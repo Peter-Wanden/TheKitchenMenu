@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MainActivity">
+
+        <Button
+            android:id="@+id/activity_main_add_recipe"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/add_recipe"
+            android:textAppearance="?android:textAppearanceMedium"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/activity_main_add_product"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/add_product"
+            android:textAppearance="?android:textAppearanceMedium"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/activity_main_add_recipe" />
+
+        <Button
+            android:id="@+id/activity_main_new_shopping_list"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/new_shopping_list"
+            android:textAppearance="?android:textAppearanceMedium"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/activity_main_add_product" />
+
+        <android.support.v4.widget.NestedScrollView
+            android:id="@+id/activity_main_menu_purchase_scroll_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/activity_main_add_recipe"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/activity_main_menu_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="center_horizontal"
+                    android:text="@string/this_weeks_menu"
+                    android:textAppearance="?android:textAppearanceMedium" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/activity_main_menu_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/activity_main_purchase_list_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="center_horizontal"
+                    android:text="@string/next_purchases"
+                    android:textAppearance="?android:textAppearanceMedium" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/activity_main_list_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </android.support.v4.widget.NestedScrollView>
+
+        <LinearLayout
+            android:id="@+id/activity_main_meal_status"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="@+id/activity_main_add_recipe"
+            app:layout_constraintTop_toBottomOf="@+id/activity_main_new_shopping_list">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center_horizontal"
+                android:text="@string/meals_remaining"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center_horizontal"
+                android:text="@string/activity_main_breakfasts" />
+
+            <TextView
+                android:id="@+id/activity_main_breakfasts_remaining"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center_horizontal"
+                android:textAppearance="?android:textAppearanceMedium"
+                tools:text="12" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center_horizontal"
+                android:text="@string/activity_main_lunches" />
+
+            <TextView
+                android:id="@+id/activity_main_lunches_remaining"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center_horizontal"
+                android:textAppearance="?android:textAppearanceMedium"
+                tools:text="14" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center_horizontal"
+                android:text="@string/activity_main_dinners" />
+
+            <TextView
+                android:id="@+id/activity_main_dinners_remaining"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center_horizontal"
+                android:textAppearance="?android:textAppearanceMedium"
+                tools:text="9" />
+
+        </LinearLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+</layout>

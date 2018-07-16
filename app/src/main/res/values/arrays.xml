@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+    These are the options displayed in the activity_product_detail unit of measure drop-down
+    Spinner. The string values of these options can be found in strings.xml.
+    -->
+    <string-array name="array_UoM_metric_options">
+        <item>@string/uom_option_0</item>
+        <item>@string/uom_option_1</item>
+        <item>@string/uom_option_2</item>
+        <item>@string/uom_option_3</item>
+    </string-array>
+
+    <!--
+    These are the options displayed in the activity_product_detail shelf life drop-down Spinner.
+    The string values of these options can be found in strings.xml.
+    -->
+    <string-array name="array_shelf_life_options">
+        <item>@string/shelf_life_option_0</item>
+        <item>@string/shelf_life_option_1</item>
+        <item>@string/shelf_life_option_2</item>
+        <item>@string/shelf_life_option_3</item>
+        <item>@string/shelf_life_option_4</item>
+        <item>@string/shelf_life_option_5</item>
+        <item>@string/shelf_life_option_6</item>
+        <item>@string/shelf_life_option_7</item>
+        <item>@string/shelf_life_option_8</item>
+        <item>@string/shelf_life_option_9</item>
+        <item>@string/shelf_life_option_10</item>
+        <item>@string/shelf_life_option_11</item>
+        <item>@string/shelf_life_option_12</item>
+        <item>@string/shelf_life_option_13</item>
+        <item>@string/shelf_life_option_14</item>
+        <item>@string/shelf_life_option_15</item>
+        <item>@string/shelf_life_option_16</item>
+    </string-array>
+
+    <!--
+    These are the options displayed in the activity_product_detail category drop-down
+    Spinner. The string values of these options can be found in strings.xml.
+    -->
+    <string-array name="array_category_options">
+        <item>@string/category_option_0</item>
+        <item>@string/category_option_1</item>
+        <item>@string/category_option_2</item>
+    </string-array>
+
+</resources>
