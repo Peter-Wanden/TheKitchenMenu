@@ -2,45 +2,49 @@
     <string name="app_name">The Kitchen Menu</string>
 
     <!-- MainActivity -->
-    <string name="add_recipe">Add Recipe</string>
-    <string name="add_product">Add Product</string>
-    <string name="new_shopping_list">New Shopping List</string>
-    <string name="this_weeks_menu">This Week\'s Menu</string>
-    <string name="next_purchases">Shopping list</string>
-    <string name="meals_remaining">Meals Remaining</string>
-    <string name="activity_main_breakfasts">Breakfasts</string>
-    <string name="activity_main_lunches">Lunches</string>
-    <string name="activity_main_dinners">Dinners</string>
-    <string name="title_product_detail">Product Details</string>
-    <string name="description_title">Description</string>
+    <string name="activity_main_label_button_add_recipe">Add Recipe</string>
+    <string name="activity_main_label_button_add_product">Add Product</string>
+    <string name="activity_main_label_button_new_shopping_list">New Shopping List</string>
+    <string name="activity_main_title_this_weeks_menu">This Week\'s Menu</string>
+    <string name="activity_main_title_next_purchases">Shopping list</string>
+    <string name="activity_main_title_meals_remaining">Meals Remaining</string>
+    <string name="activity_main_title_breakfasts">Breakfasts</string>
+    <string name="activity_main_title_lunches">Lunches</string>
+    <string name="activity_main_title_dinners">Dinners</string>
+    <string name="activity_main_title_product_detail">Product Details</string>
+    <string name="activity_main_title_description">Description</string>
 
     <!-- CONTENT DESCRIPTIONS -->
     <!-- Attach to any ImageView's of the product -->
     <string name="a_picture_of_the_product">A picture of the product</string>
 
-    <!-- ProductDetailActivity -->
-    <string name="required_up_to_120_characters">Required, up to 120 characters</string>
-    <string name="description_label">Description</string>
-    <string name="retailer_label">Retailer</string>
-    <string name="pack_size_label">Pack size</string>
-    <string name="pack_size_hint">How many in a pack?</string>
-    <string name="location_room_label">Storage room</string>
-    <string name="location_in_room_label">Location in room</string>
-    <string name="location_in_room_hint">Where abouts in the room?</string>
+    <!-- Product field labels and hints -->
+    <string name="label_description">Description</string>
+    <string name="label_retailer">Retailer</string>
+    <string name="label_location_room">Storage room</string>
+    <string name="label_location_in_room">Location in room</string>
+    <string name="label_pack_size">Pack size</string>
+    <string name="label_UoM">Unit of Measure</string>
+    <string name="label_price">Price</string>
+    <string name="label_shelf_life">Shelf life</string>
+    <string name="label_category">Category</string>
+    <string name="hint_for_120_char_fields">Required, up to 120 characters</string>
+    <string name="hint_pack_size">How many in a pack?</string>
+    <string name="hint_location_in_room">Where abouts in the room?</string>
+    <string name="hint_price">How much?</string>
+    <string name="hint_location_room">What room is this product stored in?</string>
 
-    <!-- ProductDetailActivity unit of measure spinner + options -->
-    <string name="UoM_label">Unit of Measure</string>
+    <!-- ProductDetailActivity unit of measure spinner options -->
     <string name="uom_option_0">Select measurement</string>
     <string name="uom_option_1">grams</string>
     <string name="uom_option_2">ml</string>
     <string name="uom_option_3">count</string>
 
-    <!-- ProductDetailActivity shelf life spinner + options -->
-    <string name="shelf_life_label">Shelf life</string>
+    <!-- ProductDetailActivity shelf life spinner options -->
     <string name="shelf_life_option_0">Select shelf life</string>
     <string name="shelf_life_option_1">1 day</string>
     <string name="shelf_life_option_2">3 days</string>
-    <string name="shelf_life_option_3">3 days</string>
+    <string name="shelf_life_option_3">5 days</string>
     <string name="shelf_life_option_4">1 week</string>
     <string name="shelf_life_option_5">2 weeks</string>
     <string name="shelf_life_option_6">3 weeks</string>
@@ -54,19 +58,25 @@
     <string name="shelf_life_option_14">Box</string>
     <string name="shelf_life_option_15">Packet</string>
     <string name="shelf_life_option_16">N/A</string>
-    <string name="location_room_hint">What room is this product stored in?</string>
 
-    <!-- ProductDetailActivity category spinner + options -->
-    <string name="category_label">Category</string>
+    <!-- ProductDetailActivity category spinner options -->
     <string name="category_option_0">Select category</string>
     <string name="category_option_1">Food other</string>
     <string name="category_option_2">Non food</string>
 
     <!-- ProductDetailActivity menu bar options -->
-    <string name="save_product">Save</string>
+    <string name="action_save">Save</string>
     <string name="action_delete">Delete</string>
+
+    <!-- ProductDetailActivity titles -->
+    <string name="title_update_product">Edit a Product</string>
+    <string name="title_add_new_product">Add a Product</string>
+
+    <!-- ProductDetailActivity user inpur error codes -->
+    <string name="input_error_product_description">Product description needs to be between 1 and 120 characters</string>
 
     <!-- ActivityProductCatalog -->
     <string name="product_catalog_empty_view_title_text">The cupboards are empty.</string>
     <string name="product_catalog_empty_view_subtitle_text">Press + to add some products!</string>
+
 </resources>

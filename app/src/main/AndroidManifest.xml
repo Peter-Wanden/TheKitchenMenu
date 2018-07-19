@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".ui.navigation.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -19,18 +19,12 @@
         </activity>
 
         <activity android:name=".ui.detail.ProductDetailActivity"
-            android:label="@string/title_product_detail"
+            android:label="@string/activity_main_title_product_detail"
             android:theme="@style/AppTheme"/>
 
-        <activity android:name=".ui.catalog.ProductCatalogActivity"
+        <activity android:name=".ui.list.ProductCatalogActivity"
             android:label="Product Catalog"
             android:theme="@style/AppTheme"/>
 
-        <provider
-            android:name=".data.TKMProvider"
-            android:authorities="com.example.peter.thekitchenmenu"
-            android:exported="false" />
-
     </application>
-
 </manifest>

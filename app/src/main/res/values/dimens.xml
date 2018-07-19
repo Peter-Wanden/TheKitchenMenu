@@ -5,4 +5,14 @@
 
     <!-- Common margin value used throughout the app -->
     <dimen name="activity_margin">16dp</dimen>
+
+    <!-- Default elevation -->
+    <dimen name="starting_elevation">4dp</dimen>
+
+    <!-- List item margins -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="list_item_top_margin">8dp</dimen>
+    <dimen name="list_item_bottom_margin">8dp</dimen>
+
 </resources>

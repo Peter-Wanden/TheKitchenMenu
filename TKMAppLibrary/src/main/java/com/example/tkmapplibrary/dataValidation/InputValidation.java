@@ -4,10 +4,10 @@ package com.example.tkmapplibrary.dataValidation;
  * This class holds data validation rules for all user input
  *
  * Return values:
- *    100. Validated OK
+ *      0. Validated OK
  *   true. Validated OK
- *      0. Value missing
- *      1. String is too long
+ *      1. Value missing
+ *      2. String is too long
  *  false. Value is out of range
  */
 public class InputValidation {
@@ -16,12 +16,13 @@ public class InputValidation {
     public static int validateProductDescription(String description) {
         // Check if not null and contains more than 1 character
         if (description == null || description.length() < 1) {
-            return 0;
+            return 1;
             /* Limit length to 120 chars */
         } else if(description.length() > 120) {
-            return 1;
+            return 2;
         }
-        return 100;
+        // A zero response is OK
+        return 0;
     }
 
     /* Validation rules for retailers name */

@@ -1,22 +1,66 @@
 package com.example.peter.thekitchenmenu.model;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+@Entity(tableName = "Products")
 public class Product implements Parcelable {
 
-    private long mProductId;
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id")
+    private int mProductId;
+
+    @ColumnInfo(name = "Description")
     private String mDescription;
+
+    @ColumnInfo(name = "Retailer")
     private String mRetailer;
+
+    @ColumnInfo(name = "Unit_of_Measure")
     private int mUnitOfMeasure;
+
+    @ColumnInfo(name = "Pack_Size")
     private int mPackSize;
+
+    @ColumnInfo(name = "Shelf_Life")
     private int mShelfLife;
+
+    @ColumnInfo(name = "Location_Room")
     private String mLocationRoom;
+
+    @ColumnInfo(name = "Location_in_Room")
     private String mLocationInRoom;
+
+    @ColumnInfo(name = "Category")
     private int mCategory;
+
+    @ColumnInfo(name = "Pack_Price")
     private double mPackPrice;
 
-    public Product(long productId, String description, String retailer, int unitOfMeasure,
+    @Ignore
+    /* Constructor */
+    public Product(String description, String retailer, int unitOfMeasure,
+                   int packSize, int shelfLife, String locationRoom, String locationInRoom,
+                   int category, double packPrice) {
+
+        this.mDescription = description;
+        this.mRetailer = retailer;
+        this.mUnitOfMeasure = unitOfMeasure;
+        this.mPackSize = packSize;
+        this.mShelfLife = shelfLife;
+        this.mLocationRoom = locationRoom;
+        this.mLocationInRoom = locationInRoom;
+        this.mCategory = category;
+        this.mPackPrice = packPrice;
+
+    }
+
+    /* Constructor for the database*/
+    public Product(int productId, String description, String retailer, int unitOfMeasure,
                    int packSize, int shelfLife, String locationRoom, String locationInRoom,
                    int category, double packPrice) {
 
@@ -34,7 +78,7 @@ public class Product implements Parcelable {
 
 
     private Product(Parcel in) {
-        mProductId = in.readLong();
+        mProductId = in.readInt();
         mDescription = in.readString();
         mRetailer = in.readString();
         mUnitOfMeasure = in.readInt();
@@ -65,7 +109,7 @@ public class Product implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeLong(mProductId);
+        parcel.writeInt(mProductId);
         parcel.writeString(mDescription);
         parcel.writeString(mRetailer);
         parcel.writeInt(mUnitOfMeasure);
@@ -77,8 +121,8 @@ public class Product implements Parcelable {
         parcel.writeDouble(mPackPrice);
     }
 
-    public long getProductId() {return mProductId;}
-    public void setProductId(long productId) {mProductId = productId;}
+    public int getProductId() {return mProductId;}
+    public void setProductId(int productId) {mProductId = productId;}
 
     public String getDescription() {return mDescription;}
     public void setDescription(String description) {mDescription = description;}

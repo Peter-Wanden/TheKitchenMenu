@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- For any input fields where an item has not been selected -->
+    <integer name="item_not_selected">0</integer>
+
+    <!-- Unit of measure integer values -->
+    <integer name="uom_grams_int">1</integer>
+    <integer name="uom_milliliter_int">2</integer>
+    <integer name="uom_count_int">3</integer>
+
+    <!-- Shelf life integer values -->
+    <integer name="shelf_life_option_1">1</integer>
+    <integer name="shelf_life_option_2">2</integer>
+    <integer name="shelf_life_option_3">3</integer>
+    <integer name="shelf_life_option_4">4</integer>
+    <integer name="shelf_life_option_5">5</integer>
+    <integer name="shelf_life_option_6">6</integer>
+    <integer name="shelf_life_option_7">7</integer>
+    <integer name="shelf_life_option_8">8</integer>
+    <integer name="shelf_life_option_9">9</integer>
+    <integer name="shelf_life_option_10">10</integer>
+    <integer name="shelf_life_option_11">11</integer>
+    <integer name="shelf_life_option_12">12</integer>
+    <integer name="shelf_life_option_13">13</integer>
+    <integer name="shelf_life_option_14">14</integer>
+    <integer name="shelf_life_option_15">15</integer>
+    <integer name="shelf_life_option_16">16</integer>
+
+    <!-- Integer values for categories -->
+    <integer name="category_option_1">1</integer>
+    <integer name="category_option_2">2</integer>
+    <integer name="category_option_3">3</integer>
+
+</resources>

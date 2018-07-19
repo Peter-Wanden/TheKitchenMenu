@@ -1,7 +1,6 @@
-package com.example.peter.thekitchenmenu.ui.catalog;
+package com.example.peter.thekitchenmenu.ui.list;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,7 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.data.TKMContract;
+import com.example.peter.thekitchenmenu.model.Product;
+
+import java.util.List;
 
 public class ProductCatalogAdapter
         extends
@@ -18,8 +19,8 @@ public class ProductCatalogAdapter
     /* The context we use to utility methods, app resources and layout inflaters */
     private final Context mContext;
 
-    /* Cursor storing the database qurey result */
-    private Cursor mCursor;
+    /* List storing the database query result */
+    private List<Product> mProducts;
 
     /* Click handler */
     private final ProductCatalogAdapterOnClickHandler mClickHandler;
@@ -39,11 +40,9 @@ public class ProductCatalogAdapter
     public ProductCatalogAdapterViewHolder onCreateViewHolder(
             @NonNull ViewGroup viewGroup, int viewType) {
 
-        int layoutForThisItem = R.layout.list_item_product;
-
         View view = LayoutInflater
                 .from(mContext)
-                .inflate(layoutForThisItem, viewGroup, false);
+                .inflate(R.layout.list_item_product, viewGroup, false);
 
         return new ProductCatalogAdapterViewHolder(view);
     }
@@ -52,23 +51,61 @@ public class ProductCatalogAdapter
     public void onBindViewHolder(@NonNull ProductCatalogAdapterViewHolder holder, int position) {
 
         /* Get the product at the passed in position */
-        mCursor.moveToPosition(position);
+        Product product = mProducts.get(position);
 
+        /* Set the description */
+        holder.descriptionTV.setText(product.getDescription());
+        /* Set the retailer */
+        holder.retailerTV.setText(product.getRetailer());
+        /* Set the pack size */
+        holder.packSizeTV.setText(String.valueOf(product.getPackSize()));
+        /* Set the unit of measure */
+        holder.UoMTV.setText(getStringUnitOfMeasure(product.getUnitOfMeasure()));
+
+    }
+
+    /* Helper method to convert the unit of measure from an integer to a String value */
+    private String getStringUnitOfMeasure(int requestUnitOfMeasure) {
+
+        String unitOfMeasure;
+
+        switch (requestUnitOfMeasure) {
+            case 1:
+                unitOfMeasure = mContext.getResources().getString(R.string.uom_option_1);
+                break;
+            case 2:
+                unitOfMeasure = mContext.getResources().getString(R.string.uom_option_2);
+                break;
+            case 3:
+                unitOfMeasure = mContext.getResources().getString(R.string.uom_option_3);
+                break;
+            default:
+                unitOfMeasure = mContext.getResources().getString(R.string.uom_option_0);
+                break;
+        }
+        return unitOfMeasure;
     }
 
     /* Returns the number of items in the adapter */
     @Override
     public int getItemCount() {
-        if (null == mCursor) return 0;
-        return mCursor.getCount();
+        if (mProducts == null) return 0;
+        return mProducts.size();
     }
 
-    /* Swaps out the adapters cursor data */
-    public void swapCursor (Cursor newCursor) {
-        mCursor = newCursor;
+    /* Getter for the current list of products */
+    public List<Product> getProducts() {
+        return mProducts;
+    }
+
+    /* When the data changes, this method updates the list of products and notifies the adapter to
+    use the new values in it */
+    public void setProducts(List<Product> products) {
+        mProducts = products;
         notifyDataSetChanged();
     }
 
+    /* Inner class for creating ViewHolders */
     class ProductCatalogAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         final TextView descriptionTV;
@@ -76,6 +113,7 @@ public class ProductCatalogAdapter
         final TextView packSizeTV;
         final TextView UoMTV;
 
+        /* Constructor for the ProductCatalogAdapterViewHolder.class */
         ProductCatalogAdapterViewHolder(View itemView) {
             super(itemView);
 
@@ -88,9 +126,7 @@ public class ProductCatalogAdapter
         }
 
         public void onClick(View v) {
-            int adapterPosition = getAdapterPosition();
-            mCursor.moveToPosition(adapterPosition);
-            int productId = mCursor.getInt(mCursor.getColumnIndex(TKMContract.ProductEntry._ID));
+            int productId = mProducts.get(getAdapterPosition()).getProductId();
             mClickHandler.onClick(productId);
         }
     }
