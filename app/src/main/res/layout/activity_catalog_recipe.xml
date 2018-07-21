@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Layout container for the list of recipes -->
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.list.RecipeCatalogActivity">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/activity_catalog_recipe_rv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <!-- Empty view for the list -->
+        <RelativeLayout
+            android:id="@+id/activity_catalog_recipe_empty_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true">
+
+            <!-- TODO - Find an image of empty shelves -->
+            <ImageView
+                android:id="@+id/activity_catalog_recipe_empty_shelf_image_iv"
+                android:contentDescription="@string/content_description_image_of_recipe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true" />
+
+            <TextView
+                android:id="@+id/activity_catalog_recipe_empty_title_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/activity_catalog_recipe_empty_shelf_image_iv"
+                android:layout_centerHorizontal="true"
+                android:fontFamily="sans-serif-medium"
+                android:paddingTop="16dp"
+                android:text="@string/activity_catalog_recipe_empty_view_title_text"
+                android:textAppearance="?android:textAppearanceMedium"/>
+
+            <TextView
+                android:id="@+id/activity_catalog_recipe_empty_subtitle_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/activity_catalog_recipe_empty_title_tv"
+                android:layout_centerHorizontal="true"
+                android:fontFamily="sans-serif"
+                android:paddingTop="8dp"
+                android:text="@string/activity_catalog_recipe_empty_view__sub_title_text"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:textColor="@color/secondary_text"/>
+        </RelativeLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/activity_catalog_recipe_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="@dimen/fab_margin"
+            android:src="@drawable/ic_action_add"/>
+
+        <!-- A progress bar that will be shown to indicate data is loading -->
+        <ProgressBar
+            android:id="@+id/activity_catalog_recipe_loading_indicator_pb"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_centerInParent="true"
+            android:visibility="invisible" />
+    </RelativeLayout>
+</layout>

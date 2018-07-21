@@ -26,9 +26,12 @@
     <integer name="shelf_life_option_15">15</integer>
     <integer name="shelf_life_option_16">16</integer>
 
-    <!-- Integer values for categories -->
+    <!--
+    Integer values for product and recipe categories,
+    or anything else that needs an integer
+    -->
     <integer name="category_option_1">1</integer>
     <integer name="category_option_2">2</integer>
     <integer name="category_option_3">3</integer>
-
+    <integer name="category_option_4">4</integer>
 </resources>

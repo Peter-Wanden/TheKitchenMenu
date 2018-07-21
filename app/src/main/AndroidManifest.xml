@@ -18,12 +18,19 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.detail.ProductDetailActivity"
-            android:label="@string/activity_main_title_product_detail"
-            android:theme="@style/AppTheme"/>
-
         <activity android:name=".ui.list.ProductCatalogActivity"
             android:label="Product Catalog"
+            android:theme="@style/AppTheme"/>
+
+        <activity android:name=".ui.detail.ProductDetailActivity"
+            android:label="@string/activity_detail_product_title"
+            android:theme="@style/AppTheme"/>
+
+        <activity android:name=".ui.list.RecipeCatalogActivity"
+            android:label="@string/activity_catalog_recipe_title"
+            android:theme="@style/AppTheme"/>
+
+        <activity android:name=".ui.detail.RecipeDetailActivity"
             android:theme="@style/AppTheme"/>
 
     </application>

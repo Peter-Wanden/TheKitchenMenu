@@ -26,4 +26,24 @@
         <item name="android:textAppearance">?android:textAppearanceMedium</item>
     </style>
 
+    <!-- Card View styles -->
+    <style name="cardViewStyle" parent="AppTheme">
+    </style>
+
+
+    <style name="CardViewTitleText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/card_title_text</item>
+        <item name="android:paddingTop">@dimen/card_title_top_padding</item>
+        <item name="android:paddingBottom">@dimen/card_bottom_padding</item>
+        <item name="android:paddingRight">@dimen/card_right_left_padding</item>
+        <item name="android:paddingLeft">@dimen/card_right_left_padding</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="CardViewSubText" parent="CardViewTitleText">
+        <item name="android:textSize">14sp</item>
+    </style>
+
 </resources>

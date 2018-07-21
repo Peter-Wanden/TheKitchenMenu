@@ -106,7 +106,11 @@ public class ProductCatalogAdapter
     }
 
     /* Inner class for creating ViewHolders */
-    class ProductCatalogAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class ProductCatalogAdapterViewHolder
+            extends
+            RecyclerView.ViewHolder
+            implements
+            View.OnClickListener {
 
         final TextView descriptionTV;
         final TextView retailerTV;

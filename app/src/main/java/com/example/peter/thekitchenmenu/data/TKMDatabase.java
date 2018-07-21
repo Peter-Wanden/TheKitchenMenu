@@ -7,11 +7,12 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.peter.thekitchenmenu.model.Product;
+import com.example.peter.thekitchenmenu.model.Recipe;
 
 /* Creates the database and keeps a singleton instance available
  * Add any POJO classes here to add more database tables
  */
-@Database(entities = {Product.class}, version = 1, exportSchema = false)
+@Database(entities = {Product.class, Recipe.class}, version = 1, exportSchema = false)
 public abstract class TKMDatabase extends RoomDatabase {
 
     private static final String LOG_TAG = TKMDatabase.class.getSimpleName();
@@ -34,5 +35,8 @@ public abstract class TKMDatabase extends RoomDatabase {
     }
 
     /* Method that returns the product DAO */
-    public abstract ProductDAO productDAO();
+    public abstract ProductDAO productDao();
+
+    /* Method that returns the Recipe DAO */
+    public abstract RecipeDAO recipeDao();
 }

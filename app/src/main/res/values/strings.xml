@@ -11,28 +11,40 @@
     <string name="activity_main_title_breakfasts">Breakfasts</string>
     <string name="activity_main_title_lunches">Lunches</string>
     <string name="activity_main_title_dinners">Dinners</string>
-    <string name="activity_main_title_product_detail">Product Details</string>
     <string name="activity_main_title_description">Description</string>
 
     <!-- CONTENT DESCRIPTIONS -->
     <!-- Attach to any ImageView's of the product -->
-    <string name="a_picture_of_the_product">A picture of the product</string>
+    <string name="cd_picture_of_product">A picture of the product</string>
+    <!-- Attach to any ImageView's of the recipe -->
+    <string name="cd_picture_of_recipe">A picture of the recipe</string>
+    <string name="cd_save_recipe">Click to save the current recipe</string>
+    <string name="cd_delete_recipe">Click to delete the current recipe</string>
+    <string name="cd_save_product">Click to save the current product</string>
+    <string name="cd_delete_product">Click to delete the current product</string>
 
-    <!-- Product field labels and hints -->
+    <!-- Common field labels and hints -->
     <string name="label_description">Description</string>
     <string name="label_retailer">Retailer</string>
+    <string name="hint_required_120_char_fields">Enter up to 120 characters</string>
+    <string name="hint_not_required_120_char_fields">Enter up to 120 characters</string>
     <string name="label_location_room">Storage room</string>
+    <string name="hint_location_room">What room is this product stored in?</string>
     <string name="label_location_in_room">Location in room</string>
+    <string name="hint_location_in_room">Where abouts in the room?</string>
     <string name="label_pack_size">Pack size</string>
+    <string name="hint_pack_size">How many in a pack?</string>
     <string name="label_UoM">Unit of Measure</string>
     <string name="label_price">Price</string>
+    <string name="hint_price">How much?</string>
     <string name="label_shelf_life">Shelf life</string>
     <string name="label_category">Category</string>
-    <string name="hint_for_120_char_fields">Required, up to 120 characters</string>
-    <string name="hint_pack_size">How many in a pack?</string>
-    <string name="hint_location_in_room">Where abouts in the room?</string>
-    <string name="hint_price">How much?</string>
-    <string name="hint_location_room">What room is this product stored in?</string>
+    <string name="label_recipe_title"> Recipe title</string>
+    <string name="hint_recipe_title">Please enter a title for your recipe.</string>
+    <string name="label_sittings">No of sittings</string>
+    <string name="hint_sittings">over how many meal times?</string>
+    <string name="label_servings">No of servings</string>
+    <string name="hint_servings">How many servings?</string>
 
     <!-- ProductDetailActivity unit of measure spinner options -->
     <string name="uom_option_0">Select measurement</string>
@@ -60,23 +72,67 @@
     <string name="shelf_life_option_16">N/A</string>
 
     <!-- ProductDetailActivity category spinner options -->
-    <string name="category_option_0">Select category</string>
-    <string name="category_option_1">Food other</string>
-    <string name="category_option_2">Non food</string>
+    <string name="product_category_option_0">Select category</string>
+    <string name="product_category_option_1">Food</string>
+    <string name="product_category_option_2">Non food</string>
+    <string name="product_category_option_3">Recipe</string>
 
-    <!-- ProductDetailActivity menu bar options -->
+    <!-- Common menu bar options -->
     <string name="action_save">Save</string>
     <string name="action_delete">Delete</string>
 
     <!-- ProductDetailActivity titles -->
-    <string name="title_update_product">Edit a Product</string>
-    <string name="title_add_new_product">Add a Product</string>
+    <string name="activity_detail_product_title">Product Details</string>
+    <string name="activity_detail_product_title_update">Edit a Product</string>
+    <string name="activity_detail_product_title_add_new">Add a Product</string>
 
-    <!-- ProductDetailActivity user inpur error codes -->
-    <string name="input_error_product_description">Product description needs to be between 1 and 120 characters</string>
+    <!-- ProductDetailActivity user input error codes -->
+    <string name="input_error_product_description_too_short">Description too short, needs to be
+        between 1 and 120 characters.</string>
+    <string name="input_error_product_description_too_long">Description too long, needs to be
+        between 1 and 120 characters.</string>
+    <string name="input_error_product_retailer_too_short">Retailer name too short, needs to be
+        between 1 and 120 characters.</string>
+    <string name="input_error_product_retailer_too_long">Retailer name too long, needs to be
+        between 1 and 120 characters.</string>
+    <string name="input_error_pack_size">Pack size needs to be between 1 and 1000</string>
+    <string name="input_error_product_loc_room_too_short">Storage room name too short, needs to be
+        between 1 and 60 characters.</string>
+    <string name="input_error_product_loc_room_too_long">Storage room name too long, needs to be
+        between 1 and 60 characters.</string>
+    <string name="input_error_product_loc_in_room_too_short">Location in room name too short, needs
+        to be between 1 and 60 characters.</string>
+    <string name="input_error_product_loc_in_room_too_long">Location in room name too long, needs
+        to be between 1 and 60 characters.</string>
+    <string name="input_error_recipe_title_too_short">Title too short, needs to be between 1 and 60
+        characters.</string>
+    <string name="input_error_recipe_title_too_long">Title too long, needs to be between 1 and 60
+        characters.</string>
+    <string name="input_error_recipe_description_too_long">Recipe description too long, needs to be
+        between 1 and 120 characters</string>
+    <string name="input_error_recipe_servings">Recipe must make more than one portion.</string>
 
     <!-- ActivityProductCatalog -->
     <string name="product_catalog_empty_view_title_text">The cupboards are empty.</string>
     <string name="product_catalog_empty_view_subtitle_text">Press + to add some products!</string>
+    <string name="image_of_meal">An image of the selected recipe</string>
 
+    <!-- RecipeCatalogActivity -->
+    <string name="content_description_empty_recipe_list_view">The list of recipes is empty,
+        press the plus button to add some</string>
+    <string name="content_description_image_of_recipe">An image of the recipe</string>
+    <string name="activity_catalog_recipe_empty_view_title_text">There\'s no recipes to show you right now.</string>
+    <string name="activity_catalog_recipe_empty_view__sub_title_text">Press the plus button to add some.</string>
+    <string name="activity_catalog_recipe_title">Recipe Catalog</string>
+
+    <!-- RecipeDetailActivity titles -->
+    <string name="activity_detail_recipe_title_update">Update Recipe</string>
+    <string name="activity_detail_recipe_title_add_new">Add a New Recipe</string>
+
+    <!-- RecipeDetailActivity category spinner options -->
+    <string name="recipe_category_option_0">Select category</string>
+    <string name="recipe_category_option_1">Breakfast</string>
+    <string name="recipe_category_option_2">Lunch</string>
+    <string name="recipe_category_option_3">Dinner</string>
+    <string name="recipe_category_option_4">Anytime</string>
 </resources>

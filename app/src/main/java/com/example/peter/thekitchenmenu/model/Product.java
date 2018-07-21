@@ -42,7 +42,7 @@ public class Product implements Parcelable {
     private double mPackPrice;
 
     @Ignore
-    /* Constructor */
+    /* Constructors */
     public Product(String description, String retailer, int unitOfMeasure,
                    int packSize, int shelfLife, String locationRoom, String locationInRoom,
                    int category, double packPrice) {
@@ -56,7 +56,6 @@ public class Product implements Parcelable {
         this.mLocationInRoom = locationInRoom;
         this.mCategory = category;
         this.mPackPrice = packPrice;
-
     }
 
     /* Constructor for the database*/
@@ -109,6 +108,7 @@ public class Product implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+
         parcel.writeInt(mProductId);
         parcel.writeString(mDescription);
         parcel.writeString(mRetailer);
@@ -121,6 +121,7 @@ public class Product implements Parcelable {
         parcel.writeDouble(mPackPrice);
     }
 
+    /* Getters and setters */
     public int getProductId() {return mProductId;}
     public void setProductId(int productId) {mProductId = productId;}
 

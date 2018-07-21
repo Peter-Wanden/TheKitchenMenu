@@ -9,12 +9,14 @@
 
     <item
         android:id="@+id/menu_product_editor_action_save"
+        android:contentDescription="@string/cd_save_product"
         android:title="@string/action_save"
         android:icon="@drawable/ic_done"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/menu_product_editor_action_delete"
+        android:contentDescription="@string/cd_delete_product"
         android:title="@string/action_delete"
         app:showAsAction="never" />
 </menu>

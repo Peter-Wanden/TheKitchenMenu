@@ -8,7 +8,6 @@ import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -56,7 +55,7 @@ public class ProductDetailActivity
     // Double member variables for the product fields
     private double mPackPrice;
 
-    // Fields for the views in activity_product_detail
+    // Fields for the EditText views in activity_detail_product
     private EditText
             mDescriptionET,
             mRetailerET,
@@ -65,6 +64,7 @@ public class ProductDetailActivity
             mLocationInRoomET,
             mPackPriceET;
 
+    // Spinners for the fields in activity_detail_product
     private Spinner
             mUoMSpinner,
             mShelfLifeSpinner,
@@ -73,19 +73,19 @@ public class ProductDetailActivity
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_product_detail);
+        setContentView(R.layout.activity_detail_product);
 
-        /* Construct a default product */
+        /* Construct a default product for field value comparison and validation */
         mProduct = new Product(
-                Constants.DEFAULT_DESCRIPTION,
-                Constants.DEFAULT_RETAILER,
-                Constants.DEFAULT_UOM,
-                Constants.DEFAULT_PACK_SIZE,
-                Constants.DEFAULT_SHELF_LIFE,
-                Constants.DEFAULT_LOC,
-                Constants.DEFAULT_LOC_IN_ROOM,
-                Constants.DEFAULT_CATEGORY,
-                Constants.DEFAULT_PRICE);
+                Constants.DEFAULT_PRODUCT_DESCRIPTION,
+                Constants.DEFAULT_PRODUCT_RETAILER,
+                Constants.DEFAULT_PRODUCT_UOM,
+                Constants.DEFAULT_PRODUCT_PACK_SIZE,
+                Constants.DEFAULT_PRODUCT_SHELF_LIFE,
+                Constants.DEFAULT_PRODUCT_LOC,
+                Constants.DEFAULT_PRODUCT_LOC_IN_ROOM,
+                Constants.DEFAULT_PRODUCT_CATEGORY,
+                Constants.DEFAULT_PRODUCT_PRICE);
 
         /* Setup the views */
         initialiseViews();
@@ -95,10 +95,10 @@ public class ProductDetailActivity
 
         /* If it exists get the current product from saved instance state */
         if(savedInstanceState != null && savedInstanceState.containsKey(
-                Constants.CURRENT_PRODUCT_KEY)) {
+                Constants.PRODUCT_KEY)) {
 
             mProduct = savedInstanceState.getParcelable(
-                    Constants.CURRENT_PRODUCT_KEY);
+                    Constants.PRODUCT_KEY);
 
             mProductId = mProduct.getProductId();
         }
@@ -108,18 +108,21 @@ public class ProductDetailActivity
         if(intent !=null && intent.hasExtra(Constants.PRODUCT_ID)) {
 
             // This intent has passed a product ID, so the product is being updated.
-            setTitle(getString(R.string.title_update_product));
+            setTitle(getString(R.string.activity_detail_product_title_update));
 
             if(mProductId == Constants.DEFAULT_PRODUCT_ID) {
                 // Set the product id from the incoming intent */
-                mProductId = intent.getIntExtra(Constants.PRODUCT_ID, Constants.DEFAULT_PRODUCT_ID);
-                Log.e(LOG_TAG, "Product ID from intent is: " + mProductId);
+                mProductId = intent.getIntExtra(
+                        Constants.PRODUCT_ID, Constants.DEFAULT_PRODUCT_ID);
 
                 // Get the product from the database
-                AddProductViewModelFactory factory = new AddProductViewModelFactory(mDb, mProductId);
+                AddProductViewModelFactory factory =
+                        new AddProductViewModelFactory(mDb, mProductId);
 
                 final AddProductViewModel viewModel
-                        = ViewModelProviders.of(this, factory).get(AddProductViewModel.class);
+                        = ViewModelProviders
+                        .of(this, factory)
+                        .get(AddProductViewModel.class);
 
                 viewModel.getProduct().observe(this, new Observer<Product>() {
                     @Override
@@ -132,28 +135,121 @@ public class ProductDetailActivity
             }
         } else {
             /* If there is no product ID passed in the intent then this is a new product */
-            setTitle(getString(R.string.title_add_new_product));
-            // mProductId = Constants.DEFAULT_PRODUCT_ID;
+            setTitle(getString(R.string.activity_detail_product_title_add_new));
         }
     }
 
     private void saveProduct() {
-        // Read, trim and validate all input fields
+        // Todo Implement on back pressed save changes and touch listener
+
+        /* Read, trim and validate all input fields */
+
+        // Product description
         mDescription = mDescriptionET.getText().toString().trim();
         int validateDescription = InputValidation.validateProductDescription(mDescription);
-        if (validateDescription > 0) {
-            Toast.makeText(this,
-                    R.string.input_error_product_description,
-                    Toast.LENGTH_LONG).show();
+
+        if (validateDescription != 0) {
+            mDescriptionET.requestFocus();
+
+            switch (validateDescription) {
+                case 1:
+                    mDescriptionET.setError(getResources()
+                            .getString(R.string.input_error_product_description_too_short));
+                    break;
+
+                case 2:
+                    mDescriptionET.setError(getResources()
+                            .getString(R.string.input_error_product_description_too_long));
+                    break;
+            }
+            return;
         }
 
+        // Retailer
         mRetailer = mRetailerET.getText().toString().trim();
-        mPackSize = Integer.parseInt(mPackSizeET.getText().toString().trim());
-        mLocationRoom = mLocationRoomET.getText().toString().trim();
-        mLocationInRoom = mLocationInRoomET.getText().toString().trim();
-        mPackPrice = Double.parseDouble(mPackPriceET.getText().toString().trim());
+        int validateRetailer = InputValidation.validateRetailer(mRetailer);
 
-        /* Check to see if this is a new product and if the fields are blank. */
+        if (validateRetailer != 0) {
+            mRetailerET.requestFocus();
+
+            switch (validateRetailer) {
+                case 1:
+                    mRetailerET.setError(getResources()
+                            .getString(R.string.input_error_product_retailer_too_short));
+                    break;
+
+                case 2:
+                    mRetailerET.setError(getResources()
+                            .getString(R.string.input_error_product_retailer_too_long));
+                    break;
+            }
+            return;
+        }
+
+        // Pack size
+        mPackSize = Integer.parseInt(mPackSizeET.getText().toString().trim());
+        boolean validatePackSize = InputValidation.validatePackSize(mPackSize);
+
+        if(!validatePackSize) {
+            mPackSizeET.requestFocus();
+            mPackSizeET.setError(getResources()
+                    .getString(R.string.input_error_pack_size));
+            return;
+        }
+
+        // Location room
+        mLocationRoom = mLocationRoomET.getText().toString().trim();
+        int validateLocRoom = InputValidation.validateLocRoom(mLocationRoom);
+
+        if (validateLocRoom != 0) {
+            mLocationRoomET.requestFocus();
+
+            switch (validateLocRoom) {
+                case 1:
+                    mLocationRoomET.setError(getResources()
+                            .getString(R.string.input_error_product_loc_room_too_short));
+                    break;
+
+                case 2:
+                    mLocationRoomET.setError(getResources()
+                            .getString(R.string.input_error_product_loc_room_too_long));
+                    break;
+            }
+            return;
+        }
+
+        // Location in room
+        mLocationInRoom = mLocationInRoomET.getText().toString().trim();
+        int validateLocInRoom = InputValidation.validateLocInRoom(mLocationInRoom);
+
+        if (validateLocInRoom != 0) {
+            mLocationInRoomET.requestFocus();
+
+            switch (validateLocInRoom) {
+                case 1:
+                    mLocationInRoomET.setError(getResources()
+                            .getString(R.string.input_error_product_loc_in_room_too_short));
+                    break;
+
+                case 2:
+                    mLocationInRoomET.setError(getResources()
+                            .getString(R.string.input_error_product_loc_in_room_too_long));
+                    break;
+            }
+            return;
+        }
+
+        // Pack price
+        // TODO - Implement currency, no validation required I don't think...
+        String unformattedPrice = mPackPriceET.getText().toString().trim();
+
+        if (unformattedPrice.length()>0) {
+            mPackPrice = Double.parseDouble(unformattedPrice);
+        } else {
+            mPackPrice = 0.0;
+        }
+
+        // Check to see if this is a new product and if the fields are blank.
         if (mProductId ==-1
                 && TextUtils.isEmpty(mDescription)
                 && TextUtils.isEmpty(mRetailer)
@@ -168,7 +264,7 @@ public class ProductDetailActivity
             return;
         }
 
-        // Create a new product and add the fields
+        // Update the default product by adding the validated input fields
         mProduct.setDescription(mDescription);
         mProduct.setRetailer(mRetailer);
         mProduct.setUnitOfMeasure(mUnitOfMeasure);
@@ -180,28 +276,19 @@ public class ProductDetailActivity
         mProduct.setPackPrice(mPackPrice);
 
         // Make the product information final
-        final Product product = new Product(
-                mDescription,
-                mRetailer,
-                mUnitOfMeasure,
-                mPackSize,
-                mShelfLife,
-                mLocationRoom,
-                mLocationInRoom,
-                mCategory,
-                mPackPrice);
+        final Product product = mProduct;
 
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
                 // Determine if this is an insert or update
                 if (mProductId == Constants.DEFAULT_PRODUCT_ID) {
-                    // Insert new product
-                    mDb.productDAO().insertProduct(product);
+                    // Insert new
+                    mDb.productDao().insertProduct(product);
                 } else {
-                    // Update existing product
+                    // Update existing
                     product.setProductId(mProductId);
-                    mDb.productDAO().updateProduct(product);
+                    mDb.productDao().updateProduct(product);
                 }
                 finish();
             }
@@ -230,31 +317,31 @@ public class ProductDetailActivity
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
         /* Save the current product */
-        outState.putParcelable(Constants.CURRENT_PRODUCT_KEY, mProduct);
+        outState.putParcelable(Constants.PRODUCT_KEY, mProduct);
     }
 
     private void initialiseViews() {
 
         // EditText fields
-        mDescriptionET = findViewById(R.id.activity_product_detail_et_product_description);
-        mRetailerET = findViewById(R.id.activity_product_detail_et_retailer);
-        mPackSizeET = findViewById(R.id.activity_product_detail_et_pack_size);
-        mLocationRoomET = findViewById(R.id.activity_product_detail_et_location_room);
-        mLocationInRoomET = findViewById(R.id.activity_product_detail_et_location_in_room);
-        mPackPriceET = findViewById(R.id.activity_product_detail_et_price);
+        mDescriptionET = findViewById(R.id.activity_detail_product_et_description);
+        mRetailerET = findViewById(R.id.activity_detail_product_et_retailer);
+        mPackSizeET = findViewById(R.id.activity_detail_product_et_pack_size);
+        mLocationRoomET = findViewById(R.id.activity_detail_product_et_location_room);
+        mLocationInRoomET = findViewById(R.id.activity_detail_product_et_location_in_room);
+        mPackPriceET = findViewById(R.id.activity_detail_product_et_price);
 
         // Spinner fields
-        mUoMSpinner = findViewById(R.id.activity_detail_spinner_UoM);
-        mShelfLifeSpinner = findViewById(R.id.activity_product_detail_spinner_shelf_life);
-        mCategorySpinner = findViewById(R.id.activity_detail_spinner_category);
+        mUoMSpinner = findViewById(R.id.activity_detail_product_spinner_UoM);
+        mShelfLifeSpinner = findViewById(R.id.activity_detail_product_spinner_shelf_life);
+        mCategorySpinner = findViewById(R.id.activity_detail_product_spinner_category);
 
         setupUoMSpinner();
         setupShelfLifeSpinner();
         setupCategorySpinner();
     }
 
-    /**
-     * Setup the dropdown spinner that allows the user to select the unit of measurefor a product.
+    /*
+     * Setup the dropdown spinner that allows the user to select the unit of measure for a product.
      */
     private void setupUoMSpinner() {
 
@@ -395,7 +482,7 @@ public class ProductDetailActivity
         // Create an adapter for the spinner. The list options are from the String array in
         // arrays.xml. The spinner will use the default layout.
         ArrayAdapter categorySpinnerAdapter = ArrayAdapter.createFromResource(this,
-                R.array.array_category_options, android.R.layout.simple_spinner_item);
+                R.array.array_product_category_options, android.R.layout.simple_spinner_item);
 
         // Specify dropdown layout style - simple list view with 1 item per line
         categorySpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
@@ -411,13 +498,13 @@ public class ProductDetailActivity
                 String selection = (String) parent.getItemAtPosition(position);
 
                 if (!TextUtils.isEmpty(selection)) {
-                    if (selection.equals(getString(R.string.category_option_0))) {
+                    if (selection.equals(getString(R.string.product_category_option_0))) {
                         mCategory = getResources().getInteger(R.integer.item_not_selected);
 
-                    } else if (selection.equals(getString(R.string.category_option_1))) {
+                    } else if (selection.equals(getString(R.string.product_category_option_1))) {
                         mCategory = getResources().getInteger(R.integer.category_option_1);
 
-                    } else if (selection.equals(getString(R.string.category_option_2))) {
+                    } else if (selection.equals(getString(R.string.product_category_option_2))) {
                         mCategory = getResources().getInteger(R.integer.category_option_2);
                     }
                 }
@@ -426,7 +513,7 @@ public class ProductDetailActivity
             // Because AdapterView is an abstract class, onNothingSelected must be defined
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                mCategory = R.string.category_option_0;
+                mCategory = R.string.product_category_option_0;
             }
         });
     }
@@ -444,7 +531,7 @@ public class ProductDetailActivity
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         // If this is a new product, hide the "Delete" menu item.
-        if (mProduct == null) {
+        if (mProductId == -1) {
             MenuItem menuItem = menu.findItem(R.id.menu_product_editor_action_delete);
             menuItem.setVisible(false);
         }
@@ -474,7 +561,7 @@ public class ProductDetailActivity
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
-                mDb.productDAO().deleteProduct(mProduct);
+                mDb.productDao().deleteProduct(mProduct);
             }
         });
         finish();

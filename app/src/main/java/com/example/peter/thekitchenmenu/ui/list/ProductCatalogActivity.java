@@ -15,7 +15,6 @@ import android.widget.ProgressBar;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
-import com.example.peter.thekitchenmenu.data.TKMDatabase;
 import com.example.peter.thekitchenmenu.model.Product;
 import com.example.peter.thekitchenmenu.ui.detail.ProductDetailActivity;
 
@@ -35,9 +34,6 @@ public class ProductCatalogActivity
     /* RecyclerView for the list view */
     private RecyclerView mRecyclerView;
 
-    /* Progress bar shown when loading data */
-    private ProgressBar mLoadingIndicator;
-
     /* Floating action button */
     private FloatingActionButton mFab;
 
@@ -47,7 +43,7 @@ public class ProductCatalogActivity
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_product_catalog);
+        setContentView(R.layout.activity_catalog_product);
 
         setupViews();
 
@@ -66,7 +62,6 @@ public class ProductCatalogActivity
         mCatalogAdapter = new ProductCatalogAdapter(this, this);
         mRecyclerView.setAdapter(mCatalogAdapter);
 
-        // Todo - Implement empty view and loading indicators
 
         /* Retrieve the content of the products table */
         setupProductsViewModel();
@@ -74,12 +69,12 @@ public class ProductCatalogActivity
 
     private void setupViews() {
         /* Get a reference to the views */
-        mRecyclerView = findViewById(R.id.activity_product_catalog_rv);
-        mLoadingIndicator = findViewById(R.id.activity_product_catalog_loading_indicator_pb);
-        mFab = findViewById(R.id.activity_product_catalog_fab);
-        mEmptyView = findViewById(R.id.activity_product_catalog_empty_view);
+        mRecyclerView = findViewById(R.id.activity_catalog_product_rv);
+        mFab = findViewById(R.id.activity_catalog_product_fab);
+        mEmptyView = findViewById(R.id.activity_catalog_product_empty_view);
 
         /* Create and set the layout manager */
+        /* Todo - set up a master detail flow for products */
         LinearLayoutManager layoutManager =
                 new LinearLayoutManager(this,
                         LinearLayoutManager.VERTICAL, false);
@@ -95,21 +90,11 @@ public class ProductCatalogActivity
      */
     @Override
     public void onClick(int productId) {
-        Intent intent = new Intent(ProductCatalogActivity.this, ProductDetailActivity.class);
+        Intent intent = new Intent(
+                ProductCatalogActivity.this,
+                ProductDetailActivity.class);
         intent.putExtra(Constants.PRODUCT_ID, productId);
         startActivity(intent);
-    }
-
-    /* Shows the loading indicator and hides other views */
-    private void showLoading() {
-        mRecyclerView.setVisibility(View.INVISIBLE);
-        mLoadingIndicator.setVisibility(View.VISIBLE);
-    }
-
-    /* Hides the loading indicator and shows other views */
-    private void showProducts () {
-        mLoadingIndicator.setVisibility(View.INVISIBLE);
-        mRecyclerView.setVisibility(View.VISIBLE);
     }
 
     /* Retrieve products from the database and set an observer to watch for changes */
@@ -126,12 +111,15 @@ public class ProductCatalogActivity
             @Override
             public void onChanged(@Nullable List<Product> products) {
                 // Set the list of products to the adapter
-                Log.d(LOG_TAG, "Updating list of tasks from LiveData in ViewModel");
                 mCatalogAdapter.setProducts(products);
+
+                // Set empty view
+                if(products.size() == 0) {
+                    mEmptyView.setVisibility(View.VISIBLE);
+                } else {
+                    mEmptyView.setVisibility(View.GONE);
+                }
             }
         });
     }
-
-    /* TODO - Delete product here? Or always in detail activity */
-//    private void deleteProduct();
 }

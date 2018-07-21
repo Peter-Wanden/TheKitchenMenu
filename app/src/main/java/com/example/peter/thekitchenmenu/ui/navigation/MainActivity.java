@@ -8,22 +8,34 @@ import android.widget.Button;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.ui.list.ProductCatalogActivity;
+import com.example.peter.thekitchenmenu.ui.list.RecipeCatalogActivity;
+
+// Todo - implement network / no network monitor
 
 public class MainActivity extends AppCompatActivity {
 
-    Button addProductButton;
+    Button productButton;
+    Button recipeButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        addProductButton = findViewById(R.id.activity_main_add_product);
+        productButton = findViewById(R.id.activity_main_goto_products);
+        recipeButton = findViewById(R.id.activity_main_goto_recipes);
 
-        addProductButton.setOnClickListener(new View.OnClickListener() {
+        productButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getBaseContext(), ProductCatalogActivity.class);
+                startActivity(intent);
+            }
+        });
+        recipeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getBaseContext(), RecipeCatalogActivity.class);
                 startActivity(intent);
             }
         });

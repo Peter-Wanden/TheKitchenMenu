@@ -1,4 +1,5 @@
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
     <ScrollView
@@ -13,15 +14,15 @@
             tools:context=".ui.detail.ProductDetailActivity">
 
             <ImageView
-                android:id="@+id/activity_product_detail_iv_product"
+                android:id="@+id/activity_detail_product_iv"
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
-                android:contentDescription="@string/a_picture_of_the_product"
+                android:contentDescription="@string/cd_picture_of_product"
                 android:src="@drawable/placeholder" />
 
             <!-- Product description container -->
             <LinearLayout
-                android:id="@+id/activity_product_detail_description_container"
+                android:id="@+id/activity_detail_product_container_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -39,24 +40,22 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:orientation="vertical"
-                    android:paddingEnd="4dp"
-                    android:paddingStart="4dp">
+                    android:orientation="vertical">
 
                     <!-- Description EditText field -->
                     <EditText
-                        android:id="@+id/activity_product_detail_et_product_description"
+                        android:id="@+id/activity_detail_product_et_description"
                         style="@style/EditTextFieldStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/hint_for_120_char_fields"
+                        android:hint="@string/hint_required_120_char_fields"
                         android:inputType="textCapWords" />
                 </LinearLayout>
             </LinearLayout>
 
             <!-- Retailer field container -->
             <LinearLayout
-                android:id="@+id/activity_product_detail_container_retailer"
+                android:id="@+id/activity_detail_product_container_retailer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -78,11 +77,11 @@
 
                     <!-- EditText field -->
                     <EditText
-                        android:id="@+id/activity_product_detail_et_retailer"
+                        android:id="@+id/activity_detail_product_et_retailer"
                         style="@style/EditTextFieldStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/hint_for_120_char_fields"
+                        android:hint="@string/hint_not_required_120_char_fields"
                         android:inputType="textCapWords" />
 
                 </LinearLayout>
@@ -90,7 +89,7 @@
 
             <!-- Pack size container -->
             <LinearLayout
-                android:id="@+id/activity_product_detail_container_pack_size"
+                android:id="@+id/activity_detail_product_container_pack_size"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -112,7 +111,7 @@
 
                     <!-- EditText field -->
                     <EditText
-                        android:id="@+id/activity_product_detail_et_pack_size"
+                        android:id="@+id/activity_detail_product_et_pack_size"
                         style="@style/EditTextFieldStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -123,7 +122,7 @@
 
             <!-- Unit of measure container -->
             <LinearLayout
-                android:id="@+id/activity_product_detail_container_UoM"
+                android:id="@+id/activity_detail_product_container_UoM"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -145,7 +144,7 @@
 
                     <!-- Unit of measure drop-down spinner -->
                     <Spinner
-                        android:id="@+id/activity_detail_spinner_UoM"
+                        android:id="@+id/activity_detail_product_spinner_UoM"
                         style="EditTextFieldStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="48dp"
@@ -157,7 +156,7 @@
 
             <!-- Unit of measure container -->
             <LinearLayout
-                android:id="@+id/activity_product_detail_container_shelf_life"
+                android:id="@+id/activity_detail_product_container_shelf_life"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -179,7 +178,7 @@
 
                     <!-- Shelf life drop-down spinner -->
                     <Spinner
-                        android:id="@+id/activity_product_detail_spinner_shelf_life"
+                        android:id="@+id/activity_detail_product_spinner_shelf_life"
                         style="EditTextFieldStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="48dp"
@@ -191,7 +190,7 @@
 
             <!-- Location room container -->
             <LinearLayout
-                android:id="@+id/activity_product_detail_container_location_room"
+                android:id="@+id/activity_detail_product_container_location_room"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -213,7 +212,7 @@
 
                     <!-- EditText field -->
                     <EditText
-                        android:id="@+id/activity_product_detail_et_location_room"
+                        android:id="@+id/activity_detail_product_et_location_room"
                         style="@style/EditTextFieldStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -224,7 +223,7 @@
 
             <!-- Location in room container -->
             <LinearLayout
-                android:id="@+id/activity_product_detail_container_location_in_room"
+                android:id="@+id/activity_detail_product_container_location_in_room"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -246,7 +245,7 @@
 
                     <!-- EditText field -->
                     <EditText
-                        android:id="@+id/activity_product_detail_et_location_in_room"
+                        android:id="@+id/activity_detail_product_et_location_in_room"
                         style="@style/EditTextFieldStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -257,7 +256,7 @@
 
             <!-- Product category container -->
             <LinearLayout
-                android:id="@+id/activity_product_detail_container_category"
+                android:id="@+id/activity_detail_product_container_category"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -279,7 +278,7 @@
 
                     <!-- Category drop-down spinner -->
                     <Spinner
-                        android:id="@+id/activity_detail_spinner_category"
+                        android:id="@+id/activity_detail_product_spinner_category"
                         style="EditTextFieldStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="48dp"
@@ -291,7 +290,7 @@
 
             <!-- Price container -->
             <LinearLayout
-                android:id="@+id/activity_product_detail_container_price"
+                android:id="@+id/activity_detail_product_container_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -313,7 +312,7 @@
 
                     <!-- EditText field -->
                     <EditText
-                        android:id="@+id/activity_product_detail_et_price"
+                        android:id="@+id/activity_detail_product_et_price"
                         style="@style/EditTextFieldStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

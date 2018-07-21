@@ -15,4 +15,11 @@
     <dimen name="list_item_top_margin">8dp</dimen>
     <dimen name="list_item_bottom_margin">8dp</dimen>
 
+    <!-- CardView -->
+    <dimen name="card_view_default_radius">4</dimen>
+    <dimen name="card_title_text">24sp</dimen>
+    <dimen name="card_title_top_padding">24dp</dimen>
+    <dimen name="card_bottom_padding">16dp</dimen>
+    <dimen name="card_right_left_padding">16dp</dimen>
+
 </resources>

@@ -1,27 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Layout for the list of products -->
-<RelativeLayout
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:tools="http://schemas.android.com/tools">
+
+<RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.list.ProductCatalogActivity">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/activity_product_catalog_rv"
+        android:id="@+id/activity_catalog_product_rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
     <!-- Empty view for the list -->
     <RelativeLayout
-        android:id="@+id/activity_product_catalog_empty_view"
+        android:id="@+id/activity_catalog_product_empty_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true">
 
         <!-- TODO - Find an image of empty shelves -->
         <ImageView
-            android:id="@+id/activity_product_catalog_empty_shelf_image_iv"
+            android:id="@+id/activity_catalog_product_empty_shelf_image_iv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -29,10 +31,10 @@
         <!-- android:src="@drawable/ic_empty_shelter" -->
 
         <TextView
-            android:id="@+id/activity_product_catalog_empty_title_tv"
+            android:id="@+id/activity_catalog_product_empty_title_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/activity_product_catalog_empty_shelf_image_iv"
+            android:layout_below="@+id/activity_catalog_product_empty_shelf_image_iv"
             android:layout_centerHorizontal="true"
             android:fontFamily="sans-serif-medium"
             android:paddingTop="16dp"
@@ -40,10 +42,10 @@
             android:textAppearance="?android:textAppearanceMedium"/>
 
         <TextView
-            android:id="@+id/activity_product_catalog_empty_subtitle_tv"
+            android:id="@+id/activity_catalog_product_empty_subtitle_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/activity_product_catalog_empty_title_tv"
+            android:layout_below="@+id/activity_catalog_product_empty_title_tv"
             android:layout_centerHorizontal="true"
             android:fontFamily="sans-serif"
             android:paddingTop="8dp"
@@ -53,19 +55,12 @@
     </RelativeLayout>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/activity_product_catalog_fab"
+        android:id="@+id/activity_catalog_product_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/ic_action_add"/>
-
-    <!-- A progress bar that will be shown to indicate data is loading -->
-    <ProgressBar
-        android:id="@+id/activity_product_catalog_loading_indicator_pb"
-        android:layout_width="42dp"
-        android:layout_height="42dp"
-        android:layout_centerInParent="true"
-        android:visibility="invisible" />
 </RelativeLayout>
+</layout>

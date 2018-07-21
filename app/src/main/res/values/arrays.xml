@@ -39,10 +39,21 @@
     These are the options displayed in the activity_product_detail category drop-down
     Spinner. The string values of these options can be found in strings.xml.
     -->
-    <string-array name="array_category_options">
-        <item>@string/category_option_0</item>
-        <item>@string/category_option_1</item>
-        <item>@string/category_option_2</item>
+    <string-array name="array_product_category_options">
+        <item>@string/product_category_option_0</item>
+        <item>@string/product_category_option_1</item>
+        <item>@string/product_category_option_2</item>
     </string-array>
 
+    <!--
+    These are the options displayed in the activity_product_detail category drop-down
+    Spinner. The string values of these options can be found in strings.xml.
+    -->
+    <string-array name="array_recipe_category_options">
+        <item>@string/recipe_category_option_0</item>
+        <item>@string/recipe_category_option_1</item>
+        <item>@string/recipe_category_option_2</item>
+        <item>@string/recipe_category_option_3</item>
+        <item>@string/recipe_category_option_4</item>
+    </string-array>
 </resources>

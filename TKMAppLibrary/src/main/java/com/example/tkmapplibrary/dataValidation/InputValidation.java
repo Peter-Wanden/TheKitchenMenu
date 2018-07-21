@@ -29,15 +29,16 @@ public class InputValidation {
     public static int validateRetailer(String retailer) {
         // Check if not null and contains more than 1 character
         if(retailer == null || retailer.length() < 1) {
-            return 0;
+            return 1;
             /* Limit length to 120 chars */
         } else if(retailer.length() > 120) {
-            return 1;
+            return 2;
         }
-        return 100;
+        return 0;
     }
 
     /* Validation rules for unit of measure */
+    // TODO - include all units of measure, implement units of measuretranslation into base measurements here.
     public static boolean validateUoM(int uom) {
         // Check if value is between 0 and 2
         return !(uom < 0 || uom > 2);
@@ -59,24 +60,24 @@ public class InputValidation {
     public static int validateLocRoom (String locRoom){
         // Check if not null and contains more than 1 character
         if (locRoom == null || locRoom.length() < 1) {
-            return 0;
+            return 1;
             /* Limit length to 60 chars */
         } else if(locRoom.length() > 60) {
-            return 1;
+            return 2;
         }
-        return 100;
+        return 0;
     }
 
     /* Validation rules for location in room */
     public static int validateLocInRoom (String locInRoom){
         // Check if not null and contains more than 1 character
         if (locInRoom == null || locInRoom.length() < 1) {
-            return 0;
+            return 1;
             /* Limit length to 60 chars */
         } else if(locInRoom.length() > 60) {
-            return 1;
+            return 2;
         }
-        return 100;
+        return 0;
     }
 
     /* Validation rules for packs per month */
@@ -85,9 +86,42 @@ public class InputValidation {
         return packsPerMonth >= 1 && packsPerMonth <= 1000;
     }
 
-    /* Validation rules for category */
-    public static boolean validateCategory(int category) {
-        // There are currently only three categories 0-2
+    /* Validation rules for product category */
+    public static boolean validateProductCategory(int category) {
+        // There are currently only three categories:
+        // 0 = no category selected, this is an error.
+        // 1 = food used outside of recipes (and sometimes in or with recipes).
+        // 2 = food only used in recipes.
         return category >= 0 && category <= 2;
     }
+
+    /* Validation rules for a recipes title */
+    public static int validateRecipeTitle(String title) {
+        // Check if not null and contains more than 1 character
+        if (title == null || title.length() < 1) {
+            return 1;
+            /* Limit length to 120 chars */
+        } else if(title.length() > 120) {
+            return 2;
+        }
+        // A zero response is OK
+        return 0;
+    }
+
+    /* Validation rules for a recipe description */
+    public static int validateRecipeDescription(String description) {
+        // A null length string is OK.
+        if (description == null || description.length() < 1) {
+            return 0;
+            /* Limit length to 120 chars */
+        } else if(description.length() > 120) {
+            return 2;
+        }
+        // A zero response is OK
+        return 0;
+    }
+
+    /* Validate product price */
+    /* Validate servings */
+    /* Validate sittings */
 }

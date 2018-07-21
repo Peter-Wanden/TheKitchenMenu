@@ -14,7 +14,7 @@ public class AddProductViewModel extends ViewModel{
     private LiveData<Product> product;
 
     public AddProductViewModel(TKMDatabase mDb, int mProductId) {
-        product = mDb.productDAO().loadProductById(mProductId);
+        product = mDb.productDao().loadProductById(mProductId);
     }
 
     public LiveData<Product> getProduct() {
