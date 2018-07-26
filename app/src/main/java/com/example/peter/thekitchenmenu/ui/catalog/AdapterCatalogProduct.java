@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.list;
+package com.example.peter.thekitchenmenu.ui.catalog;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -9,12 +9,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.model.Product;
+import com.example.peter.thekitchenmenu.utils.Converters;
 
 import java.util.List;
 
-public class ProductCatalogAdapter
+public class AdapterCatalogProduct
         extends
-        RecyclerView.Adapter<ProductCatalogAdapter.ProductCatalogAdapterViewHolder> {
+        RecyclerView.Adapter<AdapterCatalogProduct.AdapterCatalogProductViewHolder> {
 
     /* The context we use to utility methods, app resources and layout inflaters */
     private final Context mContext;
@@ -30,25 +31,25 @@ public class ProductCatalogAdapter
         void onClick(int productId);
     }
 
-    public ProductCatalogAdapter(Context context, ProductCatalogAdapterOnClickHandler listener) {
+    public AdapterCatalogProduct(Context context, ProductCatalogAdapterOnClickHandler listener) {
         mContext = context;
         mClickHandler = listener;
     }
 
     @NonNull
     @Override
-    public ProductCatalogAdapterViewHolder onCreateViewHolder(
+    public AdapterCatalogProductViewHolder onCreateViewHolder(
             @NonNull ViewGroup viewGroup, int viewType) {
 
         View view = LayoutInflater
                 .from(mContext)
                 .inflate(R.layout.list_item_product, viewGroup, false);
 
-        return new ProductCatalogAdapterViewHolder(view);
+        return new AdapterCatalogProductViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ProductCatalogAdapterViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull AdapterCatalogProductViewHolder holder, int position) {
 
         /* Get the product at the passed in position */
         Product product = mProducts.get(position);
@@ -60,30 +61,8 @@ public class ProductCatalogAdapter
         /* Set the pack size */
         holder.packSizeTV.setText(String.valueOf(product.getPackSize()));
         /* Set the unit of measure */
-        holder.UoMTV.setText(getStringUnitOfMeasure(product.getUnitOfMeasure()));
-
-    }
-
-    /* Helper method to convert the unit of measure from an integer to a String value */
-    private String getStringUnitOfMeasure(int requestUnitOfMeasure) {
-
-        String unitOfMeasure;
-
-        switch (requestUnitOfMeasure) {
-            case 1:
-                unitOfMeasure = mContext.getResources().getString(R.string.uom_option_1);
-                break;
-            case 2:
-                unitOfMeasure = mContext.getResources().getString(R.string.uom_option_2);
-                break;
-            case 3:
-                unitOfMeasure = mContext.getResources().getString(R.string.uom_option_3);
-                break;
-            default:
-                unitOfMeasure = mContext.getResources().getString(R.string.uom_option_0);
-                break;
-        }
-        return unitOfMeasure;
+        holder.UoMTV.setText(Converters.getStringUnitOfMeasure
+                (mContext, product.getUnitOfMeasure()));
     }
 
     /* Returns the number of items in the adapter */
@@ -106,7 +85,7 @@ public class ProductCatalogAdapter
     }
 
     /* Inner class for creating ViewHolders */
-    class ProductCatalogAdapterViewHolder
+    class AdapterCatalogProductViewHolder
             extends
             RecyclerView.ViewHolder
             implements
@@ -117,8 +96,8 @@ public class ProductCatalogAdapter
         final TextView packSizeTV;
         final TextView UoMTV;
 
-        /* Constructor for the ProductCatalogAdapterViewHolder.class */
-        ProductCatalogAdapterViewHolder(View itemView) {
+        /* Constructor for the AdapterCatalogProductViewHolder.class */
+        AdapterCatalogProductViewHolder(View itemView) {
             super(itemView);
 
             descriptionTV = itemView.findViewById(R.id.list_item_product_description);

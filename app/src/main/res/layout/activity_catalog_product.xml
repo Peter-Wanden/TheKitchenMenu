@@ -7,7 +7,7 @@
 <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.list.ProductCatalogActivity">
+    tools:context=".ui.catalog.ActivityCatalogProduct">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/activity_catalog_product_rv"

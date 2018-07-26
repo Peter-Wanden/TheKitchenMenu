@@ -10,6 +10,7 @@ import java.util.concurrent.Executors;
 /**
  * Global executor pools for the whole application.
  * Credit: Udacity - Android Architecture Components UD851
+ * App executors
  */
 public class AppExecutors {
 

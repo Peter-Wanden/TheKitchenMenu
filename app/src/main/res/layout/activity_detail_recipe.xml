@@ -12,13 +12,13 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="@dimen/activity_margin"
-            tools:context=".ui.detail.RecipeDetailActivity">
+            tools:context=".ui.detail.ActivityDetailRecipe">
 
             <ImageView
                 android:id="@+id/activity_detail_recipe_iv"
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
-                android:contentDescription="@string/cd_picture_of_product"
+                android:contentDescription="@string/cd_picture_of_recipe"
                 android:src="@drawable/placeholder" />
 
             <!-- Recipe title container -->
@@ -88,7 +88,7 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- Meal category container TODO Setup meal category spinner options -->
+            <!-- Meal category container -->
             <LinearLayout
                 android:id="@+id/activity_detail_recipe_container_caegory"
                 android:layout_width="match_parent"
@@ -187,6 +187,48 @@
                         android:inputType="numberDecimal" />
                 </LinearLayout>
             </LinearLayout>
+
+            <!-- Ingredient and Steps buttons -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/activity_detail_recipe_tv_ingredients_button"
+                    style="@style/CategoryStyle"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/activity_detail_recipe_ingredients_button"/>
+
+                <TextView
+                    android:id="@+id/activity_detail_recipe_tv_steps_button_tv"
+                    style="@style/CategoryStyle"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/activity_detail_recipe_steps_button"/>
+
+                <!-- Blank view used to make padding of above views even. -->
+                <View
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/activity_detail_recipe_fl_ingredients_fragment_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/activity_detail_recipe_fl_steps_fragment_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </FrameLayout>
         </LinearLayout>
     </ScrollView>
 </layout>

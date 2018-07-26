@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.list;
+package com.example.peter.thekitchenmenu.ui.catalog;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -13,8 +13,8 @@ import com.example.peter.thekitchenmenu.model.Recipe;
 
 import java.util.List;
 
-public class RecipeCatalogAdapter extends
-        RecyclerView.Adapter<RecipeCatalogAdapter.RecipeCatalogAdapterViewHolder> {
+public class AdapterCatalogRecipe extends
+        RecyclerView.Adapter<AdapterCatalogRecipe.ViewHolderRecipe> {
 
     /* The context we use to utility methods, app resources and layout inflaters */
     private final Context mContext;
@@ -23,34 +23,33 @@ public class RecipeCatalogAdapter extends
     private List<Recipe> mRecipes;
 
     /* Click handler */
-    private final RecipeCatalogAdapter.RecipeCatalogAdapterOnClickHandler mClickHandler;
+    private final AdapterCatalogRecipe.RecipeCatalogAdapterOnClickHandler mClickHandler;
 
     /* Click interface that receives on click messages */
     public interface RecipeCatalogAdapterOnClickHandler {
         void onClick(int productId);
     }
 
-    public RecipeCatalogAdapter(Context context,
-                                RecipeCatalogAdapter.RecipeCatalogAdapterOnClickHandler listener) {
+    public AdapterCatalogRecipe(Context context,
+                                AdapterCatalogRecipe.RecipeCatalogAdapterOnClickHandler listener) {
         mContext = context;
         mClickHandler = listener;
     }
 
     @NonNull
     @Override
-    public RecipeCatalogAdapter.RecipeCatalogAdapterViewHolder onCreateViewHolder(
+    public ViewHolderRecipe onCreateViewHolder(
             @NonNull ViewGroup viewGroup, int viewType) {
 
         View view = LayoutInflater
                 .from(mContext)
                 .inflate(R.layout.list_item_recipe, viewGroup, false);
 
-        return new RecipeCatalogAdapter.RecipeCatalogAdapterViewHolder(view);
+        return new ViewHolderRecipe(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecipeCatalogAdapter
-            .RecipeCatalogAdapterViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolderRecipe holder, int position) {
 
         /* Get the recipe at the passed in position */
         Recipe recipe = mRecipes.get(position);
@@ -106,7 +105,7 @@ public class RecipeCatalogAdapter extends
     }
 
     /* Inner class for creating ViewHolders */
-    class RecipeCatalogAdapterViewHolder
+    class ViewHolderRecipe
             extends
             RecyclerView.ViewHolder
             implements
@@ -117,7 +116,7 @@ public class RecipeCatalogAdapter extends
         final TextView categoryTV;
 
         /* Constructor */
-        RecipeCatalogAdapterViewHolder(View itemView) {
+        ViewHolderRecipe(View itemView) {
             super(itemView);
 
             titleTV = itemView.findViewById(R.id.list_item_recipe_title);

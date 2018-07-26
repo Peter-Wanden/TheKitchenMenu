@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <android.support.constraint.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".ui.catalog.FragmentCatalogIngredient">
+
+            <LinearLayout
+                android:id="@+id/fragment_catalog_ingredients_ll_ingredient_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/primary_dark"
+                android:elevation="@dimen/starting_elevation"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/fragment_catalog_ingredients_label_description_tv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="sans-serif"
+                    android:text="@string/label_ingredient"
+                    android:textAppearance="?android:textAppearanceSmall"
+                    android:textColor="@color/primary_light" />
+
+                <TextView
+                    android:id="@+id/fragment_catalog_ingredients_label_quantity_tv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="sans-serif"
+                    android:text="@string/label_quantity"
+                    android:textAppearance="?android:textAppearanceSmall"
+                    android:textColor="@color/primary_light" />
+
+                <TextView
+                    android:id="@+id/fragment_catalog_ingredients_label_UoM_tv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:fontFamily="sans-serif"
+                    android:maxLines="1"
+                    android:text="@string/label_UoM"
+                    android:textAppearance="?android:textAppearanceSmall"
+                    android:textColor="@color/primary_light" />
+
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/fragment_catalog_ingredients_rv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/fragment_catalog_ingredients_ll_ingredient_header" />
+
+            <!-- Empty view for the list -->
+            <RelativeLayout
+                android:id="@+id/fragment_catalog_container_ingredient_empty_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true">
+
+                <!-- TODO - Find an image for empty view of ingredients -->
+                <ImageView
+                    android:id="@+id/fragment_catalog_ingredient_iv_empty_shelf_image_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:contentDescription="@string/content_description_image_of_recipe" />
+
+                <TextView
+                    android:id="@+id/fragment_catalog_ingredient_tv_empty_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/fragment_catalog_ingredient_iv_empty_shelf_image_iv"
+                    android:layout_centerHorizontal="true"
+                    android:fontFamily="sans-serif-medium"
+                    android:paddingTop="16dp"
+                    android:text="@string/fragment_catalog_ingredients_empty_view_title_text"
+                    android:textAppearance="?android:textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/fragment_catalog_tv_ingredient_subtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/fragment_catalog_ingredient_tv_empty_title"
+                    android:layout_centerHorizontal="true"
+                    android:fontFamily="sans-serif"
+                    android:paddingTop="8dp"
+                    android:text="@string/fragment_catalog_ingredients_empty_view_sub_text"
+                    android:textAppearance="?android:textAppearanceSmall"
+                    android:textColor="@color/secondary_text" />
+            </RelativeLayout>
+        </RelativeLayout>
+    </android.support.constraint.ConstraintLayout>
+</layout>

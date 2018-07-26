@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.detail;
+package com.example.peter.thekitchenmenu.viewmodels;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModel;
@@ -7,14 +7,14 @@ import com.example.peter.thekitchenmenu.data.TKMDatabase;
 import com.example.peter.thekitchenmenu.model.Recipe;
 
 /**
- * View model for a single recipe
+ * View model for a recipe
  */
-public class AddRecipeViewModel extends ViewModel {
+public class ViewModelRecipe extends ViewModel {
 
     private LiveData<Recipe> recipe;
 
-    public AddRecipeViewModel(TKMDatabase mDb, int mRecipeId) {
-        recipe = mDb.recipeDao().loadRecipeById(mRecipeId);
+    public ViewModelRecipe(TKMDatabase mDb, int mRecipeId) {
+        recipe = mDb.getRecipeDao().loadRecipeById(mRecipeId);
     }
 
     public LiveData<Recipe> getRecipe() {

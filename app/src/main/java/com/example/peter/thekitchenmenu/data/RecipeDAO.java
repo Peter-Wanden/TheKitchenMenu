@@ -12,23 +12,28 @@ import com.example.peter.thekitchenmenu.model.Recipe;
 
 import java.util.List;
 
+import static android.arch.persistence.room.OnConflictStrategy.IGNORE;
+
 @Dao
 public interface RecipeDAO {
 
     /* Query whole table */
-    @Query("SELECT * FROM Recipes ORDER BY Category")
+    @Query("SELECT * FROM Recipe ORDER BY Category")
     LiveData<List<Recipe>> loadRecipes();
 
     /* Query one recipe */
-    @Query("SELECT * FROM Recipes WHERE id = :id")
-    LiveData<Recipe> loadRecipeById(int id);
+    @Query("SELECT * FROM Recipe WHERE id = :recipeId")
+    LiveData<Recipe> loadRecipeById(int recipeId);
 
     @Insert
     void insertRecipe(Recipe recipe);
 
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    void updateRecipe(Recipe recipe);
+    @Insert
+    void insertRecipes(Recipe... recipes);
+
+    @Update(onConflict = IGNORE)
+    void updateRecipe(Recipe... recipe);
 
     @Delete
-    void deleteRecipe(Recipe recipe);
+    void deleteRecipe(Recipe... recipes);
 }

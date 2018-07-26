@@ -2,9 +2,9 @@
     <string name="app_name">The Kitchen Menu</string>
 
     <!-- MainActivity -->
-    <string name="activity_main_label_button_add_recipe">Add Recipe</string>
-    <string name="activity_main_label_button_add_product">Add Product</string>
-    <string name="activity_main_label_button_new_shopping_list">New Shopping List</string>
+    <string name="activity_main_label_button_add_recipe">Recipes</string>
+    <string name="activity_main_label_button_add_product">Products</string>
+    <string name="activity_main_label_button_new_shopping_list">Shopping Lists</string>
     <string name="activity_main_title_this_weeks_menu">This Week\'s Menu</string>
     <string name="activity_main_title_next_purchases">Shopping list</string>
     <string name="activity_main_title_meals_remaining">Meals Remaining</string>
@@ -45,14 +45,16 @@
     <string name="hint_sittings">over how many meal times?</string>
     <string name="label_servings">No of servings</string>
     <string name="hint_servings">How many servings?</string>
+    <string name="label_ingredient">Ingredient</string>
+    <string name="label_quantity">Quantity</string>
 
-    <!-- ProductDetailActivity unit of measure spinner options -->
+    <!-- ActivityDetailProduct unit of measure spinner options -->
     <string name="uom_option_0">Select measurement</string>
     <string name="uom_option_1">grams</string>
     <string name="uom_option_2">ml</string>
     <string name="uom_option_3">count</string>
 
-    <!-- ProductDetailActivity shelf life spinner options -->
+    <!-- ActivityDetailProduct shelf life spinner options -->
     <string name="shelf_life_option_0">Select shelf life</string>
     <string name="shelf_life_option_1">1 day</string>
     <string name="shelf_life_option_2">3 days</string>
@@ -71,7 +73,7 @@
     <string name="shelf_life_option_15">Packet</string>
     <string name="shelf_life_option_16">N/A</string>
 
-    <!-- ProductDetailActivity category spinner options -->
+    <!-- ActivityDetailProduct category spinner options -->
     <string name="product_category_option_0">Select category</string>
     <string name="product_category_option_1">Food</string>
     <string name="product_category_option_2">Non food</string>
@@ -81,12 +83,12 @@
     <string name="action_save">Save</string>
     <string name="action_delete">Delete</string>
 
-    <!-- ProductDetailActivity titles -->
+    <!-- ActivityDetailProduct titles -->
     <string name="activity_detail_product_title">Product Details</string>
     <string name="activity_detail_product_title_update">Edit a Product</string>
     <string name="activity_detail_product_title_add_new">Add a Product</string>
 
-    <!-- ProductDetailActivity user input error codes -->
+    <!-- ActivityDetailProduct user input error codes -->
     <string name="input_error_product_description_too_short">Description too short, needs to be
         between 1 and 120 characters.</string>
     <string name="input_error_product_description_too_long">Description too long, needs to be
@@ -117,22 +119,33 @@
     <string name="product_catalog_empty_view_subtitle_text">Press + to add some products!</string>
     <string name="image_of_meal">An image of the selected recipe</string>
 
-    <!-- RecipeCatalogActivity -->
+    <!-- ActivityCatalogRecipe -->
     <string name="content_description_empty_recipe_list_view">The list of recipes is empty,
         press the plus button to add some</string>
     <string name="content_description_image_of_recipe">An image of the recipe</string>
-    <string name="activity_catalog_recipe_empty_view_title_text">There\'s no recipes to show you right now.</string>
-    <string name="activity_catalog_recipe_empty_view__sub_title_text">Press the plus button to add some.</string>
+    <string name="activity_catalog_recipe_empty_view_title_text">There\'s no recipes to show you
+        right now.</string>
+    <string name="activity_catalog_recipe_empty_view__sub_title_text">Press the plus button to
+        add some.</string>
     <string name="activity_catalog_recipe_title">Recipe Catalog</string>
 
-    <!-- RecipeDetailActivity titles -->
+    <!-- ActivityDetailRecipe titles -->
     <string name="activity_detail_recipe_title_update">Update Recipe</string>
     <string name="activity_detail_recipe_title_add_new">Add a New Recipe</string>
 
-    <!-- RecipeDetailActivity category spinner options -->
+    <!-- ActivityDetailRecipe category spinner options -->
     <string name="recipe_category_option_0">Select category</string>
     <string name="recipe_category_option_1">Breakfast</string>
     <string name="recipe_category_option_2">Lunch</string>
     <string name="recipe_category_option_3">Dinner</string>
     <string name="recipe_category_option_4">Anytime</string>
+
+    <!-- ActivityDetailRecipe fragment buttons -->
+    <string name="activity_detail_recipe_ingredients_button">Ingredients</string>
+    <string name="activity_detail_recipe_steps_button">Steps</string>
+    <string name="fragment_catalog_ingredients_empty_view_title_text">There\'s no ingredients for
+        this recipe.</string>
+    <string name="fragment_catalog_ingredients_empty_view_sub_text">Press the edit button to add
+        some.</string>
+
 </resources>

@@ -7,29 +7,25 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
-import com.example.peter.thekitchenmenu.model.Product;
+import com.example.peter.thekitchenmenu.model.Ingredient;
 
 import java.util.List;
 
 import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
 
 @Dao
-public interface ProductDAO {
-
-    /* Query whole table */
-    @Query("SELECT * FROM Products ORDER BY Category")
-    LiveData<List<Product>> loadProducts();
-
-    /* Query one row */
-    @Query("SELECT * FROM Products WHERE id = :id")
-    LiveData<Product> loadProductById(int id);
+public interface IngredientDAO {
 
     @Insert
-    void insertProduct(Product product);
+    void insert(Ingredient ingredients);
 
     @Update(onConflict = REPLACE)
-    void updateProduct(Product product);
+    void update(Ingredient... ingredients);
 
     @Delete
-    void deleteProduct(Product product);
+    void delete(Ingredient... ingredients);
+
+    /* Query for retrieving ingredients for a recipe */
+    @Query("SELECT * FROM Ingredient WHERE Recipe_id=:recipeId")
+    LiveData<List<Ingredient>> loadIngredientsForRecipe(final int recipeId);
 }

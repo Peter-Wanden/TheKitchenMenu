@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -20,11 +21,14 @@ import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.TKMDatabase;
 import com.example.peter.thekitchenmenu.model.Recipe;
+import com.example.peter.thekitchenmenu.ui.catalog.FragmentCatalogIngredient;
+import com.example.peter.thekitchenmenu.viewmodels.ViewModelFactoryRecipe;
+import com.example.peter.thekitchenmenu.viewmodels.ViewModelRecipe;
 import com.example.tkmapplibrary.dataValidation.InputValidation;
 
-public class RecipeDetailActivity extends AppCompatActivity {
+public class ActivityDetailRecipe extends AppCompatActivity {
 
-    public static final String LOG_TAG = RecipeDetailActivity.class.getSimpleName();
+    public static final String LOG_TAG = ActivityDetailRecipe.class.getSimpleName();
 
     // Database instance
     private TKMDatabase
@@ -57,6 +61,10 @@ public class RecipeDetailActivity extends AppCompatActivity {
     private Spinner
             mCategorySpinner;
 
+    // Fragments
+    FragmentManager mFragmentManager;
+    FragmentCatalogIngredient mFragmentCatalogIngredients;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,7 +96,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
 
         /* If there is a recipe ID passed with the intent, this is an existing recipe */
         Intent intent = getIntent();
-        if(intent !=null && intent.hasExtra(Constants.RECIPE_ID)) {
+        if(intent != null && intent.hasExtra(Constants.RECIPE_ID)) {
 
             // This intent has passed a recipe ID, so the recipe is being updated.
             setTitle(getString(R.string.activity_detail_recipe_title_update));
@@ -98,28 +106,69 @@ public class RecipeDetailActivity extends AppCompatActivity {
                 mRecipeId = intent.getIntExtra(
                         Constants.RECIPE_ID, Constants.DEFAULT_RECIPE_ID);
 
-                // Get the recipe from the database
-                AddRecipeViewModelFactory factory =
-                        new AddRecipeViewModelFactory(mDb, mRecipeId);
-
-                final AddRecipeViewModel viewModel
-                        = ViewModelProviders
-                        .of(this, factory)
-                        .get(AddRecipeViewModel.class);
-
-                viewModel.getRecipe().observe(this, new Observer<Recipe>() {
-                    @Override
-                    public void onChanged(@Nullable Recipe recipe) {
-                        viewModel.getRecipe().removeObserver(this);
-                        mRecipe = recipe;
-                        populateUi(mRecipe);
-                    }
-                });
+                setupRecipeViewModel();
             }
         } else {
             /* If there is no recipe ID passed in the intent then this is a new recipe */
             setTitle(getString(R.string.activity_detail_recipe_title_add_new));
+
         }
+
+        // Setup and launch the ingredient list fragment
+//        mFragmentCatalogIngredients = new FragmentCatalogIngredient();
+//        mFragmentCatalogIngredients.setArguments(getIntent().getExtras());
+//        mFragmentManager.beginTransaction().add
+//                (R.id.activity_detail_recipe_fl_ingredients_fragment_container,
+//                        mFragmentCatalogIngredients).commit();
+
+        setupIngredientsViewModel();
+    }
+
+    /* View model for the recipe */
+    private void setupRecipeViewModel() {
+        // Get the recipe from the database
+        ViewModelFactoryRecipe factory =
+                new ViewModelFactoryRecipe(mDb, mRecipeId);
+
+        final ViewModelRecipe viewModel
+                = ViewModelProviders
+                .of(this, factory)
+                .get(ViewModelRecipe.class);
+
+        viewModel.getRecipe().observe(this, new Observer<Recipe>() {
+            @Override
+            public void onChanged(@Nullable Recipe recipe) {
+                viewModel.getRecipe().removeObserver(this);
+                mRecipe = recipe;
+                populateUi(mRecipe);
+            }
+        });
+    }
+
+    /* Retrieve ingredients and products from the database and set an observer to watch for changes */
+    private void setupIngredientsViewModel() {
+
+        /* Call ViewModelProviders */
+//        ViewModelCatalogIngredientsAndProduct viewModel =
+//                ViewModelProviders
+//                        .of(this)
+//                        .get(ViewModelCatalogIngredientsAndProduct.class);
+//
+//        /* Set observer for any data changes */
+//        viewModel.getIngredients().observe(this, ingredients -> {
+//             // Set the list to the adapter
+//             mIngredientsAdapter.setProducts(ingredients);
+//
+//            // Set empty view
+//            if(ingredients.size() == 0) {
+//                mIngredientsBinding.fragmentCatalogContainerIngredientEmptyView
+//                        .setVisibility(View.VISIBLE);
+//            } else {
+//                mIngredientsBinding.fragmentCatalogContainerIngredientEmptyView
+//                        .setVisibility(View.GONE);
+//            }
+//            Log.e(LOG_TAG, String.valueOf(ingredients));
+//        });
     }
 
     /* Called when updating a recipe */
@@ -155,6 +204,9 @@ public class RecipeDetailActivity extends AppCompatActivity {
         mCategorySpinner = findViewById(R.id.activity_detail_recipe_spinner_category);
 
         setupCategorySpinner();
+
+        /* Start up a fragment manager instance for the ingredient and steps fragments */
+        mFragmentManager = getSupportFragmentManager();
     }
 
     /* Setup the dropdown spinner that allows the user to select the recipe's category */
@@ -246,8 +298,8 @@ public class RecipeDetailActivity extends AppCompatActivity {
     /* Saves the recipe, its steps and recipe specific product information */
     private void saveRecipe() {
         /*
-        Todo Implement on back pressed save changes and touch listener
-        TODO - Validate all fields - if a field fails, reset focus to that field and wit for input
+        Todo Implement on back pressed save changes and touch listener (from pets)
+        TODO - if a field fails, reset focus to that field and wit for input
         Title
         */
         mTitle = mTitleET.getText().toString().trim();
@@ -322,20 +374,17 @@ public class RecipeDetailActivity extends AppCompatActivity {
 
         final Recipe recipe = mRecipe;
 
-        AppExecutors.getInstance().diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                // Determine if this is an insert or update
-                if (mRecipeId == Constants.DEFAULT_PRODUCT_ID) {
-                    // Insert new
-                    mDb.recipeDao().insertRecipe(recipe);
-                } else {
-                    // Update existing
-                    recipe.setRecipeId(mRecipeId);
-                    mDb.recipeDao().updateRecipe(recipe);
-                }
-                finish();
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            // Determine if this is an insert or update
+            if (mRecipeId == Constants.DEFAULT_PRODUCT_ID) {
+                // Insert new
+                mDb.getRecipeDao().insertRecipe(recipe);
+            } else {
+                // Update existing
+                recipe.setRecipeId(mRecipeId);
+                mDb.getRecipeDao().updateRecipe(recipe);
             }
+            finish();
         });
 
     }
@@ -344,12 +393,8 @@ public class RecipeDetailActivity extends AppCompatActivity {
     // TODO - Cascade delete the recipes steps and any recipe specific product information
     private void deleteRecipe() {
 
-        AppExecutors.getInstance().diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                mDb.recipeDao().deleteRecipe(mRecipe);
-            }
-        });
+        AppExecutors.getInstance().diskIO().execute(() ->
+                mDb.getRecipeDao().deleteRecipe(mRecipe));
         finish();
     }
 }

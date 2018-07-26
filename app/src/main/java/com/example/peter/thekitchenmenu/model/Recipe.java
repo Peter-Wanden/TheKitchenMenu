@@ -7,7 +7,7 @@ import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-@Entity(tableName = "Recipes")
+@Entity(tableName = "Recipe")
 public class Recipe implements Parcelable{
 
     @PrimaryKey(autoGenerate = true)
@@ -32,7 +32,10 @@ public class Recipe implements Parcelable{
     @Ignore
     /* Constructors */
     public Recipe(String title,
-                  String description, int category, int servings, int sittings) {
+                  String description,
+                  int category,
+                  int servings,
+                  int sittings) {
 
         this.mTitle = title;
         this.mDescription = description;
@@ -41,8 +44,12 @@ public class Recipe implements Parcelable{
         this.mSittings = sittings;
     }
 
-    public Recipe(int recipeId, String title,
-                  String description, int category, int servings, int sittings) {
+    public Recipe(int recipeId,
+                  String title,
+                  String description,
+                  int category,
+                  int servings,
+                  int sittings) {
 
         this.mRecipeId = recipeId;
         this.mTitle = title;

@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.detail;
+package com.example.peter.thekitchenmenu.viewmodels;
 
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
@@ -6,20 +6,19 @@ import android.support.annotation.NonNull;
 
 import com.example.peter.thekitchenmenu.data.TKMDatabase;
 
-public class AddRecipeViewModelFactory extends ViewModelProvider.NewInstanceFactory {
+public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory{
 
     private final TKMDatabase mDb;
     private final int mRecipeId;
 
-
-    public AddRecipeViewModelFactory(TKMDatabase mDb, int mRecipeId) {
-        this.mDb = mDb;
-        this.mRecipeId = mRecipeId;
+    public ViewModelFactoryRecipe(TKMDatabase database, int recipeId){
+        mDb = database;
+        mRecipeId = recipeId;
     }
 
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        return (T) new AddRecipeViewModel(mDb, mRecipeId);
+        return (T) new ViewModelRecipe(mDb, mRecipeId);
     }
 }

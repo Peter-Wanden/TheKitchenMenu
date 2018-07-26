@@ -15,23 +15,20 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.example.peter.thekitchenmenu.AppExecutors;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.TKMDatabase;
 import com.example.peter.thekitchenmenu.model.Product;
+import com.example.peter.thekitchenmenu.viewmodels.ViewModelFactoryProduct;
+import com.example.peter.thekitchenmenu.viewmodels.ViewModelProduct;
 import com.example.tkmapplibrary.dataValidation.InputValidation;
 
-public class ProductDetailActivity
+public class ActivityDetailProduct
         extends AppCompatActivity {
 
-    public static final String LOG_TAG = ProductDetailActivity.class.getSimpleName();
-
-    // Database instance
-    private TKMDatabase
-            mDb;
+    public static final String LOG_TAG = ActivityDetailProduct.class.getSimpleName();
 
     // Product object instance
     private Product
@@ -70,6 +67,10 @@ public class ProductDetailActivity
             mShelfLifeSpinner,
             mCategorySpinner;
 
+    // Member variable for the database
+    private TKMDatabase mDb;
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,11 +88,10 @@ public class ProductDetailActivity
                 Constants.DEFAULT_PRODUCT_CATEGORY,
                 Constants.DEFAULT_PRODUCT_PRICE);
 
+        mDb = TKMDatabase.getInstance(getApplicationContext());
+
         /* Setup the views */
         initialiseViews();
-
-        /* Get an instance of the database */
-        mDb = TKMDatabase.getInstance(getApplicationContext());
 
         /* If it exists get the current product from saved instance state */
         if(savedInstanceState != null && savedInstanceState.containsKey(
@@ -100,6 +100,7 @@ public class ProductDetailActivity
             mProduct = savedInstanceState.getParcelable(
                     Constants.PRODUCT_KEY);
 
+            // Todo - set the default product ID if mProduct ID null or -1 at this point
             mProductId = mProduct.getProductId();
         }
 
@@ -107,7 +108,7 @@ public class ProductDetailActivity
         Intent intent = getIntent();
         if(intent !=null && intent.hasExtra(Constants.PRODUCT_ID)) {
 
-            // This intent has passed a product ID, so the product is being updated.
+            // This intent has been passed a product ID, so the product is being updated.
             setTitle(getString(R.string.activity_detail_product_title_update));
 
             if(mProductId == Constants.DEFAULT_PRODUCT_ID) {
@@ -115,28 +116,34 @@ public class ProductDetailActivity
                 mProductId = intent.getIntExtra(
                         Constants.PRODUCT_ID, Constants.DEFAULT_PRODUCT_ID);
 
-                // Get the product from the database
-                AddProductViewModelFactory factory =
-                        new AddProductViewModelFactory(mDb, mProductId);
-
-                final AddProductViewModel viewModel
-                        = ViewModelProviders
-                        .of(this, factory)
-                        .get(AddProductViewModel.class);
-
-                viewModel.getProduct().observe(this, new Observer<Product>() {
-                    @Override
-                    public void onChanged(@Nullable Product product) {
-                        viewModel.getProduct().removeObserver(this);
-                        mProduct = product;
-                        populateUi(mProduct);
-                    }
-                });
+                setupProductViewModel();
             }
         } else {
             /* If there is no product ID passed in the intent then this is a new product */
             setTitle(getString(R.string.activity_detail_product_title_add_new));
         }
+    }
+
+    /* View model for the product */
+    private void setupProductViewModel() {
+
+        ViewModelFactoryProduct factory = new ViewModelFactoryProduct(mDb, mProductId);
+        final ViewModelProduct viewModelProduct = ViewModelProviders
+                .of(this, factory)
+                .get(ViewModelProduct.class);
+
+        // Observe
+        viewModelProduct
+                .getProduct()
+                .observe(this, new Observer<Product>() {
+                    @Override
+                    public void onChanged(@Nullable Product product) {
+                        viewModelProduct.getProduct()
+                                .removeObserver(this);
+                        mProduct = product;
+                        populateUi(mProduct);
+            }
+        });
     }
 
     private void saveProduct() {
@@ -153,13 +160,13 @@ public class ProductDetailActivity
 
             switch (validateDescription) {
                 case 1:
-                    mDescriptionET.setError(getResources()
-                            .getString(R.string.input_error_product_description_too_short));
+                    mDescriptionET.setError(getResources().getString(
+                            R.string.input_error_product_description_too_short));
                     break;
 
                 case 2:
-                    mDescriptionET.setError(getResources()
-                            .getString(R.string.input_error_product_description_too_long));
+                    mDescriptionET.setError(getResources().getString(
+                            R.string.input_error_product_description_too_long));
                     break;
             }
             return;
@@ -174,13 +181,13 @@ public class ProductDetailActivity
 
             switch (validateRetailer) {
                 case 1:
-                    mRetailerET.setError(getResources()
-                            .getString(R.string.input_error_product_retailer_too_short));
+                    mRetailerET.setError(getResources().getString(
+                            R.string.input_error_product_retailer_too_short));
                     break;
 
                 case 2:
-                    mRetailerET.setError(getResources()
-                            .getString(R.string.input_error_product_retailer_too_long));
+                    mRetailerET.setError(getResources().getString(
+                            R.string.input_error_product_retailer_too_long));
                     break;
             }
             return;
@@ -192,8 +199,8 @@ public class ProductDetailActivity
 
         if(!validatePackSize) {
             mPackSizeET.requestFocus();
-            mPackSizeET.setError(getResources()
-                    .getString(R.string.input_error_pack_size));
+            mPackSizeET.setError(getResources().getString(
+                    R.string.input_error_pack_size));
             return;
         }
 
@@ -206,13 +213,13 @@ public class ProductDetailActivity
 
             switch (validateLocRoom) {
                 case 1:
-                    mLocationRoomET.setError(getResources()
-                            .getString(R.string.input_error_product_loc_room_too_short));
+                    mLocationRoomET.setError(getResources().getString(
+                            R.string.input_error_product_loc_room_too_short));
                     break;
 
                 case 2:
-                    mLocationRoomET.setError(getResources()
-                            .getString(R.string.input_error_product_loc_room_too_long));
+                    mLocationRoomET.setError(getResources().getString(
+                            R.string.input_error_product_loc_room_too_long));
                     break;
             }
             return;
@@ -227,13 +234,13 @@ public class ProductDetailActivity
 
             switch (validateLocInRoom) {
                 case 1:
-                    mLocationInRoomET.setError(getResources()
-                            .getString(R.string.input_error_product_loc_in_room_too_short));
+                    mLocationInRoomET.setError(getResources().getString(
+                            R.string.input_error_product_loc_in_room_too_short));
                     break;
 
                 case 2:
-                    mLocationInRoomET.setError(getResources()
-                            .getString(R.string.input_error_product_loc_in_room_too_long));
+                    mLocationInRoomET.setError(getResources().getString(
+                            R.string.input_error_product_loc_in_room_too_long));
                     break;
             }
             return;
@@ -278,18 +285,13 @@ public class ProductDetailActivity
         // Make the product information final
         final Product product = mProduct;
 
-        AppExecutors.getInstance().diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                // Determine if this is an insert or update
-                if (mProductId == Constants.DEFAULT_PRODUCT_ID) {
-                    // Insert new
-                    mDb.productDao().insertProduct(product);
-                } else {
-                    // Update existing
-                    product.setProductId(mProductId);
-                    mDb.productDao().updateProduct(product);
-                }
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            // Insert the product
+            if (mProductId == -1) { // Insert new.
+                mDb.getProductDao().insertProduct(product);
+                finish();
+            } else { // Update existing.
+                mDb.getProductDao().updateProduct(product);
                 finish();
             }
         });
@@ -556,14 +558,13 @@ public class ProductDetailActivity
         return super.onOptionsItemSelected(item);
     }
 
-    private void deleteProduct() {
-
-        AppExecutors.getInstance().diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                mDb.productDao().deleteProduct(mProduct);
-            }
-        });
+    /* Delete the product */
+    private void deleteProduct(){
+        AppExecutors
+                .getInstance()
+                .diskIO()
+                .execute(() -> mDb.getProductDao()
+                        .deleteProduct(mProduct));
         finish();
     }
 }

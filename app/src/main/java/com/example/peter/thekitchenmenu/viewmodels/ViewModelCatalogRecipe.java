@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.list;
+package com.example.peter.thekitchenmenu.viewmodels;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
@@ -11,20 +11,17 @@ import com.example.peter.thekitchenmenu.model.Recipe;
 
 import java.util.List;
 
-public class RecipeCatalogViewModel extends AndroidViewModel {
-
-    public static final String LOG_TAG = RecipeCatalogViewModel.class.getSimpleName();
+public class ViewModelCatalogRecipe extends AndroidViewModel {
 
     /* Instantiate an object for the data we want to cache */
     private LiveData<List<Recipe>> recipes;
 
-    public RecipeCatalogViewModel(@NonNull Application application) {
+    public ViewModelCatalogRecipe(@NonNull Application application) {
         super(application);
 
         /* Initialise member variable */
         TKMDatabase database = TKMDatabase.getInstance(this.getApplication());
-        Log.d(LOG_TAG, "Actively retrieving the recipes from the Database");
-        recipes = database.recipeDao().loadRecipes();
+        recipes = database.getRecipeDao().loadRecipes();
     }
 
     /* Getter for our live data object */

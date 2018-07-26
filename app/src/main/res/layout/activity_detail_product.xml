@@ -11,7 +11,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="@dimen/activity_margin"
-            tools:context=".ui.detail.ProductDetailActivity">
+            tools:context=".ui.detail.ActivityDetailProduct">
 
             <ImageView
                 android:id="@+id/activity_detail_product_iv"

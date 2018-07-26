@@ -43,9 +43,15 @@ public class Product implements Parcelable {
 
     @Ignore
     /* Constructors */
-    public Product(String description, String retailer, int unitOfMeasure,
-                   int packSize, int shelfLife, String locationRoom, String locationInRoom,
-                   int category, double packPrice) {
+    public Product(String description,
+                   String retailer,
+                   int unitOfMeasure,
+                   int packSize,
+                   int shelfLife,
+                   String locationRoom,
+                   String locationInRoom,
+                   int category,
+                   double packPrice) {
 
         this.mDescription = description;
         this.mRetailer = retailer;
@@ -59,9 +65,16 @@ public class Product implements Parcelable {
     }
 
     /* Constructor for the database*/
-    public Product(int productId, String description, String retailer, int unitOfMeasure,
-                   int packSize, int shelfLife, String locationRoom, String locationInRoom,
-                   int category, double packPrice) {
+    public Product(int productId,
+                   String description,
+                   String retailer,
+                   int unitOfMeasure,
+                   int packSize,
+                   int shelfLife,
+                   String locationRoom,
+                   String locationInRoom,
+                   int category,
+                   double packPrice) {
 
         this.mProductId = productId;
         this.mDescription = description;

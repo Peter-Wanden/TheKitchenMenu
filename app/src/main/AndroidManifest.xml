@@ -18,19 +18,19 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.list.ProductCatalogActivity"
+        <activity android:name=".ui.catalog.ActivityCatalogProduct"
             android:label="Product Catalog"
             android:theme="@style/AppTheme"/>
 
-        <activity android:name=".ui.detail.ProductDetailActivity"
+        <activity android:name=".ui.detail.ActivityDetailProduct"
             android:label="@string/activity_detail_product_title"
             android:theme="@style/AppTheme"/>
 
-        <activity android:name=".ui.list.RecipeCatalogActivity"
+        <activity android:name=".ui.catalog.ActivityCatalogRecipe"
             android:label="@string/activity_catalog_recipe_title"
             android:theme="@style/AppTheme"/>
 
-        <activity android:name=".ui.detail.RecipeDetailActivity"
+        <activity android:name=".ui.detail.ActivityDetailRecipe"
             android:theme="@style/AppTheme"/>
 
     </application>

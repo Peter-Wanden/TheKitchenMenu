@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.list;
+package com.example.peter.thekitchenmenu.ui.catalog;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
@@ -9,29 +9,26 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
-import android.widget.ProgressBar;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
-import com.example.peter.thekitchenmenu.model.Product;
 import com.example.peter.thekitchenmenu.model.Recipe;
-import com.example.peter.thekitchenmenu.ui.detail.ProductDetailActivity;
-import com.example.peter.thekitchenmenu.ui.detail.RecipeDetailActivity;
+import com.example.peter.thekitchenmenu.ui.detail.ActivityDetailRecipe;
+import com.example.peter.thekitchenmenu.viewmodels.ViewModelCatalogRecipe;
 
 import java.util.List;
 
-public class RecipeCatalogActivity
+public class ActivityCatalogRecipe
         extends
         AppCompatActivity
         implements
-        RecipeCatalogAdapter.RecipeCatalogAdapterOnClickHandler {
+        AdapterCatalogRecipe.RecipeCatalogAdapterOnClickHandler {
 
-    public static final String LOG_TAG = RecipeCatalogActivity.class.getSimpleName();
+    public static final String LOG_TAG = ActivityCatalogRecipe.class.getSimpleName();
 
     /* Adapter for the recipe list view */
-    public RecipeCatalogAdapter mCatalogAdapter;
+    public AdapterCatalogRecipe mCatalogAdapter;
 
     /* RecyclerView for the list view */
     private RecyclerView mRecyclerView;
@@ -53,15 +50,15 @@ public class RecipeCatalogActivity
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent addRecipeIntent = new Intent(RecipeCatalogActivity.this,
-                        RecipeDetailActivity.class);
+                Intent addRecipeIntent = new Intent(ActivityCatalogRecipe.this,
+                        ActivityDetailRecipe.class);
                 startActivity(addRecipeIntent);
             }
         });
 
         /* Create the adapter and pass in the this class context and the listener (which is also
         this class as this class implements the click handler. */
-        mCatalogAdapter = new RecipeCatalogAdapter(this, this);
+        mCatalogAdapter = new AdapterCatalogRecipe(this, this);
         mRecyclerView.setAdapter(mCatalogAdapter);
 
         /* Retrieve the content of the products table */
@@ -70,7 +67,7 @@ public class RecipeCatalogActivity
 
     private void setupViews() {
         /* Get a reference to the views */
-        mRecyclerView = findViewById(R.id.activity_catalog_recipe_rv);
+        mRecyclerView = findViewById(R.id.fragment_catalog_ingredients_rv);
         mFab = findViewById(R.id.activity_catalog_recipe_fab);
         mEmptyView = findViewById(R.id.activity_catalog_recipe_empty_view);
 
@@ -86,13 +83,13 @@ public class RecipeCatalogActivity
 
     /**
      * A recipe has been clicked in the RecyclerView. Add its ID to an intent and go to
-     * the RecipeDetailActivity.
+     * the ActivityDetailRecipe.
      * @param recipeId - The ID of the selected recipe
      */
     @Override
     public void onClick(int recipeId) {
         Intent intent = new Intent(
-                RecipeCatalogActivity.this, RecipeDetailActivity.class);
+                ActivityCatalogRecipe.this, ActivityDetailRecipe.class);
         intent.putExtra(Constants.RECIPE_ID, recipeId);
         startActivity(intent);
     }
@@ -101,24 +98,21 @@ public class RecipeCatalogActivity
     private void setupRecipesViewModel() {
 
         /* Call ViewModelProviders */
-        RecipeCatalogViewModel viewModel =
+        ViewModelCatalogRecipe viewModel =
                 ViewModelProviders
                         .of(this)
-                        .get(RecipeCatalogViewModel.class);
+                        .get(ViewModelCatalogRecipe.class);
 
         /* Set observer for any data changes */
-        viewModel.getRecipes().observe(this, new Observer<List<Recipe>>() {
-            @Override
-            public void onChanged(@Nullable List<Recipe> recipes) {
-                // Set the list to the adapter
-                mCatalogAdapter.setRecipes(recipes);
+        viewModel.getRecipes().observe(this, recipes -> {
+            // Set the list to the adapter
+            mCatalogAdapter.setRecipes(recipes);
 
-                // Set empty view
-                if (recipes.size() == 0) {
-                    mEmptyView.setVisibility(View.VISIBLE);
-                } else {
-                    mEmptyView.setVisibility(View.GONE);
-                }
+            // Set empty view
+            if (recipes.size() == 0) {
+                mEmptyView.setVisibility(View.VISIBLE);
+            } else {
+                mEmptyView.setVisibility(View.GONE);
             }
         });
     }
