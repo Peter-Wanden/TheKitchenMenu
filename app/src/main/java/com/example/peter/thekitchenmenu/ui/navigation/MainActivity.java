@@ -25,19 +25,13 @@ public class MainActivity extends AppCompatActivity {
         productButton = findViewById(R.id.activity_main_goto_products);
         recipeButton = findViewById(R.id.activity_main_goto_recipes);
 
-        productButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getBaseContext(), ActivityCatalogProduct.class);
-                startActivity(intent);
-            }
+        productButton.setOnClickListener(view -> {
+            Intent intent = new Intent(getBaseContext(), ActivityCatalogProduct.class);
+            startActivity(intent);
         });
-        recipeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getBaseContext(), ActivityCatalogRecipe.class);
-                startActivity(intent);
-            }
+        recipeButton.setOnClickListener(v -> {
+            Intent intent = new Intent(getBaseContext(), ActivityCatalogRecipe.class);
+            startActivity(intent);
         });
     }
 }

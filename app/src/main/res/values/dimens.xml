@@ -22,4 +22,7 @@
     <dimen name="card_bottom_padding">16dp</dimen>
     <dimen name="card_right_left_padding">16dp</dimen>
 
+    <!-- Image button properties -->
+    <dimen name="image_button_margin">16dp</dimen>
+
 </resources>

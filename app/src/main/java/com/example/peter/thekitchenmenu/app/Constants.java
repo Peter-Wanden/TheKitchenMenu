@@ -37,4 +37,15 @@ public class Constants {
     public static final int DEFAULT_RECIPE_CATEGORY = 0;
     public static final int DEFAULT_RECIPE_SERVINGS = 0;
     public static final int DEFAULT_RECIPE_SITTINGS = 1;
+
+    /* *************
+     * Permissions *
+     * *************/
+    public static final int REQUEST_IMAGE_CAPTURE = 1;
+    public static final int REQUEST_STORAGE_PERMISSION = 1;
+
+    /* ***************
+     * File provider *
+     *****************/
+    public static final String FILE_PROVIDER_AUTHORITY = "com.example.android.fileprovider";
 }

@@ -1,20 +1,33 @@
 package com.example.peter.thekitchenmenu.ui.detail;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.peter.thekitchenmenu.AppExecutors;
 import com.example.peter.thekitchenmenu.R;
@@ -24,11 +37,21 @@ import com.example.peter.thekitchenmenu.model.Product;
 import com.example.peter.thekitchenmenu.viewmodels.ViewModelFactoryProduct;
 import com.example.peter.thekitchenmenu.viewmodels.ViewModelProduct;
 import com.example.tkmapplibrary.dataValidation.InputValidation;
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class ActivityDetailProduct
         extends AppCompatActivity {
 
     public static final String LOG_TAG = ActivityDetailProduct.class.getSimpleName();
+
+    // Member variable for the database
+    private TKMDatabase mDb;
 
     // Product object instance
     private Product
@@ -67,8 +90,14 @@ public class ActivityDetailProduct
             mShelfLifeSpinner,
             mCategorySpinner;
 
-    // Member variable for the database
-    private TKMDatabase mDb;
+    // Add picture image button field
+    private ImageButton mAddPictureIB;
+
+    // Image field
+    private ImageView mProductIV;
+
+    // The path on the device the image is saved to
+    private String mTempPhotoPath;
 
 
     @Override
@@ -94,7 +123,7 @@ public class ActivityDetailProduct
         initialiseViews();
 
         /* If it exists get the current product from saved instance state */
-        if(savedInstanceState != null && savedInstanceState.containsKey(
+        if (savedInstanceState != null && savedInstanceState.containsKey(
                 Constants.PRODUCT_KEY)) {
 
             mProduct = savedInstanceState.getParcelable(
@@ -106,12 +135,12 @@ public class ActivityDetailProduct
 
         /* If there is a product ID passed with the intent this is an existing product */
         Intent intent = getIntent();
-        if(intent !=null && intent.hasExtra(Constants.PRODUCT_ID)) {
+        if (intent != null && intent.hasExtra(Constants.PRODUCT_ID)) {
 
             // This intent has been passed a product ID, so the product is being updated.
             setTitle(getString(R.string.activity_detail_product_title_update));
 
-            if(mProductId == Constants.DEFAULT_PRODUCT_ID) {
+            if (mProductId == Constants.DEFAULT_PRODUCT_ID) {
                 // Set the product id from the incoming intent */
                 mProductId = intent.getIntExtra(
                         Constants.PRODUCT_ID, Constants.DEFAULT_PRODUCT_ID);
@@ -122,6 +151,10 @@ public class ActivityDetailProduct
             /* If there is no product ID passed in the intent then this is a new product */
             setTitle(getString(R.string.activity_detail_product_title_add_new));
         }
+
+        mAddPictureIB.setOnClickListener(v -> {
+            requestPermissions();
+        });
     }
 
     /* View model for the product */
@@ -142,8 +175,8 @@ public class ActivityDetailProduct
                                 .removeObserver(this);
                         mProduct = product;
                         populateUi(mProduct);
-            }
-        });
+                    }
+                });
     }
 
     private void saveProduct() {
@@ -197,7 +230,7 @@ public class ActivityDetailProduct
         mPackSize = Integer.parseInt(mPackSizeET.getText().toString().trim());
         boolean validatePackSize = InputValidation.validatePackSize(mPackSize);
 
-        if(!validatePackSize) {
+        if (!validatePackSize) {
             mPackSizeET.requestFocus();
             mPackSizeET.setError(getResources().getString(
                     R.string.input_error_pack_size));
@@ -250,14 +283,14 @@ public class ActivityDetailProduct
         // TODO - Implement currency, no validation required I don't think...
         String unformattedPrice = mPackPriceET.getText().toString().trim();
 
-        if (unformattedPrice.length()>0) {
+        if (unformattedPrice.length() > 0) {
             mPackPrice = Double.parseDouble(unformattedPrice);
         } else {
             mPackPrice = 0.0;
         }
 
         // Check to see if this is a new product and if the fields are blank.
-        if (mProductId ==-1
+        if (mProductId == -1
                 && TextUtils.isEmpty(mDescription)
                 && TextUtils.isEmpty(mRetailer)
                 && mUnitOfMeasure == 0
@@ -282,6 +315,8 @@ public class ActivityDetailProduct
         mProduct.setCategory(mCategory);
         mProduct.setPackPrice(mPackPrice);
 
+        // Todo - save the image filepath to the product table
+
         // Make the product information final
         final Product product = mProduct;
 
@@ -299,6 +334,7 @@ public class ActivityDetailProduct
 
     /**
      * This method is called when updating a products information.
+     *
      * @param product - The product whose ID was passed to this activity by the intent.
      */
     private void populateUi(Product product) {
@@ -336,6 +372,12 @@ public class ActivityDetailProduct
         mUoMSpinner = findViewById(R.id.activity_detail_product_spinner_UoM);
         mShelfLifeSpinner = findViewById(R.id.activity_detail_product_spinner_shelf_life);
         mCategorySpinner = findViewById(R.id.activity_detail_product_spinner_category);
+
+        // Image button
+        mAddPictureIB = findViewById(R.id.activity_detail_product_ib_add_picture);
+
+        // Image field
+        mProductIV = findViewById(R.id.activity_detail_product_iv);
 
         setupUoMSpinner();
         setupShelfLifeSpinner();
@@ -559,12 +601,129 @@ public class ActivityDetailProduct
     }
 
     /* Delete the product */
-    private void deleteProduct(){
+    private void deleteProduct() {
         AppExecutors
                 .getInstance()
                 .diskIO()
                 .execute(() -> mDb.getProductDao()
                         .deleteProduct(mProduct));
         finish();
+    }
+
+    /* Image capture - Launches an intent to take a picture */
+    private void takePictureIntent() {
+
+        // Credit: https://developer.android.com/training/camera/photobasics
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+                Log.e(LOG_TAG, "Error capturing image " + ex);
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+
+                // Get the path of the temporary file
+                mTempPhotoPath = photoFile.getAbsolutePath();
+                Log.e(LOG_TAG, "Photo's absolute path is: " + mTempPhotoPath);
+
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        Constants.FILE_PROVIDER_AUTHORITY, photoFile);
+
+                Log.e(LOG_TAG, "Photo's URI is: " + photoURI);
+
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+
+                startActivityForResult(takePictureIntent, Constants.REQUEST_IMAGE_CAPTURE);
+            } else {
+                Log.e(LOG_TAG, "Photo file is null");
+            }
+        }
+    }
+
+
+    public void requestPermissions() {
+
+        // Check for the external storage permission
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // If you do not have permission, request it
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    Constants.REQUEST_STORAGE_PERMISSION);
+        } else {
+            takePictureIntent();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        // Called when you request permission to read and write to external storage
+        switch (requestCode) {
+            case Constants.REQUEST_STORAGE_PERMISSION: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // If you get permission, launch the camera
+                    takePictureIntent();
+                } else {
+                    // If you do not get permission, show a Toast
+                    Toast.makeText(this, R.string.storage_permission_denied,
+                            Toast.LENGTH_SHORT)
+                            .show();
+                }
+                break;
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == Constants.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+
+            Picasso.get().load(mTempPhotoPath).into(mProductIV);
+        }
+    }
+
+    /* Image capture - Create unique file name */
+    private File createImageFile() throws IOException {
+
+        @SuppressLint("SimpleDateFormat")
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault())
+                .format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+
+        // File storageDir = getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        File storageDir = getExternalCacheDir();
+        Log.e(LOG_TAG, "Temp file storage directory is: " + storageDir);
+
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",   /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mTempPhotoPath = image.getAbsolutePath();
+        galleryAddPic();
+        return image;
+    }
+
+    /* Add the photo to the media providers database so it is accessible to all */
+    private void galleryAddPic() {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(mTempPhotoPath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        this.sendBroadcast(mediaScanIntent);
     }
 }

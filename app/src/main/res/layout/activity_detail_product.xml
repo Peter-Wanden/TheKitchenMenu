@@ -13,12 +13,27 @@
             android:padding="@dimen/activity_margin"
             tools:context=".ui.detail.ActivityDetailProduct">
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="250dp">
+
             <ImageView
                 android:id="@+id/activity_detail_product_iv"
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
                 android:contentDescription="@string/cd_picture_of_product"
                 android:src="@drawable/placeholder" />
+
+                <ImageButton
+                    android:id="@+id/activity_detail_product_ib_add_picture"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/ic_action_add"
+                    android:layout_marginEnd="@dimen/image_button_margin"
+                    android:layout_marginBottom="@dimen/image_button_margin"
+                    android:layout_alignBottom="@+id/activity_detail_product_iv"
+                    android:layout_alignEnd="@+id/activity_detail_product_iv"/>
+            </RelativeLayout>
 
             <!-- Product description container -->
             <LinearLayout

@@ -148,4 +148,8 @@
     <string name="fragment_catalog_ingredients_empty_view_sub_text">Press the edit button to add
         some.</string>
 
+    <!-- Permissions -->
+    <string name="storage_permission_denied">Permission to store photos denied.
+        Photos can\'t be taken.</string>
+
 </resources>
