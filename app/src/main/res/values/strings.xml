@@ -152,4 +152,7 @@
     <string name="storage_permission_denied">Permission to store photos denied.
         Photos can\'t be taken.</string>
 
+    <!-- General errors -->
+    <string name="delete_file_error">Error deleting file - please try again.</string>
+
 </resources>

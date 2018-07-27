@@ -1,11 +1,11 @@
 package com.example.peter.thekitchenmenu.ui.detail;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.PersistableBundle;
@@ -34,6 +34,7 @@ import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.TKMDatabase;
 import com.example.peter.thekitchenmenu.model.Product;
+import com.example.peter.thekitchenmenu.utils.BitmapUtils;
 import com.example.peter.thekitchenmenu.viewmodels.ViewModelFactoryProduct;
 import com.example.peter.thekitchenmenu.viewmodels.ViewModelProduct;
 import com.example.tkmapplibrary.dataValidation.InputValidation;
@@ -41,9 +42,6 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 public class ActivityDetailProduct
         extends AppCompatActivity {
@@ -99,6 +97,9 @@ public class ActivityDetailProduct
     // The path on the device the image is saved to
     private String mTempPhotoPath;
 
+    // The re-sampled image we set to the ImageView
+    private Bitmap mResultsBitmap;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -152,6 +153,7 @@ public class ActivityDetailProduct
             setTitle(getString(R.string.activity_detail_product_title_add_new));
         }
 
+        /* OnClickListener for the add picture by camera button */
         mAddPictureIB.setOnClickListener(v -> {
             requestPermissions();
         });
@@ -315,11 +317,12 @@ public class ActivityDetailProduct
         mProduct.setCategory(mCategory);
         mProduct.setPackPrice(mPackPrice);
 
-        // Todo - save the image filepath to the product table
+        // Todo - save the image file path to the product table
 
         // Make the product information final
         final Product product = mProduct;
 
+        // Insert or update the product
         AppExecutors.getInstance().diskIO().execute(() -> {
             // Insert the product
             if (mProductId == -1) { // Insert new.
@@ -613,7 +616,8 @@ public class ActivityDetailProduct
     /* Image capture - Launches an intent to take a picture */
     private void takePictureIntent() {
 
-        // Credit: https://developer.android.com/training/camera/photobasics
+        // Attribution: https://developer.android.com/training/camera/photobasics
+        // Also used in Udacity Advanced Android Emojify
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         // Ensure that there's a camera activity to handle the intent
@@ -621,11 +625,11 @@ public class ActivityDetailProduct
             // Create the File where the photo should go
             File photoFile = null;
             try {
-                photoFile = createImageFile();
+                photoFile = BitmapUtils.createImageFile(this);
             } catch (IOException ex) {
-                // Error occurred while creating the File
-                Log.e(LOG_TAG, "Error capturing image " + ex);
+                ex.printStackTrace();
             }
+
             // Continue only if the File was successfully created
             if (photoFile != null) {
 
@@ -638,16 +642,14 @@ public class ActivityDetailProduct
 
                 Log.e(LOG_TAG, "Photo's URI is: " + photoURI);
 
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoFile);
 
                 startActivityForResult(takePictureIntent, Constants.REQUEST_IMAGE_CAPTURE);
-            } else {
-                Log.e(LOG_TAG, "Photo file is null");
             }
         }
     }
 
-
+    /* Request permissions for access to the file storage area */
     public void requestPermissions() {
 
         // Check for the external storage permission
@@ -689,34 +691,21 @@ public class ActivityDetailProduct
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Constants.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            // Todo get the returned photo path
+            processAndSetImage();
 
-            Picasso.get().load(mTempPhotoPath).into(mProductIV);
+            // Todo delete the temp file
+            // BitmapUtils.deleteImageFile(this, mTempPhotoPath);
         }
     }
 
-    /* Image capture - Create unique file name */
-    private File createImageFile() throws IOException {
+    // Resample's the image
+    private void processAndSetImage() {
+        mResultsBitmap = BitmapUtils.resamplePic(this, mTempPhotoPath);
+        mProductIV.setImageBitmap(mResultsBitmap);
 
-        @SuppressLint("SimpleDateFormat")
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault())
-                .format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-
-        // File storageDir = getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        File storageDir = getExternalCacheDir();
-        Log.e(LOG_TAG, "Temp file storage directory is: " + storageDir);
-
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",   /* suffix */
-                storageDir      /* directory */
-        );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        mTempPhotoPath = image.getAbsolutePath();
-        galleryAddPic();
-        return image;
     }
+
 
     /* Add the photo to the media providers database so it is accessible to all */
     private void galleryAddPic() {
