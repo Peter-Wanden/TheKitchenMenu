@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.PersistableBundle;
@@ -38,10 +39,10 @@ import com.example.peter.thekitchenmenu.utils.BitmapUtils;
 import com.example.peter.thekitchenmenu.viewmodels.ViewModelFactoryProduct;
 import com.example.peter.thekitchenmenu.viewmodels.ViewModelProduct;
 import com.example.tkmapplibrary.dataValidation.InputValidation;
-import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 
 public class ActivityDetailProduct
         extends AppCompatActivity {
@@ -88,17 +89,20 @@ public class ActivityDetailProduct
             mShelfLifeSpinner,
             mCategorySpinner;
 
-    // Add picture image button field
-    private ImageButton mAddPictureIB;
-
     // Image field
     private ImageView mProductIV;
 
-    // The path on the device the image is saved to
-    private String mTempPhotoPath;
+    // Add product image button
+    private ImageButton mAddImageIB;
+
+    // The temporary path on the device where the image is held for processing
+    private String mTempImagePath;
 
     // The re-sampled image we set to the ImageView
     private Bitmap mResultsBitmap;
+
+    // The permanent public URI for the image
+    private Uri mProductImageUri;
 
 
     @Override
@@ -116,7 +120,8 @@ public class ActivityDetailProduct
                 Constants.DEFAULT_PRODUCT_LOC,
                 Constants.DEFAULT_PRODUCT_LOC_IN_ROOM,
                 Constants.DEFAULT_PRODUCT_CATEGORY,
-                Constants.DEFAULT_PRODUCT_PRICE);
+                Constants.DEFAULT_PRODUCT_PRICE,
+                Constants.DEFAULT_LOCAL_IMAGE_URI);
 
         mDb = TKMDatabase.getInstance(getApplicationContext());
 
@@ -154,7 +159,7 @@ public class ActivityDetailProduct
         }
 
         /* OnClickListener for the add picture by camera button */
-        mAddPictureIB.setOnClickListener(v -> {
+        mAddImageIB.setOnClickListener(v -> {
             requestPermissions();
         });
     }
@@ -317,7 +322,10 @@ public class ActivityDetailProduct
         mProduct.setCategory(mCategory);
         mProduct.setPackPrice(mPackPrice);
 
-        // Todo - save the image file path to the product table
+        // If available, move the to a public location and get its new URI
+        addPictureToGallery();
+        mProduct.setLocalImageUri(mProductImageUri);
+
 
         // Make the product information final
         final Product product = mProduct;
@@ -352,6 +360,7 @@ public class ActivityDetailProduct
         mLocationInRoomET.setText(product.getLocationInRoom());
         mCategorySpinner.setSelection(product.getCategory());
         mPackPriceET.setText(String.valueOf(product.getPackPrice()));
+        // TODO - get the image from the Uri, adjust it to the view size and set it to the view
     }
 
     @Override
@@ -377,7 +386,7 @@ public class ActivityDetailProduct
         mCategorySpinner = findViewById(R.id.activity_detail_product_spinner_category);
 
         // Image button
-        mAddPictureIB = findViewById(R.id.activity_detail_product_ib_add_picture);
+        mAddImageIB = findViewById(R.id.activity_detail_product_ib_add_picture);
 
         // Image field
         mProductIV = findViewById(R.id.activity_detail_product_iv);
@@ -634,15 +643,15 @@ public class ActivityDetailProduct
             if (photoFile != null) {
 
                 // Get the path of the temporary file
-                mTempPhotoPath = photoFile.getAbsolutePath();
-                Log.e(LOG_TAG, "Photo's absolute path is: " + mTempPhotoPath);
+                mTempImagePath = photoFile.getAbsolutePath();
+                Log.e(LOG_TAG, "Photo's absolute path is: " + mTempImagePath);
 
                 Uri photoURI = FileProvider.getUriForFile(this,
                         Constants.FILE_PROVIDER_AUTHORITY, photoFile);
 
                 Log.e(LOG_TAG, "Photo's URI is: " + photoURI);
 
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
 
                 startActivityForResult(takePictureIntent, Constants.REQUEST_IMAGE_CAPTURE);
             }
@@ -690,29 +699,35 @@ public class ActivityDetailProduct
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Constants.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            // Todo get the returned photo path
-            processAndSetImage();
 
-            // Todo delete the temp file
-            // BitmapUtils.deleteImageFile(this, mTempPhotoPath);
+        if (requestCode == Constants.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            processAndSetImage();
+        } else {
+            // Delete the temporary file
+             BitmapUtils.deleteImageFile(this, mTempImagePath);
         }
     }
 
-    // Resample's the image
+    /* Resample's the image */
     private void processAndSetImage() {
-        mResultsBitmap = BitmapUtils.resamplePic(this, mTempPhotoPath);
-        mProductIV.setImageBitmap(mResultsBitmap);
 
+        mResultsBitmap = BitmapUtils.resamplePic(this, mTempImagePath);
+        mProductIV.setImageBitmap(mResultsBitmap);
     }
 
-
     /* Add the photo to the media providers database so it is accessible to all */
-    private void galleryAddPic() {
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File f = new File(mTempPhotoPath);
-        Uri contentUri = Uri.fromFile(f);
-        mediaScanIntent.setData(contentUri);
-        this.sendBroadcast(mediaScanIntent);
+    private void addPictureToGallery() {
+        // Get the temporary image file
+        File f = new File(mTempImagePath);
+        // Move it to a public area and return its content Uri
+        MediaScannerConnection.scanFile(
+                getApplicationContext(),
+                new String[]{f.getAbsolutePath()}, null, (path, uri) -> {
+                    if(uri != null) {
+                        mProductImageUri = uri;
+                    } else {
+                        Log.e(LOG_TAG, "Error moving image from temp to public location");
+                    }
+                });
     }
 }

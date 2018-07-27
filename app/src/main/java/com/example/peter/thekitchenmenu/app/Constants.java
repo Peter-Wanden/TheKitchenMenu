@@ -1,5 +1,7 @@
 package com.example.peter.thekitchenmenu.app;
 
+import android.net.Uri;
+
 public class Constants {
 
     /* **********
@@ -21,6 +23,7 @@ public class Constants {
     public static final String DEFAULT_PRODUCT_LOC_IN_ROOM = "no_location_in_room";
     public static final int DEFAULT_PRODUCT_CATEGORY = 0;
     public static final double DEFAULT_PRODUCT_PRICE = 0.00;
+    public static final Uri DEFAULT_LOCAL_IMAGE_URI = null;
 
     /* *********
      * RECIPES *
@@ -47,5 +50,6 @@ public class Constants {
     /* ***************
      * File provider *
      *****************/
-    public static final String FILE_PROVIDER_AUTHORITY = "com.example.android.fileprovider";
+    public static final String FILE_PROVIDER_AUTHORITY
+            = "com.example.peter.thekitchenmenu.fileprovider";
 }

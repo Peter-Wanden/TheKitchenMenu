@@ -4,6 +4,7 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -41,6 +42,9 @@ public class Product implements Parcelable {
     @ColumnInfo(name = "Pack_Price")
     private double mPackPrice;
 
+    @ColumnInfo(name = "Local_Image_Uri")
+    private Uri mLocalImageUri;
+
     @Ignore
     /* Constructors */
     public Product(String description,
@@ -51,7 +55,8 @@ public class Product implements Parcelable {
                    String locationRoom,
                    String locationInRoom,
                    int category,
-                   double packPrice) {
+                   double packPrice,
+                   Uri localImageUri) {
 
         this.mDescription = description;
         this.mRetailer = retailer;
@@ -62,6 +67,7 @@ public class Product implements Parcelable {
         this.mLocationInRoom = locationInRoom;
         this.mCategory = category;
         this.mPackPrice = packPrice;
+        this.mLocalImageUri = localImageUri;
     }
 
     /* Constructor for the database*/
@@ -74,7 +80,8 @@ public class Product implements Parcelable {
                    String locationRoom,
                    String locationInRoom,
                    int category,
-                   double packPrice) {
+                   double packPrice,
+                   Uri localImageUri) {
 
         this.mProductId = productId;
         this.mDescription = description;
@@ -86,6 +93,7 @@ public class Product implements Parcelable {
         this.mLocationInRoom = locationInRoom;
         this.mCategory = category;
         this.mPackPrice = packPrice;
+        this.mLocalImageUri = localImageUri;
     }
 
 
@@ -100,6 +108,7 @@ public class Product implements Parcelable {
         mLocationInRoom = in.readString();
         mCategory = in.readInt();
         mPackPrice = in.readDouble();
+        mLocalImageUri = Uri.parse(in.readString());
     }
 
     public static final Creator<Product> CREATOR = new Creator<Product>() {
@@ -132,6 +141,7 @@ public class Product implements Parcelable {
         parcel.writeString(mLocationInRoom);
         parcel.writeInt(mCategory);
         parcel.writeDouble(mPackPrice);
+        parcel.writeString(String.valueOf(mLocalImageUri));
     }
 
     /* Getters and setters */
@@ -164,4 +174,7 @@ public class Product implements Parcelable {
 
     public double getPackPrice() {return mPackPrice;}
     public void setPackPrice(double packPrice) {mPackPrice = packPrice;}
+
+    public Uri getLocalImageUri() {return mLocalImageUri;}
+    public void setLocalImageUri(Uri localImageUri) {mLocalImageUri = localImageUri;}
 }
