@@ -43,6 +43,7 @@ public class Product implements Parcelable {
     private double mPackPrice;
 
     @ColumnInfo(name = "Local_Image_Uri")
+    @android.support.annotation.NonNull
     private Uri mLocalImageUri;
 
     @Ignore

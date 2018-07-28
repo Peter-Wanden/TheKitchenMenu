@@ -42,7 +42,7 @@ import com.example.tkmapplibrary.dataValidation.InputValidation;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
+
 
 public class ActivityDetailProduct
         extends AppCompatActivity {
@@ -95,7 +95,7 @@ public class ActivityDetailProduct
     // Add product image button
     private ImageButton mAddImageIB;
 
-    // The temporary path on the device where the image is held for processing
+    // The temporary path on the device where the full size image is held for processing
     private String mTempImagePath;
 
     // The re-sampled image we set to the ImageView
@@ -123,6 +123,10 @@ public class ActivityDetailProduct
                 Constants.DEFAULT_PRODUCT_PRICE,
                 Constants.DEFAULT_LOCAL_IMAGE_URI);
 
+        // Set the default value of the product image member variable
+        mProductImageUri = mProduct.getLocalImageUri();
+
+        // Instantiate the database
         mDb = TKMDatabase.getInstance(getApplicationContext());
 
         /* Setup the views */
@@ -135,7 +139,6 @@ public class ActivityDetailProduct
             mProduct = savedInstanceState.getParcelable(
                     Constants.PRODUCT_KEY);
 
-            // Todo - set the default product ID if mProduct ID null or -1 at this point
             mProductId = mProduct.getProductId();
         }
 
@@ -180,14 +183,27 @@ public class ActivityDetailProduct
                     public void onChanged(@Nullable Product product) {
                         viewModelProduct.getProduct()
                                 .removeObserver(this);
+
+                        // Update member variables
                         mProduct = product;
-                        populateUi(mProduct);
+                        // Update the screen
+                        populateUi();
                     }
                 });
     }
 
+    /* If available loads the product image */
+    private void loadImage() {
+        // Todo - what if image has been moved or deleted?
+        // Retrieve the image from public storage
+        mResultsBitmap = BitmapUtils.resampleImage(this, mProductImageUri, null);
+        mProductIV.setImageBitmap(mResultsBitmap);
+        Log.e(LOG_TAG, "loadImage() - Getting image");
+
+    }
+
     private void saveProduct() {
-        // Todo Implement on back pressed save changes and touch listener
+        // Todo Implement on up pressed save changes and touch listener
 
         /* Read, trim and validate all input fields */
 
@@ -307,6 +323,7 @@ public class ActivityDetailProduct
                 && TextUtils.isEmpty(mLocationInRoom)
                 && mCategory == 0
                 && mPackPrice == 0) {
+            // Todo - add Uri field
             // As no fields have been modified we can safely return without performing any actions
             return;
         }
@@ -321,11 +338,7 @@ public class ActivityDetailProduct
         mProduct.setLocationInRoom(mLocationInRoom);
         mProduct.setCategory(mCategory);
         mProduct.setPackPrice(mPackPrice);
-
-        // If available, move the to a public location and get its new URI
-        addPictureToGallery();
         mProduct.setLocalImageUri(mProductImageUri);
-
 
         // Make the product information final
         final Product product = mProduct;
@@ -343,25 +356,27 @@ public class ActivityDetailProduct
         });
     }
 
-    /**
-     * This method is called when updating a products information.
-     *
-     * @param product - The product whose ID was passed to this activity by the intent.
-     */
-    private void populateUi(Product product) {
+    /* This method is called when updating a products information. */
+    private void populateUi() {
 
         /* Update EditText fields */
-        mDescriptionET.setText(product.getDescription());
-        mRetailerET.setText(product.getRetailer());
-        mPackSizeET.setText(String.valueOf(product.getPackSize()));
-        mUoMSpinner.setSelection(product.getUnitOfMeasure());
-        mShelfLifeSpinner.setSelection(product.getShelfLife());
-        mLocationRoomET.setText(product.getLocationRoom());
-        mLocationInRoomET.setText(product.getLocationInRoom());
-        mCategorySpinner.setSelection(product.getCategory());
-        mPackPriceET.setText(String.valueOf(product.getPackPrice()));
-        // TODO - get the image from the Uri, adjust it to the view size and set it to the view
+        mDescriptionET.setText(mProduct.getDescription());
+        mRetailerET.setText(mProduct.getRetailer());
+        mPackSizeET.setText(String.valueOf(mProduct.getPackSize()));
+        mUoMSpinner.setSelection(mProduct.getUnitOfMeasure());
+        mShelfLifeSpinner.setSelection(mProduct.getShelfLife());
+        mLocationRoomET.setText(mProduct.getLocationRoom());
+        mLocationInRoomET.setText(mProduct.getLocationInRoom());
+        mCategorySpinner.setSelection(mProduct.getCategory());
+        mPackPriceET.setText(String.valueOf(mProduct.getPackPrice()));
+
+        // Only load image if the Uri is not the default value (EMPTY)
+        if (!Uri.EMPTY.equals(mProduct.getLocalImageUri())) {
+            mProductImageUri = mProduct.getLocalImageUri();
+            loadImage();
+        }
     }
+
 
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
@@ -394,6 +409,127 @@ public class ActivityDetailProduct
         setupUoMSpinner();
         setupShelfLifeSpinner();
         setupCategorySpinner();
+    }
+
+
+    /* Delete the product */
+    private void deleteProduct() {
+        AppExecutors
+                .getInstance()
+                .diskIO()
+                .execute(() -> mDb.getProductDao()
+                        .deleteProduct(mProduct));
+        finish();
+    }
+
+    /* Image capture - Launches an intent to take a picture */
+    private void takePictureIntent() {
+
+        // Attribution: https://developer.android.com/training/camera/photobasics
+        // Also used in Udacity Advanced Android Emojify
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = BitmapUtils.createImageFile(this);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+
+                // Get the path of the temporary file
+                mTempImagePath = photoFile.getAbsolutePath();
+
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        Constants.FILE_PROVIDER_AUTHORITY, photoFile);
+
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+
+                startActivityForResult(takePictureIntent, Constants.REQUEST_IMAGE_CAPTURE);
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == Constants.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            processAndSetImage();
+        } else if (requestCode == Constants.REQUEST_IMAGE_MEDIA_STORE && resultCode == RESULT_OK) {
+            processAndSetImage();
+        } else {
+            // Delete the temporary file
+            BitmapUtils.deleteImageFile(this, mTempImagePath);
+        }
+    }
+
+    /* Resample's the image so it fits our imageView and uses less resources */
+    private void processAndSetImage() {
+
+        mResultsBitmap = BitmapUtils.resampleImage(this, null, mTempImagePath);
+        mProductIV.setImageBitmap(mResultsBitmap);
+        addImageToGallery();
+    }
+
+    /* Add the photo to the media providers database so it is accessible to all */
+    private void addImageToGallery() {
+        // Get the full size temporary image file
+        File f = new File(mTempImagePath);
+        // Move it to a public area and return its content Uri
+        MediaScannerConnection.scanFile(
+                getApplicationContext(),
+                new String[]{f.getAbsolutePath()}, null, (path, uri) -> {
+                    if (uri != null) {
+                        // Update the products public image Uri
+                        mProductImageUri = uri;
+                    } else {
+                        Log.e(LOG_TAG, "Error moving image from temp to public location");
+                    }
+                });
+    }
+
+    /* Request permissions for access to the file storage area */
+    public void requestPermissions() {
+
+        // Check for the external storage permission
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // If you do not have permission, request it
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    Constants.REQUEST_STORAGE_PERMISSION);
+        } else {
+            takePictureIntent();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        // Called when you request permission to read and write to external storage
+        switch (requestCode) {
+            case Constants.REQUEST_STORAGE_PERMISSION: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // If you get permission, launch the camera
+                    takePictureIntent();
+                } else {
+                    // If you do not get permission, show a Toast
+                    Toast.makeText(this, R.string.storage_permission_denied,
+                            Toast.LENGTH_SHORT)
+                            .show();
+                }
+                break;
+            }
+        }
     }
 
     /*
@@ -610,124 +746,5 @@ public class ActivityDetailProduct
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    /* Delete the product */
-    private void deleteProduct() {
-        AppExecutors
-                .getInstance()
-                .diskIO()
-                .execute(() -> mDb.getProductDao()
-                        .deleteProduct(mProduct));
-        finish();
-    }
-
-    /* Image capture - Launches an intent to take a picture */
-    private void takePictureIntent() {
-
-        // Attribution: https://developer.android.com/training/camera/photobasics
-        // Also used in Udacity Advanced Android Emojify
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-        // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = BitmapUtils.createImageFile(this);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-
-                // Get the path of the temporary file
-                mTempImagePath = photoFile.getAbsolutePath();
-                Log.e(LOG_TAG, "Photo's absolute path is: " + mTempImagePath);
-
-                Uri photoURI = FileProvider.getUriForFile(this,
-                        Constants.FILE_PROVIDER_AUTHORITY, photoFile);
-
-                Log.e(LOG_TAG, "Photo's URI is: " + photoURI);
-
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-
-                startActivityForResult(takePictureIntent, Constants.REQUEST_IMAGE_CAPTURE);
-            }
-        }
-    }
-
-    /* Request permissions for access to the file storage area */
-    public void requestPermissions() {
-
-        // Check for the external storage permission
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            // If you do not have permission, request it
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    Constants.REQUEST_STORAGE_PERMISSION);
-        } else {
-            takePictureIntent();
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        // Called when you request permission to read and write to external storage
-        switch (requestCode) {
-            case Constants.REQUEST_STORAGE_PERMISSION: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // If you get permission, launch the camera
-                    takePictureIntent();
-                } else {
-                    // If you do not get permission, show a Toast
-                    Toast.makeText(this, R.string.storage_permission_denied,
-                            Toast.LENGTH_SHORT)
-                            .show();
-                }
-                break;
-            }
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        if (requestCode == Constants.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            processAndSetImage();
-        } else {
-            // Delete the temporary file
-             BitmapUtils.deleteImageFile(this, mTempImagePath);
-        }
-    }
-
-    /* Resample's the image */
-    private void processAndSetImage() {
-
-        mResultsBitmap = BitmapUtils.resamplePic(this, mTempImagePath);
-        mProductIV.setImageBitmap(mResultsBitmap);
-    }
-
-    /* Add the photo to the media providers database so it is accessible to all */
-    private void addPictureToGallery() {
-        // Get the temporary image file
-        File f = new File(mTempImagePath);
-        // Move it to a public area and return its content Uri
-        MediaScannerConnection.scanFile(
-                getApplicationContext(),
-                new String[]{f.getAbsolutePath()}, null, (path, uri) -> {
-                    if(uri != null) {
-                        mProductImageUri = uri;
-                    } else {
-                        Log.e(LOG_TAG, "Error moving image from temp to public location");
-                    }
-                });
     }
 }

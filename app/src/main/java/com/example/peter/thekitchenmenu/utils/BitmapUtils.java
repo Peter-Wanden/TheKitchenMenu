@@ -2,8 +2,13 @@ package com.example.peter.thekitchenmenu.utils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.support.v4.content.CursorLoader;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.WindowManager;
@@ -19,6 +24,8 @@ import java.util.Locale;
 
 public class BitmapUtils {
 
+    private Uri mProductImageUri;
+
     private static final String LOG_TAG = BitmapUtils.class.getSimpleName();
 
     /* Image capture - Create unique file name */
@@ -30,7 +37,6 @@ public class BitmapUtils {
         String imageFileName = "JPEG_" + timeStamp + "_";
 
         File storageDir = context.getExternalCacheDir();
-        Log.e(LOG_TAG, "Temp file storage directory is: " + storageDir);
 
         // Create temp file
         return File.createTempFile(
@@ -40,7 +46,7 @@ public class BitmapUtils {
         );
     }
 
-    public static boolean deleteImageFile(Context context, String imagePath) {
+    public static void deleteImageFile(Context context, String imagePath) {
         // Get the file
         File imageFile = new File(imagePath);
 
@@ -52,7 +58,6 @@ public class BitmapUtils {
             String errorMessage = context.getString(R.string.delete_file_error);
             Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
         }
-        return deleted;
     }
 
     /**
@@ -60,10 +65,16 @@ public class BitmapUtils {
      * Resamples the captured photo to fit the screen for better memory usage.
      *
      * @param context   The application context.
-     * @param imagePath The path of the photo to be resampled.
+     * @param uri The Uri of the image to be resampled.
      * @return The resampled bitmap
      */
-    public static Bitmap resamplePic(Context context, String imagePath) {
+    public static Bitmap resampleImage(Context context, Uri uri, String imagePath) {
+
+        /* If imagePath is null we have been given a Uri, so decode to string */
+        if(imagePath == null) {
+            // Extract the imagepath from the Uri
+            imagePath = getAbsolutePathFromUri(context, uri);
+        }
 
         // Get device screen size information
         DisplayMetrics metrics = new DisplayMetrics();
@@ -77,16 +88,40 @@ public class BitmapUtils {
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         bmOptions.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(imagePath, bmOptions);
-        int photoW = bmOptions.outWidth;
-        int photoH = bmOptions.outHeight;
+        int imageW = bmOptions.outWidth;
+        int imageH = bmOptions.outHeight;
 
         // Determine how much to scale down the image
-        int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
+        int scaleFactor = Math.min(imageW / targetW, imageH / targetH);
 
         // Decode the image file into a Bitmap sized to fill the View
         bmOptions.inJustDecodeBounds = false;
         bmOptions.inSampleSize = scaleFactor;
 
         return BitmapFactory.decodeFile(imagePath);
+    }
+
+    /* As bitmap factory will only accept a path and not a Uri we have to do this. */
+    // Credit: https://stackoverflow.com/questions/3401579/get-filename-and-path-from-uri-from-mediastore?rq=1
+    public static String getAbsolutePathFromUri(Context context, Uri productImageUri) {
+
+        String[] projection = { MediaStore.Images.Media.DATA };
+
+        CursorLoader loader = new CursorLoader(
+                context,
+                productImageUri,
+                projection,
+                null,
+                null,
+                null);
+
+        Cursor cursor = loader.loadInBackground();
+
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        String result = cursor.getString(column_index);
+        cursor.close();
+
+        return result;
     }
 }

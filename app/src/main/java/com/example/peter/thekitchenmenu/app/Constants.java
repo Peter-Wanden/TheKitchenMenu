@@ -23,7 +23,7 @@ public class Constants {
     public static final String DEFAULT_PRODUCT_LOC_IN_ROOM = "no_location_in_room";
     public static final int DEFAULT_PRODUCT_CATEGORY = 0;
     public static final double DEFAULT_PRODUCT_PRICE = 0.00;
-    public static final Uri DEFAULT_LOCAL_IMAGE_URI = null;
+    public static final Uri DEFAULT_LOCAL_IMAGE_URI = Uri.parse("");
 
     /* *********
      * RECIPES *
@@ -45,7 +45,8 @@ public class Constants {
      * Permissions *
      * *************/
     public static final int REQUEST_IMAGE_CAPTURE = 1;
-    public static final int REQUEST_STORAGE_PERMISSION = 1;
+    public static final int REQUEST_STORAGE_PERMISSION = 2;
+    public static final int REQUEST_IMAGE_MEDIA_STORE = 3;
 
     /* ***************
      * File provider *

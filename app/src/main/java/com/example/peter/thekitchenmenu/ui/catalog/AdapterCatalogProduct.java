@@ -63,6 +63,9 @@ public class AdapterCatalogProduct
         /* Set the unit of measure */
         holder.UoMTV.setText(Converters.getStringUnitOfMeasure
                 (mContext, product.getUnitOfMeasure()));
+
+        // Todo - Add a thumbnail of the product image
+
     }
 
     /* Returns the number of items in the adapter */
