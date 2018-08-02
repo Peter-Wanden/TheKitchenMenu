@@ -43,16 +43,22 @@ public class ViewModelCatalogProductList extends ViewModel {
     public ViewModelCatalogProductList() {
         // Set up the MediatorLiveData to convert DataSnapshot objects into Product objects
         FirebaseQueryLiveData liveData = new FirebaseQueryLiveData(productReference);
+        Log.e(LOG_TAG, "ViewModelCatalogProductList() called.");
 
         productLiveData.addSource(liveData, snapshot -> {
             if(snapshot != null) {
                 AppExecutors.getInstance().networkIO().execute(() -> {
-
+                    int loopValue = 0;
                     for(DataSnapshot shot : snapshot.getChildren()) {
                         Product product = shot.getValue(Product.class);
-                        productList.add(product);
+                        if(!productList.contains(product)){
+                            Log.e(LOG_TAG, "");
+                            loopValue ++;
+                            productList.add(product);
+                        }
                     }
                     productLiveData.postValue(productList);
+                    Log.e(LOG_TAG, "productLiveData.postValue(productList) has: " + productList.size() + " items" );
                 });
             } else {
                 productLiveData.setValue(null);
@@ -62,8 +68,7 @@ public class ViewModelCatalogProductList extends ViewModel {
 
     // Fetches the generated list of products
     public LiveData<List<Product>> getProductsLiveData() {
-        int noOfItems = productList.size();
-        Log.e(LOG_TAG, "getProductsLiveData() - has: " + noOfItems + " items.");
+        Log.e(LOG_TAG, "getProductsLiveData() - has: " + productList.size() + " items.");
         return productLiveData;
     }
 }

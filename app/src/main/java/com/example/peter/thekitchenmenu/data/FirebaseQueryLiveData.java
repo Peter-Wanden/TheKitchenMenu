@@ -2,8 +2,11 @@ package com.example.peter.thekitchenmenu.data;
 
 import android.arch.lifecycle.LiveData;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -19,7 +22,7 @@ public class FirebaseQueryLiveData extends LiveData<DataSnapshot> {
     private boolean listenerRemovePending = false;
     private final Handler handler = new Handler();
 
-    // Adds a two second delay to prevent unnecessary querying during configuration changes
+    // Adds a two second delay to prevent unnecessary re-querying during configuration changes
     private final Runnable removeListener = new Runnable() {
         @Override
         public void run() {
@@ -66,5 +69,6 @@ public class FirebaseQueryLiveData extends LiveData<DataSnapshot> {
         public void onCancelled(DatabaseError databaseError) {
             Log.e(LOG_TAG, "Can't listen to query " + query, databaseError.toException());
         }
+
     }
 }

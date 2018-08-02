@@ -1,8 +1,6 @@
 package com.example.peter.thekitchenmenu.ui.detail;
 
 import android.Manifest;
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -34,7 +32,6 @@ import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.model.Product;
 import com.example.peter.thekitchenmenu.utils.BitmapUtils;
-import com.example.peter.thekitchenmenu.viewmodels.ViewModelCatalogProductList;
 import com.example.tkmapplibrary.dataValidation.InputValidation;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
@@ -45,8 +42,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
-
+import java.util.HashMap;
+import java.util.Map;
 
 public class ActivityDetailProduct
         extends AppCompatActivity {
@@ -171,7 +168,7 @@ public class ActivityDetailProduct
             mProduct = savedInstanceState.getParcelable(
                     Constants.PRODUCT_FB_REFERENCE_KEY);
 
-            // Update the products status (new or edit boolean)
+            // Update the products status (new or existing boolean)
             mProductIsNew = savedInstanceState.getBoolean(Constants.PRODUCT_STATUS_KEY);
 
             // Update the product reference
@@ -194,8 +191,8 @@ public class ActivityDetailProduct
                 // Set the Firebase product reference ID from the incoming intent */
                 mFbProductReferenceId = mProduct.getFbaseProductId();
 
-                Log.e(LOG_TAG, "Intent received from CatalogProduct - Firebase product ref is: "
-                        + mFbProductReferenceId);
+                Log.e(LOG_TAG, "Intent received from CatalogProduct - Firebase product name is: "
+                        + mProduct.getDescription());
 
                 // setupProductViewModel();
                 populateUi();
@@ -241,6 +238,7 @@ public class ActivityDetailProduct
     /* Initialise anything here that can only be done when signed in */
     private void onSignedInInitialise(String userUid) {
         mUserUid = userUid;
+        Log.e(LOG_TAG, "onSignedInInitialise() - user ID is: " + mUserUid);
     }
 
     /* If available loads the product image */
@@ -399,6 +397,8 @@ public class ActivityDetailProduct
             finish();
         } else {
             // This is an existing product, so update.
+
+
             // Todo - This updates the whole document, when it should only update fields that have changed - resolve
             mFbProductDbReference.child(mProduct.getFbaseProductId()).setValue(mProduct);
         }
