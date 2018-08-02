@@ -3,6 +3,7 @@ package com.example.peter.thekitchenmenu.ui.catalog;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,8 @@ public class AdapterCatalogProduct
         extends
         RecyclerView.Adapter<AdapterCatalogProduct.AdapterCatalogProductViewHolder> {
 
+    private static final String LOG_TAG = AdapterCatalogProduct.class.getSimpleName();
+
     /* The context we use to utility methods, app resources and layout inflaters */
     private final Context mContext;
 
@@ -28,7 +31,7 @@ public class AdapterCatalogProduct
 
     /* Click interface that receives on click messages */
     public interface ProductCatalogAdapterOnClickHandler {
-        void onClick(int productId);
+        void onClick(Product product);
     }
 
     public AdapterCatalogProduct(Context context, ProductCatalogAdapterOnClickHandler listener) {
@@ -85,6 +88,15 @@ public class AdapterCatalogProduct
     public void setProducts(List<Product> products) {
         mProducts = products;
         notifyDataSetChanged();
+        Log.e(LOG_TAG, "setProducts() called - Adapter updated.");
+        int noOfItems = getItemCount();
+        Log.e(LOG_TAG, "Adapter now has: " + noOfItems + " items");
+    }
+
+    /* Inserts a single product into the adapter */
+    public void insertProduct(Product product){
+        mProducts.add(product);
+        notifyItemInserted(mProducts.size() -1);
     }
 
     /* Inner class for creating ViewHolders */
@@ -112,8 +124,8 @@ public class AdapterCatalogProduct
         }
 
         public void onClick(View v) {
-            int productId = mProducts.get(getAdapterPosition()).getProductId();
-            mClickHandler.onClick(productId);
+            Product product = mProducts.get(getAdapterPosition());
+            mClickHandler.onClick(product);
         }
     }
 }

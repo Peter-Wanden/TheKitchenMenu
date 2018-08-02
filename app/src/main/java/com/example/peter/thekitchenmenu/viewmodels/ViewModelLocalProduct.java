@@ -11,11 +11,11 @@ import java.util.List;
 /**
  * View model for a single item
  */
-public class ViewModelProduct extends ViewModel {
+public class ViewModelLocalProduct extends ViewModel {
 
     private LiveData<Product> product;
 
-    public ViewModelProduct(TKMDatabase database, int productId) {
+    public ViewModelLocalProduct(TKMDatabase database, int productId) {
         product = database.getProductDao().loadProductById(productId);
     }
 

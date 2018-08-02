@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.ui.detail;
 
 import android.Manifest;
-import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -30,27 +30,28 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.peter.thekitchenmenu.AppExecutors;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
-import com.example.peter.thekitchenmenu.data.TKMDatabase;
 import com.example.peter.thekitchenmenu.model.Product;
 import com.example.peter.thekitchenmenu.utils.BitmapUtils;
-import com.example.peter.thekitchenmenu.viewmodels.ViewModelFactoryProduct;
-import com.example.peter.thekitchenmenu.viewmodels.ViewModelProduct;
+import com.example.peter.thekitchenmenu.viewmodels.ViewModelCatalogProductList;
 import com.example.tkmapplibrary.dataValidation.InputValidation;
+import com.firebase.ui.auth.AuthUI;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 
 public class ActivityDetailProduct
         extends AppCompatActivity {
 
     public static final String LOG_TAG = ActivityDetailProduct.class.getSimpleName();
-
-    // Member variable for the database
-    private TKMDatabase mDb;
 
     // Product object instance
     private Product
@@ -70,6 +71,9 @@ public class ActivityDetailProduct
             mPackSize,
             mShelfLife,
             mCategory;
+
+    // Boolean member variables
+    boolean mProductIsNew = Constants.PRODUCT_IS_NEW;
 
     // Double member variables for the product fields
     private double mPackPrice;
@@ -101,18 +105,46 @@ public class ActivityDetailProduct
     // The re-sampled image we set to the ImageView
     private Bitmap mResultsBitmap;
 
-    // The permanent public URI for the image
+    // The permanent public (device local) URI for the local image
     private Uri mProductImageUri;
 
+    /* *******************
+     * Firebase database *
+     *********************/
+    /* Firebase database instance */
+    private FirebaseDatabase mFbDatabbase;
+    /* Firebase database reference - the entry point for accessing products */
+    private DatabaseReference mFbProductDbReference;
+    /* Authentication instance */
+    private FirebaseAuth mFBAuth;
+    /* Authentication state listener */
+    private FirebaseAuth.AuthStateListener mFBAuthStateListener;
+    /* Authentication users unique ID generated for this user / app combination */
+    private String mUserUid;
+    /* Unique Firebase product reference */
+    private String mFbProductReferenceId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_product);
 
+        // Set the default user
+        mUserUid = Constants.ANONYMOUS;
+
+        // Get a reference to the Firebase database
+        mFbDatabbase = FirebaseDatabase.getInstance();
+
+        // Get an instance to Firebase authentication
+        mFBAuth = FirebaseAuth.getInstance();
+
+        // Get the reference point in the database for products
+        mFbProductDbReference = mFbDatabbase.getReference().child(Constants.FB_PRODUCT_REFERENCE);
+
         /* Construct a default product for field value comparison and validation */
         mProduct = new Product(
                 Constants.DEFAULT_PRODUCT_DESCRIPTION,
+                Constants.DEFAULT_FB_PRODUCT_ID,
                 Constants.DEFAULT_PRODUCT_RETAILER,
                 Constants.DEFAULT_PRODUCT_UOM,
                 Constants.DEFAULT_PRODUCT_PACK_SIZE,
@@ -123,41 +155,54 @@ public class ActivityDetailProduct
                 Constants.DEFAULT_PRODUCT_PRICE,
                 Constants.DEFAULT_LOCAL_IMAGE_URI);
 
-        // Set the default value of the product image member variable
-        mProductImageUri = mProduct.getLocalImageUri();
+        /* Set the default Firebase product reference id */
+        mFbProductReferenceId = Constants.DEFAULT_FB_PRODUCT_ID;
 
-        // Instantiate the database
-        mDb = TKMDatabase.getInstance(getApplicationContext());
+        // Set the default value of the product image Uri member variable
+        mProductImageUri = Uri.parse(mProduct.getLocalImageUri());
 
         /* Setup the views */
         initialiseViews();
 
         /* If it exists get the current product from saved instance state */
         if (savedInstanceState != null && savedInstanceState.containsKey(
-                Constants.PRODUCT_KEY)) {
+                Constants.PRODUCT_FB_REFERENCE_KEY)) {
 
             mProduct = savedInstanceState.getParcelable(
-                    Constants.PRODUCT_KEY);
+                    Constants.PRODUCT_FB_REFERENCE_KEY);
 
-            mProductId = mProduct.getProductId();
+            // Update the products status (new or edit boolean)
+            mProductIsNew = savedInstanceState.getBoolean(Constants.PRODUCT_STATUS_KEY);
+
+            // Update the product reference
+            mFbProductReferenceId = mProduct.getFbaseProductId();
         }
 
-        /* If there is a product ID passed with the intent this is an existing product */
+        /* If there is a Firebase product passed with the intent this is an existing product */
         Intent intent = getIntent();
-        if (intent != null && intent.hasExtra(Constants.PRODUCT_ID)) {
+        if (intent != null && intent.hasExtra(Constants.PRODUCT_FB_REFERENCE_KEY)) {
 
-            // This intent has been passed a product ID, so the product is being updated.
+            // This intent has been passed a Firebase product, so the product is being updated.
             setTitle(getString(R.string.activity_detail_product_title_update));
 
-            if (mProductId == Constants.DEFAULT_PRODUCT_ID) {
-                // Set the product id from the incoming intent */
-                mProductId = intent.getIntExtra(
-                        Constants.PRODUCT_ID, Constants.DEFAULT_PRODUCT_ID);
+            // Update the Firebase product reference ID from default to the reference passed in
+            if (mFbProductReferenceId.equals(Constants.DEFAULT_FB_PRODUCT_ID)) {
 
-                setupProductViewModel();
+                // Set the incoming product to its member variable
+                mProduct = intent.getParcelableExtra(Constants.PRODUCT_FB_REFERENCE_KEY);
+
+                // Set the Firebase product reference ID from the incoming intent */
+                mFbProductReferenceId = mProduct.getFbaseProductId();
+
+                Log.e(LOG_TAG, "Intent received from CatalogProduct - Firebase product ref is: "
+                        + mFbProductReferenceId);
+
+                // setupProductViewModel();
+                populateUi();
             }
         } else {
             /* If there is no product ID passed in the intent then this is a new product */
+            mProductIsNew = true;
             setTitle(getString(R.string.activity_detail_product_title_add_new));
         }
 
@@ -165,36 +210,42 @@ public class ActivityDetailProduct
         mAddImageIB.setOnClickListener(v -> {
             requestPermissions();
         });
+
+        // Firebase authentication listener (attached in onResume and detached in onPause)
+        mFBAuthStateListener = firebaseAuth -> {
+            // Find out if the user is logged in or not
+            FirebaseUser user = firebaseAuth.getCurrentUser();
+            if (user != null) {
+                // User is signed in
+                onSignedInInitialise(user.getUid());
+            } else {
+                // User is signed out
+                onSignedOutCleanUp();
+                startActivityForResult(
+                        AuthUI.getInstance()
+                                .createSignInIntentBuilder()
+                                .setAvailableProviders(Arrays.asList(
+                                        new AuthUI.IdpConfig.GoogleBuilder().build(),
+                                        new AuthUI.IdpConfig.EmailBuilder().build()))
+                                .build(),
+                        Constants.REQUEST_CODE_SIGN_IN);
+            }
+        };
     }
 
-    /* View model for the product */
-    private void setupProductViewModel() {
+    /* User has signed out so clean up  */
+    private void onSignedOutCleanUp() {
+        mUserUid = Constants.ANONYMOUS;
+    }
 
-        ViewModelFactoryProduct factory = new ViewModelFactoryProduct(mDb, mProductId);
-        final ViewModelProduct viewModelProduct = ViewModelProviders
-                .of(this, factory)
-                .get(ViewModelProduct.class);
-
-        // Observe
-        viewModelProduct
-                .getProduct()
-                .observe(this, new Observer<Product>() {
-                    @Override
-                    public void onChanged(@Nullable Product product) {
-                        viewModelProduct.getProduct()
-                                .removeObserver(this);
-
-                        // Update member variables
-                        mProduct = product;
-                        // Update the screen
-                        populateUi();
-                    }
-                });
+    /* Initialise anything here that can only be done when signed in */
+    private void onSignedInInitialise(String userUid) {
+        mUserUid = userUid;
     }
 
     /* If available loads the product image */
     private void loadImage() {
-        // Todo - what if image has been moved or deleted?
+        // Todo - what if image has been moved or deleted? SAVE TO Firebase Storage
         // Retrieve the image from public storage
         mResultsBitmap = BitmapUtils.resampleImage(this, mProductImageUri, null);
         mProductIV.setImageBitmap(mResultsBitmap);
@@ -303,7 +354,7 @@ public class ActivityDetailProduct
         }
 
         // Pack price
-        // TODO - Implement currency, no validation required I don't think...
+        // TODO - Implement currency, change data type to Float
         String unformattedPrice = mPackPriceET.getText().toString().trim();
 
         if (unformattedPrice.length() > 0) {
@@ -338,22 +389,27 @@ public class ActivityDetailProduct
         mProduct.setLocationInRoom(mLocationInRoom);
         mProduct.setCategory(mCategory);
         mProduct.setPackPrice(mPackPrice);
-        mProduct.setLocalImageUri(mProductImageUri);
+        mProduct.setLocalImageUri(mProductImageUri.toString());
 
-        // Make the product information final
-        final Product product = mProduct;
+        // Add or update the Firebase database with the product
+        // See: https://firebase.google.com/docs/database/admin/save-data
+        if(mProductIsNew) {
+            // This is a new product, so push to Firebase
+            mFbProductDbReference.push().setValue(mProduct);
+            finish();
+        } else {
+            // This is an existing product, so update.
+            // Todo - This updates the whole document, when it should only update fields that have changed - resolve
+            mFbProductDbReference.child(mProduct.getFbaseProductId()).setValue(mProduct);
+        }
+//        mFbProductDbReference.push().setValue(mProduct).addOnCompleteListener(task -> {
+//            Log.e(LOG_TAG, "Product saved successfully ");
+//            finish();
+//        });
 
-        // Insert or update the product
-        AppExecutors.getInstance().diskIO().execute(() -> {
-            // Insert the product
-            if (mProductId == -1) { // Insert new.
-                mDb.getProductDao().insertProduct(product);
-                finish();
-            } else { // Update existing.
-                mDb.getProductDao().updateProduct(product);
-                finish();
-            }
-        });
+        // Todo - find all occurrences of this and shift into a utils class
+        // saveOrUpdateProduct(product);
+
     }
 
     /* This method is called when updating a products information. */
@@ -371,8 +427,8 @@ public class ActivityDetailProduct
         mPackPriceET.setText(String.valueOf(mProduct.getPackPrice()));
 
         // Only load image if the Uri is not the default value (EMPTY)
-        if (!Uri.EMPTY.equals(mProduct.getLocalImageUri())) {
-            mProductImageUri = mProduct.getLocalImageUri();
+        if (!Uri.EMPTY.equals(Uri.parse(mProduct.getLocalImageUri()))) {
+            mProductImageUri = Uri.parse(mProduct.getLocalImageUri());
             loadImage();
         }
     }
@@ -382,7 +438,8 @@ public class ActivityDetailProduct
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
         /* Save the current product */
-        outState.putParcelable(Constants.PRODUCT_KEY, mProduct);
+        outState.putParcelable(Constants.PRODUCT_FB_REFERENCE_KEY, mProduct);
+        outState.putBoolean(Constants.PRODUCT_STATUS_KEY, mProductIsNew);
     }
 
     private void initialiseViews() {
@@ -413,12 +470,8 @@ public class ActivityDetailProduct
 
 
     /* Delete the product */
+    // todo - Complete the delete product action
     private void deleteProduct() {
-        AppExecutors
-                .getInstance()
-                .diskIO()
-                .execute(() -> mDb.getProductDao()
-                        .deleteProduct(mProduct));
         finish();
     }
 
@@ -723,7 +776,7 @@ public class ActivityDetailProduct
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         // If this is a new product, hide the "Delete" menu item.
-        if (mProductId == -1) {
+        if (mProductIsNew) {
             MenuItem menuItem = menu.findItem(R.id.menu_product_editor_action_delete);
             menuItem.setVisible(false);
         }
@@ -746,5 +799,19 @@ public class ActivityDetailProduct
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Add the firebase authentication state listener to the authentication instance
+        mFBAuth.addAuthStateListener(mFBAuthStateListener);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // Remove the firebase authentication state listener from the authentication instance
+        mFBAuth.removeAuthStateListener(mFBAuthStateListener);
     }
 }

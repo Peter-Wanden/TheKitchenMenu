@@ -5,10 +5,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.peter.thekitchenmenu.R;
+import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.ui.catalog.ActivityCatalogProduct;
 import com.example.peter.thekitchenmenu.ui.catalog.ActivityCatalogRecipe;
+import com.example.peter.thekitchenmenu.ui.detail.ActivityDetailProduct;
+import com.firebase.ui.auth.AuthUI;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import java.util.Arrays;
 
 // Todo - implement network / no network monitor
 

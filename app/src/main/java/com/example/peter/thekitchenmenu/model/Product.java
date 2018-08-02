@@ -8,12 +8,18 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.firebase.database.Exclude;
+
 @Entity(tableName = "Products")
 public class Product implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
+    @Exclude // Excludes id field for Firebase
     private int mProductId;
+
+    @ColumnInfo(name = "FBProductId")
+    private String mFbaseProductId;
 
     @ColumnInfo(name = "Description")
     private String mDescription;
@@ -44,11 +50,12 @@ public class Product implements Parcelable {
 
     @ColumnInfo(name = "Local_Image_Uri")
     @android.support.annotation.NonNull
-    private Uri mLocalImageUri;
+    private String mLocalImageUri = "";
 
     @Ignore
-    /* Constructors */
+    /* Constructor for Firebase */
     public Product(String description,
+                   String fbProductId,
                    String retailer,
                    int unitOfMeasure,
                    int packSize,
@@ -60,6 +67,7 @@ public class Product implements Parcelable {
                    Uri localImageUri) {
 
         this.mDescription = description;
+        this.mFbaseProductId = fbProductId;
         this.mRetailer = retailer;
         this.mUnitOfMeasure = unitOfMeasure;
         this.mPackSize = packSize;
@@ -68,11 +76,15 @@ public class Product implements Parcelable {
         this.mLocationInRoom = locationInRoom;
         this.mCategory = category;
         this.mPackPrice = packPrice;
-        this.mLocalImageUri = localImageUri;
+        this.mLocalImageUri = localImageUri.toString();
     }
 
-    /* Constructor for the database*/
+    /* Empty constructor as required by Firebase */
+    public Product(){};
+
+    /* Constructor for the local database*/
     public Product(int productId,
+                   String fbaseProductId,
                    String description,
                    String retailer,
                    int unitOfMeasure,
@@ -85,6 +97,7 @@ public class Product implements Parcelable {
                    Uri localImageUri) {
 
         this.mProductId = productId;
+        this.mFbaseProductId = fbaseProductId;
         this.mDescription = description;
         this.mRetailer = retailer;
         this.mUnitOfMeasure = unitOfMeasure;
@@ -94,12 +107,13 @@ public class Product implements Parcelable {
         this.mLocationInRoom = locationInRoom;
         this.mCategory = category;
         this.mPackPrice = packPrice;
-        this.mLocalImageUri = localImageUri;
+        this.mLocalImageUri = localImageUri.toString();
     }
 
 
     private Product(Parcel in) {
         mProductId = in.readInt();
+        mFbaseProductId = in.readString();
         mDescription = in.readString();
         mRetailer = in.readString();
         mUnitOfMeasure = in.readInt();
@@ -109,7 +123,7 @@ public class Product implements Parcelable {
         mLocationInRoom = in.readString();
         mCategory = in.readInt();
         mPackPrice = in.readDouble();
-        mLocalImageUri = Uri.parse(in.readString());
+        mLocalImageUri = in.readString();
     }
 
     public static final Creator<Product> CREATOR = new Creator<Product>() {
@@ -133,6 +147,7 @@ public class Product implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
 
         parcel.writeInt(mProductId);
+        parcel.writeString(mFbaseProductId);
         parcel.writeString(mDescription);
         parcel.writeString(mRetailer);
         parcel.writeInt(mUnitOfMeasure);
@@ -142,12 +157,15 @@ public class Product implements Parcelable {
         parcel.writeString(mLocationInRoom);
         parcel.writeInt(mCategory);
         parcel.writeDouble(mPackPrice);
-        parcel.writeString(String.valueOf(mLocalImageUri));
+        parcel.writeString(mLocalImageUri);
     }
 
     /* Getters and setters */
     public int getProductId() {return mProductId;}
     public void setProductId(int productId) {mProductId = productId;}
+
+    public String getFbaseProductId() {return mFbaseProductId;}
+    public void setFbaseProductId(String fbProductId) {mFbaseProductId = fbProductId;}
 
     public String getDescription() {return mDescription;}
     public void setDescription(String description) {mDescription = description;}
@@ -176,6 +194,6 @@ public class Product implements Parcelable {
     public double getPackPrice() {return mPackPrice;}
     public void setPackPrice(double packPrice) {mPackPrice = packPrice;}
 
-    public Uri getLocalImageUri() {return mLocalImageUri;}
-    public void setLocalImageUri(Uri localImageUri) {mLocalImageUri = localImageUri;}
+    public String getLocalImageUri() {return mLocalImageUri;}
+    public void setLocalImageUri(String localImageUri) {mLocalImageUri = localImageUri;}
 }

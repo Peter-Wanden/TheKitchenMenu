@@ -20,6 +20,6 @@ public class ViewModelFactoryProduct extends ViewModelProvider.NewInstanceFactor
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        return (T) new ViewModelProduct(mDb, mProductId);
+        return (T) new ViewModelLocalProduct(mDb, mProductId);
     }
 }

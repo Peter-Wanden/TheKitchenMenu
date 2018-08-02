@@ -70,7 +70,7 @@ public class ActivityDetailRecipe extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_recipe);
 
-        /* Construct a default product for field value comparison and validation */
+        /* Construct a default recipe for field value comparison and validation */
         mRecipe = new Recipe(
                 Constants.DEFAULT_RECIPE_TITLE,
                 Constants.DEFAULT_RECIPE_DESCRIPTION,
@@ -386,7 +386,6 @@ public class ActivityDetailRecipe extends AppCompatActivity {
             }
             finish();
         });
-
     }
 
     /* Deletes the current recipe and associated index's in all relational tables */
