@@ -12,13 +12,26 @@ package com.example.tkmapplibrary.dataValidation;
  */
 public class InputValidation {
 
-    /* Validation rules for products description */
+    /* Validation rules for a products description */
     public static int validateProductDescription(String description) {
         // Check if not null and contains more than 1 character
         if (description == null || description.length() < 1) {
             return 1;
             /* Limit length to 120 chars */
         } else if(description.length() > 120) {
+            return 2;
+        }
+        // A zero response is OK
+        return 0;
+    }
+
+    /* Validation rules for a products manufacturer */
+    public static int validateMadeBy(String madeBy) {
+        // Check if not null and contains more than 1 character
+        if (madeBy == null || madeBy.length() < 1) {
+            return 1;
+            /* Limit length to 120 chars */
+        } else if(madeBy.length() > 120) {
             return 2;
         }
         // A zero response is OK
@@ -46,8 +59,8 @@ public class InputValidation {
 
     /* Validation rules for pack size */
     public static boolean validatePackSize(int packSize) {
-        // Check to see if the value is greater than 1 and less then 1000
-        return packSize >= 1 && packSize <= 1000;
+        // Check to see if the value is greater than 1 and less then 10,000 grams.
+        return packSize >= 1 && packSize <= 10000;
     }
 
     /* Validation rules for shelf life */

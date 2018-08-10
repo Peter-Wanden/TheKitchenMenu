@@ -1,12 +1,8 @@
 package com.example.peter.thekitchenmenu.viewmodels;
 
-import android.arch.core.util.Function;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.example.peter.thekitchenmenu.AppExecutors;
@@ -21,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class is made up of a combination of teh following:
+ * This class is made up of a combination of the following:
  * See: https://firebase.googleblog.com/2017/12/using-android-architecture-components.html
  * See: https://android.jlelse.eu/android-architecture-components-with-firebase-907b7699f6a0
  */
@@ -35,35 +31,53 @@ public class ViewModelCatalogProductList extends ViewModel {
     // Get a reference to the product collection
     private static final DatabaseReference productReference =
             FirebaseDatabase
-            .getInstance()
-            .getReference(Constants.FB_PRODUCT_REFERENCE);
+                    .getInstance()
+                    .getReference(Constants.FB_COLLECTION_PRODUCTS);
 
     private final MediatorLiveData<List<Product>> productLiveData = new MediatorLiveData<>();
 
     public ViewModelCatalogProductList() {
         // Set up the MediatorLiveData to convert DataSnapshot objects into Product objects
-        FirebaseQueryLiveData liveData = new FirebaseQueryLiveData(productReference);
-        Log.e(LOG_TAG, "ViewModelCatalogProductList() called.");
+        FirebaseQueryLiveData liveData = new FirebaseQueryLiveData(productReference
+                .orderByChild(Constants.PRODUCT_BASE_DESCRIPTION_KEY));
 
-        productLiveData.addSource(liveData, snapshot -> {
-            if(snapshot != null) {
-                AppExecutors.getInstance().networkIO().execute(() -> {
-                    int loopValue = 0;
-                    for(DataSnapshot shot : snapshot.getChildren()) {
-                        Product product = shot.getValue(Product.class);
-                        if(!productList.contains(product)){
-                            Log.e(LOG_TAG, "");
-                            loopValue ++;
-                            productList.add(product);
-                        }
+        AppExecutors.getInstance().networkIO().execute(() ->
+                productLiveData.addSource(liveData, snapshot -> {
+            if (snapshot != null && snapshot.exists()) {
+                // This is a snapshot of the entire collection at reference 'products'.
+                // Clear out the old data
+                productList.clear();
+                // Loop through and add the new data
+                for (DataSnapshot shot : snapshot.getChildren()) {
+                    Log.e(LOG_TAG, "Snapshot is: " + snapshot);
+                    // Get the product values
+                    Product product = shot.getValue(Product.class);
+                    if (product != null) {
+                        product.setFbProductReferenceId(shot.getKey());
                     }
-                    productLiveData.postValue(productList);
-                    Log.e(LOG_TAG, "productLiveData.postValue(productList) has: " + productList.size() + " items" );
-                });
+                    Log.e(LOG_TAG, "\n"
+                            + "Category is: " + product.getCategory() + "\n"
+                            + "Created by: " + product.getCreatedBy() + "\n"
+                            + "Description: " + product.getDescription() + "\n"
+                            + "Made by: " + product.getMadeBy() + "\n"
+                            + "Pack size: " + product.getPackSize() + "\n"
+                            + "Price ave: " + product.getPackPrice() + "\n"
+                            + "Shelf life is: " + product.getShelfLife() + "\n"
+                            + "Uom is: " + product.getUnitOfMeasure() + "\n"
+                            + "Ref is: " + shot.getRef() + "\n"
+                            + "Key is: " + shot.getKey() + "\n"
+                            + "FbProductRefID is: " + product.getFbProductReferenceId());
+
+                    // Add the product to the list
+                    productList.add(product);
+
+                }
+                // Post the new data to LiveData
+                productLiveData.postValue(productList);
             } else {
                 productLiveData.setValue(null);
             }
-        });
+        }));
     }
 
     // Fetches the generated list of products
@@ -71,4 +85,5 @@ public class ViewModelCatalogProductList extends ViewModel {
         Log.e(LOG_TAG, "getProductsLiveData() - has: " + productList.size() + " items.");
         return productLiveData;
     }
+
 }

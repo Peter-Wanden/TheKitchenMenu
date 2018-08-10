@@ -6,6 +6,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -13,6 +17,7 @@
             android:padding="@dimen/activity_margin"
             tools:context=".ui.detail.ActivityDetailProduct">
 
+            <!-- Relative layout for the image section -->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="250dp">
@@ -26,6 +31,7 @@
 
                 <ImageButton
                     android:id="@+id/activity_detail_product_ib_add_picture"
+                    android:contentDescription="@string/cd_add_image"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:src="@drawable/ic_action_add"
@@ -35,306 +41,21 @@
                     android:layout_alignEnd="@+id/activity_detail_product_iv"/>
             </RelativeLayout>
 
-            <!-- Product description container -->
-            <LinearLayout
-                android:id="@+id/activity_detail_product_container_description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <!-- Product description label -->
-                <TextView
-                    style="@style/CategoryStyle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/label_description" />
-
-                <!-- Input field -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:orientation="vertical">
-
-                    <!-- Description EditText field -->
-                    <EditText
-                        android:id="@+id/activity_detail_product_et_description"
-                        style="@style/EditTextFieldStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/hint_required_120_char_fields"
-                        android:inputType="textCapWords" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Retailer field container -->
-            <LinearLayout
-                android:id="@+id/activity_detail_product_container_retailer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <!-- Label -->
-                <TextView
-                    style="@style/CategoryStyle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/label_retailer" />
-
-                <!-- Input field -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:orientation="vertical">
-
-                    <!-- EditText field -->
-                    <EditText
-                        android:id="@+id/activity_detail_product_et_retailer"
-                        style="@style/EditTextFieldStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/hint_not_required_120_char_fields"
-                        android:inputType="textCapWords" />
-
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Pack size container -->
-            <LinearLayout
-                android:id="@+id/activity_detail_product_container_pack_size"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <!-- Label -->
-                <TextView
-                    style="@style/CategoryStyle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/label_pack_size" />
-
-                <!-- Input field container -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:orientation="vertical">
-
-                    <!-- EditText field -->
-                    <EditText
-                        android:id="@+id/activity_detail_product_et_pack_size"
-                        style="@style/EditTextFieldStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/hint_pack_size"
-                        android:inputType="number" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Unit of measure container -->
-            <LinearLayout
-                android:id="@+id/activity_detail_product_container_UoM"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <!-- Label -->
-                <TextView
-                    style="@style/CategoryStyle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/label_UoM" />
-
-                <!-- Input field container -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:orientation="vertical">
-
-                    <!-- Unit of measure drop-down spinner -->
-                    <Spinner
-                        android:id="@+id/activity_detail_product_spinner_UoM"
-                        style="EditTextFieldStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="48dp"
-                        android:paddingEnd="16dp"
-                        android:paddingStart="0dp"
-                        android:spinnerMode="dropdown" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Unit of measure container -->
-            <LinearLayout
-                android:id="@+id/activity_detail_product_container_shelf_life"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <!-- Label -->
-                <TextView
-                    style="@style/CategoryStyle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/label_shelf_life" />
-
-                <!-- Input field container -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:orientation="vertical">
-
-                    <!-- Shelf life drop-down spinner -->
-                    <Spinner
-                        android:id="@+id/activity_detail_product_spinner_shelf_life"
-                        style="EditTextFieldStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="48dp"
-                        android:paddingEnd="16dp"
-                        android:paddingStart="0dp"
-                        android:spinnerMode="dropdown" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Location room container -->
-            <LinearLayout
-                android:id="@+id/activity_detail_product_container_location_room"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <!-- Label -->
-                <TextView
-                    style="@style/CategoryStyle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/label_location_room" />
-
-                <!-- Input field container -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:orientation="vertical">
-
-                    <!-- EditText field -->
-                    <EditText
-                        android:id="@+id/activity_detail_product_et_location_room"
-                        style="@style/EditTextFieldStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/hint_location_room"
-                        android:inputType="textCapWords" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Location in room container -->
-            <LinearLayout
-                android:id="@+id/activity_detail_product_container_location_in_room"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <!-- Label -->
-                <TextView
-                    style="@style/CategoryStyle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/label_location_in_room" />
-
-                <!-- Input field container -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:orientation="vertical">
-
-                    <!-- EditText field -->
-                    <EditText
-                        android:id="@+id/activity_detail_product_et_location_in_room"
-                        style="@style/EditTextFieldStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/hint_location_in_room"
-                        android:inputType="textCapWords" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Product category container -->
-            <LinearLayout
-                android:id="@+id/activity_detail_product_container_category"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <!-- Label -->
-                <TextView
-                    style="@style/CategoryStyle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/label_category" />
-
-                <!-- Input field container -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:orientation="vertical">
-
-                    <!-- Category drop-down spinner -->
-                    <Spinner
-                        android:id="@+id/activity_detail_product_spinner_category"
-                        style="EditTextFieldStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="48dp"
-                        android:paddingEnd="16dp"
-                        android:paddingStart="0dp"
-                        android:spinnerMode="dropdown" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Price container -->
-            <LinearLayout
-                android:id="@+id/activity_detail_product_container_price"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <!-- Label -->
-                <TextView
-                    style="@style/CategoryStyle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/label_price" />
-
-                <!-- Input field container -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:orientation="vertical">
-
-                    <!-- EditText field -->
-                    <EditText
-                        android:id="@+id/activity_detail_product_et_price"
-                        style="@style/EditTextFieldStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/hint_price"
-                        android:inputType="number" />
-                </LinearLayout>
-            </LinearLayout>
+            <include layout="@layout/activity_detail_product_base_fields_editable"/>
+            <include layout="@layout/activity_detail_product_base_fields_uneditable"/>
+            <include layout="@layout/activity_detail_product_user_fields_editable"/>
+            <include layout="@layout/activity_detail_product_user_fields_uneditable"/>
         </LinearLayout>
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/activity_detail_product_fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="@dimen/fab_margin"
+                android:src="@drawable/ic_action_basket"/>
+
+        </RelativeLayout>
     </ScrollView>
 </layout>

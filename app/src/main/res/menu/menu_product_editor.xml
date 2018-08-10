@@ -11,12 +11,20 @@
         android:id="@+id/menu_product_editor_action_save"
         android:contentDescription="@string/cd_save_product"
         android:title="@string/action_save"
-        android:icon="@drawable/ic_done"
-        app:showAsAction="always" />
+        android:icon="@drawable/ic_action_done"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/menu_product_editor_action_edit"
+        android:contentDescription="@string/cd_action_edit_product"
+        android:title="@string/action_edit"
+        android:icon="@drawable/ic_action_edit"
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/menu_product_editor_action_delete"
         android:contentDescription="@string/cd_delete_product"
         android:title="@string/action_delete"
-        app:showAsAction="never" />
+        android:icon="@drawable/ic_action_delete"
+        app:showAsAction="ifRoom" />
 </menu>

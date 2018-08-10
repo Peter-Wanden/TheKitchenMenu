@@ -3,10 +3,8 @@ package com.example.peter.thekitchenmenu.data;
 import android.arch.lifecycle.LiveData;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,7 +30,7 @@ public class FirebaseQueryLiveData extends LiveData<DataSnapshot> {
     };
 
     private final Query query;
-    private final TKMValueEventListener listener = new TKMValueEventListener();
+    private final TKMChildEventListener listener = new TKMChildEventListener();
 
     public FirebaseQueryLiveData(Query query) {
         this.query = query;
@@ -54,19 +52,20 @@ public class FirebaseQueryLiveData extends LiveData<DataSnapshot> {
 
     @Override
     protected void onInactive() {
-        // Listener removal is schedule on a two second delay
+        // Listener removal is scheduled on a two second delay
         handler.postDelayed(removeListener, 2000);
         listenerRemovePending = true;
     }
 
-    private class TKMValueEventListener implements ValueEventListener {
+    private class TKMChildEventListener implements ValueEventListener {
+
         @Override
-        public void onDataChange(DataSnapshot dataSnapshot) {
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             setValue(dataSnapshot);
         }
 
         @Override
-        public void onCancelled(DatabaseError databaseError) {
+        public void onCancelled(@NonNull DatabaseError databaseError) {
             Log.e(LOG_TAG, "Can't listen to query " + query, databaseError.toException());
         }
 

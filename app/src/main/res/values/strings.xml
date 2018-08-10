@@ -22,21 +22,27 @@
     <string name="cd_delete_recipe">Click to delete the current recipe</string>
     <string name="cd_save_product">Click to save the current product</string>
     <string name="cd_delete_product">Click to delete the current product</string>
+    <string name="cd_action_edit_product">Click to edit the current product</string>
+    <string name="cd_add_image">Click to add an picture</string>
 
     <!-- Common field labels and hints -->
     <string name="label_description">Description</string>
+    <string name="label_made_by">Made by</string>
+    <string name="hint_made_by">Who makes it?</string>
     <string name="label_retailer">Retailer</string>
     <string name="hint_required_120_char_fields">Enter up to 120 characters</string>
+    <string name="hint_description">What do you call this item?</string>
+    <string name="hint_retailer">Where do you buy it?</string>
     <string name="hint_not_required_120_char_fields">Enter up to 120 characters</string>
     <string name="label_location_room">Storage room</string>
-    <string name="hint_location_room">What room is this product stored in?</string>
-    <string name="label_location_in_room">Location in room</string>
+    <string name="hint_location_room">What room do you keep it?</string>
+    <string name="label_location_in_room">Where abouts?</string>
     <string name="hint_location_in_room">Where abouts in the room?</string>
     <string name="label_pack_size">Pack size</string>
-    <string name="hint_pack_size">How many in a pack?</string>
+    <string name="hint_pack_size">How many is in a pack?</string>
     <string name="label_UoM">Unit of Measure</string>
     <string name="label_price">Price</string>
-    <string name="hint_price">How much?</string>
+    <string name="hint_price">How much does it cost?</string>
     <string name="label_shelf_life">Shelf life</string>
     <string name="label_category">Category</string>
     <string name="label_recipe_title"> Recipe title</string>
@@ -82,8 +88,10 @@
     <!-- Common menu bar options -->
     <string name="action_save">Save</string>
     <string name="action_delete">Delete</string>
+    <string name="action_edit">Edit</string>
 
     <!-- ActivityDetailProduct titles -->
+    <string name="activity_detail_product_title_view">Product View</string>
     <string name="activity_detail_product_title">Product Details</string>
     <string name="activity_detail_product_title_update">Edit a Product</string>
     <string name="activity_detail_product_title_add_new">Add a Product</string>
@@ -92,6 +100,10 @@
     <string name="input_error_product_description_too_short">Description too short, needs to be
         between 1 and 120 characters.</string>
     <string name="input_error_product_description_too_long">Description too long, needs to be
+        between 1 and 120 characters.</string>
+    <string name="input_error_product_made_by_too_short">Manufacturer name too short, needs to be
+        between 1 and 120 characters.</string>
+    <string name="input_error_product_made_by_too_long">Manufacturer name too long, needs to be
         between 1 and 120 characters.</string>
     <string name="input_error_product_retailer_too_short">Retailer name too short, needs to be
         between 1 and 120 characters.</string>
@@ -114,7 +126,7 @@
         between 1 and 120 characters</string>
     <string name="input_error_recipe_servings">Recipe must make more than one portion.</string>
 
-    <!-- ActivityProductCatalog -->
+    <!-- ActivityCatalogProduct -->
     <string name="product_catalog_empty_view_title_text">The cupboards are empty.</string>
     <string name="product_catalog_empty_view_subtitle_text">Press + to add some products!</string>
     <string name="image_of_meal">An image of the selected recipe</string>
@@ -128,6 +140,10 @@
     <string name="activity_catalog_recipe_empty_view__sub_title_text">Press the plus button to
         add some.</string>
     <string name="activity_catalog_recipe_title">Recipe Catalog</string>
+
+    <!-- AdapterCatalogProduct -->
+    <string name="adapter_catalog_product_creator_yes">Yes</string>
+    <string name="adapter_catalog_product_creator_no">No</string>
 
     <!-- ActivityDetailRecipe titles -->
     <string name="activity_detail_recipe_title_update">Update Recipe</string>
@@ -154,5 +170,6 @@
 
     <!-- General errors -->
     <string name="delete_file_error">Error deleting file - please try again.</string>
+    <string name="label_added_by_me">Added by me</string>
 
 </resources>

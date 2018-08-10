@@ -9,8 +9,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.data.IngredientAndProductDAO;
-import com.example.peter.thekitchenmenu.model.Ingredient;
 import com.example.peter.thekitchenmenu.model.IngredientAndProduct;
 import com.example.peter.thekitchenmenu.utils.Converters;
 
@@ -66,7 +64,7 @@ public class AdapterCatalogIngredients
         holder.descriptionTV.setText(ingredient.getDescription());
         // Todo - This field should be calculated
         holder.quantityTV.setText(String.valueOf(ingredient.getQuantityPerServing()));
-        holder.measureTV.setText(Converters.getStringUnitOfMeasure(mContext, ingredient.getUoM()));
+        holder.measureTV.setText(Converters.getUnitOfMeasureString(mContext, ingredient.getUoM()));
     }
 
     /* Returns the number of items in the adapter */

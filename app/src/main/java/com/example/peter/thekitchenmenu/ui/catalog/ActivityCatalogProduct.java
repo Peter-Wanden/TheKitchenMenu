@@ -1,7 +1,6 @@
 package com.example.peter.thekitchenmenu.ui.catalog;
 
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,10 +9,10 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
+import com.example.peter.thekitchenmenu.data.TKMDatabase;
 import com.example.peter.thekitchenmenu.model.Product;
 import com.example.peter.thekitchenmenu.ui.detail.ActivityDetailProduct;
 
@@ -32,6 +31,9 @@ public class ActivityCatalogProduct
         AdapterCatalogProduct.ProductCatalogAdapterOnClickHandler {
 
     public static final String LOG_TAG = ActivityCatalogProduct.class.getSimpleName();
+
+    /* Instance of the database */
+    private TKMDatabase mDb;
 
     /* Adapter for the product list view */
     public AdapterCatalogProduct mCatalogAdapter;
@@ -63,8 +65,11 @@ public class ActivityCatalogProduct
         // If the user is not logged in
         mUserUid = Constants.ANONYMOUS;
 
-        // Get an instance to Firebase authentication */
+        // Get an instance of Firebase authentication */
         mFBAuth = FirebaseAuth.getInstance();
+
+        // Initialise the local database
+        mDb = TKMDatabase.getInstance(getApplicationContext());
 
         setupViews();
 
@@ -73,19 +78,6 @@ public class ActivityCatalogProduct
         mCatalogAdapter = new AdapterCatalogProduct(this, this);
 
         mRecyclerView.setAdapter(mCatalogAdapter);
-
-        // LiveData and ViewModel for Firebase
-        ViewModelCatalogProductList viewModelCatalogProducts =
-                ViewModelProviders.of(this).get(ViewModelCatalogProductList.class);
-
-        LiveData<List<Product>> productLiveData = viewModelCatalogProducts.getProductsLiveData();
-
-        productLiveData.observe(this, products -> {
-            if(products != null) {
-                mCatalogAdapter.setProducts(products);
-                Log.e(LOG_TAG, "onCreate() - There are: " + products.size() + " items being sent to the adapter.");
-            }
-        });
 
         // Firebase authentication listener (attached in onResume and detached in onPause)
         mFBAuthStateListener = firebaseAuth -> {
@@ -124,6 +116,24 @@ public class ActivityCatalogProduct
 
         // Update the user id
         mUserUid = userUid;
+        mCatalogAdapter.setUserId(mUserUid);
+
+        // We can only get and set the data once the user has signed in, as we need the user ID
+
+        // LiveData and ViewModel for Firebase
+        ViewModelCatalogProductList viewModelCatalogProducts =
+                ViewModelProviders.of(this).get(ViewModelCatalogProductList.class);
+//        ViewModelCatalogProduct catalogProduct =
+//                ViewModelProviders.of(this).get(ViewModelCatalogProduct.class);
+
+        LiveData<List<Product>> productLiveData = viewModelCatalogProducts.getProductsLiveData();
+
+        productLiveData.observe(this, products -> {
+            if(products != null) {
+                mCatalogAdapter.setProducts(products);
+                // Loop through live data products and set them to the local database
+            }
+        });
     }
 
     private void setupViews() {
@@ -153,11 +163,13 @@ public class ActivityCatalogProduct
      * @param fbProduct - The selected product.
      */
     @Override
-    public void onClick(Product fbProduct) {
+    public void onClick(Product fbProduct, boolean isCreator) {
+
         Intent intent = new Intent(
                 ActivityCatalogProduct.this,
                 ActivityDetailProduct.class);
         intent.putExtra(Constants.PRODUCT_FB_REFERENCE_KEY, fbProduct);
+        intent.putExtra(Constants.PRODUCT_IS_CREATOR_KEY, isCreator);
         startActivity(intent);
     }
 
@@ -166,7 +178,6 @@ public class ActivityCatalogProduct
         super.onResume();
         // Add the firebase authentication state listener to the authentication instance
         mFBAuth.addAuthStateListener(mFBAuthStateListener);
-        Log.e(LOG_TAG, "onResume() - called.");
     }
 
     @Override
@@ -175,7 +186,6 @@ public class ActivityCatalogProduct
         if (mFBAuthStateListener != null) {
             // Remove the firebase authentication state listener from the authentication instance
             mFBAuth.removeAuthStateListener(mFBAuthStateListener);
-            Log.e(LOG_TAG, "onPause() - called ");
         }
     }
 }

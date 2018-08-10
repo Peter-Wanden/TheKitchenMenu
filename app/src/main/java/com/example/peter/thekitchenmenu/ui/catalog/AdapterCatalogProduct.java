@@ -20,18 +20,24 @@ public class AdapterCatalogProduct
 
     private static final String LOG_TAG = AdapterCatalogProduct.class.getSimpleName();
 
-    /* The context we use to utility methods, app resources and layout inflaters */
+    // The context we use to utility methods, app resources and layout inflaters
     private final Context mContext;
 
-    /* List storing the database query result */
+    // List storing the database query result
     private List<Product> mProducts;
 
-    /* Click handler */
+    // The user Id of the current user
+    private String mUserId;
+
+    // Records if current user is creator of product
+    private boolean mIsCreator = false;
+
+    // Click handler
     private final ProductCatalogAdapterOnClickHandler mClickHandler;
 
     /* Click interface that receives on click messages */
     public interface ProductCatalogAdapterOnClickHandler {
-        void onClick(Product product);
+        void onClick(Product product, boolean isOwner);
     }
 
     public AdapterCatalogProduct(Context context, ProductCatalogAdapterOnClickHandler listener) {
@@ -59,16 +65,20 @@ public class AdapterCatalogProduct
 
         /* Set the description */
         holder.descriptionTV.setText(product.getDescription());
-        /* Set the retailer */
-        holder.retailerTV.setText(product.getRetailer());
+        /* Set the created by me value */
+        if(mUserId.equals(product.getCreatedBy())) {
+            holder.createdByMeTv.setText(R.string.adapter_catalog_product_creator_yes);
+        } else {
+            holder.createdByMeTv.setText(R.string.adapter_catalog_product_creator_no);
+        }
+
         /* Set the pack size */
         holder.packSizeTV.setText(String.valueOf(product.getPackSize()));
         /* Set the unit of measure */
-        holder.UoMTV.setText(Converters.getStringUnitOfMeasure
+        holder.UoMTV.setText(Converters.getUnitOfMeasureString
                 (mContext, product.getUnitOfMeasure()));
 
         // Todo - Add a thumbnail of the product image
-
     }
 
     /* Returns the number of items in the adapter */
@@ -76,6 +86,11 @@ public class AdapterCatalogProduct
     public int getItemCount() {
         if (mProducts == null) return 0;
         return mProducts.size();
+    }
+
+    /* Sets the user ID */
+    public void setUserId(String userId) {
+        mUserId = userId;
     }
 
     /* Getter for the current list of products */
@@ -107,7 +122,7 @@ public class AdapterCatalogProduct
             View.OnClickListener {
 
         final TextView descriptionTV;
-        final TextView retailerTV;
+        final TextView createdByMeTv;
         final TextView packSizeTV;
         final TextView UoMTV;
 
@@ -116,7 +131,7 @@ public class AdapterCatalogProduct
             super(itemView);
 
             descriptionTV = itemView.findViewById(R.id.list_item_product_description);
-            retailerTV = itemView.findViewById(R.id.list_item_product_retailer);
+            createdByMeTv = itemView.findViewById(R.id.list_item_product_added_by_me);
             packSizeTV = itemView.findViewById(R.id.list_item_product_pack_size);
             UoMTV = itemView.findViewById(R.id.list_item_product_unit_of_measure);
 
@@ -124,8 +139,12 @@ public class AdapterCatalogProduct
         }
 
         public void onClick(View v) {
+            // Get the product from the adapter at the clicked position
             Product product = mProducts.get(getAdapterPosition());
-            mClickHandler.onClick(product);
+            // Find out if this user was the creator of the product
+            mIsCreator = mUserId.equals(product.getCreatedBy());
+            // Send the product and its creator bool to be processed by the click handler
+            mClickHandler.onClick(product, mIsCreator);
         }
     }
 }

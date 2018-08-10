@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:id="@+id/activity_detail_product_base_fields_uneditable_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Product description container -->
+        <LinearLayout
+            android:id="@+id/activity_detail_product_base_fields_uneditable_container_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- Product description label -->
+            <TextView
+                style="@style/CategoryStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/label_description" />
+
+            <!-- Value field -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:orientation="vertical">
+
+                <!-- Description text field -->
+                <TextView
+                    android:id="@+id/activity_detail_product_base_fields_uneditable_tv_description"
+                    style="@style/EditTextFieldStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="bottom"
+                    tools:text="Laundry Detergent" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Made by container -->
+        <LinearLayout
+            android:id="@+id/activity_detail_product_base_fields_uneditable_container_made_by"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <!-- Product description label -->
+            <TextView
+                style="@style/CategoryStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/label_made_by" />
+
+            <!-- Made by field container -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:orientation="vertical">
+
+                <!-- Made by Text field -->
+                <TextView
+                    android:id="@+id/activity_detail_product_base_fields_uneditable_tv_made_by"
+                    style="@style/EditTextFieldStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="bottom"
+                    tools:text="Procter &amp; Gamble"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Pack size container -->
+        <LinearLayout
+            android:id="@+id/activity_detail_product_base_fields_uneditable_container_pack_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- Label -->
+            <TextView
+                style="@style/CategoryStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/label_pack_size" />
+
+            <!-- Field container -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:orientation="vertical">
+
+                <!-- EditText field -->
+                <TextView
+                    android:id="@+id/activity_detail_product_base_fields_uneditable_tv_pack_size"
+                    style="@style/EditTextFieldStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="bottom"
+                    tools:text="2000" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Unit of measure container -->
+        <LinearLayout
+            android:id="@+id/activity_detail_product_base_fields_uneditable_container_UoM"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <!-- Label -->
+            <TextView
+                style="@style/CategoryStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/label_UoM" />
+
+            <!-- Field container -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:orientation="vertical">
+
+                <!-- Unit of measure text view -->
+                <TextView
+                    android:id="@+id/activity_detail_product_base_fields_uneditable_tv_UoM"
+                    style="@style/EditTextFieldStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="bottom"
+                    tools:text="Grams"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Shelf life container -->
+        <LinearLayout
+            android:id="@+id/activity_detail_product_base_fields_uneditable_container_shelf_life"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- Label -->
+            <TextView
+                style="@style/CategoryStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/label_shelf_life" />
+
+            <!-- Field container -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:orientation="vertical">
+
+                <!-- Shelf life text view -->
+                <TextView
+                    android:id="@+id/activity_detail_product_base_fields_uneditable_tv_shelf_life"
+                    style="@style/EditTextFieldStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="bottom"
+                    tools:text="1 Week" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Product category container -->
+        <LinearLayout
+            android:id="@+id/activity_detail_product_base_fields_uneditable_container_category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- Label -->
+            <TextView
+                style="@style/CategoryStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/label_category" />
+
+            <!-- Input field container -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:orientation="vertical">
+
+                <!-- Category text view -->
+                <TextView
+                    android:id="@+id/activity_detail_product_base_fields_uneditable_tv_category"
+                    style="@style/EditTextFieldStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="bottom"
+                    tools:text="Non Food" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</layout>
