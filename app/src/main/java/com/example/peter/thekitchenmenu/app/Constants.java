@@ -26,7 +26,7 @@ public class Constants {
     public static final String PRODUCT_BASE_SHELF_LIFE_KEY = "shelfLife";
     public static final String PRODUCT_BASE_PACK_SIZE_KEY = "packSize";
     public static final String PRODUCT_BASE_UNIT_OF_MEASURE_KEY = "unitOfMeasure";
-    public static final String PRODUCT_BASE_PRICE_AVE_KEY = "packPrice";
+    public static final String PRODUCT_BASE_PRICE_AVE_KEY = "packAvePrice";
     public static final String PRODUCT_BASE_CREATED_BY_KEY = "createdBy";
     public static final String PRODUCT_BASE_DOC_REF_KEY = "documentReference";
 
@@ -36,10 +36,13 @@ public class Constants {
     public static final String PRODUCT_USER_LOCATION_IN_ROOM_KEY = "locationInRoom";
     public static final String PRODUCT_USER_RETAILER_KEY = "retailer";
     public static final String PRODUCT_USER_PACK_PRICE_KEY = "packPrice";
+    public static final String PRODUCT_USER_FB_REFERENCE_KEY = "fbProductReferenceKey";
+    public static final String PRODUCT_USER_FB_USED_USER_KEY = "fbUsedProductsUserKey";
 
     /* Default values for a product */
     public static final int DEFAULT_PRODUCT_ID = -1;
     public static final String DEFAULT_FB_PRODUCT_ID = "no_fd_id";
+    public static final String DEFAULT_FB_USED_PRODUCT_ID = "no_used_product_id";
     public static final String DEFAULT_PRODUCT_DESCRIPTION = "no_description";
     public static final String DEFAULT_PRODUCT_MADE_BY = "anonymous";
     public static final String DEFAULT_PRODUCT_RETAILER = "no_retailer";
@@ -50,11 +53,9 @@ public class Constants {
     public static final String DEFAULT_PRODUCT_LOC_IN_ROOM = "no_location_in_room";
     public static final int DEFAULT_PRODUCT_CATEGORY = 0;
     public static final double DEFAULT_PRODUCT_PRICE = 0.00;
+    public static final double DEFAULT_PRODUCT_PRICE_AVERAGE = 0.00;
     public static final Uri DEFAULT_LOCAL_IMAGE_URI = Uri.parse("");
     public static final Uri DEFAULT_FB_IMAGE_STORAGE_URI = Uri.parse("");
-
-    /* Default values for a product booleans */
-    public static final boolean PRODUCT_IS_NEW = false;
 
     /* Product screen titles */
     public static final int SCREEN_TITLE_PRODUCT_VIEW = 1;
@@ -84,6 +85,7 @@ public class Constants {
     public static final int REQUEST_IMAGE_CAPTURE = 1;
     public static final int REQUEST_STORAGE_PERMISSION = 2;
     public static final int REQUEST_IMAGE_MEDIA_STORE = 3;
+    public static final int REQUEST_IMAGE_PICKER = 4;
 
     /* ***************
      * File provider *
@@ -97,8 +99,9 @@ public class Constants {
     public static final String FB_COLLECTION_PRODUCTS = "/collection_products/";
     public static final String FB_COLLECTION_USERS = "/collection_users/";
     public static final String FB_COLLECTION_USED_PRODUCTS = "/collection_used_products";
-    public static final int REQUEST_CODE_SIGN_IN = 1;
+    public static final int REQUEST_CODE_SIGN_IN = 5;
     public static final String ANONYMOUS = "anonymous";
+    public static final String FB_STORAGE_IMAGE_REFERENCE = "/collection_product_images/";
 
     /* *******
      * Users *

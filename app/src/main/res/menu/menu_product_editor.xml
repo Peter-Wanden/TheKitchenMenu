@@ -26,5 +26,5 @@
         android:contentDescription="@string/cd_delete_product"
         android:title="@string/action_delete"
         android:icon="@drawable/ic_action_delete"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never"/>
 </menu>

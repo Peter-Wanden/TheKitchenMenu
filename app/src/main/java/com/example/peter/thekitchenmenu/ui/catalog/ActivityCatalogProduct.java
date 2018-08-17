@@ -9,6 +9,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
@@ -32,17 +35,11 @@ public class ActivityCatalogProduct
 
     public static final String LOG_TAG = ActivityCatalogProduct.class.getSimpleName();
 
-    /* Instance of the database */
-    private TKMDatabase mDb;
-
     /* Adapter for the product list view */
     public AdapterCatalogProduct mCatalogAdapter;
 
     /* RecyclerView for the list view */
     private RecyclerView mRecyclerView;
-
-    /* Floating action button */
-    private FloatingActionButton mFab;
 
     /* *******************
      * Firebase database *
@@ -67,9 +64,6 @@ public class ActivityCatalogProduct
 
         // Get an instance of Firebase authentication */
         mFBAuth = FirebaseAuth.getInstance();
-
-        // Initialise the local database
-        mDb = TKMDatabase.getInstance(getApplicationContext());
 
         setupViews();
 
@@ -123,8 +117,6 @@ public class ActivityCatalogProduct
         // LiveData and ViewModel for Firebase
         ViewModelCatalogProductList viewModelCatalogProducts =
                 ViewModelProviders.of(this).get(ViewModelCatalogProductList.class);
-//        ViewModelCatalogProduct catalogProduct =
-//                ViewModelProviders.of(this).get(ViewModelCatalogProduct.class);
 
         LiveData<List<Product>> productLiveData = viewModelCatalogProducts.getProductsLiveData();
 
@@ -140,9 +132,9 @@ public class ActivityCatalogProduct
 
         /* Get a reference to the views */
         mRecyclerView = findViewById(R.id.activity_catalog_product_rv);
-        mFab = findViewById(R.id.activity_catalog_product_fab);
+        FloatingActionButton mFab = findViewById(R.id.activity_catalog_product_fab);
+
         /* Create and set the layout manager */
-        /* Todo - set up a master detail flow for products */
         LinearLayoutManager layoutManager =
                 new LinearLayoutManager(this,
                         LinearLayoutManager.VERTICAL, false);
@@ -186,6 +178,26 @@ public class ActivityCatalogProduct
         if (mFBAuthStateListener != null) {
             // Remove the firebase authentication state listener from the authentication instance
             mFBAuth.removeAuthStateListener(mFBAuthStateListener);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_product_catalog, menu);
+        return true;
+    }
+
+    // Handles the menu sign out button
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.sign_out_menu:
+                // Sign the user out
+                AuthUI.getInstance().signOut(this);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }

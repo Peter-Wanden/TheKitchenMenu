@@ -37,47 +37,35 @@ public class ViewModelCatalogProductList extends ViewModel {
     private final MediatorLiveData<List<Product>> productLiveData = new MediatorLiveData<>();
 
     public ViewModelCatalogProductList() {
+
         // Set up the MediatorLiveData to convert DataSnapshot objects into Product objects
         FirebaseQueryLiveData liveData = new FirebaseQueryLiveData(productReference
                 .orderByChild(Constants.PRODUCT_BASE_DESCRIPTION_KEY));
 
         AppExecutors.getInstance().networkIO().execute(() ->
                 productLiveData.addSource(liveData, snapshot -> {
-            if (snapshot != null && snapshot.exists()) {
-                // This is a snapshot of the entire collection at reference 'products'.
-                // Clear out the old data
-                productList.clear();
-                // Loop through and add the new data
-                for (DataSnapshot shot : snapshot.getChildren()) {
-                    Log.e(LOG_TAG, "Snapshot is: " + snapshot);
-                    // Get the product values
-                    Product product = shot.getValue(Product.class);
-                    if (product != null) {
-                        product.setFbProductReferenceId(shot.getKey());
+                    if (snapshot != null && snapshot.exists()) {
+                        Log.e(LOG_TAG, "snapshot looks like: " + snapshot);
+
+                        // This is a snapshot of the entire collection at reference 'products'.
+                        // Clear out the old data
+                        productList.clear();
+                        // Loop through and add the new data
+                        for (DataSnapshot shot : snapshot.getChildren()) {
+                            // Get the product values
+                            Product product = shot.getValue(Product.class);
+                            if (product != null) {
+                                product.setFbProductReferenceKey(shot.getKey());
+                            }
+                            // Add the product to the list
+                            productList.add(product);
+                        }
+                        // Post the new data to LiveData
+                        productLiveData.postValue(productList);
+                    } else {
+                        productLiveData.setValue(null);
                     }
-                    Log.e(LOG_TAG, "\n"
-                            + "Category is: " + product.getCategory() + "\n"
-                            + "Created by: " + product.getCreatedBy() + "\n"
-                            + "Description: " + product.getDescription() + "\n"
-                            + "Made by: " + product.getMadeBy() + "\n"
-                            + "Pack size: " + product.getPackSize() + "\n"
-                            + "Price ave: " + product.getPackPrice() + "\n"
-                            + "Shelf life is: " + product.getShelfLife() + "\n"
-                            + "Uom is: " + product.getUnitOfMeasure() + "\n"
-                            + "Ref is: " + shot.getRef() + "\n"
-                            + "Key is: " + shot.getKey() + "\n"
-                            + "FbProductRefID is: " + product.getFbProductReferenceId());
-
-                    // Add the product to the list
-                    productList.add(product);
-
-                }
-                // Post the new data to LiveData
-                productLiveData.postValue(productList);
-            } else {
-                productLiveData.setValue(null);
-            }
-        }));
+                }));
     }
 
     // Fetches the generated list of products

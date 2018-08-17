@@ -23,7 +23,10 @@
     <string name="cd_save_product">Click to save the current product</string>
     <string name="cd_delete_product">Click to delete the current product</string>
     <string name="cd_action_edit_product">Click to edit the current product</string>
-    <string name="cd_add_image">Click to add an picture</string>
+    <string name="cd_add_image">Click to add a picture</string>
+    <string name="cd_rotate_image">Click to rotate picture</string>
+    <string name="cd_add_to_favorites">Click to add to favorites</string>
+    <string name="cd_remove_from_favorites">Remove from favorites</string>
 
     <!-- Common field labels and hints -->
     <string name="label_description">Description</string>
@@ -89,6 +92,7 @@
     <string name="action_save">Save</string>
     <string name="action_delete">Delete</string>
     <string name="action_edit">Edit</string>
+    <string name="sign_out">Sign out</string>
 
     <!-- ActivityDetailProduct titles -->
     <string name="activity_detail_product_title_view">Product View</string>
@@ -171,5 +175,6 @@
     <!-- General errors -->
     <string name="delete_file_error">Error deleting file - please try again.</string>
     <string name="label_added_by_me">Added by me</string>
+    <string name="intent_gallery_picker_title">Complete action using</string>
 
 </resources>

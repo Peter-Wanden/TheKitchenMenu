@@ -6,7 +6,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:backgroundTint="@color/divider">
+        android:backgroundTint="@color/divider"
+        android:visibility="gone">
 
         <LinearLayout
             android:id="@+id/activity_detail_product_container_retailer"

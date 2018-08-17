@@ -7,10 +7,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.model.Product;
 import com.example.peter.thekitchenmenu.utils.Converters;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -65,20 +67,18 @@ public class AdapterCatalogProduct
 
         /* Set the description */
         holder.descriptionTV.setText(product.getDescription());
-        /* Set the created by me value */
-        if(mUserId.equals(product.getCreatedBy())) {
-            holder.createdByMeTv.setText(R.string.adapter_catalog_product_creator_yes);
-        } else {
-            holder.createdByMeTv.setText(R.string.adapter_catalog_product_creator_no);
+
+        /* Get and set the image */
+        if (!product.getFbStorageImageUri().equals("")) {
+            Picasso.get().load(product.getFbStorageImageUri()).into(holder.productIV);
         }
 
         /* Set the pack size */
         holder.packSizeTV.setText(String.valueOf(product.getPackSize()));
+
         /* Set the unit of measure */
         holder.UoMTV.setText(Converters.getUnitOfMeasureString
                 (mContext, product.getUnitOfMeasure()));
-
-        // Todo - Add a thumbnail of the product image
     }
 
     /* Returns the number of items in the adapter */
@@ -122,18 +122,20 @@ public class AdapterCatalogProduct
             View.OnClickListener {
 
         final TextView descriptionTV;
-        final TextView createdByMeTv;
         final TextView packSizeTV;
         final TextView UoMTV;
+        final ImageView favoriteIV;
+        final ImageView productIV;
 
         /* Constructor for the AdapterCatalogProductViewHolder.class */
         AdapterCatalogProductViewHolder(View itemView) {
             super(itemView);
 
-            descriptionTV = itemView.findViewById(R.id.list_item_product_description);
-            createdByMeTv = itemView.findViewById(R.id.list_item_product_added_by_me);
-            packSizeTV = itemView.findViewById(R.id.list_item_product_pack_size);
-            UoMTV = itemView.findViewById(R.id.list_item_product_unit_of_measure);
+            descriptionTV = itemView.findViewById(R.id.list_item_product_tv_description);
+            packSizeTV = itemView.findViewById(R.id.list_item_product_tv_pack_size);
+            UoMTV = itemView.findViewById(R.id.list_item_product_tv_label_unit_of_measure);
+            favoriteIV = itemView.findViewById(R.id.list_item_product_iv_favorite);
+            productIV = itemView.findViewById(R.id.list_item_product_iv_product_image);
 
             itemView.setOnClickListener(this);
         }
