@@ -20,7 +20,7 @@
         <!-- Description label -->
         <TextView
             android:id="@+id/activity_detail_product_base_fields_uneditable_tv_description_label"
-            style="@style/CategoryStyleUneditable"
+            style="@style/UneditableCategoryStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/label_description"
@@ -31,7 +31,7 @@
         <!-- Description value -->
         <TextView
             android:id="@+id/activity_detail_product_base_fields_uneditable_tv_description"
-            style="@style/EditTextFieldStyle"
+            style="@style/UneditableTextFieldStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
@@ -42,7 +42,7 @@
         <!-- Made by label -->
         <TextView
             android:id="@+id/activity_detail_product_base_fields_uneditable_tv_made_by_label"
-            style="@style/CategoryStyleUneditable"
+            style="@style/UneditableCategoryStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/label_made_by"
@@ -53,7 +53,7 @@
         <!-- Made by value -->
         <TextView
             android:id="@+id/activity_detail_product_base_fields_uneditable_tv_made_by"
-            style="@style/EditTextFieldStyle"
+            style="@style/UneditableTextFieldStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="@+id/guideline"
@@ -63,7 +63,7 @@
         <!-- Pack size label -->
         <TextView
             android:id="@+id/activity_detail_product_base_fields_uneditable_tv_pack_size_label"
-            style="@style/CategoryStyleUneditable"
+            style="@style/UneditableCategoryStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/label_pack_size"
@@ -74,7 +74,7 @@
         <!-- Pack size value -->
         <TextView
             android:id="@+id/activity_detail_product_base_fields_uneditable_tv_pack_size"
-            style="@style/EditTextFieldStyle"
+            style="@style/UneditableTextFieldStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="@+id/guideline"
@@ -84,7 +84,7 @@
         <!-- Unit of measure label -->
         <TextView
             android:id="@+id/activity_detail_product_base_fields_uneditable_tv_UoM_label"
-            style="@style/CategoryStyleUneditable"
+            style="@style/UneditableCategoryStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/label_UoM"
@@ -95,7 +95,7 @@
         <!-- Unit of measure value -->
         <TextView
             android:id="@+id/activity_detail_product_base_fields_uneditable_tv_UoM"
-            style="@style/EditTextFieldStyle"
+            style="@style/UneditableTextFieldStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="@+id/guideline"
@@ -105,7 +105,7 @@
         <!-- Shelf life Label -->
         <TextView
             android:id="@+id/activity_detail_product_base_fields_uneditable_tv_shelf_life_label"
-            style="@style/CategoryStyleUneditable"
+            style="@style/UneditableCategoryStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/label_shelf_life"
@@ -116,7 +116,7 @@
         <!-- Shelf life value -->
         <TextView
             android:id="@+id/activity_detail_product_base_fields_uneditable_tv_shelf_life"
-            style="@style/EditTextFieldStyle"
+            style="@style/UneditableTextFieldStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="@+id/guideline"
@@ -126,7 +126,7 @@
         <!-- Category label -->
         <TextView
             android:id="@+id/activity_detail_product_base_fields_uneditable_tv_category_label"
-            style="@style/CategoryStyleUneditable"
+            style="@style/UneditableCategoryStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/label_category"
@@ -137,7 +137,7 @@
         <!-- Category value -->
         <TextView
             android:id="@+id/activity_detail_product_base_fields_uneditable_tv_category"
-            style="@style/EditTextFieldStyle"
+            style="@style/UneditableTextFieldStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="@+id/guideline"

@@ -24,7 +24,7 @@
 
             <!-- Label -->
             <TextView
-                style="@style/CategoryStyle"
+                style="@style/EditableCategoryStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -40,7 +40,7 @@
                 <!-- EditText field -->
                 <EditText
                     android:id="@+id/activity_detail_product_et_retailer"
-                    style="@style/EditTextFieldStyle"
+                    style="@style/EditableFieldStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/hint_retailer"
@@ -58,7 +58,7 @@
 
             <!-- Label -->
             <TextView
-                style="@style/CategoryStyle"
+                style="@style/EditableCategoryStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -74,7 +74,7 @@
                 <!-- EditText field -->
                 <EditText
                     android:id="@+id/activity_detail_product_et_price"
-                    style="@style/EditTextFieldStyle"
+                    style="@style/EditableFieldStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/hint_price"
@@ -91,7 +91,7 @@
 
             <!-- Label -->
             <TextView
-                style="@style/CategoryStyle"
+                style="@style/EditableCategoryStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -107,7 +107,7 @@
                 <!-- EditText field -->
                 <EditText
                     android:id="@+id/activity_detail_product_et_location_room"
-                    style="@style/EditTextFieldStyle"
+                    style="@style/EditableFieldStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/hint_location_room"
@@ -124,7 +124,7 @@
 
             <!-- Label -->
             <TextView
-                style="@style/CategoryStyle"
+                style="@style/EditableCategoryStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -140,7 +140,7 @@
                 <!-- EditText field -->
                 <EditText
                     android:id="@+id/activity_detail_product_et_location_in_room"
-                    style="@style/EditTextFieldStyle"
+                    style="@style/EditableFieldStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/hint_location_in_room"

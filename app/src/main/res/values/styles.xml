@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Base.Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="android:colorPrimary">@color/primary</item>
         <item name="android:colorPrimaryDark">@color/primary_dark</item>
@@ -12,16 +12,16 @@
         <item name="android:textColorHighlight">@color/primary_light</item>
     </style>
 
-    <!-- Style for a category in the editor -->
-    <style name="CategoryStyleUneditable">
+    <!-- Style for a category TextView in product view mode -->
+    <style name="UneditableCategoryStyle">
         <item name="android:textColor">@color/primary_text</item>
         <item name="android:fontFamily">sans-serif-light</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textAppearance">?android:textAppearanceSmall</item>
     </style>
 
-    <!-- Style for a category in the editor -->
-    <style name="CategoryStyle">
+    <!-- Style for a category TextView in product edit mode -->
+    <style name="EditableCategoryStyle">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_weight">1</item>
@@ -31,9 +31,8 @@
         <item name="android:textAppearance">?android:textAppearanceSmall</item>
     </style>
 
-
-    <!-- Style for an EditText field in the editor -->
-    <style name="EditTextFieldStyle">
+    <!-- Style for a TextView field in product view mode -->
+    <style name="UneditableTextFieldStyle">
         <item name="android:layout_marginTop">8dp</item>
         <item name="android:layout_marginStart">8dp</item>
         <item name="android:textColor">@color/secondary_text</item>
@@ -41,10 +40,18 @@
         <item name="android:textAppearance">?android:textAppearanceMedium</item>
     </style>
 
-    <!-- Card View styles -->
-    <style name="cardViewStyle" parent="AppTheme">
+    <!-- Style for an EditText field in the editor -->
+    <style name="EditableFieldStyle">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textAppearance">?android:textAppearanceMedium</item>
     </style>
 
+    <!-- Card View styles -->
+    <style name="cardViewStyle" parent="AppTheme">
+
+    </style>
 
     <style name="CardViewTitleText">
         <item name="android:layout_width">wrap_content</item>

@@ -12,9 +12,6 @@ import java.util.Map;
 
 public class Product implements Parcelable {
 
-    @Exclude // Excludes id field for Firebase
-    private int mProductId;
-
     @Exclude
     private String mFbProductReferenceKey;
 
@@ -50,49 +47,13 @@ public class Product implements Parcelable {
 
     private String mCreatedBy;
 
-    /* Constructor for Firebase */
-    public Product(String description,
-                   String madeBy,
-                   String fbProductReferenceKey,
-                   String fbUsedProductsUserKey,
-                   String retailer,
-                   int unitOfMeasure,
-                   int packSize,
-                   int shelfLife,
-                   String locationRoom,
-                   String locationInRoom,
-                   int category,
-                   double packPrice,
-                   double packPriceAverage,
-                   Uri localImageUri,
-                   Uri fbStorageImageUri,
-                   String createdBy) {
-
-        this.mDescription = description;
-        this.mMadeBy = madeBy;
-        this.mFbProductReferenceKey = fbProductReferenceKey;
-        this.mFbUsedProductsUserKey = fbUsedProductsUserKey;
-        this.mRetailer = retailer;
-        this.mUnitOfMeasure = unitOfMeasure;
-        this.mPackSize = packSize;
-        this.mShelfLife = shelfLife;
-        this.mLocationRoom = locationRoom;
-        this.mLocationInRoom = locationInRoom;
-        this.mCategory = category;
-        this.mPackPrice = packPrice;
-        this.mPackPriceAverage = packPriceAverage;
-        this.mLocalImageUri = localImageUri.toString();
-        this.mFbStorageImageUri = fbStorageImageUri.toString();
-        this.mCreatedBy = createdBy;
-    }
 
     /* Empty constructor as required by Firebase */
     public Product() {
     }
 
-    /* Constructor for the local database*/
-    public Product(int productId,
-                   String fbProductReferenceKey,
+    /* Constructor */
+    public Product(String fbProductReferenceKey,
                    String fbUsedProductsUserKey,
                    String description,
                    String madeBy,
@@ -109,7 +70,6 @@ public class Product implements Parcelable {
                    Uri fbStorageImageUri,
                    String createdBy) {
 
-        this.mProductId = productId;
         this.mFbProductReferenceKey = fbProductReferenceKey;
         this.mFbUsedProductsUserKey = fbUsedProductsUserKey;
         this.mDescription = description;
@@ -130,7 +90,6 @@ public class Product implements Parcelable {
 
 
     private Product(Parcel in) {
-        mProductId = in.readInt();
         mFbProductReferenceKey = in.readString();
         mFbUsedProductsUserKey = in.readString();
         mDescription = in.readString();
@@ -169,7 +128,6 @@ public class Product implements Parcelable {
     @Override
     public void writeToParcel(Parcel parcel, int i) {
 
-        parcel.writeInt(mProductId);
         parcel.writeString(mFbProductReferenceKey);
         parcel.writeString(mFbUsedProductsUserKey);
         parcel.writeString(mDescription);
@@ -235,14 +193,6 @@ public class Product implements Parcelable {
     }
 
     /* Getters and setters */
-    public int getProductId() {
-        return mProductId;
-    }
-
-    public void setProductId(int productId) {
-        this.mProductId = productId;
-    }
-
     public String getFbProductReferenceKey() {
         return mFbProductReferenceKey;
     }

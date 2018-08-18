@@ -19,7 +19,7 @@
         <!-- Category label -->
         <TextView
             android:id="@+id/activity_detail_product_user_fields_uneditable_tv_category_label"
-            style="@style/CategoryStyleUneditable"
+            style="@style/UneditableCategoryStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/label_retailer"
@@ -30,7 +30,7 @@
         <!-- Category field -->
         <TextView
             android:id="@+id/activity_detail_product_user_fields_uneditable_tv_retailer"
-            style="@style/EditTextFieldStyle"
+            style="@style/UneditableTextFieldStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="bottom"
@@ -41,7 +41,7 @@
         <!-- Price label -->
         <TextView
             android:id="@+id/activity_detail_product_user_fields_uneditable_tv_price_label"
-            style="@style/CategoryStyleUneditable"
+            style="@style/UneditableCategoryStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -53,7 +53,7 @@
         <!-- Price Field -->
         <TextView
             android:id="@+id/activity_detail_product_user_fields_uneditable_tv_price"
-            style="@style/EditTextFieldStyle"
+            style="@style/UneditableTextFieldStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="bottom"
@@ -64,7 +64,7 @@
         <!-- Location label -->
         <TextView
             android:id="@+id/activity_detail_product_user_fields_uneditable_tv_location_label"
-            style="@style/CategoryStyleUneditable"
+            style="@style/UneditableCategoryStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -76,7 +76,7 @@
          <!-- Location field -->
         <TextView
             android:id="@+id/activity_detail_product_user_fields_uneditable_tv_location_room"
-            style="@style/EditTextFieldStyle"
+            style="@style/UneditableTextFieldStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="bottom"
@@ -87,7 +87,7 @@
         <!-- Location in room label -->
         <TextView
             android:id="@+id/activity_detail_product_user_fields_uneditable_tv_location_in_room_label"
-            style="@style/CategoryStyleUneditable"
+            style="@style/UneditableCategoryStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -99,7 +99,7 @@
         <!-- Location in room field -->
         <TextView
             android:id="@+id/activity_detail_product_user_fields_uneditable_tv_location_in_room"
-            style="@style/EditTextFieldStyle"
+            style="@style/UneditableTextFieldStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="bottom"

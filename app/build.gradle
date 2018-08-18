@@ -37,7 +37,9 @@ dependencies {
     implementation "com.android.support:recyclerview-v7:$androidSupportVersion"
     implementation "com.android.support:cardview-v7:$androidSupportVersion"
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+    // Play services
     implementation 'com.google.android.gms:play-services-auth:16.0.0'
+    // A library that will hold the application logic
     implementation project(':TKMAppLibrary')
     // Architecture components version
     def lifecycle_version = "1.1.1"

@@ -13,7 +13,9 @@
         android:layout_weight="4"
         android:gravity="end"
         android:ellipsize="marquee"
+        android:layout_marginTop="@dimen/widget_margin"
         android:paddingEnd="8dp"
+        android:layout_gravity="start"
         android:paddingStart="8dp"
         tools:text="Description of product goes here" />
 
@@ -23,6 +25,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:gravity="end"
+        android:layout_marginTop="@dimen/widget_margin"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
         android:textAllCaps="false"
         tools:text="400" />
 
@@ -31,7 +37,12 @@
         style="@style/TableText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:gravity="start"
+        android:layout_marginTop="@dimen/widget_margin"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
         android:layout_weight="1"
-        tools:text="Grams" />
+        tools:text="Grams"
+        android:ellipsize="end"/>
 
 </LinearLayout>

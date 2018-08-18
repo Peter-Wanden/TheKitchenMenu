@@ -26,7 +26,6 @@ import com.example.peter.thekitchenmenu.widget.WidgetService;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.gson.Gson;
 
 import java.util.Arrays;
 import java.util.List;

@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="gone">
+        >
 
         <!--
                 README
@@ -24,7 +24,7 @@
 
             <!-- Product description label -->
             <TextView
-                style="@style/CategoryStyle"
+                style="@style/EditableCategoryStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -40,7 +40,7 @@
                 <!-- Description EditText field -->
                 <EditText
                     android:id="@+id/activity_detail_product_base_fields_editable_et_description"
-                    style="@style/EditTextFieldStyle"
+                    style="@style/EditableFieldStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/hint_description"
@@ -57,7 +57,7 @@
 
             <!-- Product made by label -->
             <TextView
-                style="@style/CategoryStyle"
+                style="@style/EditableCategoryStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -73,7 +73,7 @@
                 <!-- Made by EditText field -->
                 <EditText
                     android:id="@+id/activity_detail_product_base_fields_editable_et_made_by"
-                    style="@style/EditTextFieldStyle"
+                    style="@style/EditableFieldStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/hint_made_by"
@@ -90,7 +90,7 @@
 
             <!-- Label -->
             <TextView
-                style="@style/CategoryStyle"
+                style="@style/EditableCategoryStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -106,7 +106,7 @@
                 <!-- EditText field -->
                 <EditText
                     android:id="@+id/activity_detail_product_base_fields_editable_et_pack_size"
-                    style="@style/EditTextFieldStyle"
+                    style="@style/EditableFieldStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/hint_pack_size"
@@ -123,7 +123,7 @@
 
             <!-- Label -->
             <TextView
-                style="@style/CategoryStyle"
+                style="@style/EditableCategoryStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -139,7 +139,7 @@
                 <!-- Unit of measure drop-down spinner -->
                 <Spinner
                     android:id="@+id/activity_detail_product_base_fields_editable_spinner_UoM"
-                    style="@style/EditTextFieldStyle"
+                    style="@style/EditableFieldStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="48dp"
                     android:paddingEnd="16dp"
@@ -157,7 +157,7 @@
 
             <!-- Label -->
             <TextView
-                style="@style/CategoryStyle"
+                style="@style/EditableCategoryStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -173,7 +173,7 @@
                 <!-- Shelf life drop-down spinner -->
                 <Spinner
                     android:id="@+id/activity_detail_product_base_fields_editable_spinner_shelf_life"
-                    style="@style/EditTextFieldStyle"
+                    style="@style/EditableFieldStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="48dp"
                     android:paddingEnd="16dp"
@@ -191,7 +191,7 @@
 
             <!-- Label -->
             <TextView
-                style="@style/CategoryStyle"
+                style="@style/EditableCategoryStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -207,7 +207,7 @@
                 <!-- Category drop-down spinner -->
                 <Spinner
                     android:id="@+id/activity_detail_product_base_fields_editable_spinner_category"
-                    style="@style/EditTextFieldStyle"
+                    style="@style/EditableFieldStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="48dp"
                     android:paddingEnd="16dp"

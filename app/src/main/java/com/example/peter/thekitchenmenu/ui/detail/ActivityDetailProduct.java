@@ -23,7 +23,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -63,6 +65,7 @@ import com.squareup.picasso.Picasso;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -501,6 +504,57 @@ public class ActivityDetailProduct
         mIsCreator = true;
         mIsExistingProduct = false;
         mPutProductOnUsedList = true;
+
+        /* Apply text watchers for instant validation */
+        // Description EditTextField
+        mDescriptionET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                String completeText = s.toString();
+
+                // Validate the description as it is entered.
+                boolean isValidated = validateDescription(completeText);
+                if (isValidated) {
+                    mDescription = completeText;
+                } else {
+                    mDescriptionET.requestFocus();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+    }
+
+    /* Validates the description field against the validation ruled in the TKMAppLibrary */
+    private boolean validateDescription(String description) {
+
+        // Validate the description
+        int validateDescription = InputValidation.validateProductDescription(description);
+
+        // If there is an error
+        if (validateDescription != 0) {
+
+            // Report the error
+            switch (validateDescription) {
+                case 1:
+                    mDescriptionET.setError(getResources().getString(
+                            R.string.input_error_product_description_too_short));
+                    return false;
+
+                case 2:
+                    mDescriptionET.setError(getResources().getString(
+                            R.string.input_error_product_description_too_long));
+                    return false;
+            }
+        }
+        return true;
     }
 
     /* Check to see if the product is in the users user product list */
@@ -901,7 +955,7 @@ public class ActivityDetailProduct
                             mImageStorageReference = mFirebaseStorage
                                     .getReferenceFromUrl(mProduct.getFbStorageImageUri());
 
-                        // Create a new database reference for the new image
+                            // Create a new database reference for the new image
                         } else if (mProduct.getFbStorageImageUri().equals("")) {
 
                             // Create a reference to store the image
@@ -1400,6 +1454,7 @@ public class ActivityDetailProduct
         int validateDescription = InputValidation.validateProductDescription(mDescription);
 
         if (validateDescription != 0) {
+
             mDescriptionET.requestFocus();
 
             switch (validateDescription) {
@@ -1618,13 +1673,6 @@ public class ActivityDetailProduct
 
                         }
                     });
-
-
-//            Picasso.get().load(mProduct.getFbStorageImageUri()).into(mProductIV);
-
-            Log.e(LOG_TAG, "mProduct.getFbStorageImageUri() is: " +
-                    mProduct.getFbStorageImageUri());
-            Log.e(LOG_TAG, "populateUi() - There should be an image on the screen");
         }
 
         // Base fields editable criteria:
@@ -1681,7 +1729,10 @@ public class ActivityDetailProduct
 
             // Update the uneditable views
             mRetailerTV.setText(mProduct.getRetailer());
-            mPackPriceTV.setText(String.valueOf(mProduct.getPackPrice()));
+
+            NumberFormat format = NumberFormat.getCurrencyInstance();
+            mPackPriceTV.setText(String.valueOf(format.format(mProduct.getPackPrice())));
+
             mLocationRoomTV.setText(mProduct.getLocationRoom());
             mLocationInRoomTV.setText(mProduct.getLocationInRoom());
 
@@ -1691,7 +1742,6 @@ public class ActivityDetailProduct
             // This call invalidates the current menu options and calls onPrepareOptionsMenu()
             // which will in turn populate the menu with the correct icons for this view.
             invalidateOptionsMenu();
-
         }
 
         // ToDo - could this be why we arent seeing the image?
@@ -1722,7 +1772,6 @@ public class ActivityDetailProduct
                 .BASE_FIELDS_EDITABLE_STATUS_KEY, mBaseFieldsAreEditable);
         outState.putBoolean(Constants
                 .USER_CUSTOM_FIELDS_EDITABLE_STATUS_KEY, mUserFieldsAreEditable);
-
     }
 
     /* Get a reference eto all of the views */
@@ -1916,14 +1965,13 @@ public class ActivityDetailProduct
     }
 
     /* Delete the product */
-    // todo - Complete the delete product action
     // todo - Create a list of deleted products to compare with Firebase products
     // todo - so we don't display products from firebase that the user has deleted
     // todo - delete the product information from /products/ and /users/products/
     private void deleteProduct() {
 
         /*
-           This is an existing product. So there are potentially four locations where data needs to
+           This is an existing product. So there are up to four locations where data needs to
            be deleted:
            1. Delete the product form the users used product list which is located at
               /collection_users/[user id]/collection_products/[product id]

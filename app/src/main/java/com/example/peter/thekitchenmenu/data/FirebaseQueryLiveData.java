@@ -68,6 +68,5 @@ public class FirebaseQueryLiveData extends LiveData<DataSnapshot> {
         public void onCancelled(@NonNull DatabaseError databaseError) {
             Log.e(LOG_TAG, "Can't listen to query " + query, databaseError.toException());
         }
-
     }
 }
