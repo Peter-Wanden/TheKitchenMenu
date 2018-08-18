@@ -241,7 +241,7 @@ public class ActivityDetailProduct
             mIsExistingProduct = true;
 
             // This intent has been passed the base product fields of a Firebase product
-            setScreenTitle(Constants.SCREEN_TITLE_PRODUCT_VIEW);
+            setScreenTitle(Constants.ACTIVITY_TITLE_PRODUCT_VIEW);
 
             // Update the Firebase product reference key with the product passed in
             if (mFbProductReferenceKey.equals(Constants.DEFAULT_FB_PRODUCT_ID)) {
@@ -478,7 +478,7 @@ public class ActivityDetailProduct
     private void newProductInitialise() {
 
         // Set the title
-        setScreenTitle(Constants.SCREEN_TITLE_PRODUCT_ADD);
+        setScreenTitle(Constants.ACTIVITY_TITLE_PRODUCT_ADD);
 
         // Set the appropriate layouts visibility
         mBaseFieldsAreEditable = true;
@@ -609,7 +609,7 @@ public class ActivityDetailProduct
                     invalidateOptionsMenu();
 
                     // Set the screen title for edit mode.
-                    setScreenTitle(Constants.SCREEN_TITLE_PRODUCT_EDIT);
+                    setScreenTitle(Constants.ACTIVITY_TITLE_PRODUCT_EDIT);
 
                     // Update the data in the Ui
                     populateUi();
@@ -2450,7 +2450,7 @@ public class ActivityDetailProduct
                 if (mIsExistingProduct && !mIsCreator && mInUsersUsedList) {
 
                     // Set the screen title to edit a product
-                    setScreenTitle(Constants.SCREEN_TITLE_PRODUCT_EDIT);
+                    setScreenTitle(Constants.ACTIVITY_TITLE_PRODUCT_EDIT);
 
                     // Make the user specific fields editable
                     mUserFieldsAreEditable = true;

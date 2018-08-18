@@ -7,14 +7,20 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/activity_detail_product_base_fields_uneditable_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="gone">
 
-        <!-- Todo - Set visibility to View.Gone when finished editing -->
+        <!--
+                README
+                Visibility for this Layout is set to gone as it is turned on and off
+                programmatically as and when required. If you wish to edit this layout delete this
+                line from above 'android:visibility="gone"' and replace it when done
+         -->
 
         <!-- Description label -->
         <TextView
             android:id="@+id/activity_detail_product_base_fields_uneditable_tv_description_label"
-            style="@style/CategoryStyle"
+            style="@style/CategoryStyleUneditable"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/label_description"
@@ -36,7 +42,7 @@
         <!-- Made by label -->
         <TextView
             android:id="@+id/activity_detail_product_base_fields_uneditable_tv_made_by_label"
-            style="@style/CategoryStyle"
+            style="@style/CategoryStyleUneditable"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/label_made_by"
@@ -57,7 +63,7 @@
         <!-- Pack size label -->
         <TextView
             android:id="@+id/activity_detail_product_base_fields_uneditable_tv_pack_size_label"
-            style="@style/CategoryStyle"
+            style="@style/CategoryStyleUneditable"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/label_pack_size"
@@ -78,7 +84,7 @@
         <!-- Unit of measure label -->
         <TextView
             android:id="@+id/activity_detail_product_base_fields_uneditable_tv_UoM_label"
-            style="@style/CategoryStyle"
+            style="@style/CategoryStyleUneditable"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/label_UoM"
@@ -99,7 +105,7 @@
         <!-- Shelf life Label -->
         <TextView
             android:id="@+id/activity_detail_product_base_fields_uneditable_tv_shelf_life_label"
-            style="@style/CategoryStyle"
+            style="@style/CategoryStyleUneditable"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/label_shelf_life"
@@ -120,7 +126,7 @@
         <!-- Category label -->
         <TextView
             android:id="@+id/activity_detail_product_base_fields_uneditable_tv_category_label"
-            style="@style/CategoryStyle"
+            style="@style/CategoryStyleUneditable"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/label_category"

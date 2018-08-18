@@ -1,25 +1,10 @@
 <resources>
     <string name="app_name">The Kitchen Menu</string>
 
-    <!-- MainActivity -->
-    <string name="activity_main_label_button_add_recipe">Recipes</string>
-    <string name="activity_main_label_button_add_product">Products</string>
-    <string name="activity_main_label_button_new_shopping_list">Shopping Lists</string>
-    <string name="activity_main_title_this_weeks_menu">This Week\'s Menu</string>
-    <string name="activity_main_title_next_purchases">Shopping list</string>
-    <string name="activity_main_title_meals_remaining">Meals Remaining</string>
-    <string name="activity_main_title_breakfasts">Breakfasts</string>
-    <string name="activity_main_title_lunches">Lunches</string>
-    <string name="activity_main_title_dinners">Dinners</string>
-    <string name="activity_main_title_description">Description</string>
-
     <!-- CONTENT DESCRIPTIONS -->
     <!-- Attach to any ImageView's of the product -->
     <string name="cd_picture_of_product">A picture of the product</string>
     <!-- Attach to any ImageView's of the recipe -->
-    <string name="cd_picture_of_recipe">A picture of the recipe</string>
-    <string name="cd_save_recipe">Click to save the current recipe</string>
-    <string name="cd_delete_recipe">Click to delete the current recipe</string>
     <string name="cd_save_product">Click to save the current product</string>
     <string name="cd_delete_product">Click to delete the current product</string>
     <string name="cd_action_edit_product">Click to edit the current product</string>
@@ -27,6 +12,7 @@
     <string name="cd_rotate_image">Click to rotate picture</string>
     <string name="cd_add_to_favorites">Click to add to favorites</string>
     <string name="cd_remove_from_favorites">Remove from favorites</string>
+    <string name="cd_add_product">Add a product</string>
 
     <!-- Common field labels and hints -->
     <string name="label_description">Description</string>
@@ -48,13 +34,6 @@
     <string name="hint_price">How much does it cost?</string>
     <string name="label_shelf_life">Shelf life</string>
     <string name="label_category">Category</string>
-    <string name="label_recipe_title"> Recipe title</string>
-    <string name="hint_recipe_title">Please enter a title for your recipe.</string>
-    <string name="label_sittings">No of sittings</string>
-    <string name="hint_sittings">over how many meal times?</string>
-    <string name="label_servings">No of servings</string>
-    <string name="hint_servings">How many servings?</string>
-    <string name="label_ingredient">Ingredient</string>
     <string name="label_quantity">Quantity</string>
 
     <!-- ActivityDetailProduct unit of measure spinner options -->
@@ -94,11 +73,12 @@
     <string name="action_edit">Edit</string>
     <string name="sign_out">Sign out</string>
 
-    <!-- ActivityDetailProduct titles -->
+    <!-- Activity titles -->
     <string name="activity_detail_product_title_view">Product View</string>
     <string name="activity_detail_product_title">Product Details</string>
     <string name="activity_detail_product_title_update">Edit a Product</string>
     <string name="activity_detail_product_title_add_new">Add a Product</string>
+    <string name="widget_product_title_latest_products">Latest Products</string>
 
     <!-- ActivityDetailProduct user input error codes -->
     <string name="input_error_product_description_too_short">Description too short, needs to be
@@ -135,30 +115,9 @@
     <string name="product_catalog_empty_view_subtitle_text">Press + to add some products!</string>
     <string name="image_of_meal">An image of the selected recipe</string>
 
-    <!-- ActivityCatalogRecipe -->
-    <string name="content_description_empty_recipe_list_view">The list of recipes is empty,
-        press the plus button to add some</string>
-    <string name="content_description_image_of_recipe">An image of the recipe</string>
-    <string name="activity_catalog_recipe_empty_view_title_text">There\'s no recipes to show you
-        right now.</string>
-    <string name="activity_catalog_recipe_empty_view__sub_title_text">Press the plus button to
-        add some.</string>
-    <string name="activity_catalog_recipe_title">Recipe Catalog</string>
-
     <!-- AdapterCatalogProduct -->
     <string name="adapter_catalog_product_creator_yes">Yes</string>
     <string name="adapter_catalog_product_creator_no">No</string>
-
-    <!-- ActivityDetailRecipe titles -->
-    <string name="activity_detail_recipe_title_update">Update Recipe</string>
-    <string name="activity_detail_recipe_title_add_new">Add a New Recipe</string>
-
-    <!-- ActivityDetailRecipe category spinner options -->
-    <string name="recipe_category_option_0">Select category</string>
-    <string name="recipe_category_option_1">Breakfast</string>
-    <string name="recipe_category_option_2">Lunch</string>
-    <string name="recipe_category_option_3">Dinner</string>
-    <string name="recipe_category_option_4">Anytime</string>
 
     <!-- ActivityDetailRecipe fragment buttons -->
     <string name="activity_detail_recipe_ingredients_button">Ingredients</string>
@@ -176,5 +135,10 @@
     <string name="delete_file_error">Error deleting file - please try again.</string>
     <string name="label_added_by_me">Added by me</string>
     <string name="intent_gallery_picker_title">Complete action using</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 
+    <!-- Widget specific -->
+    <string name="app_widget_empty_view">Press the add button to add a product</string>
+    <string name="widget_title_latest_products">Latest Products</string>
 </resources>

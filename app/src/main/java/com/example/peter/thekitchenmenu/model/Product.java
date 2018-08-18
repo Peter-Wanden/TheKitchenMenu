@@ -1,9 +1,5 @@
 package com.example.peter.thekitchenmenu.model;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.PrimaryKey;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -14,65 +10,46 @@ import com.google.firebase.database.Exclude;
 import java.util.HashMap;
 import java.util.Map;
 
-@Entity(tableName = "Products")
 public class Product implements Parcelable {
 
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id")
     @Exclude // Excludes id field for Firebase
     private int mProductId;
 
-    @ColumnInfo(name = "FBProductId")
     @Exclude
     private String mFbProductReferenceKey;
 
     @Exclude
     private String mFbUsedProductsUserKey;
 
-    @ColumnInfo(name = "Description")
     private String mDescription;
 
-    @ColumnInfo(name = "Made_By")
     private String mMadeBy;
 
-    @ColumnInfo(name = "Retailer")
     private String mRetailer;
 
-    @ColumnInfo(name = "Unit_of_Measure")
     private int mUnitOfMeasure;
 
-    @ColumnInfo(name = "Pack_Size")
     private int mPackSize;
 
-    @ColumnInfo(name = "Shelf_Life")
     private int mShelfLife;
 
-    @ColumnInfo(name = "Location_Room")
     private String mLocationRoom;
 
-    @ColumnInfo(name = "Location_in_Room")
     private String mLocationInRoom;
 
-    @ColumnInfo(name = "Category")
     private int mCategory;
 
-    @ColumnInfo(name = "Pack_Price")
     private double mPackPrice;
 
-    @ColumnInfo
     private double mPackPriceAverage;
 
-    @ColumnInfo(name = "Local_Image_Uri")
     @android.support.annotation.NonNull
     private String mLocalImageUri = "";
 
-    @ColumnInfo(name = "Fb_Stroage_Image_Uri")
     private String mFbStorageImageUri = "";
 
-    @ColumnInfo(name = "Created_by")
     private String mCreatedBy;
 
-    @Ignore
     /* Constructor for Firebase */
     public Product(String description,
                    String madeBy,

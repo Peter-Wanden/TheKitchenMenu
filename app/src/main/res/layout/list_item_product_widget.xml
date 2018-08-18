@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/list_item_product_widget_tv_description"
+        style="@style/TableText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="4"
+        android:gravity="end"
+        android:ellipsize="marquee"
+        android:paddingEnd="8dp"
+        android:paddingStart="8dp"
+        tools:text="Description of product goes here" />
+
+    <TextView
+        android:id="@+id/list_item_product_widget_tv_pack_size"
+        style="@style/TableText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textAllCaps="false"
+        tools:text="400" />
+
+    <TextView
+        android:id="@+id/list_item_product_widget_tv_unit_of_measure"
+        style="@style/TableText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        tools:text="Grams" />
+
+</LinearLayout>

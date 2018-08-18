@@ -58,26 +58,9 @@ public class Constants {
     public static final Uri DEFAULT_FB_IMAGE_STORAGE_URI = Uri.parse("");
 
     /* Product screen titles */
-    public static final int SCREEN_TITLE_PRODUCT_VIEW = 1;
-    public static final int SCREEN_TITLE_PRODUCT_DETAILS = 4;
-    public static final int SCREEN_TITLE_PRODUCT_EDIT = 2;
-    public static final int SCREEN_TITLE_PRODUCT_ADD = 3;
-
-    /* *********
-     * RECIPES *
-     ***********/
-    /* Key value for a recipe */
-    public static final String RECIPE_KEY = "current_recipe_key";
-    /* Key value for a recipe ID */
-    public static final String RECIPE_ID = "current_recipe_id";
-
-    /* Default values for a recipe */
-    public static final int DEFAULT_RECIPE_ID = -1;
-    public static final String DEFAULT_RECIPE_TITLE = "no_title";
-    public static final String DEFAULT_RECIPE_DESCRIPTION = "no_description";
-    public static final int DEFAULT_RECIPE_CATEGORY = 0;
-    public static final int DEFAULT_RECIPE_SERVINGS = 0;
-    public static final int DEFAULT_RECIPE_SITTINGS = 1;
+    public static final int ACTIVITY_TITLE_PRODUCT_VIEW = 1;
+    public static final int ACTIVITY_TITLE_PRODUCT_EDIT = 2;
+    public static final int ACTIVITY_TITLE_PRODUCT_ADD = 3;
 
     /* *************
      * Permissions *

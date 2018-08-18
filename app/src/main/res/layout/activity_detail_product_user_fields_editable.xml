@@ -9,6 +9,13 @@
         android:backgroundTint="@color/divider"
         android:visibility="gone">
 
+        <!--
+                README
+                Visibility for this Layout is set to gone as it is turned on and off
+                programmatically as and when required. If you wish to edit this layout delete this
+                line from above 'android:visibility="gone"' and replace it when done
+         -->
+
         <LinearLayout
             android:id="@+id/activity_detail_product_container_retailer"
             android:layout_width="match_parent"

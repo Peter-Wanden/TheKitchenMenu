@@ -3,7 +3,9 @@ package com.example.peter.thekitchenmenu.ui.catalog;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -15,14 +17,16 @@ import android.view.MenuItem;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
-import com.example.peter.thekitchenmenu.data.TKMDatabase;
 import com.example.peter.thekitchenmenu.model.Product;
 import com.example.peter.thekitchenmenu.ui.detail.ActivityDetailProduct;
 
+import com.example.peter.thekitchenmenu.utils.GsonUtils;
 import com.example.peter.thekitchenmenu.viewmodels.ViewModelCatalogProductList;
+import com.example.peter.thekitchenmenu.widget.WidgetService;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.gson.Gson;
 
 import java.util.Arrays;
 import java.util.List;
@@ -120,10 +124,22 @@ public class ActivityCatalogProduct
 
         LiveData<List<Product>> productLiveData = viewModelCatalogProducts.getProductsLiveData();
 
+        // Create a shared preferences object. This will hold the base data for the widget
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
         productLiveData.observe(this, products -> {
+
             if(products != null) {
                 mCatalogAdapter.setProducts(products);
-                // Loop through live data products and set them to the local database
+
+                // Set the product list to shared preferences for the widgets adapter
+                preferences
+                        .edit()
+                        .putString(Constants.PRODUCT_KEY, GsonUtils.productsToJson(products))
+                        .apply();
+
+                /* Update the widget with the new list od products */
+                WidgetService.startActionUpdateWidget(this);
             }
         });
     }

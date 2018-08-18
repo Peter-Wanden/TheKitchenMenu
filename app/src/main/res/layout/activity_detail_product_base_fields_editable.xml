@@ -8,6 +8,13 @@
         android:orientation="vertical"
         android:visibility="gone">
 
+        <!--
+                README
+                Visibility for this Layout is set to gone as it is turned on and off
+                programmatically as and when required. If you wish to edit this layout delete this
+                line from above 'android:visibility="gone"' and replace it when done
+         -->
+
         <!-- Product description container -->
         <LinearLayout
             android:id="@+id/activity_detail_product_base_fields_editable_container_description"
@@ -48,7 +55,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <!-- Product description label -->
+            <!-- Product made by label -->
             <TextView
                 style="@style/CategoryStyle"
                 android:layout_width="0dp"

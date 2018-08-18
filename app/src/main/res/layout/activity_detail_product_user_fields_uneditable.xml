@@ -6,12 +6,20 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/activity_detail_product_user_fields_uneditable_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <!--
+                README
+                Visibility for this Layout is set to gone as it is turned on and off
+                programmatically as and when required. If you wish to edit this layout delete this
+                line from above 'android:visibility="gone"' and replace it when done
+         -->
 
         <!-- Category label -->
         <TextView
             android:id="@+id/activity_detail_product_user_fields_uneditable_tv_category_label"
-            style="@style/CategoryStyle"
+            style="@style/CategoryStyleUneditable"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/label_retailer"
@@ -33,7 +41,7 @@
         <!-- Price label -->
         <TextView
             android:id="@+id/activity_detail_product_user_fields_uneditable_tv_price_label"
-            style="@style/CategoryStyle"
+            style="@style/CategoryStyleUneditable"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -56,7 +64,7 @@
         <!-- Location label -->
         <TextView
             android:id="@+id/activity_detail_product_user_fields_uneditable_tv_location_label"
-            style="@style/CategoryStyle"
+            style="@style/CategoryStyleUneditable"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -79,7 +87,7 @@
         <!-- Location in room label -->
         <TextView
             android:id="@+id/activity_detail_product_user_fields_uneditable_tv_location_in_room_label"
-            style="@style/CategoryStyle"
+            style="@style/CategoryStyleUneditable"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
