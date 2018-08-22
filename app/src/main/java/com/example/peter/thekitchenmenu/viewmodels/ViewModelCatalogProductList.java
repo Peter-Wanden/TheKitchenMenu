@@ -45,7 +45,6 @@ public class ViewModelCatalogProductList extends ViewModel {
         AppExecutors.getInstance().networkIO().execute(() ->
                 productLiveData.addSource(liveData, snapshot -> {
                     if (snapshot != null && snapshot.exists()) {
-                        Log.e(LOG_TAG, "snapshot looks like: " + snapshot);
 
                         // This is a snapshot of the entire collection at reference 'products'.
                         // Clear out the old data
@@ -70,7 +69,6 @@ public class ViewModelCatalogProductList extends ViewModel {
 
     // Fetches the generated list of products
     public LiveData<List<Product>> getProductsLiveData() {
-        Log.e(LOG_TAG, "getProductsLiveData() - has: " + productList.size() + " items.");
         return productLiveData;
     }
 

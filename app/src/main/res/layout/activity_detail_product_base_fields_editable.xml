@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        >
+        android:visibility="gone">
 
         <!--
                 README
@@ -44,7 +44,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/hint_description"
-                    android:inputType="textCapWords" />
+                    android:inputType="textCapWords"/>
             </LinearLayout>
         </LinearLayout>
 
@@ -134,7 +134,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
                 <!-- Unit of measure drop-down spinner -->
                 <Spinner
@@ -142,9 +142,12 @@
                     style="@style/EditableFieldStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="48dp"
-                    android:paddingEnd="16dp"
-                    android:paddingStart="0dp"
-                    android:spinnerMode="dropdown" />
+                    android:spinnerMode="dropdown"/>
+
+                <TextView
+                    android:id="@+id/activity_detail_product_base_fields_editable_tv_spinner_UoM_setError"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"/>
             </LinearLayout>
         </LinearLayout>
 
@@ -168,7 +171,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
                 <!-- Shelf life drop-down spinner -->
                 <Spinner
@@ -176,9 +179,12 @@
                     style="@style/EditableFieldStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="48dp"
-                    android:paddingEnd="16dp"
-                    android:paddingStart="0dp"
                     android:spinnerMode="dropdown" />
+
+                <TextView
+                    android:id="@+id/activity_detail_product_base_fields_editable_tv_spinner_shelf_life_setError"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"/>
             </LinearLayout>
         </LinearLayout>
 
@@ -202,7 +208,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
                 <!-- Category drop-down spinner -->
                 <Spinner
@@ -210,9 +216,12 @@
                     style="@style/EditableFieldStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="48dp"
-                    android:paddingEnd="16dp"
-                    android:paddingStart="0dp"
                     android:spinnerMode="dropdown" />
+
+                <TextView
+                    android:id="@+id/activity_detail_product_base_fields_editable_tv_spinner_category_setError"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

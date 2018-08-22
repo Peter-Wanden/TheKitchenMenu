@@ -71,6 +71,8 @@ public class AdapterCatalogProduct
         /* Get and set the image */
         if (!product.getFbStorageImageUri().equals("")) {
             Picasso.get().load(product.getFbStorageImageUri()).into(holder.productIV);
+        } else {
+            Picasso.get().load(R.drawable.placeholder).into(holder.productIV);
         }
 
         /* Set the pack size */
@@ -143,6 +145,7 @@ public class AdapterCatalogProduct
         public void onClick(View v) {
             // Get the product from the adapter at the clicked position
             Product product = mProducts.get(getAdapterPosition());
+
             // Find out if this user was the creator of the product
             mIsCreator = mUserId.equals(product.getCreatedBy());
             // Send the product and its creator bool to be processed by the click handler

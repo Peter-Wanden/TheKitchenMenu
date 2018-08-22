@@ -93,7 +93,7 @@
         between 1 and 120 characters.</string>
     <string name="input_error_product_retailer_too_long">Retailer name too long, needs to be
         between 1 and 120 characters.</string>
-    <string name="input_error_pack_size">Pack size needs to be between 1 and 1000</string>
+    <string name="input_error_product_pack_size">Pack size needs to be between 1 and 1000</string>
     <string name="input_error_product_loc_room_too_short">Storage room name too short, needs to be
         between 1 and 60 characters.</string>
     <string name="input_error_product_loc_room_too_long">Storage room name too long, needs to be
@@ -109,6 +109,16 @@
     <string name="input_error_recipe_description_too_long">Recipe description too long, needs to be
         between 1 and 120 characters</string>
     <string name="input_error_recipe_servings">Recipe must make more than one portion.</string>
+    <string name="activity_detail_product_base_fields_editable_error_UoM">Please select a valid
+        unit of measure.</string>
+    <string name="activity_detail_product_base_fields_editable_error_shelf_life">Please select a
+        valid shelf life.</string>
+    <string name="activity_detail_product_base_fields_editable_error_category">Please select a valid
+        category.</string>
+    <string name="input_error_product_pack_price">Pack price needs to be between 0.01 and 1000
+    </string>
+    <string name="activity_detail_product_error_incomplete_fields">Please ensure you have completed
+        all fields.</string>
 
     <!-- ActivityCatalogProduct -->
     <string name="product_catalog_empty_view_title_text">The cupboards are empty.</string>

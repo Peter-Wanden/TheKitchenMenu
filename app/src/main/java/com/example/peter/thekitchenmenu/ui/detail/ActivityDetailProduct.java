@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.icu.util.Currency;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -68,6 +70,7 @@ import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -101,7 +104,7 @@ public class ActivityDetailProduct
             mPackPrice,
             mPackPriceAverage;
 
-    // Boolean member variables for logically switching through class decision tree
+    // Boolean member variables for the applications logic in switching through decision tree
     private boolean
             mIsExistingProduct,
             mIsCreator,
@@ -110,8 +113,21 @@ public class ActivityDetailProduct
             mBaseFieldsAreEditable,
             mUserFieldsAreEditable,
             mPutProductOnUsedList,
-            mImageAvailabe,
+            mImageAvailable,
             mCameraImageTaken;
+
+    // Booleans that keep track of validated user input fields
+    private boolean
+            mDescriptionIsValidated,
+            mMadeByIsValidated,
+            mPackSizeIsValidated,
+            mUoMIsValidated,
+            mShelfLifeIsValidated,
+            mCategoryIsValidated,
+            mRetailerIsValidated,
+            mPackPriceIsValidated,
+            mLocationRoomIsValidated,
+            mLocationInRoomIsValidated;
 
     // Containers for groups of fields
     private LinearLayout
@@ -143,7 +159,11 @@ public class ActivityDetailProduct
             mRetailerTV,
             mLocationRoomTV,
             mLocationInRoomTV,
-            mPackPriceTV;
+            mPackPriceTV,
+            mUoMTVSpinnerError,
+            mShelfLifeTVSpinnerError,
+            mCategoryTVSpinnerError,
+            mCurrencySymbol;
 
     // Spinners for the fields in activity_detail_product
     private Spinner
@@ -221,7 +241,6 @@ public class ActivityDetailProduct
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_product);
-        Log.e(LOG_TAG, "onCreate() - called");
 
         assignMemberVariables();
         setupFireBase();
@@ -400,7 +419,7 @@ public class ActivityDetailProduct
         mIsMultiUser = false;
 
         // Tells us if the user has taken an image
-        mImageAvailabe = false;
+        mImageAvailable = false;
 
         // Tells us if an image has been taken by the camera
         mCameraImageTaken = false;
@@ -441,6 +460,18 @@ public class ActivityDetailProduct
 
         // Default value for the used product reference
         mFbUsedProductsUserKey = Constants.DEFAULT_FB_USED_PRODUCT_ID;
+
+        // Default values of Bool's that record the state of input validation
+        mDescriptionIsValidated = false;
+        mMadeByIsValidated = false;
+        mPackSizeIsValidated = false;
+        mUoMIsValidated = false;
+        mShelfLifeIsValidated = false;
+        mCategoryIsValidated = false;
+        mRetailerIsValidated = false;
+        mPackPriceIsValidated = false;
+        mLocationRoomIsValidated = false;
+        mLocationInRoomIsValidated = false;
     }
 
     /* Sets up Firebase instance and references */
@@ -504,38 +535,12 @@ public class ActivityDetailProduct
         mIsCreator = true;
         mIsExistingProduct = false;
         mPutProductOnUsedList = true;
-
-        /* Apply text watchers for instant validation */
-        // Description EditTextField
-        mDescriptionET.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                String completeText = s.toString();
-
-                // Validate the description as it is entered.
-                boolean isValidated = validateDescription(completeText);
-                if (isValidated) {
-                    mDescription = completeText;
-                } else {
-                    mDescriptionET.requestFocus();
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
     }
 
-    /* Validates the description field against the validation ruled in the TKMAppLibrary */
+    /* Validates the 'description' field against the validation rules in the TKMAppLibrary */
     private boolean validateDescription(String description) {
 
-        // Validate the description
+        // Validate its content
         int validateDescription = InputValidation.validateProductDescription(description);
 
         // If there is an error
@@ -554,6 +559,227 @@ public class ActivityDetailProduct
                     return false;
             }
         }
+        // If all is well update the member and bool
+        mDescription = description;
+        return true;
+    }
+
+    /* Validates the 'made by' field against the validation rules in the TKMAppLibrary */
+    private boolean validateMadeBy(String madeBy) {
+
+        // Validate its content
+        int validateMadeBy = InputValidation.validateMadeBy(madeBy);
+
+        // If there is an error
+        if (validateMadeBy != 0) {
+
+            // Report the error
+            switch (validateMadeBy) {
+                case 1:
+                    mMadeByET.setError(getResources().getString(
+                            R.string.input_error_product_description_too_short));
+                    return false;
+
+                case 2:
+                    mMadeByET.setError(getResources().getString(
+                            R.string.input_error_product_description_too_long));
+                    return false;
+            }
+        }
+        mMadeBy = madeBy;
+        return true;
+    }
+
+    /* Validates the 'pack size' field against the validation rules in the TKMAppLibrary */
+    private boolean validatePackSize(String packSizeString) {
+
+        // Get the value in the field
+        if (!packSizeString.equals("")) {
+
+            int packSizeInt = Integer.parseInt(packSizeString);
+
+            // Check against validation rules in TKMAppLibrary
+            boolean validatePackSize = InputValidation.validatePackSize(packSizeInt);
+
+            // If there is an error
+            if (!validatePackSize) {
+                mPackSizeET.setError(getResources().getString(
+                        R.string.input_error_product_pack_size));
+                return false;
+            }
+            // Update the member and bool
+            mPackSize = packSizeInt;
+            return true;
+        }
+        mPackSizeET.setError(getResources().getString(
+                R.string.input_error_product_pack_size));
+        return false;
+    }
+
+    /* Validates the 'unit of measure' against the validation rules in the TKMAppLibrary */
+    private boolean validateUnitOfMeasure() {
+
+        // Unit of measure is automatically updated when user selects an item in the spinner.
+        // See setupUoMSpinner() for details. Check against validation rules in TKMAppLibrary.
+        mUoMIsValidated = InputValidation.validateUoM(mUnitOfMeasure);
+
+        // If there is an error
+        if (!mUoMIsValidated) {
+            // Set the error to the TextView next to the UoM spinner
+            mUoMTVSpinnerError.setError(getString(R.string.
+                    activity_detail_product_base_fields_editable_error_UoM));
+            return false;
+        }
+
+        // Clear any errors
+        mUoMTVSpinnerError.setError(null);
+        return true;
+    }
+
+    /* Validates the 'shelf life' against the validation rules in the TKMAppLibrary */
+    private boolean validateShelfLife() {
+
+        // Unit of measure is automatically updated when user selects an item in the spinner.
+        // See setupShelfLifeSpinner() for details. Check against validation rules in TKMAppLibrary.
+        mShelfLifeIsValidated = InputValidation.validateShelfLife(mShelfLife);
+
+        // If there is an error
+        if (!mShelfLifeIsValidated) {
+            // Set the error to the TextView next to the UoM spinner
+            mShelfLifeTVSpinnerError.setError(getString(R.string.
+                    activity_detail_product_base_fields_editable_error_shelf_life));
+            return false;
+        }
+        mShelfLifeTVSpinnerError.setError(null);
+        return true;
+    }
+
+    /* Validates the 'category' against the validation rules in the TKMAppLibrary */
+    private boolean validateCategory() {
+
+        // The category is automatically updated when user selects an item in the spinner.
+        // See setupCategorySpinner() for details. Check against validation rules in TKMAppLibrary.
+        mCategoryIsValidated = InputValidation.validateProductCategory(mCategory);
+
+        // If there is an error
+        if (!mCategoryIsValidated) {
+            // Set the error to the TextView next to the UoM spinner
+            mCategoryTVSpinnerError.setError(getString(R.string.
+                    activity_detail_product_base_fields_editable_error_category));
+            return false;
+        }
+        mCategoryTVSpinnerError.setError(null);
+        return true;
+    }
+
+    /* Validates the 'retailer' field against the validation rules in the TKMAppLibrary */
+    private boolean validateRetailer(String retailer) {
+
+        // Validate its content
+        int validateRetailer = InputValidation.validateRetailer(retailer);
+
+        // If there is an error
+        if (validateRetailer != 0) {
+
+            Log.e(LOG_TAG, "validateRetailer() - Retailers name is: " + retailer);
+            Log.e(LOG_TAG, "validateRetailer() - Retailer validation returned with code: " + validateRetailer);
+
+            // Report the error
+            switch (validateRetailer) {
+                case 1:
+                    mRetailerET.setError(getResources().getString(
+                            R.string.input_error_product_description_too_short));
+                    return false;
+
+                case 2:
+                    mRetailerET.setError(getResources().getString(
+                            R.string.input_error_product_description_too_long));
+                    return false;
+            }
+        }
+        // Update the member and bool.
+        mRetailer = retailer;
+        return true;
+    }
+
+    /* Validates the 'price' field against the validation rules in the TKMAppLibrary */
+    private boolean validatePackPrice() {
+
+//        Log.e(LOG_TAG, "validatePackPrice() - called");
+
+        // Get the value in the field
+        if (!mPackPriceET.getText().toString().equals("")) {
+
+            mPackPrice = Double.parseDouble(mPackSizeET.getText().toString().trim());
+
+            // Check against validation rules in TKMAppLibrary
+            boolean validatePrice = InputValidation.validatePrice(mPackPrice);
+
+            // If there is an error
+            if (!validatePrice) {
+                mPackPriceET.setError(getResources().getString(
+                        R.string.input_error_product_pack_price));
+                return false;
+            }
+            mPackPriceIsValidated = true;
+            return true;
+        }
+        mPackPriceET.setError(getResources().getString(
+                R.string.input_error_product_pack_price));
+        return false;
+    }
+
+    /* Validates the 'location room' field against the validation rules in the TKMAppLibrary */
+    private boolean validateLocationRoom(String locationRoom) {
+
+        // Validate its content
+        int validateLocationRoom = InputValidation.validateLocRoom(locationRoom);
+
+        // If there is an error
+        if (validateLocationRoom != 0) {
+
+            // Report the error
+            switch (validateLocationRoom) {
+                case 1:
+                    mLocationRoomET.setError(getResources().getString(
+                            R.string.input_error_product_loc_room_too_short));
+                    return false;
+
+                case 2:
+                    mLocationRoomET.setError(getResources().getString(
+                            R.string.input_error_product_loc_room_too_long));
+                    return false;
+            }
+        }
+        // If all is well update the member and bool
+        mLocationRoom = locationRoom;
+        return true;
+    }
+
+    /* Validates the 'location in room' field against the validation rules in the TKMAppLibrary */
+    private boolean validateLocationInRoom(String locationInRoom) {
+
+        // Validate its content
+        int validateLocationInRoom = InputValidation.validateLocInRoom(locationInRoom);
+
+        // If there is an error
+        if (validateLocationInRoom != 0) {
+
+            // Report the error
+            switch (validateLocationInRoom) {
+                case 1:
+                    mLocationInRoomET.setError(getResources().getString(
+                            R.string.input_error_product_loc_in_room_too_short));
+                    return false;
+
+                case 2:
+                    mLocationInRoomET.setError(getResources().getString(
+                            R.string.input_error_product_loc_in_room_too_long));
+                    return false;
+            }
+        }
+        // If all is well update the member and bool
+        mLocationInRoom = locationInRoom;
         return true;
     }
 
@@ -698,17 +924,26 @@ public class ActivityDetailProduct
      */
     private void saveProduct() {
 
-        Log.e(LOG_TAG, "\nsaveProduct() - Truth table: " +
-                "\nmIsCreator: " + mIsCreator +
-                "\nmBaseFieldsAreEditable: " + mBaseFieldsAreEditable +
-                "\nmUserFieldsAreEditable: " + mUserFieldsAreEditable +
-                "\nmInUsersUsedList: " + mInUsersUsedList +
-                "\nmPutProductOnUsedList: " + mPutProductOnUsedList +
-                "\nmIsExistingProduct: " + mIsExistingProduct +
-                "\nmIsMultiUser: " + mIsMultiUser);
+//        Log.e(LOG_TAG, "\nsaveProduct() - Truth table: " +
+//                "\nmIsCreator: " + mIsCreator +
+//                "\nmBaseFieldsAreEditable: " + mBaseFieldsAreEditable +
+//                "\nmUserFieldsAreEditable: " + mUserFieldsAreEditable +
+//                "\nmInUsersUsedList: " + mInUsersUsedList +
+//                "\nmPutProductOnUsedList: " + mPutProductOnUsedList +
+//                "\nmIsExistingProduct: " + mIsExistingProduct +
+//                "\nmIsMultiUser: " + mIsMultiUser);
 
-        // Todo Implement on up pressed save changes and touch listener
-        // Todo - can these updates be written in a single write
+//        Log.e(LOG_TAG, "\nsaveProduct() - State of validation bools: " + "\n" +
+//                "Description validated: " + mDescriptionIsValidated + "\n" +
+//                "MadeBy validated: " + mMadeByIsValidated + "\n" +
+//                "PackSize validated: " + mPackSizeIsValidated + "\n" +
+//                "UoM validated: " + mUoMIsValidated + "\n" +
+//                "ShelfLife validated: " + mShelfLifeIsValidated + "\n" +
+//                "Category validated: " + mCategoryIsValidated + "\n" +
+//                "Retailer validated:" + mRetailerIsValidated + "\n" +
+//                "Pack price validated: " + mPackPriceIsValidated + "\n" +
+//                "Location room validated: " + mLocationRoomIsValidated + "\n" +
+//                "Location in room validated: " + mLocationInRoomIsValidated);
 
         /*
            1. This is a new product. Various parts of it and its users data needs to be stored in
@@ -729,97 +964,94 @@ public class ActivityDetailProduct
             Log.e(LOG_TAG, "saveProduct() - Case 1: This is a new product. Save " +
                     "locations: 1 + 2 + 3 + Image (if available)");
 
-            // Validate the product base fields
-            boolean baseFieldsValidated = validateBaseFields();
+            // This is a new product, so check all fields are validated
+            if (checkValidationBaseFields() && checkValidationUserFields()) {
 
-            // If base fields are validated...
-            if (baseFieldsValidated) {
+                Log.e(LOG_TAG, "saveProduct() - Case 1: Base and user fields validated");
 
-                // Validate the user product specific fields
-                boolean userFieldsAreValidated = validateUserFields();
+                // Reduce bounce as we say in the electronics trade (double click) by hiding the
+                // menu items once pressed.
+                setMenuItemVisibility(false, false, false);
 
-                // If the product specific fields are validated...
-                if (userFieldsAreValidated) {
+                /*
+                   Set the new product to Firebase
+                   See: https://firebase.google.com/docs/database/admin/save-data
+                */
 
-                    /*
-                       Set the new product to Firebase
-                       See: https://firebase.google.com/docs/database/admin/save-data
-                    */
+                // Create a reference to the '/collection/products' location 1 (as mentioned
+                // above)
+                final DatabaseReference collectionProductsRef = mFbCollectionProduct.push();
 
-                    // Create a reference to the '/collection/products' location 1 (as mentioned
-                    // above)
-                    final DatabaseReference collectionProductsRef = mFbCollectionProduct.push();
+                // Extract the unique product ID
+                Uri productReferenceUri = Uri.parse(collectionProductsRef.toString());
+                mFbProductReferenceKey = productReferenceUri.getLastPathSegment();
 
-                    // Extract the unique product ID
-                    Uri productReferenceUri = Uri.parse(collectionProductsRef.toString());
-                    mFbProductReferenceKey = productReferenceUri.getLastPathSegment();
+                // Create a reference to /collection/users/[user ID]/collection_products/
+                // [product ID] location 2 (as mentioned above)
+                final DatabaseReference userProductRef = mFbCollectionUsers
+                        .child(mUserUid)
+                        .child(Constants.FB_COLLECTION_PRODUCTS)
+                        .child(mFbProductReferenceKey);
 
-                    // Create a reference to /collection/users/[user ID]/collection_products/
-                    // [product ID] location 2 (as mentioned above)
-                    final DatabaseReference userProductRef = mFbCollectionUsers
-                            .child(mUserUid)
-                            .child(Constants.FB_COLLECTION_PRODUCTS)
+                // Create a reference to the /collection/used_products/[product ref key]
+                // location 3 (as mentioned above)
+                final DatabaseReference usedProductRef = mFbCollectionUsedProducts
+                        .child(mFbProductReferenceKey).push();
+
+                // Extract the /used_products/user/[product reference key]
+                Uri usedProductUserUri = Uri.parse(usedProductRef.toString());
+                mFbUsedProductsUserKey = usedProductUserUri.getLastPathSegment();
+
+                if (mImageAvailable) {
+
+                    // From: https://firebase.google.com/docs/storage/android/upload-files
+                    // Get the data from the ImageView as bytes (as a very small image).
+                    mProductIV.setDrawingCacheEnabled(true);
+                    mProductIV.buildDrawingCache();
+                    Bitmap bitmap = ((BitmapDrawable) mProductIV.getDrawable()).getBitmap();
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 10, baos);
+                    byte[] productImage = baos.toByteArray();
+
+                    // Create a reference to store the image
+                    final StorageReference imageRef = mImageStorageReference
                             .child(mFbProductReferenceKey);
 
-                    // Create a reference to the /collection/used_products/[product ref key]
-                    // location 3 (as mentioned above)
-                    final DatabaseReference usedProductRef = mFbCollectionUsedProducts
-                            .child(mFbProductReferenceKey).push();
+                    // Create an upload task
+                    UploadTask uploadTask = imageRef.putBytes(productImage);
 
-                    // Extract the /used_products/user/[product reference key]
-                    Uri usedProductUserUri = Uri.parse(usedProductRef.toString());
-                    mFbUsedProductsUserKey = usedProductUserUri.getLastPathSegment();
+                    // Create a Task to get the returned URL
+                    Task<Uri> urlTask = uploadTask.continueWithTask(task -> {
 
-                    if (mImageAvailabe) {
+                        if (!task.isSuccessful()) {
+                            // There is an error so delete the temp file
+                            if (mCameraImageTaken) {
 
-                        // From: https://firebase.google.com/docs/storage/android/upload-files
-                        // Get the data from the ImageView as bytes (as a very small image).
-                        mProductIV.setDrawingCacheEnabled(true);
-                        mProductIV.buildDrawingCache();
-                        Bitmap bitmap = ((BitmapDrawable) mProductIV.getDrawable()).getBitmap();
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 10, baos);
-                        byte[] productImage = baos.toByteArray();
-
-                        // Create a reference to store the image
-                        final StorageReference imageRef = mImageStorageReference
-                                .child(mFbProductReferenceKey);
-
-                        // Create an upload task
-                        UploadTask uploadTask = imageRef.putBytes(productImage);
-
-                        // Create a Task to get the returned URL
-                        Task<Uri> urlTask = uploadTask.continueWithTask(task -> {
-
-                            if (!task.isSuccessful()) {
-                                // There is an error so delete the temp file
-                                if (mCameraImageTaken) {
-
-                                    BitmapUtils.deleteImageFile(this, mTempImagePath);
-                                    mCameraImageTaken = false;
-                                }
-
-                                throw Objects.requireNonNull(task.getException());
+                                BitmapUtils.deleteImageFile(this, mTempImagePath);
+                                mCameraImageTaken = false;
                             }
 
-                            // Continue with the task to get the download URL
-                            return imageRef.getDownloadUrl();
+                            throw Objects.requireNonNull(task.getException());
+                        }
 
-                        }).addOnCompleteListener(task -> {
+                        // Continue with the task to get the download URL
+                        return imageRef.getDownloadUrl();
 
-                            if (task.isSuccessful()) {
+                    }).addOnCompleteListener(task -> {
 
-                                // Update the member variable with the new image URL
-                                mFbStorageImageUri = task.getResult();
+                        if (task.isSuccessful()) {
 
-                                Log.e(LOG_TAG, "save Product: fbStorageImageUri is: " +
-                                        mFbStorageImageUri);
+                            // Update the member variable with the new image URL
+                            mFbStorageImageUri = task.getResult();
 
-                                if (mCameraImageTaken) {
-                                    // Now it is stored in FireStore we can delete the temp file
-                                    BitmapUtils.deleteImageFile(this, mTempImagePath);
-                                    mCameraImageTaken = false;
-                                }
+//                            Log.e(LOG_TAG, "save Product: fbStorageImageUri is: " +
+//                                    mFbStorageImageUri);
+
+                            if (mCameraImageTaken) {
+                                // Now it is stored in FireStore we can delete the temp file
+                                BitmapUtils.deleteImageFile(this, mTempImagePath);
+                                mCameraImageTaken = false;
+                            }
 
 
                             /*
@@ -827,62 +1059,66 @@ public class ActivityDetailProduct
                                our data
                             */
 
-                                // Create the base product information for /collection/products location
-                                // Convert to a map
-                                Map<String, Object> baseProductMap = convertBaseProductToMap();
+                            // Create the base product information for /collection/products location
+                            // Convert to a map
+                            Map<String, Object> baseProductMap = convertBaseProductToMap();
 
-                                // Save the base product (common product information twixt all users) to
-                                // Firebase reference: /collection_products/[unique product reference]
-                                // location 1
-                                collectionProductsRef.setValue(baseProductMap);
+                            // Save the base product (common product information twixt all users) to
+                            // Firebase reference: /collection_products/[unique product reference]
+                            // location 1
+                            collectionProductsRef.setValue(baseProductMap);
 
-                                // Add in the additional values and keys required
-                                // for /collection/users/[user ID]/collection_products/[product ID]
-                                Map<String, Object> completeProductMap =
-                                        convertProductToMap();
+                            // Add in the additional values and keys required
+                            // for /collection/users/[user ID]/collection_products/[product ID]
+                            Map<String, Object> completeProductMap =
+                                    convertProductToMap();
 
-                                // Save the full product to location 2
-                                // Reference:
-                                // /collection/users/[user ID]/collection_products/[product ID]
-                                userProductRef.setValue(completeProductMap);
+                            // Save the full product to location 2
+                            // Reference:
+                            // /collection/users/[user ID]/collection_products/[product ID]
+                            userProductRef.setValue(completeProductMap);
 
-                                // Save a product reference and user to the used products
-                                // reference at location 3
-                                usedProductRef.setValue(mUserUid);
+                            // Save a product reference and user to the used products
+                            // reference at location 3
+                            usedProductRef.setValue(mUserUid);
 
-                                finish();
-                            }
-                        });
-                    } else {
+                            finish();
+                        }
+                    });
+                } else {
 
-                        // No image was taken, so just save the EditText data
-                        // Create the base product information for /collection/products location
-                        // Convert to a map
-                        Map<String, Object> baseProductMap = convertBaseProductToMap();
+                    // No image was taken, so just save the EditText data
+                    // Create the base product information for /collection/products location
+                    // Convert to a map
+                    Map<String, Object> baseProductMap = convertBaseProductToMap();
 
-                        // Save the base product (common product information twixt all users) to
-                        // Firebase reference: /collection_products/[unique product reference]
-                        // location 1
-                        collectionProductsRef.setValue(baseProductMap);
+                    // Save the base product (common product information twixt all users) to
+                    // Firebase reference: /collection_products/[unique product reference]
+                    // location 1
+                    collectionProductsRef.setValue(baseProductMap);
 
-                        // Add in the additional values and keys required
-                        // for /collection/users/[user ID]/collection_products/[product ID]
-                        Map<String, Object> completeProductMap = convertProductToMap();
+                    // Add in the additional values and keys required
+                    // for /collection/users/[user ID]/collection_products/[product ID]
+                    Map<String, Object> completeProductMap = convertProductToMap();
 
-                        // Save the full product to location 2
-                        // reference: /collection/users/[user ID]/collection_products/[product ID]
-                        userProductRef.setValue(completeProductMap);
+                    // Save the full product to location 2
+                    // reference: /collection/users/[user ID]/collection_products/[product ID]
+                    userProductRef.setValue(completeProductMap);
 
-                        // Save a product reference and user to the used products
-                        // reference at location 3
-                        usedProductRef.setValue(mUserUid);
+                    // Save a product reference and user to the used products
+                    // reference at location 3
+                    usedProductRef.setValue(mUserUid);
 
-                        finish();
-                    }
+                    finish();
                 }
+
+            } else {
+                // Not all fields have been completed and validated so show an error
+                Toast.makeText(this,
+                        R.string.activity_detail_product_error_incomplete_fields, Toast
+                                .LENGTH_LONG).show();
             }
-            // Todo - turn off all editable fields, turn on non-editable fields and load unsaved
-            // todo - data into them. Show a loading indicator while waiting for the image to process
+            // Todo - Show a loading indicator while waiting for the image to process
             return;
 
         /*
@@ -913,22 +1149,26 @@ public class ActivityDetailProduct
                     "being edited by user, all fields editable, single user. Save Locations: 1 + 2");
 
             // Validate the product base fields
-            boolean baseFieldsValidated = validateBaseFields();
+            boolean baseFieldsValidated = checkValidationBaseFields();
+
+            Log.e(LOG_TAG, "saveProduct() - Case 2: Base fields validated = " + baseFieldsValidated);
 
             // If base fields are validated...
             if (baseFieldsValidated) {
 
                 // Validate the user product specific fields
-                boolean userFieldsValidated = validateUserFields();
+                boolean userFieldsValidated = checkValidationUserFields();
+
+                Log.e(LOG_TAG, "saveProduct() - Case 2: User fields validated = " + userFieldsValidated);
 
                 // If the product specific fields are validated...
                 if (userFieldsValidated) {
                     // If there has been changes to the image, save them
                     // Location
 
-                    Log.e(LOG_TAG, "saveProduct() - isImageTaken() = " + mImageAvailabe);
+                    Log.e(LOG_TAG, "saveProduct() - isImageTaken() = " + mImageAvailable);
 
-                    if (mImageAvailabe) {
+                    if (mImageAvailable) {
 
                         // Either:
                         // 1. A new image has been added to an existing product that did not have
@@ -1009,6 +1249,9 @@ public class ActivityDetailProduct
                                     // Save the changes to the products base data
                                     // Location 1
                                     saveBaseProductUpdates(productBaseUpdates);
+
+
+
                                 }
 
                                 // If there has been changes to the user data, save them
@@ -1022,6 +1265,7 @@ public class ActivityDetailProduct
                             }
                         });
                     } else {
+
                         /*
                             Collate any changes and update the child data in the database.
                          */
@@ -1040,12 +1284,23 @@ public class ActivityDetailProduct
                             saveBaseProductUpdates(productBaseUpdates);
                         }
 
-                        // If there has been changes to the user data, save them
+                        // If there has been changes to the user and/or base data. save them
                         // Location 2
                         if (productUserUpdates != null) {
 
-                            // Save the changes to the users product data
-                            saveUserProductUpdates(productUserUpdates);
+                            // Add the base data changes to users product updates
+                            if (productBaseUpdates != null) {
+
+                                productUserUpdates.putAll(productBaseUpdates);
+
+                                Log.e(LOG_TAG, "saveProduct() - Case 2: No image - " +
+                                        "base and user updates merged - productUserUpdates now looks like: " + productUserUpdates);
+                            } else {
+                                Log.e(LOG_TAG, "saveProduct() - Case 2: No image - " +
+                                        "There are no base updates - productUserUpdates looks like: " + productUserUpdates);
+                                // Save the changes to the users product data
+                                saveUserProductUpdates(productUserUpdates);
+                            }
                         }
                         finish();
                     }
@@ -1076,7 +1331,7 @@ public class ActivityDetailProduct
                     "The user is the creator. Only the user data can be updated - Save locations: 1");
 
             // Validate the user product specific fields
-            boolean userFieldsValidated = validateUserFields();
+            boolean userFieldsValidated = checkValidationUserFields();
 
             if (userFieldsValidated) {
 
@@ -1126,7 +1381,7 @@ public class ActivityDetailProduct
             // Todo - can these updates be written in a single write
 
             // Validate the user product specific fields
-            boolean userFieldsValidated = validateUserFields();
+            boolean userFieldsValidated = checkValidationUserFields();
 
             if (userFieldsValidated) {
 
@@ -1186,7 +1441,7 @@ public class ActivityDetailProduct
                     "edited, in users used list, base fields uneditable - Save locations: 1");
 
             // Validate the users input fields
-            boolean userFieldsValidated = validateUserFields();
+            boolean userFieldsValidated = checkValidationUserFields();
 
             if (userFieldsValidated) {
 
@@ -1229,7 +1484,7 @@ public class ActivityDetailProduct
                     " - Save locations: 3 and 2");
 
             // Validate the users input fields
-            boolean userFieldsValidated = validateUserFields();
+            boolean userFieldsValidated = checkValidationUserFields();
 
             if (userFieldsValidated) {
 
@@ -1314,6 +1569,7 @@ public class ActivityDetailProduct
 
         // If there have been changes return the baseUpdates Map
         if (baseUpdateCounter > 0) {
+            Log.e(LOG_TAG, "getBaseUpdates() - Base updates looks like: " + baseUpdates);
             return baseUpdates;
         }
 
@@ -1328,30 +1584,42 @@ public class ActivityDetailProduct
         // We store the whole product in the /collection_user/[uid]/collection_products location
         Map<String, Object> productUserUpdates = new HashMap<>();
 
-        // Add the existing base data to the HashMap
-        productUserUpdates.put(
-                Constants.PRODUCT_BASE_DESCRIPTION_KEY,
-                mProduct.getDescription());
-        productUserUpdates.put(
-                Constants.PRODUCT_BASE_MADE_BY_KEY,
-                mProduct.getMadeBy());
-        productUserUpdates.put(
-                Constants.PRODUCT_BASE_CATEGORY_KEY,
-                mProduct.getCategory());
-        productUserUpdates.put(
-                Constants.PRODUCT_BASE_SHELF_LIFE_KEY,
-                mProduct.getShelfLife());
-        productUserUpdates.put(
-                Constants.PRODUCT_BASE_PACK_SIZE_KEY,
-                mProduct.getPackSize());
-        productUserUpdates.put(
-                Constants.PRODUCT_BASE_UNIT_OF_MEASURE_KEY,
-                mProduct.getUnitOfMeasure());
-        productUserUpdates.put(
-                Constants.PRODUCT_BASE_PRICE_AVE_KEY, mProduct.getPackPrice());
-        productUserUpdates.put(
-                Constants.PRODUCT_BASE_CREATED_BY_KEY,
-                mProduct.getCreatedBy());
+        // Create a counter to see how many updates there are, if any.
+        int userUpdateCounter = 0;
+
+        /*
+             Add the base data to the HashMap.
+          */
+        // This is an existing product, single user, being updated by its creator.
+//        Log.e(LOG_TAG, "\ngetUserUpdates() - State of bool's: " +
+//                "\nIsCreator: " + mIsCreator +
+//                "\nIsMultiUser: " + mIsMultiUser +
+//                "\nBaseFieldsAreEditable: " + mBaseFieldsAreEditable);
+
+            productUserUpdates.put(
+                    Constants.PRODUCT_BASE_DESCRIPTION_KEY,
+                    mProduct.getDescription());
+            productUserUpdates.put(
+                    Constants.PRODUCT_BASE_MADE_BY_KEY,
+                    mProduct.getMadeBy());
+            productUserUpdates.put(
+                    Constants.PRODUCT_BASE_CATEGORY_KEY,
+                    mProduct.getCategory());
+            productUserUpdates.put(
+                    Constants.PRODUCT_BASE_SHELF_LIFE_KEY,
+                    mProduct.getShelfLife());
+            productUserUpdates.put(
+                    Constants.PRODUCT_BASE_PACK_SIZE_KEY,
+                    mProduct.getPackSize());
+            productUserUpdates.put(
+                    Constants.PRODUCT_BASE_UNIT_OF_MEASURE_KEY,
+                    mProduct.getUnitOfMeasure());
+            productUserUpdates.put(
+                    Constants.PRODUCT_BASE_PRICE_AVE_KEY, mProduct.getPackPrice());
+            productUserUpdates.put(
+                    Constants.PRODUCT_BASE_CREATED_BY_KEY,
+                    mProduct.getCreatedBy());
+
 
         // Add in the user specific data to the HashMap
         productUserUpdates.put(
@@ -1366,9 +1634,6 @@ public class ActivityDetailProduct
         productUserUpdates.put(
                 Constants.PRODUCT_USER_FB_USED_USER_KEY,
                 mProduct.getFbUsedProductsUserKey());
-
-        // Create a counter to see how many updates there are, if any.
-        int userUpdateCounter = 0;
 
         // Compare and add any changes from the user specific fields to the HashMap
         if (!mRetailer.equals(mProduct.getRetailer())) {
@@ -1394,7 +1659,6 @@ public class ActivityDetailProduct
 
         // If there have been updates return the updated Map
         if (userUpdateCounter > 0) {
-            Log.e(LOG_TAG, "getUserUpdates() - There are: " + userUpdateCounter + " user updates.");
             return productUserUpdates;
         }
         // If there are no changes return null
@@ -1445,151 +1709,58 @@ public class ActivityDetailProduct
     }
 
     /* Validates the user input from the products base (user common) fields */
-    // Todo - shift to utils class
-    private boolean validateBaseFields() {
+    private boolean checkValidationBaseFields() {
 
-        /* Read, trim and validate all base input fields */
-        // Description
-        mDescription = mDescriptionET.getText().toString().trim();
-        int validateDescription = InputValidation.validateProductDescription(mDescription);
+        if (!mDescriptionIsValidated) {
+            validateDescription(mDescriptionET.getText().toString().trim());
 
-        if (validateDescription != 0) {
+        } else if (!mMadeByIsValidated) {
+            validateMadeBy(mMadeByET.getText().toString().trim());
 
-            mDescriptionET.requestFocus();
+        } else if (!mPackSizeIsValidated) {
+            validatePackSize(String.valueOf(mPackSizeET.toString().trim()));
 
-            switch (validateDescription) {
-                case 1:
-                    mDescriptionET.setError(getResources().getString(
-                            R.string.input_error_product_description_too_short));
-                    break;
+        } else if (!mUoMIsValidated) {
+            mUnitOfMeasure = mUoMSpinner.getSelectedItemPosition();
+            validateUnitOfMeasure();
 
-                case 2:
-                    mDescriptionET.setError(getResources().getString(
-                            R.string.input_error_product_description_too_long));
-                    break;
-            }
-            return false;
+        } else if (!mShelfLifeIsValidated) {
+            mShelfLife = mShelfLifeSpinner.getSelectedItemPosition();
+            validateShelfLife();
+
+        } else if (!mCategoryIsValidated) {
+            mCategory = mCategorySpinner.getSelectedItemPosition();
         }
 
-        // Made by
-        mMadeBy = mMadeByET.getText().toString().trim();
-        int validateMadeBy = InputValidation.validateMadeBy(mMadeBy);
-
-        if (validateMadeBy != 0) {
-            mMadeByET.requestFocus();
-
-            switch (validateMadeBy) {
-                case 1:
-                    mMadeByET.setError(getResources().getString(
-                            R.string.input_error_product_description_too_short));
-                    break;
-
-                case 2:
-                    mMadeByET.setError(getResources().getString(
-                            R.string.input_error_product_description_too_long));
-                    break;
-            }
-            return false;
-        }
-
-        // Category - Direct from spinners, user cannot select an incorrect value
-
-        // Shelf life - Direct from spinners, user cannot select an incorrect value
-
-        // Pack size
-        mPackSize = Integer.parseInt(mPackSizeET.getText().toString().trim());
-        boolean validatePackSize = InputValidation.validatePackSize(mPackSize);
-
-        if (!validatePackSize) {
-            mPackSizeET.requestFocus();
-            mPackSizeET.setError(getResources().getString(
-                    R.string.input_error_pack_size));
-            return false;
-        }
-
-        // Unit of measure - Direct from spinners, user cannot select an incorrect value
-
-        // Pack price - No validation required (that I can think of)
-
-        return true;
+        return mDescriptionIsValidated &&
+                mMadeByIsValidated &&
+                mPackSizeIsValidated &&
+                mUoMIsValidated &&
+                mShelfLifeIsValidated &&
+                mCategoryIsValidated;
     }
 
     /* Validates the product fields that are specific to each user */
     // Todo - shift to utils class
-    private boolean validateUserFields() {
+    private boolean checkValidationUserFields() {
 
-        // Retailer
-        mRetailer = mRetailerET.getText().toString().trim();
-        int validateRetailer = InputValidation.validateRetailer(mRetailer);
+        if (!mRetailerIsValidated) {
+            validateRetailer(mRetailerET.getText().toString().trim());
 
-        if (validateRetailer != 0) {
+        } else if (!mPackPriceIsValidated && !mPackPriceET.getText().toString().equals("")) {
+                validatePackPrice();
 
-            switch (validateRetailer) {
-                case 1:
-                    mRetailerET.setError(getResources().getString(
-                            R.string.input_error_product_retailer_too_short));
-                    break;
+        } else if (!mLocationRoomIsValidated) {
+            validateLocationRoom(mLocationRoomET.getText().toString().trim());
 
-                case 2:
-                    mRetailerET.setError(getResources().getString(
-                            R.string.input_error_product_retailer_too_long));
-                    break;
-            }
-            return false;
+        } else if (!mLocationInRoomIsValidated) {
+            validateLocationInRoom(mLocationInRoomET.getText().toString().trim());
         }
 
-        // Location room
-        mLocationRoom = mLocationRoomET.getText().toString().trim();
-        int validateLocRoom = InputValidation.validateLocRoom(mLocationRoom);
-
-        if (validateLocRoom != 0) {
-            mLocationRoomET.requestFocus();
-
-            switch (validateLocRoom) {
-                case 1:
-                    mLocationRoomET.setError(getResources().getString(
-                            R.string.input_error_product_loc_room_too_short));
-                    break;
-
-                case 2:
-                    mLocationRoomET.setError(getResources().getString(
-                            R.string.input_error_product_loc_room_too_long));
-                    break;
-            }
-            return false;
-        }
-
-        // Location in room
-        mLocationInRoom = mLocationInRoomET.getText().toString().trim();
-        int validateLocInRoom = InputValidation.validateLocInRoom(mLocationInRoom);
-
-        if (validateLocInRoom != 0) {
-            mLocationInRoomET.requestFocus();
-
-            switch (validateLocInRoom) {
-                case 1:
-                    mLocationInRoomET.setError(getResources().getString(
-                            R.string.input_error_product_loc_in_room_too_short));
-                    break;
-
-                case 2:
-                    mLocationInRoomET.setError(getResources().getString(
-                            R.string.input_error_product_loc_in_room_too_long));
-                    break;
-            }
-            return false;
-        }
-
-        // Pack price
-        // TODO - Implement currency, change data type to Float
-        String unformattedPrice = mPackPriceET.getText().toString().trim();
-
-        if (unformattedPrice.length() > 0) {
-            mPackPrice = Double.parseDouble(unformattedPrice);
-        } else {
-            mPackPrice = 0.0;
-        }
-        return true;
+        return mRetailerIsValidated &&
+                mPackPriceIsValidated &&
+                mLocationRoomIsValidated &&
+                mLocationInRoomIsValidated;
     }
 
     /* Converts the products base data to an object map */
@@ -1647,14 +1818,14 @@ public class ActivityDetailProduct
      * - User specific fields uneditable
      * */
     private void populateUi() {
-        Log.e(LOG_TAG, "\npopulateUi() - State of bool's as follows:"
-                + "isExistingProduct: " + mIsExistingProduct + "\n"
-                + "IsCreator: " + mIsCreator + "\n"
-                + "ProductInUsedList: " + mInUsersUsedList + "\n"
-                + "IsMultiUser : " + mIsMultiUser + "\n"
-                + "mPutProductOnUsedList: " + mPutProductOnUsedList + "\n"
-                + "BaseFields are editable: " + mBaseFieldsAreEditable + "\n"
-                + "UserFieldsAreEditable: " + mUserFieldsAreEditable);
+//        Log.e(LOG_TAG, "\npopulateUi() - State of bool's as follows:"
+//                + "isExistingProduct: " + mIsExistingProduct + "\n"
+//                + "IsCreator: " + mIsCreator + "\n"
+//                + "ProductInUsedList: " + mInUsersUsedList + "\n"
+//                + "IsMultiUser : " + mIsMultiUser + "\n"
+//                + "mPutProductOnUsedList: " + mPutProductOnUsedList + "\n"
+//                + "BaseFields are editable: " + mBaseFieldsAreEditable + "\n"
+//                + "UserFieldsAreEditable: " + mUserFieldsAreEditable);
 
         // Load the image if there is one, from Firestore
         if (!mProduct.getFbStorageImageUri().equals("")) {
@@ -1772,6 +1943,7 @@ public class ActivityDetailProduct
                 .BASE_FIELDS_EDITABLE_STATUS_KEY, mBaseFieldsAreEditable);
         outState.putBoolean(Constants
                 .USER_CUSTOM_FIELDS_EDITABLE_STATUS_KEY, mUserFieldsAreEditable);
+
     }
 
     /* Get a reference eto all of the views */
@@ -1824,6 +1996,14 @@ public class ActivityDetailProduct
                 R.id.activity_detail_product_user_fields_uneditable_tv_location_room);
         mLocationInRoomTV = findViewById(
                 R.id.activity_detail_product_user_fields_uneditable_tv_location_in_room);
+        mUoMTVSpinnerError = findViewById(
+                R.id.activity_detail_product_base_fields_editable_tv_spinner_UoM_setError);
+        mShelfLifeTVSpinnerError = findViewById(
+                R.id.activity_detail_product_base_fields_editable_tv_spinner_shelf_life_setError);
+        mCategoryTVSpinnerError = findViewById(
+                R.id.activity_detail_product_base_fields_editable_tv_spinner_category_setError);
+        mCurrencySymbol = findViewById(
+                R.id.activity_detail_product_user_fields_editable_tv_currency_symbol);
 
         // Spinner fields
         mUoMSpinner = findViewById(
@@ -1857,6 +2037,10 @@ public class ActivityDetailProduct
         mBaseFieldsEditableContainer.setVisibility(View.GONE);
         mBaseFieldsUnEditableContainer.setVisibility(View.GONE);
 
+        /*
+            Here follows the click listeners for the various input fields.
+        */
+
         /* OnClickListener for the add picture by camera button */
         mAddImageCameraIB.setOnClickListener(v -> requestPermissions());
 
@@ -1872,7 +2056,7 @@ public class ActivityDetailProduct
             mProductIV.setImageBitmap(rotated);
 
             // The image has changed so update the bool
-            mImageAvailabe = true;
+            mImageAvailable = true;
         });
 
         /* onClickListener for the FAB */
@@ -1912,6 +2096,243 @@ public class ActivityDetailProduct
                     intent, getString(R.string.intent_gallery_picker_title)),
                     Constants.REQUEST_IMAGE_PICKER);
         });
+
+
+        /*
+            Here follows the change listeners for the various input fields.
+        */
+
+        // Text change listener for the 'description' EditText field
+        mDescriptionET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Validate the text as it changes
+                mDescriptionIsValidated = validateDescription(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        // Focus change listener for the 'description' EditText field */
+        mDescriptionET.setOnFocusChangeListener((v, hasFocus) -> {
+
+            // When this field gains focus its content may be changing, if so it will not be
+            // validated. When this field looses focus, its content will need validating.
+            mDescriptionIsValidated = !hasFocus && validateDescription(
+                    mDescriptionET.getText().toString());
+        });
+
+        // Change listener for the 'made by' EditText field
+        mMadeByET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mMadeByIsValidated = validateMadeBy(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        // Focus change listener for the 'made by' EditText field */
+        mMadeByET.setOnFocusChangeListener((v, hasFocus) -> {
+
+            // When this field gains focus its content may be changing, if so it will not be
+            // validated. When this field looses focus, its content will need validating.
+            mMadeByIsValidated = !hasFocus && validateMadeBy(
+                    mMadeByET.getText().toString());
+        });
+
+        // Change listener for the 'pack size' EditText field
+        mPackSizeET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mPackSizeIsValidated = validatePackSize(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        // Focus change listener for the 'pack size' EditText field */
+        mPackSizeET.setOnFocusChangeListener((v, hasFocus) -> {
+
+            // When this field gains focus its content may be changing, if so it will not be
+            // validated. When this field looses focus, its content will need validating.
+            mPackSizeIsValidated = !hasFocus && validatePackSize(
+                    mPackSizeET.getText().toString());
+        });
+
+        // Focus change listener for the 'unit of measure' spinner
+        mUoMSpinner.setOnFocusChangeListener((v, hasFocus) -> {
+
+            // When this field gains focus its content may be changing, if so it will not be
+            // validated. When this field looses focus, its content will need validating.
+            if (hasFocus) {
+                mUoMIsValidated = false;
+                hideKeyboard();
+                mUoMSpinner.performClick();
+
+            } else {
+
+                // Validate its contents
+                mUoMIsValidated = validateUnitOfMeasure();
+
+                // If validated remove the error
+                if (mUoMIsValidated) {
+                    mUoMTVSpinnerError.setError(null);
+                }
+            }
+        });
+
+        // Focus change listener for the 'shelf life' spinner
+        mShelfLifeSpinner.setOnFocusChangeListener((v, hasFocus) -> {
+
+            // When this field gains focus its content may be changing, if so it will not be
+            // validated. When this field looses focus, its content will need validating.
+            if (hasFocus) {
+                mShelfLifeIsValidated = false;
+                hideKeyboard();
+                mShelfLifeSpinner.performClick();
+            } else {
+                // Validate its contents
+                mShelfLifeIsValidated = validateShelfLife();
+            }
+        });
+
+        // Focus change listener for the 'category' spinner
+        mCategorySpinner.setOnFocusChangeListener((v, hasFocus) -> {
+
+            // When this field gains focus its content may be changing, if so it will not be
+            // validated. When this field looses focus, its content will need validating.
+            if (hasFocus) {
+                mCategoryIsValidated = false;
+                hideKeyboard();
+                mCategorySpinner.performClick();
+            } else {
+                // Validate its contents
+                mCategoryIsValidated = validateCategory();
+            }
+        });
+
+        // Change listener for the 'made by' EditText field
+        mRetailerET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mRetailerIsValidated = validateRetailer(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        // Focus change listener for the 'retailer' EditText field */
+        mRetailerET.setOnFocusChangeListener((v, hasFocus) -> {
+
+            // When this field gains focus its content may be changing, if so it will not be
+            // validated. When this field looses focus, its content will need validating.
+            mRetailerIsValidated = !hasFocus && validateRetailer(mRetailerET.getText().toString());
+        });
+
+        // Focus change listener for the 'pack price' EditText field
+        mPackPriceET.setOnFocusChangeListener((v, hasFocus) -> {
+
+            // When this field gains focus its content may be changing, if so it will not be
+            // validated. When this field looses focus, its content will need validating.
+            mPackPriceIsValidated = !hasFocus && validatePackPrice();
+        });
+
+        // Focus change listener for the 'location room' EditText field
+        mLocationRoomET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mLocationRoomIsValidated = validateLocationRoom(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
+        // Focus change listener for the 'location room' EditText field */
+        mLocationRoomET.setOnFocusChangeListener((v, hasFocus) -> {
+
+            // When this field gains focus its content may be changing, if so it will not be
+            // validated. When this field looses focus, its content will need validating.
+            mLocationRoomIsValidated = !hasFocus && validateLocationRoom(
+                    mLocationRoomET.getText().toString().trim());
+        });
+
+        // Focus change listener for the 'location in room' EditText field
+        mLocationInRoomET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mLocationInRoomIsValidated = validateLocationInRoom(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
+        // Focus change listener for the 'location in room' EditText field */
+        mLocationInRoomET.setOnFocusChangeListener((v, hasFocus) -> {
+
+            // When this field gains focus its content may be changing, if so it will not be
+            // validated. When this field looses focus, its content will need validating.
+            mLocationInRoomIsValidated = !hasFocus && validateLocationInRoom(
+                    mLocationInRoomET.getText().toString().trim());
+        });
+    }
+
+    /*
+       Hides the keyboard. Attrib:
+       https://stackoverflow.com/questions/6443212/spinner-does-not-get-focus
+    */
+    private void hideKeyboard() {
+        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (inputManager != null) {
+            inputManager.hideSoftInputFromWindow(Objects.requireNonNull(this.getCurrentFocus())
+                            .getWindowToken(),
+                    InputMethodManager.HIDE_NOT_ALWAYS);
+        }
     }
 
     /* Sets up the visibility properties for an existing uneditable product */
@@ -2088,7 +2509,7 @@ public class ActivityDetailProduct
                 resultCode == RESULT_OK) {
             // If an image capture
             processAndSetImage();
-            mImageAvailabe = true;
+            mImageAvailable = true;
             mCameraImageTaken = true;
 
         } else if (requestCode == Constants.REQUEST_IMAGE_CAPTURE &&
@@ -2099,7 +2520,7 @@ public class ActivityDetailProduct
 
         } else if (requestCode == Constants.REQUEST_IMAGE_MEDIA_STORE &&
                 resultCode == RESULT_OK) {
-            mImageAvailabe = true;
+            mImageAvailable = true;
             processAndSetImage();
 
         } else if (requestCode == Constants.REQUEST_IMAGE_MEDIA_STORE &&
@@ -2110,7 +2531,7 @@ public class ActivityDetailProduct
         } else if (requestCode == Constants.REQUEST_IMAGE_PICKER && resultCode == RESULT_OK) {
             // Photo picker
             Uri selectedImageUri = data.getData();
-            mImageAvailabe = true;
+            mImageAvailable = true;
             mProductIV.setImageURI(selectedImageUri);
 
         } else if (requestCode == Constants.REQUEST_IMAGE_PICKER && resultCode == RESULT_CANCELED) {
@@ -2200,8 +2621,14 @@ public class ActivityDetailProduct
         // Apply the adapter to the spinner
         mUoMSpinner.setAdapter(UoMSpinnerAdapter);
 
+        // Add the spinner to the list of focusable items, so that when the user clicks the next
+        // button on the keyboard the spinner is focusable
+        mUoMSpinner.setFocusable(true);
+        mUoMSpinner.setFocusableInTouchMode(true);
+
         // Set the integer mUoM to the constant values
         mUoMSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
@@ -2221,6 +2648,9 @@ public class ActivityDetailProduct
                         mUnitOfMeasure = getResources().getInteger(R.integer.uom_count_int);
                     }
                 }
+
+                // Validate the input
+                mUoMIsValidated = validateUnitOfMeasure();
             }
 
             // Because AdapterView is an abstract class, onNothingSelected must be defined
@@ -2246,6 +2676,11 @@ public class ActivityDetailProduct
 
         // Apply the adapter to the spinner
         mShelfLifeSpinner.setAdapter(shelfLifeSpinnerAdapter);
+
+        // Add the spinner to the list of focusable items, so that when the user clicks the next
+        // button on the keyboard the spinner is focusable
+        mShelfLifeSpinner.setFocusable(true);
+        mShelfLifeSpinner.setFocusableInTouchMode(true);
 
         // Set the integer mSelected to the constant values
         mShelfLifeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -2308,6 +2743,8 @@ public class ActivityDetailProduct
                         mShelfLife = getResources().getInteger(R.integer.shelf_life_option_16);
                     }
                 }
+                // Validate the input
+                mShelfLifeIsValidated = validateShelfLife();
             }
 
             // Because AdapterView is an abstract class, onNothingSelected must be defined
@@ -2334,6 +2771,11 @@ public class ActivityDetailProduct
         // Apply the adapter to the spinner
         mCategorySpinner.setAdapter(categorySpinnerAdapter);
 
+        // Add the spinner to the list of focusable items, so that when the user clicks the next
+        // button on the keyboard the spinner is focusable
+        mCategorySpinner.setFocusable(true);
+        mCategorySpinner.setFocusableInTouchMode(true);
+
         // Set the integer mUoM to the constant values
         mCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -2352,6 +2794,8 @@ public class ActivityDetailProduct
                         mCategory = getResources().getInteger(R.integer.category_option_2);
                     }
                 }
+                // Validate the input field
+                mCategoryIsValidated = validateCategory();
             }
 
             // Because AdapterView is an abstract class, onNothingSelected must be defined
@@ -2480,9 +2924,6 @@ public class ActivityDetailProduct
         switch (item.getItemId()) {
             // Save (tick) menu option selected
             case R.id.menu_product_editor_action_save:
-                // Reduce bounce as we say in the electronics trade (double click) by hiding the
-                // menu items once pressed.
-                setMenuItemVisibility(false, false, false);
                 // Save product and exit activity
                 saveProduct();
                 break;
@@ -2536,6 +2977,24 @@ public class ActivityDetailProduct
         mProductEditorMenu.findItem(R.id.menu_product_editor_action_save).setVisible(saveItem);
         mProductEditorMenu.findItem(R.id.menu_product_editor_action_edit).setVisible(editItem);
         mProductEditorMenu.findItem(R.id.menu_product_editor_action_delete).setVisible(deleteItem);
+    }
+
+    /* Gets the local currency symbol */
+    private String getDefaultCurrencySymbol() {
+
+        Currency c = null;
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            c = Currency.getInstance(Locale.getDefault());
+        }
+
+        String defaultCurrencySymbol = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            defaultCurrencySymbol = c.getSymbol();
+        }
+
+        Log.e(LOG_TAG, "Default currency symbol is: " + defaultCurrencySymbol);
+        return defaultCurrencySymbol;
     }
 
     @Override

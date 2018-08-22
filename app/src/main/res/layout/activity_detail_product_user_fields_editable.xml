@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?><!-- Retailer field container -->
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
         android:id="@+id/activity_detail_product_user_fields_container"
@@ -57,19 +58,35 @@
             android:orientation="horizontal">
 
             <!-- Label -->
-            <TextView
-                style="@style/EditableCategoryStyle"
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/label_price" />
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/EditableCategoryStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_price" />
+
+                <TextView
+                    android:id="@+id/activity_detail_product_user_fields_editable_tv_currency_symbol"
+                    style="@style/EditableCategoryStyle"
+                    android:layout_width="15dp"
+                    android:gravity="end"
+                    android:layout_height="wrap_content"
+                    tools:text="$" />
+
+            </LinearLayout>
+
 
             <!-- Input field container -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
                 <!-- EditText field -->
                 <EditText
