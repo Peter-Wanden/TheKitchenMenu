@@ -128,14 +128,8 @@
     <!-- AdapterCatalogProduct -->
     <string name="adapter_catalog_product_creator_yes">Yes</string>
     <string name="adapter_catalog_product_creator_no">No</string>
-
-    <!-- ActivityDetailRecipe fragment buttons -->
-    <string name="activity_detail_recipe_ingredients_button">Ingredients</string>
-    <string name="activity_detail_recipe_steps_button">Steps</string>
-    <string name="fragment_catalog_ingredients_empty_view_title_text">There\'s no ingredients for
-        this recipe.</string>
-    <string name="fragment_catalog_ingredients_empty_view_sub_text">Press the edit button to add
-        some.</string>
+    <string name="sign_in_conformation">Thank you for signing in</string>
+    <string name="sign_in_canceled">Sign in canceled</string>
 
     <!-- Permissions -->
     <string name="storage_permission_denied">Permission to store photos denied.

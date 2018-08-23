@@ -24,6 +24,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -150,20 +151,19 @@ public class ActivityDetailProduct
 
     // Fields for the TextViews in activity_detail_product_base_fields_uneditable
     private TextView
-            mDescriptionTV,
-            mMadeByTV,
-            mPackSizeTV,
-            mUoMTV,
-            mShelfLifeTV,
-            mCategoryTV,
-            mRetailerTV,
-            mLocationRoomTV,
-            mLocationInRoomTV,
-            mPackPriceTV,
-            mUoMTVSpinnerError,
-            mShelfLifeTVSpinnerError,
-            mCategoryTVSpinnerError,
-            mCurrencySymbol;
+            mDescriptionTV;
+    private TextView mMadeByTV;
+    private TextView mPackSizeTV;
+    private TextView mUoMTV;
+    private TextView mShelfLifeTV;
+    private TextView mCategoryTV;
+    private TextView mRetailerTV;
+    private TextView mLocationRoomTV;
+    private TextView mLocationInRoomTV;
+    private TextView mPackPriceTV;
+    private TextView mUoMTVSpinnerError;
+    private TextView mShelfLifeTVSpinnerError;
+    private TextView mCategoryTVSpinnerError;
 
     // Spinners for the fields in activity_detail_product
     private Spinner
@@ -708,9 +708,10 @@ public class ActivityDetailProduct
 //        Log.e(LOG_TAG, "validatePackPrice() - called");
 
         // Get the value in the field
-        if (!mPackPriceET.getText().toString().equals("")) {
+        if (!mPackPriceET.getText().toString().equals("") ||
+                !mPackPriceET.getText().toString().isEmpty()) {
 
-            mPackPrice = Double.parseDouble(mPackSizeET.getText().toString().trim());
+            mPackPrice = Double.parseDouble(mPackPriceET.getText().toString().trim());
 
             // Check against validation rules in TKMAppLibrary
             boolean validatePrice = InputValidation.validatePrice(mPackPrice);
@@ -1002,7 +1003,7 @@ public class ActivityDetailProduct
                 Uri usedProductUserUri = Uri.parse(usedProductRef.toString());
                 mFbUsedProductsUserKey = usedProductUserUri.getLastPathSegment();
 
-                if (mImageAvailable) {
+                if (mImageAvailable && mProductIV.getDrawable() != null) {
 
                     // From: https://firebase.google.com/docs/storage/android/upload-files
                     // Get the data from the ImageView as bytes (as a very small image).
@@ -1168,7 +1169,7 @@ public class ActivityDetailProduct
 
                     Log.e(LOG_TAG, "saveProduct() - isImageTaken() = " + mImageAvailable);
 
-                    if (mImageAvailable) {
+                    if (mImageAvailable && mProductIV.getDrawable() != null) {
 
                         // Either:
                         // 1. A new image has been added to an existing product that did not have
@@ -1180,90 +1181,93 @@ public class ActivityDetailProduct
                         // Get the data from the ImageView as bytes and downsize image.
                         mProductIV.setDrawingCacheEnabled(true);
                         mProductIV.buildDrawingCache();
-                        Bitmap bitmap = ((BitmapDrawable) mProductIV.getDrawable()).getBitmap();
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 10, baos);
-                        byte[] productImage = baos.toByteArray();
 
-                        // Case 2 & 3
-                        // Create a database reference from the existing image reference
-                        if (!mProduct.getFbStorageImageUri().equals("")) {
+                            Bitmap bitmap = ((BitmapDrawable) mProductIV.getDrawable()).getBitmap();
+                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 10, baos);
+                            byte[] productImage = baos.toByteArray();
+                            // Case 2 & 3
+                            // Create a database reference from the existing image reference
+                            if (!mProduct.getFbStorageImageUri().equals("")) {
 
-                            // Get the existing reference. If you save an image to an existing
-                            // Firestore location it changes the download URL by adding a new media
-                            // token, so we need to get the new download URL for all writes.
-                            mImageStorageReference = mFirebaseStorage
-                                    .getReferenceFromUrl(mProduct.getFbStorageImageUri());
+                                // Get the existing reference. If you save an image to an existing
+                                // Firestore location it changes the download URL by adding a new media
+                                // token, so we need to get the new download URL for all writes.
+                                mImageStorageReference = mFirebaseStorage
+                                        .getReferenceFromUrl(mProduct.getFbStorageImageUri());
 
-                            // Create a new database reference for the new image
-                        } else if (mProduct.getFbStorageImageUri().equals("")) {
+                                // Create a new database reference for the new image
+                            } else if (mProduct.getFbStorageImageUri().equals("")) {
 
-                            // Create a reference to store the image
-                            mImageStorageReference = mImageStorageReference
-                                    .child(mFbProductReferenceKey);
-                        }
-
-                        // Save the new image to FireStore
-                        UploadTask uploadTask = mImageStorageReference.putBytes(productImage);
-
-                        // Create a Task to get the returned URL
-                        Task<Uri> urlTask = uploadTask.continueWithTask(task -> {
-
-                            if (!task.isSuccessful()) {
-
-                                // There is an error so delete the temp file
-                                if (mCameraImageTaken) {
-                                    BitmapUtils.deleteImageFile(getParent(), mTempImagePath);
-                                    mCameraImageTaken = false;
-                                }
-
-                                throw Objects.requireNonNull(task.getException());
+                                // Create a reference to store the image
+                                mImageStorageReference = mImageStorageReference
+                                        .child(mFbProductReferenceKey);
                             }
 
-                            // Continue with the task to get the download URL
-                            return mImageStorageReference.getDownloadUrl();
+                            // Save the new image to FireStore
+                            UploadTask uploadTask = mImageStorageReference.putBytes(productImage);
 
-                        }).addOnCompleteListener(task -> {
+                            // Create a Task to get the returned URL
+                            Task<Uri> urlTask = uploadTask.continueWithTask(task -> {
 
-                            if (task.isSuccessful()) {
+                                if (!task.isSuccessful()) {
 
-                                // Update the member variable with the new image URL
-                                mFbStorageImageUri = task.getResult();
+                                    // There is an error so delete the temp file
+                                    if (mCameraImageTaken) {
+                                        BitmapUtils.deleteImageFile(getParent(), mTempImagePath);
+                                        mCameraImageTaken = false;
+                                    }
 
-                                Log.e(LOG_TAG, "saveProduct() - Updated image saved to: " +
-                                        mFbStorageImageUri);
+                                    throw Objects.requireNonNull(task.getException());
+                                }
+
+                                // Continue with the task to get the download URL
+                                return mImageStorageReference.getDownloadUrl();
+
+                            }).addOnCompleteListener(task -> {
+
+                                if (task.isSuccessful()) {
+
+                                    // Update the member variable with the new image URL
+                                    mFbStorageImageUri = task.getResult();
+
+                                    Log.e(LOG_TAG, "saveProduct() - Updated image saved to: " +
+                                            mFbStorageImageUri);
 
                             /*
                                Collate any changes and update the child data in the database.
                             */
 
-                                // mProduct (our reference product) was updated by getUsedList()
-                                // when we checked to see if the product existed. We can use this
-                                // instance to check for and collate any updates.
-                                Map<String, Object> productBaseUpdates = getBaseUpdates();
-                                Map<String, Object> productUserUpdates = getUserUpdates();
+                                    // mProduct (our reference product) was updated by getUsedList()
+                                    // when we checked to see if the product existed. We can use this
+                                    // instance to check for and collate any updates.
+                                    getProductUpdates();
 
-                                // If there has been updates to the base data, save them
-                                if (productBaseUpdates != null) {
+                                    // Create a map of any changes to the base data
+                                    Map<String, Object> baseProductMap = convertBaseProductToMap();
 
-                                    // Save the changes to the products base data
-                                    // Location 1
-                                    saveBaseProductUpdates(productBaseUpdates);
+                                    // Create a map of any changes to all of the product data
+                                    Map<String, Object> completeProductMap = convertProductToMap();
 
+                                    // If there have been updates to the base data, save them
+                                    if (baseProductMap != null) {
 
+                                        // Save the changes to the products base data
+                                        // Location 1
+                                        saveBaseProductUpdates(baseProductMap);
+                                    }
 
+                                    // If there have been changes to any of the product data. save them
+                                    // Location 2
+                                    if (completeProductMap != null) {
+
+                                        saveUserProductUpdates(completeProductMap);
+                                    }
+                                    finish();
                                 }
+                            });
 
-                                // If there has been changes to the user data, save them
-                                // Location 2
-                                if (productUserUpdates != null) {
 
-                                    // Save the changes to the users product data
-                                    saveUserProductUpdates(productUserUpdates);
-                                }
-                                finish();
-                            }
-                        });
                     } else {
 
                         /*
@@ -1272,35 +1276,28 @@ public class ActivityDetailProduct
 
                         // mProduct (our reference product) was updated by getUsedList()
                         // when we checked to see if the product existed. We can use this
-                        // instance to check for and collate any updates.
-                        Map<String, Object> productBaseUpdates = getBaseUpdates();
-                        Map<String, Object> productUserUpdates = getUserUpdates();
+                        // instance to compare and collate any updates.
+                        getProductUpdates();
 
-                        // If there has been updates to the base data, save them
-                        if (productBaseUpdates != null) {
+                        // Create a map of any changes to the base data
+                        Map<String, Object> baseProductMap = convertBaseProductToMap();
+
+                        // Create a map of any changes to all of the product data
+                        Map<String, Object> completeProductMap = convertProductToMap();
+
+                        // If there have been updates to the base data, save them
+                        if (baseProductMap != null) {
 
                             // Save the changes to the products base data
                             // Location 1
-                            saveBaseProductUpdates(productBaseUpdates);
+                            saveBaseProductUpdates(baseProductMap);
                         }
 
-                        // If there has been changes to the user and/or base data. save them
+                        // If there have been changes to any of the product data. save them
                         // Location 2
-                        if (productUserUpdates != null) {
+                        if (completeProductMap != null) {
 
-                            // Add the base data changes to users product updates
-                            if (productBaseUpdates != null) {
-
-                                productUserUpdates.putAll(productBaseUpdates);
-
-                                Log.e(LOG_TAG, "saveProduct() - Case 2: No image - " +
-                                        "base and user updates merged - productUserUpdates now looks like: " + productUserUpdates);
-                            } else {
-                                Log.e(LOG_TAG, "saveProduct() - Case 2: No image - " +
-                                        "There are no base updates - productUserUpdates looks like: " + productUserUpdates);
-                                // Save the changes to the users product data
-                                saveUserProductUpdates(productUserUpdates);
-                            }
+                            saveUserProductUpdates(completeProductMap);
                         }
                         finish();
                     }
@@ -1375,10 +1372,8 @@ public class ActivityDetailProduct
                 mUserFieldsAreEditable) {
 
             Log.e(LOG_TAG, "saveProduct() - Case 4: This is a existing product, with one " +
-                    " or many users. The user is not the creator. The user is adding this product" +
+                    "or many users. The user is not the creator. The user is adding this product " +
                     "to their product list - Save Locations 1 + 3");
-
-            // Todo - can these updates be written in a single write
 
             // Validate the user product specific fields
             boolean userFieldsValidated = checkValidationUserFields();
@@ -1464,7 +1459,7 @@ public class ActivityDetailProduct
               however the user specific fields are editable and have been verified.
 
               This product has been created by this user and this user has previously deleted this
-              product from thier their list. They are now adding it back and updating the user
+              product from their list. They are now adding it back and updating the user
               specific data. We will need to edit entries at two locations in the database:
 
               1. /collection_users/[User ID]/collection_products/[product ID] - Perform the child
@@ -1514,7 +1509,7 @@ public class ActivityDetailProduct
     }
 
     /* Checks for updates to the base product data */
-    private Map<String, Object> getBaseUpdates() {
+    private Map<String, Object> getProductUpdates() {
 
         // Create a HashMap to store any changes, then compare
         // each field in the base product data. If any change has occurred, add it to the
@@ -1527,27 +1522,27 @@ public class ActivityDetailProduct
         if (!mProduct.getDescription().equals(mDescription)) {
             baseUpdates.put(Constants.PRODUCT_BASE_DESCRIPTION_KEY, mDescription);
             mProduct.setDescription(mDescription);
-            baseUpdateCounter++;
+            baseUpdateCounter ++;
         }
         if (!mMadeBy.equals(mProduct.getMadeBy())) {
             baseUpdates.put(Constants.PRODUCT_BASE_MADE_BY_KEY, mMadeBy);
             mProduct.setMadeBy(mMadeBy);
-            baseUpdateCounter++;
+            baseUpdateCounter ++;
         }
         if (mCategory != mProduct.getCategory()) {
             baseUpdates.put(Constants.PRODUCT_BASE_CATEGORY_KEY, mCategory);
             mProduct.setCategory(mCategory);
-            baseUpdateCounter++;
+            baseUpdateCounter ++;
         }
         if (mShelfLife != mProduct.getShelfLife()) {
             baseUpdates.put(Constants.PRODUCT_BASE_SHELF_LIFE_KEY, mShelfLife);
             mProduct.setShelfLife(mShelfLife);
-            baseUpdateCounter++;
+            baseUpdateCounter ++;
         }
         if (mPackSize != mProduct.getPackSize()) {
             baseUpdates.put(Constants.PRODUCT_BASE_PACK_SIZE_KEY, mPackSize);
             mProduct.setPackSize(mPackSize);
-            baseUpdateCounter++;
+            baseUpdateCounter ++;
         }
         if (mUnitOfMeasure != mProduct.getUnitOfMeasure()) {
             baseUpdates.put(Constants.PRODUCT_BASE_UNIT_OF_MEASURE_KEY, mUnitOfMeasure);
@@ -1557,19 +1552,56 @@ public class ActivityDetailProduct
         if (mPackPriceAverage != mProduct.getPackPriceAverage()) {
             baseUpdates.put(Constants.PRODUCT_BASE_PRICE_AVE_KEY, mPackPriceAverage);
             mProduct.setPackPriceAverage(mPackPriceAverage);
-            baseUpdateCounter++;
+            baseUpdateCounter ++;
         }
         if (!mFbStorageImageUri.toString().equals(mProduct.getFbStorageImageUri())) {
             baseUpdates.put(Constants.PRODUCT_USER_FB_STORAGE_IMAGE_URI_KEY, mFbStorageImageUri.toString());
             mProduct.setFbStorageImageUri(mFbStorageImageUri.toString());
-            baseUpdateCounter++;
+            baseUpdateCounter ++;
+        }
+
+        // Start of user updates
+        if (!mFbProductReferenceKey.equals(mProduct.getFbProductReferenceKey())) {
+            baseUpdates.put(Constants.PRODUCT_USER_FB_REFERENCE_KEY, mFbProductReferenceKey);
+            mProduct.setFbProductReferenceKey(mFbProductReferenceKey);
+            baseUpdateCounter ++;
+        }
+        if (!mFbUsedProductsUserKey.equals(mProduct.getFbUsedProductsUserKey())) {
+            baseUpdates.put(Constants.PRODUCT_USER_FB_USED_USER_KEY, mFbUsedProductsUserKey);
+            mProduct.setFbUsedProductsUserKey(mFbUsedProductsUserKey);
+            baseUpdateCounter ++;
+        }
+        if (!mRetailer.equals(mProduct.getRetailer())) {
+            baseUpdates.put(Constants.PRODUCT_USER_RETAILER_KEY, mRetailer);
+            mProduct.setRetailer(mRetailer);
+            baseUpdateCounter ++;
+        }
+        if (!mLocationRoom.equals(mProduct.getLocationRoom())) {
+            baseUpdates.put(Constants.PRODUCT_USER_LOCATION_ROOM_KEY, mLocationRoom);
+            mProduct.setLocationRoom(mLocationRoom);
+            baseUpdateCounter ++;
+        }
+        if (!mLocationInRoom.equals(mProduct.getLocationInRoom())) {
+            baseUpdates.put(Constants.PRODUCT_USER_LOCATION_IN_ROOM_KEY, mLocationInRoom);
+            mProduct.setLocationInRoom(mLocationInRoom);
+            baseUpdateCounter ++;
+        }
+        if (mPackPrice != mProduct.getPackPrice()) {
+            baseUpdates.put(Constants.PRODUCT_USER_PACK_PRICE_KEY, mPackPrice);
+            mProduct.setPackPrice(mPackPrice);
+            baseUpdateCounter ++;
+        }
+        if (!mLocalImageUri.toString().equals(mProduct.getLocalImageUri())) {
+            baseUpdates.put(Constants.PRODUCT_USER_LOCAL_IMAGE_URI_KEY, mLocalImageUri.toString());
+            mProduct.setLocalImageUri(mLocalImageUri.toString());
+            baseUpdateCounter ++;
         }
         // No need to check packPriceAve as it is automatically calculated
         // No need to check createdBy as it cannot be modified once created
 
         // If there have been changes return the baseUpdates Map
         if (baseUpdateCounter > 0) {
-            Log.e(LOG_TAG, "getBaseUpdates() - Base updates looks like: " + baseUpdates);
+            Log.e(LOG_TAG, "getProductUpdates() - Base updates looks like: " + baseUpdates);
             return baseUpdates;
         }
 
@@ -1949,6 +1981,10 @@ public class ActivityDetailProduct
     /* Get a reference eto all of the views */
     private void initialiseViews() {
 
+        // Toolbar
+        Toolbar toolbar = findViewById(R.id.activity_detail_product_tb_top);
+        setSupportActionBar(toolbar);
+
         // Containers
         mBaseFieldsEditableContainer = findViewById(
                 R.id.activity_detail_product_base_fields_editable_container);
@@ -2002,8 +2038,6 @@ public class ActivityDetailProduct
                 R.id.activity_detail_product_base_fields_editable_tv_spinner_shelf_life_setError);
         mCategoryTVSpinnerError = findViewById(
                 R.id.activity_detail_product_base_fields_editable_tv_spinner_category_setError);
-        mCurrencySymbol = findViewById(
-                R.id.activity_detail_product_user_fields_editable_tv_currency_symbol);
 
         // Spinner fields
         mUoMSpinner = findViewById(
@@ -2817,9 +2851,9 @@ public class ActivityDetailProduct
 
         // Setup the icons
         if (saveItem != null && editItem != null && deleteItem != null) {
-            tintMenuIcon(this, saveItem, R.color.primary_light);
-            tintMenuIcon(this, editItem, R.color.primary_light);
-            tintMenuIcon(this, deleteItem, R.color.primary_light);
+            tintMenuIcon(this, saveItem, R.color.icons);
+            tintMenuIcon(this, editItem, R.color.icons);
+            tintMenuIcon(this, deleteItem, R.color.icons);
         }
         return true;
     }

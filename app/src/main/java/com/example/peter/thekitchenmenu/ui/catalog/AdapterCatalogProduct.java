@@ -31,9 +31,6 @@ public class AdapterCatalogProduct
     // The user Id of the current user
     private String mUserId;
 
-    // Records if current user is creator of product
-    private boolean mIsCreator = false;
-
     // Click handler
     private final ProductCatalogAdapterOnClickHandler mClickHandler;
 
@@ -105,9 +102,6 @@ public class AdapterCatalogProduct
     public void setProducts(List<Product> products) {
         mProducts = products;
         notifyDataSetChanged();
-        Log.e(LOG_TAG, "setProducts() called - Adapter updated.");
-        int noOfItems = getItemCount();
-        Log.e(LOG_TAG, "Adapter now has: " + noOfItems + " items");
     }
 
     /* Inserts a single product into the adapter */
@@ -147,7 +141,7 @@ public class AdapterCatalogProduct
             Product product = mProducts.get(getAdapterPosition());
 
             // Find out if this user was the creator of the product
-            mIsCreator = mUserId.equals(product.getCreatedBy());
+            boolean mIsCreator = mUserId.equals(product.getCreatedBy());
             // Send the product and its creator bool to be processed by the click handler
             mClickHandler.onClick(product, mIsCreator);
         }

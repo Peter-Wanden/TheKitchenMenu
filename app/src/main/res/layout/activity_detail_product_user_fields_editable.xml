@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?><!-- Retailer field container -->
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
         android:id="@+id/activity_detail_product_user_fields_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:backgroundTint="@color/divider"
+        android:backgroundTint="@color/lightGrey"
         android:visibility="gone">
 
         <!--
@@ -55,7 +54,8 @@
             android:id="@+id/activity_detail_product_container_price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:baselineAligned="false">
 
             <!-- Label -->
             <LinearLayout
@@ -69,17 +69,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/label_price" />
-
-                <TextView
-                    android:id="@+id/activity_detail_product_user_fields_editable_tv_currency_symbol"
-                    style="@style/EditableCategoryStyle"
-                    android:layout_width="15dp"
-                    android:gravity="end"
-                    android:layout_height="wrap_content"
-                    tools:text="$" />
-
             </LinearLayout>
-
 
             <!-- Input field container -->
             <LinearLayout

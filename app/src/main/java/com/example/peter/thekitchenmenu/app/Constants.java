@@ -10,9 +10,7 @@ public class Constants {
 
     /* Key values for a product */
     public static final String PRODUCT_KEY = "current_product_key";
-    public static final String PRODUCT_ID_KEY = "current_product_id_key";
     public static final String PRODUCT_FB_REFERENCE_KEY = "product_fb_reference_key";
-    public static final String PRODUCT_STATUS_KEY = "product_status_key";
     public static final String PRODUCT_IS_CREATOR_KEY = "product_is_owner_key";
     public static final String PRODUCT_IS_EXISTING_KEY = "product_is_existing_key";
     public static final String PRODUCT_PUT_ON_USED_LIST = "product_put_on_used_list_key";
@@ -28,7 +26,6 @@ public class Constants {
     public static final String PRODUCT_BASE_UNIT_OF_MEASURE_KEY = "unitOfMeasure";
     public static final String PRODUCT_BASE_PRICE_AVE_KEY = "packAvePrice";
     public static final String PRODUCT_BASE_CREATED_BY_KEY = "createdBy";
-    public static final String PRODUCT_BASE_DOC_REF_KEY = "documentReference";
 
     public static final String PRODUCT_USER_LOCAL_IMAGE_URI_KEY = "localImageUri";
     public static final String PRODUCT_USER_FB_STORAGE_IMAGE_URI_KEY = "fbStorageImageUri";
@@ -40,7 +37,6 @@ public class Constants {
     public static final String PRODUCT_USER_FB_USED_USER_KEY = "fbUsedProductsUserKey";
 
     /* Default values for a product */
-    public static final int DEFAULT_PRODUCT_ID = -1;
     public static final String DEFAULT_FB_PRODUCT_ID = "no_fd_id";
     public static final String DEFAULT_FB_USED_PRODUCT_ID = "no_used_product_id";
     public static final String DEFAULT_PRODUCT_DESCRIPTION = "no_description";

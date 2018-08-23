@@ -1,20 +1,23 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="android:colorPrimary">@color/primary</item>
-        <item name="android:colorPrimaryDark">@color/primary_dark</item>
-        <item name="android:colorAccent">@color/accent</item>
-        <item name="android:textColorPrimary">@color/primary_text</item>
-        <item name="android:textColorSecondary">@color/secondary_text</item>
+        <item name="android:colorPrimary">@color/primaryColor</item>
+        <item name="android:colorPrimaryDark">@color/primaryDarkColor</item>
+        <item name="android:colorAccent">@color/primaryLightColor</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/lightGrey</item>
         <item name="android:icon">@color/icons</item>
-        <item name="android:textColorHighlight">@color/primary_light</item>
+        <item name="android:textColorHighlight">@color/textColorHighlight</item>
+        <!-- Makes the status bar translucent -->
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
     </style>
 
     <!-- Style for a category TextView in product view mode -->
     <style name="UneditableCategoryStyle">
-        <item name="android:textColor">@color/primary_text</item>
+        <item name="android:textColor">@color/darkGrey</item>
         <item name="android:fontFamily">sans-serif-light</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textAppearance">?android:textAppearanceSmall</item>
@@ -26,7 +29,7 @@
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_weight">1</item>
         <item name="android:paddingTop">16dp</item>
-        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textColor">@color/darkGrey</item>
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textAppearance">?android:textAppearanceSmall</item>
     </style>
@@ -35,7 +38,7 @@
     <style name="UneditableTextFieldStyle">
         <item name="android:layout_marginTop">8dp</item>
         <item name="android:layout_marginStart">8dp</item>
-        <item name="android:textColor">@color/secondary_text</item>
+        <item name="android:textColor">@color/darkGrey</item>
         <item name="android:fontFamily">sans-serif-light</item>
         <item name="android:textAppearance">?android:textAppearanceMedium</item>
     </style>
@@ -45,6 +48,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textColor">@color/darkGrey</item>
         <item name="android:textAppearance">?android:textAppearanceMedium</item>
     </style>
 
@@ -61,7 +65,7 @@
         <item name="android:paddingBottom">@dimen/card_bottom_padding</item>
         <item name="android:paddingRight">@dimen/card_right_left_padding</item>
         <item name="android:paddingLeft">@dimen/card_right_left_padding</item>
-        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textColor">@color/darkGrey</item>
     </style>
 
     <style name="CardViewSubText" parent="CardViewTitleText">
@@ -72,6 +76,7 @@
     <style name="TableText">
         <item name="android:fontFamily">sans-serif-condensed</item>
         <item name="android:textAppearance">?android:textAppearanceMedium</item>
+        <item name="android:textColor">@color/darkGrey</item>
     </style>
 
 </resources>

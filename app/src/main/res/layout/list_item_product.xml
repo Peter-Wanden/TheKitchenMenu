@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/lightGrey">
 
     <android.support.v7.widget.CardView
         android:id="@+id/list_item_product_card_view"
@@ -33,7 +34,7 @@
                 android:paddingStart="@dimen/list_item_top_full_margin"
                 android:paddingTop="@dimen/list_item_top_half_margin"
                 android:textAppearance="?android:textAppearanceMedium"
-                android:textColor="@color/primary_text"
+                android:textColor="@color/darkGrey"
                 app:layout_constraintEnd_toStartOf="@+id/list_item_product_iv_product_image"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -83,7 +84,7 @@
                 android:paddingEnd="@dimen/list_item_top_half_margin"
                 android:paddingStart="@dimen/list_item_top_full_margin"
                 android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="#AEB6BD"
+                android:textColor="@color/grey"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/list_item_product_tv_description"
                 tools:text="400" />
@@ -99,7 +100,7 @@
                 android:paddingStart="@dimen/list_item_top_half_margin"
                 android:paddingEnd="@dimen/list_item_top_half_margin"
                 android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="#AEB6BD"
+                android:textColor="@color/grey"
                 app:layout_constraintStart_toEndOf="@+id/list_item_product_tv_pack_size"
                 app:layout_constraintTop_toBottomOf="@+id/list_item_product_tv_description"
                 tools:text="ml" />

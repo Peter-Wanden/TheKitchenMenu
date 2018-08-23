@@ -37,4 +37,8 @@ http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
     -->
     <dimen name="widget_margin">8dp</dimen>
 
+
+    <!-- App Bar -->
+    <dimen name="product_catalog_app_bar_height">250dp</dimen>
+
 </resources>

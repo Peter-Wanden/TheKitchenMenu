@@ -12,41 +12,23 @@ import java.util.Map;
 
 public class Product implements Parcelable {
 
-    @Exclude
     private String mFbProductReferenceKey;
-
-    @Exclude
     private String mFbUsedProductsUserKey;
-
     private String mDescription;
-
     private String mMadeBy;
-
     private String mRetailer;
-
-    private int mUnitOfMeasure;
-
-    private int mPackSize;
-
-    private int mShelfLife;
-
     private String mLocationRoom;
-
     private String mLocationInRoom;
-
-    private int mCategory;
-
-    private double mPackPrice;
-
-    private double mPackPriceAverage;
-
     @android.support.annotation.NonNull
     private String mLocalImageUri = "";
-
     private String mFbStorageImageUri = "";
-
     private String mCreatedBy;
-
+    private int mUnitOfMeasure;
+    private int mPackSize;
+    private int mShelfLife;
+    private int mCategory;
+    private double mPackPrice;
+    private double mPackPriceAverage;
 
     /* Empty constructor as required by Firebase */
     public Product() {
