@@ -145,4 +145,7 @@
     <string name="widget_title_latest_products">Latest Products</string>
     <string name="appwidget_text">Product Widget</string>
     <string name="add_widget">Add widget</string>
+
+    <!-- TRANSITIONS -->
+    <string name="transition_product">transitionProduct</string>
 </resources>

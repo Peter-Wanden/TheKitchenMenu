@@ -19,6 +19,7 @@
         app:cardCornerRadius="@dimen/cardview_default_radius">
 
         <android.support.constraint.ConstraintLayout
+            android:id="@+id/list_item_product_cl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -65,6 +66,7 @@
 
             <ImageView
                 android:id="@+id/list_item_product_iv_product_image"
+                android:transitionName="@string/transition_product"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_margin="@dimen/list_item_bottom_margin"

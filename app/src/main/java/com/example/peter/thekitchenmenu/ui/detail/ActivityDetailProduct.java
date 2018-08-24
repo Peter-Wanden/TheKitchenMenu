@@ -8,8 +8,6 @@ import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.icu.util.Currency;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.PersistableBundle;
@@ -71,7 +69,6 @@ import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -188,30 +185,18 @@ public class ActivityDetailProduct
     // The temporary path on the device where the full size image is held for processing
     private String mTempImagePath;
 
-    // The re-sampled image we set to the ImageView
-    private Bitmap mResultsBitmap;
-
     // The permanent public (device local) URI for the local image
     private Uri mLocalImageUri;
 
     // The Firebase Image storage location
     private Uri mFbStorageImageUri;
 
-    /* *******************
-     * Firebase database *
-     *********************/
-    /* Firebase database instance */
-    private FirebaseDatabase mFbDatabase;
-    /* Firebase database root reference */
-    private DatabaseReference mFbDatabaseReference;
     /* Firebase database reference - the entry point for accessing products */
     private DatabaseReference mFbCollectionProduct;
     /* Firebase database reference - the entry point for accessing users */
     private DatabaseReference mFbCollectionUsers;
     /* Firebase database reference - the entry point for accessing used products */
     private DatabaseReference mFbCollectionUsedProducts;
-    /* Firebase database */
-    private DatabaseReference mProductBaseDocumentRef;
     /* Authentication instance */
     private FirebaseAuth mFBAuth;
     /* Authentication state listener */
@@ -478,10 +463,7 @@ public class ActivityDetailProduct
     private void setupFireBase() {
 
         // Get a reference to the Firebase database
-        mFbDatabase = FirebaseDatabase.getInstance();
-
-        // Get a reference to the root of the database
-        mFbDatabaseReference = FirebaseDatabase.getInstance().getReference();
+        FirebaseDatabase mFbDatabase = FirebaseDatabase.getInstance();
 
         // Get the reference point in the database for collection products
         mFbCollectionProduct = mFbDatabase
@@ -503,7 +485,6 @@ public class ActivityDetailProduct
     }
 
     /* User has signed out so clean up  */
-    // Todo - Is there anything else that need cleaning up?
     private void onSignedOutCleanUp() {
         mUserUid = Constants.ANONYMOUS;
     }
@@ -904,15 +885,6 @@ public class ActivityDetailProduct
         });
     }
 
-    /* If available loads the product image */
-    private void loadImage() {
-        // Todo - what if image has been moved or deleted? SAVE TO Firebase Storage
-        // Retrieve the image from public storage
-        mResultsBitmap = BitmapUtils.resampleImage(this, mLocalImageUri, null);
-        mProductIV.setImageBitmap(mResultsBitmap);
-
-    }
-
     /**
      * saveProduct()
      * There are six reasons a user might want to save product data:
@@ -968,6 +940,8 @@ public class ActivityDetailProduct
             // This is a new product, so check all fields are validated
             if (checkValidationBaseFields() && checkValidationUserFields()) {
 
+
+
                 Log.e(LOG_TAG, "saveProduct() - Case 1: Base and user fields validated");
 
                 // Reduce bounce as we say in the electronics trade (double click) by hiding the
@@ -1011,7 +985,7 @@ public class ActivityDetailProduct
                     mProductIV.buildDrawingCache();
                     Bitmap bitmap = ((BitmapDrawable) mProductIV.getDrawable()).getBitmap();
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 10, baos);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
                     byte[] productImage = baos.toByteArray();
 
                     // Create a reference to store the image
@@ -1119,7 +1093,6 @@ public class ActivityDetailProduct
                         R.string.activity_detail_product_error_incomplete_fields, Toast
                                 .LENGTH_LONG).show();
             }
-            // Todo - Show a loading indicator while waiting for the image to process
             return;
 
         /*
@@ -1508,105 +1481,62 @@ public class ActivityDetailProduct
         finish();
     }
 
-    /* Checks for updates to the base product data */
-    private Map<String, Object> getProductUpdates() {
-
-        // Create a HashMap to store any changes, then compare
-        // each field in the base product data. If any change has occurred, add it to the
-        // HashMap.
-        Map<String, Object> baseUpdates = new HashMap<>();
-        // Create a counter to see how many updates there are, if any.
-        int baseUpdateCounter = 0;
+    /**
+     *  Checks for updates to the product data and updates our reference version of mProduct with
+     *  the new values
+     */
+    private void getProductUpdates() {
 
         // Add any changes to the base product information
         if (!mProduct.getDescription().equals(mDescription)) {
-            baseUpdates.put(Constants.PRODUCT_BASE_DESCRIPTION_KEY, mDescription);
             mProduct.setDescription(mDescription);
-            baseUpdateCounter ++;
         }
         if (!mMadeBy.equals(mProduct.getMadeBy())) {
-            baseUpdates.put(Constants.PRODUCT_BASE_MADE_BY_KEY, mMadeBy);
             mProduct.setMadeBy(mMadeBy);
-            baseUpdateCounter ++;
         }
         if (mCategory != mProduct.getCategory()) {
-            baseUpdates.put(Constants.PRODUCT_BASE_CATEGORY_KEY, mCategory);
             mProduct.setCategory(mCategory);
-            baseUpdateCounter ++;
         }
         if (mShelfLife != mProduct.getShelfLife()) {
-            baseUpdates.put(Constants.PRODUCT_BASE_SHELF_LIFE_KEY, mShelfLife);
             mProduct.setShelfLife(mShelfLife);
-            baseUpdateCounter ++;
         }
         if (mPackSize != mProduct.getPackSize()) {
-            baseUpdates.put(Constants.PRODUCT_BASE_PACK_SIZE_KEY, mPackSize);
             mProduct.setPackSize(mPackSize);
-            baseUpdateCounter ++;
         }
         if (mUnitOfMeasure != mProduct.getUnitOfMeasure()) {
-            baseUpdates.put(Constants.PRODUCT_BASE_UNIT_OF_MEASURE_KEY, mUnitOfMeasure);
             mProduct.setUnitOfMeasure(mUnitOfMeasure);
-            baseUpdateCounter++;
         }
         if (mPackPriceAverage != mProduct.getPackPriceAverage()) {
-            baseUpdates.put(Constants.PRODUCT_BASE_PRICE_AVE_KEY, mPackPriceAverage);
             mProduct.setPackPriceAverage(mPackPriceAverage);
-            baseUpdateCounter ++;
         }
         if (!mFbStorageImageUri.toString().equals(mProduct.getFbStorageImageUri())) {
-            baseUpdates.put(Constants.PRODUCT_USER_FB_STORAGE_IMAGE_URI_KEY, mFbStorageImageUri.toString());
             mProduct.setFbStorageImageUri(mFbStorageImageUri.toString());
-            baseUpdateCounter ++;
         }
 
         // Start of user updates
         if (!mFbProductReferenceKey.equals(mProduct.getFbProductReferenceKey())) {
-            baseUpdates.put(Constants.PRODUCT_USER_FB_REFERENCE_KEY, mFbProductReferenceKey);
             mProduct.setFbProductReferenceKey(mFbProductReferenceKey);
-            baseUpdateCounter ++;
         }
         if (!mFbUsedProductsUserKey.equals(mProduct.getFbUsedProductsUserKey())) {
-            baseUpdates.put(Constants.PRODUCT_USER_FB_USED_USER_KEY, mFbUsedProductsUserKey);
             mProduct.setFbUsedProductsUserKey(mFbUsedProductsUserKey);
-            baseUpdateCounter ++;
         }
         if (!mRetailer.equals(mProduct.getRetailer())) {
-            baseUpdates.put(Constants.PRODUCT_USER_RETAILER_KEY, mRetailer);
             mProduct.setRetailer(mRetailer);
-            baseUpdateCounter ++;
         }
         if (!mLocationRoom.equals(mProduct.getLocationRoom())) {
-            baseUpdates.put(Constants.PRODUCT_USER_LOCATION_ROOM_KEY, mLocationRoom);
             mProduct.setLocationRoom(mLocationRoom);
-            baseUpdateCounter ++;
         }
         if (!mLocationInRoom.equals(mProduct.getLocationInRoom())) {
-            baseUpdates.put(Constants.PRODUCT_USER_LOCATION_IN_ROOM_KEY, mLocationInRoom);
             mProduct.setLocationInRoom(mLocationInRoom);
-            baseUpdateCounter ++;
         }
         if (mPackPrice != mProduct.getPackPrice()) {
-            baseUpdates.put(Constants.PRODUCT_USER_PACK_PRICE_KEY, mPackPrice);
             mProduct.setPackPrice(mPackPrice);
-            baseUpdateCounter ++;
         }
         if (!mLocalImageUri.toString().equals(mProduct.getLocalImageUri())) {
-            baseUpdates.put(Constants.PRODUCT_USER_LOCAL_IMAGE_URI_KEY, mLocalImageUri.toString());
             mProduct.setLocalImageUri(mLocalImageUri.toString());
-            baseUpdateCounter ++;
         }
         // No need to check packPriceAve as it is automatically calculated
         // No need to check createdBy as it cannot be modified once created
-
-        // If there have been changes return the baseUpdates Map
-        if (baseUpdateCounter > 0) {
-            Log.e(LOG_TAG, "getProductUpdates() - Base updates looks like: " + baseUpdates);
-            return baseUpdates;
-        }
-
-        // If there are no updates return null
-        return null;
     }
 
     /* Checks for updates to the user specific product data */
@@ -1619,15 +1549,7 @@ public class ActivityDetailProduct
         // Create a counter to see how many updates there are, if any.
         int userUpdateCounter = 0;
 
-        /*
-             Add the base data to the HashMap.
-          */
-        // This is an existing product, single user, being updated by its creator.
-//        Log.e(LOG_TAG, "\ngetUserUpdates() - State of bool's: " +
-//                "\nIsCreator: " + mIsCreator +
-//                "\nIsMultiUser: " + mIsMultiUser +
-//                "\nBaseFieldsAreEditable: " + mBaseFieldsAreEditable);
-
+        /* Add the base data to the HashMap. */
             productUserUpdates.put(
                     Constants.PRODUCT_BASE_DESCRIPTION_KEY,
                     mProduct.getDescription());
@@ -1651,7 +1573,6 @@ public class ActivityDetailProduct
             productUserUpdates.put(
                     Constants.PRODUCT_BASE_CREATED_BY_KEY,
                     mProduct.getCreatedBy());
-
 
         // Add in the user specific data to the HashMap
         productUserUpdates.put(
@@ -1773,7 +1694,6 @@ public class ActivityDetailProduct
     }
 
     /* Validates the product fields that are specific to each user */
-    // Todo - shift to utils class
     private boolean checkValidationUserFields() {
 
         if (!mRetailerIsValidated) {
@@ -1947,7 +1867,6 @@ public class ActivityDetailProduct
             invalidateOptionsMenu();
         }
 
-        // ToDo - could this be why we arent seeing the image?
         if (!Uri.EMPTY.equals(Uri.parse(mProduct.getFbStorageImageUri()))) {
             Picasso.get().load(mProduct.getFbStorageImageUri()).into(mProductIV);
         }
@@ -2420,9 +2339,6 @@ public class ActivityDetailProduct
     }
 
     /* Delete the product */
-    // todo - Create a list of deleted products to compare with Firebase products
-    // todo - so we don't display products from firebase that the user has deleted
-    // todo - delete the product information from /products/ and /users/products/
     private void deleteProduct() {
 
         /*
@@ -2559,7 +2475,6 @@ public class ActivityDetailProduct
 
         } else if (requestCode == Constants.REQUEST_IMAGE_MEDIA_STORE &&
                 resultCode == RESULT_CANCELED) {
-            // Todo - handle a cancelled result
             Log.e(LOG_TAG, "Media store intent cancelled");
 
         } else if (requestCode == Constants.REQUEST_IMAGE_PICKER && resultCode == RESULT_OK) {
@@ -2576,27 +2491,8 @@ public class ActivityDetailProduct
     /* Resample's the image so it fits our imageView and uses less resources */
     private void processAndSetImage() {
 
-        mResultsBitmap = BitmapUtils.resampleImage(this, null, mTempImagePath);
+        Bitmap mResultsBitmap = BitmapUtils.resampleImage(this, null, mTempImagePath);
         mProductIV.setImageBitmap(mResultsBitmap);
-
-//        addImageToGallery();
-    }
-
-    /* Add the photo to the media providers database so it is accessible to all */
-    private void addImageToGallery() {
-        // Get the full size temporary image file
-        File file = new File(mTempImagePath);
-        // Move it to a public area and return its content Uri
-        MediaScannerConnection.scanFile(
-                getApplicationContext(),
-                new String[]{file.getAbsolutePath()}, null, (path, uri) -> {
-                    if (uri != null) {
-                        // Update the products public image Uri
-                        mLocalImageUri = uri;
-                    } else {
-                        Log.e(LOG_TAG, "Error moving image from temp to public location");
-                    }
-                });
     }
 
     /* Request permissions for access to the file storage area */
@@ -2647,10 +2543,10 @@ public class ActivityDetailProduct
         // Create an adapter for the spinner. The list options are from the String array in
         // arrays.xml. The spinner will use the default layout.
         ArrayAdapter UoMSpinnerAdapter = ArrayAdapter.createFromResource(this,
-                R.array.array_UoM_metric_options, android.R.layout.simple_spinner_item);
+                R.array.array_UoM_metric_options, R.layout.spinner_list_item);
 
-        // Specify dropdown layout style - simple list view with 1 item per line
-        UoMSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        // Specify dropdown layout style
+        UoMSpinnerAdapter.setDropDownViewResource(R.layout.spinner_list_item);
 
         // Apply the adapter to the spinner
         mUoMSpinner.setAdapter(UoMSpinnerAdapter);
@@ -2703,10 +2599,10 @@ public class ActivityDetailProduct
         // Create an adapter for the spinner. The list options are from the String array in
         // arrays.xml. The spinner will use the default layout
         ArrayAdapter shelfLifeSpinnerAdapter = ArrayAdapter.createFromResource(this,
-                R.array.array_shelf_life_options, android.R.layout.simple_spinner_item);
+                R.array.array_shelf_life_options, R.layout.spinner_list_item);
 
-        // Specify dropdown layout style - simple list view with 1 item per line
-        shelfLifeSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        // Specify dropdown layout style.
+        shelfLifeSpinnerAdapter.setDropDownViewResource(R.layout.spinner_list_item);
 
         // Apply the adapter to the spinner
         mShelfLifeSpinner.setAdapter(shelfLifeSpinnerAdapter);
@@ -2723,7 +2619,6 @@ public class ActivityDetailProduct
 
                 String selection = (String) parent.getItemAtPosition(position);
 
-                // TODO - Turn this into a loop
                 if (!TextUtils.isEmpty(selection)) {
                     if (selection.equals(getString(R.string.shelf_life_option_0))) {
                         mShelfLife = getResources().getInteger(R.integer.item_not_selected);
@@ -2797,10 +2692,10 @@ public class ActivityDetailProduct
         // Create an adapter for the spinner. The list options are from the String array in
         // arrays.xml. The spinner will use the default layout.
         ArrayAdapter categorySpinnerAdapter = ArrayAdapter.createFromResource(this,
-                R.array.array_product_category_options, android.R.layout.simple_spinner_item);
+                R.array.array_product_category_options, R.layout.spinner_list_item);
 
-        // Specify dropdown layout style - simple list view with 1 item per line
-        categorySpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        // Specify dropdown layout style.
+        categorySpinnerAdapter.setDropDownViewResource(R.layout.spinner_list_item);
 
         // Apply the adapter to the spinner
         mCategorySpinner.setAdapter(categorySpinnerAdapter);
@@ -2863,14 +2758,6 @@ public class ActivityDetailProduct
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-
-//        Log.e(LOG_TAG, "\nonPrepareOptionsMenu() - Truth table as follows: " +
-//                "\nIsExistingProduct: " + mIsExistingProduct +
-//                "\nIsCreator: " + mIsCreator +
-//                "\nInUsedList: " + mInUsersUsedList +
-//                "\nIsMultiUser: " + mIsMultiUser +
-//                "\nBaseFieldsAreEditable : " + mBaseFieldsAreEditable +
-//                "\nUserFieldsAreEditable : " + mUserFieldsAreEditable);
 
         // Update the member variable
         mProductEditorMenu = menu;
@@ -3007,28 +2894,9 @@ public class ActivityDetailProduct
     /* Sets the visibility properties of the menu items */
     private void setMenuItemVisibility(boolean saveItem, boolean editItem, boolean deleteItem) {
 
-        // Todo - change all instances of this to: invalidateOptionsMenu()
         mProductEditorMenu.findItem(R.id.menu_product_editor_action_save).setVisible(saveItem);
         mProductEditorMenu.findItem(R.id.menu_product_editor_action_edit).setVisible(editItem);
         mProductEditorMenu.findItem(R.id.menu_product_editor_action_delete).setVisible(deleteItem);
-    }
-
-    /* Gets the local currency symbol */
-    private String getDefaultCurrencySymbol() {
-
-        Currency c = null;
-
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            c = Currency.getInstance(Locale.getDefault());
-        }
-
-        String defaultCurrencySymbol = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            defaultCurrencySymbol = c.getSymbol();
-        }
-
-        Log.e(LOG_TAG, "Default currency symbol is: " + defaultCurrencySymbol);
-        return defaultCurrencySymbol;
     }
 
     @Override
@@ -3043,5 +2911,11 @@ public class ActivityDetailProduct
         super.onPause();
         // Remove the firebase authentication state listener from the authentication instance
         mFBAuth.removeAuthStateListener(mFBAuthStateListener);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 }

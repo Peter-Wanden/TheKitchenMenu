@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="android:colorPrimary">@color/primaryColor</item>
         <item name="android:colorPrimaryDark">@color/primaryDarkColor</item>
@@ -13,6 +13,8 @@
         <!-- Makes the status bar translucent -->
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
+        <!-- Enables content transitions -->
+        <item name="android:windowContentTransitions">true</item>
     </style>
 
     <!-- Style for a category TextView in product view mode -->
@@ -44,7 +46,7 @@
     </style>
 
     <!-- Style for an EditText field in the editor -->
-    <style name="EditableFieldStyle">
+    <style name="EditableFieldStyle" parent="AppTheme">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:fontFamily">sans-serif-light</item>
@@ -57,7 +59,7 @@
 
     </style>
 
-    <style name="CardViewTitleText">
+    <style name="CardViewTitleText" parent="AppTheme">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/card_title_text</item>
@@ -79,4 +81,22 @@
         <item name="android:textColor">@color/darkGrey</item>
     </style>
 
+    <!-- Style for the drop down spinners -->
+    <style name="spinner_style" parent="EditableFieldStyle">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:dropDownWidth">match_parent</item>
+    </style>
+
+    <!-- Transitions -->
+    <style name="AppTheme.Home">
+        <item name="android:windowExitTransition">
+            @transition/grid_exit</item>
+    </style>
+    <style name="CustomActivityAnimation" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/slide_in_right</item>
+        <item name="android:activityOpenExitAnimation">@anim/slide_out_left</item>
+        <item name="android:activityCloseEnterAnimation">@anim/slide_in_left</item>
+        <item name="android:activityCloseExitAnimation">@anim/slide_out_right</item>
+    </style>
 </resources>

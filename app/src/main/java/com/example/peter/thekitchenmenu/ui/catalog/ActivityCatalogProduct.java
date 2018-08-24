@@ -1,5 +1,6 @@
 package com.example.peter.thekitchenmenu.ui.catalog;
 
+import android.app.ActivityOptions;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
@@ -8,13 +9,18 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.peter.thekitchenmenu.R;
@@ -43,7 +49,7 @@ public class ActivityCatalogProduct
         implements
         AdapterCatalogProduct.ProductCatalogAdapterOnClickHandler {
 
-//    public static final String LOG_TAG = ActivityCatalogProduct.class.getSimpleName();
+    public static final String LOG_TAG = ActivityCatalogProduct.class.getSimpleName();
 
     /* Adapter for the product list view */
     public AdapterCatalogProduct mCatalogAdapter;
@@ -230,14 +236,19 @@ public class ActivityCatalogProduct
      * @param fbProduct - The selected product.
      */
     @Override
-    public void onClick(Product fbProduct, boolean isCreator) {
+    public void onClick(Product fbProduct, boolean isCreator, View v) {
 
         Intent intent = new Intent(
                 ActivityCatalogProduct.this,
                 ActivityDetailProduct.class);
+
         intent.putExtra(Constants.PRODUCT_FB_REFERENCE_KEY, fbProduct);
         intent.putExtra(Constants.PRODUCT_IS_CREATOR_KEY, isCreator);
+
         startActivity(intent);
+
+        // Sliding animation
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
     @Override
@@ -294,5 +305,11 @@ public class ActivityCatalogProduct
                 finish();
             }
         }
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 }

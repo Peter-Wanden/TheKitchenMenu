@@ -36,7 +36,7 @@ public class AdapterCatalogProduct
 
     /* Click interface that receives on click messages */
     public interface ProductCatalogAdapterOnClickHandler {
-        void onClick(Product product, boolean isOwner);
+        void onClick(Product product, boolean isOwner, View view);
     }
 
     public AdapterCatalogProduct(Context context, ProductCatalogAdapterOnClickHandler listener) {
@@ -142,8 +142,10 @@ public class AdapterCatalogProduct
 
             // Find out if this user was the creator of the product
             boolean mIsCreator = mUserId.equals(product.getCreatedBy());
-            // Send the product and its creator bool to be processed by the click handler
-            mClickHandler.onClick(product, mIsCreator);
+            // Send the product and its creator bool to be processed by the click handler, we also
+            // pass in the product image view as its required for transitions
+
+            mClickHandler.onClick(product, mIsCreator, productIV);
         }
     }
 }
