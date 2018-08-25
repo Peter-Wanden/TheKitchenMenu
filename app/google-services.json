@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "1031360292736-r78ssin0t6ia9qb3n7195c28bt52te63.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.peter.thekitchenmenu",
+            "certificate_hash": "d2bf17109c678d9501f70f9887e5c3723d2cee21"
+          }
+        },
+        {
           "client_id": "1031360292736-06glkcsobr7iq6p96pnvkgirlpfr098m.apps.googleusercontent.com",
           "client_type": 3
         }

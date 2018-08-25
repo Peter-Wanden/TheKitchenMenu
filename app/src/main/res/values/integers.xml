@@ -27,7 +27,7 @@
     <integer name="shelf_life_option_16">16</integer>
 
     <!--
-    Integer values for product and recipe categories,
+    Integer values for product categories,
     or anything else that needs an integer
     -->
     <integer name="category_option_1">1</integer>

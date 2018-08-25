@@ -1,79 +1,44 @@
 package com.example.peter.thekitchenmenu.model;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.PrimaryKey;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-@Entity(tableName = "Products")
+import com.example.peter.thekitchenmenu.app.Constants;
+import com.google.firebase.database.Exclude;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class Product implements Parcelable {
 
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id")
-    private int mProductId;
-
-    @ColumnInfo(name = "Description")
+    private String mFbProductReferenceKey;
+    private String mFbUsedProductsUserKey;
     private String mDescription;
-
-    @ColumnInfo(name = "Retailer")
+    private String mMadeBy;
     private String mRetailer;
-
-    @ColumnInfo(name = "Unit_of_Measure")
-    private int mUnitOfMeasure;
-
-    @ColumnInfo(name = "Pack_Size")
-    private int mPackSize;
-
-    @ColumnInfo(name = "Shelf_Life")
-    private int mShelfLife;
-
-    @ColumnInfo(name = "Location_Room")
     private String mLocationRoom;
-
-    @ColumnInfo(name = "Location_in_Room")
     private String mLocationInRoom;
-
-    @ColumnInfo(name = "Category")
-    private int mCategory;
-
-    @ColumnInfo(name = "Pack_Price")
-    private double mPackPrice;
-
-    @ColumnInfo(name = "Local_Image_Uri")
     @android.support.annotation.NonNull
-    private Uri mLocalImageUri;
+    private String mLocalImageUri = "";
+    private String mFbStorageImageUri = "";
+    private String mCreatedBy;
+    private int mUnitOfMeasure;
+    private int mPackSize;
+    private int mShelfLife;
+    private int mCategory;
+    private double mPackPrice;
+    private double mPackPriceAverage;
 
-    @Ignore
-    /* Constructors */
-    public Product(String description,
-                   String retailer,
-                   int unitOfMeasure,
-                   int packSize,
-                   int shelfLife,
-                   String locationRoom,
-                   String locationInRoom,
-                   int category,
-                   double packPrice,
-                   Uri localImageUri) {
-
-        this.mDescription = description;
-        this.mRetailer = retailer;
-        this.mUnitOfMeasure = unitOfMeasure;
-        this.mPackSize = packSize;
-        this.mShelfLife = shelfLife;
-        this.mLocationRoom = locationRoom;
-        this.mLocationInRoom = locationInRoom;
-        this.mCategory = category;
-        this.mPackPrice = packPrice;
-        this.mLocalImageUri = localImageUri;
+    /* Empty constructor as required by Firebase */
+    public Product() {
     }
 
-    /* Constructor for the database*/
-    public Product(int productId,
+    /* Constructor */
+    public Product(String fbProductReferenceKey,
+                   String fbUsedProductsUserKey,
                    String description,
+                   String madeBy,
                    String retailer,
                    int unitOfMeasure,
                    int packSize,
@@ -82,10 +47,15 @@ public class Product implements Parcelable {
                    String locationInRoom,
                    int category,
                    double packPrice,
-                   Uri localImageUri) {
+                   double mPackPriceAverage,
+                   Uri localImageUri,
+                   Uri fbStorageImageUri,
+                   String createdBy) {
 
-        this.mProductId = productId;
+        this.mFbProductReferenceKey = fbProductReferenceKey;
+        this.mFbUsedProductsUserKey = fbUsedProductsUserKey;
         this.mDescription = description;
+        this.mMadeBy = madeBy;
         this.mRetailer = retailer;
         this.mUnitOfMeasure = unitOfMeasure;
         this.mPackSize = packSize;
@@ -94,13 +64,18 @@ public class Product implements Parcelable {
         this.mLocationInRoom = locationInRoom;
         this.mCategory = category;
         this.mPackPrice = packPrice;
-        this.mLocalImageUri = localImageUri;
+        this.mPackPriceAverage = mPackPriceAverage;
+        this.mLocalImageUri = localImageUri.toString();
+        this.mFbStorageImageUri = fbStorageImageUri.toString();
+        this.mCreatedBy = createdBy;
     }
 
 
     private Product(Parcel in) {
-        mProductId = in.readInt();
+        mFbProductReferenceKey = in.readString();
+        mFbUsedProductsUserKey = in.readString();
         mDescription = in.readString();
+        mMadeBy = in.readString();
         mRetailer = in.readString();
         mUnitOfMeasure = in.readInt();
         mPackSize = in.readInt();
@@ -109,7 +84,10 @@ public class Product implements Parcelable {
         mLocationInRoom = in.readString();
         mCategory = in.readInt();
         mPackPrice = in.readDouble();
-        mLocalImageUri = Uri.parse(in.readString());
+        mPackPriceAverage = in.readDouble();
+        mLocalImageUri = in.readString();
+        mFbStorageImageUri = in.readString();
+        mCreatedBy = in.readString();
     }
 
     public static final Creator<Product> CREATOR = new Creator<Product>() {
@@ -132,8 +110,10 @@ public class Product implements Parcelable {
     @Override
     public void writeToParcel(Parcel parcel, int i) {
 
-        parcel.writeInt(mProductId);
+        parcel.writeString(mFbProductReferenceKey);
+        parcel.writeString(mFbUsedProductsUserKey);
         parcel.writeString(mDescription);
+        parcel.writeString(mMadeBy);
         parcel.writeString(mRetailer);
         parcel.writeInt(mUnitOfMeasure);
         parcel.writeInt(mPackSize);
@@ -142,40 +122,186 @@ public class Product implements Parcelable {
         parcel.writeString(mLocationInRoom);
         parcel.writeInt(mCategory);
         parcel.writeDouble(mPackPrice);
-        parcel.writeString(String.valueOf(mLocalImageUri));
+        parcel.writeDouble(mPackPriceAverage);
+        parcel.writeString(mLocalImageUri);
+        parcel.writeString(mFbStorageImageUri);
+        parcel.writeString(mCreatedBy);
+    }
+
+    @Exclude
+    public Map<String, Object> baseProductToMap() {
+
+        HashMap<String, Object> result = new HashMap<>();
+
+        result.put(Constants.PRODUCT_BASE_DESCRIPTION_KEY, mDescription);
+        result.put(Constants.PRODUCT_BASE_MADE_BY_KEY, mMadeBy);
+        result.put(Constants.PRODUCT_BASE_CATEGORY_KEY, mCategory);
+        result.put(Constants.PRODUCT_BASE_SHELF_LIFE_KEY, mShelfLife);
+        result.put(Constants.PRODUCT_BASE_PACK_SIZE_KEY, mPackSize);
+        result.put(Constants.PRODUCT_BASE_UNIT_OF_MEASURE_KEY, mUnitOfMeasure);
+        result.put(Constants.PRODUCT_BASE_PRICE_AVE_KEY, mPackPriceAverage);
+        result.put(Constants.PRODUCT_BASE_CREATED_BY_KEY, mCreatedBy);
+        result.put(Constants.PRODUCT_USER_FB_STORAGE_IMAGE_URI_KEY, mFbStorageImageUri);
+
+        return result;
+    }
+
+    @Exclude
+    public Map<String, Object> userFieldsToMap() {
+
+        HashMap<String, Object> result = new HashMap<>();
+
+        // All fields are required
+        // Base fields
+        result.put(Constants.PRODUCT_BASE_DESCRIPTION_KEY, mDescription);
+        result.put(Constants.PRODUCT_BASE_MADE_BY_KEY, mMadeBy);
+        result.put(Constants.PRODUCT_BASE_CATEGORY_KEY, mCategory);
+        result.put(Constants.PRODUCT_BASE_SHELF_LIFE_KEY, mShelfLife);
+        result.put(Constants.PRODUCT_BASE_PACK_SIZE_KEY, mPackSize);
+        result.put(Constants.PRODUCT_BASE_UNIT_OF_MEASURE_KEY, mUnitOfMeasure);
+        result.put(Constants.PRODUCT_BASE_PRICE_AVE_KEY, mPackPriceAverage);
+        result.put(Constants.PRODUCT_BASE_CREATED_BY_KEY, mCreatedBy);
+        result.put(Constants.PRODUCT_USER_FB_STORAGE_IMAGE_URI_KEY, mFbStorageImageUri);
+        // UserFields
+        result.put(Constants.PRODUCT_USER_FB_REFERENCE_KEY, mFbProductReferenceKey);
+        result.put(Constants.PRODUCT_USER_FB_USED_USER_KEY, mFbUsedProductsUserKey);
+        result.put(Constants.PRODUCT_USER_RETAILER_KEY, mRetailer);
+        result.put(Constants.PRODUCT_USER_LOCATION_ROOM_KEY, mLocationRoom);
+        result.put(Constants.PRODUCT_USER_LOCATION_IN_ROOM_KEY, mLocationInRoom);
+        result.put(Constants.PRODUCT_USER_PACK_PRICE_KEY, mPackPrice);
+        result.put(Constants.PRODUCT_USER_LOCAL_IMAGE_URI_KEY, mLocalImageUri);
+
+        return result;
     }
 
     /* Getters and setters */
-    public int getProductId() {return mProductId;}
-    public void setProductId(int productId) {mProductId = productId;}
+    public String getFbProductReferenceKey() {
+        return mFbProductReferenceKey;
+    }
 
-    public String getDescription() {return mDescription;}
-    public void setDescription(String description) {mDescription = description;}
+    public void setFbProductReferenceKey(String fbProductReferenceKey) {
+        this.mFbProductReferenceKey
+                = fbProductReferenceKey;
+    }
 
-    public String getRetailer() {return mRetailer;}
-    public void setRetailer(String retailer) {mRetailer = retailer;}
+    public String getFbUsedProductsUserKey() {
+        return mFbUsedProductsUserKey;
+    }
 
-    public int getUnitOfMeasure() {return mUnitOfMeasure;}
-    public void setUnitOfMeasure(int unitOfMeasure) {mUnitOfMeasure = unitOfMeasure;}
+    public void setFbUsedProductsUserKey(String fbUsedProductsUserKey) {
+        this.mFbUsedProductsUserKey
+                = fbUsedProductsUserKey;
+    }
 
-    public int getPackSize() {return mPackSize;}
-    public void setPackSize(int packSize) {mPackSize = packSize;}
+    public String getDescription() {
+        return mDescription;
+    }
 
-    public int getShelfLife() {return mShelfLife;}
-    public void setShelfLife(int shelfLife) {mShelfLife = shelfLife;}
+    public void setDescription(String description) {
+        this.mDescription = description;
+    }
 
-    public String getLocationRoom() {return mLocationRoom;}
-    public void setLocationRoom(String locationRoom) {mLocationRoom = locationRoom;}
+    public String getMadeBy() {
+        return mMadeBy;
+    }
 
-    public String getLocationInRoom() {return mLocationInRoom;}
-    public void setLocationInRoom(String locationInRoom) {mLocationInRoom = locationInRoom;}
+    public void setMadeBy(String madeBy) {
+        this.mMadeBy = madeBy;
+    }
 
-    public int getCategory() {return mCategory;}
-    public void setCategory(int category) {mCategory = category;}
+    public String getRetailer() {
+        return mRetailer;
+    }
 
-    public double getPackPrice() {return mPackPrice;}
-    public void setPackPrice(double packPrice) {mPackPrice = packPrice;}
+    public void setRetailer(String retailer) {
+        this.mRetailer = retailer;
+    }
 
-    public Uri getLocalImageUri() {return mLocalImageUri;}
-    public void setLocalImageUri(Uri localImageUri) {mLocalImageUri = localImageUri;}
+    public int getUnitOfMeasure() {
+        return mUnitOfMeasure;
+    }
+
+    public void setUnitOfMeasure(int unitOfMeasure) {
+        this.mUnitOfMeasure = unitOfMeasure;
+    }
+
+    public int getPackSize() {
+        return mPackSize;
+    }
+
+    public void setPackSize(int packSize) {
+        this.mPackSize = packSize;
+    }
+
+    public int getShelfLife() {
+        return mShelfLife;
+    }
+
+    public void setShelfLife(int shelfLife) {
+        this.mShelfLife = shelfLife;
+    }
+
+    public String getLocationRoom() {
+        return mLocationRoom;
+    }
+
+    public void setLocationRoom(String locationRoom) {
+        this.mLocationRoom = locationRoom;
+    }
+
+    public String getLocationInRoom() {
+        return mLocationInRoom;
+    }
+
+    public void setLocationInRoom(String locationInRoom) {
+        this.mLocationInRoom = locationInRoom;
+    }
+
+    public int getCategory() {
+        return mCategory;
+    }
+
+    public void setCategory(int category) {
+        this.mCategory = category;
+    }
+
+    public double getPackPrice() {
+        return mPackPrice;
+    }
+
+    public void setPackPrice(double packPrice) {
+        this.mPackPrice = packPrice;
+    }
+
+    public double getPackPriceAverage() {
+        return mPackPriceAverage;
+    }
+
+    public void setPackPriceAverage (double packPriceAverage) {
+        this.mPackPriceAverage = packPriceAverage;
+    }
+
+    public String getLocalImageUri() {
+        return mLocalImageUri;
+    }
+
+    public void setLocalImageUri(String localImageUri) {
+        this.mLocalImageUri = localImageUri;
+    }
+
+    public String getFbStorageImageUri() {
+        return mFbStorageImageUri;
+    }
+
+    public void setFbStorageImageUri(String fbStorageImageUri) {
+        this.mFbStorageImageUri = fbStorageImageUri;
+    }
+
+    public String getCreatedBy() {
+        return mCreatedBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.mCreatedBy = createdBy;
+    }
 }

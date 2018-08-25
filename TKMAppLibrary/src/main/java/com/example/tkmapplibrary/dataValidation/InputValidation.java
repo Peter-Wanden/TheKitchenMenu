@@ -12,13 +12,26 @@ package com.example.tkmapplibrary.dataValidation;
  */
 public class InputValidation {
 
-    /* Validation rules for products description */
+    /* Validation rules for a products description */
     public static int validateProductDescription(String description) {
         // Check if not null and contains more than 1 character
         if (description == null || description.length() < 1) {
             return 1;
             /* Limit length to 120 chars */
         } else if(description.length() > 120) {
+            return 2;
+        }
+        // A zero response is OK
+        return 0;
+    }
+
+    /* Validation rules for a products manufacturer */
+    public static int validateMadeBy(String madeBy) {
+        // Check if not null and contains more than 1 character
+        if (madeBy == null || madeBy.length() < 1) {
+            return 1;
+            /* Limit length to 120 chars */
+        } else if(madeBy.length() > 120) {
             return 2;
         }
         // A zero response is OK
@@ -34,6 +47,7 @@ public class InputValidation {
         } else if(retailer.length() > 120) {
             return 2;
         }
+        // A zero response is OK
         return 0;
     }
 
@@ -41,19 +55,19 @@ public class InputValidation {
     // TODO - include all units of measure, implement units of measuretranslation into base measurements here.
     public static boolean validateUoM(int uom) {
         // Check if value is between 0 and 2
-        return !(uom < 0 || uom > 2);
+        return !(uom < 1 || uom > 3);
     }
 
     /* Validation rules for pack size */
     public static boolean validatePackSize(int packSize) {
-        // Check to see if the value is greater than 1 and less then 1000
-        return packSize >= 1 && packSize <= 1000;
+        // Check to see if the value is greater than 1 and less then 10,000 grams.
+        return packSize >= 1 && packSize <= 10000;
     }
 
     /* Validation rules for shelf life */
     public static boolean validateShelfLife (int shelfLife) {
         // Check value is between 0 and 12
-        return shelfLife >= 0 && shelfLife <=12;
+        return shelfLife >= 1 && shelfLife <= 12;
     }
 
     /* Validation rules for location room */
@@ -92,7 +106,7 @@ public class InputValidation {
         // 0 = no category selected, this is an error.
         // 1 = food used outside of recipes (and sometimes in or with recipes).
         // 2 = food only used in recipes.
-        return category >= 0 && category <= 2;
+        return category >= 1 && category <= 3;
     }
 
     /* Validation rules for a recipes title */
@@ -122,6 +136,8 @@ public class InputValidation {
     }
 
     /* Validate product price */
-    /* Validate servings */
-    /* Validate sittings */
+    public static boolean validatePrice(double price) {
+        // Check to see if the value is greater than 1 and less then 10,000 grams.
+        return price >= 0.01 && price <= 10000;
+    }
 }

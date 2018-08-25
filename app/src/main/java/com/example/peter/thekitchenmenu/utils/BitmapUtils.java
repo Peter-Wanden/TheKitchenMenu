@@ -5,12 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.content.CursorLoader;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -23,8 +21,6 @@ import java.util.Date;
 import java.util.Locale;
 
 public class BitmapUtils {
-
-    private Uri mProductImageUri;
 
     private static final String LOG_TAG = BitmapUtils.class.getSimpleName();
 
@@ -47,6 +43,7 @@ public class BitmapUtils {
     }
 
     public static void deleteImageFile(Context context, String imagePath) {
+
         // Get the file
         File imageFile = new File(imagePath);
 
@@ -62,7 +59,7 @@ public class BitmapUtils {
 
     /**
      * Accreditation: Udacity - Advanced Android - Emojify
-     * Resamples the captured photo to fit the screen for better memory usage.
+     * Re-samples the captured photo to fit the screen for better memory usage.
      *
      * @param context   The application context.
      * @param uri The Uri of the image to be resampled.
@@ -78,8 +75,11 @@ public class BitmapUtils {
 
         // Get device screen size information
         DisplayMetrics metrics = new DisplayMetrics();
+
         WindowManager manager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        manager.getDefaultDisplay().getMetrics(metrics);
+        if (manager != null) {
+            manager.getDefaultDisplay().getMetrics(metrics);
+        }
 
         int targetH = metrics.heightPixels;
         int targetW = metrics.widthPixels;
@@ -87,12 +87,13 @@ public class BitmapUtils {
         // Get the dimensions of the original bitmap
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         bmOptions.inJustDecodeBounds = true;
+
         BitmapFactory.decodeFile(imagePath, bmOptions);
         int imageW = bmOptions.outWidth;
         int imageH = bmOptions.outHeight;
 
         // Determine how much to scale down the image
-        int scaleFactor = Math.min(imageW / targetW, imageH / targetH);
+        int scaleFactor = Math.min((imageW / targetW) / 2, (imageH / targetH) /2);
 
         // Decode the image file into a Bitmap sized to fill the View
         bmOptions.inJustDecodeBounds = false;
@@ -117,11 +118,15 @@ public class BitmapUtils {
 
         Cursor cursor = loader.loadInBackground();
 
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        String result = cursor.getString(column_index);
-        cursor.close();
+        int column_index;
 
-        return result;
+        if (cursor != null) {
+            column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            String result = cursor.getString(column_index);
+            cursor.close();
+            return result;
+        }
+        return null;
     }
 }

@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'TKMKey'
+            keyPassword 'Z5g3yqgZZyuCpSfANITG'
+            storeFile file('C:/Users/peter/DevProjects/KeyStore/TheKitchenMenu/TKMKeyStore.jks')
+            storePassword 'dE3kTCQc3vKMdDNN5nGe'
+        }
+    }
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.example.peter.thekitchenmenu"
@@ -8,12 +16,14 @@ android {
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
+        resConfigs "en" // Add any other language support here
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
     }
     dataBinding.enabled = true
@@ -29,27 +39,31 @@ android {
 dependencies {
     // Support version
     def androidSupportVersion = "27.1.1"
-
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "com.android.support:appcompat-v7:$androidSupportVersion"
     implementation "com.android.support:design:$androidSupportVersion"
     implementation "com.android.support:recyclerview-v7:$androidSupportVersion"
     implementation "com.android.support:cardview-v7:$androidSupportVersion"
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
-    implementation 'com.google.android.gms:play-services-auth:15.0.1'
+    // Play services
+    implementation 'com.google.android.gms:play-services-auth:16.0.0'
+    // A library that will hold the application logic
     implementation project(':TKMAppLibrary')
     // Architecture components version
     def lifecycle_version = "1.1.1"
-    // Room
-    implementation "android.arch.persistence.room:runtime:$lifecycle_version"
-    annotationProcessor "android.arch.persistence.room:compiler:$lifecycle_version"
+    // Gson
+    implementation 'com.google.code.gson:gson:2.8.2'
     // ViewModel & LiveData
     implementation "android.arch.lifecycle:extensions:$lifecycle_version"
     annotationProcessor "android.arch.lifecycle:compiler:$lifecycle_version"
     // Firebase
-    //    implementation 'com.google.firebase:firebase-messaging:17.1.0'
-    //    implementation 'com.google.firebase:firebase-firestore:17.0.2'
-    //    implementation 'com.google.firebase:firebase-core:17.0.2'
+    implementation 'com.google.firebase:firebase-database:16.0.1'
+    implementation 'com.google.firebase:firebase-core:16.0.1'
+    implementation 'com.google.firebase:firebase-auth:16.0.3'
+    implementation 'com.google.firebase:firebase-storage:16.0.1'
+    implementation 'com.google.firebase:firebase-config:16.0.0'
+    // Firebase UI
+    implementation 'com.firebaseui:firebase-ui-auth:4.1.0'
     // Picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
     // Testing
@@ -57,5 +71,5 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
-
+// Reads the configuration information in app/google-services.json
 apply plugin: 'com.google.gms.google-services'

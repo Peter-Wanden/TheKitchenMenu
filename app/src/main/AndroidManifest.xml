@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.peter.thekitchenmenu">
 
+    <!-- Add permissions -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <uses-feature android:name="android.hardware.camera"
+    <uses-feature
+        android:name="android.hardware.camera"
         android:required="true" />
-
 
     <application
         android:allowBackup="true"
@@ -16,28 +20,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".ui.navigation.MainActivity">
+        <activity android:name=".ui.catalog.ActivityCatalogProduct">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".ui.catalog.ActivityCatalogProduct"
-            android:label="Product Catalog"
-            android:theme="@style/AppTheme"/>
-
-        <activity android:name=".ui.detail.ActivityDetailProduct"
+        <activity
+            android:name=".ui.detail.ActivityDetailProduct"
             android:label="@string/activity_detail_product_title"
-            android:theme="@style/AppTheme"/>
-
-        <activity android:name=".ui.catalog.ActivityCatalogRecipe"
-            android:label="@string/activity_catalog_recipe_title"
-            android:theme="@style/AppTheme"/>
-
-        <activity android:name=".ui.detail.ActivityDetailRecipe"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -50,5 +43,19 @@
             </meta-data>
         </provider>
 
+        <receiver android:name=".widget.TKMWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/tkmwidget_provider_info" />
+        </receiver>
+        <service
+            android:name=".widget.WidgetServiceList"
+            android:permission="android.permission.BIND_REMOTEVIEWS"/>
+        <service android:name=".widget.WidgetService" />
     </application>
+
 </manifest>

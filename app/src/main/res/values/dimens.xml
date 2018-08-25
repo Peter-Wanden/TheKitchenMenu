@@ -12,8 +12,9 @@
     <!-- List item margins -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="list_item_top_margin">8dp</dimen>
+    <dimen name="list_item_top_full_margin">8dp</dimen>
     <dimen name="list_item_bottom_margin">8dp</dimen>
+    <dimen name="list_item_top_half_margin">4dp</dimen>
 
     <!-- CardView -->
     <dimen name="card_view_default_radius">4</dimen>
@@ -21,8 +22,23 @@
     <dimen name="card_title_top_padding">24dp</dimen>
     <dimen name="card_bottom_padding">16dp</dimen>
     <dimen name="card_right_left_padding">16dp</dimen>
+    <dimen name="card_view_margin">8dp</dimen>
+    <dimen name="card_view_margin_top_bottom">4dp</dimen>
+    <dimen name="card_view_elevation">2dp</dimen>
 
     <!-- Image button properties -->
     <dimen name="image_button_margin">16dp</dimen>
+    <dimen name="image_button_width">48dp</dimen>
+    <dimen name="image_button_height">48dp</dimen>
+
+    <!--
+Refer to App Widget Documentation for margin information
+http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
+    -->
+    <dimen name="widget_margin">8dp</dimen>
+
+
+    <!-- App Bar -->
+    <dimen name="product_catalog_app_bar_height">250dp</dimen>
 
 </resources>
