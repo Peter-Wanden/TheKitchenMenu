@@ -3,7 +3,6 @@ package com.example.peter.thekitchenmenu.viewmodels;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.ViewModel;
-import android.util.Log;
 
 import com.example.peter.thekitchenmenu.AppExecutors;
 import com.example.peter.thekitchenmenu.app.Constants;

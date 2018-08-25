@@ -1,26 +1,23 @@
 package com.example.peter.thekitchenmenu.ui.catalog;
 
-import android.app.ActivityOptions;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.peter.thekitchenmenu.R;
@@ -28,7 +25,6 @@ import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.databinding.ActivityCatalogProductBinding;
 import com.example.peter.thekitchenmenu.model.Product;
 import com.example.peter.thekitchenmenu.ui.detail.ActivityDetailProduct;
-
 import com.example.peter.thekitchenmenu.utils.GsonUtils;
 import com.example.peter.thekitchenmenu.viewmodels.ViewModelCatalogProductList;
 import com.example.peter.thekitchenmenu.widget.WidgetService;
@@ -69,6 +65,7 @@ public class ActivityCatalogProduct
     ActivityCatalogProductBinding mCatalogProductBinding;
     GridLayoutManager mGridManager;
     LinearLayoutManager mLinearManager;
+    Parcelable mLayoutManagerState;
 
 
     @Override
@@ -78,7 +75,43 @@ public class ActivityCatalogProduct
         mCatalogProductBinding = DataBindingUtil.
                 setContentView(this, R.layout.activity_catalog_product);
 
-        setupViews();
+        /* Creates RecyclerViews with dynamic widths depending on the display type. */
+        // Portrait for phone.
+        // Landscape for phone.
+        // Portrait for tablet.
+        // Landscape for tablet.
+        if (getResources().getBoolean(R.bool.is_tablet) ||
+                getResources().getBoolean(R.bool.is_landscape)) {
+
+            mGridManager = new GridLayoutManager(
+                    Objects.requireNonNull(this)
+                            .getApplicationContext(), columnCalculator());
+
+            mCatalogProductBinding.activityCatalogProductRv.setLayoutManager(mGridManager);
+
+        } else {
+            mLinearManager = new
+                    LinearLayoutManager(Objects.requireNonNull(this)
+                    .getApplicationContext(),
+                    LinearLayoutManager.VERTICAL, false);
+
+            mCatalogProductBinding.activityCatalogProductRv.setLayoutManager(mLinearManager);
+        }
+
+        mCatalogProductBinding.activityCatalogProductRv.setHasFixedSize(true);
+
+        mCatalogProductBinding.activityCatalogProductFab.setOnClickListener(v -> {
+
+            Intent addProductIntent = new Intent(ActivityCatalogProduct.this,
+                    ActivityDetailProduct.class);
+            startActivity(addProductIntent);
+
+            // Sliding animation
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
+        });
+
+        setSupportActionBar(mCatalogProductBinding.activityCatalogProductToolbar);
 
         // If the user is not logged in
         mUserUid = Constants.ANONYMOUS;
@@ -89,7 +122,7 @@ public class ActivityCatalogProduct
         // Get a remote configuration instance
         FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
 
-        /* Create the adapter and pass in the this classes context and the listener which is also
+        /* Create the adapter and pass in this classes context and the listener which is also
         this class, as this class implements the click handler. */
         mCatalogAdapter = new AdapterCatalogProduct(this, this);
 
@@ -127,6 +160,10 @@ public class ActivityCatalogProduct
                 .setDeveloperModeEnabled(BuildConfig.DEBUG)
                 .build();
         firebaseRemoteConfig.setConfigSettings(configSettings);
+
+        if (savedInstanceState !=null && savedInstanceState.containsKey("layoutManagerState")) {
+            mLayoutManagerState = savedInstanceState.getParcelable("layoutManagerState");
+        }
     }
 
     /* Clean up tasks after sign out */
@@ -147,7 +184,6 @@ public class ActivityCatalogProduct
         mCatalogAdapter.setUserId(mUserUid);
 
         // We can only get and set the data once the user has signed in, as we need the user ID
-
         // LiveData and ViewModel for Firebase
         ViewModelCatalogProductList viewModelCatalogProducts =
                 ViewModelProviders.of(this).get(ViewModelCatalogProductList.class);
@@ -161,6 +197,11 @@ public class ActivityCatalogProduct
 
             if (products != null) {
                 mCatalogAdapter.setProducts(products);
+                mCatalogProductBinding.activityCatalogProductPb.setVisibility(View.GONE);
+                mCatalogProductBinding.
+                        activityCatalogProductRv.
+                        getLayoutManager().
+                        onRestoreInstanceState(mLayoutManagerState);
 
                 // Set the product list to shared preferences for the widgets adapter
                 preferences
@@ -172,43 +213,6 @@ public class ActivityCatalogProduct
                 WidgetService.startActionUpdateWidget(this);
             }
         });
-    }
-
-    private void setupViews() {
-
-        /* Creates RecyclerViews with dynamic widths depending on the display type. */
-        // Portrait for phone.
-        // Landscape for phone.
-        // Portrait for tablet.
-        // Landscape for tablet.
-        if (getResources().getBoolean(R.bool.is_tablet) ||
-                getResources().getBoolean(R.bool.is_landscape)) {
-
-            mGridManager = new GridLayoutManager(
-                    Objects.requireNonNull(this)
-                            .getApplicationContext(), columnCalculator());
-
-            mCatalogProductBinding.activityCatalogProductRv.setLayoutManager(mGridManager);
-
-        } else {
-            mLinearManager = new
-                    LinearLayoutManager(Objects.requireNonNull(this)
-                    .getApplicationContext(),
-                    LinearLayoutManager.VERTICAL, false);
-
-            mCatalogProductBinding.activityCatalogProductRv.setLayoutManager(mLinearManager);
-        }
-
-        mCatalogProductBinding.activityCatalogProductRv.setHasFixedSize(true);
-
-        mCatalogProductBinding.activityCatalogProductFab.setOnClickListener(v -> {
-
-            Intent addProductIntent = new Intent(ActivityCatalogProduct.this,
-                    ActivityDetailProduct.class);
-            startActivity(addProductIntent);
-        });
-
-        setSupportActionBar(mCatalogProductBinding.activityCatalogProductToolbar);
     }
 
     /* Screen width column calculator */
@@ -236,7 +240,7 @@ public class ActivityCatalogProduct
      * @param fbProduct - The selected product.
      */
     @Override
-    public void onClick(Product fbProduct, boolean isCreator, View v) {
+    public void onClick(Product fbProduct, boolean isCreator, View view) {
 
         Intent intent = new Intent(
                 ActivityCatalogProduct.this,
@@ -255,7 +259,9 @@ public class ActivityCatalogProduct
     protected void onResume() {
         super.onResume();
         // Add the firebase authentication state listener to the authentication instance
-        mFBAuth.addAuthStateListener(mFBAuthStateListener);
+        if (mFBAuthStateListener != null) {
+            mFBAuth.addAuthStateListener(mFBAuthStateListener);
+        }
     }
 
     @Override
@@ -265,6 +271,11 @@ public class ActivityCatalogProduct
             // Remove the firebase authentication state listener from the authentication instance
             mFBAuth.removeAuthStateListener(mFBAuthStateListener);
         }
+
+        mLayoutManagerState = mCatalogProductBinding.activityCatalogProductRv
+                .getLayoutManager()
+                .onSaveInstanceState();
+
         // As the user is now logged out its good practice to clean up the adapter and detach
         // the DB listener
         mCatalogAdapter.setProducts(null);
@@ -311,5 +322,12 @@ public class ActivityCatalogProduct
     public void finish() {
         super.finish();
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putParcelable("layoutManagerState", mLayoutManagerState);
     }
 }

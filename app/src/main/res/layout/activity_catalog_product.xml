@@ -10,6 +10,24 @@
         android:fitsSystemWindows="true"
         tools:context=".ui.catalog.ActivityCatalogProduct">
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/activity_catalog_product_rv"
+            app:behavior_overlapTop="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:layout_anchorGravity="bottom">
+        </android.support.v7.widget.RecyclerView>
+
+        <ProgressBar
+            android:id="@+id/activity_catalog_product_pb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_anchor="@id/activity_catalog_product_appbar"
+            android:paddingTop="100dp"
+            app:layout_anchorGravity="center_horizontal"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/activity_catalog_product_fab"
             android:layout_width="wrap_content"
@@ -25,41 +43,49 @@
             android:id="@+id/activity_catalog_product_appbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:contentScrim="@color/primaryColor"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             android:background="@color/primaryLightColor"
-            android:fitsSystemWindows="true">
+            android:fitsSystemWindows="true"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:contentScrim="@color/primaryColor">
 
             <android.support.design.widget.CollapsingToolbarLayout
                 android:id="@+id/activity_catalog_product_collapsing_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="256dp"
                 android:fitsSystemWindows="true"
-                app:contentScrim="@color/primaryColor"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:contentScrim="@color/primaryColor"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
+
+                <ImageView
+                    android:id="@+id/activity_catalog_product_iv_logo"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/cd_brand_logo"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_launcher"
+                    app:layout_collapseMode="parallax" />
+
+                <ImageView
+                    android:id="@+id/activity_catalog_product_iv_backdrop_gradient"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_gravity="bottom"
+                    android:alpha=".2"
+                    android:contentDescription="@string/cd_brand_logo"
+                    android:src="@drawable/backdrop_gradient"
+                    app:layout_collapseMode="parallax" />
 
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/activity_catalog_product_toolbar"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="56dp"
                     android:layout_gravity="top"
                     app:layout_collapseMode="pin"
-                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
             </android.support.design.widget.CollapsingToolbarLayout>
         </android.support.design.widget.AppBarLayout>
-
-        <android.support.v4.widget.NestedScrollView
-            android:id="@+id/activity_catalog_product_nsv"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:behavior_overlapTop="0dp"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/activity_catalog_product_rv"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </android.support.v4.widget.NestedScrollView>
     </android.support.design.widget.CoordinatorLayout>
+
+
 </layout>

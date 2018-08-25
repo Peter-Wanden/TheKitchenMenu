@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -10,9 +10,8 @@
         <item name="android:textColorSecondary">@color/lightGrey</item>
         <item name="android:icon">@color/icons</item>
         <item name="android:textColorHighlight">@color/textColorHighlight</item>
-        <!-- Makes the status bar translucent -->
-        <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowTranslucentNavigation">true</item>
+        <!-- Sets the status bar color -->
+        <item name="android:statusBarColor">@color/primaryDarkColor</item>
         <!-- Enables content transitions -->
         <item name="android:windowContentTransitions">true</item>
     </style>

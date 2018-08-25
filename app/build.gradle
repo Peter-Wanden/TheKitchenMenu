@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'TKMKey'
+            keyPassword 'Z5g3yqgZZyuCpSfANITG'
+            storeFile file('C:/Users/peter/DevProjects/KeyStore/TheKitchenMenu/TKMKeyStore.jks')
+            storePassword 'dE3kTCQc3vKMdDNN5nGe'
+        }
+    }
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.example.peter.thekitchenmenu"
@@ -15,6 +23,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
     }
     dataBinding.enabled = true
@@ -30,7 +39,6 @@ android {
 dependencies {
     // Support version
     def androidSupportVersion = "27.1.1"
-
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "com.android.support:appcompat-v7:$androidSupportVersion"
     implementation "com.android.support:design:$androidSupportVersion"
@@ -54,15 +62,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:16.0.3'
     implementation 'com.google.firebase:firebase-storage:16.0.1'
     implementation 'com.google.firebase:firebase-config:16.0.0'
-
-
-    // implementation 'com.google.firebase:firebase-messaging:17.1.0'
-    //
-    // implementation 'com.google.firebase:firebase-firestore:17.0.2'
-
     // Firebase UI
     implementation 'com.firebaseui:firebase-ui-auth:4.1.0'
-
     // Picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
     // Testing

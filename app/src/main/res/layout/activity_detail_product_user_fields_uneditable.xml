@@ -34,7 +34,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="bottom"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintStart_toStartOf="@+id/activity_detail_product_user_fields_uneditable_guideline"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Waitrose" />
 
@@ -57,7 +57,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="bottom"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintStart_toStartOf="@+id/activity_detail_product_user_fields_uneditable_guideline"
             app:layout_constraintTop_toBottomOf="@+id/activity_detail_product_user_fields_uneditable_tv_retailer"
             tools:text="99.95" />
 
@@ -80,7 +80,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="bottom"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintStart_toStartOf="@+id/activity_detail_product_user_fields_uneditable_guideline"
             app:layout_constraintTop_toBottomOf="@+id/activity_detail_product_user_fields_uneditable_tv_price"
             tools:text="Kitchen" />
 
@@ -103,13 +103,13 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="bottom"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintStart_toStartOf="@+id/activity_detail_product_user_fields_uneditable_guideline"
             app:layout_constraintTop_toBottomOf="@+id/activity_detail_product_user_fields_uneditable_tv_location_room"
             tools:text="Cupboard under sink" />
 
         <!-- Invisible guideline -->
         <android.support.constraint.Guideline
-            android:id="@+id/guideline"
+            android:id="@+id/activity_detail_product_user_fields_uneditable_guideline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"

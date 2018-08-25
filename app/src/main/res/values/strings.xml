@@ -10,19 +10,16 @@
     <string name="cd_action_edit_product">Click to edit the current product</string>
     <string name="cd_add_image">Click to add a picture</string>
     <string name="cd_rotate_image">Click to rotate picture</string>
-    <string name="cd_add_to_favorites">Click to add to favorites</string>
-    <string name="cd_remove_from_favorites">Remove from favorites</string>
     <string name="cd_add_product">Add a product</string>
+    <string name="cd_brand_logo">The kitchen menu brand logo</string>
 
     <!-- Common field labels and hints -->
     <string name="label_description">Description</string>
     <string name="label_made_by">Made by</string>
     <string name="hint_made_by">Who makes it?</string>
     <string name="label_retailer">Retailer</string>
-    <string name="hint_required_120_char_fields">Enter up to 120 characters</string>
     <string name="hint_description">What do you call this item?</string>
     <string name="hint_retailer">Where do you buy it?</string>
-    <string name="hint_not_required_120_char_fields">Enter up to 120 characters</string>
     <string name="label_location_room">Storage room</string>
     <string name="hint_location_room">What room do you keep it?</string>
     <string name="label_location_in_room">Where abouts?</string>

@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@color/primaryColor">
+        android:background="@color/primaryDarkColor">
 
         <TextView
             android:id="@+id/tmkwidget_provider_product_title"
@@ -38,6 +38,7 @@
 
     <ListView
         android:id="@+id/tkmwidget_provider_lv_products"
+        android:background="@color/primaryColor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 

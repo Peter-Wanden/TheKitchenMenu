@@ -5,14 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.graphics.drawable.BitmapDrawable;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.content.CursorLoader;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -25,8 +21,6 @@ import java.util.Date;
 import java.util.Locale;
 
 public class BitmapUtils {
-
-    private Uri mProductImageUri;
 
     private static final String LOG_TAG = BitmapUtils.class.getSimpleName();
 
@@ -124,11 +118,15 @@ public class BitmapUtils {
 
         Cursor cursor = loader.loadInBackground();
 
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        String result = cursor.getString(column_index);
-        cursor.close();
+        int column_index;
 
-        return result;
+        if (cursor != null) {
+            column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            String result = cursor.getString(column_index);
+            cursor.close();
+            return result;
+        }
+        return null;
     }
 }

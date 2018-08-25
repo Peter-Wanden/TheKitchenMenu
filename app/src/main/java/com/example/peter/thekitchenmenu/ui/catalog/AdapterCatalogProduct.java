@@ -3,7 +3,6 @@ package com.example.peter.thekitchenmenu.ui.catalog;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -120,7 +119,6 @@ public class AdapterCatalogProduct
         final TextView descriptionTV;
         final TextView packSizeTV;
         final TextView UoMTV;
-        final ImageView favoriteIV;
         final ImageView productIV;
 
         /* Constructor for the AdapterCatalogProductViewHolder.class */
@@ -130,7 +128,6 @@ public class AdapterCatalogProduct
             descriptionTV = itemView.findViewById(R.id.list_item_product_tv_description);
             packSizeTV = itemView.findViewById(R.id.list_item_product_tv_pack_size);
             UoMTV = itemView.findViewById(R.id.list_item_product_tv_label_unit_of_measure);
-            favoriteIV = itemView.findViewById(R.id.list_item_product_iv_favorite);
             productIV = itemView.findViewById(R.id.list_item_product_iv_product_image);
 
             itemView.setOnClickListener(this);

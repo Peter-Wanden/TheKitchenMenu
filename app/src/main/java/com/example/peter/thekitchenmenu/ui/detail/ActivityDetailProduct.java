@@ -9,6 +9,7 @@ import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.provider.MediaStore;
@@ -60,7 +61,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
@@ -779,7 +779,6 @@ public class ActivityDetailProduct
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 // If the product is in the users used list it will show up here
                 if (dataSnapshot.exists()) {
-                    Log.e(LOG_TAG, "getUsedList - datasnap is: " + dataSnapshot);
 
                     // Convert the snapshot into a Product object
                     mProduct = dataSnapshot.getValue(Product.class);
@@ -897,27 +896,6 @@ public class ActivityDetailProduct
      */
     private void saveProduct() {
 
-//        Log.e(LOG_TAG, "\nsaveProduct() - Truth table: " +
-//                "\nmIsCreator: " + mIsCreator +
-//                "\nmBaseFieldsAreEditable: " + mBaseFieldsAreEditable +
-//                "\nmUserFieldsAreEditable: " + mUserFieldsAreEditable +
-//                "\nmInUsersUsedList: " + mInUsersUsedList +
-//                "\nmPutProductOnUsedList: " + mPutProductOnUsedList +
-//                "\nmIsExistingProduct: " + mIsExistingProduct +
-//                "\nmIsMultiUser: " + mIsMultiUser);
-
-//        Log.e(LOG_TAG, "\nsaveProduct() - State of validation bools: " + "\n" +
-//                "Description validated: " + mDescriptionIsValidated + "\n" +
-//                "MadeBy validated: " + mMadeByIsValidated + "\n" +
-//                "PackSize validated: " + mPackSizeIsValidated + "\n" +
-//                "UoM validated: " + mUoMIsValidated + "\n" +
-//                "ShelfLife validated: " + mShelfLifeIsValidated + "\n" +
-//                "Category validated: " + mCategoryIsValidated + "\n" +
-//                "Retailer validated:" + mRetailerIsValidated + "\n" +
-//                "Pack price validated: " + mPackPriceIsValidated + "\n" +
-//                "Location room validated: " + mLocationRoomIsValidated + "\n" +
-//                "Location in room validated: " + mLocationInRoomIsValidated);
-
         /*
            1. This is a new product. Various parts of it and its users data needs to be stored in
               three locations in the database:
@@ -934,15 +912,8 @@ public class ActivityDetailProduct
                 !mIsExistingProduct &&
                 !mIsMultiUser) {
 
-            Log.e(LOG_TAG, "saveProduct() - Case 1: This is a new product. Save " +
-                    "locations: 1 + 2 + 3 + Image (if available)");
-
             // This is a new product, so check all fields are validated
             if (checkValidationBaseFields() && checkValidationUserFields()) {
-
-
-
-                Log.e(LOG_TAG, "saveProduct() - Case 1: Base and user fields validated");
 
                 // Reduce bounce as we say in the electronics trade (double click) by hiding the
                 // menu items once pressed.
@@ -1119,13 +1090,8 @@ public class ActivityDetailProduct
                 mUserFieldsAreEditable &&
                 !mIsMultiUser) {
 
-            Log.e(LOG_TAG, "saveProduct() - Case 2: Existing product, created by user, " +
-                    "being edited by user, all fields editable, single user. Save Locations: 1 + 2");
-
             // Validate the product base fields
             boolean baseFieldsValidated = checkValidationBaseFields();
-
-            Log.e(LOG_TAG, "saveProduct() - Case 2: Base fields validated = " + baseFieldsValidated);
 
             // If base fields are validated...
             if (baseFieldsValidated) {
@@ -1133,14 +1099,10 @@ public class ActivityDetailProduct
                 // Validate the user product specific fields
                 boolean userFieldsValidated = checkValidationUserFields();
 
-                Log.e(LOG_TAG, "saveProduct() - Case 2: User fields validated = " + userFieldsValidated);
-
                 // If the product specific fields are validated...
                 if (userFieldsValidated) {
                     // If there has been changes to the image, save them
                     // Location
-
-                    Log.e(LOG_TAG, "saveProduct() - isImageTaken() = " + mImageAvailable);
 
                     if (mImageAvailable && mProductIV.getDrawable() != null) {
 
@@ -1204,9 +1166,6 @@ public class ActivityDetailProduct
                                     // Update the member variable with the new image URL
                                     mFbStorageImageUri = task.getResult();
 
-                                    Log.e(LOG_TAG, "saveProduct() - Updated image saved to: " +
-                                            mFbStorageImageUri);
-
                             /*
                                Collate any changes and update the child data in the database.
                             */
@@ -1239,7 +1198,6 @@ public class ActivityDetailProduct
                                     finish();
                                 }
                             });
-
 
                     } else {
 
@@ -1297,9 +1255,6 @@ public class ActivityDetailProduct
                 !mBaseFieldsAreEditable &&
                 mUserFieldsAreEditable) {
 
-            Log.e(LOG_TAG, "saveProduct() - Case 3: This is a existing multi-user product. " +
-                    "The user is the creator. Only the user data can be updated - Save locations: 1");
-
             // Validate the user product specific fields
             boolean userFieldsValidated = checkValidationUserFields();
 
@@ -1343,10 +1298,6 @@ public class ActivityDetailProduct
                 mPutProductOnUsedList &&
                 !mBaseFieldsAreEditable &&
                 mUserFieldsAreEditable) {
-
-            Log.e(LOG_TAG, "saveProduct() - Case 4: This is a existing product, with one " +
-                    "or many users. The user is not the creator. The user is adding this product " +
-                    "to their product list - Save Locations 1 + 3");
 
             // Validate the user product specific fields
             boolean userFieldsValidated = checkValidationUserFields();
@@ -1405,9 +1356,6 @@ public class ActivityDetailProduct
                 !mBaseFieldsAreEditable &&
                 mUserFieldsAreEditable) {
 
-            Log.e(LOG_TAG, "saveProduct() - Case 5: Existing product, not creator, being " +
-                    "edited, in users used list, base fields uneditable - Save locations: 1");
-
             // Validate the users input fields
             boolean userFieldsValidated = checkValidationUserFields();
 
@@ -1447,10 +1395,6 @@ public class ActivityDetailProduct
                 !mBaseFieldsAreEditable &&
                 mUserFieldsAreEditable) {
 
-            Log.e(LOG_TAG, "saveProduct() - Case 6: Existing product, creator, being " +
-                    "added back into creators list, put on used list, base fields uneditable" +
-                    " - Save locations: 3 and 2");
-
             // Validate the users input fields
             boolean userFieldsValidated = checkValidationUserFields();
 
@@ -1473,10 +1417,6 @@ public class ActivityDetailProduct
                     saveUserProductUpdates(productUserUpdates);
                 }
             }
-
-        } else {
-            Log.e(LOG_TAG, "Save action did not meet criteria required to make changes to " +
-                    "the database. Nothing was modified.");
         }
         finish();
     }
@@ -1638,10 +1578,7 @@ public class ActivityDetailProduct
         DatabaseReference reference = mFbCollectionProduct
                 .child(mFbProductReferenceKey);
 
-        Log.e(LOG_TAG, "saveBaseProductUpdates() - Looks like: " + productBaseUpdates);
-
         reference.updateChildren(productBaseUpdates);
-
     }
 
     /* Adds the current user ID to:
@@ -1770,32 +1707,13 @@ public class ActivityDetailProduct
      * - User specific fields uneditable
      * */
     private void populateUi() {
-//        Log.e(LOG_TAG, "\npopulateUi() - State of bool's as follows:"
-//                + "isExistingProduct: " + mIsExistingProduct + "\n"
-//                + "IsCreator: " + mIsCreator + "\n"
-//                + "ProductInUsedList: " + mInUsersUsedList + "\n"
-//                + "IsMultiUser : " + mIsMultiUser + "\n"
-//                + "mPutProductOnUsedList: " + mPutProductOnUsedList + "\n"
-//                + "BaseFields are editable: " + mBaseFieldsAreEditable + "\n"
-//                + "UserFieldsAreEditable: " + mUserFieldsAreEditable);
 
         // Load the image if there is one, from Firestore
         if (!mProduct.getFbStorageImageUri().equals("")) {
 
             Picasso.get()
                     .load(mProduct.getFbStorageImageUri())
-                    .into(mProductIV, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            Log.e(LOG_TAG, "populateUi() - Picasso - Image loaded successfully.");
-                        }
-
-                        @Override
-                        public void onError(Exception e) {
-                            Log.e(LOG_TAG, "populateUi() - Picasso - Image failed with error: " + e);
-
-                        }
-                    });
+                    .into(mProductIV);
         }
 
         // Base fields editable criteria:
@@ -2280,7 +2198,9 @@ public class ActivityDetailProduct
        https://stackoverflow.com/questions/6443212/spinner-does-not-get-focus
     */
     private void hideKeyboard() {
-        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager inputManager = (InputMethodManager)
+                getSystemService(Context.INPUT_METHOD_SERVICE);
+
         if (inputManager != null) {
             inputManager.hideSoftInputFromWindow(Objects.requireNonNull(this.getCurrentFocus())
                             .getWindowToken(),
@@ -2352,6 +2272,7 @@ public class ActivityDetailProduct
            4. If this is the only user using this product mFbStorageUri is not empty, delete the
               image in FireStore it is pointing to.
         */
+
         if (mIsExistingProduct && mInUsersUsedList) {
 
             // For the product information located under the users product list, create a database
@@ -2543,10 +2464,10 @@ public class ActivityDetailProduct
         // Create an adapter for the spinner. The list options are from the String array in
         // arrays.xml. The spinner will use the default layout.
         ArrayAdapter UoMSpinnerAdapter = ArrayAdapter.createFromResource(this,
-                R.array.array_UoM_metric_options, R.layout.spinner_list_item);
+                R.array.array_UoM_metric_options, R.layout.list_item_spinner);
 
         // Specify dropdown layout style
-        UoMSpinnerAdapter.setDropDownViewResource(R.layout.spinner_list_item);
+        UoMSpinnerAdapter.setDropDownViewResource(R.layout.list_item_spinner);
 
         // Apply the adapter to the spinner
         mUoMSpinner.setAdapter(UoMSpinnerAdapter);
@@ -2599,10 +2520,10 @@ public class ActivityDetailProduct
         // Create an adapter for the spinner. The list options are from the String array in
         // arrays.xml. The spinner will use the default layout
         ArrayAdapter shelfLifeSpinnerAdapter = ArrayAdapter.createFromResource(this,
-                R.array.array_shelf_life_options, R.layout.spinner_list_item);
+                R.array.array_shelf_life_options, R.layout.list_item_spinner);
 
         // Specify dropdown layout style.
-        shelfLifeSpinnerAdapter.setDropDownViewResource(R.layout.spinner_list_item);
+        shelfLifeSpinnerAdapter.setDropDownViewResource(R.layout.list_item_spinner);
 
         // Apply the adapter to the spinner
         mShelfLifeSpinner.setAdapter(shelfLifeSpinnerAdapter);
@@ -2692,10 +2613,10 @@ public class ActivityDetailProduct
         // Create an adapter for the spinner. The list options are from the String array in
         // arrays.xml. The spinner will use the default layout.
         ArrayAdapter categorySpinnerAdapter = ArrayAdapter.createFromResource(this,
-                R.array.array_product_category_options, R.layout.spinner_list_item);
+                R.array.array_product_category_options, R.layout.list_item_spinner);
 
         // Specify dropdown layout style.
-        categorySpinnerAdapter.setDropDownViewResource(R.layout.spinner_list_item);
+        categorySpinnerAdapter.setDropDownViewResource(R.layout.list_item_spinner);
 
         // Apply the adapter to the spinner
         mCategorySpinner.setAdapter(categorySpinnerAdapter);
@@ -2746,9 +2667,9 @@ public class ActivityDetailProduct
 
         // Setup the icons
         if (saveItem != null && editItem != null && deleteItem != null) {
-            tintMenuIcon(this, saveItem, R.color.icons);
-            tintMenuIcon(this, editItem, R.color.icons);
-            tintMenuIcon(this, deleteItem, R.color.icons);
+            tintMenuIcon(this, saveItem, R.color.white);
+            tintMenuIcon(this, editItem, R.color.white);
+            tintMenuIcon(this, deleteItem, R.color.white);
         }
         return true;
     }
@@ -2834,13 +2755,6 @@ public class ActivityDetailProduct
     /* This method manages the actions as they are selected from the AppBar */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
-//        Log.e(LOG_TAG, "\nonOptionsItemSelected - State of bool's as follows:"
-//                + "isExistingProduct: " + mIsExistingProduct + "\n"
-//                + "IsCreator: " + mIsCreator + "\n"
-//                + "ProductInUsedList: " + mInUsersUsedList + "\n"
-//                + "mPutProductOnUsedList: " + mPutProductOnUsedList + "\n"
-//                + "mProduct.GetUsedProductsUserKey = " + mProduct.getFbUsedProductsUserKey());
 
         switch (item.getItemId()) {
             // Save (tick) menu option selected
