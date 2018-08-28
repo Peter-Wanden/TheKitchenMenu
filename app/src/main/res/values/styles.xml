@@ -14,6 +14,8 @@
         <item name="android:statusBarColor">@color/primaryDarkColor</item>
         <!-- Enables content transitions -->
         <item name="android:windowContentTransitions">true</item>
+        <!-- Text color of the overflow menu items -->
+        <item name="android:actionMenuTextColor">@color/black</item>
     </style>
 
     <!-- Style for a category TextView in product view mode -->

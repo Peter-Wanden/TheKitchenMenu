@@ -5,7 +5,7 @@ android {
         config {
             keyAlias 'TKMKey'
             keyPassword 'Z5g3yqgZZyuCpSfANITG'
-            storeFile file('C:/Users/peter/DevProjects/KeyStore/TheKitchenMenu/TKMKeyStore.jks')
+            storeFile file('../TKMKeyStore.jks')
             storePassword 'dE3kTCQc3vKMdDNN5nGe'
         }
     }
@@ -55,6 +55,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.2'
     // ViewModel & LiveData
     implementation "android.arch.lifecycle:extensions:$lifecycle_version"
+    implementation 'com.android.support:support-v4:27.1.1'
     annotationProcessor "android.arch.lifecycle:compiler:$lifecycle_version"
     // Firebase
     implementation 'com.google.firebase:firebase-database:16.0.1'

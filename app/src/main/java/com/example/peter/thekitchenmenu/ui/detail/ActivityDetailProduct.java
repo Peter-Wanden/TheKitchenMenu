@@ -4,12 +4,12 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.provider.MediaStore;
@@ -23,7 +23,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -44,6 +43,11 @@ import android.widget.Toast;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
+import com.example.peter.thekitchenmenu.databinding.ActivityDetailProductBaseFieldsEditableBinding;
+import com.example.peter.thekitchenmenu.databinding.ActivityDetailProductBaseFieldsUneditableBinding;
+import com.example.peter.thekitchenmenu.databinding.ActivityDetailProductBinding;
+import com.example.peter.thekitchenmenu.databinding.ActivityDetailProductUserFieldsEditableBinding;
+import com.example.peter.thekitchenmenu.databinding.ActivityDetailProductUserFieldsUneditableBinding;
 import com.example.peter.thekitchenmenu.model.Product;
 import com.example.peter.thekitchenmenu.utils.BitmapUtils;
 import com.example.peter.thekitchenmenu.utils.Converters;
@@ -76,6 +80,14 @@ public class ActivityDetailProduct
         extends AppCompatActivity {
 
     public static final String LOG_TAG = ActivityDetailProduct.class.getSimpleName();
+
+    // Data binding classes
+    ActivityDetailProductBinding mDetailProductBinding;
+    ActivityDetailProductBaseFieldsEditableBinding mBaseFieldsEditableBinding;
+    ActivityDetailProductUserFieldsEditableBinding mUserFieldsEditableBinding;
+    ActivityDetailProductBaseFieldsUneditableBinding mBaseFieldsUneditableBinding;
+    ActivityDetailProductUserFieldsUneditableBinding mUserFieldsUneditableBinding;
+
 
     // Product object instance
     private Product
@@ -215,6 +227,7 @@ public class ActivityDetailProduct
     // Color the icons
     // From: https://stackoverflow.com/questions/24301235/tint-menu-icons/39535399#39535399
     public static void tintMenuIcon(Context context, MenuItem item, @ColorRes int color) {
+
         Drawable normalDrawable = item.getIcon();
         Drawable wrapDrawable = DrawableCompat.wrap(normalDrawable);
         DrawableCompat.setTint(wrapDrawable, context.getResources().getColor(color));
@@ -989,9 +1002,6 @@ public class ActivityDetailProduct
 
                             // Update the member variable with the new image URL
                             mFbStorageImageUri = task.getResult();
-
-//                            Log.e(LOG_TAG, "save Product: fbStorageImageUri is: " +
-//                                    mFbStorageImageUri);
 
                             if (mCameraImageTaken) {
                                 // Now it is stored in FireStore we can delete the temp file
@@ -1815,12 +1825,27 @@ public class ActivityDetailProduct
 
     }
 
-    /* Get a reference eto all of the views */
+    /* Get a reference to all of the views */
     private void initialiseViews() {
 
-        // Toolbar
-        Toolbar toolbar = findViewById(R.id.activity_detail_product_tb_top);
-        setSupportActionBar(toolbar);
+        // Assign the DataBinding classes a binding instance for the layouts this class uses
+        mDetailProductBinding = DataBindingUtil.setContentView(
+                this, R.layout.activity_detail_product);
+
+        mBaseFieldsEditableBinding = DataBindingUtil.setContentView(
+                this, R.layout.activity_detail_product_base_fields_editable);
+
+        mUserFieldsEditableBinding = DataBindingUtil.setContentView(
+                this, R.layout.activity_detail_product_user_fields_editable);
+
+        mBaseFieldsUneditableBinding = DataBindingUtil.setContentView(
+                this, R.layout.activity_detail_product_base_fields_uneditable);
+
+        mUserFieldsUneditableBinding = DataBindingUtil.setContentView(
+                this, R.layout.activity_detail_product_user_fields_uneditable);
+
+        // Setup the Toolbar
+        setSupportActionBar(mDetailProductBinding.activityDetailProductTbTop);
 
         // Containers
         mBaseFieldsEditableContainer = findViewById(
@@ -1828,7 +1853,7 @@ public class ActivityDetailProduct
         mBaseFieldsUnEditableContainer = findViewById(
                 R.id.activity_detail_product_base_fields_uneditable_container);
         mUserFieldsEditableContainer = findViewById(
-                R.id.activity_detail_product_user_fields_container);
+                R.id.activity_detail_product_user_fields_editable_container);
         mUserFieldsUneditableContainer = findViewById(
                 R.id.activity_detail_product_user_fields_uneditable_container);
 
@@ -1884,54 +1909,58 @@ public class ActivityDetailProduct
         mCategorySpinner = findViewById(
                 R.id.activity_detail_product_base_fields_editable_spinner_category);
 
-        // Image buttons
-        mAddImageCameraIB = findViewById(
-                R.id.activity_detail_product_ib_add_camera_picture);
-        mRotateImageIB = findViewById(
-                R.id.activity_detail_product_ib_rotate_picture);
-        mAddImageGalleryIB = findViewById(
-                R.id.activity_detail_product_ib_add_gallery_picture);
-
-        // Image field
-        mProductIV = findViewById(
-                R.id.activity_detail_product_iv);
-
         // Spinners
         setupUoMSpinner();
         setupShelfLifeSpinner();
         setupCategorySpinner();
 
-        // Assign FAB
-        mFab = findViewById(R.id.activity_detail_product_fab);
-
         // Initial visibility for editable and uneditable field containers
-        mBaseFieldsEditableContainer.setVisibility(View.GONE);
-        mBaseFieldsUnEditableContainer.setVisibility(View.GONE);
+        mBaseFieldsEditableBinding.
+                activityDetailProductBaseFieldsEditableContainer.
+                setVisibility(View.GONE);
+
+        mBaseFieldsUneditableBinding.
+                activityDetailProductBaseFieldsUneditableContainer.
+                setVisibility(View.GONE);
 
         /*
             Here follows the click listeners for the various input fields.
         */
 
         /* OnClickListener for the add picture by camera button */
-        mAddImageCameraIB.setOnClickListener(v -> requestPermissions());
+        mDetailProductBinding.
+                activityDetailProductIbAddCameraPicture.
+                setOnClickListener(v -> requestPermissions());
 
         /* OnClickListener for the rotate picture button */
-        mRotateImageIB.setOnClickListener(v -> {
+        mDetailProductBinding.
+                activityDetailProductIbRotatePicture.
+                setOnClickListener(v -> {
 
             // Rotate the image by 90 degrees
             Matrix matrix = new Matrix();
             matrix.postRotate(90);
-            Bitmap RecipeImage = ((BitmapDrawable) mProductIV.getDrawable()).getBitmap();
+
+            Bitmap RecipeImage = ((BitmapDrawable) mDetailProductBinding.
+                    activityDetailProductIv.
+                    getDrawable()).
+                    getBitmap();
+
             Bitmap rotated = Bitmap.createBitmap(RecipeImage, 0, 0,
                     RecipeImage.getWidth(), RecipeImage.getHeight(), matrix, true);
-            mProductIV.setImageBitmap(rotated);
+
+            mDetailProductBinding.
+                    activityDetailProductIv.
+                    setImageBitmap(rotated);
 
             // The image has changed so update the bool
             mImageAvailable = true;
         });
 
         /* onClickListener for the FAB */
-        mFab.setOnClickListener(v -> {
+        mDetailProductBinding.
+                activityDetailProductFab.
+                setOnClickListener(v -> {
 
             // If the current product is not in the users used list, pressing the FAB opens up the
             // user specific fields, so the user can edit the user specific fields
@@ -1941,14 +1970,18 @@ public class ActivityDetailProduct
                 mUserFieldsAreEditable = true;
                 updateUserFieldsEditableStatus();
 
-                // This product is going to be added to the users used lis so update the bool
+                // This product is going to be added to the users used list so update the bool
                 mPutProductOnUsedList = true;
 
                 // Turn off the FAB
-                mFab.setVisibility(View.GONE);
+                mDetailProductBinding.
+                        activityDetailProductFab.
+                        setVisibility(View.GONE);
 
                 // In the user specific fields set the focus to the first field
-                mRetailerET.requestFocus();
+                mUserFieldsEditableBinding.
+                        activityDetailProductEtRetailer.
+                        requestFocus();
 
                 // Show the save button
                 setMenuItemVisibility(true, false, false);
@@ -1956,7 +1989,9 @@ public class ActivityDetailProduct
         });
 
         /* onClickListener for the add image from gallery button */
-        mAddImageGalleryIB.setOnClickListener(v -> {
+        mDetailProductBinding.
+                activityDetailProductIbAddGalleryPicture.
+                setOnClickListener(v -> {
 
             // Launch an intent to open a gallery app
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -1974,7 +2009,9 @@ public class ActivityDetailProduct
         */
 
         // Text change listener for the 'description' EditText field
-        mDescriptionET.addTextChangedListener(new TextWatcher() {
+        mBaseFieldsEditableBinding.
+                activityDetailProductBaseFieldsEditableEtDescription.
+                addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -1992,16 +2029,23 @@ public class ActivityDetailProduct
         });
 
         // Focus change listener for the 'description' EditText field */
-        mDescriptionET.setOnFocusChangeListener((v, hasFocus) -> {
+        mBaseFieldsEditableBinding.
+                activityDetailProductBaseFieldsEditableEtDescription.
+                setOnFocusChangeListener((v, hasFocus) -> {
 
             // When this field gains focus its content may be changing, if so it will not be
             // validated. When this field looses focus, its content will need validating.
             mDescriptionIsValidated = !hasFocus && validateDescription(
-                    mDescriptionET.getText().toString());
+                    mBaseFieldsEditableBinding.
+                            activityDetailProductBaseFieldsEditableEtDescription
+                            .getText()
+                            .toString());
         });
 
         // Change listener for the 'made by' EditText field
-        mMadeByET.addTextChangedListener(new TextWatcher() {
+        mBaseFieldsEditableBinding.
+                activityDetailProductBaseFieldsEditableEtMadeBy.
+                addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -2019,16 +2063,23 @@ public class ActivityDetailProduct
         });
 
         // Focus change listener for the 'made by' EditText field */
-        mMadeByET.setOnFocusChangeListener((v, hasFocus) -> {
+        mBaseFieldsEditableBinding.
+                activityDetailProductBaseFieldsEditableEtMadeBy.
+                setOnFocusChangeListener((v, hasFocus) -> {
 
             // When this field gains focus its content may be changing, if so it will not be
             // validated. When this field looses focus, its content will need validating.
             mMadeByIsValidated = !hasFocus && validateMadeBy(
-                    mMadeByET.getText().toString());
+                    mBaseFieldsEditableBinding.
+                            activityDetailProductBaseFieldsEditableEtMadeBy
+                            .getText()
+                            .toString());
         });
 
         // Change listener for the 'pack size' EditText field
-        mPackSizeET.addTextChangedListener(new TextWatcher() {
+        mBaseFieldsEditableBinding.
+                activityDetailProductBaseFieldsEditableEtPackSize.
+                addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -2046,23 +2097,33 @@ public class ActivityDetailProduct
         });
 
         // Focus change listener for the 'pack size' EditText field */
-        mPackSizeET.setOnFocusChangeListener((v, hasFocus) -> {
+        mBaseFieldsEditableBinding.
+                activityDetailProductBaseFieldsEditableEtPackSize.
+                setOnFocusChangeListener((v, hasFocus) -> {
 
             // When this field gains focus its content may be changing, if so it will not be
             // validated. When this field looses focus, its content will need validating.
             mPackSizeIsValidated = !hasFocus && validatePackSize(
-                    mPackSizeET.getText().toString());
+                    mBaseFieldsEditableBinding.
+                            activityDetailProductBaseFieldsEditableEtPackSize.
+                            getText().
+                            toString());
         });
 
         // Focus change listener for the 'unit of measure' spinner
-        mUoMSpinner.setOnFocusChangeListener((v, hasFocus) -> {
+        mBaseFieldsEditableBinding.
+                activityDetailProductBaseFieldsEditableContainerUoM.
+                setOnFocusChangeListener((v, hasFocus) -> {
 
             // When this field gains focus its content may be changing, if so it will not be
             // validated. When this field looses focus, its content will need validating.
             if (hasFocus) {
                 mUoMIsValidated = false;
                 hideKeyboard();
-                mUoMSpinner.performClick();
+
+                mBaseFieldsEditableBinding.
+                        activityDetailProductBaseFieldsEditableContainerUoM.
+                        performClick();
 
             } else {
 
@@ -2071,20 +2132,27 @@ public class ActivityDetailProduct
 
                 // If validated remove the error
                 if (mUoMIsValidated) {
-                    mUoMTVSpinnerError.setError(null);
+                    mBaseFieldsEditableBinding.
+                            activityDetailProductBaseFieldsEditableTvSpinnerUoMSetError.
+                            setError(null);
                 }
             }
         });
 
         // Focus change listener for the 'shelf life' spinner
-        mShelfLifeSpinner.setOnFocusChangeListener((v, hasFocus) -> {
+        mBaseFieldsEditableBinding.
+                activityDetailProductBaseFieldsEditableSpinnerShelfLife.
+                setOnFocusChangeListener((v, hasFocus) -> {
 
             // When this field gains focus its content may be changing, if so it will not be
             // validated. When this field looses focus, its content will need validating.
             if (hasFocus) {
+
                 mShelfLifeIsValidated = false;
                 hideKeyboard();
-                mShelfLifeSpinner.performClick();
+                mBaseFieldsEditableBinding.
+                        activityDetailProductBaseFieldsEditableSpinnerShelfLife.
+                        performClick();
             } else {
                 // Validate its contents
                 mShelfLifeIsValidated = validateShelfLife();
@@ -2092,14 +2160,18 @@ public class ActivityDetailProduct
         });
 
         // Focus change listener for the 'category' spinner
-        mCategorySpinner.setOnFocusChangeListener((v, hasFocus) -> {
+        mBaseFieldsEditableBinding.
+                activityDetailProductBaseFieldsEditableSpinnerCategory.
+                setOnFocusChangeListener((v, hasFocus) -> {
 
             // When this field gains focus its content may be changing, if so it will not be
             // validated. When this field looses focus, its content will need validating.
             if (hasFocus) {
                 mCategoryIsValidated = false;
                 hideKeyboard();
-                mCategorySpinner.performClick();
+                mBaseFieldsEditableBinding.
+                        activityDetailProductBaseFieldsEditableSpinnerCategory.
+                        performClick();
             } else {
                 // Validate its contents
                 mCategoryIsValidated = validateCategory();
@@ -2107,7 +2179,9 @@ public class ActivityDetailProduct
         });
 
         // Change listener for the 'made by' EditText field
-        mRetailerET.addTextChangedListener(new TextWatcher() {
+        mUserFieldsEditableBinding.
+                activityDetailProductEtRetailer.
+                addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -2125,15 +2199,24 @@ public class ActivityDetailProduct
         });
 
         // Focus change listener for the 'retailer' EditText field */
-        mRetailerET.setOnFocusChangeListener((v, hasFocus) -> {
+        mUserFieldsEditableBinding.
+                activityDetailProductEtRetailer.
+                setOnFocusChangeListener((v, hasFocus) -> {
 
             // When this field gains focus its content may be changing, if so it will not be
             // validated. When this field looses focus, its content will need validating.
-            mRetailerIsValidated = !hasFocus && validateRetailer(mRetailerET.getText().toString());
+            mRetailerIsValidated = !hasFocus && validateRetailer(
+                    mUserFieldsEditableBinding.
+                    activityDetailProductEtRetailer.
+                            getText().
+                            toString()
+                            .trim());
         });
 
         // Focus change listener for the 'pack price' EditText field
-        mPackPriceET.setOnFocusChangeListener((v, hasFocus) -> {
+        mUserFieldsEditableBinding.
+                activityDetailProductEtPrice.
+                setOnFocusChangeListener((v, hasFocus) -> {
 
             // When this field gains focus its content may be changing, if so it will not be
             // validated. When this field looses focus, its content will need validating.
@@ -2141,7 +2224,9 @@ public class ActivityDetailProduct
         });
 
         // Focus change listener for the 'location room' EditText field
-        mLocationRoomET.addTextChangedListener(new TextWatcher() {
+        mUserFieldsEditableBinding.
+                activityDetailProductEtLocationRoom.
+                addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -2158,16 +2243,24 @@ public class ActivityDetailProduct
         });
 
         // Focus change listener for the 'location room' EditText field */
-        mLocationRoomET.setOnFocusChangeListener((v, hasFocus) -> {
+        mUserFieldsEditableBinding.
+                activityDetailProductEtLocationRoom.
+                setOnFocusChangeListener((v, hasFocus) -> {
 
             // When this field gains focus its content may be changing, if so it will not be
             // validated. When this field looses focus, its content will need validating.
             mLocationRoomIsValidated = !hasFocus && validateLocationRoom(
-                    mLocationRoomET.getText().toString().trim());
+                    mUserFieldsEditableBinding.
+                            activityDetailProductEtLocationRoom.
+                            getText().
+                            toString().
+                            trim());
         });
 
         // Focus change listener for the 'location in room' EditText field
-        mLocationInRoomET.addTextChangedListener(new TextWatcher() {
+        mUserFieldsEditableBinding.
+                activityDetailProductEtLocationInRoom.
+                addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -2184,12 +2277,18 @@ public class ActivityDetailProduct
         });
 
         // Focus change listener for the 'location in room' EditText field */
-        mLocationInRoomET.setOnFocusChangeListener((v, hasFocus) -> {
+        mUserFieldsEditableBinding.
+                activityDetailProductEtLocationInRoom.
+                setOnFocusChangeListener((v, hasFocus) -> {
 
             // When this field gains focus its content may be changing, if so it will not be
             // validated. When this field looses focus, its content will need validating.
             mLocationInRoomIsValidated = !hasFocus && validateLocationInRoom(
-                    mLocationInRoomET.getText().toString().trim());
+                    mUserFieldsEditableBinding.
+                            activityDetailProductEtLocationInRoom.
+                            getText().
+                            toString().
+                            trim());
         });
     }
 
@@ -2198,6 +2297,7 @@ public class ActivityDetailProduct
        https://stackoverflow.com/questions/6443212/spinner-does-not-get-focus
     */
     private void hideKeyboard() {
+
         InputMethodManager inputManager = (InputMethodManager)
                 getSystemService(Context.INPUT_METHOD_SERVICE);
 
@@ -2212,18 +2312,35 @@ public class ActivityDetailProduct
     private void showUneditableViewContainers() {
 
         // This is for product viewing only, so no need for editable views
-        mBaseFieldsEditableContainer.setVisibility(View.GONE);
-        mUserFieldsEditableContainer.setVisibility(View.GONE);
+        mBaseFieldsEditableBinding.
+                activityDetailProductBaseFieldsEditableContainer.
+                setVisibility(View.GONE);
+
+        mUserFieldsEditableBinding.
+                activityDetailProductUserFieldsEditableContainer
+                .setVisibility(View.GONE);
 
         // Make relevant view containers visible
-        mBaseFieldsUnEditableContainer.setVisibility(View.VISIBLE);
+        mBaseFieldsUneditableBinding.
+                activityDetailProductBaseFieldsUneditableContainer.
+                setVisibility(View.VISIBLE);
+
         // Only show user the 'specific product data container' if in used list
         if (mInUsersUsedList) {
-            mUserFieldsUneditableContainer.setVisibility(View.VISIBLE);
+
+            mUserFieldsUneditableBinding.
+                    activityDetailProductUserFieldsUneditableContainer.
+                    setVisibility(View.VISIBLE);
         } else {
+
             // This product in not in the users list. Show the fab so they can add it
-            mUserFieldsUneditableContainer.setVisibility(View.GONE);
-            mFab.setVisibility(View.VISIBLE);
+            mUserFieldsUneditableBinding.
+                    activityDetailProductUserFieldsUneditableContainer.
+                    setVisibility(View.GONE);
+
+            mDetailProductBinding.
+                    activityDetailProductFab.
+                    setVisibility(View.VISIBLE);
         }
     }
 
@@ -2231,11 +2348,23 @@ public class ActivityDetailProduct
     private void updateBaseFieldsEditableStatus() {
 
         if (mBaseFieldsAreEditable) {
-            mBaseFieldsEditableContainer.setVisibility(View.VISIBLE);
-            mBaseFieldsUnEditableContainer.setVisibility(View.GONE);
+
+            mBaseFieldsEditableBinding.
+                    activityDetailProductBaseFieldsEditableContainer.
+                    setVisibility(View.VISIBLE);
+
+            mBaseFieldsUneditableBinding.
+                    activityDetailProductBaseFieldsUneditableContainer.
+                    setVisibility(View.GONE);
         } else {
-            mBaseFieldsEditableContainer.setVisibility(View.GONE);
-            mBaseFieldsUnEditableContainer.setVisibility(View.VISIBLE);
+
+            mBaseFieldsEditableBinding.
+                    activityDetailProductBaseFieldsEditableContainer.
+                    setVisibility(View.GONE);
+
+            mBaseFieldsUneditableBinding.
+                    activityDetailProductBaseFieldsUneditableContainer.
+                    setVisibility(View.VISIBLE);
         }
     }
 
@@ -2243,21 +2372,38 @@ public class ActivityDetailProduct
     private void updateUserFieldsEditableStatus() {
 
         if (mUserFieldsAreEditable) {
-            mUserFieldsEditableContainer.setVisibility(View.VISIBLE);
-            mUserFieldsUneditableContainer.setVisibility(View.GONE);
+
+            mUserFieldsEditableBinding.
+                    activityDetailProductUserFieldsEditableContainer.
+                    setVisibility(View.VISIBLE);
+
+            mUserFieldsUneditableBinding.
+                    activityDetailProductUserFieldsUneditableContainer.
+                    setVisibility(View.GONE);
+
         } else {
-            mUserFieldsEditableContainer.setVisibility(View.GONE);
+
+            mUserFieldsEditableBinding.
+                    activityDetailProductUserFieldsEditableContainer.
+                    setVisibility(View.GONE);
+
             // If the product is on or is going to be on the users used list turn the user
             // specific fields on
             if (mInUsersUsedList || mPutProductOnUsedList) {
-                mUserFieldsUneditableContainer.setVisibility(View.VISIBLE);
+
+                mUserFieldsUneditableBinding.
+                        activityDetailProductUserFieldsUneditableContainer.
+                        setVisibility(View.VISIBLE);
+
             } else {
+
                 // If not on the users used list turn the view off
-                mUserFieldsUneditableContainer.setVisibility(View.GONE);
+                mUserFieldsUneditableBinding.
+                        activityDetailProductUserFieldsUneditableContainer.
+                        setVisibility(View.GONE);
             }
         }
     }
-
     /* Delete the product */
     private void deleteProduct() {
 
@@ -2378,6 +2524,7 @@ public class ActivityDetailProduct
         // If a camera image is taken
         if (requestCode == Constants.REQUEST_IMAGE_CAPTURE &&
                 resultCode == RESULT_OK) {
+
             // If an image capture
             processAndSetImage();
             mImageAvailable = true;
@@ -2385,26 +2532,31 @@ public class ActivityDetailProduct
 
         } else if (requestCode == Constants.REQUEST_IMAGE_CAPTURE &&
                 resultCode == RESULT_CANCELED) {
+
             // If the camera was cancelled, delete the temporary file
             BitmapUtils.deleteImageFile(this, mTempImagePath);
             mCameraImageTaken = false;
 
         } else if (requestCode == Constants.REQUEST_IMAGE_MEDIA_STORE &&
                 resultCode == RESULT_OK) {
+
             mImageAvailable = true;
             processAndSetImage();
 
         } else if (requestCode == Constants.REQUEST_IMAGE_MEDIA_STORE &&
                 resultCode == RESULT_CANCELED) {
+
             Log.e(LOG_TAG, "Media store intent cancelled");
 
         } else if (requestCode == Constants.REQUEST_IMAGE_PICKER && resultCode == RESULT_OK) {
+
             // Photo picker
             Uri selectedImageUri = data.getData();
             mImageAvailable = true;
             mProductIV.setImageURI(selectedImageUri);
 
         } else if (requestCode == Constants.REQUEST_IMAGE_PICKER && resultCode == RESULT_CANCELED) {
+
             Log.e(LOG_TAG, "Image picker intent cancelled");
         }
     }
@@ -2413,7 +2565,10 @@ public class ActivityDetailProduct
     private void processAndSetImage() {
 
         Bitmap mResultsBitmap = BitmapUtils.resampleImage(this, null, mTempImagePath);
-        mProductIV.setImageBitmap(mResultsBitmap);
+
+        mDetailProductBinding.
+                activityDetailProductIv.
+                setImageBitmap(mResultsBitmap);
     }
 
     /* Request permissions for access to the file storage area */
@@ -2470,15 +2625,24 @@ public class ActivityDetailProduct
         UoMSpinnerAdapter.setDropDownViewResource(R.layout.list_item_spinner);
 
         // Apply the adapter to the spinner
-        mUoMSpinner.setAdapter(UoMSpinnerAdapter);
+        mBaseFieldsEditableBinding.
+                activityDetailProductBaseFieldsEditableSpinnerUoM.
+                setAdapter(UoMSpinnerAdapter);
 
         // Add the spinner to the list of focusable items, so that when the user clicks the next
         // button on the keyboard the spinner is focusable
-        mUoMSpinner.setFocusable(true);
-        mUoMSpinner.setFocusableInTouchMode(true);
+        mBaseFieldsEditableBinding.
+                activityDetailProductBaseFieldsEditableSpinnerUoM.
+                setFocusable(true);
+
+        mBaseFieldsEditableBinding.
+                activityDetailProductBaseFieldsEditableSpinnerUoM.
+                setFocusableInTouchMode(true);
 
         // Set the integer mUoM to the constant values
-        mUoMSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        mBaseFieldsEditableBinding.
+                activityDetailProductBaseFieldsEditableSpinnerUoM.
+                setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -2526,15 +2690,24 @@ public class ActivityDetailProduct
         shelfLifeSpinnerAdapter.setDropDownViewResource(R.layout.list_item_spinner);
 
         // Apply the adapter to the spinner
-        mShelfLifeSpinner.setAdapter(shelfLifeSpinnerAdapter);
+        mBaseFieldsEditableBinding.
+                activityDetailProductBaseFieldsEditableSpinnerShelfLife.
+                setAdapter(shelfLifeSpinnerAdapter);
 
         // Add the spinner to the list of focusable items, so that when the user clicks the next
         // button on the keyboard the spinner is focusable
-        mShelfLifeSpinner.setFocusable(true);
-        mShelfLifeSpinner.setFocusableInTouchMode(true);
+        mBaseFieldsEditableBinding.
+                activityDetailProductBaseFieldsEditableSpinnerShelfLife.
+                setFocusable(true);
+
+        mBaseFieldsEditableBinding.
+                activityDetailProductBaseFieldsEditableSpinnerShelfLife.
+                setFocusableInTouchMode(true);
 
         // Set the integer mSelected to the constant values
-        mShelfLifeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        mBaseFieldsEditableBinding.
+                activityDetailProductBaseFieldsEditableSpinnerShelfLife.
+                setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
@@ -2619,15 +2792,24 @@ public class ActivityDetailProduct
         categorySpinnerAdapter.setDropDownViewResource(R.layout.list_item_spinner);
 
         // Apply the adapter to the spinner
-        mCategorySpinner.setAdapter(categorySpinnerAdapter);
+        mBaseFieldsEditableBinding.
+                activityDetailProductBaseFieldsEditableSpinnerCategory.
+                setAdapter(categorySpinnerAdapter);
 
         // Add the spinner to the list of focusable items, so that when the user clicks the next
         // button on the keyboard the spinner is focusable
-        mCategorySpinner.setFocusable(true);
-        mCategorySpinner.setFocusableInTouchMode(true);
+        mBaseFieldsEditableBinding.
+                activityDetailProductBaseFieldsEditableSpinnerCategory.
+                setFocusable(true);
+
+        mBaseFieldsEditableBinding.
+                activityDetailProductBaseFieldsEditableSpinnerCategory.
+                setFocusableInTouchMode(true);
 
         // Set the integer mUoM to the constant values
-        mCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        mBaseFieldsEditableBinding.
+                activityDetailProductBaseFieldsEditableSpinnerCategory.
+                setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
@@ -2717,8 +2899,14 @@ public class ActivityDetailProduct
         if (mIsExistingProduct &&
                 mIsCreator &&
                 mInUsersUsedList &&
-                mUserFieldsUneditableContainer.getVisibility() == View.VISIBLE &&
-                mBaseFieldsUnEditableContainer.getVisibility() == View.VISIBLE) {
+
+                mBaseFieldsUneditableBinding.
+                        activityDetailProductBaseFieldsUneditableContainer.
+                        getVisibility() == View.VISIBLE &&
+
+                mUserFieldsUneditableBinding.
+                        activityDetailProductUserFieldsUneditableContainer.
+                        getVisibility() == View.VISIBLE) {
 
             // Uneditable state
             setMenuItemVisibility(false, true, true);
@@ -2729,8 +2917,14 @@ public class ActivityDetailProduct
         if (mIsExistingProduct &&
                 mIsCreator &&
                 mInUsersUsedList &&
-                mUserFieldsEditableContainer.getVisibility() == View.VISIBLE &&
-                mBaseFieldsEditableContainer.getVisibility() == View.VISIBLE) {
+
+                mBaseFieldsEditableBinding.
+                        activityDetailProductBaseFieldsEditableContainer.
+                        getVisibility() == View.VISIBLE &&
+
+                mUserFieldsEditableBinding.
+                        activityDetailProductUserFieldsEditableContainer.
+                        getVisibility() == View.VISIBLE) {
 
             // Editable state
             setMenuItemVisibility(true, false, true);
@@ -2741,8 +2935,14 @@ public class ActivityDetailProduct
         if (mIsExistingProduct &&
                 mIsCreator &&
                 mInUsersUsedList &&
-                mBaseFieldsEditableContainer.getVisibility() == View.GONE &&
-                mUserFieldsEditableContainer.getVisibility() == View.VISIBLE) {
+
+                mBaseFieldsEditableBinding.
+                        activityDetailProductBaseFieldsEditableContainer.
+                        getVisibility() == View.GONE &&
+
+                mUserFieldsEditableBinding.
+                        activityDetailProductUserFieldsEditableContainer.
+                        getVisibility() == View.VISIBLE) {
 
             // Editable state
             setMenuItemVisibility(true, false, true);
@@ -2795,12 +2995,22 @@ public class ActivityDetailProduct
                 }
 
                 // Request focus to the first editable filed
-                mRetailerET.requestFocus();
+                mUserFieldsEditableBinding.
+                        activityDetailProductEtRetailer.
+                        requestFocus();
 
                 // Make the ImageView editable
-                mAddImageCameraIB.setVisibility(View.VISIBLE);
-                mRotateImageIB.setVisibility(View.VISIBLE);
-                mAddImageGalleryIB.setVisibility(View.VISIBLE);
+                mDetailProductBinding.
+                        activityDetailProductIbAddCameraPicture.
+                        setVisibility(View.VISIBLE);
+
+                mDetailProductBinding.
+                        activityDetailProductIbRotatePicture.
+                        setVisibility(View.VISIBLE);
+
+                mDetailProductBinding.
+                        activityDetailProductIbAddGalleryPicture.
+                        setVisibility(View.VISIBLE);
         }
         return super.onOptionsItemSelected(item);
     }

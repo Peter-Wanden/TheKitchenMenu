@@ -1,4 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?><!-- Layout for the list of products -->
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Layout for the list of products -->
+<!-- See: https://blog.iamsuleiman.com/parallax-scrolling-tabs-design-support-library/ -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
@@ -82,10 +84,19 @@
                     android:layout_height="56dp"
                     android:layout_gravity="top"
                     app:layout_collapseMode="pin"
+                    android:layout_marginBottom="48dp"
                     app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+                <android.support.design.widget.TabLayout
+                    android:id="@+id/activity_catalog_product_tl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    app:tabIndicatorColor="@color/white"
+                    app:tabSelectedTextColor="@color/white"
+                    app:tabTextColor="@color/brightGrey">
+                </android.support.design.widget.TabLayout>
             </android.support.design.widget.CollapsingToolbarLayout>
         </android.support.design.widget.AppBarLayout>
     </android.support.design.widget.CoordinatorLayout>
-
-
 </layout>

@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
+        android:id="@+id/activity_detail_product_rl_parent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
@@ -17,15 +18,18 @@
         android:elevation="@dimen/starting_elevation"/>
 
     <ScrollView
+        android:id="@+id/activity_detail_product_sv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/activity_detail_product_tb_top">
 
         <RelativeLayout
+            android:id="@+id/activity_detail_product_rl_scroll_parent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
         <LinearLayout
+            android:id="@+id/activity_detail_product_ll_relative_parent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -34,6 +38,7 @@
 
             <!-- Relative layout for the image section -->
             <RelativeLayout
+                android:id="@+id/activity_detail_product_rl_image_section"
                 android:layout_width="match_parent"
                 android:layout_height="250dp">
 
