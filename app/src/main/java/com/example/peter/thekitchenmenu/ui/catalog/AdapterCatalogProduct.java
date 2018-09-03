@@ -30,17 +30,9 @@ public class AdapterCatalogProduct
     // The user Id of the current user
     private String mUserId;
 
-    // Click handler
-    private final ProductCatalogAdapterOnClickHandler mClickHandler;
-
-    /* Click interface that receives on click messages */
-    public interface ProductCatalogAdapterOnClickHandler {
-        void onClick(Product product, boolean isOwner, View view);
-    }
-
-    public AdapterCatalogProduct(Context context, ProductCatalogAdapterOnClickHandler listener) {
+    /* Constructor */
+    public AdapterCatalogProduct(Context context) {
         mContext = context;
-        mClickHandler = listener;
     }
 
     @NonNull
@@ -86,11 +78,6 @@ public class AdapterCatalogProduct
         return mProducts.size();
     }
 
-    /* Sets the user ID */
-    public void setUserId(String userId) {
-        mUserId = userId;
-    }
-
     /* Getter for the current list of products */
     public List<Product> getProducts() {
         return mProducts;
@@ -101,12 +88,6 @@ public class AdapterCatalogProduct
     public void setProducts(List<Product> products) {
         mProducts = products;
         notifyDataSetChanged();
-    }
-
-    /* Inserts a single product into the adapter */
-    public void insertProduct(Product product){
-        mProducts.add(product);
-        notifyItemInserted(mProducts.size() -1);
     }
 
     /* Inner class for creating ViewHolders */
@@ -134,16 +115,17 @@ public class AdapterCatalogProduct
         }
 
         public void onClick(View v) {
+
             // Get the product from the adapter at the clicked position
             Product product = mProducts.get(getAdapterPosition());
 
             // Find out if this user was the creator of the product
             boolean mIsCreator = mUserId.equals(product.getCreatedBy());
-            // Send the product and its creator bool to be processed by the click handler, we also
-            // pass in the product image view as its required for transitions
-
-            mClickHandler.onClick(product, mIsCreator, productIV);
         }
+    }
+
+    public void setUserId (String userId){
+        mUserId = userId;
     }
 }
 

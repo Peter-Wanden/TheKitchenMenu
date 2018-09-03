@@ -1,33 +1,23 @@
 package com.example.peter.thekitchenmenu.ui.catalog;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.databinding.ActivityCatalogProductBinding;
-import com.example.peter.thekitchenmenu.model.Product;
 import com.example.peter.thekitchenmenu.ui.detail.ActivityDetailProduct;
-import com.example.peter.thekitchenmenu.utils.GsonUtils;
-import com.example.peter.thekitchenmenu.viewmodels.ViewModelCatalogProductList;
-import com.example.peter.thekitchenmenu.widget.WidgetService;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.BuildConfig;
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,19 +26,13 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
 public class ActivityCatalogProduct
         extends
-        AppCompatActivity
-        implements
-        AdapterCatalogProduct.ProductCatalogAdapterOnClickHandler {
+        AppCompatActivity {
 
     public static final String LOG_TAG = ActivityCatalogProduct.class.getSimpleName();
-
-    /* Adapter for the product list view */
-    public AdapterCatalogProduct mCatalogAdapter;
 
     /* *******************
      * Firebase database *
@@ -60,73 +44,45 @@ public class ActivityCatalogProduct
     private FirebaseAuth.AuthStateListener mFBAuthStateListener;
 
     /* Authentication users unique ID generated for this user / app combination */
-    private String mUserUid;
+    private String mUserId;
 
+    /* Binding class for the views */
     ActivityCatalogProductBinding mCatalogProductBinding;
-    GridLayoutManager mGridManager;
-    LinearLayoutManager mLinearManager;
-    Parcelable mLayoutManagerState;
+
+    /* Adapter for the ViewPager */
+    AdapterPageCatalogProduct mAdapterPageCatalogProduct;
+
+    /* ViewPager to swipe through the fragments */
+    ViewPager mViewPager;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mCatalogProductBinding = DataBindingUtil.
-                setContentView(this, R.layout.activity_catalog_product);
-
-        /* Creates RecyclerViews with dynamic widths depending on the display type. */
-        // Portrait for phone.
-        // Landscape for phone.
-        // Portrait for tablet.
-        // Landscape for tablet.
-        if (getResources().getBoolean(R.bool.is_tablet) ||
-                getResources().getBoolean(R.bool.is_landscape)) {
-
-            mGridManager = new GridLayoutManager(
-                    Objects.requireNonNull(this)
-                            .getApplicationContext(), columnCalculator());
-
-            mCatalogProductBinding.activityCatalogProductRv.setLayoutManager(mGridManager);
-
-        } else {
-            mLinearManager = new
-                    LinearLayoutManager(Objects.requireNonNull(this)
-                    .getApplicationContext(),
-                    LinearLayoutManager.VERTICAL, false);
-
-            mCatalogProductBinding.activityCatalogProductRv.setLayoutManager(mLinearManager);
-        }
-
-        mCatalogProductBinding.activityCatalogProductRv.setHasFixedSize(true);
-
-        mCatalogProductBinding.activityCatalogProductFab.setOnClickListener(v -> {
-
-            Intent addProductIntent = new Intent(ActivityCatalogProduct.this,
-                    ActivityDetailProduct.class);
-            startActivity(addProductIntent);
-
-            // Sliding animation
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-
-        });
-
-        setSupportActionBar(mCatalogProductBinding.activityCatalogProductToolbar);
+        initialiseFirebase();
+        initialiseViews();
 
         // If the user is not logged in
-        mUserUid = Constants.ANONYMOUS;
+        mUserId = Constants.ANONYMOUS;
+
+        // TODO - Save the fragments state
+
+        // Post configuration change, restores the state of the previous layout manager to the new
+        // layout manager which could be either a grid or linear layout manager
+//        if (savedInstanceState !=null && savedInstanceState.containsKey("layoutManagerState")) {
+//            mLayoutManagerState = savedInstanceState.getParcelable("layoutManagerState");
+//        }
+    }
+
+    /* Initialises the Firebase components required for this activity and logs the user in */
+    private void initialiseFirebase() {
 
         // Get an instance of Firebase authentication */
         mFBAuth = FirebaseAuth.getInstance();
 
         // Get a remote configuration instance
         FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
-
-        /* Create the adapter and pass in this classes context and the listener which is also
-        this class, as this class implements the click handler. */
-        mCatalogAdapter = new AdapterCatalogProduct(this, this);
-
-        mCatalogProductBinding.activityCatalogProductRv.setAdapter(mCatalogAdapter);
 
         // Firebase authentication listener (attached in onResume and detached in onPause).
         // From: Udacity AND Firebase
@@ -160,59 +116,190 @@ public class ActivityCatalogProduct
                 .setDeveloperModeEnabled(BuildConfig.DEBUG)
                 .build();
         firebaseRemoteConfig.setConfigSettings(configSettings);
+    }
 
-        if (savedInstanceState !=null && savedInstanceState.containsKey("layoutManagerState")) {
-            mLayoutManagerState = savedInstanceState.getParcelable("layoutManagerState");
+    /* Sets up the views for this activity */
+    private void initialiseViews() {
+
+        mCatalogProductBinding = DataBindingUtil.
+                setContentView(this, R.layout.activity_catalog_product);
+
+        mCatalogProductBinding.activityCatalogProductPb.setVisibility(View.GONE);
+
+        /* Creates RecyclerViews with dynamic widths depending on the display type. */
+        // Portrait for phone.
+        // Landscape for phone.
+        // Portrait for tablet.
+        // Landscape for tablet.
+//        if (getResources().getBoolean(R.bool.is_tablet) ||
+//                getResources().getBoolean(R.bool.is_landscape)) {
+//
+//            mGridManager = new GridLayoutManager(
+//                    Objects.requireNonNull(this)
+//                            .getApplicationContext(), columnCalculator());
+//
+//            mCatalogProductBinding.activityCatalogProductRv.setLayoutManager(mGridManager);
+//
+//        } else {
+//            mLinearManager = new
+//                    LinearLayoutManager(Objects.requireNonNull(this)
+//                    .getApplicationContext(),
+//                    LinearLayoutManager.VERTICAL, false);
+//
+//            mCatalogProductBinding.activityCatalogProductRv.setLayoutManager(mLinearManager);
+//        }
+
+//        mCatalogProductBinding.activityCatalogProductRv.setHasFixedSize(true);
+
+        mCatalogProductBinding.activityCatalogProductFab.setOnClickListener(v -> {
+
+            Intent addProductIntent = new Intent(ActivityCatalogProduct.this,
+                    ActivityDetailProduct.class);
+            startActivity(addProductIntent);
+
+            // Sliding animation
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
+        });
+
+        /* Create the adapter and pass in this classes context and the listener which is also
+        this class, as this class implements the click handler. */
+//        mCatalogAdapter = new AdapterCatalogProduct(this, this);
+//
+//        mCatalogProductBinding.activityCatalogProductRv.setAdapter(mCatalogAdapter);
+
+        /* Setup the ToolBar */
+        setSupportActionBar(mCatalogProductBinding.activityCatalogProductToolbar);
+
+        /* View pager for the recycler view fragments */
+        mAdapterPageCatalogProduct =
+                new AdapterPageCatalogProduct(
+                        getSupportFragmentManager());
+
+        mViewPager = mCatalogProductBinding.activityCatalogProductVp;
+        mViewPager.setAdapter(mAdapterPageCatalogProduct);
+
+        /* Sets up the ViewPager for the fragments that display the product lists */
+        if (mCatalogProductBinding.activityCatalogProductVp != null) {
+            setupViewPager(mCatalogProductBinding.activityCatalogProductVp);
         }
+
+        /* Sets up the Tab's and their titles */
+        mCatalogProductBinding.activityCatalogProductTl.
+                setupWithViewPager(mCatalogProductBinding.activityCatalogProductVp);
+
+    }
+
+    /* Setup the ViewPager */
+    private void setupViewPager(ViewPager viewPager) {
+
+        mAdapterPageCatalogProduct = new AdapterPageCatalogProduct(getSupportFragmentManager());
+
+        // Page 0 - for a list of all products.
+        mAdapterPageCatalogProduct.
+                addFragment(new FragmentCatalogProducts(), "All Products");
+
+        // Page 1 - for a list of the users used products.
+        mAdapterPageCatalogProduct.
+                addFragment(new FragmentCatalogUsedProducts(), "My Products");
+
+        viewPager.setAdapter(mAdapterPageCatalogProduct);
     }
 
     /* Clean up tasks after sign out */
     private void onSignedOutCleanUp() {
 
         // Nullify the user unique ID
-        mUserUid = Constants.ANONYMOUS;
+        mUserId = Constants.ANONYMOUS;
 
         // Clear out the adapter
-        mCatalogAdapter.setProducts(null);
+//        mCatalogAdapter.setProducts(null);
     }
 
     /* User is now signed in - attach to the Firebase database */
     private void onSignedInInitialise(String userUid) {
 
         // Update the user id
-        mUserUid = userUid;
-        mCatalogAdapter.setUserId(mUserUid);
+        mUserId = userUid;
 
-        // We can only get and set the data once the user has signed in, as we need the user ID
-        // LiveData and ViewModel for Firebase
-        ViewModelCatalogProductList viewModelCatalogProducts =
-                ViewModelProviders.of(this).get(ViewModelCatalogProductList.class);
 
-        LiveData<List<Product>> productLiveData = viewModelCatalogProducts.getProductsLiveData();
+        /*
+           We can only get and set the data once the user has signed in, as we need the user ID
+        */
 
-        // Create a shared preferences object. This will hold the base data for the widget
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        // ViewModel and LiveData for all products - Supplies data to Fragment 0, tab 0
+//        ViewModelCatalogProductList viewModelCatalogProducts =
+//                ViewModelProviders.of(this).get(ViewModelCatalogProductList.class);
+//
+//        LiveData<List<Product>> productLiveData =
+//                viewModelCatalogProducts.getProductsLiveData();
+//
+//        // Create a shared preferences object. This will hold the base data for the widget
+//        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+//
+//        productLiveData.observe(this, products -> {
+//
+//            if (products != null) {
+////                mCatalogAdapter.setProducts(products);
+//                mCatalogProductBinding.activityCatalogProductPb.setVisibility(View.GONE);
+////                mCatalogProductBinding.
+////                        activityCatalogProductRv.
+////                        getLayoutManager().
+////                        onRestoreInstanceState(mLayoutManagerState);
+//
+//                // Set the product list to shared preferences for the widgets adapter
+//                preferences
+//                        .edit()
+//                        .putString(Constants.PRODUCT_KEY, GsonUtils.productsToJson(products))
+//                        .apply();
+//
+//                /* Update the widget with the new list od products */
+//                WidgetService.startActionUpdateWidget(this);
+//            }
+//        });
 
-        productLiveData.observe(this, products -> {
+        // ViewModel and LiveData for all users used products - Supplies data to Fragment 1, tab 1
+//        ViewModelCatalogProductUsedList viewModelCatalogProductUsedList =
+//                ViewModelProviders.of(this, new ViewModelFactoryProducts(mUserId))
+//                        .get(ViewModelCatalogProductUsedList.class);
 
-            if (products != null) {
-                mCatalogAdapter.setProducts(products);
-                mCatalogProductBinding.activityCatalogProductPb.setVisibility(View.GONE);
-                mCatalogProductBinding.
-                        activityCatalogProductRv.
-                        getLayoutManager().
-                        onRestoreInstanceState(mLayoutManagerState);
+        Log.e(LOG_TAG, "onSignedInInitialise(String userUid) - User ID is: " + mUserId);
+//        viewModelCatalogProductUsedList.setUserId(mUserId);
 
-                // Set the product list to shared preferences for the widgets adapter
-                preferences
-                        .edit()
-                        .putString(Constants.PRODUCT_KEY, GsonUtils.productsToJson(products))
-                        .apply();
+//        LiveData<List<Product>> productUsedLiveData =
+//                viewModelCatalogProductUsedList.getProductsLiveData();
+//
+//        productUsedLiveData.observe(this, products -> {
+//
+//            if (products != null) {
+//                mCatalogProductBinding.activityCatalogProductPb.setVisibility(View.GONE);
+//            }
+//        });
 
-                /* Update the widget with the new list od products */
-                WidgetService.startActionUpdateWidget(this);
-            }
-        });
+       mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+           @Override
+           public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+           }
+
+           @Override
+           public void onPageSelected(int position) {
+               if (position == 1) {
+                   FragmentCatalogUsedProducts usedProducts = (FragmentCatalogUsedProducts)
+                           mAdapterPageCatalogProduct.getItem(position);
+                   usedProducts.setViewModel(mUserId);
+
+                   Log.e(LOG_TAG, "onSignedInInitialise() - ViewPagerListener - User ID has been set to: " + mUserId);
+
+               }
+           }
+
+           @Override
+           public void onPageScrollStateChanged(int state) {
+
+           }
+       });
+
     }
 
     /* Screen width column calculator */
@@ -237,23 +324,23 @@ public class ActivityCatalogProduct
      * A product has been clicked in the RecyclerView. Add the Firebase product to an intent
      * and go to ActivityDetailProduct.
      *
-     * @param fbProduct - The selected product.
+//     * @param fbProduct - The selected product.
      */
-    @Override
-    public void onClick(Product fbProduct, boolean isCreator, View view) {
+//    @Override
+//    public void onClick(Product fbProduct, boolean isCreator, View view) {
 
-        Intent intent = new Intent(
-                ActivityCatalogProduct.this,
-                ActivityDetailProduct.class);
-
-        intent.putExtra(Constants.PRODUCT_FB_REFERENCE_KEY, fbProduct);
-        intent.putExtra(Constants.PRODUCT_IS_CREATOR_KEY, isCreator);
-
-        startActivity(intent);
-
-        // Sliding animation
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-    }
+//        Intent intent = new Intent(
+//                ActivityCatalogProduct.this,
+//                ActivityDetailProduct.class);
+//
+//        intent.putExtra(Constants.PRODUCT_FB_REFERENCE_KEY, fbProduct);
+//        intent.putExtra(Constants.PRODUCT_IS_CREATOR_KEY, isCreator);
+//
+//        startActivity(intent);
+//
+//        // Sliding animation
+//        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+//    }
 
     @Override
     protected void onResume() {
@@ -272,13 +359,13 @@ public class ActivityCatalogProduct
             mFBAuth.removeAuthStateListener(mFBAuthStateListener);
         }
 
-        mLayoutManagerState = mCatalogProductBinding.activityCatalogProductRv
-                .getLayoutManager()
-                .onSaveInstanceState();
-
-        // As the user is now logged out its good practice to clean up the adapter and detach
-        // the DB listener
-        mCatalogAdapter.setProducts(null);
+//        mLayoutManagerState = mCatalogProductBinding.activityCatalogProductRv
+//                .getLayoutManager()
+//                .onSaveInstanceState();
+//
+//        // As the user is now logged out its good practice to clean up the adapter and detach
+//        // the DB listener
+//        mCatalogAdapter.setProducts(null);
     }
 
     @Override
@@ -328,6 +415,6 @@ public class ActivityCatalogProduct
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putParcelable("layoutManagerState", mLayoutManagerState);
+//        outState.putParcelable("layoutManagerState", mLayoutManagerState);
     }
 }

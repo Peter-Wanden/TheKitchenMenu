@@ -97,10 +97,21 @@
                     android:visibility="gone"/>
             </RelativeLayout>
 
-            <include layout="@layout/activity_detail_product_base_fields_editable"/>
-            <include layout="@layout/activity_detail_product_base_fields_uneditable"/>
-            <include layout="@layout/activity_detail_product_user_fields_editable"/>
-            <include layout="@layout/activity_detail_product_user_fields_uneditable"/>
+            <include
+                android:id="@+id/activity_detail_product_base_fields_editable_include"
+                layout="@layout/activity_detail_product_base_fields_editable"/>
+
+            <include
+                android:id="@+id/activity_detail_product_base_fields_uneditable_include"
+                layout="@layout/activity_detail_product_base_fields_uneditable"/>
+
+            <include
+                android:id="@+id/activity_detail_product_user_fields_editable_include"
+                layout="@layout/activity_detail_product_user_fields_editable"/>
+
+            <include
+                android:id="@+id/activity_detail_product_user_fields_uneditable_include"
+                layout="@layout/activity_detail_product_user_fields_uneditable"/>
         </LinearLayout>
 
             <android.support.design.widget.FloatingActionButton
