@@ -1,7 +1,5 @@
 package com.example.peter.thekitchenmenu.ui.catalog;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -18,21 +16,21 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.databinding.FragmentCatalogProductsBinding;
 import com.example.peter.thekitchenmenu.model.Product;
-import com.example.peter.thekitchenmenu.viewmodels.ViewModelCatalogProductList;
 
-import java.util.List;
 import java.util.Objects;
 
 /**
- * Houses the recycler views that list 'all products' and 'my products' within
- * ActivityCatalogProducts
+ * Houses the recycler views that list 'Community Products' and 'My Products' within
+ * {@link ActivityCatalogProduct} depending on its inherited implementation of
+ * {@link FragmentCatalogCommunityProducts} or {@link FragmentCatalogMyProducts}.
  */
 public class FragmentCatalog
         extends
-        Fragment {
+        Fragment
+        implements
+        AdapterCatalogProduct.AdapterCatalogProductClickHandler{
 
     private static final String LOG_TAG = FragmentCatalog.class.getSimpleName();
 
@@ -48,6 +46,9 @@ public class FragmentCatalog
 
     /* Enables the current layout manager to save state in configuration change. */
     Parcelable mLayoutManagerState;
+
+    // Click interface
+    public FragmentCatalogOnClickHandler mClickHandler;
 
     @Nullable
     @Override
@@ -92,7 +93,7 @@ public class FragmentCatalog
 
         /* Create the adapter and pass in this classes context and the listener which is also
         this class, as this class implements the click handler. */
-        mCatalogAdapter = new AdapterCatalogProduct(getActivity());
+        mCatalogAdapter = new AdapterCatalogProduct(getActivity(), this);
 
         mFragmentCatalogProductsBinding.
                 fragmentCatalogProductsRv.setAdapter(mCatalogAdapter);
@@ -116,5 +117,33 @@ public class FragmentCatalog
         if (columns < 2) return 2;
 
         return columns;
+    }
+
+    /*
+    This class is only ever inherited (see Javadoc at the beginning of this class). The onClick
+    method is overridden and implemented by its inheritors, therefore there is no implementation
+    here.
+    */
+    @Override
+    public void onClick(Product clickedProduct, boolean isCreator) {
+
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        // Make sure the host activity has implemented the FragmentCatalogOnClickHandler callback
+        // interface
+        try {
+            mClickHandler = (FragmentCatalogOnClickHandler) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement FragmentCatalogOnClickHandler");
+        }
+    }
+
+    /* Click interface from fragment to host that implements the onClick() method in host*/
+    public interface FragmentCatalogOnClickHandler {
+        void onClick (Product clickedProduct, boolean isCreator);
     }
 }

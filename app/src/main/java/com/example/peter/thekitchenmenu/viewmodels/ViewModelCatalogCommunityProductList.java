@@ -20,14 +20,15 @@ import java.util.List;
  * See: https://firebase.googleblog.com/2017/12/using-android-architecture-components.html
  * See: https://android.jlelse.eu/android-architecture-components-with-firebase-907b7699f6a0
  */
-public class ViewModelCatalogProductList extends ViewModel {
+public class ViewModelCatalogCommunityProductList extends ViewModel {
 
-    private static final String LOG_TAG = ViewModelCatalogProductList.class.getSimpleName();
+    private static final String LOG_TAG =
+            ViewModelCatalogCommunityProductList.class.getSimpleName();
 
-    private String mUserId = Constants.ANONYMOUS;
+    private String mUserId;
 
-    // A new list to hold products as they are de-serialized
-    private List<Product> productList = new ArrayList<>();
+    // A new list to hold the community product list as they are de-serialized.
+    private List<Product> communityProductList = new ArrayList<>();
 
     // Get a reference to the product collection
     private static final DatabaseReference productReference =
@@ -35,44 +36,55 @@ public class ViewModelCatalogProductList extends ViewModel {
                     .getInstance()
                     .getReference(Constants.FB_COLLECTION_PRODUCTS);
 
-    private final MediatorLiveData<List<Product>> productLiveData = new MediatorLiveData<>();
+    private final MediatorLiveData<List<Product>> communityProductLiveData = new MediatorLiveData<>();
 
-    public ViewModelCatalogProductList() {
+    public ViewModelCatalogCommunityProductList(String userId) {
 
-        // Set up the MediatorLiveData to convert DataSnapshot objects into Product objects
+        // Keeps a copy of the user ID throughout the owners lifecycle.
+        mUserId = userId;
+
+        // Set up the MediatorLiveData to convert DataSnapshot objects into Product objects.
         FirebaseQueryLiveData liveData = new FirebaseQueryLiveData(productReference
                 .orderByChild(Constants.PRODUCT_BASE_DESCRIPTION_KEY));
 
         AppExecutors.getInstance().networkIO().execute(() ->
-                productLiveData.addSource(liveData, snapshot -> {
+                communityProductLiveData.addSource(liveData, snapshot -> {
                     if (snapshot != null && snapshot.exists()) {
 
                         // This is a snapshot of the entire collection at reference 'products'.
-                        // Clear out the old data
-                        productList.clear();
-                        // Loop through and add the new data
+                        // Clear out the old data.
+                        communityProductList.clear();
+
+                        // Loop through and add the new data.
                         for (DataSnapshot shot : snapshot.getChildren()) {
+
                             // Get the product values
                             Product product = shot.getValue(Product.class);
+
                             if (product != null) {
                                 product.setFbProductReferenceKey(shot.getKey());
                             }
+
                             // Add the product to the list
-                            productList.add(product);
+                            communityProductList.add(product);
                         }
+
                         // Post the new data to LiveData
-                        productLiveData.postValue(productList);
+                        communityProductLiveData.postValue(communityProductList);
+
                     } else {
-                        productLiveData.setValue(null);
+
+                        communityProductLiveData.setValue(null);
                     }
                 }));
     }
 
     // Fetches the generated list of products
     public LiveData<List<Product>> getProductsLiveData() {
-        return productLiveData;
+        return communityProductLiveData;
     }
 
+    // Getters and setters
     public String getUserId() {
         return mUserId;
     }

@@ -1,10 +1,8 @@
 package com.example.peter.thekitchenmenu.viewmodels;
 
-import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.ViewModel;
-import android.util.Log;
 
 import com.example.peter.thekitchenmenu.AppExecutors;
 import com.example.peter.thekitchenmenu.app.Constants;
@@ -22,18 +20,19 @@ import java.util.List;
  * See: https://firebase.googleblog.com/2017/12/using-android-architecture-components.html
  * See: https://android.jlelse.eu/android-architecture-components-with-firebase-907b7699f6a0
  */
-public class ViewModelCatalogProductUsedList extends ViewModel {
+public class ViewModelCatalogMyProducts extends ViewModel {
 
-    private static final String LOG_TAG = ViewModelCatalogProductUsedList.class.getSimpleName();
+    private static final String LOG_TAG =
+            ViewModelCatalogMyProducts.class.getSimpleName();
 
     private String mUserId;
 
     // A new list to hold the users used products as they are de-serialized
-    private List<Product> productUsedList = new ArrayList<>();
+    private List<Product> myProductList = new ArrayList<>();
 
-    private final MediatorLiveData<List<Product>> productUserLiveData = new MediatorLiveData<>();
+    private final MediatorLiveData<List<Product>> myProductLiveData = new MediatorLiveData<>();
 
-    public ViewModelCatalogProductUsedList(String userId) {
+    public ViewModelCatalogMyProducts(String userId) {
 
         // Set the user ID before anything else as its needed for the database reference
         mUserId = userId;
@@ -51,14 +50,14 @@ public class ViewModelCatalogProductUsedList extends ViewModel {
                 .orderByChild(Constants.PRODUCT_BASE_DESCRIPTION_KEY));
 
         AppExecutors.getInstance().networkIO().execute(() ->
-                productUserLiveData.addSource(liveData, snapshot -> {
+                myProductLiveData.addSource(liveData, snapshot -> {
 
                     if (snapshot != null && snapshot.exists()) {
 
                         // This is a snapshot of the entire collection at reference
                         // /collection/users/[user ID]/collection_products/.
                         // Clear out the old data
-                        productUsedList.clear();
+                        myProductList.clear();
 
                         // Loop through and add the new data
                         for (DataSnapshot shot : snapshot.getChildren()) {
@@ -70,20 +69,28 @@ public class ViewModelCatalogProductUsedList extends ViewModel {
                                 product.setFbProductReferenceKey(shot.getKey());
                             }
                             // Add the product to the list
-                            productUsedList.add(product);
+                            myProductList.add(product);
                         }
                         // Post the new data to LiveData
-                        productUserLiveData.postValue(productUsedList);
+                        myProductLiveData.postValue(myProductList);
 
                     } else {
 
-                        productUserLiveData.setValue(null);
+                        myProductLiveData.setValue(null);
                     }
                 }));
     }
 
     // Fetches the generated list of products
     public LiveData<List<Product>> getProductsLiveData() {
-        return productUserLiveData;
+        return myProductLiveData;
+    }
+
+    // Getters and setters
+    public String getUserId() {
+        return mUserId;
+    }
+    public void setUserId(String userId) {
+        mUserId = userId;
     }
 }

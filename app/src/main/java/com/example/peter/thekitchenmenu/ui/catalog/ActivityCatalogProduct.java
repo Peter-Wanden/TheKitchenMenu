@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.databinding.ActivityCatalogProductBinding;
+import com.example.peter.thekitchenmenu.model.Product;
 import com.example.peter.thekitchenmenu.ui.detail.ActivityDetailProduct;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.BuildConfig;
@@ -26,11 +27,16 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 import java.util.Arrays;
-import java.util.Objects;
 
+/**
+ * This activity is the main entry point for product related actions. It is also the host activity
+ * for {@link FragmentCatalogCommunityProducts} and {@link FragmentCatalogMyProducts}.
+ */
 public class ActivityCatalogProduct
         extends
-        AppCompatActivity {
+        AppCompatActivity
+        implements
+        FragmentCatalog.FragmentCatalogOnClickHandler{
 
     public static final String LOG_TAG = ActivityCatalogProduct.class.getSimpleName();
 
@@ -67,6 +73,7 @@ public class ActivityCatalogProduct
         mUserId = Constants.ANONYMOUS;
 
         // TODO - Save the fragments state
+
 
         // Post configuration change, restores the state of the previous layout manager to the new
         // layout manager which could be either a grid or linear layout manager
@@ -171,7 +178,8 @@ public class ActivityCatalogProduct
         /* Setup the ToolBar */
         setSupportActionBar(mCatalogProductBinding.activityCatalogProductToolbar);
 
-        /* View pager for the recycler view fragments */
+        /* View pager for the {@link FragmentCatalogCommunityProducts} and
+        {@link FragmentCatalogMyProducts} fragments */
         mAdapterPageCatalogProduct =
                 new AdapterPageCatalogProduct(
                         getSupportFragmentManager());
@@ -179,7 +187,8 @@ public class ActivityCatalogProduct
         mViewPager = mCatalogProductBinding.activityCatalogProductVp;
         mViewPager.setAdapter(mAdapterPageCatalogProduct);
 
-        /* Sets up the ViewPager for the fragments that display the product lists */
+        /* Sets up the ViewPager for the {@link FragmentCatalogCommunityProducts} and
+        {@link FragmentCatalogMyProducts} fragments. */
         if (mCatalogProductBinding.activityCatalogProductVp != null) {
             setupViewPager(mCatalogProductBinding.activityCatalogProductVp);
         }
@@ -195,13 +204,15 @@ public class ActivityCatalogProduct
 
         mAdapterPageCatalogProduct = new AdapterPageCatalogProduct(getSupportFragmentManager());
 
-        // Page 0 - for a list of all products.
+        // Page 0 - for a list of all (community) products.
         mAdapterPageCatalogProduct.
-                addFragment(new FragmentCatalogProducts(), "All Products");
+                addFragment(new FragmentCatalogCommunityProducts(),
+                        getString(R.string.activity_catalog_products_tab_1_title));
 
         // Page 1 - for a list of the users used products.
         mAdapterPageCatalogProduct.
-                addFragment(new FragmentCatalogUsedProducts(), "My Products");
+                addFragment(new FragmentCatalogMyProducts(),
+                        getString(R.string.activity_catalog_products_tab_2_title));
 
         viewPager.setAdapter(mAdapterPageCatalogProduct);
     }
@@ -222,19 +233,19 @@ public class ActivityCatalogProduct
         // Update the user id
         mUserId = userUid;
 
+        // Now we have the user ID and FragmentCatalogCommunityProducts is attached we can set the
+        // user ID.
+        FragmentCatalogCommunityProducts communityProducts = (FragmentCatalogCommunityProducts)
+                mAdapterPageCatalogProduct.getItem(Constants.TAB_COMMUNITY_PRODUCTS);
+        if (communityProducts.isAdded()) {
+            communityProducts.setViewModel(mUserId);
+        }
 
         /*
            We can only get and set the data once the user has signed in, as we need the user ID
         */
 
-        // ViewModel and LiveData for all products - Supplies data to Fragment 0, tab 0
-//        ViewModelCatalogProductList viewModelCatalogProducts =
-//                ViewModelProviders.of(this).get(ViewModelCatalogProductList.class);
-//
-//        LiveData<List<Product>> productLiveData =
-//                viewModelCatalogProducts.getProductsLiveData();
-//
-//        // Create a shared preferences object. This will hold the base data for the widget
+        // Create a shared preferences object. This will hold the base data for the widget
 //        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
 //
 //        productLiveData.observe(this, products -> {
@@ -258,89 +269,35 @@ public class ActivityCatalogProduct
 //            }
 //        });
 
-        // ViewModel and LiveData for all users used products - Supplies data to Fragment 1, tab 1
-//        ViewModelCatalogProductUsedList viewModelCatalogProductUsedList =
-//                ViewModelProviders.of(this, new ViewModelFactoryProducts(mUserId))
-//                        .get(ViewModelCatalogProductUsedList.class);
+        /*
+        FragmentCatalogMyProducts requires the user ID to function. As such this listener is
+        implemented after onSignedInInitialise as this is the first instance where the user ID
+        is available and this is the earliest we can get an attached instance to pass the variable.
+        */
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position,
+                                       float positionOffset,
+                                       int positionOffsetPixels) {
+            }
 
-        Log.e(LOG_TAG, "onSignedInInitialise(String userUid) - User ID is: " + mUserId);
-//        viewModelCatalogProductUsedList.setUserId(mUserId);
+            @Override
+            public void onPageSelected(int position) {
 
-//        LiveData<List<Product>> productUsedLiveData =
-//                viewModelCatalogProductUsedList.getProductsLiveData();
-//
-//        productUsedLiveData.observe(this, products -> {
-//
-//            if (products != null) {
-//                mCatalogProductBinding.activityCatalogProductPb.setVisibility(View.GONE);
-//            }
-//        });
+                if (position == Constants.TAB_MY_PRODUCTS) {
 
-       mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-           @Override
-           public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                    FragmentCatalogMyProducts myProducts = (FragmentCatalogMyProducts)
+                            mAdapterPageCatalogProduct.getItem(position);
+                    myProducts.setViewModel(mUserId);
+                }
+            }
 
-           }
+            @Override
+            public void onPageScrollStateChanged(int state) {
 
-           @Override
-           public void onPageSelected(int position) {
-               if (position == 1) {
-                   FragmentCatalogUsedProducts usedProducts = (FragmentCatalogUsedProducts)
-                           mAdapterPageCatalogProduct.getItem(position);
-                   usedProducts.setViewModel(mUserId);
-
-                   Log.e(LOG_TAG, "onSignedInInitialise() - ViewPagerListener - User ID has been set to: " + mUserId);
-
-               }
-           }
-
-           @Override
-           public void onPageScrollStateChanged(int state) {
-
-           }
-       });
-
+            }
+        });
     }
-
-    /* Screen width column calculator */
-    private int columnCalculator() {
-
-        DisplayMetrics metrics = new DisplayMetrics();
-        Objects.requireNonNull(this)
-                .getWindowManager()
-                .getDefaultDisplay()
-                .getMetrics(metrics);
-
-        // Width of smallest tablet
-        int divider = 600;
-        int width = metrics.widthPixels;
-        int columns = width / divider;
-        if (columns < 2) return 2;
-
-        return columns;
-    }
-
-    /**
-     * A product has been clicked in the RecyclerView. Add the Firebase product to an intent
-     * and go to ActivityDetailProduct.
-     *
-//     * @param fbProduct - The selected product.
-     */
-//    @Override
-//    public void onClick(Product fbProduct, boolean isCreator, View view) {
-
-//        Intent intent = new Intent(
-//                ActivityCatalogProduct.this,
-//                ActivityDetailProduct.class);
-//
-//        intent.putExtra(Constants.PRODUCT_FB_REFERENCE_KEY, fbProduct);
-//        intent.putExtra(Constants.PRODUCT_IS_CREATOR_KEY, isCreator);
-//
-//        startActivity(intent);
-//
-//        // Sliding animation
-//        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-//    }
 
     @Override
     protected void onResume() {
@@ -416,5 +373,24 @@ public class ActivityCatalogProduct
         super.onSaveInstanceState(outState);
 
 //        outState.putParcelable("layoutManagerState", mLayoutManagerState);
+    }
+
+    @Override
+    public void onClick(Product clickedProduct, boolean isCreator) {
+        /*
+          A product has been clicked in the RecyclerView. Add the Firebase product to an intent
+          and go to ActivityDetailProduct.
+         */
+        Intent intent = new Intent(
+                ActivityCatalogProduct.this,
+                ActivityDetailProduct.class);
+
+        intent.putExtra(Constants.PRODUCT_FB_REFERENCE_KEY, clickedProduct);
+        intent.putExtra(Constants.PRODUCT_IS_CREATOR_KEY, isCreator);
+
+        startActivity(intent);
+
+        // Sliding animation
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 }

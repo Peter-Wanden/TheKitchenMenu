@@ -121,6 +121,8 @@
     <string name="product_catalog_empty_view_title_text">The cupboards are empty.</string>
     <string name="product_catalog_empty_view_subtitle_text">Press + to add some products!</string>
     <string name="image_of_meal">An image of the selected recipe</string>
+    <string name="activity_catalog_products_tab_1_title">Community Products</string>
+    <string name="activity_catalog_products_tab_2_title">My Products</string>
 
     <!-- AdapterCatalogProduct -->
     <string name="adapter_catalog_product_creator_yes">Yes</string>

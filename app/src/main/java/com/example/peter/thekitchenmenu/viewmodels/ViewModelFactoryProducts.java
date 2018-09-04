@@ -1,12 +1,12 @@
 package com.example.peter.thekitchenmenu.viewmodels;
 
-import android.app.Application;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
-// This factory allows the passing of variables to a view model constructor
+/**
+ * This factory allows the passing in of variables to a ViewModel constructor
+ */
 public class ViewModelFactoryProducts
         extends
         ViewModelProvider.NewInstanceFactory {
@@ -17,12 +17,14 @@ public class ViewModelFactoryProducts
 
     public ViewModelFactoryProducts(String userId) {
         mUserId = userId;
-        Log.e(LOG_TAG, "ViewModelFactoryProducts constructor reports UsedId: " + mUserId);
     }
 
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        return (T) new ViewModelCatalogProductUsedList(mUserId);
+
+        if (modelClass == ViewModelCatalogCommunityProductList.class)
+            return (T) new ViewModelCatalogCommunityProductList(mUserId);
+            return (T) new ViewModelCatalogMyProducts(mUserId);
     }
 }

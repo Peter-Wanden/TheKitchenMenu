@@ -30,9 +30,13 @@ public class AdapterCatalogProduct
     // The user Id of the current user
     private String mUserId;
 
+    // Click interface
+    final private AdapterCatalogProductClickHandler mProductClickHandler;
+
     /* Constructor */
-    public AdapterCatalogProduct(Context context) {
+    public AdapterCatalogProduct(Context context, AdapterCatalogProductClickHandler clickHandler) {
         mContext = context;
+        mProductClickHandler = clickHandler;
     }
 
     @NonNull
@@ -120,14 +124,23 @@ public class AdapterCatalogProduct
             Product product = mProducts.get(getAdapterPosition());
 
             // Find out if this user was the creator of the product
-            boolean mIsCreator = mUserId.equals(product.getCreatedBy());
+            boolean isCreator = mUserId.equals(product.getCreatedBy());
+
+            mProductClickHandler.onClick(product, isCreator);
         }
     }
 
+    /* Interface that executes the onProductClicked method in the host Activity / Fragment. */
+    public interface AdapterCatalogProductClickHandler {
+        void onClick (Product clickedProduct, boolean isCreator);
+    }
+
+    /* Setter for the user Id. The setting of this field is essential. */
     public void setUserId (String userId){
         mUserId = userId;
     }
 }
+
 
 
 

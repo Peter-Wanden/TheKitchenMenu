@@ -53,10 +53,18 @@ public class Constants {
     public static final Uri DEFAULT_LOCAL_IMAGE_URI = Uri.parse("");
     public static final Uri DEFAULT_FB_IMAGE_STORAGE_URI = Uri.parse("");
 
-    /* Product screen titles */
+    /* ***********************
+     * ActivityDetailProduct *
+     *************************/
+
+    /* Screen titles */
     public static final int ACTIVITY_TITLE_PRODUCT_VIEW = 1;
     public static final int ACTIVITY_TITLE_PRODUCT_EDIT = 2;
     public static final int ACTIVITY_TITLE_PRODUCT_ADD = 3;
+
+    /* Tab indices */
+    public static final int TAB_COMMUNITY_PRODUCTS = 0;
+    public static final int TAB_MY_PRODUCTS = 1;
 
     /* *************
      * Permissions *
