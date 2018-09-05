@@ -1650,9 +1650,10 @@ public class ActivityDetailProduct
         reference.updateChildren(productBaseUpdates);
     }
 
-    /* Adds the current user ID to:
-       /collection_used_products/[product ref key]/[used products user key]/[user id]
-     */
+    /*
+    Adds the current user ID to:
+    /collection_used_products/[product ref key]/[used products user key]/[user id]
+    */
     private void addUserToUsedProducts() {
 
         // Create the database reference
@@ -1950,7 +1951,7 @@ public class ActivityDetailProduct
 
             mDetailProductBinding.
                     activityDetailProductUserFieldsEditableInclude.
-                    activityDetailProductEtLocationRoom.
+                    activityDetailProductEtLocationInRoom.
                     setText(mProduct.getLocationInRoom());
 
             // Set the menu items for this UI state
@@ -2443,6 +2444,7 @@ public class ActivityDetailProduct
 
     /* Rotates the image in the image view */
     private void rotateImage() {
+
         // Rotate the image by 90 degrees
         Matrix matrix = new Matrix();
         matrix.postRotate(90);

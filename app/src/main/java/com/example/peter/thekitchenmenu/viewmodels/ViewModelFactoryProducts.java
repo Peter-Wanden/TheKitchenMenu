@@ -22,9 +22,6 @@ public class ViewModelFactoryProducts
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-
-        if (modelClass == ViewModelCatalogCommunityProductList.class)
-            return (T) new ViewModelCatalogCommunityProductList(mUserId);
             return (T) new ViewModelCatalogMyProducts(mUserId);
     }
 }

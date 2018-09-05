@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.FragmentCatalogProductsBinding;
 import com.example.peter.thekitchenmenu.model.Product;
+import com.example.peter.thekitchenmenu.viewmodels.ViewModelCatalogCommunityProductList;
 
 import java.util.Objects;
 
@@ -30,7 +31,7 @@ public class FragmentCatalog
         extends
         Fragment
         implements
-        AdapterCatalogProduct.AdapterCatalogProductClickHandler{
+        AdapterCatalogProduct.AdapterCatalogProductClickHandler {
 
     private static final String LOG_TAG = FragmentCatalog.class.getSimpleName();
 
@@ -98,6 +99,12 @@ public class FragmentCatalog
         mFragmentCatalogProductsBinding.
                 fragmentCatalogProductsRv.setAdapter(mCatalogAdapter);
 
+        // Post configuration change, restores the state of the previous layout manager to the new
+        // layout manager which could be either a grid or linear layout manager
+        if (savedInstanceState != null && savedInstanceState.containsKey("layoutManagerState")) {
+            mLayoutManagerState = savedInstanceState.getParcelable("layoutManagerState");
+        }
+
         return rootView;
     }
 
@@ -120,9 +127,9 @@ public class FragmentCatalog
     }
 
     /*
-    This class is only ever inherited (see Javadoc at the beginning of this class). The onClick
-    method is overridden and implemented by its inheritors, therefore there is no implementation
-    here.
+    This class is only ever inherited (see Javadoc at the beginning of this class for more info).
+    The onClick method is overridden and implemented by its inheritors, therefore there is no
+    implementation here.
     */
     @Override
     public void onClick(Product clickedProduct, boolean isCreator) {
@@ -132,11 +139,14 @@ public class FragmentCatalog
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+
         // Make sure the host activity has implemented the FragmentCatalogOnClickHandler callback
         // interface
         try {
             mClickHandler = (FragmentCatalogOnClickHandler) context;
+
         } catch (ClassCastException e) {
+
             throw new ClassCastException(context.toString()
                     + " must implement FragmentCatalogOnClickHandler");
         }
@@ -144,6 +154,25 @@ public class FragmentCatalog
 
     /* Click interface from fragment to host that implements the onClick() method in host*/
     public interface FragmentCatalogOnClickHandler {
-        void onClick (Product clickedProduct, boolean isCreator);
+        void onClick(Product clickedProduct, boolean isCreator);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        // Get the grid / linear layout manager's state.
+        mLayoutManagerState = mFragmentCatalogProductsBinding.
+                fragmentCatalogProductsRv
+                .getLayoutManager()
+                .onSaveInstanceState();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        // Save the grid / linear layout manager's state.
+        outState.putParcelable("layoutManagerState", mLayoutManagerState);
     }
 }

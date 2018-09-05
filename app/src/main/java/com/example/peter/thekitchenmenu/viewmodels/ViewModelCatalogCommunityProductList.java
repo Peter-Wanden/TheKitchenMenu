@@ -25,8 +25,6 @@ public class ViewModelCatalogCommunityProductList extends ViewModel {
     private static final String LOG_TAG =
             ViewModelCatalogCommunityProductList.class.getSimpleName();
 
-    private String mUserId;
-
     // A new list to hold the community product list as they are de-serialized.
     private List<Product> communityProductList = new ArrayList<>();
 
@@ -36,12 +34,10 @@ public class ViewModelCatalogCommunityProductList extends ViewModel {
                     .getInstance()
                     .getReference(Constants.FB_COLLECTION_PRODUCTS);
 
-    private final MediatorLiveData<List<Product>> communityProductLiveData = new MediatorLiveData<>();
+    private final MediatorLiveData<List<Product>>
+            communityProductLiveData = new MediatorLiveData<>();
 
-    public ViewModelCatalogCommunityProductList(String userId) {
-
-        // Keeps a copy of the user ID throughout the owners lifecycle.
-        mUserId = userId;
+    public ViewModelCatalogCommunityProductList() {
 
         // Set up the MediatorLiveData to convert DataSnapshot objects into Product objects.
         FirebaseQueryLiveData liveData = new FirebaseQueryLiveData(productReference
@@ -82,13 +78,5 @@ public class ViewModelCatalogCommunityProductList extends ViewModel {
     // Fetches the generated list of products
     public LiveData<List<Product>> getProductsLiveData() {
         return communityProductLiveData;
-    }
-
-    // Getters and setters
-    public String getUserId() {
-        return mUserId;
-    }
-    public void setUserId(String userId) {
-        mUserId = userId;
     }
 }

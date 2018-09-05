@@ -3,11 +3,10 @@ package com.example.peter.thekitchenmenu.ui.catalog;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -71,15 +70,6 @@ public class ActivityCatalogProduct
 
         // If the user is not logged in
         mUserId = Constants.ANONYMOUS;
-
-        // TODO - Save the fragments state
-
-
-        // Post configuration change, restores the state of the previous layout manager to the new
-        // layout manager which could be either a grid or linear layout manager
-//        if (savedInstanceState !=null && savedInstanceState.containsKey("layoutManagerState")) {
-//            mLayoutManagerState = savedInstanceState.getParcelable("layoutManagerState");
-//        }
     }
 
     /* Initialises the Firebase components required for this activity and logs the user in */
@@ -169,17 +159,13 @@ public class ActivityCatalogProduct
 
         });
 
-        /* Create the adapter and pass in this classes context and the listener which is also
-        this class, as this class implements the click handler. */
-//        mCatalogAdapter = new AdapterCatalogProduct(this, this);
-//
-//        mCatalogProductBinding.activityCatalogProductRv.setAdapter(mCatalogAdapter);
-
         /* Setup the ToolBar */
         setSupportActionBar(mCatalogProductBinding.activityCatalogProductToolbar);
 
-        /* View pager for the {@link FragmentCatalogCommunityProducts} and
-        {@link FragmentCatalogMyProducts} fragments */
+        /*
+        View pager for the {@link FragmentCatalogCommunityProducts} and
+        {@link FragmentCatalogMyProducts} fragments
+        */
         mAdapterPageCatalogProduct =
                 new AdapterPageCatalogProduct(
                         getSupportFragmentManager());
@@ -187,8 +173,10 @@ public class ActivityCatalogProduct
         mViewPager = mCatalogProductBinding.activityCatalogProductVp;
         mViewPager.setAdapter(mAdapterPageCatalogProduct);
 
-        /* Sets up the ViewPager for the {@link FragmentCatalogCommunityProducts} and
-        {@link FragmentCatalogMyProducts} fragments. */
+        /*
+        Sets up the ViewPager for the {@link FragmentCatalogCommunityProducts} and
+        {@link FragmentCatalogMyProducts} fragments.
+        */
         if (mCatalogProductBinding.activityCatalogProductVp != null) {
             setupViewPager(mCatalogProductBinding.activityCatalogProductVp);
         }
@@ -220,15 +208,27 @@ public class ActivityCatalogProduct
     /* Clean up tasks after sign out */
     private void onSignedOutCleanUp() {
 
-        // Nullify the user unique ID
+        // Nullify the user ID
         mUserId = Constants.ANONYMOUS;
 
-        // Clear out the adapter
-//        mCatalogAdapter.setProducts(null);
+        // Set the user ID to ANONYMOUS in shared preferences
+        PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).
+                edit().
+                putString(Constants.USER_ID_KEY, Constants.ANONYMOUS).
+                apply();
     }
 
     /* User is now signed in - attach to the Firebase database */
     private void onSignedInInitialise(String userUid) {
+
+        /*
+        The user ID is used throughout the app, so save it to a shared preferences object with a
+        context reference to the whole application.
+        */
+        PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).
+                edit().
+                putString(Constants.USER_ID_KEY, userUid).
+                apply();
 
         // Update the user id
         mUserId = userUid;
@@ -238,7 +238,7 @@ public class ActivityCatalogProduct
         FragmentCatalogCommunityProducts communityProducts = (FragmentCatalogCommunityProducts)
                 mAdapterPageCatalogProduct.getItem(Constants.TAB_COMMUNITY_PRODUCTS);
         if (communityProducts.isAdded()) {
-            communityProducts.setViewModel(mUserId);
+            communityProducts.setViewModel();
         }
 
         /*
@@ -288,7 +288,7 @@ public class ActivityCatalogProduct
 
                     FragmentCatalogMyProducts myProducts = (FragmentCatalogMyProducts)
                             mAdapterPageCatalogProduct.getItem(position);
-                    myProducts.setViewModel(mUserId);
+                    myProducts.setViewModel();
                 }
             }
 
@@ -315,14 +315,6 @@ public class ActivityCatalogProduct
             // Remove the firebase authentication state listener from the authentication instance
             mFBAuth.removeAuthStateListener(mFBAuthStateListener);
         }
-
-//        mLayoutManagerState = mCatalogProductBinding.activityCatalogProductRv
-//                .getLayoutManager()
-//                .onSaveInstanceState();
-//
-//        // As the user is now logged out its good practice to clean up the adapter and detach
-//        // the DB listener
-//        mCatalogAdapter.setProducts(null);
     }
 
     @Override
@@ -366,13 +358,6 @@ public class ActivityCatalogProduct
     public void finish() {
         super.finish();
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-//        outState.putParcelable("layoutManagerState", mLayoutManagerState);
     }
 
     @Override
