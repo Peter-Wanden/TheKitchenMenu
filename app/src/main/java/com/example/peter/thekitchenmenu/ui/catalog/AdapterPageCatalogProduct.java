@@ -1,15 +1,16 @@
 package com.example.peter.thekitchenmenu.ui.catalog;
 
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Paging adaptor for the tabs and fragments displayed in {@link ActivityCatalogProduct}
+ */
 public class AdapterPageCatalogProduct extends FragmentPagerAdapter {
 
     private final List<Fragment> mFragments = new ArrayList<>();

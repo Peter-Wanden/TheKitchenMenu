@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu;
+package com.example.peter.thekitchenmenu.app;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -10,7 +10,8 @@ import java.util.concurrent.Executors;
 /**
  * Global executor pools for the whole application.
  * Credit: Udacity - Android Architecture Components UD851
- * App executors
+ * Grouping tasks like this avoids the effects of task starvation (e.g. disk reads don't wait behind
+ * webservice requests).
  */
 public class AppExecutors {
 

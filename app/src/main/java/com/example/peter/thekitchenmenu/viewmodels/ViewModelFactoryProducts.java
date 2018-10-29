@@ -22,6 +22,7 @@ public class ViewModelFactoryProducts
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-            return (T) new ViewModelCatalogMyProducts(mUserId);
+        // noinspection unchecked
+        return (T) new ViewModelCatalogMyProducts(mUserId);
     }
 }

@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,20 +17,20 @@ import android.view.ViewGroup;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.FragmentCatalogProductsBinding;
 import com.example.peter.thekitchenmenu.model.Product;
-import com.example.peter.thekitchenmenu.viewmodels.ViewModelCatalogCommunityProductList;
 
 import java.util.Objects;
 
 /**
- * Houses the recycler views that list 'Community Products' and 'My Products' within
- * {@link ActivityCatalogProduct} depending on its inherited implementation of
+ * The UI controller that displays the recycler views that list 'Community Products' and
+ * 'My Products' within {@link ActivityCatalogProduct} depending on its inherited implementation of
  * {@link FragmentCatalogCommunityProducts} or {@link FragmentCatalogMyProducts}.
  */
-public class FragmentCatalog
+public abstract class FragmentCatalog
         extends
         Fragment
         implements
-        AdapterCatalogProduct.AdapterCatalogProductClickHandler {
+        AdapterCatalogProduct.AdapterCatalogProductClickHandler,
+        AdapterFirebaseCatalogProducts.AdapterFirebaseCatalogProductsClickHandler {
 
     private static final String LOG_TAG = FragmentCatalog.class.getSimpleName();
 
@@ -108,7 +107,9 @@ public class FragmentCatalog
         return rootView;
     }
 
-    /* Screen width column calculator */
+    /**
+     *  Screen width column calculator
+     */
     private int columnCalculator() {
 
         DisplayMetrics metrics = new DisplayMetrics();
@@ -127,14 +128,12 @@ public class FragmentCatalog
     }
 
     /*
-    This class is only ever inherited (see Javadoc at the beginning of this class for more info).
-    The onClick method is overridden and implemented by its inheritors, therefore there is no
-    implementation here.
+    This abstract class is only ever inherited (see Javadoc at the beginning of this class for more
+    info). The onClick method is overridden and implemented by its inheritors, therefore this method
+    is declared abstract.
     */
     @Override
-    public void onClick(Product clickedProduct, boolean isCreator) {
-
-    }
+    public abstract void onClick(Product clickedProduct, boolean isCreator);
 
     @Override
     public void onAttach(Context context) {
@@ -175,4 +174,10 @@ public class FragmentCatalog
         // Save the grid / linear layout manager's state.
         outState.putParcelable("layoutManagerState", mLayoutManagerState);
     }
+
+    /*
+    Concrete classes that inherit must implement a ViewModel to provide data to this super
+    class
+    */
+    public abstract void setViewModel();
 }

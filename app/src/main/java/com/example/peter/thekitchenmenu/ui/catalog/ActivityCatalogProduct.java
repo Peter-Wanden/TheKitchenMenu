@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -17,6 +18,7 @@ import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.databinding.ActivityCatalogProductBinding;
 import com.example.peter.thekitchenmenu.model.Product;
+import com.example.peter.thekitchenmenu.repository.Repository;
 import com.example.peter.thekitchenmenu.ui.detail.ActivityDetailProduct;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.BuildConfig;
@@ -28,7 +30,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import java.util.Arrays;
 
 /**
- * This activity is the main entry point for product related actions. It is also the host activity
+ * The main entry point for product related actions and the host activity
  * for {@link FragmentCatalogCommunityProducts} and {@link FragmentCatalogMyProducts}.
  */
 public class ActivityCatalogProduct
@@ -48,9 +50,6 @@ public class ActivityCatalogProduct
     /* Authentication state listener */
     private FirebaseAuth.AuthStateListener mFBAuthStateListener;
 
-    /* Authentication users unique ID generated for this user / app combination */
-    private String mUserId;
-
     /* Binding class for the views */
     ActivityCatalogProductBinding mCatalogProductBinding;
 
@@ -60,32 +59,30 @@ public class ActivityCatalogProduct
     /* ViewPager to swipe through the fragments */
     ViewPager mViewPager;
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         initialiseFirebase();
         initialiseViews();
-
-        // If the user is not logged in
-        mUserId = Constants.ANONYMOUS;
     }
 
-    /* Initialises the Firebase components required for this activity and logs the user in */
+    /**
+     *  Initialises the Firebase components required for this activity and logs the user in
+     */
     private void initialiseFirebase() {
 
-        // Get an instance of Firebase authentication */
+        // Gets an instance of Firebase authentication */
         mFBAuth = FirebaseAuth.getInstance();
 
-        // Get a remote configuration instance
+        // Gets a remote configuration instance
         FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
 
         // Firebase authentication listener (attached in onResume and detached in onPause).
-        // From: Udacity AND Firebase
+        // From: Udacity AND Firebase.
         mFBAuthStateListener = firebaseAuth -> {
-            // Find out if the user is logged in or not
+            // Find out if the user is logged in
             FirebaseUser user = firebaseAuth.getCurrentUser();
+
             if (user != null) {
                 // User is signed in
                 onSignedInInitialise(user.getUid());
@@ -105,7 +102,7 @@ public class ActivityCatalogProduct
             }
         };
 
-        // Create Remote Config Setting to enable developer mode.
+        // Creates a Remote Config Setting to enable developer mode.
         // Fetching configs from the server is normally limited to 5 requests per hour.
         // Enabling developer mode allows many more requests to be made per hour, so developers
         // can test different config values during development.
@@ -123,31 +120,6 @@ public class ActivityCatalogProduct
 
         mCatalogProductBinding.activityCatalogProductPb.setVisibility(View.GONE);
 
-        /* Creates RecyclerViews with dynamic widths depending on the display type. */
-        // Portrait for phone.
-        // Landscape for phone.
-        // Portrait for tablet.
-        // Landscape for tablet.
-//        if (getResources().getBoolean(R.bool.is_tablet) ||
-//                getResources().getBoolean(R.bool.is_landscape)) {
-//
-//            mGridManager = new GridLayoutManager(
-//                    Objects.requireNonNull(this)
-//                            .getApplicationContext(), columnCalculator());
-//
-//            mCatalogProductBinding.activityCatalogProductRv.setLayoutManager(mGridManager);
-//
-//        } else {
-//            mLinearManager = new
-//                    LinearLayoutManager(Objects.requireNonNull(this)
-//                    .getApplicationContext(),
-//                    LinearLayoutManager.VERTICAL, false);
-//
-//            mCatalogProductBinding.activityCatalogProductRv.setLayoutManager(mLinearManager);
-//        }
-
-//        mCatalogProductBinding.activityCatalogProductRv.setHasFixedSize(true);
-
         mCatalogProductBinding.activityCatalogProductFab.setOnClickListener(v -> {
 
             Intent addProductIntent = new Intent(ActivityCatalogProduct.this,
@@ -159,7 +131,7 @@ public class ActivityCatalogProduct
 
         });
 
-        /* Setup the ToolBar */
+        /* Sets up the ToolBar */
         setSupportActionBar(mCatalogProductBinding.activityCatalogProductToolbar);
 
         /*
@@ -184,7 +156,6 @@ public class ActivityCatalogProduct
         /* Sets up the Tab's and their titles */
         mCatalogProductBinding.activityCatalogProductTl.
                 setupWithViewPager(mCatalogProductBinding.activityCatalogProductVp);
-
     }
 
     /* Setup the ViewPager */
@@ -208,9 +179,6 @@ public class ActivityCatalogProduct
     /* Clean up tasks after sign out */
     private void onSignedOutCleanUp() {
 
-        // Nullify the user ID
-        mUserId = Constants.ANONYMOUS;
-
         // Set the user ID to ANONYMOUS in shared preferences
         PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).
                 edit().
@@ -218,56 +186,41 @@ public class ActivityCatalogProduct
                 apply();
     }
 
-    /* User is now signed in - attach to the Firebase database */
+    /**
+     *  Invoked when user is signed in.
+     * @param userUid - The unique User ID issued by Google
+     */
     private void onSignedInInitialise(String userUid) {
+        Log.e(LOG_TAG, "SIGNED IN CALLED!");
+        // Sync remote data.
+
+        // TODO - remove, temp for testing
+        Log.e(LOG_TAG, "OnSignedIn: Product is live called");
+        Repository repository = new Repository(getApplication());
+        repository.productMyIsLive(true, userUid);
 
         /*
         The user ID is used throughout the app, so save it to a shared preferences object with a
-        context reference to the whole application.
+        reference to the application context.
         */
         PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).
                 edit().
                 putString(Constants.USER_ID_KEY, userUid).
                 apply();
 
-        // Update the user id
-        mUserId = userUid;
-
-        // Now we have the user ID and FragmentCatalogCommunityProducts is attached we can set the
-        // user ID.
+        /*
+        Now we have the user ID and FragmentCatalogCommunityProducts is attached we can set the
+        user ID.
+        */
         FragmentCatalogCommunityProducts communityProducts = (FragmentCatalogCommunityProducts)
-                mAdapterPageCatalogProduct.getItem(Constants.TAB_COMMUNITY_PRODUCTS);
+                mAdapterPageCatalogProduct.getItem(Constants.TAB_COMM_PRODUCTS);
         if (communityProducts.isAdded()) {
-            communityProducts.setViewModel();
+            communityProducts.remoteLoginStatus(userUid);
         }
 
         /*
            We can only get and set the data once the user has signed in, as we need the user ID
         */
-
-        // Create a shared preferences object. This will hold the base data for the widget
-//        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-//
-//        productLiveData.observe(this, products -> {
-//
-//            if (products != null) {
-////                mCatalogAdapter.setProducts(products);
-//                mCatalogProductBinding.activityCatalogProductPb.setVisibility(View.GONE);
-////                mCatalogProductBinding.
-////                        activityCatalogProductRv.
-////                        getLayoutManager().
-////                        onRestoreInstanceState(mLayoutManagerState);
-//
-//                // Set the product list to shared preferences for the widgets adapter
-//                preferences
-//                        .edit()
-//                        .putString(Constants.PRODUCT_KEY, GsonUtils.productsToJson(products))
-//                        .apply();
-//
-//                /* Update the widget with the new list od products */
-//                WidgetService.startActionUpdateWidget(this);
-//            }
-//        });
 
         /*
         FragmentCatalogMyProducts requires the user ID to function. As such this listener is
@@ -288,6 +241,10 @@ public class ActivityCatalogProduct
 
                     FragmentCatalogMyProducts myProducts = (FragmentCatalogMyProducts)
                             mAdapterPageCatalogProduct.getItem(position);
+                    /*
+                    Now the adapter and ViewModel has a reference to the UserId we can call the
+                    ViewModel to populate the adaptor.
+                    */
                     myProducts.setViewModel();
                 }
             }

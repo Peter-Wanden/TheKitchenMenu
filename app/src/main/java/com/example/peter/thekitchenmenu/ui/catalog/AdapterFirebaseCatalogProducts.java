@@ -8,62 +8,57 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.model.Product;
-import com.example.peter.thekitchenmenu.model.ProductCommunity;
 import com.example.peter.thekitchenmenu.utils.Converters;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.squareup.picasso.Picasso;
 
-import java.util.List;
-
-public class AdapterCatalogProduct
+/**
+ * This Adapter talks directly to Firebase
+ */
+public class AdapterFirebaseCatalogProducts
         extends
-        RecyclerView.Adapter<AdapterCatalogProduct.AdapterCatalogProductViewHolder> {
+        FirebaseRecyclerAdapter<
+                Product,
+                AdapterFirebaseCatalogProducts.AdapterFirebaseCatalogProductViewHolder> {
 
-    private static final String LOG_TAG = AdapterCatalogProduct.class.getSimpleName();
+     static final String LOG_TAG = AdapterFirebaseCatalogProducts.class.getSimpleName();
 
     // The context we use for utility methods, app resources and layout inflaters
     private final Context mContext;
-
-    // List storing the database query result
-    private List<Product> mProducts;
 
     // The user Id of the current user
     private String mUserId;
 
     // Click interface
-    final private AdapterCatalogProductClickHandler mProductClickHandler;
+    final private AdapterFirebaseCatalogProductsClickHandler mProductClickHandler;
 
-    /* Constructor */
-    public AdapterCatalogProduct(
+
+    /**
+     * Initialize a {@link RecyclerView.Adapter} that listens to a Firebase query. See
+     * {@link FirebaseRecyclerOptions} for configuration options.
+     *
+     * @param options
+     */
+    public AdapterFirebaseCatalogProducts(
             Context context,
-            AdapterCatalogProductClickHandler clickHandler) {
+            AdapterFirebaseCatalogProductsClickHandler productClickHandler,
+            @NonNull FirebaseRecyclerOptions options) {
 
+        super(options);
         mContext = context;
-        mProductClickHandler = clickHandler;
-    }
-
-    /* View holder */
-    @NonNull
-    @Override
-    public AdapterCatalogProductViewHolder onCreateViewHolder(
-            @NonNull ViewGroup viewGroup,
-            int viewType) {
-
-        View view = LayoutInflater
-                .from(mContext)
-                .inflate(R.layout.list_item_product, viewGroup, false);
-
-        return new AdapterCatalogProductViewHolder(view);
+        mProductClickHandler = productClickHandler;
     }
 
     @Override
-    public void onBindViewHolder(
-            @NonNull AdapterCatalogProductViewHolder holder,
-            int position) {
+    protected void onBindViewHolder(
+            @NonNull AdapterFirebaseCatalogProductViewHolder holder,
+            int position,
+            @NonNull Product product) {
 
-        /* Get the product at the passed in position */
-        Product product = mProducts.get(position);
 
         /* Set the description */
         holder.descriptionTV.setText(product.getDescription());
@@ -81,29 +76,24 @@ public class AdapterCatalogProduct
         /* Set the unit of measure */
         holder.UoMTV.setText(Converters.getUnitOfMeasureString
                 (mContext, product.getUnitOfMeasure()));
+
     }
 
-    /* Returns the number of items in the adapter */
+    @NonNull
     @Override
-    public int getItemCount() {
-        if (mProducts == null) return 0;
-        return mProducts.size();
-    }
+    public AdapterFirebaseCatalogProductViewHolder onCreateViewHolder(
+            @NonNull ViewGroup parent,
+            int viewType) {
 
-    /* Getter for the current list of products */
-    public List<Product> getProducts() {
-        return mProducts;
-    }
+        View view = LayoutInflater
+                .from(mContext)
+                .inflate(R.layout.list_item_product, parent, false);
 
-    /* When the data changes, this method updates the list of products and notifies the adapter to
-    use the new values in it */
-    public void setProducts(List<Product> products) {
-        mProducts = products;
-        notifyDataSetChanged();
+        return new AdapterFirebaseCatalogProductViewHolder(view);
     }
 
     /* Inner class for creating ViewHolders */
-    class AdapterCatalogProductViewHolder
+    class AdapterFirebaseCatalogProductViewHolder
             extends
             RecyclerView.ViewHolder
             implements
@@ -115,7 +105,7 @@ public class AdapterCatalogProduct
         final ImageView productIV;
 
         /* Constructor for the AdapterCatalogProductViewHolder.class */
-        AdapterCatalogProductViewHolder(View itemView) {
+        AdapterFirebaseCatalogProductViewHolder(View itemView) {
             super(itemView);
 
             descriptionTV = itemView.findViewById(R.id.list_item_product_tv_description);
@@ -126,20 +116,14 @@ public class AdapterCatalogProduct
             itemView.setOnClickListener(this);
         }
 
+        @Override
         public void onClick(View v) {
 
-            // Get the product from the adapter at the clicked position
-            Product product = mProducts.get(getAdapterPosition());
-
-            // Find out if this user was the creator of the product
-            boolean isCreator = mUserId.equals(product.getCreatedBy());
-
-            mProductClickHandler.onClick(product, isCreator);
         }
     }
 
     /* Interface that executes the onProductClicked method in the host Activity / Fragment. */
-    public interface AdapterCatalogProductClickHandler {
+    public interface AdapterFirebaseCatalogProductsClickHandler {
         void onClick (Product clickedProduct, boolean isCreator);
     }
 
@@ -148,7 +132,3 @@ public class AdapterCatalogProduct
         mUserId = userId;
     }
 }
-
-
-
-

@@ -17,8 +17,11 @@ import com.google.firebase.database.ValueEventListener;
 public class FirebaseQueryLiveData extends LiveData<DataSnapshot> {
 
     private static final String LOG_TAG = "FirebaseQueryLiveData";
+
     private boolean listenerRemovePending = false;
     private final Handler handler = new Handler();
+    private final Query query;
+    private final TKMChildEventListener listener = new TKMChildEventListener();
 
     // Adds a two second delay to prevent unnecessary re-querying during configuration changes
     private final Runnable removeListener = new Runnable() {
@@ -28,9 +31,6 @@ public class FirebaseQueryLiveData extends LiveData<DataSnapshot> {
             listenerRemovePending = false;
         }
     };
-
-    private final Query query;
-    private final TKMChildEventListener listener = new TKMChildEventListener();
 
     public FirebaseQueryLiveData(Query query) {
         this.query = query;

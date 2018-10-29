@@ -32,16 +32,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
-import com.example.peter.thekitchenmenu.databinding.ActivityDetailProductBaseFieldsEditableBinding;
-import com.example.peter.thekitchenmenu.databinding.ActivityDetailProductBaseFieldsUneditableBinding;
 import com.example.peter.thekitchenmenu.databinding.ActivityDetailProductBinding;
-import com.example.peter.thekitchenmenu.databinding.ActivityDetailProductUserFieldsEditableBinding;
-import com.example.peter.thekitchenmenu.databinding.ActivityDetailProductUserFieldsUneditableBinding;
 import com.example.peter.thekitchenmenu.model.Product;
 import com.example.peter.thekitchenmenu.utils.BitmapUtils;
 import com.example.peter.thekitchenmenu.utils.Converters;
@@ -55,6 +50,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -74,6 +70,10 @@ public class ActivityDetailProduct
         extends AppCompatActivity {
 
     public static final String LOG_TAG = ActivityDetailProduct.class.getSimpleName();
+
+    // TODO - Input validation:
+    // TODO - Use 'do while'. See Intro to Java L13:L6.2-2
+    // TODO - Make sure numbers cannot go negative OR be a decimal
 
     // Data binding classes for the layouts we use in this class
     ActivityDetailProductBinding mDetailProductBinding;
@@ -181,6 +181,9 @@ public class ActivityDetailProduct
         initialiseFirebaseAuthentication();
         checkSavedInstanceState(savedInstanceState);
         initialiseViews();
+
+        Object o = ServerValue.TIMESTAMP;
+
     }
 
     /* Initialise anything here that can only be done when signed in */
@@ -285,9 +288,9 @@ public class ActivityDetailProduct
             mPutProductOnUsedList =
                     savedInstanceState.getBoolean(Constants.PRODUCT_PUT_ON_USED_LIST);
             mBaseFieldsAreEditable =
-                    savedInstanceState.getBoolean(Constants.BASE_FIELDS_EDITABLE_STATUS_KEY);
+                    savedInstanceState.getBoolean(Constants.COMM_FIELDS_EDITABLE_STATUS_KEY);
             mUserFieldsAreEditable =
-                    savedInstanceState.getBoolean(Constants.USER_CUSTOM_FIELDS_EDITABLE_STATUS_KEY);
+                    savedInstanceState.getBoolean(Constants.MY_CUSTOM_FIELDS_EDITABLE_STATUS_KEY);
 
             // Update the Strings
             mUserUid = savedInstanceState
@@ -375,7 +378,11 @@ public class ActivityDetailProduct
                 Constants.DEFAULT_PRODUCT_PRICE_AVERAGE,
                 Constants.DEFAULT_LOCAL_IMAGE_URI,
                 Constants.DEFAULT_FB_IMAGE_STORAGE_URI,
-                Constants.PRODUCT_BASE_CREATED_BY_KEY);
+                Constants.PRODUCT_COMM_CREATED_BY_KEY,
+                Constants.DEFAULT_COMM_CREATE_DATE,
+                Constants.DEFAULT_COMM_LAST_UPDATE,
+                Constants.DEFAULT_MY_CREATE_DATE,
+                Constants.DEFAULT_MY_LAST_UPDATE);
 
         // Set default value for created by
         mCreatedBy = "";
@@ -952,7 +959,7 @@ public class ActivityDetailProduct
               three locations in the database:
               1. /collection/products - Stores product data that is common to all users.
               2. /collection/users/[user ID]/collection_products/[product ID] - Users product lists.
-              3. /collection/used_products/[product ref key] - Count of how many are using a
+              3. /collection_used_products/[product ref key] - Count of how many are using a
                  product.
          */
         if (mIsCreator &&
@@ -983,14 +990,14 @@ public class ActivityDetailProduct
                 Uri productReferenceUri = Uri.parse(collectionProductsRef.toString());
                 mFbProductReferenceKey = productReferenceUri.getLastPathSegment();
 
-                // Create a reference to /collection/users/[user ID]/collection_products/
+                // Create a reference to /collection_users/[user ID]/collection_products/
                 // [product ID] location 2 (as mentioned above)
                 final DatabaseReference userProductRef = mFbCollectionUsers
                         .child(mUserUid)
                         .child(Constants.FB_COLLECTION_PRODUCTS)
                         .child(mFbProductReferenceKey);
 
-                // Create a reference to the /collection/used_products/[product ref key]
+                // Create a reference to the /collection_used_products/[product ref key]
                 // location 3 (as mentioned above)
                 final DatabaseReference usedProductRef = mFbCollectionUsedProducts
                         .child(mFbProductReferenceKey).push();
@@ -1396,7 +1403,7 @@ public class ActivityDetailProduct
 
                     // Add in the reference provided by addUserToUsedProducts
                     productUserUpdates.put(
-                            Constants.PRODUCT_USER_FB_USED_USER_KEY, mFbUsedProductsUserKey);
+                            Constants.PRODUCT_MY_FB_USED_PRODUCT_KEY, mFbUsedProductsUserKey);
 
                     // Location 1
                     saveUserProductUpdates(productUserUpdates);
@@ -1480,7 +1487,7 @@ public class ActivityDetailProduct
 
                     // Add in the reference provided by addUserToUsedProducts
                     productUserUpdates.put(
-                            Constants.PRODUCT_USER_FB_USED_USER_KEY, mFbUsedProductsUserKey);
+                            Constants.PRODUCT_MY_FB_USED_PRODUCT_KEY, mFbUsedProductsUserKey);
 
                     // Location 2
                     saveUserProductUpdates(productUserUpdates);
@@ -1560,61 +1567,61 @@ public class ActivityDetailProduct
 
         /* Add the base data to the HashMap. */
         productUserUpdates.put(
-                Constants.PRODUCT_BASE_DESCRIPTION_KEY,
+                Constants.PRODUCT_COMM_DESCRIPTION_KEY,
                 mProduct.getDescription());
         productUserUpdates.put(
-                Constants.PRODUCT_BASE_MADE_BY_KEY,
+                Constants.PRODUCT_COMM_MADE_BY_KEY,
                 mProduct.getMadeBy());
         productUserUpdates.put(
-                Constants.PRODUCT_BASE_CATEGORY_KEY,
+                Constants.PRODUCT_COMM_CATEGORY_KEY,
                 mProduct.getCategory());
         productUserUpdates.put(
-                Constants.PRODUCT_BASE_SHELF_LIFE_KEY,
+                Constants.PRODUCT_COMM_SHELF_LIFE_KEY,
                 mProduct.getShelfLife());
         productUserUpdates.put(
-                Constants.PRODUCT_BASE_PACK_SIZE_KEY,
+                Constants.PRODUCT_COMM_PACK_SIZE_KEY,
                 mProduct.getPackSize());
         productUserUpdates.put(
-                Constants.PRODUCT_BASE_UNIT_OF_MEASURE_KEY,
+                Constants.PRODUCT_COMM_UNIT_OF_MEASURE_KEY,
                 mProduct.getUnitOfMeasure());
         productUserUpdates.put(
-                Constants.PRODUCT_BASE_PRICE_AVE_KEY, mProduct.getPackPrice());
+                Constants.PRODUCT_COMM_PRICE_AVE_KEY, mProduct.getPackPrice());
         productUserUpdates.put(
-                Constants.PRODUCT_BASE_CREATED_BY_KEY,
+                Constants.PRODUCT_COMM_CREATED_BY_KEY,
                 mProduct.getCreatedBy());
 
         // Add in the user specific data to the HashMap
         productUserUpdates.put(
-                Constants.PRODUCT_USER_LOCAL_IMAGE_URI_KEY,
+                Constants.PRODUCT_MY_LOCAL_IMAGE_URI_KEY,
                 mProduct.getLocalImageUri());
         productUserUpdates.put(
-                Constants.PRODUCT_USER_FB_STORAGE_IMAGE_URI_KEY,
+                Constants.PRODUCT_MY_FB_STORAGE_IMAGE_URI_KEY,
                 mProduct.getFbStorageImageUri());
         productUserUpdates.put(
-                Constants.PRODUCT_USER_FB_REFERENCE_KEY,
+                Constants.PRODUCT_MY_FB_REFERENCE_KEY,
                 mProduct.getFbProductReferenceKey());
         productUserUpdates.put(
-                Constants.PRODUCT_USER_FB_USED_USER_KEY,
+                Constants.PRODUCT_MY_FB_USED_PRODUCT_KEY,
                 mProduct.getFbUsedProductsUserKey());
 
         // Compare and add any changes from the user specific fields to the HashMap
         if (!mRetailer.equals(mProduct.getRetailer())) {
-            productUserUpdates.put(Constants.PRODUCT_USER_RETAILER_KEY, mRetailer);
+            productUserUpdates.put(Constants.PRODUCT_MY_RETAILER_KEY, mRetailer);
             mProduct.setRetailer(mRetailer);
             userUpdateCounter++;
         }
         if (!mLocationRoom.equals(mProduct.getLocationRoom())) {
-            productUserUpdates.put(Constants.PRODUCT_USER_LOCATION_ROOM_KEY, mLocationRoom);
+            productUserUpdates.put(Constants.PRODUCT_MY_LOCATION_ROOM_KEY, mLocationRoom);
             mProduct.setLocationRoom(mLocationRoom);
             userUpdateCounter++;
         }
         if (!mLocationInRoom.equals(mProduct.getLocationInRoom())) {
-            productUserUpdates.put(Constants.PRODUCT_USER_LOCATION_IN_ROOM_KEY, mLocationInRoom);
+            productUserUpdates.put(Constants.PRODUCT_MY_LOCATION_IN_ROOM_KEY, mLocationInRoom);
             mProduct.setLocationInRoom(mLocationInRoom);
             userUpdateCounter++;
         }
         if (mPackPrice != mProduct.getPackPrice()) {
-            productUserUpdates.put(Constants.PRODUCT_USER_PACK_PRICE_KEY, mPackPrice);
+            productUserUpdates.put(Constants.PRODUCT_MY_PACK_PRICE_KEY, mPackPrice);
             mProduct.setPackPrice(mPackPrice);
             userUpdateCounter++;
         }
@@ -1801,7 +1808,7 @@ public class ActivityDetailProduct
         newProductData.setFbStorageImageUri(mFbStorageImageUri.toString());
 
         // Convert to a map
-        return newProductData.baseProductToMap();
+        return newProductData.commProductToMap();
     }
 
     /* Given the base updates, converts the entire product data to a map object */
@@ -2016,9 +2023,9 @@ public class ActivityDetailProduct
         outState.putBoolean(Constants
                 .PRODUCT_ON_USED_LIST_KEY, mInUsersUsedList);
         outState.putBoolean(Constants
-                .BASE_FIELDS_EDITABLE_STATUS_KEY, mBaseFieldsAreEditable);
+                .COMM_FIELDS_EDITABLE_STATUS_KEY, mBaseFieldsAreEditable);
         outState.putBoolean(Constants
-                .USER_CUSTOM_FIELDS_EDITABLE_STATUS_KEY, mUserFieldsAreEditable);
+                .MY_CUSTOM_FIELDS_EDITABLE_STATUS_KEY, mUserFieldsAreEditable);
 
     }
 
@@ -2608,8 +2615,8 @@ public class ActivityDetailProduct
            2. Delete the entry for this product from this user in the used_products reference
            3. If this is the only user using this product, delete the product from
               /collection_products/
-           4. If this is the only user using this product mFbStorageUri is not empty, delete the
-              image in FireStore it is pointing to.
+           4. If this is the only user using this product mFbStorageUri and is not empty, delete
+              the image in FireStore it is pointing to.
         */
 
         if (mIsExistingProduct && mInUsersUsedList) {

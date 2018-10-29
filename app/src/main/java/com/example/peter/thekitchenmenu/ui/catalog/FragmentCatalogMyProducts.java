@@ -2,6 +2,7 @@ package com.example.peter.thekitchenmenu.ui.catalog;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -12,14 +13,12 @@ import com.example.peter.thekitchenmenu.viewmodels.ViewModelCatalogMyProducts;
 import com.example.peter.thekitchenmenu.viewmodels.ViewModelFactoryProducts;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
- * This class is inherited from {@link FragmentCatalog} super class. This implementations ViewModel
- * shows a list of the current members products. In order to do so it is dependant on receiving the
- * members user ID, as it is required as an element in the DatabaseReference used by
- * {@link ViewModelCatalogMyProducts}. This is achieved by using
- * {@link ViewModelFactoryProducts}
+ * This concrete class is inherited from {@link FragmentCatalog} super class. This implementation of
+ * ViewModel shows a list of the current members products. In order to do so it is dependant on
+ * receiving the members user ID, as it is required as an element in the DatabaseReference used by
+ * {@link ViewModelCatalogMyProducts}. This is achieved by using {@link ViewModelFactoryProducts}
  */
 public class FragmentCatalogMyProducts
         extends
@@ -27,15 +26,19 @@ public class FragmentCatalogMyProducts
 
     private static final String LOG_TAG = FragmentCatalogMyProducts.class.getSimpleName();
 
-    /* ViewModel that retrieves the users used product list. */
+
+
+    /* ViewModel that retrieves the users 'My Product' list. */
     public void setViewModel() {
+
 
         // Retrieve the user ID.
         String userId = PreferenceManager.
-                getDefaultSharedPreferences(Objects.requireNonNull(
-                        getActivity()).
-                        getApplicationContext()).
+                getDefaultSharedPreferences(
+                        getActivity().
+                                getApplicationContext()).
                 getString(Constants.USER_ID_KEY, Constants.ANONYMOUS);
+
 
         // Check to ensure the user ID has been updated and the fragment is attached to the
         // activity.
@@ -48,6 +51,10 @@ public class FragmentCatalogMyProducts
                     ViewModelProviders.of(getActivity(), new ViewModelFactoryProducts(
                             userId)).get(ViewModelCatalogMyProducts.class);
 
+            // Set the user ID to the ViewModel.
+            catalogProductMyList.setUserId(userId);
+
+            // Set the user ID to the adapter.
             mCatalogAdapter.setUserId(userId);
 
             LiveData<List<Product>> productsLiveData =
@@ -69,7 +76,7 @@ public class FragmentCatalogMyProducts
         mClickHandler.onClick(clickedProduct, isCreator);
     }
 
-    /* This method is called on configuration change, it ensures setViewModel() is called */
+    /* This method is called on configuration change, it ensures remoteLoginStatus() is called */
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -79,5 +86,10 @@ public class FragmentCatalogMyProducts
             // Call the ViewModel.
             setViewModel();
         }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
     }
 }

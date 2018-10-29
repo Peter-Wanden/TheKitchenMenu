@@ -67,7 +67,7 @@ public class InputValidation {
     /* Validation rules for shelf life */
     public static boolean validateShelfLife (int shelfLife) {
         // Check value is between 0 and 12
-        return shelfLife >= 1 && shelfLife <= 12;
+        return shelfLife >= 1 && shelfLife <= 16;
     }
 
     /* Validation rules for location room */
