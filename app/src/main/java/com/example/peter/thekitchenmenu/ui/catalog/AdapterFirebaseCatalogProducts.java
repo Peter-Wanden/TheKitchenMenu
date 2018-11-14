@@ -104,7 +104,7 @@ public class AdapterFirebaseCatalogProducts
         final TextView UoMTV;
         final ImageView productIV;
 
-        /* Constructor for the AdapterCatalogProductViewHolder.class */
+        /* Constructor for the AdapterCatProdViewHolder.class */
         AdapterFirebaseCatalogProductViewHolder(View itemView) {
             super(itemView);
 

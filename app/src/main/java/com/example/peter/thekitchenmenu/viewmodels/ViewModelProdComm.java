@@ -3,6 +3,7 @@ package com.example.peter.thekitchenmenu.viewmodels;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 
 import java.util.List;
 
@@ -10,38 +11,36 @@ import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.repository.Repository;
 import com.example.peter.thekitchenmenu.data.model.ProductCommunity;
 
+/**
+ * 'DM' in a field's name means data model whereas 'VM' means view model.
+ */
+public class ViewModelProdComm extends AndroidViewModel {
 
-public class ViewModelCommunityProducts extends AndroidViewModel {
-
-    private static final String LOG_TAG = ViewModelCommunityProducts.class.getSimpleName();
+    private static final String LOG_TAG = ViewModelProdComm.class.getSimpleName();
 
     private Repository mRepository;
     private LiveData<List<ProductCommunity>> mListLiveData;
-    private String mUserUid = Constants.ANONYMOUS;
+    private MutableLiveData<String> mUserId;
 
-    public ViewModelCommunityProducts(Application application) {
+    public ViewModelProdComm(Application application) {
         super(application);
         mRepository = new Repository(application);
+        mUserId = Constants.getUserId();
     }
 
-    public LiveData<List<ProductCommunity>> listAllCommunityProducts() {
+    public LiveData<List<ProductCommunity>> getAllProdComms() {
         mListLiveData = mRepository.getAllProdComms();
         return mListLiveData;
     }
+
+    // Turns remote data sync on for all data model objects used by this class
     public void setRemoteSyncEnabled(boolean syncEnabled) {
         mRepository.isLiveProdComm(syncEnabled);
     }
-    public String getUserUid() {
-        return mUserUid;
-    }
 
-    public void setUserId(String userId) {
-        // The user ID has been set meaning this ViewModel is live and the user is logged in, so
-        // request remote data sync.
-        if (!userId.equals(Constants.ANONYMOUS)) {
-            this.mUserUid = userId;
-            setRemoteSyncEnabled(true);
-        }
+
+    public MutableLiveData<String> getUserId() {
+        return mUserId;
     }
 
     @Override

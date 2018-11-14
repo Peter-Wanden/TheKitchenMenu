@@ -124,7 +124,7 @@
     <string name="activity_catalog_products_tab_1_title">Community Products</string>
     <string name="activity_catalog_products_tab_2_title">My Products</string>
 
-    <!-- AdapterCatalogProduct -->
+    <!-- AdapterCatProd -->
     <string name="adapter_catalog_product_creator_yes">Yes</string>
     <string name="adapter_catalog_product_creator_no">No</string>
     <string name="sign_in_conformation">Thank you for signing in</string>

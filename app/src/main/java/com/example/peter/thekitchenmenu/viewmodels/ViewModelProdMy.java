@@ -4,6 +4,7 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
 
 import com.example.peter.thekitchenmenu.app.Constants;
@@ -15,29 +16,30 @@ import com.example.peter.thekitchenmenu.data.repository.Repository;
 import java.util.List;
 
 /**
- * 'DM' in a field's name means data model, 'VM' means view model.
+ * 'DM' in a field's name means data model whereas 'VM' means view model.
  */
-public class ViewModelMyProducts extends AndroidViewModel {
+public class ViewModelProdMy extends AndroidViewModel {
 
-    private static final String LOG_TAG = ViewModelMyProducts.class.getSimpleName();
+    private static final String LOG_TAG = ViewModelProdMy.class.getSimpleName();
 
-    private String mUserUid = Constants.ANONYMOUS;
     private Repository mRepository;
+    private LiveData<List<ProductCommunity>> mDMListProductComm;
+    private MutableLiveData<String> userId;
+
     // Data models.
     private LiveData<List<ProductMy>> mDMListProductMy;
-    private LiveData<List<ProductCommunity>> mDMListProductComm;
     // View models.
     private LiveData<List<UCProduct>> mVMListMyCommProducts;
     private MediatorLiveData<List<ProductCommunity>> mVMMyCommLiveData;
 
-    public ViewModelMyProducts(Application application) {
+    public ViewModelProdMy(Application application) {
         super(application);
         mRepository = new Repository(application);
         mDMListProductMy = mRepository.getAllProdMys();
+        userId = Constants.getUserId();
     }
 
     public LiveData<List<ProductCommunity>> getMyCommProducts() {
-
         mDMListProductComm = Transformations.switchMap(mDMListProductMy, productMys
                 -> {
             int pmId[] = new int[productMys.size()];
@@ -49,21 +51,13 @@ public class ViewModelMyProducts extends AndroidViewModel {
         return mDMListProductComm;
     }
 
+    // Turns remote data sync on for all data model objects used by this class
     public void setRemoteSyncEnabled(boolean syncEnabled) {
-        mRepository.IsLiveProdMy(syncEnabled, this.mUserUid);
+        mRepository.IsLiveProdMy(syncEnabled, this.userId.getValue());
     }
 
-    public void setUserId(String userId) {
-        // The user ID has been set meaning this ViewModel is live and the user is logged in, so
-        // request remote data sync.
-        if (!mUserUid.equals(Constants.ANONYMOUS)) {
-            this.mUserUid = userId;
-            setRemoteSyncEnabled(true);
-        }
-    }
-
-    public String getUserId() {
-        return mUserUid;
+    public MutableLiveData<String> getUserId() {
+        return userId;
     }
 
     @Override

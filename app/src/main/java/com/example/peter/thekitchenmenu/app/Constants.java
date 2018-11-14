@@ -1,9 +1,12 @@
 package com.example.peter.thekitchenmenu.app;
 
-import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.net.Uri;
+import android.util.Log;
 
 public abstract class Constants {
+
+    private static final String LOG_TAG = Constants.class.getSimpleName();
 
     /* **********
      * PRODUCTS *
@@ -107,10 +110,18 @@ public abstract class Constants {
      *********/
     public static final String USER_ID_KEY = "user_id_key";
     /*
-     * This field is intentionally not final. It is updated when the user is logged in and used as
-     * an application wide constant. Any use of this field should observe its value.
+     * This field is updated when the user is logged in and used application wide constant.
+     * To observe, Constants.observe(lifeCycleOwner, observerName);
+     * To update, call Constants.getUId().setValue(userID);
+     * see: https://developer.android.com/topic/libraries/architecture/livedata
      */
-    public static String USER_ID = ANONYMOUS;
+    private static MutableLiveData<String> USER_ID;
+    public static MutableLiveData<String> getUserId() {
+        if(USER_ID == null) {
+            USER_ID = new MutableLiveData<>();
+        }
+        return USER_ID;
+    }
 
     /* ***************
      * Room Database *

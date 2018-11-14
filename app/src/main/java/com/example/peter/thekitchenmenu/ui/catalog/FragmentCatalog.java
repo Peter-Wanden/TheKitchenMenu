@@ -23,19 +23,19 @@ import java.util.Objects;
 /**
  * The UI controller that displays the recycler views that list 'Community Products' and
  * 'My Products' within {@link ActivityCatalogProduct} depending on its inherited implementation of
- * {@link FragmentCatalogCommunityProducts} or {@link FragmentCatalogMyProducts}.
+ * {@link FragmentCatProdComm} or {@link FragmentCatProdMy}.
  */
 public abstract class FragmentCatalog
         extends
         Fragment
         implements
-        AdapterCatalogProduct.AdapterCatalogProductClickHandler,
+        AdapterCatProd.AdapterCatProdClickHandler,
         AdapterFirebaseCatalogProducts.AdapterFirebaseCatalogProductsClickHandler {
 
     private static final String LOG_TAG = FragmentCatalog.class.getSimpleName();
 
     /* Adapter for the product list view */
-    public AdapterCatalogProduct mCatalogAdapter;
+    public AdapterCatProd mCatalogAdapter;
 
     /* Binding class for this fragment */
     FragmentCatalogProductsBinding mFragmentCatalogProductsBinding;
@@ -92,7 +92,7 @@ public abstract class FragmentCatalog
 
         /* Create the adapter and pass in this classes context and the listener which is also
         this class, as this class implements the click handler. */
-        mCatalogAdapter = new AdapterCatalogProduct(getActivity(), this);
+        mCatalogAdapter = new AdapterCatProd(getActivity(), this);
 
         mFragmentCatalogProductsBinding.
                 fragmentCatalogProductsRv.setAdapter(mCatalogAdapter);

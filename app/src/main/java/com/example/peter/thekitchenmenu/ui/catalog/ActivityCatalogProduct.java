@@ -3,7 +3,6 @@ package com.example.peter.thekitchenmenu.ui.catalog;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -14,8 +13,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.peter.thekitchenmenu.R;
+import static com.example.peter.thekitchenmenu.app.Constants.ANONYMOUS;
+import static com.example.peter.thekitchenmenu.app.Constants.REQUEST_CODE_SIGN_IN;
+
 import com.example.peter.thekitchenmenu.app.Constants;
+import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.ActivityCatalogProductBinding;
 import com.example.peter.thekitchenmenu.data.model.Product;
 import com.example.peter.thekitchenmenu.data.repository.Repository;
@@ -31,7 +33,7 @@ import java.util.Arrays;
 
 /**
  * The main entry point for product related actions and the host activity
- * for {@link FragmentCatalogCommunityProducts} and {@link FragmentCatalogMyProducts}.
+ * for {@link FragmentCatProdComm} and {@link FragmentCatProdMy}.
  */
 public class ActivityCatalogProduct
         extends
@@ -98,7 +100,7 @@ public class ActivityCatalogProduct
                                         new AuthUI.IdpConfig.GoogleBuilder().build(),
                                         new AuthUI.IdpConfig.EmailBuilder().build()))
                                 .build(),
-                        Constants.REQUEST_CODE_SIGN_IN);
+                        REQUEST_CODE_SIGN_IN);
             }
         };
 
@@ -135,8 +137,8 @@ public class ActivityCatalogProduct
         setSupportActionBar(mCatalogProductBinding.activityCatalogProductToolbar);
 
         /*
-        View pager for the {@link FragmentCatalogCommunityProducts} and
-        {@link FragmentCatalogMyProducts} fragments
+        View pager for the {@link FragmentCatProdComm} and
+        {@link FragmentCatProdMy} fragments
         */
         mAdapterPageCatalogProduct =
                 new AdapterPageCatalogProduct(
@@ -146,9 +148,9 @@ public class ActivityCatalogProduct
         mViewPager.setAdapter(mAdapterPageCatalogProduct);
 
         /*
-        Sets up the ViewPager for the {@link FragmentCatalogCommunityProducts} and
-        {@link FragmentCatalogMyProducts} fragments.
-        */
+         * Sets up the ViewPager for the {@link FragmentCatProdComm} and
+         * {@link FragmentCatProdMy} fragments.
+         */
         if (mCatalogProductBinding.activityCatalogProductVp != null) {
             setupViewPager(mCatalogProductBinding.activityCatalogProductVp);
         }
@@ -165,12 +167,12 @@ public class ActivityCatalogProduct
 
         // Page 0 - for a list of all (community) products.
         mAdapterPageCatalogProduct.
-                addFragment(new FragmentCatalogCommunityProducts(),
+                addFragment(new FragmentCatProdComm(),
                         getString(R.string.activity_catalog_products_tab_1_title));
 
         // Page 1 - for a list of the users used products.
         mAdapterPageCatalogProduct.
-                addFragment(new FragmentCatalogMyProducts(),
+                addFragment(new FragmentCatProdMy(),
                         getString(R.string.activity_catalog_products_tab_2_title));
 
         viewPager.setAdapter(mAdapterPageCatalogProduct);
@@ -178,82 +180,19 @@ public class ActivityCatalogProduct
 
     /* Clean up tasks after sign out */
     private void onSignedOutCleanUp() {
-
-        // Set the user ID to ANONYMOUS in shared preferences
-        PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).
-                edit().
-                putString(Constants.USER_ID_KEY, Constants.ANONYMOUS).
-                apply();
+        // Set the user ID to ANONYMOUS in Constants
+        Constants.getUserId().setValue(ANONYMOUS);
     }
 
     /**
      *  Invoked when user is signed in.
-     * @param userUid - The unique User ID issued by Google
+     * @param userUid - The unique User ID issued by Google (remote database unique ID)
      */
     private void onSignedInInitialise(String userUid) {
 
-        // Sync remote data.
-
-        // TODO - remove, temp for testing
-        Log.e(LOG_TAG, "OnSignedIn: Product is live called");
-        Repository repository = new Repository(getApplication());
-        repository.IsLiveProdMy(true, userUid);
-
-        /*
-        The user ID is used throughout the app, so save it to a shared preferences object with a
-        reference to the application context.
-        */
-        PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).
-                edit().
-                putString(Constants.USER_ID_KEY, userUid).
-                apply();
-
-        /*
-        Now we have the user ID and FragmentCatalogCommunityProducts is attached we can set the
-        user ID.
-        */
-        FragmentCatalogCommunityProducts communityProducts = (FragmentCatalogCommunityProducts)
-                mAdapterPageCatalogProduct.getItem(Constants.TAB_COMM_PRODUCTS);
-        if (communityProducts.isAdded()) {
-            communityProducts.setUserId(userUid);
-        }
-
-        /*
-           We can only get and set the data once the user has signed in, as we need the user ID
-        */
-
-        /*
-        FragmentCatalogMyProducts requires the user ID to function. As such this listener is
-        implemented after onSignedInInitialise as this is the first instance where the user ID
-        is available and this is the earliest we can get an attached instance to pass the variable.
-        */
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position,
-                                       float positionOffset,
-                                       int positionOffsetPixels) {
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-                if (position == Constants.TAB_MY_PRODUCTS) {
-
-                    FragmentCatalogMyProducts myProducts = (FragmentCatalogMyProducts)
-                            mAdapterPageCatalogProduct.getItem(position);
-                    /*
-                    Now the adapter and ViewModel has a reference to the UserId we can call the
-                    ViewModel to populate the adaptor.
-                    */
-                    myProducts.setUserId(userUid);
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
+        // Update the MutableLiveData user ID static field. Any listeners to this field will now
+        // spring into action!
+        Constants.getUserId().setValue(userUid);
     }
 
     @Override
