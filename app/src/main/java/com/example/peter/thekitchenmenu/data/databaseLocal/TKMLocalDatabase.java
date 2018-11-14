@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.data;
+package com.example.peter.thekitchenmenu.data.databaseLocal;
 
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
@@ -6,15 +6,13 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
 import com.example.peter.thekitchenmenu.app.Constants;
-import com.example.peter.thekitchenmenu.model.ProductCommunity;
-import com.example.peter.thekitchenmenu.model.ProductMy;
-
-import java.util.ArrayList;
+import com.example.peter.thekitchenmenu.data.model.ProductCommunity;
+import com.example.peter.thekitchenmenu.data.model.ProductMy;
 
 @Database(entities = {
         ProductCommunity.class,
         ProductMy.class},
-        version = 1,
+        version = 2,
         exportSchema = false)
 public abstract class TKMLocalDatabase extends RoomDatabase {
 
@@ -22,7 +20,7 @@ public abstract class TKMLocalDatabase extends RoomDatabase {
 
     // DAO's
     public abstract ProductCommunityDAO productCommunityDAO();
-    public abstract ProductMyDAO productMyDAO();
+    public abstract ProdMyDAO productMyDAO();
 
     private static final Object LOCK = new Object();
 
@@ -36,12 +34,10 @@ public abstract class TKMLocalDatabase extends RoomDatabase {
             synchronized (LOCK) {
                 sInstance = Room.databaseBuilder(context.getApplicationContext(),
                         TKMLocalDatabase.class, TKMLocalDatabase.TKM_LOCAL_DATABASE)
+                        .fallbackToDestructiveMigration()
                         .build();
             }
         }
         return sInstance;
     }
-
-    ArrayList<ProductCommunity> productCommunity = new ArrayList<>();
-    ArrayList<ProductMy> productMy = new ArrayList<>();
 }

@@ -1,10 +1,12 @@
-package com.example.peter.thekitchenmenu.repository;
+package com.example.peter.thekitchenmenu.data.repository;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.example.peter.thekitchenmenu.model.ProductCommunity;
-import com.example.peter.thekitchenmenu.model.ProductMy;
+import com.example.peter.thekitchenmenu.data.model.ProductCommunity;
+import com.example.peter.thekitchenmenu.data.model.ProductMy;
+import com.example.peter.thekitchenmenu.data.databaseRemote.DataListenerPending;
+import com.example.peter.thekitchenmenu.data.databaseRemote.FirebaseReferences;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -13,9 +15,9 @@ import com.google.firebase.database.ValueEventListener;
 /**
  * Manages data access for the remote database
  */
-class RepositoryFirebase {
+class RepositoryRemote {
 
-    private static final String LOG_TAG = RepositoryFirebase.class.getSimpleName();
+    private static final String LOG_TAG = RepositoryRemote.class.getSimpleName();
 
     // A reference to the repository so that all communications with the app go through its
     // repository instance.
@@ -29,7 +31,7 @@ class RepositoryFirebase {
      * Constructor
      * @param repository an instance reference to the Repository
      */
-    public RepositoryFirebase(Repository repository) {
+    public RepositoryRemote(Repository repository) {
 
         // Reference to the repository
         this.mRepository = repository;
@@ -48,7 +50,7 @@ class RepositoryFirebase {
 
                     if (productCommunity != null) {
                         productCommunity.setFbProductReferenceKey(shot.getKey());
-                        mRepository.synchroniseCommunityProduct(productCommunity);
+                        mRepository.syncProdComm(productCommunity);
                     }
                 }
             }
@@ -67,8 +69,8 @@ class RepositoryFirebase {
      * Adds or removes a ValueEventListener to the ProductCommunity reference in Firebase.
      * @param activeState true to add the lister, false to remove it.
      */
-    void isLiveProductCommunityList(boolean activeState) {
-        // Log.e(LOG_TAG, "FIREBASE - Product listener is: " + activeState);
+    void isLiveProdComm(boolean activeState) {
+        Log.e(LOG_TAG, "FIREBASE - Product listener is: " + activeState);
         mCommunityProductsListener.changeListenerState(activeState);
     }
 
@@ -92,7 +94,7 @@ class RepositoryFirebase {
                     ProductMy p = shot.getValue(ProductMy.class);
 
                     if(p != null) {
-                        mRepository.synchroniseProductMy(p);
+                        mRepository.remoteSyncProdMy(p);
                     }
                 }
             }
@@ -110,7 +112,7 @@ class RepositoryFirebase {
      * reference in Firebase.
      * @param activeState true to add the lister, false to remove it.
      */
-    void isLiveProductMyList(boolean activeState, String userId) {
+    void isLiveProdMy(boolean activeState, String userId) {
         initialiseProductMyVEL(userId);
         mMyProductsListener.changeListenerState(activeState);
     }

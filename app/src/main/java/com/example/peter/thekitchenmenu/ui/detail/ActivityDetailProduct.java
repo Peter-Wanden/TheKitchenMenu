@@ -37,7 +37,7 @@ import android.widget.Toast;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.databinding.ActivityDetailProductBinding;
-import com.example.peter.thekitchenmenu.model.Product;
+import com.example.peter.thekitchenmenu.data.model.Product;
 import com.example.peter.thekitchenmenu.utils.BitmapUtils;
 import com.example.peter.thekitchenmenu.utils.Converters;
 import com.example.tkmapplibrary.dataValidation.InputValidation;

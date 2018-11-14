@@ -19,7 +19,7 @@ import android.view.ViewGroup;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.databinding.FragmentCatalogProductsBinding;
-import com.example.peter.thekitchenmenu.model.ProductCommunity;
+import com.example.peter.thekitchenmenu.data.model.ProductCommunity;
 import com.example.peter.thekitchenmenu.viewmodels.ViewModelCommunityProducts;
 
 import java.util.List;
@@ -30,16 +30,12 @@ import java.util.Objects;
  */
 public class FragmentCatalogCommunityProducts extends Fragment {
 
+    // TODO - make a super class, for FragmentCommunityProducts and FragmentMyProducts to inherit.
     private static final String LOG_TAG = FragmentCatalogCommunityProducts.class.getSimpleName();
-
     private AdapterCatalogProductCommunity mCatalogAdapter;
-
-    /* Binding class for this fragment */
     private FragmentCatalogProductsBinding mCatalogProductsBinding;
-
     /* Enables the current layout manager to save state in configuration change. */
     private Parcelable mLayoutManagerState;
-
     /* ViewModel for this class */
     private ViewModelCommunityProducts mModelCommunityProducts;
 
@@ -56,7 +52,7 @@ public class FragmentCatalogCommunityProducts extends Fragment {
         final Observer<List<ProductCommunity>> communityProductsObserver = productCommunities
                 -> mCatalogAdapter.setProducts(productCommunities);
 
-        // Returns a list of ProductCommunityProducts
+        // Returns a list of CommunityProducts
         mModelCommunityProducts.listAllCommunityProducts().
                 observe(this, communityProductsObserver);
 
@@ -112,7 +108,7 @@ public class FragmentCatalogCommunityProducts extends Fragment {
         }
 
         // Restores the user ID to the adapter
-        if (mModelCommunityProducts.getUserUid().equals(Constants.ANONYMOUS)) {
+        if (!mModelCommunityProducts.getUserUid().equals(Constants.ANONYMOUS)) {
             mCatalogAdapter.setUserId(mModelCommunityProducts.getUserUid());
         }
 
@@ -140,22 +136,12 @@ public class FragmentCatalogCommunityProducts extends Fragment {
     }
 
     /* Informs the fragment that the user is signed in to the remote database */
-    public void remoteLoginStatus(String userUid) {
+    public void setUserId(String userUid) {
 
         Log.e(LOG_TAG, "User is logged in!");
 
-        mModelCommunityProducts.setUserUId(userUid);
-
-        // Check to ensure the user ID is valid (logged in).
-        if (!userUid.equals(Constants.ANONYMOUS)) {
-            // Turns remote sync on for the data in this fragment
-            mModelCommunityProducts.setRemoteSyncEnabled(true);
-        }
-
-        if (getActivity() != null) {
-            // Set the user ID to the adapter
-            mCatalogAdapter.setUserId(userUid);
-        }
+        mModelCommunityProducts.setUserId(userUid);
+        mCatalogAdapter.setUserId(userUid);
     }
 
     @Override
@@ -175,9 +161,5 @@ public class FragmentCatalogCommunityProducts extends Fragment {
 
         // Save the grid / linear layout manager's state.
         outState.putParcelable("layoutManagerState", mLayoutManagerState);
-
-        // Turns remote data sync off for the data in this fragment.
-        mModelCommunityProducts.setRemoteSyncEnabled(false);
     }
-
 }

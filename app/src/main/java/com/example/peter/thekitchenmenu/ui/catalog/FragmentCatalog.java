@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.FragmentCatalogProductsBinding;
-import com.example.peter.thekitchenmenu.model.Product;
+import com.example.peter.thekitchenmenu.data.model.Product;
 
 import java.util.Objects;
 
@@ -47,7 +47,6 @@ public abstract class FragmentCatalog
     /* Enables the current layout manager to save state in configuration change. */
     Parcelable mLayoutManagerState;
 
-    // Click interface
     public FragmentCatalogOnClickHandler mClickHandler;
 
     @Nullable

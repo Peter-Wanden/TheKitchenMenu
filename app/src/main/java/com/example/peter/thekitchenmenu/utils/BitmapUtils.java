@@ -21,6 +21,8 @@ import java.util.Date;
 import java.util.Locale;
 
 public class BitmapUtils {
+    // TODO - Use s ForkJoinPool for a threadded implementation
+    // TODO - See: https://docs.oracle.com/javase/tutorial/essential/concurrency/forkjoin.html
 
     private static final String LOG_TAG = BitmapUtils.class.getSimpleName();
 

@@ -72,7 +72,6 @@
                 android:id="@+id/list_item_product_tv_label_unit_of_measure"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
                 android:fontFamily="sans-serif"
                 android:gravity="start|center_vertical"
                 android:maxLines="1"

@@ -1,95 +1,145 @@
 package com.example.peter.thekitchenmenu.ui.catalog;
 
-import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
+import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
-import com.example.peter.thekitchenmenu.model.Product;
-import com.example.peter.thekitchenmenu.viewmodels.ViewModelCatalogMyProducts;
-import com.example.peter.thekitchenmenu.viewmodels.ViewModelFactoryProducts;
+import com.example.peter.thekitchenmenu.data.model.ProductCommunity;
+import com.example.peter.thekitchenmenu.databinding.FragmentCatalogProductsBinding;
+import com.example.peter.thekitchenmenu.viewmodels.ViewModelMyProducts;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-/**
- * This concrete class is inherited from {@link FragmentCatalog} super class. This implementation of
- * ViewModel shows a list of the current members products. In order to do so it is dependant on
- * receiving the members user ID, as it is required as an element in the DatabaseReference used by
- * {@link ViewModelCatalogMyProducts}. This is achieved by using {@link ViewModelFactoryProducts}
- */
 public class FragmentCatalogMyProducts
         extends
-        FragmentCatalog {
+        Fragment {
 
     private static final String LOG_TAG = FragmentCatalogMyProducts.class.getSimpleName();
 
+    private AdapterCatalogProductCommunity mAdapterCatalogProduct;
+    private FragmentCatalogProductsBinding mCatalogProductsBinding;
+    private Parcelable mLayoutManagerState;
+    private ViewModelMyProducts mViewModelMyProducts;
+    private List<ProductCommunity> mProductCommunityList = new ArrayList<>();
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-    /* ViewModel that retrieves the users 'My Product' list. */
-    public void setViewModel() {
+        mViewModelMyProducts = ViewModelProviders.of(this).get(ViewModelMyProducts.class);
 
+        final Observer<List<ProductCommunity>> observer = uCProducts
+                -> mAdapterCatalogProduct.setProducts(uCProducts);
 
-        // Retrieve the user ID.
-        String userId = PreferenceManager.
-                getDefaultSharedPreferences(
-                        getActivity().
-                                getApplicationContext()).
-                getString(Constants.USER_ID_KEY, Constants.ANONYMOUS);
+        mViewModelMyProducts.getMyCommProducts().observe(this, observer);
+    }
 
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
 
-        // Check to ensure the user ID has been updated and the fragment is attached to the
-        // activity.
-        if (!userId.equals(Constants.ANONYMOUS) && getActivity() != null) {
+        mCatalogProductsBinding = DataBindingUtil.inflate(
+                inflater, R.layout.fragment_catalog_products, container, false);
 
-            ViewModelCatalogMyProducts catalogProductMyList =
+        View rootView = mCatalogProductsBinding.getRoot();
 
-                    // ViewModelFactoryProducts allows us to pass the user ID as an additional
-                    // argument to the default constructor of ViewModelCatalogMyProducts.
-                    ViewModelProviders.of(getActivity(), new ViewModelFactoryProducts(
-                            userId)).get(ViewModelCatalogMyProducts.class);
+        if (getResources().getBoolean(R.bool.is_tablet) ||
+                getResources().getBoolean(R.bool.is_landscape)) {
 
-            // Set the user ID to the ViewModel.
-            catalogProductMyList.setUserId(userId);
+            GridLayoutManager gridLayoutManager = new
+                    GridLayoutManager(getActivity().
+                    getApplicationContext(), columnCalculator());
 
-            // Set the user ID to the adapter.
-            mCatalogAdapter.setUserId(userId);
+            mCatalogProductsBinding.
+                    fragmentCatalogProductsRv.setLayoutManager(gridLayoutManager);
+        } else {
+            LinearLayoutManager linearLayoutManager = new
+                    LinearLayoutManager(getActivity().getApplicationContext(),
+                    LinearLayoutManager.VERTICAL, false);
 
-            LiveData<List<Product>> productsLiveData =
-                    catalogProductMyList.getProductsLiveData();
-
-            // Observes the users MyProduct list for changes.
-            productsLiveData.observe(getActivity(), products -> {
-
-                if (products != null) {
-
-                    mCatalogAdapter.setProducts(products);
-                }
-            });
+            mCatalogProductsBinding.
+                    fragmentCatalogProductsRv.
+                    setLayoutManager(linearLayoutManager);
         }
-    }
 
-    @Override
-    public void onClick(Product clickedProduct, boolean isCreator) {
-        mClickHandler.onClick(clickedProduct, isCreator);
-    }
+        mCatalogProductsBinding.fragmentCatalogProductsRv.setHasFixedSize(true);
 
-    /* This method is called on configuration change, it ensures remoteLoginStatus() is called */
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+        mAdapterCatalogProduct = new AdapterCatalogProductCommunity(getActivity());
+        mAdapterCatalogProduct.setProducts(mProductCommunityList);
+        mAdapterCatalogProduct.setUserId(mViewModelMyProducts.getUserId());
+        mCatalogProductsBinding.fragmentCatalogProductsRv.setAdapter(mAdapterCatalogProduct);
 
-        if (savedInstanceState != null) {
-
-            // Call the ViewModel.
-            setViewModel();
+        // Post configuration change, restores the state of the previous layout manager to the new
+        // layout manager, which could be either a grid or linear layout.
+        if (savedInstanceState != null && savedInstanceState.containsKey("layoutManagerState")) {
+            mLayoutManagerState = savedInstanceState.getParcelable("layoutManagerState");
         }
+
+        if (!mViewModelMyProducts.getUserId().equals(Constants.ANONYMOUS)) {
+            mAdapterCatalogProduct.setUserId(mViewModelMyProducts.getUserId());
+        }
+
+        return rootView;
+    }
+
+    /**
+     * Screen width column calculator
+     */
+    private int columnCalculator() {
+
+        DisplayMetrics metrics = new DisplayMetrics();
+        Objects.requireNonNull(getActivity())
+                .getWindowManager()
+                .getDefaultDisplay()
+                .getMetrics(metrics);
+
+        // Width of smallest tablet
+        int divider = 600;
+        int width = metrics.widthPixels;
+        int columns = width / divider;
+        if (columns < 2) return 2;
+
+        return columns;
+    }
+
+    /**
+     * Sets the users ID once the user has signed in.
+     * TODO - Set the user Id by using a callback interface
+     */
+    public void setUserId(String userId) {
+        mViewModelMyProducts.setUserId(userId);
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+    public void onPause() {
+        super.onPause();
+
+        mLayoutManagerState = mCatalogProductsBinding.fragmentCatalogProductsRv.
+                getLayoutManager().
+                onSaveInstanceState();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putParcelable("layoutManagerState", mLayoutManagerState);
     }
 }

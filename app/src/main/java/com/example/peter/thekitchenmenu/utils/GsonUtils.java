@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.utils;
 
-import com.example.peter.thekitchenmenu.model.Product;
+import com.example.peter.thekitchenmenu.data.model.Product;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 

@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.data;
+package com.example.peter.thekitchenmenu.data.databaseRemote;
 
 import android.arch.lifecycle.LiveData;
 import android.os.Handler;

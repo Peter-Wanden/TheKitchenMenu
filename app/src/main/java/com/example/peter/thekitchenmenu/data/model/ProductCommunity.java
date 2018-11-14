@@ -1,7 +1,8 @@
-package com.example.peter.thekitchenmenu.model;
+package com.example.peter.thekitchenmenu.data.model;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.net.Uri;
 import android.os.Parcel;
@@ -64,6 +65,7 @@ public class ProductCommunity implements Parcelable {
     private String mFbProductReferenceKey;
 
     /* Empty constructor as required by Firebase. */
+    @Ignore
     public ProductCommunity(){}
 
     /**
@@ -90,7 +92,7 @@ public class ProductCommunity implements Parcelable {
                             int unitOfMeasure,
                             double packPriceAverage,
                             String createdBy,
-                            Uri fbStorageImageUri,
+                            @NonNull String fbStorageImageUri,
                             long commCreateDate,
                             long commLastUpdate,
                             String fbProductReferenceKey) {
@@ -104,13 +106,14 @@ public class ProductCommunity implements Parcelable {
         this.mUnitOfMeasure = unitOfMeasure;
         this.mPackPriceAverage = packPriceAverage;
         this.mCreatedBy = createdBy;
-        this.mFbStorageImageUri = fbStorageImageUri.toString();
+        this.mFbStorageImageUri = fbStorageImageUri;
         this.mCommCreateDate = commCreateDate;
         this.mCommLastUpdate = commLastUpdate;
         this.mFbProductReferenceKey = fbProductReferenceKey;
     }
 
 
+    @Ignore
     public ProductCommunity(Parcel in) {
         id = in.readInt();
         mDescription = in.readString();

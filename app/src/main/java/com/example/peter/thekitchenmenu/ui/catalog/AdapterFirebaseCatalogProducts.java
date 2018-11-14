@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.model.Product;
+import com.example.peter.thekitchenmenu.data.model.Product;
 import com.example.peter.thekitchenmenu.utils.Converters;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;

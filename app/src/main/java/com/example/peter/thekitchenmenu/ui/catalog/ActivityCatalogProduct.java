@@ -17,8 +17,8 @@ import android.widget.Toast;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.databinding.ActivityCatalogProductBinding;
-import com.example.peter.thekitchenmenu.model.Product;
-import com.example.peter.thekitchenmenu.repository.Repository;
+import com.example.peter.thekitchenmenu.data.model.Product;
+import com.example.peter.thekitchenmenu.data.repository.Repository;
 import com.example.peter.thekitchenmenu.ui.detail.ActivityDetailProduct;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.BuildConfig;
@@ -191,13 +191,13 @@ public class ActivityCatalogProduct
      * @param userUid - The unique User ID issued by Google
      */
     private void onSignedInInitialise(String userUid) {
-        Log.e(LOG_TAG, "SIGNED IN CALLED!");
+
         // Sync remote data.
 
         // TODO - remove, temp for testing
         Log.e(LOG_TAG, "OnSignedIn: Product is live called");
         Repository repository = new Repository(getApplication());
-        repository.productMyIsLive(true, userUid);
+        repository.IsLiveProdMy(true, userUid);
 
         /*
         The user ID is used throughout the app, so save it to a shared preferences object with a
@@ -215,7 +215,7 @@ public class ActivityCatalogProduct
         FragmentCatalogCommunityProducts communityProducts = (FragmentCatalogCommunityProducts)
                 mAdapterPageCatalogProduct.getItem(Constants.TAB_COMM_PRODUCTS);
         if (communityProducts.isAdded()) {
-            communityProducts.remoteLoginStatus(userUid);
+            communityProducts.setUserId(userUid);
         }
 
         /*
@@ -245,7 +245,7 @@ public class ActivityCatalogProduct
                     Now the adapter and ViewModel has a reference to the UserId we can call the
                     ViewModel to populate the adaptor.
                     */
-                    myProducts.setViewModel();
+                    myProducts.setUserId(userUid);
                 }
             }
 

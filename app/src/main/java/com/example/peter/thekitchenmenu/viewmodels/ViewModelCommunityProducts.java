@@ -3,11 +3,12 @@ package com.example.peter.thekitchenmenu.viewmodels;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
+
 import java.util.List;
 
 import com.example.peter.thekitchenmenu.app.Constants;
-import com.example.peter.thekitchenmenu.repository.Repository;
-import com.example.peter.thekitchenmenu.model.ProductCommunity;
+import com.example.peter.thekitchenmenu.data.repository.Repository;
+import com.example.peter.thekitchenmenu.data.model.ProductCommunity;
 
 
 public class ViewModelCommunityProducts extends AndroidViewModel {
@@ -24,17 +25,29 @@ public class ViewModelCommunityProducts extends AndroidViewModel {
     }
 
     public LiveData<List<ProductCommunity>> listAllCommunityProducts() {
-        mListLiveData = mRepository.listAllCommunityProducts();
+        mListLiveData = mRepository.getAllProdComms();
         return mListLiveData;
     }
     public void setRemoteSyncEnabled(boolean syncEnabled) {
-        mRepository.productCommunityIsLive(syncEnabled);
+        mRepository.isLiveProdComm(syncEnabled);
     }
     public String getUserUid() {
         return mUserUid;
     }
 
-    public void setUserUId(String userUid) {
-        this.mUserUid = userUid;
+    public void setUserId(String userId) {
+        // The user ID has been set meaning this ViewModel is live and the user is logged in, so
+        // request remote data sync.
+        if (!userId.equals(Constants.ANONYMOUS)) {
+            this.mUserUid = userId;
+            setRemoteSyncEnabled(true);
+        }
+    }
+
+    @Override
+    protected void onCleared() {
+        // This ViewModel has been disposed, so turn of remote sync.
+        setRemoteSyncEnabled(false);
+        super.onCleared();
     }
 }

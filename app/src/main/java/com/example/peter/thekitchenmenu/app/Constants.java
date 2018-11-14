@@ -1,5 +1,6 @@
 package com.example.peter.thekitchenmenu.app;
 
+import android.arch.lifecycle.LiveData;
 import android.net.Uri;
 
 public abstract class Constants {
@@ -19,6 +20,7 @@ public abstract class Constants {
     public static final String MY_CUSTOM_FIELDS_EDITABLE_STATUS_KEY = "user_custom_fields_editable_status_key";
 
     // Firebase community product fields.
+    public static final String PRODUCT_COMM_FB_REFERENCE_KEY = "fbProductReferenceKey";
     public static final String PRODUCT_COMM_DESCRIPTION_KEY = "description";
     public static final String PRODUCT_COMM_MADE_BY_KEY = "madeBy";
     public static final String PRODUCT_COMM_CATEGORY_KEY = "category";
@@ -37,7 +39,7 @@ public abstract class Constants {
     public static final String PRODUCT_MY_LOCATION_IN_ROOM_KEY = "locationInRoom";
     public static final String PRODUCT_MY_RETAILER_KEY = "retailer";
     public static final String PRODUCT_MY_PACK_PRICE_KEY = "packPrice";
-    public static final String PRODUCT_MY_FB_REFERENCE_KEY = "fbProductReferenceKey";
+    public static final String PRODUCT_MY_FB_REFERENCE_KEY = PRODUCT_COMM_FB_REFERENCE_KEY;
     public static final String PRODUCT_MY_FB_USED_PRODUCT_KEY = "fbUsedProductsUserKey";
     public static final String PRODUCT_MY_CREATE_DATE_KEY = "my_create_date";
     public static final String PRODUCT_MY_LAST_UPDATE_KEY = "my_last_updated";
@@ -104,6 +106,11 @@ public abstract class Constants {
      * Users *
      *********/
     public static final String USER_ID_KEY = "user_id_key";
+    /*
+     * This field is intentionally not final. It is updated when the user is logged in and used as
+     * an application wide constant. Any use of this field should observe its value.
+     */
+    public static String USER_ID = ANONYMOUS;
 
     /* ***************
      * Room Database *
@@ -111,11 +118,11 @@ public abstract class Constants {
     public static final String LOCAL_DATABASE_NAME = "tkm_local_database";
 
     /*
-    Table community_product - Stores information that is generic to the product. Note: These
-    constants match the field names as mapped in Firebase where possible. Whilst it is not necessary
-    to duplicate them from the Firebase fields above it does provides greater code reading ease,
-    plus it offers a direct relationship from firebase fields to ROOM fields.
-    */
+     * Table community_product - Stores information that is generic to the product. Note: These
+     * constants match the field names as mapped in Firebase where possible. Whilst it is not necessary
+     * to duplicate them from the Firebase fields above it does provides greater code reading ease,
+     *  plus it offers a direct relationship from firebase fields to ROOM fields.
+     */
     public static final String TABLE_PRODUCT_COMM = "product_community";
     public static final String TABLE_PRODUCT_COMM_ID = "_id";
 

@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.repository;
+package com.example.peter.thekitchenmenu.data.databaseRemote;
 
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.google.firebase.database.DatabaseReference;

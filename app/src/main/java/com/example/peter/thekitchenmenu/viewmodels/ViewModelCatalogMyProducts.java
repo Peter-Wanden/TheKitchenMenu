@@ -6,10 +6,10 @@ import android.arch.lifecycle.ViewModel;
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
 import com.example.peter.thekitchenmenu.app.Constants;
-import com.example.peter.thekitchenmenu.data.FirebaseQueryLiveData;
-import com.example.peter.thekitchenmenu.repository.FirebaseReferences;
-import com.example.peter.thekitchenmenu.model.Product;
-import com.example.peter.thekitchenmenu.repository.Repository;
+import com.example.peter.thekitchenmenu.data.databaseRemote.FirebaseQueryLiveData;
+import com.example.peter.thekitchenmenu.data.databaseRemote.FirebaseReferences;
+import com.example.peter.thekitchenmenu.data.model.Product;
+import com.example.peter.thekitchenmenu.data.repository.Repository;
 import com.google.firebase.database.DataSnapshot;
 
 import java.util.ArrayList;

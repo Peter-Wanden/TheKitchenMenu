@@ -10,8 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.model.Product;
-import com.example.peter.thekitchenmenu.model.ProductCommunity;
+import com.example.peter.thekitchenmenu.data.model.Product;
+import com.example.peter.thekitchenmenu.data.model.ProductCommunity;
 import com.example.peter.thekitchenmenu.utils.Converters;
 import com.squareup.picasso.Picasso;
 

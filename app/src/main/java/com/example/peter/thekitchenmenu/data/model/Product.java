@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.model;
+package com.example.peter.thekitchenmenu.data.model;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
@@ -17,7 +17,6 @@ import java.util.Map;
  * This is the Product model. A POJO made flexible with Firebase and Room annotations along with
  * a fully parcelable implementation.
  */
-@Entity(tableName = Constants.TABLE_PRODUCT_MY)
 public class Product implements Parcelable {
 
     @Exclude // Excludes field from Firebase, as is only required for Room.
