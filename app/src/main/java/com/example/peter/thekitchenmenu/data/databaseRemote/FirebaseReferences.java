@@ -11,7 +11,7 @@ public abstract class FirebaseReferences {
      * @param userId The user ID of the current user.
      * @return The Firebase real time database reference to the current users MyProducts location.
      */
-    public static DatabaseReference getReferenceMyProducts(String userId) {
+    public static DatabaseReference getRefProdMy(String userId) {
 
         return FirebaseDatabase
                 .getInstance()
@@ -24,7 +24,7 @@ public abstract class FirebaseReferences {
      * Returns a database reference that points to the entire list of community products
      * @return a database reference pointing to the list of community products
      */
-    public static DatabaseReference getReferenceCommunityProducts() {
+    public static DatabaseReference getRefProdComm() {
 
         return FirebaseDatabase
                 .getInstance()

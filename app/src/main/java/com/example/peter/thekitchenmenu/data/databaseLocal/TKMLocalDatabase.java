@@ -19,7 +19,7 @@ public abstract class TKMLocalDatabase extends RoomDatabase {
     private static final String LOG_TAG = TKMLocalDatabase.class.getSimpleName();
 
     // DAO's
-    public abstract ProductCommunityDAO productCommunityDAO();
+    public abstract ProdCommDAO productCommunityDAO();
     public abstract ProdMyDAO productMyDAO();
 
     private static final Object LOCK = new Object();

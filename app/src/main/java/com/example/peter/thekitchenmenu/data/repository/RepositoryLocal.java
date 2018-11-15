@@ -4,7 +4,7 @@ import android.app.Application;
 import android.arch.lifecycle.LiveData;
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
-import com.example.peter.thekitchenmenu.data.databaseLocal.ProductCommunityDAO;
+import com.example.peter.thekitchenmenu.data.databaseLocal.ProdCommDAO;
 import com.example.peter.thekitchenmenu.data.databaseLocal.ProdMyDAO;
 import com.example.peter.thekitchenmenu.data.databaseLocal.TKMLocalDatabase;
 import com.example.peter.thekitchenmenu.data.model.ProductCommunity;
@@ -20,7 +20,7 @@ public class RepositoryLocal {
     private static final String LOG_TAG = RepositoryLocal.class.getSimpleName();
 
     // Data access objects
-    ProductCommunityDAO mProdCommDAO;
+    ProdCommDAO mProdCommDAO;
     ProdMyDAO mProdMyDAO;
 
     // Data list members

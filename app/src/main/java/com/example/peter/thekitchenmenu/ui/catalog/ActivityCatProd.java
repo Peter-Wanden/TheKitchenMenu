@@ -14,6 +14,7 @@ import android.view.View;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.databaseRemote.RemoteSignIn;
+import com.example.peter.thekitchenmenu.data.model.ProductCommunity;
 import com.example.peter.thekitchenmenu.databinding.ActivityCatalogProductBinding;
 import com.example.peter.thekitchenmenu.data.model.Product;
 import com.example.peter.thekitchenmenu.ui.detail.ActivityDetailProduct;
@@ -27,7 +28,7 @@ public class ActivityCatProd
         extends
         AppCompatActivity
         implements
-        FragmentCatalog.FragmentCatalogOnClickHandler{
+        OnClickProdMy{
 
     public static final String LOG_TAG = ActivityCatProd.class.getSimpleName();
 
@@ -43,9 +44,14 @@ public class ActivityCatProd
     // ViewPager to swipe through the fragments.
     ViewPager mViewPager;
 
+    private FragmentCatProdComm mFragmentCatProdComm;
+    private FragmentCatProdMy mFragmentCatProdMy;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mFragmentCatProdComm = new FragmentCatProdComm();
+        mFragmentCatProdMy = new FragmentCatProdMy();
         mRemoteSignIn = new RemoteSignIn(this);
         initialiseViews();
     }
@@ -94,13 +100,11 @@ public class ActivityCatProd
         mAdapterPageCatProd = new AdapterPageCatProd(getSupportFragmentManager());
 
         // Page 0 - for a list of all (community) products.
-        mAdapterPageCatProd.
-                addFragment(new FragmentCatProdComm(),
+        mAdapterPageCatProd.addFragment(mFragmentCatProdComm,
                         getString(R.string.activity_catalog_products_tab_1_title));
 
         // Page 1 - for a list of the users used products.
-        mAdapterPageCatProd.
-                addFragment(new FragmentCatProdMy(),
+        mAdapterPageCatProd.addFragment(mFragmentCatProdMy,
                         getString(R.string.activity_catalog_products_tab_2_title));
 
         viewPager.setAdapter(mAdapterPageCatProd);
@@ -153,14 +157,12 @@ public class ActivityCatProd
     }
 
     @Override
-    public void onClick(Product clickedProduct, boolean isCreator) {
+    public void onClick(ProductCommunity clickedProduct, boolean isCreator) {
         /*
           A product has been clicked in the RecyclerView. Add the Firebase product to an intent
           and go to ActivityDetailProduct.
          */
-        Intent intent = new Intent(
-                ActivityCatProd.this,
-                ActivityDetailProduct.class);
+        Intent intent = new Intent(ActivityCatProd.this, ActivityDetailProduct.class);
 
         intent.putExtra(Constants.PRODUCT_FB_REFERENCE_KEY, clickedProduct);
         intent.putExtra(Constants.PRODUCT_IS_CREATOR_KEY, isCreator);

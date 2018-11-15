@@ -13,7 +13,7 @@ import com.example.peter.thekitchenmenu.data.model.ProductCommunity;
 import java.util.List;
 
 @Dao
-public interface ProductCommunityDAO {
+public interface ProdCommDAO {
 
     // Gets all ProductsCommunity objects stored locally.
     @Query("SELECT * " +

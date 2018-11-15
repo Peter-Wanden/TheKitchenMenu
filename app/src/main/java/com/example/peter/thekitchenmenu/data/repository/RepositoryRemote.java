@@ -38,7 +38,7 @@ class RepositoryRemote {
 
         // Database reference to the community products location in Firebase.
         DatabaseReference productCommunityReference =
-                FirebaseReferences.getReferenceCommunityProducts();
+                FirebaseReferences.getRefProdComm();
 
         // Listens to changes in the remote database and reflects them into the local database.
         ValueEventListener communityProductVEL = new ValueEventListener() {
@@ -84,7 +84,7 @@ class RepositoryRemote {
     private void initialiseProductMyVEL(String mUserId) {
 
         DatabaseReference productMyReference =
-                FirebaseReferences.getReferenceMyProducts(mUserId);
+                FirebaseReferences.getRefProdMy(mUserId);
 
         ValueEventListener myProductVEL = new ValueEventListener() {
             @Override
