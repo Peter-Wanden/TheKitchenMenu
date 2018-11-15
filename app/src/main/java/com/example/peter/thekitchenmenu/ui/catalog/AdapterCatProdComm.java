@@ -36,7 +36,7 @@ public class AdapterCatProdComm
     //final private AdapterCatProdClickHandler mProductClickHandler;
 
     /* Constructor */
-    public AdapterCatProdComm(Context context) {
+    AdapterCatProdComm(Context context) {
 
         mContext = context;
         //mProductClickHandler = clickHandler;
@@ -146,8 +146,7 @@ public class AdapterCatProdComm
 //    }
 
     /* Setter for the user Id. The setting of this field is essential. */
-    public void setUserId (String userId){
-        Log.e(LOG_TAG, "ADAPTER - userID has been updated to: " + userId);
+    void setUserId(String userId){
         mUserId = userId;
     }
 }

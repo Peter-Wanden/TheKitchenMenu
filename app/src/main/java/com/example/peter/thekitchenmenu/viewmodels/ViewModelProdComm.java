@@ -4,6 +4,7 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.util.Log;
 
 import java.util.List;
 
@@ -38,15 +39,7 @@ public class ViewModelProdComm extends AndroidViewModel {
         mRepository.isLiveProdComm(syncEnabled);
     }
 
-
     public MutableLiveData<String> getUserId() {
         return mUserId;
-    }
-
-    @Override
-    protected void onCleared() {
-        // This ViewModel has been disposed, so turn of remote sync.
-        setRemoteSyncEnabled(false);
-        super.onCleared();
     }
 }

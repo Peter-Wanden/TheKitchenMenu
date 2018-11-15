@@ -23,7 +23,7 @@ class RepositoryRemote {
     // repository instance.
     private Repository mRepository;
     // Manages the listeners connection to the ProductCommunity remote data
-    private DataListenerPending mCommunityProductsListener;
+    private DataListenerPending mCommProdListener;
     // Manages the listeners connection to the ProductMy remote data
     private DataListenerPending mMyProductsListener;
 
@@ -31,7 +31,7 @@ class RepositoryRemote {
      * Constructor
      * @param repository an instance reference to the Repository
      */
-    public RepositoryRemote(Repository repository) {
+    RepositoryRemote(Repository repository) {
 
         // Reference to the repository
         this.mRepository = repository;
@@ -61,7 +61,7 @@ class RepositoryRemote {
                         + databaseError);
             }
         };
-        mCommunityProductsListener = new DataListenerPending(
+        mCommProdListener = new DataListenerPending(
                 productCommunityReference, communityProductVEL);
     }
 
@@ -70,8 +70,8 @@ class RepositoryRemote {
      * @param activeState true to add the lister, false to remove it.
      */
     void isLiveProdComm(boolean activeState) {
-        Log.e(LOG_TAG, "FIREBASE - Product listener is: " + activeState);
-        mCommunityProductsListener.changeListenerState(activeState);
+        // Log.e(LOG_TAG, "FIREBASE - Product COMM listener is: " + activeState);
+        mCommProdListener.changeListenerState(activeState);
     }
 
     /**
@@ -114,6 +114,7 @@ class RepositoryRemote {
      */
     void isLiveProdMy(boolean activeState, String userId) {
         initialiseProductMyVEL(userId);
+        // Log.e(LOG_TAG, "FIREBASE - Product MY listener is: " + activeState);
         mMyProductsListener.changeListenerState(activeState);
     }
 }

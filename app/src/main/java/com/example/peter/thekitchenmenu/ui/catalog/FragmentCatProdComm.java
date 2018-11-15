@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,9 +34,9 @@ public class FragmentCatProdComm extends Fragment {
     private static final String LOG_TAG = FragmentCatProdComm.class.getSimpleName();
 
     private AdapterCatProdComm mAdapterCatProd;
-    private FragmentCatalogProductsBinding mCatalogProductsBinding;
     private Parcelable mLayoutManagerState;
     private ViewModelProdComm mViewModelProdComm;
+    private FragmentCatalogProductsBinding mCatProdBinding;
 
     // TODO - add a click interface
 
@@ -45,16 +46,17 @@ public class FragmentCatProdComm extends Fragment {
 
         mAdapterCatProd = new AdapterCatProdComm(getActivity());
 
-        mViewModelProdComm = ViewModelProviders.of(this)
-                .get(ViewModelProdComm.class);
+        mViewModelProdComm = ViewModelProviders.of(this).get(ViewModelProdComm.class);
 
         // Observes changes to the ProductCommunity data and passes them to the adaptor
         final Observer<List<ProductCommunity>> prodCommObserver = prodComms
-                -> mAdapterCatProd.setProducts(prodComms);
+                -> {
+            mAdapterCatProd.setProducts(prodComms);
+        };
         mViewModelProdComm.getAllProdComms().observe(this, prodCommObserver);
 
         // Observes changes to the UserId state and passes them to the adaptor.
-        final Observer<String> useIdObserver = newUserId
+        final Observer<String> userIdObserver = newUserId
                 -> {
             if (newUserId !=null && !newUserId.equals(ANONYMOUS)) {
                 // Turns remote data sync on
@@ -62,10 +64,7 @@ public class FragmentCatProdComm extends Fragment {
                 mAdapterCatProd.setUserId(newUserId);
             }
         };
-        mViewModelProdComm.getUserId().observe(this, useIdObserver);
-
-        // Turn remote data sync on
-        mViewModelProdComm.setRemoteSyncEnabled(true);
+        mViewModelProdComm.getUserId().observe(this, userIdObserver);
     }
 
     @Nullable
@@ -74,34 +73,29 @@ public class FragmentCatProdComm extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        mCatalogProductsBinding = DataBindingUtil.inflate(
+        mCatProdBinding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_catalog_products, container, false);
 
-        View rootView = mCatalogProductsBinding.getRoot();
+        View rootView = mCatProdBinding.getRoot();
 
         if (getResources().getBoolean(R.bool.is_tablet) ||
                 getResources().getBoolean(R.bool.is_landscape)) {
 
-            GridLayoutManager gridManager = new GridLayoutManager(
-                    Objects.requireNonNull(getActivity())
+            GridLayoutManager gridManager = new GridLayoutManager((getActivity())
                             .getApplicationContext(), columnCalculator());
 
-            mCatalogProductsBinding.fragmentCatalogProductsRv.
+            mCatProdBinding.fragmentCatalogProductsRv.
                     setLayoutManager(gridManager);
 
         } else {
-            LinearLayoutManager linearManager = new
-                    LinearLayoutManager(Objects.requireNonNull(getActivity())
-                    .getApplicationContext(),
-                    LinearLayoutManager.VERTICAL, false);
+            LinearLayoutManager linearManager = new LinearLayoutManager(getActivity()
+                    .getApplicationContext(),LinearLayoutManager.VERTICAL, false);
 
-            mCatalogProductsBinding.
-                    fragmentCatalogProductsRv.
-                    setLayoutManager(linearManager);
+            mCatProdBinding.fragmentCatalogProductsRv.setLayoutManager(linearManager);
         }
 
-        mCatalogProductsBinding.fragmentCatalogProductsRv.setHasFixedSize(true);
-        mCatalogProductsBinding.fragmentCatalogProductsRv.setAdapter(mAdapterCatProd);
+        mCatProdBinding.fragmentCatalogProductsRv.setHasFixedSize(true);
+        mCatProdBinding.fragmentCatalogProductsRv.setAdapter(mAdapterCatProd);
 
         // Post configuration change, restores the state of the previous layout manager to the new
         // layout manager, which could be either a grid or linear layout.
@@ -139,7 +133,7 @@ public class FragmentCatProdComm extends Fragment {
         mViewModelProdComm.setRemoteSyncEnabled(false);
 
         // Get the grid / linear layout manager's state.
-        mLayoutManagerState = mCatalogProductsBinding.fragmentCatalogProductsRv.
+        mLayoutManagerState = mCatProdBinding.fragmentCatalogProductsRv.
                 getLayoutManager().
                 onSaveInstanceState();
     }

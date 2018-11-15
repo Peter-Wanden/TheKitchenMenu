@@ -117,7 +117,7 @@
     <string name="activity_detail_product_error_incomplete_fields">Please ensure you have completed
         all fields.</string>
 
-    <!-- ActivityCatalogProduct -->
+    <!-- ActivityCatProd -->
     <string name="product_catalog_empty_view_title_text">The cupboards are empty.</string>
     <string name="product_catalog_empty_view_subtitle_text">Press + to add some products!</string>
     <string name="image_of_meal">An image of the selected recipe</string>

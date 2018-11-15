@@ -63,13 +63,13 @@ public class DataListenerPending {
                 mHandler.removeCallbacks(mRemoveListener);
             } else {
                 mQuery.addValueEventListener(listener);
-                Log.e(LOG_TAG, "ValueEventListener added");
+//                Log.i(LOG_TAG, "-- ChangeListenerState: " + attachState);
             }
             mListenerRemovePending = false;
         } else {
             mHandler.postDelayed(mRemoveListener, 2000);
             mListenerRemovePending = true;
-            Log.e(LOG_TAG, "ValueEventListener removed");
+//            Log.i(LOG_TAG, "-- ChangeListenerState: " + attachState);
         }
     }
 }

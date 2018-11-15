@@ -22,7 +22,7 @@ import java.util.Objects;
 
 /**
  * The UI controller that displays the recycler views that list 'Community Products' and
- * 'My Products' within {@link ActivityCatalogProduct} depending on its inherited implementation of
+ * 'My Products' within {@link ActivityCatProd} depending on its inherited implementation of
  * {@link FragmentCatProdComm} or {@link FragmentCatProdMy}.
  */
 public abstract class FragmentCatalog

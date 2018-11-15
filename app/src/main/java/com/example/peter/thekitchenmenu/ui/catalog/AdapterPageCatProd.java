@@ -9,14 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Paging adaptor for the tabs and fragments displayed in {@link ActivityCatalogProduct}
+ * Paging adaptor for the tabs and fragments displayed in {@link ActivityCatProd}
  */
-public class AdapterPageCatalogProduct extends FragmentPagerAdapter {
+public class AdapterPageCatProd extends FragmentPagerAdapter {
 
     private final List<Fragment> mFragments = new ArrayList<>();
     private final List<String> mFragmentTitles = new ArrayList<>();
 
-    public AdapterPageCatalogProduct(FragmentManager fm) {
+    public AdapterPageCatProd(FragmentManager fm) {
         super(fm);
     }
 

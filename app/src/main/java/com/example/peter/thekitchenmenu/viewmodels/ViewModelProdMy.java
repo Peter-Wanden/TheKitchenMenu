@@ -59,11 +59,4 @@ public class ViewModelProdMy extends AndroidViewModel {
     public MutableLiveData<String> getUserId() {
         return userId;
     }
-
-    @Override
-    protected void onCleared() {
-        // This ViewModel has been disposed, so turn remote sync off.
-        setRemoteSyncEnabled(false);
-        super.onCleared();
-    }
 }
