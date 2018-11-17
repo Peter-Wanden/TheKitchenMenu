@@ -47,29 +47,33 @@ public abstract class Constants {
     public static final String PRODUCT_MY_CREATE_DATE_KEY = "my_create_date";
     public static final String PRODUCT_MY_LAST_UPDATE_KEY = "my_last_updated";
 
-    /* Default values for a product */
-    public static final String DEFAULT_FB_PRODUCT_ID = "no_fd_id";
+    /* Default values for a VmProd */
+    public static final int DEFAULT_PROD_MY_ID = 0;
+    public static final String DEFAULT_REMOTE_REF_KEY = "no_key";
     public static final String DEFAULT_FB_USED_PRODUCT_ID = "no_used_product_id";
-    public static final String DEFAULT_PRODUCT_DESCRIPTION = "no_description";
-    public static final String DEFAULT_PRODUCT_MADE_BY = "anonymous";
     public static final String DEFAULT_PRODUCT_RETAILER = "no_retailer";
-    public static final int DEFAULT_PRODUCT_UOM = 0;
-    public static final int DEFAULT_PRODUCT_PACK_SIZE = 0;
-    public static final int DEFAULT_PRODUCT_SHELF_LIFE = 0;
     public static final String DEFAULT_PRODUCT_LOC = "no_location";
     public static final String DEFAULT_PRODUCT_LOC_IN_ROOM = "no_location_in_room";
-    public static final int DEFAULT_PRODUCT_CATEGORY = 0;
     public static final double DEFAULT_PRODUCT_PRICE = 0.00;
-    public static final double DEFAULT_PRODUCT_PRICE_AVERAGE = 0.00;
     public static final Uri DEFAULT_LOCAL_IMAGE_URI = Uri.parse("");
-    public static final Uri DEFAULT_FB_IMAGE_STORAGE_URI = Uri.parse("");
-    public static final long DEFAULT_COMM_CREATE_DATE = 0;
-    public static final long DEFAULT_COMM_LAST_UPDATE = 0;
     public static final long DEFAULT_MY_CREATE_DATE = 0;
     public static final long DEFAULT_MY_LAST_UPDATE = 0;
 
+
+    public static final String DEFAULT_FB_PRODUCT_ID = "no_fd_id";
+    public static final String DEFAULT_PRODUCT_DESCRIPTION = "no_description";
+    public static final String DEFAULT_PRODUCT_MADE_BY = "anonymous";
+    public static final int DEFAULT_PRODUCT_UOM = 0;
+    public static final int DEFAULT_PRODUCT_PACK_SIZE = 0;
+    public static final int DEFAULT_PRODUCT_SHELF_LIFE = 0;
+    public static final int DEFAULT_PRODUCT_CATEGORY = 0;
+    public static final double DEFAULT_PRODUCT_PRICE_AVERAGE = 0.00;
+    public static final Uri DEFAULT_FB_IMAGE_STORAGE_URI = Uri.parse("");
+    public static final long DEFAULT_COMM_CREATE_DATE = 0;
+    public static final long DEFAULT_COMM_LAST_UPDATE = 0;
+
     /* ***********************
-     * ActivityDetailProduct *
+     * ActivityDetailProd *
      *************************/
 
     /* Screen titles */

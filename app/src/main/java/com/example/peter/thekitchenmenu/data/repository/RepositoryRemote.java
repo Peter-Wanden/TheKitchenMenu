@@ -3,8 +3,8 @@ package com.example.peter.thekitchenmenu.data.repository;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.example.peter.thekitchenmenu.data.model.ProductCommunity;
-import com.example.peter.thekitchenmenu.data.model.ProductMy;
+import com.example.peter.thekitchenmenu.data.model.DmProdComm;
+import com.example.peter.thekitchenmenu.data.model.DmProdMy;
 import com.example.peter.thekitchenmenu.data.databaseRemote.DataListenerPending;
 import com.example.peter.thekitchenmenu.data.databaseRemote.FirebaseReferences;
 import com.google.firebase.database.DataSnapshot;
@@ -22,9 +22,9 @@ class RepositoryRemote {
     // A reference to the repository so that all communications with the app go through its
     // repository instance.
     private Repository mRepository;
-    // Manages the listeners connection to the ProductCommunity remote data
+    // Manages the listeners connection to the DmProdComm remote data
     private DataListenerPending mCommProdListener;
-    // Manages the listeners connection to the ProductMy remote data
+    // Manages the listeners connection to the DmProdMy remote data
     private DataListenerPending mMyProductsListener;
 
     /**
@@ -46,11 +46,11 @@ class RepositoryRemote {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 for (DataSnapshot shot : snapshot.getChildren()) {
-                    ProductCommunity productCommunity = shot.getValue(ProductCommunity.class);
+                    DmProdComm dmProdComm = shot.getValue(DmProdComm.class);
 
-                    if (productCommunity != null) {
-                        productCommunity.setFbProductReferenceKey(shot.getKey());
-                        mRepository.syncProdComm(productCommunity);
+                    if (dmProdComm != null) {
+                        dmProdComm.setFbProductReferenceKey(shot.getKey());
+                        mRepository.syncProdComm(dmProdComm);
                     }
                 }
             }
@@ -66,7 +66,7 @@ class RepositoryRemote {
     }
 
     /**
-     * Adds or removes a ValueEventListener to the ProductCommunity reference in Firebase.
+     * Adds or removes a ValueEventListener to the DmProdComm reference in Firebase.
      * @param activeState true to add the lister, false to remove it.
      */
     void isLiveProdComm(boolean activeState) {
@@ -91,7 +91,7 @@ class RepositoryRemote {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 for (DataSnapshot shot: snapshot.getChildren()) {
-                    ProductMy p = shot.getValue(ProductMy.class);
+                    DmProdMy p = shot.getValue(DmProdMy.class);
 
                     if(p != null) {
                         mRepository.remoteSyncProdMy(p);

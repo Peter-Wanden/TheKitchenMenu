@@ -7,8 +7,8 @@ import com.example.peter.thekitchenmenu.app.AppExecutors;
 import com.example.peter.thekitchenmenu.data.databaseLocal.ProdCommDAO;
 import com.example.peter.thekitchenmenu.data.databaseLocal.ProdMyDAO;
 import com.example.peter.thekitchenmenu.data.databaseLocal.TKMLocalDatabase;
-import com.example.peter.thekitchenmenu.data.model.ProductCommunity;
-import com.example.peter.thekitchenmenu.data.model.ProductMy;
+import com.example.peter.thekitchenmenu.data.model.DmProdComm;
+import com.example.peter.thekitchenmenu.data.model.DmProdMy;
 
 import java.util.List;
 
@@ -24,10 +24,11 @@ public class RepositoryLocal {
     ProdMyDAO mProdMyDAO;
 
     // Data list members
-    private LiveData<List<ProductCommunity>> mGetAllProdComms;
-    private LiveData<List<ProductCommunity>> mGetProdCommsByIdArray;
-    private LiveData<List<ProductMy>> mGetProdMys;
-    private LiveData<List<ProductMy>> mGetProdMysByIdArray;
+    private LiveData<List<DmProdComm>> mGetAllProdComms;
+    private LiveData<List<DmProdComm>> mGetProdCommsByIdArray;
+    private LiveData<List<DmProdMy>> mGetProdMys;
+    private LiveData<List<DmProdMy>> mGetProdMysByIdArray;
+    private LiveData<DmProdMy> mGetProdMyById;
 
     // Constructor
     RepositoryLocal(Application application) {
@@ -40,84 +41,84 @@ public class RepositoryLocal {
     }
 
     // -------------------------------------------------------------//
-    //                        ProductCommunity                      //
+    //                        DmProdComm                      //
     // -------------------------------------------------------------//
 
     /**
      * Gets a list of all data model objects in the product_community table
-     * @return a complete list of all {@link ProductCommunity} objects ordered by description.
+     * @return a complete list of all {@link DmProdComm} objects ordered by description.
      */
-    LiveData<List<ProductCommunity>> getAllProdComms() {
+    LiveData<List<DmProdComm>> getAllProdComms() {
         mGetAllProdComms = mProdCommDAO.getAllProdComms();
         return mGetAllProdComms;
     }
 
     /**
-     * Gets a list of {@link ProductCommunity} objects given an array of ID's
+     * Gets a list of {@link DmProdComm} objects given an array of ID's
      * @param idArray an integer array containing a list of id's
-     * @return a list of {@link ProductCommunity} objects
+     * @return a list of {@link DmProdComm} objects
      */
-    LiveData<List<ProductCommunity>> getProdCommsByIdArray(int[] idArray) {
+    LiveData<List<DmProdComm>> getProdCommsByIdArray(int[] idArray) {
         mGetProdCommsByIdArray = mProdCommDAO.getProdCommsByIdArray(idArray);
         return mGetProdCommsByIdArray;
     }
 
     /**
-     * Gets a single {@link ProductCommunity} by ID
-     * @param id the ID of the {@link ProductCommunity} to retrieve.
+     * Gets a single {@link DmProdComm} by ID
+     * @param id the ID of the {@link DmProdComm} to retrieve.
      * @return the requested object, or null if not found.
      */
-    LiveData<ProductCommunity> getProdCommById(int id) {
+    LiveData<DmProdComm> getProdCommById(int id) {
         return mProdCommDAO.getProdCommById(id);
     }
 
     /**
-     * Gets a {@link ProductCommunity} by its remote ID
+     * Gets a {@link DmProdComm} by its remote ID
      * @param remoteId the remote ID to fetch.
-     * @return an {@link ProductCommunity}.
+     * @return an {@link DmProdComm}.
      */
-    ProductCommunity getProdCommByRemoteId(String remoteId) {
+    DmProdComm getProdCommByRemoteId(String remoteId) {
         return mProdCommDAO.getProdCommByRemoteId(remoteId);
     }
 
     /**
-     * Inserts a single {@link ProductCommunity} object into the database
-     * @param prodComm the object to be inserted.
+     * Inserts a single {@link DmProdComm} object into the database
+     * @param dmProdComm the object to be inserted.
      */
-    void insertProdComm(ProductCommunity prodComm) {
+    void insertProdComm(DmProdComm dmProdComm) {
         AppExecutors.getInstance().diskIO().execute(()
-                -> mProdCommDAO.insertProdComm(prodComm));
+                -> mProdCommDAO.insertProdComm(dmProdComm));
     }
 
     /**
-     * Inserts a List of {@link ProductCommunity} objects into the database
-     * @param prodComm the list of objects to be inserted.
+     * Inserts a List of {@link DmProdComm} objects into the database
+     * @param dmProdComm the list of objects to be inserted.
      */
-    public void insertProdComms(List<ProductCommunity> prodComm) {
+    public void insertProdComms(List<DmProdComm> dmProdComm) {
         AppExecutors.getInstance().diskIO().execute(()
-                -> mProdCommDAO.insertProdComms(prodComm));
+                -> mProdCommDAO.insertProdComms(dmProdComm));
     }
 
     /**
-     * Inserts an {@link ProductCommunity} object into the database
-     * @param prodComm the object to insert.
+     * Inserts an {@link DmProdComm} object into the database
+     * @param dmProdComm the object to insert.
      */
-    void updateProdComm(ProductCommunity prodComm) {
+    void updateProdComm(DmProdComm dmProdComm) {
         AppExecutors.getInstance().diskIO().execute(()
-                -> mProdCommDAO.updateProdComm(prodComm));
+                -> mProdCommDAO.updateProdComm(dmProdComm));
     }
 
     /**
-     * Deletes a single {@link ProductCommunity} object from the local database
-     * @param prodComm the {@link ProductCommunity} object to delete.
+     * Deletes a single {@link DmProdComm} object from the local database
+     * @param dmProdComm the {@link DmProdComm} object to delete.
      */
-    public void deleteProdComm(ProductCommunity prodComm) {
+    public void deleteProdComm(DmProdComm dmProdComm) {
         AppExecutors.getInstance().diskIO().execute(()
-                -> mProdCommDAO.deleteProdComm(prodComm));
+                -> mProdCommDAO.deleteProdComm(dmProdComm));
     }
 
     /**
-     * Deletes all {@link ProductCommunity} objects from the local database
+     * Deletes all {@link DmProdComm} objects from the local database
      */
     public void deleteAllProdComms() {
         AppExecutors.getInstance().diskIO().execute(()
@@ -125,94 +126,99 @@ public class RepositoryLocal {
     }
 
     /**
-     * Synchronises remote and local {@link ProductCommunity} objects.
-     * @param remoteProdComm the remote product to sync.
+     * Synchronises remote and local {@link DmProdComm} objects.
+     * @param remoteDmProdComm the remote product to sync.
      */
-    void remoteSyncProdComm(ProductCommunity remoteProdComm) {
+    void remoteSyncProdComm(DmProdComm remoteDmProdComm) {
         // Sends the remote product to be synchronised with the local database.
-        SyncProdComm sPC = new SyncProdComm(this, remoteProdComm);
+        SyncProdComm sPC = new SyncProdComm(this, remoteDmProdComm);
         sPC.matchAndSync();
     }
 
     // -------------------------------------------------------------//
-    //                        ProductMy                             //
+    //                        DmProdMy                             //
     // -------------------------------------------------------------//
 
     /**
-     * Gets a list of all {@link ProductMy} objects in the product_my table
-     * @return a list of all {@link ProductMy} objects.
+     * Gets a list of all {@link DmProdMy} objects in the product_my table
+     * @return a list of all {@link DmProdMy} objects.
      */
-    LiveData<List<ProductMy>> getAllProdMys() {
+    LiveData<List<DmProdMy>> getAllProdMys() {
         mGetProdMys = mProdMyDAO.getProdMys();
         return mGetProdMys;
     }
 
     /**
-     * Gets a list of {@link ProductMy} objects given an array of ID's
+     * Gets a list of {@link DmProdMy} objects given an array of ID's
      * @param idArray an integer array containing a list of id's
-     * @return a list of {@link ProductMy} objects
+     * @return a list of {@link DmProdMy} objects
      */
-    LiveData<List<ProductMy>> getProdMysByIdArray(int[] idArray) {
+    LiveData<List<DmProdMy>> getProdMysByIdArray(int[] idArray) {
         mGetProdMysByIdArray = mProdMyDAO.getProdMysByIdArray(idArray);
         return mGetProdMysByIdArray;
     }
 
     /**
-     * Gets a single {@link ProductMy} by ID
-     * @param id the ID of the {@link ProductMy} to retrieve.
+     * Gets a single {@link DmProdMy} by ID
+     * @param id the ID of the {@link DmProdMy} to retrieve.
      * @return the requested object, or null if not found.
      */
-    LiveData<ProductMy> getProdMyById(int id) {
-        return mProdMyDAO.getProdMyById(id);
+    LiveData<DmProdMy> getProdMyById(int id) {
+        mGetProdMyById = mProdMyDAO.getProdMyById(id);
+        return mGetProdMyById;
     }
 
     /**
-     * Gets a {@link ProductMy} by its remote ID
+     * Gets a {@link DmProdMy} by its remote ID
      * @param remoteId the remote ID to fetch.
-     * @return an {@link ProductMy}.
+     * @return an {@link DmProdMy}.
      */
-    ProductMy getProdMyByRemoteId(String remoteId) {
+    DmProdMy getProdMyByRemoteId(String remoteId) {
         return mProdMyDAO.getProdMyByRemoteId(remoteId);
     }
 
-    /**
-     * Inserts a single {@link ProductMy} object into the database
-     * @param prodMy the object to be inserted.
-     */
-    void insertProdMy(ProductMy prodMy) {
-        AppExecutors.getInstance().diskIO().execute(()
-                -> mProdMyDAO.insertProdMy(prodMy));
+    DmProdMy getProdMyByCommId(int commId) {
+        return mProdMyDAO.getProdMyByCommId(commId);
     }
 
     /**
-     * Inserts a List of {@link ProductMy} objects into the database
-     * @param prodMy the list of objects to be inserted.
+     * Inserts a single {@link DmProdMy} object into the database
+     * @param dmProdMy the object to be inserted.
      */
-    public void insertProdMy(List<ProductMy> prodMy) {
+    void insertProdMy(DmProdMy dmProdMy) {
         AppExecutors.getInstance().diskIO().execute(()
-                -> mProdMyDAO.insertProdMys(prodMy));
+                -> mProdMyDAO.insertProdMy(dmProdMy));
     }
 
     /**
-     * Inserts an {@link ProductMy} object into the database
-     * @param prodMy the object to insert.
+     * Inserts a List of {@link DmProdMy} objects into the database
+     * @param dmProdMy the list of objects to be inserted.
      */
-    void updateProdMy(ProductMy prodMy) {
+    public void insertProdMy(List<DmProdMy> dmProdMy) {
         AppExecutors.getInstance().diskIO().execute(()
-                -> mProdMyDAO.updateProdMy(prodMy));
+                -> mProdMyDAO.insertProdMys(dmProdMy));
     }
 
     /**
-     * Deletes a single {@link ProductMy} object from the local database
-     * @param prodMy the {@link ProductMy} object to delete.
+     * Inserts an {@link DmProdMy} object into the database
+     * @param dmProdMy the object to insert.
      */
-    public void deleteProdMy(ProductMy prodMy) {
+    void updateProdMy(DmProdMy dmProdMy) {
         AppExecutors.getInstance().diskIO().execute(()
-                -> mProdMyDAO.deleteProdMy(prodMy));
+                -> mProdMyDAO.updateProdMy(dmProdMy));
     }
 
     /**
-     * Deletes all {@link ProductMy} objects from the local database
+     * Deletes a single {@link DmProdMy} object from the local database
+     * @param dmProdMy the {@link DmProdMy} object to delete.
+     */
+    public void deleteProdMy(DmProdMy dmProdMy) {
+        AppExecutors.getInstance().diskIO().execute(()
+                -> mProdMyDAO.deleteProdMy(dmProdMy));
+    }
+
+    /**
+     * Deletes all {@link DmProdMy} objects from the local database
      */
     public void deleteAllProdMys() {
         AppExecutors.getInstance().diskIO().execute(()
@@ -220,11 +226,11 @@ public class RepositoryLocal {
     }
 
     /**
-     * Synchronises remote and local {@link ProductMy} objects.
-     * @param remoteProdMy the remote product to sync.
+     * Synchronises remote and local {@link DmProdMy} objects.
+     * @param remoteDmProdMy the remote product to sync.
      */
-    void remoteSyncProdMy(ProductMy remoteProdMy) {
-        SyncProdMy sPm = new SyncProdMy(this, remoteProdMy);
+    void remoteSyncProdMy(DmProdMy remoteDmProdMy) {
+        SyncProdMy sPm = new SyncProdMy(this, remoteDmProdMy);
         sPm.matchAndSync();
     }
 }

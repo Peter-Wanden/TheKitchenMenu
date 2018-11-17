@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.data.repository;
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
-import com.example.peter.thekitchenmenu.data.model.ProductCommunity;
+import com.example.peter.thekitchenmenu.data.model.DmProdComm;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -17,15 +17,15 @@ class SyncProdComm {
     // private static final String LOG_TAG = SyncProdComm.class.getSimpleName();
 
     private RepositoryLocal mRepoLocal;
-    private Future<ProductCommunity> mFuturePC;
-    private ProductCommunity[] mPcArray = new ProductCommunity[2];
+    private Future<DmProdComm> mFuturePC;
+    private DmProdComm[] mPcArray = new DmProdComm[2];
 
     /**
      * Constructor
      * @param repositoryLocal an instance of the local database repository
      * @param pcRemote       the remote object to sync
      */
-    SyncProdComm(RepositoryLocal repositoryLocal, ProductCommunity pcRemote) {
+    SyncProdComm(RepositoryLocal repositoryLocal, DmProdComm pcRemote) {
 
         mRepoLocal = repositoryLocal;
         mPcArray[0] = pcRemote;
@@ -77,14 +77,14 @@ class SyncProdComm {
     }
 
     /**
-     * Creates and returns a callable {@link ProductCommunity} object for submission to the
+     * Creates and returns a callable {@link DmProdComm} object for submission to the
      * executor service. Remote and local products are matched by comparing the remote product ID,
      * which is stored in both locations.
      */
-    private class CallableProductCommunity implements Callable<ProductCommunity> {
+    private class CallableProductCommunity implements Callable<DmProdComm> {
 
         @Override
-        public ProductCommunity call() {
+        public DmProdComm call() {
 
             return mRepoLocal.getProdCommByRemoteId(mPcArray[0].getFbProductReferenceKey());
         }

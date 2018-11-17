@@ -3,7 +3,6 @@ package com.example.peter.thekitchenmenu.ui.catalog;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.data.model.ProductCommunity;
+import com.example.peter.thekitchenmenu.data.model.VmProd;
 import com.example.peter.thekitchenmenu.utils.Converters;
 import com.squareup.picasso.Picasso;
 
@@ -27,19 +26,18 @@ public class AdapterCatProdComm
     private final Context mContext;
 
     // List storing the database query result
-    private List<ProductCommunity> mProdComm;
+    private List<VmProd> mListVmProd;
 
     // The user Id of the current user
     private String mUserId;
 
     // Click interface
-    //final private AdapterCatProdClickHandler mProductClickHandler;
+    final private OnClickVmProd mClickHandler;
 
     /* Constructor */
-    AdapterCatProdComm(Context context) {
-
+    AdapterCatProdComm(Context context, OnClickVmProd clickHandler) {
         mContext = context;
-        //mProductClickHandler = clickHandler;
+        mClickHandler = clickHandler;
     }
 
     /* View holder */
@@ -62,44 +60,44 @@ public class AdapterCatProdComm
             int position) {
 
         /* Get the product at the passed in position */
-        ProductCommunity prodComm = mProdComm.get(position);
+        VmProd vmProd = mListVmProd.get(position);
 
         /* Set the description */
-        holder.descTV.setText(prodComm.getDescription());
+        holder.descTV.setText(vmProd.getDescription());
 
         /* Get and set the image */
-        if (!prodComm.getFbStorageImageUri().equals("")) {
-            Picasso.get().load(prodComm.getFbStorageImageUri()).into(holder.prodIV);
+        if (!vmProd.getFbStorageImageUri().equals("")) {
+            Picasso.get().load(vmProd.getFbStorageImageUri()).into(holder.prodIV);
         } else {
             Picasso.get().load(R.drawable.placeholder).into(holder.prodIV);
         }
 
         /* Set the pack size */
-        holder.packSizeTV.setText(String.valueOf(prodComm.getPackSize()));
+        holder.packSizeTV.setText(String.valueOf(vmProd.getPackSize()));
 
         /* Set the unit of measure */
         holder.UoMTV.setText(Converters.getUnitOfMeasureString
-                (mContext, prodComm.getUnitOfMeasure()));
+                (mContext, vmProd.getUnitOfMeasure()));
     }
 
     /* Returns the number of items in the adapter */
     @Override
     public int getItemCount() {
-        if (mProdComm == null) return 0;
-        return mProdComm.size();
+        if (mListVmProd == null) return 0;
+        return mListVmProd.size();
     }
 
     /* Getter for the current list of products */
-    public List<ProductCommunity> getProducts() {
-        return mProdComm;
+    public List<VmProd> getProducts() {
+        return mListVmProd;
     }
 
     /*
      * When the data changes, this method updates the list of products and notifies the adapter to
      * use the new values in it
      */
-    public void setProducts(List<ProductCommunity> prodComms) {
-        mProdComm = prodComms;
+    public void setProducts(List<VmProd> vmListProd) {
+        mListVmProd = vmListProd;
         notifyDataSetChanged();
     }
 
@@ -130,20 +128,15 @@ public class AdapterCatProdComm
         public void onClick(View v) {
 
             // Get the product from the adapter at the clicked position
-            ProductCommunity prodComm = mProdComm.get(getAdapterPosition());
+            VmProd vmProd = mListVmProd.get(getAdapterPosition());
 
             // Find out if this user was the creator of the product
-            boolean isCreator = mUserId.equals(prodComm.getCreatedBy());
+            boolean isCreator = mUserId.equals(vmProd.getCreatedBy());
 
             // Click handler for this product type
-            //mProductClickHandler.onClick(prodComm, isCreator);
+            mClickHandler.onClick(vmProd, isCreator);
         }
     }
-
-    /* Interface that executes the onProductClicked method in the host Activity / Fragment. */
-//    public interface AdapterCatProdClickHandler {
-//        void onClick(ProductCommunity clickedProduct, boolean isCreator);
-//    }
 
     /* Setter for the user Id. The setting of this field is essential. */
     void setUserId(String userId){

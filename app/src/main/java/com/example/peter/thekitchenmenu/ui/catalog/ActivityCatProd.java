@@ -1,5 +1,6 @@
 package com.example.peter.thekitchenmenu.ui.catalog;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -10,50 +11,46 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
-import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.databaseRemote.RemoteSignIn;
-import com.example.peter.thekitchenmenu.data.model.ProductCommunity;
+import com.example.peter.thekitchenmenu.data.repository.Repository;
 import com.example.peter.thekitchenmenu.databinding.ActivityCatalogProductBinding;
-import com.example.peter.thekitchenmenu.data.model.Product;
-import com.example.peter.thekitchenmenu.ui.detail.ActivityDetailProduct;
-
+import com.example.peter.thekitchenmenu.ui.detail.ActivityDetailProd;
+import com.example.peter.thekitchenmenu.viewmodels.ViewModelMyCommProd;
 
 /**
  * The main entry point for product related actions and the host activity
- * for {@link FragmentCatProdComm} and {@link FragmentCatProdMy}.
+ * for {@link FragmentCatVmProd} and {@link FragmentCatVmProdMy}.
  */
 public class ActivityCatProd
-        extends
-        AppCompatActivity
-        implements
-        OnClickProdMy{
+        extends AppCompatActivity {
 
     public static final String LOG_TAG = ActivityCatProd.class.getSimpleName();
 
-    // Instance of the Firebase remote sign in class
     RemoteSignIn mRemoteSignIn;
-
-    // Binding class for the views.
+    Repository mRepository;
+    ViewModelMyCommProd viewModelMyCommProd;
     ActivityCatalogProductBinding mCatProdBinding;
-
-    // Adapter for the ViewPager.
     AdapterPageCatProd mAdapterPageCatProd;
-
-    // ViewPager to swipe through the fragments.
     ViewPager mViewPager;
-
-    private FragmentCatProdComm mFragmentCatProdComm;
-    private FragmentCatProdMy mFragmentCatProdMy;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mFragmentCatProdComm = new FragmentCatProdComm();
-        mFragmentCatProdMy = new FragmentCatProdMy();
         mRemoteSignIn = new RemoteSignIn(this);
         initialiseViews();
+        setupViewModel();
+    }
+
+    private void setupViewModel() {
+        viewModelMyCommProd = ViewModelProviders.of(this).get(ViewModelMyCommProd.class);
+
+        viewModelMyCommProd.getSelected().observe(this, vmProd -> {
+            if (vmProd != null)
+            Toast.makeText(this, "In Activity. Product selected is: " + vmProd.getDescription(), Toast.LENGTH_SHORT).show();
+        });
     }
 
     // Sets up the views for this activity.
@@ -67,7 +64,7 @@ public class ActivityCatProd
         mCatProdBinding.activityCatalogProductFab.setOnClickListener(v -> {
 
             Intent addProductIntent = new Intent(ActivityCatProd.this,
-                    ActivityDetailProduct.class);
+                    ActivityDetailProd.class);
             startActivity(addProductIntent);
 
             // Sliding animation.
@@ -78,13 +75,13 @@ public class ActivityCatProd
         // Sets up the ToolBar.
         setSupportActionBar(mCatProdBinding.activityCatalogProductToolbar);
 
-        // View pager for the FragmentCatProdComm and FragmentCatProdMy fragments.
+        // View pager for the FragmentCatVmProd and FragmentCatVmProdMy fragments.
         mAdapterPageCatProd = new AdapterPageCatProd(getSupportFragmentManager());
 
         mViewPager = mCatProdBinding.activityCatalogProductVp;
         mViewPager.setAdapter(mAdapterPageCatProd);
 
-        // Sets up the ViewPager for the FragmentCatProdComm and FragmentCatProdMy fragments.
+        // Sets up the ViewPager for the FragmentCatVmProd and FragmentCatVmProdMy fragments.
         if (mCatProdBinding.activityCatalogProductVp != null) {
             setupViewPager(mCatProdBinding.activityCatalogProductVp);
         }
@@ -100,11 +97,11 @@ public class ActivityCatProd
         mAdapterPageCatProd = new AdapterPageCatProd(getSupportFragmentManager());
 
         // Page 0 - for a list of all (community) products.
-        mAdapterPageCatProd.addFragment(mFragmentCatProdComm,
+        mAdapterPageCatProd.addFragment(new FragmentCatVmProd(),
                         getString(R.string.activity_catalog_products_tab_1_title));
 
         // Page 1 - for a list of the users used products.
-        mAdapterPageCatProd.addFragment(mFragmentCatProdMy,
+        mAdapterPageCatProd.addFragment(new FragmentCatVmProdMy(),
                         getString(R.string.activity_catalog_products_tab_2_title));
 
         viewPager.setAdapter(mAdapterPageCatProd);
@@ -153,23 +150,6 @@ public class ActivityCatProd
     @Override
     public void finish() {
         super.finish();
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-    }
-
-    @Override
-    public void onClick(ProductCommunity clickedProduct, boolean isCreator) {
-        /*
-          A product has been clicked in the RecyclerView. Add the Firebase product to an intent
-          and go to ActivityDetailProduct.
-         */
-        Intent intent = new Intent(ActivityCatProd.this, ActivityDetailProduct.class);
-
-        intent.putExtra(Constants.PRODUCT_FB_REFERENCE_KEY, clickedProduct);
-        intent.putExtra(Constants.PRODUCT_IS_CREATOR_KEY, isCreator);
-
-        startActivity(intent);
-
-        // Sliding animation
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 }

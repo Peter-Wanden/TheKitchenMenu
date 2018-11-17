@@ -66,10 +66,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class ActivityDetailProduct
+public class ActivityDetailProd
         extends AppCompatActivity {
 
-    public static final String LOG_TAG = ActivityDetailProduct.class.getSimpleName();
+    public static final String LOG_TAG = ActivityDetailProd.class.getSimpleName();
 
     // TODO - Input validation:
     // TODO - Use 'do while'. See Intro to Java L13:L6.2-2
@@ -181,9 +181,6 @@ public class ActivityDetailProduct
         initialiseFirebaseAuthentication();
         checkSavedInstanceState(savedInstanceState);
         initialiseViews();
-
-        Object o = ServerValue.TIMESTAMP;
-
     }
 
     /* Initialise anything here that can only be done when signed in */

@@ -2,6 +2,7 @@ package com.example.peter.thekitchenmenu.data.databaseRemote;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.peter.thekitchenmenu.R;
@@ -22,6 +23,8 @@ import static com.example.peter.thekitchenmenu.app.Constants.ANONYMOUS;
 import static com.example.peter.thekitchenmenu.app.Constants.REQUEST_CODE_SIGN_IN;
 
 public class RemoteSignIn {
+
+    private static final String LOG_TAG = RemoteSignIn.class.getSimpleName();
 
     ActivityCatProd mActivityCatProd;
 
@@ -125,6 +128,7 @@ public class RemoteSignIn {
 
     // Handles sign out
     public void signOut(Context context) {
+        Log.i(LOG_TAG, "--- User signed out from remote database");
         AuthUI.getInstance().signOut(context);
     }
 }

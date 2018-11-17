@@ -28,7 +28,7 @@
         </activity>
 
         <activity
-            android:name=".ui.detail.ActivityDetailProduct"
+            android:name=".ui.detail.ActivityDetailProd"
             android:label="@string/activity_detail_product_title"
             android:theme="@style/AppTheme" />
 

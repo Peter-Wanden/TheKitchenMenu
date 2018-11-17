@@ -18,53 +18,49 @@ import android.view.ViewGroup;
 
 import com.example.peter.thekitchenmenu.R;
 import static com.example.peter.thekitchenmenu.app.Constants.ANONYMOUS;
+
+import com.example.peter.thekitchenmenu.data.model.DmProdComm;
+import com.example.peter.thekitchenmenu.data.model.VmProd;
 import com.example.peter.thekitchenmenu.databinding.FragmentCatalogProductsBinding;
-import com.example.peter.thekitchenmenu.data.model.ProductCommunity;
-import com.example.peter.thekitchenmenu.viewmodels.ViewModelProdComm;
+import com.example.peter.thekitchenmenu.viewmodels.ViewModelMyCommProd;
 
 import java.util.List;
 import java.util.Objects;
 
-/**
- * Displays the {@link ProductCommunity} list.
- */
-public class FragmentCatProdComm extends Fragment {
+public class FragmentCatVmProdMy
+        extends Fragment
+        implements OnClickVmProd {
 
-    // TODO - make a super class, for FragmentCommunityProducts and FragmentMyProducts to inherit.
-    private static final String LOG_TAG = FragmentCatProdComm.class.getSimpleName();
+    private static final String LOG_TAG = FragmentCatVmProdMy.class.getSimpleName();
 
     private AdapterCatProdComm mAdapterCatProd;
-    private Parcelable mLayoutManagerState;
-    private ViewModelProdComm mViewModelProdComm;
     private FragmentCatalogProductsBinding mCatProdBinding;
-
-    // TODO - add a click interface
+    private Parcelable mLayoutManagerState;
+    private ViewModelMyCommProd mViewModelProdCommMy;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mAdapterCatProd = new AdapterCatProdComm(getActivity());
+        mAdapterCatProd = new AdapterCatProdComm(getActivity(), this);
 
-        mViewModelProdComm = ViewModelProviders.of(this).get(ViewModelProdComm.class);
+        mViewModelProdCommMy = ViewModelProviders.of(getActivity()).get(ViewModelMyCommProd.class);
 
-        // Observes changes to the ProductCommunity data and passes them to the adaptor
-        final Observer<List<ProductCommunity>> prodCommObserver = prodComms
-                -> {
-            mAdapterCatProd.setProducts(prodComms);
-        };
-        mViewModelProdComm.getAllProdComms().observe(this, prodCommObserver);
+        // Observes changes to view model ProdMy list and passes them to the adaptor.
+        final Observer<List<VmProd>> viewModelProd = vmProds
+                -> mAdapterCatProd.setProducts(vmProds);
+        mViewModelProdCommMy.getAllVmProdMy().observe(this, viewModelProd);
 
-        // Observes changes to the UserId state and passes them to the adaptor.
+        // Observes changes to the user ID state and passes them to the adaptor.
         final Observer<String> userIdObserver = newUserId
                 -> {
             if (newUserId !=null && !newUserId.equals(ANONYMOUS)) {
                 // Turns remote data sync on
-                mViewModelProdComm.setRemoteSyncEnabled(true);
+                mViewModelProdCommMy.setRemoteSyncEnabled(true);
                 mAdapterCatProd.setUserId(newUserId);
             }
         };
-        mViewModelProdComm.getUserId().observe(this, userIdObserver);
+        mViewModelProdCommMy.getUserId().observe(this, userIdObserver);
     }
 
     @Nullable
@@ -81,20 +77,24 @@ public class FragmentCatProdComm extends Fragment {
         if (getResources().getBoolean(R.bool.is_tablet) ||
                 getResources().getBoolean(R.bool.is_landscape)) {
 
-            GridLayoutManager gridManager = new GridLayoutManager((getActivity())
-                            .getApplicationContext(), columnCalculator());
+            GridLayoutManager gridManager = new
+                    GridLayoutManager(getActivity().
+                    getApplicationContext(), columnCalculator());
 
             mCatProdBinding.fragmentCatalogProductsRv.
                     setLayoutManager(gridManager);
-
         } else {
-            LinearLayoutManager linearManager = new LinearLayoutManager(getActivity()
-                    .getApplicationContext(),LinearLayoutManager.VERTICAL, false);
+            LinearLayoutManager linearManager = new
+                    LinearLayoutManager(getActivity().getApplicationContext(),
+                    LinearLayoutManager.VERTICAL, false);
 
-            mCatProdBinding.fragmentCatalogProductsRv.setLayoutManager(linearManager);
+            mCatProdBinding.
+                    fragmentCatalogProductsRv.
+                    setLayoutManager(linearManager);
         }
 
         mCatProdBinding.fragmentCatalogProductsRv.setHasFixedSize(true);
+
         mCatProdBinding.fragmentCatalogProductsRv.setAdapter(mAdapterCatProd);
 
         // Post configuration change, restores the state of the previous layout manager to the new
@@ -130,9 +130,8 @@ public class FragmentCatProdComm extends Fragment {
     public void onPause() {
         super.onPause();
 
-        mViewModelProdComm.setRemoteSyncEnabled(false);
+        mViewModelProdCommMy.setRemoteSyncEnabled(false);
 
-        // Get the grid / linear layout manager's state.
         mLayoutManagerState = mCatProdBinding.fragmentCatalogProductsRv.
                 getLayoutManager().
                 onSaveInstanceState();
@@ -142,7 +141,12 @@ public class FragmentCatProdComm extends Fragment {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        // Save the grid / linear layout manager's state.
         outState.putParcelable("layoutManagerState", mLayoutManagerState);
+    }
+
+    @Override
+    public void onClick(VmProd vmProd, boolean isCreator) {
+        // TODO - update ViewModel to take these values
+        mViewModelProdCommMy.selectedItem(vmProd, isCreator);
     }
 }

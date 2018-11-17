@@ -8,7 +8,7 @@ import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
 import com.example.peter.thekitchenmenu.app.Constants;
-import com.example.peter.thekitchenmenu.data.model.ProductCommunity;
+import com.example.peter.thekitchenmenu.data.model.DmProdComm;
 
 import java.util.List;
 
@@ -19,21 +19,21 @@ public interface ProdCommDAO {
     @Query("SELECT * " +
             "FROM "+ Constants.TABLE_PRODUCT_COMM +
             " ORDER BY " + Constants.TABLE_PRODUCT_COMM_DESCRIPTION)
-    LiveData<List<ProductCommunity>> getAllProdComms();
+    LiveData<List<DmProdComm>> getAllProdComms();
 
     // Gets a list of CommunityProducts given an array if ID's.
     @Query("SELECT * " +
             "FROM " + Constants.TABLE_PRODUCT_COMM +
             " WHERE " + Constants.TABLE_PRODUCT_COMM_ID +
             " IN(:idArray)")
-    LiveData<List<ProductCommunity>> getProdCommsByIdArray(int[] idArray);
+    LiveData<List<DmProdComm>> getProdCommsByIdArray(int[] idArray);
 
-    // Gets a single ProductCommunity by specifying its ID
+    // Gets a single DmProdComm by specifying its ID
     @Query("SELECT * " +
            "FROM " +
             Constants.TABLE_PRODUCT_COMM +
             " WHERE _id = :id")
-    LiveData<ProductCommunity> getProdCommById(int id);
+    LiveData<DmProdComm> getProdCommById(int id);
 
     // Retrieves a single product by specifying its remote database reference
     @Query("SELECT * " +
@@ -41,19 +41,19 @@ public interface ProdCommDAO {
             Constants.TABLE_PRODUCT_COMM +
             " WHERE " +
             Constants.PRODUCT_COMM_FB_REFERENCE_KEY + " = :remoteId")
-    ProductCommunity getProdCommByRemoteId(String remoteId);
+    DmProdComm getProdCommByRemoteId(String remoteId);
 
     @Insert
-    void insertProdComm(ProductCommunity prodComm);
+    void insertProdComm(DmProdComm dmProdComm);
 
     @Insert
-    void insertProdComms(List<ProductCommunity> prodComm);
+    void insertProdComms(List<DmProdComm> dmProdComm);
 
     @Update
-    void updateProdComm(ProductCommunity prodComm);
+    void updateProdComm(DmProdComm dmProdComm);
 
     @Delete
-    void deleteProdComm(ProductCommunity prodComm);
+    void deleteProdComm(DmProdComm dmProdComm);
 
     @Query("DELETE FROM " + Constants.TABLE_PRODUCT_COMM)
     void deleteAllProdComms();

@@ -33,13 +33,13 @@
     <string name="label_category">Category</string>
     <string name="label_quantity">Quantity</string>
 
-    <!-- ActivityDetailProduct unit of measure spinner options -->
+    <!-- ActivityDetailProd unit of measure spinner options -->
     <string name="uom_option_0">Select measurement</string>
     <string name="uom_option_1">grams</string>
     <string name="uom_option_2">ml</string>
     <string name="uom_option_3">count</string>
 
-    <!-- ActivityDetailProduct shelf life spinner options -->
+    <!-- ActivityDetailProd shelf life spinner options -->
     <string name="shelf_life_option_0">Select shelf life</string>
     <string name="shelf_life_option_1">1 day</string>
     <string name="shelf_life_option_2">3 days</string>
@@ -58,7 +58,7 @@
     <string name="shelf_life_option_15">Packet</string>
     <string name="shelf_life_option_16">N/A</string>
 
-    <!-- ActivityDetailProduct category spinner options -->
+    <!-- ActivityDetailProd category spinner options -->
     <string name="product_category_option_0">Select category</string>
     <string name="product_category_option_1">Food</string>
     <string name="product_category_option_2">Non food</string>
@@ -77,7 +77,7 @@
     <string name="activity_detail_product_title_add_new">Add a Product</string>
     <string name="widget_product_title_latest_products">Latest Products</string>
 
-    <!-- ActivityDetailProduct user input error codes -->
+    <!-- ActivityDetailProd user input error codes -->
     <string name="input_error_product_description_too_short">Description too short, needs to be
         between 1 and 120 characters.</string>
     <string name="input_error_product_description_too_long">Description too long, needs to be

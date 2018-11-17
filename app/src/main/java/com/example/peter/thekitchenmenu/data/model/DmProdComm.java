@@ -4,7 +4,6 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
-import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -19,7 +18,7 @@ import java.util.Map;
  * A community product model that holds product fields common to all users.
  */
 @Entity(tableName = Constants.TABLE_PRODUCT_COMM)
-public class ProductCommunity implements Parcelable {
+public class DmProdComm implements Parcelable {
 
     @Exclude // Excludes field from Firebase, as is only required for Room.
     @PrimaryKey(autoGenerate = true)
@@ -66,7 +65,7 @@ public class ProductCommunity implements Parcelable {
 
     /* Empty constructor as required by Firebase. */
     @Ignore
-    public ProductCommunity(){}
+    public DmProdComm(){}
 
     /**
      * Constructor for Room
@@ -83,19 +82,19 @@ public class ProductCommunity implements Parcelable {
      * @param commCreateDate A long TIMESTAMP describing when the product was first created.
      * @param commLastUpdate A long TIMESTAMP describing when the product was last updated.
      */
-    public ProductCommunity(int id,
-                            String description,
-                            String madeBy,
-                            int category,
-                            int shelfLife,
-                            int mPackSize,
-                            int unitOfMeasure,
-                            double packPriceAverage,
-                            String createdBy,
-                            @NonNull String fbStorageImageUri,
-                            long commCreateDate,
-                            long commLastUpdate,
-                            String fbProductReferenceKey) {
+    public DmProdComm(int id,
+                      String description,
+                      String madeBy,
+                      int category,
+                      int shelfLife,
+                      int mPackSize,
+                      int unitOfMeasure,
+                      double packPriceAverage,
+                      String createdBy,
+                      @NonNull String fbStorageImageUri,
+                      long commCreateDate,
+                      long commLastUpdate,
+                      String fbProductReferenceKey) {
 
         this.id = id;
         this.mDescription = description;
@@ -114,7 +113,7 @@ public class ProductCommunity implements Parcelable {
 
 
     @Ignore
-    public ProductCommunity(Parcel in) {
+    public DmProdComm(Parcel in) {
         id = in.readInt();
         mDescription = in.readString();
         mMadeBy = in.readString();
@@ -152,15 +151,15 @@ public class ProductCommunity implements Parcelable {
         return 0;
     }
 
-    public static final Creator<ProductCommunity> CREATOR = new Creator<ProductCommunity>() {
+    public static final Creator<DmProdComm> CREATOR = new Creator<DmProdComm>() {
         @Override
-        public ProductCommunity createFromParcel(Parcel in) {
-            return new ProductCommunity(in);
+        public DmProdComm createFromParcel(Parcel in) {
+            return new DmProdComm(in);
         }
 
         @Override
-        public ProductCommunity[] newArray(int size) {
-            return new ProductCommunity[size];
+        public DmProdComm[] newArray(int size) {
+            return new DmProdComm[size];
         }
     };
 

@@ -3,8 +3,8 @@ package com.example.peter.thekitchenmenu.data.repository;
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
 
-import com.example.peter.thekitchenmenu.data.model.ProductCommunity;
-import com.example.peter.thekitchenmenu.data.model.ProductMy;
+import com.example.peter.thekitchenmenu.data.model.DmProdComm;
+import com.example.peter.thekitchenmenu.data.model.DmProdMy;
 
 import java.util.List;
 
@@ -17,9 +17,10 @@ public class Repository {
 
     private RepositoryLocal mRepoLocal;
     private RepositoryRemote mRepoRemote;
-    private LiveData<List<ProductCommunity>> mGetAllProdComms;
-    private LiveData<List<ProductCommunity>> mGetProdCommsByIdArray;
-    private LiveData<List<ProductMy>> mGetAllProdMys;
+    private LiveData<List<DmProdComm>> mGetAllProdComms;
+    private LiveData<List<DmProdComm>> mGetProdCommsByIdArray;
+    private LiveData<List<DmProdMy>> mGetAllProdMys;
+    private LiveData<DmProdMy> mGetProdMyById;
 
     public Repository(Application application) {
         mRepoLocal = new RepositoryLocal(application);
@@ -27,7 +28,7 @@ public class Repository {
     }
 
     /**
-     * Informs the remote repository to start and stop listening to {@link ProductCommunity}
+     * Informs the remote repository to start and stop listening to {@link DmProdComm}
      * data.
      * @param isLive True, to start listening, false to stop.
      *               If this data is used by a ViewModel, this value should be set to true in
@@ -38,39 +39,39 @@ public class Repository {
     }
 
     /**
-     * Gets a list of all {@link ProductCommunity} objects from teh local database
-     * @return a list of all {@link ProductCommunity} stored in the local database.
+     * Gets a list of all {@link DmProdComm} objects from teh local database
+     * @return a list of all {@link DmProdComm} stored in the local database.
      */
-    public LiveData<List<ProductCommunity>> getAllProdComms() {
+    public LiveData<List<DmProdComm>> getAllProdComms() {
         mGetAllProdComms = mRepoLocal.getAllProdComms();
         return mGetAllProdComms;
     }
 
     /**
-     * Gets a list of {@link ProductCommunity} objects given an array of ID's
+     * Gets a list of {@link DmProdComm} objects given an array of ID's
      * @param idList an array of id's to fetch.
-     * @return a list of {@link ProductCommunity} where id's match the id's in the input array.
+     * @return a list of {@link DmProdComm} where id's match the id's in the input array.
      */
-    public LiveData<List<ProductCommunity>> getProdCommsByIdArray(int[] idList) {
+    public LiveData<List<DmProdComm>> getProdCommsByIdArray(int[] idList) {
         mGetProdCommsByIdArray = mRepoLocal.getProdCommsByIdArray(idList);
         return mGetProdCommsByIdArray;
     }
 
     /**
-     * Takes a remote {@link ProductCommunity} and synchronises it with the local repository.
+     * Takes a remote {@link DmProdComm} and synchronises it with the local repository.
      * The remote object has priority.
-     * @param prodComm the remote {@link ProductCommunity}
+     * @param dmProdComm the remote {@link DmProdComm}
      */
-    void syncProdComm(ProductCommunity prodComm) {
-        mRepoLocal.remoteSyncProdComm(prodComm);
+    void syncProdComm(DmProdComm dmProdComm) {
+        mRepoLocal.remoteSyncProdComm(dmProdComm);
     }
 
     /**
-     * Gets a single {@link ProductCommunity} object given its ID
-     * @param id the id of the {@link ProductCommunity} object to return.
+     * Gets a single {@link DmProdComm} object given its ID
+     * @param id the id of the {@link DmProdComm} object to return.
      * @return the requested object.
      */
-    public LiveData<ProductCommunity> getProdCommById(int id){
+    public LiveData<DmProdComm> getProdCommById(int id){
         return mRepoLocal.getProdCommById(id);
     }
 
@@ -84,20 +85,34 @@ public class Repository {
     }
 
     /**
-     * Gets a list of all {@link ProductMy} objects from the local database
-     * @return a list of {@link ProductMy} objects.
+     * Gets a list of all {@link DmProdMy} objects from the local database
+     * @return a list of {@link DmProdMy} objects.
      */
-    public LiveData<List<ProductMy>> getAllProdMys() {
+    public LiveData<List<DmProdMy>> getAllProdMys() {
         mGetAllProdMys = mRepoLocal.getAllProdMys();
         return mGetAllProdMys;
     }
 
     /**
-     * Takes an incoming {@link ProductMy} from the remote repository and synchronises it with the
-     * local repository. The remote {@link ProductMy} has priority.
-     * @param productMy the incoming remote product.
+     * Gets a single {@link DmProdMy} by ID
+     * @param id the local database id of the object to return
+     * @return the requested DmProdMy object.
      */
-    void remoteSyncProdMy(ProductMy productMy) {
-        mRepoLocal.remoteSyncProdMy(productMy);
+    public LiveData<DmProdMy> getProdMyById(int id) {
+        mGetProdMyById = mRepoLocal.getProdMyById(id);
+        return mGetProdMyById;
+    }
+
+    public DmProdMy getProdMyByCommId(int commId) {
+        return mRepoLocal.getProdMyByCommId(commId);
+    }
+
+    /**
+     * Takes an incoming {@link DmProdMy} from the remote repository and synchronises it with the
+     * local repository. The remote {@link DmProdMy} has priority.
+     * @param dmProdMy the incoming remote product.
+     */
+    void remoteSyncProdMy(DmProdMy dmProdMy) {
+        mRepoLocal.remoteSyncProdMy(dmProdMy);
     }
 }

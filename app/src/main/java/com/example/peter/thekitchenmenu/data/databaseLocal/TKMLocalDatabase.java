@@ -6,12 +6,12 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
 import com.example.peter.thekitchenmenu.app.Constants;
-import com.example.peter.thekitchenmenu.data.model.ProductCommunity;
-import com.example.peter.thekitchenmenu.data.model.ProductMy;
+import com.example.peter.thekitchenmenu.data.model.DmProdComm;
+import com.example.peter.thekitchenmenu.data.model.DmProdMy;
 
 @Database(entities = {
-        ProductCommunity.class,
-        ProductMy.class},
+        DmProdComm.class,
+        DmProdMy.class},
         version = 2,
         exportSchema = false)
 public abstract class TKMLocalDatabase extends RoomDatabase {
