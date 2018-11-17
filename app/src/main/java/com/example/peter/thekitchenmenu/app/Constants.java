@@ -7,6 +7,7 @@ import android.util.Log;
 public abstract class Constants {
 
     private static final String LOG_TAG = Constants.class.getSimpleName();
+    // TODO - Move constants to their respective packages
 
     /* **********
      * PRODUCTS *

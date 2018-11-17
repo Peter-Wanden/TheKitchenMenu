@@ -53,7 +53,15 @@ public class FragmentCatVmProd
 
         // Observes changes to the DmProdComm data and passes them to the adaptor
         final Observer<List<VmProd>> prodCommObserver = prodComms
-                -> mAdapterCatProd.setProducts(prodComms);
+                -> {
+            mAdapterCatProd.setProducts(prodComms);
+            if (prodComms !=null) {
+                for (VmProd vmp : prodComms) {
+                    Log.i(LOG_TAG, "--- Product being processed: " + vmp.getDescription());
+
+                }
+            }
+        };
         mViewModelProdCommMy.getMatchVmProdsMyComm().observe(this, prodCommObserver);
 
         // Observes changes to the UserId state and passes them to the adaptor.

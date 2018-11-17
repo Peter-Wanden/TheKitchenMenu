@@ -72,13 +72,12 @@ public class ActivityDetailProd
     public static final String LOG_TAG = ActivityDetailProd.class.getSimpleName();
 
     // TODO - Input validation:
-    // TODO - Use 'do while'. See Intro to Java L13:L6.2-2
     // TODO - Make sure numbers cannot go negative OR be a decimal
 
     // Data binding classes for the layouts we use in this class
     ActivityDetailProductBinding mDetailProductBinding;
 
-    // Product object instance
+    // VmProduct object instance
     private Product
             mProduct;
 

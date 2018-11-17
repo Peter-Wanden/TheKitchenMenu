@@ -6,7 +6,6 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,22 +25,11 @@ public class ViewModelMyCommProd extends AndroidViewModel {
 
     private Repository mRepository;
 
-    // Data models.
-    private LiveData<List<DmProdComm>> mDmGetAllProdComm;
-    private LiveData<List<DmProdMy>> mDmGetAllProdMy;
-
     // View models.
     private MediatorLiveData<List<VmProd>> mVmLiveDataMatchMergeMyComm = new MediatorLiveData<>();
-
     // Mutable primitives.
     private MutableLiveData<String> mUserId;
     private boolean isCreator;
-
-    // TODO - Might be better using Queue as tha data is live.
-    private List<DmProdMy> mProdMys = new ArrayList<>();
-    private List<DmProdComm> mProdComms = new ArrayList<>();
-    private List<VmProd> mVmProdMyComm = new ArrayList<>();
-
     // The item in the adapter, passed through the click interface of the fragment.
     private final MutableLiveData<VmProd> mSelectedVmProd = new MutableLiveData<>();
 
@@ -49,64 +37,80 @@ public class ViewModelMyCommProd extends AndroidViewModel {
         super(application);
         mRepository = new Repository(application);
         mUserId = Constants.getUserId();
-        mDmGetAllProdComm = mRepository.getAllProdComms();
-        mDmGetAllProdMy = mRepository.getAllProdMys();
+        initialiseDataSource();
     }
 
-    // Converts the DmProdComm and DmProdMy data streams into a VmProd data stream.
-    // Where a DmProdComm and DmProdMy match, they are merged.
-    // TODO - DELIVERING TWO SETS OF RESULTS - When getAllVmProdMy() and getMatchVmProdsMyComm() attached.
-    public MediatorLiveData<List<VmProd>> getMatchVmProdsMyComm() {
+    // Initialises the data sources for this view model
+    private void initialiseDataSource() {
 
+        // Data models.
+        LiveData<List<DmProdComm>> mDmGetAllProdComm = mRepository.getAllProdComms();
+        LiveData<List<DmProdMy>> mDmGetAllProdMy = mRepository.getAllProdMys();
+
+        List<DmProdMy> mListProdMy = new ArrayList<>();
+        List<DmProdComm> mListProdComm = new ArrayList<>();
+
+        // Adds the source objects to the mediator. Ensures all data sets have returned results
+        // before processing data.
         mVmLiveDataMatchMergeMyComm.addSource(mDmGetAllProdComm, dmProdComms -> {
             if (dmProdComms != null) {
-                mProdComms.addAll(dmProdComms);
+                mListProdComm.addAll(dmProdComms);
+                if (!mListProdMy.isEmpty()) {
+                    mVmLiveDataMatchMergeMyComm.setValue(
+                            mergeMatchMyComm(mListProdComm, mListProdMy));
+                }
             }
-            mergeMatchMyComm();
         });
 
         mVmLiveDataMatchMergeMyComm.addSource(mDmGetAllProdMy, dmProdMys -> {
             if (dmProdMys != null) {
-                mProdMys.addAll(dmProdMys);
+                mListProdMy.addAll(dmProdMys);
+                if (!mListProdComm.isEmpty()) {
+                    mVmLiveDataMatchMergeMyComm.setValue(
+                            mergeMatchMyComm(mListProdComm, mListProdMy));
+                }
             }
-            mergeMatchMyComm();
         });
+    }
 
+    // Converts the DmProdComm and DmProdMy data models into a VmProd data stream.
+    public MediatorLiveData<List<VmProd>> getMatchVmProdsMyComm() {
         return mVmLiveDataMatchMergeMyComm;
     }
 
     // Converts Matches and merges DmProdComms with DmProdMys into VmProds.
-    private void mergeMatchMyComm() {
-        mVmProdMyComm.clear();
-        for (DmProdComm dmPc : mProdComms) {
+    private List<VmProd> mergeMatchMyComm(List<DmProdComm> listDmPc, List<DmProdMy> listDmPm) {
+
+        List<VmProd> listVmP = new ArrayList<>();
+
+        for (DmProdComm dmPc : listDmPc) {
             VmProd vmp = null;
-            for(DmProdMy dmPm : mProdMys) {
+
+            for(DmProdMy dmPm : listDmPm) {
                 if (dmPc.getId() == dmPm.getCommunityProductId()) {
                     vmp = new VmProd(dmPm, dmPc);
-                    mVmProdMyComm.add(vmp);
+                    listVmP.add(vmp);
                 }
             }
+
             if(vmp == null) {
                 vmp = new VmProd(dmPc);
-                mVmProdMyComm.add(vmp);
+                listVmP.add(vmp);
             }
         }
-        mVmLiveDataMatchMergeMyComm.setValue(mVmProdMyComm);
+        return listVmP;
     }
 
-    // Returns only the DmProdMy data in a VmProd view model.
+    // Returns only the DmProdMy data in the VmProd view model.
     public LiveData<List<VmProd>> getAllVmProdMy() {
-
         return Transformations.map(mVmLiveDataMatchMergeMyComm, this::filterMy);
     }
 
     // Filters the view model ProdMy data from the view model ProdComm data
     private List<VmProd> filterMy(List<VmProd> allMyCommData) {
-
         List<VmProd> listVmP = new ArrayList<>();
 
         for (VmProd vMp : allMyCommData) {
-
             if(vMp.getProductMyId() != 0) {
                 listVmP.add(vMp);
             }
@@ -121,21 +125,17 @@ public class ViewModelMyCommProd extends AndroidViewModel {
 
     // Turns remote data sync on for all data model objects used by this class
     public void setRemoteSyncEnabled(boolean syncEnabled) {
-
         mRepository.isLiveProdComm(syncEnabled);
         mRepository.IsLiveProdMy(syncEnabled, this.mUserId.getValue());
     }
 
     // Pushes changes to the user ID to observers
     public MutableLiveData<String> getUserId() {
-
         return mUserId;
     }
 
     // Triggered by selecting an item in the Fragment's RecyclerView.
     public void selectedItem(VmProd vmProd, boolean isCreator) {
-
-        Log.i(LOG_TAG, "--- ITEM SELECTED: " + vmProd.getDescription());
         this.isCreator = isCreator;
         mSelectedVmProd.setValue(vmProd);
     }

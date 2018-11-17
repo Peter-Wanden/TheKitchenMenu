@@ -20,6 +20,7 @@ import com.example.peter.thekitchenmenu.databinding.ActivityCatalogProductBindin
 import com.example.peter.thekitchenmenu.ui.detail.ActivityDetailProd;
 import com.example.peter.thekitchenmenu.viewmodels.ViewModelMyCommProd;
 
+
 /**
  * The main entry point for product related actions and the host activity
  * for {@link FragmentCatVmProd} and {@link FragmentCatVmProdMy}.
@@ -30,7 +31,6 @@ public class ActivityCatProd
     public static final String LOG_TAG = ActivityCatProd.class.getSimpleName();
 
     RemoteSignIn mRemoteSignIn;
-    Repository mRepository;
     ViewModelMyCommProd viewModelMyCommProd;
     ActivityCatalogProductBinding mCatProdBinding;
     AdapterPageCatProd mAdapterPageCatProd;
@@ -50,6 +50,17 @@ public class ActivityCatProd
         viewModelMyCommProd.getSelected().observe(this, vmProd -> {
             if (vmProd != null)
             Toast.makeText(this, "In Activity. Product selected is: " + vmProd.getDescription(), Toast.LENGTH_SHORT).show();
+
+//        Intent intent = new Intent(ActivityCatProd.this, ActivityDetailProd.class);
+//
+//        intent.putExtra(Constants.PRODUCT_FB_REFERENCE_KEY, commProd);
+//        intent.putExtra(Constants.PRODUCT_IS_CREATOR_KEY, isCreator);
+//
+//        startActivity(intent);
+//
+//        // Sliding animation
+//        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+//    }
         });
     }
 

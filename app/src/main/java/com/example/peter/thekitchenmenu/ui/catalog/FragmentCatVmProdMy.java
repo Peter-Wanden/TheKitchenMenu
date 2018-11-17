@@ -48,7 +48,14 @@ public class FragmentCatVmProdMy
 
         // Observes changes to view model ProdMy list and passes them to the adaptor.
         final Observer<List<VmProd>> viewModelProd = vmProds
-                -> mAdapterCatProd.setProducts(vmProds);
+                -> {
+            mAdapterCatProd.setProducts(vmProds);
+            if (vmProds != null) {
+                for (VmProd vmp : vmProds) {
+                    Log.i(LOG_TAG, "--- Product delivered: " + vmp.getDescription());
+                }
+            }
+        };
         mViewModelProdCommMy.getAllVmProdMy().observe(this, viewModelProd);
 
         // Observes changes to the user ID state and passes them to the adaptor.
