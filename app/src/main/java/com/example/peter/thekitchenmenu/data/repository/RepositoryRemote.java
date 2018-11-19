@@ -6,7 +6,7 @@ import android.util.Log;
 import com.example.peter.thekitchenmenu.data.model.DmProdComm;
 import com.example.peter.thekitchenmenu.data.model.DmProdMy;
 import com.example.peter.thekitchenmenu.data.databaseRemote.DataListenerPending;
-import com.example.peter.thekitchenmenu.data.databaseRemote.FirebaseReferences;
+import com.example.peter.thekitchenmenu.data.databaseRemote.RemoteDbRefs;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,7 +38,7 @@ class RepositoryRemote {
 
         // Database reference to the community products location in Firebase.
         DatabaseReference productCommunityReference =
-                FirebaseReferences.getRefProdComm();
+                RemoteDbRefs.getRefProdComm();
 
         // Listens to changes in the remote database and reflects them into the local database.
         ValueEventListener communityProductVEL = new ValueEventListener() {
@@ -84,7 +84,7 @@ class RepositoryRemote {
     private void initialiseProductMyVEL(String mUserId) {
 
         DatabaseReference productMyReference =
-                FirebaseReferences.getRefProdMy(mUserId);
+                RemoteDbRefs.getRefProdMy(mUserId);
 
         ValueEventListener myProductVEL = new ValueEventListener() {
             @Override

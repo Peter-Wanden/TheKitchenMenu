@@ -14,11 +14,11 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.peter.thekitchenmenu.R;
+import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.databaseRemote.RemoteSignIn;
-import com.example.peter.thekitchenmenu.data.repository.Repository;
 import com.example.peter.thekitchenmenu.databinding.ActivityCatalogProductBinding;
 import com.example.peter.thekitchenmenu.ui.detail.ActivityDetailProd;
-import com.example.peter.thekitchenmenu.viewmodels.ViewModelMyCommProd;
+import com.example.peter.thekitchenmenu.viewmodels.ViewModelCatProd;
 
 
 /**
@@ -31,7 +31,7 @@ public class ActivityCatProd
     public static final String LOG_TAG = ActivityCatProd.class.getSimpleName();
 
     RemoteSignIn mRemoteSignIn;
-    ViewModelMyCommProd viewModelMyCommProd;
+    ViewModelCatProd viewModelCatProd;
     ActivityCatalogProductBinding mCatProdBinding;
     AdapterPageCatProd mAdapterPageCatProd;
     ViewPager mViewPager;
@@ -45,22 +45,19 @@ public class ActivityCatProd
     }
 
     private void setupViewModel() {
-        viewModelMyCommProd = ViewModelProviders.of(this).get(ViewModelMyCommProd.class);
+        viewModelCatProd = ViewModelProviders.of(this).get(ViewModelCatProd.class);
 
-        viewModelMyCommProd.getSelected().observe(this, vmProd -> {
-            if (vmProd != null)
-            Toast.makeText(this, "In Activity. Product selected is: " + vmProd.getDescription(), Toast.LENGTH_SHORT).show();
+        viewModelCatProd.getSelected().observe(this, vmProd -> {
+            if (vmProd != null) {
 
-//        Intent intent = new Intent(ActivityCatProd.this, ActivityDetailProd.class);
-//
-//        intent.putExtra(Constants.PRODUCT_FB_REFERENCE_KEY, commProd);
-//        intent.putExtra(Constants.PRODUCT_IS_CREATOR_KEY, isCreator);
-//
-//        startActivity(intent);
-//
-//        // Sliding animation
-//        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-//    }
+                Intent intent = new Intent(ActivityCatProd.this, ActivityDetailProd.class);
+                intent.putExtra(Constants.PRODUCT_FB_REFERENCE_KEY, vmProd);
+                intent.putExtra(Constants.PRODUCT_IS_CREATOR_KEY, viewModelCatProd.getIsCreator().getValue());
+                startActivity(intent);
+
+                // Sliding animation
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            }
         });
     }
 
@@ -109,11 +106,11 @@ public class ActivityCatProd
 
         // Page 0 - for a list of all (community) products.
         mAdapterPageCatProd.addFragment(new FragmentCatVmProd(),
-                        getString(R.string.activity_catalog_products_tab_1_title));
+                getString(R.string.activity_catalog_products_tab_1_title));
 
         // Page 1 - for a list of the users used products.
         mAdapterPageCatProd.addFragment(new FragmentCatVmProdMy(),
-                        getString(R.string.activity_catalog_products_tab_2_title));
+                getString(R.string.activity_catalog_products_tab_2_title));
 
         viewPager.setAdapter(mAdapterPageCatProd);
     }

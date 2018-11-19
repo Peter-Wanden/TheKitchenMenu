@@ -22,7 +22,7 @@ import static com.example.peter.thekitchenmenu.app.Constants.ANONYMOUS;
 import com.example.peter.thekitchenmenu.data.model.DmProdComm;
 import com.example.peter.thekitchenmenu.data.model.VmProd;
 import com.example.peter.thekitchenmenu.databinding.FragmentCatalogProductsBinding;
-import com.example.peter.thekitchenmenu.viewmodels.ViewModelMyCommProd;
+import com.example.peter.thekitchenmenu.viewmodels.ViewModelCatProd;
 
 import java.util.List;
 import java.util.Objects;
@@ -39,7 +39,7 @@ public class FragmentCatVmProd
 
     private AdapterCatProdComm mAdapterCatProd;
     private Parcelable mLayoutManagerState;
-    private ViewModelMyCommProd mViewModelProdCommMy;
+    private ViewModelCatProd mViewModelProdCommMy;
     private FragmentCatalogProductsBinding mCatProdBinding;
 
 
@@ -49,7 +49,7 @@ public class FragmentCatVmProd
 
         mAdapterCatProd = new AdapterCatProdComm(getActivity(), this);
 
-        mViewModelProdCommMy = ViewModelProviders.of(getActivity()).get(ViewModelMyCommProd.class);
+        mViewModelProdCommMy = ViewModelProviders.of(getActivity()).get(ViewModelCatProd.class);
 
         // Observes changes to the DmProdComm data and passes them to the adaptor
         final Observer<List<VmProd>> prodCommObserver = prodComms

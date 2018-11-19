@@ -19,9 +19,9 @@ import com.example.peter.thekitchenmenu.data.repository.Repository;
 /**
  * 'DM' in a field's name means data model whereas 'VM' means view model.
  */
-public class ViewModelMyCommProd extends AndroidViewModel {
+public class ViewModelCatProd extends AndroidViewModel {
 
-    private static final String LOG_TAG = ViewModelMyCommProd.class.getSimpleName();
+    private static final String LOG_TAG = ViewModelCatProd.class.getSimpleName();
 
     private Repository mRepository;
 
@@ -29,11 +29,11 @@ public class ViewModelMyCommProd extends AndroidViewModel {
     private MediatorLiveData<List<VmProd>> mVmLiveDataMatchMergeMyComm = new MediatorLiveData<>();
     // Mutable primitives.
     private MutableLiveData<String> mUserId;
-    private boolean isCreator;
+    private MutableLiveData<Boolean> mIsCreator;
     // The item in the adapter, passed through the click interface of the fragment.
     private final MutableLiveData<VmProd> mSelectedVmProd = new MutableLiveData<>();
 
-    public ViewModelMyCommProd(Application application) {
+    public ViewModelCatProd(Application application) {
         super(application);
         mRepository = new Repository(application);
         mUserId = Constants.getUserId();
@@ -134,9 +134,13 @@ public class ViewModelMyCommProd extends AndroidViewModel {
         return mUserId;
     }
 
+    public MutableLiveData<Boolean> getIsCreator() {
+        return mIsCreator;
+    }
+
     // Triggered by selecting an item in the Fragment's RecyclerView.
     public void selectedItem(VmProd vmProd, boolean isCreator) {
-        this.isCreator = isCreator;
+        this.mIsCreator.setValue(isCreator);
         mSelectedVmProd.setValue(vmProd);
     }
 }

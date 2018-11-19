@@ -36,6 +36,8 @@ import android.widget.Toast;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
+import com.example.peter.thekitchenmenu.data.databaseRemote.RemoteDbRefs;
+import com.example.peter.thekitchenmenu.data.model.VmProd;
 import com.example.peter.thekitchenmenu.databinding.ActivityDetailProductBinding;
 import com.example.peter.thekitchenmenu.data.model.Product;
 import com.example.peter.thekitchenmenu.utils.BitmapUtils;
@@ -48,9 +50,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -71,15 +71,11 @@ public class ActivityDetailProd
 
     public static final String LOG_TAG = ActivityDetailProd.class.getSimpleName();
 
-    // TODO - Input validation:
-    // TODO - Make sure numbers cannot go negative OR be a decimal
-
     // Data binding classes for the layouts we use in this class
     ActivityDetailProductBinding mDetailProductBinding;
 
     // VmProduct object instance
-    private Product
-            mProduct;
+    private VmProd mVmProd;
 
     // String member variables for the product fields
     private String
@@ -202,10 +198,10 @@ public class ActivityDetailProd
             if (mFbProductReferenceKey.equals(Constants.DEFAULT_FB_PRODUCT_ID)) {
 
                 // Set the incoming product to its member variable
-                mProduct = intent.getParcelableExtra(Constants.PRODUCT_FB_REFERENCE_KEY);
+                mVmProd = intent.getParcelableExtra(Constants.PRODUCT_FB_REFERENCE_KEY);
 
                 // Set the Firebase product reference ID from the incoming intent */
-                mFbProductReferenceKey = mProduct.getFbProductReferenceKey();
+                mFbProductReferenceKey = mVmProd.getFbProductReferenceKey();
 
                 // Identify if this user is the creator of this product
                 mIsCreator = intent.getBooleanExtra(Constants.PRODUCT_IS_CREATOR_KEY, mIsCreator);
@@ -249,29 +245,29 @@ public class ActivityDetailProd
         if (savedInstanceState != null && savedInstanceState.containsKey(
                 Constants.PRODUCT_FB_REFERENCE_KEY)) {
 
-            // Restore the instance of mProduct
-            mProduct = savedInstanceState.getParcelable(
+            // Restore the instance of mVmProd
+            mVmProd = savedInstanceState.getParcelable(
                     Constants.PRODUCT_FB_REFERENCE_KEY);
 
             // Update the product reference
-            if (mProduct != null) {
+            if (mVmProd != null) {
 
-                mFbProductReferenceKey = mProduct.getFbProductReferenceKey();
-                mFbUsedProductsUserKey = mProduct.getFbUsedProductsUserKey();
-                mDescription = mProduct.getDescription();
-                mRetailer = mProduct.getRetailer();
-                mMadeBy = mProduct.getMadeBy();
-                mUnitOfMeasure = mProduct.getUnitOfMeasure();
-                mPackSize = mProduct.getPackSize();
-                mShelfLife = mProduct.getShelfLife();
-                mLocationRoom = mProduct.getLocationRoom();
-                mLocationInRoom = mProduct.getLocationInRoom();
-                mCategory = mProduct.getCategory();
-                mPackPrice = mProduct.getPackPrice();
-                mPackPriceAverage = mProduct.getPackPriceAverage();
-                mLocalImageUri = Uri.parse(mProduct.getLocalImageUri());
-                mFbStorageImageUri = Uri.parse(mProduct.getLocalImageUri());
-                mCreatedBy = mProduct.getCreatedBy();
+                mFbProductReferenceKey = mVmProd.getFbProductReferenceKey();
+                mFbUsedProductsUserKey = mVmProd.getFbUsedProductsUserKey();
+                mDescription = mVmProd.getDescription();
+                mRetailer = mVmProd.getRetailer();
+                mMadeBy = mVmProd.getMadeBy();
+                mUnitOfMeasure = mVmProd.getUnitOfMeasure();
+                mPackSize = mVmProd.getPackSize();
+                mShelfLife = mVmProd.getShelfLife();
+                mLocationRoom = mVmProd.getLocationRoom();
+                mLocationInRoom = mVmProd.getLocationInRoom();
+                mCategory = mVmProd.getCategory();
+                mPackPrice = mVmProd.getPackPrice();
+                mPackPriceAverage = mVmProd.getPackPriceAverage();
+                mLocalImageUri = Uri.parse(mVmProd.getLocalImageUri());
+                mFbStorageImageUri = Uri.parse(mVmProd.getLocalImageUri());
+                mCreatedBy = mVmProd.getCreatedBy();
             }
 
             // Update the bool's
@@ -358,34 +354,37 @@ public class ActivityDetailProd
         mCameraImageTaken = false;
 
         /* Construct a default product for field value comparison and validation */
-        mProduct = new Product(
-                Constants.DEFAULT_PRODUCT_DESCRIPTION,
-                Constants.DEFAULT_PRODUCT_MADE_BY,
-                Constants.DEFAULT_FB_PRODUCT_ID,
+        mVmProd = new VmProd(
+                Constants.DEFAULT_PROD_MY_ID,
+                Constants.DEFAULT_REMOTE_REF_ID,
                 Constants.DEFAULT_FB_USED_PRODUCT_ID,
                 Constants.DEFAULT_PRODUCT_RETAILER,
-                Constants.DEFAULT_PRODUCT_UOM,
-                Constants.DEFAULT_PRODUCT_PACK_SIZE,
-                Constants.DEFAULT_PRODUCT_SHELF_LIFE,
                 Constants.DEFAULT_PRODUCT_LOC,
                 Constants.DEFAULT_PRODUCT_LOC_IN_ROOM,
-                Constants.DEFAULT_PRODUCT_CATEGORY,
                 Constants.DEFAULT_PRODUCT_PRICE,
-                Constants.DEFAULT_PRODUCT_PRICE_AVERAGE,
                 Constants.DEFAULT_LOCAL_IMAGE_URI,
-                Constants.DEFAULT_FB_IMAGE_STORAGE_URI,
-                Constants.PRODUCT_COMM_CREATED_BY_KEY,
-                Constants.DEFAULT_COMM_CREATE_DATE,
-                Constants.DEFAULT_COMM_LAST_UPDATE,
                 Constants.DEFAULT_MY_CREATE_DATE,
-                Constants.DEFAULT_MY_LAST_UPDATE);
+                Constants.DEFAULT_MY_LAST_UPDATE,
+                Constants.DEFAULT_LOCAL_PROD_COMM_ID,
+                Constants.DEFAULT_REMOTE_REF_ID,
+                Constants.DEFAULT_PRODUCT_DESCRIPTION,
+                Constants.DEFAULT_PRODUCT_MADE_BY,
+                Constants.DEFAULT_PRODUCT_CATEGORY,
+                Constants.DEFAULT_PRODUCT_SHELF_LIFE,
+                Constants.DEFAULT_PRODUCT_PACK_SIZE,
+                Constants.DEFAULT_PRODUCT_UOM,
+                Constants.DEFAULT_PRODUCT_PRICE_AVERAGE,
+                Constants.DEFAULT_PRODUCT_CREATED_BY,
+                Constants.DEFAULT_REMOTE_IMAGE_STORAGE_URI,
+                Constants.DEFAULT_COMM_CREATE_DATE,
+                Constants.DEFAULT_COMM_LAST_UPDATE);
 
         // Set default value for created by
         mCreatedBy = "";
 
         // Set the default value for the local and Firebase Storage Image Uri's
-        mLocalImageUri = Uri.parse(mProduct.getLocalImageUri());
-        mFbStorageImageUri = Uri.parse(mProduct.getFbStorageImageUri());
+        mLocalImageUri = Uri.parse(mVmProd.getLocalImageUri());
+        mFbStorageImageUri = Uri.parse(mVmProd.getFbStorageImageUri());
 
         // Instance of Firebase storage
         mFirebaseStorage = FirebaseStorage.getInstance();
@@ -414,23 +413,14 @@ public class ActivityDetailProd
     /* Sets up Firebase instance and references */
     private void setupFireBase() {
 
-        // Get a reference to the Firebase database
-        FirebaseDatabase mFbDatabase = FirebaseDatabase.getInstance();
-
         // Get the reference point in the database for collection products
-        mFbCollectionProduct = mFbDatabase
-                .getReference()
-                .child(Constants.FB_COLLECTION_PRODUCTS);
+        mFbCollectionProduct = RemoteDbRefs.getRefProdComm();
 
         // Get the reference point in the database for collection users
-        mFbCollectionUsers = mFbDatabase
-                .getReference()
-                .child(Constants.FB_COLLECTION_USERS);
+        mFbCollectionUsers = RemoteDbRefs.getRefUsers();
 
         /* Set the default Firebase used products reference */
-        mFbCollectionUsedProducts = mFbDatabase
-                .getReference()
-                .child(Constants.FB_COLLECTION_USED_PRODUCTS);
+        mFbCollectionUsedProducts = RemoteDbRefs.getRefUserProd();
 
         /* Set the default Firebase product collection reference */
         mFbProductReferenceKey = Constants.DEFAULT_FB_PRODUCT_ID;
@@ -823,32 +813,30 @@ public class ActivityDetailProd
     private void getUsedList() {
 
         // Is the product in the users 'used' list
-        DatabaseReference productRef = mFbCollectionUsers
-                .child(mUserUid)
-                .child(Constants.FB_COLLECTION_PRODUCTS)
-                .child(mFbProductReferenceKey);
+        DatabaseReference prodRef = RemoteDbRefs.
+                getRefProdMy(mUserUid, mFbProductReferenceKey);
 
-        productRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        prodRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 // If the product is in the users used list it will show up here
                 if (dataSnapshot.exists()) {
 
                     // Convert the snapshot into a Product object
-                    mProduct = dataSnapshot.getValue(Product.class);
+                    mVmProd = dataSnapshot.getValue(VmProd.class);
 
                     // Update products Firebase product reference key
-                    mProduct.setFbProductReferenceKey(dataSnapshot.getKey());
+                    mVmProd.setFbProductReferenceKey(dataSnapshot.getKey());
 
                     // This product is in the users used list, so update the used bool
                     mInUsersUsedList = true;
 
                     // Update the member variable for the used products user key
-                    mFbUsedProductsUserKey = mProduct.getFbUsedProductsUserKey();
+                    mFbUsedProductsUserKey = mVmProd.getFbUsedProductsUserKey();
 
                     // Update the image storage location, so if it changes later we can
                     // find out by doing a comparison.
-                    mFbStorageImageUri = Uri.parse(mProduct.getFbStorageImageUri());
+                    mFbStorageImageUri = Uri.parse(mVmProd.getFbStorageImageUri());
 
                     // Update the visibility of the uneditable view containers
                     showUneditableViewContainers();
@@ -941,12 +929,12 @@ public class ActivityDetailProd
     /**
      * saveProduct()
      * There are six reasons a user might want to save product data:
-     * 1. A new product is being created.
-     * 2. An existing product is being updated by the creator and the creator is the only user.
-     * 3. An existing product is being updated by the creator and there is more than one user.
-     * 4. An existing product is being added by someone who may not have used this product before.
-     * 5. An existing product is being updated by someone who has used this product before.
-     * 6. An existing product is being added by the creator who has previously deleted the product.
+     * 1. A new product is being created or an existing product is being:
+     * 2. - updated by the creator and the creator is the only user.
+     * 3. - updated by the creator and there is more than one user.
+     * 4. - added by someone who has not used this product before, or has and is using it again.
+     * 5. - updated by someone who has used this product before.
+     * 6. - added by the creator who has previously deleted the product.
      */
     private void saveProduct() {
 
@@ -1195,16 +1183,16 @@ public class ActivityDetailProd
                         byte[] productImage = baos.toByteArray();
                         // Case 2 & 3
                         // Create a database reference from the existing image reference
-                        if (!mProduct.getFbStorageImageUri().equals("")) {
+                        if (!mVmProd.getFbStorageImageUri().equals("")) {
 
                             // Get the existing reference. If you save an image to an existing
                             // Firestore location it changes the download URL by adding a new media
                             // token, so we need to get the new download URL for all writes.
                             mImageStorageReference = mFirebaseStorage
-                                    .getReferenceFromUrl(mProduct.getFbStorageImageUri());
+                                    .getReferenceFromUrl(mVmProd.getFbStorageImageUri());
 
                             // Create a new database reference for the new image
-                        } else if (mProduct.getFbStorageImageUri().equals("")) {
+                        } else if (mVmProd.getFbStorageImageUri().equals("")) {
 
                             // Create a reference to store the image
                             mImageStorageReference = mImageStorageReference
@@ -1242,7 +1230,7 @@ public class ActivityDetailProd
                                Collate any changes and update the child data in the database.
                             */
 
-                                // mProduct (our reference product) was updated by getUsedList()
+                                // mVmProd (our reference product) was updated by getUsedList()
                                 // when we checked to see if the product existed. We can use this
                                 // instance to check for and collate any updates.
                                 getProductUpdates();
@@ -1277,7 +1265,7 @@ public class ActivityDetailProd
                             Collate any changes and update the child data in the database.
                          */
 
-                        // mProduct (our reference product) was updated by getUsedList()
+                        // mVmProd (our reference product) was updated by getUsedList()
                         // when we checked to see if the product existed. We can use this
                         // instance to compare and collate any updates.
                         getProductUpdates();
@@ -1336,7 +1324,7 @@ public class ActivityDetailProd
                    Collate any changes and update the child data in the database.
                 */
 
-                // mProduct (our reference product) was updated by getUsedList() when we checked
+                // mVmProd (our reference product) was updated by getUsedList() when we checked
                 // to see if the product existed. We can use this instance to check for and
                 // collate any updates.
                 Map<String, Object> productUserUpdates = getUserUpdates();
@@ -1380,7 +1368,7 @@ public class ActivityDetailProd
                    Collate any changes and update the child data in the database.
                 */
 
-                // mProduct (our reference product) was updated by getUsedList() when we checked
+                // mVmProd (our reference product) was updated by getUsedList() when we checked
                 // to see if the product existed. We can use this instance to check for and
                 // collate any updates. In theory, all fields should be updated in this instance,
                 // therefore we should not need to perform this task. However we still need to
@@ -1494,58 +1482,58 @@ public class ActivityDetailProd
     }
 
     /**
-     * Checks for updates to the product data and updates our reference version of mProduct with
+     * Checks for updates to the product data and updates our reference version of mVmProd with
      * the new values
      */
     private void getProductUpdates() {
 
         // Add any changes to the base product information
-        if (!mProduct.getDescription().equals(mDescription)) {
-            mProduct.setDescription(mDescription);
+        if (!mVmProd.getDescription().equals(mDescription)) {
+            mVmProd.setDescription(mDescription);
         }
-        if (!mMadeBy.equals(mProduct.getMadeBy())) {
-            mProduct.setMadeBy(mMadeBy);
+        if (!mMadeBy.equals(mVmProd.getMadeBy())) {
+            mVmProd.setMadeBy(mMadeBy);
         }
-        if (mCategory != mProduct.getCategory()) {
-            mProduct.setCategory(mCategory);
+        if (mCategory != mVmProd.getCategory()) {
+            mVmProd.setCategory(mCategory);
         }
-        if (mShelfLife != mProduct.getShelfLife()) {
-            mProduct.setShelfLife(mShelfLife);
+        if (mShelfLife != mVmProd.getShelfLife()) {
+            mVmProd.setShelfLife(mShelfLife);
         }
-        if (mPackSize != mProduct.getPackSize()) {
-            mProduct.setPackSize(mPackSize);
+        if (mPackSize != mVmProd.getPackSize()) {
+            mVmProd.setPackSize(mPackSize);
         }
-        if (mUnitOfMeasure != mProduct.getUnitOfMeasure()) {
-            mProduct.setUnitOfMeasure(mUnitOfMeasure);
+        if (mUnitOfMeasure != mVmProd.getUnitOfMeasure()) {
+            mVmProd.setUnitOfMeasure(mUnitOfMeasure);
         }
-        if (mPackPriceAverage != mProduct.getPackPriceAverage()) {
-            mProduct.setPackPriceAverage(mPackPriceAverage);
+        if (mPackPriceAverage != mVmProd.getPackPriceAverage()) {
+            mVmProd.setPackPriceAverage(mPackPriceAverage);
         }
-        if (!mFbStorageImageUri.toString().equals(mProduct.getFbStorageImageUri())) {
-            mProduct.setFbStorageImageUri(mFbStorageImageUri.toString());
+        if (!mFbStorageImageUri.toString().equals(mVmProd.getFbStorageImageUri())) {
+            mVmProd.setFbStorageImageUri(mFbStorageImageUri.toString());
         }
 
         // Start of user updates
-        if (!mFbProductReferenceKey.equals(mProduct.getFbProductReferenceKey())) {
-            mProduct.setFbProductReferenceKey(mFbProductReferenceKey);
+        if (!mFbProductReferenceKey.equals(mVmProd.getFbProductReferenceKey())) {
+            mVmProd.setFbProductReferenceKey(mFbProductReferenceKey);
         }
-        if (!mFbUsedProductsUserKey.equals(mProduct.getFbUsedProductsUserKey())) {
-            mProduct.setFbUsedProductsUserKey(mFbUsedProductsUserKey);
+        if (!mFbUsedProductsUserKey.equals(mVmProd.getFbUsedProductsUserKey())) {
+            mVmProd.setFbUsedProductsUserKey(mFbUsedProductsUserKey);
         }
-        if (!mRetailer.equals(mProduct.getRetailer())) {
-            mProduct.setRetailer(mRetailer);
+        if (!mRetailer.equals(mVmProd.getRetailer())) {
+            mVmProd.setRetailer(mRetailer);
         }
-        if (!mLocationRoom.equals(mProduct.getLocationRoom())) {
-            mProduct.setLocationRoom(mLocationRoom);
+        if (!mLocationRoom.equals(mVmProd.getLocationRoom())) {
+            mVmProd.setLocationRoom(mLocationRoom);
         }
-        if (!mLocationInRoom.equals(mProduct.getLocationInRoom())) {
-            mProduct.setLocationInRoom(mLocationInRoom);
+        if (!mLocationInRoom.equals(mVmProd.getLocationInRoom())) {
+            mVmProd.setLocationInRoom(mLocationInRoom);
         }
-        if (mPackPrice != mProduct.getPackPrice()) {
-            mProduct.setPackPrice(mPackPrice);
+        if (mPackPrice != mVmProd.getPackPrice()) {
+            mVmProd.setPackPrice(mPackPrice);
         }
-        if (!mLocalImageUri.toString().equals(mProduct.getLocalImageUri())) {
-            mProduct.setLocalImageUri(mLocalImageUri.toString());
+        if (!mLocalImageUri.toString().equals(mVmProd.getLocalImageUri())) {
+            mVmProd.setLocalImageUri(mLocalImageUri.toString());
         }
         // No need to check packPriceAve as it is automatically calculated
         // No need to check createdBy as it cannot be modified once created
@@ -1564,61 +1552,61 @@ public class ActivityDetailProd
         /* Add the base data to the HashMap. */
         productUserUpdates.put(
                 Constants.PRODUCT_COMM_DESCRIPTION_KEY,
-                mProduct.getDescription());
+                mVmProd.getDescription());
         productUserUpdates.put(
                 Constants.PRODUCT_COMM_MADE_BY_KEY,
-                mProduct.getMadeBy());
+                mVmProd.getMadeBy());
         productUserUpdates.put(
                 Constants.PRODUCT_COMM_CATEGORY_KEY,
-                mProduct.getCategory());
+                mVmProd.getCategory());
         productUserUpdates.put(
                 Constants.PRODUCT_COMM_SHELF_LIFE_KEY,
-                mProduct.getShelfLife());
+                mVmProd.getShelfLife());
         productUserUpdates.put(
                 Constants.PRODUCT_COMM_PACK_SIZE_KEY,
-                mProduct.getPackSize());
+                mVmProd.getPackSize());
         productUserUpdates.put(
                 Constants.PRODUCT_COMM_UNIT_OF_MEASURE_KEY,
-                mProduct.getUnitOfMeasure());
+                mVmProd.getUnitOfMeasure());
         productUserUpdates.put(
-                Constants.PRODUCT_COMM_PRICE_AVE_KEY, mProduct.getPackPrice());
+                Constants.PRODUCT_COMM_PRICE_AVE_KEY, mVmProd.getPackPrice());
         productUserUpdates.put(
                 Constants.PRODUCT_COMM_CREATED_BY_KEY,
-                mProduct.getCreatedBy());
+                mVmProd.getCreatedBy());
 
         // Add in the user specific data to the HashMap
         productUserUpdates.put(
                 Constants.PRODUCT_MY_LOCAL_IMAGE_URI_KEY,
-                mProduct.getLocalImageUri());
+                mVmProd.getLocalImageUri());
         productUserUpdates.put(
                 Constants.PRODUCT_MY_FB_STORAGE_IMAGE_URI_KEY,
-                mProduct.getFbStorageImageUri());
+                mVmProd.getFbStorageImageUri());
         productUserUpdates.put(
                 Constants.PRODUCT_MY_FB_REFERENCE_KEY,
-                mProduct.getFbProductReferenceKey());
+                mVmProd.getFbProductReferenceKey());
         productUserUpdates.put(
                 Constants.PRODUCT_MY_FB_USED_PRODUCT_KEY,
-                mProduct.getFbUsedProductsUserKey());
+                mVmProd.getFbUsedProductsUserKey());
 
         // Compare and add any changes from the user specific fields to the HashMap
-        if (!mRetailer.equals(mProduct.getRetailer())) {
+        if (!mRetailer.equals(mVmProd.getRetailer())) {
             productUserUpdates.put(Constants.PRODUCT_MY_RETAILER_KEY, mRetailer);
-            mProduct.setRetailer(mRetailer);
+            mVmProd.setRetailer(mRetailer);
             userUpdateCounter++;
         }
-        if (!mLocationRoom.equals(mProduct.getLocationRoom())) {
+        if (!mLocationRoom.equals(mVmProd.getLocationRoom())) {
             productUserUpdates.put(Constants.PRODUCT_MY_LOCATION_ROOM_KEY, mLocationRoom);
-            mProduct.setLocationRoom(mLocationRoom);
+            mVmProd.setLocationRoom(mLocationRoom);
             userUpdateCounter++;
         }
-        if (!mLocationInRoom.equals(mProduct.getLocationInRoom())) {
+        if (!mLocationInRoom.equals(mVmProd.getLocationInRoom())) {
             productUserUpdates.put(Constants.PRODUCT_MY_LOCATION_IN_ROOM_KEY, mLocationInRoom);
-            mProduct.setLocationInRoom(mLocationInRoom);
+            mVmProd.setLocationInRoom(mLocationInRoom);
             userUpdateCounter++;
         }
-        if (mPackPrice != mProduct.getPackPrice()) {
+        if (mPackPrice != mVmProd.getPackPrice()) {
             productUserUpdates.put(Constants.PRODUCT_MY_PACK_PRICE_KEY, mPackPrice);
-            mProduct.setPackPrice(mPackPrice);
+            mVmProd.setPackPrice(mPackPrice);
             userUpdateCounter++;
         }
 
@@ -1846,10 +1834,10 @@ public class ActivityDetailProd
     private void populateUi() {
 
         // If there is an image Uri present, load the image
-        if (!Uri.EMPTY.equals(Uri.parse(mProduct.getFbStorageImageUri()))) {
+        if (!Uri.EMPTY.equals(Uri.parse(mVmProd.getFbStorageImageUri()))) {
             Picasso.
                     get().
-                    load(mProduct.getFbStorageImageUri()).
+                    load(mVmProd.getFbStorageImageUri()).
                     into(mDetailProductBinding.
                             activityDetailProductIv);
         }
@@ -1864,32 +1852,32 @@ public class ActivityDetailProd
             mDetailProductBinding.
                     activityDetailProductBaseFieldsEditableInclude.
                     activityDetailProductBaseFieldsEditableEtDescription.
-                    setText(mProduct.getDescription());
+                    setText(mVmProd.getDescription());
 
             mDetailProductBinding.
                     activityDetailProductBaseFieldsEditableInclude.
                     activityDetailProductBaseFieldsEditableEtMadeBy.
-                    setText(mProduct.getMadeBy());
+                    setText(mVmProd.getMadeBy());
 
             mDetailProductBinding.
                     activityDetailProductBaseFieldsEditableInclude.
                     activityDetailProductBaseFieldsEditableEtPackSize.
-                    setText(String.valueOf(mProduct.getPackSize()));
+                    setText(String.valueOf(mVmProd.getPackSize()));
 
             mDetailProductBinding.
                     activityDetailProductBaseFieldsEditableInclude.
                     activityDetailProductBaseFieldsEditableSpinnerUoM.
-                    setSelection(mProduct.getUnitOfMeasure());
+                    setSelection(mVmProd.getUnitOfMeasure());
 
             mDetailProductBinding.
                     activityDetailProductBaseFieldsEditableInclude.
                     activityDetailProductBaseFieldsEditableSpinnerShelfLife.
-                    setSelection(mProduct.getShelfLife());
+                    setSelection(mVmProd.getShelfLife());
 
             mDetailProductBinding.
                     activityDetailProductBaseFieldsEditableInclude.
                     activityDetailProductBaseFieldsEditableSpinnerCategory.
-                    setSelection(mProduct.getCategory());
+                    setSelection(mVmProd.getCategory());
 
         // Base fields uneditable criteria:
         // 1. View has to be visible
@@ -1899,35 +1887,35 @@ public class ActivityDetailProd
             mDetailProductBinding.
                     activityDetailProductBaseFieldsUneditableInclude.
                     activityDetailProductBaseFieldsUneditableTvDescription.
-                    setText(mProduct.getDescription());
+                    setText(mVmProd.getDescription());
 
             mDetailProductBinding.
                     activityDetailProductBaseFieldsUneditableInclude.
                     activityDetailProductBaseFieldsUneditableTvMadeBy.
-                    setText(mProduct.getMadeBy());
+                    setText(mVmProd.getMadeBy());
 
             mDetailProductBinding.
                     activityDetailProductBaseFieldsUneditableInclude.
                     activityDetailProductBaseFieldsUneditableTvPackSize.
-                    setText(String.valueOf(mProduct.getPackSize()));
+                    setText(String.valueOf(mVmProd.getPackSize()));
 
             mDetailProductBinding.
                     activityDetailProductBaseFieldsUneditableInclude.
                     activityDetailProductBaseFieldsUneditableTvUoM.
                     setText(Converters.getUnitOfMeasureString(
-                    this, mProduct.getUnitOfMeasure()));
+                    this, mVmProd.getUnitOfMeasure()));
 
             mDetailProductBinding.
                     activityDetailProductBaseFieldsUneditableInclude.
                     activityDetailProductBaseFieldsUneditableTvShelfLife.
                     setText(Converters.getShelfLifeString(
-                    this, mProduct.getShelfLife()));
+                    this, mVmProd.getShelfLife()));
 
             mDetailProductBinding.
                     activityDetailProductBaseFieldsUneditableInclude.
                     activityDetailProductBaseFieldsUneditableTvCategory.
                     setText(Converters.getCategoryString(
-                    this, mProduct.getCategory()));
+                    this, mVmProd.getCategory()));
         }
 
         // User specific fields editable criteria:
@@ -1940,22 +1928,22 @@ public class ActivityDetailProd
             mDetailProductBinding.
                     activityDetailProductUserFieldsEditableInclude.
                     activityDetailProductEtRetailer.
-                    setText(mProduct.getRetailer());
+                    setText(mVmProd.getRetailer());
 
             mDetailProductBinding.
                     activityDetailProductUserFieldsEditableInclude.
                     activityDetailProductEtPrice.
-                    setText(String.valueOf(mProduct.getPackPrice()));
+                    setText(String.valueOf(mVmProd.getPackPrice()));
 
             mDetailProductBinding.
                     activityDetailProductUserFieldsEditableInclude.
                     activityDetailProductEtLocationRoom.
-                    setText(mProduct.getLocationRoom());
+                    setText(mVmProd.getLocationRoom());
 
             mDetailProductBinding.
                     activityDetailProductUserFieldsEditableInclude.
                     activityDetailProductEtLocationInRoom.
-                    setText(mProduct.getLocationInRoom());
+                    setText(mVmProd.getLocationInRoom());
 
             // Set the menu items for this UI state
             invalidateOptionsMenu();
@@ -1971,23 +1959,23 @@ public class ActivityDetailProd
             mDetailProductBinding.
                     activityDetailProductUserFieldsUneditableInclude.
                     activityDetailProductUserFieldsUneditableTvRetailer.
-                    setText(mProduct.getRetailer());
+                    setText(mVmProd.getRetailer());
 
             NumberFormat format = NumberFormat.getCurrencyInstance();
             mDetailProductBinding.
                     activityDetailProductUserFieldsUneditableInclude.
                     activityDetailProductUserFieldsUneditableTvPrice.
-                    setText(String.valueOf(format.format(mProduct.getPackPrice())));
+                    setText(String.valueOf(format.format(mVmProd.getPackPrice())));
 
             mDetailProductBinding.
                     activityDetailProductUserFieldsUneditableInclude.
                     activityDetailProductUserFieldsUneditableTvLocationRoom.
-                    setText(mProduct.getLocationRoom());
+                    setText(mVmProd.getLocationRoom());
 
             mDetailProductBinding.
                     activityDetailProductUserFieldsUneditableInclude.
                     activityDetailProductUserFieldsUneditableTvLocationInRoom.
-                    setText(mProduct.getLocationInRoom());
+                    setText(mVmProd.getLocationInRoom());
 
             // This product is all ready in the users used list so remove the FAB
             mDetailProductBinding.
@@ -2006,7 +1994,7 @@ public class ActivityDetailProd
 
         /* Save the current product */
         outState.putString(Constants.USER_ID_KEY, mUserUid);
-        outState.putParcelable(Constants.PRODUCT_KEY, mProduct);
+        // outState.putParcelable(Constants.PRODUCT_KEY, mVmProd);
         outState.putString(Constants.PRODUCT_FB_REFERENCE_KEY, mFbProductReferenceKey);
 
         // Save the bool's!
@@ -2631,7 +2619,7 @@ public class ActivityDetailProd
                 // collection, create the database reference that needs removing.
                 DatabaseReference usedProductsRef = mFbCollectionUsedProducts
                         .child(mFbProductReferenceKey)
-                        .child(mProduct.getFbUsedProductsUserKey());
+                        .child(mVmProd.getFbUsedProductsUserKey());
 
                 // Then remove the value.
                 usedProductsRef.removeValue().addOnCompleteListener(task1 -> {

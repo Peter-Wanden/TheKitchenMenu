@@ -1,7 +1,10 @@
 package com.example.peter.thekitchenmenu.data.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import static com.example.peter.thekitchenmenu.app.Constants.DEFAULT_PROD_MY_ID;
-import static com.example.peter.thekitchenmenu.app.Constants.DEFAULT_REMOTE_REF_KEY;
+import static com.example.peter.thekitchenmenu.app.Constants.DEFAULT_REMOTE_REF_ID;
 import static com.example.peter.thekitchenmenu.app.Constants.DEFAULT_FB_USED_PRODUCT_ID;
 import static com.example.peter.thekitchenmenu.app.Constants.DEFAULT_PRODUCT_RETAILER;
 import static com.example.peter.thekitchenmenu.app.Constants.DEFAULT_PRODUCT_LOC;
@@ -35,7 +38,7 @@ import static com.example.peter.thekitchenmenu.app.Constants.PRODUCT_MY_RETAILER
 import java.util.HashMap;
 import java.util.Map;
 
-public class VmProd {
+public class VmProd implements Parcelable {
 
     // DmProdMy fields.
     private int mProdMyId;
@@ -65,6 +68,8 @@ public class VmProd {
     private long mCommLastUpdate;
 
     // TODO - create getters and setters for the different ID's and references.
+
+    public VmProd(){}
 
     // Constructor for merging data models
     public VmProd(DmProdMy dmProdMy, DmProdComm dmProdComm){
@@ -97,7 +102,7 @@ public class VmProd {
     // Constructor for creating a view model of a DmProdComm only
     public VmProd(DmProdComm dmProdComm) {
         this.mProdMyId = DEFAULT_PROD_MY_ID;
-        this.mRemoteProdMyRefKey = DEFAULT_REMOTE_REF_KEY;
+        this.mRemoteProdMyRefKey = DEFAULT_REMOTE_REF_ID;
         this.mFbUsedProdUserKey = DEFAULT_FB_USED_PRODUCT_ID;
         this.mRetailer = DEFAULT_PRODUCT_RETAILER;
         this.mLocationRoom = DEFAULT_PRODUCT_LOC;
@@ -124,6 +129,7 @@ public class VmProd {
 
     public VmProd(
             int productMyId,
+            String fbProductReferenceKey,
             String fbUsedProductsUserKey,
             String retailer,
             String locationRoom,
@@ -132,6 +138,8 @@ public class VmProd {
             String localImageUri,
             long myCreateDate,
             long myLastUpdate,
+            int prodCommId,
+            String remoteRefId,
             String description,
             String madeBy,
             int category,
@@ -142,9 +150,7 @@ public class VmProd {
             String createdBy,
             String fbStorageImageUri,
             long commCreateDate,
-            long commLastUpdate,
-            int productCommId,
-            String fbProductReferenceKey) {
+            long commLastUpdate) {
 
         this.mProdMyId = productMyId;
         this.mFbUsedProdUserKey = fbUsedProductsUserKey;
@@ -166,9 +172,47 @@ public class VmProd {
         this.mFbStorageImageUri = fbStorageImageUri;
         this.mCommCreateDate = commCreateDate;
         this.mCommLastUpdate = commLastUpdate;
-        this.mProdCommId = productCommId;
+        this.mProdCommId = prodCommId;
         this.mRemoteProdMyRefKey = fbProductReferenceKey;
     }
+
+    protected VmProd(Parcel in) {
+        mProdMyId = in.readInt();
+        mRemoteProdMyRefKey = in.readString();
+        mFbUsedProdUserKey = in.readString();
+        mRetailer = in.readString();
+        mLocationRoom = in.readString();
+        mLocationInRoom = in.readString();
+        mPackPrice = in.readDouble();
+        mLocalImageUri = in.readString();
+        mMyCreateDate = in.readLong();
+        mMyLastUpdate = in.readLong();
+        mProdCommId = in.readInt();
+        mRemoteProdCommRefKey = in.readString();
+        mDescription = in.readString();
+        mMadeBy = in.readString();
+        mCategory = in.readInt();
+        mShelfLife = in.readInt();
+        mPackSize = in.readInt();
+        mUnitOfMeasure = in.readInt();
+        mPackPriceAverage = in.readDouble();
+        mCreatedBy = in.readString();
+        mFbStorageImageUri = in.readString();
+        mCommCreateDate = in.readLong();
+        mCommLastUpdate = in.readLong();
+    }
+
+    public static final Creator<VmProd> CREATOR = new Creator<VmProd>() {
+        @Override
+        public VmProd createFromParcel(Parcel in) {
+            return new VmProd(in);
+        }
+
+        @Override
+        public VmProd[] newArray(int size) {
+            return new VmProd[size];
+        }
+    };
 
     // HashMap for FireBase community products information Map
     public Map<String, Object> commProductToMap() {
@@ -425,5 +469,37 @@ public class VmProd {
 
     public void setFbProductReferenceKey(String fbProductReferenceKey) {
         this.mRemoteProdMyRefKey = fbProductReferenceKey;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(mProdMyId);
+        parcel.writeString(mRemoteProdMyRefKey);
+        parcel.writeString(mFbUsedProdUserKey);
+        parcel.writeString(mRetailer);
+        parcel.writeString(mLocationRoom);
+        parcel.writeString(mLocationInRoom);
+        parcel.writeDouble(mPackPrice);
+        parcel.writeString(mLocalImageUri);
+        parcel.writeLong(mMyCreateDate);
+        parcel.writeLong(mMyLastUpdate);
+        parcel.writeInt(mProdCommId);
+        parcel.writeString(mRemoteProdCommRefKey);
+        parcel.writeString(mDescription);
+        parcel.writeString(mMadeBy);
+        parcel.writeInt(mCategory);
+        parcel.writeInt(mShelfLife);
+        parcel.writeInt(mPackSize);
+        parcel.writeInt(mUnitOfMeasure);
+        parcel.writeDouble(mPackPriceAverage);
+        parcel.writeString(mCreatedBy);
+        parcel.writeString(mFbStorageImageUri);
+        parcel.writeLong(mCommCreateDate);
+        parcel.writeLong(mCommLastUpdate);
     }
 }

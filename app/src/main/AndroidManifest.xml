@@ -31,6 +31,7 @@
             android:name=".ui.detail.ActivityDetailProd"
             android:label="@string/activity_detail_product_title"
             android:theme="@style/AppTheme" />
+        <activity android:name=".ui.detail.ActivityProdEditor" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
