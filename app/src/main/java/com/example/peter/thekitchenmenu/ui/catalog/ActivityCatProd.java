@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.databaseRemote.RemoteSignIn;
+import com.example.peter.thekitchenmenu.data.model.VmProd;
 import com.example.peter.thekitchenmenu.databinding.ActivityCatalogProductBinding;
 import com.example.peter.thekitchenmenu.ui.detail.ActivityDetailProd;
 import com.example.peter.thekitchenmenu.viewmodels.ViewModelCatProd;
@@ -46,19 +47,22 @@ public class ActivityCatProd
 
     private void setupViewModel() {
         viewModelCatProd = ViewModelProviders.of(this).get(ViewModelCatProd.class);
-
         viewModelCatProd.getSelected().observe(this, vmProd -> {
             if (vmProd != null) {
-
-                Intent intent = new Intent(ActivityCatProd.this, ActivityDetailProd.class);
-                intent.putExtra(Constants.PRODUCT_FB_REFERENCE_KEY, vmProd);
-                intent.putExtra(Constants.PRODUCT_IS_CREATOR_KEY, viewModelCatProd.getIsCreator().getValue());
-                startActivity(intent);
-
-                // Sliding animation
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                launchDetailActivity(vmProd);
             }
         });
+    }
+
+    // Launches the detail activity
+    private void launchDetailActivity(VmProd vmProd) {
+        Intent intent = new Intent(ActivityCatProd.this, ActivityDetailProd.class);
+        intent.putExtra(Constants.PRODUCT_FB_REFERENCE_KEY, vmProd);
+        intent.putExtra(Constants.PRODUCT_IS_CREATOR_KEY, viewModelCatProd.getIsCreator().getValue());
+        startActivity(intent);
+
+        // Sliding animation
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
     // Sets up the views for this activity.

@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
+    compileSdkVersion rootProject.compileSdkVersion
     signingConfigs {
         config {
             keyAlias 'TKMKey'
@@ -9,11 +10,10 @@ android {
             storePassword 'dE3kTCQc3vKMdDNN5nGe'
         }
     }
-    compileSdkVersion 28
     defaultConfig {
         applicationId "com.example.peter.thekitchenmenu"
-        minSdkVersion 21
-        targetSdkVersion 28
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
         versionCode 1
         versionName "1.0"
         resConfigs "en" // Add any other language support here
@@ -37,8 +37,6 @@ android {
 }
 
 dependencies {
-    // Support version
-    def androidSupportVersion = "28.0.0"
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "com.android.support:appcompat-v7:$androidSupportVersion"
     implementation "com.android.support:design:$androidSupportVersion"
@@ -47,45 +45,49 @@ dependencies {
     implementation "com.android.support:exifinterface:$androidSupportVersion"
     implementation "com.android.support:support-v4:$androidSupportVersion"
     implementation "com.android.support:customtabs:$androidSupportVersion"
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    // Constraint layout
+    implementation "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
 
     // Play services
-    implementation 'com.google.android.gms:play-services-ads-identifier:16.0.0'
-    implementation 'com.google.android.gms:play-services-auth:16.0.1'
-    implementation 'com.google.android.gms:play-services-auth-api-phone:16.0.0'
-    implementation 'com.google.android.gms:play-services-auth-base:16.0.0'
-    implementation 'com.google.android.gms:play-services-base:16.0.1'
-    implementation 'com.google.android.gms:play-services-basement:16.0.1'
-    implementation 'com.google.android.gms:play-services-flags:16.0.1'
-    implementation 'com.google.android.gms:play-services-phenotype:16.0.0'
-    implementation 'com.google.android.gms:play-services-stats:16.0.1'
-    implementation 'com.google.android.gms:play-services-tasks:16.0.1'
+    implementation "com.google.android.gms:play-services-ads-identifier:$playServicesA"
+    implementation "com.google.android.gms:play-services-auth-api-phone:$playServicesA"
+    implementation "com.google.android.gms:play-services-auth-base:$playServicesA"
+    implementation "com.google.android.gms:play-services-phenotype:$playServicesA"
+    implementation "com.google.android.gms:play-services-auth:$playServicesB"
+    implementation "com.google.android.gms:play-services-base:$playServicesB"
+    implementation "com.google.android.gms:play-services-stats:$playServicesB"
+    implementation "com.google.android.gms:play-services-flags:$playServicesB"
+    implementation "com.google.android.gms:play-services-tasks:$playServicesB"
+    implementation "com.google.android.gms:play-services-basement:$playServicesC"
     // A library that will hold the application logic
     implementation project(':TKMAppLibrary')
     // Gson
     implementation 'com.google.code.gson:gson:2.8.5'
     // Architecture components version
-    def lifecycle_version = "1.1.1"
-    implementation "android.arch.lifecycle:extensions:$lifecycle_version"
-    implementation "android.arch.persistence.room:runtime:$lifecycle_version"
-    annotationProcessor "android.arch.lifecycle:compiler:$lifecycle_version"
-    annotationProcessor "android.arch.persistence.room:compiler:$lifecycle_version"
+    implementation "android.arch.lifecycle:extensions:$archComponentsVersion"
+    implementation "android.arch.lifecycle:runtime:$archComponentsVersion"
+    annotationProcessor "android.arch.lifecycle:compiler:$archComponentsVersion"
+    // Paging
+    implementation "android.arch.paging:runtime:$pagingVersion"
+    // Room
+    implementation "android.arch.persistence.room:runtime:$roomVersion"
+    annotationProcessor "android.arch.persistence.room:compiler:$roomVersion"
     // Firebase
-    implementation 'com.google.firebase:firebase-database:16.0.3'
-    implementation 'com.google.firebase:firebase-core:16.0.4'
-    implementation 'com.google.firebase:firebase-auth:16.0.4'
-    implementation 'com.google.firebase:firebase-storage:16.0.3'
-    implementation 'com.google.firebase:firebase-config:16.0.1'
+    implementation "com.google.firebase:firebase-database:$firebaseVersion"
+    implementation "com.google.firebase:firebase-core:$firebaseVersion"
+    implementation "com.google.firebase:firebase-auth:$firebaseVersion"
+    implementation "com.google.firebase:firebase-storage:$firebaseVersion"
+    implementation "com.google.firebase:firebase-config:$firebaseConfigVersion"
     //////// Firebase UI ////////
-    implementation 'com.firebaseui:firebase-ui-auth:4.1.0'
+    implementation "com.firebaseui:firebase-ui-auth:$firebaseAuth"
     // Allows direct binding of data to display
-    implementation 'com.firebaseui:firebase-ui-database:4.1.0'
+    implementation "com.firebaseui:firebase-ui-database:$firebaseAuth"
     // Picasso TODO - Replace with Glide
-    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation "com.squareup.picasso:picasso:$picassoVersion"
     // Testing
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    testImplementation "junit:junit:$junitVersion"
+    androidTestImplementation "com.android.support.test:runner:$runnerVersion"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:$espressoVersion"
 }
 // Reads the configuration information in app/google-services.json
 apply plugin: 'com.google.gms.google-services'
