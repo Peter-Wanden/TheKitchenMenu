@@ -9,7 +9,7 @@
         android:background="@color/white"
         android:fitsSystemWindows="true">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/activity_detail_product_tb_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -114,7 +114,7 @@
                 layout="@layout/activity_detail_product_user_fields_uneditable"/>
         </LinearLayout>
 
-            <android.support.design.widget.FloatingActionButton
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/activity_detail_product_fab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -1,51 +1,76 @@
 package com.example.peter.thekitchenmenu.data.repository;
 
-import com.example.peter.thekitchenmenu.app.AppExecutors;
-import com.example.peter.thekitchenmenu.data.model.DmProdComm;
+import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.util.Log;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import com.example.peter.thekitchenmenu.app.HandlerWorker;
+import com.example.peter.thekitchenmenu.app.Singletons;
+import com.example.peter.thekitchenmenu.data.entity.DmProdComm;
+
+import java.util.LinkedList;
+import java.util.Queue;
 
 /**
- * Synchronises a single remote and local product. Giving preference to the remote product.
+ * Synchronises an incoming remote with a local data model. Giving preference to the remote item.
+ * SEE: https://www.youtube.com/watch?v=998tPb10DFM&list=PL6nth5sRD25hVezlyqlBO9dafKMc5fAU2&index=6
  */
 class SyncProdComm {
 
-    // private static final String LOG_TAG = SyncProdComm.class.getSimpleName();
+    // TODO - Send inserts and updates in batches!
 
-    private RepositoryLocal mRepoLocal;
-    private Future<DmProdComm> mFuturePC;
-    private DmProdComm[] mPcArray = new DmProdComm[2];
+    private static final String TAG = "SyncProdComm";
+
+    private Repository mRepository;
+    private HandlerWorker mWorker;
+    private Queue<DmProdComm> mRemoteData = new LinkedList<>();
+    private volatile DmProdComm[] mPcArray = new DmProdComm[2];
 
     /**
-     * Constructor
-     * @param repositoryLocal an instance of the local database repository
-     * @param pcRemote       the remote object to sync
+     * @param context the application context required for invoking the Repository.
      */
-    SyncProdComm(RepositoryLocal repositoryLocal, DmProdComm pcRemote) {
-
-        mRepoLocal = repositoryLocal;
-        mPcArray[0] = pcRemote;
-        ExecutorService xs = Executors.newSingleThreadExecutor();
-        CallableProductCommunity cPc = new CallableProductCommunity();
-        mFuturePC = xs.submit(cPc);
+    SyncProdComm(Context context) {
+        mRepository = ((Singletons) context).getRepository();
+        mWorker = new HandlerWorker(TAG);
     }
 
     /**
-     * Finds and matches a remote product with (if available) a local product.
-     * Position 0 always contains the remote product. Position 1 the local product.
+     * Finds and matches a remote product with (if available) with a local product.
+     * Position 0 contains the remote product. Position 1 the local product.
      */
-    void matchAndSync() {
+    void syncRemoteData(Queue<DmProdComm> remoteData) {
 
-        try {
-            mPcArray[1] = mFuturePC.get();
-            compareAndSync();
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
+        if (remoteData != null) {
+            Log.d(TAG, "syncRemoteData: remote data set size is: " + remoteData.size());
+
+            for (DmProdComm dMpc : remoteData) {
+                Log.d(TAG, "syncRemoteData: " + dMpc.getDescription());
+            }
+
+            mRemoteData.addAll(remoteData);
+            syncPrep();
         }
+    }
+
+    private void syncPrep() {
+        // Get the first DmProdComm item in the remote data queue
+        mPcArray[0] = mRemoteData.peek();
+
+        mWorker.execute(() -> {
+            // If exists, get its local counterpart by searching for the remote ID
+            mPcArray[1] = mRepository.getProdCommByRemoteId(
+                    mPcArray[0].getFbProductReferenceKey());
+
+            if (mPcArray[1] != null) {
+                // If exists, add the local DmProdComm ID to the remote DmProdComm ID
+                mPcArray[0].setId(mPcArray[1].getId());
+            }
+
+            compareAndSync();
+            }
+        );
     }
 
     /**
@@ -54,39 +79,40 @@ class SyncProdComm {
      */
     private void compareAndSync() {
 
-        // If position 1 is null, this is a new product, save to local.
+        // If there is no locally matching DmProdComm insert the remote
         if (mPcArray[1] == null) {
-            mRepoLocal.insertProdComm(mPcArray[0]);
+
+            mWorker.execute(() -> {
+                mRepository.insertProdComm(mPcArray[0]);
+                nextPlease();
+            });
 
         } else {
-            // There is a local and remote product with the same remote reference. Add the local ID
-            // to the remote product, so they are the same
-            match();
+
             // Compare the two, if they are not equal, update the local with the remote.
             if (!mPcArray[0].toString().equals(mPcArray[1].toString())) {
 
-                AppExecutors.getInstance().diskIO().execute(()
-                        -> mRepoLocal.updateProdComm(mPcArray[0]));
+                mWorker.execute(() -> {
+                    mRepository.updateProdComm(mPcArray[0]);
+                    nextPlease();
+                });
+
+            } else {
+                // There is no change to make so move on to next product item
+                nextPlease();
             }
         }
     }
 
-    // Places the local ID's into the remote product ready for comparison
-    private void match() {
-        mPcArray[0].setId(mPcArray[1].getId());
-    }
-
-    /**
-     * Creates and returns a callable {@link DmProdComm} object for submission to the
-     * executor service. Remote and local products are matched by comparing the remote product ID,
-     * which is stored in both locations.
-     */
-    private class CallableProductCommunity implements Callable<DmProdComm> {
-
-        @Override
-        public DmProdComm call() {
-
-            return mRepoLocal.getProdCommByRemoteId(mPcArray[0].getFbProductReferenceKey());
+    private void nextPlease() {
+        // Item has been processed, so remove from queue.
+        mRemoteData.remove();
+        if (mRemoteData.size() > 0) {
+            // Get the next item in the queue.
+            syncPrep();
+        } else {
+            // Sync is complete, shut down the thread.
+            mWorker.quit();
         }
     }
 }

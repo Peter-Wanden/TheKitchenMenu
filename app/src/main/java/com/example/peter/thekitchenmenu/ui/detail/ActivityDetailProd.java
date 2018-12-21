@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
@@ -13,14 +12,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.provider.MediaStore;
-import android.support.annotation.ColorRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
-import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -66,13 +57,40 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import androidx.annotation.ColorRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
+import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.databinding.DataBindingUtil;
+
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_CATEGORY;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_CREATED_BY;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_DESC;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_MADE_BY;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_PACK_SIZE;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_PRICE_AVE;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_REMOTE_IMAGE_URI;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_REMOTE_REF_ID;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_SHELF_LIFE;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_UNIT_OF_MEASURE;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.TABLE_PROD_MY_LOCAL_IMAGE_URI;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.TABLE_PROD_MY_LOC_IN_ROOM;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.TABLE_PROD_MY_LOC_ROOM;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.TABLE_PROD_MY_PACK_PRICE;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.TABLE_PROD_MY_RETAILER;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.TABLE_PROD_MY_USED_REMOTE_ID;
+
 public class ActivityDetailProd
         extends AppCompatActivity {
 
-    public static final String LOG_TAG = ActivityDetailProd.class.getSimpleName();
+    public static final String TAG = ActivityDetailProd.class.getSimpleName();
 
     // Data binding classes for the layouts we use in this class
-    ActivityDetailProductBinding mDetailProductBinding;
+    ActivityDetailProductBinding mBinding;
 
     // VmProduct object instance
     private VmProd mVmProd;
@@ -96,7 +114,7 @@ public class ActivityDetailProd
     // Double member variables for the product fields
     private double
             mPackPrice,
-            mPackPriceAverage;
+            mPackAvePrice;
 
     // Boolean member variables for the applications logic in switching through its decision tree
     private boolean
@@ -264,7 +282,7 @@ public class ActivityDetailProd
                 mLocationInRoom = mVmProd.getLocationInRoom();
                 mCategory = mVmProd.getCategory();
                 mPackPrice = mVmProd.getPackPrice();
-                mPackPriceAverage = mVmProd.getPackPriceAverage();
+                mPackAvePrice = mVmProd.getPackAvePrice();
                 mLocalImageUri = Uri.parse(mVmProd.getLocalImageUri());
                 mFbStorageImageUri = Uri.parse(mVmProd.getLocalImageUri());
                 mCreatedBy = mVmProd.getCreatedBy();
@@ -444,25 +462,25 @@ public class ActivityDetailProd
         updateUserFieldsEditableStatus();
 
         // Set the FAB to gone
-        mDetailProductBinding.
+        mBinding.
                 activityDetailProductFab.
                 setVisibility(View.GONE);
 
         // Set the image editing buttons to visible
-        mDetailProductBinding.
+        mBinding.
                 activityDetailProductIbAddCameraPicture.
                 setVisibility(View.VISIBLE);
 
-        mDetailProductBinding.
+        mBinding.
                 activityDetailProductIbRotatePicture.
                 setVisibility(View.VISIBLE);
 
-        mDetailProductBinding.
+        mBinding.
                 activityDetailProductIbAddGalleryPicture.
                 setVisibility(View.VISIBLE);
 
         // Move the cursor to the first field
-        mDetailProductBinding.
+        mBinding.
                 activityDetailProductBaseFieldsEditableInclude.
                 activityDetailProductBaseFieldsEditableEtDescription.
                 requestFocus();
@@ -485,7 +503,7 @@ public class ActivityDetailProd
             // Report the error
             switch (validateDescription) {
                 case 1:
-                    mDetailProductBinding.
+                    mBinding.
                             activityDetailProductBaseFieldsEditableInclude.
                             activityDetailProductBaseFieldsEditableEtDescription.
                             setError(getResources().getString(
@@ -493,7 +511,7 @@ public class ActivityDetailProd
                     return false;
 
                 case 2:
-                    mDetailProductBinding.
+                    mBinding.
                             activityDetailProductBaseFieldsEditableInclude.
                             activityDetailProductBaseFieldsEditableEtDescription.
                             setError(getResources().getString(
@@ -518,7 +536,7 @@ public class ActivityDetailProd
             // Report the error
             switch (validateMadeBy) {
                 case 1:
-                    mDetailProductBinding.
+                    mBinding.
                             activityDetailProductBaseFieldsEditableInclude.
                             activityDetailProductBaseFieldsEditableEtMadeBy.
                             setError(getResources().getString(
@@ -526,7 +544,7 @@ public class ActivityDetailProd
                     return false;
 
                 case 2:
-                    mDetailProductBinding.
+                    mBinding.
                             activityDetailProductBaseFieldsEditableInclude.
                             activityDetailProductBaseFieldsEditableEtMadeBy
                             .setError(getResources().getString(
@@ -551,7 +569,7 @@ public class ActivityDetailProd
 
             // If there is an error
             if (!validatePackSize) {
-                mDetailProductBinding.
+                mBinding.
                         activityDetailProductBaseFieldsEditableInclude.
                         activityDetailProductBaseFieldsEditableEtPackSize.
                         setError(getResources().getString(
@@ -563,7 +581,7 @@ public class ActivityDetailProd
             return true;
         }
 
-        mDetailProductBinding.
+        mBinding.
                 activityDetailProductBaseFieldsEditableInclude.
                 activityDetailProductBaseFieldsEditableEtPackSize.
                 setError(getResources().getString(
@@ -583,7 +601,7 @@ public class ActivityDetailProd
         if (!mUoMIsValidated) {
 
             // Set the error to the TextView next to the UoM spinner
-            mDetailProductBinding.
+            mBinding.
                     activityDetailProductBaseFieldsEditableInclude.
                     activityDetailProductBaseFieldsEditableTvSpinnerUoMSetError.
                     setError(getString(R.string.
@@ -593,7 +611,7 @@ public class ActivityDetailProd
         }
 
         // Clear any errors
-        mDetailProductBinding.
+        mBinding.
                 activityDetailProductBaseFieldsEditableInclude.
                 activityDetailProductBaseFieldsEditableTvSpinnerUoMSetError.
                 setError(null);
@@ -611,7 +629,7 @@ public class ActivityDetailProd
         // If there is an error
         if (!mShelfLifeIsValidated) {
             // Set the error to the TextView next to the shelf life spinner
-            mDetailProductBinding.
+            mBinding.
                     activityDetailProductBaseFieldsEditableInclude.
                     activityDetailProductBaseFieldsEditableTvSpinnerShelfLifeSetError.
                     setError(getString(R.string.
@@ -619,7 +637,7 @@ public class ActivityDetailProd
 
             return false;
         }
-        mDetailProductBinding.
+        mBinding.
                 activityDetailProductBaseFieldsEditableInclude.
                 activityDetailProductBaseFieldsEditableTvSpinnerShelfLifeSetError.
                 setError(null);
@@ -637,7 +655,7 @@ public class ActivityDetailProd
         // If there is an error
         if (!mCategoryIsValidated) {
             // Set the error to the TextView next to the category spinner
-            mDetailProductBinding.
+            mBinding.
                     activityDetailProductBaseFieldsEditableInclude.
                     activityDetailProductBaseFieldsEditableTvSpinnerCategorySetError.
                     setError(getString(R.string.
@@ -645,7 +663,7 @@ public class ActivityDetailProd
 
             return false;
         }
-        mDetailProductBinding.
+        mBinding.
                 activityDetailProductBaseFieldsEditableInclude.
                 activityDetailProductBaseFieldsEditableTvSpinnerCategorySetError.
                 setError(null);
@@ -665,7 +683,7 @@ public class ActivityDetailProd
             // Report the error
             switch (validateRetailer) {
                 case 1:
-                    mDetailProductBinding.
+                    mBinding.
                             activityDetailProductUserFieldsEditableInclude.
                             activityDetailProductEtRetailer.
                             setError(getResources().getString(
@@ -674,7 +692,7 @@ public class ActivityDetailProd
                     return false;
 
                 case 2:
-                    mDetailProductBinding.
+                    mBinding.
                             activityDetailProductUserFieldsEditableInclude.
                             activityDetailProductEtRetailer.
                             setError(getResources().getString(
@@ -692,21 +710,21 @@ public class ActivityDetailProd
     private boolean validatePackPrice() {
 
         // Get the value in the field
-        if (!mDetailProductBinding.
+        if (!mBinding.
                 activityDetailProductUserFieldsEditableInclude.
                 activityDetailProductEtPrice.
                 getText().
                 toString().
                 equals("") ||
 
-                !mDetailProductBinding.
+                !mBinding.
                         activityDetailProductUserFieldsEditableInclude.
                         activityDetailProductEtPrice.
                         getText().
                         toString().
                         isEmpty()) {
 
-            mPackPrice = Double.parseDouble(mDetailProductBinding.
+            mPackPrice = Double.parseDouble(mBinding.
                     activityDetailProductUserFieldsEditableInclude.
                     activityDetailProductEtPrice.
                     getText().
@@ -718,7 +736,7 @@ public class ActivityDetailProd
 
             // If there is an error
             if (!validatePrice) {
-                mDetailProductBinding.
+                mBinding.
                         activityDetailProductUserFieldsEditableInclude.
                         activityDetailProductEtPrice.
                         setError(getResources().getString(
@@ -730,7 +748,7 @@ public class ActivityDetailProd
 
             return true;
         }
-        mDetailProductBinding.
+        mBinding.
                 activityDetailProductUserFieldsEditableInclude.
                 activityDetailProductEtPrice.
                 setError(getResources().getString(
@@ -751,7 +769,7 @@ public class ActivityDetailProd
             // Report the error
             switch (validateLocationRoom) {
                 case 1:
-                    mDetailProductBinding.
+                    mBinding.
                             activityDetailProductUserFieldsEditableInclude.
                             activityDetailProductEtLocationRoom.
                             setError(getResources().getString(
@@ -760,7 +778,7 @@ public class ActivityDetailProd
                     return false;
 
                 case 2:
-                    mDetailProductBinding.
+                    mBinding.
                             activityDetailProductUserFieldsEditableInclude.
                             activityDetailProductEtLocationRoom.
                             setError(getResources().getString(
@@ -786,7 +804,7 @@ public class ActivityDetailProd
             // Report the error
             switch (validateLocationInRoom) {
                 case 1:
-                    mDetailProductBinding.
+                    mBinding.
                             activityDetailProductUserFieldsEditableInclude.
                             activityDetailProductEtLocationInRoom.
                             setError(getResources().getString(
@@ -795,7 +813,7 @@ public class ActivityDetailProd
                     return false;
 
                 case 2:
-                    mDetailProductBinding.
+                    mBinding.
                             activityDetailProductUserFieldsEditableInclude.
                             activityDetailProductEtLocationInRoom.
                             setError(getResources().getString(
@@ -991,21 +1009,21 @@ public class ActivityDetailProd
                 mFbUsedProductsUserKey = usedProductUserUri.getLastPathSegment();
 
                 if (mImageAvailable &&
-                        mDetailProductBinding.
+                        mBinding.
                                 activityDetailProductIv.
                                 getDrawable() != null) {
 
                     // From: https://firebase.google.com/docs/storage/android/upload-files
                     // Get the data from the ImageView as bytes (as a very small image).
-                    mDetailProductBinding.
+                    mBinding.
                             activityDetailProductIv.
                             setDrawingCacheEnabled(true);
 
-                    mDetailProductBinding.
+                    mBinding.
                             activityDetailProductIv.
                             buildDrawingCache();
 
-                    Bitmap bitmap = ((BitmapDrawable) mDetailProductBinding.
+                    Bitmap bitmap = ((BitmapDrawable) mBinding.
                             activityDetailProductIv.getDrawable()).getBitmap();
 
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -1154,7 +1172,7 @@ public class ActivityDetailProd
                     // Location
 
                     if (mImageAvailable &&
-                            mDetailProductBinding.
+                            mBinding.
                                     activityDetailProductIv.getDrawable() != null) {
 
                         // Either:
@@ -1165,15 +1183,15 @@ public class ActivityDetailProd
 
                         // From: https://firebase.google.com/docs/storage/android/upload-files
                         // Get the data from the ImageView as bytes and downsize image.
-                        mDetailProductBinding.
+                        mBinding.
                                 activityDetailProductIv.
                                 setDrawingCacheEnabled(true);
 
-                        mDetailProductBinding.
+                        mBinding.
                                 activityDetailProductIv.
                                 buildDrawingCache();
 
-                        Bitmap bitmap = ((BitmapDrawable) mDetailProductBinding.
+                        Bitmap bitmap = ((BitmapDrawable) mBinding.
                                 activityDetailProductIv.
                                 getDrawable()).
                                 getBitmap();
@@ -1386,8 +1404,7 @@ public class ActivityDetailProd
                     addUserToUsedProducts();
 
                     // Add in the reference provided by addUserToUsedProducts
-                    productUserUpdates.put(
-                            Constants.PRODUCT_MY_FB_USED_PRODUCT_KEY, mFbUsedProductsUserKey);
+                    productUserUpdates.put(TABLE_PROD_MY_USED_REMOTE_ID, mFbUsedProductsUserKey);
 
                     // Location 1
                     saveUserProductUpdates(productUserUpdates);
@@ -1470,8 +1487,7 @@ public class ActivityDetailProd
                     addUserToUsedProducts();
 
                     // Add in the reference provided by addUserToUsedProducts
-                    productUserUpdates.put(
-                            Constants.PRODUCT_MY_FB_USED_PRODUCT_KEY, mFbUsedProductsUserKey);
+                    productUserUpdates.put(TABLE_PROD_MY_USED_REMOTE_ID, mFbUsedProductsUserKey);
 
                     // Location 2
                     saveUserProductUpdates(productUserUpdates);
@@ -1506,8 +1522,8 @@ public class ActivityDetailProd
         if (mUnitOfMeasure != mVmProd.getUnitOfMeasure()) {
             mVmProd.setUnitOfMeasure(mUnitOfMeasure);
         }
-        if (mPackPriceAverage != mVmProd.getPackPriceAverage()) {
-            mVmProd.setPackPriceAverage(mPackPriceAverage);
+        if (mPackAvePrice != mVmProd.getPackAvePrice()) {
+            mVmProd.setPackAvePrice(mPackAvePrice);
         }
         if (!mFbStorageImageUri.toString().equals(mVmProd.getFbStorageImageUri())) {
             mVmProd.setFbStorageImageUri(mFbStorageImageUri.toString());
@@ -1550,62 +1566,39 @@ public class ActivityDetailProd
         int userUpdateCounter = 0;
 
         /* Add the base data to the HashMap. */
-        productUserUpdates.put(
-                Constants.PRODUCT_COMM_DESCRIPTION_KEY,
-                mVmProd.getDescription());
-        productUserUpdates.put(
-                Constants.PRODUCT_COMM_MADE_BY_KEY,
-                mVmProd.getMadeBy());
-        productUserUpdates.put(
-                Constants.PRODUCT_COMM_CATEGORY_KEY,
-                mVmProd.getCategory());
-        productUserUpdates.put(
-                Constants.PRODUCT_COMM_SHELF_LIFE_KEY,
-                mVmProd.getShelfLife());
-        productUserUpdates.put(
-                Constants.PRODUCT_COMM_PACK_SIZE_KEY,
-                mVmProd.getPackSize());
-        productUserUpdates.put(
-                Constants.PRODUCT_COMM_UNIT_OF_MEASURE_KEY,
-                mVmProd.getUnitOfMeasure());
-        productUserUpdates.put(
-                Constants.PRODUCT_COMM_PRICE_AVE_KEY, mVmProd.getPackPrice());
-        productUserUpdates.put(
-                Constants.PRODUCT_COMM_CREATED_BY_KEY,
-                mVmProd.getCreatedBy());
+        productUserUpdates.put(TABLE_PROD_COMM_DESC, mVmProd.getDescription());
+        productUserUpdates.put(TABLE_PROD_COMM_MADE_BY, mVmProd.getMadeBy());
+        productUserUpdates.put(TABLE_PROD_COMM_CATEGORY, mVmProd.getCategory());
+        productUserUpdates.put(TABLE_PROD_COMM_SHELF_LIFE, mVmProd.getShelfLife());
+        productUserUpdates.put(TABLE_PROD_COMM_PACK_SIZE, mVmProd.getPackSize());
+        productUserUpdates.put(TABLE_PROD_COMM_UNIT_OF_MEASURE, mVmProd.getUnitOfMeasure());
+        productUserUpdates.put(TABLE_PROD_COMM_PRICE_AVE, mVmProd.getPackPrice());
+        productUserUpdates.put(TABLE_PROD_COMM_CREATED_BY, mVmProd.getCreatedBy());
 
         // Add in the user specific data to the HashMap
-        productUserUpdates.put(
-                Constants.PRODUCT_MY_LOCAL_IMAGE_URI_KEY,
-                mVmProd.getLocalImageUri());
-        productUserUpdates.put(
-                Constants.PRODUCT_MY_FB_STORAGE_IMAGE_URI_KEY,
-                mVmProd.getFbStorageImageUri());
-        productUserUpdates.put(
-                Constants.PRODUCT_MY_FB_REFERENCE_KEY,
-                mVmProd.getFbProductReferenceKey());
-        productUserUpdates.put(
-                Constants.PRODUCT_MY_FB_USED_PRODUCT_KEY,
-                mVmProd.getFbUsedProductsUserKey());
+        productUserUpdates.put(TABLE_PROD_MY_LOCAL_IMAGE_URI, mVmProd.getLocalImageUri());
+        productUserUpdates.put(TABLE_PROD_COMM_REMOTE_IMAGE_URI, mVmProd.getFbStorageImageUri());
+        productUserUpdates.put(TABLE_PROD_COMM_REMOTE_REF_ID, mVmProd.getFbProductReferenceKey());
+        productUserUpdates.put(TABLE_PROD_MY_USED_REMOTE_ID, mVmProd.getFbUsedProductsUserKey());
 
         // Compare and add any changes from the user specific fields to the HashMap
         if (!mRetailer.equals(mVmProd.getRetailer())) {
-            productUserUpdates.put(Constants.PRODUCT_MY_RETAILER_KEY, mRetailer);
+            productUserUpdates.put(TABLE_PROD_MY_RETAILER, mRetailer);
             mVmProd.setRetailer(mRetailer);
             userUpdateCounter++;
         }
         if (!mLocationRoom.equals(mVmProd.getLocationRoom())) {
-            productUserUpdates.put(Constants.PRODUCT_MY_LOCATION_ROOM_KEY, mLocationRoom);
+            productUserUpdates.put(TABLE_PROD_MY_LOC_ROOM, mLocationRoom);
             mVmProd.setLocationRoom(mLocationRoom);
             userUpdateCounter++;
         }
         if (!mLocationInRoom.equals(mVmProd.getLocationInRoom())) {
-            productUserUpdates.put(Constants.PRODUCT_MY_LOCATION_IN_ROOM_KEY, mLocationInRoom);
+            productUserUpdates.put(TABLE_PROD_MY_LOC_IN_ROOM, mLocationInRoom);
             mVmProd.setLocationInRoom(mLocationInRoom);
             userUpdateCounter++;
         }
         if (mPackPrice != mVmProd.getPackPrice()) {
-            productUserUpdates.put(Constants.PRODUCT_MY_PACK_PRICE_KEY, mPackPrice);
+            productUserUpdates.put(TABLE_PROD_MY_PACK_PRICE, mPackPrice);
             mVmProd.setPackPrice(mPackPrice);
             userUpdateCounter++;
         }
@@ -1666,7 +1659,7 @@ public class ActivityDetailProd
         if (!mDescriptionIsValidated) {
 
             // validate it.
-            validateDescription(mDetailProductBinding.
+            validateDescription(mBinding.
                     activityDetailProductBaseFieldsEditableInclude.
                     activityDetailProductBaseFieldsEditableEtDescription.
                     getText().toString().trim());
@@ -1675,7 +1668,7 @@ public class ActivityDetailProd
         } else if (!mMadeByIsValidated) {
 
             // validate it.
-            validateMadeBy(mDetailProductBinding.
+            validateMadeBy(mBinding.
                     activityDetailProductBaseFieldsEditableInclude.
                     activityDetailProductBaseFieldsEditableEtMadeBy.
                     getText().toString().trim());
@@ -1684,7 +1677,7 @@ public class ActivityDetailProd
         } else if (!mPackSizeIsValidated) {
 
             // validate it.
-            validatePackSize(String.valueOf(mDetailProductBinding.
+            validatePackSize(String.valueOf(mBinding.
                     activityDetailProductBaseFieldsEditableInclude.
                     activityDetailProductBaseFieldsEditableEtPackSize.
                     getText().toString().trim()));
@@ -1693,7 +1686,7 @@ public class ActivityDetailProd
         } else if (!mUoMIsValidated) {
 
             // validate it.
-            mUnitOfMeasure = mDetailProductBinding.
+            mUnitOfMeasure = mBinding.
                     activityDetailProductBaseFieldsEditableInclude.
                     activityDetailProductBaseFieldsEditableSpinnerUoM.
                     getSelectedItemPosition();
@@ -1703,7 +1696,7 @@ public class ActivityDetailProd
         } else if (!mShelfLifeIsValidated) {
 
             // validate it.
-            mShelfLife = mDetailProductBinding.
+            mShelfLife = mBinding.
                     activityDetailProductBaseFieldsEditableInclude.
                     activityDetailProductBaseFieldsEditableSpinnerShelfLife.
                     getSelectedItemPosition();
@@ -1713,7 +1706,7 @@ public class ActivityDetailProd
         } else if (!mCategoryIsValidated) {
 
             // validate it.
-            mCategory = mDetailProductBinding.
+            mCategory = mBinding.
                     activityDetailProductBaseFieldsEditableInclude.
                     activityDetailProductBaseFieldsEditableSpinnerCategory.
                     getSelectedItemPosition();
@@ -1735,14 +1728,14 @@ public class ActivityDetailProd
         if (!mRetailerIsValidated) {
 
             // validate it.
-            validateRetailer(mDetailProductBinding.
+            validateRetailer(mBinding.
                     activityDetailProductUserFieldsEditableInclude.
                     activityDetailProductEtRetailer
                     .getText().toString().trim());
 
         // If the 'pack price' field is not validated,
         } else if (!mPackPriceIsValidated &&
-                !TextUtils.isEmpty(mDetailProductBinding.
+                !TextUtils.isEmpty(mBinding.
                         activityDetailProductUserFieldsEditableInclude.
                         activityDetailProductEtPrice.
                         getText().toString())) {
@@ -1754,7 +1747,7 @@ public class ActivityDetailProd
         } else if (!mLocationRoomIsValidated) {
 
             // validate it
-            validateLocationRoom(mDetailProductBinding.
+            validateLocationRoom(mBinding.
                     activityDetailProductUserFieldsEditableInclude.
                     activityDetailProductEtLocationRoom
                     .getText().toString().trim());
@@ -1763,7 +1756,7 @@ public class ActivityDetailProd
         } else if (!mLocationInRoomIsValidated) {
 
             // validate it.
-            validateLocationInRoom(mDetailProductBinding.
+            validateLocationInRoom(mBinding.
                     activityDetailProductUserFieldsEditableInclude.
                     activityDetailProductEtLocationInRoom.
                     getText().toString().trim());
@@ -1787,7 +1780,7 @@ public class ActivityDetailProd
         newProductData.setShelfLife(mShelfLife);
         newProductData.setPackSize(mPackSize);
         newProductData.setUnitOfMeasure(mUnitOfMeasure);
-        newProductData.setPackPriceAverage(Constants.DEFAULT_PRODUCT_PRICE_AVERAGE);
+        newProductData.setPackAvePrice(Constants.DEFAULT_PRODUCT_PRICE_AVERAGE);
         newProductData.setCreatedBy(mUserUid);
         newProductData.setFbStorageImageUri(mFbStorageImageUri.toString());
 
@@ -1808,7 +1801,7 @@ public class ActivityDetailProd
         newProductData.setShelfLife(mShelfLife);
         newProductData.setPackSize(mPackSize);
         newProductData.setUnitOfMeasure(mUnitOfMeasure);
-        newProductData.setPackPriceAverage(Constants.DEFAULT_PRODUCT_PRICE_AVERAGE);
+        newProductData.setPackAvePrice(Constants.DEFAULT_PRODUCT_PRICE_AVERAGE);
         newProductData.setCreatedBy(mUserUid);
         newProductData.setFbStorageImageUri(mFbStorageImageUri.toString());
 
@@ -1838,7 +1831,7 @@ public class ActivityDetailProd
             Picasso.
                     get().
                     load(mVmProd.getFbStorageImageUri()).
-                    into(mDetailProductBinding.
+                    into(mBinding.
                             activityDetailProductIv);
         }
 
@@ -1849,32 +1842,32 @@ public class ActivityDetailProd
                 mBaseFieldsAreEditable) {
 
             // Update the EditText fields for the base product information
-            mDetailProductBinding.
+            mBinding.
                     activityDetailProductBaseFieldsEditableInclude.
                     activityDetailProductBaseFieldsEditableEtDescription.
                     setText(mVmProd.getDescription());
 
-            mDetailProductBinding.
+            mBinding.
                     activityDetailProductBaseFieldsEditableInclude.
                     activityDetailProductBaseFieldsEditableEtMadeBy.
                     setText(mVmProd.getMadeBy());
 
-            mDetailProductBinding.
+            mBinding.
                     activityDetailProductBaseFieldsEditableInclude.
                     activityDetailProductBaseFieldsEditableEtPackSize.
                     setText(String.valueOf(mVmProd.getPackSize()));
 
-            mDetailProductBinding.
+            mBinding.
                     activityDetailProductBaseFieldsEditableInclude.
                     activityDetailProductBaseFieldsEditableSpinnerUoM.
                     setSelection(mVmProd.getUnitOfMeasure());
 
-            mDetailProductBinding.
+            mBinding.
                     activityDetailProductBaseFieldsEditableInclude.
                     activityDetailProductBaseFieldsEditableSpinnerShelfLife.
                     setSelection(mVmProd.getShelfLife());
 
-            mDetailProductBinding.
+            mBinding.
                     activityDetailProductBaseFieldsEditableInclude.
                     activityDetailProductBaseFieldsEditableSpinnerCategory.
                     setSelection(mVmProd.getCategory());
@@ -1884,34 +1877,34 @@ public class ActivityDetailProd
         } else if (!mBaseFieldsAreEditable) {
 
             // Update the TextViews
-            mDetailProductBinding.
+            mBinding.
                     activityDetailProductBaseFieldsUneditableInclude.
                     activityDetailProductBaseFieldsUneditableTvDescription.
                     setText(mVmProd.getDescription());
 
-            mDetailProductBinding.
+            mBinding.
                     activityDetailProductBaseFieldsUneditableInclude.
                     activityDetailProductBaseFieldsUneditableTvMadeBy.
                     setText(mVmProd.getMadeBy());
 
-            mDetailProductBinding.
+            mBinding.
                     activityDetailProductBaseFieldsUneditableInclude.
                     activityDetailProductBaseFieldsUneditableTvPackSize.
                     setText(String.valueOf(mVmProd.getPackSize()));
 
-            mDetailProductBinding.
+            mBinding.
                     activityDetailProductBaseFieldsUneditableInclude.
                     activityDetailProductBaseFieldsUneditableTvUoM.
                     setText(Converters.getUnitOfMeasureString(
                     this, mVmProd.getUnitOfMeasure()));
 
-            mDetailProductBinding.
+            mBinding.
                     activityDetailProductBaseFieldsUneditableInclude.
                     activityDetailProductBaseFieldsUneditableTvShelfLife.
                     setText(Converters.getShelfLifeString(
                     this, mVmProd.getShelfLife()));
 
-            mDetailProductBinding.
+            mBinding.
                     activityDetailProductBaseFieldsUneditableInclude.
                     activityDetailProductBaseFieldsUneditableTvCategory.
                     setText(Converters.getCategoryString(
@@ -1925,22 +1918,22 @@ public class ActivityDetailProd
                 mPutProductOnUsedList) &&
                 mUserFieldsAreEditable) {
 
-            mDetailProductBinding.
+            mBinding.
                     activityDetailProductUserFieldsEditableInclude.
                     activityDetailProductEtRetailer.
                     setText(mVmProd.getRetailer());
 
-            mDetailProductBinding.
+            mBinding.
                     activityDetailProductUserFieldsEditableInclude.
                     activityDetailProductEtPrice.
                     setText(String.valueOf(mVmProd.getPackPrice()));
 
-            mDetailProductBinding.
+            mBinding.
                     activityDetailProductUserFieldsEditableInclude.
                     activityDetailProductEtLocationRoom.
                     setText(mVmProd.getLocationRoom());
 
-            mDetailProductBinding.
+            mBinding.
                     activityDetailProductUserFieldsEditableInclude.
                     activityDetailProductEtLocationInRoom.
                     setText(mVmProd.getLocationInRoom());
@@ -1956,29 +1949,29 @@ public class ActivityDetailProd
                 !mUserFieldsAreEditable) {
 
             // Update the uneditable views
-            mDetailProductBinding.
+            mBinding.
                     activityDetailProductUserFieldsUneditableInclude.
                     activityDetailProductUserFieldsUneditableTvRetailer.
                     setText(mVmProd.getRetailer());
 
             NumberFormat format = NumberFormat.getCurrencyInstance();
-            mDetailProductBinding.
+            mBinding.
                     activityDetailProductUserFieldsUneditableInclude.
                     activityDetailProductUserFieldsUneditableTvPrice.
                     setText(String.valueOf(format.format(mVmProd.getPackPrice())));
 
-            mDetailProductBinding.
+            mBinding.
                     activityDetailProductUserFieldsUneditableInclude.
                     activityDetailProductUserFieldsUneditableTvLocationRoom.
                     setText(mVmProd.getLocationRoom());
 
-            mDetailProductBinding.
+            mBinding.
                     activityDetailProductUserFieldsUneditableInclude.
                     activityDetailProductUserFieldsUneditableTvLocationInRoom.
                     setText(mVmProd.getLocationInRoom());
 
             // This product is all ready in the users used list so remove the FAB
-            mDetailProductBinding.
+            mBinding.
                     activityDetailProductFab.
                     setVisibility(View.GONE);
 
@@ -2018,18 +2011,18 @@ public class ActivityDetailProd
 
         // Assign the DataBinding classes a binding instance for each of the layouts used by this
         // class.
-        mDetailProductBinding = DataBindingUtil.setContentView(
+        mBinding = DataBindingUtil.setContentView(
                 this, R.layout.activity_detail_product);
 
         // Setup the Toolbar
-        setSupportActionBar(mDetailProductBinding.activityDetailProductTbTop);
+        setSupportActionBar(mBinding.activityDetailProductTbTop);
 
         setupUoMSpinner();
         setupShelfLifeSpinner();
         setupCategorySpinner();
 
         // Initial visibility for editable and uneditable base field containers
-        mDetailProductBinding.
+        mBinding.
                 activityDetailProductBaseFieldsEditableInclude.
                 activityDetailProductBaseFieldsEditableContainer.
                 setVisibility(View.GONE);
@@ -2037,7 +2030,7 @@ public class ActivityDetailProd
         // Update the containers visibility state tracking boolean
         mBaseFieldsAreEditable = false;
 
-        mDetailProductBinding.
+        mBinding.
                 activityDetailProductUserFieldsEditableInclude.
                 activityDetailProductUserFieldsEditableContainer.
                 setVisibility(View.GONE);
@@ -2045,12 +2038,12 @@ public class ActivityDetailProd
         // Update the containers visibility state tracking boolean
         mUserFieldsAreEditable = false;
 
-        mDetailProductBinding.
+        mBinding.
                 activityDetailProductBaseFieldsUneditableInclude.
                 activityDetailProductBaseFieldsUneditableContainer.
                 setVisibility(View.GONE);
 
-        mDetailProductBinding.
+        mBinding.
                 activityDetailProductUserFieldsUneditableInclude.
                 activityDetailProductUserFieldsUneditableContainer.
                 setVisibility(View.GONE);
@@ -2060,19 +2053,19 @@ public class ActivityDetailProd
         */
 
         /* OnClickListener for the add picture by camera button */
-        mDetailProductBinding.activityDetailProductIbAddCameraPicture.
+        mBinding.activityDetailProductIbAddCameraPicture.
                 setOnClickListener(v -> requestPermissions());
 
         /* OnClickListener for the rotate picture button */
-        mDetailProductBinding.activityDetailProductIbRotatePicture.
+        mBinding.activityDetailProductIbRotatePicture.
                 setOnClickListener(v -> rotateImage());
 
         /* onClickListener for the FAB */
-        mDetailProductBinding.activityDetailProductFab.
+        mBinding.activityDetailProductFab.
                 setOnClickListener(v -> openProductUserDataFields());
 
         /* onClickListener for the add image from gallery button */
-        mDetailProductBinding.activityDetailProductIbAddGalleryPicture.
+        mBinding.activityDetailProductIbAddGalleryPicture.
                 setOnClickListener(v -> launchGallery());
 
         /*
@@ -2080,7 +2073,7 @@ public class ActivityDetailProd
         */
 
         // Text change listener for the 'description' EditText field
-        mDetailProductBinding.
+        mBinding.
                 activityDetailProductBaseFieldsEditableInclude.
                 activityDetailProductBaseFieldsEditableEtDescription.
                 addTextChangedListener(new TextWatcher() {
@@ -2101,7 +2094,7 @@ public class ActivityDetailProd
                 });
 
         // Focus change listener for the 'description' EditText field */
-        mDetailProductBinding.
+        mBinding.
                 activityDetailProductBaseFieldsEditableInclude.
                 activityDetailProductBaseFieldsEditableEtDescription.
                 setOnFocusChangeListener((v, hasFocus) -> {
@@ -2109,7 +2102,7 @@ public class ActivityDetailProd
                     // When this field gains focus its content may be changing, if so it will not be
                     // validated. When this field looses focus, its content will need validating.
                     mDescriptionIsValidated = !hasFocus && validateDescription(
-                            mDetailProductBinding.
+                            mBinding.
                                     activityDetailProductBaseFieldsEditableInclude.
                                     activityDetailProductBaseFieldsEditableEtDescription
                                     .getText()
@@ -2117,7 +2110,7 @@ public class ActivityDetailProd
                 });
 
         // Change listener for the 'made by' EditText field
-        mDetailProductBinding.
+        mBinding.
                 activityDetailProductBaseFieldsEditableInclude.
                 activityDetailProductBaseFieldsEditableEtMadeBy.
                 addTextChangedListener(new TextWatcher() {
@@ -2138,7 +2131,7 @@ public class ActivityDetailProd
                 });
 
         // Focus change listener for the 'made by' EditText field */
-        mDetailProductBinding.
+        mBinding.
                 activityDetailProductBaseFieldsEditableInclude.
                 activityDetailProductBaseFieldsEditableEtMadeBy.
                 setOnFocusChangeListener((v, hasFocus) -> {
@@ -2146,7 +2139,7 @@ public class ActivityDetailProd
                     // When this field gains focus its content may be changing, if so it will not be
                     // validated. When this field looses focus, its content will need validating.
                     mMadeByIsValidated = !hasFocus && validateMadeBy(
-                            mDetailProductBinding.
+                            mBinding.
                                     activityDetailProductBaseFieldsEditableInclude.
                                     activityDetailProductBaseFieldsEditableEtMadeBy
                                     .getText()
@@ -2154,7 +2147,7 @@ public class ActivityDetailProd
                 });
 
         // Change listener for the 'pack size' EditText field
-        mDetailProductBinding.
+        mBinding.
                 activityDetailProductBaseFieldsEditableInclude.
                 activityDetailProductBaseFieldsEditableEtPackSize.
                 addTextChangedListener(new TextWatcher() {
@@ -2175,7 +2168,7 @@ public class ActivityDetailProd
                 });
 
         // Focus change listener for the 'pack size' EditText field */
-        mDetailProductBinding.
+        mBinding.
                 activityDetailProductBaseFieldsEditableInclude.
                 activityDetailProductBaseFieldsEditableEtPackSize.
                 setOnFocusChangeListener((v, hasFocus) -> {
@@ -2183,7 +2176,7 @@ public class ActivityDetailProd
                     // When this field gains focus its content may be changing, if so it will not be
                     // validated. When this field looses focus, its content will need validating.
                     mPackSizeIsValidated = !hasFocus && validatePackSize(
-                            mDetailProductBinding.
+                            mBinding.
                                     activityDetailProductBaseFieldsEditableInclude.
                                     activityDetailProductBaseFieldsEditableEtPackSize.
                                     getText().
@@ -2191,7 +2184,7 @@ public class ActivityDetailProd
                 });
 
         // Focus change listener for the 'unit of measure' spinner
-        mDetailProductBinding.
+        mBinding.
                 activityDetailProductBaseFieldsEditableInclude.
                 activityDetailProductBaseFieldsEditableContainerUoM.
                 setOnFocusChangeListener((v, hasFocus) -> {
@@ -2202,7 +2195,7 @@ public class ActivityDetailProd
                         mUoMIsValidated = false;
                         hideKeyboard();
 
-                        mDetailProductBinding.
+                        mBinding.
                                 activityDetailProductBaseFieldsEditableInclude.
                                 activityDetailProductBaseFieldsEditableContainerUoM.
                                 performClick();
@@ -2214,7 +2207,7 @@ public class ActivityDetailProd
 
                         // If validated remove the error
                         if (mUoMIsValidated) {
-                            mDetailProductBinding.
+                            mBinding.
                                     activityDetailProductBaseFieldsEditableInclude.
                                     activityDetailProductBaseFieldsEditableTvSpinnerUoMSetError.
                                     setError(null);
@@ -2223,7 +2216,7 @@ public class ActivityDetailProd
                 });
 
         // Focus change listener for the 'shelf life' spinner
-        mDetailProductBinding.
+        mBinding.
                 activityDetailProductBaseFieldsEditableInclude.
                 activityDetailProductBaseFieldsEditableSpinnerShelfLife.
                 setOnFocusChangeListener((v, hasFocus) -> {
@@ -2234,7 +2227,7 @@ public class ActivityDetailProd
 
                         mShelfLifeIsValidated = false;
                         hideKeyboard();
-                        mDetailProductBinding.
+                        mBinding.
                                 activityDetailProductBaseFieldsEditableInclude.
                                 activityDetailProductBaseFieldsEditableSpinnerShelfLife.
                                 performClick();
@@ -2245,7 +2238,7 @@ public class ActivityDetailProd
                 });
 
         // Focus change listener for the 'category' spinner
-        mDetailProductBinding.
+        mBinding.
                 activityDetailProductBaseFieldsEditableInclude.
                 activityDetailProductBaseFieldsEditableSpinnerCategory.
                 setOnFocusChangeListener((v, hasFocus) -> {
@@ -2255,7 +2248,7 @@ public class ActivityDetailProd
                     if (hasFocus) {
                         mCategoryIsValidated = false;
                         hideKeyboard();
-                        mDetailProductBinding.
+                        mBinding.
                                 activityDetailProductBaseFieldsEditableInclude.
                                 activityDetailProductBaseFieldsEditableSpinnerCategory.
                                 performClick();
@@ -2266,7 +2259,7 @@ public class ActivityDetailProd
                 });
 
         // Change listener for the 'made by' EditText field
-        mDetailProductBinding.
+        mBinding.
                 activityDetailProductUserFieldsEditableInclude.
                 activityDetailProductEtRetailer.
                 addTextChangedListener(new TextWatcher() {
@@ -2287,7 +2280,7 @@ public class ActivityDetailProd
                 });
 
         // Focus change listener for the 'retailer' EditText field */
-        mDetailProductBinding.
+        mBinding.
                 activityDetailProductUserFieldsEditableInclude.
                 activityDetailProductEtRetailer.
                 setOnFocusChangeListener((v, hasFocus) -> {
@@ -2295,7 +2288,7 @@ public class ActivityDetailProd
                     // When this field gains focus its content may be changing, if so it will not be
                     // validated. When this field looses focus, its content will need validating.
                     mRetailerIsValidated = !hasFocus && validateRetailer(
-                            mDetailProductBinding.
+                            mBinding.
                                     activityDetailProductUserFieldsEditableInclude.
                                     activityDetailProductEtRetailer.
                                     getText().
@@ -2304,7 +2297,7 @@ public class ActivityDetailProd
                 });
 
         // Focus change listener for the 'pack price' EditText field
-        mDetailProductBinding.
+        mBinding.
                 activityDetailProductUserFieldsEditableInclude.
                 activityDetailProductEtPrice.
                 setOnFocusChangeListener((v, hasFocus) -> {
@@ -2315,7 +2308,7 @@ public class ActivityDetailProd
                 });
 
         // Focus change listener for the 'location room' EditText field
-        mDetailProductBinding.
+        mBinding.
                 activityDetailProductUserFieldsEditableInclude.
                 activityDetailProductEtLocationRoom.
                 addTextChangedListener(new TextWatcher() {
@@ -2335,7 +2328,7 @@ public class ActivityDetailProd
                 });
 
         // Focus change listener for the 'location room' EditText field */
-        mDetailProductBinding.
+        mBinding.
                 activityDetailProductUserFieldsEditableInclude.
                 activityDetailProductEtLocationRoom.
                 setOnFocusChangeListener((v, hasFocus) -> {
@@ -2343,7 +2336,7 @@ public class ActivityDetailProd
                     // When this field gains focus its content may be changing, if so it will not be
                     // validated. When this field looses focus, its content will need validating.
                     mLocationRoomIsValidated = !hasFocus && validateLocationRoom(
-                            mDetailProductBinding.
+                            mBinding.
                                     activityDetailProductUserFieldsEditableInclude.
                                     activityDetailProductEtLocationRoom.
                                     getText().
@@ -2352,7 +2345,7 @@ public class ActivityDetailProd
                 });
 
         // Focus change listener for the 'location in room' EditText field
-        mDetailProductBinding.
+        mBinding.
                 activityDetailProductUserFieldsEditableInclude.
                 activityDetailProductEtLocationInRoom.
                 addTextChangedListener(new TextWatcher() {
@@ -2372,7 +2365,7 @@ public class ActivityDetailProd
                 });
 
         // Focus change listener for the 'location in room' EditText field */
-        mDetailProductBinding.
+        mBinding.
                 activityDetailProductUserFieldsEditableInclude.
                 activityDetailProductEtLocationInRoom.
                 setOnFocusChangeListener((v, hasFocus) -> {
@@ -2380,7 +2373,7 @@ public class ActivityDetailProd
                     // When this field gains focus its content may be changing, if so it will not be
                     // validated. When this field looses focus, its content will need validating.
                     mLocationInRoomIsValidated = !hasFocus && validateLocationInRoom(
-                            mDetailProductBinding.
+                            mBinding.
                                     activityDetailProductUserFieldsEditableInclude.
                                     activityDetailProductEtLocationInRoom.
                                     getText().
@@ -2418,12 +2411,12 @@ public class ActivityDetailProd
             mPutProductOnUsedList = true;
 
             // Turn off the FAB
-            mDetailProductBinding.
+            mBinding.
                     activityDetailProductFab.
                     setVisibility(View.GONE);
 
             // In the user specific fields set the focus to the first field
-            mDetailProductBinding.
+            mBinding.
                     activityDetailProductUserFieldsEditableInclude.
                     activityDetailProductEtRetailer.
                     requestFocus();
@@ -2440,7 +2433,7 @@ public class ActivityDetailProd
         Matrix matrix = new Matrix();
         matrix.postRotate(90);
 
-        Bitmap RecipeImage = ((BitmapDrawable) mDetailProductBinding.
+        Bitmap RecipeImage = ((BitmapDrawable) mBinding.
                 activityDetailProductIv.
                 getDrawable()).
                 getBitmap();
@@ -2448,7 +2441,7 @@ public class ActivityDetailProd
         Bitmap rotated = Bitmap.createBitmap(RecipeImage, 0, 0,
                 RecipeImage.getWidth(), RecipeImage.getHeight(), matrix, true);
 
-        mDetailProductBinding.
+        mBinding.
                 activityDetailProductIv.
                 setImageBitmap(rotated);
 
@@ -2476,25 +2469,25 @@ public class ActivityDetailProd
     private void showUneditableViewContainers() {
 
         // This is for product viewing only, so no need for editable views
-        mDetailProductBinding.
+        mBinding.
                 activityDetailProductBaseFieldsEditableInclude.
                 activityDetailProductBaseFieldsEditableContainer.
                 setVisibility(View.GONE);
 
-        mDetailProductBinding.
+        mBinding.
                 activityDetailProductUserFieldsEditableInclude.
                 activityDetailProductUserFieldsEditableContainer
                 .setVisibility(View.GONE);
 
         // Make relevant view containers visible
-        mDetailProductBinding.activityDetailProductBaseFieldsUneditableInclude.
+        mBinding.activityDetailProductBaseFieldsUneditableInclude.
                 activityDetailProductBaseFieldsUneditableContainer.
                 setVisibility(View.VISIBLE);
 
         // Only show the 'user specific product data container' if in used list
         if (mInUsersUsedList) {
 
-            mDetailProductBinding.
+            mBinding.
                     activityDetailProductUserFieldsUneditableInclude.
                     activityDetailProductUserFieldsUneditableContainer.
                     setVisibility(View.VISIBLE);
@@ -2502,15 +2495,14 @@ public class ActivityDetailProd
 
             // This product is not in the users used list so we have no information as to how they
             // use it. So set the user fields to gone.
-            mDetailProductBinding.
+            mBinding.
                     activityDetailProductUserFieldsUneditableInclude.
                     activityDetailProductUserFieldsUneditableContainer.
                     setVisibility(View.GONE);
 
             // Show the fab so they can add this product to their list if they wish.
-            mDetailProductBinding.
-                    activityDetailProductFab.
-                    setVisibility(View.VISIBLE);
+            mBinding.
+                    activityDetailProductFab.setVisibility(View.VISIBLE);
         }
     }
 
@@ -2520,26 +2512,26 @@ public class ActivityDetailProd
         if (mBaseFieldsAreEditable) {
 
             // Base fields are editable, set the editable container to visible.
-            mDetailProductBinding.
+            mBinding.
                     activityDetailProductBaseFieldsEditableInclude.
                     activityDetailProductBaseFieldsEditableContainer.
                     setVisibility(View.VISIBLE);
 
             // We are now editing as opposed to viewing so set the uneditable container to gone.
-            mDetailProductBinding.
+            mBinding.
                     activityDetailProductBaseFieldsUneditableInclude.
                     activityDetailProductBaseFieldsUneditableContainer.
                     setVisibility(View.GONE);
         } else {
 
             // Base fields are uneditable, so set the editable fields to gone.
-            mDetailProductBinding.
+            mBinding.
                     activityDetailProductBaseFieldsEditableInclude.
                     activityDetailProductBaseFieldsEditableContainer.
                     setVisibility(View.GONE);
 
             // And set the uneditable container to visible.
-            mDetailProductBinding.
+            mBinding.
                     activityDetailProductBaseFieldsUneditableInclude.
                     activityDetailProductBaseFieldsUneditableContainer.
                     setVisibility(View.VISIBLE);
@@ -2551,19 +2543,19 @@ public class ActivityDetailProd
 
         if (mUserFieldsAreEditable) {
 
-            mDetailProductBinding.
+            mBinding.
                     activityDetailProductUserFieldsEditableInclude.
                     activityDetailProductUserFieldsEditableContainer.
                     setVisibility(View.VISIBLE);
 
-            mDetailProductBinding.
+            mBinding.
                     activityDetailProductUserFieldsUneditableInclude.
                     activityDetailProductUserFieldsUneditableContainer.
                     setVisibility(View.GONE);
 
         } else {
 
-            mDetailProductBinding.
+            mBinding.
                     activityDetailProductUserFieldsEditableInclude.
                     activityDetailProductUserFieldsEditableContainer.
                     setVisibility(View.GONE);
@@ -2572,7 +2564,7 @@ public class ActivityDetailProd
             // specific fields on
             if (mInUsersUsedList || mPutProductOnUsedList) {
 
-                mDetailProductBinding.
+                mBinding.
                         activityDetailProductUserFieldsUneditableInclude.
                         activityDetailProductUserFieldsUneditableContainer.
                         setVisibility(View.VISIBLE);
@@ -2580,7 +2572,7 @@ public class ActivityDetailProd
             } else {
 
                 // If not on the users used list turn the view off
-                mDetailProductBinding.
+                mBinding.
                         activityDetailProductUserFieldsUneditableInclude.
                         activityDetailProductUserFieldsUneditableContainer.
                         setVisibility(View.GONE);
@@ -2730,20 +2722,20 @@ public class ActivityDetailProd
         } else if (requestCode == Constants.REQUEST_IMAGE_MEDIA_STORE &&
                 resultCode == RESULT_CANCELED) {
 
-            Log.e(LOG_TAG, "Media store intent cancelled");
+            Log.e(TAG, "Media store intent cancelled");
 
         } else if (requestCode == Constants.REQUEST_IMAGE_PICKER && resultCode == RESULT_OK) {
 
             // Photo picker
             Uri selectedImageUri = data.getData();
             mImageAvailable = true;
-            mDetailProductBinding.
+            mBinding.
                     activityDetailProductIv.
                     setImageURI(selectedImageUri);
 
         } else if (requestCode == Constants.REQUEST_IMAGE_PICKER && resultCode == RESULT_CANCELED) {
 
-            Log.e(LOG_TAG, "Image picker intent cancelled");
+            Log.e(TAG, "Image picker intent cancelled");
         }
     }
 
@@ -2752,7 +2744,7 @@ public class ActivityDetailProd
 
         Bitmap mResultsBitmap = BitmapUtils.resampleImage(this, null, mTempImagePath);
 
-        mDetailProductBinding.
+        mBinding.
                 activityDetailProductIv.
                 setImageBitmap(mResultsBitmap);
     }
@@ -3158,21 +3150,21 @@ public class ActivityDetailProd
         }
 
         // Request focus to the first editable filed
-        mDetailProductBinding.
+        mBinding.
                 activityDetailProductUserFieldsEditableInclude.
                 activityDetailProductEtRetailer.
                 requestFocus();
 
         // Make the ImageView editable
-        mDetailProductBinding.
+        mBinding.
                 activityDetailProductIbAddCameraPicture.
                 setVisibility(View.VISIBLE);
 
-        mDetailProductBinding.
+        mBinding.
                 activityDetailProductIbRotatePicture.
                 setVisibility(View.VISIBLE);
 
-        mDetailProductBinding.
+        mBinding.
                 activityDetailProductIbAddGalleryPicture.
                 setVisibility(View.VISIBLE);
     }

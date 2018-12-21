@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/activity_detail_product_user_fields_uneditable_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -105,16 +105,16 @@
             android:gravity="bottom"
             app:layout_constraintStart_toStartOf="@+id/activity_detail_product_user_fields_uneditable_guideline"
             app:layout_constraintTop_toBottomOf="@+id/activity_detail_product_user_fields_uneditable_tv_location_room"
-            tools:text="Cupboard under sink" />
+            tools:text="Cupboard under sink"
+            />
 
         <!-- Invisible guideline -->
-        <android.support.constraint.Guideline
+        <androidx.constraintlayout.widget.Guideline
             android:id="@+id/activity_detail_product_user_fields_uneditable_guideline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_begin="116dp" />
-
-    </android.support.constraint.ConstraintLayout>
-
+            app:layout_constraintGuide_begin="116dp"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

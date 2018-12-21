@@ -1,118 +1,165 @@
 package com.example.peter.thekitchenmenu.data.repository;
 
-import android.app.Application;
-import android.arch.lifecycle.LiveData;
+import android.content.Context;
+import android.database.Cursor;
+import android.util.Log;
 
-import com.example.peter.thekitchenmenu.data.model.DmProdComm;
-import com.example.peter.thekitchenmenu.data.model.DmProdMy;
+import com.example.peter.thekitchenmenu.data.databaseLocal.TKMLocalDatabase;
+import com.example.peter.thekitchenmenu.data.entity.DmProdComm;
+import com.example.peter.thekitchenmenu.data.entity.DmProdMy;
 
 import java.util.List;
+
+import androidx.lifecycle.LiveData;
 
 /**
  * The 'single source of truth' for the app data
  */
 public class Repository {
 
-    private static final String LOG_TAG = Repository.class.getSimpleName();
+    private static final String TAG = "Repository";
 
-    private RepositoryLocal mRepoLocal;
-    private RepositoryRemote mRepoRemote;
-    private LiveData<List<DmProdComm>> mGetAllProdComms;
-    private LiveData<List<DmProdComm>> mGetProdCommsByIdArray;
-    private LiveData<List<DmProdMy>> mGetAllProdMys;
-    private LiveData<DmProdMy> mGetProdMyById;
+    private static Repository sInstance;
 
-    public Repository(Application application) {
-        mRepoLocal = new RepositoryLocal(application);
-        mRepoRemote = new RepositoryRemote(this);
+    private final TKMLocalDatabase mDatabase;
+    private final SyncManager mSyncManager;
+
+    private MediatorLiveDataActive<List<DmProdMy>> mObservableProdMys;
+    private MediatorLiveDataActive<List<DmProdComm>> mObservableProdComm;
+
+    private Repository(final Context context, final TKMLocalDatabase database) {
+
+        mDatabase = database;
+        mSyncManager = new SyncManager(context);
+
+        // Community Products
+        mObservableProdComm = new MediatorLiveDataActive<>(this, DmProdComm.TAG);
+
+        mObservableProdComm.addSource(mDatabase.prodCommDAO().getAll(), prodComm ->
+        {
+            if (mDatabase.getDatabaseCreated().getValue() != null) {
+                mObservableProdComm.postValue(prodComm);
+            }
+        });
+
+        // My Products
+        mObservableProdMys = new MediatorLiveDataActive<>(this, DmProdMy.TAG);
+
+        mObservableProdMys.addSource(mDatabase.prodMyDAO().getAll(), prodMy ->
+        {
+            if (mDatabase.getDatabaseCreated().getValue() != null) {
+                mObservableProdMys.postValue(prodMy);
+            }
+        });
+    }
+
+    public static Repository getInstance(Context context, final TKMLocalDatabase database) {
+        if (sInstance == null) {
+            synchronized (Repository.class) {
+                if (sInstance == null) {
+                    sInstance = new Repository(context, database);
+                }
+            }
+        }
+        return sInstance;
     }
 
     /**
-     * Informs the remote repository to start and stop listening to {@link DmProdComm}
-     * data.
-     * @param isLive True, to start listening, false to stop.
-     *               If this data is used by a ViewModel, this value should be set to true in
-     *               onActive() and false onInactive().
+     * Activates / deactivates remote synchronisation for a data model and its dependents.
+     * @param dataModel the data model to synchronise
+     * @param isActive  true turns remote synchronisation on, false turns it off.
      */
-    public void isLiveProdComm(boolean isLive) {
-        mRepoRemote.isLiveProdComm(isLive);
+    void dataModelIsActive(String dataModel, boolean isActive) {
+        mSyncManager.setTargetObservedState(dataModel, isActive);
     }
 
     /**
-     * Gets a list of all {@link DmProdComm} objects from teh local database
-     * @return a list of all {@link DmProdComm} stored in the local database.
+     * @return a list of all {@link DmProdComm} objects.
      */
-    public LiveData<List<DmProdComm>> getAllProdComms() {
-        mGetAllProdComms = mRepoLocal.getAllProdComms();
-        return mGetAllProdComms;
+    public LiveData<List<DmProdComm>> getAllProdComm() {
+        return mObservableProdComm;
     }
 
     /**
-     * Gets a list of {@link DmProdComm} objects given an array of ID's
+     * @return a list of all {@link DmProdMy} objects.
+     */
+    public LiveData<List<DmProdMy>> getAllProdMys() {
+        return mObservableProdMys;
+    }
+
+    /**
+     * @param remoteId the remote ID of the object to fetch.
+     * @return a DmProdComm object.
+     */
+    DmProdComm getProdCommByRemoteId(String remoteId) {
+        return mDatabase.prodCommDAO().getByRemoteId(remoteId);
+    }
+
+    /**
+     * @param remoteId the remote ID of the object to fetch.
+     * @return a DmProdMy object.
+     */
+    DmProdMy getProdMyByRemoteId(String remoteId) {
+        return mDatabase.prodMyDAO().getByRemoteId(remoteId);
+    }
+
+    /**
+     * @param dmProdComm the object to be inserted.
+     */
+    void insertProdComm(DmProdComm dmProdComm) {
+        mDatabase.prodCommDAO().insert(dmProdComm);
+    }
+
+    /**
+     * @param prodMy the object to be inserted.
+     */
+    void insertProdMy(DmProdMy prodMy) {
+        mDatabase.prodMyDAO().insert(prodMy);
+    }
+
+    /**
+     * @param prodComm the object to update.
+     */
+    void updateProdComm(DmProdComm prodComm) {
+        mDatabase.prodCommDAO().update(prodComm);
+    }
+
+    /**
      * @param idList an array of id's to fetch.
      * @return a list of {@link DmProdComm} where id's match the id's in the input array.
      */
-    public LiveData<List<DmProdComm>> getProdCommsByIdArray(int[] idList) {
-        mGetProdCommsByIdArray = mRepoLocal.getProdCommsByIdArray(idList);
-        return mGetProdCommsByIdArray;
+    public LiveData<List<DmProdComm>> getProdCommByIdArray(int[] idList) {
+        return mDatabase.prodCommDAO().getByIdArray(idList);
     }
 
     /**
-     * Takes a remote {@link DmProdComm} and synchronises it with the local repository.
-     * The remote object has priority.
-     * @param dmProdComm the remote {@link DmProdComm}
-     */
-    void syncProdComm(DmProdComm dmProdComm) {
-        mRepoLocal.remoteSyncProdComm(dmProdComm);
-    }
-
-    /**
-     * Gets a single {@link DmProdComm} object given its ID
      * @param id the id of the {@link DmProdComm} object to return.
      * @return the requested object.
      */
-    public LiveData<DmProdComm> getProdCommById(int id){
-        return mRepoLocal.getProdCommById(id);
+    public LiveData<DmProdComm> getProdCommById(int id) {
+        return mDatabase.prodCommDAO().getById(id);
     }
 
     /**
-     * Turns on and off remote data sync for the MyProducts location
-     * @param isLive Turns remote data sync on if true, off id false.
-     * @param userId The current users user ID for the remote data source.
-     */
-    public void IsLiveProdMy(boolean isLive, String userId) {
-        mRepoRemote.isLiveProdMy(isLive, userId);
-    }
-
-    /**
-     * Gets a list of all {@link DmProdMy} objects from the local database
-     * @return a list of {@link DmProdMy} objects.
-     */
-    public LiveData<List<DmProdMy>> getAllProdMys() {
-        mGetAllProdMys = mRepoLocal.getAllProdMys();
-        return mGetAllProdMys;
-    }
-
-    /**
-     * Gets a single {@link DmProdMy} by ID
      * @param id the local database id of the object to return
      * @return the requested DmProdMy object.
      */
     public LiveData<DmProdMy> getProdMyById(int id) {
-        mGetProdMyById = mRepoLocal.getProdMyById(id);
-        return mGetProdMyById;
+        return mDatabase.prodMyDAO().getById(id);
     }
 
     public DmProdMy getProdMyByCommId(int commId) {
-        return mRepoLocal.getProdMyByCommId(commId);
+        return mDatabase.prodMyDAO().getByCommId(commId);
     }
 
     /**
-     * Takes an incoming {@link DmProdMy} from the remote repository and synchronises it with the
-     * local repository. The remote {@link DmProdMy} has priority.
-     * @param dmProdMy the incoming remote product.
+     * @param pm the object to update.
      */
-    void remoteSyncProdMy(DmProdMy dmProdMy) {
-        mRepoLocal.remoteSyncProdMy(dmProdMy);
+    void updateProdMy(DmProdMy pm) {
+        mDatabase.prodMyDAO().update(pm);
+    }
+
+    public Cursor searchProducts(String query) {
+        return mDatabase.prodCommDAO().searchAllProducts(query);
     }
 }

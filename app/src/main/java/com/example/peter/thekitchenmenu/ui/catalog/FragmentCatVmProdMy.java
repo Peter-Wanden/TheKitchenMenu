@@ -1,15 +1,6 @@
 package com.example.peter.thekitchenmenu.ui.catalog;
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,15 +17,23 @@ import com.example.peter.thekitchenmenu.viewmodels.ViewModelCatProd;
 import java.util.List;
 import java.util.Objects;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 public class FragmentCatVmProdMy
         extends Fragment
         implements OnClickVmProd {
 
-    private static final String LOG_TAG = FragmentCatVmProdMy.class.getSimpleName();
+    private static final String TAG = "FragmentCatVmProdMy";
 
     private AdapterCatProdComm mAdapterCatProd;
-    private FragmentCatalogProductsBinding mCatProdBinding;
-    private Parcelable mLayoutManagerState;
     private ViewModelCatProd mViewModelProdCommMy;
 
     @Override
@@ -47,22 +46,14 @@ public class FragmentCatVmProdMy
 
         // Observes changes to view model ProdMy list and passes them to the adaptor.
         final Observer<List<VmProd>> viewModelProd = vmProds
-                -> {
-            mAdapterCatProd.setProducts(vmProds);
-            if (vmProds != null) {
-                for (VmProd vmp : vmProds) {
-                    Log.i(LOG_TAG, "--- Product delivered: " + vmp.getDescription());
-                }
-            }
-        };
+                -> mAdapterCatProd.setProducts(vmProds);
+
         mViewModelProdCommMy.getAllVmProdMy().observe(this, viewModelProd);
 
         // Observes changes to the user ID state and passes them to the adaptor.
         final Observer<String> userIdObserver = newUserId
                 -> {
             if (newUserId !=null && !newUserId.equals(ANONYMOUS)) {
-                // Turns remote data sync on
-                mViewModelProdCommMy.setRemoteSyncEnabled(true);
                 mAdapterCatProd.setUserId(newUserId);
             }
         };
@@ -75,10 +66,8 @@ public class FragmentCatVmProdMy
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        mCatProdBinding = DataBindingUtil.inflate(
+        FragmentCatalogProductsBinding mBinding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_catalog_products, container, false);
-
-        View rootView = mCatProdBinding.getRoot();
 
         if (getResources().getBoolean(R.bool.is_tablet) ||
                 getResources().getBoolean(R.bool.is_landscape)) {
@@ -87,29 +76,23 @@ public class FragmentCatVmProdMy
                     GridLayoutManager(getActivity().
                     getApplicationContext(), columnCalculator());
 
-            mCatProdBinding.fragmentCatalogProductsRv.
+            mBinding.fragmentCatalogProductsRv.
                     setLayoutManager(gridManager);
         } else {
             LinearLayoutManager linearManager = new
                     LinearLayoutManager(getActivity().getApplicationContext(),
-                    LinearLayoutManager.VERTICAL, false);
+                    RecyclerView.VERTICAL, false);
 
-            mCatProdBinding.
+            mBinding.
                     fragmentCatalogProductsRv.
                     setLayoutManager(linearManager);
         }
 
-        mCatProdBinding.fragmentCatalogProductsRv.setHasFixedSize(true);
+        mBinding.fragmentCatalogProductsRv.setHasFixedSize(true);
 
-        mCatProdBinding.fragmentCatalogProductsRv.setAdapter(mAdapterCatProd);
+        mBinding.fragmentCatalogProductsRv.setAdapter(mAdapterCatProd);
 
-        // Post configuration change, restores the state of the previous layout manager to the new
-        // layout manager, which could be either a grid or linear layout.
-        if (savedInstanceState != null && savedInstanceState.containsKey("layoutManagerState")) {
-            mLayoutManagerState = savedInstanceState.getParcelable("layoutManagerState");
-        }
-
-        return rootView;
+        return mBinding.getRoot();
     }
 
     /**
@@ -130,24 +113,6 @@ public class FragmentCatVmProdMy
         if (columns < 2) return 2;
 
         return columns;
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-
-        mViewModelProdCommMy.setRemoteSyncEnabled(false);
-
-        mLayoutManagerState = mCatProdBinding.fragmentCatalogProductsRv.
-                getLayoutManager().
-                onSaveInstanceState();
-    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        outState.putParcelable("layoutManagerState", mLayoutManagerState);
     }
 
     @Override

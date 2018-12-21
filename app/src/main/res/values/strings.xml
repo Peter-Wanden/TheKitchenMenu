@@ -150,4 +150,10 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Search strings -->
+    <string name="search">Search</string>
+    <string name="search_hint">Search products…</string>
+    <string name="tkm_product_descriptions">Product descriptions</string>
+
 </resources>

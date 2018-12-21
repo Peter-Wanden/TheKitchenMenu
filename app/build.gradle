@@ -38,15 +38,39 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation "com.android.support:appcompat-v7:$androidSupportVersion"
-    implementation "com.android.support:design:$androidSupportVersion"
-    implementation "com.android.support:recyclerview-v7:$androidSupportVersion"
-    implementation "com.android.support:cardview-v7:$androidSupportVersion"
-    implementation "com.android.support:exifinterface:$androidSupportVersion"
-    implementation "com.android.support:support-v4:$androidSupportVersion"
-    implementation "com.android.support:customtabs:$androidSupportVersion"
+    implementation "androidx.appcompat:appcompat:$androidxSupportVersion"
+    implementation "com.google.android.material:material:$androidxSupportVersion"
+    implementation "androidx.recyclerview:recyclerview:$androidxSupportVersion"
+    implementation "androidx.cardview:cardview:$androidxSupportVersion"
+    implementation "androidx.exifinterface:exifinterface:$androidxSupportVersion"
+    implementation "androidx.legacy:legacy-support-v4:$androidxSupportVersion"
+    implementation "androidx.browser:browser:$androidxSupportVersion"
+    annotationProcessor "androidx.databinding:databinding-compiler:3.4.0-alpha06"
+
+    // Architecture components
+    implementation "androidx.lifecycle:lifecycle-extensions:$androidxArchComponentsVersion"
+    implementation "androidx.lifecycle:lifecycle-runtime:$androidxArchComponentsVersion"
+    annotationProcessor "androidx.lifecycle:lifecycle-compiler:$androidxArchComponentsVersion"
+
+    // Room
+    implementation "androidx.room:room-runtime:$androidxRoomVersion"
+    annotationProcessor "androidx.room:room-compiler:$androidxRoomVersion"
+
+    // Paging
+    implementation "androidx.paging:paging-runtime:$androidxPagingRuntimeVersion"
+
     // Constraint layout
-    implementation "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
+    implementation "androidx.constraintlayout:constraintlayout:$androidxConstraintLayoutVersion"
+
+    // A library that will hold the application logic
+    implementation project(':TKMAppLibrary')
+
+    // Gson
+    implementation 'com.google.code.gson:gson:2.8.5'
+
+    // Picasso TODO - Replace with Glide
+    implementation "com.squareup.picasso:picasso:$picassoVersion"
+
 
     // Play services
     implementation "com.google.android.gms:play-services-ads-identifier:$playServicesA"
@@ -59,19 +83,8 @@ dependencies {
     implementation "com.google.android.gms:play-services-flags:$playServicesB"
     implementation "com.google.android.gms:play-services-tasks:$playServicesB"
     implementation "com.google.android.gms:play-services-basement:$playServicesC"
-    // A library that will hold the application logic
-    implementation project(':TKMAppLibrary')
-    // Gson
-    implementation 'com.google.code.gson:gson:2.8.5'
-    // Architecture components version
-    implementation "android.arch.lifecycle:extensions:$archComponentsVersion"
-    implementation "android.arch.lifecycle:runtime:$archComponentsVersion"
-    annotationProcessor "android.arch.lifecycle:compiler:$archComponentsVersion"
-    // Paging
-    implementation "android.arch.paging:runtime:$pagingVersion"
-    // Room
-    implementation "android.arch.persistence.room:runtime:$roomVersion"
-    annotationProcessor "android.arch.persistence.room:compiler:$roomVersion"
+
+
     // Firebase
     implementation "com.google.firebase:firebase-database:$firebaseVersion"
     implementation "com.google.firebase:firebase-core:$firebaseVersion"
@@ -82,12 +95,11 @@ dependencies {
     implementation "com.firebaseui:firebase-ui-auth:$firebaseAuth"
     // Allows direct binding of data to display
     implementation "com.firebaseui:firebase-ui-database:$firebaseAuth"
-    // Picasso TODO - Replace with Glide
-    implementation "com.squareup.picasso:picasso:$picassoVersion"
+
     // Testing
     testImplementation "junit:junit:$junitVersion"
-    androidTestImplementation "com.android.support.test:runner:$runnerVersion"
-    androidTestImplementation "com.android.support.test.espresso:espresso-core:$espressoVersion"
+    androidTestImplementation "androidx.test:runner:$androidxTestRunnerVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoVersion"
 }
 // Reads the configuration information in app/google-services.json
 apply plugin: 'com.google.gms.google-services'

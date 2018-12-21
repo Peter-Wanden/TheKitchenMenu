@@ -8,6 +8,7 @@ import android.widget.Toast;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.ui.catalog.ActivityCatProd;
+
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.BuildConfig;
 import com.google.firebase.auth.FirebaseAuth;
@@ -24,9 +25,9 @@ import static com.example.peter.thekitchenmenu.app.Constants.REQUEST_CODE_SIGN_I
 
 public class RemoteSignIn {
 
-    private static final String LOG_TAG = RemoteSignIn.class.getSimpleName();
+    private static final String TAG = RemoteSignIn.class.getSimpleName();
 
-    ActivityCatProd mActivityCatProd;
+    private ActivityCatProd mActivityCatProd;
 
     // Authentication instance.
     private FirebaseAuth mFBAuth;
@@ -54,8 +55,7 @@ public class RemoteSignIn {
             FirebaseUser user = firebaseAuth.getCurrentUser();
 
             if (user != null) {
-                // Update the MutableLiveData user ID static field. Any listeners to this field will now
-                // spring into action!
+                // Update the MutableLiveData user ID static field.
                 onSignedInInitialise(user.getUid());
             } else {
                 // User is signed out.
@@ -108,6 +108,7 @@ public class RemoteSignIn {
 
     // Processes the sign in result from the host activity.
     public void signInResult (int requestCode, int resultCode, Intent data) {
+
         if (requestCode == Constants.REQUEST_CODE_SIGN_IN) {
 
             if (resultCode == RESULT_OK) {
@@ -128,7 +129,9 @@ public class RemoteSignIn {
 
     // Handles sign out
     public void signOut(Context context) {
-        Log.i(LOG_TAG, "--- User signed out from remote database");
+        Log.i(TAG, "--- User signed out from remote database");
+        // User is signed out.
+        Constants.getUserId().setValue(ANONYMOUS);
         AuthUI.getInstance().signOut(context);
     }
 }

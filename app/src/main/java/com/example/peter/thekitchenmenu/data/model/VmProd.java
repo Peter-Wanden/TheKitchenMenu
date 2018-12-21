@@ -3,6 +3,9 @@ package com.example.peter.thekitchenmenu.data.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.example.peter.thekitchenmenu.data.entity.DmProdComm;
+import com.example.peter.thekitchenmenu.data.entity.DmProdMy;
+
 import static com.example.peter.thekitchenmenu.app.Constants.DEFAULT_PROD_MY_ID;
 import static com.example.peter.thekitchenmenu.app.Constants.DEFAULT_REMOTE_REF_ID;
 import static com.example.peter.thekitchenmenu.app.Constants.DEFAULT_FB_USED_PRODUCT_ID;
@@ -13,27 +16,26 @@ import static com.example.peter.thekitchenmenu.app.Constants.DEFAULT_PRODUCT_PRI
 import static com.example.peter.thekitchenmenu.app.Constants.DEFAULT_LOCAL_IMAGE_URI;
 import static com.example.peter.thekitchenmenu.app.Constants.DEFAULT_MY_CREATE_DATE;
 import static com.example.peter.thekitchenmenu.app.Constants.DEFAULT_MY_LAST_UPDATE;
-import static com.example.peter.thekitchenmenu.app.Constants.PRODUCT_COMM_CATEGORY_KEY;
-import static com.example.peter.thekitchenmenu.app.Constants.PRODUCT_COMM_CREATED_BY_KEY;
-import static com.example.peter.thekitchenmenu.app.Constants.PRODUCT_COMM_CREATE_DATE_KEY;
-import static com.example.peter.thekitchenmenu.app.Constants.PRODUCT_COMM_DESCRIPTION_KEY;
-import static com.example.peter.thekitchenmenu.app.Constants.PRODUCT_COMM_LAST_UPDATE_KEY;
-import static com.example.peter.thekitchenmenu.app.Constants.PRODUCT_COMM_MADE_BY_KEY;
-import static com.example.peter.thekitchenmenu.app.Constants.PRODUCT_COMM_PACK_SIZE_KEY;
-import static com.example.peter.thekitchenmenu.app.Constants.PRODUCT_COMM_PRICE_AVE_KEY;
-import static com.example.peter.thekitchenmenu.app.Constants.PRODUCT_COMM_SHELF_LIFE_KEY;
-import static com.example.peter.thekitchenmenu.app.Constants.PRODUCT_COMM_UNIT_OF_MEASURE_KEY;
-import static com.example.peter.thekitchenmenu.app.Constants.PRODUCT_MY_CREATE_DATE_KEY;
-import static com.example.peter.thekitchenmenu.app.Constants.PRODUCT_MY_FB_REFERENCE_KEY;
-import static com.example.peter.thekitchenmenu.app.Constants.PRODUCT_MY_FB_STORAGE_IMAGE_URI_KEY;
-import static com.example.peter.thekitchenmenu.app.Constants.PRODUCT_MY_FB_USED_PRODUCT_KEY;
-import static com.example.peter.thekitchenmenu.app.Constants.PRODUCT_MY_LAST_UPDATE_KEY;
-import static com.example.peter.thekitchenmenu.app.Constants.PRODUCT_MY_LOCAL_IMAGE_URI_KEY;
-import static com.example.peter.thekitchenmenu.app.Constants.PRODUCT_MY_LOCATION_IN_ROOM_KEY;
-import static com.example.peter.thekitchenmenu.app.Constants.PRODUCT_MY_LOCATION_ROOM_KEY;
-import static com.example.peter.thekitchenmenu.app.Constants.PRODUCT_MY_PACK_PRICE_KEY;
-import static com.example.peter.thekitchenmenu.app.Constants.PRODUCT_MY_RETAILER_KEY;
-
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_CATEGORY;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_CREATED_BY;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_CREATE_DATE;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_DESC;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_LAST_UPDATE;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_MADE_BY;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_PACK_SIZE;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_PRICE_AVE;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_REMOTE_REF_ID;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_SHELF_LIFE;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_UNIT_OF_MEASURE;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_REMOTE_IMAGE_URI;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.TABLE_PROD_MY_CREATE_DATE;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.TABLE_PROD_MY_LAST_UPDATE;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.TABLE_PROD_MY_LOCAL_IMAGE_URI;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.TABLE_PROD_MY_LOC_IN_ROOM;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.TABLE_PROD_MY_LOC_ROOM;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.TABLE_PROD_MY_PACK_PRICE;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.TABLE_PROD_MY_RETAILER;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.TABLE_PROD_MY_USED_REMOTE_ID;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -61,7 +63,7 @@ public class VmProd implements Parcelable {
     private int mShelfLife;
     private int mPackSize;
     private int mUnitOfMeasure;
-    private double mPackPriceAverage;
+    private double mPackAvePrice;
     private String mCreatedBy;
     private String mFbStorageImageUri;
     private long mCommCreateDate;
@@ -92,7 +94,7 @@ public class VmProd implements Parcelable {
         this.mShelfLife = dmProdComm.getShelfLife();
         this.mPackSize = dmProdComm.getPackSize();
         this.mUnitOfMeasure = dmProdComm.getUnitOfMeasure();
-        this.mPackPriceAverage = dmProdComm.getPackPriceAverage();
+        this.mPackAvePrice = dmProdComm.getPackAvePrice();
         this.mCreatedBy = dmProdComm.getCreatedBy();
         this.mFbStorageImageUri = dmProdComm.getFbStorageImageUri();
         this.mCommCreateDate = dmProdComm.getCommCreateDate();
@@ -108,7 +110,7 @@ public class VmProd implements Parcelable {
         this.mLocationRoom = DEFAULT_PRODUCT_LOC;
         this.mLocationInRoom = DEFAULT_PRODUCT_LOC_IN_ROOM;
         this.mPackPrice = DEFAULT_PRODUCT_PRICE;
-        this.mLocalImageUri = DEFAULT_LOCAL_IMAGE_URI.toString();
+        this.mLocalImageUri = DEFAULT_LOCAL_IMAGE_URI;
         this.mMyCreateDate = DEFAULT_MY_CREATE_DATE;
         this.mMyLastUpdate = DEFAULT_MY_LAST_UPDATE;
 
@@ -120,7 +122,7 @@ public class VmProd implements Parcelable {
         this.mShelfLife = dmProdComm.getShelfLife();
         this.mPackSize = dmProdComm.getPackSize();
         this.mUnitOfMeasure = dmProdComm.getUnitOfMeasure();
-        this.mPackPriceAverage = dmProdComm.getPackPriceAverage();
+        this.mPackAvePrice = dmProdComm.getPackAvePrice();
         this.mCreatedBy = dmProdComm.getCreatedBy();
         this.mFbStorageImageUri = dmProdComm.getFbStorageImageUri();
         this.mCommCreateDate = dmProdComm.getCommCreateDate();
@@ -146,7 +148,7 @@ public class VmProd implements Parcelable {
             int shelfLife,
             int packSize,
             int unitOfMeasure,
-            double mPackPriceAverage,
+            double mPackAvePrice,
             String createdBy,
             String fbStorageImageUri,
             long commCreateDate,
@@ -167,7 +169,7 @@ public class VmProd implements Parcelable {
         this.mShelfLife = shelfLife;
         this.mPackSize = packSize;
         this.mUnitOfMeasure = unitOfMeasure;
-        this.mPackPriceAverage = mPackPriceAverage;
+        this.mPackAvePrice = mPackAvePrice;
         this.mCreatedBy = createdBy;
         this.mFbStorageImageUri = fbStorageImageUri;
         this.mCommCreateDate = commCreateDate;
@@ -195,7 +197,7 @@ public class VmProd implements Parcelable {
         mShelfLife = in.readInt();
         mPackSize = in.readInt();
         mUnitOfMeasure = in.readInt();
-        mPackPriceAverage = in.readDouble();
+        mPackAvePrice = in.readDouble();
         mCreatedBy = in.readString();
         mFbStorageImageUri = in.readString();
         mCommCreateDate = in.readLong();
@@ -219,17 +221,17 @@ public class VmProd implements Parcelable {
 
         HashMap<String, Object> result = new HashMap<>();
 
-        result.put(PRODUCT_COMM_DESCRIPTION_KEY, mDescription);
-        result.put(PRODUCT_COMM_MADE_BY_KEY, mMadeBy);
-        result.put(PRODUCT_COMM_CATEGORY_KEY, mCategory);
-        result.put(PRODUCT_COMM_SHELF_LIFE_KEY, mShelfLife);
-        result.put(PRODUCT_COMM_PACK_SIZE_KEY, mPackSize);
-        result.put(PRODUCT_COMM_UNIT_OF_MEASURE_KEY, mUnitOfMeasure);
-        result.put(PRODUCT_COMM_PRICE_AVE_KEY, mPackPriceAverage);
-        result.put(PRODUCT_COMM_CREATED_BY_KEY, mCreatedBy);
-        result.put(PRODUCT_MY_FB_STORAGE_IMAGE_URI_KEY, mFbStorageImageUri);
-        result.put(PRODUCT_COMM_CREATE_DATE_KEY, mCommCreateDate);
-        result.put(PRODUCT_COMM_LAST_UPDATE_KEY, mCommLastUpdate);
+        result.put(TABLE_PROD_COMM_DESC, mDescription);
+        result.put(TABLE_PROD_COMM_MADE_BY, mMadeBy);
+        result.put(TABLE_PROD_COMM_CATEGORY, mCategory);
+        result.put(TABLE_PROD_COMM_SHELF_LIFE, mShelfLife);
+        result.put(TABLE_PROD_COMM_PACK_SIZE, mPackSize);
+        result.put(TABLE_PROD_COMM_UNIT_OF_MEASURE, mUnitOfMeasure);
+        result.put(TABLE_PROD_COMM_PRICE_AVE, mPackAvePrice);
+        result.put(TABLE_PROD_COMM_CREATED_BY, mCreatedBy);
+        result.put(TABLE_PROD_COMM_REMOTE_IMAGE_URI, mFbStorageImageUri);
+        result.put(TABLE_PROD_COMM_CREATE_DATE, mCommCreateDate);
+        result.put(TABLE_PROD_COMM_LAST_UPDATE, mCommLastUpdate);
 
         return result;
     }
@@ -241,30 +243,62 @@ public class VmProd implements Parcelable {
 
         // All fields are required
         // Community product fields
-        result.put(PRODUCT_COMM_DESCRIPTION_KEY, mDescription);
-        result.put(PRODUCT_COMM_MADE_BY_KEY, mMadeBy);
-        result.put(PRODUCT_COMM_CATEGORY_KEY, mCategory);
-        result.put(PRODUCT_COMM_SHELF_LIFE_KEY, mShelfLife);
-        result.put(PRODUCT_COMM_PACK_SIZE_KEY, mPackSize);
-        result.put(PRODUCT_COMM_UNIT_OF_MEASURE_KEY, mUnitOfMeasure);
-        result.put(PRODUCT_COMM_PRICE_AVE_KEY, mPackPriceAverage);
-        result.put(PRODUCT_COMM_CREATED_BY_KEY, mCreatedBy);
-        result.put(PRODUCT_MY_FB_STORAGE_IMAGE_URI_KEY, mFbStorageImageUri);
-        result.put(PRODUCT_COMM_CREATE_DATE_KEY, mCommCreateDate);
-        result.put(PRODUCT_COMM_LAST_UPDATE_KEY, mCommLastUpdate);
+        result.put(TABLE_PROD_COMM_DESC, mDescription);
+        result.put(TABLE_PROD_COMM_MADE_BY, mMadeBy);
+        result.put(TABLE_PROD_COMM_CATEGORY, mCategory);
+        result.put(TABLE_PROD_COMM_SHELF_LIFE, mShelfLife);
+        result.put(TABLE_PROD_COMM_PACK_SIZE, mPackSize);
+        result.put(TABLE_PROD_COMM_UNIT_OF_MEASURE, mUnitOfMeasure);
+        result.put(TABLE_PROD_COMM_PRICE_AVE, mPackAvePrice);
+        result.put(TABLE_PROD_COMM_CREATED_BY, mCreatedBy);
+        result.put(TABLE_PROD_COMM_REMOTE_IMAGE_URI, mFbStorageImageUri);
+        result.put(TABLE_PROD_COMM_CREATE_DATE, mCommCreateDate);
+        result.put(TABLE_PROD_COMM_LAST_UPDATE, mCommLastUpdate);
 
         // My product specific fields
-        result.put(PRODUCT_MY_FB_USED_PRODUCT_KEY, mFbUsedProdUserKey);
-        result.put(PRODUCT_MY_RETAILER_KEY, mRetailer);
-        result.put(PRODUCT_MY_LOCATION_ROOM_KEY, mLocationRoom);
-        result.put(PRODUCT_MY_LOCATION_IN_ROOM_KEY, mLocationInRoom);
-        result.put(PRODUCT_MY_PACK_PRICE_KEY, mPackPrice);
-        result.put(PRODUCT_MY_LOCAL_IMAGE_URI_KEY, mLocalImageUri);
-        result.put(PRODUCT_MY_CREATE_DATE_KEY, mMyCreateDate);
-        result.put(PRODUCT_MY_LAST_UPDATE_KEY, mMyLastUpdate);
-        result.put(PRODUCT_MY_FB_REFERENCE_KEY, mRemoteProdMyRefKey);
+        result.put(TABLE_PROD_MY_USED_REMOTE_ID, mFbUsedProdUserKey);
+        result.put(TABLE_PROD_MY_RETAILER, mRetailer);
+        result.put(TABLE_PROD_MY_LOC_ROOM, mLocationRoom);
+        result.put(TABLE_PROD_MY_LOC_IN_ROOM, mLocationInRoom);
+        result.put(TABLE_PROD_MY_PACK_PRICE, mPackPrice);
+        result.put(TABLE_PROD_MY_LOCAL_IMAGE_URI, mLocalImageUri);
+        result.put(TABLE_PROD_MY_CREATE_DATE, mMyCreateDate);
+        result.put(TABLE_PROD_MY_LAST_UPDATE, mMyLastUpdate);
+        result.put(TABLE_PROD_COMM_REMOTE_REF_ID, mRemoteProdMyRefKey);
 
         return result;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(mProdMyId);
+        parcel.writeString(mRemoteProdMyRefKey);
+        parcel.writeString(mFbUsedProdUserKey);
+        parcel.writeString(mRetailer);
+        parcel.writeString(mLocationRoom);
+        parcel.writeString(mLocationInRoom);
+        parcel.writeDouble(mPackPrice);
+        parcel.writeString(mLocalImageUri);
+        parcel.writeLong(mMyCreateDate);
+        parcel.writeLong(mMyLastUpdate);
+        parcel.writeInt(mProdCommId);
+        parcel.writeString(mRemoteProdCommRefKey);
+        parcel.writeString(mDescription);
+        parcel.writeString(mMadeBy);
+        parcel.writeInt(mCategory);
+        parcel.writeInt(mShelfLife);
+        parcel.writeInt(mPackSize);
+        parcel.writeInt(mUnitOfMeasure);
+        parcel.writeDouble(mPackAvePrice);
+        parcel.writeString(mCreatedBy);
+        parcel.writeString(mFbStorageImageUri);
+        parcel.writeLong(mCommCreateDate);
+        parcel.writeLong(mCommLastUpdate);
     }
 
     @Override
@@ -285,7 +319,7 @@ public class VmProd implements Parcelable {
                 this.mShelfLife + ", " +
                 this.mPackSize + ", " +
                 this.mUnitOfMeasure + ", " +
-                this.mPackPriceAverage + ", " +
+                this.mPackAvePrice + ", " +
                 this.mCreatedBy + ", " +
                 this.mFbStorageImageUri + ", " +
                 this.mCommCreateDate + ", " +
@@ -415,12 +449,12 @@ public class VmProd implements Parcelable {
         this.mUnitOfMeasure = unitOfMeasure;
     }
 
-    public double getPackPriceAverage() {
-        return mPackPriceAverage;
+    public double getPackAvePrice() {
+        return mPackAvePrice;
     }
 
-    public void setPackPriceAverage(double packPriceAverage) {
-        this.mPackPriceAverage = packPriceAverage;
+    public void setPackAvePrice(double packAvePrice) {
+        this.mPackAvePrice = packAvePrice;
     }
 
     public String getCreatedBy() {
@@ -469,37 +503,5 @@ public class VmProd implements Parcelable {
 
     public void setFbProductReferenceKey(String fbProductReferenceKey) {
         this.mRemoteProdMyRefKey = fbProductReferenceKey;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeInt(mProdMyId);
-        parcel.writeString(mRemoteProdMyRefKey);
-        parcel.writeString(mFbUsedProdUserKey);
-        parcel.writeString(mRetailer);
-        parcel.writeString(mLocationRoom);
-        parcel.writeString(mLocationInRoom);
-        parcel.writeDouble(mPackPrice);
-        parcel.writeString(mLocalImageUri);
-        parcel.writeLong(mMyCreateDate);
-        parcel.writeLong(mMyLastUpdate);
-        parcel.writeInt(mProdCommId);
-        parcel.writeString(mRemoteProdCommRefKey);
-        parcel.writeString(mDescription);
-        parcel.writeString(mMadeBy);
-        parcel.writeInt(mCategory);
-        parcel.writeInt(mShelfLife);
-        parcel.writeInt(mPackSize);
-        parcel.writeInt(mUnitOfMeasure);
-        parcel.writeDouble(mPackPriceAverage);
-        parcel.writeString(mCreatedBy);
-        parcel.writeString(mFbStorageImageUri);
-        parcel.writeLong(mCommCreateDate);
-        parcel.writeLong(mCommLastUpdate);
     }
 }

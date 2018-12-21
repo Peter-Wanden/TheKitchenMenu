@@ -1,11 +1,14 @@
 package com.example.peter.thekitchenmenu.viewmodels;
 
+
+
 import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
-import android.arch.lifecycle.MutableLiveData;
-import android.support.annotation.NonNull;
 
 import com.example.peter.thekitchenmenu.data.model.VmProd;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.MutableLiveData;
 
 public class ViewModelProdDetail extends AndroidViewModel {
 

@@ -1,17 +1,10 @@
 package com.example.peter.thekitchenmenu.ui.catalog;
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
@@ -21,15 +14,25 @@ import com.example.peter.thekitchenmenu.databinding.ActivityCatalogProductBindin
 import com.example.peter.thekitchenmenu.ui.detail.ActivityDetailProd;
 import com.example.peter.thekitchenmenu.viewmodels.ViewModelCatProd;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.viewpager.widget.ViewPager;
+
+import static com.example.peter.thekitchenmenu.app.Constants.ANONYMOUS;
+import static com.example.peter.thekitchenmenu.app.Constants.PRODUCT_FB_REFERENCE_KEY;
+import static com.example.peter.thekitchenmenu.app.Constants.PRODUCT_IS_CREATOR_KEY;
+
 
 /**
- * The main entry point for product related actions and the host activity
+ * The main entry point for product related actions and (currently) the host activity
  * for {@link FragmentCatVmProd} and {@link FragmentCatVmProdMy}.
  */
 public class ActivityCatProd
         extends AppCompatActivity {
 
-    public static final String LOG_TAG = ActivityCatProd.class.getSimpleName();
+    public static final String TAG = ActivityCatProd.class.getSimpleName();
 
     RemoteSignIn mRemoteSignIn;
     ViewModelCatProd viewModelCatProd;
@@ -39,13 +42,17 @@ public class ActivityCatProd
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         mRemoteSignIn = new RemoteSignIn(this);
         initialiseViews();
         setupViewModel();
     }
 
+    // Sets up the view model and observes when a product value changes which indicates the user has
+    // clicked a product.
     private void setupViewModel() {
+
         viewModelCatProd = ViewModelProviders.of(this).get(ViewModelCatProd.class);
         viewModelCatProd.getSelected().observe(this, vmProd -> {
             if (vmProd != null) {
@@ -56,9 +63,10 @@ public class ActivityCatProd
 
     // Launches the detail activity
     private void launchDetailActivity(VmProd vmProd) {
+
         Intent intent = new Intent(ActivityCatProd.this, ActivityDetailProd.class);
-        intent.putExtra(Constants.PRODUCT_FB_REFERENCE_KEY, vmProd);
-        intent.putExtra(Constants.PRODUCT_IS_CREATOR_KEY, viewModelCatProd.getIsCreator().getValue());
+        intent.putExtra(PRODUCT_FB_REFERENCE_KEY, vmProd);
+        intent.putExtra(PRODUCT_IS_CREATOR_KEY, viewModelCatProd.getIsCreator().getValue());
         startActivity(intent);
 
         // Sliding animation
@@ -67,6 +75,8 @@ public class ActivityCatProd
 
     // Sets up the views for this activity.
     private void initialiseViews() {
+        // TODO - Bind views to XML files
+        setDefaultKeyMode(DEFAULT_KEYS_SEARCH_LOCAL);
 
         mCatProdBinding = DataBindingUtil.setContentView(
                 this, R.layout.activity_catalog_product);
@@ -133,8 +143,7 @@ public class ActivityCatProd
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_product_catalog, menu);
+        getMenuInflater().inflate(R.menu.menu_product_catalog, menu);
         return true;
     }
 
@@ -146,9 +155,20 @@ public class ActivityCatProd
                 // Sign the user out
                 mRemoteSignIn.signOut(this);
                 return true;
+            case R.id.action_search:
+                // open the search bar
+                onSearchRequested();
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public boolean onSearchRequested() {
+        Bundle appData = new Bundle();
+        appData.putString("fromClass", TAG);
+        startSearch(null, false, appData, false);
+        return true;
     }
 
     @Override
