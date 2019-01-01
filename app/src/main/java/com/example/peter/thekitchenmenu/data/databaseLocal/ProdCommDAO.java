@@ -64,10 +64,13 @@ public interface ProdCommDAO {
     void insert(DmProdComm dmProdComm);
 
     @Insert
-    void insertAll(List<DmProdComm> dmProdComm);
+    void insertAll(List<DmProdComm> listDmProdComm);
 
     @Update
     void update(DmProdComm dmProdComm);
+
+    @Update
+    void updateAll(List<DmProdComm> listDmProdComm);
 
     @Delete
     void delete(DmProdComm dmProdComm);

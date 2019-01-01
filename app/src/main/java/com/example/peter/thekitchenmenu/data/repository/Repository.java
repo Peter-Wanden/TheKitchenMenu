@@ -110,6 +110,10 @@ public class Repository {
         mDatabase.prodCommDAO().insert(dmProdComm);
     }
 
+    void insertAllProdComm (List<DmProdComm> listProdComm) {
+        mDatabase.prodCommDAO().insertAll(listProdComm);
+    }
+
     /**
      * @param prodMy the object to be inserted.
      */
@@ -117,11 +121,19 @@ public class Repository {
         mDatabase.prodMyDAO().insert(prodMy);
     }
 
+    void insertAllProdMy(List<DmProdMy> listProdMy) {
+        mDatabase.prodMyDAO().insertAll(listProdMy);
+    }
+
     /**
      * @param prodComm the object to update.
      */
     void updateProdComm(DmProdComm prodComm) {
         mDatabase.prodCommDAO().update(prodComm);
+    }
+
+    void updateAllProdComm (List<DmProdComm> listProdComm) {
+        mDatabase.prodCommDAO().updateAll(listProdComm);
     }
 
     /**
@@ -157,6 +169,10 @@ public class Repository {
      */
     void updateProdMy(DmProdMy pm) {
         mDatabase.prodMyDAO().update(pm);
+    }
+
+    void updateAllProdMy(List<DmProdMy> listProdMy) {
+        mDatabase.prodMyDAO().updateAll(listProdMy);
     }
 
     public Cursor searchProducts(String query) {

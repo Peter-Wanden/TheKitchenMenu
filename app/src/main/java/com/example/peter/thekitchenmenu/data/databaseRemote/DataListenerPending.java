@@ -54,7 +54,7 @@ public class DataListenerPending {
      * Adds and removes the listener when called
      * @param attachState true to add a listener, false to remove it.
      */
-    public void changeListenerState(boolean attachState) {
+    public void setListenerState(boolean attachState) {
         if (attachState) {
             if (mListenerRemovePending) {
                 // If asked to attach listener and it is currently in a state of pending removal,

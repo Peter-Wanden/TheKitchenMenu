@@ -2,7 +2,6 @@ package com.example.peter.thekitchenmenu.app;
 
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.util.Log;
 
 
 // For more information on this class see

@@ -1,24 +1,44 @@
 package com.example.peter.thekitchenmenu.data.repository;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 
-import com.example.peter.thekitchenmenu.data.databaseRemote.DataListenerPending;
-import com.example.peter.thekitchenmenu.data.databaseRemote.RemoteDbRefs;
+import com.example.peter.thekitchenmenu.app.Constants;
+import com.example.peter.thekitchenmenu.app.HandlerWorker;
 import com.example.peter.thekitchenmenu.data.entity.DmProdComm;
 import com.example.peter.thekitchenmenu.data.entity.DmProdMy;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.LinkedList;
-import java.util.Queue;
-
-import androidx.annotation.NonNull;
 
 /**
- * Manages data and value event listeners for the remote database
+ * RepositoryRemotes responsibility is to synchronise data models in the order in which they are
+ * received. It achieves this by placing each model in a LinkedHashMap which preserves the order,
+ * turning the models remote listeners on or off, then listening for the returned data sets. When
+ * received, processes them in the order as laid out in the sync queue.
+ * <p>
+ * Pseudocode:
+ * <p>
+ * RepositoryRemote receives a model to turn remote sync on or off:
+ * <p>
+ * On receipt:
+ * Turns the VEL on or off as appropriate.
+ * If the VEL turns a data model on:
+ * It places the model into the 'sync queue' and flags it as 'data set not returned'.
+ * <p>
+ * When the VEL returns a data set:
+ * RepositoryRemote checks the first item in the sync queue:
+ * If the first item has its flag set to 'data set returned':
+ * The data set is sent to its respective SyncClass (syncProdComm for example) for processing into
+ * the local database.
+ * Once processing is complete:
+ * RepositoryRemote checks the next item in the queue:
+ * If its flag is set to 'data set returned':
+ * Repeats loop.
+ * If however, the first item has its flag set to 'data set not returned':
+ * Repository remote flags the VELs data model as 'data set returned' in the queue.
  */
 public class RepositoryRemote {
 
@@ -26,20 +46,60 @@ public class RepositoryRemote {
 
     private static RepositoryRemote sInstance;
 
+    private LinkedList<ModelStatus> mSyncQueue;
     private SyncProdComm mSyncProdComm;
     private SyncProdMy mSyncProdMy;
+    private boolean isProcessing;
 
-    // Manages the listeners connection to the DmProdComm remote data
-    private DataListenerPending mProdCommListener;
-    // Manages the listeners connection to the DmProdMy remote data
-    private DataListenerPending mProdMyListener;
+    // For running database actions on a separate thread.
+    private HandlerWorker mWorker;
+
+    // TODO - Does this need to be pulled into a different thread???
+    private Handler mHandler = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+
+            // Completion codes returned in msg.arg1.
+            // Inserts = 1, no inserts = 2, updates = 3, no updates = 4.
+            // eg, inserts and updates = 4, no inserts and no updates = 6, etc.
+
+            // Once the data models data set has been processed remove it from the sync queue.
+            mSyncQueue.remove();
+
+            Log.d(TAG, "handleMessage: Sync " + msg.obj +
+                    " complete, with code: " + msg.arg1 + "\n");
+
+            Log.d(TAG, "handleMessage: Removing " + msg.obj +
+                    ". Queue size is now: " + mSyncQueue.size());
+
+            // If available move on to next element.
+            if (mSyncQueue.size() > 0) {
+                Log.d(TAG, "handleMessage: Moving on to next item.");
+                processSyncQueue();
+
+            } else {
+                // Sync queue empty, sync complete.
+                // Quit thread.
+                mWorker.quit();
+                // Reset is processing to false
+                Log.d(TAG, "handleMessage: Sync complete, resetting processing to: false");
+                isProcessing = false;
+            }
+
+            // TODO - Recycle message here.
+            // TODO - Dont forget to shut down the thread when done.
+        }
+    };
 
     /**
      * @param context the Application context
      */
     private RepositoryRemote(Context context) {
-        mSyncProdComm = new SyncProdComm(context);
-        mSyncProdMy = new SyncProdMy(context);
+        mWorker = new HandlerWorker(TAG);
+        mSyncQueue = new LinkedList<>();
+        mSyncProdComm = new SyncProdComm(context, this);
+        mSyncProdMy = new SyncProdMy(context, this);
     }
 
     public static RepositoryRemote getInstance(final Context context) {
@@ -53,116 +113,127 @@ public class RepositoryRemote {
         return sInstance;
     }
 
-    private void initialiseProdCommVel() {
-        Log.d(TAG, "initialiseProdCommVel: called");
-
-        // Database reference to the community products location in Firebase.
-        DatabaseReference prodCommRef = RemoteDbRefs.getRefProdComm();
-
-        // A Queue to store the modified returned data
-        Queue<DmProdComm> remoteData = new LinkedList<>();
-
-        // Listens to changes in the remote database and reflects them into the local database.
-        ValueEventListener prodCommVEL = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                for (DataSnapshot shot : snapshot.getChildren()) {
-                    DmProdComm pc = shot.getValue(DmProdComm.class);
-
-                    if (pc != null) {
-                        // Add the remote reference key
-                        pc.setRemoteProdRefKey(shot.getKey());
-                        remoteData.add(pc);
-                    }
-                }
-                // Copy the remote data for processing and empty the queue ready for new updates
-                Queue<DmProdComm> syncData = new LinkedList<>(remoteData);
-                remoteData.clear();
-                mSyncProdComm.syncRemoteData(syncData);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e(TAG, "Unable to update community products, with error: "
-                        + databaseError);
-            }
-        };
-        mProdCommListener = new DataListenerPending(prodCommRef, prodCommVEL);
-    }
-
     /**
-     * Adds or removes a ValueEventListener to the DmProdComm reference in Firebase.
+     * Triggered each time the repository reports a change in the given data models observed status.
+     * Turns remote sync on or off in response. If the model is being turned on adds it to the sync
+     * queue awaiting a response from the server. Data models can be listed in any order.
      *
-     * @param activeState true to add the lister, false to remove it.
+     * @param dataModel     the data model to synchronise.
+     * @param observedState true to turn listener on, false to turn off.
      */
-    void isLiveProdComm(boolean activeState) {
+    void isObserved(String dataModel, boolean observedState) {
 
-        // // If there isn't an active listener, create one and update its state.
-        if (mProdCommListener == null) {
-            initialiseProdCommVel();
-            mProdCommListener.changeListenerState(activeState);
+        // Is the user logged in?
+        if (!Constants.getUserId().getValue().equals(Constants.ANONYMOUS)) {
 
-        // If the current listeners state is not equal to the required state, update it.
-        } else if (mProdCommListener.getListenerState() != activeState) {
-            mProdCommListener.changeListenerState(activeState);
+            switch (dataModel) {
+
+                // Is the data model a ProdComm?
+                case DmProdComm.TAG:
+
+                    // Is the requested listener state different from its current state?
+                    if (mSyncProdComm.getListenerState() != observedState) {
+                        // Then change the listeners state to the requested state.
+                        mSyncProdComm.setListenerState(observedState);
+                        // If the requested state is to turn the listener on:
+                        if (observedState) {
+                            // Add the model to the sync queue, with 'data set received' to false.
+                            mSyncQueue.add(new ModelStatus(DmProdComm.TAG, false));
+                        }
+                    }
+                    break;
+
+                // Is the data model a ProdMy?
+                case DmProdMy.TAG:
+
+                    if (mSyncProdMy.getListenerState() != observedState) {
+
+                        mSyncProdMy.setListenerState(observedState);
+
+                        if (observedState) {
+                            mSyncQueue.add(new ModelStatus(DmProdMy.TAG, false));
+                        }
+                    }
+                    break;
+
+                // Unknown data model.
+                default:
+                    Log.v(TAG, "isObserved: Data model unknown, cannot sync");
+                    break;
+            }
         }
     }
 
-    /**
-     * Sets up the remote collection_users/{user_id}/collection_products/ location ready for
-     * synchronisation.
-     * Receives and converts the data at the specified location to a local database object.
-     * Sends the data to be processed by the repository.
-     *
-     * @param mUserId the unique Firebase user ID.
-     */
-    private void initialiseProdMyVel(String mUserId) {
-        Log.d(TAG, "initialiseProdMyVel: called");
+    // Triggered when a VEL returns a data set. Updates the sync queue and initiates processing.
+    void dataSetReturned(ModelStatus modelStatus) {
+        Log.d(TAG, "dataSetReturned: sync queue looks like: " + mSyncQueue);
+        int count = 0;
 
-        DatabaseReference prodMyRef = RemoteDbRefs.getRefProdMy(mUserId);
-
-        Queue<DmProdMy> remoteData = new LinkedList<>();
-
-        ValueEventListener prodMyVel = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                for (DataSnapshot shot : snapshot.getChildren()) {
-                    DmProdMy pm = shot.getValue(DmProdMy.class);
-
-                    if (pm != null) {
-                        remoteData.add(pm);
-                    }
-                }
-                Queue<DmProdMy> syncData = new LinkedList<>(remoteData);
-                remoteData.clear();
-                mSyncProdMy.syncRemoteData(syncData);
+        for (int i = 0; i < mSyncQueue.size(); i++) {
+            ModelStatus ms = mSyncQueue.get(i);
+            Log.d(TAG, "dataSetReturned: i = " + i);
+            Log.d(TAG, "dataSetReturned: in loop, model is: " + ms.getModelName());
+            if (ms.getModelName().equals(modelStatus.getModelName())) {
+                count = i;
+                break;
             }
+        }
+        mSyncQueue.remove(count);
+        mSyncQueue.add(count, modelStatus);
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e(TAG, "Unable to update MyProducts, with error: " + databaseError);
-            }
-        };
-        mProdMyListener = new DataListenerPending(prodMyRef, prodMyVel);
+        Log.d(TAG, "dataSetReturned: Sync queue now looks like: " + mSyncQueue.toString());
+        processSyncQueue();
     }
 
-    /**
-     * Adds or removes a ValueEventListener to the collection_users/{userId]/collection_products
-     * reference in the remote database.
-     * @param activeState true to add the lister, false to remove it.
-     */
-    void isLiveProdMy(boolean activeState, String userId) {
-        // If there isn't an active listener, create one and update its state.
-        if (mProdMyListener == null) {
-            initialiseProdMyVel(userId);
-            mProdMyListener.changeListenerState(activeState);
+    // Triggered by a data set being returned from a VEL, or after a data set has been processed
+    // see mHandler.
+    private void processSyncQueue() {
 
-        // If the current listeners state is not equal to the required state, update it.
-        } else if (mProdMyListener.getListenerState() != activeState) {
-            mProdMyListener.changeListenerState(activeState);
-            Log.d(TAG, "isLiveProdMy: Listener state changed to: " + activeState);
+        // Check to see if the sync queue is currently being processed.
+        if (!isProcessing) {
+            // If not, start processing.
+            isProcessing = true;
+        }
+
+        // Get the data model identifier at the queue head.
+        ModelStatus queueHead = mSyncQueue.peek();
+
+        if (queueHead != null) {
+
+            // Check to see if the data model has had its data set returned.
+            if (queueHead.dataSetReturned()) {
+
+                // Find out which data models data set has been returned.
+                switch (queueHead.getModelName()) {
+
+                    case DmProdComm.TAG:
+
+                        Log.d(TAG, "processSyncQueue: DmProdComm");
+                        // Send the data to its respective sync class to be processed.
+                        mSyncProdComm.syncRemoteData(mHandler, mWorker);
+
+                        break;
+
+                    case DmProdMy.TAG:
+
+                        Log.d(TAG, "processSyncQueue: DmProdMy");
+                        // Send the data to its respective sync class to be processed.
+                        mSyncProdMy.syncRemoteData(mHandler, mWorker);
+
+                        break;
+
+                    default:
+                        // If the data models data set has not returned, log error, exit.
+                        Log.d(TAG, "processSyncQueue: Data model not found: " +
+                                queueHead.toString() + " Exiting sync.");
+                        isProcessing = false;
+                        break;
+                }
+
+            } else {
+                Log.d(TAG, "processSyncQueue: First item in queue is not ready, exiting sync.");
+                isProcessing = false;
+            }
         }
     }
 }

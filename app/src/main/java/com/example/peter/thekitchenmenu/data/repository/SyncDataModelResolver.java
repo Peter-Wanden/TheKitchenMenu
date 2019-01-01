@@ -1,7 +1,6 @@
 package com.example.peter.thekitchenmenu.data.repository;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.app.Singletons;
@@ -22,21 +21,21 @@ class SyncDataModelResolver {
     private static final String ACTION_SYNC_PROD_COMM = DmProdComm.TAG;
     private static final String ACTION_SYNC_PROD_MY = DmProdMy.TAG;
 
-    synchronized static void executeTask(Context context, String action, boolean activeState) {
+    synchronized static void executeTask(Context context, String action, boolean observedState) {
 
         RepositoryRemote repositoryRemote = ((Singletons) context).getRepositoryRemote();
 
-        // Resolve the type of intent
-        if (ACTION_SYNC_PROD_COMM.equals(action)) {
-            // Turn on / off remote sync.
-            Log.d(TAG, "executeTask: " + action);
-            // Attach / detach listener to remote data model location and sync data model
-            repositoryRemote.isLiveProdComm(activeState);
+        // Only sync if the user is logged in
+        if (!Constants.getUserId().getValue().equals(ANONYMOUS)) {
 
-        } else if (ACTION_SYNC_PROD_MY.equals(action)) {
-            Log.d(TAG, "executeTask: " + action);
-            if (!Constants.getUserId().getValue().equals(ANONYMOUS)) {
-                repositoryRemote.isLiveProdMy(activeState, Constants.getUserId().getValue());
+            // Resolve the type of intent
+            if (ACTION_SYNC_PROD_COMM.equals(action)) {
+                // Turn remote sync on / off.
+                repositoryRemote.isObserved(ACTION_SYNC_PROD_COMM, observedState);
+
+            } else if (ACTION_SYNC_PROD_MY.equals(action)) {
+                // Turn remote sync on / off.
+                repositoryRemote.isObserved(ACTION_SYNC_PROD_MY, observedState);
             }
         }
     }

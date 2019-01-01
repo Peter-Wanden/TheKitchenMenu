@@ -46,10 +46,13 @@ public interface ProdMyDAO {
     void insert(DmProdMy dmProdMy);
 
     @Insert
-    void insertAll(List<DmProdMy> dmProdMIES);
+    void insertAll(List<DmProdMy> listProdMy);
 
     @Update
     void update(DmProdMy dmProdMy);
+
+    @Update
+    void updateAll(List<DmProdMy> listDmProdMy);
 
     @Delete
     void delete(DmProdMy dmProdMy);

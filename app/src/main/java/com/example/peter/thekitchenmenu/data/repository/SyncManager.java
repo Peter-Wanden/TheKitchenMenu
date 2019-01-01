@@ -33,29 +33,29 @@ import static com.example.peter.thekitchenmenu.app.Constants.ANONYMOUS;
  *  - If the targets state is unchanged, ignore the request.
  *      - End.
  *  - If state has changed
- *      - Update the models status in the dependency list, then: *
+ *      - Update the models status in the dependency list:
  *      - If the target model is now being observed.
- *          - Loop through its upstream dependencies.
- *              - If the upstream model is observed, continue looping.
- *              - If the upstream model is not observed:
- *                  - Update its 'has dependencies' flag to true.
- *              - Keep looping until the target model has been processed.
- *                  - Then, inform the signInChecker that that sync queue needs processing.
- *
- *      - If the target model is not being observed.
+ *      |   - Loop through its upstream dependencies.
+ *      |       -> If the upstream model is observed, continue looping.
+ *      |       -> If the upstream model is not observed:
+ *      |           - Update its 'has dependencies' flag to true.
+ *      |       - Keep looping until the target model has been processed.
+ *      |           - Inform the signInChecker that that sync queue needs processing.
+ *      |
+ *      -> If the target model is not being observed.
  *          - Retrieve the next downstream dependency.
- *              - If it is being observed flag the target as having dependencies.
- *                  - End.
- *              - If the downstream dependency is not being observed, check its dependency flag:
- *                  - If set to true
- *                      - Flag the target as having dependencies.
- *                      - End.
- *                  - If set to false:
+ *             |- If it is being observed flag the target as having dependencies.
+ *             |     - End.
+ *             -> If the downstream dependency is not being observed, check its dependency flag:
+ *                 |- If set to true
+ *                 |    - Flag the target as having dependencies.
+ *                 |    - End.
+ *                 -> If set to false:
  *                      - Set the target as having no dependencies.
  *                      - Loop through upstream dependencies.
- *                          - If the upstream dependency is not being observed
- *                              - Set its dependency flag to false.
- *                          - If the upstream dependency is observed:
+ *                         |- If the upstream dependency is not observed
+ *                         |    - Set its dependency flag to false.
+ *                         -> If the upstream dependency is observed:
  *                              - Set sync pending flag to true.
  *                              - Inform the signInChecker sync queue needs processing.
  *
@@ -236,7 +236,7 @@ class SyncManager {
     }
 
     /**
-     * Works out if data model (the target), which is no longer being observed, has downstream dependents.
+     * Works out if data model, which is no longer being observed, has downstream dependents.
      *
      * @return true if has dependents, false if not.
      */
@@ -299,25 +299,32 @@ class SyncManager {
 
         int count = 0;
 
-        // Check to see if one or more data models are being observed
+        // Check to see if one or more data models are being observed.
         for (DataModelStatus dms : mDataModelSyncList) {
             if(dms.activeState()) {
                 count ++;
             }
         }
+        // If observed data models, turn on the user ID observer.
         if (count > 0) {
             if (!mUserId.hasActiveObservers()) {
                 mUserId.observeForever(mUserIdObserver);
             }
+
+        // If no observed data models turn user ID observer off.
         } else {
             mUserId.removeObserver(mUserIdObserver);
         }
 
+        // If the user is logged in.
         if (!mUserId.getValue().equals(ANONYMOUS)) {
 
+            // And there is a sync pending.
             if (mSyncPending) {
+                // Turn sync pending off.
                 mSyncPending = false;
 
+                // Start processing pending data models.
                 for (DataModelStatus dms : mDataModelSyncList) {
                     syncDataModel(dms.getModelName(), dms.activeState());
                 }

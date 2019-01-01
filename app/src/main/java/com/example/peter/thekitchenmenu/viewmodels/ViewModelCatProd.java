@@ -71,7 +71,7 @@ public class ViewModelCatProd extends AndroidViewModel {
         List<DmProdMy> mListProdMy = new ArrayList<>();
         List<DmProdComm> mListProdComm = new ArrayList<>();
 
-        // Adds the data models models to the mediator. Ensures all data sets have returned results
+        // Adds the data models to the mediator. Ensures all data sets have returned results
         // before processing data.
         mVmLiveDataMatchMergeMyComm.addSource(mObservableProdComms, dmProdComm -> {
             if (dmProdComm != null) {
@@ -99,6 +99,9 @@ public class ViewModelCatProd extends AndroidViewModel {
         return mVmLiveDataMatchMergeMyComm;
     }
 
+    // TODO - Keeping these lists in virtual memory cannot be good - get all from the database
+    // TODO - Make prodMy relational to prod comm
+    // TODO - Will become clearer when Recipes functionality is added!!!
     // Matches and merges DmProdComms with DmProdMys into VmProds.
     // TODO - Use collections for a better sort algorithm here
     private List<VmProd> mergeMatchMyComm(List<DmProdComm> listDmPc, List<DmProdMy> listDmPm) {
