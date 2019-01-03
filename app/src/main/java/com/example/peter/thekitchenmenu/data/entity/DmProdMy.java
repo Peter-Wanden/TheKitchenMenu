@@ -14,7 +14,7 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_REMOTE_REF_ID;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.PROD_COMM_REMOTE_REF_ID;
 import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.TABLE_PROD_MY;
 
 /**
@@ -26,56 +26,56 @@ public class DmProdMy implements Parcelable {
 
     public static final String TAG = "DmProdMy";
 
-    public static final String TABLE_PROD_MY_ID = "_id";
     public static final String TABLE_PROD_MY = "product_my";
-    public static final String TABLE_PROD_MY_COMM_ID = "_comm_id";
-    public static final String TABLE_PROD_MY_USED_REMOTE_ID = "fbUsedProductsUserKey";
-    public static final String TABLE_PROD_MY_RETAILER = "retailer";
-    public static final String TABLE_PROD_MY_LOC_ROOM = "locationRoom";
-    public static final String TABLE_PROD_MY_LOC_IN_ROOM = "locationInRoom";
-    public static final String TABLE_PROD_MY_PACK_PRICE = "packPrice";
-    public static final String TABLE_PROD_MY_LOCAL_IMAGE_URI = "localImageUri";
-    public static final String TABLE_PROD_MY_CREATE_DATE = "my_create_date";
-    public static final String TABLE_PROD_MY_LAST_UPDATE = "my_last_updated";
+    public static final String PROD_MY_ID = "_id";
+    public static final String PROD_MY_COMM_ID = "_comm_id";
+    public static final String PROD_MY_USED_REMOTE_ID = "fbUsedProductsUserKey";
+    public static final String PROD_MY_RETAILER = "retailer";
+    public static final String PROD_MY_LOC_ROOM = "locationRoom";
+    public static final String PROD_MY_LOC_IN_ROOM = "locationInRoom";
+    public static final String PROD_MY_PACK_PRICE = "packPrice";
+    public static final String PROD_MY_LOCAL_IMAGE_URI = "localImageUri";
+    public static final String PROD_MY_CREATE_DATE = "my_create_date";
+    public static final String PROD_MY_LAST_UPDATE = "my_last_updated";
 
     @Exclude // Exclude field from Firebase, as is only required for Room.
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = TABLE_PROD_MY_ID)
+    @ColumnInfo(name = PROD_MY_ID)
     private int id;
 
     // Relates to the community_product table, field _id.
     @Exclude // Exclude field from Firebase, as is only required for Room.
-    @ColumnInfo(name = TABLE_PROD_MY_COMM_ID)
-    private int mCommunityProductId;
+    @ColumnInfo(name = PROD_MY_COMM_ID)
+    private int communityProductId;
 
     // DmProdMy fields.
-    @ColumnInfo(name = TABLE_PROD_MY_USED_REMOTE_ID)
-    private String mFbUsedProductsUserKey;
+    @ColumnInfo(name = PROD_MY_USED_REMOTE_ID)
+    private String fbUsedProductsUserKey;
 
-    @ColumnInfo(name = TABLE_PROD_COMM_REMOTE_REF_ID)
-    private String mFbProductReferenceKey;
+    @ColumnInfo(name = PROD_COMM_REMOTE_REF_ID)
+    private String fbProductReferenceKey;
 
-    @ColumnInfo(name = TABLE_PROD_MY_RETAILER)
-    private String mRetailer;
+    @ColumnInfo(name = PROD_MY_RETAILER)
+    private String retailer;
 
-    @ColumnInfo(name = TABLE_PROD_MY_LOC_ROOM)
-    private String mLocationRoom;
+    @ColumnInfo(name = PROD_MY_LOC_ROOM)
+    private String locationRoom;
 
-    @ColumnInfo(name = TABLE_PROD_MY_LOC_IN_ROOM)
-    private String mLocationInRoom;
+    @ColumnInfo(name = PROD_MY_LOC_IN_ROOM)
+    private String locationInRoom;
 
-    @ColumnInfo(name = TABLE_PROD_MY_PACK_PRICE)
-    private double mPackPrice;
+    @ColumnInfo(name = PROD_MY_PACK_PRICE)
+    private double packPrice;
 
-    @ColumnInfo(name = TABLE_PROD_MY_LOCAL_IMAGE_URI)
+    @ColumnInfo(name = PROD_MY_LOCAL_IMAGE_URI)
     @NonNull
-    private String mLocalImageUri = "";
+    private String localImageUri = "";
 
-    @ColumnInfo(name = TABLE_PROD_MY_CREATE_DATE)
-    private long mMyCreateDate;
+    @ColumnInfo(name = PROD_MY_CREATE_DATE)
+    private long myCreateDate;
 
-    @ColumnInfo(name = TABLE_PROD_MY_LAST_UPDATE)
-    private long mMyLastUpdate;
+    @ColumnInfo(name = PROD_MY_LAST_UPDATE)
+    private long myLastUpdate;
 
     /* Empty constructor as required by Firebase. */
     @Ignore
@@ -110,46 +110,46 @@ public class DmProdMy implements Parcelable {
                     long myLastUpdate) {
 
         this.id = id;
-        this.mCommunityProductId = communityProductId;
-        this.mFbUsedProductsUserKey = fbUsedProductsUserKey;
-        this.mFbProductReferenceKey = fbProductReferenceKey;
-        this.mRetailer = retailer;
-        this.mLocationRoom = locationRoom;
-        this.mLocationInRoom = locationInRoom;
-        this.mPackPrice = packPrice;
-        this.mLocalImageUri = localImageUri;
-        this.mMyCreateDate = myCreateDate;
-        this.mMyLastUpdate = myLastUpdate;
+        this.communityProductId = communityProductId;
+        this.fbUsedProductsUserKey = fbUsedProductsUserKey;
+        this.fbProductReferenceKey = fbProductReferenceKey;
+        this.retailer = retailer;
+        this.locationRoom = locationRoom;
+        this.locationInRoom = locationInRoom;
+        this.packPrice = packPrice;
+        this.localImageUri = localImageUri;
+        this.myCreateDate = myCreateDate;
+        this.myLastUpdate = myLastUpdate;
     }
 
     @Ignore
     public DmProdMy(Parcel in) {
         id = in.readInt();
-        mCommunityProductId = in.readInt();
-        mFbUsedProductsUserKey = in.readString();
-        mFbProductReferenceKey = in.readString();
-        mRetailer = in.readString();
-        mLocationRoom = in.readString();
-        mLocationInRoom = in.readString();
-        mPackPrice = in.readDouble();
-        mLocalImageUri = in.readString();
-        mMyCreateDate = in.readLong();
-        mMyLastUpdate = in.readLong();
+        communityProductId = in.readInt();
+        fbUsedProductsUserKey = in.readString();
+        fbProductReferenceKey = in.readString();
+        retailer = in.readString();
+        locationRoom = in.readString();
+        locationInRoom = in.readString();
+        packPrice = in.readDouble();
+        localImageUri = in.readString();
+        myCreateDate = in.readLong();
+        myLastUpdate = in.readLong();
     }
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeInt(id);
-        parcel.writeInt(mCommunityProductId);
-        parcel.writeString(mFbUsedProductsUserKey);
-        parcel.writeString(mFbProductReferenceKey);
-        parcel.writeString(mRetailer);
-        parcel.writeString(mLocationRoom);
-        parcel.writeString(mLocationInRoom);
-        parcel.writeDouble(mPackPrice);
-        parcel.writeString(mLocalImageUri);
-        parcel.writeLong(mMyCreateDate);
-        parcel.writeLong(mMyLastUpdate);
+        parcel.writeInt(communityProductId);
+        parcel.writeString(fbUsedProductsUserKey);
+        parcel.writeString(fbProductReferenceKey);
+        parcel.writeString(retailer);
+        parcel.writeString(locationRoom);
+        parcel.writeString(locationInRoom);
+        parcel.writeDouble(packPrice);
+        parcel.writeString(localImageUri);
+        parcel.writeLong(myCreateDate);
+        parcel.writeLong(myLastUpdate);
     }
 
     @Exclude
@@ -157,14 +157,14 @@ public class DmProdMy implements Parcelable {
 
         HashMap<String, Object> result = new HashMap<>();
 
-        result.put(TABLE_PROD_MY_USED_REMOTE_ID, mFbUsedProductsUserKey);
-        result.put(TABLE_PROD_MY_RETAILER, mRetailer);
-        result.put(TABLE_PROD_MY_LOC_ROOM, mLocationRoom);
-        result.put(TABLE_PROD_MY_LOC_IN_ROOM, mLocationInRoom);
-        result.put(TABLE_PROD_MY_PACK_PRICE, mPackPrice);
-        result.put(TABLE_PROD_MY_LOCAL_IMAGE_URI, mLocalImageUri);
-        result.put(TABLE_PROD_MY_CREATE_DATE, mMyCreateDate);
-        result.put(TABLE_PROD_MY_LAST_UPDATE, mMyLastUpdate);
+        result.put(PROD_MY_USED_REMOTE_ID, fbUsedProductsUserKey);
+        result.put(PROD_MY_RETAILER, retailer);
+        result.put(PROD_MY_LOC_ROOM, locationRoom);
+        result.put(PROD_MY_LOC_IN_ROOM, locationInRoom);
+        result.put(PROD_MY_PACK_PRICE, packPrice);
+        result.put(PROD_MY_LOCAL_IMAGE_URI, localImageUri);
+        result.put(PROD_MY_CREATE_DATE, myCreateDate);
+        result.put(PROD_MY_LAST_UPDATE, myLastUpdate);
 
         return result;
     }
@@ -190,16 +190,16 @@ public class DmProdMy implements Parcelable {
     @Override
     public String toString() {
         return "Product ID: " + this.id + "\n" +
-                "Community product ID: " + this.mCommunityProductId + "\n" +
-                "FbUsedProductsUserKey: " + this.mFbUsedProductsUserKey + "\n" +
-                "FbProductReferenceKey: " + this.mFbProductReferenceKey + "\n" +
-                "Retailer: " + this.mRetailer + "\n" +
-                "Location room: " + this.mLocationRoom + "\n" +
-                "Location in room: " + this.mLocationInRoom + "\n" +
-                "Pack price: " + this.mPackPrice + "\n" +
-                "Local image Uri: " + this.mLocalImageUri + "\n" +
-                "Create date: " + this.mMyCreateDate + "\n" +
-                "Last update: " + this.mMyLastUpdate;
+                "Community product ID: " + this.communityProductId + "\n" +
+                "FbUsedProductsUserKey: " + this.fbUsedProductsUserKey + "\n" +
+                "FbProductReferenceKey: " + this.fbProductReferenceKey + "\n" +
+                "Retailer: " + this.retailer + "\n" +
+                "Location room: " + this.locationRoom + "\n" +
+                "Location in room: " + this.locationInRoom + "\n" +
+                "Pack price: " + this.packPrice + "\n" +
+                "Local image Uri: " + this.localImageUri + "\n" +
+                "Create date: " + this.myCreateDate + "\n" +
+                "Last update: " + this.myLastUpdate;
     }
 
     public int getId() {
@@ -211,83 +211,83 @@ public class DmProdMy implements Parcelable {
     }
 
     public int getCommunityProductId() {
-        return mCommunityProductId;
+        return communityProductId;
     }
 
     public void setCommunityProductId(int communityProductId) {
-        this.mCommunityProductId = communityProductId;
+        this.communityProductId = communityProductId;
     }
 
     public String getFbUsedProductsUserKey() {
-        return mFbUsedProductsUserKey;
+        return fbUsedProductsUserKey;
     }
 
     public void setFbUsedProductsUserKey(String fbUsedProductsUserKey) {
-        this.mFbUsedProductsUserKey = fbUsedProductsUserKey;
+        this.fbUsedProductsUserKey = fbUsedProductsUserKey;
     }
 
     public String getFbProductReferenceKey() {
-        return mFbProductReferenceKey;
+        return fbProductReferenceKey;
     }
 
     public void setFbProductReferenceKey(String fbProductReferenceKey) {
-        this.mFbProductReferenceKey = fbProductReferenceKey;
+        this.fbProductReferenceKey = fbProductReferenceKey;
     }
 
     public String getRetailer() {
-        return mRetailer;
+        return retailer;
     }
 
     public void setRetailer(String retailer) {
-        this.mRetailer = retailer;
+        this.retailer = retailer;
     }
 
     public String getLocationRoom() {
-        return mLocationRoom;
+        return locationRoom;
     }
 
     public void setLocationRoom(String locationRoom) {
-        this.mLocationRoom = locationRoom;
+        this.locationRoom = locationRoom;
     }
 
     public String getLocationInRoom() {
-        return mLocationInRoom;
+        return locationInRoom;
     }
 
     public void setLocationInRoom(String locationInRoom) {
-        this.mLocationInRoom = locationInRoom;
+        this.locationInRoom = locationInRoom;
     }
 
     public double getPackPrice() {
-        return mPackPrice;
+        return packPrice;
     }
 
     public void setPackPrice(double packPrice) {
-        this.mPackPrice = packPrice;
+        this.packPrice = packPrice;
     }
 
     @NonNull
     public String getLocalImageUri() {
-        return mLocalImageUri;
+        return localImageUri;
     }
 
     public void setLocalImageUri(@NonNull String localImageUri) {
-        this.mLocalImageUri = localImageUri;
+        this.localImageUri = localImageUri;
     }
 
     public long getMyCreateDate() {
-        return mMyCreateDate;
+        return myCreateDate;
     }
 
     public void setMyCreateDate(long myCreateDate) {
-        this.mMyCreateDate = myCreateDate;
+        this.myCreateDate = myCreateDate;
     }
 
     public long getMyLastUpdate() {
-        return mMyLastUpdate;
+        return myLastUpdate;
     }
 
     public void setMyLastUpdate(long myLastUpdate) {
-        this.mMyLastUpdate = myLastUpdate;
+        this.myLastUpdate = myLastUpdate;
     }
 }

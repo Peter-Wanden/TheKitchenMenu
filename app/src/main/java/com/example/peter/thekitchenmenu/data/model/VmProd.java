@@ -16,26 +16,26 @@ import static com.example.peter.thekitchenmenu.app.Constants.DEFAULT_PRODUCT_PRI
 import static com.example.peter.thekitchenmenu.app.Constants.DEFAULT_LOCAL_IMAGE_URI;
 import static com.example.peter.thekitchenmenu.app.Constants.DEFAULT_MY_CREATE_DATE;
 import static com.example.peter.thekitchenmenu.app.Constants.DEFAULT_MY_LAST_UPDATE;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_CATEGORY;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_CREATED_BY;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_CREATE_DATE;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_DESC;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_LAST_UPDATE;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_MADE_BY;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_PACK_SIZE;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_PRICE_AVE;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_REMOTE_REF_ID;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_SHELF_LIFE;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_UNIT_OF_MEASURE;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_REMOTE_IMAGE_URI;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.TABLE_PROD_MY_CREATE_DATE;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.TABLE_PROD_MY_LAST_UPDATE;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.TABLE_PROD_MY_LOCAL_IMAGE_URI;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.TABLE_PROD_MY_LOC_IN_ROOM;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.TABLE_PROD_MY_LOC_ROOM;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.TABLE_PROD_MY_PACK_PRICE;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.TABLE_PROD_MY_RETAILER;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.TABLE_PROD_MY_USED_REMOTE_ID;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.PROD_COMM_CATEGORY;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.PROD_COMM_CREATED_BY;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.PROD_COMM_CREATE_DATE;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.PROD_COMM_DESC;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.PROD_COMM_LAST_UPDATE;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.PROD_COMM_MADE_BY;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.PROD_COMM_PACK_SIZE;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.PROD_COMM_PRICE_AVE;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.PROD_COMM_REMOTE_REF_ID;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.PROD_COMM_SHELF_LIFE;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.PROD_COMM_UNIT_OF_MEASURE;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.PROD_COMM_REMOTE_IMAGE_URI;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.PROD_MY_CREATE_DATE;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.PROD_MY_LAST_UPDATE;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.PROD_MY_LOCAL_IMAGE_URI;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.PROD_MY_LOC_IN_ROOM;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.PROD_MY_LOC_ROOM;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.PROD_MY_PACK_PRICE;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.PROD_MY_RETAILER;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.PROD_MY_USED_REMOTE_ID;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -221,17 +221,17 @@ public class VmProd implements Parcelable {
 
         HashMap<String, Object> result = new HashMap<>();
 
-        result.put(TABLE_PROD_COMM_DESC, mDescription);
-        result.put(TABLE_PROD_COMM_MADE_BY, mMadeBy);
-        result.put(TABLE_PROD_COMM_CATEGORY, mCategory);
-        result.put(TABLE_PROD_COMM_SHELF_LIFE, mShelfLife);
-        result.put(TABLE_PROD_COMM_PACK_SIZE, mPackSize);
-        result.put(TABLE_PROD_COMM_UNIT_OF_MEASURE, mUnitOfMeasure);
-        result.put(TABLE_PROD_COMM_PRICE_AVE, mPackAvePrice);
-        result.put(TABLE_PROD_COMM_CREATED_BY, mCreatedBy);
-        result.put(TABLE_PROD_COMM_REMOTE_IMAGE_URI, mFbStorageImageUri);
-        result.put(TABLE_PROD_COMM_CREATE_DATE, mCommCreateDate);
-        result.put(TABLE_PROD_COMM_LAST_UPDATE, mCommLastUpdate);
+        result.put(PROD_COMM_DESC, mDescription);
+        result.put(PROD_COMM_MADE_BY, mMadeBy);
+        result.put(PROD_COMM_CATEGORY, mCategory);
+        result.put(PROD_COMM_SHELF_LIFE, mShelfLife);
+        result.put(PROD_COMM_PACK_SIZE, mPackSize);
+        result.put(PROD_COMM_UNIT_OF_MEASURE, mUnitOfMeasure);
+        result.put(PROD_COMM_PRICE_AVE, mPackAvePrice);
+        result.put(PROD_COMM_CREATED_BY, mCreatedBy);
+        result.put(PROD_COMM_REMOTE_IMAGE_URI, mFbStorageImageUri);
+        result.put(PROD_COMM_CREATE_DATE, mCommCreateDate);
+        result.put(PROD_COMM_LAST_UPDATE, mCommLastUpdate);
 
         return result;
     }
@@ -243,28 +243,28 @@ public class VmProd implements Parcelable {
 
         // All fields are required
         // Community product fields
-        result.put(TABLE_PROD_COMM_DESC, mDescription);
-        result.put(TABLE_PROD_COMM_MADE_BY, mMadeBy);
-        result.put(TABLE_PROD_COMM_CATEGORY, mCategory);
-        result.put(TABLE_PROD_COMM_SHELF_LIFE, mShelfLife);
-        result.put(TABLE_PROD_COMM_PACK_SIZE, mPackSize);
-        result.put(TABLE_PROD_COMM_UNIT_OF_MEASURE, mUnitOfMeasure);
-        result.put(TABLE_PROD_COMM_PRICE_AVE, mPackAvePrice);
-        result.put(TABLE_PROD_COMM_CREATED_BY, mCreatedBy);
-        result.put(TABLE_PROD_COMM_REMOTE_IMAGE_URI, mFbStorageImageUri);
-        result.put(TABLE_PROD_COMM_CREATE_DATE, mCommCreateDate);
-        result.put(TABLE_PROD_COMM_LAST_UPDATE, mCommLastUpdate);
+        result.put(PROD_COMM_DESC, mDescription);
+        result.put(PROD_COMM_MADE_BY, mMadeBy);
+        result.put(PROD_COMM_CATEGORY, mCategory);
+        result.put(PROD_COMM_SHELF_LIFE, mShelfLife);
+        result.put(PROD_COMM_PACK_SIZE, mPackSize);
+        result.put(PROD_COMM_UNIT_OF_MEASURE, mUnitOfMeasure);
+        result.put(PROD_COMM_PRICE_AVE, mPackAvePrice);
+        result.put(PROD_COMM_CREATED_BY, mCreatedBy);
+        result.put(PROD_COMM_REMOTE_IMAGE_URI, mFbStorageImageUri);
+        result.put(PROD_COMM_CREATE_DATE, mCommCreateDate);
+        result.put(PROD_COMM_LAST_UPDATE, mCommLastUpdate);
 
         // My product specific fields
-        result.put(TABLE_PROD_MY_USED_REMOTE_ID, mFbUsedProdUserKey);
-        result.put(TABLE_PROD_MY_RETAILER, mRetailer);
-        result.put(TABLE_PROD_MY_LOC_ROOM, mLocationRoom);
-        result.put(TABLE_PROD_MY_LOC_IN_ROOM, mLocationInRoom);
-        result.put(TABLE_PROD_MY_PACK_PRICE, mPackPrice);
-        result.put(TABLE_PROD_MY_LOCAL_IMAGE_URI, mLocalImageUri);
-        result.put(TABLE_PROD_MY_CREATE_DATE, mMyCreateDate);
-        result.put(TABLE_PROD_MY_LAST_UPDATE, mMyLastUpdate);
-        result.put(TABLE_PROD_COMM_REMOTE_REF_ID, mRemoteProdMyRefKey);
+        result.put(PROD_MY_USED_REMOTE_ID, mFbUsedProdUserKey);
+        result.put(PROD_MY_RETAILER, mRetailer);
+        result.put(PROD_MY_LOC_ROOM, mLocationRoom);
+        result.put(PROD_MY_LOC_IN_ROOM, mLocationInRoom);
+        result.put(PROD_MY_PACK_PRICE, mPackPrice);
+        result.put(PROD_MY_LOCAL_IMAGE_URI, mLocalImageUri);
+        result.put(PROD_MY_CREATE_DATE, mMyCreateDate);
+        result.put(PROD_MY_LAST_UPDATE, mMyLastUpdate);
+        result.put(PROD_COMM_REMOTE_REF_ID, mRemoteProdMyRefKey);
 
         return result;
     }

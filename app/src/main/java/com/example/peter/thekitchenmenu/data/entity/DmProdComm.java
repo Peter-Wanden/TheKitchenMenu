@@ -14,77 +14,73 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PRODUCT_COMM;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM;
 
 /**
  * A community product model that holds product fields common to all users.
  */
-@Entity(tableName = TABLE_PRODUCT_COMM)
+@Entity(tableName = TABLE_PROD_COMM)
 public class DmProdComm implements Parcelable {
 
     public static final String TAG = "DmProdComm";
 
-    /*
-     * Table community_product - Stores information that is generic to the product. Note: These
-     * constants match the field names in the remote database where possible.
-     */
-    public static final String TABLE_PROD_COMM_ID = "id";
-    public static final String TABLE_PRODUCT_COMM = "product_community";
-    public static final String TABLE_PROD_COMM_DESC = "description";
-    public static final String TABLE_PROD_COMM_MADE_BY = "madeBy";
-    public static final String TABLE_PROD_COMM_CATEGORY = "category";
-    public static final String TABLE_PROD_COMM_SHELF_LIFE = "shelfLife";
-    public static final String TABLE_PROD_COMM_PACK_SIZE = "packSize";
-    public static final String TABLE_PROD_COMM_UNIT_OF_MEASURE = "unitOfMeasure";
-    public static final String TABLE_PROD_COMM_PRICE_AVE = "packAvePrice";
-    public static final String TABLE_PROD_COMM_CREATED_BY = "createdBy";
-    public static final String TABLE_PROD_COMM_REMOTE_IMAGE_URI = "fbStorageImageUri";
-    public static final String TABLE_PROD_COMM_CREATE_DATE = "comm_create_date";
-    public static final String TABLE_PROD_COMM_LAST_UPDATE = "comm_last_updated";
-    public static final String TABLE_PROD_COMM_REMOTE_REF_ID = "fbProductReferenceKey";
+    public static final String TABLE_PROD_COMM = "product_community";
+    public static final String PROD_COMM_ID = "id";
+    public static final String PROD_COMM_DESC = "description";
+    public static final String PROD_COMM_MADE_BY = "madeBy";
+    public static final String PROD_COMM_CATEGORY = "category";
+    public static final String PROD_COMM_SHELF_LIFE = "shelfLife";
+    public static final String PROD_COMM_PACK_SIZE = "packSize";
+    public static final String PROD_COMM_UNIT_OF_MEASURE = "unitOfMeasure";
+    public static final String PROD_COMM_PRICE_AVE = "packAvePrice";
+    public static final String PROD_COMM_CREATED_BY = "createdBy";
+    public static final String PROD_COMM_REMOTE_IMAGE_URI = "fbStorageImageUri";
+    public static final String PROD_COMM_CREATE_DATE = "comm_create_date";
+    public static final String PROD_COMM_LAST_UPDATE = "comm_last_updated";
+    public static final String PROD_COMM_REMOTE_REF_ID = "fbProductReferenceKey";
 
     @Exclude // Excludes field from Firebase, as is only required for Room.
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = TABLE_PROD_COMM_ID)
+    @ColumnInfo(name = PROD_COMM_ID)
     private int id;
 
     // Community product information.
-    @ColumnInfo(name = TABLE_PROD_COMM_DESC)
-    private String mDescription;
+    @ColumnInfo(name = PROD_COMM_DESC)
+    private String description;
 
-    @ColumnInfo(name = TABLE_PROD_COMM_MADE_BY)
-    private String mMadeBy;
+    @ColumnInfo(name = PROD_COMM_MADE_BY)
+    private String madeBy;
 
-    @ColumnInfo(name = TABLE_PROD_COMM_CATEGORY)
-    private int mCategory;
+    @ColumnInfo(name = PROD_COMM_CATEGORY)
+    private int category;
 
-    @ColumnInfo(name = TABLE_PROD_COMM_SHELF_LIFE)
-    private int mShelfLife;
+    @ColumnInfo(name = PROD_COMM_SHELF_LIFE)
+    private int shelfLife;
 
-    @ColumnInfo(name = TABLE_PROD_COMM_PACK_SIZE)
-    private int mPackSize;
+    @ColumnInfo(name = PROD_COMM_PACK_SIZE)
+    private int packSize;
 
-    @ColumnInfo(name = TABLE_PROD_COMM_UNIT_OF_MEASURE)
-    private int mUnitOfMeasure;
+    @ColumnInfo(name = PROD_COMM_UNIT_OF_MEASURE)
+    private int unitOfMeasure;
 
-    @ColumnInfo(name = TABLE_PROD_COMM_PRICE_AVE)
-    private double mPackAvePrice;
+    @ColumnInfo(name = PROD_COMM_PRICE_AVE)
+    private double packAvePrice;
 
-    @ColumnInfo(name = TABLE_PROD_COMM_CREATED_BY)
-    private String mCreatedBy;
+    @ColumnInfo(name = PROD_COMM_CREATED_BY)
+    private String createdBy;
 
-    @ColumnInfo(name = TABLE_PROD_COMM_REMOTE_IMAGE_URI)
+    @ColumnInfo(name = PROD_COMM_REMOTE_IMAGE_URI)
     @NonNull
-    private String mFbStorageImageUri = "";
+    private String fbStorageImageUri = "";
 
-    @ColumnInfo(name = TABLE_PROD_COMM_CREATE_DATE)
-    private long mCommCreateDate;
+    @ColumnInfo(name = PROD_COMM_CREATE_DATE)
+    private long commCreateDate;
 
-    @ColumnInfo(name = TABLE_PROD_COMM_LAST_UPDATE)
-    private long mCommLastUpdate;
+    @ColumnInfo(name = PROD_COMM_LAST_UPDATE)
+    private long commLastUpdate;
 
-    @ColumnInfo(name = TABLE_PROD_COMM_REMOTE_REF_ID)
-    private String mFbProductReferenceKey;
+    @ColumnInfo(name = PROD_COMM_REMOTE_REF_ID)
+    private String fbProductReferenceKey;
 
     /* Empty constructor as required by Firebase. */
     @Ignore
@@ -97,7 +93,7 @@ public class DmProdComm implements Parcelable {
      * @param madeBy A string describing the name of the maker of the product.
      * @param category An integer between 0 and 3 - see strings.xml for a definition.
      * @param shelfLife An integer between 1 and 16 - see strings.xml for a definition.
-     * @param mPackSize An integer describing the weight or volume of the product.
+     * @param packSize An integer describing the weight or volume of the product.
      * @param unitOfMeasure An integer between 0 and 3 - see strings.xml for a definition.
      * @param packAvePrice A double automatically calculated by a Firebase function.
      * @param createdBy The user ID of the user that created this product.
@@ -110,7 +106,7 @@ public class DmProdComm implements Parcelable {
                       String madeBy,
                       int category,
                       int shelfLife,
-                      int mPackSize,
+                      int packSize,
                       int unitOfMeasure,
                       double packAvePrice,
                       String createdBy,
@@ -120,53 +116,53 @@ public class DmProdComm implements Parcelable {
                       String fbProductReferenceKey) {
 
         this.id = id;
-        this.mDescription = description;
-        this.mMadeBy = madeBy;
-        this.mCategory = category;
-        this.mShelfLife = shelfLife;
-        this.mPackSize = mPackSize;
-        this.mUnitOfMeasure = unitOfMeasure;
-        this.mPackAvePrice = packAvePrice;
-        this.mCreatedBy = createdBy;
-        this.mFbStorageImageUri = fbStorageImageUri;
-        this.mCommCreateDate = commCreateDate;
-        this.mCommLastUpdate = commLastUpdate;
-        this.mFbProductReferenceKey = fbProductReferenceKey;
+        this.description = description;
+        this.madeBy = madeBy;
+        this.category = category;
+        this.shelfLife = shelfLife;
+        this.packSize = packSize;
+        this.unitOfMeasure = unitOfMeasure;
+        this.packAvePrice = packAvePrice;
+        this.createdBy = createdBy;
+        this.fbStorageImageUri = fbStorageImageUri;
+        this.commCreateDate = commCreateDate;
+        this.commLastUpdate = commLastUpdate;
+        this.fbProductReferenceKey = fbProductReferenceKey;
     }
 
 
     @Ignore
     public DmProdComm(Parcel in) {
         id = in.readInt();
-        mDescription = in.readString();
-        mMadeBy = in.readString();
-        mCategory = in.readInt();
-        mShelfLife = in.readInt();
-        mPackSize = in.readInt();
-        mUnitOfMeasure = in.readInt();
-        mPackAvePrice = in.readDouble();
-        mCreatedBy = in.readString();
-        mFbStorageImageUri = in.readString();
-        mCommCreateDate = in.readLong();
-        mCommLastUpdate = in.readLong();
-        mFbProductReferenceKey = in.readString();
+        description = in.readString();
+        madeBy = in.readString();
+        category = in.readInt();
+        shelfLife = in.readInt();
+        packSize = in.readInt();
+        unitOfMeasure = in.readInt();
+        packAvePrice = in.readDouble();
+        createdBy = in.readString();
+        fbStorageImageUri = in.readString();
+        commCreateDate = in.readLong();
+        commLastUpdate = in.readLong();
+        fbProductReferenceKey = in.readString();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
-        dest.writeString(mDescription);
-        dest.writeString(mMadeBy);
-        dest.writeInt(mCategory);
-        dest.writeInt(mShelfLife);
-        dest.writeInt(mPackSize);
-        dest.writeInt(mUnitOfMeasure);
-        dest.writeDouble(mPackAvePrice);
-        dest.writeString(mCreatedBy);
-        dest.writeString(mFbStorageImageUri);
-        dest.writeLong(mCommCreateDate);
-        dest.writeLong(mCommLastUpdate);
-        dest.writeString(mFbProductReferenceKey);
+        dest.writeString(description);
+        dest.writeString(madeBy);
+        dest.writeInt(category);
+        dest.writeInt(shelfLife);
+        dest.writeInt(packSize);
+        dest.writeInt(unitOfMeasure);
+        dest.writeDouble(packAvePrice);
+        dest.writeString(createdBy);
+        dest.writeString(fbStorageImageUri);
+        dest.writeLong(commCreateDate);
+        dest.writeLong(commLastUpdate);
+        dest.writeString(fbProductReferenceKey);
     }
 
     @Override
@@ -191,17 +187,17 @@ public class DmProdComm implements Parcelable {
 
         HashMap<String, Object> result = new HashMap<>();
 
-        result.put(TABLE_PROD_COMM_DESC, mDescription);
-        result.put(TABLE_PROD_COMM_MADE_BY, mMadeBy);
-        result.put(TABLE_PROD_COMM_CATEGORY, mCategory);
-        result.put(TABLE_PROD_COMM_SHELF_LIFE, mShelfLife);
-        result.put(TABLE_PROD_COMM_PACK_SIZE, mPackSize);
-        result.put(TABLE_PROD_COMM_UNIT_OF_MEASURE, mUnitOfMeasure);
-        result.put(TABLE_PROD_COMM_PRICE_AVE, mPackAvePrice);
-        result.put(TABLE_PROD_COMM_CREATED_BY, mCreatedBy);
-        result.put(TABLE_PROD_COMM_REMOTE_IMAGE_URI, mFbStorageImageUri);
-        result.put(TABLE_PROD_COMM_CREATE_DATE, mCommCreateDate);
-        result.put(TABLE_PROD_COMM_LAST_UPDATE, mCommLastUpdate);
+        result.put(PROD_COMM_DESC, description);
+        result.put(PROD_COMM_MADE_BY, madeBy);
+        result.put(PROD_COMM_CATEGORY, category);
+        result.put(PROD_COMM_SHELF_LIFE, shelfLife);
+        result.put(PROD_COMM_PACK_SIZE, packSize);
+        result.put(PROD_COMM_UNIT_OF_MEASURE, unitOfMeasure);
+        result.put(PROD_COMM_PRICE_AVE, packAvePrice);
+        result.put(PROD_COMM_CREATED_BY, createdBy);
+        result.put(PROD_COMM_REMOTE_IMAGE_URI, fbStorageImageUri);
+        result.put(PROD_COMM_CREATE_DATE, commCreateDate);
+        result.put(PROD_COMM_LAST_UPDATE, commLastUpdate);
 
         return result;
     }
@@ -209,18 +205,18 @@ public class DmProdComm implements Parcelable {
     @Override
     public String toString() {
         return "Product ID: " + this.id + "\n" +
-                "Description: " + mDescription + "\n" +
-                "Made by: " + mMadeBy + "\n" +
-                "Category: " + mCategory + "\n" +
-                "Shelf life: " + mShelfLife + "\n" +
-                "Pack size: " + mPackSize + "\n" +
-                "Unit of measure: " + mUnitOfMeasure + "\n" +
-                "Pack price ave: " + mPackAvePrice + "\n" +
-                "Created by: " + mCreatedBy + "\n" +
-                "Firebase image URI: " + mFbStorageImageUri + "\n" +
-                "Create date: " + mCommCreateDate + "\n" +
-                "Last update: " + mCommLastUpdate + "\n" +
-                "Product ref key: " + mFbProductReferenceKey;
+                "Description: " + description + "\n" +
+                "Made by: " + madeBy + "\n" +
+                "Category: " + category + "\n" +
+                "Shelf life: " + shelfLife + "\n" +
+                "Pack size: " + packSize + "\n" +
+                "Unit of measure: " + unitOfMeasure + "\n" +
+                "Pack price ave: " + packAvePrice + "\n" +
+                "Created by: " + createdBy + "\n" +
+                "Firebase image URI: " + fbStorageImageUri + "\n" +
+                "Create date: " + commCreateDate + "\n" +
+                "Last update: " + commLastUpdate + "\n" +
+                "Product ref key: " + fbProductReferenceKey;
     }
 
     // Getters and setters
@@ -233,99 +229,99 @@ public class DmProdComm implements Parcelable {
     }
 
     public String getDescription() {
-        return mDescription;
+        return description;
     }
 
     public void setDescription(String description) {
-        this.mDescription = description;
+        this.description = description;
     }
 
     public String getMadeBy() {
-        return mMadeBy;
+        return madeBy;
     }
 
     public void setMadeBy(String madeBy) {
-        this.mMadeBy = madeBy;
+        this.madeBy = madeBy;
     }
 
     public int getCategory() {
-        return mCategory;
+        return category;
     }
 
     public void setCategory(int category) {
-        this.mCategory = category;
+        this.category = category;
     }
 
     public int getShelfLife() {
-        return mShelfLife;
+        return shelfLife;
     }
 
     public void setShelfLife(int shelfLife) {
-        this.mShelfLife = shelfLife;
+        this.shelfLife = shelfLife;
     }
 
     public int getPackSize() {
-        return mPackSize;
+        return packSize;
     }
 
     public void setPackSize(int packSize) {
-        this.mPackSize = packSize;
+        this.packSize = packSize;
     }
 
     public int getUnitOfMeasure() {
-        return mUnitOfMeasure;
+        return unitOfMeasure;
     }
 
     public void setUnitOfMeasure(int unitOfMeasure) {
-        this.mUnitOfMeasure = unitOfMeasure;
+        this.unitOfMeasure = unitOfMeasure;
     }
 
     public double getPackAvePrice() {
-        return mPackAvePrice;
+        return packAvePrice;
     }
 
     public void setPackAvePrice(double packAvePrice) {
-        this.mPackAvePrice = packAvePrice;
+        this.packAvePrice = packAvePrice;
     }
 
     public String getCreatedBy() {
-        return mCreatedBy;
+        return createdBy;
     }
 
     public void setCreatedBy(String createdBy) {
-        this.mCreatedBy = createdBy;
+        this.createdBy = createdBy;
     }
 
     @NonNull
     public String getFbStorageImageUri() {
-        return mFbStorageImageUri;
+        return fbStorageImageUri;
     }
 
     public void setFbStorageImageUri(@NonNull String fbStorageImageUri) {
-        this.mFbStorageImageUri = fbStorageImageUri;
+        this.fbStorageImageUri = fbStorageImageUri;
     }
 
     public long getCommCreateDate() {
-        return mCommCreateDate;
+        return commCreateDate;
     }
 
     public void setCommCreateDate(long commCreateDate) {
-        this.mCommCreateDate = commCreateDate;
+        this.commCreateDate = commCreateDate;
     }
 
     public long getCommLastUpdate() {
-        return mCommLastUpdate;
+        return commLastUpdate;
     }
 
     public void setCommLastUpdate(long commLastUpdate) {
-        this.mCommLastUpdate = commLastUpdate;
+        this.commLastUpdate = commLastUpdate;
     }
 
     public String getFbProductReferenceKey() {
-        return mFbProductReferenceKey;
+        return fbProductReferenceKey;
     }
 
     public void setRemoteProdRefKey(String fbProductReferenceKey) {
-        this.mFbProductReferenceKey = fbProductReferenceKey;
+        this.fbProductReferenceKey = fbProductReferenceKey;
     }
 }

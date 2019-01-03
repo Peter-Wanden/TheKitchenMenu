@@ -88,19 +88,19 @@ class SyncManager {
     // What happens if the remote connection is lost for a while?
     // Do the Firebase listeners account for this situation?
 
-    private MutableLiveData<String> mUserId;
+    private MutableLiveData<String> userId;
 
     // Keeps track of the value of the user ID, which in turn tells us if the user is logged in.
-    private Context mContext;
+    private Context context;
 
     // Keeps an ordered list of data models and their respective remote listener status.
-    private List<DataModelStatus> mDataModelSyncList = new LinkedList<>();
+    private List<DataModelStatus> modelSyncList = new LinkedList<>();
 
     // Keeps track of when a sync is required.
-    private boolean mSyncPending = false;
+    private boolean syncPending = false;
 
     // Keeps an eye out for changes to the users login status.
-    private Observer<String> mUserIdObserver = userId -> {
+    private Observer<String> userIdObserver = userId -> {
 
         if (userId != null) {
             // User is logged in, sync any data models in the sync map.
@@ -110,41 +110,32 @@ class SyncManager {
         }
     };
 
-    /**
-     * Constructor.
-     * @param context application context.
-     */
     SyncManager(Context context) {
 
-        mContext = context;
+        this.context = context;
 
-        mUserId = new MutableLiveData<>();
-        mUserId = Constants.getUserId();
+        userId = new MutableLiveData<>();
+        userId = Constants.getUserId();
 
-        // Add data models to the synchronisation map in dependency order.
-        mDataModelSyncList.add(new DataModelStatus(DmProdComm.TAG, false, false));
-        mDataModelSyncList.add(new DataModelStatus(DmProdMy.TAG, false, false));
+        // Add new data models to the synchronisation map in dependency order.
+        modelSyncList.add(new DataModelStatus(DmProdComm.TAG, false, false));
+        modelSyncList.add(new DataModelStatus(DmProdMy.TAG, false, false));
     }
 
-    /**
-     * Turns remote sync on/off for a data model.
-     * @param target the data model whose active state may have changed.
-     * @param isObserved  the new active state of the data model.
-     */
-    void setTargetObservedState(String target, boolean isObserved) {
+    void setModelToSync(String model, boolean isObserved) {
 
         // Updates the targets state. Returns true if changed.
-        boolean hasChanged = updateModelStatus(target, isObserved);
+        boolean hasChanged = updateModelsSyncStatus(model, isObserved);
 
         // If the targets state has changed// :
         if (hasChanged) {
             // If the target is now being observed:
             if (isObserved) {
                 // Turn on sync for all of the targets upstream inactive data models:
-                syncAllUpstream(target);
+                syncAllUpstream(model);
             } else {
                 // If the target is no longer being observed, check for downstream dependencies.
-                if (!resolveDownStream(target)) {
+                if (!resolveDownStream(model)) {
                     // If it does not have downstream dependencies, are there any upstream dependencies that are not
                     // being observed?
                     resolveUpstream();
@@ -153,25 +144,18 @@ class SyncManager {
         }
     }
 
-    /**
-     * Updates the models status in the dependency list.     *
-     * @param dataModel  the model to update.
-     * @param isObserved true if observed.
-     * @return true if models state has changed.
-     */
-    private boolean updateModelStatus(String dataModel, boolean isObserved) {
+    private boolean updateModelsSyncStatus(String modelToUpdate, boolean newObservedState) {
 
-        ListIterator<DataModelStatus> iterator = mDataModelSyncList.listIterator();
+        ListIterator<DataModelStatus> iterator = modelSyncList.listIterator();
 
         while (iterator.hasNext()) {
 
-            DataModelStatus dms = iterator.next();
+            DataModelStatus model = iterator.next();
 
             // Only update the target models status if it has changed.
-            if (dms.getModelName().equals(dataModel) && dms.isObserved() != isObserved) {
-
-                dms.setIsObserved(isObserved);
-                iterator.set(dms);
+            if (model.getName().equals(modelToUpdate) && model.observedState() != newObservedState) {
+                model.setObservedState(newObservedState);
+                iterator.set(model);
                 return true;
             }
         }
@@ -184,7 +168,7 @@ class SyncManager {
      */
     private void syncAllUpstream(String target) {
 
-        ListIterator<DataModelStatus> iterator = mDataModelSyncList.listIterator();
+        ListIterator<DataModelStatus> iterator = modelSyncList.listIterator();
         DataModelStatus dms;
 
         do {
@@ -192,7 +176,7 @@ class SyncManager {
             dms = iterator.next();
 
             // If the upstream model is not observed and its 'has dependents' flag is set to false:
-            if (!dms.isObserved() && !dms.hasDependents()) {
+            if (!dms.observedState() && !dms.hasDependents()) {
 
                 // Update its 'has dependents' flag to true.
                 dms.setHasDependents(true);
@@ -200,10 +184,10 @@ class SyncManager {
             }
         }
         // Keep looping until the target model has been processed.
-        while (iterator.hasNext() && !dms.getModelName().equals(target));
+        while (iterator.hasNext() && !dms.getName().equals(target));
 
         // Update sync pending to true and perform sync.
-        mSyncPending = true;
+        syncPending = true;
         performSync();
     }
 
@@ -212,7 +196,7 @@ class SyncManager {
      */
     private void resolveUpstream() {
 
-        ListIterator<DataModelStatus> li = mDataModelSyncList.listIterator(mDataModelSyncList.size());
+        ListIterator<DataModelStatus> li = modelSyncList.listIterator(modelSyncList.size());
         DataModelStatus dms;
 
         // Loop backwards through dependencies from the downstream to the the target.
@@ -220,14 +204,14 @@ class SyncManager {
             dms = li.previous();
 
             // If the upstream dependency is not being observed:
-            if (!dms.isObserved()) {
+            if (!dms.observedState()) {
                 // Set its dependency flag to false.
                 dms.setHasDependents(false);
 
                 // If the upstream dependency is being observed:
             } else {
                 // Set sync pending flag to true.
-                mSyncPending = true;
+                syncPending = true;
                 // Inform the signInChecker sync queue needs processing.
                 performSync();
                 break;
@@ -242,20 +226,20 @@ class SyncManager {
      */
     private boolean resolveDownStream(String target) {
 
-        ListIterator<DataModelStatus> iterator = mDataModelSyncList.listIterator();
+        ListIterator<DataModelStatus> iterator = modelSyncList.listIterator();
         DataModelStatus dms;
 
         do {
             // Loop through the dependency tree:
             dms = iterator.next();
             // When the target is found:
-            if (dms.getModelName().equals(target)) {
+            if (dms.getName().equals(target)) {
                 // See if there is another downstream dependency in the list:
                 if (iterator.hasNext()) {
                     // If there is get the downstream dependency.
                     dms = iterator.next();
                     // If it is being observed:
-                    if (dms.isObserved()) {
+                    if (dms.observedState()) {
 
                         // Go back to the target:
                         dms = iterator.previous();
@@ -291,42 +275,42 @@ class SyncManager {
             }
         }
 
-        while (iterator.hasNext() && !dms.getModelName().equals(target));
+        while (iterator.hasNext() && !dms.getName().equals(target));
         return false;
     }
 
     private void performSync() {
 
-        int count = 0;
+        int totalObservedModels = 0;
 
         // Check to see if one or more data models are being observed.
-        for (DataModelStatus dms : mDataModelSyncList) {
-            if(dms.activeState()) {
-                count ++;
+        for (DataModelStatus dataModel : modelSyncList) {
+            if(dataModel.activeState()) {
+                totalObservedModels ++;
             }
         }
         // If observed data models, turn on the user ID observer.
-        if (count > 0) {
-            if (!mUserId.hasActiveObservers()) {
-                mUserId.observeForever(mUserIdObserver);
+        if (totalObservedModels > 0) {
+            if (!userId.hasActiveObservers()) {
+                userId.observeForever(userIdObserver);
             }
 
         // If no observed data models turn user ID observer off.
         } else {
-            mUserId.removeObserver(mUserIdObserver);
+            userId.removeObserver(userIdObserver);
         }
 
         // If the user is logged in.
-        if (!mUserId.getValue().equals(ANONYMOUS)) {
+        if (!userId.getValue().equals(ANONYMOUS)) {
 
             // And there is a sync pending.
-            if (mSyncPending) {
+            if (syncPending) {
                 // Turn sync pending off.
-                mSyncPending = false;
+                syncPending = false;
 
                 // Start processing pending data models.
-                for (DataModelStatus dms : mDataModelSyncList) {
-                    syncDataModel(dms.getModelName(), dms.activeState());
+                for (DataModelStatus model : modelSyncList) {
+                    syncModel(model.getName(), model.activeState());
                 }
             }
         }
@@ -337,14 +321,14 @@ class SyncManager {
      * @param dataModel the data model to synchronise.
      * @param activeState  true turns synchronisation on, false off.
      */
-    private void syncDataModel(String dataModel, boolean activeState) {
+    private void syncModel(String dataModel, boolean activeState) {
 
-        Intent i = new Intent(mContext, SyncRemoteDataService.class);
+        Intent i = new Intent(context, SyncRemoteDataService.class);
         i.setAction(dataModel);
         i.putExtra("activeState", activeState);
 
         // Send the intent to be processed.
-        mContext.startService(i);
+        context.startService(i);
     }
 
     /**
@@ -362,11 +346,11 @@ class SyncManager {
             this.mModelName = mModelName;
         }
 
-        boolean isObserved() {
+        boolean observedState() {
             return mIsObserved;
         }
 
-        void setIsObserved(boolean mIsObserved) {
+        void setObservedState(boolean mIsObserved) {
             this.mIsObserved = mIsObserved;
         }
 
@@ -378,7 +362,7 @@ class SyncManager {
             this.mHasDependents = mHasDependents;
         }
 
-        String getModelName() {
+        String getName() {
             return mModelName;
         }
 

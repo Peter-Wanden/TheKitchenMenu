@@ -24,169 +24,121 @@ import androidx.annotation.NonNull;
 
 /**
  * Synchronises an incoming remote with a local data model. Giving preference to the remote item.
- * SEE: https://www.youtube.com/watch?v=998tPb10DFM&list=PL6nth5sRD25hVezlyqlBO9dafKMc5fAU2&index=6
+ * https://www.youtube.com/watch?v=998tPb10DFM&list=PL6nth5sRD25hVezlyqlBO9dafKMc5fAU2&index=6
  */
 class SyncProdComm {
 
     private static final String TAG = "SyncProdComm";
 
-    private Repository mRepository;
-    private RepositoryRemote mRepositoryRemote;
+    private Repository repository;
+    private RepositoryRemote repositoryRemote;
 
-    // For tracking the progress of this sync session.
-    private int mResultCode = 0;
+    private DataListenerPending listenerPending;
 
-    // Manages the listeners connection to the DmProdComm remote data.
-    private DataListenerPending mListenerPending;
+    private HandlerWorker worker;
+    private Handler handler;
+    private Message resultMessage;
 
-    // For running database actions on a separate thread.
-    private HandlerWorker mWorker;
-    // Sends messages when sync is complete to Handler in RepositoryRemote.
-    private Handler mHandler;
-    private Message mMessage;
+    private Queue<DmProdComm> remoteData = new LinkedList<>();
+    private List<DmProdComm> batchUpdates = new ArrayList<>();
+    private List<DmProdComm> batchInserts = new ArrayList<>();
 
-    // The incoming data set from the remote server.
-    private Queue<DmProdComm> mRemoteData = new LinkedList<>();
-    // A batch of database updates.
-    private List<DmProdComm> mRemoteUpdates = new ArrayList<>();
-    // A batch of database inserts.
-    private List<DmProdComm> mRemoteInserts = new ArrayList<>();
+    private DmProdComm remoteProduct;
+    private DmProdComm localProduct;
 
-    // Ensures all threads use the same instance of this field.
-    private volatile DmProdComm[] mPcArray = new DmProdComm[2];
-
-    /**
-     * @param context the application context required for invoking the Repositories.
-     */
     SyncProdComm(Context context, RepositoryRemote repositoryRemote) {
-        mRepository = ((Singletons) context).getRepository();
-        mRepositoryRemote = repositoryRemote;
-        mMessage = Message.obtain();
-        mMessage.obj = TAG;
+        repository = ((Singletons) context).getRepository();
+        this.repositoryRemote = repositoryRemote;
+        resultMessage = Message.obtain();
+        resultMessage.obj = TAG;
     }
 
-    /**
-     * Starts sync for this classes data model
-     * @param handler the handler used to send work and message updates to the worker.
-     * @param worker thread used to process result sets into local database.
-     */
     void syncRemoteData(Handler handler, HandlerWorker worker) {
-        // RepositoryRemote's handler to post updates too.
-        mHandler = handler;
-        // RepositoryRemote's worker thread to perform database operations.
-        mWorker = worker;
-        // Start the sync to local database.
-        syncPrep();
+        this.handler = handler;
+        this.worker = worker;
+        matchWithLocalProduct();
     }
 
-    /**
-     * Prepares the remote and local elements for comparison and synchronisation
-     */
-    private void syncPrep() {
+    private void matchWithLocalProduct() {
+        remoteProduct = null;
+        localProduct = null;
 
-        // Get the first element in the remote data queue
-        mPcArray[0] = mRemoteData.peek();
+        remoteProduct = remoteData.peek();
 
-        mWorker.execute(() -> {
+        worker.execute(() -> {
+            // If exists, load local counterpart.
+            localProduct = repository.getProdCommByRemoteId(remoteProduct.getFbProductReferenceKey());
 
-            // If exists, get its local counterpart.
-            mPcArray[1] = mRepository.getProdCommByRemoteId(
-                    mPcArray[0].getFbProductReferenceKey());
-
-            if (mPcArray[1] != null) {
+            if (localProduct != null) {
                 // If exists, add the local elements ID to the remote elements ID
-                mPcArray[0].setId(mPcArray[1].getId());
+                remoteProduct.setId(localProduct.getId());
                 }
-                compareAndSync();
+                compareLocalWithRemote();
             }
         );
     }
 
-    /**
-     * Compares the elements in the array, if they are different, stores or updates the local with
-     * remote.
-     */
-    private void compareAndSync() {
+    private void compareLocalWithRemote() {
 
         // If there is no locally matching element insert the remote.
-        if (mPcArray[1] == null) {
-
-            mRemoteInserts.add(mPcArray[0]);
-            nextPlease();
+        if (localProduct == null) {
+            batchInserts.add(remoteProduct);
+            moveOnToNextElement();
 
         } else {
 
-            // Compare the two, if they are not equal, update the local with the remote.
-            if (!mPcArray[0].toString().equals(mPcArray[1].toString())) {
-
-                mRemoteUpdates.add(mPcArray[0]);
-                nextPlease();
+            // Compare the two, if they are not equal, add to updates.
+            if (!remoteProduct.toString().equals(localProduct.toString())) {
+                batchUpdates.add(remoteProduct);
+                moveOnToNextElement();
 
             } else {
-                // There is no change to make so move on to next element item
-                nextPlease();
+                moveOnToNextElement();
             }
         }
     }
 
-    private void nextPlease() {
+    private void moveOnToNextElement() {
         // Element has been processed, so remove from remote queue.
-        mRemoteData.remove();
+        remoteData.remove();
 
-        if (mRemoteData.size() > 0) {
+        if (remoteData.size() > 0) {
 
             // Get the next element in the queue.
-            syncPrep();
+            matchWithLocalProduct();
 
         } else {
 
-            // Queue has been processed, save the inserts and updates to the database.
-            mWorker.execute(() -> {
+            worker.execute(() -> {
 
-                if (mRemoteInserts.size() > 0) {
-
-                    mRepository.insertAllProdComm(mRemoteInserts);
-                    mRemoteInserts.clear();
-
-                    // Work is complete, inform handler.
-                    mResultCode += 1; // inserts complete.
-
-                    } else {
-
-                    mResultCode += 2; // no inserts.
+                if (batchInserts.size() > 0) {
+                    repository.insertAllProdComm(batchInserts);
+                    batchInserts.clear();
                 }
             }
 
             ).execute(() -> {
-                if (mRemoteUpdates.size() > 0) {
-
-                    mRepository.updateAllProdComm(mRemoteUpdates);
-                    mRemoteUpdates.clear();
-
-                    mResultCode += 3; // updates complete.
-
-                } else {
-
-                    mResultCode += 4; // no updates.
+                if (batchUpdates.size() > 0) {
+                    repository.updateAllProdComm(batchUpdates);
+                    batchUpdates.clear();
                 }
 
             }).execute(() -> {
-                // Send a message to let RepositoryRemote know sync is complete for this model.
-                mMessage.arg1 = mResultCode;
-                mHandler.sendMessage(mMessage);
+                // Send a resultMessage to let RepositoryRemote know sync is complete for this model.
+                handler.sendMessage(resultMessage);
             });
         }
     }
 
     // Sets up the listener for this class
     private void initialiseVel() {
-        Log.d(TAG, "initialiseProdCommVel: for " + TAG + " called");
+        Log.d(TAG, "initialiseVel: called");
 
         // Database reference to the community products location in Firebase.
         DatabaseReference prodCommRef = RemoteDbRefs.getRefProdComm();
 
         // A Queue to store the returned data.
-        Queue<DmProdComm> remoteData = new LinkedList<>();
+        Queue<DmProdComm> remoteSnapShot = new LinkedList<>();
 
         // Reports changes in the remote database.
         ValueEventListener prodCommVEL = new ValueEventListener() {
@@ -199,16 +151,16 @@ class SyncProdComm {
                     if (pc != null) {
                         // Add the remote reference key.
                         pc.setRemoteProdRefKey(shot.getKey());
-                        remoteData.add(pc);
+                        remoteSnapShot.add(pc);
                     }
                 }
                 // Copies the remote data for processing.
-                mRemoteData.addAll(remoteData);
-                Log.d(TAG, "onDataChange: returned: " + mRemoteData.size() + " objects");
+                remoteData.addAll(remoteSnapShot);
+                Log.d(TAG, "onDataChange: returned: " + SyncProdComm.this.remoteData.size() + " objects");
                 // Clears down remote data queue.
-                remoteData.clear();
+                remoteSnapShot.clear();
                 // Updates the data models status in the RemoteRepository.
-                mRepositoryRemote.dataSetReturned(
+                repositoryRemote.dataSetReturned(
                         new ModelStatus(DmProdComm.TAG, true));
             }
 
@@ -219,24 +171,24 @@ class SyncProdComm {
             }
         };
         // Creates a listener to attach to this VEL.
-        mListenerPending = new DataListenerPending(prodCommRef, prodCommVEL);
+        listenerPending = new DataListenerPending(prodCommRef, prodCommVEL);
     }
 
-    // Returns true if listener is active, false if null or inactive.
+    // Returns true if listener is activeState, false if null or inactive.
     boolean getListenerState() {
-        if (mListenerPending == null) {
+        if (listenerPending == null) {
             initialiseVel();
         }
-        Log.d(TAG, "getListenerState: " + mListenerPending.getListenerState());
-        return mListenerPending.getListenerState();
+        Log.d(TAG, "getListenerState: " + listenerPending.getListenerState());
+        return listenerPending.getListenerState();
     }
 
     // Sets the listeners state
     void setListenerState(boolean requestedState) {
-        if (mListenerPending == null) {
+        if (listenerPending == null) {
             initialiseVel();
         }
         Log.d(TAG, "setListenerState: " + requestedState);
-        mListenerPending.setListenerState(requestedState);
+        listenerPending.setListenerState(requestedState);
     }
 }

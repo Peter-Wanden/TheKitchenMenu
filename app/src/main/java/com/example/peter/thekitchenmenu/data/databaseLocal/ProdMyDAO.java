@@ -1,9 +1,9 @@
 package com.example.peter.thekitchenmenu.data.databaseLocal;
 
-import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_REMOTE_REF_ID;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.PROD_COMM_REMOTE_REF_ID;
 import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.TABLE_PROD_MY;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.TABLE_PROD_MY_COMM_ID;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.TABLE_PROD_MY_ID;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.PROD_MY_COMM_ID;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.PROD_MY_ID;
 
 import com.example.peter.thekitchenmenu.data.entity.DmProdMy;
 
@@ -25,21 +25,21 @@ public interface ProdMyDAO {
 
     // Gets a list of ProductMys given an array if ID's.
     @Query("SELECT * FROM " + TABLE_PROD_MY +
-            " WHERE " + TABLE_PROD_MY_ID + " IN(:idArray)")
+            " WHERE " + PROD_MY_ID + " IN(:idArray)")
     LiveData<List<DmProdMy>> getByIdArray(int[] idArray);
 
     // Gets a single DmProdMy by specifying its ID
     @Query("SELECT * FROM " + TABLE_PROD_MY +
-            " WHERE " + TABLE_PROD_MY_ID + " = :id")
+            " WHERE " + PROD_MY_ID + " = :id")
     LiveData<DmProdMy> getById(int id);
 
     // Gets a single DmProdMy by specifying is remote database reference
     @Query("SELECT * FROM " + TABLE_PROD_MY +
-            " WHERE " + TABLE_PROD_COMM_REMOTE_REF_ID + " = :remoteId")
+            " WHERE " + PROD_COMM_REMOTE_REF_ID + " = :remoteId")
     DmProdMy getByRemoteId(String remoteId);
 
     @Query("SELECT * FROM " + TABLE_PROD_MY +
-            " WHERE " + TABLE_PROD_MY_COMM_ID + " = :commId")
+            " WHERE " + PROD_MY_COMM_ID + " = :commId")
     DmProdMy getByCommId(int commId);
 
     @Insert

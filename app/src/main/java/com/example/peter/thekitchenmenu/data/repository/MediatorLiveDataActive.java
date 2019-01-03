@@ -31,7 +31,7 @@ public class MediatorLiveDataActive<T> extends MediatorLiveData<T> {
     }
 
     private void updateDataModelStatus(boolean isActive) {
-        mRepository.dataModelIsActive(mDataModel, isActive);
+        mRepository.observedStateChange(mDataModel, isActive);
     }
 
 

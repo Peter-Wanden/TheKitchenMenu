@@ -18,10 +18,10 @@ import androidx.room.RoomDatabase;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PRODUCT_COMM;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_DESC;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_ID;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_MADE_BY;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.PROD_COMM_DESC;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.PROD_COMM_ID;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.PROD_COMM_MADE_BY;
 import static com.example.peter.thekitchenmenu.data.entity.FtsProdComm.TABLE_FTS_PROD_COMM;
 
 @Database(entities = {
@@ -114,15 +114,15 @@ public abstract class TKMLocalDatabase extends RoomDatabase {
             database.execSQL(
                     "CREATE VIRTUAL TABLE IF NOT EXISTS " + TABLE_FTS_PROD_COMM +
                             " USING FTS4(" +
-                            TABLE_PROD_COMM_DESC + " TEXT, " +
-                            TABLE_PROD_COMM_MADE_BY + " TEXT, " +
-                            "content=" + TABLE_PRODUCT_COMM + ")");
+                            PROD_COMM_DESC + " TEXT, " +
+                            PROD_COMM_MADE_BY + " TEXT, " +
+                            "content=" + TABLE_PROD_COMM + ")");
 
             database.execSQL(
                     "INSERT INTO " + TABLE_FTS_PROD_COMM +
-                    " (`rowid`, " + TABLE_PROD_COMM_DESC + ", " + TABLE_PROD_COMM_MADE_BY + ") "
-                    + "SELECT " + TABLE_PROD_COMM_ID + ", " + TABLE_PROD_COMM_DESC + ", " +
-                    TABLE_PROD_COMM_MADE_BY + " FROM " + TABLE_PRODUCT_COMM);
+                    " (`rowid`, " + PROD_COMM_DESC + ", " + PROD_COMM_MADE_BY + ") "
+                    + "SELECT " + PROD_COMM_ID + ", " + PROD_COMM_DESC + ", " +
+                            PROD_COMM_MADE_BY + " FROM " + TABLE_PROD_COMM);
         }
     };
 }

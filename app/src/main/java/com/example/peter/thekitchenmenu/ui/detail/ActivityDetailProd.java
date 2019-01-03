@@ -67,22 +67,22 @@ import androidx.core.content.FileProvider;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.databinding.DataBindingUtil;
 
-import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_CATEGORY;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_CREATED_BY;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_DESC;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_MADE_BY;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_PACK_SIZE;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_PRICE_AVE;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_REMOTE_IMAGE_URI;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_REMOTE_REF_ID;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_SHELF_LIFE;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM_UNIT_OF_MEASURE;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.TABLE_PROD_MY_LOCAL_IMAGE_URI;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.TABLE_PROD_MY_LOC_IN_ROOM;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.TABLE_PROD_MY_LOC_ROOM;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.TABLE_PROD_MY_PACK_PRICE;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.TABLE_PROD_MY_RETAILER;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.TABLE_PROD_MY_USED_REMOTE_ID;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.PROD_COMM_CATEGORY;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.PROD_COMM_CREATED_BY;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.PROD_COMM_DESC;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.PROD_COMM_MADE_BY;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.PROD_COMM_PACK_SIZE;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.PROD_COMM_PRICE_AVE;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.PROD_COMM_REMOTE_IMAGE_URI;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.PROD_COMM_REMOTE_REF_ID;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.PROD_COMM_SHELF_LIFE;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.PROD_COMM_UNIT_OF_MEASURE;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.PROD_MY_LOCAL_IMAGE_URI;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.PROD_MY_LOC_IN_ROOM;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.PROD_MY_LOC_ROOM;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.PROD_MY_PACK_PRICE;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.PROD_MY_RETAILER;
+import static com.example.peter.thekitchenmenu.data.entity.DmProdMy.PROD_MY_USED_REMOTE_ID;
 
 public class ActivityDetailProd
         extends AppCompatActivity {
@@ -1404,7 +1404,7 @@ public class ActivityDetailProd
                     addUserToUsedProducts();
 
                     // Add in the reference provided by addUserToUsedProducts
-                    productUserUpdates.put(TABLE_PROD_MY_USED_REMOTE_ID, mFbUsedProductsUserKey);
+                    productUserUpdates.put(PROD_MY_USED_REMOTE_ID, mFbUsedProductsUserKey);
 
                     // Location 1
                     saveUserProductUpdates(productUserUpdates);
@@ -1487,7 +1487,7 @@ public class ActivityDetailProd
                     addUserToUsedProducts();
 
                     // Add in the reference provided by addUserToUsedProducts
-                    productUserUpdates.put(TABLE_PROD_MY_USED_REMOTE_ID, mFbUsedProductsUserKey);
+                    productUserUpdates.put(PROD_MY_USED_REMOTE_ID, mFbUsedProductsUserKey);
 
                     // Location 2
                     saveUserProductUpdates(productUserUpdates);
@@ -1566,39 +1566,39 @@ public class ActivityDetailProd
         int userUpdateCounter = 0;
 
         /* Add the base data to the HashMap. */
-        productUserUpdates.put(TABLE_PROD_COMM_DESC, mVmProd.getDescription());
-        productUserUpdates.put(TABLE_PROD_COMM_MADE_BY, mVmProd.getMadeBy());
-        productUserUpdates.put(TABLE_PROD_COMM_CATEGORY, mVmProd.getCategory());
-        productUserUpdates.put(TABLE_PROD_COMM_SHELF_LIFE, mVmProd.getShelfLife());
-        productUserUpdates.put(TABLE_PROD_COMM_PACK_SIZE, mVmProd.getPackSize());
-        productUserUpdates.put(TABLE_PROD_COMM_UNIT_OF_MEASURE, mVmProd.getUnitOfMeasure());
-        productUserUpdates.put(TABLE_PROD_COMM_PRICE_AVE, mVmProd.getPackPrice());
-        productUserUpdates.put(TABLE_PROD_COMM_CREATED_BY, mVmProd.getCreatedBy());
+        productUserUpdates.put(PROD_COMM_DESC, mVmProd.getDescription());
+        productUserUpdates.put(PROD_COMM_MADE_BY, mVmProd.getMadeBy());
+        productUserUpdates.put(PROD_COMM_CATEGORY, mVmProd.getCategory());
+        productUserUpdates.put(PROD_COMM_SHELF_LIFE, mVmProd.getShelfLife());
+        productUserUpdates.put(PROD_COMM_PACK_SIZE, mVmProd.getPackSize());
+        productUserUpdates.put(PROD_COMM_UNIT_OF_MEASURE, mVmProd.getUnitOfMeasure());
+        productUserUpdates.put(PROD_COMM_PRICE_AVE, mVmProd.getPackPrice());
+        productUserUpdates.put(PROD_COMM_CREATED_BY, mVmProd.getCreatedBy());
 
         // Add in the user specific data to the HashMap
-        productUserUpdates.put(TABLE_PROD_MY_LOCAL_IMAGE_URI, mVmProd.getLocalImageUri());
-        productUserUpdates.put(TABLE_PROD_COMM_REMOTE_IMAGE_URI, mVmProd.getFbStorageImageUri());
-        productUserUpdates.put(TABLE_PROD_COMM_REMOTE_REF_ID, mVmProd.getFbProductReferenceKey());
-        productUserUpdates.put(TABLE_PROD_MY_USED_REMOTE_ID, mVmProd.getFbUsedProductsUserKey());
+        productUserUpdates.put(PROD_MY_LOCAL_IMAGE_URI, mVmProd.getLocalImageUri());
+        productUserUpdates.put(PROD_COMM_REMOTE_IMAGE_URI, mVmProd.getFbStorageImageUri());
+        productUserUpdates.put(PROD_COMM_REMOTE_REF_ID, mVmProd.getFbProductReferenceKey());
+        productUserUpdates.put(PROD_MY_USED_REMOTE_ID, mVmProd.getFbUsedProductsUserKey());
 
         // Compare and add any changes from the user specific fields to the HashMap
         if (!mRetailer.equals(mVmProd.getRetailer())) {
-            productUserUpdates.put(TABLE_PROD_MY_RETAILER, mRetailer);
+            productUserUpdates.put(PROD_MY_RETAILER, mRetailer);
             mVmProd.setRetailer(mRetailer);
             userUpdateCounter++;
         }
         if (!mLocationRoom.equals(mVmProd.getLocationRoom())) {
-            productUserUpdates.put(TABLE_PROD_MY_LOC_ROOM, mLocationRoom);
+            productUserUpdates.put(PROD_MY_LOC_ROOM, mLocationRoom);
             mVmProd.setLocationRoom(mLocationRoom);
             userUpdateCounter++;
         }
         if (!mLocationInRoom.equals(mVmProd.getLocationInRoom())) {
-            productUserUpdates.put(TABLE_PROD_MY_LOC_IN_ROOM, mLocationInRoom);
+            productUserUpdates.put(PROD_MY_LOC_IN_ROOM, mLocationInRoom);
             mVmProd.setLocationInRoom(mLocationInRoom);
             userUpdateCounter++;
         }
         if (mPackPrice != mVmProd.getPackPrice()) {
-            productUserUpdates.put(TABLE_PROD_MY_PACK_PRICE, mPackPrice);
+            productUserUpdates.put(PROD_MY_PACK_PRICE, mPackPrice);
             mVmProd.setPackPrice(mPackPrice);
             userUpdateCounter++;
         }
