@@ -7,7 +7,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.databaseRemote.RemoteSignIn;
 import com.example.peter.thekitchenmenu.data.model.VmProd;
 import com.example.peter.thekitchenmenu.databinding.ActivityCatalogProductBinding;
@@ -20,7 +19,6 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
-import static com.example.peter.thekitchenmenu.app.Constants.ANONYMOUS;
 import static com.example.peter.thekitchenmenu.app.Constants.PRODUCT_FB_REFERENCE_KEY;
 import static com.example.peter.thekitchenmenu.app.Constants.PRODUCT_IS_CREATOR_KEY;
 
@@ -29,10 +27,10 @@ import static com.example.peter.thekitchenmenu.app.Constants.PRODUCT_IS_CREATOR_
  * The main entry point for product related actions and (currently) the host activity
  * for {@link FragmentCatVmProd} and {@link FragmentCatVmProdMy}.
  */
-public class ActivityCatProd
+public class ProductCatalog
         extends AppCompatActivity {
 
-    public static final String TAG = ActivityCatProd.class.getSimpleName();
+    private static final String TAG = "ProductCatalog";
 
     RemoteSignIn mRemoteSignIn;
     ViewModelCatProd viewModelCatProd;
@@ -64,7 +62,7 @@ public class ActivityCatProd
     // Launches the detail activity
     private void launchDetailActivity(VmProd vmProd) {
 
-        Intent intent = new Intent(ActivityCatProd.this, ActivityDetailProd.class);
+        Intent intent = new Intent(ProductCatalog.this, ActivityDetailProd.class);
         intent.putExtra(PRODUCT_FB_REFERENCE_KEY, vmProd);
         intent.putExtra(PRODUCT_IS_CREATOR_KEY, viewModelCatProd.getIsCreator().getValue());
         startActivity(intent);
@@ -85,7 +83,7 @@ public class ActivityCatProd
 
         mCatProdBinding.activityCatalogProductFab.setOnClickListener(v -> {
 
-            Intent addProductIntent = new Intent(ActivityCatProd.this,
+            Intent addProductIntent = new Intent(ProductCatalog.this,
                     ActivityDetailProd.class);
             startActivity(addProductIntent);
 

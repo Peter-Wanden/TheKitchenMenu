@@ -38,19 +38,20 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation "androidx.appcompat:appcompat:$androidxSupportVersion"
+    implementation "androidx.appcompat:appcompat:$androidxAppcompat"
     implementation "com.google.android.material:material:$androidxSupportVersion"
     implementation "androidx.recyclerview:recyclerview:$androidxSupportVersion"
     implementation "androidx.cardview:cardview:$androidxSupportVersion"
     implementation "androidx.exifinterface:exifinterface:$androidxSupportVersion"
     implementation "androidx.legacy:legacy-support-v4:$androidxSupportVersion"
     implementation "androidx.browser:browser:$androidxSupportVersion"
-    annotationProcessor "androidx.databinding:databinding-compiler:3.4.0-alpha06"
+    implementation "com.google.android.material:material:$androidMaterial"
 
     // Architecture components
-    implementation "androidx.lifecycle:lifecycle-extensions:$androidxArchComponentsVersion"
+    implementation "androidx.lifecycle:lifecycle-extensions:$androidxLifecycleExtensions"
     implementation "androidx.lifecycle:lifecycle-runtime:$androidxArchComponentsVersion"
     annotationProcessor "androidx.lifecycle:lifecycle-compiler:$androidxArchComponentsVersion"
+    annotationProcessor "androidx.databinding:databinding-compiler:$androidxDatabindingCompiler"
 
     // Room
     implementation "androidx.room:room-runtime:$androidxRoomVersion"
@@ -87,14 +88,14 @@ dependencies {
 
     // Firebase
     implementation "com.google.firebase:firebase-database:$firebaseVersion"
-    implementation "com.google.firebase:firebase-core:$firebaseVersion"
-    implementation "com.google.firebase:firebase-auth:$firebaseVersion"
+    implementation "com.google.firebase:firebase-core:$firebaseCore"
+    implementation "com.google.firebase:firebase-auth:$firebaseAuth"
     implementation "com.google.firebase:firebase-storage:$firebaseVersion"
     implementation "com.google.firebase:firebase-config:$firebaseConfigVersion"
     //////// Firebase UI ////////
-    implementation "com.firebaseui:firebase-ui-auth:$firebaseAuth"
+    implementation "com.firebaseui:firebase-ui-auth:$firebaseUiAuth"
     // Allows direct binding of data to display
-    implementation "com.firebaseui:firebase-ui-database:$firebaseAuth"
+    implementation "com.firebaseui:firebase-ui-database:$firebaseUiAuth"
 
     // Testing
     testImplementation "junit:junit:$junitVersion"

@@ -9,7 +9,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 /**
- * Paging adaptor for the tabs and fragments displayed in {@link ActivityCatProd}
+ * Paging adaptor for the tabs and fragments displayed in {@link ProductCatalog}
  */
 public class AdapterPageCatProd extends FragmentPagerAdapter {
 

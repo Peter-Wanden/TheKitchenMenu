@@ -7,7 +7,7 @@ import android.widget.Toast;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
-import com.example.peter.thekitchenmenu.ui.catalog.ActivityCatProd;
+import com.example.peter.thekitchenmenu.ui.catalog.ProductCatalog;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.BuildConfig;
@@ -27,7 +27,7 @@ public class RemoteSignIn {
 
     private static final String TAG = RemoteSignIn.class.getSimpleName();
 
-    private ActivityCatProd mActivityCatProd;
+    private ProductCatalog mProductCatalog;
 
     // Authentication instance.
     private FirebaseAuth mFBAuth;
@@ -35,8 +35,8 @@ public class RemoteSignIn {
     // Authentication state listener.
     private FirebaseAuth.AuthStateListener mFBAuthStateListener;
 
-    public RemoteSignIn(ActivityCatProd activityCatProd) {
-        this.mActivityCatProd = activityCatProd;
+    public RemoteSignIn(ProductCatalog productCatalog) {
+        this.mProductCatalog = productCatalog;
         initialiseFirebase();
     }
 
@@ -62,7 +62,7 @@ public class RemoteSignIn {
                 Constants.getUserId().setValue(ANONYMOUS);
                 // For more examples of sign in see:
                 // https://github.com/firebase/FirebaseUI-Android/tree/master/auth#sign-in
-                mActivityCatProd.startActivityForResult(
+                mProductCatalog.startActivityForResult(
                         AuthUI.getInstance()
                                 .createSignInIntentBuilder()
                                 .setAvailableProviders(Arrays.asList(
@@ -114,15 +114,15 @@ public class RemoteSignIn {
             if (resultCode == RESULT_OK) {
 
                 // Sign-in succeeded, set up the UI
-                Toast.makeText(mActivityCatProd,
+                Toast.makeText(mProductCatalog,
                         R.string.sign_in_conformation, Toast.LENGTH_SHORT).show();
 
             } else if (resultCode == RESULT_CANCELED) {
 
                 // Sign in was canceled by the user, finish the activity, exit the app
-                Toast.makeText(mActivityCatProd,
+                Toast.makeText(mProductCatalog,
                         R.string.sign_in_canceled, Toast.LENGTH_SHORT).show();
-                mActivityCatProd.finish();
+                mProductCatalog.finish();
             }
         }
     }
