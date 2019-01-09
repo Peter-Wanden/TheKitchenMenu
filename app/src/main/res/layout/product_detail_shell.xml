@@ -3,14 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
-        android:id="@+id/activity_detail_product_rl_parent"
+        android:id="@+id/shell_parent_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
         android:fitsSystemWindows="true">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/activity_detail_product_tb_top"
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
@@ -18,32 +18,31 @@
         android:elevation="@dimen/starting_elevation"/>
 
     <ScrollView
-        android:id="@+id/activity_detail_product_sv"
+        android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/activity_detail_product_tb_top">
+        android:layout_below="@+id/toolbar">
 
         <RelativeLayout
-            android:id="@+id/activity_detail_product_rl_scroll_parent"
+            android:id="@+id/scroll_view_child_relative_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
         <LinearLayout
-            android:id="@+id/activity_detail_product_ll_relative_parent"
+            android:id="@+id/linear_layout_relative_parent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="@dimen/activity_margin"
-            tools:context=".ui.detail.ActivityDetailProd">
+            tools:context=".ui.detail.ProductDetail">
 
-            <!-- Relative layout for the image section -->
             <RelativeLayout
-                android:id="@+id/activity_detail_product_rl_image_section"
+                android:id="@+id/relative_layout_image_section"
                 android:layout_width="match_parent"
                 android:layout_height="250dp">
 
             <ImageView
-                android:id="@+id/activity_detail_product_iv"
+                android:id="@+id/product_image_view"
                 android:transitionName="@string/transition_product"
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
@@ -52,29 +51,29 @@
                 android:src="@drawable/placeholder" />
 
                 <ImageButton
-                    android:id="@+id/activity_detail_product_ib_add_camera_picture"
+                    android:id="@+id/picture_from_camera_button"
                     android:contentDescription="@string/cd_add_image"
                     android:layout_width="@dimen/image_button_width"
                     android:layout_height="@dimen/image_button_height"
                     android:src="@drawable/ic_action_camera"
                     android:layout_marginEnd="@dimen/image_button_margin"
                     android:layout_marginBottom="@dimen/image_button_margin"
-                    android:layout_alignBottom="@+id/activity_detail_product_iv"
-                    android:layout_alignEnd="@+id/activity_detail_product_iv"
+                    android:layout_alignBottom="@+id/product_image_view"
+                    android:layout_alignEnd="@+id/product_image_view"
                     android:tint="@color/white"
                     android:backgroundTint="@color/textColorHighlight"
                     android:elevation="4dp"
                     android:visibility="gone"/>
 
                 <ImageButton
-                    android:id="@+id/activity_detail_product_ib_add_gallery_picture"
+                    android:id="@+id/picture_from_gallery_button"
                     android:contentDescription="@string/cd_add_image"
                     android:layout_width="@dimen/image_button_width"
                     android:layout_height="@dimen/image_button_height"
                     android:src="@drawable/ic_action_insert_photo"
                     android:layout_marginEnd="@dimen/image_button_margin"
                     android:layout_marginBottom="@dimen/image_button_margin"
-                    android:layout_alignBottom="@+id/activity_detail_product_iv"
+                    android:layout_alignBottom="@+id/product_image_view"
                     android:layout_centerInParent="true"
                     android:tint="@color/white"
                     android:backgroundTint="@color/textColorHighlight"
@@ -82,15 +81,15 @@
                     android:visibility="gone"/>
 
                 <ImageButton
-                    android:id="@+id/activity_detail_product_ib_rotate_picture"
+                    android:id="@+id/rotate_picture_button"
                     android:contentDescription="@string/cd_rotate_image"
                     android:layout_width="@dimen/image_button_width"
                     android:layout_height="@dimen/image_button_height"
                     android:src="@drawable/ic_action_rotate"
                     android:layout_marginStart="@dimen/image_button_margin"
                     android:layout_marginBottom="@dimen/image_button_margin"
-                    android:layout_alignBottom="@+id/activity_detail_product_iv"
-                    android:layout_alignStart="@+id/activity_detail_product_iv"
+                    android:layout_alignBottom="@+id/product_image_view"
+                    android:layout_alignStart="@+id/product_image_view"
                     android:tint="@color/white"
                     android:backgroundTint="@color/textColorHighlight"
                     android:elevation="4dp"
@@ -98,24 +97,24 @@
             </RelativeLayout>
 
             <include
-                android:id="@+id/activity_detail_product_base_fields_editable_include"
-                layout="@layout/activity_detail_product_base_fields_editable"/>
+                android:id="@+id/product_editable"
+                layout="@layout/product_editable"/>
 
             <include
-                android:id="@+id/activity_detail_product_base_fields_uneditable_include"
-                layout="@layout/activity_detail_product_base_fields_uneditable"/>
+                android:id="@+id/product_uneditable"
+                layout="@layout/product"/>
 
             <include
-                android:id="@+id/activity_detail_product_user_fields_editable_include"
-                layout="@layout/activity_detail_product_user_fields_editable"/>
+                android:id="@+id/user_product_editable"
+                layout="@layout/product_user_editable"/>
 
             <include
-                android:id="@+id/activity_detail_product_user_fields_uneditable_include"
-                layout="@layout/activity_detail_product_user_fields_uneditable"/>
+                android:id="@+id/user_product_uneditable"
+                layout="@layout/product_user"/>
         </LinearLayout>
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/activity_detail_product_fab"
+                android:id="@+id/fab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"

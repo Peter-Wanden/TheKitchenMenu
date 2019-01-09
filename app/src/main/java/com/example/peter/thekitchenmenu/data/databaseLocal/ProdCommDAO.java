@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.data.databaseLocal;
 
 import android.database.Cursor;
 
-import com.example.peter.thekitchenmenu.data.entity.DmProdComm;
+import com.example.peter.thekitchenmenu.data.entity.Product;
 
 import java.util.List;
 
@@ -17,73 +17,73 @@ import androidx.room.Update;
 import static android.app.SearchManager.SUGGEST_COLUMN_INTENT_DATA;
 import static android.app.SearchManager.SUGGEST_COLUMN_TEXT_1;
 import static android.app.SearchManager.SUGGEST_COLUMN_TEXT_2;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.PROD_COMM_DESC;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.PROD_COMM_ID;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.PROD_COMM_MADE_BY;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.PROD_COMM_REMOTE_REF_ID;
-import static com.example.peter.thekitchenmenu.data.entity.FtsProdComm.TABLE_FTS_PROD_COMM;
+import static com.example.peter.thekitchenmenu.data.entity.Product.TABLE_PRODUCT;
+import static com.example.peter.thekitchenmenu.data.entity.Product.DESCRIPTION;
+import static com.example.peter.thekitchenmenu.data.entity.Product.ID;
+import static com.example.peter.thekitchenmenu.data.entity.Product.MADE_BY;
+import static com.example.peter.thekitchenmenu.data.entity.Product.REMOTE_PRODUCT_ID;
+import static com.example.peter.thekitchenmenu.data.entity.ProductFastTextSearch.TABLE_FTS_PROD_COMM;
 
 @Dao
 public interface ProdCommDAO {
 
-    // Gets all DmProdComm objects stored locally.
+    // Gets all Product objects stored locally.
     @Query("SELECT * " +
-            "FROM "+ TABLE_PROD_COMM +
-            " ORDER BY " + PROD_COMM_DESC)
-    LiveData<List<DmProdComm>> getAll();
+            "FROM "+ TABLE_PRODUCT +
+            " ORDER BY " + DESCRIPTION)
+    LiveData<List<Product>> getAll();
 
     // The Integer type parameter tells Room to use a PositionalDataSource
     // object, with position-based loading under the hood.
     // ToDo - Implement paging adapter
     @Query("SELECT * " +
-            "FROM "+ TABLE_PROD_COMM +
-            " ORDER BY " + PROD_COMM_DESC)
-    DataSource.Factory<Integer, DmProdComm> getAllPaged();
+            "FROM "+ TABLE_PRODUCT +
+            " ORDER BY " + DESCRIPTION)
+    DataSource.Factory<Integer, Product> getAllPaged();
 
-    // Gets a list of DmProdComm given an array if ID's.
+    // Gets a list of Product given an array if ID's.
     @Query("SELECT * " +
-            "FROM " + TABLE_PROD_COMM +
-            " WHERE " + PROD_COMM_ID +
+            "FROM " + TABLE_PRODUCT +
+            " WHERE " + ID +
             " IN(:idArray)")
-    LiveData<List<DmProdComm>> getByIdArray(int[] idArray);
+    LiveData<List<Product>> getByIdArray(int[] idArray);
 
-    // Gets a single DmProdComm by specifying its ID
+    // Gets a single Product by specifying its ID
     @Query("SELECT * " +
-           "FROM " + TABLE_PROD_COMM +
+           "FROM " + TABLE_PRODUCT +
             " WHERE id = :id")
-    LiveData<DmProdComm> getById(int id);
+    LiveData<Product> getById(int id);
 
-    // Retrieves a single DmProdComm by specifying its remote database reference
+    // Retrieves a single Product by specifying its remote database reference
     @Query("SELECT * " +
-            "FROM " + TABLE_PROD_COMM +
-            " WHERE " + PROD_COMM_REMOTE_REF_ID + " = :remoteId")
-    DmProdComm getByRemoteId(String remoteId);
+            "FROM " + TABLE_PRODUCT +
+            " WHERE " + REMOTE_PRODUCT_ID + " = :remoteId")
+    Product getByRemoteId(String remoteId);
 
     @Insert
-    void insert(DmProdComm dmProdComm);
+    void insert(Product product);
 
     @Insert
-    void insertAll(List<DmProdComm> listDmProdComm);
+    void insertAll(List<Product> listProduct);
 
     @Update
-    void update(DmProdComm dmProdComm);
+    void update(Product product);
 
     @Update
-    void updateAll(List<DmProdComm> listDmProdComm);
+    void updateAll(List<Product> listProduct);
 
     @Delete
-    void delete(DmProdComm dmProdComm);
+    void delete(Product product);
 
-    @Query("DELETE FROM " + TABLE_PROD_COMM)
+    @Query("DELETE FROM " + TABLE_PRODUCT)
     void deleteAll();
 
-    @Query("SELECT " + TABLE_PROD_COMM + "." + PROD_COMM_ID + " AS _id, " +
-            TABLE_PROD_COMM + "." + PROD_COMM_DESC + " AS " + SUGGEST_COLUMN_TEXT_1 + ", " +
-            TABLE_PROD_COMM + "." + PROD_COMM_MADE_BY + " AS " + SUGGEST_COLUMN_TEXT_2 + ", " +
-            TABLE_PROD_COMM + "." + PROD_COMM_ID + " AS " + SUGGEST_COLUMN_INTENT_DATA + " " +
-            "FROM " + TABLE_PROD_COMM + " JOIN " + TABLE_FTS_PROD_COMM + " ON (" +
-            TABLE_PROD_COMM + "." + PROD_COMM_ID + " = " + TABLE_FTS_PROD_COMM + ".rowid)" +
+    @Query("SELECT " + TABLE_PRODUCT + "." + ID + " AS _id, " +
+            TABLE_PRODUCT + "." + DESCRIPTION + " AS " + SUGGEST_COLUMN_TEXT_1 + ", " +
+            TABLE_PRODUCT + "." + MADE_BY + " AS " + SUGGEST_COLUMN_TEXT_2 + ", " +
+            TABLE_PRODUCT + "." + ID + " AS " + SUGGEST_COLUMN_INTENT_DATA + " " +
+            "FROM " + TABLE_PRODUCT + " JOIN " + TABLE_FTS_PROD_COMM + " ON (" +
+            TABLE_PRODUCT + "." + ID + " = " + TABLE_FTS_PROD_COMM + ".rowid)" +
             " WHERE " + TABLE_FTS_PROD_COMM + " MATCH :query")
     Cursor searchAllProducts(String query);
 }

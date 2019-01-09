@@ -2,11 +2,11 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
-        android:id="@+id/activity_detail_product_base_fields_editable_container"
+        android:id="@+id/product_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="gone">
+        >
 
         <!--
                 README
@@ -15,14 +15,12 @@
                 line from above 'android:visibility="gone"' and replace it when done
          -->
 
-        <!-- Product description container -->
         <LinearLayout
-            android:id="@+id/activity_detail_product_base_fields_editable_container_description"
+            android:id="@+id/editable_container_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <!-- Product description label -->
             <TextView
                 style="@style/EditableCategoryStyle"
                 android:layout_width="0dp"
@@ -30,7 +28,6 @@
                 android:layout_weight="1"
                 android:text="@string/label_description" />
 
-            <!-- Input field -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -38,9 +35,8 @@
                 android:paddingTop="2dp"
                 android:orientation="vertical">
 
-                <!-- Description EditText field -->
-                <EditText
-                    android:id="@+id/activity_detail_product_base_fields_editable_et_description"
+               <EditText
+                    android:id="@+id/editable_description"
                     style="@style/EditableFieldStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -49,14 +45,12 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Made by container -->
         <LinearLayout
-            android:id="@+id/activity_detail_product_base_fields_editable_container_made_by"
+            android:id="@+id/editable_container_made_by"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <!-- Product made by label -->
             <TextView
                 style="@style/EditableCategoryStyle"
                 android:layout_width="0dp"
@@ -64,7 +58,6 @@
                 android:layout_weight="1"
                 android:text="@string/label_made_by" />
 
-            <!-- Input field -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -72,9 +65,8 @@
                 android:paddingTop="2dp"
                 android:orientation="vertical">
 
-                <!-- Made by EditText field -->
                 <EditText
-                    android:id="@+id/activity_detail_product_base_fields_editable_et_made_by"
+                    android:id="@+id/editable_made_by"
                     style="@style/EditableFieldStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -83,14 +75,12 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Pack size container -->
         <LinearLayout
-            android:id="@+id/activity_detail_product_base_fields_editable_container_pack_size"
+            android:id="@+id/editable_container_pack_size"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <!-- Label -->
             <TextView
                 style="@style/EditableCategoryStyle"
                 android:layout_width="0dp"
@@ -98,7 +88,6 @@
                 android:layout_weight="1"
                 android:text="@string/label_pack_size" />
 
-            <!-- Input field container -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -106,9 +95,8 @@
                 android:paddingTop="2dp"
                 android:orientation="vertical">
 
-                <!-- EditText field -->
                 <EditText
-                    android:id="@+id/activity_detail_product_base_fields_editable_et_pack_size"
+                    android:id="@+id/editable_pack_size"
                     style="@style/EditableFieldStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -117,14 +105,12 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Unit of measure container -->
         <LinearLayout
-            android:id="@+id/activity_detail_product_base_fields_editable_container_UoM"
+            android:id="@+id/editable_container_unit_of_measure"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <!-- Label -->
             <TextView
                 style="@style/EditableCategoryStyle"
                 android:layout_width="0dp"
@@ -132,7 +118,6 @@
                 android:layout_weight="1"
                 android:text="@string/label_UoM" />
 
-            <!-- Input field container -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -140,9 +125,8 @@
                 android:paddingTop="8dp"
                 android:orientation="horizontal">
 
-                <!-- Unit of measure drop-down spinner -->
                 <Spinner
-                    android:id="@+id/activity_detail_product_base_fields_editable_spinner_UoM"
+                    android:id="@+id/spinner_unit_of_measure"
                     style="@style/spinner_style"
                     android:layout_width="0dp"
                     android:layout_weight="5"
@@ -151,21 +135,19 @@
                     android:spinnerMode="dropdown"/>
 
                 <TextView
-                    android:id="@+id/activity_detail_product_base_fields_editable_tv_spinner_UoM_setError"
+                    android:id="@+id/unit_of_measure_error"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="20dp"/>
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Shelf life container -->
         <LinearLayout
-            android:id="@+id/activity_detail_product_base_fields_editable_container_shelf_life"
+            android:id="@+id/editable_container_shelf_life"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <!-- Label -->
             <TextView
                 style="@style/EditableCategoryStyle"
                 android:layout_width="0dp"
@@ -173,7 +155,6 @@
                 android:layout_weight="1"
                 android:text="@string/label_shelf_life" />
 
-            <!-- Input field container -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -181,9 +162,8 @@
                 android:paddingTop="8dp"
                 android:orientation="horizontal">
 
-                <!-- Shelf life drop-down spinner -->
                 <Spinner
-                    android:id="@+id/activity_detail_product_base_fields_editable_spinner_shelf_life"
+                    android:id="@+id/spinner_shelf_life"
                     style="@style/spinner_style"
                     android:layout_width="0dp"
                     android:layout_weight="5"
@@ -192,21 +172,19 @@
                     android:spinnerMode="dropdown" />
 
                 <TextView
-                    android:id="@+id/activity_detail_product_base_fields_editable_tv_spinner_shelf_life_setError"
+                    android:id="@+id/shelf_life_error"
                     android:layout_width="wrap_content"
                     android:layout_weight="1"
                     android:layout_height="20dp"/>
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Product category container -->
         <LinearLayout
-            android:id="@+id/activity_detail_product_base_fields_editable_container_category"
+            android:id="@+id/editable_container_category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <!-- Label -->
             <TextView
                 style="@style/EditableCategoryStyle"
                 android:layout_width="0dp"
@@ -214,7 +192,6 @@
                 android:layout_weight="1"
                 android:text="@string/label_category" />
 
-            <!-- Input field container -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -222,9 +199,8 @@
                 android:paddingTop="8dp"
                 android:orientation="horizontal">
 
-                <!-- Category drop-down spinner -->
                 <Spinner
-                    android:id="@+id/activity_detail_product_base_fields_editable_spinner_category"
+                    android:id="@+id/spinner_category"
                     style="@style/spinner_style"
                     android:layout_width="0dp"
                     android:layout_weight="5"
@@ -233,7 +209,7 @@
                     android:spinnerMode="dropdown" />
 
                 <TextView
-                    android:id="@+id/activity_detail_product_base_fields_editable_tv_spinner_category_setError"
+                    android:id="@+id/category_error"
                     android:layout_width="wrap_content"
                     android:layout_weight="1"
                     android:layout_height="20dp"/>

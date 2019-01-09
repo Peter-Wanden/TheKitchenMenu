@@ -33,13 +33,13 @@
     <string name="label_category">Category</string>
     <string name="label_quantity">Quantity</string>
 
-    <!-- ActivityDetailProd unit of measure spinner options -->
+    <!-- ProductDetail unit of measure spinner options -->
     <string name="uom_option_0">Select measurement</string>
     <string name="uom_option_1">grams</string>
     <string name="uom_option_2">ml</string>
     <string name="uom_option_3">count</string>
 
-    <!-- ActivityDetailProd shelf life spinner options -->
+    <!-- ProductDetail shelf life spinner options -->
     <string name="shelf_life_option_0">Select shelf life</string>
     <string name="shelf_life_option_1">1 day</string>
     <string name="shelf_life_option_2">3 days</string>
@@ -58,7 +58,7 @@
     <string name="shelf_life_option_15">Packet</string>
     <string name="shelf_life_option_16">N/A</string>
 
-    <!-- ActivityDetailProd category spinner options -->
+    <!-- ProductDetail category spinner options -->
     <string name="product_category_option_0">Select category</string>
     <string name="product_category_option_1">Food</string>
     <string name="product_category_option_2">Non food</string>
@@ -71,17 +71,16 @@
     <string name="sign_out">Sign out</string>
 
     <!-- Activity titles -->
-    <string name="activity_detail_product_title_view">Product View</string>
+    <string name="activity_title_view_product">Product View</string>
     <string name="activity_detail_product_title">Product Details</string>
-    <string name="activity_detail_product_title_update">Edit a Product</string>
-    <string name="activity_detail_product_title_add_new">Add a Product</string>
+    <string name="activity_title_edit_product">Edit a Product</string>
+    <string name="activity_title_add_new_product">Add a Product</string>
     <string name="widget_product_title_latest_products">Latest Products</string>
 
-    <!-- ActivityDetailProd user input error codes -->
-    <string name="input_error_product_description_too_short">Description too short, needs to be
-        between 1 and 120 characters.</string>
-    <string name="input_error_product_description_too_long">Description too long, needs to be
-        between 1 and 120 characters.</string>
+    <!-- ProductDetail user input error codes -->
+    <string name="validation_text_too_short">Too short, needs to be
+        between 5 and 120 characters.</string>
+    <string name="validation_text_too_long">To long, needs to be between 1 and 120 characters.</string>
     <string name="input_error_product_made_by_too_short">Manufacturer name too short, needs to be
         between 1 and 120 characters.</string>
     <string name="input_error_product_made_by_too_long">Manufacturer name too long, needs to be
@@ -90,7 +89,7 @@
         between 1 and 120 characters.</string>
     <string name="input_error_product_retailer_too_long">Retailer name too long, needs to be
         between 1 and 120 characters.</string>
-    <string name="input_error_product_pack_size">Pack size needs to be between 1 and 1000</string>
+    <string name="input_error_product_pack_size">Pack size needs to be between 1g and 10kg</string>
     <string name="input_error_product_loc_room_too_short">Storage room name too short, needs to be
         between 1 and 60 characters.</string>
     <string name="input_error_product_loc_room_too_long">Storage room name too long, needs to be
@@ -106,11 +105,11 @@
     <string name="input_error_recipe_description_too_long">Recipe description too long, needs to be
         between 1 and 120 characters</string>
     <string name="input_error_recipe_servings">Recipe must make more than one portion.</string>
-    <string name="activity_detail_product_base_fields_editable_error_UoM">Please select a valid
+    <string name="validation_error_unit_of_measure">Please select a valid
         unit of measure.</string>
-    <string name="activity_detail_product_base_fields_editable_error_shelf_life">Please select a
+    <string name="validation_error_shelf_life">Please select a
         valid shelf life.</string>
-    <string name="activity_detail_product_base_fields_editable_error_category">Please select a valid
+    <string name="validation_error_category">Please select a valid
         category.</string>
     <string name="input_error_product_pack_price">Pack price needs to be between 0.01 and 1000
     </string>
@@ -162,5 +161,11 @@
 
     <!-- Recipe Editor -->
     <string name="title_recipe_editor">Recipe Editor</string>
+
+    <!-- Navigation drawer -->
+    <string name="nav_recipes">Recipes</string>
+    <string name="nav_products">Products</string>
+    <string name="meal_planner">Meal planner</string>
+    <string name="nav_lists">Shopping lists</string>
 
 </resources>

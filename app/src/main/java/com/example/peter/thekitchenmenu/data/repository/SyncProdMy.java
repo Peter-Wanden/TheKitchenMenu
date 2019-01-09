@@ -10,8 +10,8 @@ import com.example.peter.thekitchenmenu.app.HandlerWorker;
 import com.example.peter.thekitchenmenu.app.Singletons;
 import com.example.peter.thekitchenmenu.data.databaseRemote.DataListenerPending;
 import com.example.peter.thekitchenmenu.data.databaseRemote.RemoteDbRefs;
-import com.example.peter.thekitchenmenu.data.entity.DmProdComm;
-import com.example.peter.thekitchenmenu.data.entity.DmProdMy;
+import com.example.peter.thekitchenmenu.data.entity.Product;
+import com.example.peter.thekitchenmenu.data.entity.UsersProductData;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -43,11 +43,11 @@ class SyncProdMy {
     private Message resultMessage;
     private int resultCode = 0;
 
-    private Queue<DmProdMy> remoteData = new LinkedList<>();
-    private List<DmProdMy> batchUpdates = new ArrayList<>();
-    private List<DmProdMy> batchInserts = new ArrayList<>();
+    private Queue<UsersProductData> remoteData = new LinkedList<>();
+    private List<UsersProductData> batchUpdates = new ArrayList<>();
+    private List<UsersProductData> batchInserts = new ArrayList<>();
 
-    private volatile DmProdMy[] mPmArray = new DmProdMy[2];
+    private volatile UsersProductData[] mPmArray = new UsersProductData[2];
 
     SyncProdMy(Context context, RepositoryRemote repositoryRemote) {
         repository = ((Singletons) context).getRepository();
@@ -70,7 +70,7 @@ class SyncProdMy {
         worker.execute(() -> {
             // If exists, get its local counterpart.
             mPmArray[1] = repository.getProdMyByRemoteId(
-                    mPmArray[0].getFbProductReferenceKey());
+                    mPmArray[0].getRemoteProductId());
 
             if (mPmArray[1] != null) {
                 // If exists, add the local elements ID to the remote elements ID
@@ -78,12 +78,12 @@ class SyncProdMy {
             }
 
         }).execute(() -> {
-            // Get the local related DmProdComm using the remote reference ID
-            DmProdComm pc = repository.getProdCommByRemoteId(
-                    mPmArray[0].getFbProductReferenceKey());
+            // Get the local related Product using the remote reference ID
+            Product pc = repository.getProdCommByRemoteId(
+                    mPmArray[0].getRemoteProductId());
 
-            // Add the DmProdComm local ID to the remote DmProdMy
-            mPmArray[0].setCommunityProductId(pc.getId());
+            // Add the Product local ID to the remote UsersProductData
+            mPmArray[0].setProductId(pc.getId());
 
             compareLocalWithRemote();
         });
@@ -91,7 +91,7 @@ class SyncProdMy {
 
     private void compareLocalWithRemote() {
 
-        // If there is no locally matching DmProdMy insert the remote.
+        // If there is no locally matching UsersProductData insert the remote.
         if (mPmArray[1] == null) {
 
             batchInserts.add(mPmArray[0]);
@@ -171,14 +171,14 @@ class SyncProdMy {
 
         DatabaseReference prodMyRef = RemoteDbRefs.getRefProdMy(Constants.getUserId().getValue());
 
-        Queue<DmProdMy> remoteSnapShot = new LinkedList<>();
+        Queue<UsersProductData> remoteSnapShot = new LinkedList<>();
 
         ValueEventListener prodMyVel = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 for (DataSnapshot shot : snapshot.getChildren()) {
-                    DmProdMy pm = shot.getValue(DmProdMy.class);
+                    UsersProductData pm = shot.getValue(UsersProductData.class);
 
                     if (pm != null) {
                         remoteSnapShot.add(pm);
@@ -191,7 +191,7 @@ class SyncProdMy {
                 remoteSnapShot.clear();
                 // Updates the data models status in the RemoteRepository.
                 repositoryRemote.dataSetReturned(
-                        new ModelStatus(DmProdMy.TAG, true));
+                        new ModelStatus(UsersProductData.TAG, true));
             }
 
             @Override

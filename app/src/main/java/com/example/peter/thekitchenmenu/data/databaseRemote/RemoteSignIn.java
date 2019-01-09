@@ -7,8 +7,8 @@ import android.widget.Toast;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
-import com.example.peter.thekitchenmenu.ui.catalog.ProductCatalog;
 
+import com.example.peter.thekitchenmenu.ui.main.MainActivity;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.BuildConfig;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,46 +23,38 @@ import static android.app.Activity.RESULT_OK;
 import static com.example.peter.thekitchenmenu.app.Constants.ANONYMOUS;
 import static com.example.peter.thekitchenmenu.app.Constants.REQUEST_CODE_SIGN_IN;
 
+// For more examples of sign in see:
+// https://github.com/firebase/FirebaseUI-Android/tree/master/auth#sign-in
 public class RemoteSignIn {
 
     private static final String TAG = RemoteSignIn.class.getSimpleName();
 
-    private ProductCatalog mProductCatalog;
+    private MainActivity mainActivity;
 
-    // Authentication instance.
-    private FirebaseAuth mFBAuth;
+    private FirebaseAuth fbAuth;
 
-    // Authentication state listener.
-    private FirebaseAuth.AuthStateListener mFBAuthStateListener;
+    private FirebaseAuth.AuthStateListener authStateListener;
 
-    public RemoteSignIn(ProductCatalog productCatalog) {
-        this.mProductCatalog = productCatalog;
+    // TODO - Implement proper sign out
+    public RemoteSignIn(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
         initialiseFirebase();
     }
 
     private void initialiseFirebase() {
 
-        // Gets an instance of Firebase authentication.
-        mFBAuth = FirebaseAuth.getInstance();
-
-        // Gets a remote configuration instance.
+        fbAuth = FirebaseAuth.getInstance();
         FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
 
-        // Firebase authentication listener (attached in onResume and detached in onPause).
-        // From: Udacity AND Firebase.
-        mFBAuthStateListener = firebaseAuth -> {
-            // Find out if the user is logged in
+        authStateListener = firebaseAuth -> {
             FirebaseUser user = firebaseAuth.getCurrentUser();
 
             if (user != null) {
-                // Update the MutableLiveData user ID static field.
                 onSignedInInitialise(user.getUid());
+
             } else {
-                // User is signed out.
                 Constants.getUserId().setValue(ANONYMOUS);
-                // For more examples of sign in see:
-                // https://github.com/firebase/FirebaseUI-Android/tree/master/auth#sign-in
-                mProductCatalog.startActivityForResult(
+                mainActivity.startActivityForResult(
                         AuthUI.getInstance()
                                 .createSignInIntentBuilder()
                                 .setAvailableProviders(Arrays.asList(
@@ -83,54 +75,37 @@ public class RemoteSignIn {
         firebaseRemoteConfig.setConfigSettings(configSettings);
     }
 
-    /**
-     *  Called by Firebase when user is signed in.
-     * @param userUid - The unique User ID issued by Google (remote database unique ID)
-     */
     private void onSignedInInitialise(String userUid) {
-
-        // Update the MutableLiveData user ID static field. Any listeners to this field will now
-        // spring into action!
         Constants.getUserId().setValue(userUid);
     }
 
-    // Adds or removes the firebase authentication state listener from the authentication instance.
     public void authStateListener(boolean attachState) {
-
-        if (mFBAuthStateListener != null) {
+        if (authStateListener != null) {
             if (attachState) {
-                mFBAuth.addAuthStateListener(mFBAuthStateListener);
+                fbAuth.addAuthStateListener(authStateListener);
             } else {
-                mFBAuth.removeAuthStateListener(mFBAuthStateListener);
+                fbAuth.removeAuthStateListener(authStateListener);
             }
         }
     }
 
-    // Processes the sign in result from the host activity.
     public void signInResult (int requestCode, int resultCode, Intent data) {
-
         if (requestCode == Constants.REQUEST_CODE_SIGN_IN) {
-
             if (resultCode == RESULT_OK) {
-
                 // Sign-in succeeded, set up the UI
-                Toast.makeText(mProductCatalog,
+                Toast.makeText(mainActivity,
                         R.string.sign_in_conformation, Toast.LENGTH_SHORT).show();
 
             } else if (resultCode == RESULT_CANCELED) {
-
-                // Sign in was canceled by the user, finish the activity, exit the app
-                Toast.makeText(mProductCatalog,
+                Toast.makeText(mainActivity,
                         R.string.sign_in_canceled, Toast.LENGTH_SHORT).show();
-                mProductCatalog.finish();
+                mainActivity.finish();
             }
         }
     }
 
-    // Handles sign out
     public void signOut(Context context) {
         Log.i(TAG, "--- User signed out from remote database");
-        // User is signed out.
         Constants.getUserId().setValue(ANONYMOUS);
         AuthUI.getInstance().signOut(context);
     }

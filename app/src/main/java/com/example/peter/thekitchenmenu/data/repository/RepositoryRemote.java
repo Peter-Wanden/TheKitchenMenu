@@ -8,8 +8,8 @@ import android.util.Log;
 
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.app.HandlerWorker;
-import com.example.peter.thekitchenmenu.data.entity.DmProdComm;
-import com.example.peter.thekitchenmenu.data.entity.DmProdMy;
+import com.example.peter.thekitchenmenu.data.entity.Product;
+import com.example.peter.thekitchenmenu.data.entity.UsersProductData;
 
 import java.util.LinkedList;
 
@@ -119,7 +119,7 @@ public class RepositoryRemote {
             switch (dataModel) {
 
                 // Is the data model a ProdComm?
-                case DmProdComm.TAG:
+                case Product.TAG:
 
                     // Is the requested listener state different from its current state?
                     if (syncProdComm.getListenerState() != observedState) {
@@ -128,19 +128,19 @@ public class RepositoryRemote {
                         // If the requested state is to turn the listener on:
                         if (observedState) {
                             // Add the model to the sync queue, with 'data set received' to false.
-                            syncQueue.add(new ModelStatus(DmProdComm.TAG, false));
+                            syncQueue.add(new ModelStatus(Product.TAG, false));
                         }
                     }
                     break;
 
-                case DmProdMy.TAG:
+                case UsersProductData.TAG:
 
                     if (syncProdMy.getListenerState() != observedState) {
 
                         syncProdMy.setListenerState(observedState);
 
                         if (observedState) {
-                            syncQueue.add(new ModelStatus(DmProdMy.TAG, false));
+                            syncQueue.add(new ModelStatus(UsersProductData.TAG, false));
                         }
                     }
                     break;
@@ -163,6 +163,7 @@ public class RepositoryRemote {
                 break;
             }
         }
+
         syncQueue.remove(count);
         syncQueue.add(count, model);
 
@@ -190,17 +191,17 @@ public class RepositoryRemote {
                 // Find out which data models data set has been returned.
                 switch (queueHead.getModelName()) {
 
-                    case DmProdComm.TAG:
+                    case Product.TAG:
 
-                        Log.d(TAG, "processSyncQueue: DmProdComm");
+                        Log.d(TAG, "processSyncQueue: Product");
                         // Send the data to its respective sync class to be processed.
                         syncProdComm.syncRemoteData(handler, worker);
 
                         break;
 
-                    case DmProdMy.TAG:
+                    case UsersProductData.TAG:
 
-                        Log.d(TAG, "processSyncQueue: DmProdMy");
+                        Log.d(TAG, "processSyncQueue: UsersProductData");
                         // Send the data to its respective sync class to be processed.
                         syncProdMy.syncRemoteData(handler, worker);
 

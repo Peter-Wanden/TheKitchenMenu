@@ -28,7 +28,6 @@ public abstract class RemoteDbRefs {
      * @return a reference to /collection_users/[remoteUserId]/collection_products/[productID]
      */
     public static DatabaseReference getRefProdMy(String remoteUserId, String remoteProdRefKey) {
-
         return getRefProdMy(remoteUserId).
                 child(remoteProdRefKey);
     }

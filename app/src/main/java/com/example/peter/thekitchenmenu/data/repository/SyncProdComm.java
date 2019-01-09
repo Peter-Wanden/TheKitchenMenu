@@ -9,7 +9,7 @@ import com.example.peter.thekitchenmenu.app.HandlerWorker;
 import com.example.peter.thekitchenmenu.app.Singletons;
 import com.example.peter.thekitchenmenu.data.databaseRemote.DataListenerPending;
 import com.example.peter.thekitchenmenu.data.databaseRemote.RemoteDbRefs;
-import com.example.peter.thekitchenmenu.data.entity.DmProdComm;
+import com.example.peter.thekitchenmenu.data.entity.Product;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -39,12 +39,12 @@ class SyncProdComm {
     private Handler handler;
     private Message resultMessage;
 
-    private Queue<DmProdComm> remoteData = new LinkedList<>();
-    private List<DmProdComm> batchUpdates = new ArrayList<>();
-    private List<DmProdComm> batchInserts = new ArrayList<>();
+    private Queue<Product> remoteData = new LinkedList<>();
+    private List<Product> batchUpdates = new ArrayList<>();
+    private List<Product> batchInserts = new ArrayList<>();
 
-    private DmProdComm remoteProduct;
-    private DmProdComm localProduct;
+    private Product remoteProduct;
+    private Product localProduct;
 
     SyncProdComm(Context context, RepositoryRemote repositoryRemote) {
         repository = ((Singletons) context).getRepository();
@@ -67,7 +67,7 @@ class SyncProdComm {
 
         worker.execute(() -> {
             // If exists, load local counterpart.
-            localProduct = repository.getProdCommByRemoteId(remoteProduct.getFbProductReferenceKey());
+            localProduct = repository.getProdCommByRemoteId(remoteProduct.getRemoteProductId());
 
             if (localProduct != null) {
                 // If exists, add the local elements ID to the remote elements ID
@@ -138,7 +138,7 @@ class SyncProdComm {
         DatabaseReference prodCommRef = RemoteDbRefs.getRefProdComm();
 
         // A Queue to store the returned data.
-        Queue<DmProdComm> remoteSnapShot = new LinkedList<>();
+        Queue<Product> remoteSnapShot = new LinkedList<>();
 
         // Reports changes in the remote database.
         ValueEventListener prodCommVEL = new ValueEventListener() {
@@ -146,7 +146,7 @@ class SyncProdComm {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 for (DataSnapshot shot : snapshot.getChildren()) {
-                    DmProdComm pc = shot.getValue(DmProdComm.class);
+                    Product pc = shot.getValue(Product.class);
 
                     if (pc != null) {
                         // Add the remote reference key.
@@ -161,7 +161,7 @@ class SyncProdComm {
                 remoteSnapShot.clear();
                 // Updates the data models status in the RemoteRepository.
                 repositoryRemote.dataSetReturned(
-                        new ModelStatus(DmProdComm.TAG, true));
+                        new ModelStatus(Product.TAG, true));
             }
 
             @Override

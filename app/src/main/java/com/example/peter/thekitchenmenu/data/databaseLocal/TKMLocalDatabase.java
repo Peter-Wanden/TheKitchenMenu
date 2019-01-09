@@ -3,9 +3,9 @@ package com.example.peter.thekitchenmenu.data.databaseLocal;
 import android.content.Context;
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
-import com.example.peter.thekitchenmenu.data.entity.DmProdComm;
-import com.example.peter.thekitchenmenu.data.entity.DmProdMy;
-import com.example.peter.thekitchenmenu.data.entity.FtsProdComm;
+import com.example.peter.thekitchenmenu.data.entity.Product;
+import com.example.peter.thekitchenmenu.data.entity.UsersProductData;
+import com.example.peter.thekitchenmenu.data.entity.ProductFastTextSearch;
 
 import java.util.List;
 
@@ -18,16 +18,16 @@ import androidx.room.RoomDatabase;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.TABLE_PROD_COMM;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.PROD_COMM_DESC;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.PROD_COMM_ID;
-import static com.example.peter.thekitchenmenu.data.entity.DmProdComm.PROD_COMM_MADE_BY;
-import static com.example.peter.thekitchenmenu.data.entity.FtsProdComm.TABLE_FTS_PROD_COMM;
+import static com.example.peter.thekitchenmenu.data.entity.Product.TABLE_PRODUCT;
+import static com.example.peter.thekitchenmenu.data.entity.Product.DESCRIPTION;
+import static com.example.peter.thekitchenmenu.data.entity.Product.ID;
+import static com.example.peter.thekitchenmenu.data.entity.Product.MADE_BY;
+import static com.example.peter.thekitchenmenu.data.entity.ProductFastTextSearch.TABLE_FTS_PROD_COMM;
 
 @Database(entities = {
-        DmProdComm.class,
-        DmProdMy.class,
-        FtsProdComm.class},
+        Product.class,
+        UsersProductData.class,
+        ProductFastTextSearch.class},
         version = 2,
         exportSchema = false)
 public abstract class TKMLocalDatabase extends RoomDatabase {
@@ -81,8 +81,8 @@ public abstract class TKMLocalDatabase extends RoomDatabase {
     }
 
     private static void insertData(final TKMLocalDatabase database,
-                                   final List<DmProdComm> prodComms,
-                                   final List<DmProdMy> prodMys) {
+                                   final List<Product> prodComms,
+                                   final List<UsersProductData> prodMys) {
         database.runInTransaction(() -> {
             database.prodCommDAO().insertAll(prodComms);
             database.prodMyDAO().insertAll(prodMys);
@@ -114,15 +114,15 @@ public abstract class TKMLocalDatabase extends RoomDatabase {
             database.execSQL(
                     "CREATE VIRTUAL TABLE IF NOT EXISTS " + TABLE_FTS_PROD_COMM +
                             " USING FTS4(" +
-                            PROD_COMM_DESC + " TEXT, " +
-                            PROD_COMM_MADE_BY + " TEXT, " +
-                            "content=" + TABLE_PROD_COMM + ")");
+                            DESCRIPTION + " TEXT, " +
+                            MADE_BY + " TEXT, " +
+                            "content=" + TABLE_PRODUCT + ")");
 
             database.execSQL(
                     "INSERT INTO " + TABLE_FTS_PROD_COMM +
-                    " (`rowid`, " + PROD_COMM_DESC + ", " + PROD_COMM_MADE_BY + ") "
-                    + "SELECT " + PROD_COMM_ID + ", " + PROD_COMM_DESC + ", " +
-                            PROD_COMM_MADE_BY + " FROM " + TABLE_PROD_COMM);
+                    " (`rowid`, " + DESCRIPTION + ", " + MADE_BY + ") "
+                    + "SELECT " + ID + ", " + DESCRIPTION + ", " +
+                            MADE_BY + " FROM " + TABLE_PRODUCT);
         }
     };
 }

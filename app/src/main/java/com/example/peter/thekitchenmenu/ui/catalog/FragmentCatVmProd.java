@@ -2,16 +2,13 @@ package com.example.peter.thekitchenmenu.ui.catalog;
 
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.peter.thekitchenmenu.R;
-import static com.example.peter.thekitchenmenu.app.Constants.ANONYMOUS;
 
-import com.example.peter.thekitchenmenu.data.entity.DmProdComm;
-import com.example.peter.thekitchenmenu.data.model.VmProd;
+import com.example.peter.thekitchenmenu.data.model.ProductModel;
 import com.example.peter.thekitchenmenu.databinding.FragmentCatalogProductsBinding;
 import com.example.peter.thekitchenmenu.viewmodels.ViewModelCatProd;
 
@@ -21,15 +18,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-/**
- * Displays the {@link DmProdComm} list.
- */
 public class FragmentCatVmProd
         extends Fragment
         implements OnClickVmProd {
@@ -47,18 +40,9 @@ public class FragmentCatVmProd
         mAdapterCatProd = new AdapterCatProdComm(getActivity(), this);
 
         mViewModelProdCommMy = ViewModelProviders.of(getActivity()).get(ViewModelCatProd.class);
-        // Observes changes to the DmProdComm data and passes them to the adapter
+        // Observes changes to the Product data and passes them to the adapter
         mViewModelProdCommMy.getMatchVmProds().observe(
                 this, vmListProd -> mAdapterCatProd.setProducts(vmListProd));
-
-        // Observes changes to the UserId state and passes them to the adaptor.
-        final Observer<String> userIdObserver = userId
-                -> {
-            if (userId !=null && !userId.equals(ANONYMOUS)) {
-                mAdapterCatProd.setUserId(userId);
-            }
-        };
-        mViewModelProdCommMy.getUserId().observe(this, userIdObserver);
     }
 
     @Nullable
@@ -113,7 +97,7 @@ public class FragmentCatVmProd
     }
 
     @Override
-    public void onClick(VmProd clickedVmProd, boolean isCreator) {
-        mViewModelProdCommMy.selectedItem(clickedVmProd, isCreator);
+    public void onClick(ProductModel clickedProduct, boolean isCreator) {
+        mViewModelProdCommMy.selectedItem(clickedProduct, isCreator);
     }
 }

@@ -2,7 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
-        android:id="@+id/activity_detail_product_user_fields_editable_container"
+        android:id="@+id/product_user_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -10,19 +10,17 @@
         android:visibility="gone">
 
         <!--
-                README
                 Visibility for this Layout is set to gone as it is turned on and off
                 programmatically as and when required. If you wish to edit this layout delete this
                 line from above 'android:visibility="gone"' and replace it when done
          -->
 
         <LinearLayout
-            android:id="@+id/activity_detail_product_container_retailer"
+            android:id="@+id/container_retailer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <!-- Label -->
             <TextView
                 style="@style/EditableCategoryStyle"
                 android:layout_width="0dp"
@@ -30,16 +28,14 @@
                 android:layout_weight="1"
                 android:text="@string/label_retailer" />
 
-            <!-- Input field -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:orientation="vertical">
 
-                <!-- EditText field -->
                 <EditText
-                    android:id="@+id/activity_detail_product_et_retailer"
+                    android:id="@+id/editable_retailer"
                     style="@style/EditableFieldStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -49,15 +45,13 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Price container -->
         <LinearLayout
-            android:id="@+id/activity_detail_product_container_price"
+            android:id="@+id/container_price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:baselineAligned="false">
 
-            <!-- Label -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -71,16 +65,14 @@
                     android:text="@string/label_price" />
             </LinearLayout>
 
-            <!-- Input field container -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:orientation="horizontal">
 
-                <!-- EditText field -->
                 <EditText
-                    android:id="@+id/activity_detail_product_et_price"
+                    android:id="@+id/editable_price"
                     style="@style/EditableFieldStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -89,14 +81,12 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Location room container -->
         <LinearLayout
-            android:id="@+id/activity_detail_product_container_location_room"
+            android:id="@+id/container_location_room"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <!-- Label -->
             <TextView
                 style="@style/EditableCategoryStyle"
                 android:layout_width="0dp"
@@ -104,16 +94,14 @@
                 android:layout_weight="1"
                 android:text="@string/label_location_room" />
 
-            <!-- Input field container -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:orientation="vertical">
 
-                <!-- EditText field -->
                 <EditText
-                    android:id="@+id/activity_detail_product_et_location_room"
+                    android:id="@+id/editable_location_room"
                     style="@style/EditableFieldStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -122,14 +110,12 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Location in room container -->
         <LinearLayout
-            android:id="@+id/activity_detail_product_container_location_in_room"
+            android:id="@+id/container_location_in_room"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <!-- Label -->
             <TextView
                 style="@style/EditableCategoryStyle"
                 android:layout_width="0dp"
@@ -137,16 +123,14 @@
                 android:layout_weight="1"
                 android:text="@string/label_location_in_room" />
 
-            <!-- Input field container -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:orientation="vertical">
 
-                <!-- EditText field -->
                 <EditText
-                    android:id="@+id/activity_detail_product_et_location_in_room"
+                    android:id="@+id/editable_location_in_room"
                     style="@style/EditableFieldStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

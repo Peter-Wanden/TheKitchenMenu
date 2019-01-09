@@ -16,13 +16,8 @@ public abstract class Constants {
     public static final String PRODUCT_KEY = "current_product_key";
     public static final String PRODUCT_FB_REFERENCE_KEY = "product_fb_reference_key";
     public static final String PRODUCT_IS_CREATOR_KEY = "product_is_owner_key";
-    public static final String PRODUCT_IS_EXISTING_KEY = "product_is_existing_key";
-    public static final String PRODUCT_PUT_ON_USED_LIST = "product_put_on_used_list_key";
-    public static final String PRODUCT_ON_USED_LIST_KEY = "product_on_used_list_key";
-    public static final String COMM_FIELDS_EDITABLE_STATUS_KEY = "base_fields_editable_status_key";
-    public static final String MY_CUSTOM_FIELDS_EDITABLE_STATUS_KEY = "user_custom_fields_editable_status_key";
 
-    /* Default values for a VmProd */
+    /* Default values for a ProductModel */
     public static final int DEFAULT_PROD_MY_ID = 0;
     public static final String DEFAULT_REMOTE_REF_ID = "no_key";
     public static final String DEFAULT_FB_USED_PRODUCT_ID = "no_used_product_id";
@@ -50,13 +45,8 @@ public abstract class Constants {
     public static final long DEFAULT_COMM_LAST_UPDATE = 0;
 
     /* ***********************
-     * ActivityDetailProd *
+     * ProductDetail *
      *************************/
-
-    /* Screen titles */
-    public static final int ACTIVITY_TITLE_PRODUCT_VIEW = 1;
-    public static final int ACTIVITY_TITLE_PRODUCT_EDIT = 2;
-    public static final int ACTIVITY_TITLE_PRODUCT_ADD = 3;
 
     /* *************
      * Permissions *
@@ -79,12 +69,12 @@ public abstract class Constants {
     public static final String FB_COLLECTION_USERS = "/collection_users/";
     public static final String FB_COLLECTION_USED_PRODUCTS = "/collection_used_products";
     public static final int REQUEST_CODE_SIGN_IN = 5;
-    public static final String ANONYMOUS = "anonymous";
     public static final String FB_STORAGE_IMAGE_REFERENCE = "/collection_product_images/";
 
     /* *******
      * Users *
      *********/
+    public static final String ANONYMOUS = "anonymous";
     public static final String USER_ID_KEY = "user_id_key";
     /*
      * This field is updated when the user logs in / out.
