@@ -17,36 +17,32 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 @Dao
-public interface ProdMyDAO {
+public interface UsersProductDataDAO {
 
-    // Gets all of UsersProductData object stored locally.
     @Query("SELECT * FROM " + TABLE_USERS_PRODUCT_DATA)
     LiveData<List<UsersProductData>> getAll();
 
-    // Gets a list of ProductMys given an array if ID's.
     @Query("SELECT * FROM " + TABLE_USERS_PRODUCT_DATA +
             " WHERE " + ID + " IN(:idArray)")
     LiveData<List<UsersProductData>> getByIdArray(int[] idArray);
 
-    // Gets a single UsersProductData by specifying its ID
     @Query("SELECT * FROM " + TABLE_USERS_PRODUCT_DATA +
             " WHERE " + ID + " = :id")
     LiveData<UsersProductData> getById(int id);
 
-    // Gets a single UsersProductData by specifying is remote database reference
     @Query("SELECT * FROM " + TABLE_USERS_PRODUCT_DATA +
             " WHERE " + REMOTE_PRODUCT_ID + " = :remoteId")
     UsersProductData getByRemoteId(String remoteId);
 
     @Query("SELECT * FROM " + TABLE_USERS_PRODUCT_DATA +
-            " WHERE " + PRODUCT_ID + " = :commId")
-    UsersProductData getByCommId(int commId);
+            " WHERE " + PRODUCT_ID + " = :productId")
+    UsersProductData getByLocalProductId(int productId);
 
     @Insert
     void insert(UsersProductData usersProductData);
 
     @Insert
-    void insertAll(List<UsersProductData> listProdMy);
+    void insertAll(List<UsersProductData> listUsersProductData);
 
     @Update
     void update(UsersProductData usersProductData);

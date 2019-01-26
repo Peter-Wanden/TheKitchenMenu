@@ -3,12 +3,15 @@ package com.example.peter.thekitchenmenu.data.entity;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.example.peter.thekitchenmenu.BR;
 import com.google.firebase.database.Exclude;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.BaseObservable;
+import androidx.databinding.Bindable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
@@ -21,19 +24,21 @@ public class Product implements Parcelable {
 
     public static final String TAG = "Product";
 
-    public static final String TABLE_PRODUCT = "product";
+    public static final String TABLE_PRODUCT = "product_uneditable";
     public static final String ID = "id";
     public static final String DESCRIPTION = "description";
     public static final String MADE_BY = "madeBy";
     public static final String CATEGORY = "category";
+    public static final String MULTI_PACK = "multi_pack";
+    public static final String NUMBER_OF_ITEMS = "number_of_items";
     public static final String SHELF_LIFE = "shelfLife";
     public static final String PACK_SIZE = "packSize";
     public static final String UNIT_OF_MEASURE = "unitOfMeasure";
     public static final String PROD_COMM_PRICE_AVE = "packAvePrice";
     public static final String CREATED_BY = "createdBy";
     public static final String REMOTE_IMAGE_URI = "remoteImageUri";
-    public static final String CREATE_DATE = "createDate";
-    public static final String LAST_UPDATE = "lastUpdate";
+    public static final String CREATE_DATE = "productCreateDate";
+    public static final String LAST_UPDATE = "productLastUpdate";
     public static final String REMOTE_PRODUCT_ID = "remoteProductId";
 
     @Exclude // Excludes field from Firebase, as is only required for Room.
@@ -49,6 +54,12 @@ public class Product implements Parcelable {
 
     @ColumnInfo(name = CATEGORY)
     private int category;
+
+    @ColumnInfo(name = MULTI_PACK)
+    private boolean multiPack;
+
+    @ColumnInfo(name = NUMBER_OF_ITEMS)
+    private int numberOfItems;
 
     @ColumnInfo(name = SHELF_LIFE)
     private int shelfLife;
@@ -84,6 +95,8 @@ public class Product implements Parcelable {
                    String description,
                    String madeBy,
                    int category,
+                   boolean multiPack,
+                   int numberOfItems,
                    int shelfLife,
                    int packSize,
                    int unitOfMeasure,
@@ -98,6 +111,8 @@ public class Product implements Parcelable {
         this.description = description;
         this.madeBy = madeBy;
         this.category = category;
+        this.multiPack = multiPack;
+        this.numberOfItems = numberOfItems;
         this.shelfLife = shelfLife;
         this.packSize = packSize;
         this.unitOfMeasure = unitOfMeasure;
@@ -115,6 +130,8 @@ public class Product implements Parcelable {
         description = in.readString();
         madeBy = in.readString();
         category = in.readInt();
+        multiPack = in.readByte() != 0;
+        numberOfItems = in.readInt();
         shelfLife = in.readInt();
         packSize = in.readInt();
         unitOfMeasure = in.readInt();
@@ -132,6 +149,8 @@ public class Product implements Parcelable {
         dest.writeString(description);
         dest.writeString(madeBy);
         dest.writeInt(category);
+        dest.writeByte((byte) (multiPack ? 1 : 0));
+        dest.writeInt(numberOfItems);
         dest.writeInt(shelfLife);
         dest.writeInt(packSize);
         dest.writeInt(unitOfMeasure);
@@ -160,7 +179,7 @@ public class Product implements Parcelable {
         }
     };
 
-    @Exclude // HashMap for FireBase community product information Map
+    @Exclude // HashMap for FireBase community product_uneditable information Map
     public Map<String, Object> commProductToMap() {
 
         HashMap<String, Object> result = new HashMap<>();
@@ -168,6 +187,8 @@ public class Product implements Parcelable {
         result.put(DESCRIPTION, description);
         result.put(MADE_BY, madeBy);
         result.put(CATEGORY, category);
+        result.put(MULTI_PACK, multiPack);
+        result.put(NUMBER_OF_ITEMS, numberOfItems);
         result.put(SHELF_LIFE, shelfLife);
         result.put(PACK_SIZE, packSize);
         result.put(UNIT_OF_MEASURE, unitOfMeasure);
@@ -182,19 +203,23 @@ public class Product implements Parcelable {
 
     @Override
     public String toString() {
-        return "Product ID: " + this.id + "\n" +
-                "Description: " + description + "\n" +
-                "Made by: " + madeBy + "\n" +
-                "Category: " + category + "\n" +
-                "Shelf life: " + shelfLife + "\n" +
-                "Pack size: " + packSize + "\n" +
-                "Unit of measure: " + unitOfMeasure + "\n" +
-                "Pack price ave: " + packAvePrice + "\n" +
-                "Created by: " + createdBy + "\n" +
-                "Firebase image URI: " + remoteImageUri + "\n" +
-                "Create date: " + createDate + "\n" +
-                "Last update: " + lastUpdate + "\n" +
-                "Product ref key: " + remoteProductId;
+        return "Product { \n" +
+                "\nid=" + id +
+                "\n description='" + description + '\'' +
+                "\n madeBy='" + madeBy + '\'' +
+                "\n category=" + category +
+                "\n multi_pack=" + multiPack +
+                "\n number_of_items=" + numberOfItems +
+                "\n shelfLife=" + shelfLife +
+                "\n packSize=" + packSize +
+                "\n unitOfMeasure=" + unitOfMeasure +
+                "\n packAvePrice=" + packAvePrice +
+                "\n createdBy='" + createdBy + '\'' +
+                "\n remoteImageUri='" + remoteImageUri + '\'' +
+                "\n createDate=" + createDate +
+                "\n lastUpdate=" + lastUpdate +
+                "\n remoteProductId='" + remoteProductId + '\'' +
+                '}';
     }
 
     // Getters and setters
@@ -228,6 +253,22 @@ public class Product implements Parcelable {
 
     public void setCategory(int category) {
         this.category = category;
+    }
+
+    public boolean getMultiPack() {
+        return multiPack;
+    }
+
+    public void setMultiPack(boolean multiPack) {
+        this.multiPack = multiPack;
+    }
+
+    public int getNumberOfItems() {
+        return numberOfItems;
+    }
+
+    public void setNumberOfItems(int numberOfItems) {
+        this.numberOfItems = numberOfItems;
     }
 
     public int getShelfLife() {

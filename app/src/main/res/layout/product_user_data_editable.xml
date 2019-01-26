@@ -1,19 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?><!-- Retailer field container -->
+<?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.peter.thekitchenmenu.viewmodels.ProductMainViewModel">
+        </variable>
+    </data>
 
     <LinearLayout
         android:id="@+id/product_user_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:backgroundTint="@color/lightGrey"
-        android:visibility="gone">
-
-        <!--
-                Visibility for this Layout is set to gone as it is turned on and off
-                programmatically as and when required. If you wish to edit this layout delete this
-                line from above 'android:visibility="gone"' and replace it when done
-         -->
+        android:backgroundTint="@color/lightGrey">
 
         <LinearLayout
             android:id="@+id/container_retailer"

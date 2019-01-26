@@ -10,7 +10,8 @@ import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.model.ProductModel;
 import com.example.peter.thekitchenmenu.databinding.ActivityCatalogProductBinding;
 import com.example.peter.thekitchenmenu.ui.detail.ProductDetail;
-import com.example.peter.thekitchenmenu.viewmodels.ViewModelCatProd;
+import com.example.peter.thekitchenmenu.ui.detail.ProductMain;
+import com.example.peter.thekitchenmenu.viewmodels.ViewModelCatlogProducts;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,12 +23,12 @@ import androidx.viewpager.widget.ViewPager;
 import static com.example.peter.thekitchenmenu.app.Constants.PRODUCT_FB_REFERENCE_KEY;
 import static com.example.peter.thekitchenmenu.app.Constants.PRODUCT_IS_CREATOR_KEY;
 
-public class ProductCatalog extends AppCompatActivity {
+public class ProductCatalogMain extends AppCompatActivity {
 
-    private static final String TAG = "ProductCatalog";
-    ViewModelCatProd viewModel;
+    private static final String TAG = "ProductCatalogMain";
+    ViewModelCatlogProducts viewModel;
     ActivityCatalogProductBinding bindings;
-    AdapterPageCatProd tabPageAdapter;
+    ProductCatalogMainFragmentPageAdapter tabPageAdapter;
     ViewPager tabViewPager;
 
     @Override
@@ -38,7 +39,7 @@ public class ProductCatalog extends AppCompatActivity {
     }
 
     private void setupViewModel() {
-        viewModel = ViewModelProviders.of(this).get(ViewModelCatProd.class);
+        viewModel = ViewModelProviders.of(this).get(ViewModelCatlogProducts.class);
         viewModel.getSelected().observe(this, selectedProduct -> {
             if (selectedProduct != null) {
                 launchDetailActivity(selectedProduct);
@@ -47,7 +48,7 @@ public class ProductCatalog extends AppCompatActivity {
     }
 
     private void launchDetailActivity(ProductModel selectedProduct) {
-        Intent intent = new Intent(ProductCatalog.this, ProductDetail.class);
+        Intent intent = new Intent(ProductCatalogMain.this, ProductDetail.class);
         intent.putExtra(PRODUCT_FB_REFERENCE_KEY, selectedProduct);
         intent.putExtra(PRODUCT_IS_CREATOR_KEY, viewModel.getIsCreator().getValue());
         startActivity(intent);
@@ -58,12 +59,12 @@ public class ProductCatalog extends AppCompatActivity {
     private void initialiseViews() {
         // TODO - Bind views to XML files
         setDefaultKeyMode(DEFAULT_KEYS_SEARCH_LOCAL);
-
         bindings = DataBindingUtil.setContentView(this, R.layout.activity_catalog_product);
         bindings.activityCatalogProductPb.setVisibility(View.GONE);
+
         bindings.activityCatalogProductFab.setOnClickListener(v -> {
-            Intent addProductIntent = new Intent(ProductCatalog.this,
-                    ProductDetail.class);
+            Intent addProductIntent = new Intent(ProductCatalogMain.this,
+                    ProductMain.class);
             startActivity(addProductIntent);
 
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
@@ -73,7 +74,7 @@ public class ProductCatalog extends AppCompatActivity {
         setSupportActionBar(bindings.activityCatalogProductToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        tabPageAdapter = new AdapterPageCatProd(getSupportFragmentManager());
+        tabPageAdapter = new ProductCatalogMainFragmentPageAdapter(getSupportFragmentManager());
         tabViewPager = bindings.activityCatalogProductVp;
         tabViewPager.setAdapter(tabPageAdapter);
 
@@ -87,9 +88,9 @@ public class ProductCatalog extends AppCompatActivity {
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        tabPageAdapter = new AdapterPageCatProd(getSupportFragmentManager());
-        tabPageAdapter.addFragment(new FragmentCatVmProd(), getString(R.string.activity_catalog_products_tab_1_title));
-        tabPageAdapter.addFragment(new FragmentCatVmProdMy(), getString(R.string.activity_catalog_products_tab_2_title));
+        tabPageAdapter = new ProductCatalogMainFragmentPageAdapter(getSupportFragmentManager());
+        tabPageAdapter.addFragment(new ProductCatalogAllProducts(), getString(R.string.activity_catalog_products_tab_1_title));
+        tabPageAdapter.addFragment(new ProductCatalogUsersProducts(), getString(R.string.activity_catalog_products_tab_2_title));
         viewPager.setAdapter(tabPageAdapter);
     }
 

@@ -1,68 +1,33 @@
 package com.example.peter.thekitchenmenu.data.databaseRemote;
 
 import static com.example.peter.thekitchenmenu.app.Constants.FB_COLLECTION_USED_PRODUCTS;
-import static com.example.peter.thekitchenmenu.app.Constants.FB_COLLECTION_USERS;
-import static com.example.peter.thekitchenmenu.app.Constants.FB_COLLECTION_PRODUCTS;
+import static com.example.peter.thekitchenmenu.app.Constants.REMOTE_USER_LOCATION;
+import static com.example.peter.thekitchenmenu.app.Constants.REMOTE_PRODUCT_LOCATION;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public abstract class RemoteDbRefs {
 
-    /**
-     * @param remoteUserId The user ID of the current user.
-     * @return a reference to /collection_users/[remoteUser_id]/collection_products/
-     */
-    public static DatabaseReference getRefProdMy(String remoteUserId) {
-
-        return FirebaseDatabase.
-                getInstance().
-                getReference(FB_COLLECTION_USERS).
-                child(remoteUserId).
-                child(FB_COLLECTION_PRODUCTS);
+    public static DatabaseReference getUserProductData(String remoteUserId) {
+        return FirebaseDatabase.getInstance().getReference(REMOTE_USER_LOCATION).
+                child(remoteUserId).child(REMOTE_PRODUCT_LOCATION);
     }
 
-    /**
-     * @param remoteUserId this users remote database user ID.
-     * @param remoteProdRefKey the remote db product reference ID
-     * @return a reference to /collection_users/[remoteUserId]/collection_products/[productID]
-     */
-    public static DatabaseReference getRefProdMy(String remoteUserId, String remoteProdRefKey) {
-        return getRefProdMy(remoteUserId).
-                child(remoteProdRefKey);
+    public static DatabaseReference getUserProductData(String remoteUserId, String remoteProductId) {
+        return getUserProductData(remoteUserId).
+                child(remoteProductId);
     }
 
-    /**
-     * Returns a database reference that points to the list of community products
-     * @return a reference to /collection_products/
-     */
-    public static DatabaseReference getRefProdComm() {
-
-        return FirebaseDatabase.
-                getInstance().
-                getReference(FB_COLLECTION_PRODUCTS);
+    public static DatabaseReference getRemoteProductData() {
+        return FirebaseDatabase.getInstance().getReference(REMOTE_PRODUCT_LOCATION);
     }
 
-    /**
-     * @return a reference to /collection_users/
-     */
-    public static DatabaseReference getRefUsers() {
-
-        return FirebaseDatabase.
-                getInstance().
-                getReference().
-                child(FB_COLLECTION_USERS);
+    public static DatabaseReference getRemoteUsers() {
+        return FirebaseDatabase.getInstance().getReference().child(REMOTE_USER_LOCATION);
     }
 
-    /**
-     * @return a reference to /collection_used_products/
-     */
-    public static DatabaseReference getRefUserProd() {
-
-        return FirebaseDatabase.
-                getInstance().
-                getReference().
-                child(FB_COLLECTION_USED_PRODUCTS);
+    public static DatabaseReference getUsersProducts() {
+        return FirebaseDatabase.getInstance().getReference().child(FB_COLLECTION_USED_PRODUCTS);
     }
-
 }

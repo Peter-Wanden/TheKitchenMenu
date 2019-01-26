@@ -27,12 +27,9 @@ import static com.example.peter.thekitchenmenu.app.Constants.REQUEST_CODE_SIGN_I
 // https://github.com/firebase/FirebaseUI-Android/tree/master/auth#sign-in
 public class RemoteSignIn {
 
-    private static final String TAG = RemoteSignIn.class.getSimpleName();
-
+    private static final String TAG = "RemoteSignIn";
     private MainActivity mainActivity;
-
     private FirebaseAuth fbAuth;
-
     private FirebaseAuth.AuthStateListener authStateListener;
 
     // TODO - Implement proper sign out
@@ -42,9 +39,8 @@ public class RemoteSignIn {
     }
 
     private void initialiseFirebase() {
-
         fbAuth = FirebaseAuth.getInstance();
-        FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+        FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.getInstance();
 
         authStateListener = firebaseAuth -> {
             FirebaseUser user = firebaseAuth.getCurrentUser();
@@ -72,7 +68,7 @@ public class RemoteSignIn {
         FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
                 .setDeveloperModeEnabled(BuildConfig.DEBUG)
                 .build();
-        firebaseRemoteConfig.setConfigSettings(configSettings);
+        remoteConfig.setConfigSettings(configSettings);
     }
 
     private void onSignedInInitialise(String userUid) {

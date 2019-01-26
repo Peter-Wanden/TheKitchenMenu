@@ -18,11 +18,11 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class AdapterCatProdComm
+public class ProductCatalogRecyclerAdapter
         extends
-        RecyclerView.Adapter<AdapterCatProdComm.AdapterCatProdViewHolder> {
+        RecyclerView.Adapter<ProductCatalogRecyclerAdapter.AdapterCatProdViewHolder> {
 
-    private static final String TAG = AdapterCatProdComm.class.getSimpleName();
+    private static final String TAG = ProductCatalogRecyclerAdapter.class.getSimpleName();
 
     // The context we use for utility methods, app resources and layout inflaters
     private final Context context;
@@ -31,9 +31,9 @@ public class AdapterCatProdComm
     private List<ProductModel> listProductModel;
 
     // Click interface
-    final private OnClickVmProd clickHandler;
+    final private OnClickProduct clickHandler;
 
-    AdapterCatProdComm(Context context, OnClickVmProd clickHandler) {
+    ProductCatalogRecyclerAdapter(Context context, OnClickProduct clickHandler) {
         this.context = context;
         this.clickHandler = clickHandler;
     }
@@ -57,7 +57,7 @@ public class AdapterCatProdComm
             @NonNull AdapterCatProdViewHolder holder,
             int position) {
 
-        /* Get the product at the passed in position */
+        /* Get the product_uneditable at the passed in position */
         ProductModel productModel = listProductModel.get(position);
 
         /* Set the description */
@@ -65,8 +65,8 @@ public class AdapterCatProdComm
 
         // TODO - Picasso, add image caching.
         /* Get and set the image */
-        if (!productModel.getFbStorageImageUri().equals("")) {
-            Picasso.get().load(productModel.getFbStorageImageUri()).into(holder.prodIV);
+        if (!productModel.getRemoteImageUri().equals("")) {
+            Picasso.get().load(productModel.getRemoteImageUri()).into(holder.prodIV);
         } else {
             Picasso.get().load(R.drawable.placeholder).into(holder.prodIV);
         }
@@ -125,14 +125,14 @@ public class AdapterCatProdComm
 
         public void onClick(View v) {
 
-            // Get the product from the adapter at the clicked position
+            // Get the product_uneditable from the adapter at the clicked position
             ProductModel productModel = listProductModel.get(getAdapterPosition());
 
-            // Find out if this user was the creator of the product
+            // Find out if this user was the creator of the product_uneditable
             boolean isCreator = Constants.getUserId().getValue().
                     equals(productModel.getCreatedBy());
 
-            // Click handler for this product type
+            // Click handler for this product_uneditable type
             clickHandler.onClick(productModel, isCreator);
         }
     }

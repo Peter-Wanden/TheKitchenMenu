@@ -10,12 +10,12 @@ public class MediatorLiveDataActive<T> extends MediatorLiveData<T> {
 
     private static final String TAG = "MediatorLiveDataActive";
 
-    private Repository mRepository;
-    private String mDataModel;
+    private Repository repository;
+    private String dataModel;
 
     MediatorLiveDataActive(Repository repository, String dataModel) {
-        mRepository = repository;
-        mDataModel = dataModel;
+        this.repository = repository;
+        this.dataModel = dataModel;
     }
 
     @Override
@@ -31,9 +31,6 @@ public class MediatorLiveDataActive<T> extends MediatorLiveData<T> {
     }
 
     private void updateDataModelStatus(boolean isActive) {
-        mRepository.observedStateChange(mDataModel, isActive);
+        repository.observedStateChange(dataModel, isActive);
     }
-
-
-
 }

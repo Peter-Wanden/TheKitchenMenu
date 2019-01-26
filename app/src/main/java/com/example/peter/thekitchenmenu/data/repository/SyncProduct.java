@@ -26,9 +26,9 @@ import androidx.annotation.NonNull;
  * Synchronises an incoming remote with a local data model. Giving preference to the remote item.
  * https://www.youtube.com/watch?v=998tPb10DFM&list=PL6nth5sRD25hVezlyqlBO9dafKMc5fAU2&index=6
  */
-class SyncProdComm {
+class SyncProduct {
 
-    private static final String TAG = "SyncProdComm";
+    private static final String TAG = "SyncProduct";
 
     private Repository repository;
     private RepositoryRemote repositoryRemote;
@@ -46,7 +46,7 @@ class SyncProdComm {
     private Product remoteProduct;
     private Product localProduct;
 
-    SyncProdComm(Context context, RepositoryRemote repositoryRemote) {
+    SyncProduct(Context context, RepositoryRemote repositoryRemote) {
         repository = ((Singletons) context).getRepository();
         this.repositoryRemote = repositoryRemote;
         resultMessage = Message.obtain();
@@ -64,10 +64,11 @@ class SyncProdComm {
         localProduct = null;
 
         remoteProduct = remoteData.peek();
+        Log.d(TAG, "matchWithLocalProduct: " + remoteProduct.toString());
 
         worker.execute(() -> {
             // If exists, load local counterpart.
-            localProduct = repository.getProdCommByRemoteId(remoteProduct.getRemoteProductId());
+            localProduct = repository.getProductByRemoteId(remoteProduct.getRemoteProductId());
 
             if (localProduct != null) {
                 // If exists, add the local elements ID to the remote elements ID
@@ -112,14 +113,14 @@ class SyncProdComm {
             worker.execute(() -> {
 
                 if (batchInserts.size() > 0) {
-                    repository.insertAllProdComm(batchInserts);
+                    repository.insertAllProducts(batchInserts);
                     batchInserts.clear();
                 }
             }
 
             ).execute(() -> {
                 if (batchUpdates.size() > 0) {
-                    repository.updateAllProdComm(batchUpdates);
+                    repository.updateProducts(batchUpdates);
                     batchUpdates.clear();
                 }
 
@@ -130,12 +131,12 @@ class SyncProdComm {
         }
     }
 
-    // Sets up the listener for this class
+    // Sets up the listener for this class.
     private void initialiseVel() {
         Log.d(TAG, "initialiseVel: called");
 
         // Database reference to the community products location in Firebase.
-        DatabaseReference prodCommRef = RemoteDbRefs.getRefProdComm();
+        DatabaseReference prodCommRef = RemoteDbRefs.getRemoteProductData();
 
         // A Queue to store the returned data.
         Queue<Product> remoteSnapShot = new LinkedList<>();
@@ -146,22 +147,22 @@ class SyncProdComm {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 for (DataSnapshot shot : snapshot.getChildren()) {
-                    Product pc = shot.getValue(Product.class);
+                    Product product = shot.getValue(Product.class);
 
-                    if (pc != null) {
+                    if (product != null) {
                         // Add the remote reference key.
-                        pc.setRemoteProdRefKey(shot.getKey());
-                        remoteSnapShot.add(pc);
+                        product.setRemoteProdRefKey(shot.getKey());
+                        remoteSnapShot.add(product);
                     }
                 }
                 // Copies the remote data for processing.
                 remoteData.addAll(remoteSnapShot);
-                Log.d(TAG, "onDataChange: returned: " + SyncProdComm.this.remoteData.size() + " objects");
+                Log.d(TAG, "onDataChange: returned: " + SyncProduct.this.remoteData.size() + " objects");
                 // Clears down remote data queue.
                 remoteSnapShot.clear();
                 // Updates the data models status in the RemoteRepository.
-                repositoryRemote.dataSetReturned(
-                        new ModelStatus(Product.TAG, true));
+                repositoryRemote.dataSetReturned(new ModelStatus(
+                        Product.TAG, true, remoteData.size()));
             }
 
             @Override
@@ -179,8 +180,8 @@ class SyncProdComm {
         if (listenerPending == null) {
             initialiseVel();
         }
-        Log.d(TAG, "getListenerState: " + listenerPending.getListenerState());
-        return listenerPending.getListenerState();
+        Log.d(TAG, "getListenerIsAttached: " + listenerPending.getListenerIsAttached());
+        return listenerPending.getListenerIsAttached();
     }
 
     // Sets the listeners state
@@ -188,7 +189,7 @@ class SyncProdComm {
         if (listenerPending == null) {
             initialiseVel();
         }
-        Log.d(TAG, "setListenerState: " + requestedState);
-        listenerPending.setListenerState(requestedState);
+        Log.d(TAG, "setListenerIsAttached: " + requestedState);
+        listenerPending.setListenerIsAttached(requestedState);
     }
 }

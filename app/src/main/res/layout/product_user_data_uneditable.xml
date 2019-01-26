@@ -3,17 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.peter.thekitchenmenu.viewmodels.ProductMainViewModel">
+        </variable>
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/product_user_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
-
-        <!--
-                Visibility for this Layout is set to gone as it is turned on and off
-                programmatically as and when required. If you wish to edit this layout delete this
-                line from above 'android:visibility="gone"' and replace it when done
-         -->
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/retailer_label"
@@ -96,15 +96,13 @@
             android:gravity="bottom"
             app:layout_constraintStart_toStartOf="@+id/guideline"
             app:layout_constraintTop_toBottomOf="@+id/location_room"
-            tools:text="Cupboard under sink"
-            />
+            tools:text="Cupboard under sink" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_begin="116dp"
-            />
+            app:layout_constraintGuide_begin="116dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

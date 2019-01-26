@@ -49,7 +49,7 @@ public class SuggestionsProvider extends ContentProvider {
 
             // Get the cursor async and append a wildcard.
             Singletons singletons = new Singletons();
-            return singletons.getRepository().searchProducts(selectionArgs[0] + "*");
+            return singletons.getRepository().findProductsThatMatch(selectionArgs[0] + "*");
 
         } else {
             throw new IllegalArgumentException("Unknown URI: " + uri);

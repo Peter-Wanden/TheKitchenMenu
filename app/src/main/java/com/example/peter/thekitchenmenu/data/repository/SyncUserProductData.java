@@ -29,9 +29,9 @@ import androidx.annotation.NonNull;
  * Synchronises an incoming remote with a local item. Giving preference to the remote item.
  * https://www.youtube.com/watch?v=998tPb10DFM&list=PL6nth5sRD25hVezlyqlBO9dafKMc5fAU2&index=6
  */
-class SyncProdMy {
+class SyncUserProductData {
 
-    private static final String TAG = "SyncProdMy";
+    private static final String TAG = "SyncUserProductData";
 
     private Repository repository;
     private RepositoryRemote repositoryRemote;
@@ -49,7 +49,7 @@ class SyncProdMy {
 
     private volatile UsersProductData[] mPmArray = new UsersProductData[2];
 
-    SyncProdMy(Context context, RepositoryRemote repositoryRemote) {
+    SyncUserProductData(Context context, RepositoryRemote repositoryRemote) {
         repository = ((Singletons) context).getRepository();
         this.repositoryRemote = repositoryRemote;
         resultMessage = Message.obtain();
@@ -64,12 +64,12 @@ class SyncProdMy {
 
     private void findLocalCopy() {
 
-        // Load remote product.
+        // Load remote product_uneditable.
         mPmArray[0] = remoteData.peek();
 
         worker.execute(() -> {
             // If exists, get its local counterpart.
-            mPmArray[1] = repository.getProdMyByRemoteId(
+            mPmArray[1] = repository.getUserProductDataByRemoteId(
                     mPmArray[0].getRemoteProductId());
 
             if (mPmArray[1] != null) {
@@ -79,7 +79,7 @@ class SyncProdMy {
 
         }).execute(() -> {
             // Get the local related Product using the remote reference ID
-            Product pc = repository.getProdCommByRemoteId(
+            Product pc = repository.getProductByRemoteId(
                     mPmArray[0].getRemoteProductId());
 
             // Add the Product local ID to the remote UsersProductData
@@ -129,7 +129,7 @@ class SyncProdMy {
                 Log.d(TAG, "nextPlease: Saving: " + batchInserts.size() + " inserts to database.");
 
                 if (batchInserts.size() > 0) {
-                    repository.insertAllProdMy(batchInserts);
+                    repository.insertAllUserProductData(batchInserts);
                     batchInserts.clear();
 
                     // Work is complete, inform handler.
@@ -145,7 +145,7 @@ class SyncProdMy {
                 Log.d(TAG, "nextPlease: Saving:" + batchUpdates.size() + " updates to database.");
                 if(batchUpdates.size() > 0) {
 
-                    repository.updateAllProdMy(batchUpdates);
+                    repository.updateUsersProductData(batchUpdates);
                     batchUpdates.clear();
 
                     resultCode += 3; // updates complete.
@@ -163,13 +163,11 @@ class SyncProdMy {
         }
     }
 
-    /**
-     * Sets up the remote listener for this class
-     */
+    // Sets up the remote listener for this class.
     private void initialiseVel() {
         Log.d(TAG, "initialiseVel: called");
 
-        DatabaseReference prodMyRef = RemoteDbRefs.getRefProdMy(Constants.getUserId().getValue());
+        DatabaseReference prodMyRef = RemoteDbRefs.getUserProductData(Constants.getUserId().getValue());
 
         Queue<UsersProductData> remoteSnapShot = new LinkedList<>();
 
@@ -186,12 +184,12 @@ class SyncProdMy {
                 }
                 // Copies the remote data for processing.
                 remoteData.addAll(remoteSnapShot);
-                Log.d(TAG, "onDataChange: returned: " + SyncProdMy.this.remoteData.size() + " objects");
+                Log.d(TAG, "onDataChange: returned: " + SyncUserProductData.this.remoteData.size() + " objects");
                 // Clears down remote data queue.
                 remoteSnapShot.clear();
                 // Updates the data models status in the RemoteRepository.
-                repositoryRemote.dataSetReturned(
-                        new ModelStatus(UsersProductData.TAG, true));
+                repositoryRemote.dataSetReturned(new ModelStatus(
+                        UsersProductData.TAG, true, remoteData.size()));
             }
 
             @Override
@@ -207,8 +205,8 @@ class SyncProdMy {
         if (listenerPending == null) {
             initialiseVel();
         }
-        Log.d(TAG, "getListenerState: " + listenerPending.getListenerState());
-        return listenerPending.getListenerState();
+        Log.d(TAG, "getListenerIsAttached: " + listenerPending.getListenerIsAttached());
+        return listenerPending.getListenerIsAttached();
     }
 
     // Sets the listeners state
@@ -216,7 +214,7 @@ class SyncProdMy {
         if (listenerPending == null) {
             initialiseVel();
         }
-        Log.d(TAG, "setListenerState: " + requestedState);
-        listenerPending.setListenerState(requestedState);
+        Log.d(TAG, "setListenerIsAttached: " + requestedState);
+        listenerPending.setListenerIsAttached(requestedState);
     }
 }

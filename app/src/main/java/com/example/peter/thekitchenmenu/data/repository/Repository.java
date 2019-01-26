@@ -15,31 +15,31 @@ import androidx.lifecycle.LiveData;
 public class Repository {
 
     private static final String TAG = "Repository";
-
     private static Repository sInstance;
+    private final TKMLocalDatabase database;
+    private final SyncManager syncManager;
 
-    private final TKMLocalDatabase mDatabase;
-    private final SyncManager mSyncManager;
-
-    private MediatorLiveDataActive<List<UsersProductData>> mObservableProdMys;
-    private MediatorLiveDataActive<List<Product>> mObservableProdComm;
+    private MediatorLiveDataActive<List<UsersProductData>> observableUsersProductData;
+    private MediatorLiveDataActive<List<Product>> observableProducts;
 
     private Repository(final Context context, final TKMLocalDatabase database) {
 
-        mDatabase = database;
-        mSyncManager = new SyncManager(context);
+        this.database = database;
+        syncManager = new SyncManager(context);
 
-        mObservableProdComm = new MediatorLiveDataActive<>(this, Product.TAG);
-        mObservableProdComm.addSource(mDatabase.prodCommDAO().getAll(), prodComm -> {
-            if (mDatabase.getDatabaseCreated().getValue() != null) {
-                mObservableProdComm.postValue(prodComm);
+        observableProducts = new MediatorLiveDataActive<>(this, Product.TAG);
+        observableProducts.addSource(this.database.productDAO().getAll(),
+                products -> {
+            if (this.database.getDatabaseCreated().getValue() != null) {
+                observableProducts.postValue(products);
             }
         });
 
-        mObservableProdMys = new MediatorLiveDataActive<>(this, UsersProductData.TAG);
-        mObservableProdMys.addSource(mDatabase.prodMyDAO().getAll(), prodMy -> {
-            if (mDatabase.getDatabaseCreated().getValue() != null) {
-                mObservableProdMys.postValue(prodMy);
+        observableUsersProductData = new MediatorLiveDataActive<>(this, UsersProductData.TAG);
+        observableUsersProductData.addSource(this.database.userProductDataDAO().getAll(),
+                usersProductData -> {
+            if (this.database.getDatabaseCreated().getValue() != null) {
+                observableUsersProductData.postValue(usersProductData);
             }
         });
     }
@@ -57,42 +57,42 @@ public class Repository {
 
     void observedStateChange(String dataModel, boolean observedState) {
         Log.d(TAG, "observedStateChange: " + dataModel + " to: " + observedState);
-        mSyncManager.setModelToSync(dataModel, observedState);
+        syncManager.setModelToSync(dataModel, observedState);
     }
 
-    public LiveData<List<Product>> getAllProdComm() {
-        return mObservableProdComm;
+    public LiveData<List<Product>> getAllProducts() {
+        return observableProducts;
     }
 
-    public LiveData<List<UsersProductData>> getAllProdMys() {
-        return mObservableProdMys;
+    public LiveData<List<UsersProductData>> getAllUserProductData() {
+        return observableUsersProductData;
     }
 
-    Product getProdCommByRemoteId(String remoteId) {
-        return mDatabase.prodCommDAO().getByRemoteId(remoteId);
+    Product getProductByRemoteId(String remoteId) {
+        return database.productDAO().getByRemoteId(remoteId);
     }
 
-    UsersProductData getProdMyByRemoteId(String remoteId) {
-        return mDatabase.prodMyDAO().getByRemoteId(remoteId);
+    UsersProductData getUserProductDataByRemoteId(String remoteId) {
+        return database.userProductDataDAO().getByRemoteId(remoteId);
     }
 
-    void insertAllProdComm (List<Product> listProdComm) {
-        mDatabase.prodCommDAO().insertAll(listProdComm);
+    void insertAllProducts(List<Product> productsToInsert) {
+        database.productDAO().insertAll(productsToInsert);
     }
 
-    void insertAllProdMy(List<UsersProductData> listProdMy) {
-        mDatabase.prodMyDAO().insertAll(listProdMy);
+    void insertAllUserProductData(List<UsersProductData> userProductDataToInsert) {
+        database.userProductDataDAO().insertAll(userProductDataToInsert);
     }
 
-    void updateAllProdComm (List<Product> listProdComm) {
-        mDatabase.prodCommDAO().updateAll(listProdComm);
+    void updateProducts(List<Product> productsToUpdate) {
+        database.productDAO().updateAll(productsToUpdate);
     }
 
-    void updateAllProdMy(List<UsersProductData> listProdMy) {
-        mDatabase.prodMyDAO().updateAll(listProdMy);
+    void updateUsersProductData(List<UsersProductData> usersProductDataToUpdate) {
+        database.userProductDataDAO().updateAll(usersProductDataToUpdate);
     }
 
-    public Cursor searchProducts(String query) {
-        return mDatabase.prodCommDAO().searchAllProducts(query);
+    public Cursor findProductsThatMatch(String searchQuery) {
+        return database.productDAO().findProductsThatMatch(searchQuery);
     }
 }

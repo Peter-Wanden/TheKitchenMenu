@@ -31,8 +31,8 @@ public class UsersProductData implements Parcelable {
     public static final String LOCATION_IN_ROOM = "locationInRoom";
     public static final String PRICE = "price";
     public static final String LOCAL_IMAGE_URI = "localImageUri";
-    public static final String CREATE_DATE = "createDate";
-    public static final String LAST_UPDATE = "lastUpdate";
+    public static final String CREATE_DATE = "usersProductDataCreateDate";
+    public static final String LAST_UPDATE = "usersProductDataLastUpdate";
 
     @Exclude // Exclude field from Firebase, as is only required for Room.
     @PrimaryKey(autoGenerate = true)

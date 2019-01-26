@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="productMainViewModel"
+            type="com.example.peter.thekitchenmenu.viewmodels.ProductMainViewModel">
+        </variable>
+    </data>
+
+    <RelativeLayout
+        android:id="@+id/product_editor_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
+            android:onClick="@{() -> productMainViewModel.onFabClick()}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/fab_margin"
+            android:src="@drawable/ic_action_done"
+            android:tint="@color/white"
+            app:backgroundTint="@color/textColorHighlight"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"/>
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            app:title="@{productMainViewModel.title}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/primaryColor"
+            android:elevation="@dimen/starting_elevation"
+            android:fitsSystemWindows="true"
+            android:layout_alignParentTop="true"/>
+
+            <ScrollView
+                android:id="@+id/scroll_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/toolbar">
+
+                <LinearLayout
+                    android:id="@+id/product_editor_include_parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <fragment
+                        android:id="@+id/image_editor"
+                        android:name="com.example.peter.thekitchenmenu.ui.detail.ProductImageEditor"
+                        android:layout_width="match_parent"
+                        android:layout_height="250dp"
+                        bind:layout="@layout/product_image_editable">
+                    </fragment>
+
+                    <fragment
+                        android:id="@+id/product_editor"
+                        android:name="com.example.peter.thekitchenmenu.ui.detail.ProductEditor"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        bind:layout="@layout/product_editor">
+                    </fragment>
+
+                    <fragment
+                        android:id="@+id/product_user_data_editor"
+                        android:name="com.example.peter.thekitchenmenu.ui.detail.ProductUserDataEditor"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        bind:layout="@layout/product_user_data_editable">
+                    </fragment>
+
+                    <include
+                        android:id="@+id/product_image_uneditable"
+                        layout="@layout/product_image_uneditable"
+                        bind:viewModel="@{productMainViewModel}">
+                    </include>
+
+                    <include
+                        android:id="@+id/product_uneditable"
+                        layout="@layout/product_uneditable"
+                        bind:viewModel="@{productMainViewModel}">
+                    </include>
+
+                    <include
+                        android:id="@+id/product_user_data_uneditable"
+                        layout="@layout/product_user_data_uneditable"
+                        bind:viewModel="@{productMainViewModel}">
+                    </include>
+                </LinearLayout>
+            </ScrollView>
+    </RelativeLayout>
+</layout>

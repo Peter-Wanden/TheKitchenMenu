@@ -1,48 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--
-    These are the options displayed in the activity_product_detail unit of measure drop-down
-    Spinner. The string values of these options can be found in strings.xml.
+    These are the options displayed in the activity_product_detail drop-down spinners. The string
+    values of these options can be found in strings.xml.
     -->
-    <string-array name="array_UoM_metric_options">
-        <item>@string/uom_option_0</item>
-        <item>@string/uom_option_1</item>
-        <item>@string/uom_option_2</item>
-        <item>@string/uom_option_3</item>
+    <string-array name="unit_of_measure_options">
+        <item>@string/unit_of_measure_default</item>
+        <item>@string/grams</item>
+        <item>@string/kilograms</item>
+        <item>@string/millilitres</item>
+        <item>@string/litres</item>
+        <item>@string/count</item>
+        <item>@string/each</item>
+        <item>@string/piece</item>
+        <item>@string/items</item>
     </string-array>
 
-    <!--
-    These are the options displayed in the activity_product_detail shelf life drop-down Spinner.
-    The string values of these options can be found in strings.xml.
-    -->
-    <string-array name="array_shelf_life_options">
-        <item>@string/shelf_life_option_0</item>
-        <item>@string/shelf_life_option_1</item>
-        <item>@string/shelf_life_option_2</item>
-        <item>@string/shelf_life_option_3</item>
-        <item>@string/shelf_life_option_4</item>
-        <item>@string/shelf_life_option_5</item>
-        <item>@string/shelf_life_option_6</item>
-        <item>@string/shelf_life_option_7</item>
-        <item>@string/shelf_life_option_8</item>
-        <item>@string/shelf_life_option_9</item>
-        <item>@string/shelf_life_option_10</item>
-        <item>@string/shelf_life_option_11</item>
-        <item>@string/shelf_life_option_12</item>
-        <item>@string/shelf_life_option_13</item>
-        <item>@string/shelf_life_option_14</item>
-        <item>@string/shelf_life_option_15</item>
-        <item>@string/shelf_life_option_16</item>
+    <string-array name="shelf_life_options">
+        <item>@string/shelf_life_default</item>
+        <item>@string/one_day</item>
+        <item>@string/three_days</item>
+        <item>@string/five_days</item>
+        <item>@string/one_week</item>
+        <item>@string/two_weeks</item>
+        <item>@string/three_weeks</item>
+        <item>@string/four_weeks</item>
+        <item>@string/frozen</item>
+        <item>@string/dried</item>
+        <item>@string/sealed</item>
+        <item>@string/tin</item>
+        <item>@string/jar</item>
+        <item>@string/bottle</item>
+        <item>@string/box</item>
+        <item>@string/packet</item>
+        <item>@string/not_applicable</item>
     </string-array>
 
-    <!--
-    These are the options displayed in the activity_product_detail category drop-down
-    Spinner. The string values of these options can be found in strings.xml.
-    -->
-    <string-array name="array_product_category_options">
-        <item>@string/product_category_option_0</item>
-        <item>@string/product_category_option_1</item>
-        <item>@string/product_category_option_2</item>
+    <string-array name="product_category_options">
+        <item>@string/category_default</item>
+        <item>@string/food</item>
+        <item>@string/non_food</item>
     </string-array>
-
 </resources>

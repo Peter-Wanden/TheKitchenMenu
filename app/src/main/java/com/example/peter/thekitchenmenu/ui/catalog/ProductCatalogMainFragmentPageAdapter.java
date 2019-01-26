@@ -9,35 +9,35 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 /**
- * Paging adaptor for the tabs and fragments displayed in {@link ProductCatalog}
+ * Paging adaptor for the tabs and fragments displayed in {@link ProductCatalogMain}
  */
-public class AdapterPageCatProd extends FragmentPagerAdapter {
+public class ProductCatalogMainFragmentPageAdapter extends FragmentPagerAdapter {
 
-    private final List<Fragment> mFragments = new ArrayList<>();
-    private final List<String> mFragmentTitles = new ArrayList<>();
+    private final List<Fragment> fragments = new ArrayList<>();
+    private final List<String> fragmentTitles = new ArrayList<>();
 
-    AdapterPageCatProd(FragmentManager fm) {
+    ProductCatalogMainFragmentPageAdapter(FragmentManager fm) {
         super(fm);
     }
 
     void addFragment(Fragment fragment, String title) {
-        mFragments.add(fragment);
-        mFragmentTitles.add(title);
+        fragments.add(fragment);
+        fragmentTitles.add(title);
     }
 
     @Override
     public Fragment getItem(int position) {
-        return mFragments.get(position);
+        return fragments.get(position);
     }
 
     @Override
     public int getCount() {
-        return mFragments.size();
+        return fragments.size();
     }
 
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
-        return mFragmentTitles.get(position);
+        return fragmentTitles.get(position);
     }
 }

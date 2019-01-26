@@ -74,7 +74,7 @@
 
         <!-- Activity to view lists of products -->
         <activity
-            android:name=".ui.catalog.ProductCatalog"
+            android:name=".ui.catalog.ProductCatalogMain"
             android:label="@string/title_product_catalog"
             android:theme="@style/AppTheme"
             android:parentActivityName=".ui.main.MainActivity">
@@ -91,11 +91,12 @@
             android:theme="@style/AppTheme">
         </activity>
 
-        <activity android:name=".ui.detail.ProductEditor" />
+        <activity android:name=".ui.detail.ProductMain"
+            android:theme="@style/AppTheme"/>
 
         <!-- Searchable activity for finding Products -->
         <activity
-            android:name=".ui.catalog.ActivitySearchProd"
+            android:name=".ui.catalog.SearchProducts"
             android:launchMode="singleTop">
             <!-- Receives a query with a request to SEARCH -->
             <intent-filter>

@@ -10,9 +10,9 @@ import com.example.peter.thekitchenmenu.R;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class ActivitySearchProd extends AppCompatActivity {
+public class SearchProducts extends AppCompatActivity {
 
-    private static final String TAG = ActivitySearchProd.class.getSimpleName();
+    private static final String TAG = SearchProducts.class.getSimpleName();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

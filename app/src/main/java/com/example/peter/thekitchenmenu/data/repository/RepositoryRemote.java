@@ -31,7 +31,7 @@ import java.util.LinkedList;
  * When the VEL returns a data set:
  * RepositoryRemote checks the first item in the sync queue:
  * If the first item has its flag set to 'data set returned':
- * The data set is sent to its respective SyncClass (syncProdComm for example) for processingSyncQueue into
+ * The data set is sent to its respective SyncClass (syncProduct for example) for processingSyncQueue into
  * the local database.
  * Once processingSyncQueue is complete:
  * RepositoryRemote checks the next item in the queue:
@@ -43,12 +43,11 @@ import java.util.LinkedList;
 public class RepositoryRemote {
 
     private static final String TAG = "RepositoryRemote";
-
     private static RepositoryRemote sInstance;
 
     private LinkedList<ModelStatus> syncQueue;
-    private SyncProdComm syncProdComm;
-    private SyncProdMy syncProdMy;
+    private SyncProduct syncProduct;
+    private SyncUserProductData syncUserProductData;
     private boolean processingSyncQueue;
 
     private HandlerWorker worker;
@@ -59,28 +58,36 @@ public class RepositoryRemote {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
 
+            // TODO - This is a mess, refactor and clean.
+
             String syncModelCompleted = (String) msg.obj;
-            Log.d(TAG, "handleMessage: " + syncModelCompleted + " has completed sync.");
-            ModelStatus completedElement = syncQueue.remove();
-            Log.d(TAG, "handleMessage: Removing: " + completedElement.getModelName() +
-                    " from queue");
 
-            // If available move on to next element.
-            if (syncQueue.size() > 0) {
-                Log.d(TAG, "handleMessage: Moving on to next item.");
-                processSyncQueue();
+            if (!syncModelCompleted.equals("Sync failed, 0 items returned.")) {
+                Log.d(TAG, "handleMessage: " + syncModelCompleted + " has completed sync.");
+                ModelStatus completedElement = syncQueue.remove();
+                Log.d(TAG, "handleMessage: Removed: " + completedElement.getModelName() +
+                        " from sync queue");
 
+                // If available move on to next element.
+                if (syncQueue.size() > 0) {
+                    Log.d(TAG, "handleMessage: Moving on to next item.");
+                    processSyncQueue();
+                } else {
+                    syncComplete("Sync completed normally, resetting processingSyncQueue to: false");
+                }
             } else {
-                // Sync complete.
-                worker.quit();
-                Log.d(TAG, "handleMessage: Sync complete, reset processingSyncQueue to: false");
-                processingSyncQueue = false;
+                syncQueue.clear();
+                syncComplete("0 items returned, cannot process sync any further.");
             }
-
             // TODO - Recycle message here?
-            // TODO - Dont forget to shut down the thread when done.
         }
     };
+
+    private void syncComplete(String syncResultMessage) {
+        worker.quit();
+        processingSyncQueue = false;
+        Log.d(TAG, "syncComplete: Sync completed with message: " + syncResultMessage);
+    }
 
     /**
      * @param context the Application context
@@ -88,8 +95,8 @@ public class RepositoryRemote {
     private RepositoryRemote(Context context) {
         worker = new HandlerWorker(TAG);
         syncQueue = new LinkedList<>();
-        syncProdComm = new SyncProdComm(context, this);
-        syncProdMy = new SyncProdMy(context, this);
+        syncProduct = new SyncProduct(context, this);
+        syncUserProductData = new SyncUserProductData(context, this);
     }
 
     public static RepositoryRemote getInstance(final Context context) {
@@ -108,83 +115,76 @@ public class RepositoryRemote {
      * Turns remote sync on or off in response. If the model is being turned on adds it to the sync
      * queue awaiting a response from the server. Data models can be listed in any order.
      *
-     * @param dataModel     the data model to synchronise.
-     * @param observedState true to turn listener on, false to turn off.
+     * @param dataModel  the data model to synchronise.
+     * @param isObserved true to turn listener on, false to turn off.
      */
-    void isObserved(String dataModel, boolean observedState) {
+    void isObserved(String dataModel, boolean isObserved) {
 
-        // Is the user logged in?
         if (!Constants.getUserId().getValue().equals(Constants.ANONYMOUS)) {
-
             switch (dataModel) {
 
-                // Is the data model a ProdComm?
                 case Product.TAG:
-
-                    // Is the requested listener state different from its current state?
-                    if (syncProdComm.getListenerState() != observedState) {
-                        // Then change the listeners state to the requested state.
-                        syncProdComm.setListenerState(observedState);
-                        // If the requested state is to turn the listener on:
-                        if (observedState) {
-                            // Add the model to the sync queue, with 'data set received' to false.
-                            syncQueue.add(new ModelStatus(Product.TAG, false));
+                    if (syncProduct.getListenerState() != isObserved) {
+                        syncProduct.setListenerState(isObserved);
+                        if (isObserved) {
+                            syncQueue.add(new ModelStatus(Product.TAG));
                         }
                     }
                     break;
 
                 case UsersProductData.TAG:
-
-                    if (syncProdMy.getListenerState() != observedState) {
-
-                        syncProdMy.setListenerState(observedState);
-
-                        if (observedState) {
-                            syncQueue.add(new ModelStatus(UsersProductData.TAG, false));
+                    if (syncUserProductData.getListenerState() != isObserved) {
+                        syncUserProductData.setListenerState(isObserved);
+                        if (isObserved) {
+                            syncQueue.add(new ModelStatus(UsersProductData.TAG));
                         }
                     }
                     break;
 
                 default:
-                    Log.v(TAG, "observedState: Data model unknown, cannot sync");
+                    Log.v(TAG, "isObserved: Data model unknown, cannot sync");
                     break;
             }
         }
     }
 
     // Triggered when a VEL returns a data set. Updates the sync queue and initiates processingSyncQueue.
-    void dataSetReturned(ModelStatus model) {
-        int count = 0;
+    void dataSetReturned(ModelStatus synchronisedModel) {
 
-        for (int i = 0; i < syncQueue.size(); i++) {
-            ModelStatus ms = syncQueue.get(i);
-            if (ms.getModelName().equals(model.getModelName())) {
-                count = i;
-                break;
+        if (synchronisedModel.getNoOfItemsReturned() != 0) {
+
+            int indexOfModelInQueue = 0;
+
+            for (int indexOfModel = 0; indexOfModel < syncQueue.size(); indexOfModel++) {
+                ModelStatus modelInQueue = syncQueue.get(indexOfModel);
+
+                if (modelInQueue.getModelName().equals(synchronisedModel.getModelName())) {
+                    indexOfModelInQueue = indexOfModel;
+                    break;
+                }
             }
-        }
 
-        syncQueue.remove(count);
-        syncQueue.add(count, model);
+            // Taken out, updated status and placed back into queue.
+            syncQueue.remove(indexOfModelInQueue);
+            syncQueue.add(indexOfModelInQueue, synchronisedModel);
 
-        Log.d(TAG, "dataSetReturned: Sync queue looks like: " + syncQueue.toString());
+            Log.d(TAG, "dataSetReturned: Sync queue looks like: " + syncQueue.toString());
 
-        if (!processingSyncQueue) {
-            processSyncQueue();
+            if (!processingSyncQueue) {
+                processSyncQueue();
+            }
+        } else {
+            Message m = Message.obtain();
+            m.obj = "Sync failed, 0 items returned.";
+            handler.sendMessage(m);
         }
     }
 
-    // Triggered by a data set being returned from a VEL, or after a data set has been processed
-    // see handler.
     private void processSyncQueue() {
-
         processingSyncQueue = true;
-
-        // Get the data model identifier at the queue head.
         ModelStatus queueHead = syncQueue.peek();
 
         if (queueHead != null) {
-
             // Check to see if the data model has had its data set returned.
             if (queueHead.dataSetReturned()) {
 
@@ -192,19 +192,15 @@ public class RepositoryRemote {
                 switch (queueHead.getModelName()) {
 
                     case Product.TAG:
-
                         Log.d(TAG, "processSyncQueue: Product");
                         // Send the data to its respective sync class to be processed.
-                        syncProdComm.syncRemoteData(handler, worker);
-
+                        syncProduct.syncRemoteData(handler, worker);
                         break;
 
                     case UsersProductData.TAG:
-
                         Log.d(TAG, "processSyncQueue: UsersProductData");
                         // Send the data to its respective sync class to be processed.
-                        syncProdMy.syncRemoteData(handler, worker);
-
+                        syncUserProductData.syncRemoteData(handler, worker);
                         break;
 
                     default:
@@ -221,4 +217,6 @@ public class RepositoryRemote {
             }
         }
     }
+
+
 }

@@ -10,7 +10,7 @@ import com.example.peter.thekitchenmenu.R;
 
 import com.example.peter.thekitchenmenu.data.model.ProductModel;
 import com.example.peter.thekitchenmenu.databinding.FragmentCatalogProductsBinding;
-import com.example.peter.thekitchenmenu.viewmodels.ViewModelCatProd;
+import com.example.peter.thekitchenmenu.viewmodels.ViewModelCatlogProducts;
 
 import java.util.List;
 import java.util.Objects;
@@ -25,28 +25,28 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class FragmentCatVmProdMy
+public class ProductCatalogUsersProducts
         extends Fragment
-        implements OnClickVmProd {
+        implements OnClickProduct {
 
-    private static final String TAG = "FragmentCatVmProdMy";
+    private static final String TAG = "ProductCatalogUsersProducts";
 
-    private AdapterCatProdComm mAdapterCatProd;
-    private ViewModelCatProd mViewModelProdCommMy;
+    private ProductCatalogRecyclerAdapter catalogProductsAdapter;
+    private ViewModelCatlogProducts viewModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mAdapterCatProd = new AdapterCatProdComm(getActivity(), this);
+        catalogProductsAdapter = new ProductCatalogRecyclerAdapter(getActivity(), this);
 
-        mViewModelProdCommMy = ViewModelProviders.of(getActivity()).get(ViewModelCatProd.class);
+        viewModel = ViewModelProviders.of(getActivity()).get(ViewModelCatlogProducts.class);
 
         // Observes changes to view model ProdMy list and passes them to the adaptor.
         final Observer<List<ProductModel>> viewModelProd = vmProds
-                -> mAdapterCatProd.setProducts(vmProds);
+                -> catalogProductsAdapter.setProducts(vmProds);
 
-        mViewModelProdCommMy.getAllVmProdMy().observe(this, viewModelProd);
+        viewModel.getAllVmProdMy().observe(this, viewModelProd);
     }
 
     @Nullable
@@ -79,7 +79,7 @@ public class FragmentCatVmProdMy
 
         mBinding.fragmentCatalogProductsRv.setHasFixedSize(true);
 
-        mBinding.fragmentCatalogProductsRv.setAdapter(mAdapterCatProd);
+        mBinding.fragmentCatalogProductsRv.setAdapter(catalogProductsAdapter);
 
         return mBinding.getRoot();
     }
@@ -106,6 +106,6 @@ public class FragmentCatVmProdMy
 
     @Override
     public void onClick(ProductModel productModel, boolean isCreator) {
-        mViewModelProdCommMy.selectedItem(productModel, isCreator);
+        viewModel.selectedItem(productModel, isCreator);
     }
 }

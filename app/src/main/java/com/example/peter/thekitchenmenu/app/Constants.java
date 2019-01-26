@@ -12,7 +12,7 @@ public abstract class Constants {
      * PRODUCTS *
      ************/
 
-    /* Key values for a product */
+    /* Key values for a product_uneditable */
     public static final String PRODUCT_KEY = "current_product_key";
     public static final String PRODUCT_FB_REFERENCE_KEY = "product_fb_reference_key";
     public static final String PRODUCT_IS_CREATOR_KEY = "product_is_owner_key";
@@ -20,7 +20,7 @@ public abstract class Constants {
     /* Default values for a ProductModel */
     public static final int DEFAULT_PROD_MY_ID = 0;
     public static final String DEFAULT_REMOTE_REF_ID = "no_key";
-    public static final String DEFAULT_FB_USED_PRODUCT_ID = "no_used_product_id";
+    public static final String DEFAULT_REMOTE_USED_PRODUCT_ID = "no_used_product_id";
     public static final String DEFAULT_PRODUCT_RETAILER = "no_retailer";
     public static final String DEFAULT_PRODUCT_LOC = "no_location";
     public static final String DEFAULT_PRODUCT_LOC_IN_ROOM = "no_location_in_room";
@@ -65,8 +65,8 @@ public abstract class Constants {
     /* *******************
      * Firebase database *
      *********************/
-    public static final String FB_COLLECTION_PRODUCTS = "/collection_products/";
-    public static final String FB_COLLECTION_USERS = "/collection_users/";
+    public static final String REMOTE_PRODUCT_LOCATION = "/collection_products/";
+    public static final String REMOTE_USER_LOCATION = "/collection_users/";
     public static final String FB_COLLECTION_USED_PRODUCTS = "/collection_used_products";
     public static final int REQUEST_CODE_SIGN_IN = 5;
     public static final String FB_STORAGE_IMAGE_REFERENCE = "/collection_product_images/";
@@ -86,7 +86,7 @@ public abstract class Constants {
     public static MutableLiveData<String> getUserId() {
         if(USER_ID == null) {
             USER_ID = new MutableLiveData<>();
-            USER_ID.setValue(ANONYMOUS);
+            USER_ID.postValue(ANONYMOUS);
         }
         return USER_ID;
     }

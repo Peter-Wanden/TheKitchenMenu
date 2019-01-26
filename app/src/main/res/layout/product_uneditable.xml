@@ -3,17 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.peter.thekitchenmenu.viewmodels.ProductMainViewModel">
+        </variable>
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/product_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone">
-
-        <!--
-                Visibility for this Layout is set to gone as it is turned on and off
-                programmatically as and when required. If you wish to edit this layout delete this
-                line from above 'android:visibility="gone"' and replace it when done
-         -->
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/description_label"
@@ -28,9 +28,10 @@
         <TextView
             android:id="@+id/description"
             style="@style/UneditableTextFieldStyle"
-            android:layout_width="0dp"
+            android:layout_width="260dp"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintStart_toStartOf="@+id/guideline"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Dove Men+Care clean comfort aerosol anti-perspirant deodorant" />
@@ -50,6 +51,8 @@
             style="@style/UneditableTextFieldStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintStart_toStartOf="@+id/guideline"
             app:layout_constraintTop_toBottomOf="@+id/description"
             tools:text="Procter &amp; Gamble" />
@@ -69,27 +72,22 @@
             style="@style/UneditableTextFieldStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintStart_toStartOf="@+id/guideline"
             app:layout_constraintTop_toBottomOf="@+id/made_by"
             tools:text="2000" />
-
-        <TextView
-            android:id="@+id/unit_of_measure_label"
-            style="@style/UneditableCategoryStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/label_UoM"
-            app:layout_constraintBottom_toBottomOf="@+id/unit_of_measure"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/unit_of_measure" />
 
         <TextView
             android:id="@+id/unit_of_measure"
             style="@style/UneditableTextFieldStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@+id/pack_size"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/pack_size"
+            app:layout_constraintStart_toEndOf="@+id/pack_size"
+            app:layout_constraintTop_toTopOf="@+id/pack_size"
+            app:layout_constraintVertical_bias="1.0"
             tools:text="Grams" />
 
         <TextView
@@ -107,8 +105,9 @@
             style="@style/UneditableTextFieldStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@+id/unit_of_measure"
+            app:layout_constraintTop_toBottomOf="@+id/pack_size"
             tools:text="1 Week" />
 
         <TextView

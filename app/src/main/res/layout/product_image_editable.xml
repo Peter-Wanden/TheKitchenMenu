@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.peter.thekitchenmenu.viewmodels.ProductMainViewModel">
+        </variable>
+    </data>
+
+    <RelativeLayout
+        android:id="@+id/image_container"
+        android:layout_width="match_parent"
+        android:layout_height="250dp">
+
+        <ImageView
+            android:id="@+id/product_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/cd_picture_of_product"
+            android:scaleType="fitCenter"
+            tools:src="@drawable/placeholder">
+        </ImageView>
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/camera_button"
+            android:layout_width="@dimen/image_button_height"
+            android:layout_height="@dimen/image_button_width"
+            android:backgroundTint="@color/textColorHighlight"
+            android:tint="@color/white"
+            android:contentDescription="@string/cd_add_image_from_camera"
+            android:src="@drawable/ic_action_camera"
+            android:elevation="@dimen/standard_margin"
+            android:layout_marginEnd="@dimen/image_button_margin"
+            android:layout_alignEnd="@+id/product_image"
+            android:layout_alignBottom="@+id/product_image"/>
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/rotate_button"
+            android:layout_width="@dimen/image_button_height"
+            android:layout_height="@dimen/image_button_width"
+            android:backgroundTint="@color/textColorHighlight"
+            android:tint="@color/white"
+            android:contentDescription="@string/cd_rotate_image"
+            android:src="@drawable/ic_action_rotate"
+            android:elevation="@dimen/standard_margin"
+            android:layout_centerInParent="true"
+            android:layout_alignBottom="@+id/product_image" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/gallery_button"
+            android:layout_width="@dimen/image_button_height"
+            android:layout_height="@dimen/image_button_width"
+            android:backgroundTint="@color/textColorHighlight"
+            android:tint="@color/white"
+            android:contentDescription="@string/cd_add_image_from_gallery"
+            android:src="@drawable/ic_add_picture_from_gallery"
+            android:elevation="@dimen/standard_margin"
+            android:layout_alignStart="@+id/product_image"
+            android:layout_marginStart="@dimen/image_button_margin"
+            android:layout_alignBottom="@+id/product_image"/>
+    </RelativeLayout>
+</layout>
+

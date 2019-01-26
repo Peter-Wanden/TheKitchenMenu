@@ -22,7 +22,7 @@ import static com.example.peter.thekitchenmenu.data.entity.Product.TABLE_PRODUCT
 import static com.example.peter.thekitchenmenu.data.entity.Product.DESCRIPTION;
 import static com.example.peter.thekitchenmenu.data.entity.Product.ID;
 import static com.example.peter.thekitchenmenu.data.entity.Product.MADE_BY;
-import static com.example.peter.thekitchenmenu.data.entity.ProductFastTextSearch.TABLE_FTS_PROD_COMM;
+import static com.example.peter.thekitchenmenu.data.entity.ProductFastTextSearch.TABLE_FTS_PRODUCT;
 
 @Database(entities = {
         Product.class,
@@ -33,16 +33,13 @@ import static com.example.peter.thekitchenmenu.data.entity.ProductFastTextSearch
 public abstract class TKMLocalDatabase extends RoomDatabase {
 
     private static final String TAG = "TKMLocalDatabase";
-
     private static final String TKM_LOCAL_DATABASE = "tkm_local_database";
-
     private static TKMLocalDatabase sInstance;
 
-    // DAO's
-    public abstract ProdCommDAO prodCommDAO();
-    public abstract ProdMyDAO prodMyDAO();
+    public abstract ProductDAO productDAO();
+    public abstract UsersProductDataDAO userProductDataDAO();
 
-    private final MutableLiveData<Boolean> mIsDatabaseCreated = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isDatabaseCreated = new MutableLiveData<>();
 
     public static TKMLocalDatabase getInstance(final Context context,
                                                final AppExecutors executors) {
@@ -81,11 +78,11 @@ public abstract class TKMLocalDatabase extends RoomDatabase {
     }
 
     private static void insertData(final TKMLocalDatabase database,
-                                   final List<Product> prodComms,
-                                   final List<UsersProductData> prodMys) {
+                                   final List<Product> products,
+                                   final List<UsersProductData> usersProductData) {
         database.runInTransaction(() -> {
-            database.prodCommDAO().insertAll(prodComms);
-            database.prodMyDAO().insertAll(prodMys);
+            database.productDAO().insertAll(products);
+            database.userProductDataDAO().insertAll(usersProductData);
         });
     }
 
@@ -99,11 +96,11 @@ public abstract class TKMLocalDatabase extends RoomDatabase {
     }
 
     private void setDatabaseCreated() {
-        mIsDatabaseCreated.postValue(true);
+        isDatabaseCreated.postValue(true);
     }
 
     public LiveData<Boolean> getDatabaseCreated() {
-        return mIsDatabaseCreated;
+        return isDatabaseCreated;
     }
 
 
@@ -111,15 +108,13 @@ public abstract class TKMLocalDatabase extends RoomDatabase {
 
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
-            database.execSQL(
-                    "CREATE VIRTUAL TABLE IF NOT EXISTS " + TABLE_FTS_PROD_COMM +
+            database.execSQL("CREATE VIRTUAL TABLE IF NOT EXISTS " + TABLE_FTS_PRODUCT +
                             " USING FTS4(" +
                             DESCRIPTION + " TEXT, " +
                             MADE_BY + " TEXT, " +
                             "content=" + TABLE_PRODUCT + ")");
 
-            database.execSQL(
-                    "INSERT INTO " + TABLE_FTS_PROD_COMM +
+            database.execSQL("INSERT INTO " + TABLE_FTS_PRODUCT +
                     " (`rowid`, " + DESCRIPTION + ", " + MADE_BY + ") "
                     + "SELECT " + ID + ", " + DESCRIPTION + ", " +
                             MADE_BY + " FROM " + TABLE_PRODUCT);

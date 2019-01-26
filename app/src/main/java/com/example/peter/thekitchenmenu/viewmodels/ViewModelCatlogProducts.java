@@ -18,9 +18,9 @@ import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
-public class ViewModelCatProd extends AndroidViewModel {
+public class ViewModelCatlogProducts extends AndroidViewModel {
 
-    private static final String TAG = "ViewModelCatProd";
+    private static final String TAG = "ViewModelCatlogProducts";
 
     // View models.
     private MediatorLiveData<List<UsersProductData>> observableProdMys;
@@ -33,9 +33,8 @@ public class ViewModelCatProd extends AndroidViewModel {
     // The item selected in the adapter, passed through the click interface of the fragment.
     private final MutableLiveData<ProductModel> selectedProduct = new MutableLiveData<>();
 
-    public ViewModelCatProd(Application application) {
+    public ViewModelCatlogProducts(Application application) {
         super(application);
-
         setupObservables(application);
         initialiseDataSource();
     }
@@ -55,8 +54,8 @@ public class ViewModelCatProd extends AndroidViewModel {
         observeMatchMergeCommunityAndMyProducts.setValue(null);
 
         // Request data
-        observableProdMys.addSource(repository.getAllProdMys(), observableProdMys::setValue);
-        observableProducts.addSource(repository.getAllProdComm(), observableProducts::setValue);
+        observableProdMys.addSource(repository.getAllUserProductData(), observableProdMys::setValue);
+        observableProducts.addSource(repository.getAllProducts(), observableProducts::setValue);
 
         // Retrieve constants
         observableUserId = Constants.getUserId();
@@ -96,9 +95,8 @@ public class ViewModelCatProd extends AndroidViewModel {
     }
 
     // TODO - Keeping these lists in virtual memory cannot be good - get all from the database
-    // TODO - Make prodMy relational to prod comm
     // TODO - Will become clearer when Recipes functionality is added!!!
-    // Matches and merges DmProdComms with DmProdMys into VmProds.
+    // Matches and merges Products with UserProductData into ProductModel.
     // TODO - Use collections for a better sort algorithm here
     private List<ProductModel> mergeMatchMyComm(List<Product> listDmPc, List<UsersProductData> listDmPm) {
 
@@ -133,7 +131,7 @@ public class ViewModelCatProd extends AndroidViewModel {
 
         if (allMyCommData != null) {
             for (ProductModel vMp : allMyCommData) {
-                if(vMp.getProductMyId() != 0) {
+                if(vMp.getUserProductDataId() != 0) {
                     listVmP.add(vMp);
                 }
             }
@@ -142,23 +140,21 @@ public class ViewModelCatProd extends AndroidViewModel {
     }
 
     // Pushes changes to the user ID to observers.
-
     public MutableLiveData<String> getUserId() {
         return observableUserId;
     }
-    // Boolean that tells us if this user created the product being used.
-
+    // Boolean that tells us if this user created the product_uneditable being used.
     public MutableLiveData<Boolean> getIsCreator() {
         return isCreator;
     }
-    // Triggered by selecting an item in the Fragment's RecyclerView.
 
+    // Triggered by selecting an item in the Fragment's RecyclerView.
     public void selectedItem(ProductModel productModel, boolean isCreator) {
         this.isCreator.setValue(isCreator);
         selectedProduct.setValue(productModel);
     }
 
-    // Pushes the selected product to observers.
+    // Pushes the selected product_uneditable to observers.
     public LiveData<ProductModel> getSelected() {
         return selectedProduct;
     }

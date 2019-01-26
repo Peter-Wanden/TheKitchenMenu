@@ -60,31 +60,17 @@ import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 
 import static com.example.peter.thekitchenmenu.app.Constants.ANONYMOUS;
-import static com.example.peter.thekitchenmenu.data.entity.Product.CATEGORY;
-import static com.example.peter.thekitchenmenu.data.entity.Product.CREATED_BY;
-import static com.example.peter.thekitchenmenu.data.entity.Product.DESCRIPTION;
-import static com.example.peter.thekitchenmenu.data.entity.Product.MADE_BY;
-import static com.example.peter.thekitchenmenu.data.entity.Product.PACK_SIZE;
-import static com.example.peter.thekitchenmenu.data.entity.Product.PROD_COMM_PRICE_AVE;
-import static com.example.peter.thekitchenmenu.data.entity.Product.REMOTE_IMAGE_URI;
-import static com.example.peter.thekitchenmenu.data.entity.Product.REMOTE_PRODUCT_ID;
-import static com.example.peter.thekitchenmenu.data.entity.Product.SHELF_LIFE;
-import static com.example.peter.thekitchenmenu.data.entity.Product.UNIT_OF_MEASURE;
-import static com.example.peter.thekitchenmenu.data.entity.UsersProductData.LOCAL_IMAGE_URI;
-import static com.example.peter.thekitchenmenu.data.entity.UsersProductData.LOCATION_IN_ROOM;
-import static com.example.peter.thekitchenmenu.data.entity.UsersProductData.LOCATION_ROOM;
-import static com.example.peter.thekitchenmenu.data.entity.UsersProductData.PRICE;
-import static com.example.peter.thekitchenmenu.data.entity.UsersProductData.RETAILER;
-import static com.example.peter.thekitchenmenu.data.entity.UsersProductData.REMOTE_USED_PRODUCT_ID;
+import static com.example.peter.thekitchenmenu.data.entity.Product.*;
+import static com.example.peter.thekitchenmenu.data.entity.UsersProductData.*;
 
 public class ProductDetail extends AppCompatActivity {
 
     private static final String TAG = "ProductDetail";
     private static final String EXISTING_PRODUCT = "existing_product";
-    public static final String PUT_IN_USED_LIST = "put_on_used_list";
-    public static final String IN_USED_LIST = "product_on_used_list_key";
-    public static final String PRODUCT_FIELDS_EDITABLE = "base_fields_editable_status_key";
-    public static final String USER_FIELDS_EDITABLE = "user_custom_fields_editable_status_key";
+    private static final String PUT_IN_USED_LIST = "put_on_used_list";
+    private static final String IN_USED_LIST = "product_on_used_list_key";
+    private static final String PRODUCT_FIELDS_EDITABLE = "base_fields_editable_status_key";
+    private static final String USER_FIELDS_EDITABLE = "user_custom_fields_editable_status_key";
 
     ProductDetailShellBinding detailView;
 
@@ -140,7 +126,7 @@ public class ProductDetail extends AppCompatActivity {
     private DatabaseReference remoteProductCollectionReference;
     private DatabaseReference remoteUserCollectionReference;
     private DatabaseReference remoteUsedProductsCollectionReference;
-    private String remoteProductReferenceKey;
+    private String remoteProductId;
     private String remoteUsedProductsUserKeyReference;
     private FirebaseStorage remoteImageStorageDb;
     private StorageReference remoteImageStorageReference;
@@ -158,83 +144,7 @@ public class ProductDetail extends AppCompatActivity {
         }
     }
 
-    private void ifSignedInInitialise() {
-
-        Intent intent = getIntent();
-        if (intent != null && intent.hasExtra(Constants.PRODUCT_FB_REFERENCE_KEY)) {
-            isExistingProduct = true;
-
-            setTitle(R.string.activity_title_view_product);
-
-            // Update the Firebase product reference key with the product passed in
-            if (remoteProductReferenceKey.equals(Constants.DEFAULT_FB_PRODUCT_ID)) {
-                productModel = intent.getParcelableExtra(Constants.PRODUCT_FB_REFERENCE_KEY);
-
-                // Set the Firebase product reference ID from the incoming intent */
-                remoteProductReferenceKey = productModel.getFbProductReferenceKey();
-
-                // Identify if this user is the creator of this product
-                isCreator = intent.getBooleanExtra(Constants.PRODUCT_IS_CREATOR_KEY, isCreator);
-
-                // Find out if the product is on this users used list. This is a database operation
-                // and may take some time. We cannot proceed until we get the result. So continue
-                // operations from method gertUsedList()
-                getUsedList();
-            }
-        } else {
-            addNewProduct();
-        }
-    }
-
-    /* Checks to see if there has been a configuration change, if so recovers the data */
-    private void checkSavedInstanceState(@Nullable Bundle savedInstanceState) {
-
-        //If it exists get the current product from saved instance state
-        if (savedInstanceState != null && savedInstanceState.containsKey(
-                Constants.PRODUCT_FB_REFERENCE_KEY)) {
-
-            // Restore the instance of productModel
-            productModel = savedInstanceState.getParcelable(
-                    Constants.PRODUCT_FB_REFERENCE_KEY);
-
-            // Update the product reference
-            if (productModel != null) {
-
-                remoteProductReferenceKey = productModel.getFbProductReferenceKey();
-                remoteUsedProductsUserKeyReference = productModel.getFbUsedProductsUserKey();
-                description = productModel.getDescription();
-                retailer = productModel.getRetailer();
-                madeBy = productModel.getMadeBy();
-                unitOfMeasure = productModel.getUnitOfMeasure();
-                packSize = productModel.getPackSize();
-                shelfLife = productModel.getShelfLife();
-                locationRoom = productModel.getLocationRoom();
-                locationInRoom = productModel.getLocationInRoom();
-                category = productModel.getCategory();
-                packPrice = productModel.getPackPrice();
-                packAvePrice = productModel.getPackAvePrice();
-                localImageUri = Uri.parse(productModel.getLocalImageUri());
-                remoteImageStorageUri = Uri.parse(productModel.getLocalImageUri());
-                createdBy = productModel.getCreatedBy();
-            }
-
-            // Update the bool's
-            isExistingProduct = savedInstanceState.getBoolean(EXISTING_PRODUCT);
-            isCreator = savedInstanceState.getBoolean(Constants.PRODUCT_IS_CREATOR_KEY);
-            inUsedList = savedInstanceState.getBoolean(IN_USED_LIST);
-            putInUsedList = savedInstanceState.getBoolean(PUT_IN_USED_LIST);
-            productDataIsEditable = savedInstanceState.getBoolean(PRODUCT_FIELDS_EDITABLE);
-            userProductDataIsEditable = savedInstanceState.getBoolean(USER_FIELDS_EDITABLE);
-
-            // Update the Strings
-            remoteProductReferenceKey = savedInstanceState
-                    .getString(Constants.PRODUCT_FB_REFERENCE_KEY);
-        }
-    }
-
-    /* Sets the defaults for member variables */
     private void assignMemberVariables() {
-
         isCreator = false;
         isExistingProduct = false;
         inUsedList = false;
@@ -245,11 +155,11 @@ public class ProductDetail extends AppCompatActivity {
         isImageAvailable = false;
         hasCameraImageTaken = false;
 
-        /* Construct a default product for field value comparison and validation */
+        /* Construct a default product_uneditable for field value comparison and validation */
         productModel = new ProductModel(
                 Constants.DEFAULT_PROD_MY_ID,
                 Constants.DEFAULT_REMOTE_REF_ID,
-                Constants.DEFAULT_FB_USED_PRODUCT_ID,
+                Constants.DEFAULT_REMOTE_USED_PRODUCT_ID,
                 Constants.DEFAULT_PRODUCT_RETAILER,
                 Constants.DEFAULT_PRODUCT_LOC,
                 Constants.DEFAULT_PRODUCT_LOC_IN_ROOM,
@@ -276,7 +186,7 @@ public class ProductDetail extends AppCompatActivity {
 
         // Set the default value for the local and Firebase Storage Image Uri's
         localImageUri = Uri.parse(productModel.getLocalImageUri());
-        remoteImageStorageUri = Uri.parse(productModel.getFbStorageImageUri());
+        remoteImageStorageUri = Uri.parse(productModel.getRemoteImageUri());
 
         // Instance of Firebase storage
         remoteImageStorageDb = FirebaseStorage.getInstance();
@@ -286,8 +196,8 @@ public class ProductDetail extends AppCompatActivity {
                 .getReference()
                 .child(Constants.FB_STORAGE_IMAGE_REFERENCE);
 
-        // Default value for the used product reference
-        remoteUsedProductsUserKeyReference = Constants.DEFAULT_FB_USED_PRODUCT_ID;
+        // Default value for the used product_uneditable reference
+        remoteUsedProductsUserKeyReference = Constants.DEFAULT_REMOTE_USED_PRODUCT_ID;
 
         // Default values of Bool's that record the state of input validation
         descriptionValidated = false;
@@ -302,13 +212,87 @@ public class ProductDetail extends AppCompatActivity {
         locationInRoomValidated = false;
     }
 
+    private void ifSignedInInitialise() {
+
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra(Constants.PRODUCT_FB_REFERENCE_KEY)) {
+            isExistingProduct = true;
+
+            setTitle(R.string.activity_title_view_product);
+
+            // Update the Firebase product_uneditable reference key with the product_uneditable passed in
+            if (remoteProductId.equals(Constants.DEFAULT_FB_PRODUCT_ID)) {
+                productModel = intent.getParcelableExtra(Constants.PRODUCT_FB_REFERENCE_KEY);
+
+                // Set the Firebase product_uneditable reference ID from the incoming intent */
+                remoteProductId = productModel.getRemoteProductId();
+
+                // Identify if this user is the creator of this product_uneditable
+                isCreator = intent.getBooleanExtra(Constants.PRODUCT_IS_CREATOR_KEY, isCreator);
+
+                // Find out if the product_uneditable is on this users used list. This is a database operation
+                // and may take some time. We cannot proceed until we get the result. So continue
+                // operations from method gertUsedList()
+                getUsedList();
+            }
+        } else {
+            addNewProduct();
+        }
+    }
+    /* Checks to see if there has been a configuration change, if so recovers the data */
+
+    private void checkSavedInstanceState(@Nullable Bundle savedInstanceState) {
+
+        //If it exists get the current product_uneditable from saved instance state
+        if (savedInstanceState != null && savedInstanceState.containsKey(
+                Constants.PRODUCT_FB_REFERENCE_KEY)) {
+
+            // Restore the instance of productModel
+            productModel = savedInstanceState.getParcelable(
+                    Constants.PRODUCT_FB_REFERENCE_KEY);
+
+            // Update the product_uneditable reference
+            if (productModel != null) {
+
+                remoteProductId = productModel.getRemoteProductId();
+                remoteUsedProductsUserKeyReference = productModel.getRemoteUsedProductId();
+                description = productModel.getDescription();
+                retailer = productModel.getRetailer();
+                madeBy = productModel.getMadeBy();
+                unitOfMeasure = productModel.getUnitOfMeasure();
+                packSize = productModel.getPackSize();
+                shelfLife = productModel.getShelfLife();
+                locationRoom = productModel.getLocationRoom();
+                locationInRoom = productModel.getLocationInRoom();
+                category = productModel.getCategory();
+                packPrice = productModel.getPrice();
+                packAvePrice = productModel.getPackAvePrice();
+                localImageUri = Uri.parse(productModel.getLocalImageUri());
+                remoteImageStorageUri = Uri.parse(productModel.getLocalImageUri());
+                createdBy = productModel.getCreatedBy();
+            }
+
+            // Update the bool's
+            isExistingProduct = savedInstanceState.getBoolean(EXISTING_PRODUCT);
+            isCreator = savedInstanceState.getBoolean(Constants.PRODUCT_IS_CREATOR_KEY);
+            inUsedList = savedInstanceState.getBoolean(IN_USED_LIST);
+            putInUsedList = savedInstanceState.getBoolean(PUT_IN_USED_LIST);
+            productDataIsEditable = savedInstanceState.getBoolean(PRODUCT_FIELDS_EDITABLE);
+            userProductDataIsEditable = savedInstanceState.getBoolean(USER_FIELDS_EDITABLE);
+
+            // Update the Strings
+            remoteProductId = savedInstanceState
+                    .getString(Constants.PRODUCT_FB_REFERENCE_KEY);
+        }
+    }
+
     /* Sets up Firebase instance and references */
     private void setupFireBase() {
 
-        remoteProductCollectionReference = RemoteDbRefs.getRefProdComm();
-        remoteUserCollectionReference = RemoteDbRefs.getRefUsers();
-        remoteUsedProductsCollectionReference = RemoteDbRefs.getRefUserProd();
-        remoteProductReferenceKey = Constants.DEFAULT_FB_PRODUCT_ID;
+        remoteProductCollectionReference = RemoteDbRefs.getRemoteProductData();
+        remoteUserCollectionReference = RemoteDbRefs.getRemoteUsers();
+        remoteUsedProductsCollectionReference = RemoteDbRefs.getUsersProducts();
+        remoteProductId = Constants.DEFAULT_FB_PRODUCT_ID;
     }
 
     private void addNewProduct() {
@@ -430,26 +414,26 @@ public class ProductDetail extends AppCompatActivity {
         return false;
     }
 
-    /* Check to see if the product is in the users user product list */
+    /* Check to see if the product_uneditable is in the users user product_uneditable list */
     private void getUsedList() {
 
-        // Is the product in the users 'used' list
+        // Is the product_uneditable in the users 'used' list
         DatabaseReference remoteProductReference = RemoteDbRefs.
-                getRefProdMy(Constants.getUserId().getValue(), remoteProductReferenceKey);
+                getUserProductData(Constants.getUserId().getValue(), remoteProductId);
 
         remoteProductReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // If the product is in the users used list it will show up here
+                // If the product_uneditable is in the users used list it will show up here
                 if (dataSnapshot.exists()) {
 
                     // Convert the snapshot into a Product view model
 //                    productModel = dataSnapshot.getValue(ProductModel.class);
 
-                    // Update products Firebase product reference key
+                    // Update products Firebase product_uneditable reference key
 //                    productModel.setRemoteProductId(dataSnapshot.getKey());
 
-                    // This product is in the users used list, so update the used bool
+                    // This product_uneditable is in the users used list, so update the used bool
                     inUsedList = true;
 
                     // Update the member variable for the used products user key
@@ -468,13 +452,13 @@ public class ProductDetail extends AppCompatActivity {
                     populateUi();
 
                 } else {
-                    // This product is not in the users used list, so update the used bool
+                    // This product_uneditable is not in the users used list, so update the used bool
                     inUsedList = false;
 
                     // Update the visibility of the uneditable view containers
                     showUneditableViewContainers();
 
-                    // Update the UI with the product and user data
+                    // Update the UI with the product_uneditable and user data
                     populateUi();
                 }
             }
@@ -486,19 +470,19 @@ public class ProductDetail extends AppCompatActivity {
         });
     }
 
-    /* Checks to see if more than one user is using a product. */
+    /* Checks to see if more than one user is using a product_uneditable. */
     private void checkMultiUserStatus() {
 
-        // Get a reference to: /collection_used_products/[product ID]/[used product ref].
+        // Get a reference to: /collection_used_products/[product_uneditable ID]/[used product_uneditable ref].
         Query usedProductRef = remoteUsedProductsCollectionReference
-                .child(remoteProductReferenceKey).limitToFirst(2);
+                .child(remoteProductId).limitToFirst(2);
 
         usedProductRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 if (dataSnapshot.exists()) {
-                    // This is a snapshot of all users that have this product in their used product
+                    // This is a snapshot of all users that have this product_uneditable in their used product_uneditable
                     // list. We only need to know if there is more than one, so we can use the a
                     // limit to query to avoid a large amount of unnecessary data being returned.
                     long childCount = dataSnapshot.getChildrenCount();
@@ -506,7 +490,7 @@ public class ProductDetail extends AppCompatActivity {
                     // Set the value of isMultiUser
                     if (childCount > 1) {
 
-                        // This product is being used by more then one person, so update the bool.
+                        // This product_uneditable is being used by more then one person, so update the bool.
                         isMultiUser = true;
 
                         // This also means the base fields cannot be edited. Make only the
@@ -515,10 +499,10 @@ public class ProductDetail extends AppCompatActivity {
 
                     } else {
 
-                        // Just to confirm this product is not multi-user
+                        // Just to confirm this product_uneditable is not multi-user
                         isMultiUser = false;
 
-                        // If there is only one person using this product, the creator, let them
+                        // If there is only one person using this product_uneditable, the creator, let them
                         // edit the base fields.
                         productFieldsAreEditable(true);
 
@@ -548,23 +532,23 @@ public class ProductDetail extends AppCompatActivity {
 
     /**
      * saveProduct()
-     * There are six reasons a user might want to save product data:
-     * 1. A new product is being created or an existing product is being:
+     * There are six reasons a user might want to save product_uneditable data:
+     * 1. A new product_uneditable is being created or an existing product_uneditable is being:
      * 2. - updated by the creator and the creator is the only user.
      * 3. - updated by the creator and there is more than one user.
-     * 4. - added by someone who has not used this product before, or has and is using it again.
-     * 5. - updated by someone who has used this product before.
-     * 6. - added by the creator who has previously deleted the product.
+     * 4. - added by someone who has not used this product_uneditable before, or has and is using it again.
+     * 5. - updated by someone who has used this product_uneditable before.
+     * 6. - added by the creator who has previously deleted the product_uneditable.
      */
     private void saveProduct() {
 
         /*
-           1. This is a new product. Various parts of it and its users data needs to be stored in
+           1. This is a new product_uneditable. Various parts of it and its users data needs to be stored in
               three locations in the remote database:
-              1. /collection/products - Stores product data that is common to all users.
-              2. /collection/users/[user ID]/collection_products/[product ID] - Users product lists.
-              3. /collection_used_products/[product ref key] - Count of how many are using a
-                 product.
+              1. /collection/products - Stores product_uneditable data that is common to all users.
+              2. /collection/users/[user ID]/collection_products/[product_uneditable ID] - Users product_uneditable lists.
+              3. /collection_used_products/[product_uneditable ref key] - Count of how many are using a
+                 product_uneditable.
          */
         if (isCreator &&
                 productDataIsEditable &&
@@ -574,7 +558,7 @@ public class ProductDetail extends AppCompatActivity {
                 !isExistingProduct &&
                 !isMultiUser) {
 
-            // This is a new product, so check all fields are validated
+            // This is a new product_uneditable, so check all fields are validated
             if (validateProductFields() && checkValidationUserFields()) {
 
                 // Reduce bounce as we say in the electronics trade (double click) by hiding the
@@ -582,7 +566,7 @@ public class ProductDetail extends AppCompatActivity {
                 setMenuItemVisibility(false, false, false);
 
                 /*
-                   Set the new product to Firebase
+                   Set the new product_uneditable to Firebase
                    See: https://firebase.google.com/docs/database/admin/save-data
                 */
 
@@ -590,23 +574,23 @@ public class ProductDetail extends AppCompatActivity {
                 // above)
                 final DatabaseReference collectionProductsRef = remoteProductCollectionReference.push();
 
-                // Extract the unique product ID
+                // Extract the unique product_uneditable ID
                 Uri productReferenceUri = Uri.parse(collectionProductsRef.toString());
-                remoteProductReferenceKey = productReferenceUri.getLastPathSegment();
+                remoteProductId = productReferenceUri.getLastPathSegment();
 
                 // Create a reference to /collection_users/[user ID]/collection_products/
-                // [product ID] location 2 (as mentioned above)
+                // [product_uneditable ID] location 2 (as mentioned above)
                 final DatabaseReference userProductRef = remoteUserCollectionReference
                         .child(Constants.getUserId().getValue())
-                        .child(Constants.FB_COLLECTION_PRODUCTS)
-                        .child(remoteProductReferenceKey);
+                        .child(Constants.REMOTE_PRODUCT_LOCATION)
+                        .child(remoteProductId);
 
-                // Create a reference to the /collection_used_products/[product ref key]
+                // Create a reference to the /collection_used_products/[product_uneditable ref key]
                 // location 3 (as mentioned above)
                 final DatabaseReference usedProductRef = remoteUsedProductsCollectionReference
-                        .child(remoteProductReferenceKey).push();
+                        .child(remoteProductId).push();
 
-                // Extract the /used_products/user/[product reference key]
+                // Extract the /used_products/user/[product_uneditable reference key]
                 Uri usedProductUserUri = Uri.parse(usedProductRef.toString());
                 remoteUsedProductsUserKeyReference = usedProductUserUri.getLastPathSegment();
 
@@ -626,7 +610,7 @@ public class ProductDetail extends AppCompatActivity {
 
                     // Create a reference to store the image
                     final StorageReference imageRef = remoteImageStorageReference
-                            .child(remoteProductReferenceKey);
+                            .child(remoteProductId);
 
                     // Create an upload task
                     UploadTask uploadTask = imageRef.putBytes(productImage);
@@ -666,26 +650,26 @@ public class ProductDetail extends AppCompatActivity {
                                our data
                             */
 
-                            // Create the base product information for /collection/products location
+                            // Create the base product_uneditable information for /collection/products location
                             // Convert to a map
                             Map<String, Object> baseProductMap = convertBaseProductToMap();
 
-                            // Save the base product (common product information twixt all users) to
-                            // Firebase reference: /collection_products/[unique product reference]
+                            // Save the base product_uneditable (common product_uneditable information twixt all users) to
+                            // Firebase reference: /collection_products/[unique product_uneditable reference]
                             // location 1
                             collectionProductsRef.setValue(baseProductMap);
 
                             // Add in the additional values and keys required
-                            // for /collection/users/[user ID]/collection_products/[product ID]
+                            // for /collection/users/[user ID]/collection_products/[product_uneditable ID]
                             Map<String, Object> completeProductMap =
                                     convertProductToMap();
 
-                            // Save the full product to location 2
+                            // Save the full product_uneditable to location 2
                             // Reference:
-                            // /collection/users/[user ID]/collection_products/[product ID]
+                            // /collection/users/[user ID]/collection_products/[product_uneditable ID]
                             userProductRef.setValue(completeProductMap);
 
-                            // Save a product reference and user to the used products
+                            // Save a product_uneditable reference and user to the used products
                             // reference at location 3
                             usedProductRef.setValue(Constants.getUserId().getValue());
 
@@ -695,24 +679,24 @@ public class ProductDetail extends AppCompatActivity {
                 } else {
 
                     // No image was taken, so just save the EditText data
-                    // Create the base product information for /collection/products location
+                    // Create the base product_uneditable information for /collection/products location
                     // Convert to a map
                     Map<String, Object> baseProductMap = convertBaseProductToMap();
 
-                    // Save the base product (common product information twixt all users) to
-                    // Firebase reference: /collection_products/[unique product reference]
+                    // Save the base product_uneditable (common product_uneditable information twixt all users) to
+                    // Firebase reference: /collection_products/[unique product_uneditable reference]
                     // location 1
                     collectionProductsRef.setValue(baseProductMap);
 
                     // Add in the additional values and keys required
-                    // for /collection/users/[user ID]/collection_products/[product ID]
+                    // for /collection/users/[user ID]/collection_products/[product_uneditable ID]
                     Map<String, Object> completeProductMap = convertProductToMap();
 
-                    // Save the full product to location 2
-                    // reference: /collection/users/[user ID]/collection_products/[product ID]
+                    // Save the full product_uneditable to location 2
+                    // reference: /collection/users/[user ID]/collection_products/[product_uneditable ID]
                     userProductRef.setValue(completeProductMap);
 
-                    // Save a product reference and user to the used products
+                    // Save a product_uneditable reference and user to the used products
                     // reference at location 3
                     usedProductRef.setValue(Constants.getUserId().getValue());
 
@@ -728,19 +712,19 @@ public class ProductDetail extends AppCompatActivity {
             return;
 
         /*
-           2. This is an existing product, created by the user who is editing it. It is not due to
-              be added to the users used list as it is already in the users used product list. Both
-              the base and user specific fields are editable, and the product has only one user.
+           2. This is an existing product_uneditable, created by the user who is editing it. It is not due to
+              be added to the users used list as it is already in the users used product_uneditable list. Both
+              the base and user specific fields are editable, and the product_uneditable has only one user.
 
-              This product is being updated. The parts of this product and its users data that has
+              This product_uneditable is being updated. The parts of this product_uneditable and its users data that has
               changed need to be stored in the following locations in the database:
-              1. /collection/products - Update any of the base product data that has changed
-              2. /collection/users/[user ID]/collection_products/[product ID] - Update any user data
+              1. /collection/products - Update any of the base product_uneditable data that has changed
+              2. /collection/users/[user ID]/collection_products/[product_uneditable ID] - Update any user data
                  that has changed
-              4. /collection_product_images/[product ID] - Update the image in Firestore if it has
+              4. /collection_product_images/[product_uneditable ID] - Update the image in Firestore if it has
                  been changed.
 
-              Nothing in the users used product list will change so there is no need to update this
+              Nothing in the users used product_uneditable list will change so there is no need to update this
               part of the database
         */
         } else if (isExistingProduct &&
@@ -751,16 +735,16 @@ public class ProductDetail extends AppCompatActivity {
                 userProductDataIsEditable &&
                 !isMultiUser) {
 
-            // Validate the product base fields
+            // Validate the product_uneditable base fields
             boolean productFieldsValidated = validateProductFields();
 
             // If base fields are validated...
             if (productFieldsValidated) {
 
-                // Validate the user product specific fields
+                // Validate the user product_uneditable specific fields
                 boolean userFieldsValidated = checkValidationUserFields();
 
-                // If the product specific fields are validated...
+                // If the product_uneditable specific fields are validated...
                 if (userFieldsValidated) {
                     // If there has been changes to the image, save them
                     // Location
@@ -768,7 +752,7 @@ public class ProductDetail extends AppCompatActivity {
                     if (isImageAvailable && detailView.productImageView.getDrawable() != null) {
 
                         // Either:
-                        // 1. A new image has been added to an existing product that did not have
+                        // 1. A new image has been added to an existing product_uneditable that did not have
                         //    an image or
                         // 2. The existing image has been modified e.g. rotated or
                         // 3. The existing image is being replaced.
@@ -786,20 +770,20 @@ public class ProductDetail extends AppCompatActivity {
                         byte[] productImage = baos.toByteArray();
                         // Case 2 & 3
                         // Create a database reference from the existing image reference
-                        if (!productModel.getFbStorageImageUri().equals("")) {
+                        if (!productModel.getRemoteImageUri().equals("")) {
 
                             // Get the existing reference. If you save an image to an existing
                             // Firestore location it changes the download URL by adding a new media
                             // token, so we need to get the new download URL for all writes.
                             remoteImageStorageReference = remoteImageStorageDb
-                                    .getReferenceFromUrl(productModel.getFbStorageImageUri());
+                                    .getReferenceFromUrl(productModel.getRemoteImageUri());
 
                             // Create a new database reference for the new image
-                        } else if (productModel.getFbStorageImageUri().equals("")) {
+                        } else if (productModel.getRemoteImageUri().equals("")) {
 
                             // Create a reference to store the image
                             remoteImageStorageReference = remoteImageStorageReference
-                                    .child(remoteProductReferenceKey);
+                                    .child(remoteProductId);
                         }
 
                         // Save the new image to FireStore
@@ -833,15 +817,15 @@ public class ProductDetail extends AppCompatActivity {
                                Collate any changes and update the child data in the database.
                             */
 
-                                // productModel (our reference product) was updated by getUsedList()
-                                // when we checked to see if the product existed. We can use this
+                                // productModel (our reference product_uneditable) was updated by getUsedList()
+                                // when we checked to see if the product_uneditable existed. We can use this
                                 // instance to check for and collate any updates.
                                 getProductUpdates();
 
                                 // Create a map of any changes to the base data
                                 Map<String, Object> baseProductMap = convertBaseProductToMap();
 
-                                // Create a map of any changes to all of the product data
+                                // Create a map of any changes to all of the product_uneditable data
                                 Map<String, Object> completeProductMap = convertProductToMap();
 
                                 // If there have been updates to the base data, save them
@@ -852,7 +836,7 @@ public class ProductDetail extends AppCompatActivity {
                                     saveBaseProductUpdates(baseProductMap);
                                 }
 
-                                // If there have been changes to any of the product data. save them
+                                // If there have been changes to any of the product_uneditable data. save them
                                 // Location 2
                                 if (completeProductMap != null) {
 
@@ -868,15 +852,15 @@ public class ProductDetail extends AppCompatActivity {
                             Collate any changes and update the child data in the database.
                          */
 
-                        // productModel (our reference product) was updated by getUsedList()
-                        // when we checked to see if the product existed. We can use this
+                        // productModel (our reference product_uneditable) was updated by getUsedList()
+                        // when we checked to see if the product_uneditable existed. We can use this
                         // instance to compare and collate any updates.
                         getProductUpdates();
 
                         // Create a map of any changes to the base data
                         Map<String, Object> baseProductMap = convertBaseProductToMap();
 
-                        // Create a map of any changes to all of the product data
+                        // Create a map of any changes to all of the product_uneditable data
                         Map<String, Object> completeProductMap = convertProductToMap();
 
                         // If there have been updates to the base data, save them
@@ -887,7 +871,7 @@ public class ProductDetail extends AppCompatActivity {
                             saveBaseProductUpdates(baseProductMap);
                         }
 
-                        // If there have been changes to any of the product data. save them
+                        // If there have been changes to any of the product_uneditable data. save them
                         // Location 2
                         if (completeProductMap != null) {
 
@@ -900,15 +884,15 @@ public class ProductDetail extends AppCompatActivity {
             return;
 
         /*
-           3. This is an existing product, created by the user who is editing it. It is not due to
+           3. This is an existing product_uneditable, created by the user who is editing it. It is not due to
               be added to the users used list because it is already in the users used list. As it is
               used by more than one person the creator is no longer allowed to edit its base
               information. As such base fields are not editable however the user fields are, as the
               data they contain is specific to each user.
 
-              This product is having its user data updated which will only change in one location in
+              This product_uneditable is having its user data updated which will only change in one location in
               the database:
-              1. /collection_users/[user ID]/collection_products/[product ID] - Update user data
+              1. /collection_users/[user ID]/collection_products/[product_uneditable ID] - Update user data
         */
         } else if (isExistingProduct &&
                 isCreator &&
@@ -918,7 +902,7 @@ public class ProductDetail extends AppCompatActivity {
                 !productDataIsEditable &&
                 userProductDataIsEditable) {
 
-            // Validate the user product specific fields
+            // Validate the user product_uneditable specific fields
             boolean userFieldsValidated = checkValidationUserFields();
 
             if (userFieldsValidated) {
@@ -927,8 +911,8 @@ public class ProductDetail extends AppCompatActivity {
                    Collate any changes and update the child data in the database.
                 */
 
-                // productModel (our reference product) was updated by getUsedList() when we checked
-                // to see if the product existed. We can use this instance to check for and
+                // productModel (our reference product_uneditable) was updated by getUsedList() when we checked
+                // to see if the product_uneditable existed. We can use this instance to check for and
                 // collate any updates.
                 Map<String, Object> productUserUpdates = getUserUpdates();
 
@@ -941,19 +925,19 @@ public class ProductDetail extends AppCompatActivity {
             finish();
 
         /*
-           4. This is an existing product, not created by the user who is editing it. It is not
+           4. This is an existing product_uneditable, not created by the user who is editing it. It is not
               currently in the users used list but it is due to be added. In this instance it is not
-              relevant how many users use this product, so we do not include the multi-user boolean.
-              As the user did not create this product the base fields are not editable however the
+              relevant how many users use this product_uneditable, so we do not include the multi-user boolean.
+              As the user did not create this product_uneditable the base fields are not editable however the
               user specific fields are editable and have been verified.
 
-              This product has been created by another user and this user is adding it to their
+              This product_uneditable has been created by another user and this user is adding it to their
               list. We will need to add two entries to the database to locations 1 and 3:
 
-              1. /collection_users/[User ID]/collection_products/[product ID] - Add the product to
+              1. /collection_users/[User ID]/collection_products/[product_uneditable ID] - Add the product_uneditable to
                  the users used list.
-              3. /collection_used_products/[product ref key]/[used products user key]/[user id] -
-                 Add the users ID to the used product reference document.
+              3. /collection_used_products/[product_uneditable ref key]/[used products user key]/[user id] -
+                 Add the users ID to the used product_uneditable reference document.
         */
         } else if (isExistingProduct &&
                 !isCreator &&
@@ -962,7 +946,7 @@ public class ProductDetail extends AppCompatActivity {
                 !productDataIsEditable &&
                 userProductDataIsEditable) {
 
-            // Validate the user product specific fields
+            // Validate the user product_uneditable specific fields
             boolean userFieldsValidated = checkValidationUserFields();
 
             if (userFieldsValidated) {
@@ -971,8 +955,8 @@ public class ProductDetail extends AppCompatActivity {
                    Collate any changes and update the child data in the database.
                 */
 
-                // productModel (our reference product) was updated by getUsedList() when we checked
-                // to see if the product existed. We can use this instance to check for and
+                // productModel (our reference product_uneditable) was updated by getUsedList() when we checked
+                // to see if the product_uneditable existed. We can use this instance to check for and
                 // collate any updates. In theory, all fields should be updated in this instance,
                 // therefore we should not need to perform this task. However we still need to
                 // produce an object map and checking for changes does this for us.
@@ -981,9 +965,9 @@ public class ProductDetail extends AppCompatActivity {
                 // If there are updates save them to the database
                 if (productUserUpdates != null) {
 
-                    // The current user is adding this product to their used product list therefore
+                    // The current user is adding this product_uneditable to their used product_uneditable list therefore
                     // we need to add this users ID to:
-                    // /collection_used_products/[product ref key]/[used products user key]/[user id]
+                    // /collection_used_products/[product_uneditable ref key]/[used products user key]/[user id]
                     // and update fbUsedProductUserID
                     // Location 3
                     addUserToUsedProducts();
@@ -998,17 +982,17 @@ public class ProductDetail extends AppCompatActivity {
             finish();
 
         /*
-           5. This is an existing product, not created by the user who is editing it. It is
+           5. This is an existing product_uneditable, not created by the user who is editing it. It is
               currently in the users used list so it is not due to be added. In this instance it is
-              not relevant how many users use this product, so we do not include the multi-user
-              boolean. As the user did not create this product the base fields are not editable
+              not relevant how many users use this product_uneditable, so we do not include the multi-user
+              boolean. As the user did not create this product_uneditable the base fields are not editable
               however the user specific fields are editable and have been verified.
 
-              This product has been created by another user and this user has it on their list and
+              This product_uneditable has been created by another user and this user has it on their list and
               is updating the user specific information. We will need to edit entries at one
               location in the database:
 
-              1. /collection_users/[User ID]/collection_products/[product ID] - Perform the child
+              1. /collection_users/[User ID]/collection_products/[product_uneditable ID] - Perform the child
                  updates.
         */
         } else if (isExistingProduct &&
@@ -1035,19 +1019,19 @@ public class ProductDetail extends AppCompatActivity {
             finish();
 
         /*
-           6. This is an existing product, created by the user who is editing it. It is
+           6. This is an existing product_uneditable, created by the user who is editing it. It is
               not currently in the users used list and due to be added. In this instance it is
-              not relevant how many users use this product, so we do not include the multi-user
-              boolean. As the user created this product the base fields are not editable
+              not relevant how many users use this product_uneditable, so we do not include the multi-user
+              boolean. As the user created this product_uneditable the base fields are not editable
               however the user specific fields are editable and have been verified.
 
-              This product has been created by this user and this user has previously deleted this
-              product from their list. They are now adding it back and updating the user
+              This product_uneditable has been created by this user and this user has previously deleted this
+              product_uneditable from their list. They are now adding it back and updating the user
               specific data. We will need to edit entries at two locations in the database:
 
-              1. /collection_users/[User ID]/collection_products/[product ID] - Perform the child
+              1. /collection_users/[User ID]/collection_products/[product_uneditable ID] - Perform the child
                  updates (location 2).
-              3. /collection/used_products/[product ref key] - Count of how many are using a product
+              3. /collection/used_products/[product_uneditable ref key] - Count of how many are using a product_uneditable
                  (location 3)
         */
         } else if (isExistingProduct &&
@@ -1083,12 +1067,12 @@ public class ProductDetail extends AppCompatActivity {
     }
 
     /**
-     * Checks for updates to the product data and updates our reference version of productModel with
+     * Checks for updates to the product_uneditable data and updates our reference version of productModel with
      * the new values
      */
     private void getProductUpdates() {
 
-        // Add any changes to the base product information
+        // Add any changes to the base product_uneditable information
         if (!productModel.getDescription().equals(description)) {
             productModel.setDescription(description);
         }
@@ -1110,15 +1094,15 @@ public class ProductDetail extends AppCompatActivity {
         if (packAvePrice != productModel.getPackAvePrice()) {
             productModel.setPackAvePrice(packAvePrice);
         }
-        if (!remoteImageStorageUri.toString().equals(productModel.getFbStorageImageUri())) {
-            productModel.setFbStorageImageUri(remoteImageStorageUri.toString());
+        if (!remoteImageStorageUri.toString().equals(productModel.getRemoteImageUri())) {
+            productModel.setRemoteImageUri(remoteImageStorageUri.toString());
         }
 
         // Start of user updates
-        if (!remoteProductReferenceKey.equals(productModel.getFbProductReferenceKey())) {
-            productModel.setFbProductReferenceKey(remoteProductReferenceKey);
+        if (!remoteProductId.equals(productModel.getRemoteProductId())) {
+            productModel.setRemoteProductId(remoteProductId);
         }
-        if (!remoteUsedProductsUserKeyReference.equals(productModel.getFbUsedProductsUserKey())) {
+        if (!remoteUsedProductsUserKeyReference.equals(productModel.getRemoteUsedProductId())) {
             productModel.setFbUsedProductsUserKey(remoteUsedProductsUserKeyReference);
         }
         if (!retailer.equals(productModel.getRetailer())) {
@@ -1130,8 +1114,8 @@ public class ProductDetail extends AppCompatActivity {
         if (!locationInRoom.equals(productModel.getLocationInRoom())) {
             productModel.setLocationInRoom(locationInRoom);
         }
-        if (packPrice != productModel.getPackPrice()) {
-            productModel.setPackPrice(packPrice);
+        if (packPrice != productModel.getPrice()) {
+            productModel.setPrice(packPrice);
         }
         if (!localImageUri.toString().equals(productModel.getLocalImageUri())) {
             productModel.setLocalImageUri(localImageUri.toString());
@@ -1140,11 +1124,11 @@ public class ProductDetail extends AppCompatActivity {
         // No need to check createdBy as it cannot be modified once created
     }
 
-    /* Checks for updates to the user specific product data */
+    /* Checks for updates to the user specific product_uneditable data */
     private Map<String, Object> getUserUpdates() {
 
         // Now for the user specific information, create a HashMap to store the changes
-        // We store the whole product in the /collection_user/[uid]/collection_products location
+        // We store the whole product_uneditable in the /collection_user/[uid]/collection_products location
         Map<String, Object> productUserUpdates = new HashMap<>();
 
         // Create a counter to see how many updates there are, if any.
@@ -1157,14 +1141,14 @@ public class ProductDetail extends AppCompatActivity {
         productUserUpdates.put(SHELF_LIFE, productModel.getShelfLife());
         productUserUpdates.put(PACK_SIZE, productModel.getPackSize());
         productUserUpdates.put(UNIT_OF_MEASURE, productModel.getUnitOfMeasure());
-        productUserUpdates.put(PROD_COMM_PRICE_AVE, productModel.getPackPrice());
+        productUserUpdates.put(PROD_COMM_PRICE_AVE, productModel.getPrice());
         productUserUpdates.put(CREATED_BY, productModel.getCreatedBy());
 
         // Add in the user specific data to the HashMap
         productUserUpdates.put(LOCAL_IMAGE_URI, productModel.getLocalImageUri());
-        productUserUpdates.put(REMOTE_IMAGE_URI, productModel.getFbStorageImageUri());
-        productUserUpdates.put(REMOTE_PRODUCT_ID, productModel.getFbProductReferenceKey());
-        productUserUpdates.put(REMOTE_USED_PRODUCT_ID, productModel.getFbUsedProductsUserKey());
+        productUserUpdates.put(REMOTE_IMAGE_URI, productModel.getRemoteImageUri());
+        productUserUpdates.put(REMOTE_PRODUCT_ID, productModel.getRemoteProductId());
+        productUserUpdates.put(REMOTE_USED_PRODUCT_ID, productModel.getRemoteUsedProductId());
 
         // Compare and add any changes from the user specific fields to the HashMap
         if (!retailer.equals(productModel.getRetailer())) {
@@ -1182,9 +1166,9 @@ public class ProductDetail extends AppCompatActivity {
             productModel.setLocationInRoom(locationInRoom);
             userUpdateCounter++;
         }
-        if (packPrice != productModel.getPackPrice()) {
+        if (packPrice != productModel.getPrice()) {
             productUserUpdates.put(PRICE, packPrice);
-            productModel.setPackPrice(packPrice);
+            productModel.setPrice(packPrice);
             userUpdateCounter++;
         }
 
@@ -1196,40 +1180,40 @@ public class ProductDetail extends AppCompatActivity {
         return null;
     }
 
-    /* Saves any product user updates to the database */
+    /* Saves any product_uneditable user updates to the database */
     private void saveUserProductUpdates(Map<String, Object> productUserUpdates) {
 
         // Make a reference to the users products
         DatabaseReference userProductRef = remoteUserCollectionReference
                 .child(Constants.getUserId().getValue())
-                .child(Constants.FB_COLLECTION_PRODUCTS)
-                .child(remoteProductReferenceKey);
+                .child(Constants.REMOTE_PRODUCT_LOCATION)
+                .child(remoteProductId);
 
         // Save the changes to the users products
         userProductRef.updateChildren(productUserUpdates);
     }
 
-    /* Saves any product base updates to the database */
+    /* Saves any product_uneditable base updates to the database */
     private void saveBaseProductUpdates(Map<String, Object> productBaseUpdates) {
 
-        // Update the product specific information in Firebase
+        // Update the product_uneditable specific information in Firebase
         DatabaseReference reference = remoteProductCollectionReference
-                .child(remoteProductReferenceKey);
+                .child(remoteProductId);
 
         reference.updateChildren(productBaseUpdates);
     }
 
     /*
     Adds the current user ID to:
-    /collection_used_products/[product ref key]/[used products user key]/[user id]
+    /collection_used_products/[product_uneditable ref key]/[used products user key]/[user id]
     */
     private void addUserToUsedProducts() {
 
         // Create the database reference
         DatabaseReference usedProductRef = remoteUsedProductsCollectionReference
-                .child(remoteProductReferenceKey).push();
+                .child(remoteProductId).push();
 
-        // Extract the /used_products/user/[product reference key]
+        // Extract the /used_products/user/[product_uneditable reference key]
         Uri usedProductUserUri = Uri.parse(usedProductRef.toString());
         remoteUsedProductsUserKeyReference = usedProductUserUri.getLastPathSegment();
 
@@ -1299,10 +1283,10 @@ public class ProductDetail extends AppCompatActivity {
     }
 
     /* Converts the products base data to an object map */
-    // Todo - use the mapping in the product class
+    // Todo - use the mapping in the product_uneditable class
     private Map<String, Object> convertBaseProductToMap() {
 
-        // Create the base product information for /collection/products location
+        // Create the base product_uneditable information for /collection/products location
         ProductModel newProductData = new ProductModel();
         newProductData.setDescription(description);
         newProductData.setMadeBy(madeBy);
@@ -1312,14 +1296,14 @@ public class ProductDetail extends AppCompatActivity {
         newProductData.setUnitOfMeasure(unitOfMeasure);
         newProductData.setPackAvePrice(Constants.DEFAULT_PRODUCT_PRICE_AVERAGE);
         newProductData.setCreatedBy(Constants.getUserId().getValue());
-        newProductData.setFbStorageImageUri(remoteImageStorageUri.toString());
+        newProductData.setRemoteImageUri(remoteImageStorageUri.toString());
 
         // Convert to a map
         return newProductData.commProductToMap();
     }
 
-    /* Given the base updates, converts the entire product data to a map object */
-    // Todo - use the mapping in the product class
+    /* Given the base updates, converts the entire product_uneditable data to a map object */
+    // Todo - use the mapping in the product_uneditable class
     private Map<String, Object> convertProductToMap() {
 
         ProductModel newProductData = new ProductModel();
@@ -1333,15 +1317,15 @@ public class ProductDetail extends AppCompatActivity {
         newProductData.setUnitOfMeasure(unitOfMeasure);
         newProductData.setPackAvePrice(Constants.DEFAULT_PRODUCT_PRICE_AVERAGE);
         newProductData.setCreatedBy(Constants.getUserId().getValue());
-        newProductData.setFbStorageImageUri(remoteImageStorageUri.toString());
+        newProductData.setRemoteImageUri(remoteImageStorageUri.toString());
 
         // Add in the additional values and keys
-        newProductData.setFbProductReferenceKey(remoteProductReferenceKey);
+        newProductData.setRemoteProductId(remoteProductId);
         newProductData.setFbUsedProductsUserKey(remoteUsedProductsUserKeyReference);
         newProductData.setRetailer(retailer);
         newProductData.setLocationRoom(locationRoom);
         newProductData.setLocationInRoom(locationInRoom);
-        newProductData.setPackPrice(packPrice);
+        newProductData.setPrice(packPrice);
         newProductData.setLocalImageUri(localImageUri.toString());
 
         // Convert to Map
@@ -1357,17 +1341,17 @@ public class ProductDetail extends AppCompatActivity {
     private void populateUi() {
 
         // If there is an image Uri present, load the image
-        if (!Uri.EMPTY.equals(Uri.parse(productModel.getFbStorageImageUri()))) {
-            Picasso.get().load(productModel.getFbStorageImageUri()).
+        if (!Uri.EMPTY.equals(Uri.parse(productModel.getRemoteImageUri()))) {
+            Picasso.get().load(productModel.getRemoteImageUri()).
                     into(detailView.productImageView);
         }
 
         // Product fields editable criteria:
-        // 1. Has to be creator of product
+        // 1. Has to be creator of product_uneditable
         // 2. Base fields have to be editable
         if (isCreator && productDataIsEditable) {
 
-            // Update the EditText fields for the product information
+            // Update the EditText fields for the product_uneditable information
             detailView.productEditable.editableDescription.setText(productModel.getDescription());
             detailView.productEditable.editableMadeBy.setText(productModel.getMadeBy());
             detailView.productEditable.editablePackSize.setText(String.valueOf(productModel.getPackSize()));
@@ -1392,14 +1376,14 @@ public class ProductDetail extends AppCompatActivity {
         }
 
         // User specific fields editable criteria:
-        // 1. Has to be on the users used product list or about to be on it
+        // 1. Has to be on the users used product_uneditable list or about to be on it
         // 2. User fields have to be editable
         if ((inUsedList ||
                 putInUsedList) &&
                 userProductDataIsEditable) {
 
             detailView.userProductEditable.editableRetailer.setText(productModel.getRetailer());
-            detailView.userProductEditable.editablePrice.setText(String.valueOf(productModel.getPackPrice()));
+            detailView.userProductEditable.editablePrice.setText(String.valueOf(productModel.getPrice()));
             detailView.userProductEditable.editableLocationRoom.setText(productModel.getLocationRoom());
             detailView.userProductEditable.editableLocationInRoom.setText(productModel.getLocationInRoom());
 
@@ -1407,7 +1391,7 @@ public class ProductDetail extends AppCompatActivity {
             invalidateOptionsMenu();
 
             // User specific fields uneditable container criteria:
-            // 1. Has to be in the users used product list.
+            // 1. Has to be in the users used product_uneditable list.
             // 2. Uneditable status has to be true.
             // Todo - Why  are userProductDataIsEditable is always false, this may be correct behaviour
         } else if (inUsedList &&
@@ -1417,11 +1401,11 @@ public class ProductDetail extends AppCompatActivity {
             detailView.userProductUneditable.retailer.setText(productModel.getRetailer());
             NumberFormat format = NumberFormat.getCurrencyInstance();
             detailView.userProductUneditable.price.setText(
-                    String.valueOf(format.format(productModel.getPackPrice())));
+                    String.valueOf(format.format(productModel.getPrice())));
             detailView.userProductUneditable.locationRoom.setText(productModel.getLocationRoom());
             detailView.userProductUneditable.locationInRoom.setText(productModel.getLocationInRoom());
 
-            // This product is all ready in the users used list so remove the FAB
+            // This product_uneditable is all ready in the users used list so remove the FAB
             detailView.fab.setVisibility(View.GONE);
 
             // This call invalidates the current menu options and calls onPrepareOptionsMenu()
@@ -1434,10 +1418,10 @@ public class ProductDetail extends AppCompatActivity {
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
 
-        /* Save the current product */
+        /* Save the current product_uneditable */
         outState.putString(Constants.USER_ID_KEY, Constants.getUserId().getValue());
         // outState.putParcelable(Constants.PRODUCT_KEY, productModel);
-        outState.putString(Constants.PRODUCT_FB_REFERENCE_KEY, remoteProductReferenceKey);
+        outState.putString(Constants.PRODUCT_FB_REFERENCE_KEY, remoteProductId);
 
         // Save the bool's!
         outState.putBoolean(Constants.PRODUCT_IS_CREATOR_KEY, isCreator);
@@ -1686,19 +1670,19 @@ public class ProductDetail extends AppCompatActivity {
     }
 
     /*
-    Opens the product user data fields for a product that is being added to this users product
+    Opens the product_uneditable user data fields for a product_uneditable that is being added to this users product_uneditable
     used list
     */
     private void openProductUserDataFields() {
 
-        // If the current product is not in the users used list, pressing the FAB opens up the
+        // If the current product_uneditable is not in the users used list, pressing the FAB opens up the
         // user specific fields, so the user can edit them.
         if (!inUsedList) {
 
             // Make the user specific fields visible
             usersProductInfoFieldsAreEditable(true);
 
-            // This product is going to be added to the users used list so update the bool
+            // This product_uneditable is going to be added to the users used list so update the bool
             putInUsedList = true;
 
             // Turn off the FAB
@@ -1746,27 +1730,27 @@ public class ProductDetail extends AppCompatActivity {
         }
     }
 
-    /* Sets up the visibility properties for an existing uneditable product */
+    /* Sets up the visibility properties for an existing uneditable product_uneditable */
     private void showUneditableViewContainers() {
 
-        // This is for product viewing only, so no need for editable views
+        // This is for product_uneditable viewing only, so no need for editable views
         detailView.productEditable.productContainer.setVisibility(View.GONE);
         detailView.userProductEditable.productUserContainer.setVisibility(View.GONE);
 
         // Make relevant view containers visible
         detailView.productUneditable.productContainer.setVisibility(View.VISIBLE);
 
-        // Only show the 'user specific product data container' if in used list
+        // Only show the 'user specific product_uneditable data container' if in used list
         if (inUsedList) {
 
             detailView.userProductUneditable.productUserContainer.setVisibility(View.VISIBLE);
         } else {
 
-            // This product is not in the users used list so we have no information as to how they
+            // This product_uneditable is not in the users used list so we have no information as to how they
             // use it. So set the user fields to gone.
             detailView.userProductUneditable.productUserContainer.setVisibility(View.GONE);
 
-            // Show the fab so they can add this product to their list if they wish.
+            // Show the fab so they can add this product_uneditable to their list if they wish.
             detailView.fab.setVisibility(View.VISIBLE);
         }
     }
@@ -1805,7 +1789,7 @@ public class ProductDetail extends AppCompatActivity {
 
             detailView.userProductEditable.productUserContainer.setVisibility(View.GONE);
 
-            // If the product is on or is going to be on the users used list turn the user
+            // If the product_uneditable is on or is going to be on the users used list turn the user
             // specific fields on
             if (inUsedList || putInUsedList) {
 
@@ -1819,66 +1803,66 @@ public class ProductDetail extends AppCompatActivity {
         }
     }
 
-    /* Delete the product */
+    /* Delete the product_uneditable */
     private void deleteProduct() {
 
         /*
-           This is an existing product. So there are up to four locations where data needs to
+           This is an existing product_uneditable. So there are up to four locations where data needs to
            be deleted:
-           1. Delete the product form the users used product list which is located at
-              /collection_users/[user id]/collection_products/[product id]
-           2. Delete the entry for this product from this user in the used_products reference
-           3. If this is the only user using this product, delete the product from
+           1. Delete the product_uneditable form the users used product_uneditable list which is located at
+              /collection_users/[user id]/collection_products/[product_uneditable id]
+           2. Delete the entry for this product_uneditable from this user in the used_products reference
+           3. If this is the only user using this product_uneditable, delete the product_uneditable from
               /collection_products/
-           4. If this is the only user using this product mFbStorageUri and is not empty, delete
+           4. If this is the only user using this product_uneditable mFbStorageUri and is not empty, delete
               the image in FireStore it is pointing to.
         */
 
         if (isExistingProduct && inUsedList) {
 
-            // For the product information located under the users product list, create a database
+            // For the product_uneditable information located under the users product_uneditable list, create a database
             // reference that needs removing
             DatabaseReference userProductRef = remoteUserCollectionReference
                     .child(Constants.getUserId().getValue())
-                    .child(Constants.FB_COLLECTION_PRODUCTS)
-                    .child(remoteProductReferenceKey);
+                    .child(Constants.REMOTE_PRODUCT_LOCATION)
+                    .child(remoteProductId);
 
             // Then remove the value
             userProductRef.removeValue().addOnCompleteListener(task -> {
 
-                // For the product information located under the 'used_products'
+                // For the product_uneditable information located under the 'used_products'
                 // collection, create the database reference that needs removing.
                 DatabaseReference usedProductsRef = remoteUsedProductsCollectionReference
-                        .child(remoteProductReferenceKey)
-                        .child(productModel.getFbUsedProductsUserKey());
+                        .child(remoteProductId)
+                        .child(productModel.getRemoteUsedProductId());
 
                 // Then remove the value.
                 usedProductsRef.removeValue().addOnCompleteListener(task1 -> {
 
                     /*
-                       Check to see if this product is being used by anyone else. If not remove it
+                       Check to see if this product_uneditable is being used by anyone else. If not remove it
                        from the database.
                     */
 
-                    // Get a reference to: /collection_used_products/[product ID]/[used product ref].
+                    // Get a reference to: /collection_used_products/[product_uneditable ID]/[used product_uneditable ref].
                     Query usedProductRef = remoteUsedProductsCollectionReference
-                            .child(remoteProductReferenceKey).limitToFirst(2);
+                            .child(remoteProductId).limitToFirst(2);
 
                     usedProductRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                            // If getValue() is null there are no other users using this product, it
+                            // If getValue() is null there are no other users using this product_uneditable, it
                             // is therefore safe to delete it from /collection_products/
                             if (dataSnapshot.getValue() == null) {
 
                                 DatabaseReference deleteProductRef = remoteProductCollectionReference
-                                        .child(remoteProductReferenceKey);
+                                        .child(remoteProductId);
 
                                 // Remove the value.
                                 deleteProductRef.removeValue();
 
-                                // If there is an image stored with this product, delete it.
+                                // If there is an image stored with this product_uneditable, delete it.
                                 if (!TextUtils.isEmpty(remoteImageStorageUri.toString())) {
 
                                     StorageReference imageRef = remoteImageStorageDb
@@ -2025,17 +2009,16 @@ public class ProductDetail extends AppCompatActivity {
     }
 
     /*
-     * Setup the dropdown spinner that allows the user to select the unit of measure for a product.
+     * Setup the dropdown spinner that allows the user to select the unit of measure for a product_uneditable.
      */
     private void setupUoMSpinner() {
 
-        Spinner UoMSpinner = findViewById(
-                R.id.spinner_unit_of_measure);
+        Spinner UoMSpinner = findViewById(R.id.spinner_unit_of_measure);
 
         // Create an adapter for the spinner. The list options are from the String array in
         // arrays.xml. The spinner will use the default layout.
         ArrayAdapter UoMSpinnerAdapter = ArrayAdapter.createFromResource(this,
-                R.array.array_UoM_metric_options, R.layout.list_item_spinner);
+                R.array.unit_of_measure_options, R.layout.list_item_spinner);
 
         // Specify dropdown layout style
         UoMSpinnerAdapter.setDropDownViewResource(R.layout.list_item_spinner);
@@ -2058,16 +2041,16 @@ public class ProductDetail extends AppCompatActivity {
                 String selection = (String) parent.getItemAtPosition(position);
 
                 if (!TextUtils.isEmpty(selection)) {
-                    if (selection.equals(getString(R.string.uom_option_0))) {
+                    if (selection.equals(getString(R.string.unit_of_measure_default))) {
                         unitOfMeasure = getResources().getInteger(R.integer.item_not_selected);
 
-                    } else if (selection.equals(getString(R.string.uom_option_1))) {
+                    } else if (selection.equals(getString(R.string.grams))) {
                         unitOfMeasure = getResources().getInteger(R.integer.uom_grams_int);
 
-                    } else if (selection.equals(getString(R.string.uom_option_2))) {
+                    } else if (selection.equals(getString(R.string.millilitres))) {
                         unitOfMeasure = getResources().getInteger(R.integer.uom_milliliter_int);
 
-                    } else if (selection.equals(getString(R.string.uom_option_3))) {
+                    } else if (selection.equals(getString(R.string.count))) {
                         unitOfMeasure = getResources().getInteger(R.integer.uom_count_int);
                     }
                 }
@@ -2076,16 +2059,16 @@ public class ProductDetail extends AppCompatActivity {
                 uoMValidated = validateUnitOfMeasure();
             }
 
-            // Because AdapterView is an abstract class, onNothingSelected must be defined
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 unitOfMeasure = getResources().getInteger(R.integer.item_not_selected);
+                uoMValidated = false;
             }
         });
     }
 
     /**
-     * Setup the dropdown spinner that allows the user to select the shelf life of the product.
+     * Setup the dropdown spinner that allows the user to select the shelf life of the product_uneditable.
      */
     private void setupShelfLifeSpinner() {
 
@@ -2095,7 +2078,7 @@ public class ProductDetail extends AppCompatActivity {
         // Create an adapter for the spinner. The list options are from the String array in
         // arrays.xml. The spinner will use the default layout
         ArrayAdapter shelfLifeSpinnerAdapter = ArrayAdapter.createFromResource(this,
-                R.array.array_shelf_life_options, R.layout.list_item_spinner);
+                R.array.shelf_life_options, R.layout.list_item_spinner);
 
         // Specify dropdown layout style.
         shelfLifeSpinnerAdapter.setDropDownViewResource(R.layout.list_item_spinner);
@@ -2117,55 +2100,55 @@ public class ProductDetail extends AppCompatActivity {
                 String selection = (String) parent.getItemAtPosition(position);
 
                 if (!TextUtils.isEmpty(selection)) {
-                    if (selection.equals(getString(R.string.shelf_life_option_0))) {
+                    if (selection.equals(getString(R.string.shelf_life_default))) {
                         shelfLife = getResources().getInteger(R.integer.item_not_selected);
 
-                    } else if (selection.equals(getString(R.string.shelf_life_option_1))) {
+                    } else if (selection.equals(getString(R.string.one_day))) {
                         shelfLife = getResources().getInteger(R.integer.shelf_life_option_1);
 
-                    } else if (selection.equals(getString(R.string.shelf_life_option_2))) {
+                    } else if (selection.equals(getString(R.string.three_days))) {
                         shelfLife = getResources().getInteger(R.integer.shelf_life_option_2);
 
-                    } else if (selection.equals(getString(R.string.shelf_life_option_3))) {
+                    } else if (selection.equals(getString(R.string.five_days))) {
                         shelfLife = getResources().getInteger(R.integer.shelf_life_option_3);
 
-                    } else if (selection.equals(getString(R.string.shelf_life_option_4))) {
+                    } else if (selection.equals(getString(R.string.one_week))) {
                         shelfLife = getResources().getInteger(R.integer.shelf_life_option_4);
 
-                    } else if (selection.equals(getString(R.string.shelf_life_option_5))) {
+                    } else if (selection.equals(getString(R.string.two_weeks))) {
                         shelfLife = getResources().getInteger(R.integer.shelf_life_option_5);
 
-                    } else if (selection.equals(getString(R.string.shelf_life_option_6))) {
+                    } else if (selection.equals(getString(R.string.three_weeks))) {
                         shelfLife = getResources().getInteger(R.integer.shelf_life_option_6);
 
-                    } else if (selection.equals(getString(R.string.shelf_life_option_7))) {
+                    } else if (selection.equals(getString(R.string.four_weeks))) {
                         shelfLife = getResources().getInteger(R.integer.shelf_life_option_7);
 
-                    } else if (selection.equals(getString(R.string.shelf_life_option_8))) {
+                    } else if (selection.equals(getString(R.string.frozen))) {
                         shelfLife = getResources().getInteger(R.integer.shelf_life_option_8);
 
-                    } else if (selection.equals(getString(R.string.shelf_life_option_9))) {
+                    } else if (selection.equals(getString(R.string.dried))) {
                         shelfLife = getResources().getInteger(R.integer.shelf_life_option_9);
 
-                    } else if (selection.equals(getString(R.string.shelf_life_option_10))) {
+                    } else if (selection.equals(getString(R.string.sealed))) {
                         shelfLife = getResources().getInteger(R.integer.shelf_life_option_10);
 
-                    } else if (selection.equals(getString(R.string.shelf_life_option_11))) {
+                    } else if (selection.equals(getString(R.string.tin))) {
                         shelfLife = getResources().getInteger(R.integer.shelf_life_option_11);
 
-                    } else if (selection.equals(getString(R.string.shelf_life_option_12))) {
+                    } else if (selection.equals(getString(R.string.jar))) {
                         shelfLife = getResources().getInteger(R.integer.shelf_life_option_12);
 
-                    } else if (selection.equals(getString(R.string.shelf_life_option_13))) {
+                    } else if (selection.equals(getString(R.string.bottle))) {
                         shelfLife = getResources().getInteger(R.integer.shelf_life_option_13);
 
-                    } else if (selection.equals(getString(R.string.shelf_life_option_14))) {
+                    } else if (selection.equals(getString(R.string.box))) {
                         shelfLife = getResources().getInteger(R.integer.shelf_life_option_14);
 
-                    } else if (selection.equals(getString(R.string.shelf_life_option_15))) {
+                    } else if (selection.equals(getString(R.string.packet))) {
                         shelfLife = getResources().getInteger(R.integer.shelf_life_option_15);
 
-                    } else if (selection.equals(getString(R.string.shelf_life_option_16))) {
+                    } else if (selection.equals(getString(R.string.not_applicable))) {
                         shelfLife = getResources().getInteger(R.integer.shelf_life_option_16);
                     }
                 }
@@ -2182,7 +2165,7 @@ public class ProductDetail extends AppCompatActivity {
     }
 
     /**
-     * Setup the dropdown spinner that allows the user to select the category for a product.
+     * Setup the dropdown spinner that allows the user to select the category for a product_uneditable.
      */
     private void setupCategorySpinner() {
 
@@ -2192,7 +2175,7 @@ public class ProductDetail extends AppCompatActivity {
         // Create an adapter for the spinner. The list options are from the String array in
         // arrays.xml. The spinner will use the default layout.
         ArrayAdapter categorySpinnerAdapter = ArrayAdapter.createFromResource(this,
-                R.array.array_product_category_options, R.layout.list_item_spinner);
+                R.array.product_category_options, R.layout.list_item_spinner);
 
         // Specify dropdown layout style.
         categorySpinnerAdapter.setDropDownViewResource(R.layout.list_item_spinner);
@@ -2214,13 +2197,13 @@ public class ProductDetail extends AppCompatActivity {
                 String selection = (String) parent.getItemAtPosition(position);
 
                 if (!TextUtils.isEmpty(selection)) {
-                    if (selection.equals(getString(R.string.product_category_option_0))) {
+                    if (selection.equals(getString(R.string.category_default))) {
                         category = getResources().getInteger(R.integer.item_not_selected);
 
-                    } else if (selection.equals(getString(R.string.product_category_option_1))) {
+                    } else if (selection.equals(getString(R.string.food))) {
                         category = getResources().getInteger(R.integer.category_option_1);
 
-                    } else if (selection.equals(getString(R.string.product_category_option_2))) {
+                    } else if (selection.equals(getString(R.string.non_food))) {
                         category = getResources().getInteger(R.integer.category_option_2);
                     }
                 }
@@ -2231,7 +2214,7 @@ public class ProductDetail extends AppCompatActivity {
             // Because AdapterView is an abstract class, onNothingSelected must be defined
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                category = R.string.product_category_option_0;
+                category = R.string.category_default;
             }
         });
     }
@@ -2255,12 +2238,12 @@ public class ProductDetail extends AppCompatActivity {
         /* Initial status bar options */
         setMenuItemVisibility(false, false, false);
 
-        // If product is a new product, hide the "Delete" and "Edit"  menu items.
-        if (remoteProductReferenceKey.equals(Constants.DEFAULT_FB_PRODUCT_ID)) {
+        // If product_uneditable is a new product_uneditable, hide the "Delete" and "Edit"  menu items.
+        if (remoteProductId.equals(Constants.DEFAULT_FB_PRODUCT_ID)) {
             setMenuItemVisibility(true, false, false);
         }
 
-        // If existing product, is not the creator, is in the used list, user fields editable.
+        // If existing product_uneditable, is not the creator, is in the used list, user fields editable.
         if (isExistingProduct &&
                 !isCreator &&
                 inUsedList &&
@@ -2268,7 +2251,7 @@ public class ProductDetail extends AppCompatActivity {
             setMenuItemVisibility(true, false, false);
         }
 
-        // Existing product, user is not creator, is in used list, multi-user is not yet known, base
+        // Existing product_uneditable, user is not creator, is in used list, multi-user is not yet known, base
         // fields are not editable, user fields are not editable
         if (isExistingProduct &&
                 !isCreator &&
@@ -2279,7 +2262,7 @@ public class ProductDetail extends AppCompatActivity {
             setMenuItemVisibility(false, true, true);
         }
 
-        // Existing product, user is creator, is in the users used list. Ui state is uneditable.
+        // Existing product_uneditable, user is creator, is in the users used list. Ui state is uneditable.
         if (isExistingProduct &&
                 isCreator &&
                 inUsedList &&
@@ -2289,7 +2272,7 @@ public class ProductDetail extends AppCompatActivity {
             setMenuItemVisibility(false, true, true);
         }
 
-        // Existing product, user is creator, is in users used list, both editable containers are
+        // Existing product_uneditable, user is creator, is in users used list, both editable containers are
         // visible.
         if (isExistingProduct &&
                 isCreator &&
@@ -2300,7 +2283,7 @@ public class ProductDetail extends AppCompatActivity {
             setMenuItemVisibility(true, false, true);
         }
 
-        // Existing product, user is creator, is in users used list, base container is uneditable
+        // Existing product_uneditable, user is creator, is in users used list, base container is uneditable
         // user container is editable.
         if (isExistingProduct &&
                 isCreator &&
@@ -2320,12 +2303,12 @@ public class ProductDetail extends AppCompatActivity {
         switch (item.getItemId()) {
             // Save (tick) menu option selected
             case R.id.menu_product_editor_action_save:
-                // Save product and exit activity
+                // Save product_uneditable and exit activity
                 saveProduct();
                 break;
 
             case R.id.menu_product_editor_action_delete:
-                // Delete product
+                // Delete product_uneditable
                 deleteProduct();
                 break;
 
@@ -2353,7 +2336,7 @@ public class ProductDetail extends AppCompatActivity {
         }
 
         if (isExistingProduct && isCreator && inUsedList) {
-            // Check to see if more than one user is using this product. This is a
+            // Check to see if more than one user is using this product_uneditable. This is a
             // database operation and may take some time. We cannot proceed until we get the
             // result. So continue operations from method checkMultiUserStatus()
             checkMultiUserStatus();

@@ -22,12 +22,11 @@ import static com.example.peter.thekitchenmenu.data.entity.Product.DESCRIPTION;
 import static com.example.peter.thekitchenmenu.data.entity.Product.ID;
 import static com.example.peter.thekitchenmenu.data.entity.Product.MADE_BY;
 import static com.example.peter.thekitchenmenu.data.entity.Product.REMOTE_PRODUCT_ID;
-import static com.example.peter.thekitchenmenu.data.entity.ProductFastTextSearch.TABLE_FTS_PROD_COMM;
+import static com.example.peter.thekitchenmenu.data.entity.ProductFastTextSearch.TABLE_FTS_PRODUCT;
 
 @Dao
-public interface ProdCommDAO {
+public interface ProductDAO {
 
-    // Gets all Product objects stored locally.
     @Query("SELECT * " +
             "FROM "+ TABLE_PRODUCT +
             " ORDER BY " + DESCRIPTION)
@@ -41,20 +40,17 @@ public interface ProdCommDAO {
             " ORDER BY " + DESCRIPTION)
     DataSource.Factory<Integer, Product> getAllPaged();
 
-    // Gets a list of Product given an array if ID's.
     @Query("SELECT * " +
             "FROM " + TABLE_PRODUCT +
             " WHERE " + ID +
             " IN(:idArray)")
     LiveData<List<Product>> getByIdArray(int[] idArray);
 
-    // Gets a single Product by specifying its ID
     @Query("SELECT * " +
            "FROM " + TABLE_PRODUCT +
             " WHERE id = :id")
     LiveData<Product> getById(int id);
 
-    // Retrieves a single Product by specifying its remote database reference
     @Query("SELECT * " +
             "FROM " + TABLE_PRODUCT +
             " WHERE " + REMOTE_PRODUCT_ID + " = :remoteId")
@@ -78,12 +74,15 @@ public interface ProdCommDAO {
     @Query("DELETE FROM " + TABLE_PRODUCT)
     void deleteAll();
 
-    @Query("SELECT " + TABLE_PRODUCT + "." + ID + " AS _id, " +
+    @Query("SELECT " +
+            TABLE_PRODUCT + "." + ID + " AS _id, " +
             TABLE_PRODUCT + "." + DESCRIPTION + " AS " + SUGGEST_COLUMN_TEXT_1 + ", " +
             TABLE_PRODUCT + "." + MADE_BY + " AS " + SUGGEST_COLUMN_TEXT_2 + ", " +
             TABLE_PRODUCT + "." + ID + " AS " + SUGGEST_COLUMN_INTENT_DATA + " " +
-            "FROM " + TABLE_PRODUCT + " JOIN " + TABLE_FTS_PROD_COMM + " ON (" +
-            TABLE_PRODUCT + "." + ID + " = " + TABLE_FTS_PROD_COMM + ".rowid)" +
-            " WHERE " + TABLE_FTS_PROD_COMM + " MATCH :query")
-    Cursor searchAllProducts(String query);
+            "FROM " +
+            TABLE_PRODUCT + " JOIN " + TABLE_FTS_PRODUCT + " ON (" +
+            TABLE_PRODUCT + "." + ID + " = " + TABLE_FTS_PRODUCT + ".rowid)" +
+            " WHERE " +
+            TABLE_FTS_PRODUCT + " MATCH :query")
+    Cursor findProductsThatMatch(String query);
 }

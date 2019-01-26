@@ -2,8 +2,10 @@
     <string name="app_name">The Kitchen Menu</string>
 
     <!-- CONTENT DESCRIPTIONS -->
-    <!-- Attach to any ImageView's of the product -->
+    <!-- Attach to any ImageView's of the product_uneditable -->
     <string name="cd_picture_of_product">A picture of the product</string>
+    <string name="cd_add_image_from_camera">Select to add image from camera</string>
+    <string name="cd_add_image_from_gallery">Click to add image from gallery</string>
     <!-- Attach to any ImageView's of the recipe -->
     <string name="cd_save_product">Click to save the current product</string>
     <string name="cd_delete_product">Click to delete the current product</string>
@@ -18,7 +20,7 @@
     <string name="label_made_by">Made by</string>
     <string name="hint_made_by">Who makes it?</string>
     <string name="label_retailer">Retailer</string>
-    <string name="hint_description">What do you call this item?</string>
+    <string name="hint_description">Retailers description</string>
     <string name="hint_retailer">Where do you buy it?</string>
     <string name="label_location_room">Storage room</string>
     <string name="hint_location_room">What room do you keep it?</string>
@@ -27,6 +29,8 @@
     <string name="label_pack_size">Pack size</string>
     <string name="hint_pack_size">How many is in a pack?</string>
     <string name="label_UoM">Unit of Measure</string>
+    <string name="label_multi_pack">Multipack?</string>
+    <string name="label_number_of_items">How many in a pack?</string>
     <string name="label_price">Price</string>
     <string name="hint_price">How much does it cost?</string>
     <string name="label_shelf_life">Shelf life</string>
@@ -34,35 +38,41 @@
     <string name="label_quantity">Quantity</string>
 
     <!-- ProductDetail unit of measure spinner options -->
-    <string name="uom_option_0">Select measurement</string>
-    <string name="uom_option_1">grams</string>
-    <string name="uom_option_2">ml</string>
-    <string name="uom_option_3">count</string>
+    <string name="unit_of_measure_default">Please select</string>
+    <string name="grams">grams</string>
+    <string name="kilograms">Kg</string>
+    <string name="ounces">oz</string>
+    <string name="pounds">lb</string>
+    <string name="millilitres">ml</string>
+    <string name="litres">l</string>
+    <string name="count">count</string>
+    <string name="each">each</string>
+    <string name="piece">piece</string>
+    <string name="items">items</string>
 
     <!-- ProductDetail shelf life spinner options -->
-    <string name="shelf_life_option_0">Select shelf life</string>
-    <string name="shelf_life_option_1">1 day</string>
-    <string name="shelf_life_option_2">3 days</string>
-    <string name="shelf_life_option_3">5 days</string>
-    <string name="shelf_life_option_4">1 week</string>
-    <string name="shelf_life_option_5">2 weeks</string>
-    <string name="shelf_life_option_6">3 weeks</string>
-    <string name="shelf_life_option_7">4 weeks</string>
-    <string name="shelf_life_option_8">Frozen</string>
-    <string name="shelf_life_option_9">Dried</string>
-    <string name="shelf_life_option_10">Sealed</string>
-    <string name="shelf_life_option_11">Tin</string>
-    <string name="shelf_life_option_12">Jar</string>
-    <string name="shelf_life_option_13">Bottle</string>
-    <string name="shelf_life_option_14">Box</string>
-    <string name="shelf_life_option_15">Packet</string>
-    <string name="shelf_life_option_16">N/A</string>
+    <string name="shelf_life_default">Please select</string>
+    <string name="one_day">1 day</string>
+    <string name="three_days">3 days</string>
+    <string name="five_days">5 days</string>
+    <string name="one_week">1 week</string>
+    <string name="two_weeks">2 weeks</string>
+    <string name="three_weeks">3 weeks</string>
+    <string name="four_weeks">4 weeks</string>
+    <string name="frozen">Frozen</string>
+    <string name="dried">Dried</string>
+    <string name="sealed">Sealed</string>
+    <string name="tin">Tin</string>
+    <string name="jar">Jar</string>
+    <string name="bottle">Bottle</string>
+    <string name="box">Box</string>
+    <string name="packet">Packet</string>
+    <string name="not_applicable">N/A</string>
 
     <!-- ProductDetail category spinner options -->
-    <string name="product_category_option_0">Select category</string>
-    <string name="product_category_option_1">Food</string>
-    <string name="product_category_option_2">Non food</string>
-    <string name="product_category_option_3">Recipe</string>
+    <string name="category_default">Please select</string>
+    <string name="food">Food</string>
+    <string name="non_food">Non food</string>
 
     <!-- Common menu bar options -->
     <string name="action_save">Save</string>
@@ -78,9 +88,8 @@
     <string name="widget_product_title_latest_products">Latest Products</string>
 
     <!-- ProductDetail user input error codes -->
-    <string name="validation_text_too_short">Too short, needs to be
-        between 5 and 120 characters.</string>
-    <string name="validation_text_too_long">To long, needs to be between 1 and 120 characters.</string>
+    <string name="validation_text_too_short">Too short, needs to be between 3 and 70 characters.</string>
+    <string name="validation_text_too_long">To long, needs to be between 3 and 70 characters.</string>
     <string name="input_error_product_made_by_too_short">Manufacturer name too short, needs to be
         between 1 and 120 characters.</string>
     <string name="input_error_product_made_by_too_long">Manufacturer name too long, needs to be
@@ -116,7 +125,7 @@
     <string name="activity_detail_product_error_incomplete_fields">Please ensure you have completed
         all fields.</string>
 
-    <!-- ProductCatalog -->
+    <!-- ProductCatalogMain -->
     <string name="title_product_catalog">Product Catalog</string>
     <string name="product_catalog_empty_view_title_text">The cupboards are empty.</string>
     <string name="product_catalog_empty_view_subtitle_text">Press + to add some products!</string>
@@ -124,7 +133,7 @@
     <string name="activity_catalog_products_tab_1_title">Community Products</string>
     <string name="activity_catalog_products_tab_2_title">My Products</string>
 
-    <!-- AdapterCatProd -->
+    <!-- AdapterProduct -->
     <string name="adapter_catalog_product_creator_yes">Yes</string>
     <string name="adapter_catalog_product_creator_no">No</string>
     <string name="sign_in_conformation">Thank you for signing in</string>

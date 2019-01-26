@@ -6,7 +6,7 @@ import android.view.MenuItem;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.databaseRemote.RemoteSignIn;
-import com.example.peter.thekitchenmenu.ui.catalog.ProductCatalog;
+import com.example.peter.thekitchenmenu.ui.catalog.ProductCatalogMain;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.Nullable;
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
     void launchProductActivity() {
         Intent launchProductActivity = new Intent(
-                MainActivity.this, ProductCatalog.class);
+                MainActivity.this, ProductCatalogMain.class);
         startActivity(launchProductActivity);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
