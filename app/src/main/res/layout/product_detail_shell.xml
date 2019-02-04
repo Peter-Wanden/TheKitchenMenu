@@ -63,7 +63,7 @@
                             android:contentDescription="@string/cd_add_image"
                             android:elevation="4dp"
                             android:src="@drawable/ic_action_camera"
-                            android:tint="@color/white"/>
+                            android:tint="@color/white" />
 
                         <ImageButton
                             android:id="@+id/picture_from_gallery_button"
@@ -91,7 +91,7 @@
                             android:contentDescription="@string/cd_rotate_image"
                             android:elevation="4dp"
                             android:src="@drawable/ic_action_rotate"
-                            android:tint="@color/white"/>
+                            android:tint="@color/white" />
                     </RelativeLayout>
 
                     <include
@@ -100,15 +100,18 @@
 
                     <include
                         android:id="@+id/product_uneditable"
-                        layout="@layout/product_uneditable" />
+                        layout="@layout/product_uneditable"
+                        android:visibility="gone"/>
 
                     <include
                         android:id="@+id/user_product_editable"
-                        layout="@layout/product_user_data_editable" />
+                        layout="@layout/product_user_data_editable"
+                        android:visibility="gone"/>
 
                     <include
                         android:id="@+id/user_product_uneditable"
-                        layout="@layout/product_user_data_uneditable" />
+                        layout="@layout/product_user_data_uneditable"
+                        android:visibility="gone"/>
                 </LinearLayout>
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton

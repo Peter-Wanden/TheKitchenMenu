@@ -18,7 +18,7 @@
     <!-- Common field labels and hints -->
     <string name="label_description">Description</string>
     <string name="label_made_by">Made by</string>
-    <string name="hint_made_by">Who makes it?</string>
+    <string name="hint_made_by">Who the manufacturer?</string>
     <string name="label_retailer">Retailer</string>
     <string name="hint_description">Retailers description</string>
     <string name="hint_retailer">Where do you buy it?</string>
@@ -26,11 +26,17 @@
     <string name="hint_location_room">What room do you keep it?</string>
     <string name="label_location_in_room">Where abouts?</string>
     <string name="hint_location_in_room">Where abouts in the room?</string>
+    <string name="pack_size_total">Total pack %1$s</string>
+    <string name="pack_size_total_hint">How many %1$s?</string>
+    <string name="item_size">Item %1$s</string>
+    <string name="item_size_hint">How many %1$s?</string>
     <string name="label_pack_size">Pack size</string>
-    <string name="hint_pack_size">How many is in a pack?</string>
-    <string name="label_UoM">Unit of Measure</string>
+    <string name="label_item_size">Item size</string>
+    <string name="hint_pack_size">Weight/volume of pack</string>
+    <string name="hint_item_size">Weight/volume of each item</string>
+    <string name="unit_of_measure_label">Sold in units of</string>
     <string name="label_multi_pack">Multipack?</string>
-    <string name="label_number_of_items">How many in a pack?</string>
+    <string name="label_number_of_items">How many items in a pack?</string>
     <string name="label_price">Price</string>
     <string name="hint_price">How much does it cost?</string>
     <string name="label_shelf_life">Shelf life</string>
@@ -38,17 +44,23 @@
     <string name="label_quantity">Quantity</string>
 
     <!-- ProductDetail unit of measure spinner options -->
+    <!-- See arrays.xml "unit_of_measure_options" for usage -->
     <string name="unit_of_measure_default">Please select</string>
     <string name="grams">grams</string>
     <string name="kilograms">Kg</string>
     <string name="ounces">oz</string>
     <string name="pounds">lb</string>
     <string name="millilitres">ml</string>
-    <string name="litres">l</string>
-    <string name="count">count</string>
+    <string name="litres">litres</string>
+    <string name="fluidOunce">fl oz</string>
     <string name="each">each</string>
     <string name="piece">piece</string>
     <string name="items">items</string>
+
+    <!-- Unit of measure types -->
+    <string name="weight">weight</string>
+    <string name="volume">volume</string>
+    <string name="count">count</string>
 
     <!-- ProductDetail shelf life spinner options -->
     <string name="shelf_life_default">Please select</string>
@@ -176,5 +188,6 @@
     <string name="nav_products">Products</string>
     <string name="meal_planner">Meal planner</string>
     <string name="nav_lists">Shopping lists</string>
+    <string name="total_or_unit">----- or -----</string>
 
 </resources>

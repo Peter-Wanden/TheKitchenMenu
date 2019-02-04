@@ -295,12 +295,12 @@ class SyncManager {
                 userId.observeForever(userIdObserver);
             }
 
-        // If no observed data models turn user ID observer off.
+        // If no observed data models, turn user ID observer off.
         } else {
             userId.removeObserver(userIdObserver);
         }
 
-        // If the user is logged in.
+        // If the user is logged in. TODO - Fix this null pointer!!
         if (!userId.getValue().equals(ANONYMOUS)) {
 
             // And there is a sync pending.

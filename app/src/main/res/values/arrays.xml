@@ -4,12 +4,16 @@
     These are the options displayed in the activity_product_detail drop-down spinners. The string
     values of these options can be found in strings.xml.
     -->
+
     <string-array name="unit_of_measure_options">
         <item>@string/unit_of_measure_default</item>
         <item>@string/grams</item>
         <item>@string/kilograms</item>
+        <item>@string/ounces</item>
+        <item>@string/pounds</item>
         <item>@string/millilitres</item>
         <item>@string/litres</item>
+        <item>@string/fluidOunce</item>
         <item>@string/count</item>
         <item>@string/each</item>
         <item>@string/piece</item>

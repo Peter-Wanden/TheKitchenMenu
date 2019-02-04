@@ -1,11 +1,14 @@
 package com.example.peter.thekitchenmenu.viewmodels;
 
 import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 
 import com.example.peter.thekitchenmenu.BR;
 import com.example.peter.thekitchenmenu.data.entity.Product;
 import com.example.peter.thekitchenmenu.utils.ObservableViewModel;
+import com.example.peter.thekitchenmenu.utils.UnitOfMeasure.UnitOfMeasure;
+import com.example.peter.thekitchenmenu.utils.UnitOfMeasure.UnitOfMeasureClassSelector;
 
 import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
@@ -16,46 +19,62 @@ import androidx.databinding.ObservableInt;
 import androidx.lifecycle.MutableLiveData;
 
 import static com.example.peter.thekitchenmenu.data.entity.Product.*;
+import static com.example.peter.thekitchenmenu.utils.UnitOfMeasure.UnitOfMeasureConstants.*;
 
 public class ProductEditorViewModel extends ObservableViewModel {
 
     private static final String TAG = "ProductEditorViewModel";
 
-    private MutableLiveData<Product> product = new MutableLiveData<>();;
-    private boolean descriptionValidated;
-    private boolean madeByValidated;
+    private MutableLiveData<Product> product = new MutableLiveData<>();
+    private Context applicationContext;
 
     private final ObservableField<String> description = new ObservableField<>();
+    private boolean descriptionValidated;
     private final ObservableField<String> madeBy = new ObservableField<>();
+    private boolean madeByValidated;
     private ObservableInt category = new ObservableInt();
-    private ObservableInt unitOfMeasure = new ObservableInt();
+    private boolean categoryValidated;
+    private ObservableInt shelfLife = new ObservableInt();
+    private boolean shelfLifeValidated;
     private ObservableBoolean multiPack = new ObservableBoolean();
     private ObservableInt numberOfItemsInPack = new ObservableInt();
+    private boolean numberOfItemsInPackValidated;
+    private ObservableInt unitOfMeasure = new ObservableInt();
+    private boolean unitOfMeasureValidated;
+    private final ObservableField<String> totalPackSizeDisplayed = new ObservableField<>();
+    private boolean totalPackSizeValidated;
 
     public ProductEditorViewModel(@NonNull Application application) {
         super(application);
+        this.applicationContext = application;
 
-        Product p = new Product(1,
-                "Cornflakes",
-                "Kellogs",
-                2,
+        Product p = new Product(0,
+                "",
+                "",
+                0,
                 false,
-                4,
-                12,
-                500,
-                5,
-                2.99,
-                "q344ufhfk7",
-                "https://image.url.com",
-                123456789,
-                123456789,
-                "skdjf496dflekgg");
+                0,
+                0,
+                0,
+                0,
+                0,
+                "",
+                "",
+                0,
+                0,
+                "");
         product.setValue(p);
 
-        description.set(product.getValue().getDescription());
-        madeBy.set(product.getValue().getMadeBy());
-
-
+        if (product.getValue() != null) {
+            description.set(product.getValue().getDescription());
+            madeBy.set(product.getValue().getMadeBy());
+            category.set(product.getValue().getCategory());
+            shelfLife.set(product.getValue().getShelfLife());
+            multiPack.set(product.getValue().getMultiPack());
+            numberOfItemsInPack.set(product.getValue().getNumberOfItems());
+            unitOfMeasure.set(product.getValue().getUnitOfMeasure());
+            totalPackSizeDisplayed.set(String.valueOf(product.getValue().getPackSize()));
+        }
     }
 
     public void setProduct(MutableLiveData<Product> product) {
@@ -64,58 +83,93 @@ public class ProductEditorViewModel extends ObservableViewModel {
 
     @Bindable
     public ObservableField<String> getDescription() {
+        if (descriptionValidated && product.getValue() != null) {
+            product.getValue().setDescription(description.get());
+        }
         return description;
     }
 
     @Bindable
     public ObservableField<String> getMadeBy() {
+        if (madeByValidated && product.getValue() != null) {
+            product.getValue().setMadeBy(madeBy.get());
+        }
         return madeBy;
     }
 
     @Bindable
     public ObservableInt getCategory() {
+        if (category.get() == 0) {
+            categoryValidated = false;
+
+        } else {
+            categoryValidated = true;
+
+            if (product.getValue() != null) {
+                product.getValue().setCategory(category.get());
+            }
+        }
         return category;
     }
 
-    public void setCategory(ObservableInt category) {
-        this.category = category;
-        notifyPropertyChanged(BR.category);
-    }
-
     @Bindable
-    public ObservableInt getUnitOfMeasure() {
-        return unitOfMeasure;
-    }
+    public ObservableInt getShelfLife() {
+        if (shelfLife.get() == NOTHING_SELECTED) {
+            shelfLifeValidated = false;
 
-    public void setUnitOfMeasure(ObservableInt unitOfMeasure) {
-        this.unitOfMeasure = unitOfMeasure;
-        notifyPropertyChanged(BR.unitOfMeasure);
+        } else {
+            shelfLifeValidated = true;
+
+            if (product.getValue() != null) {
+                product.getValue().setShelfLife(shelfLife.get());
+            }
+        }
+        return shelfLife;
     }
 
     @Bindable
     public ObservableBoolean getMultiPack() {
+        if (product.getValue() != null) {
+            product.getValue().setMultiPack(multiPack.get());
+        }
         return multiPack;
-    }
-
-    public void setMultiPack(ObservableBoolean multiPack) {
-        this.multiPack = multiPack;
-        notifyPropertyChanged(BR.multiPack);
     }
 
     @Bindable
     public ObservableInt getNumberOfItemsInPack() {
-        Log.d(TAG, "getNumberOfItemsInPack: " + numberOfItemsInPack.get());
+        if (product.getValue() != null &&
+                numberOfItemsInPack.get() >= MULTI_PACK_MINIMUM_NO_OF_ITEMS) {
+            product.getValue().setNumberOfItems(numberOfItemsInPack.get());
+            numberOfItemsInPackValidated = true;
+        }
         return numberOfItemsInPack;
     }
 
-    public void setNumberOfItemsInPack(ObservableInt numberOfItemsInPack) {
-        Log.d(TAG, "setNumberOfItemsInPack: " + numberOfItemsInPack.get());
-        this.numberOfItemsInPack = numberOfItemsInPack;
-        notifyPropertyChanged(BR.numberOfItemsInPack);
+    @Bindable
+    public ObservableInt getUnitOfMeasure() {
+        if (product.getValue() != null && unitOfMeasure.get() > NOTHING_SELECTED) {
+            product.getValue().setUnitOfMeasure(unitOfMeasure.get());
+            unitOfMeasureValidated = true;
+        }
+        return unitOfMeasure;
+    }
+
+    @Bindable
+    public ObservableField<String> getTotalPackSizeDisplayed() {
+        if (product.getValue() != null && unitOfMeasure.get() != NOTHING_SELECTED) {
+
+            UnitOfMeasure unitOfMeasureClass = UnitOfMeasureClassSelector.getUnitOfMeasureClass(
+                    applicationContext, unitOfMeasure.get());
+
+            product.getValue().setPackSize(unitOfMeasureClass.convertValueToBaseSiUnit(
+                    totalPackSizeDisplayed.get()));
+
+            Log.d(TAG, "getTotalPackSizeDisplayed: product.packSize is: " + product.getValue().getPackSize());
+        }
+        return totalPackSizeDisplayed;
     }
 
     public MutableLiveData<Product> getProduct() {
-        Log.d(TAG, "getProduct: product values are:" + product.getValue().toString());
         return product;
     }
 
@@ -131,7 +185,11 @@ public class ProductEditorViewModel extends ObservableViewModel {
         }
     }
 
+    // TODO - For dev only.
     public void printProduct() {
+        if (product.getValue() != null)
         Log.d(TAG, "printProduct: " + product.getValue().toString());
     }
+
+
 }

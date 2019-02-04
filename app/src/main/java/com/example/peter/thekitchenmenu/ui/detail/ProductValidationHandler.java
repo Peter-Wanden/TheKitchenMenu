@@ -21,7 +21,7 @@ public class ProductValidationHandler {
         this.productEditor = binding;
     }
 
-    // TODO - Introduce a cleanString() method for all fields that strips out spaces and escape characters from Editable's.
+    // TODO - Introduce a cleanString() method that strips out spaces and escape characters from Editable's.
 
     public void validateDescription(Editable textToValidate) {
         Log.d(TAG, "validateDescription: editable is: " + textToValidate.toString());

@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.utils;
+package com.example.peter.thekitchenmenu.utils.UnitOfMeasure;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +22,9 @@ public enum UnitOfMeasureValues {
         @Override
         public String getString() {
             return "g";
+        }
+        public int getMeasureType() {
+            return 1;
         }
     },
 
