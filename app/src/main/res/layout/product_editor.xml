@@ -12,8 +12,13 @@
         </variable>
 
         <variable
-            name="validation"
-            type="com.example.peter.thekitchenmenu.ui.detail.ProductValidationHandler">
+            name="textValidation"
+            type="com.example.peter.thekitchenmenu.utils.ProductTextValidationHandler">
+        </variable>
+
+        <variable
+            name="numericValidation"
+            type="com.example.peter.thekitchenmenu.utils.ProductNumericValidationHandler">
         </variable>
     </data>
 
@@ -37,7 +42,7 @@
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/editable_description"
-            android:afterTextChanged='@{validation::validateDescription}'
+            android:afterTextChanged='@{textValidation::validateDescription}'
             android:text='@={productEditorViewModel.description}'
             android:inputType="textCapWords"
             android:hint="@string/hint_description"
@@ -65,7 +70,7 @@
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/editable_made_by"
-            android:afterTextChanged='@{validation::validateMadeBy}'
+            android:afterTextChanged='@{textValidation::validateMadeBy}'
             android:text='@={productEditorViewModel.madeBy}'
             android:hint="@string/hint_made_by"
             android:inputType="textCapWords"
@@ -247,6 +252,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/pack_size_label"
+            app:multiPack="@{productEditorViewModel.multiPack}"
             app:onUnitOfMeasureSelected='@{productEditorViewModel.unitOfMeasure}'
             tools:text="@string/pack_size_total"
             style="@style/EditableCategoryStyle"
@@ -259,8 +265,9 @@
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/editable_pack_size"
+            app:multiPack="@{productEditorViewModel.multiPack}"
             app:onUnitOfMeasureSelected='@{productEditorViewModel.unitOfMeasure}'
-            android:text="@={productEditorViewModel.totalPackSizeDisplayed}"
+            android:afterTextChanged='@{() -> numericValidation.validatePackSize(editablePackSize, productEditorViewModel.unitOfMeasure)}'
             tools:hint="@string/pack_size_total_hint"
             style="@style/EditableFieldStyle"
             android:layout_width="0dp"
@@ -274,6 +281,7 @@
 
         <TextView
             android:id="@+id/total_or_unit"
+            app:multiPack="@{productEditorViewModel.multiPack}"
             app:onUnitOfMeasureSelected='@{productEditorViewModel.unitOfMeasure}'
             style="@style/EditableCategoryStyle"
             android:layout_width="0dp"
@@ -288,6 +296,8 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/item_size_label"
+            app:multiPack="@{productEditorViewModel.multiPack}"
+            app:onUnitOfMeasureSelected='@{productEditorViewModel.unitOfMeasure}'
             style="@style/EditableCategoryStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -295,23 +305,20 @@
             app:layout_constraintEnd_toEndOf="@+id/pack_size_label"
             app:layout_constraintStart_toStartOf="@+id/pack_size_label"
             app:layout_constraintTop_toTopOf="@+id/editable_item_size"
-            app:multiPack="@{productEditorViewModel.multiPack}"
-            app:onUnitOfMeasureSelected='@{productEditorViewModel.unitOfMeasure}'
             tools:text="@string/item_size" />
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/editable_item_size"
             style="@style/EditableFieldStyle"
+            app:multiPack="@{productEditorViewModel.multiPack}"
+            app:onUnitOfMeasureSelected='@{productEditorViewModel.unitOfMeasure}'
+            app:showWhenChecked="@{productEditorViewModel.multiPack}"
             android:layout_width="0dp"
             android:layout_height="@dimen/standard_input_item_height"
-
             android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="@+id/editable_pack_size"
             app:layout_constraintStart_toStartOf="@+id/editable_pack_size"
             app:layout_constraintTop_toBottomOf="@+id/editable_pack_size"
-            app:multiPack="@{productEditorViewModel.multiPack}"
-            app:onUnitOfMeasureSelected='@{productEditorViewModel.unitOfMeasure}'
-            app:showWhenChecked="@{productEditorViewModel.multiPack}"
             tools:hint="@string/item_size_hint" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

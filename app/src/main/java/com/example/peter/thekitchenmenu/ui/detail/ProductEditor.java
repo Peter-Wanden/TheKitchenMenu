@@ -9,6 +9,8 @@ import android.widget.Spinner;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.ProductEditorBinding;
+import com.example.peter.thekitchenmenu.utils.ProductNumericValidationHandler;
+import com.example.peter.thekitchenmenu.utils.ProductTextValidationHandler;
 import com.example.peter.thekitchenmenu.utils.ShowHideSoftInput;
 import com.example.peter.thekitchenmenu.viewmodels.ProductEditorViewModel;
 
@@ -41,7 +43,8 @@ public class ProductEditor extends Fragment {
 
         setViewModel();
         setupSpinners();
-        setFieldValidationHandler();
+        setAlphaValidationHandler();
+        setNumericValidationHandler();
 
         return rootView;
     }
@@ -90,11 +93,25 @@ public class ProductEditor extends Fragment {
         spinner.setFocusableInTouchMode(true);
     }
 
-    private void setFieldValidationHandler() {
-        ProductValidationHandler validationHandler = new ProductValidationHandler();
-        validationHandler.setBinding(
+    private void setAlphaValidationHandler() {
+        ProductTextValidationHandler textValidationHandler =
+                new ProductTextValidationHandler();
+
+        textValidationHandler.
+                setBinding(getActivity(),
+                productEditor);
+
+        productEditor.setTextValidation(textValidationHandler);
+    }
+
+    private void setNumericValidationHandler() {
+        ProductNumericValidationHandler numericValidationHandler =
+                new ProductNumericValidationHandler();
+
+        numericValidationHandler.setBinding(
                 getActivity(),
                 productEditor);
-        productEditor.setValidation(validationHandler);
+
+        productEditor.setNumericValidation(numericValidationHandler);
     }
 }

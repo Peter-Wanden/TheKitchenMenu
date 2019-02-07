@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.detail;
+package com.example.peter.thekitchenmenu.utils;
 
 import android.content.Context;
 import android.text.Editable;
@@ -12,19 +12,18 @@ import com.example.peter.thekitchenmenu.databinding.ProductEditorBinding;
 import androidx.core.util.Pair;
 
 
-public class ProductValidationHandler {
+public class ProductTextValidationHandler {
     private ProductEditorBinding productEditor;
     private Context context;
 
-    void setBinding(Context context, ProductEditorBinding binding) {
+    public void setBinding(Context context, ProductEditorBinding productEditor) {
+        this.productEditor = productEditor;
         this.context = context;
-        this.productEditor = binding;
     }
 
     // TODO - Introduce a cleanString() method that strips out spaces and escape characters from Editable's.
 
     public void validateDescription(Editable textToValidate) {
-        Log.d(TAG, "validateDescription: editable is: " + textToValidate.toString());
         if (productEditor.editableDescription != null) {
             ValidateTextLength validateLengthResult = validateTextLength(textToValidate);
             publishResult(new Pair<>(DESCRIPTION, validateLengthResult));

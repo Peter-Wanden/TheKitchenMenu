@@ -1,5 +1,6 @@
 package com.example.peter.thekitchenmenu.utils;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -92,5 +93,12 @@ public class BindingAdapters {
                 }
             }
         }
+    }
+
+    @BindingAdapter("app:formatCardinalOrDecimal")
+    public static void formatCardinalOrDecimal(View v, int unitOfMeasure) {
+        EditText editText = (EditText) v;
+        Log.d(TAG, "formatCardinalOrDecimal: view text is: " + editText.getText().toString());
+        Log.d(TAG, "formatCardinalOrDecimal: unit of measure is: " + unitOfMeasure);
     }
 }

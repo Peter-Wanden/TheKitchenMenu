@@ -1,18 +1,22 @@
 package com.example.peter.thekitchenmenu.utils.UnitOfMeasure;
 
-public interface UnitOfMeasure {
+public interface UnitOfMeasure<T> {
 
-    // weight / volume / count
+    // Weight / volume / count
     String getTypeAsString();
     int getTypeAsInt();
 
-    // grams / ml / count etc.
+    // Grams / ml / count etc.
     String getUnitAsString();
     int getUnitAsInt();
 
-    // Screen value as String to base unit
-    Integer convertValueToBaseSiUnit(String value);
+    // Decimal to cardinal
+    int convertToInt(UnitOfMeasure newUnitOfMeasure, String value);
 
-    // Number type (cardinal / decimal)
-    int getInputNumberType();
+    double convertToDouble(UnitOfMeasure newUnitOfMeasure, String value);
+
+    int convertToBaseUnit(double value);
+
+    int convertToBaseUnit(int value);
+
 }

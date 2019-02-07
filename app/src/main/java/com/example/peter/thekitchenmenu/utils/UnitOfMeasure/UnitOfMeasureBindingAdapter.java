@@ -27,81 +27,162 @@ public class UnitOfMeasureBindingAdapter {
 
     @BindingAdapter(value = {"app:onUnitOfMeasureSelected", "app:multiPack"}, requireAll = false)
     public static void onUnitOfMeasureSelected(View view,
-                                               int unitOfMeasureSelected,
-                                               boolean isMultiPack) {
-        Context viewContext = view.getContext();
+                                               int oldUnitOfMeasureSelected,
+                                               boolean oldIsMultiPack,
+                                               int newUnitOfMeasureSelected,
+                                               boolean newIsMultiPack) {
+//        Log.d(TAG, "onUnitOfMeasureSelected: old UoM: " + oldUnitOfMeasureSelected + " new UoM: " + newUnitOfMeasureSelected);
+//        Log.d(TAG, "onUnitOfMeasureSelected: old multi pack: " + oldIsMultiPack + " new multi pack: " + newIsMultiPack);
 
-        if (unitOfMeasureSelected == SPINNER_NOTHING_SELECTED) {
+        boolean isVisible = setViewVisibility(view, newUnitOfMeasureSelected);
+
+        if (isVisible) {
+            setupViews(view, oldUnitOfMeasureSelected, newUnitOfMeasureSelected, newIsMultiPack);
+        }
+    }
+
+    private static boolean setViewVisibility(View view, int newUnitOfMeasureSelected) {
+
+        if (newUnitOfMeasureSelected == SPINNER_NOTHING_SELECTED) {
             view.setVisibility(View.GONE);
+            return false;
 
         } else {
             view.setVisibility(View.VISIBLE);
-            int viewId = view.getId();
+            return true;
+        }
+    }
 
-            if (viewId != View.NO_ID) {
-                UnitOfMeasure unitOfMeasure = UnitOfMeasureClassSelector.
-                        getUnitOfMeasureClass(viewContext, unitOfMeasureSelected);
+    private static void setupViews(View view,
+                                   int oldUnitOfMeasureSelected,
+                                   int newUnitOfMeasureSelected,
+                                   boolean isMultiPack) {
 
-                switch (viewId) {
+        Context viewContext = view.getContext();
+        int viewId = view.getId();
 
-                    case R.id.pack_size_label:
-                        setPackSizeLabel(view, unitOfMeasure);
-                        break;
+        if (viewId != View.NO_ID) {
+            UnitOfMeasure newUnitOfMeasure = UnitOfMeasureClassSelector.
+                    getUnitOfMeasureClass(viewContext, newUnitOfMeasureSelected);
 
-                    case R.id.editable_pack_size:
-                        setPackSizeEditable(view, unitOfMeasure);
-                        break;
+            UnitOfMeasure oldUnitOfMeasure = UnitOfMeasureClassSelector.
+                    getUnitOfMeasureClass(viewContext, oldUnitOfMeasureSelected);
 
-                    case R.id.item_size_label:
-                        setItemSizeLabel(view, unitOfMeasure, isMultiPack);
-                        break;
+            switch (viewId) {
 
-                    case R.id.editable_item_size:
-                        setItemSizeEditable(view, unitOfMeasure, isMultiPack);
-                        break;
+                case R.id.pack_size_label:
+                    setPackSizeLabel(view, newUnitOfMeasure);
+                    break;
+
+                case R.id.editable_pack_size:
+                    setPackSizeEditable(view, oldUnitOfMeasure, newUnitOfMeasure);
+                    break;
+
+                case R.id.item_size_label:
+                    setItemSizeLabel(view, newUnitOfMeasure, isMultiPack);
+                    break;
+
+                case R.id.editable_item_size:
+                    setItemSizeEditable(view, newUnitOfMeasure, isMultiPack);
+                    break;
+            }
+        }
+    }
+
+    private static void setPackSizeLabel(View view, UnitOfMeasure unitOfMeasure) {
+        TextView packSize = (TextView) view;
+        packSize.setText(view.getContext().getString(
+                R.string.pack_size_total, unitOfMeasure.getTypeAsString()));
+    }
+
+    private static void setPackSizeEditable(View view,
+                                            UnitOfMeasure oldUnitOfMeasure,
+                                            UnitOfMeasure newUnitOfMeasure) {
+        EditText packSize = (EditText) view;
+
+        Log.d(TAG, "setPackSizeEditable: new uom is: " + newUnitOfMeasure.getUnitAsInt());
+        Log.d(TAG, "setPackSizeEditable: old uom is: " + oldUnitOfMeasure.getUnitAsInt());
+
+        int inputType = getInputType(newUnitOfMeasure);
+        int inputTypeFlag = getInputTypeFlag(newUnitOfMeasure);
+
+        packSize.requestFocusFromTouch();
+        ShowHideSoftInput.showKeyboard(view, true);
+        String packSizeText = packSize.getText().toString();
+
+        // For cardinal input
+        if (inputTypeFlag == NO_INPUT_TYPE_FLAG) {
+            packSize.setInputType(inputType);
+            packSize.setFilters(new InputFilter[]
+                    {new DecimalDigitsInputFilter(7, 0)});
+
+            if (packSizeText.isEmpty()) {
+                resetValueIfZeroOrInconvertible(packSize, newUnitOfMeasure);
+
+            } else {
+                // If old and new have inconvertible types
+                if (oldUnitOfMeasure.getTypeAsInt() != newUnitOfMeasure.getTypeAsInt()) {
+                    resetValueIfZeroOrInconvertible(packSize, newUnitOfMeasure);
+                    return;
+                }
+
+                int convertedValue;
+
+                if (oldUnitOfMeasure.getUnitAsInt() != newUnitOfMeasure.getUnitAsInt()) {
+                    convertedValue = oldUnitOfMeasure.convertToInt(newUnitOfMeasure, packSizeText);
+
+                } else {
+                    convertedValue = Integer.parseInt(packSizeText);
+                }
+
+                packSizeText = String.valueOf(convertedValue);
+                packSize.setText(packSizeText);
+
+                if (Integer.parseInt(packSizeText) == NO_INPUT) {
+                    Log.d(TAG, "setPackSizeEditable: is this reached");
+                    resetValueIfZeroOrInconvertible(packSize, newUnitOfMeasure);
+                }
+            }
+            // For decimal input
+        } else if (inputTypeFlag == TYPE_NUMBER_FLAG_DECIMAL) {
+            Log.d(TAG, "setPackSizeEditable: is decimal input");
+            packSize.setInputType(inputType | inputTypeFlag);
+            packSize.setFilters(new InputFilter[]
+                    {new DecimalDigitsInputFilter(4, 3)});
+
+            if (packSizeText.isEmpty()) {
+                resetValueIfZeroOrInconvertible(packSize, newUnitOfMeasure);
+
+            } else {
+
+                if (oldUnitOfMeasure.getTypeAsInt() != newUnitOfMeasure.getTypeAsInt()) {
+                    resetValueIfZeroOrInconvertible(packSize, newUnitOfMeasure);
+                    return;
+                }
+
+                double convertedValue;
+
+                if (oldUnitOfMeasure.getUnitAsInt() != newUnitOfMeasure.getUnitAsInt()) {
+                    convertedValue = oldUnitOfMeasure.convertToDouble(newUnitOfMeasure, packSizeText);
+
+                } else {
+                    convertedValue = Double.parseDouble(packSizeText);
+                }
+
+                packSizeText = String.valueOf(convertedValue);
+                packSize.setText(packSizeText);
+
+                if (Double.parseDouble(packSizeText) == NO_INPUT) {
+                    resetValueIfZeroOrInconvertible(packSize, newUnitOfMeasure);
                 }
             }
         }
     }
 
-    private static void setPackSizeEditable(View view, UnitOfMeasure unitOfMeasure) {
-        EditText packSize = (EditText) view;
-
-        if (packSize.getText().toString().isEmpty()) {
-            showHintIfZero(packSize, unitOfMeasure);
-        }
-
-        packSize.requestFocusFromTouch();
-        ShowHideSoftInput.showKeyboard(view, true);
-
-        int inputType = getInputType(unitOfMeasure);
-        int inputTypeFlag = getInputTypeFlag(unitOfMeasure);
-
-        // For cardinal input
-        if (inputTypeFlag == NO_INPUT_TYPE_FLAG) {
-            packSize.setInputType(inputType);
-            packSize.setFilters(new InputFilter[]{});
-
-            String packSizeText = packSize.getText().toString();
-            String decimalRemoved;
-
-            // When user changes from decimal to cardinal
-            if (packSizeText.contains(".")) {
-                decimalRemoved = (convertToCardinal(packSizeText, unitOfMeasure));
-                packSizeText = decimalRemoved;
-                packSize.setText(packSizeText);
-            }
-
-            if (Integer.parseInt(packSizeText) == 0) {
-                showHintIfZero(packSize, unitOfMeasure);
-            }
-
-        // For decimal input
-        } else if (inputTypeFlag == TYPE_NUMBER_FLAG_DECIMAL) {
-            packSize.setInputType(inputType | inputTypeFlag);
-            packSize.setFilters(new InputFilter[]{new
-                    DecimalDigitsInputFilter(4, 3)});
-        }
+    private static void resetValueIfZeroOrInconvertible(EditText packSize, UnitOfMeasure unitOfMeasure) {
+        packSize.setText("");
+        packSize.setHint(packSize.getContext().getString(
+                R.string.pack_size_total_hint, unitOfMeasure.getUnitAsString()));
     }
 
     private static int getInputType(UnitOfMeasure unitOfMeasure) {
@@ -129,22 +210,6 @@ public class UnitOfMeasureBindingAdapter {
             default:
                 return NO_INPUT_TYPE_FLAG;
         }
-    }
-
-    private static void showHintIfZero(EditText packSize, UnitOfMeasure unitOfMeasure) {
-        packSize.setText("");
-        packSize.setHint(packSize.getContext().getString(
-                R.string.pack_size_total_hint, unitOfMeasure.getUnitAsString()));
-    }
-
-    private static String convertToCardinal(String packSizeText, UnitOfMeasure unitOfMeasure) {
-        return String.valueOf(unitOfMeasure.convertValueToBaseSiUnit(packSizeText));
-    }
-
-    private static void setPackSizeLabel(View view, UnitOfMeasure unitOfMeasure) {
-        TextView packSize = (TextView) view;
-        packSize.setText(view.getContext().getString(
-                R.string.pack_size_total, unitOfMeasure.getTypeAsString()));
     }
 
     private static void setItemSizeLabel(View view,

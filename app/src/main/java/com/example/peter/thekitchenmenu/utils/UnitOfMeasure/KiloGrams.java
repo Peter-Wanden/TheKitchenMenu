@@ -1,6 +1,7 @@
 package com.example.peter.thekitchenmenu.utils.UnitOfMeasure;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.peter.thekitchenmenu.R;
 
@@ -39,38 +40,44 @@ public class KiloGrams implements UnitOfMeasure {
     }
 
     @Override
-    public Integer convertValueToBaseSiUnit(String inputWeight) {
-        if (inputWeight == null || inputWeight.equals("")) {
-            return 0;
+    public int convertToInt(UnitOfMeasure newUnitOfMeasure, String inputWeight) {
+        double weight = Double.parseDouble(inputWeight);
+
+        if (weight == NO_INPUT) {
+            Log.d(TAG, "convertTo: input weight is: " + weight);
+            return NO_INPUT;
         }
-        return weightConvertedToBasSi(inputWeight);
+
+        if (newUnitOfMeasure instanceof Grams) {
+            return convertWeightToBaseUnits(weight);
+        }
+
+        return INCONVERTIBLE;
     }
 
-    private Integer weightConvertedToBasSi(String inputWeight) {
-        double weight = parseInputWeight(inputWeight);
+    @Override
+    public double convertToDouble(UnitOfMeasure newUnitOfMeasure, String value) {
+        return 0;
+    }
+
+
+    @Override
+    public int convertToBaseUnit(int weight) {
+        Log.d(TAG, "convertToBaseUnit: int is: " + weight);
+        return convertWeightToBaseUnits(weight);
+    }
+
+    @Override
+    public int convertToBaseUnit(double weight) {
+        Log.d(TAG, "convertToBaseUnit: double is: " + weight);
         return convertWeightToBaseUnits(weight);
     }
 
     private int convertWeightToBaseUnits(double weight) {
+        Log.d(TAG, "convertWeightToBaseUnits: weight is: " + weight);
         double weightConvertedToBaseUnits = weight * 1000;
+        Log.d(TAG, "convertWeightToBaseUnits: weight * 1k is: " + weightConvertedToBaseUnits);
+        Log.d(TAG, "convertWeightToBaseUnits: weight (int) is: " + (int) weightConvertedToBaseUnits);
         return (int) weightConvertedToBaseUnits;
-    }
-
-    private double parseInputWeight(String inputWeight) {
-        if (inputWeight.equals(".")) {
-            return Double.parseDouble(appendZeroTo(inputWeight));
-        }
-        return Double.parseDouble(inputWeight);
-    }
-
-    private String appendZeroTo(String inputWeight) {
-        StringBuilder builder = new StringBuilder(inputWeight);
-        builder.insert(0, 0);
-        return builder.toString();
-    }
-
-    @Override
-    public int getInputNumberType() {
-        return DECIMAL;
     }
 }
