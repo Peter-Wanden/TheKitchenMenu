@@ -15,6 +15,9 @@ public abstract class UnitOfMeasureClassSelector {
             case UNIT_KILOGRAMS:
                 return new KiloGrams(appContext);
 
+            case UNIT_OUNCES:
+                return new Ounces(appContext);
+
             default:
                 // TODO - default cannot return null
                 return new Grams(appContext);

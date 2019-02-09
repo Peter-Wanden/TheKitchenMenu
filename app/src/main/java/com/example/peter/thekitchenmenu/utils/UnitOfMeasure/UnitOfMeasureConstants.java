@@ -2,16 +2,16 @@ package com.example.peter.thekitchenmenu.utils.UnitOfMeasure;
 
 // TODO - convert to enum's.
 public class UnitOfMeasureConstants {
-    public static final int TYPE_WEIGHT = 1;
+
+    public static final int MAX_MASS = 100000;
+
+    public static final int TYPE_MASS = 1;
     public static final int TYPE_VOLUME = 2;
     public static final int TYPE_COUNT = 3;
 
-    public static final int BASE_UNIT_GRAMS = 1;
-    public static final int BASE_UNIT_MILLILITRES = 2;
-    public static final int BASE_UNIT_COUNT = 3;
-
     public static final int UNIT_GRAMS = 1;
     public static final int UNIT_KILOGRAMS = 2;
+    public static final int UNIT_OUNCES = 3;
 
     public static final int NOTHING_SELECTED = 0;
     public static final int NO_INPUT = 0;

@@ -58,7 +58,7 @@
     <string name="items">items</string>
 
     <!-- Unit of measure types -->
-    <string name="weight">weight</string>
+    <string name="mass">mass</string>
     <string name="volume">volume</string>
     <string name="count">count</string>
 
@@ -111,6 +111,7 @@
     <string name="input_error_product_retailer_too_long">Retailer name too long, needs to be
         between 1 and 120 characters.</string>
     <string name="input_error_product_pack_size">Pack size needs to be between 1g and 10kg</string>
+    <string name="max_mass_exceeded_error">Weight must be under %1$.0f %2$s</string>
     <string name="input_error_product_loc_room_too_short">Storage room name too short, needs to be
         between 1 and 60 characters.</string>
     <string name="input_error_product_loc_room_too_long">Storage room name too long, needs to be
@@ -189,5 +190,4 @@
     <string name="meal_planner">Meal planner</string>
     <string name="nav_lists">Shopping lists</string>
     <string name="total_or_unit">----- or -----</string>
-
 </resources>

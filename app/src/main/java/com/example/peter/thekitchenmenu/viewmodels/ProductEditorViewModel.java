@@ -4,16 +4,14 @@ import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.peter.thekitchenmenu.BR;
 import com.example.peter.thekitchenmenu.data.entity.Product;
 import com.example.peter.thekitchenmenu.utils.ObservableViewModel;
-import com.example.peter.thekitchenmenu.utils.UnitOfMeasure.UnitOfMeasure;
-import com.example.peter.thekitchenmenu.utils.UnitOfMeasure.UnitOfMeasureClassSelector;
 
 import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
 import androidx.databinding.Bindable;
 import androidx.databinding.ObservableBoolean;
-import androidx.databinding.ObservableDouble;
 import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableInt;
 import androidx.lifecycle.MutableLiveData;
@@ -41,7 +39,7 @@ public class ProductEditorViewModel extends ObservableViewModel {
     private boolean numberOfItemsInPackValidated;
     private ObservableInt unitOfMeasure = new ObservableInt();
     private boolean unitOfMeasureValidated;
-    private final ObservableInt packSizeInt = new ObservableInt();
+    private final ObservableInt packSize = new ObservableInt();
     private boolean packSizeValidated;
 
     public ProductEditorViewModel(@NonNull Application application) {
@@ -49,9 +47,9 @@ public class ProductEditorViewModel extends ObservableViewModel {
         this.applicationContext = application;
 
         Product p = new Product(0,
-                "",
-                "",
-                0,
+                "Qwerty",
+                "qwerty",
+                2,
                 false,
                 0,
                 0,
@@ -73,7 +71,7 @@ public class ProductEditorViewModel extends ObservableViewModel {
             multiPack.set(product.getValue().getMultiPack());
             numberOfItemsInPack.set(product.getValue().getNumberOfItems());
             unitOfMeasure.set(product.getValue().getUnitOfMeasure());
-            packSizeInt.set(product.getValue().getPackSize());
+            packSize.set(product.getValue().getPackSize());
         }
     }
 
@@ -148,7 +146,7 @@ public class ProductEditorViewModel extends ObservableViewModel {
     @Bindable
     public ObservableInt getUnitOfMeasure() {
         if (product.getValue() != null && unitOfMeasure.get() > NOTHING_SELECTED) {
-            if (packSizeInt.get() > 0)
+            if (packSize.get() > 0)
             product.getValue().setUnitOfMeasure(unitOfMeasure.get());
             unitOfMeasureValidated = true;
         }
@@ -156,22 +154,27 @@ public class ProductEditorViewModel extends ObservableViewModel {
     }
 
     @Bindable
-    public ObservableInt getPackSizeInt() {
+    public ObservableInt getPackSize() {
         if (product.getValue() != null && unitOfMeasure.get() != NOTHING_SELECTED) {
-            UnitOfMeasure unitOfMeasureClass = UnitOfMeasureClassSelector.getUnitOfMeasureClass(
-                    applicationContext, unitOfMeasure.get());
-
-            product.getValue().setPackSize(unitOfMeasureClass.convertToBaseUnit(packSizeInt.get()));
-
-            Log.d(TAG, "getPackSizeInt: product.packSizeInt is: " + product.getValue().getPackSize());
+            Log.d(TAG, "getPackSize: product.packSize is: " + product.getValue().getPackSize());
         }
-        return packSizeInt;
+        return packSize;
     }
 
-    public void setPackSizeInt(int packSizeInt) {
-        if (this.packSizeInt.get() != packSizeInt) {
-            this.packSizeInt.set(packSizeInt);
+    public void setPackSize(int packSize) {
+        if (this.packSize.get() != packSize) {
+            Log.d(TAG, "setPackSize: " + packSize);
+            this.packSize.set(packSize);
+            notifyPropertyChanged(BR.packSize);
         }
+    }
+
+    public void setPackSizeValidated(boolean packSizeValidated) {
+        this.packSizeValidated = packSizeValidated;
+    }
+
+    public boolean isPackSizeValidated() {
+        return packSizeValidated;
     }
 
     public MutableLiveData<Product> getProduct() {

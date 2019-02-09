@@ -1,7 +1,6 @@
 package com.example.peter.thekitchenmenu.utils.UnitOfMeasure;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.example.peter.thekitchenmenu.R;
 
@@ -10,12 +9,15 @@ import static com.example.peter.thekitchenmenu.utils.UnitOfMeasure.UnitOfMeasure
 public class Grams implements UnitOfMeasure {
 
     private static final String TAG = "Grams";
+    private static final double BASE_SI_UNITS = 1;
 
     private String type;
     private String unit;
+    private double measurement = 0;
+    private int baseSiUnits = 0;
 
     Grams(Context applicationContext) {
-        type = applicationContext.getResources().getString(R.string.weight);
+        type = applicationContext.getResources().getString(R.string.mass);
         unit = applicationContext.getResources().getString(R.string.grams);
     }
 
@@ -26,7 +28,7 @@ public class Grams implements UnitOfMeasure {
 
     @Override
     public int getTypeAsInt() {
-        return TYPE_WEIGHT;
+        return TYPE_MASS;
     }
 
     @Override
@@ -40,58 +42,40 @@ public class Grams implements UnitOfMeasure {
     }
 
     @Override
-    public int convertToInt(UnitOfMeasure newUnitOfMeasure, String inputWeight) {
-
-//        if (inputWeight == NO_INPUT) {
-//            return NO_INPUT;
-//        }
-//
-//        if (newUnitOfMeasure.getTypeAsInt() == TYPE_WEIGHT) {
-//
-//            if (newUnitOfMeasure instanceof Grams) {
-//                return (int) inputWeight;
-//
-//            } else if (newUnitOfMeasure instanceof KiloGrams) {
-//                return convertKilogramsToBaseSiUnit(inputWeight);
-//
-//            }
-//        }
-        return INCONVERTIBLE;
+    public void setMeasurement(double measurement) {
+        this.measurement = measurement;
+        baseSiUnits = convertToBaseSiUnits(this.measurement);
     }
 
     @Override
-    public double convertToDouble(UnitOfMeasure newUnitOfMeasure, String inputWeight) {
-        int weight = Integer.parseInt(inputWeight);
-
-        if (weight == NO_INPUT) {
-            return NO_INPUT;
-        }
-
-        if (newUnitOfMeasure instanceof KiloGrams) {
-            return convertToKilograms(weight);
-        }
-
-        return INCONVERTIBLE;
-    }
-
-    private double convertToKilograms(int weight) {
-        double convertedWeight = (double) weight;
-        Log.d(TAG, "convertToKilograms: int weight: " + weight);
-        Log.d(TAG, "convertToKilograms: double weight: " + convertedWeight);
-        convertedWeight = convertedWeight / 1000;
-        Log.d(TAG, "convertToKilograms: double weight converted: " +convertedWeight);
-        return convertedWeight;
+    public double getMeasurement() {
+        return measurement;
     }
 
     @Override
-    public int convertToBaseUnit(int value) {
-        return value;
+    public void setBaseSiUnits(int baseSiUnits) {
+        this.baseSiUnits = baseSiUnits;
+        measurement = convertToMeasurement(this.baseSiUnits);
+    }
+
+    private double convertToMeasurement(int baseSiUnits) {
+        return baseSiUnits;
     }
 
     @Override
-    public int convertToBaseUnit(double value) {
-        Log.d(TAG, "convertToBaseUnit: " + value);
-        Log.d(TAG, "convertToBaseUnit: " + (int) value);
-        return (int) value;
+    public int getBaseSiUnits() {
+        return baseSiUnits;
+    }
+
+    @Override
+    public int convertToBaseSiUnits(double measurement) {
+        double baseSiUnits = measurement * BASE_SI_UNITS;
+        this.baseSiUnits = (int) baseSiUnits;
+        return this.baseSiUnits;
+    }
+
+    @Override
+    public double getMax() {
+        return MAX_MASS / BASE_SI_UNITS;
     }
 }

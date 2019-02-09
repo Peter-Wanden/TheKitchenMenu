@@ -7,19 +7,19 @@ import com.example.peter.thekitchenmenu.R;
 
 import static com.example.peter.thekitchenmenu.utils.UnitOfMeasure.UnitOfMeasureConstants.*;
 
-public class KiloGrams implements UnitOfMeasure {
+public class Ounces implements UnitOfMeasure {
 
-    private static final String TAG = "KiloGrams";
-    private static final double BASE_SI_UNITS = 1000;
+    private static final String TAG = "Ounces";
+    private static final double BASE_SI_UNITS = 28.3495;
 
     private String type;
     private String unit;
     private double measurement = 0;
     private int baseSiUnits = 0;
 
-    KiloGrams(Context Context) {
-        type = Context.getResources().getString(R.string.mass);
-        unit = Context.getResources().getString(R.string.kilograms);
+    Ounces(Context applicationContext) {
+        type = applicationContext.getResources().getString(R.string.mass);
+        unit = applicationContext.getResources().getString(R.string.ounces);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class KiloGrams implements UnitOfMeasure {
 
     @Override
     public int getUnitAsInt() {
-        return UNIT_KILOGRAMS;
+        return UNIT_OUNCES;
     }
 
     @Override
@@ -65,7 +65,7 @@ public class KiloGrams implements UnitOfMeasure {
 
     @Override
     public int getBaseSiUnits() {
-        return baseSiUnits;
+        return this.baseSiUnits;
     }
 
     @Override

@@ -44,6 +44,7 @@
             android:id="@+id/editable_description"
             android:afterTextChanged='@{textValidation::validateDescription}'
             android:text='@={productEditorViewModel.description}'
+            android:selection='@{productEditorViewModel.description.length()}'
             android:inputType="textCapWords"
             android:hint="@string/hint_description"
             style="@style/EditableFieldStyle"
@@ -72,6 +73,7 @@
             android:id="@+id/editable_made_by"
             android:afterTextChanged='@{textValidation::validateMadeBy}'
             android:text='@={productEditorViewModel.madeBy}'
+            android:selection='@{productEditorViewModel.madeBy.length()}'
             android:hint="@string/hint_made_by"
             android:inputType="textCapWords"
             style="@style/EditableFieldStyle"
