@@ -23,14 +23,10 @@ public class ProductCatalogRecyclerAdapter
         RecyclerView.Adapter<ProductCatalogRecyclerAdapter.AdapterCatProdViewHolder> {
 
     private static final String TAG = ProductCatalogRecyclerAdapter.class.getSimpleName();
-
-    // The context we use for utility methods, app resources and layout inflaters
     private final Context context;
 
-    // List storing the database query result
     private List<ProductModel> listProductModel;
 
-    // Click interface
     final private OnClickProduct clickHandler;
 
     ProductCatalogRecyclerAdapter(Context context, OnClickProduct clickHandler) {

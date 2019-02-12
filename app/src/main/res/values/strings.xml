@@ -47,20 +47,28 @@
     <!-- See arrays.xml "unit_of_measure_options" for usage -->
     <string name="unit_of_measure_default">Please select</string>
     <string name="grams">grams</string>
-    <string name="kilograms">Kg</string>
+    <string name="kilograms">kg</string>
     <string name="ounces">oz</string>
     <string name="pounds">lb</string>
+    <string name="pounds_and_ounces">lbs and oz</string>
     <string name="millilitres">ml</string>
     <string name="litres">litres</string>
     <string name="fluidOunce">fl oz</string>
+    <string name="pints">pints</string>
+    <string name="gallons">gallons</string>
     <string name="each">each</string>
     <string name="piece">piece</string>
     <string name="items">items</string>
 
     <!-- Unit of measure types -->
-    <string name="mass">mass</string>
+    <string name="mass">weight</string>
     <string name="volume">volume</string>
     <string name="count">count</string>
+
+    <!-- Unit of measure spinner headers -->
+    <string name="header_mass">SELECT WEIGHT</string>
+    <string name="header_volume">SELECT VOLUME</string>
+    <string name="header_count">SELECT COUNT</string>
 
     <!-- ProductDetail shelf life spinner options -->
     <string name="shelf_life_default">Please select</string>
@@ -190,4 +198,6 @@
     <string name="meal_planner">Meal planner</string>
     <string name="nav_lists">Shopping lists</string>
     <string name="total_or_unit">----- or -----</string>
+    <string name="invalid_pack_size">Invalid number for this measurement!</string>
+    <string name="please_select">Please select</string>
 </resources>

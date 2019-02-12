@@ -1,12 +1,15 @@
 package com.example.peter.thekitchenmenu.utils.UnitOfMeasure;
 
+import androidx.core.util.Pair;
+
 public interface UnitOfMeasure {
 
+    // Returns weight, volume or count.
     String getTypeAsString();
 
-    int getTypeAsInt();
+    MeasurementType getType();
 
-    String getUnitAsString();
+    String getUnitsAsString();
 
     int getUnitAsInt();
 
@@ -21,4 +24,8 @@ public interface UnitOfMeasure {
     int convertToBaseSiUnits(double measurement);
 
     double getMax();
+
+    // TODO - Returns numbers before and after decimal places.
+    // TODO - make a calculation within UoM class based on MAX_VALUE
+    Pair<Integer, Integer> getInputFilterFormat();
 }

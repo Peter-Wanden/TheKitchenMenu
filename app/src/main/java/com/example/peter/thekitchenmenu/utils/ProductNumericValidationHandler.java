@@ -8,8 +8,7 @@ import com.example.peter.thekitchenmenu.databinding.ProductEditorBinding;
 import com.example.peter.thekitchenmenu.utils.UnitOfMeasure.UnitOfMeasure;
 import com.example.peter.thekitchenmenu.utils.UnitOfMeasure.UnitOfMeasureClassSelector;
 
-import static com.example.peter.thekitchenmenu.utils.UnitOfMeasure.UnitOfMeasureConstants.MAX_MASS;
-import static com.example.peter.thekitchenmenu.utils.UnitOfMeasure.UnitOfMeasureConstants.NO_INPUT;
+import static com.example.peter.thekitchenmenu.utils.UnitOfMeasure.UnitOfMeasureConstants.*;
 
 public class ProductNumericValidationHandler {
 
@@ -29,34 +28,42 @@ public class ProductNumericValidationHandler {
 
             UnitOfMeasure unitOfMeasure = UnitOfMeasureClassSelector.
                     getUnitOfMeasureClass(context, unitOfMeasureSelected);
-            double measurement = NO_INPUT;
+
+            unitOfMeasure.setMeasurement(NO_INPUT);
 
             String rawMeasurement = editText.getText().toString();
-            if (!rawMeasurement.isEmpty()) measurement = Double.parseDouble(rawMeasurement);
 
-            if (measurement == NO_INPUT) {
-                setResultToViewModel((int)measurement);
+            if (rawMeasurement.isEmpty()) {
+
+                setResultToViewModel(unitOfMeasure);
 
             } else {
-                unitOfMeasure.setMeasurement(measurement);
-                int baseSiUnits = unitOfMeasure.getBaseSiUnits();
 
-                if (baseSiUnits <= MAX_MASS) {
-                    setResultToViewModel(baseSiUnits);
+                try {
 
-                } else {
-                    String massError = editText.getContext().getString(
-                            R.string.max_mass_exceeded_error,
-                            unitOfMeasure.getMax(),
-                            unitOfMeasure.getUnitAsString());
-                    editText.setError(massError);
+                    unitOfMeasure.setMeasurement(Double.parseDouble(rawMeasurement));
+
+                } catch (NumberFormatException e) {
+
+                    setResultToViewModel(unitOfMeasure);
                 }
+            }
+
+            if (unitOfMeasure.getBaseSiUnits() <= MAX_MASS) {
+                setResultToViewModel(unitOfMeasure);
+
+            } else {
+                String massError = editText.getContext().getString(
+                        R.string.max_mass_exceeded_error,
+                        unitOfMeasure.getMax(),
+                        unitOfMeasure.getUnitsAsString());
+                editText.setError(massError);
             }
         }
     }
 
-    private void setResultToViewModel(int packSizeBaseSiUnits) {
-        productEditor.getProductEditorViewModel().setPackSize(packSizeBaseSiUnits);
+    private void setResultToViewModel(UnitOfMeasure unitOfMeasure) {
+        productEditor.getProductEditorViewModel().setPackSize(unitOfMeasure.getBaseSiUnits());
         productEditor.getProductEditorViewModel().setPackSizeValidated(true);
     }
 }

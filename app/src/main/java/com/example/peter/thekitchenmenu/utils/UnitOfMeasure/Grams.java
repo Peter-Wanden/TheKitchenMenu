@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.example.peter.thekitchenmenu.R;
 
+import androidx.core.util.Pair;
+
 import static com.example.peter.thekitchenmenu.utils.UnitOfMeasure.UnitOfMeasureConstants.*;
 
 public class Grams implements UnitOfMeasure {
@@ -27,12 +29,12 @@ public class Grams implements UnitOfMeasure {
     }
 
     @Override
-    public int getTypeAsInt() {
-        return TYPE_MASS;
+    public MeasurementType getType() {
+        return MeasurementType.TYPE_MASS;
     }
 
     @Override
-    public String getUnitAsString() {
+    public String getUnitsAsString() {
         return unit;
     }
 
@@ -43,8 +45,8 @@ public class Grams implements UnitOfMeasure {
 
     @Override
     public void setMeasurement(double measurement) {
-        this.measurement = measurement;
-        baseSiUnits = convertToBaseSiUnits(this.measurement);
+        baseSiUnits = convertToBaseSiUnits(measurement);
+        this.measurement = convertToMeasurement(baseSiUnits);
     }
 
     @Override
@@ -59,7 +61,7 @@ public class Grams implements UnitOfMeasure {
     }
 
     private double convertToMeasurement(int baseSiUnits) {
-        return baseSiUnits;
+        return baseSiUnits / BASE_SI_UNITS;
     }
 
     @Override
@@ -77,5 +79,10 @@ public class Grams implements UnitOfMeasure {
     @Override
     public double getMax() {
         return MAX_MASS / BASE_SI_UNITS;
+    }
+
+    @Override
+    public Pair<Integer, Integer> getInputFilterFormat() {
+        return new Pair<>(SEVEN_DECIMAL_PLACES, NO_DECIMAL_PLACES);
     }
 }

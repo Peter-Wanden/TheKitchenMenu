@@ -8,81 +8,77 @@ import androidx.core.util.Pair;
 
 import static com.example.peter.thekitchenmenu.utils.UnitOfMeasure.UnitOfMeasureConstants.*;
 
-public class Ounces implements UnitOfMeasure {
+public class MetricMass {
 
-    private static final String TAG = "Ounces";
-    private static final double BASE_SI_UNITS = 28.3495;
+    private static final String TAG = "MetricMass";
+
+    public static final int BASE_SI_UNIT_MASS = 1;
+    private static final int BASE_SI_UNIT_KILOGRAM = BASE_SI_UNIT_MASS * 1000;
 
     private String type;
     private String unit;
     private double measurement;
     private int baseSiUnits;
+    private Pair<Integer, Integer> kilograms;
+    private Pair<Integer, Integer> grams;
 
-    Ounces(Context applicationContext) {
-        type = applicationContext.getResources().getString(R.string.mass);
-        unit = applicationContext.getResources().getString(R.string.ounces);
+    MetricMass(Context Context) {
+        type = Context.getResources().getString(R.string.mass);
+        unit = Context.getResources().getString(R.string.kilograms);
     }
 
-    @Override
     public String getTypeAsString() {
         return type;
     }
 
-    @Override
     public MeasurementType getType() {
         return MeasurementType.TYPE_MASS;
     }
 
-    @Override
     public String getUnitsAsString() {
         return unit;
     }
 
-    @Override
     public int getUnitAsInt() {
-        return UNIT_OUNCES;
+        return UNIT_KILOGRAMS;
     }
 
-    @Override
     public void setMeasurement(double measurement) {
         baseSiUnits = convertToBaseSiUnits(measurement);
-        this.measurement = measurement;
+        this.measurement = convertToMeasurement(baseSiUnits);
     }
 
-    @Override
     public double getMeasurement() {
-        return Math.round(measurement * 1d) /1d;
+        kilograms = new Pair<>(1,1);
+        grams = new Pair<>(2, 200);
+        Pair<Pair, Pair> returnValue = new Pair<>(kilograms, grams);
+        return measurement;
     }
 
-    @Override
     public void setBaseSiUnits(int baseSiUnits) {
         this.baseSiUnits = baseSiUnits;
-        measurement = convertToMeasurement(baseSiUnits);
+        measurement = convertToMeasurement(this.baseSiUnits);
     }
 
     private double convertToMeasurement(int baseSiUnits) {
-        return baseSiUnits / BASE_SI_UNITS;
+        return baseSiUnits;
     }
 
-    @Override
     public int getBaseSiUnits() {
-        return this.baseSiUnits;
+        return baseSiUnits;
     }
 
-    @Override
     public int convertToBaseSiUnits(double measurement) {
-        double baseSiUnits = measurement * BASE_SI_UNITS;
+        double baseSiUnits = measurement;
         this.baseSiUnits = (int) baseSiUnits;
         return this.baseSiUnits;
     }
 
-    @Override
     public double getMax() {
-        return MAX_MASS / BASE_SI_UNITS;
+        return MAX_MASS;
     }
 
-    @Override
     public Pair<Integer, Integer> getInputFilterFormat() {
-        return new Pair<>(FOUR_DECIMAL_PLACES, NO_DECIMAL_PLACES);
+        return new Pair<>(THREE_DECIMAL_PLACES, THREE_DECIMAL_PLACES);
     }
 }

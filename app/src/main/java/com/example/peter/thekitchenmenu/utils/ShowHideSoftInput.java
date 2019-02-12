@@ -10,12 +10,8 @@ public abstract class ShowHideSoftInput {
     public static void showKeyboard(View view, boolean showKeyboard) {
         InputMethodManager imm = getInputMethodManager(view.getContext());
 
-        if (showKeyboard) {
-            imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-
-        } else {
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
+        if (showKeyboard) imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+        else imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
     }
 

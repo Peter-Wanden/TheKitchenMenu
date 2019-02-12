@@ -2,7 +2,6 @@ package com.example.peter.thekitchenmenu.utils.UnitOfMeasure;
 
 import android.content.Context;
 import android.text.InputFilter;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -11,6 +10,7 @@ import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.utils.DecimalDigitsInputFilter;
 import com.example.peter.thekitchenmenu.utils.ShowHideSoftInput;
 
+import androidx.core.util.Pair;
 import androidx.databinding.BindingAdapter;
 
 import static android.text.InputType.*;
@@ -21,8 +21,6 @@ public class UnitOfMeasureBindingAdapter {
     private static final String TAG = "UnitOfMeasureBindingAda";
 
     private static final int SPINNER_NOTHING_SELECTED = 0;
-    private static final int NO_INPUT_TYPE = 0;
-    private static final int NO_INPUT_TYPE_FLAG = 0;
 
 
     @BindingAdapter(value = {"app:onUnitOfMeasureSelected", "app:multiPack"}, requireAll = false)
@@ -78,6 +76,10 @@ public class UnitOfMeasureBindingAdapter {
                     setPackSizeEditable(view, oldUnitOfMeasure, newUnitOfMeasure);
                     break;
 
+                case R.id.total_or_unit:
+                    setTotalOrUnitSeparator(view, isMultiPack);
+                    break;
+
                 case R.id.item_size_label:
                     setItemSizeLabel(view, newUnitOfMeasure, isMultiPack);
                     break;
@@ -87,6 +89,50 @@ public class UnitOfMeasureBindingAdapter {
                     break;
             }
         }
+    }
+
+    private static boolean convertToNewUnitOfMeasurement(
+            UnitOfMeasure oldUnitOfMeasure,
+            UnitOfMeasure newUnitOfMeasure) {
+
+        if (oldUnitOfMeasure.getType() != newUnitOfMeasure.getType()) return false;
+        newUnitOfMeasure.setBaseSiUnits(oldUnitOfMeasure.getBaseSiUnits());
+
+        return true;
+    }
+
+    private static void resetIfInconvertibleOrNoInput(EditText packSize,
+                                                      UnitOfMeasure unitOfMeasure) {
+        packSize.setText("");
+        packSize.setHint(packSize.getContext().getString(
+                R.string.pack_size_total_hint, unitOfMeasure.getUnitsAsString()));
+    }
+
+    private static void setInputForSoftAndHardKeyboard(EditText packSize,
+                                                       UnitOfMeasure newUnitOfMeasure) {
+
+        setInputTypes(packSize, newUnitOfMeasure);
+        setInputFilters(packSize, newUnitOfMeasure);
+        packSize.requestFocusFromTouch();
+        ShowHideSoftInput.showKeyboard(packSize, true);
+    }
+
+    private static void setInputTypes(EditText packSize, UnitOfMeasure newUnitOfMeasure) {
+
+        if (newUnitOfMeasure.getUnitAsInt() == UNIT_GRAMS) {
+            packSize.setInputType(TYPE_CLASS_NUMBER);
+
+        } else {
+            packSize.setInputType(TYPE_CLASS_NUMBER | TYPE_NUMBER_FLAG_DECIMAL);
+        }
+    }
+
+    private static void setInputFilters(EditText packSize, UnitOfMeasure newUnitOfMeasure) {
+        Pair<Integer, Integer> inputFilterFormat = newUnitOfMeasure.getInputFilterFormat();
+
+        if (inputFilterFormat.first != null && inputFilterFormat.second != null)
+            packSize.setFilters(new InputFilter[]
+                    {new DecimalDigitsInputFilter(inputFilterFormat.first, inputFilterFormat.second)});
     }
 
     private static void setPackSizeLabel(View view, UnitOfMeasure unitOfMeasure) {
@@ -100,106 +146,48 @@ public class UnitOfMeasureBindingAdapter {
                                             UnitOfMeasure newUnitOfMeasure) {
 
         EditText packSize = (EditText) view;
+        setInputForSoftAndHardKeyboard(packSize, newUnitOfMeasure);
+
         String rawInputMeasurement = packSize.getText().toString();
-
-        setInputForSoftKeyboard(packSize, newUnitOfMeasure);
-
         double inputMeasurement;
 
-        if (rawInputMeasurement.isEmpty()) {
-            inputMeasurement = NO_INPUT;
+        if (!rawInputMeasurement.isEmpty()) {
 
-        } else {
-            inputMeasurement = Double.parseDouble(rawInputMeasurement);
-        }
+            try {
+                inputMeasurement = Double.parseDouble(rawInputMeasurement);
 
-        if (oldUnitOfMeasure.getTypeAsInt() == newUnitOfMeasure.getTypeAsInt()) {
+            } catch (NumberFormatException e) {
+                inputMeasurement = NO_INPUT;
 
-            if (inputMeasurement == NO_INPUT) {
-                resetIfInconvertibleOrNoInput(packSize, newUnitOfMeasure);
+                packSize.setText(String.valueOf(inputMeasurement));
+                packSize.setError(packSize.getContext().getString(R.string.invalid_pack_size));
+            }
 
-            } else {
+            if (inputMeasurement > NO_INPUT) {
 
                 oldUnitOfMeasure.setMeasurement(inputMeasurement);
-                newUnitOfMeasure.setBaseSiUnits(oldUnitOfMeasure.getBaseSiUnits());
+                boolean canConvert = convertToNewUnitOfMeasurement(
+                        oldUnitOfMeasure,
+                        newUnitOfMeasure);
 
-                double measurement = newUnitOfMeasure.getMeasurement();
+                if (canConvert) {
 
-                if (getInputTypeFlag(newUnitOfMeasure) == NO_INPUT_TYPE_FLAG) {
+                    if (newUnitOfMeasure.getUnitAsInt() == UNIT_GRAMS) {
+                        packSize.setText(String.valueOf((int) newUnitOfMeasure.getMeasurement()));
+                        return;
 
-                    int measurementWithoutRemainder = (int) measurement;
-                    packSize.setText(String.valueOf(measurementWithoutRemainder));
-
-                } else {
-                    packSize.setText(String.valueOf(newUnitOfMeasure.getMeasurement()));
+                    } else {
+                        packSize.setText(String.valueOf(newUnitOfMeasure.getMeasurement()));
+                        return;
+                    }
                 }
             }
-        } else {
-            resetIfInconvertibleOrNoInput(packSize, newUnitOfMeasure);
         }
+        resetIfInconvertibleOrNoInput(packSize, newUnitOfMeasure);
     }
 
-    private static void setInputForSoftKeyboard(EditText packSize, UnitOfMeasure newUnitOfMeasure) {
-        packSize.requestFocusFromTouch();
-
-        int inputType = getInputType(newUnitOfMeasure);
-        int inputTypeFlag = getInputTypeFlag(newUnitOfMeasure);
-
-        ShowHideSoftInput.showKeyboard(packSize, true);
-
-        // For cardinal input
-        if (inputTypeFlag == NO_INPUT_TYPE_FLAG) {
-
-            packSize.setInputType(inputType);
-            packSize.setFilters(new InputFilter[]
-                    {new DecimalDigitsInputFilter(7, 0)});
-
-            // For decimal input
-        } else if (inputTypeFlag == TYPE_NUMBER_FLAG_DECIMAL) {
-
-            packSize.setInputType(inputType | inputTypeFlag);
-            packSize.setFilters(new InputFilter[]
-                    {new DecimalDigitsInputFilter(4, 3)});
-        }
-    }
-
-    private static int getInputType(UnitOfMeasure unitOfMeasure) {
-        int unit = unitOfMeasure.getUnitAsInt();
-
-        switch (unit) {
-            case UNIT_GRAMS:
-                return TYPE_CLASS_NUMBER;
-
-            case UNIT_KILOGRAMS:
-                return TYPE_CLASS_NUMBER;
-
-            case UNIT_OUNCES:
-                return TYPE_CLASS_NUMBER;
-
-            default:
-                return NO_INPUT_TYPE;
-        }
-    }
-
-    private static int getInputTypeFlag(UnitOfMeasure unitOfMeasure) {
-        int unit = unitOfMeasure.getUnitAsInt();
-
-        switch (unit) {
-            case UNIT_KILOGRAMS:
-                return TYPE_NUMBER_FLAG_DECIMAL;
-
-            case UNIT_OUNCES:
-                return TYPE_NUMBER_FLAG_DECIMAL;
-
-            default:
-                return NO_INPUT_TYPE_FLAG;
-        }
-    }
-
-    private static void resetIfInconvertibleOrNoInput(EditText packSize, UnitOfMeasure unitOfMeasure) {
-        packSize.setText("");
-        packSize.setHint(packSize.getContext().getString(
-                R.string.pack_size_total_hint, unitOfMeasure.getUnitAsString()));
+    private static void setTotalOrUnitSeparator(View view, boolean isMultiPack) {
+        if (!isMultiPack) view.setVisibility(View.GONE);
     }
 
     private static void setItemSizeLabel(View view,
@@ -221,7 +209,7 @@ public class UnitOfMeasureBindingAdapter {
         if (isMultiPack) {
             EditText itemSize = (EditText) view;
             itemSize.setHint(view.getContext().getString(
-                    R.string.item_size_hint, unitOfMeasure.getUnitAsString()));
+                    R.string.item_size_hint, unitOfMeasure.getUnitsAsString()));
 
         } else {
             view.setVisibility(View.GONE);

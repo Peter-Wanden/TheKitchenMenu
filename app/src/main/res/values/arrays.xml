@@ -20,6 +20,40 @@
         <item>@string/items</item>
     </string-array>
 
+    <string-array name="unit_of_measure_headers">
+        <item>@string/header_mass</item>
+        <item>@string/header_volume</item>
+        <item>@string/header_count</item>
+    </string-array>
+
+    <string-array name="unit_of_measure_options_mass_metric">
+        <item>@string/grams</item>
+        <item>@string/kilograms</item>
+    </string-array>
+
+    <string-array name="unit_of_measure_options_mass_imperial">
+        <item>@string/ounces</item>
+        <item>@string/pounds</item>
+    </string-array>
+
+    <string-array name="unit_of_measure_options_volume_metric">
+        <item>@string/millilitres</item>
+        <item>@string/litres</item>
+    </string-array>
+
+    <string-array name="unit_of_measure_options_volume_imperial">
+        <item>@string/fluidOunce</item>
+        <item>@string/pints</item>
+        <item>@string/gallons</item>
+    </string-array>
+
+    <string-array name="unit_of_measure_options_count">
+        <item>@string/count</item>
+        <item>@string/each</item>
+        <item>@string/piece</item>
+        <item>@string/items</item>
+    </string-array>
+
     <string-array name="shelf_life_options">
         <item>@string/shelf_life_default</item>
         <item>@string/one_day</item>
