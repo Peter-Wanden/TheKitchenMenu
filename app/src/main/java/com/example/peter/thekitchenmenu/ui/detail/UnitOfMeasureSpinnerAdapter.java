@@ -63,8 +63,7 @@ public class UnitOfMeasureSpinnerAdapter extends ArrayAdapter<UnitOfMeasureSpinn
 
                 if (headerView != null) {
                     headerView.setText(model.getMeasurementUnits());
-                    headerView.setEnabled(false);   // TODO - should not be able to select a header.
-                                                    // why is this not working?
+                    headerView.setEnabled(false); // TODO - should not be able to select a header. Why is this not working?
                 }
                 break;
 

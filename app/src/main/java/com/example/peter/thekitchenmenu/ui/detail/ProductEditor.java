@@ -149,23 +149,46 @@ public class ProductEditor extends Fragment {
 
             if (header == 0) {
 
-                for (int massMetric = 0; massMetric < unitOfMeasureMassMetric.size(); massMetric++) {
+                for (int massMetric = 0; massMetric < unitOfMeasureMassMetric.size();
+                     massMetric++) {
 
-                    UnitOfMeasureSpinnerItem massItem = new UnitOfMeasureSpinnerItem(
+                    UnitOfMeasureSpinnerItem massMetricItem = new UnitOfMeasureSpinnerItem(
                             SpinnerItemType.LIST_ITEM,
-                            unitOfMeasureMass.get(massMetric)
+                            unitOfMeasureMassMetric.get(massMetric)
                     );
-                    categoryList.add(massItem);
+                    categoryList.add(massMetricItem);
+                }
+
+                for (int massImperial = 0; massImperial < unitOfMeasureMassImperial.size();
+                     massImperial++) {
+
+                    UnitOfMeasureSpinnerItem massImperialItem = new UnitOfMeasureSpinnerItem(
+                            SpinnerItemType.LIST_ITEM,
+                            unitOfMeasureMassImperial.get(massImperial)
+                    );
+                    categoryList.add(massImperialItem);
                 }
 
             } else if (header == 1) {
 
-                for (int volume = 0; volume < unitOfMeasureVolume.size(); volume ++) {
-                    UnitOfMeasureSpinnerItem volumeItem = new UnitOfMeasureSpinnerItem(
+                for (int volumeMetric = 0; volumeMetric < unitOfMeasureVolumeMetric.size();
+                     volumeMetric ++) {
+
+                    UnitOfMeasureSpinnerItem volumeMetricItem = new UnitOfMeasureSpinnerItem(
                             SpinnerItemType.LIST_ITEM,
-                            unitOfMeasureVolume.get(volume)
+                            unitOfMeasureVolumeMetric.get(volumeMetric)
                     );
-                    categoryList.add(volumeItem);
+                    categoryList.add(volumeMetricItem);
+                }
+
+                for (int volumeImperial = 0; volumeImperial < unitOfMeasureVolumeImperial.size();
+                     volumeImperial ++) {
+
+                    UnitOfMeasureSpinnerItem volumeImperialItem = new UnitOfMeasureSpinnerItem(
+                            SpinnerItemType.LIST_ITEM,
+                            unitOfMeasureVolumeImperial.get(volumeImperial)
+                    );
+                    categoryList.add(volumeImperialItem);
                 }
 
             } else if (header == 2) {

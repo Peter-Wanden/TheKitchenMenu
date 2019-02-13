@@ -10,8 +10,6 @@
     android:paddingTop="4dp"
     android:paddingEnd="4dp"
     android:paddingBottom="4dp"
-    android:enabled="false"
-    android:focusable="false"
     android:background="@drawable/rectangle"
     android:backgroundTint="@color/primaryColor"
     android:textStyle="bold"

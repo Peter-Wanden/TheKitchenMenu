@@ -44,18 +44,6 @@ public enum UnitOfMeasureUnits {
         }
     },
 
-    POUNDS_AND_OUNCES(5) {
-        @Override
-        public int getIntValue() {
-            return super.getIntValue();
-        }
-
-        @Override
-        public String getString() {
-            return null;
-        }
-    },
-
     MILLILITRES(6) {
         @Override
         public int getIntValue() {

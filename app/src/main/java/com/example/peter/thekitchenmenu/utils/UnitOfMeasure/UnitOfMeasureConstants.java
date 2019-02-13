@@ -4,6 +4,7 @@ package com.example.peter.thekitchenmenu.utils.UnitOfMeasure;
 public class UnitOfMeasureConstants {
 
     public static final int MAX_MASS = 100000;
+    public static final int MIN_MASS = 1;
 
     public static final int UNIT_GRAMS = 1;
     public static final int UNIT_KILOGRAMS = 2;
