@@ -87,12 +87,12 @@ public class WidgetServiceList
 
             views.setTextViewText(
                     R.id.list_item_product_widget_tv_pack_size,
-                    String.valueOf(currentProduct.getPackSize()));
+                    String.valueOf(currentProduct.getBaseSiUnits()));
 
             views.setTextViewText(
                     R.id.list_item_product_widget_tv_unit_of_measure,
                     Converters.getUnitOfMeasureString
-                            (context, currentProduct.getUnitOfMeasure()));
+                            (context, currentProduct.getUnitOfMeasureSubType()));
 
             return views;
         }

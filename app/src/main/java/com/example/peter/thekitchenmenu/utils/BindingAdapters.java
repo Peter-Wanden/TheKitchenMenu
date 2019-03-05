@@ -1,12 +1,18 @@
 package com.example.peter.thekitchenmenu.utils;
 
+import android.os.Handler;
+import android.text.InputFilter;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 
 import com.example.peter.thekitchenmenu.R;
 
+import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.databinding.BindingAdapter;
+
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MULTI_PACK_MAXIMUM_NO_OF_ITEMS;
 
 public class BindingAdapters {
 
@@ -14,6 +20,7 @@ public class BindingAdapters {
 
     @BindingAdapter("app:showWhenChecked")
     public static void showWhenChecked(View view, Boolean checked) {
+
         view.setVisibility(checked ? View.VISIBLE : View.GONE);
 
         if (checked) {
@@ -30,13 +37,32 @@ public class BindingAdapters {
     }
 
     private static void setupItemsInPackEditText(EditText noOfItemsInPack, Boolean checked) {
+
+        setInputFilter(noOfItemsInPack);
         noOfItemsInPack.requestFocus();
         ShowHideSoftInput.showKeyboard(noOfItemsInPack, checked);
+
 
         if (noOfItemsInPack.getText().toString().isEmpty() ||
                 Integer.parseInt(noOfItemsInPack.getText().toString()) == 0) {
             showHintIfZero(noOfItemsInPack);
         }
+    }
+
+    private static void setInputFilter(EditText noOfItemsInPack) {
+
+        int numberOfDigits = 0;
+        int digits = MULTI_PACK_MAXIMUM_NO_OF_ITEMS;
+
+        while(digits > 0) {
+            numberOfDigits ++;
+            digits = digits / 10;
+        }
+
+        noOfItemsInPack.setFilters(new InputFilter[] {
+                new DecimalDigitsInputFilter(numberOfDigits, 0)});
+
+        noOfItemsInPack.setEms(numberOfDigits);
     }
 
     private static void showHintIfZero(EditText noOfItemsInPack) {
@@ -54,8 +80,10 @@ public class BindingAdapters {
             if (viewId != View.NO_ID) {
 
                 if (viewId == R.id.spinner_shelf_life) {
+
                     view.requestFocus();
-                    view.performClick();
+                    // Avoids WindowManager$BadTokenException by waiting for the screen to redraw.
+                    new Handler().postDelayed(view::performClick, 100);
                 }
             }
         } else {

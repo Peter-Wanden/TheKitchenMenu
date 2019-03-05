@@ -1,69 +1,129 @@
 package com.example.peter.thekitchenmenu.utils;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.EditText;
 
 import com.example.peter.thekitchenmenu.R;
+import com.example.peter.thekitchenmenu.data.entity.Product;
 import com.example.peter.thekitchenmenu.databinding.ProductEditorBinding;
-import com.example.peter.thekitchenmenu.utils.UnitOfMeasure.UnitOfMeasure;
-import com.example.peter.thekitchenmenu.utils.UnitOfMeasure.UnitOfMeasureClassSelector;
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.Measurement;
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasure;
+import com.example.peter.thekitchenmenu.viewmodels.ProductEditorViewModel;
 
-import static com.example.peter.thekitchenmenu.utils.UnitOfMeasure.UnitOfMeasureConstants.*;
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.*;
 
 public class ProductNumericValidationHandler {
 
     private static final String TAG = "ProductNumericValidatio";
 
-    private ProductEditorBinding productEditor;
     private Context context;
+    private ProductEditorBinding productEditor;
+    private ProductEditorViewModel viewModel;
+    private Product product;
+    private UnitOfMeasure unitOfMeasure;
 
     public void setBinding(Context context, ProductEditorBinding productEditor) {
-        this.productEditor = productEditor;
         this.context = context;
+        this.productEditor = productEditor;
+        viewModel = productEditor.getProductEditorViewModel();
+        product = viewModel.getProduct().getValue();
     }
 
-    // TODO - Validate for MAX_MASS in UnitOfMeasureConstants
-    public void validatePackSize(EditText editText, int unitOfMeasureSelected) {
-        if (productEditor.editablePackSize != null) {
+    public void validateItemsInPack(EditText editableItemsInPack) {
 
-            UnitOfMeasure unitOfMeasure = UnitOfMeasureClassSelector.
-                    getUnitOfMeasureClass(context, unitOfMeasureSelected);
+        Log.d(TAG, "validateItemsInPack: called");
 
-            unitOfMeasure.setMeasurement(NO_INPUT);
+        if (productEditor.editableItemsInPack != null) {
 
-            String rawMeasurement = editText.getText().toString();
+            String rawItemsInPack = editableItemsInPack.getText().toString();
 
-            if (rawMeasurement.isEmpty()) {
+            if (!rawItemsInPack.isEmpty()) try {
 
-                setResultToViewModel(unitOfMeasure);
+                int numberOfItemsInPack = Integer.parseInt(rawItemsInPack);
 
-            } else {
+                if (numberOfItemsInPack < MULTI_PACK_MINIMUM_NO_OF_ITEMS ||
+                        numberOfItemsInPack > MULTI_PACK_MAXIMUM_NO_OF_ITEMS) {
 
-                try {
+                    String itemsInPackError =
+                            editableItemsInPack.getContext().getResources().getString(
+                                    R.string.input_error_items_in_pack,
+                                    MULTI_PACK_MINIMUM_NO_OF_ITEMS,
+                                    MULTI_PACK_MAXIMUM_NO_OF_ITEMS);
 
-                    unitOfMeasure.setMeasurement(Double.parseDouble(rawMeasurement));
-
-                } catch (NumberFormatException e) {
-
-                    setResultToViewModel(unitOfMeasure);
+                    productEditor.editableItemsInPack.setError(itemsInPackError);
                 }
-            }
 
-            if (unitOfMeasure.getBaseSiUnits() <= MAX_MASS) {
-                setResultToViewModel(unitOfMeasure);
+            } catch (NumberFormatException e) {
 
-            } else {
-                String massError = editText.getContext().getString(
-                        R.string.max_mass_exceeded_error,
-                        unitOfMeasure.getMax(),
-                        unitOfMeasure.getUnitsAsString());
-                editText.setError(massError);
+                viewModel.getNumberOfItemsInPack().set(0);
             }
         }
     }
 
-    private void setResultToViewModel(UnitOfMeasure unitOfMeasure) {
-        productEditor.getProductEditorViewModel().setPackSize(unitOfMeasure.getBaseSiUnits());
-        productEditor.getProductEditorViewModel().setPackSizeValidated(true);
+    // TODO - Validate for MAX_MASS in UnitOfMeasureConstants
+    public void validatePackSize(EditText editableMeasurement) {
+
+        Log.d(TAG, "validatePackSize: called");
+        unitOfMeasure = viewModel.getUnitOfMeasure();
+        processPackMeasurement(getMeasurement(editableMeasurement), editableMeasurement);
+    }
+
+    private int getMeasurement(EditText editableMeasurement) {
+
+        String rawMeasurement = editableMeasurement.getText().toString();
+
+        if (rawMeasurement.isEmpty()) return 0;
+
+        else try {
+            return Integer.parseInt(rawMeasurement);
+
+        } catch (NumberFormatException e) {
+
+            return 0;
+        }
+    }
+
+    private void processPackMeasurement(int packMeasurement, EditText editableMeasurement) {
+
+        int viewId = editableMeasurement.getId();
+
+        if (packMeasurement > 0) {
+
+            boolean measurementIsSet = false;
+
+            if (viewId == R.id.pack_editable_measurement_one)
+                measurementIsSet = unitOfMeasure.setPackMeasurementOne(packMeasurement);
+
+             else if (viewId == R.id.pack_editable_measurement_two)
+                measurementIsSet = unitOfMeasure.setPackMeasurementTwo(packMeasurement);
+
+            if (measurementIsSet) {
+
+                product.setBaseSiUnits(unitOfMeasure.getBaseSiUnits());
+                viewModel.setPackSizeValidated(true);
+
+            } else {
+
+                Measurement measurement = unitOfMeasure.getMinAndMax();
+
+                editableMeasurement.setError(
+                        context.getResources().getString(
+                                R.string.input_error_pack_size,
+                                measurement.getType(),
+                                measurement.getMeasurementTwo(),
+                                measurement.getMeasurementUnitTwo(),
+                                measurement.getMeasurementOne(),
+                                measurement.getMeasurementUnitOne()));
+            }
+
+        } else {
+
+            if (viewId == R.id.pack_editable_measurement_one)
+            viewModel.getPackMeasurementOne().set(packMeasurement);
+
+            else if (viewId == R.id.pack_editable_measurement_two)
+                viewModel.getPackMeasurementTwo().set(packMeasurement);
+        }
     }
 }

@@ -34,8 +34,8 @@ public class ProductModel implements Parcelable {
     private String madeBy;
     private int category;
     private int shelfLife;
-    private int packSize;
-    private int unitOfMeasure;
+    private double baseSiUnits;
+    private int unitOfMeasureSubType;
     private double packAvePrice;
     private String createdBy;
     private String remoteImageUri;
@@ -63,8 +63,8 @@ public class ProductModel implements Parcelable {
         this.madeBy = product.getMadeBy();
         this.category = product.getCategory();
         this.shelfLife = product.getShelfLife();
-        this.packSize = product.getPackSize();
-        this.unitOfMeasure = product.getUnitOfMeasure();
+        this.baseSiUnits = product.getBaseSiUnits();
+        this.unitOfMeasureSubType = product.getUnitOfMeasureSubType();
         this.packAvePrice = product.getPackAvePrice();
         this.createdBy = product.getCreatedBy();
         this.remoteImageUri = product.getRemoteImageUri();
@@ -91,8 +91,8 @@ public class ProductModel implements Parcelable {
         this.madeBy = product.getMadeBy();
         this.category = product.getCategory();
         this.shelfLife = product.getShelfLife();
-        this.packSize = product.getPackSize();
-        this.unitOfMeasure = product.getUnitOfMeasure();
+        this.baseSiUnits = product.getBaseSiUnits();
+        this.unitOfMeasureSubType = product.getUnitOfMeasureSubType();
         this.packAvePrice = product.getPackAvePrice();
         this.createdBy = product.getCreatedBy();
         this.remoteImageUri = product.getRemoteImageUri();
@@ -117,8 +117,8 @@ public class ProductModel implements Parcelable {
             String madeBy,
             int category,
             int shelfLife,
-            int packSize,
-            int unitOfMeasure,
+            double baseSiUnits,
+            int unitOfMeasureSubType,
             double packAvePrice,
             String createdBy,
             String remoteImageUri,
@@ -141,8 +141,8 @@ public class ProductModel implements Parcelable {
         this.madeBy = madeBy;
         this.category = category;
         this.shelfLife = shelfLife;
-        this.packSize = packSize;
-        this.unitOfMeasure = unitOfMeasure;
+        this.baseSiUnits = baseSiUnits;
+        this.unitOfMeasureSubType = unitOfMeasureSubType;
         this.packAvePrice = packAvePrice;
         this.createdBy = createdBy;
         this.remoteImageUri = remoteImageUri;
@@ -167,8 +167,8 @@ public class ProductModel implements Parcelable {
         madeBy = in.readString();
         category = in.readInt();
         shelfLife = in.readInt();
-        packSize = in.readInt();
-        unitOfMeasure = in.readInt();
+        baseSiUnits = in.readDouble();
+        unitOfMeasureSubType = in.readInt();
         packAvePrice = in.readDouble();
         createdBy = in.readString();
         remoteImageUri = in.readString();
@@ -196,8 +196,8 @@ public class ProductModel implements Parcelable {
         result.put(MADE_BY, madeBy);
         result.put(CATEGORY, category);
         result.put(SHELF_LIFE, shelfLife);
-        result.put(PACK_SIZE, packSize);
-        result.put(UNIT_OF_MEASURE, unitOfMeasure);
+        result.put(BASE_SI_UNITS, baseSiUnits);
+        result.put(UNIT_OF_MEASURE_SUB_TYPE, unitOfMeasureSubType);
         result.put(PROD_COMM_PRICE_AVE, packAvePrice);
         result.put(CREATED_BY, createdBy);
         result.put(REMOTE_IMAGE_URI, remoteImageUri);
@@ -216,8 +216,8 @@ public class ProductModel implements Parcelable {
         result.put(MADE_BY, madeBy);
         result.put(CATEGORY, category);
         result.put(SHELF_LIFE, shelfLife);
-        result.put(PACK_SIZE, packSize);
-        result.put(UNIT_OF_MEASURE, unitOfMeasure);
+        result.put(BASE_SI_UNITS, baseSiUnits);
+        result.put(UNIT_OF_MEASURE_SUB_TYPE, unitOfMeasureSubType);
         result.put(PROD_COMM_PRICE_AVE, packAvePrice);
         result.put(CREATED_BY, createdBy);
         result.put(REMOTE_IMAGE_URI, remoteImageUri);
@@ -261,8 +261,8 @@ public class ProductModel implements Parcelable {
         parcel.writeString(madeBy);
         parcel.writeInt(category);
         parcel.writeInt(shelfLife);
-        parcel.writeInt(packSize);
-        parcel.writeInt(unitOfMeasure);
+        parcel.writeDouble(baseSiUnits);
+        parcel.writeInt(unitOfMeasureSubType);
         parcel.writeDouble(packAvePrice);
         parcel.writeString(createdBy);
         parcel.writeString(remoteImageUri);
@@ -289,8 +289,8 @@ public class ProductModel implements Parcelable {
                 ", madeBy='" + madeBy + '\'' +
                 ", category=" + category +
                 ", shelfLife=" + shelfLife +
-                ", packSize=" + packSize +
-                ", unitOfMeasure=" + unitOfMeasure +
+                ", baseSiUnits=" + baseSiUnits +
+                ", unitOfMeasureSubType=" + unitOfMeasureSubType +
                 ", packAvePrice=" + packAvePrice +
                 ", createdBy='" + createdBy + '\'' +
                 ", remoteImageUri='" + remoteImageUri + '\'' +
@@ -405,20 +405,20 @@ public class ProductModel implements Parcelable {
         this.shelfLife = shelfLife;
     }
 
-    public int getPackSize() {
-        return packSize;
+    public double getBaseSiUnits() {
+        return baseSiUnits;
     }
 
-    public void setPackSize(int packSize) {
-        this.packSize = packSize;
+    public void setBaseSiUnits(double baseSiUnits) {
+        this.baseSiUnits = baseSiUnits;
     }
 
-    public int getUnitOfMeasure() {
-        return unitOfMeasure;
+    public int getUnitOfMeasureSubType() {
+        return unitOfMeasureSubType;
     }
 
-    public void setUnitOfMeasure(int unitOfMeasure) {
-        this.unitOfMeasure = unitOfMeasure;
+    public void setUnitOfMeasureSubType(int unitOfMeasureSubType) {
+        this.unitOfMeasureSubType = unitOfMeasureSubType;
     }
 
     public double getPackAvePrice() {

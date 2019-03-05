@@ -79,7 +79,7 @@ public abstract class Constants {
     /*
      * This field is updated when the user logs in / out.
      * To observe, Constants.observe(lifeCycleOwner, observerName);
-     * To update, call Constants.getUId().setMeasurement(userID);
+     * To update, call Constants.getUId().setPackMeasurement(userID);
      * see: https://developer.android.com/topic/libraries/architecture/livedata
      */
     private static MutableLiveData<String> USER_ID;

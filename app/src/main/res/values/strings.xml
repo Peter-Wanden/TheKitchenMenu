@@ -65,6 +65,13 @@
     <string name="volume">volume</string>
     <string name="count">count</string>
 
+    <!-- Unit of measure sub-types -->
+    <string name="sub_type_metric_mass">Metric weight</string>
+    <string name="sub_type_imperial_mass">Imperial weight</string>
+    <string name="sub_type_metric_volume">Metric volume</string>
+    <string name="sub_type_imperial_volume">Imperial volume</string>
+    <string name="sub_type_count">Count</string>
+
     <!-- Unit of measure spinner headers -->
     <string name="header_mass">SELECT WEIGHT</string>
     <string name="header_volume">SELECT VOLUME</string>
@@ -118,8 +125,12 @@
         between 1 and 120 characters.</string>
     <string name="input_error_product_retailer_too_long">Retailer name too long, needs to be
         between 1 and 120 characters.</string>
+    <string name="input_error_items_in_pack">Number of items needs to be between %1$d and %2$d</string>
     <string name="input_error_product_pack_size">Pack size needs to be between 1g and 10kg</string>
     <string name="max_mass_exceeded_error">Weight must be under %1$.0f %2$s</string>
+
+    <string name="input_error_pack_size">Pack %1$s must be between %2$d %3$s and %4$d %5$s.</string>
+
     <string name="input_error_product_loc_room_too_short">Storage room name too short, needs to be
         between 1 and 60 characters.</string>
     <string name="input_error_product_loc_room_too_long">Storage room name too long, needs to be

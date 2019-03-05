@@ -18,10 +18,7 @@ import androidx.room.RoomDatabase;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import static com.example.peter.thekitchenmenu.data.entity.Product.TABLE_PRODUCT;
-import static com.example.peter.thekitchenmenu.data.entity.Product.DESCRIPTION;
-import static com.example.peter.thekitchenmenu.data.entity.Product.ID;
-import static com.example.peter.thekitchenmenu.data.entity.Product.MADE_BY;
+import static com.example.peter.thekitchenmenu.data.entity.Product.*;
 import static com.example.peter.thekitchenmenu.data.entity.ProductFastTextSearch.TABLE_FTS_PRODUCT;
 
 @Database(entities = {

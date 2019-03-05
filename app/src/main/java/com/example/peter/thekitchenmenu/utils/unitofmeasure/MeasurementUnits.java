@@ -1,12 +1,12 @@
-package com.example.peter.thekitchenmenu.utils.UnitOfMeasure;
+package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @see {http://tutorials.jenkov.com/java/enums.html}
+ * @link {http://tutorials.jenkov.com/java/enums.html}
  */
-public enum UnitOfMeasureUnits {
+public enum MeasurementUnits {
 
     GRAMS(1) {
         @Override
@@ -25,14 +25,14 @@ public enum UnitOfMeasureUnits {
         }
     },
 
-    OUNCES(3) {
+    OUNCES(1) {
         @Override
         public String getString() {
-            return "each";
+            return "oz";
         }
     },
 
-    POUNDS(4) {
+    POUNDS(2) {
         @Override
         public int getIntValue() {
             return super.getIntValue();
@@ -44,7 +44,7 @@ public enum UnitOfMeasureUnits {
         }
     },
 
-    MILLILITRES(6) {
+    MILLILITRES(1) {
         @Override
         public int getIntValue() {
             return super.getIntValue();
@@ -56,7 +56,7 @@ public enum UnitOfMeasureUnits {
         }
     },
 
-    LITRES(7) {
+    LITRES(2) {
         @Override
         public int getIntValue() {
             return super.getIntValue();
@@ -68,7 +68,7 @@ public enum UnitOfMeasureUnits {
         }
     },
 
-    FLUID_OUNCES(8) {
+    FLUID_OUNCES(1) {
         @Override
         public int getIntValue() {
             return super.getIntValue();
@@ -80,7 +80,7 @@ public enum UnitOfMeasureUnits {
         }
     },
 
-    PINTS(9) {
+    PINTS(2) {
         @Override
         public int getIntValue() {
             return super.getIntValue();
@@ -92,19 +92,7 @@ public enum UnitOfMeasureUnits {
         }
     },
 
-    GALLONS(10) {
-        @Override
-        public int getIntValue() {
-            return super.getIntValue();
-        }
-
-        @Override
-        public String getString() {
-            return null;
-        }
-    },
-
-    COUNT(11) {
+    COUNT(1) {
         @Override
         public int getIntValue() {
             return super.getIntValue();
@@ -117,24 +105,25 @@ public enum UnitOfMeasureUnits {
     };
 
     private int enumIntValue;
-    private static Map<Integer, UnitOfMeasureUnits> unitOfMeasureMap = new HashMap<>();
 
-    UnitOfMeasureUnits(int measureTypeRequested) {
+    public int getIntValue() {
+        return enumIntValue;
+    }
+
+    MeasurementUnits(int measureTypeRequested) {
         this.enumIntValue = measureTypeRequested;
     }
 
+    private static Map<Integer, MeasurementUnits> unitOfMeasureMap = new HashMap<>();
+
     static {
-        for (UnitOfMeasureUnits unitOfMeasure : UnitOfMeasureUnits.values()) {
+        for (MeasurementUnits unitOfMeasure : MeasurementUnits.values()) {
             unitOfMeasureMap.put(unitOfMeasure.enumIntValue, unitOfMeasure);
         }
     }
 
-    public static UnitOfMeasureUnits valueOf(int unitOfMeasureType) {
+    public static MeasurementUnits valueOf(int unitOfMeasureType) {
         return unitOfMeasureMap.get(unitOfMeasureType);
-    }
-
-    public int getIntValue() {
-        return enumIntValue;
     }
 
     public abstract String getString();

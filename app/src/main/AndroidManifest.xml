@@ -85,11 +85,6 @@
         </activity>
 
         <!-- Activity view of a single products details -->
-        <activity
-            android:name=".ui.detail.ProductDetail"
-            android:label="@string/activity_detail_product_title"
-            android:theme="@style/AppTheme">
-        </activity>
 
         <activity android:name=".ui.detail.ProductMain"
             android:theme="@style/AppTheme"/>

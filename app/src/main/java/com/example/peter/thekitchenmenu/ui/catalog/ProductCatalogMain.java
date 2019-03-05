@@ -9,7 +9,7 @@ import android.view.View;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.model.ProductModel;
 import com.example.peter.thekitchenmenu.databinding.ActivityCatalogProductBinding;
-import com.example.peter.thekitchenmenu.ui.detail.ProductDetail;
+import com.example.peter.thekitchenmenu.ui.detail.ProductEditor;
 import com.example.peter.thekitchenmenu.ui.detail.ProductMain;
 import com.example.peter.thekitchenmenu.viewmodels.ViewModelCatlogProducts;
 
@@ -48,7 +48,7 @@ public class ProductCatalogMain extends AppCompatActivity {
     }
 
     private void launchDetailActivity(ProductModel selectedProduct) {
-        Intent intent = new Intent(ProductCatalogMain.this, ProductDetail.class);
+        Intent intent = new Intent(ProductCatalogMain.this, ProductEditor.class);
         intent.putExtra(PRODUCT_FB_REFERENCE_KEY, selectedProduct);
         intent.putExtra(PRODUCT_IS_CREATOR_KEY, viewModel.getIsCreator().getValue());
         startActivity(intent);
@@ -105,6 +105,7 @@ public class ProductCatalogMain extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_search:
                 onSearchRequested();
+                return true;
             case R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
                 return true;

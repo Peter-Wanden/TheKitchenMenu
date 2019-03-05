@@ -27,6 +27,7 @@ android {
         }
     }
     dataBinding.enabled = true
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -51,7 +52,6 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:$androidxLifecycleExtensions"
     implementation "androidx.lifecycle:lifecycle-runtime:$androidxArchComponentsVersion"
     annotationProcessor "androidx.lifecycle:lifecycle-compiler:$androidxArchComponentsVersion"
-    annotationProcessor "androidx.databinding:databinding-compiler:$androidxDatabindingCompiler"
 
     // Room
     implementation "androidx.room:room-runtime:$androidxRoomVersion"

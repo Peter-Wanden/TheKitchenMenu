@@ -1,6 +1,7 @@
 package com.example.peter.thekitchenmenu.ui.detail;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import com.example.peter.thekitchenmenu.databinding.ProductEditorBinding;
 import com.example.peter.thekitchenmenu.utils.ProductNumericValidationHandler;
 import com.example.peter.thekitchenmenu.utils.ProductTextValidationHandler;
 import com.example.peter.thekitchenmenu.utils.ShowHideSoftInput;
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementType;
 import com.example.peter.thekitchenmenu.viewmodels.ProductEditorViewModel;
 
 import java.util.ArrayList;
@@ -58,7 +60,7 @@ public class ProductEditor extends Fragment {
     private void setViewModel() {
 
         ProductEditorViewModel productEditorViewModel = ViewModelProviders.of(
-                getActivity()).
+                requireActivity()).
                 get(ProductEditorViewModel.class);
 
         productEditor.setProductEditorViewModel(productEditorViewModel);
@@ -72,14 +74,14 @@ public class ProductEditor extends Fragment {
 
     private void setupCategorySpinner() {
         productEditor.spinnerCategory.setAdapter(ArrayAdapter.createFromResource(
-                getActivity(), R.array.product_category_options,
+                requireActivity(), R.array.product_category_options,
                 R.layout.list_item_spinner));
         setSpinnerListeners(productEditor.spinnerCategory);
     }
 
     private void setupShelfLifeSpinner() {
         productEditor.spinnerShelfLife.setAdapter(ArrayAdapter.createFromResource(
-                getActivity(),
+                requireActivity(),
                 R.array.shelf_life_options,
                 R.layout.list_item_spinner));
         setSpinnerListeners(productEditor.spinnerShelfLife);
@@ -92,7 +94,13 @@ public class ProductEditor extends Fragment {
     }
 
     private SpinnerAdapter getUnitOfMeasureSpinnerAdapter() {
-        return new UnitOfMeasureSpinnerAdapter(getActivity(),unitOfMeasureArrayList());
+
+        ArrayList<UnitOfMeasureSpinnerItem> uomList = unitOfMeasureArrayList();
+        for (UnitOfMeasureSpinnerItem listItem : uomList) {
+            Log.d(TAG, "getUnitOfMeasureSpinnerAdapter: " + listItem.getType() + " - " + listItem.getMeasurementUnits());
+        }
+
+        return new UnitOfMeasureSpinnerAdapter(requireActivity(), unitOfMeasureArrayList());
     }
 
     private void setSpinnerListeners(Spinner spinner) {
@@ -100,15 +108,20 @@ public class ProductEditor extends Fragment {
         spinner.setOnFocusChangeListener((view, b) -> {
 
             if (view.hasFocus()) {
+
                 ShowHideSoftInput.showKeyboard(view, false);
-                view.performClick();
+                // Avoids WindowManager$BadTokenException by waiting for the screen to redraw.
+                new Handler().postDelayed(view::performClick, 100);
             }
         });
 
         spinner.setOnTouchListener((view, motionEvent) -> {
 
-            ShowHideSoftInput.showKeyboard(view, false);
-            view.performClick();
+            if (view.getVisibility() == View.VISIBLE) {
+
+                ShowHideSoftInput.showKeyboard(view, false);
+                view.performClick();
+            }
             return true;
         });
 
@@ -119,91 +132,65 @@ public class ProductEditor extends Fragment {
     private ArrayList<UnitOfMeasureSpinnerItem> unitOfMeasureArrayList() {
 
         List<String> unitOfMeasureHeaders = Arrays.asList(getResources().getStringArray(
-                R.array.unit_of_measure_headers
-        ));
-        List<String> unitOfMeasureMassMetric = Arrays.asList(getResources().getStringArray(
-                R.array.unit_of_measure_options_mass_metric
-        ));
-        List<String> unitOfMeasureMassImperial = Arrays.asList(getResources().getStringArray(
-                R.array.unit_of_measure_options_mass_imperial
-        ));
-        List<String> unitOfMeasureVolumeMetric = Arrays.asList(getResources().getStringArray(
-                R.array.unit_of_measure_options_volume_metric
-        ));
-        List<String> unitOfMeasureVolumeImperial = Arrays.asList(getResources().getStringArray(
-                R.array.unit_of_measure_options_volume_imperial
-        ));
-        List<String> unitOfMeasureCount = Arrays.asList(getResources().getStringArray(
-                R.array.unit_of_measure_options_count
-        ));
+                R.array.unit_of_measure_headers));
 
-        ArrayList<UnitOfMeasureSpinnerItem> categoryList = new ArrayList<>();
+        String massMetricUnits = removeArrayBraces(Arrays.toString(getResources().
+                getStringArray(R.array.unit_of_measure_options_mass_metric)));
 
-        for (int header = 0; header < unitOfMeasureHeaders.size(); header ++) {
+        String massImperialUnits = removeArrayBraces(Arrays.toString(getResources().
+                getStringArray(R.array.unit_of_measure_options_mass_imperial)));
+
+        String volumeMetricUnits = removeArrayBraces(Arrays.toString(getResources().
+                getStringArray(R.array.unit_of_measure_options_volume_metric)));
+
+        String volumeImperialUnits = removeArrayBraces(Arrays.toString(getResources().
+                getStringArray(R.array.unit_of_measure_options_volume_imperial)));
+
+        String countUnits = removeArrayBraces(Arrays.toString(getResources().
+                getStringArray(R.array.unit_of_measure_options_count)));
+
+        ArrayList<UnitOfMeasureSpinnerItem> unitOfMeasureList = new ArrayList<>();
+
+        for (int header = 0; header < unitOfMeasureHeaders.size(); header++) {
 
             UnitOfMeasureSpinnerItem headerItem = new UnitOfMeasureSpinnerItem(
                     SpinnerItemType.SECTION_HEADER,
                     unitOfMeasureHeaders.get(header)
             );
-            categoryList.add(headerItem);
+            unitOfMeasureList.add(headerItem);
 
-            if (header == 0) {
+            if (header == MeasurementType.TYPE_MASS.ordinal() -1) {
 
-                for (int massMetric = 0; massMetric < unitOfMeasureMassMetric.size();
-                     massMetric++) {
+                UnitOfMeasureSpinnerItem massMetricItem = new UnitOfMeasureSpinnerItem(
+                        SpinnerItemType.LIST_ITEM, massMetricUnits);
+                unitOfMeasureList.add(massMetricItem);
 
-                    UnitOfMeasureSpinnerItem massMetricItem = new UnitOfMeasureSpinnerItem(
-                            SpinnerItemType.LIST_ITEM,
-                            unitOfMeasureMassMetric.get(massMetric)
-                    );
-                    categoryList.add(massMetricItem);
-                }
+                UnitOfMeasureSpinnerItem massImperialItem = new UnitOfMeasureSpinnerItem(
+                        SpinnerItemType.LIST_ITEM, massImperialUnits);
+                unitOfMeasureList.add(massImperialItem);
 
-                for (int massImperial = 0; massImperial < unitOfMeasureMassImperial.size();
-                     massImperial++) {
+            } else if (header == MeasurementType.TYPE_VOLUME.ordinal() -1) {
 
-                    UnitOfMeasureSpinnerItem massImperialItem = new UnitOfMeasureSpinnerItem(
-                            SpinnerItemType.LIST_ITEM,
-                            unitOfMeasureMassImperial.get(massImperial)
-                    );
-                    categoryList.add(massImperialItem);
-                }
+                UnitOfMeasureSpinnerItem volumeMetricItem = new UnitOfMeasureSpinnerItem(
+                        SpinnerItemType.LIST_ITEM, volumeMetricUnits);
+                unitOfMeasureList.add(volumeMetricItem);
 
-            } else if (header == 1) {
+                UnitOfMeasureSpinnerItem volumeImperialItem = new UnitOfMeasureSpinnerItem(
+                        SpinnerItemType.LIST_ITEM, volumeImperialUnits);
+                unitOfMeasureList.add(volumeImperialItem);
 
-                for (int volumeMetric = 0; volumeMetric < unitOfMeasureVolumeMetric.size();
-                     volumeMetric ++) {
+            } else if (header == MeasurementType.TYPE_COUNT.ordinal() -1) {
 
-                    UnitOfMeasureSpinnerItem volumeMetricItem = new UnitOfMeasureSpinnerItem(
-                            SpinnerItemType.LIST_ITEM,
-                            unitOfMeasureVolumeMetric.get(volumeMetric)
-                    );
-                    categoryList.add(volumeMetricItem);
-                }
-
-                for (int volumeImperial = 0; volumeImperial < unitOfMeasureVolumeImperial.size();
-                     volumeImperial ++) {
-
-                    UnitOfMeasureSpinnerItem volumeImperialItem = new UnitOfMeasureSpinnerItem(
-                            SpinnerItemType.LIST_ITEM,
-                            unitOfMeasureVolumeImperial.get(volumeImperial)
-                    );
-                    categoryList.add(volumeImperialItem);
-                }
-
-            } else if (header == 2) {
-
-                for (int count = 0; count < unitOfMeasureCount.size(); count ++) {
-
-                    UnitOfMeasureSpinnerItem countItem = new UnitOfMeasureSpinnerItem(
-                            SpinnerItemType.LIST_ITEM,
-                            unitOfMeasureCount.get(count)
-                    );
-                    categoryList.add(countItem);
-                }
+                UnitOfMeasureSpinnerItem countItem = new UnitOfMeasureSpinnerItem(
+                        SpinnerItemType.LIST_ITEM, countUnits);
+                unitOfMeasureList.add(countItem);
             }
         }
-        return categoryList;
+        return unitOfMeasureList;
+    }
+
+    private String removeArrayBraces(String stringWithBrackets) {
+        return stringWithBrackets.substring(1, stringWithBrackets.length() - 1);
     }
 
     private void setAlphaValidationHandler() {
@@ -211,10 +198,7 @@ public class ProductEditor extends Fragment {
         ProductTextValidationHandler textValidationHandler =
                 new ProductTextValidationHandler();
 
-        textValidationHandler.
-                setBinding(getActivity(),
-                productEditor);
-
+        textValidationHandler.setBinding(getActivity(), productEditor);
         productEditor.setTextValidation(textValidationHandler);
     }
 
@@ -223,10 +207,7 @@ public class ProductEditor extends Fragment {
         ProductNumericValidationHandler numericValidationHandler =
                 new ProductNumericValidationHandler();
 
-        numericValidationHandler.setBinding(
-                getActivity(),
-                productEditor);
-
+        numericValidationHandler.setBinding(getActivity(), productEditor);
         productEditor.setNumericValidation(numericValidationHandler);
     }
 }

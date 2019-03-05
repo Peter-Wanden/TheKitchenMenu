@@ -37,8 +37,8 @@ public class ProductCatalogAllProducts
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        adapterProducts = new ProductCatalogRecyclerAdapter(getActivity(), this);
-        viewModelProducts = ViewModelProviders.of(getActivity()).get(ViewModelCatlogProducts.class);
+        adapterProducts = new ProductCatalogRecyclerAdapter(requireActivity(), this);
+        viewModelProducts = ViewModelProviders.of(requireActivity()).get(ViewModelCatlogProducts.class);
         viewModelProducts.getMatchVmProds().observe(
                 this, vmListProd -> adapterProducts.setProducts(vmListProd));
     }
@@ -56,13 +56,13 @@ public class ProductCatalogAllProducts
         if (getResources().getBoolean(R.bool.is_tablet) ||
                 getResources().getBoolean(R.bool.is_landscape)) {
 
-            GridLayoutManager gridManager = new GridLayoutManager((getActivity())
+            GridLayoutManager gridManager = new GridLayoutManager((requireActivity())
                             .getApplicationContext(), columnCalculator());
 
             binding.fragmentCatalogProductsRv.setLayoutManager(gridManager);
 
         } else {
-            LinearLayoutManager linearManager = new LinearLayoutManager(getActivity()
+            LinearLayoutManager linearManager = new LinearLayoutManager(requireActivity()
                     .getApplicationContext(), RecyclerView.VERTICAL, false);
 
             binding.fragmentCatalogProductsRv.setLayoutManager(linearManager);
@@ -80,10 +80,7 @@ public class ProductCatalogAllProducts
     private int columnCalculator() {
 
         DisplayMetrics metrics = new DisplayMetrics();
-        Objects.requireNonNull(getActivity())
-                .getWindowManager()
-                .getDefaultDisplay()
-                .getMetrics(metrics);
+        requireActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
         // Width of smallest tablet
         int divider = 600;

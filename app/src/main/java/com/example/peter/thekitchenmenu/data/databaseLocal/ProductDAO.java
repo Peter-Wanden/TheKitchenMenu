@@ -14,14 +14,8 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import static android.app.SearchManager.SUGGEST_COLUMN_INTENT_DATA;
-import static android.app.SearchManager.SUGGEST_COLUMN_TEXT_1;
-import static android.app.SearchManager.SUGGEST_COLUMN_TEXT_2;
-import static com.example.peter.thekitchenmenu.data.entity.Product.TABLE_PRODUCT;
-import static com.example.peter.thekitchenmenu.data.entity.Product.DESCRIPTION;
-import static com.example.peter.thekitchenmenu.data.entity.Product.ID;
-import static com.example.peter.thekitchenmenu.data.entity.Product.MADE_BY;
-import static com.example.peter.thekitchenmenu.data.entity.Product.REMOTE_PRODUCT_ID;
+import static android.app.SearchManager.*;
+import static com.example.peter.thekitchenmenu.data.entity.Product.*;
 import static com.example.peter.thekitchenmenu.data.entity.ProductFastTextSearch.TABLE_FTS_PRODUCT;
 
 @Dao

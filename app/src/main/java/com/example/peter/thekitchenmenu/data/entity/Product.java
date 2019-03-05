@@ -3,15 +3,12 @@ package com.example.peter.thekitchenmenu.data.entity;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.example.peter.thekitchenmenu.BR;
 import com.google.firebase.database.Exclude;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import androidx.annotation.NonNull;
-import androidx.databinding.BaseObservable;
-import androidx.databinding.Bindable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
@@ -32,8 +29,8 @@ public class Product implements Parcelable {
     public static final String MULTI_PACK = "multi_pack";
     public static final String NUMBER_OF_ITEMS = "number_of_items";
     public static final String SHELF_LIFE = "shelfLife";
-    public static final String PACK_SIZE = "packSize";
-    public static final String UNIT_OF_MEASURE = "unitOfMeasure";
+    public static final String BASE_SI_UNITS = "baseSiUnits";
+    public static final String UNIT_OF_MEASURE_SUB_TYPE = "unitOfMeasureSubType";
     public static final String PROD_COMM_PRICE_AVE = "packAvePrice";
     public static final String CREATED_BY = "createdBy";
     public static final String REMOTE_IMAGE_URI = "remoteImageUri";
@@ -64,11 +61,11 @@ public class Product implements Parcelable {
     @ColumnInfo(name = SHELF_LIFE)
     private int shelfLife;
 
-    @ColumnInfo(name = PACK_SIZE)
-    private int packSize;
+    @ColumnInfo(name = BASE_SI_UNITS)
+    private double baseSiUnits;
 
-    @ColumnInfo(name = UNIT_OF_MEASURE)
-    private int unitOfMeasure;
+    @ColumnInfo(name = UNIT_OF_MEASURE_SUB_TYPE)
+    private int unitOfMeasureSubType;
 
     @ColumnInfo(name = PROD_COMM_PRICE_AVE)
     private double packAvePrice;
@@ -98,8 +95,8 @@ public class Product implements Parcelable {
                    boolean multiPack,
                    int numberOfItems,
                    int shelfLife,
-                   int packSize,
-                   int unitOfMeasure,
+                   double baseSiUnits,
+                   int unitOfMeasureSubType,
                    double packAvePrice,
                    String createdBy,
                    @NonNull String remoteImageUri,
@@ -114,8 +111,8 @@ public class Product implements Parcelable {
         this.multiPack = multiPack;
         this.numberOfItems = numberOfItems;
         this.shelfLife = shelfLife;
-        this.packSize = packSize;
-        this.unitOfMeasure = unitOfMeasure;
+        this.baseSiUnits = baseSiUnits;
+        this.unitOfMeasureSubType = unitOfMeasureSubType;
         this.packAvePrice = packAvePrice;
         this.createdBy = createdBy;
         this.remoteImageUri = remoteImageUri;
@@ -133,8 +130,8 @@ public class Product implements Parcelable {
         multiPack = in.readByte() != 0;
         numberOfItems = in.readInt();
         shelfLife = in.readInt();
-        packSize = in.readInt();
-        unitOfMeasure = in.readInt();
+        baseSiUnits = in.readDouble();
+        unitOfMeasureSubType = in.readInt();
         packAvePrice = in.readDouble();
         createdBy = in.readString();
         remoteImageUri = in.readString();
@@ -152,8 +149,8 @@ public class Product implements Parcelable {
         dest.writeByte((byte) (multiPack ? 1 : 0));
         dest.writeInt(numberOfItems);
         dest.writeInt(shelfLife);
-        dest.writeInt(packSize);
-        dest.writeInt(unitOfMeasure);
+        dest.writeDouble(baseSiUnits);
+        dest.writeInt(unitOfMeasureSubType);
         dest.writeDouble(packAvePrice);
         dest.writeString(createdBy);
         dest.writeString(remoteImageUri);
@@ -190,8 +187,8 @@ public class Product implements Parcelable {
         result.put(MULTI_PACK, multiPack);
         result.put(NUMBER_OF_ITEMS, numberOfItems);
         result.put(SHELF_LIFE, shelfLife);
-        result.put(PACK_SIZE, packSize);
-        result.put(UNIT_OF_MEASURE, unitOfMeasure);
+        result.put(BASE_SI_UNITS, baseSiUnits);
+        result.put(UNIT_OF_MEASURE_SUB_TYPE, unitOfMeasureSubType);
         result.put(PROD_COMM_PRICE_AVE, packAvePrice);
         result.put(CREATED_BY, createdBy);
         result.put(REMOTE_IMAGE_URI, remoteImageUri);
@@ -211,8 +208,8 @@ public class Product implements Parcelable {
                 "\n multi_pack=" + multiPack +
                 "\n number_of_items=" + numberOfItems +
                 "\n shelfLife=" + shelfLife +
-                "\n packSize=" + packSize +
-                "\n unitOfMeasure=" + unitOfMeasure +
+                "\n baseSiUnits=" + baseSiUnits +
+                "\n unitOfMeasureSubType=" + unitOfMeasureSubType +
                 "\n packAvePrice=" + packAvePrice +
                 "\n createdBy='" + createdBy + '\'' +
                 "\n remoteImageUri='" + remoteImageUri + '\'' +
@@ -279,20 +276,20 @@ public class Product implements Parcelable {
         this.shelfLife = shelfLife;
     }
 
-    public int getPackSize() {
-        return packSize;
+    public double getBaseSiUnits() {
+        return baseSiUnits;
     }
 
-    public void setPackSize(int packSize) {
-        this.packSize = packSize;
+    public void setBaseSiUnits(double baseSiUnits) {
+        this.baseSiUnits = baseSiUnits;
     }
 
-    public int getUnitOfMeasure() {
-        return unitOfMeasure;
+    public int getUnitOfMeasureSubType() {
+        return unitOfMeasureSubType;
     }
 
-    public void setUnitOfMeasure(int unitOfMeasure) {
-        this.unitOfMeasure = unitOfMeasure;
+    public void setUnitOfMeasureSubType(int unitOfMeasureSubType) {
+        this.unitOfMeasureSubType = unitOfMeasureSubType;
     }
 
     public double getPackAvePrice() {

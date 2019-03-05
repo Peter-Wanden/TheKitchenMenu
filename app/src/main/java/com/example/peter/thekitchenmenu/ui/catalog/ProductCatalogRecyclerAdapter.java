@@ -68,11 +68,11 @@ public class ProductCatalogRecyclerAdapter
         }
 
         /* Set the pack size */
-        holder.packSizeTV.setText(String.valueOf(productModel.getPackSize()));
+        holder.packSizeTV.setText(String.valueOf(productModel.getBaseSiUnits()));
 
         /* Set the unit of measure */
         holder.UoMTV.setText(Converters.getUnitOfMeasureString
-                (context, productModel.getUnitOfMeasure()));
+                (context, productModel.getUnitOfMeasureSubType()));
     }
 
     /* Returns the number of items in the adapter */

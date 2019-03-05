@@ -4,20 +4,26 @@ import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
-import com.example.peter.thekitchenmenu.BR;
 import com.example.peter.thekitchenmenu.data.entity.Product;
 import com.example.peter.thekitchenmenu.utils.ObservableViewModel;
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubType;
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasure;
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureClassSelector;
 
 import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
 import androidx.databinding.Bindable;
 import androidx.databinding.ObservableBoolean;
+import androidx.databinding.ObservableDouble;
 import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableInt;
 import androidx.lifecycle.MutableLiveData;
 
-import static com.example.peter.thekitchenmenu.data.entity.Product.*;
-import static com.example.peter.thekitchenmenu.utils.UnitOfMeasure.UnitOfMeasureConstants.*;
+import static com.example.peter.thekitchenmenu.data.entity.Product.BASE_SI_UNITS;
+import static com.example.peter.thekitchenmenu.data.entity.Product.DESCRIPTION;
+import static com.example.peter.thekitchenmenu.data.entity.Product.MADE_BY;
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MULTI_PACK_MINIMUM_NO_OF_ITEMS;
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.NOTHING_SELECTED;
 
 public class ProductEditorViewModel extends ObservableViewModel {
 
@@ -30,31 +36,40 @@ public class ProductEditorViewModel extends ObservableViewModel {
     private boolean descriptionValidated;
     private final ObservableField<String> madeBy = new ObservableField<>();
     private boolean madeByValidated;
-    private ObservableInt category = new ObservableInt();
+    // TODO - Change category to an enum
+    private ObservableInt category = new ObservableInt(0);
     private boolean categoryValidated;
-    private ObservableInt shelfLife = new ObservableInt();
+    private ObservableInt shelfLife = new ObservableInt(0);
     private boolean shelfLifeValidated;
-    private ObservableBoolean multiPack = new ObservableBoolean();
-    private ObservableInt numberOfItemsInPack = new ObservableInt();
-    private boolean numberOfItemsInPackValidated;
-    private ObservableInt unitOfMeasure = new ObservableInt();
+    private ObservableField<MeasurementSubType> unitOfMeasureSubtype =
+            new ObservableField<>(MeasurementSubType.NOTHING_SELECTED);
     private boolean unitOfMeasureValidated;
-    private final ObservableInt packSize = new ObservableInt();
+    private boolean numberOfItemsInPackValidated;
     private boolean packSizeValidated;
+
+    // Measurements
+    private ObservableBoolean multiPack = new ObservableBoolean(false);
+    private ObservableInt numberOfItemsInPack = new ObservableInt(0);
+    private UnitOfMeasure unitOfMeasure;
+
+    private ObservableInt packMeasurementOne = new ObservableInt(0);
+    private ObservableInt packMeasurementTwo = new ObservableInt(0);
+    private ObservableInt itemMeasurementOne = new ObservableInt(0);
+    private ObservableInt itemMeasurementTwo = new ObservableInt(0);
 
     public ProductEditorViewModel(@NonNull Application application) {
         super(application);
-        this.applicationContext = application;
+        applicationContext = application;
 
         Product p = new Product(0,
-                "Qwerty",
-                "qwerty",
-                2,
-                false,
-                0,
-                0,
-                0,
-                0,
+                "Cake!",
+                "Cake factory",
+                1,
+                true,
+                4,
+                5,
+                1200,
+                1,
                 0,
                 "",
                 "",
@@ -64,47 +79,93 @@ public class ProductEditorViewModel extends ObservableViewModel {
         product.setValue(p);
 
         if (product.getValue() != null) {
+
             description.set(product.getValue().getDescription());
             madeBy.set(product.getValue().getMadeBy());
             category.set(product.getValue().getCategory());
             shelfLife.set(product.getValue().getShelfLife());
             multiPack.set(product.getValue().getMultiPack());
-            numberOfItemsInPack.set(product.getValue().getNumberOfItems());
-            unitOfMeasure.set(product.getValue().getUnitOfMeasure());
-            packSize.set(product.getValue().getPackSize());
+
+            if (product.getValue().getUnitOfMeasureSubType() > 0) {
+
+                unitOfMeasure = UnitOfMeasureClassSelector.getClassWithSubType(
+                        applicationContext,
+                        MeasurementSubType.values()[product.getValue().getUnitOfMeasureSubType()]);
+                unitOfMeasureSubtype.set(unitOfMeasure.getSubType());
+
+                if (multiPack.get()) {
+
+                    unitOfMeasure.setNumberOfItems(product.getValue().getNumberOfItems());
+                    numberOfItemsInPack.set(unitOfMeasure.getNumberOfItems());
+                }
+
+                boolean baseSiIsSet = unitOfMeasure.setBaseSiUnits(product.getValue().getBaseSiUnits());
+
+                if (baseSiIsSet) {
+
+                    packMeasurementOne.set(unitOfMeasure.getPackMeasurementOne());
+                    packMeasurementTwo.set(unitOfMeasure.getPackMeasurementTwo());
+
+                    if (multiPack.get()) {
+
+                        itemMeasurementOne.set(unitOfMeasure.getItemMeasurementOne());
+                        itemMeasurementTwo.set(unitOfMeasure.getItemMeasurementTwo());
+                    }
+                }
+            }
         }
     }
 
-    public void setProduct(MutableLiveData<Product> product) {
-        this.product = product;
+    public MutableLiveData<Product> getProduct() {
+        return product;
+    }
+
+    public UnitOfMeasure getUnitOfMeasure() {
+        return unitOfMeasure;
+    }
+
+    public void setPackSizeValidated(boolean packSizeValidated) {
+        this.packSizeValidated = packSizeValidated;
     }
 
     @Bindable
     public ObservableField<String> getDescription() {
+
         if (descriptionValidated && product.getValue() != null) {
+
             product.getValue().setDescription(description.get());
+            printProduct();
         }
         return description;
     }
 
     @Bindable
     public ObservableField<String> getMadeBy() {
+
         if (madeByValidated && product.getValue() != null) {
+
             product.getValue().setMadeBy(madeBy.get());
+            printProduct();
         }
         return madeBy;
     }
 
     @Bindable
     public ObservableInt getCategory() {
+
         if (category.get() == 0) {
+
             categoryValidated = false;
+            printProduct();
 
         } else {
+
             categoryValidated = true;
 
             if (product.getValue() != null) {
+
                 product.getValue().setCategory(category.get());
+                printProduct();
             }
         }
         return category;
@@ -112,14 +173,19 @@ public class ProductEditorViewModel extends ObservableViewModel {
 
     @Bindable
     public ObservableInt getShelfLife() {
+
         if (shelfLife.get() == NOTHING_SELECTED) {
+
             shelfLifeValidated = false;
 
         } else {
+
             shelfLifeValidated = true;
 
             if (product.getValue() != null) {
+
                 product.getValue().setShelfLife(shelfLife.get());
+                printProduct();
             }
         }
         return shelfLife;
@@ -127,58 +193,128 @@ public class ProductEditorViewModel extends ObservableViewModel {
 
     @Bindable
     public ObservableBoolean getMultiPack() {
+
         if (product.getValue() != null) {
+
             product.getValue().setMultiPack(multiPack.get());
+            printProduct();
         }
         return multiPack;
     }
 
     @Bindable
     public ObservableInt getNumberOfItemsInPack() {
+
         if (product.getValue() != null &&
                 numberOfItemsInPack.get() >= MULTI_PACK_MINIMUM_NO_OF_ITEMS) {
+
             product.getValue().setNumberOfItems(numberOfItemsInPack.get());
             numberOfItemsInPackValidated = true;
+            printProduct();
         }
         return numberOfItemsInPack;
     }
 
     @Bindable
-    public ObservableInt getUnitOfMeasure() {
-        if (product.getValue() != null && unitOfMeasure.get() > NOTHING_SELECTED) {
-            if (packSize.get() > 0)
-            product.getValue().setUnitOfMeasure(unitOfMeasure.get());
-            unitOfMeasureValidated = true;
+    public ObservableField<MeasurementSubType> getUnitOfMeasureSubtype() {
+        Log.d(TAG, "getUnitOfMeasureSubtype: called");
+
+        if (product.getValue() != null) {
+
+            UnitOfMeasure newUnitOfMeasure = UnitOfMeasureClassSelector.getClassWithSubType(
+                    applicationContext, unitOfMeasureSubtype.get());
+
+            if (unitOfMeasure.getSubType() == newUnitOfMeasure.getSubType()) {
+
+                // Actions for a new unit of measure to replace nothing
+                if (unitOfMeasure.getSubType() == MeasurementSubType.NOTHING_SELECTED) {
+
+                    unitOfMeasure = newUnitOfMeasure;
+
+                    if (multiPack.get() &&
+                            numberOfItemsInPack.get() >= MULTI_PACK_MINIMUM_NO_OF_ITEMS) {
+
+                        unitOfMeasure.setNumberOfItems(numberOfItemsInPack.get());
+
+                    }
+
+                    // Actions for converting an old to a new unit of measure
+                } else if (unitOfMeasure.getType() == newUnitOfMeasure.getType()) {
+
+                    newUnitOfMeasure.setBaseSiUnits(unitOfMeasure.getBaseSiUnits());
+                    unitOfMeasure = newUnitOfMeasure;
+
+                    if (numberOfItemsInPack.get() >= MULTI_PACK_MINIMUM_NO_OF_ITEMS) {
+
+                        unitOfMeasure.setNumberOfItems(numberOfItemsInPack.get());
+
+                    }
+
+                    packMeasurementOne.set(unitOfMeasure.getPackMeasurementOne());
+                    packMeasurementTwo.set(unitOfMeasure.getPackMeasurementTwo());
+                    itemMeasurementOne.set(unitOfMeasure.getItemMeasurementOne());
+                    itemMeasurementTwo.set(unitOfMeasure.getItemMeasurementTwo());
+
+                    // Actions for replacing inconvertible unit of measure types
+                } else {
+
+                    unitOfMeasure = newUnitOfMeasure;
+
+                    if (numberOfItemsInPack.get() >= MULTI_PACK_MINIMUM_NO_OF_ITEMS) {
+
+                        unitOfMeasure.setNumberOfItems(numberOfItemsInPack.get());
+                    }
+
+                    packMeasurementOne.set(0);
+                    packMeasurementTwo.set(0);
+                    itemMeasurementOne.set(0);
+                    itemMeasurementTwo.set(0);
+                }
+
+                product.getValue().setUnitOfMeasureSubType(unitOfMeasureSubtype.get().ordinal());
+            }
         }
-        return unitOfMeasure;
+        printProduct();
+        return unitOfMeasureSubtype;
+    }
+
+    // TODO - Make unit of measure observable OR a LiveData that updates automatically
+    @Bindable
+    public ObservableInt getPackMeasurementOne() {
+        return packMeasurementOne;
     }
 
     @Bindable
-    public ObservableInt getPackSize() {
-        if (product.getValue() != null && unitOfMeasure.get() != NOTHING_SELECTED) {
-            Log.d(TAG, "getPackSize: product.packSize is: " + product.getValue().getPackSize());
-        }
-        return packSize;
+    public ObservableInt getPackMeasurementTwo() {
+
+        unitOfMeasure.setPackMeasurementTwo(packMeasurementTwo.get());
+        packMeasurementTwo.set(unitOfMeasure.getPackMeasurementTwo());
+        product.getValue().setBaseSiUnits(unitOfMeasure.getBaseSiUnits());
+        Log.d(TAG, "getPackMeasurementTwo: Pack two is: " + packMeasurementTwo.get());
+        printProduct();
+        return packMeasurementTwo;
     }
 
-    public void setPackSize(int packSize) {
-        if (this.packSize.get() != packSize) {
-            Log.d(TAG, "setPackSize: " + packSize);
-            this.packSize.set(packSize);
-            notifyPropertyChanged(BR.packSize);
-        }
+    @Bindable
+    public ObservableInt getItemMeasurementOne() {
+
+        unitOfMeasure.setItemMeasurementOne(itemMeasurementOne.get());
+        itemMeasurementOne.set(unitOfMeasure.getItemMeasurementOne());
+        product.getValue().setBaseSiUnits(unitOfMeasure.getBaseSiUnits());
+        Log.d(TAG, "getItemMeasurementOne: Item one is: " + itemMeasurementOne.get());
+        printProduct();
+        return itemMeasurementOne;
     }
 
-    public void setPackSizeValidated(boolean packSizeValidated) {
-        this.packSizeValidated = packSizeValidated;
-    }
+    @Bindable
+    public ObservableInt getItemMeasurementTwo() {
 
-    public boolean isPackSizeValidated() {
-        return packSizeValidated;
-    }
-
-    public MutableLiveData<Product> getProduct() {
-        return product;
+        unitOfMeasure.setItemMeasurementTwo(itemMeasurementTwo.get());
+        itemMeasurementTwo.set(unitOfMeasure.getItemMeasurementTwo());
+        product.getValue().setBaseSiUnits(unitOfMeasure.getBaseSiUnits());
+        Log.d(TAG, "getItemMeasurementTwo: Item two is: " + itemMeasurementTwo.get());
+        printProduct();
+        return itemMeasurementTwo;
     }
 
     public void setFieldValidation(Pair<String, Boolean> fieldToValidate) {
@@ -191,14 +327,14 @@ public class ProductEditorViewModel extends ObservableViewModel {
         } else if (fieldToValidate.first.equals(MADE_BY)) {
             this.madeByValidated = fieldToValidate.second;
 
-        } else if (fieldToValidate.first.equals(PACK_SIZE)) {
+        } else if (fieldToValidate.first.equals(BASE_SI_UNITS)) {
             this.packSizeValidated = fieldToValidate.second;
         }
     }
 
     // TODO - For dev only.
-    public void printProduct() {
+    private void printProduct() {
         if (product.getValue() != null)
-        Log.d(TAG, "printProduct: " + product.getValue().toString());
+            Log.d(TAG, "printProduct: " + product.getValue().toString());
     }
 }

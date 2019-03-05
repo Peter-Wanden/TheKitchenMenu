@@ -101,6 +101,7 @@ public class ProductTextValidationHandler {
                     } else if (fieldToVerify.equals(MADE_BY)) {
                         setValidationResultToViewModel(new Pair<>(MADE_BY, fieldIsValid));
                     }
+                    break;
             }
         }
     }
