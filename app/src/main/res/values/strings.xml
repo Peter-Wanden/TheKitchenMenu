@@ -36,7 +36,7 @@
     <string name="hint_item_size">Weight/volume of each item</string>
     <string name="unit_of_measure_label">Sold in units of</string>
     <string name="label_multi_pack">Multipack?</string>
-    <string name="label_number_of_items">How many items in a pack?</string>
+    <string name="label_number_of_items">How many packs in the multi-pack?</string>
     <string name="label_price">Price</string>
     <string name="hint_price">How much does it cost?</string>
     <string name="label_shelf_life">Shelf life</string>
@@ -125,11 +125,11 @@
         between 1 and 120 characters.</string>
     <string name="input_error_product_retailer_too_long">Retailer name too long, needs to be
         between 1 and 120 characters.</string>
-    <string name="input_error_items_in_pack">Number of items needs to be between %1$d and %2$d</string>
+    <string name="input_error_items_in_pack">Number of packs needs to be between %1$d and %2$d</string>
     <string name="input_error_product_pack_size">Pack size needs to be between 1g and 10kg</string>
     <string name="max_mass_exceeded_error">Weight must be under %1$.0f %2$s</string>
 
-    <string name="input_error_pack_size">Pack %1$s must be between %2$d %3$s and %4$d %5$s.</string>
+    <string name="input_error_pack_size">Pack %1$s must be between %2$d %3$s and %4$d %5$s. Minimum %6$s is %7$d %8$s per item.</string>
 
     <string name="input_error_product_loc_room_too_short">Storage room name too short, needs to be
         between 1 and 60 characters.</string>
@@ -211,4 +211,7 @@
     <string name="total_or_unit">----- or -----</string>
     <string name="invalid_pack_size">Invalid number for this measurement!</string>
     <string name="please_select">Please select</string>
+    <string name="number_format_exception">Please only enter numbers.</string>
+    <string name="plus_sign">+</string>
+    <string name="minus_sign">-</string>
 </resources>

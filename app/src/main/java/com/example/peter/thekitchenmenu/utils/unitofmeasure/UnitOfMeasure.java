@@ -1,24 +1,25 @@
 package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
-import java.util.List;
+import com.example.peter.thekitchenmenu.data.entity.Product;
 
 public interface UnitOfMeasure {
 
     String getTypeAsString();
-    MeasurementType getType();
-    String getSubTypeAsString();
-    MeasurementSubType getSubType();
+    MeasurementType getMeasurementType();
+    MeasurementSubType getMeasurementSubType();
 
-    List<MeasurementUnits> getUnits();
-    String[] getUnitsAsString();
+    String getMeasurementUnitOne();
+    String getMeasurementUnitTwo();
 
     Measurement getMinAndMax();
+    Measurement setNewMeasurementValuesTo(Measurement measurement);
+    boolean setValuesFromProduct(Product product);
 
     double getBaseSiUnits();
     boolean setBaseSiUnits(double baseSiUnits);
 
-    boolean setNumberOfItems(int numberOfItems);
-    int getNumberOfItems();
+    boolean setNumberOfItemsInPack(int numberOfItems);
+    int getNumberOfItemsInPack();
 
     int getPackMeasurementOne();
     boolean setPackMeasurementOne(int packMeasurementOne);
@@ -30,4 +31,6 @@ public interface UnitOfMeasure {
     boolean setItemMeasurementTwo(int itemMeasurementTwo);
 
     int[] getInputFilterFormat();
+
+    void resetNumericValues();
 }

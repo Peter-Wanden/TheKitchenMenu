@@ -264,7 +264,7 @@ public class Product implements Parcelable {
         return numberOfItems;
     }
 
-    public void setNumberOfItems(int numberOfItems) {
+    public void setNumberOfItemsInPack(int numberOfItems) {
         this.numberOfItems = numberOfItems;
     }
 

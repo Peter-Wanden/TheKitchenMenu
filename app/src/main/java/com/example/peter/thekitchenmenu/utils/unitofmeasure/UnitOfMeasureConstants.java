@@ -6,6 +6,10 @@ public class UnitOfMeasureConstants {
     public static final int BASE_SI_UNIT_MASS = 1;
     public static final int MAX_MASS = 100000;
 
+    public static final int BASE_UNIT_COUNT = 1;
+    public static final int MINIMUM_COUNT = 1;
+    public static final int MAXIMUM_COUNT = 1000;
+
     public static final int NOTHING_SELECTED = 0;
     public static final int NO_INPUT = 0;
 

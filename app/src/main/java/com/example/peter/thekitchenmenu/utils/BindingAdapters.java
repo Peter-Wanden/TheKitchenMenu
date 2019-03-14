@@ -4,15 +4,14 @@ import android.os.Handler;
 import android.text.InputFilter;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 
 import com.example.peter.thekitchenmenu.R;
 
-import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.databinding.BindingAdapter;
 
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MULTI_PACK_MAXIMUM_NO_OF_ITEMS;
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.NO_INPUT;
 
 public class BindingAdapters {
 
@@ -29,24 +28,35 @@ public class BindingAdapters {
             if (viewId != View.NO_ID) {
 
                 if (viewId == R.id.editable_items_in_pack) {
-                    EditText noOfItemsInPack = (EditText)view;
+                    EditText noOfItemsInPack = (EditText) view;
                     setupItemsInPackEditText(noOfItemsInPack, checked);
                 }
             }
         }
     }
 
-    private static void setupItemsInPackEditText(EditText noOfItemsInPack, Boolean checked) {
+    private static void setupItemsInPackEditText(EditText itemsInPack, Boolean checked) {
 
-        setInputFilter(noOfItemsInPack);
-        noOfItemsInPack.requestFocus();
-        ShowHideSoftInput.showKeyboard(noOfItemsInPack, checked);
+        setInputFilter(itemsInPack);
+        itemsInPack.requestFocus();
+        ShowHideSoftInput.showKeyboard(itemsInPack, checked);
 
-
-        if (noOfItemsInPack.getText().toString().isEmpty() ||
-                Integer.parseInt(noOfItemsInPack.getText().toString()) == 0) {
-            showHintIfZero(noOfItemsInPack);
-        }
+//        String rawInput = itemsInPack.getText().toString();
+//        int numberOfItemsInPack;
+//
+//        if (!rawInput.isEmpty()) {
+//
+//            try {
+//
+//                numberOfItemsInPack = Integer.parseInt(rawInput);
+//
+//                if (numberOfItemsInPack == NO_INPUT) showHintIfNoInput(itemsInPack);
+//
+//            } catch (NumberFormatException e) {
+//
+//                showHintIfNoInput(itemsInPack);
+//            }
+//        }
     }
 
     private static void setInputFilter(EditText noOfItemsInPack) {
@@ -65,7 +75,7 @@ public class BindingAdapters {
         noOfItemsInPack.setEms(numberOfDigits);
     }
 
-    private static void showHintIfZero(EditText noOfItemsInPack) {
+    private static void showHintIfNoInput(EditText noOfItemsInPack) {
         noOfItemsInPack.setText("");
     }
 

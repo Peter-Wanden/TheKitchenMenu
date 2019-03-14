@@ -2,10 +2,21 @@ package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
 import android.content.Context;
 
+import com.example.peter.thekitchenmenu.BR;
+import com.example.peter.thekitchenmenu.data.entity.Product;
+
 import java.util.HashMap;
 import java.util.List;
 
+import androidx.databinding.BaseObservable;
+import androidx.databinding.Bindable;
+
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MULTI_PACK_MAXIMUM_NO_OF_ITEMS;
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MULTI_PACK_MINIMUM_NO_OF_ITEMS;
+
 public class MetricVolume implements UnitOfMeasure {
+
+    private int numberOfItemsInPack = 0;
 
     MetricVolume(Context context) {
 
@@ -17,33 +28,38 @@ public class MetricVolume implements UnitOfMeasure {
     }
 
     @Override
-    public MeasurementType getType() {
+    public MeasurementType getMeasurementType() {
         return null;
     }
 
     @Override
-    public String getSubTypeAsString() {
+    public MeasurementSubType getMeasurementSubType() {
+        return MeasurementSubType.TYPE_METRIC_VOLUME;
+    }
+
+    @Override
+    public String getMeasurementUnitOne() {
         return null;
     }
 
     @Override
-    public MeasurementSubType getSubType() {
-        return null;
-    }
-
-    @Override
-    public List<MeasurementUnits> getUnits() {
-        return null;
-    }
-
-    @Override
-    public String[] getUnitsAsString() {
+    public String getMeasurementUnitTwo() {
         return null;
     }
 
     @Override
     public Measurement getMinAndMax() {
         return null;
+    }
+
+    @Override
+    public Measurement setNewMeasurementValuesTo(Measurement measurement) {
+        return null;
+    }
+
+    @Override
+    public boolean setValuesFromProduct(Product product) {
+        return false;
     }
 
     @Override
@@ -57,13 +73,22 @@ public class MetricVolume implements UnitOfMeasure {
     }
 
     @Override
-    public boolean setNumberOfItems(int numberOfItems) {
+    public boolean setNumberOfItemsInPack(int numberOfItems) {
+
+        // TODO - When setting number of items, check the size / measurements (if available) do not
+        // TODO - exceed MAX
+        if (numberOfItems >= MULTI_PACK_MINIMUM_NO_OF_ITEMS &&
+                numberOfItems <= MULTI_PACK_MAXIMUM_NO_OF_ITEMS) {
+
+            this.numberOfItemsInPack = numberOfItems;
+            return true;
+        }
         return false;
     }
 
     @Override
-    public int getNumberOfItems() {
-        return 0;
+    public int getNumberOfItemsInPack() {
+        return numberOfItemsInPack;
     }
 
     @Override
@@ -109,5 +134,10 @@ public class MetricVolume implements UnitOfMeasure {
     @Override
     public boolean setItemMeasurementTwo(int itemMeasurementTwo) {
         return false;
+    }
+
+    @Override
+    public void resetNumericValues() {
+
     }
 }

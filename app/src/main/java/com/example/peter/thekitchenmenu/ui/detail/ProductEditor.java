@@ -95,11 +95,6 @@ public class ProductEditor extends Fragment {
 
     private SpinnerAdapter getUnitOfMeasureSpinnerAdapter() {
 
-        ArrayList<UnitOfMeasureSpinnerItem> uomList = unitOfMeasureArrayList();
-        for (UnitOfMeasureSpinnerItem listItem : uomList) {
-            Log.d(TAG, "getUnitOfMeasureSpinnerAdapter: " + listItem.getType() + " - " + listItem.getMeasurementUnits());
-        }
-
         return new UnitOfMeasureSpinnerAdapter(requireActivity(), unitOfMeasureArrayList());
     }
 
@@ -111,7 +106,7 @@ public class ProductEditor extends Fragment {
 
                 ShowHideSoftInput.showKeyboard(view, false);
                 // Avoids WindowManager$BadTokenException by waiting for the screen to redraw.
-                new Handler().postDelayed(view::performClick, 100);
+//                new Handler().postDelayed(view::performClick, 100);
             }
         });
 

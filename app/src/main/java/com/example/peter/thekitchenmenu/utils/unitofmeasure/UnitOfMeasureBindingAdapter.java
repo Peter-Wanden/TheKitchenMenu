@@ -16,20 +16,18 @@ import java.util.Arrays;
 import androidx.databinding.BindingAdapter;
 
 import static android.text.InputType.TYPE_CLASS_NUMBER;
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.NO_INPUT;
 
 public class UnitOfMeasureBindingAdapter {
 
     private static final String TAG = "UnitOfMeasureBindingAda";
 
-    @BindingAdapter(value = {"app:onUnitOfMeasureSelected", "app:multiPack", "app:baseSiUnits"},
-            requireAll = false)
+    @BindingAdapter(value = {"app:onUnitOfMeasureSelected", "app:multiPack"}, requireAll = false)
     public static void onUnitOfMeasureSelected(View view,
                                                MeasurementSubType measurementSubType,
-                                               boolean isMultiPack,
-                                               double packSize) {
+                                               boolean isMultiPack) {
 
         Log.d(TAG, "onUnitOfMeasureSelected: measurement sub type: " + measurementSubType.name());
-        Log.d(TAG, "onUnitOfMeasureSelected: pack size is: " + packSize);
 
         if (isVisible(view, measurementSubType)) {
             setupViews(view, measurementSubType, isMultiPack);
@@ -133,50 +131,22 @@ public class UnitOfMeasureBindingAdapter {
         setInputForSoftAndHardKeyboard(editText, newUnitOfMeasure);
 
         String rawInputMeasurement = editText.getText().toString();
-        int inputMeasurement;
+        int inputMeasurement = NO_INPUT;
 
-//        if (!rawInputMeasurement.isEmpty()) {
-//
-//            try {
-//                inputMeasurement = Integer.parseInt(rawInputMeasurement);
-//
-//            } catch (NumberFormatException e) {
-//                inputMeasurement = NO_INPUT;
-//
-//                editText.setText(String.valueOf(inputMeasurement));
-//                editText.setError(editText.getContext().getString(R.string.invalid_pack_size));
-//            }
-//
-//            if (inputMeasurement > NO_INPUT) {
-//
-//                List<MeasurementUnits> oldUnitOfMeasureUnits = oldUnitOfMeasure.getUnits();
-//
-//                HashMap<MeasurementUnits, Integer> measurement = new HashMap<>();
-//                measurement.put(oldUnitOfMeasureUnits.get(1), inputMeasurement);
-//                measurement.put(oldUnitOfMeasureUnits.get(2), 0);
-//                boolean isSet = oldUnitOfMeasure.setPackMeasurement(measurement);
-//
-//                if (isSet) Log.d(TAG, "setupPackEditableMeasurements: old measurement set successfully");
-//                else Log.d(TAG, "setupPackEditableMeasurements: old measurement failed to set");
-//
-//                boolean canConvert = convertToNewUnitOfMeasurement(
-//                        oldUnitOfMeasure,
-//                        newUnitOfMeasure);
-//
-//                if (canConvert) {
-//
-////                    if (newUnitOfMeasure.getUnitAsInt() == UNIT_GRAMS) {
-////                        editText.setText(String.valueOf((int) newUnitOfMeasure.getMeasurement()));
-////                        return;
-////
-////                    } else {
-////                        editText.setText(String.valueOf(newUnitOfMeasure.getMeasurement()));
-////                        return;
-////                    }
-//                }
-//            }
-//        }
-//        resetIfInconvertibleOrNoInput(editText, newUnitOfMeasure);
+        if (!rawInputMeasurement.isEmpty()) {
+
+            try {
+
+                inputMeasurement = Integer.parseInt(rawInputMeasurement);
+
+                if (inputMeasurement == NO_INPUT) editText.setText("");
+
+
+            } catch (NumberFormatException e) {
+
+                editText.setText(String.valueOf(inputMeasurement));
+            }
+        }
     }
 
     private static void setInputForSoftAndHardKeyboard(EditText editText,
@@ -214,23 +184,6 @@ public class UnitOfMeasureBindingAdapter {
         }
     }
 
-    private static boolean convertToNewUnitOfMeasurement(
-            UnitOfMeasure oldUnitOfMeasure,
-            UnitOfMeasure newUnitOfMeasure) {
-
-        if (oldUnitOfMeasure.getType() != newUnitOfMeasure.getType()) return false;
-        newUnitOfMeasure.setBaseSiUnits(oldUnitOfMeasure.getBaseSiUnits());
-
-        return true;
-    }
-
-    private static void resetIfInconvertibleOrNoInput(EditText packSize,
-                                                      UnitOfMeasure unitOfMeasure) {
-        packSize.setText("");
-        packSize.setHint(packSize.getContext().getString(
-                R.string.pack_size_total_hint, unitOfMeasure.getUnitsAsString()));
-    }
-
     private static void setPackMeasurementLabels(View view,
                                                  UnitOfMeasure newUnitOfMeasure,
                                                  boolean isMultiPack) {
@@ -245,17 +198,15 @@ public class UnitOfMeasureBindingAdapter {
             return;
         }
 
-        String[] measurementUnits = newUnitOfMeasure.getUnitsAsString();
-
         if (viewId == R.id.pack_label_measurement_one ||
                 viewId == R.id.item_measurement_label_one) {
 
-            textView.setText(measurementUnits[1]);
+            textView.setText(newUnitOfMeasure.getMeasurementUnitOne());
 
         } else if (viewId == R.id.pack_label_measurement_two ||
                 viewId == R.id.item_measurement_label_two) {
 
-            textView.setText(measurementUnits[2]);
+            textView.setText(newUnitOfMeasure.getMeasurementUnitTwo());
         }
     }
 
@@ -270,19 +221,6 @@ public class UnitOfMeasureBindingAdapter {
             TextView itemSize = (TextView) view;
             itemSize.setText(view.getContext().getString(
                     R.string.item_size, unitOfMeasure.getTypeAsString()));
-
-        } else {
-            view.setVisibility(View.GONE);
-        }
-    }
-
-    private static void setItemSizeEditable(View view,
-                                            UnitOfMeasure unitOfMeasure,
-                                            boolean isMultiPack) {
-        if (isMultiPack) {
-            EditText itemSize = (EditText) view;
-            itemSize.setHint(view.getContext().getString(
-                    R.string.item_size_hint, unitOfMeasure.getUnitsAsString()));
 
         } else {
             view.setVisibility(View.GONE);
