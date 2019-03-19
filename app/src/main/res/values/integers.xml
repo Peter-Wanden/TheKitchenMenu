@@ -27,11 +27,14 @@
     <integer name="shelf_life_option_16">16</integer>
 
     <!--
-    Integer values for product categories,
+    Integer values for product_uneditable categories,
     or anything else that needs an integer
     -->
     <integer name="category_option_1">1</integer>
     <integer name="category_option_2">2</integer>
     <integer name="category_option_3">3</integer>
     <integer name="category_option_4">4</integer>
+
+    <integer name="user_input_text_shortest_length">3</integer>
+    <integer name="user_input_text_longest_length">70</integer>
 </resources>

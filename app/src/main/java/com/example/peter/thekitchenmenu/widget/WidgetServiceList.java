@@ -8,7 +8,7 @@ import android.widget.RemoteViewsService;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
-import com.example.peter.thekitchenmenu.model.Product;
+import com.example.peter.thekitchenmenu.data.model.ObservableProductModel;
 import com.example.peter.thekitchenmenu.utils.Converters;
 import com.example.peter.thekitchenmenu.utils.GsonUtils;
 
@@ -28,11 +28,11 @@ public class WidgetServiceList
             implements
             RemoteViewsService.RemoteViewsFactory {
 
-        private final Context mContext;
-        private List<Product> mProducts = Collections.emptyList();
+        private final Context context;
+        private List<ObservableProductModel> products = Collections.emptyList();
 
         ListRemoteViewsFactory(Context applicationContext) {
-            mContext = applicationContext;
+            context = applicationContext;
         }
 
         @Override
@@ -46,28 +46,28 @@ public class WidgetServiceList
         @Override
         public void onDataSetChanged() {
             // Get the JSON string containing the list of ingredients from shared preferences
-            mProducts = GsonUtils.productsJsonToList(PreferenceManager
-                    .getDefaultSharedPreferences(mContext)
+            products = GsonUtils.productsJsonToList(PreferenceManager
+                    .getDefaultSharedPreferences(context)
                     .getString(Constants.PRODUCT_KEY, null));
         }
 
         @Override
         public void onDestroy() {
-            mProducts = null;
+            products = null;
         }
 
         @Override
         public int getCount() {
-            return mProducts == null ? 0 : mProducts.size();
+            return products == null ? 0 : products.size();
         }
 
         @Override
         public RemoteViews getViewAt(int position) {
 
-            Product currentProduct = mProducts.get(position);
+            ObservableProductModel currentProduct = products.get(position);
 
             RemoteViews views = new RemoteViews(
-                    mContext.getPackageName(),
+                    context.getPackageName(),
                     R.layout.list_item_product_widget);
 
             /* Set the TextView text color */
@@ -87,12 +87,12 @@ public class WidgetServiceList
 
             views.setTextViewText(
                     R.id.list_item_product_widget_tv_pack_size,
-                    String.valueOf(currentProduct.getPackSize()));
+                    String.valueOf(currentProduct.getBaseSiUnits()));
 
             views.setTextViewText(
                     R.id.list_item_product_widget_tv_unit_of_measure,
                     Converters.getUnitOfMeasureString
-                            (mContext, currentProduct.getUnitOfMeasure()));
+                            (context, currentProduct.getUnitOfMeasureSubType()));
 
             return views;
         }

@@ -1,19 +1,19 @@
 apply plugin: 'com.android.application'
 
 android {
+    compileSdkVersion rootProject.compileSdkVersion
     signingConfigs {
         config {
             keyAlias 'TKMKey'
             keyPassword 'Z5g3yqgZZyuCpSfANITG'
-            storeFile file('C:/Users/peter/DevProjects/KeyStore/TheKitchenMenu/TKMKeyStore.jks')
+            storeFile file('../TKMKeyStore.jks')
             storePassword 'dE3kTCQc3vKMdDNN5nGe'
         }
     }
-    compileSdkVersion 27
     defaultConfig {
         applicationId "com.example.peter.thekitchenmenu"
-        minSdkVersion 21
-        targetSdkVersion 27
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
         versionCode 1
         versionName "1.0"
         resConfigs "en" // Add any other language support here
@@ -27,49 +27,80 @@ android {
         }
     }
     dataBinding.enabled = true
-    // buildToolsVersion '27.0.3'
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
     productFlavors {
     }
+    buildToolsVersion '28.0.3'
 }
 
 dependencies {
-    // Support version
-    def androidSupportVersion = "27.1.1"
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation "com.android.support:appcompat-v7:$androidSupportVersion"
-    implementation "com.android.support:design:$androidSupportVersion"
-    implementation "com.android.support:recyclerview-v7:$androidSupportVersion"
-    implementation "com.android.support:cardview-v7:$androidSupportVersion"
-    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
-    // Play services
-    implementation 'com.google.android.gms:play-services-auth:16.0.0'
+    implementation "androidx.appcompat:appcompat:$androidxAppcompat"
+    implementation "com.google.android.material:material:$androidxSupportVersion"
+    implementation "androidx.recyclerview:recyclerview:$androidxSupportVersion"
+    implementation "androidx.cardview:cardview:$androidxSupportVersion"
+    implementation "androidx.exifinterface:exifinterface:$androidxSupportVersion"
+    implementation "androidx.legacy:legacy-support-v4:$androidxSupportVersion"
+    implementation "androidx.browser:browser:$androidxSupportVersion"
+    implementation "com.google.android.material:material:$androidMaterial"
+
+    // Architecture components
+    implementation "androidx.lifecycle:lifecycle-extensions:$androidxLifecycleExtensions"
+    implementation "androidx.lifecycle:lifecycle-runtime:$androidxArchComponentsVersion"
+    annotationProcessor "androidx.lifecycle:lifecycle-compiler:$androidxArchComponentsVersion"
+
+    // Room
+    implementation "androidx.room:room-runtime:$androidxRoomVersion"
+    annotationProcessor "androidx.room:room-compiler:$androidxRoomVersion"
+
+    // Paging
+    implementation "androidx.paging:paging-runtime:$androidxPagingRuntimeVersion"
+
+    // Constraint layout
+    implementation "androidx.constraintlayout:constraintlayout:$androidxConstraintLayoutVersion"
+
     // A library that will hold the application logic
     implementation project(':TKMAppLibrary')
-    // Architecture components version
-    def lifecycle_version = "1.1.1"
+
     // Gson
-    implementation 'com.google.code.gson:gson:2.8.2'
-    // ViewModel & LiveData
-    implementation "android.arch.lifecycle:extensions:$lifecycle_version"
-    annotationProcessor "android.arch.lifecycle:compiler:$lifecycle_version"
+    implementation 'com.google.code.gson:gson:2.8.5'
+
+    // Picasso TODO - Replace with Glide
+    implementation "com.squareup.picasso:picasso:$picassoVersion"
+
+
+    // Play services
+    implementation "com.google.android.gms:play-services-ads-identifier:$playServicesA"
+    implementation "com.google.android.gms:play-services-auth-api-phone:$playServicesA"
+    implementation "com.google.android.gms:play-services-auth-base:$playServicesA"
+    implementation "com.google.android.gms:play-services-phenotype:$playServicesA"
+    implementation "com.google.android.gms:play-services-auth:$playServicesB"
+    implementation "com.google.android.gms:play-services-base:$playServicesB"
+    implementation "com.google.android.gms:play-services-stats:$playServicesB"
+    implementation "com.google.android.gms:play-services-flags:$playServicesB"
+    implementation "com.google.android.gms:play-services-tasks:$playServicesB"
+    implementation "com.google.android.gms:play-services-basement:$playServicesC"
+
+
     // Firebase
-    implementation 'com.google.firebase:firebase-database:16.0.1'
-    implementation 'com.google.firebase:firebase-core:16.0.1'
-    implementation 'com.google.firebase:firebase-auth:16.0.3'
-    implementation 'com.google.firebase:firebase-storage:16.0.1'
-    implementation 'com.google.firebase:firebase-config:16.0.0'
-    // Firebase UI
-    implementation 'com.firebaseui:firebase-ui-auth:4.1.0'
-    // Picasso
-    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation "com.google.firebase:firebase-database:$firebaseVersion"
+    implementation "com.google.firebase:firebase-core:$firebaseCore"
+    implementation "com.google.firebase:firebase-auth:$firebaseAuth"
+    implementation "com.google.firebase:firebase-storage:$firebaseVersion"
+    implementation "com.google.firebase:firebase-config:$firebaseConfigVersion"
+    //////// Firebase UI ////////
+    implementation "com.firebaseui:firebase-ui-auth:$firebaseUiAuth"
+    // Allows direct binding of data to display
+    implementation "com.firebaseui:firebase-ui-database:$firebaseUiAuth"
+
     // Testing
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    testImplementation "junit:junit:$junitVersion"
+    androidTestImplementation "androidx.test:runner:$androidxTestRunnerVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoVersion"
 }
 // Reads the configuration information in app/google-services.json
 apply plugin: 'com.google.gms.google-services'

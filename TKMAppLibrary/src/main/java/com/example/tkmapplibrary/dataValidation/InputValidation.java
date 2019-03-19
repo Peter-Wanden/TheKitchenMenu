@@ -12,32 +12,6 @@ package com.example.tkmapplibrary.dataValidation;
  */
 public class InputValidation {
 
-    /* Validation rules for a products description */
-    public static int validateProductDescription(String description) {
-        // Check if not null and contains more than 1 character
-        if (description == null || description.length() < 1) {
-            return 1;
-            /* Limit length to 120 chars */
-        } else if(description.length() > 120) {
-            return 2;
-        }
-        // A zero response is OK
-        return 0;
-    }
-
-    /* Validation rules for a products manufacturer */
-    public static int validateMadeBy(String madeBy) {
-        // Check if not null and contains more than 1 character
-        if (madeBy == null || madeBy.length() < 1) {
-            return 1;
-            /* Limit length to 120 chars */
-        } else if(madeBy.length() > 120) {
-            return 2;
-        }
-        // A zero response is OK
-        return 0;
-    }
-
     /* Validation rules for retailers name */
     public static int validateRetailer(String retailer) {
         // Check if not null and contains more than 1 character
@@ -67,7 +41,7 @@ public class InputValidation {
     /* Validation rules for shelf life */
     public static boolean validateShelfLife (int shelfLife) {
         // Check value is between 0 and 12
-        return shelfLife >= 1 && shelfLife <= 12;
+        return shelfLife >= 1 && shelfLife <= 16;
     }
 
     /* Validation rules for location room */

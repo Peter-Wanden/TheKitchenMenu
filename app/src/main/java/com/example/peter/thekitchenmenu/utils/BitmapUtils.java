@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.v4.content.CursorLoader;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -20,9 +19,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class BitmapUtils {
+import androidx.loader.content.CursorLoader;
 
-    private static final String LOG_TAG = BitmapUtils.class.getSimpleName();
+public class BitmapUtils {
+    // TODO - Use s ForkJoinPool for a threadded implementation
+    // TODO - See: https://docs.oracle.com/javase/tutorial/essential/concurrency/forkjoin.html
+
+    private static final String TAG = BitmapUtils.class.getSimpleName();
 
     /* Image capture - Create unique file name */
     public static File createImageFile(Context context) throws IOException {

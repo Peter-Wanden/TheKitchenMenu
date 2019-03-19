@@ -2,8 +2,10 @@
     <string name="app_name">The Kitchen Menu</string>
 
     <!-- CONTENT DESCRIPTIONS -->
-    <!-- Attach to any ImageView's of the product -->
+    <!-- Attach to any ImageView's of the product_uneditable -->
     <string name="cd_picture_of_product">A picture of the product</string>
+    <string name="cd_add_image_from_camera">Select to add image from camera</string>
+    <string name="cd_add_image_from_gallery">Click to add image from gallery</string>
     <!-- Attach to any ImageView's of the recipe -->
     <string name="cd_save_product">Click to save the current product</string>
     <string name="cd_delete_product">Click to delete the current product</string>
@@ -16,53 +18,88 @@
     <!-- Common field labels and hints -->
     <string name="label_description">Description</string>
     <string name="label_made_by">Made by</string>
-    <string name="hint_made_by">Who makes it?</string>
+    <string name="hint_made_by">Who the manufacturer?</string>
     <string name="label_retailer">Retailer</string>
-    <string name="hint_description">What do you call this item?</string>
+    <string name="hint_description">Retailers description</string>
     <string name="hint_retailer">Where do you buy it?</string>
     <string name="label_location_room">Storage room</string>
     <string name="hint_location_room">What room do you keep it?</string>
     <string name="label_location_in_room">Where abouts?</string>
     <string name="hint_location_in_room">Where abouts in the room?</string>
+    <string name="pack_size_total">Total pack %1$s</string>
+    <string name="pack_size_total_hint">How many %1$s?</string>
+    <string name="single_pack_size">Single pack %1$s</string>
+    <string name="item_size_hint">How many %1$s?</string>
     <string name="label_pack_size">Pack size</string>
-    <string name="hint_pack_size">How many is in a pack?</string>
-    <string name="label_UoM">Unit of Measure</string>
+    <string name="label_item_size">Item size</string>
+    <string name="hint_pack_size">Weight/volume of pack</string>
+    <string name="hint_item_size">Weight/volume of each item</string>
+    <string name="unit_of_measure_label">Sold in units of</string>
+    <string name="label_multi_pack">Multipack?</string>
+    <string name="label_number_of_packs">How many packs in the multi-pack?</string>
     <string name="label_price">Price</string>
     <string name="hint_price">How much does it cost?</string>
     <string name="label_shelf_life">Shelf life</string>
     <string name="label_category">Category</string>
     <string name="label_quantity">Quantity</string>
 
-    <!-- ActivityDetailProduct unit of measure spinner options -->
-    <string name="uom_option_0">Select measurement</string>
-    <string name="uom_option_1">grams</string>
-    <string name="uom_option_2">ml</string>
-    <string name="uom_option_3">count</string>
+    <!-- ProductDetail unit of measure spinner options -->
+    <!-- See arrays.xml "unit_of_measure_options" for usage -->
+    <string name="unit_of_measure_default">Please select</string>
+    <string name="grams">grams</string>
+    <string name="kilograms">kg</string>
+    <string name="ounces">oz</string>
+    <string name="pounds">lb</string>
+    <string name="pounds_and_ounces">lbs and oz</string>
+    <string name="millilitres">ml</string>
+    <string name="litres">litres</string>
+    <string name="fluidOunce">fl oz</string>
+    <string name="pints">pints</string>
+    <string name="gallons">gallons</string>
+    <string name="each">each</string>
+    <string name="piece">piece</string>
+    <string name="items">items</string>
 
-    <!-- ActivityDetailProduct shelf life spinner options -->
-    <string name="shelf_life_option_0">Select shelf life</string>
-    <string name="shelf_life_option_1">1 day</string>
-    <string name="shelf_life_option_2">3 days</string>
-    <string name="shelf_life_option_3">5 days</string>
-    <string name="shelf_life_option_4">1 week</string>
-    <string name="shelf_life_option_5">2 weeks</string>
-    <string name="shelf_life_option_6">3 weeks</string>
-    <string name="shelf_life_option_7">4 weeks</string>
-    <string name="shelf_life_option_8">Frozen</string>
-    <string name="shelf_life_option_9">Dried</string>
-    <string name="shelf_life_option_10">Sealed</string>
-    <string name="shelf_life_option_11">Tin</string>
-    <string name="shelf_life_option_12">Jar</string>
-    <string name="shelf_life_option_13">Bottle</string>
-    <string name="shelf_life_option_14">Box</string>
-    <string name="shelf_life_option_15">Packet</string>
-    <string name="shelf_life_option_16">N/A</string>
+    <!-- Unit of measure types -->
+    <string name="mass">weight</string>
+    <string name="volume">volume</string>
+    <string name="count">count</string>
 
-    <!-- ActivityDetailProduct category spinner options -->
-    <string name="product_category_option_0">Select category</string>
-    <string name="product_category_option_1">Food</string>
-    <string name="product_category_option_2">Non food</string>
-    <string name="product_category_option_3">Recipe</string>
+    <!-- Unit of measure sub-types -->
+    <string name="sub_type_metric_mass">Metric weight</string>
+    <string name="sub_type_imperial_mass">Imperial weight</string>
+    <string name="sub_type_metric_volume">Metric volume</string>
+    <string name="sub_type_imperial_volume">Imperial volume</string>
+    <string name="sub_type_count">Count</string>
+
+    <!-- Unit of measure spinner headers -->
+    <string name="header_mass">SELECT WEIGHT</string>
+    <string name="header_volume">SELECT VOLUME</string>
+    <string name="header_count">SELECT COUNT</string>
+
+    <!-- ProductDetail shelf life spinner options -->
+    <string name="shelf_life_default">Please select</string>
+    <string name="one_day">1 day</string>
+    <string name="three_days">3 days</string>
+    <string name="five_days">5 days</string>
+    <string name="one_week">1 week</string>
+    <string name="two_weeks">2 weeks</string>
+    <string name="three_weeks">3 weeks</string>
+    <string name="four_weeks">4 weeks</string>
+    <string name="frozen">Frozen</string>
+    <string name="dried">Dried</string>
+    <string name="sealed">Sealed</string>
+    <string name="tin">Tin</string>
+    <string name="jar">Jar</string>
+    <string name="bottle">Bottle</string>
+    <string name="box">Box</string>
+    <string name="packet">Packet</string>
+    <string name="not_applicable">N/A</string>
+
+    <!-- ProductDetail category spinner options -->
+    <string name="category_default">Please select</string>
+    <string name="food">Food</string>
+    <string name="non_food">Non food</string>
 
     <!-- Common menu bar options -->
     <string name="action_save">Save</string>
@@ -71,17 +108,15 @@
     <string name="sign_out">Sign out</string>
 
     <!-- Activity titles -->
-    <string name="activity_detail_product_title_view">Product View</string>
+    <string name="activity_title_view_product">Product View</string>
     <string name="activity_detail_product_title">Product Details</string>
-    <string name="activity_detail_product_title_update">Edit a Product</string>
-    <string name="activity_detail_product_title_add_new">Add a Product</string>
+    <string name="activity_title_edit_product">Edit a Product</string>
+    <string name="activity_title_add_new_product">Add a Product</string>
     <string name="widget_product_title_latest_products">Latest Products</string>
 
-    <!-- ActivityDetailProduct user input error codes -->
-    <string name="input_error_product_description_too_short">Description too short, needs to be
-        between 1 and 120 characters.</string>
-    <string name="input_error_product_description_too_long">Description too long, needs to be
-        between 1 and 120 characters.</string>
+    <!-- ProductDetail user input error codes -->
+    <string name="validation_text_too_short">Too short, needs to be between 3 and 70 characters.</string>
+    <string name="validation_text_too_long">To long, needs to be between 3 and 70 characters.</string>
     <string name="input_error_product_made_by_too_short">Manufacturer name too short, needs to be
         between 1 and 120 characters.</string>
     <string name="input_error_product_made_by_too_long">Manufacturer name too long, needs to be
@@ -90,7 +125,12 @@
         between 1 and 120 characters.</string>
     <string name="input_error_product_retailer_too_long">Retailer name too long, needs to be
         between 1 and 120 characters.</string>
-    <string name="input_error_product_pack_size">Pack size needs to be between 1 and 1000</string>
+    <string name="input_error_packs_in_pack">Number of packs needs to be between %1$d and %2$d</string>
+    <string name="input_error_product_pack_size">Pack size needs to be between 1g and 10kg</string>
+    <string name="max_mass_exceeded_error">Weight must be under %1$.0f %2$s</string>
+
+    <string name="input_error_pack_size">Pack %1$s must be between %2$d %3$s and %4$d %5$s. Minimum %6$s is %7$d %8$s per item.</string>
+
     <string name="input_error_product_loc_room_too_short">Storage room name too short, needs to be
         between 1 and 60 characters.</string>
     <string name="input_error_product_loc_room_too_long">Storage room name too long, needs to be
@@ -106,23 +146,26 @@
     <string name="input_error_recipe_description_too_long">Recipe description too long, needs to be
         between 1 and 120 characters</string>
     <string name="input_error_recipe_servings">Recipe must make more than one portion.</string>
-    <string name="activity_detail_product_base_fields_editable_error_UoM">Please select a valid
+    <string name="validation_error_unit_of_measure">Please select a valid
         unit of measure.</string>
-    <string name="activity_detail_product_base_fields_editable_error_shelf_life">Please select a
+    <string name="validation_error_shelf_life">Please select a
         valid shelf life.</string>
-    <string name="activity_detail_product_base_fields_editable_error_category">Please select a valid
+    <string name="validation_error_category">Please select a valid
         category.</string>
     <string name="input_error_product_pack_price">Pack price needs to be between 0.01 and 1000
     </string>
     <string name="activity_detail_product_error_incomplete_fields">Please ensure you have completed
         all fields.</string>
 
-    <!-- ActivityCatalogProduct -->
+    <!-- ProductCatalogMain -->
+    <string name="title_product_catalog">Product Catalog</string>
     <string name="product_catalog_empty_view_title_text">The cupboards are empty.</string>
     <string name="product_catalog_empty_view_subtitle_text">Press + to add some products!</string>
     <string name="image_of_meal">An image of the selected recipe</string>
+    <string name="activity_catalog_products_tab_1_title">Community Products</string>
+    <string name="activity_catalog_products_tab_2_title">My Products</string>
 
-    <!-- AdapterCatalogProduct -->
+    <!-- AdapterProduct -->
     <string name="adapter_catalog_product_creator_yes">Yes</string>
     <string name="adapter_catalog_product_creator_no">No</string>
     <string name="sign_in_conformation">Thank you for signing in</string>
@@ -145,4 +188,30 @@
 
     <!-- TRANSITIONS -->
     <string name="transition_product">transitionProduct</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Search strings -->
+    <string name="search">Search</string>
+    <string name="search_hint">Search products…</string>
+    <string name="tkm_product_descriptions">Product descriptions</string>
+
+    <!-- Recipe Catalog -->
+    <string name="title_recipe_catalog">Recipe Catalog</string>
+
+    <!-- Recipe Editor -->
+    <string name="title_recipe_editor">Recipe Editor</string>
+
+    <!-- Navigation drawer -->
+    <string name="nav_recipes">Recipes</string>
+    <string name="nav_products">Products</string>
+    <string name="meal_planner">Meal planner</string>
+    <string name="nav_lists">Shopping lists</string>
+    <string name="total_or_unit">----- or -----</string>
+    <string name="invalid_pack_size">Invalid number for this measurement!</string>
+    <string name="please_select">Please select</string>
+    <string name="number_format_exception">Please only enter numbers.</string>
+    <string name="plus_sign">+</string>
+    <string name="minus_sign">-</string>
 </resources>
