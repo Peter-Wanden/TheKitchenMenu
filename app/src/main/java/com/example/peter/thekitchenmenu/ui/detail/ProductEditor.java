@@ -1,7 +1,6 @@
 package com.example.peter.thekitchenmenu.ui.detail;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,9 +10,8 @@ import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 
 import com.example.peter.thekitchenmenu.R;
+import com.example.peter.thekitchenmenu.data.entity.Product;
 import com.example.peter.thekitchenmenu.databinding.ProductEditorBinding;
-import com.example.peter.thekitchenmenu.utils.ProductNumericValidationHandler;
-import com.example.peter.thekitchenmenu.utils.ProductTextValidationHandler;
 import com.example.peter.thekitchenmenu.utils.ShowHideSoftInput;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementType;
 import com.example.peter.thekitchenmenu.viewmodels.ProductEditorViewModel;
@@ -26,6 +24,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 public class ProductEditor extends Fragment {
@@ -33,6 +32,7 @@ public class ProductEditor extends Fragment {
     private static final String TAG = "ProductEditor";
 
     private ProductEditorBinding productEditor;
+    private ProductEditorViewModel viewModel;
 
     @Nullable
     @Override
@@ -50,29 +50,46 @@ public class ProductEditor extends Fragment {
         productEditor.setLifecycleOwner(this);
 
         setViewModel();
+        setValidationHandlers();
+        setProductInstanceVariables();
         setupSpinners();
-        setAlphaValidationHandler();
-        setNumericValidationHandler();
 
         return rootView;
     }
 
     private void setViewModel() {
 
-        ProductEditorViewModel productEditorViewModel = ViewModelProviders.of(
-                requireActivity()).
-                get(ProductEditorViewModel.class);
+        viewModel = ViewModelProviders.of(requireActivity()).get(ProductEditorViewModel.class);
 
-        productEditor.setProductEditorViewModel(productEditorViewModel);
+        final Observer<Product> productObserver = product
+                -> Log.d(TAG, "onChanged: Product entity has been updated");
+
+        viewModel.getProductEntity().observe(this, productObserver);
+
+        productEditor.setProductEditorViewModel(viewModel);
+    }
+
+    private void setValidationHandlers() {
+
+        productEditor.setTextValidation(viewModel.getTextValidationHandler());
+        productEditor.setNumericValidation(viewModel.getNumericValidationHandler());
+    }
+
+    private void setProductInstanceVariables() {
+
+        productEditor.setMeasurement(viewModel.getMeasurement());
+        productEditor.setProductModel(viewModel.getProductModel());
     }
 
     private void setupSpinners() {
+
         setupCategorySpinner();
         setupShelfLifeSpinner();
         setupUnitOfMeasureSpinner();
     }
 
     private void setupCategorySpinner() {
+
         productEditor.spinnerCategory.setAdapter(ArrayAdapter.createFromResource(
                 requireActivity(), R.array.product_category_options,
                 R.layout.list_item_spinner));
@@ -80,6 +97,7 @@ public class ProductEditor extends Fragment {
     }
 
     private void setupShelfLifeSpinner() {
+
         productEditor.spinnerShelfLife.setAdapter(ArrayAdapter.createFromResource(
                 requireActivity(),
                 R.array.shelf_life_options,
@@ -88,6 +106,7 @@ public class ProductEditor extends Fragment {
     }
 
     private void setupUnitOfMeasureSpinner() {
+
         productEditor.spinnerUnitOfMeasure.setAdapter(getUnitOfMeasureSpinnerAdapter());
         productEditor.spinnerUnitOfMeasure.setPrompt(getResources().getString(R.string.please_select));
         setSpinnerListeners(productEditor.spinnerUnitOfMeasure);
@@ -185,24 +204,7 @@ public class ProductEditor extends Fragment {
     }
 
     private String removeArrayBraces(String stringWithBrackets) {
+
         return stringWithBrackets.substring(1, stringWithBrackets.length() - 1);
-    }
-
-    private void setAlphaValidationHandler() {
-
-        ProductTextValidationHandler textValidationHandler =
-                new ProductTextValidationHandler();
-
-        textValidationHandler.setBinding(getActivity(), productEditor);
-        productEditor.setTextValidation(textValidationHandler);
-    }
-
-    private void setNumericValidationHandler() {
-
-        ProductNumericValidationHandler numericValidationHandler =
-                new ProductNumericValidationHandler();
-
-        numericValidationHandler.setBinding(getActivity(), productEditor);
-        productEditor.setNumericValidation(numericValidationHandler);
     }
 }

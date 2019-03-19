@@ -7,9 +7,8 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.data.model.ProductModel;
+import com.example.peter.thekitchenmenu.data.model.ObservableProductModel;
 import com.example.peter.thekitchenmenu.databinding.ActivityCatalogProductBinding;
-import com.example.peter.thekitchenmenu.ui.detail.ProductEditor;
 import com.example.peter.thekitchenmenu.ui.detail.ProductMain;
 import com.example.peter.thekitchenmenu.viewmodels.ViewModelCatlogProducts;
 
@@ -20,7 +19,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
-import static com.example.peter.thekitchenmenu.app.Constants.PRODUCT_FB_REFERENCE_KEY;
+import static com.example.peter.thekitchenmenu.app.Constants.PRODUCT_REMOTE_REFERENCE_KEY;
 import static com.example.peter.thekitchenmenu.app.Constants.PRODUCT_IS_CREATOR_KEY;
 
 public class ProductCatalogMain extends AppCompatActivity {
@@ -34,22 +33,27 @@ public class ProductCatalogMain extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         initialiseViews();
         setupViewModel();
     }
 
     private void setupViewModel() {
+
         viewModel = ViewModelProviders.of(this).get(ViewModelCatlogProducts.class);
         viewModel.getSelected().observe(this, selectedProduct -> {
+
             if (selectedProduct != null) {
+
                 launchDetailActivity(selectedProduct);
             }
         });
     }
 
-    private void launchDetailActivity(ProductModel selectedProduct) {
-        Intent intent = new Intent(ProductCatalogMain.this, ProductEditor.class);
-        intent.putExtra(PRODUCT_FB_REFERENCE_KEY, selectedProduct);
+    private void launchDetailActivity(ObservableProductModel selectedProduct) {
+
+        Intent intent = new Intent(ProductCatalogMain.this, ProductMain.class);
+        intent.putExtra(PRODUCT_REMOTE_REFERENCE_KEY, selectedProduct);
         intent.putExtra(PRODUCT_IS_CREATOR_KEY, viewModel.getIsCreator().getValue());
         startActivity(intent);
 
@@ -63,6 +67,7 @@ public class ProductCatalogMain extends AppCompatActivity {
         bindings.activityCatalogProductPb.setVisibility(View.GONE);
 
         bindings.activityCatalogProductFab.setOnClickListener(v -> {
+
             Intent addProductIntent = new Intent(ProductCatalogMain.this,
                     ProductMain.class);
             startActivity(addProductIntent);
@@ -88,6 +93,7 @@ public class ProductCatalogMain extends AppCompatActivity {
     }
 
     private void setupViewPager(ViewPager viewPager) {
+
         tabPageAdapter = new ProductCatalogMainFragmentPageAdapter(getSupportFragmentManager());
         tabPageAdapter.addFragment(new ProductCatalogAllProducts(), getString(R.string.activity_catalog_products_tab_1_title));
         tabPageAdapter.addFragment(new ProductCatalogUsersProducts(), getString(R.string.activity_catalog_products_tab_2_title));
@@ -96,19 +102,27 @@ public class ProductCatalogMain extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
         getMenuInflater().inflate(R.menu.menu_product_catalog, menu);
+
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         switch (item.getItemId()) {
+
             case R.id.action_search:
                 onSearchRequested();
+
                 return true;
+
             case R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
+
                 return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -116,21 +130,25 @@ public class ProductCatalogMain extends AppCompatActivity {
 
     @Override
     public boolean onSearchRequested() {
+
         Bundle appData = new Bundle();
         appData.putString("fromClass", TAG);
         startSearch(null, false, appData, false);
+
         return true;
     }
 
     @Override
     public void finish() {
         super.finish();
+
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 }

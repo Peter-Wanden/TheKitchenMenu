@@ -8,11 +8,9 @@ import android.view.ViewGroup;
 
 import com.example.peter.thekitchenmenu.R;
 
-import com.example.peter.thekitchenmenu.data.model.ProductModel;
+import com.example.peter.thekitchenmenu.data.model.ObservableProductModel;
 import com.example.peter.thekitchenmenu.databinding.FragmentCatalogProductsBinding;
 import com.example.peter.thekitchenmenu.viewmodels.ViewModelCatlogProducts;
-
-import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -92,7 +90,7 @@ public class ProductCatalogAllProducts
     }
 
     @Override
-    public void onClick(ProductModel clickedProduct, boolean isCreator) {
+    public void onClick(ObservableProductModel clickedProduct, boolean isCreator) {
         viewModelProducts.selectedItem(clickedProduct, isCreator);
     }
 }

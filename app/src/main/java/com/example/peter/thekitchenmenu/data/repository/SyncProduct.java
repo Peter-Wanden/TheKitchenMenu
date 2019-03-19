@@ -151,7 +151,7 @@ class SyncProduct {
 
                     if (product != null) {
                         // Add the remote reference key.
-                        product.setRemoteProdRefKey(shot.getKey());
+                        product.setRemoteProductId(shot.getKey());
                         remoteSnapShot.add(product);
                     }
                 }

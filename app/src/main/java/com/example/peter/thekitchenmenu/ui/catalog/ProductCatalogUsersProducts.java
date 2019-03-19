@@ -8,12 +8,11 @@ import android.view.ViewGroup;
 
 import com.example.peter.thekitchenmenu.R;
 
-import com.example.peter.thekitchenmenu.data.model.ProductModel;
+import com.example.peter.thekitchenmenu.data.model.ObservableProductModel;
 import com.example.peter.thekitchenmenu.databinding.FragmentCatalogProductsBinding;
 import com.example.peter.thekitchenmenu.viewmodels.ViewModelCatlogProducts;
 
 import java.util.List;
-import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -43,7 +42,7 @@ public class ProductCatalogUsersProducts
         viewModel = ViewModelProviders.of(requireActivity()).get(ViewModelCatlogProducts.class);
 
         // Observes changes to view model ProdMy list and passes them to the adaptor.
-        final Observer<List<ProductModel>> viewModelProd = vmProds
+        final Observer<List<ObservableProductModel>> viewModelProd = vmProds
                 -> catalogProductsAdapter.setProducts(vmProds);
 
         viewModel.getAllVmProdMy().observe(this, viewModelProd);
@@ -102,7 +101,7 @@ public class ProductCatalogUsersProducts
     }
 
     @Override
-    public void onClick(ProductModel productModel, boolean isCreator) {
-        viewModel.selectedItem(productModel, isCreator);
+    public void onClick(ObservableProductModel observableProductModel, boolean isCreator) {
+        viewModel.selectedItem(observableProductModel, isCreator);
     }
 }

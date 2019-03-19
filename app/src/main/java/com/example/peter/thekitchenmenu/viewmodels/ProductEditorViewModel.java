@@ -5,234 +5,183 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.peter.thekitchenmenu.data.entity.Product;
+import com.example.peter.thekitchenmenu.data.model.ObservableProductModel;
 import com.example.peter.thekitchenmenu.utils.ObservableViewModel;
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.Measurement;
+import com.example.peter.thekitchenmenu.utils.ProductTextValidationHandler;
+import com.example.peter.thekitchenmenu.utils.ProductNumericValidationHandler;
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.ObservableMeasurement;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubType;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasure;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureClassSelector;
 
 import androidx.annotation.NonNull;
-import androidx.core.util.Pair;
 import androidx.databinding.Bindable;
 import androidx.databinding.ObservableBoolean;
-import androidx.databinding.ObservableField;
-import androidx.databinding.ObservableInt;
 import androidx.lifecycle.MutableLiveData;
 
-import static com.example.peter.thekitchenmenu.data.entity.Product.BASE_SI_UNITS;
-import static com.example.peter.thekitchenmenu.data.entity.Product.DESCRIPTION;
-import static com.example.peter.thekitchenmenu.data.entity.Product.MADE_BY;
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.NOTHING_SELECTED;
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MULTI_PACK_MINIMUM_NO_OF_PACKS;
 
 public class ProductEditorViewModel extends ObservableViewModel {
 
     private static final String TAG = "ProductEditorViewModel";
 
-    private MutableLiveData<Product> product = new MutableLiveData<>();
     private Context applicationContext;
+    private ProductTextValidationHandler textValidationHandler;
+    private ProductNumericValidationHandler numericValidationHandler;
 
-    private final ObservableField<String> description = new ObservableField<>();
-    private boolean descriptionValidated;
-    private final ObservableField<String> madeBy = new ObservableField<>();
-    private boolean madeByValidated;
+    private MutableLiveData<Product> productEntity = new MutableLiveData<>();
+
     // TODO - Change category and shelf life to an enum
-    private ObservableInt category = new ObservableInt(0);
-    private boolean categoryValidated;
-    private ObservableInt shelfLife = new ObservableInt(0);
-    private boolean shelfLifeValidated;
-    private ObservableBoolean multiPack = new ObservableBoolean(false);
 
+    // Field validation status
+    private boolean descriptionValidated;
+    private boolean madeByValidated;
+    private boolean categoryValidated;
+    private boolean shelfLifeValidated;
     private boolean numberOfItemsInPackValidated;
     private boolean packSizeValidated;
 
     // Measurements
-    private UnitOfMeasure unitOfMeasure;
-    private Measurement measurement;
+    private ObservableProductModel productModel = new ObservableProductModel();
+    private ObservableBoolean multiPack = new ObservableBoolean(false);
+    private ObservableMeasurement measurement;
 
-    public ProductEditorViewModel(@NonNull Application application) {
-
-        super(application);
-        applicationContext = application;
-
-        unitOfMeasure = UnitOfMeasureClassSelector.getClassWithSubType(
-                applicationContext, MeasurementSubType.NOTHING_SELECTED);
-
-        measurement = new Measurement();
+    public ProductEditorViewModel(@NonNull Application applicationContext) {
+        super(applicationContext);
+        this.applicationContext = applicationContext;
 
 
-        Product p = new Product(0,
+        Product productEntity = new Product(
+                0,
                 "Mars Bar",
                 "Mars",
                 1,
-                false,
-                0,
                 5,
-                0,
-                0,
+                5,
+                5250,
+                1,
                 0,
                 "",
                 "",
                 0,
                 0,
                 "");
-        product.setValue(p);
+        this.productEntity.setValue(productEntity);
 
-        if (product.getValue() != null) {
+        if (this.productEntity.getValue() != null) {
 
-            description.set(product.getValue().getDescription());
-            madeBy.set(product.getValue().getMadeBy());
-            category.set(product.getValue().getCategory());
-            shelfLife.set(product.getValue().getShelfLife());
-            multiPack.set(product.getValue().getMultiPack());
+            productModel.updateModelFromEntity(this.productEntity.getValue());
 
-            if (product.getValue().getUnitOfMeasureSubType() >
-                    MeasurementSubType.NOTHING_SELECTED.ordinal()) {
-
-                unitOfMeasure = UnitOfMeasureClassSelector.getClassWithSubType(
-                        applicationContext,
-                        MeasurementSubType.values()[product.getValue().getUnitOfMeasureSubType()]);
-
-                Log.d(TAG, "ProductEditorViewModel: unit of measure is: " +
-                        unitOfMeasure.getMeasurementSubType());
-
-                boolean productValuesAreSet = unitOfMeasure.setValuesFromProduct(product.getValue());
-
-                if (productValuesAreSet) unitOfMeasure.setNewMeasurementValuesTo(measurement);
-                else Log.d(TAG, "ProductEditorViewModel: Product values contain errors.");
-
-                Log.d(TAG, "ProductEditorViewModel: Unit of measure set to: " +
-                        unitOfMeasure.toString());
-                Log.d(TAG, "ProductEditorViewModel: Measurement set to: " + measurement);
+            if (isMultiPack()) {
+                multiPack.set(true);
             }
         }
+
+        measurement = new ObservableMeasurement();
+
+        numericValidationHandler = new ProductNumericValidationHandler(
+                applicationContext,
+                this,
+                measurement);
+
+        textValidationHandler = new ProductTextValidationHandler(
+                applicationContext,
+                this);
+
     }
 
-    public Measurement getMeasurement() {
+    public ProductTextValidationHandler getTextValidationHandler() {
+        return textValidationHandler;
+    }
+
+    public ProductNumericValidationHandler getNumericValidationHandler() {
+        return numericValidationHandler;
+    }
+
+    public MutableLiveData<Product> getProductEntity() {
+
+        if (productEntity == null) {
+
+            productEntity = new MutableLiveData<>();
+        }
+        return productEntity;
+    }
+
+    public ObservableProductModel getProductModel() {
+        return productModel;
+    }
+
+    public void setProductModel(ObservableProductModel productModel) {
+        this.productModel = productModel;
+    }
+
+    private boolean isMultiPack() {
+        return productModel.getNumberOfPacks() >= MULTI_PACK_MINIMUM_NO_OF_PACKS;
+    }
+
+    public ObservableMeasurement getMeasurement() {
         return measurement;
     }
 
-    public void setMeasurement(Measurement measurement) {
+    public void setMeasurement(ObservableMeasurement measurement) {
         Log.d(TAG, "setMeasurement: " + measurement.toString());
         this.measurement = measurement;
     }
 
-    public UnitOfMeasure getUnitOfMeasure() {
-        Log.d(TAG, "getUnitOfMeasure: " + unitOfMeasure.toString());
-        return unitOfMeasure;
+    @Bindable
+    public ObservableBoolean getMultiPack() {
+
+        if (productModel != null) {
+            Log.d(TAG, "getMultiPack: " + multiPack.get());
+        }
+        return multiPack;
     }
 
-    public void setUnitOfMeasure(UnitOfMeasure unitOfMeasure) {
-        this.unitOfMeasure = unitOfMeasure;
+    public void setDescriptionValidated(boolean descriptionValidated) {
+        this.descriptionValidated = descriptionValidated;
     }
 
-    public MutableLiveData<Product> getProduct() {
-        return product;
+    public void setMadeByValidated(boolean madeByValidated) {
+        this.madeByValidated = madeByValidated;
     }
 
     public void setPackSizeValidated(boolean packSizeValidated) {
         this.packSizeValidated = packSizeValidated;
     }
 
-    @Bindable
-    public ObservableField<String> getDescription() {
-
-        if (descriptionValidated && product.getValue() != null) {
-
-            product.getValue().setDescription(description.get());
-            printProduct();
-        }
-        return description;
-    }
-
-    @Bindable
-    public ObservableField<String> getMadeBy() {
-
-        if (madeByValidated && product.getValue() != null) {
-
-            product.getValue().setMadeBy(madeBy.get());
-            printProduct();
-        }
-        return madeBy;
-    }
-
-    @Bindable
-    public ObservableInt getCategory() {
-
-        if (category.get() == 0) {
-
-            categoryValidated = false;
-            printProduct();
-
-        } else {
-
-            categoryValidated = true;
-
-            if (product.getValue() != null) {
-
-                product.getValue().setCategory(category.get());
-                printProduct();
-            }
-        }
-        return category;
-    }
-
-    @Bindable
-    public ObservableInt getShelfLife() {
-
-        if (shelfLife.get() == NOTHING_SELECTED) {
-
-            shelfLifeValidated = false;
-
-        } else {
-
-            shelfLifeValidated = true;
-
-            if (product.getValue() != null) {
-
-                product.getValue().setShelfLife(shelfLife.get());
-                printProduct();
-            }
-        }
-        return shelfLife;
-    }
-
-    @Bindable
-    public ObservableBoolean getMultiPack() {
-
-        if (product.getValue() != null) {
-
-            product.getValue().setMultiPack(multiPack.get());
-            printProduct();
-        }
-        return multiPack;
-    }
-
-    public void setFieldValidation(Pair<String, Boolean> fieldToValidate) {
-
-        assert fieldToValidate.first != null && fieldToValidate.second != null;
-
-        if (fieldToValidate.first.equals(DESCRIPTION)) {
-            this.descriptionValidated = fieldToValidate.second;
-
-        } else if (fieldToValidate.first.equals(MADE_BY)) {
-            this.madeByValidated = fieldToValidate.second;
-
-        } else if (fieldToValidate.first.equals(BASE_SI_UNITS)) {
-            this.packSizeValidated = fieldToValidate.second;
-        }
-    }
-
-    public void setNumberOfItemsInPackValidated(boolean numberOfItemsInPackValidated) {
+    public void setNumberOfPacksInPackValidated(boolean numberOfItemsInPackValidated) {
         this.numberOfItemsInPackValidated = numberOfItemsInPackValidated;
     }
 
     // TODO - For dev only.
+
     private void printProduct() {
-        if (product.getValue() != null)
-            Log.d(TAG, "printProduct: " + product.getValue().toString());
+        if (productEntity.getValue() != null)
+            Log.d(TAG, "printProduct: " + productEntity.getValue().toString());
     }
 
-    private void printUnitOfMeasure() {
-        Log.d(TAG, "printUnitOfMeasure: " + unitOfMeasure.toString());
+    // Changes the reference to the productEntity, triggering LiveData to update the database.
+    private void saveProductEntity() {
+
+        // TODO - Create a new product entity, Swap in the values from the model, set the new
+        // TODO - entity over the old entity
+        Product oldProduct = productEntity.getValue();
+        Product newProduct = new Product();
+
+        newProduct.setDescription(oldProduct.getDescription());
+        newProduct.setMadeBy(oldProduct.getMadeBy());
+        newProduct.setCategory(oldProduct.getCategory());
+        newProduct.setNumberOfPacks(oldProduct.getNumberOfPacks());
+        newProduct.setShelfLife(oldProduct.getShelfLife());
+        newProduct.setBaseSiUnits(oldProduct.getBaseSiUnits());
+        newProduct.setUnitOfMeasureSubType(oldProduct.getUnitOfMeasureSubType());
+        newProduct.setPackAvePrice(oldProduct.getPackAvePrice());
+        newProduct.setCreatedBy(oldProduct.getCreatedBy());
+        newProduct.setRemoteImageUri(oldProduct.getRemoteImageUri());
+        newProduct.setCreateDate(oldProduct.getCreateDate());
+        newProduct.setLastUpdate(oldProduct.getLastUpdate());
+        newProduct.setRemoteProductId(oldProduct.getRemoteProductId());
+
+        productEntity.setValue(newProduct);
     }
 }

@@ -14,10 +14,10 @@ public abstract class Constants {
 
     /* Key values for a product_uneditable */
     public static final String PRODUCT_KEY = "current_product_key";
-    public static final String PRODUCT_FB_REFERENCE_KEY = "product_fb_reference_key";
+    public static final String PRODUCT_REMOTE_REFERENCE_KEY = "product_fb_reference_key";
     public static final String PRODUCT_IS_CREATOR_KEY = "product_is_owner_key";
 
-    /* Default values for a ProductModel */
+    /* Default values for a ObservableProductModel */
     public static final int DEFAULT_PROD_MY_ID = 0;
     public static final String DEFAULT_REMOTE_REF_ID = "no_key";
     public static final String DEFAULT_REMOTE_USED_PRODUCT_ID = "no_used_product_id";

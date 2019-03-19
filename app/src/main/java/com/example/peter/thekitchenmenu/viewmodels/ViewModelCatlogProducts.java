@@ -9,7 +9,7 @@ import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.app.Singletons;
 import com.example.peter.thekitchenmenu.data.entity.Product;
 import com.example.peter.thekitchenmenu.data.entity.UsersProductData;
-import com.example.peter.thekitchenmenu.data.model.ProductModel;
+import com.example.peter.thekitchenmenu.data.model.ObservableProductModel;
 import com.example.peter.thekitchenmenu.data.repository.Repository;
 
 import androidx.lifecycle.AndroidViewModel;
@@ -25,13 +25,13 @@ public class ViewModelCatlogProducts extends AndroidViewModel {
     // View models.
     private MediatorLiveData<List<UsersProductData>> observableProdMys;
     private MediatorLiveData<List<Product>> observableProducts;
-    private MediatorLiveData<List<ProductModel>> observeMatchMergeCommunityAndMyProducts;
+    private MediatorLiveData<List<ObservableProductModel>> observeMatchMergeCommunityAndMyProducts;
 
     // Mutable's.
     private MutableLiveData<String> observableUserId;
     private MutableLiveData<Boolean> isCreator = new MutableLiveData<>();
     // The item selected in the adapter, passed through the click interface of the fragment.
-    private final MutableLiveData<ProductModel> selectedProduct = new MutableLiveData<>();
+    private final MutableLiveData<ObservableProductModel> selectedProduct = new MutableLiveData<>();
 
     public ViewModelCatlogProducts(Application application) {
         super(application);
@@ -90,47 +90,47 @@ public class ViewModelCatlogProducts extends AndroidViewModel {
     }
 
     // Converts data models into view models.
-    public MediatorLiveData<List<ProductModel>> getMatchVmProds() {
+    public MediatorLiveData<List<ObservableProductModel>> getMatchVmProds() {
         return observeMatchMergeCommunityAndMyProducts;
     }
 
     // TODO - Keeping these lists in virtual memory cannot be good - get all from the database
     // TODO - Will become clearer when Recipes functionality is added!!!
-    // Matches and merges Products with UserProductData into ProductModel.
+    // Matches and merges Products with UserProductData into ObservableProductModel.
     // TODO - Use collections for a better sort algorithm here
-    private List<ProductModel> mergeMatchMyComm(List<Product> listDmPc, List<UsersProductData> listDmPm) {
+    private List<ObservableProductModel> mergeMatchMyComm(List<Product> listDmPc, List<UsersProductData> listDmPm) {
 
-        List<ProductModel> listVmP = new ArrayList<>();
+        List<ObservableProductModel> listVmP = new ArrayList<>();
 
         for (Product dmPc : listDmPc) {
-            ProductModel vmp = null;
+            ObservableProductModel vmp = null;
 
             for(UsersProductData dmPm : listDmPm) {
                 if (dmPc.getId() == dmPm.getProductId()) {
-                    vmp = new ProductModel(dmPm, dmPc);
+                    vmp = new ObservableProductModel(dmPm, dmPc);
                     listVmP.add(vmp);
                 }
             }
 
             if(vmp == null) {
-                vmp = new ProductModel(dmPc);
+                vmp = new ObservableProductModel(dmPc);
                 listVmP.add(vmp);
             }
         }
         return listVmP;
     }
 
-    // Filters through only the UsersProductData data in the ProductModel view model (My Products).
-    public LiveData<List<ProductModel>> getAllVmProdMy() {
+    // Filters through only the UsersProductData data in the ObservableProductModel view model (My Products).
+    public LiveData<List<ObservableProductModel>> getAllVmProdMy() {
         return Transformations.map(observeMatchMergeCommunityAndMyProducts, this::filterMy);
     }
 
     // Filters the view model ProdMy data from the view model ProdComm data.
-    private List<ProductModel> filterMy(List<ProductModel> allMyCommData) {
-        List<ProductModel> listVmP = new ArrayList<>();
+    private List<ObservableProductModel> filterMy(List<ObservableProductModel> allMyCommData) {
+        List<ObservableProductModel> listVmP = new ArrayList<>();
 
         if (allMyCommData != null) {
-            for (ProductModel vMp : allMyCommData) {
+            for (ObservableProductModel vMp : allMyCommData) {
                 if(vMp.getUserProductDataId() != 0) {
                     listVmP.add(vMp);
                 }
@@ -149,13 +149,13 @@ public class ViewModelCatlogProducts extends AndroidViewModel {
     }
 
     // Triggered by selecting an item in the Fragment's RecyclerView.
-    public void selectedItem(ProductModel productModel, boolean isCreator) {
+    public void selectedItem(ObservableProductModel observableProductModel, boolean isCreator) {
         this.isCreator.setValue(isCreator);
-        selectedProduct.setValue(productModel);
+        selectedProduct.setValue(observableProductModel);
     }
 
     // Pushes the selected product_uneditable to observers.
-    public LiveData<ProductModel> getSelected() {
+    public LiveData<ObservableProductModel> getSelected() {
         return selectedProduct;
     }
 }

@@ -1,78 +1,75 @@
 package com.example.peter.thekitchenmenu.utils;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.res.Resources;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.databinding.ProductEditorBinding;
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.Measurement;
+import com.example.peter.thekitchenmenu.data.model.ObservableProductModel;
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.ObservableMeasurement;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubType;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasure;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureClassSelector;
 import com.example.peter.thekitchenmenu.viewmodels.ProductEditorViewModel;
 
-import androidx.appcompat.widget.AppCompatButton;
-import androidx.appcompat.widget.AppCompatEditText;
-
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MULTI_PACK_MAXIMUM_NO_OF_ITEMS;
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MULTI_PACK_MINIMUM_NO_OF_ITEMS;
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.NO_INPUT;
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MULTI_PACK_MAXIMUM_NO_OF_PACKS;
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MULTI_PACK_MINIMUM_NO_OF_PACKS;
 
 public class ProductNumericValidationHandler {
 
     private static final String TAG = "ProductNumericValidatio";
 
-    private Context context;
+    private Context applicationContext;
     private ProductEditorViewModel viewModel;
-    private ProductEditorBinding productEditor;
     private Resources resources;
 
     private UnitOfMeasure unitOfMeasure;
-    private Measurement measurement;
+    private ObservableMeasurement measurement;
+    private static final int MEASUREMENT_ERROR = -1;
 
-    public void setBinding(Context context, ProductEditorBinding productEditor) {
+    private int numberOfPacksInPack;
 
-        this.context = context;
-        viewModel = productEditor.getProductEditorViewModel();
-        this.productEditor = productEditor;
+    public ProductNumericValidationHandler(Application applicationContext,
+                                           ProductEditorViewModel viewModel,
+                                           ObservableMeasurement measurement) {
 
-        resources = context.getResources();
-        unitOfMeasure = viewModel.getUnitOfMeasure();
-        measurement = viewModel.getMeasurement();
+        this.applicationContext = applicationContext;
+        this.viewModel = viewModel;
+        resources = applicationContext.getResources();
+        this.measurement = measurement;
     }
 
     public void newUnitOfMeasureSelected(Spinner spinnerWithSubType) {
 
         UnitOfMeasure newUnitOfMeasure = UnitOfMeasureClassSelector.getClassWithSubType(
-                context, MeasurementSubType.values()[spinnerWithSubType.getSelectedItemPosition()]);
+                applicationContext, MeasurementSubType.values()[spinnerWithSubType.getSelectedItemPosition()]);
 
         Log.d(TAG, "newUnitOfMeasureSelected: " +
                 newUnitOfMeasure.getMeasurementSubType().getMeasurementType());
 
-        Log.d(TAG, "newUnitOfMeasureSelected: items in old pack are: " +
-                unitOfMeasure.getNumberOfItemsInPack());
+        Log.d(TAG, "newUnitOfMeasureSelected: packs in old pack are: " +
+                unitOfMeasure.getNumberOfPacksInPack());
 
         // If the view model has a unit of measure that has some base units in it there may be a
         // measurement to convert
         if (unitOfMeasure.getBaseSiUnits() > 0. ||
-                unitOfMeasure.getNumberOfItemsInPack() > MULTI_PACK_MINIMUM_NO_OF_ITEMS) {
+                unitOfMeasure.getNumberOfPacksInPack() > MULTI_PACK_MINIMUM_NO_OF_PACKS) {
 
             Log.d(TAG, "newUnitOfMeasureSelected: old base units are: " +
                     unitOfMeasure.getBaseSiUnits());
 
-            Log.d(TAG, "newUnitOfMeasureSelected: old number of items are: " +
-                    unitOfMeasure.getNumberOfItemsInPack());
+            Log.d(TAG, "newUnitOfMeasureSelected: old number of packs are: " +
+                    unitOfMeasure.getNumberOfPacksInPack());
 
-            if (unitOfMeasure.getNumberOfItemsInPack() > MULTI_PACK_MINIMUM_NO_OF_ITEMS) {
+            if (unitOfMeasure.getNumberOfPacksInPack() > MULTI_PACK_MINIMUM_NO_OF_PACKS) {
 
-                newUnitOfMeasure.setNumberOfItemsInPack(unitOfMeasure.getNumberOfItemsInPack());
-                Log.d(TAG, "newUnitOfMeasureSelected: setting number of items to: " +
-                        unitOfMeasure.getNumberOfItemsInPack());
+                newUnitOfMeasure.setNumberOfPacksInPack(unitOfMeasure.getNumberOfPacksInPack());
+                Log.d(TAG, "newUnitOfMeasureSelected: setting number of packs to: " +
+                        unitOfMeasure.getNumberOfPacksInPack());
             }
 
             // If the subtype in the view models unit of measure and the validations new unit of
@@ -97,16 +94,16 @@ public class ProductNumericValidationHandler {
                     // If the base units set ok...
                     if (baseSiUnitsAreSet) {
 
-                        boolean numberOfItemsAreSet =
-                                newUnitOfMeasure.setNumberOfItemsInPack(
-                                        unitOfMeasure.getNumberOfItemsInPack());
-                        Log.d(TAG, "newUnitOfMeasureSelected: No of items are set: " +
-                                numberOfItemsAreSet);
+                        boolean numberOfPacksIsSet =
+                                newUnitOfMeasure.setNumberOfPacksInPack(
+                                        unitOfMeasure.getNumberOfPacksInPack());
+                        Log.d(TAG, "newUnitOfMeasureSelected: No of packs are set: " +
+                                numberOfPacksIsSet);
 
-                        if (!numberOfItemsAreSet) {
-                            // An error, setting number of items could be because it reduces the
-                            // item size below the minimum measurement. Set error and reset values
-                            // within the unit of measure and the Measurement (shouldn't have to do
+                        if (!numberOfPacksIsSet) {
+                            // An error, setting number of packs could be because it reduces the
+                            // packs size below the minimum measurement. Set error and reset values
+                            // within the unit of measure and the ObservableMeasurement (shouldn't have to do
                             // both)
                             updateUnitOfMeasure(newUnitOfMeasure);
                             updateMeasurementValues();
@@ -118,9 +115,8 @@ public class ProductNumericValidationHandler {
                         updateMeasurementNumericValues();
                     }
                     // The types are the same, but the base units would not set. This can only
-                    // happen if the numberOfItems has been set first and in setting the base units
-                    // has made the item size smaller than the smallest item for this unit of
-                    // measure class.
+                    // happen if the numberOfPacks has been set first and in setting the base units
+                    // has made the pack size smaller than the smallest unit for this measure class.
 
                     // Reset values and maybe pass an error or toast reflecting the above?
                     updateUnitOfMeasure(newUnitOfMeasure);
@@ -149,7 +145,7 @@ public class ProductNumericValidationHandler {
             // original unit of measure is empty. Reset the measurement in the view model, update
             // the unit of measure in the view model and update the measurement
             Log.d(TAG, "newUnitOfMeasureSelected: Old unit of measure has no base units " +
-                    "and number of items is below the minimum.");
+                    "and number of packs is below the minimum.");
 
             updateUnitOfMeasure(newUnitOfMeasure);
             updateMeasurementValues();
@@ -163,276 +159,236 @@ public class ProductNumericValidationHandler {
 
     private void updateMeasurementValues() {
 
-        measurement.resetNonNumericValues();
-        measurement.setTypeAsString(unitOfMeasure.getTypeAsString());
+        measurement.resetMeasurementSubType();
         measurement.setMeasurementSubType(unitOfMeasure.getMeasurementSubType());
-        measurement.setMeasurementUnitOne(unitOfMeasure.getMeasurementUnitOne());
-        measurement.setMeasurementUnitTwo(unitOfMeasure.getMeasurementUnitTwo());
     }
 
     private void updateMeasurementNumericValues() {
 
-        if (viewModel.getMeasurement().getNumberOfItemsInPack()
-                != unitOfMeasure.getNumberOfItemsInPack()) {
-
-            measurement.setNumberOfItemsInPack(
-                    unitOfMeasure.getNumberOfItemsInPack());
-            Log.d(TAG, "updateMeasurementNumericValues: updating items in pack to: " +
-                    unitOfMeasure.getNumberOfItemsInPack());
+        if (measurement.getNumberOfPacksInPack() != unitOfMeasure.getNumberOfPacksInPack()) {
+            measurement.setNumberOfPacksInPack(unitOfMeasure.getNumberOfPacksInPack());
+            Log.d(TAG, "updateMeasurementNumericValues: updating packs in pack to: " +
+                    unitOfMeasure.getNumberOfPacksInPack());
         }
 
-        if (viewModel.getMeasurement().getPackMeasurementOne() !=
-                unitOfMeasure.getPackMeasurementOne()) {
-
+        if (measurement.getPackMeasurementOne() != unitOfMeasure.getPackMeasurementOne()) {
             measurement.setPackMeasurementOne(unitOfMeasure.getPackMeasurementOne());
             Log.d(TAG, "updateMeasurementNumericValues: updating pack One to: " +
                     unitOfMeasure.getPackMeasurementOne());
         }
 
-        if (viewModel.getMeasurement().getPackMeasurementTwo() !=
-                unitOfMeasure.getPackMeasurementTwo()) {
-
+        if (measurement.getPackMeasurementTwo() != unitOfMeasure.getPackMeasurementTwo()) {
             measurement.setPackMeasurementTwo(unitOfMeasure.getPackMeasurementTwo());
             Log.d(TAG, "updateMeasurementNumericValues: updating pack Two to: " +
                     unitOfMeasure.getPackMeasurementTwo());
         }
 
-        if (viewModel.getMeasurement().getItemMeasurementOne() !=
-                unitOfMeasure.getItemMeasurementOne()) {
-
-            measurement.setItemMeasurementOne(unitOfMeasure.getItemMeasurementOne());
-            Log.d(TAG, "updateMeasurementNumericValues: updating item One to: " +
-                    unitOfMeasure.getItemMeasurementOne());
+        if (measurement.getSinglePackMeasurementOne() != unitOfMeasure.getSinglePackMeasurementOne()) {
+            measurement.setSinglePackMeasurementOne(unitOfMeasure.getSinglePackMeasurementOne());
+            Log.d(TAG, "updateMeasurementNumericValues: updating single pack One to: " +
+                    unitOfMeasure.getSinglePackMeasurementOne());
         }
 
-        if (viewModel.getMeasurement().getItemMeasurementTwo() !=
-                unitOfMeasure.getItemMeasurementTwo()) {
-
-            measurement.setItemMeasurementTwo(unitOfMeasure.getItemMeasurementTwo());
-            Log.d(TAG, "updateMeasurementNumericValues: updating item Two to: " +
-                    unitOfMeasure.getItemMeasurementTwo());
+        if (measurement.getSinglePackMeasurementTwo() != unitOfMeasure.getSinglePackMeasurementTwo()) {
+            measurement.setSinglePackMeasurementTwo(unitOfMeasure.getSinglePackMeasurementTwo());
+            Log.d(TAG, "updateMeasurementNumericValues: updating single pack Two to: " +
+                    unitOfMeasure.getSinglePackMeasurementTwo());
         }
     }
 
-    public void validateItemsInPack(EditText editableItemsInPack) {
+    public void validatePacksInPack(EditText editablePacksInPack) {
 
-        String rawItemsInPack = editableItemsInPack.getText().toString();
+        String rawPacksInPack = editablePacksInPack.getText().toString();
 
-        if (!rawItemsInPack.isEmpty()) try {
+        if (!rawPacksInPack.isEmpty()) try {
 
-            int numberOfItemsInPack = Integer.parseInt(rawItemsInPack);
-            setItemsInPack(editableItemsInPack, numberOfItemsInPack);
+            int numberPacksInPack = Integer.parseInt(rawPacksInPack);
+            Log.d(TAG, "validatePacksInPack: Received: " + numberPacksInPack);
+            setPacksInPack(editablePacksInPack, numberPacksInPack);
 
         } catch (NumberFormatException e) {
 
-            setNumberFormatExceptionError(editableItemsInPack);
+            setNumberFormatExceptionError(editablePacksInPack);
+            Log.d(TAG, "validatePacksInPack: Setting error");
         }
-
-        Log.d(TAG, "validateItemsInPack: items in pack are blank. Resetting values in UoM and " +
-                "Measurement");
-        unitOfMeasure.setBaseSiUnits(0);
-        measurement.setPackMeasurementOne(0);
-        measurement.setPackMeasurementTwo(0);
-        measurement.setItemMeasurementOne(0);
-        measurement.setItemMeasurementTwo(0);
     }
 
-    private void setItemsInPack(EditText editableItemsInPack, int numberOfItemsInPack) {
+    private void setPacksInPack(EditText editablePacksInPack, int numberOfPacksInPack) {
 
-        Log.d(TAG, "setItemsInPack: EditableItemsInPack is: " +
-                editableItemsInPack.getText().toString() +
-                " number of items in pack: " + numberOfItemsInPack);
+        Log.d(TAG, "setNumberOfPacks: EditablePacksInPack is: " +
+                editablePacksInPack.getText().toString() +
+                " number of packs in pack: " + numberOfPacksInPack);
 
-        boolean itemsInPackAreSet = unitOfMeasure.setNumberOfItemsInPack(numberOfItemsInPack);
+        boolean packsInPackAreSet = unitOfMeasure.setNumberOfPacksInPack(numberOfPacksInPack);
 
-        boolean baseUnitsAreAboveMinimumValue =
-                unitOfMeasure.getBaseSiUnits() >
-                        unitOfMeasure.getMinAndMax().getMinimumMeasurementOne();
+        Log.d(TAG, "setNumberOfPacks: Set number of packs to unit of measure: " +
+                packsInPackAreSet);
 
-        Log.d(TAG, "setItemsInPack: baseUnitsAreAboveMinValue: " +
-                baseUnitsAreAboveMinimumValue + " base unit are: " + unitOfMeasure.getBaseSiUnits());
 
-        if (itemsInPackAreSet) {
+        Log.d(TAG, "setNumberOfPacks: baseUnitsAreAboveMinValue: " +
+                baseUnitsAreAboveMinimumValue() + " base unit are: " + unitOfMeasure.getBaseSiUnits());
 
-            viewModel.getProduct().getValue().setNumberOfItemsInPack(numberOfItemsInPack);
-            if (baseUnitsAreAboveMinimumValue) viewModel.setNumberOfItemsInPackValidated(true);
+        if (packsInPackAreSet) {
+
+            viewModel.getProductEntity().getValue().setNumberOfPacks(numberOfPacksInPack);
+
+            if (baseUnitsAreAboveMinimumValue()) viewModel.setNumberOfPacksInPackValidated(true);
             updateMeasurementNumericValues();
 
         } else {
 
-            setItemsInPackOutOfBoundsError(editableItemsInPack);
+            Log.d(TAG, "setNumberOfPacks: setting packs out of bounds error for some reason");
+            setPacksInPackOutOfBoundsError(editablePacksInPack);
         }
     }
 
-    private void modifyItemsInPack(AppCompatButton button) {
+    private boolean baseUnitsAreAboveMinimumValue() {
 
-//        int buttonId = button.getId();
-//        int numberOfItemsInPack = parseNumberFromEditText(editableItemsInPack);
-//
-//        if (buttonId == R.id.multi_pack_plus) editableItemsInPack.setText(numberOfItemsInPack +1);
-//        if (buttonId == R.id.multi_pack_minus) editableItemsInPack.setText(numberOfItemsInPack -1);
+        return unitOfMeasure.getBaseSiUnits() >
+                unitOfMeasure.getMinAndMax().getMinimumMeasurementOne();
     }
 
-    private int parseNumberFromEditText(EditText editTextToParse) {
+    public void modifyPacksInPackByOne(EditText editablePacksInPack, Button button) {
 
-        String rawNumber = editTextToParse.getText().toString();
-        int number = 0;
-        if (rawNumber.isEmpty()) return number;
+        numberOfPacksInPack = measurement.getNumberOfPacksInPack();
+        int buttonId = button.getId();
 
-        try {
+        if (buttonId == R.id.multi_pack_plus &&
+                numberOfPacksInPack < MULTI_PACK_MAXIMUM_NO_OF_PACKS)
+            editablePacksInPack.setText(String.valueOf(numberOfPacksInPack + 1));
 
-            number = Integer.parseInt(rawNumber);
-            return number;
-
-        } catch (NumberFormatException e) {
-
-            return -1;
-        }
+        if (buttonId == R.id.multi_pack_minus &&
+                numberOfPacksInPack > MULTI_PACK_MINIMUM_NO_OF_PACKS)
+            editablePacksInPack.setText(String.valueOf(numberOfPacksInPack -1));
     }
 
-    private void setItemsInPackOutOfBoundsError(EditText editableItemsInPack) {
+    private void setPacksInPackOutOfBoundsError(EditText editablePacksInPack) {
 
-        String itemsInPackError =
+        String packsInPackError =
                 resources.getString(
-                        R.string.input_error_items_in_pack,
-                        MULTI_PACK_MINIMUM_NO_OF_ITEMS,
-                        MULTI_PACK_MAXIMUM_NO_OF_ITEMS);
+                        R.string.input_error_packs_in_pack,
+                        MULTI_PACK_MINIMUM_NO_OF_PACKS,
+                        MULTI_PACK_MAXIMUM_NO_OF_PACKS);
 
-        editableItemsInPack.setError(itemsInPackError);
+        editablePacksInPack.setError(packsInPackError);
     }
 
     // TODO - Validate for MAX_MASS in UnitOfMeasureConstants
 
-    public void validatePackSize(EditText editableMeasurementOne, EditText editableMeasurementTwo) {
+    public void validatePackSize(EditText editableMeasurement) {
 
-        processMeasurements(editableMeasurementOne, editableMeasurementTwo);
+        int measurementViewId = editableMeasurement.getId();
+        int measurement = parseIntegerFromEditText(editableMeasurement);
+
+        if (measurement == MEASUREMENT_ERROR) {
+
+            Log.d(TAG, "validatePackSize: NumberFormatException error, resetting values.");
+            setNumberFormatExceptionError(editableMeasurement);
+            resetMeasurementValues();
+
+        } else if (measurementHasChanged(measurementViewId, measurement)) {
+
+            Log.d(TAG, "validatePackSize: ObservableMeasurement has changed, sending measurement " +
+                    "for processing");
+            processMeasurements(editableMeasurement, measurement);
+        }
+
+        Log.d(TAG, "validatePackSize: ObservableMeasurement has not changed, aborting.");
     }
 
-    private void processMeasurements(EditText editableMeasurementOne,
-                                     EditText editableMeasurementTwo) {
+    private boolean measurementHasChanged(int measurementViewId, int newMeasurement) {
 
-        int measurementOneViewId = editableMeasurementOne.getId();
-        int measurementTwoViewId = editableMeasurementTwo.getId();
+        int oldMeasurement;
 
-        int measurementOne = getMeasurement(editableMeasurementOne);
+        switch (measurementViewId) {
 
-        if (measurementOne == -1) {
+            case R.id.pack_editable_measurement_one:
 
-            setNumberFormatExceptionError(editableMeasurementOne);
-            resetMeasurementValues();
+                Log.d(TAG, "measurementHasChanged: Pack measurement one has changed");
+                oldMeasurement = unitOfMeasure.getPackMeasurementOne();
+                return newMeasurement != oldMeasurement;
+
+            case R.id.pack_editable_measurement_two:
+
+                Log.d(TAG, "measurementHasChanged: Pack measurement Two has changed");
+                oldMeasurement = unitOfMeasure.getPackMeasurementTwo();
+                return newMeasurement != oldMeasurement;
+
+            case R.id.single_pack_editable_measurement_one:
+
+                Log.d(TAG, "measurementHasChanged: Single pack measurement One has changed");
+                oldMeasurement = unitOfMeasure.getSinglePackMeasurementOne();
+                return newMeasurement != oldMeasurement;
+
+            case R.id.single_pack_editable_measurement_two:
+
+                Log.d(TAG, "measurementHasChanged: Single pack measurement Two has changed");
+                oldMeasurement = unitOfMeasure.getSinglePackMeasurementTwo();
+                return newMeasurement != oldMeasurement;
         }
+        Log.d(TAG, "measurementHasChanged: View not recognised, aborting.");
+        return false;
+    }
 
-        int measurementTwo = getMeasurement(editableMeasurementTwo);
+    private void processMeasurements(EditText editableMeasurement, int newMeasurement) {
 
-        if (measurementTwo == -1) {
+        int viewId = editableMeasurement.getId();
 
-            setNumberFormatExceptionError(editableMeasurementTwo);
-            resetMeasurementValues();
-        }
-
-        Log.d(TAG, "processMeasurements: New Two: " + measurementTwo +
-                " New One: " + measurementOne);
-
-//        if ((measurementOne > NO_INPUT || measurementTwo > NO_INPUT)) {
+        Log.d(TAG, "processMeasurements: New measurement received from: " +
+                resources.getResourceEntryName(editableMeasurement.getId()));
 
         boolean isMultiPack = viewModel.getMultiPack().get();
-        boolean multiPackSelectedWithNoItems = viewModel.
-                getMeasurement().
-                getNumberOfItemsInPack() < MULTI_PACK_MINIMUM_NO_OF_ITEMS;
+        boolean multiPackSelectedWithNoPacks =
+                measurement.getNumberOfPacksInPack() < MULTI_PACK_MINIMUM_NO_OF_PACKS;
 
         Log.d(TAG, "processMeasurements: isMultiPack: " + isMultiPack +
-                " selectedWithNoItems: " + multiPackSelectedWithNoItems);
+                " selectedWithNoPacks: " + multiPackSelectedWithNoPacks);
 
-        Log.d(TAG, "processMeasurements: number of items: " +
-                viewModel.getMeasurement().getNumberOfItemsInPack());
+        Log.d(TAG, "processMeasurements: number of packs: " +
+                viewModel.getMeasurement().getNumberOfPacksInPack());
 
-        boolean measurementOneIsSet = false;
-        boolean measurementTwoIsSet = false;
+        boolean measurementIsSet = false;
 
-        if (isMultiPack && multiPackSelectedWithNoItems) {
+        if (viewId == R.id.pack_editable_measurement_one) {
 
-            setItemsInPackOutOfBoundsError(productEditor.editableItemsInPack);
-            measurement.setPackMeasurementOne(NO_INPUT);
-            measurement.setPackMeasurementTwo(NO_INPUT);
-            measurement.setItemMeasurementOne(NO_INPUT);
-            measurement.setItemMeasurementTwo(NO_INPUT);
+            Log.d(TAG, "processMeasurements: processing change to pack measurement One");
+            measurementIsSet = unitOfMeasure.setPackMeasurementOne(newMeasurement);
+
+        } else if (viewId == R.id.pack_editable_measurement_two) {
+
+            Log.d(TAG, "processMeasurements: processing change to pack measurement Two");
+            measurementIsSet = unitOfMeasure.setPackMeasurementTwo(newMeasurement);
+
+        } else if (viewId == R.id.single_pack_editable_measurement_one) {
+
+            Log.d(TAG, "processMeasurements: processing change to single pack measurement One");
+            measurementIsSet = unitOfMeasure.setSinglePackMeasurementOne(newMeasurement);
+
+        } else if (viewId == R.id.single_pack_editable_measurement_two) {
+
+            Log.d(TAG, "processMeasurements: processing change to single pack measurement Two");
+            measurementIsSet = unitOfMeasure.setSinglePackMeasurementTwo(newMeasurement);
         }
 
+        Log.d(TAG, "processMeasurements: MeasurementOneIsSet: " + measurementIsSet);
 
-        if (measurementOneViewId == R.id.pack_editable_measurement_one &&
-                measurementTwoViewId == R.id.pack_editable_measurement_two) {
-
-            Log.d(TAG, "processMeasurements: processing pack measurements");
-
-            if (measurementOne != unitOfMeasure.getPackMeasurementOne())
-                measurementOneIsSet = unitOfMeasure.setPackMeasurementOne(measurementOne);
-
-            else if (measurementTwo != unitOfMeasure.getPackMeasurementTwo())
-                measurementTwoIsSet = unitOfMeasure.setPackMeasurementTwo(measurementTwo);
-
-            else {
-                Log.d(TAG, "processMeasurements: Measurements have not changed, aborting");
-                return;
-            }
-
-            Log.d(TAG, "processMeasurements: PackTwoIsSet: " + measurementTwoIsSet +
-                    " PackOneIsSet: " + measurementOneIsSet);
-
-        } else if (measurementOneViewId == R.id.item_editable_measurement_one &&
-                measurementTwoViewId == R.id.item_editable_measurement_two) {
-
-            Log.d(TAG, "processMeasurements: processing item measurements");
-
-            if (measurementOne != unitOfMeasure.getItemMeasurementOne())
-                measurementOneIsSet = unitOfMeasure.setItemMeasurementOne(measurementOne);
-
-            else if (measurementTwo != unitOfMeasure.getItemMeasurementTwo())
-                measurementTwoIsSet = unitOfMeasure.setItemMeasurementTwo(measurementTwo);
-
-            else {
-                Log.d(TAG, "processMeasurements: Measurements have not changed, aborting");
-                return;
-            }
-
-            Log.d(TAG, "processMeasurements: ItemTwoIsSet: " + measurementTwoIsSet +
-                    " ItemOneIsSet: " + measurementOneIsSet);
-
-        } else {
-
-            Log.e(TAG, "processMeasurements: Wrong combination of views sent for " +
-                    "validation. Views sent are: " +
-                    resources.getResourceEntryName(measurementOneViewId) + " and " +
-                    resources.getResourceEntryName(measurementTwoViewId));
-        }
-
-        Log.d(TAG, "processMeasurements: MeasurementOneIsSet: " + measurementOneIsSet +
-                " MeasurementTwoIsSet: " + measurementTwoIsSet);
-
-        if (measurementOneIsSet) {
-            Log.d(TAG, "processMeasurements: Measurement one IS SET!");
-            updateMeasurementNumericValues();
-
-        } else if (measurementTwoIsSet) {
-
-            Log.d(TAG, "processMeasurements: Measurement two IS SET!");
+        if (measurementIsSet) {
+            Log.d(TAG, "processMeasurements: ObservableMeasurement one IS SET!");
             updateMeasurementNumericValues();
 
         } else {
-            // One of the measurements did not set, so reset back to last known good value
-            // And show an error
-            Log.d(TAG, "processMeasurements: Measurement is out of bounds");
+
+            Log.d(TAG, "processMeasurements: ObservableMeasurement is out of bounds");
             unitOfMeasure.setBaseSiUnits(measurement.getBaseSiUnits());
-            setMeasurementOutOfBoundsError();
+            setMeasurementOutOfBoundsError(editableMeasurement);
         }
-//        }
         // Input from one of the measurement fields is zero. Or multiPack has been selected and has
-        // no valid number. Reset all numeric fields apart from
-        // Number of items
+        // no valid number. Reset all numeric fields apart from number of packs
         Log.d(TAG, "processMeasurements: measurements have been zeroed out.");
 
     }
 
-    private int getMeasurement(EditText editableMeasurement) {
+    private int parseIntegerFromEditText(EditText editableMeasurement) {
 
         String rawMeasurement = editableMeasurement.getText().toString();
 
@@ -448,25 +404,18 @@ public class ProductNumericValidationHandler {
         }
     }
 
-    private void setMeasurementOutOfBoundsError() {
+    private void setMeasurementOutOfBoundsError(EditText editableMeasurement) {
 
         Log.d(TAG, "setMeasurementOutOfBoundsError: Pack size out of bounds error");
 
-        setErrorTo(productEditor.packEditableMeasurementOne);
-        setErrorTo(productEditor.packEditableMeasurementTwo);
-
-        if (productEditor.itemEditableMeasurementOne.getVisibility() == View.VISIBLE)
-            setErrorTo(productEditor.itemEditableMeasurementOne);
-
-        if (productEditor.itemEditableMeasurementTwo.getVisibility() == View.VISIBLE)
-            setErrorTo(productEditor.itemEditableMeasurementTwo);
+        setErrorTo(editableMeasurement);
 
         resetMeasurementValues();
     }
 
     private void setErrorTo(EditText editableMeasurement) {
 
-        Measurement measurement = unitOfMeasure.getMinAndMax();
+        ObservableMeasurement observableMeasurement = unitOfMeasure.getMinAndMax();
 
         // TODO - Use plurals for this error
         // TODO - If measurement units contain zero values do not show them
@@ -476,14 +425,14 @@ public class ProductNumericValidationHandler {
 
                 resources.getString(
                         R.string.input_error_pack_size,
-                        measurement.getTypeAsString(),
-                        measurement.getMaximumMeasurementTwo(),
-                        measurement.getMeasurementUnitTwo(),
-                        measurement.getMinimumMeasurementOne(),
-                        measurement.getMeasurementUnitOne(),
-                        measurement.getTypeAsString(),
-                        getMinimumPerItemMeasurement(measurement),
-                        measurement.getMeasurementUnitOne()));
+                        unitOfMeasure.getTypeAsString(),
+                        observableMeasurement.getMaximumMeasurementTwo(),
+                        unitOfMeasure.getMeasurementUnitTwo(),
+                        observableMeasurement.getMinimumMeasurementOne(),
+                        unitOfMeasure.getMeasurementUnitOne(),
+                        unitOfMeasure.getTypeAsString(),
+                        getMinimumPerSinglePackMeasurement(observableMeasurement),
+                        unitOfMeasure.getMeasurementUnitOne()));
 
 
         Log.d(TAG, "setErrorTo: Error should be set.");
@@ -504,11 +453,11 @@ public class ProductNumericValidationHandler {
     // TODO - Add quantity strings (plurals)
     // https://developer.android.com/guide/topics/resources/string-resource.html#Plurals
 
-    private int getMinimumPerItemMeasurement(Measurement measurement) {
+    private int getMinimumPerSinglePackMeasurement(ObservableMeasurement observableMeasurement) {
 
-        if (measurement.getNumberOfItemsInPack() >= MULTI_PACK_MINIMUM_NO_OF_ITEMS)
-            return measurement.getMinimumMeasurementOne() / measurement.getNumberOfItemsInPack();
+        if (observableMeasurement.getNumberOfPacksInPack() >= MULTI_PACK_MINIMUM_NO_OF_PACKS)
+            return observableMeasurement.getMinimumMeasurementOne() / observableMeasurement.getNumberOfPacksInPack();
 
-        return measurement.getMinimumMeasurementOne();
+        return observableMeasurement.getMinimumMeasurementOne();
     }
 }

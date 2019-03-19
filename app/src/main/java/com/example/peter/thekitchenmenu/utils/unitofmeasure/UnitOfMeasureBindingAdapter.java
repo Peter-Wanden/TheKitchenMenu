@@ -22,7 +22,7 @@ public class UnitOfMeasureBindingAdapter {
 
     private static final String TAG = "UnitOfMeasureBindingAda";
 
-    @BindingAdapter(value = {"app:onUnitOfMeasureSelected", "app:multiPack"}, requireAll = false)
+    @BindingAdapter(value = {"onUnitOfMeasureSelected", "multiPack"}, requireAll = false)
     public static void onUnitOfMeasureSelected(View view,
                                                MeasurementSubType measurementSubType,
                                                boolean isMultiPack) {
@@ -85,23 +85,23 @@ public class UnitOfMeasureBindingAdapter {
                     setTotalOrUnitSeparator(view, isMultiPack);
                     break;
 
-                case R.id.item_size_label:
+                case R.id.single_pack_size_label:
                     setItemSizeLabel(view, unitOfMeasure, isMultiPack);
                     break;
 
-                case R.id.item_editable_measurement_two:
+                case R.id.single_pack_editable_measurement_two:
                     setupPackEditableMeasurements(view, unitOfMeasure, isMultiPack);
                     break;
 
-                case R.id.item_measurement_label_two:
+                case R.id.single_pack_measurement_label_two:
                     setPackMeasurementLabels(view, unitOfMeasure, isMultiPack);
                     break;
 
-                case R.id.item_editable_measurement_one:
+                case R.id.single_pack_editable_measurement_one:
                     setupPackEditableMeasurements(view, unitOfMeasure, isMultiPack);
                     break;
 
-                case R.id.item_measurement_label_one:
+                case R.id.single_pack_measurement_label_one:
                     setPackMeasurementLabels(view, unitOfMeasure, isMultiPack);
                     break;
             }
@@ -121,8 +121,8 @@ public class UnitOfMeasureBindingAdapter {
         EditText editText = (EditText) view;
         int viewId = editText.getId();
 
-        if (!isMultiPack && (viewId == R.id.item_editable_measurement_one ||
-                viewId == R.id.item_editable_measurement_two)) {
+        if (!isMultiPack && (viewId == R.id.single_pack_editable_measurement_one ||
+                viewId == R.id.single_pack_editable_measurement_two)) {
 
             editText.setVisibility(View.GONE);
             return;
@@ -170,14 +170,14 @@ public class UnitOfMeasureBindingAdapter {
         Log.d(TAG, "setInputFilters: " + Arrays.toString(inputFilterFormat));
 
         if (viewId == R.id.pack_editable_measurement_one ||
-                viewId == R.id.item_editable_measurement_one) {
+                viewId == R.id.single_pack_editable_measurement_one) {
 
             editText.setFilters(new InputFilter[] {
                     new DecimalDigitsInputFilter(inputFilterFormat[1], 0)});
         }
 
         if (viewId == R.id.pack_editable_measurement_two ||
-                viewId == R.id.item_editable_measurement_two) {
+                viewId == R.id.single_pack_editable_measurement_two) {
 
             editText.setFilters(new InputFilter[] {
                     new DecimalDigitsInputFilter(inputFilterFormat[2], 0)});
@@ -191,20 +191,20 @@ public class UnitOfMeasureBindingAdapter {
         int viewId = view.getId();
         TextView textView = (TextView) view;
 
-        if (!isMultiPack && (viewId == R.id.item_measurement_label_one ||
-                viewId == R.id.item_measurement_label_two)) {
+        if (!isMultiPack && (viewId == R.id.single_pack_measurement_label_one ||
+                viewId == R.id.single_pack_measurement_label_two)) {
 
             textView.setVisibility(View.GONE);
             return;
         }
 
         if (viewId == R.id.pack_label_measurement_one ||
-                viewId == R.id.item_measurement_label_one) {
+                viewId == R.id.single_pack_measurement_label_one) {
 
             textView.setText(newUnitOfMeasure.getMeasurementUnitOne());
 
         } else if (viewId == R.id.pack_label_measurement_two ||
-                viewId == R.id.item_measurement_label_two) {
+                viewId == R.id.single_pack_measurement_label_two) {
 
             textView.setText(newUnitOfMeasure.getMeasurementUnitTwo());
         }
@@ -220,7 +220,7 @@ public class UnitOfMeasureBindingAdapter {
         if (isMultiPack) {
             TextView itemSize = (TextView) view;
             itemSize.setText(view.getContext().getString(
-                    R.string.item_size, unitOfMeasure.getTypeAsString()));
+                    R.string.single_pack_size, unitOfMeasure.getTypeAsString()));
 
         } else {
             view.setVisibility(View.GONE);

@@ -5,7 +5,7 @@ import android.content.res.Resources;
 
 import com.example.peter.thekitchenmenu.BR;
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.data.entity.Product;
+import com.example.peter.thekitchenmenu.data.model.ObservableProductModel;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
@@ -22,7 +22,7 @@ public class Count extends BaseObservable implements UnitOfMeasure {
     private String subType;
     private String unitCount;
 
-    private int numberOfItemsInPack = 0;
+    private int numberOfPacksInPack = 0;
     private double baseSiUnits = 0;
 
     public Count(Context context) {
@@ -59,23 +59,21 @@ public class Count extends BaseObservable implements UnitOfMeasure {
     }
 
     @Override
-    public Measurement getMinAndMax() {
+    public ObservableMeasurement getMinAndMax() {
 
-        Measurement measurement = new Measurement();
-        measurement.setMinimumMeasurementOne(MINIMUM_COUNT);
-        measurement.setMaximumMeasurementOne(MAXIMUM_COUNT);
+        ObservableMeasurement observableMeasurement = new ObservableMeasurement();
+        observableMeasurement.setMinimumMeasurementOne(MINIMUM_COUNT);
+        observableMeasurement.setMaximumMeasurementOne(MAXIMUM_COUNT);
 
-        return measurement;
+        return observableMeasurement;
     }
 
     @Override
-    public Measurement setNewMeasurementValuesTo(Measurement measurement) {
-
-        return null;
+    public void setNewMeasurementValuesTo(ObservableMeasurement observableMeasurement) {
     }
 
     @Override
-    public boolean setValuesFromProduct(Product product) {
+    public boolean getValuesFromObservableProductModel(ObservableProductModel productModel) {
         return false;
     }
 
@@ -87,9 +85,9 @@ public class Count extends BaseObservable implements UnitOfMeasure {
     @Override
     public boolean setBaseSiUnits(double baseSiUnits) {
 
-        if (numberOfItemsInPack > 1) {
+        if (numberOfPacksInPack > 1) {
 
-            if (baseSiUnits <= MAXIMUM_COUNT && baseSiUnits >= UNIT_COUNT * numberOfItemsInPack) {
+            if (baseSiUnits <= MAXIMUM_COUNT && baseSiUnits >= UNIT_COUNT * numberOfPacksInPack) {
                 this.baseSiUnits = baseSiUnits;
                 notifyPropertyChanged(BR.packMeasurementOne);
                 return true;
@@ -104,23 +102,23 @@ public class Count extends BaseObservable implements UnitOfMeasure {
     }
 
     @Override
-    public boolean setNumberOfItemsInPack(int numberOfItems) {
+    public boolean setNumberOfPacksInPack(int numberOfItems) {
 
         // TODO - When setting number of items, check the size / measurements (if available) do not
         // TODO - exceed MAX
-        if (numberOfItems >= MULTI_PACK_MINIMUM_NO_OF_ITEMS &&
-                numberOfItems <= MULTI_PACK_MAXIMUM_NO_OF_ITEMS) {
+        if (numberOfItems >= MULTI_PACK_MINIMUM_NO_OF_PACKS &&
+                numberOfItems <= MULTI_PACK_MAXIMUM_NO_OF_PACKS) {
 
-            this.numberOfItemsInPack = numberOfItems;
-            notifyPropertyChanged(BR.numberOfItemsInPack);
+            this.numberOfPacksInPack = numberOfItems;
+            notifyPropertyChanged(BR.numberOfPacksInPack);
             return true;
         }
         return false;
     }
 
     @Override @Bindable
-    public int getNumberOfItemsInPack() {
-        return numberOfItemsInPack;
+    public int getNumberOfPacksInPack() {
+        return numberOfPacksInPack;
     }
 
     @Override
@@ -157,22 +155,22 @@ public class Count extends BaseObservable implements UnitOfMeasure {
     }
 
     @Override @Bindable
-    public int getItemMeasurementOne() {
+    public int getSinglePackMeasurementOne() {
         return 0;
     }
 
     @Override
-    public boolean setItemMeasurementOne(int itemMeasurementOne) {
+    public boolean setSinglePackMeasurementOne(int itemMeasurementOne) {
         return false;
     }
 
     @Override @Bindable
-    public int getItemMeasurementTwo() {
+    public int getSinglePackMeasurementTwo() {
         return 0;
     }
 
     @Override
-    public boolean setItemMeasurementTwo(int itemMeasurementTwo) {
+    public boolean setSinglePackMeasurementTwo(int itemMeasurementTwo) {
         return false;
     }
 
@@ -182,7 +180,7 @@ public class Count extends BaseObservable implements UnitOfMeasure {
                 "\ntype='" + type + '\'' +
                 "\n, subType='" + subType + '\'' +
                 "\n, unitCount='" + unitCount + '\'' +
-                "\n, numberOfItemsInPack=" + numberOfItemsInPack +
+                "\n, numberOfPacksInPack=" + numberOfPacksInPack +
                 "\n, baseSiUnits=" + baseSiUnits +
                 '}';
     }

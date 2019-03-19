@@ -73,6 +73,7 @@
                         bind:layout="@layout/product_user_data_editable">
                     </fragment>
 
+                    <!-- TODO - Instead of uneditable, call it product view -->
                     <include
                         android:id="@+id/product_image_uneditable"
                         layout="@layout/product_image_uneditable"

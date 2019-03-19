@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
-import com.example.peter.thekitchenmenu.data.entity.Product;
+import com.example.peter.thekitchenmenu.data.model.ObservableProductModel;
 
 public interface UnitOfMeasure {
 
@@ -11,24 +11,25 @@ public interface UnitOfMeasure {
     String getMeasurementUnitOne();
     String getMeasurementUnitTwo();
 
-    Measurement getMinAndMax();
-    Measurement setNewMeasurementValuesTo(Measurement measurement);
-    boolean setValuesFromProduct(Product product);
+    ObservableMeasurement getMinAndMax();
+
+    void setNewMeasurementValuesTo(ObservableMeasurement observableMeasurement);
+    boolean getValuesFromObservableProductModel(ObservableProductModel productModel);
 
     double getBaseSiUnits();
     boolean setBaseSiUnits(double baseSiUnits);
 
-    boolean setNumberOfItemsInPack(int numberOfItems);
-    int getNumberOfItemsInPack();
+    boolean setNumberOfPacksInPack(int numberOfItems);
+    int getNumberOfPacksInPack();
 
     int getPackMeasurementOne();
     boolean setPackMeasurementOne(int packMeasurementOne);
     int getPackMeasurementTwo();
     boolean setPackMeasurementTwo(int packMeasurementTwo);
-    int getItemMeasurementOne();
-    boolean setItemMeasurementOne(int itemMeasurementOne);
-    int getItemMeasurementTwo();
-    boolean setItemMeasurementTwo(int itemMeasurementTwo);
+    int getSinglePackMeasurementOne();
+    boolean setSinglePackMeasurementOne(int itemMeasurementOne);
+    int getSinglePackMeasurementTwo();
+    boolean setSinglePackMeasurementTwo(int itemMeasurementTwo);
 
     int[] getInputFilterFormat();
 
