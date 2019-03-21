@@ -22,7 +22,7 @@ public class Count extends BaseObservable implements UnitOfMeasure {
     private String subType;
     private String unitCount;
 
-    private int numberOfPacksInPack = 0;
+    private int numberOfItems = 0;
     private double baseSiUnits = 0;
 
     public Count(Context context) {
@@ -59,17 +59,17 @@ public class Count extends BaseObservable implements UnitOfMeasure {
     }
 
     @Override
-    public ObservableMeasurement getMinAndMax() {
+    public ObservableMeasurementModel getMinAndMax() {
 
-        ObservableMeasurement observableMeasurement = new ObservableMeasurement();
-        observableMeasurement.setMinimumMeasurementOne(MINIMUM_COUNT);
-        observableMeasurement.setMaximumMeasurementOne(MAXIMUM_COUNT);
+        ObservableMeasurementModel observableMeasurementModel = new ObservableMeasurementModel();
+        observableMeasurementModel.setMinimumMeasurementOne(MINIMUM_COUNT);
+        observableMeasurementModel.setMaximumMeasurementOne(MAXIMUM_COUNT);
 
-        return observableMeasurement;
+        return observableMeasurementModel;
     }
 
     @Override
-    public void setNewMeasurementValuesTo(ObservableMeasurement observableMeasurement) {
+    public void setNewMeasurementValuesTo(ObservableMeasurementModel observableMeasurementModel) {
     }
 
     @Override
@@ -83,11 +83,11 @@ public class Count extends BaseObservable implements UnitOfMeasure {
     }
 
     @Override
-    public boolean setBaseSiUnits(double baseSiUnits) {
+    public boolean baseSiUnitsAreSet(double baseSiUnits) {
 
-        if (numberOfPacksInPack > 1) {
+        if (numberOfItems > 1) {
 
-            if (baseSiUnits <= MAXIMUM_COUNT && baseSiUnits >= UNIT_COUNT * numberOfPacksInPack) {
+            if (baseSiUnits <= MAXIMUM_COUNT && baseSiUnits >= UNIT_COUNT * numberOfItems) {
                 this.baseSiUnits = baseSiUnits;
                 notifyPropertyChanged(BR.packMeasurementOne);
                 return true;
@@ -102,23 +102,23 @@ public class Count extends BaseObservable implements UnitOfMeasure {
     }
 
     @Override
-    public boolean setNumberOfPacksInPack(int numberOfItems) {
+    public boolean setNumberOfItems(int numberOfItems) {
 
         // TODO - When setting number of items, check the size / measurements (if available) do not
         // TODO - exceed MAX
-        if (numberOfItems >= MULTI_PACK_MINIMUM_NO_OF_PACKS &&
-                numberOfItems <= MULTI_PACK_MAXIMUM_NO_OF_PACKS) {
+        if (numberOfItems >= MULTI_PACK_MINIMUM_NO_OF_ITEMS &&
+                numberOfItems <= MULTI_PACK_MAXIMUM_NO_OF_ITEMS) {
 
-            this.numberOfPacksInPack = numberOfItems;
-            notifyPropertyChanged(BR.numberOfPacksInPack);
+            this.numberOfItems = numberOfItems;
+            notifyPropertyChanged(BR.numberOfItems);
             return true;
         }
         return false;
     }
 
     @Override @Bindable
-    public int getNumberOfPacksInPack() {
-        return numberOfPacksInPack;
+    public int getNumberOfItems() {
+        return numberOfItems;
     }
 
     @Override
@@ -155,22 +155,22 @@ public class Count extends BaseObservable implements UnitOfMeasure {
     }
 
     @Override @Bindable
-    public int getSinglePackMeasurementOne() {
+    public int getItemMeasurementOne() {
         return 0;
     }
 
     @Override
-    public boolean setSinglePackMeasurementOne(int itemMeasurementOne) {
+    public boolean setItemMeasurementOne(int itemMeasurementOne) {
         return false;
     }
 
     @Override @Bindable
-    public int getSinglePackMeasurementTwo() {
+    public int getItemMeasurementTwo() {
         return 0;
     }
 
     @Override
-    public boolean setSinglePackMeasurementTwo(int itemMeasurementTwo) {
+    public boolean setItemMeasurementTwo(int itemMeasurementTwo) {
         return false;
     }
 
@@ -180,7 +180,7 @@ public class Count extends BaseObservable implements UnitOfMeasure {
                 "\ntype='" + type + '\'' +
                 "\n, subType='" + subType + '\'' +
                 "\n, unitCount='" + unitCount + '\'' +
-                "\n, numberOfPacksInPack=" + numberOfPacksInPack +
+                "\n, numberOfItems=" + numberOfItems +
                 "\n, baseSiUnits=" + baseSiUnits +
                 '}';
     }

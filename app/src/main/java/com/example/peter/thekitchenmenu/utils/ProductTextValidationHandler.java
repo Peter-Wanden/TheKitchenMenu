@@ -2,9 +2,11 @@ package com.example.peter.thekitchenmenu.utils;
 
 import android.app.Application;
 import android.content.res.Resources;
+import android.util.Log;
 import android.widget.EditText;
 
 import com.example.peter.thekitchenmenu.R;
+import com.example.peter.thekitchenmenu.data.entity.Product;
 import com.example.peter.thekitchenmenu.viewmodels.ProductEditorViewModel;
 
 public class ProductTextValidationHandler {
@@ -15,6 +17,7 @@ public class ProductTextValidationHandler {
 
     private ProductEditorViewModel viewModel;
     private Resources resources;
+
     private int viewId;
     private String newText;
 

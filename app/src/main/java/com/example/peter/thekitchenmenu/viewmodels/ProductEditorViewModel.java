@@ -1,7 +1,6 @@
 package com.example.peter.thekitchenmenu.viewmodels;
 
 import android.app.Application;
-import android.content.Context;
 import android.util.Log;
 
 import com.example.peter.thekitchenmenu.data.entity.Product;
@@ -9,27 +8,24 @@ import com.example.peter.thekitchenmenu.data.model.ObservableProductModel;
 import com.example.peter.thekitchenmenu.utils.ObservableViewModel;
 import com.example.peter.thekitchenmenu.utils.ProductTextValidationHandler;
 import com.example.peter.thekitchenmenu.utils.ProductNumericValidationHandler;
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.ObservableMeasurement;
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubType;
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasure;
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureClassSelector;
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.ObservableMeasurementModel;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.Bindable;
 import androidx.databinding.ObservableBoolean;
 import androidx.lifecycle.MutableLiveData;
 
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MULTI_PACK_MINIMUM_NO_OF_PACKS;
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MULTI_PACK_MINIMUM_NO_OF_ITEMS;
 
 public class ProductEditorViewModel extends ObservableViewModel {
 
     private static final String TAG = "ProductEditorViewModel";
 
-    private Context applicationContext;
     private ProductTextValidationHandler textValidationHandler;
     private ProductNumericValidationHandler numericValidationHandler;
 
     private MutableLiveData<Product> productEntity = new MutableLiveData<>();
+    private ObservableProductModel productModel = new ObservableProductModel();;
 
     // TODO - Change category and shelf life to an enum
 
@@ -42,14 +38,11 @@ public class ProductEditorViewModel extends ObservableViewModel {
     private boolean packSizeValidated;
 
     // Measurements
-    private ObservableProductModel productModel = new ObservableProductModel();
     private ObservableBoolean multiPack = new ObservableBoolean(false);
-    private ObservableMeasurement measurement;
+    private ObservableMeasurementModel measurement;
 
     public ProductEditorViewModel(@NonNull Application applicationContext) {
         super(applicationContext);
-        this.applicationContext = applicationContext;
-
 
         Product productEntity = new Product(
                 0,
@@ -68,26 +61,17 @@ public class ProductEditorViewModel extends ObservableViewModel {
                 "");
         this.productEntity.setValue(productEntity);
 
-        if (this.productEntity.getValue() != null) {
-
-            productModel.updateModelFromEntity(this.productEntity.getValue());
-
-            if (isMultiPack()) {
-                multiPack.set(true);
-            }
-        }
-
-        measurement = new ObservableMeasurement();
+        measurement = new ObservableMeasurementModel();
 
         numericValidationHandler = new ProductNumericValidationHandler(
                 applicationContext,
-                this,
-                measurement);
+                this);
 
         textValidationHandler = new ProductTextValidationHandler(
                 applicationContext,
                 this);
 
+        multiPack.set(true);
     }
 
     public ProductTextValidationHandler getTextValidationHandler() {
@@ -116,14 +100,14 @@ public class ProductEditorViewModel extends ObservableViewModel {
     }
 
     private boolean isMultiPack() {
-        return productModel.getNumberOfPacks() >= MULTI_PACK_MINIMUM_NO_OF_PACKS;
+        return productModel.getNumberOfItems() >= MULTI_PACK_MINIMUM_NO_OF_ITEMS;
     }
 
-    public ObservableMeasurement getMeasurement() {
+    public ObservableMeasurementModel getMeasurement() {
         return measurement;
     }
 
-    public void setMeasurement(ObservableMeasurement measurement) {
+    public void setMeasurement(ObservableMeasurementModel measurement) {
         Log.d(TAG, "setMeasurement: " + measurement.toString());
         this.measurement = measurement;
     }
@@ -149,7 +133,7 @@ public class ProductEditorViewModel extends ObservableViewModel {
         this.packSizeValidated = packSizeValidated;
     }
 
-    public void setNumberOfPacksInPackValidated(boolean numberOfItemsInPackValidated) {
+    public void setNumberOfItemsInPackValidated(boolean numberOfItemsInPackValidated) {
         this.numberOfItemsInPackValidated = numberOfItemsInPackValidated;
     }
 
@@ -160,28 +144,29 @@ public class ProductEditorViewModel extends ObservableViewModel {
             Log.d(TAG, "printProduct: " + productEntity.getValue().toString());
     }
 
-    // Changes the reference to the productEntity, triggering LiveData to update the database.
+    // Changes the reference to a new productEntity, triggering LiveData to update the database.
     private void saveProductEntity() {
 
-        // TODO - Create a new product entity, Swap in the values from the model, set the new
-        // TODO - entity over the old entity
-        Product oldProduct = productEntity.getValue();
-        Product newProduct = new Product();
+        // TODO - Check all validation bool's before saving ProductEntity
+        if (productEntity.getValue() != null) {
 
-        newProduct.setDescription(oldProduct.getDescription());
-        newProduct.setMadeBy(oldProduct.getMadeBy());
-        newProduct.setCategory(oldProduct.getCategory());
-        newProduct.setNumberOfPacks(oldProduct.getNumberOfPacks());
-        newProduct.setShelfLife(oldProduct.getShelfLife());
-        newProduct.setBaseSiUnits(oldProduct.getBaseSiUnits());
-        newProduct.setUnitOfMeasureSubType(oldProduct.getUnitOfMeasureSubType());
-        newProduct.setPackAvePrice(oldProduct.getPackAvePrice());
-        newProduct.setCreatedBy(oldProduct.getCreatedBy());
-        newProduct.setRemoteImageUri(oldProduct.getRemoteImageUri());
-        newProduct.setCreateDate(oldProduct.getCreateDate());
-        newProduct.setLastUpdate(oldProduct.getLastUpdate());
-        newProduct.setRemoteProductId(oldProduct.getRemoteProductId());
+            Product newProduct = new Product();
 
-        productEntity.setValue(newProduct);
+            newProduct.setDescription(productModel.getDescription());
+            newProduct.setMadeBy(productModel.getMadeBy());
+            newProduct.setCategory(productModel.getCategory());
+            newProduct.setNumberOfItems(productModel.getNumberOfItems());
+            newProduct.setShelfLife(productModel.getShelfLife());
+            newProduct.setBaseSiUnits(productModel.getBaseSiUnits());
+            newProduct.setUnitOfMeasureSubType(productModel.getUnitOfMeasureSubType());
+            newProduct.setPackAvePrice(productModel.getPackAvePrice());
+            newProduct.setCreatedBy(productModel.getCreatedBy());
+            newProduct.setRemoteImageUri(productModel.getRemoteImageUri());
+            newProduct.setCreateDate(productModel.getCreateDate());
+            newProduct.setLastUpdate(productModel.getLastUpdate());
+            newProduct.setRemoteProductId(productModel.getRemoteProductId());
+
+            productEntity.setValue(newProduct);
+        }
     }
 }

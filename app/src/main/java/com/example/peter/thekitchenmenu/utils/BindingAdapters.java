@@ -9,7 +9,7 @@ import com.example.peter.thekitchenmenu.R;
 
 import androidx.databinding.BindingAdapter;
 
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MULTI_PACK_MAXIMUM_NO_OF_PACKS;
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MULTI_PACK_MAXIMUM_NO_OF_ITEMS;
 public class BindingAdapters {
 
     private static final String TAG = "BindingAdapters";
@@ -25,7 +25,7 @@ public class BindingAdapters {
 
             if (viewId != View.NO_ID) {
 
-                if (viewId == R.id.editable_packs_in_pack) {
+                if (viewId == R.id.editable_items_in_pack) {
 
                     EditText noOfItemsInPack = (EditText) view;
                     setupItemsInPackEditText(noOfItemsInPack, checked);
@@ -44,7 +44,7 @@ public class BindingAdapters {
     private static void setInputFilter(EditText noOfItemsInPack) {
 
         int numberOfDigits = 0;
-        int digits = MULTI_PACK_MAXIMUM_NO_OF_PACKS;
+        int digits = MULTI_PACK_MAXIMUM_NO_OF_ITEMS;
 
         while(digits > 0) {
             numberOfDigits ++;

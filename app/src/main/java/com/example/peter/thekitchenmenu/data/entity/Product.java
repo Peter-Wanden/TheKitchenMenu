@@ -26,8 +26,7 @@ public class Product implements Parcelable {
     public static final String DESCRIPTION = "description";
     public static final String MADE_BY = "madeBy";
     public static final String CATEGORY = "category";
-    public static final String MULTI_PACK = "multi_pack";
-    public static final String NUMBER_OF_PACKS = "number_of_packs";
+    public static final String NUMBER_OF_ITEMS = "number_of_items";
     public static final String SHELF_LIFE = "shelfLife";
     public static final String BASE_SI_UNITS = "baseSiUnits";
     public static final String UNIT_OF_MEASURE_SUB_TYPE = "unitOfMeasureSubType";
@@ -52,8 +51,8 @@ public class Product implements Parcelable {
     @ColumnInfo(name = CATEGORY)
     private int category;
 
-    @ColumnInfo(name = NUMBER_OF_PACKS)
-    private int numberOfPacks;
+    @ColumnInfo(name = NUMBER_OF_ITEMS)
+    private int numberOfItems;
 
     @ColumnInfo(name = SHELF_LIFE)
     private int shelfLife;
@@ -90,7 +89,7 @@ public class Product implements Parcelable {
                    String madeBy,
                    int category,
                    int shelfLife,
-                   int numberOfPacks,
+                   int numberOfItems,
                    double baseSiUnits,
                    int unitOfMeasureSubType,
                    double packAvePrice,
@@ -104,7 +103,7 @@ public class Product implements Parcelable {
         this.description = description;
         this.madeBy = madeBy;
         this.category = category;
-        this.numberOfPacks = numberOfPacks;
+        this.numberOfItems = numberOfItems;
         this.shelfLife = shelfLife;
         this.baseSiUnits = baseSiUnits;
         this.unitOfMeasureSubType = unitOfMeasureSubType;
@@ -122,7 +121,7 @@ public class Product implements Parcelable {
         description = in.readString();
         madeBy = in.readString();
         category = in.readInt();
-        numberOfPacks = in.readInt();
+        numberOfItems = in.readInt();
         shelfLife = in.readInt();
         baseSiUnits = in.readDouble();
         unitOfMeasureSubType = in.readInt();
@@ -140,7 +139,7 @@ public class Product implements Parcelable {
         dest.writeString(description);
         dest.writeString(madeBy);
         dest.writeInt(category);
-        dest.writeInt(numberOfPacks);
+        dest.writeInt(numberOfItems);
         dest.writeInt(shelfLife);
         dest.writeDouble(baseSiUnits);
         dest.writeInt(unitOfMeasureSubType);
@@ -177,7 +176,7 @@ public class Product implements Parcelable {
         result.put(DESCRIPTION, description);
         result.put(MADE_BY, madeBy);
         result.put(CATEGORY, category);
-        result.put(NUMBER_OF_PACKS, numberOfPacks);
+        result.put(NUMBER_OF_ITEMS, numberOfItems);
         result.put(SHELF_LIFE, shelfLife);
         result.put(BASE_SI_UNITS, baseSiUnits);
         result.put(UNIT_OF_MEASURE_SUB_TYPE, unitOfMeasureSubType);
@@ -197,7 +196,7 @@ public class Product implements Parcelable {
                 "\n description='" + description + '\'' +
                 "\n madeBy='" + madeBy + '\'' +
                 "\n category=" + category + '\'' +
-                "\n number_of_items=" + numberOfPacks + '\'' +
+                "\n number_of_items=" + numberOfItems + '\'' +
                 "\n shelfLife=" + shelfLife + '\'' +
                 "\n baseSiUnits=" + baseSiUnits +
                 "\n unitOfMeasureSubType=" + unitOfMeasureSubType + '\'' +
@@ -243,12 +242,12 @@ public class Product implements Parcelable {
         this.category = category;
     }
 
-    public int getNumberOfPacks() {
-        return numberOfPacks;
+    public int getNumberOfItems() {
+        return numberOfItems;
     }
 
-    public void setNumberOfPacks(int numberOfPacks) {
-        this.numberOfPacks = numberOfPacks;
+    public void setNumberOfItems(int numberOfItems) {
+        this.numberOfItems = numberOfItems;
     }
 
     public int getShelfLife() {

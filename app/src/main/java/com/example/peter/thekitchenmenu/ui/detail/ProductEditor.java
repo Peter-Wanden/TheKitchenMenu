@@ -14,6 +14,8 @@ import com.example.peter.thekitchenmenu.data.entity.Product;
 import com.example.peter.thekitchenmenu.databinding.ProductEditorBinding;
 import com.example.peter.thekitchenmenu.utils.ShowHideSoftInput;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementType;
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasure;
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureClassSelector;
 import com.example.peter.thekitchenmenu.viewmodels.ProductEditorViewModel;
 
 import java.util.ArrayList;
@@ -52,6 +54,7 @@ public class ProductEditor extends Fragment {
         setViewModel();
         setValidationHandlers();
         setProductInstanceVariables();
+        setObservers();
         setupSpinners();
 
         return rootView;
@@ -60,12 +63,6 @@ public class ProductEditor extends Fragment {
     private void setViewModel() {
 
         viewModel = ViewModelProviders.of(requireActivity()).get(ProductEditorViewModel.class);
-
-        final Observer<Product> productObserver = product
-                -> Log.d(TAG, "onChanged: Product entity has been updated");
-
-        viewModel.getProductEntity().observe(this, productObserver);
-
         productEditor.setProductEditorViewModel(viewModel);
     }
 
@@ -79,6 +76,54 @@ public class ProductEditor extends Fragment {
 
         productEditor.setMeasurement(viewModel.getMeasurement());
         productEditor.setProductModel(viewModel.getProductModel());
+    }
+
+    private void setObservers() {
+
+        final Observer<Product> productObserver = product -> {
+
+            if (product != null) {
+
+                viewModel.getProductModel().getValuesFromEntity(product);
+                viewModel.getMeasurement().getNumericValuesFromProductModel(
+                        viewModel.getProductModel());
+
+                UnitOfMeasure unitOfMeasure = UnitOfMeasureClassSelector.getClassWithSubType(
+                        requireActivity(), viewModel.getMeasurement().getMeasurementSubType());
+
+                Log.d(TAG, "setObservers: Unit of measure from measurement is: " +
+                        unitOfMeasure.getMeasurementSubType());
+
+                boolean numberOfItemsAreSet = unitOfMeasure.setNumberOfItems(
+                        viewModel.getMeasurement().getNumberOfItems());
+
+                if (numberOfItemsAreSet) {
+
+                    Log.d(TAG, "setObservers: Number of items are set!");
+                    Log.d(TAG, "setObservers: Setting base units to: " +
+                            viewModel.getMeasurement().getBaseSiUnits());
+
+                    if (unitOfMeasure.baseSiUnitsAreSet(
+                            viewModel.getMeasurement().getBaseSiUnits())) {
+
+                        viewModel.getMeasurement().setPackMeasurementOne(
+                                unitOfMeasure.getPackMeasurementOne());
+
+                        Log.d(TAG, "setObservers: Setting pack measurement one to: " +
+                                unitOfMeasure.getPackMeasurementOne());
+
+                        viewModel.getMeasurement().setPackMeasurementTwo(
+                                unitOfMeasure.getPackMeasurementTwo());
+
+                        Log.d(TAG, "setObservers: Setting pack measurement two to: " +
+                                unitOfMeasure.getPackMeasurementTwo());
+
+                    } else Log.d(TAG, "setObservers: Cannot set base units!");
+
+                } else Log.d(TAG, "setObservers: Number of items are not set");
+            }};
+
+        viewModel.getProductEntity().observe(this, productObserver);
     }
 
     private void setupSpinners() {

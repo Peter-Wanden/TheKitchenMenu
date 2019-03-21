@@ -11,8 +11,8 @@ import static com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementUn
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementUnits.KILOGRAMS;
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.BASE_SI_UNIT_MASS;
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MAX_MASS;
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MULTI_PACK_MAXIMUM_NO_OF_PACKS;
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MULTI_PACK_MINIMUM_NO_OF_PACKS;
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MULTI_PACK_MAXIMUM_NO_OF_ITEMS;
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MULTI_PACK_MINIMUM_NO_OF_ITEMS;
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.NO_INPUT;
 
 public class MetricMass implements UnitOfMeasure {
@@ -30,19 +30,23 @@ public class MetricMass implements UnitOfMeasure {
     private static final double UNIT_GRAM = BASE_SI_UNIT_MASS;
 
     // Min and max measurements
-    private double minimumBaseSiMeasurement = 0; // TODO - set this to one when all is said and done
+    private double minimumBaseSiMeasurement = UNIT_GRAM;
     private double maximumBaseSiMeasurement = MAX_MASS;
-    private int minimumNumberOfPacks = MULTI_PACK_MINIMUM_NO_OF_PACKS;
-    private int maximumNumberOfPacks = MULTI_PACK_MAXIMUM_NO_OF_PACKS;
+    private int minimumNumberOfItems = MULTI_PACK_MINIMUM_NO_OF_ITEMS;
+    private int maximumNumberOfItems = MULTI_PACK_MAXIMUM_NO_OF_ITEMS;
 
     // Current measurements
-    private int numberOfPacksInPack = 1;
-    private double singlePackSizeInBaseUnits = minimumBaseSiMeasurement;
+    private int numberOfItems = 1;
+    private double itemSizeInBaseSiUnits = minimumBaseSiMeasurement;
     private double baseSiUnits = 0.;
     private double packMeasurementInKilograms = 0;
     private double packMeasurementInGrams = 0;
-    private double singlePackMeasurementInKilograms = 0;
-    private double singlePackMeasurementInGrams = 0;
+    private double itemMeasurementInKilograms = 0;
+    private double itemMeasurementInGrams = 0;
+
+    private static final boolean PACK_MEASUREMENT = false;
+    private static final boolean ITEM_MEASUREMENT = true;
+    private boolean lastMeasurementUpdated = false; // false for pack, true for item measurement.
 
     MetricMass(Context context) {
 
@@ -79,32 +83,70 @@ public class MetricMass implements UnitOfMeasure {
     }
 
     @Override
-    public boolean setNumberOfPacksInPack(int numberOfPacksInPack) {
+    public boolean setNumberOfItems(int numberOfItemsInPack) {
 
-        Log.d(TAG, "setNumberOfPacks: " + numberOfPacksInPack);
+        Log.d(TAG, "setNumberOfItems: " + numberOfItemsInPack);
 
-        if (newUnitOfMeasureIsBeingInitialised() &&
-                numberOfPacksInAPackAreWithinBounds(numberOfPacksInPack)) {
+        if (numberOfItemsInPackAreWithinBounds(numberOfItemsInPack)) {
 
-            Log.d(TAG, "setNumberOfPacks: New unit of measure is being initialised " +
-                    "AND numberOfPacksInAPackAreWithinBounds - Setting number " +
-                    "of packs in pack to: " + numberOfPacksInPack);
+            Log.d(TAG, "setNumberOfItems: number of items is within bounds");
 
-            this.numberOfPacksInPack = numberOfPacksInPack;
+            if (newUnitOfMeasureIsBeingInitialised()) {
 
-            return true;
+                Log.d(TAG, "setNumberOfItems: New unit of measure is being initialised " +
+                        "- Setting number of items in pack to: " + numberOfItemsInPack);
 
-        } else {
-
-            if (singlePackSizeNotLessThanSmallestUnit(numberOfPacksInPack) &&
-                    numberOfPacksInAPackAreWithinBounds(numberOfPacksInPack)) {
-
-                setPacksInPack(numberOfPacksInPack);
+                this.numberOfItems = numberOfItemsInPack;
 
                 return true;
+
+            } else {
+
+                if (lastMeasurementUpdated == PACK_MEASUREMENT) {
+
+                    Log.d(TAG, "setNumberOfItems: last measurement updated was pack");
+
+                    if (itemSizeNotLessThanSmallestUnit(numberOfItemsInPack)) {
+
+                        setItemsInPackByAdjustingItemSize(numberOfItemsInPack);
+
+                        return true;
+                    }
+
+                    Log.d(TAG, "setNumberOfItems: item size would be smaller than " +
+                            "smallest item, aborting");
+
+
+                } else if (lastMeasurementUpdated == ITEM_MEASUREMENT) {
+
+                    Log.d(TAG, "setNumberOfItems: last measurement updated was item");
+
+                    if (itemSizeTimesNumberOfItemsDoNotExceedMaxMass(numberOfItemsInPack)) {
+
+                        setItemsInPackByAdjustingPackSize(numberOfItemsInPack);
+
+                        return true;
+
+                    }
+                    Log.d(TAG, "setNumberOfItems: item size will exceed max mass, " +
+                            "cannot set number of items, aborting");
+                    return false;
+                }
             }
+
         }
         return false;
+    }
+
+    private void setItemsInPackByAdjustingPackSize(int numberOfItemsInPack) {
+
+        this.numberOfItems = numberOfItemsInPack;
+        double newBaseSiUnitSize = itemSizeInBaseSiUnits * numberOfItemsInPack;
+        boolean baseUnitsAreNowSet = baseSiUnitsAreSet(newBaseSiUnitSize);
+
+        Log.d(TAG, "setItemsInPackByAdjustingPackSize: number of items: " + numberOfItemsInPack);
+        Log.d(TAG, "setItemsInPackByAdjustingPackSize: new base unit size: " + newBaseSiUnitSize);
+        Log.d(TAG, "setItemsInPackByAdjustingPackSize: base units are set: " + baseUnitsAreNowSet);
     }
 
     private boolean newUnitOfMeasureIsBeingInitialised() {
@@ -112,77 +154,68 @@ public class MetricMass implements UnitOfMeasure {
         return baseSiUnits == NO_INPUT;
     }
 
-    private boolean numberOfPacksInAPackAreWithinBounds(int numberOfPacksInPack) {
+    private boolean numberOfItemsInPackAreWithinBounds(int numberOfItemsInPack) {
 
-        boolean result = numberOfPacksInPack >= minimumNumberOfPacks &&
-                numberOfPacksInPack <= maximumNumberOfPacks;
+        boolean result = numberOfItemsInPack >= minimumNumberOfItems &&
+                numberOfItemsInPack <= maximumNumberOfItems;
 
-        Log.d(TAG, "numberOfPacksInAPackAreWithinBounds: " + result);
-
-        return result;
-    }
-
-    private boolean singlePackSizeNotLessThanSmallestUnit(int numberOfPacks) {
-
-        boolean result = numberOfPacks / singlePackSizeInBaseUnits >= minimumBaseSiMeasurement;
-        Log.d(TAG, "singlePackSizeNotLessThanSmallestUnit: " + result);
+        Log.d(TAG, "numberOfItemsInPackAreWithinBounds: " + result);
 
         return result;
     }
 
-    private void setPacksInPack(int numberOfPacksInPack) {
+    private boolean itemSizeNotLessThanSmallestUnit(int numberOfItemsInPack) {
 
-        this.numberOfPacksInPack = numberOfPacksInPack;
-        singlePackSizeInBaseUnits = baseSiUnits / numberOfPacksInPack;
-        singlePackMeasurementInGrams = getMeasurementInGrams(singlePackSizeInBaseUnits);
-        singlePackMeasurementInKilograms = getMeasurementInKilograms(singlePackSizeInBaseUnits);
+        boolean result = numberOfItemsInPack / itemSizeInBaseSiUnits >= minimumBaseSiMeasurement;
+        Log.d(TAG, "itemSizeNotLessThanSmallestUnit: " + result);
 
-        // This needs updating every time the pack or single pack measurements change
-        maximumNumberOfPacks = (int) singlePackSizeInBaseUnits / MAX_MASS;
+        return result;
+    }
 
-        Log.d(TAG, "setNumberOfPacks: single packSize: " + singlePackSizeInBaseUnits + " " +
-                singlePackMeasurementInKilograms + "kg " +
-                singlePackMeasurementInGrams + "grams");
+    private void setItemsInPackByAdjustingItemSize(int numberOfItemsInPack) {
+
+        this.numberOfItems = numberOfItemsInPack;
+        setItemMeasurement();
     }
 
     @Override
-    public ObservableMeasurement getMinAndMax() {
+    public ObservableMeasurementModel getMinAndMax() {
 
-        ObservableMeasurement observableMeasurement = new ObservableMeasurement();
-        observableMeasurement.setNumberOfPacksInPack(numberOfPacksInPack);
+        ObservableMeasurementModel observableMeasurementModel = new ObservableMeasurementModel();
+        observableMeasurementModel.setNumberOfItems(numberOfItems);
 
-        if (numberOfPacksInPack >= MULTI_PACK_MINIMUM_NO_OF_PACKS)
-            observableMeasurement.setMinimumMeasurementOne((int) minimumMultiPackMeasurement());
-        else observableMeasurement.setMinimumMeasurementOne((int) minimumBaseSiMeasurement);
+        if (numberOfItems >= MULTI_PACK_MINIMUM_NO_OF_ITEMS)
+            observableMeasurementModel.setMinimumMeasurementOne((int) minimumMultiPackMeasurement());
+        else observableMeasurementModel.setMinimumMeasurementOne((int) minimumBaseSiMeasurement);
 
-        observableMeasurement.setMinimumMeasurementTwo(0);
-        observableMeasurement.setMaximumMeasurementOne(0);
-        observableMeasurement.setMaximumMeasurementTwo(getMeasurementInKilograms(MAX_MASS));
+        observableMeasurementModel.setMinimumMeasurementTwo(0);
+        observableMeasurementModel.setMaximumMeasurementOne(0);
+        observableMeasurementModel.setMaximumMeasurementTwo(getMeasurementInKilograms(MAX_MASS));
 
-        return observableMeasurement;
+        return observableMeasurementModel;
     }
 
     private double minimumMultiPackMeasurement() {
-        return minimumBaseSiMeasurement * numberOfPacksInPack;
+        return minimumBaseSiMeasurement * numberOfItems;
     }
 
     @Override
     public boolean getValuesFromObservableProductModel(ObservableProductModel productModel) {
 
-        boolean baseSiUnitsAreSet = setBaseSiUnits(productModel.getBaseSiUnits());
-        boolean numberOfPacksAreSet = setNumberOfPacksInPack(productModel.getNumberOfPacks());
+        boolean baseSiUnitsAreSet = baseSiUnitsAreSet(productModel.getBaseSiUnits());
+        boolean numberOfItemsAreSet = setNumberOfItems(productModel.getNumberOfItems());
 
-        Log.d(TAG, "getValuesFromObservableProductModel: number of packs is set: " +
-                numberOfPacksAreSet);
+        Log.d(TAG, "getValuesFromObservableProductModel: number of items are set: " +
+                numberOfItemsAreSet);
         Log.d(TAG, "getValuesFromObservableProductModel: base units are set: " +
                 baseSiUnitsAreSet);
 
-        return numberOfPacksAreSet && baseSiUnitsAreSet;
+        return numberOfItemsAreSet && baseSiUnitsAreSet;
     }
 
     @Override
-    public int getNumberOfPacksInPack() {
-        return numberOfPacksInPack;
+    public int getNumberOfItems() {
+        return numberOfItems;
     }
 
     @Override
@@ -191,30 +224,17 @@ public class MetricMass implements UnitOfMeasure {
     }
 
     @Override
-    public boolean setBaseSiUnits(double baseSiUnits) {
+    public boolean baseSiUnitsAreSet(double baseSiUnits) {
 
-        Log.d(TAG, "setBaseSiUnits: measurement received: " + baseSiUnits);
-        Log.d(TAG, "setBaseSiUnits: " +
-                "max is: " + maximumBaseSiMeasurement + " min is: " + minimumBaseSiMeasurement);
+        Log.d(TAG, "baseSiUnitsAreSet: measurement received: " + baseSiUnits);
+        Log.d(TAG, "baseSiUnitsAreSet: " + "minimum measurement for a pack is: "
+                + minimumMultiPackMeasurement() + "max is: " + maximumBaseSiMeasurement);
 
-        if (isMultiPack()) {
+        if (baseSiUnitsAreWithinBounds(baseSiUnits)) {
 
-            if (baseSiUnitsAreWithinBounds(baseSiUnits)) {
-
-                Log.d(TAG, "setBaseSiUnits: setting base Si for multiPack to: " + baseSiUnits);
-                this.baseSiUnits = baseSiUnits;
-                setPackMeasurement();
-                setPacksInPack(numberOfPacksInPack);
-
-                return true;
-            }
-            return false;
-
-        } else if (baseSiUnitsAreWithinBounds(baseSiUnits)) {
-
-            Log.d(TAG, "setBaseSiUnits: setting baseSi for single pack");
             this.baseSiUnits = baseSiUnits;
             setPackMeasurement();
+            setItemMeasurement();
 
             return true;
 
@@ -225,15 +245,33 @@ public class MetricMass implements UnitOfMeasure {
         return false;
     }
 
-    private boolean baseSiUnitsAreWithinBounds(double baseSiUnits) {
-        boolean result = baseSiUnits <= maximumBaseSiMeasurement &&
-                baseSiUnits >= minimumBaseSiMeasurement;
-        Log.d(TAG, "baseSiUnitsAreWithinBounds: " + result);
-        return baseSiUnits <= maximumBaseSiMeasurement && baseSiUnits >= minimumBaseSiMeasurement;
+    private boolean itemSizeTimesNumberOfItemsDoNotExceedMaxMass(int numberOfItemsInPack) {
+        return itemSizeInBaseSiUnits * numberOfItemsInPack <= MAX_MASS;
     }
 
-    private boolean isMultiPack() {
-        return numberOfPacksInPack >= MULTI_PACK_MINIMUM_NO_OF_PACKS;
+    private void setItemMeasurement() {
+
+        itemSizeInBaseSiUnits = baseSiUnits / numberOfItems;
+        itemMeasurementInGrams = getMeasurementInGrams(itemSizeInBaseSiUnits);
+        itemMeasurementInKilograms = getMeasurementInKilograms(itemSizeInBaseSiUnits);
+
+        maximumNumberOfItems = (int) (MAX_MASS / itemSizeInBaseSiUnits);
+
+        Log.d(TAG, "setItemMeasurement: item size in base units: " + itemSizeInBaseSiUnits);
+        Log.d(TAG, "setItemMeasurement: item kg: " + itemMeasurementInKilograms + " grams: " +
+                itemMeasurementInGrams);
+        Log.d(TAG, "setItemMeasurement: Max number of items is now: " + maximumNumberOfItems);
+    }
+
+    private boolean baseSiUnitsAreWithinBounds(double baseSiUnits) {
+
+        double minimumPackMeasurement = minimumBaseSiMeasurement * numberOfItems;
+
+        boolean result = baseSiUnits <= maximumBaseSiMeasurement &&
+                baseSiUnits >= minimumPackMeasurement;
+        Log.d(TAG, "baseSiUnitsAreWithinBounds: " + result);
+
+        return result;
     }
 
     private void setPackMeasurement() {
@@ -262,18 +300,23 @@ public class MetricMass implements UnitOfMeasure {
     @Override
     public boolean setPackMeasurementOne(int packMeasurementOne) {
 
-        ObservableMeasurement observableMeasurement = new ObservableMeasurement();
-        observableMeasurement.setPackMeasurementOne(packMeasurementOne);
-        observableMeasurement.setPackMeasurementTwo((int) packMeasurementInKilograms);
+        Log.d(TAG, "setPackMeasurementOne: New measurement in grams: " + packMeasurementOne);
+        Log.d(TAG, "setPackMeasurementOne: Old kilograms: " + packMeasurementInKilograms);
 
-        Log.d(TAG, "setPackMeasurementOne: observableMeasurement is: " + packMeasurementOne);
-        Log.d(TAG, "setPackMeasurementOne: observableMeasurement sent for processing is: " +
-                observableMeasurement.getPackMeasurementTwo() + " kg, " + observableMeasurement.getPackMeasurementOne() + " grams");
+        int measurement = (int) (packMeasurementInKilograms * UNIT_KILOGRAM + packMeasurementOne);
 
-        double baseSiUnits = convertToBaseSiUnits(observableMeasurement);
-        Log.d(TAG, "setPackMeasurementOne: base Si to set is: " + baseSiUnits);
+        Log.d(TAG, "setPackMeasurementOne: Add them together: " + measurement);
+        boolean baseSiIsSet = baseSiUnitsAreSet(measurement);
+        Log.d(TAG, "setPackMeasurementOne: Set to base Si: " + baseSiIsSet);
 
-        return setBaseSiUnits(convertToBaseSiUnits(observableMeasurement));
+        if (baseSiIsSet) {
+
+            lastMeasurementUpdated = false;
+
+            return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -285,99 +328,112 @@ public class MetricMass implements UnitOfMeasure {
     @Override
     public boolean setPackMeasurementTwo(int packMeasurementTwo) {
 
-        ObservableMeasurement observableMeasurement = new ObservableMeasurement();
-        observableMeasurement.setPackMeasurementOne((int) packMeasurementInGrams);
-        observableMeasurement.setPackMeasurementTwo(packMeasurementTwo);
+        Log.d(TAG, "setPackMeasurementTwo: new pack measurement in kg: " + packMeasurementTwo);
+        Log.d(TAG, "setPackMeasurementTwo: old pack measurement in g : " + packMeasurementInGrams);
 
-        Log.d(TAG, "setPackMeasurementTwo: observableMeasurement is: " + packMeasurementTwo);
-        Log.d(TAG, "setPackMeasurementTwo: observableMeasurement sent for processing is: " +
-                observableMeasurement.getPackMeasurementTwo() + " kg, " +
-                observableMeasurement.getPackMeasurementOne() + " grams");
+        int measurement = (int) (packMeasurementTwo * UNIT_KILOGRAM + packMeasurementInGrams);
 
-        return setBaseSiUnits(convertToBaseSiUnits(observableMeasurement));
+        Log.d(TAG, "setPackMeasurementTwo: Add them together: " + measurement);
+        boolean baseSiIsSet = baseSiUnitsAreSet(measurement);
+        Log.d(TAG, "setPackMeasurementTwo: set to base Si: " + baseSiIsSet);
+
+        if (baseSiIsSet) {
+
+            lastMeasurementUpdated = false;
+
+            return true;
+        }
+
+        return false;
     }
 
     @Override
-    public int getSinglePackMeasurementOne() {
-        return (int) this.singlePackMeasurementInGrams;
+    public int getItemMeasurementOne() {
+        return (int) this.itemMeasurementInGrams;
     }
 
     @Override
-    public boolean setSinglePackMeasurementOne(int singlePackMeasurementOne) {
+    public boolean setItemMeasurementOne(int itemMeasurementOne) {
 
-        ObservableMeasurement singleToTotalPackMeasurement = new ObservableMeasurement();
-        singleToTotalPackMeasurement.setPackMeasurementOne(singlePackMeasurementOne * numberOfPacksInPack);
-        singleToTotalPackMeasurement.setPackMeasurementTwo((int) singlePackMeasurementInKilograms * numberOfPacksInPack);
+        Log.d(TAG, "setItemMeasurementOne: new item measurement in g :" + itemMeasurementOne);
+        Log.d(TAG, "setItemMeasurementOne: old item measurement in kg:" + itemMeasurementInKilograms);
 
-        Log.d(TAG, "setSinglePackMeasurementOne: measurement is: " + singlePackMeasurementOne);
-        Log.d(TAG, "setSinglePackMeasurementOne: measurement sent for processing is: " +
-                singleToTotalPackMeasurement.getSinglePackMeasurementTwo() + " kg" +
-                singleToTotalPackMeasurement.getSinglePackMeasurementOne() + " grams");
+        int measurement = (itemMeasurementOne * numberOfItems) +
+                (int) (packMeasurementInKilograms * UNIT_KILOGRAM);
 
-        return setBaseSiUnits(convertToBaseSiUnits(singleToTotalPackMeasurement));
+        Log.d(TAG, "setItemMeasurementOne: new pack base Si: " + measurement);
+
+        boolean baseSiIsSet = baseSiUnitsAreSet(measurement);
+
+        if (baseSiIsSet) {
+
+            lastMeasurementUpdated = true;
+
+            return true;
+        }
+
+        return false;
     }
 
     @Override
-    public int getSinglePackMeasurementTwo() {
-        return (int) singlePackMeasurementInKilograms;
+    public int getItemMeasurementTwo() {
+        return (int) itemMeasurementInKilograms;
     }
 
     @Override
-    public boolean setSinglePackMeasurementTwo(int singlePackMeasurementTwo) {
+    public boolean setItemMeasurementTwo(int itemMeasurementTwo) {
 
-        ObservableMeasurement singlePackMeasurement = new ObservableMeasurement();
-        singlePackMeasurement.setPackMeasurementOne((int) singlePackMeasurementInGrams * numberOfPacksInPack);
-        singlePackMeasurement.setPackMeasurementTwo(singlePackMeasurementTwo * numberOfPacksInPack);
+        Log.d(TAG, "setItemMeasurementTwo: old item measurement in g : " + itemMeasurementInGrams);
+        Log.d(TAG, "setItemMeasurementTwo: new item measurement in kg: " + itemMeasurementTwo);
 
-        Log.d(TAG, "setSinglePackMeasurementTwo: measurement is: " + singlePackMeasurementTwo);
-        Log.d(TAG, "setSinglePackMeasurementTwo: measurement sent for processing is: " +
-                singlePackMeasurement.getPackMeasurementTwo() + " kg " +
-                singlePackMeasurement.getPackMeasurementOne() + " grams");
+        int measurement = (int) (packMeasurementInGrams +
+                (itemMeasurementTwo * numberOfItems * UNIT_KILOGRAM));
 
-        return setBaseSiUnits(convertToBaseSiUnits(singlePackMeasurement));
-    }
+        Log.d(TAG, "setItemMeasurementTwo: new pack base Si: " + measurement);
 
-    private double convertToBaseSiUnits(ObservableMeasurement observableMeasurementToConvert) {
+        boolean baseSiIsSet = baseSiUnitsAreSet(measurement);
 
-        double gramsToGrams = observableMeasurementToConvert.getPackMeasurementOne();
-        double kilogramsToGrams = observableMeasurementToConvert.getPackMeasurementTwo() * UNIT_KILOGRAM;
+        if (baseSiIsSet) {
 
-        Log.d(TAG, "convertToBaseSiUnits: kg to grams: " + kilogramsToGrams +
-                ", grams to grams: " + gramsToGrams + " Total: " + (kilogramsToGrams + gramsToGrams));
+            lastMeasurementUpdated = true;
 
-        return kilogramsToGrams + gramsToGrams;
+            return true;
+        }
+
+        return false;
     }
 
     @Override
-    public void setNewMeasurementValuesTo(ObservableMeasurement observableMeasurement) {
+    public void setNewMeasurementValuesTo(ObservableMeasurementModel measurement) {
 
-        if (observableMeasurement.getMeasurementSubType() != getMeasurementSubType())
-            observableMeasurement.setMeasurementSubType(getMeasurementSubType());
+        if (measurement.getMeasurementSubType() != getMeasurementSubType())
+            measurement.setMeasurementSubType(getMeasurementSubType());
 
-        if (observableMeasurement.getNumberOfPacksInPack() != getNumberOfPacksInPack())
-            observableMeasurement.setNumberOfPacksInPack(getNumberOfPacksInPack());
+        if (measurement.getNumberOfItems() != getNumberOfItems())
+            measurement.setNumberOfItems(getNumberOfItems());
 
-        if (observableMeasurement.getPackMeasurementOne() != getPackMeasurementOne())
-            observableMeasurement.setPackMeasurementOne(getPackMeasurementOne());
+        if (measurement.getPackMeasurementOne() != getPackMeasurementOne())
+            measurement.setPackMeasurementOne(getPackMeasurementOne());
 
-        if (observableMeasurement.getPackMeasurementTwo() != getPackMeasurementTwo())
-            observableMeasurement.setPackMeasurementTwo(getPackMeasurementTwo());
+        if (measurement.getPackMeasurementTwo() != getPackMeasurementTwo())
+            measurement.setPackMeasurementTwo(getPackMeasurementTwo());
 
-        if (observableMeasurement.getSinglePackMeasurementOne() != getSinglePackMeasurementOne())
-            observableMeasurement.setSinglePackMeasurementOne(getSinglePackMeasurementOne());
+        if (measurement.getItemMeasurementOne() != getItemMeasurementOne())
+            measurement.setItemMeasurementOne(getItemMeasurementOne());
 
-        if (observableMeasurement.getSinglePackMeasurementTwo() != getSinglePackMeasurementTwo())
-            observableMeasurement.setSinglePackMeasurementTwo(getSinglePackMeasurementTwo());
+        if (measurement.getItemMeasurementTwo() != getItemMeasurementTwo())
+            measurement.setItemMeasurementTwo(getItemMeasurementTwo());
     }
+
     @Override
     public void resetNumericValues() {
 
         baseSiUnits = 0;
-        numberOfPacksInPack = 0;
+        numberOfItems = 0;
         packMeasurementInKilograms = 0;
         packMeasurementInGrams = 0;
-        singlePackMeasurementInKilograms = 0;
-        singlePackMeasurementInGrams = 0;
+        itemMeasurementInKilograms = 0;
+        itemMeasurementInGrams = 0;
     }
 
     @Override
@@ -397,12 +453,12 @@ public class MetricMass implements UnitOfMeasure {
                 "\n, subType='" + subTypeAsString + '\'' +
                 "\n, unitKilogram='" + unitKilogram + '\'' +
                 "\n, unitGram='" + unitGram + '\'' +
-                "\n, numberOfPacksInPack=" + numberOfPacksInPack +
+                "\n, numberOfItems=" + numberOfItems +
                 "\n, baseSiUnits=" + baseSiUnits +
                 "\n, packMeasurementInKilograms=" + packMeasurementInKilograms +
                 "\n, packMeasurementInGrams=" + packMeasurementInGrams +
-                "\n, singlePackMeasurementInKilograms=" + singlePackMeasurementInKilograms +
-                "\n, singlePackMeasurementInGrams=" + singlePackMeasurementInGrams +
+                "\n, itemMeasurementInKilograms=" + itemMeasurementInKilograms +
+                "\n, itemMeasurementInGrams=" + itemMeasurementInGrams +
                 '}';
     }
 }

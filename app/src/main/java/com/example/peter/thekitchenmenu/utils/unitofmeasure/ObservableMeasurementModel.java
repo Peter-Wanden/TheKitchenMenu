@@ -1,11 +1,16 @@
 package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
+import android.util.Log;
+
 import com.example.peter.thekitchenmenu.BR;
+import com.example.peter.thekitchenmenu.data.model.ObservableProductModel;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
-public class ObservableMeasurement extends BaseObservable {
+public class ObservableMeasurementModel extends BaseObservable {
+
+    private static final String TAG = "ObservableMeasurementMo";
 
     // TODO move this block to ProductModel
     private MeasurementSubType measurementSubType = MeasurementSubType.NOTHING_SELECTED;
@@ -15,12 +20,12 @@ public class ObservableMeasurement extends BaseObservable {
     private int maximumMeasurementOne = 0;
     private int maximumMeasurementTwo = 0;
 
-    private int baseSiUnits = 0;
-    private int numberOfPacksInPack = 0;
+    private double baseSiUnits = 0;
+    private int numberOfItems = 0;
     private int packMeasurementOne = 0;
     private int packMeasurementTwo = 0;
-    private int singlePackMeasurementOne = 0;
-    private int singlePackMeasurementTwo = 0;
+    private int itemMeasurementOne = 0;
+    private int itemMeasurementTwo = 0;
 
     @Bindable
     public MeasurementSubType getMeasurementSubType() {
@@ -33,13 +38,13 @@ public class ObservableMeasurement extends BaseObservable {
     }
 
     @Bindable
-    public int getNumberOfPacksInPack() {
-        return numberOfPacksInPack;
+    public int getNumberOfItems() {
+        return numberOfItems;
     }
 
-    public void setNumberOfPacksInPack(int numberOfPacksInPack) {
-        this.numberOfPacksInPack = numberOfPacksInPack;
-        notifyPropertyChanged(BR.numberOfPacksInPack);
+    public void setNumberOfItems(int numberOfItems) {
+        this.numberOfItems = numberOfItems;
+        notifyPropertyChanged(BR.numberOfItems);
     }
 
     public int getMinimumMeasurementOne() {
@@ -66,14 +71,12 @@ public class ObservableMeasurement extends BaseObservable {
         this.maximumMeasurementTwo = maximumMeasurementTwo;
     }
 
-    @Bindable
-    public int getBaseSiUnits() {
+    public double getBaseSiUnits() {
         return baseSiUnits;
     }
 
-    public void setBaseSiUnits(int baseSiUnits) {
+    public void setBaseSiUnits(double baseSiUnits) {
         this.baseSiUnits = baseSiUnits;
-        notifyPropertyChanged(BR.baseSiUnits);
     }
 
     @Bindable
@@ -97,42 +100,46 @@ public class ObservableMeasurement extends BaseObservable {
     }
 
     @Bindable
-    public int getSinglePackMeasurementOne() {
-        return singlePackMeasurementOne;
+    public int getItemMeasurementOne() {
+        return itemMeasurementOne;
     }
 
-    public void setSinglePackMeasurementOne(int singlePackMeasurementOne) {
-        this.singlePackMeasurementOne = singlePackMeasurementOne;
-        notifyPropertyChanged(BR.singlePackMeasurementOne);
+    public void setItemMeasurementOne(int itemMeasurementOne) {
+        this.itemMeasurementOne = itemMeasurementOne;
+        notifyPropertyChanged(BR.itemMeasurementOne);
     }
 
     @Bindable
-    public int getSinglePackMeasurementTwo() {
-        return singlePackMeasurementTwo;
+    public int getItemMeasurementTwo() {
+        return itemMeasurementTwo;
     }
 
-    public void setSinglePackMeasurementTwo(int singlePackMeasurementTwo) {
-        this.singlePackMeasurementTwo = singlePackMeasurementTwo;
-        notifyPropertyChanged(BR.singlePackMeasurementTwo);
-    }
-
-    @Override
-    public void notifyChange() {
-        super.notifyChange();
+    public void setItemMeasurementTwo(int itemMeasurementTwo) {
+        this.itemMeasurementTwo = itemMeasurementTwo;
+        notifyPropertyChanged(BR.itemMeasurementTwo);
     }
 
     @Override
     public String toString() {
-        return "ObservableMeasurement{" +
+        return "ObservableMeasurementModel{" +
                 ", \nmeasurementSubType=" + measurementSubType +
-                ", \nnumberOfPacksInPack=" + numberOfPacksInPack +
+                ", \nnumberOfItems=" + numberOfItems +
                 ", \nminimumMeasurementOne=" + minimumMeasurementOne +
                 ", \nmaximumMeasurementOne=" + maximumMeasurementOne +
                 ", \npackMeasurementOne=" + packMeasurementOne +
                 ", \npackMeasurementTwo=" + packMeasurementTwo +
-                ", \nsinglePackMeasurementOne=" + singlePackMeasurementOne +
-                ", \nsinglePackMeasurementTwo=" + singlePackMeasurementTwo +
+                ", \nitemMeasurementOne=" + itemMeasurementOne +
+                ", \nitemMeasurementTwo=" + itemMeasurementTwo +
                 '}';
+    }
+
+    public void getNumericValuesFromProductModel(ObservableProductModel productModel) {
+
+        Log.d(TAG, "getNumericValuesFromProductModel: Getting values");
+
+        setBaseSiUnits(productModel.getBaseSiUnits());
+        setMeasurementSubType(MeasurementSubType.values()[productModel.getUnitOfMeasureSubType()]);
+        setNumberOfItems(productModel.getNumberOfItems());
     }
 
     public void resetMeasurementSubType() {
@@ -142,13 +149,13 @@ public class ObservableMeasurement extends BaseObservable {
 
     public void resetNumericValues() {
 
-        numberOfPacksInPack = 0;
+        numberOfItems = 0;
         minimumMeasurementOne = 0;
         maximumMeasurementOne = 0;
 
         packMeasurementOne = 0;
         packMeasurementTwo = 0;
-        singlePackMeasurementOne = 0;
-        singlePackMeasurementTwo = 0;
+        itemMeasurementOne = 0;
+        itemMeasurementTwo = 0;
     }
 }

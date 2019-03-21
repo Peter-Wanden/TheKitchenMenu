@@ -2,6 +2,7 @@ package com.example.peter.thekitchenmenu.data.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.example.peter.thekitchenmenu.data.entity.Product;
 import com.example.peter.thekitchenmenu.data.entity.UsersProductData;
@@ -19,6 +20,8 @@ import androidx.databinding.library.baseAdapters.BR;
 
 // TODO, split this class out into product data and users product data models
 public class ObservableProductModel extends BaseObservable implements Parcelable {
+
+    private static final String TAG = "ObservableProductModel";
 
     // UsersProductData fields.
     private int userProductDataId;
@@ -40,7 +43,7 @@ public class ObservableProductModel extends BaseObservable implements Parcelable
     private String madeBy;
     private int category;
     private int shelfLife;
-    private int numberOfPacks;
+    private int numberOfItems;
     private double baseSiUnits;
     private int unitOfMeasureSubType;
     private double packAvePrice;
@@ -70,7 +73,7 @@ public class ObservableProductModel extends BaseObservable implements Parcelable
         this.madeBy = product.getMadeBy();
         this.category = product.getCategory();
         this.shelfLife = product.getShelfLife();
-        this.numberOfPacks = product.getNumberOfPacks();
+        this.numberOfItems = product.getNumberOfItems();
         this.baseSiUnits = product.getBaseSiUnits();
         this.unitOfMeasureSubType = product.getUnitOfMeasureSubType();
         this.packAvePrice = product.getPackAvePrice();
@@ -94,12 +97,11 @@ public class ObservableProductModel extends BaseObservable implements Parcelable
         this.usersProductDataLastUpdate = DEFAULT_MY_LAST_UPDATE;
 
         this.productId = product.getId();
-        this.remoteProductId = product.getRemoteProductId();
         this.description = product.getDescription();
         this.madeBy = product.getMadeBy();
         this.category = product.getCategory();
         this.shelfLife = product.getShelfLife();
-        this.numberOfPacks = product.getNumberOfPacks();
+        this.numberOfItems = product.getNumberOfItems();
         this.baseSiUnits = product.getBaseSiUnits();
         this.unitOfMeasureSubType = product.getUnitOfMeasureSubType();
         this.packAvePrice = product.getPackAvePrice();
@@ -107,6 +109,7 @@ public class ObservableProductModel extends BaseObservable implements Parcelable
         this.remoteImageUri = product.getRemoteImageUri();
         this.createDate = product.getCreateDate();
         this.lastUpdate = product.getLastUpdate();
+        this.remoteProductId = product.getRemoteProductId();
     }
 
     public ObservableProductModel(
@@ -126,7 +129,7 @@ public class ObservableProductModel extends BaseObservable implements Parcelable
             String madeBy,
             int category,
             int shelfLife,
-            int numberOfPacks,
+            int numberOfItems,
             double baseSiUnits,
             int unitOfMeasureSubType,
             double packAvePrice,
@@ -151,7 +154,7 @@ public class ObservableProductModel extends BaseObservable implements Parcelable
         this.madeBy = madeBy;
         this.category = category;
         this.shelfLife = shelfLife;
-        this.numberOfPacks = numberOfPacks;
+        this.numberOfItems = numberOfItems;
         this.baseSiUnits = baseSiUnits;
         this.unitOfMeasureSubType = unitOfMeasureSubType;
         this.packAvePrice = packAvePrice;
@@ -178,7 +181,7 @@ public class ObservableProductModel extends BaseObservable implements Parcelable
         madeBy = in.readString();
         category = in.readInt();
         shelfLife = in.readInt();
-        numberOfPacks = in.readInt();
+        numberOfItems = in.readInt();
         baseSiUnits = in.readDouble();
         unitOfMeasureSubType = in.readInt();
         packAvePrice = in.readDouble();
@@ -208,7 +211,7 @@ public class ObservableProductModel extends BaseObservable implements Parcelable
         result.put(MADE_BY, madeBy);
         result.put(CATEGORY, category);
         result.put(SHELF_LIFE, shelfLife);
-        result.put(NUMBER_OF_PACKS, numberOfPacks);
+        result.put(NUMBER_OF_ITEMS, numberOfItems);
         result.put(BASE_SI_UNITS, baseSiUnits);
         result.put(UNIT_OF_MEASURE_SUB_TYPE, unitOfMeasureSubType);
         result.put(PROD_COMM_PRICE_AVE, packAvePrice);
@@ -229,7 +232,7 @@ public class ObservableProductModel extends BaseObservable implements Parcelable
         result.put(MADE_BY, madeBy);
         result.put(CATEGORY, category);
         result.put(SHELF_LIFE, shelfLife);
-        result.put(NUMBER_OF_PACKS, numberOfPacks);
+        result.put(NUMBER_OF_ITEMS, numberOfItems);
         result.put(BASE_SI_UNITS, baseSiUnits);
         result.put(UNIT_OF_MEASURE_SUB_TYPE, unitOfMeasureSubType);
         result.put(PROD_COMM_PRICE_AVE, packAvePrice);
@@ -275,7 +278,7 @@ public class ObservableProductModel extends BaseObservable implements Parcelable
         parcel.writeString(madeBy);
         parcel.writeInt(category);
         parcel.writeInt(shelfLife);
-        parcel.writeInt(numberOfPacks);
+        parcel.writeInt(numberOfItems);
         parcel.writeDouble(baseSiUnits);
         parcel.writeInt(unitOfMeasureSubType);
         parcel.writeDouble(packAvePrice);
@@ -304,7 +307,7 @@ public class ObservableProductModel extends BaseObservable implements Parcelable
                 ", madeBy: '" + madeBy + '\'' +
                 ", category: " + category + '\'' +
                 ", shelfLife: " + shelfLife + '\'' +
-                ", numberOfPacks: '" + numberOfPacks + '\'' +
+                ", numberOfItems: '" + numberOfItems + '\'' +
                 ", baseSiUnits: '" + baseSiUnits + '\'' +
                 ", unitOfMeasureSubType: '" + unitOfMeasureSubType + '\'' +
                 ", packAvePrice: '" + packAvePrice + '\'' +
@@ -315,20 +318,23 @@ public class ObservableProductModel extends BaseObservable implements Parcelable
                 '}';
     }
 
-    public void updateModelFromEntity(Product entity) {
-        this.description = entity.getDescription();
-        this.madeBy = entity.getMadeBy();
-        this.category = entity.getCategory();
-        this.numberOfPacks = entity.getNumberOfPacks();
-        this.shelfLife = entity.getShelfLife();
-        this.baseSiUnits = entity.getBaseSiUnits();
-        this.unitOfMeasureSubType = entity.getUnitOfMeasureSubType();
-        this.packAvePrice = entity.getPackAvePrice();
-        this.createdBy = entity.getCreatedBy();
-        this.remoteImageUri = entity.getRemoteImageUri();
-        this.createDate = entity.getCreateDate();
-        this.lastUpdate = entity.getLastUpdate();
-        this.remoteProductId = entity.getRemoteProductId();
+    public void getValuesFromEntity(Product entity) {
+
+        Log.d(TAG, "getValuesFromEntity: getting values");
+
+        setDescription(entity.getDescription());
+        setMadeBy(entity.getMadeBy());
+        setCategory(entity.getCategory());
+        setNumberOfItems(entity.getNumberOfItems());
+        setShelfLife(entity.getShelfLife());
+        setBaseSiUnits(entity.getBaseSiUnits());
+        setUnitOfMeasureSubType(entity.getUnitOfMeasureSubType());
+        setPackAvePrice(entity.getPackAvePrice());
+        setCreatedBy(entity.getCreatedBy());
+        setRemoteImageUri(entity.getRemoteImageUri());
+        setCreateDate(entity.getCreateDate());
+        setLastUpdate(entity.getLastUpdate());
+        setRemoteProductId(entity.getRemoteProductId());
     }
 
     public int getUserProductDataId() {
@@ -444,12 +450,12 @@ public class ObservableProductModel extends BaseObservable implements Parcelable
         notifyPropertyChanged(BR.shelfLife);
     }
 
-    public int getNumberOfPacks() {
-        return numberOfPacks;
+    public int getNumberOfItems() {
+        return numberOfItems;
     }
 
-    public void setNumberOfPacks(int numberOfPacks) {
-        this.numberOfPacks = numberOfPacks;
+    public void setNumberOfItems(int numberOfItems) {
+        this.numberOfItems = numberOfItems;
     }
 
     public double getBaseSiUnits() {

@@ -11,25 +11,25 @@ public interface UnitOfMeasure {
     String getMeasurementUnitOne();
     String getMeasurementUnitTwo();
 
-    ObservableMeasurement getMinAndMax();
+    ObservableMeasurementModel getMinAndMax();
 
-    void setNewMeasurementValuesTo(ObservableMeasurement observableMeasurement);
+    void setNewMeasurementValuesTo(ObservableMeasurementModel observableMeasurementModel);
     boolean getValuesFromObservableProductModel(ObservableProductModel productModel);
 
     double getBaseSiUnits();
-    boolean setBaseSiUnits(double baseSiUnits);
+    boolean baseSiUnitsAreSet(double baseSiUnits);
 
-    boolean setNumberOfPacksInPack(int numberOfItems);
-    int getNumberOfPacksInPack();
+    boolean setNumberOfItems(int numberOfItems);
+    int getNumberOfItems();
 
     int getPackMeasurementOne();
     boolean setPackMeasurementOne(int packMeasurementOne);
     int getPackMeasurementTwo();
     boolean setPackMeasurementTwo(int packMeasurementTwo);
-    int getSinglePackMeasurementOne();
-    boolean setSinglePackMeasurementOne(int itemMeasurementOne);
-    int getSinglePackMeasurementTwo();
-    boolean setSinglePackMeasurementTwo(int itemMeasurementTwo);
+    int getItemMeasurementOne();
+    boolean setItemMeasurementOne(int itemMeasurementOne);
+    int getItemMeasurementTwo();
+    boolean setItemMeasurementTwo(int itemMeasurementTwo);
 
     int[] getInputFilterFormat();
 

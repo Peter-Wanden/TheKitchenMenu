@@ -61,28 +61,28 @@ public class ImperialMass implements UnitOfMeasure {
     }
 
     @Override
-    public ObservableMeasurement getMinAndMax() {
+    public ObservableMeasurementModel getMinAndMax() {
 
-        ObservableMeasurement observableMeasurement = new ObservableMeasurement();
-        observableMeasurement.setNumberOfPacksInPack(numberOfItemsInPack);
+        ObservableMeasurementModel observableMeasurementModel = new ObservableMeasurementModel();
+        observableMeasurementModel.setNumberOfItems(numberOfItemsInPack);
 
         double minMeasurement;
 
-        if (numberOfItemsInPack >= MULTI_PACK_MINIMUM_NO_OF_PACKS)
+        if (numberOfItemsInPack >= MULTI_PACK_MINIMUM_NO_OF_ITEMS)
 
             minMeasurement = UNIT_OUNCE * numberOfItemsInPack;
 
         else minMeasurement = UNIT_OUNCE;
 
-        observableMeasurement.setMinimumMeasurementOne((int) minMeasurement);
-        observableMeasurement.setPackMeasurementOne(getMeasurementInOunces(MAX_MASS));
-        observableMeasurement.setPackMeasurementTwo(getMeasurementInPounds(MAX_MASS));
+        observableMeasurementModel.setMinimumMeasurementOne((int) minMeasurement);
+        observableMeasurementModel.setPackMeasurementOne(getMeasurementInOunces(MAX_MASS));
+        observableMeasurementModel.setPackMeasurementTwo(getMeasurementInPounds(MAX_MASS));
 
-        return observableMeasurement;
+        return observableMeasurementModel;
     }
 
     @Override
-    public void setNewMeasurementValuesTo(ObservableMeasurement observableMeasurement) {
+    public void setNewMeasurementValuesTo(ObservableMeasurementModel observableMeasurementModel) {
     }
 
     @Override
@@ -90,31 +90,31 @@ public class ImperialMass implements UnitOfMeasure {
         return false;
     }
 
-    private double convertToBaseSiUnits(ObservableMeasurement observableMeasurementToConvert) {
+    private double convertToBaseSiUnits(ObservableMeasurementModel observableMeasurementModelToConvert) {
 
-        double ouncesToGrams = observableMeasurementToConvert.getPackMeasurementOne() * UNIT_OUNCE;
-        double poundsToGrams = observableMeasurementToConvert.getPackMeasurementTwo() * UNIT_POUND;
+        double ouncesToGrams = observableMeasurementModelToConvert.getPackMeasurementOne() * UNIT_OUNCE;
+        double poundsToGrams = observableMeasurementModelToConvert.getPackMeasurementTwo() * UNIT_POUND;
 
         return poundsToGrams + ouncesToGrams;
     }
 
     @Override
-    public int getNumberOfPacksInPack() {
-        Log.d(TAG, "getNumberOfPacks: banana");
+    public int getNumberOfItems() {
+        Log.d(TAG, "getNumberOfItems: banana");
         return numberOfItemsInPack;
     }
 
     @Override
-    public boolean setNumberOfPacksInPack(int numberOfItems) {
+    public boolean setNumberOfItems(int numberOfItems) {
 
         // TODO - When setting number of items, check the size / measurements (if available) do not
         // TODO - exceed MAX
-        if (numberOfItems >= MULTI_PACK_MINIMUM_NO_OF_PACKS &&
-                numberOfItems <= MULTI_PACK_MAXIMUM_NO_OF_PACKS) {
+        if (numberOfItems >= MULTI_PACK_MINIMUM_NO_OF_ITEMS &&
+                numberOfItems <= MULTI_PACK_MAXIMUM_NO_OF_ITEMS) {
 
             this.numberOfItemsInPack = numberOfItems;
             setItemMeasurement(numberOfItemsInPack);
-            Log.d(TAG, "setNumberOfPacks: banana" + numberOfItemsInPack);
+            Log.d(TAG, "setNumberOfItems: banana" + numberOfItemsInPack);
             return true;
         }
         return false;
@@ -126,7 +126,7 @@ public class ImperialMass implements UnitOfMeasure {
     }
 
     @Override
-    public boolean setBaseSiUnits(double baseSiUnits) {
+    public boolean baseSiUnitsAreSet(double baseSiUnits) {
 
         if (numberOfItemsInPack > 1) {
 
@@ -175,7 +175,7 @@ public class ImperialMass implements UnitOfMeasure {
     public int[] getInputFilterFormat() {
 
         int[] inputFilterFormat = new int[3];
-        ObservableMeasurement maxValues = getMinAndMax();
+        ObservableMeasurementModel maxValues = getMinAndMax();
         int maxOunceValue = maxValues.getPackMeasurementOne();
         int maxPoundValue = maxValues.getPackMeasurementTwo();
 
@@ -205,11 +205,11 @@ public class ImperialMass implements UnitOfMeasure {
     @Override
     public boolean setPackMeasurementOne(int packMeasurementOne) {
 
-        ObservableMeasurement observableMeasurement = new ObservableMeasurement();
-        observableMeasurement.setPackMeasurementOne(packMeasurementOne);
-        observableMeasurement.setPackMeasurementTwo(packMeasurementInPounds);
+        ObservableMeasurementModel observableMeasurementModel = new ObservableMeasurementModel();
+        observableMeasurementModel.setPackMeasurementOne(packMeasurementOne);
+        observableMeasurementModel.setPackMeasurementTwo(packMeasurementInPounds);
 
-        return setBaseSiUnits(convertToBaseSiUnits(observableMeasurement));
+        return baseSiUnitsAreSet(convertToBaseSiUnits(observableMeasurementModel));
     }
 
     @Override
@@ -220,41 +220,41 @@ public class ImperialMass implements UnitOfMeasure {
     @Override
     public boolean setPackMeasurementTwo(int packMeasurementTwo) {
 
-        ObservableMeasurement observableMeasurement = new ObservableMeasurement();
-        observableMeasurement.setPackMeasurementOne(packMeasurementInOunces);
-        observableMeasurement.setPackMeasurementTwo(packMeasurementTwo);
+        ObservableMeasurementModel observableMeasurementModel = new ObservableMeasurementModel();
+        observableMeasurementModel.setPackMeasurementOne(packMeasurementInOunces);
+        observableMeasurementModel.setPackMeasurementTwo(packMeasurementTwo);
 
-        return setBaseSiUnits(convertToBaseSiUnits(observableMeasurement));
+        return baseSiUnitsAreSet(convertToBaseSiUnits(observableMeasurementModel));
     }
 
     @Override
-    public int getSinglePackMeasurementOne() {
+    public int getItemMeasurementOne() {
         return itemMeasurementInOunces;
     }
 
     @Override
-    public boolean setSinglePackMeasurementOne(int itemMeasurementOne) {
+    public boolean setItemMeasurementOne(int itemMeasurementOne) {
 
-        ObservableMeasurement observableMeasurement = new ObservableMeasurement();
-        observableMeasurement.setPackMeasurementOne(itemMeasurementOne * numberOfItemsInPack);
-        observableMeasurement.setPackMeasurementTwo(itemMeasurementInPounds * numberOfItemsInPack);
+        ObservableMeasurementModel observableMeasurementModel = new ObservableMeasurementModel();
+        observableMeasurementModel.setPackMeasurementOne(itemMeasurementOne * numberOfItemsInPack);
+        observableMeasurementModel.setPackMeasurementTwo(itemMeasurementInPounds * numberOfItemsInPack);
 
-        return setBaseSiUnits(convertToBaseSiUnits(observableMeasurement));
+        return baseSiUnitsAreSet(convertToBaseSiUnits(observableMeasurementModel));
     }
 
     @Override
-    public int getSinglePackMeasurementTwo() {
+    public int getItemMeasurementTwo() {
         return itemMeasurementInPounds;
     }
 
     @Override
-    public boolean setSinglePackMeasurementTwo(int itemMeasurementTwo) {
+    public boolean setItemMeasurementTwo(int itemMeasurementTwo) {
 
-        ObservableMeasurement observableMeasurement = new ObservableMeasurement();
-        observableMeasurement.setPackMeasurementOne(itemMeasurementInOunces * numberOfItemsInPack);
-        observableMeasurement.setPackMeasurementTwo(itemMeasurementInPounds * numberOfItemsInPack);
+        ObservableMeasurementModel observableMeasurementModel = new ObservableMeasurementModel();
+        observableMeasurementModel.setPackMeasurementOne(itemMeasurementInOunces * numberOfItemsInPack);
+        observableMeasurementModel.setPackMeasurementTwo(itemMeasurementInPounds * numberOfItemsInPack);
 
-        return setBaseSiUnits(convertToBaseSiUnits(observableMeasurement));
+        return baseSiUnitsAreSet(convertToBaseSiUnits(observableMeasurementModel));
     }
 
     @Override
