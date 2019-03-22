@@ -36,7 +36,7 @@
     <string name="hint_item_size">Weight/volume of each item</string>
     <string name="unit_of_measure_label">Sold in units of</string>
     <string name="label_multi_pack">Multipack?</string>
-    <string name="label_number_of_packs">How many packs in the multi-pack?</string>
+    <string name="label_number_of_packs">Number of packs / items (multipack only)</string>
     <string name="label_price">Price</string>
     <string name="hint_price">How much does it cost?</string>
     <string name="label_shelf_life">Shelf life</string>

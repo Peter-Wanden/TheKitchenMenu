@@ -142,11 +142,6 @@ public class ObservableMeasurementModel extends BaseObservable {
         setNumberOfItems(productModel.getNumberOfItems());
     }
 
-    public void resetMeasurementSubType() {
-
-        measurementSubType = MeasurementSubType.NOTHING_SELECTED;
-    }
-
     public void resetNumericValues() {
 
         numberOfItems = 0;

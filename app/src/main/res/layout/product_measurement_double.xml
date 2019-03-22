@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/product_measurement_double_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/pack_editable_measurement_two"
+            style="@style/EditableFieldStyle"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/standard_input_item_height"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:afterTextChanged='@{() -> numericValidation.validatePackSize(packEditableMeasurementTwo)}'
+            android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(packEditableMeasurementTwo, productEditorViewModel.measurement.packMeasurementTwo)}'
+            android:textAlignment="textEnd"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/pack_label_measurement_two"
+            app:layout_constraintBottom_toTopOf="@+id/item_editable_measurement_two"
+            app:onUnitOfMeasureSelected='@{productEditorViewModel.measurement.measurementSubType}'
+            tools:text="99" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/pack_label_measurement_two"
+            style="@style/EditableCategoryStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/standard_input_item_height"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical"
+            app:layout_constraintBottom_toTopOf="@+id/item_editable_measurement_two"
+            app:layout_constraintEnd_toStartOf="@+id/pack_editable_measurement_one"
+            app:layout_constraintStart_toEndOf="@id/pack_editable_measurement_two"
+            app:onUnitOfMeasureSelected='@{productEditorViewModel.measurement.measurementSubType}'
+            tools:text="lbs" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/pack_editable_measurement_one"
+            style="@style/EditableFieldStyle"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/standard_input_item_height"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:afterTextChanged='@{() -> numericValidation.validatePackSize(packEditableMeasurementOne)}'
+            android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(packEditableMeasurementOne, productEditorViewModel.measurement.packMeasurementOne)}'
+            android:textAlignment="textEnd"
+            app:layout_constraintBottom_toTopOf="@+id/item_editable_measurement_one"
+            app:layout_constraintEnd_toStartOf="@+id/pack_label_measurement_one"
+            app:layout_constraintStart_toEndOf="@id/pack_label_measurement_two"
+            app:onUnitOfMeasureSelected='@{productEditorViewModel.measurement.measurementSubType}'
+            tools:text="9999" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/pack_label_measurement_one"
+            style="@style/EditableCategoryStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/standard_input_item_height"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical"
+            app:layout_constraintBottom_toTopOf="@+id/item_measurement_label_one"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/pack_editable_measurement_one"
+            app:onUnitOfMeasureSelected='@{productEditorViewModel.measurement.measurementSubType}'
+            tools:text="oz" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/item_editable_measurement_two"
+            style="@style/EditableFieldStyle"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/standard_input_item_height"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:afterTextChanged='@{() -> numericValidation.validatePackSize(itemEditableMeasurementTwo)}'
+            android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(itemEditableMeasurementTwo, productEditorViewModel.measurement.itemMeasurementTwo)}'
+            android:textAlignment="textEnd"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/item_measurement_label_two"
+            app:layout_constraintStart_toStartOf="parent"
+            app:onUnitOfMeasureSelected='@{productEditorViewModel.measurement.measurementSubType}'
+            tools:text="5" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/item_measurement_label_two"
+            style="@style/EditableCategoryStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/standard_input_item_height"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/item_editable_measurement_two"
+            app:layout_constraintEnd_toStartOf="@id/item_editable_measurement_one"
+            app:onUnitOfMeasureSelected='@{productEditorViewModel.measurement.measurementSubType}'
+            tools:layout_editor_absoluteX="334dp"
+            tools:text="lbs" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/item_editable_measurement_one"
+            style="@style/EditableFieldStyle"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/standard_input_item_height"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:afterTextChanged='@{() -> numericValidation.validatePackSize(itemEditableMeasurementOne)}'
+            android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(itemEditableMeasurementOne, productEditorViewModel.measurement.itemMeasurementOne)}'
+            android:textAlignment="textEnd"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/item_measurement_label_one"
+            app:layout_constraintStart_toEndOf="@+id/item_measurement_label_two"
+            app:onUnitOfMeasureSelected='@{productEditorViewModel.measurement.measurementSubType}'
+            tools:text="3" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/item_measurement_label_one"
+            style="@style/EditableCategoryStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/standard_input_item_height"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/item_editable_measurement_one"
+            app:onUnitOfMeasureSelected='@{productEditorViewModel.measurement.measurementSubType}'
+            tools:text="oz" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

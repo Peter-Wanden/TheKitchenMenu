@@ -9,8 +9,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.ObservableMeasurementModel;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubType;
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.ObservableMeasurementModel;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasure;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureClassSelector;
 import com.example.peter.thekitchenmenu.viewmodels.ProductEditorViewModel;
@@ -27,6 +27,7 @@ public class ProductNumericValidationHandler {
     private Resources resources;
 
     private UnitOfMeasure unitOfMeasure;
+
     private static final int MEASUREMENT_ERROR = -1;
 
     public ProductNumericValidationHandler(Application applicationContext,
@@ -44,19 +45,26 @@ public class ProductNumericValidationHandler {
 
         // Check for change
         if (unitOfMeasure.getMeasurementSubType().ordinal() ==
-                spinnerWithSubType.getSelectedItemPosition())
-            return;
+                spinnerWithSubType.getSelectedItemPosition()) {
+            Log.d(TAG, "newUnitOfMeasureSelected: Unit of measure is the same, aborting");
 
+            return;
+        }
 
         UnitOfMeasure newUnitOfMeasure = UnitOfMeasureClassSelector.getClassWithSubType(
                 applicationContext, MeasurementSubType.values()
                         [spinnerWithSubType.getSelectedItemPosition()]);
 
-        Log.d(TAG, "newUnitOfMeasureSelected: " +
+        Log.d(TAG, "newUnitOfMeasureSelected: old unit of measure is: " +
+                unitOfMeasure.getMeasurementSubType() + " new unit of measure is: " +
                 newUnitOfMeasure.getMeasurementSubType().getMeasurementType());
 
-        Log.d(TAG, "newUnitOfMeasureSelected: items in old pack are: " +
-                viewModel.getMeasurement().getNumberOfItems());
+        // Transfer old number of items to new unit of measure
+        if (unitOfMeasure.getNumberOfItems() > MULTI_PACK_MINIMUM_NO_OF_ITEMS) {
+
+            newUnitOfMeasure.setNumberOfItems(unitOfMeasure.getNumberOfItems());
+            Log.d(TAG, "newUnitOfMeasureSelected: transferring number of items");
+        }
 
         // If the view model has a unit of measure that has some base units in it there may be a
         // measurement to convert
@@ -69,75 +77,52 @@ public class ProductNumericValidationHandler {
                     viewModel.getMeasurement().getNumberOfItems());
 
             newUnitOfMeasure.setNumberOfItems(viewModel.getMeasurement().getNumberOfItems());
-                Log.d(TAG, "newUnitOfMeasureSelected: setting number of items to: " +
-                        unitOfMeasure.getNumberOfItems());
+            Log.d(TAG, "newUnitOfMeasureSelected: setting number of items to: " +
+                    unitOfMeasure.getNumberOfItems());
 
-            // If the subtype in the view models unit of measure and the validations new unit of
-            // measure are different it may be possible to convert if the types are the same
-            if (viewModel.getMeasurement().getMeasurementSubType() !=
-                    newUnitOfMeasure.getMeasurementSubType()) {
+            Log.d(TAG, "newUnitOfMeasureSelected: old and new subtypes are different.");
 
-                Log.d(TAG, "newUnitOfMeasureSelected: old and new subtypes are different.");
+            // If the types are the same, there may be a// measurement to convert...
+            if (unitOfMeasure.getMeasurementType() == newUnitOfMeasure.getMeasurementType()) {
 
-                // If the types are the same and the base measurement is above 0, there may be a
-                // measurement to convert...
-                if (unitOfMeasure.getMeasurementType() == newUnitOfMeasure.getMeasurementType()) {
+                Log.d(TAG, "newUnitOfMeasureSelected: old and new types are the same.");
 
-                    Log.d(TAG, "newUnitOfMeasureSelected: old and new types are the same.");
+                // Set the base units to the new unit of measure
+                boolean baseSiUnitsAreSet =
+                        newUnitOfMeasure.baseSiUnitsAreSet(unitOfMeasure.getBaseSiUnits());
 
-                    // Set the base units to the new unit of measure
-                    boolean baseSiUnitsAreSet =
-                            newUnitOfMeasure.baseSiUnitsAreSet(unitOfMeasure.getBaseSiUnits());
+                Log.d(TAG, "newUnitOfMeasureSelected: base units are set: " +
+                        baseSiUnitsAreSet);
 
-                    Log.d(TAG, "newUnitOfMeasureSelected: base units are set: " +
-                            baseSiUnitsAreSet);
+                // If the base units set ok...
+                if (baseSiUnitsAreSet) {
 
-                    // If the base units set ok...
-                    if (baseSiUnitsAreSet) {
+                    Log.d(TAG, "newUnitOfMeasureSelected: base units are set");
 
-                        boolean numberOfItemsAreSet =
-                                newUnitOfMeasure.setNumberOfItems(
-                                        unitOfMeasure.getNumberOfItems());
-                        Log.d(TAG, "newUnitOfMeasureSelected: No of packs are set: " +
-                                numberOfItemsAreSet);
-
-                        if (!numberOfItemsAreSet) {
-                            // An error, setting number of items could be because it reduces the
-                            // items size below the minimum measurement. Set error and reset values
-                            // within the unit of measure and the ObservableMeasurementModel (shouldn't
-                            // have to do both)
-                            updateUnitOfMeasure(newUnitOfMeasure);
-                            updateMeasurementValues();
-                        }
-
-                        // Measurements have been successfully converted
-                        updateUnitOfMeasure(newUnitOfMeasure);
-                        updateMeasurementValues();
-                        updateNumericValues();
-                    }
-                    // The types are the same, but the base units would not set. This can only
-                    // happen if the numberOfItems has been set first and in setting the base units
-                    // has made the pack size smaller than the smallest unit for this measure class.
-
-                    // Reset values and maybe pass an error or toast reflecting the above?
+                    // Measurements have been successfully converted
                     updateUnitOfMeasure(newUnitOfMeasure);
                     updateMeasurementValues();
-
-                } else {
-
-                    // The types are not the same, cannot convert
-                    // Reset the measurement in the view model, update the unit of measure in the view
-                    // model and update the measurement
-                    Log.d(TAG, "newUnitOfMeasureSelected: old and new types are different, " +
-                            "cannot convert measurement.");
-                    updateUnitOfMeasure(newUnitOfMeasure);
-                    updateMeasurementValues();
+                    updateNumericValues();
                 }
+                // The types are the same, but the base units would not set. This can only
+                // happen if the numberOfItems has been set first and in setting the base units
+                // has made the pack size smaller than the smallest unit for this measure class.
+
+                // Reset values and maybe pass an error or toast reflecting the above?
+                updateUnitOfMeasure(newUnitOfMeasure);
+                updateMeasurementValues();
+                updateNumericValues();
 
             } else {
-                // If the subtypes are the same nothing has changed, therefor there is nothing to do.
-                Log.d(TAG, "newUnitOfMeasureSelected: old and new subtypes are the same. " +
-                        "nothing has changed, aborting");
+
+                // The types are not the same, cannot convert
+                // Reset the measurement in the view model, update the unit of measure in the view
+                // model and update the measurement
+                Log.d(TAG, "newUnitOfMeasureSelected: old and new types are different, " +
+                        "cannot convert measurement.");
+                updateUnitOfMeasure(newUnitOfMeasure);
+                updateMeasurementValues();
+                updateNumericValues();
             }
 
         } else {
@@ -145,11 +130,11 @@ public class ProductNumericValidationHandler {
             // unit of measure. Measurements are inconvertible between units of measure, or the
             // original unit of measure is empty. Reset the measurement in the view model, update
             // the unit of measure in the view model and update the measurement
-            Log.d(TAG, "newUnitOfMeasureSelected: Old unit of measure has no base units " +
-                    "and number of items is below the minimum.");
+            Log.d(TAG, "newUnitOfMeasureSelected: Old unit of measure has no base units");
 
             updateUnitOfMeasure(newUnitOfMeasure);
             updateMeasurementValues();
+            updateNumericValues();
         }
     }
 
@@ -160,8 +145,8 @@ public class ProductNumericValidationHandler {
 
     private void updateMeasurementValues() {
 
-        viewModel.getMeasurement().resetMeasurementSubType();
         viewModel.getMeasurement().setMeasurementSubType(unitOfMeasure.getMeasurementSubType());
+        viewModel.getProductModel().setUnitOfMeasureSubType(unitOfMeasure.getMeasurementSubType().ordinal());
     }
 
     // Blocks infinite loops and updates the measurement and product model
@@ -276,7 +261,7 @@ public class ProductNumericValidationHandler {
 
         if (buttonId == R.id.multi_pack_minus &&
                 itemsInPack > MULTI_PACK_MINIMUM_NO_OF_ITEMS)
-            editableItemsInPack.setText(String.valueOf(itemsInPack -1));
+            editableItemsInPack.setText(String.valueOf(itemsInPack - 1));
     }
 
     private void setItemsInPackOutOfBoundsError(EditText editableItemsInPack) {
@@ -322,26 +307,36 @@ public class ProductNumericValidationHandler {
             case R.id.editable_items_in_pack:
 
                 oldMeasurement = viewModel.getMeasurement().getNumberOfItems();
+                Log.d(TAG, "measurementHasChanged: numberOfItems has changed from: " +
+                        oldMeasurement + " to: " + newMeasurement);
                 return newMeasurement != oldMeasurement;
 
             case R.id.pack_editable_measurement_one:
 
                 oldMeasurement = viewModel.getMeasurement().getPackMeasurementOne();
+                Log.d(TAG, "measurementHasChanged: packOne has changed from: " +
+                        oldMeasurement + " to: " + newMeasurement);
                 return newMeasurement != oldMeasurement;
 
             case R.id.pack_editable_measurement_two:
 
                 oldMeasurement = viewModel.getMeasurement().getPackMeasurementTwo();
+                Log.d(TAG, "measurementHasChanged: packTwo has changed from: " +
+                        oldMeasurement + " to: " + newMeasurement);
                 return newMeasurement != oldMeasurement;
 
             case R.id.item_editable_measurement_one:
 
                 oldMeasurement = viewModel.getMeasurement().getItemMeasurementOne();
+                Log.d(TAG, "measurementHasChanged: itemOne has changed from: " +
+                        oldMeasurement + " to: " + newMeasurement);
                 return newMeasurement != oldMeasurement;
 
             case R.id.item_editable_measurement_two:
 
                 oldMeasurement = viewModel.getMeasurement().getItemMeasurementTwo();
+                Log.d(TAG, "measurementHasChanged: itemTwo has changed from: " +
+                        oldMeasurement + " to: " + newMeasurement);
                 return newMeasurement != oldMeasurement;
         }
         Log.d(TAG, "measurementHasChanged: View not recognised, aborting.");
