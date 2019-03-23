@@ -4,10 +4,19 @@ import android.content.Context;
 
 import com.example.peter.thekitchenmenu.data.model.ObservableProductModel;
 
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.BASE_SI_UNIT_VOLUME;
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MULTI_PACK_MAXIMUM_NO_OF_ITEMS;
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MULTI_PACK_MINIMUM_NO_OF_ITEMS;
 
 public class MetricVolume implements UnitOfMeasure {
+
+    private static final String TAG = "MetricVolume";
+
+    // Unit values as they relate to the International System of Units, or SI
+    private static final int METRIC_VOLUME_NUMBER_OF_MEASUREMENT_UNITS = 3;
+    private static final double UNIT_MILLILITRE = BASE_SI_UNIT_VOLUME;
+    private static final double UNIT_CENTILITRE = UNIT_MILLILITRE * 100;
+    private static final double UNIT_LITRE = UNIT_CENTILITRE * 10;
 
     private int numberOfItemsInPack = 0;
 
@@ -31,6 +40,11 @@ public class MetricVolume implements UnitOfMeasure {
     }
 
     @Override
+    public int getNumberOfMeasurementUnits() {
+        return METRIC_VOLUME_NUMBER_OF_MEASUREMENT_UNITS;
+    }
+
+    @Override
     public String getMeasurementUnitOne() {
         return null;
     }
@@ -43,15 +57,6 @@ public class MetricVolume implements UnitOfMeasure {
     @Override
     public ObservableMeasurementModel getMinAndMax() {
         return null;
-    }
-
-    @Override
-    public void setNewMeasurementValuesTo(ObservableMeasurementModel observableMeasurementModel) {
-    }
-
-    @Override
-    public boolean getValuesFromObservableProductModel(ObservableProductModel productModel) {
-        return false;
     }
 
     @Override
@@ -109,6 +114,16 @@ public class MetricVolume implements UnitOfMeasure {
     }
 
     @Override
+    public int getPackMeasurementThree() {
+        return 0;
+    }
+
+    @Override
+    public boolean setPackMeasurementThree(int packMeasurementThree) {
+        return false;
+    }
+
+    @Override
     public int getItemMeasurementOne() {
         return 0;
     }
@@ -125,6 +140,16 @@ public class MetricVolume implements UnitOfMeasure {
 
     @Override
     public boolean setItemMeasurementTwo(int itemMeasurementTwo) {
+        return false;
+    }
+
+    @Override
+    public int getItemMeasurementThree() {
+        return 0;
+    }
+
+    @Override
+    public boolean setItemMeasurementThree(int itemMeasurementThree) {
         return false;
     }
 

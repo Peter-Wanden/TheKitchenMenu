@@ -11,11 +11,7 @@ import com.example.peter.thekitchenmenu.utils.ProductNumericValidationHandler;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.ObservableMeasurementModel;
 
 import androidx.annotation.NonNull;
-import androidx.databinding.Bindable;
-import androidx.databinding.ObservableBoolean;
 import androidx.lifecycle.MutableLiveData;
-
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MULTI_PACK_MINIMUM_NO_OF_ITEMS;
 
 public class ProductEditorViewModel extends ObservableViewModel {
 
@@ -38,7 +34,6 @@ public class ProductEditorViewModel extends ObservableViewModel {
     private boolean packSizeValidated;
 
     // Measurements
-    private ObservableBoolean multiPack = new ObservableBoolean(false);
     private ObservableMeasurementModel measurement;
 
     public ProductEditorViewModel(@NonNull Application applicationContext) {
@@ -70,8 +65,6 @@ public class ProductEditorViewModel extends ObservableViewModel {
         textValidationHandler = new ProductTextValidationHandler(
                 applicationContext,
                 this);
-
-        multiPack.set(true);
     }
 
     public ProductTextValidationHandler getTextValidationHandler() {
@@ -95,14 +88,6 @@ public class ProductEditorViewModel extends ObservableViewModel {
         return productModel;
     }
 
-    public void setProductModel(ObservableProductModel productModel) {
-        this.productModel = productModel;
-    }
-
-    private boolean isMultiPack() {
-        return productModel.getNumberOfItems() >= MULTI_PACK_MINIMUM_NO_OF_ITEMS;
-    }
-
     public ObservableMeasurementModel getMeasurement() {
         return measurement;
     }
@@ -110,15 +95,6 @@ public class ProductEditorViewModel extends ObservableViewModel {
     public void setMeasurement(ObservableMeasurementModel measurement) {
         Log.d(TAG, "setMeasurement: " + measurement.toString());
         this.measurement = measurement;
-    }
-
-    @Bindable
-    public ObservableBoolean getMultiPack() {
-
-        if (productModel != null) {
-            Log.d(TAG, "getMultiPack: " + multiPack.get());
-        }
-        return multiPack;
     }
 
     public void setDescriptionValidated(boolean descriptionValidated) {

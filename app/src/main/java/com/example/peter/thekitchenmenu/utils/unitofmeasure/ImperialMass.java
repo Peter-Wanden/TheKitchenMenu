@@ -12,6 +12,7 @@ public class ImperialMass implements UnitOfMeasure {
 
     private static final String TAG = "ImperialMass";
 
+    private static final int IMPERIAL_MASS_NUMBER_OF_MEASUREMENT_UNITS = 2;
     private static final double UNIT_POUND = BASE_SI_UNIT_MASS * 453.59237;
     private static final double UNIT_OUNCE = UNIT_POUND / 16;
 
@@ -51,6 +52,11 @@ public class ImperialMass implements UnitOfMeasure {
     }
 
     @Override
+    public int getNumberOfMeasurementUnits() {
+        return IMPERIAL_MASS_NUMBER_OF_MEASUREMENT_UNITS;
+    }
+
+    @Override
     public String getMeasurementUnitOne() {
         return unitOunce;
     }
@@ -79,15 +85,6 @@ public class ImperialMass implements UnitOfMeasure {
         observableMeasurementModel.setPackMeasurementTwo(getMeasurementInPounds(MAX_MASS));
 
         return observableMeasurementModel;
-    }
-
-    @Override
-    public void setNewMeasurementValuesTo(ObservableMeasurementModel observableMeasurementModel) {
-    }
-
-    @Override
-    public boolean getValuesFromObservableProductModel(ObservableProductModel productModel) {
-        return false;
     }
 
     private double convertToBaseSiUnits(ObservableMeasurementModel observableMeasurementModelToConvert) {
@@ -228,6 +225,16 @@ public class ImperialMass implements UnitOfMeasure {
     }
 
     @Override
+    public int getPackMeasurementThree() {
+        return 0;
+    }
+
+    @Override
+    public boolean setPackMeasurementThree(int packMeasurementThree) {
+        return false;
+    }
+
+    @Override
     public int getItemMeasurementOne() {
         return itemMeasurementInOunces;
     }
@@ -255,6 +262,16 @@ public class ImperialMass implements UnitOfMeasure {
         observableMeasurementModel.setPackMeasurementTwo(itemMeasurementInPounds * numberOfItemsInPack);
 
         return baseSiUnitsAreSet(convertToBaseSiUnits(observableMeasurementModel));
+    }
+
+    @Override
+    public int getItemMeasurementThree() {
+        return 0;
+    }
+
+    @Override
+    public boolean setItemMeasurementThree(int itemMeasurementThree) {
+        return false;
     }
 
     @Override

@@ -325,6 +325,13 @@ public class ProductNumericValidationHandler {
                         oldMeasurement + " to: " + newMeasurement);
                 return newMeasurement != oldMeasurement;
 
+            case R.id.pack_editable_measurement_three:
+
+                oldMeasurement = viewModel.getMeasurement().getPackMeasurementThree();
+                Log.d(TAG, "measurementHasChanged: packThree has changed from: " +
+                        oldMeasurement + " to: " + newMeasurement);
+                return newMeasurement != oldMeasurement;
+
             case R.id.item_editable_measurement_one:
 
                 oldMeasurement = viewModel.getMeasurement().getItemMeasurementOne();
@@ -338,6 +345,12 @@ public class ProductNumericValidationHandler {
                 Log.d(TAG, "measurementHasChanged: itemTwo has changed from: " +
                         oldMeasurement + " to: " + newMeasurement);
                 return newMeasurement != oldMeasurement;
+
+            case R.id.item_editable_measurement_three:
+
+                oldMeasurement = viewModel.getMeasurement().getItemMeasurementThree();
+                Log.d(TAG, "measurementHasChanged: itemThree has changed from: " +
+                        oldMeasurement + " to: " + newMeasurement);
         }
         Log.d(TAG, "measurementHasChanged: View not recognised, aborting.");
         return false;
@@ -353,19 +366,13 @@ public class ProductNumericValidationHandler {
                 resources.getResourceEntryName(editableMeasurement.getId()) + " measurement is: "
                 + newMeasurement);
 
-        boolean isMultiPack = viewModel.getMultiPack().get();
-        boolean multiPackSelectedWithNoItems =
-                viewModel.getMeasurement().getNumberOfItems() < MULTI_PACK_MINIMUM_NO_OF_ITEMS;
-
-        Log.d(TAG, "processMeasurements: isMultiPack: " + isMultiPack +
-                " selectedWithNoItems: " + multiPackSelectedWithNoItems);
-
         Log.d(TAG, "processMeasurements: number of packs: " +
                 viewModel.getMeasurement().getNumberOfItems());
 
         boolean measurementIsSet = false;
 
         if (viewId == R.id.pack_editable_measurement_one) {
+
 
             Log.d(TAG, "processMeasurements: processing change to pack measurement One");
             measurementIsSet = unitOfMeasure.setPackMeasurementOne(newMeasurement);
@@ -374,6 +381,11 @@ public class ProductNumericValidationHandler {
 
             Log.d(TAG, "processMeasurements: processing change to pack measurement Two");
             measurementIsSet = unitOfMeasure.setPackMeasurementTwo(newMeasurement);
+
+        } else if (viewId == R.id.pack_editable_measurement_three) {
+
+            Log.d(TAG, "processMeasurements: processing change to pack measurement three");
+            measurementIsSet = unitOfMeasure.setPackMeasurementThree(newMeasurement);
 
         } else if (viewId == R.id.item_editable_measurement_one) {
 
@@ -384,6 +396,18 @@ public class ProductNumericValidationHandler {
 
             Log.d(TAG, "processMeasurements: processing change to item measurement Two");
             measurementIsSet = unitOfMeasure.setItemMeasurementTwo(newMeasurement);
+
+        } else if (viewId == R.id.item_editable_measurement_three) {
+
+            Log.d(TAG, "processMeasurements: ");
+            measurementIsSet = unitOfMeasure.setItemMeasurementThree(newMeasurement);
+
+        } else {
+
+            Log.d(TAG, "processMeasurements: View not recognised!. View passed in: " +
+                    resources.getResourceEntryName(viewId) + " Cannot process further, aborting.");
+
+            return;
         }
 
         Log.d(TAG, "processMeasurements: MeasurementOneIsSet: " + measurementIsSet);

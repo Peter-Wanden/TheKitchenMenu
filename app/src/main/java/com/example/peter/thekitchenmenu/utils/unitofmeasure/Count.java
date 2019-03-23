@@ -16,6 +16,7 @@ public class Count extends BaseObservable implements UnitOfMeasure {
 
     private static final String TAG = "Count";
 
+    private static final int COUNT_NUMBER_OF_MEASUREMENT_UNITS = 1;
     private static final double UNIT_COUNT = BASE_UNIT_COUNT;
 
     private String type;
@@ -49,6 +50,11 @@ public class Count extends BaseObservable implements UnitOfMeasure {
     }
 
     @Override
+    public int getNumberOfMeasurementUnits() {
+        return COUNT_NUMBER_OF_MEASUREMENT_UNITS;
+    }
+
+    @Override
     public String getMeasurementUnitOne() {
         return null;
     }
@@ -66,15 +72,6 @@ public class Count extends BaseObservable implements UnitOfMeasure {
         observableMeasurementModel.setMaximumMeasurementOne(MAXIMUM_COUNT);
 
         return observableMeasurementModel;
-    }
-
-    @Override
-    public void setNewMeasurementValuesTo(ObservableMeasurementModel observableMeasurementModel) {
-    }
-
-    @Override
-    public boolean getValuesFromObservableProductModel(ObservableProductModel productModel) {
-        return false;
     }
 
     @Override
@@ -154,6 +151,16 @@ public class Count extends BaseObservable implements UnitOfMeasure {
         return false;
     }
 
+    @Override
+    public int getPackMeasurementThree() {
+        return 0;
+    }
+
+    @Override
+    public boolean setPackMeasurementThree(int packMeasurementThree) {
+        return false;
+    }
+
     @Override @Bindable
     public int getItemMeasurementOne() {
         return 0;
@@ -171,6 +178,16 @@ public class Count extends BaseObservable implements UnitOfMeasure {
 
     @Override
     public boolean setItemMeasurementTwo(int itemMeasurementTwo) {
+        return false;
+    }
+
+    @Override
+    public int getItemMeasurementThree() {
+        return 0;
+    }
+
+    @Override
+    public boolean setItemMeasurementThree(int itemMeasurementThree) {
         return false;
     }
 

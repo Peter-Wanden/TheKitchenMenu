@@ -69,7 +69,7 @@ public class UnitOfMeasureBindingAdapter {
                     setupPackEditableMeasurements(view, unitOfMeasure, isMultiPack);
                     break;
 
-                case R.id.pack_label_measurement_one:
+                case R.id.pack_measurement_label_one:
                     setPackMeasurementLabels(view, unitOfMeasure, isMultiPack);
                     break;
 
@@ -77,12 +77,8 @@ public class UnitOfMeasureBindingAdapter {
                     setupPackEditableMeasurements(view, unitOfMeasure, isMultiPack);
                     break;
 
-                case R.id.pack_label_measurement_two:
+                case R.id.pack_measurement_label_two:
                     setPackMeasurementLabels(view, unitOfMeasure, isMultiPack);
-                    break;
-
-                case R.id.total_or_unit:
-                    setTotalOrUnitSeparator(view, isMultiPack);
                     break;
 
                 case R.id.item_size_label:
@@ -198,20 +194,16 @@ public class UnitOfMeasureBindingAdapter {
             return;
         }
 
-        if (viewId == R.id.pack_label_measurement_one ||
+        if (viewId == R.id.pack_measurement_label_one ||
                 viewId == R.id.item_measurement_label_one) {
 
             textView.setText(newUnitOfMeasure.getMeasurementUnitOne());
 
-        } else if (viewId == R.id.pack_label_measurement_two ||
+        } else if (viewId == R.id.pack_measurement_label_two ||
                 viewId == R.id.item_measurement_label_two) {
 
             textView.setText(newUnitOfMeasure.getMeasurementUnitTwo());
         }
-    }
-
-    private static void setTotalOrUnitSeparator(View view, boolean isMultiPack) {
-        if (!isMultiPack) view.setVisibility(View.GONE);
     }
 
     private static void setItemSizeLabel(View view,

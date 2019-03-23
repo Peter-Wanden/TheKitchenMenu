@@ -5,7 +5,6 @@ import android.content.res.Resources;
 import android.util.Log;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.data.model.ObservableProductModel;
 
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementUnits.GRAMS;
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementUnits.KILOGRAMS;
@@ -19,15 +18,16 @@ public class MetricMass implements UnitOfMeasure {
 
     private static final String TAG = "MetricMass";
 
+    // Unit values as they relate to the International System of Units, or SI
+    private static final int METRIC_MASS_NUMBER_OF_MEASUREMENT_UNITS = 2;
+    private static final double UNIT_GRAM = BASE_SI_UNIT_MASS;
+    private static final double UNIT_KILOGRAM = BASE_SI_UNIT_MASS * 1000;
+
     // Unit description strings
     private String typeAsString;
     private String subTypeAsString;
     private String unitGram;
     private String unitKilogram;
-
-    // Unit values as they relate to the International System of Units, or SI
-    private static final double UNIT_KILOGRAM = BASE_SI_UNIT_MASS * 1000;
-    private static final double UNIT_GRAM = BASE_SI_UNIT_MASS;
 
     // Min and max measurements
     private double minimumBaseSiMeasurement = UNIT_GRAM;
@@ -70,6 +70,11 @@ public class MetricMass implements UnitOfMeasure {
     @Override
     public MeasurementSubType getMeasurementSubType() {
         return MeasurementSubType.TYPE_METRIC_MASS;
+    }
+
+    @Override
+    public int getNumberOfMeasurementUnits() {
+        return METRIC_MASS_NUMBER_OF_MEASUREMENT_UNITS;
     }
 
     @Override
@@ -197,20 +202,6 @@ public class MetricMass implements UnitOfMeasure {
 
     private double minimumMultiPackMeasurement() {
         return minimumBaseSiMeasurement * numberOfItems;
-    }
-
-    @Override
-    public boolean getValuesFromObservableProductModel(ObservableProductModel productModel) {
-
-        boolean baseSiUnitsAreSet = baseSiUnitsAreSet(productModel.getBaseSiUnits());
-        boolean numberOfItemsAreSet = setNumberOfItems(productModel.getNumberOfItems());
-
-        Log.d(TAG, "getValuesFromObservableProductModel: number of items are set: " +
-                numberOfItemsAreSet);
-        Log.d(TAG, "getValuesFromObservableProductModel: base units are set: " +
-                baseSiUnitsAreSet);
-
-        return numberOfItemsAreSet && baseSiUnitsAreSet;
     }
 
     @Override
@@ -348,6 +339,16 @@ public class MetricMass implements UnitOfMeasure {
     }
 
     @Override
+    public int getPackMeasurementThree() {
+        return 0;
+    }
+
+    @Override
+    public boolean setPackMeasurementThree(int packMeasurementThree) {
+        return false;
+    }
+
+    @Override
     public int getItemMeasurementOne() {
         return (int) this.itemMeasurementInGrams;
     }
@@ -404,25 +405,13 @@ public class MetricMass implements UnitOfMeasure {
     }
 
     @Override
-    public void setNewMeasurementValuesTo(ObservableMeasurementModel measurement) {
+    public int getItemMeasurementThree() {
+        return 0;
+    }
 
-        if (measurement.getMeasurementSubType() != getMeasurementSubType())
-            measurement.setMeasurementSubType(getMeasurementSubType());
-
-        if (measurement.getNumberOfItems() != getNumberOfItems())
-            measurement.setNumberOfItems(getNumberOfItems());
-
-        if (measurement.getPackMeasurementOne() != getPackMeasurementOne())
-            measurement.setPackMeasurementOne(getPackMeasurementOne());
-
-        if (measurement.getPackMeasurementTwo() != getPackMeasurementTwo())
-            measurement.setPackMeasurementTwo(getPackMeasurementTwo());
-
-        if (measurement.getItemMeasurementOne() != getItemMeasurementOne())
-            measurement.setItemMeasurementOne(getItemMeasurementOne());
-
-        if (measurement.getItemMeasurementTwo() != getItemMeasurementTwo())
-            measurement.setItemMeasurementTwo(getItemMeasurementTwo());
+    @Override
+    public boolean setItemMeasurementThree(int itemMeasurementThree) {
+        return false;
     }
 
     @Override

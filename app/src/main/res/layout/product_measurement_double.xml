@@ -5,6 +5,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <import type="android.view.View" />
+
+        <import type="com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubTypeConverter" />
+
+        <import type="com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementZeroToBlankConverter" />
+
+        <variable
+            name="productEditorViewModel"
+            type="com.example.peter.thekitchenmenu.viewmodels.ProductEditorViewModel" />
+
+        <variable
+            name="numericValidation"
+            type="com.example.peter.thekitchenmenu.utils.ProductNumericValidationHandler" />
+
+        <variable
+            name="measurement"
+            type="com.example.peter.thekitchenmenu.utils.unitofmeasure.ObservableMeasurementModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/product_measurement_double_parent"
         android:layout_width="match_parent"
@@ -22,13 +43,13 @@
             android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(packEditableMeasurementTwo, productEditorViewModel.measurement.packMeasurementTwo)}'
             android:textAlignment="textEnd"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/pack_label_measurement_two"
+            app:layout_constraintEnd_toStartOf="@+id/pack_measurement_label_two"
             app:layout_constraintBottom_toTopOf="@+id/item_editable_measurement_two"
             app:onUnitOfMeasureSelected='@{productEditorViewModel.measurement.measurementSubType}'
-            tools:text="99" />
+            tools:text="22" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/pack_label_measurement_two"
+            android:id="@+id/pack_measurement_label_two"
             style="@style/EditableCategoryStyle"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/standard_input_item_height"
@@ -52,13 +73,13 @@
             android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(packEditableMeasurementOne, productEditorViewModel.measurement.packMeasurementOne)}'
             android:textAlignment="textEnd"
             app:layout_constraintBottom_toTopOf="@+id/item_editable_measurement_one"
-            app:layout_constraintEnd_toStartOf="@+id/pack_label_measurement_one"
-            app:layout_constraintStart_toEndOf="@id/pack_label_measurement_two"
+            app:layout_constraintEnd_toStartOf="@+id/pack_measurement_label_one"
+            app:layout_constraintStart_toEndOf="@id/pack_measurement_label_two"
             app:onUnitOfMeasureSelected='@{productEditorViewModel.measurement.measurementSubType}'
-            tools:text="9999" />
+            tools:text="16" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/pack_label_measurement_one"
+            android:id="@+id/pack_measurement_label_one"
             style="@style/EditableCategoryStyle"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/standard_input_item_height"
@@ -86,7 +107,7 @@
             app:layout_constraintEnd_toStartOf="@+id/item_measurement_label_two"
             app:layout_constraintStart_toStartOf="parent"
             app:onUnitOfMeasureSelected='@{productEditorViewModel.measurement.measurementSubType}'
-            tools:text="5" />
+            tools:text="22" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/item_measurement_label_two"
@@ -117,7 +138,7 @@
             app:layout_constraintEnd_toStartOf="@id/item_measurement_label_one"
             app:layout_constraintStart_toEndOf="@+id/item_measurement_label_two"
             app:onUnitOfMeasureSelected='@{productEditorViewModel.measurement.measurementSubType}'
-            tools:text="3" />
+            tools:text="16" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/item_measurement_label_one"

@@ -79,38 +79,6 @@ public class BindingAdapters {
         }
     }
 
-    @BindingAdapter("nonFoodGetFocus")
-    public static void nonFoodGetFocus(View view, int category) {
-        final int NON_FOOD = 2;
-
-        if (category == NON_FOOD) {
-
-            int viewId = view.getId();
-
-            if (viewId != View.NO_ID) {
-
-                if (viewId == R.id.multi_pack_check_box) {
-                    view.requestFocusFromTouch();
-                }
-            }
-
-        }
-    }
-
-    @BindingAdapter("shelfLifeValueChange")
-    public static void shelfLifeValueChange(View view, int shelfLife) {
-        if (shelfLife != 0) {
-            int viewId = view.getId();
-
-            if (viewId != View.NO_ID) {
-
-                if(viewId == R.id.multi_pack_check_box) {
-                    view.requestFocusFromTouch();
-                }
-            }
-        }
-    }
-
     @BindingAdapter("formatCardinalOrDecimal")
     public static void formatCardinalOrDecimal(View v, int unitOfMeasure) {
         EditText editText = (EditText) v;
