@@ -1,10 +1,8 @@
 package com.example.peter.thekitchenmenu.viewmodels;
 
 import android.app.Application;
-import android.util.Log;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.data.entity.Product;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;

@@ -14,7 +14,7 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-import static com.example.peter.thekitchenmenu.data.entity.Product.REMOTE_PRODUCT_ID;
+import static com.example.peter.thekitchenmenu.data.entity.ProductEntity.REMOTE_PRODUCT_ID;
 import static com.example.peter.thekitchenmenu.data.entity.UsersProductData.TABLE_USERS_PRODUCT_DATA;
 
 @Entity(tableName = TABLE_USERS_PRODUCT_DATA)

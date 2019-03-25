@@ -8,7 +8,7 @@ import android.util.Log;
 
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.app.HandlerWorker;
-import com.example.peter.thekitchenmenu.data.entity.Product;
+import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.data.entity.UsersProductData;
 
 import java.util.LinkedList;
@@ -123,11 +123,11 @@ public class RepositoryRemote {
         if (!Constants.getUserId().getValue().equals(Constants.ANONYMOUS)) {
             switch (dataModel) {
 
-                case Product.TAG:
+                case ProductEntity.TAG:
                     if (syncProduct.getListenerState() != isObserved) {
                         syncProduct.setListenerState(isObserved);
                         if (isObserved) {
-                            syncQueue.add(new ModelStatus(Product.TAG));
+                            syncQueue.add(new ModelStatus(ProductEntity.TAG));
                         }
                     }
                     break;
@@ -191,8 +191,8 @@ public class RepositoryRemote {
                 // Find out which data models data set has been returned.
                 switch (queueHead.getModelName()) {
 
-                    case Product.TAG:
-                        Log.d(TAG, "processSyncQueue: Product");
+                    case ProductEntity.TAG:
+                        Log.d(TAG, "processSyncQueue: ProductEntity");
                         // Send the data to its respective sync class to be processed.
                         syncProduct.syncRemoteData(handler, worker);
                         break;

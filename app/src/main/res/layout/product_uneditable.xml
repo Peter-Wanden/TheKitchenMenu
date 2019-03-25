@@ -11,7 +11,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/product_container"
+        android:id="@+id/product_identity_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

@@ -14,12 +14,12 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-import static com.example.peter.thekitchenmenu.data.entity.Product.TABLE_PRODUCT;
+import static com.example.peter.thekitchenmenu.data.entity.ProductEntity.TABLE_PRODUCT;
 
 @Entity(tableName = TABLE_PRODUCT)
-public class Product implements Parcelable {
+public class ProductEntity implements Parcelable {
 
-    public static final String TAG = "Product";
+    public static final String TAG = "ProductEntity";
 
     public static final String TABLE_PRODUCT = "product_uneditable";
     public static final String ID = "id";
@@ -82,22 +82,22 @@ public class Product implements Parcelable {
     private String remoteProductId;
 
     @Ignore
-    public Product(){} /* Required by Firebase. */
+    public ProductEntity(){} /* Required by Firebase. */
 
-    public Product(int id,
-                   String description,
-                   String madeBy,
-                   int category,
-                   int shelfLife,
-                   int numberOfItems,
-                   double baseSiUnits,
-                   int unitOfMeasureSubType,
-                   double packAvePrice,
-                   String createdBy,
-                   @NonNull String remoteImageUri,
-                   long createDate,
-                   long lastUpdate,
-                   String remoteProductId) {
+    public ProductEntity(int id,
+                         String description,
+                         String madeBy,
+                         int category,
+                         int shelfLife,
+                         int numberOfItems,
+                         double baseSiUnits,
+                         int unitOfMeasureSubType,
+                         double packAvePrice,
+                         String createdBy,
+                         @NonNull String remoteImageUri,
+                         long createDate,
+                         long lastUpdate,
+                         String remoteProductId) {
 
         this.id = id;
         this.description = description;
@@ -116,7 +116,7 @@ public class Product implements Parcelable {
     }
 
     @Ignore
-    public Product(Parcel in) {
+    public ProductEntity(Parcel in) {
         id = in.readInt();
         description = in.readString();
         madeBy = in.readString();
@@ -156,15 +156,15 @@ public class Product implements Parcelable {
         return 0;
     }
 
-    public static final Creator<Product> CREATOR = new Creator<Product>() {
+    public static final Creator<ProductEntity> CREATOR = new Creator<ProductEntity>() {
         @Override
-        public Product createFromParcel(Parcel in) {
-            return new Product(in);
+        public ProductEntity createFromParcel(Parcel in) {
+            return new ProductEntity(in);
         }
 
         @Override
-        public Product[] newArray(int size) {
-            return new Product[size];
+        public ProductEntity[] newArray(int size) {
+            return new ProductEntity[size];
         }
     };
 
@@ -191,7 +191,7 @@ public class Product implements Parcelable {
 
     @Override
     public String toString() {
-        return "Product { \n" +
+        return "ProductEntity { \n" +
                 "\nid=" + id +
                 "\n description='" + description + '\'' +
                 "\n madeBy='" + madeBy + '\'' +

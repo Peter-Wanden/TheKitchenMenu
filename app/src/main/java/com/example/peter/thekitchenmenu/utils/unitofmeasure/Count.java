@@ -5,7 +5,6 @@ import android.content.res.Resources;
 
 import com.example.peter.thekitchenmenu.BR;
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.data.model.ObservableProductModel;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
@@ -65,13 +64,13 @@ public class Count extends BaseObservable implements UnitOfMeasure {
     }
 
     @Override
-    public ObservableMeasurementModel getMinAndMax() {
+    public MeasurementModel getMinAndMax() {
 
-        ObservableMeasurementModel observableMeasurementModel = new ObservableMeasurementModel();
-        observableMeasurementModel.setMinimumMeasurementOne(MINIMUM_COUNT);
-        observableMeasurementModel.setMaximumMeasurementOne(MAXIMUM_COUNT);
+        MeasurementModel measurementModel = new MeasurementModel();
+        measurementModel.setMinimumMeasurementOne(MINIMUM_COUNT);
+        measurementModel.setMaximumMeasurementOne(MAXIMUM_COUNT);
 
-        return observableMeasurementModel;
+        return measurementModel;
     }
 
     @Override

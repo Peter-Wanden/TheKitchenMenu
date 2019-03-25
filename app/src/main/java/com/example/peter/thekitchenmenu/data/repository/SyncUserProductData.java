@@ -10,7 +10,7 @@ import com.example.peter.thekitchenmenu.app.HandlerWorker;
 import com.example.peter.thekitchenmenu.app.Singletons;
 import com.example.peter.thekitchenmenu.data.databaseRemote.DataListenerPending;
 import com.example.peter.thekitchenmenu.data.databaseRemote.RemoteDbRefs;
-import com.example.peter.thekitchenmenu.data.entity.Product;
+import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.data.entity.UsersProductData;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -78,11 +78,11 @@ class SyncUserProductData {
             }
 
         }).execute(() -> {
-            // Get the local related Product using the remote reference ID
-            Product pc = repository.getProductByRemoteId(
+            // Get the local related ProductEntity using the remote reference ID
+            ProductEntity pc = repository.getProductByRemoteId(
                     mPmArray[0].getRemoteProductId());
 
-            // Add the Product local ID to the remote UsersProductData
+            // Add the ProductEntity local ID to the remote UsersProductData
             mPmArray[0].setProductId(pc.getId());
 
             compareLocalWithRemote();

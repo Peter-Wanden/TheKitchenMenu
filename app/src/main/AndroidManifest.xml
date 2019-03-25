@@ -13,12 +13,14 @@
 
     <application
         android:name=".app.Singletons"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <!-- TODO: Auto backup see: https://developer.android.com/guide/topics/data/autobackup -->
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -72,7 +74,7 @@
             </intent-filter>
         </activity>
 
-        <!-- Activity to view lists of products -->
+        <!-- Activity to view lists of productEntities -->
         <activity
             android:name=".ui.catalog.ProductCatalogMain"
             android:label="@string/title_product_catalog"
@@ -84,10 +86,13 @@
                 android:value=".ui.catalog.ActivitySearchProd" />
         </activity>
 
-        <!-- Activity view of a single products details -->
+        <!-- Activity view of a single productEntities details -->
 
         <activity android:name=".ui.detail.ProductMain"
             android:theme="@style/AppTheme"/>
+
+        <activity android:name=".ui.detail.product.editor.ProductEditor"
+            android:theme="@style/AppTheme" />
 
         <!-- Searchable activity for finding Products -->
         <activity

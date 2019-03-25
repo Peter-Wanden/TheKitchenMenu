@@ -55,6 +55,9 @@ public class UnitOfMeasureBindingAdapter {
         UnitOfMeasure unitOfMeasure = UnitOfMeasureClassSelector.
                 getClassWithSubType(viewContext, measurementSubType);
 
+        Log.d(TAG, "setupViews: new unit of measure is: " +
+                unitOfMeasure.getMeasurementSubType());
+
         int viewId = view.getId();
 
         if (viewId != View.NO_ID && view.getVisibility() == View.VISIBLE) {
@@ -62,42 +65,52 @@ public class UnitOfMeasureBindingAdapter {
             switch (viewId) {
 
                 case R.id.pack_size_label:
+
                     setPackSizeLabel(view, unitOfMeasure);
                     break;
 
                 case R.id.pack_editable_measurement_one:
+
                     setupPackEditableMeasurements(view, unitOfMeasure, isMultiPack);
                     break;
 
                 case R.id.pack_measurement_label_one:
+
                     setPackMeasurementLabels(view, unitOfMeasure, isMultiPack);
                     break;
 
                 case R.id.pack_editable_measurement_two:
+
                     setupPackEditableMeasurements(view, unitOfMeasure, isMultiPack);
                     break;
 
                 case R.id.pack_measurement_label_two:
+
                     setPackMeasurementLabels(view, unitOfMeasure, isMultiPack);
                     break;
 
                 case R.id.item_size_label:
+
                     setItemSizeLabel(view, unitOfMeasure, isMultiPack);
                     break;
 
                 case R.id.item_editable_measurement_two:
+
                     setupPackEditableMeasurements(view, unitOfMeasure, isMultiPack);
                     break;
 
                 case R.id.item_measurement_label_two:
+
                     setPackMeasurementLabels(view, unitOfMeasure, isMultiPack);
                     break;
 
                 case R.id.item_editable_measurement_one:
+
                     setupPackEditableMeasurements(view, unitOfMeasure, isMultiPack);
                     break;
 
                 case R.id.item_measurement_label_one:
+
                     setPackMeasurementLabels(view, unitOfMeasure, isMultiPack);
                     break;
             }
@@ -105,6 +118,7 @@ public class UnitOfMeasureBindingAdapter {
     }
 
     private static void setPackSizeLabel(View view, UnitOfMeasure unitOfMeasure) {
+
         TextView packSize = (TextView) view;
         packSize.setText(view.getContext().getString(
                 R.string.pack_size_total, unitOfMeasure.getTypeAsString()));

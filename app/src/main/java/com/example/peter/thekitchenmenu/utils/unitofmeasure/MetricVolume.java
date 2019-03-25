@@ -2,8 +2,6 @@ package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
 import android.content.Context;
 
-import com.example.peter.thekitchenmenu.data.model.ObservableProductModel;
-
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.BASE_SI_UNIT_VOLUME;
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MULTI_PACK_MAXIMUM_NO_OF_ITEMS;
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MULTI_PACK_MINIMUM_NO_OF_ITEMS;
@@ -55,7 +53,7 @@ public class MetricVolume implements UnitOfMeasure {
     }
 
     @Override
-    public ObservableMeasurementModel getMinAndMax() {
+    public MeasurementModel getMinAndMax() {
         return null;
     }
 

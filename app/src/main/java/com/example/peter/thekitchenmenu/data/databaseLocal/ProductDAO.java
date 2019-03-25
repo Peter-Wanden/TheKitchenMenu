@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.data.databaseLocal;
 
 import android.database.Cursor;
 
-import com.example.peter.thekitchenmenu.data.entity.Product;
+import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import static android.app.SearchManager.*;
-import static com.example.peter.thekitchenmenu.data.entity.Product.*;
+import static com.example.peter.thekitchenmenu.data.entity.ProductEntity.*;
 import static com.example.peter.thekitchenmenu.data.entity.ProductFastTextSearch.TABLE_FTS_PRODUCT;
 
 @Dao
@@ -24,7 +24,7 @@ public interface ProductDAO {
     @Query("SELECT * " +
             "FROM "+ TABLE_PRODUCT +
             " ORDER BY " + DESCRIPTION)
-    LiveData<List<Product>> getAll();
+    LiveData<List<ProductEntity>> getAll();
 
     // The Integer type parameter tells Room to use a PositionalDataSource
     // object, with position-based loading under the hood.
@@ -32,38 +32,38 @@ public interface ProductDAO {
     @Query("SELECT * " +
             "FROM "+ TABLE_PRODUCT +
             " ORDER BY " + DESCRIPTION)
-    DataSource.Factory<Integer, Product> getAllPaged();
+    DataSource.Factory<Integer, ProductEntity> getAllPaged();
 
     @Query("SELECT * " +
             "FROM " + TABLE_PRODUCT +
             " WHERE " + ID +
             " IN(:idArray)")
-    LiveData<List<Product>> getByIdArray(int[] idArray);
+    LiveData<List<ProductEntity>> getByIdArray(int[] idArray);
 
     @Query("SELECT * " +
            "FROM " + TABLE_PRODUCT +
             " WHERE id = :id")
-    LiveData<Product> getById(int id);
+    LiveData<ProductEntity> getById(int id);
 
     @Query("SELECT * " +
             "FROM " + TABLE_PRODUCT +
             " WHERE " + REMOTE_PRODUCT_ID + " = :remoteId")
-    Product getByRemoteId(String remoteId);
+    ProductEntity getByRemoteId(String remoteId);
 
     @Insert
-    void insert(Product product);
+    void insert(ProductEntity productEntity);
 
     @Insert
-    void insertAll(List<Product> listProduct);
+    void insertAll(List<ProductEntity> listProductEntity);
 
     @Update
-    void update(Product product);
+    void update(ProductEntity productEntity);
 
     @Update
-    void updateAll(List<Product> listProduct);
+    void updateAll(List<ProductEntity> listProductEntity);
 
     @Delete
-    void delete(Product product);
+    void delete(ProductEntity productEntity);
 
     @Query("DELETE FROM " + TABLE_PRODUCT)
     void deleteAll();

@@ -1,17 +1,13 @@
 package com.example.peter.thekitchenmenu.ui.detail;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.data.entity.Product;
-import com.example.peter.thekitchenmenu.databinding.ProductMainBinding;
 import com.example.peter.thekitchenmenu.viewmodels.ProductMainViewModel;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 public class ProductMain extends AppCompatActivity {
@@ -33,12 +29,6 @@ public class ProductMain extends AppCompatActivity {
         ProductMainViewModel viewModel = ViewModelProviders.of(
                 this).get(ProductMainViewModel.class);
         viewModel.getTitle().observe(this, this::setTitle);
-
-        ProductMainBinding binding = DataBindingUtil.setContentView(this,
-                R.layout.product_main);
-        binding.setLifecycleOwner(this);
-        binding.setProductMainViewModel(viewModel);
-        setSupportActionBar(binding.toolbar);
     }
 
     @Override

@@ -3,12 +3,12 @@ package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 import android.util.Log;
 
 import com.example.peter.thekitchenmenu.BR;
-import com.example.peter.thekitchenmenu.data.model.ObservableProductModel;
+import com.example.peter.thekitchenmenu.data.model.ProductModel;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
-public class ObservableMeasurementModel extends BaseObservable {
+public class MeasurementModel extends BaseObservable {
 
     private static final String TAG = "ObservableMeasurementMo";
 
@@ -197,7 +197,7 @@ public class ObservableMeasurementModel extends BaseObservable {
     @Override
     public String toString() {
 
-        return "ObservableMeasurementModel{" +
+        return "MeasurementModel{" +
                 ", \nmeasurementSubType=" + measurementSubType +
                 ", \nnumberOfItems=" + numberOfItems +
                 ", \nminimumMeasurementOne=" + minimumMeasurementOne +
@@ -209,7 +209,7 @@ public class ObservableMeasurementModel extends BaseObservable {
                 '}';
     }
 
-    public void getNumericValuesFromProductModel(ObservableProductModel productModel) {
+    public void getNumericValuesFromProductModel(ProductModel productModel) {
 
         Log.d(TAG, "getNumericValuesFromProductModel: Getting values");
 

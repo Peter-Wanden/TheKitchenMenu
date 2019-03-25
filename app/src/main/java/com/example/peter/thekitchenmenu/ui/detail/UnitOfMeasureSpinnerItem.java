@@ -1,17 +1,17 @@
 package com.example.peter.thekitchenmenu.ui.detail;
 
-class UnitOfMeasureSpinnerItem {
+public class UnitOfMeasureSpinnerItem {
 
     private SpinnerItemType type;
     private String measurementUnit;
 
 
-    UnitOfMeasureSpinnerItem(SpinnerItemType type, String measurementUnit) {
+    public UnitOfMeasureSpinnerItem(SpinnerItemType type, String measurementUnit) {
         this.type = type;
         this.measurementUnit = measurementUnit;
     }
 
-    String getMeasurementUnits() {
+    public String getMeasurementUnits() {
         return measurementUnit;
     }
 

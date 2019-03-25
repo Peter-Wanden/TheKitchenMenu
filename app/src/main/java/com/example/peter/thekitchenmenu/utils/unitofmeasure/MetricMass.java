@@ -184,20 +184,20 @@ public class MetricMass implements UnitOfMeasure {
     }
 
     @Override
-    public ObservableMeasurementModel getMinAndMax() {
+    public MeasurementModel getMinAndMax() {
 
-        ObservableMeasurementModel observableMeasurementModel = new ObservableMeasurementModel();
-        observableMeasurementModel.setNumberOfItems(numberOfItems);
+        MeasurementModel measurementModel = new MeasurementModel();
+        measurementModel.setNumberOfItems(numberOfItems);
 
         if (numberOfItems >= MULTI_PACK_MINIMUM_NO_OF_ITEMS)
-            observableMeasurementModel.setMinimumMeasurementOne((int) minimumMultiPackMeasurement());
-        else observableMeasurementModel.setMinimumMeasurementOne((int) minimumBaseSiMeasurement);
+            measurementModel.setMinimumMeasurementOne((int) minimumMultiPackMeasurement());
+        else measurementModel.setMinimumMeasurementOne((int) minimumBaseSiMeasurement);
 
-        observableMeasurementModel.setMinimumMeasurementTwo(0);
-        observableMeasurementModel.setMaximumMeasurementOne(0);
-        observableMeasurementModel.setMaximumMeasurementTwo(getMeasurementInKilograms(MAX_MASS));
+        measurementModel.setMinimumMeasurementTwo(0);
+        measurementModel.setMaximumMeasurementOne(0);
+        measurementModel.setMaximumMeasurementTwo(getMeasurementInKilograms(MAX_MASS));
 
-        return observableMeasurementModel;
+        return measurementModel;
     }
 
     private double minimumMultiPackMeasurement() {

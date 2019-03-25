@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
-import com.example.peter.thekitchenmenu.data.model.ObservableProductModel;
+import com.example.peter.thekitchenmenu.data.model.ProductModel;
 import com.example.peter.thekitchenmenu.utils.Converters;
 import com.squareup.picasso.Picasso;
 
@@ -25,7 +25,7 @@ public class ProductCatalogRecyclerAdapter
     private static final String TAG = ProductCatalogRecyclerAdapter.class.getSimpleName();
     private final Context context;
 
-    private List<ObservableProductModel> listObservableProductModel;
+    private List<ProductModel> listProductModel;
 
     final private OnClickProduct clickHandler;
 
@@ -54,45 +54,45 @@ public class ProductCatalogRecyclerAdapter
             int position) {
 
         /* Get the product_uneditable at the passed in position */
-        ObservableProductModel observableProductModel = listObservableProductModel.get(position);
+        ProductModel productModel = listProductModel.get(position);
 
         /* Set the description */
-        holder.descTV.setText(observableProductModel.getDescription());
+        holder.descTV.setText(productModel.getDescription());
 
         // TODO - Picasso, add image caching.
         /* Get and set the image */
-        if (!observableProductModel.getRemoteImageUri().equals("")) {
-            Picasso.get().load(observableProductModel.getRemoteImageUri()).into(holder.prodIV);
+        if (!productModel.getRemoteImageUri().equals("")) {
+            Picasso.get().load(productModel.getRemoteImageUri()).into(holder.prodIV);
         } else {
             Picasso.get().load(R.drawable.placeholder).into(holder.prodIV);
         }
 
         /* Set the pack size */
-        holder.packSizeTV.setText(String.valueOf(observableProductModel.getBaseSiUnits()));
+        holder.packSizeTV.setText(String.valueOf(productModel.getBaseSiUnits()));
 
         /* Set the unit of measure */
         holder.UoMTV.setText(Converters.getUnitOfMeasureString
-                (context, observableProductModel.getUnitOfMeasureSubType()));
+                (context, productModel.getUnitOfMeasureSubType()));
     }
 
     /* Returns the number of items in the adapter */
     @Override
     public int getItemCount() {
-        if (listObservableProductModel == null) return 0;
-        return listObservableProductModel.size();
+        if (listProductModel == null) return 0;
+        return listProductModel.size();
     }
 
     /* Getter for the current list of products */
-    public List<ObservableProductModel> getProducts() {
-        return listObservableProductModel;
+    public List<ProductModel> getProducts() {
+        return listProductModel;
     }
 
     /*
      * When the data changes, this method updates the list of products and notifies the adapter to
      * use the new values in it
      */
-    public void setProducts(List<ObservableProductModel> vmListProd) {
-        listObservableProductModel = vmListProd;
+    public void setProducts(List<ProductModel> vmListProd) {
+        listProductModel = vmListProd;
         notifyDataSetChanged();
     }
 
@@ -122,14 +122,14 @@ public class ProductCatalogRecyclerAdapter
         public void onClick(View v) {
 
             // Get the product_uneditable from the adapter at the clicked position
-            ObservableProductModel observableProductModel = listObservableProductModel.get(getAdapterPosition());
+            ProductModel productModel = listProductModel.get(getAdapterPosition());
 
             // Find out if this user was the creator of the product_uneditable
             boolean isCreator = Constants.getUserId().getValue().
-                    equals(observableProductModel.getCreatedBy());
+                    equals(productModel.getCreatedBy());
 
             // Click handler for this product_uneditable type
-            clickHandler.onClick(observableProductModel, isCreator);
+            clickHandler.onClick(productModel, isCreator);
         }
     }
 }

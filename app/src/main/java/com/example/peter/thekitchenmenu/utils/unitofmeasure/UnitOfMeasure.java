@@ -10,7 +10,7 @@ public interface UnitOfMeasure {
     String getMeasurementUnitOne();
     String getMeasurementUnitTwo();
 
-    ObservableMeasurementModel getMinAndMax();
+    MeasurementModel getMinAndMax();
 
     double getBaseSiUnits();
     boolean baseSiUnitsAreSet(double baseSiUnits);

@@ -7,7 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.data.model.ObservableProductModel;
+import com.example.peter.thekitchenmenu.data.model.ProductModel;
 import com.example.peter.thekitchenmenu.databinding.ActivityCatalogProductBinding;
 import com.example.peter.thekitchenmenu.ui.detail.ProductMain;
 import com.example.peter.thekitchenmenu.viewmodels.ViewModelCatlogProducts;
@@ -50,7 +50,7 @@ public class ProductCatalogMain extends AppCompatActivity {
         });
     }
 
-    private void launchDetailActivity(ObservableProductModel selectedProduct) {
+    private void launchDetailActivity(ProductModel selectedProduct) {
 
         Intent intent = new Intent(ProductCatalogMain.this, ProductMain.class);
         intent.putExtra(PRODUCT_REMOTE_REFERENCE_KEY, selectedProduct);

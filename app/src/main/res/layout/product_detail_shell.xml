@@ -96,7 +96,7 @@
 
                     <include
                         android:id="@+id/product_editable"
-                        layout="@layout/product_editor" />
+                        layout="@layout/product_identity_editor" />
 
                     <include
                         android:id="@+id/product_uneditable"
@@ -105,7 +105,7 @@
 
                     <include
                         android:id="@+id/user_product_editable"
-                        layout="@layout/product_user_data_editable" />
+                        layout="@layout/product_user_data_editor" />
 
                     <include
                         android:id="@+id/user_product_uneditable"

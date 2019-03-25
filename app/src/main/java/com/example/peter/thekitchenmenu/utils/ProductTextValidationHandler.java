@@ -2,12 +2,12 @@ package com.example.peter.thekitchenmenu.utils;
 
 import android.app.Application;
 import android.content.res.Resources;
-import android.util.Log;
 import android.widget.EditText;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.data.entity.Product;
+import com.example.peter.thekitchenmenu.data.model.ProductIdentityModel;
 import com.example.peter.thekitchenmenu.viewmodels.ProductEditorViewModel;
+import com.example.peter.thekitchenmenu.viewmodels.ProductIdentityViewModel;
 
 public class ProductTextValidationHandler {
 
@@ -15,20 +15,21 @@ public class ProductTextValidationHandler {
 
     private enum ValidateTextLength {TOO_SHORT, TOO_LONG, VALIDATED}
 
-    private ProductEditorViewModel viewModel;
+    private ProductIdentityViewModel viewModel;
     private Resources resources;
 
     private int viewId;
     private String newText;
 
     public ProductTextValidationHandler(Application applicationContext,
-                                        ProductEditorViewModel viewModel) {
+                                        ProductIdentityViewModel viewModel) {
         this.viewModel = viewModel;
         resources = applicationContext.getResources();
     }
 
     // TODO - Introduce a cleanString() method that strips out spaces and escape characters from Editable's.
     // TODO - Refactor: Create a class for each type of validation i.e. length, number ranges etc.
+    // TODO - Make general classes for text validation so as to not duplicate this class each time text validation is required
 
     public void validateDescription(EditText editableDescription) {
 
@@ -56,17 +57,17 @@ public class ProductTextValidationHandler {
 
     private boolean fieldHasChanged() {
 
-        if (viewModel.getProductModel() != null) {
+        if (viewModel.getIdentityModel() != null) {
 
             switch (viewId) {
 
                 case R.id.editable_description:
 
-                    return !viewModel.getProductModel().getDescription().equals(newText);
+                    return !viewModel.getIdentityModel().getDescription().equals(newText);
 
                 case R.id.editable_made_by:
 
-                    return !viewModel.getProductModel().getMadeBy().equals(newText);
+                    return !viewModel.getIdentityModel().getMadeBy().equals(newText);
 
                 default:
                     return false;
@@ -118,20 +119,20 @@ public class ProductTextValidationHandler {
 
     private void publishResultToViewModel() {
 
-        if (viewModel.getProductModel() != null) {
+        if (viewModel.getIdentityModel() != null) {
 
             switch (viewId) {
 
                 case R.id.editable_description:
 
-                    viewModel.getProductModel().setDescription(newText);
+                    viewModel.getIdentityModel().setDescription(newText);
                     viewModel.setDescriptionValidated(true);
 
                     break;
 
                 case R.id.editable_made_by:
 
-                    viewModel.getProductModel().setMadeBy(newText);
+                    viewModel.getIdentityModel().setMadeBy(newText);
                     viewModel.setMadeByValidated(true);
 
                     break;

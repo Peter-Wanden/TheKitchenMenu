@@ -3,16 +3,16 @@
 
     <!-- CONTENT DESCRIPTIONS -->
     <!-- Attach to any ImageView's of the product_uneditable -->
-    <string name="cd_picture_of_product">A picture of the product</string>
+    <string name="cd_picture_of_product">A picture of the productEntity</string>
     <string name="cd_add_image_from_camera">Select to add image from camera</string>
     <string name="cd_add_image_from_gallery">Click to add image from gallery</string>
     <!-- Attach to any ImageView's of the recipe -->
-    <string name="cd_save_product">Click to save the current product</string>
-    <string name="cd_delete_product">Click to delete the current product</string>
-    <string name="cd_action_edit_product">Click to edit the current product</string>
+    <string name="cd_save_product">Click to save the current productEntity</string>
+    <string name="cd_delete_product">Click to delete the current productEntity</string>
+    <string name="cd_action_edit_product">Click to edit the current productEntity</string>
     <string name="cd_add_image">Click to add a picture</string>
     <string name="cd_rotate_image">Click to rotate picture</string>
-    <string name="cd_add_product">Add a product</string>
+    <string name="cd_add_product">Add a productEntity</string>
     <string name="cd_brand_logo">The kitchen menu brand logo</string>
 
     <!-- Common field labels and hints -->
@@ -160,7 +160,7 @@
     <!-- ProductCatalogMain -->
     <string name="title_product_catalog">Product Catalog</string>
     <string name="product_catalog_empty_view_title_text">The cupboards are empty.</string>
-    <string name="product_catalog_empty_view_subtitle_text">Press + to add some products!</string>
+    <string name="product_catalog_empty_view_subtitle_text">Press + to add some productEntities!</string>
     <string name="image_of_meal">An image of the selected recipe</string>
     <string name="activity_catalog_products_tab_1_title">Community Products</string>
     <string name="activity_catalog_products_tab_2_title">My Products</string>
@@ -181,7 +181,7 @@
     <string name="intent_gallery_picker_title">Complete action using</string>
 
     <!-- Widget specific -->
-    <string name="app_widget_empty_view">Press the add button to add a product</string>
+    <string name="app_widget_empty_view">Press the add button to add a productEntity</string>
     <string name="widget_title_latest_products">Latest Products</string>
     <string name="appwidget_text">Product Widget</string>
     <string name="add_widget">Add widget</string>
@@ -194,7 +194,7 @@
 
     <!-- Search strings -->
     <string name="search">Search</string>
-    <string name="search_hint">Search products…</string>
+    <string name="search_hint">Search productEntities…</string>
     <string name="tkm_product_descriptions">Product descriptions</string>
 
     <!-- Recipe Catalog -->
@@ -208,10 +208,15 @@
     <string name="nav_products">Products</string>
     <string name="meal_planner">Meal planner</string>
     <string name="nav_lists">Shopping lists</string>
+
+
     <string name="total_or_unit">----- or -----</string>
     <string name="invalid_pack_size">Invalid number for this measurement!</string>
     <string name="please_select">Please select</string>
     <string name="number_format_exception">Please only enter numbers.</string>
     <string name="plus_sign">+</string>
     <string name="minus_sign">-</string>
+    <string name="product_size_options">Product Size Options</string>
+    <string name="my_product_information">Your Personal Product Info</string>
+    <string name="product_identity">Product identity</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.example.peter.thekitchenmenu.utils;
 
+import android.os.Handler;
 import android.text.InputFilter;
 import android.util.Log;
 import android.view.View;
@@ -63,17 +64,17 @@ public class BindingAdapters {
 
         if (category == FOOD) {
             view.setVisibility(View.VISIBLE);
-//            int viewId = view.getId();
-//
-//            if (viewId != View.NO_ID) {
-//
-//                if (viewId == R.id.spinner_shelf_life) {
-//
-//                    view.requestFocus();
-//                    // Avoids WindowManager$BadTokenException by waiting for the screen to redraw.
-//                    new Handler().postDelayed(view::performClick, 100);
-//                }
-//            }
+            int viewId = view.getId();
+
+            if (viewId != View.NO_ID) {
+
+                if (viewId == R.id.spinner_shelf_life) {
+
+                    view.requestFocus();
+                    // Avoids WindowManager$BadTokenException by waiting for the screen to redraw.
+                    new Handler().postDelayed(view::performClick, 100);
+                }
+            }
         } else {
             view.setVisibility(View.GONE);
         }

@@ -8,7 +8,7 @@ import android.widget.RemoteViewsService;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
-import com.example.peter.thekitchenmenu.data.model.ObservableProductModel;
+import com.example.peter.thekitchenmenu.data.model.ProductModel;
 import com.example.peter.thekitchenmenu.utils.Converters;
 import com.example.peter.thekitchenmenu.utils.GsonUtils;
 
@@ -29,7 +29,7 @@ public class WidgetServiceList
             RemoteViewsService.RemoteViewsFactory {
 
         private final Context context;
-        private List<ObservableProductModel> products = Collections.emptyList();
+        private List<ProductModel> products = Collections.emptyList();
 
         ListRemoteViewsFactory(Context applicationContext) {
             context = applicationContext;
@@ -64,7 +64,7 @@ public class WidgetServiceList
         @Override
         public RemoteViews getViewAt(int position) {
 
-            ObservableProductModel currentProduct = products.get(position);
+            ProductModel currentProduct = products.get(position);
 
             RemoteViews views = new RemoteViews(
                     context.getPackageName(),

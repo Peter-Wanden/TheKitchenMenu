@@ -9,7 +9,7 @@ import com.example.peter.thekitchenmenu.app.HandlerWorker;
 import com.example.peter.thekitchenmenu.app.Singletons;
 import com.example.peter.thekitchenmenu.data.databaseRemote.DataListenerPending;
 import com.example.peter.thekitchenmenu.data.databaseRemote.RemoteDbRefs;
-import com.example.peter.thekitchenmenu.data.entity.Product;
+import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -39,12 +39,12 @@ class SyncProduct {
     private Handler handler;
     private Message resultMessage;
 
-    private Queue<Product> remoteData = new LinkedList<>();
-    private List<Product> batchUpdates = new ArrayList<>();
-    private List<Product> batchInserts = new ArrayList<>();
+    private Queue<ProductEntity> remoteData = new LinkedList<>();
+    private List<ProductEntity> batchUpdates = new ArrayList<>();
+    private List<ProductEntity> batchInserts = new ArrayList<>();
 
-    private Product remoteProduct;
-    private Product localProduct;
+    private ProductEntity remoteProductEntity;
+    private ProductEntity localProductEntity;
 
     SyncProduct(Context context, RepositoryRemote repositoryRemote) {
         repository = ((Singletons) context).getRepository();
@@ -60,19 +60,19 @@ class SyncProduct {
     }
 
     private void matchWithLocalProduct() {
-        remoteProduct = null;
-        localProduct = null;
+        remoteProductEntity = null;
+        localProductEntity = null;
 
-        remoteProduct = remoteData.peek();
-        Log.d(TAG, "matchWithLocalProduct: " + remoteProduct.toString());
+        remoteProductEntity = remoteData.peek();
+        Log.d(TAG, "matchWithLocalProduct: " + remoteProductEntity.toString());
 
         worker.execute(() -> {
             // If exists, load local counterpart.
-            localProduct = repository.getProductByRemoteId(remoteProduct.getRemoteProductId());
+            localProductEntity = repository.getProductByRemoteId(remoteProductEntity.getRemoteProductId());
 
-            if (localProduct != null) {
+            if (localProductEntity != null) {
                 // If exists, add the local elements ID to the remote elements ID
-                remoteProduct.setId(localProduct.getId());
+                remoteProductEntity.setId(localProductEntity.getId());
                 }
                 compareLocalWithRemote();
             }
@@ -82,15 +82,15 @@ class SyncProduct {
     private void compareLocalWithRemote() {
 
         // If there is no locally matching element insert the remote.
-        if (localProduct == null) {
-            batchInserts.add(remoteProduct);
+        if (localProductEntity == null) {
+            batchInserts.add(remoteProductEntity);
             moveOnToNextElement();
 
         } else {
 
             // Compare the two, if they are not equal, add to updates.
-            if (!remoteProduct.toString().equals(localProduct.toString())) {
-                batchUpdates.add(remoteProduct);
+            if (!remoteProductEntity.toString().equals(localProductEntity.toString())) {
+                batchUpdates.add(remoteProductEntity);
                 moveOnToNextElement();
 
             } else {
@@ -139,7 +139,7 @@ class SyncProduct {
         DatabaseReference prodCommRef = RemoteDbRefs.getRemoteProductData();
 
         // A Queue to store the returned data.
-        Queue<Product> remoteSnapShot = new LinkedList<>();
+        Queue<ProductEntity> remoteSnapShot = new LinkedList<>();
 
         // Reports changes in the remote database.
         ValueEventListener prodCommVEL = new ValueEventListener() {
@@ -147,12 +147,12 @@ class SyncProduct {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 for (DataSnapshot shot : snapshot.getChildren()) {
-                    Product product = shot.getValue(Product.class);
+                    ProductEntity productEntity = shot.getValue(ProductEntity.class);
 
-                    if (product != null) {
+                    if (productEntity != null) {
                         // Add the remote reference key.
-                        product.setRemoteProductId(shot.getKey());
-                        remoteSnapShot.add(product);
+                        productEntity.setRemoteProductId(shot.getKey());
+                        remoteSnapShot.add(productEntity);
                     }
                 }
                 // Copies the remote data for processing.
@@ -162,7 +162,7 @@ class SyncProduct {
                 remoteSnapShot.clear();
                 // Updates the data models status in the RemoteRepository.
                 repositoryRemote.dataSetReturned(new ModelStatus(
-                        Product.TAG, true, remoteData.size()));
+                        ProductEntity.TAG, true, remoteData.size()));
             }
 
             @Override

@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.detail;
+package com.example.peter.thekitchenmenu.ui.detail.product.editor;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,6 +17,6 @@ public class ProductUserDataEditor extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.product_user_data_editable, container, false);
+        return inflater.inflate(R.layout.product_user_data_editor, container, false);
     }
 }

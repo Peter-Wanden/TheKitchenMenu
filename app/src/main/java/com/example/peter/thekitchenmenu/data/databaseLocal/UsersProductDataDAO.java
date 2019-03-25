@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.data.databaseLocal;
 
-import static com.example.peter.thekitchenmenu.data.entity.Product.REMOTE_PRODUCT_ID;
+import static com.example.peter.thekitchenmenu.data.entity.ProductEntity.REMOTE_PRODUCT_ID;
 import static com.example.peter.thekitchenmenu.data.entity.UsersProductData.TABLE_USERS_PRODUCT_DATA;
 import static com.example.peter.thekitchenmenu.data.entity.UsersProductData.PRODUCT_ID;
 import static com.example.peter.thekitchenmenu.data.entity.UsersProductData.ID;

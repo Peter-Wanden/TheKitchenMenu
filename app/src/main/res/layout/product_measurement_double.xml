@@ -14,16 +14,16 @@
         <import type="com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementZeroToBlankConverter" />
 
         <variable
-            name="productEditorViewModel"
-            type="com.example.peter.thekitchenmenu.viewmodels.ProductEditorViewModel" />
+            name="sizeEditorViewModel"
+            type="com.example.peter.thekitchenmenu.viewmodels.ProductSizeViewModel" />
 
         <variable
-            name="numericValidation"
-            type="com.example.peter.thekitchenmenu.utils.ProductNumericValidationHandler" />
+            name="sizeValidation"
+            type="com.example.peter.thekitchenmenu.utils.ProductSizeValidationHandler" />
 
         <variable
             name="measurement"
-            type="com.example.peter.thekitchenmenu.utils.unitofmeasure.ObservableMeasurementModel" />
+            type="com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -39,13 +39,13 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:afterTextChanged='@{() -> numericValidation.validatePackSize(packEditableMeasurementTwo)}'
-            android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(packEditableMeasurementTwo, productEditorViewModel.measurement.packMeasurementTwo)}'
+            android:afterTextChanged='@{() -> sizeValidation.validatePackSize(packEditableMeasurementTwo)}'
+            android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(packEditableMeasurementTwo, sizeEditorViewModel.measurement.packMeasurementTwo)}'
             android:textAlignment="textEnd"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/pack_measurement_label_two"
             app:layout_constraintBottom_toTopOf="@+id/item_editable_measurement_two"
-            app:onUnitOfMeasureSelected='@{productEditorViewModel.measurement.measurementSubType}'
+            app:onUnitOfMeasureSelected='@{sizeEditorViewModel.measurement.measurementSubType}'
             tools:text="22" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -59,7 +59,7 @@
             app:layout_constraintBottom_toTopOf="@+id/item_editable_measurement_two"
             app:layout_constraintEnd_toStartOf="@+id/pack_editable_measurement_one"
             app:layout_constraintStart_toEndOf="@id/pack_editable_measurement_two"
-            app:onUnitOfMeasureSelected='@{productEditorViewModel.measurement.measurementSubType}'
+            app:onUnitOfMeasureSelected='@{sizeEditorViewModel.measurement.measurementSubType}'
             tools:text="lbs" />
 
         <androidx.appcompat.widget.AppCompatEditText
@@ -69,13 +69,13 @@
             android:layout_height="@dimen/standard_input_item_height"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:afterTextChanged='@{() -> numericValidation.validatePackSize(packEditableMeasurementOne)}'
-            android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(packEditableMeasurementOne, productEditorViewModel.measurement.packMeasurementOne)}'
+            android:afterTextChanged='@{() -> sizeValidation.validatePackSize(packEditableMeasurementOne)}'
+            android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(packEditableMeasurementOne, sizeEditorViewModel.measurement.packMeasurementOne)}'
             android:textAlignment="textEnd"
             app:layout_constraintBottom_toTopOf="@+id/item_editable_measurement_one"
             app:layout_constraintEnd_toStartOf="@+id/pack_measurement_label_one"
             app:layout_constraintStart_toEndOf="@id/pack_measurement_label_two"
-            app:onUnitOfMeasureSelected='@{productEditorViewModel.measurement.measurementSubType}'
+            app:onUnitOfMeasureSelected='@{sizeEditorViewModel.measurement.measurementSubType}'
             tools:text="16" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -89,7 +89,7 @@
             app:layout_constraintBottom_toTopOf="@+id/item_measurement_label_one"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/pack_editable_measurement_one"
-            app:onUnitOfMeasureSelected='@{productEditorViewModel.measurement.measurementSubType}'
+            app:onUnitOfMeasureSelected='@{sizeEditorViewModel.measurement.measurementSubType}'
             tools:text="oz" />
 
         <androidx.appcompat.widget.AppCompatEditText
@@ -100,13 +100,13 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:afterTextChanged='@{() -> numericValidation.validatePackSize(itemEditableMeasurementTwo)}'
-            android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(itemEditableMeasurementTwo, productEditorViewModel.measurement.itemMeasurementTwo)}'
+            android:afterTextChanged='@{() -> sizeValidation.validatePackSize(itemEditableMeasurementTwo)}'
+            android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(itemEditableMeasurementTwo, sizeEditorViewModel.measurement.itemMeasurementTwo)}'
             android:textAlignment="textEnd"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/item_measurement_label_two"
             app:layout_constraintStart_toStartOf="parent"
-            app:onUnitOfMeasureSelected='@{productEditorViewModel.measurement.measurementSubType}'
+            app:onUnitOfMeasureSelected='@{sizeEditorViewModel.measurement.measurementSubType}'
             tools:text="22" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -119,7 +119,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/item_editable_measurement_two"
             app:layout_constraintEnd_toStartOf="@id/item_editable_measurement_one"
-            app:onUnitOfMeasureSelected='@{productEditorViewModel.measurement.measurementSubType}'
+            app:onUnitOfMeasureSelected='@{sizeEditorViewModel.measurement.measurementSubType}'
             tools:layout_editor_absoluteX="334dp"
             tools:text="lbs" />
 
@@ -131,13 +131,13 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:afterTextChanged='@{() -> numericValidation.validatePackSize(itemEditableMeasurementOne)}'
-            android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(itemEditableMeasurementOne, productEditorViewModel.measurement.itemMeasurementOne)}'
+            android:afterTextChanged='@{() -> sizeValidation.validatePackSize(itemEditableMeasurementOne)}'
+            android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(itemEditableMeasurementOne, sizeEditorViewModel.measurement.itemMeasurementOne)}'
             android:textAlignment="textEnd"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/item_measurement_label_one"
             app:layout_constraintStart_toEndOf="@+id/item_measurement_label_two"
-            app:onUnitOfMeasureSelected='@{productEditorViewModel.measurement.measurementSubType}'
+            app:onUnitOfMeasureSelected='@{sizeEditorViewModel.measurement.measurementSubType}'
             tools:text="16" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -151,7 +151,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/item_editable_measurement_one"
-            app:onUnitOfMeasureSelected='@{productEditorViewModel.measurement.measurementSubType}'
+            app:onUnitOfMeasureSelected='@{sizeEditorViewModel.measurement.measurementSubType}'
             tools:text="oz" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

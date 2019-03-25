@@ -4,11 +4,11 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
-import com.example.peter.thekitchenmenu.data.entity.Product;
+import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.data.entity.UsersProductData;
 
 import static com.example.peter.thekitchenmenu.app.Constants.*;
-import static com.example.peter.thekitchenmenu.data.entity.Product.*;
+import static com.example.peter.thekitchenmenu.data.entity.ProductEntity.*;
 import static com.example.peter.thekitchenmenu.data.entity.UsersProductData.*;
 
 import java.util.HashMap;
@@ -19,9 +19,9 @@ import androidx.databinding.Bindable;
 import androidx.databinding.library.baseAdapters.BR;
 
 // TODO, split this class out into product data and users product data models
-public class ObservableProductModel extends BaseObservable implements Parcelable {
+public class ProductModel extends BaseObservable implements Parcelable {
 
-    private static final String TAG = "ObservableProductModel";
+    private static final String TAG = "ProductModel";
 
     // UsersProductData fields.
     private int userProductDataId;
@@ -35,7 +35,7 @@ public class ObservableProductModel extends BaseObservable implements Parcelable
     private long usersProductDataCreateDate;
     private long usersProductDataLastUpdate;
 
-    // Product fields.
+    // ProductEntity fields.
     private int productId;
     private String remoteProductId;
 
@@ -52,10 +52,10 @@ public class ObservableProductModel extends BaseObservable implements Parcelable
     private long createDate;
     private long lastUpdate;
 
-    public ObservableProductModel(){}
+    public ProductModel(){}
 
     // For merging data models
-    public ObservableProductModel(UsersProductData usersProductData, Product product){
+    public ProductModel(UsersProductData usersProductData, ProductEntity productEntity){
         this.userProductDataId = usersProductData.getId();
         this.remoteProductId = usersProductData.getRemoteProductId();
         this.remoteUsedProductId = usersProductData.getRemoteIdUsedProduct();
@@ -67,24 +67,24 @@ public class ObservableProductModel extends BaseObservable implements Parcelable
         this.usersProductDataCreateDate = usersProductData.getCreateDate();
         this.usersProductDataLastUpdate = usersProductData.getLastUpdate();
 
-        this.productId = product.getId();
-        this.remoteProductId = product.getRemoteProductId();
-        this.description = product.getDescription();
-        this.madeBy = product.getMadeBy();
-        this.category = product.getCategory();
-        this.shelfLife = product.getShelfLife();
-        this.numberOfItems = product.getNumberOfItems();
-        this.baseSiUnits = product.getBaseSiUnits();
-        this.unitOfMeasureSubType = product.getUnitOfMeasureSubType();
-        this.packAvePrice = product.getPackAvePrice();
-        this.createdBy = product.getCreatedBy();
-        this.remoteImageUri = product.getRemoteImageUri();
-        this.createDate = product.getCreateDate();
-        this.lastUpdate = product.getLastUpdate();
+        this.productId = productEntity.getId();
+        this.remoteProductId = productEntity.getRemoteProductId();
+        this.description = productEntity.getDescription();
+        this.madeBy = productEntity.getMadeBy();
+        this.category = productEntity.getCategory();
+        this.shelfLife = productEntity.getShelfLife();
+        this.numberOfItems = productEntity.getNumberOfItems();
+        this.baseSiUnits = productEntity.getBaseSiUnits();
+        this.unitOfMeasureSubType = productEntity.getUnitOfMeasureSubType();
+        this.packAvePrice = productEntity.getPackAvePrice();
+        this.createdBy = productEntity.getCreatedBy();
+        this.remoteImageUri = productEntity.getRemoteImageUri();
+        this.createDate = productEntity.getCreateDate();
+        this.lastUpdate = productEntity.getLastUpdate();
     }
 
-    // For creating a view model of a Product only
-    public ObservableProductModel(Product product) {
+    // For creating a view model of a ProductEntity only
+    public ProductModel(ProductEntity productEntity) {
         this.userProductDataId = DEFAULT_PROD_MY_ID;
         this.remoteProductId = DEFAULT_REMOTE_REF_ID;
         this.remoteUsedProductId = DEFAULT_REMOTE_USED_PRODUCT_ID;
@@ -96,23 +96,23 @@ public class ObservableProductModel extends BaseObservable implements Parcelable
         this.usersProductDataCreateDate = DEFAULT_MY_CREATE_DATE;
         this.usersProductDataLastUpdate = DEFAULT_MY_LAST_UPDATE;
 
-        this.productId = product.getId();
-        this.description = product.getDescription();
-        this.madeBy = product.getMadeBy();
-        this.category = product.getCategory();
-        this.shelfLife = product.getShelfLife();
-        this.numberOfItems = product.getNumberOfItems();
-        this.baseSiUnits = product.getBaseSiUnits();
-        this.unitOfMeasureSubType = product.getUnitOfMeasureSubType();
-        this.packAvePrice = product.getPackAvePrice();
-        this.createdBy = product.getCreatedBy();
-        this.remoteImageUri = product.getRemoteImageUri();
-        this.createDate = product.getCreateDate();
-        this.lastUpdate = product.getLastUpdate();
-        this.remoteProductId = product.getRemoteProductId();
+        this.productId = productEntity.getId();
+        this.description = productEntity.getDescription();
+        this.madeBy = productEntity.getMadeBy();
+        this.category = productEntity.getCategory();
+        this.shelfLife = productEntity.getShelfLife();
+        this.numberOfItems = productEntity.getNumberOfItems();
+        this.baseSiUnits = productEntity.getBaseSiUnits();
+        this.unitOfMeasureSubType = productEntity.getUnitOfMeasureSubType();
+        this.packAvePrice = productEntity.getPackAvePrice();
+        this.createdBy = productEntity.getCreatedBy();
+        this.remoteImageUri = productEntity.getRemoteImageUri();
+        this.createDate = productEntity.getCreateDate();
+        this.lastUpdate = productEntity.getLastUpdate();
+        this.remoteProductId = productEntity.getRemoteProductId();
     }
 
-    public ObservableProductModel(
+    public ProductModel(
             int userProductDataId,
             String remoteUserProductId,
             String remoteUsedProductId,
@@ -164,7 +164,7 @@ public class ObservableProductModel extends BaseObservable implements Parcelable
         this.lastUpdate = lastUpdate;
     }
 
-    protected ObservableProductModel(Parcel in) {
+    protected ProductModel(Parcel in) {
         userProductDataId = in.readInt();
         remoteProductId = in.readString();
         remoteUsedProductId = in.readString();
@@ -191,15 +191,15 @@ public class ObservableProductModel extends BaseObservable implements Parcelable
         lastUpdate = in.readLong();
     }
 
-    public static final Creator<ObservableProductModel> CREATOR = new Creator<ObservableProductModel>() {
+    public static final Creator<ProductModel> CREATOR = new Creator<ProductModel>() {
         @Override
-        public ObservableProductModel createFromParcel(Parcel in) {
-            return new ObservableProductModel(in);
+        public ProductModel createFromParcel(Parcel in) {
+            return new ProductModel(in);
         }
 
         @Override
-        public ObservableProductModel[] newArray(int size) {
-            return new ObservableProductModel[size];
+        public ProductModel[] newArray(int size) {
+            return new ProductModel[size];
         }
     };
 
@@ -217,8 +217,8 @@ public class ObservableProductModel extends BaseObservable implements Parcelable
         result.put(PROD_COMM_PRICE_AVE, packAvePrice);
         result.put(CREATED_BY, createdBy);
         result.put(REMOTE_IMAGE_URI, remoteImageUri);
-        result.put(Product.CREATE_DATE, createDate);
-        result.put(Product.LAST_UPDATE, lastUpdate);
+        result.put(ProductEntity.CREATE_DATE, createDate);
+        result.put(ProductEntity.LAST_UPDATE, lastUpdate);
 
         return result;
     }
@@ -238,8 +238,8 @@ public class ObservableProductModel extends BaseObservable implements Parcelable
         result.put(PROD_COMM_PRICE_AVE, packAvePrice);
         result.put(CREATED_BY, createdBy);
         result.put(REMOTE_IMAGE_URI, remoteImageUri);
-        result.put(Product.CREATE_DATE, createDate);
-        result.put(Product.LAST_UPDATE, lastUpdate);
+        result.put(ProductEntity.CREATE_DATE, createDate);
+        result.put(ProductEntity.LAST_UPDATE, lastUpdate);
 
         // My product_uneditable specific fields
         result.put(REMOTE_USED_PRODUCT_ID, remoteUsedProductId);
@@ -290,7 +290,7 @@ public class ObservableProductModel extends BaseObservable implements Parcelable
 
     @Override
     public String toString() {
-        return "ObservableProductModel{" +
+        return "ProductModel{" +
                 "userProductDataId: '" + userProductDataId +
                 ", remoteProdMyRefKey: '" + remoteProductId + '\'' +
                 ", remoteUsedProductId: '" + remoteUsedProductId + '\'' +
@@ -318,7 +318,7 @@ public class ObservableProductModel extends BaseObservable implements Parcelable
                 '}';
     }
 
-    public void getValuesFromEntity(Product entity) {
+    public void getValuesFromEntity(ProductEntity entity) {
 
         Log.d(TAG, "getValuesFromEntity: getting values");
 
