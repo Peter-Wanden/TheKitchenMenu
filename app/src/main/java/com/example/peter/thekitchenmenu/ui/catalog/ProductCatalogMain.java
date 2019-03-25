@@ -10,6 +10,7 @@ import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.model.ProductModel;
 import com.example.peter.thekitchenmenu.databinding.ActivityCatalogProductBinding;
 import com.example.peter.thekitchenmenu.ui.detail.ProductMain;
+import com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductEditor;
 import com.example.peter.thekitchenmenu.viewmodels.ViewModelCatlogProducts;
 
 import androidx.annotation.Nullable;
@@ -52,7 +53,7 @@ public class ProductCatalogMain extends AppCompatActivity {
 
     private void launchDetailActivity(ProductModel selectedProduct) {
 
-        Intent intent = new Intent(ProductCatalogMain.this, ProductMain.class);
+        Intent intent = new Intent(ProductCatalogMain.this, ProductEditor.class);
         intent.putExtra(PRODUCT_REMOTE_REFERENCE_KEY, selectedProduct);
         intent.putExtra(PRODUCT_IS_CREATOR_KEY, viewModel.getIsCreator().getValue());
         startActivity(intent);
@@ -69,7 +70,7 @@ public class ProductCatalogMain extends AppCompatActivity {
         bindings.activityCatalogProductFab.setOnClickListener(v -> {
 
             Intent addProductIntent = new Intent(ProductCatalogMain.this,
-                    ProductMain.class);
+                    ProductEditor.class);
             startActivity(addProductIntent);
 
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
