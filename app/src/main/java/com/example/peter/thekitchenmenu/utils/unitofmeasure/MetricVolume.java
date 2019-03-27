@@ -3,8 +3,8 @@ package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 import android.content.Context;
 
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.BASE_SI_UNIT_VOLUME;
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.SINGLE_ITEM;
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MULTI_PACK_MAXIMUM_NO_OF_ITEMS;
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MULTI_PACK_MINIMUM_NO_OF_ITEMS;
 
 public class MetricVolume implements UnitOfMeasure {
 
@@ -16,7 +16,7 @@ public class MetricVolume implements UnitOfMeasure {
     private static final double UNIT_CENTILITRE = UNIT_MILLILITRE * 100;
     private static final double UNIT_LITRE = UNIT_CENTILITRE * 10;
 
-    private int numberOfItemsInPack = 0;
+    private int numberOfItemsInPack = SINGLE_ITEM;
 
     MetricVolume(Context context) {
 
@@ -53,6 +53,11 @@ public class MetricVolume implements UnitOfMeasure {
     }
 
     @Override
+    public String getMeasurementUnitThree() {
+        return null;
+    }
+
+    @Override
     public MeasurementModel getMinAndMax() {
         return null;
     }
@@ -72,7 +77,7 @@ public class MetricVolume implements UnitOfMeasure {
 
         // TODO - When setting number of items, check the size / measurements (if available) do not
         // TODO - exceed MAX
-        if (numberOfItems >= MULTI_PACK_MINIMUM_NO_OF_ITEMS &&
+        if (numberOfItems >= SINGLE_ITEM &&
                 numberOfItems <= MULTI_PACK_MAXIMUM_NO_OF_ITEMS) {
 
             this.numberOfItemsInPack = numberOfItems;

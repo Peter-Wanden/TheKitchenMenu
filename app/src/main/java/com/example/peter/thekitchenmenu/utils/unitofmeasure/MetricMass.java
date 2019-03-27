@@ -6,13 +6,8 @@ import android.util.Log;
 
 import com.example.peter.thekitchenmenu.R;
 
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementUnits.GRAMS;
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementUnits.KILOGRAMS;
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.BASE_SI_UNIT_MASS;
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MAX_MASS;
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MULTI_PACK_MAXIMUM_NO_OF_ITEMS;
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MULTI_PACK_MINIMUM_NO_OF_ITEMS;
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.NO_INPUT;
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementUnits.*;
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.*;
 
 public class MetricMass implements UnitOfMeasure {
 
@@ -26,17 +21,18 @@ public class MetricMass implements UnitOfMeasure {
     // Unit description strings
     private String typeAsString;
     private String subTypeAsString;
-    private String unitGram;
-    private String unitKilogram;
+    private String measurementUnitOne;
+    private String measurementUnitTwo;
+    private String measurementUnitThree;
 
     // Min and max measurements
     private double minimumBaseSiMeasurement = UNIT_GRAM;
     private double maximumBaseSiMeasurement = MAX_MASS;
-    private int minimumNumberOfItems = MULTI_PACK_MINIMUM_NO_OF_ITEMS;
+    private int minimumNumberOfItems = SINGLE_ITEM;
     private int maximumNumberOfItems = MULTI_PACK_MAXIMUM_NO_OF_ITEMS;
 
     // Current measurements
-    private int numberOfItems = 1;
+    private int numberOfItems = SINGLE_ITEM;
     private double itemSizeInBaseSiUnits = minimumBaseSiMeasurement;
     private double baseSiUnits = 0.;
     private double packMeasurementInKilograms = 0;
@@ -53,8 +49,9 @@ public class MetricMass implements UnitOfMeasure {
         Resources resources = context.getResources();
         typeAsString = resources.getString(R.string.mass);
         subTypeAsString = resources.getString(R.string.sub_type_metric_mass);
-        unitGram = resources.getString(R.string.grams);
-        unitKilogram = resources.getString(R.string.kilograms);
+        measurementUnitOne = resources.getString(R.string.grams);
+        measurementUnitTwo = resources.getString(R.string.kilograms);
+        measurementUnitThree = "";
     }
 
     @Override
@@ -79,12 +76,17 @@ public class MetricMass implements UnitOfMeasure {
 
     @Override
     public String getMeasurementUnitOne() {
-        return unitGram;
+        return measurementUnitOne;
     }
 
     @Override
     public String getMeasurementUnitTwo() {
-        return unitKilogram;
+        return measurementUnitTwo;
+    }
+
+    @Override
+    public String getMeasurementUnitThree() {
+        return measurementUnitThree;
     }
 
     @Override
@@ -189,7 +191,7 @@ public class MetricMass implements UnitOfMeasure {
         MeasurementModel measurementModel = new MeasurementModel();
         measurementModel.setNumberOfItems(numberOfItems);
 
-        if (numberOfItems >= MULTI_PACK_MINIMUM_NO_OF_ITEMS)
+        if (numberOfItems > SINGLE_ITEM)
             measurementModel.setMinimumMeasurementOne((int) minimumMultiPackMeasurement());
         else measurementModel.setMinimumMeasurementOne((int) minimumBaseSiMeasurement);
 
@@ -440,8 +442,9 @@ public class MetricMass implements UnitOfMeasure {
         return "MetricMass{" +
                 "\ntype='" + typeAsString + '\'' +
                 "\n, subType='" + subTypeAsString + '\'' +
-                "\n, unitKilogram='" + unitKilogram + '\'' +
-                "\n, unitGram='" + unitGram + '\'' +
+                "\n, measurementUnitOne='" + measurementUnitOne + '\'' +
+                "\n, measurementUnitTwo='" + measurementUnitTwo + '\'' +
+                "\n, measurementUnitThree'" + measurementUnitThree + '\'' +
                 "\n, numberOfItems=" + numberOfItems +
                 "\n, baseSiUnits=" + baseSiUnits +
                 "\n, packMeasurementInKilograms=" + packMeasurementInKilograms +

@@ -1,16 +1,13 @@
 package com.example.peter.thekitchenmenu.ui.detail.product.editor;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.ProductIdentityEditorBinding;
-import com.example.peter.thekitchenmenu.utils.ShowHideSoftInput;
 import com.example.peter.thekitchenmenu.viewmodels.ProductIdentityViewModel;
 
 import androidx.annotation.NonNull;
@@ -74,8 +71,6 @@ public class ProductIdentityEditor extends Fragment {
 
         identityEditorBinding.spinnerCategory.setAdapter(ArrayAdapter.createFromResource(
                 requireActivity(), R.array.product_category_options, R.layout.list_item_spinner));
-
-        setSpinnerListeners(identityEditorBinding.spinnerCategory);
     }
 
     private void setUpShelfLifeSpinner() {
@@ -84,33 +79,5 @@ public class ProductIdentityEditor extends Fragment {
                 requireActivity(),
                 R.array.shelf_life_options,
                 R.layout.list_item_spinner));
-
-        setSpinnerListeners(identityEditorBinding.spinnerShelfLife);
-    }
-
-    private void setSpinnerListeners(Spinner spinner) {
-
-        spinner.setOnFocusChangeListener((view, b) -> {
-
-            if (view.hasFocus()) {
-
-                ShowHideSoftInput.showKeyboard(view, false);
-                // Avoids WindowManager$BadTokenException by waiting for the screen to redraw.
-                new Handler().postDelayed(view::performClick, 100);
-            }
-        });
-
-        spinner.setOnTouchListener((view, motionEvent) -> {
-
-            if (view.getVisibility() == View.VISIBLE) {
-
-                ShowHideSoftInput.showKeyboard(view, false);
-                view.performClick();
-            }
-            return true;
-        });
-
-        spinner.setFocusable(true);
-        spinner.setFocusableInTouchMode(true);
     }
 }

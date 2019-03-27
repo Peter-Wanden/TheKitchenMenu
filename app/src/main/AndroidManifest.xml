@@ -87,10 +87,6 @@
         </activity>
 
         <!-- Activity view of a single productEntities details -->
-
-        <activity android:name=".ui.detail.ProductMain"
-            android:theme="@style/AppTheme"/>
-
         <activity android:name=".ui.detail.product.editor.ProductEditor"
             android:theme="@style/AppTheme" />
 

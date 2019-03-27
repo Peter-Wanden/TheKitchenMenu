@@ -9,6 +9,7 @@ public interface UnitOfMeasure {
     int getNumberOfMeasurementUnits();
     String getMeasurementUnitOne();
     String getMeasurementUnitTwo();
+    String getMeasurementUnitThree();
 
     MeasurementModel getMinAndMax();
 

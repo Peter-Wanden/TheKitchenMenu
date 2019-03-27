@@ -2,6 +2,7 @@ package com.example.peter.thekitchenmenu.viewmodels;
 
 import android.app.Application;
 
+import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.utils.ObservableViewModel;
 
@@ -13,11 +14,14 @@ public class ProductEditorViewModel extends ObservableViewModel {
     private static final String TAG = "ProductEditorViewModel";
 
     private MutableLiveData<ProductEntity> productEntity = new MutableLiveData<>();
+    private String title;
 
     // TODO - Change category and shelf life to an enum
 
     public ProductEditorViewModel(@NonNull Application applicationContext) {
         super(applicationContext);
+
+        title = applicationContext.getString(R.string.activity_title_edit_product);
 
         ProductEntity productEntity = new ProductEntity(
                 0,
@@ -25,7 +29,7 @@ public class ProductEditorViewModel extends ObservableViewModel {
                 "Mars",
                 1,
                 5,
-                5,
+                1,
                 5250,
                 1,
                 0,
@@ -72,5 +76,13 @@ public class ProductEditorViewModel extends ObservableViewModel {
 //
 //            productEntity.setValue(newProductEntity);
 //        }
+    }
+
+    public void onFabClick() {
+
+    }
+
+    public String getTitle() {
+        return title;
     }
 }

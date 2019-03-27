@@ -11,7 +11,7 @@ import androidx.databinding.Bindable;
 
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.*;
 
-public class Count extends BaseObservable implements UnitOfMeasure {
+public class Count implements UnitOfMeasure {
 
     private static final String TAG = "Count";
 
@@ -21,8 +21,10 @@ public class Count extends BaseObservable implements UnitOfMeasure {
     private String type;
     private String subType;
     private String unitCount;
+    private String measurementUnitTwo = "";
+    private String measurementUnitThree = "";
 
-    private int numberOfItems = 0;
+    private int numberOfItems = SINGLE_ITEM;
     private double baseSiUnits = 0;
 
     public Count(Context context) {
@@ -43,7 +45,7 @@ public class Count extends BaseObservable implements UnitOfMeasure {
         return MeasurementType.TYPE_COUNT;
     }
 
-    @Override @Bindable
+    @Override
     public MeasurementSubType getMeasurementSubType() {
         return MeasurementSubType.TYPE_COUNT;
     }
@@ -55,12 +57,17 @@ public class Count extends BaseObservable implements UnitOfMeasure {
 
     @Override
     public String getMeasurementUnitOne() {
-        return null;
+        return unitCount;
     }
 
     @Override
     public String getMeasurementUnitTwo() {
-        return null;
+        return measurementUnitTwo;
+    }
+
+    @Override
+    public String getMeasurementUnitThree() {
+        return measurementUnitThree;
     }
 
     @Override
@@ -85,7 +92,6 @@ public class Count extends BaseObservable implements UnitOfMeasure {
 
             if (baseSiUnits <= MAXIMUM_COUNT && baseSiUnits >= UNIT_COUNT * numberOfItems) {
                 this.baseSiUnits = baseSiUnits;
-                notifyPropertyChanged(BR.packMeasurementOne);
                 return true;
             }
         }
@@ -102,17 +108,16 @@ public class Count extends BaseObservable implements UnitOfMeasure {
 
         // TODO - When setting number of items, check the size / measurements (if available) do not
         // TODO - exceed MAX
-        if (numberOfItems >= MULTI_PACK_MINIMUM_NO_OF_ITEMS &&
+        if (numberOfItems > SINGLE_ITEM &&
                 numberOfItems <= MULTI_PACK_MAXIMUM_NO_OF_ITEMS) {
 
             this.numberOfItems = numberOfItems;
-            notifyPropertyChanged(BR.numberOfItems);
             return true;
         }
         return false;
     }
 
-    @Override @Bindable
+    @Override
     public int getNumberOfItems() {
         return numberOfItems;
     }
@@ -130,7 +135,7 @@ public class Count extends BaseObservable implements UnitOfMeasure {
 
     }
 
-    @Override @Bindable
+    @Override
     public int getPackMeasurementOne() {
         return 0;
     }
@@ -140,7 +145,7 @@ public class Count extends BaseObservable implements UnitOfMeasure {
         return false;
     }
 
-    @Override @Bindable
+    @Override
     public int getPackMeasurementTwo() {
         return 0;
     }
@@ -160,7 +165,7 @@ public class Count extends BaseObservable implements UnitOfMeasure {
         return false;
     }
 
-    @Override @Bindable
+    @Override
     public int getItemMeasurementOne() {
         return 0;
     }
@@ -170,7 +175,7 @@ public class Count extends BaseObservable implements UnitOfMeasure {
         return false;
     }
 
-    @Override @Bindable
+    @Override
     public int getItemMeasurementTwo() {
         return 0;
     }

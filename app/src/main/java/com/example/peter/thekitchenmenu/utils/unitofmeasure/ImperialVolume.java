@@ -3,8 +3,8 @@ package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 import android.content.Context;
 
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.BASE_SI_UNIT_VOLUME;
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.SINGLE_ITEM;
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MULTI_PACK_MAXIMUM_NO_OF_ITEMS;
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MULTI_PACK_MINIMUM_NO_OF_ITEMS;
 
 public class ImperialVolume implements UnitOfMeasure {
 
@@ -12,7 +12,7 @@ public class ImperialVolume implements UnitOfMeasure {
     private static final double UNIT_FLUID_OUNCE = BASE_SI_UNIT_VOLUME * 28.4130625;
     private static final double UNIT_PINT = UNIT_FLUID_OUNCE * 20;
 
-    private int numberOfItemsInPack = 0;
+    private int numberOfItems = SINGLE_ITEM;
 
     ImperialVolume(Context context) {
 
@@ -35,7 +35,7 @@ public class ImperialVolume implements UnitOfMeasure {
 
     @Override
     public int getNumberOfMeasurementUnits() {
-        return 0;
+        return IMPERIAL_VOLUME_NUMBER_OF_MEASUREMENT_UNITS;
     }
 
     @Override
@@ -45,6 +45,11 @@ public class ImperialVolume implements UnitOfMeasure {
 
     @Override
     public String getMeasurementUnitTwo() {
+        return null;
+    }
+
+    @Override
+    public String getMeasurementUnitThree() {
         return null;
     }
 
@@ -68,10 +73,10 @@ public class ImperialVolume implements UnitOfMeasure {
 
         // TODO - When setting number of items, check the size / measurements (if available) do not
         // TODO - exceed MAX
-        if (numberOfItems >= MULTI_PACK_MINIMUM_NO_OF_ITEMS &&
+        if (numberOfItems > SINGLE_ITEM &&
                 numberOfItems <= MULTI_PACK_MAXIMUM_NO_OF_ITEMS) {
 
-            this.numberOfItemsInPack = numberOfItems;
+            this.numberOfItems = numberOfItems;
             return true;
         }
         return false;
@@ -79,7 +84,7 @@ public class ImperialVolume implements UnitOfMeasure {
 
     @Override
     public int getNumberOfItems() {
-        return numberOfItemsInPack;
+        return numberOfItems;
     }
 
     @Override

@@ -1,9 +1,6 @@
 package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
-import android.util.Log;
-
 import com.example.peter.thekitchenmenu.BR;
-import com.example.peter.thekitchenmenu.data.model.ProductModel;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
@@ -14,6 +11,7 @@ public class MeasurementModel extends BaseObservable {
 
     // TODO move this block to ProductModel
     private MeasurementSubType measurementSubType = MeasurementSubType.NOTHING_SELECTED;
+    private int numberOfMeasurementUnits = 1;
 
     private int minimumMeasurementOne = 0;
     private int minimumMeasurementTwo = 0;
@@ -35,6 +33,16 @@ public class MeasurementModel extends BaseObservable {
     public MeasurementSubType getMeasurementSubType() {
 
         return measurementSubType;
+    }
+
+    @Bindable
+    public int getNumberOfMeasurementUnits() {
+        return numberOfMeasurementUnits;
+    }
+
+    public void setNumberOfMeasurementUnits(int numberOfMeasurementUnits) {
+        this.numberOfMeasurementUnits = numberOfMeasurementUnits;
+        notifyPropertyChanged(BR.numberOfMeasurementUnits);
     }
 
     public void setMeasurementSubType(MeasurementSubType measurementSubType) {
@@ -209,24 +217,24 @@ public class MeasurementModel extends BaseObservable {
                 '}';
     }
 
-    public void getNumericValuesFromProductModel(ProductModel productModel) {
-
-        Log.d(TAG, "getNumericValuesFromProductModel: Getting values");
-
-        setBaseSiUnits(productModel.getBaseSiUnits());
-        setMeasurementSubType(MeasurementSubType.values()[productModel.getUnitOfMeasureSubType()]);
-        setNumberOfItems(productModel.getNumberOfItems());
-    }
-
     public void resetNumericValues() {
 
-        numberOfItems = 0;
+        numberOfItems = 1;
+
         minimumMeasurementOne = 0;
+        minimumMeasurementTwo = 0;
+        minimumMeasurementThree = 0;
+
         maximumMeasurementOne = 0;
+        maximumMeasurementTwo = 0;
+        maximumMeasurementThree = 0;
 
         packMeasurementOne = 0;
         packMeasurementTwo = 0;
+        packMeasurementThree = 0;
+
         itemMeasurementOne = 0;
         itemMeasurementTwo = 0;
+        itemMeasurementThree = 0;
     }
 }

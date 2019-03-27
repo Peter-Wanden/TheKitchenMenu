@@ -6,8 +6,8 @@
 
     <data>
         <variable
-            name="viewModel"
-            type="com.example.peter.thekitchenmenu.viewmodels.ProductMainViewModel">
+            name="imageViewModel"
+            type="com.example.peter.thekitchenmenu.viewmodels.ImageEditorViewModel">
         </variable>
     </data>
 

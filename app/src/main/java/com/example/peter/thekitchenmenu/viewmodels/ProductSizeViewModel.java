@@ -10,8 +10,6 @@ import androidx.annotation.NonNull;
 
 public class ProductSizeViewModel extends ObservableViewModel {
 
-    private static final String TAG = "ProductSizeEditorViewMo";
-
     private ProductSizeValidationHandler sizeValidationHandler;
     private MeasurementModel measurement;
 

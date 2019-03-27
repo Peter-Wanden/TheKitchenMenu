@@ -12,10 +12,6 @@
         <import type="com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementZeroToBlankConverter" />
 
         <variable
-            name="identityEditorViewModel"
-            type="com.example.peter.thekitchenmenu.viewmodels.ProductIdentityViewModel" />
-
-        <variable
             name="textValidation"
             type="com.example.peter.thekitchenmenu.utils.ProductTextValidationHandler" />
 
@@ -24,6 +20,10 @@
             type="com.example.peter.thekitchenmenu.data.model.ProductIdentityModel" />
 
     </data>
+
+    <!--<variable-->
+        <!--name="identityEditorViewModel"-->
+        <!--type="com.example.peter.thekitchenmenu.viewmodels.ProductIdentityViewModel" />-->
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/product_identity_container"
@@ -80,7 +80,7 @@
             android:layout_marginEnd="8dp"
             android:hint="@string/hint_description"
             android:afterTextChanged='@{() -> textValidation.validateDescription(editableDescription)}'
-            android:text='@{identityEditorViewModel.identityModel.description}'
+            android:text='@{identityModel.description}'
             android:inputType="textCapWords"
             app:layout_constraintStart_toStartOf="@id/product_identity_border"
             app:layout_constraintEnd_toEndOf="@id/product_identity_border"
@@ -111,7 +111,7 @@
             android:hint="@string/hint_made_by"
             android:inputType="textCapWords"
 
-            android:text='@{identityEditorViewModel.identityModel.madeBy}'
+            android:text='@{identityModel.madeBy}'
             app:layout_constraintStart_toStartOf="@id/product_identity_border"
             app:layout_constraintEnd_toEndOf="@id/product_identity_border"
             app:layout_constraintTop_toBottomOf="@id/made_by_label" />
@@ -136,7 +136,7 @@
             android:layout_height="@dimen/standard_input_item_height"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:selectedItemPosition='@={identityEditorViewModel.identityModel.category}'
+            android:selectedItemPosition='@={identityModel.category}'
             android:spinnerMode="dropdown"
             app:layout_constraintStart_toEndOf="@id/category_label"
             app:layout_constraintTop_toBottomOf="@id/editable_made_by" />
@@ -151,7 +151,7 @@
             app:layout_constraintTop_toTopOf="@id/spinner_shelf_life"
             app:layout_constraintBottom_toBottomOf="@id/spinner_shelf_life"
             app:layout_constraintStart_toStartOf="@id/product_identity_border"
-            app:showIfFood='@{identityEditorViewModel.identityModel.category}' />
+            android:visibility='@{identityModel.category == 1 ? View.VISIBLE : View.GONE}' />
 
         <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/spinner_shelf_life"
@@ -159,13 +159,13 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/standard_input_item_height"
             android:layout_marginTop="8dp"
-            android:selectedItemPosition='@={identityEditorViewModel.identityModel.shelfLife}'
+            android:selectedItemPosition='@={identityModel.shelfLife}'
             android:spinnerMode="dropdown"
             app:layout_constraintEnd_toEndOf="@id/spinner_category"
             app:layout_constraintStart_toStartOf="@id/spinner_category"
             app:layout_constraintTop_toBottomOf="@id/spinner_category"
             app:layout_constraintBottom_toBottomOf="@id/bottom_guideline"
-            app:showIfFood='@{identityEditorViewModel.identityModel.category}' />
+            android:visibility='@{identityModel.category == 1 ? View.VISIBLE : View.GONE}' />
         
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/bottom_guideline"

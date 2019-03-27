@@ -78,14 +78,20 @@ public class ProductEditor extends AppCompatActivity {
                 productIdentityViewModel.getIdentityModel().setShelfLife(
                         productEntity.getShelfLife());
 
-                productSizeViewModel.getMeasurement().setMeasurementSubType(
+                boolean newUnitOfMeasureIsSet = productSizeViewModel.
+                        getSizeValidationHandler().
+                        setNewUnitOfMeasure(
                         MeasurementSubType.values()[productEntity.getUnitOfMeasureSubType()]);
 
-                productSizeViewModel.getMeasurement().setNumberOfItems(
-                        productEntity.getNumberOfItems());
+                if (newUnitOfMeasureIsSet) {
 
-                productSizeViewModel.getMeasurement().setBaseSiUnits(
-                        productEntity.getBaseSiUnits());
+                    productSizeViewModel.getMeasurement().setNumberOfItems(
+                            productEntity.getNumberOfItems());
+
+                    productSizeViewModel.getMeasurement().setBaseSiUnits(
+                            productEntity.getBaseSiUnits());
+                }
+
 
 
 //                productEditorViewModel.getProductModel().getValuesFromEntity(productEntity);

@@ -1,11 +1,9 @@
 package com.example.peter.thekitchenmenu.ui.detail.product.editor;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 
 import com.example.peter.thekitchenmenu.R;
@@ -13,7 +11,6 @@ import com.example.peter.thekitchenmenu.databinding.ProductSizeEditorBinding;
 import com.example.peter.thekitchenmenu.ui.detail.SpinnerItemType;
 import com.example.peter.thekitchenmenu.ui.detail.UnitOfMeasureSpinnerAdapter;
 import com.example.peter.thekitchenmenu.ui.detail.UnitOfMeasureSpinnerItem;
-import com.example.peter.thekitchenmenu.utils.ShowHideSoftInput;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementType;
 import com.example.peter.thekitchenmenu.viewmodels.ProductSizeViewModel;
 
@@ -49,7 +46,7 @@ public class ProductSizeEditor extends Fragment {
         View rootView = sizeEditor.getRoot();
         sizeEditor.setLifecycleOwner(this);
 
-        setViewModelToBinding();
+        setViewModel();
         setValidationHandlersToBinding();
         setBindingInstanceVariables();
         setupUnitOfMeasureSpinner();
@@ -57,10 +54,9 @@ public class ProductSizeEditor extends Fragment {
         return rootView;
     }
 
-    private void setViewModelToBinding() {
+    private void setViewModel() {
 
         viewModel = ViewModelProviders.of(requireActivity()).get(ProductSizeViewModel.class);
-        sizeEditor.setSizeEditorViewModel(viewModel);
     }
 
     private void setValidationHandlersToBinding() {
@@ -76,7 +72,6 @@ public class ProductSizeEditor extends Fragment {
     private void setupUnitOfMeasureSpinner() {
 
         sizeEditor.spinnerUnitOfMeasure.setAdapter(getUnitOfMeasureSpinnerAdapter());
-        setupSpinnerListeners(sizeEditor.spinnerUnitOfMeasure);
     }
 
     private SpinnerAdapter getUnitOfMeasureSpinnerAdapter() {
@@ -147,31 +142,5 @@ public class ProductSizeEditor extends Fragment {
     private String removeArrayBraces(String stringWithBrackets) {
 
         return stringWithBrackets.substring(1, stringWithBrackets.length() - 1);
-    }
-
-    private void setupSpinnerListeners(Spinner spinner) {
-
-        spinner.setOnFocusChangeListener((view, b) -> {
-
-            if (view.hasFocus()) {
-
-                ShowHideSoftInput.showKeyboard(view, false);
-                // Avoids WindowManager$BadTokenException by waiting for the screen to redraw.
-                new Handler().postDelayed(view::performClick, 100);
-            }
-        });
-
-        spinner.setOnTouchListener((view, motionEvent) -> {
-
-            if (view.getVisibility() == View.VISIBLE) {
-
-                ShowHideSoftInput.showKeyboard(view, false);
-                view.performClick();
-            }
-            return true;
-        });
-
-        spinner.setFocusable(true);
-        spinner.setFocusableInTouchMode(true);
     }
 }

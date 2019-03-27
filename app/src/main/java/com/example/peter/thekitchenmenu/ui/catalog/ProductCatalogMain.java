@@ -9,7 +9,6 @@ import android.view.View;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.model.ProductModel;
 import com.example.peter.thekitchenmenu.databinding.ActivityCatalogProductBinding;
-import com.example.peter.thekitchenmenu.ui.detail.ProductMain;
 import com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductEditor;
 import com.example.peter.thekitchenmenu.viewmodels.ViewModelCatlogProducts;
 
@@ -26,9 +25,10 @@ import static com.example.peter.thekitchenmenu.app.Constants.PRODUCT_IS_CREATOR_
 public class ProductCatalogMain extends AppCompatActivity {
 
     private static final String TAG = "ProductCatalogMain";
+
     ViewModelCatlogProducts viewModel;
     ActivityCatalogProductBinding bindings;
-    ProductCatalogMainFragmentPageAdapter tabPageAdapter;
+    ProductCatalogFragmentPageAdapter tabPageAdapter;
     ViewPager tabViewPager;
 
     @Override
@@ -80,7 +80,7 @@ public class ProductCatalogMain extends AppCompatActivity {
         setSupportActionBar(bindings.activityCatalogProductToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        tabPageAdapter = new ProductCatalogMainFragmentPageAdapter(getSupportFragmentManager());
+        tabPageAdapter = new ProductCatalogFragmentPageAdapter(getSupportFragmentManager());
         tabViewPager = bindings.activityCatalogProductVp;
         tabViewPager.setAdapter(tabPageAdapter);
 
@@ -95,7 +95,7 @@ public class ProductCatalogMain extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
 
-        tabPageAdapter = new ProductCatalogMainFragmentPageAdapter(getSupportFragmentManager());
+        tabPageAdapter = new ProductCatalogFragmentPageAdapter(getSupportFragmentManager());
         tabPageAdapter.addFragment(new ProductCatalogAllProducts(), getString(R.string.activity_catalog_products_tab_1_title));
         tabPageAdapter.addFragment(new ProductCatalogUsersProducts(), getString(R.string.activity_catalog_products_tab_2_title));
         viewPager.setAdapter(tabPageAdapter);

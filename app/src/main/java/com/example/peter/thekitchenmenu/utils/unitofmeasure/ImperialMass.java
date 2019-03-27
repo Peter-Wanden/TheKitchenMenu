@@ -17,10 +17,11 @@ public class ImperialMass implements UnitOfMeasure {
 
     private String type;
     private String subType;
-    private String unitOunce;
-    private String unitPound;
+    private String measurementUnitOne;
+    private String measurementUnitTwo;
+    private String measurementUnitThree;
 
-    private Integer numberOfItemsInPack = 0;
+    private Integer numberOfItemsInPack = SINGLE_ITEM;
     private double baseSiUnits;
     private Integer packMeasurementInPounds = 0;
     private Integer packMeasurementInOunces = 0;
@@ -31,8 +32,9 @@ public class ImperialMass implements UnitOfMeasure {
 
         type = context.getResources().getString(R.string.mass);
         subType = context.getResources().getString(R.string.sub_type_imperial_mass);
-        unitPound = context.getResources().getString(R.string.pounds);
-        unitOunce = context.getResources().getString(R.string.ounces);
+        measurementUnitTwo = context.getResources().getString(R.string.pounds);
+        measurementUnitOne = context.getResources().getString(R.string.ounces);
+        measurementUnitThree = "";
     }
 
     @Override
@@ -57,12 +59,17 @@ public class ImperialMass implements UnitOfMeasure {
 
     @Override
     public String getMeasurementUnitOne() {
-        return unitOunce;
+        return measurementUnitOne;
     }
 
     @Override
     public String getMeasurementUnitTwo() {
-        return unitPound;
+        return measurementUnitTwo;
+    }
+
+    @Override
+    public String getMeasurementUnitThree() {
+        return measurementUnitThree;
     }
 
     @Override
@@ -73,7 +80,7 @@ public class ImperialMass implements UnitOfMeasure {
 
         double minMeasurement;
 
-        if (numberOfItemsInPack >= MULTI_PACK_MINIMUM_NO_OF_ITEMS)
+        if (numberOfItemsInPack > SINGLE_ITEM)
 
             minMeasurement = UNIT_OUNCE * numberOfItemsInPack;
 
@@ -105,7 +112,7 @@ public class ImperialMass implements UnitOfMeasure {
 
         // TODO - When setting number of items, check the size / measurements (if available) do not
         // TODO - exceed MAX
-        if (numberOfItems >= MULTI_PACK_MINIMUM_NO_OF_ITEMS &&
+        if (numberOfItems > SINGLE_ITEM &&
                 numberOfItems <= MULTI_PACK_MAXIMUM_NO_OF_ITEMS) {
 
             this.numberOfItemsInPack = numberOfItems;
