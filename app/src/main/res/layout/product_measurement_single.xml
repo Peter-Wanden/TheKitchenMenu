@@ -22,15 +22,10 @@
             type="com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementModel" />
     </data>
 
-    <!-- Is it ok to call pack and itemEditableMeasurementOne the same name as in the other
-            measurement layouts? Is this in a different name space?-->
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/product_measurement_single_parent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:onUnitOfMeasureSelected='@{measurement.measurementSubType}'
-        app:numberOfItems='@{measurement.numberOfItems}'
         android:visibility="@{(measurement.numberOfMeasurementUnits == 1) ? View.VISIBLE : View.INVISIBLE}">
 
         <androidx.appcompat.widget.AppCompatEditText
@@ -44,7 +39,7 @@
             android:textAlignment="textEnd"
             android:afterTextChanged='@{() -> sizeValidation.validatePackSize(packEditableMeasurementOne)}'
             android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(packEditableMeasurementOne, measurement.packMeasurementOne)}'
-            app:onUnitOfMeasureSelected='@{measurement.measurementSubType}'
+            app:setUpEditTextForSubTypeSelected='@{measurement.measurementSubType}'
             app:numberOfItems='@{measurement.numberOfItems}'
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/pack_measurement_label_one"
@@ -62,7 +57,7 @@
             app:layout_constraintStart_toEndOf="@id/pack_editable_measurement_one"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@id/item_measurement_label_one"
-            app:onUnitOfMeasureSelected='@{measurement.measurementSubType}'
+            app:setLabelForSubTypeSelected='@{measurement.measurementSubType}'
             app:numberOfItems='@{measurement.numberOfItems}'
             tools:text="ea" />
 
@@ -77,7 +72,7 @@
             android:textAlignment="textEnd"
             android:afterTextChanged='@{() -> sizeValidation.validatePackSize(itemEditableMeasurementOne)}'
             android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(itemEditableMeasurementOne, measurement.itemMeasurementOne)}'
-            app:onUnitOfMeasureSelected='@{measurement.measurementSubType}'
+            app:setUpEditTextForSubTypeSelected='@{measurement.measurementSubType}'
             app:numberOfItems='@{measurement.numberOfItems}'
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -95,7 +90,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/item_editable_measurement_one"
-            app:onUnitOfMeasureSelected='@{measurement.measurementSubType}'
+            app:setLabelForSubTypeSelected='@{measurement.measurementSubType}'
             app:numberOfItems='@{measurement.numberOfItems}'
             tools:text="oz" />
 

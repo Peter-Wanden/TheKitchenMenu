@@ -41,7 +41,7 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "androidx.appcompat:appcompat:$androidxAppcompat"
     implementation "com.google.android.material:material:$androidxSupportVersion"
-    implementation "androidx.recyclerview:recyclerview:$androidxSupportVersion"
+    implementation "androidx.recyclerview:recyclerview:$androidxRecyclerView"
     implementation "androidx.cardview:cardview:$androidxSupportVersion"
     implementation "androidx.exifinterface:exifinterface:$androidxSupportVersion"
     implementation "androidx.legacy:legacy-support-v4:$androidxSupportVersion"
@@ -72,25 +72,23 @@ dependencies {
     // Picasso TODO - Replace with Glide
     implementation "com.squareup.picasso:picasso:$picassoVersion"
 
-
     // Play services
     implementation "com.google.android.gms:play-services-ads-identifier:$playServicesA"
     implementation "com.google.android.gms:play-services-auth-api-phone:$playServicesA"
     implementation "com.google.android.gms:play-services-auth-base:$playServicesA"
     implementation "com.google.android.gms:play-services-phenotype:$playServicesA"
     implementation "com.google.android.gms:play-services-auth:$playServicesB"
-    implementation "com.google.android.gms:play-services-base:$playServicesB"
+    implementation "com.google.android.gms:play-services-base:$playServicesC"
     implementation "com.google.android.gms:play-services-stats:$playServicesB"
     implementation "com.google.android.gms:play-services-flags:$playServicesB"
     implementation "com.google.android.gms:play-services-tasks:$playServicesB"
     implementation "com.google.android.gms:play-services-basement:$playServicesC"
 
-
     // Firebase
-    implementation "com.google.firebase:firebase-database:$firebaseVersion"
+    implementation "com.google.firebase:firebase-database:$firebaseDatabase"
     implementation "com.google.firebase:firebase-core:$firebaseCore"
     implementation "com.google.firebase:firebase-auth:$firebaseAuth"
-    implementation "com.google.firebase:firebase-storage:$firebaseVersion"
+    implementation "com.google.firebase:firebase-storage:$firebaseStorage"
     implementation "com.google.firebase:firebase-config:$firebaseConfigVersion"
     //////// Firebase UI ////////
     implementation "com.firebaseui:firebase-ui-auth:$firebaseUiAuth"
@@ -98,9 +96,10 @@ dependencies {
     implementation "com.firebaseui:firebase-ui-database:$firebaseUiAuth"
 
     // Testing
-    testImplementation "junit:junit:$junitVersion"
+    androidTestImplementation "androidx.test.ext:junit:$androidxTestExtJunit"
     androidTestImplementation "androidx.test:runner:$androidxTestRunnerVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoVersion"
+    androidTestImplementation "androidx.test:core:$androidxTestCore"
 }
 // Reads the configuration information in app/google-services.json
 apply plugin: 'com.google.gms.google-services'

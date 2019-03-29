@@ -11,7 +11,7 @@ import com.example.peter.thekitchenmenu.databinding.ProductSizeEditorBinding;
 import com.example.peter.thekitchenmenu.ui.detail.SpinnerItemType;
 import com.example.peter.thekitchenmenu.ui.detail.UnitOfMeasureSpinnerAdapter;
 import com.example.peter.thekitchenmenu.ui.detail.UnitOfMeasureSpinnerItem;
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementType;
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubType;
 import com.example.peter.thekitchenmenu.viewmodels.ProductSizeViewModel;
 
 import java.util.ArrayList;
@@ -82,7 +82,7 @@ public class ProductSizeEditor extends Fragment {
     private ArrayList<UnitOfMeasureSpinnerItem> unitOfMeasureArrayList() {
 
         List<String> unitOfMeasureHeaders = Arrays.asList(getResources().getStringArray(
-                R.array.unit_of_measure_headers));
+                R.array.unit_of_measure_subtypes_as_string_array));
 
         String massMetricUnits = removeArrayBraces(Arrays.toString(getResources().
                 getStringArray(R.array.unit_of_measure_options_mass_metric)));
@@ -103,39 +103,67 @@ public class ProductSizeEditor extends Fragment {
 
         for (int header = 0; header < unitOfMeasureHeaders.size(); header++) {
 
-            UnitOfMeasureSpinnerItem headerItem = new UnitOfMeasureSpinnerItem(
-                    SpinnerItemType.SECTION_HEADER,
-                    unitOfMeasureHeaders.get(header)
-            );
-            unitOfMeasureList.add(headerItem);
+            if (header == MeasurementSubType.TYPE_METRIC_MASS.ordinal()) {
 
-            if (header == MeasurementType.TYPE_MASS.ordinal() - 1) {
+                UnitOfMeasureSpinnerItem headerItem = new UnitOfMeasureSpinnerItem(
+                        SpinnerItemType.LIST_ITEM,
+                        unitOfMeasureHeaders.get(header).
+                                concat(" (").
+                                concat(massMetricUnits).
+                                concat(")"));
 
-                UnitOfMeasureSpinnerItem massMetricItem = new UnitOfMeasureSpinnerItem(
-                        SpinnerItemType.LIST_ITEM, massMetricUnits);
-                unitOfMeasureList.add(massMetricItem);
+                unitOfMeasureList.add(headerItem);
+            }
 
-                UnitOfMeasureSpinnerItem massImperialItem = new UnitOfMeasureSpinnerItem(
-                        SpinnerItemType.LIST_ITEM, massImperialUnits);
-                unitOfMeasureList.add(massImperialItem);
+            if (header == MeasurementSubType.TYPE_IMPERIAL_MASS.ordinal()) {
 
-            } else if (header == MeasurementType.TYPE_VOLUME.ordinal() - 1) {
+                UnitOfMeasureSpinnerItem headerItem = new UnitOfMeasureSpinnerItem(
+                        SpinnerItemType.LIST_ITEM,
+                        unitOfMeasureHeaders.get(header).
+                                concat(" (").
+                                concat(massImperialUnits).
+                                concat(")"));
 
-                UnitOfMeasureSpinnerItem volumeMetricItem = new UnitOfMeasureSpinnerItem(
-                        SpinnerItemType.LIST_ITEM, volumeMetricUnits);
-                unitOfMeasureList.add(volumeMetricItem);
+                unitOfMeasureList.add(headerItem);
+            }
 
-                UnitOfMeasureSpinnerItem volumeImperialItem = new UnitOfMeasureSpinnerItem(
-                        SpinnerItemType.LIST_ITEM, volumeImperialUnits);
-                unitOfMeasureList.add(volumeImperialItem);
+            if (header == MeasurementSubType.TYPE_METRIC_VOLUME.ordinal()) {
 
-            } else if (header == MeasurementType.TYPE_COUNT.ordinal() - 1) {
+                UnitOfMeasureSpinnerItem headerItem = new UnitOfMeasureSpinnerItem(
+                        SpinnerItemType.LIST_ITEM,
+                        unitOfMeasureHeaders.get(header).
+                                concat(" (").
+                                concat(volumeMetricUnits).
+                                concat(")"));
 
-                UnitOfMeasureSpinnerItem countItem = new UnitOfMeasureSpinnerItem(
-                        SpinnerItemType.LIST_ITEM, countUnits);
-                unitOfMeasureList.add(countItem);
+                unitOfMeasureList.add(headerItem);
+            }
+
+            if (header == MeasurementSubType.TYPE_IMPERIAL_VOLUME.ordinal()) {
+
+                UnitOfMeasureSpinnerItem headerItem = new UnitOfMeasureSpinnerItem(
+                        SpinnerItemType.LIST_ITEM,
+                        unitOfMeasureHeaders.get(header).
+                                concat(" (").
+                                concat(volumeImperialUnits).
+                                concat(")"));
+
+                unitOfMeasureList.add(headerItem);
+            }
+
+            if (header == MeasurementSubType.TYPE_COUNT.ordinal()) {
+
+                UnitOfMeasureSpinnerItem headerItem = new UnitOfMeasureSpinnerItem(
+                        SpinnerItemType.LIST_ITEM,
+                        unitOfMeasureHeaders.get(header).
+                                concat(" (").
+                                concat(countUnits).
+                                concat(")"));
+
+                unitOfMeasureList.add(headerItem);
             }
         }
+
         return unitOfMeasureList;
     }
 

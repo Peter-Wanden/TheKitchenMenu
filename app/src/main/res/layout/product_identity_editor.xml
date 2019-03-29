@@ -21,10 +21,6 @@
 
     </data>
 
-    <!--<variable-->
-        <!--name="identityEditorViewModel"-->
-        <!--type="com.example.peter.thekitchenmenu.viewmodels.ProductIdentityViewModel" />-->
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/product_identity_container"
         android:layout_width="match_parent"

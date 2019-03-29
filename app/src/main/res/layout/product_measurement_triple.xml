@@ -26,8 +26,6 @@
         android:id="@+id/product_measurement_triple_parent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:onUnitOfMeasureSelected='@{measurement.measurementSubType}'
-        app:numberOfItems='@{measurement.numberOfItems}'
         android:visibility="@{(measurement.numberOfMeasurementUnits == 3) ? View.VISIBLE : View.INVISIBLE}">
 
         <androidx.appcompat.widget.AppCompatEditText
@@ -38,9 +36,11 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
+            android:textAlignment="textEnd"
             android:afterTextChanged='@{() -> sizeValidation.validatePackSize(packEditableMeasurementThree)}'
             android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(packEditableMeasurementThree, measurement.packMeasurementThree)}'
-            android:textAlignment="textEnd"
+            app:setUpEditTextForSubTypeSelected='@{measurement.measurementSubType}'
+            app:numberOfItems='@{measurement.numberOfItems}'
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/pack_measurement_label_three"
             app:layout_constraintBottom_toTopOf="@id/item_editable_measurement_three"
@@ -54,7 +54,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:gravity="center_vertical"
-            app:onUnitOfMeasureSelected='@{measurement.measurementSubType}'
+            app:setLabelForSubTypeSelected='@{measurement.measurementSubType}'
             app:numberOfItems='@{measurement.numberOfItems}'
             app:layout_constraintStart_toEndOf="@id/pack_editable_measurement_three"
             app:layout_constraintEnd_toStartOf="@id/pack_editable_measurement_two"
@@ -69,13 +69,13 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
+            android:textAlignment="textEnd"
             android:afterTextChanged='@{() -> sizeValidation.validatePackSize(packEditableMeasurementTwo)}'
             android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(packEditableMeasurementTwo, measurement.packMeasurementTwo)}'
-            android:textAlignment="textEnd"
             app:layout_constraintStart_toEndOf="@id/pack_measurement_label_three"
             app:layout_constraintEnd_toStartOf="@id/pack_measurement_label_two"
             app:layout_constraintBottom_toTopOf="@id/item_editable_measurement_two"
-            app:onUnitOfMeasureSelected='@{measurement.measurementSubType}'
+            app:setUpEditTextForSubTypeSelected='@{measurement.measurementSubType}'
             app:numberOfItems='@{measurement.numberOfItems}'
             tools:text="22" />
 
@@ -87,7 +87,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:gravity="center_vertical"
-            app:onUnitOfMeasureSelected='@{measurement.measurementSubType}'
+            app:setLabelForSubTypeSelected='@{measurement.measurementSubType}'
             app:numberOfItems='@{measurement.numberOfItems}'
             app:layout_constraintStart_toEndOf="@id/pack_editable_measurement_two"
             app:layout_constraintEnd_toStartOf="@id/pack_editable_measurement_one"
@@ -108,7 +108,7 @@
             app:layout_constraintStart_toEndOf="@id/pack_measurement_label_two"
             app:layout_constraintEnd_toStartOf="@id/pack_measurement_label_one"
             app:layout_constraintBottom_toTopOf="@id/item_editable_measurement_one"
-            app:onUnitOfMeasureSelected='@{measurement.measurementSubType}'
+            app:setUpEditTextForSubTypeSelected='@{measurement.measurementSubType}'
             app:numberOfItems='@{measurement.numberOfItems}'
             tools:text="16" />
 
@@ -123,7 +123,7 @@
             app:layout_constraintBottom_toTopOf="@id/item_measurement_label_one"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/pack_editable_measurement_one"
-            app:onUnitOfMeasureSelected='@{measurement.measurementSubType}'
+            app:setLabelForSubTypeSelected='@{measurement.measurementSubType}'
             app:numberOfItems='@{measurement.numberOfItems}'
             tools:text="ml" />
 
@@ -141,7 +141,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/item_measurement_label_three"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:onUnitOfMeasureSelected='@{measurement.measurementSubType}'
+            app:setUpEditTextForSubTypeSelected='@{measurement.measurementSubType}'
             app:numberOfItems='@{measurement.numberOfItems}'
             tools:text="22"/>
 
@@ -153,7 +153,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:gravity="center_vertical"
-            app:onUnitOfMeasureSelected='@{measurement.measurementSubType}'
+            app:setLabelForSubTypeSelected='@{measurement.measurementSubType}'
             app:numberOfItems='@{measurement.numberOfItems}'
             app:layout_constraintStart_toEndOf="@id/item_editable_measurement_three"
             app:layout_constraintEnd_toStartOf="@id/item_editable_measurement_two"
@@ -174,7 +174,7 @@
             app:layout_constraintStart_toEndOf="@id/item_measurement_label_three"
             app:layout_constraintEnd_toStartOf="@id/item_measurement_label_two"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:onUnitOfMeasureSelected='@{measurement.measurementSubType}'
+            app:setUpEditTextForSubTypeSelected='@{measurement.measurementSubType}'
             app:numberOfItems='@{measurement.numberOfItems}'
             tools:text="22" />
 
@@ -189,7 +189,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/item_editable_measurement_two"
             app:layout_constraintEnd_toStartOf="@id/item_editable_measurement_one"
-            app:onUnitOfMeasureSelected='@{measurement.measurementSubType}'
+            app:setLabelForSubTypeSelected='@{measurement.measurementSubType}'
             app:numberOfItems='@{measurement.numberOfItems}'
             tools:text="cl" />
 
@@ -207,7 +207,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/item_measurement_label_two"
             app:layout_constraintEnd_toStartOf="@id/item_measurement_label_one"
-            app:onUnitOfMeasureSelected='@{measurement.measurementSubType}'
+            app:setUpEditTextForSubTypeSelected='@{measurement.measurementSubType}'
             app:numberOfItems='@{measurement.numberOfItems}'
             tools:text="16" />
 
@@ -222,7 +222,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/item_editable_measurement_one"
-            app:onUnitOfMeasureSelected='@{measurement.measurementSubType}'
+            app:setLabelForSubTypeSelected='@{measurement.measurementSubType}'
             app:numberOfItems='@{measurement.numberOfItems}'
             tools:text="ml" />
 

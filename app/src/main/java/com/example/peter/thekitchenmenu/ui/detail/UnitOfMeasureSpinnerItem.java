@@ -11,7 +11,7 @@ public class UnitOfMeasureSpinnerItem {
         this.measurementUnit = measurementUnit;
     }
 
-    public String getMeasurementUnits() {
+    public String getMeasurementUnit() {
         return measurementUnit;
     }
 

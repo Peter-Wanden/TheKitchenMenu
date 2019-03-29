@@ -10,7 +10,7 @@ public class MeasurementModel extends BaseObservable {
     private static final String TAG = "ObservableMeasurementMo";
 
     // TODO move this block to ProductModel
-    private MeasurementSubType measurementSubType = MeasurementSubType.NOTHING_SELECTED;
+    private MeasurementSubType measurementSubType = MeasurementSubType.TYPE_METRIC_MASS;
     private int numberOfMeasurementUnits = 1;
 
     private int minimumMeasurementOne = 0;

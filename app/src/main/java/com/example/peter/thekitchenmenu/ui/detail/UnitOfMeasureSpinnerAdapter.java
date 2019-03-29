@@ -62,7 +62,7 @@ public class UnitOfMeasureSpinnerAdapter extends ArrayAdapter<UnitOfMeasureSpinn
                 TextView headerView = view.findViewById(R.id.list_item_spinner_header);
 
                 if (headerView != null) {
-                    headerView.setText(model.getMeasurementUnits());
+                    headerView.setText(model.getMeasurementUnit());
                     headerView.setEnabled(false); // TODO - should not be able to select a header. Why is this not working?
                 }
                 break;
@@ -74,7 +74,7 @@ public class UnitOfMeasureSpinnerAdapter extends ArrayAdapter<UnitOfMeasureSpinn
                         false);
 
                 TextView measurementView = view.findViewById(R.id.list_item_spinner);
-                if (measurementView != null) measurementView.setText(model.getMeasurementUnits());
+                if (measurementView != null) measurementView.setText(model.getMeasurementUnit());
                 break;
         }
         return view;

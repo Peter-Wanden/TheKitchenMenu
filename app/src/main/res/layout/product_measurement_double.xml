@@ -26,8 +26,6 @@
         android:id="@+id/product_measurement_double_parent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:onUnitOfMeasureSelected='@{measurement.measurementSubType}'
-        app:numberOfItems='@{measurement.numberOfItems}'
         android:visibility="@{(measurement.numberOfMeasurementUnits == 2) ? View.VISIBLE : View.INVISIBLE}">
 
         <androidx.appcompat.widget.AppCompatEditText
@@ -44,7 +42,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/pack_measurement_label_two"
             app:layout_constraintBottom_toTopOf="@+id/item_editable_measurement_two"
-            app:onUnitOfMeasureSelected='@{measurement.measurementSubType}'
+            app:setUpEditTextForSubTypeSelected='@{measurement.measurementSubType}'
             app:numberOfItems='@{measurement.numberOfItems}'
             tools:text="22" />
 
@@ -59,7 +57,7 @@
             app:layout_constraintBottom_toTopOf="@+id/item_editable_measurement_two"
             app:layout_constraintEnd_toStartOf="@+id/pack_editable_measurement_one"
             app:layout_constraintStart_toEndOf="@id/pack_editable_measurement_two"
-            app:onUnitOfMeasureSelected='@{measurement.measurementSubType}'
+            app:setLabelForSubTypeSelected='@{measurement.measurementSubType}'
             app:numberOfItems='@{measurement.numberOfItems}'
             tools:text="lbs" />
 
@@ -76,7 +74,7 @@
             app:layout_constraintBottom_toTopOf="@+id/item_editable_measurement_one"
             app:layout_constraintEnd_toStartOf="@+id/pack_measurement_label_one"
             app:layout_constraintStart_toEndOf="@id/pack_measurement_label_two"
-            app:onUnitOfMeasureSelected='@{measurement.measurementSubType}'
+            app:setUpEditTextForSubTypeSelected='@{measurement.measurementSubType}'
             app:numberOfItems='@{measurement.numberOfItems}'
             tools:text="16" />
 
@@ -91,7 +89,7 @@
             app:layout_constraintBottom_toTopOf="@+id/item_measurement_label_one"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/pack_editable_measurement_one"
-            app:onUnitOfMeasureSelected='@{measurement.measurementSubType}'
+            app:setLabelForSubTypeSelected='@{measurement.measurementSubType}'
             app:numberOfItems='@{measurement.numberOfItems}'
             tools:text="oz" />
 
@@ -109,7 +107,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/item_measurement_label_two"
             app:layout_constraintStart_toStartOf="parent"
-            app:onUnitOfMeasureSelected='@{measurement.measurementSubType}'
+            app:setUpEditTextForSubTypeSelected='@{measurement.measurementSubType}'
             app:numberOfItems='@{measurement.numberOfItems}'
             tools:text="22" />
 
@@ -123,7 +121,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/item_editable_measurement_two"
             app:layout_constraintEnd_toStartOf="@id/item_editable_measurement_one"
-            app:onUnitOfMeasureSelected='@{measurement.measurementSubType}'
+            app:setLabelForSubTypeSelected='@{measurement.measurementSubType}'
             app:numberOfItems='@{measurement.numberOfItems}'
             tools:text="lbs" />
 
@@ -141,7 +139,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/item_measurement_label_one"
             app:layout_constraintStart_toEndOf="@+id/item_measurement_label_two"
-            app:onUnitOfMeasureSelected='@{measurement.measurementSubType}'
+            app:setUpEditTextForSubTypeSelected='@{measurement.measurementSubType}'
             app:numberOfItems='@{measurement.numberOfItems}'
             tools:text="16" />
 
@@ -156,7 +154,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/item_editable_measurement_one"
-            app:onUnitOfMeasureSelected='@{measurement.measurementSubType}'
+            app:setLabelForSubTypeSelected='@{measurement.measurementSubType}'
             app:numberOfItems='@{measurement.numberOfItems}'
             tools:text="oz" />
 

@@ -301,6 +301,8 @@ class SyncManager {
         }
 
         // If the user is logged in. TODO - SYNC MANAGER Fix this null pointer!!
+
+        if (userId.getValue() != null)
         if (!userId.getValue().equals(ANONYMOUS)) {
 
             // And there is a sync pending.

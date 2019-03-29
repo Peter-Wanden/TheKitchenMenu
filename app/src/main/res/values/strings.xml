@@ -26,7 +26,7 @@
     <string name="hint_location_room">What room do you keep it?</string>
     <string name="label_location_in_room">Where abouts?</string>
     <string name="hint_location_in_room">Where abouts in the room?</string>
-    <string name="pack_size_total">Total pack %1$s</string>
+    <string name="pack_size_label">Total pack %1$s</string>
     <string name="pack_size_total_hint">How many %1$s?</string>
     <string name="item_size_label">Single pack %1$s</string>
     <string name="item_size_hint">How many %1$s?</string>
@@ -46,7 +46,7 @@
     <!-- ProductDetail unit of measure spinner options -->
     <!-- See arrays.xml "unit_of_measure_options" for usage -->
     <string name="unit_of_measure_default">Please select</string>
-    <string name="grams">grams</string>
+    <string name="grams">g</string>
     <string name="kilograms">kg</string>
     <string name="ounces">oz</string>
     <string name="pounds">lb</string>
@@ -54,8 +54,8 @@
     <string name="millilitres">ml</string>
     <string name="litres">litres</string>
     <string name="fluidOunce">fl oz</string>
-    <string name="pints">pints</string>
-    <string name="gallons">gallons</string>
+    <string name="pints">pt</string>
+    <string name="gallons">gal</string>
     <string name="each">each</string>
     <string name="piece">piece</string>
     <string name="items">items</string>
@@ -73,9 +73,11 @@
     <string name="sub_type_count">Count</string>
 
     <!-- Unit of measure spinner headers -->
-    <string name="header_mass">SELECT WEIGHT</string>
-    <string name="header_volume">SELECT VOLUME</string>
-    <string name="header_count">SELECT COUNT</string>
+    <string name="header_mass_metric">Weight metric</string>
+    <string name="header_mass_imperial">Weight imperial</string>
+    <string name="header_volume_metric">Volume metric</string>
+    <string name="header_volume_imperial">Volume imperial</string>
+    <string name="header_count">Count</string>
 
     <!-- ProductDetail shelf life spinner options -->
     <string name="shelf_life_default">Please select</string>

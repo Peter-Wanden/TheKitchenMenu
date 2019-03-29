@@ -40,7 +40,7 @@ public class ProductSizeValidationHandler {
         resources = applicationContext.getResources();
 
         unitOfMeasure = UnitOfMeasureClassSelector.getClassWithSubType(applicationContext,
-                MeasurementSubType.NOTHING_SELECTED);
+                MeasurementSubType.TYPE_METRIC_MASS);
     }
 
     public void newUnitOfMeasureSelected(Spinner spinnerWithSubType) {
@@ -281,6 +281,8 @@ public class ProductSizeValidationHandler {
     }
 
     private boolean measurementHasChanged(int measurementViewId, int newMeasurement) {
+
+        // Should this be checking against the unit of measure value and not the measurement?
 
         int oldMeasurement;
 

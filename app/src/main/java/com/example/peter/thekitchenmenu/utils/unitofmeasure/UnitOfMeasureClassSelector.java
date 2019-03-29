@@ -4,9 +4,9 @@ import android.content.Context;
 
 public abstract class UnitOfMeasureClassSelector {
 
-    public static UnitOfMeasure getClassWithSubType(Context context, MeasurementSubType measurementSubType) {
+    public static UnitOfMeasure getClassWithSubType(Context context, MeasurementSubType subType) {
 
-        switch (measurementSubType) {
+        switch (subType) {
             case TYPE_METRIC_MASS:
                 return new MetricMass(context);
 
