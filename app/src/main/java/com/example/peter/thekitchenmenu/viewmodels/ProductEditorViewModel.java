@@ -23,14 +23,14 @@ public class ProductEditorViewModel extends ObservableViewModel {
 
         title = applicationContext.getString(R.string.activity_title_edit_product);
 
-        ProductEntity productEntity = new ProductEntity(
+        ProductEntity defaultProductEntity = new ProductEntity(
                 0,
-                "Mars Bar",
-                "Mars",
+                "",
+                "",
+                0,
+                0,
                 1,
-                5,
-                1,
-                5250,
+                0,
                 1,
                 0,
                 "",
@@ -38,7 +38,7 @@ public class ProductEditorViewModel extends ObservableViewModel {
                 0,
                 0,
                 "");
-        this.productEntity.setValue(productEntity);
+        this.productEntity.setValue(defaultProductEntity);
 
     }
 

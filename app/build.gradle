@@ -1,8 +1,11 @@
 apply plugin: 'com.android.application'
 
 android {
+
     compileSdkVersion rootProject.compileSdkVersion
+
     signingConfigs {
+
         config {
             keyAlias 'TKMKey'
             keyPassword 'Z5g3yqgZZyuCpSfANITG'
@@ -10,15 +13,18 @@ android {
             storePassword 'dE3kTCQc3vKMdDNN5nGe'
         }
     }
+
     defaultConfig {
+
         applicationId "com.example.peter.thekitchenmenu"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
         versionCode 1
         versionName "1.0"
         resConfigs "en" // Add any other language support here
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -26,18 +32,22 @@ android {
             signingConfig signingConfigs.config
         }
     }
+
     dataBinding.enabled = true
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     productFlavors {
     }
+
     buildToolsVersion '28.0.3'
 }
 
 dependencies {
+
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "androidx.appcompat:appcompat:$androidxAppcompat"
     implementation "com.google.android.material:material:$androidxSupportVersion"
@@ -95,11 +105,16 @@ dependencies {
     // Allows direct binding of data to display
     implementation "com.firebaseui:firebase-ui-database:$firebaseUiAuth"
 
-    // Testing
+    // Instrumentation tests
     androidTestImplementation "androidx.test.ext:junit:$androidxTestExtJunit"
     androidTestImplementation "androidx.test:runner:$androidxTestRunnerVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoVersion"
     androidTestImplementation "androidx.test:core:$androidxTestCore"
+
+    // Local unit tests
+    testImplementation 'junit:junit:4.12'
+
 }
+
 // Reads the configuration information in app/google-services.json
 apply plugin: 'com.google.gms.google-services'

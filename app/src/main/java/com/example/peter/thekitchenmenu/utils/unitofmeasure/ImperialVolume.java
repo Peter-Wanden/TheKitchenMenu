@@ -2,6 +2,8 @@ package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
 import android.content.Context;
 
+import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
+
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.BASE_SI_UNIT_VOLUME;
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.SINGLE_ITEM;
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MULTI_PACK_MAXIMUM_NO_OF_ITEMS;
@@ -19,12 +21,17 @@ public class ImperialVolume implements UnitOfMeasure {
     }
 
     @Override
-    public String getTypeAsString() {
+    public String getMeasurementTypeAsString() {
         return null;
     }
 
     @Override
     public MeasurementType getMeasurementType() {
+        return null;
+    }
+
+    @Override
+    public String getMeasurementSubTypeAsString() {
         return null;
     }
 
@@ -39,22 +46,22 @@ public class ImperialVolume implements UnitOfMeasure {
     }
 
     @Override
-    public String getMeasurementUnitOne() {
+    public String getMeasurementUnitOneLabel() {
         return null;
     }
 
     @Override
-    public String getMeasurementUnitTwo() {
+    public String getMeasurementUnitTwoLabel() {
         return null;
     }
 
     @Override
-    public String getMeasurementUnitThree() {
+    public String getMeasurementUnitThreeLabel() {
         return null;
     }
 
     @Override
-    public MeasurementModel getMinAndMax() {
+    public ProductMeasurementModel getMinAndMax() {
         return null;
     }
 

@@ -3,11 +3,8 @@ package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 import android.content.Context;
 import android.content.res.Resources;
 
-import com.example.peter.thekitchenmenu.BR;
 import com.example.peter.thekitchenmenu.R;
-
-import androidx.databinding.BaseObservable;
-import androidx.databinding.Bindable;
+import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
 
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.*;
 
@@ -36,13 +33,18 @@ public class Count implements UnitOfMeasure {
     }
 
     @Override
-    public String getTypeAsString() {
+    public String getMeasurementTypeAsString() {
         return type;
     }
 
     @Override
     public MeasurementType getMeasurementType() {
         return MeasurementType.TYPE_COUNT;
+    }
+
+    @Override
+    public String getMeasurementSubTypeAsString() {
+        return null;
     }
 
     @Override
@@ -56,28 +58,28 @@ public class Count implements UnitOfMeasure {
     }
 
     @Override
-    public String getMeasurementUnitOne() {
+    public String getMeasurementUnitOneLabel() {
         return unitCount;
     }
 
     @Override
-    public String getMeasurementUnitTwo() {
+    public String getMeasurementUnitTwoLabel() {
         return measurementUnitTwo;
     }
 
     @Override
-    public String getMeasurementUnitThree() {
+    public String getMeasurementUnitThreeLabel() {
         return measurementUnitThree;
     }
 
     @Override
-    public MeasurementModel getMinAndMax() {
+    public ProductMeasurementModel getMinAndMax() {
 
-        MeasurementModel measurementModel = new MeasurementModel();
-        measurementModel.setMinimumMeasurementOne(MINIMUM_COUNT);
-        measurementModel.setMaximumMeasurementOne(MAXIMUM_COUNT);
+        ProductMeasurementModel productMeasurementModel = new ProductMeasurementModel();
+        productMeasurementModel.setMinimumMeasurementOne(MINIMUM_COUNT);
+        productMeasurementModel.setMaximumMeasurementOne(MAXIMUM_COUNT);
 
-        return measurementModel;
+        return productMeasurementModel;
     }
 
     @Override

@@ -67,10 +67,10 @@
 
                 <fragment
                     android:id="@+id/product_size_fragment"
-                    android:name="com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductSizeEditor"
+                    android:name="com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductMeasurementEditor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    bind:layout="@layout/product_size_editor">
+                    bind:layout="@layout/product_measurement_editor">
                 </fragment>
 
                 <fragment

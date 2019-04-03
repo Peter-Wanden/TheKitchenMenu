@@ -1,11 +1,11 @@
 package com.example.peter.thekitchenmenu.data.databaseLocal;
 
 import static com.example.peter.thekitchenmenu.data.entity.ProductEntity.REMOTE_PRODUCT_ID;
-import static com.example.peter.thekitchenmenu.data.entity.UsersProductData.TABLE_USERS_PRODUCT_DATA;
-import static com.example.peter.thekitchenmenu.data.entity.UsersProductData.PRODUCT_ID;
-import static com.example.peter.thekitchenmenu.data.entity.UsersProductData.ID;
+import static com.example.peter.thekitchenmenu.data.entity.ProductUserDataEntity.TABLE_USERS_PRODUCT_DATA;
+import static com.example.peter.thekitchenmenu.data.entity.ProductUserDataEntity.PRODUCT_ID;
+import static com.example.peter.thekitchenmenu.data.entity.ProductUserDataEntity.ID;
 
-import com.example.peter.thekitchenmenu.data.entity.UsersProductData;
+import com.example.peter.thekitchenmenu.data.entity.ProductUserDataEntity;
 
 import java.util.List;
 
@@ -20,38 +20,38 @@ import androidx.room.Update;
 public interface UsersProductDataDAO {
 
     @Query("SELECT * FROM " + TABLE_USERS_PRODUCT_DATA)
-    LiveData<List<UsersProductData>> getAll();
+    LiveData<List<ProductUserDataEntity>> getAll();
 
     @Query("SELECT * FROM " + TABLE_USERS_PRODUCT_DATA +
             " WHERE " + ID + " IN(:idArray)")
-    LiveData<List<UsersProductData>> getByIdArray(int[] idArray);
+    LiveData<List<ProductUserDataEntity>> getByIdArray(int[] idArray);
 
     @Query("SELECT * FROM " + TABLE_USERS_PRODUCT_DATA +
             " WHERE " + ID + " = :id")
-    LiveData<UsersProductData> getById(int id);
+    LiveData<ProductUserDataEntity> getById(int id);
 
     @Query("SELECT * FROM " + TABLE_USERS_PRODUCT_DATA +
             " WHERE " + REMOTE_PRODUCT_ID + " = :remoteId")
-    UsersProductData getByRemoteId(String remoteId);
+    ProductUserDataEntity getByRemoteId(String remoteId);
 
     @Query("SELECT * FROM " + TABLE_USERS_PRODUCT_DATA +
             " WHERE " + PRODUCT_ID + " = :productId")
-    UsersProductData getByLocalProductId(int productId);
+    ProductUserDataEntity getByLocalProductId(int productId);
 
     @Insert
-    void insert(UsersProductData usersProductData);
+    void insert(ProductUserDataEntity productUserDataEntity);
 
     @Insert
-    void insertAll(List<UsersProductData> listUsersProductData);
+    void insertAll(List<ProductUserDataEntity> listProductUserDatumEntities);
 
     @Update
-    void update(UsersProductData usersProductData);
+    void update(ProductUserDataEntity productUserDataEntity);
 
     @Update
-    void updateAll(List<UsersProductData> listUsersProductData);
+    void updateAll(List<ProductUserDataEntity> listProductUserDatumEntities);
 
     @Delete
-    void delete(UsersProductData usersProductData);
+    void delete(ProductUserDataEntity productUserDataEntity);
 
     @Query("DELETE FROM " + TABLE_USERS_PRODUCT_DATA)
     void deleteAll();

@@ -8,7 +8,7 @@ import java.util.List;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.app.Singletons;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
-import com.example.peter.thekitchenmenu.data.entity.UsersProductData;
+import com.example.peter.thekitchenmenu.data.entity.ProductUserDataEntity;
 import com.example.peter.thekitchenmenu.data.model.ProductModel;
 import com.example.peter.thekitchenmenu.data.repository.Repository;
 
@@ -23,7 +23,7 @@ public class ViewModelCatlogProducts extends AndroidViewModel {
     private static final String TAG = "ViewModelCatlogProducts";
 
     // View models.
-    private MediatorLiveData<List<UsersProductData>> observableProdMys;
+    private MediatorLiveData<List<ProductUserDataEntity>> observableProdMys;
     private MediatorLiveData<List<ProductEntity>> observableProducts;
     private MediatorLiveData<List<ProductModel>> observeMatchMergeCommunityAndMyProducts;
 
@@ -63,7 +63,7 @@ public class ViewModelCatlogProducts extends AndroidViewModel {
 
     private void initialiseDataSource() {
 
-        List<UsersProductData> mListProdMy = new ArrayList<>();
+        List<ProductUserDataEntity> mListProdMy = new ArrayList<>();
         List<ProductEntity> mListProdComm = new ArrayList<>();
 
         // Adds the data models to the mediator. Ensures all data sets have returned results
@@ -98,14 +98,14 @@ public class ViewModelCatlogProducts extends AndroidViewModel {
     // TODO - Will become clearer when Recipes functionality is added!!!
     // Matches and merges Products with UserProductData into ProductModel.
     // TODO - Use collections for a better sort algorithm here
-    private List<ProductModel> mergeMatchMyComm(List<ProductEntity> listDmPc, List<UsersProductData> listDmPm) {
+    private List<ProductModel> mergeMatchMyComm(List<ProductEntity> listDmPc, List<ProductUserDataEntity> listDmPm) {
 
         List<ProductModel> listVmP = new ArrayList<>();
 
         for (ProductEntity dmPc : listDmPc) {
             ProductModel vmp = null;
 
-            for(UsersProductData dmPm : listDmPm) {
+            for(ProductUserDataEntity dmPm : listDmPm) {
                 if (dmPc.getId() == dmPm.getProductId()) {
                     vmp = new ProductModel(dmPm, dmPc);
                     listVmP.add(vmp);
@@ -120,7 +120,7 @@ public class ViewModelCatlogProducts extends AndroidViewModel {
         return listVmP;
     }
 
-    // Filters through only the UsersProductData data in the ProductModel view model (My Products).
+    // Filters through only the ProductUserDataEntity data in the ProductModel view model (My Products).
     public LiveData<List<ProductModel>> getAllVmProdMy() {
         return Transformations.map(observeMatchMergeCommunityAndMyProducts, this::filterMy);
     }

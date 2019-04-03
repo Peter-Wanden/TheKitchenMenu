@@ -5,11 +5,11 @@ import android.os.Parcelable;
 import android.util.Log;
 
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
-import com.example.peter.thekitchenmenu.data.entity.UsersProductData;
+import com.example.peter.thekitchenmenu.data.entity.ProductUserDataEntity;
 
 import static com.example.peter.thekitchenmenu.app.Constants.*;
 import static com.example.peter.thekitchenmenu.data.entity.ProductEntity.*;
-import static com.example.peter.thekitchenmenu.data.entity.UsersProductData.*;
+import static com.example.peter.thekitchenmenu.data.entity.ProductUserDataEntity.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,7 +23,7 @@ public class ProductModel extends BaseObservable implements Parcelable {
 
     private static final String TAG = "ProductModel";
 
-    // UsersProductData fields.
+    // ProductUserDataEntity fields.
     private int userProductDataId;
     // private String remoteProdMyRefKey; // TODO - find the root of this var
     private String remoteUsedProductId;
@@ -55,17 +55,17 @@ public class ProductModel extends BaseObservable implements Parcelable {
     public ProductModel(){}
 
     // For merging data models
-    public ProductModel(UsersProductData usersProductData, ProductEntity productEntity){
-        this.userProductDataId = usersProductData.getId();
-        this.remoteProductId = usersProductData.getRemoteProductId();
-        this.remoteUsedProductId = usersProductData.getRemoteIdUsedProduct();
-        this.retailer = usersProductData.getRetailer();
-        this.locationRoom = usersProductData.getLocationRoom();
-        this.locationInRoom = usersProductData.getLocationInRoom();
-        this.price = usersProductData.getPrice();
-        this.localImageUri = usersProductData.getLocalImageUri();
-        this.usersProductDataCreateDate = usersProductData.getCreateDate();
-        this.usersProductDataLastUpdate = usersProductData.getLastUpdate();
+    public ProductModel(ProductUserDataEntity productUserDataEntity, ProductEntity productEntity){
+        this.userProductDataId = productUserDataEntity.getId();
+        this.remoteProductId = productUserDataEntity.getRemoteProductId();
+        this.remoteUsedProductId = productUserDataEntity.getRemoteIdUsedProduct();
+        this.retailer = productUserDataEntity.getRetailer();
+        this.locationRoom = productUserDataEntity.getLocationRoom();
+        this.locationInRoom = productUserDataEntity.getLocationInRoom();
+        this.price = productUserDataEntity.getPrice();
+        this.localImageUri = productUserDataEntity.getLocalImageUri();
+        this.usersProductDataCreateDate = productUserDataEntity.getCreateDate();
+        this.usersProductDataLastUpdate = productUserDataEntity.getLastUpdate();
 
         this.productId = productEntity.getId();
         this.remoteProductId = productEntity.getRemoteProductId();
@@ -248,8 +248,8 @@ public class ProductModel extends BaseObservable implements Parcelable {
         result.put(LOCATION_IN_ROOM, locationInRoom);
         result.put(PRICE, price);
         result.put(LOCAL_IMAGE_URI, localImageUri);
-        result.put(UsersProductData.CREATE_DATE, usersProductDataCreateDate);
-        result.put(UsersProductData.LAST_UPDATE, usersProductDataLastUpdate);
+        result.put(ProductUserDataEntity.CREATE_DATE, usersProductDataCreateDate);
+        result.put(ProductUserDataEntity.LAST_UPDATE, usersProductDataLastUpdate);
         result.put(REMOTE_PRODUCT_ID, remoteProductId);
 
         return result;

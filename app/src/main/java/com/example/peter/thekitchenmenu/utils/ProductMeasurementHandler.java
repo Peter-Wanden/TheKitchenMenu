@@ -9,22 +9,22 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementModel;
+import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubType;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasure;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureClassSelector;
-import com.example.peter.thekitchenmenu.viewmodels.ProductSizeViewModel;
+import com.example.peter.thekitchenmenu.viewmodels.ProductMeasurementViewModel;
 
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MULTI_PACK_MAXIMUM_NO_OF_ITEMS;
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MULTI_PACK_MINIMUM_NO_OF_ITEMS;
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.SINGLE_ITEM;
 
-public class ProductSizeValidationHandler {
+public class ProductMeasurementHandler {
 
-    private static final String TAG = "ProductSizeValidationHa";
+    private static final String TAG = "ProductMeasurementValid";
 
     private Context applicationContext;
-    private ProductSizeViewModel viewModel;
+    private ProductMeasurementViewModel viewModel;
     private Resources resources;
 
     private UnitOfMeasure unitOfMeasure;
@@ -32,26 +32,19 @@ public class ProductSizeValidationHandler {
 
     private static final int MEASUREMENT_ERROR = -1;
 
-    public ProductSizeValidationHandler(Application applicationContext,
-                                        ProductSizeViewModel viewModel) {
+    public ProductMeasurementHandler(Application applicationContext,
+                                     ProductMeasurementViewModel viewModel) {
 
         this.applicationContext = applicationContext;
         this.viewModel = viewModel;
         resources = applicationContext.getResources();
 
+        // Default unit of measure
         unitOfMeasure = UnitOfMeasureClassSelector.getClassWithSubType(applicationContext,
                 MeasurementSubType.TYPE_METRIC_MASS);
     }
 
     public void newUnitOfMeasureSelected(Spinner spinnerWithSubType) {
-
-        // Check for change
-        if (unitOfMeasure.getMeasurementSubType().ordinal() ==
-                spinnerWithSubType.getSelectedItemPosition()) {
-            Log.d(TAG, "newUnitOfMeasureSelected: Unit of measure is the same, aborting");
-
-            return;
-        }
 
         boolean newUnitOfMeasureIsSet = setNewUnitOfMeasure(
                 MeasurementSubType.values()[spinnerWithSubType.getSelectedItemPosition()]
@@ -157,7 +150,7 @@ public class ProductSizeValidationHandler {
         viewModel.getMeasurement().setMeasurementSubType(unitOfMeasure.getMeasurementSubType());
     }
 
-    // Blocks infinite loops and updates the measurement and product model
+    // Second check that blocks infinite loops and updates the measurement and product model
     private void updateNumericValues() {
 
         if (viewModel.getMeasurement().getBaseSiUnits() != (int) unitOfMeasure.getBaseSiUnits()) {
@@ -419,12 +412,12 @@ public class ProductSizeValidationHandler {
         Log.d(TAG, "processMeasurements: MeasurementOneIsSet: " + measurementIsSet);
 
         if (measurementIsSet) {
-            Log.d(TAG, "processMeasurements: MeasurementModel one IS SET!");
+            Log.d(TAG, "processMeasurements: ProductMeasurementModel one IS SET!");
             updateNumericValues();
 
         } else {
 
-            Log.d(TAG, "processMeasurements: MeasurementModel is out of bounds");
+            Log.d(TAG, "processMeasurements: ProductMeasurementModel is out of bounds");
             unitOfMeasure.baseSiUnitsAreSet(viewModel.getMeasurement().getBaseSiUnits());
             setMeasurementOutOfBoundsError(editableMeasurement);
         }
@@ -462,7 +455,7 @@ public class ProductSizeValidationHandler {
 
     private void setErrorTo(EditText editableMeasurement) {
 
-        MeasurementModel measurementModel = unitOfMeasure.getMinAndMax();
+        ProductMeasurementModel productMeasurementModel = unitOfMeasure.getMinAndMax();
 
         // TODO - Add quantity strings (plurals)
         // https://developer.android.com/guide/topics/resources/string-resource.html#Plurals
@@ -474,14 +467,14 @@ public class ProductSizeValidationHandler {
 
                 resources.getString(
                         R.string.input_error_pack_size,
-                        unitOfMeasure.getTypeAsString(),
-                        measurementModel.getMaximumMeasurementTwo(),
-                        unitOfMeasure.getMeasurementUnitTwo(),
-                        measurementModel.getMinimumMeasurementOne(),
-                        unitOfMeasure.getMeasurementUnitOne(),
-                        unitOfMeasure.getTypeAsString(),
-                        getMinimumPerItemMeasurement(measurementModel),
-                        unitOfMeasure.getMeasurementUnitOne()));
+                        unitOfMeasure.getMeasurementTypeAsString(),
+                        productMeasurementModel.getMaximumMeasurementTwo(),
+                        unitOfMeasure.getMeasurementUnitTwoLabel(),
+                        productMeasurementModel.getMinimumMeasurementOne(),
+                        unitOfMeasure.getMeasurementUnitOneLabel(),
+                        unitOfMeasure.getMeasurementTypeAsString(),
+                        getMinimumPerItemMeasurement(productMeasurementModel),
+                        unitOfMeasure.getMeasurementUnitOneLabel()));
 
 
         Log.d(TAG, "setErrorTo: Error should be set.");
@@ -500,12 +493,12 @@ public class ProductSizeValidationHandler {
     }
 
 
-    private int getMinimumPerItemMeasurement(MeasurementModel measurementModel) {
+    private int getMinimumPerItemMeasurement(ProductMeasurementModel productMeasurementModel) {
 
-        if (measurementModel.getNumberOfItems() > SINGLE_ITEM)
-            return measurementModel.getMinimumMeasurementOne() / measurementModel.getNumberOfItems();
+        if (productMeasurementModel.getNumberOfItems() > SINGLE_ITEM)
+            return productMeasurementModel.getMinimumMeasurementOne() / productMeasurementModel.getNumberOfItems();
 
-        return measurementModel.getMinimumMeasurementOne();
+        return productMeasurementModel.getMinimumMeasurementOne();
     }
 
     public void setNewBaseSiUnits(double baseSiUnits) {

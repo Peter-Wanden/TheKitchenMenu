@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.peter.thekitchenmenu.R;
+import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
 
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.*;
 
@@ -38,13 +39,18 @@ public class ImperialMass implements UnitOfMeasure {
     }
 
     @Override
-    public String getTypeAsString() {
+    public String getMeasurementTypeAsString() {
         return type;
     }
 
     @Override
     public MeasurementType getMeasurementType() {
         return MeasurementType.TYPE_MASS;
+    }
+
+    @Override
+    public String getMeasurementSubTypeAsString() {
+        return null;
     }
 
     @Override
@@ -58,25 +64,25 @@ public class ImperialMass implements UnitOfMeasure {
     }
 
     @Override
-    public String getMeasurementUnitOne() {
+    public String getMeasurementUnitOneLabel() {
         return measurementUnitOne;
     }
 
     @Override
-    public String getMeasurementUnitTwo() {
+    public String getMeasurementUnitTwoLabel() {
         return measurementUnitTwo;
     }
 
     @Override
-    public String getMeasurementUnitThree() {
+    public String getMeasurementUnitThreeLabel() {
         return measurementUnitThree;
     }
 
     @Override
-    public MeasurementModel getMinAndMax() {
+    public ProductMeasurementModel getMinAndMax() {
 
-        MeasurementModel measurementModel = new MeasurementModel();
-        measurementModel.setNumberOfItems(numberOfItemsInPack);
+        ProductMeasurementModel productMeasurementModel = new ProductMeasurementModel();
+        productMeasurementModel.setNumberOfItems(numberOfItemsInPack);
 
         double minMeasurement;
 
@@ -86,17 +92,17 @@ public class ImperialMass implements UnitOfMeasure {
 
         else minMeasurement = UNIT_OUNCE;
 
-        measurementModel.setMinimumMeasurementOne((int) minMeasurement);
-        measurementModel.setPackMeasurementOne(getMeasurementInOunces(MAX_MASS));
-        measurementModel.setPackMeasurementTwo(getMeasurementInPounds(MAX_MASS));
+        productMeasurementModel.setMinimumMeasurementOne((int) minMeasurement);
+        productMeasurementModel.setPackMeasurementOne(getMeasurementInOunces(MAX_MASS));
+        productMeasurementModel.setPackMeasurementTwo(getMeasurementInPounds(MAX_MASS));
 
-        return measurementModel;
+        return productMeasurementModel;
     }
 
-    private double convertToBaseSiUnits(MeasurementModel measurementModelToConvert) {
+    private double convertToBaseSiUnits(ProductMeasurementModel productMeasurementModelToConvert) {
 
-        double ouncesToGrams = measurementModelToConvert.getPackMeasurementOne() * UNIT_OUNCE;
-        double poundsToGrams = measurementModelToConvert.getPackMeasurementTwo() * UNIT_POUND;
+        double ouncesToGrams = productMeasurementModelToConvert.getPackMeasurementOne() * UNIT_OUNCE;
+        double poundsToGrams = productMeasurementModelToConvert.getPackMeasurementTwo() * UNIT_POUND;
 
         return poundsToGrams + ouncesToGrams;
     }
@@ -178,7 +184,7 @@ public class ImperialMass implements UnitOfMeasure {
     public int[] getInputFilterFormat() {
 
         int[] inputFilterFormat = new int[3];
-        MeasurementModel maxValues = getMinAndMax();
+        ProductMeasurementModel maxValues = getMinAndMax();
         int maxOunceValue = maxValues.getPackMeasurementOne();
         int maxPoundValue = maxValues.getPackMeasurementTwo();
 
@@ -208,11 +214,11 @@ public class ImperialMass implements UnitOfMeasure {
     @Override
     public boolean setPackMeasurementOne(int packMeasurementOne) {
 
-        MeasurementModel measurementModel = new MeasurementModel();
-        measurementModel.setPackMeasurementOne(packMeasurementOne);
-        measurementModel.setPackMeasurementTwo(packMeasurementInPounds);
+        ProductMeasurementModel productMeasurementModel = new ProductMeasurementModel();
+        productMeasurementModel.setPackMeasurementOne(packMeasurementOne);
+        productMeasurementModel.setPackMeasurementTwo(packMeasurementInPounds);
 
-        return baseSiUnitsAreSet(convertToBaseSiUnits(measurementModel));
+        return baseSiUnitsAreSet(convertToBaseSiUnits(productMeasurementModel));
     }
 
     @Override
@@ -223,11 +229,11 @@ public class ImperialMass implements UnitOfMeasure {
     @Override
     public boolean setPackMeasurementTwo(int packMeasurementTwo) {
 
-        MeasurementModel measurementModel = new MeasurementModel();
-        measurementModel.setPackMeasurementOne(packMeasurementInOunces);
-        measurementModel.setPackMeasurementTwo(packMeasurementTwo);
+        ProductMeasurementModel productMeasurementModel = new ProductMeasurementModel();
+        productMeasurementModel.setPackMeasurementOne(packMeasurementInOunces);
+        productMeasurementModel.setPackMeasurementTwo(packMeasurementTwo);
 
-        return baseSiUnitsAreSet(convertToBaseSiUnits(measurementModel));
+        return baseSiUnitsAreSet(convertToBaseSiUnits(productMeasurementModel));
     }
 
     @Override
@@ -248,11 +254,11 @@ public class ImperialMass implements UnitOfMeasure {
     @Override
     public boolean setItemMeasurementOne(int itemMeasurementOne) {
 
-        MeasurementModel measurementModel = new MeasurementModel();
-        measurementModel.setPackMeasurementOne(itemMeasurementOne * numberOfItemsInPack);
-        measurementModel.setPackMeasurementTwo(itemMeasurementInPounds * numberOfItemsInPack);
+        ProductMeasurementModel productMeasurementModel = new ProductMeasurementModel();
+        productMeasurementModel.setPackMeasurementOne(itemMeasurementOne * numberOfItemsInPack);
+        productMeasurementModel.setPackMeasurementTwo(itemMeasurementInPounds * numberOfItemsInPack);
 
-        return baseSiUnitsAreSet(convertToBaseSiUnits(measurementModel));
+        return baseSiUnitsAreSet(convertToBaseSiUnits(productMeasurementModel));
     }
 
     @Override
@@ -263,11 +269,11 @@ public class ImperialMass implements UnitOfMeasure {
     @Override
     public boolean setItemMeasurementTwo(int itemMeasurementTwo) {
 
-        MeasurementModel measurementModel = new MeasurementModel();
-        measurementModel.setPackMeasurementOne(itemMeasurementInOunces * numberOfItemsInPack);
-        measurementModel.setPackMeasurementTwo(itemMeasurementInPounds * numberOfItemsInPack);
+        ProductMeasurementModel productMeasurementModel = new ProductMeasurementModel();
+        productMeasurementModel.setPackMeasurementOne(itemMeasurementInOunces * numberOfItemsInPack);
+        productMeasurementModel.setPackMeasurementTwo(itemMeasurementInPounds * numberOfItemsInPack);
 
-        return baseSiUnitsAreSet(convertToBaseSiUnits(measurementModel));
+        return baseSiUnitsAreSet(convertToBaseSiUnits(productMeasurementModel));
     }
 
     @Override

@@ -6,7 +6,7 @@ import android.util.Log;
 
 import com.example.peter.thekitchenmenu.data.databaseLocal.TKMLocalDatabase;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
-import com.example.peter.thekitchenmenu.data.entity.UsersProductData;
+import com.example.peter.thekitchenmenu.data.entity.ProductUserDataEntity;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public class Repository {
     private final TKMLocalDatabase database;
     private final SyncManager syncManager;
 
-    private MediatorLiveDataActive<List<UsersProductData>> observableUsersProductData;
+    private MediatorLiveDataActive<List<ProductUserDataEntity>> observableUsersProductData;
     private MediatorLiveDataActive<List<ProductEntity>> observableProducts;
 
     private Repository(final Context context, final TKMLocalDatabase database) {
@@ -35,7 +35,7 @@ public class Repository {
             }
         });
 
-        observableUsersProductData = new MediatorLiveDataActive<>(this, UsersProductData.TAG);
+        observableUsersProductData = new MediatorLiveDataActive<>(this, ProductUserDataEntity.TAG);
         observableUsersProductData.addSource(this.database.userProductDataDAO().getAll(),
                 usersProductData -> {
             if (this.database.getDatabaseCreated().getValue() != null) {
@@ -64,7 +64,7 @@ public class Repository {
         return observableProducts;
     }
 
-    public LiveData<List<UsersProductData>> getAllUserProductData() {
+    public LiveData<List<ProductUserDataEntity>> getAllUserProductData() {
         return observableUsersProductData;
     }
 
@@ -72,7 +72,7 @@ public class Repository {
         return database.productDAO().getByRemoteId(remoteId);
     }
 
-    UsersProductData getUserProductDataByRemoteId(String remoteId) {
+    ProductUserDataEntity getUserProductDataByRemoteId(String remoteId) {
         return database.userProductDataDAO().getByRemoteId(remoteId);
     }
 
@@ -80,7 +80,7 @@ public class Repository {
         database.productDAO().insertAll(productsToInsert);
     }
 
-    void insertAllUserProductData(List<UsersProductData> userProductDataToInsert) {
+    void insertAllUserProductData(List<ProductUserDataEntity> userProductDataToInsert) {
         database.userProductDataDAO().insertAll(userProductDataToInsert);
     }
 
@@ -88,8 +88,8 @@ public class Repository {
         database.productDAO().updateAll(productsToUpdate);
     }
 
-    void updateUsersProductData(List<UsersProductData> usersProductDataToUpdate) {
-        database.userProductDataDAO().updateAll(usersProductDataToUpdate);
+    void updateUsersProductData(List<ProductUserDataEntity> productUserDataEntityToUpdate) {
+        database.userProductDataDAO().updateAll(productUserDataEntityToUpdate);
     }
 
     public Cursor findProductsThatMatch(String searchQuery) {

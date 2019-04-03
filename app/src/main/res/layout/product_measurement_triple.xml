@@ -14,12 +14,12 @@
         <import type="com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementZeroToBlankConverter" />
 
         <variable
-            name="sizeValidation"
-            type="com.example.peter.thekitchenmenu.utils.ProductSizeValidationHandler" />
+            name="measurementValidation"
+            type="com.example.peter.thekitchenmenu.utils.ProductMeasurementHandler" />
 
         <variable
             name="measurement"
-            type="com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementModel" />
+            type="com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -37,7 +37,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:textAlignment="textEnd"
-            android:afterTextChanged='@{() -> sizeValidation.validatePackSize(packEditableMeasurementThree)}'
+            android:afterTextChanged='@{() -> measurementValidation.validatePackSize(packEditableMeasurementThree)}'
             android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(packEditableMeasurementThree, measurement.packMeasurementThree)}'
             app:setUpEditTextForSubTypeSelected='@{measurement.measurementSubType}'
             app:numberOfItems='@{measurement.numberOfItems}'
@@ -70,7 +70,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:textAlignment="textEnd"
-            android:afterTextChanged='@{() -> sizeValidation.validatePackSize(packEditableMeasurementTwo)}'
+            android:afterTextChanged='@{() -> measurementValidation.validatePackSize(packEditableMeasurementTwo)}'
             android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(packEditableMeasurementTwo, measurement.packMeasurementTwo)}'
             app:layout_constraintStart_toEndOf="@id/pack_measurement_label_three"
             app:layout_constraintEnd_toStartOf="@id/pack_measurement_label_two"
@@ -102,7 +102,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:afterTextChanged='@{() -> sizeValidation.validatePackSize(packEditableMeasurementOne)}'
+            android:afterTextChanged='@{() -> measurementValidation.validatePackSize(packEditableMeasurementOne)}'
             android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(packEditableMeasurementOne, measurement.packMeasurementOne)}'
             android:textAlignment="textEnd"
             app:layout_constraintStart_toEndOf="@id/pack_measurement_label_two"
@@ -135,7 +135,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:afterTextChanged='@{() -> sizeValidation.validatePackSize(itemEditableMeasurementThree)}'
+            android:afterTextChanged='@{() -> measurementValidation.validatePackSize(itemEditableMeasurementThree)}'
             android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(itemEditableMeasurementThree, measurement.itemMeasurementThree)}'
             android:textAlignment="textEnd"
             app:layout_constraintStart_toStartOf="parent"
@@ -169,7 +169,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(itemEditableMeasurementTwo, measurement.itemMeasurementTwo)}'
-            android:afterTextChanged='@{() -> sizeValidation.validatePackSize(itemEditableMeasurementTwo)}'
+            android:afterTextChanged='@{() -> measurementValidation.validatePackSize(itemEditableMeasurementTwo)}'
             android:textAlignment="textEnd"
             app:layout_constraintStart_toEndOf="@id/item_measurement_label_three"
             app:layout_constraintEnd_toStartOf="@id/item_measurement_label_two"
@@ -202,7 +202,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(itemEditableMeasurementOne, measurement.itemMeasurementOne)}'
-            android:afterTextChanged='@{() -> sizeValidation.validatePackSize(itemEditableMeasurementOne)}'
+            android:afterTextChanged='@{() -> measurementValidation.validatePackSize(itemEditableMeasurementOne)}'
             android:textAlignment="textEnd"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/item_measurement_label_two"

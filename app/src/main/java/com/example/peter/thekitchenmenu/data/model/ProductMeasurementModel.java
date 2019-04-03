@@ -1,15 +1,16 @@
-package com.example.peter.thekitchenmenu.utils.unitofmeasure;
+package com.example.peter.thekitchenmenu.data.model;
 
 import com.example.peter.thekitchenmenu.BR;
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubType;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
-public class MeasurementModel extends BaseObservable {
+public class ProductMeasurementModel extends BaseObservable {
 
-    private static final String TAG = "ObservableMeasurementMo";
+    private static final String TAG = "ProductMeasurementModel";
 
-    // TODO move this block to ProductModel
+    // TODO move this block to ProductModel?
     private MeasurementSubType measurementSubType = MeasurementSubType.TYPE_METRIC_MASS;
     private int numberOfMeasurementUnits = 1;
 
@@ -107,7 +108,7 @@ public class MeasurementModel extends BaseObservable {
         return maximumMeasurementTwo;
     }
 
-    void setMaximumMeasurementTwo(int maximumMeasurementTwo) {
+    public void setMaximumMeasurementTwo(int maximumMeasurementTwo) {
 
         this.maximumMeasurementTwo = maximumMeasurementTwo;
     }
@@ -205,7 +206,7 @@ public class MeasurementModel extends BaseObservable {
     @Override
     public String toString() {
 
-        return "MeasurementModel{" +
+        return "ProductMeasurementModel{" +
                 ", \nmeasurementSubType=" + measurementSubType +
                 ", \nnumberOfItems=" + numberOfItems +
                 ", \nminimumMeasurementOne=" + minimumMeasurementOne +

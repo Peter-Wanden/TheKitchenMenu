@@ -14,12 +14,12 @@
         <import type="com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementZeroToBlankConverter" />
 
         <variable
-            name="sizeValidation"
-            type="com.example.peter.thekitchenmenu.utils.ProductSizeValidationHandler" />
+            name="measurementValidation"
+            type="com.example.peter.thekitchenmenu.utils.ProductMeasurementHandler" />
 
         <variable
             name="measurement"
-            type="com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementModel" />
+            type="com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -37,7 +37,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:textAlignment="textEnd"
-            android:afterTextChanged='@{() -> sizeValidation.validatePackSize(packEditableMeasurementOne)}'
+            android:afterTextChanged='@{() -> measurementValidation.validatePackSize(packEditableMeasurementOne)}'
             android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(packEditableMeasurementOne, measurement.packMeasurementOne)}'
             app:setUpEditTextForSubTypeSelected='@{measurement.measurementSubType}'
             app:numberOfItems='@{measurement.numberOfItems}'
@@ -70,7 +70,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:textAlignment="textEnd"
-            android:afterTextChanged='@{() -> sizeValidation.validatePackSize(itemEditableMeasurementOne)}'
+            android:afterTextChanged='@{() -> measurementValidation.validatePackSize(itemEditableMeasurementOne)}'
             android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(itemEditableMeasurementOne, measurement.itemMeasurementOne)}'
             app:setUpEditTextForSubTypeSelected='@{measurement.measurementSubType}'
             app:numberOfItems='@{measurement.numberOfItems}'

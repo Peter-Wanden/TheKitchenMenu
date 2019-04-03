@@ -9,7 +9,8 @@ import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubType;
 import com.example.peter.thekitchenmenu.viewmodels.ImageEditorViewModel;
 import com.example.peter.thekitchenmenu.viewmodels.ProductEditorViewModel;
 import com.example.peter.thekitchenmenu.viewmodels.ProductIdentityViewModel;
-import com.example.peter.thekitchenmenu.viewmodels.ProductSizeViewModel;
+import com.example.peter.thekitchenmenu.viewmodels.ProductMeasurementViewModel;
+import com.example.peter.thekitchenmenu.viewmodels.ProductUserDataEditorViewModel;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,7 +28,8 @@ public class ProductEditor extends AppCompatActivity {
     ProductEditorViewModel productEditorViewModel;
     ImageEditorViewModel imageEditorViewModel;
     ProductIdentityViewModel productIdentityViewModel;
-    ProductSizeViewModel productSizeViewModel;
+    ProductMeasurementViewModel productMeasurementViewModel;
+    ProductUserDataEditorViewModel productUserDataEditorViewModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,11 +53,19 @@ public class ProductEditor extends AppCompatActivity {
         productEditorViewModel = ViewModelProviders.of(
                 this).get(ProductEditorViewModel.class);
 
+        imageEditorViewModel = ViewModelProviders.of(
+                this).get(ImageEditorViewModel.class);
+
         productIdentityViewModel = ViewModelProviders.of(
                 this).get(ProductIdentityViewModel.class);
 
-        productSizeViewModel = ViewModelProviders.of(
-                this).get(ProductSizeViewModel.class);
+        productMeasurementViewModel = ViewModelProviders.of(
+                this).get(ProductMeasurementViewModel.class);
+
+        productUserDataEditorViewModel = ViewModelProviders.of(
+                this).get(ProductUserDataEditorViewModel.class);
+
+
     }
 
     private void setObservers() {
@@ -78,17 +88,17 @@ public class ProductEditor extends AppCompatActivity {
                 productIdentityViewModel.getIdentityModel().setShelfLife(
                         productEntity.getShelfLife());
 
-                boolean newUnitOfMeasureIsSet = productSizeViewModel.
-                        getSizeValidationHandler().
+                boolean newUnitOfMeasureIsSet = productMeasurementViewModel.
+                        getMeasurementValidation().
                         setNewUnitOfMeasure(
                         MeasurementSubType.values()[productEntity.getUnitOfMeasureSubType()]);
 
                 if (newUnitOfMeasureIsSet) {
 
-                    productSizeViewModel.getMeasurement().setNumberOfItems(
+                    productMeasurementViewModel.getMeasurement().setNumberOfItems(
                             productEntity.getNumberOfItems());
 
-                    productSizeViewModel.getMeasurement().setBaseSiUnits(
+                    productMeasurementViewModel.getMeasurement().setBaseSiUnits(
                             productEntity.getBaseSiUnits());
                 }
 

@@ -7,12 +7,12 @@ import android.view.ViewGroup;
 import android.widget.SpinnerAdapter;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.databinding.ProductSizeEditorBinding;
+import com.example.peter.thekitchenmenu.databinding.ProductMeasurementEditorBinding;
 import com.example.peter.thekitchenmenu.ui.detail.SpinnerItemType;
 import com.example.peter.thekitchenmenu.ui.detail.UnitOfMeasureSpinnerAdapter;
 import com.example.peter.thekitchenmenu.ui.detail.UnitOfMeasureSpinnerItem;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubType;
-import com.example.peter.thekitchenmenu.viewmodels.ProductSizeViewModel;
+import com.example.peter.thekitchenmenu.viewmodels.ProductMeasurementViewModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,12 +24,12 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
-public class ProductSizeEditor extends Fragment {
+public class ProductMeasurementEditor extends Fragment {
 
-    private static final String TAG = "ProductSizeEditor";
+    private static final String TAG = "ProductMeasurementEditor";
 
-    private ProductSizeEditorBinding sizeEditor;
-    private ProductSizeViewModel viewModel;
+    private ProductMeasurementEditorBinding measurementEditorBinding;
+    private ProductMeasurementViewModel viewModel;
 
     @Nullable
     @Override
@@ -37,14 +37,14 @@ public class ProductSizeEditor extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        sizeEditor = DataBindingUtil.inflate(
+        measurementEditorBinding = DataBindingUtil.inflate(
                 inflater,
-                R.layout.product_size_editor,
+                R.layout.product_measurement_editor,
                 container,
                 false);
 
-        View rootView = sizeEditor.getRoot();
-        sizeEditor.setLifecycleOwner(this);
+        View rootView = measurementEditorBinding.getRoot();
+        measurementEditorBinding.setLifecycleOwner(this);
 
         setViewModel();
         setValidationHandlersToBinding();
@@ -56,22 +56,22 @@ public class ProductSizeEditor extends Fragment {
 
     private void setViewModel() {
 
-        viewModel = ViewModelProviders.of(requireActivity()).get(ProductSizeViewModel.class);
+        viewModel = ViewModelProviders.of(requireActivity()).get(ProductMeasurementViewModel.class);
     }
 
     private void setValidationHandlersToBinding() {
 
-        sizeEditor.setSizeValidation(viewModel.getSizeValidationHandler());
+        measurementEditorBinding.setMeasurementValidation(viewModel.getMeasurementValidation());
     }
 
     private void setBindingInstanceVariables() {
 
-        sizeEditor.setMeasurement(viewModel.getMeasurement());
+        measurementEditorBinding.setMeasurement(viewModel.getMeasurement());
     }
 
     private void setupUnitOfMeasureSpinner() {
 
-        sizeEditor.spinnerUnitOfMeasure.setAdapter(getUnitOfMeasureSpinnerAdapter());
+        measurementEditorBinding.spinnerUnitOfMeasure.setAdapter(getUnitOfMeasureSpinnerAdapter());
     }
 
     private SpinnerAdapter getUnitOfMeasureSpinnerAdapter() {
