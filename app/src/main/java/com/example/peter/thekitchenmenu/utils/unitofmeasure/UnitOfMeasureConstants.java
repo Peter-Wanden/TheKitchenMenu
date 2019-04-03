@@ -13,7 +13,7 @@ public class UnitOfMeasureConstants {
     public static final int MINIMUM_COUNT = 1;
     public static final int MAXIMUM_COUNT = 1000;
 
-    public static final int NO_INPUT = 0;
+    public static final int NOT_YET_SET = 0;
 
     public static final int SINGLE_ITEM = 1;
 

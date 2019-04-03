@@ -19,10 +19,10 @@ public interface UnitOfMeasure {
     int getNumberOfMeasurementUnits();
 
     String getMeasurementUnitOneLabel();
-    int getPackMeasurementOne();
-    boolean setPackMeasurementOne(int packMeasurementOne);
-    int getItemMeasurementOne();
-    boolean setItemMeasurementOne(int itemMeasurementOne);
+    double getPackMeasurementOne();
+    boolean setPackMeasurementOne(double packMeasurementOne);
+    double getItemMeasurementOne();
+    boolean setItemMeasurementOne(double itemMeasurementOne);
 
     String getMeasurementUnitTwoLabel();
     int getPackMeasurementTwo();

@@ -27,14 +27,14 @@ public class MetricMass implements UnitOfMeasure {
     private String measurementUnitThree;
 
     // Min and max measurements
-    private double minimumItemBaseSiMeasurement = UNIT_GRAM;
+    private double minimumItemSize = UNIT_GRAM;
     private double maximumBaseSiMeasurement = MAX_MASS;
     private int minimumNumberOfItems = SINGLE_ITEM;
-    private int maximumNumberOfItems = (int) (MAX_MASS / minimumItemBaseSiMeasurement);
+    private int maximumNumberOfItems = (int) (MAX_MASS / minimumItemSize);
 
     // Current measurements
     private int numberOfItems = SINGLE_ITEM;
-    private double itemSizeInBaseSiUnits = minimumItemBaseSiMeasurement;
+    private double itemSizeInBaseSiUnits = minimumItemSize;
     private double baseSiUnits = 0.;
     private double packMeasurementInKilograms = 0;
     private double packMeasurementInGrams = 0;
@@ -142,11 +142,107 @@ public class MetricMass implements UnitOfMeasure {
         itemMeasurementInKilograms = getMeasurementInKilograms(itemSizeInBaseSiUnits);
 
         maximumNumberOfItems = (int) (MAX_MASS / itemSizeInBaseSiUnits);
+    }
 
-        Log.d(TAG, "setItemMeasurements: item size in base units: " + itemSizeInBaseSiUnits);
-        Log.d(TAG, "setItemMeasurements: item kg: " + itemMeasurementInKilograms + " grams: " +
-                itemMeasurementInGrams);
-        Log.d(TAG, "setItemMeasurements: Max number of items is now: " + maximumNumberOfItems);
+    @Override
+    public int getNumberOfItems() {
+        return numberOfItems;
+    }
+
+    @Override
+    public boolean setNumberOfItems(int numberOfItemsInPack) {
+
+        if (numberOfItemsInPackAreWithinBounds(numberOfItemsInPack)) {
+
+            if (baseSiUnits == NOT_YET_SET) {
+
+                this.numberOfItems = numberOfItemsInPack;
+
+                return true;
+
+            } else {
+
+                if (lastMeasurementUpdated == PACK_MEASUREMENT) {
+
+                    if (itemSizeNotLessThanSmallestUnit(numberOfItemsInPack)) {
+
+                        setItemsInPackByAdjustingItemSize(numberOfItemsInPack);
+
+                        return true;
+                    }
+
+                } else if (lastMeasurementUpdated == ITEM_MEASUREMENT) {
+
+                    if (itemSizeTimesNumberOfItemsDoNotExceedMaxMass(numberOfItemsInPack)) {
+
+                        setItemsInPackByAdjustingPackSize(numberOfItemsInPack);
+
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean numberOfItemsInPackAreWithinBounds(int numberOfItemsInPack) {
+
+        return numberOfItemsInPack >= minimumNumberOfItems &&
+               numberOfItemsInPack <= maximumNumberOfItems;
+    }
+
+    private boolean itemSizeNotLessThanSmallestUnit(int numberOfItemsInPack) {
+
+        return numberOfItemsInPack / itemSizeInBaseSiUnits >= minimumItemSize;
+    }
+
+    private void setItemsInPackByAdjustingItemSize(int numberOfItemsInPack) {
+
+        this.numberOfItems = numberOfItemsInPack;
+        setItemMeasurements();
+    }
+
+    private boolean itemSizeTimesNumberOfItemsDoNotExceedMaxMass(int numberOfItemsInPack) {
+
+        return itemSizeInBaseSiUnits * numberOfItemsInPack <= MAX_MASS;
+    }
+
+    private void setItemsInPackByAdjustingPackSize(int numberOfItemsInPack) {
+
+        this.numberOfItems = numberOfItemsInPack;
+        baseSiUnitsAreSet(itemSizeInBaseSiUnits * numberOfItemsInPack);
+    }
+
+    @Override
+    public String getMeasurementUnitOneLabel() {
+        return measurementUnitOne;
+    }
+
+    @Override
+    public double getPackMeasurementOne() {
+        return packMeasurementInGrams;
+    }
+
+    @Override
+    public boolean setPackMeasurementOne(double packMeasurementOne) {
+
+        if (baseSiUnitsAreSet(baseSiUnitsWithPackMeasurementOne(packMeasurementOne))) {
+
+            lastMeasurementUpdated = false;
+            return true;
+        }
+
+        return false;
+    }
+
+    private double baseSiUnitsWithPackMeasurementOne(double packMeasurementOne) {
+
+        return packMeasurementInKilograms * UNIT_KILOGRAM + packMeasurementOne;
+    }
+
+    @Override
+    public double getItemMeasurementOne() {
+        return itemMeasurementInGrams;
     }
 
 
@@ -161,11 +257,6 @@ public class MetricMass implements UnitOfMeasure {
     }
 
     @Override
-    public String getMeasurementUnitOneLabel() {
-        return measurementUnitOne;
-    }
-
-    @Override
     public String getMeasurementUnitTwoLabel() {
         return measurementUnitTwo;
     }
@@ -176,102 +267,6 @@ public class MetricMass implements UnitOfMeasure {
     }
 
     @Override
-    public boolean setNumberOfItems(int numberOfItemsInPack) {
-
-        Log.d(TAG, "setNumberOfItems: " + numberOfItemsInPack);
-
-        if (numberOfItemsInPackAreWithinBounds(numberOfItemsInPack)) {
-
-            Log.d(TAG, "setNumberOfItems: number of items is within bounds");
-
-            if (newUnitOfMeasureIsBeingInitialised()) {
-
-                Log.d(TAG, "setNumberOfItems: New unit of measure is being initialised " +
-                        "- Setting number of items in pack to: " + numberOfItemsInPack);
-
-                this.numberOfItems = numberOfItemsInPack;
-
-                return true;
-
-            } else {
-
-                if (lastMeasurementUpdated == PACK_MEASUREMENT) {
-
-                    Log.d(TAG, "setNumberOfItems: last measurement updated was pack");
-
-                    if (itemSizeNotLessThanSmallestUnit(numberOfItemsInPack)) {
-
-                        setItemsInPackByAdjustingItemSize(numberOfItemsInPack);
-
-                        return true;
-                    }
-
-                    Log.d(TAG, "setNumberOfItems: item size would be smaller than " +
-                            "smallest item, aborting");
-
-
-                } else if (lastMeasurementUpdated == ITEM_MEASUREMENT) {
-
-                    Log.d(TAG, "setNumberOfItems: last measurement updated was item");
-
-                    if (itemSizeTimesNumberOfItemsDoNotExceedMaxMass(numberOfItemsInPack)) {
-
-                        setItemsInPackByAdjustingPackSize(numberOfItemsInPack);
-
-                        return true;
-
-                    }
-                    Log.d(TAG, "setNumberOfItems: item size will exceed max mass, " +
-                            "cannot set number of items, aborting");
-                    return false;
-                }
-            }
-
-        }
-        return false;
-    }
-
-    private void setItemsInPackByAdjustingPackSize(int numberOfItemsInPack) {
-
-        this.numberOfItems = numberOfItemsInPack;
-        double newBaseSiUnitSize = itemSizeInBaseSiUnits * numberOfItemsInPack;
-        boolean baseUnitsAreNowSet = baseSiUnitsAreSet(newBaseSiUnitSize);
-
-        Log.d(TAG, "setItemsInPackByAdjustingPackSize: number of items: " + numberOfItemsInPack);
-        Log.d(TAG, "setItemsInPackByAdjustingPackSize: new base unit size: " + newBaseSiUnitSize);
-        Log.d(TAG, "setItemsInPackByAdjustingPackSize: base units are set: " + baseUnitsAreNowSet);
-    }
-
-    private boolean newUnitOfMeasureIsBeingInitialised() {
-
-        return baseSiUnits == NO_INPUT;
-    }
-
-    private boolean numberOfItemsInPackAreWithinBounds(int numberOfItemsInPack) {
-
-        boolean result = numberOfItemsInPack >= minimumNumberOfItems &&
-                numberOfItemsInPack <= maximumNumberOfItems;
-
-        Log.d(TAG, "numberOfItemsInPackAreWithinBounds: " + result);
-
-        return result;
-    }
-
-    private boolean itemSizeNotLessThanSmallestUnit(int numberOfItemsInPack) {
-
-        boolean result = numberOfItemsInPack / itemSizeInBaseSiUnits >= minimumItemBaseSiMeasurement;
-        Log.d(TAG, "itemSizeNotLessThanSmallestUnit: " + result);
-
-        return result;
-    }
-
-    private void setItemsInPackByAdjustingItemSize(int numberOfItemsInPack) {
-
-        this.numberOfItems = numberOfItemsInPack;
-        setItemMeasurements();
-    }
-
-    @Override
     public ProductMeasurementModel getMinAndMax() {
 
         ProductMeasurementModel productMeasurementModel = new ProductMeasurementModel();
@@ -279,7 +274,7 @@ public class MetricMass implements UnitOfMeasure {
 
         if (numberOfItems > SINGLE_ITEM)
             productMeasurementModel.setMinimumMeasurementOne((int) minimumMultiPackMeasurement());
-        else productMeasurementModel.setMinimumMeasurementOne((int) minimumItemBaseSiMeasurement);
+        else productMeasurementModel.setMinimumMeasurementOne((int) minimumItemSize);
 
         productMeasurementModel.setMinimumMeasurementTwo(0);
         productMeasurementModel.setMaximumMeasurementOne(0);
@@ -289,37 +284,7 @@ public class MetricMass implements UnitOfMeasure {
     }
 
     private double minimumMultiPackMeasurement() {
-        return minimumItemBaseSiMeasurement * numberOfItems;
-    }
-
-    @Override
-    public int getNumberOfItems() {
-        return numberOfItems;
-    }
-
-    private boolean itemSizeTimesNumberOfItemsDoNotExceedMaxMass(int numberOfItemsInPack) {
-        return itemSizeInBaseSiUnits * numberOfItemsInPack <= MAX_MASS;
-    }
-
-    @Override
-    public int getPackMeasurementOne() {
-        Log.d(TAG, "getPackMeasurementOne: " + packMeasurementInGrams);
-        return (int) packMeasurementInGrams;
-    }
-
-    @Override
-    public boolean setPackMeasurementOne(int packMeasurementOne) {
-
-        int baseSiUnits = (int) (packMeasurementInKilograms * UNIT_KILOGRAM + packMeasurementOne);
-
-        if (baseSiUnitsAreSet(baseSiUnits)) {
-
-            lastMeasurementUpdated = false;
-
-            return true;
-        }
-
-        return false;
+        return minimumItemSize * numberOfItems;
     }
 
     @Override
@@ -355,11 +320,6 @@ public class MetricMass implements UnitOfMeasure {
     @Override
     public boolean setPackMeasurementThree(int packMeasurementThree) {
         return false;
-    }
-
-    @Override
-    public int getItemMeasurementOne() {
-        return (int) this.itemMeasurementInGrams;
     }
 
     @Override
