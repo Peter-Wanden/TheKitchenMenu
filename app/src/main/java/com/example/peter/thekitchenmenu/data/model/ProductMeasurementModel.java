@@ -23,10 +23,10 @@ public class ProductMeasurementModel extends BaseObservable {
 
     private double baseSiUnits = 0;
     private int numberOfItems = 1;
-    private int packMeasurementOne = 0;
+    private double packMeasurementOne = 0;
     private int packMeasurementTwo = 0;
     private int packMeasurementThree = 0;
-    private int itemMeasurementOne = 0;
+    private double itemMeasurementOne = 0;
     private int itemMeasurementTwo = 0;
     private int itemMeasurementThree = 0;
 
@@ -132,12 +132,12 @@ public class ProductMeasurementModel extends BaseObservable {
     }
 
     @Bindable
-    public int getPackMeasurementOne() {
+    public double getPackMeasurementOne() {
 
         return packMeasurementOne;
     }
 
-    public void setPackMeasurementOne(int packMeasurementOne) {
+    public void setPackMeasurementOne(double packMeasurementOne) {
 
         this.packMeasurementOne = packMeasurementOne;
         notifyPropertyChanged(BR.packMeasurementOne);
@@ -168,12 +168,12 @@ public class ProductMeasurementModel extends BaseObservable {
     }
 
     @Bindable
-    public int getItemMeasurementOne() {
+    public double getItemMeasurementOne() {
 
         return itemMeasurementOne;
     }
 
-    public void setItemMeasurementOne(int itemMeasurementOne) {
+    public void setItemMeasurementOne(double itemMeasurementOne) {
 
         this.itemMeasurementOne = itemMeasurementOne;
         notifyPropertyChanged(BR.itemMeasurementOne);

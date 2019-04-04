@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
 
+import androidx.core.util.Pair;
+
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.BASE_SI_UNIT_VOLUME;
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.SINGLE_ITEM;
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MULTI_PACK_MAXIMUM_NO_OF_ITEMS;
@@ -65,11 +67,6 @@ public class MetricVolume implements UnitOfMeasure {
     }
 
     @Override
-    public ProductMeasurementModel getMinAndMax() {
-        return null;
-    }
-
-    @Override
     public double getBaseSiUnits() {
         return 0;
     }
@@ -99,17 +96,17 @@ public class MetricVolume implements UnitOfMeasure {
     }
 
     @Override
-    public int[] getInputFilterFormat() {
+    public Pair[] getInputDigitsFilter() {
         return null;
     }
 
     @Override
-    public int getPackMeasurementOne() {
-        return 0;
+    public double getPackMeasurementOne() {
+        return 0.;
     }
 
     @Override
-    public boolean setPackMeasurementOne(int packMeasurementOne) {
+    public boolean setPackMeasurementOne(double packMeasurementOne) {
         return false;
     }
 
@@ -134,12 +131,12 @@ public class MetricVolume implements UnitOfMeasure {
     }
 
     @Override
-    public int getItemMeasurementOne() {
-        return 0;
+    public double getItemMeasurementOne() {
+        return 0.;
     }
 
     @Override
-    public boolean setItemMeasurementOne(int itemMeasurementOne) {
+    public boolean setItemMeasurementOne(double itemMeasurementOne) {
         return false;
     }
 
@@ -161,6 +158,11 @@ public class MetricVolume implements UnitOfMeasure {
     @Override
     public boolean setItemMeasurementThree(int itemMeasurementThree) {
         return false;
+    }
+
+    @Override
+    public String[] getMeasurementError() {
+        return new String[0];
     }
 
     @Override

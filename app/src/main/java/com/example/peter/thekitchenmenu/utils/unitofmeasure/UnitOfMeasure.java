@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
-import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
+import androidx.core.util.Pair;
 
 public interface UnitOfMeasure {
 
@@ -36,9 +36,9 @@ public interface UnitOfMeasure {
     int getItemMeasurementThree();
     boolean setItemMeasurementThree(int itemMeasurementThree);
 
-    ProductMeasurementModel getMinAndMax();
+    String[] getMeasurementError();
 
-    int[] getInputFilterFormat();
+    Pair[] getInputDigitsFilter();
 
     void resetNumericValues();
 }

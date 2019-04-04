@@ -24,4 +24,23 @@ public class MeasurementZeroToBlankConverter {
             return "";
         }
     }
+
+    public static String doNotShowZero(EditText editText, double value) {
+
+        try {
+
+            String numberInView = editText.getText().toString();
+            double parsed = Double.parseDouble(numberInView);
+
+            if (parsed == 0.) return "";
+            if (value == 0.) return "";
+
+            return String.valueOf(value);
+
+        } catch (NumberFormatException e) {
+
+            if (value > 0) return String.valueOf(value);
+            return "";
+        }
+    }
 }

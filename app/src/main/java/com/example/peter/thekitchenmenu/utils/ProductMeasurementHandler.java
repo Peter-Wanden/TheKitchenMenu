@@ -277,7 +277,7 @@ public class ProductMeasurementHandler {
 
         // Should this be checking against the unit of measure value and not the measurement?
 
-        int oldMeasurement;
+        double oldMeasurement;
 
         switch (measurementViewId) {
 
@@ -455,26 +455,25 @@ public class ProductMeasurementHandler {
 
     private void setErrorTo(EditText editableMeasurement) {
 
-        ProductMeasurementModel productMeasurementModel = unitOfMeasure.getMinAndMax();
-
         // TODO - Add quantity strings (plurals)
         // https://developer.android.com/guide/topics/resources/string-resource.html#Plurals
         // TODO - Use plurals for this error
         // TODO - If measurement units contain zero values do not show them
         // TODO - Have different errors for 1 to 3 measurement values
 
+        String[] measurementError = unitOfMeasure.getMeasurementError();
+
         editableMeasurement.setError(
 
                 resources.getString(
+
                         R.string.input_error_pack_size,
-                        unitOfMeasure.getMeasurementTypeAsString(),
-                        productMeasurementModel.getMaximumMeasurementTwo(),
-                        unitOfMeasure.getMeasurementUnitTwoLabel(),
-                        productMeasurementModel.getMinimumMeasurementOne(),
-                        unitOfMeasure.getMeasurementUnitOneLabel(),
-                        unitOfMeasure.getMeasurementTypeAsString(),
-                        getMinimumPerItemMeasurement(productMeasurementModel),
-                        unitOfMeasure.getMeasurementUnitOneLabel()));
+                        measurementError[0],
+                        measurementError[1],
+                        measurementError[2],
+                        measurementError[3],
+                        measurementError[4]
+                        ));
 
 
         Log.d(TAG, "setErrorTo: Error should be set.");

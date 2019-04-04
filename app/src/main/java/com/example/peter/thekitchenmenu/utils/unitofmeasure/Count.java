@@ -6,6 +6,8 @@ import android.content.res.Resources;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
 
+import androidx.core.util.Pair;
+
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.*;
 
 public class Count implements UnitOfMeasure {
@@ -73,16 +75,6 @@ public class Count implements UnitOfMeasure {
     }
 
     @Override
-    public ProductMeasurementModel getMinAndMax() {
-
-        ProductMeasurementModel productMeasurementModel = new ProductMeasurementModel();
-        productMeasurementModel.setMinimumMeasurementOne(MINIMUM_COUNT);
-        productMeasurementModel.setMaximumMeasurementOne(MAXIMUM_COUNT);
-
-        return productMeasurementModel;
-    }
-
-    @Override
     public double getBaseSiUnits() {
         return baseSiUnits;
     }
@@ -125,11 +117,18 @@ public class Count implements UnitOfMeasure {
     }
 
     @Override
-    public int[] getInputFilterFormat() {
-        int[] inputFilterFormat = new int[5];
-        inputFilterFormat[1] = 4;
-        inputFilterFormat[2] = 5;
-        return inputFilterFormat;
+    public Pair[] getInputDigitsFilter() {
+
+        Pair<Integer, Integer> unitOneDigitsFilter = new Pair<>(MULTI_PACK_MAXIMUM_NO_OF_ITEMS, 0);
+        Pair<Integer, Integer> unitTwoDigitsFilter = new Pair<>(0, 0);
+        Pair<Integer, Integer> unitThreeDigitsFilter = new Pair<>(0,0);
+
+        Pair[] digitFilters = new Pair[3];
+        digitFilters[0] = unitOneDigitsFilter;
+        digitFilters[1] = unitTwoDigitsFilter;
+        digitFilters[2] = unitThreeDigitsFilter;
+
+        return digitFilters;
     }
 
     @Override
@@ -138,12 +137,12 @@ public class Count implements UnitOfMeasure {
     }
 
     @Override
-    public int getPackMeasurementOne() {
+    public double getPackMeasurementOne() {
         return 0;
     }
 
     @Override
-    public boolean setPackMeasurementOne(int packMeasurementOne) {
+    public boolean setPackMeasurementOne(double packMeasurementOne) {
         return false;
     }
 
@@ -168,12 +167,12 @@ public class Count implements UnitOfMeasure {
     }
 
     @Override
-    public int getItemMeasurementOne() {
+    public double getItemMeasurementOne() {
         return 0;
     }
 
     @Override
-    public boolean setItemMeasurementOne(int itemMeasurementOne) {
+    public boolean setItemMeasurementOne(double itemMeasurementOne) {
         return false;
     }
 
@@ -195,6 +194,11 @@ public class Count implements UnitOfMeasure {
     @Override
     public boolean setItemMeasurementThree(int itemMeasurementThree) {
         return false;
+    }
+
+    @Override
+    public String[] getMeasurementError() {
+        return new String[0];
     }
 
     @Override
