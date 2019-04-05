@@ -36,7 +36,7 @@ public class UnitOfMeasureLabelBindingAdapter {
 
         Context context = textView.getContext();
 
-        UnitOfMeasure unitOfMeasure = UnitOfMeasureClassSelector.
+        UnitOfMeasure unitOfMeasure = UnitOfMeasureSubtypeSelector.
                 getClassWithSubType(context, subType);
 
         int units = unitOfMeasure.getNumberOfMeasurementUnits();

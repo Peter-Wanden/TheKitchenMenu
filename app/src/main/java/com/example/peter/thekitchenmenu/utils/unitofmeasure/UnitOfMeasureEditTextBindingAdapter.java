@@ -41,7 +41,7 @@ public class UnitOfMeasureEditTextBindingAdapter {
 
         Context viewContext = editText.getContext();
 
-        UnitOfMeasure unitOfMeasure = UnitOfMeasureClassSelector.
+        UnitOfMeasure unitOfMeasure = UnitOfMeasureSubtypeSelector.
                 getClassWithSubType(viewContext, subType);
 
         int viewId = editText.getId();

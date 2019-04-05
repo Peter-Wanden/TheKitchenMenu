@@ -4,7 +4,7 @@ package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 public class UnitOfMeasureConstants {
 
     public static final int BASE_SI_UNIT_MASS = 1;
-    public static final int MAX_MASS = 10000;
+    public static final double MAX_MASS = 10000.;
 
     public static final int BASE_SI_UNIT_VOLUME = 1;
     public static final int MAX_VOLUME = 10000;

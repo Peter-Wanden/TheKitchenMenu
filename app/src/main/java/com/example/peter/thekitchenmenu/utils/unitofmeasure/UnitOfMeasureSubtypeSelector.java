@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
 import android.content.Context;
 
-public abstract class UnitOfMeasureClassSelector {
+public abstract class UnitOfMeasureSubtypeSelector {
 
     public static UnitOfMeasure getClassWithSubType(Context context, MeasurementSubType subType) {
 

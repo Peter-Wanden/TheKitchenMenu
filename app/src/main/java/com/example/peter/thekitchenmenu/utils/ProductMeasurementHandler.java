@@ -12,7 +12,7 @@ import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubType;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasure;
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureClassSelector;
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureSubtypeSelector;
 import com.example.peter.thekitchenmenu.viewmodels.ProductMeasurementViewModel;
 
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MULTI_PACK_MAXIMUM_NO_OF_ITEMS;
@@ -40,7 +40,7 @@ public class ProductMeasurementHandler {
         resources = applicationContext.getResources();
 
         // Default unit of measure
-        unitOfMeasure = UnitOfMeasureClassSelector.getClassWithSubType(applicationContext,
+        unitOfMeasure = UnitOfMeasureSubtypeSelector.getClassWithSubType(applicationContext,
                 MeasurementSubType.TYPE_METRIC_MASS);
     }
 
@@ -515,7 +515,7 @@ public class ProductMeasurementHandler {
 
     public boolean setNewUnitOfMeasure(MeasurementSubType subType) {
 
-        newUnitOfMeasure = UnitOfMeasureClassSelector.getClassWithSubType(
+        newUnitOfMeasure = UnitOfMeasureSubtypeSelector.getClassWithSubType(
                 applicationContext, subType);
 
         return true;

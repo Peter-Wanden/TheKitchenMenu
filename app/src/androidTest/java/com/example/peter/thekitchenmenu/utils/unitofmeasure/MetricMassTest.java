@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import androidx.test.core.app.ApplicationProvider;
 
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MAX_MASS;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -18,7 +19,6 @@ public class MetricMassTest {
     @Test
     public void testBaseSiInRangeMin() { // IN RANGE MIN
 
-        System.out.println("Setting bas SI to minimum (1)");
         assertThat(metricMass.baseSiUnitsAreSet(1), is(true));
 
         assertThat(metricMass.getPackMeasurementOne(), is(1.));
@@ -33,7 +33,6 @@ public class MetricMassTest {
     @Test
     public void testBaseSiOutOfRangeMin() { // OUT OF RANGE MIN
 
-        System.out.println("Testing out of range minimum (0.9)");
         assertThat(metricMass.baseSiUnitsAreSet(0.9), is(false));
 
         assertThat(metricMass.getPackMeasurementOne(), is(0.));
@@ -48,14 +47,13 @@ public class MetricMassTest {
     @Test
     public void testBaseSiInRangeMax() { // IN RANGE MAX
 
-        System.out.println("Testing in range max");
-        assertThat(metricMass.baseSiUnitsAreSet(UnitOfMeasureConstants.MAX_MASS), is(true));
+        assertThat(metricMass.baseSiUnitsAreSet(MAX_MASS), is(true));
 
         assertThat(metricMass.getPackMeasurementOne(), is(0.));
         assertThat(metricMass.getPackMeasurementTwo(), is(10));
         assertThat(metricMass.getItemMeasurementOne(), is(0.));
         assertThat(metricMass.getItemMeasurementTwo(), is(10));
-        assertThat(metricMass.getBaseSiUnits(), is(10000.));
+        assertThat(metricMass.getBaseSiUnits(), is(MAX_MASS));
 
         System.out.println();
     }
@@ -63,8 +61,7 @@ public class MetricMassTest {
     @Test
     public void testBaseSiOutOfRangeMax() { // OUT OF RANGE MAX
 
-        System.out.println("Testing out of range max + 1");
-        assertThat(metricMass.baseSiUnitsAreSet(UnitOfMeasureConstants.MAX_MASS + 1), is(false));
+        assertThat(metricMass.baseSiUnitsAreSet(MAX_MASS + 1), is(false));
 
         assertThat(metricMass.getPackMeasurementOne(), is(0.));
         assertThat(metricMass.getPackMeasurementTwo(), is(0));
@@ -75,19 +72,68 @@ public class MetricMassTest {
         System.out.println();
     }
 
+    @Test
+    public void testBaseSiViolatesMinimumItemSize() { // CONDITION: BASE SI SMALLER THAN SMALLEST ITEM
+
+        metricMass.setNumberOfItems(5);
+
+        assertThat(metricMass.baseSiUnitsAreSet(4), is(false));
+
+        assertThat(metricMass.getPackMeasurementOne(), is(0.));
+        assertThat(metricMass.getPackMeasurementTwo(), is(0));
+        assertThat(metricMass.getItemMeasurementOne(), is(0.));
+        assertThat(metricMass.getItemMeasurementTwo(), is(0));
+        assertThat(metricMass.getBaseSiUnits(), is(0.));
+
+        System.out.println();
+    }
+
+    @Test
+    public void testBaseSiAtMinimumItemSize() { // CONDITION: BASE SI SAME AS SMALLEST ITEM
+
+        metricMass.setNumberOfItems(5);
+
+        assertThat(metricMass.baseSiUnitsAreSet(5), is(true));
+
+        assertThat(metricMass.getPackMeasurementOne(), is(5.));
+        assertThat(metricMass.getPackMeasurementTwo(), is(0));
+        assertThat(metricMass.getItemMeasurementOne(), is(1.));
+        assertThat(metricMass.getItemMeasurementTwo(), is(0));
+        assertThat(metricMass.getBaseSiUnits(), is(5.));
+
+        System.out.println();
+    }
+
+    @Test
+    public void testBaseSiRetrieveFromPackAndItem() {// CONDITION: BASE SI SET, CHECK PACK AND ITEM UPDATED
+
+        // Set base SI
+        assertThat(metricMass.baseSiUnitsAreSet(5500), is(true));
+
+        // Check pack and item values have updated correctly
+        assertThat(metricMass.getPackMeasurementOne(), is(500.));
+        assertThat(metricMass.getPackMeasurementTwo(), is(5));
+        assertThat(metricMass.getItemMeasurementOne(), is(500.));
+        assertThat(metricMass.getItemMeasurementTwo(), is(5));
+        assertThat(metricMass.getBaseSiUnits(), is(5500.));
+
+        System.out.println();
+    }
+
     //////////////////////////// PACK MEASUREMENT ONE TESTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
     @Test
     public void testMeasurementUnitOneInRangeMax() { // IN RANGE MAX
 
-        System.out.println("Testing max in range measurement unit one (10,000)");
-        assertThat(metricMass.setPackMeasurementOne(10000), is(true));
+        // Set to max
+        assertThat(metricMass.setPackMeasurementOne(MAX_MASS), is(true));
 
+        // Check value set
         assertThat(metricMass.getPackMeasurementOne(), is(0.));
         assertThat(metricMass.getPackMeasurementTwo(), is(10));
         assertThat(metricMass.getItemMeasurementOne(), is(0.));
         assertThat(metricMass.getItemMeasurementTwo(), is(10));
-        assertThat(metricMass.getBaseSiUnits(), is(10000.));
+        assertThat(metricMass.getBaseSiUnits(), is(MAX_MASS));
 
         System.out.println();
     }
@@ -95,9 +141,10 @@ public class MetricMassTest {
     @Test
     public void testMeasurementUnitOneOutOfRangeMax() { // OUT OF RANGE MAX
 
-        System.out.println("Testing max out of range measurement unit one (10,001)");
+        // Set to max plus 1
         assertThat(metricMass.setPackMeasurementOne(10001), is(false));
 
+        // Check values unchanges
         assertThat(metricMass.getPackMeasurementOne(), is(0.));
         assertThat(metricMass.getPackMeasurementTwo(), is(0));
         assertThat(metricMass.getItemMeasurementOne(), is(0.));
@@ -110,9 +157,10 @@ public class MetricMassTest {
     @Test
     public void testMeasurementUnitOneInRangeMin() { // IN RANGE MIN
 
-        System.out.println("Testing min out of range measurement unit one (1)");
+        // Set to minimum
         assertThat(metricMass.setPackMeasurementOne(1.), is(true));
 
+        // Check set
         assertThat(metricMass.getPackMeasurementOne(), is(1.));
         assertThat(metricMass.getPackMeasurementTwo(), is(0));
         assertThat(metricMass.getItemMeasurementOne(), is(1.));
@@ -123,9 +171,10 @@ public class MetricMassTest {
     @Test
     public void testMeasurementUnitOneOutOfRangeMin() { // OUT OF RANGE MIN
 
-        System.out.println("Testing min out of range measurement unit one (0.9)");
+        // Set to .1 below min
         assertThat(metricMass.setPackMeasurementOne(0.9), is(false));
 
+        // Check values unchanged
         assertThat(metricMass.getPackMeasurementOne(), is(0.));
         assertThat(metricMass.getPackMeasurementTwo(), is(0));
         assertThat(metricMass.getItemMeasurementOne(), is(0.));
@@ -138,9 +187,10 @@ public class MetricMassTest {
     @Test
     public void testMaximumInRangeMeasurementUnitTwo() { // IN RANGE MAX
 
-        System.out.println("Testing max in range kilograms (10)");
+        // Set to max
         assertThat(metricMass.setPackMeasurementTwo(10), is(true));
 
+        // Check value set
         assertThat(metricMass.getPackMeasurementOne(), is(0.));
         assertThat(metricMass.getPackMeasurementTwo(), is(10));
         assertThat(metricMass.getItemMeasurementOne(), is(0.));
@@ -152,9 +202,10 @@ public class MetricMassTest {
     @Test
     public void testMaximumOutOfRangeMeasurementUnitTwo() { // OUT OF RANGE MAX
 
-        System.out.println("Testing max out of range kilograms (11)");
+        // Set to max +1
         assertThat(metricMass.setPackMeasurementTwo(11), is(false));
 
+        // Check values unchanged
         assertThat(metricMass.getPackMeasurementOne(), is(0.));
         assertThat(metricMass.getPackMeasurementTwo(), is(0));
         assertThat(metricMass.getItemMeasurementOne(), is(0.));
@@ -167,9 +218,10 @@ public class MetricMassTest {
     @Test
     public void testMinInRangeMeasurementUnitTwo() { // IN RANGE MIN
 
-        System.out.println("Testing min in range measurement unit two (1)");
+        // Set to min
         assertThat(metricMass.setPackMeasurementTwo(1), is(true));
 
+        // Check value set
         assertThat(metricMass.getPackMeasurementOne(), is(0.));
         assertThat(metricMass.getPackMeasurementTwo(), is(1));
         assertThat(metricMass.getItemMeasurementOne(), is(0.));
@@ -180,24 +232,46 @@ public class MetricMassTest {
     @Test
     public void testMinimumOutOfRangeMeasurementTwo() { // OUT OF RANGE MIN
 
-        System.out.println("Testing min out of range measurement two (-1)");
+        // Set to min -1
         assertThat(metricMass.setPackMeasurementTwo(-1), is(false));
 
+        // Check values unchanged
         assertThat(metricMass.getPackMeasurementOne(), is(0.));
         assertThat(metricMass.getPackMeasurementTwo(), is(0));
         assertThat(metricMass.getItemMeasurementOne(), is(0.));
         assertThat(metricMass.getItemMeasurementTwo(), is(0));
         assertThat(metricMass.getBaseSiUnits(), is(0.));
     }
+
+    //////////////////////////// PACK ONE AND TWO TESTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+    @Test
+    public void testInRangeMeasurementOneAndTwo() { // CONDITION: IN RANGE
+
+        // Set arbitrary in range value
+        assertThat(metricMass.setPackMeasurementOne(500), is(true));
+        assertThat(metricMass.setPackMeasurementTwo(5), is(true));
+
+        // Check values set
+        assertThat(metricMass.getPackMeasurementOne(), is(500.));
+        assertThat(metricMass.getPackMeasurementTwo(), is(5));
+        assertThat(metricMass.getItemMeasurementOne(), is(500.));
+        assertThat(metricMass.getItemMeasurementTwo(), is(5));
+        assertThat(metricMass.getBaseSiUnits(), is(5500.));
+    }
+
 
     //////////////////////////// SETTING NUMBER OF ITEMS TESTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
     @Test
-    public void testSetNumberOfItemsWithNoBaseSi() { // CONDITION: NEW CLASS CREATED, BASE SI NOT YET SET
+    public void testSetNumberOfItemsMinInRangeWithNoBaseSi() { // CONDITION: BASE SI NOT YET SET - IN RANGE MIN
 
-        System.out.println("Setting number of items on new instance");
+        // Set arbitrary number of items, base si at zero
         assertThat(metricMass.setNumberOfItems(5), is(true));
 
+        // Check set
+        assertThat(metricMass.getNumberOfItems(), is(5));
+        // Check values unchanged
         assertThat(metricMass.getPackMeasurementOne(), is(0.));
         assertThat(metricMass.getPackMeasurementTwo(), is(0));
         assertThat(metricMass.getItemMeasurementOne(), is(0.));
@@ -206,19 +280,225 @@ public class MetricMassTest {
     }
 
     @Test
-    public void testNumberOfItemsWithBaseSI() {
+    public void testSetNumberOfItemsMinOutOfRangeWithNoBaseSi() { // CONDITION: BASE SI NOT YET SET - OUT OF RANGE MIN
 
-        // TODO - double check values
+        // Set out of range min
+        assertThat(metricMass.setNumberOfItems(0), is(false));
 
-        metricMass.baseSiUnitsAreSet(5);
-        assertThat(metricMass.setNumberOfItems(5), is(true));
+        // Check values unchanged (1 is default)
+        assertThat(metricMass.getNumberOfItems(), is(1));
 
+        // Check values unchanged
         assertThat(metricMass.getPackMeasurementOne(), is(0.));
         assertThat(metricMass.getPackMeasurementTwo(), is(0));
         assertThat(metricMass.getItemMeasurementOne(), is(0.));
         assertThat(metricMass.getItemMeasurementTwo(), is(0));
         assertThat(metricMass.getBaseSiUnits(), is(0.));
     }
+
+    @Test
+    public void testNumberOfItemsInRangeMaxWithNoBaseSI() { // CONDITION: BASE SI NOT YET SET - IN RANGE MAX
+
+        // Set to max within range
+        assertThat(metricMass.setNumberOfItems(999), is(true));
+
+        // Check set
+        assertThat(metricMass.getNumberOfItems(), is(999));
+
+        // Check values unchanged
+        assertThat(metricMass.getPackMeasurementOne(), is(0.));
+        assertThat(metricMass.getPackMeasurementTwo(), is(0));
+        assertThat(metricMass.getItemMeasurementOne(), is(0.));
+        assertThat(metricMass.getItemMeasurementTwo(), is(0));
+        assertThat(metricMass.getBaseSiUnits(), is(0.));
+    }
+
+    @Test
+    public void testNumberOfItemsOutOfRangeMaxWithNoBaseSI() { // CONDITION: BASE SI NOT YET SET - OUT OF RANGE MAX
+
+        // Set to max +1
+        assertThat(metricMass.setNumberOfItems(1000), is(false));
+
+        // Check values unchanged
+        assertThat(metricMass.getNumberOfItems(), is(1));
+
+        // Check values unchanged
+        assertThat(metricMass.getPackMeasurementOne(), is(0.));
+        assertThat(metricMass.getPackMeasurementTwo(), is(0));
+        assertThat(metricMass.getItemMeasurementOne(), is(0.));
+        assertThat(metricMass.getItemMeasurementTwo(), is(0));
+        assertThat(metricMass.getBaseSiUnits(), is(0.));
+    }
+
+    @Test
+    public void testNumberOfItemsInRangeMinWithBaseSI() { // CONDITION: BASE SI SET BY PACK ONE - NO OF ITEMS IN RANGE MIN
+
+        // Set value to pack measurement - sets lastMeasurementUpdated to PACK
+        // When number of items is updated item measurement should change
+        assertThat(metricMass.setPackMeasurementOne(2), is(true));
+
+        // Set number of items
+        assertThat(metricMass.setNumberOfItems(2), is(true));
+
+        // Check item measurement changed
+        assertThat(metricMass.getPackMeasurementOne(), is(2.));
+        assertThat(metricMass.getPackMeasurementTwo(), is(0));
+        assertThat(metricMass.getItemMeasurementOne(), is(1.));
+        assertThat(metricMass.getItemMeasurementTwo(), is(0));
+        assertThat(metricMass.getBaseSiUnits(), is(2.));
+    }
+
+    @Test
+    public void testNumberOfItemsOutOfRangeAdjustsItemSize() { // CONDITION: BASE SI SET BY PACK ONE - NO OF ITEMS IN RANGE (ODD)
+
+        // Set pack to number not divisible by number of items
+        assertThat(metricMass.setPackMeasurementOne(3), is(true));
+
+        // Set number of items not divisible by pack size
+        assertThat(metricMass.setNumberOfItems(2), is(true));
+
+        // Check item measurements have rounded correctly
+        assertThat(metricMass.getPackMeasurementOne(), is(3.));
+        assertThat(metricMass.getPackMeasurementTwo(), is(0));
+        assertThat(metricMass.getItemMeasurementOne(), is(1.));
+        assertThat(metricMass.getItemMeasurementTwo(), is(0));
+        assertThat(metricMass.getBaseSiUnits(), is(3.));
+    }
+
+    @Test
+    public void testNumberOfItemsAdjustsItemSize() { // CONDITION: BASE SI SET BY PACK ONE & TWO - NO OF ITEMS ADJUSTS ITEM SIZE
+
+        // Set value to both pack measurements - sets lastMeasurementUpdated to PACK
+        // When number of items is updated item measurement should change
+        assertThat(metricMass.setPackMeasurementOne(500), is(true));
+        assertThat(metricMass.setPackMeasurementTwo(1), is(true));
+
+        // Set number of items
+        assertThat(metricMass.setNumberOfItems(2), is(true));
+
+        // Check item measurements have changed
+        assertThat(metricMass.getPackMeasurementOne(), is(500.));
+        assertThat(metricMass.getPackMeasurementTwo(), is(1));
+        assertThat(metricMass.getItemMeasurementOne(), is(750.));
+        assertThat(metricMass.getItemMeasurementTwo(), is(0));
+        assertThat(metricMass.getBaseSiUnits(), is(1500.));
+    }
+
+    @Test
+    public void testNumberOfItemsOneAdjustsPackSize() { // CONDITION: BASE SI SET BY ITEM ONE - NO OF ITEMS ADJUSTS PACK SIZE
+
+        // Set value to item measurement - sets lastMeasurementUpdated to ITEM
+        // When number of items is updated PACK measurement should change
+        assertThat(metricMass.setItemMeasurementOne(500), is(true));
+
+        // Set number of items
+        assertThat(metricMass.setNumberOfItems(2), is(true));
+
+        // Check pack measurement have changed
+        assertThat(metricMass.getPackMeasurementOne(), is(0.));
+        assertThat(metricMass.getPackMeasurementTwo(), is(1));
+        assertThat(metricMass.getItemMeasurementOne(), is(500.));
+        assertThat(metricMass.getItemMeasurementTwo(), is(0));
+        assertThat(metricMass.getBaseSiUnits(), is(1000.));
+    }
+
+    @Test
+    public void testNumberOfItemsOneAndTwoAdjustsPackSize() { // CONDITION: BASE SI SET BY ITEM ONE & TWO - NO OF ITEMS ADJUSTS PACK SIZE - IN RANGE
+
+        // Set value to both item measurements - sets lastMeasurementUpdated to ITEM
+        // When number of items is updated PACK measurement should change
+        assertThat(metricMass.setItemMeasurementOne(500), is(true));
+        assertThat(metricMass.setItemMeasurementTwo(1), is(true));
+
+        // Set items
+        assertThat(metricMass.setNumberOfItems(2), is(true));
+
+        // Check PACK measurements have changed
+        assertThat(metricMass.getPackMeasurementOne(), is(0.));
+        assertThat(metricMass.getPackMeasurementTwo(), is(3));
+        assertThat(metricMass.getItemMeasurementOne(), is(500.));
+        assertThat(metricMass.getItemMeasurementTwo(), is(1));
+        assertThat(metricMass.getBaseSiUnits(), is(3000.));
+    }
+
+    @Test
+    public void testNumberOfItemsSetItemOneAndTwoAdjustsPackSizeOutOfRange() { // CONDITION: BASE SI SET BY ITEM ONE & TWO - NO OF ITEMS ADJUSTS PACK SIZE - OUT OF RANGE MAX
+
+        // Set value to both item measurements - sets lastMeasurementUpdated to ITEM
+        // When number of items is updated PACK measurement should change
+        assertThat(metricMass.setItemMeasurementOne(1), is(true));
+        assertThat(metricMass.setItemMeasurementTwo(5), is(true));
+
+        // Set items so to high
+        assertThat(metricMass.setNumberOfItems(2), is(false));
+
+        // Check values unchanged
+        assertThat(metricMass.getPackMeasurementOne(), is(1.));
+        assertThat(metricMass.getPackMeasurementTwo(), is(5));
+        assertThat(metricMass.getItemMeasurementOne(), is(1.));
+        assertThat(metricMass.getItemMeasurementTwo(), is(5));
+        assertThat(metricMass.getBaseSiUnits(), is(5001.));
+    }
+
+    @Test
+    public void testNumberOfItemsInRangeSetWithItemWithBaseSiThenChangedAgain() {
+        // CONDITION: BASE SI SET BY ITEM - NO OF ITEMS CHANGED - THEN NO OF ITEMS CHANGED AGAIN
+
+        // Set item measurement last changed by setting item measurement
+        assertThat(metricMass.setItemMeasurementOne(500), is(true));
+        assertThat(metricMass.setItemMeasurementTwo(1), is(true));
+
+        // Change number of items
+        assertThat(metricMass.setNumberOfItems(3), is(true));
+
+        // Check pack measurement has changed
+        assertThat(metricMass.getPackMeasurementOne(), is(500.));
+        assertThat(metricMass.getPackMeasurementTwo(), is(4));
+        assertThat(metricMass.getItemMeasurementOne(), is(500.));
+        assertThat(metricMass.getItemMeasurementTwo(), is(1));
+        assertThat(metricMass.getBaseSiUnits(), is(4500.));
+
+        // Set item measurement again
+        assertThat(metricMass.setNumberOfItems(5), is(true));
+
+        // Check pack measurement changed
+        assertThat(metricMass.getPackMeasurementOne(), is(500.));
+        assertThat(metricMass.getPackMeasurementTwo(), is(7));
+        assertThat(metricMass.getItemMeasurementOne(), is(500.));
+        assertThat(metricMass.getItemMeasurementTwo(), is(1));
+        assertThat(metricMass.getBaseSiUnits(), is(7500.));
+    }
+
+    @Test
+    public void testNumberOfItemsInRangeSetWith_ItemWithBaseSI() {
+        // CONDITION: BASE SI SET BY PACK - NO OF ITEMS CHANGED - THEN NO OF ITEMS CHANGED AGAIN
+
+        // Set pack measurement last changed by setting pack measurement
+        assertThat(metricMass.setPackMeasurementTwo(10), is(true));
+        assertThat(metricMass.getBaseSiUnits(), is(MAX_MASS));
+
+        // Change number of items
+        assertThat(metricMass.setNumberOfItems(10), is(true));
+
+        assertThat(metricMass.getPackMeasurementOne(), is(0.));
+        assertThat(metricMass.getPackMeasurementTwo(), is(10));
+
+        // Check item measurements have changed
+        assertThat(metricMass.getItemMeasurementOne(), is(0.));
+        assertThat(metricMass.getItemMeasurementTwo(), is(1));
+        assertThat(metricMass.getBaseSiUnits(), is(MAX_MASS));
+
+        // Change number of items
+        assertThat(metricMass.setNumberOfItems(20), is(true));
+
+        assertThat(metricMass.getPackMeasurementOne(), is(0.));
+        assertThat(metricMass.getPackMeasurementTwo(), is(10));
+        // Check item measurements have changed
+        assertThat(metricMass.getItemMeasurementOne(), is(500.));
+        assertThat(metricMass.getItemMeasurementTwo(), is(0));
+        assertThat(metricMass.getBaseSiUnits(), is(MAX_MASS));
+    }
+
 
 
     @Test

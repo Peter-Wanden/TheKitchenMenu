@@ -8,10 +8,7 @@ import com.example.peter.thekitchenmenu.R;
 import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
 
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.BASE_SI_UNIT_MASS;
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MAX_MASS;
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.NOT_YET_SET;
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.SINGLE_ITEM;
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.*;
 
 public class MetricMass implements UnitOfMeasure {
 
@@ -37,8 +34,6 @@ public class MetricMass implements UnitOfMeasure {
     // Min and max measurements
     private double minimumItemSize = UNIT_GRAM;
     private double maximumBaseSiMeasurement = MAX_MASS;
-    private int minimumNumberOfItems = SINGLE_ITEM;
-    private int maximumNumberOfItems = (int) (MAX_MASS / minimumItemSize);
 
     // Current measurements
     private int numberOfItems = SINGLE_ITEM;
@@ -132,17 +127,17 @@ public class MetricMass implements UnitOfMeasure {
         packMeasurementInKilograms = getMeasurementInKilograms(baseSiUnits);
     }
 
-    private int getMeasurementInKilograms(double baseSiUnits) {
-
-        return (int) (baseSiUnits / UNIT_KILOGRAM);
-    }
-
     private double getMeasurementInGrams(double baseSiUnits) {
 
-        // TODO - does this need to be converted to an int?
+        // TODO - Check to see if this needs to be converted to an integer
         int grams = (int) (baseSiUnits % UNIT_KILOGRAM);
 
         return (double) (grams);
+    }
+
+    private int getMeasurementInKilograms(double baseSiUnits) {
+
+        return (int) (baseSiUnits / UNIT_KILOGRAM);
     }
 
     private void setItemMeasurements() {
@@ -150,8 +145,6 @@ public class MetricMass implements UnitOfMeasure {
         itemSizeInBaseSiUnits = baseSiUnits / numberOfItems;
         itemMeasurementInGrams = getMeasurementInGrams(itemSizeInBaseSiUnits);
         itemMeasurementInKilograms = getMeasurementInKilograms(itemSizeInBaseSiUnits);
-
-        maximumNumberOfItems = (int) (MAX_MASS / itemSizeInBaseSiUnits);
     }
 
     @Override
@@ -184,7 +177,7 @@ public class MetricMass implements UnitOfMeasure {
 
                 } else if (lastMeasurementUpdated == ITEM_MEASUREMENT) {
 
-                    if (itemSizeTimesNumberOfItemsDoNotExceedMaxMass(numberOfItemsInPack)) {
+                    if (itemSizeMultipliedByNumberOfItemsDoNotExceedMaxMass(numberOfItemsInPack)) {
 
                         setItemsInPackByAdjustingPackSize(numberOfItemsInPack);
 
@@ -198,13 +191,13 @@ public class MetricMass implements UnitOfMeasure {
 
     private boolean numberOfItemsInPackAreWithinBounds(int numberOfItemsInPack) {
 
-        return numberOfItemsInPack >= minimumNumberOfItems &&
-                numberOfItemsInPack <= maximumNumberOfItems;
+        return numberOfItemsInPack >= SINGLE_ITEM &&
+                numberOfItemsInPack <= MULTI_PACK_MAXIMUM_NO_OF_ITEMS;
     }
 
     private boolean itemSizeNotLessThanSmallestUnit(int numberOfItemsInPack) {
 
-        return numberOfItemsInPack / itemSizeInBaseSiUnits >= minimumItemSize;
+        return baseSiUnits / numberOfItemsInPack >= minimumItemSize;
     }
 
     private void setItemsInPackByAdjustingItemSize(int numberOfItemsInPack) {
@@ -213,7 +206,7 @@ public class MetricMass implements UnitOfMeasure {
         setItemMeasurements();
     }
 
-    private boolean itemSizeTimesNumberOfItemsDoNotExceedMaxMass(int numberOfItemsInPack) {
+    private boolean itemSizeMultipliedByNumberOfItemsDoNotExceedMaxMass(int numberOfItemsInPack) {
 
         return itemSizeInBaseSiUnits * numberOfItemsInPack <= MAX_MASS;
     }
@@ -271,7 +264,7 @@ public class MetricMass implements UnitOfMeasure {
 
     private double baseSiUnitsWithItemMeasurementOne(double itemMeasurementOne) {
 
-        return (itemMeasurementOne * numberOfItems) + (packMeasurementInKilograms * UNIT_KILOGRAM);
+        return (itemMeasurementInKilograms * UNIT_KILOGRAM + itemMeasurementOne) * numberOfItems;
     }
 
     @Override
@@ -324,7 +317,7 @@ public class MetricMass implements UnitOfMeasure {
 
     private double baseSiUnitsWithItemMeasurementTwo(int itemMeasurementTwo) {
 
-        return itemMeasurementTwo * UNIT_KILOGRAM * numberOfItems;
+        return (itemMeasurementTwo * UNIT_KILOGRAM + itemMeasurementInGrams) * numberOfItems;
     }
 
     @Override
@@ -377,8 +370,8 @@ public class MetricMass implements UnitOfMeasure {
         int maxKilogramValue = (int) (MAX_MASS / UNIT_KILOGRAM);
         int kilogramDigits = 0;
 
-        while(maxKilogramValue > 0) {
-            kilogramDigits ++;
+        while (maxKilogramValue > 0) {
+            kilogramDigits++;
             maxKilogramValue = maxKilogramValue / 10;
         }
 
