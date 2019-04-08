@@ -10,18 +10,10 @@ public class ProductMeasurementModel extends BaseObservable {
 
     private static final String TAG = "ProductMeasurementModel";
 
-    // TODO move this block to ProductModel?
+    // Default
     private MeasurementSubType measurementSubType = MeasurementSubType.TYPE_METRIC_MASS;
-    private int numberOfMeasurementUnits = 1;
+    private int numberOfMeasurementUnits = 2;
 
-    private int minimumMeasurementOne = 0;
-    private int minimumMeasurementTwo = 0;
-    private int minimumMeasurementThree = 0;
-    private int maximumMeasurementOne = 0;
-    private int maximumMeasurementTwo = 0;
-    private int maximumMeasurementThree = 0;
-
-    private double baseSiUnits = 0;
     private int numberOfItems = 1;
     private double packMeasurementOne = 0;
     private int packMeasurementTwo = 0;
@@ -62,73 +54,6 @@ public class ProductMeasurementModel extends BaseObservable {
 
         this.numberOfItems = numberOfItems;
         notifyPropertyChanged(BR.numberOfItems);
-    }
-
-    public int getMinimumMeasurementOne() {
-
-        return minimumMeasurementOne;
-    }
-
-    public void setMinimumMeasurementOne(int minimumMeasurementOne) {
-
-        this.minimumMeasurementOne = minimumMeasurementOne;
-    }
-
-    public int getMinimumMeasurementTwo() {
-
-        return minimumMeasurementTwo;
-    }
-
-    public void setMinimumMeasurementTwo(int minimumMeasurementTwo) {
-
-        this.minimumMeasurementTwo = minimumMeasurementTwo;
-    }
-
-    public int getMinimumMeasurementThree() {
-        return minimumMeasurementThree;
-    }
-
-    public void setMinimumMeasurementThree(int minimumMeasurementThree) {
-
-        this.minimumMeasurementThree = minimumMeasurementThree;
-    }
-
-    public int getMaximumMeasurementOne() {
-
-        return maximumMeasurementOne;
-    }
-
-    public void setMaximumMeasurementOne(int maximumMeasurementOne) {
-
-        this.maximumMeasurementOne = maximumMeasurementOne;
-    }
-
-    public int getMaximumMeasurementTwo() {
-
-        return maximumMeasurementTwo;
-    }
-
-    public void setMaximumMeasurementTwo(int maximumMeasurementTwo) {
-
-        this.maximumMeasurementTwo = maximumMeasurementTwo;
-    }
-
-    public int getMaximumMeasurementThree() {
-        return maximumMeasurementThree;
-    }
-
-    public void setMaximumMeasurementThree(int maximumMeasurementThree) {
-        this.maximumMeasurementThree = maximumMeasurementThree;
-    }
-
-    public double getBaseSiUnits() {
-
-        return baseSiUnits;
-    }
-
-    public void setBaseSiUnits(double baseSiUnits) {
-
-        this.baseSiUnits = baseSiUnits;
     }
 
     @Bindable
@@ -209,33 +134,10 @@ public class ProductMeasurementModel extends BaseObservable {
         return "ProductMeasurementModel{" +
                 ", \nmeasurementSubType=" + measurementSubType +
                 ", \nnumberOfItems=" + numberOfItems +
-                ", \nminimumMeasurementOne=" + minimumMeasurementOne +
-                ", \nmaximumMeasurementOne=" + maximumMeasurementOne +
                 ", \npackMeasurementOne=" + packMeasurementOne +
                 ", \npackMeasurementTwo=" + packMeasurementTwo +
                 ", \nitemMeasurementOne=" + itemMeasurementOne +
                 ", \nitemMeasurementTwo=" + itemMeasurementTwo +
                 '}';
-    }
-
-    public void resetNumericValues() {
-
-        numberOfItems = 1;
-
-        minimumMeasurementOne = 0;
-        minimumMeasurementTwo = 0;
-        minimumMeasurementThree = 0;
-
-        maximumMeasurementOne = 0;
-        maximumMeasurementTwo = 0;
-        maximumMeasurementThree = 0;
-
-        packMeasurementOne = 0;
-        packMeasurementTwo = 0;
-        packMeasurementThree = 0;
-
-        itemMeasurementOne = 0;
-        itemMeasurementTwo = 0;
-        itemMeasurementThree = 0;
     }
 }

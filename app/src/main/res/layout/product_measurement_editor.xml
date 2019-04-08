@@ -77,7 +77,7 @@
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:layout_marginEnd="8dp"
-            android:onClick='@{() -> measurementValidation.modifyItemsInPackByOne(editableItemsInPack, multiPackMinus)}'
+            android:onClick='@{() -> measurementValidation.modifyNumberOfItemsByOne(editableItemsInPack, multiPackMinus)}'
             android:text="@string/minus_sign"
             app:layout_constraintBottom_toBottomOf="@id/editable_items_in_pack"
             app:layout_constraintEnd_toStartOf="@id/editable_items_in_pack"
@@ -93,7 +93,7 @@
             android:inputType="number"
             android:nextFocusForward="@id/spinner_unit_of_measure"
             android:text='@{`` + measurement.numberOfItems}'
-            android:afterTextChanged='@{() -> measurementValidation.validateItemsInPack(editableItemsInPack)}'
+            android:afterTextChanged='@{() -> measurementValidation.numberOfItems(editableItemsInPack)}'
             app:layout_constraintEnd_toEndOf="@id/items_in_pack_label"
             app:layout_constraintStart_toStartOf="@id/items_in_pack_label"
             app:layout_constraintTop_toBottomOf="@id/items_in_pack_label"
@@ -104,7 +104,7 @@
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:layout_marginStart="8dp"
-            android:onClick='@{() -> measurementValidation.modifyItemsInPackByOne(editableItemsInPack, multiPackPlus)}'
+            android:onClick='@{() -> measurementValidation.modifyNumberOfItemsByOne(editableItemsInPack, multiPackPlus)}'
             android:text="@string/plus_sign"
             app:layout_constraintBottom_toBottomOf="@id/editable_items_in_pack"
             app:layout_constraintStart_toEndOf="@id/editable_items_in_pack"
@@ -167,6 +167,7 @@
             android:gravity="bottom"
             app:layout_constraintTop_toBottomOf="@id/pack_size_label"
             app:layout_constraintStart_toStartOf="@id/measurement_border"
+            android:visibility="@{(measurement.numberOfItems > 1) ? View.VISIBLE : View.INVISIBLE}"
             app:setLabelForSubTypeSelected='@{measurement.measurementSubType}'
             app:numberOfItems='@{measurement.numberOfItems}'
             tools:text="@string/item_size_label" />

@@ -1,11 +1,11 @@
 package com.example.peter.thekitchenmenu.ui.detail.product.editor;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.databinding.ProductEditorBinding;
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubType;
 import com.example.peter.thekitchenmenu.viewmodels.ImageEditorViewModel;
 import com.example.peter.thekitchenmenu.viewmodels.ProductEditorViewModel;
 import com.example.peter.thekitchenmenu.viewmodels.ProductIdentityViewModel;
@@ -88,34 +88,23 @@ public class ProductEditor extends AppCompatActivity {
                 productIdentityViewModel.getIdentityModel().setShelfLife(
                         productEntity.getShelfLife());
 
-                boolean newUnitOfMeasureIsSet = productMeasurementViewModel.
-                        getMeasurementValidation().
-                        setNewUnitOfMeasure(
-                        MeasurementSubType.values()[productEntity.getUnitOfMeasureSubType()]);
-
-                if (newUnitOfMeasureIsSet) {
-
-                    productMeasurementViewModel.getMeasurement().setNumberOfItems(
-                            productEntity.getNumberOfItems());
-
-                    productMeasurementViewModel.getMeasurement().setBaseSiUnits(
-                            productEntity.getBaseSiUnits());
-                }
-
-
-
-//                productEditorViewModel.getProductModel().getValuesFromEntity(productEntity);
+//                Log.d(TAG, "setObservers: Updating unit of measure to: " +
+//                        productEntity.getUnitOfMeasureSubType());
 //
-//                productEditorBinding.spinnerUnitOfMeasure.setSelection(
-//                        productEditorViewModel.getProductModel().getUnitOfMeasureSubType());
+//                productMeasurementViewModel.getMeasurementValidation().changeUnitOfMeasure(
+//                        productEntity.getUnitOfMeasureSubType());
 //
-//                productEditorBinding.editableItemsInPack.setText(String.valueOf(
-//                        productEditorViewModel.getProductModel().getNumberOfItems()));
+//                productMeasurementViewModel.getMeasurementValidation().numberOfItemsUpdated(
+//                        productEntity.getNumberOfItems());
 //
-//                productEditorViewModel.getNumericValidationHandler().setNewBaseSiUnits(
-//                        productEditorViewModel.getProductModel().getBaseSiUnits());
-
-            }};
+//                boolean baseSiUnitsAreSet = productMeasurementViewModel.getMeasurementValidation().setBaseSiUnits(
+//                        productEntity.getBaseSiUnits());
+//
+//                if (baseSiUnitsAreSet) {
+//                    Log.d(TAG, "setObservers: Base units set ok!");
+//                }
+            }
+        };
 
         productEditorViewModel.getProductEntity().observe(this, productObserver);
     }

@@ -14,9 +14,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/label_description"
-            app:layout_constraintBottom_toBottomOf="@+id/description"
+            app:layout_constraintBottom_toBottomOf="@id/description"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/description" />
+            app:layout_constraintTop_toTopOf="@id/description" />
 
         <TextView
             android:id="@+id/description"
@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintStart_toStartOf="@id/guideline"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Dove Men+Care clean comfort aerosol anti-perspirant deodorant" />
 
@@ -35,9 +35,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/label_made_by"
-            app:layout_constraintBottom_toBottomOf="@+id/made_by"
+            app:layout_constraintBottom_toBottomOf="@id/made_by"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/made_by" />
+            app:layout_constraintTop_toTopOf="@id/made_by" />
 
         <TextView
             android:id="@+id/made_by"
@@ -46,8 +46,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@+id/description"
+            app:layout_constraintStart_toStartOf="@id/guideline"
+            app:layout_constraintTop_toBottomOf="@id/description"
             tools:text="Procter &amp; Gamble" />
 
         <TextView
@@ -56,9 +56,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/label_pack_size"
-            app:layout_constraintBottom_toBottomOf="@+id/pack_size"
+            app:layout_constraintBottom_toBottomOf="@id/pack_size"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/pack_size" />
+            app:layout_constraintTop_toTopOf="@id/pack_size" />
 
         <TextView
             android:id="@+id/pack_size"
@@ -67,8 +67,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@+id/made_by"
+            app:layout_constraintStart_toStartOf="@id/guideline"
+            app:layout_constraintTop_toBottomOf="@id/made_by"
             tools:text="2000" />
 
         <TextView
@@ -77,9 +77,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/pack_size"
-            app:layout_constraintStart_toEndOf="@+id/pack_size"
-            app:layout_constraintTop_toTopOf="@+id/pack_size"
+            app:layout_constraintBottom_toBottomOf="@id/pack_size"
+            app:layout_constraintStart_toEndOf="@id/pack_size"
+            app:layout_constraintTop_toTopOf="@id/pack_size"
             app:layout_constraintVertical_bias="1.0"
             tools:text="Grams" />
 
@@ -89,9 +89,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/label_shelf_life"
-            app:layout_constraintBottom_toBottomOf="@+id/shelf_life"
+            app:layout_constraintBottom_toBottomOf="@id/shelf_life"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/shelf_life" />
+            app:layout_constraintTop_toTopOf="@id/shelf_life" />
 
         <TextView
             android:id="@+id/shelf_life"
@@ -99,8 +99,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@+id/pack_size"
+            app:layout_constraintStart_toStartOf="@id/guideline"
+            app:layout_constraintTop_toBottomOf="@id/pack_size"
             tools:text="1 Week" />
 
         <TextView
@@ -109,17 +109,17 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/label_category"
-            app:layout_constraintBottom_toBottomOf="@+id/category"
+            app:layout_constraintBottom_toBottomOf="@id/category"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/category" />
+            app:layout_constraintTop_toTopOf="@id/category" />
 
         <TextView
             android:id="@+id/category"
             style="@style/UneditableTextFieldStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@+id/shelf_life"
+            app:layout_constraintStart_toStartOf="@id/guideline"
+            app:layout_constraintTop_toBottomOf="@id/shelf_life"
             tools:text="Non Food" />
 
         <androidx.constraintlayout.widget.Guideline

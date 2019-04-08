@@ -50,7 +50,8 @@ public class UnitOfMeasureLabelBindingAdapter {
             if (viewId == R.id.item_size_label && isMultiPack)
                 setItemSizeLabel(textView, unitOfMeasure);
 
-            if (viewId == R.id.pack_measurement_label_one ||
+            if (
+                    viewId == R.id.pack_measurement_label_one ||
                     viewId == R.id.item_measurement_label_one && isMultiPack ||
                     viewId == R.id.pack_measurement_label_two && units > 1 ||
                     viewId == R.id.item_measurement_label_two && isMultiPack && units > 1 ||

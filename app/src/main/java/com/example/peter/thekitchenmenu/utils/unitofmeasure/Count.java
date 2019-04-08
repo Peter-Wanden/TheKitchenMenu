@@ -98,7 +98,7 @@ public class Count implements UnitOfMeasure {
     }
 
     @Override
-    public boolean setNumberOfItems(int numberOfItems) {
+    public boolean numberOfItemsAreSet(int numberOfItems) {
 
         // TODO - When setting number of items, check the size / measurements (if available) do not
         // TODO - exceed MAX
@@ -142,7 +142,7 @@ public class Count implements UnitOfMeasure {
     }
 
     @Override
-    public boolean setPackMeasurementOne(double packMeasurementOne) {
+    public boolean packMeasurementOneIsSet(double packMeasurementOne) {
         return false;
     }
 
@@ -152,7 +152,7 @@ public class Count implements UnitOfMeasure {
     }
 
     @Override
-    public boolean setPackMeasurementTwo(int packMeasurementTwo) {
+    public boolean packMeasurementTwoIsSet(int packMeasurementTwo) {
         return false;
     }
 
@@ -162,7 +162,7 @@ public class Count implements UnitOfMeasure {
     }
 
     @Override
-    public boolean setPackMeasurementThree(int packMeasurementThree) {
+    public boolean packMeasurementThreeIsSet(int packMeasurementThree) {
         return false;
     }
 
@@ -172,7 +172,7 @@ public class Count implements UnitOfMeasure {
     }
 
     @Override
-    public boolean setItemMeasurementOne(double itemMeasurementOne) {
+    public boolean itemMeasurementOneIsSet(double itemMeasurementOne) {
         return false;
     }
 
@@ -182,7 +182,7 @@ public class Count implements UnitOfMeasure {
     }
 
     @Override
-    public boolean setItemMeasurementTwo(int itemMeasurementTwo) {
+    public boolean itemMeasurementTwoIsSet(int itemMeasurementTwo) {
         return false;
     }
 
@@ -192,7 +192,7 @@ public class Count implements UnitOfMeasure {
     }
 
     @Override
-    public boolean setItemMeasurementThree(int itemMeasurementThree) {
+    public boolean itemMeasurementThreeIsSet(int itemMeasurementThree) {
         return false;
     }
 

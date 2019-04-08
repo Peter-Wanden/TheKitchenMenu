@@ -25,13 +25,13 @@ public class ProductEditorViewModel extends ObservableViewModel {
 
         ProductEntity defaultProductEntity = new ProductEntity(
                 0,
-                "",
-                "",
-                0,
-                0,
+                "Baked Beans",
+                "Heinz",
                 1,
-                0,
+                3,
                 1,
+                2400,
+                0,
                 0,
                 "",
                 "",
@@ -64,7 +64,7 @@ public class ProductEditorViewModel extends ObservableViewModel {
 //            newProductEntity.setCategory(identityModel.getCategory());
 //            newProductEntity.setShelfLife(identityModel.getShelfLife());
 //
-//            newProductEntity.setNumberOfItems(productModel.getNumberOfItems());
+//            newProductEntity.numberOfItemsAreSet(productModel.getNumberOfItems());
 //            newProductEntity.setBaseSiUnits(productModel.getBaseSiUnits());
 //            newProductEntity.setUnitOfMeasureSubType(productModel.getUnitOfMeasureSubType());
 //            newProductEntity.setPackAvePrice(productModel.getPackAvePrice());

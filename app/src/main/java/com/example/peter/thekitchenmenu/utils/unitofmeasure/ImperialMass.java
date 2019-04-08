@@ -95,7 +95,7 @@ public class ImperialMass implements UnitOfMeasure {
     }
 
     @Override
-    public boolean setNumberOfItems(int numberOfItems) {
+    public boolean numberOfItemsAreSet(int numberOfItems) {
 
         // TODO - When setting number of items, check the size / measurements (if available) do not
         // TODO - exceed MAX
@@ -104,7 +104,7 @@ public class ImperialMass implements UnitOfMeasure {
 
             this.numberOfItemsInPack = numberOfItems;
             setItemMeasurement(numberOfItemsInPack);
-            Log.d(TAG, "setNumberOfItems: banana" + numberOfItemsInPack);
+            Log.d(TAG, "numberOfItemsAreSet: banana" + numberOfItemsInPack);
             return true;
         }
         return false;
@@ -195,7 +195,7 @@ public class ImperialMass implements UnitOfMeasure {
     }
 
     @Override
-    public boolean setPackMeasurementOne(double packMeasurementOne) {
+    public boolean packMeasurementOneIsSet(double packMeasurementOne) {
 
         return false;
     }
@@ -206,7 +206,7 @@ public class ImperialMass implements UnitOfMeasure {
     }
 
     @Override
-    public boolean setPackMeasurementTwo(int packMeasurementTwo) {
+    public boolean packMeasurementTwoIsSet(int packMeasurementTwo) {
 
         ProductMeasurementModel productMeasurementModel = new ProductMeasurementModel();
         productMeasurementModel.setPackMeasurementOne(packMeasurementInOunces);
@@ -221,7 +221,7 @@ public class ImperialMass implements UnitOfMeasure {
     }
 
     @Override
-    public boolean setPackMeasurementThree(int packMeasurementThree) {
+    public boolean packMeasurementThreeIsSet(int packMeasurementThree) {
         return false;
     }
 
@@ -231,7 +231,7 @@ public class ImperialMass implements UnitOfMeasure {
     }
 
     @Override
-    public boolean setItemMeasurementOne(double itemMeasurementOne) {
+    public boolean itemMeasurementOneIsSet(double itemMeasurementOne) {
 
         return false;
     }
@@ -242,7 +242,7 @@ public class ImperialMass implements UnitOfMeasure {
     }
 
     @Override
-    public boolean setItemMeasurementTwo(int itemMeasurementTwo) {
+    public boolean itemMeasurementTwoIsSet(int itemMeasurementTwo) {
 
         ProductMeasurementModel productMeasurementModel = new ProductMeasurementModel();
         productMeasurementModel.setPackMeasurementOne(itemMeasurementInOunces * numberOfItemsInPack);
@@ -257,7 +257,7 @@ public class ImperialMass implements UnitOfMeasure {
     }
 
     @Override
-    public boolean setItemMeasurementThree(int itemMeasurementThree) {
+    public boolean itemMeasurementThreeIsSet(int itemMeasurementThree) {
         return false;
     }
 

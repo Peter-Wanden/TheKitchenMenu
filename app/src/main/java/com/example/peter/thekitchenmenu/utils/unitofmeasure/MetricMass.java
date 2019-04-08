@@ -5,6 +5,8 @@ import android.content.res.Resources;
 
 import com.example.peter.thekitchenmenu.R;
 
+import java.math.BigDecimal;
+
 import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
 
@@ -154,7 +156,7 @@ public class MetricMass implements UnitOfMeasure {
     }
 
     @Override
-    public boolean setNumberOfItems(int numberOfItemsInPack) {
+    public boolean numberOfItemsAreSet(int numberOfItemsInPack) {
 
         if (numberOfItemsInPackAreWithinBounds(numberOfItemsInPack)) {
 
@@ -226,11 +228,11 @@ public class MetricMass implements UnitOfMeasure {
     @Override
     public double getPackMeasurementOne() {
 
-        return packMeasurementInGrams;
+        return Math.floor(packMeasurementInGrams * 1) / 1;
     }
 
     @Override
-    public boolean setPackMeasurementOne(double packMeasurementOne) {
+    public boolean packMeasurementOneIsSet(double packMeasurementOne) {
 
         if (baseSiUnitsAreSet(baseSiUnitsWithPackMeasurementOne(packMeasurementOne))) {
 
@@ -248,11 +250,11 @@ public class MetricMass implements UnitOfMeasure {
     @Override
     public double getItemMeasurementOne() {
 
-        return itemMeasurementInGrams;
+        return Math.floor(itemMeasurementInGrams * 1) / 1;
     }
 
     @Override
-    public boolean setItemMeasurementOne(double itemMeasurementOne) {
+    public boolean itemMeasurementOneIsSet(double itemMeasurementOne) {
 
         if (baseSiUnitsAreSet(baseSiUnitsWithItemMeasurementOne(itemMeasurementOne))) {
 
@@ -280,7 +282,7 @@ public class MetricMass implements UnitOfMeasure {
     }
 
     @Override
-    public boolean setPackMeasurementTwo(int packMeasurementTwo) {
+    public boolean packMeasurementTwoIsSet(int packMeasurementTwo) {
 
         if (baseSiUnitsAreSet(baseSiUnitsWithPackMeasurementTwo(packMeasurementTwo))) {
 
@@ -303,7 +305,7 @@ public class MetricMass implements UnitOfMeasure {
     }
 
     @Override
-    public boolean setItemMeasurementTwo(int itemMeasurementTwo) {
+    public boolean itemMeasurementTwoIsSet(int itemMeasurementTwo) {
 
         if (baseSiUnitsAreSet(baseSiUnitsWithItemMeasurementTwo(itemMeasurementTwo))) {
 
@@ -333,7 +335,7 @@ public class MetricMass implements UnitOfMeasure {
     }
 
     @Override
-    public boolean setPackMeasurementThree(int packMeasurementThree) {
+    public boolean packMeasurementThreeIsSet(int packMeasurementThree) {
 
         return false;
     }
@@ -345,7 +347,7 @@ public class MetricMass implements UnitOfMeasure {
     }
 
     @Override
-    public boolean setItemMeasurementThree(int itemMeasurementThree) {
+    public boolean itemMeasurementThreeIsSet(int itemMeasurementThree) {
 
         return false;
     }

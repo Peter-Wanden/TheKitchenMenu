@@ -14,27 +14,27 @@ public interface UnitOfMeasure {
     boolean baseSiUnitsAreSet(double baseSiUnits);
 
     int getNumberOfItems();
-    boolean setNumberOfItems(int numberOfItems);
+    boolean numberOfItemsAreSet(int numberOfItems);
 
     int getNumberOfMeasurementUnits();
 
     String getMeasurementUnitOneLabel();
     double getPackMeasurementOne();
-    boolean setPackMeasurementOne(double packMeasurementOne);
+    boolean packMeasurementOneIsSet(double packMeasurementOne);
     double getItemMeasurementOne();
-    boolean setItemMeasurementOne(double itemMeasurementOne);
+    boolean itemMeasurementOneIsSet(double itemMeasurementOne);
 
     String getMeasurementUnitTwoLabel();
     int getPackMeasurementTwo();
-    boolean setPackMeasurementTwo(int packMeasurementTwo);
+    boolean packMeasurementTwoIsSet(int packMeasurementTwo);
     int getItemMeasurementTwo();
-    boolean setItemMeasurementTwo(int itemMeasurementTwo);
+    boolean itemMeasurementTwoIsSet(int itemMeasurementTwo);
 
     String getMeasurementUnitThreeLabel();
     int getPackMeasurementThree();
-    boolean setPackMeasurementThree(int packMeasurementThree);
+    boolean packMeasurementThreeIsSet(int packMeasurementThree);
     int getItemMeasurementThree();
-    boolean setItemMeasurementThree(int itemMeasurementThree);
+    boolean itemMeasurementThreeIsSet(int itemMeasurementThree);
 
     String[] getMeasurementError();
 

@@ -2,7 +2,6 @@ package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
 import android.content.Context;
 import android.text.InputFilter;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -23,9 +22,6 @@ public class UnitOfMeasureEditTextBindingAdapter {
     public static void setUpEditTextForSubTypeSelected(EditText editText,
                                                        MeasurementSubType subType,
                                                        int numberOfItems) {
-
-        Log.d(TAG, "setUpEditTextForSubTypeSelected: View passed in is: " +
-                editText.getContext().getResources().getResourceEntryName(editText.getId()));
 
         setupViews(editText, subType, isMultiPack(numberOfItems));
 
@@ -51,7 +47,8 @@ public class UnitOfMeasureEditTextBindingAdapter {
 
         if (viewId != View.NO_ID && editText.getVisibility() == View.VISIBLE) {
 
-            if (viewId == R.id.pack_editable_measurement_one ||
+            if (
+                    viewId == R.id.pack_editable_measurement_one ||
                     viewId == R.id.item_editable_measurement_one && isMultiPack ||
                     viewId == R.id.pack_editable_measurement_two && units > 1 ||
                     viewId == R.id.item_editable_measurement_two && isMultiPack && units > 1  ||
@@ -79,7 +76,8 @@ public class UnitOfMeasureEditTextBindingAdapter {
         Pair[] inputDigitsFilters = unitOfMeasure.getInputDigitsFilter();
 
 
-        if (viewId == R.id.pack_editable_measurement_one ||
+        if (
+                viewId == R.id.pack_editable_measurement_one ||
                 viewId == R.id.item_editable_measurement_one) {
 
             editText.setFilters(new InputFilter[]{
@@ -89,7 +87,8 @@ public class UnitOfMeasureEditTextBindingAdapter {
                             (int)inputDigitsFilters[0].second)});
         }
 
-        if (viewId == R.id.pack_editable_measurement_two ||
+        if (
+                viewId == R.id.pack_editable_measurement_two ||
                 viewId == R.id.item_editable_measurement_two) {
 
             editText.setFilters(new InputFilter[]{
@@ -99,7 +98,8 @@ public class UnitOfMeasureEditTextBindingAdapter {
                             (int)inputDigitsFilters[1].second)});
         }
 
-        if (viewId == R.id.pack_editable_measurement_three ||
+        if (
+                viewId == R.id.pack_editable_measurement_three ||
                 viewId == R.id.item_editable_measurement_three) {
 
             editText.setFilters(new InputFilter[]{
