@@ -24,7 +24,6 @@ public class UnitOfMeasureEditTextBindingAdapter {
                                                        int numberOfItems) {
 
         setupViews(editText, subType, isMultiPack(numberOfItems));
-
     }
 
     private static boolean isMultiPack(int numberOfItems) {

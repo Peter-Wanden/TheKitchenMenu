@@ -27,9 +27,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
 
-        remoteSignIn = new RemoteSignIn(this);
+        setContentView(R.layout.main);
+//        remoteSignIn = new RemoteSignIn(this);
 
         initialiseViews();
     }
@@ -40,23 +40,32 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
+
+        if (actionBar != null) {
+
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
+        }
 
         drawerLayout = findViewById(R.id.drawer_layout);
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(menuItem -> {
+
             menuItem.setChecked(true);
             drawerLayout.closeDrawers();
 
             // Add code here to update the UI based on the item selected
             // For example, swap UI fragments here
             switch (menuItem.getItemId()) {
+
                 case R.id.sign_out:
-                    remoteSignIn.signOut(this);
+
+//                    remoteSignIn.signOut(this);
                     return true;
+
                 case R.id.nav_products:
+
                     launchProductActivity();
                     return true;
             }
@@ -65,16 +74,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void launchProductActivity() {
+
         Intent launchProductActivity = new Intent(
                 MainActivity.this, ProductCatalogMain.class);
         startActivity(launchProductActivity);
+
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         switch (item.getItemId()) {
+
             case android.R.id.home:
+
                 drawerLayout.openDrawer(GravityCompat.START);
                 return true;
         }
@@ -84,24 +98,28 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        remoteSignIn.authStateListener(true);
+
+//        remoteSignIn.authStateListener(true);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        remoteSignIn.authStateListener(false);
+
+//        remoteSignIn.authStateListener(false);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        remoteSignIn.signInResult(requestCode, resultCode, data);
+
+//        remoteSignIn.signInResult(requestCode, resultCode, data);
     }
 
     @Override
     public void finish() {
         super.finish();
+
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 }

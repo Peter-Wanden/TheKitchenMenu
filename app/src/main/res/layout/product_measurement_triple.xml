@@ -41,6 +41,7 @@
             android:afterTextChanged='@{() -> measurementValidation.validatePackSize(packEditableMeasurementThree)}'
             app:setUpEditTextForSubTypeSelected='@{measurement.measurementSubType}'
             app:numberOfItems='@{measurement.numberOfItems}'
+            app:setFieldVisibility='@{measurement.numberOfItems}'
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/pack_measurement_label_three"
             app:layout_constraintBottom_toTopOf="@id/item_editable_measurement_three"
