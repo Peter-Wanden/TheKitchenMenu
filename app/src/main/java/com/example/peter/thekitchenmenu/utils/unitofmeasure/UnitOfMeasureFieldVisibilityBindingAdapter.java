@@ -1,40 +1,31 @@
 package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
-import android.content.Context;
+import android.util.Log;
 import android.view.View;
 
 import com.example.peter.thekitchenmenu.R;
 
 import androidx.databinding.BindingAdapter;
 
-public class UnitOfMeasureFieldVisibility {
+public class UnitOfMeasureFieldVisibilityBindingAdapter {
+
+    private static final String TAG = "UnitOfMeasureFieldVisib";
 
     @BindingAdapter(value = {"setFieldVisibility"})
-    public static void setFieldVisibility(View view,
-                                          MeasurementSubType subType,
-                                          int numberOfItems) {
+    public static void setFieldVisibility(View view, int numberOfMeasurementUnits) {
 
-        setupViews(view, subType, isMultiPack(numberOfItems));
+        Log.d(TAG, "setFieldVisibility: number of units: " + numberOfMeasurementUnits);
+
+        setupViews(view, numberOfMeasurementUnits);
     }
 
-    private static boolean isMultiPack(int numberOfItems) {
-
-        return numberOfItems > 1;
-    }
-
-    private static void setupViews(View view,
-                                   MeasurementSubType subType,
-                                   boolean multiPack) {
-
-        Context context = view.getContext();
-
-        UnitOfMeasure unitOfMeasure = UnitOfMeasureSubtypeSelector.
-                getClassWithSubType(context, subType);
+    private static void setupViews(View view, int units) {
 
         int viewId = view.getId();
-        int units = unitOfMeasure.getNumberOfMeasurementUnits();
 
         if (units == 1 && view.getVisibility() == View.VISIBLE) {
+
+            Log.d(TAG, "setupViews: ");
 
             if (
                     viewId == R.id.pack_measurement_label_two ||

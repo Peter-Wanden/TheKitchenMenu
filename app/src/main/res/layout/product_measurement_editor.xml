@@ -181,25 +181,6 @@
             app:layout_constraintStart_toEndOf="@id/pack_size_label">
 
             <include
-                android:id="@+id/product_measurement_single"
-                layout="@layout/product_measurement_single"
-                app:layout_constraintBottom_toBottomOf="@id/product_measurement_parent"
-                app:layout_constraintEnd_toEndOf="@id/product_measurement_parent"
-                app:layout_constraintStart_toStartOf="@id/product_measurement_parent"
-                bind:measurementValidation="@{measurementValidation}"
-                bind:measurement="@{measurement}"
-                />
-
-            <include
-                android:id="@+id/product_measurement_double"
-                layout="@layout/product_measurement_double"
-                app:layout_constraintBottom_toBottomOf="@id/product_measurement_parent"
-                app:layout_constraintEnd_toEndOf="@id/product_measurement_parent"
-                app:layout_constraintStart_toStartOf="@id/product_measurement_parent"
-                bind:measurementValidation="@{measurementValidation}"
-                bind:measurement="@{measurement}"/>
-
-            <include
                 android:id="@+id/product_measurement_triple"
                 layout="@layout/product_measurement_triple"
                 app:layout_constraintBottom_toBottomOf="@id/product_measurement_parent"
