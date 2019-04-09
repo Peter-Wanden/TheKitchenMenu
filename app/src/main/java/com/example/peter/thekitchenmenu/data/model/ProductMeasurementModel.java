@@ -34,6 +34,7 @@ public class ProductMeasurementModel extends BaseObservable {
     }
 
     public void setNumberOfMeasurementUnits(int numberOfMeasurementUnits) {
+
         this.numberOfMeasurementUnits = numberOfMeasurementUnits;
         notifyPropertyChanged(BR.numberOfMeasurementUnits);
     }
@@ -135,8 +136,8 @@ public class ProductMeasurementModel extends BaseObservable {
                 ", \nmeasurementSubType=" + measurementSubType +
                 ", \nnumberOfItems=" + numberOfItems +
                 ", \npackMeasurementOne=" + packMeasurementOne +
-                ", \npackMeasurementTwo=" + packMeasurementTwo +
                 ", \nitemMeasurementOne=" + itemMeasurementOne +
+                ", \npackMeasurementTwo=" + packMeasurementTwo +
                 ", \nitemMeasurementTwo=" + itemMeasurementTwo +
                 '}';
     }

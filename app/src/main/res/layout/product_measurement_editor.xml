@@ -182,7 +182,7 @@
 
             <include
                 android:id="@+id/product_measurement_triple"
-                layout="@layout/product_measurement_triple"
+                layout="@layout/product_measurement"
                 app:layout_constraintBottom_toBottomOf="@id/product_measurement_parent"
                 app:layout_constraintEnd_toEndOf="@id/product_measurement_parent"
                 app:layout_constraintStart_toStartOf="@id/product_measurement_parent"

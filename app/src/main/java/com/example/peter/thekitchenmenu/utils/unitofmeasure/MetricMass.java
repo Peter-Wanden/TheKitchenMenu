@@ -2,10 +2,12 @@ package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.util.Log;
 
 import com.example.peter.thekitchenmenu.R;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 
 import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
@@ -19,7 +21,7 @@ public class MetricMass implements UnitOfMeasure {
     // Unit values as they relate to the International System of Units, or SI
     private static final int METRIC_MASS_NUMBER_OF_MEASUREMENT_UNITS = 2;
     private static final double UNIT_GRAM = BASE_SI_UNIT_MASS;
-    private static final double UNIT_KILOGRAM = BASE_SI_UNIT_MASS * 1000;
+    private static final double UNIT_KILOGRAM = BASE_SI_UNIT_MASS * 1000.;
 
     // Keeps track of the last updated measurement
     private static final boolean PACK_MEASUREMENT = false;
@@ -42,9 +44,9 @@ public class MetricMass implements UnitOfMeasure {
     private double itemSizeInBaseSiUnits = minimumItemSize;
     private double baseSiUnits = 0.;
     private int packMeasurementInKilograms = 0;
-    private double packMeasurementInGrams = 0;
+    private double packMeasurementInGrams = 0.;
     private int itemMeasurementInKilograms = 0;
-    private double itemMeasurementInGrams = 0;
+    private double itemMeasurementInGrams = 0.;
 
 
     public MetricMass(Context context) {
@@ -132,9 +134,9 @@ public class MetricMass implements UnitOfMeasure {
     private double getMeasurementInGrams(double baseSiUnits) {
 
         // TODO - Check to see if this needs to be converted to an integer
-        int grams = (int) (baseSiUnits % UNIT_KILOGRAM);
+//        int grams = (int) (baseSiUnits % UNIT_KILOGRAM);
 
-        return (double) (grams);
+        return baseSiUnits % UNIT_KILOGRAM;
     }
 
     private int getMeasurementInKilograms(double baseSiUnits) {
@@ -228,7 +230,7 @@ public class MetricMass implements UnitOfMeasure {
     @Override
     public double getPackMeasurementOne() {
 
-        return Math.floor(packMeasurementInGrams * 1) / 1;
+        return (int) Math.floor(packMeasurementInGrams * 1);
     }
 
     @Override
@@ -385,6 +387,8 @@ public class MetricMass implements UnitOfMeasure {
         digitFilters[0] = unitOneDigitsFilter;
         digitFilters[1] = unitTwoDigitsFilter;
         digitFilters[2] = unitThreeDigitsFilter;
+
+        Log.d(TAG, "getInputDigitsFilter: Filter is: " + Arrays.toString(digitFilters));
 
         return digitFilters;
     }

@@ -499,6 +499,15 @@ public class MetricMassTest {
         assertThat(metricMass.getBaseSiUnits(), is(MAX_MASS));
     }
 
+    @Test
+    public void testMixedNumberReturnValues() {
+
+        assertThat(metricMass.baseSiUnitsAreSet(5), is(true));
+        assertThat(metricMass.numberOfItemsAreSet(3), is(true));
+        assertThat(metricMass.getPackMeasurementOne(), is(5.));
+        assertThat(metricMass.getItemMeasurementOne(), is(1.0));
+    }
+
 
 
     @Test

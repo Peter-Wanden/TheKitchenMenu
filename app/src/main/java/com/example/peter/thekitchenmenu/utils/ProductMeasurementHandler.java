@@ -14,6 +14,8 @@ import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasure;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureSubtypeSelector;
 import com.example.peter.thekitchenmenu.viewmodels.ProductMeasurementViewModel;
 
+import androidx.core.util.Pair;
+
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MULTI_PACK_MAXIMUM_NO_OF_ITEMS;
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MULTI_PACK_MINIMUM_NO_OF_ITEMS;
 
@@ -120,10 +122,6 @@ public class ProductMeasurementHandler {
 
     public void modifyNumberOfItemsByOne(EditText editableNoOfItems, Button button) {
 
-//        if (measurementModelUpdating) {
-//            return; // This can never get called??
-//        }
-
         int itemsInPack = unitOfMeasure.getNumberOfItems();
         int buttonId = button.getId();
 
@@ -141,31 +139,28 @@ public class ProductMeasurementHandler {
                 setNumberOfItemsOutOfBoundsError(editableNoOfItems);
     }
 
-    public void validatePackSize(EditText editableMeasurement) {
+    public void validatePackSize(EditText editableMeasurement, MeasurementSubType subType) {
 
-//        if (measurementModelUpdating) {
-//
-//            Log.d(TAG, "validatePackSize: Measurement is updating, can't update");
-//            return;
-//        }
+        Context context = editableMeasurement.getContext();
+        UnitOfMeasure unitOfMeasure = UnitOfMeasureSubtypeSelector.
+                getClassWithSubType(context, subType);
+
+        Pair[] inputDigitsFilters = unitOfMeasure.getInputDigitsFilter();
 
         int viewId = editableMeasurement.getId();
         double doubleMeasurement;
         int integerMeasurement;
 
+        Log.d(TAG, "validatePackSize: Measurement received from: " +
+                resources.getResourceEntryName(viewId) +
+                " Raw value received is: " + editableMeasurement.getText().toString());
+
+
         if (viewId == R.id.pack_editable_measurement_one ||
                 viewId == R.id.item_editable_measurement_one) {
 
-            if (viewId == R.id.pack_editable_measurement_one)
-
-                Log.d(TAG, "validatePackSize: Pack One - raw String from view is: " +
-                        editableMeasurement.getText().toString());
-
-            if (viewId == R.id.item_editable_measurement_one)
-
-                Log.d(TAG, "validatePackSize: Item One - raw String from view is: " +
-                        editableMeasurement.getText().toString());
-
+            // TODO - Check the input filters to see if the number input should be a double or an integer
+            int numberOfUnitsAfterDecimal = inputDigitsFilters[0].second;
 
             doubleMeasurement = parseDoubleFromEditText(editableMeasurement);
 
@@ -181,19 +176,36 @@ public class ProductMeasurementHandler {
             if (integerMeasurement == MEASUREMENT_ERROR) return;
 
             if (measurementHasChangedInteger(viewId, integerMeasurement))
-                processMeasurements(editableMeasurement, integerMeasurement);
+                processIntegerMeasurements(editableMeasurement, integerMeasurement);
         }
     }
 
     private double parseDoubleFromEditText(EditText editableMeasurement) {
 
-        String rawMeasurement = editableMeasurement.getText().toString().trim();
+        String rawMeasurement = editableMeasurement.getText().toString();
 
         if (rawMeasurement.isEmpty()) return 0.;
 
         try {
 
             return Double.parseDouble(rawMeasurement);
+
+        } catch (NumberFormatException e) {
+
+            setNumberFormatExceptionError(editableMeasurement);
+            return MEASUREMENT_ERROR;
+        }
+    }
+
+    private int parseIntegerFromEditText(EditText editableMeasurement) {
+
+        String rawMeasurement = editableMeasurement.getText().toString();
+
+        if (rawMeasurement.isEmpty()) return 0;
+
+        try {
+
+            return Integer.parseInt(rawMeasurement);
 
         } catch (NumberFormatException e) {
 
@@ -212,13 +224,14 @@ public class ProductMeasurementHandler {
 
                 oldMeasurement = unitOfMeasure.getPackMeasurementOne();
 
-                if (doubleMeasurementHasChanged(oldMeasurement, newMeasurement)) {
+                if (oldMeasurement != newMeasurement)
+
                     Log.d(TAG, "measurementHasChangedDouble: Pack One:" +
                             " Old measurement: " + oldMeasurement +
                             " New measurement: " + newMeasurement);
-                    return true;
-                }
-                else return false;
+
+
+                return oldMeasurement != newMeasurement;
 
             case R.id.item_editable_measurement_one:
 
@@ -236,14 +249,9 @@ public class ProductMeasurementHandler {
         return false;
     }
 
-    private boolean doubleMeasurementHasChanged(double oldMeasurement, double newMeasurement) {
-
-        return oldMeasurement != newMeasurement;
-    }
-
     private boolean measurementHasChangedInteger(int viewId, int newMeasurement) {
 
-        double oldMeasurement;
+        int oldMeasurement;
 
         switch (viewId) {
 
@@ -303,26 +311,38 @@ public class ProductMeasurementHandler {
     private void processDoubleMeasurements(EditText editableMeasurement, double newMeasurement) {
 
         int viewId = editableMeasurement.getId();
-
         boolean measurementIsSet = false;
 
-        if (viewId == R.id.pack_editable_measurement_one)
+        if (viewId == R.id.pack_editable_measurement_one) {
+
+            Log.d(TAG, "processDoubleMeasurements: Processing change to Pack One");
             measurementIsSet = unitOfMeasure.packMeasurementOneIsSet(newMeasurement);
+        }
 
-        if (viewId == R.id.item_editable_measurement_one)
+        if (viewId == R.id.item_editable_measurement_one) {
+
+            Log.d(TAG, "processDoubleMeasurements: Processing change to Item One");
             measurementIsSet = unitOfMeasure.itemMeasurementOneIsSet(newMeasurement);
+        }
 
-        if (measurementIsSet) updateMeasurementModel();
-        else setMeasurementOutOfBoundsError(editableMeasurement);
+        if (measurementIsSet) {
+
+            Log.d(TAG, "processDoubleMeasurements: Measurement is set!");
+            updateMeasurementModel();
+
+        } else {
+            Log.d(TAG, "processDoubleMeasurements: measurement is out of bounds");
+            setMeasurementOutOfBoundsError(editableMeasurement);
+        }
     }
 
-    private void processMeasurements(EditText editableMeasurement, int newMeasurement) {
+    private void processIntegerMeasurements(EditText editableMeasurement, int newMeasurement) {
 
         // TODO - check for changes before processing measurements!!
 
         int viewId = editableMeasurement.getId();
 
-        Log.d(TAG, "processMeasurements: New measurement received from: " +
+        Log.d(TAG, "processIntegerMeasurements: New measurement received from: " +
                 resources.getResourceEntryName(editableMeasurement.getId()) + " measurement is: "
                 + newMeasurement);
 
@@ -330,55 +350,35 @@ public class ProductMeasurementHandler {
 
         if (viewId == R.id.pack_editable_measurement_two) {
 
-            Log.d(TAG, "processMeasurements: processing change to pack measurement Two");
+            Log.d(TAG, "processIntegerMeasurements: processing change to Pack Two");
             measurementIsSet = unitOfMeasure.packMeasurementTwoIsSet(newMeasurement);
-
-        } else if (viewId == R.id.pack_editable_measurement_three) {
-
-            Log.d(TAG, "processMeasurements: processing change to pack measurement three");
-            measurementIsSet = unitOfMeasure.packMeasurementThreeIsSet(newMeasurement);
 
         } else if (viewId == R.id.item_editable_measurement_two) {
 
-            Log.d(TAG, "processMeasurements: processing change to item measurement Two");
+            Log.d(TAG, "processIntegerMeasurements: processing change to Item Two");
             measurementIsSet = unitOfMeasure.itemMeasurementTwoIsSet(newMeasurement);
+
+        } else if (viewId == R.id.pack_editable_measurement_three) {
+
+            Log.d(TAG, "processIntegerMeasurements: processing change to Pack three");
+            measurementIsSet = unitOfMeasure.packMeasurementThreeIsSet(newMeasurement);
 
         } else if (viewId == R.id.item_editable_measurement_three) {
 
-            Log.d(TAG, "processMeasurements: ");
+            Log.d(TAG, "processIntegerMeasurements: ");
             measurementIsSet = unitOfMeasure.itemMeasurementThreeIsSet(newMeasurement);
         }
 
         if (measurementIsSet) {
-            Log.d(TAG, "processMeasurements: Measurement is set! Updating measurement model");
+            Log.d(TAG, "processIntegerMeasurements: Measurement is set!");
             updateMeasurementModel();
 
         } else {
 
-            Log.d(TAG, "processMeasurements: measurement is out of bounds");
+            Log.d(TAG, "processIntegerMeasurements: measurement is out of bounds");
             setMeasurementOutOfBoundsError(editableMeasurement);
         }
-        // Input from one of the measurement fields is zero. Or multiPack has been selected and has
-        // no valid number. Reset all numeric fields apart from number of items
-        Log.d(TAG, "processMeasurements: This statement should not be reachable!.");
 
-    }
-
-    private int parseIntegerFromEditText(EditText editableMeasurement) {
-
-        String rawMeasurement = editableMeasurement.getText().toString();
-
-        if (rawMeasurement.isEmpty()) return 0;
-
-        try {
-
-            return Integer.parseInt(rawMeasurement);
-
-        } catch (NumberFormatException e) {
-
-            setNumberFormatExceptionError(editableMeasurement);
-            return MEASUREMENT_ERROR;
-        }
     }
 
     private void setMeasurementOutOfBoundsError(EditText editableMeasurement) {
@@ -477,11 +477,21 @@ public class ProductMeasurementHandler {
         if (viewModel.getMeasurement().getPackMeasurementOne() !=
                 unitOfMeasure.getPackMeasurementOne()) {
 
-            viewModel.getMeasurement().setPackMeasurementOne(
-                    unitOfMeasure.getPackMeasurementOne());
-
             Log.d(TAG, "updateMeasurementModel: Updating pack One to: " +
                     unitOfMeasure.getPackMeasurementOne());
+
+            viewModel.getMeasurement().setPackMeasurementOne(
+                    unitOfMeasure.getPackMeasurementOne());
+        }
+
+        if (viewModel.getMeasurement().getItemMeasurementOne() !=
+                unitOfMeasure.getItemMeasurementOne()) {
+
+            viewModel.getMeasurement().setItemMeasurementOne(
+                    unitOfMeasure.getItemMeasurementOne());
+
+            Log.d(TAG, "updateMeasurementModel: Updating Item One to: " +
+                    unitOfMeasure.getItemMeasurementOne());
         }
 
         if (viewModel.getMeasurement().getPackMeasurementTwo() !=
@@ -494,34 +504,24 @@ public class ProductMeasurementHandler {
                     unitOfMeasure.getPackMeasurementTwo());
         }
 
-        if (viewModel.getMeasurement().getPackMeasurementThree() !=
-                unitOfMeasure.getPackMeasurementThree()) {
-
-            viewModel.getMeasurement().setPackMeasurementThree(
-                    unitOfMeasure.getPackMeasurementThree());
-
-            Log.d(TAG, "updateMeasurementModel: updating Pack Three to: " +
-                    unitOfMeasure.getPackMeasurementThree());
-        }
-
-        if (viewModel.getMeasurement().getItemMeasurementOne() !=
-                unitOfMeasure.getItemMeasurementOne()) {
-
-            viewModel.getMeasurement().setItemMeasurementOne(
-                    unitOfMeasure.getItemMeasurementOne());
-
-            Log.d(TAG, "updateMeasurementModel: updating Item One to: " +
-                    unitOfMeasure.getItemMeasurementOne());
-        }
-
         if (viewModel.getMeasurement().getItemMeasurementTwo() !=
                 unitOfMeasure.getItemMeasurementTwo()) {
 
             viewModel.getMeasurement().setItemMeasurementTwo(
                     unitOfMeasure.getItemMeasurementTwo());
 
-            Log.d(TAG, "updateMeasurementModel: updating Item Two to: " +
+            Log.d(TAG, "updateMeasurementModel: Updating Item Two to: " +
                     unitOfMeasure.getItemMeasurementTwo());
+        }
+
+        if (viewModel.getMeasurement().getPackMeasurementThree() !=
+                unitOfMeasure.getPackMeasurementThree()) {
+
+            viewModel.getMeasurement().setPackMeasurementThree(
+                    unitOfMeasure.getPackMeasurementThree());
+
+            Log.d(TAG, "updateMeasurementModel: Updating Pack Three to: " +
+                    unitOfMeasure.getPackMeasurementThree());
         }
 
         if (viewModel.getMeasurement().getItemMeasurementThree() !=
@@ -530,7 +530,7 @@ public class ProductMeasurementHandler {
             viewModel.getMeasurement().setItemMeasurementThree(
                     unitOfMeasure.getItemMeasurementThree());
 
-            Log.d(TAG, "updateMeasurementModel: updating item Three to: " +
+            Log.d(TAG, "updateMeasurementModel: Updating item Three to: " +
                     unitOfMeasure.getItemMeasurementThree());
         }
 
