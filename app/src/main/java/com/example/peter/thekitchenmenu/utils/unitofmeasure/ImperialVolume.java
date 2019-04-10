@@ -100,7 +100,7 @@ public class ImperialVolume implements UnitOfMeasure {
     }
 
     @Override
-    public boolean packMeasurementOneDecimalIsSet(double packMeasurementOne) {
+    public boolean packMeasurementOneIsSet(double packMeasurementOne) {
         return false;
     }
 
@@ -130,7 +130,7 @@ public class ImperialVolume implements UnitOfMeasure {
     }
 
     @Override
-    public boolean itemMeasurementOneDecimalIsSet(double itemMeasurementOne) {
+    public boolean itemMeasurementOneIsSet(double itemMeasurementOne) {
         return false;
     }
 

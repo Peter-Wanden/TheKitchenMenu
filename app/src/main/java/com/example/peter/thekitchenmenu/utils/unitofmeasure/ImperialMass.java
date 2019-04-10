@@ -18,11 +18,21 @@ public class ImperialMass implements UnitOfMeasure {
     private static final double UNIT_POUND = BASE_SI_UNIT_MASS * 453.59237;
     private static final double UNIT_OUNCE = UNIT_POUND / 16;
 
-    private String type;
-    private String subType;
-    private String measurementUnitOne;
-    private String measurementUnitTwo;
-    private String measurementUnitThree;
+    // Keeps track of the last updated measurement
+    private static final boolean PACK_MEASUREMENT = false;
+    private static final boolean ITEM_MEASUREMENT = true;
+    private boolean lastMeasurementUpdated = false;
+
+    // Unit description strings
+    private String typeAsString;
+    private String subTypeAsString;
+    private String measurementUnitOneLabel;
+    private String measurementUnitTwoLabel;
+    private String measurementUnitThreeLabel;
+
+    // Min and max measurements
+    private double minimumItemSize = UNIT_OUNCE / 10;
+    private double maximumBaseSiMeasurement = (UNIT_OUNCE / 10) / MAX_MASS;
 
     private Integer numberOfItemsInPack = SINGLE_ITEM;
     private double baseSiUnits;
@@ -33,16 +43,16 @@ public class ImperialMass implements UnitOfMeasure {
 
     ImperialMass(Context context) {
 
-        type = context.getResources().getString(R.string.mass);
-        subType = context.getResources().getString(R.string.sub_type_imperial_mass);
-        measurementUnitTwo = context.getResources().getString(R.string.pounds);
-        measurementUnitOne = context.getResources().getString(R.string.ounces);
-        measurementUnitThree = "";
+        typeAsString = context.getResources().getString(R.string.mass);
+        subTypeAsString = context.getResources().getString(R.string.sub_type_imperial_mass);
+        measurementUnitTwoLabel = context.getResources().getString(R.string.pounds);
+        measurementUnitOneLabel = context.getResources().getString(R.string.ounces);
+        measurementUnitThreeLabel = "";
     }
 
     @Override
     public String getMeasurementTypeAsString() {
-        return type;
+        return typeAsString;
     }
 
     @Override
@@ -67,17 +77,17 @@ public class ImperialMass implements UnitOfMeasure {
 
     @Override
     public String getMeasurementUnitOneLabel() {
-        return measurementUnitOne;
+        return measurementUnitOneLabel;
     }
 
     @Override
     public String getMeasurementUnitTwoLabel() {
-        return measurementUnitTwo;
+        return measurementUnitTwoLabel;
     }
 
     @Override
     public String getMeasurementUnitThreeLabel() {
-        return measurementUnitThree;
+        return measurementUnitThreeLabel;
     }
 
     private double convertToBaseSiUnits(ProductMeasurementModel productMeasurementModelToConvert) {
@@ -90,7 +100,7 @@ public class ImperialMass implements UnitOfMeasure {
 
     @Override
     public int getNumberOfItems() {
-        Log.d(TAG, "getNumberOfItems: banana");
+        Log.d(TAG, "zyx - getNumberOfItems: banana");
         return numberOfItemsInPack;
     }
 
@@ -104,7 +114,7 @@ public class ImperialMass implements UnitOfMeasure {
 
             this.numberOfItemsInPack = numberOfItems;
             setItemMeasurement(numberOfItemsInPack);
-            Log.d(TAG, "numberOfItemsAreSet: banana" + numberOfItemsInPack);
+            Log.d(TAG, "zyx - numberOfItemsAreSet: banana" + numberOfItemsInPack);
             return true;
         }
         return false;
@@ -195,7 +205,7 @@ public class ImperialMass implements UnitOfMeasure {
     }
 
     @Override
-    public boolean packMeasurementOneDecimalIsSet(double packMeasurementOne) {
+    public boolean packMeasurementOneIsSet(double packMeasurementOne) {
 
         return false;
     }
@@ -231,7 +241,7 @@ public class ImperialMass implements UnitOfMeasure {
     }
 
     @Override
-    public boolean itemMeasurementOneDecimalIsSet(double itemMeasurementOne) {
+    public boolean itemMeasurementOneIsSet(double itemMeasurementOne) {
 
         return false;
     }

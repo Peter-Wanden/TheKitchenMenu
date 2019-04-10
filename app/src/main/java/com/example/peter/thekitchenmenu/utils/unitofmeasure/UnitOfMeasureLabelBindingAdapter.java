@@ -1,7 +1,6 @@
 package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -19,14 +18,12 @@ public class UnitOfMeasureLabelBindingAdapter {
     public static void setLabelForSubTypeSelected(TextView textView,
                                                   MeasurementSubType subType,
                                                   int numberOfItems) {
-        // setUnitOfMeasureLabel
-        Log.d(TAG, "setUnitOfMeasureLabel: View passed in is: " +
-                textView.getContext().getResources().getResourceEntryName(textView.getId()));
 
         setUpViewLabels(textView, subType, isMultiPack(numberOfItems));
     }
 
     private static boolean isMultiPack(int numberOfItems) {
+
         return numberOfItems > SINGLE_ITEM;
     }
 
@@ -80,24 +77,22 @@ public class UnitOfMeasureLabelBindingAdapter {
 
         if (
                 viewId == R.id.pack_measurement_label_one ||
-                viewId == R.id.item_measurement_label_one) {
+                viewId == R.id.item_measurement_label_one)
 
             textView.setText(unitOfMeasure.getMeasurementUnitOneLabel());
 
-        } else if (
+        else if (
 
                 viewId == R.id.pack_measurement_label_two ||
-                viewId == R.id.item_measurement_label_two) {
+                viewId == R.id.item_measurement_label_two)
 
             textView.setText(unitOfMeasure.getMeasurementUnitTwoLabel());
 
-        } else if (
+        else if (
 
                 viewId == R.id.pack_measurement_label_three ||
-                viewId == R.id.item_measurement_label_three) {
+                viewId == R.id.item_measurement_label_three)
 
             textView.setText(unitOfMeasure.getMeasurementUnitThreeLabel());
-        }
-
     }
 }

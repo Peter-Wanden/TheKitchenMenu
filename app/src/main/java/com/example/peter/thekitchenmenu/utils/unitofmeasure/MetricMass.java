@@ -234,7 +234,7 @@ public class MetricMass implements UnitOfMeasure {
     }
 
     @Override
-    public boolean packMeasurementOneDecimalIsSet(double packMeasurementOne) {
+    public boolean packMeasurementOneIsSet(double packMeasurementOne) {
 
         if (baseSiUnitsAreSet(baseSiUnitsWithPackMeasurementOne(packMeasurementOne))) {
 
@@ -256,7 +256,7 @@ public class MetricMass implements UnitOfMeasure {
     }
 
     @Override
-    public boolean itemMeasurementOneDecimalIsSet(double itemMeasurementOne) {
+    public boolean itemMeasurementOneIsSet(double itemMeasurementOne) {
 
         if (baseSiUnitsAreSet(baseSiUnitsWithItemMeasurementOne(itemMeasurementOne))) {
 
@@ -388,7 +388,7 @@ public class MetricMass implements UnitOfMeasure {
         digitFilters[1] = unitTwoDigitsFilter;
         digitFilters[2] = unitThreeDigitsFilter;
 
-        Log.d(TAG, "getInputDigitsFilter: Filter is: " + Arrays.toString(digitFilters));
+        Log.d(TAG, "zyx - getInputDigitsFilter: Filter is: " + Arrays.toString(digitFilters));
 
         return digitFilters;
     }

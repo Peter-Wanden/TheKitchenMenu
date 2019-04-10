@@ -45,19 +45,17 @@ public class UnitOfMeasureEditTextBindingAdapter {
 
         setInputTypeNumber(editText);
 
-        if (viewId != View.NO_ID && editText.getVisibility() == View.VISIBLE) {
+        if (viewId != View.NO_ID && editText.getVisibility() == View.VISIBLE)
 
             if (
-                    viewId == R.id.pack_editable_measurement_one ||
-                    viewId == R.id.item_editable_measurement_one && isMultiPack ||
-                    viewId == R.id.pack_editable_measurement_two && units > 1 ||
-                    viewId == R.id.item_editable_measurement_two && isMultiPack && units > 1  ||
-                    viewId == R.id.pack_editable_measurement_three && units > 2 ||
-                    viewId == R.id.item_editable_measurement_three && isMultiPack && units > 2 ){
+                viewId == R.id.pack_editable_measurement_one ||
+                viewId == R.id.item_editable_measurement_one && isMultiPack ||
+                viewId == R.id.pack_editable_measurement_two && units > 1 ||
+                viewId == R.id.item_editable_measurement_two && isMultiPack && units > 1 ||
+                viewId == R.id.pack_editable_measurement_three && units > 2 ||
+                viewId == R.id.item_editable_measurement_three && isMultiPack && units > 2)
 
                 setInputForSoftAndHardKeyboard(editText, unitOfMeasure);
-            }
-        }
     }
 
     private static void setInputForSoftAndHardKeyboard(EditText editText,

@@ -56,7 +56,7 @@ public class Repository {
     }
 
     void observedStateChange(String dataModel, boolean observedState) {
-        Log.d(TAG, "observedStateChange: " + dataModel + " to: " + observedState);
+        Log.d(TAG, "zyx - observedStateChange: " + dataModel + " to: " + observedState);
         syncManager.setModelToSync(dataModel, observedState);
     }
 

@@ -320,7 +320,7 @@ public class ProductModel extends BaseObservable implements Parcelable {
 
     public void getValuesFromEntity(ProductEntity entity) {
 
-        Log.d(TAG, "getValuesFromEntity: getting values");
+        Log.d(TAG, "zyx - getValuesFromEntity: getting values");
 
         setDescription(entity.getDescription());
         setMadeBy(entity.getMadeBy());

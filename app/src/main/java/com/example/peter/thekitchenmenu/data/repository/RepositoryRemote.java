@@ -63,14 +63,14 @@ public class RepositoryRemote {
             String syncModelCompleted = (String) msg.obj;
 
             if (!syncModelCompleted.equals("Sync failed, 0 items returned.")) {
-                Log.d(TAG, "handleMessage: " + syncModelCompleted + " has completed sync.");
+                Log.d(TAG, "zyx - handleMessage: " + syncModelCompleted + " has completed sync.");
                 ModelStatus completedElement = syncQueue.remove();
-                Log.d(TAG, "handleMessage: Removed: " + completedElement.getModelName() +
+                Log.d(TAG, "zyx - handleMessage: Removed: " + completedElement.getModelName() +
                         " from sync queue");
 
                 // If available move on to next element.
                 if (syncQueue.size() > 0) {
-                    Log.d(TAG, "handleMessage: Moving on to next item.");
+                    Log.d(TAG, "zyx - handleMessage: Moving on to next item.");
                     processSyncQueue();
                 } else {
                     syncComplete("Sync completed normally, resetting processingSyncQueue to: false");
@@ -86,7 +86,7 @@ public class RepositoryRemote {
     private void syncComplete(String syncResultMessage) {
         worker.quit();
         processingSyncQueue = false;
-        Log.d(TAG, "syncComplete: Sync completed with message: " + syncResultMessage);
+        Log.d(TAG, "zyx - syncComplete: Sync completed with message: " + syncResultMessage);
     }
 
     /**
@@ -168,7 +168,7 @@ public class RepositoryRemote {
             syncQueue.remove(indexOfModelInQueue);
             syncQueue.add(indexOfModelInQueue, synchronisedModel);
 
-            Log.d(TAG, "dataSetReturned: Sync queue looks like: " + syncQueue.toString());
+            Log.d(TAG, "zyx - dataSetReturned: Sync queue looks like: " + syncQueue.toString());
 
             if (!processingSyncQueue) {
                 processSyncQueue();
@@ -192,27 +192,27 @@ public class RepositoryRemote {
                 switch (queueHead.getModelName()) {
 
                     case ProductEntity.TAG:
-                        Log.d(TAG, "processSyncQueue: ProductEntity");
+                        Log.d(TAG, "zyx - processSyncQueue: ProductEntity");
                         // Send the data to its respective sync class to be processed.
                         syncProduct.syncRemoteData(handler, worker);
                         break;
 
                     case ProductUserDataEntity.TAG:
-                        Log.d(TAG, "processSyncQueue: ProductUserDataEntity");
+                        Log.d(TAG, "zyx - processSyncQueue: ProductUserDataEntity");
                         // Send the data to its respective sync class to be processed.
                         syncUserProductData.syncRemoteData(handler, worker);
                         break;
 
                     default:
                         // If the data models data set has not returned, log error, exit.
-                        Log.d(TAG, "processSyncQueue: Data model not found: " +
+                        Log.d(TAG, "zyx - processSyncQueue: Data model not found: " +
                                 queueHead.toString() + " Exiting sync.");
                         processingSyncQueue = false;
                         break;
                 }
 
             } else {
-                Log.d(TAG, "processSyncQueue: First item in queue is not ready, exiting sync.");
+                Log.d(TAG, "zyx - processSyncQueue: First item in queue is not ready, exiting sync.");
                 processingSyncQueue = false;
             }
         }

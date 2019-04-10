@@ -64,7 +64,7 @@ class SyncProduct {
         localProductEntity = null;
 
         remoteProductEntity = remoteData.peek();
-        Log.d(TAG, "matchWithLocalProduct: " + remoteProductEntity.toString());
+        Log.d(TAG, "zyx - matchWithLocalProduct: " + remoteProductEntity.toString());
 
         worker.execute(() -> {
             // If exists, load local counterpart.
@@ -133,7 +133,7 @@ class SyncProduct {
 
     // Sets up the listener for this class.
     private void initialiseVel() {
-        Log.d(TAG, "initialiseVel: called");
+        Log.d(TAG, "zyx - initialiseVel: called");
 
         // Database reference to the community products location in Firebase.
         DatabaseReference prodCommRef = RemoteDbRefs.getRemoteProductData();
@@ -157,7 +157,7 @@ class SyncProduct {
                 }
                 // Copies the remote data for processing.
                 remoteData.addAll(remoteSnapShot);
-                Log.d(TAG, "onDataChange: returned: " + SyncProduct.this.remoteData.size() + " objects");
+                Log.d(TAG, "zyx - onDataChange: returned: " + SyncProduct.this.remoteData.size() + " objects");
                 // Clears down remote data queue.
                 remoteSnapShot.clear();
                 // Updates the data models status in the RemoteRepository.
@@ -167,7 +167,7 @@ class SyncProduct {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e(TAG, "Unable to update community products, with error: "
+                Log.e(TAG, "zyx - Unable to update community products, with error: "
                         + databaseError);
             }
         };
@@ -180,7 +180,7 @@ class SyncProduct {
         if (listenerPending == null) {
             initialiseVel();
         }
-        Log.d(TAG, "getListenerIsAttached: " + listenerPending.getListenerIsAttached());
+        Log.d(TAG, "zyx - getListenerIsAttached: " + listenerPending.getListenerIsAttached());
         return listenerPending.getListenerIsAttached();
     }
 
@@ -189,7 +189,7 @@ class SyncProduct {
         if (listenerPending == null) {
             initialiseVel();
         }
-        Log.d(TAG, "setListenerIsAttached: " + requestedState);
+        Log.d(TAG, "zyx - setListenerIsAttached: " + requestedState);
         listenerPending.setListenerIsAttached(requestedState);
     }
 }

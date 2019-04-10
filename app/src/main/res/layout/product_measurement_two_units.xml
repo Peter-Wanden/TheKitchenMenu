@@ -33,16 +33,14 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/standard_input_item_height"
             android:layout_marginStart="8dp"
-
-
             android:layout_marginBottom="8dp"
-            android:afterTextChanged='@{() -> measurementValidation.validatePackSize(packEditableMeasurementTwo, measurement.measurementSubType)}'
-            android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(packEditableMeasurementTwo, measurement.packMeasurementTwo)}'
             android:textAlignment="textEnd"
             app:layout_constraintBottom_toTopOf="@+id/item_editable_measurement_two"
             app:layout_constraintEnd_toStartOf="@+id/pack_measurement_label_two"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
+            android:afterTextChanged='@{() -> measurementValidation.validatePackSize(packEditableMeasurementTwo, measurement.measurementSubType)}'
+            android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(packEditableMeasurementTwo, measurement.packMeasurementTwo)}'
             app:numberOfItems='@{measurement.numberOfItems}'
             app:setUpEditTextForSubTypeSelected='@{measurement.measurementSubType}'
             tools:text="22" />
@@ -52,19 +50,18 @@
             style="@style/EditableFieldStyle"
             android:layout_width="0dp"
             android:layout_height="@dimen/standard_input_item_height"
-
-
             android:layout_marginStart="8dp"
             android:layout_marginBottom="8dp"
-            android:afterTextChanged='@{() -> measurementValidation.validatePackSize(itemEditableMeasurementTwo, measurement.measurementSubType)}'
-            android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(itemEditableMeasurementTwo, measurement.itemMeasurementTwo)}'
             android:textAlignment="textEnd"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/item_measurement_label_two"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
+            android:afterTextChanged='@{() -> measurementValidation.validatePackSize(itemEditableMeasurementTwo, measurement.measurementSubType)}'
+            android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(itemEditableMeasurementTwo, measurement.itemMeasurementTwo)}'
             app:numberOfItems='@{measurement.numberOfItems}'
             app:setUpEditTextForSubTypeSelected='@{measurement.measurementSubType}'
+            android:visibility='@{measurement.numberOfItems > 1 ? View.VISIBLE : View.INVISIBLE}'
             tools:text="22" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -73,7 +70,6 @@
             android:layout_width="wrap_content"
             android:layout_height="@dimen/standard_input_item_height"
             android:layout_marginStart="8dp"
-
             android:layout_marginEnd="8dp"
             android:gravity="center_vertical"
             app:layout_constraintEnd_toStartOf="@+id/pack_editable_measurement_one"
@@ -82,14 +78,13 @@
             app:layout_constraintTop_toTopOf="@+id/pack_editable_measurement_two"
             app:numberOfItems='@{measurement.numberOfItems}'
             app:setLabelForSubTypeSelected='@{measurement.measurementSubType}'
-            tools:text="cl" />
+            tools:text="l" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/item_measurement_label_two"
             style="@style/EditableCategoryStyle"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/standard_input_item_height"
-
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:gravity="center_vertical"
@@ -99,7 +94,7 @@
             app:layout_constraintTop_toTopOf="@+id/item_editable_measurement_two"
             app:numberOfItems='@{measurement.numberOfItems}'
             app:setLabelForSubTypeSelected='@{measurement.measurementSubType}'
-            tools:text="cl" />
+            tools:text="l" />
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/pack_editable_measurement_one"
@@ -107,18 +102,16 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/standard_input_item_height"
             android:layout_marginStart="8dp"
-            android:afterTextChanged='@{() -> measurementValidation.validatePackSize(packEditableMeasurementOne, measurement.measurementSubType)}'
-            android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(packEditableMeasurementOne, measurement.packMeasurementOneAsInt)}'
             android:textAlignment="textEnd"
             app:layout_constraintEnd_toStartOf="@+id/pack_measurement_label_one"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/pack_measurement_label_two"
             app:layout_constraintTop_toTopOf="@+id/pack_measurement_label_two"
+            android:afterTextChanged='@{() -> measurementValidation.validatePackSize(packEditableMeasurementOne, measurement.measurementSubType)}'
+            android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(packEditableMeasurementOne, measurement.packMeasurementOneAsInt)}'
             app:numberOfItems='@{measurement.numberOfItems}'
             app:setUpEditTextForSubTypeSelected='@{measurement.measurementSubType}'
             tools:text="16" />
-
-        <!--android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(packEditableMeasurementOne, measurement.packMeasurementOne)}'-->
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/item_editable_measurement_one"
@@ -126,16 +119,16 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/standard_input_item_height"
             android:layout_marginStart="8dp"
-
-            android:afterTextChanged='@{() -> measurementValidation.validatePackSize(itemEditableMeasurementOne, measurement.measurementSubType)}'
-            android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(itemEditableMeasurementOne, measurement.itemMeasurementOneAsInt)}'
             android:textAlignment="textEnd"
             app:layout_constraintEnd_toStartOf="@+id/item_measurement_label_one"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/item_measurement_label_two"
             app:layout_constraintTop_toTopOf="@+id/item_measurement_label_two"
+            android:afterTextChanged='@{() -> measurementValidation.validatePackSize(itemEditableMeasurementOne, measurement.measurementSubType)}'
+            android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(itemEditableMeasurementOne, measurement.itemMeasurementOneAsInt)}'
             app:numberOfItems='@{measurement.numberOfItems}'
             app:setUpEditTextForSubTypeSelected='@{measurement.measurementSubType}'
+            android:visibility='@{measurement.numberOfItems > 1 ? View.VISIBLE : View.INVISIBLE}'
             tools:text="16" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -144,7 +137,6 @@
             android:layout_width="wrap_content"
             android:layout_height="@dimen/standard_input_item_height"
             android:layout_marginStart="8dp"
-
             android:layout_marginEnd="8dp"
             android:gravity="center_vertical"
             app:layout_constraintEnd_toEndOf="parent"
@@ -154,8 +146,6 @@
             app:numberOfItems='@{measurement.numberOfItems}'
             app:setLabelForSubTypeSelected='@{measurement.measurementSubType}'
             tools:text="ml" />
-
-        <!--android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(itemEditableMeasurementOne, measurement.itemMeasurementOne)}'-->
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/item_measurement_label_one"
@@ -172,6 +162,5 @@
             app:numberOfItems='@{measurement.numberOfItems}'
             app:setLabelForSubTypeSelected='@{measurement.measurementSubType}'
             tools:text="ml" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

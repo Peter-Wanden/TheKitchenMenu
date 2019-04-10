@@ -14,7 +14,7 @@ public class UnitOfMeasureFieldVisibilityBindingAdapter {
     @BindingAdapter(value = {"setFieldVisibility"})
     public static void setFieldVisibility(View view, int numberOfMeasurementUnits) {
 
-        Log.d(TAG, "setFieldVisibility: number of units: " + numberOfMeasurementUnits);
+        Log.d(TAG, "zyx - setFieldVisibility: number of units: " + numberOfMeasurementUnits);
 
         setupViews(view, numberOfMeasurementUnits);
     }
@@ -25,7 +25,7 @@ public class UnitOfMeasureFieldVisibilityBindingAdapter {
 
         if (units == 1 && view.getVisibility() == View.VISIBLE) {
 
-            Log.d(TAG, "setupViews: ");
+            Log.d(TAG, "zyx - setupViews: ");
 
             if (
                     viewId == R.id.pack_measurement_label_two ||

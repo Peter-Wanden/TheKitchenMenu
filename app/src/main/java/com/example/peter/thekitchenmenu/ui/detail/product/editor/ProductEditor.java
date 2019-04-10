@@ -88,7 +88,7 @@ public class ProductEditor extends AppCompatActivity {
                 productIdentityViewModel.getIdentityModel().setShelfLife(
                         productEntity.getShelfLife());
 
-//                Log.d(TAG, "setObservers: Updating unit of measure to: " +
+//                Log.d(TAG, "zyx - setObservers: Updating unit of measure to: " +
 //                        productEntity.getUnitOfMeasureSubType());
 //
 //                productMeasurementViewModel.getMeasurementValidation().changeUnitOfMeasure(
@@ -101,7 +101,7 @@ public class ProductEditor extends AppCompatActivity {
 //                        productEntity.getBaseSiUnits());
 //
 //                if (baseSiUnitsAreSet) {
-//                    Log.d(TAG, "setObservers: Base units set ok!");
+//                    Log.d(TAG, "zyx - setObservers: Base units set ok!");
 //                }
             }
         };
