@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.Resources;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
 
 import androidx.core.util.Pair;
 
@@ -142,7 +141,7 @@ public class Count implements UnitOfMeasure {
     }
 
     @Override
-    public boolean packMeasurementOneIsSet(double packMeasurementOne) {
+    public boolean packMeasurementOneDecimalIsSet(double packMeasurementOne) {
         return false;
     }
 
@@ -172,7 +171,7 @@ public class Count implements UnitOfMeasure {
     }
 
     @Override
-    public boolean itemMeasurementOneIsSet(double itemMeasurementOne) {
+    public boolean itemMeasurementOneDecimalIsSet(double itemMeasurementOne) {
         return false;
     }
 

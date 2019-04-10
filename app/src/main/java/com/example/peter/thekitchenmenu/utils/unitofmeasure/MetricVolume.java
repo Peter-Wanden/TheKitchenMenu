@@ -2,8 +2,6 @@ package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
 import android.content.Context;
 
-import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
-
 import androidx.core.util.Pair;
 
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.BASE_SI_UNIT_VOLUME;
@@ -106,7 +104,7 @@ public class MetricVolume implements UnitOfMeasure {
     }
 
     @Override
-    public boolean packMeasurementOneIsSet(double packMeasurementOne) {
+    public boolean packMeasurementOneDecimalIsSet(double packMeasurementOne) {
         return false;
     }
 
@@ -136,7 +134,7 @@ public class MetricVolume implements UnitOfMeasure {
     }
 
     @Override
-    public boolean itemMeasurementOneIsSet(double itemMeasurementOne) {
+    public boolean itemMeasurementOneDecimalIsSet(double itemMeasurementOne) {
         return false;
     }
 

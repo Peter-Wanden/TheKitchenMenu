@@ -234,7 +234,7 @@ public class MetricMass implements UnitOfMeasure {
     }
 
     @Override
-    public boolean packMeasurementOneIsSet(double packMeasurementOne) {
+    public boolean packMeasurementOneDecimalIsSet(double packMeasurementOne) {
 
         if (baseSiUnitsAreSet(baseSiUnitsWithPackMeasurementOne(packMeasurementOne))) {
 
@@ -256,7 +256,7 @@ public class MetricMass implements UnitOfMeasure {
     }
 
     @Override
-    public boolean itemMeasurementOneIsSet(double itemMeasurementOne) {
+    public boolean itemMeasurementOneDecimalIsSet(double itemMeasurementOne) {
 
         if (baseSiUnitsAreSet(baseSiUnitsWithItemMeasurementOne(itemMeasurementOne))) {
 

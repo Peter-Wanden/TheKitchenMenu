@@ -160,7 +160,7 @@ public class ProductMeasurementHandler {
                 viewId == R.id.item_editable_measurement_one) {
 
             // TODO - Check the input filters to see if the number input should be a double or an integer
-            int numberOfUnitsAfterDecimal = inputDigitsFilters[0].second;
+            int numberOfUnitsAfterDecimal = (int) inputDigitsFilters[0].second;
 
             doubleMeasurement = parseDoubleFromEditText(editableMeasurement);
 
@@ -316,13 +316,13 @@ public class ProductMeasurementHandler {
         if (viewId == R.id.pack_editable_measurement_one) {
 
             Log.d(TAG, "processDoubleMeasurements: Processing change to Pack One");
-            measurementIsSet = unitOfMeasure.packMeasurementOneIsSet(newMeasurement);
+            measurementIsSet = unitOfMeasure.packMeasurementOneDecimalIsSet(newMeasurement);
         }
 
         if (viewId == R.id.item_editable_measurement_one) {
 
             Log.d(TAG, "processDoubleMeasurements: Processing change to Item One");
-            measurementIsSet = unitOfMeasure.itemMeasurementOneIsSet(newMeasurement);
+            measurementIsSet = unitOfMeasure.itemMeasurementOneDecimalIsSet(newMeasurement);
         }
 
         if (measurementIsSet) {
@@ -474,24 +474,53 @@ public class ProductMeasurementHandler {
                     unitOfMeasure.getNumberOfItems());
         }
 
-        if (viewModel.getMeasurement().getPackMeasurementOne() !=
-                unitOfMeasure.getPackMeasurementOne()) {
 
-            Log.d(TAG, "updateMeasurementModel: Updating pack One to: " +
-                    unitOfMeasure.getPackMeasurementOne());
+        if (unitOfMeasure.getMeasurementSubType() == MeasurementSubType.TYPE_IMPERIAL_MASS ||
+                unitOfMeasure.getMeasurementSubType() == MeasurementSubType.TYPE_IMPERIAL_VOLUME) {
 
-            viewModel.getMeasurement().setPackMeasurementOne(
-                    unitOfMeasure.getPackMeasurementOne());
-        }
+            if (viewModel.getMeasurement().getPackMeasurementOneAsDecimal() !=
+                    unitOfMeasure.getPackMeasurementOne()) {
 
-        if (viewModel.getMeasurement().getItemMeasurementOne() !=
-                unitOfMeasure.getItemMeasurementOne()) {
+                Log.d(TAG, "updateMeasurementModel: Updating pack One DECIMAL to: " +
+                        unitOfMeasure.getPackMeasurementOne());
 
-            viewModel.getMeasurement().setItemMeasurementOne(
-                    unitOfMeasure.getItemMeasurementOne());
+                viewModel.getMeasurement().setPackMeasurementOneAsDecimal(
+                        unitOfMeasure.getPackMeasurementOne());
+            }
 
-            Log.d(TAG, "updateMeasurementModel: Updating Item One to: " +
-                    unitOfMeasure.getItemMeasurementOne());
+            if (viewModel.getMeasurement().getItemMeasurementOneAsDecimal() !=
+                    unitOfMeasure.getItemMeasurementOne()) {
+
+                viewModel.getMeasurement().setItemMeasurementOneAsDecimal(
+                        unitOfMeasure.getItemMeasurementOne());
+
+                Log.d(TAG, "updateMeasurementModel: Updating Item One DECIMAL to: " +
+                        unitOfMeasure.getItemMeasurementOne());
+            }
+
+        } else {
+
+            if (viewModel.getMeasurement().getPackMeasurementOneAsInt() !=
+                    (int) unitOfMeasure.getPackMeasurementOne()) {
+
+                Log.d(TAG, "updateMeasurementModel: Updating Pack One as INTEGER to: " +
+                        (int) unitOfMeasure.getPackMeasurementOne());
+
+                viewModel.getMeasurement().setPackMeasurementOneAsInt(
+                        (int) unitOfMeasure.getPackMeasurementOne());
+            }
+
+
+            if (viewModel.getMeasurement().getItemMeasurementOneAsInt() !=
+                    (int) unitOfMeasure.getItemMeasurementOne()) {
+
+                Log.d(TAG, "updateMeasurementModel: Updating Item One as INTEGER to: " +
+                        (int) unitOfMeasure.getItemMeasurementOne());
+
+                viewModel.getMeasurement().setItemMeasurementOneAsInt(
+                        (int) unitOfMeasure.getItemMeasurementOne());
+            }
+
         }
 
         if (viewModel.getMeasurement().getPackMeasurementTwo() !=

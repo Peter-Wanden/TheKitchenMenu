@@ -82,7 +82,7 @@ public class ImperialMass implements UnitOfMeasure {
 
     private double convertToBaseSiUnits(ProductMeasurementModel productMeasurementModelToConvert) {
 
-        double ouncesToGrams = productMeasurementModelToConvert.getPackMeasurementOne() * UNIT_OUNCE;
+        double ouncesToGrams = productMeasurementModelToConvert.getPackMeasurementOneAsDecimal() * UNIT_OUNCE;
         double poundsToGrams = productMeasurementModelToConvert.getPackMeasurementTwo() * UNIT_POUND;
 
         return poundsToGrams + ouncesToGrams;
@@ -195,7 +195,7 @@ public class ImperialMass implements UnitOfMeasure {
     }
 
     @Override
-    public boolean packMeasurementOneIsSet(double packMeasurementOne) {
+    public boolean packMeasurementOneDecimalIsSet(double packMeasurementOne) {
 
         return false;
     }
@@ -209,7 +209,7 @@ public class ImperialMass implements UnitOfMeasure {
     public boolean packMeasurementTwoIsSet(int packMeasurementTwo) {
 
         ProductMeasurementModel productMeasurementModel = new ProductMeasurementModel();
-        productMeasurementModel.setPackMeasurementOne(packMeasurementInOunces);
+        productMeasurementModel.setPackMeasurementOneAsDecimal(packMeasurementInOunces);
         productMeasurementModel.setPackMeasurementTwo(packMeasurementTwo);
 
         return baseSiUnitsAreSet(convertToBaseSiUnits(productMeasurementModel));
@@ -231,7 +231,7 @@ public class ImperialMass implements UnitOfMeasure {
     }
 
     @Override
-    public boolean itemMeasurementOneIsSet(double itemMeasurementOne) {
+    public boolean itemMeasurementOneDecimalIsSet(double itemMeasurementOne) {
 
         return false;
     }
@@ -245,7 +245,7 @@ public class ImperialMass implements UnitOfMeasure {
     public boolean itemMeasurementTwoIsSet(int itemMeasurementTwo) {
 
         ProductMeasurementModel productMeasurementModel = new ProductMeasurementModel();
-        productMeasurementModel.setPackMeasurementOne(itemMeasurementInOunces * numberOfItemsInPack);
+        productMeasurementModel.setPackMeasurementOneAsDecimal(itemMeasurementInOunces * numberOfItemsInPack);
         productMeasurementModel.setPackMeasurementTwo(itemMeasurementInPounds * numberOfItemsInPack);
 
         return baseSiUnitsAreSet(convertToBaseSiUnits(productMeasurementModel));

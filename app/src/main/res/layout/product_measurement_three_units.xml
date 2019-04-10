@@ -103,7 +103,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:afterTextChanged='@{() -> measurementValidation.validatePackSize(packEditableMeasurementOne, measurement.measurementSubType)}'
-            android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(packEditableMeasurementOne, measurement.packMeasurementOne)}'
+            android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(packEditableMeasurementOne, measurement.packMeasurementOneAsDecimal)}'
             android:textAlignment="textEnd"
             app:layout_constraintBottom_toTopOf="@id/item_editable_measurement_one"
             app:layout_constraintEnd_toStartOf="@id/pack_measurement_label_one"
@@ -145,7 +145,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:setUpEditTextForSubTypeSelected='@{measurement.measurementSubType}'
             app:numberOfItems='@{measurement.numberOfItems}'
-
             tools:text="22"/>
 
         <!--android:visibility="@{(measurement.numberOfItems > 1) ? View.VISIBLE : View.INVISIBLE}"-->
@@ -182,7 +181,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:setUpEditTextForSubTypeSelected='@{measurement.measurementSubType}'
             app:numberOfItems='@{measurement.numberOfItems}'
-
             tools:text="22" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -209,7 +207,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:textAlignment="textEnd"
-            android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(itemEditableMeasurementOne, measurement.itemMeasurementOne)}'
+            android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(itemEditableMeasurementOne, measurement.itemMeasurementOneAsDecimal)}'
             android:afterTextChanged='@{() -> measurementValidation.validatePackSize(itemEditableMeasurementOne, measurement.measurementSubType)}'
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/item_measurement_label_two"

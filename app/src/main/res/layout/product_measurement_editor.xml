@@ -14,6 +14,8 @@
 
         <import type="com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementZeroToBlankConverter" />
 
+        <import type="com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubType"/>
+
         <variable
             name="measurementValidation"
             type="com.example.peter.thekitchenmenu.utils.ProductMeasurementHandler" />
@@ -181,13 +183,24 @@
             app:layout_constraintStart_toEndOf="@id/pack_size_label">
 
             <include
-                android:id="@+id/product_measurement_triple"
-                layout="@layout/product_measurement"
+                android:id="@+id/product_measurement_two_units"
+                layout="@layout/product_measurement_two_units"
                 app:layout_constraintBottom_toBottomOf="@id/product_measurement_parent"
                 app:layout_constraintEnd_toEndOf="@id/product_measurement_parent"
                 app:layout_constraintStart_toStartOf="@id/product_measurement_parent"
                 bind:measurementValidation="@{measurementValidation}"
-                bind:measurement="@{measurement}"/>
+                bind:measurement="@{measurement}"
+                android:visibility='@{measurement.measurementSubType == MeasurementSubType.TYPE_METRIC_MASS || measurement.measurementSubType == MeasurementSubType.TYPE_METRIC_VOLUME || measurement.measurementSubType == MeasurementSubType.TYPE_COUNT ? View.VISIBLE : View.INVISIBLE}'/>
+
+            <include
+                android:id="@+id/product_measurement_triple"
+                layout="@layout/product_measurement_three_units"
+                app:layout_constraintBottom_toBottomOf="@id/product_measurement_parent"
+                app:layout_constraintEnd_toEndOf="@id/product_measurement_parent"
+                app:layout_constraintStart_toStartOf="@id/product_measurement_parent"
+                bind:measurementValidation="@{measurementValidation}"
+                bind:measurement="@{measurement}"
+                android:visibility='@{measurement.measurementSubType == MeasurementSubType.TYPE_IMPERIAL_VOLUME || measurement.measurementSubType == MeasurementSubType.TYPE_IMPERIAL_MASS ? View.VISIBLE : View.INVISIBLE}'/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

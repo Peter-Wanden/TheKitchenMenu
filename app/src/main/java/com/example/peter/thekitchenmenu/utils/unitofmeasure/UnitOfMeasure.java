@@ -20,9 +20,9 @@ public interface UnitOfMeasure {
 
     String getMeasurementUnitOneLabel();
     double getPackMeasurementOne();
-    boolean packMeasurementOneIsSet(double packMeasurementOne);
+    boolean packMeasurementOneDecimalIsSet(double packMeasurementOne);
     double getItemMeasurementOne();
-    boolean itemMeasurementOneIsSet(double itemMeasurementOne);
+    boolean itemMeasurementOneDecimalIsSet(double itemMeasurementOne);
 
     String getMeasurementUnitTwoLabel();
     int getPackMeasurementTwo();

@@ -126,7 +126,7 @@ public class MetricMassTest {
     public void testMeasurementUnitOneInRangeMax() { // IN RANGE MAX
 
         // Set to max
-        assertThat(metricMass.packMeasurementOneIsSet(MAX_MASS), is(true));
+        assertThat(metricMass.packMeasurementOneDecimalIsSet(MAX_MASS), is(true));
 
         // Check value set
         assertThat(metricMass.getPackMeasurementOne(), is(0.));
@@ -142,7 +142,7 @@ public class MetricMassTest {
     public void testMeasurementUnitOneOutOfRangeMax() { // OUT OF RANGE MAX
 
         // Set to max plus 1
-        assertThat(metricMass.packMeasurementOneIsSet(10001), is(false));
+        assertThat(metricMass.packMeasurementOneDecimalIsSet(10001), is(false));
 
         // Check values unchanges
         assertThat(metricMass.getPackMeasurementOne(), is(0.));
@@ -158,7 +158,7 @@ public class MetricMassTest {
     public void testMeasurementUnitOneInRangeMin() { // IN RANGE MIN
 
         // Set to minimum
-        assertThat(metricMass.packMeasurementOneIsSet(1.), is(true));
+        assertThat(metricMass.packMeasurementOneDecimalIsSet(1.), is(true));
 
         // Check set
         assertThat(metricMass.getPackMeasurementOne(), is(1.));
@@ -172,7 +172,7 @@ public class MetricMassTest {
     public void testMeasurementUnitOneOutOfRangeMin() { // OUT OF RANGE MIN
 
         // Set to .1 below min
-        assertThat(metricMass.packMeasurementOneIsSet(0.9), is(false));
+        assertThat(metricMass.packMeasurementOneDecimalIsSet(0.9), is(false));
 
         // Check values unchanged
         assertThat(metricMass.getPackMeasurementOne(), is(0.));
@@ -249,7 +249,7 @@ public class MetricMassTest {
     public void testInRangeMeasurementOneAndTwo() { // CONDITION: IN RANGE
 
         // Set arbitrary in range value
-        assertThat(metricMass.packMeasurementOneIsSet(500), is(true));
+        assertThat(metricMass.packMeasurementOneDecimalIsSet(500), is(true));
         assertThat(metricMass.packMeasurementTwoIsSet(5), is(true));
 
         // Check values set
@@ -335,7 +335,7 @@ public class MetricMassTest {
 
         // Set value to pack measurement - sets lastMeasurementUpdated to PACK
         // When number of items is updated item measurement should change
-        assertThat(metricMass.packMeasurementOneIsSet(2), is(true));
+        assertThat(metricMass.packMeasurementOneDecimalIsSet(2), is(true));
 
         // Set number of items
         assertThat(metricMass.numberOfItemsAreSet(2), is(true));
@@ -352,7 +352,7 @@ public class MetricMassTest {
     public void testNumberOfItemsOutOfRangeAdjustsItemSize() { // CONDITION: BASE SI SET BY PACK ONE - NO OF ITEMS IN RANGE (ODD)
 
         // Set pack to number not divisible by number of items
-        assertThat(metricMass.packMeasurementOneIsSet(3), is(true));
+        assertThat(metricMass.packMeasurementOneDecimalIsSet(3), is(true));
 
         // Set number of items not divisible by pack size
         assertThat(metricMass.numberOfItemsAreSet(2), is(true));
@@ -370,7 +370,7 @@ public class MetricMassTest {
 
         // Set value to both pack measurements - sets lastMeasurementUpdated to PACK
         // When number of items is updated item measurement should change
-        assertThat(metricMass.packMeasurementOneIsSet(500), is(true));
+        assertThat(metricMass.packMeasurementOneDecimalIsSet(500), is(true));
         assertThat(metricMass.packMeasurementTwoIsSet(1), is(true));
 
         // Set number of items
@@ -389,7 +389,7 @@ public class MetricMassTest {
 
         // Set value to item measurement - sets lastMeasurementUpdated to ITEM
         // When number of items is updated PACK measurement should change
-        assertThat(metricMass.itemMeasurementOneIsSet(500), is(true));
+        assertThat(metricMass.itemMeasurementOneDecimalIsSet(500), is(true));
 
         // Set number of items
         assertThat(metricMass.numberOfItemsAreSet(2), is(true));
@@ -407,7 +407,7 @@ public class MetricMassTest {
 
         // Set value to both item measurements - sets lastMeasurementUpdated to ITEM
         // When number of items is updated PACK measurement should change
-        assertThat(metricMass.itemMeasurementOneIsSet(500), is(true));
+        assertThat(metricMass.itemMeasurementOneDecimalIsSet(500), is(true));
         assertThat(metricMass.itemMeasurementTwoIsSet(1), is(true));
 
         // Set items
@@ -426,7 +426,7 @@ public class MetricMassTest {
 
         // Set value to both item measurements - sets lastMeasurementUpdated to ITEM
         // When number of items is updated PACK measurement should change
-        assertThat(metricMass.itemMeasurementOneIsSet(1), is(true));
+        assertThat(metricMass.itemMeasurementOneDecimalIsSet(1), is(true));
         assertThat(metricMass.itemMeasurementTwoIsSet(5), is(true));
 
         // Set items so to high
@@ -445,7 +445,7 @@ public class MetricMassTest {
         // CONDITION: BASE SI SET BY ITEM - NO OF ITEMS CHANGED - THEN NO OF ITEMS CHANGED AGAIN
 
         // Set item measurement last changed by setting item measurement
-        assertThat(metricMass.itemMeasurementOneIsSet(500), is(true));
+        assertThat(metricMass.itemMeasurementOneDecimalIsSet(500), is(true));
         assertThat(metricMass.itemMeasurementTwoIsSet(1), is(true));
 
         // Change number of items
