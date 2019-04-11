@@ -221,4 +221,5 @@
     <string name="product_size_options">Product Size Options</string>
     <string name="my_product_information">Your Personal Product Info</string>
     <string name="product_identity">Product identity</string>
+    <string name="empty_string" />
 </resources>

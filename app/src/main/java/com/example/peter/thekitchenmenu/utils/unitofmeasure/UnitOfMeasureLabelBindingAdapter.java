@@ -62,13 +62,13 @@ public class UnitOfMeasureLabelBindingAdapter {
     private static void setPackSizeLabel(TextView textView, UnitOfMeasure unitOfMeasure) {
 
         textView.setText(textView.getContext().getString(
-                R.string.pack_size_label, unitOfMeasure.getMeasurementTypeAsString()));
+                R.string.pack_size_label, unitOfMeasure.getTypeStringResourceId()));
     }
 
     private static void setItemSizeLabel(TextView textView, UnitOfMeasure unitOfMeasure) {
 
         textView.setText(textView.getContext().getString(
-                R.string.item_size_label, unitOfMeasure.getMeasurementTypeAsString()));
+                R.string.item_size_label, unitOfMeasure.getTypeStringResourceId()));
     }
 
     private static void setMeasurementUnitLabels(TextView textView, UnitOfMeasure unitOfMeasure) {
@@ -79,20 +79,20 @@ public class UnitOfMeasureLabelBindingAdapter {
                 viewId == R.id.pack_measurement_label_one ||
                 viewId == R.id.item_measurement_label_one)
 
-            textView.setText(unitOfMeasure.getMeasurementUnitOneLabel());
+            textView.setText(unitOfMeasure.getUnitOneLabelStringResourceId());
 
         else if (
 
                 viewId == R.id.pack_measurement_label_two ||
                 viewId == R.id.item_measurement_label_two)
 
-            textView.setText(unitOfMeasure.getMeasurementUnitTwoLabel());
+            textView.setText(unitOfMeasure.getUnitTwoLabelStringResourceId());
 
         else if (
 
                 viewId == R.id.pack_measurement_label_three ||
                 viewId == R.id.item_measurement_label_three)
 
-            textView.setText(unitOfMeasure.getMeasurementUnitThreeLabel());
+            textView.setText(unitOfMeasure.getUnitThreeLabelStringResourceId());
     }
 }

@@ -1,14 +1,15 @@
 package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
-import android.content.Context;
-import android.util.Log;
-
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
 
 import androidx.core.util.Pair;
 
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.*;
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.BASE_SI_UNIT_MASS;
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MAX_MASS;
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MULTI_PACK_MAXIMUM_NO_OF_ITEMS;
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.NOT_YET_SET;
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.SINGLE_ITEM;
 
 public class ImperialMass implements UnitOfMeasure {
 
@@ -17,158 +18,351 @@ public class ImperialMass implements UnitOfMeasure {
     private static final int IMPERIAL_MASS_NUMBER_OF_MEASUREMENT_UNITS = 2;
     private static final double UNIT_POUND = BASE_SI_UNIT_MASS * 453.59237;
     private static final double UNIT_OUNCE = UNIT_POUND / 16;
+    private static final double UNIT_OUNCE_DECIMAL = UNIT_OUNCE / 10;
 
     // Keeps track of the last updated measurement
     private static final boolean PACK_MEASUREMENT = false;
     private static final boolean ITEM_MEASUREMENT = true;
     private boolean lastMeasurementUpdated = false;
 
-    // Unit description strings
-    private String typeAsString;
-    private String subTypeAsString;
-    private String measurementUnitOneLabel;
-    private String measurementUnitTwoLabel;
-    private String measurementUnitThreeLabel;
+    // Unit description string resource ID's
+    private int typeStringResourceId;
+    private int subTypeStringResourceId;
+    private int unitOneLabelStringResourceId;
+    private int unitTwoLabelStringResourceId;
+    private int unitThreeLabelStringResourceId;
 
     // Min and max measurements
-    private double minimumItemSize = UNIT_OUNCE / 10;
-    private double maximumBaseSiMeasurement = (UNIT_OUNCE / 10) / MAX_MASS;
+    private double minimumItemSize = UNIT_OUNCE_DECIMAL;
+    private double maximumBaseSiMeasurement = MAX_MASS / UNIT_OUNCE_DECIMAL;
 
-    private Integer numberOfItemsInPack = SINGLE_ITEM;
-    private double baseSiUnits;
+    private Integer numberOfItems = SINGLE_ITEM;
+    private double itemSizeInBaseSiUnits = minimumItemSize;
+    private double baseSiUnits = 0;
     private Integer packMeasurementInPounds = 0;
-    private Integer packMeasurementInOunces = 0;
+    private double packMeasurementInOunces = 0;
     private Integer itemMeasurementInPounds = 0;
-    private Integer itemMeasurementInOunces = 0;
+    private double itemMeasurementInOunces = 0;
 
-    ImperialMass(Context context) {
+    ImperialMass() {
 
-        typeAsString = context.getResources().getString(R.string.mass);
-        subTypeAsString = context.getResources().getString(R.string.sub_type_imperial_mass);
-        measurementUnitTwoLabel = context.getResources().getString(R.string.pounds);
-        measurementUnitOneLabel = context.getResources().getString(R.string.ounces);
-        measurementUnitThreeLabel = "";
-    }
-
-    @Override
-    public String getMeasurementTypeAsString() {
-        return typeAsString;
-    }
-
-    @Override
-    public MeasurementType getMeasurementType() {
-        return MeasurementType.TYPE_MASS;
-    }
-
-    @Override
-    public String getMeasurementSubTypeAsString() {
-        return null;
-    }
-
-    @Override
-    public MeasurementSubType getMeasurementSubType() {
-        return MeasurementSubType.TYPE_IMPERIAL_MASS;
+        typeStringResourceId = R.string.mass;
+        subTypeStringResourceId = R.string.sub_type_imperial_mass;
+        unitTwoLabelStringResourceId = R.string.pounds;
+        unitOneLabelStringResourceId = R.string.ounces;
+        unitThreeLabelStringResourceId = R.string.empty_string;
     }
 
     @Override
     public int getNumberOfMeasurementUnits() {
+
         return IMPERIAL_MASS_NUMBER_OF_MEASUREMENT_UNITS;
     }
 
     @Override
-    public String getMeasurementUnitOneLabel() {
-        return measurementUnitOneLabel;
+    public int getTypeStringResourceId() {
+
+        return typeStringResourceId;
     }
 
     @Override
-    public String getMeasurementUnitTwoLabel() {
-        return measurementUnitTwoLabel;
+    public MeasurementType getMeasurementType() {
+
+        return MeasurementType.TYPE_MASS;
     }
 
     @Override
-    public String getMeasurementUnitThreeLabel() {
-        return measurementUnitThreeLabel;
-    }
+    public int getSubTypeStringResourceId() {
 
-    private double convertToBaseSiUnits(ProductMeasurementModel productMeasurementModelToConvert) {
-
-        double ouncesToGrams = productMeasurementModelToConvert.getPackMeasurementOneAsDecimal() * UNIT_OUNCE;
-        double poundsToGrams = productMeasurementModelToConvert.getPackMeasurementTwo() * UNIT_POUND;
-
-        return poundsToGrams + ouncesToGrams;
+        return subTypeStringResourceId;
     }
 
     @Override
-    public int getNumberOfItems() {
-        Log.d(TAG, "zyx - getNumberOfItems: banana");
-        return numberOfItemsInPack;
-    }
+    public MeasurementSubType getMeasurementSubType() {
 
-    @Override
-    public boolean numberOfItemsAreSet(int numberOfItems) {
-
-        // TODO - When setting number of items, check the size / measurements (if available) do not
-        // TODO - exceed MAX
-        if (numberOfItems > SINGLE_ITEM &&
-                numberOfItems <= MULTI_PACK_MAXIMUM_NO_OF_ITEMS) {
-
-            this.numberOfItemsInPack = numberOfItems;
-            setItemMeasurement(numberOfItemsInPack);
-            Log.d(TAG, "zyx - numberOfItemsAreSet: banana" + numberOfItemsInPack);
-            return true;
-        }
-        return false;
+        return MeasurementSubType.TYPE_IMPERIAL_MASS;
     }
 
     @Override
     public double getBaseSiUnits() {
+
         return baseSiUnits;
     }
 
     @Override
     public boolean baseSiUnitsAreSet(double baseSiUnits) {
 
-        if (numberOfItemsInPack > 1) {
+        if (baseSiUnitsAreWithinBounds(baseSiUnits)) {
 
-            if (baseSiUnits <= MAX_MASS && baseSiUnits >= UNIT_OUNCE * numberOfItemsInPack) {
+            this.baseSiUnits = baseSiUnits;
+            setNewPackMeasurements();
+            setNewItemMeasurements();
 
-                this.baseSiUnits = baseSiUnits;
-                setPackMeasurement();
-                setItemMeasurement(numberOfItemsInPack);
-                packMeasurementInPounds = (int) (this.baseSiUnits / UNIT_POUND);
-                packMeasurementInOunces = (int) (this.baseSiUnits % UNIT_POUND / UNIT_OUNCE);
-                return true;
-            }
+            return true;
+
 
         }
         return false;
     }
 
-    private void setPackMeasurement() {
+    private boolean baseSiUnitsAreWithinBounds(double baseSiUnits) {
 
-        packMeasurementInOunces = getMeasurementInOunces(baseSiUnits);
+        return baseSiUnitsDoNotMakeItemSmallerThanSmallestUnit(baseSiUnits) &&
+                baseSiUnitsAreWithinMaxMass(baseSiUnits);
+    }
+
+    private boolean baseSiUnitsDoNotMakeItemSmallerThanSmallestUnit(double baseSiUnits) {
+
+        return baseSiUnits >= UNIT_OUNCE_DECIMAL * numberOfItems;
+    }
+
+    private boolean baseSiUnitsAreWithinMaxMass(double baseSiUnits) {
+
+        return baseSiUnits <= maximumBaseSiMeasurement;
+    }
+
+    private void setNewPackMeasurements() {
+
         packMeasurementInPounds = getMeasurementInPounds(baseSiUnits);
+        packMeasurementInOunces = getMeasurementInOunces(baseSiUnits);
     }
 
-    private boolean setItemMeasurement(int numberOfItemsInPack) {
+    private void setNewItemMeasurements() {
 
-        // TODO - validate
-        double itemSizeInBaseUnits = baseSiUnits / numberOfItemsInPack;
-
-        if (itemSizeInBaseUnits < UNIT_OUNCE) return false;
-
-        itemMeasurementInOunces = getMeasurementInOunces(itemSizeInBaseUnits);
-        itemMeasurementInPounds = getMeasurementInPounds(itemSizeInBaseUnits);
-
-        return true;
+        itemSizeInBaseSiUnits = baseSiUnits / numberOfItems;
+        itemMeasurementInOunces = getMeasurementInOunces(itemSizeInBaseSiUnits);
+        itemMeasurementInPounds = getMeasurementInPounds(itemSizeInBaseSiUnits);
     }
 
-    private int getMeasurementInOunces(double baseSiUnits) {
-        return (int) (baseSiUnits % UNIT_POUND / UNIT_OUNCE);
+    private double getMeasurementInOunces(double baseSiUnits) {
+
+        double poundsInBasSi = getMeasurementInPounds(baseSiUnits) * UNIT_POUND;
+        double ouncesInBaseSi = baseSiUnits - poundsInBasSi;
+
+        return ouncesInBaseSi / UNIT_OUNCE;
     }
 
     private int getMeasurementInPounds(double baseSiUnits) {
+
         return (int) (baseSiUnits / UNIT_POUND);
+    }
+
+    @Override
+    public int getNumberOfItems() {
+
+        return numberOfItems;
+    }
+
+    @Override
+    public boolean numberOfItemsAreSet(int numberOfItems) {
+
+        if (numberOfItemsInPackAreWithinBounds(numberOfItems)) {
+
+            if (baseSiUnits == NOT_YET_SET) {
+
+                this.numberOfItems = numberOfItems;
+
+                return true;
+
+            } else {
+
+                if (lastMeasurementUpdated == PACK_MEASUREMENT) {
+
+                    if (itemSizeNotLessThanSmallestUnit(numberOfItems)) {
+
+                        setItemsInPackByAdjustingItemSize(numberOfItems);
+
+                        return true;
+                    }
+
+                } else if (lastMeasurementUpdated == ITEM_MEASUREMENT) {
+
+                    if (itemSizeMultipliedByNumberOfItemsDoNotExceedMaxMass(numberOfItems)) {
+
+                        setItemsInPackByAdjustingPackSize(numberOfItems);
+
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean numberOfItemsInPackAreWithinBounds(int numberOfItems) {
+
+        return numberOfItems >= SINGLE_ITEM && numberOfItems <= MULTI_PACK_MAXIMUM_NO_OF_ITEMS;
+    }
+
+    private boolean itemSizeNotLessThanSmallestUnit(int numberOfItems) {
+
+        return baseSiUnits / numberOfItems >= minimumItemSize;
+    }
+
+    private void setItemsInPackByAdjustingItemSize(int numberOfItems) {
+
+        this.numberOfItems = numberOfItems;
+        baseSiUnitsAreSet(itemSizeInBaseSiUnits * numberOfItems);
+    }
+
+    private boolean itemSizeMultipliedByNumberOfItemsDoNotExceedMaxMass(int numberOfItems) {
+
+        return itemSizeInBaseSiUnits * numberOfItems <= MAX_MASS;
+    }
+
+    private void setItemsInPackByAdjustingPackSize(int numberOfItems) {
+
+        this.numberOfItems = numberOfItems;
+        baseSiUnitsAreSet(itemSizeInBaseSiUnits * numberOfItems);
+    }
+
+    @Override
+    public int getUnitOneLabelStringResourceId() {
+
+        return unitOneLabelStringResourceId;
+    }
+
+    @Override
+    public double getPackMeasurementOne() {
+
+        return Math.floor(packMeasurementInOunces * 10) / 10;
+    }
+
+    @Override
+    public boolean packMeasurementOneIsSet(double packMeasurementOne) {
+
+        if (baseSiUnitsAreSet(baseSiUnitsWithPackMeasurementOne(packMeasurementOne))) {
+
+            lastMeasurementUpdated = PACK_MEASUREMENT;
+            return true;
+
+        } else baseSiUnitsAreSet(baseSiUnitsWithPackMeasurementOne(0.));
+
+        return false;
+    }
+
+    private double baseSiUnitsWithPackMeasurementOne(double packMeasurementOne) {
+
+        return (packMeasurementInPounds * UNIT_POUND) + (packMeasurementOne * UNIT_OUNCE);
+    }
+
+    @Override
+    public double getItemMeasurementOne() {
+
+        return Math.floor(itemMeasurementInOunces * 10) / 10;
+    }
+
+    @Override
+    public boolean itemMeasurementOneIsSet(double itemMeasurementOne) {
+
+        if (baseSiUnitsAreSet(baseSiUnitsWithItemMeasurementOne(itemMeasurementOne))) {
+
+            lastMeasurementUpdated = ITEM_MEASUREMENT;
+            return true;
+
+        } else baseSiUnitsAreSet(baseSiUnitsWithItemMeasurementOne(0.));
+
+        return false;
+    }
+
+    private double baseSiUnitsWithItemMeasurementOne(double itemMeasurementOne) {
+
+        return (packMeasurementInPounds * UNIT_POUND) +
+                (itemMeasurementOne * numberOfItems * UNIT_OUNCE);
+    }
+
+    @Override
+    public int getUnitTwoLabelStringResourceId() {
+        return unitTwoLabelStringResourceId;
+    }
+
+    @Override
+    public int getPackMeasurementTwo() {
+
+        return packMeasurementInPounds;
+    }
+
+    @Override
+    public boolean packMeasurementTwoIsSet(int packMeasurementTwo) {
+
+        if (baseSiUnitsAreSet(baseSiUnitsWithPackMeasurementTwo(packMeasurementTwo))) {
+
+            lastMeasurementUpdated = PACK_MEASUREMENT;
+            return true;
+
+        } else baseSiUnitsAreSet(baseSiUnitsWithPackMeasurementTwo(0));
+
+        return false;
+    }
+
+    private double baseSiUnitsWithPackMeasurementTwo(int packMeasurementTwo) {
+
+        return (packMeasurementTwo * UNIT_POUND) + (packMeasurementInOunces * UNIT_OUNCE);
+    }
+
+    @Override
+    public int getItemMeasurementTwo() {
+
+        return itemMeasurementInPounds;
+    }
+
+    @Override
+    public boolean itemMeasurementTwoIsSet(int itemMeasurementTwo) {
+
+        if (baseSiUnitsAreSet(baseSiUnitsWithItemMeasurementTwo(itemMeasurementTwo))) {
+
+            lastMeasurementUpdated = ITEM_MEASUREMENT;
+
+            return true;
+
+        } else baseSiUnitsAreSet(baseSiUnitsWithItemMeasurementTwo(0));
+
+        return false;
+    }
+
+    private double baseSiUnitsWithItemMeasurementTwo(int itemMeasurementTwo) {
+
+        return (itemMeasurementTwo * UNIT_POUND * numberOfItems) +
+                (packMeasurementInOunces * UNIT_OUNCE);
+    }
+
+    @Override
+    public int getUnitThreeLabelStringResourceId() {
+
+        return unitThreeLabelStringResourceId;
+    }
+
+    @Override
+    public int getPackMeasurementThree() {
+        return 0;
+    }
+
+    @Override
+    public boolean packMeasurementThreeIsSet(int packMeasurementThree) {
+        return false;
+    }
+
+    @Override
+    public int getItemMeasurementThree() {
+        return 0;
+    }
+
+    @Override
+    public boolean itemMeasurementThreeIsSet(int itemMeasurementThree) {
+        return false;
+    }
+
+    @Override
+    public int[] getMeasurementError() {
+
+        return new int[]{
+
+                getTypeStringResourceId(),
+                (int) (maximumBaseSiMeasurement / UNIT_POUND),
+                getUnitTwoLabelStringResourceId(),
+                getUnitOneLabelStringResourceId(),
+                (int) (minimumItemSize),
+                getUnitOneLabelStringResourceId()};
     }
 
     @Override
@@ -197,87 +391,5 @@ public class ImperialMass implements UnitOfMeasure {
 //        inputFilterFormat[MeasurementUnits.OUNCES.getIntValue()] = ounceDigits;
 
         return digitFilters;
-    }
-
-    @Override
-    public double getPackMeasurementOne() {
-        return packMeasurementInOunces;
-    }
-
-    @Override
-    public boolean packMeasurementOneIsSet(double packMeasurementOne) {
-
-        return false;
-    }
-
-    @Override
-    public int getPackMeasurementTwo() {
-        return packMeasurementInPounds;
-    }
-
-    @Override
-    public boolean packMeasurementTwoIsSet(int packMeasurementTwo) {
-
-        ProductMeasurementModel productMeasurementModel = new ProductMeasurementModel();
-        productMeasurementModel.setPackMeasurementOneAsDecimal(packMeasurementInOunces);
-        productMeasurementModel.setPackMeasurementTwo(packMeasurementTwo);
-
-        return baseSiUnitsAreSet(convertToBaseSiUnits(productMeasurementModel));
-    }
-
-    @Override
-    public int getPackMeasurementThree() {
-        return 0;
-    }
-
-    @Override
-    public boolean packMeasurementThreeIsSet(int packMeasurementThree) {
-        return false;
-    }
-
-    @Override
-    public double getItemMeasurementOne() {
-        return itemMeasurementInOunces;
-    }
-
-    @Override
-    public boolean itemMeasurementOneIsSet(double itemMeasurementOne) {
-
-        return false;
-    }
-
-    @Override
-    public int getItemMeasurementTwo() {
-        return itemMeasurementInPounds;
-    }
-
-    @Override
-    public boolean itemMeasurementTwoIsSet(int itemMeasurementTwo) {
-
-        ProductMeasurementModel productMeasurementModel = new ProductMeasurementModel();
-        productMeasurementModel.setPackMeasurementOneAsDecimal(itemMeasurementInOunces * numberOfItemsInPack);
-        productMeasurementModel.setPackMeasurementTwo(itemMeasurementInPounds * numberOfItemsInPack);
-
-        return baseSiUnitsAreSet(convertToBaseSiUnits(productMeasurementModel));
-    }
-
-    @Override
-    public int getItemMeasurementThree() {
-        return 0;
-    }
-
-    @Override
-    public boolean itemMeasurementThreeIsSet(int itemMeasurementThree) {
-        return false;
-    }
-
-    @Override
-    public String[] getMeasurementError() {
-        return new String[0];
-    }
-
-    @Override
-    public void resetNumericValues() {
-
     }
 }

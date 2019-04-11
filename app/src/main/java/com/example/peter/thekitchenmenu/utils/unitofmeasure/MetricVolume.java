@@ -25,7 +25,7 @@ public class MetricVolume implements UnitOfMeasure {
     }
 
     @Override
-    public String getMeasurementTypeAsString() {
+    public String getTypeStringResourceId() {
         return null;
     }
 
@@ -35,7 +35,7 @@ public class MetricVolume implements UnitOfMeasure {
     }
 
     @Override
-    public String getMeasurementSubTypeAsString() {
+    public String getSubTypeStringResourceId() {
         return null;
     }
 
@@ -50,17 +50,17 @@ public class MetricVolume implements UnitOfMeasure {
     }
 
     @Override
-    public String getMeasurementUnitOneLabel() {
+    public String getUnitOneLabelStringResourceId() {
         return null;
     }
 
     @Override
-    public String getMeasurementUnitTwoLabel() {
+    public String getUnitTwoLabelStringResourceId() {
         return null;
     }
 
     @Override
-    public String getMeasurementUnitThreeLabel() {
+    public String getUnitThreeLabelStringResourceId() {
         return null;
     }
 

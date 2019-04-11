@@ -34,7 +34,7 @@ public class Count implements UnitOfMeasure {
     }
 
     @Override
-    public String getMeasurementTypeAsString() {
+    public String getTypeStringResourceId() {
         return type;
     }
 
@@ -44,7 +44,7 @@ public class Count implements UnitOfMeasure {
     }
 
     @Override
-    public String getMeasurementSubTypeAsString() {
+    public String getSubTypeStringResourceId() {
         return null;
     }
 
@@ -59,17 +59,17 @@ public class Count implements UnitOfMeasure {
     }
 
     @Override
-    public String getMeasurementUnitOneLabel() {
+    public String getUnitOneLabelStringResourceId() {
         return unitCount;
     }
 
     @Override
-    public String getMeasurementUnitTwoLabel() {
+    public String getUnitTwoLabelStringResourceId() {
         return measurementUnitTwo;
     }
 
     @Override
-    public String getMeasurementUnitThreeLabel() {
+    public String getUnitThreeLabelStringResourceId() {
         return measurementUnitThree;
     }
 

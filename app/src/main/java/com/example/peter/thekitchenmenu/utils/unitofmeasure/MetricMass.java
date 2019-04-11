@@ -1,15 +1,11 @@
 package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
-import android.content.Context;
-import android.content.res.Resources;
 import android.util.Log;
 
 import com.example.peter.thekitchenmenu.R;
 
-import java.math.BigDecimal;
 import java.util.Arrays;
 
-import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
 
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.*;
@@ -28,12 +24,12 @@ public class MetricMass implements UnitOfMeasure {
     private static final boolean ITEM_MEASUREMENT = true;
     private boolean lastMeasurementUpdated = false;
 
-    // Unit description strings
-    private String typeAsString;
-    private String subTypeAsString;
-    private String measurementUnitOneLabel;
-    private String measurementUnitTwoLabel;
-    private String measurementUnitThreeLabel;
+    // Unit description string resource ID's
+    private int typeStringResourceId;
+    private int subTypeStringResourceId;
+    private int unitOneLabelStringResourceId;
+    private int unitTwoLabelStringResourceId;
+    private int unitThreeLabelStringResourceId;
 
     // Min and max measurements
     private double minimumItemSize = UNIT_GRAM;
@@ -49,14 +45,13 @@ public class MetricMass implements UnitOfMeasure {
     private double itemMeasurementInGrams = 0.;
 
 
-    public MetricMass(Context context) {
+    public MetricMass() {
 
-        Resources resources = context.getResources();
-        typeAsString = resources.getString(R.string.mass);
-        subTypeAsString = resources.getString(R.string.sub_type_metric_mass);
-        measurementUnitOneLabel = resources.getString(R.string.grams);
-        measurementUnitTwoLabel = resources.getString(R.string.kilograms);
-        measurementUnitThreeLabel = "";
+        typeStringResourceId = R.string.mass;
+        subTypeStringResourceId = R.string.sub_type_metric_mass;
+        unitOneLabelStringResourceId = R.string.grams;
+        unitTwoLabelStringResourceId = R.string.kilograms;
+        unitThreeLabelStringResourceId = R.string.empty_string;
     }
 
     @Override
@@ -66,20 +61,21 @@ public class MetricMass implements UnitOfMeasure {
     }
 
     @Override
-    public String getMeasurementTypeAsString() {
+    public int getTypeStringResourceId() {
 
-        return typeAsString;
+        return typeStringResourceId;
     }
 
     @Override
     public MeasurementType getMeasurementType() {
+
         return MeasurementType.TYPE_MASS;
     }
 
     @Override
-    public String getMeasurementSubTypeAsString() {
+    public int getSubTypeStringResourceId() {
 
-        return subTypeAsString;
+        return subTypeStringResourceId;
     }
 
     @Override
@@ -105,7 +101,8 @@ public class MetricMass implements UnitOfMeasure {
 
             return true;
 
-        }
+        } else if (baseSiUnits == 0.) this.baseSiUnits = 0.; // allows for a reset
+
         return false;
     }
 
@@ -131,10 +128,14 @@ public class MetricMass implements UnitOfMeasure {
         packMeasurementInKilograms = getMeasurementInKilograms(baseSiUnits);
     }
 
-    private double getMeasurementInGrams(double baseSiUnits) {
+    private void setItemMeasurements() {
 
-        // TODO - Check to see if this needs to be converted to an integer
-//        int grams = (int) (baseSiUnits % UNIT_KILOGRAM);
+        itemSizeInBaseSiUnits = baseSiUnits / numberOfItems;
+        itemMeasurementInGrams = getMeasurementInGrams(itemSizeInBaseSiUnits);
+        itemMeasurementInKilograms = getMeasurementInKilograms(itemSizeInBaseSiUnits);
+    }
+
+    private double getMeasurementInGrams(double baseSiUnits) {
 
         return baseSiUnits % UNIT_KILOGRAM;
     }
@@ -144,13 +145,6 @@ public class MetricMass implements UnitOfMeasure {
         return (int) (baseSiUnits / UNIT_KILOGRAM);
     }
 
-    private void setItemMeasurements() {
-
-        itemSizeInBaseSiUnits = baseSiUnits / numberOfItems;
-        itemMeasurementInGrams = getMeasurementInGrams(itemSizeInBaseSiUnits);
-        itemMeasurementInKilograms = getMeasurementInKilograms(itemSizeInBaseSiUnits);
-    }
-
     @Override
     public int getNumberOfItems() {
 
@@ -158,13 +152,13 @@ public class MetricMass implements UnitOfMeasure {
     }
 
     @Override
-    public boolean numberOfItemsAreSet(int numberOfItemsInPack) {
+    public boolean numberOfItemsAreSet(int numberOfItems) {
 
-        if (numberOfItemsInPackAreWithinBounds(numberOfItemsInPack)) {
+        if (numberOfItemsInPackAreWithinBounds(numberOfItems)) {
 
             if (baseSiUnits == NOT_YET_SET) {
 
-                this.numberOfItems = numberOfItemsInPack;
+                this.numberOfItems = numberOfItems;
 
                 return true;
 
@@ -172,18 +166,18 @@ public class MetricMass implements UnitOfMeasure {
 
                 if (lastMeasurementUpdated == PACK_MEASUREMENT) {
 
-                    if (itemSizeNotLessThanSmallestUnit(numberOfItemsInPack)) {
+                    if (itemSizeNotLessThanSmallestUnit(numberOfItems)) {
 
-                        setItemsInPackByAdjustingItemSize(numberOfItemsInPack);
+                        setItemsInPackByAdjustingItemSize(numberOfItems);
 
                         return true;
                     }
 
                 } else if (lastMeasurementUpdated == ITEM_MEASUREMENT) {
 
-                    if (itemSizeMultipliedByNumberOfItemsDoNotExceedMaxMass(numberOfItemsInPack)) {
+                    if (itemSizeMultipliedByNumberOfItemsDoNotExceedMaxMass(numberOfItems)) {
 
-                        setItemsInPackByAdjustingPackSize(numberOfItemsInPack);
+                        setItemsInPackByAdjustingPackSize(numberOfItems);
 
                         return true;
                     }
@@ -193,15 +187,14 @@ public class MetricMass implements UnitOfMeasure {
         return false;
     }
 
-    private boolean numberOfItemsInPackAreWithinBounds(int numberOfItemsInPack) {
+    private boolean numberOfItemsInPackAreWithinBounds(int numberOfItems) {
 
-        return numberOfItemsInPack >= SINGLE_ITEM &&
-                numberOfItemsInPack <= MULTI_PACK_MAXIMUM_NO_OF_ITEMS;
+        return numberOfItems >= SINGLE_ITEM && numberOfItems <= MULTI_PACK_MAXIMUM_NO_OF_ITEMS;
     }
 
-    private boolean itemSizeNotLessThanSmallestUnit(int numberOfItemsInPack) {
+    private boolean itemSizeNotLessThanSmallestUnit(int numberOfItems) {
 
-        return baseSiUnits / numberOfItemsInPack >= minimumItemSize;
+        return baseSiUnits / numberOfItems >= minimumItemSize;
     }
 
     private void setItemsInPackByAdjustingItemSize(int numberOfItemsInPack) {
@@ -210,21 +203,21 @@ public class MetricMass implements UnitOfMeasure {
         setItemMeasurements();
     }
 
-    private boolean itemSizeMultipliedByNumberOfItemsDoNotExceedMaxMass(int numberOfItemsInPack) {
+    private boolean itemSizeMultipliedByNumberOfItemsDoNotExceedMaxMass(int numberOfItems) {
 
-        return itemSizeInBaseSiUnits * numberOfItemsInPack <= MAX_MASS;
+        return itemSizeInBaseSiUnits * numberOfItems <= MAX_MASS;
     }
 
-    private void setItemsInPackByAdjustingPackSize(int numberOfItemsInPack) {
+    private void setItemsInPackByAdjustingPackSize(int numberOfItems) {
 
-        this.numberOfItems = numberOfItemsInPack;
-        baseSiUnitsAreSet(itemSizeInBaseSiUnits * numberOfItemsInPack);
+        this.numberOfItems = numberOfItems;
+        baseSiUnitsAreSet(itemSizeInBaseSiUnits * numberOfItems);
     }
 
     @Override
-    public String getMeasurementUnitOneLabel() {
+    public int getUnitOneLabelStringResourceId() {
 
-        return measurementUnitOneLabel;
+        return unitOneLabelStringResourceId;
     }
 
     @Override
@@ -240,7 +233,9 @@ public class MetricMass implements UnitOfMeasure {
 
             lastMeasurementUpdated = PACK_MEASUREMENT;
             return true;
-        }
+
+        } else baseSiUnitsAreSet(baseSiUnitsWithPackMeasurementOne(0.));
+
         return false;
     }
 
@@ -262,7 +257,9 @@ public class MetricMass implements UnitOfMeasure {
 
             lastMeasurementUpdated = ITEM_MEASUREMENT;
             return true;
-        }
+
+        } else baseSiUnitsAreSet(baseSiUnitsWithItemMeasurementOne(0.));
+
         return false;
     }
 
@@ -272,9 +269,9 @@ public class MetricMass implements UnitOfMeasure {
     }
 
     @Override
-    public String getMeasurementUnitTwoLabel() {
+    public int getUnitTwoLabelStringResourceId() {
 
-        return measurementUnitTwoLabel;
+        return unitTwoLabelStringResourceId;
     }
 
     @Override
@@ -291,7 +288,9 @@ public class MetricMass implements UnitOfMeasure {
             lastMeasurementUpdated = PACK_MEASUREMENT;
 
             return true;
-        }
+
+        } else baseSiUnitsAreSet(baseSiUnitsWithPackMeasurementTwo(0));
+
         return false;
     }
 
@@ -314,7 +313,8 @@ public class MetricMass implements UnitOfMeasure {
             lastMeasurementUpdated = ITEM_MEASUREMENT;
 
             return true;
-        }
+
+        } else baseSiUnitsAreSet(baseSiUnitsWithItemMeasurementTwo(0));
 
         return false;
     }
@@ -325,45 +325,42 @@ public class MetricMass implements UnitOfMeasure {
     }
 
     @Override
-    public String getMeasurementUnitThreeLabel() {
+    public int getUnitThreeLabelStringResourceId() {
 
-        return measurementUnitThreeLabel;
+        return unitThreeLabelStringResourceId;
     }
 
     @Override
     public int getPackMeasurementThree() {
-
         return 0;
     }
 
     @Override
     public boolean packMeasurementThreeIsSet(int packMeasurementThree) {
-
         return false;
     }
 
     @Override
     public int getItemMeasurementThree() {
-
         return 0;
     }
 
     @Override
     public boolean itemMeasurementThreeIsSet(int itemMeasurementThree) {
-
         return false;
     }
 
     @Override
-    public String[] getMeasurementError() {
+    public int[] getMeasurementError() {
 
-        return new String[]{
+        return new int[]{
 
-                getMeasurementTypeAsString(),
-                String.valueOf((int) maximumBaseSiMeasurement / UNIT_KILOGRAM),
-                getMeasurementUnitTwoLabel(),
-                getMeasurementUnitOneLabel(), String.valueOf((int) minimumItemSize),
-                getMeasurementUnitOneLabel()};
+                getTypeStringResourceId(),
+                (int) (maximumBaseSiMeasurement / UNIT_KILOGRAM),
+                getUnitTwoLabelStringResourceId(),
+                getUnitOneLabelStringResourceId(),
+                (int) (minimumItemSize),
+                getUnitOneLabelStringResourceId()};
     }
 
     @Override
@@ -391,34 +388,5 @@ public class MetricMass implements UnitOfMeasure {
         Log.d(TAG, "zyx - getInputDigitsFilter: Filter is: " + Arrays.toString(digitFilters));
 
         return digitFilters;
-    }
-
-    @Override
-    public void resetNumericValues() {
-
-        baseSiUnits = 0;
-        numberOfItems = 0;
-        packMeasurementInKilograms = 0;
-        packMeasurementInGrams = 0;
-        itemMeasurementInKilograms = 0;
-        itemMeasurementInGrams = 0;
-    }
-
-    @NonNull
-    @Override
-    public String toString() {
-        return "MetricMass{" +
-                "\ntype='" + typeAsString + '\'' +
-                "\n, subType='" + subTypeAsString + '\'' +
-                "\n, measurementUnitOneLabel='" + measurementUnitOneLabel + '\'' +
-                "\n, measurementUnitTwoLabel='" + measurementUnitTwoLabel + '\'' +
-                "\n, measurementUnitThreeLabel'" + measurementUnitThreeLabel + '\'' +
-                "\n, numberOfItems=" + numberOfItems +
-                "\n, baseSiUnits=" + baseSiUnits +
-                "\n, packMeasurementInKilograms=" + packMeasurementInKilograms +
-                "\n, packMeasurementInGrams=" + packMeasurementInGrams +
-                "\n, itemMeasurementInKilograms=" + itemMeasurementInKilograms +
-                "\n, itemMeasurementInGrams=" + itemMeasurementInGrams +
-                '}';
     }
 }

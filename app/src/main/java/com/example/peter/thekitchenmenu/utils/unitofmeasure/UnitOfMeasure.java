@@ -4,10 +4,10 @@ import androidx.core.util.Pair;
 
 public interface UnitOfMeasure {
 
-    String getMeasurementTypeAsString();
+    int getTypeStringResourceId();
     MeasurementType getMeasurementType();
 
-    String getMeasurementSubTypeAsString();
+    int getSubTypeStringResourceId();
     MeasurementSubType getMeasurementSubType();
 
     double getBaseSiUnits();
@@ -18,27 +18,25 @@ public interface UnitOfMeasure {
 
     int getNumberOfMeasurementUnits();
 
-    String getMeasurementUnitOneLabel();
+    int getUnitOneLabelStringResourceId();
     double getPackMeasurementOne();
     boolean packMeasurementOneIsSet(double packMeasurementOne);
     double getItemMeasurementOne();
     boolean itemMeasurementOneIsSet(double itemMeasurementOne);
 
-    String getMeasurementUnitTwoLabel();
+    int getUnitTwoLabelStringResourceId();
     int getPackMeasurementTwo();
     boolean packMeasurementTwoIsSet(int packMeasurementTwo);
     int getItemMeasurementTwo();
     boolean itemMeasurementTwoIsSet(int itemMeasurementTwo);
 
-    String getMeasurementUnitThreeLabel();
+    int getUnitThreeLabelStringResourceId();
     int getPackMeasurementThree();
     boolean packMeasurementThreeIsSet(int packMeasurementThree);
     int getItemMeasurementThree();
     boolean itemMeasurementThreeIsSet(int itemMeasurementThree);
 
-    String[] getMeasurementError();
+    int[] getMeasurementError();
 
     Pair[] getInputDigitsFilter();
-
-    void resetNumericValues();
 }
