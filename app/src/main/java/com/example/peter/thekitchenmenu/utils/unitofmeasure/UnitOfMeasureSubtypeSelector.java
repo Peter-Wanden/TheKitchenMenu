@@ -1,30 +1,28 @@
 package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
-import android.content.Context;
-
 public abstract class UnitOfMeasureSubtypeSelector {
 
-    public static UnitOfMeasure getClassWithSubType(Context context, MeasurementSubType subType) {
+    public static UnitOfMeasure getClassWithSubType(MeasurementSubType subType) {
 
         switch (subType) {
             case TYPE_METRIC_MASS:
-                return new MetricMass(context);
+                return new MetricMass();
 
             case TYPE_IMPERIAL_MASS:
-                return new ImperialMass(context);
+                return new ImperialMass();
 
             case TYPE_METRIC_VOLUME:
-                return new MetricVolume(context);
+                return new MetricVolume();
 
             case TYPE_IMPERIAL_VOLUME:
-                return new ImperialVolume(context);
+                return new ImperialVolume();
 
             case TYPE_COUNT:
-                return new Count(context);
+                return new Count();
 
             default:
-                // TODO - default cannot return null
-                return new Count(context);
+                // default cannot return null
+                return new Count();
         }
     }
 }

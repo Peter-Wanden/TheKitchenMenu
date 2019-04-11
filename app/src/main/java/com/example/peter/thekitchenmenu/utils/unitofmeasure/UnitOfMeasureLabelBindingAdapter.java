@@ -1,6 +1,7 @@
 package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.view.View;
 import android.widget.TextView;
 
@@ -31,10 +32,8 @@ public class UnitOfMeasureLabelBindingAdapter {
                                         MeasurementSubType subType,
                                         boolean isMultiPack) {
 
-        Context context = textView.getContext();
-
         UnitOfMeasure unitOfMeasure = UnitOfMeasureSubtypeSelector.
-                getClassWithSubType(context, subType);
+                getClassWithSubType(subType);
 
         int units = unitOfMeasure.getNumberOfMeasurementUnits();
         int viewId = textView.getId();
@@ -61,14 +60,20 @@ public class UnitOfMeasureLabelBindingAdapter {
 
     private static void setPackSizeLabel(TextView textView, UnitOfMeasure unitOfMeasure) {
 
+        Resources resources = textView.getResources();
+
         textView.setText(textView.getContext().getString(
-                R.string.pack_size_label, unitOfMeasure.getTypeStringResourceId()));
+                R.string.pack_size_label,
+                resources.getString(unitOfMeasure.getTypeStringResourceId())));
     }
 
     private static void setItemSizeLabel(TextView textView, UnitOfMeasure unitOfMeasure) {
 
+        Resources resources = textView.getResources();
+
         textView.setText(textView.getContext().getString(
-                R.string.item_size_label, unitOfMeasure.getTypeStringResourceId()));
+                R.string.item_size_label,
+                resources.getString(unitOfMeasure.getTypeStringResourceId())));
     }
 
     private static void setMeasurementUnitLabels(TextView textView, UnitOfMeasure unitOfMeasure) {

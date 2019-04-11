@@ -1,7 +1,5 @@
 package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
-import android.content.Context;
-
 import androidx.core.util.Pair;
 
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.BASE_SI_UNIT_VOLUME;
@@ -16,13 +14,13 @@ public class ImperialVolume implements UnitOfMeasure {
 
     private int numberOfItems = SINGLE_ITEM;
 
-    ImperialVolume(Context context) {
+    ImperialVolume() {
 
     }
 
     @Override
-    public String getTypeStringResourceId() {
-        return null;
+    public int getTypeStringResourceId() {
+        return 0;
     }
 
     @Override
@@ -31,8 +29,8 @@ public class ImperialVolume implements UnitOfMeasure {
     }
 
     @Override
-    public String getSubTypeStringResourceId() {
-        return null;
+    public int getSubTypeStringResourceId() {
+        return 0;
     }
 
     @Override
@@ -46,18 +44,18 @@ public class ImperialVolume implements UnitOfMeasure {
     }
 
     @Override
-    public String getUnitOneLabelStringResourceId() {
-        return null;
+    public int getUnitOneLabelStringResourceId() {
+        return 0;
     }
 
     @Override
-    public String getUnitTwoLabelStringResourceId() {
-        return null;
+    public int getUnitTwoLabelStringResourceId() {
+        return 0;
     }
 
     @Override
-    public String getUnitThreeLabelStringResourceId() {
-        return null;
+    public int getUnitThreeLabelStringResourceId() {
+        return 0;
     }
 
     @Override
@@ -155,12 +153,7 @@ public class ImperialVolume implements UnitOfMeasure {
     }
 
     @Override
-    public String[] getMeasurementError() {
-        return new String[0];
-    }
-
-    @Override
-    public void resetNumericValues() {
-
+    public int[] getMeasurementError() {
+        return new int[0];
     }
 }

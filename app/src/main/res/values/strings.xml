@@ -131,7 +131,8 @@
     <string name="input_error_product_pack_size">Pack size needs to be between 1g and 10kg</string>
     <string name="max_mass_exceeded_error">Weight must be under %1$.0f %2$s</string>
 
-    <string name="input_error_pack_size">Total pack %1$s must not exceed %2$s %3$s. Pack %1$s must be between %4$s %5$s and %2$s %3$s. Minimum item %1$s is %4$s %5$s.</string>
+    <string name="input_error_pack_size">Total pack %1$s must not exceed %2$s%3$s. Pack %1$s
+        must be between %4$s%5$s and %2$s%3$s. Minimum item %1$s is %4$s%5$s.</string>
 
     <string name="input_error_product_loc_room_too_short">Storage room name too short, needs to be
         between 1 and 60 characters.</string>

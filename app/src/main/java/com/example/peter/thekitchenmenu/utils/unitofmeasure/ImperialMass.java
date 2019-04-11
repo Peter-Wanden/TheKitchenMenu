@@ -1,7 +1,10 @@
 package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
+import android.util.Log;
+
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
+
+import java.util.Arrays;
 
 import androidx.core.util.Pair;
 
@@ -368,28 +371,26 @@ public class ImperialMass implements UnitOfMeasure {
     @Override
     public Pair[] getInputDigitsFilter() {
 
+        int maxPoundValue = (int) (MAX_MASS / UNIT_POUND);
 
-//        double maxOunceValue = maxValues.getPackMeasurementOne();
-//        int maxPoundValue = maxValues.getPackMeasurementTwo();
-//
-//
-//        int poundDigits = 0;
-//        while (maxPoundValue > 0) {
-//            poundDigits++;
-//            maxPoundValue = maxPoundValue / 10;
-//        }
-//
-//        int ounceDigits = 0;
-//        while (maxOunceValue > 0) {
-//            ounceDigits++;
-//            maxOunceValue = maxOunceValue / 10;
-//        }
-//
-        Pair[] digitFilters = new Pair[3];
-//
-//        inputFilterFormat[MeasurementUnits.POUNDS.getIntValue()] = poundDigits;
-//        inputFilterFormat[MeasurementUnits.OUNCES.getIntValue()] = ounceDigits;
+        int poundDigits = 0;
+        while (maxPoundValue > 0) {
+            poundDigits++;
+            maxPoundValue = maxPoundValue / 10;
+        }
 
-        return digitFilters;
+        Pair<Integer, Integer> unitOneDigitsFormat = new Pair<>(2, 1);
+        Pair<Integer, Integer> unitTwoDigitsFormat = new Pair<>(poundDigits, 0);
+        Pair<Integer, Integer> unitThreeDigitsFormat = new Pair<>(0, 0);
+
+        Pair[] digitFormats = new Pair[3];
+
+        digitFormats[0] = unitOneDigitsFormat;
+        digitFormats[1] = unitTwoDigitsFormat;
+        digitFormats[2] = unitThreeDigitsFormat;
+
+        Log.d(TAG, "zyx - getInputDigitsFilter: Filter is: " + Arrays.toString(digitFormats));
+
+        return digitFormats;
     }
 }

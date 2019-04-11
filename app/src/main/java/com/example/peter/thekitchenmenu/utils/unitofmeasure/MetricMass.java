@@ -358,29 +358,28 @@ public class MetricMass implements UnitOfMeasure {
                 getTypeStringResourceId(),
                 (int) (maximumBaseSiMeasurement / UNIT_KILOGRAM),
                 getUnitTwoLabelStringResourceId(),
-                getUnitOneLabelStringResourceId(),
                 (int) (minimumItemSize),
                 getUnitOneLabelStringResourceId()};
     }
 
+
     @Override
     public Pair[] getInputDigitsFilter() {
 
-        Pair<Integer, Integer> unitOneDigitsFilter = new Pair<>(3, 0);
-
         int maxKilogramValue = (int) (MAX_MASS / UNIT_KILOGRAM);
-        int kilogramDigits = 0;
 
+        int kilogramDigits = 0;
         while (maxKilogramValue > 0) {
             kilogramDigits++;
             maxKilogramValue = maxKilogramValue / 10;
         }
 
+        Pair<Integer, Integer> unitOneDigitsFilter = new Pair<>(3, 0);
         Pair<Integer, Integer> unitTwoDigitsFilter = new Pair<>(kilogramDigits, 0);
-
         Pair<Integer, Integer> unitThreeDigitsFilter = new Pair<>(0, 0);
 
         Pair[] digitFilters = new Pair[3];
+
         digitFilters[0] = unitOneDigitsFilter;
         digitFilters[1] = unitTwoDigitsFilter;
         digitFilters[2] = unitThreeDigitsFilter;

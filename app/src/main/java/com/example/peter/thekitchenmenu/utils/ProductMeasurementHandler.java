@@ -39,7 +39,7 @@ public class ProductMeasurementHandler {
         resources = applicationContext.getResources();
 
         // Default unit of measure
-        unitOfMeasure = UnitOfMeasureSubtypeSelector.getClassWithSubType(applicationContext,
+        unitOfMeasure = UnitOfMeasureSubtypeSelector.getClassWithSubType(
                 MeasurementSubType.TYPE_METRIC_MASS);
 
         updateMeasurementModel();
@@ -58,8 +58,7 @@ public class ProductMeasurementHandler {
                     "the one i have. Changing it now.");
 
             unitOfMeasure = UnitOfMeasureSubtypeSelector.getClassWithSubType(
-                    applicationContext, MeasurementSubType.values()
-                            [unitOfMeasureSubTypeAsInt]);
+                    MeasurementSubType.values()[unitOfMeasureSubTypeAsInt]);
 
             updateMeasurementModel();
 
@@ -141,9 +140,8 @@ public class ProductMeasurementHandler {
 
     public void validatePackSize(EditText editableMeasurement, MeasurementSubType subType) {
 
-        Context context = editableMeasurement.getContext();
         UnitOfMeasure unitOfMeasure = UnitOfMeasureSubtypeSelector.
-                getClassWithSubType(context, subType);
+                getClassWithSubType(subType);
 
         Pair[] inputDigitsFilters = unitOfMeasure.getInputDigitsFilter();
         int numberOfUnitsAfterDecimal = (int) inputDigitsFilters[0].second;
@@ -424,24 +422,22 @@ public class ProductMeasurementHandler {
 
         // TODO - Add quantity strings (plurals)
         // https://developer.android.com/guide/topics/resources/string-resource.html#Plurals
-        // TODO - Use plurals for this error
         // TODO - If measurement units contain zero values do not show them
         // TODO - Have different errors for 1 to 3 measurement values
 
-        String[] measurementError = unitOfMeasure.getMeasurementError();
+        int[] measurementError = unitOfMeasure.getMeasurementError();
 
         editableMeasurement.setError(
 
                 resources.getString(
 
                         R.string.input_error_pack_size,
-                        measurementError[0],
-                        measurementError[1],
-                        measurementError[2],
-                        measurementError[3],
-                        measurementError[4]
+                        resources.getString(measurementError[0]),
+                        String.valueOf(measurementError[1]),
+                        resources.getString(measurementError[2]),
+                        String.valueOf(measurementError[3]),
+                        resources.getString(measurementError[4])
                 ));
-
 
         Log.d(TAG, "zyx - setErrorTo: Error should be set.");
     }

@@ -1,6 +1,5 @@
 package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
-import android.content.Context;
 import android.text.InputFilter;
 import android.view.View;
 import android.widget.EditText;
@@ -35,10 +34,8 @@ public class UnitOfMeasureEditTextBindingAdapter {
                                    MeasurementSubType subType,
                                    boolean isMultiPack) {
 
-        Context viewContext = editText.getContext();
-
         UnitOfMeasure unitOfMeasure = UnitOfMeasureSubtypeSelector.
-                getClassWithSubType(viewContext, subType);
+                getClassWithSubType(subType);
 
         int viewId = editText.getId();
         int units = unitOfMeasure.getNumberOfMeasurementUnits();

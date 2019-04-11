@@ -1,8 +1,5 @@
 package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
-import android.content.Context;
-import android.content.res.Resources;
-
 import com.example.peter.thekitchenmenu.R;
 
 import androidx.core.util.Pair;
@@ -16,26 +13,27 @@ public class Count implements UnitOfMeasure {
     private static final int COUNT_NUMBER_OF_MEASUREMENT_UNITS = 1;
     private static final double UNIT_COUNT = BASE_UNIT_COUNT;
 
-    private String type;
-    private String subType;
-    private String unitCount;
-    private String measurementUnitTwo = "";
-    private String measurementUnitThree = "";
+    private int typeStringResourceId;
+    private int subTypeStringResourceId;
+    private int unitOneLabelStringResourceId;
+    private int unitTwoLabelStringResourceId;
+    private int unitThreeLabelStringResourceId ;
 
     private int numberOfItems = SINGLE_ITEM;
     private double baseSiUnits = 0;
 
-    public Count(Context context) {
+    public Count() {
 
-        Resources resources = context.getResources();
-        type = resources.getString(R.string.count);
-        subType = resources.getString(R.string.count);
-        unitCount = resources.getString(R.string.each);
+        typeStringResourceId = R.string.count;
+        subTypeStringResourceId = R.string.count;
+        unitOneLabelStringResourceId = R.string.each;
+        unitTwoLabelStringResourceId = R.string.empty_string;
+        unitThreeLabelStringResourceId = R.string.empty_string;
     }
 
     @Override
-    public String getTypeStringResourceId() {
-        return type;
+    public int getTypeStringResourceId() {
+        return 0;
     }
 
     @Override
@@ -44,8 +42,8 @@ public class Count implements UnitOfMeasure {
     }
 
     @Override
-    public String getSubTypeStringResourceId() {
-        return null;
+    public int getSubTypeStringResourceId() {
+        return 0;
     }
 
     @Override
@@ -59,18 +57,18 @@ public class Count implements UnitOfMeasure {
     }
 
     @Override
-    public String getUnitOneLabelStringResourceId() {
-        return unitCount;
+    public int getUnitOneLabelStringResourceId() {
+        return 0;
     }
 
     @Override
-    public String getUnitTwoLabelStringResourceId() {
-        return measurementUnitTwo;
+    public int getUnitTwoLabelStringResourceId() {
+        return 0;
     }
 
     @Override
-    public String getUnitThreeLabelStringResourceId() {
-        return measurementUnitThree;
+    public int getUnitThreeLabelStringResourceId() {
+        return 0;
     }
 
     @Override
@@ -128,11 +126,6 @@ public class Count implements UnitOfMeasure {
         digitFilters[2] = unitThreeDigitsFilter;
 
         return digitFilters;
-    }
-
-    @Override
-    public void resetNumericValues() {
-
     }
 
     @Override
@@ -196,18 +189,7 @@ public class Count implements UnitOfMeasure {
     }
 
     @Override
-    public String[] getMeasurementError() {
-        return new String[0];
-    }
-
-    @Override
-    public String toString() {
-        return "Count{" +
-                "\ntype='" + type + '\'' +
-                "\n, subType='" + subType + '\'' +
-                "\n, unitCount='" + unitCount + '\'' +
-                "\n, numberOfItems=" + numberOfItems +
-                "\n, baseSiUnits=" + baseSiUnits +
-                '}';
+    public int[] getMeasurementError() {
+        return new int[0];
     }
 }
