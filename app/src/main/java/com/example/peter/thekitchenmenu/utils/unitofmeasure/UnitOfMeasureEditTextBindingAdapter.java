@@ -12,44 +12,42 @@ import androidx.databinding.BindingAdapter;
 
 import static android.text.InputType.TYPE_CLASS_NUMBER;
 import static android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL;
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.SINGLE_ITEM;
 
 public class UnitOfMeasureEditTextBindingAdapter {
 
     private static final String TAG = "UnitOfMeasureEditTextBi";
 
-    @BindingAdapter(value = {"setUpEditTextForSubTypeSelected", "numberOfItems"})
+    @BindingAdapter(value = {"setUpEditTextForSubTypeSelected"})
     public static void setUpEditTextForSubTypeSelected(EditText editText,
-                                                       MeasurementSubType subType,
-                                                       int numberOfItems) {
-
-        setupViews(editText, subType, isMultiPack(numberOfItems));
+                                                       MeasurementSubType subType) {
+        setupViews(editText, subType);
     }
 
-    private static boolean isMultiPack(int numberOfItems) {
-        return numberOfItems > SINGLE_ITEM;
-    }
-
-    private static void setupViews(EditText editText,
-                                   MeasurementSubType subType,
-                                   boolean isMultiPack) {
+    private static void setupViews(EditText editText, MeasurementSubType subType) {
 
         UnitOfMeasure unitOfMeasure = subType.getMeasurementClass();
 
         int viewId = editText.getId();
         int units = unitOfMeasure.getNumberOfMeasurementUnits();
+        int digitsAfterDecimal = (int) unitOfMeasure.getInputDigitsFilter()[0].second;
 
-        setInputTypeNumber(editText);
+        if (
+                viewId == R.id.pack_editable_measurement_one && digitsAfterDecimal > 0 ||
+                viewId == R.id.item_editable_measurement_one && digitsAfterDecimal > 0)
 
-        if (viewId != View.NO_ID && editText.getVisibility() == View.VISIBLE)
+            setInputTypeNumberDecimal(editText);
+
+        else setInputTypeNumber(editText);
+
+        if (viewId != View.NO_ID)
 
             if (
                 viewId == R.id.pack_editable_measurement_one ||
-                viewId == R.id.item_editable_measurement_one && isMultiPack ||
+                viewId == R.id.item_editable_measurement_one ||
                 viewId == R.id.pack_editable_measurement_two && units > 1 ||
-                viewId == R.id.item_editable_measurement_two && isMultiPack && units > 1 ||
+                viewId == R.id.item_editable_measurement_two && units > 1 ||
                 viewId == R.id.pack_editable_measurement_three && units > 2 ||
-                viewId == R.id.item_editable_measurement_three && isMultiPack && units > 2)
+                viewId == R.id.item_editable_measurement_three && units > 2)
 
                 setInputForSoftAndHardKeyboard(editText, unitOfMeasure);
     }
@@ -92,9 +90,9 @@ public class UnitOfMeasureEditTextBindingAdapter {
 
             editText.setFilters(new InputFilter[]{
 
-                    new DecimalDigitsInputFilter(
-                            (int)inputDigitsFilters[1].first,
-                            (int)inputDigitsFilters[1].second)});
+                new DecimalDigitsInputFilter(
+                        (int)inputDigitsFilters[1].first,
+                        (int)inputDigitsFilters[1].second)});
         }
 
         if (
@@ -103,9 +101,9 @@ public class UnitOfMeasureEditTextBindingAdapter {
 
             editText.setFilters(new InputFilter[]{
 
-                    new DecimalDigitsInputFilter(
-                            (int)inputDigitsFilters[2].first,
-                            (int)inputDigitsFilters[2].second)});
+                new DecimalDigitsInputFilter(
+                        (int)inputDigitsFilters[2].first,
+                        (int)inputDigitsFilters[2].second)});
 
         }
     }

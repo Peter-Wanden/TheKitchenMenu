@@ -373,16 +373,16 @@ public class MetricMass implements UnitOfMeasure {
             maxKilogramValue = maxKilogramValue / 10;
         }
 
-        Pair<Integer, Integer> unitOneDigitsFilter = new Pair<>(3, 0);
-        Pair<Integer, Integer> unitTwoDigitsFilter = new Pair<>(kilogramDigits, 0);
-        Pair<Integer, Integer> unitThreeDigitsFilter = new Pair<>(0, 0);
+        Pair<Integer, Integer> unitOneDigitsFormat = new Pair<>(3, 0);
+        Pair<Integer, Integer> unitTwoDigitsFormat = new Pair<>(kilogramDigits, 0);
+        Pair<Integer, Integer> unitThreeDigitsFormat = new Pair<>(0, 0);
 
-        Pair[] digitFilters = new Pair[3];
+        Pair[] digitsFormat = new Pair[3];
 
-        digitFilters[0] = unitOneDigitsFilter;
-        digitFilters[1] = unitTwoDigitsFilter;
-        digitFilters[2] = unitThreeDigitsFilter;
+        digitsFormat[0] = unitOneDigitsFormat;
+        digitsFormat[1] = unitTwoDigitsFormat;
+        digitsFormat[2] = unitThreeDigitsFormat;
 
-        return digitFilters;
+        return digitsFormat;
     }
 }

@@ -8,49 +8,38 @@ import com.example.peter.thekitchenmenu.R;
 
 import androidx.databinding.BindingAdapter;
 
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.SINGLE_ITEM;
-
 public class UnitOfMeasureLabelBindingAdapter {
 
     private static final String TAG = "UnitOfMeasureLabelBindi";
 
-    @BindingAdapter(value = {"setLabelForSubTypeSelected", "numberOfItems"})
-    public static void setLabelForSubTypeSelected(TextView textView,
-                                                  MeasurementSubType subType,
-                                                  int numberOfItems) {
+    @BindingAdapter(value = {"setLabelForSubTypeSelected"})
+    public static void setLabelForSubTypeSelected(TextView textView, MeasurementSubType subType) {
 
-        setUpViewLabels(textView, subType, isMultiPack(numberOfItems));
+        setUpViewLabels(textView, subType);
     }
 
-    private static boolean isMultiPack(int numberOfItems) {
-
-        return numberOfItems > SINGLE_ITEM;
-    }
-
-    private static void setUpViewLabels(TextView textView,
-                                        MeasurementSubType subType,
-                                        boolean isMultiPack) {
+    private static void setUpViewLabels(TextView textView, MeasurementSubType subType) {
 
         UnitOfMeasure unitOfMeasure = subType.getMeasurementClass();
-        int units = unitOfMeasure.getNumberOfMeasurementUnits();
-
         int viewId = textView.getId();
 
-        if (viewId != View.NO_ID && textView.getVisibility() == View.VISIBLE) {
+        if (viewId != View.NO_ID) {
 
             if (viewId == R.id.pack_size_label)
+
                 setPackSizeLabel(textView, unitOfMeasure);
 
-            if (viewId == R.id.item_size_label && isMultiPack)
+            if (viewId == R.id.item_size_label)
+
                 setItemSizeLabel(textView, unitOfMeasure);
 
             if (
                     viewId == R.id.pack_measurement_label_one ||
-                    viewId == R.id.item_measurement_label_one && isMultiPack ||
-                    viewId == R.id.pack_measurement_label_two && units > 1 ||
-                    viewId == R.id.item_measurement_label_two && isMultiPack && units > 1 ||
-                    viewId == R.id.pack_measurement_label_three && units > 2||
-                    viewId == R.id.item_measurement_label_three && isMultiPack && units > 2)
+                    viewId == R.id.item_measurement_label_one ||
+                    viewId == R.id.pack_measurement_label_two ||
+                    viewId == R.id.item_measurement_label_two ||
+                    viewId == R.id.pack_measurement_label_three ||
+                    viewId == R.id.item_measurement_label_three )
 
             setMeasurementUnitLabels(textView, unitOfMeasure);
         }

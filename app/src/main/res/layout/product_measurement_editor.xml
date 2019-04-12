@@ -156,7 +156,6 @@
             app:layout_constraintTop_toBottomOf="@id/spinner_unit_of_measure"
             app:layout_constraintVertical_chainStyle="spread_inside"
             app:setLabelForSubTypeSelected='@{measurement.measurementSubType}'
-            app:numberOfItems='@{measurement.numberOfItems}'
             tools:text="@string/pack_size_label" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -171,7 +170,6 @@
             app:layout_constraintStart_toStartOf="@id/measurement_border"
             android:visibility="@{(measurement.numberOfItems > 1) ? View.VISIBLE : View.INVISIBLE}"
             app:setLabelForSubTypeSelected='@{measurement.measurementSubType}'
-            app:numberOfItems='@{measurement.numberOfItems}'
             tools:text="@string/item_size_label" />
 
         <androidx.constraintlayout.widget.ConstraintLayout

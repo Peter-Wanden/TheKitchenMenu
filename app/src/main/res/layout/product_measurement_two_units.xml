@@ -41,7 +41,6 @@
             app:layout_constraintStart_toStartOf="parent"
             android:afterTextChanged='@{() -> measurementValidation.validatePackSize(packEditableMeasurementTwo, measurement.measurementSubType)}'
             android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(packEditableMeasurementTwo, measurement.packMeasurementTwo)}'
-            app:numberOfItems='@{measurement.numberOfItems}'
             app:setUpEditTextForSubTypeSelected='@{measurement.measurementSubType}'
             app:fieldVisibilityAdapterNumberOfUnits='@{measurement.numberOfMeasurementUnits}'
             tools:text="22" />
@@ -58,7 +57,6 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/pack_editable_measurement_two"
             app:layout_constraintTop_toTopOf="@+id/pack_editable_measurement_two"
-            app:numberOfItems='@{measurement.numberOfItems}'
             app:setLabelForSubTypeSelected='@{measurement.measurementSubType}'
             app:fieldVisibilityAdapterNumberOfUnits='@{measurement.numberOfMeasurementUnits}'
             tools:text="l" />
@@ -77,7 +75,6 @@
             app:layout_constraintStart_toStartOf="parent"
             android:afterTextChanged='@{() -> measurementValidation.validatePackSize(itemEditableMeasurementTwo, measurement.measurementSubType)}'
             android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(itemEditableMeasurementTwo, measurement.itemMeasurementTwo)}'
-            app:numberOfItems='@{measurement.numberOfItems}'
             app:setUpEditTextForSubTypeSelected='@{measurement.measurementSubType}'
             app:fieldVisibilityAdapterNumberOfUnits='@{measurement.numberOfMeasurementUnits}'
             app:fieldVisibilityAdapterNumberOfItems='@{measurement.numberOfItems}'
@@ -95,7 +92,6 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/item_editable_measurement_two"
             app:layout_constraintTop_toTopOf="@+id/item_editable_measurement_two"
-            app:numberOfItems='@{measurement.numberOfItems}'
             app:setLabelForSubTypeSelected='@{measurement.measurementSubType}'
             app:fieldVisibilityAdapterNumberOfUnits='@{measurement.numberOfMeasurementUnits}'
             app:fieldVisibilityAdapterNumberOfItems='@{measurement.numberOfItems}'
@@ -114,7 +110,6 @@
             app:layout_constraintTop_toTopOf="@+id/pack_measurement_label_two"
             android:afterTextChanged='@{() -> measurementValidation.validatePackSize(packEditableMeasurementOne, measurement.measurementSubType)}'
             android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(packEditableMeasurementOne, measurement.packMeasurementOneAsInt)}'
-            app:numberOfItems='@{measurement.numberOfItems}'
             app:setUpEditTextForSubTypeSelected='@{measurement.measurementSubType}'
             tools:text="16" />
 
@@ -130,7 +125,6 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/pack_editable_measurement_one"
             app:layout_constraintTop_toTopOf="@+id/pack_editable_measurement_one"
-            app:numberOfItems='@{measurement.numberOfItems}'
             app:setLabelForSubTypeSelected='@{measurement.measurementSubType}'
             tools:text="ml" />
 
@@ -147,7 +141,6 @@
             app:layout_constraintTop_toTopOf="@+id/item_measurement_label_two"
             android:afterTextChanged='@{() -> measurementValidation.validatePackSize(itemEditableMeasurementOne, measurement.measurementSubType)}'
             android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(itemEditableMeasurementOne, measurement.itemMeasurementOneAsInt)}'
-            app:numberOfItems='@{measurement.numberOfItems}'
             app:setUpEditTextForSubTypeSelected='@{measurement.measurementSubType}'
             app:fieldVisibilityAdapterNumberOfItems='@{measurement.numberOfItems}'
             tools:text="16" />
@@ -164,7 +157,6 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/item_editable_measurement_one"
             app:layout_constraintTop_toTopOf="@+id/item_editable_measurement_one"
-            app:numberOfItems='@{measurement.numberOfItems}'
             app:setLabelForSubTypeSelected='@{measurement.measurementSubType}'
             app:fieldVisibilityAdapterNumberOfItems='@{measurement.numberOfItems}'
             tools:text="ml" />
