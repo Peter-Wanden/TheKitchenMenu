@@ -1,7 +1,6 @@
 package com.example.peter.thekitchenmenu.utils;
 
 import android.app.Application;
-import android.content.Context;
 import android.content.res.Resources;
 import android.util.Log;
 import android.widget.Button;
@@ -11,7 +10,6 @@ import android.widget.Spinner;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubType;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasure;
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureSubtypeSelector;
 import com.example.peter.thekitchenmenu.viewmodels.ProductMeasurementViewModel;
 
 import androidx.core.util.Pair;
@@ -23,7 +21,6 @@ public class ProductMeasurementHandler {
 
     private static final String TAG = "ProductMeasurementHandl";
 
-    private Context applicationContext;
     private ProductMeasurementViewModel viewModel;
     private Resources resources;
 
@@ -34,13 +31,11 @@ public class ProductMeasurementHandler {
     public ProductMeasurementHandler(Application applicationContext,
                                      ProductMeasurementViewModel viewModel) {
 
-        this.applicationContext = applicationContext;
         this.viewModel = viewModel;
         resources = applicationContext.getResources();
 
         // Default unit of measure
-        unitOfMeasure = UnitOfMeasureSubtypeSelector.getClassWithSubType(
-                MeasurementSubType.TYPE_METRIC_MASS);
+        unitOfMeasure = MeasurementSubType.TYPE_METRIC_MASS.getMeasurementClass();
 
         updateMeasurementModel();
     }
@@ -50,15 +45,14 @@ public class ProductMeasurementHandler {
         changeUnitOfMeasure(spinnerWithSubType.getSelectedItemPosition());
     }
 
-    public void changeUnitOfMeasure(int unitOfMeasureSubTypeAsInt) {
+    public void changeUnitOfMeasure(int subTypeAsInt) {
 
-        if (unitOfMeasure.getMeasurementSubType().ordinal() != unitOfMeasureSubTypeAsInt) {
+        if (unitOfMeasure.getMeasurementSubType().ordinal() != subTypeAsInt) {
 
             Log.d(TAG, "zyx - changeUnitOfMeasure: unit of measure is different from " +
                     "the one i have. Changing it now.");
 
-            unitOfMeasure = UnitOfMeasureSubtypeSelector.getClassWithSubType(
-                    MeasurementSubType.values()[unitOfMeasureSubTypeAsInt]);
+            unitOfMeasure = MeasurementSubType.values()[subTypeAsInt].getMeasurementClass();
 
             updateMeasurementModel();
 
@@ -140,8 +134,7 @@ public class ProductMeasurementHandler {
 
     public void validatePackSize(EditText editableMeasurement, MeasurementSubType subType) {
 
-        UnitOfMeasure unitOfMeasure = UnitOfMeasureSubtypeSelector.
-                getClassWithSubType(subType);
+        UnitOfMeasure unitOfMeasure = subType.getMeasurementClass();
 
         Pair[] inputDigitsFilters = unitOfMeasure.getInputDigitsFilter();
         int numberOfUnitsAfterDecimal = (int) inputDigitsFilters[0].second;

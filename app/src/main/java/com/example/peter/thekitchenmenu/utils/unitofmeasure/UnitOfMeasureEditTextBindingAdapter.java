@@ -34,8 +34,7 @@ public class UnitOfMeasureEditTextBindingAdapter {
                                    MeasurementSubType subType,
                                    boolean isMultiPack) {
 
-        UnitOfMeasure unitOfMeasure = UnitOfMeasureSubtypeSelector.
-                getClassWithSubType(subType);
+        UnitOfMeasure unitOfMeasure = subType.getMeasurementClass();
 
         int viewId = editText.getId();
         int units = unitOfMeasure.getNumberOfMeasurementUnits();

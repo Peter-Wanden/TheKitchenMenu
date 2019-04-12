@@ -94,6 +94,7 @@
             app:layout_constraintTop_toTopOf="@+id/item_editable_measurement_two"
             app:numberOfItems='@{measurement.numberOfItems}'
             app:setLabelForSubTypeSelected='@{measurement.measurementSubType}'
+            android:visibility='@{measurement.numberOfItems > 1 ? View.VISIBLE : View.INVISIBLE}'
             tools:text="l" />
 
         <androidx.appcompat.widget.AppCompatEditText
@@ -161,6 +162,7 @@
             app:layout_constraintTop_toTopOf="@+id/item_editable_measurement_one"
             app:numberOfItems='@{measurement.numberOfItems}'
             app:setLabelForSubTypeSelected='@{measurement.measurementSubType}'
+            android:visibility='@{measurement.numberOfItems > 1 ? View.VISIBLE : View.INVISIBLE}'
             tools:text="ml" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

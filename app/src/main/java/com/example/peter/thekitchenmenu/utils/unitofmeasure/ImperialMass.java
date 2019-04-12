@@ -363,7 +363,6 @@ public class ImperialMass implements UnitOfMeasure {
                 getTypeStringResourceId(),
                 (int) (maximumBaseSiMeasurement / UNIT_POUND),
                 getUnitTwoLabelStringResourceId(),
-                getUnitOneLabelStringResourceId(),
                 (int) (minimumItemSize),
                 getUnitOneLabelStringResourceId()};
     }

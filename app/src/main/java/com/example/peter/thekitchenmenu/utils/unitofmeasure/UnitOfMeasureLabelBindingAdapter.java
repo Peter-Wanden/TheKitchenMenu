@@ -1,6 +1,5 @@
 package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
-import android.content.Context;
 import android.content.res.Resources;
 import android.view.View;
 import android.widget.TextView;
@@ -32,10 +31,9 @@ public class UnitOfMeasureLabelBindingAdapter {
                                         MeasurementSubType subType,
                                         boolean isMultiPack) {
 
-        UnitOfMeasure unitOfMeasure = UnitOfMeasureSubtypeSelector.
-                getClassWithSubType(subType);
-
+        UnitOfMeasure unitOfMeasure = subType.getMeasurementClass();
         int units = unitOfMeasure.getNumberOfMeasurementUnits();
+
         int viewId = textView.getId();
 
         if (viewId != View.NO_ID && textView.getVisibility() == View.VISIBLE) {

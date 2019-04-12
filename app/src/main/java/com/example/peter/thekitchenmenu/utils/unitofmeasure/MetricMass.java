@@ -362,7 +362,6 @@ public class MetricMass implements UnitOfMeasure {
                 getUnitOneLabelStringResourceId()};
     }
 
-
     @Override
     public Pair[] getInputDigitsFilter() {
 

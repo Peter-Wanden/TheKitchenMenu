@@ -55,7 +55,6 @@
             android:gravity="center_vertical"
             app:setLabelForSubTypeSelected='@{measurement.measurementSubType}'
             app:numberOfItems='@{measurement.numberOfItems}'
-
             app:layout_constraintStart_toEndOf="@id/pack_editable_measurement_three"
             app:layout_constraintEnd_toStartOf="@id/pack_editable_measurement_two"
             app:layout_constraintBottom_toTopOf="@id/item_measurement_label_three"
@@ -112,8 +111,6 @@
             app:numberOfItems='@{measurement.numberOfItems}'
             tools:text="16" />
 
-        <!--android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(packEditableMeasurementOne, measurement.packMeasurementOne)}'-->
-
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/pack_measurement_label_one"
             style="@style/EditableCategoryStyle"
@@ -145,10 +142,9 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:setUpEditTextForSubTypeSelected='@{measurement.measurementSubType}'
             app:numberOfItems='@{measurement.numberOfItems}'
+            android:visibility="@{(measurement.numberOfItems > 1) ? View.VISIBLE : View.INVISIBLE}"
+            app:setFieldVisibility='@{measurement.numberOfMeasurementUnits}'
             tools:text="22"/>
-
-        <!--android:visibility="@{(measurement.numberOfItems > 1) ? View.VISIBLE : View.INVISIBLE}"-->
-        <!--app:setFieldVisibility='@{measurement.numberOfMeasurementUnits}'-->
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/item_measurement_label_three"
@@ -163,6 +159,8 @@
             app:layout_constraintStart_toEndOf="@id/item_editable_measurement_three"
             app:layout_constraintEnd_toStartOf="@id/item_editable_measurement_two"
             app:layout_constraintBottom_toBottomOf="parent"
+            android:visibility="@{(measurement.numberOfItems > 1) ? View.VISIBLE : View.INVISIBLE}"
+            app:setFieldVisibility='@{measurement.numberOfMeasurementUnits}'
             tools:text="l" />
 
         <androidx.appcompat.widget.AppCompatEditText
@@ -181,6 +179,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:setUpEditTextForSubTypeSelected='@{measurement.measurementSubType}'
             app:numberOfItems='@{measurement.numberOfItems}'
+            android:visibility="@{(measurement.numberOfItems > 1) ? View.VISIBLE : View.INVISIBLE}"
+            app:setFieldVisibility='@{measurement.numberOfMeasurementUnits}'
             tools:text="22" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -196,6 +196,7 @@
             app:layout_constraintEnd_toStartOf="@id/item_editable_measurement_one"
             app:setLabelForSubTypeSelected='@{measurement.measurementSubType}'
             app:numberOfItems='@{measurement.numberOfItems}'
+            android:visibility="@{(measurement.numberOfItems > 1) ? View.VISIBLE : View.INVISIBLE}"
             tools:text="cl" />
 
         <androidx.appcompat.widget.AppCompatEditText
@@ -214,9 +215,8 @@
             app:layout_constraintEnd_toStartOf="@id/item_measurement_label_one"
             app:setUpEditTextForSubTypeSelected='@{measurement.measurementSubType}'
             app:numberOfItems='@{measurement.numberOfItems}'
+            android:visibility="@{(measurement.numberOfItems > 1) ? View.VISIBLE : View.INVISIBLE}"
             tools:text="16" />
-
-        <!--android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(itemEditableMeasurementOne, measurement.itemMeasurementOne)}'-->
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/item_measurement_label_one"
@@ -231,6 +231,7 @@
             app:layout_constraintStart_toEndOf="@id/item_editable_measurement_one"
             app:setLabelForSubTypeSelected='@{measurement.measurementSubType}'
             app:numberOfItems='@{measurement.numberOfItems}'
+            android:visibility="@{(measurement.numberOfItems > 1) ? View.VISIBLE : View.INVISIBLE}"
             tools:text="ml" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
