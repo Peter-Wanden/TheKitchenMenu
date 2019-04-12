@@ -13,7 +13,7 @@ import static org.junit.Assert.assertThat;
 public class MetricMassTest {
 
     private Context context = ApplicationProvider.getApplicationContext();
-    private MetricMass metricMass = new MetricMass(context);
+    private MetricMass metricMass = new MetricMass();
 
     //////////////////////////// SETTING AND GETTING BASE SI TESTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\
     @Test

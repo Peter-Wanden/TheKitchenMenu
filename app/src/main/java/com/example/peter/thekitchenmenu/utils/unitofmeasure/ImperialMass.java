@@ -4,6 +4,8 @@ import android.util.Log;
 
 import com.example.peter.thekitchenmenu.R;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.Arrays;
 
 import androidx.core.util.Pair;
@@ -37,7 +39,7 @@ public class ImperialMass implements UnitOfMeasure {
 
     // Min and max measurements
     private double minimumItemSize = UNIT_OUNCE_DECIMAL;
-    private double maximumBaseSiMeasurement = MAX_MASS / UNIT_OUNCE_DECIMAL;
+    private double maximumBaseSiMeasurement = (MAX_MASS / UNIT_OUNCE_DECIMAL) * UNIT_OUNCE_DECIMAL;
 
     private Integer numberOfItems = SINGLE_ITEM;
     private double itemSizeInBaseSiUnits = minimumItemSize;
@@ -205,7 +207,7 @@ public class ImperialMass implements UnitOfMeasure {
     private void setItemsInPackByAdjustingItemSize(int numberOfItems) {
 
         this.numberOfItems = numberOfItems;
-        baseSiUnitsAreSet(itemSizeInBaseSiUnits * numberOfItems);
+        setNewItemMeasurements();
     }
 
     private boolean itemSizeMultipliedByNumberOfItemsDoNotExceedMaxMass(int numberOfItems) {
@@ -228,7 +230,7 @@ public class ImperialMass implements UnitOfMeasure {
     @Override
     public double getPackMeasurementOne() {
 
-        return Math.floor(packMeasurementInOunces * 10) / 10;
+        return roundDecimal(packMeasurementInOunces);
     }
 
     @Override
@@ -252,7 +254,7 @@ public class ImperialMass implements UnitOfMeasure {
     @Override
     public double getItemMeasurementOne() {
 
-        return Math.floor(itemMeasurementInOunces * 10) / 10;
+        return roundDecimal(itemMeasurementInOunces);
     }
 
     @Override
@@ -391,5 +393,13 @@ public class ImperialMass implements UnitOfMeasure {
         Log.d(TAG, "zyx - getInputDigitsFilter: Filter is: " + Arrays.toString(digitFormats));
 
         return digitFormats;
+    }
+
+    private double roundDecimal(double valueToRound) {
+
+        DecimalFormat decimalFormat = new DecimalFormat("##.#");
+        decimalFormat.setRoundingMode(RoundingMode.HALF_EVEN);
+
+        return Double.parseDouble(decimalFormat.format(valueToRound));
     }
 }

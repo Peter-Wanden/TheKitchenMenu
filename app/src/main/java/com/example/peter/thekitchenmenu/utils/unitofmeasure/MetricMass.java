@@ -97,7 +97,7 @@ public class MetricMass implements UnitOfMeasure {
 
             this.baseSiUnits = baseSiUnits;
             setNewPackMeasurements();
-            setItemMeasurements();
+            setNewItemMeasurements();
 
             return true;
 
@@ -128,7 +128,7 @@ public class MetricMass implements UnitOfMeasure {
         packMeasurementInKilograms = getMeasurementInKilograms(baseSiUnits);
     }
 
-    private void setItemMeasurements() {
+    private void setNewItemMeasurements() {
 
         itemSizeInBaseSiUnits = baseSiUnits / numberOfItems;
         itemMeasurementInGrams = getMeasurementInGrams(itemSizeInBaseSiUnits);
@@ -200,7 +200,7 @@ public class MetricMass implements UnitOfMeasure {
     private void setItemsInPackByAdjustingItemSize(int numberOfItemsInPack) {
 
         this.numberOfItems = numberOfItemsInPack;
-        setItemMeasurements();
+        setNewItemMeasurements();
     }
 
     private boolean itemSizeMultipliedByNumberOfItemsDoNotExceedMaxMass(int numberOfItems) {

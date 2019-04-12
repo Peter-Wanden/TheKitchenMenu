@@ -43,6 +43,7 @@
             android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(packEditableMeasurementTwo, measurement.packMeasurementTwo)}'
             app:numberOfItems='@{measurement.numberOfItems}'
             app:setUpEditTextForSubTypeSelected='@{measurement.measurementSubType}'
+            app:setFieldVisibility='@{measurement.numberOfMeasurementUnits}'
             tools:text="22" />
 
         <androidx.appcompat.widget.AppCompatEditText
@@ -57,11 +58,12 @@
             app:layout_constraintEnd_toStartOf="@+id/item_measurement_label_two"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
+            android:visibility='@{measurement.numberOfItems > 1 ? View.VISIBLE : View.INVISIBLE}'
             android:afterTextChanged='@{() -> measurementValidation.validatePackSize(itemEditableMeasurementTwo, measurement.measurementSubType)}'
             android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(itemEditableMeasurementTwo, measurement.itemMeasurementTwo)}'
             app:numberOfItems='@{measurement.numberOfItems}'
             app:setUpEditTextForSubTypeSelected='@{measurement.measurementSubType}'
-            android:visibility='@{measurement.numberOfItems > 1 ? View.VISIBLE : View.INVISIBLE}'
+            app:setFieldVisibility='@{measurement.numberOfMeasurementUnits}'
             tools:text="22" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -78,6 +80,7 @@
             app:layout_constraintTop_toTopOf="@+id/pack_editable_measurement_two"
             app:numberOfItems='@{measurement.numberOfItems}'
             app:setLabelForSubTypeSelected='@{measurement.measurementSubType}'
+            app:setFieldVisibility='@{measurement.numberOfMeasurementUnits}'
             tools:text="l" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -88,13 +91,14 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:gravity="center_vertical"
+            android:visibility='@{measurement.numberOfItems > 1 ? View.VISIBLE : View.INVISIBLE}'
             app:layout_constraintEnd_toStartOf="@+id/item_editable_measurement_one"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/item_editable_measurement_two"
             app:layout_constraintTop_toTopOf="@+id/item_editable_measurement_two"
             app:numberOfItems='@{measurement.numberOfItems}'
             app:setLabelForSubTypeSelected='@{measurement.measurementSubType}'
-            android:visibility='@{measurement.numberOfItems > 1 ? View.VISIBLE : View.INVISIBLE}'
+            app:setFieldVisibility='@{measurement.numberOfMeasurementUnits}'
             tools:text="l" />
 
         <androidx.appcompat.widget.AppCompatEditText

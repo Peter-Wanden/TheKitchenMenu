@@ -40,6 +40,7 @@
             android:afterTextChanged='@{() -> measurementValidation.validatePackSize(packEditableMeasurementThree, measurement.measurementSubType)}'
             app:setUpEditTextForSubTypeSelected='@{measurement.measurementSubType}'
             app:numberOfItems='@{measurement.numberOfItems}'
+            app:setFieldVisibility='@{measurement.numberOfMeasurementUnits}'
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/pack_measurement_label_three"
             app:layout_constraintBottom_toTopOf="@id/item_editable_measurement_three"
@@ -58,6 +59,7 @@
             app:layout_constraintStart_toEndOf="@id/pack_editable_measurement_three"
             app:layout_constraintEnd_toStartOf="@id/pack_editable_measurement_two"
             app:layout_constraintBottom_toTopOf="@id/item_measurement_label_three"
+            app:setFieldVisibility='@{measurement.numberOfMeasurementUnits}'
             tools:text="l" />
 
         <androidx.appcompat.widget.AppCompatEditText
@@ -180,7 +182,6 @@
             app:setUpEditTextForSubTypeSelected='@{measurement.measurementSubType}'
             app:numberOfItems='@{measurement.numberOfItems}'
             android:visibility="@{(measurement.numberOfItems > 1) ? View.VISIBLE : View.INVISIBLE}"
-            app:setFieldVisibility='@{measurement.numberOfMeasurementUnits}'
             tools:text="22" />
 
         <androidx.appcompat.widget.AppCompatTextView
