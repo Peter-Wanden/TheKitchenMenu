@@ -1,6 +1,5 @@
 package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
-import android.util.Log;
 import android.view.View;
 
 import com.example.peter.thekitchenmenu.R;
@@ -11,46 +10,46 @@ public class UnitOfMeasureFieldVisibilityBindingAdapter {
 
     private static final String TAG = "UnitOfMeasureFieldVisib";
 
-    @BindingAdapter(value = {"setFieldVisibility"})
-    public static void setFieldVisibility(View view, int numberOfMeasurementUnits) {
+    @BindingAdapter(
+            value = {"fieldVisibilityAdapterNumberOfUnits", "fieldVisibilityAdapterNumberOfItems"},
+            requireAll = false)
+    public static void fieldVisibility(View view, int numberOfUnits, int numberOfItems) {
 
-        Log.d(TAG, "zyx - setFieldVisibility: number of units: " + numberOfMeasurementUnits);
-
-        setupViews(view, numberOfMeasurementUnits);
+        setViewVisibility(view, numberOfUnits, numberOfItems);
     }
 
-    private static void setupViews(View view, int units) {
+    private static void setViewVisibility(View view, int units, int numberOfItems) {
 
         int viewId = view.getId();
 
-        if (units == 1 && view.getVisibility() == View.VISIBLE) {
 
-            Log.d(TAG, "zyx - setupViews: ");
+        if (
+                viewId == R.id.item_editable_measurement_one ||
+                viewId == R.id.item_measurement_label_one ||
+                viewId == R.id.item_editable_measurement_two ||
+                viewId == R.id.item_measurement_label_two) {
 
-            if (
-                    viewId == R.id.pack_measurement_label_two ||
-                    viewId == R.id.pack_editable_measurement_two ||
-                    viewId == R.id.item_measurement_label_two ||
-                    viewId == R.id.item_editable_measurement_two ||
-                    viewId == R.id.pack_measurement_label_three ||
-                    viewId == R.id.pack_editable_measurement_three ||
-                    viewId == R.id.item_measurement_label_three ||
-                    viewId == R.id.item_editable_measurement_three) {
-
-                view.setVisibility(View.INVISIBLE);
-            }
+            view.setVisibility(numberOfItems >= 2 ? View.INVISIBLE : View.GONE);
         }
 
-        if (units == 2 && view.getVisibility() == View.VISIBLE) {
 
-            if (
-                    viewId == R.id.pack_measurement_label_three ||
-                    viewId == R.id.pack_editable_measurement_three ||
-                    viewId == R.id.item_measurement_label_three ||
-                    viewId == R.id.item_editable_measurement_three) {
+        if (
+                viewId == R.id.pack_editable_measurement_two ||
+                viewId == R.id.pack_measurement_label_two)
 
-                view.setVisibility(View.INVISIBLE);
-            }
-        }
+            view.setVisibility(units == 2 ? View.VISIBLE : View.INVISIBLE);
+
+
+        if (
+                viewId == R.id.pack_editable_measurement_three ||
+                viewId == R.id.pack_measurement_label_three)
+
+            view.setVisibility(units == 3 ? View.VISIBLE : View.INVISIBLE);
+
+        if (
+                viewId == R.id.item_editable_measurement_three ||
+                viewId == R.id.item_measurement_label_three)
+
+            view.setVisibility(numberOfItems > 1 && units == 3 ? View.VISIBLE : View.INVISIBLE);
     }
 }

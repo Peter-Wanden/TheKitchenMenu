@@ -383,8 +383,6 @@ public class MetricMass implements UnitOfMeasure {
         digitFilters[1] = unitTwoDigitsFilter;
         digitFilters[2] = unitThreeDigitsFilter;
 
-        Log.d(TAG, "zyx - getInputDigitsFilter: Filter is: " + Arrays.toString(digitFilters));
-
         return digitFilters;
     }
 }

@@ -390,8 +390,6 @@ public class ImperialMass implements UnitOfMeasure {
         digitFormats[1] = unitTwoDigitsFormat;
         digitFormats[2] = unitThreeDigitsFormat;
 
-        Log.d(TAG, "zyx - getInputDigitsFilter: Filter is: " + Arrays.toString(digitFormats));
-
         return digitFormats;
     }
 
