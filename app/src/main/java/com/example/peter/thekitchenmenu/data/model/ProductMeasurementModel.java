@@ -1,5 +1,7 @@
 package com.example.peter.thekitchenmenu.data.model;
 
+import android.util.Log;
+
 import com.example.peter.thekitchenmenu.BR;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubType;
 
@@ -63,46 +65,34 @@ public class ProductMeasurementModel extends BaseObservable {
     @Bindable
     public String getPackMeasurementOne() {
 
-        // What if pack one contains zero?
-        if (packMeasurementOneAsDecimal == 0.) {
-
-            return "";
-        }
-
-        int whole = (int) packMeasurementOneAsDecimal;
-        double decimal = whole - packMeasurementOneAsDecimal;
-
-        if (decimal > 0.09) {
-
-            // If packOneAsDecimal does have a fractional part, only display the tenths
-            // (remove this part from the Unit of measure classes and put it here?)
-            packMeasurementOne = String.format("%.1f", packMeasurementOneAsDecimal);
-
-        } else {
-
-            // If packOneAsDecimal does not have a fractional element after the decimal point, just show the integer
-            packMeasurementOne = String.format("%.0f", packMeasurementOneAsDecimal);
-        }
-
         return packMeasurementOne;
     }
 
     private void setPackMeasurementOne(String packMeasurementOne) {
-
-        // What if the measurement is empty or 0.0
-        if (packMeasurementOne.isEmpty()) packMeasurementOneAsDecimal = 0.;
-
-        this.packMeasurementOneAsDecimal = Double.parseDouble(packMeasurementOne);
+        Log.d(TAG, "zyx- setPackMeasurementOne: " + packMeasurementOne);
+        this.packMeasurementOne = packMeasurementOne;
+        notifyPropertyChanged(BR.packMeasurementOne);
     }
 
+    private void setPackMeasurementOneFromDecimal(double packMeasurementOneAsDecimal){
+
+        Log.d(TAG, "setPackMeasurementOneFromDecimal: " + packMeasurementOneAsDecimal);
+        packMeasurementOne = Double.toString(packMeasurementOneAsDecimal);
+        notifyPropertyChanged(BR.packMeasurementOne);
+    }
+
+    @Bindable
     public double getPackMeasurementOneAsDecimal() {
 
         return packMeasurementOneAsDecimal;
     }
 
-    public void setPackMeasurementOneAsDecimal(double packMeasurementOne) {
+    public void setPackMeasurementOneAsDecimal(double packMeasurementOneAsDecimal) {
 
-        this.packMeasurementOneAsDecimal = packMeasurementOne;
+        Log.d(TAG, "setPackMeasurementOneAsDecimal: " + packMeasurementOneAsDecimal);
+        this.packMeasurementOneAsDecimal = packMeasurementOneAsDecimal;
+        notifyPropertyChanged(BR.packMeasurementOneAsDecimal);
+        setPackMeasurementOneFromDecimal(this.packMeasurementOneAsDecimal);
     }
 
     public int getPackMeasurementOneAsInt() {

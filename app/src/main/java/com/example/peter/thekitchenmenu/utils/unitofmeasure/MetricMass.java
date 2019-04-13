@@ -1,10 +1,6 @@
 package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
-import android.util.Log;
-
 import com.example.peter.thekitchenmenu.R;
-
-import java.util.Arrays;
 
 import androidx.core.util.Pair;
 
