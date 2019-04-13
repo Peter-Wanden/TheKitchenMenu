@@ -3,6 +3,8 @@ package com.example.peter.thekitchenmenu.data.model;
 import com.example.peter.thekitchenmenu.BR;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubType;
 
+import java.math.BigDecimal;
+
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
@@ -15,7 +17,8 @@ public class ProductMeasurementModel extends BaseObservable {
     private int numberOfMeasurementUnits = 2;
 
     private int numberOfItems = 1;
-    private double packMeasurementOne = 0;
+    private String packMeasurementOne;
+    private double packMeasurementOneAsDecimal = 0;
     private int packMeasurementTwo = 0;
     private int packMeasurementThree = 0;
     private double itemMeasurementOne = 0;
@@ -58,27 +61,58 @@ public class ProductMeasurementModel extends BaseObservable {
     }
 
     @Bindable
-    public double getPackMeasurementOneAsDecimal() {
+    public String getPackMeasurementOne() {
+
+        // What if pack one contains zero?
+        if (packMeasurementOneAsDecimal == 0.) {
+
+            return "";
+        }
+
+        int whole = (int) packMeasurementOneAsDecimal;
+        double decimal = whole - packMeasurementOneAsDecimal;
+
+        if (decimal > 0.09) {
+
+            // If packOneAsDecimal does have a fractional part, only display the tenths
+            // (remove this part from the Unit of measure classes and put it here?)
+            packMeasurementOne = String.format("%.1f", packMeasurementOneAsDecimal);
+
+        } else {
+
+            // If packOneAsDecimal does not have a fractional element after the decimal point, just show the integer
+            packMeasurementOne = String.format("%.0f", packMeasurementOneAsDecimal);
+        }
 
         return packMeasurementOne;
     }
 
-    public void setPackMeasurementOneAsDecimal(double packMeasurementOne) {
+    private void setPackMeasurementOne(String packMeasurementOne) {
 
-        this.packMeasurementOne = packMeasurementOne;
-        notifyPropertyChanged(BR.packMeasurementOneAsDecimal);
+        // What if the measurement is empty or 0.0
+        if (packMeasurementOne.isEmpty()) packMeasurementOneAsDecimal = 0.;
+
+        this.packMeasurementOneAsDecimal = Double.parseDouble(packMeasurementOne);
     }
 
-    @Bindable
+    public double getPackMeasurementOneAsDecimal() {
+
+        return packMeasurementOneAsDecimal;
+    }
+
+    public void setPackMeasurementOneAsDecimal(double packMeasurementOne) {
+
+        this.packMeasurementOneAsDecimal = packMeasurementOne;
+    }
+
     public int getPackMeasurementOneAsInt() {
 
-        return (int) packMeasurementOne;
+        return (int) packMeasurementOneAsDecimal;
     }
 
     public void setPackMeasurementOneAsInt(int packMeasurementOne) {
 
-        this.packMeasurementOne = (double) packMeasurementOne;
-        notifyPropertyChanged(BR.packMeasurementOneAsInt);
+        this.packMeasurementOneAsDecimal = (double) packMeasurementOne;
     }
 
     @Bindable
@@ -159,7 +193,7 @@ public class ProductMeasurementModel extends BaseObservable {
         return "ProductMeasurementModel{" +
                 ", \nmeasurementSubType=" + measurementSubType +
                 ", \nnumberOfItems=" + numberOfItems +
-                ", \npackMeasurementOne=" + packMeasurementOne +
+                ", \npackMeasurementOneAsDecimal=" + packMeasurementOneAsDecimal +
                 ", \nitemMeasurementOne=" + itemMeasurementOne +
                 ", \npackMeasurementTwo=" + packMeasurementTwo +
                 ", \nitemMeasurementTwo=" + itemMeasurementTwo +
