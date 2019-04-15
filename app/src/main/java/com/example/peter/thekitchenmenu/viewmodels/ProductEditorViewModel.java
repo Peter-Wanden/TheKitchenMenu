@@ -23,7 +23,7 @@ public class ProductEditorViewModel extends ObservableViewModel {
 
         title = applicationContext.getString(R.string.activity_title_edit_product);
 
-        ProductEntity defaultProductEntity = new ProductEntity(
+        ProductEntity productEntityMetricMassTest = new ProductEntity(
                 0,
                 "Baked Beans",
                 "Heinz",
@@ -38,7 +38,24 @@ public class ProductEditorViewModel extends ObservableViewModel {
                 0,
                 0,
                 "");
-        this.productEntity.setValue(defaultProductEntity);
+
+        ProductEntity productEntityImperialMassTest = new ProductEntity(
+                0,
+                "Cheez",
+                "The Cheez Man",
+                1,
+                3,
+                3,
+                2834.95,
+                1,
+                0,
+                "",
+                "",
+                0,
+                0,
+                "");
+
+        this.productEntity.setValue(productEntityImperialMassTest);
 
     }
 

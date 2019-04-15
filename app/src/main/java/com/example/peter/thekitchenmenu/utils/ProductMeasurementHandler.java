@@ -49,14 +49,14 @@ public class ProductMeasurementHandler {
 
         if (unitOfMeasure.getMeasurementSubType().ordinal() != subTypeAsInt) {
 
-            Log.d(TAG, "zyx - changeUnitOfMeasure: unit of measure is different from " +
+            Log.d(TAG, "tkm - changeUnitOfMeasure: unit of measure is different from " +
                     "the one i have. Changing it now.");
 
             unitOfMeasure = MeasurementSubType.values()[subTypeAsInt].getMeasurementClass();
 
             updateMeasurementModel();
 
-        } else Log.d(TAG, "zyx - changeUnitOfMeasure: Unit of measure has not changed!");
+        } else Log.d(TAG, "tkm - changeUnitOfMeasure: Unit of measure has not changed!");
     }
 
     public void numberOfItems(EditText editableItemsInPack) {
@@ -72,17 +72,17 @@ public class ProductMeasurementHandler {
 
         if (numberOfItemsHasChanged(newNumberOfItems)) {
 
-            Log.d(TAG, "zyx - numberOfItemsUpdated: Value has changed to: " +
+            Log.d(TAG, "tkm - numberOfItemsUpdated: Value has changed to: " +
                     newNumberOfItems + " Setting new value");
 
             if (numberOfItemsAreSet(newNumberOfItems)) {
 
-                Log.d(TAG, "zyx - numberOfItemsUpdated: New value set");
+                Log.d(TAG, "tkm - numberOfItemsUpdated: New value set");
                 return true;
 
-            } else Log.d(TAG, "zyx - numberOfItemsUpdated: Unit of measure refused new number of items");
+            } else Log.d(TAG, "tkm - numberOfItemsUpdated: Unit of measure refused new number of items");
 
-        } else Log.d(TAG, "zyx - numberOfItemsUpdated: Number of items has not changed");
+        } else Log.d(TAG, "tkm - numberOfItemsUpdated: Number of items has not changed");
 
         return false;
     }
@@ -136,17 +136,23 @@ public class ProductMeasurementHandler {
 
         UnitOfMeasure unitOfMeasure = subType.getMeasurementClass();
 
-        Pair[] inputDigitsFilters = unitOfMeasure.getInputDigitsFilter();
-        int numberOfUnitsAfterDecimal = (int) inputDigitsFilters[0].second;
-
         int viewId = editableMeasurement.getId();
         double doubleMeasurement;
         int integerMeasurement;
+        int numberOfUnitsAfterDecimal;
 
-        Log.d(TAG, "zyx - validatePackSize: Measurement received from: " +
+        if (viewId == R.id.pack_editable_measurement_one ||
+                viewId == R.id.item_editable_measurement_one) {
+
+            Pair[] inputDigitsFilters = unitOfMeasure.getInputDigitsFilter();
+            numberOfUnitsAfterDecimal = (int) inputDigitsFilters[0].second;
+
+        } else numberOfUnitsAfterDecimal = 0;
+
+        Log.d(TAG, "tkm - validatePackSize: Measurement received from: " +
                 resources.getResourceEntryName(viewId) +
-                " Raw value received is: " + editableMeasurement.getText().toString() +
-                " Number of units after decimal are: " + numberOfUnitsAfterDecimal);
+                " Raw value: " + editableMeasurement.getText().toString() +
+                " Units after decimal: " + numberOfUnitsAfterDecimal);
 
 
         if (numberOfUnitsAfterDecimal > 0) {
@@ -215,7 +221,7 @@ public class ProductMeasurementHandler {
 
                 if (oldMeasurement != newMeasurement)
 
-                    Log.d(TAG, "zyx - measurementHasChangedDouble: Pack One:" +
+                    Log.d(TAG, "tkm - measurementHasChangedDouble: Pack One:" +
                             " Old measurement: " + oldMeasurement +
                             " New measurement: " + newMeasurement);
 
@@ -228,7 +234,7 @@ public class ProductMeasurementHandler {
 
                 if (oldMeasurement != newMeasurement)
 
-                    Log.d(TAG, "zyx - measurementHasChangedDouble: Item One:" +
+                    Log.d(TAG, "tkm - measurementHasChangedDouble: Item One:" +
                             " Old measurement: " + oldMeasurement +
                             " New measurement: " + newMeasurement);
 
@@ -274,7 +280,7 @@ public class ProductMeasurementHandler {
 
                 if (oldMeasurement != newMeasurement)
 
-                    Log.d(TAG, "zyx - measurementHasChangedInteger: Pack Two:" +
+                    Log.d(TAG, "tkm - measurementHasChangedInteger: Pack Two:" +
                             " Old measurement: " + oldMeasurement +
                             " New measurement: " + newMeasurement);
 
@@ -286,7 +292,7 @@ public class ProductMeasurementHandler {
 
                 if (oldMeasurement != newMeasurement)
 
-                    Log.d(TAG, "zyx - measurementHasChangedInteger: Item Two:" +
+                    Log.d(TAG, "tkm - measurementHasChangedInteger: Item Two:" +
                             " Old measurement: " + oldMeasurement +
                             " New measurement: " + newMeasurement);
 
@@ -298,7 +304,7 @@ public class ProductMeasurementHandler {
 
                 if (oldMeasurement != newMeasurement)
 
-                    Log.d(TAG, "zyx - measurementHasChangedInteger: Pack Three:" +
+                    Log.d(TAG, "tkm - measurementHasChangedInteger: Pack Three:" +
                             " Old measurement: " + oldMeasurement +
                             " New measurement: " + newMeasurement);
 
@@ -311,13 +317,13 @@ public class ProductMeasurementHandler {
 
                 if (oldMeasurement != newMeasurement)
 
-                    Log.d(TAG, "zyx - measurementHasChangedInteger: Item Three: " +
+                    Log.d(TAG, "tkm - measurementHasChangedInteger: Item Three: " +
                             " Old Measurement: " + oldMeasurement +
                             " New Measurement: " + newMeasurement);
 
                 return newMeasurement != oldMeasurement;
         }
-        Log.d(TAG, "zyx - measurementHasChangedInteger: View not recognised, aborting.");
+        Log.d(TAG, "tkm - measurementHasChangedInteger: View not recognised, aborting.");
         return false;
     }
 
@@ -328,23 +334,23 @@ public class ProductMeasurementHandler {
 
         if (viewId == R.id.pack_editable_measurement_one) {
 
-            Log.d(TAG, "zyx - processDoubleMeasurements: Processing change to Pack One");
+            Log.d(TAG, "tkm - processDoubleMeasurements: Processing change to Pack One");
             measurementIsSet = unitOfMeasure.packMeasurementOneIsSet(newMeasurement);
         }
 
         if (viewId == R.id.item_editable_measurement_one) {
 
-            Log.d(TAG, "zyx - processDoubleMeasurements: Processing change to Item One");
+            Log.d(TAG, "tkm - processDoubleMeasurements: Processing change to Item One");
             measurementIsSet = unitOfMeasure.itemMeasurementOneIsSet(newMeasurement);
         }
 
         if (measurementIsSet) {
 
-            Log.d(TAG, "zyx - processDoubleMeasurements: Measurement is set!");
+            Log.d(TAG, "tkm - processDoubleMeasurements: Measurement is set!");
             updateMeasurementModel();
 
         } else {
-            Log.d(TAG, "zyx - processDoubleMeasurements: measurement is out of bounds");
+            Log.d(TAG, "tkm - processDoubleMeasurements: measurement is out of bounds");
             setMeasurementOutOfBoundsError(editableMeasurement);
         }
     }
@@ -353,7 +359,7 @@ public class ProductMeasurementHandler {
 
         int viewId = editableMeasurement.getId();
 
-        Log.d(TAG, "zyx - processIntegerMeasurements: New measurement received from: " +
+        Log.d(TAG, "tkm - processIntegerMeasurements: New measurement received from: " +
                 resources.getResourceEntryName(editableMeasurement.getId()) + " measurement is: "
                 + newMeasurement);
 
@@ -361,44 +367,44 @@ public class ProductMeasurementHandler {
 
         if (viewId == R.id.pack_editable_measurement_one){
 
-            Log.d(TAG, "processIntegerMeasurements: Processing change to Pack One");
+            Log.d(TAG, "tkm - processIntegerMeasurements: Processing change to Pack One");
             measurementIsSet = unitOfMeasure.packMeasurementOneIsSet(newMeasurement);
         }
 
         if (viewId == R.id.item_editable_measurement_one) {
 
-            Log.d(TAG, "processIntegerMeasurements: Processing change to Item One");
+            Log.d(TAG, "tkm -processIntegerMeasurements: Processing change to Item One");
             measurementIsSet = unitOfMeasure.itemMeasurementOneIsSet(newMeasurement);
         }
 
         if (viewId == R.id.pack_editable_measurement_two) {
 
-            Log.d(TAG, "zyx - processIntegerMeasurements: processing change to Pack Two");
+            Log.d(TAG, "tkm - processIntegerMeasurements: processing change to Pack Two");
             measurementIsSet = unitOfMeasure.packMeasurementTwoIsSet(newMeasurement);
 
         } else if (viewId == R.id.item_editable_measurement_two) {
 
-            Log.d(TAG, "zyx - processIntegerMeasurements: processing change to Item Two");
+            Log.d(TAG, "tkm - processIntegerMeasurements: processing change to Item Two");
             measurementIsSet = unitOfMeasure.itemMeasurementTwoIsSet(newMeasurement);
 
         } else if (viewId == R.id.pack_editable_measurement_three) {
 
-            Log.d(TAG, "zyx - processIntegerMeasurements: processing change to Pack three");
+            Log.d(TAG, "tkm - processIntegerMeasurements: processing change to Pack three");
             measurementIsSet = unitOfMeasure.packMeasurementThreeIsSet(newMeasurement);
 
         } else if (viewId == R.id.item_editable_measurement_three) {
 
-            Log.d(TAG, "zyx - processIntegerMeasurements: ");
+            Log.d(TAG, "tkm - processIntegerMeasurements: ");
             measurementIsSet = unitOfMeasure.itemMeasurementThreeIsSet(newMeasurement);
         }
 
         if (measurementIsSet) {
-            Log.d(TAG, "zyx - processIntegerMeasurements: Measurement is set!");
+            Log.d(TAG, "tkm - processIntegerMeasurements: Measurement is set!");
             updateMeasurementModel();
 
         } else {
 
-            Log.d(TAG, "zyx - processIntegerMeasurements: measurement is out of bounds");
+            Log.d(TAG, "tkm - processIntegerMeasurements: measurement is out of bounds");
             setMeasurementOutOfBoundsError(editableMeasurement);
         }
 
@@ -406,7 +412,7 @@ public class ProductMeasurementHandler {
 
     private void setMeasurementOutOfBoundsError(EditText editableMeasurement) {
 
-        Log.d(TAG, "zyx - setMeasurementOutOfBoundsError: Pack size out of bounds error");
+        Log.d(TAG, "tkm - setMeasurementOutOfBoundsError: Pack size out of bounds error");
 
         setErrorTo(editableMeasurement);
     }
@@ -432,7 +438,7 @@ public class ProductMeasurementHandler {
                         resources.getString(measurementError[4])
                 ));
 
-        Log.d(TAG, "zyx - setErrorTo: Error should be set.");
+        Log.d(TAG, "tkm - setErrorTo: Error should be set.");
     }
 
     private void setNumberFormatExceptionError(EditText editable) {
@@ -442,15 +448,15 @@ public class ProductMeasurementHandler {
 
     public boolean setBaseSiUnits(double baseSi) {
 
-        Log.d(TAG, "zyx - setBaseSiUnits: New base units received: " + baseSi);
+        Log.d(TAG, "tkm - setBaseSiUnits: New base units received: " + baseSi);
 
         if (baseSiUnitsAreSet(baseSi)) {
 
-            Log.d(TAG, "zyx - setBaseSiUnits: New base units have been set!");
+            Log.d(TAG, "tkm - setBaseSiUnits: New base units have been set!");
 
             updateMeasurementModel();
             return true;
-        } else Log.d(TAG, "zyx - setBaseSiUnits: Base units have been refused");
+        } else Log.d(TAG, "tkm - setBaseSiUnits: Base units have been refused");
 
         return false;
     }
@@ -463,12 +469,13 @@ public class ProductMeasurementHandler {
     // Synchronises the measurement model with the unit of measure
     private void updateMeasurementModel() {
 
-        Log.d(TAG, "zyx - updateMeasurementModel: Updating measurement model");
+        Log.d(TAG, "tkm - updateMeasurementModel: Updating measurement model");
+        Log.d(TAG, "tkm - updateMeasurementModel: Base units are: " + unitOfMeasure.getBaseSiUnits());
 
         if (viewModel.getMeasurement().getMeasurementSubType() !=
                 unitOfMeasure.getMeasurementSubType()) {
 
-            Log.d(TAG, "zyx - updateMeasurementModel: Updating measurement Subtype to: " +
+            Log.d(TAG, "tkm - updateMeasurementModel: Updating measurement Subtype to: " +
                     unitOfMeasure.getMeasurementSubType());
 
             viewModel.getMeasurement().setMeasurementSubType(
@@ -478,7 +485,7 @@ public class ProductMeasurementHandler {
         if (viewModel.getMeasurement().getNumberOfMeasurementUnits() !=
                 unitOfMeasure.getNumberOfMeasurementUnits()) {
 
-            Log.d(TAG, "zyx - updateMeasurementModel: Updating number of measurement units to: " +
+            Log.d(TAG, "tkm - updateMeasurementModel: Updating number of measurement units to: " +
                     unitOfMeasure.getNumberOfMeasurementUnits());
 
             viewModel.getMeasurement().setNumberOfMeasurementUnits(
@@ -488,13 +495,12 @@ public class ProductMeasurementHandler {
         if (viewModel.getMeasurement().getNumberOfItems() !=
                 unitOfMeasure.getNumberOfItems()) {
 
-            Log.d(TAG, "zyx - updateMeasurementModel: Updating number of Items to: " +
+            Log.d(TAG, "tkm - updateMeasurementModel: Updating number of Items to: " +
                     unitOfMeasure.getNumberOfItems());
 
             viewModel.getMeasurement().setNumberOfItems(
                     unitOfMeasure.getNumberOfItems());
         }
-
 
         if (unitOfMeasure.getMeasurementSubType() == MeasurementSubType.TYPE_IMPERIAL_MASS ||
                 unitOfMeasure.getMeasurementSubType() == MeasurementSubType.TYPE_IMPERIAL_VOLUME) {
@@ -502,7 +508,7 @@ public class ProductMeasurementHandler {
             if (viewModel.getMeasurement().getPackMeasurementOneAsDecimal() !=
                     unitOfMeasure.getPackMeasurementOne()) {
 
-                Log.d(TAG, "zyx - updateMeasurementModel: Updating pack One DECIMAL to: " +
+                Log.d(TAG, "tkm - updateMeasurementModel: Updating pack One DECIMAL to: " +
                         unitOfMeasure.getPackMeasurementOne());
 
                 viewModel.getMeasurement().setPackMeasurementOneAsDecimal(
@@ -515,7 +521,7 @@ public class ProductMeasurementHandler {
                 viewModel.getMeasurement().setItemMeasurementOneAsDecimal(
                         unitOfMeasure.getItemMeasurementOne());
 
-                Log.d(TAG, "zyx - updateMeasurementModel: Updating Item One DECIMAL to: " +
+                Log.d(TAG, "tkm - updateMeasurementModel: Updating Item One DECIMAL to: " +
                         unitOfMeasure.getItemMeasurementOne());
             }
 
@@ -524,7 +530,7 @@ public class ProductMeasurementHandler {
             if (viewModel.getMeasurement().getPackMeasurementOneAsInt() !=
                     (int) unitOfMeasure.getPackMeasurementOne()) {
 
-                Log.d(TAG, "zyx - updateMeasurementModel: Updating Pack One as INTEGER to: " +
+                Log.d(TAG, "tkm - updateMeasurementModel: Updating Pack One as INTEGER to: " +
                         (int) unitOfMeasure.getPackMeasurementOne());
 
                 viewModel.getMeasurement().setPackMeasurementOneAsInt(
@@ -535,7 +541,7 @@ public class ProductMeasurementHandler {
             if (viewModel.getMeasurement().getItemMeasurementOneAsInt() !=
                     (int) unitOfMeasure.getItemMeasurementOne()) {
 
-                Log.d(TAG, "zyx - updateMeasurementModel: Updating Item One as INTEGER to: " +
+                Log.d(TAG, "tkm - updateMeasurementModel: Updating Item One as INTEGER to: " +
                         (int) unitOfMeasure.getItemMeasurementOne());
 
                 viewModel.getMeasurement().setItemMeasurementOneAsInt(
@@ -550,7 +556,7 @@ public class ProductMeasurementHandler {
             viewModel.getMeasurement().setPackMeasurementTwo(
                     unitOfMeasure.getPackMeasurementTwo());
 
-            Log.d(TAG, "zyx - updateMeasurementModel: Updating pack Two to: " +
+            Log.d(TAG, "tkm - updateMeasurementModel: Updating pack Two to: " +
                     unitOfMeasure.getPackMeasurementTwo());
         }
 
@@ -560,7 +566,7 @@ public class ProductMeasurementHandler {
             viewModel.getMeasurement().setItemMeasurementTwo(
                     unitOfMeasure.getItemMeasurementTwo());
 
-            Log.d(TAG, "zyx - updateMeasurementModel: Updating Item Two to: " +
+            Log.d(TAG, "tkm - updateMeasurementModel: Updating Item Two to: " +
                     unitOfMeasure.getItemMeasurementTwo());
         }
 
@@ -570,7 +576,7 @@ public class ProductMeasurementHandler {
             viewModel.getMeasurement().setPackMeasurementThree(
                     unitOfMeasure.getPackMeasurementThree());
 
-            Log.d(TAG, "zyx - updateMeasurementModel: Updating Pack Three to: " +
+            Log.d(TAG, "tkm - updateMeasurementModel: Updating Pack Three to: " +
                     unitOfMeasure.getPackMeasurementThree());
         }
 
@@ -580,10 +586,10 @@ public class ProductMeasurementHandler {
             viewModel.getMeasurement().setItemMeasurementThree(
                     unitOfMeasure.getItemMeasurementThree());
 
-            Log.d(TAG, "zyx - updateMeasurementModel: Updating item Three to: " +
+            Log.d(TAG, "tkm - updateMeasurementModel: Updating item Three to: " +
                     unitOfMeasure.getItemMeasurementThree());
         }
 
-        Log.d(TAG, "zyx - updateMeasurementModel: Measurement model updating complete");
+        Log.d(TAG, "tkm - updateMeasurementModel: Measurement model updating complete");
     }
 }

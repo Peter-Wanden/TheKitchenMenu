@@ -290,7 +290,7 @@ public class ProductModel extends BaseObservable implements Parcelable {
 
     @Override
     public String toString() {
-        return "ProductModel{" +
+        return "tkm - ProductModel{" +
                 "userProductDataId: '" + userProductDataId +
                 ", remoteProdMyRefKey: '" + remoteProductId + '\'' +
                 ", remoteUsedProductId: '" + remoteUsedProductId + '\'' +
@@ -320,7 +320,7 @@ public class ProductModel extends BaseObservable implements Parcelable {
 
     public void getValuesFromEntity(ProductEntity entity) {
 
-        Log.d(TAG, "zyx - getValuesFromEntity: getting values");
+        Log.d(TAG, "tkm - getValuesFromEntity: getting values");
 
         setDescription(entity.getDescription());
         setMadeBy(entity.getMadeBy());

@@ -88,21 +88,21 @@ public class ProductEditor extends AppCompatActivity {
                 productIdentityViewModel.getIdentityModel().setShelfLife(
                         productEntity.getShelfLife());
 
-//                Log.d(TAG, "zyx - setObservers: Updating unit of measure to: " +
-//                        productEntity.getUnitOfMeasureSubType());
-//
-//                productMeasurementViewModel.getMeasurementValidation().changeUnitOfMeasure(
-//                        productEntity.getUnitOfMeasureSubType());
-//
-//                productMeasurementViewModel.getMeasurementValidation().numberOfItemsUpdated(
-//                        productEntity.getNumberOfItems());
-//
-//                boolean baseSiUnitsAreSet = productMeasurementViewModel.getMeasurementValidation().setBaseSiUnits(
-//                        productEntity.getBaseSiUnits());
-//
-//                if (baseSiUnitsAreSet) {
-//                    Log.d(TAG, "zyx - setObservers: Base units set ok!");
-//                }
+                Log.d(TAG, "tkm - setObservers: Updating unit of measure to: " +
+                        productEntity.getUnitOfMeasureSubType());
+
+                productMeasurementViewModel.getMeasurementValidation().changeUnitOfMeasure(
+                        productEntity.getUnitOfMeasureSubType());
+
+                productMeasurementViewModel.getMeasurementValidation().numberOfItemsUpdated(
+                        productEntity.getNumberOfItems());
+
+                boolean baseSiUnitsAreSet = productMeasurementViewModel.getMeasurementValidation().setBaseSiUnits(
+                        productEntity.getBaseSiUnits());
+
+                if (baseSiUnitsAreSet) {
+                    Log.d(TAG, "tkm - setObservers: Base units set ok!");
+                }
             }
         };
 

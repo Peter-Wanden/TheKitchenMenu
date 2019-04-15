@@ -1,11 +1,7 @@
 package com.example.peter.thekitchenmenu.data.model;
 
-import android.util.Log;
-
 import com.example.peter.thekitchenmenu.BR;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubType;
-
-import java.math.BigDecimal;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
@@ -19,13 +15,21 @@ public class ProductMeasurementModel extends BaseObservable {
     private int numberOfMeasurementUnits = 2;
 
     private int numberOfItems = 1;
+
     private String packMeasurementOne;
-    private double packMeasurementOneAsDecimal = 0;
+    private int packMeasurementOneAsInt = 0;
+    private double packMeasurementOneAsDecimal = 0.;
+
+    private String itemMeasurementOne;
+    private int itemMeasurementOneAsInt = 0;
+    private double itemMeasurementOneAsDecimal = 0.;
+
     private int packMeasurementTwo = 0;
-    private int packMeasurementThree = 0;
-    private double itemMeasurementOne = 0;
     private int itemMeasurementTwo = 0;
+
+    private int packMeasurementThree = 0;
     private int itemMeasurementThree = 0;
+
 
     @Bindable
     public MeasurementSubType getMeasurementSubType() {
@@ -69,15 +73,8 @@ public class ProductMeasurementModel extends BaseObservable {
     }
 
     private void setPackMeasurementOne(String packMeasurementOne) {
-        Log.d(TAG, "zyx- setPackMeasurementOne: " + packMeasurementOne);
+
         this.packMeasurementOne = packMeasurementOne;
-        notifyPropertyChanged(BR.packMeasurementOne);
-    }
-
-    private void setPackMeasurementOneFromDecimal(double packMeasurementOneAsDecimal){
-
-        Log.d(TAG, "setPackMeasurementOneFromDecimal: " + packMeasurementOneAsDecimal);
-        packMeasurementOne = Double.toString(packMeasurementOneAsDecimal);
         notifyPropertyChanged(BR.packMeasurementOne);
     }
 
@@ -89,20 +86,25 @@ public class ProductMeasurementModel extends BaseObservable {
 
     public void setPackMeasurementOneAsDecimal(double packMeasurementOneAsDecimal) {
 
-        Log.d(TAG, "setPackMeasurementOneAsDecimal: " + packMeasurementOneAsDecimal);
         this.packMeasurementOneAsDecimal = packMeasurementOneAsDecimal;
         notifyPropertyChanged(BR.packMeasurementOneAsDecimal);
-        setPackMeasurementOneFromDecimal(this.packMeasurementOneAsDecimal);
+
+        setPackMeasurementOne(Double.toString(this.packMeasurementOneAsDecimal));
     }
 
+    @Bindable
     public int getPackMeasurementOneAsInt() {
 
-        return (int) packMeasurementOneAsDecimal;
+        return packMeasurementOneAsInt;
     }
 
-    public void setPackMeasurementOneAsInt(int packMeasurementOne) {
+    public void setPackMeasurementOneAsInt(int packMeasurementOneAsInt) {
 
-        this.packMeasurementOneAsDecimal = (double) packMeasurementOne;
+
+        this.packMeasurementOneAsInt = packMeasurementOneAsInt;
+        notifyPropertyChanged(BR.packMeasurementOneAsInt);
+
+        setPackMeasurementOne(Integer.toString(this.packMeasurementOneAsInt));
     }
 
     @Bindable
@@ -130,27 +132,43 @@ public class ProductMeasurementModel extends BaseObservable {
     }
 
     @Bindable
-    public double getItemMeasurementOneAsDecimal() {
+    public String getItemMeasurementOne() {
 
         return itemMeasurementOne;
     }
 
-    public void setItemMeasurementOneAsDecimal(double itemMeasurementOne) {
+    public void setItemMeasurementOne(String itemMeasurementOne) {
 
         this.itemMeasurementOne = itemMeasurementOne;
+        notifyPropertyChanged(BR.itemMeasurementOne);
+    }
+
+    @Bindable
+    public double getItemMeasurementOneAsDecimal() {
+
+        return itemMeasurementOneAsDecimal;
+    }
+
+    public void setItemMeasurementOneAsDecimal(double itemMeasurementOneAsDecimal) {
+
+        this.itemMeasurementOneAsDecimal = itemMeasurementOneAsDecimal;
         notifyPropertyChanged(BR.itemMeasurementOneAsDecimal);
+
+        setItemMeasurementOne(Double.toString(itemMeasurementOneAsDecimal));
     }
 
     @Bindable
     public int getItemMeasurementOneAsInt() {
 
-        return (int) itemMeasurementOne;
+        return itemMeasurementOneAsInt;
     }
 
-    public void setItemMeasurementOneAsInt(int itemMeasurementOne) {
+    public void setItemMeasurementOneAsInt(int itemMeasurementOneAsInt) {
 
-        this.itemMeasurementOne = (double) itemMeasurementOne;
+        this.itemMeasurementOneAsInt = itemMeasurementOneAsInt;
         notifyPropertyChanged(BR.itemMeasurementOneAsInt);
+
+        setItemMeasurementOne(Integer.toString(this.itemMeasurementOneAsInt));
     }
 
     @Bindable
@@ -180,7 +198,7 @@ public class ProductMeasurementModel extends BaseObservable {
     @Override
     public String toString() {
 
-        return "ProductMeasurementModel{" +
+        return "tkm - ProductMeasurementModel{" +
                 ", \nmeasurementSubType=" + measurementSubType +
                 ", \nnumberOfItems=" + numberOfItems +
                 ", \npackMeasurementOneAsDecimal=" + packMeasurementOneAsDecimal +

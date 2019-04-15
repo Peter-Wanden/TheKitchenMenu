@@ -123,10 +123,10 @@ class SyncUserProductData {
 
             // Queue has been processed, save the inserts and updates to the database.
 
-            Log.d(TAG, "zyx - nextPlease: Saving data");
+            Log.d(TAG, "tkm - nextPlease: Saving data");
             worker.execute(() -> {
 
-                Log.d(TAG, "zyx - nextPlease: Saving: " + batchInserts.size() + " inserts to database.");
+                Log.d(TAG, "tkm - nextPlease: Saving: " + batchInserts.size() + " inserts to database.");
 
                 if (batchInserts.size() > 0) {
                     repository.insertAllUserProductData(batchInserts);
@@ -142,7 +142,7 @@ class SyncUserProductData {
             }
 
             ).execute(() -> {
-                Log.d(TAG, "zyx - nextPlease: Saving:" + batchUpdates.size() + " updates to database.");
+                Log.d(TAG, "tkm - nextPlease: Saving:" + batchUpdates.size() + " updates to database.");
                 if(batchUpdates.size() > 0) {
 
                     repository.updateUsersProductData(batchUpdates);
@@ -165,7 +165,7 @@ class SyncUserProductData {
 
     // Sets up the remote listener for this class.
     private void initialiseVel() {
-        Log.d(TAG, "zyx - initialiseVel: called");
+        Log.d(TAG, "tkm - initialiseVel: called");
 
         DatabaseReference prodMyRef = RemoteDbRefs.getUserProductData(Constants.getUserId().getValue());
 
@@ -184,7 +184,7 @@ class SyncUserProductData {
                 }
                 // Copies the remote data for processing.
                 remoteData.addAll(remoteSnapShot);
-                Log.d(TAG, "zyx - onDataChange: returned: " + SyncUserProductData.this.remoteData.size() + " objects");
+                Log.d(TAG, "tkm - onDataChange: returned: " + SyncUserProductData.this.remoteData.size() + " objects");
                 // Clears down remote data queue.
                 remoteSnapShot.clear();
                 // Updates the data models status in the RemoteRepository.
@@ -194,7 +194,7 @@ class SyncUserProductData {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e(TAG, "Unable to update MyProducts, with error: " + databaseError);
+                Log.e(TAG, "tkm - Unable to update MyProducts, with error: " + databaseError);
             }
         };
         listenerPending = new DataListenerPending(prodMyRef, prodMyVel);
@@ -205,7 +205,7 @@ class SyncUserProductData {
         if (listenerPending == null) {
             initialiseVel();
         }
-        Log.d(TAG, "zyx - getListenerIsAttached: " + listenerPending.getListenerIsAttached());
+        Log.d(TAG, "tkm - getListenerIsAttached: " + listenerPending.getListenerIsAttached());
         return listenerPending.getListenerIsAttached();
     }
 
@@ -214,7 +214,7 @@ class SyncUserProductData {
         if (listenerPending == null) {
             initialiseVel();
         }
-        Log.d(TAG, "zyx - setListenerIsAttached: " + requestedState);
+        Log.d(TAG, "tkm - setListenerIsAttached: " + requestedState);
         listenerPending.setListenerIsAttached(requestedState);
     }
 }
