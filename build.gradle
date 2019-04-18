@@ -11,7 +11,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.2'
+        classpath 'com.android.tools.build:gradle:3.4.0'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -36,17 +36,17 @@ ext {
     targetSdkVersion = 28
     androidSupportVersion = "28.0.0"
 
-    junitVersion = "4.12"
 
     // Firebase
-    firebaseAuth = "16.2.0"
-    firebaseConfigVersion = "16.4.1"
+    firebaseAuth = "16.2.1"
+    firebaseConfigVersion = "16.5.0"
     firebaseCore = "16.0.8"
     firebaseDatabase = "16.1.0"
     firebaseStorage = "16.1.0"
     firebaseUiAuth = "4.1.0"
     firebaseVersion = "16.0.5"
 
+    // Image manipulation
     picassoVersion = "2.71828"
 
     playServicesA = "16.0.0"
@@ -55,16 +55,17 @@ ext {
 
     // Support
     androidxSupportVersion = "1.0.0"
-    androidxAppcompat = "1.1.0-alpha03"
+    androidxAppcompat = "1.1.0-alpha04"
     androidMaterial = "1.1.0-alpha05"
-    androidxRecyclerView = "1.1.0-alpha03"
+    androidxRecyclerView = "1.1.0-alpha04"
 
     // Constraint
     androidxConstraintLayoutVersion = "1.1.3"
 
     // Architecture Components
     androidxArchComponentsVersion = "2.0.0-rc01"
-    androidxLifecycleExtensions = "2.1.0-alpha03"
+    androidxLifecycleExtensions = "2.1.0-alpha04"
+    androidxLifecycleRuntime = "2.1.0-alpha04"
 
     // Paging runtime
     androidxPagingRuntimeVersion = "2.1.0"
@@ -74,8 +75,18 @@ ext {
     androidxRoomRuntime = "2.1.0-alpha03"
 
     // Testing
-    androidxEspressoVersion = "3.1.0"
+    junit = "4.12"
+
     androidxTestCore = "1.1.1-alpha02"
+    androidxTestRunner = "1.1.0"
+    androidxTestRules = "1.1.0"
     androidxTestExtJunit = "1.1.0"
-    androidxTestRunnerVersion = "1.1.0"
+
+    androidxEspresso = "3.1.0"
+
+    mockitoVersion = '1.10.19'
+    powerMockito = '1.6.2'
+
+    hamcrest = '1.3'
+
 }

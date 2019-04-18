@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.peter.thekitchenmenu">
 
     <!-- Add permissions -->
@@ -94,14 +95,17 @@
         <activity
             android:name=".ui.catalog.SearchProducts"
             android:launchMode="singleTop">
+
             <!-- Receives a query with a request to SEARCH -->
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
+
             <!-- Receives a query with a request to view a specific item -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
+
             <!-- Points to searchable configuration for this search activity -->
             <meta-data
                 android:name="android.app.searchable"
@@ -122,5 +126,8 @@
         <service
             android:name=".data.repository.SyncRemoteDataService"
             android:exported="false"/>
+
+        <uses-library android:name="android.test.runner"
+            android:required="false" />
     </application>
 </manifest>

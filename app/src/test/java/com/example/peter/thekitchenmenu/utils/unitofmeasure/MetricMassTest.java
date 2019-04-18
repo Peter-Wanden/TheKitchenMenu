@@ -1,18 +1,13 @@
 package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
-import android.content.Context;
-
 import org.junit.Test;
-
-import androidx.test.core.app.ApplicationProvider;
 
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MAX_MASS;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 public class MetricMassTest {
 
-    private Context context = ApplicationProvider.getApplicationContext();
     private MetricMass metricMass = new MetricMass();
 
     //////////////////////////// SETTING AND GETTING BASE SI TESTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -75,7 +70,7 @@ public class MetricMassTest {
     @Test
     public void testBaseSiViolatesMinimumItemSize() { // CONDITION: BASE SI SMALLER THAN SMALLEST ITEM
 
-        metricMass.numberOfItemsAreSet(5);
+        assertThat(metricMass.numberOfItemsAreSet(5), is(true));
 
         assertThat(metricMass.baseSiUnitsAreSet(4), is(false));
 
@@ -91,7 +86,7 @@ public class MetricMassTest {
     @Test
     public void testBaseSiAtMinimumItemSize() { // CONDITION: BASE SI SAME AS SMALLEST ITEM
 
-        metricMass.numberOfItemsAreSet(5);
+        assertThat(metricMass.numberOfItemsAreSet(5), is(true));
 
         assertThat(metricMass.baseSiUnitsAreSet(5), is(true));
 
@@ -260,6 +255,7 @@ public class MetricMassTest {
         assertThat(metricMass.getBaseSiUnits(), is(5500.));
     }
 
+    //TODO////////////////////////// ITEM ONE AND TWO TESTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
     //////////////////////////// SETTING NUMBER OF ITEMS TESTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
@@ -508,53 +504,52 @@ public class MetricMassTest {
         assertThat(metricMass.getItemMeasurementOne(), is(1.0));
     }
 
-
-
     @Test
-    public void getNumberOfMeasurementUnits() {
+    public void test_setting_pack_one() {
+
+        assertThat(metricMass.getBaseSiUnits(), is(0.));
+        assertThat(metricMass.numberOfItemsAreSet(2), is(true));
+        assertThat(metricMass.packMeasurementOneIsSet(2.), is(true));
+        assertThat(metricMass.getBaseSiUnits(), is(2.));
+        assertThat(metricMass.packMeasurementOneIsSet(20.), is(true));
+        assertThat(metricMass.getBaseSiUnits(), is(20.));
     }
 
     @Test
-    public void setNumberOfItems() {
+    public void settingBaseSi() {
+
+        assertThat(metricMass.numberOfItemsAreSet(2), is(true));
+        assertThat(metricMass.packMeasurementOneIsSet(2), is(true));
+        assertThat(metricMass.packMeasurementOneIsSet(20.), is(true));
+        assertThat(metricMass.getBaseSiUnits(), is(20.));
+        assertThat(metricMass.getPackMeasurementOne(), is(20.));
     }
 
     @Test
-    public void getNumberOfItems() {
-    }
+    public void test_for_zero_base_units_with_false_return() {
 
-    @Test
-    public void getPackMeasurementThree() {
-    }
+        // Setup
+        assertThat(metricMass.numberOfItemsAreSet(2), is(true));
+        assertThat(metricMass.packMeasurementOneIsSet(500), is(true));
+        assertThat(metricMass.packMeasurementTwoIsSet(1), is(true));
+        assertThat(metricMass.getBaseSiUnits(), is(1500.));
 
-    @Test
-    public void setPackMeasurementThree() {
-    }
+        // Gradual teardown, as the user would type
+        assertThat(metricMass.packMeasurementTwoIsSet(0), is(true));
+        assertThat(metricMass.getBaseSiUnits(), is(500.));
 
-    @Test
-    public void getItemMeasurementOne() {
-    }
+        assertThat(metricMass.packMeasurementOneIsSet(50), is(true));
+        assertThat(metricMass.getBaseSiUnits(), is(50.));
 
-    @Test
-    public void setItemMeasurementOne() {
-    }
+        assertThat(metricMass.packMeasurementOneIsSet(5), is(true));
+        assertThat(metricMass.getBaseSiUnits(), is(5.));
 
-    @Test
-    public void getItemMeasurementTwo() {
-    }
+        assertThat(metricMass.baseSiUnitsAreSet(0), is(false));
+        assertThat(metricMass.getBaseSiUnits(), is(0.));
 
-    @Test
-    public void setItemMeasurementTwo() {
-    }
-
-    @Test
-    public void getItemMeasurementThree() {
-    }
-
-    @Test
-    public void setItemMeasurementThree() {
-    }
-
-    @Test
-    public void resetNumericValues() {
+        assertThat(metricMass.getPackMeasurementOne(), is(0.));
+        assertThat(metricMass.getItemMeasurementOne(), is(0.));
+        assertThat(metricMass.getPackMeasurementTwo(), is(0));
+        assertThat(metricMass.getItemMeasurementTwo(), is(0));
     }
 }

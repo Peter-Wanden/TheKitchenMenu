@@ -49,14 +49,9 @@ public class ProductMeasurementHandler {
 
         if (unitOfMeasure.getMeasurementSubType().ordinal() != subTypeAsInt) {
 
-            Log.d(TAG, "tkm - changeUnitOfMeasure: unit of measure is different from " +
-                    "the one i have. Changing it now.");
-
             unitOfMeasure = MeasurementSubType.values()[subTypeAsInt].getMeasurementClass();
-
             updateMeasurementModel();
-
-        } else Log.d(TAG, "tkm - changeUnitOfMeasure: Unit of measure has not changed!");
+        }
     }
 
     public void numberOfItems(EditText editableItemsInPack) {
@@ -110,7 +105,7 @@ public class ProductMeasurementHandler {
                         MULTI_PACK_MINIMUM_NO_OF_ITEMS,
                         MULTI_PACK_MAXIMUM_NO_OF_ITEMS);
 
-        editableItemsInPack.setError(numberOfItemsError);
+//        editableItemsInPack.setError(numberOfItemsError);
     }
 
     public void modifyNumberOfItemsByOne(EditText editableNoOfItems, Button button) {
@@ -119,22 +114,16 @@ public class ProductMeasurementHandler {
         int buttonId = button.getId();
 
         if (buttonId == R.id.multi_pack_plus)
-
             if (!numberOfItemsUpdated((itemsInPack + 1)))
-
                 setNumberOfItemsOutOfBoundsError(editableNoOfItems);
 
 
         if (buttonId == R.id.multi_pack_minus)
-
             if (!numberOfItemsUpdated((itemsInPack - 1)))
-
                 setNumberOfItemsOutOfBoundsError(editableNoOfItems);
     }
 
     public void validatePackSize(EditText editableMeasurement, MeasurementSubType subType) {
-
-        UnitOfMeasure unitOfMeasure = subType.getMeasurementClass();
 
         int viewId = editableMeasurement.getId();
         double doubleMeasurement;
@@ -352,6 +341,7 @@ public class ProductMeasurementHandler {
         } else {
             Log.d(TAG, "tkm - processDoubleMeasurements: measurement is out of bounds");
             setMeasurementOutOfBoundsError(editableMeasurement);
+            updateMeasurementModel();
         }
     }
 
@@ -406,6 +396,7 @@ public class ProductMeasurementHandler {
 
             Log.d(TAG, "tkm - processIntegerMeasurements: measurement is out of bounds");
             setMeasurementOutOfBoundsError(editableMeasurement);
+            updateMeasurementModel();
         }
 
     }
@@ -414,7 +405,7 @@ public class ProductMeasurementHandler {
 
         Log.d(TAG, "tkm - setMeasurementOutOfBoundsError: Pack size out of bounds error");
 
-        setErrorTo(editableMeasurement);
+//        setErrorTo(editableMeasurement);
     }
 
     private void setErrorTo(EditText editableMeasurement) {

@@ -98,8 +98,16 @@ public class ImperialMass implements UnitOfMeasure {
 
             return true;
 
+        } else if (baseSiUnits == 0.) {
 
+            this.baseSiUnits = 0.;
+
+            packMeasurementInOunces = 0.;
+            itemMeasurementInOunces = 0.;
+            packMeasurementInPounds = 0;
+            itemMeasurementInPounds = 0;
         }
+
         return false;
     }
 
@@ -265,8 +273,9 @@ public class ImperialMass implements UnitOfMeasure {
 
     private double baseSiUnitsWithItemMeasurementOne(double itemMeasurementOne) {
 
-        return (packMeasurementInPounds * UNIT_POUND) +
-                (itemMeasurementOne * numberOfItems * UNIT_OUNCE);
+        return (itemMeasurementInPounds * UNIT_POUND) +
+                (itemMeasurementOne * UNIT_OUNCE)
+                * numberOfItems;
     }
 
     @Override

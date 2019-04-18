@@ -468,4 +468,64 @@ public class ImperialMassTest {
         assertThat(imperialMass.getItemMeasurementTwo(), is(2));
         assertThat(imperialMass.getBaseSiUnits(), is(6662.137934375));
     }
+
+    @Test
+    public void test_setting_pack_one() {
+
+        assertThat(imperialMass.numberOfItemsAreSet(10), is(true));
+        assertThat(imperialMass.packMeasurementOneIsSet(10.), is(true));
+        assertThat(imperialMass.packMeasurementTwoIsSet(10), is(true));
+
+        assertThat(imperialMass.getBaseSiUnits(), is(4819.41893125));
+
+        assertThat(imperialMass.getItemMeasurementOne(), is(1.));
+        assertThat(imperialMass.getItemMeasurementTwo(), is(1));
+
+        assertThat(imperialMass.numberOfItemsAreSet(9), is(true));
+
+        assertThat(imperialMass.getItemMeasurementOne(), is(2.9));
+        assertThat(imperialMass.itemMeasurementOneIsSet(2.), is(true));
+
+        assertThat(imperialMass.itemMeasurementOneIsSet(2.), is(true));
+        assertThat(imperialMass.getItemMeasurementOne(), is(2.));
+
+    }
+
+    @Test
+    public void settingBaseSi() {
+
+        assertThat(imperialMass.numberOfItemsAreSet(2), is(true));
+        assertThat(imperialMass.packMeasurementOneIsSet(2), is(true));
+        assertThat(imperialMass.packMeasurementOneIsSet(20.), is(true));
+        assertThat(imperialMass.getBaseSiUnits(), is(20.));
+        assertThat(imperialMass.getPackMeasurementOne(), is(20.));
+    }
+
+    @Test
+    public void test_for_zero_base_units_with_false_return() {
+
+        // Setup
+        assertThat(imperialMass.numberOfItemsAreSet(2), is(true));
+        assertThat(imperialMass.packMeasurementOneIsSet(500), is(true));
+        assertThat(imperialMass.packMeasurementTwoIsSet(1), is(true));
+        assertThat(imperialMass.getBaseSiUnits(), is(1500.));
+
+        // Gradual teardown, as the user would type
+        assertThat(imperialMass.packMeasurementTwoIsSet(0), is(true));
+        assertThat(imperialMass.getBaseSiUnits(), is(500.));
+
+        assertThat(imperialMass.packMeasurementOneIsSet(50), is(true));
+        assertThat(imperialMass.getBaseSiUnits(), is(50.));
+
+        assertThat(imperialMass.packMeasurementOneIsSet(5), is(true));
+        assertThat(imperialMass.getBaseSiUnits(), is(5.));
+
+        assertThat(imperialMass.baseSiUnitsAreSet(0), is(false));
+        assertThat(imperialMass.getBaseSiUnits(), is(0.));
+
+        assertThat(imperialMass.getPackMeasurementOne(), is(0.));
+        assertThat(imperialMass.getItemMeasurementOne(), is(0.));
+        assertThat(imperialMass.getPackMeasurementTwo(), is(0));
+        assertThat(imperialMass.getItemMeasurementTwo(), is(0));
+    }
 }

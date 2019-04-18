@@ -97,7 +97,15 @@ public class MetricMass implements UnitOfMeasure {
 
             return true;
 
-        } else if (baseSiUnits == 0.) this.baseSiUnits = 0.; // allows for a reset
+        } else if (baseSiUnits == 0.) {
+
+            this.baseSiUnits = 0.; // allows for a reset
+
+            packMeasurementInGrams = 0.;
+            itemMeasurementInGrams = 0.;
+            packMeasurementInKilograms = 0;
+            itemMeasurementInKilograms = 0;
+        }
 
         return false;
     }
