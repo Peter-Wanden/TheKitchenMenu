@@ -1,23 +1,26 @@
 package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
-import android.content.Context;
+import androidx.core.util.Pair;
 
-import com.example.peter.thekitchenmenu.data.model.ObservableProductModel;
-
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MULTI_PACK_MAXIMUM_NO_OF_PACKS;
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MULTI_PACK_MINIMUM_NO_OF_PACKS;
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.BASE_SI_UNIT_VOLUME;
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.SINGLE_ITEM;
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MULTI_PACK_MAXIMUM_NO_OF_ITEMS;
 
 public class ImperialVolume implements UnitOfMeasure {
 
-    private int numberOfItemsInPack = 0;
+    private static final int IMPERIAL_VOLUME_NUMBER_OF_MEASUREMENT_UNITS = 2;
+    private static final double UNIT_FLUID_OUNCE = BASE_SI_UNIT_VOLUME * 28.4130625;
+    private static final double UNIT_PINT = UNIT_FLUID_OUNCE * 20;
 
-    ImperialVolume(Context context) {
+    private int numberOfItems = SINGLE_ITEM;
+
+    ImperialVolume() {
 
     }
 
     @Override
-    public String getTypeAsString() {
-        return null;
+    public int getTypeStringResourceId() {
+        return 0;
     }
 
     @Override
@@ -26,32 +29,33 @@ public class ImperialVolume implements UnitOfMeasure {
     }
 
     @Override
+    public int getSubTypeStringResourceId() {
+        return 0;
+    }
+
+    @Override
     public MeasurementSubType getMeasurementSubType() {
         return MeasurementSubType.TYPE_IMPERIAL_VOLUME;
     }
 
     @Override
-    public String getMeasurementUnitOne() {
-        return null;
+    public int getNumberOfMeasurementUnits() {
+        return IMPERIAL_VOLUME_NUMBER_OF_MEASUREMENT_UNITS;
     }
 
     @Override
-    public String getMeasurementUnitTwo() {
-        return null;
+    public int getUnitOneLabelStringResourceId() {
+        return 0;
     }
 
     @Override
-    public ObservableMeasurement getMinAndMax() {
-        return null;
+    public int getUnitTwoLabelStringResourceId() {
+        return 0;
     }
 
     @Override
-    public void setNewMeasurementValuesTo(ObservableMeasurement observableMeasurement) {
-    }
-
-    @Override
-    public boolean getValuesFromObservableProductModel(ObservableProductModel productModel) {
-        return false;
+    public int getUnitThreeLabelStringResourceId() {
+        return 0;
     }
 
     @Override
@@ -60,41 +64,41 @@ public class ImperialVolume implements UnitOfMeasure {
     }
 
     @Override
-    public boolean setBaseSiUnits(double baseSiUnits) {
+    public boolean baseSiUnitsAreSet(double baseSiUnits) {
         return false;
     }
 
     @Override
-    public boolean setNumberOfPacksInPack(int numberOfItems) {
+    public boolean numberOfItemsAreSet(int numberOfItems) {
 
         // TODO - When setting number of items, check the size / measurements (if available) do not
         // TODO - exceed MAX
-        if (numberOfItems >= MULTI_PACK_MINIMUM_NO_OF_PACKS &&
-                numberOfItems <= MULTI_PACK_MAXIMUM_NO_OF_PACKS) {
+        if (numberOfItems > SINGLE_ITEM &&
+                numberOfItems <= MULTI_PACK_MAXIMUM_NO_OF_ITEMS) {
 
-            this.numberOfItemsInPack = numberOfItems;
+            this.numberOfItems = numberOfItems;
             return true;
         }
         return false;
     }
 
     @Override
-    public int getNumberOfPacksInPack() {
-        return numberOfItemsInPack;
+    public int getNumberOfItems() {
+        return numberOfItems;
     }
 
     @Override
-    public int[] getInputFilterFormat() {
+    public Pair[] getInputDigitsFilter() {
         return null;
     }
 
     @Override
-    public int getPackMeasurementOne() {
-        return 0;
+    public double getPackMeasurementOne() {
+        return 0.;
     }
 
     @Override
-    public boolean setPackMeasurementOne(int packMeasurementOne) {
+    public boolean packMeasurementOneIsSet(double packMeasurementOne) {
         return false;
     }
 
@@ -104,32 +108,52 @@ public class ImperialVolume implements UnitOfMeasure {
     }
 
     @Override
-    public boolean setPackMeasurementTwo(int packMeasurementTwo) {
+    public boolean packMeasurementTwoIsSet(int packMeasurementTwo) {
         return false;
     }
 
     @Override
-    public int getSinglePackMeasurementOne() {
+    public int getPackMeasurementThree() {
         return 0;
     }
 
     @Override
-    public boolean setSinglePackMeasurementOne(int itemMeasurementOne) {
+    public boolean packMeasurementThreeIsSet(int packMeasurementThree) {
         return false;
     }
 
     @Override
-    public int getSinglePackMeasurementTwo() {
+    public double getItemMeasurementOne() {
         return 0;
     }
 
     @Override
-    public boolean setSinglePackMeasurementTwo(int itemMeasurementTwo) {
+    public boolean itemMeasurementOneIsSet(double itemMeasurementOne) {
         return false;
     }
 
     @Override
-    public void resetNumericValues() {
+    public int getItemMeasurementTwo() {
+        return 0;
+    }
 
+    @Override
+    public boolean itemMeasurementTwoIsSet(int itemMeasurementTwo) {
+        return false;
+    }
+
+    @Override
+    public int getItemMeasurementThree() {
+        return 0;
+    }
+
+    @Override
+    public boolean itemMeasurementThreeIsSet(int itemMeasurementThree) {
+        return false;
+    }
+
+    @Override
+    public int[] getMeasurementError() {
+        return new int[0];
     }
 }

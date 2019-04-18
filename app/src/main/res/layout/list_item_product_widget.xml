@@ -18,7 +18,7 @@
         android:paddingEnd="8dp"
         android:layout_gravity="start"
         android:paddingStart="8dp"
-        tools:text="Description of product goes here" />
+        tools:text="Description of productEntity goes here" />
 
     <TextView
         android:id="@+id/list_item_product_widget_tv_pack_size"

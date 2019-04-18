@@ -8,15 +8,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-/**
- * Paging adaptor for the tabs and fragments displayed in {@link ProductCatalogMain}
- */
-public class ProductCatalogMainFragmentPageAdapter extends FragmentPagerAdapter {
+public class ProductCatalogFragmentPageAdapter extends FragmentPagerAdapter {
 
     private final List<Fragment> fragments = new ArrayList<>();
     private final List<String> fragmentTitles = new ArrayList<>();
 
-    ProductCatalogMainFragmentPageAdapter(FragmentManager fm) {
+    ProductCatalogFragmentPageAdapter(FragmentManager fm) {
         super(fm);
     }
 

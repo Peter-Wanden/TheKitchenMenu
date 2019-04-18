@@ -5,8 +5,8 @@ import android.database.Cursor;
 import android.util.Log;
 
 import com.example.peter.thekitchenmenu.data.databaseLocal.TKMLocalDatabase;
-import com.example.peter.thekitchenmenu.data.entity.Product;
-import com.example.peter.thekitchenmenu.data.entity.UsersProductData;
+import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
+import com.example.peter.thekitchenmenu.data.entity.ProductUserDataEntity;
 
 import java.util.List;
 
@@ -19,15 +19,15 @@ public class Repository {
     private final TKMLocalDatabase database;
     private final SyncManager syncManager;
 
-    private MediatorLiveDataActive<List<UsersProductData>> observableUsersProductData;
-    private MediatorLiveDataActive<List<Product>> observableProducts;
+    private MediatorLiveDataActive<List<ProductUserDataEntity>> observableUsersProductData;
+    private MediatorLiveDataActive<List<ProductEntity>> observableProducts;
 
     private Repository(final Context context, final TKMLocalDatabase database) {
 
         this.database = database;
         syncManager = new SyncManager(context);
 
-        observableProducts = new MediatorLiveDataActive<>(this, Product.TAG);
+        observableProducts = new MediatorLiveDataActive<>(this, ProductEntity.TAG);
         observableProducts.addSource(this.database.productDAO().getAll(),
                 products -> {
             if (this.database.getDatabaseCreated().getValue() != null) {
@@ -35,7 +35,7 @@ public class Repository {
             }
         });
 
-        observableUsersProductData = new MediatorLiveDataActive<>(this, UsersProductData.TAG);
+        observableUsersProductData = new MediatorLiveDataActive<>(this, ProductUserDataEntity.TAG);
         observableUsersProductData.addSource(this.database.userProductDataDAO().getAll(),
                 usersProductData -> {
             if (this.database.getDatabaseCreated().getValue() != null) {
@@ -56,40 +56,40 @@ public class Repository {
     }
 
     void observedStateChange(String dataModel, boolean observedState) {
-        Log.d(TAG, "observedStateChange: " + dataModel + " to: " + observedState);
+        Log.d(TAG, "tkm - observedStateChange: " + dataModel + " to: " + observedState);
         syncManager.setModelToSync(dataModel, observedState);
     }
 
-    public LiveData<List<Product>> getAllProducts() {
+    public LiveData<List<ProductEntity>> getAllProducts() {
         return observableProducts;
     }
 
-    public LiveData<List<UsersProductData>> getAllUserProductData() {
+    public LiveData<List<ProductUserDataEntity>> getAllUserProductData() {
         return observableUsersProductData;
     }
 
-    Product getProductByRemoteId(String remoteId) {
+    ProductEntity getProductByRemoteId(String remoteId) {
         return database.productDAO().getByRemoteId(remoteId);
     }
 
-    UsersProductData getUserProductDataByRemoteId(String remoteId) {
+    ProductUserDataEntity getUserProductDataByRemoteId(String remoteId) {
         return database.userProductDataDAO().getByRemoteId(remoteId);
     }
 
-    void insertAllProducts(List<Product> productsToInsert) {
+    void insertAllProducts(List<ProductEntity> productsToInsert) {
         database.productDAO().insertAll(productsToInsert);
     }
 
-    void insertAllUserProductData(List<UsersProductData> userProductDataToInsert) {
+    void insertAllUserProductData(List<ProductUserDataEntity> userProductDataToInsert) {
         database.userProductDataDAO().insertAll(userProductDataToInsert);
     }
 
-    void updateProducts(List<Product> productsToUpdate) {
+    void updateProducts(List<ProductEntity> productsToUpdate) {
         database.productDAO().updateAll(productsToUpdate);
     }
 
-    void updateUsersProductData(List<UsersProductData> usersProductDataToUpdate) {
-        database.userProductDataDAO().updateAll(usersProductDataToUpdate);
+    void updateUsersProductData(List<ProductUserDataEntity> productUserDataEntityToUpdate) {
+        database.userProductDataDAO().updateAll(productUserDataEntityToUpdate);
     }
 
     public Cursor findProductsThatMatch(String searchQuery) {

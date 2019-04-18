@@ -3,13 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <data>
-        <variable
-            name="viewModel"
-            type="com.example.peter.thekitchenmenu.viewmodels.ProductMainViewModel">
-        </variable>
-    </data>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/product_user_container"
         android:layout_width="match_parent"
@@ -21,9 +14,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/label_retailer"
-            app:layout_constraintBottom_toBottomOf="@+id/retailer"
+            app:layout_constraintBottom_toBottomOf="@id/retailer"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/retailer" />
+            app:layout_constraintTop_toTopOf="@id/retailer" />
 
         <TextView
             android:id="@+id/retailer"
@@ -31,7 +24,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="bottom"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintStart_toStartOf="@id/guideline"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Waitrose" />
 
@@ -42,9 +35,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/label_price"
-            app:layout_constraintBottom_toBottomOf="@+id/price"
+            app:layout_constraintBottom_toBottomOf="@id/price"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/price" />
+            app:layout_constraintTop_toTopOf="@id/price" />
 
         <TextView
             android:id="@+id/price"
@@ -52,8 +45,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="bottom"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@+id/retailer"
+            app:layout_constraintStart_toStartOf="@id/guideline"
+            app:layout_constraintTop_toBottomOf="@id/retailer"
             tools:text="99.95" />
 
         <TextView
@@ -63,9 +56,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/label_location_room"
-            app:layout_constraintBottom_toBottomOf="@+id/location_room"
+            app:layout_constraintBottom_toBottomOf="@id/location_room"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/location_room" />
+            app:layout_constraintTop_toTopOf="@id/location_room" />
 
         <TextView
             android:id="@+id/location_room"
@@ -73,8 +66,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="bottom"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@+id/price"
+            app:layout_constraintStart_toStartOf="@id/guideline"
+            app:layout_constraintTop_toBottomOf="@id/price"
             tools:text="Kitchen" />
 
         <TextView
@@ -84,9 +77,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/label_location_in_room"
-            app:layout_constraintBottom_toBottomOf="@+id/location_in_room"
+            app:layout_constraintBottom_toBottomOf="@id/location_in_room"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/location_in_room" />
+            app:layout_constraintTop_toTopOf="@id/location_in_room" />
 
         <TextView
             android:id="@+id/location_in_room"
@@ -94,8 +87,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="bottom"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@+id/location_room"
+            app:layout_constraintStart_toStartOf="@id/guideline"
+            app:layout_constraintTop_toBottomOf="@id/location_room"
             tools:text="Cupboard under sink" />
 
         <androidx.constraintlayout.widget.Guideline

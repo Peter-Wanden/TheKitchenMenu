@@ -14,20 +14,19 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-import static com.example.peter.thekitchenmenu.data.entity.Product.TABLE_PRODUCT;
+import static com.example.peter.thekitchenmenu.data.entity.ProductEntity.TABLE_PRODUCT;
 
 @Entity(tableName = TABLE_PRODUCT)
-public class Product implements Parcelable {
+public class ProductEntity implements Parcelable {
 
-    public static final String TAG = "Product";
+    public static final String TAG = "ProductEntity";
 
     public static final String TABLE_PRODUCT = "product_uneditable";
     public static final String ID = "id";
     public static final String DESCRIPTION = "description";
     public static final String MADE_BY = "madeBy";
     public static final String CATEGORY = "category";
-    public static final String MULTI_PACK = "multi_pack";
-    public static final String NUMBER_OF_PACKS = "number_of_packs";
+    public static final String NUMBER_OF_ITEMS = "number_of_items";
     public static final String SHELF_LIFE = "shelfLife";
     public static final String BASE_SI_UNITS = "baseSiUnits";
     public static final String UNIT_OF_MEASURE_SUB_TYPE = "unitOfMeasureSubType";
@@ -52,8 +51,8 @@ public class Product implements Parcelable {
     @ColumnInfo(name = CATEGORY)
     private int category;
 
-    @ColumnInfo(name = NUMBER_OF_PACKS)
-    private int numberOfPacks;
+    @ColumnInfo(name = NUMBER_OF_ITEMS)
+    private int numberOfItems;
 
     @ColumnInfo(name = SHELF_LIFE)
     private int shelfLife;
@@ -83,28 +82,28 @@ public class Product implements Parcelable {
     private String remoteProductId;
 
     @Ignore
-    public Product(){} /* Required by Firebase. */
+    public ProductEntity(){} /* Required by Firebase. */
 
-    public Product(int id,
-                   String description,
-                   String madeBy,
-                   int category,
-                   int shelfLife,
-                   int numberOfPacks,
-                   double baseSiUnits,
-                   int unitOfMeasureSubType,
-                   double packAvePrice,
-                   String createdBy,
-                   @NonNull String remoteImageUri,
-                   long createDate,
-                   long lastUpdate,
-                   String remoteProductId) {
+    public ProductEntity(int id,
+                         String description,
+                         String madeBy,
+                         int category,
+                         int shelfLife,
+                         int numberOfItems,
+                         double baseSiUnits,
+                         int unitOfMeasureSubType,
+                         double packAvePrice,
+                         String createdBy,
+                         @NonNull String remoteImageUri,
+                         long createDate,
+                         long lastUpdate,
+                         String remoteProductId) {
 
         this.id = id;
         this.description = description;
         this.madeBy = madeBy;
         this.category = category;
-        this.numberOfPacks = numberOfPacks;
+        this.numberOfItems = numberOfItems;
         this.shelfLife = shelfLife;
         this.baseSiUnits = baseSiUnits;
         this.unitOfMeasureSubType = unitOfMeasureSubType;
@@ -117,12 +116,12 @@ public class Product implements Parcelable {
     }
 
     @Ignore
-    public Product(Parcel in) {
+    public ProductEntity(Parcel in) {
         id = in.readInt();
         description = in.readString();
         madeBy = in.readString();
         category = in.readInt();
-        numberOfPacks = in.readInt();
+        numberOfItems = in.readInt();
         shelfLife = in.readInt();
         baseSiUnits = in.readDouble();
         unitOfMeasureSubType = in.readInt();
@@ -140,7 +139,7 @@ public class Product implements Parcelable {
         dest.writeString(description);
         dest.writeString(madeBy);
         dest.writeInt(category);
-        dest.writeInt(numberOfPacks);
+        dest.writeInt(numberOfItems);
         dest.writeInt(shelfLife);
         dest.writeDouble(baseSiUnits);
         dest.writeInt(unitOfMeasureSubType);
@@ -157,15 +156,15 @@ public class Product implements Parcelable {
         return 0;
     }
 
-    public static final Creator<Product> CREATOR = new Creator<Product>() {
+    public static final Creator<ProductEntity> CREATOR = new Creator<ProductEntity>() {
         @Override
-        public Product createFromParcel(Parcel in) {
-            return new Product(in);
+        public ProductEntity createFromParcel(Parcel in) {
+            return new ProductEntity(in);
         }
 
         @Override
-        public Product[] newArray(int size) {
-            return new Product[size];
+        public ProductEntity[] newArray(int size) {
+            return new ProductEntity[size];
         }
     };
 
@@ -177,7 +176,7 @@ public class Product implements Parcelable {
         result.put(DESCRIPTION, description);
         result.put(MADE_BY, madeBy);
         result.put(CATEGORY, category);
-        result.put(NUMBER_OF_PACKS, numberOfPacks);
+        result.put(NUMBER_OF_ITEMS, numberOfItems);
         result.put(SHELF_LIFE, shelfLife);
         result.put(BASE_SI_UNITS, baseSiUnits);
         result.put(UNIT_OF_MEASURE_SUB_TYPE, unitOfMeasureSubType);
@@ -192,12 +191,12 @@ public class Product implements Parcelable {
 
     @Override
     public String toString() {
-        return "Product { \n" +
+        return "ProductEntity { \n" +
                 "\nid=" + id +
                 "\n description='" + description + '\'' +
                 "\n madeBy='" + madeBy + '\'' +
                 "\n category=" + category + '\'' +
-                "\n number_of_items=" + numberOfPacks + '\'' +
+                "\n number_of_items=" + numberOfItems + '\'' +
                 "\n shelfLife=" + shelfLife + '\'' +
                 "\n baseSiUnits=" + baseSiUnits +
                 "\n unitOfMeasureSubType=" + unitOfMeasureSubType + '\'' +
@@ -243,12 +242,12 @@ public class Product implements Parcelable {
         this.category = category;
     }
 
-    public int getNumberOfPacks() {
-        return numberOfPacks;
+    public int getNumberOfItems() {
+        return numberOfItems;
     }
 
-    public void setNumberOfPacks(int numberOfPacks) {
-        this.numberOfPacks = numberOfPacks;
+    public void setNumberOfItems(int numberOfItems) {
+        this.numberOfItems = numberOfItems;
     }
 
     public int getShelfLife() {

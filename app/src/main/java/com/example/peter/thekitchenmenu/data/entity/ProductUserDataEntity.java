@@ -14,13 +14,13 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-import static com.example.peter.thekitchenmenu.data.entity.Product.REMOTE_PRODUCT_ID;
-import static com.example.peter.thekitchenmenu.data.entity.UsersProductData.TABLE_USERS_PRODUCT_DATA;
+import static com.example.peter.thekitchenmenu.data.entity.ProductEntity.REMOTE_PRODUCT_ID;
+import static com.example.peter.thekitchenmenu.data.entity.ProductUserDataEntity.TABLE_USERS_PRODUCT_DATA;
 
 @Entity(tableName = TABLE_USERS_PRODUCT_DATA)
-public class UsersProductData implements Parcelable {
+public class ProductUserDataEntity implements Parcelable {
 
-    public static final String TAG = "UsersProductData";
+    public static final String TAG = "ProductUserDataEntity";
 
     public static final String TABLE_USERS_PRODUCT_DATA = "usersProductData";
     public static final String ID = "id";
@@ -74,19 +74,19 @@ public class UsersProductData implements Parcelable {
 
     /* Empty constructor as required by Firebase. */
     @Ignore
-    public UsersProductData(){}
+    public ProductUserDataEntity(){}
 
-    public UsersProductData(int id,
-                            int productId,
-                            String remoteIdUsedProduct,
-                            String remoteProductId,
-                            String retailer,
-                            String locationRoom,
-                            String locationInRoom,
-                            double price,
-                            String localImageUri,
-                            long createDate,
-                            long lastUpdate) {
+    public ProductUserDataEntity(int id,
+                                 int productId,
+                                 String remoteIdUsedProduct,
+                                 String remoteProductId,
+                                 String retailer,
+                                 String locationRoom,
+                                 String locationInRoom,
+                                 double price,
+                                 String localImageUri,
+                                 long createDate,
+                                 long lastUpdate) {
 
         this.id = id;
         this.productId = productId;
@@ -102,7 +102,7 @@ public class UsersProductData implements Parcelable {
     }
 
     @Ignore
-    public UsersProductData(Parcel in) {
+    public ProductUserDataEntity(Parcel in) {
         id = in.readInt();
         productId = in.readInt();
         remoteIdUsedProduct = in.readString();
@@ -154,15 +154,15 @@ public class UsersProductData implements Parcelable {
         return 0;
     }
 
-    public static final Creator<UsersProductData> CREATOR = new Creator<UsersProductData>() {
+    public static final Creator<ProductUserDataEntity> CREATOR = new Creator<ProductUserDataEntity>() {
         @Override
-        public UsersProductData createFromParcel(Parcel in) {
-            return new UsersProductData(in);
+        public ProductUserDataEntity createFromParcel(Parcel in) {
+            return new ProductUserDataEntity(in);
         }
 
         @Override
-        public UsersProductData[] newArray(int size) {
-            return new UsersProductData[size];
+        public ProductUserDataEntity[] newArray(int size) {
+            return new ProductUserDataEntity[size];
         }
     };
 

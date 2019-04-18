@@ -3,8 +3,8 @@ package com.example.peter.thekitchenmenu.data.databaseLocal;
 import android.content.Context;
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
-import com.example.peter.thekitchenmenu.data.entity.Product;
-import com.example.peter.thekitchenmenu.data.entity.UsersProductData;
+import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
+import com.example.peter.thekitchenmenu.data.entity.ProductUserDataEntity;
 import com.example.peter.thekitchenmenu.data.entity.ProductFastTextSearch;
 
 import java.util.List;
@@ -18,12 +18,12 @@ import androidx.room.RoomDatabase;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import static com.example.peter.thekitchenmenu.data.entity.Product.*;
+import static com.example.peter.thekitchenmenu.data.entity.ProductEntity.*;
 import static com.example.peter.thekitchenmenu.data.entity.ProductFastTextSearch.TABLE_FTS_PRODUCT;
 
 @Database(entities = {
-        Product.class,
-        UsersProductData.class,
+        ProductEntity.class,
+        ProductUserDataEntity.class,
         ProductFastTextSearch.class},
         version = 2,
         exportSchema = false)
@@ -75,11 +75,11 @@ public abstract class TKMLocalDatabase extends RoomDatabase {
     }
 
     private static void insertData(final TKMLocalDatabase database,
-                                   final List<Product> products,
-                                   final List<UsersProductData> usersProductData) {
+                                   final List<ProductEntity> productEntities,
+                                   final List<ProductUserDataEntity> productUserDatumEntities) {
         database.runInTransaction(() -> {
-            database.productDAO().insertAll(products);
-            database.userProductDataDAO().insertAll(usersProductData);
+            database.productDAO().insertAll(productEntities);
+            database.userProductDataDAO().insertAll(productUserDatumEntities);
         });
     }
 

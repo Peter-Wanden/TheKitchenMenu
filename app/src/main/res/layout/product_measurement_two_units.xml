@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <import type="com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubTypeConverter" />
+
+        <import type="com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementZeroToBlankConverter" />
+
+        <variable
+            name="measurementValidation"
+            type="com.example.peter.thekitchenmenu.utils.ProductMeasurementHandler" />
+
+        <variable
+            name="measurement"
+            type="com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/product_measurement_double_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/pack_editable_measurement_two"
+            style="@style/EditableFieldStyle"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/standard_input_item_height"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp"
+            android:textAlignment="textEnd"
+            app:layout_constraintBottom_toTopOf="@+id/item_editable_measurement_two"
+            app:layout_constraintEnd_toStartOf="@+id/pack_measurement_label_two"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            android:afterTextChanged='@{() -> measurementValidation.validatePackSize(packEditableMeasurementTwo, measurement.measurementSubType)}'
+            android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(packEditableMeasurementTwo, measurement.packMeasurementTwo)}'
+            app:setUpEditTextForSubTypeSelected='@{measurement.measurementSubType}'
+            app:fieldVisibilityAdapterNumberOfUnits='@{measurement.numberOfMeasurementUnits}'
+            tools:text="22" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/pack_measurement_label_two"
+            style="@style/EditableCategoryStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/standard_input_item_height"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:gravity="center_vertical"
+            app:layout_constraintEnd_toStartOf="@+id/pack_editable_measurement_one"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/pack_editable_measurement_two"
+            app:layout_constraintTop_toTopOf="@+id/pack_editable_measurement_two"
+            app:setLabelForSubTypeSelected='@{measurement.measurementSubType}'
+            app:fieldVisibilityAdapterNumberOfUnits='@{measurement.numberOfMeasurementUnits}'
+            tools:text="l" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/item_editable_measurement_two"
+            style="@style/EditableFieldStyle"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/standard_input_item_height"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp"
+            android:textAlignment="textEnd"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/item_measurement_label_two"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            android:afterTextChanged='@{() -> measurementValidation.validatePackSize(itemEditableMeasurementTwo, measurement.measurementSubType)}'
+            android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(itemEditableMeasurementTwo, measurement.itemMeasurementTwo)}'
+            app:setUpEditTextForSubTypeSelected='@{measurement.measurementSubType}'
+            app:fieldVisibilityAdapterNumberOfUnits='@{measurement.numberOfMeasurementUnits}'
+            app:fieldVisibilityAdapterNumberOfItems='@{measurement.numberOfItems}'
+            tools:text="22" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/item_measurement_label_two"
+            style="@style/EditableCategoryStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/standard_input_item_height"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:gravity="center_vertical"
+            app:layout_constraintEnd_toStartOf="@+id/item_editable_measurement_one"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/item_editable_measurement_two"
+            app:layout_constraintTop_toTopOf="@+id/item_editable_measurement_two"
+            app:setLabelForSubTypeSelected='@{measurement.measurementSubType}'
+            app:fieldVisibilityAdapterNumberOfUnits='@{measurement.numberOfMeasurementUnits}'
+            app:fieldVisibilityAdapterNumberOfItems='@{measurement.numberOfItems}'
+            tools:text="l" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/pack_editable_measurement_one"
+            style="@style/EditableFieldStyle"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/standard_input_item_height"
+            android:layout_marginStart="8dp"
+            android:textAlignment="textEnd"
+            app:layout_constraintEnd_toStartOf="@+id/pack_measurement_label_one"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/pack_measurement_label_two"
+            app:layout_constraintTop_toTopOf="@+id/pack_measurement_label_two"
+            android:afterTextChanged='@{() -> measurementValidation.validatePackSize(packEditableMeasurementOne, measurement.measurementSubType)}'
+            android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(packEditableMeasurementOne, measurement.packMeasurementOneAsInt)}'
+            app:setUpEditTextForSubTypeSelected='@{measurement.measurementSubType}'
+            tools:text="16" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/pack_measurement_label_one"
+            style="@style/EditableCategoryStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/standard_input_item_height"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:gravity="center_vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/pack_editable_measurement_one"
+            app:layout_constraintTop_toTopOf="@+id/pack_editable_measurement_one"
+            app:setLabelForSubTypeSelected='@{measurement.measurementSubType}'
+            tools:text="ml" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/item_editable_measurement_one"
+            style="@style/EditableFieldStyle"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/standard_input_item_height"
+            android:layout_marginStart="8dp"
+            android:textAlignment="textEnd"
+            app:layout_constraintEnd_toStartOf="@+id/item_measurement_label_one"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/item_measurement_label_two"
+            app:layout_constraintTop_toTopOf="@+id/item_measurement_label_two"
+            android:afterTextChanged='@{() -> measurementValidation.validatePackSize(itemEditableMeasurementOne, measurement.measurementSubType)}'
+            android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(itemEditableMeasurementOne, measurement.itemMeasurementOneAsInt)}'
+            app:setUpEditTextForSubTypeSelected='@{measurement.measurementSubType}'
+            app:fieldVisibilityAdapterNumberOfItems='@{measurement.numberOfItems}'
+            tools:text="16" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/item_measurement_label_one"
+            style="@style/EditableCategoryStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/standard_input_item_height"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:gravity="center_vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/item_editable_measurement_one"
+            app:layout_constraintTop_toTopOf="@+id/item_editable_measurement_one"
+            app:setLabelForSubTypeSelected='@{measurement.measurementSubType}'
+            app:fieldVisibilityAdapterNumberOfItems='@{measurement.numberOfItems}'
+            tools:text="ml" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -8,8 +8,8 @@ import android.util.Log;
 
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.app.HandlerWorker;
-import com.example.peter.thekitchenmenu.data.entity.Product;
-import com.example.peter.thekitchenmenu.data.entity.UsersProductData;
+import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
+import com.example.peter.thekitchenmenu.data.entity.ProductUserDataEntity;
 
 import java.util.LinkedList;
 
@@ -63,21 +63,21 @@ public class RepositoryRemote {
             String syncModelCompleted = (String) msg.obj;
 
             if (!syncModelCompleted.equals("Sync failed, 0 items returned.")) {
-                Log.d(TAG, "handleMessage: " + syncModelCompleted + " has completed sync.");
+                Log.d(TAG, "tkm - handleMessage: " + syncModelCompleted + " has completed sync.");
                 ModelStatus completedElement = syncQueue.remove();
-                Log.d(TAG, "handleMessage: Removed: " + completedElement.getModelName() +
+                Log.d(TAG, "tkm - handleMessage: Removed: " + completedElement.getModelName() +
                         " from sync queue");
 
                 // If available move on to next element.
                 if (syncQueue.size() > 0) {
-                    Log.d(TAG, "handleMessage: Moving on to next item.");
+                    Log.d(TAG, "tkm - handleMessage: Moving on to next item.");
                     processSyncQueue();
                 } else {
-                    syncComplete("Sync completed normally, resetting processingSyncQueue to: false");
+                    syncComplete("tkm - Sync completed normally, resetting processingSyncQueue to: false");
                 }
             } else {
                 syncQueue.clear();
-                syncComplete("0 items returned, cannot process sync any further.");
+                syncComplete("tkm - 0 items returned, cannot process sync any further.");
             }
             // TODO - Recycle message here?
         }
@@ -86,7 +86,7 @@ public class RepositoryRemote {
     private void syncComplete(String syncResultMessage) {
         worker.quit();
         processingSyncQueue = false;
-        Log.d(TAG, "syncComplete: Sync completed with message: " + syncResultMessage);
+        Log.d(TAG, "tkm - syncComplete: Sync completed with message: " + syncResultMessage);
     }
 
     /**
@@ -123,20 +123,20 @@ public class RepositoryRemote {
         if (!Constants.getUserId().getValue().equals(Constants.ANONYMOUS)) {
             switch (dataModel) {
 
-                case Product.TAG:
+                case ProductEntity.TAG:
                     if (syncProduct.getListenerState() != isObserved) {
                         syncProduct.setListenerState(isObserved);
                         if (isObserved) {
-                            syncQueue.add(new ModelStatus(Product.TAG));
+                            syncQueue.add(new ModelStatus(ProductEntity.TAG));
                         }
                     }
                     break;
 
-                case UsersProductData.TAG:
+                case ProductUserDataEntity.TAG:
                     if (syncUserProductData.getListenerState() != isObserved) {
                         syncUserProductData.setListenerState(isObserved);
                         if (isObserved) {
-                            syncQueue.add(new ModelStatus(UsersProductData.TAG));
+                            syncQueue.add(new ModelStatus(ProductUserDataEntity.TAG));
                         }
                     }
                     break;
@@ -168,7 +168,7 @@ public class RepositoryRemote {
             syncQueue.remove(indexOfModelInQueue);
             syncQueue.add(indexOfModelInQueue, synchronisedModel);
 
-            Log.d(TAG, "dataSetReturned: Sync queue looks like: " + syncQueue.toString());
+            Log.d(TAG, "tkm - dataSetReturned: Sync queue looks like: " + syncQueue.toString());
 
             if (!processingSyncQueue) {
                 processSyncQueue();
@@ -191,28 +191,28 @@ public class RepositoryRemote {
                 // Find out which data models data set has been returned.
                 switch (queueHead.getModelName()) {
 
-                    case Product.TAG:
-                        Log.d(TAG, "processSyncQueue: Product");
+                    case ProductEntity.TAG:
+                        Log.d(TAG, "tkm - processSyncQueue: ProductEntity");
                         // Send the data to its respective sync class to be processed.
                         syncProduct.syncRemoteData(handler, worker);
                         break;
 
-                    case UsersProductData.TAG:
-                        Log.d(TAG, "processSyncQueue: UsersProductData");
+                    case ProductUserDataEntity.TAG:
+                        Log.d(TAG, "tkm - processSyncQueue: ProductUserDataEntity");
                         // Send the data to its respective sync class to be processed.
                         syncUserProductData.syncRemoteData(handler, worker);
                         break;
 
                     default:
                         // If the data models data set has not returned, log error, exit.
-                        Log.d(TAG, "processSyncQueue: Data model not found: " +
+                        Log.d(TAG, "tkm - processSyncQueue: Data model not found: " +
                                 queueHead.toString() + " Exiting sync.");
                         processingSyncQueue = false;
                         break;
                 }
 
             } else {
-                Log.d(TAG, "processSyncQueue: First item in queue is not ready, exiting sync.");
+                Log.d(TAG, "tkm - processSyncQueue: First item in queue is not ready, exiting sync.");
                 processingSyncQueue = false;
             }
         }

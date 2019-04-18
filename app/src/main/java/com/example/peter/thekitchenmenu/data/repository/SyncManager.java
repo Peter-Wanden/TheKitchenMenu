@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.example.peter.thekitchenmenu.app.Constants;
-import com.example.peter.thekitchenmenu.data.entity.Product;
-import com.example.peter.thekitchenmenu.data.entity.UsersProductData;
+import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
+import com.example.peter.thekitchenmenu.data.entity.ProductUserDataEntity;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -118,8 +118,8 @@ class SyncManager {
         userId = Constants.getUserId();
 
         // Add new data models to the synchronisation map in dependency order.
-        modelSyncList.add(new DataModelStatus(Product.TAG, false, false));
-        modelSyncList.add(new DataModelStatus(UsersProductData.TAG, false, false));
+        modelSyncList.add(new DataModelStatus(ProductEntity.TAG, false, false));
+        modelSyncList.add(new DataModelStatus(ProductUserDataEntity.TAG, false, false));
     }
 
     void setModelToSync(String model, boolean isObserved) {
@@ -301,6 +301,8 @@ class SyncManager {
         }
 
         // If the user is logged in. TODO - SYNC MANAGER Fix this null pointer!!
+
+        if (userId.getValue() != null)
         if (!userId.getValue().equals(ANONYMOUS)) {
 
             // And there is a sync pending.

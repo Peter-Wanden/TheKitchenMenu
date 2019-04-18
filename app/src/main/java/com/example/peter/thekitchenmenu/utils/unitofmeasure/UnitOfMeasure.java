@@ -1,37 +1,42 @@
 package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
-import com.example.peter.thekitchenmenu.data.model.ObservableProductModel;
+import androidx.core.util.Pair;
 
 public interface UnitOfMeasure {
 
-    String getTypeAsString();
+    int getTypeStringResourceId();
     MeasurementType getMeasurementType();
+
+    int getSubTypeStringResourceId();
     MeasurementSubType getMeasurementSubType();
 
-    String getMeasurementUnitOne();
-    String getMeasurementUnitTwo();
-
-    ObservableMeasurement getMinAndMax();
-
-    void setNewMeasurementValuesTo(ObservableMeasurement observableMeasurement);
-    boolean getValuesFromObservableProductModel(ObservableProductModel productModel);
-
     double getBaseSiUnits();
-    boolean setBaseSiUnits(double baseSiUnits);
+    boolean baseSiUnitsAreSet(double baseSiUnits);
 
-    boolean setNumberOfPacksInPack(int numberOfItems);
-    int getNumberOfPacksInPack();
+    int getNumberOfItems();
+    boolean numberOfItemsAreSet(int numberOfItems);
 
-    int getPackMeasurementOne();
-    boolean setPackMeasurementOne(int packMeasurementOne);
+    int getNumberOfMeasurementUnits();
+
+    int getUnitOneLabelStringResourceId();
+    double getPackMeasurementOne();
+    boolean packMeasurementOneIsSet(double packMeasurementOne);
+    double getItemMeasurementOne();
+    boolean itemMeasurementOneIsSet(double itemMeasurementOne);
+
+    int getUnitTwoLabelStringResourceId();
     int getPackMeasurementTwo();
-    boolean setPackMeasurementTwo(int packMeasurementTwo);
-    int getSinglePackMeasurementOne();
-    boolean setSinglePackMeasurementOne(int itemMeasurementOne);
-    int getSinglePackMeasurementTwo();
-    boolean setSinglePackMeasurementTwo(int itemMeasurementTwo);
+    boolean packMeasurementTwoIsSet(int packMeasurementTwo);
+    int getItemMeasurementTwo();
+    boolean itemMeasurementTwoIsSet(int itemMeasurementTwo);
 
-    int[] getInputFilterFormat();
+    int getUnitThreeLabelStringResourceId();
+    int getPackMeasurementThree();
+    boolean packMeasurementThreeIsSet(int packMeasurementThree);
+    int getItemMeasurementThree();
+    boolean itemMeasurementThreeIsSet(int itemMeasurementThree);
 
-    void resetNumericValues();
+    int[] getMeasurementError();
+
+    Pair[] getInputDigitsFilter();
 }

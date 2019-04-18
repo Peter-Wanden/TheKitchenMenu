@@ -56,7 +56,15 @@ public enum MeasurementUnits {
         }
     },
 
-    LITRES(2) {
+    CENTILITRES(2) {
+        @Override
+        public int getIntValue() {return super.getIntValue();}
+
+        @Override
+        public String getString() {return null;}
+    },
+
+    LITRES(3) {
         @Override
         public int getIntValue() {
             return super.getIntValue();

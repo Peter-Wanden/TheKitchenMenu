@@ -3,16 +3,16 @@
 
     <!-- CONTENT DESCRIPTIONS -->
     <!-- Attach to any ImageView's of the product_uneditable -->
-    <string name="cd_picture_of_product">A picture of the product</string>
+    <string name="cd_picture_of_product">A picture of the productEntity</string>
     <string name="cd_add_image_from_camera">Select to add image from camera</string>
     <string name="cd_add_image_from_gallery">Click to add image from gallery</string>
     <!-- Attach to any ImageView's of the recipe -->
-    <string name="cd_save_product">Click to save the current product</string>
-    <string name="cd_delete_product">Click to delete the current product</string>
-    <string name="cd_action_edit_product">Click to edit the current product</string>
+    <string name="cd_save_product">Click to save the current productEntity</string>
+    <string name="cd_delete_product">Click to delete the current productEntity</string>
+    <string name="cd_action_edit_product">Click to edit the current productEntity</string>
     <string name="cd_add_image">Click to add a picture</string>
     <string name="cd_rotate_image">Click to rotate picture</string>
-    <string name="cd_add_product">Add a product</string>
+    <string name="cd_add_product">Add a productEntity</string>
     <string name="cd_brand_logo">The kitchen menu brand logo</string>
 
     <!-- Common field labels and hints -->
@@ -26,9 +26,9 @@
     <string name="hint_location_room">What room do you keep it?</string>
     <string name="label_location_in_room">Where abouts?</string>
     <string name="hint_location_in_room">Where abouts in the room?</string>
-    <string name="pack_size_total">Total pack %1$s</string>
+    <string name="pack_size_label">Total pack %1$s</string>
     <string name="pack_size_total_hint">How many %1$s?</string>
-    <string name="single_pack_size">Single pack %1$s</string>
+    <string name="item_size_label">Single pack %1$s</string>
     <string name="item_size_hint">How many %1$s?</string>
     <string name="label_pack_size">Pack size</string>
     <string name="label_item_size">Item size</string>
@@ -36,7 +36,7 @@
     <string name="hint_item_size">Weight/volume of each item</string>
     <string name="unit_of_measure_label">Sold in units of</string>
     <string name="label_multi_pack">Multipack?</string>
-    <string name="label_number_of_packs">How many packs in the multi-pack?</string>
+    <string name="label_number_of_packs">Number of packs / items (multipack only)</string>
     <string name="label_price">Price</string>
     <string name="hint_price">How much does it cost?</string>
     <string name="label_shelf_life">Shelf life</string>
@@ -46,7 +46,7 @@
     <!-- ProductDetail unit of measure spinner options -->
     <!-- See arrays.xml "unit_of_measure_options" for usage -->
     <string name="unit_of_measure_default">Please select</string>
-    <string name="grams">grams</string>
+    <string name="grams">g</string>
     <string name="kilograms">kg</string>
     <string name="ounces">oz</string>
     <string name="pounds">lb</string>
@@ -54,8 +54,8 @@
     <string name="millilitres">ml</string>
     <string name="litres">litres</string>
     <string name="fluidOunce">fl oz</string>
-    <string name="pints">pints</string>
-    <string name="gallons">gallons</string>
+    <string name="pints">pt</string>
+    <string name="gallons">gal</string>
     <string name="each">each</string>
     <string name="piece">piece</string>
     <string name="items">items</string>
@@ -73,9 +73,11 @@
     <string name="sub_type_count">Count</string>
 
     <!-- Unit of measure spinner headers -->
-    <string name="header_mass">SELECT WEIGHT</string>
-    <string name="header_volume">SELECT VOLUME</string>
-    <string name="header_count">SELECT COUNT</string>
+    <string name="header_mass_metric">Weight metric</string>
+    <string name="header_mass_imperial">Weight imperial</string>
+    <string name="header_volume_metric">Volume metric</string>
+    <string name="header_volume_imperial">Volume imperial</string>
+    <string name="header_count">Count</string>
 
     <!-- ProductDetail shelf life spinner options -->
     <string name="shelf_life_default">Please select</string>
@@ -125,11 +127,12 @@
         between 1 and 120 characters.</string>
     <string name="input_error_product_retailer_too_long">Retailer name too long, needs to be
         between 1 and 120 characters.</string>
-    <string name="input_error_packs_in_pack">Number of packs needs to be between %1$d and %2$d</string>
+    <string name="input_error_items_in_pack">Number of packs needs to be between %1$d and %2$d</string>
     <string name="input_error_product_pack_size">Pack size needs to be between 1g and 10kg</string>
     <string name="max_mass_exceeded_error">Weight must be under %1$.0f %2$s</string>
 
-    <string name="input_error_pack_size">Pack %1$s must be between %2$d %3$s and %4$d %5$s. Minimum %6$s is %7$d %8$s per item.</string>
+    <string name="input_error_pack_size">Total pack %1$s must not exceed %2$s%3$s. Pack %1$s
+        must be between %4$s%5$s and %2$s%3$s. Minimum item %1$s is %4$s%5$s.</string>
 
     <string name="input_error_product_loc_room_too_short">Storage room name too short, needs to be
         between 1 and 60 characters.</string>
@@ -160,7 +163,7 @@
     <!-- ProductCatalogMain -->
     <string name="title_product_catalog">Product Catalog</string>
     <string name="product_catalog_empty_view_title_text">The cupboards are empty.</string>
-    <string name="product_catalog_empty_view_subtitle_text">Press + to add some products!</string>
+    <string name="product_catalog_empty_view_subtitle_text">Press + to add some productEntities!</string>
     <string name="image_of_meal">An image of the selected recipe</string>
     <string name="activity_catalog_products_tab_1_title">Community Products</string>
     <string name="activity_catalog_products_tab_2_title">My Products</string>
@@ -181,7 +184,7 @@
     <string name="intent_gallery_picker_title">Complete action using</string>
 
     <!-- Widget specific -->
-    <string name="app_widget_empty_view">Press the add button to add a product</string>
+    <string name="app_widget_empty_view">Press the add button to add a productEntity</string>
     <string name="widget_title_latest_products">Latest Products</string>
     <string name="appwidget_text">Product Widget</string>
     <string name="add_widget">Add widget</string>
@@ -194,7 +197,7 @@
 
     <!-- Search strings -->
     <string name="search">Search</string>
-    <string name="search_hint">Search products…</string>
+    <string name="search_hint">Search productEntities…</string>
     <string name="tkm_product_descriptions">Product descriptions</string>
 
     <!-- Recipe Catalog -->
@@ -208,10 +211,16 @@
     <string name="nav_products">Products</string>
     <string name="meal_planner">Meal planner</string>
     <string name="nav_lists">Shopping lists</string>
+
+
     <string name="total_or_unit">----- or -----</string>
     <string name="invalid_pack_size">Invalid number for this measurement!</string>
     <string name="please_select">Please select</string>
     <string name="number_format_exception">Please only enter numbers.</string>
     <string name="plus_sign">+</string>
     <string name="minus_sign">-</string>
+    <string name="product_size_options">Product Size Options</string>
+    <string name="my_product_information">Your Personal Product Info</string>
+    <string name="product_identity">Product identity</string>
+    <string name="empty_string" />
 </resources>

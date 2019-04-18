@@ -1,41 +1,39 @@
 package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
-import android.content.Context;
-import android.content.res.Resources;
-
-import com.example.peter.thekitchenmenu.BR;
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.data.model.ObservableProductModel;
 
-import androidx.databinding.BaseObservable;
-import androidx.databinding.Bindable;
+import androidx.core.util.Pair;
 
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.*;
 
-public class Count extends BaseObservable implements UnitOfMeasure {
+public class Count implements UnitOfMeasure {
 
     private static final String TAG = "Count";
 
+    private static final int COUNT_NUMBER_OF_MEASUREMENT_UNITS = 1;
     private static final double UNIT_COUNT = BASE_UNIT_COUNT;
 
-    private String type;
-    private String subType;
-    private String unitCount;
+    private int typeStringResourceId;
+    private int subTypeStringResourceId;
+    private int unitOneLabelStringResourceId;
+    private int unitTwoLabelStringResourceId;
+    private int unitThreeLabelStringResourceId ;
 
-    private int numberOfPacksInPack = 0;
+    private int numberOfItems = SINGLE_ITEM;
     private double baseSiUnits = 0;
 
-    public Count(Context context) {
+    public Count() {
 
-        Resources resources = context.getResources();
-        type = resources.getString(R.string.count);
-        subType = resources.getString(R.string.count);
-        unitCount = resources.getString(R.string.each);
+        typeStringResourceId = R.string.count;
+        subTypeStringResourceId = R.string.count;
+        unitOneLabelStringResourceId = R.string.each;
+        unitTwoLabelStringResourceId = R.string.empty_string;
+        unitThreeLabelStringResourceId = R.string.empty_string;
     }
 
     @Override
-    public String getTypeAsString() {
-        return type;
+    public int getTypeStringResourceId() {
+        return 0;
     }
 
     @Override
@@ -43,38 +41,34 @@ public class Count extends BaseObservable implements UnitOfMeasure {
         return MeasurementType.TYPE_COUNT;
     }
 
-    @Override @Bindable
+    @Override
+    public int getSubTypeStringResourceId() {
+        return 0;
+    }
+
+    @Override
     public MeasurementSubType getMeasurementSubType() {
         return MeasurementSubType.TYPE_COUNT;
     }
 
     @Override
-    public String getMeasurementUnitOne() {
-        return null;
+    public int getNumberOfMeasurementUnits() {
+        return COUNT_NUMBER_OF_MEASUREMENT_UNITS;
     }
 
     @Override
-    public String getMeasurementUnitTwo() {
-        return null;
+    public int getUnitOneLabelStringResourceId() {
+        return 0;
     }
 
     @Override
-    public ObservableMeasurement getMinAndMax() {
-
-        ObservableMeasurement observableMeasurement = new ObservableMeasurement();
-        observableMeasurement.setMinimumMeasurementOne(MINIMUM_COUNT);
-        observableMeasurement.setMaximumMeasurementOne(MAXIMUM_COUNT);
-
-        return observableMeasurement;
+    public int getUnitTwoLabelStringResourceId() {
+        return 0;
     }
 
     @Override
-    public void setNewMeasurementValuesTo(ObservableMeasurement observableMeasurement) {
-    }
-
-    @Override
-    public boolean getValuesFromObservableProductModel(ObservableProductModel productModel) {
-        return false;
+    public int getUnitThreeLabelStringResourceId() {
+        return 0;
     }
 
     @Override
@@ -83,13 +77,12 @@ public class Count extends BaseObservable implements UnitOfMeasure {
     }
 
     @Override
-    public boolean setBaseSiUnits(double baseSiUnits) {
+    public boolean baseSiUnitsAreSet(double baseSiUnits) {
 
-        if (numberOfPacksInPack > 1) {
+        if (numberOfItems > 1) {
 
-            if (baseSiUnits <= MAXIMUM_COUNT && baseSiUnits >= UNIT_COUNT * numberOfPacksInPack) {
+            if (baseSiUnits <= MAXIMUM_COUNT && baseSiUnits >= UNIT_COUNT * numberOfItems) {
                 this.baseSiUnits = baseSiUnits;
-                notifyPropertyChanged(BR.packMeasurementOne);
                 return true;
             }
         }
@@ -102,86 +95,101 @@ public class Count extends BaseObservable implements UnitOfMeasure {
     }
 
     @Override
-    public boolean setNumberOfPacksInPack(int numberOfItems) {
+    public boolean numberOfItemsAreSet(int numberOfItems) {
 
         // TODO - When setting number of items, check the size / measurements (if available) do not
         // TODO - exceed MAX
-        if (numberOfItems >= MULTI_PACK_MINIMUM_NO_OF_PACKS &&
-                numberOfItems <= MULTI_PACK_MAXIMUM_NO_OF_PACKS) {
+        if (numberOfItems > SINGLE_ITEM &&
+                numberOfItems <= MULTI_PACK_MAXIMUM_NO_OF_ITEMS) {
 
-            this.numberOfPacksInPack = numberOfItems;
-            notifyPropertyChanged(BR.numberOfPacksInPack);
+            this.numberOfItems = numberOfItems;
             return true;
         }
         return false;
     }
 
-    @Override @Bindable
-    public int getNumberOfPacksInPack() {
-        return numberOfPacksInPack;
+    @Override
+    public int getNumberOfItems() {
+        return numberOfItems;
     }
 
     @Override
-    public int[] getInputFilterFormat() {
-        int[] inputFilterFormat = new int[5];
-        inputFilterFormat[1] = 4;
-        inputFilterFormat[2] = 5;
-        return inputFilterFormat;
+    public Pair[] getInputDigitsFilter() {
+
+        Pair<Integer, Integer> unitOneDigitsFilter = new Pair<>(MULTI_PACK_MAXIMUM_NO_OF_ITEMS, 0);
+        Pair<Integer, Integer> unitTwoDigitsFilter = new Pair<>(0, 0);
+        Pair<Integer, Integer> unitThreeDigitsFilter = new Pair<>(0,0);
+
+        Pair[] digitFilters = new Pair[3];
+        digitFilters[0] = unitOneDigitsFilter;
+        digitFilters[1] = unitTwoDigitsFilter;
+        digitFilters[2] = unitThreeDigitsFilter;
+
+        return digitFilters;
     }
 
     @Override
-    public void resetNumericValues() {
-
-    }
-
-    @Override @Bindable
-    public int getPackMeasurementOne() {
+    public double getPackMeasurementOne() {
         return 0;
     }
 
     @Override
-    public boolean setPackMeasurementOne(int packMeasurementOne) {
+    public boolean packMeasurementOneIsSet(double packMeasurementOne) {
         return false;
     }
 
-    @Override @Bindable
+    @Override
     public int getPackMeasurementTwo() {
         return 0;
     }
 
     @Override
-    public boolean setPackMeasurementTwo(int packMeasurementTwo) {
+    public boolean packMeasurementTwoIsSet(int packMeasurementTwo) {
         return false;
     }
 
-    @Override @Bindable
-    public int getSinglePackMeasurementOne() {
+    @Override
+    public int getPackMeasurementThree() {
         return 0;
     }
 
     @Override
-    public boolean setSinglePackMeasurementOne(int itemMeasurementOne) {
+    public boolean packMeasurementThreeIsSet(int packMeasurementThree) {
         return false;
     }
 
-    @Override @Bindable
-    public int getSinglePackMeasurementTwo() {
+    @Override
+    public double getItemMeasurementOne() {
         return 0;
     }
 
     @Override
-    public boolean setSinglePackMeasurementTwo(int itemMeasurementTwo) {
+    public boolean itemMeasurementOneIsSet(double itemMeasurementOne) {
         return false;
     }
 
     @Override
-    public String toString() {
-        return "Count{" +
-                "\ntype='" + type + '\'' +
-                "\n, subType='" + subType + '\'' +
-                "\n, unitCount='" + unitCount + '\'' +
-                "\n, numberOfPacksInPack=" + numberOfPacksInPack +
-                "\n, baseSiUnits=" + baseSiUnits +
-                '}';
+    public int getItemMeasurementTwo() {
+        return 0;
+    }
+
+    @Override
+    public boolean itemMeasurementTwoIsSet(int itemMeasurementTwo) {
+        return false;
+    }
+
+    @Override
+    public int getItemMeasurementThree() {
+        return 0;
+    }
+
+    @Override
+    public boolean itemMeasurementThreeIsSet(int itemMeasurementThree) {
+        return false;
+    }
+
+    @Override
+    public int[] getMeasurementError() {
+        return new int[0];
     }
 }

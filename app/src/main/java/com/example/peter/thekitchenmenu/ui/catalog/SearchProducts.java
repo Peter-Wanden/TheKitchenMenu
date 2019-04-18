@@ -24,6 +24,7 @@ public class SearchProducts extends AppCompatActivity {
 
     @Override
     protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
         setIntent(intent);
         handleIntent(getIntent());
     }
@@ -36,17 +37,17 @@ public class SearchProducts extends AppCompatActivity {
         // Verifies the intent action
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 
-            Log.e(TAG, "Intent action is SEARCH");
-            Log.e(TAG, "Query is: " + intent.getStringExtra(SearchManager.QUERY));
-            Log.e(TAG, "Originating class is: " + b.getString(TAG));
-            Log.e(TAG, "Intent extra data is: " + intent.getData());
+            Log.e(TAG, "tkm - Intent action is SEARCH");
+            Log.e(TAG, "tkm - Query is: " + intent.getStringExtra(SearchManager.QUERY));
+            Log.e(TAG, "tkm - Originating class is: " + b.getString(TAG));
+            Log.e(TAG, "tkm - Intent extra data is: " + intent.getData());
 
         } else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
 
-            Log.d(TAG, "Intent action is VIEW" );
-            Log.d(TAG, "Query is: " + intent.getStringExtra(SearchManager.QUERY));
-            Log.d(TAG, "Originating class is: " + b.getString(TAG));
-            Log.e(TAG, "Intent extra data is: " + intent.getData());
+            Log.d(TAG, "tkm - Intent action is VIEW" );
+            Log.d(TAG, "tkm - Query is: " + intent.getStringExtra(SearchManager.QUERY));
+            Log.d(TAG, "tkm - Originating class is: " + b.getString(TAG));
+            Log.e(TAG, "tkm - Intent extra data is: " + intent.getData());
         }
     }
 }

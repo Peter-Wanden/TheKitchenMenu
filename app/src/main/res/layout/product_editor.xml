@@ -1,439 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
-        <import type="android.view.View"/>
-        <import type="com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubTypeConverter"/>
-        <import type="com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementZeroToBlankConverter"/>
-
         <variable
             name="productEditorViewModel"
-            type="com.example.peter.thekitchenmenu.viewmodels.ProductEditorViewModel"/>
-
-        <variable
-            name="textValidation"
-            type="com.example.peter.thekitchenmenu.utils.ProductTextValidationHandler"/>
-
-        <variable
-            name="numericValidation"
-            type="com.example.peter.thekitchenmenu.utils.ProductNumericValidationHandler"/>
-
-        <variable
-            name="measurement"
-            type="com.example.peter.thekitchenmenu.utils.unitofmeasure.ObservableMeasurement"/>
-
-        <variable
-            name="productModel"
-            type="com.example.peter.thekitchenmenu.data.model.ObservableProductModel"/>
+            type="com.example.peter.thekitchenmenu.viewmodels.ProductEditorViewModel">
+        </variable>
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/product_container"
+    <RelativeLayout
+        android:id="@+id/product_editor_parent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingStart="@dimen/standard_margin"
-        android:paddingEnd="@dimen/standard_margin">
+        android:layout_height="match_parent">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/description_label"
-            style="@style/EditableCategoryStyle"
-            android:layout_width="wrap_content"
+        <!--<com.google.android.material.floatingactionbutton.FloatingActionButton-->
+            <!--android:id="@+id/fab"-->
+            <!--android:onClick="@{() -> productEditorViewModel.onFabClick()}"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_margin="@dimen/fab_margin"-->
+            <!--android:src="@drawable/ic_action_done"-->
+            <!--android:tint="@color/white"-->
+            <!--app:backgroundTint="@color/textColorHighlight"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:layout_alignParentEnd="true"/>-->
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            app:title="@{productEditorViewModel.title}"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/label_description"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:background="@color/primaryColor"
+            android:elevation="@dimen/starting_elevation"
+            android:fitsSystemWindows="true"
+            android:layout_alignParentTop="true"/>
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/editable_description"
-            style="@style/EditableFieldStyle"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/standard_input_item_height"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:hint="@string/hint_description"
-            android:inputType="textCapWords"
-            android:nextFocusForward="@id/editable_made_by"
-            android:text='@{productEditorViewModel.productModel.description}'
-            android:afterTextChanged='@{() -> textValidation.validateDescription(editableDescription)}'
-            android:selection='@{productEditorViewModel.productModel.description.length()}'
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/description_label" />
+        <ScrollView
+            android:id="@+id/scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/toolbar">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/made_by_label"
-            style="@style/EditableCategoryStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/label_made_by"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editable_description" />
+            <LinearLayout
+                android:id="@+id/product_editor_include_parent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/editable_made_by"
-            style="@style/EditableFieldStyle"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/standard_input_item_height"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:hint="@string/hint_made_by"
-            android:inputType="textCapWords"
-            android:text='@{productEditorViewModel.productModel.madeBy}'
-            android:afterTextChanged='@{() -> textValidation.validateMadeBy(editableMadeBy)}'
-            android:selection='@{productEditorViewModel.productModel.madeBy.length()}'
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/made_by_label" />
+                <fragment
+                    android:id="@+id/image_editor_fragment"
+                    android:name="com.example.peter.thekitchenmenu.ui.detail.product.editor.ImageEditor"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    bind:layout="@layout/image_editor">
+                </fragment>
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/category_label"
-            style="@style/EditableCategoryStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="@string/label_category"
-            app:layout_constraintBottom_toBottomOf="@+id/spinner_category"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/spinner_category" />
+                <fragment
+                    android:id="@+id/product_identity_fragment"
+                    android:name="com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductIdentityEditor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    bind:layout="@layout/product_identity_editor">
+                </fragment>
 
-        <androidx.appcompat.widget.AppCompatSpinner
-            android:id="@+id/spinner_category"
-            style="@style/spinner_style"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/standard_input_item_height"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:dropDownWidth="wrap_content"
-            android:selectedItemPosition='@={productEditorViewModel.productModel.category}'
-            android:spinnerMode="dropdown"
-            app:layout_constraintStart_toEndOf="@+id/category_label"
-            app:layout_constraintTop_toBottomOf="@+id/editable_made_by" />
+                <fragment
+                    android:id="@+id/product_size_fragment"
+                    android:name="com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductMeasurementEditor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    bind:layout="@layout/product_measurement_editor">
+                </fragment>
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/shelf_life_label"
-            style="@style/EditableCategoryStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="@string/label_shelf_life"
-            app:layout_constraintBottom_toBottomOf="@+id/spinner_shelf_life"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/spinner_shelf_life"
-            app:showIfFood='@{productEditorViewModel.productModel.category}' />
-
-        <androidx.appcompat.widget.AppCompatSpinner
-            android:id="@+id/spinner_shelf_life"
-            style="@style/spinner_style"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/standard_input_item_height"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:dropDownWidth="wrap_content"
-            android:nextFocusForward="@id/multi_pack_check_box"
-            android:selectedItemPosition='@={productEditorViewModel.productModel.shelfLife}'
-            android:spinnerMode="dropdown"
-            app:layout_constraintStart_toEndOf="@+id/shelf_life_label"
-            app:layout_constraintTop_toBottomOf="@+id/spinner_category"
-            app:showIfFood='@{productEditorViewModel.productModel.category}' />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/multi_pack_label"
-            style="@style/EditableCategoryStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="@string/label_multi_pack"
-            app:layout_constraintBottom_toBottomOf="@+id/multi_pack_check_box"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/multi_pack_check_box" />
-
-        <androidx.appcompat.widget.AppCompatCheckBox
-            android:id="@+id/multi_pack_check_box"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/standard_input_item_height"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="8dp"
-            android:buttonTint="@color/primaryColor"
-            android:gravity="center"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.223"
-            app:layout_constraintStart_toEndOf="@+id/multi_pack_label"
-            app:layout_constraintTop_toBottomOf="@+id/spinner_shelf_life"
-            android:checked='@={productEditorViewModel.multiPack}'
-            app:nonFoodGetFocus='@{productEditorViewModel.productModel.category}'
-            app:shelfLifeValueChange='@{productEditorViewModel.productModel.shelfLife}' />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/packs_in_pack_label"
-            style="@style/EditableCategoryStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/label_number_of_packs"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/multi_pack_check_box"
-            app:showWhenChecked='@{productEditorViewModel.multiPack}' />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/multi_pack_plus"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:layout_marginStart="8dp"
-            android:text="@string/plus_sign"
-            app:showWhenChecked='@{productEditorViewModel.multiPack}'
-            android:onClick='@{() -> numericValidation.modifyPacksInPackByOne(editablePacksInPack, multiPackPlus)}'
-            app:layout_constraintBottom_toBottomOf="@+id/editable_packs_in_pack"
-            app:layout_constraintStart_toEndOf="@+id/editable_packs_in_pack"
-            app:layout_constraintTop_toTopOf="@+id/editable_packs_in_pack" />
-
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/editable_packs_in_pack"
-            style="@style/EditableFieldStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/standard_input_item_height"
-            android:layout_marginTop="8dp"
-            android:inputType="number"
-            android:gravity="center"
-            android:nextFocusForward="@id/spinner_unit_of_measure"
-            android:text='@{productEditorViewModel.measurement.numberOfPacksInPack}'
-            android:afterTextChanged='@{() -> numericValidation.validatePacksInPack(editablePacksInPack)}'
-            app:showWhenChecked='@{productEditorViewModel.multiPack}'
-            app:layout_constraintEnd_toEndOf="@+id/packs_in_pack_label"
-            app:layout_constraintStart_toStartOf="@+id/packs_in_pack_label"
-            app:layout_constraintTop_toBottomOf="@+id/packs_in_pack_label"
-            tools:text="5"/>
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/multi_pack_minus"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:layout_marginEnd="8dp"
-            android:text="@string/minus_sign"
-            app:showWhenChecked='@{productEditorViewModel.multiPack}'
-            android:onClick='@{() -> numericValidation.modifyPacksInPackByOne(editablePacksInPack, multiPackMinus)}'
-            app:layout_constraintBottom_toBottomOf="@+id/editable_packs_in_pack"
-            app:layout_constraintEnd_toStartOf="@+id/editable_packs_in_pack"
-            app:layout_constraintTop_toTopOf="@+id/editable_packs_in_pack" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/unit_of_measure_label"
-            style="@style/EditableCategoryStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="@string/unit_of_measure_label"
-            app:layout_constraintBottom_toBottomOf="@+id/spinner_unit_of_measure"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/spinner_unit_of_measure" />
-
-        <androidx.appcompat.widget.AppCompatSpinner
-            android:id="@+id/spinner_unit_of_measure"
-            style="@style/spinner_style"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/standard_input_item_height"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:dropDownWidth="wrap_content"
-            android:onItemSelected='@{() -> numericValidation.newUnitOfMeasureSelected(spinnerUnitOfMeasure)}'
-            android:selectedItemPosition='@{MeasurementSubTypeConverter.toInt(productEditorViewModel.measurement.measurementSubType)}'
-            android:spinnerMode="dropdown"
-            app:layout_constraintStart_toEndOf="@+id/unit_of_measure_label"
-            app:layout_constraintTop_toBottomOf="@+id/editable_packs_in_pack">
-        </androidx.appcompat.widget.AppCompatSpinner>
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/pack_size_label"
-            style="@style/EditableCategoryStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/pack_editable_measurement_two"
-            app:layout_constraintEnd_toStartOf="@+id/pack_editable_measurement_two"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/pack_editable_measurement_two"
-            app:onUnitOfMeasureSelected='@{productEditorViewModel.measurement.measurementSubType}'
-            app:multiPack="@{productEditorViewModel.multiPack}"
-            tools:text="@string/pack_size_total" />
-
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/pack_editable_measurement_two"
-            style="@style/EditableFieldStyle"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/standard_input_item_height"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:textAlignment="textEnd"
-            tools:text="99"
-            app:layout_constraintEnd_toStartOf="@+id/pack_label_measurement_two"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@id/pack_size_label"
-            app:layout_constraintTop_toBottomOf="@+id/spinner_unit_of_measure"
-            android:afterTextChanged='@{() -> numericValidation.validatePackSize(packEditableMeasurementTwo)}'
-            android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(packEditableMeasurementTwo, productEditorViewModel.measurement.packMeasurementTwo)}'
-            app:onUnitOfMeasureSelected='@{productEditorViewModel.measurement.measurementSubType}'
-            app:multiPack='@{productEditorViewModel.multiPack}' />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/pack_label_measurement_two"
-            style="@style/EditableCategoryStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/standard_input_item_height"
-            android:gravity="center_vertical"
-            app:layout_constraintBottom_toBottomOf="@+id/pack_editable_measurement_two"
-            app:layout_constraintEnd_toStartOf="@id/pack_editable_measurement_one"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@id/pack_editable_measurement_two"
-            app:layout_constraintTop_toTopOf="@+id/pack_editable_measurement_two"
-            app:onUnitOfMeasureSelected='@{productEditorViewModel.measurement.measurementSubType}'
-            app:multiPack='@{productEditorViewModel.multiPack}'
-            tools:text="lbs" />
-
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/pack_editable_measurement_one"
-            style="@style/EditableFieldStyle"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/standard_input_item_height"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:textAlignment="textEnd"
-            app:layout_constraintBottom_toBottomOf="@+id/pack_editable_measurement_two"
-            app:layout_constraintEnd_toStartOf="@id/pack_label_measurement_one"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@id/pack_label_measurement_two"
-            app:layout_constraintTop_toTopOf="@+id/pack_editable_measurement_two"
-            android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(packEditableMeasurementOne, productEditorViewModel.measurement.packMeasurementOne)}'
-            android:afterTextChanged='@{() -> numericValidation.validatePackSize(packEditableMeasurementOne)}'
-            app:onUnitOfMeasureSelected='@{productEditorViewModel.measurement.measurementSubType}'
-            app:multiPack='@{productEditorViewModel.multiPack}'
-            tools:text="9999" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/pack_label_measurement_one"
-            style="@style/EditableCategoryStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/standard_input_item_height"
-            android:gravity="center_vertical"
-            android:layout_marginEnd="8dp"
-            app:onUnitOfMeasureSelected='@{productEditorViewModel.measurement.measurementSubType}'
-            app:multiPack='@{productEditorViewModel.multiPack}'
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@id/pack_editable_measurement_one"
-            app:layout_constraintTop_toTopOf="@id/pack_editable_measurement_one"
-            app:layout_constraintBottom_toBottomOf="@id/pack_editable_measurement_one"
-            tools:text="oz" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/total_or_unit"
-            style="@style/EditableCategoryStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/total_or_unit"
-            app:layout_constraintTop_toBottomOf="@+id/pack_size_label"
-            app:layout_constraintEnd_toEndOf="@+id/pack_size_label"
-            app:layout_constraintStart_toStartOf="@+id/pack_size_label"
-            app:layout_constraintBottom_toTopOf="@+id/single_pack_size_label"
-            app:onUnitOfMeasureSelected='@{productEditorViewModel.measurement.measurementSubType}'
-            app:multiPack='@{productEditorViewModel.multiPack}'
-            app:showWhenChecked='@{productEditorViewModel.multiPack}' />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/single_pack_size_label"
-            style="@style/EditableCategoryStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/single_pack_editable_measurement_two"
-            app:layout_constraintEnd_toEndOf="@+id/total_or_unit"
-            app:layout_constraintStart_toStartOf="@+id/total_or_unit"
-            app:layout_constraintTop_toTopOf="@+id/single_pack_editable_measurement_two"
-            app:onUnitOfMeasureSelected='@{productEditorViewModel.measurement.measurementSubType}'
-            app:multiPack='@{productEditorViewModel.multiPack}'
-            app:showWhenChecked='@{productEditorViewModel.multiPack}'
-            tools:text="@string/single_pack_size" />
-
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/single_pack_editable_measurement_two"
-            style="@style/EditableFieldStyle"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/standard_input_item_height"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:textAlignment="textEnd"
-            app:layout_constraintEnd_toStartOf="@+id/single_pack_measurement_label_two"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/single_pack_size_label"
-            app:layout_constraintTop_toBottomOf="@+id/pack_editable_measurement_two"
-            android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(singlePackEditableMeasurementTwo, productEditorViewModel.measurement.singlePackMeasurementTwo)}'
-            android:afterTextChanged='@{() -> numericValidation.validatePackSize(singlePackEditableMeasurementTwo)}'
-            app:onUnitOfMeasureSelected='@{productEditorViewModel.measurement.measurementSubType}'
-            app:multiPack='@{productEditorViewModel.multiPack}'
-            app:showWhenChecked="@{productEditorViewModel.multiPack}"
-            tools:text="5" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/single_pack_measurement_label_two"
-            style="@style/EditableCategoryStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/standard_input_item_height"
-            android:gravity="center_vertical"
-            app:layout_constraintBottom_toBottomOf="@+id/single_pack_editable_measurement_two"
-            app:layout_constraintEnd_toStartOf="@+id/single_pack_editable_measurement_one"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/single_pack_editable_measurement_two"
-            app:layout_constraintTop_toTopOf="@+id/single_pack_editable_measurement_two"
-            app:onUnitOfMeasureSelected='@{productEditorViewModel.measurement.measurementSubType}'
-            app:multiPack='@{productEditorViewModel.multiPack}'
-            app:showWhenChecked='@{productEditorViewModel.multiPack}'
-            tools:text="lbs" />
-
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/single_pack_editable_measurement_one"
-            style="@style/EditableFieldStyle"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/standard_input_item_height"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:textAlignment="textEnd"
-            app:layout_constraintBottom_toBottomOf="@+id/single_pack_editable_measurement_two"
-            app:layout_constraintEnd_toStartOf="@+id/single_pack_measurement_label_one"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/single_pack_measurement_label_two"
-            app:layout_constraintTop_toTopOf="@+id/single_pack_editable_measurement_two"
-            android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(singlePackEditableMeasurementOne, productEditorViewModel.measurement.singlePackMeasurementOne)}'
-            android:afterTextChanged='@{() -> numericValidation.validatePackSize(singlePackEditableMeasurementOne)}'
-            app:onUnitOfMeasureSelected='@{productEditorViewModel.measurement.measurementSubType}'
-            app:multiPack='@{productEditorViewModel.multiPack}'
-            app:showWhenChecked='@{productEditorViewModel.multiPack}'
-            tools:text="3" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/single_pack_measurement_label_one"
-            style="@style/EditableCategoryStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/standard_input_item_height"
-            android:layout_marginEnd="8dp"
-            android:gravity="center_vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/single_pack_editable_measurement_one"
-            app:layout_constraintTop_toTopOf="@+id/single_pack_editable_measurement_one"
-            app:layout_constraintBottom_toBottomOf="@+id/single_pack_editable_measurement_one"
-            app:onUnitOfMeasureSelected='@{productEditorViewModel.measurement.measurementSubType}'
-            app:multiPack='@{productEditorViewModel.multiPack}'
-            app:showWhenChecked='@{productEditorViewModel.multiPack}'
-            tools:text="oz" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                <fragment
+                    android:id="@+id/product_user_data_editor"
+                    android:name="com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductUserDataEditor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    bind:layout="@layout/product_user_data_editor">
+                </fragment>
+            </LinearLayout>
+        </ScrollView>
+    </RelativeLayout>
 </layout>

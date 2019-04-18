@@ -2,14 +2,46 @@ package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
 public enum MeasurementSubType {
 
-    NOTHING_SELECTED(MeasurementType.TYPE_NO_TYPE),
-    TYPE_METRIC_MASS(MeasurementType.TYPE_MASS),
-    TYPE_IMPERIAL_MASS(MeasurementType.TYPE_MASS),
-    SELECT_VOLUME(MeasurementType.TYPE_VOLUME),
-    TYPE_METRIC_VOLUME(MeasurementType.TYPE_VOLUME),
-    TYPE_IMPERIAL_VOLUME(MeasurementType.TYPE_VOLUME),
-    SELECT_COUNT(MeasurementType.TYPE_COUNT),
-    TYPE_COUNT(MeasurementType.TYPE_COUNT);
+    TYPE_METRIC_MASS(MeasurementType.TYPE_MASS) {
+
+        @Override
+        public UnitOfMeasure getMeasurementClass() {
+
+            return new MetricMass();
+        }
+    },
+
+    TYPE_IMPERIAL_MASS(MeasurementType.TYPE_MASS) {
+
+        @Override
+        public UnitOfMeasure getMeasurementClass() {
+            return new ImperialMass();
+        }
+    },
+
+    TYPE_METRIC_VOLUME(MeasurementType.TYPE_VOLUME) {
+
+        @Override
+        public UnitOfMeasure getMeasurementClass() {
+            return new MetricVolume();
+        }
+    },
+
+    TYPE_IMPERIAL_VOLUME(MeasurementType.TYPE_VOLUME) {
+
+        @Override
+        public UnitOfMeasure getMeasurementClass() {
+            return new ImperialVolume();
+        }
+    },
+
+    TYPE_COUNT(MeasurementType.TYPE_COUNT) {
+
+        @Override
+        public UnitOfMeasure getMeasurementClass() {
+            return new Count();
+        }
+    };
 
     private MeasurementType measurementType;
 
@@ -20,4 +52,6 @@ public enum MeasurementSubType {
     MeasurementSubType(MeasurementType measurementType) {
         this.measurementType = measurementType;
     }
+
+    public abstract UnitOfMeasure getMeasurementClass();
 }

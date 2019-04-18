@@ -20,9 +20,11 @@
         <item>@string/items</item>
     </string-array>
 
-    <string-array name="unit_of_measure_headers">
-        <item>@string/header_mass</item>
-        <item>@string/header_volume</item>
+    <string-array name="unit_of_measure_subtypes_as_string_array">
+        <item>@string/header_mass_metric</item>
+        <item>@string/header_mass_imperial</item>
+        <item>@string/header_volume_metric</item>
+        <item>@string/header_volume_imperial</item>
         <item>@string/header_count</item>
     </string-array>
 
@@ -48,7 +50,6 @@
     </string-array>
 
     <string-array name="unit_of_measure_options_count">
-        <item>@string/count</item>
         <item>@string/each</item>
         <item>@string/piece</item>
         <item>@string/items</item>
