@@ -273,9 +273,8 @@ public class ImperialMass implements UnitOfMeasure {
 
     private double baseSiUnitsWithItemMeasurementOne(double itemMeasurementOne) {
 
-        return (itemMeasurementInPounds * UNIT_POUND) +
-                (itemMeasurementOne * UNIT_OUNCE)
-                * numberOfItems;
+        return ((itemMeasurementInPounds * UNIT_POUND) + (itemMeasurementOne * UNIT_OUNCE)) *
+                numberOfItems;
     }
 
     @Override
@@ -329,8 +328,8 @@ public class ImperialMass implements UnitOfMeasure {
 
     private double baseSiUnitsWithItemMeasurementTwo(int itemMeasurementTwo) {
 
-        return (itemMeasurementTwo * UNIT_POUND * numberOfItems) +
-                (packMeasurementInOunces * UNIT_OUNCE);
+        return ((itemMeasurementTwo * UNIT_POUND) + (itemMeasurementInOunces * UNIT_OUNCE)) *
+                numberOfItems;
     }
 
     @Override

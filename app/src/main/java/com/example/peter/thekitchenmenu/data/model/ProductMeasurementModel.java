@@ -1,5 +1,7 @@
 package com.example.peter.thekitchenmenu.data.model;
 
+import android.util.Log;
+
 import com.example.peter.thekitchenmenu.BR;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubType;
 
@@ -101,6 +103,7 @@ public class ProductMeasurementModel extends BaseObservable {
     public void setPackMeasurementOneAsInt(int packMeasurementOneAsInt) {
 
 
+        Log.d(TAG, "tkm - setPackMeasurementOneAsInt: new measurement is: " + packMeasurementOneAsInt);
         this.packMeasurementOneAsInt = packMeasurementOneAsInt;
         notifyPropertyChanged(BR.packMeasurementOneAsInt);
 

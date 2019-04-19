@@ -470,25 +470,13 @@ public class ImperialMassTest {
     }
 
     @Test
-    public void test_setting_pack_one() {
+    public void test_setting_item_one_and_two() {
 
-        assertThat(imperialMass.numberOfItemsAreSet(10), is(true));
-        assertThat(imperialMass.packMeasurementOneIsSet(10.), is(true));
-        assertThat(imperialMass.packMeasurementTwoIsSet(10), is(true));
-
-        assertThat(imperialMass.getBaseSiUnits(), is(4819.41893125));
-
-        assertThat(imperialMass.getItemMeasurementOne(), is(1.));
-        assertThat(imperialMass.getItemMeasurementTwo(), is(1));
-
-        assertThat(imperialMass.numberOfItemsAreSet(9), is(true));
-
-        assertThat(imperialMass.getItemMeasurementOne(), is(2.9));
-        assertThat(imperialMass.itemMeasurementOneIsSet(2.), is(true));
-
-        assertThat(imperialMass.itemMeasurementOneIsSet(2.), is(true));
+        assertThat(imperialMass.numberOfItemsAreSet(2), is(true));
+        assertThat(imperialMass.itemMeasurementTwoIsSet(1), is(true));
+        assertThat(imperialMass.getBaseSiUnits(), is(907.18474));
+        assertThat(imperialMass.itemMeasurementOneIsSet(2), is(true));
         assertThat(imperialMass.getItemMeasurementOne(), is(2.));
-
     }
 
     @Test
@@ -506,26 +494,56 @@ public class ImperialMassTest {
 
         // Setup
         assertThat(imperialMass.numberOfItemsAreSet(2), is(true));
-        assertThat(imperialMass.packMeasurementOneIsSet(500), is(true));
+        assertThat(imperialMass.packMeasurementOneIsSet(5.2), is(true));
         assertThat(imperialMass.packMeasurementTwoIsSet(1), is(true));
-        assertThat(imperialMass.getBaseSiUnits(), is(1500.));
 
         // Gradual teardown, as the user would type
         assertThat(imperialMass.packMeasurementTwoIsSet(0), is(true));
-        assertThat(imperialMass.getBaseSiUnits(), is(500.));
-
-        assertThat(imperialMass.packMeasurementOneIsSet(50), is(true));
-        assertThat(imperialMass.getBaseSiUnits(), is(50.));
-
+        assertThat(imperialMass.packMeasurementOneIsSet(5.), is(true));
         assertThat(imperialMass.packMeasurementOneIsSet(5), is(true));
-        assertThat(imperialMass.getBaseSiUnits(), is(5.));
 
-        assertThat(imperialMass.baseSiUnitsAreSet(0), is(false));
+        assertThat(imperialMass.packMeasurementOneIsSet(0), is(false));
         assertThat(imperialMass.getBaseSiUnits(), is(0.));
 
         assertThat(imperialMass.getPackMeasurementOne(), is(0.));
         assertThat(imperialMass.getItemMeasurementOne(), is(0.));
         assertThat(imperialMass.getPackMeasurementTwo(), is(0));
         assertThat(imperialMass.getItemMeasurementTwo(), is(0));
+    }
+
+    @Test
+    public void pack_measurement_two_forces_out_of_bounds_is_then_zeroed_out() {
+
+        // Setup in range values
+        assertThat(imperialMass.packMeasurementOneIsSet(10), is(true));
+        assertThat(imperialMass.getPackMeasurementOne(), is(10.));
+
+
+        assertThat(imperialMass.packMeasurementTwoIsSet(19), is(true));
+        assertThat(imperialMass.getPackMeasurementTwo(), is(19));
+
+        // Attempt to set pack two out of range, which should return false
+        // and zero out pack measurement two.
+        assertThat(imperialMass.packMeasurementTwoIsSet(22), is(false));
+
+        // Check pack measurement one is unaffected
+        assertThat(imperialMass.getPackMeasurementOne(), is(10.));
+
+        // Check pack two has been zeroed out
+        assertThat(imperialMass.getPackMeasurementTwo(), is(0));
+    }
+
+    @Test
+    public void pack_measurement_one_forces_out_of_bounds_is_then_zeroed_out() {
+
+        // Setup in range values
+        assertThat(imperialMass.packMeasurementTwoIsSet(22), is(true));
+        assertThat(imperialMass.getPackMeasurementTwo(), is(22));
+
+        // Attempt to set pack one out of range, which should return false
+        // and zero out pack measurement one.
+        assertThat(imperialMass.packMeasurementOneIsSet(1), is(false));
+        assertThat(imperialMass.getPackMeasurementOne(), is(0.));
+
     }
 }
