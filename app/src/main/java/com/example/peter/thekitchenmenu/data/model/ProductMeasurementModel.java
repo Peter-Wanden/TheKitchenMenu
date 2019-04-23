@@ -88,6 +88,8 @@ public class ProductMeasurementModel extends BaseObservable {
 
     public void setPackMeasurementOneAsDecimal(double packMeasurementOneAsDecimal) {
 
+        Log.d(TAG, "getPackMeasurementOneAsDecimal: " + packMeasurementOneAsDecimal);
+
         this.packMeasurementOneAsDecimal = packMeasurementOneAsDecimal;
         notifyPropertyChanged(BR.packMeasurementOneAsDecimal);
 
@@ -102,8 +104,9 @@ public class ProductMeasurementModel extends BaseObservable {
 
     public void setPackMeasurementOneAsInt(int packMeasurementOneAsInt) {
 
+        Log.d(TAG, "tkm - setPackMeasurementOneAsInt: new measurement is: " +
+                packMeasurementOneAsInt);
 
-        Log.d(TAG, "tkm - setPackMeasurementOneAsInt: new measurement is: " + packMeasurementOneAsInt);
         this.packMeasurementOneAsInt = packMeasurementOneAsInt;
         notifyPropertyChanged(BR.packMeasurementOneAsInt);
 

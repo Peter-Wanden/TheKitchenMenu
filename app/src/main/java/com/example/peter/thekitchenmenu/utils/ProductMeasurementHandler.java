@@ -150,8 +150,16 @@ public class ProductMeasurementHandler {
 
             if (doubleMeasurement == MEASUREMENT_ERROR) return;
 
-            if (measurementHasChangedDouble(viewId, doubleMeasurement))
+            if (measurementHasChangedDouble(viewId, doubleMeasurement)) {
+
+                if (viewId == R.id.pack_editable_measurement_one)
+                    viewModel.getMeasurement().setPackMeasurementOneAsDecimal(doubleMeasurement);
+
+                if (viewId == R.id.item_editable_measurement_one)
+                    viewModel.getMeasurement().setItemMeasurementOneAsDecimal(doubleMeasurement);
+
                 processDoubleMeasurements(editableMeasurement, doubleMeasurement);
+            }
 
         } else {
 
@@ -159,8 +167,16 @@ public class ProductMeasurementHandler {
 
             if (integerMeasurement == MEASUREMENT_ERROR) return;
 
-            if (measurementHasChangedInteger(viewId, integerMeasurement))
+            if (measurementHasChangedInteger(viewId, integerMeasurement)) {
+
+                if (viewId == R.id.pack_editable_measurement_one)
+                    viewModel.getMeasurement().setPackMeasurementOneAsInt(integerMeasurement);
+
+                if (viewId == R.id.item_editable_measurement_one)
+                    viewModel.getMeasurement().setItemMeasurementOneAsInt(integerMeasurement);
+
                 processIntegerMeasurements(editableMeasurement, integerMeasurement);
+            }
         }
     }
 
@@ -517,6 +533,8 @@ public class ProductMeasurementHandler {
             }
 
         } else {
+
+            // Parse pack measurementOne and check
 
             if (viewModel.getMeasurement().getPackMeasurementOneAsInt() !=
                     (int) unitOfMeasure.getPackMeasurementOne()) {
