@@ -1,10 +1,11 @@
-package com.example.peter.thekitchenmenu.utils.unitofmeasure;
+package com.example.peter.thekitchenmenu.utils;
 
 import android.content.res.Resources;
-
 import android.os.Build;
 import android.view.View;
 import android.widget.EditText;
+
+import androidx.databinding.InverseMethod;
 
 import com.example.peter.thekitchenmenu.R;
 
@@ -13,14 +14,12 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
 
-import androidx.databinding.InverseMethod;
+public class IntegerStringFormatConverter {
 
-public class DecimalStringFormatConverter {
+    private static final String TAG = "IntegerStringFormatConv";
 
-    private static final String TAG = "DecimalStringFormatConv";
-
-    @InverseMethod("stringToDouble")
-    public static String doubleToString(EditText editText, double oldValue, double measurementModelValue) {
+    @InverseMethod("stringToInteger")
+    public static String integerToString(EditText editText, int oldValue, int measurementModelValue) {
 
         NumberFormat numberFormat = getNumberFormat(editText);
 
@@ -29,11 +28,11 @@ public class DecimalStringFormatConverter {
             // Don't return a different value if the parsed value doesn't change
             String numberInView = editText.getText().toString();
 
-            double parsed = numberFormat.parse(numberInView).doubleValue();
+            int parsed = numberFormat.parse(numberInView).intValue();
 
             if (parsed == measurementModelValue) {
 
-                if (parsed == 0.) return "";
+                if (parsed == 0) return "";
                 else return editText.getText().toString();
             }
 
@@ -42,17 +41,17 @@ public class DecimalStringFormatConverter {
             // Number set from Product is broken
         }
 
-        if (measurementModelValue == 0.) return "";
+        if (measurementModelValue == 0) return "";
         else return numberFormat.format(measurementModelValue);
     }
 
-    public static double stringToDouble(EditText editText, double oldValue, String newValue) {
+    public static int stringToInteger(EditText editText, int oldValue, String newValue) {
 
         NumberFormat numberFormat = getNumberFormat(editText);
 
         try {
 
-            return numberFormat.parse(newValue).doubleValue();
+            return numberFormat.parse(newValue).intValue();
 
         } catch (ParseException e) {
 
@@ -63,7 +62,6 @@ public class DecimalStringFormatConverter {
 
             return oldValue;
         }
-
     }
 
     private static NumberFormat getNumberFormat(View view) {
@@ -83,12 +81,9 @@ public class DecimalStringFormatConverter {
         }
 
         NumberFormat format = NumberFormat.getNumberInstance(locale);
-
-        if (format instanceof DecimalFormat) {
-
-            DecimalFormat decimalFormat = (DecimalFormat) format;
-            decimalFormat.setGroupingUsed(false);
-        }
+        format.setGroupingUsed(false);
+        format.setMaximumFractionDigits(0);
+        format.setMinimumFractionDigits(0);
 
         return format;
     }

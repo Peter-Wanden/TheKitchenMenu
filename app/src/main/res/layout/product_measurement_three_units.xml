@@ -10,7 +10,7 @@
         <import type="android.view.View" />
         <import type="com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubTypeConverter" />
         <import type="com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementZeroToBlankConverter" />
-        <import type="com.example.peter.thekitchenmenu.utils.unitofmeasure.DecimalStringFormatConverter"/>
+        <import type="com.example.peter.thekitchenmenu.utils.DecimalStringFormatConverter"/>
 
         <variable
             name="measurementValidation"
