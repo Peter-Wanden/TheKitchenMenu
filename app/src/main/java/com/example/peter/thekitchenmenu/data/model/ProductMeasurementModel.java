@@ -71,16 +71,25 @@ public class ProductMeasurementModel extends BaseObservable {
     @Bindable
     public String getPackMeasurementOne() {
 
+        Log.d(TAG, "tkm - getPackMeasurementOne: " + packMeasurementOne);
         return packMeasurementOne;
     }
 
     private void setPackMeasurementOne(String packMeasurementOne) {
 
+        Log.d(TAG, "tkm - setPackMeasurementOne: Value passed in to method   : " +
+                packMeasurementOne);
+        Log.d(TAG, "tkm - setPackMeasurementOne: Instance value before change: " +
+                this.packMeasurementOne);
+
         this.packMeasurementOne = packMeasurementOne;
+
+        Log.d(TAG, "tkm - setPackMeasurementOne: New instance value          : " +
+                this.packMeasurementOne);
+
         notifyPropertyChanged(BR.packMeasurementOne);
     }
 
-    @Bindable
     public double getPackMeasurementOneAsDecimal() {
 
         return packMeasurementOneAsDecimal;
@@ -88,15 +97,12 @@ public class ProductMeasurementModel extends BaseObservable {
 
     public void setPackMeasurementOneAsDecimal(double packMeasurementOneAsDecimal) {
 
-        Log.d(TAG, "getPackMeasurementOneAsDecimal: " + packMeasurementOneAsDecimal);
+        Log.d(TAG, "tkm - getPackMeasurementOneAsDecimal: " + packMeasurementOneAsDecimal);
 
         this.packMeasurementOneAsDecimal = packMeasurementOneAsDecimal;
-        notifyPropertyChanged(BR.packMeasurementOneAsDecimal);
-
         setPackMeasurementOne(Double.toString(this.packMeasurementOneAsDecimal));
     }
 
-    @Bindable
     public int getPackMeasurementOneAsInt() {
 
         return packMeasurementOneAsInt;
@@ -108,20 +114,20 @@ public class ProductMeasurementModel extends BaseObservable {
                 packMeasurementOneAsInt);
 
         this.packMeasurementOneAsInt = packMeasurementOneAsInt;
-        notifyPropertyChanged(BR.packMeasurementOneAsInt);
-
         setPackMeasurementOne(Integer.toString(this.packMeasurementOneAsInt));
     }
 
     @Bindable
     public int getPackMeasurementTwo() {
 
+        Log.d(TAG, "tkm - getPackMeasurementTwo: " + packMeasurementTwo);
         return packMeasurementTwo;
     }
 
     public void setPackMeasurementTwo(int packMeasurementTwo) {
 
         this.packMeasurementTwo = packMeasurementTwo;
+        Log.d(TAG, "tkm - setPackMeasurementTwo: " + this.packMeasurementTwo);
         notifyPropertyChanged(BR.packMeasurementTwo);
     }
 
@@ -180,12 +186,14 @@ public class ProductMeasurementModel extends BaseObservable {
     @Bindable
     public int getItemMeasurementTwo() {
 
+        Log.d(TAG, "tkm - getItemMeasurementTwo: " + itemMeasurementTwo);
         return itemMeasurementTwo;
     }
 
     public void setItemMeasurementTwo(int itemMeasurementTwo) {
 
         this.itemMeasurementTwo = itemMeasurementTwo;
+        Log.d(TAG, "tkm - setItemMeasurementTwo: " + this.itemMeasurementTwo);
         notifyPropertyChanged(BR.itemMeasurementTwo);
     }
 

@@ -138,12 +138,6 @@ public class ProductMeasurementHandler {
 
         } else numberOfUnitsAfterDecimal = 0;
 
-        Log.d(TAG, "tkm - validatePackSize: Measurement received from: " +
-                resources.getResourceEntryName(viewId) +
-                " Raw value: " + editableMeasurement.getText().toString() +
-                " Units after decimal: " + numberOfUnitsAfterDecimal);
-
-
         if (numberOfUnitsAfterDecimal > 0) {
 
             doubleMeasurement = parseDoubleFromEditText(editableMeasurement);
@@ -184,7 +178,7 @@ public class ProductMeasurementHandler {
 
         String rawMeasurement = editableMeasurement.getText().toString();
 
-        if (rawMeasurement.isEmpty()) return 0.;
+        if (rawMeasurement.isEmpty() || rawMeasurement.equals(".")) return 0.;
 
         try {
 
@@ -534,8 +528,6 @@ public class ProductMeasurementHandler {
 
         } else {
 
-            // Parse pack measurementOne and check
-
             if (viewModel.getMeasurement().getPackMeasurementOneAsInt() !=
                     (int) unitOfMeasure.getPackMeasurementOne()) {
 
@@ -556,7 +548,6 @@ public class ProductMeasurementHandler {
                 viewModel.getMeasurement().setItemMeasurementOneAsInt(
                         (int) unitOfMeasure.getItemMeasurementOne());
             }
-
         }
 
         if (viewModel.getMeasurement().getPackMeasurementTwo() !=
@@ -568,6 +559,11 @@ public class ProductMeasurementHandler {
             Log.d(TAG, "tkm - updateMeasurementModel: Updating pack Two to: " +
                     unitOfMeasure.getPackMeasurementTwo());
         }
+
+
+        Log.d(TAG, "tkm - updateMeasurementModel: Measurement - Item two is: " +
+                viewModel.getMeasurement().getItemMeasurementTwo() +
+                " Unit of measure Item Two is: " + unitOfMeasure.getItemMeasurementTwo());
 
         if (viewModel.getMeasurement().getItemMeasurementTwo() !=
                 unitOfMeasure.getItemMeasurementTwo()) {

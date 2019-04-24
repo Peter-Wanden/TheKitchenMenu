@@ -29,8 +29,8 @@ public class ProductEditorViewModel extends ObservableViewModel {
                 "Heinz",
                 1,
                 3,
-                2,
-                2500,
+                10,
+                10000,
                 0,
                 0,
                 "",
@@ -55,7 +55,7 @@ public class ProductEditorViewModel extends ObservableViewModel {
                 0,
                 "");
 
-        this.productEntity.setValue(productEntityImperialMassTest);
+        this.productEntity.setValue(productEntityMetricMassTest);
 
     }
 

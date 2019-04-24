@@ -6,6 +6,8 @@ public class MeasurementZeroToBlankConverter {
 
     private static final String TAG = "MeasurementZeroToBlankC";
 
+    // TODO - Add inverse method to see if this solves the measurement model updating problem!
+
     public static String doNotShowZero(EditText editText, int value) {
 
         try {
