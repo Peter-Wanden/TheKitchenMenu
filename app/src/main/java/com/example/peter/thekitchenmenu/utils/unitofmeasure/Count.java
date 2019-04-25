@@ -10,16 +10,30 @@ public class Count implements UnitOfMeasure {
 
     private static final String TAG = "Count";
 
+    // Unit values
     private static final int COUNT_NUMBER_OF_MEASUREMENT_UNITS = 1;
     private static final double UNIT_COUNT = BASE_UNIT_COUNT;
 
+    // Keeps track of the last updated measurement
+    private static final boolean PACK_MEASUREMENT = false;
+    private static final boolean ITEM_MEASUREMENT = true;
+    private boolean lastMeasurementUpdated = false;
+
+    // Unit description string resource ID's
     private int typeStringResourceId;
     private int subTypeStringResourceId;
     private int unitOneLabelStringResourceId;
     private int unitTwoLabelStringResourceId;
 
+    // Min and max measurements
+    private double minimumItemSize = UNIT_COUNT;
+    private double maximumMeasurement = MAX_COUNT;
+
     private int numberOfItems = SINGLE_ITEM;
-    private double baseSiUnits = 0;
+    private double itemSizeInCountUnits = minimumItemSize;
+    private double baseUnits = 0.;
+    private double packMeasurementCount = 0;
+    private double itemMeasurementCount = 0;
 
     public Count() {
 
@@ -30,103 +44,186 @@ public class Count implements UnitOfMeasure {
     }
 
     @Override
+    public int getNumberOfMeasurementUnits() {
+
+        return COUNT_NUMBER_OF_MEASUREMENT_UNITS;
+    }
+
+    @Override
     public int getTypeStringResourceId() {
-        return 0;
+
+        return typeStringResourceId;
     }
 
     @Override
     public MeasurementType getMeasurementType() {
+
         return MeasurementType.TYPE_COUNT;
     }
 
     @Override
     public int getSubTypeStringResourceId() {
-        return 0;
+
+        return subTypeStringResourceId;
     }
 
     @Override
     public MeasurementSubType getMeasurementSubType() {
+
         return MeasurementSubType.TYPE_COUNT;
     }
 
     @Override
-    public int getNumberOfMeasurementUnits() {
-        return COUNT_NUMBER_OF_MEASUREMENT_UNITS;
-    }
-
-    @Override
-    public int getUnitOneLabelStringResourceId() {
-        return 0;
-    }
-
-    @Override
-    public int getUnitTwoLabelStringResourceId() {
-        return 0;
-    }
-
-    @Override
     public double getBaseSiUnits() {
-        return baseSiUnits;
+        return baseUnits;
     }
 
     @Override
-    public boolean baseSiUnitsAreSet(double baseSiUnits) {
+    public boolean baseSiUnitsAreSet(double newCount) {
 
-        if (numberOfItems > 1) {
+        if (newCountIsWithinBounds(newCount)) {
 
-            if (baseSiUnits <= MAXIMUM_COUNT && baseSiUnits >= UNIT_COUNT * numberOfItems) {
-                this.baseSiUnits = baseSiUnits;
-                return true;
-            }
-        }
+            this.baseUnits = newCount;
+            packMeasurementCount = baseUnits;
+            itemMeasurementCount = baseUnits / numberOfItems;
 
-        if (baseSiUnits > MINIMUM_COUNT && baseSiUnits < MAXIMUM_COUNT) {
-            this.baseSiUnits = baseSiUnits;
             return true;
+
+        } else if (newCount == 0.) {
+
+            this.baseUnits = 0.; // allows for a reset
+
+            packMeasurementCount = 0;
+            itemMeasurementCount = 0;
         }
+
         return false;
+    }
+
+    private boolean newCountIsWithinBounds(double newCount) {
+
+        return newCountDoesNotMakeItemSmallerThanSmallestCount(newCount) &&
+                newCountIsWithinMaxCount(newCount);
+    }
+
+    private boolean newCountDoesNotMakeItemSmallerThanSmallestCount(double newCount) {
+
+        return newCount >= UNIT_COUNT * numberOfItems;
+    }
+
+    private boolean newCountIsWithinMaxCount(double newCount) {
+
+        return newCount <= maximumMeasurement;
+    }
+
+    @Override
+    public int getNumberOfItems() {
+
+        return numberOfItems;
     }
 
     @Override
     public boolean numberOfItemsAreSet(int numberOfItems) {
 
-        // TODO - When setting number of items, check the size / measurements (if available) do not
-        // TODO - exceed MAX
-        if (numberOfItems > SINGLE_ITEM &&
-                numberOfItems <= MULTI_PACK_MAXIMUM_NO_OF_ITEMS) {
+        if (numberOfItemsInPackAreWithinBounds(numberOfItems)) {
 
-            this.numberOfItems = numberOfItems;
-            return true;
+            if (baseUnits == NOT_YET_SET) {
+
+                this.numberOfItems = numberOfItems;
+
+                return true;
+
+            } else {
+
+                if (lastMeasurementUpdated == PACK_MEASUREMENT) {
+
+                    if (itemSizeNotLessThanSmallestUnit(numberOfItems)) {
+
+                        setItemsInPackByAdjustingItemSize(numberOfItems);
+
+                        return true;
+                    }
+
+                } else if (lastMeasurementUpdated == ITEM_MEASUREMENT) {
+
+                    if (itemSizeMultipliedByNumberOfItemsDoNotExceedMaxCount(numberOfItems)) {
+
+                        setItemsInPackByAdjustingPackSize(numberOfItems);
+
+                        return true;
+                    }
+                }
+            }
         }
         return false;
     }
 
-    @Override
-    public int getNumberOfItems() {
-        return numberOfItems;
+    private boolean numberOfItemsInPackAreWithinBounds(int numberOfItems) {
+
+        return numberOfItems >= SINGLE_ITEM && numberOfItems <= MAX_COUNT;
+    }
+
+    private boolean itemSizeNotLessThanSmallestUnit(int numberOfItems) {
+
+        return baseUnits / numberOfItems >= minimumItemSize;
+    }
+
+    private void setItemsInPackByAdjustingItemSize(int numberOfItemsInPack) {
+
+        this.numberOfItems = numberOfItemsInPack;
+        setNewItemMeasurements();
+    }
+
+    private void setNewItemMeasurements() {
+
+        itemSizeInCountUnits = baseUnits / numberOfItems;
+        itemMeasurementCount = itemSizeInCountUnits;
+    }
+
+    private boolean itemSizeMultipliedByNumberOfItemsDoNotExceedMaxCount(int numberOfItems) {
+
+        return itemSizeInCountUnits * numberOfItems <= MAX_COUNT;
+    }
+
+    private void setItemsInPackByAdjustingPackSize(int numberOfItems) {
+
+        this.numberOfItems = numberOfItems;
+        baseSiUnitsAreSet(itemSizeInCountUnits * numberOfItems);
     }
 
     @Override
-    public Pair[] getInputDigitsFilter() {
+    public int getUnitOneLabelStringResourceId() {
 
-        Pair<Integer, Integer> unitOneDigitsFilter = new Pair<>(MULTI_PACK_MAXIMUM_NO_OF_ITEMS, 0);
-        Pair<Integer, Integer> unitTwoDigitsFilter = new Pair<>(0, 0);
-
-        Pair[] digitFilters = new Pair[2];
-        digitFilters[0] = unitOneDigitsFilter;
-        digitFilters[1] = unitTwoDigitsFilter;
-
-        return digitFilters;
+        return unitOneLabelStringResourceId;
     }
 
     @Override
     public double getPackMeasurementOne() {
-        return 0;
+
+        return packMeasurementCount;
     }
 
     @Override
     public boolean packMeasurementOneIsSet(double packMeasurementOne) {
-        return false;
+
+        return baseSiUnitsAreSet(packMeasurementOne);
+    }
+
+    @Override
+    public double getItemMeasurementOne() {
+
+        return itemMeasurementCount;
+    }
+
+    @Override
+    public boolean itemMeasurementOneIsSet(double itemMeasurementOne) {
+
+        return baseSiUnitsAreSet(itemMeasurementOne * numberOfItems);
+    }
+
+    @Override
+    public int getUnitTwoLabelStringResourceId() {
+        return R.string.empty_string;
     }
 
     @Override
@@ -136,16 +233,6 @@ public class Count implements UnitOfMeasure {
 
     @Override
     public boolean packMeasurementTwoIsSet(int packMeasurementTwo) {
-        return false;
-    }
-
-    @Override
-    public double getItemMeasurementOne() {
-        return 0;
-    }
-
-    @Override
-    public boolean itemMeasurementOneIsSet(double itemMeasurementOne) {
         return false;
     }
 
@@ -161,6 +248,26 @@ public class Count implements UnitOfMeasure {
 
     @Override
     public int[] getMeasurementError() {
-        return new int[0];
+
+        return new int[]{
+
+                getTypeStringResourceId(),
+                MAX_COUNT,
+                getUnitTwoLabelStringResourceId(),
+                (int) (minimumItemSize),
+                getUnitOneLabelStringResourceId()};
+    }
+
+    @Override
+    public Pair[] getInputDigitsFilter() {
+
+        Pair<Integer, Integer> unitOneDigitsFilter = new Pair<>(MULTI_PACK_MAXIMUM_NO_OF_ITEMS, 0);
+        Pair<Integer, Integer> unitTwoDigitsFilter = new Pair<>(0, 0);
+
+        Pair[] digitFilters = new Pair[2];
+        digitFilters[0] = unitOneDigitsFilter;
+        digitFilters[1] = unitTwoDigitsFilter;
+
+        return digitFilters;
     }
 }

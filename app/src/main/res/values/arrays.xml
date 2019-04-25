@@ -46,17 +46,13 @@
     <string-array name="unit_of_measure_options_volume_imperial">
         <item>@string/fluidOunce</item>
         <item>@string/pints</item>
-        <item>@string/gallons</item>
     </string-array>
 
     <string-array name="unit_of_measure_options_count">
         <item>@string/each</item>
-        <item>@string/piece</item>
-        <item>@string/items</item>
     </string-array>
 
     <string-array name="shelf_life_options">
-        <item>@string/shelf_life_default</item>
         <item>@string/one_day</item>
         <item>@string/three_days</item>
         <item>@string/five_days</item>
@@ -64,20 +60,11 @@
         <item>@string/two_weeks</item>
         <item>@string/three_weeks</item>
         <item>@string/four_weeks</item>
-        <item>@string/frozen</item>
-        <item>@string/dried</item>
-        <item>@string/sealed</item>
-        <item>@string/tin</item>
-        <item>@string/jar</item>
-        <item>@string/bottle</item>
-        <item>@string/box</item>
-        <item>@string/packet</item>
         <item>@string/not_applicable</item>
     </string-array>
 
     <string-array name="product_category_options">
-        <item>@string/category_default</item>
-        <item>@string/food</item>
         <item>@string/non_food</item>
+        <item>@string/food</item>
     </string-array>
 </resources>

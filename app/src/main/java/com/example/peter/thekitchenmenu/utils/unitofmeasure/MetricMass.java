@@ -119,9 +119,9 @@ public class MetricMass implements UnitOfMeasure {
         return baseSiUnits >= UNIT_GRAM * numberOfItems;
     }
 
-    private boolean baseSiUnitsAreWithinMaxMass(double basSiUnits) {
+    private boolean baseSiUnitsAreWithinMaxMass(double baseSiUnits) {
 
-        return basSiUnits <= maximumBaseSiMeasurement;
+        return baseSiUnits <= maximumBaseSiMeasurement;
     }
 
     private void setNewPackMeasurements() {
