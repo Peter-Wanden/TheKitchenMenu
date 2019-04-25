@@ -93,7 +93,7 @@ public class ImperialMassTest {
     @Test
     public void testBaseSiAtMinimumItemSize() { // CONDITION: BASE SI SAME AS SMALLEST ITEM
 
-        imperialMass.numberOfItemsAreSet(2);
+        assertThat(imperialMass.numberOfItemsAreSet(2), is(true));
 
         assertThat(imperialMass.baseSiUnitsAreSet(5.7), is(true));
 
@@ -130,8 +130,9 @@ public class ImperialMassTest {
         // Set to max
         assertThat(imperialMass.packMeasurementOneIsSet(352.7), is(true));
 
+
         // Check value set
-        assertThat(imperialMass.getPackMeasurementOne(), is(.7));
+        assertThat(imperialMass.getPackMeasurementOne(), is(.70));
         assertThat(imperialMass.getPackMeasurementTwo(), is(22));
         assertThat(imperialMass.getItemMeasurementOne(), is(.7));
         assertThat(imperialMass.getItemMeasurementTwo(), is(22));
@@ -299,10 +300,10 @@ public class ImperialMassTest {
     public void testNumberOfItemsInRangeMaxWithNoBaseSI() { // CONDITION: BASE SI NOT YET SET - IN RANGE MAX
 
         // Set to max within range
-        assertThat(imperialMass.numberOfItemsAreSet(999), is(true));
+        assertThat(imperialMass.numberOfItemsAreSet(99), is(true));
 
         // Check set
-        assertThat(imperialMass.getNumberOfItems(), is(999));
+        assertThat(imperialMass.getNumberOfItems(), is(99));
 
         // Check values unchanged
         assertThat(imperialMass.getPackMeasurementOne(), is(0.));
@@ -477,6 +478,7 @@ public class ImperialMassTest {
         assertThat(imperialMass.getBaseSiUnits(), is(907.18474));
         assertThat(imperialMass.itemMeasurementOneIsSet(2), is(true));
         assertThat(imperialMass.getItemMeasurementOne(), is(2.));
+        assertThat(imperialMass.getBaseSiUnits(), is(1020.5828325));
     }
 
     @Test
@@ -485,8 +487,8 @@ public class ImperialMassTest {
         assertThat(imperialMass.numberOfItemsAreSet(2), is(true));
         assertThat(imperialMass.packMeasurementOneIsSet(2), is(true));
         assertThat(imperialMass.packMeasurementOneIsSet(20.), is(true));
-        assertThat(imperialMass.getBaseSiUnits(), is(20.));
-        assertThat(imperialMass.getPackMeasurementOne(), is(20.));
+        assertThat(imperialMass.getPackMeasurementTwo(), is(1));
+        assertThat(imperialMass.getPackMeasurementOne(), is(4.));
     }
 
     @Test

@@ -36,17 +36,5 @@ public class UnitOfMeasureFieldVisibilityBindingAdapter {
                 viewId == R.id.pack_measurement_label_two)
 
             view.setVisibility(units == 2 ? View.VISIBLE : View.INVISIBLE);
-
-        if (
-                viewId == R.id.pack_editable_measurement_three ||
-                viewId == R.id.pack_measurement_label_three)
-
-            view.setVisibility(units == 3 ? View.VISIBLE : View.INVISIBLE);
-
-        if (
-                viewId == R.id.item_editable_measurement_three ||
-                viewId == R.id.item_measurement_label_three)
-
-            view.setVisibility(numberOfItems > 1 && units == 3 ? View.VISIBLE : View.INVISIBLE);
     }
 }

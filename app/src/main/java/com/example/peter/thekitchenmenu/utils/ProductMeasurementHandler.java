@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubType;
@@ -54,7 +55,7 @@ public class ProductMeasurementHandler {
         }
     }
 
-    public void numberOfItems(EditText editableItemsInPack) {
+    public void numberOfItems(TextView editableItemsInPack) {
 
         int newNumberOfItems = parseIntegerFromEditText(editableItemsInPack);
 
@@ -97,7 +98,7 @@ public class ProductMeasurementHandler {
         return false;
     }
 
-    private void setNumberOfItemsOutOfBoundsError(EditText editableItemsInPack) {
+    private void setNumberOfItemsOutOfBoundsError(TextView editableItemsInPack) {
 
         String numberOfItemsError =
                 resources.getString(
@@ -108,7 +109,7 @@ public class ProductMeasurementHandler {
 //        editableItemsInPack.setError(numberOfItemsError);
     }
 
-    public void modifyNumberOfItemsByOne(EditText editableNoOfItems, Button button) {
+    public void modifyNumberOfItemsByOne(TextView editableNoOfItems, Button button) {
 
         int itemsInPack = unitOfMeasure.getNumberOfItems();
         int buttonId = button.getId();
@@ -191,7 +192,7 @@ public class ProductMeasurementHandler {
         }
     }
 
-    private int parseIntegerFromEditText(EditText editableMeasurement) {
+    private int parseIntegerFromEditText(TextView editableMeasurement) {
 
         String rawMeasurement = editableMeasurement.getText().toString();
 
@@ -296,31 +297,6 @@ public class ProductMeasurementHandler {
                             " New measurement: " + newMeasurement);
 
                 return newMeasurement != oldMeasurement;
-
-            case R.id.pack_editable_measurement_three:
-
-                oldMeasurement = unitOfMeasure.getPackMeasurementThree();
-
-                if (oldMeasurement != newMeasurement)
-
-                    Log.d(TAG, "tkm - measurementHasChangedInteger: Pack Three:" +
-                            " Old measurement: " + oldMeasurement +
-                            " New measurement: " + newMeasurement);
-
-                return newMeasurement != oldMeasurement;
-
-
-            case R.id.item_editable_measurement_three:
-
-                oldMeasurement = unitOfMeasure.getItemMeasurementThree();
-
-                if (oldMeasurement != newMeasurement)
-
-                    Log.d(TAG, "tkm - measurementHasChangedInteger: Item Three: " +
-                            " Old Measurement: " + oldMeasurement +
-                            " New Measurement: " + newMeasurement);
-
-                return newMeasurement != oldMeasurement;
         }
         Log.d(TAG, "tkm - measurementHasChangedInteger: View not recognised, aborting.");
         return false;
@@ -386,16 +362,6 @@ public class ProductMeasurementHandler {
 
             Log.d(TAG, "tkm - processIntegerMeasurements: processing change to Item Two");
             measurementIsSet = unitOfMeasure.itemMeasurementTwoIsSet(newMeasurement);
-
-        } else if (viewId == R.id.pack_editable_measurement_three) {
-
-            Log.d(TAG, "tkm - processIntegerMeasurements: processing change to Pack three");
-            measurementIsSet = unitOfMeasure.packMeasurementThreeIsSet(newMeasurement);
-
-        } else if (viewId == R.id.item_editable_measurement_three) {
-
-            Log.d(TAG, "tkm - processIntegerMeasurements: ");
-            measurementIsSet = unitOfMeasure.itemMeasurementThreeIsSet(newMeasurement);
         }
 
         if (measurementIsSet) {
@@ -442,7 +408,7 @@ public class ProductMeasurementHandler {
         Log.d(TAG, "tkm - setErrorTo: Error should be set.");
     }
 
-    private void setNumberFormatExceptionError(EditText editable) {
+    private void setNumberFormatExceptionError(TextView editable) {
 
         editable.setError(resources.getString(R.string.number_format_exception));
     }
@@ -573,26 +539,6 @@ public class ProductMeasurementHandler {
 
             Log.d(TAG, "tkm - updateMeasurementModel: Updating Item Two to: " +
                     unitOfMeasure.getItemMeasurementTwo());
-        }
-
-        if (viewModel.getMeasurement().getPackMeasurementThree() !=
-                unitOfMeasure.getPackMeasurementThree()) {
-
-            viewModel.getMeasurement().setPackMeasurementThree(
-                    unitOfMeasure.getPackMeasurementThree());
-
-            Log.d(TAG, "tkm - updateMeasurementModel: Updating Pack Three to: " +
-                    unitOfMeasure.getPackMeasurementThree());
-        }
-
-        if (viewModel.getMeasurement().getItemMeasurementThree() !=
-                unitOfMeasure.getItemMeasurementThree()) {
-
-            viewModel.getMeasurement().setItemMeasurementThree(
-                    unitOfMeasure.getItemMeasurementThree());
-
-            Log.d(TAG, "tkm - updateMeasurementModel: Updating item Three to: " +
-                    unitOfMeasure.getItemMeasurementThree());
         }
 
         Log.d(TAG, "tkm - updateMeasurementModel: Measurement model updating complete");

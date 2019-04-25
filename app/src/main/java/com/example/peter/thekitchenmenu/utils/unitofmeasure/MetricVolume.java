@@ -29,7 +29,6 @@ public class MetricVolume implements UnitOfMeasure {
     private int subTypeStringResourceId;
     private int unitOneLabelStringResourceId;
     private int unitTwoLabelStringResourceId;
-    private int unitThreeLabelStringResourceId;
 
     // Min and max measurements
     private double minimumItemSize = UNIT_MILLILITRE;
@@ -50,7 +49,6 @@ public class MetricVolume implements UnitOfMeasure {
         subTypeStringResourceId = R.string.sub_type_metric_volume;
         unitOneLabelStringResourceId = R.string.millilitres;
         unitTwoLabelStringResourceId = R.string.litres;
-        unitThreeLabelStringResourceId = R.string.empty_string;
     }
 
     @Override
@@ -319,32 +317,6 @@ public class MetricVolume implements UnitOfMeasure {
     }
 
     @Override
-    public int getUnitThreeLabelStringResourceId() {
-
-        return unitThreeLabelStringResourceId;
-    }
-
-    @Override
-    public int getPackMeasurementThree() {
-        return 0;
-    }
-
-    @Override
-    public boolean packMeasurementThreeIsSet(int packMeasurementThree) {
-        return false;
-    }
-
-    @Override
-    public int getItemMeasurementThree() {
-        return 0;
-    }
-
-    @Override
-    public boolean itemMeasurementThreeIsSet(int itemMeasurementThree) {
-        return false;
-    }
-
-    @Override
     public int[] getMeasurementError() {
 
         return new int[]{
@@ -369,13 +341,10 @@ public class MetricVolume implements UnitOfMeasure {
 
         Pair<Integer, Integer> unitOneDigitsFormat = new Pair<>(3, 0);
         Pair<Integer, Integer> unitTwoDigitsFormat = new Pair<>(litreDigits, 0);
-        Pair<Integer, Integer> unitThreeDigitsFormat = new Pair<>(0, 0);
 
-        Pair[] digitsFormat = new Pair[3];
-
+        Pair[] digitsFormat = new Pair[2];
         digitsFormat[0] = unitOneDigitsFormat;
         digitsFormat[1] = unitTwoDigitsFormat;
-        digitsFormat[2] = unitThreeDigitsFormat;
 
         return digitsFormat;
     }

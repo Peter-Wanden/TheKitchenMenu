@@ -1,7 +1,5 @@
 package com.example.peter.thekitchenmenu.data.model;
 
-import android.util.Log;
-
 import com.example.peter.thekitchenmenu.BR;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubType;
 
@@ -27,9 +25,6 @@ public class ProductMeasurementModel extends BaseObservable {
 
     private int packMeasurementTwo = 0;
     private int itemMeasurementTwo = 0;
-
-    private int packMeasurementThree = 0;
-    private int itemMeasurementThree = 0;
 
 
     @Bindable
@@ -104,18 +99,6 @@ public class ProductMeasurementModel extends BaseObservable {
     }
 
     @Bindable
-    public int getPackMeasurementThree() {
-
-        return packMeasurementThree;
-    }
-
-    public void setPackMeasurementThree(int packMeasurementThree) {
-
-        this.packMeasurementThree = packMeasurementThree;
-        notifyPropertyChanged(BR.packMeasurementThree);
-    }
-
-    @Bindable
     public String getItemMeasurementOne() {
 
         return itemMeasurementOne;
@@ -160,39 +143,12 @@ public class ProductMeasurementModel extends BaseObservable {
     @Bindable
     public int getItemMeasurementTwo() {
 
-        Log.d(TAG, "tkm - getItemMeasurementTwo: " + itemMeasurementTwo);
         return itemMeasurementTwo;
     }
 
     public void setItemMeasurementTwo(int itemMeasurementTwo) {
 
         this.itemMeasurementTwo = itemMeasurementTwo;
-        Log.d(TAG, "tkm - setItemMeasurementTwo: " + this.itemMeasurementTwo);
         notifyPropertyChanged(BR.itemMeasurementTwo);
-    }
-
-    @Bindable
-    public int getItemMeasurementThree() {
-
-        return itemMeasurementThree;
-    }
-
-    public void setItemMeasurementThree(int itemMeasurementThree) {
-
-        this.itemMeasurementThree = itemMeasurementThree;
-        notifyPropertyChanged(BR.itemMeasurementThree);
-    }
-
-    @Override
-    public String toString() {
-
-        return "tkm - ProductMeasurementModel{" +
-                ", \nmeasurementSubType=" + measurementSubType +
-                ", \nnumberOfItems=" + numberOfItems +
-                ", \npackMeasurementOneAsDecimal=" + packMeasurementOneAsDecimal +
-                ", \nitemMeasurementOne=" + itemMeasurementOne +
-                ", \npackMeasurementTwo=" + packMeasurementTwo +
-                ", \nitemMeasurementTwo=" + itemMeasurementTwo +
-                '}';
     }
 }

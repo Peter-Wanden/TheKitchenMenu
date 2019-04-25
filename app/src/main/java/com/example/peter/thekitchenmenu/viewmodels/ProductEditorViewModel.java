@@ -4,7 +4,6 @@ import android.app.Application;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
-import com.example.peter.thekitchenmenu.utils.ObservableViewModel;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
@@ -55,7 +54,23 @@ public class ProductEditorViewModel extends ObservableViewModel {
                 0,
                 "");
 
-        this.productEntity.setValue(productEntityMetricMassTest);
+        ProductEntity productEntityImperialVolumeTest = new ProductEntity(
+                0,
+                "Semi-Skimmed Milk",
+                "Waitrose",
+                1,
+                3,
+                2,
+                10000,
+                3,
+                0,
+                "",
+                "",
+                0,
+                0,
+                "");
+
+        this.productEntity.setValue(productEntityImperialVolumeTest);
 
     }
 

@@ -3,7 +3,6 @@ package com.example.peter.thekitchenmenu.viewmodels;
 import android.app.Application;
 
 import com.example.peter.thekitchenmenu.data.model.ProductIdentityModel;
-import com.example.peter.thekitchenmenu.utils.ObservableViewModel;
 import com.example.peter.thekitchenmenu.utils.ProductTextValidationHandler;
 
 import androidx.annotation.NonNull;

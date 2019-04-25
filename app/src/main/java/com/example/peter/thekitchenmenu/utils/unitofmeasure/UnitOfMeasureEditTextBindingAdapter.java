@@ -45,9 +45,7 @@ public class UnitOfMeasureEditTextBindingAdapter {
                 viewId == R.id.pack_editable_measurement_one ||
                 viewId == R.id.item_editable_measurement_one ||
                 viewId == R.id.pack_editable_measurement_two && units > 1 ||
-                viewId == R.id.item_editable_measurement_two && units > 1 ||
-                viewId == R.id.pack_editable_measurement_three && units > 2 ||
-                viewId == R.id.item_editable_measurement_three && units > 2)
+                viewId == R.id.item_editable_measurement_two && units > 1)
 
                 setInputForSoftAndHardKeyboard(editText, unitOfMeasure);
     }
@@ -93,18 +91,6 @@ public class UnitOfMeasureEditTextBindingAdapter {
                 new DecimalDigitsInputFilter(
                         (int)inputDigitsFilters[1].first,
                         (int)inputDigitsFilters[1].second)});
-        }
-
-        if (
-                viewId == R.id.pack_editable_measurement_three ||
-                viewId == R.id.item_editable_measurement_three) {
-
-            editText.setFilters(new InputFilter[]{
-
-                new DecimalDigitsInputFilter(
-                        (int)inputDigitsFilters[2].first,
-                        (int)inputDigitsFilters[2].second)});
-
         }
     }
 }

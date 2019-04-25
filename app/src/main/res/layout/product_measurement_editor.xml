@@ -85,7 +85,7 @@
             app:layout_constraintEnd_toStartOf="@id/editable_items_in_pack"
             app:layout_constraintTop_toTopOf="@id/editable_items_in_pack" />
 
-        <androidx.appcompat.widget.AppCompatEditText
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/editable_items_in_pack"
             style="@style/EditableFieldStyle"
             android:layout_width="wrap_content"

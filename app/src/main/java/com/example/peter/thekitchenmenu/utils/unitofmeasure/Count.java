@@ -17,7 +17,6 @@ public class Count implements UnitOfMeasure {
     private int subTypeStringResourceId;
     private int unitOneLabelStringResourceId;
     private int unitTwoLabelStringResourceId;
-    private int unitThreeLabelStringResourceId ;
 
     private int numberOfItems = SINGLE_ITEM;
     private double baseSiUnits = 0;
@@ -28,7 +27,6 @@ public class Count implements UnitOfMeasure {
         subTypeStringResourceId = R.string.count;
         unitOneLabelStringResourceId = R.string.each;
         unitTwoLabelStringResourceId = R.string.empty_string;
-        unitThreeLabelStringResourceId = R.string.empty_string;
     }
 
     @Override
@@ -63,11 +61,6 @@ public class Count implements UnitOfMeasure {
 
     @Override
     public int getUnitTwoLabelStringResourceId() {
-        return 0;
-    }
-
-    @Override
-    public int getUnitThreeLabelStringResourceId() {
         return 0;
     }
 
@@ -118,12 +111,10 @@ public class Count implements UnitOfMeasure {
 
         Pair<Integer, Integer> unitOneDigitsFilter = new Pair<>(MULTI_PACK_MAXIMUM_NO_OF_ITEMS, 0);
         Pair<Integer, Integer> unitTwoDigitsFilter = new Pair<>(0, 0);
-        Pair<Integer, Integer> unitThreeDigitsFilter = new Pair<>(0,0);
 
-        Pair[] digitFilters = new Pair[3];
+        Pair[] digitFilters = new Pair[2];
         digitFilters[0] = unitOneDigitsFilter;
         digitFilters[1] = unitTwoDigitsFilter;
-        digitFilters[2] = unitThreeDigitsFilter;
 
         return digitFilters;
     }
@@ -149,16 +140,6 @@ public class Count implements UnitOfMeasure {
     }
 
     @Override
-    public int getPackMeasurementThree() {
-        return 0;
-    }
-
-    @Override
-    public boolean packMeasurementThreeIsSet(int packMeasurementThree) {
-        return false;
-    }
-
-    @Override
     public double getItemMeasurementOne() {
         return 0;
     }
@@ -175,16 +156,6 @@ public class Count implements UnitOfMeasure {
 
     @Override
     public boolean itemMeasurementTwoIsSet(int itemMeasurementTwo) {
-        return false;
-    }
-
-    @Override
-    public int getItemMeasurementThree() {
-        return 0;
-    }
-
-    @Override
-    public boolean itemMeasurementThreeIsSet(int itemMeasurementThree) {
         return false;
     }
 

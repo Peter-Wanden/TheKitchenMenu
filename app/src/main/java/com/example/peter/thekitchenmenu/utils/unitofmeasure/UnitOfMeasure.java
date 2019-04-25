@@ -30,12 +30,6 @@ public interface UnitOfMeasure {
     int getItemMeasurementTwo();
     boolean itemMeasurementTwoIsSet(int itemMeasurementTwo);
 
-    int getUnitThreeLabelStringResourceId();
-    int getPackMeasurementThree();
-    boolean packMeasurementThreeIsSet(int packMeasurementThree);
-    int getItemMeasurementThree();
-    boolean itemMeasurementThreeIsSet(int itemMeasurementThree);
-
     int[] getMeasurementError();
 
     Pair[] getInputDigitsFilter();

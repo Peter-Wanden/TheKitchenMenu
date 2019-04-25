@@ -4,6 +4,7 @@ import com.example.peter.thekitchenmenu.R;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 import androidx.core.util.Pair;
 
@@ -28,7 +29,6 @@ public class ImperialMass implements UnitOfMeasure {
     private int subTypeStringResourceId;
     private int unitOneLabelStringResourceId;
     private int unitTwoLabelStringResourceId;
-    private int unitThreeLabelStringResourceId;
 
     // Min and max measurements
     private double minimumItemSize = UNIT_OUNCE_DECIMAL;
@@ -46,9 +46,8 @@ public class ImperialMass implements UnitOfMeasure {
 
         typeStringResourceId = R.string.mass;
         subTypeStringResourceId = R.string.sub_type_imperial_mass;
-        unitTwoLabelStringResourceId = R.string.pounds;
         unitOneLabelStringResourceId = R.string.ounces;
-        unitThreeLabelStringResourceId = R.string.empty_string;
+        unitTwoLabelStringResourceId = R.string.pounds;
     }
 
     @Override
@@ -279,6 +278,7 @@ public class ImperialMass implements UnitOfMeasure {
 
     @Override
     public int getUnitTwoLabelStringResourceId() {
+
         return unitTwoLabelStringResourceId;
     }
 
@@ -333,35 +333,9 @@ public class ImperialMass implements UnitOfMeasure {
     }
 
     @Override
-    public int getUnitThreeLabelStringResourceId() {
-
-        return unitThreeLabelStringResourceId;
-    }
-
-    @Override
-    public int getPackMeasurementThree() {
-        return 0;
-    }
-
-    @Override
-    public boolean packMeasurementThreeIsSet(int packMeasurementThree) {
-        return false;
-    }
-
-    @Override
-    public int getItemMeasurementThree() {
-        return 0;
-    }
-
-    @Override
-    public boolean itemMeasurementThreeIsSet(int itemMeasurementThree) {
-        return false;
-    }
-
-    @Override
     public int[] getMeasurementError() {
 
-        return new int[]{
+        return new int[] {
 
                 getTypeStringResourceId(),
                 (int) (maximumBaseSiMeasurement / UNIT_POUND),
@@ -383,21 +357,21 @@ public class ImperialMass implements UnitOfMeasure {
 
         Pair<Integer, Integer> unitOneDigitsFormat = new Pair<>(2, 1);
         Pair<Integer, Integer> unitTwoDigitsFormat = new Pair<>(poundDigits, 0);
-        Pair<Integer, Integer> unitThreeDigitsFormat = new Pair<>(0, 0);
 
-        Pair[] digitFormats = new Pair[3];
-
+        Pair[] digitFormats = new Pair[2];
         digitFormats[0] = unitOneDigitsFormat;
         digitFormats[1] = unitTwoDigitsFormat;
-        digitFormats[2] = unitThreeDigitsFormat;
 
         return digitFormats;
     }
 
     private double roundDecimal(double valueToRound) {
 
-        DecimalFormat decimalFormat = new DecimalFormat("##.#");
+        NumberFormat decimalFormat = NumberFormat.getInstance();
         decimalFormat.setRoundingMode(RoundingMode.HALF_EVEN);
+
+        if (decimalFormat instanceof DecimalFormat)
+            ((DecimalFormat) decimalFormat).applyPattern("##.#");
 
         return Double.parseDouble(decimalFormat.format(valueToRound));
     }
