@@ -23,34 +23,40 @@ public class ProductModel extends BaseObservable implements Parcelable {
 
     private static final String TAG = "ProductModel";
 
-    // ProductUserDataEntity fields.
-    private int userProductDataId;
-    // private String remoteProdMyRefKey; // TODO - find the root of this var
-    private String remoteUsedProductId;
-    private String retailer;
-    private String locationRoom;
-    private String locationInRoom;
-    private double price;
+    // ProductImageModel fields
+    private String remoteImageUri;
     private String localImageUri;
-    private long usersProductDataCreateDate;
-    private long usersProductDataLastUpdate;
 
-    // ProductEntity fields.
-    private int productId;
-    private String remoteProductId;
-
+    // ProductIdentityModel fields
     private String description;
     private String madeBy;
     private int category;
     private int shelfLife;
-    private int numberOfItems;
+
+    // ProductMeasurementModel fields
     private double baseSiUnits;
+    private int numberOfItems;
     private int unitOfMeasureSubType;
-    private double packAvePrice;
+
+    // ProductUserDataModel fields.
+    private int userProductDataId;
+    private long usersProductDataCreateDate;
+    private long usersProductDataLastUpdate;
+    private String retailer;
+    private double price;
+    private String locationRoom;
+    private String locationInRoom;
+
+    // ProductEntity fields.
+    private int localProductId;
+    private String remoteProductId;
+    private String remoteUsedProductId;
     private String createdBy;
-    private String remoteImageUri;
-    private long createDate;
-    private long lastUpdate;
+    private long productCreateDate;
+    private long productLastUpdate;
+
+
+    private double packAvePrice;
 
     public ProductModel(){}
 
@@ -67,7 +73,7 @@ public class ProductModel extends BaseObservable implements Parcelable {
         this.usersProductDataCreateDate = productUserDataEntity.getCreateDate();
         this.usersProductDataLastUpdate = productUserDataEntity.getLastUpdate();
 
-        this.productId = productEntity.getId();
+        this.localProductId = productEntity.getId();
         this.remoteProductId = productEntity.getRemoteProductId();
         this.description = productEntity.getDescription();
         this.madeBy = productEntity.getMadeBy();
@@ -79,8 +85,8 @@ public class ProductModel extends BaseObservable implements Parcelable {
         this.packAvePrice = productEntity.getPackAvePrice();
         this.createdBy = productEntity.getCreatedBy();
         this.remoteImageUri = productEntity.getRemoteImageUri();
-        this.createDate = productEntity.getCreateDate();
-        this.lastUpdate = productEntity.getLastUpdate();
+        this.productCreateDate = productEntity.getCreateDate();
+        this.productLastUpdate = productEntity.getLastUpdate();
     }
 
     // For creating a view model of a ProductEntity only
@@ -96,7 +102,7 @@ public class ProductModel extends BaseObservable implements Parcelable {
         this.usersProductDataCreateDate = DEFAULT_MY_CREATE_DATE;
         this.usersProductDataLastUpdate = DEFAULT_MY_LAST_UPDATE;
 
-        this.productId = productEntity.getId();
+        this.localProductId = productEntity.getId();
         this.description = productEntity.getDescription();
         this.madeBy = productEntity.getMadeBy();
         this.category = productEntity.getCategory();
@@ -107,8 +113,8 @@ public class ProductModel extends BaseObservable implements Parcelable {
         this.packAvePrice = productEntity.getPackAvePrice();
         this.createdBy = productEntity.getCreatedBy();
         this.remoteImageUri = productEntity.getRemoteImageUri();
-        this.createDate = productEntity.getCreateDate();
-        this.lastUpdate = productEntity.getLastUpdate();
+        this.productCreateDate = productEntity.getCreateDate();
+        this.productLastUpdate = productEntity.getLastUpdate();
         this.remoteProductId = productEntity.getRemoteProductId();
     }
 
@@ -123,7 +129,7 @@ public class ProductModel extends BaseObservable implements Parcelable {
             String localImageUri,
             long usersProductDataCreateDate,
             long usersProductDataLastUpdate,
-            int productId,
+            int localProductId,
             String remoteProductId,
             String description,
             String madeBy,
@@ -135,8 +141,8 @@ public class ProductModel extends BaseObservable implements Parcelable {
             double packAvePrice,
             String createdBy,
             String remoteImageUri,
-            long createDate,
-            long lastUpdate) {
+            long productCreateDate,
+            long productLastUpdate) {
 
         this.userProductDataId = userProductDataId;
         this.remoteProductId = remoteUserProductId;
@@ -148,7 +154,7 @@ public class ProductModel extends BaseObservable implements Parcelable {
         this.localImageUri = localImageUri;
         this.usersProductDataCreateDate = usersProductDataCreateDate;
         this.usersProductDataLastUpdate = usersProductDataLastUpdate;
-        this.productId = productId;
+        this.localProductId = localProductId;
         this.remoteProductId = remoteProductId;
         this.description = description;
         this.madeBy = madeBy;
@@ -160,8 +166,8 @@ public class ProductModel extends BaseObservable implements Parcelable {
         this.packAvePrice = packAvePrice;
         this.createdBy = createdBy;
         this.remoteImageUri = remoteImageUri;
-        this.createDate = createDate;
-        this.lastUpdate = lastUpdate;
+        this.productCreateDate = productCreateDate;
+        this.productLastUpdate = productLastUpdate;
     }
 
     protected ProductModel(Parcel in) {
@@ -175,7 +181,7 @@ public class ProductModel extends BaseObservable implements Parcelable {
         localImageUri = in.readString();
         usersProductDataCreateDate = in.readLong();
         usersProductDataLastUpdate = in.readLong();
-        productId = in.readInt();
+        localProductId = in.readInt();
         remoteProductId = in.readString();
         description = in.readString();
         madeBy = in.readString();
@@ -187,8 +193,8 @@ public class ProductModel extends BaseObservable implements Parcelable {
         packAvePrice = in.readDouble();
         createdBy = in.readString();
         remoteImageUri = in.readString();
-        createDate = in.readLong();
-        lastUpdate = in.readLong();
+        productCreateDate = in.readLong();
+        productLastUpdate = in.readLong();
     }
 
     public static final Creator<ProductModel> CREATOR = new Creator<ProductModel>() {
@@ -217,8 +223,8 @@ public class ProductModel extends BaseObservable implements Parcelable {
         result.put(PROD_COMM_PRICE_AVE, packAvePrice);
         result.put(CREATED_BY, createdBy);
         result.put(REMOTE_IMAGE_URI, remoteImageUri);
-        result.put(ProductEntity.CREATE_DATE, createDate);
-        result.put(ProductEntity.LAST_UPDATE, lastUpdate);
+        result.put(ProductEntity.CREATE_DATE, productCreateDate);
+        result.put(ProductEntity.LAST_UPDATE, productLastUpdate);
 
         return result;
     }
@@ -238,8 +244,8 @@ public class ProductModel extends BaseObservable implements Parcelable {
         result.put(PROD_COMM_PRICE_AVE, packAvePrice);
         result.put(CREATED_BY, createdBy);
         result.put(REMOTE_IMAGE_URI, remoteImageUri);
-        result.put(ProductEntity.CREATE_DATE, createDate);
-        result.put(ProductEntity.LAST_UPDATE, lastUpdate);
+        result.put(ProductEntity.CREATE_DATE, productCreateDate);
+        result.put(ProductEntity.LAST_UPDATE, productLastUpdate);
 
         // My product_uneditable specific fields
         result.put(REMOTE_USED_PRODUCT_ID, remoteUsedProductId);
@@ -272,7 +278,7 @@ public class ProductModel extends BaseObservable implements Parcelable {
         parcel.writeString(localImageUri);
         parcel.writeLong(usersProductDataCreateDate);
         parcel.writeLong(usersProductDataLastUpdate);
-        parcel.writeInt(productId);
+        parcel.writeInt(localProductId);
         parcel.writeString(remoteProductId);
         parcel.writeString(description);
         parcel.writeString(madeBy);
@@ -284,8 +290,8 @@ public class ProductModel extends BaseObservable implements Parcelable {
         parcel.writeDouble(packAvePrice);
         parcel.writeString(createdBy);
         parcel.writeString(remoteImageUri);
-        parcel.writeLong(createDate);
-        parcel.writeLong(lastUpdate);
+        parcel.writeLong(productCreateDate);
+        parcel.writeLong(productLastUpdate);
     }
 
     @Override
@@ -301,7 +307,7 @@ public class ProductModel extends BaseObservable implements Parcelable {
                 ", localImageUri: '" + localImageUri + '\'' +
                 ", usersProductDataCreateDate: '" + usersProductDataCreateDate + '\'' +
                 ", usersProductDataLastUpdate: '" + usersProductDataLastUpdate + '\'' +
-                ", productId: '" + productId + '\'' +
+                ", localProductId: '" + localProductId + '\'' +
                 ", remoteProductId: '" + remoteProductId + '\'' +
                 ", description: '" + description + '\'' +
                 ", madeBy: '" + madeBy + '\'' +
@@ -313,8 +319,8 @@ public class ProductModel extends BaseObservable implements Parcelable {
                 ", packAvePrice: '" + packAvePrice + '\'' +
                 ", createdBy: '" + createdBy + '\'' +
                 ", remoteImageUri: '" + remoteImageUri + '\'' +
-                ", createDate: '" + createDate + '\'' +
-                ", lastUpdate: '" + lastUpdate + '\'' +
+                ", productCreateDate: '" + productCreateDate + '\'' +
+                ", productLastUpdate: '" + productLastUpdate + '\'' +
                 '}';
     }
 
@@ -332,8 +338,8 @@ public class ProductModel extends BaseObservable implements Parcelable {
         setPackAvePrice(entity.getPackAvePrice());
         setCreatedBy(entity.getCreatedBy());
         setRemoteImageUri(entity.getRemoteImageUri());
-        setCreateDate(entity.getCreateDate());
-        setLastUpdate(entity.getLastUpdate());
+        setProductCreateDate(entity.getCreateDate());
+        setProductLastUpdate(entity.getLastUpdate());
         setRemoteProductId(entity.getRemoteProductId());
     }
 
@@ -498,28 +504,28 @@ public class ProductModel extends BaseObservable implements Parcelable {
         this.remoteImageUri = remoteImageUri;
     }
 
-    public long getCreateDate() {
-        return createDate;
+    public long getProductCreateDate() {
+        return productCreateDate;
     }
 
-    public void setCreateDate(long createDate) {
-        this.createDate = createDate;
+    public void setProductCreateDate(long productCreateDate) {
+        this.productCreateDate = productCreateDate;
     }
 
-    public long getLastUpdate() {
-        return lastUpdate;
+    public long getProductLastUpdate() {
+        return productLastUpdate;
     }
 
-    public void setLastUpdate(long lastUpdate) {
-        this.lastUpdate = lastUpdate;
+    public void setProductLastUpdate(long productLastUpdate) {
+        this.productLastUpdate = productLastUpdate;
     }
 
-    public int getProductId() {
-        return this.productId;
+    public int getLocalProductId() {
+        return this.localProductId;
     }
 
-    public void setProductId(int productId) {
-        this.productId = productId;
+    public void setLocalProductId(int localProductId) {
+        this.localProductId = localProductId;
     }
 
     public String getRemoteProductId() {

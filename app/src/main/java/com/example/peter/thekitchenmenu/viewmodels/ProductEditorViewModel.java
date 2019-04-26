@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
+import com.example.peter.thekitchenmenu.data.entity.ProductUserDataEntity;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
@@ -13,6 +14,8 @@ public class ProductEditorViewModel extends ObservableViewModel {
     private static final String TAG = "ProductEditorViewModel";
 
     private MutableLiveData<ProductEntity> productEntity = new MutableLiveData<>();
+    private MutableLiveData<ProductUserDataEntity> productUserDataEntity = new MutableLiveData<>();
+
     private String title;
 
     // TODO - Change category and shelf life to an enum
@@ -72,15 +75,33 @@ public class ProductEditorViewModel extends ObservableViewModel {
 
         this.productEntity.setValue(productEntityImperialVolumeTest);
 
+        ProductUserDataEntity userDataEntity = new ProductUserDataEntity(
+                0,
+                0,
+                "0",
+                "0",
+                "Waitrose",
+                "Kitchen",
+                "Cupboard",
+                12.34,
+                "file:///sdcard/img.png",
+                0,
+                0
+        );
+
+        this.productUserDataEntity.setValue(userDataEntity);
     }
 
     public MutableLiveData<ProductEntity> getProductEntity() {
 
-        if (productEntity == null) {
-
-            productEntity = new MutableLiveData<>();
-        }
+        if (productEntity == null) productEntity = new MutableLiveData<>();
         return productEntity;
+    }
+
+    public MutableLiveData<ProductUserDataEntity> getProductUserDataEntity() {
+
+        if (productUserDataEntity == null) productUserDataEntity = new MutableLiveData<>();
+        return productUserDataEntity;
     }
 
     // Changes the reference to a new productEntity, triggering LiveData to update the database.
@@ -102,8 +123,8 @@ public class ProductEditorViewModel extends ObservableViewModel {
 //            newProductEntity.setPackAvePrice(productModel.getPackAvePrice());
 //            newProductEntity.setCreatedBy(productModel.getCreatedBy());
 //            newProductEntity.setRemoteImageUri(productModel.getRemoteImageUri());
-//            newProductEntity.setCreateDate(productModel.getCreateDate());
-//            newProductEntity.setLastUpdate(productModel.getLastUpdate());
+//            newProductEntity.setProductCreateDate(productModel.getProductCreateDate());
+//            newProductEntity.setProductLastUpdate(productModel.getProductLastUpdate());
 //            newProductEntity.setRemoteProductId(productModel.getRemoteProductId());
 //
 //            productEntity.setValue(newProductEntity);

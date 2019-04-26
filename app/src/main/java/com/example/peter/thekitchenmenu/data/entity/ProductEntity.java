@@ -51,11 +51,11 @@ public class ProductEntity implements Parcelable {
     @ColumnInfo(name = CATEGORY)
     private int category;
 
-    @ColumnInfo(name = NUMBER_OF_ITEMS)
-    private int numberOfItems;
-
     @ColumnInfo(name = SHELF_LIFE)
     private int shelfLife;
+
+    @ColumnInfo(name = NUMBER_OF_ITEMS)
+    private int numberOfItems;
 
     @ColumnInfo(name = BASE_SI_UNITS)
     private double baseSiUnits;

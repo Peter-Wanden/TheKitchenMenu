@@ -21,8 +21,6 @@ public class MetricMassTest {
         assertThat(metricMass.getItemMeasurementOne(), is(1.));
         assertThat(metricMass.getItemMeasurementTwo(), is(0));
         assertThat(metricMass.getBaseSiUnits(), is(1.));
-
-        System.out.println();
     }
 
     @Test
@@ -35,8 +33,6 @@ public class MetricMassTest {
         assertThat(metricMass.getPackMeasurementTwo(), is(0));
         assertThat(metricMass.getItemMeasurementTwo(), is(0));
         assertThat(metricMass.getBaseSiUnits(), is(0.));
-
-        System.out.println();
     }
 
     @Test
@@ -49,8 +45,6 @@ public class MetricMassTest {
         assertThat(metricMass.getItemMeasurementOne(), is(0.));
         assertThat(metricMass.getItemMeasurementTwo(), is(10));
         assertThat(metricMass.getBaseSiUnits(), is(MAX_MASS));
-
-        System.out.println();
     }
 
     @Test
@@ -63,8 +57,6 @@ public class MetricMassTest {
         assertThat(metricMass.getItemMeasurementOne(), is(0.));
         assertThat(metricMass.getItemMeasurementTwo(), is(0));
         assertThat(metricMass.getBaseSiUnits(), is(0.));
-
-        System.out.println();
     }
 
     @Test
@@ -79,8 +71,6 @@ public class MetricMassTest {
         assertThat(metricMass.getItemMeasurementOne(), is(0.));
         assertThat(metricMass.getItemMeasurementTwo(), is(0));
         assertThat(metricMass.getBaseSiUnits(), is(0.));
-
-        System.out.println();
     }
 
     @Test
@@ -95,8 +85,6 @@ public class MetricMassTest {
         assertThat(metricMass.getItemMeasurementOne(), is(1.));
         assertThat(metricMass.getItemMeasurementTwo(), is(0));
         assertThat(metricMass.getBaseSiUnits(), is(5.));
-
-        System.out.println();
     }
 
     @Test
@@ -111,8 +99,6 @@ public class MetricMassTest {
         assertThat(metricMass.getItemMeasurementOne(), is(500.));
         assertThat(metricMass.getItemMeasurementTwo(), is(5));
         assertThat(metricMass.getBaseSiUnits(), is(5500.));
-
-        System.out.println();
     }
 
     //////////////////////////// PACK MEASUREMENT ONE TESTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -129,8 +115,6 @@ public class MetricMassTest {
         assertThat(metricMass.getItemMeasurementOne(), is(0.));
         assertThat(metricMass.getItemMeasurementTwo(), is(10));
         assertThat(metricMass.getBaseSiUnits(), is(MAX_MASS));
-
-        System.out.println();
     }
 
     @Test
@@ -139,14 +123,12 @@ public class MetricMassTest {
         // Set to max plus 1
         assertThat(metricMass.packMeasurementOneIsSet(10001), is(false));
 
-        // Check values unchanges
+        // Check values unchanged
         assertThat(metricMass.getPackMeasurementOne(), is(0.));
         assertThat(metricMass.getPackMeasurementTwo(), is(0));
         assertThat(metricMass.getItemMeasurementOne(), is(0.));
         assertThat(metricMass.getItemMeasurementTwo(), is(0));
         assertThat(metricMass.getBaseSiUnits(), is(0.));
-
-        System.out.println();
     }
 
     @Test
@@ -190,8 +172,6 @@ public class MetricMassTest {
         assertThat(metricMass.getPackMeasurementTwo(), is(10));
         assertThat(metricMass.getItemMeasurementOne(), is(0.));
         assertThat(metricMass.getItemMeasurementTwo(), is(10));
-
-        System.out.println();
     }
 
     @Test
@@ -206,8 +186,6 @@ public class MetricMassTest {
         assertThat(metricMass.getItemMeasurementOne(), is(0.));
         assertThat(metricMass.getItemMeasurementTwo(), is(0));
         assertThat(metricMass.getBaseSiUnits(), is(0.));
-
-        System.out.println();
     }
 
     @Test

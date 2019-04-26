@@ -31,7 +31,8 @@ public class ProductIdentityEditor extends Fragment {
 
         identityEditorBinding = DataBindingUtil.inflate(
                 inflater,
-                R.layout.product_identity_editor, container,
+                R.layout.product_identity_editor,
+                container,
                 false);
 
         View rootView = identityEditorBinding.getRoot();

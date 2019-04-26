@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
+import com.example.peter.thekitchenmenu.data.entity.ProductUserDataEntity;
 import com.example.peter.thekitchenmenu.databinding.ProductEditorBinding;
 import com.example.peter.thekitchenmenu.viewmodels.ImageEditorViewModel;
 import com.example.peter.thekitchenmenu.viewmodels.ProductEditorViewModel;
@@ -25,11 +26,11 @@ public class ProductEditor extends AppCompatActivity {
 
     ProductEditorBinding productEditorBinding;
 
-    ProductEditorViewModel productEditorViewModel;
+    ProductEditorViewModel mainEditorViewModel;
     ImageEditorViewModel imageEditorViewModel;
-    ProductIdentityViewModel productIdentityViewModel;
-    ProductMeasurementViewModel productMeasurementViewModel;
-    ProductUserDataEditorViewModel productUserDataEditorViewModel;
+    ProductIdentityViewModel identityEditorViewModel;
+    ProductMeasurementViewModel measurementEditorViewModel;
+    ProductUserDataEditorViewModel userDataEditorViewModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,19 +51,19 @@ public class ProductEditor extends AppCompatActivity {
 
     private void setViewModels() {
 
-        productEditorViewModel = ViewModelProviders.of(
+        mainEditorViewModel = ViewModelProviders.of(
                 this).get(ProductEditorViewModel.class);
 
         imageEditorViewModel = ViewModelProviders.of(
                 this).get(ImageEditorViewModel.class);
 
-        productIdentityViewModel = ViewModelProviders.of(
+        identityEditorViewModel = ViewModelProviders.of(
                 this).get(ProductIdentityViewModel.class);
 
-        productMeasurementViewModel = ViewModelProviders.of(
+        measurementEditorViewModel = ViewModelProviders.of(
                 this).get(ProductMeasurementViewModel.class);
 
-        productUserDataEditorViewModel = ViewModelProviders.of(
+        userDataEditorViewModel = ViewModelProviders.of(
                 this).get(ProductUserDataEditorViewModel.class);
 
 
@@ -74,30 +75,29 @@ public class ProductEditor extends AppCompatActivity {
 
             if (productEntity != null) {
 
-                // Update ProductImageModel, ProductIdentityModel and ProductUserDataModel in
-                // their respective view models
-                productIdentityViewModel.getIdentityModel().setDescription(
+                imageEditorViewModel.getImageModel().setRemoteImageUri(
+                        productEntity.getRemoteImageUri());
+
+                identityEditorViewModel.getIdentityModel().setDescription(
                         productEntity.getDescription());
 
-                productIdentityViewModel.getIdentityModel().setMadeBy(
+                identityEditorViewModel.getIdentityModel().setMadeBy(
                         productEntity.getMadeBy());
 
-                productIdentityViewModel.getIdentityModel().setCategory(
+                identityEditorViewModel.getIdentityModel().setCategory(
                         productEntity.getCategory());
 
-                productIdentityViewModel.getIdentityModel().setShelfLife(
+                identityEditorViewModel.getIdentityModel().setShelfLife(
                         productEntity.getShelfLife());
 
-                Log.d(TAG, "tkm - setObservers: Updating unit of measure to: " +
+                measurementEditorViewModel.getMeasurementValidation().changeUnitOfMeasure(
                         productEntity.getUnitOfMeasureSubType());
 
-                productMeasurementViewModel.getMeasurementValidation().changeUnitOfMeasure(
-                        productEntity.getUnitOfMeasureSubType());
-
-                productMeasurementViewModel.getMeasurementValidation().numberOfItemsUpdated(
+                measurementEditorViewModel.getMeasurementValidation().numberOfItemsUpdated(
                         productEntity.getNumberOfItems());
 
-                boolean baseSiUnitsAreSet = productMeasurementViewModel.getMeasurementValidation().setBaseSiUnits(
+                boolean baseSiUnitsAreSet =
+                        measurementEditorViewModel.getMeasurementValidation().setBaseSiUnits(
                         productEntity.getBaseSiUnits());
 
                 if (baseSiUnitsAreSet) {
@@ -106,6 +106,33 @@ public class ProductEditor extends AppCompatActivity {
             }
         };
 
-        productEditorViewModel.getProductEntity().observe(this, productObserver);
+        mainEditorViewModel.getProductEntity().observe(this, productObserver);
+
+        final Observer<ProductUserDataEntity> userDataObserver = userDataEntity -> {
+
+            if (userDataEntity != null) {
+
+                imageEditorViewModel.getImageModel().setLocalImageUri(
+                        userDataEntity.getLocalImageUri());
+
+                userDataEditorViewModel.getUserDataModel().setRetailer(
+                        userDataEntity.getRetailer());
+
+                Log.d(TAG, "tkm - setObservers: setting retailer to: " +
+                        userDataEntity.getRetailer() );
+
+                userDataEditorViewModel.getUserDataModel().setPrice(
+                        userDataEntity.getPrice());
+
+                userDataEditorViewModel.getUserDataModel().setLocationRoom(
+                        userDataEntity.getLocationRoom());
+
+                userDataEditorViewModel.getUserDataModel().setLocationInRoom(
+                        userDataEntity.getLocationInRoom());
+            }
+        };
+
+        mainEditorViewModel.getProductUserDataEntity().observe(this, userDataObserver);
+
     }
 }

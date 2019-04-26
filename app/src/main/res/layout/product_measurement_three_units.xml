@@ -31,6 +31,8 @@
             style="@style/EditableCategoryStyle"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/standard_input_item_height"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:gravity="center_vertical"
             app:layout_constraintBottom_toTopOf="@id/item_measurement_label_two"
@@ -38,7 +40,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/pack_editable_measurement_two"
             app:setLabelForSubTypeSelected='@{measurement.measurementSubType}'
-            tools:text="cl" />
+            tools:text="l" />
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/pack_editable_measurement_two"
@@ -62,6 +64,8 @@
             style="@style/EditableCategoryStyle"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/standard_input_item_height"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:gravity="center_vertical"
             app:fieldVisibilityAdapterNumberOfItems='@{measurement.numberOfItems}'
@@ -70,7 +74,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/item_editable_measurement_two"
             app:setLabelForSubTypeSelected='@{measurement.measurementSubType}'
-            tools:text="cl" />
+            tools:text="l" />
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/item_editable_measurement_two"
@@ -95,6 +99,7 @@
             style="@style/EditableCategoryStyle"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/standard_input_item_height"
+            android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:gravity="center_vertical"
@@ -126,6 +131,7 @@
             style="@style/EditableCategoryStyle"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/standard_input_item_height"
+            android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:gravity="center_vertical"

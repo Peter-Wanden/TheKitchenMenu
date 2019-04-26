@@ -54,13 +54,20 @@
 
     <string-array name="shelf_life_options">
         <item>@string/one_day</item>
+        <item>@string/two_days</item>
         <item>@string/three_days</item>
+        <item>@string/four_days</item>
         <item>@string/five_days</item>
+        <item>@string/six_days</item>
         <item>@string/one_week</item>
         <item>@string/two_weeks</item>
         <item>@string/three_weeks</item>
         <item>@string/four_weeks</item>
-        <item>@string/not_applicable</item>
+        <item>@string/frozen</item>
+        <item>@string/dried</item>
+        <item>@string/tin</item>
+        <item>@string/jar</item>
+        <item>@string/bottle</item>
     </string-array>
 
     <string-array name="product_category_options">

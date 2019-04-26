@@ -16,40 +16,48 @@ public class ProductIdentityModel extends BaseObservable {
 
     @Bindable
     public String getDescription() {
+
         return description;
     }
 
     public void setDescription(String description) {
+
         this.description = description;
         notifyPropertyChanged(BR.description);
     }
 
     @Bindable
     public String getMadeBy() {
+
         return madeBy;
     }
 
     public void setMadeBy(String madeBy) {
+
         this.madeBy = madeBy;
         notifyPropertyChanged(BR.madeBy);
     }
 
     @Bindable
     public int getCategory() {
+
         return category;
     }
 
     public void setCategory(int category) {
+
         this.category = category;
         notifyPropertyChanged(BR.category);
     }
 
     @Bindable
     public int getShelfLife() {
+
         return shelfLife;
     }
 
     public void setShelfLife(int shelfLife) {
+
         this.shelfLife = shelfLife;
         notifyPropertyChanged(BR.shelfLife);
     }

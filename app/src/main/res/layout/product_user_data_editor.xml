@@ -2,6 +2,16 @@
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+    
+    <data>
+        
+    <import type="android.view.View" />
+        
+        <variable
+            name="userDataModel"
+            type="com.example.peter.thekitchenmenu.data.model.ProductUserDataModel" />
+    </data>
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/product_user_data_editable_parent"
@@ -56,6 +66,7 @@
             android:layout_marginEnd="8dp"
             android:hint="@string/hint_retailer"
             android:inputType="textCapWords"
+            android:text='@{userDataModel.retailer}'
             app:layout_constraintStart_toStartOf="@id/product_user_data_border"
             app:layout_constraintEnd_toEndOf="@id/product_user_data_border"
             app:layout_constraintTop_toBottomOf="@id/retailer_label"/>
@@ -80,6 +91,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:hint="@string/hint_price"
+            android:text='@{`` + userDataModel.price}'
             android:inputType="numberDecimal"
             app:layout_constraintStart_toStartOf="@id/product_user_data_border"
             app:layout_constraintEnd_toEndOf="@id/product_user_data_border"
@@ -105,6 +117,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:hint="@string/hint_location_room"
+            android:text='@{userDataModel.locationRoom}'
             android:inputType="textCapWords"
             app:layout_constraintStart_toStartOf="@id/product_user_data_border"
             app:layout_constraintEnd_toEndOf="@id/product_user_data_border"
@@ -130,6 +143,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:hint="@string/hint_location_in_room"
+            android:text='@{userDataModel.locationInRoom}'
             android:inputType="textCapWords"
             app:layout_constraintStart_toStartOf="@id/product_user_data_border"
             app:layout_constraintEnd_toEndOf="@id/product_user_data_border"

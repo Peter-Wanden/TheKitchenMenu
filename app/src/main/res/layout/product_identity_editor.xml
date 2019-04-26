@@ -7,10 +7,6 @@
 
         <import type="android.view.View" />
 
-        <import type="com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubTypeConverter" />
-
-        <import type="com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementZeroToBlankConverter" />
-
         <variable
             name="textValidation"
             type="com.example.peter.thekitchenmenu.utils.ProductTextValidationHandler" />
@@ -106,7 +102,6 @@
             android:afterTextChanged='@{() -> textValidation.validateMadeBy(editableMadeBy)}'
             android:hint="@string/hint_made_by"
             android:inputType="textCapWords"
-
             android:text='@{identityModel.madeBy}'
             app:layout_constraintStart_toStartOf="@id/product_identity_border"
             app:layout_constraintEnd_toEndOf="@id/product_identity_border"

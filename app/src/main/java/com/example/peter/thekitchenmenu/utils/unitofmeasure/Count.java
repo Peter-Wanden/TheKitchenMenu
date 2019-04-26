@@ -108,7 +108,7 @@ public class Count implements UnitOfMeasure {
 
     private boolean newCountDoesNotMakeItemSmallerThanSmallestCount(double newCount) {
 
-        return newCount >= UNIT_COUNT * numberOfItems;
+        return newCount >= minimumItemSize * numberOfItems;
     }
 
     private boolean newCountIsWithinMaxCount(double newCount) {
@@ -160,7 +160,7 @@ public class Count implements UnitOfMeasure {
 
     private boolean numberOfItemsInPackAreWithinBounds(int numberOfItems) {
 
-        return numberOfItems >= SINGLE_ITEM && numberOfItems <= MAX_COUNT;
+        return numberOfItems >= SINGLE_ITEM && numberOfItems <= MULTI_PACK_MAXIMUM_NO_OF_ITEMS;
     }
 
     private boolean itemSizeNotLessThanSmallestUnit(int numberOfItems) {
@@ -168,9 +168,9 @@ public class Count implements UnitOfMeasure {
         return baseUnits / numberOfItems >= minimumItemSize;
     }
 
-    private void setItemsInPackByAdjustingItemSize(int numberOfItemsInPack) {
+    private void setItemsInPackByAdjustingItemSize(int numberOfItems) {
 
-        this.numberOfItems = numberOfItemsInPack;
+        this.numberOfItems = numberOfItems;
         setNewItemMeasurements();
     }
 
@@ -206,7 +206,14 @@ public class Count implements UnitOfMeasure {
     @Override
     public boolean packMeasurementOneIsSet(double packMeasurementOne) {
 
-        return baseSiUnitsAreSet(packMeasurementOne);
+        if (baseSiUnitsAreSet(packMeasurementOne)) {
+
+            lastMeasurementUpdated = PACK_MEASUREMENT;
+            return true;
+
+        } else baseSiUnitsAreSet(0.);
+
+        return false;
     }
 
     @Override
@@ -218,7 +225,14 @@ public class Count implements UnitOfMeasure {
     @Override
     public boolean itemMeasurementOneIsSet(double itemMeasurementOne) {
 
-        return baseSiUnitsAreSet(itemMeasurementOne * numberOfItems);
+        if (baseSiUnitsAreSet(itemMeasurementOne * numberOfItems)) {
+
+            lastMeasurementUpdated = ITEM_MEASUREMENT;
+            return true;
+
+        } else baseSiUnitsAreSet(0.);
+
+        return false;
     }
 
     @Override
