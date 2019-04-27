@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable
-            name="imageViewModel"
-            type="com.example.peter.thekitchenmenu.viewmodels.ImageEditorViewModel">
+            name="imageModel"
+            type="com.example.peter.thekitchenmenu.data.model.ProductImageModel">
         </variable>
     </data>
 
@@ -22,6 +22,8 @@
             android:layout_height="match_parent"
             android:contentDescription="@string/cd_picture_of_product"
             android:scaleType="fitCenter"
+            bind:localImageUri='@{imageModel.localImageUri}'
+            bind:remoteImageUri='@{imageModel.remoteImageUri}'
             tools:src="@drawable/placeholder">
         </ImageView>
 

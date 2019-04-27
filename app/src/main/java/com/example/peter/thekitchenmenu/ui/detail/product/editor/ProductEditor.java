@@ -65,8 +65,6 @@ public class ProductEditor extends AppCompatActivity {
 
         userDataEditorViewModel = ViewModelProviders.of(
                 this).get(ProductUserDataEditorViewModel.class);
-
-
     }
 
     private void setObservers() {
@@ -133,6 +131,5 @@ public class ProductEditor extends AppCompatActivity {
         };
 
         mainEditorViewModel.getProductUserDataEntity().observe(this, userDataObserver);
-
     }
 }

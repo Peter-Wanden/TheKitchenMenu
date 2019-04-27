@@ -14,6 +14,7 @@ public class ImageEditorViewModel extends ObservableViewModel {
 
     private ProductImageModel imageModel;
 
+
     public ImageEditorViewModel(@NonNull Application application) {
         super(application);
 
@@ -22,10 +23,12 @@ public class ImageEditorViewModel extends ObservableViewModel {
     }
 
     public ProductImageModel getImageModel() {
+
         return imageModel;
     }
 
     public void setImageModel(ProductImageModel imageModel) {
+
         this.imageModel = imageModel;
     }
 }
