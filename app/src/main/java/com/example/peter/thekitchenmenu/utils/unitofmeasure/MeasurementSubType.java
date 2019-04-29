@@ -45,6 +45,7 @@ public enum MeasurementSubType {
 
     private MeasurementType measurementType;
 
+    // TODO - Implement for conversion between types
     public MeasurementType getMeasurementType() {
         return measurementType;
     }
@@ -54,4 +55,11 @@ public enum MeasurementSubType {
     }
 
     public abstract UnitOfMeasure getMeasurementClass();
+
+    // TODO - add String resource getters for:
+    // 1. Type
+    // 2. Subtype
+    // 3. Label 1
+    // 4. Label 2
+    // 5. Label 3
 }

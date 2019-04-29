@@ -7,8 +7,8 @@ public interface UnitOfMeasure {
     int getTypeStringResourceId();
     MeasurementType getMeasurementType();
 
-    int getSubTypeStringResourceId();
     MeasurementSubType getMeasurementSubType();
+    int getSubTypeStringResourceId();
 
     double getBaseSiUnits();
     boolean baseSiUnitsAreSet(double baseSiUnits);

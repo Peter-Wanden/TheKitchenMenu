@@ -18,10 +18,8 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
-import com.example.peter.thekitchenmenu.data.model.ProductImageModel;
 import com.example.peter.thekitchenmenu.databinding.ImageEditorBinding;
 import com.example.peter.thekitchenmenu.utils.BitmapUtils;
-import com.example.peter.thekitchenmenu.viewmodels.ImageEditing;
 import com.example.peter.thekitchenmenu.viewmodels.ImageEditorViewModel;
 
 import androidx.annotation.NonNull;
@@ -40,7 +38,7 @@ import java.io.IOException;
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
-public class ImageEditor extends Fragment implements ImageEditing {
+public class ImageEditor extends Fragment {
 
     private static final String TAG = "ImageEditor";
 
@@ -68,6 +66,8 @@ public class ImageEditor extends Fragment implements ImageEditing {
         imageEditorBinding.setLifecycleOwner(this);
 
         setViewModel();
+        setInstanceVariables();
+        subscribeToEvents();
 
         return rootView;
     }
@@ -78,8 +78,18 @@ public class ImageEditor extends Fragment implements ImageEditing {
                 get(ImageEditorViewModel.class);
     }
 
-    @Override
-    public void launchCamera() {
+    private void setInstanceVariables() {
+
+        imageEditorBinding.setImageViewModel(imageEditorViewModel);
+        imageEditorBinding.setImageModel(imageEditorViewModel.getImageModel());
+    }
+
+    private void subscribeToEvents() {
+
+        imageEditorViewModel.getLaunchGalleryEvent().observe(this, event -> launchGallery());
+    }
+
+    private void launchCamera() {
 
         // https://developer.android.com/training/camera/photobasics
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -99,7 +109,7 @@ public class ImageEditor extends Fragment implements ImageEditing {
 
             if (photoFile != null) {
 
-                temporaryImagePath = photoFile.getAbsolutePath();
+                imageEditorViewModel.setTemporaryImagePath(photoFile.getAbsolutePath());
 
                 Uri photoURI = FileProvider.getUriForFile(requireActivity(),
                         Constants.FILE_PROVIDER_AUTHORITY, photoFile);
@@ -111,8 +121,7 @@ public class ImageEditor extends Fragment implements ImageEditing {
         }
     }
 
-    @Override
-    public void launchGallery() {
+    private void launchGallery() {
 
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/jpeg");
@@ -124,26 +133,21 @@ public class ImageEditor extends Fragment implements ImageEditing {
                 Constants.REQUEST_IMAGE_PICKER);
     }
 
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == Constants.REQUEST_IMAGE_CAPTURE &&
                 resultCode == RESULT_OK) {
 
             processAndSetImage();
-            newImageAvailable = true;
-            cameraImageTaken = true;
 
         } else if (requestCode == Constants.REQUEST_IMAGE_CAPTURE &&
                 resultCode == RESULT_CANCELED) {
 
             BitmapUtils.deleteImageFile(requireActivity(), temporaryImagePath);
-            cameraImageTaken = false;
 
         } else if (requestCode == Constants.REQUEST_IMAGE_MEDIA_STORE &&
                 resultCode == RESULT_OK) {
 
-            newImageAvailable = true;
             processAndSetImage();
 
         } else if (requestCode == Constants.REQUEST_IMAGE_MEDIA_STORE &&
@@ -154,10 +158,14 @@ public class ImageEditor extends Fragment implements ImageEditing {
         } else if (requestCode == Constants.REQUEST_IMAGE_PICKER &&
                 resultCode == RESULT_OK) {
 
-            Uri selectedImageUri = data.getData();
-            newImageAvailable = true;
+            Uri uri = data.getData();
 
-            imageEditorBinding.productImage.setImageURI(selectedImageUri);
+            if (uri != null) {
+
+                imageEditorViewModel.getImageModel().setLocalImageUri(uri.toString());
+            }
+            Log.d(TAG, "onActivityResult: image uri is null");
+
 
         } else if (requestCode == Constants.REQUEST_IMAGE_PICKER &&
                 resultCode == RESULT_CANCELED) {
@@ -200,7 +208,6 @@ public class ImageEditor extends Fragment implements ImageEditing {
         }
     }
 
-    @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
@@ -226,7 +233,6 @@ public class ImageEditor extends Fragment implements ImageEditing {
         }
     }
 
-    @Override
     public void rotateImage() {
 
         Matrix matrix = new Matrix();

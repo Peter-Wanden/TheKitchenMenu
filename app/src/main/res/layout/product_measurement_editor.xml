@@ -12,6 +12,7 @@
 
         <import type="com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubTypeConverter" />
 
+        <!--TODO - replace with NumberFormat as number format ### should not show zero -->
         <import type="com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementZeroToBlankConverter" />
 
         <import type="com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubType"/>

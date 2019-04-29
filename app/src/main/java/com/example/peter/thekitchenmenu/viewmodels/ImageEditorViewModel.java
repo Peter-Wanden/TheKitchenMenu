@@ -6,45 +6,46 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.example.peter.thekitchenmenu.data.model.ProductImageModel;
-import com.example.peter.thekitchenmenu.ui.detail.product.editor.ImageEditor;
+import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 
 public class ImageEditorViewModel extends ObservableViewModel {
 
     private static final String TAG = "ImageEditorViewModel";
 
-    private ImageEditing editor;
     private ProductImageModel imageModel = new ProductImageModel();
-
+    private final SingleLiveEvent<Void> launchGalleryEvent = new SingleLiveEvent<>();
+    private String temporaryImagePath;
 
     public ImageEditorViewModel(@NonNull Application application) {
         super(application);
-
-        editor = new ImageEditor();
-    }
-
-    public void launchCamera() {
-
-        editor.launchGallery();
-    }
-
-    public void rotateImage() {
-
-        editor.rotateImage();
-    }
-
-    public void launchGallery() {
-
-        Log.d(TAG, "launchGallery: called!");
-        editor.launchGallery();
     }
 
     public ProductImageModel getImageModel() {
-
         return imageModel;
     }
 
-    public void setImageModel(ProductImageModel imageModel) {
+    public void launchCamera() {
+        Log.d(TAG, "tkm - launchCamera: detected");
+    }
 
-        this.imageModel = imageModel;
+    public void launchGallery() {
+        Log.d(TAG, "tkm - launchGallery: detected");
+        launchGalleryEvent.call();
+    }
+
+    public SingleLiveEvent<Void> getLaunchGalleryEvent() {
+        return launchGalleryEvent;
+    }
+
+    public void rotateImage() {
+        Log.d(TAG, "rotateImage: detected");
+    }
+
+    public String getTemporaryImagePath() {
+        return temporaryImagePath;
+    }
+
+    public void setTemporaryImagePath(String temporaryImagePath) {
+        this.temporaryImagePath = temporaryImagePath;
     }
 }

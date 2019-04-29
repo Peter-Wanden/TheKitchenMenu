@@ -1,8 +1,10 @@
 package com.example.peter.thekitchenmenu.viewmodels;
 
+import android.content.Intent;
+
 public interface ImageEditing {
 
     void launchCamera();
     void rotateImage();
-    void launchGallery();
+    Intent launchGallery();
 }
