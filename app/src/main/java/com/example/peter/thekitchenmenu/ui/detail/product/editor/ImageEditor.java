@@ -1,6 +1,7 @@
 package com.example.peter.thekitchenmenu.ui.detail.product.editor;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -13,9 +14,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.databinding.ImageEditorBinding;
@@ -29,7 +30,6 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import java.io.File;
@@ -44,12 +44,6 @@ public class ImageEditor extends Fragment {
 
     private ImageEditorBinding imageEditorBinding;
     private ImageEditorViewModel imageEditorViewModel;
-
-    // Todo - move instance vars and logic to ViewModel
-    private boolean imageHasBeenModified = false;
-    private boolean newImageAvailable;
-    private boolean cameraImageTaken;
-    private String temporaryImagePath;
 
     @Nullable
     @Override
@@ -86,7 +80,14 @@ public class ImageEditor extends Fragment {
 
     private void subscribeToEvents() {
 
-        imageEditorViewModel.getLaunchGalleryEvent().observe(this, event -> launchGallery());
+        imageEditorViewModel.getLaunchGalleryEvent().observe(
+                this, event -> launchGallery());
+
+        imageEditorViewModel.getLaunchCameraEvent().observe(
+                this, event -> requestPermissions());
+
+        imageEditorViewModel.getRotateImageEvent().observe(
+                this, event -> rotateImage(imageEditorBinding.productImage));
     }
 
     private void launchCamera() {
@@ -136,76 +137,67 @@ public class ImageEditor extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == Constants.REQUEST_IMAGE_CAPTURE &&
-                resultCode == RESULT_OK) {
+                resultCode == RESULT_OK)
 
             processAndSetImage();
 
-        } else if (requestCode == Constants.REQUEST_IMAGE_CAPTURE &&
-                resultCode == RESULT_CANCELED) {
+        else if (requestCode == Constants.REQUEST_IMAGE_CAPTURE &&
+                resultCode == RESULT_CANCELED)
 
-            BitmapUtils.deleteImageFile(requireActivity(), temporaryImagePath);
+            BitmapUtils.deleteImageFile(requireActivity(),
+                    imageEditorViewModel.getTemporaryImagePath());
 
-        } else if (requestCode == Constants.REQUEST_IMAGE_MEDIA_STORE &&
-                resultCode == RESULT_OK) {
+        else if (requestCode == Constants.REQUEST_IMAGE_MEDIA_STORE &&
+                resultCode == RESULT_OK)
 
             processAndSetImage();
 
-        } else if (requestCode == Constants.REQUEST_IMAGE_MEDIA_STORE &&
-                resultCode == RESULT_CANCELED) {
+        else if (requestCode == Constants.REQUEST_IMAGE_MEDIA_STORE &&
+                resultCode == RESULT_CANCELED)
 
-            Log.e(TAG, "Media store intent cancelled");
+            Log.e(TAG, "tkm - Media store intent cancelled");
 
-        } else if (requestCode == Constants.REQUEST_IMAGE_PICKER &&
+        else if (requestCode == Constants.REQUEST_IMAGE_PICKER &&
                 resultCode == RESULT_OK) {
 
             Uri uri = data.getData();
 
-            if (uri != null) {
+            if (uri != null) imageEditorViewModel.getImageModel().setLocalImageUri(uri.toString());
 
-                imageEditorViewModel.getImageModel().setLocalImageUri(uri.toString());
-            }
-            Log.d(TAG, "onActivityResult: image uri is null");
+            Log.d(TAG, "tkm - onActivityResult: image uri is null");
 
 
         } else if (requestCode == Constants.REQUEST_IMAGE_PICKER &&
-                resultCode == RESULT_CANCELED) {
+                resultCode == RESULT_CANCELED)
 
-            Log.e(TAG, "Image picker intent cancelled");
-        }
+            Log.e(TAG, "tkm - Image picker intent cancelled");
     }
 
-    // TODO - Picasso?
+    // TODO - Resampling only required if storing on servers, otherwise just store local Uri
+    // todo - If storing locally, store image to local media and delete temp file
     private void processAndSetImage() {
 
-        Bitmap mResultsBitmap = BitmapUtils.resampleImage(
-                requireActivity(), null, temporaryImagePath);
+        BitmapUtils.resampleImage(
+                requireActivity(),
+                null,
+                imageEditorViewModel.getTemporaryImagePath());
 
-        imageEditorBinding.productImage.setImageBitmap(mResultsBitmap);
+        imageEditorViewModel.
+                getImageModel().
+                setLocalImageUri(imageEditorViewModel.getTemporaryImagePath());
     }
 
-    private void setImage() {
-
-        Glide.with(this)
-                .load(temporaryImagePath)
-                .placeholder(R.drawable.placeholder)
-                .centerCrop()
-                .into(imageEditorBinding.productImage);
-    }
-
-    public void requestPermissions() {
+    private void requestPermissions() {
 
         if (ContextCompat.checkSelfPermission(requireActivity(),
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
+                != PackageManager.PERMISSION_GRANTED)
 
             ActivityCompat.requestPermissions(requireActivity(),
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     Constants.REQUEST_STORAGE_PERMISSION);
 
-        } else {
-
-            launchCamera();
-        }
+        else launchCamera();
     }
 
     public void onRequestPermissionsResult(int requestCode,
@@ -216,38 +208,21 @@ public class ImageEditor extends Fragment {
 
             case Constants.REQUEST_STORAGE_PERMISSION: {
 
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
 
                     launchCamera();
 
-                } else {
-
-                    Toast.makeText(requireActivity(), R.string.storage_permission_denied,
-                            Toast.LENGTH_SHORT)
-                            .show();
-                }
-
+                else Toast.makeText(requireActivity(), R.string.storage_permission_denied,
+                        Toast.LENGTH_SHORT)
+                        .show();
                 break;
             }
         }
     }
 
-    public void rotateImage() {
+    private void rotateImage(ImageView productImage) {
 
-        Matrix matrix = new Matrix();
-        matrix.postRotate(90);
-
-        Bitmap productImage = ((BitmapDrawable) imageEditorBinding.
-                productImage.
-                getDrawable()).
-                getBitmap();
-
-        Bitmap rotated = Bitmap.createBitmap(productImage, 0, 0,
-                productImage.getWidth(), productImage.getHeight(), matrix, true);
-
-        imageEditorBinding.productImage.setImageBitmap(rotated);
-
-        imageHasBeenModified = true;
+        BitmapUtils.rotateImage(productImage);
+        imageEditorViewModel.setImageHasChanged(true);
     }
 }

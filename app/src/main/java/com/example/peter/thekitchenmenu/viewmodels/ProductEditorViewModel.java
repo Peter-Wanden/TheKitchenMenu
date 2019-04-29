@@ -52,7 +52,7 @@ public class ProductEditorViewModel extends ObservableViewModel {
                 1,
                 0,
                 "",
-                "",
+                "https://d25hqtnqp5nl24.cloudfront.net/images/products/11/LN_043101_BP_11.jpg",
                 0,
                 0,
                 "");
@@ -68,12 +68,12 @@ public class ProductEditorViewModel extends ObservableViewModel {
                 3,
                 0,
                 "",
-                "",
+                "https://img.tesco.com/Groceries/pi/239/5054775188239/IDShot_225x225.jpg",
                 0,
                 0,
                 "");
 
-        this.productEntity.setValue(productEntityImperialVolumeTest);
+//        this.productEntity.setValue(productEntityImperialMassTest);
 
         ProductUserDataEntity userDataEntity = new ProductUserDataEntity(
                 0,
@@ -89,7 +89,7 @@ public class ProductEditorViewModel extends ObservableViewModel {
                 0
         );
 
-        this.productUserDataEntity.setValue(userDataEntity);
+//        this.productUserDataEntity.setValue(userDataEntity);
     }
 
     public MutableLiveData<ProductEntity> getProductEntity() {
@@ -108,6 +108,8 @@ public class ProductEditorViewModel extends ObservableViewModel {
     private void saveProductEntity() {
 
         // TODO - Check all validation bool's before saving ProductEntity
+        // TODO - Image - If local image copy from temp location to local storage, save Uri
+        //  and delete image in temp location
 //        if (productEntity.getValue() != null) {
 //
 //            ProductEntity newProductEntity = new ProductEntity();

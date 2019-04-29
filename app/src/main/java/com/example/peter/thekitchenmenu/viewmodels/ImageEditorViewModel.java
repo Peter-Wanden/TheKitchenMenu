@@ -1,7 +1,6 @@
 package com.example.peter.thekitchenmenu.viewmodels;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -10,11 +9,14 @@ import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 
 public class ImageEditorViewModel extends ObservableViewModel {
 
-    private static final String TAG = "ImageEditorViewModel";
-
     private ProductImageModel imageModel = new ProductImageModel();
+
+    private final SingleLiveEvent<Void> launchCameraEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<Void> launchGalleryEvent = new SingleLiveEvent<>();
+    private final SingleLiveEvent<Void> rotateImageEvent = new SingleLiveEvent<>();
+
     private String temporaryImagePath;
+    private boolean imageHasChanged = false;
 
     public ImageEditorViewModel(@NonNull Application application) {
         super(application);
@@ -25,11 +27,14 @@ public class ImageEditorViewModel extends ObservableViewModel {
     }
 
     public void launchCamera() {
-        Log.d(TAG, "tkm - launchCamera: detected");
+        launchCameraEvent.call();
+    }
+
+    public SingleLiveEvent<Void> getLaunchCameraEvent() {
+        return launchCameraEvent;
     }
 
     public void launchGallery() {
-        Log.d(TAG, "tkm - launchGallery: detected");
         launchGalleryEvent.call();
     }
 
@@ -38,7 +43,11 @@ public class ImageEditorViewModel extends ObservableViewModel {
     }
 
     public void rotateImage() {
-        Log.d(TAG, "rotateImage: detected");
+        rotateImageEvent.call();
+    }
+
+    public SingleLiveEvent<Void> getRotateImageEvent() {
+        return rotateImageEvent;
     }
 
     public String getTemporaryImagePath() {
@@ -47,5 +56,9 @@ public class ImageEditorViewModel extends ObservableViewModel {
 
     public void setTemporaryImagePath(String temporaryImagePath) {
         this.temporaryImagePath = temporaryImagePath;
+    }
+
+    public void setImageHasChanged(boolean imageHasChanged) {
+        this.imageHasChanged = imageHasChanged;
     }
 }

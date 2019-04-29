@@ -11,7 +11,6 @@ public class ProductImageModel extends BaseObservable {
     private String remoteImageUri = "";
     private String localImageUri = "";
 
-
     @Bindable
     public String getRemoteImageUri() {
 

@@ -5,10 +5,15 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.WindowManager;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.peter.thekitchenmenu.R;
@@ -22,7 +27,7 @@ import java.util.Locale;
 import androidx.loader.content.CursorLoader;
 
 public class BitmapUtils {
-    // TODO - Use s ForkJoinPool for a threadded implementation
+    // TODO - Use ForkJoinPool for a threaded implementation
     // TODO - See: https://docs.oracle.com/javase/tutorial/essential/concurrency/forkjoin.html
 
     private static final String TAG = BitmapUtils.class.getSimpleName();
@@ -61,18 +66,19 @@ public class BitmapUtils {
     }
 
     /**
-     * Accreditation: Udacity - Advanced Android - Emojify
      * Re-samples the captured photo to fit the screen for better memory usage.
      *
      * @param context   The application context.
-     * @param uri The Uri of the image to be resampled.
-     * @return The resampled bitmap
+     * @param uri The Uri of the image to be re-sampled.
+     * @return The re-sampled bitmap
      */
     public static Bitmap resampleImage(Context context, Uri uri, String imagePath) {
 
+        Log.d(TAG, "tkm - resampleImage: image path is: " + imagePath);
+
         /* If imagePath is null we have been given a Uri, so decode to string */
-        if(imagePath == null) {
-            // Extract the imagepath from the Uri
+        if (imagePath == null) {
+            // Extract the image path from the Uri
             imagePath = getAbsolutePathFromUri(context, uri);
         }
 
@@ -80,7 +86,9 @@ public class BitmapUtils {
         DisplayMetrics metrics = new DisplayMetrics();
 
         WindowManager manager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+
         if (manager != null) {
+
             manager.getDefaultDisplay().getMetrics(metrics);
         }
 
@@ -109,7 +117,7 @@ public class BitmapUtils {
     // Credit: https://stackoverflow.com/questions/3401579/get-filename-and-path-from-uri-from-mediastore?rq=1
     public static String getAbsolutePathFromUri(Context context, Uri productImageUri) {
 
-        String[] projection = { MediaStore.Images.Media.DATA };
+        String[] projection = {MediaStore.Images.Media.DATA};
 
         CursorLoader loader = new CursorLoader(
                 context,
@@ -124,12 +132,30 @@ public class BitmapUtils {
         int column_index;
 
         if (cursor != null) {
+
             column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             cursor.moveToFirst();
             String result = cursor.getString(column_index);
             cursor.close();
+
             return result;
         }
+
         return null;
+    }
+
+    public static void rotateImage(ImageView imageView) {
+
+        Matrix matrix = new Matrix();
+        matrix.postRotate(90);
+
+        Bitmap productImage = ((BitmapDrawable) imageView.
+                getDrawable()).
+                getBitmap();
+
+        Bitmap rotated = Bitmap.createBitmap(productImage, 0, 0,
+                productImage.getWidth(), productImage.getHeight(), matrix, true);
+
+        imageView.setImageBitmap(rotated);
     }
 }
