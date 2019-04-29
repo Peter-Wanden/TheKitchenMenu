@@ -21,6 +21,7 @@ import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.model.ProductImageModel;
 import com.example.peter.thekitchenmenu.databinding.ImageEditorBinding;
 import com.example.peter.thekitchenmenu.utils.BitmapUtils;
+import com.example.peter.thekitchenmenu.viewmodels.ImageEditing;
 import com.example.peter.thekitchenmenu.viewmodels.ImageEditorViewModel;
 
 import androidx.annotation.NonNull;
@@ -39,7 +40,7 @@ import java.io.IOException;
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
-public class ImageEditor extends Fragment {
+public class ImageEditor extends Fragment implements ImageEditing {
 
     private static final String TAG = "ImageEditor";
 
@@ -77,7 +78,8 @@ public class ImageEditor extends Fragment {
                 get(ImageEditorViewModel.class);
     }
 
-    private void takePictureIntent() {
+    @Override
+    public void launchCamera() {
 
         // https://developer.android.com/training/camera/photobasics
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -109,7 +111,8 @@ public class ImageEditor extends Fragment {
         }
     }
 
-    private void launchGallery() {
+    @Override
+    public void launchGallery() {
 
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/jpeg");
@@ -193,7 +196,7 @@ public class ImageEditor extends Fragment {
 
         } else {
 
-            takePictureIntent();
+            launchCamera();
         }
     }
 
@@ -209,7 +212,7 @@ public class ImageEditor extends Fragment {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    takePictureIntent();
+                    launchCamera();
 
                 } else {
 
@@ -223,7 +226,8 @@ public class ImageEditor extends Fragment {
         }
     }
 
-    private void rotateImage() {
+    @Override
+    public void rotateImage() {
 
         Matrix matrix = new Matrix();
         matrix.postRotate(90);

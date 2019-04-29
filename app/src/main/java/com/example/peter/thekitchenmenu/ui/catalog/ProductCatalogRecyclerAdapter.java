@@ -119,6 +119,7 @@ public class ProductCatalogRecyclerAdapter
             itemView.setOnClickListener(this);
         }
 
+        @Override
         public void onClick(View v) {
 
             // Get the product_uneditable from the adapter at the clicked position

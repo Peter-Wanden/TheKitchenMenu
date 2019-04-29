@@ -6,6 +6,10 @@
 
     <data>
         <variable
+            name="imageViewModel"
+            type="com.example.peter.thekitchenmenu.viewmodels.ImageEditorViewModel" />
+
+        <variable
             name="imageModel"
             type="com.example.peter.thekitchenmenu.data.model.ProductImageModel">
         </variable>
@@ -29,6 +33,7 @@
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/camera_button"
+            android:onClick='@{() -> imageViewModel.launchCamera()}'
             android:layout_width="@dimen/image_button_height"
             android:layout_height="@dimen/image_button_width"
             android:backgroundTint="@color/textColorHighlight"
@@ -42,6 +47,7 @@
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/rotate_button"
+            android:onClick='@{() -> imageViewModel.rotateImage()}'
             android:layout_width="@dimen/image_button_height"
             android:layout_height="@dimen/image_button_width"
             android:backgroundTint="@color/textColorHighlight"
@@ -54,6 +60,7 @@
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/gallery_button"
+            android:onClick='@{() -> imageViewModel.launchGallery()}'
             android:layout_width="@dimen/image_button_height"
             android:layout_height="@dimen/image_button_width"
             android:backgroundTint="@color/textColorHighlight"

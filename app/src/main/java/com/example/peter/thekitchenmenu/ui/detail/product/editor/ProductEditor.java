@@ -19,7 +19,6 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-// TODO - remove all the code from ProductEditor Fragment and rename this activity to ProductEditor
 public class ProductEditor extends AppCompatActivity {
 
     private static final String TAG = "ProductEditor";
