@@ -68,12 +68,12 @@ public class ProductEditorViewModel extends ObservableViewModel {
                 3,
                 0,
                 "",
-                "https://img.tesco.com/Groceries/pi/239/5054775188239/IDShot_225x225.jpg",
+                "https://d1ycl3zewbvuig.cloudfront.net/images/products/11/LN_759450_BP_11.jpg",
                 0,
                 0,
                 "");
 
-//        this.productEntity.setValue(productEntityImperialMassTest);
+        this.productEntity.setValue(productEntityImperialMassTest);
 
         ProductUserDataEntity userDataEntity = new ProductUserDataEntity(
                 0,
@@ -82,14 +82,14 @@ public class ProductEditorViewModel extends ObservableViewModel {
                 "0",
                 "Waitrose",
                 "Kitchen",
-                "Cupboard",
+                "Fridge",
                 12.34,
                 "file:///sdcard/img.png",
                 0,
                 0
         );
 
-//        this.productUserDataEntity.setValue(userDataEntity);
+        this.productUserDataEntity.setValue(userDataEntity);
     }
 
     public MutableLiveData<ProductEntity> getProductEntity() {

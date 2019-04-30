@@ -12,13 +12,21 @@ public class UniversalBindingAdapters {
 
     private static final String TAG = "UniversalBindingAdapter";
 
-    @BindingAdapter(value = {"bind:localImageUri", "bind:remoteImageUri"}, requireAll = false)
-    public static void setImage(ImageView imageView, String localImageUri, String remoteImageUri) {
+    @BindingAdapter(value = {
+            "bind:localImageUri",
+            "bind:remoteImageUri",
+            "bind:webImageUrl"},
+            requireAll = false)
+    public static void setImage(ImageView imageView,
+                                String localImageUri,
+                                String remoteImageUri,
+                                String webImageUrl) {
 
         String uri;
 
         if (remoteImageUri != null && !remoteImageUri.isEmpty()) uri = remoteImageUri;
         else if (localImageUri != null && !localImageUri.isEmpty()) uri = localImageUri;
+        else if (webImageUrl != null && !webImageUrl.isEmpty()) uri = webImageUrl;
         else uri = "";
 
         if (localImageUri != null) Log.d(TAG, "tkm - setImage: local uri is: " + localImageUri);
@@ -28,7 +36,7 @@ public class UniversalBindingAdapters {
         Glide.with(imageView.getContext())
                 .load(uri)
                 .placeholder(R.drawable.placeholder)
-                .centerCrop()
+
                 .into(imageView);
     }
 }

@@ -1,6 +1,7 @@
 package com.example.peter.thekitchenmenu.ui.detail.product.editor;
 
 import android.Manifest;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -88,11 +89,16 @@ public class ImageEditor extends Fragment {
 
         imageEditorViewModel.getRotateImageEvent().observe(
                 this, event -> rotateImage(imageEditorBinding.productImage));
+
+        imageEditorViewModel.getLaunchBrowserEvent().observe(
+                this, event -> launchBrowser());
     }
 
+    // TODO - Move all camera code to another (utils) class
     private void launchCamera() {
 
-        // https://developer.android.com/training/camera/photobasics
+        // https://developer.android.com/training/camera/photobasics - Using camera app
+        // https://developer.android.com/training/camera/cameradirect.html - Controlling the camera
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         if (takePictureIntent.resolveActivity(requireActivity().getPackageManager()) != null) {
@@ -175,6 +181,9 @@ public class ImageEditor extends Fragment {
 
     // TODO - Resampling only required if storing on servers, otherwise just store local Uri
     // todo - If storing locally, store image to local media and delete temp file
+    // I think Glide re-samples / down-samples images before loading into image views.
+    // For non-web (local and server images) do not down-sample, just take the bitmap image and
+    // store it as it is.
     private void processAndSetImage() {
 
         BitmapUtils.resampleImage(
@@ -224,5 +233,13 @@ public class ImageEditor extends Fragment {
 
         BitmapUtils.rotateImage(productImage);
         imageEditorViewModel.setImageHasChanged(true);
+    }
+
+    private void launchBrowser() {
+        // TODO - launch browser with (if available), any search term added
+        Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
+        String query = "";
+        intent.putExtra(SearchManager.QUERY, query);
+        startActivity(intent);
     }
 }

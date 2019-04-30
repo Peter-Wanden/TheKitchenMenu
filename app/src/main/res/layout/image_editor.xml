@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:bind="http://schemas.android.com/apk/res-auto">
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="imageViewModel"
             type="com.example.peter.thekitchenmenu.viewmodels.ImageEditorViewModel" />
@@ -15,62 +17,160 @@
         </variable>
     </data>
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/image_container"
         android:layout_width="match_parent"
-        android:layout_height="250dp">
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/product_image_border"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/rectangle_radius_20dp"
+            bind:layout_constraintTop_toTopOf="parent"
+            bind:layout_constraintEnd_toEndOf="parent"
+            bind:layout_constraintStart_toStartOf="parent"
+            bind:layout_constraintBottom_toBottomOf="@id/bottom_guideline"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/bottom_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            bind:layout_constraintGuide_end="0dp"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/product_image_header"
+            style="@style/EditableCategoryStyle"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/standard_input_item_height"
+            android:paddingTop="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/product_image"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            bind:layout_constraintStart_toStartOf="@id/product_image_border"
+            bind:layout_constraintEnd_toEndOf="@id/product_image_border"
+            bind:layout_constraintTop_toTopOf="@id/product_image_border"
+            bind:layout_constraintBottom_toTopOf="@id/product_image"/>
 
         <ImageView
             android:id="@+id/product_image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
             android:contentDescription="@string/cd_picture_of_product"
-            android:scaleType="fitCenter"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            bind:layout_constraintDimensionRatio="1:1"
+            bind:layout_constraintTop_toBottomOf="@id/product_image_header"
+            bind:layout_constraintBottom_toTopOf="@id/add_web_image_url_label"
+            bind:layout_constraintEnd_toEndOf="@id/product_image_border"
+            bind:layout_constraintStart_toStartOf="@id/product_image_border"
             bind:localImageUri='@{imageModel.localImageUri}'
             bind:remoteImageUri='@{imageModel.remoteImageUri}'
-            tools:src="@drawable/placeholder">
+            bind:webImageUrl='@{imageModel.webImageUrl}'
+            tools:src="@drawable/cirio_tinned_tomatoes">
         </ImageView>
 
         <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/camera_button"
-            android:onClick='@{() -> imageViewModel.launchCamera()}'
+            android:id="@+id/gallery_button"
             android:layout_width="@dimen/image_button_height"
             android:layout_height="@dimen/image_button_width"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp"
             android:backgroundTint="@color/textColorHighlight"
-            android:tint="@color/white"
-            android:contentDescription="@string/cd_add_image_from_camera"
-            android:src="@drawable/ic_action_camera"
+            android:contentDescription="@string/cd_add_image_from_gallery"
             android:elevation="@dimen/standard_margin"
-            android:layout_marginEnd="@dimen/image_button_margin"
-            android:layout_alignEnd="@+id/product_image"
-            android:layout_alignBottom="@+id/product_image"/>
+            android:onClick='@{() -> imageViewModel.launchGallery()}'
+            android:src="@drawable/ic_add_picture_from_gallery"
+            android:tint="@color/white"
+            bind:layout_constraintBottom_toBottomOf="@id/product_image"
+            bind:layout_constraintEnd_toStartOf="@id/rotate_button"
+            bind:layout_constraintStart_toStartOf="@id/product_image_border" />
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/rotate_button"
-            android:onClick='@{() -> imageViewModel.rotateImage()}'
             android:layout_width="@dimen/image_button_height"
             android:layout_height="@dimen/image_button_width"
+            android:layout_marginBottom="8dp"
             android:backgroundTint="@color/textColorHighlight"
-            android:tint="@color/white"
             android:contentDescription="@string/cd_rotate_image"
-            android:src="@drawable/ic_action_rotate"
             android:elevation="@dimen/standard_margin"
-            android:layout_centerInParent="true"
-            android:layout_alignBottom="@+id/product_image" />
+            android:onClick='@{() -> imageViewModel.rotateImage()}'
+            android:src="@drawable/ic_action_rotate"
+            android:tint="@color/white"
+            bind:layout_constraintBottom_toBottomOf="@id/product_image"
+            bind:layout_constraintEnd_toStartOf="@id/camera_button"
+            bind:layout_constraintStart_toEndOf="@id/gallery_button" />
 
         <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/gallery_button"
-            android:onClick='@{() -> imageViewModel.launchGallery()}'
+            android:id="@+id/camera_button"
             android:layout_width="@dimen/image_button_height"
             android:layout_height="@dimen/image_button_width"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
             android:backgroundTint="@color/textColorHighlight"
-            android:tint="@color/white"
-            android:contentDescription="@string/cd_add_image_from_gallery"
-            android:src="@drawable/ic_add_picture_from_gallery"
+            android:contentDescription="@string/cd_add_image_from_camera"
             android:elevation="@dimen/standard_margin"
-            android:layout_alignStart="@+id/product_image"
-            android:layout_marginStart="@dimen/image_button_margin"
-            android:layout_alignBottom="@+id/product_image"/>
-    </RelativeLayout>
+            android:onClick='@{() -> imageViewModel.launchCamera()}'
+            android:src="@drawable/ic_action_camera"
+            android:tint="@color/white"
+            bind:layout_constraintBottom_toBottomOf="@id/product_image"
+            bind:layout_constraintEnd_toStartOf="@id/launch_browser_button"
+            bind:layout_constraintStart_toEndOf="@id/rotate_button" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/launch_browser_button"
+            android:layout_width="@dimen/image_button_height"
+            android:layout_height="@dimen/image_button_width"
+            android:layout_marginBottom="8dp"
+            android:backgroundTint="@color/textColorHighlight"
+            android:contentDescription="@string/cd_launch_browser_to_get_image_url"
+            android:elevation="@dimen/standard_margin"
+            android:onClick='@{() -> imageViewModel.launchBrowser()}'
+            android:src="@drawable/ic_open_in_browser_vector"
+            android:tint="@color/white"
+            bind:layout_constraintBottom_toBottomOf="@id/product_image"
+            bind:layout_constraintEnd_toEndOf="@id/product_image_border"
+            bind:layout_constraintStart_toEndOf="@id/camera_button" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/add_web_image_url_label"
+            style="@style/EditableCategoryStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/add_web_image_url"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            bind:layout_constraintTop_toBottomOf="@id/product_image"
+            bind:layout_constraintBottom_toTopOf="@id/editable_image_web_url"
+            bind:layout_constraintEnd_toEndOf="@id/product_image_border"
+            bind:layout_constraintStart_toStartOf="@id/product_image_border" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/editable_image_web_url"
+            style="@style/EditableFieldStyle"
+            android:layout_width="0dp"
+            android:lines="2"
+            android:layout_height="@dimen/standard_input_item_height"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:hint="@string/hint_web_image_url"
+            android:text='@={imageModel.webImageUrl}'
+            bind:layout_constraintBottom_toBottomOf="@id/product_image_border"
+            bind:layout_constraintEnd_toEndOf="@id/product_image_border"
+            bind:layout_constraintStart_toStartOf="@id/product_image_border" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
 

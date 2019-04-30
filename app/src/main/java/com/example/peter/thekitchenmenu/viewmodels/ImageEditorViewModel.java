@@ -11,9 +11,11 @@ public class ImageEditorViewModel extends ObservableViewModel {
 
     private ProductImageModel imageModel = new ProductImageModel();
 
+    // SingleLiveEvent - see https://github.com/googlesamples/android-architecture
     private final SingleLiveEvent<Void> launchCameraEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<Void> launchGalleryEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<Void> rotateImageEvent = new SingleLiveEvent<>();
+    private final SingleLiveEvent<Void> launchBrowserEvent = new SingleLiveEvent<>();
 
     private String temporaryImagePath;
     private boolean imageHasChanged = false;
@@ -48,6 +50,14 @@ public class ImageEditorViewModel extends ObservableViewModel {
 
     public SingleLiveEvent<Void> getRotateImageEvent() {
         return rotateImageEvent;
+    }
+
+    public void launchBrowser() {
+        launchBrowserEvent.call();
+    }
+
+    public SingleLiveEvent<Void> getLaunchBrowserEvent() {
+        return launchBrowserEvent;
     }
 
     public String getTemporaryImagePath() {
