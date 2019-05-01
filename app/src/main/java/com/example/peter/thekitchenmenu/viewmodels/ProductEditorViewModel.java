@@ -7,6 +7,7 @@ import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.data.entity.ProductUserDataEntity;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.ObservableBoolean;
 import androidx.lifecycle.MutableLiveData;
 
 public class ProductEditorViewModel extends ObservableViewModel {
@@ -119,6 +120,10 @@ public class ProductEditorViewModel extends ObservableViewModel {
             allProductDataValid = new MutableLiveData<>(false);
 
         return allProductDataValid;
+    }
+
+    public void setAllProductDataValid(MutableLiveData<Boolean> allProductDataValid) {
+        this.allProductDataValid = allProductDataValid;
     }
 
     public MutableLiveData<Boolean> getProductImageModelValid() {

@@ -12,7 +12,7 @@ public class ProductIdentityViewModel extends ObservableViewModel {
 
     private ProductIdentityModel identityModel = new ProductIdentityModel();
     private ProductIdentityTextValidationHandler textValidationHandler;
-    private MutableLiveData<Boolean> allIdentityFieldsValid = new MutableLiveData<>(false);
+    private MutableLiveData<Boolean> getIdentityModelIsValid = new MutableLiveData<>(false);
 
     private boolean descriptionValidated = false;
     private boolean madeByValidated = false;
@@ -45,7 +45,7 @@ public class ProductIdentityViewModel extends ObservableViewModel {
         this.madeByValidated = madeByValidated;
     }
 
-    public MutableLiveData<Boolean> getAllIdentityFieldsValid() {
-        return allIdentityFieldsValid;
+    public MutableLiveData<Boolean> getGetIdentityModelIsValid() {
+        return getIdentityModelIsValid;
     }
 }

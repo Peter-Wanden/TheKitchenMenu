@@ -8,7 +8,7 @@
         <import type="android.view.View" />
 
         <variable
-            name="productEditorViewModel"
+            name="viewModel"
             type="com.example.peter.thekitchenmenu.viewmodels.ProductEditorViewModel">
         </variable>
     </data>
@@ -20,8 +20,8 @@
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
-            android:onClick="@{() -> productEditorViewModel.onFabClick()}"
-            android:visibility='@{productEditorViewModel.allProductDataValid() ? View.VISIBLE : View.GONE}'
+            android:onClick="@{() -> viewModel.onFabClick()}"
+            android:visibility='@{viewModel.allProductDataValid ? View.VISIBLE : View.GONE}'
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/fab_margin"
@@ -33,7 +33,7 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
-            app:title="@{productEditorViewModel.title}"
+            app:title="@{viewModel.title}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/primaryColor"

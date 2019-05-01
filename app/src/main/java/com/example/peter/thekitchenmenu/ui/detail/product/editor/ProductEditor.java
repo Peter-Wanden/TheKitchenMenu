@@ -25,7 +25,7 @@ public class ProductEditor extends AppCompatActivity {
 
     ProductEditorBinding productEditorBinding;
 
-    ProductEditorViewModel mainEditorViewModel;
+    ProductEditorViewModel productEditorViewModel;
     ImageEditorViewModel imageEditorViewModel;
     ProductIdentityViewModel identityEditorViewModel;
     ProductMeasurementViewModel measurementEditorViewModel;
@@ -50,7 +50,7 @@ public class ProductEditor extends AppCompatActivity {
 
     private void setViewModels() {
 
-        mainEditorViewModel = ViewModelProviders.of(
+        productEditorViewModel = ViewModelProviders.of(
                 this).get(ProductEditorViewModel.class);
 
         imageEditorViewModel = ViewModelProviders.of(
@@ -103,7 +103,7 @@ public class ProductEditor extends AppCompatActivity {
             }
         };
 
-        mainEditorViewModel.getProductEntity().observe(
+        productEditorViewModel.getProductEntity().observe(
                 this, productObserver);
 
         final Observer<ProductUserDataEntity> userDataObserver = userDataEntity -> {
@@ -127,27 +127,39 @@ public class ProductEditor extends AppCompatActivity {
             }
         };
 
-        mainEditorViewModel.getProductUserDataEntity().observe(
+        productEditorViewModel.getProductUserDataEntity().observe(
                 this, userDataObserver);
 
         final Observer<Boolean> productIdentityValid = identityIsValid -> {
 
             if (identityIsValid != null) {
 
-                checkAllProductModelsValidated();
+                checkAllProductModelsAreValidated();
             }
         };
 
-        mainEditorViewModel.getProductIdentityModelValid().observe(
+        // TODO - Set up observers from each ViewModel that point to main view model
+        productEditorViewModel.getProductIdentityModelValid().observe(
                 this, productIdentityValid);
 
+        final Observer<Boolean> identityModelIsValid = identityIsValid -> {
+
+            if (identityIsValid) {
+
+                checkAllProductModelsAreValidated();
+            }
+        };
+
+        identityEditorViewModel.getGetIdentityModelIsValid().observe(
+                this, identityModelIsValid);
     }
 
-    private void checkAllProductModelsValidated() {
+    private void checkAllProductModelsAreValidated() {
 
-        if (mainEditorViewModel.getProductIdentityModelValid().getValue() == Boolean.TRUE) {
+        if (productEditorViewModel.getProductIdentityModelValid().getValue() == Boolean.TRUE) {
 
-            mainEditorViewModel.getAllProductDataValid().setValue(Boolean.TRUE);
+            Log.d(TAG, "tkm - checkAllProductModelsAreValidated: Called!");
+            productEditorViewModel.getAllProductDataValid().setValue(Boolean.TRUE);
         }
     }
 }
