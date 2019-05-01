@@ -3,14 +3,14 @@ package com.example.peter.thekitchenmenu.viewmodels;
 import android.app.Application;
 
 import com.example.peter.thekitchenmenu.data.model.ProductIdentityModel;
-import com.example.peter.thekitchenmenu.utils.ProductTextValidationHandler;
+import com.example.peter.thekitchenmenu.utils.ProductIdentityTextValidationHandler;
 
 import androidx.annotation.NonNull;
 
 public class ProductIdentityViewModel extends ObservableViewModel {
 
     private ProductIdentityModel identityModel = new ProductIdentityModel();
-    private ProductTextValidationHandler textValidationHandler;
+    private ProductIdentityTextValidationHandler textValidationHandler;
 
     private boolean descriptionValidated = false;
     private boolean madeByValidated = false;
@@ -18,7 +18,7 @@ public class ProductIdentityViewModel extends ObservableViewModel {
     public ProductIdentityViewModel(@NonNull Application application) {
         super(application);
 
-        textValidationHandler = new ProductTextValidationHandler(
+        textValidationHandler = new ProductIdentityTextValidationHandler(
                 application,
                 this);
     }
@@ -28,7 +28,7 @@ public class ProductIdentityViewModel extends ObservableViewModel {
         return identityModel;
     }
 
-    public ProductTextValidationHandler getTextValidationHandler() {
+    public ProductIdentityTextValidationHandler getTextValidationHandler() {
 
         return textValidationHandler;
     }

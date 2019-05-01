@@ -50,12 +50,12 @@ public class ProductUserDataEditor extends Fragment {
                 get(ProductUserDataEditorViewModel.class);
     }
 
-    // TODO - Set validation handler
     private void setValidationHandler() {
+
+        userDataEditorBinding.setTextValidation(userDataEditorViewModel.getTextValidationHandler());
     }
 
     private void setBindingInstanceVariables() {
 
         userDataEditorBinding.setUserDataModel(userDataEditorViewModel.getUserDataModel());
-    }
-}
+    }}

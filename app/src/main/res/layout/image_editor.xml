@@ -2,7 +2,7 @@
 
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -20,7 +20,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/image_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/product_image_border"
@@ -30,17 +30,17 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:src="@drawable/rectangle_radius_20dp"
-            bind:layout_constraintTop_toTopOf="parent"
-            bind:layout_constraintEnd_toEndOf="parent"
-            bind:layout_constraintStart_toStartOf="parent"
-            bind:layout_constraintBottom_toBottomOf="@id/bottom_guideline"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/bottom_guideline"/>
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/bottom_guideline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            bind:layout_constraintGuide_end="0dp"/>
+            app:layout_constraintGuide_end="0dp"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/product_image_header"
@@ -54,30 +54,29 @@
             android:text="@string/product_image"
             android:textAlignment="center"
             android:textSize="20sp"
-            bind:layout_constraintStart_toStartOf="@id/product_image_border"
-            bind:layout_constraintEnd_toEndOf="@id/product_image_border"
-            bind:layout_constraintTop_toTopOf="@id/product_image_border"
-            bind:layout_constraintBottom_toTopOf="@id/product_image"/>
+            app:layout_constraintStart_toStartOf="@id/product_image_border"
+            app:layout_constraintEnd_toEndOf="@id/product_image_border"
+            app:layout_constraintTop_toTopOf="@id/product_image_border"
+            app:layout_constraintBottom_toTopOf="@id/product_image"/>
 
         <ImageView
             android:id="@+id/product_image"
-            android:contentDescription="@string/cd_picture_of_product"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:layout_marginTop="8dp"
+            android:layout_height="0dp"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            bind:layout_constraintDimensionRatio="1:1"
-            bind:layout_constraintTop_toBottomOf="@id/product_image_header"
-            bind:layout_constraintBottom_toTopOf="@id/add_web_image_url_label"
-            bind:layout_constraintEnd_toEndOf="@id/product_image_border"
-            bind:layout_constraintStart_toStartOf="@id/product_image_border"
-            bind:localImageUri='@{imageModel.localImageUri}'
-            bind:remoteImageUri='@{imageModel.remoteImageUri}'
-            bind:webImageUrl='@{imageModel.webImageUrl}'
-            tools:src="@drawable/cirio_tinned_tomatoes">
+            android:contentDescription="@string/cd_picture_of_product"
+            app:layout_constraintTop_toBottomOf="@id/product_image_header"
+            app:layout_constraintBottom_toTopOf="@id/add_web_image_url_label"
+            app:layout_constraintEnd_toEndOf="@id/product_image_border"
+            app:layout_constraintStart_toStartOf="@id/product_image_border"
+            app:layout_constraintDimensionRatio="1:1"
+            app:localImageUri='@{imageModel.localImageUri}'
+            app:remoteImageUri='@{imageModel.remoteImageUri}'
+            app:webImageUrl='@{imageModel.webImageUrl}'
+            tools:src="@drawable/placeholder">
         </ImageView>
 
         <androidx.appcompat.widget.AppCompatImageButton
@@ -92,9 +91,9 @@
             android:onClick='@{() -> imageViewModel.launchGallery()}'
             android:src="@drawable/ic_add_picture_from_gallery"
             android:tint="@color/white"
-            bind:layout_constraintBottom_toBottomOf="@id/product_image"
-            bind:layout_constraintEnd_toStartOf="@id/rotate_button"
-            bind:layout_constraintStart_toStartOf="@id/product_image_border" />
+            app:layout_constraintBottom_toBottomOf="@id/product_image"
+            app:layout_constraintEnd_toStartOf="@id/rotate_button"
+            app:layout_constraintStart_toStartOf="@id/product_image_border" />
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/rotate_button"
@@ -107,9 +106,9 @@
             android:onClick='@{() -> imageViewModel.rotateImage()}'
             android:src="@drawable/ic_action_rotate"
             android:tint="@color/white"
-            bind:layout_constraintBottom_toBottomOf="@id/product_image"
-            bind:layout_constraintEnd_toStartOf="@id/camera_button"
-            bind:layout_constraintStart_toEndOf="@id/gallery_button" />
+            app:layout_constraintBottom_toBottomOf="@id/product_image"
+            app:layout_constraintEnd_toStartOf="@id/camera_button"
+            app:layout_constraintStart_toEndOf="@id/gallery_button" />
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/camera_button"
@@ -123,9 +122,9 @@
             android:onClick='@{() -> imageViewModel.launchCamera()}'
             android:src="@drawable/ic_action_camera"
             android:tint="@color/white"
-            bind:layout_constraintBottom_toBottomOf="@id/product_image"
-            bind:layout_constraintEnd_toStartOf="@id/launch_browser_button"
-            bind:layout_constraintStart_toEndOf="@id/rotate_button" />
+            app:layout_constraintBottom_toBottomOf="@id/product_image"
+            app:layout_constraintEnd_toStartOf="@id/launch_browser_button"
+            app:layout_constraintStart_toEndOf="@id/rotate_button" />
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/launch_browser_button"
@@ -138,9 +137,9 @@
             android:onClick='@{() -> imageViewModel.launchBrowser()}'
             android:src="@drawable/ic_open_in_browser_vector"
             android:tint="@color/white"
-            bind:layout_constraintBottom_toBottomOf="@id/product_image"
-            bind:layout_constraintEnd_toEndOf="@id/product_image_border"
-            bind:layout_constraintStart_toEndOf="@id/camera_button" />
+            app:layout_constraintBottom_toBottomOf="@id/product_image"
+            app:layout_constraintEnd_toEndOf="@id/product_image_border"
+            app:layout_constraintStart_toEndOf="@id/camera_button" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/add_web_image_url_label"
@@ -151,10 +150,10 @@
             android:layout_marginTop="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            bind:layout_constraintTop_toBottomOf="@id/product_image"
-            bind:layout_constraintBottom_toTopOf="@id/editable_image_web_url"
-            bind:layout_constraintEnd_toEndOf="@id/product_image_border"
-            bind:layout_constraintStart_toStartOf="@id/product_image_border" />
+            app:layout_constraintTop_toBottomOf="@id/product_image"
+            app:layout_constraintBottom_toTopOf="@id/editable_image_web_url"
+            app:layout_constraintEnd_toEndOf="@id/product_image_border"
+            app:layout_constraintStart_toStartOf="@id/product_image_border" />
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/editable_image_web_url"
@@ -168,9 +167,9 @@
             android:layout_marginEnd="8dp"
             android:hint="@string/hint_web_image_url"
             android:text='@={imageModel.webImageUrl}'
-            bind:layout_constraintBottom_toBottomOf="@id/product_image_border"
-            bind:layout_constraintEnd_toEndOf="@id/product_image_border"
-            bind:layout_constraintStart_toStartOf="@id/product_image_border" />
+            app:layout_constraintBottom_toBottomOf="@id/product_image_border"
+            app:layout_constraintEnd_toEndOf="@id/product_image_border"
+            app:layout_constraintStart_toStartOf="@id/product_image_border" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
 

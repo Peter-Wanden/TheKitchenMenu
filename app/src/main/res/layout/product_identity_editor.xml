@@ -9,7 +9,7 @@
 
         <variable
             name="textValidation"
-            type="com.example.peter.thekitchenmenu.utils.ProductTextValidationHandler" />
+            type="com.example.peter.thekitchenmenu.utils.ProductIdentityTextValidationHandler" />
 
         <variable
             name="identityModel"

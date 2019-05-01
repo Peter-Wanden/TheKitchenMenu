@@ -7,7 +7,7 @@ import android.widget.EditText;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.viewmodels.ProductIdentityViewModel;
 
-public class ProductTextValidationHandler {
+public class ProductIdentityTextValidationHandler {
 
     private static final String TAG = "ProductTextValidationHa";
 
@@ -19,15 +19,14 @@ public class ProductTextValidationHandler {
     private int viewId;
     private String newText;
 
-    public ProductTextValidationHandler(Application applicationContext,
-                                        ProductIdentityViewModel viewModel) {
+    public ProductIdentityTextValidationHandler(Application applicationContext,
+                                                ProductIdentityViewModel viewModel) {
         this.viewModel = viewModel;
         resources = applicationContext.getResources();
     }
 
     // TODO - Introduce a cleanString() method that strips out spaces and escape characters from Editable's.
-    // TODO - Refactor: Create a class for each type of validation i.e. length, number ranges etc.
-    // TODO - Make general classes for text validation so as to not duplicate this class each time text validation is required
+    // TODO - Refactor: Create a class for each type of validation i.e. length
 
     public void validateDescription(EditText editableDescription) {
 
@@ -96,26 +95,26 @@ public class ProductTextValidationHandler {
             case TOO_SHORT:
 
                 editable.setError(lengthTooShort);
-                viewModel.setDescriptionValidated(false);
+                publishResultToViewModel(result);
 
                 break;
 
             case TOO_LONG:
 
                 editable.setError(lengthTooLong);
-                viewModel.setDescriptionValidated(false);
+                publishResultToViewModel(result);
 
                 break;
 
             case VALIDATED:
 
-                publishResultToViewModel();
+                publishResultToViewModel(result);
 
                 break;
         }
     }
 
-    private void publishResultToViewModel() {
+    private void publishResultToViewModel(ValidateTextLength result) {
 
         if (viewModel.getIdentityModel() != null) {
 
@@ -124,14 +123,22 @@ public class ProductTextValidationHandler {
                 case R.id.editable_description:
 
                     viewModel.getIdentityModel().setDescription(newText);
-                    viewModel.setDescriptionValidated(true);
+
+                    if (result == ValidateTextLength.VALIDATED)
+                        viewModel.setDescriptionValidated(true);
+
+                    else viewModel.setDescriptionValidated(false);
 
                     break;
 
                 case R.id.editable_made_by:
 
                     viewModel.getIdentityModel().setMadeBy(newText);
-                    viewModel.setMadeByValidated(true);
+
+                    if (result == ValidateTextLength.VALIDATED)
+                        viewModel.setMadeByValidated(true);
+
+                    else viewModel.setMadeByValidated(false);
 
                     break;
             }

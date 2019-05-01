@@ -52,7 +52,7 @@ public class ProductEditorViewModel extends ObservableViewModel {
                 1,
                 0,
                 "",
-                "https://d25hqtnqp5nl24.cloudfront.net/images/products/11/LN_043101_BP_11.jpg",
+                "",
                 0,
                 0,
                 "");
@@ -89,7 +89,7 @@ public class ProductEditorViewModel extends ObservableViewModel {
                 0
         );
 
-        this.productUserDataEntity.setValue(userDataEntity);
+//        this.productUserDataEntity.setValue(userDataEntity);
     }
 
     public MutableLiveData<ProductEntity> getProductEntity() {

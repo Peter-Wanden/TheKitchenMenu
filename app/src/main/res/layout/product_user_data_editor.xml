@@ -6,6 +6,10 @@
     <data>
         
     <import type="android.view.View" />
+
+        <variable
+            name="textValidation"
+            type="com.example.peter.thekitchenmenu.utils.ProductUserDataTextValidationHandler" />
         
         <variable
             name="userDataModel"
@@ -66,6 +70,7 @@
             android:layout_marginEnd="8dp"
             android:hint="@string/hint_retailer"
             android:inputType="textCapWords"
+            android:afterTextChanged='@{() -> textValidation.validateRetailer(editableRetailer)}'
             android:text='@{userDataModel.retailer}'
             app:layout_constraintStart_toStartOf="@id/product_user_data_border"
             app:layout_constraintEnd_toEndOf="@id/product_user_data_border"
@@ -117,6 +122,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:hint="@string/hint_location_room"
+            android:afterTextChanged='@{() -> textValidation.validateLocationRoom(editableLocationRoom)}'
             android:text='@{userDataModel.locationRoom}'
             android:inputType="textCapWords"
             app:layout_constraintStart_toStartOf="@id/product_user_data_border"
@@ -143,6 +149,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:hint="@string/hint_location_in_room"
+            android:afterTextChanged='@{() -> textValidation.validateLocationInRoom(editableLocationInRoom)}'
             android:text='@{userDataModel.locationInRoom}'
             android:inputType="textCapWords"
             app:layout_constraintStart_toStartOf="@id/product_user_data_border"

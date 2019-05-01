@@ -98,7 +98,7 @@ public class ProductEditor extends AppCompatActivity {
                         productEntity.getBaseSiUnits());
 
                 if (baseSiUnitsAreSet) {
-                    Log.d(TAG, "tkm - setObservers: Base units set ok!");
+                    Log.d(TAG, "tkm - setObservers: Base units set!");
                 }
             }
         };
@@ -114,9 +114,6 @@ public class ProductEditor extends AppCompatActivity {
 
                 userDataEditorViewModel.getUserDataModel().setRetailer(
                         userDataEntity.getRetailer());
-
-                Log.d(TAG, "tkm - setObservers: setting retailer to: " +
-                        userDataEntity.getRetailer() );
 
                 userDataEditorViewModel.getUserDataModel().setPrice(
                         userDataEntity.getPrice());

@@ -9,8 +9,8 @@ public class ProductIdentityModel extends BaseObservable {
 
     private static final String TAG = "ProductIdentityModel";
 
-    private String description;
-    private String madeBy;
+    private String description = "";
+    private String madeBy = "";
     private int category;
     private int shelfLife;
 

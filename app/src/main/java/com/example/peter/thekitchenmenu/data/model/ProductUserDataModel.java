@@ -9,10 +9,10 @@ public class ProductUserDataModel extends BaseObservable {
 
     private static final String TAG = "ProductUserDataModel";
 
-    private String retailer;
-    private double price;
-    private String locationRoom;
-    private String locationInRoom;
+    private String retailer = "";
+    private double price = 0.;
+    private String locationRoom = "";
+    private String locationInRoom = "";
 
     @Bindable
     public String getRetailer() {
