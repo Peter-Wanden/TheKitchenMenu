@@ -6,11 +6,13 @@ import com.example.peter.thekitchenmenu.data.model.ProductIdentityModel;
 import com.example.peter.thekitchenmenu.utils.ProductIdentityTextValidationHandler;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
 
 public class ProductIdentityViewModel extends ObservableViewModel {
 
     private ProductIdentityModel identityModel = new ProductIdentityModel();
     private ProductIdentityTextValidationHandler textValidationHandler;
+    private MutableLiveData<Boolean> allIdentityFieldsValid = new MutableLiveData<>(false);
 
     private boolean descriptionValidated = false;
     private boolean madeByValidated = false;
@@ -43,8 +45,7 @@ public class ProductIdentityViewModel extends ObservableViewModel {
         this.madeByValidated = madeByValidated;
     }
 
-    public boolean allFieldsAreValidated() {
-
-        return descriptionValidated && madeByValidated;
+    public MutableLiveData<Boolean> getAllIdentityFieldsValid() {
+        return allIdentityFieldsValid;
     }
 }

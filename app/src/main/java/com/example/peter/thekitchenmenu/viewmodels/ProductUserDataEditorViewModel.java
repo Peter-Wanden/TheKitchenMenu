@@ -13,8 +13,8 @@ public class ProductUserDataEditorViewModel extends ObservableViewModel {
     private static final String TAG = "ProductUserDataEditorVi";
 
     private ProductUserDataModel userDataModel = new ProductUserDataModel();
-
     private ProductUserDataTextValidationHandler textValidationHandler;
+
     private MutableLiveData<Boolean> allUserDataFieldsValidated = new MutableLiveData<>(false);
     private boolean retailerValidated = false;
     private boolean locationRoomValidated = false;

@@ -35,6 +35,7 @@ public class ViewModelCatlogProducts extends AndroidViewModel {
 
     public ViewModelCatlogProducts(Application application) {
         super(application);
+
         setupObservables(application);
         initialiseDataSource();
     }

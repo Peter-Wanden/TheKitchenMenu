@@ -16,6 +16,13 @@ public class ProductEditorViewModel extends ObservableViewModel {
     private MutableLiveData<ProductEntity> productEntity = new MutableLiveData<>();
     private MutableLiveData<ProductUserDataEntity> productUserDataEntity = new MutableLiveData<>();
 
+    private MutableLiveData<Boolean> allProductDataValid = new MutableLiveData<>(false);
+    private MutableLiveData<Boolean> productImageModelValid = new MutableLiveData<>(false);
+    private MutableLiveData<Boolean> productIdentityModelValid = new MutableLiveData<>(false);
+    private MutableLiveData<Boolean> productMeasurementModelValid = new MutableLiveData<>(false);
+
+    private MutableLiveData<Boolean> allUserDataValid = new MutableLiveData<>(false);
+
     private String title;
 
     // TODO - Change category and shelf life to an enum
@@ -100,8 +107,50 @@ public class ProductEditorViewModel extends ObservableViewModel {
 
     public MutableLiveData<ProductUserDataEntity> getProductUserDataEntity() {
 
-        if (productUserDataEntity == null) productUserDataEntity = new MutableLiveData<>();
+        if (productUserDataEntity == null)
+            productUserDataEntity = new MutableLiveData<>();
+
         return productUserDataEntity;
+    }
+
+    public MutableLiveData<Boolean> getAllProductDataValid() {
+
+        if (allProductDataValid == null)
+            allProductDataValid = new MutableLiveData<>(false);
+
+        return allProductDataValid;
+    }
+
+    public MutableLiveData<Boolean> getProductImageModelValid() {
+
+        if (productImageModelValid == null)
+            productImageModelValid = new MutableLiveData<>(false);
+
+        return productImageModelValid;
+    }
+
+    public MutableLiveData<Boolean> getProductIdentityModelValid() {
+
+        if (productIdentityModelValid == null)
+            productIdentityModelValid = new MutableLiveData<>(false);
+
+        return productIdentityModelValid;
+    }
+
+    public MutableLiveData<Boolean> getProductMeasurementModelValid() {
+
+        if (productMeasurementModelValid == null)
+            productMeasurementModelValid = new MutableLiveData<>(false);
+
+        return productMeasurementModelValid;
+    }
+
+    public MutableLiveData<Boolean> getAllUserDataValid() {
+
+        if (allProductDataValid == null)
+            allProductDataValid = new MutableLiveData<>(false);
+
+        return allUserDataValid;
     }
 
     // Changes the reference to a new productEntity, triggering LiveData to update the database.

@@ -103,7 +103,8 @@ public class ProductEditor extends AppCompatActivity {
             }
         };
 
-        mainEditorViewModel.getProductEntity().observe(this, productObserver);
+        mainEditorViewModel.getProductEntity().observe(
+                this, productObserver);
 
         final Observer<ProductUserDataEntity> userDataObserver = userDataEntity -> {
 
@@ -126,6 +127,27 @@ public class ProductEditor extends AppCompatActivity {
             }
         };
 
-        mainEditorViewModel.getProductUserDataEntity().observe(this, userDataObserver);
+        mainEditorViewModel.getProductUserDataEntity().observe(
+                this, userDataObserver);
+
+        final Observer<Boolean> productIdentityValid = identityIsValid -> {
+
+            if (identityIsValid != null) {
+
+                checkAllProductModelsValidated();
+            }
+        };
+
+        mainEditorViewModel.getProductIdentityModelValid().observe(
+                this, productIdentityValid);
+
+    }
+
+    private void checkAllProductModelsValidated() {
+
+        if (mainEditorViewModel.getProductIdentityModelValid().getValue() == Boolean.TRUE) {
+
+            mainEditorViewModel.getAllProductDataValid().setValue(Boolean.TRUE);
+        }
     }
 }

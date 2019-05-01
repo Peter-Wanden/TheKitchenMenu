@@ -30,7 +30,9 @@ public class Repository {
         observableProducts = new MediatorLiveDataActive<>(this, ProductEntity.TAG);
         observableProducts.addSource(this.database.productDAO().getAll(),
                 products -> {
+
             if (this.database.getDatabaseCreated().getValue() != null) {
+
                 observableProducts.postValue(products);
             }
         });
@@ -38,7 +40,9 @@ public class Repository {
         observableUsersProductData = new MediatorLiveDataActive<>(this, ProductUserDataEntity.TAG);
         observableUsersProductData.addSource(this.database.userProductDataDAO().getAll(),
                 usersProductData -> {
+
             if (this.database.getDatabaseCreated().getValue() != null) {
+
                 observableUsersProductData.postValue(usersProductData);
             }
         });
