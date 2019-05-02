@@ -5,9 +5,6 @@ import android.os.Parcelable;
 
 import com.google.firebase.database.Exclude;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -30,6 +27,7 @@ public class ProductUserDataEntity implements Parcelable {
     public static final String LOCATION_ROOM = "locationRoom";
     public static final String LOCATION_IN_ROOM = "locationInRoom";
     public static final String PRICE = "price";
+    public static final String LOCAL_IMAGE_THUM_URI = "localImageThumbUri";
     public static final String LOCAL_IMAGE_URI = "localImageUri";
     public static final String CREATE_DATE = "usersProductDataCreateDate";
     public static final String LAST_UPDATE = "usersProductDataLastUpdate";
@@ -62,8 +60,10 @@ public class ProductUserDataEntity implements Parcelable {
     @ColumnInfo(name = PRICE)
     private double price;
 
+    @ColumnInfo(name = LOCAL_IMAGE_THUM_URI)
+    private String localImageThumbUri = "";
+
     @ColumnInfo(name = LOCAL_IMAGE_URI)
-    @NonNull
     private String localImageUri = "";
 
     @ColumnInfo(name = CREATE_DATE)
@@ -84,6 +84,7 @@ public class ProductUserDataEntity implements Parcelable {
                                  String locationRoom,
                                  String locationInRoom,
                                  double price,
+                                 String localImageThumbUri,
                                  String localImageUri,
                                  long createDate,
                                  long lastUpdate) {
@@ -96,6 +97,7 @@ public class ProductUserDataEntity implements Parcelable {
         this.locationRoom = locationRoom;
         this.locationInRoom = locationInRoom;
         this.price = price;
+        this.localImageThumbUri = localImageThumbUri;
         this.localImageUri = localImageUri;
         this.createDate = createDate;
         this.lastUpdate = lastUpdate;
@@ -111,6 +113,7 @@ public class ProductUserDataEntity implements Parcelable {
         locationRoom = in.readString();
         locationInRoom = in.readString();
         price = in.readDouble();
+        localImageThumbUri = in.readString();
         localImageUri = in.readString();
         createDate = in.readLong();
         lastUpdate = in.readLong();
@@ -127,27 +130,10 @@ public class ProductUserDataEntity implements Parcelable {
         parcel.writeString(locationInRoom);
         parcel.writeDouble(price);
         parcel.writeString(localImageUri);
+        parcel.writeString(localImageThumbUri);
         parcel.writeLong(createDate);
         parcel.writeLong(lastUpdate);
     }
-
-    @Exclude
-    public Map<String, Object> productMyToMap() {
-
-        HashMap<String, Object> result = new HashMap<>();
-
-        result.put(REMOTE_USED_PRODUCT_ID, remoteIdUsedProduct);
-        result.put(RETAILER, retailer);
-        result.put(LOCATION_ROOM, locationRoom);
-        result.put(LOCATION_IN_ROOM, locationInRoom);
-        result.put(PRICE, price);
-        result.put(LOCAL_IMAGE_URI, localImageUri);
-        result.put(CREATE_DATE, createDate);
-        result.put(LAST_UPDATE, lastUpdate);
-
-        return result;
-    }
-
 
     @Override
     public int describeContents() {
@@ -165,7 +151,6 @@ public class ProductUserDataEntity implements Parcelable {
             return new ProductUserDataEntity[size];
         }
     };
-
 
     public int getId() {
         return id;
@@ -231,7 +216,14 @@ public class ProductUserDataEntity implements Parcelable {
         this.price = price;
     }
 
-    @NonNull
+    public String getLocalImageThumbUri() {
+        return localImageThumbUri;
+    }
+
+    public void setLocalImageThumbUri(@NonNull String localImageThumbUri) {
+        this.localImageThumbUri = localImageThumbUri;
+    }
+
     public String getLocalImageUri() {
         return localImageUri;
     }

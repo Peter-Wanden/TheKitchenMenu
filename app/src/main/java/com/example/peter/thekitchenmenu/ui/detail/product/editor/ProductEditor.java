@@ -1,31 +1,31 @@
 package com.example.peter.thekitchenmenu.ui.detail.product.editor;
 
-import android.os.Bundle;
 import android.util.Log;
+import android.os.Bundle;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
-import com.example.peter.thekitchenmenu.data.entity.ProductUserDataEntity;
-import com.example.peter.thekitchenmenu.databinding.ProductEditorBinding;
 import com.example.peter.thekitchenmenu.viewmodels.ImageEditorViewModel;
+import com.example.peter.thekitchenmenu.databinding.ProductEditorBinding;
+import com.example.peter.thekitchenmenu.data.entity.ProductUserDataEntity;
 import com.example.peter.thekitchenmenu.viewmodels.ProductEditorViewModel;
 import com.example.peter.thekitchenmenu.viewmodels.ProductIdentityViewModel;
 import com.example.peter.thekitchenmenu.viewmodels.ProductMeasurementViewModel;
 import com.example.peter.thekitchenmenu.viewmodels.ProductUserDataEditorViewModel;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
+import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class ProductEditor extends AppCompatActivity {
 
     private static final String TAG = "ProductEditor";
 
     ProductEditorBinding productEditorBinding;
-
     ProductEditorViewModel productEditorViewModel;
+
     ImageEditorViewModel imageEditorViewModel;
     ProductIdentityViewModel identityEditorViewModel;
     ProductMeasurementViewModel measurementEditorViewModel;
@@ -38,7 +38,10 @@ public class ProductEditor extends AppCompatActivity {
         initialiseViews();
         setViewModels();
         setObservers();
+        setModelValidationObservers();
+
         // TODO - Get the intent, establish if existing product to edit or new product to create
+        productEditorViewModel.isNewProduct(true);
     }
 
     private void initialiseViews() {
@@ -68,6 +71,7 @@ public class ProductEditor extends AppCompatActivity {
 
     private void setObservers() {
 
+        // Dish out the entities to the models
         final Observer<ProductEntity> productObserver = productEntity -> {
 
             if (productEntity != null) {
@@ -129,37 +133,57 @@ public class ProductEditor extends AppCompatActivity {
 
         productEditorViewModel.getProductUserDataEntity().observe(
                 this, userDataObserver);
+    }
 
-        final Observer<Boolean> productIdentityValid = identityIsValid -> {
+    private void setModelValidationObservers() {
 
-            if (identityIsValid != null) {
+        final Observer<Boolean> imageModelIsValid = imageIsValid -> {
 
-                checkAllProductModelsAreValidated();
-            }
+            if (imageIsValid) checkAllProductModelsAreValidated();
         };
 
-        // TODO - Set up observers from each ViewModel that point to main view model
-        productEditorViewModel.getProductIdentityModelValid().observe(
-                this, productIdentityValid);
+        imageEditorViewModel.getImageModelIsValid().observe(
+                this, imageModelIsValid);
 
         final Observer<Boolean> identityModelIsValid = identityIsValid -> {
 
-            if (identityIsValid) {
-
-                checkAllProductModelsAreValidated();
-            }
+            if (identityIsValid) checkAllProductModelsAreValidated();
         };
 
         identityEditorViewModel.getGetIdentityModelIsValid().observe(
                 this, identityModelIsValid);
+
+        final Observer<Boolean> measurementModelIsValid = measurementIsValid -> {
+
+            if (measurementIsValid) checkAllProductModelsAreValidated();
+        };
+
+        measurementEditorViewModel.getMeasurementIsValid().observe(
+                this, measurementModelIsValid);
+
+        final Observer<Boolean> userDataModelIsValid = userDataValid -> {
+
+            if (userDataValid) checkAllProductModelsAreValidated();
+        };
+
+        userDataEditorViewModel.getUserDataModelIsValidated().observe(
+                this, userDataModelIsValid);
+
+        final Observer<Boolean> entityModelsAreValid = entitiesValid -> {
+
+            // data entities can be saved
+        };
+
+        productEditorViewModel.getEntitiesAreValid().observe(
+                this, entityModelsAreValid);
     }
 
     private void checkAllProductModelsAreValidated() {
 
-        if (productEditorViewModel.getProductIdentityModelValid().getValue() == Boolean.TRUE) {
+        if (identityEditorViewModel.getGetIdentityModelIsValid().getValue() == Boolean.TRUE) {
 
-            Log.d(TAG, "tkm - checkAllProductModelsAreValidated: Called!");
-            productEditorViewModel.getAllProductDataValid().setValue(Boolean.TRUE);
+            productEditorViewModel.getEntitiesAreValid().setValue(Boolean.TRUE);
+            Log.d(TAG, "tkm - all entities are valid, saving entity data.");
         }
     }
 }

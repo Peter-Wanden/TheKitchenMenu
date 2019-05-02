@@ -32,6 +32,8 @@ public class ProductEntity implements Parcelable {
     public static final String UNIT_OF_MEASURE_SUB_TYPE = "unitOfMeasureSubType";
     public static final String PROD_COMM_PRICE_AVE = "packAvePrice";
     public static final String CREATED_BY = "createdBy";
+    public static final String WEB_IMAGE_URL = "webImageUrl";
+    public static final String REMOTE_IMAGE_THUMB_URI = "remoteImageThumbUri";
     public static final String REMOTE_IMAGE_URI = "remoteImageUri";
     public static final String CREATE_DATE = "productCreateDate";
     public static final String LAST_UPDATE = "productLastUpdate";
@@ -69,6 +71,12 @@ public class ProductEntity implements Parcelable {
     @ColumnInfo(name = CREATED_BY)
     private String createdBy;
 
+    @ColumnInfo(name = WEB_IMAGE_URL)
+    private String webImageUrl = "";
+
+    @ColumnInfo(name = REMOTE_IMAGE_THUMB_URI)
+    private String remoteImageThumbUri = "";
+
     @ColumnInfo(name = REMOTE_IMAGE_URI)
     private String remoteImageUri = "";
 
@@ -94,7 +102,9 @@ public class ProductEntity implements Parcelable {
                          int unitOfMeasureSubType,
                          double packAvePrice,
                          String createdBy,
-                         @NonNull String remoteImageUri,
+                         String webImageUrl,
+                         String remoteImageThumbUri,
+                         String remoteImageUri,
                          long createDate,
                          long lastUpdate,
                          String remoteProductId) {
@@ -109,6 +119,8 @@ public class ProductEntity implements Parcelable {
         this.unitOfMeasureSubType = unitOfMeasureSubType;
         this.packAvePrice = packAvePrice;
         this.createdBy = createdBy;
+        this.webImageUrl = webImageUrl;
+        this.remoteImageThumbUri = remoteImageThumbUri;
         this.remoteImageUri = remoteImageUri;
         this.createDate = createDate;
         this.lastUpdate = lastUpdate;
@@ -127,6 +139,8 @@ public class ProductEntity implements Parcelable {
         unitOfMeasureSubType = in.readInt();
         packAvePrice = in.readDouble();
         createdBy = in.readString();
+        webImageUrl = in.readString();
+        remoteImageThumbUri = in.readString();
         remoteImageUri = in.readString();
         createDate = in.readLong();
         lastUpdate = in.readLong();
@@ -145,6 +159,8 @@ public class ProductEntity implements Parcelable {
         dest.writeInt(unitOfMeasureSubType);
         dest.writeDouble(packAvePrice);
         dest.writeString(createdBy);
+        dest.writeString(webImageUrl);
+        dest.writeString(remoteImageThumbUri);
         dest.writeString(remoteImageUri);
         dest.writeLong(createDate);
         dest.writeLong(lastUpdate);
@@ -182,6 +198,8 @@ public class ProductEntity implements Parcelable {
         result.put(UNIT_OF_MEASURE_SUB_TYPE, unitOfMeasureSubType);
         result.put(PROD_COMM_PRICE_AVE, packAvePrice);
         result.put(CREATED_BY, createdBy);
+        result.put(WEB_IMAGE_URL, webImageUrl);
+        result.put(REMOTE_IMAGE_THUMB_URI, remoteImageThumbUri);
         result.put(REMOTE_IMAGE_URI, remoteImageUri);
         result.put(CREATE_DATE, createDate);
         result.put(LAST_UPDATE, lastUpdate);
@@ -189,24 +207,10 @@ public class ProductEntity implements Parcelable {
         return result;
     }
 
+    @NonNull
     @Override
     public String toString() {
-        return "ProductEntity { \n" +
-                "\nid=" + id +
-                "\n description='" + description + '\'' +
-                "\n madeBy='" + madeBy + '\'' +
-                "\n category=" + category + '\'' +
-                "\n number_of_items=" + numberOfItems + '\'' +
-                "\n shelfLife=" + shelfLife + '\'' +
-                "\n baseSiUnits=" + baseSiUnits +
-                "\n unitOfMeasureSubType=" + unitOfMeasureSubType + '\'' +
-                "\n packAvePrice=" + packAvePrice +
-                "\n createdBy='" + createdBy + '\'' +
-                "\n remoteImageUri='" + remoteImageUri + '\'' +
-                "\n createDate=" + createDate +
-                "\n lastUpdate=" + lastUpdate +
-                "\n remoteProductId='" + remoteProductId + '\'' +
-                '}';
+        return super.toString();
     }
 
     // Getters and setters
@@ -290,7 +294,22 @@ public class ProductEntity implements Parcelable {
         this.createdBy = createdBy;
     }
 
-    @NonNull
+    public String getWebImageUrl() {
+        return webImageUrl;
+    }
+
+    public void setWebImageUrl(String webImageUrl) {
+        this.webImageUrl = webImageUrl;
+    }
+
+    public String getRemoteImageThumbUri() {
+        return remoteImageThumbUri;
+    }
+
+    public void setRemoteImageThumbUri(String remoteImageThumbUri) {
+        this.remoteImageThumbUri = remoteImageThumbUri;
+    }
+
     public String getRemoteImageUri() {
         return remoteImageUri;
     }

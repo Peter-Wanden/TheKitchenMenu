@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.utils;
+package com.example.peter.thekitchenmenu.utils.imageeditor;
 
 import android.widget.ImageView;
 
@@ -7,7 +7,7 @@ import androidx.databinding.BindingAdapter;
 import com.bumptech.glide.Glide;
 import com.example.peter.thekitchenmenu.R;
 
-public class UniversalBindingAdapters {
+public class ImageBindingAdapters {
 
     private static final String TAG = "UniversalBindingAdapter";
 

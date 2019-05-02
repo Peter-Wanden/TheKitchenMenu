@@ -15,7 +15,7 @@ public class ProductUserDataEditorViewModel extends ObservableViewModel {
     private ProductUserDataModel userDataModel = new ProductUserDataModel();
     private ProductUserDataTextValidationHandler textValidationHandler;
 
-    private MutableLiveData<Boolean> allUserDataFieldsValidated = new MutableLiveData<>(false);
+    private MutableLiveData<Boolean> userDataModelIsValidated = new MutableLiveData<>(false);
     private boolean retailerValidated = false;
     private boolean locationRoomValidated = false;
     private boolean locationInRoomValidated = false;
@@ -34,27 +34,36 @@ public class ProductUserDataEditorViewModel extends ObservableViewModel {
     }
 
     public ProductUserDataTextValidationHandler getTextValidationHandler() {
+
         return textValidationHandler;
     }
 
-    public void setUserDataModel(ProductUserDataModel userDataModel) {
-
-        this.userDataModel = userDataModel;
-    }
-
     public void setRetailerValidated(boolean retailerValidated) {
+
         this.retailerValidated = retailerValidated;
+        checkUserDataModelValidated();
     }
 
     public void setLocationRoomValidated(boolean locationRoomValidated) {
+
         this.locationRoomValidated = locationRoomValidated;
+        checkUserDataModelValidated();
     }
 
     public void setLocationInRoomValidated(boolean locationInRoomValidated) {
+
         this.locationInRoomValidated = locationInRoomValidated;
+        checkUserDataModelValidated();
     }
 
-    public MutableLiveData<Boolean> getAllUserDataFieldsValidated() {
-        return allUserDataFieldsValidated;
+    private void checkUserDataModelValidated() {
+
+        if(retailerValidated && locationRoomValidated && locationInRoomValidated)
+            getUserDataModelIsValidated().setValue(Boolean.TRUE);
+    }
+
+    public MutableLiveData<Boolean> getUserDataModelIsValidated() {
+
+        return userDataModelIsValidated;
     }
 }

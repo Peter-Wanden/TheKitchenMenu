@@ -18,6 +18,7 @@ import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.databinding.ImageEditorBinding;
 import com.example.peter.thekitchenmenu.utils.BitmapUtils;
+import com.example.peter.thekitchenmenu.utils.imageeditor.LastImageUpdated;
 import com.example.peter.thekitchenmenu.viewmodels.ImageEditorViewModel;
 
 import androidx.annotation.NonNull;
@@ -57,7 +58,7 @@ public class ImageEditor extends Fragment {
         imageEditorBinding.setLifecycleOwner(this);
 
         setViewModel();
-        setInstanceVariables();
+        setBindingInstanceVariables();
         subscribeToEvents();
 
         return rootView;
@@ -69,10 +70,11 @@ public class ImageEditor extends Fragment {
                 get(ImageEditorViewModel.class);
     }
 
-    private void setInstanceVariables() {
+    private void setBindingInstanceVariables() {
 
         imageEditorBinding.setImageViewModel(imageEditorViewModel);
         imageEditorBinding.setImageModel(imageEditorViewModel.getImageModel());
+        imageEditorBinding.setImageHandler(imageEditorViewModel.getImageEditorHandler());
     }
 
     private void subscribeToEvents() {
@@ -164,10 +166,13 @@ public class ImageEditor extends Fragment {
 
             Uri uri = data.getData();
 
-            if (uri != null) imageEditorViewModel.getImageModel().setLocalImageUri(uri.toString());
+            if (uri != null) {
+
+                imageEditorViewModel.getImageModel().setLocalImageUri(uri.toString());
+                imageEditorViewModel.setLastImageUpdated(LastImageUpdated.LOCAL_IMAGE);
+            }
 
             Log.d(TAG, "tkm - onActivityResult: image uri is null");
-
 
         } else if (requestCode == Constants.REQUEST_IMAGE_PICKER &&
                 resultCode == RESULT_CANCELED)

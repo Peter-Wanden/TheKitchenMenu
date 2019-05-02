@@ -9,10 +9,10 @@ public class ProductImageModel extends BaseObservable {
     private static final String TAG = "ProductImageModel";
 
     private String remoteImageUri = ""; // tkm remote server image location
-    private String remoteThumbUri = "";
+    private String remoteImageThumbUri = "";
     private String webImageUrl = "";    // user selected web image location
     private String localImageUri = "";  // Camera or local gallery file location
-    private String localThumbUri = "";
+    private String localImageThumbUri = "";
 
     @Bindable
     public String getRemoteImageUri() {
@@ -27,15 +27,15 @@ public class ProductImageModel extends BaseObservable {
     }
 
     @Bindable
-    public String getRemoteThumbUri() {
+    public String getRemoteImageThumbUri() {
 
-        return remoteThumbUri;
+        return remoteImageThumbUri;
     }
 
-    public void setRemoteThumbUri(String remoteThumbUri) {
+    public void setRemoteImageThumbUri(String remoteImageThumbUri) {
 
-        this.remoteThumbUri = remoteThumbUri;
-        notifyPropertyChanged(BR.remoteThumbUri);
+        this.remoteImageThumbUri = remoteImageThumbUri;
+        notifyPropertyChanged(BR.remoteImageThumbUri);
     }
 
     @Bindable
@@ -63,14 +63,14 @@ public class ProductImageModel extends BaseObservable {
     }
 
     @Bindable
-    public String getLocalThumbUri() {
+    public String getLocalImageThumbUri() {
 
-        return localThumbUri;
+        return localImageThumbUri;
     }
 
-    public void setLocalThumbUri(String localThumbUri) {
+    public void setLocalImageThumbUri(String localImageThumbUri) {
 
-        this.localThumbUri = localThumbUri;
-        notifyPropertyChanged(BR.localThumbUri);
+        this.localImageThumbUri = localImageThumbUri;
+        notifyPropertyChanged(BR.localImageThumbUri);
     }
 }

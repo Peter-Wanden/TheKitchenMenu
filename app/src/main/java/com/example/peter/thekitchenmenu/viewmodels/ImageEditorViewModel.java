@@ -3,13 +3,21 @@ package com.example.peter.thekitchenmenu.viewmodels;
 import android.app.Application;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
 
 import com.example.peter.thekitchenmenu.data.model.ProductImageModel;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
+import com.example.peter.thekitchenmenu.utils.imageeditor.ImageEditorHandler;
+import com.example.peter.thekitchenmenu.utils.imageeditor.LastImageUpdated;
+import com.example.peter.thekitchenmenu.utils.imageeditor.ProductImageEditorHandler;
 
 public class ImageEditorViewModel extends ObservableViewModel {
 
     private ProductImageModel imageModel = new ProductImageModel();
+    private MutableLiveData<Boolean> imageModelIsValid = new MutableLiveData<>();
+    private ImageEditorHandler imageEditorHandler = new ProductImageEditorHandler();
+    private LastImageUpdated lastImageUpdated = LastImageUpdated.NO_IMAGE;
+    private boolean imageHasChanged = false;
 
     // SingleLiveEvent - see https://github.com/googlesamples/android-architecture
     private final SingleLiveEvent<Void> launchCameraEvent = new SingleLiveEvent<>();
@@ -18,7 +26,6 @@ public class ImageEditorViewModel extends ObservableViewModel {
     private final SingleLiveEvent<Void> launchBrowserEvent = new SingleLiveEvent<>();
 
     private String temporaryImagePath;
-    private boolean imageHasChanged = false;
 
     public ImageEditorViewModel(@NonNull Application application) {
         super(application);
@@ -26,6 +33,26 @@ public class ImageEditorViewModel extends ObservableViewModel {
 
     public ProductImageModel getImageModel() {
         return imageModel;
+    }
+
+    public MutableLiveData<Boolean> getImageModelIsValid() {
+        return imageModelIsValid;
+    }
+
+    public ImageEditorHandler getImageEditorHandler() {
+        return imageEditorHandler;
+    }
+
+    public LastImageUpdated getLastImageUpdated() {
+        return lastImageUpdated;
+    }
+
+    public void setLastImageUpdated(LastImageUpdated lastImageUpdated) {
+        this.lastImageUpdated = lastImageUpdated;
+    }
+
+    public void setImageHasChanged(boolean imageHasChanged) {
+        this.imageHasChanged = imageHasChanged;
     }
 
     public void launchCamera() {
@@ -66,9 +93,5 @@ public class ImageEditorViewModel extends ObservableViewModel {
 
     public void setTemporaryImagePath(String temporaryImagePath) {
         this.temporaryImagePath = temporaryImagePath;
-    }
-
-    public void setImageHasChanged(boolean imageHasChanged) {
-        this.imageHasChanged = imageHasChanged;
     }
 }

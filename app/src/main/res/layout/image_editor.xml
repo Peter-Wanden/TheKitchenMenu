@@ -15,12 +15,16 @@
             name="imageModel"
             type="com.example.peter.thekitchenmenu.data.model.ProductImageModel">
         </variable>
+
+        <variable
+            name="imageHandler"
+            type="com.example.peter.thekitchenmenu.utils.imageeditor.ImageEditorHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/image_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/product_image_border"
@@ -35,6 +39,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="@id/bottom_guideline"/>
 
+        <!--Todo - Use this guideline as is done in the product_identity / product size xml-->
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/bottom_guideline"
             android:layout_width="wrap_content"

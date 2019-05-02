@@ -5,24 +5,31 @@ import android.app.Application;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.data.entity.ProductUserDataEntity;
+import com.example.peter.thekitchenmenu.data.model.ProductIdentityModel;
+import com.example.peter.thekitchenmenu.data.model.ProductImageModel;
+import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
+import com.example.peter.thekitchenmenu.data.model.ProductUserDataModel;
 
 import androidx.annotation.NonNull;
-import androidx.databinding.ObservableBoolean;
 import androidx.lifecycle.MutableLiveData;
 
 public class ProductEditorViewModel extends ObservableViewModel {
 
     private static final String TAG = "ProductEditorViewModel";
 
+    private boolean isNewProduct = false; // Todo - control this bool with intent
+    // bundle passed into activity.
+
     private MutableLiveData<ProductEntity> productEntity = new MutableLiveData<>();
     private MutableLiveData<ProductUserDataEntity> productUserDataEntity = new MutableLiveData<>();
+    private MutableLiveData<Boolean> entitiesAreValid = new MutableLiveData<>(false);
 
-    private MutableLiveData<Boolean> allProductDataValid = new MutableLiveData<>(false);
-    private MutableLiveData<Boolean> productImageModelValid = new MutableLiveData<>(false);
-    private MutableLiveData<Boolean> productIdentityModelValid = new MutableLiveData<>(false);
-    private MutableLiveData<Boolean> productMeasurementModelValid = new MutableLiveData<>(false);
-
-    private MutableLiveData<Boolean> allUserDataValid = new MutableLiveData<>(false);
+    private ProductEntity newProductEntity = new ProductEntity();
+    private ProductUserDataEntity newUserDataEntity = new ProductUserDataEntity();
+    private ProductImageModel imageModel= new ProductImageModel();
+    private ProductIdentityModel identityModel = new ProductIdentityModel();
+    private ProductMeasurementModel measurementModel = new ProductMeasurementModel();
+    private ProductUserDataModel userDataModel = new ProductUserDataModel();
 
     private String title;
 
@@ -32,6 +39,7 @@ public class ProductEditorViewModel extends ObservableViewModel {
         super(applicationContext);
 
         title = applicationContext.getString(R.string.activity_title_edit_product);
+        // TODO -
 
         ProductEntity productEntityMetricMassTest = new ProductEntity(
                 0,
@@ -43,6 +51,8 @@ public class ProductEditorViewModel extends ObservableViewModel {
                 10000,
                 0,
                 0,
+                "",
+                "",
                 "",
                 "",
                 0,
@@ -61,6 +71,8 @@ public class ProductEditorViewModel extends ObservableViewModel {
                 0,
                 "",
                 "",
+                "",
+                "",
                 0,
                 0,
                 "");
@@ -75,6 +87,8 @@ public class ProductEditorViewModel extends ObservableViewModel {
                 10000,
                 3,
                 0,
+                "",
+                "",
                 "",
                 "https://d1ycl3zewbvuig.cloudfront.net/images/products/11/LN_759450_BP_11.jpg",
                 0,
@@ -92,12 +106,17 @@ public class ProductEditorViewModel extends ObservableViewModel {
                 "Kitchen",
                 "Fridge",
                 12.34,
+                "",
                 "file:///sdcard/img.png",
                 0,
                 0
         );
 
 //        this.productUserDataEntity.setValue(userDataEntity);
+    }
+
+    public void isNewProduct(boolean newProduct) {
+        isNewProduct = newProduct;
     }
 
     public MutableLiveData<ProductEntity> getProductEntity() {
@@ -114,48 +133,62 @@ public class ProductEditorViewModel extends ObservableViewModel {
         return productUserDataEntity;
     }
 
-    public MutableLiveData<Boolean> getAllProductDataValid() {
+    public MutableLiveData<Boolean> getEntitiesAreValid() {
 
-        if (allProductDataValid == null)
-            allProductDataValid = new MutableLiveData<>(false);
+        if (entitiesAreValid == null)
+            entitiesAreValid = new MutableLiveData<>(false);
 
-        return allProductDataValid;
+        return entitiesAreValid;
     }
 
-    public void setAllProductDataValid(MutableLiveData<Boolean> allProductDataValid) {
-        this.allProductDataValid = allProductDataValid;
+    public void setEntitiesAreValid(MutableLiveData<Boolean> entitiesAreValid) {
+
+        this.entitiesAreValid = entitiesAreValid;
     }
 
-    public MutableLiveData<Boolean> getProductImageModelValid() {
+    public void setImageModel(ProductImageModel imageModel) {
 
-        if (productImageModelValid == null)
-            productImageModelValid = new MutableLiveData<>(false);
-
-        return productImageModelValid;
+        this.imageModel = imageModel;
+        updateEntitiesWithImageModelData();
     }
 
-    public MutableLiveData<Boolean> getProductIdentityModelValid() {
+    private void updateEntitiesWithImageModelData() {
 
-        if (productIdentityModelValid == null)
-            productIdentityModelValid = new MutableLiveData<>(false);
+        if (isNewProduct) {
 
-        return productIdentityModelValid;
+            // If there's a local image and no remote image, which for a new product should always
+            // be the case, save the
+            if (imageModel.getRemoteImageUri().isEmpty() &&
+                    !imageModel.getLocalImageUri().isEmpty())
+                newProductEntity.setRemoteImageUri(imageModel.getLocalImageUri());
+
+            if (imageModel.getRemoteImageThumbUri().isEmpty() &&
+                    !imageModel.getLocalImageThumbUri().isEmpty()) {
+                newProductEntity.setRemoteImageThumbUri(imageModel.getLocalImageThumbUri());
+            }
+
+            if (imageModel.getWebImageUrl().isEmpty())
+
+            if (!imageModel.getLocalImageThumbUri().isEmpty()) {
+                newUserDataEntity.setLocalImageThumbUri(imageModel.getLocalImageThumbUri());
+            }
+
+            if (!imageModel.getLocalImageUri().isEmpty()) {
+                newUserDataEntity.setLocalImageUri(imageModel.getLocalImageUri());
+            }
+        }
     }
 
-    public MutableLiveData<Boolean> getProductMeasurementModelValid() {
-
-        if (productMeasurementModelValid == null)
-            productMeasurementModelValid = new MutableLiveData<>(false);
-
-        return productMeasurementModelValid;
+    public void setIdentityModel(ProductIdentityModel identityModel) {
+        this.identityModel = identityModel;
     }
 
-    public MutableLiveData<Boolean> getAllUserDataValid() {
+    public void setMeasurementModel(ProductMeasurementModel measurementModel) {
+        this.measurementModel = measurementModel;
+    }
 
-        if (allProductDataValid == null)
-            allProductDataValid = new MutableLiveData<>(false);
-
-        return allUserDataValid;
+    public void setUserDataModel(ProductUserDataModel userDataModel) {
+        this.userDataModel = userDataModel;
     }
 
     // Changes the reference to a new productEntity, triggering LiveData to update the database.
