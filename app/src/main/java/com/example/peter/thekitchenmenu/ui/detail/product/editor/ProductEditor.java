@@ -1,5 +1,6 @@
 package com.example.peter.thekitchenmenu.ui.detail.product.editor;
 
+import android.content.Intent;
 import android.util.Log;
 import android.os.Bundle;
 
@@ -22,11 +23,13 @@ import androidx.appcompat.app.AppCompatActivity;
 public class ProductEditor extends AppCompatActivity {
 
     private static final String TAG = "ProductEditor";
+    private static final String PRODUCT_ID = "product_id";
 
     ProductEditorBinding productEditorBinding;
     ProductEditorViewModel productEditorViewModel;
 
     ImageEditorViewModel imageEditorViewModel;
+
     ProductIdentityViewModel identityEditorViewModel;
     ProductMeasurementViewModel measurementEditorViewModel;
     ProductUserDataEditorViewModel userDataEditorViewModel;
@@ -41,7 +44,19 @@ public class ProductEditor extends AppCompatActivity {
         setModelValidationObservers();
 
         // TODO - Get the intent, establish if existing product to edit or new product to create
-        productEditorViewModel.isNewProduct(true);
+        Intent intent = getIntent();
+
+        if (intent != null && intent.hasExtra(PRODUCT_ID)) {
+
+            productEditorViewModel.isNewProduct(false);
+
+        } else {
+
+            productEditorViewModel.isNewProduct(true);
+
+        }
+
+        setTitle(productEditorViewModel.getTitle());
     }
 
     private void initialiseViews() {
