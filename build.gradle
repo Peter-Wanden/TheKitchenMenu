@@ -52,7 +52,7 @@ ext {
     // Support
     androidxSupportVersion = "1.0.0"
     androidxAppcompat = "1.1.0-alpha04"
-    androidMaterial = "1.1.0-alpha05"
+    androidMaterial = "1.1.0-alpha06"
     androidxRecyclerView = "1.1.0-alpha04"
 
     // Constraint

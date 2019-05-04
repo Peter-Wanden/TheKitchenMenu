@@ -88,7 +88,6 @@ dependencies {
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "androidx.appcompat:appcompat:$androidxAppcompat"
-    implementation "com.google.android.material:material:$androidxSupportVersion"
     implementation "androidx.recyclerview:recyclerview:$androidxRecyclerView"
     implementation "androidx.cardview:cardview:$androidxSupportVersion"
     implementation "androidx.exifinterface:exifinterface:$androidxSupportVersion"
