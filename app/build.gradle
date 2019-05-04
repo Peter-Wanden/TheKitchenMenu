@@ -44,31 +44,8 @@ android {
 
     compileOptions {
 
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    flavorDimensions "mock"
-
-    productFlavors {
-
-        mock {
-            applicationIdSuffix = ".mock"
-            dimension "mock"
-        }
-
-        prod {
-        }
-    }
-
-    // Remove mockRelease as it's not needed.
-    android.variantFilter { variant ->
-
-        if (variant.buildType.name == 'release'
-                && variant.getFlavors().get(0).name == 'mock') {
-
-            variant.setIgnore(true)
-        }
+        sourceCompatibility '1.8'
+        targetCompatibility '1.8'
     }
 
     // Always show the result of every unit test, even if it passes.
@@ -110,9 +87,6 @@ dependencies {
     // Constraint layout
     implementation "androidx.constraintlayout:constraintlayout:$androidxConstraintLayoutVersion"
 
-    // A library that will hold the application logic
-    implementation project(':TKMAppLibrary')
-
     // Gson
     implementation 'com.google.code.gson:gson:2.8.5'
 
@@ -127,7 +101,7 @@ dependencies {
     implementation "com.google.android.gms:play-services-auth-base:$playServicesA"
     implementation "com.google.android.gms:play-services-phenotype:$playServicesA"
     implementation "com.google.android.gms:play-services-auth:$playServicesB"
-    implementation "com.google.android.gms:play-services-base:$playServicesC"
+    implementation "com.google.android.gms:play-services-base:$playServicesBase"
     implementation "com.google.android.gms:play-services-stats:$playServicesB"
     implementation "com.google.android.gms:play-services-flags:$playServicesB"
     implementation "com.google.android.gms:play-services-tasks:$playServicesB"

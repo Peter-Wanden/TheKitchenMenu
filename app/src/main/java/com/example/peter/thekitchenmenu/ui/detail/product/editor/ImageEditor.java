@@ -2,8 +2,10 @@ package com.example.peter.thekitchenmenu.ui.detail.product.editor;
 
 import android.Manifest;
 import android.app.SearchManager;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -42,6 +44,8 @@ public class ImageEditor extends Fragment {
 
     private ImageEditorBinding imageEditorBinding;
     private ImageEditorViewModel imageEditorViewModel;
+    private File imageFile = null;
+    private Uri imageFileUri = null;
 
     @Nullable
     @Override
@@ -97,29 +101,21 @@ public class ImageEditor extends Fragment {
 
         // https://developer.android.com/training/camera/photobasics - Using camera app
         // https://developer.android.com/training/camera/cameradirect.html - Controlling the camera
+        // Todo, if the imageFile is !=null, delete the file, then recreate it.
+        imageFile = null;
+
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         if (takePictureIntent.resolveActivity(requireActivity().getPackageManager()) != null) {
 
-            File photoFile = null;
+            if (createImageFile()) {
 
-            try {
+                imageEditorViewModel.setTemporaryImagePath(imageFile.getAbsolutePath());
 
-                photoFile = BitmapUtils.createImageFile(requireActivity());
+                imageFileUri = FileProvider.getUriForFile(requireActivity(),
+                        Constants.FILE_PROVIDER_AUTHORITY, imageFile);
 
-            } catch (IOException ex) {
-
-                ex.printStackTrace();
-            }
-
-            if (photoFile != null) {
-
-                imageEditorViewModel.setTemporaryImagePath(photoFile.getAbsolutePath());
-
-                Uri photoURI = FileProvider.getUriForFile(requireActivity(),
-                        Constants.FILE_PROVIDER_AUTHORITY, photoFile);
-
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageFileUri);
 
                 startActivityForResult(takePictureIntent, Constants.REQUEST_IMAGE_CAPTURE);
             }
@@ -127,6 +123,10 @@ public class ImageEditor extends Fragment {
     }
 
     private void launchGallery() {
+
+        imageFile = null;
+
+        if (createImageFile()) {
 
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/jpeg");
@@ -136,6 +136,7 @@ public class ImageEditor extends Fragment {
                 intent,
                 getString(R.string.intent_gallery_picker_title)),
                 Constants.REQUEST_IMAGE_PICKER);
+        }
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -143,7 +144,8 @@ public class ImageEditor extends Fragment {
         if (requestCode == Constants.REQUEST_IMAGE_CAPTURE &&
                 resultCode == RESULT_OK)
 
-            processAndSetImage();
+//            processAndSetImage();
+            performCrop();
 
         else if (requestCode == Constants.REQUEST_IMAGE_CAPTURE &&
                 resultCode == RESULT_CANCELED)
@@ -164,12 +166,13 @@ public class ImageEditor extends Fragment {
         else if (requestCode == Constants.REQUEST_IMAGE_PICKER &&
                 resultCode == RESULT_OK) {
 
-            Uri uri = data.getData();
+            imageFileUri = data.getData();
 
-            if (uri != null) {
+            if (imageFile != null) {
 
-                imageEditorViewModel.getImageModel().setLocalImageUri(uri.toString());
+                imageEditorViewModel.getImageModel().setLocalImageUri(imageFileUri.toString());
                 imageEditorViewModel.setLastImageUpdated(LastImageUpdated.LOCAL_IMAGE);
+                performCrop();
             }
 
             Log.d(TAG, "tkm - onActivityResult: image uri is null");
@@ -178,6 +181,9 @@ public class ImageEditor extends Fragment {
                 resultCode == RESULT_CANCELED)
 
             Log.e(TAG, "tkm - Image picker intent cancelled");
+        else if (requestCode == Constants.REQUEST_CROP_PICTURE && resultCode == RESULT_OK)
+
+            processAndSetImage();
     }
 
     // TODO - Resampling only required if storing on servers, otherwise just store local Uri
@@ -234,6 +240,54 @@ public class ImageEditor extends Fragment {
 
         BitmapUtils.rotateImage(productImage);
         imageEditorViewModel.setImageHasChanged(true);
+    }
+
+    // https://stackoverflow.com/questions/26357012/how-to-crop-images-from-camera
+    // https://stackoverflow.com/questions/15438085/set-camera-size-parameters-vs-intent
+    private void performCrop() {
+
+        // take care of exceptions
+        try {
+            // call the standard crop action intent (the user device may not
+            // support it)
+            Intent cropIntent = new Intent("com.android.camera.action.CROP");
+            // indicate image type and Uri
+            cropIntent.setDataAndType(imageFileUri, "image/*");
+            // set crop properties
+            cropIntent.putExtra("crop", "true");
+            // indicate aspect of desired crop
+            cropIntent.putExtra("aspectX", 1);
+            cropIntent.putExtra("aspectY", 1);
+            // indicate output X and Y
+            cropIntent.putExtra("outputX", 400);
+            cropIntent.putExtra("outputY", 400);
+            // retrieve data on return
+            cropIntent.putExtra("return-data", true);
+            // start the activity - we handle returning in onActivityResult
+            startActivityForResult(cropIntent, Constants.REQUEST_CROP_PICTURE);
+        }
+        // respond to users whose devices do not support the crop action
+        catch (ActivityNotFoundException e) {
+
+            Toast toast = Toast
+                    .makeText(requireActivity(),
+                            "This device doesn't support the crop action!", Toast.LENGTH_SHORT);
+            toast.show();
+        }
+    }
+
+    private boolean createImageFile() {
+
+        try {
+
+            imageFile = BitmapUtils.createImageFile(requireActivity());
+            return true;
+
+        } catch (IOException ex) {
+
+            ex.printStackTrace();
+        }
+        return false;
     }
 
     private void launchBrowser() {

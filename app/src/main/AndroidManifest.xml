@@ -47,7 +47,8 @@
 
         <service
             android:name=".widget.WidgetServiceList"
-            android:permission="android.permission.BIND_REMOTEVIEWS" />
+            android:permission="android.permission.BIND_REMOTEVIEWS">
+        </service>
 
         <service
             android:name=".widget.WidgetService" />
@@ -88,7 +89,8 @@
 
         <!-- Activity view of a single productEntities details -->
         <activity android:name=".ui.detail.product.editor.ProductEditor"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme">
+        </activity>
 
         <!-- Searchable activity for finding Products -->
         <activity
@@ -124,9 +126,11 @@
         <!-- Service tag pointing to the sync intent service -->
         <service
             android:name=".data.repository.SyncRemoteDataService"
-            android:exported="false"/>
+            android:exported="false">
+        </service>
 
         <uses-library android:name="android.test.runner"
-            android:required="false" />
+            android:required="false">
+        </uses-library>
     </application>
 </manifest>

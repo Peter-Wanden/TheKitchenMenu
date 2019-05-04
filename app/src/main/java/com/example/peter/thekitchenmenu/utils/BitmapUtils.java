@@ -50,21 +50,6 @@ public class BitmapUtils {
         );
     }
 
-    public static void deleteImageFile(Context context, String imagePath) {
-
-        // Get the file
-        File imageFile = new File(imagePath);
-
-        // Delete the image
-        boolean deleted = imageFile.delete();
-
-        // If there is an error deleting the file, show a Toast
-        if (!deleted) {
-            String errorMessage = context.getString(R.string.delete_file_error);
-            Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
-        }
-    }
-
     /**
      * Re-samples the captured photo to fit the screen for better memory usage.
      *
@@ -111,6 +96,21 @@ public class BitmapUtils {
         bmOptions.inSampleSize = scaleFactor;
 
         return BitmapFactory.decodeFile(imagePath);
+    }
+
+    public static void deleteImageFile(Context context, String imagePath) {
+
+        // Get the file
+        File imageFile = new File(imagePath);
+
+        // Delete the image
+        boolean deleted = imageFile.delete();
+
+        // If there is an error deleting the file, show a Toast
+        if (!deleted) {
+            String errorMessage = context.getString(R.string.delete_file_error);
+            Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
+        }
     }
 
     /* As bitmap factory will only accept a path and not a Uri we have to do this. */
