@@ -13,13 +13,18 @@ import com.example.peter.thekitchenmenu.utils.imageeditor.ProductImageEditorHand
 
 public class ImageEditorViewModel extends ObservableViewModel {
 
+    private boolean deviceHasCamera = false;
+    private boolean hasCameraPermissions = false;
+
     private ProductImageModel imageModel = new ProductImageModel();
     private MutableLiveData<Boolean> imageModelIsValid = new MutableLiveData<>();
     private ImageEditorHandler imageEditorHandler = new ProductImageEditorHandler();
+
     private LastImageUpdated lastImageUpdated = LastImageUpdated.NO_IMAGE;
-    private boolean imageHasChanged = false;
+    private boolean newImageDataAvailable = false;
 
     // SingleLiveEvent - see https://github.com/googlesamples/android-architecture
+    private final SingleLiveEvent<Void> checkCameraHardware = new SingleLiveEvent<>();
     private final SingleLiveEvent<Void> launchCameraEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<Void> launchGalleryEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<Void> rotateImageEvent = new SingleLiveEvent<>();
@@ -51,8 +56,13 @@ public class ImageEditorViewModel extends ObservableViewModel {
         this.lastImageUpdated = lastImageUpdated;
     }
 
-    public void setImageHasChanged(boolean imageHasChanged) {
-        this.imageHasChanged = imageHasChanged;
+    public void setNewImageDataAvailable(boolean newImageDataAvailable) {
+        this.newImageDataAvailable = newImageDataAvailable;
+    }
+
+    public void setDeviceHasCamera(boolean deviceHasCamera) {
+
+        this.deviceHasCamera = deviceHasCamera;
     }
 
     public void launchCamera() {

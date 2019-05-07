@@ -90,10 +90,11 @@ dependencies {
     // Gson
     implementation 'com.google.code.gson:gson:2.8.5'
 
-    // Picasso TODO - Replace with Glide
+    // Image processing TODO - Replace with Glide
     implementation "com.squareup.picasso:picasso:$picassoVersion"
     implementation "com.github.bumptech.glide:glide:$glideVersion"
     annotationProcessor "com.github.bumptech.glide:compiler:$glideVersion"
+    implementation "com.theartofdev.edmodo:android-image-cropper:2.8.0"
 
     // Play services
     implementation "com.google.android.gms:play-services-ads-identifier:$playServicesA"

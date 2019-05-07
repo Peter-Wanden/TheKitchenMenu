@@ -10,7 +10,7 @@ public class ProductImageEditorHandler implements ImageEditorHandler {
     public void setViewModel(ImageEditorViewModel viewModel) {
 
         this.viewModel = viewModel;
-    };
+    }
 
     @Override
     public LastImageUpdated getLastImageUpdated() {

@@ -2,7 +2,6 @@ package com.example.peter.thekitchenmenu.ui.detail.product.editor;
 
 import android.Manifest;
 import android.app.SearchManager;
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -16,12 +15,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.databinding.ImageEditorBinding;
 import com.example.peter.thekitchenmenu.utils.BitmapUtils;
 import com.example.peter.thekitchenmenu.utils.imageeditor.LastImageUpdated;
 import com.example.peter.thekitchenmenu.viewmodels.ImageEditorViewModel;
+import com.theartofdev.edmodo.cropper.CropImage;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -64,6 +65,7 @@ public class ImageEditor extends Fragment {
         setViewModel();
         setBindingInstanceVariables();
         subscribeToEvents();
+        checkHardware();
 
         return rootView;
     }
@@ -94,10 +96,27 @@ public class ImageEditor extends Fragment {
 
         imageEditorViewModel.getLaunchBrowserEvent().observe(
                 this, event -> launchBrowser());
+
+
+    }
+
+    private void checkHardware() {
+
+        imageEditorViewModel.setDeviceHasCamera(
+                requireActivity().getPackageManager().
+                        hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY));
     }
 
     // TODO - Move all camera code to another (utils) class
     private void launchCamera() {
+
+        // TODO - implement for no camera (already done in manifest!!)
+        // If your application uses, but does not require a camera in order to function, instead
+        // set android:required to false. In doing so, Google Play will allow devices without a
+        // camera to download your application. It's then your responsibility to check for the
+        // availability of the camera at runtime by calling
+        // hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY). If a camera is not available,
+        // you should then disable your camera features.
 
         // https://developer.android.com/training/camera/photobasics - Using camera app
         // https://developer.android.com/training/camera/cameradirect.html - Controlling the camera
@@ -122,21 +141,18 @@ public class ImageEditor extends Fragment {
         }
     }
 
-    private void launchGallery() {
+    private boolean createImageFile() {
 
-        imageFile = null;
+        try {
 
-        if (createImageFile()) {
+            imageFile = BitmapUtils.createImageFile(requireActivity());
+            return true;
 
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("image/jpeg");
-        intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+        } catch (IOException ex) {
 
-        startActivityForResult(Intent.createChooser(
-                intent,
-                getString(R.string.intent_gallery_picker_title)),
-                Constants.REQUEST_IMAGE_PICKER);
+            ex.printStackTrace();
         }
+        return false;
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -144,8 +160,9 @@ public class ImageEditor extends Fragment {
         if (requestCode == Constants.REQUEST_IMAGE_CAPTURE &&
                 resultCode == RESULT_OK)
 
+            cropImage();
 //            processAndSetImage();
-            performCrop();
+//            performCrop();
 
         else if (requestCode == Constants.REQUEST_IMAGE_CAPTURE &&
                 resultCode == RESULT_CANCELED)
@@ -156,7 +173,7 @@ public class ImageEditor extends Fragment {
         else if (requestCode == Constants.REQUEST_IMAGE_MEDIA_STORE &&
                 resultCode == RESULT_OK)
 
-            processAndSetImage();
+            processAndSetImage(imageFileUri);
 
         else if (requestCode == Constants.REQUEST_IMAGE_MEDIA_STORE &&
                 resultCode == RESULT_CANCELED)
@@ -172,7 +189,6 @@ public class ImageEditor extends Fragment {
 
                 imageEditorViewModel.getImageModel().setLocalImageUri(imageFileUri.toString());
                 imageEditorViewModel.setLastImageUpdated(LastImageUpdated.LOCAL_IMAGE);
-                performCrop();
             }
 
             Log.d(TAG, "tkm - onActivityResult: image uri is null");
@@ -181,36 +197,92 @@ public class ImageEditor extends Fragment {
                 resultCode == RESULT_CANCELED)
 
             Log.e(TAG, "tkm - Image picker intent cancelled");
-        else if (requestCode == Constants.REQUEST_CROP_PICTURE && resultCode == RESULT_OK)
 
-            processAndSetImage();
+        else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+
+            if (resultCode == RESULT_OK) {
+
+                Uri resultUri = result.getUri();
+                processAndSetImage(resultUri);
+
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+
+                Exception error = result.getError();
+                Log.e(TAG, "onActivityResult: ", error);
+            }
+        }
     }
 
+    private void launchGallery() {
+
+        CropImage.activity().
+                setAspectRatio(1,1).
+                start(requireActivity(), this);
+    }
+
+    private void cropImage() {
+
+        CropImage.activity(imageFileUri).
+                setAspectRatio(1,1).
+                start(requireContext(), this);
+    }
     // TODO - Resampling only required if storing on servers, otherwise just store local Uri
     // todo - If storing locally, store image to local media and delete temp file
     // I think Glide re-samples / down-samples images before loading into image views.
     // For non-web (local and server images) do not down-sample, just take the bitmap image and
     // store it as it is.
-    private void processAndSetImage() {
 
-        BitmapUtils.resampleImage(
-                requireActivity(),
-                null,
-                imageEditorViewModel.getTemporaryImagePath());
+    private void createScaledBitmaps() {
 
-        imageEditorViewModel.
-                getImageModel().
-                setLocalImageUri(imageEditorViewModel.getTemporaryImagePath());
+        // Create a new file
+        // pass in the
+
+
+
+    }
+
+    public static Bitmap createScaledBitmap(Bitmap image, float imageSize, boolean filter) {
+
+        float ratio = Math.min(imageSize / image.getWidth(), imageSize / image.getHeight());
+        int width = Math.round(ratio * image.getWidth());
+        int height = Math.round(ratio * image.getHeight());
+
+        return Bitmap.createScaledBitmap(image, width, height, filter);
+    }
+
+    private void processAndSetImage(Uri resultUri) {
+
+
+//        Bitmap bitmap = BitmapFactory.decodeFile();
+//        Bitmap scaledBitmap = createScaledBitmap(bitmap, 400, true);
+
+//        Log.d(TAG, "processAndSetImage: width is:" + bitmap.getWidth()
+//        + " height is: " + bitmap.getHeight());
+
+        // TODO - DON'T FORGET TO DELETE OLD BITMAPS AND URI'S
+
+        Glide.with(this).load(resultUri).into(imageEditorBinding.productImage);
+
+//        BitmapUtils.resampleImage(
+//                requireActivity(),
+//                null,
+//                imageEditorViewModel.getTemporaryImagePath());
+
+//        imageEditorViewModel.
+//                getImageModel().
+//                setLocalImageUri(imageEditorViewModel.getTemporaryImagePath());
     }
 
     private void requestPermissions() {
 
         if (ContextCompat.checkSelfPermission(requireActivity(),
-                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED)
 
             ActivityCompat.requestPermissions(requireActivity(),
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                     Constants.REQUEST_STORAGE_PERMISSION);
 
         else launchCamera();
@@ -239,55 +311,7 @@ public class ImageEditor extends Fragment {
     private void rotateImage(ImageView productImage) {
 
         BitmapUtils.rotateImage(productImage);
-        imageEditorViewModel.setImageHasChanged(true);
-    }
-
-    // https://stackoverflow.com/questions/26357012/how-to-crop-images-from-camera
-    // https://stackoverflow.com/questions/15438085/set-camera-size-parameters-vs-intent
-    private void performCrop() {
-
-        // take care of exceptions
-        try {
-            // call the standard crop action intent (the user device may not
-            // support it)
-            Intent cropIntent = new Intent("com.android.camera.action.CROP");
-            // indicate image type and Uri
-            cropIntent.setDataAndType(imageFileUri, "image/*");
-            // set crop properties
-            cropIntent.putExtra("crop", "true");
-            // indicate aspect of desired crop
-            cropIntent.putExtra("aspectX", 1);
-            cropIntent.putExtra("aspectY", 1);
-            // indicate output X and Y
-            cropIntent.putExtra("outputX", 400);
-            cropIntent.putExtra("outputY", 400);
-            // retrieve data on return
-            cropIntent.putExtra("return-data", true);
-            // start the activity - we handle returning in onActivityResult
-            startActivityForResult(cropIntent, Constants.REQUEST_CROP_PICTURE);
-        }
-        // respond to users whose devices do not support the crop action
-        catch (ActivityNotFoundException e) {
-
-            Toast toast = Toast
-                    .makeText(requireActivity(),
-                            "This device doesn't support the crop action!", Toast.LENGTH_SHORT);
-            toast.show();
-        }
-    }
-
-    private boolean createImageFile() {
-
-        try {
-
-            imageFile = BitmapUtils.createImageFile(requireActivity());
-            return true;
-
-        } catch (IOException ex) {
-
-            ex.printStackTrace();
-        }
-        return false;
+        imageEditorViewModel.setNewImageDataAvailable(true);
     }
 
     private void launchBrowser() {
