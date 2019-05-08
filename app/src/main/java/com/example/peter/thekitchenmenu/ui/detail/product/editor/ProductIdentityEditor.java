@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
 import com.example.peter.thekitchenmenu.R;
+import com.example.peter.thekitchenmenu.data.model.ProductIdentityModel;
 import com.example.peter.thekitchenmenu.databinding.ProductIdentityEditorBinding;
 import com.example.peter.thekitchenmenu.viewmodels.ProductIdentityViewModel;
 
@@ -14,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 public class ProductIdentityEditor extends Fragment {
@@ -39,6 +41,7 @@ public class ProductIdentityEditor extends Fragment {
         identityEditorBinding.setLifecycleOwner(this);
 
         setViewModel();
+        setObservers();
         setValidationHandler();
         setBindingInstanceVariables();
         setupSpinners();
@@ -52,6 +55,16 @@ public class ProductIdentityEditor extends Fragment {
                 get(ProductIdentityViewModel.class);
     }
 
+    private void setObservers() {
+
+        final Observer<ProductIdentityModel> identityModelObserver = identityModel -> {
+
+            identityViewModel.setNewIdentityModel(identityModel);
+        };
+
+        identityViewModel.getIdentityModel().observe(this, identityModelObserver);
+    }
+
     private void setValidationHandler() {
 
         identityEditorBinding.setTextValidation(identityViewModel.getTextValidationHandler());
@@ -59,7 +72,7 @@ public class ProductIdentityEditor extends Fragment {
 
     private void setBindingInstanceVariables() {
 
-        identityEditorBinding.setIdentityModel(identityViewModel.getIdentityModel());
+        identityEditorBinding.setIdentityModel(identityViewModel.getNewIdentityModel());
     }
 
     private void setupSpinners() {

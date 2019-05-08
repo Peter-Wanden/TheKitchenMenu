@@ -60,11 +60,11 @@ public class ProductIdentityTextValidationHandler {
 
                 case R.id.editable_description:
 
-                    return !viewModel.getIdentityModel().getDescription().equals(newText);
+                    return !viewModel.getNewIdentityModel().getDescription().equals(newText);
 
                 case R.id.editable_made_by:
 
-                    return !viewModel.getIdentityModel().getMadeBy().equals(newText);
+                    return !viewModel.getNewIdentityModel().getMadeBy().equals(newText);
 
                 default:
                     return false;
@@ -122,7 +122,7 @@ public class ProductIdentityTextValidationHandler {
 
                 case R.id.editable_description:
 
-                    viewModel.getIdentityModel().setDescription(newText);
+                    viewModel.getNewIdentityModel().setDescription(newText);
 
                     if (result == ValidateTextLength.VALIDATED)
                         viewModel.setDescriptionValidated(true);
@@ -133,7 +133,7 @@ public class ProductIdentityTextValidationHandler {
 
                 case R.id.editable_made_by:
 
-                    viewModel.getIdentityModel().setMadeBy(newText);
+                    viewModel.getNewIdentityModel().setMadeBy(newText);
 
                     if (result == ValidateTextLength.VALIDATED)
                         viewModel.setMadeByValidated(true);

@@ -1,18 +1,19 @@
 package com.example.peter.thekitchenmenu.ui.detail.product.editor;
 
-import android.content.Intent;
-import android.util.Log;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
+import com.example.peter.thekitchenmenu.data.model.ImageModel;
+import com.example.peter.thekitchenmenu.data.model.ProductIdentityModel;
+import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubType;
 import com.example.peter.thekitchenmenu.viewmodels.ImageEditorViewModel;
 import com.example.peter.thekitchenmenu.databinding.ProductEditorBinding;
-import com.example.peter.thekitchenmenu.data.entity.ProductUserDataEntity;
 import com.example.peter.thekitchenmenu.viewmodels.ProductEditorViewModel;
 import com.example.peter.thekitchenmenu.viewmodels.ProductIdentityViewModel;
 import com.example.peter.thekitchenmenu.viewmodels.ProductMeasurementViewModel;
-import com.example.peter.thekitchenmenu.viewmodels.ProductUserDataEditorViewModel;
 
 import androidx.lifecycle.Observer;
 import androidx.annotation.Nullable;
@@ -32,7 +33,6 @@ public class ProductEditor extends AppCompatActivity {
 
     ProductIdentityViewModel identityEditorViewModel;
     ProductMeasurementViewModel measurementEditorViewModel;
-    ProductUserDataEditorViewModel userDataEditorViewModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,20 +41,19 @@ public class ProductEditor extends AppCompatActivity {
         initialiseViews();
         setViewModels();
         setObservers();
-        setModelValidationObservers();
 
         // TODO - Get the intent, establish if existing product to edit or new product to create
-        Intent intent = getIntent();
-
-        if (intent != null && intent.hasExtra(PRODUCT_ID)) {
-
-            productEditorViewModel.isNewProduct(false);
-
-        } else {
-
-            productEditorViewModel.isNewProduct(true);
-
-        }
+//        Intent intent = getIntent();
+//
+//        if (intent != null && intent.hasExtra(PRODUCT_ID)) {
+//
+//            productEditorViewModel.isNewProduct(false);
+//
+//        } else {
+//
+//            productEditorViewModel.isNewProduct(true);
+//
+//        }
 
         setTitle(productEditorViewModel.getTitle());
     }
@@ -79,126 +78,60 @@ public class ProductEditor extends AppCompatActivity {
 
         measurementEditorViewModel = ViewModelProviders.of(
                 this).get(ProductMeasurementViewModel.class);
-
-        userDataEditorViewModel = ViewModelProviders.of(
-                this).get(ProductUserDataEditorViewModel.class);
     }
 
     private void setObservers() {
 
-        // Dish out the entities to the models
+        // Dish out the entity values to the models
         final Observer<ProductEntity> productObserver = productEntity -> {
 
             if (productEntity != null) {
 
-                imageEditorViewModel.getImageModel().setRemoteImageUri(
-                        productEntity.getRemoteImageUri());
+                ImageModel imageModel = new ImageModel();
+                imageModel.setWebImageUrl(productEntity.getWebImageUrl());
+                imageModel.setRemoteSmallImageUri(imageModel.getRemoteSmallImageUri());
+                imageModel.setRemoteMediumImageUri(imageModel.getRemoteMediumImageUri());
+                imageModel.setRemoteLargeImageUri(imageModel.getRemoteLargeImageUri());
 
-                identityEditorViewModel.getIdentityModel().setDescription(
-                        productEntity.getDescription());
+                productEditorViewModel.getImageModel().setValue(imageModel);
 
-                identityEditorViewModel.getIdentityModel().setMadeBy(
-                        productEntity.getMadeBy());
+                ProductIdentityModel identityModel = new ProductIdentityModel();
+                identityModel.setDescription(productEntity.getDescription());
+                identityModel.setMadeBy(productEntity.getMadeBy());
+                identityModel.setCategory(productEntity.getCategory());
+                identityModel.setShelfLife(productEntity.getShelfLife());
 
-                identityEditorViewModel.getIdentityModel().setCategory(
-                        productEntity.getCategory());
+                productEditorViewModel.getIdentityModel().setValue(identityModel);
 
-                identityEditorViewModel.getIdentityModel().setShelfLife(
-                        productEntity.getShelfLife());
+                ProductMeasurementModel measurementModel = new ProductMeasurementModel();
+                measurementModel.setMeasurementSubType(
+                        MeasurementSubType.values()[productEntity.getUnitOfMeasureSubType()]);
+                measurementModel.setNumberOfItems(productEntity.getNumberOfItems());
+                measurementModel.setBaseSiUnits(productEntity.getBaseSiUnits());
 
-                measurementEditorViewModel.getMeasurementValidation().changeUnitOfMeasure(
-                        productEntity.getUnitOfMeasureSubType());
-
-                measurementEditorViewModel.getMeasurementValidation().numberOfItemsUpdated(
-                        productEntity.getNumberOfItems());
-
-                boolean baseSiUnitsAreSet =
-                        measurementEditorViewModel.getMeasurementValidation().setBaseSiUnits(
-                        productEntity.getBaseSiUnits());
-
-                if (baseSiUnitsAreSet) {
-                    Log.d(TAG, "tkm - setObservers: Base units set!");
-                }
+                productEditorViewModel.getMeasurementModel().setValue(measurementModel);
             }
         };
 
-        productEditorViewModel.getProductEntity().observe(
-                this, productObserver);
+        productEditorViewModel.getProductEntity().observe(this, productObserver);
 
-        final Observer<ProductUserDataEntity> userDataObserver = userDataEntity -> {
+        // Dish out the models to the view models
+        final Observer<ImageModel> imageEditorObserver = imageModel -> {
 
-            if (userDataEntity != null) {
-
-                imageEditorViewModel.getImageModel().setLocalImageUri(
-                        userDataEntity.getLocalImageUri());
-
-                userDataEditorViewModel.getUserDataModel().setRetailer(
-                        userDataEntity.getRetailer());
-
-                userDataEditorViewModel.getUserDataModel().setPrice(
-                        userDataEntity.getPrice());
-
-                userDataEditorViewModel.getUserDataModel().setLocationRoom(
-                        userDataEntity.getLocationRoom());
-
-                userDataEditorViewModel.getUserDataModel().setLocationInRoom(
-                        userDataEntity.getLocationInRoom());
-            }
+            imageEditorViewModel.getImageModel().setValue(imageModel);
+            Log.d(TAG, "setObservers: image model updated");
         };
 
-        productEditorViewModel.getProductUserDataEntity().observe(
-                this, userDataObserver);
-    }
+        productEditorViewModel.getImageModel().observe(this, imageEditorObserver);
 
-    private void setModelValidationObservers() {
+        final Observer<ProductIdentityModel> identityModelObserver = newIdentityModel ->
+                identityEditorViewModel.getIdentityModel().setValue(newIdentityModel);
 
-        final Observer<Boolean> imageModelIsValid = imageIsValid -> {
+        productEditorViewModel.getIdentityModel().observe(this, identityModelObserver);
 
-            if (imageIsValid) checkAllProductModelsAreValidated();
-        };
+        final Observer<ProductMeasurementModel> measurementModelObserver = newMeasurementModel ->
+                measurementEditorViewModel.getMeasurementModel().setValue(newMeasurementModel);
 
-        imageEditorViewModel.getImageModelIsValid().observe(
-                this, imageModelIsValid);
-
-        final Observer<Boolean> identityModelIsValid = identityIsValid -> {
-
-            if (identityIsValid) checkAllProductModelsAreValidated();
-        };
-
-        identityEditorViewModel.getGetIdentityModelIsValid().observe(
-                this, identityModelIsValid);
-
-        final Observer<Boolean> measurementModelIsValid = measurementIsValid -> {
-
-            if (measurementIsValid) checkAllProductModelsAreValidated();
-        };
-
-        measurementEditorViewModel.getMeasurementIsValid().observe(
-                this, measurementModelIsValid);
-
-        final Observer<Boolean> userDataModelIsValid = userDataValid -> {
-
-            if (userDataValid) checkAllProductModelsAreValidated();
-        };
-
-        userDataEditorViewModel.getUserDataModelIsValidated().observe(
-                this, userDataModelIsValid);
-
-        final Observer<Boolean> entityModelsAreValid = entitiesValid -> {
-
-            // data entities can be saved
-        };
-
-        productEditorViewModel.getEntitiesAreValid().observe(
-                this, entityModelsAreValid);
-    }
-
-    private void checkAllProductModelsAreValidated() {
-
-        if (identityEditorViewModel.getGetIdentityModelIsValid().getValue() == Boolean.TRUE) {
-
-            productEditorViewModel.getEntitiesAreValid().setValue(Boolean.TRUE);
-            Log.d(TAG, "tkm - all entities are valid, saving entity data.");
-        }
+        productEditorViewModel.getMeasurementModel().observe(this, measurementModelObserver);
     }
 }

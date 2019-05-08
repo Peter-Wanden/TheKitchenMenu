@@ -5,7 +5,7 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.peter.thekitchenmenu.data.model.ProductImageModel;
+import com.example.peter.thekitchenmenu.data.model.ImageModel;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 import com.example.peter.thekitchenmenu.utils.imageeditor.ImageEditorHandler;
 import com.example.peter.thekitchenmenu.utils.imageeditor.LastImageUpdated;
@@ -16,7 +16,10 @@ public class ImageEditorViewModel extends ObservableViewModel {
     private boolean deviceHasCamera = false;
     private boolean hasCameraPermissions = false;
 
-    private ProductImageModel imageModel = new ProductImageModel();
+    // TODO CHECK model and newModel are different before updating to prevent loops
+    private MutableLiveData<ImageModel> imageModel = new MutableLiveData<>();
+    private ImageModel newImageModel = new ImageModel();
+
     private MutableLiveData<Boolean> imageModelIsValid = new MutableLiveData<>();
     private ImageEditorHandler imageEditorHandler = new ProductImageEditorHandler();
 
@@ -30,14 +33,24 @@ public class ImageEditorViewModel extends ObservableViewModel {
     private final SingleLiveEvent<Void> rotateImageEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<Void> launchBrowserEvent = new SingleLiveEvent<>();
 
-    private String temporaryImagePath;
-
     public ImageEditorViewModel(@NonNull Application application) {
         super(application);
     }
 
-    public ProductImageModel getImageModel() {
+    public MutableLiveData<ImageModel> getImageModel() {
         return imageModel;
+    }
+
+    public void setImageModel(MutableLiveData<ImageModel> imageModel) {
+        this.imageModel = imageModel;
+    }
+
+    public ImageModel getNewImageModel() {
+        return newImageModel;
+    }
+
+    public void setNewImageModel(ImageModel newImageModel) {
+        this.newImageModel = newImageModel;
     }
 
     public MutableLiveData<Boolean> getImageModelIsValid() {
@@ -97,11 +110,12 @@ public class ImageEditorViewModel extends ObservableViewModel {
         return launchBrowserEvent;
     }
 
-    public String getTemporaryImagePath() {
-        return temporaryImagePath;
-    }
+    public void setLocalImageUris(String localSmallImageUri,
+                                  String localMediumImageUri,
+                                  String localLargeImageUri) {
 
-    public void setTemporaryImagePath(String temporaryImagePath) {
-        this.temporaryImagePath = temporaryImagePath;
+        newImageModel.setLocalSmallImageUri(localSmallImageUri);
+        newImageModel.setLocalMediumImageUri(localMediumImageUri);
+        newImageModel.setLocalLargeImageUri(localLargeImageUri);
     }
 }

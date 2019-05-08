@@ -12,8 +12,8 @@ public class ImageBindingAdapters {
     private static final String TAG = "UniversalBindingAdapter";
 
     @BindingAdapter(value = {
-            "app:localImageUri",
-            "app:remoteImageUri",
+            "app:localLargeImageUri",
+            "app:remoteLargeImageUri",
             "app:webImageUrl"},
             requireAll = false)
     public static void setImage(ImageView imageView,

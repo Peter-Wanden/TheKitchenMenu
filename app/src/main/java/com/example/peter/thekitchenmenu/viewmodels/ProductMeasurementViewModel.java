@@ -10,14 +10,16 @@ import androidx.lifecycle.MutableLiveData;
 
 public class ProductMeasurementViewModel extends ObservableViewModel {
 
-    private ProductMeasurementModel measurement;
+    private MutableLiveData<ProductMeasurementModel> measurementModel = new MutableLiveData<>();
+
+    // Whenever a newMeasurement is valid, set it to measurement model
+    private ProductMeasurementModel newMeasurement;
     private ProductMeasurementHandler measurementValidation;
-    private MutableLiveData<Boolean> measurementIsValid = new MutableLiveData<>(false);
 
     public ProductMeasurementViewModel(@NonNull Application application) {
         super(application);
 
-        measurement = new ProductMeasurementModel();
+        newMeasurement = new ProductMeasurementModel();
 
         measurementValidation = new ProductMeasurementHandler(
                 application,
@@ -25,15 +27,19 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
 
     }
 
+    public MutableLiveData<ProductMeasurementModel> getMeasurementModel() {
+        return measurementModel;
+    }
+
     public ProductMeasurementHandler getMeasurementValidation() {
         return measurementValidation;
     }
 
-    public ProductMeasurementModel getMeasurement() {
-        return measurement;
+    public ProductMeasurementModel getNewMeasurement() {
+        return newMeasurement;
     }
 
-    public MutableLiveData<Boolean> getMeasurementIsValid() {
-        return measurementIsValid;
+    public void setNewMeasurement(ProductMeasurementModel newMeasurement) {
+        this.newMeasurement = newMeasurement;
     }
 }

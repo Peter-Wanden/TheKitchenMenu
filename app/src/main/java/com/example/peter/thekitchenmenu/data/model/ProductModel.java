@@ -23,7 +23,7 @@ public class ProductModel extends BaseObservable implements Parcelable {
 
     private static final String TAG = "ProductModel";
 
-    // ProductImageModel fields
+    // ImageModel fields
     private String remoteImageUri;
     private String localImageUri;
 
@@ -84,7 +84,7 @@ public class ProductModel extends BaseObservable implements Parcelable {
         this.unitOfMeasureSubType = productEntity.getUnitOfMeasureSubType();
         this.packAvePrice = productEntity.getPackAvePrice();
         this.createdBy = productEntity.getCreatedBy();
-        this.remoteImageUri = productEntity.getRemoteImageUri();
+        this.remoteImageUri = productEntity.getRemoteLargeImageUri();
         this.productCreateDate = productEntity.getCreateDate();
         this.productLastUpdate = productEntity.getLastUpdate();
     }
@@ -112,7 +112,7 @@ public class ProductModel extends BaseObservable implements Parcelable {
         this.unitOfMeasureSubType = productEntity.getUnitOfMeasureSubType();
         this.packAvePrice = productEntity.getPackAvePrice();
         this.createdBy = productEntity.getCreatedBy();
-        this.remoteImageUri = productEntity.getRemoteImageUri();
+        this.remoteImageUri = productEntity.getRemoteLargeImageUri();
         this.productCreateDate = productEntity.getCreateDate();
         this.productLastUpdate = productEntity.getLastUpdate();
         this.remoteProductId = productEntity.getRemoteProductId();
@@ -222,7 +222,7 @@ public class ProductModel extends BaseObservable implements Parcelable {
         result.put(UNIT_OF_MEASURE_SUB_TYPE, unitOfMeasureSubType);
         result.put(PROD_COMM_PRICE_AVE, packAvePrice);
         result.put(CREATED_BY, createdBy);
-        result.put(REMOTE_IMAGE_URI, remoteImageUri);
+        result.put(REMOTE_LARGE_IMAGE_URI, remoteImageUri);
         result.put(ProductEntity.CREATE_DATE, productCreateDate);
         result.put(ProductEntity.LAST_UPDATE, productLastUpdate);
 
@@ -243,7 +243,7 @@ public class ProductModel extends BaseObservable implements Parcelable {
         result.put(UNIT_OF_MEASURE_SUB_TYPE, unitOfMeasureSubType);
         result.put(PROD_COMM_PRICE_AVE, packAvePrice);
         result.put(CREATED_BY, createdBy);
-        result.put(REMOTE_IMAGE_URI, remoteImageUri);
+        result.put(REMOTE_LARGE_IMAGE_URI, remoteImageUri);
         result.put(ProductEntity.CREATE_DATE, productCreateDate);
         result.put(ProductEntity.LAST_UPDATE, productLastUpdate);
 
@@ -337,7 +337,7 @@ public class ProductModel extends BaseObservable implements Parcelable {
         setUnitOfMeasureSubType(entity.getUnitOfMeasureSubType());
         setPackAvePrice(entity.getPackAvePrice());
         setCreatedBy(entity.getCreatedBy());
-        setRemoteImageUri(entity.getRemoteImageUri());
+        setRemoteImageUri(entity.getRemoteLargeImageUri());
         setProductCreateDate(entity.getCreateDate());
         setProductLastUpdate(entity.getLastUpdate());
         setRemoteProductId(entity.getRemoteProductId());

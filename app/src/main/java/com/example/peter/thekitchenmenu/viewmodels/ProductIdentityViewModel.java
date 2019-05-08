@@ -10,10 +10,14 @@ import androidx.lifecycle.MutableLiveData;
 
 public class ProductIdentityViewModel extends ObservableViewModel {
 
-    private ProductIdentityModel identityModel = new ProductIdentityModel();
+    private MutableLiveData<ProductIdentityModel> identityModel = new MutableLiveData<>();
     private ProductIdentityTextValidationHandler textValidationHandler;
-    private MutableLiveData<Boolean> getIdentityModelIsValid = new MutableLiveData<>(false);
 
+    // New model created as user types
+    private ProductIdentityModel newIdentityModel = new ProductIdentityModel();
+
+    // Tracking of valid fields. When all are true post new model to mutable identityModel
+    // TODO CHECK model and newModel are different before updating to prevent loops
     private boolean descriptionValidated = false;
     private boolean madeByValidated = false;
 
@@ -25,9 +29,16 @@ public class ProductIdentityViewModel extends ObservableViewModel {
                 this);
     }
 
-    public ProductIdentityModel getIdentityModel() {
-
+    public MutableLiveData<ProductIdentityModel> getIdentityModel() {
         return identityModel;
+    }
+
+    public ProductIdentityModel getNewIdentityModel() {
+        return newIdentityModel;
+    }
+
+    public void setNewIdentityModel(ProductIdentityModel newIdentityModel) {
+        this.newIdentityModel = newIdentityModel;
     }
 
     public ProductIdentityTextValidationHandler getTextValidationHandler() {
@@ -43,9 +54,5 @@ public class ProductIdentityViewModel extends ObservableViewModel {
     public void setMadeByValidated(boolean madeByValidated) {
 
         this.madeByValidated = madeByValidated;
-    }
-
-    public MutableLiveData<Boolean> getGetIdentityModelIsValid() {
-        return getIdentityModelIsValid;
     }
 }

@@ -51,7 +51,6 @@ public abstract class Constants {
     /* *************
      * Permissions *
      ***************/
-    public static final int REQUEST_IMAGE_CAPTURE = 1;
     public static final int REQUEST_STORAGE_PERMISSION = 2;
     public static final int REQUEST_IMAGE_MEDIA_STORE = 3;
     public static final int REQUEST_IMAGE_PICKER = 4;

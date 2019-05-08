@@ -26,6 +26,8 @@ public class ProductMeasurementModel extends BaseObservable {
     private int packMeasurementTwo = 0;
     private int itemMeasurementTwo = 0;
 
+    private double baseSiUnits;
+
 
     @Bindable
     public MeasurementSubType getMeasurementSubType() {
@@ -60,6 +62,14 @@ public class ProductMeasurementModel extends BaseObservable {
 
         this.numberOfItems = numberOfItems;
         notifyPropertyChanged(BR.numberOfItems);
+    }
+
+    public double getBaseSiUnits() {
+        return baseSiUnits;
+    }
+
+    public void setBaseSiUnits(double baseSiUnits) {
+        this.baseSiUnits = baseSiUnits;
     }
 
     @Bindable

@@ -18,8 +18,9 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
+import com.example.peter.thekitchenmenu.data.model.ImageModel;
 import com.example.peter.thekitchenmenu.databinding.ImageEditorBinding;
-import com.example.peter.thekitchenmenu.utils.BitmapUtils;
+import com.example.peter.thekitchenmenu.utils.imageeditor.BitmapUtils;
 import com.example.peter.thekitchenmenu.utils.imageeditor.LastImageUpdated;
 import com.example.peter.thekitchenmenu.viewmodels.ImageEditorViewModel;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -31,6 +32,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import java.io.File;
@@ -43,10 +45,21 @@ public class ImageEditor extends Fragment {
 
     private static final String TAG = "ImageEditor";
 
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final String FILE_PROVIDER_AUTHORITY = "com.example.peter.thekitchenmenu.fileprovider";
+
     private ImageEditorBinding imageEditorBinding;
     private ImageEditorViewModel imageEditorViewModel;
-    private File imageFile = null;
-    private Uri imageFileUri = null;
+
+    private File tempOriginalFile = null;
+    private File tempLargeImage = null;
+    private File tempMediumImage = null;
+    private File tempSmallImage = null;
+    private String tempOriginalImagePath = null;
+    private Uri tempOriginalImageUri = null;
+    private String tempLargeFileUri = null;
+    private String tempMediumFileUri = null;
+    private String tempSmallFileUri = null;
 
     @Nullable
     @Override
@@ -63,6 +76,7 @@ public class ImageEditor extends Fragment {
         imageEditorBinding.setLifecycleOwner(this);
 
         setViewModel();
+        setObservers();
         setBindingInstanceVariables();
         subscribeToEvents();
         checkHardware();
@@ -76,10 +90,18 @@ public class ImageEditor extends Fragment {
                 get(ImageEditorViewModel.class);
     }
 
+    private void setObservers() {
+
+        Observer<ImageModel> imageModelObserver =
+                newImageModel -> imageEditorViewModel.setNewImageModel(newImageModel);
+
+        imageEditorViewModel.getImageModel().observe(this, imageModelObserver);
+    }
+
     private void setBindingInstanceVariables() {
 
         imageEditorBinding.setImageViewModel(imageEditorViewModel);
-        imageEditorBinding.setImageModel(imageEditorViewModel.getImageModel());
+        imageEditorBinding.setImageModel(imageEditorViewModel.getNewImageModel());
         imageEditorBinding.setImageHandler(imageEditorViewModel.getImageEditorHandler());
     }
 
@@ -96,18 +118,15 @@ public class ImageEditor extends Fragment {
 
         imageEditorViewModel.getLaunchBrowserEvent().observe(
                 this, event -> launchBrowser());
-
-
     }
 
+    // Todo - implement
     private void checkHardware() {
 
-        imageEditorViewModel.setDeviceHasCamera(
-                requireActivity().getPackageManager().
+        imageEditorViewModel.setDeviceHasCamera(requireActivity().getPackageManager().
                         hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY));
     }
 
-    // TODO - Move all camera code to another (utils) class
     private void launchCamera() {
 
         // TODO - implement for no camera (already done in manifest!!)
@@ -120,60 +139,78 @@ public class ImageEditor extends Fragment {
 
         // https://developer.android.com/training/camera/photobasics - Using camera app
         // https://developer.android.com/training/camera/cameradirect.html - Controlling the camera
-        // Todo, if the imageFile is !=null, delete the file, then recreate it.
-        imageFile = null;
-
+        // Todo, if the localTempLargeImage is !=null, delete the file, then recreate it.
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         if (takePictureIntent.resolveActivity(requireActivity().getPackageManager()) != null) {
 
-            if (createImageFile()) {
+            try {
 
-                imageEditorViewModel.setTemporaryImagePath(imageFile.getAbsolutePath());
+                tempOriginalFile = BitmapUtils.createTempImageFile(requireContext());
 
-                imageFileUri = FileProvider.getUriForFile(requireActivity(),
-                        Constants.FILE_PROVIDER_AUTHORITY, imageFile);
+            } catch (IOException e) {
 
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageFileUri);
+                e.printStackTrace();
+            }
 
-                startActivityForResult(takePictureIntent, Constants.REQUEST_IMAGE_CAPTURE);
+            if (tempOriginalFile != null) {
+
+                tempOriginalImagePath = tempOriginalFile.getAbsolutePath();
+
+                tempOriginalImageUri = FileProvider.getUriForFile(
+                        requireContext(),
+                        FILE_PROVIDER_AUTHORITY,
+                        tempOriginalFile);
+
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, tempOriginalImageUri);
+
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
         }
     }
 
-    private boolean createImageFile() {
+    private void createImageFiles() {
 
         try {
 
-            imageFile = BitmapUtils.createImageFile(requireActivity());
-            return true;
+            // TODO - Create one file, resample, save, then create the next one
 
-        } catch (IOException ex) {
+            tempSmallImage = BitmapUtils.createTempImageFile(requireActivity());
+            tempMediumImage = BitmapUtils.createTempImageFile(requireActivity());
+            tempLargeImage = BitmapUtils.createTempImageFile(requireActivity());
 
-            ex.printStackTrace();
+            getUris();
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return false;
+    }
+
+    private void getUris() {
+
+        tempSmallFileUri = tempSmallImage.getAbsolutePath();
+        tempMediumFileUri = tempMediumImage.getAbsolutePath();
+        tempLargeFileUri = tempLargeImage.getAbsolutePath();
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if (requestCode == Constants.REQUEST_IMAGE_CAPTURE &&
+        if (requestCode == REQUEST_IMAGE_CAPTURE &&
                 resultCode == RESULT_OK)
 
             cropImage();
-//            processAndSetImage();
-//            performCrop();
 
-        else if (requestCode == Constants.REQUEST_IMAGE_CAPTURE &&
+        else if (requestCode == REQUEST_IMAGE_CAPTURE &&
                 resultCode == RESULT_CANCELED)
 
-            BitmapUtils.deleteImageFile(requireActivity(),
-                    imageEditorViewModel.getTemporaryImagePath());
+            BitmapUtils.deleteImageFile(requireActivity(), tempOriginalImagePath);
 
         else if (requestCode == Constants.REQUEST_IMAGE_MEDIA_STORE &&
-                resultCode == RESULT_OK)
+                resultCode == RESULT_OK) {
 
-            processAndSetImage(imageFileUri);
+//            processAndSetImage(tempLargeFileUri);
+        }
+
 
         else if (requestCode == Constants.REQUEST_IMAGE_MEDIA_STORE &&
                 resultCode == RESULT_CANCELED)
@@ -183,13 +220,13 @@ public class ImageEditor extends Fragment {
         else if (requestCode == Constants.REQUEST_IMAGE_PICKER &&
                 resultCode == RESULT_OK) {
 
-            imageFileUri = data.getData();
+//            tempLargeFileUri = data.getData();
 
-            if (imageFile != null) {
-
-                imageEditorViewModel.getImageModel().setLocalImageUri(imageFileUri.toString());
-                imageEditorViewModel.setLastImageUpdated(LastImageUpdated.LOCAL_IMAGE);
-            }
+//            if (localTempLargeImage != null) {
+//
+//                imageEditorViewModel.getImageModel().setLocalImageUri(tempLargeFileUri.toString());
+//                imageEditorViewModel.setLastImageUpdated(LastImageUpdated.LOCAL_IMAGE);
+//            }
 
             Log.d(TAG, "tkm - onActivityResult: image uri is null");
 
@@ -204,8 +241,8 @@ public class ImageEditor extends Fragment {
 
             if (resultCode == RESULT_OK) {
 
-                Uri resultUri = result.getUri();
-                processAndSetImage(resultUri);
+                tempOriginalImageUri = result.getUri();
+                processAndSetImage();
 
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
 
@@ -224,7 +261,7 @@ public class ImageEditor extends Fragment {
 
     private void cropImage() {
 
-        CropImage.activity(imageFileUri).
+        CropImage.activity(tempOriginalImageUri).
                 setAspectRatio(1,1).
                 start(requireContext(), this);
     }
@@ -252,7 +289,8 @@ public class ImageEditor extends Fragment {
         return Bitmap.createScaledBitmap(image, width, height, filter);
     }
 
-    private void processAndSetImage(Uri resultUri) {
+    private void processAndSetImage() {
+
 
 
 //        Bitmap bitmap = BitmapFactory.decodeFile();
@@ -263,16 +301,16 @@ public class ImageEditor extends Fragment {
 
         // TODO - DON'T FORGET TO DELETE OLD BITMAPS AND URI'S
 
-        Glide.with(this).load(resultUri).into(imageEditorBinding.productImage);
+        Glide.with(this).load(tempOriginalImageUri).into(imageEditorBinding.productImage);
 
 //        BitmapUtils.resampleImage(
 //                requireActivity(),
 //                null,
-//                imageEditorViewModel.getTemporaryImagePath());
+//                imageEditorViewModel.getTempSmallImagePath());
 
 //        imageEditorViewModel.
 //                getImageModel().
-//                setLocalImageUri(imageEditorViewModel.getTemporaryImagePath());
+//                setLocalLargeImageUri(imageEditorViewModel.getTempSmallImagePath());
     }
 
     private void requestPermissions() {
@@ -320,5 +358,13 @@ public class ImageEditor extends Fragment {
         String query = "";
         intent.putExtra(SearchManager.QUERY, query);
         startActivity(intent);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        // TODO - delete the large original file if it exist
+        
     }
 }

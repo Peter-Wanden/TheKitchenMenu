@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.SpinnerAdapter;
 
 import com.example.peter.thekitchenmenu.R;
+import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
 import com.example.peter.thekitchenmenu.databinding.ProductMeasurementEditorBinding;
 import com.example.peter.thekitchenmenu.ui.detail.SpinnerItemType;
 import com.example.peter.thekitchenmenu.ui.detail.UnitOfMeasureSpinnerAdapter;
@@ -22,6 +23,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 public class ProductMeasurementEditor extends Fragment {
@@ -29,7 +31,7 @@ public class ProductMeasurementEditor extends Fragment {
     private static final String TAG = "ProductMeasurementEditor";
 
     private ProductMeasurementEditorBinding measurementEditorBinding;
-    private ProductMeasurementViewModel viewModel;
+    private ProductMeasurementViewModel measurementViewModel;
 
     @Nullable
     @Override
@@ -47,6 +49,7 @@ public class ProductMeasurementEditor extends Fragment {
         measurementEditorBinding.setLifecycleOwner(this);
 
         setViewModel();
+        setObservers();
         setValidationHandlersToBinding();
         setBindingInstanceVariables();
         setupUnitOfMeasureSpinner();
@@ -56,17 +59,27 @@ public class ProductMeasurementEditor extends Fragment {
 
     private void setViewModel() {
 
-        viewModel = ViewModelProviders.of(requireActivity()).get(ProductMeasurementViewModel.class);
+        measurementViewModel = ViewModelProviders.of(requireActivity()).
+                get(ProductMeasurementViewModel.class);
+    }
+
+    private void setObservers() {
+
+        final Observer<ProductMeasurementModel> measurementModelObserver =
+                newMeasurementModel -> measurementViewModel.setNewMeasurement(newMeasurementModel);
+
+        measurementViewModel.getMeasurementModel().observe(this, measurementModelObserver);
     }
 
     private void setValidationHandlersToBinding() {
 
-        measurementEditorBinding.setMeasurementValidation(viewModel.getMeasurementValidation());
+        measurementEditorBinding.
+                setMeasurementValidation(measurementViewModel.getMeasurementValidation());
     }
 
     private void setBindingInstanceVariables() {
 
-        measurementEditorBinding.setMeasurement(viewModel.getMeasurement());
+        measurementEditorBinding.setMeasurement(measurementViewModel.getNewMeasurement());
     }
 
     private void setupUnitOfMeasureSpinner() {

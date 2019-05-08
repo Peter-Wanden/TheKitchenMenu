@@ -20,8 +20,7 @@
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
-            android:onClick="@{() -> viewModel.onFabClick()}"
-            android:visibility='@{viewModel.entitiesAreValid ? View.VISIBLE : View.GONE}'
+            android:visibility="@{View.GONE}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/fab_margin"
@@ -75,14 +74,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     bind:layout="@layout/product_measurement_editor">
-                </fragment>
-
-                <fragment
-                    android:id="@+id/product_user_data_editor"
-                    android:name="com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductUserDataEditor"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    bind:layout="@layout/product_user_data_editor">
                 </fragment>
             </LinearLayout>
         </ScrollView>

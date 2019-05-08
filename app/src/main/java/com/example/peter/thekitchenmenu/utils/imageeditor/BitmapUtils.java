@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.utils;
+package com.example.peter.thekitchenmenu.utils.imageeditor;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -27,55 +27,46 @@ import java.util.Locale;
 import androidx.loader.content.CursorLoader;
 
 public class BitmapUtils {
+
+    private static final String TAG = "BitmapUtils";
     // TODO - Use ForkJoinPool for a threaded implementation
     // TODO - See: https://docs.oracle.com/javase/tutorial/essential/concurrency/forkjoin.html
+    // TODO - Can also use a callback if fast enough
 
-    private static final String TAG = BitmapUtils.class.getSimpleName();
-
-    /* Image capture - Create unique file name */
-    public static File createImageFile(Context context) throws IOException {
-
-        @SuppressLint("SimpleDateFormat")
+    /**
+     * Creates the temporary image file in the cache directory.
+     *
+     * @return The temporary image file.
+     * @throws IOException Thrown if there is an error creating the file
+     */
+    public static File createTempImageFile(Context context) throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
                 Locale.getDefault()).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
 
         File storageDir = context.getExternalCacheDir();
+        Log.e(TAG, "Temp file storage directory is: " + storageDir);
 
-        // Create temp file
         return File.createTempFile(
                 imageFileName,  /* prefix */
-                ".jpg",   /* suffix */
+                ".jpg",         /* suffix */
                 storageDir      /* directory */
         );
     }
 
     /**
-     * Re-samples the captured photo to fit the screen for better memory usage.
+     * Resamples the captured photo to fit the screen for better memory usage.
      *
      * @param context   The application context.
-     * @param uri The Uri of the image to be re-sampled.
-     * @return The re-sampled bitmap
+     * @param imagePath The path of the photo to be resampled.
+     * @return The resampled bitmap
      */
-    public static Bitmap resampleImage(Context context, Uri uri, String imagePath) {
-
-        Log.d(TAG, "tkm - resampleImage: image path is: " + imagePath);
-
-        /* If imagePath is null we have been given a Uri, so decode to string */
-        if (imagePath == null) {
-            // Extract the image path from the Uri
-            imagePath = getAbsolutePathFromUri(context, uri);
-        }
+    public static Bitmap resamplePic(Context context, String imagePath) {
 
         // Get device screen size information
         DisplayMetrics metrics = new DisplayMetrics();
-
         WindowManager manager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-
-        if (manager != null) {
-
-            manager.getDefaultDisplay().getMetrics(metrics);
-        }
+        manager.getDefaultDisplay().getMetrics(metrics);
 
         int targetH = metrics.heightPixels;
         int targetW = metrics.widthPixels;
@@ -83,13 +74,12 @@ public class BitmapUtils {
         // Get the dimensions of the original bitmap
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         bmOptions.inJustDecodeBounds = true;
-
         BitmapFactory.decodeFile(imagePath, bmOptions);
-        int imageW = bmOptions.outWidth;
-        int imageH = bmOptions.outHeight;
+        int photoW = bmOptions.outWidth;
+        int photoH = bmOptions.outHeight;
 
         // Determine how much to scale down the image
-        int scaleFactor = Math.min((imageW / targetW) / 2, (imageH / targetH) /2);
+        int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
 
         // Decode the image file into a Bitmap sized to fill the View
         bmOptions.inJustDecodeBounds = false;

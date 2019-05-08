@@ -148,10 +148,10 @@ public class ProductMeasurementHandler {
             if (measurementHasChangedDouble(viewId, doubleMeasurement)) {
 
                 if (viewId == R.id.pack_editable_measurement_one)
-                    viewModel.getMeasurement().setPackMeasurementOneAsDecimal(doubleMeasurement);
+                    viewModel.getNewMeasurement().setPackMeasurementOneAsDecimal(doubleMeasurement);
 
                 if (viewId == R.id.item_editable_measurement_one)
-                    viewModel.getMeasurement().setItemMeasurementOneAsDecimal(doubleMeasurement);
+                    viewModel.getNewMeasurement().setItemMeasurementOneAsDecimal(doubleMeasurement);
 
                 processDoubleMeasurements(editableMeasurement, doubleMeasurement);
             }
@@ -165,10 +165,10 @@ public class ProductMeasurementHandler {
             if (measurementHasChangedInteger(viewId, integerMeasurement)) {
 
                 if (viewId == R.id.pack_editable_measurement_one)
-                    viewModel.getMeasurement().setPackMeasurementOneAsInt(integerMeasurement);
+                    viewModel.getNewMeasurement().setPackMeasurementOneAsInt(integerMeasurement);
 
                 if (viewId == R.id.item_editable_measurement_one)
-                    viewModel.getMeasurement().setItemMeasurementOneAsInt(integerMeasurement);
+                    viewModel.getNewMeasurement().setItemMeasurementOneAsInt(integerMeasurement);
 
                 processIntegerMeasurements(editableMeasurement, integerMeasurement);
             }
@@ -439,53 +439,53 @@ public class ProductMeasurementHandler {
         Log.d(TAG, "tkm - updateMeasurementModel: Updating measurement model");
         Log.d(TAG, "tkm - updateMeasurementModel: Base units are: " + unitOfMeasure.getBaseSiUnits());
 
-        if (viewModel.getMeasurement().getMeasurementSubType() !=
+        if (viewModel.getNewMeasurement().getMeasurementSubType() !=
                 unitOfMeasure.getMeasurementSubType()) {
 
             Log.d(TAG, "tkm - updateMeasurementModel: Updating measurement Subtype to: " +
                     unitOfMeasure.getMeasurementSubType());
 
-            viewModel.getMeasurement().setMeasurementSubType(
+            viewModel.getNewMeasurement().setMeasurementSubType(
                     unitOfMeasure.getMeasurementSubType());
         }
 
-        if (viewModel.getMeasurement().getNumberOfMeasurementUnits() !=
+        if (viewModel.getNewMeasurement().getNumberOfMeasurementUnits() !=
                 unitOfMeasure.getNumberOfMeasurementUnits()) {
 
             Log.d(TAG, "tkm - updateMeasurementModel: Updating number of measurement units to: " +
                     unitOfMeasure.getNumberOfMeasurementUnits());
 
-            viewModel.getMeasurement().setNumberOfMeasurementUnits(
+            viewModel.getNewMeasurement().setNumberOfMeasurementUnits(
                     unitOfMeasure.getNumberOfMeasurementUnits());
         }
 
-        if (viewModel.getMeasurement().getNumberOfItems() !=
+        if (viewModel.getNewMeasurement().getNumberOfItems() !=
                 unitOfMeasure.getNumberOfItems()) {
 
             Log.d(TAG, "tkm - updateMeasurementModel: Updating number of Items to: " +
                     unitOfMeasure.getNumberOfItems());
 
-            viewModel.getMeasurement().setNumberOfItems(
+            viewModel.getNewMeasurement().setNumberOfItems(
                     unitOfMeasure.getNumberOfItems());
         }
 
         if (unitOfMeasure.getMeasurementSubType() == MeasurementSubType.TYPE_IMPERIAL_MASS ||
                 unitOfMeasure.getMeasurementSubType() == MeasurementSubType.TYPE_IMPERIAL_VOLUME) {
 
-            if (viewModel.getMeasurement().getPackMeasurementOneAsDecimal() !=
+            if (viewModel.getNewMeasurement().getPackMeasurementOneAsDecimal() !=
                     unitOfMeasure.getPackMeasurementOne()) {
 
                 Log.d(TAG, "tkm - updateMeasurementModel: Updating pack One DECIMAL to: " +
                         unitOfMeasure.getPackMeasurementOne());
 
-                viewModel.getMeasurement().setPackMeasurementOneAsDecimal(
+                viewModel.getNewMeasurement().setPackMeasurementOneAsDecimal(
                         unitOfMeasure.getPackMeasurementOne());
             }
 
-            if (viewModel.getMeasurement().getItemMeasurementOneAsDecimal() !=
+            if (viewModel.getNewMeasurement().getItemMeasurementOneAsDecimal() !=
                     unitOfMeasure.getItemMeasurementOne()) {
 
-                viewModel.getMeasurement().setItemMeasurementOneAsDecimal(
+                viewModel.getNewMeasurement().setItemMeasurementOneAsDecimal(
                         unitOfMeasure.getItemMeasurementOne());
 
                 Log.d(TAG, "tkm - updateMeasurementModel: Updating Item One DECIMAL to: " +
@@ -494,32 +494,32 @@ public class ProductMeasurementHandler {
 
         } else {
 
-            if (viewModel.getMeasurement().getPackMeasurementOneAsInt() !=
+            if (viewModel.getNewMeasurement().getPackMeasurementOneAsInt() !=
                     (int) unitOfMeasure.getPackMeasurementOne()) {
 
                 Log.d(TAG, "tkm - updateMeasurementModel: Updating Pack One as INTEGER to: " +
                         (int) unitOfMeasure.getPackMeasurementOne());
 
-                viewModel.getMeasurement().setPackMeasurementOneAsInt(
+                viewModel.getNewMeasurement().setPackMeasurementOneAsInt(
                         (int) unitOfMeasure.getPackMeasurementOne());
             }
 
 
-            if (viewModel.getMeasurement().getItemMeasurementOneAsInt() !=
+            if (viewModel.getNewMeasurement().getItemMeasurementOneAsInt() !=
                     (int) unitOfMeasure.getItemMeasurementOne()) {
 
                 Log.d(TAG, "tkm - updateMeasurementModel: Updating Item One as INTEGER to: " +
                         (int) unitOfMeasure.getItemMeasurementOne());
 
-                viewModel.getMeasurement().setItemMeasurementOneAsInt(
+                viewModel.getNewMeasurement().setItemMeasurementOneAsInt(
                         (int) unitOfMeasure.getItemMeasurementOne());
             }
         }
 
-        if (viewModel.getMeasurement().getPackMeasurementTwo() !=
+        if (viewModel.getNewMeasurement().getPackMeasurementTwo() !=
                 unitOfMeasure.getPackMeasurementTwo()) {
 
-            viewModel.getMeasurement().setPackMeasurementTwo(
+            viewModel.getNewMeasurement().setPackMeasurementTwo(
                     unitOfMeasure.getPackMeasurementTwo());
 
             Log.d(TAG, "tkm - updateMeasurementModel: Updating pack Two to: " +
@@ -528,13 +528,13 @@ public class ProductMeasurementHandler {
 
 
         Log.d(TAG, "tkm - updateMeasurementModel: Measurement - Item two is: " +
-                viewModel.getMeasurement().getItemMeasurementTwo() +
+                viewModel.getNewMeasurement().getItemMeasurementTwo() +
                 " Unit of measure Item Two is: " + unitOfMeasure.getItemMeasurementTwo());
 
-        if (viewModel.getMeasurement().getItemMeasurementTwo() !=
+        if (viewModel.getNewMeasurement().getItemMeasurementTwo() !=
                 unitOfMeasure.getItemMeasurementTwo()) {
 
-            viewModel.getMeasurement().setItemMeasurementTwo(
+            viewModel.getNewMeasurement().setItemMeasurementTwo(
                     unitOfMeasure.getItemMeasurementTwo());
 
             Log.d(TAG, "tkm - updateMeasurementModel: Updating Item Two to: " +

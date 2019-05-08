@@ -13,7 +13,7 @@
 
         <variable
             name="imageModel"
-            type="com.example.peter.thekitchenmenu.data.model.ProductImageModel">
+            type="com.example.peter.thekitchenmenu.data.model.ImageModel">
         </variable>
 
         <variable
@@ -78,8 +78,8 @@
             app:layout_constraintEnd_toEndOf="@id/product_image_border"
             app:layout_constraintStart_toStartOf="@id/product_image_border"
             app:layout_constraintDimensionRatio="1:1"
-            app:localImageUri='@{imageModel.localImageUri}'
-            app:remoteImageUri='@{imageModel.remoteImageUri}'
+            app:localLargeImageUri='@{imageModel.localLargeImageUri}'
+            app:remoteLargeImageUri='@{imageModel.remoteLargeImageUri}'
             app:webImageUrl='@{imageModel.webImageUrl}'
             tools:src="@drawable/placeholder">
         </ImageView>

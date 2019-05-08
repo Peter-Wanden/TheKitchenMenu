@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.firebase.database.Exclude;
+import com.google.firebase.database.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,8 +34,9 @@ public class ProductEntity implements Parcelable {
     public static final String PROD_COMM_PRICE_AVE = "packAvePrice";
     public static final String CREATED_BY = "createdBy";
     public static final String WEB_IMAGE_URL = "webImageUrl";
-    public static final String REMOTE_IMAGE_THUMB_URI = "remoteImageThumbUri";
-    public static final String REMOTE_IMAGE_URI = "remoteImageUri";
+    public static final String REMOTE_SMALL_IMAGE_URI = "remoteSmallImageUri";
+    public static final String REMOTE_MEDIUM_IMAGE_URI = "remoteMediumImageUri";
+    public static final String REMOTE_LARGE_IMAGE_URI = "remoteLargeImageUri";
     public static final String CREATE_DATE = "productCreateDate";
     public static final String LAST_UPDATE = "productLastUpdate";
     public static final String REMOTE_PRODUCT_ID = "remoteProductId";
@@ -72,13 +74,17 @@ public class ProductEntity implements Parcelable {
     private String createdBy;
 
     @ColumnInfo(name = WEB_IMAGE_URL)
+    @NotNull
     private String webImageUrl = "";
 
-    @ColumnInfo(name = REMOTE_IMAGE_THUMB_URI)
-    private String remoteImageThumbUri = "";
+    @ColumnInfo(name = REMOTE_SMALL_IMAGE_URI)
+    private String remoteSmallImageUri = "";
 
-    @ColumnInfo(name = REMOTE_IMAGE_URI)
-    private String remoteImageUri = "";
+    @ColumnInfo(name = REMOTE_MEDIUM_IMAGE_URI)
+    private String remoteMediumImageUri = "";
+
+    @ColumnInfo(name = REMOTE_LARGE_IMAGE_URI)
+    private String remoteLargeImageUri = "";
 
     @ColumnInfo(name = CREATE_DATE)
     private long createDate;
@@ -103,8 +109,9 @@ public class ProductEntity implements Parcelable {
                          double packAvePrice,
                          String createdBy,
                          String webImageUrl,
-                         String remoteImageThumbUri,
-                         String remoteImageUri,
+                         String remoteSmallImageUri,
+                         String remoteMediumImageUri,
+                         String remoteLargeImageUri,
                          long createDate,
                          long lastUpdate,
                          String remoteProductId) {
@@ -120,8 +127,9 @@ public class ProductEntity implements Parcelable {
         this.packAvePrice = packAvePrice;
         this.createdBy = createdBy;
         this.webImageUrl = webImageUrl;
-        this.remoteImageThumbUri = remoteImageThumbUri;
-        this.remoteImageUri = remoteImageUri;
+        this.remoteSmallImageUri = remoteSmallImageUri;
+        this.remoteMediumImageUri = remoteMediumImageUri;
+        this.remoteLargeImageUri = remoteLargeImageUri;
         this.createDate = createDate;
         this.lastUpdate = lastUpdate;
         this.remoteProductId = remoteProductId;
@@ -140,8 +148,9 @@ public class ProductEntity implements Parcelable {
         packAvePrice = in.readDouble();
         createdBy = in.readString();
         webImageUrl = in.readString();
-        remoteImageThumbUri = in.readString();
-        remoteImageUri = in.readString();
+        remoteSmallImageUri = in.readString();
+        remoteMediumImageUri = in.readString();
+        remoteLargeImageUri = in.readString();
         createDate = in.readLong();
         lastUpdate = in.readLong();
         remoteProductId = in.readString();
@@ -160,8 +169,9 @@ public class ProductEntity implements Parcelable {
         dest.writeDouble(packAvePrice);
         dest.writeString(createdBy);
         dest.writeString(webImageUrl);
-        dest.writeString(remoteImageThumbUri);
-        dest.writeString(remoteImageUri);
+        dest.writeString(remoteSmallImageUri);
+        dest.writeString(remoteMediumImageUri);
+        dest.writeString(remoteLargeImageUri);
         dest.writeLong(createDate);
         dest.writeLong(lastUpdate);
         dest.writeString(remoteProductId);
@@ -199,8 +209,9 @@ public class ProductEntity implements Parcelable {
         result.put(PROD_COMM_PRICE_AVE, packAvePrice);
         result.put(CREATED_BY, createdBy);
         result.put(WEB_IMAGE_URL, webImageUrl);
-        result.put(REMOTE_IMAGE_THUMB_URI, remoteImageThumbUri);
-        result.put(REMOTE_IMAGE_URI, remoteImageUri);
+        result.put(REMOTE_SMALL_IMAGE_URI, remoteSmallImageUri);
+        result.put(REMOTE_MEDIUM_IMAGE_URI, remoteMediumImageUri);
+        result.put(REMOTE_LARGE_IMAGE_URI, remoteLargeImageUri);
         result.put(CREATE_DATE, createDate);
         result.put(LAST_UPDATE, lastUpdate);
 
@@ -302,20 +313,28 @@ public class ProductEntity implements Parcelable {
         this.webImageUrl = webImageUrl;
     }
 
-    public String getRemoteImageThumbUri() {
-        return remoteImageThumbUri;
+    public String getRemoteSmallImageUri() {
+        return remoteSmallImageUri;
     }
 
-    public void setRemoteImageThumbUri(String remoteImageThumbUri) {
-        this.remoteImageThumbUri = remoteImageThumbUri;
+    public void setRemoteSmallImageUri(String remoteSmallImageUri) {
+        this.remoteSmallImageUri = remoteSmallImageUri;
     }
 
-    public String getRemoteImageUri() {
-        return remoteImageUri;
+    public String getRemoteMediumImageUri() {
+        return remoteMediumImageUri;
     }
 
-    public void setRemoteImageUri(@NonNull String remoteImageUri) {
-        this.remoteImageUri = remoteImageUri;
+    public void setRemoteMediumImageUri(String remoteMediumImageUri) {
+        this.remoteMediumImageUri = remoteMediumImageUri;
+    }
+
+    public String getRemoteLargeImageUri() {
+        return remoteLargeImageUri;
+    }
+
+    public void setRemoteLargeImageUri(@NonNull String remoteLargeImageUri) {
+        this.remoteLargeImageUri = remoteLargeImageUri;
     }
 
     public long getCreateDate() {
