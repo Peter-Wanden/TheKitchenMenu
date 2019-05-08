@@ -40,26 +40,29 @@ public class BitmapUtils {
      * @throws IOException Thrown if there is an error creating the file
      */
     public static File createTempImageFile(Context context) throws IOException {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
+
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmssSSS",
                 Locale.getDefault()).format(new Date());
+
         String imageFileName = "JPEG_" + timeStamp + "_";
 
         File storageDir = context.getExternalCacheDir();
-        Log.e(TAG, "Temp file storage directory is: " + storageDir);
+        Log.d(TAG, "tkm - Temp file storage directory is: " + storageDir);
+        Log.d(TAG, "tkm - Temp file name is: " + imageFileName);
 
         return File.createTempFile(
                 imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
+                ".jpg",   /* suffix */
                 storageDir      /* directory */
         );
     }
 
     /**
-     * Resamples the captured photo to fit the screen for better memory usage.
+     * Re-samples the captured photo to fit the screen for better memory usage.
      *
      * @param context   The application context.
      * @param imagePath The path of the photo to be resampled.
-     * @return The resampled bitmap
+     * @return The re-sampled bitmap
      */
     public static Bitmap resamplePic(Context context, String imagePath) {
 

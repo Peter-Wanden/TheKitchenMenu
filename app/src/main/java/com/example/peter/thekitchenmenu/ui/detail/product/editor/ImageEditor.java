@@ -21,7 +21,6 @@ import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.model.ImageModel;
 import com.example.peter.thekitchenmenu.databinding.ImageEditorBinding;
 import com.example.peter.thekitchenmenu.utils.imageeditor.BitmapUtils;
-import com.example.peter.thekitchenmenu.utils.imageeditor.LastImageUpdated;
 import com.example.peter.thekitchenmenu.viewmodels.ImageEditorViewModel;
 import com.theartofdev.edmodo.cropper.CropImage;
 
@@ -57,6 +56,7 @@ public class ImageEditor extends Fragment {
     private File tempSmallImage = null;
     private String tempOriginalImagePath = null;
     private Uri tempOriginalImageUri = null;
+    private Uri cropResultUri = null;
     private String tempLargeFileUri = null;
     private String tempMediumFileUri = null;
     private String tempSmallFileUri = null;
@@ -156,11 +156,14 @@ public class ImageEditor extends Fragment {
             if (tempOriginalFile != null) {
 
                 tempOriginalImagePath = tempOriginalFile.getAbsolutePath();
+                Log.d(TAG, "tkm - launchCamera: filepath is: " + tempOriginalImagePath);
 
                 tempOriginalImageUri = FileProvider.getUriForFile(
                         requireContext(),
                         FILE_PROVIDER_AUTHORITY,
                         tempOriginalFile);
+
+                Log.d(TAG, "tkm - launchCamera: uri is: " + tempOriginalImageUri);
 
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, tempOriginalImageUri);
 
@@ -241,13 +244,15 @@ public class ImageEditor extends Fragment {
 
             if (resultCode == RESULT_OK) {
 
-                tempOriginalImageUri = result.getUri();
+                cropResultUri = result.getUri();
+
+                Log.d(TAG, "tkm - onActivityResult: Cropped image path is: " + cropResultUri);
                 processAndSetImage();
 
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
 
                 Exception error = result.getError();
-                Log.e(TAG, "onActivityResult: ", error);
+                Log.e(TAG, "tkm - onActivityResult: ", error);
             }
         }
     }
