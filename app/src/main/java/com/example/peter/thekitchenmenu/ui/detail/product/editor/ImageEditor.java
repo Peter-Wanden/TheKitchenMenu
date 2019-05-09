@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -20,7 +19,6 @@ import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.model.ImageModel;
 import com.example.peter.thekitchenmenu.databinding.ImageEditorBinding;
-import com.example.peter.thekitchenmenu.utils.imageeditor.BitmapUtils;
 import com.example.peter.thekitchenmenu.viewmodels.ImageEditorViewModel;
 import com.theartofdev.edmodo.cropper.CropImage;
 
@@ -39,27 +37,30 @@ import java.io.IOException;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
+import static com.example.peter.thekitchenmenu.utils.imageeditor.BitmapUtils.*;
 
 public class ImageEditor extends Fragment {
 
     private static final String TAG = "ImageEditor";
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
-    private static final String FILE_PROVIDER_AUTHORITY = "com.example.peter.thekitchenmenu.fileprovider";
+    private static final String FILE_PROVIDER_AUTHORITY =
+            "com.example.peter.thekitchenmenu.fileprovider";
 
     private ImageEditorBinding imageEditorBinding;
     private ImageEditorViewModel imageEditorViewModel;
 
-    private File tempOriginalFile = null;
-    private File tempLargeImage = null;
-    private File tempMediumImage = null;
-    private File tempSmallImage = null;
-    private String tempOriginalImagePath = null;
-    private Uri tempOriginalImageUri = null;
-    private Uri cropResultUri = null;
-    private String tempLargeFileUri = null;
-    private String tempMediumFileUri = null;
-    private String tempSmallFileUri = null;
+    private Uri croppedImageResultUri = null;
+    private Bitmap croppedImageBitmap = null;
+
+    private boolean cameraImageTaken = false;
+    private File    cameraImageFile = null;
+    private String  cameraImageFilePath = null;
+    private Uri     cameraImageFileUri = null;
+
+    private File smallImageFile = null;
+    private File mediumImageFile = null;
+    private File largeImageFile = null;
 
     @Nullable
     @Override
@@ -90,10 +91,17 @@ public class ImageEditor extends Fragment {
                 get(ImageEditorViewModel.class);
     }
 
+    // TODO - Not sure this is required as is being observed by the ProductEditor
     private void setObservers() {
 
         Observer<ImageModel> imageModelObserver =
-                newImageModel -> imageEditorViewModel.setNewImageModel(newImageModel);
+                newImageModel -> {
+
+            imageEditorViewModel.setNewImageModel(newImageModel);
+                    Log.d(TAG, "tkm - setObservers: new Image model: Local large Uri: " +
+                            newImageModel.getLocalLargeImageUri());
+
+        };
 
         imageEditorViewModel.getImageModel().observe(this, imageModelObserver);
     }
@@ -108,13 +116,10 @@ public class ImageEditor extends Fragment {
     private void subscribeToEvents() {
 
         imageEditorViewModel.getLaunchGalleryEvent().observe(
-                this, event -> launchGallery());
+                this, event -> getImageFromGallery());
 
         imageEditorViewModel.getLaunchCameraEvent().observe(
                 this, event -> requestPermissions());
-
-        imageEditorViewModel.getRotateImageEvent().observe(
-                this, event -> rotateImage(imageEditorBinding.productImage));
 
         imageEditorViewModel.getLaunchBrowserEvent().observe(
                 this, event -> launchBrowser());
@@ -127,7 +132,7 @@ public class ImageEditor extends Fragment {
                         hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY));
     }
 
-    private void launchCamera() {
+    private void getImageFromCamera() {
 
         // TODO - implement for no camera (already done in manifest!!)
         // If your application uses, but does not require a camera in order to function, instead
@@ -146,97 +151,50 @@ public class ImageEditor extends Fragment {
 
             try {
 
-                tempOriginalFile = BitmapUtils.createTempImageFile(requireContext());
+                cameraImageFile = createTempImageFile(requireContext());
 
             } catch (IOException e) {
 
                 e.printStackTrace();
             }
 
-            if (tempOriginalFile != null) {
+            if (cameraImageFile != null) {
 
-                tempOriginalImagePath = tempOriginalFile.getAbsolutePath();
-                Log.d(TAG, "tkm - launchCamera: filepath is: " + tempOriginalImagePath);
-
-                tempOriginalImageUri = FileProvider.getUriForFile(
+                cameraImageFilePath = cameraImageFile.getAbsolutePath();
+                cameraImageFileUri = FileProvider.getUriForFile(
                         requireContext(),
                         FILE_PROVIDER_AUTHORITY,
-                        tempOriginalFile);
+                        cameraImageFile);
 
-                Log.d(TAG, "tkm - launchCamera: uri is: " + tempOriginalImageUri);
+                cameraImageTaken = true;
 
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, tempOriginalImageUri);
-
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageFileUri);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
         }
     }
 
-    private void createImageFiles() {
+    private void getImageFromGallery() {
 
-        try {
-
-            // TODO - Create one file, resample, save, then create the next one
-
-            tempSmallImage = BitmapUtils.createTempImageFile(requireActivity());
-            tempMediumImage = BitmapUtils.createTempImageFile(requireActivity());
-            tempLargeImage = BitmapUtils.createTempImageFile(requireActivity());
-
-            getUris();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        CropImage.activity().
+                setAspectRatio(1,1).
+                start(requireActivity(), this);
     }
 
-    private void getUris() {
+    private void cropCameraImage() {
 
-        tempSmallFileUri = tempSmallImage.getAbsolutePath();
-        tempMediumFileUri = tempMediumImage.getAbsolutePath();
-        tempLargeFileUri = tempLargeImage.getAbsolutePath();
+        CropImage.activity(cameraImageFileUri).
+                setAspectRatio(1,1).
+                start(requireContext(), this);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if (requestCode == REQUEST_IMAGE_CAPTURE &&
-                resultCode == RESULT_OK)
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK)
+            cropCameraImage();
 
-            cropImage();
-
-        else if (requestCode == REQUEST_IMAGE_CAPTURE &&
-                resultCode == RESULT_CANCELED)
-
-            BitmapUtils.deleteImageFile(requireActivity(), tempOriginalImagePath);
-
-        else if (requestCode == Constants.REQUEST_IMAGE_MEDIA_STORE &&
-                resultCode == RESULT_OK) {
-
-//            processAndSetImage(tempLargeFileUri);
-        }
-
-
-        else if (requestCode == Constants.REQUEST_IMAGE_MEDIA_STORE &&
-                resultCode == RESULT_CANCELED)
-
-            Log.e(TAG, "tkm - Media store intent cancelled");
-
-        else if (requestCode == Constants.REQUEST_IMAGE_PICKER &&
-                resultCode == RESULT_OK) {
-
-//            tempLargeFileUri = data.getData();
-
-//            if (localTempLargeImage != null) {
-//
-//                imageEditorViewModel.getImageModel().setLocalImageUri(tempLargeFileUri.toString());
-//                imageEditorViewModel.setLastImageUpdated(LastImageUpdated.LOCAL_IMAGE);
-//            }
-
-            Log.d(TAG, "tkm - onActivityResult: image uri is null");
-
-        } else if (requestCode == Constants.REQUEST_IMAGE_PICKER &&
-                resultCode == RESULT_CANCELED)
-
-            Log.e(TAG, "tkm - Image picker intent cancelled");
+        else if (requestCode == REQUEST_IMAGE_CAPTURE &&resultCode == RESULT_CANCELED)
+            deleteImageFile(requireActivity(), cameraImageFilePath);
 
         else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
 
@@ -244,78 +202,92 @@ public class ImageEditor extends Fragment {
 
             if (resultCode == RESULT_OK) {
 
-                cropResultUri = result.getUri();
-
-                Log.d(TAG, "tkm - onActivityResult: Cropped image path is: " + cropResultUri);
-                processAndSetImage();
+                croppedImageResultUri = result.getUri();
+//                deleteCameraImage();
+                processCroppedBitMap();
 
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
 
                 Exception error = result.getError();
                 Log.e(TAG, "tkm - onActivityResult: ", error);
+//                deleteCameraImage();
             }
         }
     }
 
-    private void launchGallery() {
+    private void processCroppedBitMap() {
 
-        CropImage.activity().
-                setAspectRatio(1,1).
-                start(requireActivity(), this);
+        try {
+
+            croppedImageBitmap = MediaStore.Images.Media.getBitmap(
+                    requireActivity().getContentResolver(),
+                    croppedImageResultUri);
+
+            createImageFiles();
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
     }
 
-    private void cropImage() {
+    private void createImageFiles() {
 
-        CropImage.activity(tempOriginalImageUri).
-                setAspectRatio(1,1).
-                start(requireContext(), this);
+        try {
+
+            smallImageFile = createTempImageFile(requireContext());
+            mediumImageFile = createTempImageFile(requireContext());
+            largeImageFile = createTempImageFile(requireContext());
+
+            createScaledBitmaps();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-    // TODO - Resampling only required if storing on servers, otherwise just store local Uri
-    // todo - If storing locally, store image to local media and delete temp file
-    // I think Glide re-samples / down-samples images before loading into image views.
-    // For non-web (local and server images) do not down-sample, just take the bitmap image and
-    // store it as it is.
 
     private void createScaledBitmaps() {
 
-        // Create a new file
-        // pass in the
+        Bitmap smallBitmap = createScaledBitmap(croppedImageBitmap, 75, true);
+        Bitmap mediumBitmap = createScaledBitmap(croppedImageBitmap, 290, true);
+        Bitmap largeBitMap = createScaledBitmap(croppedImageBitmap, 400, true);
 
+        String smallImageFileUri = saveBitmapToFileLocation(smallBitmap, smallImageFile);
+        String mediumImageFileUri = saveBitmapToFileLocation(mediumBitmap, mediumImageFile);
+        String largeImageFileUri = saveBitmapToFileLocation(largeBitMap, largeImageFile);
 
+        imageEditorViewModel.setLocalImageUris(
+                smallImageFileUri,
+                mediumImageFileUri,
+                largeImageFileUri);
 
+        Log.d(TAG, "tkm - createScaledBitmaps:" +
+                " small uri: " + smallImageFileUri +
+                " med uri: " + mediumImageFileUri +
+                " large uri: " + largeImageFileUri);
+
+        processAndSetImage(mediumImageFileUri);
+
+//        if (croppedImageBitmap != null) croppedImageBitmap = null;
+//        deleteImageFile(requireActivity(), croppedImageResultUri.toString());
+//        delete camera image
+//        When first instantiated check for old files!!!
     }
 
-    public static Bitmap createScaledBitmap(Bitmap image, float imageSize, boolean filter) {
+    private void processAndSetImage(String largeImageFileUri) {
 
-        float ratio = Math.min(imageSize / image.getWidth(), imageSize / image.getHeight());
-        int width = Math.round(ratio * image.getWidth());
-        int height = Math.round(ratio * image.getHeight());
-
-        return Bitmap.createScaledBitmap(image, width, height, filter);
+        Glide.with(this).
+                load(largeImageFileUri).
+                into(imageEditorBinding.productImage);
     }
 
-    private void processAndSetImage() {
+    private void deleteCameraImage() {
 
+        if (cameraImageTaken) {
 
-
-//        Bitmap bitmap = BitmapFactory.decodeFile();
-//        Bitmap scaledBitmap = createScaledBitmap(bitmap, 400, true);
-
-//        Log.d(TAG, "processAndSetImage: width is:" + bitmap.getWidth()
-//        + " height is: " + bitmap.getHeight());
-
-        // TODO - DON'T FORGET TO DELETE OLD BITMAPS AND URI'S
-
-        Glide.with(this).load(tempOriginalImageUri).into(imageEditorBinding.productImage);
-
-//        BitmapUtils.resampleImage(
-//                requireActivity(),
-//                null,
-//                imageEditorViewModel.getTempSmallImagePath());
-
-//        imageEditorViewModel.
-//                getImageModel().
-//                setLocalLargeImageUri(imageEditorViewModel.getTempSmallImagePath());
+            deleteImageFile(requireActivity(), cameraImageFilePath);
+            cameraImageTaken = false;
+        }
     }
 
     private void requestPermissions() {
@@ -328,7 +300,7 @@ public class ImageEditor extends Fragment {
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                     Constants.REQUEST_STORAGE_PERMISSION);
 
-        else launchCamera();
+        else getImageFromCamera();
     }
 
     public void onRequestPermissionsResult(int requestCode,
@@ -341,7 +313,7 @@ public class ImageEditor extends Fragment {
 
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
 
-                    launchCamera();
+                    getImageFromCamera();
 
                 else Toast.makeText(requireActivity(), R.string.storage_permission_denied,
                         Toast.LENGTH_SHORT)
@@ -351,25 +323,11 @@ public class ImageEditor extends Fragment {
         }
     }
 
-    private void rotateImage(ImageView productImage) {
-
-        BitmapUtils.rotateImage(productImage);
-        imageEditorViewModel.setNewImageDataAvailable(true);
-    }
-
     private void launchBrowser() {
         // TODO - launch browser with (if available), any search term added
         Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
         String query = "";
         intent.putExtra(SearchManager.QUERY, query);
         startActivity(intent);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        // TODO - delete the large original file if it exist
-        
     }
 }

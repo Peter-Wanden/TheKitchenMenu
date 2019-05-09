@@ -1,6 +1,7 @@
 package com.example.peter.thekitchenmenu.viewmodels;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
@@ -12,6 +13,8 @@ import com.example.peter.thekitchenmenu.utils.imageeditor.LastImageUpdated;
 import com.example.peter.thekitchenmenu.utils.imageeditor.ProductImageEditorHandler;
 
 public class ImageEditorViewModel extends ObservableViewModel {
+
+    private static final String TAG = "ImageEditorViewModel";
 
     private boolean deviceHasCamera = false;
     private boolean hasCameraPermissions = false;
@@ -30,7 +33,6 @@ public class ImageEditorViewModel extends ObservableViewModel {
     private final SingleLiveEvent<Void> checkCameraHardware = new SingleLiveEvent<>();
     private final SingleLiveEvent<Void> launchCameraEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<Void> launchGalleryEvent = new SingleLiveEvent<>();
-    private final SingleLiveEvent<Void> rotateImageEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<Void> launchBrowserEvent = new SingleLiveEvent<>();
 
     public ImageEditorViewModel(@NonNull Application application) {
@@ -73,9 +75,14 @@ public class ImageEditorViewModel extends ObservableViewModel {
         this.newImageDataAvailable = newImageDataAvailable;
     }
 
-    public void setDeviceHasCamera(boolean deviceHasCamera) {
+    public boolean isDeviceHasCamera() {
+        return deviceHasCamera;
+    }
+
+        public void setDeviceHasCamera(boolean deviceHasCamera) {
 
         this.deviceHasCamera = deviceHasCamera;
+        Log.d(TAG, "tkm - setDeviceHasCamera: " + deviceHasCamera);
     }
 
     public void launchCamera() {
@@ -94,14 +101,6 @@ public class ImageEditorViewModel extends ObservableViewModel {
         return launchGalleryEvent;
     }
 
-    public void rotateImage() {
-        rotateImageEvent.call();
-    }
-
-    public SingleLiveEvent<Void> getRotateImageEvent() {
-        return rotateImageEvent;
-    }
-
     public void launchBrowser() {
         launchBrowserEvent.call();
     }
@@ -117,5 +116,7 @@ public class ImageEditorViewModel extends ObservableViewModel {
         newImageModel.setLocalSmallImageUri(localSmallImageUri);
         newImageModel.setLocalMediumImageUri(localMediumImageUri);
         newImageModel.setLocalLargeImageUri(localLargeImageUri);
+
+        getImageModel().setValue(newImageModel);
     }
 }

@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.example.peter.thekitchenmenu.R;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -89,6 +90,32 @@ public class BitmapUtils {
         bmOptions.inSampleSize = scaleFactor;
 
         return BitmapFactory.decodeFile(imagePath);
+    }
+
+    public static Bitmap createScaledBitmap(Bitmap image, float imageSize, boolean filter) {
+
+        float ratio = Math.min(imageSize / image.getWidth(), imageSize / image.getHeight());
+        int width = Math.round(ratio * image.getWidth());
+        int height = Math.round(ratio * image.getHeight());
+
+        return Bitmap.createScaledBitmap(image, width, height, filter);
+    }
+
+    public static String saveBitmapToFileLocation(Bitmap scaledBitMap, File imageFile) {
+
+        try (FileOutputStream out = new FileOutputStream(imageFile)) {
+
+            // Save the cropped bitmap to its image file
+            scaledBitMap.compress(Bitmap.CompressFormat.JPEG, 80, out);
+
+            // Get the Uri
+            return imageFile.getAbsolutePath();
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+            return "";
+        }
     }
 
     public static void deleteImageFile(Context context, String imagePath) {

@@ -8,9 +8,9 @@ import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.data.model.ImageModel;
 import com.example.peter.thekitchenmenu.data.model.ProductIdentityModel;
 import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
+import com.example.peter.thekitchenmenu.databinding.ProductEditorBinding;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubType;
 import com.example.peter.thekitchenmenu.viewmodels.ImageEditorViewModel;
-import com.example.peter.thekitchenmenu.databinding.ProductEditorBinding;
 import com.example.peter.thekitchenmenu.viewmodels.ProductEditorViewModel;
 import com.example.peter.thekitchenmenu.viewmodels.ProductIdentityViewModel;
 import com.example.peter.thekitchenmenu.viewmodels.ProductMeasurementViewModel;
@@ -115,14 +115,17 @@ public class ProductEditor extends AppCompatActivity {
 
         productEditorViewModel.getProductEntity().observe(this, productObserver);
 
-        // Dish out the models to the view models
-        final Observer<ImageModel> imageEditorObserver = imageModel -> {
+        // Dish out models in the ProductEditor to view models in individual editors
+        final Observer<ImageModel> productEditorImageModelObserver = imageModel -> {
 
             imageEditorViewModel.getImageModel().setValue(imageModel);
-            Log.d(TAG, "setObservers: image model updated");
+            Log.d(TAG, "tkm - setObservers: image model updated: " +
+                    "small uri: " + imageModel.getLocalSmallImageUri() + " " +
+                    " med uri: " + imageModel.getLocalMediumImageUri() +
+                    " large uri: " + imageModel.getLocalLargeImageUri());
         };
 
-        productEditorViewModel.getImageModel().observe(this, imageEditorObserver);
+        productEditorViewModel.getImageModel().observe(this, productEditorImageModelObserver);
 
         final Observer<ProductIdentityModel> identityModelObserver = newIdentityModel ->
                 identityEditorViewModel.getIdentityModel().setValue(newIdentityModel);
@@ -133,5 +136,14 @@ public class ProductEditor extends AppCompatActivity {
                 measurementEditorViewModel.getMeasurementModel().setValue(newMeasurementModel);
 
         productEditorViewModel.getMeasurementModel().observe(this, measurementModelObserver);
+
+        // Retrieve updated models from individual editors and pass them into ProductEditor
+        final Observer<ImageModel> imageEditorImageModelObserver = imageModel -> {
+
+            // TODO - Implement equals in models and check for change to avoid loops
+            productEditorViewModel.getImageModel().setValue(imageModel);
+        };
+
+        imageEditorViewModel.getImageModel().observe(this, imageEditorImageModelObserver);
     }
 }

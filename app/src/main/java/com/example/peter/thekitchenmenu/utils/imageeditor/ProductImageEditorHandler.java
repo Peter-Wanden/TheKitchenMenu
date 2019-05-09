@@ -21,5 +21,4 @@ public class ProductImageEditorHandler implements ImageEditorHandler {
     public void setLastImageUpdated(LastImageUpdated lastImageUpdated) {
         this.lastImageUpdated = lastImageUpdated;
     }
-
 }
