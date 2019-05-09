@@ -18,9 +18,9 @@ import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
-public class ViewModelCatlogProducts extends AndroidViewModel {
+public class ViewModelCatalogProducts extends AndroidViewModel {
 
-    private static final String TAG = "ViewModelCatlogProducts";
+    private static final String TAG = "ViewModelCatalogProducts";
 
     // View models.
     private MediatorLiveData<List<ProductUserDataEntity>> observableProdMys;
@@ -30,10 +30,11 @@ public class ViewModelCatlogProducts extends AndroidViewModel {
     // Mutable's.
     private MutableLiveData<String> observableUserId;
     private MutableLiveData<Boolean> isCreator = new MutableLiveData<>();
+
     // The item selected in the adapter, passed through the click interface of the fragment.
     private final MutableLiveData<ProductModel> selectedProduct = new MutableLiveData<>();
 
-    public ViewModelCatlogProducts(Application application) {
+    public ViewModelCatalogProducts(Application application) {
         super(application);
 
         setupObservables(application);

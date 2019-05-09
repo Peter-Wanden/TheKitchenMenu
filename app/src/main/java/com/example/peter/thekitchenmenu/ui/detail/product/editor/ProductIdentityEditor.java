@@ -41,7 +41,6 @@ public class ProductIdentityEditor extends Fragment {
         identityEditorBinding.setLifecycleOwner(this);
 
         setViewModel();
-        setObservers();
         setValidationHandler();
         setBindingInstanceVariables();
         setupSpinners();
@@ -50,45 +49,29 @@ public class ProductIdentityEditor extends Fragment {
     }
 
     private void setViewModel() {
-
         identityViewModel = ViewModelProviders.of(requireActivity()).
                 get(ProductIdentityViewModel.class);
     }
 
-    private void setObservers() {
-
-        final Observer<ProductIdentityModel> identityModelObserver = identityModel -> {
-
-            identityViewModel.setNewIdentityModel(identityModel);
-        };
-
-        identityViewModel.getIdentityModel().observe(this, identityModelObserver);
-    }
-
     private void setValidationHandler() {
-
         identityEditorBinding.setTextValidation(identityViewModel.getTextValidationHandler());
     }
 
     private void setBindingInstanceVariables() {
-
         identityEditorBinding.setIdentityModel(identityViewModel.getNewIdentityModel());
     }
 
     private void setupSpinners() {
-
         setupCategorySpinner();
         setUpShelfLifeSpinner();
     }
 
     private void setupCategorySpinner() {
-
         identityEditorBinding.spinnerCategory.setAdapter(ArrayAdapter.createFromResource(
                 requireActivity(), R.array.product_category_options, R.layout.list_item_spinner));
     }
 
     private void setUpShelfLifeSpinner() {
-
         identityEditorBinding.spinnerShelfLife.setAdapter(ArrayAdapter.createFromResource(
                 requireActivity(),
                 R.array.shelf_life_options,

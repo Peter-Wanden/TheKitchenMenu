@@ -77,7 +77,6 @@ public class ImageEditor extends Fragment {
         imageEditorBinding.setLifecycleOwner(this);
 
         setViewModel();
-        setObservers();
         setBindingInstanceVariables();
         subscribeToEvents();
         checkHardware();
@@ -86,24 +85,8 @@ public class ImageEditor extends Fragment {
     }
 
     private void setViewModel() {
-
         imageEditorViewModel = ViewModelProviders.of(requireActivity()).
                 get(ImageEditorViewModel.class);
-    }
-
-    // TODO - Not sure this is required as is being observed by the ProductEditor
-    private void setObservers() {
-
-        Observer<ImageModel> imageModelObserver =
-                newImageModel -> {
-
-            imageEditorViewModel.setNewImageModel(newImageModel);
-                    Log.d(TAG, "tkm - setObservers: new Image model: Local large Uri: " +
-                            newImageModel.getLocalLargeImageUri());
-
-        };
-
-        imageEditorViewModel.getImageModel().observe(this, imageModelObserver);
     }
 
     private void setBindingInstanceVariables() {
@@ -127,7 +110,6 @@ public class ImageEditor extends Fragment {
 
     // Todo - implement
     private void checkHardware() {
-
         imageEditorViewModel.setDeviceHasCamera(requireActivity().getPackageManager().
                         hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY));
     }
@@ -268,6 +250,7 @@ public class ImageEditor extends Fragment {
 
         processAndSetImage(mediumImageFileUri);
 
+        // TODO - Set callbacks for bitmap processing before deleting any images
 //        if (croppedImageBitmap != null) croppedImageBitmap = null;
 //        deleteImageFile(requireActivity(), croppedImageResultUri.toString());
 //        delete camera image

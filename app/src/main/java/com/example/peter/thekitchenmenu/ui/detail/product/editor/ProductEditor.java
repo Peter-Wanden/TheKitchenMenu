@@ -93,7 +93,7 @@ public class ProductEditor extends AppCompatActivity {
                 imageModel.setRemoteMediumImageUri(imageModel.getRemoteMediumImageUri());
                 imageModel.setRemoteLargeImageUri(imageModel.getRemoteLargeImageUri());
 
-                productEditorViewModel.getImageModel().setValue(imageModel);
+                imageEditorViewModel.getImageModel().setValue(imageModel);
 
                 ProductIdentityModel identityModel = new ProductIdentityModel();
                 identityModel.setDescription(productEntity.getDescription());
@@ -101,7 +101,7 @@ public class ProductEditor extends AppCompatActivity {
                 identityModel.setCategory(productEntity.getCategory());
                 identityModel.setShelfLife(productEntity.getShelfLife());
 
-                productEditorViewModel.getIdentityModel().setValue(identityModel);
+                identityEditorViewModel.getIdentityModel().setValue(identityModel);
 
                 ProductMeasurementModel measurementModel = new ProductMeasurementModel();
                 measurementModel.setMeasurementSubType(
@@ -109,41 +109,26 @@ public class ProductEditor extends AppCompatActivity {
                 measurementModel.setNumberOfItems(productEntity.getNumberOfItems());
                 measurementModel.setBaseSiUnits(productEntity.getBaseSiUnits());
 
-                productEditorViewModel.getMeasurementModel().setValue(measurementModel);
+                measurementEditorViewModel.getMeasurementModel().setValue(measurementModel);
             }
         };
 
         productEditorViewModel.getProductEntity().observe(this, productObserver);
 
-        // Dish out models in the ProductEditor to view models in individual editors
-        final Observer<ImageModel> productEditorImageModelObserver = imageModel -> {
+        // TODO - Observe the Models values - report them back ProductEditorViewModel
+        final Observer<ImageModel> imageModelObserver = imageModel ->
+                productEditorViewModel.setUpdatedImageModel(imageModel);
 
-            imageEditorViewModel.getImageModel().setValue(imageModel);
-            Log.d(TAG, "tkm - setObservers: image model updated: " +
-                    "small uri: " + imageModel.getLocalSmallImageUri() + " " +
-                    " med uri: " + imageModel.getLocalMediumImageUri() +
-                    " large uri: " + imageModel.getLocalLargeImageUri());
-        };
+        imageEditorViewModel.getImageModel().observe(this, imageModelObserver);
 
-        productEditorViewModel.getImageModel().observe(this, productEditorImageModelObserver);
+        final Observer<ProductIdentityModel> identityModelObserver = productIdentityModel ->
+                productEditorViewModel.setUpdatedIdentityModel(productIdentityModel);
 
-        final Observer<ProductIdentityModel> identityModelObserver = newIdentityModel ->
-                identityEditorViewModel.getIdentityModel().setValue(newIdentityModel);
+        identityEditorViewModel.getIdentityModel().observe(this, identityModelObserver);
 
-        productEditorViewModel.getIdentityModel().observe(this, identityModelObserver);
+        final Observer<ProductMeasurementModel> measurementModelObserver = measurementModel ->
+                productEditorViewModel.setUpdatedMeasurementModel(measurementModel);
 
-        final Observer<ProductMeasurementModel> measurementModelObserver = newMeasurementModel ->
-                measurementEditorViewModel.getMeasurementModel().setValue(newMeasurementModel);
-
-        productEditorViewModel.getMeasurementModel().observe(this, measurementModelObserver);
-
-        // Retrieve updated models from individual editors and pass them into ProductEditor
-        final Observer<ImageModel> imageEditorImageModelObserver = imageModel -> {
-
-            // TODO - Implement equals in models and check for change to avoid loops
-            productEditorViewModel.getImageModel().setValue(imageModel);
-        };
-
-        imageEditorViewModel.getImageModel().observe(this, imageEditorImageModelObserver);
+        measurementEditorViewModel.getMeasurementModel().observe(this, measurementModelObserver);
     }
 }

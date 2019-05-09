@@ -10,7 +10,7 @@ import com.example.peter.thekitchenmenu.R;
 
 import com.example.peter.thekitchenmenu.data.model.ProductModel;
 import com.example.peter.thekitchenmenu.databinding.FragmentCatalogProductsBinding;
-import com.example.peter.thekitchenmenu.viewmodels.ViewModelCatlogProducts;
+import com.example.peter.thekitchenmenu.viewmodels.ViewModelCatalogProducts;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,14 +29,14 @@ public class ProductCatalogAllProducts
     private static final String TAG = "ProductCatalogAllProducts";
 
     private ProductCatalogRecyclerAdapter adapterProducts;
-    private ViewModelCatlogProducts viewModelProducts;
+    private ViewModelCatalogProducts viewModelProducts;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         adapterProducts = new ProductCatalogRecyclerAdapter(requireActivity(), this);
-        viewModelProducts = ViewModelProviders.of(requireActivity()).get(ViewModelCatlogProducts.class);
+        viewModelProducts = ViewModelProviders.of(requireActivity()).get(ViewModelCatalogProducts.class);
         viewModelProducts.getMatchVmProds().observe(
                 this, vmListProd -> adapterProducts.setProducts(vmListProd));
     }

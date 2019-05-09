@@ -10,7 +10,7 @@ import com.example.peter.thekitchenmenu.R;
 
 import com.example.peter.thekitchenmenu.data.model.ProductModel;
 import com.example.peter.thekitchenmenu.databinding.FragmentCatalogProductsBinding;
-import com.example.peter.thekitchenmenu.viewmodels.ViewModelCatlogProducts;
+import com.example.peter.thekitchenmenu.viewmodels.ViewModelCatalogProducts;
 
 import java.util.List;
 
@@ -31,7 +31,7 @@ public class ProductCatalogUsersProducts
     private static final String TAG = "ProductCatalogUsersProducts";
 
     private ProductCatalogRecyclerAdapter catalogProductsAdapter;
-    private ViewModelCatlogProducts viewModel;
+    private ViewModelCatalogProducts viewModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,7 +39,7 @@ public class ProductCatalogUsersProducts
 
         catalogProductsAdapter = new ProductCatalogRecyclerAdapter(requireActivity(), this);
 
-        viewModel = ViewModelProviders.of(requireActivity()).get(ViewModelCatlogProducts.class);
+        viewModel = ViewModelProviders.of(requireActivity()).get(ViewModelCatalogProducts.class);
 
         // Observes changes to view model ProdMy list and passes them to the adaptor.
         final Observer<List<ProductModel>> viewModelProd = vmProds

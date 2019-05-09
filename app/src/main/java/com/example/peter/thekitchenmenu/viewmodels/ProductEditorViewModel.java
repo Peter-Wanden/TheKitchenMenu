@@ -1,6 +1,7 @@
 package com.example.peter.thekitchenmenu.viewmodels;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
@@ -11,11 +12,14 @@ import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
 import com.example.peter.thekitchenmenu.data.model.ProductUserDataModel;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 
 public class ProductEditorViewModel extends ObservableViewModel {
 
     private static final String TAG = "ProductEditorViewModel";
+
+    private String title; // Add product, Edit product
 
     // From repo, or empty if new product. Posts updates back to repo when replaced by newProductEntity
     private MutableLiveData<ProductEntity> productEntity = new MutableLiveData<>();
@@ -23,12 +27,10 @@ public class ProductEditorViewModel extends ObservableViewModel {
     // Populated as new data is set from models. Once complete is posted to ProductEntity
     private ProductEntity newProductEntity = new ProductEntity();
 
-    // Updated by image, identity and measurement view models, observed by this view model
-    private MutableLiveData<ImageModel> imageModel = new MutableLiveData<>();
-    private MutableLiveData<ProductIdentityModel> identityModel = new MutableLiveData<>();
-    private MutableLiveData<ProductMeasurementModel> measurementModel = new MutableLiveData<>();
-
-    private String title; // Add product, Edit product
+    // Model updates
+    private ImageModel updatedImageModel = new ImageModel();
+    private ProductIdentityModel updatedIdentityModel = new ProductIdentityModel();
+    private ProductMeasurementModel updatedMeasurementModel = new ProductMeasurementModel();
 
     // TODO - Change category and shelf life to an enum
 
@@ -97,35 +99,34 @@ public class ProductEditorViewModel extends ObservableViewModel {
         this.productEntity.setValue(productEntityImperialMassTest);
     }
 
+    public String getTitle() {
+
+        return title;
+    }
+
     public MutableLiveData<ProductEntity> getProductEntity() {
 
         if (productEntity == null) productEntity = new MutableLiveData<>();
         return productEntity;
     }
 
-    public MutableLiveData<ImageModel> getImageModel() {
-
-        if (imageModel == null) imageModel = new MutableLiveData<>();
-        return imageModel;
+    public void setUpdatedImageModel(ImageModel updatedImageModel) {
+        this.updatedImageModel = updatedImageModel;
+        Log.d(TAG, "tkm - setUpdatedImageModel: Image model updated");
+        // TODO - Save images to remote database
     }
 
-    public MutableLiveData<ProductIdentityModel> getIdentityModel() {
-
-        if (identityModel == null) identityModel = new MutableLiveData<>();
-        return identityModel;
+    public void setUpdatedIdentityModel(ProductIdentityModel updatedIdentityModel) {
+        this.updatedIdentityModel = updatedIdentityModel;
+        Log.d(TAG, "tkm - setUpdatedIdentityModel: Identity model updated");
     }
 
-    public MutableLiveData<ProductMeasurementModel> getMeasurementModel() {
-
-        if (measurementModel == null) measurementModel = new MutableLiveData<>();
-        return measurementModel;
+    public void setUpdatedMeasurementModel(ProductMeasurementModel updatedMeasurementModel) {
+        this.updatedMeasurementModel = updatedMeasurementModel;
+        Log.d(TAG, "setUpdatedMeasurementModel: Measurement model updated");
     }
 
     public void onFabClick() {
 
-    }
-
-    public String getTitle() {
-        return title;
     }
 }

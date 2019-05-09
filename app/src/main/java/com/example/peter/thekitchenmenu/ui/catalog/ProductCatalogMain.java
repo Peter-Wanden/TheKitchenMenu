@@ -10,7 +10,7 @@ import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.model.ProductModel;
 import com.example.peter.thekitchenmenu.databinding.ActivityCatalogProductBinding;
 import com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductEditor;
-import com.example.peter.thekitchenmenu.viewmodels.ViewModelCatlogProducts;
+import com.example.peter.thekitchenmenu.viewmodels.ViewModelCatalogProducts;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,7 +26,7 @@ public class ProductCatalogMain extends AppCompatActivity {
 
     private static final String TAG = "ProductCatalogMain";
 
-    ViewModelCatlogProducts viewModel;
+    ViewModelCatalogProducts viewModel;
     ActivityCatalogProductBinding bindings;
     ProductCatalogFragmentPageAdapter tabPageAdapter;
     ViewPager tabViewPager;
@@ -41,7 +41,7 @@ public class ProductCatalogMain extends AppCompatActivity {
 
     private void setupViewModel() {
 
-        viewModel = ViewModelProviders.of(this).get(ViewModelCatlogProducts.class);
+        viewModel = ViewModelProviders.of(this).get(ViewModelCatalogProducts.class);
         viewModel.getSelected().observe(this, selectedProduct -> {
 
             if (selectedProduct != null) {
