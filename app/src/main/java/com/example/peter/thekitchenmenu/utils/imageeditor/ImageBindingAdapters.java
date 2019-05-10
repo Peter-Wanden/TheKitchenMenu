@@ -1,5 +1,6 @@
 package com.example.peter.thekitchenmenu.utils.imageeditor;
 
+import android.util.Log;
 import android.widget.ImageView;
 
 import androidx.databinding.BindingAdapter;
@@ -22,6 +23,11 @@ public class ImageBindingAdapters {
                          String webUrl) {
 
         String uri;
+
+        Log.d(TAG, "tkm - setImage: uri's received: " +
+                "\nlocal:" + localUri +
+                "\nremote: " + remoteUri +
+                "\nweb: " + webUrl);
 
         // TODO - Extract this business logic
         if (remoteUri != null && !remoteUri.isEmpty()) uri = remoteUri;

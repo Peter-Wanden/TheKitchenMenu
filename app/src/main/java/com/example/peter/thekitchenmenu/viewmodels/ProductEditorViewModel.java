@@ -41,35 +41,35 @@ public class ProductEditorViewModel extends ObservableViewModel {
 
         ProductEntity productEntityMetricMassTest = new ProductEntity(
                 0,
-                "Baked Beans",
+                "Heinz Baked Beanz",
                 "Heinz",
                 1,
-                3,
-                10,
-                10000,
+                12,
+                1,
+                415,
                 0,
                 0,
                 "",
-                "",
-                "",
-                "",
-                "",
+                "https://d1ycl3zewbvuig.cloudfront.net/images/products/4/LN_019025_BP_4.jpg",
+                "https://d25hqtnqp5nl24.cloudfront.net/images/products/3/LN_019025_BP_3.jpg",
+                "https://d1ycl3zewbvuig.cloudfront.net/images/products/11/LN_019025_BP_11.jpg",
+                "https://d1ycl3zewbvuig.cloudfront.net/images/products/11/LN_019025_BP_11.jpg",
                 0,
                 0,
                 "");
 
         ProductEntity productEntityImperialMassTest = new ProductEntity(
                 0,
-                "Cheez",
-                "The Cheez Man",
+                "Cadbury Wispa Chocolate Multipack 4 X30g",
+                "Cadbury",
                 1,
-                3,
-                10,
-                4819.41893125,
-                1,
+                9,
+                4,
+                120,
+                0,
                 0,
                 "",
-                "",
+                "https://img.tesco.com/Groceries/pi/372/7622210255372/IDShot_540x540.jpg",
                 "",
                 "",
                 "",
@@ -79,24 +79,24 @@ public class ProductEditorViewModel extends ObservableViewModel {
 
         ProductEntity productEntityImperialVolumeTest = new ProductEntity(
                 0,
-                "Semi-Skimmed Milk",
-                "Waitrose",
+                "Domestos Spray Multi-Purpose Bleach",
+                "Domestos",
+                0,
                 1,
-                3,
+                1,
+                700,
                 2,
-                10000,
-                3,
                 0,
                 "",
                 "",
-                "",
-                "",
-                "https://d1ycl3zewbvuig.cloudfront.net/images/products/11/LN_759450_BP_11.jpg",
+                "https://assets.iceland.co.uk/i/iceland/Domestos_700m_Spray_Bleach_73591.jpg?$pdpzoom$",
+                "https://assets.iceland.co.uk/i/iceland/Domestos_700m_Spray_Bleach_73591.jpg?$pdpzoom$",
+                "https://assets.iceland.co.uk/i/iceland/Domestos_700m_Spray_Bleach_73591.jpg?$pdpzoom$",
                 0,
                 0,
                 "");
 
-        this.productEntity.setValue(productEntityImperialMassTest);
+        this.productEntity.setValue(productEntityMetricMassTest);
     }
 
     public String getTitle() {
@@ -113,7 +113,9 @@ public class ProductEditorViewModel extends ObservableViewModel {
     public void setUpdatedImageModel(ImageModel updatedImageModel) {
         this.updatedImageModel = updatedImageModel;
         Log.d(TAG, "tkm - setUpdatedImageModel: Image model updated");
-        // TODO - Save images to remote database
+        // TODO - read in files https://developer.android.com/training/data-storage/files#OpenFileInternal
+        //  Save images to remote database
+        //
     }
 
     public void setUpdatedIdentityModel(ProductIdentityModel updatedIdentityModel) {

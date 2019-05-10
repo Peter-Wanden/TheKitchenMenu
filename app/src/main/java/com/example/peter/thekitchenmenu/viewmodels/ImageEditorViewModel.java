@@ -8,9 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.peter.thekitchenmenu.data.model.ImageModel;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
-import com.example.peter.thekitchenmenu.utils.imageeditor.ImageEditorHandler;
 import com.example.peter.thekitchenmenu.utils.imageeditor.LastImageUpdated;
-import com.example.peter.thekitchenmenu.utils.imageeditor.ProductImageEditorHandler;
 
 public class ImageEditorViewModel extends ObservableViewModel {
 
@@ -19,12 +17,11 @@ public class ImageEditorViewModel extends ObservableViewModel {
     private boolean deviceHasCamera = false;
     private boolean hasCameraPermissions = false;
 
-    // TODO CHECK model and newModel are different before updating to prevent loops
+    // TODO - Clear out the storage directory for new products
     private MutableLiveData<ImageModel> imageModel = new MutableLiveData<>();
     private ImageModel newImageModel = new ImageModel();
 
     private MutableLiveData<Boolean> imageModelIsValid = new MutableLiveData<>();
-    private ImageEditorHandler imageEditorHandler = new ProductImageEditorHandler();
 
     private LastImageUpdated lastImageUpdated = LastImageUpdated.NO_IMAGE;
     private boolean newImageDataAvailable = false;
@@ -43,10 +40,6 @@ public class ImageEditorViewModel extends ObservableViewModel {
         return imageModel;
     }
 
-    public void setImageModel(MutableLiveData<ImageModel> imageModel) {
-        this.imageModel = imageModel;
-    }
-
     public ImageModel getNewImageModel() {
         return newImageModel;
     }
@@ -57,10 +50,6 @@ public class ImageEditorViewModel extends ObservableViewModel {
 
     public MutableLiveData<Boolean> getImageModelIsValid() {
         return imageModelIsValid;
-    }
-
-    public ImageEditorHandler getImageEditorHandler() {
-        return imageEditorHandler;
     }
 
     public LastImageUpdated getLastImageUpdated() {

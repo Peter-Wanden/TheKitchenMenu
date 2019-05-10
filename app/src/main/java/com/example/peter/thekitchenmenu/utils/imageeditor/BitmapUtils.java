@@ -1,6 +1,5 @@
 package com.example.peter.thekitchenmenu.utils.imageeditor;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -12,7 +11,6 @@ import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -45,10 +43,10 @@ public class BitmapUtils {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmssSSS",
                 Locale.getDefault()).format(new Date());
 
-        String imageFileName = "JPEG_" + timeStamp + "_";
+        String imageFileName = "TKM_" + timeStamp + "_";
 
-        File storageDir = context.getExternalCacheDir();
-        Log.d(TAG, "tkm - Temp file storage directory is: " + storageDir);
+        File storageDir = context.getCacheDir();
+        Log.d(TAG, "tkm - cache directory is: " + storageDir);
         Log.d(TAG, "tkm - Temp file name is: " + imageFileName);
 
         return File.createTempFile(
@@ -101,7 +99,7 @@ public class BitmapUtils {
         return Bitmap.createScaledBitmap(image, width, height, filter);
     }
 
-    public static String saveBitmapToFileLocation(Bitmap scaledBitMap, File imageFile) {
+    public static String saveBitmapToCache(Bitmap scaledBitMap, File imageFile) {
 
         try (FileOutputStream out = new FileOutputStream(imageFile)) {
 
@@ -128,6 +126,7 @@ public class BitmapUtils {
 
         // If there is an error deleting the file, show a Toast
         if (!deleted) {
+
             String errorMessage = context.getString(R.string.delete_file_error);
             Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
         }

@@ -17,10 +17,6 @@
             name="imageModel"
             type="com.example.peter.thekitchenmenu.data.model.ImageModel">
         </variable>
-
-        <variable
-            name="imageHandler"
-            type="com.example.peter.thekitchenmenu.utils.imageeditor.ImageEditorHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

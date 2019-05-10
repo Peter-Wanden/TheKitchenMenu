@@ -1,6 +1,5 @@
 package com.example.peter.thekitchenmenu.ui.detail.product.editor;
 
-import android.Manifest;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,28 +11,24 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.app.Constants;
-import com.example.peter.thekitchenmenu.data.model.ImageModel;
 import com.example.peter.thekitchenmenu.databinding.ImageEditorBinding;
 import com.example.peter.thekitchenmenu.viewmodels.ImageEditorViewModel;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.core.util.Pair;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -50,17 +45,11 @@ public class ImageEditor extends Fragment {
     private ImageEditorBinding imageEditorBinding;
     private ImageEditorViewModel imageEditorViewModel;
 
-    private Uri croppedImageResultUri = null;
     private Bitmap croppedImageBitmap = null;
 
     private boolean cameraImageTaken = false;
-    private File    cameraImageFile = null;
-    private String  cameraImageFilePath = null;
-    private Uri     cameraImageFileUri = null;
-
-    private File smallImageFile = null;
-    private File mediumImageFile = null;
-    private File largeImageFile = null;
+    private String cameraImageFilePath = null;
+    private Uri cameraImageFileUri = null;
 
     @Nullable
     @Override
@@ -93,7 +82,6 @@ public class ImageEditor extends Fragment {
 
         imageEditorBinding.setImageViewModel(imageEditorViewModel);
         imageEditorBinding.setImageModel(imageEditorViewModel.getNewImageModel());
-        imageEditorBinding.setImageHandler(imageEditorViewModel.getImageEditorHandler());
     }
 
     private void subscribeToEvents() {
@@ -102,34 +90,25 @@ public class ImageEditor extends Fragment {
                 this, event -> getImageFromGallery());
 
         imageEditorViewModel.getLaunchCameraEvent().observe(
-                this, event -> requestPermissions());
+                this, event -> getImageFromCamera());
 
         imageEditorViewModel.getLaunchBrowserEvent().observe(
                 this, event -> launchBrowser());
     }
 
-    // Todo - implement
     private void checkHardware() {
+
         imageEditorViewModel.setDeviceHasCamera(requireActivity().getPackageManager().
                         hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY));
     }
 
     private void getImageFromCamera() {
 
-        // TODO - implement for no camera (already done in manifest!!)
-        // If your application uses, but does not require a camera in order to function, instead
-        // set android:required to false. In doing so, Google Play will allow devices without a
-        // camera to download your application. It's then your responsibility to check for the
-        // availability of the camera at runtime by calling
-        // hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY). If a camera is not available,
-        // you should then disable your camera features.
-
-        // https://developer.android.com/training/camera/photobasics - Using camera app
-        // https://developer.android.com/training/camera/cameradirect.html - Controlling the camera
-        // Todo, if the localTempLargeImage is !=null, delete the file, then recreate it.
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         if (takePictureIntent.resolveActivity(requireActivity().getPackageManager()) != null) {
+
+            File cameraImageFile = null;
 
             try {
 
@@ -142,12 +121,12 @@ public class ImageEditor extends Fragment {
 
             if (cameraImageFile != null) {
 
-                cameraImageFilePath = cameraImageFile.getAbsolutePath();
                 cameraImageFileUri = FileProvider.getUriForFile(
-                        requireContext(),
+                        requireActivity(),
                         FILE_PROVIDER_AUTHORITY,
                         cameraImageFile);
 
+                cameraImageFilePath = cameraImageFile.getAbsolutePath();
                 cameraImageTaken = true;
 
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageFileUri);
@@ -158,46 +137,44 @@ public class ImageEditor extends Fragment {
 
     private void getImageFromGallery() {
 
-        CropImage.activity().
+        CropImage.activity().setActivityTitle("TKM - Image Cropper").
                 setAspectRatio(1,1).
                 start(requireActivity(), this);
     }
 
     private void cropCameraImage() {
 
-        CropImage.activity(cameraImageFileUri).
+        CropImage.activity(cameraImageFileUri).setActivityTitle("TKM - Image Cropper").
                 setAspectRatio(1,1).
                 start(requireContext(), this);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK)
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             cropCameraImage();
+        }
 
-        else if (requestCode == REQUEST_IMAGE_CAPTURE &&resultCode == RESULT_CANCELED)
+        else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_CANCELED) {
             deleteImageFile(requireActivity(), cameraImageFilePath);
+        }
 
         else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
 
             if (resultCode == RESULT_OK) {
-
-                croppedImageResultUri = result.getUri();
-//                deleteCameraImage();
-                processCroppedBitMap();
+                Uri croppedImageResultUri = result.getUri();
+                processCroppedBitMap(croppedImageResultUri);
 
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
 
                 Exception error = result.getError();
                 Log.e(TAG, "tkm - onActivityResult: ", error);
-//                deleteCameraImage();
             }
         }
     }
 
-    private void processCroppedBitMap() {
+    private void processCroppedBitMap(Uri croppedImageResultUri) {
 
         try {
 
@@ -217,44 +194,86 @@ public class ImageEditor extends Fragment {
 
         try {
 
-            smallImageFile = createTempImageFile(requireContext());
-            mediumImageFile = createTempImageFile(requireContext());
-            largeImageFile = createTempImageFile(requireContext());
+            File smallImageFile = createTempImageFile(requireContext());
+            File mediumImageFile = createTempImageFile(requireContext());
+            File largeImageFile = createTempImageFile(requireContext());
 
-            createScaledBitmaps();
+            createScaledBitmaps(
+                    smallImageFile,
+                    mediumImageFile,
+                    largeImageFile);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void createScaledBitmaps() {
+    private void createScaledBitmaps(File smallImageFile,
+                                     File mediumImageFile,
+                                     File largeImageFile) {
 
         Bitmap smallBitmap = createScaledBitmap(croppedImageBitmap, 75, true);
         Bitmap mediumBitmap = createScaledBitmap(croppedImageBitmap, 290, true);
         Bitmap largeBitMap = createScaledBitmap(croppedImageBitmap, 400, true);
 
-        String smallImageFileUri = saveBitmapToFileLocation(smallBitmap, smallImageFile);
-        String mediumImageFileUri = saveBitmapToFileLocation(mediumBitmap, mediumImageFile);
-        String largeImageFileUri = saveBitmapToFileLocation(largeBitMap, largeImageFile);
+        String smallImageFileUri = saveBitmapToCache(smallBitmap, smallImageFile);
+        String mediumImageFileUri = saveBitmapToCache(mediumBitmap, mediumImageFile);
+        String largeImageFileUri = saveBitmapToCache(largeBitMap, largeImageFile);
 
         imageEditorViewModel.setLocalImageUris(
                 smallImageFileUri,
                 mediumImageFileUri,
                 largeImageFileUri);
 
-        Log.d(TAG, "tkm - createScaledBitmaps:" +
-                " small uri: " + smallImageFileUri +
-                " med uri: " + mediumImageFileUri +
-                " large uri: " + largeImageFileUri);
-
         processAndSetImage(mediumImageFileUri);
+    }
 
-        // TODO - Set callbacks for bitmap processing before deleting any images
-//        if (croppedImageBitmap != null) croppedImageBitmap = null;
-//        deleteImageFile(requireActivity(), croppedImageResultUri.toString());
-//        delete camera image
-//        When first instantiated check for old files!!!
+    private void deleteTemporaryFiles(Pair[] filesAndDates) {
+
+        long fiveMinutes = 60000 * 5;
+        long timeNow = System.currentTimeMillis();
+
+        for (Pair file : filesAndDates) {
+
+            File filename = (File) file.first;
+            long lastModified = (long) file.second;
+            long fileAge = timeNow - lastModified;
+
+            if (fileAge > fiveMinutes) {
+
+                if (filename !=null) {
+
+                    boolean fileDeleted = filename.delete();
+
+                    if (fileDeleted)
+                        Log.d(TAG, "tkm - deleteTemporaryFiles: file deleted: " +
+                                filename.getName());
+                }
+            }
+        }
+
+        long daysBeforeDeletionOfTempFiles = TimeUnit.DAYS.toMillis(3);
+
+        long daysBeforeDeletion = 3;
+        long threeDaysInMilliseconds = 1000 * 60 * 60 * 24 * daysBeforeDeletion;
+        Log.d(TAG, "tkm - deleteTemporaryFiles: S days in milliseconds is: " + daysBeforeDeletionOfTempFiles);
+    }
+
+    private Pair[] getTemporaryFiles() {
+
+        // TODO - get files Uri?
+        int i = 0;
+        File[] cachedFiles = requireActivity().getCacheDir().listFiles();
+        Pair[] filesAndDates = new Pair[cachedFiles.length];
+
+        for (File file : cachedFiles) {
+
+            Pair<File, Long> fileWithDate = new Pair<>(file, file.lastModified());
+            filesAndDates[i] = fileWithDate;
+            i++;
+        }
+
+        return filesAndDates;
     }
 
     private void processAndSetImage(String largeImageFileUri) {
@@ -270,39 +289,6 @@ public class ImageEditor extends Fragment {
 
             deleteImageFile(requireActivity(), cameraImageFilePath);
             cameraImageTaken = false;
-        }
-    }
-
-    private void requestPermissions() {
-
-        if (ContextCompat.checkSelfPermission(requireActivity(),
-                Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED)
-
-            ActivityCompat.requestPermissions(requireActivity(),
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    Constants.REQUEST_STORAGE_PERMISSION);
-
-        else getImageFromCamera();
-    }
-
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-
-        switch (requestCode) {
-
-            case Constants.REQUEST_STORAGE_PERMISSION: {
-
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-
-                    getImageFromCamera();
-
-                else Toast.makeText(requireActivity(), R.string.storage_permission_denied,
-                        Toast.LENGTH_SHORT)
-                        .show();
-                break;
-            }
         }
     }
 
