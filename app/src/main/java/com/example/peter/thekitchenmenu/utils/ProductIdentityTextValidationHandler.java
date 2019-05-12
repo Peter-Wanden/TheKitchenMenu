@@ -142,6 +142,7 @@ public class ProductIdentityTextValidationHandler {
 
                     break;
             }
+            viewModel.getIdentityModel().setValue(viewModel.getNewIdentityModel());
         }
     }
 }

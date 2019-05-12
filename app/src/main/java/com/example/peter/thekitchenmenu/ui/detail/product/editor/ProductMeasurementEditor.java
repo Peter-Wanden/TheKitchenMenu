@@ -49,6 +49,7 @@ public class ProductMeasurementEditor extends Fragment {
         measurementEditorBinding.setLifecycleOwner(this);
 
         setViewModel();
+        setObservers();
         setValidationHandlersToBinding();
         setBindingInstanceVariables();
         setupUnitOfMeasureSpinner();
@@ -60,6 +61,14 @@ public class ProductMeasurementEditor extends Fragment {
 
         measurementViewModel = ViewModelProviders.of(requireActivity()).
                 get(ProductMeasurementViewModel.class);
+    }
+
+    private void setObservers() {
+
+        final Observer<ProductMeasurementModel> measurementModelObserver = measurementModel ->
+                measurementEditorBinding.setMeasurement(measurementModel);
+
+        measurementViewModel.getMeasurementModel().observe(this, measurementModelObserver);
     }
 
     private void setValidationHandlersToBinding() {

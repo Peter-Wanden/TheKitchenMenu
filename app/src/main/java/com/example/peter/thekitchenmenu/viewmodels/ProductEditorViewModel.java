@@ -89,9 +89,9 @@ public class ProductEditorViewModel extends ObservableViewModel {
                 0,
                 "",
                 "",
-                "https://assets.iceland.co.uk/i/iceland/Domestos_700m_Spray_Bleach_73591.jpg?$pdpzoom$",
-                "https://assets.iceland.co.uk/i/iceland/Domestos_700m_Spray_Bleach_73591.jpg?$pdpzoom$",
-                "https://assets.iceland.co.uk/i/iceland/Domestos_700m_Spray_Bleach_73591.jpg?$pdpzoom$",
+                "https://assets.iceland.co.uk/i/iceland/Domestos_700m_Spray_Bleach_73591.jpg",
+                "https://assets.iceland.co.uk/i/iceland/Domestos_700m_Spray_Bleach_73591.jpg",
+                "https://assets.iceland.co.uk/i/iceland/Domestos_700m_Spray_Bleach_73591.jpg",
                 0,
                 0,
                 "");
@@ -125,7 +125,7 @@ public class ProductEditorViewModel extends ObservableViewModel {
 
     public void setUpdatedMeasurementModel(ProductMeasurementModel updatedMeasurementModel) {
         this.updatedMeasurementModel = updatedMeasurementModel;
-        Log.d(TAG, "setUpdatedMeasurementModel: Measurement model updated");
+        Log.d(TAG, "tkm - setUpdatedMeasurementModel: Measurement model updated");
     }
 
     public void onFabClick() {

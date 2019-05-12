@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.example.peter.thekitchenmenu.R;
+import com.example.peter.thekitchenmenu.data.model.ImageModel;
 import com.example.peter.thekitchenmenu.databinding.ImageEditorBinding;
 import com.example.peter.thekitchenmenu.viewmodels.ImageEditorViewModel;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -24,6 +25,7 @@ import androidx.core.content.FileProvider;
 import androidx.core.util.Pair;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import java.io.File;
@@ -66,6 +68,7 @@ public class ImageEditor extends Fragment {
         imageEditorBinding.setLifecycleOwner(this);
 
         setViewModel();
+        setObservers();
         setBindingInstanceVariables();
         subscribeToEvents();
         checkHardware();
@@ -76,6 +79,15 @@ public class ImageEditor extends Fragment {
     private void setViewModel() {
         imageEditorViewModel = ViewModelProviders.of(requireActivity()).
                 get(ImageEditorViewModel.class);
+    }
+
+    private void setObservers() {
+
+        final Observer<ImageModel> imageModelObserver = imageModel -> {
+            imageEditorBinding.setImageModel(imageModel);
+        };
+
+        imageEditorViewModel.getImageModel().observe(this, imageModelObserver);
     }
 
     private void setBindingInstanceVariables() {

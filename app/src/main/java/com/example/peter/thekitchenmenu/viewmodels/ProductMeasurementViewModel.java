@@ -1,6 +1,7 @@
 package com.example.peter.thekitchenmenu.viewmodels;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.example.peter.thekitchenmenu.utils.ProductMeasurementHandler;
 import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
@@ -9,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 public class ProductMeasurementViewModel extends ObservableViewModel {
+
+    private static final String TAG = "ProductMeasurementViewM";
 
     private MutableLiveData<ProductMeasurementModel> measurementModel = new MutableLiveData<>();
 

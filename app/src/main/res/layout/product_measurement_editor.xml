@@ -9,12 +9,9 @@
     <data>
 
         <import type="android.view.View" />
-
         <import type="com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubTypeConverter" />
-
         <!--TODO - replace with NumberFormat as number format ### should not show zero -->
         <import type="com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementZeroToBlankConverter" />
-
         <import type="com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubType"/>
 
         <variable
@@ -24,7 +21,6 @@
         <variable
             name="measurement"
             type="com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel" />
-
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

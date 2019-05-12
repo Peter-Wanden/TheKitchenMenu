@@ -118,19 +118,25 @@ public class ProductEditor extends AppCompatActivity {
         // TODO - Observe the Models values - report them back ProductEditorViewModel
         final Observer<ImageModel> imageModelObserver = imageModel -> {
 
-            Log.d(TAG, "tkm - setObservers: ImageViewModel: New Image Model received");
+            Log.d(TAG, "tkm - setObservers: ImageViewModel: New model received");
             productEditorViewModel.setUpdatedImageModel(imageModel);
         };
 
         imageEditorViewModel.getImageModel().observe(this, imageModelObserver);
 
-        final Observer<ProductIdentityModel> identityModelObserver = IdentityModel ->
-                productEditorViewModel.setUpdatedIdentityModel(IdentityModel);
+        final Observer<ProductIdentityModel> identityModelObserver = IdentityModel -> {
+
+            Log.d(TAG, "tkm - setObservers: IdentityViewModel: New model received");
+            productEditorViewModel.setUpdatedIdentityModel(IdentityModel);
+        };
 
         identityEditorViewModel.getIdentityModel().observe(this, identityModelObserver);
 
-        final Observer<ProductMeasurementModel> measurementModelObserver = measurementModel ->
-                productEditorViewModel.setUpdatedMeasurementModel(measurementModel);
+        final Observer<ProductMeasurementModel> measurementModelObserver = measurementModel -> {
+
+            Log.d(TAG, "tkm - setObservers: MeasurementViewModel: New model received");
+            productEditorViewModel.setUpdatedMeasurementModel(measurementModel);
+        };
 
         measurementEditorViewModel.getMeasurementModel().observe(this, measurementModelObserver);
     }

@@ -32,6 +32,11 @@ public class BitmapUtils {
     // TODO - See: https://docs.oracle.com/javase/tutorial/essential/concurrency/forkjoin.html
     // TODO - Can also use a callback if fast enough
 
+    private BitmapUtils() {
+        // Suppress default constructor for noninstantiability
+        throw new AssertionError();
+    }
+
     /**
      * Creates the temporary image file in the cache directory.
      *

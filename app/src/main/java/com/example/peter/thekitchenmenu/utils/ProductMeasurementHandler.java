@@ -541,6 +541,7 @@ public class ProductMeasurementHandler {
                     unitOfMeasure.getItemMeasurementTwo());
         }
 
+        viewModel.getMeasurementModel().setValue(viewModel.getNewMeasurement());
         Log.d(TAG, "tkm - updateMeasurementModel: Measurement model updating complete");
     }
 }

@@ -15,7 +15,6 @@ public class ImageEditorViewModel extends ObservableViewModel {
     private static final String TAG = "ImageEditorViewModel";
 
     private boolean deviceHasCamera = false;
-    private boolean hasCameraPermissions = false;
 
     // TODO - Clear out the storage directory for new products
     private MutableLiveData<ImageModel> imageModel = new MutableLiveData<>();

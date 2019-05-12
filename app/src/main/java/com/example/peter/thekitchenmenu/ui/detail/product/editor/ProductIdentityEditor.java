@@ -41,6 +41,7 @@ public class ProductIdentityEditor extends Fragment {
         identityEditorBinding.setLifecycleOwner(this);
 
         setViewModel();
+        setObservers();
         setValidationHandler();
         setBindingInstanceVariables();
         setupSpinners();
@@ -51,6 +52,14 @@ public class ProductIdentityEditor extends Fragment {
     private void setViewModel() {
         identityViewModel = ViewModelProviders.of(requireActivity()).
                 get(ProductIdentityViewModel.class);
+    }
+
+    private void setObservers() {
+
+        final Observer<ProductIdentityModel> identityModelObserver = identityModel ->
+                identityEditorBinding.setIdentityModel(identityModel);
+
+        identityViewModel.getIdentityModel().observe(this, identityModelObserver);
     }
 
     private void setValidationHandler() {
