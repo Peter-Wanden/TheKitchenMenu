@@ -1,7 +1,5 @@
 package com.example.peter.thekitchenmenu.utils.imageeditor;
 
-import com.example.peter.thekitchenmenu.viewmodels.ImageEditorViewModel;
-
 public class ProductImageEditorHandler implements ImageEditorHandler {
 
     private ImageEditorViewModel viewModel;

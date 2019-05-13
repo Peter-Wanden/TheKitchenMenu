@@ -6,12 +6,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <import type="android.view.View" />
 
         <variable
             name="imageViewModel"
-            type="com.example.peter.thekitchenmenu.viewmodels.ImageEditorViewModel" />
+            type="com.example.peter.thekitchenmenu.utils.imageeditor.ImageEditorViewModel" />
 
         <variable
             name="imageModel"
@@ -94,7 +93,7 @@
             android:backgroundTint="@color/textColorHighlight"
             android:contentDescription="@string/cd_add_image_from_camera"
             android:elevation="@dimen/standard_margin"
-            android:visibility="@{imageViewModel.isDeviceHasCamera ? View.VISIBLE : View.GONE}"
+            android:visibility="@{imageViewModel.deviceHasCamera ? View.VISIBLE : View.GONE}"
             android:onClick='@{() -> imageViewModel.launchCamera()}'
             android:src="@drawable/ic_action_camera"
             android:tint="@color/white"

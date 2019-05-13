@@ -5,14 +5,11 @@ import android.util.Log;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
-import com.example.peter.thekitchenmenu.data.entity.ProductUserDataEntity;
 import com.example.peter.thekitchenmenu.data.model.ProductIdentityModel;
 import com.example.peter.thekitchenmenu.data.model.ImageModel;
 import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
-import com.example.peter.thekitchenmenu.data.model.ProductUserDataModel;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 
 public class ProductEditorViewModel extends ObservableViewModel {
@@ -21,13 +18,13 @@ public class ProductEditorViewModel extends ObservableViewModel {
 
     private String title; // Add product, Edit product
 
-    // From repo, or empty if new product. Posts updates back to repo when replaced by newProductEntity
-    private MutableLiveData<ProductEntity> productEntity = new MutableLiveData<>();
+    // From repo, or empty if new product. Set an updatedProductEntity here to update repo
+    private MutableLiveData<ProductEntity> existingProductEntity = new MutableLiveData<>();
 
-    // Populated as new data is set from models. Once complete is posted to ProductEntity
-    private ProductEntity newProductEntity = new ProductEntity();
+    // Populated as new data is set from models. Once complete post to existingProductEntity
+    private ProductEntity updatedProductEntity = new ProductEntity();
 
-    // Model updates
+    // The various model updates that make up an updated ProductEntity
     private ImageModel updatedImageModel = new ImageModel();
     private ProductIdentityModel updatedIdentityModel = new ProductIdentityModel();
     private ProductMeasurementModel updatedMeasurementModel = new ProductMeasurementModel();
@@ -96,7 +93,7 @@ public class ProductEditorViewModel extends ObservableViewModel {
                 0,
                 "");
 
-        this.productEntity.setValue(productEntityMetricMassTest);
+        this.existingProductEntity.setValue(productEntityMetricMassTest);
     }
 
     public String getTitle() {
@@ -104,10 +101,10 @@ public class ProductEditorViewModel extends ObservableViewModel {
         return title;
     }
 
-    public MutableLiveData<ProductEntity> getProductEntity() {
+    public MutableLiveData<ProductEntity> getExistingProductEntity() {
 
-        if (productEntity == null) productEntity = new MutableLiveData<>();
-        return productEntity;
+        if (existingProductEntity == null) existingProductEntity = new MutableLiveData<>();
+        return existingProductEntity;
     }
 
     public void setUpdatedImageModel(ImageModel updatedImageModel) {

@@ -134,7 +134,7 @@ public class BitmapUtils {
 
             String errorMessage = context.getString(R.string.delete_file_error);
             Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
-        }
+        } else Log.d(TAG, "tkm - deleteImageFile: Image file deleted");
     }
 
     /* As bitmap factory will only accept a path and not a Uri we have to do this. */

@@ -10,7 +10,7 @@ import com.example.peter.thekitchenmenu.data.model.ProductIdentityModel;
 import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
 import com.example.peter.thekitchenmenu.databinding.ProductEditorBinding;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubType;
-import com.example.peter.thekitchenmenu.viewmodels.ImageEditorViewModel;
+import com.example.peter.thekitchenmenu.utils.imageeditor.ImageEditorViewModel;
 import com.example.peter.thekitchenmenu.viewmodels.ProductEditorViewModel;
 import com.example.peter.thekitchenmenu.viewmodels.ProductIdentityViewModel;
 import com.example.peter.thekitchenmenu.viewmodels.ProductMeasurementViewModel;
@@ -93,7 +93,7 @@ public class ProductEditor extends AppCompatActivity {
                 imageModel.setRemoteMediumImageUri(imageModel.getRemoteMediumImageUri());
                 imageModel.setRemoteLargeImageUri(imageModel.getRemoteLargeImageUri());
 
-                imageEditorViewModel.getImageModel().setValue(imageModel);
+                imageEditorViewModel.getExistingImageModel().setValue(imageModel);
 
                 ProductIdentityModel identityModel = new ProductIdentityModel();
                 identityModel.setDescription(productEntity.getDescription());
@@ -113,7 +113,7 @@ public class ProductEditor extends AppCompatActivity {
             }
         };
 
-        productEditorViewModel.getProductEntity().observe(this, productObserver);
+        productEditorViewModel.getExistingProductEntity().observe(this, productObserver);
 
         // TODO - Observe the Models values - report them back ProductEditorViewModel
         final Observer<ImageModel> imageModelObserver = imageModel -> {
@@ -122,7 +122,7 @@ public class ProductEditor extends AppCompatActivity {
             productEditorViewModel.setUpdatedImageModel(imageModel);
         };
 
-        imageEditorViewModel.getImageModel().observe(this, imageModelObserver);
+        imageEditorViewModel.getExistingImageModel().observe(this, imageModelObserver);
 
         final Observer<ProductIdentityModel> identityModelObserver = IdentityModel -> {
 

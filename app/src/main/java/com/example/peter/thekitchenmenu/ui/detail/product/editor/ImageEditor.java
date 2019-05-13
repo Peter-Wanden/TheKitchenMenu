@@ -16,7 +16,7 @@ import com.bumptech.glide.Glide;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.model.ImageModel;
 import com.example.peter.thekitchenmenu.databinding.ImageEditorBinding;
-import com.example.peter.thekitchenmenu.viewmodels.ImageEditorViewModel;
+import com.example.peter.thekitchenmenu.utils.imageeditor.ImageEditorViewModel;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import androidx.annotation.NonNull;
@@ -41,17 +41,15 @@ public class ImageEditor extends Fragment {
     private static final String TAG = "ImageEditor";
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final boolean CAMERA_IMAGE_TAKEN = true;
     private static final String FILE_PROVIDER_AUTHORITY =
             "com.example.peter.thekitchenmenu.fileprovider";
 
     private ImageEditorBinding imageEditorBinding;
-    private ImageEditorViewModel imageEditorViewModel;
+    private ImageEditorViewModel viewModel;
 
+    private File fullSizeImageFile = null;
     private Bitmap croppedImageBitmap = null;
-
-    private boolean cameraImageTaken = false;
-    private String cameraImageFilePath = null;
-    private Uri cameraImageFileUri = null;
 
     @Nullable
     @Override
@@ -61,7 +59,8 @@ public class ImageEditor extends Fragment {
 
         imageEditorBinding = DataBindingUtil.inflate(
                 inflater,
-                R.layout.image_editor, container,
+                R.layout.image_editor,
+                container,
                 false);
 
         View rootView = imageEditorBinding.getRoot();
@@ -71,13 +70,13 @@ public class ImageEditor extends Fragment {
         setObservers();
         setBindingInstanceVariables();
         subscribeToEvents();
-        checkHardware();
 
         return rootView;
     }
 
     private void setViewModel() {
-        imageEditorViewModel = ViewModelProviders.of(requireActivity()).
+
+        viewModel = ViewModelProviders.of(requireActivity()).
                 get(ImageEditorViewModel.class);
     }
 
@@ -87,31 +86,41 @@ public class ImageEditor extends Fragment {
             imageEditorBinding.setImageModel(imageModel);
         };
 
-        imageEditorViewModel.getImageModel().observe(this, imageModelObserver);
+        viewModel.getExistingImageModel().observe(this, imageModelObserver);
     }
 
     private void setBindingInstanceVariables() {
 
-        imageEditorBinding.setImageViewModel(imageEditorViewModel);
-        imageEditorBinding.setImageModel(imageEditorViewModel.getNewImageModel());
+        imageEditorBinding.setImageViewModel(viewModel);
+        imageEditorBinding.setImageModel(viewModel.getUpdatedImageModel());
     }
 
     private void subscribeToEvents() {
 
-        imageEditorViewModel.getLaunchGalleryEvent().observe(
-                this, event -> getImageFromGallery());
+        viewModel.checkIfHardwareHasCameraEvent().observe(this, event ->
+                checkIfHardwareHasCamera());
 
-        imageEditorViewModel.getLaunchCameraEvent().observe(
-                this, event -> getImageFromCamera());
+        viewModel.launchGalleryEvent().observe(this, event ->
+                getImageFromGallery());
 
-        imageEditorViewModel.getLaunchBrowserEvent().observe(
-                this, event -> launchBrowser());
+        viewModel.launchCameraEvent().observe(this, event ->
+                getImageFromCamera());
+
+        viewModel.launchBrowserEvent().observe(this, event ->
+                launchBrowser());
+
+        viewModel.cropFullSizeImageEvent().observe(this, uri -> {
+            if (uri != null) cropImage();
+        });
+
+        viewModel.deleteFullSizeImageEvent().observe(this, event ->
+                deleteFullSizeImage());
     }
 
-    private void checkHardware() {
+    private void checkIfHardwareHasCamera() {
 
-        imageEditorViewModel.setDeviceHasCamera(requireActivity().getPackageManager().
-                        hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY));
+        viewModel.getDeviceHasCamera().set(requireActivity().getPackageManager().
+                hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY));
     }
 
     private void getImageFromCamera() {
@@ -120,28 +129,28 @@ public class ImageEditor extends Fragment {
 
         if (takePictureIntent.resolveActivity(requireActivity().getPackageManager()) != null) {
 
-            File cameraImageFile = null;
+            fullSizeImageFile = null;
 
             try {
 
-                cameraImageFile = createTempImageFile(requireContext());
+                fullSizeImageFile = createTempImageFile(requireContext());
 
             } catch (IOException e) {
 
                 e.printStackTrace();
             }
 
-            if (cameraImageFile != null) {
+            if (fullSizeImageFile != null) {
 
-                cameraImageFileUri = FileProvider.getUriForFile(
+                viewModel.setCameraImageFileUri(FileProvider.getUriForFile(
                         requireActivity(),
                         FILE_PROVIDER_AUTHORITY,
-                        cameraImageFile);
+                        fullSizeImageFile));
 
-                cameraImageFilePath = cameraImageFile.getAbsolutePath();
-                cameraImageTaken = true;
+                viewModel.setCameraImageFilePath(fullSizeImageFile.getAbsolutePath());
 
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageFileUri);
+                takePictureIntent.putExtra(
+                        MediaStore.EXTRA_OUTPUT, viewModel.getCameraImageFileUri());
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
         }
@@ -149,26 +158,20 @@ public class ImageEditor extends Fragment {
 
     private void getImageFromGallery() {
 
-        CropImage.activity().setActivityTitle("TKM - Image Cropper").
+        CropImage.activity().setActivityTitle(requireActivity().
+                getString(R.string.activity_title_image_cropper)).
                 setAspectRatio(1,1).
                 start(requireActivity(), this);
-    }
-
-    private void cropCameraImage() {
-
-        CropImage.activity(cameraImageFileUri).setActivityTitle("TKM - Image Cropper").
-                setAspectRatio(1,1).
-                start(requireContext(), this);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            cropCameraImage();
+            viewModel.cameraImageResult(RESULT_OK);
         }
 
         else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_CANCELED) {
-            deleteImageFile(requireActivity(), cameraImageFilePath);
+            viewModel.cameraImageResult(RESULT_CANCELED);
         }
 
         else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
@@ -184,6 +187,15 @@ public class ImageEditor extends Fragment {
                 Log.e(TAG, "tkm - onActivityResult: ", error);
             }
         }
+    }
+
+    private void cropImage() {
+
+        CropImage.activity(viewModel.getCameraImageFileUri()).
+                setActivityTitle(requireActivity().
+                        getString(R.string.activity_title_image_cropper)).
+                setAspectRatio(1,1).
+                start(requireContext(), this);
     }
 
     private void processCroppedBitMap(Uri croppedImageResultUri) {
@@ -232,7 +244,7 @@ public class ImageEditor extends Fragment {
         String mediumImageFileUri = saveBitmapToCache(mediumBitmap, mediumImageFile);
         String largeImageFileUri = saveBitmapToCache(largeBitMap, largeImageFile);
 
-        imageEditorViewModel.setLocalImageUris(
+        viewModel.setLocalImageUris(
                 smallImageFileUri,
                 mediumImageFileUri,
                 largeImageFileUri);
@@ -295,12 +307,10 @@ public class ImageEditor extends Fragment {
                 into(imageEditorBinding.productImage);
     }
 
-    private void deleteCameraImage() {
+    private void deleteFullSizeImage() {
 
-        if (cameraImageTaken) {
-
-            deleteImageFile(requireActivity(), cameraImageFilePath);
-            cameraImageTaken = false;
+        if (viewModel.getCameraImageFilePath() != null) {
+            deleteImageFile(requireActivity(), viewModel.getCameraImageFilePath());
         }
     }
 
