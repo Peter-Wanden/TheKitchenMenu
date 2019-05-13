@@ -75,7 +75,7 @@ dependencies {
     // Architecture components
     implementation "androidx.lifecycle:lifecycle-extensions:$androidxLifecycleExtensions"
     implementation "androidx.lifecycle:lifecycle-runtime:$androidxLifecycleRuntime"
-    annotationProcessor "androidx.lifecycle:lifecycle-compiler:$androidxArchComponentsVersion"
+    implementation "androidx.lifecycle:lifecycle-common-java8:$androidxArchComponentsVersion"
 
     // Room
     implementation "androidx.room:room-runtime:$androidxRoomVersion"

@@ -53,7 +53,7 @@ public class ImageEditorViewModel extends ObservableViewModel {
         return updatedImageModel;
     }
 
-    private void checkIfHardwareHasCamera() {
+    public void checkIfHardwareHasCamera() {
         checkIfHardwareHasCameraEvent.call();
     }
 

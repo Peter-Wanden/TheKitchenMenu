@@ -64,6 +64,7 @@ ext {
     androidxArchComponentsVersion = "2.0.0-rc01"
     androidxLifecycleExtensions = "2.2.0-alpha01"
     androidxLifecycleRuntime = "2.1.0-alpha04"
+    androidxLifscycleCommon = "2.0.0-rc01"
 
     // Paging runtime
     androidxPagingRuntimeVersion = "2.1.0"
