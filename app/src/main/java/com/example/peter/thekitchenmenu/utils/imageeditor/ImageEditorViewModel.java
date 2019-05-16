@@ -1,48 +1,65 @@
 package com.example.peter.thekitchenmenu.utils.imageeditor;
 
 import android.app.Application;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.provider.MediaStore;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
 import androidx.databinding.ObservableBoolean;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.peter.thekitchenmenu.data.model.ImageModel;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
-import com.example.peter.thekitchenmenu.utils.imageeditor.LastImageUpdated;
 import com.example.peter.thekitchenmenu.viewmodels.ObservableViewModel;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static android.app.Activity.RESULT_OK;
+import static com.example.peter.thekitchenmenu.app.Constants.FILE_PROVIDER_AUTHORITY;
+import static com.example.peter.thekitchenmenu.data.model.ImageModel.*;
+import static com.example.peter.thekitchenmenu.utils.imageeditor.BitmapUtils.createScaledBitmap;
+import static com.example.peter.thekitchenmenu.utils.imageeditor.BitmapUtils.saveBitmapToCache;
 
 public class ImageEditorViewModel extends ObservableViewModel {
 
     private static final String TAG = "ImageEditorViewModel";
 
-    private final ObservableBoolean deviceHasCamera = new ObservableBoolean(false);
+    public static final int REQUEST_IMAGE_CAPTURE = 1;
+    public static final int REQUEST_IMAGE_IMPORT = 2;
 
-    // TODO - Clear out the storage directory for new products
+    private Application appContext;
     private final MutableLiveData<ImageModel> existingImageModel = new MutableLiveData<>();
     private ImageModel updatedImageModel = new ImageModel();
-    private final MutableLiveData<Boolean> imageModelIsValid = new MutableLiveData<>();
+
+    private static final long MAX_FILE_AGE = 60000 * 5; // five minutes TODO Change to 3 days
+    private final SingleLiveEvent<String> deleteFullSizeImage = new SingleLiveEvent<>();
+    private File fullSizeImageFile = null;
+    private File smallImageFile = null;
+    private File mediumImageFile = null;
+    private File largeImageFile = null;
 
     // SingleLiveEvent - see https://github.com/googlesamples/android-architecture
-    private final SingleLiveEvent<Void> checkIfHardwareHasCameraEvent = new SingleLiveEvent<>();
-    private final SingleLiveEvent<Void> launchCameraEvent = new SingleLiveEvent<>();
-    private static final int CAMERA_IMAGE_RESULT_OK = -1;
-
-    private final SingleLiveEvent<Uri> cropFullSizeImageEvent = new SingleLiveEvent<>();
-    private final SingleLiveEvent<Void> deleteFullSizeImage = new SingleLiveEvent<>();
-
-    private final SingleLiveEvent<Void> launchGalleryEvent = new SingleLiveEvent<>();
+    private final ObservableBoolean canTakePictures = new ObservableBoolean(false);
+    private final SingleLiveEvent<Void> getImageFromCameraEvent = new SingleLiveEvent<>();
+    private final SingleLiveEvent<Void> getImageFromGalleryEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<Void> launchBrowserEvent = new SingleLiveEvent<>();
-
-    private Uri cameraImageFileUri = null;
-    private String cameraImageFilePath = null;
-    private LastImageUpdated lastImageUpdated = LastImageUpdated.NO_IMAGE;
-    private boolean newImageDataAvailable = false;
+    private final SingleLiveEvent<Void> cropFullSizeImageEvent = new SingleLiveEvent<>();
 
     public ImageEditorViewModel(@NonNull Application application) {
         super(application);
 
-        checkIfHardwareHasCamera();
+        appContext = application;
+        cleanUpCacheDirectory();
+        createTemporaryImageFiles();
+        checkIfCanTakePictures();
     }
 
     public MutableLiveData<ImageModel> getExistingImageModel() {
@@ -53,61 +70,206 @@ public class ImageEditorViewModel extends ObservableViewModel {
         return updatedImageModel;
     }
 
-    public void checkIfHardwareHasCamera() {
-        checkIfHardwareHasCameraEvent.call();
+    private void cleanUpCacheDirectory() {
+
+        File[] cacheDirectoryFileList = appContext.getCacheDir().listFiles();
+        if (cacheDirectoryFileList.length > 0) processCacheDirectoryFiles(cacheDirectoryFileList);
     }
 
-    public SingleLiveEvent<Void> checkIfHardwareHasCameraEvent() {
-        return checkIfHardwareHasCameraEvent;
+    private void processCacheDirectoryFiles(File[] cacheDirectoryFileList) {
+
+        List<File> imageEditorCacheFileList = new ArrayList<>();
+
+        for (File cachedFile : cacheDirectoryFileList) {
+
+            Log.d(TAG, "tkm - processCacheDirectoryFiles: " + cachedFile.getName());
+
+            if (cachedFileBelongsToImageEditor(cachedFile))
+                imageEditorCacheFileList.add(cachedFile);
+        }
+
+        deleteOutOfDateFiles(imageEditorCacheFileList);
     }
 
-    public ObservableBoolean getDeviceHasCamera() {
-        return deviceHasCamera;
+    private boolean cachedFileBelongsToImageEditor(File file) {
+
+        String filename = file.getName();
+
+        return filename.startsWith(FULL_SIZE_IMAGE_FILE_PREFIX) ||
+                filename.startsWith(LARGE_IMAGE_FILE_PREFIX) ||
+                filename.startsWith(MEDIUM_IMAGE_FILE_PREFIX) ||
+                filename.startsWith(SMALL_IMAGE_FILE_PREFIX);
     }
 
-    public void launchCamera() {
-        launchCameraEvent.call();
+    private void deleteOutOfDateFiles(List<File> imageEditorCacheFileList) {
+
+        long timeNow = System.currentTimeMillis();
+
+        for (File file : imageEditorCacheFileList) {
+
+            long lastModified = file.lastModified();
+            long fileAge = timeNow - lastModified;
+
+            if (fileAge > MAX_FILE_AGE) {
+
+                if (file.delete())
+                    Log.d(TAG, "tkm - deleteOutOfDateFiles: file deleted: " + file.getName());
+            }
+        }
     }
 
-    public SingleLiveEvent<Void> launchCameraEvent() {
-        return launchCameraEvent;
+    public File getFullSizeImageFile() {
+        return fullSizeImageFile;
     }
 
-    public Uri getCameraImageFileUri() {
-        return cameraImageFileUri;
+    private void createTemporaryImageFiles() {
+
+        fullSizeImageFile = createImageFile(ImageModel.FULL_SIZE_IMAGE_FILE_PREFIX);
+
+        smallImageFile = createImageFile(ImageModel.SMALL_IMAGE_FILE_PREFIX);
+        if (smallImageFile != null) {
+
+            updatedImageModel.setLocalSmallImageUri(FileProvider.getUriForFile(
+                    appContext,
+                    FILE_PROVIDER_AUTHORITY,
+                    smallImageFile).toString());
+        }
+
+        mediumImageFile = createImageFile(ImageModel.MEDIUM_IMAGE_FILE_PREFIX);
+        if (mediumImageFile != null) {
+
+            updatedImageModel.setLocalMediumImageUri(FileProvider.getUriForFile(
+                    appContext,
+                    FILE_PROVIDER_AUTHORITY,
+                    mediumImageFile).toString());
+        }
+
+        largeImageFile = createImageFile(ImageModel.LARGE_IMAGE_FILE_PREFIX);
+        if (largeImageFile != null) {
+
+            updatedImageModel.setLocalLargeImageUri(FileProvider.getUriForFile(
+                            appContext,
+                            FILE_PROVIDER_AUTHORITY,
+                            largeImageFile).toString());
+        }
     }
 
-    public void setCameraImageFileUri(Uri cameraImageFileUri) {
-        this.cameraImageFileUri = cameraImageFileUri;
+    private File createImageFile(String filePrefix) {
+
+        File newImageFile = null;
+
+        try {
+
+            newImageFile = BitmapUtils.createTemporaryImageFile(appContext, filePrefix);
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+        return newImageFile;
     }
 
-    public String getCameraImageFilePath() {
-        return cameraImageFilePath;
+    private void checkIfCanTakePictures() {
+
+        boolean hasCamera = appContext.getPackageManager().
+                hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY);
+
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        boolean hasCameraApp = takePictureIntent.resolveActivity(
+                appContext.getPackageManager()) != null;
+
+        canTakePictures.set(hasCamera && hasCameraApp);
     }
 
-    public void setCameraImageFilePath(String cameraImageFilePath) {
-        this.cameraImageFilePath = cameraImageFilePath;
+    public void getImageFromCamera() {
+        getImageFromCameraEvent.call();
     }
 
-    public void launchGallery() {
-        launchGalleryEvent.call();
+    public SingleLiveEvent<Void> getImageFromCameraEvent() {
+        return getImageFromCameraEvent;
     }
 
-    public SingleLiveEvent<Void> launchGalleryEvent() {
-        return launchGalleryEvent;
+    public void getImageFromGallery() {
+        getImageFromGalleryEvent.call();
+    }
+
+    public SingleLiveEvent<Void> getImageFromGalleryEvent() {
+        return getImageFromGalleryEvent;
     }
 
     public void cameraImageResult(int cameraImageResult) {
 
-        if (cameraImageResult == CAMERA_IMAGE_RESULT_OK) cropFullSizeImageEvent.call();
-        else deleteFullSizeImage.call();
+        if (cameraImageResult == RESULT_OK) {
+            cropFullSizeImageEvent.call();
+        }
     }
 
-    public SingleLiveEvent<Uri> cropFullSizeImageEvent() {
+    public SingleLiveEvent<Void> cropFullSizeImageEvent() {
         return cropFullSizeImageEvent;
     }
 
-    public SingleLiveEvent<Void> deleteFullSizeImageEvent() {
+    public void setCroppedImageResult(int cropImageResult, Uri croppedImageUri) {
+
+        if (cropImageResult == RESULT_OK && croppedImageUri != null)
+            processCroppedImageIntoImageFiles(croppedImageUri);
+    }
+
+    private void processCroppedImageIntoImageFiles(Uri croppedImageUri) {
+
+        try {
+
+            Bitmap croppedImageBitmap = MediaStore.Images.Media.getBitmap(
+                    appContext.getContentResolver(), croppedImageUri);
+
+            Log.d(TAG, "tkm - processCroppedImage: path is: " +
+                    BitmapUtils.getAbsolutePathFromUri(appContext, croppedImageUri));
+
+            createImageFilesFromCroppedBitMap(croppedImageBitmap);
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+    }
+
+    private void createImageFilesFromCroppedBitMap(Bitmap croppedImageBitmap) {
+
+        Bitmap smallBitmap = createScaledBitmap(croppedImageBitmap, 75, true);
+        Bitmap mediumBitmap = createScaledBitmap(croppedImageBitmap, 290, true);
+        Bitmap largeBitMap = createScaledBitmap(croppedImageBitmap, 400, true);
+
+        if (smallImageFile != null) {
+
+            boolean smallImageFileSaved = saveBitmapToCache(smallBitmap, smallImageFile);
+
+            if (smallImageFileSaved)
+            updatedImageModel.setLocalSmallImageUri(FileProvider.getUriForFile(
+                            appContext, FILE_PROVIDER_AUTHORITY,smallImageFile).toString());
+        }
+
+        if (mediumImageFile != null) {
+
+            boolean mediumImageSaved = saveBitmapToCache(mediumBitmap, mediumImageFile);
+
+            if (mediumImageSaved)
+                updatedImageModel.setLocalMediumImageUri(FileProvider.getUriForFile(
+                                appContext, FILE_PROVIDER_AUTHORITY, mediumImageFile).toString());
+        }
+
+        if (largeImageFile != null) {
+
+            boolean largeImageSaved = saveBitmapToCache(largeBitMap, largeImageFile);
+
+            if (largeImageSaved)
+                updatedImageModel.setLocalLargeImageUri(FileProvider.getUriForFile(
+                                appContext, FILE_PROVIDER_AUTHORITY, largeImageFile).toString());
+        }
+
+        // ToDo - set the new image to the display
+    }
+
+    public SingleLiveEvent<String> deleteFullSizeImageEvent() {
         return deleteFullSizeImage;
     }
 
@@ -117,28 +279,5 @@ public class ImageEditorViewModel extends ObservableViewModel {
 
     public SingleLiveEvent<Void> launchBrowserEvent() {
         return launchBrowserEvent;
-    }
-
-    public LastImageUpdated getLastImageUpdated() {
-        return lastImageUpdated;
-    }
-
-    public void setLastImageUpdated(LastImageUpdated lastImageUpdated) {
-        this.lastImageUpdated = lastImageUpdated;
-    }
-
-    public void setNewImageDataAvailable(boolean newImageDataAvailable) {
-        this.newImageDataAvailable = newImageDataAvailable;
-    }
-
-    public void setLocalImageUris(String localSmallImageUri,
-                                  String localMediumImageUri,
-                                  String localLargeImageUri) {
-
-        updatedImageModel.setLocalSmallImageUri(localSmallImageUri);
-        updatedImageModel.setLocalMediumImageUri(localMediumImageUri);
-        updatedImageModel.setLocalLargeImageUri(localLargeImageUri);
-
-        getExistingImageModel().setValue(updatedImageModel);
     }
 }

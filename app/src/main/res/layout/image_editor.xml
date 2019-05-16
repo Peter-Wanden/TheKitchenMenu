@@ -93,8 +93,8 @@
             android:backgroundTint="@color/textColorHighlight"
             android:contentDescription="@string/cd_add_image_from_camera"
             android:elevation="@dimen/standard_margin"
-            android:visibility="@{imageViewModel.deviceHasCamera ? View.VISIBLE : View.GONE}"
-            android:onClick='@{() -> imageViewModel.launchCamera()}'
+            android:visibility="@{imageViewModel.canTakePictures ? View.VISIBLE : View.GONE}"
+            android:onClick="@{() -> imageViewModel.getImageFromCamera()}"
             android:src="@drawable/ic_action_camera"
             android:tint="@color/white"
             app:layout_constraintBottom_toBottomOf="@id/product_image"
@@ -109,7 +109,7 @@
             android:backgroundTint="@color/textColorHighlight"
             android:contentDescription="@string/cd_add_image_from_gallery"
             android:elevation="@dimen/standard_margin"
-            android:onClick='@{() -> imageViewModel.launchGallery()}'
+            android:onClick="@{() -> imageViewModel.getImageFromGallery()}"
             android:src="@drawable/ic_add_picture_from_gallery"
             android:tint="@color/white"
             app:layout_constraintBottom_toBottomOf="@id/product_image"

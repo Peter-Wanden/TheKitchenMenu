@@ -8,14 +8,26 @@ public class ImageModel extends BaseObservable {
 
     private static final String TAG = "ImageModel";
 
-    private String remoteLargeImageUri = ""; // remote server image location
-    private String remoteMediumImageUri = "";
-    private String remoteSmallImageUri = "";
-    private String webImageUrl = "";    // user selected web image location
+    public static final String FULL_SIZE_IMAGE_FILE_PREFIX = "IE_FULL_";
+    private String localFullSizeImageUri = "";
 
-    private String localLargeImageUri = "";  // Camera or local gallery file location
+    public static final String LARGE_IMAGE_FILE_PREFIX = "IE_LARGE_";
+    private String remoteLargeImageUri = "";
+    private String localLargeImageUri = "";
+
+    public static final String MEDIUM_IMAGE_FILE_PREFIX = "IE_MEDIUM_";
+    private String remoteMediumImageUri = "";
     private String localMediumImageUri = "";
+
+    public static final String SMALL_IMAGE_FILE_PREFIX = "IE_SMALL_";
+    private String remoteSmallImageUri = "";
     private String localSmallImageUri = "";
+
+    private String webImageUrl = "";
+
+    public String getLocalFullSizeImageUri() {
+        return localFullSizeImageUri;
+    }
 
     @Bindable
     public String getRemoteLargeImageUri() {
@@ -28,32 +40,6 @@ public class ImageModel extends BaseObservable {
         notifyPropertyChanged(BR.remoteLargeImageUri);
     }
 
-    public String getRemoteMediumImageUri() {
-        return remoteMediumImageUri;
-    }
-
-    public void setRemoteMediumImageUri(String remoteMediumImageUri) {
-        this.remoteMediumImageUri = remoteMediumImageUri;
-    }
-
-    public String getRemoteSmallImageUri() {
-        return remoteSmallImageUri;
-    }
-
-    public void setRemoteSmallImageUri(String remoteSmallImageUri) {
-        this.remoteSmallImageUri = remoteSmallImageUri;
-    }
-
-    @Bindable
-    public String getWebImageUrl() {
-        return webImageUrl;
-    }
-
-    public void setWebImageUrl(String webImageUrl) {
-        this.webImageUrl = webImageUrl;
-        notifyPropertyChanged(BR.webImageUrl);
-    }
-
     @Bindable
     public String getLocalLargeImageUri() {
         return localLargeImageUri;
@@ -64,6 +50,15 @@ public class ImageModel extends BaseObservable {
         notifyPropertyChanged(BR.localLargeImageUri);
     }
 
+
+    public String getRemoteMediumImageUri() {
+        return remoteMediumImageUri;
+    }
+
+    public void setRemoteMediumImageUri(String remoteMediumImageUri) {
+        this.remoteMediumImageUri = remoteMediumImageUri;
+    }
+
     public String getLocalMediumImageUri() {
         return localMediumImageUri;
     }
@@ -72,11 +67,31 @@ public class ImageModel extends BaseObservable {
         this.localMediumImageUri = localMediumImageUri;
     }
 
+
+    public String getRemoteSmallImageUri() {
+        return remoteSmallImageUri;
+    }
+
+    public void setRemoteSmallImageUri(String remoteSmallImageUri) {
+        this.remoteSmallImageUri = remoteSmallImageUri;
+    }
+
     public String getLocalSmallImageUri() {
         return localSmallImageUri;
     }
 
     public void setLocalSmallImageUri(String localSmallImageUri) {
         this.localSmallImageUri = localSmallImageUri;
+    }
+
+
+    @Bindable
+    public String getWebImageUrl() {
+        return webImageUrl;
+    }
+
+    public void setWebImageUrl(String webImageUrl) {
+        this.webImageUrl = webImageUrl;
+        notifyPropertyChanged(BR.webImageUrl);
     }
 }

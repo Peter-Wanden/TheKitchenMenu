@@ -43,12 +43,12 @@ public class BitmapUtils {
      * @return The temporary image file.
      * @throws IOException Thrown if there is an error creating the file
      */
-    public static File createTempImageFile(Context context) throws IOException {
+    public static File createTemporaryImageFile(Context context, String prefix) throws IOException {
 
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmssSSS",
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
                 Locale.getDefault()).format(new Date());
 
-        String imageFileName = "TKM_" + timeStamp + "_";
+        String imageFileName = prefix + timeStamp + "_";
 
         File storageDir = context.getCacheDir();
         Log.d(TAG, "tkm - cache directory is: " + storageDir);
@@ -104,20 +104,18 @@ public class BitmapUtils {
         return Bitmap.createScaledBitmap(image, width, height, filter);
     }
 
-    public static String saveBitmapToCache(Bitmap scaledBitMap, File imageFile) {
+    public static boolean saveBitmapToCache(Bitmap scaledBitMap, File imageFile) {
 
         try (FileOutputStream out = new FileOutputStream(imageFile)) {
 
             // Save the cropped bitmap to its image file
             scaledBitMap.compress(Bitmap.CompressFormat.JPEG, 80, out);
-
-            // Get the Uri
-            return imageFile.getAbsolutePath();
+            return true;
 
         } catch (IOException e) {
 
             e.printStackTrace();
-            return "";
+            return false;
         }
     }
 
@@ -139,13 +137,13 @@ public class BitmapUtils {
 
     /* As bitmap factory will only accept a path and not a Uri we have to do this. */
     // Credit: https://stackoverflow.com/questions/3401579/get-filename-and-path-from-uri-from-mediastore?rq=1
-    public static String getAbsolutePathFromUri(Context context, Uri productImageUri) {
+    public static String getAbsolutePathFromUri(Context context, Uri fileUri) {
 
         String[] projection = {MediaStore.Images.Media.DATA};
 
         CursorLoader loader = new CursorLoader(
                 context,
-                productImageUri,
+                fileUri,
                 projection,
                 null,
                 null,
@@ -182,4 +180,6 @@ public class BitmapUtils {
 
         imageView.setImageBitmap(rotated);
     }
+
+
 }

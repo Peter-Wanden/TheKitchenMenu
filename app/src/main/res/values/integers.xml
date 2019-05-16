@@ -37,4 +37,5 @@
 
     <integer name="user_input_text_shortest_length">3</integer>
     <integer name="user_input_text_longest_length">70</integer>
+    
 </resources>

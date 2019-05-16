@@ -56,7 +56,7 @@
 
                 <fragment
                     android:id="@+id/image_editor_fragment"
-                    android:name="com.example.peter.thekitchenmenu.ui.detail.product.editor.ImageEditor"
+                    android:name="com.example.peter.thekitchenmenu.ui.detail.product.editor.ImageEditorFragment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     bind:layout="@layout/image_editor">
