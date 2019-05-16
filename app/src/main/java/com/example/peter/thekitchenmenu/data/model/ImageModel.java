@@ -1,5 +1,6 @@
 package com.example.peter.thekitchenmenu.data.model;
 
+import androidx.annotation.NonNull;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 import androidx.databinding.library.baseAdapters.BR;
@@ -9,25 +10,20 @@ public class ImageModel extends BaseObservable {
     private static final String TAG = "ImageModel";
 
     public static final String FULL_SIZE_IMAGE_FILE_PREFIX = "IE_FULL_";
-    private String localFullSizeImageUri = "";
-
     public static final String LARGE_IMAGE_FILE_PREFIX = "IE_LARGE_";
-    private String remoteLargeImageUri = "";
-    private String localLargeImageUri = "";
-
     public static final String MEDIUM_IMAGE_FILE_PREFIX = "IE_MEDIUM_";
-    private String remoteMediumImageUri = "";
-    private String localMediumImageUri = "";
-
     public static final String SMALL_IMAGE_FILE_PREFIX = "IE_SMALL_";
-    private String remoteSmallImageUri = "";
-    private String localSmallImageUri = "";
 
-    private String webImageUrl = "";
+    private String remoteLargeImageUri;
+    private String localLargeImageUri;
 
-    public String getLocalFullSizeImageUri() {
-        return localFullSizeImageUri;
-    }
+    private String remoteMediumImageUri;
+    private String localMediumImageUri;
+
+    private String remoteSmallImageUri;
+    private String localSmallImageUri;
+
+    private String webImageUrl;
 
     @Bindable
     public String getRemoteLargeImageUri() {
@@ -93,5 +89,17 @@ public class ImageModel extends BaseObservable {
     public void setWebImageUrl(String webImageUrl) {
         this.webImageUrl = webImageUrl;
         notifyPropertyChanged(BR.webImageUrl);
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "\nremoteLargeImageUrl: "   + remoteLargeImageUri +
+                "\nremoteMediumImageUri: " + remoteMediumImageUri +
+                "\nremoteSmallImageUri: "  + remoteSmallImageUri +
+                "\nlocalLargeImageUri :"   + localLargeImageUri +
+                "\nlocalMediumImageUri: "  + localMediumImageUri +
+                "\nlocalSmallImageUri: "   + localSmallImageUri +
+                "\nwebImageUrl: "          + webImageUrl;
     }
 }

@@ -19,6 +19,7 @@ import com.theartofdev.edmodo.cropper.CropImage;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -28,6 +29,7 @@ import java.io.IOException;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
+import static com.example.peter.thekitchenmenu.app.Constants.FILE_PROVIDER_AUTHORITY;
 import static com.example.peter.thekitchenmenu.utils.imageeditor.BitmapUtils.*;
 import static com.example.peter.thekitchenmenu.utils.imageeditor.ImageEditorViewModel.*;
 
@@ -85,17 +87,9 @@ public class ImageEditorFragment extends Fragment {
     private void subscribeToEvents() {
 
         viewModel.getImageFromCameraEvent().observe(this, event -> getImageFromCamera());
-
         viewModel.getImageFromGalleryEvent().observe(this, event -> getImageFromGallery());
-
         viewModel.launchBrowserEvent().observe(this, event -> launchBrowser());
-
         viewModel.cropFullSizeImageEvent().observe(this, event -> cropImage());
-
-        viewModel.deleteFullSizeImageEvent().observe(this, fullSizeImagePath -> {
-
-            if (fullSizeImagePath != null) deleteFullSizeImage(fullSizeImagePath);
-        });
     }
 
     private void getImageFromCamera() {
@@ -103,10 +97,12 @@ public class ImageEditorFragment extends Fragment {
         if (viewModel.getFullSizeImageFile() != null) {
 
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
             takePictureIntent.putExtra(
                     MediaStore.EXTRA_OUTPUT,
-                    Uri.fromFile(viewModel.getFullSizeImageFile()));
+                    FileProvider.getUriForFile(
+                            requireActivity(),
+                            FILE_PROVIDER_AUTHORITY,
+                            viewModel.getFullSizeImageFile()));
 
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
@@ -131,61 +127,29 @@ public class ImageEditorFragment extends Fragment {
             viewModel.cameraImageResult(RESULT_CANCELED);
 
         } else if (requestCode == REQUEST_IMAGE_IMPORT && resultCode == RESULT_OK && data != null) {
+            viewModel.imageImportResult(RESULT_OK, data.getData());
 
-            Uri uri = data.getData();
-            importUriImage(uri);
-
-        }
-                else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-
+        } else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
 
             if (resultCode == RESULT_OK) {
                 viewModel.setCroppedImageResult(resultCode, result.getUri());
 
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-
                 Exception error = result.getError();
                 Log.e(TAG, "tkm - onActivityResult: ", error);
             }
         }
     }
 
-    private void importUriImage(Uri uri) {
-
-        try {
-            // Use the MediaStore to load the image.
-            Bitmap image = MediaStore.Images.Media.getBitmap(
-                    requireActivity().getContentResolver(), uri);
-
-            if (image != null) {
-                // Tell the presenter to import this image.
-                // mPresenter.onImportImage(image);
-                // TODO - save the image to full size file
-                // TODO - Then invok cropImage
-            }
-
-        } catch (IOException e) {
-
-            e.printStackTrace();
-            Log.e(TAG, "Error: " + e.getMessage() + "Could not open URI: "
-                    + uri.toString());
-        }
-    }
-
     private void cropImage() {
 
         CropImage.activity(
-                Uri.parse(viewModel.getUpdatedImageModel().getLocalFullSizeImageUri())).
+                Uri.fromFile(viewModel.getFullSizeImageFile())).
                 setActivityTitle(requireActivity().
                         getString(R.string.activity_title_image_cropper)).
                 setAspectRatio(1, 1).
                 start(requireContext(), this);
-    }
-
-    private void deleteFullSizeImage(String fullSizeImagePath) {
-
-        deleteImageFile(requireActivity(), fullSizeImagePath);
     }
 
     private void launchBrowser() {
@@ -196,13 +160,7 @@ public class ImageEditorFragment extends Fragment {
         startActivity(intent);
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        if (viewModel.getFullSizeImageFile() != null)
-            deleteFullSizeImage(viewModel.getFullSizeImageFile().getAbsolutePath());
-
-        // TODO - Delete any files that were not modified!
+    private void deleteFullSizeImage(String fullSizeImagePath) {
+        deleteImageFile(requireActivity(), fullSizeImagePath);
     }
 }

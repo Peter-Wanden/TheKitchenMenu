@@ -25,8 +25,7 @@ import java.util.List;
 import static android.app.Activity.RESULT_OK;
 import static com.example.peter.thekitchenmenu.app.Constants.FILE_PROVIDER_AUTHORITY;
 import static com.example.peter.thekitchenmenu.data.model.ImageModel.*;
-import static com.example.peter.thekitchenmenu.utils.imageeditor.BitmapUtils.createScaledBitmap;
-import static com.example.peter.thekitchenmenu.utils.imageeditor.BitmapUtils.saveBitmapToCache;
+import static com.example.peter.thekitchenmenu.utils.imageeditor.BitmapUtils.*;
 
 public class ImageEditorViewModel extends ObservableViewModel {
 
@@ -40,7 +39,6 @@ public class ImageEditorViewModel extends ObservableViewModel {
     private ImageModel updatedImageModel = new ImageModel();
 
     private static final long MAX_FILE_AGE = 60000 * 5; // five minutes TODO Change to 3 days
-    private final SingleLiveEvent<String> deleteFullSizeImage = new SingleLiveEvent<>();
     private File fullSizeImageFile = null;
     private File smallImageFile = null;
     private File mediumImageFile = null;
@@ -73,16 +71,16 @@ public class ImageEditorViewModel extends ObservableViewModel {
     private void cleanUpCacheDirectory() {
 
         File[] cacheDirectoryFileList = appContext.getCacheDir().listFiles();
-        if (cacheDirectoryFileList.length > 0) processCacheDirectoryFiles(cacheDirectoryFileList);
+        if (cacheDirectoryFileList.length > 0) filterImageEditorFiles(cacheDirectoryFileList);
     }
 
-    private void processCacheDirectoryFiles(File[] cacheDirectoryFileList) {
+    private void filterImageEditorFiles(File[] cacheDirectoryFileList) {
 
         List<File> imageEditorCacheFileList = new ArrayList<>();
 
         for (File cachedFile : cacheDirectoryFileList) {
 
-            Log.d(TAG, "tkm - processCacheDirectoryFiles: " + cachedFile.getName());
+            Log.d(TAG, "tkm - filterImageEditorFiles: " + cachedFile.getName());
 
             if (cachedFileBelongsToImageEditor(cachedFile))
                 imageEditorCacheFileList.add(cachedFile);
@@ -182,6 +180,10 @@ public class ImageEditorViewModel extends ObservableViewModel {
         canTakePictures.set(hasCamera && hasCameraApp);
     }
 
+    public ObservableBoolean getCanTakePictures() {
+        return canTakePictures;
+    }
+
     public void getImageFromCamera() {
         getImageFromCameraEvent.call();
     }
@@ -202,6 +204,32 @@ public class ImageEditorViewModel extends ObservableViewModel {
 
         if (cameraImageResult == RESULT_OK) {
             cropFullSizeImageEvent.call();
+        }
+    }
+
+    public void imageImportResult(int imageImportResult, Uri imageToImportUri) {
+
+        if (imageImportResult == RESULT_OK) {
+
+            Bitmap importedImage;
+
+            try {
+                importedImage = MediaStore.Images.Media.getBitmap(
+                        appContext.getContentResolver(), imageToImportUri);
+
+                boolean importedImageSavedToCache = saveBitmapToCache(
+                        importedImage, fullSizeImageFile);
+
+                if (importedImageSavedToCache) {
+                    cropFullSizeImageEvent.call();
+                }
+
+            } catch (IOException e) {
+
+                e.printStackTrace();
+                Log.e(TAG, "Error: " + e.getMessage() + "Could not open URI: "
+                        + imageToImportUri.toString());
+            }
         }
     }
 
@@ -244,7 +272,7 @@ public class ImageEditorViewModel extends ObservableViewModel {
             boolean smallImageFileSaved = saveBitmapToCache(smallBitmap, smallImageFile);
 
             if (smallImageFileSaved)
-            updatedImageModel.setLocalSmallImageUri(FileProvider.getUriForFile(
+                updatedImageModel.setLocalSmallImageUri(FileProvider.getUriForFile(
                             appContext, FILE_PROVIDER_AUTHORITY,smallImageFile).toString());
         }
 
@@ -266,11 +294,9 @@ public class ImageEditorViewModel extends ObservableViewModel {
                                 appContext, FILE_PROVIDER_AUTHORITY, largeImageFile).toString());
         }
 
-        // ToDo - set the new image to the display
-    }
-
-    public SingleLiveEvent<String> deleteFullSizeImageEvent() {
-        return deleteFullSizeImage;
+        existingImageModel.setValue(updatedImageModel);
+        Log.d(TAG, "tkm - createImageFilesFromCroppedBitMap: " +
+                "Final step! updatedImageModel looks like: " + updatedImageModel.toString());
     }
 
     public void launchBrowser() {
