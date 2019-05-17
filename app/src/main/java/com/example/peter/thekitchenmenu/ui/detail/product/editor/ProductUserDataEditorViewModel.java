@@ -1,9 +1,9 @@
-package com.example.peter.thekitchenmenu.viewmodels;
+package com.example.peter.thekitchenmenu.ui.detail.product.editor;
 
 import android.app.Application;
 
 import com.example.peter.thekitchenmenu.data.model.ProductUserDataModel;
-import com.example.peter.thekitchenmenu.utils.ProductUserDataTextValidationHandler;
+import com.example.peter.thekitchenmenu.viewmodels.ObservableViewModel;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
@@ -28,29 +28,29 @@ public class ProductUserDataEditorViewModel extends ObservableViewModel {
                 this);
     }
 
-    public ProductUserDataModel getUserDataModel() {
+    ProductUserDataModel getUserDataModel() {
 
         return userDataModel;
     }
 
-    public ProductUserDataTextValidationHandler getTextValidationHandler() {
+    ProductUserDataTextValidationHandler getTextValidationHandler() {
 
         return textValidationHandler;
     }
 
-    public void setRetailerValidated(boolean retailerValidated) {
+    void setRetailerValidated(boolean retailerValidated) {
 
         this.retailerValidated = retailerValidated;
         checkUserDataModelValidated();
     }
 
-    public void setLocationRoomValidated(boolean locationRoomValidated) {
+    void setLocationRoomValidated(boolean locationRoomValidated) {
 
         this.locationRoomValidated = locationRoomValidated;
         checkUserDataModelValidated();
     }
 
-    public void setLocationInRoomValidated(boolean locationInRoomValidated) {
+    void setLocationInRoomValidated(boolean locationInRoomValidated) {
 
         this.locationInRoomValidated = locationInRoomValidated;
         checkUserDataModelValidated();
@@ -62,7 +62,7 @@ public class ProductUserDataEditorViewModel extends ObservableViewModel {
             getUserDataModelIsValidated().setValue(Boolean.TRUE);
     }
 
-    public MutableLiveData<Boolean> getUserDataModelIsValidated() {
+    private MutableLiveData<Boolean> getUserDataModelIsValidated() {
 
         return userDataModelIsValidated;
     }

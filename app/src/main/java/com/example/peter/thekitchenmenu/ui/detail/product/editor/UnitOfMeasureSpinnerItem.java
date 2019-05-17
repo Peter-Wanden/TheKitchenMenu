@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.detail;
+package com.example.peter.thekitchenmenu.ui.detail.product.editor;
 
 public class UnitOfMeasureSpinnerItem {
 
@@ -6,12 +6,12 @@ public class UnitOfMeasureSpinnerItem {
     private String measurementUnit;
 
 
-    public UnitOfMeasureSpinnerItem(SpinnerItemType type, String measurementUnit) {
+    UnitOfMeasureSpinnerItem(SpinnerItemType type, String measurementUnit) {
         this.type = type;
         this.measurementUnit = measurementUnit;
     }
 
-    public String getMeasurementUnit() {
+    String getMeasurementUnit() {
         return measurementUnit;
     }
 

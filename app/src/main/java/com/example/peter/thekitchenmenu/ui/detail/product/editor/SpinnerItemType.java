@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.detail;
+package com.example.peter.thekitchenmenu.ui.detail.product.editor;
 
 public enum SpinnerItemType {
     SECTION_HEADER,

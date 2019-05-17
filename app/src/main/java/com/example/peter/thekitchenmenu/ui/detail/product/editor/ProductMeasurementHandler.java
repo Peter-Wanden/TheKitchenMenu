@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.utils;
+package com.example.peter.thekitchenmenu.ui.detail.product.editor;
 
 import android.app.Application;
 import android.content.res.Resources;
@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubType;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasure;
-import com.example.peter.thekitchenmenu.viewmodels.ProductMeasurementViewModel;
+import com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductMeasurementViewModel;
 
 import androidx.core.util.Pair;
 
@@ -46,7 +46,7 @@ public class ProductMeasurementHandler {
         changeUnitOfMeasure(spinnerWithSubType.getSelectedItemPosition());
     }
 
-    public void changeUnitOfMeasure(int subTypeAsInt) {
+    private void changeUnitOfMeasure(int subTypeAsInt) {
 
         if (unitOfMeasure.getMeasurementSubType().ordinal() != subTypeAsInt) {
 
@@ -64,7 +64,7 @@ public class ProductMeasurementHandler {
         numberOfItemsUpdated(newNumberOfItems);
     }
 
-    public boolean numberOfItemsUpdated(int newNumberOfItems) {
+    private boolean numberOfItemsUpdated(int newNumberOfItems) {
 
         if (numberOfItemsHasChanged(newNumberOfItems)) {
 

@@ -1,27 +1,25 @@
-package com.example.peter.thekitchenmenu.utils;
+package com.example.peter.thekitchenmenu.ui.detail.product.editor;
 
 import android.app.Application;
 import android.content.res.Resources;
 import android.widget.EditText;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.viewmodels.ProductUserDataEditorViewModel;
 
-public class ProductUserDataTextValidationHandler {
+public class ProductIdentityTextValidationHandler {
 
     private static final String TAG = "ProductTextValidationHa";
 
     private enum ValidateTextLength {TOO_SHORT, TOO_LONG, VALIDATED}
 
-    private ProductUserDataEditorViewModel viewModel;
+    private ProductIdentityViewModel viewModel;
     private Resources resources;
 
     private int viewId;
     private String newText;
 
-    public ProductUserDataTextValidationHandler(Application applicationContext,
-                                                ProductUserDataEditorViewModel viewModel) {
-
+    ProductIdentityTextValidationHandler(Application applicationContext,
+                                                ProductIdentityViewModel viewModel) {
         this.viewModel = viewModel;
         resources = applicationContext.getResources();
     }
@@ -29,59 +27,43 @@ public class ProductUserDataTextValidationHandler {
     // TODO - Introduce a cleanString() method that strips out spaces and escape characters from Editable's.
     // TODO - Refactor: Create a class for each type of validation i.e. length
 
-    public void validateRetailer(EditText editableRetailer) {
+    public void validateDescription(EditText editableDescription) {
 
-        viewId = editableRetailer.getId();
-        newText = editableRetailer.getText().toString();
+        viewId = editableDescription.getId();
+        newText = editableDescription.getText().toString();
 
         if (fieldHasChanged()) {
 
             ValidateTextLength result = validateTextLength();
-            publishResult(editableRetailer, result);
+            publishResult(editableDescription, result);
         }
     }
 
-    public void validateLocationRoom(EditText editableLocationRoom) {
+    public void validateMadeBy(EditText editableMadeBy) {
 
-        viewId = editableLocationRoom.getId();
-        newText = editableLocationRoom.getText().toString();
-
-        if (fieldHasChanged()) {
-
-            ValidateTextLength result = validateTextLength();
-            publishResult(editableLocationRoom, result);
-        }
-    }
-
-    public void validateLocationInRoom(EditText editableLocationInRoom) {
-
-        viewId = editableLocationInRoom.getId();
-        newText = editableLocationInRoom.getText().toString();
+        viewId = editableMadeBy.getId();
+        newText = editableMadeBy.getText().toString();
 
         if (fieldHasChanged()) {
 
             ValidateTextLength result = validateTextLength();
-            publishResult(editableLocationInRoom, result);
+            publishResult(editableMadeBy, result);
         }
     }
 
     private boolean fieldHasChanged() {
 
-        if (viewModel.getUserDataModel() != null) {
+        if (viewModel.getExistingIdentityModel() != null) {
 
             switch (viewId) {
 
-                case R.id.editable_retailer:
+                case R.id.editable_description:
 
-                    return !viewModel.getUserDataModel().getRetailer().equals(newText);
+                    return !viewModel.getUpdatedIdentityModel().getDescription().equals(newText);
 
-                case R.id.editable_location_room:
+                case R.id.editable_made_by:
 
-                    return !viewModel.getUserDataModel().getLocationRoom().equals(newText);
-
-                case R.id.editable_location_in_room:
-
-                    return !viewModel.getUserDataModel().getLocationInRoom().equals(newText);
+                    return !viewModel.getUpdatedIdentityModel().getMadeBy().equals(newText);
 
                 default:
                     return false;
@@ -133,41 +115,33 @@ public class ProductUserDataTextValidationHandler {
 
     private void publishResultToViewModel(ValidateTextLength result) {
 
-        if (viewModel.getUserDataModel() != null) {
+        if (viewModel.getExistingIdentityModel() != null) {
 
             switch (viewId) {
 
-                case R.id.editable_retailer:
+                case R.id.editable_description:
 
-                    viewModel.getUserDataModel().setRetailer(newText);
+                    viewModel.getUpdatedIdentityModel().setDescription(newText);
 
                     if (result == ValidateTextLength.VALIDATED)
-                        viewModel.setRetailerValidated(true);
+                        viewModel.setDescriptionValidated(true);
 
-                    else viewModel.setRetailerValidated(false);
+                    else viewModel.setDescriptionValidated(false);
 
                     break;
 
-                case R.id.location_room:
+                case R.id.editable_made_by:
 
-                    viewModel.getUserDataModel().setLocationRoom(newText);
+                    viewModel.getUpdatedIdentityModel().setMadeBy(newText);
 
                     if (result == ValidateTextLength.VALIDATED)
-                        viewModel.setLocationRoomValidated(true);
+                        viewModel.setMadeByValidated(true);
 
-                    else viewModel.setLocationRoomValidated(false);
+                    else viewModel.setMadeByValidated(false);
 
                     break;
-
-                case R.id.location_in_room:
-
-                    viewModel.getUserDataModel().setLocationInRoom(newText);
-
-                    if (result == ValidateTextLength.VALIDATED)
-                        viewModel.setLocationInRoomValidated(true);
-
-                    else viewModel.setLocationInRoomValidated(false);
             }
+            viewModel.getExistingIdentityModel().setValue(viewModel.getUpdatedIdentityModel());
         }
     }
 }

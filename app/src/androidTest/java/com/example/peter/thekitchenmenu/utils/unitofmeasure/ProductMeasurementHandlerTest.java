@@ -1,12 +1,11 @@
 package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
-import com.example.peter.thekitchenmenu.utils.ProductMeasurementHandler;
-import com.example.peter.thekitchenmenu.viewmodels.ProductMeasurementViewModel;
+import com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductMeasurementHandler;
+import com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductMeasurementViewModel;
 
 import org.junit.Test;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
-import static org.junit.Assert.*;
 
 public class ProductMeasurementHandlerTest {
 

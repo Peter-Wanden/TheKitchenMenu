@@ -14,7 +14,7 @@
 
         <variable
             name="measurementValidation"
-            type="com.example.peter.thekitchenmenu.utils.ProductMeasurementHandler" />
+            type="com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductMeasurementHandler" />
 
         <variable
             name="measurement"

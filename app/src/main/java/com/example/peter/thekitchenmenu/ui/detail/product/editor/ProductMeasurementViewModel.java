@@ -1,10 +1,9 @@
-package com.example.peter.thekitchenmenu.viewmodels;
+package com.example.peter.thekitchenmenu.ui.detail.product.editor;
 
 import android.app.Application;
-import android.util.Log;
 
-import com.example.peter.thekitchenmenu.utils.ProductMeasurementHandler;
 import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
+import com.example.peter.thekitchenmenu.viewmodels.ObservableViewModel;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
@@ -30,7 +29,7 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
 
     }
 
-    public MutableLiveData<ProductMeasurementModel> getMeasurementModel() {
+    MutableLiveData<ProductMeasurementModel> getMeasurementModel() {
         return measurementModel;
     }
 
@@ -38,7 +37,7 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
         return measurementValidation;
     }
 
-    public ProductMeasurementModel getNewMeasurement() {
+    ProductMeasurementModel getNewMeasurement() {
         return newMeasurement;
     }
 

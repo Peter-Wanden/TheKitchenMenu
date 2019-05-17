@@ -103,7 +103,7 @@
 
         <!-- Activity view of a single productEntities details -->
         <activity
-            android:name=".ui.detail.product.editor.ProductEditor"
+            android:name=".ui.detail.product.editor.ProductEditorActivity"
             android:theme="@style/AppTheme">
         </activity>
 

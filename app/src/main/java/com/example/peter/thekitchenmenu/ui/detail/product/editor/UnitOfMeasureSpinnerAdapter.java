@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.detail;
+package com.example.peter.thekitchenmenu.ui.detail.product.editor;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -19,7 +19,7 @@ public class UnitOfMeasureSpinnerAdapter extends ArrayAdapter<UnitOfMeasureSpinn
     private LayoutInflater inflater;
     private ArrayList<UnitOfMeasureSpinnerItem> unitOfMeasureList;
 
-    public UnitOfMeasureSpinnerAdapter(
+    UnitOfMeasureSpinnerAdapter(
             @NonNull Context context,
             ArrayList<UnitOfMeasureSpinnerItem> unitOfMeasureList) {
 

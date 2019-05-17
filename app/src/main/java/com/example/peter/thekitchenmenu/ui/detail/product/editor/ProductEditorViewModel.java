@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.viewmodels;
+package com.example.peter.thekitchenmenu.ui.detail.product.editor;
 
 import android.app.Application;
 import android.util.Log;
@@ -8,6 +8,7 @@ import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.data.model.ProductIdentityModel;
 import com.example.peter.thekitchenmenu.data.model.ImageModel;
 import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
+import com.example.peter.thekitchenmenu.viewmodels.ObservableViewModel;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
@@ -101,13 +102,13 @@ public class ProductEditorViewModel extends ObservableViewModel {
         return title;
     }
 
-    public MutableLiveData<ProductEntity> getExistingProductEntity() {
+    MutableLiveData<ProductEntity> getExistingProductEntity() {
 
         if (existingProductEntity == null) existingProductEntity = new MutableLiveData<>();
         return existingProductEntity;
     }
 
-    public void setUpdatedImageModel(ImageModel updatedImageModel) {
+    void setUpdatedImageModel(ImageModel updatedImageModel) {
         this.updatedImageModel = updatedImageModel;
         Log.d(TAG, "tkm - setUpdatedImageModel: Image model updated");
         // TODO - read in files https://developer.android.com/training/data-storage/files#OpenFileInternal
@@ -115,12 +116,12 @@ public class ProductEditorViewModel extends ObservableViewModel {
         //
     }
 
-    public void setUpdatedIdentityModel(ProductIdentityModel updatedIdentityModel) {
+    void setUpdatedIdentityModel(ProductIdentityModel updatedIdentityModel) {
         this.updatedIdentityModel = updatedIdentityModel;
         Log.d(TAG, "tkm - setUpdatedIdentityModel: Identity model updated");
     }
 
-    public void setUpdatedMeasurementModel(ProductMeasurementModel updatedMeasurementModel) {
+    void setUpdatedMeasurementModel(ProductMeasurementModel updatedMeasurementModel) {
         this.updatedMeasurementModel = updatedMeasurementModel;
         Log.d(TAG, "tkm - setUpdatedMeasurementModel: Measurement model updated");
     }

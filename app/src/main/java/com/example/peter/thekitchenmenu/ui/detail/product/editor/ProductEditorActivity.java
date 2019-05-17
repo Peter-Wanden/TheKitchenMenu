@@ -11,9 +11,6 @@ import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
 import com.example.peter.thekitchenmenu.databinding.ProductEditorBinding;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubType;
 import com.example.peter.thekitchenmenu.utils.imageeditor.ImageEditorViewModel;
-import com.example.peter.thekitchenmenu.viewmodels.ProductEditorViewModel;
-import com.example.peter.thekitchenmenu.viewmodels.ProductIdentityViewModel;
-import com.example.peter.thekitchenmenu.viewmodels.ProductMeasurementViewModel;
 
 import androidx.lifecycle.Observer;
 import androidx.annotation.Nullable;
@@ -21,9 +18,9 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class ProductEditor extends AppCompatActivity {
+public class ProductEditorActivity extends AppCompatActivity {
 
-    private static final String TAG = "ProductEditor";
+    private static final String TAG = "ProductEditorActivity";
     private static final String PRODUCT_ID = "product_id";
 
     ProductEditorBinding productEditorBinding;
@@ -101,7 +98,7 @@ public class ProductEditor extends AppCompatActivity {
                 identityModel.setCategory(productEntity.getCategory());
                 identityModel.setShelfLife(productEntity.getShelfLife());
 
-                identityEditorViewModel.getIdentityModel().setValue(identityModel);
+                identityEditorViewModel.getExistingIdentityModel().setValue(identityModel);
 
                 ProductMeasurementModel measurementModel = new ProductMeasurementModel();
                 measurementModel.setMeasurementSubType(
@@ -130,7 +127,7 @@ public class ProductEditor extends AppCompatActivity {
             productEditorViewModel.setUpdatedIdentityModel(IdentityModel);
         };
 
-        identityEditorViewModel.getIdentityModel().observe(this, identityModelObserver);
+        identityEditorViewModel.getExistingIdentityModel().observe(this, identityModelObserver);
 
         final Observer<ProductMeasurementModel> measurementModelObserver = measurementModel -> {
 

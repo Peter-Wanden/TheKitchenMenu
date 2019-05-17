@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.ProductUserDataEditorBinding;
-import com.example.peter.thekitchenmenu.viewmodels.ProductUserDataEditorViewModel;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,9 +14,9 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
-public class ProductUserDataEditor extends Fragment {
+public class ProductUserDataEditorFragment extends Fragment {
 
-    private static final String TAG = "ProductUserDataEditor";
+    private static final String TAG = "ProductUserDataEditorFragment";
 
     private ProductUserDataEditorBinding userDataEditorBinding;
     private ProductUserDataEditorViewModel userDataEditorViewModel;

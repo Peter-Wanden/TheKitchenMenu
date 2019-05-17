@@ -11,7 +11,7 @@
 
         <variable
             name="viewModel"
-            type="com.example.peter.thekitchenmenu.viewmodels.ProductEditorViewModel">
+            type="com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductEditorViewModel">
         </variable>
     </data>
 
@@ -64,7 +64,7 @@
 
                 <fragment
                     android:id="@+id/product_identity_fragment"
-                    android:name="com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductIdentityEditor"
+                    android:name="com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductIdentityEditorFragment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     bind:layout="@layout/product_identity_editor">
@@ -72,7 +72,7 @@
 
                 <fragment
                     android:id="@+id/product_size_fragment"
-                    android:name="com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductMeasurementEditor"
+                    android:name="com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductMeasurementEditorFragment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     bind:layout="@layout/product_measurement_editor">
