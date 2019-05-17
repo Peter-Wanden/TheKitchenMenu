@@ -44,17 +44,6 @@ public abstract class Constants {
     public static final long DEFAULT_COMM_CREATE_DATE = 0;
     public static final long DEFAULT_COMM_LAST_UPDATE = 0;
 
-    /* ***********************
-     * ProductDetail *
-     *************************/
-
-    /* *************
-     * Permissions *
-     ***************/
-    public static final int REQUEST_STORAGE_PERMISSION = 2;
-    public static final int REQUEST_IMAGE_MEDIA_STORE = 3;
-    public static final int REQUEST_IMAGE_PICKER = 4;
-
     /* ***************
      * File provider *
      *****************/

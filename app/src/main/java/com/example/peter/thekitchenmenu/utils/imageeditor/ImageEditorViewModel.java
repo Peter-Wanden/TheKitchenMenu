@@ -16,12 +16,14 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.peter.thekitchenmenu.data.model.ImageModel;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 import com.example.peter.thekitchenmenu.viewmodels.ObservableViewModel;
+import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 import static com.example.peter.thekitchenmenu.app.Constants.FILE_PROVIDER_AUTHORITY;
 import static com.example.peter.thekitchenmenu.data.model.ImageModel.*;
@@ -46,7 +48,7 @@ public class ImageEditorViewModel extends ObservableViewModel {
 
     // SingleLiveEvent - see https://github.com/googlesamples/android-architecture
     private final ObservableBoolean canTakePictures = new ObservableBoolean(false);
-    private final SingleLiveEvent<Void> getImageFromCameraEvent = new SingleLiveEvent<>();
+    private final SingleLiveEvent<Uri> getImageFromCameraEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<Void> getImageFromGalleryEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<Void> launchBrowserEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<Void> cropFullSizeImageEvent = new SingleLiveEvent<>();
@@ -56,8 +58,13 @@ public class ImageEditorViewModel extends ObservableViewModel {
 
         appContext = application;
         cleanUpCacheDirectory();
-        createTemporaryImageFiles();
         checkIfCanTakePictures();
+    }
+
+    public void onConfigurationChange() {
+
+        if (updatedImageModel.getLocalLargeImageUri() != null)
+            existingImageModel.setValue(updatedImageModel);
     }
 
     public MutableLiveData<ImageModel> getExistingImageModel() {
@@ -96,7 +103,8 @@ public class ImageEditorViewModel extends ObservableViewModel {
         return filename.startsWith(FULL_SIZE_IMAGE_FILE_PREFIX) ||
                 filename.startsWith(LARGE_IMAGE_FILE_PREFIX) ||
                 filename.startsWith(MEDIUM_IMAGE_FILE_PREFIX) ||
-                filename.startsWith(SMALL_IMAGE_FILE_PREFIX);
+                filename.startsWith(SMALL_IMAGE_FILE_PREFIX) ||
+                filename.startsWith("cropped");
     }
 
     private void deleteOutOfDateFiles(List<File> imageEditorCacheFileList) {
@@ -116,13 +124,181 @@ public class ImageEditorViewModel extends ObservableViewModel {
         }
     }
 
+    private void checkIfCanTakePictures() {
+
+        boolean hasCamera = appContext.getPackageManager().
+                hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY);
+
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        boolean hasCameraApp = takePictureIntent.resolveActivity(
+                appContext.getPackageManager()) != null;
+
+        canTakePictures.set(hasCamera && hasCameraApp);
+    }
+
+    public ObservableBoolean getCanTakePictures() {
+        return canTakePictures;
+    }
+
+    public void getImageFromCamera() {
+        fullSizeImageFile = createImageFile(FULL_SIZE_IMAGE_FILE_PREFIX);
+        getImageFromCameraEvent.setValue(getFullSizeImagePublicUri());
+    }
+
+    private Uri getFullSizeImagePublicUri() {
+
+        return FileProvider.getUriForFile(
+                appContext,
+                FILE_PROVIDER_AUTHORITY,
+                fullSizeImageFile);
+    }
+
+    public SingleLiveEvent<Uri> getImageFromCameraEvent() {
+        return getImageFromCameraEvent;
+    }
+
     public File getFullSizeImageFile() {
         return fullSizeImageFile;
     }
 
-    private void createTemporaryImageFiles() {
+    private File createImageFile(String filePrefix) {
 
-        fullSizeImageFile = createImageFile(ImageModel.FULL_SIZE_IMAGE_FILE_PREFIX);
+        File newImageFile = null;
+
+        try {
+
+            newImageFile = BitmapUtils.createTemporaryImageFile(appContext, filePrefix);
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+        return newImageFile;
+    }
+
+    public void getImageFromGallery() {
+        getImageFromGalleryEvent.call();
+    }
+
+    public SingleLiveEvent<Void> getImageFromGalleryEvent() {
+        return getImageFromGalleryEvent;
+    }
+
+    public SingleLiveEvent<Void> cropFullSizeImageEvent() {
+        return cropFullSizeImageEvent;
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK)
+            cropFullSizeImageEvent().call();
+
+        else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_CANCELED)
+            deleteImageFile(appContext, fullSizeImageFile.getAbsolutePath());
+
+        else if (requestCode == REQUEST_IMAGE_IMPORT && resultCode == RESULT_OK && data != null) {
+            Uri galleryImageUri = data.getData();
+            importGalleryImage(galleryImageUri);
+
+        } else if (requestCode == REQUEST_IMAGE_IMPORT && resultCode == RESULT_CANCELED)
+            deleteImageFile(appContext, fullSizeImageFile.getAbsolutePath());
+
+        else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+
+            if (resultCode == RESULT_OK) {
+                Uri croppedImageUri = result.getUri();
+                importAndProcessCroppedImage(croppedImageUri);
+
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+                Log.e(TAG, "tkm - onActivityResult: ", error);
+            }
+        }
+    }
+
+    private void importGalleryImage(Uri galleryImageUri) {
+
+        Bitmap importedImage = getBitmapFromImageUri(galleryImageUri);
+        fullSizeImageFile = createImageFile(FULL_SIZE_IMAGE_FILE_PREFIX);
+
+        if (importedImage != null && bitmapSavedToCacheFile(importedImage, fullSizeImageFile))
+            cropFullSizeImageEvent.call();
+    }
+
+    private Bitmap getBitmapFromImageUri(Uri uriOfImageToImport) {
+
+        try {
+            return MediaStore.Images.Media.getBitmap(
+                    appContext.getContentResolver(),
+                    uriOfImageToImport);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e(TAG, "Error: " + e.getMessage() + "Could not open URI: " +
+                    uriOfImageToImport);
+
+            return null;
+        }
+    }
+
+    private void importAndProcessCroppedImage(Uri croppedImageUri) {
+
+        Bitmap croppedBitmap = getBitmapFromImageUri(croppedImageUri);
+
+        if (croppedBitmap != null)
+            createImageFilesFromCroppedBitMap(croppedBitmap);
+    }
+
+    private boolean bitmapSavedToCacheFile(Bitmap bitmapToSave, File fileToSaveBitmapTo) {
+        return saveBitmapToCache(bitmapToSave, fileToSaveBitmapTo);
+    }
+
+    private void createImageFilesFromCroppedBitMap(Bitmap croppedImageBitmap) {
+
+        // ToDo - Now we create image files!
+        createTemporaryImageFiles();
+
+        Bitmap smallBitmap = createScaledBitmap(croppedImageBitmap, 75, true);
+        Bitmap mediumBitmap = createScaledBitmap(croppedImageBitmap, 290, true);
+        Bitmap largeBitMap = createScaledBitmap(croppedImageBitmap, 400, true);
+
+        if (smallImageFile != null) {
+
+            boolean smallImageSaved = saveBitmapToCache(smallBitmap, smallImageFile);
+
+            if (smallImageSaved)
+                updatedImageModel.setLocalSmallImageUri(FileProvider.getUriForFile(
+                            appContext, FILE_PROVIDER_AUTHORITY,smallImageFile).toString());
+        }
+
+        if (mediumImageFile != null) {
+
+            boolean mediumImageSaved = saveBitmapToCache(mediumBitmap, mediumImageFile);
+
+            if (mediumImageSaved)
+                updatedImageModel.setLocalMediumImageUri(FileProvider.getUriForFile(
+                                appContext, FILE_PROVIDER_AUTHORITY, mediumImageFile).toString());
+        }
+
+        if (largeImageFile != null) {
+
+            boolean largeImageSaved = saveBitmapToCache(largeBitMap, largeImageFile);
+
+            if (largeImageSaved)
+                updatedImageModel.setLocalLargeImageUri(FileProvider.getUriForFile(
+                                appContext, FILE_PROVIDER_AUTHORITY, largeImageFile).toString());
+        }
+
+        deleteImageFile(appContext, fullSizeImageFile.getAbsolutePath());
+
+        existingImageModel.setValue(updatedImageModel);
+        Log.d(TAG, "tkm - createImageFilesFromCroppedBitMap: " +
+                "Final step! updatedImageModel looks like: " + updatedImageModel.toString());
+    }
+
+    private void createTemporaryImageFiles() {
 
         smallImageFile = createImageFile(ImageModel.SMALL_IMAGE_FILE_PREFIX);
         if (smallImageFile != null) {
@@ -146,157 +322,10 @@ public class ImageEditorViewModel extends ObservableViewModel {
         if (largeImageFile != null) {
 
             updatedImageModel.setLocalLargeImageUri(FileProvider.getUriForFile(
-                            appContext,
-                            FILE_PROVIDER_AUTHORITY,
-                            largeImageFile).toString());
+                    appContext,
+                    FILE_PROVIDER_AUTHORITY,
+                    largeImageFile).toString());
         }
-    }
-
-    private File createImageFile(String filePrefix) {
-
-        File newImageFile = null;
-
-        try {
-
-            newImageFile = BitmapUtils.createTemporaryImageFile(appContext, filePrefix);
-
-        } catch (IOException e) {
-
-            e.printStackTrace();
-        }
-        return newImageFile;
-    }
-
-    private void checkIfCanTakePictures() {
-
-        boolean hasCamera = appContext.getPackageManager().
-                hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY);
-
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-        boolean hasCameraApp = takePictureIntent.resolveActivity(
-                appContext.getPackageManager()) != null;
-
-        canTakePictures.set(hasCamera && hasCameraApp);
-    }
-
-    public ObservableBoolean getCanTakePictures() {
-        return canTakePictures;
-    }
-
-    public void getImageFromCamera() {
-        getImageFromCameraEvent.call();
-    }
-
-    public SingleLiveEvent<Void> getImageFromCameraEvent() {
-        return getImageFromCameraEvent;
-    }
-
-    public void getImageFromGallery() {
-        getImageFromGalleryEvent.call();
-    }
-
-    public SingleLiveEvent<Void> getImageFromGalleryEvent() {
-        return getImageFromGalleryEvent;
-    }
-
-    public void cameraImageResult(int cameraImageResult) {
-
-        if (cameraImageResult == RESULT_OK) {
-            cropFullSizeImageEvent.call();
-        }
-    }
-
-    public void imageImportResult(int imageImportResult, Uri imageToImportUri) {
-
-        if (imageImportResult == RESULT_OK) {
-
-            Bitmap importedImage;
-
-            try {
-                importedImage = MediaStore.Images.Media.getBitmap(
-                        appContext.getContentResolver(), imageToImportUri);
-
-                boolean importedImageSavedToCache = saveBitmapToCache(
-                        importedImage, fullSizeImageFile);
-
-                if (importedImageSavedToCache) {
-                    cropFullSizeImageEvent.call();
-                }
-
-            } catch (IOException e) {
-
-                e.printStackTrace();
-                Log.e(TAG, "Error: " + e.getMessage() + "Could not open URI: "
-                        + imageToImportUri.toString());
-            }
-        }
-    }
-
-    public SingleLiveEvent<Void> cropFullSizeImageEvent() {
-        return cropFullSizeImageEvent;
-    }
-
-    public void setCroppedImageResult(int cropImageResult, Uri croppedImageUri) {
-
-        if (cropImageResult == RESULT_OK && croppedImageUri != null)
-            processCroppedImageIntoImageFiles(croppedImageUri);
-    }
-
-    private void processCroppedImageIntoImageFiles(Uri croppedImageUri) {
-
-        try {
-
-            Bitmap croppedImageBitmap = MediaStore.Images.Media.getBitmap(
-                    appContext.getContentResolver(), croppedImageUri);
-
-            Log.d(TAG, "tkm - processCroppedImage: path is: " +
-                    BitmapUtils.getAbsolutePathFromUri(appContext, croppedImageUri));
-
-            createImageFilesFromCroppedBitMap(croppedImageBitmap);
-
-        } catch (IOException e) {
-
-            e.printStackTrace();
-        }
-    }
-
-    private void createImageFilesFromCroppedBitMap(Bitmap croppedImageBitmap) {
-
-        Bitmap smallBitmap = createScaledBitmap(croppedImageBitmap, 75, true);
-        Bitmap mediumBitmap = createScaledBitmap(croppedImageBitmap, 290, true);
-        Bitmap largeBitMap = createScaledBitmap(croppedImageBitmap, 400, true);
-
-        if (smallImageFile != null) {
-
-            boolean smallImageFileSaved = saveBitmapToCache(smallBitmap, smallImageFile);
-
-            if (smallImageFileSaved)
-                updatedImageModel.setLocalSmallImageUri(FileProvider.getUriForFile(
-                            appContext, FILE_PROVIDER_AUTHORITY,smallImageFile).toString());
-        }
-
-        if (mediumImageFile != null) {
-
-            boolean mediumImageSaved = saveBitmapToCache(mediumBitmap, mediumImageFile);
-
-            if (mediumImageSaved)
-                updatedImageModel.setLocalMediumImageUri(FileProvider.getUriForFile(
-                                appContext, FILE_PROVIDER_AUTHORITY, mediumImageFile).toString());
-        }
-
-        if (largeImageFile != null) {
-
-            boolean largeImageSaved = saveBitmapToCache(largeBitMap, largeImageFile);
-
-            if (largeImageSaved)
-                updatedImageModel.setLocalLargeImageUri(FileProvider.getUriForFile(
-                                appContext, FILE_PROVIDER_AUTHORITY, largeImageFile).toString());
-        }
-
-        existingImageModel.setValue(updatedImageModel);
-        Log.d(TAG, "tkm - createImageFilesFromCroppedBitMap: " +
-                "Final step! updatedImageModel looks like: " + updatedImageModel.toString());
     }
 
     public void launchBrowser() {
