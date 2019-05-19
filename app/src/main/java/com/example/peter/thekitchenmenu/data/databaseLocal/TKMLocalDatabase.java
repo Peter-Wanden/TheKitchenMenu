@@ -108,13 +108,13 @@ public abstract class TKMLocalDatabase extends RoomDatabase {
             database.execSQL("CREATE VIRTUAL TABLE IF NOT EXISTS " + TABLE_FTS_PRODUCT +
                             " USING FTS4(" +
                             DESCRIPTION + " TEXT, " +
-                            MADE_BY + " TEXT, " +
+                    SHOPPING_LIST_ITEM_NAME + " TEXT, " +
                             "content=" + TABLE_PRODUCT + ")");
 
             database.execSQL("INSERT INTO " + TABLE_FTS_PRODUCT +
-                    " (`rowid`, " + DESCRIPTION + ", " + MADE_BY + ") "
+                    " (`rowid`, " + DESCRIPTION + ", " + SHOPPING_LIST_ITEM_NAME + ") "
                     + "SELECT " + ID + ", " + DESCRIPTION + ", " +
-                            MADE_BY + " FROM " + TABLE_PRODUCT);
+                    SHOPPING_LIST_ITEM_NAME + " FROM " + TABLE_PRODUCT);
         }
     };
 }

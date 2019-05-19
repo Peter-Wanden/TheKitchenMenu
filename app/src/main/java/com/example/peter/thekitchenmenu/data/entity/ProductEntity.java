@@ -22,10 +22,10 @@ public class ProductEntity implements Parcelable {
 
     public static final String TAG = "ProductEntity";
 
-    public static final String TABLE_PRODUCT = "product_uneditable";
+    public static final String TABLE_PRODUCT = "product";
     public static final String ID = "id";
     public static final String DESCRIPTION = "description";
-    public static final String MADE_BY = "madeBy";
+    public static final String SHOPPING_LIST_ITEM_NAME = "shoppingListItemName";
     public static final String CATEGORY = "category";
     public static final String NUMBER_OF_ITEMS = "number_of_items";
     public static final String SHELF_LIFE = "shelfLife";
@@ -34,12 +34,12 @@ public class ProductEntity implements Parcelable {
     public static final String PROD_COMM_PRICE_AVE = "packAvePrice";
     public static final String CREATED_BY = "createdBy";
     public static final String WEB_IMAGE_URL = "webImageUrl";
+    public static final String REMOTE_PRODUCT_ID = "remoteProductId";
     public static final String REMOTE_SMALL_IMAGE_URI = "remoteSmallImageUri";
     public static final String REMOTE_MEDIUM_IMAGE_URI = "remoteMediumImageUri";
     public static final String REMOTE_LARGE_IMAGE_URI = "remoteLargeImageUri";
     public static final String CREATE_DATE = "productCreateDate";
     public static final String LAST_UPDATE = "productLastUpdate";
-    public static final String REMOTE_PRODUCT_ID = "remoteProductId";
 
     @Exclude // Excludes field from Firebase, as is only required for Room.
     @PrimaryKey(autoGenerate = true)
@@ -49,8 +49,8 @@ public class ProductEntity implements Parcelable {
     @ColumnInfo(name = DESCRIPTION)
     private String description;
 
-    @ColumnInfo(name = MADE_BY)
-    private String madeBy;
+    @ColumnInfo(name = SHOPPING_LIST_ITEM_NAME)
+    private String shoppingListItemName;
 
     @ColumnInfo(name = CATEGORY)
     private int category;
@@ -100,7 +100,7 @@ public class ProductEntity implements Parcelable {
 
     public ProductEntity(int id,
                          String description,
-                         String madeBy,
+                         String shoppingListItemName,
                          int category,
                          int shelfLife,
                          int numberOfItems,
@@ -118,7 +118,7 @@ public class ProductEntity implements Parcelable {
 
         this.id = id;
         this.description = description;
-        this.madeBy = madeBy;
+        this.shoppingListItemName = shoppingListItemName;
         this.category = category;
         this.numberOfItems = numberOfItems;
         this.shelfLife = shelfLife;
@@ -139,7 +139,7 @@ public class ProductEntity implements Parcelable {
     public ProductEntity(Parcel in) {
         id = in.readInt();
         description = in.readString();
-        madeBy = in.readString();
+        shoppingListItemName = in.readString();
         category = in.readInt();
         numberOfItems = in.readInt();
         shelfLife = in.readInt();
@@ -160,7 +160,7 @@ public class ProductEntity implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
         dest.writeString(description);
-        dest.writeString(madeBy);
+        dest.writeString(shoppingListItemName);
         dest.writeInt(category);
         dest.writeInt(numberOfItems);
         dest.writeInt(shelfLife);
@@ -200,7 +200,7 @@ public class ProductEntity implements Parcelable {
         HashMap<String, Object> result = new HashMap<>();
 
         result.put(DESCRIPTION, description);
-        result.put(MADE_BY, madeBy);
+        result.put(SHOPPING_LIST_ITEM_NAME, shoppingListItemName);
         result.put(CATEGORY, category);
         result.put(NUMBER_OF_ITEMS, numberOfItems);
         result.put(SHELF_LIFE, shelfLife);
@@ -241,12 +241,12 @@ public class ProductEntity implements Parcelable {
         this.description = description;
     }
 
-    public String getMadeBy() {
-        return madeBy;
+    public String getShoppingListItemName() {
+        return shoppingListItemName;
     }
 
-    public void setMadeBy(String madeBy) {
-        this.madeBy = madeBy;
+    public void setShoppingListItemName(String shoppingListItemName) {
+        this.shoppingListItemName = shoppingListItemName;
     }
 
     public int getCategory() {

@@ -39,15 +39,15 @@ public class ProductIdentityTextValidationHandler {
         }
     }
 
-    public void validateMadeBy(EditText editableMadeBy) {
+    public void validateShoppingListItemName(EditText editableShoppingListItemName) {
 
-        viewId = editableMadeBy.getId();
-        newText = editableMadeBy.getText().toString();
+        viewId = editableShoppingListItemName.getId();
+        newText = editableShoppingListItemName.getText().toString();
 
         if (fieldHasChanged()) {
 
             ValidateTextLength result = validateTextLength();
-            publishResult(editableMadeBy, result);
+            publishResult(editableShoppingListItemName, result);
         }
     }
 
@@ -63,7 +63,7 @@ public class ProductIdentityTextValidationHandler {
 
                 case R.id.editable_made_by:
 
-                    return !viewModel.getUpdatedIdentityModel().getMadeBy().equals(newText);
+                    return !viewModel.getUpdatedIdentityModel().getShoppingListItemName().equals(newText);
 
                 default:
                     return false;
@@ -132,12 +132,12 @@ public class ProductIdentityTextValidationHandler {
 
                 case R.id.editable_made_by:
 
-                    viewModel.getUpdatedIdentityModel().setMadeBy(newText);
+                    viewModel.getUpdatedIdentityModel().setShoppingListItemName(newText);
 
                     if (result == ValidateTextLength.VALIDATED)
-                        viewModel.setMadeByValidated(true);
+                        viewModel.setShoppingListItemNameValidated(true);
 
-                    else viewModel.setMadeByValidated(false);
+                    else viewModel.setShoppingListItemNameValidated(false);
 
                     break;
             }

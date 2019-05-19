@@ -39,8 +39,8 @@ public class ProductEditorViewModel extends ObservableViewModel {
 
         ProductEntity productEntityMetricMassTest = new ProductEntity(
                 0,
-                "Heinz Baked Beanz",
-                "Heinz",
+                "Heinz Baked Beans",
+                "Baked beans",
                 1,
                 12,
                 1,
@@ -111,8 +111,7 @@ public class ProductEditorViewModel extends ObservableViewModel {
     void setUpdatedImageModel(ImageModel updatedImageModel) {
         this.updatedImageModel = updatedImageModel;
         Log.d(TAG, "tkm - setUpdatedImageModel: Image model updated");
-        // TODO - read in files https://developer.android.com/training/data-storage/files#OpenFileInternal
-        //  Save images to remote database
+        // TODO Save images to remote database
         //
     }
 

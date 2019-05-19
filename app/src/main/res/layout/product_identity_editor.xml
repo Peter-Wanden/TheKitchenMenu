@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <ImageView
             android:id="@+id/product_identity_border"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -35,7 +35,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="@id/bottom_guideline"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <TextView
             android:id="@+id/product_identity_header"
             style="@style/EditableCategoryStyle"
             android:layout_width="0dp"
@@ -51,7 +51,7 @@
             app:layout_constraintEnd_toEndOf="@id/product_identity_border"
             app:layout_constraintTop_toTopOf="@id/product_identity_border" />
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <TextView
             android:id="@+id/description_label"
             style="@style/EditableCategoryStyle"
             android:layout_width="wrap_content"
@@ -62,7 +62,7 @@
             app:layout_constraintTop_toBottomOf="@id/product_identity_header"
             app:layout_constraintStart_toStartOf="@id/product_identity_border" />
 
-        <androidx.appcompat.widget.AppCompatEditText
+        <EditText
             android:id="@+id/editable_description"
             style="@style/EditableFieldStyle"
             android:layout_width="0dp"
@@ -78,20 +78,20 @@
             app:layout_constraintEnd_toEndOf="@id/product_identity_border"
             app:layout_constraintTop_toBottomOf="@id/description_label" />
 
-        <!--android:selection='@{productEditorViewModel.productModel.madeBy.length()}'-->
+        <!--android:selection='@{productEditorViewModel.productModel.shoppingListItemName.length()}'-->
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <TextView
             android:id="@+id/made_by_label"
             style="@style/EditableCategoryStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="@string/label_made_by"
+            android:text="@string/label_shopping_list_item"
             app:layout_constraintStart_toStartOf="@id/product_identity_border"
             app:layout_constraintTop_toBottomOf="@id/editable_description" />
 
-        <androidx.appcompat.widget.AppCompatEditText
+        <EditText
             android:id="@+id/editable_made_by"
             style="@style/EditableFieldStyle"
             android:layout_width="0dp"
@@ -99,17 +99,17 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:afterTextChanged='@{() -> textValidation.validateMadeBy(editableMadeBy)}'
-            android:hint="@string/hint_made_by"
+            android:afterTextChanged="@{() -> textValidation.validateShoppingListItemName(editableMadeBy)}"
+            android:hint="@string/hint_shopping_list_item"
             android:inputType="textCapWords"
-            android:text='@{identityModel.madeBy}'
+            android:text='@{identityModel.shoppingListItemName}'
             app:layout_constraintStart_toStartOf="@id/product_identity_border"
             app:layout_constraintEnd_toEndOf="@id/product_identity_border"
             app:layout_constraintTop_toBottomOf="@id/made_by_label" />
 
-        <!--android:selection='@{productEditorViewModel.productModel.madeBy.length()}'-->
+        <!--android:selection='@{productEditorViewModel.productModel.shoppingListItemName.length()}'-->
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <TextView
             android:id="@+id/category_label"
             style="@style/EditableCategoryStyle"
             android:layout_width="wrap_content"
@@ -120,19 +120,21 @@
             app:layout_constraintBottom_toBottomOf="@id/spinner_category"
             app:layout_constraintStart_toStartOf="@id/product_identity_border" />
 
-        <androidx.appcompat.widget.AppCompatSpinner
+        <Spinner
             android:id="@+id/spinner_category"
             style="@style/spinner_style"
             android:layout_width="200dp"
             android:layout_height="@dimen/standard_input_item_height"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:selectedItemPosition='@={identityModel.category}'
             android:spinnerMode="dropdown"
+
             app:layout_constraintStart_toEndOf="@id/category_label"
             app:layout_constraintTop_toBottomOf="@id/editable_made_by" />
 
-        <androidx.appcompat.widget.AppCompatTextView
+<!--        android:selectedItemPosition='@={identityModel.category}'-->
+
+        <TextView
             android:id="@+id/shelf_life_label"
             style="@style/EditableCategoryStyle"
             android:layout_width="wrap_content"
@@ -144,7 +146,7 @@
             app:layout_constraintStart_toStartOf="@id/product_identity_border"
             android:visibility='@{identityModel.category == 1 ? View.VISIBLE : View.GONE}' />
 
-        <androidx.appcompat.widget.AppCompatSpinner
+        <Spinner
             android:id="@+id/spinner_shelf_life"
             style="@style/spinner_style"
             android:layout_width="0dp"
@@ -164,6 +166,5 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintGuide_end="0dp"/>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -16,11 +16,11 @@
     <string name="cd_brand_logo">The kitchen menu brand logo</string>
 
     <!-- Common field labels and hints -->
-    <string name="label_description">Description</string>
-    <string name="label_made_by">Made by</string>
-    <string name="hint_made_by">Who the manufacturer?</string>
+    <string name="label_description">Manufacturer or retailers exact description</string>
+    <string name="hint_description">eg. Lurpak spreadable lighter, unsalted</string>
+    <string name="label_shopping_list_item">What do you call this item on your shopping list?</string>
+    <string name="hint_shopping_list_item">eg. Butter</string>
     <string name="label_retailer">Retailer</string>
-    <string name="hint_description">Retailers description</string>
     <string name="hint_retailer">Where do you buy it?</string>
     <string name="label_location_room">Storage room</string>
     <string name="hint_location_room">What room do you keep it?</string>

@@ -16,18 +16,18 @@ public class ProductFastTextSearch {
     public static final String TABLE_FTS_PRODUCT = "fts_prod_comm";
 
     private String description;
-    private String madeBy;
+    private String shoppingListItemName;
 
-    public ProductFastTextSearch(String description, String madeBy) {
+    public ProductFastTextSearch(String description, String shoppingListItemName) {
         this.description = description;
-        this.madeBy = madeBy;
+        this.shoppingListItemName = shoppingListItemName;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public String getMadeBy() {
-        return madeBy;
+    public String getShoppingListItemName() {
+        return shoppingListItemName;
     }
 }

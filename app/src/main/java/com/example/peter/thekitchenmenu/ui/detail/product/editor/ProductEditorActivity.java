@@ -94,7 +94,7 @@ public class ProductEditorActivity extends AppCompatActivity {
 
                 ProductIdentityModel identityModel = new ProductIdentityModel();
                 identityModel.setDescription(productEntity.getDescription());
-                identityModel.setMadeBy(productEntity.getMadeBy());
+                identityModel.setShoppingListItemName(productEntity.getShoppingListItemName());
                 identityModel.setCategory(productEntity.getCategory());
                 identityModel.setShelfLife(productEntity.getShelfLife());
 

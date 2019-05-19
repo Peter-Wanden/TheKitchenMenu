@@ -21,7 +21,7 @@ public class ProductIdentityEditorFragment extends Fragment {
 
     private static final String TAG = "ProductIdentityEditorFragment";
 
-    private ProductIdentityEditorBinding identityEditorBinding;
+    private ProductIdentityEditorBinding identityBinding;
     private ProductIdentityViewModel identityViewModel;
 
     @Nullable
@@ -30,14 +30,14 @@ public class ProductIdentityEditorFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        identityEditorBinding = DataBindingUtil.inflate(
+        identityBinding = DataBindingUtil.inflate(
                 inflater,
                 R.layout.product_identity_editor,
                 container,
                 false);
 
-        View rootView = identityEditorBinding.getRoot();
-        identityEditorBinding.setLifecycleOwner(this);
+        View rootView = identityBinding.getRoot();
+        identityBinding.setLifecycleOwner(this);
 
         setViewModel();
         setObservers();
@@ -56,17 +56,17 @@ public class ProductIdentityEditorFragment extends Fragment {
     private void setObservers() {
 
         final Observer<ProductIdentityModel> identityModelObserver = identityModel ->
-                identityEditorBinding.setIdentityModel(identityModel);
+                identityBinding.setIdentityModel(identityModel);
 
         identityViewModel.getExistingIdentityModel().observe(this, identityModelObserver);
     }
 
     private void setValidationHandler() {
-        identityEditorBinding.setTextValidation(identityViewModel.getTextValidationHandler());
+        identityBinding.setTextValidation(identityViewModel.getTextValidationHandler());
     }
 
     private void setBindingInstanceVariables() {
-        identityEditorBinding.setIdentityModel(identityViewModel.getUpdatedIdentityModel());
+        identityBinding.setIdentityModel(identityViewModel.getUpdatedIdentityModel());
     }
 
     private void setupSpinners() {
@@ -75,14 +75,16 @@ public class ProductIdentityEditorFragment extends Fragment {
     }
 
     private void setupCategorySpinner() {
-        identityEditorBinding.spinnerCategory.setAdapter(ArrayAdapter.createFromResource(
+        identityBinding.spinnerCategory.setAdapter(ArrayAdapter.createFromResource(
                 requireActivity(), R.array.product_category_options, R.layout.list_item_spinner));
     }
 
     private void setUpShelfLifeSpinner() {
-        identityEditorBinding.spinnerShelfLife.setAdapter(ArrayAdapter.createFromResource(
+        identityBinding.spinnerShelfLife.setAdapter(ArrayAdapter.createFromResource(
                 requireActivity(),
                 R.array.shelf_life_options,
                 R.layout.list_item_spinner));
+
+
     }
 }

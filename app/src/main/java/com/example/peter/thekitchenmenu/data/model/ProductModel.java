@@ -29,7 +29,7 @@ public class ProductModel extends BaseObservable implements Parcelable {
 
     // ProductIdentityModel fields
     private String description;
-    private String madeBy;
+    private String shoppingListItemName;
     private int category;
     private int shelfLife;
 
@@ -76,7 +76,7 @@ public class ProductModel extends BaseObservable implements Parcelable {
         this.localProductId = productEntity.getId();
         this.remoteProductId = productEntity.getRemoteProductId();
         this.description = productEntity.getDescription();
-        this.madeBy = productEntity.getMadeBy();
+        this.shoppingListItemName = productEntity.getShoppingListItemName();
         this.category = productEntity.getCategory();
         this.shelfLife = productEntity.getShelfLife();
         this.numberOfItems = productEntity.getNumberOfItems();
@@ -104,7 +104,7 @@ public class ProductModel extends BaseObservable implements Parcelable {
 
         this.localProductId = productEntity.getId();
         this.description = productEntity.getDescription();
-        this.madeBy = productEntity.getMadeBy();
+        this.shoppingListItemName = productEntity.getShoppingListItemName();
         this.category = productEntity.getCategory();
         this.shelfLife = productEntity.getShelfLife();
         this.numberOfItems = productEntity.getNumberOfItems();
@@ -132,7 +132,7 @@ public class ProductModel extends BaseObservable implements Parcelable {
             int localProductId,
             String remoteProductId,
             String description,
-            String madeBy,
+            String shoppingListItemName,
             int category,
             int shelfLife,
             int numberOfItems,
@@ -157,7 +157,7 @@ public class ProductModel extends BaseObservable implements Parcelable {
         this.localProductId = localProductId;
         this.remoteProductId = remoteProductId;
         this.description = description;
-        this.madeBy = madeBy;
+        this.shoppingListItemName = shoppingListItemName;
         this.category = category;
         this.shelfLife = shelfLife;
         this.numberOfItems = numberOfItems;
@@ -184,7 +184,7 @@ public class ProductModel extends BaseObservable implements Parcelable {
         localProductId = in.readInt();
         remoteProductId = in.readString();
         description = in.readString();
-        madeBy = in.readString();
+        shoppingListItemName = in.readString();
         category = in.readInt();
         shelfLife = in.readInt();
         numberOfItems = in.readInt();
@@ -214,7 +214,7 @@ public class ProductModel extends BaseObservable implements Parcelable {
         HashMap<String, Object> result = new HashMap<>();
 
         result.put(DESCRIPTION, description);
-        result.put(MADE_BY, madeBy);
+        result.put(SHOPPING_LIST_ITEM_NAME, shoppingListItemName);
         result.put(CATEGORY, category);
         result.put(SHELF_LIFE, shelfLife);
         result.put(NUMBER_OF_ITEMS, numberOfItems);
@@ -235,7 +235,7 @@ public class ProductModel extends BaseObservable implements Parcelable {
 
         // All fields are required
         result.put(DESCRIPTION, description);
-        result.put(MADE_BY, madeBy);
+        result.put(SHOPPING_LIST_ITEM_NAME, shoppingListItemName);
         result.put(CATEGORY, category);
         result.put(SHELF_LIFE, shelfLife);
         result.put(NUMBER_OF_ITEMS, numberOfItems);
@@ -281,7 +281,7 @@ public class ProductModel extends BaseObservable implements Parcelable {
         parcel.writeInt(localProductId);
         parcel.writeString(remoteProductId);
         parcel.writeString(description);
-        parcel.writeString(madeBy);
+        parcel.writeString(shoppingListItemName);
         parcel.writeInt(category);
         parcel.writeInt(shelfLife);
         parcel.writeInt(numberOfItems);
@@ -310,7 +310,7 @@ public class ProductModel extends BaseObservable implements Parcelable {
                 ", localProductId: '" + localProductId + '\'' +
                 ", remoteProductId: '" + remoteProductId + '\'' +
                 ", description: '" + description + '\'' +
-                ", madeBy: '" + madeBy + '\'' +
+                ", shoppingListItemName: '" + shoppingListItemName + '\'' +
                 ", category: " + category + '\'' +
                 ", shelfLife: " + shelfLife + '\'' +
                 ", numberOfItems: '" + numberOfItems + '\'' +
@@ -329,7 +329,7 @@ public class ProductModel extends BaseObservable implements Parcelable {
         Log.d(TAG, "tkm - getValuesFromEntity: getting values");
 
         setDescription(entity.getDescription());
-        setMadeBy(entity.getMadeBy());
+        setShoppingListItemName(entity.getShoppingListItemName());
         setCategory(entity.getCategory());
         setNumberOfItems(entity.getNumberOfItems());
         setShelfLife(entity.getShelfLife());
@@ -427,13 +427,13 @@ public class ProductModel extends BaseObservable implements Parcelable {
     }
 
     @Bindable
-    public String getMadeBy() {
-        return madeBy;
+    public String getShoppingListItemName() {
+        return shoppingListItemName;
     }
 
-    public void setMadeBy(String madeBy) {
-        this.madeBy = madeBy;
-        notifyPropertyChanged(BR.madeBy);
+    public void setShoppingListItemName(String shoppingListItemName) {
+        this.shoppingListItemName = shoppingListItemName;
+        notifyPropertyChanged(BR.shoppingListItemName);
     }
 
     @Bindable

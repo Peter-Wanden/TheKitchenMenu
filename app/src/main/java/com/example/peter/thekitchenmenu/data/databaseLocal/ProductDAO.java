@@ -71,7 +71,7 @@ public interface ProductDAO {
     @Query("SELECT " +
             TABLE_PRODUCT + "." + ID + " AS _id, " +
             TABLE_PRODUCT + "." + DESCRIPTION + " AS " + SUGGEST_COLUMN_TEXT_1 + ", " +
-            TABLE_PRODUCT + "." + MADE_BY + " AS " + SUGGEST_COLUMN_TEXT_2 + ", " +
+            TABLE_PRODUCT + "." + SHOPPING_LIST_ITEM_NAME + " AS " + SUGGEST_COLUMN_TEXT_2 + ", " +
             TABLE_PRODUCT + "." + ID + " AS " + SUGGEST_COLUMN_INTENT_DATA + " " +
             "FROM " +
             TABLE_PRODUCT + " JOIN " + TABLE_FTS_PRODUCT + " ON (" +
