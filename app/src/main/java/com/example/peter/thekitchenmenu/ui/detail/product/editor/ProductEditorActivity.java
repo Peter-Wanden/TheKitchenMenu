@@ -20,7 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class ProductEditorActivity extends AppCompatActivity {
 
-    private static final String TAG = "ProductEditorActivity";
+    private static final String TAG = "tkm-ProdEditorAct";
     private static final String PRODUCT_ID = "product_id";
 
     ProductEditorBinding productEditorBinding;
@@ -106,7 +106,7 @@ public class ProductEditorActivity extends AppCompatActivity {
                 measurementModel.setNumberOfItems(productEntity.getNumberOfItems());
                 measurementModel.setBaseSiUnits(productEntity.getBaseSiUnits());
 
-                measurementEditorViewModel.getMeasurementModel().setValue(measurementModel);
+                measurementEditorViewModel.getExistingMeasurementModel().setValue(measurementModel);
             }
         };
 
@@ -135,6 +135,6 @@ public class ProductEditorActivity extends AppCompatActivity {
             productEditorViewModel.setUpdatedMeasurementModel(measurementModel);
         };
 
-        measurementEditorViewModel.getMeasurementModel().observe(this, measurementModelObserver);
+        measurementEditorViewModel.getExistingMeasurementModel().observe(this, measurementModelObserver);
     }
 }

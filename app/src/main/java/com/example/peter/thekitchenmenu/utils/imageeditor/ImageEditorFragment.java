@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.detail.product.editor;
+package com.example.peter.thekitchenmenu.utils.imageeditor;
 
 import android.app.SearchManager;
 import android.content.Intent;
@@ -55,28 +55,23 @@ public class ImageEditorFragment extends Fragment {
     }
 
     private void setViewModel() {
-
         viewModel = ViewModelProviders.of(requireActivity()).
                 get(ImageEditorViewModel.class);
     }
 
     private void setObservers() {
-
-        final Observer<ImageModel> imageModelObserver = imageModel -> {
-            imageEditorBinding.setImageModel(imageModel);
-        };
+        final Observer<ImageModel> imageModelObserver = imageModel ->
+                imageEditorBinding.setImageModel(imageModel);
 
         viewModel.getExistingImageModel().observe(this, imageModelObserver);
     }
 
     private void setBindingInstanceVariables() {
-
         imageEditorBinding.setImageViewModel(viewModel);
         imageEditorBinding.setImageModel(viewModel.getUpdatedImageModel());
     }
 
     private void subscribeToEvents() {
-
         viewModel.getImageFromCameraEvent().observe(this, this::getImageFromCamera);
         viewModel.getImageFromGalleryEvent().observe(this, event -> getImageFromGallery());
         viewModel.launchBrowserEvent().observe(this, event -> launchBrowser());
@@ -84,7 +79,6 @@ public class ImageEditorFragment extends Fragment {
     }
 
     private void getImageFromCamera(Uri fullSizeImageUri) {
-
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, fullSizeImageUri);
 
@@ -92,7 +86,6 @@ public class ImageEditorFragment extends Fragment {
     }
 
     private void getImageFromGallery() {
-
         // see https://codelabs.developers.google.com/codelabs/android-storage-permissions/#4
         Intent imagePickerIntent = new Intent(Intent.ACTION_GET_CONTENT);
         imagePickerIntent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -110,7 +103,6 @@ public class ImageEditorFragment extends Fragment {
     }
 
     private void cropImage() {
-
         CropImage.activity(
                 Uri.fromFile(viewModel.getFullSizeImageFile())).
                 setActivityTitle(requireActivity().

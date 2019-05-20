@@ -4,17 +4,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <import type="android.view.View" />
 
         <variable
-            name="textValidation"
-            type="com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductIdentityTextValidationHandler" />
+            name="viewModel"
+            type="com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductIdentityViewModel" />
 
         <variable
             name="identityModel"
             type="com.example.peter.thekitchenmenu.data.model.ProductIdentityModel" />
-
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -71,14 +69,12 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:hint="@string/hint_description"
-            android:afterTextChanged='@{() -> textValidation.validateDescription(editableDescription)}'
             android:text='@{identityModel.description}'
+            android:afterTextChanged="@{viewModel::descriptionChanged}"
             android:inputType="textCapWords"
             app:layout_constraintStart_toStartOf="@id/product_identity_border"
             app:layout_constraintEnd_toEndOf="@id/product_identity_border"
             app:layout_constraintTop_toBottomOf="@id/description_label" />
-
-        <!--android:selection='@{productEditorViewModel.productModel.shoppingListItemName.length()}'-->
 
         <TextView
             android:id="@+id/made_by_label"
@@ -92,22 +88,20 @@
             app:layout_constraintTop_toBottomOf="@id/editable_description" />
 
         <EditText
-            android:id="@+id/editable_made_by"
+            android:id="@+id/editable_shopping_item_list_name"
             style="@style/EditableFieldStyle"
             android:layout_width="0dp"
             android:layout_height="@dimen/standard_input_item_height"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:afterTextChanged="@{() -> textValidation.validateShoppingListItemName(editableMadeBy)}"
+            android:afterTextChanged="@{viewModel::shoppingListItemNameChanged}"
             android:hint="@string/hint_shopping_list_item"
-            android:inputType="textCapWords"
+            android:inputType="textCapSentences"
             android:text='@{identityModel.shoppingListItemName}'
             app:layout_constraintStart_toStartOf="@id/product_identity_border"
             app:layout_constraintEnd_toEndOf="@id/product_identity_border"
             app:layout_constraintTop_toBottomOf="@id/made_by_label" />
-
-        <!--android:selection='@{productEditorViewModel.productModel.shoppingListItemName.length()}'-->
 
         <TextView
             android:id="@+id/category_label"
@@ -128,11 +122,9 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:spinnerMode="dropdown"
-
+            android:selectedItemPosition='@={identityModel.category}'
             app:layout_constraintStart_toEndOf="@id/category_label"
-            app:layout_constraintTop_toBottomOf="@id/editable_made_by" />
-
-<!--        android:selectedItemPosition='@={identityModel.category}'-->
+            app:layout_constraintTop_toBottomOf="@id/editable_shopping_item_list_name" />
 
         <TextView
             android:id="@+id/shelf_life_label"

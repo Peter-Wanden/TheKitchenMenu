@@ -33,8 +33,8 @@ public class ImageEditorViewModel extends ObservableViewModel {
 
     private static final String TAG = "ImageEditorViewModel";
 
-    public static final int REQUEST_IMAGE_CAPTURE = 1;
-    public static final int REQUEST_IMAGE_IMPORT = 2;
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+    static final int REQUEST_IMAGE_IMPORT = 2;
 
     private Application appContext;
     private final MutableLiveData<ImageModel> existingImageModel = new MutableLiveData<>();
@@ -61,7 +61,7 @@ public class ImageEditorViewModel extends ObservableViewModel {
         checkIfCanTakePictures();
     }
 
-    public void onConfigurationChange() {
+    void onConfigurationChange() {
 
         if (updatedImageModel.getLocalLargeImageUri() != null)
             existingImageModel.setValue(updatedImageModel);
@@ -71,7 +71,7 @@ public class ImageEditorViewModel extends ObservableViewModel {
         return existingImageModel;
     }
 
-    public ImageModel getUpdatedImageModel() {
+    ImageModel getUpdatedImageModel() {
         return updatedImageModel;
     }
 
@@ -146,6 +146,10 @@ public class ImageEditorViewModel extends ObservableViewModel {
         getImageFromCameraEvent.setValue(getFullSizeImagePublicUri());
     }
 
+    SingleLiveEvent<Uri> getImageFromCameraEvent() {
+        return getImageFromCameraEvent;
+    }
+
     private Uri getFullSizeImagePublicUri() {
 
         return FileProvider.getUriForFile(
@@ -154,11 +158,7 @@ public class ImageEditorViewModel extends ObservableViewModel {
                 fullSizeImageFile);
     }
 
-    public SingleLiveEvent<Uri> getImageFromCameraEvent() {
-        return getImageFromCameraEvent;
-    }
-
-    public File getFullSizeImageFile() {
+    File getFullSizeImageFile() {
         return fullSizeImageFile;
     }
 
@@ -181,15 +181,15 @@ public class ImageEditorViewModel extends ObservableViewModel {
         getImageFromGalleryEvent.call();
     }
 
-    public SingleLiveEvent<Void> getImageFromGalleryEvent() {
+    SingleLiveEvent<Void> getImageFromGalleryEvent() {
         return getImageFromGalleryEvent;
     }
 
-    public SingleLiveEvent<Void> cropFullSizeImageEvent() {
+    SingleLiveEvent<Void> cropFullSizeImageEvent() {
         return cropFullSizeImageEvent;
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK)
             cropFullSizeImageEvent().call();
@@ -332,7 +332,7 @@ public class ImageEditorViewModel extends ObservableViewModel {
         launchBrowserEvent.call();
     }
 
-    public SingleLiveEvent<Void> launchBrowserEvent() {
+    SingleLiveEvent<Void> launchBrowserEvent() {
         return launchBrowserEvent;
     }
 }

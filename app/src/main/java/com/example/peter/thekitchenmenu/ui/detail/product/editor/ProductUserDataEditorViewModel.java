@@ -29,41 +29,34 @@ public class ProductUserDataEditorViewModel extends ObservableViewModel {
     }
 
     ProductUserDataModel getUserDataModel() {
-
         return userDataModel;
     }
 
     ProductUserDataTextValidationHandler getTextValidationHandler() {
-
         return textValidationHandler;
     }
 
     void setRetailerValidated(boolean retailerValidated) {
-
         this.retailerValidated = retailerValidated;
         checkUserDataModelValidated();
     }
 
     void setLocationRoomValidated(boolean locationRoomValidated) {
-
         this.locationRoomValidated = locationRoomValidated;
         checkUserDataModelValidated();
     }
 
     void setLocationInRoomValidated(boolean locationInRoomValidated) {
-
         this.locationInRoomValidated = locationInRoomValidated;
         checkUserDataModelValidated();
     }
 
     private void checkUserDataModelValidated() {
-
         if(retailerValidated && locationRoomValidated && locationInRoomValidated)
             getUserDataModelIsValidated().setValue(Boolean.TRUE);
     }
 
     private MutableLiveData<Boolean> getUserDataModelIsValidated() {
-
         return userDataModelIsValidated;
     }
 }

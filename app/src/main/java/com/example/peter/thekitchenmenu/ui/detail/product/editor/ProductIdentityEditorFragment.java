@@ -1,6 +1,7 @@
 package com.example.peter.thekitchenmenu.ui.detail.product.editor;
 
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,12 +18,14 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import static com.example.peter.thekitchenmenu.utils.CharacterInputFilters.getCustomInputFilter;
+
 public class ProductIdentityEditorFragment extends Fragment {
 
-    private static final String TAG = "ProductIdentityEditorFragment";
+    private static final String TAG = "ProductIdentityEditorFr";
 
-    private ProductIdentityEditorBinding identityBinding;
-    private ProductIdentityViewModel identityViewModel;
+    private ProductIdentityEditorBinding binding;
+    private ProductIdentityViewModel viewModel;
 
     @Nullable
     @Override
@@ -30,43 +33,65 @@ public class ProductIdentityEditorFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        identityBinding = DataBindingUtil.inflate(
+        binding = DataBindingUtil.inflate(
                 inflater,
                 R.layout.product_identity_editor,
                 container,
                 false);
 
-        View rootView = identityBinding.getRoot();
-        identityBinding.setLifecycleOwner(this);
+        View rootView = binding.getRoot();
+        binding.setLifecycleOwner(this);
 
         setViewModel();
         setObservers();
-        setValidationHandler();
         setBindingInstanceVariables();
         setupSpinners();
+        subscribeToEvents();
+        setInputFilters();
 
         return rootView;
     }
 
     private void setViewModel() {
-        identityViewModel = ViewModelProviders.of(requireActivity()).
+        viewModel = ViewModelProviders.of(requireActivity()).
                 get(ProductIdentityViewModel.class);
     }
 
     private void setObservers() {
+        final Observer<ProductIdentityModel> identityModelObserver = identityModel -> {
+            binding.setIdentityModel(identityModel);
+            viewModel.setEditedIdentityModel(identityModel);
+        };
 
-        final Observer<ProductIdentityModel> identityModelObserver = identityModel ->
-                identityBinding.setIdentityModel(identityModel);
-
-        identityViewModel.getExistingIdentityModel().observe(this, identityModelObserver);
-    }
-
-    private void setValidationHandler() {
-        identityBinding.setTextValidation(identityViewModel.getTextValidationHandler());
+        viewModel.getExistingIdentityModel().observe(this, identityModelObserver);
     }
 
     private void setBindingInstanceVariables() {
-        identityBinding.setIdentityModel(identityViewModel.getUpdatedIdentityModel());
+        binding.setViewModel(viewModel);
+        binding.setIdentityModel(viewModel.getEditedIdentityModel());
+    }
+
+    private void subscribeToEvents() {
+        viewModel.getDescriptionErrorEvent().observe(
+                this, this::descriptionError);
+
+        viewModel.getShoppingListItemNameErrorEvent().observe(
+                this, this::shoppingListItemNameError);
+    }
+
+    private void setInputFilters() {
+        binding.editableDescription.setFilters(new InputFilter[] {
+                getCustomInputFilter(true, true, true)});
+        binding.editableShoppingItemListName.setFilters(new InputFilter[] {
+                getCustomInputFilter(true, true, true)});
+    }
+
+    private void descriptionError(String descriptionError) {
+        binding.editableDescription.setError(descriptionError);
+    }
+
+    private void shoppingListItemNameError(String shoppingListItemNameError) {
+        binding.editableShoppingItemListName.setError(shoppingListItemNameError);
     }
 
     private void setupSpinners() {
@@ -75,16 +100,14 @@ public class ProductIdentityEditorFragment extends Fragment {
     }
 
     private void setupCategorySpinner() {
-        identityBinding.spinnerCategory.setAdapter(ArrayAdapter.createFromResource(
+        binding.spinnerCategory.setAdapter(ArrayAdapter.createFromResource(
                 requireActivity(), R.array.product_category_options, R.layout.list_item_spinner));
     }
 
     private void setUpShelfLifeSpinner() {
-        identityBinding.spinnerShelfLife.setAdapter(ArrayAdapter.createFromResource(
+        binding.spinnerShelfLife.setAdapter(ArrayAdapter.createFromResource(
                 requireActivity(),
                 R.array.shelf_life_options,
                 R.layout.list_item_spinner));
-
-
     }
 }

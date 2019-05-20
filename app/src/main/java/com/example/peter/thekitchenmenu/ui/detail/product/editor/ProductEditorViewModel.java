@@ -58,13 +58,13 @@ public class ProductEditorViewModel extends ObservableViewModel {
 
         ProductEntity productEntityImperialMassTest = new ProductEntity(
                 0,
-                "Cadbury Wispa Chocolate Multipack 4 X30g",
+                "Cadbury Wispa Chocolate Multipack 4 x 30g",
                 "Cadbury",
                 1,
                 9,
                 4,
                 120,
-                0,
+                2,
                 0,
                 "",
                 "https://img.tesco.com/Groceries/pi/372/7622210255372/IDShot_540x540.jpg",
@@ -94,7 +94,7 @@ public class ProductEditorViewModel extends ObservableViewModel {
                 0,
                 "");
 
-        this.existingProductEntity.setValue(productEntityMetricMassTest);
+        this.existingProductEntity.setValue(productEntityImperialMassTest);
     }
 
     public String getTitle() {
@@ -117,7 +117,7 @@ public class ProductEditorViewModel extends ObservableViewModel {
 
     void setUpdatedIdentityModel(ProductIdentityModel updatedIdentityModel) {
         this.updatedIdentityModel = updatedIdentityModel;
-        Log.d(TAG, "tkm - setUpdatedIdentityModel: Identity model updated");
+        Log.d(TAG, "tkm - setEditedIdentityModel: " + updatedIdentityModel.toString());
     }
 
     void setUpdatedMeasurementModel(ProductMeasurementModel updatedMeasurementModel) {

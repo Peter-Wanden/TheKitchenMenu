@@ -44,17 +44,14 @@ public class ProductUserDataEditorFragment extends Fragment {
     }
 
     private void setViewModel() {
-
         userDataEditorViewModel = ViewModelProviders.of(requireActivity()).
                 get(ProductUserDataEditorViewModel.class);
     }
 
     private void setValidationHandler() {
-
         userDataEditorBinding.setTextValidation(userDataEditorViewModel.getTextValidationHandler());
     }
 
     private void setBindingInstanceVariables() {
-
         userDataEditorBinding.setUserDataModel(userDataEditorViewModel.getUserDataModel());
     }}

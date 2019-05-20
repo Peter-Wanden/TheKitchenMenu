@@ -54,42 +54,35 @@ public class ProductMeasurementEditorFragment extends Fragment {
     }
 
     private void setViewModel() {
-
         measurementViewModel = ViewModelProviders.of(requireActivity()).
                 get(ProductMeasurementViewModel.class);
     }
 
     private void setObservers() {
-
         final Observer<ProductMeasurementModel> measurementModelObserver = measurementModel ->
                 measurementEditorBinding.setMeasurement(measurementModel);
 
-        measurementViewModel.getMeasurementModel().observe(this, measurementModelObserver);
+        measurementViewModel.getExistingMeasurementModel().observe(this, measurementModelObserver);
     }
 
     private void setValidationHandlersToBinding() {
-
         measurementEditorBinding.
-                setMeasurementValidation(measurementViewModel.getMeasurementValidation());
+                setMeasurementValidation(measurementViewModel.getMeasurementHandler());
     }
 
     private void setBindingInstanceVariables() {
-
-        measurementEditorBinding.setMeasurement(measurementViewModel.getNewMeasurement());
+        measurementEditorBinding.setMeasurement(measurementViewModel.getEditedMeasurementModel());
     }
 
     private void setupUnitOfMeasureSpinner() {
-
         measurementEditorBinding.spinnerUnitOfMeasure.setAdapter(getUnitOfMeasureSpinnerAdapter());
     }
 
     private SpinnerAdapter getUnitOfMeasureSpinnerAdapter() {
-
         return new UnitOfMeasureSpinnerAdapter(requireActivity(), unitOfMeasureArrayList());
     }
 
     private ArrayList<UnitOfMeasureSpinnerItem> unitOfMeasureArrayList() {
-
         List<String> unitOfMeasureHeaders = Arrays.asList(getResources().getStringArray(
                 R.array.unit_of_measure_subtypes_as_string_array));
 
@@ -113,7 +106,6 @@ public class ProductMeasurementEditorFragment extends Fragment {
         for (int header = 0; header < unitOfMeasureHeaders.size(); header++) {
 
             if (header == MeasurementSubType.TYPE_METRIC_MASS.ordinal()) {
-
                 UnitOfMeasureSpinnerItem headerItem = new UnitOfMeasureSpinnerItem(
                         SpinnerItemType.LIST_ITEM,
                         unitOfMeasureHeaders.get(header).
@@ -125,7 +117,6 @@ public class ProductMeasurementEditorFragment extends Fragment {
             }
 
             if (header == MeasurementSubType.TYPE_IMPERIAL_MASS.ordinal()) {
-
                 UnitOfMeasureSpinnerItem headerItem = new UnitOfMeasureSpinnerItem(
                         SpinnerItemType.LIST_ITEM,
                         unitOfMeasureHeaders.get(header).
@@ -137,7 +128,6 @@ public class ProductMeasurementEditorFragment extends Fragment {
             }
 
             if (header == MeasurementSubType.TYPE_METRIC_VOLUME.ordinal()) {
-
                 UnitOfMeasureSpinnerItem headerItem = new UnitOfMeasureSpinnerItem(
                         SpinnerItemType.LIST_ITEM,
                         unitOfMeasureHeaders.get(header).
@@ -149,7 +139,6 @@ public class ProductMeasurementEditorFragment extends Fragment {
             }
 
             if (header == MeasurementSubType.TYPE_IMPERIAL_VOLUME.ordinal()) {
-
                 UnitOfMeasureSpinnerItem headerItem = new UnitOfMeasureSpinnerItem(
                         SpinnerItemType.LIST_ITEM,
                         unitOfMeasureHeaders.get(header).
@@ -161,7 +150,6 @@ public class ProductMeasurementEditorFragment extends Fragment {
             }
 
             if (header == MeasurementSubType.TYPE_COUNT.ordinal()) {
-
                 UnitOfMeasureSpinnerItem headerItem = new UnitOfMeasureSpinnerItem(
                         SpinnerItemType.LIST_ITEM,
                         unitOfMeasureHeaders.get(header).
@@ -177,7 +165,6 @@ public class ProductMeasurementEditorFragment extends Fragment {
     }
 
     private String removeArrayBraces(String stringWithBrackets) {
-
         return stringWithBrackets.substring(1, stringWithBrackets.length() - 1);
     }
 }
