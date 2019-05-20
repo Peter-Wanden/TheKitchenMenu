@@ -38,7 +38,7 @@
             app:layout_constraintEnd_toStartOf="@+id/pack_measurement_label_two"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            android:afterTextChanged='@{() -> measurementValidation.validatePackSize(packEditableMeasurementTwo, measurement.measurementSubType)}'
+            android:afterTextChanged='@{() -> measurementValidation.validatePackSize(packEditableMeasurementTwo)}'
             android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(packEditableMeasurementTwo, measurement.packMeasurementTwo)}'
             app:setUpEditTextForSubTypeSelected='@{measurement.measurementSubType}'
             app:fieldVisibilityAdapterNumberOfUnits='@{measurement.numberOfMeasurementUnits}'
@@ -72,7 +72,7 @@
             app:layout_constraintEnd_toStartOf="@+id/item_measurement_label_two"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            android:afterTextChanged='@{() -> measurementValidation.validatePackSize(itemEditableMeasurementTwo, measurement.measurementSubType)}'
+            android:afterTextChanged='@{() -> measurementValidation.validatePackSize(itemEditableMeasurementTwo)}'
             android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(itemEditableMeasurementTwo, measurement.itemMeasurementTwo)}'
             app:setUpEditTextForSubTypeSelected='@{measurement.measurementSubType}'
             app:fieldVisibilityAdapterNumberOfUnits='@{measurement.numberOfMeasurementUnits}'
@@ -101,7 +101,7 @@
             style="@style/EditableFieldStyle"
             android:layout_width="0dp"
             android:layout_height="@dimen/standard_input_item_height"
-            android:afterTextChanged='@{() -> measurementValidation.validatePackSize(packEditableMeasurementOne, measurement.measurementSubType)}'
+            android:afterTextChanged='@{() -> measurementValidation.validatePackSize(packEditableMeasurementOne)}'
             android:text='@{IntegerStringFormatConverter.integerToString(packEditableMeasurementOne, measurement.packMeasurementOneAsInt, measurement.packMeasurementOneAsInt)}'
             android:textAlignment="textEnd"
             app:layout_constraintEnd_toStartOf="@+id/pack_measurement_label_one"
@@ -131,7 +131,7 @@
             style="@style/EditableFieldStyle"
             android:layout_width="0dp"
             android:layout_height="@dimen/standard_input_item_height"
-            android:afterTextChanged='@{() -> measurementValidation.validatePackSize(itemEditableMeasurementOne, measurement.measurementSubType)}'
+            android:afterTextChanged='@{() -> measurementValidation.validatePackSize(itemEditableMeasurementOne)}'
             android:text='@{IntegerStringFormatConverter.integerToString(itemEditableMeasurementOne, measurement.itemMeasurementOneAsInt, measurement.itemMeasurementOneAsInt)}'
             android:textAlignment="textEnd"
             app:fieldVisibilityAdapterNumberOfItems='@{measurement.numberOfItems}'

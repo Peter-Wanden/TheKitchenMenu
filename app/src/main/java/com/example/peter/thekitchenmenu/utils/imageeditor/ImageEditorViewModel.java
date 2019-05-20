@@ -31,7 +31,7 @@ import static com.example.peter.thekitchenmenu.utils.imageeditor.BitmapUtils.*;
 
 public class ImageEditorViewModel extends ObservableViewModel {
 
-    private static final String TAG = "ImageEditorViewModel";
+    private static final String TAG = "tkm-ImageEditorVM";
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int REQUEST_IMAGE_IMPORT = 2;
@@ -62,7 +62,6 @@ public class ImageEditorViewModel extends ObservableViewModel {
     }
 
     void onConfigurationChange() {
-
         if (updatedImageModel.getLocalLargeImageUri() != null)
             existingImageModel.setValue(updatedImageModel);
     }
@@ -76,28 +75,21 @@ public class ImageEditorViewModel extends ObservableViewModel {
     }
 
     private void cleanUpCacheDirectory() {
-
         File[] cacheDirectoryFileList = appContext.getCacheDir().listFiles();
         if (cacheDirectoryFileList.length > 0) filterImageEditorFiles(cacheDirectoryFileList);
     }
 
     private void filterImageEditorFiles(File[] cacheDirectoryFileList) {
-
         List<File> imageEditorCacheFileList = new ArrayList<>();
 
         for (File cachedFile : cacheDirectoryFileList) {
-
-            Log.d(TAG, "tkm - filterImageEditorFiles: " + cachedFile.getName());
-
             if (cachedFileBelongsToImageEditor(cachedFile))
                 imageEditorCacheFileList.add(cachedFile);
         }
-
         deleteOutOfDateFiles(imageEditorCacheFileList);
     }
 
     private boolean cachedFileBelongsToImageEditor(File file) {
-
         String filename = file.getName();
 
         return filename.startsWith(FULL_SIZE_IMAGE_FILE_PREFIX) ||
@@ -108,24 +100,17 @@ public class ImageEditorViewModel extends ObservableViewModel {
     }
 
     private void deleteOutOfDateFiles(List<File> imageEditorCacheFileList) {
-
         long timeNow = System.currentTimeMillis();
 
         for (File file : imageEditorCacheFileList) {
-
             long lastModified = file.lastModified();
             long fileAge = timeNow - lastModified;
 
-            if (fileAge > MAX_FILE_AGE) {
-
-                if (file.delete())
-                    Log.d(TAG, "tkm - deleteOutOfDateFiles: file deleted: " + file.getName());
-            }
+            if (fileAge > MAX_FILE_AGE) file.delete();
         }
     }
 
     private void checkIfCanTakePictures() {
-
         boolean hasCamera = appContext.getPackageManager().
                 hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY);
 
@@ -163,15 +148,11 @@ public class ImageEditorViewModel extends ObservableViewModel {
     }
 
     private File createImageFile(String filePrefix) {
-
         File newImageFile = null;
 
         try {
-
             newImageFile = BitmapUtils.createTemporaryImageFile(appContext, filePrefix);
-
         } catch (IOException e) {
-
             e.printStackTrace();
         }
         return newImageFile;
@@ -190,7 +171,6 @@ public class ImageEditorViewModel extends ObservableViewModel {
     }
 
     void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK)
             cropFullSizeImageEvent().call();
 
@@ -213,13 +193,12 @@ public class ImageEditorViewModel extends ObservableViewModel {
 
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
-                Log.e(TAG, "tkm - onActivityResult: ", error);
+                Log.e(TAG, "onActivityResult: ", error);
             }
         }
     }
 
     private void importGalleryImage(Uri galleryImageUri) {
-
         Bitmap importedImage = getBitmapFromImageUri(galleryImageUri);
         fullSizeImageFile = createImageFile(FULL_SIZE_IMAGE_FILE_PREFIX);
 
@@ -228,7 +207,6 @@ public class ImageEditorViewModel extends ObservableViewModel {
     }
 
     private Bitmap getBitmapFromImageUri(Uri uriOfImageToImport) {
-
         try {
             return MediaStore.Images.Media.getBitmap(
                     appContext.getContentResolver(),
@@ -244,11 +222,9 @@ public class ImageEditorViewModel extends ObservableViewModel {
     }
 
     private void importAndProcessCroppedImage(Uri croppedImageUri) {
-
         Bitmap croppedBitmap = getBitmapFromImageUri(croppedImageUri);
 
-        if (croppedBitmap != null)
-            createImageFilesFromCroppedBitMap(croppedBitmap);
+        if (croppedBitmap != null) createImageFilesFromCroppedBitMap(croppedBitmap);
     }
 
     private boolean bitmapSavedToCacheFile(Bitmap bitmapToSave, File fileToSaveBitmapTo) {
@@ -256,8 +232,6 @@ public class ImageEditorViewModel extends ObservableViewModel {
     }
 
     private void createImageFilesFromCroppedBitMap(Bitmap croppedImageBitmap) {
-
-        // ToDo - Now we create image files!
         createTemporaryImageFiles();
 
         Bitmap smallBitmap = createScaledBitmap(croppedImageBitmap, 75, true);
@@ -265,66 +239,61 @@ public class ImageEditorViewModel extends ObservableViewModel {
         Bitmap largeBitMap = createScaledBitmap(croppedImageBitmap, 400, true);
 
         if (smallImageFile != null) {
-
             boolean smallImageSaved = saveBitmapToCache(smallBitmap, smallImageFile);
 
-            if (smallImageSaved)
-                updatedImageModel.setLocalSmallImageUri(FileProvider.getUriForFile(
-                            appContext, FILE_PROVIDER_AUTHORITY,smallImageFile).toString());
+            if (smallImageSaved) updatedImageModel.setLocalSmallImageUri(
+                    FileProvider.getUriForFile(
+                            appContext, FILE_PROVIDER_AUTHORITY,smallImageFile).
+                            toString());
         }
 
         if (mediumImageFile != null) {
-
             boolean mediumImageSaved = saveBitmapToCache(mediumBitmap, mediumImageFile);
 
             if (mediumImageSaved)
-                updatedImageModel.setLocalMediumImageUri(FileProvider.getUriForFile(
-                                appContext, FILE_PROVIDER_AUTHORITY, mediumImageFile).toString());
+                updatedImageModel.setLocalMediumImageUri(
+                        FileProvider.getUriForFile(
+                                appContext, FILE_PROVIDER_AUTHORITY, mediumImageFile).
+                                toString());
         }
 
         if (largeImageFile != null) {
-
             boolean largeImageSaved = saveBitmapToCache(largeBitMap, largeImageFile);
 
-            if (largeImageSaved)
-                updatedImageModel.setLocalLargeImageUri(FileProvider.getUriForFile(
-                                appContext, FILE_PROVIDER_AUTHORITY, largeImageFile).toString());
+            if (largeImageSaved) updatedImageModel.setLocalLargeImageUri(
+                    FileProvider.getUriForFile(
+                            appContext, FILE_PROVIDER_AUTHORITY, largeImageFile).
+                            toString());
         }
 
         deleteImageFile(appContext, fullSizeImageFile.getAbsolutePath());
-
         existingImageModel.setValue(updatedImageModel);
-        Log.d(TAG, "tkm - createImageFilesFromCroppedBitMap: " +
-                "Final step! updatedImageModel looks like: " + updatedImageModel.toString());
     }
 
     private void createTemporaryImageFiles() {
-
         smallImageFile = createImageFile(ImageModel.SMALL_IMAGE_FILE_PREFIX);
-        if (smallImageFile != null) {
 
-            updatedImageModel.setLocalSmallImageUri(FileProvider.getUriForFile(
-                    appContext,
-                    FILE_PROVIDER_AUTHORITY,
-                    smallImageFile).toString());
+        if (smallImageFile != null) {
+            updatedImageModel.setLocalSmallImageUri(
+                    FileProvider.getUriForFile(
+                            appContext, FILE_PROVIDER_AUTHORITY, smallImageFile).
+                            toString());
         }
 
         mediumImageFile = createImageFile(ImageModel.MEDIUM_IMAGE_FILE_PREFIX);
         if (mediumImageFile != null) {
-
-            updatedImageModel.setLocalMediumImageUri(FileProvider.getUriForFile(
-                    appContext,
-                    FILE_PROVIDER_AUTHORITY,
-                    mediumImageFile).toString());
+            updatedImageModel.setLocalMediumImageUri(
+                    FileProvider.getUriForFile(
+                            appContext, FILE_PROVIDER_AUTHORITY, mediumImageFile).
+                            toString());
         }
 
         largeImageFile = createImageFile(ImageModel.LARGE_IMAGE_FILE_PREFIX);
         if (largeImageFile != null) {
-
-            updatedImageModel.setLocalLargeImageUri(FileProvider.getUriForFile(
-                    appContext,
-                    FILE_PROVIDER_AUTHORITY,
-                    largeImageFile).toString());
+            updatedImageModel.setLocalLargeImageUri(
+                    FileProvider.getUriForFile(
+                            appContext, FILE_PROVIDER_AUTHORITY, largeImageFile).
+                            toString());
         }
     }
 

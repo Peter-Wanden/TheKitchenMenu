@@ -15,7 +15,7 @@ import androidx.lifecycle.MutableLiveData;
 
 public class ProductEditorViewModel extends ObservableViewModel {
 
-    private static final String TAG = "ProductEditorViewModel";
+    private static final String TAG = "tkm-EditorViewModel";
 
     private String title; // Add product, Edit product
 
@@ -110,19 +110,19 @@ public class ProductEditorViewModel extends ObservableViewModel {
 
     void setUpdatedImageModel(ImageModel updatedImageModel) {
         this.updatedImageModel = updatedImageModel;
-        Log.d(TAG, "tkm - setUpdatedImageModel: Image model updated");
+        Log.d(TAG, "setUpdatedImageModel: Image model updated");
         // TODO Save images to remote database
         //
     }
 
     void setUpdatedIdentityModel(ProductIdentityModel updatedIdentityModel) {
         this.updatedIdentityModel = updatedIdentityModel;
-        Log.d(TAG, "tkm - setEditedIdentityModel: " + updatedIdentityModel.toString());
+        Log.d(TAG, "setEditedIdentityModel: " + updatedIdentityModel.toString());
     }
 
     void setUpdatedMeasurementModel(ProductMeasurementModel updatedMeasurementModel) {
         this.updatedMeasurementModel = updatedMeasurementModel;
-        Log.d(TAG, "tkm - setUpdatedMeasurementModel: Measurement model updated");
+        Log.d(TAG, "setUpdatedMeasurementModel: Measurement model updated");
     }
 
     public void onFabClick() {

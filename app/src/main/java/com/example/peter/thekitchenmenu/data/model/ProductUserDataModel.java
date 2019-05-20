@@ -16,48 +16,40 @@ public class ProductUserDataModel extends BaseObservable {
 
     @Bindable
     public String getRetailer() {
-
         return retailer;
     }
 
     public void setRetailer(String retailer) {
-
         this.retailer = retailer;
         notifyPropertyChanged(BR.retailer);
     }
 
     @Bindable
     public double getPrice() {
-
         return price;
     }
 
     public void setPrice(double price) {
-
         this.price = price;
         notifyPropertyChanged(BR.price);
     }
 
     @Bindable
     public String getLocationRoom() {
-
         return locationRoom;
     }
 
     public void setLocationRoom(String locationRoom) {
-
         this.locationRoom = locationRoom;
         notifyPropertyChanged(BR.locationRoom);
     }
 
     @Bindable
     public String getLocationInRoom() {
-
         return locationInRoom;
     }
 
     public void setLocationInRoom(String locationInRoom) {
-
         this.locationInRoom = locationInRoom;
         notifyPropertyChanged(BR.locationInRoom);
     }

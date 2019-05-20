@@ -14,7 +14,7 @@ import androidx.lifecycle.LiveData;
 
 public class Repository {
 
-    private static final String TAG = "Repository";
+    private static final String TAG = "tkm-Repository";
     private static Repository sInstance;
     private final TKMLocalDatabase database;
     private final SyncManager syncManager;
@@ -60,7 +60,7 @@ public class Repository {
     }
 
     void observedStateChange(String dataModel, boolean observedState) {
-        Log.d(TAG, "tkm - observedStateChange: " + dataModel + " to: " + observedState);
+        Log.d(TAG, "observedStateChange: " + dataModel + " to: " + observedState);
         syncManager.setModelToSync(dataModel, observedState);
     }
 

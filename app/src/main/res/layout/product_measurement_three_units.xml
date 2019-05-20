@@ -49,7 +49,7 @@
             android:layout_height="@dimen/standard_input_item_height"
             android:layout_marginStart="8dp"
             android:layout_marginBottom="8dp"
-            android:afterTextChanged='@{() -> measurementValidation.validatePackSize(packEditableMeasurementTwo, measurement.measurementSubType)}'
+            android:afterTextChanged='@{() -> measurementValidation.validatePackSize(packEditableMeasurementTwo)}'
             android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(packEditableMeasurementTwo, measurement.packMeasurementTwo)}'
             android:textAlignment="textEnd"
             app:layout_constraintBottom_toTopOf="@id/item_editable_measurement_two"
@@ -83,7 +83,7 @@
             android:layout_height="@dimen/standard_input_item_height"
             android:layout_marginStart="8dp"
             android:layout_marginBottom="8dp"
-            android:afterTextChanged='@{() -> measurementValidation.validatePackSize(itemEditableMeasurementTwo, measurement.measurementSubType)}'
+            android:afterTextChanged='@{() -> measurementValidation.validatePackSize(itemEditableMeasurementTwo)}'
             android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(itemEditableMeasurementTwo, measurement.itemMeasurementTwo)}'
             android:textAlignment="textEnd"
             app:fieldVisibilityAdapterNumberOfItems='@{measurement.numberOfItems}'
@@ -116,7 +116,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/standard_input_item_height"
             android:layout_marginBottom="8dp"
-            android:afterTextChanged='@{() -> measurementValidation.validatePackSize(packEditableMeasurementOne, measurement.measurementSubType)}'
+            android:afterTextChanged='@{() -> measurementValidation.validatePackSize(packEditableMeasurementOne)}'
             android:text='@{DecimalStringFormatConverter.doubleToString(packEditableMeasurementOne, measurement.packMeasurementOneAsDecimal, measurement.packMeasurementOneAsDecimal)}'
             android:textAlignment="textEnd"
             app:layout_constraintBottom_toTopOf="@id/item_editable_measurement_one"
@@ -149,7 +149,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/standard_input_item_height"
             android:layout_marginBottom="8dp"
-            android:afterTextChanged='@{() -> measurementValidation.validatePackSize(itemEditableMeasurementOne, measurement.measurementSubType)}'
+            android:afterTextChanged='@{() -> measurementValidation.validatePackSize(itemEditableMeasurementOne)}'
             android:text='@{DecimalStringFormatConverter.doubleToString(itemEditableMeasurementOne, measurement.itemMeasurementOneAsDecimal, measurement.itemMeasurementOneAsDecimal)}'
             android:textAlignment="textEnd"
             app:fieldVisibilityAdapterNumberOfItems='@{measurement.numberOfItems}'

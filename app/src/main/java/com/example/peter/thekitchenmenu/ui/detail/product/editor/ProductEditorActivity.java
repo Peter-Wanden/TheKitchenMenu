@@ -20,7 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class ProductEditorActivity extends AppCompatActivity {
 
-    private static final String TAG = "tkm-ProdEditorAct";
+    private static final String TAG = "tkm-EditorActivity";
     private static final String PRODUCT_ID = "product_id";
 
     ProductEditorBinding productEditorBinding;
@@ -115,7 +115,7 @@ public class ProductEditorActivity extends AppCompatActivity {
         // TODO - Observe the Models values - report them back ProductEditorViewModel
         final Observer<ImageModel> imageModelObserver = imageModel -> {
 
-            Log.d(TAG, "tkm - setObservers: ImageViewModel: New model received");
+            Log.d(TAG, "setObservers: ImageViewModel: New model received");
             productEditorViewModel.setUpdatedImageModel(imageModel);
         };
 
@@ -123,7 +123,7 @@ public class ProductEditorActivity extends AppCompatActivity {
 
         final Observer<ProductIdentityModel> identityModelObserver = IdentityModel -> {
 
-            Log.d(TAG, "tkm - setObservers: IdentityViewModel: New model received");
+            Log.d(TAG, "setObservers: IdentityViewModel: New model received");
             productEditorViewModel.setUpdatedIdentityModel(IdentityModel);
         };
 
@@ -131,7 +131,7 @@ public class ProductEditorActivity extends AppCompatActivity {
 
         final Observer<ProductMeasurementModel> measurementModelObserver = measurementModel -> {
 
-            Log.d(TAG, "tkm - setObservers: MeasurementViewModel: New model received");
+            Log.d(TAG, "setObservers: MeasurementViewModel: New model received");
             productEditorViewModel.setUpdatedMeasurementModel(measurementModel);
         };
 

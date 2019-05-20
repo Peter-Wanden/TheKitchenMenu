@@ -62,7 +62,6 @@ public class ProductIdentityEditorFragment extends Fragment {
             binding.setIdentityModel(identityModel);
             viewModel.setEditedIdentityModel(identityModel);
         };
-
         viewModel.getExistingIdentityModel().observe(this, identityModelObserver);
     }
 

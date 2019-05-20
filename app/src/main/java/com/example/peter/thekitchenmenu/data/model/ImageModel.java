@@ -7,7 +7,7 @@ import androidx.databinding.library.baseAdapters.BR;
 
 public class ImageModel extends BaseObservable {
 
-    private static final String TAG = "ImageModel";
+    private static final String TAG = "tkm - ImageModel";
 
     public static final String FULL_SIZE_IMAGE_FILE_PREFIX = "IE_FULL_";
     public static final String LARGE_IMAGE_FILE_PREFIX = "IE_LARGE_";
@@ -31,7 +31,6 @@ public class ImageModel extends BaseObservable {
     }
 
     public void setRemoteLargeImageUri(String remoteLargeImageUri) {
-
         this.remoteLargeImageUri = remoteLargeImageUri;
         notifyPropertyChanged(BR.remoteLargeImageUri);
     }
@@ -45,7 +44,6 @@ public class ImageModel extends BaseObservable {
         this.localLargeImageUri = localLargeImageUri;
         notifyPropertyChanged(BR.localLargeImageUri);
     }
-
 
     public String getRemoteMediumImageUri() {
         return remoteMediumImageUri;
@@ -63,7 +61,6 @@ public class ImageModel extends BaseObservable {
         this.localMediumImageUri = localMediumImageUri;
     }
 
-
     public String getRemoteSmallImageUri() {
         return remoteSmallImageUri;
     }
@@ -80,7 +77,6 @@ public class ImageModel extends BaseObservable {
         this.localSmallImageUri = localSmallImageUri;
     }
 
-
     @Bindable
     public String getWebImageUrl() {
         return webImageUrl;
@@ -94,7 +90,8 @@ public class ImageModel extends BaseObservable {
     @NonNull
     @Override
     public String toString() {
-        return "\nremoteLargeImageUrl: "   + remoteLargeImageUri +
+        return "tkm - " +
+                "\nremoteLargeImageUrl: "   + remoteLargeImageUri +
                 "\nremoteMediumImageUri: " + remoteMediumImageUri +
                 "\nremoteSmallImageUri: "  + remoteSmallImageUri +
                 "\nlocalLargeImageUri :"   + localLargeImageUri +

@@ -1,11 +1,8 @@
 package com.example.peter.thekitchenmenu.ui.detail.product.editor;
 
 import android.app.Application;
-import android.content.res.Resources;
 import android.text.Editable;
-import android.util.Log;
 
-import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.model.ProductIdentityModel;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 import com.example.peter.thekitchenmenu.utils.TextValidationHandler;

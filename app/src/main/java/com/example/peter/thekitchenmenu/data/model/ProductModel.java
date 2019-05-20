@@ -313,7 +313,7 @@ public class ProductModel extends BaseObservable implements Parcelable {
                 ", shoppingListItemName: '" + shoppingListItemName + '\'' +
                 ", category: " + category + '\'' +
                 ", shelfLife: " + shelfLife + '\'' +
-                ", numberOfItems: '" + numberOfItems + '\'' +
+                ", numberOfItemsChanged: '" + numberOfItems + '\'' +
                 ", baseSiUnits: '" + baseSiUnits + '\'' +
                 ", unitOfMeasureSubType: '" + unitOfMeasureSubType + '\'' +
                 ", packAvePrice: '" + packAvePrice + '\'' +

@@ -1,7 +1,5 @@
 package com.example.peter.thekitchenmenu.data.model;
 
-import android.util.Log;
-
 import com.example.peter.thekitchenmenu.BR;
 
 import androidx.annotation.NonNull;
@@ -10,7 +8,7 @@ import androidx.databinding.Bindable;
 
 public class ProductIdentityModel extends BaseObservable {
 
-    private static final String TAG = "ProductIdentityModel";
+    private static final String TAG = "tkm - ProductIdentityModel";
 
     private String description = "";
     private String shoppingListItemName = "";
@@ -19,13 +17,11 @@ public class ProductIdentityModel extends BaseObservable {
 
     @Bindable
     public String getDescription() {
-        Log.d(TAG, "tkm - getDescription: " + description);
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
-        Log.d(TAG, "tkm - setDescription: " + description);
         notifyPropertyChanged(BR.description);
     }
 
@@ -41,13 +37,11 @@ public class ProductIdentityModel extends BaseObservable {
 
     @Bindable
     public int getCategory() {
-        Log.d(TAG, "tkm - getCategory: " + category);
         return category;
     }
 
     public void setCategory(int category) {
         this.category = category;
-        Log.d(TAG, "tkm - setCategory: " + category);
         notifyPropertyChanged(BR.category);
     }
 
