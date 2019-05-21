@@ -29,16 +29,13 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
         super(application);
 
         editedMeasurementModel = new ProductMeasurementModel();
-
-        measurementHandler = new ProductMeasurementHandler(
-                application,
-                this);
-
-        unitOfMeasure = MeasurementSubType.TYPE_METRIC_MASS.getMeasurementClass();
+        measurementHandler = new ProductMeasurementHandler(this);
+        unitOfMeasure = MeasurementSubType.TYPE_METRIC_MASS.getMeasurementClass(); // default
         updateMeasurementModel();
     }
 
     MutableLiveData<ProductMeasurementModel> getExistingMeasurementModel() {
+        Log.d(TAG, "getExistingMeasurementModel: existing model called");
         return existingMeasurementModel;
     }
 
@@ -47,10 +44,17 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
     }
 
     ProductMeasurementModel getEditedMeasurementModel() {
+        Log.d(TAG, "getEditedMeasurementModel: edited model called");
         return editedMeasurementModel;
     }
 
+    UnitOfMeasure getUnitOfMeasure() {
+        Log.d(TAG, "getUnitOfMeasure: called");
+        return unitOfMeasure;
+    }
+
     void newUnitOfMeasureSelected(int subTypeAsInt) {
+        Log.d(TAG, "newUnitOfMeasureSelected: " + subTypeAsInt);
         if (unitOfMeasure.getMeasurementSubType().ordinal() != subTypeAsInt) {
             unitOfMeasure = MeasurementSubType.values()[subTypeAsInt].getMeasurementClass();
             updateMeasurementModel();
@@ -92,7 +96,17 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
             numberOfItemsChanged((itemsInPack - 1));
     }
 
+    void setBaseSiUnits(double newBaseSiUnits) {
+        Log.d(TAG, "setBaseSiUnits: Existing units are: " + unitOfMeasure.getBaseSiUnits());
+        Log.d(TAG, "setBaseSiUnits: New units are     : " + newBaseSiUnits);
+        if (unitOfMeasure.getBaseSiUnits() != newBaseSiUnits) {
+            unitOfMeasure.baseSiUnitsAreSet(newBaseSiUnits);
+            updateMeasurementModel();
+        }
+    }
+
     void validatePackSize(int viewId, int integerMeasurement, double doubleMeasurement) {
+        Log.d(TAG, "validatePackSize: ");
         int numberOfUnitsAfterDecimal;
 
         if (viewId == R.id.pack_editable_measurement_one ||
@@ -313,6 +327,7 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
             }
         }
 
+        // TODO - Only needs to be run if has more the one unit
         if (editedMeasurementModel.getPackMeasurementTwo() !=
                 unitOfMeasure.getPackMeasurementTwo()) {
             editedMeasurementModel.setPackMeasurementTwo(unitOfMeasure.getPackMeasurementTwo());
@@ -333,8 +348,13 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
             Log.d(TAG, "updateMeasurementModel: Updating Item Two to: " +
                     unitOfMeasure.getItemMeasurementTwo());
         }
-
-        existingMeasurementModel.setValue(editedMeasurementModel);
         Log.d(TAG, "updateMeasurementModel: Measurement model updating complete");
+        saveToExistingModelIfValid();
+    }
+
+    private void saveToExistingModelIfValid() {
+        Log.d(TAG, "saveToExistingModelIfValid: " + unitOfMeasure.isValidMeasurement());
+        if (unitOfMeasure.isValidMeasurement())
+            existingMeasurementModel.setValue(editedMeasurementModel);
     }
 }

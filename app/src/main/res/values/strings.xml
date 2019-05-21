@@ -210,11 +210,10 @@
     <string name="meal_planner">Meal planner</string>
     <string name="nav_lists">Shopping lists</string>
 
-
     <string name="total_or_unit">----- or -----</string>
     <string name="invalid_pack_size">Invalid number for this measurement!</string>
     <string name="please_select">Please select</string>
-    <string name="number_format_exception">Please only enter numbers.</string>
+    <string name="number_format_exception">Please enter numbers only.</string>
     <string name="plus_sign">+</string>
     <string name="minus_sign">-</string>
     <string name="product_size_options">Product Size Options</string>

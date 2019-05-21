@@ -14,7 +14,6 @@ public class UnitOfMeasureFieldVisibilityBindingAdapter {
             value = {"fieldVisibilityAdapterNumberOfUnits", "fieldVisibilityAdapterNumberOfItems"},
             requireAll = false)
     public static void fieldVisibility(View view, int numberOfUnits, int numberOfItems) {
-
         setViewVisibility(view, numberOfUnits, numberOfItems);
     }
 
@@ -33,7 +32,9 @@ public class UnitOfMeasureFieldVisibilityBindingAdapter {
 
         if (
                 viewId == R.id.pack_editable_measurement_two ||
-                viewId == R.id.pack_measurement_label_two)
+                viewId == R.id.pack_measurement_label_two ||
+                viewId == R.id.item_editable_measurement_two ||
+                viewId == R.id.item_measurement_label_two)
 
             view.setVisibility(units == 2 ? View.VISIBLE : View.INVISIBLE);
     }

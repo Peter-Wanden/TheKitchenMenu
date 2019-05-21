@@ -5,10 +5,8 @@ import androidx.core.util.Pair;
 public interface UnitOfMeasure {
 
     int getTypeStringResourceId();
-    MeasurementType getMeasurementType();
 
     MeasurementSubType getMeasurementSubType();
-    int getSubTypeStringResourceId();
 
     double getBaseSiUnits();
     boolean baseSiUnitsAreSet(double baseSiUnits);
@@ -30,7 +28,6 @@ public interface UnitOfMeasure {
     int getItemMeasurementTwo();
     boolean itemMeasurementTwoIsSet(int itemMeasurementTwo);
 
-    int[] getMeasurementError();
-
+    boolean isValidMeasurement();
     Pair[] getInputDigitsFilter();
 }

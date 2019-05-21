@@ -2,7 +2,9 @@ package com.example.peter.thekitchenmenu.data.model;
 
 import com.example.peter.thekitchenmenu.BR;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubType;
+import com.google.firebase.database.annotations.NotNull;
 
+import androidx.annotation.NonNull;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
@@ -11,8 +13,8 @@ public class ProductMeasurementModel extends BaseObservable {
     private static final String TAG = "tkm - MeasurementModel";
 
     // Default
-    private MeasurementSubType measurementSubType = MeasurementSubType.TYPE_METRIC_MASS;
-    private int numberOfMeasurementUnits = 2;
+    private MeasurementSubType measurementSubType;
+    private int numberOfMeasurementUnits;
 
     private int numberOfItems = 1;
 
@@ -27,7 +29,6 @@ public class ProductMeasurementModel extends BaseObservable {
     private int itemMeasurementTwo = 0;
 
     private double baseSiUnits;
-
 
     @Bindable
     public MeasurementSubType getMeasurementSubType() {
@@ -138,5 +139,23 @@ public class ProductMeasurementModel extends BaseObservable {
     public void setItemMeasurementTwo(int itemMeasurementTwo) {
         this.itemMeasurementTwo = itemMeasurementTwo;
         notifyPropertyChanged(BR.itemMeasurementTwo);
+    }
+
+    @NotNull
+    @Override
+    public String toString() {
+        return "\ntkm-ProductMeasurementModel{" +
+                "\nmeasurementSubType="         + measurementSubType +
+                "\nnumberOfMeasurementUnits="   + numberOfMeasurementUnits +
+                "\nnumberOfItems="              + numberOfItems +
+                "\npackMeasurementOneAsInt="    + packMeasurementOneAsInt +
+                "\npackMeasurementOneAsDecimal="+ packMeasurementOneAsDecimal +
+                "\nitemMeasurementOne='"        + itemMeasurementOne + '\'' +
+                "\nitemMeasurementOneAsInt="    + itemMeasurementOneAsInt +
+                "\nitemMeasurementOneAsDecimal="+ itemMeasurementOneAsDecimal +
+                "\npackMeasurementTwo="         + packMeasurementTwo +
+                "\nitemMeasurementTwo="         + itemMeasurementTwo +
+                "\nbaseSiUnits="                + baseSiUnits +
+                '}';
     }
 }

@@ -43,8 +43,8 @@ public class ProductEditorViewModel extends ObservableViewModel {
                 "Baked beans",
                 1,
                 12,
-                1,
-                415,
+                4,
+                1260,
                 0,
                 0,
                 "",
@@ -94,35 +94,35 @@ public class ProductEditorViewModel extends ObservableViewModel {
                 0,
                 "");
 
-        this.existingProductEntity.setValue(productEntityImperialMassTest);
+        ProductEntity productEntityNoValues = new ProductEntity();
+
+        this.existingProductEntity.setValue(productEntityMetricMassTest);
     }
 
     public String getTitle() {
-
         return title;
     }
 
     MutableLiveData<ProductEntity> getExistingProductEntity() {
-
         if (existingProductEntity == null) existingProductEntity = new MutableLiveData<>();
         return existingProductEntity;
     }
 
     void setUpdatedImageModel(ImageModel updatedImageModel) {
         this.updatedImageModel = updatedImageModel;
-        Log.d(TAG, "setUpdatedImageModel: Image model updated");
+        Log.d(TAG, "setUpdatedImageModel:" + updatedImageModel.toString());
         // TODO Save images to remote database
         //
     }
 
     void setUpdatedIdentityModel(ProductIdentityModel updatedIdentityModel) {
         this.updatedIdentityModel = updatedIdentityModel;
-        Log.d(TAG, "setEditedIdentityModel: " + updatedIdentityModel.toString());
+        Log.d(TAG, "setEditedIdentityModel:" + updatedIdentityModel.toString());
     }
 
     void setUpdatedMeasurementModel(ProductMeasurementModel updatedMeasurementModel) {
         this.updatedMeasurementModel = updatedMeasurementModel;
-        Log.d(TAG, "setUpdatedMeasurementModel: Measurement model updated");
+        Log.d(TAG, "setUpdatedMeasurementModel:" + updatedMeasurementModel.toString());
     }
 
     public void onFabClick() {

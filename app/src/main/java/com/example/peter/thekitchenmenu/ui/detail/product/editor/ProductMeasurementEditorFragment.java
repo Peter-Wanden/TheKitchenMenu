@@ -1,6 +1,7 @@
 package com.example.peter.thekitchenmenu.ui.detail.product.editor;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,10 +25,10 @@ import androidx.lifecycle.ViewModelProviders;
 
 public class ProductMeasurementEditorFragment extends Fragment {
 
-    private static final String TAG = "ProductMeasurementEditorFragment";
+    private static final String TAG = "tkm-MeasurementFragment";
 
-    private ProductMeasurementEditorBinding measurementEditorBinding;
-    private ProductMeasurementViewModel measurementViewModel;
+    private ProductMeasurementEditorBinding binding;
+    private ProductMeasurementViewModel viewModel;
 
     @Nullable
     @Override
@@ -35,14 +36,14 @@ public class ProductMeasurementEditorFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        measurementEditorBinding = DataBindingUtil.inflate(
+        binding = DataBindingUtil.inflate(
                 inflater,
                 R.layout.product_measurement_editor,
                 container,
                 false);
 
-        View rootView = measurementEditorBinding.getRoot();
-        measurementEditorBinding.setLifecycleOwner(this);
+        View rootView = binding.getRoot();
+        binding.setLifecycleOwner(this);
 
         setViewModel();
         setObservers();
@@ -54,28 +55,38 @@ public class ProductMeasurementEditorFragment extends Fragment {
     }
 
     private void setViewModel() {
-        measurementViewModel = ViewModelProviders.of(requireActivity()).
+        viewModel = ViewModelProviders.of(requireActivity()).
                 get(ProductMeasurementViewModel.class);
     }
 
     private void setObservers() {
-        final Observer<ProductMeasurementModel> measurementModelObserver = measurementModel ->
-                measurementEditorBinding.setMeasurement(measurementModel);
+        final Observer<ProductMeasurementModel> measurementModelObserver = measurementModel -> {
+            // Should we use a builder here?
+            viewModel.newUnitOfMeasureSelected(
+                    measurementModel.getMeasurementSubType().getMeasurementType().ordinal());
+            Log.d(TAG, "setObservers: subtype is: " + measurementModel.getMeasurementSubType());
 
-        measurementViewModel.getExistingMeasurementModel().observe(this, measurementModelObserver);
+            viewModel.numberOfItemsChanged(measurementModel.getNumberOfItems());
+            Log.d(TAG, "setObservers: number of items: " + measurementModel.getNumberOfItems());
+
+            viewModel.setBaseSiUnits(measurementModel.getBaseSiUnits());
+            Log.d(TAG, "setObservers: base units set are: " + measurementModel.getBaseSiUnits());
+        };
+
+        viewModel.getExistingMeasurementModel().observe(this, measurementModelObserver);
     }
 
     private void setValidationHandlersToBinding() {
-        measurementEditorBinding.
-                setMeasurementValidation(measurementViewModel.getMeasurementHandler());
+        binding.setMeasurementValidation(
+                viewModel.getMeasurementHandler());
     }
 
     private void setBindingInstanceVariables() {
-        measurementEditorBinding.setMeasurement(measurementViewModel.getEditedMeasurementModel());
+        binding.setMeasurement(viewModel.getEditedMeasurementModel());
     }
 
     private void setupUnitOfMeasureSpinner() {
-        measurementEditorBinding.spinnerUnitOfMeasure.setAdapter(getUnitOfMeasureSpinnerAdapter());
+        binding.spinnerUnitOfMeasure.setAdapter(getUnitOfMeasureSpinnerAdapter());
     }
 
     private SpinnerAdapter getUnitOfMeasureSpinnerAdapter() {

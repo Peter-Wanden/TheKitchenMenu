@@ -25,18 +25,13 @@ public class Count implements UnitOfMeasure {
     private int unitOneLabelStringResourceId;
     private int unitTwoLabelStringResourceId;
 
-    // Min and max measurements
-    private double minimumItemSize = UNIT_COUNT;
-    private double maximumMeasurement = MAX_COUNT;
-
     private int numberOfItems = SINGLE_ITEM;
-    private double itemSizeInCountUnits = minimumItemSize;
+    private double itemSizeInCountUnits = UNIT_COUNT;
     private double baseUnits = 0.;
     private double packMeasurementCount = 0;
     private double itemMeasurementCount = 0;
 
-    public Count() {
-
+    Count() {
         typeStringResourceId = R.string.count;
         subTypeStringResourceId = R.string.count;
         unitOneLabelStringResourceId = R.string.each;
@@ -45,31 +40,16 @@ public class Count implements UnitOfMeasure {
 
     @Override
     public int getNumberOfMeasurementUnits() {
-
         return COUNT_NUMBER_OF_MEASUREMENT_UNITS;
     }
 
     @Override
     public int getTypeStringResourceId() {
-
         return typeStringResourceId;
     }
 
     @Override
-    public MeasurementType getMeasurementType() {
-
-        return MeasurementType.TYPE_COUNT;
-    }
-
-    @Override
-    public int getSubTypeStringResourceId() {
-
-        return subTypeStringResourceId;
-    }
-
-    @Override
     public MeasurementSubType getMeasurementSubType() {
-
         return MeasurementSubType.TYPE_COUNT;
     }
 
@@ -80,76 +60,57 @@ public class Count implements UnitOfMeasure {
 
     @Override
     public boolean baseSiUnitsAreSet(double newCount) {
-
         if (newCountIsWithinBounds(newCount)) {
-
             this.baseUnits = newCount;
             packMeasurementCount = baseUnits;
             itemMeasurementCount = baseUnits / numberOfItems;
-
             return true;
 
         } else if (newCount == 0.) {
-
             this.baseUnits = 0.; // allows for a reset
-
             packMeasurementCount = 0;
             itemMeasurementCount = 0;
         }
-
         return false;
     }
 
     private boolean newCountIsWithinBounds(double newCount) {
-
         return newCountDoesNotMakeItemSmallerThanSmallestCount(newCount) &&
                 newCountIsWithinMaxCount(newCount);
     }
 
     private boolean newCountDoesNotMakeItemSmallerThanSmallestCount(double newCount) {
-
-        return newCount >= minimumItemSize * numberOfItems;
+        return newCount >= UNIT_COUNT * numberOfItems;
     }
 
     private boolean newCountIsWithinMaxCount(double newCount) {
-
-        return newCount <= maximumMeasurement;
+        return newCount <= MAX_COUNT;
     }
 
     @Override
     public int getNumberOfItems() {
-
         return numberOfItems;
     }
 
     @Override
     public boolean numberOfItemsAreSet(int numberOfItems) {
-
         if (numberOfItemsInPackAreWithinBounds(numberOfItems)) {
 
             if (baseUnits == NOT_YET_SET) {
-
                 this.numberOfItems = numberOfItems;
-
                 return true;
 
             } else {
 
                 if (lastMeasurementUpdated == PACK_MEASUREMENT) {
-
                     if (itemSizeNotLessThanSmallestUnit(numberOfItems)) {
-
                         setItemsInPackByAdjustingItemSize(numberOfItems);
-
                         return true;
                     }
 
                 } else if (lastMeasurementUpdated == ITEM_MEASUREMENT) {
-
                     if (itemSizeMultipliedByNumberOfItemsDoNotExceedMaxCount(numberOfItems)) {
-
                         setItemsInPackByAdjustingPackSize(numberOfItems);
-
                         return true;
                     }
                 }
@@ -159,79 +120,64 @@ public class Count implements UnitOfMeasure {
     }
 
     private boolean numberOfItemsInPackAreWithinBounds(int numberOfItems) {
-
         return numberOfItems >= SINGLE_ITEM && numberOfItems <= MULTI_PACK_MAXIMUM_NO_OF_ITEMS;
     }
 
     private boolean itemSizeNotLessThanSmallestUnit(int numberOfItems) {
-
-        return baseUnits / numberOfItems >= minimumItemSize;
+        return baseUnits / numberOfItems >= UNIT_COUNT;
     }
 
     private void setItemsInPackByAdjustingItemSize(int numberOfItems) {
-
         this.numberOfItems = numberOfItems;
         setNewItemMeasurements();
     }
 
     private void setNewItemMeasurements() {
-
         itemSizeInCountUnits = baseUnits / numberOfItems;
         itemMeasurementCount = itemSizeInCountUnits;
     }
 
     private boolean itemSizeMultipliedByNumberOfItemsDoNotExceedMaxCount(int numberOfItems) {
-
         return itemSizeInCountUnits * numberOfItems <= MAX_COUNT;
     }
 
     private void setItemsInPackByAdjustingPackSize(int numberOfItems) {
-
         this.numberOfItems = numberOfItems;
         baseSiUnitsAreSet(itemSizeInCountUnits * numberOfItems);
     }
 
     @Override
     public int getUnitOneLabelStringResourceId() {
-
         return unitOneLabelStringResourceId;
     }
 
     @Override
     public double getPackMeasurementOne() {
-
         return packMeasurementCount;
     }
 
     @Override
     public boolean packMeasurementOneIsSet(double packMeasurementOne) {
-
         if (baseSiUnitsAreSet(packMeasurementOne)) {
-
             lastMeasurementUpdated = PACK_MEASUREMENT;
             return true;
 
         } else baseSiUnitsAreSet(0.);
-
         return false;
     }
 
     @Override
     public double getItemMeasurementOne() {
-
         return itemMeasurementCount;
     }
 
     @Override
     public boolean itemMeasurementOneIsSet(double itemMeasurementOne) {
-
         if (baseSiUnitsAreSet(itemMeasurementOne * numberOfItems)) {
-
             lastMeasurementUpdated = ITEM_MEASUREMENT;
             return true;
 
         } else baseSiUnitsAreSet(0.);
-
         return false;
     }
 
@@ -261,15 +207,8 @@ public class Count implements UnitOfMeasure {
     }
 
     @Override
-    public int[] getMeasurementError() {
-
-        return new int[]{
-
-                getTypeStringResourceId(),
-                MAX_COUNT,
-                getUnitTwoLabelStringResourceId(),
-                (int) (minimumItemSize),
-                getUnitOneLabelStringResourceId()};
+    public boolean isValidMeasurement() {
+        return (baseUnits >= UNIT_COUNT && baseUnits <= MAX_COUNT);
     }
 
     @Override

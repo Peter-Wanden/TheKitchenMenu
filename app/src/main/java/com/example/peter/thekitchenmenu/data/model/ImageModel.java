@@ -90,13 +90,14 @@ public class ImageModel extends BaseObservable {
     @NonNull
     @Override
     public String toString() {
-        return "tkm - " +
-                "\nremoteLargeImageUrl: "   + remoteLargeImageUri +
-                "\nremoteMediumImageUri: " + remoteMediumImageUri +
-                "\nremoteSmallImageUri: "  + remoteSmallImageUri +
-                "\nlocalLargeImageUri :"   + localLargeImageUri +
-                "\nlocalMediumImageUri: "  + localMediumImageUri +
-                "\nlocalSmallImageUri: "   + localSmallImageUri +
-                "\nwebImageUrl: "          + webImageUrl;
+        return "tkm-ImageModel{" +
+                "\nremoteLargeImageUrl="  + remoteLargeImageUri +
+                "\nremoteMediumImageUri=" + remoteMediumImageUri +
+                "\nremoteSmallImageUri="  + remoteSmallImageUri +
+                "\nlocalLargeImageUri="   + localLargeImageUri +
+                "\nlocalMediumImageUri="  + localMediumImageUri +
+                "\nlocalSmallImageUri="   + localSmallImageUri +
+                "\nwebImageUrl="          + webImageUrl +
+                '}';
     }
 }

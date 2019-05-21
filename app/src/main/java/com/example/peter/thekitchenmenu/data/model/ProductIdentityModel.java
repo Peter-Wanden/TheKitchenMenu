@@ -58,10 +58,11 @@ public class ProductIdentityModel extends BaseObservable {
     @NonNull
     @Override
     public String toString() {
-        return "tkm - ProductIdentityModel values: " +
-                "\ndescription: " + description +
-                "\nshoppingListName: " + shoppingListItemName +
-                "\ncategory: " + category +
-                "\nshelfLife: " + shelfLife;
+        return "\ntkm-ProductIdentityModel{"+
+                "\ndescription="            + description +
+                "\nshoppingListName="       + shoppingListItemName +
+                "\ncategory="               + category +
+                "\nshelfLife="              + shelfLife +
+                '}';
     }
 }

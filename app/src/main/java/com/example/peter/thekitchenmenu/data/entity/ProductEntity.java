@@ -59,7 +59,7 @@ public class ProductEntity implements Parcelable {
     private int shelfLife;
 
     @ColumnInfo(name = NUMBER_OF_ITEMS)
-    private int numberOfItems;
+    private int numberOfItems = 1;
 
     @ColumnInfo(name = BASE_SI_UNITS)
     private double baseSiUnits;
