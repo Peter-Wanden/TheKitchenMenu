@@ -28,7 +28,7 @@ public class ProductEditorViewModel extends ObservableViewModel {
     // The various model updates that make up an updated ProductEntity
     private ImageModel updatedImageModel = new ImageModel();
     private ProductIdentityModel updatedIdentityModel = new ProductIdentityModel();
-    private ProductMeasurementModel updatedMeasurementModel = new ProductMeasurementModel();
+    private ProductMeasurementModel measurementModelOut = new ProductMeasurementModel();
 
     // TODO - Change category and shelf life to an enum
 
@@ -88,8 +88,8 @@ public class ProductEditorViewModel extends ObservableViewModel {
                 "",
                 "",
                 "https://assets.iceland.co.uk/i/iceland/Domestos_700m_Spray_Bleach_73591.jpg",
-                "https://assets.iceland.co.uk/i/iceland/Domestos_700m_Spray_Bleach_73591.jpg",
-                "https://assets.iceland.co.uk/i/iceland/Domestos_700m_Spray_Bleach_73591.jpg",
+                "",
+                "",
                 0,
                 0,
                 "");
@@ -120,9 +120,9 @@ public class ProductEditorViewModel extends ObservableViewModel {
 //        Log.d(TAG, "setEditedIdentityModel:" + updatedIdentityModel.toString());
     }
 
-    void setUpdatedMeasurementModel(ProductMeasurementModel updatedMeasurementModel) {
-        this.updatedMeasurementModel = updatedMeasurementModel;
-        Log.d(TAG, "setUpdatedMeasurementModel:" + updatedMeasurementModel.toString());
+    void setMeasurementModelOut(ProductMeasurementModel measurementModelOut) {
+        this.measurementModelOut = measurementModelOut;
+        Log.d(TAG, "setMeasurementModelOut:" + measurementModelOut.toString());
     }
 
     public void onFabClick() {

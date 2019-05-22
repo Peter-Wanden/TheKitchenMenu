@@ -80,7 +80,7 @@
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:layout_marginEnd="8dp"
-            android:onClick='@{() -> measurementValidation.modifyNumberOfItemsByOne(multiPackMinus)}'
+            android:onClick='@{() -> viewModel.minusOneOffNumberOfItems()}'
             android:text="@string/minus_sign"
             app:layout_constraintBottom_toBottomOf="@id/editable_items_in_pack"
             app:layout_constraintEnd_toStartOf="@id/editable_items_in_pack"
@@ -95,8 +95,7 @@
             android:gravity="center"
             android:inputType="number"
             android:nextFocusForward="@id/spinner_unit_of_measure"
-            android:text='@{`` + measurement.numberOfItems}'
-            android:afterTextChanged="@{() -> measurementValidation.numberOfItemsChanged(editableItemsInPack)}"
+            android:text='@{`` + viewModel.numberOfItems}'
             app:layout_constraintEnd_toEndOf="@id/items_in_pack_label"
             app:layout_constraintStart_toStartOf="@id/items_in_pack_label"
             app:layout_constraintTop_toBottomOf="@id/items_in_pack_label"
@@ -107,7 +106,7 @@
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:layout_marginStart="8dp"
-            android:onClick='@{() -> measurementValidation.modifyNumberOfItemsByOne(multiPackPlus)}'
+            android:onClick="@{() -> viewModel.addOneNumberOfItems()}"
             android:text="@string/plus_sign"
             app:layout_constraintBottom_toBottomOf="@id/editable_items_in_pack"
             app:layout_constraintStart_toEndOf="@id/editable_items_in_pack"
@@ -135,7 +134,7 @@
             android:layout_marginEnd="8dp"
             android:spinnerMode="dropdown"
             android:dropDownWidth="wrap_content"
-            android:selectedItemPosition='@{MeasurementSubTypeConverter.toInt(measurement.measurementSubType)}'
+            android:selectedItemPosition='@={MeasurementSubTypeConverter.toInt(viewModel.subType)}'
             android:onItemSelected='@{() -> measurementValidation.newUnitOfMeasureSelected(spinnerUnitOfMeasure)}'
             app:layout_constraintEnd_toEndOf="@id/measurement_border"
             app:layout_constraintStart_toStartOf="@id/measurement_border"
@@ -156,7 +155,7 @@
             app:layout_constraintStart_toStartOf="@id/measurement_border"
             app:layout_constraintTop_toBottomOf="@id/spinner_unit_of_measure"
             app:layout_constraintVertical_chainStyle="spread_inside"
-            app:setLabelForSubTypeSelected='@{measurement.measurementSubType}'
+            app:setLabelForSubTypeSelected='@{viewModel.subType}'
             tools:text="@string/pack_size_label" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -170,7 +169,7 @@
             app:layout_constraintTop_toBottomOf="@id/pack_size_label"
             app:layout_constraintStart_toStartOf="@id/measurement_border"
             android:visibility="@{(measurement.numberOfItems > 1) ? View.VISIBLE : View.INVISIBLE}"
-            app:setLabelForSubTypeSelected='@{measurement.measurementSubType}'
+            app:setLabelForSubTypeSelected='@{viewModel.subType}'
             tools:text="@string/item_size_label" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -188,20 +187,7 @@
                 app:layout_constraintEnd_toEndOf="@id/product_measurement_parent"
                 app:layout_constraintStart_toStartOf="@id/product_measurement_parent"
                 bind:viewModel="@{viewModel}"
-                bind:measurement="@{measurement}"
-                bind:measurementValidation="@{measurementValidation}"
-                android:visibility='@{measurement.measurementSubType == MeasurementSubType.TYPE_METRIC_MASS || measurement.measurementSubType == MeasurementSubType.TYPE_METRIC_VOLUME || measurement.measurementSubType == MeasurementSubType.TYPE_COUNT ? View.VISIBLE : View.INVISIBLE}'/>
-
-            <include
-                android:id="@+id/product_measurement_triple"
-                layout="@layout/product_measurement_three_units"
-                app:layout_constraintBottom_toBottomOf="@id/product_measurement_parent"
-                app:layout_constraintEnd_toEndOf="@id/product_measurement_parent"
-                app:layout_constraintStart_toStartOf="@id/product_measurement_parent"
-                bind:viewModel="@{viewModel}"
-                bind:measurementValidation="@{measurementValidation}"
-                bind:measurement="@{measurement}"
-                android:visibility='@{measurement.measurementSubType == MeasurementSubType.TYPE_IMPERIAL_VOLUME || measurement.measurementSubType == MeasurementSubType.TYPE_IMPERIAL_MASS ? View.VISIBLE : View.INVISIBLE}'/>
+                bind:measurementValidation="@{measurementValidation}"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

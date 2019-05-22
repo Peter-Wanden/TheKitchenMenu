@@ -1,7 +1,6 @@
 package com.example.peter.thekitchenmenu.ui.detail.product.editor;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
@@ -100,44 +99,35 @@ public class ProductEditorActivity extends AppCompatActivity {
 
                 identityEditorViewModel.getExistingIdentityModel().setValue(identityModel);
 
-                ProductMeasurementModel measurementModel = new ProductMeasurementModel();
-                measurementModel.setMeasurementSubType(
+                ProductMeasurementModel measurementModelIn = new ProductMeasurementModel();
+                measurementModelIn.setMeasurementSubType(
                         MeasurementSubType.values()[productEntity.getUnitOfMeasureSubType()]);
-                measurementModel.setNumberOfItems(productEntity.getNumberOfItems());
-                measurementModel.setBaseSiUnits(productEntity.getBaseSiUnits());
+                measurementModelIn.setNumberOfItems(productEntity.getNumberOfItems());
+                measurementModelIn.setBaseSiUnits(productEntity.getBaseSiUnits());
 
-                measurementEditorViewModel.getExistingMeasurementModel().setValue(measurementModel);
+                measurementEditorViewModel.setMeasurementModelIn(measurementModelIn);
             }
         };
 
         productEditorViewModel.getExistingProductEntity().observe(this, productObserver);
 
         // TODO - Observe the Models values - report them back ProductEditorViewModel
-        final Observer<ImageModel> imageModelObserver = imageModel -> {
-
-            Log.d(TAG, "setObservers: ImageViewModel: New model received");
-            productEditorViewModel.setUpdatedImageModel(imageModel);
-        };
+        final Observer<ImageModel> imageModelObserver = imageModel ->
+                productEditorViewModel.setUpdatedImageModel(imageModel);
 
         imageEditorViewModel.getExistingImageModel().observe(
                 this, imageModelObserver);
 
-        final Observer<ProductIdentityModel> identityModelObserver = IdentityModel -> {
-
-            Log.d(TAG, "setObservers: IdentityViewModel: New model received");
-            productEditorViewModel.setUpdatedIdentityModel(IdentityModel);
-        };
+        final Observer<ProductIdentityModel> identityModelObserver = IdentityModel ->
+                productEditorViewModel.setUpdatedIdentityModel(IdentityModel);
 
         identityEditorViewModel.getExistingIdentityModel().observe(
                 this, identityModelObserver);
 
-        final Observer<ProductMeasurementModel> measurementModelObserver = measurementModel -> {
+        final Observer<ProductMeasurementModel> measurementModelOutObserver = measurementModelOut ->
+                productEditorViewModel.setMeasurementModelOut(measurementModelOut);
 
-            Log.d(TAG, "setObservers: MeasurementViewModel: New model received");
-            productEditorViewModel.setUpdatedMeasurementModel(measurementModel);
-        };
-
-        measurementEditorViewModel.getExistingMeasurementModel().observe(
-                this, measurementModelObserver);
+        measurementEditorViewModel.getModelOut().observe(
+                this, measurementModelOutObserver);
     }
 }

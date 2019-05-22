@@ -1,7 +1,6 @@
 package com.example.peter.thekitchenmenu.ui.detail.product.editor;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +45,6 @@ public class ProductMeasurementEditorFragment extends Fragment {
         binding.setLifecycleOwner(this);
 
         setViewModel();
-        setObservers();
         setValidationHandlersToBinding();
         setBindingInstanceVariables();
         setupUnitOfMeasureSpinner();
@@ -59,23 +57,6 @@ public class ProductMeasurementEditorFragment extends Fragment {
                 get(ProductMeasurementViewModel.class);
     }
 
-    private void setObservers() {
-        final Observer<ProductMeasurementModel> measurementModelObserver = measurementModel -> {
-            // Should we use a builder here?
-//            viewModel.newUnitOfMeasureSelected(
-//                    measurementModel.getMeasurementSubType().getMeasurementType().ordinal());
-//            Log.d(TAG, "setObservers: subtype is: " + measurementModel.getMeasurementSubType());
-
-//            viewModel.numberOfItemsChanged(measurementModel.getNumberOfItems());
-//            Log.d(TAG, "setObservers: number of items: " + measurementModel.getNumberOfItems());
-
-//            viewModel.setBaseSiUnits(measurementModel.getBaseSiUnits());
-//            Log.d(TAG, "setObservers: base units set are: " + measurementModel.getBaseSiUnits());
-        };
-
-        viewModel.getExistingMeasurementModel().observe(this, measurementModelObserver);
-    }
-
     private void setValidationHandlersToBinding() {
         binding.setMeasurementValidation(
                 viewModel.getMeasurementHandler());
@@ -83,7 +64,6 @@ public class ProductMeasurementEditorFragment extends Fragment {
 
     private void setBindingInstanceVariables() {
         binding.setViewModel(viewModel);
-        binding.setMeasurement(viewModel.getEditedMeasurementModel());
     }
 
     private void setupUnitOfMeasureSpinner() {

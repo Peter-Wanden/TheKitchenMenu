@@ -1,11 +1,11 @@
 package com.example.peter.thekitchenmenu.ui.detail.product.editor;
 
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.peter.thekitchenmenu.R;
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubType;
 
 import androidx.core.util.Pair;
 
@@ -21,19 +21,8 @@ public class ProductMeasurementHandler {
     }
 
     public void newUnitOfMeasureSelected(Spinner spinnerWithSubType) {
-        viewModel.newUnitOfMeasureSelected(spinnerWithSubType.getSelectedItemPosition());
-    }
-
-    public void numberOfItemsChanged(TextView editableItemsInPack) {
-        int newNumberOfItems = parseIntegerFromEditText(editableItemsInPack);
-
-        if (newNumberOfItems == 0 || newNumberOfItems == MEASUREMENT_ERROR) return;
-
-        viewModel.numberOfItemsChanged(newNumberOfItems);
-    }
-
-    public void modifyNumberOfItemsByOne(Button button) {
-        viewModel.modifyNumberOfItemsByOne(button.getId());
+        viewModel.newUnitOfMeasureSelected(MeasurementSubType.values()
+                        [spinnerWithSubType.getSelectedItemPosition()]);
     }
 
     public void validatePackSize(EditText editableMeasurement) {
