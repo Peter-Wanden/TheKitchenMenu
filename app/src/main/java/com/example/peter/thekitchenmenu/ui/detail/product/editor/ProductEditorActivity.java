@@ -119,7 +119,8 @@ public class ProductEditorActivity extends AppCompatActivity {
             productEditorViewModel.setUpdatedImageModel(imageModel);
         };
 
-        imageEditorViewModel.getExistingImageModel().observe(this, imageModelObserver);
+        imageEditorViewModel.getExistingImageModel().observe(
+                this, imageModelObserver);
 
         final Observer<ProductIdentityModel> identityModelObserver = IdentityModel -> {
 
@@ -127,7 +128,8 @@ public class ProductEditorActivity extends AppCompatActivity {
             productEditorViewModel.setUpdatedIdentityModel(IdentityModel);
         };
 
-        identityEditorViewModel.getExistingIdentityModel().observe(this, identityModelObserver);
+        identityEditorViewModel.getExistingIdentityModel().observe(
+                this, identityModelObserver);
 
         final Observer<ProductMeasurementModel> measurementModelObserver = measurementModel -> {
 
@@ -135,6 +137,7 @@ public class ProductEditorActivity extends AppCompatActivity {
             productEditorViewModel.setUpdatedMeasurementModel(measurementModel);
         };
 
-        measurementEditorViewModel.getExistingMeasurementModel().observe(this, measurementModelObserver);
+        measurementEditorViewModel.getExistingMeasurementModel().observe(
+                this, measurementModelObserver);
     }
 }

@@ -110,14 +110,14 @@ public class ProductEditorViewModel extends ObservableViewModel {
 
     void setUpdatedImageModel(ImageModel updatedImageModel) {
         this.updatedImageModel = updatedImageModel;
-        Log.d(TAG, "setUpdatedImageModel:" + updatedImageModel.toString());
+//        Log.d(TAG, "setUpdatedImageModel:" + updatedImageModel.toString());
         // TODO Save images to remote database
         //
     }
 
     void setUpdatedIdentityModel(ProductIdentityModel updatedIdentityModel) {
         this.updatedIdentityModel = updatedIdentityModel;
-        Log.d(TAG, "setEditedIdentityModel:" + updatedIdentityModel.toString());
+//        Log.d(TAG, "setEditedIdentityModel:" + updatedIdentityModel.toString());
     }
 
     void setUpdatedMeasurementModel(ProductMeasurementModel updatedMeasurementModel) {

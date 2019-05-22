@@ -4,7 +4,6 @@ import com.example.peter.thekitchenmenu.BR;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubType;
 import com.google.firebase.database.annotations.NotNull;
 
-import androidx.annotation.NonNull;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
@@ -14,7 +13,6 @@ public class ProductMeasurementModel extends BaseObservable {
 
     // Default
     private MeasurementSubType measurementSubType;
-    private int numberOfMeasurementUnits;
 
     private int numberOfItems = 1;
 
@@ -33,16 +31,6 @@ public class ProductMeasurementModel extends BaseObservable {
     @Bindable
     public MeasurementSubType getMeasurementSubType() {
         return measurementSubType;
-    }
-
-    @Bindable
-    public int getNumberOfMeasurementUnits() {
-        return numberOfMeasurementUnits;
-    }
-
-    public void setNumberOfMeasurementUnits(int numberOfMeasurementUnits) {
-        this.numberOfMeasurementUnits = numberOfMeasurementUnits;
-        notifyPropertyChanged(BR.numberOfMeasurementUnits);
     }
 
     public void setMeasurementSubType(MeasurementSubType measurementSubType) {
@@ -146,7 +134,6 @@ public class ProductMeasurementModel extends BaseObservable {
     public String toString() {
         return "\ntkm-ProductMeasurementModel{" +
                 "\nmeasurementSubType="         + measurementSubType +
-                "\nnumberOfMeasurementUnits="   + numberOfMeasurementUnits +
                 "\nnumberOfItems="              + numberOfItems +
                 "\npackMeasurementOneAsInt="    + packMeasurementOneAsInt +
                 "\npackMeasurementOneAsDecimal="+ packMeasurementOneAsDecimal +

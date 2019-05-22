@@ -62,15 +62,15 @@ public class ProductMeasurementEditorFragment extends Fragment {
     private void setObservers() {
         final Observer<ProductMeasurementModel> measurementModelObserver = measurementModel -> {
             // Should we use a builder here?
-            viewModel.newUnitOfMeasureSelected(
-                    measurementModel.getMeasurementSubType().getMeasurementType().ordinal());
-            Log.d(TAG, "setObservers: subtype is: " + measurementModel.getMeasurementSubType());
+//            viewModel.newUnitOfMeasureSelected(
+//                    measurementModel.getMeasurementSubType().getMeasurementType().ordinal());
+//            Log.d(TAG, "setObservers: subtype is: " + measurementModel.getMeasurementSubType());
 
-            viewModel.numberOfItemsChanged(measurementModel.getNumberOfItems());
-            Log.d(TAG, "setObservers: number of items: " + measurementModel.getNumberOfItems());
+//            viewModel.numberOfItemsChanged(measurementModel.getNumberOfItems());
+//            Log.d(TAG, "setObservers: number of items: " + measurementModel.getNumberOfItems());
 
-            viewModel.setBaseSiUnits(measurementModel.getBaseSiUnits());
-            Log.d(TAG, "setObservers: base units set are: " + measurementModel.getBaseSiUnits());
+//            viewModel.setBaseSiUnits(measurementModel.getBaseSiUnits());
+//            Log.d(TAG, "setObservers: base units set are: " + measurementModel.getBaseSiUnits());
         };
 
         viewModel.getExistingMeasurementModel().observe(this, measurementModelObserver);
@@ -82,6 +82,7 @@ public class ProductMeasurementEditorFragment extends Fragment {
     }
 
     private void setBindingInstanceVariables() {
+        binding.setViewModel(viewModel);
         binding.setMeasurement(viewModel.getEditedMeasurementModel());
     }
 

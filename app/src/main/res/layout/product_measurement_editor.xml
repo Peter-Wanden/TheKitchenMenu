@@ -15,6 +15,10 @@
         <import type="com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubType"/>
 
         <variable
+            name="viewModel"
+            type="com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductMeasurementViewModel" />
+
+        <variable
             name="measurementValidation"
             type="com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductMeasurementHandler" />
 
@@ -183,8 +187,9 @@
                 app:layout_constraintBottom_toBottomOf="@id/product_measurement_parent"
                 app:layout_constraintEnd_toEndOf="@id/product_measurement_parent"
                 app:layout_constraintStart_toStartOf="@id/product_measurement_parent"
-                bind:measurementValidation="@{measurementValidation}"
+                bind:viewModel="@{viewModel}"
                 bind:measurement="@{measurement}"
+                bind:measurementValidation="@{measurementValidation}"
                 android:visibility='@{measurement.measurementSubType == MeasurementSubType.TYPE_METRIC_MASS || measurement.measurementSubType == MeasurementSubType.TYPE_METRIC_VOLUME || measurement.measurementSubType == MeasurementSubType.TYPE_COUNT ? View.VISIBLE : View.INVISIBLE}'/>
 
             <include
@@ -193,6 +198,7 @@
                 app:layout_constraintBottom_toBottomOf="@id/product_measurement_parent"
                 app:layout_constraintEnd_toEndOf="@id/product_measurement_parent"
                 app:layout_constraintStart_toStartOf="@id/product_measurement_parent"
+                bind:viewModel="@{viewModel}"
                 bind:measurementValidation="@{measurementValidation}"
                 bind:measurement="@{measurement}"
                 android:visibility='@{measurement.measurementSubType == MeasurementSubType.TYPE_IMPERIAL_VOLUME || measurement.measurementSubType == MeasurementSubType.TYPE_IMPERIAL_MASS ? View.VISIBLE : View.INVISIBLE}'/>

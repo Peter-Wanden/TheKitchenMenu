@@ -13,6 +13,10 @@
         <import type="com.example.peter.thekitchenmenu.utils.DecimalStringFormatConverter"/>
 
         <variable
+            name="viewModel"
+            type="com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductMeasurementViewModel" />
+
+        <variable
             name="measurementValidation"
             type="com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductMeasurementHandler" />
 

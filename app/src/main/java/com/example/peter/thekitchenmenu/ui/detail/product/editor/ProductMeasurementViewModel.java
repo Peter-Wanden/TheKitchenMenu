@@ -3,6 +3,7 @@ package com.example.peter.thekitchenmenu.ui.detail.product.editor;
 import android.app.Application;
 import android.util.Log;
 
+import com.example.peter.thekitchenmenu.BR;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubType;
@@ -11,6 +12,7 @@ import com.example.peter.thekitchenmenu.viewmodels.ObservableViewModel;
 
 import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
+import androidx.databinding.Bindable;
 import androidx.lifecycle.MutableLiveData;
 
 public class ProductMeasurementViewModel extends ObservableViewModel {
@@ -19,11 +21,12 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
 
     private MutableLiveData<ProductMeasurementModel> existingMeasurementModel =
             new MutableLiveData<>();
-
     // Whenever a editedMeasurementModel is valid, set it to measurement model
     private ProductMeasurementModel editedMeasurementModel;
     private ProductMeasurementHandler measurementHandler;
+
     private UnitOfMeasure unitOfMeasure;
+    private int numberOfMeasurementUnits;
 
     public ProductMeasurementViewModel(@NonNull Application application) {
         super(application);
@@ -34,8 +37,10 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
         updateMeasurementModel();
     }
 
+    // TODO - Bind number of measurement units to the display and remove it from Measurement
+    //  model. Then re-jig the references to it in xml
+    //
     MutableLiveData<ProductMeasurementModel> getExistingMeasurementModel() {
-        Log.d(TAG, "getExistingMeasurementModel: existing model called");
         return existingMeasurementModel;
     }
 
@@ -44,33 +49,37 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
     }
 
     ProductMeasurementModel getEditedMeasurementModel() {
-        Log.d(TAG, "getEditedMeasurementModel: edited model called");
         return editedMeasurementModel;
     }
 
     UnitOfMeasure getUnitOfMeasure() {
-        Log.d(TAG, "getUnitOfMeasure: called");
         return unitOfMeasure;
     }
 
+    @Bindable
+    public int getNumberOfMeasurementUnits() {
+        return numberOfMeasurementUnits;
+    }
+
+    private void setNumberOfMeasurementUnits(int numberOfMeasurementUnits) {
+        this.numberOfMeasurementUnits = numberOfMeasurementUnits;
+        notifyPropertyChanged(BR.numberOfMeasurementUnits);
+    }
+
     void newUnitOfMeasureSelected(int subTypeAsInt) {
-        Log.d(TAG, "newUnitOfMeasureSelected: " + subTypeAsInt);
         if (unitOfMeasure.getMeasurementSubType().ordinal() != subTypeAsInt) {
             unitOfMeasure = MeasurementSubType.values()[subTypeAsInt].getMeasurementClass();
+            setNumberOfMeasurementUnits(unitOfMeasure.getNumberOfMeasurementUnits());
             updateMeasurementModel();
         }
     }
 
     boolean numberOfItemsChanged(int newNumberOfItems) {
         if (numberOfItemsHasChanged(newNumberOfItems)) {
-            Log.d(TAG, "numberOfItemsChanged: Value has changed to: " +
-                    newNumberOfItems + " Setting new value");
-
             if (numberOfItemsAreSet(newNumberOfItems)) {
-                Log.d(TAG, "numberOfItemsChanged: New value set");
                 return true;
-            } else Log.d(TAG, "numberOfItemsChanged: Unit of measure refused new number of items");
-        } else Log.d(TAG, "numberOfItemsChanged: Number of items has not changed");
+            }
+        }
         return false;
     }
 
@@ -97,8 +106,6 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
     }
 
     void setBaseSiUnits(double newBaseSiUnits) {
-        Log.d(TAG, "setBaseSiUnits: Existing units are: " + unitOfMeasure.getBaseSiUnits());
-        Log.d(TAG, "setBaseSiUnits: New units are     : " + newBaseSiUnits);
         if (unitOfMeasure.getBaseSiUnits() != newBaseSiUnits) {
             unitOfMeasure.baseSiUnitsAreSet(newBaseSiUnits);
             updateMeasurementModel();
@@ -106,7 +113,6 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
     }
 
     void validatePackSize(int viewId, int integerMeasurement, double doubleMeasurement) {
-        Log.d(TAG, "validatePackSize: ");
         int numberOfUnitsAfterDecimal;
 
         if (viewId == R.id.pack_editable_measurement_one ||
@@ -146,18 +152,10 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
         switch (viewId) {
             case R.id.pack_editable_measurement_one:
                 oldMeasurement = unitOfMeasure.getPackMeasurementOne();
-                if (oldMeasurement != newMeasurement)
-                    Log.d(TAG, "measurementHasChangedDouble: Pack One:" +
-                            " Old measurement: " + oldMeasurement +
-                            " New measurement: " + newMeasurement);
                 return oldMeasurement != newMeasurement;
 
             case R.id.item_editable_measurement_one:
                 oldMeasurement = unitOfMeasure.getItemMeasurementOne();
-                if (oldMeasurement != newMeasurement)
-                    Log.d(TAG, "measurementHasChangedDouble: Item One:" +
-                            " Old measurement: " + oldMeasurement +
-                            " New measurement: " + newMeasurement);
                 return oldMeasurement != newMeasurement;
         }
         return false;
@@ -169,192 +167,109 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
         switch (viewId) {
             case R.id.pack_editable_measurement_one:
                 oldMeasurement = (int) unitOfMeasure.getPackMeasurementOne();
-                if (oldMeasurement != newMeasurement)
-                    Log.d(TAG, "measurementHasChangedInteger: Pack One:" +
-                            " Old measurement: " + oldMeasurement +
-                            " New measurement: " + newMeasurement);
                 return oldMeasurement != newMeasurement;
 
             case R.id.item_editable_measurement_one:
                 oldMeasurement = (int) unitOfMeasure.getItemMeasurementOne();
-                if (oldMeasurement != newMeasurement)
-                    Log.d(TAG, "measurementHasChangedInteger: Item One:" +
-                            " Old measurement: " + oldMeasurement +
-                            " New measurement: " + newMeasurement);
                 return oldMeasurement != newMeasurement;
 
             case R.id.pack_editable_measurement_two:
                 oldMeasurement = unitOfMeasure.getPackMeasurementTwo();
-                if (oldMeasurement != newMeasurement)
-                    Log.d(TAG, "measurementHasChangedInteger: Pack Two:" +
-                            " Old measurement: " + oldMeasurement +
-                            " New measurement: " + newMeasurement);
                 return newMeasurement != oldMeasurement;
 
             case R.id.item_editable_measurement_two:
                 oldMeasurement = unitOfMeasure.getItemMeasurementTwo();
-                if (oldMeasurement != newMeasurement)
-                    Log.d(TAG, "measurementHasChangedInteger: Item Two:" +
-                            " Old measurement: " + oldMeasurement +
-                            " New measurement: " + newMeasurement);
                 return newMeasurement != oldMeasurement;
         }
-        Log.d(TAG, "measurementHasChangedInteger: View not recognised, aborting.");
         return false;
     }
 
     private void processDoubleMeasurements(int viewId, double newMeasurement) {
         boolean measurementIsSet = false;
 
-        if (viewId == R.id.pack_editable_measurement_one) {
-            Log.d(TAG, "processDoubleMeasurements: Processing change to Pack One");
+        if (viewId == R.id.pack_editable_measurement_one)
             measurementIsSet = unitOfMeasure.packMeasurementOneIsSet(newMeasurement);
-        }
 
-        if (viewId == R.id.item_editable_measurement_one) {
-            Log.d(TAG, "processDoubleMeasurements: Processing change to Item One");
+        if (viewId == R.id.item_editable_measurement_one)
             measurementIsSet = unitOfMeasure.itemMeasurementOneIsSet(newMeasurement);
-        }
 
-        if (measurementIsSet) {
-            Log.d(TAG, "processDoubleMeasurements: Measurement is set!");
-            updateMeasurementModel();
-        } else {
-            Log.d(TAG, "processDoubleMeasurements: measurement is out of bounds");
-            updateMeasurementModel();
-        }
+        if (measurementIsSet) updateMeasurementModel();
     }
 
     private void processIntegerMeasurements(int viewId, int newMeasurement) {
         boolean measurementIsSet = false;
 
-        if (viewId == R.id.pack_editable_measurement_one){
-            Log.d(TAG, "processIntegerMeasurements: Processing change to Pack One");
+        if (viewId == R.id.pack_editable_measurement_one)
             measurementIsSet = unitOfMeasure.packMeasurementOneIsSet(newMeasurement);
-        }
 
-        if (viewId == R.id.item_editable_measurement_one) {
-            Log.d(TAG, "processIntegerMeasurements: Processing change to Item One");
+        if (viewId == R.id.item_editable_measurement_one)
             measurementIsSet = unitOfMeasure.itemMeasurementOneIsSet(newMeasurement);
-        }
 
-        if (viewId == R.id.pack_editable_measurement_two) {
-            Log.d(TAG, "processIntegerMeasurements: processing change to Pack Two");
+        if (viewId == R.id.pack_editable_measurement_two)
             measurementIsSet = unitOfMeasure.packMeasurementTwoIsSet(newMeasurement);
 
-        } else if (viewId == R.id.item_editable_measurement_two) {
-            Log.d(TAG, "processIntegerMeasurements: processing change to Item Two");
+        else if (viewId == R.id.item_editable_measurement_two)
             measurementIsSet = unitOfMeasure.itemMeasurementTwoIsSet(newMeasurement);
-        }
 
-        if (measurementIsSet) {
-            Log.d(TAG, "processIntegerMeasurements: Measurement is set!");
-            updateMeasurementModel();
-        } else {
-            Log.d(TAG, "processIntegerMeasurements: measurement is out of bounds");
-            updateMeasurementModel();
-        }
+        if (measurementIsSet) updateMeasurementModel();
     }
 
     // Synchronises the measurement model with the unit of measure
     private void updateMeasurementModel() {
-
-        Log.d(TAG, "updateMeasurementModel: Updating measurement model");
-        Log.d(TAG, "updateMeasurementModel: Base units are: " + unitOfMeasure.getBaseSiUnits());
-
-        if (editedMeasurementModel.getMeasurementSubType() != unitOfMeasure.getMeasurementSubType()) {
-            Log.d(TAG, "updateMeasurementModel: Updating measurement Subtype to: " +
+        if (editedMeasurementModel.getMeasurementSubType() !=
+                unitOfMeasure.getMeasurementSubType())
+            editedMeasurementModel.setMeasurementSubType(
                     unitOfMeasure.getMeasurementSubType());
 
-            editedMeasurementModel.setMeasurementSubType(unitOfMeasure.getMeasurementSubType());
-        }
-
-        if (editedMeasurementModel.getNumberOfMeasurementUnits() !=
-                unitOfMeasure.getNumberOfMeasurementUnits()) {
-            Log.d(TAG, "updateMeasurementModel: Updating number of measurement units to: " +
-                    unitOfMeasure.getNumberOfMeasurementUnits());
-
-            editedMeasurementModel.setNumberOfMeasurementUnits(
-                    unitOfMeasure.getNumberOfMeasurementUnits());
-        }
-
-        if (editedMeasurementModel.getNumberOfItems() != unitOfMeasure.getNumberOfItems()) {
-            Log.d(TAG, "updateMeasurementModel: Updating number of Items to: " +
+        if (editedMeasurementModel.getNumberOfItems() !=
+                unitOfMeasure.getNumberOfItems())
+            editedMeasurementModel.setNumberOfItems(
                     unitOfMeasure.getNumberOfItems());
-
-            editedMeasurementModel.setNumberOfItems(unitOfMeasure.getNumberOfItems());
-        }
 
         if (unitOfMeasure.getMeasurementSubType() == MeasurementSubType.TYPE_IMPERIAL_MASS ||
                 unitOfMeasure.getMeasurementSubType() == MeasurementSubType.TYPE_IMPERIAL_VOLUME) {
 
             if (editedMeasurementModel.getPackMeasurementOneAsDecimal() !=
-                    unitOfMeasure.getPackMeasurementOne()) {
-                Log.d(TAG, "updateMeasurementModel: Updating pack One DECIMAL to: " +
-                        unitOfMeasure.getPackMeasurementOne());
-
+                    unitOfMeasure.getPackMeasurementOne())
                 editedMeasurementModel.setPackMeasurementOneAsDecimal(
                         unitOfMeasure.getPackMeasurementOne());
-            }
 
             if (editedMeasurementModel.getItemMeasurementOneAsDecimal() !=
-                    unitOfMeasure.getItemMeasurementOne()) {
+                    unitOfMeasure.getItemMeasurementOne())
                 editedMeasurementModel.setItemMeasurementOneAsDecimal(
                         unitOfMeasure.getItemMeasurementOne());
 
-                Log.d(TAG, "updateMeasurementModel: Updating Item One DECIMAL to: " +
-                        unitOfMeasure.getItemMeasurementOne());
-            }
-
         } else {
-
             if (editedMeasurementModel.getPackMeasurementOneAsInt() !=
-                    (int) unitOfMeasure.getPackMeasurementOne()) {
-                Log.d(TAG, "updateMeasurementModel: Updating Pack One as INTEGER to: " +
-                        (int) unitOfMeasure.getPackMeasurementOne());
-
+                    (int) unitOfMeasure.getPackMeasurementOne())
                 editedMeasurementModel.setPackMeasurementOneAsInt(
                         (int) unitOfMeasure.getPackMeasurementOne());
-            }
 
             if (editedMeasurementModel.getItemMeasurementOneAsInt() !=
-                    (int) unitOfMeasure.getItemMeasurementOne()) {
-                Log.d(TAG, "updateMeasurementModel: Updating Item One as INTEGER to: " +
-                        (int) unitOfMeasure.getItemMeasurementOne());
-
+                    (int) unitOfMeasure.getItemMeasurementOne())
                 editedMeasurementModel.setItemMeasurementOneAsInt(
                         (int) unitOfMeasure.getItemMeasurementOne());
-            }
         }
 
-        // TODO - Only needs to be run if has more the one unit
-        if (editedMeasurementModel.getPackMeasurementTwo() !=
-                unitOfMeasure.getPackMeasurementTwo()) {
-            editedMeasurementModel.setPackMeasurementTwo(unitOfMeasure.getPackMeasurementTwo());
+        if (numberOfMeasurementUnits > 1) {
+            if (editedMeasurementModel.getPackMeasurementTwo() !=
+                    unitOfMeasure.getPackMeasurementTwo())
+                editedMeasurementModel.setPackMeasurementTwo(
+                        unitOfMeasure.getPackMeasurementTwo());
 
-            Log.d(TAG, "updateMeasurementModel: Updating pack Two to: " +
-                    unitOfMeasure.getPackMeasurementTwo());
+            if (editedMeasurementModel.getItemMeasurementTwo() !=
+                    unitOfMeasure.getItemMeasurementTwo())
+                editedMeasurementModel.setItemMeasurementTwo(
+                        unitOfMeasure.getItemMeasurementTwo());
         }
-        Log.d(TAG, "updateMeasurementModel: Measurement - Item two is: " +
-                editedMeasurementModel.getItemMeasurementTwo() +
-                " Unit of measure Item Two is: " + unitOfMeasure.getItemMeasurementTwo());
-
-        if (editedMeasurementModel.getItemMeasurementTwo() !=
-                unitOfMeasure.getItemMeasurementTwo()) {
-
-            editedMeasurementModel.setItemMeasurementTwo(
-                    unitOfMeasure.getItemMeasurementTwo());
-
-            Log.d(TAG, "updateMeasurementModel: Updating Item Two to: " +
-                    unitOfMeasure.getItemMeasurementTwo());
-        }
-        Log.d(TAG, "updateMeasurementModel: Measurement model updating complete");
+        Log.d(TAG, "updateMeasurementModel: Measurement model updating complete: " +
+                editedMeasurementModel.toString());
         saveToExistingModelIfValid();
     }
 
     private void saveToExistingModelIfValid() {
         Log.d(TAG, "saveToExistingModelIfValid: " + unitOfMeasure.isValidMeasurement());
-        if (unitOfMeasure.isValidMeasurement())
-            existingMeasurementModel.setValue(editedMeasurementModel);
+//        if (unitOfMeasure.isValidMeasurement())
+//            existingMeasurementModel.setValue(editedMeasurementModel);
     }
 }

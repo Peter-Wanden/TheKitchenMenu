@@ -6,11 +6,14 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <import type="android.view.View" />
         <import type="com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubTypeConverter" />
         <import type="com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementZeroToBlankConverter" />
         <import type="com.example.peter.thekitchenmenu.utils.IntegerStringFormatConverter" />
+
+        <variable
+            name="viewModel"
+            type="com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductMeasurementViewModel" />
 
         <variable
             name="measurementValidation"
@@ -41,7 +44,7 @@
             android:afterTextChanged='@{() -> measurementValidation.validatePackSize(packEditableMeasurementTwo)}'
             android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(packEditableMeasurementTwo, measurement.packMeasurementTwo)}'
             app:setUpEditTextForSubTypeSelected='@{measurement.measurementSubType}'
-            app:fieldVisibilityAdapterNumberOfUnits='@{measurement.numberOfMeasurementUnits}'
+            app:fieldVisibilityAdapterNumberOfUnits='@{viewModel.numberOfMeasurementUnits}'
             tools:text="22" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -57,7 +60,7 @@
             app:layout_constraintStart_toEndOf="@+id/pack_editable_measurement_two"
             app:layout_constraintTop_toTopOf="@+id/pack_editable_measurement_two"
             app:setLabelForSubTypeSelected='@{measurement.measurementSubType}'
-            app:fieldVisibilityAdapterNumberOfUnits='@{measurement.numberOfMeasurementUnits}'
+            app:fieldVisibilityAdapterNumberOfUnits='@{viewModel.numberOfMeasurementUnits}'
             tools:text="l" />
 
         <androidx.appcompat.widget.AppCompatEditText
@@ -75,7 +78,7 @@
             android:afterTextChanged='@{() -> measurementValidation.validatePackSize(itemEditableMeasurementTwo)}'
             android:text='@{MeasurementZeroToBlankConverter.doNotShowZero(itemEditableMeasurementTwo, measurement.itemMeasurementTwo)}'
             app:setUpEditTextForSubTypeSelected='@{measurement.measurementSubType}'
-            app:fieldVisibilityAdapterNumberOfUnits='@{measurement.numberOfMeasurementUnits}'
+            app:fieldVisibilityAdapterNumberOfUnits='@{viewModel.numberOfMeasurementUnits}'
             app:fieldVisibilityAdapterNumberOfItems='@{measurement.numberOfItems}'
             tools:text="22" />
 
@@ -92,7 +95,7 @@
             app:layout_constraintStart_toEndOf="@+id/item_editable_measurement_two"
             app:layout_constraintTop_toTopOf="@+id/item_editable_measurement_two"
             app:setLabelForSubTypeSelected='@{measurement.measurementSubType}'
-            app:fieldVisibilityAdapterNumberOfUnits='@{measurement.numberOfMeasurementUnits}'
+            app:fieldVisibilityAdapterNumberOfUnits='@{viewModel.numberOfMeasurementUnits}'
             app:fieldVisibilityAdapterNumberOfItems='@{measurement.numberOfItems}'
             tools:text="l" />
 
@@ -104,8 +107,8 @@
             android:afterTextChanged='@{() -> measurementValidation.validatePackSize(packEditableMeasurementOne)}'
             android:text='@{IntegerStringFormatConverter.integerToString(packEditableMeasurementOne, measurement.packMeasurementOneAsInt, measurement.packMeasurementOneAsInt)}'
             android:textAlignment="textEnd"
-            app:layout_constraintEnd_toStartOf="@+id/pack_measurement_label_one"
             app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toStartOf="@+id/pack_measurement_label_one"
             app:layout_constraintStart_toEndOf="@+id/pack_measurement_label_two"
             app:layout_constraintTop_toTopOf="@+id/pack_measurement_label_two"
             app:setUpEditTextForSubTypeSelected='@{measurement.measurementSubType}'
