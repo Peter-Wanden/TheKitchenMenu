@@ -1,5 +1,6 @@
 package com.example.peter.thekitchenmenu.ui.detail.product.editor;
 
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -35,7 +36,7 @@ public class ProductMeasurementHandler {
                 viewId == R.id.item_editable_measurement_one) {
 
             Pair[] inputDigitsFilters = viewModel.getUnitOfMeasure().getInputDigitsFilter();
-            numberOfUnitsAfterDecimal = (int) inputDigitsFilters[0].second;
+            numberOfUnitsAfterDecimal = 1;
 
         } else numberOfUnitsAfterDecimal = 0;
 

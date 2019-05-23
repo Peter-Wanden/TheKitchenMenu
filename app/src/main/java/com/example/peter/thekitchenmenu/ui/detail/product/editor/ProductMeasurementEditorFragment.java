@@ -58,8 +58,7 @@ public class ProductMeasurementEditorFragment extends Fragment {
     }
 
     private void setValidationHandlersToBinding() {
-        binding.setMeasurementValidation(
-                viewModel.getMeasurementHandler());
+        binding.setMeasurementHandler(viewModel.getMeasurementHandler());
     }
 
     private void setBindingInstanceVariables() {

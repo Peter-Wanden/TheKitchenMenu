@@ -21,21 +21,21 @@ public class UnitOfMeasureFieldVisibilityBindingAdapter {
 
         int viewId = view.getId();
 
-        if (
-                viewId == R.id.item_editable_measurement_one ||
-                viewId == R.id.item_measurement_label_one ||
-                viewId == R.id.item_editable_measurement_two ||
-                viewId == R.id.item_measurement_label_two) {
-
-            view.setVisibility(numberOfItems >= 2 ? View.VISIBLE : View.INVISIBLE);
-        }
-
-        if (
-                viewId == R.id.pack_editable_measurement_two ||
-                viewId == R.id.pack_measurement_label_two ||
-                viewId == R.id.item_editable_measurement_two ||
-                viewId == R.id.item_measurement_label_two)
-
-            view.setVisibility(units == 2 ? View.VISIBLE : View.INVISIBLE);
+//        if (
+//                viewId == R.id.item_editable_measurement_one ||
+//                viewId == R.id.item_measurement_label_one ||
+//                viewId == R.id.item_editable_measurement_two ||
+//                viewId == R.id.item_measurement_label_two) {
+//
+//            view.setVisibility(numberOfItems >= 2 ? View.VISIBLE : View.INVISIBLE);
+//        }
+//
+//        if (
+//                viewId == R.id.pack_editable_measurement_two ||
+//                viewId == R.id.pack_measurement_label_two ||
+//                viewId == R.id.item_editable_measurement_two ||
+//                viewId == R.id.item_measurement_label_two)
+//
+//            view.setVisibility(units == 2 ? View.VISIBLE : View.INVISIBLE);
     }
 }

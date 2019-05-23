@@ -28,10 +28,10 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
     private int numberOfItems;
 
     // TODO - these need to be integers and doubles!
-    private String packMeasurementOne;
-    private String itemMeasurementOne;
-    private String packMeasurementTwo;
-    private String itemMeasurementTwo;
+    private double packMeasurementOne;
+    private double itemMeasurementOne;
+    private int packMeasurementTwo;
+    private int itemMeasurementTwo;
 
     public ProductMeasurementViewModel(@NonNull Application application) {
         super(application);
@@ -44,6 +44,7 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
     }
 
     MutableLiveData<ProductMeasurementModel> getModelOut() {
+        if (modelOut == null) modelOut = new MutableLiveData<>();
         return modelOut;
     }
 
@@ -57,7 +58,7 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
     void setMeasurementModelIn(ProductMeasurementModel measurementModelIn) {
         setSubType(measurementModelIn.getMeasurementSubType());
         newNumberOfItems(measurementModelIn.getNumberOfItems());
-        setBaseSiUnits(measurementModelIn.getBaseSiUnits());
+//        setBaseSiUnits(measurementModelIn.getBaseSiUnits());
     }
 
     @Bindable
@@ -103,11 +104,11 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
         notifyPropertyChanged(BR.numberOfItems);
     }
 
-    public void addOneNumberOfItems() {
+    public void addOneToNumberOfItems() {
         newNumberOfItems((unitOfMeasure.getNumberOfItems() + 1));
     }
 
-    public void minusOneOffNumberOfItems() {
+    public void minusOneFromNumberOfItems() {
         newNumberOfItems((unitOfMeasure.getNumberOfItems() - 1));
     }
 
@@ -209,8 +210,11 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
     private void processIntegerMeasurements(int viewId, int newMeasurement) {
         boolean measurementIsSet = false;
 
-        if (viewId == R.id.pack_editable_measurement_one)
+        if (viewId == R.id.pack_editable_measurement_one){
+
+            Log.d(TAG, "processIntegerMeasurements: Pack one found with value: " + newMeasurement);
             measurementIsSet = unitOfMeasure.packMeasurementOneIsSet(newMeasurement);
+        }
 
         if (viewId == R.id.item_editable_measurement_one)
             measurementIsSet = unitOfMeasure.itemMeasurementOneIsSet(newMeasurement);
@@ -221,77 +225,65 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
         else if (viewId == R.id.item_editable_measurement_two)
             measurementIsSet = unitOfMeasure.itemMeasurementTwoIsSet(newMeasurement);
 
-        if (measurementIsSet) {updateMeasurements(); updateMeasurementModel();}
+        if (measurementIsSet) updateMeasurements();
     }
 
     private void updateMeasurements() {
-        setPackMeasurementOne(String.valueOf(unitOfMeasure.getPackMeasurementOne()));
-        setItemMeasurementOne(String.valueOf(unitOfMeasure.getItemMeasurementOne()));
-        setPackMeasurementTwo(String.valueOf(unitOfMeasure.getPackMeasurementTwo()));
-        setItemMeasurementTwo(String.valueOf(unitOfMeasure.getItemMeasurementTwo()));
+        setPackMeasurementOne(unitOfMeasure.getPackMeasurementOne());
+        setItemMeasurementOne(unitOfMeasure.getItemMeasurementOne());
+        setPackMeasurementTwo(unitOfMeasure.getPackMeasurementTwo());
+        setItemMeasurementTwo(unitOfMeasure.getItemMeasurementTwo());
+
+        updateMeasurementModel();
     }
 
     @Bindable
-    public String getPackMeasurementOne() {
+    public double getPackMeasurementOne() {
         return packMeasurementOne;
     }
 
-    public void setPackMeasurementOne(String packMeasurementOne) {
+    public void setPackMeasurementOne(double packMeasurementOne) {
         this.packMeasurementOne = packMeasurementOne;
         notifyPropertyChanged(BR.packMeasurementOne);
     }
 
     @Bindable
-    public String getItemMeasurementOne() {
+    public double getItemMeasurementOne() {
         return itemMeasurementOne;
     }
 
-    public void setItemMeasurementOne(String itemMeasurementOne) {
+    public void setItemMeasurementOne(double itemMeasurementOne) {
         this.itemMeasurementOne = itemMeasurementOne;
         notifyPropertyChanged(BR.itemMeasurementOne);
     }
 
     @Bindable
-    public String getPackMeasurementTwo() {
+    public int getPackMeasurementTwo() {
         return packMeasurementTwo;
     }
 
-    public void setPackMeasurementTwo(String packMeasurementTwo) {
+    public void setPackMeasurementTwo(int packMeasurementTwo) {
         this.packMeasurementTwo = packMeasurementTwo;
         notifyPropertyChanged(BR.packMeasurementTwo);
     }
 
     @Bindable
-    public String getItemMeasurementTwo() {
+    public int getItemMeasurementTwo() {
         return itemMeasurementTwo;
     }
 
-    public void setItemMeasurementTwo(String itemMeasurementTwo) {
+    public void setItemMeasurementTwo(int itemMeasurementTwo) {
         this.itemMeasurementTwo = itemMeasurementTwo;
         notifyPropertyChanged(BR.itemMeasurementTwo);
     }
 
-    // Synchronises unit of measure to the measurement model
     private void updateMeasurementModel() {
-        if (modelOut.getValue() != null) {
-            if (modelOut.getValue().getMeasurementSubType() != unitOfMeasure.getMeasurementSubType())
-                modelOut.getValue().setMeasurementSubType(unitOfMeasure.getMeasurementSubType());
+            ProductMeasurementModel modelOut = new ProductMeasurementModel();
+            modelOut.setMeasurementSubType(unitOfMeasure.getMeasurementSubType());
+            modelOut.setNumberOfItems(unitOfMeasure.getNumberOfItems());
+            modelOut.setBaseSiUnits(unitOfMeasure.getBaseSiUnits());
 
-            if (modelOut.getValue().getNumberOfItems() != unitOfMeasure.getNumberOfItems())
-                modelOut.getValue().setNumberOfItems(unitOfMeasure.getNumberOfItems());
-
-            if (modelOut.getValue().getBaseSiUnits() != unitOfMeasure.getBaseSiUnits())
-                modelOut.getValue().setBaseSiUnits(unitOfMeasure.getBaseSiUnits());
-
-            Log.d(TAG, "updateMeasurementModel: Measurement model updating complete: " +
-                    modelOut.getValue().toString());
-            saveToExistingModelIfValid();
-        }
-    }
-
-    private void saveToExistingModelIfValid() {
-        Log.d(TAG, "saveToExistingModelIfValid: " + unitOfMeasure.isValidMeasurement());
-//        if (unitOfMeasure.isValidMeasurement())
-//            modelIn.setValue(modelOut);
+            if(unitOfMeasure.isValidMeasurement()) getModelOut().setValue(modelOut);
+            Log.d(TAG, "updateMeasurementModel: model created:" + modelOut.toString());
     }
 }

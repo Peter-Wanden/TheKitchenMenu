@@ -8,14 +8,14 @@
     <data>
         <import type="android.view.View" />
         <import type="com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubTypeConverter" />
-        <import type="com.example.peter.thekitchenmenu.utils.NumberToStringFormatConverter" />
+        <import type="com.example.peter.thekitchenmenu.utils.IntegerToStringFormatConverter" />
 
         <variable
             name="viewModel"
             type="com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductMeasurementViewModel" />
 
         <variable
-            name="measurementValidation"
+            name="measurementHandler"
             type="com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductMeasurementHandler" />
     </data>
 
@@ -36,8 +36,8 @@
             app:layout_constraintEnd_toStartOf="@+id/pack_measurement_label_two"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            android:afterTextChanged='@{() -> measurementValidation.validatePackSize(packEditableMeasurementTwo)}'
-            android:text="@{NumberToStringFormatConverter.integerToString(packEditableMeasurementTwo, viewModel.packMeasurementTwo, viewModel.packMeasurementTwo)}"
+            android:afterTextChanged='@{() -> measurementHandler.validatePackSize(packEditableMeasurementTwo)}'
+            android:text="@{IntegerToStringFormatConverter.integerToString(packEditableMeasurementTwo, viewModel.packMeasurementTwo, viewModel.packMeasurementTwo)}"
             app:setUpEditTextForSubTypeSelected='@{viewModel.subType}'
             app:fieldVisibilityAdapterNumberOfUnits='@{viewModel.numberOfMeasurementUnits}'
             tools:text="22" />
@@ -70,8 +70,8 @@
             app:layout_constraintEnd_toStartOf="@+id/item_measurement_label_two"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            android:afterTextChanged='@{() -> measurementValidation.validatePackSize(itemEditableMeasurementTwo)}'
-            android:text="@{NumberToStringFormatConverter.integerToString(itemEditableMeasurementTwo, viewModel.itemMeasurementTwo, viewModel.itemMeasurementTwo)}"
+            android:afterTextChanged='@{() -> measurementHandler.validatePackSize(itemEditableMeasurementTwo)}'
+            android:text="@{IntegerToStringFormatConverter.integerToString(itemEditableMeasurementTwo, viewModel.itemMeasurementTwo, viewModel.itemMeasurementTwo)}"
             app:setUpEditTextForSubTypeSelected='@{viewModel.subType}'
             app:fieldVisibilityAdapterNumberOfUnits='@{viewModel.numberOfMeasurementUnits}'
             app:fieldVisibilityAdapterNumberOfItems='@{viewModel.numberOfItems}'
@@ -99,8 +99,8 @@
             style="@style/EditableFieldStyle"
             android:layout_width="0dp"
             android:layout_height="@dimen/standard_input_item_height"
-            android:afterTextChanged='@{() -> measurementValidation.validatePackSize(packEditableMeasurementOne)}'
-            android:text='@{NumberToStringFormatConverter.integerToString(packEditableMeasurementOne, viewModel.packMeasurementOne, viewModel.packMeasurementOne)}'
+            android:afterTextChanged='@{() -> measurementHandler.validatePackSize(packEditableMeasurementOne)}'
+            android:text='@{`` + viewModel.packMeasurementOne}'
             android:textAlignment="textEnd"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintEnd_toStartOf="@+id/pack_measurement_label_one"
@@ -134,8 +134,8 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/item_measurement_label_two"
             app:layout_constraintTop_toTopOf="@+id/item_measurement_label_two"
-            android:afterTextChanged='@{() -> measurementValidation.validatePackSize(itemEditableMeasurementOne)}'
-            android:text='@{NumberToStringFormatConverter.integerToString(itemEditableMeasurementOne, viewModel.itemMeasurementOne, viewModel.itemMeasurementOne)}'
+            android:text='@{`` + viewModel.itemMeasurementOne}'
+            android:afterTextChanged='@{() -> measurementHandler.validatePackSize(itemEditableMeasurementOne)}'
             app:fieldVisibilityAdapterNumberOfItems='@{viewModel.numberOfItems}'
             app:setUpEditTextForSubTypeSelected='@{viewModel.subType}'
             tools:text="16" />
