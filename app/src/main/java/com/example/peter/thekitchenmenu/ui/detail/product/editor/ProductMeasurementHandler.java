@@ -22,39 +22,50 @@ public class ProductMeasurementHandler {
     }
 
     public void newUnitOfMeasureSelected(Spinner spinnerWithSubType) {
-        viewModel.newUnitOfMeasureSelected(MeasurementSubType.values()
+        viewModel.setSubType(MeasurementSubType.values()
                         [spinnerWithSubType.getSelectedItemPosition()]);
     }
 
-    public void validatePackSize(EditText editableMeasurement) {
+    public void newMeasurementReceived(EditText editableMeasurement) {
         int viewId = editableMeasurement.getId();
-        double doubleMeasurement;
+        double decimalMeasurement;
         int integerMeasurement;
         int numberOfUnitsAfterDecimal;
 
-        if (viewId == R.id.pack_editable_measurement_one ||
+        if (
+                viewId == R.id.pack_editable_measurement_one ||
                 viewId == R.id.item_editable_measurement_one) {
 
             Pair[] inputDigitsFilters = viewModel.getUnitOfMeasure().getInputDigitsFilter();
-            numberOfUnitsAfterDecimal = 1;
+            numberOfUnitsAfterDecimal = (int) inputDigitsFilters[0].second;
 
         } else numberOfUnitsAfterDecimal = 0;
 
         if (numberOfUnitsAfterDecimal > 0) {
-            doubleMeasurement = parseDoubleFromEditText(editableMeasurement);
+            decimalMeasurement = parseDecimalFromString(editableMeasurement);
 
-            if (doubleMeasurement == MEASUREMENT_ERROR) return;
-            viewModel.validatePackSize(viewId, 0, doubleMeasurement);
+            if (decimalMeasurement == MEASUREMENT_ERROR) return;
+
+            viewModel.newMeasurementReceived(
+                    viewId,
+                    0,
+                    decimalMeasurement,
+                    numberOfUnitsAfterDecimal);
 
         } else {
-            integerMeasurement = parseIntegerFromEditText(editableMeasurement);
+            integerMeasurement = parseIntegerFromString(editableMeasurement);
 
             if (integerMeasurement == MEASUREMENT_ERROR) return;
-            viewModel.validatePackSize(viewId, integerMeasurement, 0.);
+
+            viewModel.newMeasurementReceived(
+                    viewId,
+                    integerMeasurement,
+                    0.,
+                    numberOfUnitsAfterDecimal);
         }
     }
 
-    private double parseDoubleFromEditText(EditText editableMeasurement) {
+    private double parseDecimalFromString(EditText editableMeasurement) {
         String rawMeasurement = editableMeasurement.getText().toString();
 
         if (rawMeasurement.isEmpty() || rawMeasurement.equals(".")) return 0.;
@@ -67,7 +78,7 @@ public class ProductMeasurementHandler {
         }
     }
 
-    private int parseIntegerFromEditText(TextView editableMeasurement) {
+    private int parseIntegerFromString(TextView editableMeasurement) {
         String rawMeasurement = editableMeasurement.getText().toString();
 
         if (rawMeasurement.isEmpty()) return 0;

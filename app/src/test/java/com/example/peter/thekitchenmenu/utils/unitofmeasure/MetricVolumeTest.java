@@ -2,7 +2,6 @@ package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
 import org.junit.Test;
 
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MAX_MASS;
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MAX_VOLUME;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;

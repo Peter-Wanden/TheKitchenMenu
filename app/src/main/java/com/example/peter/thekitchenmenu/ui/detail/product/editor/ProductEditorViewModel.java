@@ -64,7 +64,7 @@ public class ProductEditorViewModel extends ObservableViewModel {
                 9,
                 4,
                 120,
-                2,
+                1,
                 0,
                 "",
                 "https://img.tesco.com/Groceries/pi/372/7622210255372/IDShot_540x540.jpg",
@@ -122,7 +122,7 @@ public class ProductEditorViewModel extends ObservableViewModel {
 
     void setMeasurementModelOut(ProductMeasurementModel measurementModelOut) {
         this.measurementModelOut = measurementModelOut;
-        Log.d(TAG, "setMeasurementModelOut:" + measurementModelOut.toString());
+//        Log.d(TAG, "setMeasurementModelOut:" + measurementModelOut.toString());
     }
 
     public void onFabClick() {

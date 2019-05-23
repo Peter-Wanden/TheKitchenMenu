@@ -10,7 +10,7 @@ import androidx.databinding.BindingAdapter;
 
 public class UnitOfMeasureLabelBindingAdapter {
 
-    private static final String TAG = "UnitOfMeasureLabelBindi";
+    private static final String TAG = "tkm-UomLabelBinding";
 
     @BindingAdapter(value = {"setLabelForSubTypeSelected"})
     public static void setLabelForSubTypeSelected(TextView textView, MeasurementSubType subType) {
