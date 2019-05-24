@@ -29,10 +29,10 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
     private int numberOfItems;
 
     // TODO - these need to be integers and doubles!
-    private double packMeasurementOne;
-    private double itemMeasurementOne;
-    private int packMeasurementTwo;
-    private int itemMeasurementTwo;
+    private String packMeasurementOne;
+    private String itemMeasurementOne;
+    private String packMeasurementTwo;
+    private String itemMeasurementTwo;
 
     private Resources resources;
 
@@ -58,9 +58,9 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
     //  model. Then re-jig the references to it in xml
     //
     void setMeasurementModelIn(ProductMeasurementModel measurementModelIn) {
-        setSubType(measurementModelIn.getMeasurementSubType());
-        setNumberOfItems(measurementModelIn.getNumberOfItems());
-        setBaseSiUnits(measurementModelIn.getBaseSiUnits());
+//        setSubType(measurementModelIn.getMeasurementSubType());
+//        setNumberOfItems(measurementModelIn.getNumberOfItems());
+//        setBaseSiUnits(measurementModelIn.getBaseSiUnits());
     }
 
     @Bindable
@@ -132,27 +132,22 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
         return unitOfMeasure.baseSiUnitsAreSet(newBaseSiUnits);
     }
 
-    void newMeasurementReceived(int viewId,
-                                int integerMeasurement,
-                                double decimalMeasurement,
-                                int numberOfUnitsAfterDecimal) {
+    void newDecimalMeasurementReceived(int viewId, double decimalMeasurement) {
+        Log.d(TAG, "newMeasurementReceived from " +
+                resources.getResourceEntryName(viewId) +
+                " with decimal value: " + decimalMeasurement);
 
-        if (numberOfUnitsAfterDecimal > 0) {
-            Log.d(TAG, "newMeasurementReceived from " +
-                    resources.getResourceEntryName(viewId) +
-                    " with decimal value: " + decimalMeasurement);
+        if (decimalMeasurementHasChanged(viewId, decimalMeasurement))
+            processDecimalMeasurements(viewId, decimalMeasurement);
+    }
 
-            if (decimalMeasurementHasChanged(viewId, decimalMeasurement))
-                processDecimalMeasurements(viewId, decimalMeasurement);
+    void newIntegerMeasurementReceived(int viewId, int integerMeasurement) {
+        Log.d(TAG, "newMeasurementReceived from " +
+                resources.getResourceEntryName(viewId) +
+                " with integer value: " + integerMeasurement);
 
-        } else {
-            Log.d(TAG, "newMeasurementReceived from " +
-                    resources.getResourceEntryName(viewId) +
-                    " with decimal value: " + integerMeasurement);
-
-            if (measurementHasChangedInteger(viewId, integerMeasurement))
-                processIntegerMeasurements(viewId, integerMeasurement);
-        }
+        if (measurementHasChangedInteger(viewId, integerMeasurement))
+            processIntegerMeasurements(viewId, integerMeasurement);
     }
 
     private boolean decimalMeasurementHasChanged(int viewId, double newMeasurement) {
@@ -174,14 +169,6 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
         int oldMeasurement;
 
         switch (viewId) {
-            case R.id.pack_editable_measurement_one:
-                oldMeasurement = (int) unitOfMeasure.getPackMeasurementOne();
-                return oldMeasurement != newMeasurement;
-
-            case R.id.item_editable_measurement_one:
-                oldMeasurement = (int) unitOfMeasure.getItemMeasurementOne();
-                return oldMeasurement != newMeasurement;
-
             case R.id.pack_editable_measurement_two:
                 oldMeasurement = unitOfMeasure.getPackMeasurementTwo();
                 return newMeasurement != oldMeasurement;
@@ -220,7 +207,7 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
     private void processIntegerMeasurements(int viewId, int newMeasurement) {
         boolean measurementIsSet = false;
 
-        if (viewId == R.id.pack_editable_measurement_one){
+        if (viewId == R.id.pack_editable_measurement_one) {
             Log.d(TAG, "processIntegerMeasurements - packMeasurementOne:" +
                     " old=" + unitOfMeasure.getPackMeasurementOne() +
                     " new=" + newMeasurement);
@@ -266,27 +253,19 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
             numberOfItems = unitOfMeasure.getNumberOfItems();
             notifyPropertyChanged(BR.numberOfItems);
         }
-        if (packMeasurementOne != unitOfMeasure.getPackMeasurementOne()) {
-            Log.d(TAG, "updateUi: packOne: " +
-                    "ui=" + packMeasurementOne + " uom=" + unitOfMeasure.getPackMeasurementOne());
-            packMeasurementOne = unitOfMeasure.getPackMeasurementOne();
-            notifyPropertyChanged(BR.packMeasurementOne);
-        }
-        if (itemMeasurementOne != unitOfMeasure.getItemMeasurementOne()) {
-            Log.d(TAG, "updateUi: itemOne " +
-                    "ui=" + itemMeasurementOne + " uom=" + unitOfMeasure.getItemMeasurementOne());
-            itemMeasurementOne = unitOfMeasure.getItemMeasurementOne();
-            notifyPropertyChanged(BR.itemMeasurementOne);
-        }
+
+        packMeasurementOne = String.valueOf(unitOfMeasure.getPackMeasurementOne());
+//        notifyPropertyChanged(BR.packMeasurementOne);
+
+        itemMeasurementOne = String.valueOf(unitOfMeasure.getItemMeasurementOne());
+//        notifyPropertyChanged(BR.itemMeasurementOne);
+
         if (numberOfMeasurementUnits > 1) {
-            if (packMeasurementTwo != unitOfMeasure.getPackMeasurementTwo()) {
-                packMeasurementTwo = unitOfMeasure.getPackMeasurementTwo();
-                notifyPropertyChanged(BR.packMeasurementTwo);
-            }
-            if (itemMeasurementTwo != unitOfMeasure.getItemMeasurementTwo()) {
-                itemMeasurementTwo = unitOfMeasure.getItemMeasurementTwo();
-                notifyPropertyChanged(BR.itemMeasurementTwo);
-            }
+            packMeasurementTwo = String.valueOf(unitOfMeasure.getPackMeasurementTwo());
+//            notifyPropertyChanged(BR.packMeasurementTwo);
+
+            itemMeasurementTwo = String.valueOf(unitOfMeasure.getItemMeasurementTwo());
+//            notifyPropertyChanged(BR.itemMeasurementTwo);
         }
         updateMeasurementModel();
     }
@@ -304,42 +283,22 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
     }
 
     @Bindable
-    public double getPackMeasurementOne() {
+    public String getPackMeasurementOne() {
         return packMeasurementOne;
     }
 
-    public void setPackMeasurementOne(double packMeasurementOne) {
-//        this.packMeasurementOne = packMeasurementOne;
-//        notifyPropertyChanged(BR.packMeasurementOne);
-    }
-
     @Bindable
-    public double getItemMeasurementOne() {
+    public String getItemMeasurementOne() {
         return itemMeasurementOne;
     }
 
-    public void setItemMeasurementOne(double itemMeasurementOne) {
-//        this.itemMeasurementOne = itemMeasurementOne;
-//        notifyPropertyChanged(BR.itemMeasurementOne);
-    }
-
     @Bindable
-    public int getPackMeasurementTwo() {
+    public String getPackMeasurementTwo() {
         return packMeasurementTwo;
     }
 
-    public void setPackMeasurementTwo(int packMeasurementTwo) {
-//        this.packMeasurementTwo = packMeasurementTwo;
-//        notifyPropertyChanged(BR.packMeasurementTwo);
-    }
-
     @Bindable
-    public int getItemMeasurementTwo() {
+    public String getItemMeasurementTwo() {
         return itemMeasurementTwo;
-    }
-
-    public void setItemMeasurementTwo(int itemMeasurementTwo) {
-//        this.itemMeasurementTwo = itemMeasurementTwo;
-//        notifyPropertyChanged(BR.itemMeasurementTwo);
     }
 }

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/pack_editable_unit_two"
+        style="@style/EditableFieldStyle"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/standard_input_item_height"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Name"
+        app:layout_constraintBottom_toTopOf="@+id/item_editable_unit_two"
+        app:layout_constraintEnd_toStartOf="@+id/pack_label_two"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        android:importantForAutofill="no" />
+
+    <TextView
+        android:id="@+id/pack_label_two"
+        style="@style/EditableCategoryStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/standard_input_item_height"
+        android:layout_marginBottom="8dp"
+        android:gravity="center_vertical"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/unit_two_label"
+        app:layout_constraintEnd_toStartOf="@+id/pack_editable_unit_one"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/pack_editable_unit_two"
+        tools:text="kg" />
+
+    <EditText
+        android:id="@+id/pack_editable_unit_one"
+        style="@style/EditableFieldStyle"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/standard_input_item_height"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Name"
+        app:layout_constraintBottom_toTopOf="@+id/item_editable_unit_one"
+        app:layout_constraintEnd_toStartOf="@+id/pack_label_one"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/pack_label_two" />
+
+    <TextView
+        android:id="@+id/pack_label_one"
+        style="@style/EditableCategoryStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/standard_input_item_height"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center_vertical"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/unit_onr_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/pack_editable_unit_one"
+        tools:text="g" />
+
+    <EditText
+        android:id="@+id/item_editable_unit_two"
+        style="@style/EditableFieldStyle"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/standard_input_item_height"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Name"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/unit_two_label"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/unit_two_label"
+        style="@style/EditableCategoryStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/standard_input_item_height"
+        android:layout_marginBottom="8dp"
+        android:gravity="center_vertical"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/item_editable_unit_one"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/item_editable_unit_two"
+        tools:text="kg" />
+
+    <EditText
+        android:id="@+id/item_editable_unit_one"
+        style="@style/EditableFieldStyle"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/standard_input_item_height"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Name"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/unit_onr_label"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/unit_two_label" />
+
+    <TextView
+        android:id="@+id/unit_onr_label"
+        style="@style/EditableCategoryStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/standard_input_item_height"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center_vertical"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/item_editable_unit_one"
+        tools:text="g" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

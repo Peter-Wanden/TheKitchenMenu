@@ -37,9 +37,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             android:afterTextChanged="@{() -> measurementHandler.newMeasurementReceived(packEditableMeasurementTwo)}"
-
             android:text="@{`` + viewModel.packMeasurementTwo}"
-
             tools:text="22" />
 
 <!--        app:setUpEditTextForSubTypeSelected='@{viewModel.subType}'-->
@@ -75,9 +73,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             android:afterTextChanged="@{() -> measurementHandler.newMeasurementReceived(itemEditableMeasurementTwo)}"
-
             android:text='@{`` + viewModel.itemMeasurementTwo}'
-
             tools:text="22" />
 
 <!--        android:text="@{IntegerToStringFormatConverter.integerToString(itemEditableMeasurementTwo, viewModel.itemMeasurementTwo, viewModel.itemMeasurementTwo)}"-->
@@ -107,16 +103,14 @@
             style="@style/EditableFieldStyle"
             android:layout_width="0dp"
             android:layout_height="@dimen/standard_input_item_height"
-
-            android:afterTextChanged="@{() -> measurementHandler.newMeasurementReceived(packEditableMeasurementOne)}"
-            android:text='@{`` + viewModel.packMeasurementOne}'
-
             android:textAlignment="textEnd"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintEnd_toStartOf="@+id/pack_measurement_label_one"
             app:layout_constraintStart_toEndOf="@+id/pack_measurement_label_two"
             app:layout_constraintTop_toTopOf="@+id/pack_measurement_label_two"
             app:setUpEditTextForSubTypeSelected='@{viewModel.subType}'
+            android:afterTextChanged="@{() -> measurementHandler.newMeasurementReceived(packEditableMeasurementOne)}"
+            android:text='@{`` + viewModel.packMeasurementOne}'
             tools:text="16" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -144,13 +138,12 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/item_measurement_label_two"
             app:layout_constraintTop_toTopOf="@+id/item_measurement_label_two"
-
             android:text='@{`` + viewModel.itemMeasurementOne}'
             android:afterTextChanged="@{() -> measurementHandler.newMeasurementReceived(itemEditableMeasurementOne)}"
-
-            app:fieldVisibilityAdapterNumberOfItems='@{viewModel.numberOfItems}'
-            app:setUpEditTextForSubTypeSelected='@{viewModel.subType}'
             tools:text="16" />
+
+<!--        app:fieldVisibilityAdapterNumberOfItems='@{viewModel.numberOfItems}'-->
+<!--        app:setUpEditTextForSubTypeSelected='@{viewModel.subType}'-->
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/item_measurement_label_one"

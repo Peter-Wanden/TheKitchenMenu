@@ -30,46 +30,23 @@ public class ProductMeasurementHandler {
         int viewId = editableMeasurement.getId();
         double decimalMeasurement;
         int integerMeasurement;
-        int numberOfUnitsAfterDecimal;
 
-        if (
-                viewId == R.id.pack_editable_measurement_one ||
+        if (viewId == R.id.pack_editable_measurement_one ||
                 viewId == R.id.item_editable_measurement_one) {
-
-            Pair[] inputDigitsFilters = viewModel.getUnitOfMeasure().getInputDigitsFilter();
-            numberOfUnitsAfterDecimal = (int) inputDigitsFilters[0].second;
-
-        } else numberOfUnitsAfterDecimal = 0;
-
-        if (numberOfUnitsAfterDecimal > 0) {
             decimalMeasurement = parseDecimalFromString(editableMeasurement);
-
             if (decimalMeasurement == MEASUREMENT_ERROR) return;
-
-            viewModel.newMeasurementReceived(
-                    viewId,
-                    0,
-                    decimalMeasurement,
-                    numberOfUnitsAfterDecimal);
+            viewModel.newDecimalMeasurementReceived(viewId, decimalMeasurement);
 
         } else {
             integerMeasurement = parseIntegerFromString(editableMeasurement);
-
             if (integerMeasurement == MEASUREMENT_ERROR) return;
-
-            viewModel.newMeasurementReceived(
-                    viewId,
-                    integerMeasurement,
-                    0.,
-                    numberOfUnitsAfterDecimal);
+            viewModel.newIntegerMeasurementReceived(viewId, integerMeasurement);
         }
     }
 
     private double parseDecimalFromString(EditText editableMeasurement) {
         String rawMeasurement = editableMeasurement.getText().toString();
-
         if (rawMeasurement.isEmpty() || rawMeasurement.equals(".")) return 0.;
-
         try {
             return Double.parseDouble(rawMeasurement);
         } catch (NumberFormatException e) {
@@ -80,9 +57,7 @@ public class ProductMeasurementHandler {
 
     private int parseIntegerFromString(TextView editableMeasurement) {
         String rawMeasurement = editableMeasurement.getText().toString();
-
         if (rawMeasurement.isEmpty()) return 0;
-
         try {
             return Integer.parseInt(rawMeasurement);
         } catch (NumberFormatException e) {
@@ -92,8 +67,7 @@ public class ProductMeasurementHandler {
     }
 
     private void setNumberFormatExceptionError(TextView editable) {
-        editable.setError(
-                editable.getContext().
+        editable.setError(editable.getContext().
                 getResources().getString(R.string.number_format_exception));
     }
 }
