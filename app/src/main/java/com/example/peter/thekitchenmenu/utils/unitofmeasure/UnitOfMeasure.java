@@ -29,5 +29,5 @@ public interface UnitOfMeasure {
     boolean itemMeasurementTwoIsSet(int itemMeasurementTwo);
 
     boolean isValidMeasurement();
-    Pair[] getInputDigitsFilter();
+    Pair[] getMeasurementUnitNumberTypeArray();
 }

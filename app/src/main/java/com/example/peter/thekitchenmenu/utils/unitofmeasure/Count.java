@@ -212,7 +212,7 @@ public class Count implements UnitOfMeasure {
     }
 
     @Override
-    public Pair[] getInputDigitsFilter() {
+    public Pair[] getMeasurementUnitNumberTypeArray() {
 
         Pair<Integer, Integer> unitOneDigitsFilter = new Pair<>(MULTI_PACK_MAXIMUM_NO_OF_ITEMS, 0);
         Pair<Integer, Integer> unitTwoDigitsFilter = new Pair<>(0, 0);

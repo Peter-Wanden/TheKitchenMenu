@@ -14,8 +14,6 @@ public class UnitOfMeasureConstants {
     static final int MAX_COUNT = 99;
 
     static final int NOT_YET_SET = 0;
-
     static final int SINGLE_ITEM = 1;
-
     static final int MULTI_PACK_MAXIMUM_NO_OF_ITEMS = 20;
 }

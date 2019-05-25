@@ -14,28 +14,33 @@ public class UnitOfMeasureFieldVisibilityBindingAdapter {
             value = {"fieldVisibilityAdapterNumberOfUnits", "fieldVisibilityAdapterNumberOfItems"},
             requireAll = false)
     public static void fieldVisibility(View view, int numberOfUnits, int numberOfItems) {
+
         setViewVisibility(view, numberOfUnits, numberOfItems);
     }
 
-    private static void setViewVisibility(View view, int units, int numberOfItems) {
-
+    private static void setViewVisibility(View view, int numberOfUnits, int numberOfItems) {
         int viewId = view.getId();
 
-//        if (
-//                viewId == R.id.item_editable_measurement_one ||
-//                viewId == R.id.item_measurement_label_one ||
-//                viewId == R.id.item_editable_measurement_two ||
-//                viewId == R.id.item_measurement_label_two) {
-//
-//            view.setVisibility(numberOfItems >= 2 ? View.VISIBLE : View.INVISIBLE);
-//        }
-//
-//        if (
-//                viewId == R.id.pack_editable_measurement_two ||
-//                viewId == R.id.pack_measurement_label_two ||
-//                viewId == R.id.item_editable_measurement_two ||
-//                viewId == R.id.item_measurement_label_two)
-//
-//            view.setVisibility(units == 2 ? View.VISIBLE : View.INVISIBLE);
+        if (
+                viewId == R.id.item_editable_measurement_one ||
+                viewId == R.id.item_measurement_label_one) {
+
+            view.setVisibility(
+                    numberOfItems > 1 ? View.VISIBLE : View.INVISIBLE);
+        }
+
+        if (
+                viewId == R.id.pack_editable_measurement_two ||
+                viewId == R.id.pack_measurement_label_two)
+
+            view.setVisibility(
+                    numberOfUnits > 1 ? View.VISIBLE : View.INVISIBLE);
+
+        if (
+                viewId == R.id.item_editable_measurement_two ||
+                viewId == R.id.item_measurement_label_two)
+
+            view.setVisibility(
+                    numberOfItems > 1 && numberOfUnits == 2 ? View.VISIBLE : View.INVISIBLE);
     }
 }

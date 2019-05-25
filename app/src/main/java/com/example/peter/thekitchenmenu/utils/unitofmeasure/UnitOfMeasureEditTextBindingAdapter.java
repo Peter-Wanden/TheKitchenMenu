@@ -1,7 +1,6 @@
 package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
 import android.text.InputFilter;
-import android.view.View;
 import android.widget.EditText;
 
 import com.example.peter.thekitchenmenu.R;
@@ -15,82 +14,45 @@ import static android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL;
 
 public class UnitOfMeasureEditTextBindingAdapter {
 
-    private static final String TAG = "UnitOfMeasureEditTextBi";
+    private static final String TAG = "tkm-InputFilters";
 
     @BindingAdapter(value = {"setUpEditTextForSubTypeSelected"})
     public static void setUpEditTextForSubTypeSelected(EditText editText,
                                                        MeasurementSubType subType) {
-        setupViews(editText, subType);
-    }
-
-    private static void setupViews(EditText editText, MeasurementSubType subType) {
-
         UnitOfMeasure unitOfMeasure = subType.getMeasurementClass();
-
         int viewId = editText.getId();
         int units = unitOfMeasure.getNumberOfMeasurementUnits();
-        int digitsAfterDecimal = (int) unitOfMeasure.getInputDigitsFilter()[0].second;
+        int digitsAfterDecimal = (int) unitOfMeasure.getMeasurementUnitNumberTypeArray()[0].second;
 
-        if (
-                viewId == R.id.pack_editable_measurement_one && digitsAfterDecimal > 0 ||
+        if (viewId == R.id.pack_editable_measurement_one && digitsAfterDecimal > 0 ||
                 viewId == R.id.item_editable_measurement_one && digitsAfterDecimal > 0)
+            editText.setInputType(TYPE_CLASS_NUMBER | TYPE_NUMBER_FLAG_DECIMAL);
 
-            setInputTypeNumberDecimal(editText);
+        else editText.setInputType(TYPE_CLASS_NUMBER);
 
-        else setInputTypeNumber(editText);
-
-        if (viewId != View.NO_ID)
-
-            if (
-                viewId == R.id.pack_editable_measurement_one ||
+        if (viewId == R.id.pack_editable_measurement_one ||
                 viewId == R.id.item_editable_measurement_one ||
                 viewId == R.id.pack_editable_measurement_two && units > 1 ||
                 viewId == R.id.item_editable_measurement_two && units > 1)
-
-                setInputForSoftAndHardKeyboard(editText, unitOfMeasure);
+            setInputFilters(viewId, editText, unitOfMeasure);
     }
 
-    private static void setInputForSoftAndHardKeyboard(EditText editText,
-                                                       UnitOfMeasure unitOfMeasure) {
-        setInputFilters(editText, unitOfMeasure);
-    }
-
-    private static void setInputTypeNumber(EditText editText) {
-
-        editText.setInputType(TYPE_CLASS_NUMBER);
-    }
-
-    private static void setInputTypeNumberDecimal(EditText editText) {
-
-        editText.setInputType(TYPE_CLASS_NUMBER | TYPE_NUMBER_FLAG_DECIMAL);
-    }
-
-    private static void setInputFilters(EditText editText,
+    private static void setInputFilters(int viewId,
+                                        EditText editText,
                                         UnitOfMeasure unitOfMeasure) {
+        Pair[] inputDigitsFilters = unitOfMeasure.getMeasurementUnitNumberTypeArray();
 
-        int viewId = editText.getId();
-        Pair[] inputDigitsFilters = unitOfMeasure.getInputDigitsFilter();
-
-
-        if (
-                viewId == R.id.pack_editable_measurement_one ||
+        if (viewId == R.id.pack_editable_measurement_one ||
                 viewId == R.id.item_editable_measurement_one)
+            editText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(
+                            (int) inputDigitsFilters[0].first,
+                            (int) inputDigitsFilters[0].second)});
 
-            editText.setFilters(new InputFilter[]{
-
-                new DecimalDigitsInputFilter(
-                        (int) inputDigitsFilters[0].first,
-                        (int) inputDigitsFilters[0].second)});
-
-        if (
-                viewId == R.id.pack_editable_measurement_two ||
+        if (viewId == R.id.pack_editable_measurement_two ||
                 viewId == R.id.item_editable_measurement_two) {
-
-            editText.setFilters(new InputFilter[]{
-
-                new DecimalDigitsInputFilter(
-                        (int)inputDigitsFilters[1].first,
-                        (int)inputDigitsFilters[1].second)});
+            editText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(
+                            (int) inputDigitsFilters[1].first,
+                            (int) inputDigitsFilters[1].second)});
         }
     }
 }

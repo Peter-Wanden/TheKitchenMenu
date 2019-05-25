@@ -36,7 +36,7 @@ public class MetricMass implements UnitOfMeasure {
     private double itemMeasurementInGrams = 0.;
 
 
-    public MetricMass() {
+    MetricMass() {
         typeStringResourceId = R.string.mass;
         subTypeStringResourceId = R.string.sub_type_metric_mass;
         unitOneLabelStringResourceId = R.string.grams;
@@ -258,7 +258,7 @@ public class MetricMass implements UnitOfMeasure {
     }
 
     @Override
-    public Pair[] getInputDigitsFilter() {
+    public Pair[] getMeasurementUnitNumberTypeArray() {
 
         int maxKilogramValue = (int) (MAX_MASS / UNIT_KILOGRAM);
 

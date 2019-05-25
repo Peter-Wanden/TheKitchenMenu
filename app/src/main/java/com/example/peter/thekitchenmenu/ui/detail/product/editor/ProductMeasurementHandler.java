@@ -1,29 +1,17 @@
 package com.example.peter.thekitchenmenu.ui.detail.product.editor;
 
-import android.util.Log;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubType;
-
-import androidx.core.util.Pair;
 
 public class ProductMeasurementHandler {
-
-    private static final String TAG = "tkm-MeasurementHandler";
 
     private static final int MEASUREMENT_ERROR = -1;
     private ProductMeasurementViewModel viewModel;
 
     public ProductMeasurementHandler(ProductMeasurementViewModel viewModel) {
         this.viewModel = viewModel;
-    }
-
-    public void newUnitOfMeasureSelected(Spinner spinnerWithSubType) {
-        viewModel.setSubType(MeasurementSubType.values()
-                        [spinnerWithSubType.getSelectedItemPosition()]);
     }
 
     public void newMeasurementReceived(EditText editableMeasurement) {

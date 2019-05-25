@@ -71,7 +71,6 @@ public class ImperialMass implements UnitOfMeasure {
             this.baseSiUnits = baseSiUnits;
             setNewPackMeasurements();
             setNewItemMeasurements();
-
             return true;
 
         } else if (baseSiUnits == 0.) {
@@ -94,6 +93,8 @@ public class ImperialMass implements UnitOfMeasure {
     }
 
     private boolean baseSiUnitsAreWithinMaxMass(double baseSiUnits) {
+        // TODO - this equation should be extracted as CLASS_MAX_MASS
+        //  then all classes can just return baseSiUnits <= CLASS_MAX_MASS
         return baseSiUnits <= (MAX_MASS / UNIT_OUNCE_DECIMAL) * UNIT_OUNCE_DECIMAL;
     }
 
@@ -268,7 +269,7 @@ public class ImperialMass implements UnitOfMeasure {
     }
 
     @Override
-    public Pair[] getInputDigitsFilter() {
+    public Pair[] getMeasurementUnitNumberTypeArray() {
         int maxPoundValue = (int) (MAX_MASS / UNIT_POUND);
 
         int poundDigits = 0;
