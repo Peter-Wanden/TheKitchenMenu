@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubType;
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasure;
 
 import java.text.DecimalFormat;
@@ -21,9 +21,9 @@ public class NumberStringFormatConverter {
 
     public static String toFormat(EditText editText,
                                   String measurementModelValue,
-                                  MeasurementSubType subType) {
+                                  MeasurementSubtype subtype) {
 
-        UnitOfMeasure unitOfMeasure = subType.getMeasurementClass();
+        UnitOfMeasure unitOfMeasure = subtype.getMeasurementClass();
         int viewId = editText.getId();
         int digitsAfterDecimal = 0;
 

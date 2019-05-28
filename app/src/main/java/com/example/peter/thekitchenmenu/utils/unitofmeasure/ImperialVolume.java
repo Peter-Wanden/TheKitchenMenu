@@ -1,5 +1,7 @@
 package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
+import android.util.Log;
+
 import androidx.core.util.Pair;
 
 import com.example.peter.thekitchenmenu.R;
@@ -11,15 +13,20 @@ import java.text.NumberFormat;
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.BASE_SI_UNIT_VOLUME;
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MAX_VOLUME;
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.NOT_YET_SET;
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.SINGLE_ITEM;
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MULTI_PACK_MAXIMUM_NO_OF_ITEMS;
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.ONE_PRODUCT;
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MAXIMUM_NO_OF_PRODUCTS;
 
 public class ImperialVolume implements UnitOfMeasure {
 
-    private static final int IMPERIAL_VOLUME_NUMBER_OF_MEASUREMENT_UNITS = 2;
-    private static final double UNIT_PINT = BASE_SI_UNIT_VOLUME * 568.26125;
-    private static final double UNIT_FLUID_OUNCE = UNIT_PINT / 20;
-    private static final double UNIT_FLUID_OUNCE_DECIMAL = UNIT_FLUID_OUNCE / 10;
+    private static final String TAG = "tkm-ImperialVolume";
+
+    private static final int NUMBER_OF_MEASUREMENT_UNITS = 2;
+
+    private static final double UNIT_TWO = BASE_SI_UNIT_VOLUME * 568.26125; // Pint
+    private static final double UNIT_ONE = UNIT_TWO / 20; // Fluid ounce
+    private static final double UNIT_ONE_DECIMAL = UNIT_ONE / 10; // One tenth fl oz
+    private static final double MAXIMUM_MEASUREMENT = MAX_VOLUME;
+    private static final double MINIMUM_MEASUREMENT = UNIT_ONE_DECIMAL;
 
     // Keeps track of the last updated measurement
     private static final boolean PACK_MEASUREMENT = false;
@@ -28,28 +35,28 @@ public class ImperialVolume implements UnitOfMeasure {
 
     // Unit description string resource ID's
     private int typeStringResourceId;
-    private int subTypeStringResourceId;
+    private int subtypeStringResourceId;
     private int unitOneLabelStringResourceId;
     private int unitTwoLabelStringResourceId;
 
-    private int numberOfItems = SINGLE_ITEM;
-    private double itemSizeInBaseSiUnits = UNIT_FLUID_OUNCE_DECIMAL;
-    private double baseSiUnits = 0;
-    private Integer packMeasurementInPints = 0;
-    private double packMeasurementInFluidOunces = 0;
-    private Integer itemMeasurementInPints = 0;
-    private double itemMeasurementInFluidOunces = 0;
+    private double baseUnits = 0;
+    private int numberOfProducts = ONE_PRODUCT;
+    private double productSize = MINIMUM_MEASUREMENT;
+    private Integer packMeasurementTwo = 0;
+    private double packMeasurementOne = 0;
+    private Integer productMeasurementTwo = 0;
+    private double productMeasurementOne = 0;
 
     ImperialVolume() {
         typeStringResourceId = R.string.volume;
-        subTypeStringResourceId = R.string.sub_type_imperial_volume;
+        subtypeStringResourceId = R.string.sub_type_imperial_volume;
         unitOneLabelStringResourceId = R.string.fluidOunce;
         unitTwoLabelStringResourceId = R.string.pints;
     }
 
     @Override
     public int getNumberOfMeasurementUnits() {
-        return IMPERIAL_VOLUME_NUMBER_OF_MEASUREMENT_UNITS;
+        return NUMBER_OF_MEASUREMENT_UNITS;
     }
 
     @Override
@@ -58,79 +65,80 @@ public class ImperialVolume implements UnitOfMeasure {
     }
 
     @Override
-    public MeasurementSubType getMeasurementSubType() {
-        return MeasurementSubType.TYPE_IMPERIAL_VOLUME;
+    public MeasurementSubtype getMeasurementSubtype() {
+        return MeasurementSubtype.TYPE_IMPERIAL_VOLUME;
     }
 
     @Override
-    public double getBaseSiUnits() {
-        return baseSiUnits;
+    public double getBaseUnits() {
+        return baseUnits;
     }
 
     @Override
-    public boolean baseSiUnitsAreSet(double baseSiUnits) {
-        if (baseSiUnitsAreWithinBounds(baseSiUnits)) {
-            this.baseSiUnits = baseSiUnits;
+    public boolean baseUnitsAreSet(double baseUnits) {
+        if (baseUnitsAreWithinBounds(baseUnits)) {
+            this.baseUnits = baseUnits;
             setNewPackMeasurements();
-            setNewItemMeasurements();
+            setNewProductMeasurements();
             return true;
 
-        } else if (baseSiUnits == 0.) {
-            this.baseSiUnits = 0.;
-            packMeasurementInFluidOunces = 0.;
-            itemMeasurementInFluidOunces = 0.;
-            packMeasurementInPints = 0;
-            itemMeasurementInPints = 0;
+        } else if (baseUnits == 0.) {
+            this.baseUnits = 0.;
+            packMeasurementOne = 0.;
+            packMeasurementTwo = 0;
+            productMeasurementOne = 0.;
+            productMeasurementTwo = 0;
         }
         return false;
     }
 
-    private boolean baseSiUnitsAreWithinBounds(double baseSiUnits) {
-        return baseSiUnitsDoNotMakeItemSmallerThanSmallestUnit(baseSiUnits) &&
-                baseSiUnitsAreWithinMaxMass(baseSiUnits);
+    private boolean baseUnitsAreWithinBounds(double baseUnits) {
+        return baseUnitsAreWithinLowerBounds(baseUnits) &&
+                baseUnitsAreWithinUpperBounds(baseUnits);
     }
 
-    private boolean baseSiUnitsDoNotMakeItemSmallerThanSmallestUnit(double baseSiUnits) {
-        return baseSiUnits >= UNIT_FLUID_OUNCE_DECIMAL * numberOfItems;
+    private boolean baseUnitsAreWithinLowerBounds(double baseUnits) {
+        return baseUnits >= MINIMUM_MEASUREMENT * numberOfProducts;
     }
 
-    private boolean baseSiUnitsAreWithinMaxMass(double baseSiUnits) {
-        return baseSiUnits <=
-                (MAX_VOLUME / UNIT_FLUID_OUNCE_DECIMAL) * UNIT_FLUID_OUNCE_DECIMAL;
+    private boolean baseUnitsAreWithinUpperBounds(double baseSiUnits) {
+        return baseSiUnits <= MAX_VOLUME;
     }
 
     private void setNewPackMeasurements() {
-        packMeasurementInPints = getMeasurementInPints(baseSiUnits);
-        packMeasurementInFluidOunces = getMeasurementFluidOunces(baseSiUnits);
+        packMeasurementOne = getUnitOneMeasurement(baseUnits);
+        packMeasurementTwo = getUnitTwoMeasurement(baseUnits);
     }
 
-    private void setNewItemMeasurements() {
-        itemSizeInBaseSiUnits = baseSiUnits / numberOfItems;
-        itemMeasurementInFluidOunces = getMeasurementFluidOunces(itemSizeInBaseSiUnits);
-        itemMeasurementInPints = getMeasurementInPints(itemSizeInBaseSiUnits);
+    private void setNewProductMeasurements() {
+        productSize = baseUnits / numberOfProducts;
+        productMeasurementOne = getUnitOneMeasurement(productSize);
+        productMeasurementTwo = getUnitTwoMeasurement(productSize);
     }
 
-    private double getMeasurementFluidOunces(double baseSiUnits) {
-        double pintsInBasSi = getMeasurementInPints(baseSiUnits) * UNIT_PINT;
-        double fluidOuncesInBaseSi = baseSiUnits - pintsInBasSi;
-        return fluidOuncesInBaseSi / UNIT_FLUID_OUNCE;
+    private double getUnitOneMeasurement(double baseUnits) {
+        double unitTwoRemainder = baseUnits % UNIT_TWO;
+        int unitOneValueWithoutDecimal = (int) (unitTwoRemainder / UNIT_ONE);
+        double unitOneRemainder = unitTwoRemainder % UNIT_ONE;
+        double unitOneDecimalValue = (unitOneRemainder / UNIT_ONE_DECIMAL) / 10;
+        return unitOneValueWithoutDecimal + unitOneDecimalValue;
     }
 
-    private int getMeasurementInPints(double baseSiUnits) {
-        return (int) (baseSiUnits / UNIT_PINT);
-    }
-
-    @Override
-    public int getNumberOfItems() {
-        return numberOfItems;
+    private int getUnitTwoMeasurement(double baseSiUnits) {
+        return (int) (baseSiUnits / UNIT_TWO);
     }
 
     @Override
-    public boolean numberOfItemsAreSet(int numberOfItems) {
+    public int getNumberOfProducts() {
+        return numberOfProducts;
+    }
+
+    @Override
+    public boolean numberOfProductsIsSet(int numberOfItems) {
         if (numberOfItemsInPackAreWithinBounds(numberOfItems)) {
 
-            if (baseSiUnits == NOT_YET_SET) {
-                this.numberOfItems = numberOfItems;
+            if (baseUnits == NOT_YET_SET) {
+                this.numberOfProducts = numberOfItems;
                 return true;
 
             } else {
@@ -152,25 +160,25 @@ public class ImperialVolume implements UnitOfMeasure {
     }
 
     private boolean numberOfItemsInPackAreWithinBounds(int numberOfItems) {
-        return numberOfItems >= SINGLE_ITEM && numberOfItems <= MULTI_PACK_MAXIMUM_NO_OF_ITEMS;
+        return numberOfItems >= ONE_PRODUCT && numberOfItems <= MAXIMUM_NO_OF_PRODUCTS;
     }
 
     private boolean itemSizeNotLessThanSmallestUnit(int numberOfItems) {
-        return baseSiUnits / numberOfItems >= UNIT_FLUID_OUNCE_DECIMAL;
+        return baseUnits / numberOfItems >= UNIT_ONE_DECIMAL;
     }
 
     private void setItemsInPackByAdjustingItemSize(int numberOfItems) {
-        this.numberOfItems = numberOfItems;
-        setNewItemMeasurements();
+        this.numberOfProducts = numberOfItems;
+        setNewProductMeasurements();
     }
 
     private boolean itemSizeMultipliedByNumberOfItemsDoNotExceedMaxMass(int numberOfItems) {
-        return itemSizeInBaseSiUnits * numberOfItems <= MAX_VOLUME;
+        return productSize * numberOfItems <= MAX_VOLUME;
     }
 
     private void setItemsInPackByAdjustingPackSize(int numberOfItems) {
-        this.numberOfItems = numberOfItems;
-        baseSiUnitsAreSet(itemSizeInBaseSiUnits * numberOfItems);
+        this.numberOfProducts = numberOfItems;
+        baseUnitsAreSet(productSize * numberOfItems);
     }
 
     @Override
@@ -180,41 +188,41 @@ public class ImperialVolume implements UnitOfMeasure {
 
     @Override
     public double getPackMeasurementOne() {
-        return roundDecimal(packMeasurementInFluidOunces);
+        return roundDecimal(packMeasurementOne);
     }
 
     @Override
     public boolean packMeasurementOneIsSet(double packMeasurementOne) {
-        if (baseSiUnitsAreSet(baseSiUnitsWithPackMeasurementOne(packMeasurementOne))) {
+        if (baseUnitsAreSet(baseSiUnitsWithPackMeasurementOne(packMeasurementOne))) {
             lastMeasurementUpdated = PACK_MEASUREMENT;
             return true;
 
-        } else baseSiUnitsAreSet(baseSiUnitsWithPackMeasurementOne(0.));
+        } else baseUnitsAreSet(baseSiUnitsWithPackMeasurementOne(0.));
         return false;
     }
 
     private double baseSiUnitsWithPackMeasurementOne(double packMeasurementOne) {
-        return (packMeasurementInPints * UNIT_PINT) + (packMeasurementOne * UNIT_FLUID_OUNCE);
+        return (packMeasurementTwo * UNIT_TWO) + (packMeasurementOne * UNIT_ONE);
     }
 
     @Override
-    public double getItemMeasurementOne() {
-        return roundDecimal(itemMeasurementInFluidOunces);
+    public double getProductMeasurementOne() {
+        return roundDecimal(productMeasurementOne);
     }
 
     @Override
-    public boolean itemMeasurementOneIsSet(double itemMeasurementOne) {
-        if (baseSiUnitsAreSet(baseSiUnitsWithItemMeasurementOne(itemMeasurementOne))) {
+    public boolean productMeasurementOneIsSet(double productMeasurementOne) {
+        if (baseUnitsAreSet(baseSiUnitsWithItemMeasurementOne(productMeasurementOne))) {
             lastMeasurementUpdated = ITEM_MEASUREMENT;
             return true;
 
-        } else baseSiUnitsAreSet(baseSiUnitsWithItemMeasurementOne(0.));
+        } else baseUnitsAreSet(baseSiUnitsWithItemMeasurementOne(0.));
         return false;
     }
 
     private double baseSiUnitsWithItemMeasurementOne(double itemMeasurementOne) {
-        return ((itemMeasurementInPints * UNIT_PINT) + (itemMeasurementOne * UNIT_FLUID_OUNCE)) *
-                numberOfItems;
+        return ((productMeasurementTwo * UNIT_TWO) + (itemMeasurementOne * UNIT_ONE)) *
+                numberOfProducts;
     }
 
     @Override
@@ -224,51 +232,51 @@ public class ImperialVolume implements UnitOfMeasure {
 
     @Override
     public int getPackMeasurementTwo() {
-        return packMeasurementInPints;
+        return packMeasurementTwo;
     }
 
     @Override
     public boolean packMeasurementTwoIsSet(int packMeasurementTwo) {
-        if (baseSiUnitsAreSet(baseSiUnitsWithPackMeasurementTwo(packMeasurementTwo))) {
+        if (baseUnitsAreSet(baseSiUnitsWithPackMeasurementTwo(packMeasurementTwo))) {
             lastMeasurementUpdated = PACK_MEASUREMENT;
             return true;
 
-        } else baseSiUnitsAreSet(baseSiUnitsWithPackMeasurementTwo(0));
+        } else baseUnitsAreSet(baseSiUnitsWithPackMeasurementTwo(0));
         return false;
     }
 
     private double baseSiUnitsWithPackMeasurementTwo(int packMeasurementTwo) {
-        return (packMeasurementTwo * UNIT_PINT) + (packMeasurementInFluidOunces * UNIT_FLUID_OUNCE);
+        return (packMeasurementTwo * UNIT_TWO) + (packMeasurementOne * UNIT_ONE);
     }
 
     @Override
-    public int getItemMeasurementTwo() {
-        return itemMeasurementInPints;
+    public int getProductMeasurementTwo() {
+        return productMeasurementTwo;
     }
 
     @Override
-    public boolean itemMeasurementTwoIsSet(int itemMeasurementTwo) {
-        if (baseSiUnitsAreSet(baseSiUnitsWithItemMeasurementTwo(itemMeasurementTwo))) {
+    public boolean productMeasurementTwoIsSet(int productMeasurementTwo) {
+        if (baseUnitsAreSet(baseSiUnitsWithItemMeasurementTwo(productMeasurementTwo))) {
             lastMeasurementUpdated = ITEM_MEASUREMENT;
             return true;
 
-        } else baseSiUnitsAreSet(baseSiUnitsWithItemMeasurementTwo(0));
+        } else baseUnitsAreSet(baseSiUnitsWithItemMeasurementTwo(0));
         return false;
     }
 
     private double baseSiUnitsWithItemMeasurementTwo(int itemMeasurementTwo) {
-        return ((itemMeasurementTwo * UNIT_PINT) + (itemMeasurementInFluidOunces *
-                UNIT_FLUID_OUNCE)) * numberOfItems;
+        return ((itemMeasurementTwo * UNIT_TWO) + (productMeasurementOne *
+                UNIT_ONE)) * numberOfProducts;
     }
 
     @Override
     public boolean isValidMeasurement() {
-        return (baseSiUnits >= UNIT_FLUID_OUNCE_DECIMAL && baseSiUnits <= MAX_VOLUME);
+        return (baseUnits >= UNIT_ONE_DECIMAL && baseUnits <= MAX_VOLUME);
     }
 
     @Override
     public Pair[] getMeasurementUnitNumberTypeArray() {
-        int maxPintValue = (int) (MAX_VOLUME / UNIT_PINT);
+        int maxPintValue = (int) (MAX_VOLUME / UNIT_TWO);
         int pintDigits = 0;
 
         while (maxPintValue > 0) {

@@ -7,9 +7,8 @@ import android.view.ViewGroup;
 import android.widget.SpinnerAdapter;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
 import com.example.peter.thekitchenmenu.databinding.ProductMeasurementEditorBinding;
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubType;
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtype;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,7 +18,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 public class ProductMeasurementEditorFragment extends Fragment {
@@ -96,7 +94,7 @@ public class ProductMeasurementEditorFragment extends Fragment {
 
         for (int header = 0; header < unitOfMeasureHeaders.size(); header++) {
 
-            if (header == MeasurementSubType.TYPE_METRIC_MASS.ordinal()) {
+            if (header == MeasurementSubtype.TYPE_METRIC_MASS.ordinal()) {
                 UnitOfMeasureSpinnerItem headerItem = new UnitOfMeasureSpinnerItem(
                         SpinnerItemType.LIST_ITEM,
                         unitOfMeasureHeaders.get(header).
@@ -107,7 +105,7 @@ public class ProductMeasurementEditorFragment extends Fragment {
                 unitOfMeasureList.add(headerItem);
             }
 
-            if (header == MeasurementSubType.TYPE_IMPERIAL_MASS.ordinal()) {
+            if (header == MeasurementSubtype.TYPE_IMPERIAL_MASS.ordinal()) {
                 UnitOfMeasureSpinnerItem headerItem = new UnitOfMeasureSpinnerItem(
                         SpinnerItemType.LIST_ITEM,
                         unitOfMeasureHeaders.get(header).
@@ -118,7 +116,7 @@ public class ProductMeasurementEditorFragment extends Fragment {
                 unitOfMeasureList.add(headerItem);
             }
 
-            if (header == MeasurementSubType.TYPE_METRIC_VOLUME.ordinal()) {
+            if (header == MeasurementSubtype.TYPE_METRIC_VOLUME.ordinal()) {
                 UnitOfMeasureSpinnerItem headerItem = new UnitOfMeasureSpinnerItem(
                         SpinnerItemType.LIST_ITEM,
                         unitOfMeasureHeaders.get(header).
@@ -129,7 +127,7 @@ public class ProductMeasurementEditorFragment extends Fragment {
                 unitOfMeasureList.add(headerItem);
             }
 
-            if (header == MeasurementSubType.TYPE_IMPERIAL_VOLUME.ordinal()) {
+            if (header == MeasurementSubtype.TYPE_IMPERIAL_VOLUME.ordinal()) {
                 UnitOfMeasureSpinnerItem headerItem = new UnitOfMeasureSpinnerItem(
                         SpinnerItemType.LIST_ITEM,
                         unitOfMeasureHeaders.get(header).
@@ -140,7 +138,7 @@ public class ProductMeasurementEditorFragment extends Fragment {
                 unitOfMeasureList.add(headerItem);
             }
 
-            if (header == MeasurementSubType.TYPE_COUNT.ordinal()) {
+            if (header == MeasurementSubtype.TYPE_COUNT.ordinal()) {
                 UnitOfMeasureSpinnerItem headerItem = new UnitOfMeasureSpinnerItem(
                         SpinnerItemType.LIST_ITEM,
                         unitOfMeasureHeaders.get(header).

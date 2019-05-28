@@ -8,7 +8,7 @@ import com.example.peter.thekitchenmenu.data.model.ImageModel;
 import com.example.peter.thekitchenmenu.data.model.ProductIdentityModel;
 import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
 import com.example.peter.thekitchenmenu.databinding.ProductEditorBinding;
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubType;
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.utils.imageeditor.ImageEditorViewModel;
 
 import androidx.lifecycle.Observer;
@@ -100,8 +100,8 @@ public class ProductEditorActivity extends AppCompatActivity {
                 identityEditorViewModel.getExistingIdentityModel().setValue(identityModel);
 
                 ProductMeasurementModel measurementModelIn = new ProductMeasurementModel();
-                measurementModelIn.setMeasurementSubType(
-                        MeasurementSubType.values()[productEntity.getUnitOfMeasureSubType()]);
+                measurementModelIn.setMeasurementSubtype(
+                        MeasurementSubtype.values()[productEntity.getUnitOfMeasureSubtype()]);
                 measurementModelIn.setNumberOfItems(productEntity.getNumberOfItems());
                 measurementModelIn.setBaseSiUnits(productEntity.getBaseSiUnits());
 

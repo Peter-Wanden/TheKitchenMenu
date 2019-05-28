@@ -16,10 +16,10 @@ public class UnitOfMeasureEditTextBindingAdapter {
 
     private static final String TAG = "tkm-InputFilters";
 
-    @BindingAdapter(value = {"setUpEditTextForSubTypeSelected"})
-    public static void setUpEditTextForSubTypeSelected(EditText editText,
-                                                       MeasurementSubType subType) {
-        UnitOfMeasure unitOfMeasure = subType.getMeasurementClass();
+    @BindingAdapter(value = {"setUpEditTextForSubtypeSelected"})
+    public static void setUpEditTextForSubtypeSelected(EditText editText,
+                                                       MeasurementSubtype subtype) {
+        UnitOfMeasure unitOfMeasure = subtype.getMeasurementClass();
         int viewId = editText.getId();
         int units = unitOfMeasure.getNumberOfMeasurementUnits();
         int digitsAfterDecimal = (int) unitOfMeasure.getMeasurementUnitNumberTypeArray()[0].second;

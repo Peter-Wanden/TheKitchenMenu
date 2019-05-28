@@ -1,58 +1,45 @@
 package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
-import com.example.peter.thekitchenmenu.R;
-
 import androidx.core.util.Pair;
 
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.*;
 
-public class MetricMass implements UnitOfMeasure {
-
-    private static final String TAG = "MetricMass";
+public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
+    private static final String TAG = "tkm-UnitOfMeasureAbstract";
 
     // Unit values as they relate to the International System of Units, or SI
-    private static final int NUMBER_OF_MEASUREMENT_UNITS = 2;
+    private int numberOfMeasurementUnits;
     private static final double UNIT_ONE = BASE_SI_UNIT_MASS;
-    private static final double UNIT_ONE_DECIMAL = 0;
     private static final double UNIT_TWO = BASE_SI_UNIT_MASS * 1000.;
     private static final double MINIMUM_MEASUREMENT = UNIT_ONE;
 
     // Keeps track of the last updated measurement
-    private static final boolean PACK_MEASUREMENT = false;
-    private static final boolean PRODUCT_MEASUREMENT = true;
+    private static final boolean PACK_MEASUREMENT_LAST_UPDATED = false;
+    private static final boolean PRODUCT_MEASUREMENT_LAST_UPDATED = true;
     private boolean lastMeasurementUpdated = false;
 
     // Unit description string resource ID's
-    private int typeStringResourceId;
-    private int subtypeStringResourceId;
-    private int unitOneLabelStringResourceId;
-    private int unitTwoLabelStringResourceId;
 
     // Current measurements
-    private double baseUnits = 0;
+    private double baseUnits = 0.;
     private int numberOfProducts = ONE_PRODUCT;
-    private double productSize = MINIMUM_MEASUREMENT;
+    private double productSize = 0.;
     private int packMeasurementTwo = 0;
-    private double packMeasurementOne = 0;
+    private double packMeasurementOne = 0.;
     private int productMeasurementTwo = 0;
-    private double productMeasurementOne = 0;
+    private double productMeasurementOne = 0.;
 
 
-    MetricMass() {
-        typeStringResourceId = R.string.mass;
-        subtypeStringResourceId = R.string.sub_type_metric_mass;
-        unitOneLabelStringResourceId = R.string.grams;
-        unitTwoLabelStringResourceId = R.string.kilograms;
-    }
+    UnitOfMeasureAbstract() {}
 
     @Override
     public int getNumberOfMeasurementUnits() {
-        return NUMBER_OF_MEASUREMENT_UNITS;
+        return numberOfMeasurementUnits;
     }
 
     @Override
     public int getTypeStringResourceId() {
-        return typeStringResourceId;
+        return 0;
     }
 
     @Override
@@ -73,8 +60,8 @@ public class MetricMass implements UnitOfMeasure {
             setNewProductMeasurements();
             return true;
 
-        } else if (baseUnits == 0.) { // allows for a reset
-            this.baseUnits = 0.;
+        } else if (baseUnits == 0.) {
+            this.baseUnits = 0.; // allows for a reset
             packMeasurementOne = 0.;
             packMeasurementTwo = 0;
             productMeasurementOne = 0.;
@@ -84,15 +71,15 @@ public class MetricMass implements UnitOfMeasure {
     }
 
     private boolean baseUnitsAreWithinBounds(double baseUnits) {
-        return baseUnitsAreWithinLowerBounds(baseUnits) &&
-                baseUnitsAreWithUpperBounds(baseUnits);
+        return baseUnitsWithinLowerBounds(baseUnits) &&
+                baseUnitsWithUpperBounds(baseUnits);
     }
 
-    private boolean baseUnitsAreWithinLowerBounds(double baseUnits) {
+    private boolean baseUnitsWithinLowerBounds(double baseUnits) {
         return baseUnits >= MINIMUM_MEASUREMENT * numberOfProducts;
     }
 
-    private boolean baseUnitsAreWithUpperBounds(double baseUnits) {
+    private boolean baseUnitsWithUpperBounds(double baseUnits) {
         return baseUnits <= MAX_MASS;
     }
 
@@ -111,8 +98,8 @@ public class MetricMass implements UnitOfMeasure {
         return baseUnits % UNIT_TWO;
     }
 
-    private int getUnitTwoMeasurement(double baseSiUnits) {
-        return (int) (baseSiUnits / UNIT_TWO);
+    private int getUnitTwoMeasurement(double baseUnits) {
+        return (int) (baseUnits / UNIT_TWO);
     }
 
     @Override
@@ -121,23 +108,23 @@ public class MetricMass implements UnitOfMeasure {
     }
 
     @Override
-    public boolean numberOfProductsIsSet(int numberOfItems) {
-        if (numberOfItemsInPackAreWithinBounds(numberOfItems)) {
+    public boolean numberOfProductsIsSet(int numberOfProducts) {
+        if (numberOfProductsInPackAreWithinBounds(numberOfProducts)) {
 
             if (baseUnits == NOT_YET_SET) {
-                this.numberOfProducts = numberOfItems;
+                this.numberOfProducts = numberOfProducts;
                 return true;
 
             } else {
-                if (lastMeasurementUpdated == PACK_MEASUREMENT) {
-                    if (itemSizeNotLessThanSmallestUnit(numberOfItems)) {
-                        setItemsInPackByAdjustingItemSize(numberOfItems);
+                if (lastMeasurementUpdated == PACK_MEASUREMENT_LAST_UPDATED) {
+                    if (productSizeNotLessThanSmallestUnit(numberOfProducts)) {
+                        setNumberOfProductsByAdjustingProductSize(numberOfProducts);
                         return true;
                     }
 
-                } else if (lastMeasurementUpdated == PRODUCT_MEASUREMENT) {
-                    if (itemSizeMultipliedByNumberOfItemsDoNotExceedMaxMass(numberOfItems)) {
-                        setItemsInPackByAdjustingPackSize(numberOfItems);
+                } else if (lastMeasurementUpdated == PRODUCT_MEASUREMENT_LAST_UPDATED) {
+                    if (packSizeDoesNotExceedMaxMass(numberOfProducts)) {
+                        setNumberOfProductsByAdjustingPackSize(numberOfProducts);
                         return true;
                     }
                 }
@@ -146,31 +133,31 @@ public class MetricMass implements UnitOfMeasure {
         return false;
     }
 
-    private boolean numberOfItemsInPackAreWithinBounds(int numberOfItems) {
-        return numberOfItems >= ONE_PRODUCT && numberOfItems <= MAXIMUM_NO_OF_PRODUCTS;
+    private boolean numberOfProductsInPackAreWithinBounds(int numberOfProducts) {
+        return numberOfProducts >= ONE_PRODUCT && numberOfProducts <= MAXIMUM_NO_OF_PRODUCTS;
     }
 
-    private boolean itemSizeNotLessThanSmallestUnit(int numberOfItems) {
-        return baseUnits / numberOfItems >= UNIT_ONE;
+    private boolean productSizeNotLessThanSmallestUnit(int numberOfProducts) {
+        return baseUnits / numberOfProducts >= MINIMUM_MEASUREMENT;
     }
 
-    private void setItemsInPackByAdjustingItemSize(int numberOfItemsInPack) {
-        this.numberOfProducts = numberOfItemsInPack;
+    private void setNumberOfProductsByAdjustingProductSize(int numberOfProducts) {
+        this.numberOfProducts = numberOfProducts;
         setNewProductMeasurements();
     }
 
-    private boolean itemSizeMultipliedByNumberOfItemsDoNotExceedMaxMass(int numberOfItems) {
-        return productSize * numberOfItems <= MAX_MASS;
+    private boolean packSizeDoesNotExceedMaxMass(int numberOfProducts) {
+        return productSize * numberOfProducts <= MAX_MASS;
     }
 
-    private void setItemsInPackByAdjustingPackSize(int numberOfItems) {
-        this.numberOfProducts = numberOfItems;
-        baseUnitsAreSet(productSize * numberOfItems);
+    private void setNumberOfProductsByAdjustingPackSize(int numberOfProducts) {
+        this.numberOfProducts = numberOfProducts;
+        baseUnitsAreSet(productSize * numberOfProducts);
     }
 
     @Override
     public int getUnitOneLabelStringResourceId() {
-        return unitOneLabelStringResourceId;
+        return 0;
     }
 
     @Override
@@ -180,16 +167,19 @@ public class MetricMass implements UnitOfMeasure {
 
     @Override
     public boolean packMeasurementOneIsSet(double packMeasurementOne) {
-        if (baseUnitsAreSet(baseSiUnitsWithPackMeasurementOne(packMeasurementOne))) {
-            lastMeasurementUpdated = PACK_MEASUREMENT;
+        if (baseUnitsAreSet(baseUnitsWithPackMeasurementOne(packMeasurementOne))) {
+            lastMeasurementUpdated = PACK_MEASUREMENT_LAST_UPDATED;
             return true;
 
-        } else baseUnitsAreSet(baseSiUnitsWithPackMeasurementOne(0.));
-        return false;
+        } else {
+            baseUnitsAreSet(baseUnitsWithPackMeasurementOne(0.));
+            lastMeasurementUpdated = PACK_MEASUREMENT_LAST_UPDATED;
+            return false;
+        }
     }
 
-    private double baseSiUnitsWithPackMeasurementOne(double packMeasurementOne) {
-        return packMeasurementTwo * UNIT_TWO + packMeasurementOne;
+    private double baseUnitsWithPackMeasurementOne(double packMeasurementOne) {
+        return (packMeasurementTwo * UNIT_TWO) + (packMeasurementOne * UNIT_ONE);
     }
 
     @Override
@@ -199,21 +189,25 @@ public class MetricMass implements UnitOfMeasure {
 
     @Override
     public boolean productMeasurementOneIsSet(double productMeasurementOne) {
-        if (baseUnitsAreSet(baseSiUnitsWithItemMeasurementOne(productMeasurementOne))) {
-            lastMeasurementUpdated = PRODUCT_MEASUREMENT;
+        if (baseUnitsAreSet(baseUnitsWithProductMeasurementOne(productMeasurementOne))) {
+            lastMeasurementUpdated = PRODUCT_MEASUREMENT_LAST_UPDATED;
             return true;
 
-        } else baseUnitsAreSet(baseSiUnitsWithItemMeasurementOne(0.));
-        return false;
+        } else {
+            baseUnitsAreSet(baseUnitsWithProductMeasurementOne(0.));
+            lastMeasurementUpdated = PRODUCT_MEASUREMENT_LAST_UPDATED;
+            return false;
+        }
     }
 
-    private double baseSiUnitsWithItemMeasurementOne(double itemMeasurementOne) {
-        return (productMeasurementTwo * UNIT_TWO + itemMeasurementOne) * numberOfProducts;
+    private double baseUnitsWithProductMeasurementOne(double productMeasurementOne) {
+        return ((productMeasurementTwo * UNIT_TWO) + (productMeasurementOne * UNIT_ONE)) *
+                numberOfProducts;
     }
 
     @Override
     public int getUnitTwoLabelStringResourceId() {
-        return unitTwoLabelStringResourceId;
+        return 0;
     }
 
     @Override
@@ -224,11 +218,14 @@ public class MetricMass implements UnitOfMeasure {
     @Override
     public boolean packMeasurementTwoIsSet(int packMeasurementTwo) {
         if (baseUnitsAreSet(baseSiUnitsWithPackMeasurementTwo(packMeasurementTwo))) {
-            lastMeasurementUpdated = PACK_MEASUREMENT;
+            lastMeasurementUpdated = PACK_MEASUREMENT_LAST_UPDATED;
             return true;
 
-        } else baseUnitsAreSet(baseSiUnitsWithPackMeasurementTwo(0));
-        return false;
+        } else {
+            baseUnitsAreSet(baseSiUnitsWithPackMeasurementTwo(0));
+            lastMeasurementUpdated = PACK_MEASUREMENT_LAST_UPDATED;
+            return false;
+        }
     }
 
     private double baseSiUnitsWithPackMeasurementTwo(int packMeasurementTwo) {
@@ -242,21 +239,24 @@ public class MetricMass implements UnitOfMeasure {
 
     @Override
     public boolean productMeasurementTwoIsSet(int productMeasurementTwo) {
-        if (baseUnitsAreSet(baseSiUnitsWithItemMeasurementTwo(productMeasurementTwo))) {
-            lastMeasurementUpdated = PRODUCT_MEASUREMENT;
+        if (baseUnitsAreSet(baseUnitsWithProductMeasurementTwo(productMeasurementTwo))) {
+            lastMeasurementUpdated = PRODUCT_MEASUREMENT_LAST_UPDATED;
             return true;
 
-        } else baseUnitsAreSet(baseSiUnitsWithItemMeasurementTwo(0));
-        return false;
+        } else {
+            baseUnitsAreSet(baseUnitsWithProductMeasurementTwo(0));
+            lastMeasurementUpdated = PRODUCT_MEASUREMENT_LAST_UPDATED;
+            return false;
+        }
     }
 
-    private double baseSiUnitsWithItemMeasurementTwo(int itemMeasurementTwo) {
-        return (itemMeasurementTwo * UNIT_TWO + productMeasurementOne) * numberOfProducts;
+    private double baseUnitsWithProductMeasurementTwo(int productMeasurementTwo) {
+        return (productMeasurementTwo * UNIT_TWO + productMeasurementOne) * numberOfProducts;
     }
 
     @Override
     public boolean isValidMeasurement() {
-        return (baseUnits >= UNIT_ONE && baseUnits <= MAX_MASS);
+        return (baseUnits >= MINIMUM_MEASUREMENT && baseUnits <= MAX_MASS);
     }
 
     @Override

@@ -72,7 +72,7 @@ public class ProductCatalogRecyclerAdapter
 
         /* Set the unit of measure */
         holder.UoMTV.setText(Converters.getUnitOfMeasureString
-                (context, productModel.getUnitOfMeasureSubType()));
+                (context, productModel.getUnitOfMeasureSubtype()));
     }
 
     /* Returns the number of items in the adapter */

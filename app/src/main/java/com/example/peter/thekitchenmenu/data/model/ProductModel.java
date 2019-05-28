@@ -36,7 +36,7 @@ public class ProductModel extends BaseObservable implements Parcelable {
     // ProductMeasurementModel fields
     private double baseSiUnits;
     private int numberOfItems;
-    private int unitOfMeasureSubType;
+    private int unitOfMeasureSubtype;
 
     // ProductUserDataModel fields.
     private int userProductDataId;
@@ -81,7 +81,7 @@ public class ProductModel extends BaseObservable implements Parcelable {
         this.shelfLife = productEntity.getShelfLife();
         this.numberOfItems = productEntity.getNumberOfItems();
         this.baseSiUnits = productEntity.getBaseSiUnits();
-        this.unitOfMeasureSubType = productEntity.getUnitOfMeasureSubType();
+        this.unitOfMeasureSubtype = productEntity.getUnitOfMeasureSubtype();
         this.packAvePrice = productEntity.getPackAvePrice();
         this.createdBy = productEntity.getCreatedBy();
         this.remoteImageUri = productEntity.getRemoteLargeImageUri();
@@ -109,7 +109,7 @@ public class ProductModel extends BaseObservable implements Parcelable {
         this.shelfLife = productEntity.getShelfLife();
         this.numberOfItems = productEntity.getNumberOfItems();
         this.baseSiUnits = productEntity.getBaseSiUnits();
-        this.unitOfMeasureSubType = productEntity.getUnitOfMeasureSubType();
+        this.unitOfMeasureSubtype = productEntity.getUnitOfMeasureSubtype();
         this.packAvePrice = productEntity.getPackAvePrice();
         this.createdBy = productEntity.getCreatedBy();
         this.remoteImageUri = productEntity.getRemoteLargeImageUri();
@@ -137,7 +137,7 @@ public class ProductModel extends BaseObservable implements Parcelable {
             int shelfLife,
             int numberOfItems,
             double baseSiUnits,
-            int unitOfMeasureSubType,
+            int unitOfMeasureSubtype,
             double packAvePrice,
             String createdBy,
             String remoteImageUri,
@@ -162,7 +162,7 @@ public class ProductModel extends BaseObservable implements Parcelable {
         this.shelfLife = shelfLife;
         this.numberOfItems = numberOfItems;
         this.baseSiUnits = baseSiUnits;
-        this.unitOfMeasureSubType = unitOfMeasureSubType;
+        this.unitOfMeasureSubtype = unitOfMeasureSubtype;
         this.packAvePrice = packAvePrice;
         this.createdBy = createdBy;
         this.remoteImageUri = remoteImageUri;
@@ -189,7 +189,7 @@ public class ProductModel extends BaseObservable implements Parcelable {
         shelfLife = in.readInt();
         numberOfItems = in.readInt();
         baseSiUnits = in.readDouble();
-        unitOfMeasureSubType = in.readInt();
+        unitOfMeasureSubtype = in.readInt();
         packAvePrice = in.readDouble();
         createdBy = in.readString();
         remoteImageUri = in.readString();
@@ -219,7 +219,7 @@ public class ProductModel extends BaseObservable implements Parcelable {
         result.put(SHELF_LIFE, shelfLife);
         result.put(NUMBER_OF_ITEMS, numberOfItems);
         result.put(BASE_SI_UNITS, baseSiUnits);
-        result.put(UNIT_OF_MEASURE_SUB_TYPE, unitOfMeasureSubType);
+        result.put(UNIT_OF_MEASURE_SUB_TYPE, unitOfMeasureSubtype);
         result.put(PROD_COMM_PRICE_AVE, packAvePrice);
         result.put(CREATED_BY, createdBy);
         result.put(REMOTE_LARGE_IMAGE_URI, remoteImageUri);
@@ -240,7 +240,7 @@ public class ProductModel extends BaseObservable implements Parcelable {
         result.put(SHELF_LIFE, shelfLife);
         result.put(NUMBER_OF_ITEMS, numberOfItems);
         result.put(BASE_SI_UNITS, baseSiUnits);
-        result.put(UNIT_OF_MEASURE_SUB_TYPE, unitOfMeasureSubType);
+        result.put(UNIT_OF_MEASURE_SUB_TYPE, unitOfMeasureSubtype);
         result.put(PROD_COMM_PRICE_AVE, packAvePrice);
         result.put(CREATED_BY, createdBy);
         result.put(REMOTE_LARGE_IMAGE_URI, remoteImageUri);
@@ -286,7 +286,7 @@ public class ProductModel extends BaseObservable implements Parcelable {
         parcel.writeInt(shelfLife);
         parcel.writeInt(numberOfItems);
         parcel.writeDouble(baseSiUnits);
-        parcel.writeInt(unitOfMeasureSubType);
+        parcel.writeInt(unitOfMeasureSubtype);
         parcel.writeDouble(packAvePrice);
         parcel.writeString(createdBy);
         parcel.writeString(remoteImageUri);
@@ -315,7 +315,7 @@ public class ProductModel extends BaseObservable implements Parcelable {
                 ", shelfLife: " + shelfLife + '\'' +
                 ", numberOfItemsChanged: '" + numberOfItems + '\'' +
                 ", baseSiUnits: '" + baseSiUnits + '\'' +
-                ", unitOfMeasureSubType: '" + unitOfMeasureSubType + '\'' +
+                ", unitOfMeasureSubtype: '" + unitOfMeasureSubtype + '\'' +
                 ", packAvePrice: '" + packAvePrice + '\'' +
                 ", createdBy: '" + createdBy + '\'' +
                 ", remoteImageUri: '" + remoteImageUri + '\'' +
@@ -334,7 +334,7 @@ public class ProductModel extends BaseObservable implements Parcelable {
         setNumberOfItems(entity.getNumberOfItems());
         setShelfLife(entity.getShelfLife());
         setBaseSiUnits(entity.getBaseSiUnits());
-        setUnitOfMeasureSubType(entity.getUnitOfMeasureSubType());
+        setUnitOfMeasureSubtype(entity.getUnitOfMeasureSubtype());
         setPackAvePrice(entity.getPackAvePrice());
         setCreatedBy(entity.getCreatedBy());
         setRemoteImageUri(entity.getRemoteLargeImageUri());
@@ -472,12 +472,12 @@ public class ProductModel extends BaseObservable implements Parcelable {
         this.baseSiUnits = baseSiUnits;
     }
 
-    public int getUnitOfMeasureSubType() {
-        return unitOfMeasureSubType;
+    public int getUnitOfMeasureSubtype() {
+        return unitOfMeasureSubtype;
     }
 
-    public void setUnitOfMeasureSubType(int unitOfMeasureSubType) {
-        this.unitOfMeasureSubType = unitOfMeasureSubType;
+    public void setUnitOfMeasureSubtype(int unitOfMeasureSubtype) {
+        this.unitOfMeasureSubtype = unitOfMeasureSubtype;
     }
 
     public double getPackAvePrice() {

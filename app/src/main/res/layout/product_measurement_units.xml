@@ -7,7 +7,7 @@
 
     <data>
         <import type="android.view.View" />
-        <import type="com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubTypeConverter" />
+        <import type="com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtypeConverter" />
         <import type="com.example.peter.thekitchenmenu.utils.NumberStringFormatConverter" />
 
         <variable
@@ -36,9 +36,9 @@
             app:layout_constraintEnd_toStartOf="@+id/pack_measurement_label_two"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:setUpEditTextForSubTypeSelected='@{viewModel.subType}'
+            app:setUpEditTextForSubtypeSelected="@{viewModel.subtype}"
             android:afterTextChanged="@{() -> measurementHandler.newMeasurementReceived(packEditableMeasurementTwo)}"
-            android:text="@{NumberStringFormatConverter.toFormat(packEditableMeasurementTwo, viewModel.packMeasurementTwo, viewModel.subType)}"
+            android:text="@{NumberStringFormatConverter.toFormat(packEditableMeasurementTwo, viewModel.packMeasurementTwo, viewModel.subtype)}"
             app:fieldVisibilityAdapterNumberOfUnits='@{viewModel.numberOfMeasurementUnits}'
             tools:text="22" />
 
@@ -56,7 +56,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/pack_editable_measurement_two"
             app:layout_constraintTop_toTopOf="@+id/pack_editable_measurement_two"
-            app:setLabelForSubTypeSelected='@{viewModel.subType}'
+            app:setLabelForSubtypeSelected="@{viewModel.subtype}"
             app:fieldVisibilityAdapterNumberOfUnits='@{viewModel.numberOfMeasurementUnits}'
             tools:text="l" />
 
@@ -73,8 +73,8 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             android:afterTextChanged="@{() -> measurementHandler.newMeasurementReceived(itemEditableMeasurementTwo)}"
-            android:text="@{NumberStringFormatConverter.toFormat(itemEditableMeasurementTwo, viewModel.itemMeasurementTwo, viewModel.subType)}"
-            app:setUpEditTextForSubTypeSelected='@{viewModel.subType}'
+            android:text="@{NumberStringFormatConverter.toFormat(itemEditableMeasurementTwo, viewModel.itemMeasurementTwo, viewModel.subtype)}"
+            app:setUpEditTextForSubtypeSelected="@{viewModel.subtype}"
             app:fieldVisibilityAdapterNumberOfUnits='@{viewModel.numberOfMeasurementUnits}'
             app:fieldVisibilityAdapterNumberOfItems='@{viewModel.numberOfItems}'
             tools:text="22" />
@@ -91,7 +91,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/item_editable_measurement_two"
             app:layout_constraintTop_toTopOf="@+id/item_editable_measurement_two"
-            app:setLabelForSubTypeSelected='@{viewModel.subType}'
+            app:setLabelForSubtypeSelected="@{viewModel.subtype}"
             app:fieldVisibilityAdapterNumberOfItems='@{viewModel.numberOfItems}'
             app:fieldVisibilityAdapterNumberOfUnits='@{viewModel.numberOfMeasurementUnits}'
             tools:text="l" />
@@ -106,9 +106,9 @@
             app:layout_constraintEnd_toStartOf="@+id/pack_measurement_label_one"
             app:layout_constraintStart_toEndOf="@+id/pack_measurement_label_two"
             app:layout_constraintTop_toTopOf="@+id/pack_measurement_label_two"
-            app:setUpEditTextForSubTypeSelected='@{viewModel.subType}'
+            app:setUpEditTextForSubtypeSelected="@{viewModel.subtype}"
             android:afterTextChanged="@{() -> measurementHandler.newMeasurementReceived(packEditableMeasurementOne)}"
-            android:text="@{NumberStringFormatConverter.toFormat(packEditableMeasurementOne, viewModel.packMeasurementOne, viewModel.subType)}"
+            android:text="@{NumberStringFormatConverter.toFormat(packEditableMeasurementOne, viewModel.packMeasurementOne, viewModel.subtype)}"
             tools:text="16" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -123,7 +123,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/pack_editable_measurement_one"
             app:layout_constraintTop_toTopOf="@+id/pack_editable_measurement_one"
-            app:setLabelForSubTypeSelected='@{viewModel.subType}'
+            app:setLabelForSubtypeSelected="@{viewModel.subtype}"
             tools:text="ml" />
 
         <androidx.appcompat.widget.AppCompatEditText
@@ -136,9 +136,9 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/item_measurement_label_two"
             app:layout_constraintTop_toTopOf="@+id/item_measurement_label_two"
-            app:setUpEditTextForSubTypeSelected='@{viewModel.subType}'
+            app:setUpEditTextForSubtypeSelected="@{viewModel.subtype}"
             app:fieldVisibilityAdapterNumberOfItems='@{viewModel.numberOfItems}'
-            android:text="@{NumberStringFormatConverter.toFormat(itemEditableMeasurementOne, viewModel.itemMeasurementOne, viewModel.subType)}"
+            android:text="@{NumberStringFormatConverter.toFormat(itemEditableMeasurementOne, viewModel.itemMeasurementOne, viewModel.subtype)}"
             android:afterTextChanged="@{() -> measurementHandler.newMeasurementReceived(itemEditableMeasurementOne)}"
             tools:text="16" />
 
@@ -157,7 +157,7 @@
             app:layout_constraintStart_toEndOf="@+id/item_editable_measurement_one"
             app:layout_constraintTop_toTopOf="@+id/item_editable_measurement_one"
             app:fieldVisibilityAdapterNumberOfItems='@{viewModel.numberOfItems}'
-            app:setLabelForSubTypeSelected='@{viewModel.subType}'
+            app:setLabelForSubtypeSelected="@{viewModel.subtype}"
             tools:text="ml" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

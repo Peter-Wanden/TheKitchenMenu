@@ -1,22 +1,22 @@
 package com.example.peter.thekitchenmenu.data.model;
 
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubType;
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtype;
 import com.google.firebase.database.annotations.NotNull;
 
 public class ProductMeasurementModel {
 
     private static final String TAG = "tkm - MeasurementModel";
 
-    private MeasurementSubType measurementSubType;
+    private MeasurementSubtype measurementSubtype;
     private int numberOfItems = 1;
     private double baseSiUnits;
 
-    public MeasurementSubType getMeasurementSubType() {
-        return measurementSubType;
+    public MeasurementSubtype getMeasurementSubtype() {
+        return measurementSubtype;
     }
 
-    public void setMeasurementSubType(MeasurementSubType measurementSubType) {
-        this.measurementSubType = measurementSubType;
+    public void setMeasurementSubtype(MeasurementSubtype measurementSubtype) {
+        this.measurementSubtype = measurementSubtype;
     }
 
     public int getNumberOfItems() {
@@ -39,7 +39,7 @@ public class ProductMeasurementModel {
     @Override
     public String toString() {
         return "\ntkm-ProductMeasurementModel{" +
-                "\nmeasurementSubType="         + measurementSubType +
+                "\nmeasurementSubtype="         + measurementSubtype +
                 "\nnumberOfItems="              + numberOfItems +
                 "\nbaseSiUnits="                + baseSiUnits +
                 '}';

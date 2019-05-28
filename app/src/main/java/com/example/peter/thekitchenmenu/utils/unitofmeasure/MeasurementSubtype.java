@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
-public enum MeasurementSubType {
+public enum MeasurementSubtype {
 
     TYPE_METRIC_MASS(MeasurementType.TYPE_MASS) {
 
@@ -50,7 +50,7 @@ public enum MeasurementSubType {
         return measurementType;
     }
 
-    MeasurementSubType(MeasurementType measurementType) {
+    MeasurementSubtype(MeasurementType measurementType) {
         this.measurementType = measurementType;
     }
 

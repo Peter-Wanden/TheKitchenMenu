@@ -30,7 +30,7 @@ public class ProductEntity implements Parcelable {
     public static final String NUMBER_OF_ITEMS = "number_of_items";
     public static final String SHELF_LIFE = "shelfLife";
     public static final String BASE_SI_UNITS = "baseSiUnits";
-    public static final String UNIT_OF_MEASURE_SUB_TYPE = "unitOfMeasureSubType";
+    public static final String UNIT_OF_MEASURE_SUB_TYPE = "unitOfMeasureSubtype";
     public static final String PROD_COMM_PRICE_AVE = "packAvePrice";
     public static final String CREATED_BY = "createdBy";
     public static final String WEB_IMAGE_URL = "webImageUrl";
@@ -65,7 +65,7 @@ public class ProductEntity implements Parcelable {
     private double baseSiUnits;
 
     @ColumnInfo(name = UNIT_OF_MEASURE_SUB_TYPE)
-    private int unitOfMeasureSubType;
+    private int unitOfMeasureSubtype;
 
     @ColumnInfo(name = PROD_COMM_PRICE_AVE)
     private double packAvePrice;
@@ -105,7 +105,7 @@ public class ProductEntity implements Parcelable {
                          int shelfLife,
                          int numberOfItems,
                          double baseSiUnits,
-                         int unitOfMeasureSubType,
+                         int unitOfMeasureSubtype,
                          double packAvePrice,
                          String createdBy,
                          String webImageUrl,
@@ -123,7 +123,7 @@ public class ProductEntity implements Parcelable {
         this.numberOfItems = numberOfItems;
         this.shelfLife = shelfLife;
         this.baseSiUnits = baseSiUnits;
-        this.unitOfMeasureSubType = unitOfMeasureSubType;
+        this.unitOfMeasureSubtype = unitOfMeasureSubtype;
         this.packAvePrice = packAvePrice;
         this.createdBy = createdBy;
         this.webImageUrl = webImageUrl;
@@ -144,7 +144,7 @@ public class ProductEntity implements Parcelable {
         numberOfItems = in.readInt();
         shelfLife = in.readInt();
         baseSiUnits = in.readDouble();
-        unitOfMeasureSubType = in.readInt();
+        unitOfMeasureSubtype = in.readInt();
         packAvePrice = in.readDouble();
         createdBy = in.readString();
         webImageUrl = in.readString();
@@ -165,7 +165,7 @@ public class ProductEntity implements Parcelable {
         dest.writeInt(numberOfItems);
         dest.writeInt(shelfLife);
         dest.writeDouble(baseSiUnits);
-        dest.writeInt(unitOfMeasureSubType);
+        dest.writeInt(unitOfMeasureSubtype);
         dest.writeDouble(packAvePrice);
         dest.writeString(createdBy);
         dest.writeString(webImageUrl);
@@ -205,7 +205,7 @@ public class ProductEntity implements Parcelable {
         result.put(NUMBER_OF_ITEMS, numberOfItems);
         result.put(SHELF_LIFE, shelfLife);
         result.put(BASE_SI_UNITS, baseSiUnits);
-        result.put(UNIT_OF_MEASURE_SUB_TYPE, unitOfMeasureSubType);
+        result.put(UNIT_OF_MEASURE_SUB_TYPE, unitOfMeasureSubtype);
         result.put(PROD_COMM_PRICE_AVE, packAvePrice);
         result.put(CREATED_BY, createdBy);
         result.put(WEB_IMAGE_URL, webImageUrl);
@@ -281,12 +281,12 @@ public class ProductEntity implements Parcelable {
         this.baseSiUnits = baseSiUnits;
     }
 
-    public int getUnitOfMeasureSubType() {
-        return unitOfMeasureSubType;
+    public int getUnitOfMeasureSubtype() {
+        return unitOfMeasureSubtype;
     }
 
-    public void setUnitOfMeasureSubType(int unitOfMeasureSubType) {
-        this.unitOfMeasureSubType = unitOfMeasureSubType;
+    public void setUnitOfMeasureSubtype(int unitOfMeasureSubtype) {
+        this.unitOfMeasureSubtype = unitOfMeasureSubtype;
     }
 
     public double getPackAvePrice() {

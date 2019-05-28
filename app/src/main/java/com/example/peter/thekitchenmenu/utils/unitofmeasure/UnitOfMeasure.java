@@ -6,27 +6,27 @@ public interface UnitOfMeasure {
 
     int getTypeStringResourceId();
 
-    MeasurementSubType getMeasurementSubType();
+    MeasurementSubtype getMeasurementSubtype();
 
-    double getBaseSiUnits();
-    boolean baseSiUnitsAreSet(double baseSiUnits);
+    double getBaseUnits();
+    boolean baseUnitsAreSet(double baseSiUnits);
 
-    int getNumberOfItems();
-    boolean numberOfItemsAreSet(int numberOfItems);
+    int getNumberOfProducts();
+    boolean numberOfProductsIsSet(int numberOfItems);
 
     int getNumberOfMeasurementUnits();
 
     int getUnitOneLabelStringResourceId();
     double getPackMeasurementOne();
     boolean packMeasurementOneIsSet(double packMeasurementOne);
-    double getItemMeasurementOne();
-    boolean itemMeasurementOneIsSet(double itemMeasurementOne);
+    double getProductMeasurementOne();
+    boolean productMeasurementOneIsSet(double productMeasurementOne);
 
     int getUnitTwoLabelStringResourceId();
     int getPackMeasurementTwo();
     boolean packMeasurementTwoIsSet(int packMeasurementTwo);
-    int getItemMeasurementTwo();
-    boolean itemMeasurementTwoIsSet(int itemMeasurementTwo);
+    int getProductMeasurementTwo();
+    boolean productMeasurementTwoIsSet(int productMeasurementTwo);
 
     boolean isValidMeasurement();
     Pair[] getMeasurementUnitNumberTypeArray();

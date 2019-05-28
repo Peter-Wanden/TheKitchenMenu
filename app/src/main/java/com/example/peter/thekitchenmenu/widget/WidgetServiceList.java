@@ -92,7 +92,7 @@ public class WidgetServiceList
             views.setTextViewText(
                     R.id.list_item_product_widget_tv_unit_of_measure,
                     Converters.getUnitOfMeasureString
-                            (context, currentProduct.getUnitOfMeasureSubType()));
+                            (context, currentProduct.getUnitOfMeasureSubtype()));
 
             return views;
         }

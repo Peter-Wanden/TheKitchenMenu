@@ -37,13 +37,13 @@ public class ImperialVolumeTest {
     @Test
     public void testBaseSiInRangeMin() { // IN RANGE MIN
 
-        assertThat(imperialVolume.baseSiUnitsAreSet(UNIT_FLUID_OUNCE_DECIMAL), is(true));
+        assertThat(imperialVolume.baseUnitsAreSet(UNIT_FLUID_OUNCE_DECIMAL), is(true));
 
         assertThat(imperialVolume.getPackMeasurementOne(), is(.1));
         assertThat(imperialVolume.getPackMeasurementTwo(), is(0));
-        assertThat(imperialVolume.getItemMeasurementOne(), is(.1));
-        assertThat(imperialVolume.getItemMeasurementTwo(), is(0));
-        assertThat(imperialVolume.getBaseSiUnits(), is(UNIT_FLUID_OUNCE_DECIMAL));
+        assertThat(imperialVolume.getProductMeasurementOne(), is(.1));
+        assertThat(imperialVolume.getProductMeasurementTwo(), is(0));
+        assertThat(imperialVolume.getBaseUnits(), is(UNIT_FLUID_OUNCE_DECIMAL));
 
         System.out.println();
     }
@@ -51,14 +51,14 @@ public class ImperialVolumeTest {
     @Test
     public void testBaseSiOutOfRangeMin() { // OUT OF RANGE MIN
 
-        assertThat(imperialVolume.baseSiUnitsAreSet(UNIT_FLUID_OUNCE_DECIMAL - .00000001),
+        assertThat(imperialVolume.baseUnitsAreSet(UNIT_FLUID_OUNCE_DECIMAL - .00000001),
                 is(false));
 
         assertThat(imperialVolume.getPackMeasurementOne(), is(0.));
-        assertThat(imperialVolume.getItemMeasurementOne(), is(0.));
+        assertThat(imperialVolume.getProductMeasurementOne(), is(0.));
         assertThat(imperialVolume.getPackMeasurementTwo(), is(0));
-        assertThat(imperialVolume.getItemMeasurementTwo(), is(0));
-        assertThat(imperialVolume.getBaseSiUnits(), is(0.));
+        assertThat(imperialVolume.getProductMeasurementTwo(), is(0));
+        assertThat(imperialVolume.getBaseUnits(), is(0.));
 
         System.out.println();
     }
@@ -66,13 +66,13 @@ public class ImperialVolumeTest {
     @Test
     public void testBaseSiInRangeMax() { // IN RANGE MAX
 
-        assertThat(imperialVolume.baseSiUnitsAreSet((MAX_VOLUME)), is(true));
+        assertThat(imperialVolume.baseUnitsAreSet((MAX_VOLUME)), is(true));
 
         assertThat(imperialVolume.getPackMeasurementOne(), is(12.));
         assertThat(imperialVolume.getPackMeasurementTwo(), is(17));
-        assertThat(imperialVolume.getItemMeasurementOne(), is(12.));
-        assertThat(imperialVolume.getItemMeasurementTwo(), is(17));
-        assertThat(imperialVolume.getBaseSiUnits(), is(MAX_VOLUME));
+        assertThat(imperialVolume.getProductMeasurementOne(), is(12.));
+        assertThat(imperialVolume.getProductMeasurementTwo(), is(17));
+        assertThat(imperialVolume.getBaseUnits(), is(MAX_VOLUME));
 
         System.out.println();
     }
@@ -80,13 +80,13 @@ public class ImperialVolumeTest {
     @Test
     public void testBaseSiOutOfRangeMax() { // OUT OF RANGE MAX
 
-        assertThat(imperialVolume.baseSiUnitsAreSet(MAX_VOLUME + .00000001), is(false));
+        assertThat(imperialVolume.baseUnitsAreSet(MAX_VOLUME + .00000001), is(false));
 
         assertThat(imperialVolume.getPackMeasurementOne(), is(0.));
         assertThat(imperialVolume.getPackMeasurementTwo(), is(0));
-        assertThat(imperialVolume.getItemMeasurementOne(), is(0.));
-        assertThat(imperialVolume.getItemMeasurementTwo(), is(0));
-        assertThat(imperialVolume.getBaseSiUnits(), is(0.));
+        assertThat(imperialVolume.getProductMeasurementOne(), is(0.));
+        assertThat(imperialVolume.getProductMeasurementTwo(), is(0));
+        assertThat(imperialVolume.getBaseUnits(), is(0.));
 
         System.out.println();
     }
@@ -94,16 +94,16 @@ public class ImperialVolumeTest {
     @Test
     public void testBaseSiViolatesMinimumItemSize() { // CONDITION: BASE SI SMALLER THAN SMALLEST ITEM
 
-        assertThat(imperialVolume.numberOfItemsAreSet(2), is(true));
+        assertThat(imperialVolume.numberOfProductsIsSet(2), is(true));
 
-        assertThat(imperialVolume.baseSiUnitsAreSet(UNIT_FLUID_OUNCE_DECIMAL - .00000001),
+        assertThat(imperialVolume.baseUnitsAreSet(UNIT_FLUID_OUNCE_DECIMAL - .00000001),
                 is(false));
 
         assertThat(imperialVolume.getPackMeasurementOne(), is(0.));
         assertThat(imperialVolume.getPackMeasurementTwo(), is(0));
-        assertThat(imperialVolume.getItemMeasurementOne(), is(0.));
-        assertThat(imperialVolume.getItemMeasurementTwo(), is(0));
-        assertThat(imperialVolume.getBaseSiUnits(), is(0.));
+        assertThat(imperialVolume.getProductMeasurementOne(), is(0.));
+        assertThat(imperialVolume.getProductMeasurementTwo(), is(0));
+        assertThat(imperialVolume.getBaseUnits(), is(0.));
 
         System.out.println();
     }
@@ -111,15 +111,15 @@ public class ImperialVolumeTest {
     @Test
     public void testBaseSiAtMinimumItemSize() { // CONDITION: BASE SI SAME AS SMALLEST ITEM
 
-        assertThat(imperialVolume.numberOfItemsAreSet(2), is(true));
+        assertThat(imperialVolume.numberOfProductsIsSet(2), is(true));
 
-        assertThat(imperialVolume.baseSiUnitsAreSet(UNIT_FLUID_OUNCE_DECIMAL * 2), is(true));
+        assertThat(imperialVolume.baseUnitsAreSet(UNIT_FLUID_OUNCE_DECIMAL * 2), is(true));
 
         assertThat(imperialVolume.getPackMeasurementOne(), is(.2));
         assertThat(imperialVolume.getPackMeasurementTwo(), is(0));
-        assertThat(imperialVolume.getItemMeasurementOne(), is(.1));
-        assertThat(imperialVolume.getItemMeasurementTwo(), is(0));
-        assertThat(imperialVolume.getBaseSiUnits(), is(UNIT_FLUID_OUNCE_DECIMAL * 2));
+        assertThat(imperialVolume.getProductMeasurementOne(), is(.1));
+        assertThat(imperialVolume.getProductMeasurementTwo(), is(0));
+        assertThat(imperialVolume.getBaseUnits(), is(UNIT_FLUID_OUNCE_DECIMAL * 2));
 
         System.out.println();
     }
@@ -128,15 +128,15 @@ public class ImperialVolumeTest {
     public void testBaseSiRetrieveFromPackAndItem() {// CONDITION: BASE SI SET, CHECK PACK AND ITEM UPDATED
 
         // Set base SI
-        assertThat(imperialVolume.baseSiUnitsAreSet((UNIT_PINT * 12) + (UNIT_FLUID_OUNCE * 2)),
+        assertThat(imperialVolume.baseUnitsAreSet((UNIT_PINT * 12) + (UNIT_FLUID_OUNCE * 2)),
                 is(true));
 
         // Check pack and item values have updated correctly
         assertThat(imperialVolume.getPackMeasurementOne(), is(2.));
         assertThat(imperialVolume.getPackMeasurementTwo(), is(12));
-        assertThat(imperialVolume.getItemMeasurementOne(), is(2.));
-        assertThat(imperialVolume.getItemMeasurementTwo(), is(12));
-        assertThat(imperialVolume.getBaseSiUnits(),
+        assertThat(imperialVolume.getProductMeasurementOne(), is(2.));
+        assertThat(imperialVolume.getProductMeasurementTwo(), is(12));
+        assertThat(imperialVolume.getBaseUnits(),
                 is((UNIT_PINT * 12) + (UNIT_FLUID_OUNCE * 2)));
 
         System.out.println();
@@ -158,8 +158,8 @@ public class ImperialVolumeTest {
         // Check value set
         assertThat(imperialVolume.getPackMeasurementOne(), is(11.9));
         assertThat(imperialVolume.getPackMeasurementTwo(), is(17));
-        assertThat(imperialVolume.getItemMeasurementOne(), is(11.9));
-        assertThat(imperialVolume.getItemMeasurementTwo(), is(17));
+        assertThat(imperialVolume.getProductMeasurementOne(), is(11.9));
+        assertThat(imperialVolume.getProductMeasurementTwo(), is(17));
 
         System.out.println();
     }
@@ -177,9 +177,9 @@ public class ImperialVolumeTest {
         // Check values no changes
         assertThat(imperialVolume.getPackMeasurementOne(), is(0.));
         assertThat(imperialVolume.getPackMeasurementTwo(), is(0));
-        assertThat(imperialVolume.getItemMeasurementOne(), is(0.));
-        assertThat(imperialVolume.getItemMeasurementTwo(), is(0));
-        assertThat(imperialVolume.getBaseSiUnits(), is(0.));
+        assertThat(imperialVolume.getProductMeasurementOne(), is(0.));
+        assertThat(imperialVolume.getProductMeasurementTwo(), is(0));
+        assertThat(imperialVolume.getBaseUnits(), is(0.));
 
         System.out.println();
     }
@@ -193,8 +193,8 @@ public class ImperialVolumeTest {
         // Check set
         assertThat(imperialVolume.getPackMeasurementOne(), is(.1));
         assertThat(imperialVolume.getPackMeasurementTwo(), is(0));
-        assertThat(imperialVolume.getItemMeasurementOne(), is(.1));
-        assertThat(imperialVolume.getItemMeasurementTwo(), is(0));
+        assertThat(imperialVolume.getProductMeasurementOne(), is(.1));
+        assertThat(imperialVolume.getProductMeasurementTwo(), is(0));
     }
 
     @Test
@@ -206,8 +206,8 @@ public class ImperialVolumeTest {
         // Check values unchanged
         assertThat(imperialVolume.getPackMeasurementOne(), is(0.));
         assertThat(imperialVolume.getPackMeasurementTwo(), is(0));
-        assertThat(imperialVolume.getItemMeasurementOne(), is(0.));
-        assertThat(imperialVolume.getItemMeasurementTwo(), is(0));
-        assertThat(imperialVolume.getBaseSiUnits(), is(0.));
+        assertThat(imperialVolume.getProductMeasurementOne(), is(0.));
+        assertThat(imperialVolume.getProductMeasurementTwo(), is(0));
+        assertThat(imperialVolume.getBaseUnits(), is(0.));
     }
 }

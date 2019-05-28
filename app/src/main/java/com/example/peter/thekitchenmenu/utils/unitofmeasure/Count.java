@@ -21,11 +21,11 @@ public class Count implements UnitOfMeasure {
 
     // Unit description string resource ID's
     private int typeStringResourceId;
-    private int subTypeStringResourceId;
+    private int subtypeStringResourceId;
     private int unitOneLabelStringResourceId;
     private int unitTwoLabelStringResourceId;
 
-    private int numberOfItems = SINGLE_ITEM;
+    private int numberOfItems = ONE_PRODUCT;
     private double itemSizeInCountUnits = UNIT_COUNT;
     private double baseUnits = 0.;
     private double packMeasurementCount = 0;
@@ -33,7 +33,7 @@ public class Count implements UnitOfMeasure {
 
     Count() {
         typeStringResourceId = R.string.count;
-        subTypeStringResourceId = R.string.count;
+        subtypeStringResourceId = R.string.count;
         unitOneLabelStringResourceId = R.string.each;
         unitTwoLabelStringResourceId = R.string.empty_string;
     }
@@ -49,17 +49,17 @@ public class Count implements UnitOfMeasure {
     }
 
     @Override
-    public MeasurementSubType getMeasurementSubType() {
-        return MeasurementSubType.TYPE_COUNT;
+    public MeasurementSubtype getMeasurementSubtype() {
+        return MeasurementSubtype.TYPE_COUNT;
     }
 
     @Override
-    public double getBaseSiUnits() {
+    public double getBaseUnits() {
         return baseUnits;
     }
 
     @Override
-    public boolean baseSiUnitsAreSet(double newCount) {
+    public boolean baseUnitsAreSet(double newCount) {
         if (newCountIsWithinBounds(newCount)) {
             this.baseUnits = newCount;
             packMeasurementCount = baseUnits;
@@ -88,12 +88,12 @@ public class Count implements UnitOfMeasure {
     }
 
     @Override
-    public int getNumberOfItems() {
+    public int getNumberOfProducts() {
         return numberOfItems;
     }
 
     @Override
-    public boolean numberOfItemsAreSet(int numberOfItems) {
+    public boolean numberOfProductsIsSet(int numberOfItems) {
         if (numberOfItemsInPackAreWithinBounds(numberOfItems)) {
 
             if (baseUnits == NOT_YET_SET) {
@@ -120,7 +120,7 @@ public class Count implements UnitOfMeasure {
     }
 
     private boolean numberOfItemsInPackAreWithinBounds(int numberOfItems) {
-        return numberOfItems >= SINGLE_ITEM && numberOfItems <= MULTI_PACK_MAXIMUM_NO_OF_ITEMS;
+        return numberOfItems >= ONE_PRODUCT && numberOfItems <= MAXIMUM_NO_OF_PRODUCTS;
     }
 
     private boolean itemSizeNotLessThanSmallestUnit(int numberOfItems) {
@@ -143,7 +143,7 @@ public class Count implements UnitOfMeasure {
 
     private void setItemsInPackByAdjustingPackSize(int numberOfItems) {
         this.numberOfItems = numberOfItems;
-        baseSiUnitsAreSet(itemSizeInCountUnits * numberOfItems);
+        baseUnitsAreSet(itemSizeInCountUnits * numberOfItems);
     }
 
     @Override
@@ -158,26 +158,26 @@ public class Count implements UnitOfMeasure {
 
     @Override
     public boolean packMeasurementOneIsSet(double packMeasurementOne) {
-        if (baseSiUnitsAreSet(packMeasurementOne)) {
+        if (baseUnitsAreSet(packMeasurementOne)) {
             lastMeasurementUpdated = PACK_MEASUREMENT;
             return true;
 
-        } else baseSiUnitsAreSet(0.);
+        } else baseUnitsAreSet(0.);
         return false;
     }
 
     @Override
-    public double getItemMeasurementOne() {
+    public double getProductMeasurementOne() {
         return itemMeasurementCount;
     }
 
     @Override
-    public boolean itemMeasurementOneIsSet(double itemMeasurementOne) {
-        if (baseSiUnitsAreSet(itemMeasurementOne * numberOfItems)) {
+    public boolean productMeasurementOneIsSet(double productMeasurementOne) {
+        if (baseUnitsAreSet(productMeasurementOne * numberOfItems)) {
             lastMeasurementUpdated = ITEM_MEASUREMENT;
             return true;
 
-        } else baseSiUnitsAreSet(0.);
+        } else baseUnitsAreSet(0.);
         return false;
     }
 
@@ -197,12 +197,12 @@ public class Count implements UnitOfMeasure {
     }
 
     @Override
-    public int getItemMeasurementTwo() {
+    public int getProductMeasurementTwo() {
         return 0;
     }
 
     @Override
-    public boolean itemMeasurementTwoIsSet(int itemMeasurementTwo) {
+    public boolean productMeasurementTwoIsSet(int productMeasurementTwo) {
         return false;
     }
 
@@ -214,7 +214,7 @@ public class Count implements UnitOfMeasure {
     @Override
     public Pair[] getMeasurementUnitNumberTypeArray() {
 
-        Pair<Integer, Integer> unitOneDigitsFilter = new Pair<>(MULTI_PACK_MAXIMUM_NO_OF_ITEMS, 0);
+        Pair<Integer, Integer> unitOneDigitsFilter = new Pair<>(MAXIMUM_NO_OF_PRODUCTS, 0);
         Pair<Integer, Integer> unitTwoDigitsFilter = new Pair<>(0, 0);
 
         Pair[] digitFilters = new Pair[2];
