@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
 import org.junit.Test;
 
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MAX_MASS;
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MAXIMUM_MASS;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
@@ -38,19 +38,19 @@ public class MetricMassTest {
     @Test
     public void testBaseSiInRangeMax() { // IN RANGE MAX
 
-        assertThat(metricMass.baseUnitsAreSet(MAX_MASS), is(true));
+        assertThat(metricMass.baseUnitsAreSet(MAXIMUM_MASS), is(true));
 
         assertThat(metricMass.getPackMeasurementOne(), is(0.));
         assertThat(metricMass.getPackMeasurementTwo(), is(10));
         assertThat(metricMass.getProductMeasurementOne(), is(0.));
         assertThat(metricMass.getProductMeasurementTwo(), is(10));
-        assertThat(metricMass.getBaseUnits(), is(MAX_MASS));
+        assertThat(metricMass.getBaseUnits(), is(MAXIMUM_MASS));
     }
 
     @Test
     public void testBaseSiOutOfRangeMax() { // OUT OF RANGE MAX
 
-        assertThat(metricMass.baseUnitsAreSet(MAX_MASS + 1), is(false));
+        assertThat(metricMass.baseUnitsAreSet(MAXIMUM_MASS + 1), is(false));
 
         assertThat(metricMass.getPackMeasurementOne(), is(0.));
         assertThat(metricMass.getPackMeasurementTwo(), is(0));
@@ -107,14 +107,14 @@ public class MetricMassTest {
     public void testMeasurementUnitOneInRangeMax() { // IN RANGE MAX
 
         // Set to max
-        assertThat(metricMass.packMeasurementOneIsSet(MAX_MASS), is(true));
+        assertThat(metricMass.packMeasurementOneIsSet(MAXIMUM_MASS), is(true));
 
         // Check value set
         assertThat(metricMass.getPackMeasurementOne(), is(0.));
         assertThat(metricMass.getPackMeasurementTwo(), is(10));
         assertThat(metricMass.getProductMeasurementOne(), is(0.));
         assertThat(metricMass.getProductMeasurementTwo(), is(10));
-        assertThat(metricMass.getBaseUnits(), is(MAX_MASS));
+        assertThat(metricMass.getBaseUnits(), is(MAXIMUM_MASS));
     }
 
     @Test
@@ -449,7 +449,7 @@ public class MetricMassTest {
 
         // Set pack measurement last changed by setting pack measurement
         assertThat(metricMass.packMeasurementTwoIsSet(10), is(true));
-        assertThat(metricMass.getBaseUnits(), is(MAX_MASS));
+        assertThat(metricMass.getBaseUnits(), is(MAXIMUM_MASS));
 
         // Change number of items
         assertThat(metricMass.numberOfProductsIsSet(10), is(true));
@@ -460,7 +460,7 @@ public class MetricMassTest {
         // Check item measurements have changed
         assertThat(metricMass.getProductMeasurementOne(), is(0.));
         assertThat(metricMass.getProductMeasurementTwo(), is(1));
-        assertThat(metricMass.getBaseUnits(), is(MAX_MASS));
+        assertThat(metricMass.getBaseUnits(), is(MAXIMUM_MASS));
 
         // Change number of items
         assertThat(metricMass.numberOfProductsIsSet(20), is(true));
@@ -470,7 +470,7 @@ public class MetricMassTest {
         // Check item measurements have changed
         assertThat(metricMass.getProductMeasurementOne(), is(500.));
         assertThat(metricMass.getProductMeasurementTwo(), is(0));
-        assertThat(metricMass.getBaseUnits(), is(MAX_MASS));
+        assertThat(metricMass.getBaseUnits(), is(MAXIMUM_MASS));
     }
 
     @Test

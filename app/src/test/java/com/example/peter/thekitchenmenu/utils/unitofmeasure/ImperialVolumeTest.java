@@ -5,8 +5,8 @@ import org.junit.Test;
 import java.math.RoundingMode;
 import java.text.NumberFormat;
 
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.BASE_SI_UNIT_VOLUME;
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MAX_VOLUME;
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MINIMUM_VOLUME;
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MAXIMUM_VOLUME;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
@@ -14,7 +14,7 @@ public class ImperialVolumeTest {
 
     private ImperialVolume imperialVolume = new ImperialVolume();
 
-    private static final double UNIT_PINT = BASE_SI_UNIT_VOLUME * 568.26125;
+    private static final double UNIT_PINT = MINIMUM_VOLUME * 568.26125;
     private static final double UNIT_FLUID_OUNCE = UNIT_PINT / 20;
     private static final double UNIT_FLUID_OUNCE_DECIMAL = UNIT_FLUID_OUNCE / 10;
 
@@ -66,13 +66,13 @@ public class ImperialVolumeTest {
     @Test
     public void testBaseSiInRangeMax() { // IN RANGE MAX
 
-        assertThat(imperialVolume.baseUnitsAreSet((MAX_VOLUME)), is(true));
+        assertThat(imperialVolume.baseUnitsAreSet((MAXIMUM_VOLUME)), is(true));
 
         assertThat(imperialVolume.getPackMeasurementOne(), is(12.));
         assertThat(imperialVolume.getPackMeasurementTwo(), is(17));
         assertThat(imperialVolume.getProductMeasurementOne(), is(12.));
         assertThat(imperialVolume.getProductMeasurementTwo(), is(17));
-        assertThat(imperialVolume.getBaseUnits(), is(MAX_VOLUME));
+        assertThat(imperialVolume.getBaseUnits(), is(MAXIMUM_VOLUME));
 
         System.out.println();
     }
@@ -80,7 +80,7 @@ public class ImperialVolumeTest {
     @Test
     public void testBaseSiOutOfRangeMax() { // OUT OF RANGE MAX
 
-        assertThat(imperialVolume.baseUnitsAreSet(MAX_VOLUME + .00000001), is(false));
+        assertThat(imperialVolume.baseUnitsAreSet(MAXIMUM_VOLUME + .00000001), is(false));
 
         assertThat(imperialVolume.getPackMeasurementOne(), is(0.));
         assertThat(imperialVolume.getPackMeasurementTwo(), is(0));
@@ -147,7 +147,7 @@ public class ImperialVolumeTest {
     @Test
     public void testMeasurementUnitOneInRangeMax() { // IN RANGE MAX
 
-        double maxFluidOunces = MAX_VOLUME / UNIT_FLUID_OUNCE;
+        double maxFluidOunces = MAXIMUM_VOLUME / UNIT_FLUID_OUNCE;
 
         // Set to max
         assertThat(imperialVolume.packMeasurementOneIsSet(
@@ -167,7 +167,7 @@ public class ImperialVolumeTest {
     @Test
     public void testMeasurementUnitOneOutOfRangeMax() { // OUT OF RANGE MAX
 
-        double maxFluidOunces = MAX_VOLUME / UNIT_FLUID_OUNCE;
+        double maxFluidOunces = MAXIMUM_VOLUME / UNIT_FLUID_OUNCE;
 
         // Set to max + 1
         assertThat(imperialVolume.packMeasurementOneIsSet(

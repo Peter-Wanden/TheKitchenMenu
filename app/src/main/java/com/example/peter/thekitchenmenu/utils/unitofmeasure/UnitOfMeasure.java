@@ -12,22 +12,22 @@ public interface UnitOfMeasure {
     boolean baseUnitsAreSet(double baseSiUnits);
 
     int getNumberOfProducts();
-    boolean numberOfProductsIsSet(int numberOfItems);
+    boolean numberOfProductsIsSet(int numberOfProducts);
 
     int getNumberOfMeasurementUnits();
 
     int getUnitOneLabelStringResourceId();
     double getPackMeasurementOne();
-    boolean packMeasurementOneIsSet(double packMeasurementOne);
+    boolean packMeasurementOneIsSet(double newPackMeasurementOne);
     double getProductMeasurementOne();
-    boolean productMeasurementOneIsSet(double productMeasurementOne);
+    boolean productMeasurementOneIsSet(double newProductMeasurementOne);
 
     int getUnitTwoLabelStringResourceId();
     int getPackMeasurementTwo();
-    boolean packMeasurementTwoIsSet(int packMeasurementTwo);
+    boolean packMeasurementTwoIsSet(int newPackMeasurementTwo);
     int getProductMeasurementTwo();
-    boolean productMeasurementTwoIsSet(int productMeasurementTwo);
+    boolean productMeasurementTwoIsSet(int newProductMeasurementTwo);
 
     boolean isValidMeasurement();
-    Pair[] getMeasurementUnitNumberTypeArray();
+    Pair[] getMeasurementUnitDigitLengthArray();
 }

@@ -128,4 +128,10 @@ public class ProductEditorViewModel extends ObservableViewModel {
     public void onFabClick() {
 
     }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        // TODO - Abort all network operations, unsubscribe observers and drop callbacks.
+    }
 }

@@ -57,7 +57,8 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
 //        setNumberOfItems(measurementModelIn.getNumberOfProducts());
 //        setBaseSiUnits(measurementModelIn.getBaseUnits());
         setSubtype(MeasurementSubtype.TYPE_IMPERIAL_VOLUME);
-        setBaseSiUnits(1000);
+        setNumberOfItems(20);
+        setBaseSiUnits(1500);
     }
 
     @Bindable
@@ -226,7 +227,7 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
             numberOfItems = unitOfMeasure.getNumberOfProducts();
             notifyPropertyChanged(BR.numberOfItems);
         }
-        int numberOfUnitsAfterDecimal = (int) unitOfMeasure.getMeasurementUnitNumberTypeArray()[0].second;
+        int numberOfUnitsAfterDecimal = (int) unitOfMeasure.getMeasurementUnitDigitLengthArray()[0].second;
         if (numberOfUnitsAfterDecimal > 0) {
             packMeasurementOne = String.valueOf(unitOfMeasure.getPackMeasurementOne());
             notifyPropertyChanged(BR.packMeasurementOne);

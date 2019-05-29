@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
 import org.junit.Test;
 
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MAX_MASS;
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MAXIMUM_MASS;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.is;
 
@@ -49,13 +49,13 @@ public class ImperialMassTest {
     @Test
     public void testBaseSiInRangeMax() { // IN RANGE MAX
 
-        assertThat(imperialMass.baseUnitsAreSet((MAX_MASS)), is(true));
+        assertThat(imperialMass.baseUnitsAreSet((MAXIMUM_MASS)), is(true));
 
         assertThat(imperialMass.getPackMeasurementOne(), is(.7));
         assertThat(imperialMass.getPackMeasurementTwo(), is(22));
         assertThat(imperialMass.getProductMeasurementOne(), is(.7));
         assertThat(imperialMass.getProductMeasurementTwo(), is(22));
-        assertThat(imperialMass.getBaseUnits(), is(MAX_MASS));
+        assertThat(imperialMass.getBaseUnits(), is(MAXIMUM_MASS));
 
         System.out.println();
     }
@@ -63,7 +63,7 @@ public class ImperialMassTest {
     @Test
     public void testBaseSiOutOfRangeMax() { // OUT OF RANGE MAX
 
-        assertThat(imperialMass.baseUnitsAreSet(MAX_MASS + 1), is(false));
+        assertThat(imperialMass.baseUnitsAreSet(MAXIMUM_MASS + 1), is(false));
 
         assertThat(imperialMass.getPackMeasurementOne(), is(0.));
         assertThat(imperialMass.getPackMeasurementTwo(), is(0));

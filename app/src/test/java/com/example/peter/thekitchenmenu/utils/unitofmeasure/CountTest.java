@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
 import org.junit.Test;
 
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MAX_COUNT;
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MAXIMUM_COUNT;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
@@ -34,7 +34,7 @@ public class CountTest {
     @Test
     public void testBaseSiInRangeMax() { // IN RANGE MAX
 
-        assertThat(count.baseUnitsAreSet(MAX_COUNT), is(true));
+        assertThat(count.baseUnitsAreSet(MAXIMUM_COUNT), is(true));
 
         assertThat(count.getPackMeasurementOne(), is(99.));
         assertThat(count.getProductMeasurementOne(), is(99.));
@@ -44,7 +44,7 @@ public class CountTest {
     @Test
     public void testBaseSiOutOfRangeMax() { // OUT OF RANGE MAX
 
-        assertThat(count.baseUnitsAreSet(MAX_COUNT + 1), is(false));
+        assertThat(count.baseUnitsAreSet(MAXIMUM_COUNT + 1), is(false));
 
         assertThat(count.getPackMeasurementOne(), is(0.));
         assertThat(count.getProductMeasurementOne(), is(0.));
@@ -91,7 +91,7 @@ public class CountTest {
     public void testMeasurementUnitOneInRangeMax() { // IN RANGE MAX
 
         // Set to max
-        assertThat(count.packMeasurementOneIsSet(MAX_COUNT), is(true));
+        assertThat(count.packMeasurementOneIsSet(MAXIMUM_COUNT), is(true));
 
         // Check value set
         assertThat(count.getPackMeasurementOne(), is(99.));
@@ -320,7 +320,7 @@ public class CountTest {
         // CONDITION: BASE SI SET BY PACK - NO OF ITEMS CHANGED - THEN NO OF ITEMS CHANGED AGAIN
 
         // Set pack measurement last changed by setting pack measurement
-        assertThat(count.getBaseUnits(), is(MAX_COUNT));
+        assertThat(count.getBaseUnits(), is(MAXIMUM_COUNT));
 
         // Change number of items
         assertThat(count.numberOfProductsIsSet(10), is(true));
@@ -329,7 +329,7 @@ public class CountTest {
 
         // Check item measurements have changed
         assertThat(count.getProductMeasurementOne(), is(0.));
-        assertThat(count.getBaseUnits(), is(MAX_COUNT));
+        assertThat(count.getBaseUnits(), is(MAXIMUM_COUNT));
 
         // Change number of items
         assertThat(count.numberOfProductsIsSet(20), is(true));
@@ -337,7 +337,7 @@ public class CountTest {
         assertThat(count.getPackMeasurementOne(), is(0.));
         // Check item measurements have changed
         assertThat(count.getProductMeasurementOne(), is(500.));
-        assertThat(count.getBaseUnits(), is(MAX_COUNT));
+        assertThat(count.getBaseUnits(), is(MAXIMUM_COUNT));
     }
 
     @Test

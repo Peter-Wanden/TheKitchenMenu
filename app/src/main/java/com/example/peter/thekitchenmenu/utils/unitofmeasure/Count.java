@@ -8,11 +8,11 @@ import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasure
 
 public class Count implements UnitOfMeasure {
 
-    private static final String TAG = "Count";
+    private static final String TAG = "tkm-Count";
 
     // Unit values
     private static final int COUNT_NUMBER_OF_MEASUREMENT_UNITS = 1;
-    private static final double UNIT_COUNT = BASE_UNIT_COUNT;
+    private static final double UNIT_COUNT = MINIMUM_COUNT;
 
     // Keeps track of the last updated measurement
     private static final boolean PACK_MEASUREMENT = false;
@@ -25,7 +25,7 @@ public class Count implements UnitOfMeasure {
     private int unitOneLabelStringResourceId;
     private int unitTwoLabelStringResourceId;
 
-    private int numberOfItems = ONE_PRODUCT;
+    private int numberOfItems = MINIMUM_NUMBER_OF_PRODUCTS;
     private double itemSizeInCountUnits = UNIT_COUNT;
     private double baseUnits = 0.;
     private double packMeasurementCount = 0;
@@ -84,7 +84,7 @@ public class Count implements UnitOfMeasure {
     }
 
     private boolean newCountIsWithinMaxCount(double newCount) {
-        return newCount <= MAX_COUNT;
+        return newCount <= MAXIMUM_COUNT;
     }
 
     @Override
@@ -93,24 +93,24 @@ public class Count implements UnitOfMeasure {
     }
 
     @Override
-    public boolean numberOfProductsIsSet(int numberOfItems) {
-        if (numberOfItemsInPackAreWithinBounds(numberOfItems)) {
+    public boolean numberOfProductsIsSet(int numberOfProducts) {
+        if (numberOfItemsInPackAreWithinBounds(numberOfProducts)) {
 
             if (baseUnits == NOT_YET_SET) {
-                this.numberOfItems = numberOfItems;
+                this.numberOfItems = numberOfProducts;
                 return true;
 
             } else {
 
                 if (lastMeasurementUpdated == PACK_MEASUREMENT) {
-                    if (itemSizeNotLessThanSmallestUnit(numberOfItems)) {
-                        setItemsInPackByAdjustingItemSize(numberOfItems);
+                    if (itemSizeNotLessThanSmallestUnit(numberOfProducts)) {
+                        setItemsInPackByAdjustingItemSize(numberOfProducts);
                         return true;
                     }
 
                 } else if (lastMeasurementUpdated == ITEM_MEASUREMENT) {
-                    if (itemSizeMultipliedByNumberOfItemsDoNotExceedMaxCount(numberOfItems)) {
-                        setItemsInPackByAdjustingPackSize(numberOfItems);
+                    if (itemSizeMultipliedByNumberOfItemsDoNotExceedMaxCount(numberOfProducts)) {
+                        setItemsInPackByAdjustingPackSize(numberOfProducts);
                         return true;
                     }
                 }
@@ -120,7 +120,7 @@ public class Count implements UnitOfMeasure {
     }
 
     private boolean numberOfItemsInPackAreWithinBounds(int numberOfItems) {
-        return numberOfItems >= ONE_PRODUCT && numberOfItems <= MAXIMUM_NO_OF_PRODUCTS;
+        return numberOfItems >= MINIMUM_NUMBER_OF_PRODUCTS && numberOfItems <= MAXIMUM_NUMBER_OF_PRODUCTS;
     }
 
     private boolean itemSizeNotLessThanSmallestUnit(int numberOfItems) {
@@ -138,7 +138,7 @@ public class Count implements UnitOfMeasure {
     }
 
     private boolean itemSizeMultipliedByNumberOfItemsDoNotExceedMaxCount(int numberOfItems) {
-        return itemSizeInCountUnits * numberOfItems <= MAX_COUNT;
+        return itemSizeInCountUnits * numberOfItems <= MAXIMUM_COUNT;
     }
 
     private void setItemsInPackByAdjustingPackSize(int numberOfItems) {
@@ -157,8 +157,8 @@ public class Count implements UnitOfMeasure {
     }
 
     @Override
-    public boolean packMeasurementOneIsSet(double packMeasurementOne) {
-        if (baseUnitsAreSet(packMeasurementOne)) {
+    public boolean packMeasurementOneIsSet(double newPackMeasurementOne) {
+        if (baseUnitsAreSet(newPackMeasurementOne)) {
             lastMeasurementUpdated = PACK_MEASUREMENT;
             return true;
 
@@ -172,8 +172,8 @@ public class Count implements UnitOfMeasure {
     }
 
     @Override
-    public boolean productMeasurementOneIsSet(double productMeasurementOne) {
-        if (baseUnitsAreSet(productMeasurementOne * numberOfItems)) {
+    public boolean productMeasurementOneIsSet(double newProductMeasurementOne) {
+        if (baseUnitsAreSet(newProductMeasurementOne * numberOfItems)) {
             lastMeasurementUpdated = ITEM_MEASUREMENT;
             return true;
 
@@ -192,7 +192,7 @@ public class Count implements UnitOfMeasure {
     }
 
     @Override
-    public boolean packMeasurementTwoIsSet(int packMeasurementTwo) {
+    public boolean packMeasurementTwoIsSet(int newPackMeasurementTwo) {
         return false;
     }
 
@@ -202,19 +202,19 @@ public class Count implements UnitOfMeasure {
     }
 
     @Override
-    public boolean productMeasurementTwoIsSet(int productMeasurementTwo) {
+    public boolean productMeasurementTwoIsSet(int newProductMeasurementTwo) {
         return false;
     }
 
     @Override
     public boolean isValidMeasurement() {
-        return (baseUnits >= UNIT_COUNT && baseUnits <= MAX_COUNT);
+        return (baseUnits >= UNIT_COUNT && baseUnits <= MAXIMUM_COUNT);
     }
 
     @Override
-    public Pair[] getMeasurementUnitNumberTypeArray() {
+    public Pair[] getMeasurementUnitDigitLengthArray() {
 
-        Pair<Integer, Integer> unitOneDigitsFilter = new Pair<>(MAXIMUM_NO_OF_PRODUCTS, 0);
+        Pair<Integer, Integer> unitOneDigitsFilter = new Pair<>(MAXIMUM_NUMBER_OF_PRODUCTS, 0);
         Pair<Integer, Integer> unitTwoDigitsFilter = new Pair<>(0, 0);
 
         Pair[] digitFilters = new Pair[2];

@@ -12,10 +12,10 @@ import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasure
 
 public class ImperialMass implements UnitOfMeasure {
 
-    private static final String TAG = "ImperialMass";
+    private static final String TAG = "tkm-ImperialMass";
 
     private static final int IMPERIAL_MASS_NUMBER_OF_MEASUREMENT_UNITS = 2;
-    private static final double UNIT_POUND = BASE_SI_UNIT_MASS * 453.59237;
+    private static final double UNIT_POUND = MINIMUM_MASS * 453.59237;
     private static final double UNIT_OUNCE = UNIT_POUND / 16;
     private static final double UNIT_OUNCE_DECIMAL = UNIT_OUNCE / 10;
 
@@ -30,7 +30,7 @@ public class ImperialMass implements UnitOfMeasure {
     private int unitOneLabelStringResourceId;
     private int unitTwoLabelStringResourceId;
 
-    private Integer numberOfItems = ONE_PRODUCT;
+    private Integer numberOfItems = MINIMUM_NUMBER_OF_PRODUCTS;
     private double itemSizeInBaseSiUnits = UNIT_OUNCE_DECIMAL;
     private double baseSiUnits = 0;
     private Integer packMeasurementInPounds = 0;
@@ -95,7 +95,7 @@ public class ImperialMass implements UnitOfMeasure {
     private boolean baseSiUnitsAreWithinMaxMass(double baseSiUnits) {
         // TODO - this equation should be extracted as CLASS_MAX_MASS
         //  then all classes can just return baseSiUnits <= CLASS_MAX_MASS
-        return baseSiUnits <= (MAX_MASS / UNIT_OUNCE_DECIMAL) * UNIT_OUNCE_DECIMAL;
+        return baseSiUnits <= (MAXIMUM_MASS / UNIT_OUNCE_DECIMAL) * UNIT_OUNCE_DECIMAL;
     }
 
     private void setNewPackMeasurements() {
@@ -126,25 +126,25 @@ public class ImperialMass implements UnitOfMeasure {
     }
 
     @Override
-    public boolean numberOfProductsIsSet(int numberOfItems) {
-        if (numberOfItemsInPackAreWithinBounds(numberOfItems)) {
+    public boolean numberOfProductsIsSet(int numberOfProducts) {
+        if (numberOfItemsInPackAreWithinBounds(numberOfProducts)) {
 
             if (baseSiUnits == NOT_YET_SET) {
-                this.numberOfItems = numberOfItems;
+                this.numberOfItems = numberOfProducts;
                 return true;
 
             } else {
                 if (lastMeasurementUpdated == PACK_MEASUREMENT) {
 
-                    if (itemSizeNotLessThanSmallestUnit(numberOfItems)) {
-                        setItemsInPackByAdjustingItemSize(numberOfItems);
+                    if (itemSizeNotLessThanSmallestUnit(numberOfProducts)) {
+                        setItemsInPackByAdjustingItemSize(numberOfProducts);
                         return true;
                     }
 
                 } else if (lastMeasurementUpdated == ITEM_MEASUREMENT) {
 
-                    if (itemSizeMultipliedByNumberOfItemsDoNotExceedMaxMass(numberOfItems)) {
-                        setItemsInPackByAdjustingPackSize(numberOfItems);
+                    if (itemSizeMultipliedByNumberOfItemsDoNotExceedMaxMass(numberOfProducts)) {
+                        setItemsInPackByAdjustingPackSize(numberOfProducts);
                         return true;
                     }
                 }
@@ -154,7 +154,7 @@ public class ImperialMass implements UnitOfMeasure {
     }
 
     private boolean numberOfItemsInPackAreWithinBounds(int numberOfItems) {
-        return numberOfItems >= ONE_PRODUCT && numberOfItems <= MAXIMUM_NO_OF_PRODUCTS;
+        return numberOfItems >= MINIMUM_NUMBER_OF_PRODUCTS && numberOfItems <= MAXIMUM_NUMBER_OF_PRODUCTS;
     }
 
     private boolean itemSizeNotLessThanSmallestUnit(int numberOfItems) {
@@ -167,7 +167,7 @@ public class ImperialMass implements UnitOfMeasure {
     }
 
     private boolean itemSizeMultipliedByNumberOfItemsDoNotExceedMaxMass(int numberOfItems) {
-        return itemSizeInBaseSiUnits * numberOfItems <= MAX_MASS;
+        return itemSizeInBaseSiUnits * numberOfItems <= MAXIMUM_MASS;
     }
 
     private void setItemsInPackByAdjustingPackSize(int numberOfItems) {
@@ -186,8 +186,8 @@ public class ImperialMass implements UnitOfMeasure {
     }
 
     @Override
-    public boolean packMeasurementOneIsSet(double packMeasurementOne) {
-        if (baseUnitsAreSet(baseSiUnitsWithPackMeasurementOne(packMeasurementOne))) {
+    public boolean packMeasurementOneIsSet(double newPackMeasurementOne) {
+        if (baseUnitsAreSet(baseSiUnitsWithPackMeasurementOne(newPackMeasurementOne))) {
             lastMeasurementUpdated = PACK_MEASUREMENT;
             return true;
 
@@ -205,8 +205,8 @@ public class ImperialMass implements UnitOfMeasure {
     }
 
     @Override
-    public boolean productMeasurementOneIsSet(double productMeasurementOne) {
-        if (baseUnitsAreSet(baseSiUnitsWithItemMeasurementOne(productMeasurementOne))) {
+    public boolean productMeasurementOneIsSet(double newProductMeasurementOne) {
+        if (baseUnitsAreSet(baseSiUnitsWithItemMeasurementOne(newProductMeasurementOne))) {
             lastMeasurementUpdated = ITEM_MEASUREMENT;
             return true;
 
@@ -230,8 +230,8 @@ public class ImperialMass implements UnitOfMeasure {
     }
 
     @Override
-    public boolean packMeasurementTwoIsSet(int packMeasurementTwo) {
-        if (baseUnitsAreSet(baseSiUnitsWithPackMeasurementTwo(packMeasurementTwo))) {
+    public boolean packMeasurementTwoIsSet(int newPackMeasurementTwo) {
+        if (baseUnitsAreSet(baseSiUnitsWithPackMeasurementTwo(newPackMeasurementTwo))) {
             lastMeasurementUpdated = PACK_MEASUREMENT;
             return true;
 
@@ -249,8 +249,8 @@ public class ImperialMass implements UnitOfMeasure {
     }
 
     @Override
-    public boolean productMeasurementTwoIsSet(int productMeasurementTwo) {
-        if (baseUnitsAreSet(baseSiUnitsWithItemMeasurementTwo(productMeasurementTwo))) {
+    public boolean productMeasurementTwoIsSet(int newProductMeasurementTwo) {
+        if (baseUnitsAreSet(baseSiUnitsWithItemMeasurementTwo(newProductMeasurementTwo))) {
             lastMeasurementUpdated = ITEM_MEASUREMENT;
             return true;
 
@@ -265,12 +265,12 @@ public class ImperialMass implements UnitOfMeasure {
 
     @Override
     public boolean isValidMeasurement() {
-        return (baseSiUnits >= UNIT_OUNCE_DECIMAL && baseSiUnits <= MAX_MASS);
+        return (baseSiUnits >= UNIT_OUNCE_DECIMAL && baseSiUnits <= MAXIMUM_MASS);
     }
 
     @Override
-    public Pair[] getMeasurementUnitNumberTypeArray() {
-        int maxPoundValue = (int) (MAX_MASS / UNIT_POUND);
+    public Pair[] getMeasurementUnitDigitLengthArray() {
+        int maxPoundValue = (int) (MAXIMUM_MASS / UNIT_POUND);
 
         int poundDigits = 0;
         while (maxPoundValue > 0) {

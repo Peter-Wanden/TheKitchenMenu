@@ -9,8 +9,8 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
 
     // Unit values as they relate to the International System of Units, or SI
     private int numberOfMeasurementUnits;
-    private static final double UNIT_ONE = BASE_SI_UNIT_MASS;
-    private static final double UNIT_TWO = BASE_SI_UNIT_MASS * 1000.;
+    private static final double UNIT_ONE = MINIMUM_MASS;
+    private static final double UNIT_TWO = MINIMUM_MASS * 1000.;
     private static final double MINIMUM_MEASUREMENT = UNIT_ONE;
 
     // Keeps track of the last updated measurement
@@ -22,7 +22,7 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
 
     // Current measurements
     private double baseUnits = 0.;
-    private int numberOfProducts = ONE_PRODUCT;
+    private int numberOfProducts = MINIMUM_NUMBER_OF_PRODUCTS;
     private double productSize = 0.;
     private int packMeasurementTwo = 0;
     private double packMeasurementOne = 0.;
@@ -80,7 +80,7 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     }
 
     private boolean baseUnitsWithUpperBounds(double baseUnits) {
-        return baseUnits <= MAX_MASS;
+        return baseUnits <= MAXIMUM_MASS;
     }
 
     private void setNewPackMeasurements() {
@@ -134,7 +134,7 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     }
 
     private boolean numberOfProductsInPackAreWithinBounds(int numberOfProducts) {
-        return numberOfProducts >= ONE_PRODUCT && numberOfProducts <= MAXIMUM_NO_OF_PRODUCTS;
+        return numberOfProducts >= MINIMUM_NUMBER_OF_PRODUCTS && numberOfProducts <= MAXIMUM_NUMBER_OF_PRODUCTS;
     }
 
     private boolean productSizeNotLessThanSmallestUnit(int numberOfProducts) {
@@ -147,7 +147,7 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     }
 
     private boolean packSizeDoesNotExceedMaxMass(int numberOfProducts) {
-        return productSize * numberOfProducts <= MAX_MASS;
+        return productSize * numberOfProducts <= MAXIMUM_MASS;
     }
 
     private void setNumberOfProductsByAdjustingPackSize(int numberOfProducts) {
@@ -166,8 +166,8 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     }
 
     @Override
-    public boolean packMeasurementOneIsSet(double packMeasurementOne) {
-        if (baseUnitsAreSet(baseUnitsWithPackMeasurementOne(packMeasurementOne))) {
+    public boolean packMeasurementOneIsSet(double newPackMeasurementOne) {
+        if (baseUnitsAreSet(baseUnitsWithPackMeasurementOne(newPackMeasurementOne))) {
             lastMeasurementUpdated = PACK_MEASUREMENT_LAST_UPDATED;
             return true;
 
@@ -188,8 +188,8 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     }
 
     @Override
-    public boolean productMeasurementOneIsSet(double productMeasurementOne) {
-        if (baseUnitsAreSet(baseUnitsWithProductMeasurementOne(productMeasurementOne))) {
+    public boolean productMeasurementOneIsSet(double newProductMeasurementOne) {
+        if (baseUnitsAreSet(baseUnitsWithProductMeasurementOne(newProductMeasurementOne))) {
             lastMeasurementUpdated = PRODUCT_MEASUREMENT_LAST_UPDATED;
             return true;
 
@@ -216,8 +216,8 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     }
 
     @Override
-    public boolean packMeasurementTwoIsSet(int packMeasurementTwo) {
-        if (baseUnitsAreSet(baseSiUnitsWithPackMeasurementTwo(packMeasurementTwo))) {
+    public boolean packMeasurementTwoIsSet(int newPackMeasurementTwo) {
+        if (baseUnitsAreSet(baseSiUnitsWithPackMeasurementTwo(newPackMeasurementTwo))) {
             lastMeasurementUpdated = PACK_MEASUREMENT_LAST_UPDATED;
             return true;
 
@@ -238,8 +238,8 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     }
 
     @Override
-    public boolean productMeasurementTwoIsSet(int productMeasurementTwo) {
-        if (baseUnitsAreSet(baseUnitsWithProductMeasurementTwo(productMeasurementTwo))) {
+    public boolean productMeasurementTwoIsSet(int newProductMeasurementTwo) {
+        if (baseUnitsAreSet(baseUnitsWithProductMeasurementTwo(newProductMeasurementTwo))) {
             lastMeasurementUpdated = PRODUCT_MEASUREMENT_LAST_UPDATED;
             return true;
 
@@ -256,13 +256,13 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
 
     @Override
     public boolean isValidMeasurement() {
-        return (baseUnits >= MINIMUM_MEASUREMENT && baseUnits <= MAX_MASS);
+        return (baseUnits >= MINIMUM_MEASUREMENT && baseUnits <= MAXIMUM_MASS);
     }
 
     @Override
-    public Pair[] getMeasurementUnitNumberTypeArray() {
+    public Pair[] getMeasurementUnitDigitLengthArray() {
 
-        int maxKilogramValue = (int) (MAX_MASS / UNIT_TWO);
+        int maxKilogramValue = (int) (MAXIMUM_MASS / UNIT_TWO);
 
         int kilogramDigits = 0;
         while (maxKilogramValue > 0) {
