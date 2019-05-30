@@ -10,7 +10,6 @@ import com.example.peter.thekitchenmenu.R;
 
 import com.example.peter.thekitchenmenu.data.model.ProductModel;
 import com.example.peter.thekitchenmenu.databinding.FragmentCatalogProductsBinding;
-import com.example.peter.thekitchenmenu.viewmodels.ViewModelCatalogProducts;
 
 import java.util.List;
 

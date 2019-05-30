@@ -1,16 +1,17 @@
 package com.example.peter.thekitchenmenu.ui.detail.product.editor;
 
 import android.app.Application;
-import android.util.Log;
 
+import com.example.peter.thekitchenmenu.BR;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.data.model.ProductIdentityModel;
 import com.example.peter.thekitchenmenu.data.model.ImageModel;
 import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
-import com.example.peter.thekitchenmenu.viewmodels.ObservableViewModel;
+import com.example.peter.thekitchenmenu.utils.ObservableViewModel;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.Bindable;
 import androidx.lifecycle.MutableLiveData;
 
 public class ProductEditorViewModel extends ObservableViewModel {
@@ -28,7 +29,15 @@ public class ProductEditorViewModel extends ObservableViewModel {
     // The various model updates that make up an updated ProductEntity
     private ImageModel updatedImageModel = new ImageModel();
     private ProductIdentityModel updatedIdentityModel = new ProductIdentityModel();
-    private ProductMeasurementModel measurementModelOut = new ProductMeasurementModel();
+    private ProductMeasurementModel measurementModel = new ProductMeasurementModel();
+
+    private boolean
+            imageModelValid = false,
+    identityModelValid = false,
+    measurementModelValid = false;
+
+    @Bindable
+    public boolean allModelsValid = false;
 
     // TODO - Change category and shelf life to an enum
 
@@ -110,22 +119,35 @@ public class ProductEditorViewModel extends ObservableViewModel {
 
     void setUpdatedImageModel(ImageModel updatedImageModel) {
         this.updatedImageModel = updatedImageModel;
-//        Log.d(TAG, "setUpdatedImageModel:" + updatedImageModel.toString());
+        imageModelValid = true;
+        allProductModelsAreValid();
         // TODO Save images to remote database
-        //
     }
 
     void setUpdatedIdentityModel(ProductIdentityModel updatedIdentityModel) {
         this.updatedIdentityModel = updatedIdentityModel;
-//        Log.d(TAG, "setEditedIdentityModel:" + updatedIdentityModel.toString());
+        identityModelValid = true;
+        allProductModelsAreValid();
     }
 
-    void setMeasurementModelOut(ProductMeasurementModel measurementModelOut) {
-        this.measurementModelOut = measurementModelOut;
-//        Log.d(TAG, "setMeasurementModelOut:" + measurementModelOut.toString());
+    void setMeasurementModel(ProductMeasurementModel measurementModel) {
+        this.measurementModel = measurementModel;
+        measurementModelValid = true;
+        allProductModelsAreValid();
+    }
+
+    private void allProductModelsAreValid() {
+        if (imageModelValid && identityModelValid && measurementModelValid) {
+            allModelsValid = true;
+            notifyPropertyChanged(BR.allModelsValid);
+        }
     }
 
     public void onFabClick() {
+        saveProduct();
+    }
+
+    private void saveProduct() {
 
     }
 

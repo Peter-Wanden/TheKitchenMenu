@@ -8,7 +8,7 @@ import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasure;
-import com.example.peter.thekitchenmenu.viewmodels.ObservableViewModel;
+import com.example.peter.thekitchenmenu.utils.ObservableViewModel;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.Bindable;

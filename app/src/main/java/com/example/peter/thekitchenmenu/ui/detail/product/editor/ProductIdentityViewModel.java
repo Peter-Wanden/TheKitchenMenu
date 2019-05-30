@@ -6,7 +6,7 @@ import android.text.Editable;
 import com.example.peter.thekitchenmenu.data.model.ProductIdentityModel;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 import com.example.peter.thekitchenmenu.utils.TextValidationHandler;
-import com.example.peter.thekitchenmenu.viewmodels.ObservableViewModel;
+import com.example.peter.thekitchenmenu.utils.ObservableViewModel;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;

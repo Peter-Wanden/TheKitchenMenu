@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.data.databaseLocal;
+package com.example.peter.thekitchenmenu.data.source.local;
 
 import static com.example.peter.thekitchenmenu.data.entity.ProductEntity.REMOTE_PRODUCT_ID;
 import static com.example.peter.thekitchenmenu.data.entity.ProductUserDataEntity.TABLE_USERS_PRODUCT_DATA;

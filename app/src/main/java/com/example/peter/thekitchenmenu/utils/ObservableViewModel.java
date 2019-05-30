@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.viewmodels;
+package com.example.peter.thekitchenmenu.utils;
 
 import android.app.Application;
 

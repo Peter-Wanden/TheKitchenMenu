@@ -125,7 +125,7 @@ public class ProductEditorActivity extends AppCompatActivity {
                 this, identityModelObserver);
 
         final Observer<ProductMeasurementModel> measurementModelOutObserver = measurementModelOut ->
-                productEditorViewModel.setMeasurementModelOut(measurementModelOut);
+                productEditorViewModel.setMeasurementModel(measurementModelOut);
 
         measurementEditorViewModel.getModelOut().observe(
                 this, measurementModelOutObserver);

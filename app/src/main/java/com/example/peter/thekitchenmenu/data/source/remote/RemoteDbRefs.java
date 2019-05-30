@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.data.databaseRemote;
+package com.example.peter.thekitchenmenu.data.source.remote;
 
 import static com.example.peter.thekitchenmenu.app.Constants.FB_COLLECTION_USED_PRODUCTS;
 import static com.example.peter.thekitchenmenu.app.Constants.REMOTE_USER_LOCATION;

@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.data.databaseLocal;
+package com.example.peter.thekitchenmenu.data.source.local;
 
 import android.content.Context;
 
@@ -27,21 +27,21 @@ import static com.example.peter.thekitchenmenu.data.entity.ProductFastTextSearch
         ProductFastTextSearch.class},
         version = 2,
         exportSchema = false)
-public abstract class TKMLocalDatabase extends RoomDatabase {
+public abstract class TKMDatabase extends RoomDatabase {
 
-    private static final String TAG = "TKMLocalDatabase";
+    private static final String TAG = "TKMDatabase";
     private static final String TKM_LOCAL_DATABASE = "tkm_local_database";
-    private static TKMLocalDatabase sInstance;
+    private static TKMDatabase sInstance;
 
     public abstract ProductDAO productDAO();
     public abstract UsersProductDataDAO userProductDataDAO();
 
     private final MutableLiveData<Boolean> isDatabaseCreated = new MutableLiveData<>();
 
-    public static TKMLocalDatabase getInstance(final Context context,
-                                               final AppExecutors executors) {
+    public static TKMDatabase getInstance(final Context context,
+                                          final AppExecutors executors) {
         if (sInstance == null) {
-            synchronized (TKMLocalDatabase.class) {
+            synchronized (TKMDatabase.class) {
                 if (sInstance == null) {
                     sInstance = buildDatabase(context.getApplicationContext(), executors);
                     sInstance.updateDatabaseCreated(context.getApplicationContext());
@@ -51,11 +51,11 @@ public abstract class TKMLocalDatabase extends RoomDatabase {
         return sInstance;
     }
 
-    private static TKMLocalDatabase buildDatabase(
+    private static TKMDatabase buildDatabase(
             final Context appContext,
             final AppExecutors executors) {
 
-        return Room.databaseBuilder(appContext, TKMLocalDatabase.class, TKM_LOCAL_DATABASE)
+        return Room.databaseBuilder(appContext, TKMDatabase.class, TKM_LOCAL_DATABASE)
                 .addCallback(new Callback() {
             @Override
             public void onCreate(@NonNull SupportSQLiteDatabase db) {
@@ -64,7 +64,7 @@ public abstract class TKMLocalDatabase extends RoomDatabase {
                     // Add anything here that needs to be completed during database creation,
                     // Loading large amounts of data for example.
                     // See Persistence Sample for more information.
-                    TKMLocalDatabase database = TKMLocalDatabase.getInstance(appContext, executors);
+                    TKMDatabase database = TKMDatabase.getInstance(appContext, executors);
                     // insertData(database, prodComms, prodMys);
                     database.setDatabaseCreated();
                 });
@@ -74,7 +74,7 @@ public abstract class TKMLocalDatabase extends RoomDatabase {
                 .build();
     }
 
-    private static void insertData(final TKMLocalDatabase database,
+    private static void insertData(final TKMDatabase database,
                                    final List<ProductEntity> productEntities,
                                    final List<ProductUserDataEntity> productUserDatumEntities) {
         database.runInTransaction(() -> {

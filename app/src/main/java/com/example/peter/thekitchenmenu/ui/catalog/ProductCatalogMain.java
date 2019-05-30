@@ -10,7 +10,6 @@ import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.model.ProductModel;
 import com.example.peter.thekitchenmenu.databinding.ActivityCatalogProductBinding;
 import com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductEditorActivity;
-import com.example.peter.thekitchenmenu.viewmodels.ViewModelCatalogProducts;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;

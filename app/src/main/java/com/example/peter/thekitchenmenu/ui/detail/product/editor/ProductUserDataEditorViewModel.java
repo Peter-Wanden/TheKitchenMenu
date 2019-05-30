@@ -3,7 +3,7 @@ package com.example.peter.thekitchenmenu.ui.detail.product.editor;
 import android.app.Application;
 
 import com.example.peter.thekitchenmenu.data.model.ProductUserDataModel;
-import com.example.peter.thekitchenmenu.viewmodels.ObservableViewModel;
+import com.example.peter.thekitchenmenu.utils.ObservableViewModel;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;

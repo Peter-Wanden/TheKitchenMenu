@@ -15,7 +15,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.peter.thekitchenmenu.data.model.ImageModel;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
-import com.example.peter.thekitchenmenu.viewmodels.ObservableViewModel;
+import com.example.peter.thekitchenmenu.utils.ObservableViewModel;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.File;

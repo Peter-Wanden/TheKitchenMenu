@@ -2,9 +2,8 @@ package com.example.peter.thekitchenmenu.data.repository;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 
-import com.example.peter.thekitchenmenu.data.databaseLocal.TKMLocalDatabase;
+import com.example.peter.thekitchenmenu.data.source.local.TKMDatabase;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.data.entity.ProductUserDataEntity;
 
@@ -16,13 +15,13 @@ public class Repository {
 
     private static final String TAG = "tkm-Repository";
     private static Repository sInstance;
-    private final TKMLocalDatabase database;
+    private final TKMDatabase database;
     private final SyncManager syncManager;
 
     private MediatorLiveDataActive<List<ProductUserDataEntity>> observableUsersProductData;
     private MediatorLiveDataActive<List<ProductEntity>> observableProducts;
 
-    private Repository(final Context context, final TKMLocalDatabase database) {
+    private Repository(final Context context, final TKMDatabase database) {
 
         this.database = database;
         syncManager = new SyncManager(context);
@@ -48,7 +47,7 @@ public class Repository {
         });
     }
 
-    public static Repository getInstance(Context context, final TKMLocalDatabase database) {
+    public static Repository getInstance(Context context, final TKMDatabase database) {
         if (sInstance == null) {
             synchronized (Repository.class) {
                 if (sInstance == null) {

@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.data.databaseLocal;
+package com.example.peter.thekitchenmenu.data.source.local;
 
 import android.database.Cursor;
 

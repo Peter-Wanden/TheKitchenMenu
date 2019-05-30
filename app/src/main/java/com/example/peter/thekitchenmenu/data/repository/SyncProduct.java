@@ -7,8 +7,8 @@ import android.util.Log;
 
 import com.example.peter.thekitchenmenu.app.HandlerWorker;
 import com.example.peter.thekitchenmenu.app.Singletons;
-import com.example.peter.thekitchenmenu.data.databaseRemote.DataListenerPending;
-import com.example.peter.thekitchenmenu.data.databaseRemote.RemoteDbRefs;
+import com.example.peter.thekitchenmenu.data.source.remote.DataListenerPending;
+import com.example.peter.thekitchenmenu.data.source.remote.RemoteDbRefs;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

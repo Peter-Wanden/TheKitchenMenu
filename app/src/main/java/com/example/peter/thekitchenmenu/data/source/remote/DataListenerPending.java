@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.data.databaseRemote;
+package com.example.peter.thekitchenmenu.data.source.remote;
 
 import android.os.Handler;
 
