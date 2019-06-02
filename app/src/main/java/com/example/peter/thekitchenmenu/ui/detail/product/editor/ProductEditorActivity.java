@@ -10,6 +10,7 @@ import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
 import com.example.peter.thekitchenmenu.databinding.ProductEditorBinding;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.utils.imageeditor.ImageEditorViewModel;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.lifecycle.Observer;
 import androidx.annotation.Nullable;
@@ -17,16 +18,16 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class ProductEditorActivity extends AppCompatActivity {
+public class ProductEditorActivity extends AppCompatActivity implements AddEditProductNavigator {
 
     private static final String TAG = "tkm-EditorActivity";
-    private static final String PRODUCT_ID = "product_id";
+    public static final String EXTRA_PRODUCT_ID = "PRODUCT_ID";
+    public static final String EXTRA_IS_CREATOR = "IS_CREATOR";
 
     ProductEditorBinding productEditorBinding;
     ProductEditorViewModel productEditorViewModel;
 
     ImageEditorViewModel imageEditorViewModel;
-
     ProductIdentityViewModel identityEditorViewModel;
     ProductMeasurementViewModel measurementEditorViewModel;
 
@@ -37,6 +38,7 @@ public class ProductEditorActivity extends AppCompatActivity {
         initialiseViews();
         setViewModels();
         setObservers();
+        setupFab();
 
         // TODO - Get the intent, establish if existing product to edit or new product to create
 //        Intent intent = getIntent();
@@ -51,7 +53,7 @@ public class ProductEditorActivity extends AppCompatActivity {
 //
 //        }
 
-        setTitle(productEditorViewModel.getTitle());
+        setTitle(productEditorViewModel.getActivityTitle());
     }
 
     private void initialiseViews() {
@@ -102,8 +104,8 @@ public class ProductEditorActivity extends AppCompatActivity {
                 ProductMeasurementModel measurementModelIn = new ProductMeasurementModel();
                 measurementModelIn.setMeasurementSubtype(
                         MeasurementSubtype.values()[productEntity.getUnitOfMeasureSubtype()]);
-                measurementModelIn.setNumberOfItems(productEntity.getNumberOfItems());
-                measurementModelIn.setBaseSiUnits(productEntity.getBaseSiUnits());
+                measurementModelIn.setNumberOfProducts(productEntity.getNumberOfProducts());
+                measurementModelIn.setBaseUnits(productEntity.getBaseUnits());
 
                 measurementEditorViewModel.setMeasurementModelIn(measurementModelIn);
             }
@@ -125,9 +127,19 @@ public class ProductEditorActivity extends AppCompatActivity {
                 this, identityModelObserver);
 
         final Observer<ProductMeasurementModel> measurementModelOutObserver = measurementModelOut ->
-                productEditorViewModel.setMeasurementModel(measurementModelOut);
+                productEditorViewModel.setUpdatedMeasurementModel(measurementModelOut);
 
         measurementEditorViewModel.getModelOut().observe(
                 this, measurementModelOutObserver);
+    }
+
+    private void setupFab() {
+        FloatingActionButton fab = findViewById(R.id.product_editor_save_fab);
+        fab.setOnClickListener(v -> productEditorViewModel.onFabClick());
+    }
+
+    @Override
+    public void reviewBeforeSave() {
+
     }
 }

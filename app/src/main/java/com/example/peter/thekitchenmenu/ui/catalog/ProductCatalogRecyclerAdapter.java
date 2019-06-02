@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
-import com.example.peter.thekitchenmenu.data.model.ProductModel;
+import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.utils.Converters;
 import com.squareup.picasso.Picasso;
 
@@ -20,13 +20,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class ProductCatalogRecyclerAdapter
         extends
-        RecyclerView.Adapter<ProductCatalogRecyclerAdapter.AdapterCatProdViewHolder> {
+        RecyclerView.Adapter<ProductCatalogRecyclerAdapter.AdapterViewHolder> {
 
-    private static final String TAG = ProductCatalogRecyclerAdapter.class.getSimpleName();
+    private static final String TAG = "tkm-ProductCatalogAdapter";
     private final Context context;
 
-    private List<ProductModel> listProductModel;
-
+    private List<ProductEntity> productList;
     final private OnClickProduct clickHandler;
 
     ProductCatalogRecyclerAdapter(Context context, OnClickProduct clickHandler) {
@@ -37,7 +36,7 @@ public class ProductCatalogRecyclerAdapter
     /* View holder */
     @NonNull
     @Override
-    public AdapterCatProdViewHolder onCreateViewHolder(
+    public AdapterViewHolder onCreateViewHolder(
             @NonNull ViewGroup viewGroup,
             int viewType) {
 
@@ -45,76 +44,68 @@ public class ProductCatalogRecyclerAdapter
                 .from(context)
                 .inflate(R.layout.list_item_product, viewGroup, false);
 
-        return new AdapterCatProdViewHolder(view);
+        return new AdapterViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(
-            @NonNull AdapterCatProdViewHolder holder,
+            @NonNull AdapterViewHolder holder,
             int position) {
 
-        /* Get the product_uneditable at the passed in position */
-        ProductModel productModel = listProductModel.get(position);
-
-        /* Set the description */
-        holder.descTV.setText(productModel.getDescription());
+        ProductEntity product = productList.get(position);
+        holder.descriptionTV.setText(product.getDescription());
 
         // TODO - Picasso, add image caching.
         /* Get and set the image */
-        if (!productModel.getRemoteImageUri().equals("")) {
-            Picasso.get().load(productModel.getRemoteImageUri()).into(holder.prodIV);
+        if (!product.getRemoteSmallImageUri().equals("")) {
+            Picasso.get().load(product.getRemoteSmallImageUri()).into(holder.productImageIV);
         } else {
-            Picasso.get().load(R.drawable.placeholder).into(holder.prodIV);
+            Picasso.get().load(R.drawable.placeholder).into(holder.productImageIV);
         }
 
         /* Set the pack size */
-        holder.packSizeTV.setText(String.valueOf(productModel.getBaseSiUnits()));
+        holder.baseUnitsTV.setText(String.valueOf(product.getBaseUnits()));
 
         /* Set the unit of measure */
-        holder.UoMTV.setText(Converters.getUnitOfMeasureString
-                (context, productModel.getUnitOfMeasureSubtype()));
+        holder.unitOfMeasureTV.setText(Converters.getUnitOfMeasureString
+                (context, product.getUnitOfMeasureSubtype()));
     }
 
-    /* Returns the number of items in the adapter */
     @Override
     public int getItemCount() {
-        if (listProductModel == null) return 0;
-        return listProductModel.size();
+        if (productList == null) return 0;
+        return productList.size();
     }
 
     /* Getter for the current list of products */
-    public List<ProductModel> getProducts() {
-        return listProductModel;
+    public List<ProductEntity> getProducts() {
+        return productList;
     }
 
-    /*
-     * When the data changes, this method updates the list of products and notifies the adapter to
-     * use the new values in it
-     */
-    public void setProducts(List<ProductModel> vmListProd) {
-        listProductModel = vmListProd;
+    public void setProducts(List<ProductEntity> productList) {
+        this.productList = productList;
         notifyDataSetChanged();
     }
 
     /* Inner class for creating ViewHolders */
-    class AdapterCatProdViewHolder
+    class AdapterViewHolder
             extends
             RecyclerView.ViewHolder
             implements
             View.OnClickListener {
 
-        final TextView descTV;
-        final TextView packSizeTV;
-        final TextView UoMTV;
-        final ImageView prodIV;
+        final TextView descriptionTV;
+        final TextView baseUnitsTV;
+        final TextView unitOfMeasureTV;
+        final ImageView productImageIV;
 
-        AdapterCatProdViewHolder(View itemView) {
+        AdapterViewHolder(View itemView) {
             super(itemView);
 
-            descTV = itemView.findViewById(R.id.list_item_product_tv_description);
-            packSizeTV = itemView.findViewById(R.id.list_item_product_tv_pack_size);
-            UoMTV = itemView.findViewById(R.id.list_item_product_tv_label_unit_of_measure);
-            prodIV = itemView.findViewById(R.id.list_item_product_iv_product_image);
+            descriptionTV = itemView.findViewById(R.id.list_item_product_tv_description);
+            baseUnitsTV = itemView.findViewById(R.id.list_item_product_tv_pack_size);
+            unitOfMeasureTV = itemView.findViewById(R.id.list_item_product_tv_label_unit_of_measure);
+            productImageIV = itemView.findViewById(R.id.list_item_product_iv_product_image);
 
             itemView.setOnClickListener(this);
         }
@@ -122,15 +113,15 @@ public class ProductCatalogRecyclerAdapter
         @Override
         public void onClick(View v) {
 
-            // Get the product_uneditable from the adapter at the clicked position
-            ProductModel productModel = listProductModel.get(getAdapterPosition());
+            // Get the product from the adapter at the clicked position
+            ProductEntity product = productList.get(getAdapterPosition());
 
             // Find out if this user was the creator of the product_uneditable
             boolean isCreator = Constants.getUserId().getValue().
-                    equals(productModel.getCreatedBy());
+                    equals(product.getCreatedBy());
 
             // Click handler for this product_uneditable type
-            clickHandler.onClick(productModel, isCreator);
+            clickHandler.onClickProduct(product, isCreator);
         }
     }
 }

@@ -24,7 +24,7 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
     private MeasurementSubtype subtype;
     private UnitOfMeasure unitOfMeasure;
     private int numberOfMeasurementUnits;
-    private int numberOfItems;
+    private int numberOfProducts;
 
     // TODO - these need to be integers and doubles!
     private String packMeasurementOne;
@@ -54,10 +54,10 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
     //
     void setMeasurementModelIn(ProductMeasurementModel measurementModelIn) {
 //        setSubtype(measurementModelIn.getMeasurementSubtype());
-//        setNumberOfItems(measurementModelIn.getNumberOfProducts());
-//        setBaseSiUnits(measurementModelIn.getBaseUnits());
+//        setNumberOfProducts(measurementModelIn.getNumberOfProducts());
+//        setBaseUnits(measurementModelIn.getBaseUnits());
         setSubtype(MeasurementSubtype.TYPE_IMPERIAL_VOLUME);
-        setNumberOfItems(20);
+        setNumberOfProducts(20);
         setBaseSiUnits(1500);
     }
 
@@ -83,21 +83,21 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
     }
 
     @Bindable
-    public int getNumberOfItems() {
-        return numberOfItems;
+    public int getNumberOfProducts() {
+        return numberOfProducts;
     }
 
     public void addOneToNumberOfItems() {
-        setNumberOfItems((unitOfMeasure.getNumberOfProducts() + 1));
+        setNumberOfProducts((unitOfMeasure.getNumberOfProducts() + 1));
     }
 
     public void minusOneFromNumberOfItems() {
-        setNumberOfItems((unitOfMeasure.getNumberOfProducts() - 1));
+        setNumberOfProducts((unitOfMeasure.getNumberOfProducts() - 1));
     }
 
-    public void setNumberOfItems(int numberOfItems) {
-        if (newNumberOfItemsReceived(numberOfItems))
-            if (canChangeToNewNumberOfItems(numberOfItems)) updateUi(); // with new value
+    public void setNumberOfProducts(int numberOfProducts) {
+        if (newNumberOfItemsReceived(numberOfProducts))
+            if (canChangeToNewNumberOfItems(numberOfProducts)) updateUi(); // with new value
                 // Room to add error message if required
             else updateUi(); // with old value
     }
@@ -223,9 +223,9 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
             numberOfMeasurementUnits = unitOfMeasure.getNumberOfMeasurementUnits();
             notifyPropertyChanged(BR.numberOfMeasurementUnits);
         }
-        if (numberOfItems != unitOfMeasure.getNumberOfProducts()) {
-            numberOfItems = unitOfMeasure.getNumberOfProducts();
-            notifyPropertyChanged(BR.numberOfItems);
+        if (numberOfProducts != unitOfMeasure.getNumberOfProducts()) {
+            numberOfProducts = unitOfMeasure.getNumberOfProducts();
+            notifyPropertyChanged(BR.numberOfProducts);
         }
         int numberOfUnitsAfterDecimal = (int) unitOfMeasure.getMeasurementUnitDigitLengthArray()[0].second;
         if (numberOfUnitsAfterDecimal > 0) {
@@ -254,8 +254,8 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
     private void updateMeasurementModel() {
         ProductMeasurementModel modelOut = new ProductMeasurementModel();
         modelOut.setMeasurementSubtype(unitOfMeasure.getMeasurementSubtype());
-        modelOut.setNumberOfItems(unitOfMeasure.getNumberOfProducts());
-        modelOut.setBaseSiUnits(unitOfMeasure.getBaseUnits());
+        modelOut.setNumberOfProducts(unitOfMeasure.getNumberOfProducts());
+        modelOut.setBaseUnits(unitOfMeasure.getBaseUnits());
 
         if (unitOfMeasure.isValidMeasurement()) {
             getModelOut().setValue(modelOut);

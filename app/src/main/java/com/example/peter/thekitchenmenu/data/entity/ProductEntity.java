@@ -1,37 +1,35 @@
 package com.example.peter.thekitchenmenu.data.entity;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import com.google.firebase.database.Exclude;
-import com.google.firebase.database.annotations.NotNull;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtype;
+import com.google.android.gms.common.internal.Objects;
+
+import java.util.Calendar;
+import java.util.UUID;
+
 import static com.example.peter.thekitchenmenu.data.entity.ProductEntity.TABLE_PRODUCT;
 
+// TODO - make final
 @Entity(tableName = TABLE_PRODUCT)
-public class ProductEntity implements Parcelable {
+public final class ProductEntity {
 
-    public static final String TAG = "ProductEntity";
+    public static final String TAG = "tkm-ProductEntity";
 
     public static final String TABLE_PRODUCT = "product";
     public static final String ID = "id";
     public static final String DESCRIPTION = "description";
     public static final String SHOPPING_LIST_ITEM_NAME = "shoppingListItemName";
     public static final String CATEGORY = "category";
-    public static final String NUMBER_OF_ITEMS = "number_of_items";
+    public static final String NUMBER_OF_PRODUCTS = "number_of_products";
     public static final String SHELF_LIFE = "shelfLife";
-    public static final String BASE_SI_UNITS = "baseSiUnits";
+    public static final String BASE_UNITS = "baseUnits";
     public static final String UNIT_OF_MEASURE_SUB_TYPE = "unitOfMeasureSubtype";
-    public static final String PROD_COMM_PRICE_AVE = "packAvePrice";
     public static final String CREATED_BY = "createdBy";
     public static final String WEB_IMAGE_URL = "webImageUrl";
     public static final String REMOTE_PRODUCT_ID = "remoteProductId";
@@ -41,90 +39,187 @@ public class ProductEntity implements Parcelable {
     public static final String CREATE_DATE = "productCreateDate";
     public static final String LAST_UPDATE = "productLastUpdate";
 
-    @Exclude // Excludes field from Firebase, as is only required for Room.
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
+    @NonNull
     @ColumnInfo(name = ID)
-    private int id;
+    private final String id;
 
+    @NonNull
     @ColumnInfo(name = DESCRIPTION)
-    private String description;
+    private final String description;
 
+    @NonNull
     @ColumnInfo(name = SHOPPING_LIST_ITEM_NAME)
-    private String shoppingListItemName;
+    private final String shoppingListItemName;
 
     @ColumnInfo(name = CATEGORY)
-    private int category;
+    private final int category;
 
     @ColumnInfo(name = SHELF_LIFE)
-    private int shelfLife;
+    private final int shelfLife;
 
-    @ColumnInfo(name = NUMBER_OF_ITEMS)
-    private int numberOfItems = 1;
+    @ColumnInfo(name = NUMBER_OF_PRODUCTS)
+    private final int numberOfProducts;
 
-    @ColumnInfo(name = BASE_SI_UNITS)
-    private double baseSiUnits;
+    @ColumnInfo(name = BASE_UNITS)
+    private final double baseUnits;
 
     @ColumnInfo(name = UNIT_OF_MEASURE_SUB_TYPE)
-    private int unitOfMeasureSubtype;
-
-    @ColumnInfo(name = PROD_COMM_PRICE_AVE)
-    private double packAvePrice;
+    private final int unitOfMeasureSubtype;
 
     @ColumnInfo(name = CREATED_BY)
-    private String createdBy;
+    private final String createdBy;
 
+    @Nullable
     @ColumnInfo(name = WEB_IMAGE_URL)
-    @NotNull
-    private String webImageUrl = "";
+    private final String webImageUrl;
 
+    @Nullable
     @ColumnInfo(name = REMOTE_SMALL_IMAGE_URI)
-    private String remoteSmallImageUri = "";
+    private final String remoteSmallImageUri;
 
+    @Nullable
     @ColumnInfo(name = REMOTE_MEDIUM_IMAGE_URI)
-    private String remoteMediumImageUri = "";
+    private final String remoteMediumImageUri;
 
+    @Nullable
     @ColumnInfo(name = REMOTE_LARGE_IMAGE_URI)
-    private String remoteLargeImageUri = "";
+    private final String remoteLargeImageUri;
 
     @ColumnInfo(name = CREATE_DATE)
-    private long createDate;
+    private final long createDate;
 
     @ColumnInfo(name = LAST_UPDATE)
-    private long lastUpdate;
+    private final long lastUpdate;
 
-    @ColumnInfo(name = REMOTE_PRODUCT_ID)
-    private String remoteProductId;
-
+    /**
+     * Use this constructor when creating a new product entity
+     *
+     * @param description           manufacturers or retailers exact description of the product
+     * @param shoppingListItemName  name used for this product on a shopping list
+     * @param category              an integer that relates back to a category
+     * @param shelfLife             an integer that relates back to a period of time
+     * @param numberOfProducts      defines the number of products when sold as a multi-pack
+     * @param baseUnits             the products size in base units
+     * @param unitOfMeasureSubtype  an integer defining the products {@link MeasurementSubtype}
+     * @param createdBy             the users UID
+     * @param webImageUrl           a URL to an image that is not stored by TKM
+     * @param remoteSmallImageUri   URL to a small version of a product image
+     * @param remoteMediumImageUri  URL to a medium sized version of a product image
+     * @param remoteLargeImageUri   URL to a large version of a product image
+     *
+     */
     @Ignore
-    public ProductEntity(){} /* Required by Firebase. */
-
-    public ProductEntity(int id,
-                         String description,
-                         String shoppingListItemName,
+    public ProductEntity(@NonNull String description,
+                         @NonNull String shoppingListItemName,
                          int category,
                          int shelfLife,
-                         int numberOfItems,
-                         double baseSiUnits,
+                         int numberOfProducts,
+                         double baseUnits,
                          int unitOfMeasureSubtype,
-                         double packAvePrice,
-                         String createdBy,
-                         String webImageUrl,
-                         String remoteSmallImageUri,
-                         String remoteMediumImageUri,
-                         String remoteLargeImageUri,
-                         long createDate,
-                         long lastUpdate,
-                         String remoteProductId) {
+                         @NonNull String createdBy,
+                         @Nullable String webImageUrl,
+                         @Nullable String remoteSmallImageUri,
+                         @Nullable String remoteMediumImageUri,
+                         @Nullable String remoteLargeImageUri) {
+
+
+        this.id = UUID.randomUUID().toString();
+        this.description = description;
+        this.shoppingListItemName = shoppingListItemName;
+        this.category = category;
+        this.shelfLife = shelfLife;
+        this.numberOfProducts = numberOfProducts;
+        this.baseUnits = baseUnits;
+        this.unitOfMeasureSubtype = unitOfMeasureSubtype;
+        this.createdBy = createdBy;
+        this.webImageUrl = webImageUrl;
+        this.remoteSmallImageUri = remoteSmallImageUri;
+        this.remoteMediumImageUri = remoteMediumImageUri;
+        this.remoteLargeImageUri = remoteLargeImageUri;
+        this.createDate = getDate();
+        this.lastUpdate = getDate();
+    }
+
+    /**
+     * Use this constructor when updating (copying) a product
+     *
+     * @param id                    the id of the product being copied
+     * @param description           manufacturers or retailers exact description of the product
+     * @param shoppingListItemName  name used for this product on a shopping list
+     * @param category              an integer that relates back to a category
+     * @param shelfLife             an integer that relates back to a period of time
+     * @param numberOfProducts      defines the number of products when sold as a multi-pack
+     * @param baseUnits             the products size in base units
+     * @param unitOfMeasureSubtype  an integer defining the products {@link MeasurementSubtype}
+     * @param createdBy             the Google Firebase provided UID
+     * @param webImageUrl           URL to an image that is not stored by TKM
+     * @param remoteSmallImageUri   URL to a small version of a product image
+     * @param remoteMediumImageUri  URL to a medium sized version of a product image
+     * @param remoteLargeImageUri   URL to a large version of a product image
+     */
+    @Ignore
+    public ProductEntity(@NonNull String id,
+                         @NonNull String description,
+                         @NonNull String shoppingListItemName,
+                         int category,
+                         int shelfLife,
+                         int numberOfProducts,
+                         double baseUnits,
+                         int unitOfMeasureSubtype,
+                         @NonNull String createdBy,
+                         @Nullable String webImageUrl,
+                         @Nullable String remoteSmallImageUri,
+                         @Nullable String remoteMediumImageUri,
+                         @Nullable String remoteLargeImageUri,
+                         long createDate) {
 
         this.id = id;
         this.description = description;
         this.shoppingListItemName = shoppingListItemName;
         this.category = category;
-        this.numberOfItems = numberOfItems;
+        this.numberOfProducts = numberOfProducts;
         this.shelfLife = shelfLife;
-        this.baseSiUnits = baseSiUnits;
+        this.baseUnits = baseUnits;
         this.unitOfMeasureSubtype = unitOfMeasureSubtype;
-        this.packAvePrice = packAvePrice;
+        this.createdBy = createdBy;
+        this.webImageUrl = webImageUrl;
+        this.remoteSmallImageUri = remoteSmallImageUri;
+        this.remoteMediumImageUri = remoteMediumImageUri;
+        this.remoteLargeImageUri = remoteLargeImageUri;
+        this.createDate = createDate;
+        this.lastUpdate = getDate();
+    }
+
+    private long getDate() {
+        return Calendar.getInstance().getTimeInMillis();
+    }
+
+    // Required by Room
+    public ProductEntity(@NonNull String id,
+                         @NonNull String description,
+                         @NonNull String shoppingListItemName,
+                         int category,
+                         int shelfLife,
+                         int numberOfProducts,
+                         double baseUnits,
+                         int unitOfMeasureSubtype,
+                         @NonNull String createdBy,
+                         @Nullable String webImageUrl,
+                         @Nullable String remoteSmallImageUri,
+                         @Nullable String remoteMediumImageUri,
+                         @Nullable String remoteLargeImageUri,
+                         long createDate,
+                         long lastUpdate) {
+
+        this.id = id;
+        this.description = description;
+        this.shoppingListItemName = shoppingListItemName;
+        this.category = category;
+        this.numberOfProducts = numberOfProducts;
+        this.shelfLife = shelfLife;
+        this.baseUnits = baseUnits;
+        this.unitOfMeasureSubtype = unitOfMeasureSubtype;
         this.createdBy = createdBy;
         this.webImageUrl = webImageUrl;
         this.remoteSmallImageUri = remoteSmallImageUri;
@@ -132,232 +227,117 @@ public class ProductEntity implements Parcelable {
         this.remoteLargeImageUri = remoteLargeImageUri;
         this.createDate = createDate;
         this.lastUpdate = lastUpdate;
-        this.remoteProductId = remoteProductId;
-    }
-
-    @Ignore
-    public ProductEntity(Parcel in) {
-        id = in.readInt();
-        description = in.readString();
-        shoppingListItemName = in.readString();
-        category = in.readInt();
-        numberOfItems = in.readInt();
-        shelfLife = in.readInt();
-        baseSiUnits = in.readDouble();
-        unitOfMeasureSubtype = in.readInt();
-        packAvePrice = in.readDouble();
-        createdBy = in.readString();
-        webImageUrl = in.readString();
-        remoteSmallImageUri = in.readString();
-        remoteMediumImageUri = in.readString();
-        remoteLargeImageUri = in.readString();
-        createDate = in.readLong();
-        lastUpdate = in.readLong();
-        remoteProductId = in.readString();
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
-        dest.writeString(description);
-        dest.writeString(shoppingListItemName);
-        dest.writeInt(category);
-        dest.writeInt(numberOfItems);
-        dest.writeInt(shelfLife);
-        dest.writeDouble(baseSiUnits);
-        dest.writeInt(unitOfMeasureSubtype);
-        dest.writeDouble(packAvePrice);
-        dest.writeString(createdBy);
-        dest.writeString(webImageUrl);
-        dest.writeString(remoteSmallImageUri);
-        dest.writeString(remoteMediumImageUri);
-        dest.writeString(remoteLargeImageUri);
-        dest.writeLong(createDate);
-        dest.writeLong(lastUpdate);
-        dest.writeString(remoteProductId);
+    public boolean equals(@Nullable Object o) {
+
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProductEntity entity = (ProductEntity) o;
+
+        return Objects.equal(id,                    entity.id)                      &&
+               Objects.equal(description,           entity.description)             &&
+               Objects.equal(shoppingListItemName,  entity.shoppingListItemName)    &&
+               Objects.equal(category,              entity.category)                &&
+               Objects.equal(shelfLife,             entity.shelfLife)               &&
+               Objects.equal(numberOfProducts,      entity.numberOfProducts)        &&
+               Objects.equal(baseUnits,             entity.baseUnits)               &&
+               Objects.equal(unitOfMeasureSubtype,  entity.unitOfMeasureSubtype)    &&
+               Objects.equal(createdBy,             entity.createdBy)               &&
+               Objects.equal(webImageUrl,           entity.webImageUrl)             &&
+               Objects.equal(remoteSmallImageUri,   entity.remoteSmallImageUri)     &&
+               Objects.equal(remoteMediumImageUri,  entity.remoteMediumImageUri)    &&
+               Objects.equal(remoteLargeImageUri,   entity.remoteLargeImageUri)     &&
+               Objects.equal(createDate,            entity.createDate)              &&
+               Objects.equal(lastUpdate,            entity.lastUpdate);
     }
 
     @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public static final Creator<ProductEntity> CREATOR = new Creator<ProductEntity>() {
-        @Override
-        public ProductEntity createFromParcel(Parcel in) {
-            return new ProductEntity(in);
-        }
-
-        @Override
-        public ProductEntity[] newArray(int size) {
-            return new ProductEntity[size];
-        }
-    };
-
-    @Exclude // HashMap for FireBase community product_uneditable information Map
-    public Map<String, Object> commProductToMap() {
-
-        HashMap<String, Object> result = new HashMap<>();
-
-        result.put(DESCRIPTION, description);
-        result.put(SHOPPING_LIST_ITEM_NAME, shoppingListItemName);
-        result.put(CATEGORY, category);
-        result.put(NUMBER_OF_ITEMS, numberOfItems);
-        result.put(SHELF_LIFE, shelfLife);
-        result.put(BASE_SI_UNITS, baseSiUnits);
-        result.put(UNIT_OF_MEASURE_SUB_TYPE, unitOfMeasureSubtype);
-        result.put(PROD_COMM_PRICE_AVE, packAvePrice);
-        result.put(CREATED_BY, createdBy);
-        result.put(WEB_IMAGE_URL, webImageUrl);
-        result.put(REMOTE_SMALL_IMAGE_URI, remoteSmallImageUri);
-        result.put(REMOTE_MEDIUM_IMAGE_URI, remoteMediumImageUri);
-        result.put(REMOTE_LARGE_IMAGE_URI, remoteLargeImageUri);
-        result.put(CREATE_DATE, createDate);
-        result.put(LAST_UPDATE, lastUpdate);
-
-        return result;
+    public String toString() {
+        return "ProductEntity{" +
+               "\nid="                     + id                    +
+               "\ndescription='"           + description           + '\'' +
+               "\nshoppingListItemName='"  + shoppingListItemName  + '\'' +
+               "\ncategory="               + category              +
+               "\nshelfLife="              + shelfLife             +
+               "\nnumberOfProducts="       + numberOfProducts      +
+               "\nbaseUnits="              + baseUnits             +
+               "\nunitOfMeasureSubtype="   + unitOfMeasureSubtype  +
+               "\ncreatedBy='"             + createdBy             + '\'' +
+               "\nwebImageUrl='"           + webImageUrl           + '\'' +
+               "\nremoteSmallImageUri='"   + remoteSmallImageUri   + '\'' +
+               "\nremoteMediumImageUri='"  + remoteMediumImageUri  + '\'' +
+               "\nremoteLargeImageUri='"   + remoteLargeImageUri   + '\'' +
+               "\ncreateDate="             + createDate            +
+               "\nlastUpdate="             + lastUpdate            + '\'' +
+               '}';
     }
 
     @NonNull
-    @Override
-    public String toString() {
-        return super.toString();
-    }
-
-    // Getters and setters
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
+    @NonNull
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
+    @NonNull
     public String getShoppingListItemName() {
         return shoppingListItemName;
-    }
-
-    public void setShoppingListItemName(String shoppingListItemName) {
-        this.shoppingListItemName = shoppingListItemName;
     }
 
     public int getCategory() {
         return category;
     }
 
-    public void setCategory(int category) {
-        this.category = category;
-    }
-
-    public int getNumberOfItems() {
-        return numberOfItems;
-    }
-
-    public void setNumberOfItems(int numberOfItems) {
-        this.numberOfItems = numberOfItems;
+    public int getNumberOfProducts() {
+        return numberOfProducts;
     }
 
     public int getShelfLife() {
         return shelfLife;
     }
 
-    public void setShelfLife(int shelfLife) {
-        this.shelfLife = shelfLife;
-    }
-
-    public double getBaseSiUnits() {
-        return baseSiUnits;
-    }
-
-    public void setBaseSiUnits(double baseSiUnits) {
-        this.baseSiUnits = baseSiUnits;
+    public double getBaseUnits() {
+        return baseUnits;
     }
 
     public int getUnitOfMeasureSubtype() {
         return unitOfMeasureSubtype;
     }
 
-    public void setUnitOfMeasureSubtype(int unitOfMeasureSubtype) {
-        this.unitOfMeasureSubtype = unitOfMeasureSubtype;
-    }
-
-    public double getPackAvePrice() {
-        return packAvePrice;
-    }
-
-    public void setPackAvePrice(double packAvePrice) {
-        this.packAvePrice = packAvePrice;
-    }
-
     public String getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
+    @Nullable
     public String getWebImageUrl() {
         return webImageUrl;
     }
 
-    public void setWebImageUrl(String webImageUrl) {
-        this.webImageUrl = webImageUrl;
-    }
-
+    @Nullable
     public String getRemoteSmallImageUri() {
         return remoteSmallImageUri;
     }
 
-    public void setRemoteSmallImageUri(String remoteSmallImageUri) {
-        this.remoteSmallImageUri = remoteSmallImageUri;
-    }
-
+    @Nullable
     public String getRemoteMediumImageUri() {
         return remoteMediumImageUri;
     }
 
-    public void setRemoteMediumImageUri(String remoteMediumImageUri) {
-        this.remoteMediumImageUri = remoteMediumImageUri;
-    }
-
+    @Nullable
     public String getRemoteLargeImageUri() {
         return remoteLargeImageUri;
-    }
-
-    public void setRemoteLargeImageUri(@NonNull String remoteLargeImageUri) {
-        this.remoteLargeImageUri = remoteLargeImageUri;
     }
 
     public long getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(long createDate) {
-        this.createDate = createDate;
-    }
-
     public long getLastUpdate() {
         return lastUpdate;
-    }
-
-    public void setLastUpdate(long lastUpdate) {
-        this.lastUpdate = lastUpdate;
-    }
-
-    public String getRemoteProductId() {
-        return remoteProductId;
-    }
-
-    public void setRemoteProductId(String fbProductReferenceKey) {
-        this.remoteProductId = fbProductReferenceKey;
     }
 }

@@ -76,7 +76,7 @@
             android:text="@{NumberStringFormatConverter.toFormat(itemEditableMeasurementTwo, viewModel.itemMeasurementTwo, viewModel.subtype)}"
             app:setUpEditTextForSubtypeSelected="@{viewModel.subtype}"
             app:fieldVisibilityAdapterNumberOfUnits='@{viewModel.numberOfMeasurementUnits}'
-            app:fieldVisibilityAdapterNumberOfItems='@{viewModel.numberOfItems}'
+            app:fieldVisibilityAdapterNumberOfItems='@{viewModel.numberOfProducts}'
             tools:text="22" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -92,7 +92,7 @@
             app:layout_constraintStart_toEndOf="@+id/item_editable_measurement_two"
             app:layout_constraintTop_toTopOf="@+id/item_editable_measurement_two"
             app:setLabelForSubtypeSelected="@{viewModel.subtype}"
-            app:fieldVisibilityAdapterNumberOfItems='@{viewModel.numberOfItems}'
+            app:fieldVisibilityAdapterNumberOfItems='@{viewModel.numberOfProducts}'
             app:fieldVisibilityAdapterNumberOfUnits='@{viewModel.numberOfMeasurementUnits}'
             tools:text="l" />
 
@@ -137,12 +137,12 @@
             app:layout_constraintStart_toEndOf="@+id/item_measurement_label_two"
             app:layout_constraintTop_toTopOf="@+id/item_measurement_label_two"
             app:setUpEditTextForSubtypeSelected="@{viewModel.subtype}"
-            app:fieldVisibilityAdapterNumberOfItems='@{viewModel.numberOfItems}'
+            app:fieldVisibilityAdapterNumberOfItems='@{viewModel.numberOfProducts}'
             android:text="@{NumberStringFormatConverter.toFormat(itemEditableMeasurementOne, viewModel.itemMeasurementOne, viewModel.subtype)}"
             android:afterTextChanged="@{() -> measurementHandler.newMeasurementReceived(itemEditableMeasurementOne)}"
             tools:text="16" />
 
-<!--        app:fieldVisibilityAdapterNumberOfItems='@{viewModel.numberOfItems}'-->
+<!--        app:fieldVisibilityAdapterNumberOfItems='@{viewModel.numberOfProducts}'-->
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/item_measurement_label_one"
@@ -156,7 +156,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/item_editable_measurement_one"
             app:layout_constraintTop_toTopOf="@+id/item_editable_measurement_one"
-            app:fieldVisibilityAdapterNumberOfItems='@{viewModel.numberOfItems}'
+            app:fieldVisibilityAdapterNumberOfItems='@{viewModel.numberOfProducts}'
             app:setLabelForSubtypeSelected="@{viewModel.subtype}"
             tools:text="ml" />
     </androidx.constraintlayout.widget.ConstraintLayout>

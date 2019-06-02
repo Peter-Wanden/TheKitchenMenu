@@ -59,35 +59,35 @@ class SyncUserProductData {
     void syncRemoteData(Handler handler, HandlerWorker worker) {
         this.handler = handler;
         this.worker = worker;
-        findLocalCopy();
+//        findLocalCopy();
     }
 
-    private void findLocalCopy() {
-
-        // Load remote product_uneditable.
-        mPmArray[0] = remoteData.peek();
-
-        worker.execute(() -> {
-            // If exists, get its local counterpart.
-            mPmArray[1] = repository.getUserProductDataByRemoteId(
-                    mPmArray[0].getRemoteProductId());
-
-            if (mPmArray[1] != null) {
-                // If exists, add the local elements ID to the remote elements ID
-                mPmArray[0].setId(mPmArray[1].getId());
-            }
-
-        }).execute(() -> {
-            // Get the local related ProductEntity using the remote reference ID
-            ProductEntity pc = repository.getProductByRemoteId(
-                    mPmArray[0].getRemoteProductId());
-
-            // Add the ProductEntity local ID to the remote ProductUserDataEntity
-            mPmArray[0].setProductId(pc.getId());
-
-            compareLocalWithRemote();
-        });
-    }
+//    private void findLocalCopy() {
+//
+//        // Load remote product_uneditable.
+//        mPmArray[0] = remoteData.peek();
+//
+//        worker.execute(() -> {
+//            // If exists, get its local counterpart.
+//            mPmArray[1] = repository.getUserProductDataByRemoteId(
+//                    mPmArray[0].getRemoteProductId());
+//
+//            if (mPmArray[1] != null) {
+//                // If exists, add the local elements ID to the remote elements ID
+//                mPmArray[0].setId(mPmArray[1].getId());
+//            }
+//
+//        }).execute(() -> {
+//            // Get the local related ProductEntity using the remote reference ID
+//            ProductEntity pc = repository.getProductByRemoteId(
+//                    mPmArray[0].getRemoteProductId());
+//
+//            // Add the ProductEntity local ID to the remote ProductUserDataEntity
+//            mPmArray[0].setProductId(pc.getId());
+//
+//            compareLocalWithRemote();
+//        });
+//    }
 
     private void compareLocalWithRemote() {
 
@@ -117,7 +117,7 @@ class SyncUserProductData {
 
         if (remoteData.size() > 0) {
             // Get the next element in the queue.
-            findLocalCopy();
+//            findLocalCopy();
 
         } else {
 

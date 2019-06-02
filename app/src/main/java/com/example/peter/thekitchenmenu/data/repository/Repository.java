@@ -71,14 +71,6 @@ public class Repository {
         return observableUsersProductData;
     }
 
-    ProductEntity getProductByRemoteId(String remoteId) {
-        return database.productDAO().getByRemoteId(remoteId);
-    }
-
-    ProductUserDataEntity getUserProductDataByRemoteId(String remoteId) {
-        return database.userProductDataDAO().getByRemoteId(remoteId);
-    }
-
     void insertAllProducts(List<ProductEntity> productsToInsert) {
         database.productDAO().insertAll(productsToInsert);
     }

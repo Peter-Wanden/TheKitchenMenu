@@ -13,7 +13,7 @@ public class ProductMeasurementHandlerTest {
             ProductMeasurementViewModel(getApplicationContext());
 
     ProductMeasurementHandler measurementHandler = new
-            ProductMeasurementHandler(getApplicationContext(), viewModel);
+            ProductMeasurementHandler(viewModel);
 
     @Test
     public void testNumberOfItemsUpdated() {

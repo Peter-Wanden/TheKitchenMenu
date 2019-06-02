@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.ui.catalog;
 
-import com.example.peter.thekitchenmenu.data.model.ProductModel;
+import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 
 public interface OnClickProduct {
-    void onClick (ProductModel productModel, boolean isCreator);
+    void onClickProduct(ProductEntity product, boolean isCreator);
 }

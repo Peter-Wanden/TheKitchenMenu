@@ -1,12 +1,11 @@
-package com.example.peter.thekitchenmenu.data.source.local;
+package com.example.peter.thekitchenmenu.data.source.remote;
 
 import androidx.annotation.NonNull;
 
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.data.repository.ProductDataSource;
 
-public class ProductLocalDataSource implements ProductDataSource {
-
+public class ProductRemoteDataSource implements ProductDataSource {
 
     @Override
     public void getProducts(LoadProductsCallback callback) {

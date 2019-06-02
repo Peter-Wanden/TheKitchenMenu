@@ -13,7 +13,7 @@ import static com.example.peter.thekitchenmenu.data.entity.ProductFastTextSearch
 public class ProductFastTextSearch {
 
     public static final String TAG = ProductFastTextSearch.class.getSimpleName();
-    public static final String TABLE_FTS_PRODUCT = "fts_prod_comm";
+    public static final String TABLE_FTS_PRODUCT = "fts_product";
 
     private String description;
     private String shoppingListItemName;

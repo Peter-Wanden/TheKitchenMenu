@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 
 import com.example.peter.thekitchenmenu.R;
 
-import com.example.peter.thekitchenmenu.data.model.ProductModel;
+import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.databinding.FragmentCatalogProductsBinding;
 
 import java.util.List;
@@ -37,14 +37,12 @@ public class ProductCatalogUsersProducts
         super.onCreate(savedInstanceState);
 
         catalogProductsAdapter = new ProductCatalogRecyclerAdapter(requireActivity(), this);
-
         viewModel = ViewModelProviders.of(requireActivity()).get(ViewModelCatalogProducts.class);
 
-        // Observes changes to view model ProdMy list and passes them to the adaptor.
-        final Observer<List<ProductModel>> viewModelProd = vmProds
-                -> catalogProductsAdapter.setProducts(vmProds);
-
-        viewModel.getAllVmProdMy().observe(this, viewModelProd);
+        // Observes changes to view model Product list and passes them to the adaptor.
+        final Observer<List<ProductEntity>> productList = products ->
+                catalogProductsAdapter.setProducts(products);
+        viewModel.getProductData().observe(this, productList);
     }
 
     @Nullable
@@ -100,7 +98,7 @@ public class ProductCatalogUsersProducts
     }
 
     @Override
-    public void onClick(ProductModel productModel, boolean isCreator) {
-        viewModel.selectedItem(productModel, isCreator);
+    public void onClickProduct(ProductEntity product, boolean isCreator) {
+        viewModel.selectedItem(product, isCreator);
     }
 }

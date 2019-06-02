@@ -8,8 +8,8 @@ public class ProductMeasurementModel {
     private static final String TAG = "tkm - MeasurementModel";
 
     private MeasurementSubtype measurementSubtype;
-    private int numberOfItems = 1;
-    private double baseSiUnits;
+    private int numberOfProducts = 1;
+    private double baseUnits;
 
     public MeasurementSubtype getMeasurementSubtype() {
         return measurementSubtype;
@@ -19,20 +19,20 @@ public class ProductMeasurementModel {
         this.measurementSubtype = measurementSubtype;
     }
 
-    public int getNumberOfItems() {
-        return numberOfItems;
+    public int getNumberOfProducts() {
+        return numberOfProducts;
     }
 
-    public void setNumberOfItems(int numberOfItems) {
-        this.numberOfItems = numberOfItems;
+    public void setNumberOfProducts(int numberOfProducts) {
+        this.numberOfProducts = numberOfProducts;
     }
 
-    public double getBaseSiUnits() {
-        return baseSiUnits;
+    public double getBaseUnits() {
+        return baseUnits;
     }
 
-    public void setBaseSiUnits(double baseSiUnits) {
-        this.baseSiUnits = baseSiUnits;
+    public void setBaseUnits(double baseUnits) {
+        this.baseUnits = baseUnits;
     }
 
     @NotNull
@@ -40,8 +40,8 @@ public class ProductMeasurementModel {
     public String toString() {
         return "\ntkm-ProductMeasurementModel{" +
                 "\nmeasurementSubtype="         + measurementSubtype +
-                "\nnumberOfItems="              + numberOfItems +
-                "\nbaseSiUnits="                + baseSiUnits +
+                "\nnumberOfProducts="           + numberOfProducts +
+                "\nbaseUnits="                  + baseUnits +
                 '}';
     }
 }

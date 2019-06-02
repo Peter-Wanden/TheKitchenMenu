@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 
 import com.example.peter.thekitchenmenu.R;
 
-import com.example.peter.thekitchenmenu.data.model.ProductModel;
+import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.databinding.FragmentCatalogProductsBinding;
 
 import androidx.annotation.NonNull;
@@ -36,7 +36,7 @@ public class ProductCatalogAllProducts
 
         adapterProducts = new ProductCatalogRecyclerAdapter(requireActivity(), this);
         viewModelProducts = ViewModelProviders.of(requireActivity()).get(ViewModelCatalogProducts.class);
-        viewModelProducts.getMatchVmProds().observe(
+        viewModelProducts.getMergedProductAndUserData().observe(
                 this, vmListProd -> adapterProducts.setProducts(vmListProd));
     }
 
@@ -89,7 +89,7 @@ public class ProductCatalogAllProducts
     }
 
     @Override
-    public void onClick(ProductModel clickedProduct, boolean isCreator) {
-        viewModelProducts.selectedItem(clickedProduct, isCreator);
+    public void onClickProduct(ProductEntity selectedProduct, boolean isCreator) {
+        viewModelProducts.selectedItem(selectedProduct, isCreator);
     }
 }

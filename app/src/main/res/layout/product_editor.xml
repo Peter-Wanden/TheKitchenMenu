@@ -20,7 +20,7 @@
         android:layout_height="match_parent">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab"
+            android:id="@+id/product_editor_save_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
@@ -28,8 +28,7 @@
             android:layout_margin="@dimen/fab_margin"
             android:src="@drawable/ic_action_done"
             android:tint="@color/white"
-            android:visibility="@{viewModel.allModelsValid ? View.VISIBLE : View.GONE}"
-            android:onClick="@{viewModel.onFabClick()}"
+            android:visibility="@{viewModel.allModelsAreValid ? View.GONE : View.VISIBLE}"
             app:backgroundTint="@color/textColorHighlight" />
 
         <androidx.appcompat.widget.Toolbar
@@ -40,7 +39,7 @@
             android:background="@color/primaryColor"
             android:elevation="@dimen/starting_elevation"
             android:fitsSystemWindows="true"
-            app:title="@{viewModel.title}" />
+            app:title="@{viewModel.activityTitle}" />
 
         <ScrollView
             android:id="@+id/scroll_view"

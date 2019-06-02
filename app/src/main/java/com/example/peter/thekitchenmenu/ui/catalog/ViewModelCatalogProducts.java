@@ -9,7 +9,6 @@ import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.app.Singletons;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.data.entity.ProductUserDataEntity;
-import com.example.peter.thekitchenmenu.data.model.ProductModel;
 import com.example.peter.thekitchenmenu.data.repository.Repository;
 
 import androidx.lifecycle.AndroidViewModel;
@@ -22,142 +21,75 @@ public class ViewModelCatalogProducts extends AndroidViewModel {
 
     private static final String TAG = "ViewModelCatalogProducts";
 
-    // View models.
-    private MediatorLiveData<List<ProductUserDataEntity>> observableProdMys;
-    private MediatorLiveData<List<ProductEntity>> observableProducts;
-    private MediatorLiveData<List<ProductModel>> observeMatchMergeCommunityAndMyProducts;
-
-    // Mutable's.
-    private MutableLiveData<String> observableUserId;
+    private ProductNavigator navigator;
+    private MediatorLiveData<List<ProductEntity>> products;
+    private MutableLiveData<String> userId;
     private MutableLiveData<Boolean> isCreator = new MutableLiveData<>();
 
     // The item selected in the adapter, passed through the click interface of the fragment.
-    private final MutableLiveData<ProductModel> selectedProduct = new MutableLiveData<>();
+    private final MutableLiveData<ProductEntity> selectedProduct = new MutableLiveData<>();
 
     public ViewModelCatalogProducts(Application application) {
         super(application);
 
         setupObservables(application);
-        initialiseDataSource();
+    }
+
+    void setNavigator(ProductNavigator navigator) {
+        this.navigator = navigator;
+    }
+
+    void onActivityDestroyed() {
+        // Clear references to avoid potential memory leaks
+        navigator = null;
+    }
+
+    void addNewProduct() {
+        if(navigator != null) navigator.addNewProduct();
     }
 
     private void setupObservables(Application application) {
-
         Repository repository = ((Singletons) application).getRepository();
 
         // Data models.
-        observableProdMys = new MediatorLiveData<>();
-        observableProdMys.setValue(null);
-        observableProducts = new MediatorLiveData<>();
-        observableProducts.setValue(null);
-
-        // View models.
-        observeMatchMergeCommunityAndMyProducts = new MediatorLiveData<>();
-        observeMatchMergeCommunityAndMyProducts.setValue(null);
+        products = new MediatorLiveData<>();
+        products.setValue(null);
 
         // Request data
-        observableProdMys.addSource(repository.getAllUserProductData(), observableProdMys::setValue);
-        observableProducts.addSource(repository.getAllProducts(), observableProducts::setValue);
+        products.addSource(repository.getAllProducts(), products::setValue);
 
         // Retrieve constants
-        observableUserId = Constants.getUserId();
+        userId = Constants.getUserId();
     }
-
-    private void initialiseDataSource() {
-
-        List<ProductUserDataEntity> mListProdMy = new ArrayList<>();
-        List<ProductEntity> mListProdComm = new ArrayList<>();
-
-        // Adds the data models to the mediator. Ensures all data sets have returned results
-        // before processing data.
-        observeMatchMergeCommunityAndMyProducts.addSource(observableProducts, dmProdComm -> {
-            if (dmProdComm != null) {
-                mListProdComm.addAll(dmProdComm);
-                if (!mListProdMy.isEmpty()) {
-                    observeMatchMergeCommunityAndMyProducts.setValue(
-                            mergeMatchMyComm(mListProdComm, mListProdMy));
-                }
-            }
-        });
-
-        observeMatchMergeCommunityAndMyProducts.addSource(observableProdMys, dmProdMy -> {
-            if (dmProdMy != null) {
-                mListProdMy.addAll(dmProdMy);
-                if (!mListProdComm.isEmpty()) {
-                    observeMatchMergeCommunityAndMyProducts.setValue(
-                            mergeMatchMyComm(mListProdComm, mListProdMy));
-                }
-            }
-        });
-    }
-
     // Converts data models into view models.
-    public MediatorLiveData<List<ProductModel>> getMatchVmProds() {
-        return observeMatchMergeCommunityAndMyProducts;
+
+    public MediatorLiveData<List<ProductEntity>> getMergedProductAndUserData() {
+        return products;
     }
-
-    // TODO - Keeping these lists in virtual memory cannot be good - get all from the database
-    // TODO - Will become clearer when Recipes functionality is added!!!
-    // Matches and merges Products with UserProductData into ProductModel.
-    // TODO - Use collections for a better sort algorithm here
-    private List<ProductModel> mergeMatchMyComm(List<ProductEntity> listDmPc, List<ProductUserDataEntity> listDmPm) {
-
-        List<ProductModel> listVmP = new ArrayList<>();
-
-        for (ProductEntity dmPc : listDmPc) {
-            ProductModel vmp = null;
-
-            for(ProductUserDataEntity dmPm : listDmPm) {
-                if (dmPc.getId() == dmPm.getProductId()) {
-                    vmp = new ProductModel(dmPm, dmPc);
-                    listVmP.add(vmp);
-                }
-            }
-
-            if(vmp == null) {
-                vmp = new ProductModel(dmPc);
-                listVmP.add(vmp);
-            }
-        }
-        return listVmP;
-    }
-
     // Filters through only the ProductUserDataEntity data in the ProductModel view model (My Products).
-    public LiveData<List<ProductModel>> getAllVmProdMy() {
-        return Transformations.map(observeMatchMergeCommunityAndMyProducts, this::filterMy);
+
+    public LiveData<List<ProductEntity>> getProductData() {
+        return products;
     }
-
-    // Filters the view model ProdMy data from the view model ProdComm data.
-    private List<ProductModel> filterMy(List<ProductModel> allMyCommData) {
-        List<ProductModel> listVmP = new ArrayList<>();
-
-        if (allMyCommData != null) {
-            for (ProductModel vMp : allMyCommData) {
-                if(vMp.getUserProductDataId() != 0) {
-                    listVmP.add(vMp);
-                }
-            }
-        }
-        return listVmP;
-    }
-
     // Pushes changes to the user ID to observers.
+
     public MutableLiveData<String> getUserId() {
-        return observableUserId;
+        return userId;
     }
     // Boolean that tells us if this user created the product_uneditable being used.
+
     public MutableLiveData<Boolean> getIsCreator() {
         return isCreator;
     }
-
     // Triggered by selecting an item in the Fragment's RecyclerView.
-    public void selectedItem(ProductModel productModel, boolean isCreator) {
+
+    public void selectedItem(ProductEntity product, boolean isCreator) {
         this.isCreator.setValue(isCreator);
-        selectedProduct.setValue(productModel);
+        selectedProduct.setValue(product);
     }
 
-    // Pushes the selected product_uneditable to observers.
-    public LiveData<ProductModel> getSelected() {
+    // Pushes the selected product to observers.
+    public LiveData<ProductEntity> getSelected() {
         return selectedProduct;
     }
 }

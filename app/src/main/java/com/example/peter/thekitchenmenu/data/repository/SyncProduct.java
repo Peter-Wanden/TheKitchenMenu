@@ -56,28 +56,28 @@ class SyncProduct {
     void syncRemoteData(Handler handler, HandlerWorker worker) {
         this.handler = handler;
         this.worker = worker;
-        matchWithLocalProduct();
+//        matchWithLocalProduct();
     }
 
-    private void matchWithLocalProduct() {
-        remoteProductEntity = null;
-        localProductEntity = null;
-
-        remoteProductEntity = remoteData.peek();
-        Log.d(TAG, "tkm - matchWithLocalProduct: " + remoteProductEntity.toString());
-
-        worker.execute(() -> {
-            // If exists, load local counterpart.
-            localProductEntity = repository.getProductByRemoteId(remoteProductEntity.getRemoteProductId());
-
-            if (localProductEntity != null) {
-                // If exists, add the local elements ID to the remote elements ID
-                remoteProductEntity.setId(localProductEntity.getId());
-                }
-                compareLocalWithRemote();
-            }
-        );
-    }
+//    private void matchWithLocalProduct() {
+//        remoteProductEntity = null;
+//        localProductEntity = null;
+//
+//        remoteProductEntity = remoteData.peek();
+//        Log.d(TAG, "tkm - matchWithLocalProduct: " + remoteProductEntity.toString());
+//
+//        worker.execute(() -> {
+//            // If exists, load local counterpart.
+//            localProductEntity = repository.getProductByRemoteId(remoteProductEntity.getRemoteProductId());
+//
+//            if (localProductEntity != null) {
+//                // If exists, add the local elements ID to the remote elements ID
+//                remoteProductEntity.setId(localProductEntity.getId());
+//                }
+//                compareLocalWithRemote();
+//            }
+//        );
+//    }
 
     private void compareLocalWithRemote() {
 
@@ -106,7 +106,7 @@ class SyncProduct {
         if (remoteData.size() > 0) {
 
             // Get the next element in the queue.
-            matchWithLocalProduct();
+//            matchWithLocalProduct();
 
         } else {
 
@@ -151,7 +151,7 @@ class SyncProduct {
 
                     if (productEntity != null) {
                         // Add the remote reference key.
-                        productEntity.setRemoteProductId(shot.getKey());
+//                        productEntity.setRemoteProductId(shot.getKey());
                         remoteSnapShot.add(productEntity);
                     }
                 }

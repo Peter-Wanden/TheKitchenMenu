@@ -31,10 +31,6 @@ public interface UsersProductDataDAO {
     LiveData<ProductUserDataEntity> getById(int id);
 
     @Query("SELECT * FROM " + TABLE_USERS_PRODUCT_DATA +
-            " WHERE " + REMOTE_PRODUCT_ID + " = :remoteId")
-    ProductUserDataEntity getByRemoteId(String remoteId);
-
-    @Query("SELECT * FROM " + TABLE_USERS_PRODUCT_DATA +
             " WHERE " + PRODUCT_ID + " = :productId")
     ProductUserDataEntity getByLocalProductId(int productId);
 
