@@ -2,53 +2,55 @@ package com.example.peter.thekitchenmenu.ui.catalog;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
+import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
 import com.example.peter.thekitchenmenu.databinding.ActivityCatalogProductBinding;
+import com.example.peter.thekitchenmenu.ui.ViewModelHolder;
 import com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductEditorActivity;
+import com.example.peter.thekitchenmenu.utils.ActivityUtils;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
-public class ProductCatalogActivity extends AppCompatActivity implements ProductNavigator {
+public class CatalogActivity extends AppCompatActivity implements ProductNavigator {
 
     private static final String TAG = "tkm-ProductCatalogAct";
+    public static final String PRODUCT_CATALOG_VIEW_MODEL_TAG = "PRODUCT_CATALOG_VIEW_MODEL_TAG";
 
-    ViewModelCatalogProducts viewModel;
+    CatalogProductsViewModel viewModel;
     ActivityCatalogProductBinding bindings;
-    ProductCatalogFragmentPageAdapter tabPageAdapter;
+    CatalogFragmentPageAdapter tabPageAdapter;
     ViewPager tabViewPager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        initialiseViews();
-        setupFragmentPageAdapter();
+        initialiseBindings();
         setupToolBar();
         setupFab();
+        viewModel = findOrCreateViewModel();
         setupViewModel();
+        setupFragmentPageAdapter();
     }
 
-    private void initialiseViews() {
+    private void initialiseBindings() {
         // TODO - Bind views to XML files
         setDefaultKeyMode(DEFAULT_KEYS_SEARCH_LOCAL);
         bindings = DataBindingUtil.setContentView(this, R.layout.activity_catalog_product);
         bindings.activityCatalogProductPb.setVisibility(View.GONE);
-
     }
 
     private void setupFragmentPageAdapter() {
-        tabPageAdapter = new ProductCatalogFragmentPageAdapter(getSupportFragmentManager());
+        tabPageAdapter = new CatalogFragmentPageAdapter(getSupportFragmentManager());
         tabViewPager = bindings.activityCatalogProductVp;
         tabViewPager.setAdapter(tabPageAdapter);
 
@@ -61,9 +63,10 @@ public class ProductCatalogActivity extends AppCompatActivity implements Product
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        tabPageAdapter = new ProductCatalogFragmentPageAdapter(getSupportFragmentManager());
-        tabPageAdapter.addFragment(new ProductCatalogAllProducts(), getString(R.string.activity_catalog_products_tab_1_title));
-        tabPageAdapter.addFragment(new ProductCatalogUsersProducts(), getString(R.string.activity_catalog_products_tab_2_title));
+        tabPageAdapter = new CatalogFragmentPageAdapter(getSupportFragmentManager());
+        tabPageAdapter.addFragment(new CatalogAllFragment(), getString(R.string.activity_catalog_products_tab_1_title));
+        tabPageAdapter.addFragment(new CatalogUsedFragment(), getString(R.string.activity_catalog_products_tab_2_title));
+
         viewPager.setAdapter(tabPageAdapter);
     }
 
@@ -78,10 +81,31 @@ public class ProductCatalogActivity extends AppCompatActivity implements Product
         });
     }
 
-    private void setupViewModel() {
-        viewModel = ViewModelProviders.of(this).get(ViewModelCatalogProducts.class);
-        viewModel.setNavigator(this);
+    private CatalogProductsViewModel findOrCreateViewModel() {
+        @SuppressWarnings("unchecked")
+        ViewModelHolder<CatalogProductsViewModel> retainedViewModel =
+                (ViewModelHolder<CatalogProductsViewModel>) getSupportFragmentManager().
+                        findFragmentByTag(PRODUCT_CATALOG_VIEW_MODEL_TAG);
 
+        if (retainedViewModel != null && retainedViewModel.getViewModel() != null)
+            return retainedViewModel.getViewModel();
+
+        else {
+            CatalogProductsViewModel viewModel = new CatalogProductsViewModel(
+                    getApplication(),
+                    DatabaseInjection.provideProductsRepository(getApplicationContext()));
+
+            ActivityUtils.addFragmentToActivity(
+                    getSupportFragmentManager(),
+                    ViewModelHolder.createContainer(viewModel),
+                    PRODUCT_CATALOG_VIEW_MODEL_TAG);
+
+            return viewModel;
+        }
+    }
+
+    private void setupViewModel() {
+        viewModel.setNavigator(this);
         viewModel.getSelected().observe(this, selectedProduct -> {
             if (selectedProduct != null) {
                 launchDetailActivity(selectedProduct);
@@ -97,7 +121,6 @@ public class ProductCatalogActivity extends AppCompatActivity implements Product
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         switch (item.getItemId()) {
 
             case R.id.action_search:
@@ -130,7 +153,7 @@ public class ProductCatalogActivity extends AppCompatActivity implements Product
     // Todo - this will be the product viewing and adding user details page (with fab to editing
     //  if owned and not used by others)
     private void launchDetailActivity(ProductEntity selectedProduct) {
-        Intent intent = new Intent(ProductCatalogActivity.this, ProductEditorActivity.class);
+        Intent intent = new Intent(CatalogActivity.this, ProductEditorActivity.class);
         intent.putExtra(ProductEditorActivity.EXTRA_PRODUCT_ID, selectedProduct.getId());
         intent.putExtra(ProductEditorActivity.EXTRA_IS_CREATOR, viewModel.getIsCreator().getValue());
         startActivity(intent);

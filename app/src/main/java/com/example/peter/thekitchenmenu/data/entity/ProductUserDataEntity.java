@@ -1,24 +1,21 @@
 package com.example.peter.thekitchenmenu.data.entity;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import com.google.firebase.database.Exclude;
-
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import com.google.android.gms.common.internal.Objects;
+
 import java.util.Calendar;
 import java.util.UUID;
 
-import static com.example.peter.thekitchenmenu.data.entity.ProductEntity.REMOTE_PRODUCT_ID;
 import static com.example.peter.thekitchenmenu.data.entity.ProductUserDataEntity.TABLE_USERS_PRODUCT_DATA;
 
 @Entity(tableName = TABLE_USERS_PRODUCT_DATA)
-public class ProductUserDataEntity {
+public final class ProductUserDataEntity {
 
     public static final String TAG = "ProductUserDataEntity";
 
@@ -35,32 +32,36 @@ public class ProductUserDataEntity {
     @PrimaryKey
     @NonNull
     @ColumnInfo(name = ID)
-    private String id;
+    private final String id;
 
+    @NonNull
     @ColumnInfo(name = PRODUCT_ID)
-    private String productId;
+    private final String productId;
 
     @ColumnInfo(name = RETAILER)
-    private String retailer;
+    private final String retailer;
 
     @ColumnInfo(name = LOCATION_ROOM)
-    private String locationRoom;
+    private final String locationRoom;
 
     @ColumnInfo(name = LOCATION_IN_ROOM)
-    private String locationInRoom;
+    private final String locationInRoom;
 
     @ColumnInfo(name = PRICE)
-    private double price;
+    private final double price;
 
     @ColumnInfo(name = CREATE_DATE)
-    private long createDate;
+    private final long createDate;
 
     @ColumnInfo(name = LAST_UPDATE)
-    private long lastUpdate;
+    private final long lastUpdate;
+
+    @Ignore
+    private ProductEntity product;
 
     // Used by room and for copying
-    public ProductUserDataEntity(String id,
-                                 String productId,
+    public ProductUserDataEntity(@NonNull String id,
+                                 @NonNull String productId,
                                  String retailer,
                                  String locationRoom,
                                  String locationInRoom,
@@ -80,7 +81,7 @@ public class ProductUserDataEntity {
 
     // Use this constructor to create a new ProductUserDataEntity
     @Ignore
-    public ProductUserDataEntity(String productId,
+    public ProductUserDataEntity(@NonNull String productId,
                                  String retailer,
                                  String locationRoom,
                                  String locationInRoom,
@@ -100,10 +101,29 @@ public class ProductUserDataEntity {
         return Calendar.getInstance().getTimeInMillis();
     }
 
+    @Override
+    public boolean equals(@Nullable Object o) {
+
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProductUserDataEntity entity = (ProductUserDataEntity) o;
+
+        return Objects.equal(id,                entity.id)              &&
+               Objects.equal(productId,         entity.productId)       &&
+               Objects.equal(retailer,          entity.retailer)        &&
+               Objects.equal(locationRoom,      entity.locationRoom)    &&
+               Objects.equal(locationInRoom,    entity.locationInRoom)  &&
+               Objects.equal(price,             entity.price)           &&
+               Objects.equal(createDate,        entity.createDate)      &&
+               Objects.equal(lastUpdate,        entity.lastUpdate);
+    }
+
+    @NonNull
     public String getId() {
         return id;
     }
 
+    @NonNull
     public String getProductId() {
         return productId;
     }
@@ -130,5 +150,15 @@ public class ProductUserDataEntity {
 
     public long getLastUpdate() {
         return lastUpdate;
+    }
+
+    @Ignore
+    public ProductEntity getProduct() {
+        return product;
+    }
+
+    @Ignore
+    public void setProduct(ProductEntity product) {
+        this.product = product;
     }
 }

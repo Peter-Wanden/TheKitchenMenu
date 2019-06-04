@@ -113,14 +113,14 @@ class SyncProduct {
             worker.execute(() -> {
 
                 if (batchInserts.size() > 0) {
-                    repository.insertAllProducts(batchInserts);
+//                    repository.insertAllProducts(batchInserts);
                     batchInserts.clear();
                 }
             }
 
             ).execute(() -> {
                 if (batchUpdates.size() > 0) {
-                    repository.updateProducts(batchUpdates);
+//                    repository.updateProducts(batchUpdates);
                     batchUpdates.clear();
                 }
 

@@ -1,5 +1,7 @@
 package com.example.peter.thekitchenmenu.data.repository;
 
+import android.database.Cursor;
+
 import androidx.annotation.NonNull;
 
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
@@ -34,4 +36,6 @@ public interface ProductDataSource {
     void deleteAllProducts();
 
     void deleteProduct(@NonNull String productId);
+
+    Cursor getMatchingProducts(String searchQuery);
 }

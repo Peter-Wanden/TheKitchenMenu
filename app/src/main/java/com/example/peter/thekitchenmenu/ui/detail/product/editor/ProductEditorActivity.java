@@ -1,6 +1,7 @@
 package com.example.peter.thekitchenmenu.ui.detail.product.editor;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
@@ -8,10 +9,12 @@ import com.example.peter.thekitchenmenu.data.model.ImageModel;
 import com.example.peter.thekitchenmenu.data.model.ProductIdentityModel;
 import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
 import com.example.peter.thekitchenmenu.databinding.ProductEditorBinding;
+import com.example.peter.thekitchenmenu.ui.ViewModelFactory;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.utils.imageeditor.ImageEditorViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Observer;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
@@ -25,8 +28,8 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
     public static final String EXTRA_IS_CREATOR = "IS_CREATOR";
 
     ProductEditorBinding productEditorBinding;
-    ProductEditorViewModel productEditorViewModel;
 
+    ProductEditorViewModel productEditorViewModel;
     ImageEditorViewModel imageEditorViewModel;
     ProductIdentityViewModel identityEditorViewModel;
     ProductMeasurementViewModel measurementEditorViewModel;
@@ -35,38 +38,40 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        initialiseViews();
+        initialiseBindings();
+        setupToolbar();
+        setupFab();
         setViewModels();
         setObservers();
-        setupFab();
-
-        // TODO - Get the intent, establish if existing product to edit or new product to create
-//        Intent intent = getIntent();
-//
-//        if (intent != null && intent.hasExtra(PRODUCT_ID)) {
-//
-//            productEditorViewModel.isNewProduct(false);
-//
-//        } else {
-//
-//            productEditorViewModel.isNewProduct(true);
-//
-//        }
 
         setTitle(productEditorViewModel.getActivityTitle());
+
+        subscribeToNavigationChanges();
     }
 
-    private void initialiseViews() {
+    private void subscribeToNavigationChanges() {
+        productEditorViewModel.getEditingCompleteEvent().observe(this, aVoid -> {
+            ProductEditorActivity.this.onProductSaved();
+            Log.d(TAG, "subscribeToNavigationChanges: Product saved");
+        });
+    }
 
+    private void initialiseBindings() {
         productEditorBinding = DataBindingUtil.setContentView(this, R.layout.product_editor);
         productEditorBinding.setLifecycleOwner(this);
+    }
+
+    private void setupToolbar() {
         setSupportActionBar(productEditorBinding.toolbar);
     }
 
-    private void setViewModels() {
+    private void setupFab() {
+        FloatingActionButton fab = findViewById(R.id.product_editor_save_fab);
+        fab.setOnClickListener(v -> productEditorViewModel.onFabClick());
+    }
 
-        productEditorViewModel = ViewModelProviders.of(
-                this).get(ProductEditorViewModel.class);
+    private void setViewModels() {
+        productEditorViewModel = obtainViewModel(this);
 
         imageEditorViewModel = ViewModelProviders.of(
                 this).get(ImageEditorViewModel.class);
@@ -76,6 +81,11 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
 
         measurementEditorViewModel = ViewModelProviders.of(
                 this).get(ProductMeasurementViewModel.class);
+    }
+
+    private static ProductEditorViewModel obtainViewModel(FragmentActivity activity) {
+        ViewModelFactory factory = ViewModelFactory.getInstance(activity.getApplication());
+        return ViewModelProviders.of(activity, factory).get(ProductEditorViewModel.class);
     }
 
     private void setObservers() {
@@ -133,13 +143,13 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
                 this, measurementModelOutObserver);
     }
 
-    private void setupFab() {
-        FloatingActionButton fab = findViewById(R.id.product_editor_save_fab);
-        fab.setOnClickListener(v -> productEditorViewModel.onFabClick());
-    }
-
     @Override
     public void reviewBeforeSave() {
 
+    }
+
+    @Override
+    public void onProductSaved() {
+        finish();
     }
 }

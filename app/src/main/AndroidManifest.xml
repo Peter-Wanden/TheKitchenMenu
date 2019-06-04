@@ -89,7 +89,7 @@
 
         <!-- Activity to view lists of productEntities -->
         <activity
-            android:name=".ui.catalog.ProductCatalogActivity"
+            android:name=".ui.catalog.CatalogActivity"
             android:label="@string/title_product_catalog"
             android:theme="@style/AppTheme"
             android:parentActivityName=".ui.main.MainActivity">

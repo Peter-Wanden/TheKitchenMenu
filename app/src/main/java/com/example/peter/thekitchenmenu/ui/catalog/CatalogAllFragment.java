@@ -10,34 +10,58 @@ import com.example.peter.thekitchenmenu.R;
 
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.databinding.FragmentCatalogProductsBinding;
+import com.example.peter.thekitchenmenu.ui.ViewModelHolder;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class ProductCatalogAllProducts
+import static com.example.peter.thekitchenmenu.ui.catalog.CatalogActivity.PRODUCT_CATALOG_VIEW_MODEL_TAG;
+
+public class CatalogAllFragment
         extends Fragment
         implements OnClickProduct {
 
     // TODO - make a super class, for FragmentCommunityProducts and FragmentMyProducts to inherit.
-    private static final String TAG = "ProductCatalogAllProducts";
+    private static final String TAG = "tkm-CatalogAllFragment";
 
-    private ProductCatalogRecyclerAdapter adapterProducts;
-    private ViewModelCatalogProducts viewModelProducts;
+    private CatalogRecyclerAdapter adapter;
+    private CatalogProductsViewModel viewModel;
+
+    public CatalogAllFragment(){}
+
+    public static CatalogAllFragment newInstance() {
+        return new CatalogAllFragment();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        viewModel.loadAllProducts();
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        adapterProducts = new ProductCatalogRecyclerAdapter(requireActivity(), this);
-        viewModelProducts = ViewModelProviders.of(requireActivity()).get(ViewModelCatalogProducts.class);
-        viewModelProducts.getMergedProductAndUserData().observe(
-                this, vmListProd -> adapterProducts.setProducts(vmListProd));
+        adapter = new CatalogRecyclerAdapter(requireActivity(), this);
+        viewModel = getViewModel();
+    }
+
+    private CatalogProductsViewModel getViewModel() {
+        @SuppressWarnings("unchecked")
+        ViewModelHolder<CatalogProductsViewModel> retainedViewModel =
+                (ViewModelHolder<CatalogProductsViewModel>)
+                        requireActivity().getSupportFragmentManager().
+                        findFragmentByTag(PRODUCT_CATALOG_VIEW_MODEL_TAG);
+
+        if (retainedViewModel != null && retainedViewModel.getViewModel() != null)
+            return retainedViewModel.getViewModel();
+        else return null;
     }
 
     @Nullable
@@ -66,7 +90,7 @@ public class ProductCatalogAllProducts
         }
 
         binding.fragmentCatalogProductsRv.setHasFixedSize(true);
-        binding.fragmentCatalogProductsRv.setAdapter(adapterProducts);
+        binding.fragmentCatalogProductsRv.setAdapter(adapter);
 
         return binding.getRoot();
     }
@@ -90,6 +114,6 @@ public class ProductCatalogAllProducts
 
     @Override
     public void onClickProduct(ProductEntity selectedProduct, boolean isCreator) {
-        viewModelProducts.selectedItem(selectedProduct, isCreator);
+        viewModel.selectedItem(selectedProduct, isCreator);
     }
 }

@@ -10,7 +10,9 @@ import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.data.model.ProductIdentityModel;
 import com.example.peter.thekitchenmenu.data.model.ImageModel;
 import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
+import com.example.peter.thekitchenmenu.data.repository.ProductRepository;
 import com.example.peter.thekitchenmenu.utils.ObservableViewModel;
+import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.Bindable;
@@ -22,8 +24,10 @@ public class ProductEditorViewModel extends ObservableViewModel {
 
     private String activityTitle; // "Add new product" or "Edit product"
 
+    private ProductRepository repository;
     // From repo, or empty if new product. Set an updatedProductEntity here to update repo
     private MutableLiveData<ProductEntity> existingProductEntity = new MutableLiveData<>();
+    private SingleLiveEvent<Void> editingComplete = new SingleLiveEvent<>();
 
     // Populated as new data is set from models. Once complete post to existingProductEntity
     private ProductEntity updatedProductEntity;
@@ -43,10 +47,11 @@ public class ProductEditorViewModel extends ObservableViewModel {
 
     // TODO - Change category and shelf life to an enum
 
-    public ProductEditorViewModel(@NonNull Application applicationContext) {
-        super(applicationContext);
+    public ProductEditorViewModel(@NonNull Application application, ProductRepository repository) {
+        super(application);
+        this.repository = repository;
 
-        activityTitle = applicationContext.getString(R.string.activity_title_edit_product);
+        activityTitle = application.getString(R.string.activity_title_edit_product);
 
         ProductEntity productEntityMetricMassTest = new ProductEntity(
                 "Heinz Baked Beanz, 4 pack",
@@ -97,6 +102,10 @@ public class ProductEditorViewModel extends ObservableViewModel {
         return activityTitle;
     }
 
+    SingleLiveEvent<Void> getEditingCompleteEvent() {
+        return editingComplete;
+    }
+
     MutableLiveData<ProductEntity> getExistingProductEntity() {
         if (existingProductEntity == null) existingProductEntity = new MutableLiveData<>();
         return existingProductEntity;
@@ -128,7 +137,7 @@ public class ProductEditorViewModel extends ObservableViewModel {
         }
     }
 
-    public void onFabClick() {
+    void onFabClick() {
         saveProduct();
     }
 
@@ -149,6 +158,12 @@ public class ProductEditorViewModel extends ObservableViewModel {
                 updatedImageModel.getLocalLargeImageUri());
 
         Log.d(TAG, "saveProduct: updated Product entity=" + updatedProductEntity.toString());
+        createNewProduct(updatedProductEntity);
+    }
+
+    private void createNewProduct(ProductEntity product) {
+        repository.saveProduct(product);
+        editingComplete.call();
     }
 
     @Override

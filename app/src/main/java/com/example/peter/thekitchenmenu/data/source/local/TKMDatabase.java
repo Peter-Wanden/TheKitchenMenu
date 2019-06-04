@@ -7,8 +7,6 @@ import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.data.entity.ProductUserDataEntity;
 import com.example.peter.thekitchenmenu.data.entity.ProductFastTextSearch;
 
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -29,11 +27,10 @@ import static com.example.peter.thekitchenmenu.data.entity.ProductFastTextSearch
         exportSchema = false)
 public abstract class TKMDatabase extends RoomDatabase {
 
-    private static final String TAG = "TKMDatabase";
     private static final String TKM_LOCAL_DATABASE = "tkm_local_database";
     private static TKMDatabase sInstance;
 
-    public abstract ProductDAO productDAO();
+    public abstract ProductEntityDao productEntityDao();
     public abstract UsersProductDataDAO userProductDataDAO();
 
     private final MutableLiveData<Boolean> isDatabaseCreated = new MutableLiveData<>();
@@ -74,15 +71,6 @@ public abstract class TKMDatabase extends RoomDatabase {
                 .build();
     }
 
-    private static void insertData(final TKMDatabase database,
-                                   final List<ProductEntity> productEntities,
-                                   final List<ProductUserDataEntity> productUserDatumEntities) {
-        database.runInTransaction(() -> {
-            database.productDAO().insertAll(productEntities);
-            database.userProductDataDAO().insertAll(productUserDatumEntities);
-        });
-    }
-
     /**
      * Check whether the database already exists and expose it via {@link #getDatabaseCreated()}
      */
@@ -106,9 +94,8 @@ public abstract class TKMDatabase extends RoomDatabase {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
             database.execSQL("CREATE VIRTUAL TABLE IF NOT EXISTS " + TABLE_FTS_PRODUCT +
-                            " USING FTS4(" +
-                            DESCRIPTION + " TEXT, " +
-                    SHOPPING_LIST_ITEM_NAME + " TEXT, " +
+                            " USING FTS4(" + DESCRIPTION + " TEXT, " +
+                                SHOPPING_LIST_ITEM_NAME + " TEXT, " +
                             "content=" + TABLE_PRODUCT + ")");
 
             database.execSQL("INSERT INTO " + TABLE_FTS_PRODUCT +

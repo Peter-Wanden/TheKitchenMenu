@@ -10,6 +10,7 @@ import com.example.peter.thekitchenmenu.R;
 
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.databinding.FragmentCatalogProductsBinding;
+import com.example.peter.thekitchenmenu.ui.ViewModelHolder;
 
 import java.util.List;
 
@@ -18,31 +19,45 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class ProductCatalogUsersProducts
+import static com.example.peter.thekitchenmenu.ui.catalog.CatalogActivity.PRODUCT_CATALOG_VIEW_MODEL_TAG;
+
+public class CatalogUsedFragment
         extends Fragment
         implements OnClickProduct {
 
-    private static final String TAG = "ProductCatalogUsersProducts";
+    private static final String TAG = "CatalogUsedFragment";
 
-    private ProductCatalogRecyclerAdapter catalogProductsAdapter;
-    private ViewModelCatalogProducts viewModel;
+    private CatalogRecyclerAdapter catalogProductsAdapter;
+    private CatalogProductsViewModel viewModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        catalogProductsAdapter = new ProductCatalogRecyclerAdapter(requireActivity(), this);
-        viewModel = ViewModelProviders.of(requireActivity()).get(ViewModelCatalogProducts.class);
+        catalogProductsAdapter = new CatalogRecyclerAdapter(requireActivity(), this);
+        viewModel = getViewModel();
+        viewModel.loadAllProducts();
 
         // Observes changes to view model Product list and passes them to the adaptor.
         final Observer<List<ProductEntity>> productList = products ->
                 catalogProductsAdapter.setProducts(products);
-        viewModel.getProductData().observe(this, productList);
+        viewModel.getProducts().observe(this, productList);
+    }
+
+    private CatalogProductsViewModel getViewModel() {
+        @SuppressWarnings("unchecked")
+        ViewModelHolder<CatalogProductsViewModel> retainedViewModel =
+                (ViewModelHolder<CatalogProductsViewModel>)
+                        requireActivity().getSupportFragmentManager().
+                                findFragmentByTag(PRODUCT_CATALOG_VIEW_MODEL_TAG);
+
+        if (retainedViewModel != null && retainedViewModel.getViewModel() != null)
+            return retainedViewModel.getViewModel();
+        else return null;
     }
 
     @Nullable
@@ -63,6 +78,7 @@ public class ProductCatalogUsersProducts
 
             mBinding.fragmentCatalogProductsRv.
                     setLayoutManager(gridManager);
+
         } else {
             LinearLayoutManager linearManager = new
                     LinearLayoutManager(requireActivity().getApplicationContext(),
@@ -74,7 +90,6 @@ public class ProductCatalogUsersProducts
         }
 
         mBinding.fragmentCatalogProductsRv.setHasFixedSize(true);
-
         mBinding.fragmentCatalogProductsRv.setAdapter(catalogProductsAdapter);
 
         return mBinding.getRoot();

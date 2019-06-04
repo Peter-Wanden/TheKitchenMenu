@@ -158,7 +158,7 @@
     <string name="activity_detail_product_error_incomplete_fields">Please ensure you have completed
         all fields.</string>
 
-    <!-- ProductCatalogActivity -->
+    <!-- CatalogActivity -->
     <string name="title_product_catalog">Product Catalog</string>
     <string name="product_catalog_empty_view_title_text">The cupboards are empty.</string>
     <string name="product_catalog_empty_view_subtitle_text">Press + to add some productEntities!</string>

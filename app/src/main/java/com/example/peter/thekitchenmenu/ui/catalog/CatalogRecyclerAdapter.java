@@ -18,9 +18,9 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class ProductCatalogRecyclerAdapter
+public class CatalogRecyclerAdapter
         extends
-        RecyclerView.Adapter<ProductCatalogRecyclerAdapter.AdapterViewHolder> {
+        RecyclerView.Adapter<CatalogRecyclerAdapter.AdapterViewHolder> {
 
     private static final String TAG = "tkm-ProductCatalogAdapter";
     private final Context context;
@@ -28,7 +28,7 @@ public class ProductCatalogRecyclerAdapter
     private List<ProductEntity> productList;
     final private OnClickProduct clickHandler;
 
-    ProductCatalogRecyclerAdapter(Context context, OnClickProduct clickHandler) {
+    CatalogRecyclerAdapter(Context context, OnClickProduct clickHandler) {
         this.context = context;
         this.clickHandler = clickHandler;
     }
@@ -57,7 +57,7 @@ public class ProductCatalogRecyclerAdapter
 
         // TODO - Picasso, add image caching.
         /* Get and set the image */
-        if (!product.getRemoteSmallImageUri().equals("")) {
+        if (product.getWebImageUrl() != null && !product.getWebImageUrl().isEmpty()) {
             Picasso.get().load(product.getRemoteSmallImageUri()).into(holder.productImageIV);
         } else {
             Picasso.get().load(R.drawable.placeholder).into(holder.productImageIV);
