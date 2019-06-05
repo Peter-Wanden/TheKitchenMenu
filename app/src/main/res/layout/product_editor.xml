@@ -66,7 +66,7 @@
                     android:name="com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductIdentityEditorFragment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    bind:layout="@layout/product_identity_editor">
+                    bind:layout="@layout/product_editor_identity">
                 </fragment>
 
                 <fragment
@@ -74,7 +74,7 @@
                     android:name="com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductMeasurementEditorFragment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    bind:layout="@layout/product_measurement_editor">
+                    bind:layout="@layout/product_editor_measurement">
                 </fragment>
             </LinearLayout>
         </ScrollView>

@@ -64,7 +64,7 @@ class SyncUserProductData {
 
 //    private void findLocalCopy() {
 //
-//        // Load remote product_uneditable.
+//        // Load remote product_viewer_identity.
 //        mPmArray[0] = remoteData.peek();
 //
 //        worker.execute(() -> {

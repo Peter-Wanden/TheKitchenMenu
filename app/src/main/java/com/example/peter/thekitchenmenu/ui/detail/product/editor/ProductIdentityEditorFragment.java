@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.model.ProductIdentityModel;
-import com.example.peter.thekitchenmenu.databinding.ProductIdentityEditorBinding;
+import com.example.peter.thekitchenmenu.databinding.ProductEditorIdentityBinding;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,7 +24,7 @@ public class ProductIdentityEditorFragment extends Fragment {
 
     private static final String TAG = "ProductIdentityEditorFr";
 
-    private ProductIdentityEditorBinding binding;
+    private ProductEditorIdentityBinding binding;
     private ProductIdentityViewModel viewModel;
 
     @Nullable
@@ -35,7 +35,7 @@ public class ProductIdentityEditorFragment extends Fragment {
 
         binding = DataBindingUtil.inflate(
                 inflater,
-                R.layout.product_identity_editor,
+                R.layout.product_editor_identity,
                 container,
                 false);
 

@@ -68,7 +68,7 @@ public class WidgetServiceList
 
             RemoteViews views = new RemoteViews(
                     context.getPackageName(),
-                    R.layout.list_item_product_widget);
+                    R.layout.product_list_item_widget);
 
             /* Set the TextView text color */
             views.setTextColor(R.id.list_item_product_widget_tv_description,

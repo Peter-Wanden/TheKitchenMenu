@@ -11,7 +11,7 @@ public abstract class Constants {
      * PRODUCTS *
      ************/
 
-    /* Key values for a product_uneditable */
+    /* Key values for a product_viewer_identity */
     public static final String PRODUCT_KEY = "current_product_key";
     public static final String PRODUCT_REMOTE_REFERENCE_KEY = "product_fb_reference_key";
     public static final String PRODUCT_IS_CREATOR_KEY = "product_is_owner_key";

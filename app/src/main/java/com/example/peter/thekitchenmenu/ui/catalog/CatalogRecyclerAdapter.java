@@ -1,74 +1,63 @@
 package com.example.peter.thekitchenmenu.ui.catalog;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.peter.thekitchenmenu.BR;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
+import com.example.peter.thekitchenmenu.databinding.ProductListItemBinding;
 import com.example.peter.thekitchenmenu.utils.Converters;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class CatalogRecyclerAdapter
-        extends
-        RecyclerView.Adapter<CatalogRecyclerAdapter.AdapterViewHolder> {
+        extends RecyclerView.Adapter<CatalogRecyclerAdapter.AdapterViewHolder>
+        implements ProductItemUserActionsListener {
 
-    private static final String TAG = "tkm-ProductCatalogAdapter";
+    private static final String TAG = "tkm-CatalogAdapter";
+
     private final Context context;
-
+    private final CatalogProductsViewModel viewModel;
     private List<ProductEntity> productList;
-    final private OnClickProduct clickHandler;
 
-    CatalogRecyclerAdapter(Context context, OnClickProduct clickHandler) {
+    CatalogRecyclerAdapter(Context context, CatalogProductsViewModel viewModel) {
         this.context = context;
-        this.clickHandler = clickHandler;
+        this.viewModel = viewModel;
     }
 
     /* View holder */
     @NonNull
     @Override
-    public AdapterViewHolder onCreateViewHolder(
+    public CatalogRecyclerAdapter.AdapterViewHolder onCreateViewHolder(
             @NonNull ViewGroup viewGroup,
             int viewType) {
 
-        View view = LayoutInflater
-                .from(context)
-                .inflate(R.layout.list_item_product, viewGroup, false);
+        ProductListItemBinding binding = DataBindingUtil.inflate(
+                LayoutInflater.from(viewGroup.getContext()),
+                R.layout.product_list_item,
+                viewGroup,
+                false);
 
-        return new AdapterViewHolder(view);
+        return new AdapterViewHolder(binding);
     }
 
     @Override
-    public void onBindViewHolder(
-            @NonNull AdapterViewHolder holder,
-            int position) {
-
-        ProductEntity product = productList.get(position);
-        holder.descriptionTV.setText(product.getDescription());
-
-        // TODO - Picasso, add image caching.
-        /* Get and set the image */
-        if (product.getWebImageUrl() != null && !product.getWebImageUrl().isEmpty()) {
-            Picasso.get().load(product.getRemoteSmallImageUri()).into(holder.productImageIV);
-        } else {
-            Picasso.get().load(R.drawable.placeholder).into(holder.productImageIV);
-        }
-
-        /* Set the pack size */
-        holder.baseUnitsTV.setText(String.valueOf(product.getBaseUnits()));
-
-        /* Set the unit of measure */
-        holder.unitOfMeasureTV.setText(Converters.getUnitOfMeasureString
-                (context, product.getUnitOfMeasureSubtype()));
+    public void onBindViewHolder(@NonNull AdapterViewHolder holder, int position) {
+        final ProductEntity product = productList.get(position);
+        holder.bind(product);
+        holder.binding.setListener(this);
     }
 
     @Override
@@ -87,41 +76,23 @@ public class CatalogRecyclerAdapter
         notifyDataSetChanged();
     }
 
+    @Override
+    public void onProductClicked(ProductEntity product) {
+        Log.d(TAG, "onProductClicked: description=" + product.getDescription());
+    }
+
     /* Inner class for creating ViewHolders */
-    class AdapterViewHolder
-            extends
-            RecyclerView.ViewHolder
-            implements
-            View.OnClickListener {
+    class AdapterViewHolder extends RecyclerView.ViewHolder {
+        ProductListItemBinding binding;
 
-        final TextView descriptionTV;
-        final TextView baseUnitsTV;
-        final TextView unitOfMeasureTV;
-        final ImageView productImageIV;
-
-        AdapterViewHolder(View itemView) {
-            super(itemView);
-
-            descriptionTV = itemView.findViewById(R.id.list_item_product_tv_description);
-            baseUnitsTV = itemView.findViewById(R.id.list_item_product_tv_pack_size);
-            unitOfMeasureTV = itemView.findViewById(R.id.list_item_product_tv_label_unit_of_measure);
-            productImageIV = itemView.findViewById(R.id.list_item_product_iv_product_image);
-
-            itemView.setOnClickListener(this);
+        AdapterViewHolder(ProductListItemBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
 
-        @Override
-        public void onClick(View v) {
-
-            // Get the product from the adapter at the clicked position
-            ProductEntity product = productList.get(getAdapterPosition());
-
-            // Find out if this user was the creator of the product_uneditable
-            boolean isCreator = Constants.getUserId().getValue().
-                    equals(product.getCreatedBy());
-
-            // Click handler for this product_uneditable type
-            clickHandler.onClickProduct(product, isCreator);
+        void bind(ProductEntity product) {
+            binding.setProduct(product);
+            binding.executePendingBindings();
         }
     }
 }

@@ -2,6 +2,7 @@ package com.example.peter.thekitchenmenu.ui.catalog;
 
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,55 +10,43 @@ import android.view.ViewGroup;
 import com.example.peter.thekitchenmenu.R;
 
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
-import com.example.peter.thekitchenmenu.databinding.FragmentCatalogProductsBinding;
-import com.example.peter.thekitchenmenu.ui.ViewModelHolder;
-
-import java.util.List;
+import com.example.peter.thekitchenmenu.databinding.ProductCatalogUsedFragmentBinding;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import static com.example.peter.thekitchenmenu.ui.catalog.CatalogActivity.PRODUCT_CATALOG_VIEW_MODEL_TAG;
-
 public class CatalogUsedFragment
         extends Fragment
-        implements OnClickProduct {
+        implements ProductItemNavigator {
 
     private static final String TAG = "CatalogUsedFragment";
 
-    private CatalogRecyclerAdapter catalogProductsAdapter;
     private CatalogProductsViewModel viewModel;
+    private ProductCatalogUsedFragmentBinding binding;
+    private CatalogRecyclerAdapter adapter;
+
+    public CatalogUsedFragment(){}
+    public CatalogUsedFragment newInstance() {return new CatalogUsedFragment();}
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onResume() {
+        super.onResume();
 
-        catalogProductsAdapter = new CatalogRecyclerAdapter(requireActivity(), this);
-        viewModel = getViewModel();
-        viewModel.loadAllProducts();
+        viewModel.getProducts().observe(requireActivity(), products -> {
+            if (products != null) {
+                adapter.setProducts(products);
 
-        // Observes changes to view model Product list and passes them to the adaptor.
-        final Observer<List<ProductEntity>> productList = products ->
-                catalogProductsAdapter.setProducts(products);
-        viewModel.getProducts().observe(this, productList);
-    }
-
-    private CatalogProductsViewModel getViewModel() {
-        @SuppressWarnings("unchecked")
-        ViewModelHolder<CatalogProductsViewModel> retainedViewModel =
-                (ViewModelHolder<CatalogProductsViewModel>)
-                        requireActivity().getSupportFragmentManager().
-                                findFragmentByTag(PRODUCT_CATALOG_VIEW_MODEL_TAG);
-
-        if (retainedViewModel != null && retainedViewModel.getViewModel() != null)
-            return retainedViewModel.getViewModel();
-        else return null;
+                for (ProductEntity product : products) {
+                    Log.d(TAG, "onResumeUsed: description=" + product.getDescription());
+                }
+            }
+        });
+        viewModel.loadUsedProducts();
     }
 
     @Nullable
@@ -66,33 +55,36 @@ public class CatalogUsedFragment
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        FragmentCatalogProductsBinding mBinding = DataBindingUtil.inflate(
-                inflater, R.layout.fragment_catalog_products, container, false);
+        binding = DataBindingUtil.inflate(
+                inflater,
+                R.layout.product_catalog_used_fragment,
+                container,
+                false);
+
+        viewModel = CatalogActivity.obtainViewModel(requireActivity());
+        binding.setViewModel(viewModel);
 
         if (getResources().getBoolean(R.bool.is_tablet) ||
                 getResources().getBoolean(R.bool.is_landscape)) {
 
-            GridLayoutManager gridManager = new
-                    GridLayoutManager(requireActivity().
+            GridLayoutManager gridManager = new GridLayoutManager(requireActivity().
                     getApplicationContext(), columnCalculator());
 
-            mBinding.fragmentCatalogProductsRv.
-                    setLayoutManager(gridManager);
+            binding.fragmentCatalogProductsRv.setLayoutManager(gridManager);
 
         } else {
             LinearLayoutManager linearManager = new
                     LinearLayoutManager(requireActivity().getApplicationContext(),
                     RecyclerView.VERTICAL, false);
 
-            mBinding.
-                    fragmentCatalogProductsRv.
-                    setLayoutManager(linearManager);
+            binding.fragmentCatalogProductsRv.setLayoutManager(linearManager);
         }
 
-        mBinding.fragmentCatalogProductsRv.setHasFixedSize(true);
-        mBinding.fragmentCatalogProductsRv.setAdapter(catalogProductsAdapter);
+        binding.fragmentCatalogProductsRv.setHasFixedSize(true);
+        adapter = new CatalogRecyclerAdapter(requireActivity(), viewModel);
+        binding.fragmentCatalogProductsRv.setAdapter(adapter);
 
-        return mBinding.getRoot();
+        return binding.getRoot();
     }
 
     /**
@@ -113,7 +105,7 @@ public class CatalogUsedFragment
     }
 
     @Override
-    public void onClickProduct(ProductEntity product, boolean isCreator) {
+    public void openProductDetails(ProductEntity product, boolean isCreator) {
         viewModel.selectedItem(product, isCreator);
     }
 }

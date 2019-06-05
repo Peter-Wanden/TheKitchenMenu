@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/lightGrey">
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View.OnClickListener"/>
+
+        <variable
+            name="product"
+            type="com.example.peter.thekitchenmenu.data.entity.ProductEntity" />
+
+        <variable
+            name="listener"
+            type="com.example.peter.thekitchenmenu.ui.catalog.ProductItemUserActionsListener" />
+    </data>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/list_item_product_card_view"
@@ -16,7 +27,9 @@
         android:elevation="@dimen/card_view_elevation"
         android:focusable="true"
         android:foregroundGravity="center"
-        app:cardCornerRadius="4dp">
+        android:background="@color/white"
+        app:cardCornerRadius="4dp"
+        android:onClick="@{() -> listener.onProductClicked(product)}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/list_item_product_cl"
@@ -39,7 +52,8 @@
                 app:layout_constraintEnd_toStartOf="@+id/list_item_product_iv_product_image"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="Cirio canned chopped tomatoes" />
+                tools:text="Cirio canned chopped tomatoes"
+                android:text="@{product.description}"/>
 
             <ImageView
                 android:id="@+id/list_item_product_iv_product_image"
@@ -52,7 +66,9 @@
                 android:transitionName="@string/transition_product"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:webImageUrl='@{product.webImageUrl}'
+                app:remoteSmallImageUri='@{product.remoteSmallImageUri}' />
 
             <TextView
                 android:id="@+id/list_item_product_tv_pack_size"
@@ -66,6 +82,7 @@
                 android:textColor="@color/grey"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/list_item_product_tv_description"
+                android:text='@{`` + product.baseUnits}'
                 tools:text="400" />
 
             <TextView
@@ -81,6 +98,7 @@
                 android:textColor="@color/grey"
                 app:layout_constraintStart_toEndOf="@+id/list_item_product_tv_pack_size"
                 app:layout_constraintTop_toBottomOf="@+id/list_item_product_tv_description"
+                android:text='@{`` + product.unitOfMeasureSubtype}'
                 tools:text="ml" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

@@ -9,7 +9,7 @@ import java.util.List;
 
 public class GsonUtils {
 
-    /* Turns a list of product_uneditable objects into a JSON string */
+    /* Turns a list of product_viewer_identity objects into a JSON string */
     public static String productsToJson(List<ProductEntity> products) {
         return new Gson().toJson(products);
     }

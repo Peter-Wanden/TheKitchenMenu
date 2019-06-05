@@ -2,7 +2,7 @@
     <string name="app_name">The Kitchen Menu</string>
 
     <!-- CONTENT DESCRIPTIONS -->
-    <!-- Attach to any ImageView's of the product_uneditable -->
+    <!-- Attach to any ImageView's of the product_viewer_identity -->
     <string name="cd_picture_of_product">A picture of the productEntity</string>
     <string name="cd_add_image_from_camera">Select to add image from camera</string>
     <string name="cd_add_image_from_gallery">Click to add image from gallery</string>

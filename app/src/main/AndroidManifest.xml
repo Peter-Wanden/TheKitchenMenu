@@ -57,7 +57,7 @@
 
         <!-- Service tag pointing to the sync intent service -->
         <service
-            android:name=".data.repository.SyncRemoteDataService"
+            android:name=".data.repositoryProduct.SyncRemoteDataService"
             android:exported="false">
         </service>
 

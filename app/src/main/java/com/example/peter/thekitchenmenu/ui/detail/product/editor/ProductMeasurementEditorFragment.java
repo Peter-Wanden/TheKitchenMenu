@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.SpinnerAdapter;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.databinding.ProductMeasurementEditorBinding;
+import com.example.peter.thekitchenmenu.databinding.ProductEditorMeasurementBinding;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtype;
 
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ public class ProductMeasurementEditorFragment extends Fragment {
 
     private static final String TAG = "tkm-MeasurementFragment";
 
-    private ProductMeasurementEditorBinding binding;
+    private ProductEditorMeasurementBinding binding;
     private ProductMeasurementViewModel viewModel;
 
     @Nullable
@@ -35,7 +35,7 @@ public class ProductMeasurementEditorFragment extends Fragment {
 
         binding = DataBindingUtil.inflate(
                 inflater,
-                R.layout.product_measurement_editor,
+                R.layout.product_editor_measurement,
                 container,
                 false);
 
