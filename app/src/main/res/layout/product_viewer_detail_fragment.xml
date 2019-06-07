@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View"/>
+
+        <variable
+            name="viewModel"
+            type="com.example.peter.thekitchenmenu.ui.detail.product.viewer.ProductViewerViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/product_viewer_description"
+            style="@style/ViewerCategoryStyle"
+            android:textSize="20sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="@{viewModel.product.description}"
+            bind:layout_constraintEnd_toEndOf="parent"
+            bind:layout_constraintStart_toStartOf="parent"
+            bind:layout_constraintTop_toTopOf="parent"
+            tools:text="Dove Original antiperspirant roll on deodorant">
+        </TextView>
+
+        <TextView
+            android:id="@+id/product_viewer_size"
+            style="@style/ViewerTextFieldStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="@{`` + viewModel.product.baseUnits}"
+            bind:layout_constraintTop_toBottomOf="@id/product_viewer_description"
+            bind:layout_constraintStart_toStartOf="parent"
+            tools:text="50ml">
+        </TextView>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/product_viewer_image"
+            android:contentDescription="@string/cd_picture_of_product"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            bind:layout_constraintDimensionRatio="1:1"
+            bind:layout_constraintStart_toStartOf="parent"
+            bind:layout_constraintTop_toBottomOf="@id/product_viewer_size"
+            bind:webImageUrl='@{viewModel.product.webImageUrl}'
+            bind:remoteLargeImageUri='@{viewModel.product.remoteLargeImageUri}'
+            tools:src="@drawable/cirio_tinned_tomatoes">
+        </androidx.appcompat.widget.AppCompatImageView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -30,7 +30,7 @@ public class ProductRepository implements ProductDataSource {
     /**
      * This variable has package local visibility so it can be accessed from tests.
      */
-    Map<String, ProductEntity> cachedProducts;
+    Map<String, ProductEntity> productsCache;
 
     /**
      * Marks the cache as invalid, to force an update the next time data is requested. This variable
@@ -54,9 +54,7 @@ public class ProductRepository implements ProductDataSource {
      */
     public static ProductRepository getInstance(ProductDataSource remoteDataSource,
                                                 ProductDataSource localDataSource) {
-        if (INSTANCE == null) {
-            INSTANCE = new ProductRepository(remoteDataSource, localDataSource);
-        }
+        if (INSTANCE == null) INSTANCE = new ProductRepository(remoteDataSource, localDataSource);
         return INSTANCE;
     }
 
@@ -79,8 +77,8 @@ public class ProductRepository implements ProductDataSource {
         checkNotNull(callback);
 
         // Respond immediately with cache if available and not dirty
-        if (cachedProducts != null && !cacheIsDirty) {
-            callback.onProductsLoaded(new ArrayList<>(cachedProducts.values()));
+        if (productsCache != null && !cacheIsDirty) {
+            callback.onProductsLoaded(new ArrayList<>(productsCache.values()));
             return;
         }
 
@@ -92,7 +90,7 @@ public class ProductRepository implements ProductDataSource {
                 @Override
                 public void onProductsLoaded(List<ProductEntity> products) {
                     refreshProductCache(products);
-                    callback.onProductsLoaded(new ArrayList<>(cachedProducts.values()));
+                    callback.onProductsLoaded(new ArrayList<>(productsCache.values()));
                 }
 
                 @Override
@@ -102,6 +100,22 @@ public class ProductRepository implements ProductDataSource {
             });
 
         }
+    }
+
+    private void getProductsFromRemoteDataSource(@NonNull final LoadProductsCallback callback) {
+        remoteDataSource.getProducts(new LoadProductsCallback() {
+            @Override
+            public void onProductsLoaded(List<ProductEntity> products) {
+                refreshProductCache(products);
+                refreshLocalDataSource(products);
+                callback.onProductsLoaded(new ArrayList<>(productsCache.values()));
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+                callback.onDataNotAvailable();
+            }
+        });
     }
 
     @Override
@@ -123,8 +137,8 @@ public class ProductRepository implements ProductDataSource {
             @Override
             public void onProductLoaded(ProductEntity product) {
                 // Do in memory cache update to keep the app UI up to date
-                if (cachedProducts == null) cachedProducts = new LinkedHashMap<>();
-                cachedProducts.put(product.getId(), product);
+                if (productsCache == null) productsCache = new LinkedHashMap<>();
+                productsCache.put(product.getId(), product);
                 callback.onProductLoaded(product);
             }
 
@@ -134,8 +148,8 @@ public class ProductRepository implements ProductDataSource {
                     @Override
                     public void onProductLoaded(ProductEntity product) {
                         // Do in memory cache update to keep the app UI up to date
-                        if (cachedProducts == null) cachedProducts = new LinkedHashMap<>();
-                        cachedProducts.put(product.getId(), product);
+                        if (productsCache == null) productsCache = new LinkedHashMap<>();
+                        productsCache.put(product.getId(), product);
                         callback.onProductLoaded(product);
                     }
 
@@ -148,6 +162,13 @@ public class ProductRepository implements ProductDataSource {
         });
     }
 
+    @Nullable
+    private ProductEntity getProductWithId(@NonNull String id) {
+        checkNotNull(id);
+        if (productsCache == null || productsCache.isEmpty()) return null;
+        else return productsCache.get(id);
+    }
+
     @Override
     public void saveProduct(ProductEntity product) {
         checkNotNull(product);
@@ -156,15 +177,8 @@ public class ProductRepository implements ProductDataSource {
         localDataSource.saveProduct(product);
 
         // Do in memory cache update to keep the app UI up to date
-        if (cachedProducts == null) cachedProducts = new LinkedHashMap<>();
-        cachedProducts.put(product.getId(), product);
-    }
-
-    @Nullable
-    private ProductEntity getProductWithId(@NonNull String id) {
-        checkNotNull(id);
-        if (cachedProducts == null || cachedProducts.isEmpty()) return null;
-        else return cachedProducts.get(id);
+        if (productsCache == null) productsCache = new LinkedHashMap<>();
+        productsCache.put(product.getId(), product);
     }
 
     @Override
@@ -177,38 +191,22 @@ public class ProductRepository implements ProductDataSource {
         remoteDataSource.deleteAllProducts();
         localDataSource.deleteAllProducts();
 
-        if (cachedProducts == null) cachedProducts = new LinkedHashMap<>();
-        cachedProducts.clear();
+        if (productsCache == null) productsCache = new LinkedHashMap<>();
+        productsCache.clear();
     }
 
     @Override
     public void deleteProduct(@NonNull String productId) {
         remoteDataSource.deleteProduct(checkNotNull(productId));
         localDataSource.deleteProduct(checkNotNull(productId));
-        cachedProducts.remove(productId);
-    }
-
-    private void getProductsFromRemoteDataSource(@NonNull final LoadProductsCallback callback) {
-        remoteDataSource.getProducts(new LoadProductsCallback() {
-            @Override
-            public void onProductsLoaded(List<ProductEntity> products) {
-                refreshProductCache(products);
-                refreshLocalDataSource(products);
-                callback.onProductsLoaded(new ArrayList<>(cachedProducts.values()));
-            }
-
-            @Override
-            public void onDataNotAvailable() {
-                callback.onDataNotAvailable();
-            }
-        });
+        productsCache.remove(productId);
     }
 
     private void refreshProductCache(List<ProductEntity> products) {
-        if (cachedProducts == null) cachedProducts = new LinkedHashMap<>();
-        cachedProducts.clear();
+        if (productsCache == null) productsCache = new LinkedHashMap<>();
+        productsCache.clear();
 
-        for (ProductEntity product:products) cachedProducts.put(product.getId(), product);
+        for (ProductEntity product: products) productsCache.put(product.getId(), product);
         cacheIsDirty = false;
     }
 

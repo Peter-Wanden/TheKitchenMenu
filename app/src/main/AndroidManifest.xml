@@ -103,7 +103,7 @@
 
         <!-- Activity view of a single productEntities details -->
         <activity
-            android:name=".ui.detail.product.editor.ProductEditorActivity"
+            android:name=".ui.detail.product.producteditor.ProductEditorActivity"
             android:theme="@style/AppTheme">
         </activity>
 
@@ -144,6 +144,12 @@
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat"> <!-- optional (needed if default theme has no action bar) -->
+        </activity>
+
+        <activity
+            android:name=".ui.detail.product.viewer.ProductViewerActivity"
+            android:label="@string/activity_title_view_product"
+            android:theme="@style/AppTheme">
         </activity>
 
         <uses-library

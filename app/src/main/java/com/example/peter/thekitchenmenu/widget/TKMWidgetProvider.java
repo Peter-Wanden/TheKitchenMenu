@@ -96,7 +96,7 @@ public class TKMWidgetProvider extends AppWidgetProvider {
     @Override
     public void onDeleted(Context context, int[] appWidgetIds) {
         super.onDeleted(context, appWidgetIds);
-        // There is no more widget so delete the recipe info from shared preferences
+        // There is no more widget so deleteByUsedProductId the recipe info from shared preferences
         for (int widgetId : appWidgetIds) {
             context.getSharedPreferences(String.valueOf(widgetId), Context.MODE_PRIVATE)
                     .edit()

@@ -9,7 +9,7 @@ import android.util.Log;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.app.HandlerWorker;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
-import com.example.peter.thekitchenmenu.data.entity.ProductUserDataEntity;
+import com.example.peter.thekitchenmenu.data.entity.UsedProductEntity;
 
 import java.util.LinkedList;
 
@@ -132,11 +132,11 @@ public class RepositoryRemote {
                     }
                     break;
 
-                case ProductUserDataEntity.TAG:
+                case UsedProductEntity.TAG:
                     if (syncUserProductData.getListenerState() != isObserved) {
                         syncUserProductData.setListenerState(isObserved);
                         if (isObserved) {
-                            syncQueue.add(new ModelStatus(ProductUserDataEntity.TAG));
+                            syncQueue.add(new ModelStatus(UsedProductEntity.TAG));
                         }
                     }
                     break;
@@ -197,8 +197,8 @@ public class RepositoryRemote {
                         syncProduct.syncRemoteData(handler, worker);
                         break;
 
-                    case ProductUserDataEntity.TAG:
-                        Log.d(TAG, "tkm - processSyncQueue: ProductUserDataEntity");
+                    case UsedProductEntity.TAG:
+                        Log.d(TAG, "tkm - processSyncQueue: UsedProductEntity");
                         // Send the data to its respective sync class to be processed.
                         syncUserProductData.syncRemoteData(handler, worker);
                         break;

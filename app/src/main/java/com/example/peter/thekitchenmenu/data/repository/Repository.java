@@ -3,9 +3,9 @@ package com.example.peter.thekitchenmenu.data.repository;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.example.peter.thekitchenmenu.data.entity.UsedProductEntity;
 import com.example.peter.thekitchenmenu.data.source.local.TKMDatabase;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
-import com.example.peter.thekitchenmenu.data.entity.ProductUserDataEntity;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public class Repository {
     private final SyncManager syncManager;
 
     private MediatorLiveDataActive<List<ProductEntity>> observableProducts;
-    private MediatorLiveDataActive<List<ProductUserDataEntity>> observableUsersProductData;
+    private MediatorLiveDataActive<List<UsedProductEntity>> observableUsersProductData;
 
     private Repository(final Context context, final TKMDatabase database) {
 
@@ -35,9 +35,9 @@ public class Repository {
 //        });
 
         observableUsersProductData = new MediatorLiveDataActive<>(this,
-                ProductUserDataEntity.TAG);
+                UsedProductEntity.TAG);
 
-        observableUsersProductData.addSource(this.database.userProductDataDAO().getAll(),
+        observableUsersProductData.addSource(this.database.usedProductEntityDao().getAll(),
                 usersProductData -> {
 
             if (this.database.getDatabaseCreated().getValue() != null) {
@@ -66,7 +66,7 @@ public class Repository {
         return observableProducts;
     }
 
-    public LiveData<List<ProductUserDataEntity>> getAllUserProductData() {
+    public LiveData<List<UsedProductEntity>> getAllUserProductData() {
         return observableUsersProductData;
     }
 
@@ -74,16 +74,16 @@ public class Repository {
 //        database.productEntityDao().insertAll(productsToInsert);
     }
 
-    void insertAllUserProductData(List<ProductUserDataEntity> userProductDataToInsert) {
-        database.userProductDataDAO().insertAll(userProductDataToInsert);
+    void insertAllUserProductData(List<UsedProductEntity> userProductDataToInsert) {
+        database.usedProductEntityDao().insertAll(userProductDataToInsert);
     }
 
     void updateProducts(List<ProductEntity> productsToUpdate) {
 //        database.productEntityDao().updateAll(productsToUpdate);
     }
 
-    void updateUsersProductData(List<ProductUserDataEntity> productUserDataEntityToUpdate) {
-        database.userProductDataDAO().updateAll(productUserDataEntityToUpdate);
+    void updateUsersProductData(List<UsedProductEntity> usedProductEntityToUpdate) {
+        database.usedProductEntityDao().updateAll(usedProductEntityToUpdate);
     }
 
     public Cursor findProductsThatMatch(String searchQuery) {

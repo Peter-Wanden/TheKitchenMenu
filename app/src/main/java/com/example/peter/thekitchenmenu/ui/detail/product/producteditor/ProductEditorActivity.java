@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.detail.product.editor;
+package com.example.peter.thekitchenmenu.ui.detail.product.producteditor;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -9,7 +9,7 @@ import com.example.peter.thekitchenmenu.data.model.ImageModel;
 import com.example.peter.thekitchenmenu.data.model.ProductIdentityModel;
 import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
 import com.example.peter.thekitchenmenu.databinding.ProductEditorBinding;
-import com.example.peter.thekitchenmenu.ui.ViewModelFactory;
+import com.example.peter.thekitchenmenu.ui.ViewModelFactoryProduct;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.utils.imageeditor.ImageEditorViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -84,7 +84,7 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
     }
 
     private static ProductEditorViewModel obtainViewModel(FragmentActivity activity) {
-        ViewModelFactory factory = ViewModelFactory.getInstance(activity.getApplication());
+        ViewModelFactoryProduct factory = ViewModelFactoryProduct.getInstance(activity.getApplication());
         return ViewModelProviders.of(activity, factory).get(ProductEditorViewModel.class);
     }
 

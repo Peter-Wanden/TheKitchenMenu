@@ -8,10 +8,9 @@ import android.util.Log;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.app.HandlerWorker;
 import com.example.peter.thekitchenmenu.app.Singletons;
+import com.example.peter.thekitchenmenu.data.entity.UsedProductEntity;
 import com.example.peter.thekitchenmenu.data.source.remote.DataListenerPending;
 import com.example.peter.thekitchenmenu.data.source.remote.RemoteDbRefs;
-import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
-import com.example.peter.thekitchenmenu.data.entity.ProductUserDataEntity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -43,11 +42,11 @@ class SyncUserProductData {
     private Message resultMessage;
     private int resultCode = 0;
 
-    private Queue<ProductUserDataEntity> remoteData = new LinkedList<>();
-    private List<ProductUserDataEntity> batchUpdates = new ArrayList<>();
-    private List<ProductUserDataEntity> batchInserts = new ArrayList<>();
+    private Queue<UsedProductEntity> remoteData = new LinkedList<>();
+    private List<UsedProductEntity> batchUpdates = new ArrayList<>();
+    private List<UsedProductEntity> batchInserts = new ArrayList<>();
 
-    private volatile ProductUserDataEntity[] mPmArray = new ProductUserDataEntity[2];
+    private volatile UsedProductEntity[] mPmArray = new UsedProductEntity[2];
 
     SyncUserProductData(Context context, RepositoryRemote repositoryRemote) {
         repository = ((Singletons) context).getRepository();
@@ -82,7 +81,7 @@ class SyncUserProductData {
 //            ProductEntity pc = repository.getProductByRemoteId(
 //                    mPmArray[0].getRemoteProductId());
 //
-//            // Add the ProductEntity local ID to the remote ProductUserDataEntity
+//            // Add the ProductEntity local ID to the remote UsedProductEntity
 //            mPmArray[0].setProductId(pc.getId());
 //
 //            compareLocalWithRemote();
@@ -91,7 +90,7 @@ class SyncUserProductData {
 
     private void compareLocalWithRemote() {
 
-        // If there is no locally matching ProductUserDataEntity insert the remote.
+        // If there is no locally matching UsedProductEntity insert the remote.
         if (mPmArray[1] == null) {
 
             batchInserts.add(mPmArray[0]);
@@ -169,14 +168,14 @@ class SyncUserProductData {
 
         DatabaseReference prodMyRef = RemoteDbRefs.getUserProductData(Constants.getUserId().getValue());
 
-        Queue<ProductUserDataEntity> remoteSnapShot = new LinkedList<>();
+        Queue<UsedProductEntity> remoteSnapShot = new LinkedList<>();
 
         ValueEventListener prodMyVel = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 for (DataSnapshot shot : snapshot.getChildren()) {
-                    ProductUserDataEntity pm = shot.getValue(ProductUserDataEntity.class);
+                    UsedProductEntity pm = shot.getValue(UsedProductEntity.class);
 
                     if (pm != null) {
                         remoteSnapShot.add(pm);
@@ -189,7 +188,7 @@ class SyncUserProductData {
                 remoteSnapShot.clear();
                 // Updates the data models status in the RemoteRepository.
                 repositoryRemote.dataSetReturned(new ModelStatus(
-                        ProductUserDataEntity.TAG, true, remoteData.size()));
+                        UsedProductEntity.TAG, true, remoteData.size()));
             }
 
             @Override

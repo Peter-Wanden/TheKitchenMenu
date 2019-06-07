@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View"/>
+
+        <variable
+            name="viewModel"
+            type="com.example.peter.thekitchenmenu.ui.detail.product.viewer.ProductViewerViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".ui.detail.product.viewer.ProductViewerActivity">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/product_viewer_activity_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/primaryColor"
+                android:fitsSystemWindows="true">
+            </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/product_viewer_CL"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/product_user_data_fragments_LL"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <FrameLayout
+                    android:id="@+id/product_viewer_content_frame"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/used_product_editor_content_frame"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                </FrameLayout>
+            </LinearLayout>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/fab_margin"
+                bind:fabSize="normal"
+                android:src="@drawable/ic_format_list_bulleted_white"
+                bind:backgroundTint="@color/textColorHighlight"
+                bind:layout_anchor="@id/product_user_data_fragments_LL"
+                bind:layout_anchorGravity="bottom|right|end">
+            </com.google.android.material.floatingactionbutton.FloatingActionButton>
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </LinearLayout>
+</layout>

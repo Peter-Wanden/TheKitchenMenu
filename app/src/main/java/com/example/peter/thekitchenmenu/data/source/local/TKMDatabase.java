@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
-import com.example.peter.thekitchenmenu.data.entity.ProductUserDataEntity;
+import com.example.peter.thekitchenmenu.data.entity.UsedProductEntity;
 import com.example.peter.thekitchenmenu.data.entity.ProductFastTextSearch;
 
 import androidx.annotation.NonNull;
@@ -21,7 +21,7 @@ import static com.example.peter.thekitchenmenu.data.entity.ProductFastTextSearch
 
 @Database(entities = {
         ProductEntity.class,
-        ProductUserDataEntity.class,
+        UsedProductEntity.class,
         ProductFastTextSearch.class},
         version = 2,
         exportSchema = false)
@@ -31,7 +31,7 @@ public abstract class TKMDatabase extends RoomDatabase {
     private static TKMDatabase sInstance;
 
     public abstract ProductEntityDao productEntityDao();
-    public abstract UsersProductDataDAO userProductDataDAO();
+    public abstract UsedProductEntityDAO usedProductEntityDao();
 
     private final MutableLiveData<Boolean> isDatabaseCreated = new MutableLiveData<>();
 

@@ -2,7 +2,6 @@ package com.example.peter.thekitchenmenu.ui.catalog;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,16 +9,15 @@ import android.view.View;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.databinding.ProductCatalogActivityBinding;
-import com.example.peter.thekitchenmenu.ui.ViewModelFactory;
-import com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductEditorActivity;
+import com.example.peter.thekitchenmenu.ui.ViewModelFactoryProduct;
+import com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductEditorActivity;
+import com.example.peter.thekitchenmenu.ui.detail.product.viewer.ProductViewerActivity;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
 import androidx.databinding.DataBindingUtil;
-import androidx.databinding.Observable;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
@@ -31,7 +29,7 @@ public class CatalogActivity
     public static final String PRODUCT_CATALOG_VIEW_MODEL_TAG = "PRODUCT_CATALOG_VIEW_MODEL_TAG";
 
     CatalogProductsViewModel viewModel;
-    ProductCatalogActivityBinding bindings;
+    ProductCatalogActivityBinding binding;
     CatalogFragmentPageAdapter tabPageAdapter;
     ViewPager tabViewPager;
 
@@ -48,8 +46,8 @@ public class CatalogActivity
     }
 
     private void initialiseBindings() {
-        bindings = DataBindingUtil.setContentView(this, R.layout.product_catalog_activity);
-        bindings.activityCatalogProductPb.setVisibility(View.GONE);
+        binding = DataBindingUtil.setContentView(this, R.layout.product_catalog_activity);
+        binding.activityCatalogProductPb.setVisibility(View.GONE);
     }
 
     private void setupSearch() {
@@ -58,15 +56,15 @@ public class CatalogActivity
 
     private void setupFragmentPageAdapter() {
         tabPageAdapter = new CatalogFragmentPageAdapter(getSupportFragmentManager());
-        tabViewPager = bindings.activityCatalogProductVp;
+        tabViewPager = binding.activityCatalogProductVp;
         tabViewPager.setAdapter(tabPageAdapter);
 
-        if (bindings.activityCatalogProductVp != null) {
-            setupViewPager(bindings.activityCatalogProductVp);
+        if (binding.activityCatalogProductVp != null) {
+            setupViewPager(binding.activityCatalogProductVp);
         }
 
         // Sets up the Tab's and their titles.
-        bindings.activityCatalogProductTl.setupWithViewPager(bindings.activityCatalogProductVp);
+        binding.activityCatalogProductTl.setupWithViewPager(binding.activityCatalogProductVp);
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -78,19 +76,17 @@ public class CatalogActivity
     }
 
     private void setupToolBar() {
-        setSupportActionBar(bindings.activityCatalogProductToolbar);
+        setSupportActionBar(binding.activityCatalogProductToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void setupFab() {
-        bindings.activityCatalogAddNewProductFab.setOnClickListener(v -> {
-            viewModel.addNewProduct();
-        });
+        binding.activityCatalogAddNewProductFab.setOnClickListener(v -> viewModel.addNewProduct());
     }
 
     public static CatalogProductsViewModel obtainViewModel(FragmentActivity activity) {
         // Use a Factory to inject dependencies into the ViewModel
-        ViewModelFactory factory = ViewModelFactory.getInstance(activity.getApplication());
+        ViewModelFactoryProduct factory = ViewModelFactoryProduct.getInstance(activity.getApplication());
         return ViewModelProviders.of(activity, factory).get(CatalogProductsViewModel.class);
     }
 
@@ -99,9 +95,11 @@ public class CatalogActivity
         viewModel.setNavigator(this);
 
         viewModel.getSelected().observe(this, selectedProduct -> {
-            if (selectedProduct != null) {
-                launchProductEditor(selectedProduct);
-            }
+            if (selectedProduct != null) launchProductEditor(selectedProduct);
+        });
+
+        viewModel.getOpenProductEvent().observe(this, productId -> {
+            if (productId != null) launchProductViewer(productId);
         });
     }
 
@@ -142,17 +140,6 @@ public class CatalogActivity
         startActivity(intent);
     }
 
-    // Todo - this will be the product viewing and adding user details page (with fab to editing
-    //  if owned and not used by others)
-    private void launchProductEditor(ProductEntity selectedProduct) {
-        Intent intent = new Intent(CatalogActivity.this, ProductEditorActivity.class);
-        intent.putExtra(ProductEditorActivity.EXTRA_PRODUCT_ID, selectedProduct.getId());
-        intent.putExtra(ProductEditorActivity.EXTRA_IS_CREATOR, viewModel.getIsCreator().getValue());
-        startActivity(intent);
-
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-    }
-
     @Override
     public void finish() {
         super.finish();
@@ -172,7 +159,17 @@ public class CatalogActivity
     }
 
     @Override
-    public void openProductDetails(ProductEntity product, boolean isCreator) {
-        Log.d(TAG, "openProductDetails: called!");
+    public void launchProductViewer(String productId) {
+        Intent intent = new Intent(CatalogActivity.this, ProductViewerActivity.class);
+        intent.putExtra(ProductViewerActivity.EXTRA_PRODUCT_ID, productId);
+        startActivity(intent);
+    }
+
+    private void launchProductEditor(ProductEntity selectedProduct) {
+        Intent intent = new Intent(CatalogActivity.this, ProductEditorActivity.class);
+        intent.putExtra(ProductEditorActivity.EXTRA_PRODUCT_ID, selectedProduct.getId());
+        startActivity(intent);
+
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 }

@@ -11,8 +11,6 @@ public class ProductRemoteDataSource implements ProductDataSource {
 
     private static ProductRemoteDataSource INSTANCE;
 
-    private ProductRemoteDataSource(){}
-
     public static ProductRemoteDataSource getInstance() {
         if (INSTANCE == null) INSTANCE = new ProductRemoteDataSource();
         return INSTANCE;

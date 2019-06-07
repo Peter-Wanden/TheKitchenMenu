@@ -9,7 +9,7 @@
 
         <variable
             name="textValidation"
-            type="com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductUserDataTextValidationHandler" />
+            type="com.example.peter.thekitchenmenu.ui.detail.product.productuserdataeditor.ProductUserDataTextValidationHandler" />
         
         <variable
             name="userDataModel"

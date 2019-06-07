@@ -33,7 +33,7 @@ public class ImageBindingAdapters {
 
     @BindingAdapter(value = {
             "app:remoteSmallImageUri",
-            "webImageUrl"},
+            "app:webImageUrl"},
             requireAll = false)
     public static void setSmallImage(ImageView imageView,
                                      String smallImageUri,

@@ -108,7 +108,7 @@
     <string name="sign_out">Sign out</string>
 
     <!-- Activity titles -->
-    <string name="activity_title_view_product">Product View</string>
+    <string name="activity_title_view_product">Product Viewer</string>
     <string name="activity_detail_product_title">Product Details</string>
     <string name="activity_title_edit_product">Edit a Product</string>
     <string name="activity_title_add_new_product">Add a Product</string>

@@ -12,14 +12,14 @@ import com.google.android.gms.common.internal.Objects;
 import java.util.Calendar;
 import java.util.UUID;
 
-import static com.example.peter.thekitchenmenu.data.entity.ProductUserDataEntity.TABLE_USERS_PRODUCT_DATA;
+import static com.example.peter.thekitchenmenu.data.entity.UsedProductEntity.TABLE_USED_PRODUCTS;
 
-@Entity(tableName = TABLE_USERS_PRODUCT_DATA)
-public final class ProductUserDataEntity {
+@Entity(tableName = TABLE_USED_PRODUCTS)
+public final class UsedProductEntity {
 
-    public static final String TAG = "ProductUserDataEntity";
+    public static final String TAG = "UsedProductEntity";
 
-    public static final String TABLE_USERS_PRODUCT_DATA = "usersProductData";
+    public static final String TABLE_USED_PRODUCTS = "usedProducts";
     public static final String ID = "id";
     public static final String PRODUCT_ID = "productId";
     public static final String RETAILER = "retailer";
@@ -56,18 +56,15 @@ public final class ProductUserDataEntity {
     @ColumnInfo(name = LAST_UPDATE)
     private final long lastUpdate;
 
-    @Ignore
-    private ProductEntity product;
-
     // Used by room and for copying
-    public ProductUserDataEntity(@NonNull String id,
-                                 @NonNull String productId,
-                                 String retailer,
-                                 String locationRoom,
-                                 String locationInRoom,
-                                 double price,
-                                 long createDate,
-                                 long lastUpdate) {
+    public UsedProductEntity(@NonNull String id,
+                             @NonNull String productId,
+                             String retailer,
+                             String locationRoom,
+                             String locationInRoom,
+                             double price,
+                             long createDate,
+                             long lastUpdate) {
 
         this.id = id;
         this.productId = productId;
@@ -79,13 +76,13 @@ public final class ProductUserDataEntity {
         this.lastUpdate = lastUpdate;
     }
 
-    // Use this constructor to create a new ProductUserDataEntity
+    // Use this constructor to create a new UsedProductEntity
     @Ignore
-    public ProductUserDataEntity(@NonNull String productId,
-                                 String retailer,
-                                 String locationRoom,
-                                 String locationInRoom,
-                                 double price) {
+    public UsedProductEntity(@NonNull String productId,
+                             String retailer,
+                             String locationRoom,
+                             String locationInRoom,
+                             double price) {
 
         this.id = UUID.randomUUID().toString();
         this.productId = productId;
@@ -106,7 +103,7 @@ public final class ProductUserDataEntity {
 
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ProductUserDataEntity entity = (ProductUserDataEntity) o;
+        UsedProductEntity entity = (UsedProductEntity) o;
 
         return Objects.equal(id,                entity.id)              &&
                Objects.equal(productId,         entity.productId)       &&
@@ -152,15 +149,5 @@ public final class ProductUserDataEntity {
 
     public long getLastUpdate() {
         return lastUpdate;
-    }
-
-    @Ignore
-    public ProductEntity getProduct() {
-        return product;
-    }
-
-    @Ignore
-    public void setProduct(ProductEntity product) {
-        this.product = product;
     }
 }

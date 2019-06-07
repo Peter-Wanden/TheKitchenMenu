@@ -1,23 +1,19 @@
 package com.example.peter.thekitchenmenu.ui.catalog;
 
 import android.app.Application;
-import android.util.Log;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
-import com.example.peter.thekitchenmenu.data.entity.ProductUserDataEntity;
+import com.example.peter.thekitchenmenu.data.entity.UsedProductEntity;
 import com.example.peter.thekitchenmenu.data.repository.ProductDataSource;
 import com.example.peter.thekitchenmenu.data.repository.ProductRepository;
+import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 
-import androidx.databinding.ObservableArrayList;
 import androidx.databinding.ObservableBoolean;
-import androidx.databinding.ObservableList;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 
 public class CatalogProductsViewModel extends AndroidViewModel {
@@ -28,8 +24,12 @@ public class CatalogProductsViewModel extends AndroidViewModel {
     private ProductNavigator navigator;
     private ObservableBoolean dataLoading = new ObservableBoolean(false);
     private ObservableBoolean isDataLoadingError = new ObservableBoolean(false);
+
     private MutableLiveData<List<ProductEntity>> products = new MutableLiveData<>();
-    private MediatorLiveData<List<ProductUserDataEntity>> usedProducts;
+    private MutableLiveData<List<UsedProductEntity>> usedProducts = new MutableLiveData<>();
+
+    private SingleLiveEvent<String> openProductEvent = new SingleLiveEvent<>();
+
     private MutableLiveData<String> userId;
     private MutableLiveData<Boolean> isCreator = new MutableLiveData<>();
 
@@ -100,6 +100,10 @@ public class CatalogProductsViewModel extends AndroidViewModel {
         return products;
     }
 
+    public MutableLiveData<List<UsedProductEntity>> getUsedProducts() {
+        return usedProducts;
+    }
+
     // Pushes changes to the user ID to observers.
     public MutableLiveData<String> getUserId() {
         return userId;
@@ -110,14 +114,12 @@ public class CatalogProductsViewModel extends AndroidViewModel {
         return isCreator;
     }
 
-    // Triggered by selecting an item in the Fragment's RecyclerView.
-    void selectedItem(ProductEntity product, boolean isCreator) {
-        this.isCreator.setValue(isCreator);
-        selectedProduct.setValue(product);
-    }
-
     // Pushes the selected product to observers.
     LiveData<ProductEntity> getSelected() {
         return selectedProduct;
+    }
+
+    SingleLiveEvent<String> getOpenProductEvent() {
+        return openProductEvent;
     }
 }

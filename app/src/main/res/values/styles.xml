@@ -19,7 +19,7 @@
     </style>
 
     <!-- Style for a category TextView in product_viewer_identity view mode -->
-    <style name="UneditableCategoryStyle">
+    <style name="ViewerCategoryStyle">
         <item name="android:textColor">@color/darkGrey</item>
         <item name="android:fontFamily">sans-serif-light</item>
         <item name="android:textStyle">bold</item>
@@ -35,7 +35,7 @@
     </style>
 
     <!-- Style for a TextView field in product_viewer_identity view mode -->
-    <style name="UneditableTextFieldStyle">
+    <style name="ViewerTextFieldStyle">
         <item name="android:layout_marginTop">8dp</item>
         <item name="android:layout_marginStart">8dp</item>
         <item name="android:textColor">@color/darkGrey</item>

@@ -1,11 +1,10 @@
-package com.example.peter.thekitchenmenu.ui.detail.product.editor;
+package com.example.peter.thekitchenmenu.ui.detail.product.productuserdataeditor;
 
 import android.app.Application;
 import android.content.res.Resources;
 import android.widget.EditText;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductUserDataEditorViewModel;
 
 public class ProductUserDataTextValidationHandler {
 
@@ -13,14 +12,14 @@ public class ProductUserDataTextValidationHandler {
 
     private enum ValidateTextLength {TOO_SHORT, TOO_LONG, VALIDATED}
 
-    private ProductUserDataEditorViewModel viewModel;
+    private UsedProductEditorViewModel viewModel;
     private Resources resources;
 
     private int viewId;
     private String newText;
 
     ProductUserDataTextValidationHandler(Application applicationContext,
-                                         ProductUserDataEditorViewModel viewModel) {
+                                         UsedProductEditorViewModel viewModel) {
 
         this.viewModel = viewModel;
         resources = applicationContext.getResources();

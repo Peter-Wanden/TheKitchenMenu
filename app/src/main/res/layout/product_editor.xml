@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:bind="http://schemas.android.com/tools">
 
@@ -10,7 +11,7 @@
 
         <variable
             name="viewModel"
-            type="com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductEditorViewModel">
+            type="com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductEditorViewModel">
         </variable>
     </data>
 
@@ -28,8 +29,8 @@
             android:layout_margin="@dimen/fab_margin"
             android:src="@drawable/ic_action_done"
             android:tint="@color/white"
-            android:visibility="@{viewModel.allModelsAreValid ? View.GONE : View.VISIBLE}"
-            app:backgroundTint="@color/textColorHighlight" />
+            app:backgroundTint="@color/textColorHighlight"
+            android:visibility="@{viewModel.allModelsAreValid ? View.GONE : View.VISIBLE}"/>
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -63,7 +64,7 @@
 
                 <fragment
                     android:id="@+id/product_identity_fragment"
-                    android:name="com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductIdentityEditorFragment"
+                    android:name="com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductIdentityEditorFragment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     bind:layout="@layout/product_editor_identity">
@@ -71,7 +72,7 @@
 
                 <fragment
                     android:id="@+id/product_size_fragment"
-                    android:name="com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductMeasurementEditorFragment"
+                    android:name="com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductMeasurementEditorFragment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     bind:layout="@layout/product_editor_measurement">

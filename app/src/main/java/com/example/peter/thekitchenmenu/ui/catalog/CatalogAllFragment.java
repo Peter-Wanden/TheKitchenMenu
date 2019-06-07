@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 
 import com.example.peter.thekitchenmenu.R;
 
-import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.databinding.ProductCatalogAllFragmentBinding;
 
 import androidx.annotation.NonNull;
@@ -29,7 +28,9 @@ public class CatalogAllFragment extends Fragment {
     private ProductCatalogAllFragmentBinding binding;
     private CatalogRecyclerAdapter adapter;
 
-    public CatalogAllFragment(){}
+    public CatalogAllFragment() {
+    }
+
     public static CatalogAllFragment newInstance() {
         return new CatalogAllFragment();
     }
@@ -39,13 +40,7 @@ public class CatalogAllFragment extends Fragment {
         super.onResume();
 
         viewModel.getProducts().observe(requireActivity(), products -> {
-            if (products != null) {
-                adapter.setProducts(products);
-
-                for (ProductEntity product : products) {
-                    Log.d(TAG, "onResumeAll: description=" + product.getDescription());
-                }
-            }
+            if (products != null) adapter.setProducts(products);
         });
         viewModel.loadAllProducts();
     }
@@ -65,12 +60,11 @@ public class CatalogAllFragment extends Fragment {
         viewModel = CatalogActivity.obtainViewModel(requireActivity());
         binding.setViewModel(viewModel);
 
-
         if (getResources().getBoolean(R.bool.is_tablet) ||
                 getResources().getBoolean(R.bool.is_landscape)) {
 
             GridLayoutManager gridManager = new GridLayoutManager((requireActivity())
-                            .getApplicationContext(), columnCalculator());
+                    .getApplicationContext(), columnCalculator());
 
             binding.fragmentCatalogProductsRv.setLayoutManager(gridManager);
 

@@ -1,18 +1,20 @@
-package com.example.peter.thekitchenmenu.ui.detail.product.editor;
+package com.example.peter.thekitchenmenu.ui.detail.product.productuserdataeditor;
 
 import android.app.Application;
 
 import com.example.peter.thekitchenmenu.data.model.ProductUserDataModel;
+import com.example.peter.thekitchenmenu.data.repository.UsedProductRepository;
 import com.example.peter.thekitchenmenu.utils.ObservableViewModel;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
-public class ProductUserDataEditorViewModel extends ObservableViewModel {
+public class UsedProductEditorViewModel extends ObservableViewModel {
 
     private static final String TAG = "ProductUserDataEditorVi";
 
     private ProductUserDataModel userDataModel = new ProductUserDataModel();
+    private UsedProductRepository repository;
     private ProductUserDataTextValidationHandler textValidationHandler;
 
     private MutableLiveData<Boolean> userDataModelIsValidated = new MutableLiveData<>(false);
@@ -20,12 +22,18 @@ public class ProductUserDataEditorViewModel extends ObservableViewModel {
     private boolean locationRoomValidated = false;
     private boolean locationInRoomValidated = false;
 
-    public ProductUserDataEditorViewModel(@NonNull Application application) {
+    public UsedProductEditorViewModel(@NonNull Application application,
+                                      @NonNull UsedProductRepository repository) {
         super(application);
 
+        this.repository = repository;
         textValidationHandler = new ProductUserDataTextValidationHandler(
                 application,
                 this);
+    }
+
+    void start(String productId) {
+
     }
 
     ProductUserDataModel getUserDataModel() {

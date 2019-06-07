@@ -5,7 +5,7 @@ import android.content.Intent;
 
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
-import com.example.peter.thekitchenmenu.data.entity.ProductUserDataEntity;
+import com.example.peter.thekitchenmenu.data.entity.UsedProductEntity;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -119,7 +119,7 @@ class SyncManager {
 
         // Add new data models to the synchronisation map in dependency order.
         modelSyncList.add(new DataModelStatus(ProductEntity.TAG, false, false));
-        modelSyncList.add(new DataModelStatus(ProductUserDataEntity.TAG, false, false));
+        modelSyncList.add(new DataModelStatus(UsedProductEntity.TAG, false, false));
     }
 
     void setModelToSync(String model, boolean isObserved) {

@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 
 import com.example.peter.thekitchenmenu.R;
 
-import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.databinding.ProductCatalogUsedFragmentBinding;
 
 import androidx.annotation.NonNull;
@@ -20,9 +19,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class CatalogUsedFragment
-        extends Fragment
-        implements ProductItemNavigator {
+public class CatalogUsedFragment extends Fragment {
 
     private static final String TAG = "CatalogUsedFragment";
 
@@ -38,14 +35,7 @@ public class CatalogUsedFragment
         super.onResume();
 
         viewModel.getProducts().observe(requireActivity(), products -> {
-            if (products != null) {
-                adapter.setProducts(products);
-
-                for (ProductEntity product : products) {
-                    Log.d(TAG, "onResumeUsed: description=" + product.getDescription());
-                }
-            }
-        });
+            if (products != null) {adapter.setProducts(products);}});
         viewModel.loadUsedProducts();
     }
 
@@ -102,10 +92,5 @@ public class CatalogUsedFragment
         if (columns < 2) return 2;
 
         return columns;
-    }
-
-    @Override
-    public void openProductDetails(ProductEntity product, boolean isCreator) {
-        viewModel.selectedItem(product, isCreator);
     }
 }

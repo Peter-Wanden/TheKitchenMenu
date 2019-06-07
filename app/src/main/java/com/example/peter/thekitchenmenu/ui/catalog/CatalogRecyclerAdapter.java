@@ -23,8 +23,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class CatalogRecyclerAdapter
-        extends RecyclerView.Adapter<CatalogRecyclerAdapter.AdapterViewHolder>
-        implements ProductItemUserActionsListener {
+        extends RecyclerView.Adapter<CatalogRecyclerAdapter.AdapterViewHolder> {
 
     private static final String TAG = "tkm-CatalogAdapter";
 
@@ -57,7 +56,6 @@ public class CatalogRecyclerAdapter
     public void onBindViewHolder(@NonNull AdapterViewHolder holder, int position) {
         final ProductEntity product = productList.get(position);
         holder.bind(product);
-        holder.binding.setListener(this);
     }
 
     @Override
@@ -76,14 +74,12 @@ public class CatalogRecyclerAdapter
         notifyDataSetChanged();
     }
 
-    @Override
-    public void onProductClicked(ProductEntity product) {
-        Log.d(TAG, "onProductClicked: description=" + product.getDescription());
-    }
-
     /* Inner class for creating ViewHolders */
     class AdapterViewHolder extends RecyclerView.ViewHolder {
         ProductListItemBinding binding;
+
+        ProductItemUserActionsListener listener = product ->
+                viewModel.getOpenProductEvent().setValue(product.getId());
 
         AdapterViewHolder(ProductListItemBinding binding) {
             super(binding.getRoot());
@@ -92,6 +88,7 @@ public class CatalogRecyclerAdapter
 
         void bind(ProductEntity product) {
             binding.setProduct(product);
+            binding.setListener(listener);
             binding.executePendingBindings();
         }
     }

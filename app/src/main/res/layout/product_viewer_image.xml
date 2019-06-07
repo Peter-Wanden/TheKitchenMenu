@@ -2,8 +2,14 @@
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.peter.thekitchenmenu.ui.detail.product.viewer.ProductViewerViewModel" />
+    </data>
+
     <LinearLayout
-        android:id="@+id/product_image_uneditable"
+        android:id="@+id/product_image_viewer"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="250dp">

@@ -5,7 +5,7 @@ import android.content.Context;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.app.Singletons;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
-import com.example.peter.thekitchenmenu.data.entity.ProductUserDataEntity;
+import com.example.peter.thekitchenmenu.data.entity.UsedProductEntity;
 
 import static com.example.peter.thekitchenmenu.app.Constants.ANONYMOUS;
 
@@ -19,7 +19,7 @@ class SyncDataModelResolver {
 
     // Static constant names for the data models
     private static final String ACTION_SYNC_PROD_COMM = ProductEntity.TAG;
-    private static final String ACTION_SYNC_PROD_MY = ProductUserDataEntity.TAG;
+    private static final String ACTION_SYNC_PROD_MY = UsedProductEntity.TAG;
 
     synchronized static void executeTask(Context context, String action, boolean observedState) {
 
