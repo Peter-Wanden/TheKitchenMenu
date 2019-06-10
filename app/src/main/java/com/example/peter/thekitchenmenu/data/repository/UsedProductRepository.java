@@ -135,6 +135,47 @@ public class UsedProductRepository implements UsedProductDataSource {
     }
 
     @Override
+    public void getUsedProductByProductId(@NonNull String productId,
+                                          @NonNull GetUsedProductCallback callback) {
+        checkNotNull(productId);
+        checkNotNull(callback);
+
+        UsedProductEntity cachedUsedProduct = getUsedProductWithProductId(productId);
+        if (cachedUsedProduct !=null) {
+            callback.onUsedProductLoaded(cachedUsedProduct);
+            return;
+        }
+
+        localDataSource.getUsedProductByProductId(productId, new GetUsedProductCallback() {
+            @Override
+            public void onUsedProductLoaded(UsedProductEntity usedProduct) {
+                if (usedProductsCache == null) usedProductsCache = new LinkedHashMap<>();
+                usedProductsCache.put(usedProduct.getId(), usedProduct);
+                callback.onUsedProductLoaded(usedProduct);
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+                callback.onDataNotAvailable();
+            }
+        });
+
+    }
+
+    private UsedProductEntity getUsedProductWithProductId(String productId) {
+        checkNotNull(productId);
+
+        if (usedProductsCache == null || usedProductsCache.isEmpty()) return null;
+        else {
+            for (String key : usedProductsCache.keySet()) {
+                UsedProductEntity usedProduct = usedProductsCache.get(key);
+                if (usedProduct.getProductId().equals(productId)) return usedProduct;
+            }
+            return null;
+        }
+    }
+
+    @Override
     public void saveUsedProduct(@NonNull UsedProductEntity usedProduct) {
         checkNotNull(usedProduct);
 

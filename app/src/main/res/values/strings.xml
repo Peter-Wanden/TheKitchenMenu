@@ -113,6 +113,7 @@
     <string name="activity_title_edit_product">Edit a Product</string>
     <string name="activity_title_add_new_product">Add a Product</string>
     <string name="widget_product_title_latest_products">Latest Products</string>
+    <string name="activity_title_add_used_product">Add a Used Product</string>
 
     <!-- ProductDetail user input error codes -->
     <string name="validation_text_too_short">Too short, needs to be between 3 and 70 characters.</string>
@@ -225,4 +226,5 @@
     <string name="product_image">Product image</string>
     <string name="hint_web_image_url">Paste a web image url here</string>
     <string name="activity_title_image_cropper">TKM - Image Cropper</string>
+    <string name="empty_screen__unused_product">Add this product to your used product list?</string>
 </resources>

@@ -60,6 +60,19 @@ public class UsedProductLocalDataSource implements UsedProductDataSource {
     }
 
     @Override
+    public void getUsedProductByProductId(@NonNull String productId,
+                                          @NonNull GetUsedProductCallback callback) {
+        Runnable getUsedProductByProductId = () -> {
+            final UsedProductEntity usedProduct = usedProductEntityDao.getByProductId(productId);
+            appExecutors.mainThread().execute(() -> {
+                if (usedProduct != null) callback.onUsedProductLoaded(usedProduct);
+                else callback.onDataNotAvailable();
+            });
+        };
+        appExecutors.diskIO().execute(getUsedProductByProductId);
+    }
+
+    @Override
     public void saveUsedProduct(@NonNull UsedProductEntity usedProduct) {
         checkNotNull(usedProduct);
         Runnable saveUsedProductRunnable = () -> usedProductEntityDao.insert(usedProduct);

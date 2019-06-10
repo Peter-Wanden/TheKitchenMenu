@@ -128,7 +128,7 @@ class SyncUserProductData {
                 Log.d(TAG, "tkm - nextPlease: Saving: " + batchInserts.size() + " inserts to database.");
 
                 if (batchInserts.size() > 0) {
-                    repository.insertAllUserProductData(batchInserts);
+//                    repository.insertAllUserProductData(batchInserts);
                     batchInserts.clear();
 
                     // Work is complete, inform handler.
@@ -144,7 +144,7 @@ class SyncUserProductData {
                 Log.d(TAG, "tkm - nextPlease: Saving:" + batchUpdates.size() + " updates to database.");
                 if(batchUpdates.size() > 0) {
 
-                    repository.updateUsersProductData(batchUpdates);
+//                    repository.updateUsersProductData(batchUpdates);
                     batchUpdates.clear();
 
                     resultCode += 3; // updates complete.

@@ -36,14 +36,6 @@ public class Repository {
 
         observableUsersProductData = new MediatorLiveDataActive<>(this,
                 UsedProductEntity.TAG);
-
-        observableUsersProductData.addSource(this.database.usedProductEntityDao().getAll(),
-                usersProductData -> {
-
-            if (this.database.getDatabaseCreated().getValue() != null) {
-                observableUsersProductData.postValue(usersProductData);
-            }
-        });
     }
 
     public static Repository getInstance(Context context, final TKMDatabase database) {
@@ -68,22 +60,6 @@ public class Repository {
 
     public LiveData<List<UsedProductEntity>> getAllUserProductData() {
         return observableUsersProductData;
-    }
-
-    void insertAllProducts(List<ProductEntity> productsToInsert) {
-//        database.productEntityDao().insertAll(productsToInsert);
-    }
-
-    void insertAllUserProductData(List<UsedProductEntity> userProductDataToInsert) {
-        database.usedProductEntityDao().insertAll(userProductDataToInsert);
-    }
-
-    void updateProducts(List<ProductEntity> productsToUpdate) {
-//        database.productEntityDao().updateAll(productsToUpdate);
-    }
-
-    void updateUsersProductData(List<UsedProductEntity> usedProductEntityToUpdate) {
-        database.usedProductEntityDao().updateAll(usedProductEntityToUpdate);
     }
 
     public Cursor findProductsThatMatch(String searchQuery) {

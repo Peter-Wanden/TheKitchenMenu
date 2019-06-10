@@ -49,13 +49,14 @@
                 </FrameLayout>
 
                 <FrameLayout
-                    android:id="@+id/used_product_editor_content_frame"
+                    android:id="@+id/used_product_viewer_content_frame"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                 </FrameLayout>
             </LinearLayout>
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/product_viewer_activity_fab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/fab_margin"

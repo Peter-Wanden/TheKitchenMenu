@@ -11,19 +11,21 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.databinding.ProductViewerDetailFragmentBinding;
+import com.example.peter.thekitchenmenu.databinding.UsedProductViewerBinding;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-public class ProductViewerFragment extends Fragment {
+public class UsedProductViewerFragment extends Fragment {
 
     public static final String ARGUMENT_PRODUCT_ID = "PRODUCT_ID";
 
-    private ProductViewerDetailFragmentBinding binding;
-    private ProductViewerViewModel viewModel;
+    private UsedProductViewerBinding binding;
+    private UsedProductViewerViewModel viewModel;
 
-    public static ProductViewerFragment newInstance(String productId) {
+    public static UsedProductViewerFragment newInstance(String productId) {
+
         Bundle arguments = new Bundle();
         arguments.putString(ARGUMENT_PRODUCT_ID, productId);
-        ProductViewerFragment fragment = new ProductViewerFragment();
+        UsedProductViewerFragment fragment = new UsedProductViewerFragment();
         fragment.setArguments(arguments);
         return fragment;
     }
@@ -42,21 +44,27 @@ public class ProductViewerFragment extends Fragment {
 
         binding = DataBindingUtil.inflate(
                 inflater,
-                R.layout.product_viewer_detail_fragment,
+                R.layout.used_product_viewer,
                 container,
                 false);
 
         setViewModel();
         setBindingInstanceVariables();
+        setupFab();
 
         return binding.getRoot();
     }
 
     private void setViewModel() {
-        viewModel = ProductViewerActivity.obtainProductViewerViewModel(requireActivity());
+        viewModel = ProductViewerActivity.obtainUsedProductViewerViewModel(requireActivity());
     }
 
     private void setBindingInstanceVariables() {
         binding.setViewModel(viewModel);
+    }
+
+    private void setupFab() {
+        FloatingActionButton fab = getActivity().findViewById(R.id.product_viewer_activity_fab);
+        fab.setOnClickListener(v -> viewModel.addUsedProduct());
     }
 }

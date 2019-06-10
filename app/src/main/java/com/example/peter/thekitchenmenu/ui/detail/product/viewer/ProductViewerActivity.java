@@ -1,5 +1,6 @@
 package com.example.peter.thekitchenmenu.ui.detail.product.viewer;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,42 +14,30 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.ProductViewerActivityBinding;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryProduct;
-import com.example.peter.thekitchenmenu.ui.detail.product.productuserdataeditor.UsedProductEditorFragment;
-import com.example.peter.thekitchenmenu.ui.detail.product.productuserdataeditor.UsedProductEditorViewModel;
+import com.example.peter.thekitchenmenu.ui.ViewModelFactoryUsedProduct;
+import com.example.peter.thekitchenmenu.ui.detail.product.usedproducteditor.UsedProductEditorActivity;
 import com.example.peter.thekitchenmenu.utils.ActivityUtils;
 
-public class ProductViewerActivity extends AppCompatActivity {
+public class ProductViewerActivity extends AppCompatActivity implements ProductViewerNavigator {
 
     public static final String EXTRA_PRODUCT_ID = "PRODUCT_ID";
 
+
     private ProductViewerActivityBinding binding;
-    private ProductViewerViewModel viewerViewModel;
-    private UsedProductEditorViewModel userDataEditorViewModel;
+    private ProductViewerViewModel productViewerViewModel;
+    private UsedProductViewerViewModel usedProductViewerViewModel;
+    private String productId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        productId = getIntent().getStringExtra(EXTRA_PRODUCT_ID);
         initialiseBindings();
         setupToolbar();
+        setupViewModels();
         addFragments();
-    }
-
-    private void addFragments() {
-        ProductViewerFragment productViewerFragment = findOrReplaceViewerFragment();
-        ActivityUtils.replaceFragmentInActivity(
-                getSupportFragmentManager(),
-                productViewerFragment,
-                R.id.product_viewer_content_frame);
-        viewerViewModel = obtainProductViewerViewModel(this);
-
-        UsedProductEditorFragment usedProductEditorFragment =
-                findOrReplaceUsedProductEditorFragment();
-        ActivityUtils.replaceFragmentInActivity(
-                getSupportFragmentManager(),
-                usedProductEditorFragment,
-                R.id.used_product_editor_content_frame);
-        userDataEditorViewModel = obtainUsedProductEditorViewModel(this);
+        subscribeToNavigationChanges();
     }
 
     private void initialiseBindings() {
@@ -65,9 +54,46 @@ public class ProductViewerActivity extends AppCompatActivity {
         }
     }
 
+    private void setupViewModels() {
+        productViewerViewModel = obtainProductViewerViewModel(this);
+        usedProductViewerViewModel = obtainUsedProductViewerViewModel(this);
+    }
+
+    public static ProductViewerViewModel obtainProductViewerViewModel(
+            FragmentActivity activity) {
+
+        ViewModelFactoryProduct factory = ViewModelFactoryProduct.getInstance(
+                activity.getApplication());
+        return ViewModelProviders.of(activity, factory).get(ProductViewerViewModel.class);
+    }
+
+    public static UsedProductViewerViewModel obtainUsedProductViewerViewModel(
+            FragmentActivity activity) {
+
+        ViewModelFactoryUsedProduct factory = ViewModelFactoryUsedProduct.getInstance(
+                activity.getApplication());
+        return ViewModelProviders.of(activity, factory).get(UsedProductViewerViewModel.class);
+    }
+
+    private void addFragments() {
+
+        ProductViewerFragment productViewerFragment =
+                findOrReplaceViewerFragment(productId);
+        ActivityUtils.replaceFragmentInActivity(
+                getSupportFragmentManager(),
+                productViewerFragment,
+                R.id.product_viewer_content_frame);
+
+        UsedProductViewerFragment usedProductViewerFragment =
+                findOrReplaceUsedProductViewerFragment(productId);
+        ActivityUtils.replaceFragmentInActivity(
+                getSupportFragmentManager(),
+                usedProductViewerFragment,
+                R.id.used_product_viewer_content_frame);
+    }
+
     @NonNull
-    private ProductViewerFragment findOrReplaceViewerFragment() {
-        String productId = getIntent().getStringExtra(EXTRA_PRODUCT_ID);
+    private ProductViewerFragment findOrReplaceViewerFragment(String productId) {
 
         ProductViewerFragment fragment = (ProductViewerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.product_viewer_content_frame);
@@ -77,31 +103,48 @@ public class ProductViewerActivity extends AppCompatActivity {
     }
 
     @NonNull
-    private UsedProductEditorFragment findOrReplaceUsedProductEditorFragment() {
-        String productId = getIntent().getStringExtra(EXTRA_PRODUCT_ID);
+    private UsedProductViewerFragment findOrReplaceUsedProductViewerFragment(String productId) {
 
-        UsedProductEditorFragment fragment = (UsedProductEditorFragment)
-                getSupportFragmentManager().findFragmentById(R.id.used_product_editor_content_frame);
+        UsedProductViewerFragment fragment = (UsedProductViewerFragment)
+                getSupportFragmentManager().findFragmentById(
+                        R.id.used_product_viewer_content_frame);
 
-        if (fragment == null) fragment = UsedProductEditorFragment.newInstance(productId);
+        if (fragment == null) fragment = UsedProductViewerFragment.newInstance(productId);
         return fragment;
     }
 
-    public static ProductViewerViewModel obtainProductViewerViewModel(
-            FragmentActivity activity) {
-        ViewModelFactoryProduct factory = ViewModelFactoryProduct.getInstance(activity.getApplication());
-        return ViewModelProviders.of(activity, factory).get(ProductViewerViewModel.class);
-    }
-
-    public static UsedProductEditorViewModel obtainUsedProductEditorViewModel(
-            FragmentActivity activity) {
-        ViewModelFactoryProduct factory = ViewModelFactoryProduct.getInstance(activity.getApplication());
-        return ViewModelProviders.of(activity, factory).get(UsedProductEditorViewModel.class);
+    private void subscribeToNavigationChanges() {
+        usedProductViewerViewModel.getAddUsedProduct().observe(this, addUsedProductEvent ->
+                ProductViewerActivity.this.addToUsedProducts());
     }
 
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    @Override
+    public void editProduct() {
+        // Navigate to ProductEditor, with onActivityResult()
+    }
+
+    @Override
+    public void deleteFromUsedProducts() {
+        // delete from used products and finish
+    }
+
+    @Override
+    public void addToUsedProducts() {
+        // Navigate to used products editor, with onActivityResult()
+        Intent intent = new Intent(this, UsedProductEditorActivity.class);
+        intent.putExtra(UsedProductEditorActivity.EXTRA_PRODUCT_ID, productId);
+        startActivityForResult(intent, UsedProductEditorActivity.REQUEST_ADD_EDIT_USED_PRODUCT_DETAILS);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
     }
 }

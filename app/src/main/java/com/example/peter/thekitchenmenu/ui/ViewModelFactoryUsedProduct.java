@@ -8,7 +8,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
 import com.example.peter.thekitchenmenu.data.repository.UsedProductRepository;
-import com.example.peter.thekitchenmenu.ui.detail.product.productuserdataeditor.UsedProductEditorViewModel;
+import com.example.peter.thekitchenmenu.ui.detail.product.usedproducteditor.UsedProductEditorViewModel;
+import com.example.peter.thekitchenmenu.ui.detail.product.viewer.UsedProductViewerViewModel;
 
 public class ViewModelFactoryUsedProduct extends ViewModelProvider.NewInstanceFactory {
 
@@ -42,6 +43,10 @@ public class ViewModelFactoryUsedProduct extends ViewModelProvider.NewInstanceFa
         if (modelClass.isAssignableFrom(UsedProductEditorViewModel.class)) {
             //noinspection unchecked
             return (T) new UsedProductEditorViewModel(application, repository);
+
+        } else if (modelClass.isAssignableFrom(UsedProductViewerViewModel.class)) {
+            //noinspection unchecked
+            return(T) new UsedProductViewerViewModel(application, repository);
         }
 
         throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());

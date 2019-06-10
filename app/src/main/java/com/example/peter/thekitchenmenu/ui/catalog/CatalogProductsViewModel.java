@@ -11,6 +11,7 @@ import com.example.peter.thekitchenmenu.data.repository.ProductDataSource;
 import com.example.peter.thekitchenmenu.data.repository.ProductRepository;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 
+import androidx.annotation.NonNull;
 import androidx.databinding.ObservableBoolean;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;

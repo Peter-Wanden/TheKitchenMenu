@@ -25,6 +25,12 @@ public class UsedProductRemoteDataSource implements UsedProductDataSource {
     }
 
     @Override
+    public void getUsedProductByProductId(@NonNull String productId,
+                                          @NonNull GetUsedProductCallback callback) {
+        callback.onDataNotAvailable();
+    }
+
+    @Override
     public void saveUsedProduct(@NonNull UsedProductEntity usedProduct) {
 
     }

@@ -10,7 +10,7 @@ import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.data.repository.ProductDataSource;
 import com.example.peter.thekitchenmenu.data.repository.ProductRepository;
 
-public class    ProductViewerViewModel
+public class ProductViewerViewModel
         extends AndroidViewModel
         implements ProductDataSource.GetProductCallback {
 
@@ -19,7 +19,7 @@ public class    ProductViewerViewModel
     public final ObservableField<ProductEntity> product = new ObservableField<>();
 
 
-    public ProductViewerViewModel(@NonNull Application application, ProductRepository repository) {
+    public ProductViewerViewModel(Application application, ProductRepository repository) {
         super(application);
         this.repository = repository;
     }

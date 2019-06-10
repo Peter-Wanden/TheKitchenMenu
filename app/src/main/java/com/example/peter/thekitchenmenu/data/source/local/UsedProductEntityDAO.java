@@ -27,7 +27,7 @@ public interface UsedProductEntityDAO {
 
     @Query("SELECT * FROM " + TABLE_USED_PRODUCTS +
             " WHERE " + PRODUCT_ID + " = :productId")
-    UsedProductEntity getByProductId(int productId);
+    UsedProductEntity getByProductId(String productId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(UsedProductEntity usedProduct);

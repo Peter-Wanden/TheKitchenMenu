@@ -27,6 +27,9 @@ public interface UsedProductDataSource {
 
     void getUsedProduct(@NonNull String usedProductId, @NonNull GetUsedProductCallback callback);
 
+    void getUsedProductByProductId(@NonNull String productId,
+                                   @NonNull GetUsedProductCallback callback);
+
     void saveUsedProduct(@NonNull UsedProductEntity usedProduct);
 
     void deleteAllUsedProducts();
