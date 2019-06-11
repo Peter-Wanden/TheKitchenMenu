@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.utils.imageeditor;
+package com.example.peter.thekitchenmenu.ui.imageeditor;
 
 import android.app.Application;
 import android.content.Intent;
@@ -15,7 +15,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.peter.thekitchenmenu.data.model.ImageModel;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
-import com.example.peter.thekitchenmenu.utils.ObservableViewModel;
+import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.File;
@@ -27,7 +27,6 @@ import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 import static com.example.peter.thekitchenmenu.app.Constants.FILE_PROVIDER_AUTHORITY;
 import static com.example.peter.thekitchenmenu.data.model.ImageModel.*;
-import static com.example.peter.thekitchenmenu.utils.imageeditor.BitmapUtils.*;
 
 public class ImageEditorViewModel extends ObservableViewModel {
 
@@ -175,14 +174,14 @@ public class ImageEditorViewModel extends ObservableViewModel {
             cropFullSizeImageEvent().call();
 
         else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_CANCELED)
-            deleteImageFile(appContext, fullSizeImageFile.getAbsolutePath());
+            BitmapUtils.deleteImageFile(appContext, fullSizeImageFile.getAbsolutePath());
 
         else if (requestCode == REQUEST_IMAGE_IMPORT && resultCode == RESULT_OK && data != null) {
             Uri galleryImageUri = data.getData();
             importGalleryImage(galleryImageUri);
 
         } else if (requestCode == REQUEST_IMAGE_IMPORT && resultCode == RESULT_CANCELED)
-            deleteImageFile(appContext, fullSizeImageFile.getAbsolutePath());
+            BitmapUtils.deleteImageFile(appContext, fullSizeImageFile.getAbsolutePath());
 
         else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
@@ -228,18 +227,18 @@ public class ImageEditorViewModel extends ObservableViewModel {
     }
 
     private boolean bitmapSavedToCacheFile(Bitmap bitmapToSave, File fileToSaveBitmapTo) {
-        return saveBitmapToCache(bitmapToSave, fileToSaveBitmapTo);
+        return BitmapUtils.saveBitmapToCache(bitmapToSave, fileToSaveBitmapTo);
     }
 
     private void createImageFilesFromCroppedBitMap(Bitmap croppedImageBitmap) {
         createTemporaryImageFiles();
 
-        Bitmap smallBitmap = createScaledBitmap(croppedImageBitmap, 75, true);
-        Bitmap mediumBitmap = createScaledBitmap(croppedImageBitmap, 290, true);
-        Bitmap largeBitMap = createScaledBitmap(croppedImageBitmap, 400, true);
+        Bitmap smallBitmap = BitmapUtils.createScaledBitmap(croppedImageBitmap, 75, true);
+        Bitmap mediumBitmap = BitmapUtils.createScaledBitmap(croppedImageBitmap, 290, true);
+        Bitmap largeBitMap = BitmapUtils.createScaledBitmap(croppedImageBitmap, 400, true);
 
         if (smallImageFile != null) {
-            boolean smallImageSaved = saveBitmapToCache(smallBitmap, smallImageFile);
+            boolean smallImageSaved = BitmapUtils.saveBitmapToCache(smallBitmap, smallImageFile);
 
             if (smallImageSaved) updatedImageModel.setLocalSmallImageUri(
                     FileProvider.getUriForFile(
@@ -248,7 +247,7 @@ public class ImageEditorViewModel extends ObservableViewModel {
         }
 
         if (mediumImageFile != null) {
-            boolean mediumImageSaved = saveBitmapToCache(mediumBitmap, mediumImageFile);
+            boolean mediumImageSaved = BitmapUtils.saveBitmapToCache(mediumBitmap, mediumImageFile);
 
             if (mediumImageSaved)
                 updatedImageModel.setLocalMediumImageUri(
@@ -258,7 +257,7 @@ public class ImageEditorViewModel extends ObservableViewModel {
         }
 
         if (largeImageFile != null) {
-            boolean largeImageSaved = saveBitmapToCache(largeBitMap, largeImageFile);
+            boolean largeImageSaved = BitmapUtils.saveBitmapToCache(largeBitMap, largeImageFile);
 
             if (largeImageSaved) updatedImageModel.setLocalLargeImageUri(
                     FileProvider.getUriForFile(
@@ -266,7 +265,7 @@ public class ImageEditorViewModel extends ObservableViewModel {
                             toString());
         }
 
-        deleteImageFile(appContext, fullSizeImageFile.getAbsolutePath());
+        BitmapUtils.deleteImageFile(appContext, fullSizeImageFile.getAbsolutePath());
         existingImageModel.setValue(updatedImageModel);
     }
 

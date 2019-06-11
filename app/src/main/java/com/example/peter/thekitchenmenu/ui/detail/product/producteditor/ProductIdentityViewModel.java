@@ -6,7 +6,7 @@ import android.text.Editable;
 import com.example.peter.thekitchenmenu.data.model.ProductIdentityModel;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 import com.example.peter.thekitchenmenu.utils.TextValidationHandler;
-import com.example.peter.thekitchenmenu.utils.ObservableViewModel;
+import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
@@ -17,10 +17,11 @@ public class ProductIdentityViewModel extends ObservableViewModel {
 
     private static final String TAG = "tkm - ProductIdentityVM";
 
-    private MutableLiveData<ProductIdentityModel> existingIdentityModel = new MutableLiveData<>();
+    private final MutableLiveData<ProductIdentityModel> existingIdentityModel = new MutableLiveData<>();
     private ProductIdentityModel editedIdentityModel = new ProductIdentityModel();
-    private SingleLiveEvent<String> descriptionErrorEvent = new SingleLiveEvent<>();
-    private SingleLiveEvent<String> shoppingListItemNameErrorEvent = new SingleLiveEvent<>();
+    private final SingleLiveEvent<String> descriptionErrorEvent = new SingleLiveEvent<>();
+    private final SingleLiveEvent<String> shoppingListItemNameErrorEvent = new SingleLiveEvent<>();
+
     private Application appContext;
 
     // Tracking of valid fields. When all are true post new model to mutable existingIdentityModel

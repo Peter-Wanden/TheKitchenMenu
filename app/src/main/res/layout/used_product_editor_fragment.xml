@@ -4,34 +4,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     
     <data>
-        
-    <import type="android.view.View" />
+        <import type="android.view.View" />
 
         <variable
-            name="textValidation"
-            type="com.example.peter.thekitchenmenu.ui.detail.product.usedproducteditor.ProductUserDataTextValidationHandler" />
-        
-        <variable
-            name="userDataModel"
-            type="com.example.peter.thekitchenmenu.data.model.ProductUserDataModel" />
+            name="viewModel"
+            type="com.example.peter.thekitchenmenu.ui.detail.product.usedproducteditor.UsedProductEditorViewModel" />
     </data>
-
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/product_user_data_editable_parent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/product_user_data_border"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_margin="8dp"
-            android:src="@drawable/rectangle_radius_20dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+        android:layout_height="match_parent">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/user_data_header"
@@ -45,9 +28,10 @@
             android:text="@string/my_product_information"
             android:textAlignment="center"
             android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="@id/product_user_data_border"
-            app:layout_constraintTop_toTopOf="@id/product_user_data_border"
-            app:layout_constraintEnd_toEndOf="@id/product_user_data_border" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/retailer_label"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/retailer_label"
@@ -57,8 +41,9 @@
             android:layout_marginTop="8dp"
             android:layout_marginStart="8dp"
             android:text="@string/label_retailer"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/user_data_header"
-            app:layout_constraintStart_toStartOf="@id/product_user_data_border" />
+            app:layout_constraintBottom_toTopOf="@id/editable_retailer"/>
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/editable_retailer"
@@ -70,11 +55,12 @@
             android:layout_marginEnd="8dp"
             android:hint="@string/hint_retailer"
             android:inputType="textCapWords"
-            android:afterTextChanged='@{() -> textValidation.validateRetailer(editableRetailer)}'
-            android:text='@{userDataModel.retailer}'
-            app:layout_constraintStart_toStartOf="@id/product_user_data_border"
-            app:layout_constraintEnd_toEndOf="@id/product_user_data_border"
-            app:layout_constraintTop_toBottomOf="@id/retailer_label"/>
+            android:text='@{viewModel.retailer}'
+            android:afterTextChanged='@{viewModel::retailerHasChanged}'
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/retailer_label"
+            app:layout_constraintBottom_toTopOf="@id/price_label" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/price_label"
@@ -84,8 +70,9 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:text="@string/label_price"
-            app:layout_constraintStart_toStartOf="@id/product_user_data_border"
-            app:layout_constraintTop_toBottomOf="@id/editable_retailer"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/editable_retailer"
+            app:layout_constraintBottom_toTopOf="@id/editable_price"/>
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/editable_price"
@@ -96,11 +83,12 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:hint="@string/hint_price"
-            android:text='@{`` + userDataModel.price}'
+            android:text='@{`` + viewModel.price}'
             android:inputType="numberDecimal"
-            app:layout_constraintStart_toStartOf="@id/product_user_data_border"
-            app:layout_constraintEnd_toEndOf="@id/product_user_data_border"
-            app:layout_constraintTop_toBottomOf="@id/price_label" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/price_label"
+            app:layout_constraintBottom_toTopOf="@id/storage_room_label"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/storage_room_label"
@@ -110,8 +98,9 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:text="@string/label_location_room"
-            app:layout_constraintStart_toStartOf="@id/product_user_data_border"
-            app:layout_constraintTop_toBottomOf="@id/editable_price"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/editable_price"
+            app:layout_constraintBottom_toTopOf="@id/editable_location_room"/>
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/editable_location_room"
@@ -122,12 +111,14 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:hint="@string/hint_location_room"
-            android:afterTextChanged='@{() -> textValidation.validateLocationRoom(editableLocationRoom)}'
-            android:text='@{userDataModel.locationRoom}'
+            android:text='@{viewModel.locationRoom}'
             android:inputType="textCapWords"
-            app:layout_constraintStart_toStartOf="@id/product_user_data_border"
-            app:layout_constraintEnd_toEndOf="@id/product_user_data_border"
-            app:layout_constraintTop_toBottomOf="@id/storage_room_label" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/storage_room_label"
+            app:layout_constraintBottom_toTopOf="@id/location_in_room_label"/>
+
+        <!-- android:afterTextChanged='@{() -> textValidation.validateLocationRoom(editableLocationRoom)}' -->
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/location_in_room_label"
@@ -137,8 +128,9 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:text="@string/label_location_in_room"
-            app:layout_constraintStart_toStartOf="@id/product_user_data_border"
-            app:layout_constraintTop_toBottomOf="@id/editable_location_room" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/editable_location_room"
+            app:layout_constraintBottom_toTopOf="@id/editable_location_in_room"/>
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/editable_location_in_room"
@@ -149,19 +141,11 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:hint="@string/hint_location_in_room"
-            android:afterTextChanged='@{() -> textValidation.validateLocationInRoom(editableLocationInRoom)}'
-            android:text='@{userDataModel.locationInRoom}'
+            android:text='@{viewModel.locationInRoom}'
             android:inputType="textCapWords"
-            app:layout_constraintStart_toStartOf="@id/product_user_data_border"
-            app:layout_constraintEnd_toEndOf="@id/product_user_data_border"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/location_in_room_label"
-            app:layout_constraintBottom_toBottomOf="@id/bottom_guideline"/>
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/bottom_guideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_end="12dp"/>
+            app:layout_constraintBottom_toBottomOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

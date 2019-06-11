@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.utils;
+package com.example.peter.thekitchenmenu.ui;
 
 import android.app.Application;
 

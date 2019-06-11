@@ -7,9 +7,7 @@ import androidx.room.FtsOptions;
 import static com.example.peter.thekitchenmenu.data.entity.ProductFastTextSearch.TABLE_FTS_PRODUCT;
 
 @Entity(tableName = TABLE_FTS_PRODUCT)
-@Fts4(contentEntity = ProductEntity.class,
-        tokenizer = FtsOptions.Tokenizer.UNICODE61,
-        prefix = {2,3,4})
+@Fts4(contentEntity = ProductEntity.class, prefix = {2,3,4})
 public class ProductFastTextSearch {
 
     public static final String TAG = ProductFastTextSearch.class.getSimpleName();

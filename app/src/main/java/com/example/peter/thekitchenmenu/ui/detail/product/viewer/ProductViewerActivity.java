@@ -2,6 +2,7 @@ package com.example.peter.thekitchenmenu.ui.detail.product.viewer;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,8 +21,9 @@ import com.example.peter.thekitchenmenu.utils.ActivityUtils;
 
 public class ProductViewerActivity extends AppCompatActivity implements ProductViewerNavigator {
 
-    public static final String EXTRA_PRODUCT_ID = "PRODUCT_ID";
+    private static final String TAG = "tkm-ProductViewerAct";
 
+    public static final String EXTRA_PRODUCT_ID = "PRODUCT_ID";
 
     private ProductViewerActivityBinding binding;
     private ProductViewerViewModel productViewerViewModel;
@@ -79,6 +81,7 @@ public class ProductViewerActivity extends AppCompatActivity implements ProductV
 
         ProductViewerFragment productViewerFragment =
                 findOrReplaceViewerFragment(productId);
+
         ActivityUtils.replaceFragmentInActivity(
                 getSupportFragmentManager(),
                 productViewerFragment,
@@ -86,6 +89,7 @@ public class ProductViewerActivity extends AppCompatActivity implements ProductV
 
         UsedProductViewerFragment usedProductViewerFragment =
                 findOrReplaceUsedProductViewerFragment(productId);
+
         ActivityUtils.replaceFragmentInActivity(
                 getSupportFragmentManager(),
                 usedProductViewerFragment,
@@ -115,7 +119,7 @@ public class ProductViewerActivity extends AppCompatActivity implements ProductV
 
     private void subscribeToNavigationChanges() {
         usedProductViewerViewModel.getAddUsedProduct().observe(this, addUsedProductEvent ->
-                ProductViewerActivity.this.addToUsedProducts());
+                ProductViewerActivity.this.addNewUsedProduct());
     }
 
     @Override
@@ -130,16 +134,37 @@ public class ProductViewerActivity extends AppCompatActivity implements ProductV
     }
 
     @Override
-    public void deleteFromUsedProducts() {
+    public void deleteUsedProduct() {
         // delete from used products and finish
     }
 
     @Override
-    public void addToUsedProducts() {
-        // Navigate to used products editor, with onActivityResult()
+    public void addNewUsedProduct() {
         Intent intent = new Intent(this, UsedProductEditorActivity.class);
-        intent.putExtra(UsedProductEditorActivity.EXTRA_PRODUCT_ID, productId);
-        startActivityForResult(intent, UsedProductEditorActivity.REQUEST_ADD_EDIT_USED_PRODUCT_DETAILS);
+
+        intent.putExtra(
+                UsedProductEditorActivity.EXTRA_PRODUCT_ID,
+                productViewerViewModel.product.get().getId());
+
+        startActivityForResult(
+                intent,
+                UsedProductEditorActivity.REQUEST_ADD_NEW_USED_PRODUCT);
+    }
+
+    @Override
+    public void editUsedProduct() {
+        Intent intent = new Intent(this, UsedProductEditorActivity.class);
+
+        intent.putExtra(
+                UsedProductEditorActivity.EXTRA_PRODUCT_ID,
+                usedProductViewerViewModel.usedProduct.get().getProductId());
+        intent.putExtra(
+                UsedProductEditorActivity.EXTRA_USED_PRODUCT_ID,
+                usedProductViewerViewModel.usedProduct.get().getId());
+
+        startActivityForResult(
+                intent,
+                UsedProductEditorActivity.REQUEST_EDIT_USED_PRODUCT);
     }
 
     @Override

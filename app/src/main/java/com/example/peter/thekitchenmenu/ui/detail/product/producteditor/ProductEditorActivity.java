@@ -11,7 +11,7 @@ import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
 import com.example.peter.thekitchenmenu.databinding.ProductEditorBinding;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryProduct;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtype;
-import com.example.peter.thekitchenmenu.utils.imageeditor.ImageEditorViewModel;
+import com.example.peter.thekitchenmenu.ui.imageeditor.ImageEditorViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.fragment.app.FragmentActivity;

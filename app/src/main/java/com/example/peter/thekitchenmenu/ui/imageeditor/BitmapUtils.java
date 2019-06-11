@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.utils.imageeditor;
+package com.example.peter.thekitchenmenu.ui.imageeditor;
 
 import android.content.Context;
 import android.database.Cursor;

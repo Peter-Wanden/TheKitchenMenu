@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.databinding.UsedProductEditorBinding;
+import com.example.peter.thekitchenmenu.databinding.UsedProductEditorFragmentBinding;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,25 +15,60 @@ import androidx.fragment.app.Fragment;
 
 public class UsedProductEditorFragment extends Fragment {
 
-    private static final String TAG = "UsedProductEditorFragment";
+    private static final String TAG = "tkm-UsedProductEditFrag";
 
     public static final String ARGUMENT_PRODUCT_ID = "PRODUCT_ID";
+    public static final String ARGUMENT_USED_PRODUCT_ID = "USED_PRODUCT_ID";
 
-    private UsedProductEditorBinding binding;
+    private UsedProductEditorFragmentBinding binding;
     private UsedProductEditorViewModel viewModel;
 
-    public static UsedProductEditorFragment newInstance(String productId) {
+    public UsedProductEditorFragment() {
+    }
+
+    public static UsedProductEditorFragment newInstance(String productId, String usedProductId) {
+
         Bundle arguments = new Bundle();
         arguments.putString(ARGUMENT_PRODUCT_ID, productId);
+        arguments.putString(ARGUMENT_USED_PRODUCT_ID, usedProductId);
         UsedProductEditorFragment fragment = new UsedProductEditorFragment();
         fragment.setArguments(arguments);
         return fragment;
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        viewModel.start(getArguments().getString(ARGUMENT_PRODUCT_ID));
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        viewModel = obtainViewModel();
+        loadData();
+        subscribeToEvents();
+    }
+
+    private UsedProductEditorViewModel obtainViewModel() {
+        return UsedProductEditorActivity.obtainUsedProductEditorViewModel(requireActivity());
+    }
+
+    private void loadData() {
+        if (getArguments() != null)
+
+            if (getArguments().getString(ARGUMENT_USED_PRODUCT_ID) != null) {
+                viewModel.start(
+                        getArguments().getString(ARGUMENT_PRODUCT_ID),
+                        getArguments().getString(ARGUMENT_USED_PRODUCT_ID));
+            } else {
+                viewModel.start(
+                        getArguments().getString(ARGUMENT_PRODUCT_ID),
+                        null);
+            }
+    }
+
+    private void subscribeToEvents() {
+        viewModel.getRetailerErrorEvent().observe(this, this::retailerError);
+    }
+
+    private void retailerError(String retailerError) {
+        binding.editableRetailer.setError(retailerError);
     }
 
     @Nullable
@@ -44,26 +79,17 @@ public class UsedProductEditorFragment extends Fragment {
 
         binding = DataBindingUtil.inflate(
                 inflater,
-                R.layout.used_product_editor,
+                R.layout.used_product_editor_fragment,
                 container,
                 false);
 
-        setViewModel();
         setBindingInstanceVariables();
-        setValidationHandler();
 
         binding.setLifecycleOwner(this);
         return binding.getRoot();
     }
 
-    private void setViewModel() {
-    }
-
-    private void setValidationHandler() {
-        binding.setTextValidation(viewModel.getTextValidationHandler());
-    }
-
     private void setBindingInstanceVariables() {
-        binding.setUserDataModel(viewModel.getUserDataModel());
+        binding.setViewModel(viewModel);
     }
 }

@@ -56,12 +56,12 @@ public final class UsedProductEntity {
     @ColumnInfo(name = LAST_UPDATE)
     private final long lastUpdate;
 
-    // Used by room and for copying
+    // Required by room, do not use
     public UsedProductEntity(@NonNull String id,
                              @NonNull String productId,
-                             String retailer,
-                             String locationRoom,
-                             String locationInRoom,
+                             @Nullable String retailer,
+                             @Nullable String locationRoom,
+                             @Nullable String locationInRoom,
                              double price,
                              long createDate,
                              long lastUpdate) {
@@ -76,25 +76,43 @@ public final class UsedProductEntity {
         this.lastUpdate = lastUpdate;
     }
 
-    // Use this constructor to create a new UsedProductEntity
     @Ignore
-    public UsedProductEntity(@NonNull String productId,
-                             String retailer,
-                             String locationRoom,
-                             String locationInRoom,
-                             double price) {
-
-        this.id = UUID.randomUUID().toString();
-        this.productId = productId;
-        this.retailer = retailer;
-        this.locationRoom = locationRoom;
-        this.locationInRoom = locationInRoom;
-        this.price = price;
-        this.createDate = getDate();
-        this.lastUpdate = getDate();
+    public static UsedProductEntity updateUsedProduct(@NonNull String usedProductId,
+                                                      @NonNull String productId,
+                                                      @Nullable String retailer,
+                                                      @Nullable String locationRoom,
+                                                      @Nullable String locationInRoom,
+                                                      double price,
+                                                      long createDate) {
+        return new UsedProductEntity(
+                usedProductId,
+                productId,
+                retailer,
+                locationRoom,
+                locationInRoom,
+                price,
+                createDate,
+                getDate());
     }
 
-    private long getDate() {
+    @Ignore
+    public static UsedProductEntity createNewUsedProduct(@NonNull String productId,
+                                                         @Nullable String retailer,
+                                                         @Nullable String locationRoom,
+                                                         @Nullable String locationInRoom,
+                                                         double price) {
+        return new UsedProductEntity(
+                UUID.randomUUID().toString(),
+                productId,
+                retailer,
+                locationRoom,
+                locationInRoom,
+                price,
+                getDate(),
+                getDate());
+    }
+
+    private static long getDate() {
         return Calendar.getInstance().getTimeInMillis();
     }
 

@@ -7,7 +7,9 @@ public interface ProductViewerNavigator {
 
     void editProduct();
 
-    void deleteFromUsedProducts();
+    void deleteUsedProduct();
 
-    void addToUsedProducts();
+    void addNewUsedProduct();
+
+    void editUsedProduct();
 }

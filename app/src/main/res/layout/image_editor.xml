@@ -10,7 +10,7 @@
 
         <variable
             name="imageViewModel"
-            type="com.example.peter.thekitchenmenu.utils.imageeditor.ImageEditorViewModel" />
+            type="com.example.peter.thekitchenmenu.ui.imageeditor.ImageEditorViewModel" />
 
         <variable
             name="imageModel"

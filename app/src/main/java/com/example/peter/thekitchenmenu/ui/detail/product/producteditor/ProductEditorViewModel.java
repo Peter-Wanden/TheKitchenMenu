@@ -11,7 +11,7 @@ import com.example.peter.thekitchenmenu.data.model.ProductIdentityModel;
 import com.example.peter.thekitchenmenu.data.model.ImageModel;
 import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
 import com.example.peter.thekitchenmenu.data.repository.ProductRepository;
-import com.example.peter.thekitchenmenu.utils.ObservableViewModel;
+import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 
 import androidx.annotation.NonNull;

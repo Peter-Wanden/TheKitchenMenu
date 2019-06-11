@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.utils.imageeditor;
+package com.example.peter.thekitchenmenu.ui.imageeditor;
 
 import android.app.SearchManager;
 import android.content.Intent;
@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.model.ImageModel;
 import com.example.peter.thekitchenmenu.databinding.ImageEditorBinding;
-import com.example.peter.thekitchenmenu.utils.imageeditor.ImageEditorViewModel;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import androidx.annotation.NonNull;
@@ -22,7 +21,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import static com.example.peter.thekitchenmenu.utils.imageeditor.ImageEditorViewModel.*;
+import static com.example.peter.thekitchenmenu.ui.imageeditor.ImageEditorViewModel.*;
 
 public class ImageEditorFragment extends Fragment {
 

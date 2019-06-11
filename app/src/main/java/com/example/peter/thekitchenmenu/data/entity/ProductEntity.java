@@ -32,7 +32,6 @@ public final class ProductEntity {
     public static final String UNIT_OF_MEASURE_SUB_TYPE = "unitOfMeasureSubtype";
     public static final String CREATED_BY = "createdBy";
     public static final String WEB_IMAGE_URL = "webImageUrl";
-    public static final String REMOTE_PRODUCT_ID = "remoteProductId";
     public static final String REMOTE_SMALL_IMAGE_URI = "remoteSmallImageUri";
     public static final String REMOTE_MEDIUM_IMAGE_URI = "remoteMediumImageUri";
     public static final String REMOTE_LARGE_IMAGE_URI = "remoteLargeImageUri";

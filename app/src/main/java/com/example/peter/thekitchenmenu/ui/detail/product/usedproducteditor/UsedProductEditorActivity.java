@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentActivity;
@@ -21,9 +22,16 @@ public class UsedProductEditorActivity
         extends AppCompatActivity
         implements AddEditUsedProductNavigator {
 
+    private static final String TAG = "tkm-UsedProductEditAct";
+
+    // Intent data
     public static final String EXTRA_PRODUCT_ID = "PRODUCT_ID";
-    public static final int REQUEST_ADD_EDIT_USED_PRODUCT_DETAILS = 1;
-    public static final int ADD_USED_PRODUCT_DETAILS_OK = RESULT_FIRST_USER + 1;
+    public static final String EXTRA_USED_PRODUCT_ID = "USED_PRODUCT_ID";
+    // Intent requests
+    public static final int REQUEST_ADD_NEW_USED_PRODUCT = 1;
+    public static final int REQUEST_EDIT_USED_PRODUCT = 2;
+    // Intent results
+    public static final int ADD_USED_PRODUCT_OK = RESULT_FIRST_USER + 1;
 
     private UsedProductEditorActivityBinding binding;
     private ProductViewerViewModel productViewerViewModel;
@@ -37,7 +45,7 @@ public class UsedProductEditorActivity
         setupToolbar();
         setupViewModels();
         findOrCreateFragments();
-
+        subscribeToNavigationChanges();
     }
 
     private void initialiseBindings() {
@@ -47,6 +55,10 @@ public class UsedProductEditorActivity
 
     private void setupToolbar() {
         setSupportActionBar(binding.usedProductEditorActivityToolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);
     }
 
     private void setupViewModels() {
@@ -57,32 +69,47 @@ public class UsedProductEditorActivity
     @NonNull
     public static ProductViewerViewModel obtainProductViewerViewModel(
             FragmentActivity activity) {
+
         ViewModelFactoryProduct factoryProduct =
                 ViewModelFactoryProduct.getInstance(activity.getApplication());
+
         return ViewModelProviders.of(activity, factoryProduct).get(ProductViewerViewModel.class);
     }
 
     @NonNull
     public static UsedProductEditorViewModel obtainUsedProductEditorViewModel(
             FragmentActivity activity) {
+
         ViewModelFactoryUsedProduct factoryUsedProduct =
                 ViewModelFactoryUsedProduct.getInstance(activity.getApplication());
+
         return ViewModelProviders.of(activity, factoryUsedProduct).
                 get(UsedProductEditorViewModel.class);
     }
 
     private void findOrCreateFragments() {
-        String productId = getIntent().getStringExtra(EXTRA_PRODUCT_ID);
+        String productId = null;
+        String usedProductId = null;
+
+        if (getIntent().hasExtra(EXTRA_PRODUCT_ID)) {
+            productId = getIntent().getStringExtra(EXTRA_PRODUCT_ID);
+        }
+
+        if (getIntent().hasExtra(EXTRA_USED_PRODUCT_ID)) {
+            usedProductId = getIntent().getStringExtra(EXTRA_USED_PRODUCT_ID);
+        }
 
         ProductViewerFragment productViewerFragment =
                 findOrCreateProductViewerFragment(productId);
+
         ActivityUtils.replaceFragmentInActivity(
                 getSupportFragmentManager(),
                 productViewerFragment,
-                R.id.product_viewer_cotentFrame);
+                R.id.product_viewer_contentFrame);
 
         UsedProductEditorFragment usedProductEditorFragment =
-                findOrCreateUsedProductEditorFragment(productId);
+                findOrCreateUsedProductEditorFragment(productId, usedProductId);
+
         ActivityUtils.replaceFragmentInActivity(
                 getSupportFragmentManager(),
                 usedProductEditorFragment,
@@ -90,26 +117,35 @@ public class UsedProductEditorActivity
     }
 
     private ProductViewerFragment findOrCreateProductViewerFragment(String productId) {
+
         ProductViewerFragment fragment = (ProductViewerFragment)
                 getSupportFragmentManager().
-                findFragmentById(R.id.product_viewer_cotentFrame);
+                findFragmentById(R.id.product_viewer_contentFrame);
 
         if (fragment == null) fragment = ProductViewerFragment.newInstance(productId);
+
         return fragment;
     }
 
-    private UsedProductEditorFragment findOrCreateUsedProductEditorFragment(String productId) {
+    private UsedProductEditorFragment findOrCreateUsedProductEditorFragment(String productId,
+                                                                            String usedProductId) {
         UsedProductEditorFragment fragment = (UsedProductEditorFragment)
                 getSupportFragmentManager().
                 findFragmentById(R.id.used_product_editor_contentFrame);
 
-        if (fragment == null) fragment = UsedProductEditorFragment.newInstance(productId);
+        if (fragment == null) fragment =
+                UsedProductEditorFragment.newInstance(productId, usedProductId);
+
         return fragment;
+    }
+
+    private void subscribeToNavigationChanges() {
+
     }
 
     @Override
     public void onUsedProductSaved() {
-        setResult(ADD_USED_PRODUCT_DETAILS_OK);
+        setResult(ADD_USED_PRODUCT_OK);
         finish();
     }
 

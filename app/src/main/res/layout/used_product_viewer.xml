@@ -23,7 +23,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/label_retailer"
-            android:visibility="@{viewModel.isInUsedList ? View.GONE : View.VISIBLE}"
+            android:visibility="@{viewModel.isInUsedList ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintBottom_toBottomOf="@id/retailer"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/retailer" />
@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:gravity="bottom"
             android:text="@{viewModel.usedProduct.retailer}"
-            android:visibility="@{viewModel.isInUsedList ? View.GONE : View.VISIBLE}"
+            android:visibility="@{viewModel.isInUsedList ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintStart_toStartOf="@id/guideline"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Waitrose" />
@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/label_price"
-            android:visibility="@{viewModel.isInUsedList ? View.GONE : View.VISIBLE}"
+            android:visibility="@{viewModel.isInUsedList ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintBottom_toBottomOf="@id/price"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/price" />
@@ -59,7 +59,7 @@
             android:layout_height="wrap_content"
             android:gravity="bottom"
             android:text="@{`` + viewModel.usedProduct.price}"
-            android:visibility="@{viewModel.isInUsedList ? View.GONE : View.VISIBLE}"
+            android:visibility="@{viewModel.isInUsedList ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintStart_toStartOf="@id/guideline"
             app:layout_constraintTop_toBottomOf="@id/retailer"
             tools:text="99.95" />
@@ -71,7 +71,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/label_location_room"
-            android:visibility="@{viewModel.isInUsedList ? View.GONE : View.VISIBLE}"
+            android:visibility="@{viewModel.isInUsedList ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintBottom_toBottomOf="@id/location_room"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/location_room" />
@@ -83,7 +83,7 @@
             android:layout_height="wrap_content"
             android:gravity="bottom"
             android:text="@{viewModel.usedProduct.locationRoom}"
-            android:visibility="@{viewModel.isInUsedList ? View.GONE : View.VISIBLE}"
+            android:visibility="@{viewModel.isInUsedList ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintStart_toStartOf="@id/guideline"
             app:layout_constraintTop_toBottomOf="@id/price"
             tools:text="Kitchen" />
@@ -95,7 +95,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/label_location_in_room"
-            android:visibility="@{viewModel.isInUsedList ? View.GONE : View.VISIBLE}"
+            android:visibility="@{viewModel.isInUsedList ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintBottom_toBottomOf="@id/location_in_room"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/location_in_room" />
@@ -107,7 +107,7 @@
             android:layout_height="wrap_content"
             android:gravity="bottom"
             android:text="@{viewModel.usedProduct.locationInRoom}"
-            android:visibility="@{viewModel.isInUsedList ? View.GONE : View.VISIBLE}"
+            android:visibility="@{viewModel.isInUsedList ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintStart_toStartOf="@id/guideline"
             app:layout_constraintTop_toBottomOf="@id/location_room"
             tools:text="Cupboard under sink" />
@@ -117,7 +117,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_list"
-            android:visibility="@{viewModel.isInUsedList ? View.VISIBLE : View.GONE}"
+            android:visibility="@{viewModel.isInUsedList ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toTopOf="@id/empty_screen_unused_product_label"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -131,7 +131,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="@string/empty_screen__unused_product"
-            android:visibility="@{viewModel.isInUsedList ? View.VISIBLE : View.GONE}"
+            android:visibility="@{viewModel.isInUsedList ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

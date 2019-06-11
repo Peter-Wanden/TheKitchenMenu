@@ -1,70 +1,181 @@
 package com.example.peter.thekitchenmenu.ui.detail.product.usedproducteditor;
 
 import android.app.Application;
+import android.text.Editable;
+import android.util.Log;
 
-import com.example.peter.thekitchenmenu.data.model.ProductUserDataModel;
+import com.example.peter.thekitchenmenu.data.entity.UsedProductEntity;
+import com.example.peter.thekitchenmenu.data.repository.UsedProductDataSource;
 import com.example.peter.thekitchenmenu.data.repository.UsedProductRepository;
-import com.example.peter.thekitchenmenu.utils.ObservableViewModel;
+import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
+import com.example.peter.thekitchenmenu.utils.TextValidationHandler;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.MutableLiveData;
+import androidx.databinding.ObservableBoolean;
+import androidx.databinding.ObservableDouble;
+import androidx.databinding.ObservableField;
+import androidx.lifecycle.AndroidViewModel;
 
-public class UsedProductEditorViewModel extends ObservableViewModel {
+import static com.example.peter.thekitchenmenu.utils.TextValidationHandler.VALIDATED;
 
-    private static final String TAG = "ProductUserDataEditorVi";
+public class UsedProductEditorViewModel
+        extends AndroidViewModel // TODO - Should it extend BaseObservable?
+        implements UsedProductDataSource.GetUsedProductCallback {
 
-    private ProductUserDataModel userDataModel = new ProductUserDataModel();
+    private static final String TAG = "tkm-UsedProductEditorVM";
+
+    private String usedProductId;
+    public final ObservableField<String> retailer = new ObservableField<>();
+    public final ObservableField<String> locationRoom = new ObservableField<>();
+    public final ObservableField<String> locationInRoom = new ObservableField<>();
+    public final ObservableDouble price = new ObservableDouble();
+    private long createDate;
+    private long lastUpdate;
+
+    private final SingleLiveEvent<String> retailerErrorEvent = new SingleLiveEvent<>();
+    private final SingleLiveEvent<String> locationRoomErrorEvent = new SingleLiveEvent<>();
+    private final SingleLiveEvent<String> locationInRoomErrorEvent = new SingleLiveEvent<>();
+    private final SingleLiveEvent<String> priceErrorEvent = new SingleLiveEvent<>();
+
+    private boolean retailerValidated;
+    private boolean locationRoomValidated;
+    private boolean locationInRoomValidated;
+    private boolean priceValidated;
+    public final ObservableBoolean allFieldsValidated = new ObservableBoolean();
+
+    public final ObservableBoolean dataIsLoading = new ObservableBoolean();
+    private final SingleLiveEvent<Void> usedProductIsUpdated = new SingleLiveEvent<>();
+
+    private Application appContext;
     private UsedProductRepository repository;
-    private ProductUserDataTextValidationHandler textValidationHandler;
 
-    private MutableLiveData<Boolean> userDataModelIsValidated = new MutableLiveData<>(false);
-    private boolean retailerValidated = false;
-    private boolean locationRoomValidated = false;
-    private boolean locationInRoomValidated = false;
+    private String productId;
+    private boolean isNewUsedProduct;
+    private boolean dataHasLoaded;
+    private boolean usedProductIsComplete;
+
+    // For testing
+
+    private UsedProductEntity usedProduct;
 
     public UsedProductEditorViewModel(@NonNull Application application,
                                       @NonNull UsedProductRepository repository) {
         super(application);
-
+        this.appContext = application;
         this.repository = repository;
-        textValidationHandler = new ProductUserDataTextValidationHandler(
-                application,
-                this);
+
+        usedProduct = UsedProductEntity.createNewUsedProduct(
+                "1234",
+                "Waitrose",
+                "Kitchen",
+                "Fridge",
+                24.99);
     }
 
-    void start(String productId) {
+    void start(String productId, String usedProductId) {
 
+        Log.d(TAG, "start: productId=" + productId);
+        if (usedProductId != null) Log.d(TAG, "start: usedProductId=" + usedProductId);
+
+        this.productId = productId;
+        if (dataIsLoading.get()) return;
+
+        this.usedProductId = usedProductId;
+
+        if (usedProductId == null) {
+            isNewUsedProduct = true;
+            return;
+        }
+
+        if (dataHasLoaded) return;
+        isNewUsedProduct = false;
+        dataIsLoading.set(true);
+
+        repository.getUsedProduct(usedProductId, this);
     }
 
-    ProductUserDataModel getUserDataModel() {
-        return userDataModel;
+    @Override
+    public void onUsedProductLoaded(UsedProductEntity usedProduct) {
+
+        if (usedProduct != null) {
+
+            retailer.set(usedProduct.getRetailer());
+            locationRoom.set(usedProduct.getLocationRoom());
+            locationInRoom.set(usedProduct.getLocationInRoom());
+            price.set(usedProduct.getPrice());
+
+            createDate = usedProduct.getCreateDate();
+            lastUpdate = usedProduct.getLastUpdate();
+
+            dataIsLoading.set(false);
+            dataHasLoaded = true;
+        }
     }
 
-    ProductUserDataTextValidationHandler getTextValidationHandler() {
-        return textValidationHandler;
+    @Override
+    public void onDataNotAvailable() {
+        dataIsLoading.set(false);
     }
 
-    void setRetailerValidated(boolean retailerValidated) {
-        this.retailerValidated = retailerValidated;
-        checkUserDataModelValidated();
+    public void retailerHasChanged(Editable editedRetailer) {
+        Log.d(TAG, "retailerHasChanged: =" + editedRetailer.toString());
+        retailer.set(editedRetailer.toString());
+        String retailerValidationResponse = validateText(editedRetailer);
+
+        if (retailerValidationResponse.equals(VALIDATED)) {
+            retailerValidated = true;
+            checkAllFieldsValidated();
+        } else {
+            retailerValidated = false;
+            retailerErrorEvent.setValue(retailerValidationResponse);
+        }
     }
 
-    void setLocationRoomValidated(boolean locationRoomValidated) {
-        this.locationRoomValidated = locationRoomValidated;
-        checkUserDataModelValidated();
+    private String validateText(Editable editable) {
+        return TextValidationHandler.validateText(appContext, editable);
     }
 
-    void setLocationInRoomValidated(boolean locationInRoomValidated) {
-        this.locationInRoomValidated = locationInRoomValidated;
-        checkUserDataModelValidated();
+    private void checkAllFieldsValidated() {
+        if (retailerValidated && locationRoomValidated && locationInRoomValidated && priceValidated)
+            allFieldsValidated.set(true);
+        else allFieldsValidated.set(false);
     }
 
-    private void checkUserDataModelValidated() {
-        if(retailerValidated && locationRoomValidated && locationInRoomValidated)
-            getUserDataModelIsValidated().setValue(Boolean.TRUE);
+    public SingleLiveEvent<String> getRetailerErrorEvent() {
+        return retailerErrorEvent;
     }
 
-    private MutableLiveData<Boolean> getUserDataModelIsValidated() {
-        return userDataModelIsValidated;
+    public SingleLiveEvent<String> getLocationRoomErrorEvent() {
+        return locationRoomErrorEvent;
+    }
+
+    public SingleLiveEvent<String> getLocationInRoomErrorEvent() {
+        return locationInRoomErrorEvent;
+    }
+
+    public SingleLiveEvent<String> getPriceErrorEvent() {
+        return priceErrorEvent;
+    }
+
+    void saveUsedProduct() {
+        UsedProductEntity usedProduct;
+
+        if (isNewUsedProduct || usedProductId == null) {
+            usedProduct = UsedProductEntity.createNewUsedProduct(
+                    productId,
+                    retailer.get(),
+                    locationRoom.get(),
+                    locationInRoom.get(),
+                    price.get());
+        } else {
+            usedProduct = UsedProductEntity.updateUsedProduct(
+                    usedProductId,
+                    productId,
+                    retailer.get(),
+                    locationRoom.get(),
+                    locationInRoom.get(),
+                    price.get(),
+                    createDate);
+        }
     }
 }
