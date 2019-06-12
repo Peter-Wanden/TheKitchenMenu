@@ -12,11 +12,11 @@ public class TextValidationHandler {
 
     public static final String VALIDATED = "validated";
 
-    public static String validateText(Application application, Editable editable) {
-        return validateTextLength(application, editable);
+    public static String validateText(Application application, String textToValidate) {
+        return validateTextLength(application, textToValidate);
     }
 
-    private static String validateTextLength(Application application, Editable editable) {
+    private static String validateTextLength(Application application, String testToValidate) {
         Resources resources = application.getResources();
 
         int minimumLength = resources.getInteger(R.integer.user_input_text_shortest_length);
@@ -24,8 +24,8 @@ public class TextValidationHandler {
         String lengthTooShort = resources.getString(R.string.validation_text_too_short);
         String lengthTooLong = resources.getString(R.string.validation_text_too_long);
 
-        if (editable.length() < minimumLength) return lengthTooShort;
-        else if (editable.length() > maximumLength) return lengthTooLong;
+        if (testToValidate.length() < minimumLength) return lengthTooShort;
+        else if (testToValidate.length() > maximumLength) return lengthTooLong;
         else return VALIDATED;
     }
 }

@@ -8,6 +8,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.peter.thekitchenmenu.R;
@@ -26,12 +27,10 @@ public class UsedProductEditorActivity
 
     // Intent data
     public static final String EXTRA_PRODUCT_ID = "PRODUCT_ID";
-    public static final String EXTRA_USED_PRODUCT_ID = "USED_PRODUCT_ID";
     // Intent requests
-    public static final int REQUEST_ADD_NEW_USED_PRODUCT = 1;
-    public static final int REQUEST_EDIT_USED_PRODUCT = 2;
+    public static final int REQUEST_ADD_EDIT_USED_PRODUCT = 1;
     // Intent results
-    public static final int ADD_USED_PRODUCT_OK = RESULT_FIRST_USER + 1;
+    public static final int RESULT_ADD_EDIT_USED_PRODUCT_OK = RESULT_FIRST_USER + 1;
 
     private UsedProductEditorActivityBinding binding;
     private ProductViewerViewModel productViewerViewModel;
@@ -45,7 +44,9 @@ public class UsedProductEditorActivity
         setupToolbar();
         setupViewModels();
         findOrCreateFragments();
+        setBindingInstanceVariables();
         subscribeToNavigationChanges();
+        setActivityTitle();
     }
 
     private void initialiseBindings() {
@@ -95,8 +96,9 @@ public class UsedProductEditorActivity
             productId = getIntent().getStringExtra(EXTRA_PRODUCT_ID);
         }
 
-        if (getIntent().hasExtra(EXTRA_USED_PRODUCT_ID)) {
-            usedProductId = getIntent().getStringExtra(EXTRA_USED_PRODUCT_ID);
+        if (getIntent().hasExtra(UsedProductEditorFragment.ARGUMENT_USED_PRODUCT_ID)) {
+            usedProductId = getIntent().getStringExtra(
+                    UsedProductEditorFragment.ARGUMENT_USED_PRODUCT_ID);
         }
 
         ProductViewerFragment productViewerFragment =
@@ -139,13 +141,24 @@ public class UsedProductEditorActivity
         return fragment;
     }
 
-    private void subscribeToNavigationChanges() {
+    private void setBindingInstanceVariables() {
+        binding.setViewModel(usedProductEditorViewModel);
+    }
 
+    private void subscribeToNavigationChanges() {
+        usedProductEditorViewModel.getUsedProductIsUpdated().observe(this, saved ->
+                UsedProductEditorActivity.this.onUsedProductSaved());
+    }
+
+    private void setActivityTitle() {
+        if (getIntent().hasExtra(UsedProductEditorFragment.ARGUMENT_USED_PRODUCT_ID))
+            setTitle(R.string.activity_title_edit_used_product);
+        else setTitle(R.string.activity_title_add_used_product);
     }
 
     @Override
     public void onUsedProductSaved() {
-        setResult(ADD_USED_PRODUCT_OK);
+        setResult(RESULT_ADD_EDIT_USED_PRODUCT_OK);
         finish();
     }
 

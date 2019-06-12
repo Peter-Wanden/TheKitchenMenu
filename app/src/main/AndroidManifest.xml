@@ -153,7 +153,6 @@
         </activity>
 
         <activity android:name=".ui.detail.product.usedproducteditor.UsedProductEditorActivity"
-            android:label="@string/activity_title_add_used_product"
             android:theme="@style/AppTheme">
         </activity>
 

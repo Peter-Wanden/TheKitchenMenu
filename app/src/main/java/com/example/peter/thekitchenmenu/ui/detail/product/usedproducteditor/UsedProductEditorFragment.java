@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.UsedProductEditorFragmentBinding;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,9 +24,6 @@ public class UsedProductEditorFragment extends Fragment {
     private UsedProductEditorFragmentBinding binding;
     private UsedProductEditorViewModel viewModel;
 
-    public UsedProductEditorFragment() {
-    }
-
     public static UsedProductEditorFragment newInstance(String productId, String usedProductId) {
 
         Bundle arguments = new Bundle();
@@ -36,17 +34,15 @@ public class UsedProductEditorFragment extends Fragment {
         return fragment;
     }
 
+    public UsedProductEditorFragment() {}
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        viewModel = obtainViewModel();
         loadData();
         subscribeToEvents();
-    }
-
-    private UsedProductEditorViewModel obtainViewModel() {
-        return UsedProductEditorActivity.obtainUsedProductEditorViewModel(requireActivity());
+        setUpFab();
     }
 
     private void loadData() {
@@ -65,10 +61,30 @@ public class UsedProductEditorFragment extends Fragment {
 
     private void subscribeToEvents() {
         viewModel.getRetailerErrorEvent().observe(this, this::retailerError);
+        viewModel.getLocationRoomErrorEvent().observe(this, this::locationRoomError);
+        viewModel.getLocationInRoomErrorEvent().observe(this, this::locationInRoomError);
+        viewModel.getPriceErrorEvent().observe(this, this::priceError);
     }
 
     private void retailerError(String retailerError) {
         binding.editableRetailer.setError(retailerError);
+    }
+
+    private void locationRoomError(String locationRoomError) {
+        binding.editableLocationRoom.setError(locationRoomError);
+    }
+
+    private void locationInRoomError(String locationInRoomError) {
+        binding.editableLocationInRoom.setError(locationInRoomError);
+    }
+
+    private void priceError(String priceError) {
+        binding.editablePrice.setError(priceError);
+    }
+
+    private void setUpFab() {
+        FloatingActionButton fab = getActivity().findViewById(R.id.used_product_editor_save_fab);
+        fab.setOnClickListener(view -> viewModel.saveUsedProduct());
     }
 
     @Nullable
@@ -83,10 +99,15 @@ public class UsedProductEditorFragment extends Fragment {
                 container,
                 false);
 
+        viewModel = obtainViewModel();
         setBindingInstanceVariables();
 
         binding.setLifecycleOwner(this);
         return binding.getRoot();
+    }
+
+    private UsedProductEditorViewModel obtainViewModel() {
+        return UsedProductEditorActivity.obtainUsedProductEditorViewModel(requireActivity());
     }
 
     private void setBindingInstanceVariables() {

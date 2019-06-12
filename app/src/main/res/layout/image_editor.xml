@@ -92,7 +92,7 @@
             android:contentDescription="@string/cd_add_image_from_camera"
             android:elevation="@dimen/standard_margin"
             android:onClick="@{() -> imageViewModel.getImageFromCamera()}"
-            android:src="@drawable/ic_action_camera"
+            android:src="@drawable/ic_photo_camera_white"
             android:tint="@color/white"
             android:visibility="@{imageViewModel.canTakePictures ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@id/product_image"
@@ -108,7 +108,7 @@
             android:contentDescription="@string/cd_add_image_from_gallery"
             android:elevation="@dimen/standard_margin"
             android:onClick="@{() -> imageViewModel.getImageFromGallery()}"
-            android:src="@drawable/ic_add_picture_from_gallery"
+            android:src="@drawable/ic_photo_white"
             android:tint="@color/white"
             app:layout_constraintBottom_toBottomOf="@id/product_image"
             app:layout_constraintEnd_toEndOf="@+id/product_image" />

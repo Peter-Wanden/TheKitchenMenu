@@ -1,6 +1,8 @@
 package com.example.peter.thekitchenmenu.data.repository;
 
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -14,6 +16,8 @@ import java.util.Map;
 import static androidx.core.util.Preconditions.checkNotNull;
 
 public class UsedProductRepository implements UsedProductDataSource {
+
+    private static final String TAG = "tkm-UsedProductRepo";
 
     private static UsedProductRepository INSTANCE = null;
 
@@ -103,11 +107,13 @@ public class UsedProductRepository implements UsedProductDataSource {
     @Override
     public void getUsedProduct(@NonNull String usedProductId,
                                @NonNull GetUsedProductCallback callback) {
+        
         checkNotNull(usedProductId);
         checkNotNull(callback);
 
         UsedProductEntity cachedUsedProduct = getUsedProductWithId(usedProductId);
         if (cachedUsedProduct != null) {
+            Log.d(TAG, "getUsedProduct: cache has used product");
             callback.onUsedProductLoaded(cachedUsedProduct);
             return;
         }
@@ -117,11 +123,13 @@ public class UsedProductRepository implements UsedProductDataSource {
             public void onUsedProductLoaded(UsedProductEntity usedProduct) {
                 if (usedProductsCache == null) usedProductsCache = new LinkedHashMap<>();
                 usedProductsCache.put(usedProduct.getId(), usedProduct);
+                Log.d(TAG, "onUsedProductLoaded: local repo has product");
                 callback.onUsedProductLoaded(usedProduct);
             }
 
             @Override
             public void onDataNotAvailable() {
+                Log.d(TAG, "onDataNotAvailable: ");
                 callback.onDataNotAvailable();
             }
         });

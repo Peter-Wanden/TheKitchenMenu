@@ -8,6 +8,7 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.google.android.gms.common.internal.Objects;
+import com.google.android.gms.common.util.Strings;
 
 import java.util.Calendar;
 import java.util.UUID;
@@ -133,12 +134,31 @@ public final class UsedProductEntity {
                Objects.equal(lastUpdate,        entity.lastUpdate);
     }
 
+    public boolean isEmpty() {
+        return Strings.isEmptyOrWhitespace(retailer) &&
+                Strings.isEmptyOrWhitespace(locationRoom) &&
+                Strings.isEmptyOrWhitespace(locationInRoom) &&
+                price == 0.0;
+    }
+
     @NonNull
     public String getId() {
         return id;
     }
 
-    // TODO - Override toString()
+    @Override
+    public String toString() {
+        return "UsedProductEntity{" +
+                "id='" + id + '\'' +
+                ", productId='" + productId + '\'' +
+                ", retailer='" + retailer + '\'' +
+                ", locationRoom='" + locationRoom + '\'' +
+                ", locationInRoom='" + locationInRoom + '\'' +
+                ", price=" + price +
+                ", createDate=" + createDate +
+                ", lastUpdate=" + lastUpdate +
+                '}';
+    }
 
     @NonNull
     public String getProductId() {

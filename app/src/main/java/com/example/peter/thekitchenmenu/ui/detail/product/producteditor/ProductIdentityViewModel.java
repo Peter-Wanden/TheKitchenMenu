@@ -81,7 +81,7 @@ public class ProductIdentityViewModel extends ObservableViewModel {
     }
 
     private String validateText(Editable editable) {
-        return TextValidationHandler.validateText(appContext, editable);
+        return TextValidationHandler.validateText(appContext, editable.toString());
     }
 
     private void checkAllFieldsValidated() {

@@ -32,7 +32,7 @@
             android:contentDescription="@string/cd_add_product"
             android:scaleType="fitCenter"
             android:tint="@color/white"
-            android:src="@drawable/ic_add_circle_outline_black_24dp"
+            android:src="@drawable/ic_add_circle_outline_white"
             android:layout_weight="1"/>
     </LinearLayout>
 

@@ -1,7 +1,6 @@
 package com.example.peter.thekitchenmenu.ui.detail.product.usedproducteditor;
 
 import android.app.Application;
-import android.text.Editable;
 import android.util.Log;
 
 import com.example.peter.thekitchenmenu.data.entity.UsedProductEntity;
@@ -11,6 +10,7 @@ import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 import com.example.peter.thekitchenmenu.utils.TextValidationHandler;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.Observable;
 import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableDouble;
 import androidx.databinding.ObservableField;
@@ -19,7 +19,7 @@ import androidx.lifecycle.AndroidViewModel;
 import static com.example.peter.thekitchenmenu.utils.TextValidationHandler.VALIDATED;
 
 public class UsedProductEditorViewModel
-        extends AndroidViewModel // TODO - Should it extend BaseObservable?
+        extends AndroidViewModel
         implements UsedProductDataSource.GetUsedProductCallback {
 
     private static final String TAG = "tkm-UsedProductEditorVM";
@@ -30,7 +30,6 @@ public class UsedProductEditorViewModel
     public final ObservableField<String> locationInRoom = new ObservableField<>();
     public final ObservableDouble price = new ObservableDouble();
     private long createDate;
-    private long lastUpdate;
 
     private final SingleLiveEvent<String> retailerErrorEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<String> locationRoomErrorEvent = new SingleLiveEvent<>();
@@ -52,11 +51,6 @@ public class UsedProductEditorViewModel
     private String productId;
     private boolean isNewUsedProduct;
     private boolean dataHasLoaded;
-    private boolean usedProductIsComplete;
-
-    // For testing
-
-    private UsedProductEntity usedProduct;
 
     public UsedProductEditorViewModel(@NonNull Application application,
                                       @NonNull UsedProductRepository repository) {
@@ -64,12 +58,33 @@ public class UsedProductEditorViewModel
         this.appContext = application;
         this.repository = repository;
 
-        usedProduct = UsedProductEntity.createNewUsedProduct(
-                "1234",
-                "Waitrose",
-                "Kitchen",
-                "Fridge",
-                24.99);
+        retailer.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                retailerChanged();
+            }
+        });
+
+        locationRoom.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                locationRoomChanged();
+            }
+        });
+
+        locationInRoom.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                locationInRoomChanged();
+            }
+        });
+
+        price.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                priceChanged();
+            }
+        });
     }
 
     void start(String productId, String usedProductId) {
@@ -96,16 +111,15 @@ public class UsedProductEditorViewModel
 
     @Override
     public void onUsedProductLoaded(UsedProductEntity usedProduct) {
+        Log.d(TAG, "onUsedProductLoaded: ");
 
         if (usedProduct != null) {
+            createDate = usedProduct.getCreateDate();
 
             retailer.set(usedProduct.getRetailer());
             locationRoom.set(usedProduct.getLocationRoom());
             locationInRoom.set(usedProduct.getLocationInRoom());
             price.set(usedProduct.getPrice());
-
-            createDate = usedProduct.getCreateDate();
-            lastUpdate = usedProduct.getLastUpdate();
 
             dataIsLoading.set(false);
             dataHasLoaded = true;
@@ -117,43 +131,84 @@ public class UsedProductEditorViewModel
         dataIsLoading.set(false);
     }
 
-    public void retailerHasChanged(Editable editedRetailer) {
-        Log.d(TAG, "retailerHasChanged: =" + editedRetailer.toString());
-        retailer.set(editedRetailer.toString());
-        String retailerValidationResponse = validateText(editedRetailer);
+    private void retailerChanged() {
+        String retailerValidationResponse = validateText(retailer.get());
 
         if (retailerValidationResponse.equals(VALIDATED)) {
             retailerValidated = true;
-            checkAllFieldsValidated();
+
         } else {
             retailerValidated = false;
             retailerErrorEvent.setValue(retailerValidationResponse);
         }
+        checkAllFieldsValidated();
     }
 
-    private String validateText(Editable editable) {
-        return TextValidationHandler.validateText(appContext, editable);
+    private void locationRoomChanged() {
+        String locationRoomValidationResponse = validateText(locationRoom.get());
+
+        if (locationRoomValidationResponse.equals(VALIDATED)) {
+            locationRoomValidated = true;
+
+        } else {
+            locationRoomValidated = false;
+            locationRoomErrorEvent.setValue(locationRoomValidationResponse);
+        }
+        checkAllFieldsValidated();
+    }
+
+    private void locationInRoomChanged() {
+        String locationInRoomValidationResponse = validateText(locationInRoom.get());
+
+        if (locationInRoomValidationResponse.equals(VALIDATED)) {
+            locationInRoomValidated = true;
+
+        } else {
+            locationInRoomValidated = false;
+            locationInRoomErrorEvent.setValue(locationInRoomValidationResponse);
+        }
+        checkAllFieldsValidated();
+    }
+
+    private String validateText(String textToValidate) {
+        return TextValidationHandler.validateText(appContext, textToValidate);
+    }
+
+    private void priceChanged() {
+        if (price.get() > 0 && price.get() < 100) {
+            priceValidated = true;
+
+        } else {
+            priceValidated = false;
+            priceErrorEvent.setValue("Price must be greater than 0p and less than £100");
+        }
+        checkAllFieldsValidated();
     }
 
     private void checkAllFieldsValidated() {
-        if (retailerValidated && locationRoomValidated && locationInRoomValidated && priceValidated)
+
+        if (retailerValidated &&
+                locationRoomValidated &&
+                locationInRoomValidated &&
+                priceValidated)
             allFieldsValidated.set(true);
+
         else allFieldsValidated.set(false);
     }
 
-    public SingleLiveEvent<String> getRetailerErrorEvent() {
+    SingleLiveEvent<String> getRetailerErrorEvent() {
         return retailerErrorEvent;
     }
 
-    public SingleLiveEvent<String> getLocationRoomErrorEvent() {
+    SingleLiveEvent<String> getLocationRoomErrorEvent() {
         return locationRoomErrorEvent;
     }
 
-    public SingleLiveEvent<String> getLocationInRoomErrorEvent() {
+    SingleLiveEvent<String> getLocationInRoomErrorEvent() {
         return locationInRoomErrorEvent;
     }
 
-    public SingleLiveEvent<String> getPriceErrorEvent() {
+    SingleLiveEvent<String> getPriceErrorEvent() {
         return priceErrorEvent;
     }
 
@@ -167,6 +222,9 @@ public class UsedProductEditorViewModel
                     locationRoom.get(),
                     locationInRoom.get(),
                     price.get());
+
+            if (!usedProduct.isEmpty()) createUsedProduct(usedProduct);
+
         } else {
             usedProduct = UsedProductEntity.updateUsedProduct(
                     usedProductId,
@@ -176,6 +234,30 @@ public class UsedProductEditorViewModel
                     locationInRoom.get(),
                     price.get(),
                     createDate);
+
+            if (!usedProduct.isEmpty()) updateUsedProduct(usedProduct);
         }
+
+        if (usedProduct.isEmpty()) {
+            Log.d(TAG, "saveUsedProduct: cannot save empty used product");
+        }
+    }
+
+    private void createUsedProduct(UsedProductEntity usedProduct) {
+        Log.d(TAG, "createUsedProduct: ");
+        repository.saveUsedProduct(usedProduct);
+        usedProductIsUpdated.call();
+    }
+
+    private void updateUsedProduct(UsedProductEntity usedProduct) {
+        Log.d(TAG, "updateUsedProduct: ");
+        if (isNewUsedProduct)
+            throw new RuntimeException("updateUsedProduct called but is new UsedProduct.");
+        repository.saveUsedProduct(usedProduct);
+        usedProductIsUpdated.call();
+    }
+
+    SingleLiveEvent<Void> getUsedProductIsUpdated() {
+        return usedProductIsUpdated;
     }
 }

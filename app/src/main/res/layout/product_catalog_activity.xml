@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/fab_margin"
-            android:src="@drawable/ic_action_add"
+            android:src="@drawable/ic_add_white"
             android:tint="@color/white"
             app:backgroundTint="@color/textColorHighlight"
             app:layout_anchor="@+id/activity_catalog_product_vp"

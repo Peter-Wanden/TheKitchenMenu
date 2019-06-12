@@ -2,7 +2,6 @@ package com.example.peter.thekitchenmenu.ui.detail.product.viewer;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,6 +16,7 @@ import com.example.peter.thekitchenmenu.databinding.ProductViewerActivityBinding
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryProduct;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryUsedProduct;
 import com.example.peter.thekitchenmenu.ui.detail.product.usedproducteditor.UsedProductEditorActivity;
+import com.example.peter.thekitchenmenu.ui.detail.product.usedproducteditor.UsedProductEditorFragment;
 import com.example.peter.thekitchenmenu.utils.ActivityUtils;
 
 public class ProductViewerActivity extends AppCompatActivity implements ProductViewerNavigator {
@@ -24,6 +24,7 @@ public class ProductViewerActivity extends AppCompatActivity implements ProductV
     private static final String TAG = "tkm-ProductViewerAct";
 
     public static final String EXTRA_PRODUCT_ID = "PRODUCT_ID";
+    public static final int DELETE_RESULT_OK = RESULT_FIRST_USER + 2;
 
     private ProductViewerActivityBinding binding;
     private ProductViewerViewModel productViewerViewModel;
@@ -120,6 +121,12 @@ public class ProductViewerActivity extends AppCompatActivity implements ProductV
     private void subscribeToNavigationChanges() {
         usedProductViewerViewModel.getAddUsedProduct().observe(this, addUsedProductEvent ->
                 ProductViewerActivity.this.addNewUsedProduct());
+
+        usedProductViewerViewModel.getEditUsedProduct().observe(this, editUsedProductEvent ->
+                ProductViewerActivity.this.editUsedProduct());
+
+        usedProductViewerViewModel.getRemoveUsedProduct().observe(this, removeProductEvent ->
+                ProductViewerActivity.this.deleteUsedProduct());
     }
 
     @Override
@@ -135,7 +142,8 @@ public class ProductViewerActivity extends AppCompatActivity implements ProductV
 
     @Override
     public void deleteUsedProduct() {
-        // delete from used products and finish
+        setResult(DELETE_RESULT_OK);
+        finish();
     }
 
     @Override
@@ -148,7 +156,7 @@ public class ProductViewerActivity extends AppCompatActivity implements ProductV
 
         startActivityForResult(
                 intent,
-                UsedProductEditorActivity.REQUEST_ADD_NEW_USED_PRODUCT);
+                UsedProductEditorActivity.REQUEST_ADD_EDIT_USED_PRODUCT);
     }
 
     @Override
@@ -157,19 +165,20 @@ public class ProductViewerActivity extends AppCompatActivity implements ProductV
 
         intent.putExtra(
                 UsedProductEditorActivity.EXTRA_PRODUCT_ID,
-                usedProductViewerViewModel.usedProduct.get().getProductId());
+                productViewerViewModel.product.get().getId());
+
         intent.putExtra(
-                UsedProductEditorActivity.EXTRA_USED_PRODUCT_ID,
+                UsedProductEditorFragment.ARGUMENT_USED_PRODUCT_ID,
                 usedProductViewerViewModel.usedProduct.get().getId());
 
         startActivityForResult(
                 intent,
-                UsedProductEditorActivity.REQUEST_EDIT_USED_PRODUCT);
+                UsedProductEditorActivity.REQUEST_ADD_EDIT_USED_PRODUCT);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        usedProductViewerViewModel.handleActivityResult(requestCode, resultCode);
     }
 }

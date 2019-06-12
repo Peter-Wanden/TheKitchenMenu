@@ -55,12 +55,12 @@
             android:layout_marginEnd="8dp"
             android:hint="@string/hint_retailer"
             android:inputType="textCapWords"
-            android:text='@{viewModel.retailer}'
-            android:afterTextChanged='@{viewModel::retailerHasChanged}'
+            android:text='@={viewModel.retailer}'
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/retailer_label"
             app:layout_constraintBottom_toTopOf="@id/price_label" />
+<!--        android:afterTextChanged='@{viewModel::retailerHasChanged}'-->
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/price_label"
@@ -83,7 +83,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:hint="@string/hint_price"
-            android:text='@{`` + viewModel.price}'
+            android:text='@={`` + viewModel.price}'
             android:inputType="numberDecimal"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -111,7 +111,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:hint="@string/hint_location_room"
-            android:text='@{viewModel.locationRoom}'
+            android:text='@={viewModel.locationRoom}'
             android:inputType="textCapWords"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -141,7 +141,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:hint="@string/hint_location_in_room"
-            android:text='@{viewModel.locationInRoom}'
+            android:text='@={viewModel.locationInRoom}'
             android:inputType="textCapWords"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

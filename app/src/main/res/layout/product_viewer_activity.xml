@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="android.view.View"/>
-
+        <import type="android.view.View" />
         <variable
             name="viewModel"
-            type="com.example.peter.thekitchenmenu.ui.detail.product.viewer.ProductViewerViewModel" />
+            type="com.example.peter.thekitchenmenu.ui.detail.product.viewer.UsedProductViewerViewModel" />
     </data>
 
     <LinearLayout
@@ -27,8 +25,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/primaryColor"
-                android:fitsSystemWindows="true">
-            </androidx.appcompat.widget.Toolbar>
+                android:fitsSystemWindows="true"/>
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -45,14 +42,12 @@
                 <FrameLayout
                     android:id="@+id/product_viewer_content_frame"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                </FrameLayout>
+                    android:layout_height="wrap_content"/>
 
                 <FrameLayout
                     android:id="@+id/used_product_viewer_content_frame"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                </FrameLayout>
+                    android:layout_height="wrap_content"/>
             </LinearLayout>
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -60,12 +55,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/fab_margin"
-                bind:fabSize="normal"
-                android:src="@drawable/ic_format_list_bulleted_white"
                 bind:backgroundTint="@color/textColorHighlight"
+                bind:fabSize="normal"
                 bind:layout_anchor="@id/product_user_data_fragments_LL"
-                bind:layout_anchorGravity="bottom|right|end">
-            </com.google.android.material.floatingactionbutton.FloatingActionButton>
+                bind:layout_anchorGravity="bottom|right|end"/>
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
     </LinearLayout>
 </layout>
