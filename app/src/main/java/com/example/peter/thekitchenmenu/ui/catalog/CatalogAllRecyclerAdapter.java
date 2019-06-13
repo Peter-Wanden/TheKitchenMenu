@@ -1,20 +1,11 @@
 package com.example.peter.thekitchenmenu.ui.catalog;
 
-import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.example.peter.thekitchenmenu.BR;
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.databinding.ProductListItemBinding;
-import com.example.peter.thekitchenmenu.utils.Converters;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -22,26 +13,22 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class CatalogRecyclerAdapter
-        extends RecyclerView.Adapter<CatalogRecyclerAdapter.AdapterViewHolder> {
+public class CatalogAllRecyclerAdapter
+        extends RecyclerView.Adapter<CatalogAllRecyclerAdapter.ViewHolder> {
 
     private static final String TAG = "tkm-CatalogAdapter";
 
-    private final Context context;
     private final CatalogProductsViewModel viewModel;
     private List<ProductEntity> productList;
 
-    CatalogRecyclerAdapter(Context context, CatalogProductsViewModel viewModel) {
-        this.context = context;
+    CatalogAllRecyclerAdapter(CatalogProductsViewModel viewModel) {
         this.viewModel = viewModel;
     }
 
     /* View holder */
     @NonNull
     @Override
-    public CatalogRecyclerAdapter.AdapterViewHolder onCreateViewHolder(
-            @NonNull ViewGroup viewGroup,
-            int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
 
         ProductListItemBinding binding = DataBindingUtil.inflate(
                 LayoutInflater.from(viewGroup.getContext()),
@@ -49,11 +36,11 @@ public class CatalogRecyclerAdapter
                 viewGroup,
                 false);
 
-        return new AdapterViewHolder(binding);
+        return new ViewHolder(binding);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull AdapterViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final ProductEntity product = productList.get(position);
         holder.bind(product);
     }
@@ -75,13 +62,13 @@ public class CatalogRecyclerAdapter
     }
 
     /* Inner class for creating ViewHolders */
-    class AdapterViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         ProductListItemBinding binding;
 
         ProductItemUserActionsListener listener = product ->
                 viewModel.getOpenProductEvent().setValue(product.getId());
 
-        AdapterViewHolder(ProductListItemBinding binding) {
+        ViewHolder(ProductListItemBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.example.peter.thekitchenmenu.R;
 
+import com.example.peter.thekitchenmenu.data.model.UsedProductDataModel;
 import com.example.peter.thekitchenmenu.databinding.ProductCatalogUsedFragmentBinding;
 
 import androidx.annotation.NonNull;
@@ -21,11 +22,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class CatalogUsedFragment extends Fragment {
 
-    private static final String TAG = "CatalogUsedFragment";
+    private static final String TAG = "tkm-CatalogUsedFragment";
 
     private CatalogProductsViewModel viewModel;
     private ProductCatalogUsedFragmentBinding binding;
-    private CatalogRecyclerAdapter adapter;
+    private CatalogUsedRecyclerAdapter adapter;
 
     public CatalogUsedFragment(){}
     public CatalogUsedFragment newInstance() {return new CatalogUsedFragment();}
@@ -33,9 +34,17 @@ public class CatalogUsedFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        Log.d(TAG, "onResume: called");
 
-        viewModel.getProducts().observe(requireActivity(), products -> {
-            if (products != null) {adapter.setProducts(products);}});
+        viewModel.getUsedProducts().observe(requireActivity(), usedProductsDataModels -> {
+            if (usedProductsDataModels != null) {
+                adapter.setUsedProductDataModels(usedProductsDataModels);
+
+                for (UsedProductDataModel model : usedProductsDataModels) {
+                    Log.d(TAG, "onResume: Looping through used products: " + model.getProduct().getDescription());
+                }
+            }
+        });
         viewModel.loadUsedProducts();
     }
 
@@ -71,7 +80,7 @@ public class CatalogUsedFragment extends Fragment {
         }
 
         binding.fragmentCatalogProductsRv.setHasFixedSize(true);
-        adapter = new CatalogRecyclerAdapter(requireActivity(), viewModel);
+        adapter = new CatalogUsedRecyclerAdapter(viewModel);
         binding.fragmentCatalogProductsRv.setAdapter(adapter);
 
         return binding.getRoot();

@@ -194,6 +194,11 @@ public class UsedProductRepository implements UsedProductDataSource {
     }
 
     @Override
+    public void refreshUsedProducts() {
+        cacheIsDirty = true;
+    }
+
+    @Override
     public void deleteAllUsedProducts() {
         remoteDataSource.deleteAllUsedProducts();
         localDataSource.deleteAllUsedProducts();

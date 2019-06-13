@@ -36,6 +36,12 @@ public class UsedProductRemoteDataSource implements UsedProductDataSource {
     }
 
     @Override
+    public void refreshUsedProducts() {
+        // Not required because the {@link TasksRepository} handles the logic of refreshing the
+        // tasks from all the available data sources.
+    }
+
+    @Override
     public void deleteAllUsedProducts() {
 
     }

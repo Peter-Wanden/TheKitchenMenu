@@ -62,7 +62,7 @@ public class UsedProductViewerViewModel
         dataIsLoading = false;
     }
 
-    public SingleLiveEvent<Boolean> getSetFabIcon() {
+    SingleLiveEvent<Boolean> getSetFabIcon() {
         return setFabIcon;
     }
 
@@ -93,7 +93,7 @@ public class UsedProductViewerViewModel
         }
     }
 
-    public SingleLiveEvent<Void> getRemoveUsedProduct() {
+    SingleLiveEvent<Void> getRemoveUsedProduct() {
         return removeUsedProduct;
     }
 }

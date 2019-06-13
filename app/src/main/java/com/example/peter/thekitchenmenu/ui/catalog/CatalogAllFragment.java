@@ -2,7 +2,6 @@ package com.example.peter.thekitchenmenu.ui.catalog;
 
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +25,7 @@ public class CatalogAllFragment extends Fragment {
 
     private CatalogProductsViewModel viewModel;
     private ProductCatalogAllFragmentBinding binding;
-    private CatalogRecyclerAdapter adapter;
+    private CatalogAllRecyclerAdapter adapter;
 
     public CatalogAllFragment() {
     }
@@ -40,7 +39,9 @@ public class CatalogAllFragment extends Fragment {
         super.onResume();
 
         viewModel.getProducts().observe(requireActivity(), products -> {
-            if (products != null) adapter.setProducts(products);
+            if (products != null) {
+                adapter.setProducts(products);
+            }
         });
         viewModel.loadAllProducts();
     }
@@ -76,7 +77,7 @@ public class CatalogAllFragment extends Fragment {
         }
 
         binding.fragmentCatalogProductsRv.setHasFixedSize(true);
-        adapter = new CatalogRecyclerAdapter(requireActivity(), viewModel);
+        adapter = new CatalogAllRecyclerAdapter(viewModel);
         binding.fragmentCatalogProductsRv.setAdapter(adapter);
 
         return binding.getRoot();

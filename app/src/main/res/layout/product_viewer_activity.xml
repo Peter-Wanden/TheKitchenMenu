@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="com.example.peter.thekitchenmenu.ui.detail.product.viewer.UsedProductViewerViewModel" />
@@ -25,30 +27,36 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/primaryColor"
-                android:fitsSystemWindows="true"/>
+                android:fitsSystemWindows="true" />
         </com.google.android.material.appbar.AppBarLayout>
+
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:id="@+id/product_viewer_CL"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <LinearLayout
-                android:id="@+id/product_user_data_fragments_LL"
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_height="match_parent">
 
-                <FrameLayout
-                    android:id="@+id/product_viewer_content_frame"
+                <LinearLayout
+                    android:id="@+id/product_user_data_fragments_LL"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-                <FrameLayout
-                    android:id="@+id/used_product_viewer_content_frame"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
+                    <FrameLayout
+                        android:id="@+id/product_viewer_content_frame"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <FrameLayout
+                        android:id="@+id/used_product_viewer_content_frame"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </ScrollView>
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/product_viewer_activity_fab"
@@ -58,7 +66,7 @@
                 bind:backgroundTint="@color/textColorHighlight"
                 bind:fabSize="normal"
                 bind:layout_anchor="@id/product_user_data_fragments_LL"
-                bind:layout_anchorGravity="bottom|right|end"/>
+                bind:layout_anchorGravity="bottom|right|end" />
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
     </LinearLayout>
 </layout>

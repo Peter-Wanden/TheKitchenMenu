@@ -80,6 +80,12 @@ public class UsedProductLocalDataSource implements UsedProductDataSource {
     }
 
     @Override
+    public void refreshUsedProducts() {
+        // Not required because the {@link ProductRepository} handles the logic of refreshing the
+        // tasks from all the available data sources.
+    }
+
+    @Override
     public void deleteAllUsedProducts() {
         Runnable deleteAllUsedProductsRunnable = () -> usedProductEntityDao.deleteAll();
         appExecutors.diskIO().execute(deleteAllUsedProductsRunnable);

@@ -9,7 +9,7 @@ import android.view.View;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.databinding.ProductCatalogActivityBinding;
-import com.example.peter.thekitchenmenu.ui.ViewModelFactoryProduct;
+import com.example.peter.thekitchenmenu.ui.ViewModelFactoryUsedProduct;
 import com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductEditorActivity;
 import com.example.peter.thekitchenmenu.ui.detail.product.viewer.ProductViewerActivity;
 
@@ -26,7 +26,6 @@ public class CatalogActivity
         implements ProductNavigator, ProductItemNavigator {
 
     private static final String TAG = "tkm-ProductCatalogAct";
-    public static final String PRODUCT_CATALOG_VIEW_MODEL_TAG = "PRODUCT_CATALOG_VIEW_MODEL_TAG";
 
     CatalogProductsViewModel viewModel;
     ProductCatalogActivityBinding binding;
@@ -86,7 +85,8 @@ public class CatalogActivity
 
     public static CatalogProductsViewModel obtainViewModel(FragmentActivity activity) {
         // Use a Factory to inject dependencies into the ViewModel
-        ViewModelFactoryProduct factory = ViewModelFactoryProduct.getInstance(activity.getApplication());
+        ViewModelFactoryUsedProduct factory =
+                ViewModelFactoryUsedProduct.getInstance(activity.getApplication());
         return ViewModelProviders.of(activity, factory).get(CatalogProductsViewModel.class);
     }
 
@@ -162,14 +162,18 @@ public class CatalogActivity
     public void launchProductViewer(String productId) {
         Intent intent = new Intent(CatalogActivity.this, ProductViewerActivity.class);
         intent.putExtra(ProductViewerActivity.EXTRA_PRODUCT_ID, productId);
-        startActivity(intent);
+        startActivityForResult(intent, ProductViewerActivity.REQUEST_CODE);
     }
 
     private void launchProductEditor(ProductEntity selectedProduct) {
         Intent intent = new Intent(CatalogActivity.this, ProductEditorActivity.class);
         intent.putExtra(ProductEditorActivity.EXTRA_PRODUCT_ID, selectedProduct.getId());
         startActivity(intent);
+    }
 
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        viewModel.handleActivityResult(requestCode, resultCode);
     }
 }

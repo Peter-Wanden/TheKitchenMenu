@@ -33,6 +33,8 @@ public interface UsedProductDataSource {
 
     void saveUsedProduct(@NonNull UsedProductEntity usedProduct);
 
+    void refreshUsedProducts();
+
     void deleteAllUsedProducts();
 
     void deleteUsedProduct(String usedProductId);

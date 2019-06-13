@@ -28,7 +28,7 @@ public class UsedProductEditorActivity
     // Intent data
     public static final String EXTRA_PRODUCT_ID = "PRODUCT_ID";
     // Intent requests
-    public static final int REQUEST_ADD_EDIT_USED_PRODUCT = 1;
+    public static final int REQUEST_ADD_EDIT_USED_PRODUCT = 3;
     // Intent results
     public static final int RESULT_ADD_EDIT_USED_PRODUCT_OK = RESULT_FIRST_USER + 1;
 

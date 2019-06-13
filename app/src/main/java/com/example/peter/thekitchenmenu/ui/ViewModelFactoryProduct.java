@@ -50,11 +50,7 @@ public class ViewModelFactoryProduct extends ViewModelProvider.NewInstanceFactor
     @Override
     public <T extends ViewModel> T create(Class<T> modelClass) {
 
-        if (modelClass.isAssignableFrom(CatalogProductsViewModel.class)) {
-            //noinspection unchecked
-            return (T) new CatalogProductsViewModel(application, repository);
-
-        } else if (modelClass.isAssignableFrom(ProductEditorViewModel.class)) {
+        if (modelClass.isAssignableFrom(ProductEditorViewModel.class)) {
             //noinspection unchecked
             return (T) new ProductEditorViewModel(application, repository);
 

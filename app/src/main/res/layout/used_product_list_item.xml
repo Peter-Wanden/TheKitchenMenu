@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -7,16 +8,15 @@
         <import type="android.view.View.OnClickListener"/>
 
         <variable
-            name="product"
-            type="com.example.peter.thekitchenmenu.data.entity.ProductEntity" />
+            name="usedProduct"
+            type="com.example.peter.thekitchenmenu.data.model.UsedProductDataModel" />
 
         <variable
             name="listener"
-            type="com.example.peter.thekitchenmenu.ui.catalog.ProductItemUserActionsListener" />
+            type="com.example.peter.thekitchenmenu.ui.catalog.UsedProductItemUserActionsListener" />
     </data>
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/list_item_product_card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/card_view_margin"
@@ -27,12 +27,12 @@
         android:elevation="@dimen/card_view_elevation"
         android:focusable="true"
         android:foregroundGravity="center"
-        android:background="@color/white"
+        app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="4dp"
-        android:onClick="@{() -> listener.onProductClicked(product)}">
+        android:onClick="@{() -> listener.onUsedProductClicked(usedProduct)}" >
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/list_item_product_cl"
+            android:id="@+id/used_product_list_item_cl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -53,7 +53,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Cirio canned chopped tomatoes"
-                android:text="@{product.description}"/>
+                android:text="@{usedProduct.product.description}"
+                />
 
             <ImageView
                 android:id="@+id/used_product_list_item_product_image"
@@ -67,39 +68,53 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:webImageUrl='@{product.webImageUrl}'
-                app:remoteSmallImageUri='@{product.remoteSmallImageUri}' />
+                app:webImageUrl='@{usedProduct.product.webImageUrl}'
+                app:remoteSmallImageUri='@{usedProduct.product.remoteSmallImageUri}' />
 
             <TextView
                 android:id="@+id/used_product_list_item_pack_size"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif"
-                android:gravity="end|center_vertical"
                 android:paddingEnd="@dimen/list_item_top_half_margin"
                 android:paddingStart="@dimen/list_item_top_full_margin"
                 android:textAppearance="?android:textAppearanceSmall"
                 android:textColor="@color/grey"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/used_product_list_item_description"
-                android:text='@{`` + product.baseUnits}'
-                tools:text="400" />
+                tools:text="400"
+                android:text="@{`` + usedProduct.product.baseUnits}"/>
 
             <TextView
                 android:id="@+id/used_product_list_item_label_unit_of_measure"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif"
-                android:gravity="start|center_vertical"
-                android:maxLines="1"
                 android:paddingStart="@dimen/list_item_top_half_margin"
                 android:paddingEnd="@dimen/list_item_top_half_margin"
                 android:textAppearance="?android:textAppearanceSmall"
                 android:textColor="@color/grey"
                 app:layout_constraintStart_toEndOf="@+id/used_product_list_item_pack_size"
                 app:layout_constraintTop_toBottomOf="@+id/used_product_list_item_description"
-                android:text='@{`` + product.unitOfMeasureSubtype}'
-                tools:text="ml" />
+                tools:text="ml"
+                android:text="@{`` + usedProduct.product.unitOfMeasureSubtype}"/>
+
+            <TextView
+                android:id="@+id/used_product_list_item_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="8dp"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:textColor="@color/darkGrey"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:text="£24.99"
+                android:text="@{`` + usedProduct.usedProduct.price}"
+                />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </layout>

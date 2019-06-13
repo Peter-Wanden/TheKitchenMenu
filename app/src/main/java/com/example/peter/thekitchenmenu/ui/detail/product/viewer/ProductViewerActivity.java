@@ -24,7 +24,9 @@ public class ProductViewerActivity extends AppCompatActivity implements ProductV
     private static final String TAG = "tkm-ProductViewerAct";
 
     public static final String EXTRA_PRODUCT_ID = "PRODUCT_ID";
+    public static final int REQUEST_CODE = 1;
     public static final int DELETE_RESULT_OK = RESULT_FIRST_USER + 2;
+
 
     private ProductViewerActivityBinding binding;
     private ProductViewerViewModel productViewerViewModel;
