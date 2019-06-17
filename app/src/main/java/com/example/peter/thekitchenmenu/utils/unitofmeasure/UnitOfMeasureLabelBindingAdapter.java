@@ -25,13 +25,13 @@ public class UnitOfMeasureLabelBindingAdapter {
             if (viewId == R.id.pack_size_label)
                 setPackSizeLabel(textView, unitOfMeasure);
 
-            if (viewId == R.id.item_size_label)
+            if (viewId == R.id.product_size_label)
                 setItemSizeLabel(textView, unitOfMeasure);
 
             if (viewId == R.id.pack_measurement_label_one ||
-                    viewId == R.id.item_measurement_label_one ||
+                    viewId == R.id.product_measurement_label_one ||
                     viewId == R.id.pack_measurement_label_two ||
-                    viewId == R.id.item_measurement_label_two)
+                    viewId == R.id.product_measurement_label_two)
                 setMeasurementUnitLabels(textView, unitOfMeasure);
         }
     }
@@ -46,18 +46,18 @@ public class UnitOfMeasureLabelBindingAdapter {
     private static void setItemSizeLabel(TextView textView, UnitOfMeasure unitOfMeasure) {
         Resources resources = textView.getResources();
         textView.setText(textView.getContext().getString(
-                R.string.item_size_label,
+                R.string.product_size_label,
                 resources.getString(unitOfMeasure.getTypeStringResourceId())));
     }
 
     private static void setMeasurementUnitLabels(TextView textView, UnitOfMeasure unitOfMeasure) {
         int viewId = textView.getId();
         if (viewId == R.id.pack_measurement_label_one ||
-                viewId == R.id.item_measurement_label_one)
+                viewId == R.id.product_measurement_label_one)
             textView.setText(unitOfMeasure.getUnitOneLabelStringResourceId());
 
         else if (viewId == R.id.pack_measurement_label_two ||
-                viewId == R.id.item_measurement_label_two)
+                viewId == R.id.product_measurement_label_two)
             textView.setText(unitOfMeasure.getUnitTwoLabelStringResourceId());
     }
 }

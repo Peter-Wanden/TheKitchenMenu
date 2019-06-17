@@ -28,7 +28,7 @@ public class NumberStringFormatConverter {
         int digitsAfterDecimal = 0;
 
         if (viewId == R.id.pack_editable_measurement_one ||
-                viewId == R.id.item_editable_measurement_one)
+                viewId == R.id.product_editable_measurement_one)
             digitsAfterDecimal = (int)unitOfMeasure.getMeasurementUnitDigitLengthArray()[0].second;
 
         NumberFormat numberFormat = getNumberFormat(editText);

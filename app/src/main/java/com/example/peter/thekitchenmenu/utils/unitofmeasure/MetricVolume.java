@@ -12,7 +12,7 @@ public class MetricVolume implements UnitOfMeasure {
     private static final int METRIC_VOLUME_NUMBER_OF_MEASUREMENT_UNITS = 2;
     private static final double UNIT_MILLILITRE = MINIMUM_VOLUME;
     private static final double UNIT_LITRE = UNIT_MILLILITRE * 1000.;
-    private double minimumItemSize = UNIT_MILLILITRE;
+    private double minimumProductSize = UNIT_MILLILITRE;
 
     // Keeps track of the last updated measurement
     private static final boolean PACK_MEASUREMENT = false;
@@ -26,9 +26,9 @@ public class MetricVolume implements UnitOfMeasure {
     private int unitTwoLabelStringResourceId;
 
     // Current measurements
-    private int numberOfItems = MINIMUM_NUMBER_OF_PRODUCTS;
-    private double itemSizeInBaseSiUnits = minimumItemSize;
-    private double baseSiUnits = 0.;
+    private int numberOfProductsInPack = MINIMUM_NUMBER_OF_PRODUCTS;
+    private double singleProductSizeInBaseUnits = minimumProductSize;
+    private double baseUnits = 0.;
     private int packMeasurementInLitres = 0;
     private double packMeasurementInMillilitres = 0.;
     private int itemMeasurementInLitres = 0;
@@ -58,19 +58,19 @@ public class MetricVolume implements UnitOfMeasure {
 
     @Override
     public double getBaseUnits() {
-        return baseSiUnits;
+        return baseUnits;
     }
 
     @Override
-    public boolean baseUnitsAreSet(double baseSiUnits) {
-        if (baseSiUnitsAreWithinBounds(baseSiUnits)) {
-            this.baseSiUnits = baseSiUnits;
+    public boolean baseUnitsAreSet(double baseUnits) {
+        if (baseUnitsAreWithinBounds(baseUnits)) {
+            this.baseUnits = baseUnits;
             setNewPackMeasurements();
             setNewItemMeasurements();
             return true;
 
-        } else if (baseSiUnits == 0.) {
-            this.baseSiUnits = 0.; // allows for a reset
+        } else if (baseUnits == 0.) {
+            this.baseUnits = 0.; // allows for a reset
             packMeasurementInMillilitres = 0.;
             itemMeasurementInMillilitres = 0.;
             packMeasurementInLitres = 0;
@@ -79,49 +79,49 @@ public class MetricVolume implements UnitOfMeasure {
         return false;
     }
 
-    private boolean baseSiUnitsAreWithinBounds(double baseSiUnits) {
-        return baseSiUnitsDoNotMakeItemSmallerThanSmallestUnit(baseSiUnits) &&
-                baseSiUnitsAreWithinMaxVolume(baseSiUnits);
+    private boolean baseUnitsAreWithinBounds(double baseUnits) {
+        return baseUnitsDoNotMakeSingleProductSmallerThanSmallestUnit(baseUnits) &&
+                baseUnitsAreWithinMaxVolume(baseUnits);
     }
 
-    private boolean baseSiUnitsDoNotMakeItemSmallerThanSmallestUnit(double baseSiUnits) {
-        return baseSiUnits >= UNIT_MILLILITRE * numberOfItems;
+    private boolean baseUnitsDoNotMakeSingleProductSmallerThanSmallestUnit(double baseUnits) {
+        return baseUnits >= UNIT_MILLILITRE * numberOfProductsInPack;
     }
 
-    private boolean baseSiUnitsAreWithinMaxVolume(double basSiUnits) {
-        return basSiUnits <= MAXIMUM_VOLUME;
+    private boolean baseUnitsAreWithinMaxVolume(double baseUnits) {
+        return baseUnits <= MAXIMUM_VOLUME;
     }
 
     private void setNewPackMeasurements() {
-        packMeasurementInMillilitres = getMeasurementInMillilitres(baseSiUnits);
-        packMeasurementInLitres = getMeasurementInLitres(baseSiUnits);
+        packMeasurementInMillilitres = getMeasurementInMillilitres(baseUnits);
+        packMeasurementInLitres = getMeasurementInLitres(baseUnits);
     }
 
     private void setNewItemMeasurements() {
-        itemSizeInBaseSiUnits = baseSiUnits / numberOfItems;
-        itemMeasurementInMillilitres = getMeasurementInMillilitres(itemSizeInBaseSiUnits);
-        itemMeasurementInLitres = getMeasurementInLitres(itemSizeInBaseSiUnits);
+        singleProductSizeInBaseUnits = baseUnits / numberOfProductsInPack;
+        itemMeasurementInMillilitres = getMeasurementInMillilitres(singleProductSizeInBaseUnits);
+        itemMeasurementInLitres = getMeasurementInLitres(singleProductSizeInBaseUnits);
     }
 
-    private double getMeasurementInMillilitres(double baseSiUnits) {
-        return baseSiUnits % UNIT_LITRE;
+    private double getMeasurementInMillilitres(double baseUnits) {
+        return baseUnits % UNIT_LITRE;
     }
 
-    private int getMeasurementInLitres(double baseSiUnits) {
-        return (int) (baseSiUnits / UNIT_LITRE);
+    private int getMeasurementInLitres(double baseUnits) {
+        return (int) (baseUnits / UNIT_LITRE);
     }
 
     @Override
     public int getNumberOfProducts() {
-        return numberOfItems;
+        return numberOfProductsInPack;
     }
 
     @Override
     public boolean numberOfProductsIsSet(int numberOfProducts) {
         if (numberOfItemsInPackAreWithinBounds(numberOfProducts)) {
 
-            if (baseSiUnits == NOT_YET_SET) {
-                this.numberOfItems = numberOfProducts;
+            if (baseUnits == NOT_YET_SET) {
+                this.numberOfProductsInPack = numberOfProducts;
                 return true;
 
             } else {
@@ -147,21 +147,21 @@ public class MetricVolume implements UnitOfMeasure {
     }
 
     private boolean itemSizeNotLessThanSmallestUnit(int numberOfItems) {
-        return baseSiUnits / numberOfItems >= minimumItemSize;
+        return baseUnits / numberOfItems >= minimumProductSize;
     }
 
     private void setItemsInPackByAdjustingItemSize(int numberOfItemsInPack) {
-        this.numberOfItems = numberOfItemsInPack;
+        this.numberOfProductsInPack = numberOfItemsInPack;
         setNewItemMeasurements();
     }
 
     private boolean itemSizeMultipliedByNumberOfItemsDoNotExceedMaxMass(int numberOfItems) {
-        return itemSizeInBaseSiUnits * numberOfItems <= MAXIMUM_VOLUME;
+        return singleProductSizeInBaseUnits * numberOfItems <= MAXIMUM_VOLUME;
     }
 
     private void setItemsInPackByAdjustingPackSize(int numberOfItems) {
-        this.numberOfItems = numberOfItems;
-        baseUnitsAreSet(itemSizeInBaseSiUnits * numberOfItems);
+        this.numberOfProductsInPack = numberOfItems;
+        baseUnitsAreSet(singleProductSizeInBaseUnits * numberOfItems);
     }
 
     @Override
@@ -195,16 +195,16 @@ public class MetricVolume implements UnitOfMeasure {
 
     @Override
     public boolean productMeasurementOneIsSet(double newProductMeasurementOne) {
-        if (baseUnitsAreSet(baseSiUnitsWithItemMeasurementOne(newProductMeasurementOne))) {
+        if (baseUnitsAreSet(baseUnitsWithItemMeasurementOne(newProductMeasurementOne))) {
             lastMeasurementUpdated = ITEM_MEASUREMENT;
             return true;
 
-        } else baseUnitsAreSet(baseSiUnitsWithItemMeasurementOne(0.));
+        } else baseUnitsAreSet(baseUnitsWithItemMeasurementOne(0.));
         return false;
     }
 
-    private double baseSiUnitsWithItemMeasurementOne(double itemMeasurementOne) {
-        return (itemMeasurementInLitres * UNIT_LITRE + itemMeasurementOne) * numberOfItems;
+    private double baseUnitsWithItemMeasurementOne(double itemMeasurementOne) {
+        return (itemMeasurementInLitres * UNIT_LITRE + itemMeasurementOne) * numberOfProductsInPack;
     }
 
     @Override
@@ -219,15 +219,15 @@ public class MetricVolume implements UnitOfMeasure {
 
     @Override
     public boolean packMeasurementTwoIsSet(int newPackMeasurementTwo) {
-        if (baseUnitsAreSet(baseSiUnitsWithPackMeasurementTwo(newPackMeasurementTwo))) {
+        if (baseUnitsAreSet(baseUnitsWithPackMeasurementTwo(newPackMeasurementTwo))) {
             lastMeasurementUpdated = PACK_MEASUREMENT;
             return true;
 
-        } else baseUnitsAreSet(baseSiUnitsWithPackMeasurementTwo(0));
+        } else baseUnitsAreSet(baseUnitsWithPackMeasurementTwo(0));
         return false;
     }
 
-    private double baseSiUnitsWithPackMeasurementTwo(int packMeasurementTwo) {
+    private double baseUnitsWithPackMeasurementTwo(int packMeasurementTwo) {
         return packMeasurementTwo * UNIT_LITRE + packMeasurementInMillilitres;
     }
 
@@ -238,21 +238,21 @@ public class MetricVolume implements UnitOfMeasure {
 
     @Override
     public boolean productMeasurementTwoIsSet(int newProductMeasurementTwo) {
-        if (baseUnitsAreSet(baseSiUnitsWithItemMeasurementTwo(newProductMeasurementTwo))) {
+        if (baseUnitsAreSet(baseUnitsWithItemMeasurementTwo(newProductMeasurementTwo))) {
             lastMeasurementUpdated = ITEM_MEASUREMENT;
             return true;
 
-        } else baseUnitsAreSet(baseSiUnitsWithItemMeasurementTwo(0));
+        } else baseUnitsAreSet(baseUnitsWithItemMeasurementTwo(0));
         return false;
     }
 
-    private double baseSiUnitsWithItemMeasurementTwo(int itemMeasurementTwo) {
-        return (itemMeasurementTwo * UNIT_LITRE + itemMeasurementInMillilitres) * numberOfItems;
+    private double baseUnitsWithItemMeasurementTwo(int itemMeasurementTwo) {
+        return (itemMeasurementTwo * UNIT_LITRE + itemMeasurementInMillilitres) * numberOfProductsInPack;
     }
 
     @Override
     public boolean isValidMeasurement() {
-        return (baseSiUnits >= minimumItemSize && baseSiUnits <= MAXIMUM_VOLUME);
+        return (baseUnits >= minimumProductSize && baseUnits <= MAXIMUM_VOLUME);
     }
 
     @Override

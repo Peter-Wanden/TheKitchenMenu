@@ -28,15 +28,15 @@
     <string name="hint_location_in_room">Where abouts in the room?</string>
     <string name="pack_size_label">Total pack %1$s</string>
     <string name="pack_size_total_hint">How many %1$s?</string>
-    <string name="item_size_label">Single pack %1$s</string>
+    <string name="product_size_label">Single pack %1$s</string>
     <string name="item_size_hint">How many %1$s?</string>
     <string name="label_pack_size">Pack size</string>
     <string name="label_item_size">Item size</string>
     <string name="hint_pack_size">Weight/volume of pack</string>
     <string name="hint_item_size">Weight/volume of each item</string>
-    <string name="unit_of_measure_label">Sold in units of</string>
+    <string name="unit_of_measure_label">Sold by</string>
     <string name="label_multi_pack">Multipack?</string>
-    <string name="label_number_of_packs">Number of packs / items (multipack only)</string>
+    <string name="label_number_of_packs">Number of products in pack</string>
     <string name="label_price">Price</string>
     <string name="hint_price">How much does it cost?</string>
     <string name="label_shelf_life">Shelf life</string>
@@ -223,10 +223,17 @@
     <string name="product_identity">Product identity</string>
     <string name="empty_string" />
     <string name="add_web_image_url">Add a picture from web, camera or gallery</string>
-    <string name="cd_launch_browser_to_get_image_url">Press to launch broowser for image url</string>
+    <string name="cd_launch_browser_to_get_image_url">Press to launch browser for image url</string>
     <string name="product_image">Product image</string>
     <string name="hint_web_image_url">Paste a web image url here</string>
     <string name="activity_title_image_cropper">TKM - Image Cropper</string>
     <string name="empty_screen__unused_product">Add this product to your used product list?</string>
     <string name="menu_item_remove_used_product">REMOVE PRODUCT</string>
+
+
+    <!-- PRICING -->
+    <string name="min_currency_value">0.01</string>
+    <string name="max_price_for_product">100</string>
+    <string name="maximum_currency_value_shopping_list">1000</string>
+    <string name="lasUpdated">last updated</string>
 </resources>

@@ -49,7 +49,7 @@ public final class UsedProductEntity {
     private final String locationInRoom;
 
     @ColumnInfo(name = PRICE)
-    private final double price;
+    private final String price;
 
     @ColumnInfo(name = CREATE_DATE)
     private final long createDate;
@@ -63,7 +63,7 @@ public final class UsedProductEntity {
                              @Nullable String retailer,
                              @Nullable String locationRoom,
                              @Nullable String locationInRoom,
-                             double price,
+                             @Nullable String price,
                              long createDate,
                              long lastUpdate) {
 
@@ -83,7 +83,7 @@ public final class UsedProductEntity {
                                                       @Nullable String retailer,
                                                       @Nullable String locationRoom,
                                                       @Nullable String locationInRoom,
-                                                      double price,
+                                                      @Nullable String price,
                                                       long createDate) {
         return new UsedProductEntity(
                 usedProductId,
@@ -101,7 +101,7 @@ public final class UsedProductEntity {
                                                          @Nullable String retailer,
                                                          @Nullable String locationRoom,
                                                          @Nullable String locationInRoom,
-                                                         double price) {
+                                                         @Nullable String price) {
         return new UsedProductEntity(
                 UUID.randomUUID().toString(),
                 productId,
@@ -138,7 +138,7 @@ public final class UsedProductEntity {
         return Strings.isEmptyOrWhitespace(retailer) &&
                 Strings.isEmptyOrWhitespace(locationRoom) &&
                 Strings.isEmptyOrWhitespace(locationInRoom) &&
-                price == 0.0;
+                Strings.isEmptyOrWhitespace(price);
     }
 
     @NonNull
@@ -177,7 +177,7 @@ public final class UsedProductEntity {
         return locationInRoom;
     }
 
-    public double getPrice() {
+    public String getPrice() {
         return price;
     }
 

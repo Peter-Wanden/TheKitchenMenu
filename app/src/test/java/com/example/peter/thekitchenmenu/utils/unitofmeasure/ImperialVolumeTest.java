@@ -35,7 +35,7 @@ public class ImperialVolumeTest {
 
     //////////////////////////// SETTING AND GETTING BASE SI TESTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\
     @Test
-    public void testBaseSiInRangeMin() { // IN RANGE MIN
+    public void testBaseUnitsInRangeMin() { // IN RANGE MIN
 
         assertThat(imperialVolume.baseUnitsAreSet(UNIT_FLUID_OUNCE_DECIMAL), is(true));
 
@@ -49,7 +49,7 @@ public class ImperialVolumeTest {
     }
 
     @Test
-    public void testBaseSiOutOfRangeMin() { // OUT OF RANGE MIN
+    public void testBaseUnitsOutOfRangeMin() { // OUT OF RANGE MIN
 
         assertThat(imperialVolume.baseUnitsAreSet(UNIT_FLUID_OUNCE_DECIMAL - .00000001),
                 is(false));
@@ -64,7 +64,7 @@ public class ImperialVolumeTest {
     }
 
     @Test
-    public void testBaseSiInRangeMax() { // IN RANGE MAX
+    public void testBaseUnitsInRangeMax() { // IN RANGE MAX
 
         assertThat(imperialVolume.baseUnitsAreSet((MAXIMUM_VOLUME)), is(true));
 
@@ -78,7 +78,7 @@ public class ImperialVolumeTest {
     }
 
     @Test
-    public void testBaseSiOutOfRangeMax() { // OUT OF RANGE MAX
+    public void testBaseUnitsOutOfRangeMax() { // OUT OF RANGE MAX
 
         assertThat(imperialVolume.baseUnitsAreSet(MAXIMUM_VOLUME + .00000001), is(false));
 
@@ -92,7 +92,7 @@ public class ImperialVolumeTest {
     }
 
     @Test
-    public void testBaseSiViolatesMinimumItemSize() { // CONDITION: BASE SI SMALLER THAN SMALLEST ITEM
+    public void testBaseUnitsViolateMinimumItemSize() { // CONDITION: BASE SI SMALLER THAN SMALLEST ITEM
 
         assertThat(imperialVolume.numberOfProductsIsSet(2), is(true));
 
@@ -109,7 +109,7 @@ public class ImperialVolumeTest {
     }
 
     @Test
-    public void testBaseSiAtMinimumItemSize() { // CONDITION: BASE SI SAME AS SMALLEST ITEM
+    public void testBaseUnitsAtMinimumItemSize() { // CONDITION: BASE SI SAME AS SMALLEST ITEM
 
         assertThat(imperialVolume.numberOfProductsIsSet(2), is(true));
 
@@ -125,7 +125,7 @@ public class ImperialVolumeTest {
     }
 
     @Test
-    public void testBaseSiRetrieveFromPackAndItem() {// CONDITION: BASE SI SET, CHECK PACK AND ITEM UPDATED
+    public void testBaseUnitsRetrieveFromPackAndItem() {// CONDITION: BASE SI SET, CHECK PACK AND ITEM UPDATED
 
         // Set base SI
         assertThat(imperialVolume.baseUnitsAreSet((UNIT_PINT * 12) + (UNIT_FLUID_OUNCE * 2)),

@@ -2,6 +2,7 @@ package com.example.peter.thekitchenmenu.ui.detail.product.producteditor;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
@@ -139,7 +140,7 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
         final Observer<ProductMeasurementModel> measurementModelOutObserver = measurementModelOut ->
                 productEditorViewModel.setUpdatedMeasurementModel(measurementModelOut);
 
-        measurementEditorViewModel.getModelOut().observe(
+        measurementEditorViewModel.getMeasurementModel().observe(
                 this, measurementModelOutObserver);
     }
 

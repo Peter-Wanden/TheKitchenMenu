@@ -154,8 +154,8 @@ public class ImperialVolume implements UnitOfMeasure {
         return unitTwoRemainder / UNIT_ONE;
     }
 
-    private int getUnitTwoMeasurement(double baseSiUnits) {
-        return (int) (baseSiUnits / UNIT_TWO);
+    private int getUnitTwoMeasurement(double baseUnits) {
+        return (int) (baseUnits / UNIT_TWO);
     }
 
     @Override

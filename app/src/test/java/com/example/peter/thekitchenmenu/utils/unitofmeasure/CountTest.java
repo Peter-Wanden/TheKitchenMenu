@@ -12,7 +12,7 @@ public class CountTest {
 
     //////////////////////////// SETTING AND GETTING BASE SI TESTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\
     @Test
-    public void testBaseSiInRangeMin() { // IN RANGE MIN
+    public void testBaseUnitsInRangeMin() { // IN RANGE MIN
 
         assertThat(count.baseUnitsAreSet(1), is(true));
 
@@ -22,7 +22,7 @@ public class CountTest {
     }
 
     @Test
-    public void testBaseSiOutOfRangeMin() { // OUT OF RANGE MIN
+    public void testBaseUnitsOutOfRangeMin() { // OUT OF RANGE MIN
 
         assertThat(count.baseUnitsAreSet(0.9), is(false));
 
@@ -32,7 +32,7 @@ public class CountTest {
     }
 
     @Test
-    public void testBaseSiInRangeMax() { // IN RANGE MAX
+    public void testBaseUnitsInRangeMax() { // IN RANGE MAX
 
         assertThat(count.baseUnitsAreSet(MAXIMUM_COUNT), is(true));
 
@@ -42,7 +42,7 @@ public class CountTest {
     }
 
     @Test
-    public void testBaseSiOutOfRangeMax() { // OUT OF RANGE MAX
+    public void testBaseUnitsOutOfRangeMax() { // OUT OF RANGE MAX
 
         assertThat(count.baseUnitsAreSet(MAXIMUM_COUNT + 1), is(false));
 
@@ -52,7 +52,7 @@ public class CountTest {
     }
 
     @Test
-    public void testBaseSiViolatesMinimumItemSize() { // CONDITION: BASE SI SMALLER THAN SMALLEST ITEM
+    public void testBaseUnitsViolatesMinimumItemSize() { // CONDITION: BASE SI SMALLER THAN SMALLEST ITEM
 
         assertThat(count.numberOfProductsIsSet(5), is(true));
         assertThat(count.baseUnitsAreSet(4), is(false));
@@ -63,7 +63,7 @@ public class CountTest {
     }
 
     @Test
-    public void testBaseSiAtMinimumItemSize() { // CONDITION: BASE SI SAME AS SMALLEST ITEM
+    public void testBaseUnitsAtMinimumItemSize() { // CONDITION: BASE SI SAME AS SMALLEST ITEM
 
         assertThat(count.numberOfProductsIsSet(5), is(true));
         assertThat(count.baseUnitsAreSet(5), is(true));
@@ -74,7 +74,7 @@ public class CountTest {
     }
 
     @Test
-    public void testBaseSiRetrieveFromPackAndItem() {// CONDITION: BASE SI SET, CHECK PACK AND ITEM UPDATED
+    public void testBaseUnitsRetrieveFromPackAndItem() {// CONDITION: BASE SI SET, CHECK PACK AND ITEM UPDATED
 
         // Set base SI
         assertThat(count.baseUnitsAreSet(55), is(true));
@@ -138,7 +138,7 @@ public class CountTest {
     //////////////////////////// SETTING NUMBER OF ITEMS TESTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
     @Test
-    public void testSetNumberOfItemsMinInRangeWithNoBaseSi() { // CONDITION: BASE SI NOT YET SET - IN RANGE MIN
+    public void testSetNumberOfItemsMinInRangeWithNoBaseUnits() { // CONDITION: BASE SI NOT YET SET - IN RANGE MIN
 
         // Set arbitrary number of items, base si at zero
         assertThat(count.numberOfProductsIsSet(5), is(true));
@@ -152,7 +152,7 @@ public class CountTest {
     }
 
     @Test
-    public void testSetNumberOfItemsMinOutOfRangeWithNoBaseSi() { // CONDITION: BASE SI NOT YET SET - OUT OF RANGE MIN
+    public void testSetNumberOfItemsMinOutOfRangeWithNoBaseUnits() { // CONDITION: BASE SI NOT YET SET - OUT OF RANGE MIN
 
         // Set out of range min
         assertThat(count.numberOfProductsIsSet(0), is(false));
@@ -167,7 +167,7 @@ public class CountTest {
     }
 
     @Test
-    public void testNumberOfItemsInRangeMaxWithNoBaseSI() { // CONDITION: BASE SI NOT YET SET - IN RANGE MAX
+    public void testNumberOfItemsInRangeMaxWithNoBaseUnits() { // CONDITION: BASE SI NOT YET SET - IN RANGE MAX
 
         // Set to max within range
         assertThat(count.numberOfProductsIsSet(99), is(true));
@@ -182,7 +182,7 @@ public class CountTest {
     }
 
     @Test
-    public void testNumberOfItemsOutOfRangeMaxWithNoBaseSI() { // CONDITION: BASE SI NOT YET SET - OUT OF RANGE MAX
+    public void testNumberOfItemsOutOfRangeMaxWithNoBaseUnits() { // CONDITION: BASE SI NOT YET SET - OUT OF RANGE MAX
 
         // Set to max +1
         assertThat(count.numberOfProductsIsSet(100), is(false));
@@ -197,7 +197,7 @@ public class CountTest {
     }
 
     @Test
-    public void testNumberOfItemsInRangeMinWithBaseSI() { // CONDITION: BASE SI SET BY PACK ONE - NO OF ITEMS IN RANGE MIN
+    public void testNumberOfItemsInRangeMinWithBaseUnits() { // CONDITION: BASE SI SET BY PACK ONE - NO OF ITEMS IN RANGE MIN
 
         // Set value to pack measurement - sets lastMeasurementUpdated to PACK
         // When number of items is updated item measurement should change
@@ -292,7 +292,7 @@ public class CountTest {
     }
 
     @Test
-    public void testNumberOfItemsInRangeSetWithItemWithBaseSiThenChangedAgain() {
+    public void testNumberOfItemsInRangeSetWithItemWithBaseUnitsThenChangedAgain() {
         // CONDITION: BASE SI SET BY ITEM - NO OF ITEMS CHANGED - THEN NO OF ITEMS CHANGED AGAIN
 
         // Set item measurement last changed by setting item measurement
@@ -316,7 +316,7 @@ public class CountTest {
     }
 
     @Test
-    public void testNumberOfItemsInRangeSetWith_ItemWithBaseSI() {
+    public void testNumberOfItemsInRangeSetWith_ItemWithBaseUnits() {
         // CONDITION: BASE SI SET BY PACK - NO OF ITEMS CHANGED - THEN NO OF ITEMS CHANGED AGAIN
 
         // Set pack measurement last changed by setting pack measurement
@@ -361,7 +361,7 @@ public class CountTest {
     }
 
     @Test
-    public void settingBaseSi() {
+    public void settingBaseUnits() {
 
         assertThat(count.numberOfProductsIsSet(2), is(true));
         assertThat(count.packMeasurementOneIsSet(2), is(true));

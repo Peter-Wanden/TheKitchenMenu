@@ -1,6 +1,9 @@
 package com.example.peter.thekitchenmenu.ui.detail.product.producteditor;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.transition.TransitionManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +19,8 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
@@ -26,6 +31,9 @@ public class ProductMeasurementEditorFragment extends Fragment {
 
     private ProductEditorMeasurementBinding binding;
     private ProductMeasurementViewModel viewModel;
+    private ConstraintSet constraintTwoUnits = new ConstraintSet();
+    private ConstraintSet constraintOneUnit = new ConstraintSet();
+    private ConstraintLayout constraintLayout;
 
     @Nullable
     @Override
@@ -46,6 +54,8 @@ public class ProductMeasurementEditorFragment extends Fragment {
         setValidationHandlersToBinding();
         setBindingInstanceVariables();
         setupUnitOfMeasureSpinner();
+        subscribeToObservableEvents();
+        setUpConstraintViewChanges();
 
         return rootView;
     }
@@ -155,5 +165,32 @@ public class ProductMeasurementEditorFragment extends Fragment {
 
     private String removeArrayBraces(String stringWithBrackets) {
         return stringWithBrackets.substring(1, stringWithBrackets.length() - 1);
+    }
+
+    private void subscribeToObservableEvents() {
+        viewModel.getSetDisplayToOneMeasurementUnitEvent().observe(this, event ->
+                setDisplayToOneMeasurementUnit());
+        viewModel.getSetDisplayToTwoMeasurementUnitsEvent().observe(this, event->
+                setDisplayToTwoMeasurementUnits());
+    }
+
+    // see:{https://developer.android.com/reference/android/support/constraint/ConstraintSet}
+    private void setDisplayToOneMeasurementUnit() {
+        TransitionManager.beginDelayedTransition(constraintLayout);
+        constraintOneUnit.applyTo(constraintLayout);
+
+    }
+
+    private void setDisplayToTwoMeasurementUnits() {
+        TransitionManager.beginDelayedTransition(constraintLayout);
+        constraintTwoUnits.applyTo(constraintLayout);
+    }
+
+    private void setUpConstraintViewChanges() {
+        Context context = requireActivity();
+
+        constraintOneUnit.clone(context, R.layout.product_editor_measurement_one_unit);
+        constraintLayout = binding.productMeasurementUnits.productMeasurementUnitsParent;
+        constraintTwoUnits.clone(constraintLayout);
     }
 }

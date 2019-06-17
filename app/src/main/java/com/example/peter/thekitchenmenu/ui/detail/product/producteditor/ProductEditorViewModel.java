@@ -95,7 +95,7 @@ public class ProductEditorViewModel extends ObservableViewModel {
                 "",
                 "");
 
-        this.existingProductEntity.setValue(productEntityMetricMassTest);
+//        this.existingProductEntity.setValue(productEntityMetricMassTest);
     }
 
     public String getActivityTitle() {

@@ -12,7 +12,7 @@ public class MetricVolumeTest {
 
     //////////////////////////// SETTING AND GETTING BASE SI TESTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\
     @Test
-    public void testBaseSiInRangeMin() { // IN RANGE MIN
+    public void testBaseUnitsInRangeMin() { // IN RANGE MIN
 
         assertThat(metricVolume.baseUnitsAreSet(1), is(true));
 
@@ -26,7 +26,7 @@ public class MetricVolumeTest {
     }
 
     @Test
-    public void testBaseSiOutOfRangeMin() { // OUT OF RANGE MIN
+    public void testBaseUnitsOutOfRangeMin() { // OUT OF RANGE MIN
 
         assertThat(metricVolume.baseUnitsAreSet(0.9), is(false));
 
@@ -40,7 +40,7 @@ public class MetricVolumeTest {
     }
 
     @Test
-    public void testBaseSiInRangeMax() { // IN RANGE MAX
+    public void testBaseUnitsInRangeMax() { // IN RANGE MAX
 
         assertThat(metricVolume.baseUnitsAreSet(MAXIMUM_VOLUME), is(true));
 
@@ -54,7 +54,7 @@ public class MetricVolumeTest {
     }
 
     @Test
-    public void testBaseSiOutOfRangeMax() { // OUT OF RANGE MAX
+    public void testBaseUnitsOutOfRangeMax() { // OUT OF RANGE MAX
 
         assertThat(metricVolume.baseUnitsAreSet(MAXIMUM_VOLUME + 1), is(false));
 
@@ -68,7 +68,7 @@ public class MetricVolumeTest {
     }
 
     @Test
-    public void testBaseSiViolatesMinimumItemSize() { // CONDITION: BASE SI SMALLER THAN SMALLEST ITEM
+    public void testBaseUnitsViolatesMinimumItemSize() { // CONDITION: BASE SI SMALLER THAN SMALLEST ITEM
 
         assertThat(metricVolume.numberOfProductsIsSet(5), is(true));
 
@@ -84,7 +84,7 @@ public class MetricVolumeTest {
     }
 
     @Test
-    public void testBaseSiAtMinimumItemSize() { // CONDITION: BASE SI SAME AS SMALLEST ITEM
+    public void testBaseUnitsAtMinimumItemSize() { // CONDITION: BASE SI SAME AS SMALLEST ITEM
 
         assertThat(metricVolume.numberOfProductsIsSet(5), is(true));
 
@@ -100,7 +100,7 @@ public class MetricVolumeTest {
     }
 
     @Test
-    public void testBaseSiRetrieveFromPackAndItem() {// CONDITION: BASE SI SET, CHECK PACK AND ITEM UPDATED
+    public void testBaseUnitsRetrieveFromPackAndItem() {// CONDITION: BASE SI SET, CHECK PACK AND ITEM UPDATED
 
         // Set base SI
         assertThat(metricVolume.baseUnitsAreSet(5500), is(true));
@@ -261,7 +261,7 @@ public class MetricVolumeTest {
     //////////////////////////// SETTING NUMBER OF ITEMS TESTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
     @Test
-    public void testSetNumberOfItemsMinInRangeWithNoBaseSi() { // CONDITION: BASE SI NOT YET SET - IN RANGE MIN
+    public void testSetNumberOfItemsMinInRangeWithNoBaseUnits() { // CONDITION: BASE SI NOT YET SET - IN RANGE MIN
 
         // Set arbitrary number of items, base si at zero
         assertThat(metricVolume.numberOfProductsIsSet(5), is(true));
@@ -277,7 +277,7 @@ public class MetricVolumeTest {
     }
 
     @Test
-    public void testSetNumberOfItemsMinOutOfRangeWithNoBaseSi() { // CONDITION: BASE SI NOT YET SET - OUT OF RANGE MIN
+    public void testSetNumberOfItemsMinOutOfRangeWithNoBaseUnits() { // CONDITION: BASE SI NOT YET SET - OUT OF RANGE MIN
 
         // Set out of range min
         assertThat(metricVolume.numberOfProductsIsSet(0), is(false));
@@ -294,7 +294,7 @@ public class MetricVolumeTest {
     }
 
     @Test
-    public void testNumberOfItemsInRangeMaxWithNoBaseSI() { // CONDITION: BASE SI NOT YET SET - IN RANGE MAX
+    public void testNumberOfItemsInRangeMaxWithNoBaseUnits() { // CONDITION: BASE SI NOT YET SET - IN RANGE MAX
 
         // Set to max within range
         assertThat(metricVolume.numberOfProductsIsSet(999), is(true));
@@ -311,7 +311,7 @@ public class MetricVolumeTest {
     }
 
     @Test
-    public void testNumberOfItemsOutOfRangeMaxWithNoBaseSI() { // CONDITION: BASE SI NOT YET SET - OUT OF RANGE MAX
+    public void testNumberOfItemsOutOfRangeMaxWithNoBaseUnits() { // CONDITION: BASE SI NOT YET SET - OUT OF RANGE MAX
 
         // Set to max +1
         assertThat(metricVolume.numberOfProductsIsSet(1000), is(false));
@@ -328,7 +328,7 @@ public class MetricVolumeTest {
     }
 
     @Test
-    public void testNumberOfItemsInRangeMinWithBaseSI() { // CONDITION: BASE SI SET BY PACK ONE - NO OF ITEMS IN RANGE MIN
+    public void testNumberOfItemsInRangeMinWithBaseUnits() { // CONDITION: BASE SI SET BY PACK ONE - NO OF ITEMS IN RANGE MIN
 
         // Set value to pack measurement - sets lastMeasurementUpdated to PACK
         // When number of items is updated item measurement should change
@@ -438,7 +438,7 @@ public class MetricVolumeTest {
     }
 
     @Test
-    public void testNumberOfItemsInRangeSetWithItemWithBaseSiThenChangedAgain() {
+    public void testNumberOfItemsInRange_SetWithItemBaseUnitsThenChangedAgain() {
         // CONDITION: BASE SI SET BY ITEM - NO OF ITEMS CHANGED - THEN NO OF ITEMS CHANGED AGAIN
 
         // Set item measurement last changed by setting item measurement
@@ -467,7 +467,7 @@ public class MetricVolumeTest {
     }
 
     @Test
-    public void testNumberOfItemsInRangeSetWith_ItemWithBaseSI() {
+    public void testNumberOfItemsInRangeSetWith_ItemWithBaseUnits() {
         // CONDITION: BASE SI SET BY PACK - NO OF ITEMS CHANGED - THEN NO OF ITEMS CHANGED AGAIN
 
         // Set pack measurement last changed by setting pack measurement
@@ -517,7 +517,7 @@ public class MetricVolumeTest {
     }
 
     @Test
-    public void settingBaseSi() {
+    public void settingBaseUnits() {
 
         assertThat(metricVolume.numberOfProductsIsSet(2), is(true));
         assertThat(metricVolume.packMeasurementOneIsSet(2), is(true));

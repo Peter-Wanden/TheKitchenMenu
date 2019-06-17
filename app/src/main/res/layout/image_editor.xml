@@ -23,45 +23,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <!--Todo - Use this guideline as is done in the product_identity / product size xml-->
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/product_image_border"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:src="@drawable/rectangle_radius_20dp"
-            app:layout_constraintBottom_toBottomOf="@id/bottom_guideline"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/bottom_guideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_end="0dp" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/product_image_header"
-            style="@style/EditableCategoryStyle"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/standard_input_item_height"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:paddingTop="8dp"
-            android:text="@string/product_image"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toTopOf="@id/product_image"
-            app:layout_constraintEnd_toEndOf="@id/product_image_border"
-            app:layout_constraintStart_toStartOf="@id/product_image_border"
-            app:layout_constraintTop_toTopOf="@id/product_image_border"
-            app:layout_constraintVertical_chainStyle="spread_inside" />
-
         <ImageView
             android:id="@+id/product_image"
             android:layout_width="0dp"
@@ -72,15 +33,15 @@
             android:layout_marginBottom="8dp"
             android:contentDescription="@string/cd_picture_of_product"
             app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintBottom_toTopOf="@id/add_web_image_url_label"
-            app:layout_constraintEnd_toEndOf="@id/product_image_border"
-            app:layout_constraintStart_toStartOf="@id/product_image_border"
-            app:layout_constraintTop_toBottomOf="@id/product_image_header"
             app:localLargeImageUri='@{imageModel.localLargeImageUri}'
             app:remoteLargeImageUri='@{imageModel.remoteLargeImageUri}'
             app:webImageUrl='@{imageModel.webImageUrl}'
-            tools:src="@drawable/placeholder">
-        </ImageView>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/add_web_image_url_label"
+            tools:src="@drawable/placeholder"
+            />
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/camera_button"
@@ -113,21 +74,6 @@
             app:layout_constraintBottom_toBottomOf="@id/product_image"
             app:layout_constraintEnd_toEndOf="@+id/product_image" />
 
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/launch_browser_button"
-            android:layout_width="@dimen/image_button_height"
-            android:layout_height="@dimen/image_button_width"
-            android:layout_marginEnd="8dp"
-            android:backgroundTint="@color/textColorHighlight"
-            android:contentDescription="@string/cd_launch_browser_to_get_image_url"
-            android:elevation="@dimen/standard_margin"
-            android:onClick='@{() -> imageViewModel.launchBrowser()}'
-            android:src="@drawable/ic_open_in_browser_vector"
-            android:tint="@color/white"
-            app:layout_constraintBottom_toBottomOf="@+id/editable_image_web_url"
-            app:layout_constraintEnd_toEndOf="@+id/product_image"
-            app:layout_constraintTop_toTopOf="@+id/editable_image_web_url" />
-
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/add_web_image_url_label"
             style="@style/EditableCategoryStyle"
@@ -137,10 +83,11 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:text="@string/add_web_image_url"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@id/editable_image_web_url"
-            app:layout_constraintEnd_toEndOf="@id/product_image_border"
-            app:layout_constraintStart_toStartOf="@id/product_image_border"
-            app:layout_constraintTop_toBottomOf="@id/product_image" />
+            app:layout_constraintTop_toBottomOf="@id/product_image"
+            />
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/editable_image_web_url"
@@ -152,9 +99,26 @@
             android:hint="@string/hint_web_image_url"
             android:lines="2"
             android:text='@={imageModel.webImageUrl}'
-            app:layout_constraintBottom_toBottomOf="@id/product_image_border"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/launch_browser_button"
-            app:layout_constraintStart_toStartOf="@id/product_image_border" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/launch_browser_button"
+            android:layout_width="@dimen/image_button_height"
+            android:layout_height="@dimen/image_button_width"
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="@color/textColorHighlight"
+            android:contentDescription="@string/cd_launch_browser_to_get_image_url"
+            android:elevation="@dimen/standard_margin"
+            android:onClick='@{() -> imageViewModel.launchBrowser()}'
+            android:src="@drawable/ic_open_in_browser_vector"
+            android:tint="@color/white"
+            app:layout_constraintTop_toTopOf="@+id/editable_image_web_url"
+            app:layout_constraintBottom_toBottomOf="@+id/editable_image_web_url"
+            app:layout_constraintEnd_toEndOf="@+id/product_image"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
 

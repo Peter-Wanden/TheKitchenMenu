@@ -10,7 +10,6 @@
 
         <import type="android.view.View" />
         <import type="com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtypeConverter" />
-        <!--TODO - replace with NumberFormat as number format ### should not show zero -->
         <import type="com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtype"/>
 
         <variable
@@ -27,97 +26,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/measurement_border"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:src="@drawable/rectangle_radius_20dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/product_measurement_parent"/>
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/product_identity_header"
-            style="@style/EditableCategoryStyle"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/standard_input_item_height"
-            android:paddingTop="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:contentDescription="@string/hint_pack_size"
-            android:text="@string/product_size_options"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="@id/measurement_border"
-            app:layout_constraintStart_toStartOf="@id/measurement_border"
-            app:layout_constraintTop_toTopOf="@id/measurement_border" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/items_in_pack_label"
-            style="@style/EditableCategoryStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:text="@string/label_number_of_packs"
-            app:layout_constraintEnd_toEndOf="@id/measurement_border"
-            app:layout_constraintStart_toStartOf="@id/measurement_border"
-            app:layout_constraintTop_toBottomOf="@id/product_identity_header"/>
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/multi_pack_minus"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:layout_marginEnd="8dp"
-            android:onClick='@{() -> viewModel.minusOneFromNumberOfItems()}'
-            android:text="@string/minus_sign"
-            app:layout_constraintBottom_toBottomOf="@id/editable_items_in_pack"
-            app:layout_constraintEnd_toStartOf="@id/editable_items_in_pack"
-            app:layout_constraintTop_toTopOf="@id/editable_items_in_pack" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/editable_items_in_pack"
-            style="@style/EditableFieldStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/standard_input_item_height"
-            android:layout_marginTop="8dp"
-            android:gravity="center"
-            android:inputType="number"
-            android:nextFocusForward="@id/spinner_unit_of_measure"
-            android:text='@{`` + viewModel.numberOfProducts}'
-            app:layout_constraintEnd_toEndOf="@id/items_in_pack_label"
-            app:layout_constraintStart_toStartOf="@id/items_in_pack_label"
-            app:layout_constraintTop_toBottomOf="@id/items_in_pack_label"
-            tools:text="5" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/multi_pack_plus"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:layout_marginStart="8dp"
-            android:onClick="@{() -> viewModel.addOneToNumberOfItems()}"
-            android:text="@string/plus_sign"
-            app:layout_constraintBottom_toBottomOf="@id/editable_items_in_pack"
-            app:layout_constraintStart_toEndOf="@id/editable_items_in_pack"
-            app:layout_constraintTop_toTopOf="@id/editable_items_in_pack" />
-
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/unit_of_measure_label"
             style="@style/EditableCategoryStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="8dp"
             android:layout_marginStart="8dp"
             android:text="@string/unit_of_measure_label"
-            app:layout_constraintStart_toStartOf="@id/measurement_border"
-            app:layout_constraintEnd_toEndOf="@id/measurement_border"
-            app:layout_constraintTop_toBottomOf="@id/editable_items_in_pack" />
+            app:layout_constraintTop_toTopOf="@id/spinner_unit_of_measure"
+            app:layout_constraintBottom_toBottomOf="@id/spinner_unit_of_measure"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/spinner_unit_of_measure"
+            />
 
         <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/spinner_unit_of_measure"
@@ -127,13 +47,84 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:spinnerMode="dropdown"
             android:dropDownWidth="wrap_content"
             android:selectedItemPosition="@={MeasurementSubtypeConverter.toInt(viewModel.subtype)}"
-            app:layout_constraintEnd_toEndOf="@id/measurement_border"
-            app:layout_constraintStart_toStartOf="@id/measurement_border"
-            app:layout_constraintTop_toBottomOf="@id/unit_of_measure_label">
-        </androidx.appcompat.widget.AppCompatSpinner>
+            android:spinnerMode="dropdown"
+            app:layout_constraintStart_toEndOf="@id/unit_of_measure_label"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/multi_pack_label"
+            style="@style/EditableCategoryStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_multi_pack"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintTop_toTopOf="@id/multi_pack_checkBox"
+            app:layout_constraintBottom_toBottomOf="@id/multi_pack_checkBox"
+            app:layout_constraintEnd_toStartOf="@id/multi_pack_checkBox"
+            app:layout_constraintStart_toStartOf="parent"
+            />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/multi_pack_checkBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/spinner_unit_of_measure"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/multi_pack_label"
+            />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/products_in_pack_label"
+            style="@style/EditableCategoryStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/label_number_of_packs"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/multi_pack_label" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/multi_pack_minus"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginEnd="8dp"
+            android:onClick="@{() -> viewModel.minusOneFromNumberOfProducts()}"
+            android:text="@string/minus_sign"
+            app:layout_constraintBottom_toBottomOf="@id/editable_products_in_pack"
+            app:layout_constraintEnd_toStartOf="@id/editable_products_in_pack"
+            app:layout_constraintTop_toTopOf="@id/editable_products_in_pack" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/editable_products_in_pack"
+            style="@style/EditableFieldStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/standard_input_item_height"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:inputType="number"
+            android:text='@{`` + viewModel.numberOfProducts}'
+            app:layout_constraintEnd_toEndOf="@id/products_in_pack_label"
+            app:layout_constraintStart_toStartOf="@id/products_in_pack_label"
+            app:layout_constraintTop_toBottomOf="@id/products_in_pack_label"
+            tools:text="5" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/multi_pack_plus"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginStart="8dp"
+            android:onClick="@{() -> viewModel.addOneToNumberOfProducts()}"
+            android:text="@string/plus_sign"
+            app:layout_constraintBottom_toBottomOf="@id/editable_products_in_pack"
+            app:layout_constraintStart_toEndOf="@id/editable_products_in_pack"
+            app:layout_constraintTop_toTopOf="@id/editable_products_in_pack" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/pack_size_label"
@@ -142,46 +133,52 @@
             android:layout_height="@dimen/standard_input_item_height"
             android:layout_marginStart="8dp"
             android:gravity="bottom"
-            android:paddingEnd="8dp"
             android:paddingStart="0dp"
+            android:paddingEnd="8dp"
             android:paddingBottom="12dp"
-            app:layout_constraintBottom_toTopOf="@id/item_size_label"
-            app:layout_constraintStart_toStartOf="@id/measurement_border"
-            app:layout_constraintTop_toBottomOf="@id/spinner_unit_of_measure"
-            app:layout_constraintVertical_chainStyle="spread_inside"
+            app:layout_constraintBottom_toTopOf="@id/product_size_label"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/editable_products_in_pack"
             app:setLabelForSubtypeSelected="@{viewModel.subtype}"
             tools:text="@string/pack_size_label" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/item_size_label"
+            android:id="@+id/product_size_label"
             style="@style/EditableCategoryStyle"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="@dimen/standard_input_item_height"
             android:layout_marginStart="8dp"
-            android:paddingBottom="4dp"
             android:gravity="bottom"
-            app:layout_constraintTop_toBottomOf="@id/pack_size_label"
-            app:layout_constraintStart_toStartOf="@id/measurement_border"
+            android:paddingBottom="4dp"
             android:visibility="@{(viewModel.numberOfProducts > 1) ? View.VISIBLE : View.INVISIBLE}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/pack_size_label"
+            app:layout_constraintEnd_toStartOf="@id/product_measurement_parent"
             app:setLabelForSubtypeSelected="@{viewModel.subtype}"
-            tools:text="@string/item_size_label" />
+            tools:text="@string/product_size_label" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/product_measurement_parent"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/spinner_unit_of_measure"
-            app:layout_constraintEnd_toEndOf="@id/measurement_border"
-            app:layout_constraintStart_toEndOf="@id/pack_size_label">
+            app:layout_constraintStart_toEndOf="@id/product_size_label"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/editable_products_in_pack"
+            >
 
             <include
-                android:id="@+id/product_measurement_two_units"
+                android:id="@+id/product_measurement_units"
                 layout="@layout/product_editor_measurement_units"
-                app:layout_constraintBottom_toBottomOf="@id/product_measurement_parent"
-                app:layout_constraintEnd_toEndOf="@id/product_measurement_parent"
-                app:layout_constraintStart_toStartOf="@id/product_measurement_parent"
-                bind:viewModel="@{viewModel}"
-                bind:measurementHandler="@{measurementHandler}"/>
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                bind:measurementHandler="@{measurementHandler}"
+                bind:viewModel="@{viewModel}" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

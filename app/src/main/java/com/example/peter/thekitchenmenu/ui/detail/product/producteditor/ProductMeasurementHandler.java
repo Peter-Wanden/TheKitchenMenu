@@ -20,7 +20,7 @@ public class ProductMeasurementHandler {
         int integerMeasurement;
 
         if (viewId == R.id.pack_editable_measurement_one ||
-                viewId == R.id.item_editable_measurement_one) {
+                viewId == R.id.product_editable_measurement_one) {
             decimalMeasurement = parseDecimalFromString(editableMeasurement);
             if (decimalMeasurement == MEASUREMENT_ERROR) return;
             viewModel.newDecimalMeasurementReceived(viewId, decimalMeasurement);

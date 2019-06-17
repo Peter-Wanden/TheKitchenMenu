@@ -9,7 +9,7 @@ public interface UnitOfMeasure {
     MeasurementSubtype getMeasurementSubtype();
 
     double getBaseUnits();
-    boolean baseUnitsAreSet(double baseSiUnits);
+    boolean baseUnitsAreSet(double baseUnits);
 
     int getNumberOfProducts();
     boolean numberOfProductsIsSet(int numberOfProducts);

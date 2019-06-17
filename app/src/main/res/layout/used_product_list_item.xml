@@ -112,8 +112,35 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 tools:text="£24.99"
-                android:text="@{`` + usedProduct.usedProduct.price}"
+                app:stringToCurrency="@{usedProduct.usedProduct.price}"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/used_product_list_item_last_updated_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:textColor="@color/grey"
+                android:paddingBottom="8dp"
+                app:layout_constraintTop_toTopOf="@id/used_product_list_item_price"
+                app:layout_constraintBottom_toBottomOf="@id/used_product_list_item_price"
+                app:layout_constraintStart_toEndOf="@id/used_product_list_item_price"
+                android:text="@string/lasUpdated"
                 />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/used_product_list_item_last_updated_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="8dp"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:textColor="@color/grey"
+                app:layout_constraintBottom_toBottomOf="@id/used_product_list_item_price"
+                app:layout_constraintStart_toEndOf="@+id/used_product_list_item_last_updated_label"
+                app:layout_constraintTop_toTopOf="@id/used_product_list_item_price"
+                tools:text="01 Apr 2019"
+                app:longToDate="@{usedProduct.usedProduct.lastUpdate}"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

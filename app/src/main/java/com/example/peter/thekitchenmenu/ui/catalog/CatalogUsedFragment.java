@@ -34,15 +34,12 @@ public class CatalogUsedFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, "onResume: called");
 
         viewModel.getUsedProducts().observe(requireActivity(), usedProductsDataModels -> {
             if (usedProductsDataModels != null) {
                 adapter.setUsedProductDataModels(usedProductsDataModels);
 
-                for (UsedProductDataModel model : usedProductsDataModels) {
-                    Log.d(TAG, "onResume: Looping through used products: " + model.getProduct().getDescription());
-                }
+                Log.d(TAG, "onResume: used product size=" + usedProductsDataModels.size());
             }
         });
         viewModel.loadUsedProducts();

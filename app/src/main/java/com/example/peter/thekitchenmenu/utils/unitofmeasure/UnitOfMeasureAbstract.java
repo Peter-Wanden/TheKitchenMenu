@@ -217,18 +217,18 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
 
     @Override
     public boolean packMeasurementTwoIsSet(int newPackMeasurementTwo) {
-        if (baseUnitsAreSet(baseSiUnitsWithPackMeasurementTwo(newPackMeasurementTwo))) {
+        if (baseUnitsAreSet(baseUnitsWithPackMeasurementTwo(newPackMeasurementTwo))) {
             lastMeasurementUpdated = PACK_MEASUREMENT_LAST_UPDATED;
             return true;
 
         } else {
-            baseUnitsAreSet(baseSiUnitsWithPackMeasurementTwo(0));
+            baseUnitsAreSet(baseUnitsWithPackMeasurementTwo(0));
             lastMeasurementUpdated = PACK_MEASUREMENT_LAST_UPDATED;
             return false;
         }
     }
 
-    private double baseSiUnitsWithPackMeasurementTwo(int packMeasurementTwo) {
+    private double baseUnitsWithPackMeasurementTwo(int packMeasurementTwo) {
         return packMeasurementTwo * UNIT_TWO + packMeasurementOne;
     }
 

@@ -83,7 +83,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:hint="@string/hint_price"
-            android:text='@={`` + viewModel.price}'
+            android:text='@={viewModel.price}'
             android:inputType="numberDecimal"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

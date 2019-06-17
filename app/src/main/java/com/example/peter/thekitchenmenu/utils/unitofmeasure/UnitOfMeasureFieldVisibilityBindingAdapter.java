@@ -1,5 +1,6 @@
 package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
+import android.util.Log;
 import android.view.View;
 
 import com.example.peter.thekitchenmenu.R;
@@ -8,39 +9,25 @@ import androidx.databinding.BindingAdapter;
 
 public class UnitOfMeasureFieldVisibilityBindingAdapter {
 
-    private static final String TAG = "UnitOfMeasureFieldVisib";
+    private static final String TAG = "tkm-FieldVisibility";
 
-    @BindingAdapter(
-            value = {"fieldVisibilityAdapterNumberOfUnits", "fieldVisibilityAdapterNumberOfItems"},
-            requireAll = false)
-    public static void fieldVisibility(View view, int numberOfUnits, int numberOfItems) {
+    @BindingAdapter(value = {"fieldVisibilityAdapterNumberOfProducts"})
+    public static void fieldVisibility(View view, int numberOfProducts) {
+        Log.d(TAG, "fieldVisibility: view=" + view.getResources().getResourceEntryName(view.getId()));
+        Log.d(TAG, "fieldVisibility: noOfProducts=" + numberOfProducts);
 
-        setViewVisibility(view, numberOfUnits, numberOfItems);
+        setViewVisibility(view, numberOfProducts);
     }
 
-    private static void setViewVisibility(View view, int numberOfUnits, int numberOfItems) {
+    private static void setViewVisibility(View view, int numberOfProducts) {
         int viewId = view.getId();
 
-        if (
-                viewId == R.id.item_editable_measurement_one ||
-                viewId == R.id.item_measurement_label_one) {
+        if (    viewId == R.id.product_editable_measurement_one ||
+                viewId == R.id.product_editable_measurement_two ||
+                viewId == R.id.product_measurement_label_one ||
+                viewId == R.id.product_measurement_label_two) {
 
-            view.setVisibility(
-                    numberOfItems > 1 ? View.VISIBLE : View.INVISIBLE);
+            view.setVisibility(numberOfProducts > 1 ? View.VISIBLE : View.INVISIBLE);
         }
-
-        if (
-                viewId == R.id.pack_editable_measurement_two ||
-                viewId == R.id.pack_measurement_label_two)
-
-            view.setVisibility(
-                    numberOfUnits > 1 ? View.VISIBLE : View.INVISIBLE);
-
-        if (
-                viewId == R.id.item_editable_measurement_two ||
-                viewId == R.id.item_measurement_label_two)
-
-            view.setVisibility(
-                    numberOfItems > 1 && numberOfUnits == 2 ? View.VISIBLE : View.INVISIBLE);
     }
 }

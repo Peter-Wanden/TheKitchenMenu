@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.UsedProductEditorFragmentBinding;
+import com.example.peter.thekitchenmenu.utils.CurrencyInputWatcher;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.annotation.NonNull;
@@ -43,6 +44,7 @@ public class UsedProductEditorFragment extends Fragment {
         loadData();
         subscribeToEvents();
         setUpFab();
+        setUpPricingInput();
     }
 
     private void loadData() {
@@ -112,5 +114,9 @@ public class UsedProductEditorFragment extends Fragment {
 
     private void setBindingInstanceVariables() {
         binding.setViewModel(viewModel);
+    }
+
+    private void setUpPricingInput() {
+        binding.editablePrice.addTextChangedListener(new CurrencyInputWatcher(binding.editablePrice));
     }
 }
