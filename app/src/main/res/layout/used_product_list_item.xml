@@ -37,7 +37,7 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/used_product_list_item_description"
+                android:id="@+id/product_list_item_description"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:ellipsize="marquee"
@@ -49,7 +49,7 @@
                 android:paddingTop="@dimen/list_item_top_half_margin"
                 android:textAppearance="?android:textAppearanceMedium"
                 android:textColor="@color/darkGrey"
-                app:layout_constraintEnd_toStartOf="@+id/used_product_list_item_product_image"
+                app:layout_constraintEnd_toStartOf="@+id/product_list_item_image"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Cirio canned chopped tomatoes"
@@ -57,7 +57,7 @@
                 />
 
             <ImageView
-                android:id="@+id/used_product_list_item_product_image"
+                android:id="@+id/product_list_item_image"
                 android:contentDescription="@string/cd_picture_of_product"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
@@ -72,7 +72,7 @@
                 app:remoteSmallImageUri='@{usedProduct.product.remoteSmallImageUri}' />
 
             <TextView
-                android:id="@+id/used_product_list_item_pack_size"
+                android:id="@+id/product_list_item_pack_size"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif"
@@ -81,12 +81,12 @@
                 android:textAppearance="?android:textAppearanceSmall"
                 android:textColor="@color/grey"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/used_product_list_item_description"
+                app:layout_constraintTop_toBottomOf="@+id/product_list_item_description"
                 tools:text="400"
                 android:text="@{`` + usedProduct.product.baseUnits}"/>
 
             <TextView
-                android:id="@+id/used_product_list_item_label_unit_of_measure"
+                android:id="@+id/product_list_item_label_unit_of_measure"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif"
@@ -94,8 +94,8 @@
                 android:paddingEnd="@dimen/list_item_top_half_margin"
                 android:textAppearance="?android:textAppearanceSmall"
                 android:textColor="@color/grey"
-                app:layout_constraintStart_toEndOf="@+id/used_product_list_item_pack_size"
-                app:layout_constraintTop_toBottomOf="@+id/used_product_list_item_description"
+                app:layout_constraintStart_toEndOf="@+id/product_list_item_pack_size"
+                app:layout_constraintTop_toBottomOf="@+id/product_list_item_description"
                 tools:text="ml"
                 android:text="@{`` + usedProduct.product.unitOfMeasureSubtype}"/>
 

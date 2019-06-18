@@ -53,7 +53,6 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
     private void subscribeToNavigationChanges() {
         productEditorViewModel.getEditingCompleteEvent().observe(this, aVoid -> {
             ProductEditorActivity.this.onProductSaved();
-            Log.d(TAG, "subscribeToNavigationChanges: Product saved");
         });
     }
 
@@ -124,7 +123,6 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
 
         productEditorViewModel.getExistingProductEntity().observe(this, productObserver);
 
-        // TODO - Observe the Models values - report them back ProductEditorViewModel
         final Observer<ImageModel> imageModelObserver = imageModel ->
                 productEditorViewModel.setUpdatedImageModel(imageModel);
 
@@ -146,11 +144,12 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
 
     @Override
     public void reviewBeforeSave() {
-
+        // TODO - back to ProductViewer
     }
 
     @Override
     public void onProductSaved() {
+        // TODO - Add onActivityResult
         finish();
     }
 }

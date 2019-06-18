@@ -42,7 +42,7 @@
         <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/spinner_unit_of_measure"
             style="@style/spinner_style"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="@dimen/standard_input_item_height"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
@@ -51,7 +51,6 @@
             android:selectedItemPosition="@={MeasurementSubtypeConverter.toInt(viewModel.subtype)}"
             android:spinnerMode="dropdown"
             app:layout_constraintStart_toEndOf="@id/unit_of_measure_label"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             />
 
@@ -60,11 +59,10 @@
             style="@style/EditableCategoryStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:text="@string/label_multi_pack"
-            app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintTop_toTopOf="@id/multi_pack_checkBox"
             app:layout_constraintBottom_toBottomOf="@id/multi_pack_checkBox"
-            app:layout_constraintEnd_toStartOf="@id/multi_pack_checkBox"
             app:layout_constraintStart_toStartOf="parent"
             />
 
@@ -72,9 +70,11 @@
             android:id="@+id/multi_pack_checkBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:textColorHighlight="@color/textColorHighlight"
             app:layout_constraintTop_toBottomOf="@id/spinner_unit_of_measure"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/multi_pack_label"
+            android:checked="@={viewModel.multiPack}"
             />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -86,9 +86,11 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:text="@string/label_number_of_packs"
+            android:visibility="@{viewModel.numberOfProducts > 1 ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/multi_pack_label" />
+            app:layout_constraintTop_toBottomOf="@id/multi_pack_label"
+            />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/multi_pack_minus"
@@ -99,7 +101,9 @@
             android:text="@string/minus_sign"
             app:layout_constraintBottom_toBottomOf="@id/editable_products_in_pack"
             app:layout_constraintEnd_toStartOf="@id/editable_products_in_pack"
-            app:layout_constraintTop_toTopOf="@id/editable_products_in_pack" />
+            app:layout_constraintTop_toTopOf="@id/editable_products_in_pack"
+            android:visibility="@{viewModel.numberOfProducts > 1 ? View.VISIBLE : View.GONE}"
+            />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/editable_products_in_pack"
@@ -110,10 +114,12 @@
             android:gravity="center"
             android:inputType="number"
             android:text='@{`` + viewModel.numberOfProducts}'
+            android:visibility="@{viewModel.numberOfProducts > 1 ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toEndOf="@id/products_in_pack_label"
             app:layout_constraintStart_toStartOf="@id/products_in_pack_label"
             app:layout_constraintTop_toBottomOf="@id/products_in_pack_label"
-            tools:text="5" />
+            tools:text="5"
+            />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/multi_pack_plus"
@@ -121,10 +127,12 @@
             android:layout_height="42dp"
             android:layout_marginStart="8dp"
             android:onClick="@{() -> viewModel.addOneToNumberOfProducts()}"
+            android:visibility="@{viewModel.numberOfProducts > 1 ? View.VISIBLE : View.GONE}"
             android:text="@string/plus_sign"
             app:layout_constraintBottom_toBottomOf="@id/editable_products_in_pack"
             app:layout_constraintStart_toEndOf="@id/editable_products_in_pack"
-            app:layout_constraintTop_toTopOf="@id/editable_products_in_pack" />
+            app:layout_constraintTop_toTopOf="@id/editable_products_in_pack"
+            />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/pack_size_label"

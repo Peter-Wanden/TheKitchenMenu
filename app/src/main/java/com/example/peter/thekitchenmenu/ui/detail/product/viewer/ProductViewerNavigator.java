@@ -5,7 +5,7 @@ package com.example.peter.thekitchenmenu.ui.detail.product.viewer;
  */
 public interface ProductViewerNavigator {
 
-    void editProduct();
+    void editProduct(String productId);
 
     void deleteUsedProduct();
 

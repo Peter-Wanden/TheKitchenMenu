@@ -138,8 +138,9 @@ public class ProductViewerActivity extends AppCompatActivity implements ProductV
     }
 
     @Override
-    public void editProduct() {
+    public void editProduct(String productId) {
         // Navigate to ProductEditor, with onActivityResult()
+
     }
 
     @Override

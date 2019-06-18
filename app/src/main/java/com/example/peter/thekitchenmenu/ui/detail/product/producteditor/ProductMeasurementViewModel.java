@@ -26,9 +26,7 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
     private UnitOfMeasure unitOfMeasure;
     private int numberOfMeasurementUnits;
     private int numberOfProducts;
-
-    private SingleLiveEvent<Void> setDisplayToOneMeasurementUnitEvent = new SingleLiveEvent<>();
-    private SingleLiveEvent<Void> setDisplayToTwoMeasurementUnitsEvent = new SingleLiveEvent<>();
+    private boolean multiPack;
 
     private String packMeasurementOne;
     private String productMeasurementOne;
@@ -76,22 +74,29 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
 
     @Bindable
     public int getNumberOfMeasurementUnits() {
-        if (numberOfMeasurementUnits == 1) setDisplayToOneMeasurementUnitEvent.call();
-        if (numberOfMeasurementUnits == 2) setDisplayToTwoMeasurementUnitsEvent.call();
         return numberOfMeasurementUnits;
-    }
-
-    public SingleLiveEvent<Void> getSetDisplayToOneMeasurementUnitEvent() {
-        return setDisplayToOneMeasurementUnitEvent;
-    }
-
-    public SingleLiveEvent<Void> getSetDisplayToTwoMeasurementUnitsEvent() {
-        return setDisplayToTwoMeasurementUnitsEvent;
     }
 
     @Bindable
     public int getNumberOfProducts() {
+        Log.d(TAG, "getNumberOfProducts: NoOfProducts=" + numberOfProducts);
         return numberOfProducts;
+    }
+
+    @Bindable
+    public boolean isMultiPack() {
+        return multiPack;
+    }
+
+    public void setMultiPack(boolean multiPack) {
+        if (this.multiPack != multiPack) {
+
+            Log.d(TAG, "setMultiPack: " + multiPack);
+            this.multiPack = multiPack;
+            if (multiPack && unitOfMeasure.getNumberOfProducts() == 1) addOneToNumberOfProducts();
+            if (!multiPack) setNumberOfProducts(1);
+            notifyPropertyChanged(BR.multiPack);
+        }
     }
 
     public void addOneToNumberOfProducts() {
@@ -104,8 +109,13 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
 
     public void setNumberOfProducts(int numberOfProducts) {
         if (newNumberOfProductsReceived(numberOfProducts))
-            if (canChangeToNewNumberOfProducts(numberOfProducts)) updateUi(); // with new value
-                // if required, add error message here
+            if (canChangeToNewNumberOfProducts(numberOfProducts)) {
+                // TODO - do we need to update multiPack bool here?
+                if (numberOfProducts == 1) setMultiPack(false);
+                else setMultiPack(true);
+                updateUi(); // with new value
+            }
+            // if required, add error message here
             else updateUi(); // with old value
     }
 
@@ -267,6 +277,6 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
         if (unitOfMeasure.isValidMeasurement()) {
             getMeasurementModel().setValue(modelOut);
             Log.d(TAG, "updateMeasurementModel: model isValid:" + modelOut.toString());
-        } else Log.d(TAG, "updateMeasurementModel: model isNotValid");
+        } else Log.d(TAG, "updateMeasurementModel: model isNotValid:" + modelOut.toString());
     }
 }

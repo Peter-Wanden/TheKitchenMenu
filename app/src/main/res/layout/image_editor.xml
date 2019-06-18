@@ -32,10 +32,10 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:contentDescription="@string/cd_picture_of_product"
-            app:layout_constraintDimensionRatio="1:1"
             app:localLargeImageUri='@{imageModel.localLargeImageUri}'
             app:remoteLargeImageUri='@{imageModel.remoteLargeImageUri}'
             app:webImageUrl='@{imageModel.webImageUrl}'
+            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"

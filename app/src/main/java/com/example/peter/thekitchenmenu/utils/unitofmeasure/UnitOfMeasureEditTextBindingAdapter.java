@@ -25,16 +25,22 @@ public class UnitOfMeasureEditTextBindingAdapter {
         int digitsAfterDecimal = (int) unitOfMeasure.getMeasurementUnitDigitLengthArray()[0].second;
 
         if (viewId == R.id.pack_editable_measurement_one && digitsAfterDecimal > 0 ||
-                viewId == R.id.product_editable_measurement_one && digitsAfterDecimal > 0)
-            editText.setInputType(TYPE_CLASS_NUMBER | TYPE_NUMBER_FLAG_DECIMAL);
+                viewId == R.id.product_editable_measurement_one && digitsAfterDecimal > 0) {
 
-        else editText.setInputType(TYPE_CLASS_NUMBER);
+            editText.setInputType(TYPE_CLASS_NUMBER | TYPE_NUMBER_FLAG_DECIMAL);
+        }
+
+        else {
+            editText.setInputType(TYPE_CLASS_NUMBER);
+        }
 
         if (viewId == R.id.pack_editable_measurement_one ||
                 viewId == R.id.product_editable_measurement_one ||
                 viewId == R.id.pack_editable_measurement_two && units > 1 ||
-                viewId == R.id.product_editable_measurement_two && units > 1)
+                viewId == R.id.product_editable_measurement_two && units > 1) {
+
             setInputFilters(viewId, editText, unitOfMeasure);
+        }
     }
 
     private static void setInputFilters(int viewId,
@@ -43,13 +49,16 @@ public class UnitOfMeasureEditTextBindingAdapter {
         Pair[] inputDigitsFilters = unitOfMeasure.getMeasurementUnitDigitLengthArray();
 
         if (viewId == R.id.pack_editable_measurement_one ||
-                viewId == R.id.product_editable_measurement_one)
+                viewId == R.id.product_editable_measurement_one) {
+
             editText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(
-                            (int) inputDigitsFilters[0].first,
-                            (int) inputDigitsFilters[0].second)});
+                    (int) inputDigitsFilters[0].first,
+                    (int) inputDigitsFilters[0].second)});
+        }
 
         if (viewId == R.id.pack_editable_measurement_two ||
                 viewId == R.id.product_editable_measurement_two) {
+
             editText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(
                             (int) inputDigitsFilters[1].first,
                             (int) inputDigitsFilters[1].second)});

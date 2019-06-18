@@ -1,6 +1,7 @@
 package com.example.peter.thekitchenmenu.ui.detail.product.viewer;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,8 @@ import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.ProductViewerDetailFragmentBinding;
 
 public class ProductViewerFragment extends Fragment {
+
+    private static final String TAG = "tkm-ProductViewerFrag";
 
     public static final String ARGUMENT_PRODUCT_ID = "PRODUCT_ID";
 
