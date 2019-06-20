@@ -38,12 +38,11 @@ public class CatalogAllFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        viewModel.getProducts().observe(requireActivity(), products -> {
-            if (products != null) {
-                adapter.setProducts(products);
+        viewModel.getProductModels().observe(requireActivity(), productModels -> {
+            if (productModels != null) {
+                adapter.setProductModels(productModels);
             }
         });
-        viewModel.loadAllProducts();
     }
 
     @Nullable

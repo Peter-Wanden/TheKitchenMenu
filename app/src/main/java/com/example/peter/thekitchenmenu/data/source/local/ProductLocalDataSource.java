@@ -45,7 +45,7 @@ public class ProductLocalDataSource implements ProductDataSource {
         Runnable getAllProductsRunnable = () -> {
             final List<ProductEntity> products = productDao.getAll();
             appExecutors.mainThread().execute(() -> {
-                if (products.isEmpty()) callback.onDataNotAvailable(); // if new table or empty
+                if (products.isEmpty()) callback.onDataNotAvailable(); // if new or empty table
                 else callback.onProductsLoaded(products);
             });
         };

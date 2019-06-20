@@ -27,7 +27,7 @@ public abstract class Constants {
      *********************/
     public static final String REMOTE_PRODUCT_LOCATION = "/collection_products/";
     public static final String REMOTE_USER_LOCATION = "/collection_users/";
-    public static final String FB_COLLECTION_USED_PRODUCTS = "/collection_used_products";
+    public static final String FB_COLLECTION_FAVORITE_PRODUCTS = "/collection_favorite_products";
     public static final int REQUEST_CODE_SIGN_IN = 5;
     public static final String FB_STORAGE_IMAGE_REFERENCE = "/collection_product_images/";
 

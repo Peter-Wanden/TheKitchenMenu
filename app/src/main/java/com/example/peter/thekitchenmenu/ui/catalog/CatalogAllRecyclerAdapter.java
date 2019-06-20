@@ -5,6 +5,7 @@ import android.view.ViewGroup;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
+import com.example.peter.thekitchenmenu.data.model.ProductModel;
 import com.example.peter.thekitchenmenu.databinding.ProductListItemBinding;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public class CatalogAllRecyclerAdapter
     private static final String TAG = "tkm-CatalogAdapter";
 
     private final CatalogProductsViewModel viewModel;
-    private List<ProductEntity> productList;
+    private List<ProductModel> productModelList;
 
     CatalogAllRecyclerAdapter(CatalogProductsViewModel viewModel) {
         this.viewModel = viewModel;
@@ -41,23 +42,23 @@ public class CatalogAllRecyclerAdapter
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        final ProductEntity product = productList.get(position);
-        holder.bind(product);
+        final ProductModel productModel = productModelList.get(position);
+        holder.bind(productModel);
     }
 
     @Override
     public int getItemCount() {
-        if (productList == null) return 0;
-        return productList.size();
+        if (productModelList == null) return 0;
+        return productModelList.size();
     }
 
     /* Getter for the current list of products */
-    public List<ProductEntity> getProducts() {
-        return productList;
+    public List<ProductModel> getProducts() {
+        return productModelList;
     }
 
-    public void setProducts(List<ProductEntity> productList) {
-        this.productList = productList;
+    public void setProductModels(List<ProductModel> productModelList) {
+        this.productModelList = productModelList;
         notifyDataSetChanged();
     }
 
@@ -65,16 +66,30 @@ public class CatalogAllRecyclerAdapter
     class ViewHolder extends RecyclerView.ViewHolder {
         ProductListItemBinding binding;
 
-        ProductItemUserActionsListener listener = product ->
-                viewModel.getOpenProductEvent().setValue(product.getId());
+        ProductItemUserActionsListener listener = new ProductItemUserActionsListener() {
+            @Override
+            public void onProductClicked(ProductModel productModel) {
+                viewModel.getOpenProductEvent().setValue(productModel.getProduct().getId());
+            }
+
+            @Override
+            public void onAddToFavoritesClicked(ProductModel productModel) {
+                viewModel.getAddToFavoritesEvent().setValue(productModel.getProduct().getId());
+            }
+
+            @Override
+            public void onRemoveFromFavoritesClicked(ProductModel productModel) {
+                viewModel.removeFromFavorites(productModel.getProduct().getId());
+            }
+        };
 
         ViewHolder(ProductListItemBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
 
-        void bind(ProductEntity product) {
-            binding.setProduct(product);
+        void bind(ProductModel product) {
+            binding.setProductModel(product);
             binding.setListener(listener);
             binding.executePendingBindings();
         }

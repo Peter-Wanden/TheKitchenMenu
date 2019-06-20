@@ -2,15 +2,13 @@ package com.example.peter.thekitchenmenu.ui.catalog;
 
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.peter.thekitchenmenu.R;
 
-import com.example.peter.thekitchenmenu.data.model.UsedProductDataModel;
-import com.example.peter.thekitchenmenu.databinding.ProductCatalogUsedFragmentBinding;
+import com.example.peter.thekitchenmenu.databinding.ProductCatalogFavoritesFragmentBinding;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,29 +18,26 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class CatalogUsedFragment extends Fragment {
+public class CatalogFavoritesFragment extends Fragment {
 
-    private static final String TAG = "tkm-CatalogUsedFragment";
+    private static final String TAG = "tkm-CatalogFavFrag";
 
     private CatalogProductsViewModel viewModel;
-    private ProductCatalogUsedFragmentBinding binding;
-    private CatalogUsedRecyclerAdapter adapter;
+    private ProductCatalogFavoritesFragmentBinding binding;
+    private CatalogFavoritesRecyclerAdapter adapter;
 
-    public CatalogUsedFragment(){}
-    public CatalogUsedFragment newInstance() {return new CatalogUsedFragment();}
+    public CatalogFavoritesFragment(){}
+    public CatalogFavoritesFragment newInstance() {return new CatalogFavoritesFragment();}
 
     @Override
     public void onResume() {
         super.onResume();
 
-        viewModel.getUsedProducts().observe(requireActivity(), usedProductsDataModels -> {
-            if (usedProductsDataModels != null) {
-                adapter.setUsedProductDataModels(usedProductsDataModels);
-
-                Log.d(TAG, "onResume: used product size=" + usedProductsDataModels.size());
+        viewModel.getFavoriteProducts().observe(requireActivity(), favoriteProducts -> {
+            if (favoriteProducts != null) {
+                adapter.setFavoriteProductModels(favoriteProducts);
             }
         });
-        viewModel.loadUsedProducts();
     }
 
     @Nullable
@@ -53,7 +48,7 @@ public class CatalogUsedFragment extends Fragment {
 
         binding = DataBindingUtil.inflate(
                 inflater,
-                R.layout.product_catalog_used_fragment,
+                R.layout.product_catalog_favorites_fragment,
                 container,
                 false);
 
@@ -77,7 +72,7 @@ public class CatalogUsedFragment extends Fragment {
         }
 
         binding.fragmentCatalogProductsRv.setHasFixedSize(true);
-        adapter = new CatalogUsedRecyclerAdapter(viewModel);
+        adapter = new CatalogFavoritesRecyclerAdapter(viewModel);
         binding.fragmentCatalogProductsRv.setAdapter(adapter);
 
         return binding.getRoot();

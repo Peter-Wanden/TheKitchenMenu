@@ -14,9 +14,9 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.ProductViewerActivityBinding;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryProduct;
-import com.example.peter.thekitchenmenu.ui.ViewModelFactoryUsedProduct;
-import com.example.peter.thekitchenmenu.ui.detail.product.usedproducteditor.UsedProductEditorActivity;
-import com.example.peter.thekitchenmenu.ui.detail.product.usedproducteditor.UsedProductEditorFragment;
+import com.example.peter.thekitchenmenu.ui.ViewModelFactoryFavoriteProduct;
+import com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorActivity;
+import com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorFragment;
 import com.example.peter.thekitchenmenu.utils.ActivityUtils;
 
 public class ProductViewerActivity extends AppCompatActivity implements ProductViewerNavigator {
@@ -30,7 +30,7 @@ public class ProductViewerActivity extends AppCompatActivity implements ProductV
 
     private ProductViewerActivityBinding binding;
     private ProductViewerViewModel productViewerViewModel;
-    private UsedProductViewerViewModel usedProductViewerViewModel;
+    private FavoriteProductViewerViewModel favoriteProductViewerViewModel;
     private String productId;
 
     @Override
@@ -61,7 +61,7 @@ public class ProductViewerActivity extends AppCompatActivity implements ProductV
 
     private void setupViewModels() {
         productViewerViewModel = obtainProductViewerViewModel(this);
-        usedProductViewerViewModel = obtainUsedProductViewerViewModel(this);
+        favoriteProductViewerViewModel = obtainFavoriteProductViewerViewModel(this);
     }
 
     public static ProductViewerViewModel obtainProductViewerViewModel(
@@ -72,12 +72,12 @@ public class ProductViewerActivity extends AppCompatActivity implements ProductV
         return ViewModelProviders.of(activity, factory).get(ProductViewerViewModel.class);
     }
 
-    public static UsedProductViewerViewModel obtainUsedProductViewerViewModel(
+    public static FavoriteProductViewerViewModel obtainFavoriteProductViewerViewModel(
             FragmentActivity activity) {
 
-        ViewModelFactoryUsedProduct factory = ViewModelFactoryUsedProduct.getInstance(
+        ViewModelFactoryFavoriteProduct factory = ViewModelFactoryFavoriteProduct.getInstance(
                 activity.getApplication());
-        return ViewModelProviders.of(activity, factory).get(UsedProductViewerViewModel.class);
+        return ViewModelProviders.of(activity, factory).get(FavoriteProductViewerViewModel.class);
     }
 
     private void addFragments() {
@@ -90,13 +90,13 @@ public class ProductViewerActivity extends AppCompatActivity implements ProductV
                 productViewerFragment,
                 R.id.product_viewer_content_frame);
 
-        UsedProductViewerFragment usedProductViewerFragment =
-                findOrReplaceUsedProductViewerFragment(productId);
+        FavoriteProductViewerFragment favoriteProductViewerFragment =
+                findOrReplaceFavoriteProductViewerFragment(productId);
 
         ActivityUtils.replaceFragmentInActivity(
                 getSupportFragmentManager(),
-                usedProductViewerFragment,
-                R.id.used_product_viewer_content_frame);
+                favoriteProductViewerFragment,
+                R.id.favorite_product_viewer_content_frame);
     }
 
     @NonNull
@@ -110,25 +110,28 @@ public class ProductViewerActivity extends AppCompatActivity implements ProductV
     }
 
     @NonNull
-    private UsedProductViewerFragment findOrReplaceUsedProductViewerFragment(String productId) {
+    private FavoriteProductViewerFragment findOrReplaceFavoriteProductViewerFragment(String productId) {
 
-        UsedProductViewerFragment fragment = (UsedProductViewerFragment)
+        FavoriteProductViewerFragment fragment = (FavoriteProductViewerFragment)
                 getSupportFragmentManager().findFragmentById(
-                        R.id.used_product_viewer_content_frame);
+                        R.id.favorite_product_viewer_content_frame);
 
-        if (fragment == null) fragment = UsedProductViewerFragment.newInstance(productId);
+        if (fragment == null) fragment = FavoriteProductViewerFragment.newInstance(productId);
         return fragment;
     }
 
     private void subscribeToNavigationChanges() {
-        usedProductViewerViewModel.getAddUsedProduct().observe(this, addUsedProductEvent ->
-                ProductViewerActivity.this.addNewUsedProduct());
+        favoriteProductViewerViewModel.getAddFavoriteProduct().observe(
+                this, addFavoriteProductEvent ->
+                ProductViewerActivity.this.addNewFavoriteProduct());
 
-        usedProductViewerViewModel.getEditUsedProduct().observe(this, editUsedProductEvent ->
-                ProductViewerActivity.this.editUsedProduct());
+        favoriteProductViewerViewModel.getEditFavoriteProduct().observe(
+                this, editFavoriteProductEvent ->
+                        ProductViewerActivity.this.editFavoriteProduct());
 
-        usedProductViewerViewModel.getRemoveUsedProduct().observe(this, removeProductEvent ->
-                ProductViewerActivity.this.deleteUsedProduct());
+        favoriteProductViewerViewModel.getRemoveFavoriteProduct().observe(
+                this, removeProductEvent ->
+                ProductViewerActivity.this.deleteFavoriteProduct());
     }
 
     @Override
@@ -144,44 +147,49 @@ public class ProductViewerActivity extends AppCompatActivity implements ProductV
     }
 
     @Override
-    public void deleteUsedProduct() {
+    public void deleteProduct(String productId) {
+        // Confirm delete, Navigate to product catalog with appropriate onActivityResult()
+    }
+
+    @Override
+    public void deleteFavoriteProduct() {
         setResult(DELETE_RESULT_OK);
         finish();
     }
 
     @Override
-    public void addNewUsedProduct() {
-        Intent intent = new Intent(this, UsedProductEditorActivity.class);
+    public void addNewFavoriteProduct() {
+        Intent intent = new Intent(this, FavoriteProductEditorActivity.class);
 
         intent.putExtra(
-                UsedProductEditorActivity.EXTRA_PRODUCT_ID,
+                FavoriteProductEditorActivity.EXTRA_PRODUCT_ID,
                 productViewerViewModel.product.get().getId());
 
         startActivityForResult(
                 intent,
-                UsedProductEditorActivity.REQUEST_ADD_EDIT_USED_PRODUCT);
+                FavoriteProductEditorActivity.REQUEST_ADD_EDIT_FAVORITE_PRODUCT);
     }
 
     @Override
-    public void editUsedProduct() {
-        Intent intent = new Intent(this, UsedProductEditorActivity.class);
+    public void editFavoriteProduct() {
+        Intent intent = new Intent(this, FavoriteProductEditorActivity.class);
 
         intent.putExtra(
-                UsedProductEditorActivity.EXTRA_PRODUCT_ID,
+                FavoriteProductEditorActivity.EXTRA_PRODUCT_ID,
                 productViewerViewModel.product.get().getId());
 
         intent.putExtra(
-                UsedProductEditorFragment.ARGUMENT_USED_PRODUCT_ID,
-                usedProductViewerViewModel.usedProduct.get().getId());
+                FavoriteProductEditorFragment.ARGUMENT_FAVORITE_PRODUCT_ID,
+                favoriteProductViewerViewModel.favoriteProduct.get().getId());
 
         startActivityForResult(
                 intent,
-                UsedProductEditorActivity.REQUEST_ADD_EDIT_USED_PRODUCT);
+                FavoriteProductEditorActivity.REQUEST_ADD_EDIT_FAVORITE_PRODUCT);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        usedProductViewerViewModel.handleActivityResult(requestCode, resultCode);
+        favoriteProductViewerViewModel.handleActivityResult(requestCode, resultCode);
     }
 }

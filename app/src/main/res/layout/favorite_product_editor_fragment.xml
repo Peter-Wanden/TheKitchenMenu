@@ -8,7 +8,7 @@
 
         <variable
             name="viewModel"
-            type="com.example.peter.thekitchenmenu.ui.detail.product.usedproducteditor.UsedProductEditorViewModel" />
+            type="com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,33 +17,15 @@
         android:layout_height="match_parent">
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/user_data_header"
-            style="@style/EditableCategoryStyle"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/standard_input_item_height"
-            android:paddingTop="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:text="@string/my_product_information"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/retailer_label"/>
-
-        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/retailer_label"
             style="@style/EditableCategoryStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:layout_marginStart="8dp"
             android:text="@string/label_retailer"
+            app:layout_constraintBottom_toTopOf="@id/editable_retailer"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/user_data_header"
-            app:layout_constraintBottom_toTopOf="@id/editable_retailer"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/editable_retailer"
@@ -60,7 +42,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/retailer_label"
             app:layout_constraintBottom_toTopOf="@id/price_label" />
-<!--        android:afterTextChanged='@{viewModel::retailerHasChanged}'-->
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/price_label"
@@ -117,8 +98,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/storage_room_label"
             app:layout_constraintBottom_toTopOf="@id/location_in_room_label"/>
-
-        <!-- android:afterTextChanged='@{() -> textValidation.validateLocationRoom(editableLocationRoom)}' -->
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/location_in_room_label"

@@ -7,7 +7,8 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
 
-import com.example.peter.thekitchenmenu.app.Singletons;
+import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
+import com.example.peter.thekitchenmenu.data.repository.ProductRepository;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -48,8 +49,8 @@ public class SuggestionsProvider extends ContentProvider {
             }
 
             // Get the cursor async and append a wildcard.
-            Singletons singletons = new Singletons();
-            return singletons.getRepository().findProductsThatMatch(selectionArgs[0] + "*");
+            ProductRepository repository = DatabaseInjection.provideProductsRepository(getContext());
+            return repository.getMatchingProducts(selectionArgs[0] + "*");
 
         } else {
             throw new IllegalArgumentException("Unknown URI: " + uri);

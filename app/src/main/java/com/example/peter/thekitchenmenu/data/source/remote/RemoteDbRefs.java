@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.data.source.remote;
 
-import static com.example.peter.thekitchenmenu.app.Constants.FB_COLLECTION_USED_PRODUCTS;
+import static com.example.peter.thekitchenmenu.app.Constants.FB_COLLECTION_FAVORITE_PRODUCTS;
 import static com.example.peter.thekitchenmenu.app.Constants.REMOTE_USER_LOCATION;
 import static com.example.peter.thekitchenmenu.app.Constants.REMOTE_PRODUCT_LOCATION;
 
@@ -28,6 +28,6 @@ public abstract class RemoteDbRefs {
     }
 
     public static DatabaseReference getUsersProducts() {
-        return FirebaseDatabase.getInstance().getReference().child(FB_COLLECTION_USED_PRODUCTS);
+        return FirebaseDatabase.getInstance().getReference().child(FB_COLLECTION_FAVORITE_PRODUCTS);
     }
 }

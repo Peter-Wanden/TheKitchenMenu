@@ -113,8 +113,8 @@
     <string name="activity_title_edit_product">Edit a Product</string>
     <string name="activity_title_add_new_product">Add a Product</string>
     <string name="widget_product_title_latest_products">Latest Products</string>
-    <string name="activity_title_add_used_product">Add a Used Product</string>
-    <string name="activity_title_edit_used_product">Edit a Used Product</string>
+    <string name="activity_title_add_favorite_product">Add a Favorite Product</string>
+    <string name="activity_title_edit_favorite_product">Edit a Favorite Product</string>
 
     <!-- ProductDetail user input error codes -->
     <string name="validation_text_too_short">Too short, needs to be between 3 and 70 characters.</string>
@@ -165,8 +165,8 @@
     <string name="product_catalog_empty_view_title_text">The cupboards are empty.</string>
     <string name="product_catalog_empty_view_subtitle_text">Press + to add some productEntities!</string>
     <string name="image_of_meal">An image of the selected recipe</string>
-    <string name="activity_catalog_products_tab_1_title">Community Products</string>
-    <string name="activity_catalog_products_tab_2_title">My Products</string>
+    <string name="activity_catalog_products_tab_1_title">All Products</string>
+    <string name="activity_catalog_products_tab_2_title">My Favorites</string>
 
     <!-- AdapterProduct -->
     <string name="adapter_catalog_product_creator_yes">Yes</string>
@@ -227,9 +227,8 @@
     <string name="product_image">Product image</string>
     <string name="hint_web_image_url">Paste a web image url here</string>
     <string name="activity_title_image_cropper">TKM - Image Cropper</string>
-    <string name="empty_screen__unused_product">Add this product to your used product list?</string>
-    <string name="menu_item_remove_used_product">REMOVE PRODUCT</string>
-
+    <string name="empty_screen_add_to_favorites_message">Add to favorites</string>
+    <string name="menu_item_remove_product_from_favorites">REMOVE FROM FAVORITES</string>
 
     <!-- PRICING -->
     <string name="min_currency_value">0.01</string>

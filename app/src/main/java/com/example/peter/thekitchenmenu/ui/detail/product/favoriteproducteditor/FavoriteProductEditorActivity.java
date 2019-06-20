@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.detail.product.usedproducteditor;
+package com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor;
 
 import android.os.Bundle;
 
@@ -8,33 +8,32 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.databinding.UsedProductEditorActivityBinding;
+import com.example.peter.thekitchenmenu.databinding.FavoriteProductEditorActivityBinding;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryProduct;
-import com.example.peter.thekitchenmenu.ui.ViewModelFactoryUsedProduct;
+import com.example.peter.thekitchenmenu.ui.ViewModelFactoryFavoriteProduct;
 import com.example.peter.thekitchenmenu.ui.detail.product.viewer.ProductViewerFragment;
 import com.example.peter.thekitchenmenu.ui.detail.product.viewer.ProductViewerViewModel;
 import com.example.peter.thekitchenmenu.utils.ActivityUtils;
 
-public class UsedProductEditorActivity
+public class FavoriteProductEditorActivity
         extends AppCompatActivity
-        implements AddEditUsedProductNavigator {
+        implements AddEditFavoriteProductNavigator {
 
-    private static final String TAG = "tkm-UsedProductEditAct";
+    private static final String TAG = "tkm-FavProductEditAct";
 
     // Intent data
     public static final String EXTRA_PRODUCT_ID = "PRODUCT_ID";
     // Intent requests
-    public static final int REQUEST_ADD_EDIT_USED_PRODUCT = 3;
+    public static final int REQUEST_ADD_EDIT_FAVORITE_PRODUCT = 3;
     // Intent results
-    public static final int RESULT_ADD_EDIT_USED_PRODUCT_OK = RESULT_FIRST_USER + 1;
+    public static final int RESULT_ADD_EDIT_FAVORITE_PRODUCT_OK = RESULT_FIRST_USER + 1;
 
-    private UsedProductEditorActivityBinding binding;
+    private FavoriteProductEditorActivityBinding binding;
     private ProductViewerViewModel productViewerViewModel;
-    private UsedProductEditorViewModel usedProductEditorViewModel;
+    private FavoriteProductEditorViewModel favoriteProductEditorViewModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,11 +50,11 @@ public class UsedProductEditorActivity
 
     private void initialiseBindings() {
         binding = DataBindingUtil.setContentView(this,
-                R.layout.used_product_editor_activity);
+                R.layout.favorite_product_editor_activity);
     }
 
     private void setupToolbar() {
-        setSupportActionBar(binding.usedProductEditorActivityToolbar);
+        setSupportActionBar(binding.favoriteProductEditorActivityToolbar);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -64,7 +63,7 @@ public class UsedProductEditorActivity
 
     private void setupViewModels() {
         productViewerViewModel = obtainProductViewerViewModel(this);
-        usedProductEditorViewModel = obtainUsedProductEditorViewModel(this);
+        favoriteProductEditorViewModel = obtainFavoriteProductEditorViewModel(this);
     }
 
     @NonNull
@@ -78,27 +77,27 @@ public class UsedProductEditorActivity
     }
 
     @NonNull
-    public static UsedProductEditorViewModel obtainUsedProductEditorViewModel(
+    public static FavoriteProductEditorViewModel obtainFavoriteProductEditorViewModel(
             FragmentActivity activity) {
 
-        ViewModelFactoryUsedProduct factoryUsedProduct =
-                ViewModelFactoryUsedProduct.getInstance(activity.getApplication());
+        ViewModelFactoryFavoriteProduct factoryFavoriteProduct =
+                ViewModelFactoryFavoriteProduct.getInstance(activity.getApplication());
 
-        return ViewModelProviders.of(activity, factoryUsedProduct).
-                get(UsedProductEditorViewModel.class);
+        return ViewModelProviders.of(activity, factoryFavoriteProduct).
+                get(FavoriteProductEditorViewModel.class);
     }
 
     private void findOrCreateFragments() {
         String productId = null;
-        String usedProductId = null;
+        String favoriteProductId = null;
 
         if (getIntent().hasExtra(EXTRA_PRODUCT_ID)) {
             productId = getIntent().getStringExtra(EXTRA_PRODUCT_ID);
         }
 
-        if (getIntent().hasExtra(UsedProductEditorFragment.ARGUMENT_USED_PRODUCT_ID)) {
-            usedProductId = getIntent().getStringExtra(
-                    UsedProductEditorFragment.ARGUMENT_USED_PRODUCT_ID);
+        if (getIntent().hasExtra(FavoriteProductEditorFragment.ARGUMENT_FAVORITE_PRODUCT_ID)) {
+            favoriteProductId = getIntent().getStringExtra(
+                    FavoriteProductEditorFragment.ARGUMENT_FAVORITE_PRODUCT_ID);
         }
 
         ProductViewerFragment productViewerFragment =
@@ -109,13 +108,13 @@ public class UsedProductEditorActivity
                 productViewerFragment,
                 R.id.product_viewer_contentFrame);
 
-        UsedProductEditorFragment usedProductEditorFragment =
-                findOrCreateUsedProductEditorFragment(productId, usedProductId);
+        FavoriteProductEditorFragment favoriteProductEditorFragment =
+                findOrCreateFavoriteProductEditorFragment(productId, favoriteProductId);
 
         ActivityUtils.replaceFragmentInActivity(
                 getSupportFragmentManager(),
-                usedProductEditorFragment,
-                R.id.used_product_editor_contentFrame);
+                favoriteProductEditorFragment,
+                R.id.favorite_product_editor_contentFrame);
     }
 
     private ProductViewerFragment findOrCreateProductViewerFragment(String productId) {
@@ -129,36 +128,36 @@ public class UsedProductEditorActivity
         return fragment;
     }
 
-    private UsedProductEditorFragment findOrCreateUsedProductEditorFragment(String productId,
-                                                                            String usedProductId) {
-        UsedProductEditorFragment fragment = (UsedProductEditorFragment)
+    private FavoriteProductEditorFragment findOrCreateFavoriteProductEditorFragment(
+            String productId, String favoriteProductId) {
+        FavoriteProductEditorFragment fragment = (FavoriteProductEditorFragment)
                 getSupportFragmentManager().
-                findFragmentById(R.id.used_product_editor_contentFrame);
+                findFragmentById(R.id.favorite_product_editor_contentFrame);
 
         if (fragment == null) fragment =
-                UsedProductEditorFragment.newInstance(productId, usedProductId);
+                FavoriteProductEditorFragment.newInstance(productId, favoriteProductId);
 
         return fragment;
     }
 
     private void setBindingInstanceVariables() {
-        binding.setViewModel(usedProductEditorViewModel);
+        binding.setViewModel(favoriteProductEditorViewModel);
     }
 
     private void subscribeToNavigationChanges() {
-        usedProductEditorViewModel.getUsedProductIsUpdated().observe(this, saved ->
-                UsedProductEditorActivity.this.onUsedProductSaved());
+        favoriteProductEditorViewModel.getFavoriteProductIsUpdated().observe(this, saved ->
+                FavoriteProductEditorActivity.this.onFavoriteProductSaved());
     }
 
     private void setActivityTitle() {
-        if (getIntent().hasExtra(UsedProductEditorFragment.ARGUMENT_USED_PRODUCT_ID))
-            setTitle(R.string.activity_title_edit_used_product);
-        else setTitle(R.string.activity_title_add_used_product);
+        if (getIntent().hasExtra(FavoriteProductEditorFragment.ARGUMENT_FAVORITE_PRODUCT_ID))
+            setTitle(R.string.activity_title_edit_favorite_product);
+        else setTitle(R.string.activity_title_add_favorite_product);
     }
 
     @Override
-    public void onUsedProductSaved() {
-        setResult(RESULT_ADD_EDIT_USED_PRODUCT_OK);
+    public void onFavoriteProductSaved() {
+        setResult(RESULT_ADD_EDIT_FAVORITE_PRODUCT_OK);
         finish();
     }
 

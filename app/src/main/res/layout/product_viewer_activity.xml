@@ -9,7 +9,7 @@
 
         <variable
             name="viewModel"
-            type="com.example.peter.thekitchenmenu.ui.detail.product.viewer.UsedProductViewerViewModel" />
+            type="com.example.peter.thekitchenmenu.ui.detail.product.viewer.FavoriteProductViewerViewModel" />
     </data>
 
     <LinearLayout
@@ -52,7 +52,7 @@
                         android:layout_height="wrap_content" />
 
                     <FrameLayout
-                        android:id="@+id/used_product_viewer_content_frame"
+                        android:id="@+id/favorite_product_viewer_content_frame"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
                 </LinearLayout>

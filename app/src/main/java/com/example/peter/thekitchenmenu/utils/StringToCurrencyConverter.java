@@ -12,15 +12,10 @@ import java.text.NumberFormat;
 
 public class StringToCurrencyConverter {
 
-    private static final String TAG = "tkm-StringToCurrency";
-
     @BindingAdapter(value = "stringToCurrency")
     public static void toString(TextView view, String price) {
 
-        Log.d(TAG, "toString: price passed in=" + price);
-
         if (Strings.isEmptyOrWhitespace(price)) {
-            Log.d(TAG, "toString: String is empty!");
             return;
         }
 

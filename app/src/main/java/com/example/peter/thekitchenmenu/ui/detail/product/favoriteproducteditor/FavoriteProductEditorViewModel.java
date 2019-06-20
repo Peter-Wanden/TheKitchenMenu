@@ -1,12 +1,12 @@
-package com.example.peter.thekitchenmenu.ui.detail.product.usedproducteditor;
+package com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor;
 
 import android.app.Application;
 import android.util.Log;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.data.entity.UsedProductEntity;
-import com.example.peter.thekitchenmenu.data.repository.UsedProductDataSource;
-import com.example.peter.thekitchenmenu.data.repository.UsedProductRepository;
+import com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity;
+import com.example.peter.thekitchenmenu.data.repository.FavoriteProductsDataSource;
+import com.example.peter.thekitchenmenu.data.repository.FavoriteProductsRepository;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 import com.example.peter.thekitchenmenu.utils.TextValidationHandler;
 import com.google.android.gms.common.util.Strings;
@@ -22,13 +22,13 @@ import java.text.NumberFormat;
 
 import static com.example.peter.thekitchenmenu.utils.TextValidationHandler.VALIDATED;
 
-public class UsedProductEditorViewModel
+public class FavoriteProductEditorViewModel
         extends AndroidViewModel
-        implements UsedProductDataSource.GetUsedProductCallback {
+        implements FavoriteProductsDataSource.GetFavoriteProductCallback {
 
-    private static final String TAG = "tkm-UsedProductEditorVM";
+    private static final String TAG = "tkm-FavProductEditorVM";
 
-    private String usedProductId;
+    private String favoriteProductId;
     public final ObservableField<String> retailer = new ObservableField<>();
     public final ObservableField<String> locationRoom = new ObservableField<>();
     public final ObservableField<String> locationInRoom = new ObservableField<>();
@@ -47,17 +47,17 @@ public class UsedProductEditorViewModel
     public final ObservableBoolean allFieldsValidated = new ObservableBoolean();
 
     private final ObservableBoolean dataIsLoading = new ObservableBoolean();
-    private final SingleLiveEvent<Void> usedProductIsUpdated = new SingleLiveEvent<>();
+    private final SingleLiveEvent<Void> favoriteProductIsUpdated = new SingleLiveEvent<>();
 
     private Application appContext;
-    private UsedProductRepository repository;
+    private FavoriteProductsRepository repository;
 
     private String productId;
-    private boolean isNewUsedProduct;
+    private boolean isNewFavoriteProduct;
     private boolean dataHasLoaded;
 
-    public UsedProductEditorViewModel(@NonNull Application application,
-                                      @NonNull UsedProductRepository repository) {
+    public FavoriteProductEditorViewModel(@NonNull Application application,
+                                          @NonNull FavoriteProductsRepository repository) {
         super(application);
         this.appContext = application;
         this.repository = repository;
@@ -91,39 +91,39 @@ public class UsedProductEditorViewModel
         });
     }
 
-    void start(String productId, String usedProductId) {
+    void start(String productId, String favoriteProductId) {
 
         Log.d(TAG, "start: productId=" + productId);
-        if (usedProductId != null) Log.d(TAG, "start: usedProductId=" + usedProductId);
+        if (favoriteProductId != null) Log.d(TAG, "start: favoriteProductId=" + favoriteProductId);
 
         this.productId = productId;
         if (dataIsLoading.get()) return;
 
-        this.usedProductId = usedProductId;
+        this.favoriteProductId = favoriteProductId;
 
-        if (usedProductId == null) {
-            isNewUsedProduct = true;
+        if (favoriteProductId == null) {
+            isNewFavoriteProduct = true;
             return;
         }
 
         if (dataHasLoaded) return;
-        isNewUsedProduct = false;
+        isNewFavoriteProduct = false;
         dataIsLoading.set(true);
 
-        repository.getUsedProduct(usedProductId, this);
+        repository.getFavoriteProduct(favoriteProductId, this);
     }
 
     @Override
-    public void onUsedProductLoaded(UsedProductEntity usedProduct) {
-        Log.d(TAG, "onUsedProductLoaded: ");
+    public void onFavoriteProductLoaded(FavoriteProductEntity favoriteProduct) {
+        Log.d(TAG, "onFavoriteProductLoaded: ");
 
-        if (usedProduct != null) {
-            createDate = usedProduct.getCreateDate();
+        if (favoriteProduct != null) {
+            createDate = favoriteProduct.getCreateDate();
 
-            retailer.set(usedProduct.getRetailer());
-            locationRoom.set(usedProduct.getLocationRoom());
-            locationInRoom.set(usedProduct.getLocationInRoom());
-            price.set(usedProduct.getPrice());
+            retailer.set(favoriteProduct.getRetailer());
+            locationRoom.set(favoriteProduct.getLocationRoom());
+            locationInRoom.set(favoriteProduct.getLocationInRoom());
+            price.set(favoriteProduct.getPrice());
 
             dataIsLoading.set(false);
             dataHasLoaded = true;
@@ -242,24 +242,24 @@ public class UsedProductEditorViewModel
         return priceErrorEvent;
     }
 
-    void saveUsedProduct() {
-        UsedProductEntity usedProduct;
+    void saveFavoriteProduct() {
+        FavoriteProductEntity favoriteProduct;
         String price = removeCurrencySymbolFromPrice().toString();
-        Log.d(TAG, "saveUsedProduct: price=" + price);
+        Log.d(TAG, "saveFavoriteProduct: price=" + price);
 
-        if (isNewUsedProduct || usedProductId == null) {
-            usedProduct = UsedProductEntity.createNewUsedProduct(
+        if (isNewFavoriteProduct || favoriteProductId == null) {
+            favoriteProduct = FavoriteProductEntity.createFavoriteProduct(
                     productId,
                     retailer.get(),
                     locationRoom.get(),
                     locationInRoom.get(),
                     price);
 
-            if (!usedProduct.isEmpty()) createUsedProduct(usedProduct);
+            if (!favoriteProduct.isEmpty()) createFavoriteProduct(favoriteProduct);
 
         } else {
-            usedProduct = UsedProductEntity.updateUsedProduct(
-                    usedProductId,
+            favoriteProduct = FavoriteProductEntity.updateFavoriteProduct(
+                    favoriteProductId,
                     productId,
                     retailer.get(),
                     locationRoom.get(),
@@ -267,27 +267,27 @@ public class UsedProductEditorViewModel
                     price,
                     createDate);
 
-            if (!usedProduct.isEmpty()) updateUsedProduct(usedProduct);
+            if (!favoriteProduct.isEmpty()) updateFavoriteProduct(favoriteProduct);
         }
 
-        if (usedProduct.isEmpty()) {
-            Log.d(TAG, "saveUsedProduct: cannot save empty used product");
+        if (favoriteProduct.isEmpty()) {
+            Log.d(TAG, "saveFavoriteProduct: cannot save empty favorite product");
         }
     }
 
-    private void createUsedProduct(UsedProductEntity usedProduct) {
-        repository.saveUsedProduct(usedProduct);
-        usedProductIsUpdated.call();
+    private void createFavoriteProduct(FavoriteProductEntity favoriteProduct) {
+        repository.saveFavoriteProduct(favoriteProduct);
+        favoriteProductIsUpdated.call();
     }
 
-    private void updateUsedProduct(UsedProductEntity usedProduct) {
-        if (isNewUsedProduct)
-            throw new RuntimeException("updateUsedProduct called but is new UsedProduct.");
-        repository.saveUsedProduct(usedProduct);
-        usedProductIsUpdated.call();
+    private void updateFavoriteProduct(FavoriteProductEntity favoriteProduct) {
+        if (isNewFavoriteProduct)
+            throw new RuntimeException("updateFavoriteProduct called but is new favorite Product.");
+        repository.saveFavoriteProduct(favoriteProduct);
+        favoriteProductIsUpdated.call();
     }
 
-    SingleLiveEvent<Void> getUsedProductIsUpdated() {
-        return usedProductIsUpdated;
+    SingleLiveEvent<Void> getFavoriteProductIsUpdated() {
+        return favoriteProductIsUpdated;
     }
 }

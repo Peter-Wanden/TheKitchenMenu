@@ -7,14 +7,14 @@
         <import type="android.view.View" />
         <variable
             name="viewModel"
-            type="com.example.peter.thekitchenmenu.ui.detail.product.usedproducteditor.UsedProductEditorViewModel" />
+            type="com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorViewModel" />
     </data>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context=".ui.detail.product.usedproducteditor.UsedProductEditorActivity">
+        tools:context=".ui.detail.product.favoriteproducteditor.FavoriteProductEditorActivity">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appbar"
@@ -23,7 +23,7 @@
             android:layout_alignParentTop="true">
 
             <androidx.appcompat.widget.Toolbar
-                android:id="@+id/used_product_editor_activity_toolbar"
+                android:id="@+id/favorite_product_editor_activity_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/primaryColor">
@@ -32,7 +32,7 @@
         </com.google.android.material.appbar.AppBarLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/used_product_editor_save_fab"
+            android:id="@+id/favorite_product_editor_save_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/fab_margin"
@@ -62,7 +62,7 @@
                 </FrameLayout>
 
                 <FrameLayout
-                    android:id="@+id/used_product_editor_contentFrame"
+                    android:id="@+id/favorite_product_editor_contentFrame"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                 </FrameLayout>

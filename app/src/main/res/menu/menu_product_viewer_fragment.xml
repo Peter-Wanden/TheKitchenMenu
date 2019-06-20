@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/menu_item_remove_used_product"
-        android:title="@string/menu_item_remove_used_product"
+        android:id="@+id/menu_item_remove_product_from_favorites"
+        android:title="@string/menu_item_remove_product_from_favorites"
         android:icon="@drawable/ic_delete_white"
         app:showAsAction="always|withText" />
 </menu>

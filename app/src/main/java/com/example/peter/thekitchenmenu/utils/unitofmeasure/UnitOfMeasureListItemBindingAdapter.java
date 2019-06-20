@@ -14,47 +14,66 @@ public class UnitOfMeasureListItemBindingAdapter {
 
     @BindingAdapter(value = {"setLabelForSubtypeInt", "formatBaseUnits"})
     public static void setLabelForSubtypeInt(TextView view, int subtypeInt, double baseUnits) {
-        Log.d(TAG, "setLabelForSubtypeInt: subtype=" + subtypeInt + " baseUnits=" + baseUnits);
 
-        String measurement = getMeasurement(subtypeInt, baseUnits, view.getResources());
+        UnitOfMeasure unitOfMeasure = MeasurementSubtype.values()[subtypeInt].getMeasurementClass();
+        boolean baseUnitsAreSet = unitOfMeasure.baseUnitsAreSet(baseUnits);
+        Resources resources = view.getResources();
+        String measurement = "";
+
+        if (baseUnitsAreSet) {
+            if (unitOfMeasure instanceof MetricMass || unitOfMeasure instanceof MetricVolume) {
+                measurement = getMetricMeasurement(unitOfMeasure, resources);
+            }
+            if (unitOfMeasure instanceof ImperialMass || unitOfMeasure instanceof ImperialVolume) {
+                measurement = getImperialMeasurement(unitOfMeasure, resources);
+            }
+        }
         setMeasurementToView(view, measurement);
     }
 
-    private static String getMeasurement(int subtypeInt, double baseUnits, Resources resources) {
-        UnitOfMeasure unitOfMeasure = MeasurementSubtype.values()[subtypeInt].getMeasurementClass();
-        boolean baseUnitsAreSet = unitOfMeasure.baseUnitsAreSet(baseUnits);
-        int numberOfMeasurementUnits = unitOfMeasure.getNumberOfMeasurementUnits();
+    private static String getMetricMeasurement(UnitOfMeasure unitOfMeasure, Resources resources) {
+        StringBuilder measurement = new StringBuilder();
+        double baseUnits = unitOfMeasure.getBaseUnits();
 
-        if (baseUnitsAreSet) {
-            if (numberOfMeasurementUnits == 1 || unitOfMeasure.getPackMeasurementTwo() == 0) {
-                return measurementBasedOnUnitOne(unitOfMeasure, resources);
-
-            } else if (numberOfMeasurementUnits == 2) {
-                return measurementBasedOnTwoUnits(unitOfMeasure, resources);
-            }
+        if (baseUnits > 999) {
+            measurement.
+                    append(baseUnits / 1000).
+                    append(" ").
+                    append(resources.getString(
+                            unitOfMeasure.getUnitTwoLabelStringResourceId()));
+        } else {
+            measurement.
+                    append((int) baseUnits).
+                    append(" ").
+                    append(resources.getString(
+                            unitOfMeasure.getUnitOneLabelStringResourceId()));
         }
-        return "";
+        return measurement.toString();
     }
 
-    private static String measurementBasedOnUnitOne(UnitOfMeasure unitOfMeasure,
-                                                    Resources resources) {
-        return (int)unitOfMeasure.getBaseUnits() + " " +
-                resources.getString(unitOfMeasure.getUnitOneLabelStringResourceId());
-    }
+    private static String getImperialMeasurement(UnitOfMeasure unitOfMeasure, Resources resources) {
+        StringBuilder measurement = new StringBuilder();
 
-    private static String measurementBasedOnTwoUnits(UnitOfMeasure unitOfMeasure,
-                                                     Resources resources) {
-        // TODO - Does this work for units of measure with a decimal? Also need to strip off the
-        //  zeros!!! Or switch through the units of measure and have a case for each?
-        return unitOfMeasure.getPackMeasurementTwo() + "." +
-                (int)unitOfMeasure.getPackMeasurementOne() + " " +
-                resources.getString(unitOfMeasure.getUnitTwoLabelStringResourceId());
+        if (unitOfMeasure.getPackMeasurementTwo() > 0) {
+            measurement.
+                    append(unitOfMeasure.getPackMeasurementTwo()).
+                    append(resources.getString(unitOfMeasure.getUnitTwoLabelStringResourceId())).
+                    append(" ");
+        }
+
+        if (unitOfMeasure.getPackMeasurementOne() > 0) {
+            measurement.
+                    append(unitOfMeasure.getPackMeasurementOne()).
+                    append(resources.getString(unitOfMeasure.getUnitOneLabelStringResourceId()));
+        }
+        return measurement.toString();
     }
 
     private static void setMeasurementToView(TextView view, String measurement) {
         int viewId = view.getId();
 
-        if (viewId == R.id.product_list_item_label_unit_of_measure) {
+        if (viewId == R.id.product_list_item_measurement ||
+                viewId == R.id.product_viewer_size) {
             view.setText(measurement);
         }
     }

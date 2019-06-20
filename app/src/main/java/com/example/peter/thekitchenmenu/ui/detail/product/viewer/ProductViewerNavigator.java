@@ -7,9 +7,11 @@ public interface ProductViewerNavigator {
 
     void editProduct(String productId);
 
-    void deleteUsedProduct();
+    void deleteProduct(String productId);
 
-    void addNewUsedProduct();
+    void deleteFavoriteProduct();
 
-    void editUsedProduct();
+    void addNewFavoriteProduct();
+
+    void editFavoriteProduct();
 }

@@ -4,11 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View"/>
         <import type="android.view.View.OnClickListener"/>
 
         <variable
-            name="product"
-            type="com.example.peter.thekitchenmenu.data.entity.ProductEntity" />
+            name="productModel"
+            type="com.example.peter.thekitchenmenu.data.model.ProductModel" />
 
         <variable
             name="listener"
@@ -29,7 +30,8 @@
         android:foregroundGravity="center"
         android:background="@color/white"
         app:cardCornerRadius="4dp"
-        android:onClick="@{() -> listener.onProductClicked(product)}">
+        android:onClick="@{() -> listener.onProductClicked(productModel)}"
+        >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/list_item_product_cl"
@@ -53,7 +55,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Cirio canned chopped tomatoes"
-                android:text="@{product.description}"/>
+                android:text="@{productModel.product.description}"/>
 
             <ImageView
                 android:id="@+id/product_list_item_image"
@@ -67,26 +69,51 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:webImageUrl='@{product.webImageUrl}'
-                app:remoteSmallImageUri='@{product.remoteSmallImageUri}' />
+                app:webImageUrl='@{productModel.product.webImageUrl}'
+                app:remoteSmallImageUri='@{productModel.product.remoteSmallImageUri}' />
 
             <TextView
-                android:id="@+id/product_list_item_label_unit_of_measure"
+                android:id="@+id/product_list_item_measurement"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif"
                 android:gravity="start|center_vertical"
-                android:layout_marginStart="8dp"
                 android:maxLines="1"
-                android:paddingStart="@dimen/list_item_top_half_margin"
-                android:paddingEnd="@dimen/list_item_top_half_margin"
+                android:paddingEnd="@dimen/list_item_top_full_margin"
+                android:paddingStart="@dimen/list_item_top_full_margin"
                 android:textAppearance="?android:textAppearanceSmall"
                 android:textColor="@color/grey"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/product_list_item_description"
-                app:setLabelForSubtypeInt="@{product.unitOfMeasureSubtype}"
-                app:formatBaseUnits="@{product.baseUnits}"
+                app:setLabelForSubtypeInt="@{productModel.product.unitOfMeasureSubtype}"
+                app:formatBaseUnits="@{productModel.product.baseUnits}"
                 tools:text="400 ml" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/product_list_item_add_to_favorites"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_margin="8dp"
+                android:src="@drawable/ic_favorite_border"
+                android:tint="@color/primaryColor"
+                android:visibility="@{productModel.favorite ? View.GONE : View.VISIBLE}"
+                android:onClick="@{() -> listener.onAddToFavoritesClicked(productModel)}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                />
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/product_list_item_remove_from_favorites"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_margin="8dp"
+                android:src="@drawable/ic_favorite"
+                android:tint="@color/primaryColor"
+                android:visibility="@{productModel.favorite ? View.VISIBLE : View.GONE}"
+                android:onClick="@{() -> listener.onRemoveFromFavoritesClicked(productModel)}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </layout>

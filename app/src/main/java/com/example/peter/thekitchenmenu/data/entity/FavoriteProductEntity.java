@@ -13,22 +13,22 @@ import com.google.android.gms.common.util.Strings;
 import java.util.Calendar;
 import java.util.UUID;
 
-import static com.example.peter.thekitchenmenu.data.entity.UsedProductEntity.TABLE_USED_PRODUCTS;
+import static com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity.TABLE_FAVORITE_PRODUCTS;
 
-@Entity(tableName = TABLE_USED_PRODUCTS)
-public final class UsedProductEntity {
+@Entity(tableName = TABLE_FAVORITE_PRODUCTS)
+public final class FavoriteProductEntity {
 
-    public static final String TAG = "UsedProductEntity";
+    public static final String TAG = "FavoriteProductEntity";
 
-    public static final String TABLE_USED_PRODUCTS = "usedProducts";
+    public static final String TABLE_FAVORITE_PRODUCTS = "favoriteProducts";
     public static final String ID = "id";
     public static final String PRODUCT_ID = "productId";
-    public static final String RETAILER = "retailer";
-    public static final String LOCATION_ROOM = "locationRoom";
-    public static final String LOCATION_IN_ROOM = "locationInRoom";
-    public static final String PRICE = "price";
-    public static final String CREATE_DATE = "usersProductDataCreateDate";
-    public static final String LAST_UPDATE = "usersProductDataLastUpdate";
+    private static final String RETAILER = "retailer";
+    private static final String LOCATION_ROOM = "locationRoom";
+    private static final String LOCATION_IN_ROOM = "locationInRoom";
+    private static final String PRICE = "price";
+    private static final String CREATE_DATE = "usersProductDataCreateDate";
+    private static final String LAST_UPDATE = "usersProductDataLastUpdate";
 
     @PrimaryKey
     @NonNull
@@ -58,14 +58,14 @@ public final class UsedProductEntity {
     private final long lastUpdate;
 
     // Required by room, do not use
-    public UsedProductEntity(@NonNull String id,
-                             @NonNull String productId,
-                             @Nullable String retailer,
-                             @Nullable String locationRoom,
-                             @Nullable String locationInRoom,
-                             @Nullable String price,
-                             long createDate,
-                             long lastUpdate) {
+    public FavoriteProductEntity(@NonNull String id,
+                                 @NonNull String productId,
+                                 @Nullable String retailer,
+                                 @Nullable String locationRoom,
+                                 @Nullable String locationInRoom,
+                                 @Nullable String price,
+                                 long createDate,
+                                 long lastUpdate) {
 
         this.id = id;
         this.productId = productId;
@@ -78,15 +78,15 @@ public final class UsedProductEntity {
     }
 
     @Ignore
-    public static UsedProductEntity updateUsedProduct(@NonNull String usedProductId,
-                                                      @NonNull String productId,
-                                                      @Nullable String retailer,
-                                                      @Nullable String locationRoom,
-                                                      @Nullable String locationInRoom,
-                                                      @Nullable String price,
-                                                      long createDate) {
-        return new UsedProductEntity(
-                usedProductId,
+    public static FavoriteProductEntity updateFavoriteProduct(@NonNull String favoriteProductId,
+                                                              @NonNull String productId,
+                                                              @Nullable String retailer,
+                                                              @Nullable String locationRoom,
+                                                              @Nullable String locationInRoom,
+                                                              @Nullable String price,
+                                                              long createDate) {
+        return new FavoriteProductEntity(
+                favoriteProductId,
                 productId,
                 retailer,
                 locationRoom,
@@ -97,12 +97,12 @@ public final class UsedProductEntity {
     }
 
     @Ignore
-    public static UsedProductEntity createNewUsedProduct(@NonNull String productId,
-                                                         @Nullable String retailer,
-                                                         @Nullable String locationRoom,
-                                                         @Nullable String locationInRoom,
-                                                         @Nullable String price) {
-        return new UsedProductEntity(
+    public static FavoriteProductEntity createFavoriteProduct(@NonNull String productId,
+                                                              @Nullable String retailer,
+                                                              @Nullable String locationRoom,
+                                                              @Nullable String locationInRoom,
+                                                              @Nullable String price) {
+        return new FavoriteProductEntity(
                 UUID.randomUUID().toString(),
                 productId,
                 retailer,
@@ -122,7 +122,7 @@ public final class UsedProductEntity {
 
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UsedProductEntity entity = (UsedProductEntity) o;
+        FavoriteProductEntity entity = (FavoriteProductEntity) o;
 
         return Objects.equal(id,                entity.id)              &&
                Objects.equal(productId,         entity.productId)       &&
@@ -141,14 +141,9 @@ public final class UsedProductEntity {
                 Strings.isEmptyOrWhitespace(price);
     }
 
-    @NonNull
-    public String getId() {
-        return id;
-    }
-
     @Override
     public String toString() {
-        return "UsedProductEntity{" +
+        return "FavoriteProductEntity{" +
                 "id='" + id + '\'' +
                 ", productId='" + productId + '\'' +
                 ", retailer='" + retailer + '\'' +
@@ -158,6 +153,11 @@ public final class UsedProductEntity {
                 ", createDate=" + createDate +
                 ", lastUpdate=" + lastUpdate +
                 '}';
+    }
+
+    @NonNull
+    public String getId() {
+        return id;
     }
 
     @NonNull

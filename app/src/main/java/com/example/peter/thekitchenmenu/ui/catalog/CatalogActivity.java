@@ -9,7 +9,8 @@ import android.view.View;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.databinding.ProductCatalogActivityBinding;
-import com.example.peter.thekitchenmenu.ui.ViewModelFactoryUsedProduct;
+import com.example.peter.thekitchenmenu.ui.ViewModelFactoryFavoriteProduct;
+import com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorActivity;
 import com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductEditorActivity;
 import com.example.peter.thekitchenmenu.ui.detail.product.viewer.ProductViewerActivity;
 
@@ -69,7 +70,7 @@ public class CatalogActivity
     private void setupViewPager(ViewPager viewPager) {
         tabPageAdapter = new CatalogFragmentPageAdapter(getSupportFragmentManager());
         tabPageAdapter.addFragment(new CatalogAllFragment(), getString(R.string.activity_catalog_products_tab_1_title));
-        tabPageAdapter.addFragment(new CatalogUsedFragment(), getString(R.string.activity_catalog_products_tab_2_title));
+        tabPageAdapter.addFragment(new CatalogFavoritesFragment(), getString(R.string.activity_catalog_products_tab_2_title));
 
         viewPager.setAdapter(tabPageAdapter);
     }
@@ -85,14 +86,15 @@ public class CatalogActivity
 
     public static CatalogProductsViewModel obtainViewModel(FragmentActivity activity) {
         // Use a Factory to inject dependencies into the ViewModel
-        ViewModelFactoryUsedProduct factory =
-                ViewModelFactoryUsedProduct.getInstance(activity.getApplication());
+        ViewModelFactoryFavoriteProduct factory =
+                ViewModelFactoryFavoriteProduct.getInstance(activity.getApplication());
         return ViewModelProviders.of(activity, factory).get(CatalogProductsViewModel.class);
     }
 
     private void setupViewModel() {
         viewModel = obtainViewModel(this);
         viewModel.setNavigator(this);
+        viewModel.prepareData();
 
         viewModel.getSelected().observe(this, selectedProduct -> {
             if (selectedProduct != null) launchProductEditor(selectedProduct);
@@ -101,6 +103,54 @@ public class CatalogActivity
         viewModel.getOpenProductEvent().observe(this, productId -> {
             if (productId != null) launchProductViewer(productId);
         });
+
+        viewModel.getAddToFavoritesEvent().observe(this, productId -> {
+            if (productId != null) addToFavorites(productId);
+        });
+    }
+
+    @Override
+    public void addNewProduct() {
+        Intent intent = new Intent(this, ProductEditorActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void addToFavorites(String productId) {
+        // Launch AddToFavorites, don't forget to deal with onActivityResult
+        Intent intent = new Intent(this, FavoriteProductEditorActivity.class);
+
+        intent.putExtra(
+                FavoriteProductEditorActivity.EXTRA_PRODUCT_ID,
+                productId);
+
+        startActivityForResult(
+                intent,
+                FavoriteProductEditorActivity.REQUEST_ADD_EDIT_FAVORITE_PRODUCT);
+    }
+
+    @Override
+    public void removeFromFavorites(String productId) {
+        // Delete from FavoriteProducts / or show dialog and refresh data
+    }
+
+    @Override
+    public void launchProductViewer(String productId) {
+        Intent intent = new Intent(CatalogActivity.this, ProductViewerActivity.class);
+        intent.putExtra(ProductViewerActivity.EXTRA_PRODUCT_ID, productId);
+        startActivityForResult(intent, ProductViewerActivity.REQUEST_CODE);
+    }
+
+    private void launchProductEditor(ProductEntity selectedProduct) {
+        Intent intent = new Intent(CatalogActivity.this, ProductEditorActivity.class);
+        intent.putExtra(ProductEditorActivity.EXTRA_PRODUCT_ID, selectedProduct.getId());
+        startActivity(intent);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        viewModel.handleActivityResult(requestCode, resultCode);
     }
 
     @Override
@@ -135,12 +185,6 @@ public class CatalogActivity
     }
 
     @Override
-    public void addNewProduct() {
-        Intent intent = new Intent(this, ProductEditorActivity.class);
-        startActivity(intent);
-    }
-
-    @Override
     public void finish() {
         super.finish();
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
@@ -156,24 +200,5 @@ public class CatalogActivity
     protected void onDestroy() {
         viewModel.onActivityDestroyed();
         super.onDestroy();
-    }
-
-    @Override
-    public void launchProductViewer(String productId) {
-        Intent intent = new Intent(CatalogActivity.this, ProductViewerActivity.class);
-        intent.putExtra(ProductViewerActivity.EXTRA_PRODUCT_ID, productId);
-        startActivityForResult(intent, ProductViewerActivity.REQUEST_CODE);
-    }
-
-    private void launchProductEditor(ProductEntity selectedProduct) {
-        Intent intent = new Intent(CatalogActivity.this, ProductEditorActivity.class);
-        intent.putExtra(ProductEditorActivity.EXTRA_PRODUCT_ID, selectedProduct.getId());
-        startActivity(intent);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        viewModel.handleActivityResult(requestCode, resultCode);
     }
 }

@@ -1,12 +1,15 @@
 package com.example.peter.thekitchenmenu.ui.catalog;
 
-
-import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
+import com.example.peter.thekitchenmenu.data.model.ProductModel;
 
 /**
  * Listener used with data binding to process user actions on a product in a catalog list
  */
 public interface ProductItemUserActionsListener {
 
-    void onProductClicked(ProductEntity product);
+    void onProductClicked(ProductModel productModel);
+
+    void onAddToFavoritesClicked(ProductModel productModel);
+
+    void onRemoveFromFavoritesClicked(ProductModel productModel);
 }

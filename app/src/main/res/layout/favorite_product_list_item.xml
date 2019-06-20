@@ -8,12 +8,12 @@
         <import type="android.view.View.OnClickListener"/>
 
         <variable
-            name="usedProduct"
-            type="com.example.peter.thekitchenmenu.data.model.UsedProductDataModel" />
+            name="favoriteProduct"
+            type="com.example.peter.thekitchenmenu.data.model.FavoriteProductModel" />
 
         <variable
             name="listener"
-            type="com.example.peter.thekitchenmenu.ui.catalog.UsedProductItemUserActionsListener" />
+            type="com.example.peter.thekitchenmenu.ui.catalog.FavoriteProductItemUserActionsListener" />
     </data>
 
     <androidx.cardview.widget.CardView
@@ -29,10 +29,10 @@
         android:foregroundGravity="center"
         app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="4dp"
-        android:onClick="@{() -> listener.onUsedProductClicked(usedProduct)}" >
+        android:onClick="@{() -> listener.onFavoriteProductClicked(favoriteProduct)}" >
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/used_product_list_item_cl"
+            android:id="@+id/favorite_product_list_item_cl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -53,7 +53,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Cirio canned chopped tomatoes"
-                android:text="@{usedProduct.product.description}"
+                android:text="@{favoriteProduct.product.description}"
                 />
 
             <ImageView
@@ -68,8 +68,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:webImageUrl='@{usedProduct.product.webImageUrl}'
-                app:remoteSmallImageUri='@{usedProduct.product.remoteSmallImageUri}' />
+                app:webImageUrl='@{favoriteProduct.product.webImageUrl}'
+                app:remoteSmallImageUri='@{favoriteProduct.product.remoteSmallImageUri}' />
 
             <TextView
                 android:id="@+id/product_list_item_pack_size"
@@ -83,10 +83,10 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/product_list_item_description"
                 tools:text="400"
-                android:text="@{`` + usedProduct.product.baseUnits}"/>
+                android:text="@{`` + favoriteProduct.product.baseUnits}"/>
 
             <TextView
-                android:id="@+id/product_list_item_label_unit_of_measure"
+                android:id="@+id/product_list_item_measurement"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif"
@@ -97,10 +97,10 @@
                 app:layout_constraintStart_toEndOf="@+id/product_list_item_pack_size"
                 app:layout_constraintTop_toBottomOf="@+id/product_list_item_description"
                 tools:text="ml"
-                android:text="@{`` + usedProduct.product.unitOfMeasureSubtype}"/>
+                android:text="@{`` + favoriteProduct.product.unitOfMeasureSubtype}"/>
 
             <TextView
-                android:id="@+id/used_product_list_item_price"
+                android:id="@+id/favorite_product_list_item_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif"
@@ -112,23 +112,23 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 tools:text="£24.99"
-                app:stringToCurrency="@{usedProduct.usedProduct.price}"/>
+                app:stringToCurrency="@{favoriteProduct.favoriteProduct.price}"/>
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/used_product_list_item_last_updated_label"
+                android:id="@+id/favorite_product_list_item_last_updated_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:textAppearanceSmall"
                 android:textColor="@color/grey"
                 android:paddingBottom="8dp"
-                app:layout_constraintTop_toTopOf="@id/used_product_list_item_price"
-                app:layout_constraintBottom_toBottomOf="@id/used_product_list_item_price"
-                app:layout_constraintStart_toEndOf="@id/used_product_list_item_price"
+                app:layout_constraintTop_toTopOf="@id/favorite_product_list_item_price"
+                app:layout_constraintBottom_toBottomOf="@id/favorite_product_list_item_price"
+                app:layout_constraintStart_toEndOf="@id/favorite_product_list_item_price"
                 android:text="@string/lasUpdated"
                 />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/used_product_list_item_last_updated_date"
+                android:id="@+id/favorite_product_list_item_last_updated_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingBottom="8dp"
@@ -136,11 +136,11 @@
                 android:paddingEnd="4dp"
                 android:textAppearance="?android:textAppearanceSmall"
                 android:textColor="@color/grey"
-                app:layout_constraintBottom_toBottomOf="@id/used_product_list_item_price"
-                app:layout_constraintStart_toEndOf="@+id/used_product_list_item_last_updated_label"
-                app:layout_constraintTop_toTopOf="@id/used_product_list_item_price"
+                app:layout_constraintBottom_toBottomOf="@id/favorite_product_list_item_price"
+                app:layout_constraintStart_toEndOf="@+id/favorite_product_list_item_last_updated_label"
+                app:layout_constraintTop_toTopOf="@id/favorite_product_list_item_price"
                 tools:text="01 Apr 2019"
-                app:longToDate="@{usedProduct.usedProduct.lastUpdate}"/>
+                app:longToDate="@{favoriteProduct.favoriteProduct.lastUpdate}"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

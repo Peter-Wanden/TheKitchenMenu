@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.detail.product.usedproducteditor;
+package com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.databinding.UsedProductEditorFragmentBinding;
+import com.example.peter.thekitchenmenu.databinding.FavoriteProductEditorFragmentBinding;
 import com.example.peter.thekitchenmenu.utils.CurrencyInputWatcher;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -15,27 +15,28 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
-public class UsedProductEditorFragment extends Fragment {
+public class FavoriteProductEditorFragment extends Fragment {
 
-    private static final String TAG = "tkm-UsedProductEditFrag";
+    private static final String TAG = "tkm-FavProductEditFrag";
 
     public static final String ARGUMENT_PRODUCT_ID = "PRODUCT_ID";
-    public static final String ARGUMENT_USED_PRODUCT_ID = "USED_PRODUCT_ID";
+    public static final String ARGUMENT_FAVORITE_PRODUCT_ID = "FAVORITE_PRODUCT_ID";
 
-    private UsedProductEditorFragmentBinding binding;
-    private UsedProductEditorViewModel viewModel;
+    private FavoriteProductEditorFragmentBinding binding;
+    private FavoriteProductEditorViewModel viewModel;
 
-    public static UsedProductEditorFragment newInstance(String productId, String usedProductId) {
+    public static FavoriteProductEditorFragment newInstance(String productId,
+                                                            String favoriteProductId) {
 
         Bundle arguments = new Bundle();
         arguments.putString(ARGUMENT_PRODUCT_ID, productId);
-        arguments.putString(ARGUMENT_USED_PRODUCT_ID, usedProductId);
-        UsedProductEditorFragment fragment = new UsedProductEditorFragment();
+        arguments.putString(ARGUMENT_FAVORITE_PRODUCT_ID, favoriteProductId);
+        FavoriteProductEditorFragment fragment = new FavoriteProductEditorFragment();
         fragment.setArguments(arguments);
         return fragment;
     }
 
-    public UsedProductEditorFragment() {}
+    public FavoriteProductEditorFragment() {}
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -50,10 +51,10 @@ public class UsedProductEditorFragment extends Fragment {
     private void loadData() {
         if (getArguments() != null)
 
-            if (getArguments().getString(ARGUMENT_USED_PRODUCT_ID) != null) {
+            if (getArguments().getString(ARGUMENT_FAVORITE_PRODUCT_ID) != null) {
                 viewModel.start(
                         getArguments().getString(ARGUMENT_PRODUCT_ID),
-                        getArguments().getString(ARGUMENT_USED_PRODUCT_ID));
+                        getArguments().getString(ARGUMENT_FAVORITE_PRODUCT_ID));
             } else {
                 viewModel.start(
                         getArguments().getString(ARGUMENT_PRODUCT_ID),
@@ -85,8 +86,8 @@ public class UsedProductEditorFragment extends Fragment {
     }
 
     private void setUpFab() {
-        FloatingActionButton fab = getActivity().findViewById(R.id.used_product_editor_save_fab);
-        fab.setOnClickListener(view -> viewModel.saveUsedProduct());
+        FloatingActionButton fab = getActivity().findViewById(R.id.favorite_product_editor_save_fab);
+        fab.setOnClickListener(view -> viewModel.saveFavoriteProduct());
     }
 
     @Nullable
@@ -97,7 +98,7 @@ public class UsedProductEditorFragment extends Fragment {
 
         binding = DataBindingUtil.inflate(
                 inflater,
-                R.layout.used_product_editor_fragment,
+                R.layout.favorite_product_editor_fragment,
                 container,
                 false);
 
@@ -108,8 +109,8 @@ public class UsedProductEditorFragment extends Fragment {
         return binding.getRoot();
     }
 
-    private UsedProductEditorViewModel obtainViewModel() {
-        return UsedProductEditorActivity.obtainUsedProductEditorViewModel(requireActivity());
+    private FavoriteProductEditorViewModel obtainViewModel() {
+        return FavoriteProductEditorActivity.obtainFavoriteProductEditorViewModel(requireActivity());
     }
 
     private void setBindingInstanceVariables() {
