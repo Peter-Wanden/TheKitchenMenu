@@ -5,7 +5,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentActivity;
@@ -17,31 +16,45 @@ import com.example.peter.thekitchenmenu.ui.ViewModelFactoryProduct;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryFavoriteProduct;
 import com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorActivity;
 import com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorFragment;
+import com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductEditorActivity;
 import com.example.peter.thekitchenmenu.utils.ActivityUtils;
 
-public class ProductViewerActivity extends AppCompatActivity implements ProductViewerNavigator {
+public class ProductViewerActivity
+        extends AppCompatActivity
+        implements ProductViewerNavigator, FavoriteProductViewerNavigator {
 
     private static final String TAG = "tkm-ProductViewerAct";
 
     public static final String EXTRA_PRODUCT_ID = "PRODUCT_ID";
-    public static final int REQUEST_CODE = 1;
-    public static final int DELETE_RESULT_OK = RESULT_FIRST_USER + 2;
-
+    public static final String EXTRA_NEW_PRODUCT_ID = "NEW_PRODUCT_ID";
+    public static final int REQUEST_VIEW_PRODUCT = 1;
+    public static final int REQUEST_REVIEW_PRODUCT = 2;
+    public static final int RESULT_DELETE_PRODUCT_OK = RESULT_FIRST_USER + 1;
+    public static final int RESULT_FAVORITE_ADDED_OK = RESULT_FIRST_USER + 2;
+    public static final int RESULT_FAVORITE_NOT_ADDED = RESULT_FIRST_USER + 3;
 
     private ProductViewerActivityBinding binding;
     private ProductViewerViewModel productViewerViewModel;
     private FavoriteProductViewerViewModel favoriteProductViewerViewModel;
-    private String productId;
+    private boolean productEdited = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        productId = getIntent().getStringExtra(EXTRA_PRODUCT_ID);
+        String productId = "";
+        if (getIntent().getStringExtra(EXTRA_PRODUCT_ID) != null) {
+            setTitle(R.string.activity_title_view_product);
+            productId = getIntent().getStringExtra(EXTRA_PRODUCT_ID);
+
+        } else if (getIntent().getStringExtra(EXTRA_NEW_PRODUCT_ID) != null) {
+            setTitle(R.string.activity_title_review_new_product);
+            productId = getIntent().getStringExtra(EXTRA_NEW_PRODUCT_ID);
+        }
         initialiseBindings();
         setupToolbar();
         setupViewModels();
-        addFragments();
+        addFragments(productId);
         subscribeToNavigationChanges();
     }
 
@@ -51,17 +64,16 @@ public class ProductViewerActivity extends AppCompatActivity implements ProductV
 
     private void setupToolbar() {
         setSupportActionBar(binding.productViewerActivityToolbar);
-        ActionBar ab = getSupportActionBar();
-
-        if (ab != null) {
-            ab.setDisplayHomeAsUpEnabled(true);
-            ab.setDisplayShowHomeEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
 
     private void setupViewModels() {
         productViewerViewModel = obtainProductViewerViewModel(this);
+        productViewerViewModel.setNavigator(this);
         favoriteProductViewerViewModel = obtainFavoriteProductViewerViewModel(this);
+        favoriteProductViewerViewModel.setNavigator(this);
     }
 
     public static ProductViewerViewModel obtainProductViewerViewModel(
@@ -80,7 +92,7 @@ public class ProductViewerActivity extends AppCompatActivity implements ProductV
         return ViewModelProviders.of(activity, factory).get(FavoriteProductViewerViewModel.class);
     }
 
-    private void addFragments() {
+    private void addFragments(String productId) {
 
         ProductViewerFragment productViewerFragment =
                 findOrReplaceViewerFragment(productId);
@@ -110,7 +122,8 @@ public class ProductViewerActivity extends AppCompatActivity implements ProductV
     }
 
     @NonNull
-    private FavoriteProductViewerFragment findOrReplaceFavoriteProductViewerFragment(String productId) {
+    private FavoriteProductViewerFragment findOrReplaceFavoriteProductViewerFragment(
+            String productId) {
 
         FavoriteProductViewerFragment fragment = (FavoriteProductViewerFragment)
                 getSupportFragmentManager().findFragmentById(
@@ -121,50 +134,51 @@ public class ProductViewerActivity extends AppCompatActivity implements ProductV
     }
 
     private void subscribeToNavigationChanges() {
+
+        productViewerViewModel.getProductEditedEvent().observe(
+                this, productEdited ->
+                        ProductViewerActivity.this.productEdited = productEdited);
+
         favoriteProductViewerViewModel.getAddFavoriteProduct().observe(
                 this, addFavoriteProductEvent ->
-                ProductViewerActivity.this.addNewFavoriteProduct());
+                        ProductViewerActivity.this.addFavoriteProduct());
 
         favoriteProductViewerViewModel.getEditFavoriteProduct().observe(
                 this, editFavoriteProductEvent ->
                         ProductViewerActivity.this.editFavoriteProduct());
-
-        favoriteProductViewerViewModel.getRemoveFavoriteProduct().observe(
-                this, removeProductEvent ->
-                ProductViewerActivity.this.deleteFavoriteProduct());
     }
 
     @Override
     public boolean onSupportNavigateUp() {
+        if (productEdited) setResult(ProductEditorActivity.RESULT_ADD_EDIT_PRODUCT_OK);
+        if (favoriteProductViewerViewModel.isFavoriteAddedEdited()) {
+            setResult(RESULT_FAVORITE_ADDED_OK);
+        }
+
         onBackPressed();
         return true;
     }
 
     @Override
     public void editProduct(String productId) {
-        // Navigate to ProductEditor, with onActivityResult()
-
+        Intent intent = new Intent(this, ProductEditorActivity.class);
+        intent.putExtra(ProductEditorActivity.EXTRA_PRODUCT_ID, productId);
+        startActivityForResult(intent, ProductEditorActivity.REQUEST_ADD_EDIT_PRODUCT);
     }
 
     @Override
     public void deleteProduct(String productId) {
-        // Confirm delete, Navigate to product catalog with appropriate onActivityResult()
-    }
-
-    @Override
-    public void deleteFavoriteProduct() {
-        setResult(DELETE_RESULT_OK);
+        favoriteProductViewerViewModel.deleteFavoriteProduct();
+        setResult(RESULT_DELETE_PRODUCT_OK);
         finish();
     }
 
     @Override
-    public void addNewFavoriteProduct() {
+    public void addFavoriteProduct() {
         Intent intent = new Intent(this, FavoriteProductEditorActivity.class);
-
         intent.putExtra(
                 FavoriteProductEditorActivity.EXTRA_PRODUCT_ID,
                 productViewerViewModel.product.get().getId());
-
         startActivityForResult(
                 intent,
                 FavoriteProductEditorActivity.REQUEST_ADD_EDIT_FAVORITE_PRODUCT);
@@ -173,15 +187,12 @@ public class ProductViewerActivity extends AppCompatActivity implements ProductV
     @Override
     public void editFavoriteProduct() {
         Intent intent = new Intent(this, FavoriteProductEditorActivity.class);
-
         intent.putExtra(
                 FavoriteProductEditorActivity.EXTRA_PRODUCT_ID,
                 productViewerViewModel.product.get().getId());
-
         intent.putExtra(
                 FavoriteProductEditorFragment.ARGUMENT_FAVORITE_PRODUCT_ID,
                 favoriteProductViewerViewModel.favoriteProduct.get().getId());
-
         startActivityForResult(
                 intent,
                 FavoriteProductEditorActivity.REQUEST_ADD_EDIT_FAVORITE_PRODUCT);
@@ -190,6 +201,18 @@ public class ProductViewerActivity extends AppCompatActivity implements ProductV
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        favoriteProductViewerViewModel.handleActivityResult(requestCode, resultCode);
+
+        if (requestCode == FavoriteProductEditorActivity.REQUEST_ADD_EDIT_FAVORITE_PRODUCT)
+            favoriteProductViewerViewModel.handleActivityResult(requestCode, resultCode);
+
+        if (requestCode == ProductEditorActivity.REQUEST_ADD_EDIT_PRODUCT)
+            productViewerViewModel.handleActivityResult(requestCode, resultCode);
+    }
+
+    @Override
+    protected void onDestroy() {
+        productViewerViewModel.onActivityDestroyed();
+        favoriteProductViewerViewModel.onActivityDestroyed();
+        super.onDestroy();
     }
 }

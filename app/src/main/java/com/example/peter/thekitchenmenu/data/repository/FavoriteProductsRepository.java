@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity;
+import com.example.peter.thekitchenmenu.data.model.FavoriteProductModel;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -210,8 +211,12 @@ public class FavoriteProductsRepository implements FavoriteProductsDataSource {
 
     @Override
     public void deleteFavoriteProduct(String favoriteProductId) {
+        Log.d(TAG, "deleteFavoriteProduct: called with id=" + favoriteProductId);
         remoteDataSource.deleteFavoriteProduct(favoriteProductId);
         localDataSource.deleteFavoriteProduct(favoriteProductId);
         favoriteProductsCache.remove(favoriteProductId);
+        for (Map.Entry<String, FavoriteProductEntity> model : favoriteProductsCache.entrySet()) {
+            Log.d(TAG, "deleteFavoriteProduct: map has entry=" + model.getKey());
+        }
     }
 }

@@ -21,6 +21,7 @@ public class ProductIdentityViewModel extends ObservableViewModel {
     private ProductIdentityModel editedIdentityModel = new ProductIdentityModel();
     private final SingleLiveEvent<String> descriptionErrorEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<String> shoppingListItemNameErrorEvent = new SingleLiveEvent<>();
+    private final SingleLiveEvent<Boolean> identityModelValidEvent = new SingleLiveEvent<>();
 
     private Application appContext;
 
@@ -55,6 +56,7 @@ public class ProductIdentityViewModel extends ObservableViewModel {
             checkAllFieldsValidated();
         } else {
             descriptionValidated = false;
+            checkAllFieldsValidated();
             descriptionErrorEvent.setValue(descriptionValidationResponse);
         }
     }
@@ -72,6 +74,7 @@ public class ProductIdentityViewModel extends ObservableViewModel {
             checkAllFieldsValidated();
         } else {
             shoppingItemNameValidated = false;
+            checkAllFieldsValidated();
             shoppingListItemNameErrorEvent.setValue(shoppingListItemNameValidationResponse);
         }
     }
@@ -84,9 +87,14 @@ public class ProductIdentityViewModel extends ObservableViewModel {
         return TextValidationHandler.validateText(appContext, editable.toString());
     }
 
+    SingleLiveEvent<Boolean> getIdentityModelValidEvent() {
+        return identityModelValidEvent;
+    }
+
     private void checkAllFieldsValidated() {
         if (descriptionValidated && shoppingItemNameValidated) {
             existingIdentityModel.setValue(editedIdentityModel);
-        }
+            identityModelValidEvent.setValue(true);
+        } else identityModelValidEvent.setValue(false);
     }
 }

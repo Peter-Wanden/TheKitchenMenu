@@ -79,7 +79,7 @@ public class CatalogAllRecyclerAdapter
 
             @Override
             public void onRemoveFromFavoritesClicked(ProductModel productModel) {
-                viewModel.removeFromFavorites(productModel.getProduct().getId());
+                viewModel.removeFromFavorites(productModel.getFavoriteProductId());
             }
         };
 

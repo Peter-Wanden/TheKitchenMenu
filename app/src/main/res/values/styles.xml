@@ -14,8 +14,14 @@
         <item name="android:statusBarColor">@color/primaryDarkColor</item>
         <!-- Enables content transitions -->
         <item name="android:windowContentTransitions">true</item>
+
         <!-- Text color of overflow menu items -->
-        <item name="android:actionMenuTextColor">@color/black</item>
+        <item name="android:itemTextAppearance">@style/AppTheme.ItemTextStyle</item>
+
+    </style>
+
+    <style name="AppTheme.ItemTextStyle" parent="@android:style/TextAppearance.Widget">
+        <item name="android:textColor">@color/darkGrey</item>
     </style>
 
     <!-- Style for a category TextView in product_viewer_identity view mode -->

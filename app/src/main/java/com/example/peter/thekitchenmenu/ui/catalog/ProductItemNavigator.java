@@ -5,7 +5,7 @@ package com.example.peter.thekitchenmenu.ui.catalog;
  */
 public interface ProductItemNavigator {
 
-    void launchProductViewer(String productId);
+    void viewProduct(String productId);
 
     void addToFavorites(String productId);
 

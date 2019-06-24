@@ -6,6 +6,7 @@ public class ProductModel {
 
     private ProductEntity product;
     private boolean isFavorite;
+    private String favoriteProductId;
 
     public ProductEntity getProduct() {
         return product;
@@ -21,5 +22,13 @@ public class ProductModel {
 
     public void setFavorite(boolean favorite) {
         isFavorite = favorite;
+    }
+
+    public String getFavoriteProductId() {
+        return favoriteProductId;
+    }
+
+    public void setFavoriteProductId(String favoriteProductId) {
+        this.favoriteProductId = favoriteProductId;
     }
 }

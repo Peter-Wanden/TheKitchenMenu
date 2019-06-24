@@ -145,7 +145,7 @@ public class FavoriteProductEditorActivity
     }
 
     private void subscribeToNavigationChanges() {
-        favoriteProductEditorViewModel.getFavoriteProductIsUpdated().observe(this, saved ->
+        favoriteProductEditorViewModel.getFavoriteProductSaved().observe(this, saved ->
                 FavoriteProductEditorActivity.this.onFavoriteProductSaved());
     }
 

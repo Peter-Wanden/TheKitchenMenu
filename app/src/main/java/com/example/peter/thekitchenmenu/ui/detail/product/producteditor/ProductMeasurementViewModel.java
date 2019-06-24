@@ -21,6 +21,7 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
 
     private MutableLiveData<ProductMeasurementModel> measurementModel;
     private ProductMeasurementHandler measurementHandler;
+    private final SingleLiveEvent<Boolean> measurementModelIsValidEvent = new SingleLiveEvent<>();
 
     private MeasurementSubtype subtype;
     private UnitOfMeasure unitOfMeasure;
@@ -276,7 +277,11 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
 
         if (unitOfMeasure.isValidMeasurement()) {
             getMeasurementModel().setValue(modelOut);
-            Log.d(TAG, "updateMeasurementModel: model isValid:" + modelOut.toString());
-        } else Log.d(TAG, "updateMeasurementModel: model isNotValid:" + modelOut.toString());
+            measurementModelIsValidEvent.setValue(true);
+        } else measurementModelIsValidEvent.setValue(false);
+    }
+
+    public SingleLiveEvent<Boolean> getMeasurementModelIsValidEvent() {
+        return measurementModelIsValidEvent;
     }
 }

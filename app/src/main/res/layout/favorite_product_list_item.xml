@@ -72,7 +72,7 @@
                 app:remoteSmallImageUri='@{favoriteProduct.product.remoteSmallImageUri}' />
 
             <TextView
-                android:id="@+id/product_list_item_pack_size"
+                android:id="@+id/product_list_item_measurement"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif"
@@ -82,22 +82,10 @@
                 android:textColor="@color/grey"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/product_list_item_description"
-                tools:text="400"
-                android:text="@{`` + favoriteProduct.product.baseUnits}"/>
-
-            <TextView
-                android:id="@+id/product_list_item_measurement"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif"
-                android:paddingStart="@dimen/list_item_top_half_margin"
-                android:paddingEnd="@dimen/list_item_top_half_margin"
-                android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="@color/grey"
-                app:layout_constraintStart_toEndOf="@+id/product_list_item_pack_size"
-                app:layout_constraintTop_toBottomOf="@+id/product_list_item_description"
-                tools:text="ml"
-                android:text="@{`` + favoriteProduct.product.unitOfMeasureSubtype}"/>
+                app:setLabelForSubtypeInt="@{favoriteProduct.product.unitOfMeasureSubtype}"
+                app:formatBaseUnits="@{favoriteProduct.product.baseUnits}"
+                tools:text="400ml"
+                />
 
             <TextView
                 android:id="@+id/favorite_product_list_item_price"
@@ -121,6 +109,7 @@
                 android:textAppearance="?android:textAppearanceSmall"
                 android:textColor="@color/grey"
                 android:paddingBottom="8dp"
+                app:layout_constraintBaseline_toBaselineOf="@id/favorite_product_list_item_price"
                 app:layout_constraintTop_toTopOf="@id/favorite_product_list_item_price"
                 app:layout_constraintBottom_toBottomOf="@id/favorite_product_list_item_price"
                 app:layout_constraintStart_toEndOf="@id/favorite_product_list_item_price"
@@ -136,6 +125,7 @@
                 android:paddingEnd="4dp"
                 android:textAppearance="?android:textAppearanceSmall"
                 android:textColor="@color/grey"
+                app:layout_constraintBaseline_toBaselineOf="@id/favorite_product_list_item_price"
                 app:layout_constraintBottom_toBottomOf="@id/favorite_product_list_item_price"
                 app:layout_constraintStart_toEndOf="@+id/favorite_product_list_item_last_updated_label"
                 app:layout_constraintTop_toTopOf="@id/favorite_product_list_item_price"

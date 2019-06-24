@@ -7,7 +7,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.databinding.ProductCatalogActivityBinding;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryFavoriteProduct;
 import com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorActivity;
@@ -77,7 +76,9 @@ public class CatalogActivity
 
     private void setupToolBar() {
         setSupportActionBar(binding.activityCatalogProductToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     private void setupFab() {
@@ -93,15 +94,11 @@ public class CatalogActivity
 
     private void setupViewModel() {
         viewModel = obtainViewModel(this);
-        viewModel.setNavigator(this);
+        viewModel.setNavigators(this, this);
         viewModel.prepareData();
 
-        viewModel.getSelected().observe(this, selectedProduct -> {
-            if (selectedProduct != null) launchProductEditor(selectedProduct);
-        });
-
         viewModel.getOpenProductEvent().observe(this, productId -> {
-            if (productId != null) launchProductViewer(productId);
+            if (productId != null) viewProduct(productId);
         });
 
         viewModel.getAddToFavoritesEvent().observe(this, productId -> {
@@ -112,7 +109,9 @@ public class CatalogActivity
     @Override
     public void addNewProduct() {
         Intent intent = new Intent(this, ProductEditorActivity.class);
-        startActivity(intent);
+        startActivityForResult(
+                intent,
+                ProductEditorActivity.REQUEST_ADD_EDIT_PRODUCT);
     }
 
     @Override
@@ -135,22 +134,23 @@ public class CatalogActivity
     }
 
     @Override
-    public void launchProductViewer(String productId) {
+    public void viewProduct(String productId) {
         Intent intent = new Intent(CatalogActivity.this, ProductViewerActivity.class);
         intent.putExtra(ProductViewerActivity.EXTRA_PRODUCT_ID, productId);
-        startActivityForResult(intent, ProductViewerActivity.REQUEST_CODE);
+        startActivityForResult(intent, ProductViewerActivity.REQUEST_VIEW_PRODUCT);
     }
 
-    private void launchProductEditor(ProductEntity selectedProduct) {
-        Intent intent = new Intent(CatalogActivity.this, ProductEditorActivity.class);
-        intent.putExtra(ProductEditorActivity.EXTRA_PRODUCT_ID, selectedProduct.getId());
-        startActivity(intent);
+    @Override
+    public void reviewNewProduct(String productId) {
+        Intent intent = new Intent(CatalogActivity.this, ProductViewerActivity.class);
+        intent.putExtra(ProductViewerActivity.EXTRA_NEW_PRODUCT_ID, productId);
+        startActivityForResult(intent, ProductViewerActivity.REQUEST_REVIEW_PRODUCT);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        viewModel.handleActivityResult(requestCode, resultCode);
+        viewModel.handleActivityResult(requestCode, resultCode, data);
     }
 
     @Override

@@ -24,7 +24,7 @@ public class FavoriteProductViewerFragment extends Fragment {
     private FavoriteProductViewerViewModel viewModel;
     private FloatingActionButton fab;
 
-    public static FavoriteProductViewerFragment newInstance(String productId) {
+    static FavoriteProductViewerFragment newInstance(String productId) {
 
         Bundle arguments = new Bundle();
         arguments.putString(ARGUMENT_PRODUCT_ID, productId);
@@ -36,6 +36,7 @@ public class FavoriteProductViewerFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        if (getArguments() !=null)
         viewModel.start(getArguments().getString(ARGUMENT_PRODUCT_ID));
     }
 
@@ -77,8 +78,8 @@ public class FavoriteProductViewerFragment extends Fragment {
         viewModel.getSetFabIcon().observe(this, this::setFabIcon);
     }
 
-    private void setFabIcon(boolean setEditIconIfTrue) {
-        if (setEditIconIfTrue) fab.setImageResource(R.drawable.ic_edit_white);
+    private void setFabIcon(boolean setEditIcon) {
+        if (setEditIcon) fab.setImageResource(R.drawable.ic_edit_white);
         else fab.setImageResource(R.drawable.ic_format_list_bulleted_white);
     }
 }

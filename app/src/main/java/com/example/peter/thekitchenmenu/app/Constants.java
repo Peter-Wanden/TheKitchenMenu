@@ -1,5 +1,6 @@
 package com.example.peter.thekitchenmenu.app;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 public abstract class Constants {
@@ -36,18 +37,14 @@ public abstract class Constants {
      *********/
     public static final String ANONYMOUS = "anonymous";
     public static final String USER_ID_KEY = "user_id_key";
+
     /*
      * This field is updated when the user logs in / out.
-     * To observe, Constants.observe(lifeCycleOwner, observerName);
-     * To update, call Constants.getUId().setPackMeasurement(userID);
      * see: https://developer.android.com/topic/libraries/architecture/livedata
      */
-    private static MutableLiveData<String> USER_ID;
+    @NonNull
+    private static MutableLiveData<String> USER_ID = new MutableLiveData<>(ANONYMOUS);
     public static MutableLiveData<String> getUserId() {
-        if(USER_ID == null) {
-            USER_ID = new MutableLiveData<>();
-            USER_ID.postValue(ANONYMOUS);
-        }
         return USER_ID;
     }
 }

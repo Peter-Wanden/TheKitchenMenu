@@ -38,13 +38,13 @@ public class UnitOfMeasureListItemBindingAdapter {
         if (baseUnits > 999) {
             measurement.
                     append(baseUnits / 1000).
-                    append(" ").
+                    append("").
                     append(resources.getString(
                             unitOfMeasure.getUnitTwoLabelStringResourceId()));
         } else {
             measurement.
                     append((int) baseUnits).
-                    append(" ").
+                    append("").
                     append(resources.getString(
                             unitOfMeasure.getUnitOneLabelStringResourceId()));
         }

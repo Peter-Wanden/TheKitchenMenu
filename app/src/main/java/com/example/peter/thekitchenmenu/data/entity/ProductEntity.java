@@ -1,5 +1,8 @@
 package com.example.peter.thekitchenmenu.data.entity;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
@@ -15,9 +18,8 @@ import java.util.UUID;
 
 import static com.example.peter.thekitchenmenu.data.entity.ProductEntity.TABLE_PRODUCT;
 
-// TODO - make final
 @Entity(tableName = TABLE_PRODUCT)
-public final class ProductEntity {
+public final class ProductEntity implements Parcelable {
 
     public static final String TAG = "tkm-ProductEntity";
 
@@ -25,18 +27,18 @@ public final class ProductEntity {
     public static final String ID = "id";
     public static final String DESCRIPTION = "description";
     public static final String SHOPPING_LIST_ITEM_NAME = "shoppingListItemName";
-    public static final String CATEGORY = "category";
-    public static final String NUMBER_OF_PRODUCTS = "number_of_products";
-    public static final String SHELF_LIFE = "shelfLife";
-    public static final String BASE_UNITS = "baseUnits";
-    public static final String UNIT_OF_MEASURE_SUB_TYPE = "unitOfMeasureSubtype";
-    public static final String CREATED_BY = "createdBy";
-    public static final String WEB_IMAGE_URL = "webImageUrl";
-    public static final String REMOTE_SMALL_IMAGE_URI = "remoteSmallImageUri";
-    public static final String REMOTE_MEDIUM_IMAGE_URI = "remoteMediumImageUri";
-    public static final String REMOTE_LARGE_IMAGE_URI = "remoteLargeImageUri";
-    public static final String CREATE_DATE = "productCreateDate";
-    public static final String LAST_UPDATE = "productLastUpdate";
+    private static final String CATEGORY = "category";
+    private static final String NUMBER_OF_PRODUCTS = "number_of_products";
+    private static final String SHELF_LIFE = "shelfLife";
+    private static final String BASE_UNITS = "baseUnits";
+    private static final String UNIT_OF_MEASURE_SUB_TYPE = "unitOfMeasureSubtype";
+    private static final String CREATED_BY = "createdBy";
+    private static final String WEB_IMAGE_URL = "webImageUrl";
+    private static final String REMOTE_SMALL_IMAGE_URI = "remoteSmallImageUri";
+    private static final String REMOTE_MEDIUM_IMAGE_URI = "remoteMediumImageUri";
+    private static final String REMOTE_LARGE_IMAGE_URI = "remoteLargeImageUri";
+    private static final String CREATE_DATE = "productCreateDate";
+    private static final String LAST_UPDATE = "productLastUpdate";
 
     @PrimaryKey
     @NonNull
@@ -91,109 +93,6 @@ public final class ProductEntity {
     @ColumnInfo(name = LAST_UPDATE)
     private final long lastUpdate;
 
-    /**
-     * Use this constructor when creating a new product entity
-     *
-     * @param description           manufacturers or retailers exact description of the product
-     * @param shoppingListItemName  name used for this product on a shopping list
-     * @param category              an integer that relates back to a category
-     * @param shelfLife             an integer that relates back to a period of time
-     * @param numberOfProducts      defines the number of products when sold as a multi-pack
-     * @param baseUnits             the products size in base units
-     * @param unitOfMeasureSubtype  an integer defining the products {@link MeasurementSubtype}
-     * @param createdBy             the users UID
-     * @param webImageUrl           a URL to an image that is not stored by TKM
-     * @param remoteSmallImageUri   URL to a small version of a product image
-     * @param remoteMediumImageUri  URL to a medium sized version of a product image
-     * @param remoteLargeImageUri   URL to a large version of a product image
-     *
-     */
-    @Ignore
-    public ProductEntity(@NonNull String description,
-                         @NonNull String shoppingListItemName,
-                         int category,
-                         int shelfLife,
-                         int numberOfProducts,
-                         double baseUnits,
-                         int unitOfMeasureSubtype,
-                         @NonNull String createdBy,
-                         @Nullable String webImageUrl,
-                         @Nullable String remoteSmallImageUri,
-                         @Nullable String remoteMediumImageUri,
-                         @Nullable String remoteLargeImageUri) {
-
-
-        this.id = UUID.randomUUID().toString();
-        this.description = description;
-        this.shoppingListItemName = shoppingListItemName;
-        this.category = category;
-        this.shelfLife = shelfLife;
-        this.numberOfProducts = numberOfProducts;
-        this.baseUnits = baseUnits;
-        this.unitOfMeasureSubtype = unitOfMeasureSubtype;
-        this.createdBy = createdBy;
-        this.webImageUrl = webImageUrl;
-        this.remoteSmallImageUri = remoteSmallImageUri;
-        this.remoteMediumImageUri = remoteMediumImageUri;
-        this.remoteLargeImageUri = remoteLargeImageUri;
-        this.createDate = getDate();
-        this.lastUpdate = getDate();
-    }
-
-    /**
-     * Use this constructor when updating (copying) a product
-     *
-     * @param id                    the id of the product being copied
-     * @param description           manufacturers or retailers exact description of the product
-     * @param shoppingListItemName  name used for this product on a shopping list
-     * @param category              an integer that relates back to a category
-     * @param shelfLife             an integer that relates back to a period of time
-     * @param numberOfProducts      defines the number of products when sold as a multi-pack
-     * @param baseUnits             the products size in base units
-     * @param unitOfMeasureSubtype  an integer defining the products {@link MeasurementSubtype}
-     * @param createdBy             the Google Firebase provided UID
-     * @param webImageUrl           URL to an image that is not stored by TKM
-     * @param remoteSmallImageUri   URL to a small version of a product image
-     * @param remoteMediumImageUri  URL to a medium sized version of a product image
-     * @param remoteLargeImageUri   URL to a large version of a product image
-     */
-    @Ignore
-    public ProductEntity(@NonNull String id,
-                         @NonNull String description,
-                         @NonNull String shoppingListItemName,
-                         int category,
-                         int shelfLife,
-                         int numberOfProducts,
-                         double baseUnits,
-                         int unitOfMeasureSubtype,
-                         @NonNull String createdBy,
-                         @Nullable String webImageUrl,
-                         @Nullable String remoteSmallImageUri,
-                         @Nullable String remoteMediumImageUri,
-                         @Nullable String remoteLargeImageUri,
-                         long createDate) {
-
-        this.id = id;
-        this.description = description;
-        this.shoppingListItemName = shoppingListItemName;
-        this.category = category;
-        this.numberOfProducts = numberOfProducts;
-        this.shelfLife = shelfLife;
-        this.baseUnits = baseUnits;
-        this.unitOfMeasureSubtype = unitOfMeasureSubtype;
-        this.createdBy = createdBy;
-        this.webImageUrl = webImageUrl;
-        this.remoteSmallImageUri = remoteSmallImageUri;
-        this.remoteMediumImageUri = remoteMediumImageUri;
-        this.remoteLargeImageUri = remoteLargeImageUri;
-        this.createDate = createDate;
-        this.lastUpdate = getDate();
-    }
-
-    private long getDate() {
-        return Calendar.getInstance().getTimeInMillis();
-    }
-
     // Required by Room
     public ProductEntity(@NonNull String id,
                          @NonNull String description,
@@ -228,6 +127,107 @@ public final class ProductEntity {
         this.lastUpdate = lastUpdate;
     }
 
+    /**
+     * Use this constructor when creating a new product entity
+     *
+     * @param description          manufacturers or retailers exact description of the product
+     * @param shoppingListItemName name used for this product on a shopping list
+     * @param category             an integer that relates back to a category
+     * @param shelfLife            an integer that relates back to a period of time
+     * @param numberOfProducts     defines the number of products when sold as a multi-pack
+     * @param baseUnits            the products size in base units
+     * @param unitOfMeasureSubtype an integer defining the products {@link MeasurementSubtype}
+     * @param createdBy            the users UID
+     * @param webImageUrl          a URL to an image that is not stored by TKM
+     * @param remoteSmallImageUri  URL to a small version of a product image
+     * @param remoteMediumImageUri URL to a medium sized version of a product image
+     * @param remoteLargeImageUri  URL to a large version of a product image
+     */
+    @Ignore
+    public static ProductEntity createProduct(@NonNull String description,
+                                              @NonNull String shoppingListItemName,
+                                              int category,
+                                              int shelfLife,
+                                              int numberOfProducts,
+                                              double baseUnits,
+                                              int unitOfMeasureSubtype,
+                                              @NonNull String createdBy,
+                                              @Nullable String webImageUrl,
+                                              @Nullable String remoteSmallImageUri,
+                                              @Nullable String remoteMediumImageUri,
+                                              @Nullable String remoteLargeImageUri) {
+        return new ProductEntity(
+                UUID.randomUUID().toString(),
+                description,
+                shoppingListItemName,
+                category,
+                shelfLife,
+                numberOfProducts,
+                baseUnits,
+                unitOfMeasureSubtype,
+                createdBy,
+                webImageUrl,
+                remoteSmallImageUri,
+                remoteMediumImageUri,
+                remoteLargeImageUri,
+                getDate(),
+                getDate());
+    }
+
+    /**
+     * Use this constructor when updating (copying) a product
+     *
+     * @param id                   the id of the product being copied
+     * @param description          manufacturers or retailers exact description of the product
+     * @param shoppingListItemName name used for this product on a shopping list
+     * @param category             an integer that relates back to a category
+     * @param shelfLife            an integer that relates back to a period of time
+     * @param numberOfProducts     defines the number of products when sold as a multi-pack
+     * @param baseUnits            the products size in base units
+     * @param unitOfMeasureSubtype an integer defining the products {@link MeasurementSubtype}
+     * @param createdBy            the Google Firebase provided UID
+     * @param webImageUrl          URL to an image that is not stored by TKM
+     * @param remoteSmallImageUri  URL to a small version of a product image
+     * @param remoteMediumImageUri URL to a medium sized version of a product image
+     * @param remoteLargeImageUri  URL to a large version of a product image
+     */
+    @Ignore
+    public static ProductEntity updateProduct(@NonNull String id,
+                                              @NonNull String description,
+                                              @NonNull String shoppingListItemName,
+                                              int category,
+                                              int shelfLife,
+                                              int numberOfProducts,
+                                              double baseUnits,
+                                              int unitOfMeasureSubtype,
+                                              @NonNull String createdBy,
+                                              @Nullable String webImageUrl,
+                                              @Nullable String remoteSmallImageUri,
+                                              @Nullable String remoteMediumImageUri,
+                                              @Nullable String remoteLargeImageUri,
+                                              long createDate) {
+        return new ProductEntity(
+                id,
+                description,
+                shoppingListItemName,
+                category,
+                numberOfProducts,
+                shelfLife,
+                baseUnits,
+                unitOfMeasureSubtype,
+                createdBy,
+                webImageUrl,
+                remoteSmallImageUri,
+                remoteMediumImageUri,
+                remoteLargeImageUri,
+                createDate,
+                getDate());
+    }
+
+    private static long getDate() {
+        return Calendar.getInstance().getTimeInMillis();
+    }
+
     @Override
     public boolean equals(@Nullable Object o) {
 
@@ -235,42 +235,99 @@ public final class ProductEntity {
         if (o == null || getClass() != o.getClass()) return false;
         ProductEntity entity = (ProductEntity) o;
 
-        return Objects.equal(id,                    entity.id)                      &&
-               Objects.equal(description,           entity.description)             &&
-               Objects.equal(shoppingListItemName,  entity.shoppingListItemName)    &&
-               Objects.equal(category,              entity.category)                &&
-               Objects.equal(shelfLife,             entity.shelfLife)               &&
-               Objects.equal(numberOfProducts,      entity.numberOfProducts)        &&
-               Objects.equal(baseUnits,             entity.baseUnits)               &&
-               Objects.equal(unitOfMeasureSubtype,  entity.unitOfMeasureSubtype)    &&
-               Objects.equal(createdBy,             entity.createdBy)               &&
-               Objects.equal(webImageUrl,           entity.webImageUrl)             &&
-               Objects.equal(remoteSmallImageUri,   entity.remoteSmallImageUri)     &&
-               Objects.equal(remoteMediumImageUri,  entity.remoteMediumImageUri)    &&
-               Objects.equal(remoteLargeImageUri,   entity.remoteLargeImageUri)     &&
-               Objects.equal(createDate,            entity.createDate)              &&
-               Objects.equal(lastUpdate,            entity.lastUpdate);
+        return Objects.equal(id, entity.id) &&
+                Objects.equal(description, entity.description) &&
+                Objects.equal(shoppingListItemName, entity.shoppingListItemName) &&
+                Objects.equal(category, entity.category) &&
+                Objects.equal(shelfLife, entity.shelfLife) &&
+                Objects.equal(numberOfProducts, entity.numberOfProducts) &&
+                Objects.equal(baseUnits, entity.baseUnits) &&
+                Objects.equal(unitOfMeasureSubtype, entity.unitOfMeasureSubtype) &&
+                Objects.equal(createdBy, entity.createdBy) &&
+                Objects.equal(webImageUrl, entity.webImageUrl) &&
+                Objects.equal(remoteSmallImageUri, entity.remoteSmallImageUri) &&
+                Objects.equal(remoteMediumImageUri, entity.remoteMediumImageUri) &&
+                Objects.equal(remoteLargeImageUri, entity.remoteLargeImageUri) &&
+                Objects.equal(createDate, entity.createDate) &&
+                Objects.equal(lastUpdate, entity.lastUpdate);
     }
 
     @Override
     public String toString() {
         return "ProductEntity{" +
-               "\nid="                     + id                    +
-               "\ndescription='"           + description           + '\'' +
-               "\nshoppingListItemName='"  + shoppingListItemName  + '\'' +
-               "\ncategory="               + category              +
-               "\nshelfLife="              + shelfLife             +
-               "\nnumberOfProducts="       + numberOfProducts      +
-               "\nbaseUnits="              + baseUnits             +
-               "\nunitOfMeasureSubtype="   + unitOfMeasureSubtype  +
-               "\ncreatedBy='"             + createdBy             + '\'' +
-               "\nwebImageUrl='"           + webImageUrl           + '\'' +
-               "\nremoteSmallImageUri='"   + remoteSmallImageUri   + '\'' +
-               "\nremoteMediumImageUri='"  + remoteMediumImageUri  + '\'' +
-               "\nremoteLargeImageUri='"   + remoteLargeImageUri   + '\'' +
-               "\ncreateDate="             + createDate            +
-               "\nlastUpdate="             + lastUpdate            + '\'' +
-               '}';
+                "\nid=" + id +
+                "\ndescription='" + description + '\'' +
+                "\nshoppingListItemName='" + shoppingListItemName + '\'' +
+                "\ncategory=" + category +
+                "\nshelfLife=" + shelfLife +
+                "\nnumberOfProducts=" + numberOfProducts +
+                "\nbaseUnits=" + baseUnits +
+                "\nunitOfMeasureSubtype=" + unitOfMeasureSubtype +
+                "\ncreatedBy='" + createdBy + '\'' +
+                "\nwebImageUrl='" + webImageUrl + '\'' +
+                "\nremoteSmallImageUri='" + remoteSmallImageUri + '\'' +
+                "\nremoteMediumImageUri='" + remoteMediumImageUri + '\'' +
+                "\nremoteLargeImageUri='" + remoteLargeImageUri + '\'' +
+                "\ncreateDate=" + createDate +
+                "\nlastUpdate=" + lastUpdate + '\'' +
+                '}';
+    }
+
+    protected ProductEntity(Parcel in) {
+        id = java.util.Objects.requireNonNull(in.readString(),
+                "id cannot be null");
+        description = java.util.Objects.requireNonNull(in.readString(),
+                "description cannot be null");
+        shoppingListItemName = java.util.Objects.requireNonNull(in.readString(),
+                "shoppingListItemName cannot be null");
+        category = in.readInt();
+        shelfLife = in.readInt();
+        numberOfProducts = in.readInt();
+        baseUnits = in.readDouble();
+        unitOfMeasureSubtype = in.readInt();
+        createdBy = in.readString();
+        webImageUrl = in.readString();
+        remoteSmallImageUri = in.readString();
+        remoteMediumImageUri = in.readString();
+        remoteLargeImageUri = in.readString();
+        createDate = in.readLong();
+        lastUpdate = in.readLong();
+    }
+
+    public static final Creator<ProductEntity> CREATOR = new Creator<ProductEntity>() {
+        @Override
+        public ProductEntity createFromParcel(Parcel in) {
+            return new ProductEntity(in);
+        }
+
+        @Override
+        public ProductEntity[] newArray(int size) {
+            return new ProductEntity[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(id);
+        parcel.writeString(description);
+        parcel.writeString(shoppingListItemName);
+        parcel.writeInt(category);
+        parcel.writeInt(shelfLife);
+        parcel.writeInt(numberOfProducts);
+        parcel.writeDouble(baseUnits);
+        parcel.writeInt(unitOfMeasureSubtype);
+        parcel.writeString(createdBy);
+        parcel.writeString(webImageUrl);
+        parcel.writeString(remoteSmallImageUri);
+        parcel.writeString(remoteMediumImageUri);
+        parcel.writeString(remoteLargeImageUri);
+        parcel.writeLong(createDate);
+        parcel.writeLong(lastUpdate);
     }
 
     @NonNull

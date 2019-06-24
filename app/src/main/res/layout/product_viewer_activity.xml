@@ -19,15 +19,20 @@
         tools:context=".ui.detail.product.viewer.ProductViewerActivity">
 
         <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/product_viewer_activity_appbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/primaryColor"
+            android:theme="@style/ThemeOverlay.AppCompat.Light">
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/product_viewer_activity_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/primaryColor"
-                android:fitsSystemWindows="true" />
+                android:fitsSystemWindows="true"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                bind:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
         </com.google.android.material.appbar.AppBarLayout>
 
 

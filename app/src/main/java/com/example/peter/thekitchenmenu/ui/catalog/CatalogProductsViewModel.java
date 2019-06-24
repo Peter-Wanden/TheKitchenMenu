@@ -1,16 +1,14 @@
 package com.example.peter.thekitchenmenu.ui.catalog;
 
 import android.app.Application;
+import android.content.Intent;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.data.model.FavoriteProductModel;
@@ -20,12 +18,13 @@ import com.example.peter.thekitchenmenu.data.repository.ProductRepository;
 import com.example.peter.thekitchenmenu.data.repository.FavoriteProductsDataSource;
 import com.example.peter.thekitchenmenu.data.repository.FavoriteProductsRepository;
 import com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorActivity;
+import com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductEditorActivity;
 import com.example.peter.thekitchenmenu.ui.detail.product.viewer.ProductViewerActivity;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 
+import androidx.annotation.Nullable;
 import androidx.databinding.ObservableBoolean;
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 public class CatalogProductsViewModel extends AndroidViewModel {
@@ -34,10 +33,11 @@ public class CatalogProductsViewModel extends AndroidViewModel {
 
     private ProductRepository repositoryProduct;
     private FavoriteProductsRepository repositoryFavoriteProducts;
-    private ProductNavigator navigator;
+    private ProductNavigator productNavigator;
+    private ProductItemNavigator itemNavigator;
 
-    private boolean productEntitiesLoading;
-    private boolean favoriteProductEntitiesLoading;
+    private boolean productsLoading;
+    private boolean favoriteProductsLoading;
     private ObservableBoolean dataLoading = new ObservableBoolean(false);
     private ObservableBoolean isDataLoadingError = new ObservableBoolean(false);
 
@@ -49,39 +49,27 @@ public class CatalogProductsViewModel extends AndroidViewModel {
     private SingleLiveEvent<String> openProductEvent = new SingleLiveEvent<>();
     private SingleLiveEvent<String> addToFavoritesEvent = new SingleLiveEvent<>();
 
-    private MutableLiveData<String> userId;
-    private MutableLiveData<Boolean> isCreator = new MutableLiveData<>();
-
-    private List<FavoriteProductModel> favoriteProductModels = new ArrayList<>();
-
-    // The item selected in the adapter, passed through the click interface of the fragment.
-    private final MutableLiveData<ProductEntity> selectedProduct = new MutableLiveData<>();
-
     public CatalogProductsViewModel(Application application,
                                     FavoriteProductsRepository repositoryFavoriteProducts,
                                     ProductRepository repositoryProduct) {
         super(application);
-        setupObservables();
         this.repositoryFavoriteProducts = repositoryFavoriteProducts;
         this.repositoryProduct = repositoryProduct;
     }
 
-    private void setupObservables() {
-        // Retrieve constants
-        userId = Constants.getUserId();
-    }
-
-    void setNavigator(ProductNavigator navigator) {
-        this.navigator = navigator;
+    void setNavigators(ProductNavigator productNavigator, ProductItemNavigator itemNavigator) {
+        this.productNavigator = productNavigator;
+        this.itemNavigator = itemNavigator;
     }
 
     void onActivityDestroyed() {
         // Clear references to avoid potential memory leaks
-        navigator = null;
+        productNavigator = null;
+        itemNavigator = null;
     }
 
     void addNewProduct() {
-        if (navigator != null) navigator.addNewProduct();
+        if (productNavigator != null) productNavigator.addNewProduct();
     }
 
     void prepareData() {
@@ -102,7 +90,8 @@ public class CatalogProductsViewModel extends AndroidViewModel {
      * @param showLoadingUI Pass in true to display a loading icon in the UI
      */
     private void loadProductEntities(boolean forceUpdate, final boolean showLoadingUI) {
-        productEntitiesLoading = true;
+        productMap.clear();
+        productsLoading = true;
         if (showLoadingUI) dataLoading.set(true);
         if (forceUpdate) repositoryProduct.refreshProducts();
 
@@ -112,7 +101,7 @@ public class CatalogProductsViewModel extends AndroidViewModel {
 
                 if (showLoadingUI) dataLoading.set(false);
                 isDataLoadingError.set(false);
-                productEntitiesLoading = false;
+                productsLoading = false;
 
                 if (productMap == null) productMap = new LinkedHashMap<>();
                 for (ProductEntity productEntity : productEntities) {
@@ -125,6 +114,8 @@ public class CatalogProductsViewModel extends AndroidViewModel {
             public void onDataNotAvailable() {
                 // TODO - Show empty screen
                 isDataLoadingError.set(true);
+                productsLoading = false;
+                prepareModels();
             }
         });
     }
@@ -138,7 +129,8 @@ public class CatalogProductsViewModel extends AndroidViewModel {
     }
 
     private void loadFavoriteProductEntities(boolean forceUpdate, boolean showLoadingUi) {
-        favoriteProductEntitiesLoading = true;
+        favoriteProductMap.clear();
+        favoriteProductsLoading = true;
         if (showLoadingUi) dataLoading.set(true);
 
         if (forceUpdate) {
@@ -154,12 +146,13 @@ public class CatalogProductsViewModel extends AndroidViewModel {
 
                         if (showLoadingUi) dataLoading.set(false);
                         isDataLoadingError.set(false);
-                        favoriteProductEntitiesLoading = false;
+                        favoriteProductsLoading = false;
 
                         if (favoriteProductMap == null) favoriteProductMap = new LinkedHashMap<>();
                         for (FavoriteProductEntity favoriteProductEntity : favoriteProductEntities) {
                             favoriteProductMap.put(
-                                    favoriteProductEntity.getProductId(), favoriteProductEntity);
+                                    favoriteProductEntity.getProductId(),
+                                    favoriteProductEntity);
                         }
                         prepareModels();
                     }
@@ -168,12 +161,14 @@ public class CatalogProductsViewModel extends AndroidViewModel {
                     public void onDataNotAvailable() {
                         // TODO - Show empty screen
                         isDataLoadingError.set(true);
+                        favoriteProductsLoading = false;
+                        prepareModels();
                     }
                 });
     }
 
     private void prepareModels() {
-        if (!productEntitiesLoading && !favoriteProductEntitiesLoading) {
+        if (!productsLoading && !favoriteProductsLoading) {
             prepareProductModels();
             prepareFavoriteProductModels();
         }
@@ -181,13 +176,15 @@ public class CatalogProductsViewModel extends AndroidViewModel {
 
     private void prepareProductModels() {
         List<ProductModel> productModelList = new ArrayList<>();
-
         for (Map.Entry<String, ProductEntity> productEntityEntry : productMap.entrySet()) {
             ProductModel productModel = new ProductModel();
             productModel.setProduct(productEntityEntry.getValue());
 
             if (favoriteProductMap.containsKey(productEntityEntry.getValue().getId())) {
                 productModel.setFavorite(true);
+                productModel.setFavoriteProductId(
+                        favoriteProductMap.get(productEntityEntry.getValue().getId()).getId());
+
             } else productModel.setFavorite(false);
 
             productModelList.add(productModel);
@@ -196,12 +193,7 @@ public class CatalogProductsViewModel extends AndroidViewModel {
         productModels.setValue(productModelList);
     }
 
-    MutableLiveData<List<ProductModel>> getProductModels() {
-        return productModels;
-    }
-
     private void prepareFavoriteProductModels() {
-        Log.d(TAG, "prepareFavoriteProductModels: called");
         List<FavoriteProductModel> favoriteProductModelList = new ArrayList<>();
 
         for (Map.Entry<String, FavoriteProductEntity> favoriteProductEntityEntry :
@@ -213,29 +205,18 @@ public class CatalogProductsViewModel extends AndroidViewModel {
                 favoriteProductModel.setProduct(productMap.get(
                         favoriteProductEntityEntry.getKey()));
 
-            } else favoriteProductMap.remove(favoriteProductEntityEntry.getKey());
+            }
             favoriteProductModelList.add(favoriteProductModel);
         }
         favoriteProducts.setValue(favoriteProductModelList);
     }
 
+    MutableLiveData<List<ProductModel>> getProductModels() {
+        return productModels;
+    }
+
     MutableLiveData<List<FavoriteProductModel>> getFavoriteProducts() {
         return favoriteProducts;
-    }
-
-    // Pushes changes to the user ID to observers.
-    public MutableLiveData<String> getUserId() {
-        return userId;
-    }
-
-    // Boolean that tells us if this user created the product.
-    MutableLiveData<Boolean> getIsCreator() {
-        return isCreator;
-    }
-
-    // Pushes the selected product to observers.
-    LiveData<ProductEntity> getSelected() {
-        return selectedProduct;
     }
 
     SingleLiveEvent<String> getOpenProductEvent() {
@@ -246,29 +227,47 @@ public class CatalogProductsViewModel extends AndroidViewModel {
         return addToFavoritesEvent;
     }
 
-    void removeFromFavorites(String productId) {
-        repositoryFavoriteProducts.getFavoriteProductByProductId(productId,
-                new FavoriteProductsDataSource.GetFavoriteProductCallback() {
-            @Override
-            public void onFavoriteProductLoaded(FavoriteProductEntity favoriteProduct) {
-                repositoryFavoriteProducts.deleteFavoriteProduct(favoriteProduct.getId());
-                prepareData();
-            }
-
-            @Override
-            public void onDataNotAvailable() {}});
+    void removeFromFavorites(String favoriteProductId) {
+        repositoryFavoriteProducts.deleteFavoriteProduct(favoriteProductId);
+        prepareData();
     }
 
-    void handleActivityResult(int requestCode, int resultCode) {
-        if (ProductViewerActivity.REQUEST_CODE == requestCode) {
+    void handleActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        Log.d(TAG, "handleActivityResult: requestCode=" + requestCode + " resultCode=" + resultCode);
+        if (ProductViewerActivity.REQUEST_VIEW_PRODUCT == requestCode) {
+            if (resultCode == ProductEditorActivity.RESULT_ADD_EDIT_PRODUCT_OK) {
+                prepareData();
+            } else if (resultCode == ProductViewerActivity.RESULT_DELETE_PRODUCT_OK) {
+                prepareData();
+            } else if (resultCode == ProductViewerActivity.RESULT_FAVORITE_ADDED_OK) {
 
-            switch (resultCode) {
-                case ProductViewerActivity.DELETE_RESULT_OK:
-                    prepareData();
+                prepareData();
+            }
+        } else if (ProductViewerActivity.REQUEST_REVIEW_PRODUCT == requestCode) {
 
-                case FavoriteProductEditorActivity.RESULT_ADD_EDIT_FAVORITE_PRODUCT_OK:
-                    prepareData();
+            if (ProductViewerActivity.RESULT_FAVORITE_NOT_ADDED == resultCode) {
+                prepareData();
+            } else if (ProductViewerActivity.RESULT_FAVORITE_ADDED_OK == resultCode) {
+                prepareData();
             }
         }
+
+        if (FavoriteProductEditorActivity.REQUEST_ADD_EDIT_FAVORITE_PRODUCT == requestCode) {
+            if (resultCode == FavoriteProductEditorActivity.RESULT_ADD_EDIT_FAVORITE_PRODUCT_OK) {
+                prepareData();
+            }
+        }
+
+        if (ProductEditorActivity.REQUEST_ADD_EDIT_PRODUCT == requestCode) {
+            if (resultCode == ProductEditorActivity.RESULT_ADD_EDIT_PRODUCT_OK) {
+                // TODO - New product added, go to product viewer
+                String productId;
+                if (data != null) {
+                    productId = data.getStringExtra(ProductEditorActivity.EXTRA_PRODUCT_ID);
+                    productNavigator.reviewNewProduct(productId);
+                }
+            }
+        }
+
     }
 }

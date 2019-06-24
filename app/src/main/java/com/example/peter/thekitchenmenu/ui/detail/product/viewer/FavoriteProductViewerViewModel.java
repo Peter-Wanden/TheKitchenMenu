@@ -11,6 +11,7 @@ import com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity;
 import com.example.peter.thekitchenmenu.data.repository.FavoriteProductsDataSource;
 import com.example.peter.thekitchenmenu.data.repository.FavoriteProductsRepository;
 import com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorActivity;
+import com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductEditorActivity;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 
 public class FavoriteProductViewerViewModel
@@ -20,17 +21,28 @@ public class FavoriteProductViewerViewModel
     private static final String TAG = "tkm-FavProductViewerVM";
 
     private FavoriteProductsRepository repository;
+    private FavoriteProductViewerNavigator navigator;
+
     private boolean dataIsLoading;
     public final ObservableBoolean isFavorite = new ObservableBoolean();
     public final ObservableField<FavoriteProductEntity> favoriteProduct = new ObservableField<>();
     private final SingleLiveEvent<Void> addFavoriteProduct = new SingleLiveEvent<>();
     private final SingleLiveEvent<Void> editFavoriteProduct = new SingleLiveEvent<>();
+    private boolean favoriteAddedEdited;
     private final SingleLiveEvent<Boolean> setFabIcon = new SingleLiveEvent<>();
-    private final SingleLiveEvent<Void> removeFavoriteProduct = new SingleLiveEvent<>();
 
-    public FavoriteProductViewerViewModel(Application application, FavoriteProductsRepository repository) {
+    public FavoriteProductViewerViewModel(Application application,
+                                          FavoriteProductsRepository repository) {
         super(application);
         this.repository = repository;
+    }
+
+    void setNavigator(FavoriteProductViewerNavigator navigator) {
+        this.navigator = navigator;
+    }
+
+    void onActivityDestroyed() {
+        navigator = null;
     }
 
     public void start(String productId) {
@@ -86,18 +98,19 @@ public class FavoriteProductViewerViewModel
     void handleActivityResult(int requestCode, int resultCode) {
         Log.d(TAG, "handleActivityResult: requestCode=" + requestCode + " resultCode=" + resultCode);
         if (FavoriteProductEditorActivity.REQUEST_ADD_EDIT_FAVORITE_PRODUCT == requestCode) {
-            Log.d(TAG, "handleActivityResult: Yay, favorite product saved!");
+            if (resultCode == FavoriteProductEditorActivity.RESULT_ADD_EDIT_FAVORITE_PRODUCT_OK) {
+                favoriteAddedEdited = true;
+            }
         }
     }
 
-    void removeFavoriteProduct() {
+    void deleteFavoriteProduct() {
         if (favoriteProduct.get() != null) {
             repository.deleteFavoriteProduct(favoriteProduct.get().getId());
-            removeFavoriteProduct.call();
         }
     }
 
-    SingleLiveEvent<Void> getRemoveFavoriteProduct() {
-        return removeFavoriteProduct;
+    boolean isFavoriteAddedEdited() {
+        return favoriteAddedEdited;
     }
 }

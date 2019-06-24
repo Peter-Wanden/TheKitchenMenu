@@ -47,7 +47,7 @@ public class FavoriteProductEditorViewModel
     public final ObservableBoolean allFieldsValidated = new ObservableBoolean();
 
     private final ObservableBoolean dataIsLoading = new ObservableBoolean();
-    private final SingleLiveEvent<Void> favoriteProductIsUpdated = new SingleLiveEvent<>();
+    private final SingleLiveEvent<Void> favoriteProductSaved = new SingleLiveEvent<>();
 
     private Application appContext;
     private FavoriteProductsRepository repository;
@@ -245,7 +245,6 @@ public class FavoriteProductEditorViewModel
     void saveFavoriteProduct() {
         FavoriteProductEntity favoriteProduct;
         String price = removeCurrencySymbolFromPrice().toString();
-        Log.d(TAG, "saveFavoriteProduct: price=" + price);
 
         if (isNewFavoriteProduct || favoriteProductId == null) {
             favoriteProduct = FavoriteProductEntity.createFavoriteProduct(
@@ -277,17 +276,17 @@ public class FavoriteProductEditorViewModel
 
     private void createFavoriteProduct(FavoriteProductEntity favoriteProduct) {
         repository.saveFavoriteProduct(favoriteProduct);
-        favoriteProductIsUpdated.call();
+        favoriteProductSaved.call();
     }
 
     private void updateFavoriteProduct(FavoriteProductEntity favoriteProduct) {
         if (isNewFavoriteProduct)
             throw new RuntimeException("updateFavoriteProduct called but is new favorite Product.");
         repository.saveFavoriteProduct(favoriteProduct);
-        favoriteProductIsUpdated.call();
+        favoriteProductSaved.call();
     }
 
-    SingleLiveEvent<Void> getFavoriteProductIsUpdated() {
-        return favoriteProductIsUpdated;
+    SingleLiveEvent<Void> getFavoriteProductSaved() {
+        return favoriteProductSaved;
     }
 }

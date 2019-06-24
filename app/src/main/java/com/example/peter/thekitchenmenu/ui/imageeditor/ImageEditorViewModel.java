@@ -45,7 +45,6 @@ public class ImageEditorViewModel extends ObservableViewModel {
     private File mediumImageFile = null;
     private File largeImageFile = null;
 
-    // SingleLiveEvent - see https://github.com/googlesamples/android-architecture
     private final ObservableBoolean canTakePictures = new ObservableBoolean(false);
     private final SingleLiveEvent<Uri> getImageFromCameraEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<Void> getImageFromGalleryEvent = new SingleLiveEvent<>();
@@ -75,15 +74,18 @@ public class ImageEditorViewModel extends ObservableViewModel {
 
     private void cleanUpCacheDirectory() {
         File[] cacheDirectoryFileList = appContext.getCacheDir().listFiles();
-        if (cacheDirectoryFileList.length > 0) filterImageEditorFiles(cacheDirectoryFileList);
+        if (cacheDirectoryFileList != null && cacheDirectoryFileList.length > 0) {
+            filterImageEditorFiles(cacheDirectoryFileList);
+        }
     }
 
     private void filterImageEditorFiles(File[] cacheDirectoryFileList) {
         List<File> imageEditorCacheFileList = new ArrayList<>();
 
         for (File cachedFile : cacheDirectoryFileList) {
-            if (cachedFileBelongsToImageEditor(cachedFile))
+            if (cachedFileBelongsToImageEditor(cachedFile)) {
                 imageEditorCacheFileList.add(cachedFile);
+            }
         }
         deleteOutOfDateFiles(imageEditorCacheFileList);
     }
@@ -105,7 +107,15 @@ public class ImageEditorViewModel extends ObservableViewModel {
             long lastModified = file.lastModified();
             long fileAge = timeNow - lastModified;
 
-            if (fileAge > MAX_FILE_AGE) file.delete();
+            if (fileAge > MAX_FILE_AGE) {
+                try {
+                    boolean fileIsDeleted = file.delete();
+                    if (!fileIsDeleted) Log.e(
+                            TAG, "deleteOutOfDateFiles: Can't delete file:" + file.getName());
+                } catch (SecurityException e) {
+                    Log.e(TAG, "deleteOutOfDateFiles: security exception: " + e);
+                }
+            }
         }
     }
 
