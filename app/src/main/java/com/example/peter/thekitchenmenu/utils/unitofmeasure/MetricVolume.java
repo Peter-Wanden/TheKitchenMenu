@@ -2,21 +2,23 @@ package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
 import androidx.core.util.Pair;
 import com.example.peter.thekitchenmenu.R;
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.*;
 
 public class MetricVolume implements UnitOfMeasure {
 
     private static final String TAG = "tkm-MetricVolume";
 
     // Unit values as they relate to the International System of Units, or SI
-    private static final int METRIC_VOLUME_NUMBER_OF_MEASUREMENT_UNITS = 2;
-    private static final double UNIT_MILLILITRE = MINIMUM_VOLUME;
-    private static final double UNIT_LITRE = UNIT_MILLILITRE * 1000.;
-    private double minimumProductSize = UNIT_MILLILITRE;
+    private static final int NUMBER_OF_MEASUREMENT_UNITS = 2;
+    private static final double MAXIMUM_MEASUREMENT = UnitOfMeasureConstants.MAXIMUM_VOLUME;
+    private static final double MINIMUM_MEASUREMENT = UnitOfMeasureConstants.MINIMUM_VOLUME;
+    private static final double UNIT_TWO = MINIMUM_MEASUREMENT * 1000.;
+    private static final double UNIT_ONE = UNIT_TWO / 1000;
+    private static final double UNIT_ONE_DECIMAL = 0;
+    private static final double SMALLEST_UNIT = UNIT_ONE;
 
     // Keeps track of the last updated measurement
     private static final boolean PACK_MEASUREMENT = false;
-    private static final boolean ITEM_MEASUREMENT = true;
+    private static final boolean PRODUCT_MEASUREMENT = true;
     private boolean lastMeasurementUpdated = false;
 
     // Unit description string resource ID's
@@ -26,13 +28,14 @@ public class MetricVolume implements UnitOfMeasure {
     private int unitTwoLabelStringResourceId;
 
     // Current measurements
-    private int numberOfProductsInPack = MINIMUM_NUMBER_OF_PRODUCTS;
-    private double singleProductSizeInBaseUnits = minimumProductSize;
     private double baseUnits = 0.;
-    private int packMeasurementInLitres = 0;
-    private double packMeasurementInMillilitres = 0.;
-    private int itemMeasurementInLitres = 0;
-    private double itemMeasurementInMillilitres = 0.;
+    private int numberOfProducts = UnitOfMeasureConstants.MINIMUM_NUMBER_OF_PRODUCTS;
+    private int oldNumberOfProducts;
+    private double productSize = SMALLEST_UNIT;
+    private int packMeasurementTwo = 0;
+    private double packMeasurementOne = 0.;
+    private int productMeasurementTwo = 0;
+    private double productMeasurementOne = 0.;
 
     MetricVolume() {
         typeStringResourceId = R.string.volume;
@@ -43,7 +46,7 @@ public class MetricVolume implements UnitOfMeasure {
 
     @Override
     public int getNumberOfMeasurementUnits() {
-        return METRIC_VOLUME_NUMBER_OF_MEASUREMENT_UNITS;
+        return NUMBER_OF_MEASUREMENT_UNITS;
     }
 
     @Override
@@ -63,77 +66,107 @@ public class MetricVolume implements UnitOfMeasure {
 
     @Override
     public boolean baseUnitsAreSet(double baseUnits) {
-        if (baseUnitsAreWithinBounds(baseUnits)) {
+        if (baseUnitsWithinBounds(baseUnits)) {
             this.baseUnits = baseUnits;
             setNewPackMeasurements();
-            setNewItemMeasurements();
+            setNewProductMeasurements();
             return true;
 
-        } else if (baseUnits == 0.) {
-            this.baseUnits = 0.; // allows for a reset
-            packMeasurementInMillilitres = 0.;
-            itemMeasurementInMillilitres = 0.;
-            packMeasurementInLitres = 0;
-            itemMeasurementInLitres = 0;
+        } else if (baseUnits == 0.) { // allows for a reset
+            this.baseUnits = 0.;
+            packMeasurementOne = 0.;
+            packMeasurementTwo = 0;
+            productMeasurementOne = 0.;
+            productMeasurementTwo = 0;
         }
         return false;
     }
 
-    private boolean baseUnitsAreWithinBounds(double baseUnits) {
-        return baseUnitsDoNotMakeSingleProductSmallerThanSmallestUnit(baseUnits) &&
-                baseUnitsAreWithinMaxVolume(baseUnits);
+    private boolean baseUnitsWithinBounds(double baseUnits) {
+        if (baseUnits == 0) return false;
+        if (baseUnitsWithinUpperBounds(baseUnits)) {
+            if (baseUnitsWithinLowerBounds(baseUnits)) {
+                if (oldNumberOfProductsLargerThanCurrentNumberOfProducts()) {
+                    if (settingOldNumberOfProductsBreaksMinimumMeasurement(baseUnits)) {
+                        adjustNumberOfProductsSoBaseUnitsFitWithinLowerBounds(baseUnits);
+                    } else {
+                        this.baseUnits = baseUnits;
+                        numberOfProductsIsSet(oldNumberOfProducts);
+                        oldNumberOfProducts = 0;
+                    }
+                } // What if its smaller??
+                return true;
+            } else {
+                oldNumberOfProducts = numberOfProducts;
+                adjustNumberOfProductsSoBaseUnitsFitWithinLowerBounds(baseUnits);
+                return true;
+            }
+        }
+        return false;
     }
 
-    private boolean baseUnitsDoNotMakeSingleProductSmallerThanSmallestUnit(double baseUnits) {
-        return baseUnits >= UNIT_MILLILITRE * numberOfProductsInPack;
+    private boolean baseUnitsWithinUpperBounds(double baseUnits) {
+        return baseUnits <= (MAXIMUM_MEASUREMENT / SMALLEST_UNIT) * SMALLEST_UNIT;
     }
 
-    private boolean baseUnitsAreWithinMaxVolume(double baseUnits) {
-        return baseUnits <= MAXIMUM_VOLUME;
+    private boolean baseUnitsWithinLowerBounds(double baseUnits) {
+        return baseUnits >= MINIMUM_MEASUREMENT * numberOfProducts;
+    }
+
+    private boolean oldNumberOfProductsLargerThanCurrentNumberOfProducts() {
+        return oldNumberOfProducts > numberOfProducts;
+    }
+
+    private boolean settingOldNumberOfProductsBreaksMinimumMeasurement(double baseUnits) {
+        return baseUnits / MINIMUM_MEASUREMENT < oldNumberOfProducts;
+    }
+
+    private void adjustNumberOfProductsSoBaseUnitsFitWithinLowerBounds(double baseUnits) {
+        this.baseUnits = baseUnits;
+        numberOfProductsIsSet((int) (baseUnits / MINIMUM_MEASUREMENT));
     }
 
     private void setNewPackMeasurements() {
-        packMeasurementInMillilitres = getMeasurementInMillilitres(baseUnits);
-        packMeasurementInLitres = getMeasurementInLitres(baseUnits);
+        packMeasurementOne = getUnitOneMeasurement(baseUnits);
+        packMeasurementTwo = getUnitTwoMeasurement(baseUnits);
     }
 
-    private void setNewItemMeasurements() {
-        singleProductSizeInBaseUnits = baseUnits / numberOfProductsInPack;
-        itemMeasurementInMillilitres = getMeasurementInMillilitres(singleProductSizeInBaseUnits);
-        itemMeasurementInLitres = getMeasurementInLitres(singleProductSizeInBaseUnits);
+    private void setNewProductMeasurements() {
+        productSize = baseUnits / numberOfProducts;
+        productMeasurementOne = getUnitOneMeasurement(productSize);
+        productMeasurementTwo = getUnitTwoMeasurement(productSize);
     }
 
-    private double getMeasurementInMillilitres(double baseUnits) {
-        return baseUnits % UNIT_LITRE;
+    private double getUnitOneMeasurement(double baseUnits) {
+        double unitTwoInBaseUnits = getUnitTwoMeasurement(baseUnits) * UNIT_TWO;
+        double unitOneInBaseUnits = baseUnits - unitTwoInBaseUnits;
+        return unitOneInBaseUnits / UNIT_ONE;
     }
 
-    private int getMeasurementInLitres(double baseUnits) {
-        return (int) (baseUnits / UNIT_LITRE);
+    private int getUnitTwoMeasurement(double baseUnits) {
+        return (int) (baseUnits / UNIT_TWO);
     }
 
     @Override
     public int getNumberOfProducts() {
-        return numberOfProductsInPack;
+        return numberOfProducts;
     }
 
     @Override
     public boolean numberOfProductsIsSet(int numberOfProducts) {
-        if (numberOfItemsInPackAreWithinBounds(numberOfProducts)) {
-
-            if (baseUnits == NOT_YET_SET) {
-                this.numberOfProductsInPack = numberOfProducts;
+        if (numberOfProductsInPackAreWithinBounds(numberOfProducts)) {
+            if (baseUnits == UnitOfMeasureConstants.NOT_YET_SET) {
+                this.numberOfProducts = numberOfProducts;
                 return true;
-
             } else {
                 if (lastMeasurementUpdated == PACK_MEASUREMENT) {
-                    if (itemSizeNotLessThanSmallestUnit(numberOfProducts)) {
-                        setItemsInPackByAdjustingItemSize(numberOfProducts);
+                    if (productSizeNotLessThanSmallestUnit(numberOfProducts)) {
+                        setNumberOfProductsInPackByAdjustingProductSize(numberOfProducts);
                         return true;
                     }
-
-                } else if (lastMeasurementUpdated == ITEM_MEASUREMENT) {
-                    if (itemSizeMultipliedByNumberOfItemsDoNotExceedMaxMass(numberOfProducts)) {
-                        setItemsInPackByAdjustingPackSize(numberOfProducts);
+                } else if (lastMeasurementUpdated == PRODUCT_MEASUREMENT) {
+                    if (productSizeMultipliedByNumberOfProductsDoesNotExceedMaximum(numberOfProducts)) {
+                        setNumberOfProductsInPackByAdjustingPackSize(numberOfProducts);
                         return true;
                     }
                 }
@@ -142,26 +175,28 @@ public class MetricVolume implements UnitOfMeasure {
         return false;
     }
 
-    private boolean numberOfItemsInPackAreWithinBounds(int numberOfItems) {
-        return numberOfItems >= MINIMUM_NUMBER_OF_PRODUCTS && numberOfItems <= MAXIMUM_NUMBER_OF_PRODUCTS;
+    private boolean numberOfProductsInPackAreWithinBounds(int numberOfProducts) {
+        return numberOfProducts >= UnitOfMeasureConstants.MINIMUM_NUMBER_OF_PRODUCTS &&
+                numberOfProducts <= UnitOfMeasureConstants.MAXIMUM_NUMBER_OF_PRODUCTS;
     }
 
-    private boolean itemSizeNotLessThanSmallestUnit(int numberOfItems) {
-        return baseUnits / numberOfItems >= minimumProductSize;
+    private boolean productSizeNotLessThanSmallestUnit(int numberOfProducts) {
+        return baseUnits / numberOfProducts >= SMALLEST_UNIT;
     }
 
-    private void setItemsInPackByAdjustingItemSize(int numberOfItemsInPack) {
-        this.numberOfProductsInPack = numberOfItemsInPack;
-        setNewItemMeasurements();
+    private void setNumberOfProductsInPackByAdjustingProductSize(int numberOfProducts) {
+        this.numberOfProducts = numberOfProducts;
+        setNewProductMeasurements();
     }
 
-    private boolean itemSizeMultipliedByNumberOfItemsDoNotExceedMaxMass(int numberOfItems) {
-        return singleProductSizeInBaseUnits * numberOfItems <= MAXIMUM_VOLUME;
+    private boolean productSizeMultipliedByNumberOfProductsDoesNotExceedMaximum(
+            int numberOfProducts) {
+        return productSize * numberOfProducts <= MAXIMUM_MEASUREMENT;
     }
 
-    private void setItemsInPackByAdjustingPackSize(int numberOfItems) {
-        this.numberOfProductsInPack = numberOfItems;
-        baseUnitsAreSet(singleProductSizeInBaseUnits * numberOfItems);
+    private void setNumberOfProductsInPackByAdjustingPackSize(int numberOfProducts) {
+        this.numberOfProducts = numberOfProducts;
+        baseUnitsAreSet(productSize * numberOfProducts);
     }
 
     @Override
@@ -171,7 +206,7 @@ public class MetricVolume implements UnitOfMeasure {
 
     @Override
     public double getPackMeasurementOne() {
-        return (int) Math.floor(packMeasurementInMillilitres *1);
+        return (int) Math.floor(packMeasurementOne * 1);
     }
 
     @Override
@@ -185,26 +220,27 @@ public class MetricVolume implements UnitOfMeasure {
     }
 
     private double baseUnitsWithNewPackMeasurementOne(double newPackMeasurementOne) {
-        return packMeasurementInLitres * UNIT_LITRE + newPackMeasurementOne;
+        return (packMeasurementTwo * UNIT_TWO) + (newPackMeasurementOne * UNIT_ONE);
     }
 
     @Override
     public double getProductMeasurementOne() {
-        return Math.floor(itemMeasurementInMillilitres * 1) / 1;
+        return Math.floor(productMeasurementOne * 1) / 1;
     }
 
     @Override
     public boolean productMeasurementOneIsSet(double newProductMeasurementOne) {
-        if (baseUnitsAreSet(baseUnitsWithItemMeasurementOne(newProductMeasurementOne))) {
-            lastMeasurementUpdated = ITEM_MEASUREMENT;
+        if (baseUnitsAreSet(baseUnitsWithNewProductMeasurementOne(newProductMeasurementOne))) {
+            lastMeasurementUpdated = PRODUCT_MEASUREMENT;
             return true;
 
-        } else baseUnitsAreSet(baseUnitsWithItemMeasurementOne(0.));
+        } else baseUnitsAreSet(baseUnitsWithNewProductMeasurementOne(0.));
         return false;
     }
 
-    private double baseUnitsWithItemMeasurementOne(double itemMeasurementOne) {
-        return (itemMeasurementInLitres * UNIT_LITRE + itemMeasurementOne) * numberOfProductsInPack;
+    private double baseUnitsWithNewProductMeasurementOne(double productMeasurementOne) {
+        return ((productMeasurementTwo * UNIT_TWO) + (productMeasurementOne * UNIT_ONE)) *
+                numberOfProducts;
     }
 
     @Override
@@ -214,65 +250,78 @@ public class MetricVolume implements UnitOfMeasure {
 
     @Override
     public int getPackMeasurementTwo() {
-        return packMeasurementInLitres;
+        return packMeasurementTwo;
     }
 
     @Override
     public boolean packMeasurementTwoIsSet(int newPackMeasurementTwo) {
-        if (baseUnitsAreSet(baseUnitsWithPackMeasurementTwo(newPackMeasurementTwo))) {
+        if (baseUnitsAreSet(baseUnitsWithNewPackMeasurementTwo(newPackMeasurementTwo))) {
             lastMeasurementUpdated = PACK_MEASUREMENT;
             return true;
 
-        } else baseUnitsAreSet(baseUnitsWithPackMeasurementTwo(0));
+        } else baseUnitsAreSet(baseUnitsWithNewPackMeasurementTwo(0));
         return false;
     }
 
-    private double baseUnitsWithPackMeasurementTwo(int packMeasurementTwo) {
-        return packMeasurementTwo * UNIT_LITRE + packMeasurementInMillilitres;
+    private double baseUnitsWithNewPackMeasurementTwo(int newPackMeasurementTwo) {
+        return (newPackMeasurementTwo * UNIT_TWO) + (packMeasurementOne * UNIT_ONE);
     }
 
     @Override
     public int getProductMeasurementTwo() {
-        return itemMeasurementInLitres;
+        return productMeasurementTwo;
     }
 
     @Override
     public boolean productMeasurementTwoIsSet(int newProductMeasurementTwo) {
-        if (baseUnitsAreSet(baseUnitsWithItemMeasurementTwo(newProductMeasurementTwo))) {
-            lastMeasurementUpdated = ITEM_MEASUREMENT;
+        if (baseUnitsAreSet(baseUnitsWithNewProductMeasurementTwo(newProductMeasurementTwo))) {
+            lastMeasurementUpdated = PRODUCT_MEASUREMENT;
             return true;
 
-        } else baseUnitsAreSet(baseUnitsWithItemMeasurementTwo(0));
+        } else baseUnitsAreSet(baseUnitsWithNewProductMeasurementTwo(0));
         return false;
     }
 
-    private double baseUnitsWithItemMeasurementTwo(int itemMeasurementTwo) {
-        return (itemMeasurementTwo * UNIT_LITRE + itemMeasurementInMillilitres) * numberOfProductsInPack;
+    private double baseUnitsWithNewProductMeasurementTwo(int newProductMeasurementTwo) {
+        return ((newProductMeasurementTwo * UNIT_TWO) + (productMeasurementOne * UNIT_ONE)) *
+                numberOfProducts;
     }
 
     @Override
     public boolean isValidMeasurement() {
-        return (baseUnits >= minimumProductSize && baseUnits <= MAXIMUM_VOLUME);
+        return (baseUnits >= MINIMUM_MEASUREMENT && baseUnits <= MAXIMUM_MEASUREMENT);
     }
 
     @Override
     public Pair[] getMeasurementUnitsDigitWidths() {
 
-        int maxLitreValue = (int) (MAXIMUM_VOLUME / UNIT_LITRE);
-
-        int litreDigits = 0;
-        while (maxLitreValue > 0) {
-            litreDigits++;
-            maxLitreValue = maxLitreValue / 10;
+        // Calculates the max digit width of unit two
+        int maximumUnitTwoValue = (int) (MAXIMUM_MEASUREMENT / UNIT_TWO);
+        int unitTwoDigits = 0;
+        while (maximumUnitTwoValue > 0) {
+            unitTwoDigits++;
+            maximumUnitTwoValue = maximumUnitTwoValue / 10;
         }
+        Pair<Integer, Integer> unitTwoDigitsWidth = new Pair<>(unitTwoDigits, 0);
 
-        Pair<Integer, Integer> unitOneDigitsFormat = new Pair<>(3, 0);
-        Pair<Integer, Integer> unitTwoDigitsFormat = new Pair<>(litreDigits, 0);
+        // Calculates the max digit width of unit one
+        int maximumUnitOneValue = (int) (UNIT_TWO / UNIT_ONE) -1;
+        int unitOneDigitsBeforeDecimal = 0;
+        while (maximumUnitOneValue > 0) {
+            unitOneDigitsBeforeDecimal ++;
+            maximumUnitOneValue = maximumUnitOneValue / 10;
+        }
+        int unitsOneDigitsAfterDecimal = 0;
+        boolean isUnitAfterDecimal = UNIT_ONE_DECIMAL > 0;
+        if (isUnitAfterDecimal) unitsOneDigitsAfterDecimal = 1;
+        Pair<Integer, Integer> unitOneDigitsWidth = new Pair<>
+                (unitOneDigitsBeforeDecimal, unitsOneDigitsAfterDecimal);
 
-        Pair[] digitsFormat = new Pair[2];
-        digitsFormat[0] = unitOneDigitsFormat;
-        digitsFormat[1] = unitTwoDigitsFormat;
 
-        return digitsFormat;
+        Pair[] MeasurementUnitDigitWidths = new Pair[2];
+        MeasurementUnitDigitWidths[0] = unitOneDigitsWidth;
+        MeasurementUnitDigitWidths[1] = unitTwoDigitsWidth;
+
+        return MeasurementUnitDigitWidths;
     }
 }

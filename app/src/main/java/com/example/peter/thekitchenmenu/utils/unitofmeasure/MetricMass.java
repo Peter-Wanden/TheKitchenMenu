@@ -6,7 +6,6 @@ import com.example.peter.thekitchenmenu.R;
 
 import androidx.core.util.Pair;
 
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.*;
 
 public class MetricMass implements UnitOfMeasure {
 
@@ -159,7 +158,7 @@ public class MetricMass implements UnitOfMeasure {
     @Override
     public boolean numberOfProductsIsSet(int numberOfProducts) {
         if (numberOfProductsInPackAreWithinBounds(numberOfProducts)) {
-            if (baseUnits == NOT_YET_SET) {
+            if (baseUnits == UnitOfMeasureConstants.NOT_YET_SET) {
                 this.numberOfProducts = numberOfProducts;
                 return true;
             } else {
