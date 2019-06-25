@@ -234,16 +234,18 @@ public class CatalogProductsViewModel extends AndroidViewModel {
 
     void handleActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         Log.d(TAG, "handleActivityResult: requestCode=" + requestCode + " resultCode=" + resultCode);
+
         if (ProductViewerActivity.REQUEST_VIEW_PRODUCT == requestCode) {
             if (resultCode == ProductEditorActivity.RESULT_ADD_EDIT_PRODUCT_OK) {
                 prepareData();
             } else if (resultCode == ProductViewerActivity.RESULT_DELETE_PRODUCT_OK) {
                 prepareData();
             } else if (resultCode == ProductViewerActivity.RESULT_FAVORITE_ADDED_OK) {
-
                 prepareData();
             }
-        } else if (ProductViewerActivity.REQUEST_REVIEW_PRODUCT == requestCode) {
+        }
+
+        if (ProductViewerActivity.REQUEST_REVIEW_PRODUCT == requestCode) {
 
             if (ProductViewerActivity.RESULT_FAVORITE_NOT_ADDED == resultCode) {
                 prepareData();
@@ -268,6 +270,5 @@ public class CatalogProductsViewModel extends AndroidViewModel {
                 }
             }
         }
-
     }
 }

@@ -306,7 +306,7 @@ public class ImperialVolume implements UnitOfMeasure {
     }
 
     @Override
-    public Pair[] getMeasurementUnitDigitLengthArray() {
+    public Pair[] getMeasurementUnitsDigitWidths() {
         int maxPintValue = (int) (MAXIMUM_VOLUME / UNIT_TWO);
 
         int pintDigits = 0;

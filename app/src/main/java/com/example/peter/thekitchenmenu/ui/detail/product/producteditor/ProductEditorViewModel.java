@@ -23,11 +23,9 @@ public class ProductEditorViewModel extends ObservableViewModel {
     private ProductRepository repository;
     private AddEditProductNavigator navigator;
 
-    // From intent extra or empty if new product. Set an updatedProductEntity here to update repo
     private final MutableLiveData<ProductEntity> existingProductEntity = new MutableLiveData<>();
     private final SingleLiveEvent<Boolean> showSaveButtonEvent = new SingleLiveEvent<>();
 
-    // The various model updates that make up an updated ProductEntity
     private ImageModel updatedImageModel = new ImageModel();
     private ProductIdentityModel updatedIdentityModel = new ProductIdentityModel();
     private ProductMeasurementModel updatedMeasurementModel = new ProductMeasurementModel();

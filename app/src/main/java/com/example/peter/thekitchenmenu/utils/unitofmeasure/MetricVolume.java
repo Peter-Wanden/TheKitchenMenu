@@ -256,7 +256,7 @@ public class MetricVolume implements UnitOfMeasure {
     }
 
     @Override
-    public Pair[] getMeasurementUnitDigitLengthArray() {
+    public Pair[] getMeasurementUnitsDigitWidths() {
 
         int maxLitreValue = (int) (MAXIMUM_VOLUME / UNIT_LITRE);
 

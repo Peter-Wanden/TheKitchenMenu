@@ -2,13 +2,13 @@ package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
 public class UnitOfMeasureConstants {
 
-    // Base SI unit for mass is the gram
-    static final double MINIMUM_MASS = 1.;
-    static final double MAXIMUM_MASS = 10000.;
+    // Base SI unit for mass is the Kilogram
+    static final double MINIMUM_MASS = 1.; // 1 gram
+    static final double MAXIMUM_MASS = 10000.; // 10kg
 
-    // Base SI unit for volume is the millilitre
-    static final double MINIMUM_VOLUME = 1.;
-    static final double MAXIMUM_VOLUME = 10000.;
+    // Base SI unit for volume is the litre
+    static final double MINIMUM_VOLUME = 1.; // 1ml
+    static final double MAXIMUM_VOLUME = 10000.; // 10 litres
 
     // Min and max for products sold by number
     static final int MINIMUM_COUNT = 1;

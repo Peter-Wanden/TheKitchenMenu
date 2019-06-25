@@ -22,7 +22,7 @@ public class UnitOfMeasureEditTextBindingAdapter {
         UnitOfMeasure unitOfMeasure = subtype.getMeasurementClass();
         int viewId = editText.getId();
         int units = unitOfMeasure.getNumberOfMeasurementUnits();
-        int digitsAfterDecimal = (int) unitOfMeasure.getMeasurementUnitDigitLengthArray()[0].second;
+        int digitsAfterDecimal = (int) unitOfMeasure.getMeasurementUnitsDigitWidths()[0].second;
 
         if (viewId == R.id.pack_editable_measurement_one && digitsAfterDecimal > 0 ||
                 viewId == R.id.product_editable_measurement_one && digitsAfterDecimal > 0) {
@@ -46,7 +46,7 @@ public class UnitOfMeasureEditTextBindingAdapter {
     private static void setInputFilters(int viewId,
                                         EditText editText,
                                         UnitOfMeasure unitOfMeasure) {
-        Pair[] inputDigitsFilters = unitOfMeasure.getMeasurementUnitDigitLengthArray();
+        Pair[] inputDigitsFilters = unitOfMeasure.getMeasurementUnitsDigitWidths();
 
         if (viewId == R.id.pack_editable_measurement_one ||
                 viewId == R.id.product_editable_measurement_one) {

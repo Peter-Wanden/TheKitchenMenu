@@ -134,7 +134,8 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     }
 
     private boolean numberOfProductsInPackAreWithinBounds(int numberOfProducts) {
-        return numberOfProducts >= MINIMUM_NUMBER_OF_PRODUCTS && numberOfProducts <= MAXIMUM_NUMBER_OF_PRODUCTS;
+        return numberOfProducts >= MINIMUM_NUMBER_OF_PRODUCTS &&
+                numberOfProducts <= MAXIMUM_NUMBER_OF_PRODUCTS;
     }
 
     private boolean productSizeNotLessThanSmallestUnit(int numberOfProducts) {
@@ -260,7 +261,7 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     }
 
     @Override
-    public Pair[] getMeasurementUnitDigitLengthArray() {
+    public Pair[] getMeasurementUnitsDigitWidths() {
 
         int maxKilogramValue = (int) (MAXIMUM_MASS / UNIT_TWO);
 

@@ -1,7 +1,6 @@
 package com.example.peter.thekitchenmenu.ui.detail.product.producteditor;
 
 import android.app.Application;
-import android.util.Log;
 
 import com.example.peter.thekitchenmenu.BR;
 import com.example.peter.thekitchenmenu.R;
@@ -17,7 +16,7 @@ import androidx.lifecycle.MutableLiveData;
 
 public class ProductMeasurementViewModel extends ObservableViewModel {
 
-    private static final String TAG = "tkm-MeasurementVM";
+//    private static final String TAG = "tkm-MeasurementVM";
 
     private MutableLiveData<ProductMeasurementModel> measurementModel;
     private ProductMeasurementHandler measurementHandler;
@@ -51,10 +50,10 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
         return measurementHandler;
     }
 
-    void setMeasurementModelIn(ProductMeasurementModel measurementModelIn) {
-        setSubtype(measurementModelIn.getMeasurementSubtype());
-        setNumberOfProducts(measurementModelIn.getNumberOfProducts());
-        setBaseUnits(measurementModelIn.getBaseUnits());
+    void setMeasurementModel(ProductMeasurementModel measurementModel) {
+        setSubtype(measurementModel.getMeasurementSubtype());
+        setNumberOfProducts(measurementModel.getNumberOfProducts());
+        setBaseUnits(measurementModel.getBaseUnits());
     }
 
     @Bindable
@@ -70,6 +69,7 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
 
     private void newUnitOfMeasureSelected(MeasurementSubtype subtype) {
         unitOfMeasure = subtype.getMeasurementClass();
+        setMultiPack(false);
         updateUi();
     }
 
@@ -80,7 +80,6 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
 
     @Bindable
     public int getNumberOfProducts() {
-        Log.d(TAG, "getNumberOfProducts: NoOfProducts=" + numberOfProducts);
         return numberOfProducts;
     }
 
@@ -91,27 +90,26 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
 
     public void setMultiPack(boolean multiPack) {
         if (this.multiPack != multiPack) {
-
-            Log.d(TAG, "setMultiPack: " + multiPack);
             this.multiPack = multiPack;
-            if (multiPack && unitOfMeasure.getNumberOfProducts() == 1) addOneToNumberOfProducts();
+
+            if (multiPack && unitOfMeasure.getNumberOfProducts() == 1) incrementNumberOfProducts();
+
             if (!multiPack) setNumberOfProducts(1);
             notifyPropertyChanged(BR.multiPack);
         }
     }
 
-    public void addOneToNumberOfProducts() {
+    public void incrementNumberOfProducts() {
         setNumberOfProducts((unitOfMeasure.getNumberOfProducts() + 1));
     }
 
-    public void minusOneFromNumberOfProducts() {
+    public void decrementNumberOfProducts() {
         setNumberOfProducts((unitOfMeasure.getNumberOfProducts() - 1));
     }
 
     public void setNumberOfProducts(int numberOfProducts) {
         if (newNumberOfProductsReceived(numberOfProducts))
             if (canChangeToNewNumberOfProducts(numberOfProducts)) {
-                // TODO - do we need to update multiPack bool here?
                 if (numberOfProducts == 1) setMultiPack(false);
                 else setMultiPack(true);
                 updateUi(); // with new value
@@ -245,7 +243,7 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
             numberOfProducts = unitOfMeasure.getNumberOfProducts();
             notifyPropertyChanged(BR.numberOfProducts);
         }
-        int unitsAfterDecimal = (int) unitOfMeasure.getMeasurementUnitDigitLengthArray()[0].second;
+        int unitsAfterDecimal = (int) unitOfMeasure.getMeasurementUnitsDigitWidths()[0].second;
         if (unitsAfterDecimal > 0) {
             packMeasurementOne = String.valueOf(unitOfMeasure.getPackMeasurementOne());
             notifyPropertyChanged(BR.packMeasurementOne);
@@ -281,7 +279,7 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
         } else measurementModelIsValidEvent.setValue(false);
     }
 
-    public SingleLiveEvent<Boolean> getMeasurementModelIsValidEvent() {
+    SingleLiveEvent<Boolean> getMeasurementModelIsValidEvent() {
         return measurementModelIsValidEvent;
     }
 }

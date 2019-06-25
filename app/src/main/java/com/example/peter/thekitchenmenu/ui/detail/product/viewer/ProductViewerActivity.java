@@ -153,7 +153,7 @@ public class ProductViewerActivity
         if (productEdited) setResult(ProductEditorActivity.RESULT_ADD_EDIT_PRODUCT_OK);
         if (favoriteProductViewerViewModel.isFavoriteAddedEdited()) {
             setResult(RESULT_FAVORITE_ADDED_OK);
-        }
+        } else setResult(RESULT_FAVORITE_NOT_ADDED);
 
         onBackPressed();
         return true;

@@ -29,7 +29,7 @@ public class NumberStringFormatConverter {
 
         if (viewId == R.id.pack_editable_measurement_one ||
                 viewId == R.id.product_editable_measurement_one)
-            digitsAfterDecimal = (int)unitOfMeasure.getMeasurementUnitDigitLengthArray()[0].second;
+            digitsAfterDecimal = (int)unitOfMeasure.getMeasurementUnitsDigitWidths()[0].second;
 
         NumberFormat numberFormat = getNumberFormat(editText);
 

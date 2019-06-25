@@ -36,8 +36,7 @@ public class FavoriteProductViewerFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (getArguments() !=null)
-        viewModel.start(getArguments().getString(ARGUMENT_PRODUCT_ID));
+        if (getArguments() !=null) viewModel.start(getArguments().getString(ARGUMENT_PRODUCT_ID));
     }
 
     @Nullable

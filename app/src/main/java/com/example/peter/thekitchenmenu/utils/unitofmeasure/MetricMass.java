@@ -12,13 +12,13 @@ public class MetricMass implements UnitOfMeasure {
 
     private static final String TAG = "tkm-MetricMass";
 
-    // Unit values as they relate to the base SI units for this class
     private static final int NUMBER_OF_MEASUREMENT_UNITS = 2;
-    private static final double UNIT_TWO = MINIMUM_MASS * 1000.;
-    private static final double UNIT_ONE = MINIMUM_MASS;
-    private static final double UNIT_ONE_DECIMAL = 0;
-    private static final double MINIMUM_MEASUREMENT = MINIMUM_MASS;
-    private static final double MAXIMUM_MEASUREMENT = MAXIMUM_MASS;
+    private static final double MAXIMUM_MEASUREMENT = UnitOfMeasureConstants.MAXIMUM_MASS;
+    private static final double MINIMUM_MEASUREMENT = UnitOfMeasureConstants.MINIMUM_MASS;
+    private static final double UNIT_TWO = MINIMUM_MEASUREMENT * 1000.; // 1 kilogram
+    private static final double UNIT_ONE = UNIT_TWO / 1000; // 1 gram
+    private static final double UNIT_ONE_DECIMAL = 0; // Leave as zero if no digits after decimal
+    private static final double SMALLEST_UNIT = UNIT_ONE;
 
     // Keeps track of the last updated measurement
     private static final boolean PACK_MEASUREMENT = false;
@@ -31,16 +31,15 @@ public class MetricMass implements UnitOfMeasure {
     private int unitOneLabelStringResourceId;
     private int unitTwoLabelStringResourceId;
 
-    // Current measurements
+    // Measurement defaults
     private double baseUnits = 0;
-    private int numberOfProducts = MINIMUM_NUMBER_OF_PRODUCTS;
+    private int numberOfProducts = UnitOfMeasureConstants.MINIMUM_NUMBER_OF_PRODUCTS;
     private int oldNumberOfProducts;
-    private double productSize = MINIMUM_MEASUREMENT;
+    private double productSize = SMALLEST_UNIT;
     private int packMeasurementTwo = 0;
     private double packMeasurementOne = 0;
     private int productMeasurementTwo = 0;
     private double productMeasurementOne = 0;
-
 
     MetricMass() {
         typeStringResourceId = R.string.mass;
@@ -111,16 +110,11 @@ public class MetricMass implements UnitOfMeasure {
     }
 
     private boolean baseUnitsWithinUpperBounds(double baseUnits) {
-        return baseUnits <= MAXIMUM_MASS;
+        return baseUnits <= (MAXIMUM_MEASUREMENT / SMALLEST_UNIT) * SMALLEST_UNIT;
     }
 
     private boolean baseUnitsWithinLowerBounds(double baseUnits) {
         return baseUnits >= MINIMUM_MEASUREMENT * numberOfProducts;
-    }
-
-    private void adjustNumberOfProductsSoBaseUnitsFitWithinLowerBounds(double baseUnits) {
-        this.baseUnits = baseUnits;
-        numberOfProductsIsSet((int) (baseUnits / MINIMUM_MEASUREMENT));
     }
 
     private boolean oldNumberOfProductsLargerThanCurrentNumberOfProducts() {
@@ -129,6 +123,11 @@ public class MetricMass implements UnitOfMeasure {
 
     private boolean settingOldNumberOfProductsBreaksMinimumMeasurement(double baseUnits) {
         return baseUnits / MINIMUM_MEASUREMENT < oldNumberOfProducts;
+    }
+
+    private void adjustNumberOfProductsSoBaseUnitsFitWithinLowerBounds(double baseUnits) {
+        this.baseUnits = baseUnits;
+        numberOfProductsIsSet((int) (baseUnits / MINIMUM_MEASUREMENT));
     }
 
     private void setNewPackMeasurements() {
@@ -143,8 +142,9 @@ public class MetricMass implements UnitOfMeasure {
     }
 
     private double getUnitOneMeasurement(double baseUnits) {
-        double unitTwoRemainder = baseUnits % UNIT_TWO;
-        return unitTwoRemainder / UNIT_ONE;
+        double unitTwoInBaseUnits = getUnitTwoMeasurement(baseUnits) * UNIT_TWO;
+        double unitOneInBaseUnits = baseUnits - unitTwoInBaseUnits;
+        return unitOneInBaseUnits / UNIT_ONE;
     }
 
     private int getUnitTwoMeasurement(double baseUnits) {
@@ -159,20 +159,17 @@ public class MetricMass implements UnitOfMeasure {
     @Override
     public boolean numberOfProductsIsSet(int numberOfProducts) {
         if (numberOfProductsInPackAreWithinBounds(numberOfProducts)) {
-
             if (baseUnits == NOT_YET_SET) {
                 this.numberOfProducts = numberOfProducts;
                 return true;
-
             } else {
                 if (lastMeasurementUpdated == PACK_MEASUREMENT) {
                     if (productSizeNotLessThanSmallestUnit(numberOfProducts)) {
                         setNumberOfProductsInPackByAdjustingProductSize(numberOfProducts);
                         return true;
                     }
-
                 } else if (lastMeasurementUpdated == PRODUCT_MEASUREMENT) {
-                    if (ProductSizeMultipliedByNumberOfProductsDoesNotExceedMax(numberOfProducts)) {
+                    if (productSizeMultipliedByNumberOfProductsDoesNotExceedMaximum(numberOfProducts)) {
                         setNumberOfProductsInPackByAdjustingPackSize(numberOfProducts);
                         return true;
                     }
@@ -183,12 +180,12 @@ public class MetricMass implements UnitOfMeasure {
     }
 
     private boolean numberOfProductsInPackAreWithinBounds(int numberOfProducts) {
-        return numberOfProducts >= MINIMUM_NUMBER_OF_PRODUCTS &&
-                numberOfProducts <= MAXIMUM_NUMBER_OF_PRODUCTS;
+        return numberOfProducts >= UnitOfMeasureConstants.MINIMUM_NUMBER_OF_PRODUCTS &&
+                numberOfProducts <= UnitOfMeasureConstants.MAXIMUM_NUMBER_OF_PRODUCTS;
     }
 
     private boolean productSizeNotLessThanSmallestUnit(int numberOfProducts) {
-        return baseUnits / numberOfProducts >= UNIT_ONE;
+        return baseUnits / numberOfProducts >= SMALLEST_UNIT;
     }
 
     private void setNumberOfProductsInPackByAdjustingProductSize(int numberOfProducts) {
@@ -196,8 +193,9 @@ public class MetricMass implements UnitOfMeasure {
         setNewProductMeasurements();
     }
 
-    private boolean ProductSizeMultipliedByNumberOfProductsDoesNotExceedMax(int numberOfProducts) {
-        return productSize * numberOfProducts <= MAXIMUM_MASS;
+    private boolean productSizeMultipliedByNumberOfProductsDoesNotExceedMaximum(
+            int numberOfProducts) {
+        return productSize * numberOfProducts <= MAXIMUM_MEASUREMENT;
     }
 
     private void setNumberOfProductsInPackByAdjustingPackSize(int numberOfProducts) {
@@ -236,15 +234,15 @@ public class MetricMass implements UnitOfMeasure {
 
     @Override
     public boolean productMeasurementOneIsSet(double newProductMeasurementOne) {
-        if (baseUnitsAreSet(baseUnitsWithProductMeasurementOne(newProductMeasurementOne))) {
+        if (baseUnitsAreSet(baseUnitsWithNewProductMeasurementOne(newProductMeasurementOne))) {
             lastMeasurementUpdated = PRODUCT_MEASUREMENT;
             return true;
 
-        } else baseUnitsAreSet(baseUnitsWithProductMeasurementOne(0.));
+        } else baseUnitsAreSet(baseUnitsWithNewProductMeasurementOne(0.));
         return false;
     }
 
-    private double baseUnitsWithProductMeasurementOne(double productMeasurementOne) {
+    private double baseUnitsWithNewProductMeasurementOne(double productMeasurementOne) {
         return ((productMeasurementTwo * UNIT_TWO) + (productMeasurementOne * UNIT_ONE)) *
                 numberOfProducts;
     }
@@ -261,16 +259,16 @@ public class MetricMass implements UnitOfMeasure {
 
     @Override
     public boolean packMeasurementTwoIsSet(int newPackMeasurementTwo) {
-        if (baseUnitsAreSet(baseUnitsWithPackMeasurementTwo(newPackMeasurementTwo))) {
+        if (baseUnitsAreSet(baseUnitsWithNewPackMeasurementTwo(newPackMeasurementTwo))) {
             lastMeasurementUpdated = PACK_MEASUREMENT;
             return true;
 
-        } else baseUnitsAreSet(baseUnitsWithPackMeasurementTwo(0));
+        } else baseUnitsAreSet(baseUnitsWithNewPackMeasurementTwo(0));
         return false;
     }
 
-    private double baseUnitsWithPackMeasurementTwo(int packMeasurementTwo) {
-        return (packMeasurementTwo * UNIT_TWO) + (packMeasurementOne * UNIT_ONE);
+    private double baseUnitsWithNewPackMeasurementTwo(int newPackMeasurementTwo) {
+        return (newPackMeasurementTwo * UNIT_TWO) + (packMeasurementOne * UNIT_ONE);
     }
 
     @Override
@@ -279,17 +277,17 @@ public class MetricMass implements UnitOfMeasure {
     }
 
     @Override
-    public boolean productMeasurementTwoIsSet(int productMeasurementTwo) {
-        if (baseUnitsAreSet(baseUnitsWithProductMeasurementTwo(productMeasurementTwo))) {
+    public boolean productMeasurementTwoIsSet(int newProductMeasurementTwo) {
+        if (baseUnitsAreSet(baseUnitsWithNewProductMeasurementTwo(newProductMeasurementTwo))) {
             lastMeasurementUpdated = PRODUCT_MEASUREMENT;
             return true;
 
-        } else baseUnitsAreSet(baseUnitsWithProductMeasurementTwo(0));
+        } else baseUnitsAreSet(baseUnitsWithNewProductMeasurementTwo(0));
         return false;
     }
 
-    private double baseUnitsWithProductMeasurementTwo(int productMeasurementTwo) {
-        return ((productMeasurementTwo * UNIT_TWO) + (productMeasurementOne * UNIT_ONE)) *
+    private double baseUnitsWithNewProductMeasurementTwo(int newProductMeasurementTwo) {
+        return ((newProductMeasurementTwo * UNIT_TWO) + (productMeasurementOne * UNIT_ONE)) *
                 numberOfProducts;
     }
 
@@ -299,22 +297,35 @@ public class MetricMass implements UnitOfMeasure {
     }
 
     @Override
-    public Pair[] getMeasurementUnitDigitLengthArray() {
-        int maxKilogramValue = (int) (MAXIMUM_MASS / UNIT_TWO);
+    public Pair[] getMeasurementUnitsDigitWidths() {
 
-        int kilogramDigits = 0;
-        while (maxKilogramValue > 0) {
-            kilogramDigits++;
-            maxKilogramValue = maxKilogramValue / 10;
+        // Calculates the max digit width of unit two
+        int maximumUnitTwoValue = (int) (MAXIMUM_MEASUREMENT / UNIT_TWO);
+        int unitTwoDigits = 0;
+        while (maximumUnitTwoValue > 0) {
+            unitTwoDigits++;
+            maximumUnitTwoValue = maximumUnitTwoValue / 10;
         }
+        Pair<Integer, Integer> unitTwoDigitsWidth = new Pair<>(unitTwoDigits, 0);
 
-        Pair<Integer, Integer> unitOneDigitsFormat = new Pair<>(3, 0);
-        Pair<Integer, Integer> unitTwoDigitsFormat = new Pair<>(kilogramDigits, 0);
+        // Calculates the max digit width of unit one
+        int maximumUnitOneValue = (int) (UNIT_TWO / UNIT_ONE) -1;
+        int unitOneDigitsBeforeDecimal = 0;
+        while (maximumUnitOneValue > 0) {
+            unitOneDigitsBeforeDecimal ++;
+            maximumUnitOneValue = maximumUnitOneValue / 10;
+        }
+        int unitsOneDigitsAfterDecimal = 0;
+        boolean isUnitAfterDecimal = UNIT_ONE_DECIMAL > 0;
+        if (isUnitAfterDecimal) unitsOneDigitsAfterDecimal = 1;
+        Pair<Integer, Integer> unitOneDigitsWidth = new Pair<>
+                (unitOneDigitsBeforeDecimal, unitsOneDigitsAfterDecimal);
 
-        Pair[] digitsFormat = new Pair[2];
-        digitsFormat[0] = unitOneDigitsFormat;
-        digitsFormat[1] = unitTwoDigitsFormat;
 
-        return digitsFormat;
+        Pair[] MeasurementUnitDigitWidths = new Pair[2];
+        MeasurementUnitDigitWidths[0] = unitOneDigitsWidth;
+        MeasurementUnitDigitWidths[1] = unitTwoDigitsWidth;
+
+        return MeasurementUnitDigitWidths;
     }
 }

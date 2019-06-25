@@ -110,7 +110,7 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
                 measurementModelIn.setNumberOfProducts(productEntity.getNumberOfProducts());
                 measurementModelIn.setBaseUnits(productEntity.getBaseUnits());
 
-                measurementEditorViewModel.setMeasurementModelIn(measurementModelIn);
+                measurementEditorViewModel.setMeasurementModel(measurementModelIn);
             }
         };
 
