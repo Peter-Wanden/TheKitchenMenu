@@ -9,4 +9,6 @@ import com.example.peter.thekitchenmenu.data.model.FavoriteProductModel;
 public interface FavoriteProductItemUserActionsListener {
 
     void onFavoriteProductClicked(FavoriteProductModel favoriteProduct);
+
+    void onRemoveFromFavoritesClicked(FavoriteProductModel favoriteProductModel);
 }

@@ -1,7 +1,6 @@
 package com.example.peter.thekitchenmenu.ui.detail.product.producteditor;
 
 import android.os.Bundle;
-import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import static com.example.peter.thekitchenmenu.utils.CharacterInputFilters.getCustomInputFilter;
 
 public class ProductIdentityEditorFragment extends Fragment {
 
@@ -79,10 +77,6 @@ public class ProductIdentityEditorFragment extends Fragment {
     }
 
     private void setInputFilters() {
-        binding.editableDescription.setFilters(new InputFilter[] {
-                getCustomInputFilter(true, true, true)});
-        binding.editableShoppingItemListName.setFilters(new InputFilter[] {
-                getCustomInputFilter(true, true, true)});
     }
 
     private void descriptionError(String descriptionError) {

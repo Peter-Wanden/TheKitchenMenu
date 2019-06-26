@@ -26,8 +26,6 @@ public class FavoriteProductViewerViewModel
     private boolean dataIsLoading;
     public final ObservableBoolean isFavorite = new ObservableBoolean();
     public final ObservableField<FavoriteProductEntity> favoriteProduct = new ObservableField<>();
-    private final SingleLiveEvent<Void> addFavoriteProduct = new SingleLiveEvent<>();
-    private final SingleLiveEvent<Void> editFavoriteProduct = new SingleLiveEvent<>();
     private boolean favoriteAddedEdited;
     private final SingleLiveEvent<Boolean> setFabIcon = new SingleLiveEvent<>();
 
@@ -79,20 +77,8 @@ public class FavoriteProductViewerViewModel
     }
 
     void onFabClicked() {
-        if(isFavorite.get()) editFavoriteProduct.call();
-        else addToFavorites();
-    }
-
-    public void addToFavorites() {
-        addFavoriteProduct.call();
-    }
-
-    SingleLiveEvent<Void> getAddFavoriteProduct() {
-        return addFavoriteProduct;
-    }
-
-    SingleLiveEvent<Void> getEditFavoriteProduct() {
-        return editFavoriteProduct;
+        if (isFavorite.get()) navigator.editFavoriteProduct();
+        else navigator.addFavoriteProduct();
     }
 
     void handleActivityResult(int requestCode, int resultCode) {
@@ -104,9 +90,16 @@ public class FavoriteProductViewerViewModel
         }
     }
 
+    public void addFavoriteProduct() {
+        navigator.addFavoriteProduct();
+    }
+
     void deleteFavoriteProduct() {
+        Log.d(TAG, "deleteFavoriteProduct=" + favoriteProduct.get());
         if (favoriteProduct.get() != null) {
             repository.deleteFavoriteProduct(favoriteProduct.get().getId());
+            favoriteProduct.set(null);
+            isFavorite.set(false);
         }
     }
 

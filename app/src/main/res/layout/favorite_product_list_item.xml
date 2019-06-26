@@ -8,7 +8,7 @@
         <import type="android.view.View.OnClickListener"/>
 
         <variable
-            name="favoriteProduct"
+            name="favoriteProductModel"
             type="com.example.peter.thekitchenmenu.data.model.FavoriteProductModel" />
 
         <variable
@@ -29,7 +29,7 @@
         android:foregroundGravity="center"
         app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="4dp"
-        android:onClick="@{() -> listener.onFavoriteProductClicked(favoriteProduct)}" >
+        android:onClick="@{() -> listener.onFavoriteProductClicked(favoriteProductModel)}" >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/favorite_product_list_item_cl"
@@ -53,7 +53,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Cirio canned chopped tomatoes"
-                android:text="@{favoriteProduct.product.description}"
+                android:text="@{favoriteProductModel.product.description}"
                 />
 
             <ImageView
@@ -68,8 +68,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:webImageUrl='@{favoriteProduct.product.webImageUrl}'
-                app:remoteSmallImageUri='@{favoriteProduct.product.remoteSmallImageUri}' />
+                app:webImageUrl='@{favoriteProductModel.product.webImageUrl}'
+                app:remoteSmallImageUri='@{favoriteProductModel.product.remoteSmallImageUri}' />
 
             <TextView
                 android:id="@+id/product_list_item_measurement"
@@ -82,8 +82,8 @@
                 android:textColor="@color/grey"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/product_list_item_description"
-                app:setLabelForSubtypeInt="@{favoriteProduct.product.unitOfMeasureSubtype}"
-                app:formatBaseUnits="@{favoriteProduct.product.baseUnits}"
+                app:setLabelForSubtypeInt="@{favoriteProductModel.product.unitOfMeasureSubtype}"
+                app:formatBaseUnits="@{favoriteProductModel.product.baseUnits}"
                 tools:text="400ml"
                 />
 
@@ -100,7 +100,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 tools:text="£24.99"
-                app:stringToCurrency="@{favoriteProduct.favoriteProduct.price}"/>
+                app:stringToCurrency="@{favoriteProductModel.favoriteProduct.price}"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/favorite_product_list_item_last_updated_label"
@@ -130,7 +130,19 @@
                 app:layout_constraintStart_toEndOf="@+id/favorite_product_list_item_last_updated_label"
                 app:layout_constraintTop_toTopOf="@id/favorite_product_list_item_price"
                 tools:text="01 Apr 2019"
-                app:longToDate="@{favoriteProduct.favoriteProduct.lastUpdate}"/>
+                app:longToDate="@{favoriteProductModel.favoriteProduct.lastUpdate}"/>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/product_list_item_remove_from_favorites"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_margin="8dp"
+                android:src="@drawable/ic_list_add_check"
+                android:tint="@color/primaryColor"
+                android:onClick="@{() -> listener.onRemoveFromFavoritesClicked(favoriteProductModel)}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

@@ -36,7 +36,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:hint="@string/hint_retailer"
-            android:inputType="textCapWords"
+            android:inputType="textCapSentences"
             android:text='@={viewModel.retailer}'
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -93,7 +93,7 @@
             android:layout_marginEnd="8dp"
             android:hint="@string/hint_location_room"
             android:text='@={viewModel.locationRoom}'
-            android:inputType="textCapWords"
+            android:inputType="textCapSentences"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/storage_room_label"
@@ -121,7 +121,7 @@
             android:layout_marginEnd="8dp"
             android:hint="@string/hint_location_in_room"
             android:text='@={viewModel.locationInRoom}'
-            android:inputType="textCapWords"
+            android:inputType="textCapSentences"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/location_in_room_label"

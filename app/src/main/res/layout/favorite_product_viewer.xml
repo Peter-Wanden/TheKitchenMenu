@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <import type="android.view.View.OnClickListener"/>
         <import type="android.view.View" />
 
         <variable
@@ -120,7 +120,7 @@
             android:src="@drawable/ic_list"
             android:layout_marginEnd="4dp"
             android:visibility="@{viewModel.isFavorite ? View.GONE : View.VISIBLE}"
-            android:onClick="@{() -> viewModel.addToFavorites()}"
+            android:onClick="@{() -> viewModel.addFavoriteProduct()}"
             app:layout_constraintBottom_toBottomOf="@id/empty_screen_not_in_favorites_label"
             app:layout_constraintEnd_toStartOf="@id/empty_screen_not_in_favorites_label"
             app:layout_constraintStart_toStartOf="parent"
@@ -137,7 +137,7 @@
             android:layout_marginStart="4dp"
             android:text="@string/empty_screen_add_to_favorites_message"
             android:visibility="@{viewModel.isFavorite ? View.GONE : View.VISIBLE}"
-            android:onClick="@{() -> viewModel.addToFavorites()}"
+            android:onClick="@{() -> viewModel.addFavoriteProduct()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/empty_screen_favorite_product_list_drawable"

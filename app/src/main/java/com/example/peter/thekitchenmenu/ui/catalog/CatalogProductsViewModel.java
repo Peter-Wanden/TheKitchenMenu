@@ -259,16 +259,5 @@ public class CatalogProductsViewModel extends AndroidViewModel {
                 prepareData();
             }
         }
-
-        if (ProductEditorActivity.REQUEST_ADD_EDIT_PRODUCT == requestCode) {
-            if (resultCode == ProductEditorActivity.RESULT_ADD_EDIT_PRODUCT_OK) {
-                // TODO - New product added, go to product viewer
-                String productId;
-                if (data != null) {
-                    productId = data.getStringExtra(ProductEditorActivity.EXTRA_PRODUCT_ID);
-                    productNavigator.reviewNewProduct(productId);
-                }
-            }
-        }
     }
 }

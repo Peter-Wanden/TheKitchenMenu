@@ -6,10 +6,19 @@
 
     <data>
         <import type="android.view.View"/>
+        <import type="android.view.View.OnClickListener"/>
 
         <variable
-            name="viewModel"
+            name="listener"
+            type="com.example.peter.thekitchenmenu.ui.detail.product.viewer.FavoriteProductUserActionsListener" />
+
+        <variable
+            name="viewModelProduct"
             type="com.example.peter.thekitchenmenu.ui.detail.product.viewer.ProductViewerViewModel" />
+
+        <variable
+            name="viewModelFavoriteProduct"
+            type="com.example.peter.thekitchenmenu.ui.detail.product.viewer.FavoriteProductViewerViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -25,7 +34,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            android:text="@{viewModel.product.description}"
+            android:text="@{viewModelProduct.product.description}"
             bind:layout_constraintEnd_toEndOf="parent"
             bind:layout_constraintStart_toStartOf="parent"
             bind:layout_constraintTop_toTopOf="parent"
@@ -40,8 +49,8 @@
             android:layout_marginTop="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            bind:setLabelForSubtypeInt="@{viewModel.product.unitOfMeasureSubtype}"
-            bind:formatBaseUnits="@{viewModel.product.baseUnits}"
+            bind:setLabelForSubtypeInt="@{viewModelProduct.product.unitOfMeasureSubtype}"
+            bind:formatBaseUnits="@{viewModelProduct.product.baseUnits}"
             bind:layout_constraintTop_toBottomOf="@id/product_viewer_description"
             bind:layout_constraintStart_toStartOf="parent"
             tools:text="50ml">
@@ -57,10 +66,34 @@
             bind:layout_constraintEnd_toEndOf="parent"
             bind:layout_constraintStart_toStartOf="parent"
             bind:layout_constraintTop_toBottomOf="@id/product_viewer_size"
-            bind:remoteLargeImageUri='@{viewModel.product.remoteLargeImageUri}'
-            bind:webImageUrl='@{viewModel.product.webImageUrl}'
+            bind:remoteLargeImageUri='@{viewModelProduct.product.remoteLargeImageUri}'
+            bind:webImageUrl='@{viewModelProduct.product.webImageUrl}'
             tools:src="@drawable/cirio_tinned_tomatoes">
-
         </androidx.appcompat.widget.AppCompatImageView>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/product_list_item_add_to_favorites"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="8dp"
+            android:src="@drawable/ic_list_add"
+            android:tint="@color/primaryColor"
+            android:visibility="@{viewModelFavoriteProduct.isFavorite ? View.GONE : View.VISIBLE}"
+            android:onClick="@{() -> listener.addToFavorites()}"
+            bind:layout_constraintEnd_toEndOf="@id/product_viewer_image"
+            bind:layout_constraintTop_toTopOf="@id/product_viewer_image"
+            />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/product_list_item_remove_from_favorites"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="8dp"
+            android:src="@drawable/ic_list_add_check"
+            android:tint="@color/primaryColor"
+            android:visibility="@{viewModelFavoriteProduct.isFavorite ? View.VISIBLE : View.GONE}"
+            android:onClick="@{() -> listener.removeFromFavorites()}"
+            bind:layout_constraintEnd_toEndOf="@id/product_viewer_image"
+            bind:layout_constraintTop_toTopOf="@id/product_viewer_image"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

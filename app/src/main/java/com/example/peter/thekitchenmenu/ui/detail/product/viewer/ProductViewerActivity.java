@@ -2,6 +2,7 @@ package com.example.peter.thekitchenmenu.ui.detail.product.viewer;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,6 +15,7 @@ import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.ProductViewerActivityBinding;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryProduct;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryFavoriteProduct;
+import com.example.peter.thekitchenmenu.ui.catalog.CatalogActivity;
 import com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorActivity;
 import com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorFragment;
 import com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductEditorActivity;
@@ -36,7 +38,7 @@ public class ProductViewerActivity
     private ProductViewerActivityBinding binding;
     private ProductViewerViewModel productViewerViewModel;
     private FavoriteProductViewerViewModel favoriteProductViewerViewModel;
-    private boolean productEdited = false;
+    private boolean productAdded = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,12 +52,12 @@ public class ProductViewerActivity
         } else if (getIntent().getStringExtra(EXTRA_NEW_PRODUCT_ID) != null) {
             setTitle(R.string.activity_title_review_new_product);
             productId = getIntent().getStringExtra(EXTRA_NEW_PRODUCT_ID);
+            productAdded = true;
         }
         initialiseBindings();
         setupToolbar();
         setupViewModels();
         addFragments(productId);
-        subscribeToNavigationChanges();
     }
 
     private void initialiseBindings() {
@@ -133,30 +135,28 @@ public class ProductViewerActivity
         return fragment;
     }
 
-    private void subscribeToNavigationChanges() {
-
-        productViewerViewModel.getProductEditedEvent().observe(
-                this, productEdited ->
-                        ProductViewerActivity.this.productEdited = productEdited);
-
-        favoriteProductViewerViewModel.getAddFavoriteProduct().observe(
-                this, addFavoriteProductEvent ->
-                        ProductViewerActivity.this.addFavoriteProduct());
-
-        favoriteProductViewerViewModel.getEditFavoriteProduct().observe(
-                this, editFavoriteProductEvent ->
-                        ProductViewerActivity.this.editFavoriteProduct());
-    }
-
     @Override
     public boolean onSupportNavigateUp() {
-        if (productEdited) setResult(ProductEditorActivity.RESULT_ADD_EDIT_PRODUCT_OK);
+        if (productAdded) {
+            goToProductCatalog();
+        }
         if (favoriteProductViewerViewModel.isFavoriteAddedEdited()) {
             setResult(RESULT_FAVORITE_ADDED_OK);
-        } else setResult(RESULT_FAVORITE_NOT_ADDED);
+            finish();
 
-        onBackPressed();
+        } else {
+            setResult(RESULT_FAVORITE_NOT_ADDED);
+            finish();
+        }
         return true;
+    }
+
+    private void goToProductCatalog() {
+        Intent intent = new Intent(this, CatalogActivity.class);
+        intent.putExtra(
+                CatalogActivity.NEW_PRODUCT_ID_ADDED,
+                productViewerViewModel.product.get().getId());
+        startActivity(intent);
     }
 
     @Override
@@ -201,12 +201,10 @@ public class ProductViewerActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onActivityResult: requestCode=" + requestCode + " resultCode=" + resultCode);
 
         if (requestCode == FavoriteProductEditorActivity.REQUEST_ADD_EDIT_FAVORITE_PRODUCT)
             favoriteProductViewerViewModel.handleActivityResult(requestCode, resultCode);
-
-        if (requestCode == ProductEditorActivity.REQUEST_ADD_EDIT_PRODUCT)
-            productViewerViewModel.handleActivityResult(requestCode, resultCode);
     }
 
     @Override

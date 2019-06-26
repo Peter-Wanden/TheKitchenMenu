@@ -63,8 +63,17 @@ public class CatalogFavoritesRecyclerAdapter extends RecyclerView.Adapter<Catalo
     class ViewHolder extends RecyclerView.ViewHolder {
         FavoriteProductListItemBinding binding;
 
-        FavoriteProductItemUserActionsListener listener = favoriteProduct ->
+        FavoriteProductItemUserActionsListener listener = new FavoriteProductItemUserActionsListener() {
+            @Override
+            public void onFavoriteProductClicked(FavoriteProductModel favoriteProduct) {
                 viewModel.getOpenProductEvent().setValue(favoriteProduct.getProduct().getId());
+            }
+
+            @Override
+            public void onRemoveFromFavoritesClicked(FavoriteProductModel favoriteProductModel) {
+                viewModel.removeFromFavorites(favoriteProductModel.getFavoriteProduct().getId());
+            }
+        };
 
         ViewHolder(FavoriteProductListItemBinding binding) {
             super(binding.getRoot());
@@ -72,7 +81,7 @@ public class CatalogFavoritesRecyclerAdapter extends RecyclerView.Adapter<Catalo
         }
 
         void bind(FavoriteProductModel favoriteProductModel) {
-            binding.setFavoriteProduct(favoriteProductModel);
+            binding.setFavoriteProductModel(favoriteProductModel);
             binding.setListener(listener);
             binding.executePendingBindings();
         }

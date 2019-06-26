@@ -27,6 +27,7 @@ public class CatalogActivity
 
     private static final String TAG = "tkm-ProductCatalogAct";
 
+    public static final String NEW_PRODUCT_ID_ADDED = "NEW_PRODUCT_ID_ADDED";
     CatalogProductsViewModel viewModel;
     ProductCatalogActivityBinding binding;
     CatalogFragmentPageAdapter tabPageAdapter;
@@ -109,9 +110,7 @@ public class CatalogActivity
     @Override
     public void addNewProduct() {
         Intent intent = new Intent(this, ProductEditorActivity.class);
-        startActivityForResult(
-                intent,
-                ProductEditorActivity.REQUEST_ADD_EDIT_PRODUCT);
+        startActivity(intent);
     }
 
     @Override
@@ -138,13 +137,6 @@ public class CatalogActivity
         Intent intent = new Intent(CatalogActivity.this, ProductViewerActivity.class);
         intent.putExtra(ProductViewerActivity.EXTRA_PRODUCT_ID, productId);
         startActivityForResult(intent, ProductViewerActivity.REQUEST_VIEW_PRODUCT);
-    }
-
-    @Override
-    public void reviewNewProduct(String productId) {
-        Intent intent = new Intent(CatalogActivity.this, ProductViewerActivity.class);
-        intent.putExtra(ProductViewerActivity.EXTRA_NEW_PRODUCT_ID, productId);
-        startActivityForResult(intent, ProductViewerActivity.REQUEST_REVIEW_PRODUCT);
     }
 
     @Override

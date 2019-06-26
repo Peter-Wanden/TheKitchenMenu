@@ -16,6 +16,7 @@ public class StringToCurrencyConverter {
     public static void toString(TextView view, String price) {
 
         if (Strings.isEmptyOrWhitespace(price)) {
+            view.setText("");
             return;
         }
 

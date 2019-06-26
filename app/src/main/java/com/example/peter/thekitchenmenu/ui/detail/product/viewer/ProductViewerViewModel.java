@@ -23,7 +23,6 @@ public class ProductViewerViewModel
 
     private boolean dataIsLoading;
     public final ObservableField<ProductEntity> product = new ObservableField<>();
-    private final SingleLiveEvent<Boolean> productEditedEvent = new SingleLiveEvent<>();
 
     public ProductViewerViewModel(Application application, ProductRepository repository) {
         super(application);
@@ -68,19 +67,5 @@ public class ProductViewerViewModel
 
     void editProduct() {
         navigator.editProduct(product.get().getId());
-    }
-
-    SingleLiveEvent<Boolean> getProductEditedEvent() {
-        return productEditedEvent;
-    }
-
-    void handleActivityResult(int requestCode, int resultCode) {
-        Log.d(TAG, "handleActivityResult: requestCode=" + requestCode + " resultCode=" + resultCode);
-
-        if(resultCode == ProductEditorActivity.RESULT_ADD_EDIT_PRODUCT_OK) {
-            //TODO - if not in favorites, add it automatically
-            // TODO - Product has been edited so set result for catalog activity to refresh data
-            productEditedEvent.setValue(true);
-        }
     }
 }

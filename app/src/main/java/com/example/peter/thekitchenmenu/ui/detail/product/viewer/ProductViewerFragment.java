@@ -1,7 +1,6 @@
 package com.example.peter.thekitchenmenu.ui.detail.product.viewer;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,7 +23,8 @@ public class ProductViewerFragment extends Fragment {
     public static final String ARGUMENT_PRODUCT_ID = "PRODUCT_ID";
 
     private ProductViewerDetailFragmentBinding binding;
-    private ProductViewerViewModel viewModel;
+    private ProductViewerViewModel productViewerViewModel;
+    private FavoriteProductViewerViewModel favoriteProductViewerViewModel;
 
     public static ProductViewerFragment newInstance(String productId) {
         Bundle arguments = new Bundle();
@@ -37,7 +37,7 @@ public class ProductViewerFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        viewModel.start(getArguments().getString(ARGUMENT_PRODUCT_ID));
+        productViewerViewModel.start(getArguments().getString(ARGUMENT_PRODUCT_ID));
     }
 
     @Nullable
@@ -52,19 +52,38 @@ public class ProductViewerFragment extends Fragment {
                 container,
                 false);
 
-        setViewModel();
+        setViewModels();
         setBindingInstanceVariables();
         setHasOptionsMenu(true);
 
         return binding.getRoot();
     }
 
-    private void setViewModel() {
-        viewModel = ProductViewerActivity.obtainProductViewerViewModel(requireActivity());
+    private void setViewModels() {
+        productViewerViewModel = ProductViewerActivity.obtainProductViewerViewModel(
+                requireActivity());
+        favoriteProductViewerViewModel = ProductViewerActivity.obtainFavoriteProductViewerViewModel(
+                requireActivity());
     }
 
     private void setBindingInstanceVariables() {
-        binding.setViewModel(viewModel);
+        binding.setViewModelProduct(productViewerViewModel);
+        binding.setViewModelFavoriteProduct(favoriteProductViewerViewModel);
+        binding.setListener(getFavoriteProductUserActionsListener());
+    }
+
+    private FavoriteProductUserActionsListener getFavoriteProductUserActionsListener() {
+        return new FavoriteProductUserActionsListener() {
+            @Override
+            public void addToFavorites() {
+                favoriteProductViewerViewModel.addFavoriteProduct();
+            }
+
+            @Override
+            public void removeFromFavorites() {
+                favoriteProductViewerViewModel.deleteFavoriteProduct();
+            }
+        };
     }
 
     @Override
@@ -76,10 +95,10 @@ public class ProductViewerFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_item_edit_product:
-                viewModel.editProduct();
+                productViewerViewModel.editProduct();
                 return true;
             case R.id.menu_item_delete_product:
-                viewModel.deleteProduct();
+                productViewerViewModel.deleteProduct();
                 return true;
         }
         return false;

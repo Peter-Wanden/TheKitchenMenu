@@ -143,7 +143,7 @@ public class ProductEditorViewModel extends ObservableViewModel {
             );
         }
         repository.saveProduct(productEntity);
-        navigator.onProductSaved(productEntity.getId());
+        navigator.reviewProduct(productEntity.getId());
     }
 
     @Override

@@ -12,6 +12,7 @@ import com.example.peter.thekitchenmenu.data.model.ProductIdentityModel;
 import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
 import com.example.peter.thekitchenmenu.databinding.ProductEditorBinding;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryProduct;
+import com.example.peter.thekitchenmenu.ui.detail.product.viewer.ProductViewerActivity;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.ui.imageeditor.ImageEditorViewModel;
 
@@ -154,10 +155,8 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
         if (getIntent().getStringExtra(EXTRA_PRODUCT_ID) != null) {
             productEditorViewModel.editProduct(getIntent().getStringExtra(EXTRA_PRODUCT_ID));
             productEditorViewModel.setExistingProduct(true);
-            setTitle(getApplicationContext().getString(R.string.activity_title_edit_product));
         } else {
             productEditorViewModel.setExistingProduct(false);
-            setTitle(R.string.activity_title_add_new_product);
         }
     }
 
@@ -192,7 +191,7 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.menu_product_editor_action_save){
+        if (item.getItemId() == R.id.menu_product_editor_action_save) {
             productEditorViewModel.saveProduct();
             return true;
         }
@@ -200,11 +199,11 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
     }
 
     @Override
-    public void onProductSaved(String productId) {
-        Intent resultIntent = new Intent();
-        resultIntent.putExtra(EXTRA_PRODUCT_ID, productId);
-        setResult(RESULT_ADD_EDIT_PRODUCT_OK, resultIntent);
-        finish();
+    public void reviewProduct(String productId) {
+        Intent intent = new Intent(
+                ProductEditorActivity.this, ProductViewerActivity.class);
+        intent.putExtra(ProductViewerActivity.EXTRA_NEW_PRODUCT_ID, productId);
+        startActivity(intent);
     }
 
     @Override
