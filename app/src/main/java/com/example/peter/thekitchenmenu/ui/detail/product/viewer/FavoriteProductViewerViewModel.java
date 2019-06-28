@@ -77,8 +77,10 @@ public class FavoriteProductViewerViewModel
     }
 
     void onFabClicked() {
-        if (isFavorite.get()) navigator.editFavoriteProduct();
-        else navigator.addFavoriteProduct();
+        if (isFavorite.get())
+            navigator.editFavoriteProduct();
+        else
+            navigator.addFavoriteProduct();
     }
 
     void handleActivityResult(int requestCode, int resultCode) {

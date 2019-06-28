@@ -84,6 +84,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/product_list_item_description"
                 app:setLabelForSubtypeInt="@{favoriteProductModel.product.unitOfMeasureSubtype}"
                 app:formatBaseUnits="@{favoriteProductModel.product.baseUnits}"
+                app:formatNumberOfItems="@{favoriteProductModel.product.numberOfProducts}"
                 tools:text="400ml"
                 />
 

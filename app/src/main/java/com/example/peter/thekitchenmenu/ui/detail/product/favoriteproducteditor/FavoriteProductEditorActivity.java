@@ -63,6 +63,7 @@ public class FavoriteProductEditorActivity
 
     private void setupViewModels() {
         productViewerViewModel = obtainProductViewerViewModel(this);
+        productViewerViewModel.canAddRemoveFavorites.set(false);
         favoriteProductEditorViewModel = obtainFavoriteProductEditorViewModel(this);
     }
 

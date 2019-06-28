@@ -38,16 +38,17 @@ public class CatalogProductsViewModel extends AndroidViewModel {
 
     private boolean productsLoading;
     private boolean favoriteProductsLoading;
-    private ObservableBoolean dataLoading = new ObservableBoolean(false);
-    private ObservableBoolean isDataLoadingError = new ObservableBoolean(false);
+    private final ObservableBoolean dataLoading = new ObservableBoolean(false);
+    private final ObservableBoolean isDataLoadingError = new ObservableBoolean(false);
 
     private LinkedHashMap<String, ProductEntity> productMap = new LinkedHashMap<>();
     private LinkedHashMap<String, FavoriteProductEntity> favoriteProductMap = new LinkedHashMap<>();
-    private MutableLiveData<List<ProductModel>> productModels = new MutableLiveData<>();
-    private MutableLiveData<List<FavoriteProductModel>> favoriteProducts = new MutableLiveData<>();
+    private final MutableLiveData<List<ProductModel>> productModels = new MutableLiveData<>();
+    private final MutableLiveData<List<FavoriteProductModel>> favoriteProducts = new MutableLiveData<>();
 
-    private SingleLiveEvent<String> openProductEvent = new SingleLiveEvent<>();
-    private SingleLiveEvent<String> addToFavoritesEvent = new SingleLiveEvent<>();
+    private final SingleLiveEvent<String> openProductEvent = new SingleLiveEvent<>();
+    private final SingleLiveEvent<String> addToFavoritesEvent = new SingleLiveEvent<>();
+    private final MutableLiveData<String> searchQueryEvent = new MutableLiveData<>();
 
     public CatalogProductsViewModel(Application application,
                                     FavoriteProductsRepository repositoryFavoriteProducts,
@@ -259,5 +260,13 @@ public class CatalogProductsViewModel extends AndroidViewModel {
                 prepareData();
             }
         }
+    }
+
+    void searchQuery(String query) {
+        searchQueryEvent.setValue(query);
+    }
+
+    MutableLiveData<String> getSearchQueryEvent() {
+        return searchQueryEvent;
     }
 }

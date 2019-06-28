@@ -11,6 +11,7 @@
         <import type="android.view.View" />
         <import type="com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtypeConverter" />
         <import type="com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtype"/>
+        <import type="com.example.peter.thekitchenmenu.utils.NumberStringFormatConverter"/>
 
         <variable
             name="viewModel"
@@ -26,6 +27,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/vertical_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="98dp" />
+
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/unit_of_measure_label"
             style="@style/EditableCategoryStyle"
@@ -33,10 +41,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="@string/unit_of_measure_label"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/spinner_unit_of_measure"
             app:layout_constraintBottom_toBottomOf="@id/spinner_unit_of_measure"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/spinner_unit_of_measure"
             />
 
         <androidx.appcompat.widget.AppCompatSpinner
@@ -44,37 +51,12 @@
             style="@style/spinner_style"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/standard_input_item_height"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
             android:dropDownWidth="wrap_content"
             android:selectedItemPosition="@={MeasurementSubtypeConverter.toInt(viewModel.subtype)}"
             android:spinnerMode="dropdown"
-            app:layout_constraintStart_toEndOf="@id/unit_of_measure_label"
+            app:layout_constraintStart_toEndOf="@id/vertical_guideline"
             app:layout_constraintTop_toTopOf="parent"
-            />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/multi_pack_label"
-            style="@style/EditableCategoryStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="@string/label_multi_pack"
-            app:layout_constraintTop_toTopOf="@id/multi_pack_checkBox"
-            app:layout_constraintBottom_toBottomOf="@id/multi_pack_checkBox"
-            app:layout_constraintStart_toStartOf="parent"
-            />
-
-        <androidx.appcompat.widget.AppCompatCheckBox
-            android:id="@+id/multi_pack_checkBox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:textColorHighlight="@color/textColorHighlight"
-            app:layout_constraintTop_toBottomOf="@id/spinner_unit_of_measure"
-            app:layout_constraintStart_toEndOf="@id/multi_pack_label"
-            android:checked="@={viewModel.multiPack}"
             />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -83,43 +65,36 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
             android:text="@string/label_number_of_packs"
-            android:visibility="@{viewModel.numberOfProducts > 1 ? View.VISIBLE : View.GONE}"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBaseline_toBaselineOf="@id/editable_products_in_pack"
+            app:layout_constraintBottom_toBottomOf="@+id/multi_pack_minus"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/multi_pack_label"
-            />
+            app:layout_constraintTop_toTopOf="@id/multi_pack_minus" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/multi_pack_minus"
             android:layout_width="42dp"
             android:layout_height="42dp"
-            android:layout_marginEnd="8dp"
             android:onClick="@{() -> viewModel.decrementNumberOfProducts()}"
             android:text="@string/minus_sign"
-            app:layout_constraintBottom_toBottomOf="@id/editable_products_in_pack"
-            app:layout_constraintEnd_toStartOf="@id/editable_products_in_pack"
-            app:layout_constraintTop_toTopOf="@id/editable_products_in_pack"
-            android:visibility="@{viewModel.numberOfProducts > 1 ? View.VISIBLE : View.GONE}"
+            app:layout_constraintStart_toStartOf="@id/vertical_guideline"
+            app:layout_constraintTop_toBottomOf="@id/spinner_unit_of_measure"
             />
+
+<!--        android:visibility="@{viewModel.numberOfProducts > 1 ? View.VISIBLE : View.GONE}"-->
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/editable_products_in_pack"
             style="@style/EditableFieldStyle"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/standard_input_item_height"
-            android:layout_marginTop="8dp"
-            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:inputType="number"
             android:text='@{`` + viewModel.numberOfProducts}'
-            android:visibility="@{viewModel.numberOfProducts > 1 ? View.VISIBLE : View.GONE}"
-            app:layout_constraintEnd_toEndOf="@id/products_in_pack_label"
-            app:layout_constraintStart_toStartOf="@id/products_in_pack_label"
-            app:layout_constraintTop_toBottomOf="@id/products_in_pack_label"
-            tools:text="5"
-            />
+            app:layout_constraintBottom_toBottomOf="@id/multi_pack_minus"
+            app:layout_constraintStart_toEndOf="@id/multi_pack_minus"
+            app:layout_constraintTop_toTopOf="@id/multi_pack_minus"
+            tools:text="5" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/multi_pack_plus"
@@ -127,66 +102,169 @@
             android:layout_height="42dp"
             android:layout_marginStart="8dp"
             android:onClick="@{() -> viewModel.incrementNumberOfProducts()}"
-            android:visibility="@{viewModel.numberOfProducts > 1 ? View.VISIBLE : View.GONE}"
             android:text="@string/plus_sign"
-            app:layout_constraintBottom_toBottomOf="@id/editable_products_in_pack"
             app:layout_constraintStart_toEndOf="@id/editable_products_in_pack"
-            app:layout_constraintTop_toTopOf="@id/editable_products_in_pack"
+            app:layout_constraintBottom_toBottomOf="@id/multi_pack_minus"
+            app:layout_constraintTop_toTopOf="@id/multi_pack_minus"
             />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/pack_size_label"
             style="@style/EditableCategoryStyle"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/standard_input_item_height"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:gravity="bottom"
-            android:paddingStart="0dp"
-            android:paddingEnd="8dp"
-            android:paddingBottom="12dp"
-            app:layout_constraintBottom_toTopOf="@id/product_size_label"
+            app:layout_constraintBaseline_toBaselineOf="@id/pack_editable_measurement_one"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/editable_products_in_pack"
+            app:layout_constraintTop_toTopOf="@id/pack_editable_measurement_one"
+            app:layout_constraintBottom_toBottomOf="@id/pack_editable_measurement_one"
             app:setLabelForSubtypeSelected="@{viewModel.subtype}"
+            app:fieldVisibilityNumberOfProducts="@{viewModel.numberOfProducts}"
             tools:text="@string/pack_size_label" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/pack_editable_measurement_two"
+            style="@style/EditableFieldStyle"
+            android:layout_width="wrap_content"
+            android:minEms="2"
+            android:layout_height="@dimen/standard_input_item_height"
+            android:layout_marginBottom="8dp"
+            android:textAlignment="textEnd"
+            app:setUpEditTextForSubtypeSelected="@{viewModel.subtype}"
+            android:afterTextChanged="@{() -> measurementHandler.newMeasurementReceived(packEditableMeasurementTwo)}"
+            android:text="@{NumberStringFormatConverter.toFormat(packEditableMeasurementTwo, viewModel.packMeasurementTwo, viewModel.subtype)}"
+            app:fieldVisibilityNumberOfMeasurementUnits="@{viewModel.numberOfMeasurementUnits}"
+            app:fieldVisibilityNumberOfProducts="@{viewModel.numberOfProducts}"
+            app:layout_constraintBaseline_toBaselineOf="@id/pack_editable_measurement_one"
+            app:layout_constraintStart_toEndOf="@id/vertical_guideline"
+            app:layout_constraintTop_toBottomOf="@id/multi_pack_minus"
+            tools:text="22"
+            />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/pack_measurement_label_two"
+            style="@style/EditableCategoryStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            app:setLabelForSubtypeSelected="@{viewModel.subtype}"
+            app:fieldVisibilityNumberOfMeasurementUnits="@{viewModel.numberOfMeasurementUnits}"
+            app:fieldVisibilityNumberOfProducts="@{viewModel.numberOfProducts}"
+            app:layout_constraintBaseline_toBaselineOf="@id/pack_editable_measurement_one"
+            app:layout_constraintStart_toEndOf="@id/pack_editable_measurement_two"
+            app:layout_constraintTop_toTopOf="@id/pack_editable_measurement_one"
+            app:layout_constraintBottom_toBottomOf="@id/pack_editable_measurement_one"
+            tools:text="l"
+            />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/pack_editable_measurement_one"
+            style="@style/EditableFieldStyle"
+            android:layout_width="wrap_content"
+            android:minEms="2"
+            android:layout_height="@dimen/standard_input_item_height"
+            android:textAlignment="textEnd"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp"
+            app:setUpEditTextForSubtypeSelected="@{viewModel.subtype}"
+            android:afterTextChanged="@{() -> measurementHandler.newMeasurementReceived(packEditableMeasurementOne)}"
+            android:text="@{NumberStringFormatConverter.toFormat(packEditableMeasurementOne, viewModel.packMeasurementOne, viewModel.subtype)}"
+            app:fieldVisibilityNumberOfProducts="@{viewModel.numberOfProducts}"
+            app:layout_goneMarginLeft="8dp"
+            app:layout_constraintStart_toEndOf="@id/pack_measurement_label_two"
+            app:layout_constraintTop_toBottomOf="@id/multi_pack_minus"
+            tools:text="16"
+            />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/pack_measurement_label_one"
+            style="@style/EditableCategoryStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            app:setLabelForSubtypeSelected="@{viewModel.subtype}"
+            app:fieldVisibilityNumberOfProducts="@{viewModel.numberOfProducts}"
+            app:layout_constraintBaseline_toBaselineOf="@id/pack_editable_measurement_one"
+            app:layout_constraintStart_toEndOf="@+id/pack_editable_measurement_one"
+            app:layout_constraintTop_toTopOf="@id/pack_editable_measurement_one"
+            app:layout_constraintBottom_toBottomOf="@id/pack_editable_measurement_one"
+            tools:text="ml"
+            />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/product_size_label"
             style="@style/EditableCategoryStyle"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/standard_input_item_height"
+            android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:gravity="bottom"
-            android:paddingBottom="4dp"
-            android:visibility="@{(viewModel.numberOfProducts > 1) ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/pack_size_label"
-            app:layout_constraintEnd_toStartOf="@id/product_measurement_parent"
             app:setLabelForSubtypeSelected="@{viewModel.subtype}"
+            app:layout_constraintBaseline_toBaselineOf="@id/product_editable_measurement_one"
+            app:layout_constraintTop_toTopOf="@id/product_editable_measurement_one"
+            app:layout_constraintBottom_toBottomOf="@id/product_editable_measurement_one"
             tools:text="@string/product_size_label" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/product_measurement_parent"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toEndOf="@id/product_size_label"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/editable_products_in_pack"
-            >
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/product_editable_measurement_two"
+            style="@style/EditableFieldStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/standard_input_item_height"
+            android:minEms="2"
+            android:layout_marginBottom="8dp"
+            android:textAlignment="textEnd"
+            android:afterTextChanged="@{() -> measurementHandler.newMeasurementReceived(productEditableMeasurementTwo)}"
+            android:text="@{NumberStringFormatConverter.toFormat(productEditableMeasurementTwo, viewModel.productMeasurementTwo, viewModel.subtype)}"
+            app:setUpEditTextForSubtypeSelected="@{viewModel.subtype}"
+            app:fieldVisibilityNumberOfMeasurementUnits="@{viewModel.numberOfMeasurementUnits}"
+            app:layout_constraintBaseline_toBaselineOf="@id/product_editable_measurement_one"
+            app:layout_constraintStart_toStartOf="@id/vertical_guideline"
+            app:layout_constraintTop_toBottomOf="@id/pack_editable_measurement_two"
+            tools:text="22"
+            />
 
-            <include
-                android:id="@+id/product_measurement_units"
-                layout="@layout/product_editor_measurement_units"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                bind:measurementHandler="@{measurementHandler}"
-                bind:viewModel="@{viewModel}" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/product_measurement_label_two"
+            style="@style/EditableCategoryStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp"
+            app:fieldVisibilityNumberOfMeasurementUnits="@{viewModel.numberOfMeasurementUnits}"
+            app:layout_constraintBaseline_toBaselineOf="@id/product_editable_measurement_one"
+            app:layout_constraintStart_toEndOf="@id/product_editable_measurement_two"
+            app:layout_constraintBottom_toBottomOf="@id/product_editable_measurement_one"
+            app:layout_constraintTop_toTopOf="@id/product_editable_measurement_one"
+            app:setLabelForSubtypeSelected="@{viewModel.subtype}"
+            tools:text="l" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/product_editable_measurement_one"
+            style="@style/EditableFieldStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/standard_input_item_height"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+            android:minEms="2"
+            android:textAlignment="textEnd"
+            android:afterTextChanged="@{() -> measurementHandler.newMeasurementReceived(productEditableMeasurementOne)}"
+            android:text="@{NumberStringFormatConverter.toFormat(productEditableMeasurementOne, viewModel.productMeasurementOne, viewModel.subtype)}"
+            app:setUpEditTextForSubtypeSelected="@{viewModel.subtype}"
+            app:layout_constraintStart_toEndOf="@id/product_measurement_label_two"
+            app:layout_constraintTop_toBottomOf="@id/pack_editable_measurement_one"
+            tools:text="16" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/product_measurement_label_one"
+            style="@style/EditableCategoryStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp"
+            app:setLabelForSubtypeSelected="@{viewModel.subtype}"
+            app:layout_constraintBaseline_toBaselineOf="@id/product_editable_measurement_one"
+            app:layout_constraintBottom_toBottomOf="@id/product_editable_measurement_one"
+            app:layout_constraintStart_toEndOf="@id/product_editable_measurement_one"
+            app:layout_constraintTop_toTopOf="@id/product_editable_measurement_one"
+            tools:text="ml" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

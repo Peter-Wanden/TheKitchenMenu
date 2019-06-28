@@ -2,6 +2,7 @@ package com.example.peter.thekitchenmenu.ui.detail.product.producteditor;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -105,13 +106,14 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
 
                 identityEditorViewModel.getExistingIdentityModel().setValue(identityModel);
 
-                ProductMeasurementModel measurementModelIn = new ProductMeasurementModel();
-                measurementModelIn.setMeasurementSubtype(
+                ProductMeasurementModel measurementModel = new ProductMeasurementModel();
+                measurementModel.setMeasurementSubtype(
                         MeasurementSubtype.values()[productEntity.getUnitOfMeasureSubtype()]);
-                measurementModelIn.setNumberOfProducts(productEntity.getNumberOfProducts());
-                measurementModelIn.setBaseUnits(productEntity.getBaseUnits());
+                measurementModel.setNumberOfProducts(productEntity.getNumberOfProducts());
+                measurementModel.setBaseUnits(productEntity.getBaseUnits());
 
-                measurementEditorViewModel.setMeasurementModel(measurementModelIn);
+                measurementEditorViewModel.setMeasurementModel(measurementModel);
+                Log.d(TAG, "setObservers: measurementModel=" + measurementModel.toString());
             }
         };
 

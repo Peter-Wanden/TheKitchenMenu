@@ -160,6 +160,11 @@ public class ProductViewerActivity
     }
 
     @Override
+    public void onBackPressed() {
+        goToProductCatalog();
+    }
+
+    @Override
     public void editProduct(String productId) {
         Intent intent = new Intent(this, ProductEditorActivity.class);
         intent.putExtra(ProductEditorActivity.EXTRA_PRODUCT_ID, productId);

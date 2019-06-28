@@ -8,6 +8,8 @@ import androidx.databinding.BindingAdapter;
 
 public class UnitOfMeasureFieldVisibilityBindingAdapter {
 
+//    private static final String TAG = "tkm=FieldVisibility";
+
     @BindingAdapter(value = {"fieldVisibilityNumberOfProducts",
                     "fieldVisibilityNumberOfMeasurementUnits"}, requireAll = false)
     public static void fieldVisibility(View view,
@@ -21,19 +23,20 @@ public class UnitOfMeasureFieldVisibilityBindingAdapter {
                                           int numberOfMeasurementUnits) {
         int viewId = view.getId();
 
-        if (viewId == R.id.product_editable_measurement_two ||
-                viewId == R.id.product_measurement_label_two) {
-            view.setVisibility( numberOfMeasurementUnits > 1 && numberOfProducts > 1 ?
+        if (viewId == R.id.pack_editable_measurement_two ||
+                viewId == R.id.pack_measurement_label_two) {
+            view.setVisibility(numberOfMeasurementUnits > 1 && numberOfProducts > 1 ?
                     View.VISIBLE : View.GONE);
         }
 
-        if (viewId == R.id.product_editable_measurement_one ||
-                viewId == R.id.product_measurement_label_one) {
+        if (viewId == R.id.pack_editable_measurement_one ||
+                viewId == R.id.pack_measurement_label_one ||
+                viewId == R.id.pack_size_label) {
             view.setVisibility(numberOfProducts > 1 ? View.VISIBLE : View.GONE);
         }
 
-        if (viewId == R.id.pack_editable_measurement_two ||
-                viewId == R.id.pack_measurement_label_two) {
+        if (viewId == R.id.product_editable_measurement_two ||
+                viewId == R.id.product_measurement_label_two) {
             view.setVisibility(numberOfMeasurementUnits > 1 ? View.VISIBLE : View.GONE);
         }
     }

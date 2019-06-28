@@ -3,6 +3,7 @@ package com.example.peter.thekitchenmenu.ui.detail.product.viewer;
 import android.app.Application;
 import android.util.Log;
 
+import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
 import androidx.lifecycle.AndroidViewModel;
 
@@ -23,6 +24,7 @@ public class ProductViewerViewModel
 
     private boolean dataIsLoading;
     public final ObservableField<ProductEntity> product = new ObservableField<>();
+    public final ObservableBoolean canAddRemoveFavorites = new ObservableBoolean();
 
     public ProductViewerViewModel(Application application, ProductRepository repository) {
         super(application);
@@ -67,5 +69,9 @@ public class ProductViewerViewModel
 
     void editProduct() {
         navigator.editProduct(product.get().getId());
+    }
+
+    ObservableBoolean getCanAddRemoveFavorites() {
+        return canAddRemoveFavorites;
     }
 }

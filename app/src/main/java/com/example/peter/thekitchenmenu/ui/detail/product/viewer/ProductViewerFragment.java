@@ -1,6 +1,7 @@
 package com.example.peter.thekitchenmenu.ui.detail.product.viewer;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -62,14 +63,21 @@ public class ProductViewerFragment extends Fragment {
     private void setViewModels() {
         productViewerViewModel = ProductViewerActivity.obtainProductViewerViewModel(
                 requireActivity());
-        favoriteProductViewerViewModel = ProductViewerActivity.obtainFavoriteProductViewerViewModel(
-                requireActivity());
+
+        if (requireActivity() instanceof ProductViewerActivity) {
+            productViewerViewModel.canAddRemoveFavorites.set(true);
+            favoriteProductViewerViewModel = ProductViewerActivity.obtainFavoriteProductViewerViewModel(
+                    requireActivity());
+        }
     }
 
     private void setBindingInstanceVariables() {
         binding.setViewModelProduct(productViewerViewModel);
-        binding.setViewModelFavoriteProduct(favoriteProductViewerViewModel);
-        binding.setListener(getFavoriteProductUserActionsListener());
+
+        if (requireActivity() instanceof ProductViewerActivity) {
+            binding.setViewModelFavoriteProduct(favoriteProductViewerViewModel);
+            binding.setListener(getFavoriteProductUserActionsListener());
+        }
     }
 
     private FavoriteProductUserActionsListener getFavoriteProductUserActionsListener() {

@@ -74,21 +74,6 @@
             app:layout_constraintBottom_toBottomOf="@id/product_image"
             app:layout_constraintEnd_toEndOf="@+id/product_image" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/add_web_image_url_label"
-            style="@style/EditableCategoryStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:text="@string/add_web_image_url"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/editable_image_web_url"
-            app:layout_constraintTop_toBottomOf="@id/product_image"
-            />
-
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/editable_image_web_url"
             style="@style/EditableFieldStyle"
@@ -102,6 +87,23 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/launch_browser_button"
             app:layout_constraintBottom_toBottomOf="parent"
+            android:visibility="gone"
+            />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/add_web_image_url_label"
+            style="@style/EditableCategoryStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/add_web_image_url"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/editable_image_web_url"
+            app:layout_constraintTop_toBottomOf="@id/product_image"
+            android:visibility="gone"
             />
 
         <androidx.appcompat.widget.AppCompatImageButton
@@ -118,6 +120,7 @@
             app:layout_constraintTop_toTopOf="@+id/editable_image_web_url"
             app:layout_constraintBottom_toBottomOf="@+id/editable_image_web_url"
             app:layout_constraintEnd_toEndOf="@+id/product_image"
+            android:visibility="gone"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

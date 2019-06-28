@@ -25,7 +25,7 @@ public class FavoriteProductEditorFragment extends Fragment {
     private FavoriteProductEditorFragmentBinding binding;
     private FavoriteProductEditorViewModel viewModel;
 
-    public static FavoriteProductEditorFragment newInstance(String productId,
+    static FavoriteProductEditorFragment newInstance(String productId,
                                                             String favoriteProductId) {
 
         Bundle arguments = new Bundle();
@@ -50,7 +50,6 @@ public class FavoriteProductEditorFragment extends Fragment {
 
     private void loadData() {
         if (getArguments() != null)
-
             if (getArguments().getString(ARGUMENT_FAVORITE_PRODUCT_ID) != null) {
                 viewModel.start(
                         getArguments().getString(ARGUMENT_PRODUCT_ID),

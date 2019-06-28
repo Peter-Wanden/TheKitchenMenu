@@ -1,7 +1,10 @@
 package com.example.peter.thekitchenmenu.ui.catalog;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -11,20 +14,23 @@ import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.model.FavoriteProductModel;
 import com.example.peter.thekitchenmenu.databinding.FavoriteProductListItemBinding;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class CatalogFavoritesRecyclerAdapter extends RecyclerView.Adapter<CatalogFavoritesRecyclerAdapter.ViewHolder> {
+public class CatalogFavoritesRecyclerAdapter
+        extends RecyclerView.Adapter<CatalogFavoritesRecyclerAdapter.ViewHolder>
+        implements Filterable {
 
     private static final String TAG = "tkm-CatalogFavAdapter";
 
     private final CatalogProductsViewModel viewModel;
     private List<FavoriteProductModel> favoriteProductModels;
+    private List<FavoriteProductModel> favoriteProductModelListFull;
 
-    public CatalogFavoritesRecyclerAdapter(CatalogProductsViewModel viewModel) {
+    CatalogFavoritesRecyclerAdapter(CatalogProductsViewModel viewModel) {
         this.viewModel = viewModel;
     }
 
-    /* View holder */
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
@@ -50,12 +56,49 @@ public class CatalogFavoritesRecyclerAdapter extends RecyclerView.Adapter<Catalo
         return favoriteProductModels.size();
     }
 
+    @Override
+    public Filter getFilter() {
+        return filterResults;
+    }
+
+    private Filter filterResults = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<FavoriteProductModel> filteredList = new ArrayList<>();
+
+            if (constraint == null || constraint.length() == 0) {
+                filteredList.addAll(favoriteProductModelListFull);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for (FavoriteProductModel model : favoriteProductModelListFull) {
+                    String description = model.getProduct().getDescription().toLowerCase();
+
+                    if (description.contains(filterPattern)) {
+                        filteredList.add(model);
+                    }
+                }
+            }
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+            favoriteProductModels.clear();
+            favoriteProductModels.addAll((List) filterResults.values);
+            notifyDataSetChanged();
+        }
+    };
+
     public List<FavoriteProductModel> getFavoriteProductModels() {
         return favoriteProductModels;
     }
 
     void setFavoriteProductModels(List<FavoriteProductModel> favoriteProductModels) {
         this.favoriteProductModels = favoriteProductModels;
+        favoriteProductModelListFull = new ArrayList<>(favoriteProductModels);
         notifyDataSetChanged();
     }
 

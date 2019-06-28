@@ -142,6 +142,7 @@ public class ProductEditorViewModel extends ObservableViewModel {
                     updatedImageModel.getLocalLargeImageUri()
             );
         }
+
         repository.saveProduct(productEntity);
         navigator.reviewProduct(productEntity.getId());
     }

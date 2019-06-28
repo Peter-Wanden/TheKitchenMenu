@@ -48,8 +48,10 @@ public class NumberStringFormatConverter {
                 int parsedInView = numberFormat.parse(numberInView).intValue();
 
                 if (parsedInView == parsedModelValue) {
-                    if (parsedInView == 0) return "";
-                    else return editText.getText().toString();
+                    if (parsedInView == 0)
+                        return "";
+                    else return
+                            editText.getText().toString();
                 }
             } catch (ParseException e) {
                 // Number set from Product is broken

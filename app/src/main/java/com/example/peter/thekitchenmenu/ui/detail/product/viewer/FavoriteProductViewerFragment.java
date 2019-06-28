@@ -78,7 +78,9 @@ public class FavoriteProductViewerFragment extends Fragment {
     }
 
     private void setFabIcon(boolean setEditIcon) {
-        if (setEditIcon) fab.setImageResource(R.drawable.ic_edit_white);
-        else fab.setImageResource(R.drawable.ic_format_list_bulleted_white);
+        if (setEditIcon)
+            fab.setImageResource(R.drawable.ic_edit_white);
+        else
+            fab.setImageResource(R.drawable.ic_list_add);
     }
 }

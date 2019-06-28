@@ -2,6 +2,7 @@ package com.example.peter.thekitchenmenu.ui.catalog;
 
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,11 @@ public class CatalogFavoritesFragment extends Fragment {
             if (favoriteProducts != null) {
                 adapter.setFavoriteProductModels(favoriteProducts);
             }
+        });
+
+        viewModel.getSearchQueryEvent().observe(requireActivity(), searchQuery -> {
+            Log.d(TAG, "onResume: searchQuery=" + searchQuery);
+            adapter.getFilter().filter(searchQuery);
         });
     }
 

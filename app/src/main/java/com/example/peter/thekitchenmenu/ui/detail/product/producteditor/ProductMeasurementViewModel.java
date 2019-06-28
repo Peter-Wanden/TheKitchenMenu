@@ -18,15 +18,14 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
 
 //    private static final String TAG = "tkm-MeasurementVM";
 
-    private MutableLiveData<ProductMeasurementModel> measurementModel;
-    private ProductMeasurementHandler measurementHandler;
+    private final MutableLiveData<ProductMeasurementModel> measurementModel = new MutableLiveData<>();
     private final SingleLiveEvent<Boolean> measurementModelIsValidEvent = new SingleLiveEvent<>();
+    private ProductMeasurementHandler measurementHandler;
 
     private MeasurementSubtype subtype;
     private UnitOfMeasure unitOfMeasure;
     private int numberOfMeasurementUnits;
     private int numberOfProducts;
-    private boolean multiPack;
 
     private String packMeasurementOne;
     private String productMeasurementOne;
@@ -35,14 +34,11 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
 
     public ProductMeasurementViewModel(@NonNull Application application) {
         super(application);
-
-        measurementModel = new MutableLiveData<>();
         measurementHandler = new ProductMeasurementHandler(this);
         setSubtype(MeasurementSubtype.TYPE_METRIC_MASS); // default
     }
 
     MutableLiveData<ProductMeasurementModel> getMeasurementModel() {
-        if (measurementModel == null) measurementModel = new MutableLiveData<>();
         return measurementModel;
     }
 
@@ -69,7 +65,6 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
 
     private void newUnitOfMeasureSelected(MeasurementSubtype subtype) {
         unitOfMeasure = subtype.getMeasurementClass();
-        setMultiPack(false);
         updateUi();
     }
 
@@ -83,22 +78,6 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
         return numberOfProducts;
     }
 
-    @Bindable
-    public boolean isMultiPack() {
-        return multiPack;
-    }
-
-    public void setMultiPack(boolean multiPack) {
-        if (this.multiPack != multiPack) {
-            this.multiPack = multiPack;
-
-            if (multiPack && unitOfMeasure.getNumberOfProducts() == 1) incrementNumberOfProducts();
-
-            if (!multiPack) setNumberOfProducts(1);
-            notifyPropertyChanged(BR.multiPack);
-        }
-    }
-
     public void incrementNumberOfProducts() {
         setNumberOfProducts((unitOfMeasure.getNumberOfProducts() + 1));
     }
@@ -109,13 +88,11 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
 
     public void setNumberOfProducts(int numberOfProducts) {
         if (newNumberOfProductsReceived(numberOfProducts))
-            if (canChangeToNewNumberOfProducts(numberOfProducts)) {
-                if (numberOfProducts == 1) setMultiPack(false);
-                else setMultiPack(true);
+            if (canChangeToNewNumberOfProducts(numberOfProducts))
                 updateUi(); // with new value
-            }
             // if required, add error message here
-            else updateUi(); // with old value
+            else
+                updateUi(); // with old value
     }
 
     private boolean newNumberOfProductsReceived(int newNumberOfProducts) {
@@ -127,11 +104,11 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
     }
 
     private void setBaseUnits(double newBaseUnits) {
-        if (newBaseUnitsReceived(newBaseUnits)) {
-            if (canChangeToNewNumberOfBaseUnits(newBaseUnits)) updateUi(); // with new value
+        if (newBaseUnitsReceived(newBaseUnits))
+            if (canChangeToNewNumberOfBaseUnits(newBaseUnits))
+                updateUi(); // with new value
                 // if required, add error message here
             else updateUi(); // with old value
-        }
     }
 
     private boolean newBaseUnitsReceived(double newBaseUnits) {
@@ -191,9 +168,11 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
         if (viewId == R.id.product_editable_measurement_one)
             measurementIsSet = unitOfMeasure.productMeasurementOneIsSet(decimalMeasurement);
 
-        if (measurementIsSet) updateUi(); // with new value
+        if (measurementIsSet)
+            updateUi(); // with new value
             // add error message if required
-        else updateUi(); // with old value set to zero
+        else
+            updateUi(); // with old value set to zero
     }
 
     void newIntegerMeasurementReceived(int viewId, int integerMeasurement) {
@@ -225,28 +204,30 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
         if (viewId == R.id.product_editable_measurement_two)
             measurementIsSet = unitOfMeasure.productMeasurementTwoIsSet(newMeasurement);
 
-        if (measurementIsSet) updateUi(); // with new value
+        if (measurementIsSet)
+            updateUi(); // with new value
         // add error message if required
-        else updateUi(); // with old value set to zero
+        else
+            updateUi(); // with old value set to zero
     }
 
     private void updateUi() {
         if (subtype != unitOfMeasure.getMeasurementSubtype()) {
             subtype = unitOfMeasure.getMeasurementSubtype();
-            notifyPropertyChanged(BR.subtype);
+            notifyPropertyChanged(17); // Databinding not working AGAIN! See BR class for int defs
         }
         if (numberOfMeasurementUnits != unitOfMeasure.getNumberOfMeasurementUnits()) {
             numberOfMeasurementUnits = unitOfMeasure.getNumberOfMeasurementUnits();
-            notifyPropertyChanged(BR.numberOfMeasurementUnits);
+            notifyPropertyChanged(2);
         }
         if (numberOfProducts != unitOfMeasure.getNumberOfProducts()) {
             numberOfProducts = unitOfMeasure.getNumberOfProducts();
-            notifyPropertyChanged(BR.numberOfProducts);
+            notifyPropertyChanged(10);
         }
         int unitsAfterDecimal = (int) unitOfMeasure.getMeasurementUnitsDigitWidths()[0].second;
         if (unitsAfterDecimal > 0) {
             packMeasurementOne = String.valueOf(unitOfMeasure.getPackMeasurementOne());
-            notifyPropertyChanged(BR.packMeasurementOne);
+            notifyPropertyChanged(5);
 
             productMeasurementOne = String.valueOf(unitOfMeasure.getProductMeasurementOne());
             notifyPropertyChanged(BR.productMeasurementOne);

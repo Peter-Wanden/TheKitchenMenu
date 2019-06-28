@@ -1,13 +1,16 @@
 package com.example.peter.thekitchenmenu.ui.catalog;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.data.model.ProductModel;
 import com.example.peter.thekitchenmenu.databinding.ProductListItemBinding;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -15,12 +18,14 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class CatalogAllRecyclerAdapter
-        extends RecyclerView.Adapter<CatalogAllRecyclerAdapter.ViewHolder> {
+        extends RecyclerView.Adapter<CatalogAllRecyclerAdapter.ViewHolder>
+        implements Filterable {
 
     private static final String TAG = "tkm-CatalogAdapter";
 
     private final CatalogProductsViewModel viewModel;
     private List<ProductModel> productModelList;
+    private List<ProductModel> productModelListFull;
 
     CatalogAllRecyclerAdapter(CatalogProductsViewModel viewModel) {
         this.viewModel = viewModel;
@@ -52,13 +57,50 @@ public class CatalogAllRecyclerAdapter
         return productModelList.size();
     }
 
+    @Override
+    public Filter getFilter() {
+        return filterResults;
+    }
+
+    private Filter filterResults = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<ProductModel> filteredList = new ArrayList<>();
+
+            if (constraint == null || constraint.length() == 0) {
+                filteredList.addAll(productModelListFull);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for (ProductModel model : productModelListFull) {
+                    String description = model.getProduct().getDescription().toLowerCase();
+
+                    if (description.contains(filterPattern)) {
+                        filteredList.add(model);
+                    }
+                }
+            }
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+            productModelList.clear();
+            productModelList.addAll((List) filterResults.values);
+            notifyDataSetChanged();
+        }
+    };
+
     /* Getter for the current list of products */
     public List<ProductModel> getProducts() {
         return productModelList;
     }
 
-    public void setProductModels(List<ProductModel> productModelList) {
+    void setProductModels(List<ProductModel> productModelList) {
         this.productModelList = productModelList;
+        productModelListFull = new ArrayList<>(productModelList);
         notifyDataSetChanged();
     }
 

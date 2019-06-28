@@ -12,11 +12,11 @@ public class UnitOfMeasureConstants {
 
     // Min and max for products sold by count/each
     static final int MINIMUM_COUNT = 1;
-    static final int MAXIMUM_COUNT = 99;
+    static final int MAXIMUM_COUNT = 500;
 
     // Min and max values for products sold in a multi-pack
     static final int MINIMUM_NUMBER_OF_PRODUCTS = 1;
-    static final int MAXIMUM_NUMBER_OF_PRODUCTS = 20;
+    static final int MAXIMUM_NUMBER_OF_PRODUCTS = 100;
 
     // Represents measurement that has not yet had a value assigned
     static final int NOT_YET_SET = 0;
