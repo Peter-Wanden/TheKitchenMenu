@@ -2,6 +2,7 @@ package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
 import androidx.core.util.Pair;
 
+import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -283,7 +284,9 @@ public abstract class UnitOfMeasureImpl implements UnitOfMeasure {
 
     @Override
     public boolean isValidMeasurement() {
-        return (baseUnits >= minimumMeasurement && baseUnits <= maximumMeasurement);
+        return (baseUnits >= minimumMeasurement &&
+                baseUnits <= maximumMeasurement &&
+                numberOfProducts > 0);
     }
 
     @Override
@@ -333,5 +336,32 @@ public abstract class UnitOfMeasureImpl implements UnitOfMeasure {
         } else {
             return (int) Math.floor(valueToRound * 1);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "UnitOfMeasureImpl{" +
+                "\nnumberOfMeasurementUnits=" + numberOfMeasurementUnits +
+                ", \nmaximumMeasurement=" + maximumMeasurement +
+                ", \nminimumMeasurement=" + minimumMeasurement +
+                ", \nunitTwo=" + unitTwo +
+                ", \nunitOne=" + unitOne +
+                ", \nunitOneDecimal=" + unitOneDecimal +
+                ", \nsmallestUnit=" + smallestUnit +
+                ", \nsubtype=" + subtype +
+                ", \nlastMeasurementUpdated=" + lastMeasurementUpdated +
+                ", \ntypeStringResourceId=" + typeStringResourceId +
+                ", \nsubtypeStringResourceId=" + subtypeStringResourceId +
+                ", \nunitOneLabelStringResourceId=" + unitOneLabelStringResourceId +
+                ", \nunitTwoLabelStringResourceId=" + unitTwoLabelStringResourceId +
+                ", \nbaseUnits=" + baseUnits +
+                ", \nnumberOfProducts=" + numberOfProducts +
+                ", \noldNumberOfProducts=" + oldNumberOfProducts +
+                ", \nproductSize=" + productSize +
+                ", \npackMeasurementTwo=" + packMeasurementTwo +
+                ", \npackMeasurementOne=" + packMeasurementOne +
+                ", \nproductMeasurementTwo=" + productMeasurementTwo +
+                ", \nproductMeasurementOne=" + productMeasurementOne +
+                '}';
     }
 }

@@ -3,7 +3,6 @@ package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 import android.content.res.Resources;
 import android.os.Build;
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
 
 import androidx.databinding.BindingAdapter;
@@ -19,6 +18,7 @@ public class UnitOfMeasureListItemBindingAdapter {
 
     private static final String TAG = "tkm-UOMListItemAdapter";
 
+    // TodO send in a measurement model- also use one in measurement viewmodel instead of bindable viewmodel
     @BindingAdapter(value = {"setLabelForSubtypeInt", "formatBaseUnits", "formatNumberOfItems"})
     public static void setLabelForSubtypeInt(TextView view,
                                              int subtypeInt,
@@ -44,47 +44,101 @@ public class UnitOfMeasureListItemBindingAdapter {
         setMeasurementToView(view, measurement);
     }
 
-    // ToDO change all to use NumberFormat
     private static String getMetricMeasurement(UnitOfMeasure unitOfMeasure, Resources resources) {
-        StringBuilder measurement = new StringBuilder();
-        double baseUnits = unitOfMeasure.getBaseUnits();
+        StringBuilder formattedMeasurement = new StringBuilder();
         int numberOfItems = unitOfMeasure.getNumberOfProducts();
-        NumberFormat numberFormat = getNumberFormat(resources);
-        Log.d(TAG, "getMetricMeasurement: NoItems=" + numberOfItems + " baseUnits=" + baseUnits);
 
         if (numberOfItems > 1) {
+            formattedMeasurement.append(numberOfItems).append(" x ");
 
-            measurement.
-                    append(numberOfItems).append("x");
-            baseUnits = baseUnits / numberOfItems;
+            formattedMeasurement.append(formattedMetricMeasurement(
+                    resources,
+                    unitOfMeasure,
+                    unitOfMeasure.getProductMeasurementTwo(),
+                    unitOfMeasure.getProductMeasurementOne()));
+            formattedMeasurement.append(" (");
         }
-        if (baseUnits > 999) {
-            measurement.
-                    append(numberFormat.format(baseUnits / 1000)).
-                    append(resources.getString(unitOfMeasure.getUnitTwoLabelStringResourceId()));
+
+        formattedMeasurement.append(formattedMetricMeasurement(
+                resources,
+                unitOfMeasure,
+                unitOfMeasure.getPackMeasurementTwo(),
+                unitOfMeasure.getPackMeasurementOne()));
+
+        if (numberOfItems > 1) {
+            formattedMeasurement.append(")");
+        }
+
+        if (formattedMeasurement.length() > 0) {
+            return formattedMeasurement.toString();
         } else {
-            measurement.
-                    append(numberFormat.format(baseUnits)).
-                    append(resources.getString(unitOfMeasure.getUnitOneLabelStringResourceId()));
+            return "";
         }
-        return measurement.toString();
+    }
+
+    private static StringBuilder formattedMetricMeasurement(Resources resources,
+                                                            UnitOfMeasure unitOfMeasure,
+                                                            int unitTwoValue,
+                                                            double unitOneValue) {
+        String unitOneLabel = resources.getString(unitOfMeasure.getUnitOneLabelStringResourceId());
+        String unitTwoLabel = resources.getString(unitOfMeasure.getUnitTwoLabelStringResourceId());
+        StringBuilder unformattedMeasurement = new StringBuilder();
+        StringBuilder formattedMeasurement = new StringBuilder();
+        NumberFormat numberFormat = getNumberFormat(resources);
+        if (unitTwoValue > 0) {
+            unformattedMeasurement.append(unitTwoValue);
+        }
+        if (unitTwoValue > 0 && unitOneValue > 0) {
+            unformattedMeasurement.append(".");
+        }
+        if (unitOneValue > 0) {
+            unformattedMeasurement.append(numberFormat.format(unitOneValue));
+        }
+        formattedMeasurement.append(numberFormat.format(
+                Double.parseDouble(unformattedMeasurement.toString())));
+
+        if (unitTwoValue > 0) {
+            formattedMeasurement.append(unitTwoLabel);
+            return formattedMeasurement;
+        } else {
+            formattedMeasurement.append(unitOneLabel);
+            return formattedMeasurement;
+        }
     }
 
     private static String getImperialMeasurement(UnitOfMeasure unitOfMeasure, Resources resources) {
-        StringBuilder measurement = new StringBuilder();
+        NumberFormat numberFormat = getNumberFormat(resources);
+        StringBuilder formattedMeasurement = new StringBuilder();
+        int numberOfProducts = unitOfMeasure.getNumberOfProducts();
+        int packUnitTwoValue = unitOfMeasure.getPackMeasurementTwo();
+        double packUnitOneValue = unitOfMeasure.getPackMeasurementOne();
+        int productUnitTwo = unitOfMeasure.getProductMeasurementTwo();
+        double productUnitOne = unitOfMeasure.getProductMeasurementOne();
+        String unitOneLabel = resources.getString(unitOfMeasure.getUnitOneLabelStringResourceId());
+        String unitTwoLabel = resources.getString(unitOfMeasure.getUnitTwoLabelStringResourceId());
 
-        if (unitOfMeasure.getPackMeasurementTwo() > 0)
-            measurement.
-                    append(unitOfMeasure.getPackMeasurementTwo()).
-                    append(resources.getString(unitOfMeasure.getUnitTwoLabelStringResourceId())).
-                    append(" ");
-
-        if (unitOfMeasure.getPackMeasurementOne() > 0)
-            measurement.
-                    append(unitOfMeasure.getPackMeasurementOne()).
-                    append(resources.getString(unitOfMeasure.getUnitOneLabelStringResourceId()));
-
-        return measurement.toString();
+        if (numberOfProducts > 1) {
+            formattedMeasurement.append(numberOfProducts).append(" x ");
+            if (productUnitTwo > 0)
+                formattedMeasurement.append(productUnitTwo).append(unitTwoLabel).append(" ");
+            if (productUnitOne > 0) {
+                formattedMeasurement.append(numberFormat.format(productUnitOne));
+                formattedMeasurement.append(unitOneLabel);
+            }
+            formattedMeasurement.append(" (");
+        }
+        if (packUnitTwoValue > 0)
+            formattedMeasurement.append(packUnitTwoValue).append(unitTwoLabel);
+        if (packUnitTwoValue > 0 && packUnitOneValue > 0)
+            formattedMeasurement.append(" ");
+        if (packUnitOneValue > 0)
+            formattedMeasurement.append(numberFormat.format(packUnitOneValue)).append(unitOneLabel);
+        if (numberOfProducts > 1)
+            formattedMeasurement.append(")");
+        if (formattedMeasurement.toString().length() > 0)
+            return formattedMeasurement.toString();
+        else
+            return "";
     }
 
     private static String getCountMeasurement(UnitOfMeasure unitOfMeasure, Resources resources) {

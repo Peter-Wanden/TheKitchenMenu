@@ -1,6 +1,7 @@
 package com.example.peter.thekitchenmenu.ui.detail.product.producteditor;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.example.peter.thekitchenmenu.BR;
 import com.example.peter.thekitchenmenu.R;
@@ -16,7 +17,7 @@ import androidx.lifecycle.MutableLiveData;
 
 public class ProductMeasurementViewModel extends ObservableViewModel {
 
-//    private static final String TAG = "tkm-MeasurementVM";
+    private static final String TAG = "tkm-MeasurementVM";
 
     private final MutableLiveData<ProductMeasurementModel> measurementModel = new MutableLiveData<>();
     private final SingleLiveEvent<Boolean> measurementModelIsValidEvent = new SingleLiveEvent<>();
@@ -214,50 +215,40 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
     private void updateUi() {
         if (subtype != unitOfMeasure.getMeasurementSubtype()) {
             subtype = unitOfMeasure.getMeasurementSubtype();
-            notifyPropertyChanged(17); // Databinding not working AGAIN! See BR class for int defs
         }
         if (numberOfMeasurementUnits != unitOfMeasure.getNumberOfMeasurementUnits()) {
             numberOfMeasurementUnits = unitOfMeasure.getNumberOfMeasurementUnits();
-            notifyPropertyChanged(2);
         }
         if (numberOfProducts != unitOfMeasure.getNumberOfProducts()) {
             numberOfProducts = unitOfMeasure.getNumberOfProducts();
-            notifyPropertyChanged(10);
         }
         int unitsAfterDecimal = (int) unitOfMeasure.getMeasurementUnitsDigitWidths()[0].second;
         if (unitsAfterDecimal > 0) {
             packMeasurementOne = String.valueOf(unitOfMeasure.getPackMeasurementOne());
-            notifyPropertyChanged(5);
-
             productMeasurementOne = String.valueOf(unitOfMeasure.getProductMeasurementOne());
-            notifyPropertyChanged(BR.productMeasurementOne);
         } else {
             packMeasurementOne = String.valueOf((int) unitOfMeasure.getPackMeasurementOne());
-            notifyPropertyChanged(BR.packMeasurementOne);
-
             productMeasurementOne = String.valueOf((int) unitOfMeasure.getProductMeasurementOne());
-            notifyPropertyChanged(BR.productMeasurementOne);
         }
         if (numberOfMeasurementUnits > 1) {
             packMeasurementTwo = String.valueOf(unitOfMeasure.getPackMeasurementTwo());
-            notifyPropertyChanged(BR.packMeasurementTwo);
-
             productMeasurementTwo = String.valueOf(unitOfMeasure.getProductMeasurementTwo());
-            notifyPropertyChanged(BR.productMeasurementTwo);
         }
+        notifyChange();
         updateMeasurementModel();
     }
 
     private void updateMeasurementModel() {
-        ProductMeasurementModel modelOut = new ProductMeasurementModel();
-        modelOut.setMeasurementSubtype(unitOfMeasure.getMeasurementSubtype());
-        modelOut.setNumberOfProducts(unitOfMeasure.getNumberOfProducts());
-        modelOut.setBaseUnits(unitOfMeasure.getBaseUnits());
+        ProductMeasurementModel measurementModel = new ProductMeasurementModel();
+        measurementModel.setMeasurementSubtype(unitOfMeasure.getMeasurementSubtype());
+        measurementModel.setNumberOfProducts(unitOfMeasure.getNumberOfProducts());
+        measurementModel.setBaseUnits(unitOfMeasure.getBaseUnits());
 
         if (unitOfMeasure.isValidMeasurement()) {
-            getMeasurementModel().setValue(modelOut);
+            getMeasurementModel().setValue(measurementModel);
             measurementModelIsValidEvent.setValue(true);
-        } else measurementModelIsValidEvent.setValue(false);
+        } else
+            measurementModelIsValidEvent.setValue(false);
     }
 
     SingleLiveEvent<Boolean> getMeasurementModelIsValidEvent() {
