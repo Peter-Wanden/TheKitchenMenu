@@ -16,9 +16,7 @@ import com.google.android.gms.common.internal.Objects;
 import java.util.Calendar;
 import java.util.UUID;
 
-import static com.example.peter.thekitchenmenu.data.entity.ProductEntity.TABLE_PRODUCT;
-
-@Entity(tableName = TABLE_PRODUCT)
+@Entity(tableName = ProductEntity.TABLE_PRODUCT)
 public final class ProductEntity implements Parcelable {
 
     public static final String TAG = "tkm-ProductEntity";
@@ -93,7 +91,6 @@ public final class ProductEntity implements Parcelable {
     @ColumnInfo(name = LAST_UPDATE)
     private final long lastUpdate;
 
-    // Required by Room
     public ProductEntity(@NonNull String id,
                          @NonNull String description,
                          @NonNull String shoppingListItemName,
@@ -151,7 +148,7 @@ public final class ProductEntity implements Parcelable {
                                               int numberOfProducts,
                                               double baseUnits,
                                               int unitOfMeasureSubtype,
-                                              @NonNull String createdBy,
+                                              @NonNull String createdBy, // Change to app.Constants.getUserId()
                                               @Nullable String webImageUrl,
                                               @Nullable String remoteSmallImageUri,
                                               @Nullable String remoteMediumImageUri,

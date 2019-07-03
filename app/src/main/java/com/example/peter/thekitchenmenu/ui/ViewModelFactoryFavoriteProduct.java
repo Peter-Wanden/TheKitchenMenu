@@ -9,8 +9,8 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
 import com.example.peter.thekitchenmenu.data.repository.ProductRepository;
 import com.example.peter.thekitchenmenu.data.repository.FavoriteProductsRepository;
-import com.example.peter.thekitchenmenu.ui.catalog.CatalogProductsViewModel;
-import com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorViewModel;
+import com.example.peter.thekitchenmenu.ui.catalog.product.ProductCatalogViewModel;
+import com.example.peter.thekitchenmenu.ui.detail.product.favoriteeditor.FavoriteProductEditorViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.product.viewer.FavoriteProductViewerViewModel;
 
 public class ViewModelFactoryFavoriteProduct extends ViewModelProvider.NewInstanceFactory {
@@ -56,9 +56,9 @@ public class ViewModelFactoryFavoriteProduct extends ViewModelProvider.NewInstan
             //noinspection unchecked
             return(T) new FavoriteProductViewerViewModel(application, favoriteProductsRepository);
 
-        } else if (modelClass.isAssignableFrom(CatalogProductsViewModel.class)) {
+        } else if (modelClass.isAssignableFrom(ProductCatalogViewModel.class)) {
             //noinspection unchecked
-            return(T) new CatalogProductsViewModel(application, favoriteProductsRepository,
+            return(T) new ProductCatalogViewModel(application, favoriteProductsRepository,
                     productRepository);
         }
 

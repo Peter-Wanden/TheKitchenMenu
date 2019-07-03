@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.RemoteViews;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.ui.catalog.CatalogActivity;
+import com.example.peter.thekitchenmenu.ui.catalog.product.ProductCatalogActivity;
 
 /**
  * Implementation of App Widget functionality.
@@ -58,7 +58,7 @@ public class TKMWidgetProvider extends AppWidgetProvider {
         remoteViews.setRemoteAdapter(R.id.tkmwidget_provider_lv_products, intentAdapter);
 
         // An intent that launches the MainActivity when the widget button is clicked.
-        Intent intentActivity = new Intent(context, CatalogActivity.class);
+        Intent intentActivity = new Intent(context, ProductCatalogActivity.class);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 context,

@@ -25,11 +25,11 @@ public interface ProductDataSource {
         void onDataNotAvailable();
     }
 
-    void getProducts(@NotNull LoadProductsCallback callback);
+    void getProducts(@NonNull LoadProductsCallback callback);
 
     void getProduct(@NonNull String productId, @NonNull GetProductCallback callback);
 
-    void saveProduct(@NotNull ProductEntity product);
+    void saveProduct(@NonNull ProductEntity product);
 
     void refreshProducts();
 

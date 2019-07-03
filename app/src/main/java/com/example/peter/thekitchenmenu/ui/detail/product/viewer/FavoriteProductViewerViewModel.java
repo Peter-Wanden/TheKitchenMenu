@@ -10,8 +10,7 @@ import androidx.lifecycle.AndroidViewModel;
 import com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity;
 import com.example.peter.thekitchenmenu.data.repository.FavoriteProductsDataSource;
 import com.example.peter.thekitchenmenu.data.repository.FavoriteProductsRepository;
-import com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorActivity;
-import com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductEditorActivity;
+import com.example.peter.thekitchenmenu.ui.detail.product.favoriteeditor.FavoriteProductEditorActivity;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 
 public class FavoriteProductViewerViewModel

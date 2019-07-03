@@ -9,8 +9,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
 import com.example.peter.thekitchenmenu.data.repository.ProductRepository;
-import com.example.peter.thekitchenmenu.ui.catalog.CatalogProductsViewModel;
-import com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductEditorViewModel;
+import com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductEditorViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.product.viewer.ProductViewerViewModel;
 
 /**

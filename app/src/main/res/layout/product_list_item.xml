@@ -13,7 +13,7 @@
 
         <variable
             name="listener"
-            type="com.example.peter.thekitchenmenu.ui.catalog.ProductItemUserActionsListener" />
+            type="com.example.peter.thekitchenmenu.ui.catalog.product.ProductItemUserActionsListener" />
     </data>
 
     <androidx.cardview.widget.CardView

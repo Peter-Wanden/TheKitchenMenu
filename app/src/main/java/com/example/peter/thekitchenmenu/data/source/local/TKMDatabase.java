@@ -6,6 +6,7 @@ import com.example.peter.thekitchenmenu.app.AppExecutors;
 import com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.data.entity.ProductFastTextSearch;
+import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -21,8 +22,9 @@ import static com.example.peter.thekitchenmenu.data.entity.ProductFastTextSearch
 
 @Database(entities = {
         ProductEntity.class,
+        ProductFastTextSearch.class,
         FavoriteProductEntity.class,
-        ProductFastTextSearch.class},
+        RecipeEntity.class},
         version = 2,
         exportSchema = false)
 public abstract class TKMDatabase extends RoomDatabase {
@@ -31,7 +33,8 @@ public abstract class TKMDatabase extends RoomDatabase {
     private static TKMDatabase sInstance;
 
     public abstract ProductEntityDao productEntityDao();
-    public abstract FavoriteProductEntityDAO favoriteProductEntityDao();
+    public abstract FavoriteProductEntityDao favoriteProductEntityDao();
+    public abstract RecipeEntityDao recipeEntityDao();
 
     private final MutableLiveData<Boolean> isDatabaseCreated = new MutableLiveData<>();
 

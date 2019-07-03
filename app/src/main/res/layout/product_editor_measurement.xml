@@ -14,11 +14,11 @@
 
         <variable
             name="viewModel"
-            type="com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductMeasurementViewModel" />
+            type="com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductMeasurementViewModel" />
 
         <variable
             name="measurementHandler"
-            type="com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductMeasurementHandler" />
+            type="com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductMeasurementHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

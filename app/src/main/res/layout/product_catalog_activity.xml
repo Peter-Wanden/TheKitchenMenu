@@ -11,7 +11,8 @@
             android:id="@+id/activity_catalog_product_vp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        </androidx.viewpager.widget.ViewPager>
 
         <ProgressBar
             android:id="@+id/activity_catalog_product_pb"
@@ -20,7 +21,8 @@
             app:layout_anchor="@id/activity_catalog_product_appbar"
             android:paddingTop="100dp"
             app:layout_anchorGravity="center_horizontal"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        </ProgressBar>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/activity_catalog_add_new_product_fab"
@@ -31,7 +33,8 @@
             android:tint="@color/white"
             app:backgroundTint="@color/textColorHighlight"
             app:layout_anchor="@+id/activity_catalog_product_vp"
-            app:layout_anchorGravity="bottom|right" />
+            app:layout_anchorGravity="bottom|right" >
+        </com.google.android.material.floatingactionbutton.FloatingActionButton>
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/activity_catalog_product_appbar"
@@ -47,8 +50,8 @@
                 android:background="@color/primaryColor"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:layout_scrollFlags="scroll|enterAlways|snap"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                />
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+            </androidx.appcompat.widget.Toolbar>
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/activity_catalog_product_tl"
@@ -56,8 +59,8 @@
                 android:layout_height="wrap_content"
                 app:tabIndicatorColor="@color/white"
                 app:tabSelectedTextColor="@color/white"
-                app:tabTextColor="@color/brightGrey"/>
-
+                app:tabTextColor="@color/brightGrey">
+            </com.google.android.material.tabs.TabLayout>
         </com.google.android.material.appbar.AppBarLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

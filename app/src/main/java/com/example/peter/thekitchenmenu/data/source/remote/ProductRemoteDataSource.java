@@ -12,7 +12,8 @@ public class ProductRemoteDataSource implements ProductDataSource {
     private static ProductRemoteDataSource INSTANCE;
 
     public static ProductRemoteDataSource getInstance() {
-        if (INSTANCE == null) INSTANCE = new ProductRemoteDataSource();
+        if (INSTANCE == null)
+            INSTANCE = new ProductRemoteDataSource();
         return INSTANCE;
     }
 
@@ -33,8 +34,8 @@ public class ProductRemoteDataSource implements ProductDataSource {
 
     @Override
     public void refreshProducts() {
-        // Not required because the {@link TasksRepository} handles the logic of refreshing the
-        // tasks from all the available data sources.
+        // Not required because the {@link ProductRepository} handles the logic of refreshing the
+        // products from all the available data sources.
     }
 
     @Override

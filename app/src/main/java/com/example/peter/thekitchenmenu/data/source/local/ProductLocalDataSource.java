@@ -45,8 +45,10 @@ public class ProductLocalDataSource implements ProductDataSource {
         Runnable getAllProductsRunnable = () -> {
             final List<ProductEntity> products = productDao.getAll();
             appExecutors.mainThread().execute(() -> {
-                if (products.isEmpty()) callback.onDataNotAvailable(); // if new or empty table
-                else callback.onProductsLoaded(products);
+                if (products.isEmpty())
+                    callback.onDataNotAvailable(); // if new or empty table
+                else
+                    callback.onProductsLoaded(products);
             });
         };
         appExecutors.diskIO().execute(getAllProductsRunnable);
@@ -57,8 +59,10 @@ public class ProductLocalDataSource implements ProductDataSource {
         Runnable getProductByIdRunnable = () -> {
             final ProductEntity product = productDao.getById(productId);
             appExecutors.mainThread().execute(() -> {
-                if (product != null) callback.onProductLoaded(product);
-                else callback.onDataNotAvailable();
+                if (product != null)
+                    callback.onProductLoaded(product);
+                else
+                    callback.onDataNotAvailable();
             });
         };
         appExecutors.diskIO().execute(getProductByIdRunnable);

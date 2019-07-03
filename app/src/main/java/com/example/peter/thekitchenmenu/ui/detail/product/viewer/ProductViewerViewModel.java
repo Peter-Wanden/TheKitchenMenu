@@ -1,7 +1,6 @@
 package com.example.peter.thekitchenmenu.ui.detail.product.viewer;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
@@ -10,8 +9,6 @@ import androidx.lifecycle.AndroidViewModel;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.data.repository.ProductDataSource;
 import com.example.peter.thekitchenmenu.data.repository.ProductRepository;
-import com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductEditorActivity;
-import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 
 public class ProductViewerViewModel
         extends AndroidViewModel

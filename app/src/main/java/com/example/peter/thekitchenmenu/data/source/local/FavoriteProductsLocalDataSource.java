@@ -13,17 +13,17 @@ import static androidx.core.util.Preconditions.checkNotNull;
 public class FavoriteProductsLocalDataSource implements FavoriteProductsDataSource {
 
     private static volatile FavoriteProductsLocalDataSource INSTANCE;
-    private FavoriteProductEntityDAO favoriteProductEntityDao;
+    private FavoriteProductEntityDao favoriteProductEntityDao;
     private AppExecutors appExecutors;
 
     private FavoriteProductsLocalDataSource(@NonNull AppExecutors appExecutors,
-                                            @NonNull FavoriteProductEntityDAO favoriteProductEntityDao) {
+                                            @NonNull FavoriteProductEntityDao favoriteProductEntityDao) {
         this.appExecutors = appExecutors;
         this.favoriteProductEntityDao = favoriteProductEntityDao;
     }
 
     public static FavoriteProductsLocalDataSource getInstance(@NonNull AppExecutors appExecutors,
-                                                              @NonNull FavoriteProductEntityDAO favoriteProductEntityDao) {
+                                                              @NonNull FavoriteProductEntityDao favoriteProductEntityDao) {
         if (INSTANCE == null) {
             synchronized (FavoriteProductsLocalDataSource.class) {
                 if (INSTANCE == null) INSTANCE= new FavoriteProductsLocalDataSource(

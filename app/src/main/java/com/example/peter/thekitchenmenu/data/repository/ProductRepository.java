@@ -54,7 +54,8 @@ public class ProductRepository implements ProductDataSource {
      */
     public static ProductRepository getInstance(ProductDataSource remoteDataSource,
                                                 ProductDataSource localDataSource) {
-        if (INSTANCE == null) INSTANCE = new ProductRepository(remoteDataSource, localDataSource);
+        if (INSTANCE == null)
+            INSTANCE = new ProductRepository(remoteDataSource, localDataSource);
         return INSTANCE;
     }
 
@@ -83,7 +84,8 @@ public class ProductRepository implements ProductDataSource {
         }
 
         // If the cache is dirty we need to fetch new data from the network.
-        if (cacheIsDirty) getProductsFromRemoteDataSource(callback);
+        if (cacheIsDirty)
+            getProductsFromRemoteDataSource(callback);
         else {
             // Query the local storage if available. If not, query the network.
             localDataSource.getProducts(new LoadProductsCallback() {
@@ -137,7 +139,8 @@ public class ProductRepository implements ProductDataSource {
             @Override
             public void onProductLoaded(ProductEntity product) {
                 // Do in memory cache update to keep the app UI up to date
-                if (productsCache == null) productsCache = new LinkedHashMap<>();
+                if (productsCache == null)
+                    productsCache = new LinkedHashMap<>();
                 productsCache.put(product.getId(), product);
                 callback.onProductLoaded(product);
             }
@@ -148,7 +151,8 @@ public class ProductRepository implements ProductDataSource {
                     @Override
                     public void onProductLoaded(ProductEntity product) {
                         // Do in memory cache update to keep the app UI up to date
-                        if (productsCache == null) productsCache = new LinkedHashMap<>();
+                        if (productsCache == null)
+                            productsCache = new LinkedHashMap<>();
                         productsCache.put(product.getId(), product);
                         callback.onProductLoaded(product);
                     }
@@ -165,8 +169,10 @@ public class ProductRepository implements ProductDataSource {
     @Nullable
     private ProductEntity getProductWithId(@NonNull String id) {
         checkNotNull(id);
-        if (productsCache == null || productsCache.isEmpty()) return null;
-        else return productsCache.get(id);
+        if (productsCache == null || productsCache.isEmpty())
+            return null;
+        else
+            return productsCache.get(id);
     }
 
     @Override
@@ -177,7 +183,8 @@ public class ProductRepository implements ProductDataSource {
         localDataSource.saveProduct(product);
 
         // Do in memory cache update to keep the app UI up to date
-        if (productsCache == null) productsCache = new LinkedHashMap<>();
+        if (productsCache == null)
+            productsCache = new LinkedHashMap<>();
         productsCache.put(product.getId(), product);
     }
 
@@ -191,7 +198,8 @@ public class ProductRepository implements ProductDataSource {
         remoteDataSource.deleteAllProducts();
         localDataSource.deleteAllProducts();
 
-        if (productsCache == null) productsCache = new LinkedHashMap<>();
+        if (productsCache == null)
+            productsCache = new LinkedHashMap<>();
         productsCache.clear();
     }
 
@@ -203,16 +211,19 @@ public class ProductRepository implements ProductDataSource {
     }
 
     private void refreshProductCache(List<ProductEntity> products) {
-        if (productsCache == null) productsCache = new LinkedHashMap<>();
+        if (productsCache == null)
+            productsCache = new LinkedHashMap<>();
         productsCache.clear();
 
-        for (ProductEntity product: products) productsCache.put(product.getId(), product);
+        for (ProductEntity product: products)
+            productsCache.put(product.getId(), product);
         cacheIsDirty = false;
     }
 
     private void refreshLocalDataSource(List<ProductEntity> products) {
         localDataSource.deleteAllProducts();
-        for (ProductEntity product : products) localDataSource.saveProduct(product);
+        for (ProductEntity product : products)
+            localDataSource.saveProduct(product);
     }
 
     @Override

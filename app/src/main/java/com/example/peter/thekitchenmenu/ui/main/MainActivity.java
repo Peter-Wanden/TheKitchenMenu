@@ -6,7 +6,8 @@ import android.view.MenuItem;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.source.remote.RemoteSignIn;
-import com.example.peter.thekitchenmenu.ui.catalog.CatalogActivity;
+import com.example.peter.thekitchenmenu.ui.catalog.product.ProductCatalogActivity;
+import com.example.peter.thekitchenmenu.ui.catalog.recipe.RecipeCatalogActivity;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.Nullable;
@@ -40,9 +41,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
-
         if (actionBar != null) {
-
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
         }
@@ -59,13 +58,14 @@ public class MainActivity extends AppCompatActivity {
             // For example, swap UI fragments here
             switch (menuItem.getItemId()) {
 
-                case R.id.sign_out:
+                case R.id.nav_recipes:
+                    launchRecipeActivity();
 
+                case R.id.sign_out:
 //                    remoteSignIn.signOut(this);
                     return true;
 
                 case R.id.nav_products:
-
                     launchProductActivity();
                     return true;
             }
@@ -73,12 +73,14 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    void launchProductActivity() {
+    private void launchRecipeActivity() {
+        Intent intent = new Intent(this, RecipeCatalogActivity.class);
+        startActivity(intent);
+    }
 
-        Intent launchProductActivity = new Intent(
-                MainActivity.this, CatalogActivity.class);
-        startActivity(launchProductActivity);
-
+    private void launchProductActivity() {
+        Intent intent = new Intent(this, ProductCatalogActivity.class);
+        startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
@@ -119,7 +121,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void finish() {
         super.finish();
-
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 }

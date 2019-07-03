@@ -8,7 +8,7 @@
 
         <variable
             name="viewModel"
-            type="com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorViewModel" />
+            type="com.example.peter.thekitchenmenu.ui.detail.product.favoriteeditor.FavoriteProductEditorViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -82,8 +82,8 @@
 
         <!-- Activity to view lists of productEntities -->
         <activity
-            android:name=".ui.catalog.CatalogActivity"
-            android:label="@string/title_product_catalog"
+            android:name=".ui.catalog.product.ProductCatalogActivity"
+            android:label="@string/activity_title_product_catalog"
             android:theme="@style/AppTheme"
             android:parentActivityName=".ui.main.MainActivity">
 
@@ -96,13 +96,13 @@
 
         <!-- Activity view of a single productEntities details -->
         <activity
-            android:name=".ui.detail.product.producteditor.ProductEditorActivity"
+            android:name=".ui.detail.product.editor.ProductEditorActivity"
             android:theme="@style/AppTheme">
         </activity>
 
         <!-- Searchable activity for finding Products -->
         <activity
-            android:name=".ui.catalog.SearchProducts"
+            android:name=".ui.catalog.product.SearchProducts"
             android:launchMode="singleTop">
 
             <!-- Receives a query with a request to SEARCH -->
@@ -123,13 +123,13 @@
         </activity>
 
         <activity
-            android:name=".ui.catalog.RecipeCatalog"
+            android:name=".ui.catalog.recipe.RecipeCatalogActivity"
             android:label="@string/title_recipe_catalog"
             android:theme="@style/AppTheme">
         </activity>
 
         <activity
-            android:name=".ui.detail.RecipeEditor"
+            android:name=".ui.detail.recipe.recipeeditor.RecipeEditorActivity"
             android:label="@string/title_recipe_editor"
             android:theme="@style/AppTheme">
         </activity>
@@ -145,7 +145,7 @@
             android:theme="@style/AppTheme">
         </activity>
 
-        <activity android:name=".ui.detail.product.favoriteproducteditor.FavoriteProductEditorActivity"
+        <activity android:name=".ui.detail.product.favoriteeditor.FavoriteProductEditorActivity"
             android:theme="@style/AppTheme">
         </activity>
 

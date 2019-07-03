@@ -15,10 +15,10 @@ import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.ProductViewerActivityBinding;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryProduct;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryFavoriteProduct;
-import com.example.peter.thekitchenmenu.ui.catalog.CatalogActivity;
-import com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorActivity;
-import com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorFragment;
-import com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductEditorActivity;
+import com.example.peter.thekitchenmenu.ui.catalog.product.ProductCatalogActivity;
+import com.example.peter.thekitchenmenu.ui.detail.product.favoriteeditor.FavoriteProductEditorActivity;
+import com.example.peter.thekitchenmenu.ui.detail.product.favoriteeditor.FavoriteProductEditorFragment;
+import com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductEditorActivity;
 import com.example.peter.thekitchenmenu.utils.ActivityUtils;
 
 public class ProductViewerActivity
@@ -152,9 +152,9 @@ public class ProductViewerActivity
     }
 
     private void goToProductCatalog() {
-        Intent intent = new Intent(this, CatalogActivity.class);
+        Intent intent = new Intent(this, ProductCatalogActivity.class);
         intent.putExtra(
-                CatalogActivity.NEW_PRODUCT_ID_ADDED,
+                ProductCatalogActivity.NEW_PRODUCT_ID_ADDED,
                 productViewerViewModel.product.get().getId());
         startActivity(intent);
     }

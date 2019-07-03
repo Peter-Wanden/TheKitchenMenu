@@ -7,12 +7,12 @@
     <string name="cd_add_image_from_camera">Select to add image from camera</string>
     <string name="cd_add_image_from_gallery">Click to add image from gallery</string>
     <!-- Attach to any ImageView's of the recipe -->
-    <string name="cd_save_product">Click to save the current productEntity</string>
-    <string name="cd_delete_product">Click to delete the current productEntity</string>
-    <string name="cd_action_edit_product">Click to edit the current productEntity</string>
+    <string name="cd_save_product">Click to save the current product</string>
+    <string name="cd_delete_product">Click to delete the current product</string>
+    <string name="cd_action_edit_product">Click to edit the current product</string>
     <string name="cd_add_image">Click to add a picture</string>
     <string name="cd_rotate_image">Click to rotate picture</string>
-    <string name="cd_add_product">Add a productEntity</string>
+    <string name="cd_add_product">Add a product</string>
     <string name="cd_brand_logo">The kitchen menu brand logo</string>
 
     <!-- Common field labels and hints -->
@@ -108,6 +108,8 @@
     <string name="sign_out">Sign out</string>
 
     <!-- Activity titles -->
+    <string name="activity_title_product_catalog">Product catalog</string>
+    <string name="activity_title_recipe_catalog">Recipe catalog</string>
     <string name="activity_title_view_product">Product viewer</string>
     <string name="activity_title_review_new_product">Review new product</string>
     <string name="activity_detail_product_title">Product details</string>
@@ -161,8 +163,30 @@
     <string name="activity_detail_product_error_incomplete_fields">Please ensure you have completed
         all fields.</string>
 
-    <!-- CatalogActivity -->
-    <string name="title_product_catalog">Product Catalog</string>
+    <!-- RecipeEditorActivity -->
+    <string name="recipe_description_label">Description</string>
+    <string name="recipe_course">Course</string>
+    <string name="recipe_select_all_that_apply">(select all that apply)</string>
+    <string name="recipe_category_spinner_label">Category</string>
+    <string name="recipe_servings_label">Servings per sitting</string>
+    <string name="recipe_sittings_label">No of sittings</string>
+    <string name="recipe_total_servings_label">Total number of servings</string>
+    <string name="recipe_preparation_time_label">Prep time</string>
+    <string name="recipe_cooking_time_label">Cooking time</string>
+    <string name="recipe_hours_label">Hours</string>
+    <string name="recipe_minutes_label">Minutes</string>
+
+    <!-- Recipe course labels -->
+    <string name="course_label_breakfast">Breakfast</string>
+    <string name="course_label_lunch">Lunch</string>
+    <string name="course_label_dinner">Main course</string>
+    <string name="course_label_desert">Desert</string>
+    <string name="course_label_side_dish">Side</string>
+    <string name="course_label_accompaniment">Accompaniment</string>
+    <string name="course_label_snack">Snack</string>
+    <string name="course_label_drink">Drink</string>
+
+    <!-- ProductCatalogActivity -->
     <string name="product_catalog_empty_view_title_text">The cupboards are empty.</string>
     <string name="product_catalog_empty_view_subtitle_text">Press + to add some productEntities!</string>
     <string name="image_of_meal">An image of the selected recipe</string>
@@ -237,4 +261,6 @@
     <string name="maximum_currency_value_shopping_list">1000</string>
     <string name="lasUpdated">last updated</string>
     <string name="action_delete_product">Delete product</string>
+    <string name="add_ingredients">ADD INGREDIENTS</string>
+    <string name="recipe_title_label">Title</string>
 </resources>
