@@ -1,7 +1,8 @@
-package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
+package com.example.peter.thekitchenmenu.ui.detail.recipe;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +13,8 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.RecipeEditorActivityBinding;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryRecipe;
+import com.example.peter.thekitchenmenu.ui.imageeditor.ImageEditorFragment;
+import com.example.peter.thekitchenmenu.ui.imageeditor.ImageEditorViewModel;
 import com.example.peter.thekitchenmenu.utils.ActivityUtils;
 import com.google.firebase.database.annotations.NotNull;
 
@@ -27,6 +30,7 @@ public class RecipeEditorActivity extends AppCompatActivity implements AddEditRe
     private RecipeEditorActivityBinding binding;
     private RecipeEditorViewModel recipeEditorViewModel;
     private RecipeIdentityViewModel recipeIdentityViewModel;
+    private ImageEditorViewModel imageEditorViewModel;
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -61,13 +65,21 @@ public class RecipeEditorActivity extends AppCompatActivity implements AddEditRe
     }
 
     private void setViewModels() {
-        recipeEditorViewModel = obtainViewModel(this);
+        recipeEditorViewModel = obtainRecipeEditorViewModel(this);
+        imageEditorViewModel = ViewModelProviders.of(this).get(ImageEditorViewModel.class);
+        recipeIdentityViewModel = obtainIdentityViewModel(this); // todo - pass in an ImageModel if available
     }
 
-    private static RecipeEditorViewModel obtainViewModel(FragmentActivity activity) {
+    private static RecipeEditorViewModel obtainRecipeEditorViewModel(FragmentActivity activity) {
         ViewModelFactoryRecipe factoryRecipe = ViewModelFactoryRecipe.getInstance(
                 activity.getApplication());
         return ViewModelProviders.of(activity, factoryRecipe).get(RecipeEditorViewModel.class);
+    }
+
+    static RecipeIdentityViewModel obtainIdentityViewModel(FragmentActivity activity) {
+        ViewModelFactoryRecipe factoryRecipe = ViewModelFactoryRecipe.getInstance(
+                activity.getApplication());
+        return ViewModelProviders.of(activity, factoryRecipe).get(RecipeIdentityViewModel.class);
     }
 
     private void setupToolbar() {
@@ -85,17 +97,33 @@ public class RecipeEditorActivity extends AppCompatActivity implements AddEditRe
                 getSupportFragmentManager(),
                 recipeIdentityFragment,
                 R.id.recipe_editor_recipe_identity_content_frame);
+
+        ImageEditorFragment imageEditorFragment = obtainImageEditorFragment();
+        ActivityUtils.replaceFragmentInActivity(
+                getSupportFragmentManager(),
+                imageEditorFragment,
+                R.id.recipe_editor_image_editor_content_frame);
     }
 
     @NotNull
     private RecipeIdentityFragment obtainRecipeIdentityFragment() {
         RecipeIdentityFragment recipeIdentityFragment =
-                (RecipeIdentityFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.recipe_editor_recipe_identity_content_frame);
+                (RecipeIdentityFragment) getSupportFragmentManager().
+                        findFragmentById(R.id.recipe_editor_recipe_identity_content_frame);
 
-        if (recipeIdentityFragment == null) {
+        if (recipeIdentityFragment == null)
             recipeIdentityFragment = RecipeIdentityFragment.newInstance(null); //todo add the recipeID
-        }
         return recipeIdentityFragment;
+    }
+
+    @NonNull
+    private ImageEditorFragment obtainImageEditorFragment() {
+        ImageEditorFragment imageEditorFragment =
+                (ImageEditorFragment) getSupportFragmentManager().
+                        findFragmentById(R.id.recipe_editor_image_editor_content_frame);
+
+        if (imageEditorFragment == null)
+            imageEditorFragment = ImageEditorFragment.newInstance();
+        return imageEditorFragment;
     }
 }

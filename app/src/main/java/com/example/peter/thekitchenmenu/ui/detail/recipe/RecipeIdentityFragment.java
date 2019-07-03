@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
+package com.example.peter.thekitchenmenu.ui.detail.recipe;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,12 +9,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.RecipeIdentityFragmentBinding;
-import com.example.peter.thekitchenmenu.ui.ViewModelFactoryRecipe;
 
 public class RecipeIdentityFragment extends Fragment {
 
@@ -80,13 +77,7 @@ public class RecipeIdentityFragment extends Fragment {
     }
 
     private void setupViewModel() {
-        viewModel = obtainViewModel(requireActivity());
-    }
-
-    private RecipeIdentityViewModel obtainViewModel(FragmentActivity activity) {
-        ViewModelFactoryRecipe factoryRecipe = ViewModelFactoryRecipe.getInstance(
-                activity.getApplication());
-        return ViewModelProviders.of(activity, factoryRecipe).get(RecipeIdentityViewModel.class);
+        viewModel = RecipeEditorActivity.obtainIdentityViewModel(requireActivity());
     }
 
     private void setBindingInstanceVariables() {

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentActivity;
@@ -12,7 +13,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.RecipeCatalogActivityBinding;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryRecipe;
-import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeEditorActivity;
+import com.example.peter.thekitchenmenu.ui.detail.recipe.RecipeEditorActivity;
 
 public class RecipeCatalogActivity extends AppCompatActivity implements RecipeNavigator {
 
@@ -58,6 +59,18 @@ public class RecipeCatalogActivity extends AppCompatActivity implements RecipeNa
         setSupportActionBar(binding.recipeCatalogActivityToolbar);
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
+        }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     @Override

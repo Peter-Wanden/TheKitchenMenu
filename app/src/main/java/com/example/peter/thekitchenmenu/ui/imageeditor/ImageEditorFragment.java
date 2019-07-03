@@ -30,6 +30,10 @@ public class ImageEditorFragment extends Fragment {
     private ImageEditorBinding imageEditorBinding;
     private ImageEditorViewModel viewModel;
 
+    public static ImageEditorFragment newInstance() {
+        return new ImageEditorFragment();
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -54,8 +58,7 @@ public class ImageEditorFragment extends Fragment {
     }
 
     private void setViewModel() {
-        viewModel = ViewModelProviders.of(requireActivity()).
-                get(ImageEditorViewModel.class);
+        viewModel = ViewModelProviders.of(requireActivity()).get(ImageEditorViewModel.class);
     }
 
     private void setObservers() {

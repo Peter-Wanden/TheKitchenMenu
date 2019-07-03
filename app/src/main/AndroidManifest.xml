@@ -129,7 +129,7 @@
         </activity>
 
         <activity
-            android:name=".ui.detail.recipe.recipeeditor.RecipeEditorActivity"
+            android:name=".ui.detail.recipe.RecipeEditorActivity"
             android:label="@string/title_recipe_editor"
             android:theme="@style/AppTheme">
         </activity>

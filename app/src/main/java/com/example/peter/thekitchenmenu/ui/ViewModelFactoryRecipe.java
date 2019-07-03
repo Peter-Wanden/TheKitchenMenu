@@ -10,8 +10,8 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
 import com.example.peter.thekitchenmenu.data.repository.RecipeRepository;
 import com.example.peter.thekitchenmenu.ui.catalog.recipe.RecipeCatalogViewModel;
-import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeEditorViewModel;
-import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeIdentityViewModel;
+import com.example.peter.thekitchenmenu.ui.detail.recipe.RecipeEditorViewModel;
+import com.example.peter.thekitchenmenu.ui.detail.recipe.RecipeIdentityViewModel;
 
 /**
  * A creator is used to inject the product ID into the ViewModel

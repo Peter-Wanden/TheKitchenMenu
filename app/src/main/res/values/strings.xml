@@ -166,7 +166,7 @@
     <!-- RecipeEditorActivity -->
     <string name="recipe_description_label">Description</string>
     <string name="recipe_course">Course</string>
-    <string name="recipe_select_all_that_apply">(select all that apply)</string>
+    <string name="recipe_select_all_that_apply">(tick all that apply)</string>
     <string name="recipe_category_spinner_label">Category</string>
     <string name="recipe_servings_label">Servings per sitting</string>
     <string name="recipe_sittings_label">No of sittings</string>

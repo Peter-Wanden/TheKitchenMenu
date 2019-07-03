@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
+package com.example.peter.thekitchenmenu.ui.detail.recipe;
 
 public interface AddEditRecipeNavigator {
 

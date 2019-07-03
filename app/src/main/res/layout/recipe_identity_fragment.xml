@@ -9,7 +9,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeIdentityViewModel" />
+            type="com.example.peter.thekitchenmenu.ui.detail.recipe.RecipeIdentityViewModel" />
 
     </data>
 
@@ -30,29 +30,25 @@
     <ImageView
         android:id="@+id/recipe_identity_editor_identity_box"
         android:layout_width="0dp"
-        android:layout_height="165dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_height="0dp"
         android:background="@color/white"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         android:src="@drawable/rectangle"
-        />
+        app:layout_constraintBottom_toBottomOf="@id/editable_recipe_description"
+        app:layout_constraintEnd_toEndOf="@id/editable_recipe_editor_title"
+        app:layout_constraintStart_toStartOf="@id/editable_recipe_editor_title"
+        app:layout_constraintTop_toTopOf="@id/recipe_editor_title_label" />
 
     <TextView
         android:id="@+id/recipe_editor_title_label"
-        style="@style/EditableCategoryStyle"
+        android:textColor="@color/darkGrey"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:padding="4dp"
         android:text="@string/recipe_title_label"
-        app:layout_constraintStart_toStartOf="@id/recipe_identity_editor_identity_box"
-        app:layout_constraintTop_toTopOf="@id/recipe_identity_editor_identity_box"
-        />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/editable_recipe_editor_title"
@@ -61,37 +57,40 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="4dp"
         android:layout_marginEnd="8dp"
-        android:lines="2"
-        android:minLines="2"
-        app:layout_constraintStart_toStartOf="@id/recipe_identity_editor_identity_box"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:textColor="@color/darkGrey"
+        android:backgroundTint="@color/primaryLightColor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/recipe_editor_title_label"
-        app:layout_constraintEnd_toEndOf="@id/recipe_identity_editor_identity_box"
-        />
+        tools:text="essential Waitrose semi-skimmed milk 1.7% fat 4 pints" />
 
     <TextView
         android:id="@+id/recipe_description_label"
-        style="@style/EditableCategoryStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/darkGrey"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="4dp"
+        android:padding="4dp"
         android:text="@string/recipe_description_label"
-        app:layout_constraintStart_toStartOf="@id/recipe_identity_editor_identity_box"
-        app:layout_constraintTop_toBottomOf="@id/editable_recipe_editor_title"
-        />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editable_recipe_editor_title" />
 
     <EditText
         android:id="@+id/editable_recipe_description"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="4dp"
-        app:layout_constraintStart_toStartOf="@id/recipe_identity_editor_identity_box"
-        app:layout_constraintTop_toBottomOf="@id/recipe_description_label"
-        app:layout_constraintEnd_toEndOf="@id/recipe_identity_editor_identity_box"
-        />
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:backgroundTint="@color/primaryLightColor"
+        android:textColor="@color/darkGrey"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recipe_description_label" />
 
     <ImageView
         android:id="@+id/recipe_identity_editor_course_selector_box"
@@ -109,10 +108,10 @@
 
     <TextView
         android:id="@+id/recipe_identity_editor_course_selector_label"
-        style="@style/EditableCategoryStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/recipe_course"
+        android:textColor="@color/darkGrey"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="4dp"
         android:layout_marginTop="4dp"
@@ -147,7 +146,7 @@
         android:id="@+id/recipe_identity_editor_breakfast_check_box"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
+        android:layout_marginEnd="12dp"
         app:layout_constraintTop_toBottomOf="@id/recipe_identity_editor_select_all_that_apply_label"
         app:layout_constraintEnd_toStartOf="@id/recipe_editor_center_guideline"
         />
@@ -167,7 +166,7 @@
         android:id="@+id/recipe_identity_editor_lunch_check_box"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
+        android:layout_marginEnd="12dp"
         app:layout_constraintTop_toBottomOf="@id/recipe_identity_editor_breakfast_check_box"
         app:layout_constraintEnd_toStartOf="@id/recipe_editor_center_guideline"
         />
@@ -187,7 +186,7 @@
         android:id="@+id/recipe_identity_editor_main_course_check_box"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
+        android:layout_marginEnd="12dp"
         app:layout_constraintTop_toBottomOf="@id/recipe_identity_editor_lunch_check_box"
         app:layout_constraintEnd_toStartOf="@id/recipe_editor_center_guideline"
         />
@@ -207,7 +206,7 @@
         android:id="@+id/recipe_identity_editor_accompaniment_check_box"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
+        android:layout_marginEnd="12dp"
         app:layout_constraintTop_toBottomOf="@id/recipe_identity_editor_main_course_check_box"
         app:layout_constraintEnd_toStartOf="@id/recipe_editor_center_guideline"
         />
@@ -304,9 +303,9 @@
 
     <TextView
         android:id="@+id/recipe_editor_prep_time_label"
-        style="@style/EditableCategoryStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/darkGrey"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="4dp"
         android:layout_marginTop="4dp"
@@ -330,6 +329,9 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:layout_marginStart="24dp"
+        android:textColor="@color/darkGrey"
+        android:gravity="center_horizontal"
+        android:backgroundTint="@color/primaryLightColor"
         app:layout_constraintTop_toBottomOf="@id/recipe_editor_prep_time_label"
         app:layout_constraintStart_toEndOf="@id/recipe_editor_prep_time_hours_label"
         app:layout_constraintEnd_toStartOf="@id/recipe_editor_center_guideline"
@@ -351,6 +353,8 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:layout_marginStart="24dp"
+        android:backgroundTint="@color/primaryLightColor"
+        android:textColor="@color/darkGrey"
         app:layout_constraintBaseline_toBaselineOf="@id/editable_recipe_prep_time_hours"
         app:layout_constraintStart_toEndOf="@id/recipe_editor_prep_time_minutes_label"
         app:layout_constraintEnd_toEndOf="@id/recipe_identity_editor_times_box"
@@ -358,9 +362,9 @@
 
     <TextView
         android:id="@+id/recipe_identity_editor_cook_time_label"
-        style="@style/EditableCategoryStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/darkGrey"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="4dp"
         android:layout_marginTop="4dp"
@@ -385,6 +389,8 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:layout_marginStart="24dp"
+        android:backgroundTint="@color/primaryLightColor"
+        android:textColor="@color/darkGrey"
         app:layout_constraintTop_toBottomOf="@id/recipe_identity_editor_cook_time_label"
         app:layout_constraintStart_toEndOf="@id/recipe_editor_cooking_time_hours_label"
         app:layout_constraintEnd_toStartOf="@id/recipe_editor_center_guideline"
@@ -406,6 +412,8 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:layout_marginStart="24dp"
+        android:backgroundTint="@color/primaryLightColor"
+        android:textColor="@color/darkGrey"
         app:layout_constraintBaseline_toBaselineOf="@id/editable_recipe_cooking_time_hours"
         app:layout_constraintStart_toEndOf="@id/recipe_editor_cooking_time_minutes_label"
         app:layout_constraintEnd_toEndOf="@id/recipe_identity_editor_times_box"
