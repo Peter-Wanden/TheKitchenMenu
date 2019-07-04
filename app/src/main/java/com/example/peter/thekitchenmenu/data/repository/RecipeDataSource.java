@@ -8,27 +8,27 @@ import java.util.List;
 
 public interface RecipeDataSource {
 
-    interface LoadRecipesCallback {
+    interface LoadAllCallback {
 
-        void onRecipesLoaded(List<RecipeEntity> recipeEntities);
-
-        void onDataNotAvailable();
-    }
-
-    interface GetRecipeCallback {
-
-        void onRecipeLoaded(RecipeEntity recipeEntity);
+        void onAllLoaded(List<RecipeEntity> recipeEntities);
 
         void onDataNotAvailable();
     }
 
-    void getRecipes(@NonNull LoadRecipesCallback callback);
+    interface GetItemCallback {
 
-    void getRecipe(@NonNull String recipeId, @NonNull GetRecipeCallback callback);
+        void onItemLoaded(RecipeEntity recipeEntity);
 
-    void saveRecipe(@NonNull RecipeEntity recipeEntity);
+        void onDataNotAvailable();
+    }
 
-    void refreshRecipes();
+    void getAll(@NonNull LoadAllCallback callback);
+
+    void getById(@NonNull String recipeId, @NonNull GetItemCallback callback);
+
+    void save(@NonNull RecipeEntity recipeEntity);
+
+    void refresh();
 
     void deleteAll();
 

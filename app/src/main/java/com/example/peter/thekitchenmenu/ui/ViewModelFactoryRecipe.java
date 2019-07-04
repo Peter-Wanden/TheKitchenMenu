@@ -61,7 +61,7 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
 
         } else if (modelClass.isAssignableFrom(RecipeIdentityViewModel.class)) {
             //noinspection unchecked
-            return (T) new RecipeIdentityViewModel(application, repository);
+            return (T) new RecipeIdentityViewModel(application);
         }
 
         throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());

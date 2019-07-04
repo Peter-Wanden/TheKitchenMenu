@@ -8,7 +8,9 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
+import androidx.databinding.Observable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.RecipeIdentityFragmentBinding;
@@ -35,26 +37,30 @@ public class RecipeIdentityFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        loadData();
         subscribeToEvents();
     }
 
-    private void loadData() {
-        if (getArguments() != null)
-            viewModel.start(getArguments().getString(ARGUMENT_EDIT_RECIPE_ID));
-        else
-            viewModel.start(null);
-    }
-
     private void subscribeToEvents() {
+        viewModel.getTitleErrorEvent().observe(this, this::titleValidationError);
+        viewModel.getDescriptionErrorEvent().observe(this, this::descriptionValidationError);
+        viewModel.getPrepTimeErrorEvent().observe(this, this::prepTimeValidationErrorEvent);
+        viewModel.getCookTimeErrorEvent().observe(this, this::cookTimeValidationErrorEvent);
+    }
+
+    private void titleValidationError(String errorMessage) {
+        binding.editableRecipeEditorTitle.setError(errorMessage);
+    }
+
+    private void descriptionValidationError(String errorMessage) {
+        binding.editableRecipeDescription.setError(errorMessage);
+    }
+
+    private void prepTimeValidationErrorEvent(String errorMessage) {
 
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        viewModel.start(getArguments().getString(ARGUMENT_EDIT_RECIPE_ID));
+    private void cookTimeValidationErrorEvent(String errorMessage) {
+
     }
 
     @Nullable

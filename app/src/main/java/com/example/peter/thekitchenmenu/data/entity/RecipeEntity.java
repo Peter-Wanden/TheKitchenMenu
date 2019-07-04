@@ -36,10 +36,10 @@ public class RecipeEntity {
     private final String description;
 
     @ColumnInfo(name = "preparationTime")
-    private final long preparationTime;
+    private final int preparationTime;
 
     @ColumnInfo(name = "cookingTime")
-    private final long cookingTime;
+    private final int cookingTime;
 
     @ColumnInfo(name = "createdBy")
     private final String createdBy;
@@ -69,8 +69,8 @@ public class RecipeEntity {
     public RecipeEntity(@NonNull String id,
                         @Nullable String title,
                         @NonNull String description,
-                        long preparationTime,
-                        long cookingTime,
+                        int preparationTime,
+                        int cookingTime,
                         String createdBy,
                         @Nullable String webImageUrl,
                         @Nullable String remoteSmallImageUri,
@@ -95,8 +95,8 @@ public class RecipeEntity {
     @Ignore
     public static RecipeEntity createRecipe(String title,
                                             String description,
-                                            long preparationTime,
-                                            long cookingTime,
+                                            int preparationTime,
+                                            int cookingTime,
                                             String webImageUrl,
                                             String remoteSmallImageUri,
                                             String remoteMediumImageUri,
@@ -118,8 +118,8 @@ public class RecipeEntity {
     public static RecipeEntity updateRecipe(String id,
                                             String title,
                                             String description,
-                                            long preparationTime,
-                                            long cookingTime,
+                                            int preparationTime,
+                                            int cookingTime,
                                             String createdBy,
                                             String webImageUrl,
                                             String remoteSmallImageUri,
@@ -157,11 +157,11 @@ public class RecipeEntity {
         return description;
     }
 
-    public long getPreparationTime() {
+    public int getPreparationTime() {
         return preparationTime;
     }
 
-    public long getCookingTime() {
+    public int getCookingTime() {
         return cookingTime;
     }
 

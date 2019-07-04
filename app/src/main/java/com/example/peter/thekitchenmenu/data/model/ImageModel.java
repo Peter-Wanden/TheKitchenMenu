@@ -25,6 +25,24 @@ public class ImageModel extends BaseObservable {
 
     private String webImageUrl;
 
+    public ImageModel(){}
+
+    public ImageModel(String remoteLargeImageUri,
+                      String localLargeImageUri,
+                      String remoteMediumImageUri,
+                      String localMediumImageUri,
+                      String remoteSmallImageUri,
+                      String localSmallImageUri,
+                      String webImageUrl) {
+        this.remoteLargeImageUri = remoteLargeImageUri;
+        this.localLargeImageUri = localLargeImageUri;
+        this.remoteMediumImageUri = remoteMediumImageUri;
+        this.localMediumImageUri = localMediumImageUri;
+        this.remoteSmallImageUri = remoteSmallImageUri;
+        this.localSmallImageUri = localSmallImageUri;
+        this.webImageUrl = webImageUrl;
+    }
+
     @Bindable
     public String getRemoteLargeImageUri() {
         return remoteLargeImageUri;

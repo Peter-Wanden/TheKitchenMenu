@@ -20,8 +20,6 @@ import androidx.lifecycle.AndroidViewModel;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 
-import static com.example.peter.thekitchenmenu.utils.TextValidationHandler.VALIDATED;
-
 public class FavoriteProductEditorViewModel
         extends AndroidViewModel
         implements FavoriteProductsDataSource.GetFavoriteProductCallback {
@@ -138,10 +136,9 @@ public class FavoriteProductEditorViewModel
     private void retailerChanged() {
         String retailerValidationResponse = validateText(retailer.get());
 
-        if (retailerValidationResponse.equals(VALIDATED)) {
+        if (retailerValidationResponse.equals(TextValidationHandler.VALIDATED))
             retailerValidated = true;
-
-        } else {
+        else {
             retailerValidated = false;
             retailerErrorEvent.setValue(retailerValidationResponse);
         }
@@ -151,10 +148,9 @@ public class FavoriteProductEditorViewModel
     private void locationRoomChanged() {
         String locationRoomValidationResponse = validateText(locationRoom.get());
 
-        if (locationRoomValidationResponse.equals(VALIDATED)) {
+        if (locationRoomValidationResponse.equals(TextValidationHandler.VALIDATED))
             locationRoomValidated = true;
-
-        } else {
+        else {
             locationRoomValidated = false;
             locationRoomErrorEvent.setValue(locationRoomValidationResponse);
         }
@@ -164,10 +160,9 @@ public class FavoriteProductEditorViewModel
     private void locationInRoomChanged() {
         String locationInRoomValidationResponse = validateText(locationInRoom.get());
 
-        if (locationInRoomValidationResponse.equals(VALIDATED)) {
+        if (locationInRoomValidationResponse.equals(TextValidationHandler.VALIDATED))
             locationInRoomValidated = true;
-
-        } else {
+        else {
             locationInRoomValidated = false;
             locationInRoomErrorEvent.setValue(locationInRoomValidationResponse);
         }
@@ -175,21 +170,20 @@ public class FavoriteProductEditorViewModel
     }
 
     private String validateText(String textToValidate) {
-        return TextValidationHandler.validateText(appContext, textToValidate);
+        return TextValidationHandler.validateShortText(appContext.getResources(), textToValidate);
     }
 
     private void priceChanged() {
-        if (price.get() == null || Strings.isEmptyOrWhitespace(price.get())) {
+        if (price.get() == null || Strings.isEmptyOrWhitespace(price.get()))
             return;
-        }
 
         BigDecimal minAmount = new BigDecimal(appContext.getString(R.string.min_currency_value));
         BigDecimal maxAmount = new BigDecimal(appContext.getString(R.string.max_price_for_product));
         BigDecimal givenAmount = removeCurrencySymbolFromPrice();
 
-        if (givenAmount.compareTo(minAmount) >= 0  && givenAmount.compareTo(maxAmount) < 0) {
+        if (givenAmount.compareTo(minAmount) >= 0  && givenAmount.compareTo(maxAmount) < 0)
             priceValidated = true;
-        } else {
+        else {
             priceValidated = false;
             priceErrorEvent.setValue(appContext.getString(
                     R.string.input_error_product_pack_price));
@@ -223,7 +217,8 @@ public class FavoriteProductEditorViewModel
                 priceValidated)
             allFieldsValidated.set(true);
 
-        else allFieldsValidated.set(false);
+        else
+            allFieldsValidated.set(false);
     }
 
     SingleLiveEvent<String> getRetailerErrorEvent() {
@@ -254,7 +249,8 @@ public class FavoriteProductEditorViewModel
                     locationInRoom.get(),
                     price);
 
-            if (!favoriteProduct.isEmpty()) createFavoriteProduct(favoriteProduct);
+            if (!favoriteProduct.isEmpty())
+                createFavoriteProduct(favoriteProduct);
 
         } else {
             favoriteProduct = FavoriteProductEntity.updateFavoriteProduct(
@@ -266,7 +262,8 @@ public class FavoriteProductEditorViewModel
                     price,
                     createDate);
 
-            if (!favoriteProduct.isEmpty()) updateFavoriteProduct(favoriteProduct);
+            if (!favoriteProduct.isEmpty())
+                updateFavoriteProduct(favoriteProduct);
         }
 
         if (favoriteProduct.isEmpty()) {

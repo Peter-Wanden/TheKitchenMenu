@@ -179,6 +179,7 @@ public class ImageEditorViewModel extends ObservableViewModel {
         return cropFullSizeImageEvent;
     }
 
+    // TODO - Move this logic to the viewModel
     void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK)
             cropFullSizeImageEvent().call();
@@ -233,7 +234,8 @@ public class ImageEditorViewModel extends ObservableViewModel {
     private void importAndProcessCroppedImage(Uri croppedImageUri) {
         Bitmap croppedBitmap = getBitmapFromImageUri(croppedImageUri);
 
-        if (croppedBitmap != null) createImageFilesFromCroppedBitMap(croppedBitmap);
+        if (croppedBitmap != null)
+            createImageFilesFromCroppedBitMap(croppedBitmap);
     }
 
     private boolean bitmapSavedToCacheFile(Bitmap bitmapToSave, File fileToSaveBitmapTo) {

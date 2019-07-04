@@ -8,9 +8,12 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.peter.thekitchenmenu.R;
+import com.example.peter.thekitchenmenu.data.model.ImageModel;
+import com.example.peter.thekitchenmenu.data.model.RecipeIdentityModel;
 import com.example.peter.thekitchenmenu.databinding.RecipeEditorActivityBinding;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryRecipe;
 import com.example.peter.thekitchenmenu.ui.imageeditor.ImageEditorFragment;
@@ -55,8 +58,11 @@ public class RecipeEditorActivity extends AppCompatActivity implements AddEditRe
 
         initialiseBindings();
         setViewModels();
+        setupObservers();
         setupToolbar();
+        setupActionBar();
         setupFragments();
+        loadData();
     }
 
     private void initialiseBindings() {
@@ -67,7 +73,15 @@ public class RecipeEditorActivity extends AppCompatActivity implements AddEditRe
     private void setViewModels() {
         recipeEditorViewModel = obtainRecipeEditorViewModel(this);
         imageEditorViewModel = ViewModelProviders.of(this).get(ImageEditorViewModel.class);
-        recipeIdentityViewModel = obtainIdentityViewModel(this); // todo - pass in an ImageModel if available
+        recipeIdentityViewModel = obtainIdentityViewModel(this);
+    }
+
+    private void setupObservers() {
+        recipeEditorViewModel.imageModel.observe(this, imageModel ->
+                imageEditorViewModel.getExistingImageModel().setValue(imageModel));
+
+        recipeEditorViewModel.recipeIdentityModel.observe(this, recipeIdentityModel ->
+                recipeIdentityViewModel.start(recipeIdentityModel));
     }
 
     private static RecipeEditorViewModel obtainRecipeEditorViewModel(FragmentActivity activity) {
@@ -84,11 +98,20 @@ public class RecipeEditorActivity extends AppCompatActivity implements AddEditRe
 
     private void setupToolbar() {
         setSupportActionBar(binding.recipeEditorToolbar);
+    }
+
+    private void setupActionBar() {
         ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayShowHomeEnabled(true);
-        }
+        if (actionBar == null)
+            return;
+
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);
+
+        if (getIntent().getStringExtra(EXTRA_RECIPE_ID) != null)
+            actionBar.setTitle(R.string.activity_title_edit_recipe);
+        else
+            actionBar.setTitle(R.string.activity_title_add_new_recipe);
     }
 
     private void setupFragments() {
@@ -125,5 +148,12 @@ public class RecipeEditorActivity extends AppCompatActivity implements AddEditRe
         if (imageEditorFragment == null)
             imageEditorFragment = ImageEditorFragment.newInstance();
         return imageEditorFragment;
+    }
+
+    private void loadData() {
+        if (getIntent().getStringExtra(EXTRA_RECIPE_ID) != null)
+            recipeEditorViewModel.start(getIntent().getStringExtra(EXTRA_RECIPE_ID));
+        else
+            recipeEditorViewModel.start(null);
     }
 }

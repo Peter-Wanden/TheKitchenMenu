@@ -34,20 +34,20 @@ public class RecipeRepository implements RecipeDataSource {
     }
 
     @Override
-    public void getRecipes(@NonNull LoadRecipesCallback callback) {
+    public void getAll(@NonNull LoadAllCallback callback) {
         checkNotNull(callback);
         if (recipesCache != null) {
-            callback.onRecipesLoaded(new ArrayList<>(recipesCache.values()));
+            callback.onAllLoaded(new ArrayList<>(recipesCache.values()));
             return;
         }
         if (cacheIsDirty)
             getRecipesFromRemoteDataSource(callback);
         else {
-            localDataSource.getRecipes(new LoadRecipesCallback() {
+            localDataSource.getAll(new LoadAllCallback() {
                 @Override
-                public void onRecipesLoaded(List<RecipeEntity> recipeEntities) {
+                public void onAllLoaded(List<RecipeEntity> recipeEntities) {
                     refreshRecipesCache(recipeEntities);
-                    callback.onRecipesLoaded(new ArrayList<>(recipesCache.values()));
+                    callback.onAllLoaded(new ArrayList<>(recipesCache.values()));
                 }
 
                 @Override
@@ -58,13 +58,13 @@ public class RecipeRepository implements RecipeDataSource {
         }
     }
 
-    private void getRecipesFromRemoteDataSource(@NonNull final LoadRecipesCallback callback) {
-        remoteDataSource.getRecipes(new LoadRecipesCallback() {
+    private void getRecipesFromRemoteDataSource(@NonNull final LoadAllCallback callback) {
+        remoteDataSource.getAll(new LoadAllCallback() {
             @Override
-            public void onRecipesLoaded(List<RecipeEntity> recipeEntities) {
+            public void onAllLoaded(List<RecipeEntity> recipeEntities) {
                 refreshRecipesCache(recipeEntities);
                 refreshLocalDataSource(recipeEntities);
-                callback.onRecipesLoaded(new ArrayList<>(recipesCache.values()));
+                callback.onAllLoaded(new ArrayList<>(recipesCache.values()));
             }
 
             @Override
@@ -87,38 +87,38 @@ public class RecipeRepository implements RecipeDataSource {
     private void refreshLocalDataSource(List<RecipeEntity> recipeEntities) {
         localDataSource.deleteAll();
         for (RecipeEntity recipeEntity : recipeEntities)
-            localDataSource.saveRecipe(recipeEntity);
+            localDataSource.save(recipeEntity);
     }
 
     @Override
-    public void getRecipe(@NonNull String recipeId, @NonNull GetRecipeCallback callback) {
+    public void getById(@NonNull String recipeId, @NonNull GetItemCallback callback) {
         checkNotNull(recipeId);
         checkNotNull(callback);
 
         RecipeEntity cachedRecipeEntity = getRecipeWithId(recipeId);
         if (cachedRecipeEntity != null) {
-            callback.onRecipeLoaded(cachedRecipeEntity);
+            callback.onItemLoaded(cachedRecipeEntity);
             return;
         }
 
-        localDataSource.getRecipe(recipeId, new GetRecipeCallback() {
+        localDataSource.getById(recipeId, new GetItemCallback() {
             @Override
-            public void onRecipeLoaded(RecipeEntity recipeEntity) {
+            public void onItemLoaded(RecipeEntity recipeEntity) {
                 if (recipesCache == null)
                     recipesCache = new LinkedHashMap<>();
                 recipesCache.put(recipeEntity.getId(), recipeEntity);
-                callback.onRecipeLoaded(recipeEntity);
+                callback.onItemLoaded(recipeEntity);
             }
 
             @Override
             public void onDataNotAvailable() {
-                remoteDataSource.getRecipe(recipeId, new GetRecipeCallback() {
+                remoteDataSource.getById(recipeId, new GetItemCallback() {
                     @Override
-                    public void onRecipeLoaded(RecipeEntity recipeEntity) {
+                    public void onItemLoaded(RecipeEntity recipeEntity) {
                         if (recipesCache == null)
                             recipesCache = new LinkedHashMap<>();
                         recipesCache.put(recipeEntity.getId(), recipeEntity);
-                        callback.onRecipeLoaded(recipeEntity);
+                        callback.onItemLoaded(recipeEntity);
                     }
 
                     @Override
@@ -141,9 +141,9 @@ public class RecipeRepository implements RecipeDataSource {
     }
 
     @Override
-    public void saveRecipe(@NonNull RecipeEntity recipeEntity) {
-        remoteDataSource.saveRecipe(recipeEntity);
-        localDataSource.saveRecipe(recipeEntity);
+    public void save(@NonNull RecipeEntity recipeEntity) {
+        remoteDataSource.save(recipeEntity);
+        localDataSource.save(recipeEntity);
 
         if (recipesCache == null)
             recipesCache = new LinkedHashMap<>();
@@ -151,7 +151,7 @@ public class RecipeRepository implements RecipeDataSource {
     }
 
     @Override
-    public void refreshRecipes() {
+    public void refresh() {
         cacheIsDirty = true;
     }
 

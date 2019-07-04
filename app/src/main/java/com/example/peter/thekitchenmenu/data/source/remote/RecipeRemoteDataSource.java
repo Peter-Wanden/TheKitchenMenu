@@ -17,23 +17,23 @@ public class RecipeRemoteDataSource implements RecipeDataSource {
     }
 
     @Override
-    public void getRecipes(@NonNull LoadRecipesCallback callback) {
+    public void getAll(@NonNull LoadAllCallback callback) {
         callback.onDataNotAvailable();
     }
 
     @Override
-    public void getRecipe(@NonNull String recipeId, @NonNull GetRecipeCallback callback) {
+    public void getById(@NonNull String recipeId, @NonNull GetItemCallback callback) {
         callback.onDataNotAvailable();
     }
 
     @Override
-    public void saveRecipe(@NonNull RecipeEntity recipeEntity) {
+    public void save(@NonNull RecipeEntity recipeEntity) {
         // Not required because the {@link RecipeRepository} handles the logic of refreshing the
         // recipes from all the available data sources.
     }
 
     @Override
-    public void refreshRecipes() {
+    public void refresh() {
 
     }
 

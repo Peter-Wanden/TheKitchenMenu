@@ -35,7 +35,17 @@
     <integer name="category_option_3">3</integer>
     <integer name="category_option_4">4</integer>
 
-    <integer name="user_input_text_shortest_length">3</integer>
-    <integer name="user_input_text_longest_length">70</integer>
-    
+    <!--
+    Min and max char lengths for EditText user inputs
+    -->
+    <integer name="input_validation_short_text_shortest_length">3</integer>
+    <integer name="input_validation_short_text_longest_length">70</integer>
+    <integer name="input_validation_long_text_shortest_length">3</integer>
+    <integer name="input_validation_long_text_longest_length">29000</integer>
+
+    <!--
+    Min and max preparation and cooking times
+    -->
+    <integer name="recipe_max_prep_time_in_minutes">6000</integer>
+    <integer name="recipe_max_cook_time_in_minutes">6000</integer>
 </resources>

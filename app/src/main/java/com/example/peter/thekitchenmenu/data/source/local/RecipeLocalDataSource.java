@@ -34,26 +34,26 @@ public class RecipeLocalDataSource implements RecipeDataSource {
     }
 
     @Override
-    public void getRecipes(@NonNull LoadRecipesCallback callback) {
+    public void getAll(@NonNull LoadAllCallback callback) {
         Runnable runnable = () -> {
             final List<RecipeEntity> recipeEntityList = recipeEntityDao.getAll();
             appExecutors.mainThread().execute(() -> {
                 if (recipeEntityList.isEmpty())
                     callback.onDataNotAvailable();
                 else
-                    callback.onRecipesLoaded(recipeEntityList);
+                    callback.onAllLoaded(recipeEntityList);
             });
         };
         appExecutors.diskIO().execute(runnable);
     }
 
     @Override
-    public void getRecipe(@NonNull String recipeId, @NonNull GetRecipeCallback callback) {
+    public void getById(@NonNull String recipeId, @NonNull GetItemCallback callback) {
         Runnable runnable = () -> {
             final RecipeEntity recipeEntity = recipeEntityDao.getById(recipeId);
             appExecutors.mainThread().execute(() -> {
                 if (recipeEntity != null)
-                    callback.onRecipeLoaded(recipeEntity);
+                    callback.onItemLoaded(recipeEntity);
                 else
                     callback.onDataNotAvailable();
             });
@@ -62,14 +62,14 @@ public class RecipeLocalDataSource implements RecipeDataSource {
     }
 
     @Override
-    public void saveRecipe(@NonNull RecipeEntity recipeEntity) {
+    public void save(@NonNull RecipeEntity recipeEntity) {
         checkNotNull(recipeEntity);
         Runnable runnable = () -> recipeEntityDao.insert(recipeEntity);
         appExecutors.diskIO().execute(runnable);
     }
 
     @Override
-    public void refreshRecipes() {
+    public void refresh() {
         // Not required because the {@link RecipeRepository} handles the logic of refreshing the
         // tasks from all the available data sources.
     }

@@ -11,8 +11,6 @@ import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
-import static com.example.peter.thekitchenmenu.utils.TextValidationHandler.VALIDATED;
-
 public class ProductIdentityViewModel extends ObservableViewModel {
 
     private static final String TAG = "tkm - ProductIdentityVM";
@@ -31,7 +29,6 @@ public class ProductIdentityViewModel extends ObservableViewModel {
 
     public ProductIdentityViewModel(@NonNull Application application) {
         super(application);
-
         appContext = application;
     }
 
@@ -51,7 +48,7 @@ public class ProductIdentityViewModel extends ObservableViewModel {
         editedIdentityModel.setDescription(editedDescription.toString());
         String descriptionValidationResponse = validateText(editedDescription);
 
-        if (descriptionValidationResponse.equals(VALIDATED)) {
+        if (descriptionValidationResponse.equals(TextValidationHandler.VALIDATED)) {
             descriptionValidated = true;
             checkAllFieldsValidated();
         } else {
@@ -69,7 +66,7 @@ public class ProductIdentityViewModel extends ObservableViewModel {
         editedIdentityModel.setShoppingListItemName(editedShoppingItem.toString());
         String shoppingListItemNameValidationResponse = validateText(editedShoppingItem);
 
-        if (shoppingListItemNameValidationResponse.equals(VALIDATED)) {
+        if (shoppingListItemNameValidationResponse.equals(TextValidationHandler.VALIDATED)) {
             shoppingItemNameValidated = true;
             checkAllFieldsValidated();
         } else {
@@ -84,7 +81,8 @@ public class ProductIdentityViewModel extends ObservableViewModel {
     }
 
     private String validateText(Editable editable) {
-        return TextValidationHandler.validateText(appContext, editable.toString());
+        return TextValidationHandler.validateShortText(
+                appContext.getResources(), editable.toString());
     }
 
     SingleLiveEvent<Boolean> getIdentityModelValidEvent() {
