@@ -10,14 +10,52 @@
             type="com.example.peter.thekitchenmenu.ui.catalog.recipe.RecipeCatalogViewModel" />
     </data>
 
-    <androidx.appcompat.widget.LinearLayoutCompat
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/recipe_catalog_activity_coordinatorLayout_parent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        >
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/recipe_catalog_activity_viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        </androidx.viewpager.widget.ViewPager>
+
+        <ProgressBar
+            android:id="@+id/recipe_catalog_activity_progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_anchor="@id/recipe_catalog_activity_viewPager"
+            app:layout_anchorGravity="center_horizontal|center_vertical"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:visibility="gone"
+            >
+        </ProgressBar>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/recipe_catalog_activity_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/fab_margin"
+            android:src="@drawable/ic_add_white"
+            android:tint="@color/white"
+            app:backgroundTint="@color/textColorHighlight"
+            app:fabSize="normal"
+            app:layout_anchor="@id/recipe_catalog_activity_viewPager"
+            app:layout_anchorGravity="bottom|right|end"
+            android:onClick="@{() -> viewModel.addRecipe()}"
+            >
+        </com.google.android.material.floatingactionbutton.FloatingActionButton>
 
         <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/recipe_catalog_activity_appBarLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/primaryColor"
+            android:theme="@style/ThemeOverlay.AppCompat.Light"
+            >
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/recipe_catalog_activity_toolbar"
@@ -28,32 +66,15 @@
                 app:layout_scrollFlags="scroll|enterAlways|snap"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
             </androidx.appcompat.widget.Toolbar>
-        </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
-            android:id="@+id/recipe_catalog_activity_coordinatorLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <FrameLayout
-                android:id="@+id/recipe_catalog_activity_contentFrame"
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/recipe_catalog_activity_tabLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab_edit_task_done"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/fab_margin"
-                android:src="@drawable/ic_add_white"
-                android:tint="@color/white"
-                app:backgroundTint="@color/textColorHighlight"
-                app:fabSize="normal"
-                app:layout_anchor="@id/recipe_catalog_activity_contentFrame"
-                app:layout_anchorGravity="bottom|right|end"
-                android:onClick="@{() -> viewModel.addRecipe()}"
-                >
-            </com.google.android.material.floatingactionbutton.FloatingActionButton>
-        </androidx.coordinatorlayout.widget.CoordinatorLayout>
-    </androidx.appcompat.widget.LinearLayoutCompat>
+                app:tabIndicatorColor="@color/white"
+                app:tabSelectedTextColor="@color/white"
+                app:tabTextColor="@color/brightGrey">
+            </com.google.android.material.tabs.TabLayout>
+        </com.google.android.material.appbar.AppBarLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

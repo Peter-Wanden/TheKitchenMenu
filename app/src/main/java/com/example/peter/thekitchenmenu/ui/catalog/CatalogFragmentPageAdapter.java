@@ -1,8 +1,9 @@
-package com.example.peter.thekitchenmenu.ui.catalog.product;
+package com.example.peter.thekitchenmenu.ui.catalog;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -14,15 +15,16 @@ public class CatalogFragmentPageAdapter extends FragmentPagerAdapter {
     private final List<Fragment> fragments = new ArrayList<>();
     private final List<String> fragmentTitles = new ArrayList<>();
 
-    CatalogFragmentPageAdapter(FragmentManager fm) {
+    public CatalogFragmentPageAdapter(FragmentManager fm) {
         super(fm);
     }
 
-    void addFragment(Fragment fragment, String title) {
+    public void addFragment(Fragment fragment, String title) {
         fragments.add(fragment);
         fragmentTitles.add(title);
     }
 
+    @NonNull
     @Override
     public Fragment getItem(int position) {
         return fragments.get(position);

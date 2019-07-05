@@ -22,8 +22,9 @@ public class FavoriteProductsLocalDataSource implements FavoriteProductsDataSour
         this.favoriteProductEntityDao = favoriteProductEntityDao;
     }
 
-    public static FavoriteProductsLocalDataSource getInstance(@NonNull AppExecutors appExecutors,
-                                                              @NonNull FavoriteProductEntityDao favoriteProductEntityDao) {
+    public static FavoriteProductsLocalDataSource
+    getInstance(@NonNull AppExecutors appExecutors,
+                @NonNull FavoriteProductEntityDao favoriteProductEntityDao) {
         if (INSTANCE == null) {
             synchronized (FavoriteProductsLocalDataSource.class) {
                 if (INSTANCE == null) INSTANCE= new FavoriteProductsLocalDataSource(
@@ -35,66 +36,72 @@ public class FavoriteProductsLocalDataSource implements FavoriteProductsDataSour
     }
 
     @Override
-    public void getFavoriteProducts(LoadFavoriteProductsCallback callback) {
+    public void getAll(@NonNull LoadAllCallback callback) {
         Runnable runnable = () -> {
             final List<FavoriteProductEntity> favoriteProducts = favoriteProductEntityDao.getAll();
             appExecutors.mainThread().execute(() -> {
-                if (favoriteProducts.isEmpty()) callback.onDataNotAvailable();
-                else callback.onFavoriteProductsLoaded(favoriteProducts);
+                if (favoriteProducts.isEmpty())
+                    callback.onDataNotAvailable();
+                else
+                    callback.onAllLoaded(favoriteProducts);
             });
         };
         appExecutors.diskIO().execute(runnable);
     }
 
     @Override
-    public void getFavoriteProduct(@NonNull String favoriteProductId,
-                                   @NonNull GetFavoriteProductCallback callback) {
+    public void getById(@NonNull String favoriteProductId, @NonNull GetItemCallback callback) {
         Runnable runnable = () -> {
             final FavoriteProductEntity favoriteProduct =
                     favoriteProductEntityDao.getById(favoriteProductId);
             appExecutors.mainThread().execute(() -> {
-                if (favoriteProduct != null) callback.onFavoriteProductLoaded(favoriteProduct);
-                else callback.onDataNotAvailable();
+                if (favoriteProduct != null){
+                    callback.onItemLoaded(favoriteProduct);
+                }
+
+                else
+                    callback.onDataNotAvailable();
             });
         };
         appExecutors.diskIO().execute(runnable);
     }
 
-    @Override
     public void getFavoriteProductByProductId(@NonNull String productId,
-                                              @NonNull GetFavoriteProductCallback callback) {
+                                              @NonNull GetItemCallback callback) {
         Runnable runnable = () -> {
             final FavoriteProductEntity favoriteProduct =
                     favoriteProductEntityDao.getByProductId(productId);
             appExecutors.mainThread().execute(() -> {
-                if (favoriteProduct != null) callback.onFavoriteProductLoaded(favoriteProduct);
-                else callback.onDataNotAvailable();
+                if (favoriteProduct != null)
+                    callback.onItemLoaded(favoriteProduct);
+                else
+                    callback.onDataNotAvailable();
             });
         };
         appExecutors.diskIO().execute(runnable);
     }
 
     @Override
-    public void saveFavoriteProduct(@NonNull FavoriteProductEntity favoriteProduct) {
-        checkNotNull(favoriteProduct);
-        Runnable runnable = () -> favoriteProductEntityDao.insert(favoriteProduct);
+    public void save(@NonNull Object object) {
+        checkNotNull(object);
+        Runnable runnable = () -> favoriteProductEntityDao.insert((FavoriteProductEntity) object);
         appExecutors.diskIO().execute(runnable);
     }
 
     @Override
-    public void refreshFavoriteProducts() {
+    public void refreshData() {
         // Not required because the {@link ProductRepository} handles the logic of refreshing the
         // tasks from all the available data sources.
     }
 
     @Override
-    public void deleteAllFavoriteProducts() {
+    public void deleteAll() {
         Runnable runnable = () -> favoriteProductEntityDao.deleteAll();
         appExecutors.diskIO().execute(runnable);
     }
 
     @Override
-    public void deleteFavoriteProduct(String favoriteProductId) {
+    public void deleteById(@NonNull String favoriteProductId) {
         Runnable runnable = () ->
                 favoriteProductEntityDao.deleteByFavoriteProductId(favoriteProductId);
         appExecutors.diskIO().execute(runnable);

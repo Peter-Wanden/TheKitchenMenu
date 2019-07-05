@@ -11,13 +11,13 @@
     </data>
 
     <LinearLayout
-        android:id="@+id/fragment_catalog_products_container"
+        android:id="@+id/product_catalog_all_fragment_products_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/fragment_catalog_products_rv"
+            android:id="@+id/product_catalog_all_fragment_recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         </androidx.recyclerview.widget.RecyclerView>

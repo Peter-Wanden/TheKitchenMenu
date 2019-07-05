@@ -16,8 +16,8 @@ import com.example.peter.thekitchenmenu.databinding.FavoriteProductListItemBindi
 import java.util.ArrayList;
 import java.util.List;
 
-public class CatalogFavoritesRecyclerAdapter
-        extends RecyclerView.Adapter<CatalogFavoritesRecyclerAdapter.ViewHolder>
+public class ProductCatalogFavoritesRecyclerAdapter
+        extends RecyclerView.Adapter<ProductCatalogFavoritesRecyclerAdapter.ViewHolder>
         implements Filterable {
 
     private static final String TAG = "tkm-CatalogFavAdapter";
@@ -26,7 +26,7 @@ public class CatalogFavoritesRecyclerAdapter
     private List<FavoriteProductModel> favoriteProductModels;
     private List<FavoriteProductModel> favoriteProductModelListFull;
 
-    CatalogFavoritesRecyclerAdapter(ProductCatalogViewModel viewModel) {
+    ProductCatalogFavoritesRecyclerAdapter(ProductCatalogViewModel viewModel) {
         this.viewModel = viewModel;
     }
 

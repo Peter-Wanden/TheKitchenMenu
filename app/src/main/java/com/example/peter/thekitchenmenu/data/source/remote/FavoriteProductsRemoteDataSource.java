@@ -2,7 +2,6 @@ package com.example.peter.thekitchenmenu.data.source.remote;
 
 import androidx.annotation.NonNull;
 
-import com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity;
 import com.example.peter.thekitchenmenu.data.repository.FavoriteProductsDataSource;
 
 public class FavoriteProductsRemoteDataSource implements FavoriteProductsDataSource {
@@ -15,39 +14,38 @@ public class FavoriteProductsRemoteDataSource implements FavoriteProductsDataSou
     }
 
     @Override
-    public void getFavoriteProducts(LoadFavoriteProductsCallback callback) {
+    public void getAll(@NonNull LoadAllCallback callback) {
         callback.onDataNotAvailable();
     }
 
     @Override
-    public void getFavoriteProduct(@NonNull String favoriteProductId, @NonNull GetFavoriteProductCallback callback) {
+    public void getById(@NonNull String id, @NonNull GetItemCallback callback) {
         callback.onDataNotAvailable();
     }
 
-    @Override
     public void getFavoriteProductByProductId(@NonNull String productId,
-                                              @NonNull GetFavoriteProductCallback callback) {
+                                              @NonNull GetItemCallback callback) {
         callback.onDataNotAvailable();
     }
 
     @Override
-    public void saveFavoriteProduct(@NonNull FavoriteProductEntity favoriteProduct) {
+    public void save(@NonNull Object o) {
 
     }
 
     @Override
-    public void refreshFavoriteProducts() {
+    public void refreshData() {
         // Not required because the {@link TasksRepository} handles the logic of refreshing the
         // tasks from all the available data sources.
     }
 
     @Override
-    public void deleteAllFavoriteProducts() {
+    public void deleteAll() {
 
     }
 
     @Override
-    public void deleteFavoriteProduct(String favoriteProductId) {
+    public void deleteById(@NonNull String id) {
 
     }
 }

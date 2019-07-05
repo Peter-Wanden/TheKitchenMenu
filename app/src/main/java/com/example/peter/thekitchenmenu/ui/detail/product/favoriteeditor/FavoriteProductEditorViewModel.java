@@ -22,7 +22,7 @@ import java.text.NumberFormat;
 
 public class FavoriteProductEditorViewModel
         extends AndroidViewModel
-        implements FavoriteProductsDataSource.GetFavoriteProductCallback {
+        implements FavoriteProductsDataSource.GetItemCallback {
 
     private static final String TAG = "tkm-FavProductEditorVM";
 
@@ -108,16 +108,16 @@ public class FavoriteProductEditorViewModel
         isNewFavoriteProduct = false;
         dataIsLoading.set(true);
 
-        repository.getFavoriteProduct(favoriteProductId, this);
+        repository.getById(favoriteProductId, this);
     }
 
     @Override
-    public void onFavoriteProductLoaded(FavoriteProductEntity favoriteProduct) {
+    public void onItemLoaded(Object o) {
         Log.d(TAG, "onFavoriteProductLoaded: ");
 
+        FavoriteProductEntity favoriteProduct = (FavoriteProductEntity) o;
         if (favoriteProduct != null) {
             createDate = favoriteProduct.getCreateDate();
-
             retailer.set(favoriteProduct.getRetailer());
             locationRoom.set(favoriteProduct.getLocationRoom());
             locationInRoom.set(favoriteProduct.getLocationInRoom());
@@ -272,14 +272,14 @@ public class FavoriteProductEditorViewModel
     }
 
     private void createFavoriteProduct(FavoriteProductEntity favoriteProduct) {
-        repository.saveFavoriteProduct(favoriteProduct);
+        repository.save(favoriteProduct);
         favoriteProductSaved.call();
     }
 
     private void updateFavoriteProduct(FavoriteProductEntity favoriteProduct) {
         if (isNewFavoriteProduct)
             throw new RuntimeException("updateFavoriteProduct called but is new favorite Product.");
-        repository.saveFavoriteProduct(favoriteProduct);
+        repository.save(favoriteProduct);
         favoriteProductSaved.call();
     }
 

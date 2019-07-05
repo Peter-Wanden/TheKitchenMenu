@@ -9,6 +9,7 @@ import android.view.View;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.ProductCatalogActivityBinding;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryFavoriteProduct;
+import com.example.peter.thekitchenmenu.ui.catalog.CatalogFragmentPageAdapter;
 import com.example.peter.thekitchenmenu.ui.detail.product.favoriteeditor.FavoriteProductEditorActivity;
 import com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductEditorActivity;
 import com.example.peter.thekitchenmenu.ui.detail.product.viewer.ProductViewerActivity;
@@ -20,7 +21,6 @@ import androidx.core.app.NavUtils;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.viewpager.widget.ViewPager;
 
 public class ProductCatalogActivity
         extends AppCompatActivity
@@ -29,10 +29,8 @@ public class ProductCatalogActivity
     private static final String TAG = "tkm-ProductCatalogAct";
 
     public static final String NEW_PRODUCT_ID_ADDED = "NEW_PRODUCT_ID_ADDED";
-    ProductCatalogViewModel viewModel;
-    ProductCatalogActivityBinding binding;
-    CatalogFragmentPageAdapter tabPageAdapter;
-    ViewPager tabViewPager;
+    private ProductCatalogViewModel viewModel;
+    private ProductCatalogActivityBinding binding;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,51 +39,25 @@ public class ProductCatalogActivity
         initialiseBindings();
         setupSearch();
         setupToolBar();
-        setupFab();
         setupViewModel();
+        subscribeNavigationChanges();
         setupFragmentPageAdapter();
         setTitle(this.getResources().getString(R.string.activity_title_product_catalog));
     }
 
     private void initialiseBindings() {
         binding = DataBindingUtil.setContentView(this, R.layout.product_catalog_activity);
-        binding.activityCatalogProductPb.setVisibility(View.GONE);
+        binding.setLifecycleOwner(this);
     }
 
     private void setupSearch() {
         setDefaultKeyMode(DEFAULT_KEYS_SEARCH_LOCAL);
     }
 
-    private void setupFragmentPageAdapter() {
-        tabPageAdapter = new CatalogFragmentPageAdapter(getSupportFragmentManager());
-        tabViewPager = binding.activityCatalogProductVp;
-        tabViewPager.setAdapter(tabPageAdapter);
-
-        if (binding.activityCatalogProductVp != null) {
-            setupViewPager(binding.activityCatalogProductVp);
-        }
-
-        // Sets up the Tab's and their titles.
-        binding.activityCatalogProductTl.setupWithViewPager(binding.activityCatalogProductVp);
-    }
-
-    private void setupViewPager(ViewPager viewPager) {
-        tabPageAdapter = new CatalogFragmentPageAdapter(getSupportFragmentManager());
-        tabPageAdapter.addFragment(new ProductCatalogAllFragment(), getString(R.string.activity_catalog_products_tab_1_title));
-        tabPageAdapter.addFragment(new CatalogFavoritesFragment(), getString(R.string.activity_catalog_products_tab_2_title));
-
-        viewPager.setAdapter(tabPageAdapter);
-    }
-
-    private void setupToolBar() {
-        setSupportActionBar(binding.activityCatalogProductToolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-    }
-
-    private void setupFab() {
-        binding.activityCatalogAddNewProductFab.setOnClickListener(v -> viewModel.addNewProduct());
+    private void setupViewModel() {
+        viewModel = obtainViewModel(this);
+        viewModel.setNavigators(this, this);
+        viewModel.prepareData();
     }
 
     public static ProductCatalogViewModel obtainViewModel(FragmentActivity activity) {
@@ -95,11 +67,7 @@ public class ProductCatalogActivity
         return ViewModelProviders.of(activity, factory).get(ProductCatalogViewModel.class);
     }
 
-    private void setupViewModel() {
-        viewModel = obtainViewModel(this);
-        viewModel.setNavigators(this, this);
-        viewModel.prepareData();
-
+    private void subscribeNavigationChanges() {
         viewModel.getOpenProductEvent().observe(this, productId -> {
             if (productId != null) viewProduct(productId);
         });
@@ -107,6 +75,28 @@ public class ProductCatalogActivity
         viewModel.getAddToFavoritesEvent().observe(this, productId -> {
             if (productId != null) addToFavorites(productId);
         });
+    }
+
+    private void setupFragmentPageAdapter() {
+        CatalogFragmentPageAdapter fragmentPageAdapter =
+                new CatalogFragmentPageAdapter(getSupportFragmentManager());
+
+        fragmentPageAdapter.addFragment(ProductCatalogAllFragment.newInstance(),
+                getString(R.string.activity_catalog_products_tab_1_title));
+        fragmentPageAdapter.addFragment(ProductCatalogFavoritesFragment.newInstance(),
+                getString(R.string.activity_catalog_products_tab_2_title));
+
+        binding.productCatalogActivityViewPager.setAdapter(fragmentPageAdapter);
+
+        binding.productCatalogActivityTabLayout.setupWithViewPager(
+                binding.productCatalogActivityViewPager);
+    }
+
+    private void setupToolBar() {
+        setSupportActionBar(binding.productCatalogActivityToolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override
@@ -131,7 +121,7 @@ public class ProductCatalogActivity
 
     @Override
     public void removeFromFavorites(String productId) {
-        // Delete from FavoriteProducts / or show dialog and refresh data
+        // Delete from FavoriteProducts / or show dialog and refreshData data
     }
 
     @Override

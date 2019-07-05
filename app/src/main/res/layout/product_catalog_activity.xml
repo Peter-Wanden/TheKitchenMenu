@@ -2,49 +2,59 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+        <import type="android.view.View.OnClickListener"/>
+        <import type="android.view.View" />
+        <variable
+            name="viewModel"
+            type="com.example.peter.thekitchenmenu.ui.catalog.product.ProductCatalogViewModel" />
+    </data>
+
     <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:id="@+id/activity_catalog_product_cl"
+        android:id="@+id/product_catalog_activity_coordinatorLayout_parent"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <androidx.viewpager.widget.ViewPager
-            android:id="@+id/activity_catalog_product_vp"
+            android:id="@+id/product_catalog_activity_viewPager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
         </androidx.viewpager.widget.ViewPager>
 
         <ProgressBar
-            android:id="@+id/activity_catalog_product_pb"
+            android:id="@+id/product_catalog_activity_progressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_anchor="@id/activity_catalog_product_appbar"
-            android:paddingTop="100dp"
-            app:layout_anchorGravity="center_horizontal"
+            app:layout_anchor="@id/product_catalog_activity_viewPager"
+            app:layout_anchorGravity="center_horizontal|center_vertical"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
         </ProgressBar>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/activity_catalog_add_new_product_fab"
+            android:id="@+id/product_catalog_activity_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/fab_margin"
             android:src="@drawable/ic_add_white"
             android:tint="@color/white"
+            app:fabSize="normal"
             app:backgroundTint="@color/textColorHighlight"
-            app:layout_anchor="@+id/activity_catalog_product_vp"
-            app:layout_anchorGravity="bottom|right" >
+            app:layout_anchor="@+id/product_catalog_activity_viewPager"
+            app:layout_anchorGravity="bottom|right"
+            android:onClick="@{() -> viewModel.addProduct()}"
+            >
         </com.google.android.material.floatingactionbutton.FloatingActionButton>
 
         <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/activity_catalog_product_appbar"
+            android:id="@+id/product_catalog_activity_appBarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/primaryColor"
             android:theme="@style/ThemeOverlay.AppCompat.Light">
 
             <androidx.appcompat.widget.Toolbar
-                android:id="@+id/activity_catalog_product_toolbar"
+                android:id="@+id/product_catalog_activity_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="@color/primaryColor"
@@ -54,7 +64,7 @@
             </androidx.appcompat.widget.Toolbar>
 
             <com.google.android.material.tabs.TabLayout
-                android:id="@+id/activity_catalog_product_tl"
+                android:id="@+id/product_catalog_activity_tabLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:tabIndicatorColor="@color/white"

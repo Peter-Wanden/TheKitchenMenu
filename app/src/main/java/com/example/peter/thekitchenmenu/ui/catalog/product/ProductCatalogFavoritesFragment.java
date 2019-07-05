@@ -1,8 +1,6 @@
 package com.example.peter.thekitchenmenu.ui.catalog.product;
 
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,16 +17,19 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class CatalogFavoritesFragment extends Fragment {
+public class ProductCatalogFavoritesFragment extends Fragment {
 
     private static final String TAG = "tkm-CatalogFavFrag";
 
     private ProductCatalogViewModel viewModel;
     private ProductCatalogFavoritesFragmentBinding binding;
-    private CatalogFavoritesRecyclerAdapter adapter;
+    private ProductCatalogFavoritesRecyclerAdapter adapter;
 
-    public CatalogFavoritesFragment(){}
-    public CatalogFavoritesFragment newInstance() {return new CatalogFavoritesFragment();}
+    public ProductCatalogFavoritesFragment(){}
+
+    public static ProductCatalogFavoritesFragment newInstance() {
+        return new ProductCatalogFavoritesFragment();
+    }
 
     @Override
     public void onResume() {
@@ -40,10 +41,8 @@ public class CatalogFavoritesFragment extends Fragment {
             }
         });
 
-        viewModel.getSearchQueryEvent().observe(requireActivity(), searchQuery -> {
-            Log.d(TAG, "onResume: searchQuery=" + searchQuery);
-            adapter.getFilter().filter(searchQuery);
-        });
+        viewModel.getSearchQueryEvent().observe(requireActivity(), searchQuery ->
+                adapter.getFilter().filter(searchQuery));
     }
 
     @Nullable
@@ -65,39 +64,22 @@ public class CatalogFavoritesFragment extends Fragment {
                 getResources().getBoolean(R.bool.is_landscape)) {
 
             GridLayoutManager gridManager = new GridLayoutManager(requireActivity().
-                    getApplicationContext(), columnCalculator());
+                    getApplicationContext(), 2);
 
-            binding.fragmentCatalogProductsRv.setLayoutManager(gridManager);
+            binding.productCatalogFavoritesFragmentRecyclerView.setLayoutManager(gridManager);
 
         } else {
             LinearLayoutManager linearManager = new
                     LinearLayoutManager(requireActivity().getApplicationContext(),
                     RecyclerView.VERTICAL, false);
 
-            binding.fragmentCatalogProductsRv.setLayoutManager(linearManager);
+            binding.productCatalogFavoritesFragmentRecyclerView.setLayoutManager(linearManager);
         }
 
-        binding.fragmentCatalogProductsRv.setHasFixedSize(true);
-        adapter = new CatalogFavoritesRecyclerAdapter(viewModel);
-        binding.fragmentCatalogProductsRv.setAdapter(adapter);
+        binding.productCatalogFavoritesFragmentRecyclerView.setHasFixedSize(true);
+        adapter = new ProductCatalogFavoritesRecyclerAdapter(viewModel);
+        binding.productCatalogFavoritesFragmentRecyclerView.setAdapter(adapter);
 
         return binding.getRoot();
-    }
-
-    /**
-     * Screen width column calculator
-     */
-    private int columnCalculator() {
-
-        DisplayMetrics metrics = new DisplayMetrics();
-        requireActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
-        // Width of smallest tablet
-        int divider = 600;
-        int width = metrics.widthPixels;
-        int columns = width / divider;
-        if (columns < 2) return 2;
-
-        return columns;
     }
 }

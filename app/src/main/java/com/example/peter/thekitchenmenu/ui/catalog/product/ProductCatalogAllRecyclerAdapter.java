@@ -16,8 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class CatalogAllRecyclerAdapter
-        extends RecyclerView.Adapter<CatalogAllRecyclerAdapter.ViewHolder>
+public class ProductCatalogAllRecyclerAdapter
+        extends RecyclerView.Adapter<ProductCatalogAllRecyclerAdapter.ViewHolder>
         implements Filterable {
 
     private static final String TAG = "tkm-CatalogAdapter";
@@ -26,7 +26,7 @@ public class CatalogAllRecyclerAdapter
     private List<ProductModel> productModelList;
     private List<ProductModel> productModelListFull;
 
-    CatalogAllRecyclerAdapter(ProductCatalogViewModel viewModel) {
+    ProductCatalogAllRecyclerAdapter(ProductCatalogViewModel viewModel) {
         this.viewModel = viewModel;
     }
 

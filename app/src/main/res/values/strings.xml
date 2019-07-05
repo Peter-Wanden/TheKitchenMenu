@@ -201,6 +201,8 @@
     <string name="image_of_meal">An image of the selected recipe</string>
     <string name="activity_catalog_products_tab_1_title">All Products</string>
     <string name="activity_catalog_products_tab_2_title">My Favorites</string>
+    <string name="activity_catalog_recipes_tab_1_title">All recipes</string>
+    <string name="activity_catalog_recipes_tab_2_title">My favorites</string>
 
     <!-- AdapterProduct -->
     <string name="adapter_catalog_product_creator_yes">Yes</string>

@@ -33,8 +33,10 @@ public class FavoriteProductsRepository implements FavoriteProductsDataSource {
         this.localDataSource = checkNotNull(localDataSource);
     }
 
-    public static FavoriteProductsRepository getInstance(FavoriteProductsDataSource remoteDataSource,
-                                                         FavoriteProductsDataSource localDataSource) {
+    public static FavoriteProductsRepository getInstance(
+            FavoriteProductsDataSource remoteDataSource,
+            FavoriteProductsDataSource localDataSource) {
+
         if (INSTANCE == null)
             INSTANCE = new FavoriteProductsRepository(remoteDataSource, localDataSource);
         return INSTANCE;
@@ -45,23 +47,23 @@ public class FavoriteProductsRepository implements FavoriteProductsDataSource {
     }
 
     @Override
-    public void getFavoriteProducts(LoadFavoriteProductsCallback callback) {
+    public void getAll(@NonNull LoadAllCallback callback) {
         checkNotNull(callback);
 
         if (favoriteProductsCache != null && !cacheIsDirty) {
-            callback.onFavoriteProductsLoaded(new ArrayList<>(favoriteProductsCache.values()));
+            callback.onAllLoaded(new ArrayList<>(favoriteProductsCache.values()));
             return;
         }
 
-        if (cacheIsDirty) getFavoriteProductFromRemoteDataSource(callback);
+        if (cacheIsDirty)
+            getFavoriteProductFromRemoteDataSource(callback);
 
         else {
-            localDataSource.getFavoriteProducts(new LoadFavoriteProductsCallback() {
+            localDataSource.getAll(new LoadAllCallback() {
                 @Override
-                public void onFavoriteProductsLoaded(List<FavoriteProductEntity> favoriteProducts) {
-                    refreshFavoriteProductCache(favoriteProducts);
-                    callback.onFavoriteProductsLoaded(
-                            new ArrayList<>(favoriteProductsCache.values()));
+                public <E> void onAllLoaded(List<E> entities) {
+                    refreshFavoriteProductCache((ArrayList<FavoriteProductEntity>) entities);
+                    callback.onAllLoaded(new ArrayList<>(favoriteProductsCache.values()));
                 }
 
                 @Override
@@ -72,15 +74,13 @@ public class FavoriteProductsRepository implements FavoriteProductsDataSource {
         }
     }
 
-    private void getFavoriteProductFromRemoteDataSource(
-            @NonNull final LoadFavoriteProductsCallback callback) {
-
-        remoteDataSource.getFavoriteProducts(new LoadFavoriteProductsCallback() {
+    private void getFavoriteProductFromRemoteDataSource(@NonNull final LoadAllCallback callback) {
+        remoteDataSource.getAll(new LoadAllCallback() {
             @Override
-            public void onFavoriteProductsLoaded(List<FavoriteProductEntity> favoriteProducts) {
-                refreshFavoriteProductCache(favoriteProducts);
-                refreshLocalDataSource(favoriteProducts);
-                callback.onFavoriteProductsLoaded(new ArrayList<>(favoriteProductsCache.values()));
+            public <E> void onAllLoaded(List<E> entities) {
+                refreshFavoriteProductCache((ArrayList<FavoriteProductEntity>) entities);
+                refreshLocalDataSource((ArrayList<FavoriteProductEntity>) entities);
+                callback.onAllLoaded(new ArrayList<>(favoriteProductsCache.values()));
             }
 
             @Override
@@ -91,7 +91,8 @@ public class FavoriteProductsRepository implements FavoriteProductsDataSource {
     }
 
     private void refreshFavoriteProductCache(List<FavoriteProductEntity> favoriteProducts) {
-        if (favoriteProductsCache == null) favoriteProductsCache = new LinkedHashMap<>();
+        if (favoriteProductsCache == null)
+            favoriteProductsCache = new LinkedHashMap<>();
         favoriteProductsCache.clear();
 
         for (FavoriteProductEntity favoriteProduct: favoriteProducts)
@@ -101,14 +102,14 @@ public class FavoriteProductsRepository implements FavoriteProductsDataSource {
     }
 
     private void refreshLocalDataSource(List<FavoriteProductEntity> favoriteProducts) {
-        localDataSource.deleteAllFavoriteProducts();
+        localDataSource.deleteAll();
         for (FavoriteProductEntity favoriteProduct : favoriteProducts)
-            localDataSource.saveFavoriteProduct(favoriteProduct);
+            localDataSource.save(favoriteProduct);
     }
 
     @Override
-    public void getFavoriteProduct(@NonNull String favoriteProductId,
-                                   @NonNull GetFavoriteProductCallback callback) {
+    public void getById(@NonNull String favoriteProductId,
+                                   @NonNull GetItemCallback callback) {
         
         checkNotNull(favoriteProductId);
         checkNotNull(callback);
@@ -116,17 +117,19 @@ public class FavoriteProductsRepository implements FavoriteProductsDataSource {
         FavoriteProductEntity cachedFavoriteProduct = getFavoriteProductWithId(favoriteProductId);
         if (cachedFavoriteProduct != null) {
             Log.d(TAG, "getFavoriteProduct: cache has favorite product");
-            callback.onFavoriteProductLoaded(cachedFavoriteProduct);
+            callback.onItemLoaded(cachedFavoriteProduct);
             return;
         }
 
-        localDataSource.getFavoriteProduct(favoriteProductId, new GetFavoriteProductCallback() {
+        localDataSource.getById(favoriteProductId, new GetItemCallback() {
             @Override
-            public void onFavoriteProductLoaded(FavoriteProductEntity favoriteProduct) {
-                if (favoriteProductsCache == null) favoriteProductsCache = new LinkedHashMap<>();
+            public void onItemLoaded(Object o) {
+                if (favoriteProductsCache == null)
+                    favoriteProductsCache = new LinkedHashMap<>();
+
+                FavoriteProductEntity favoriteProduct = (FavoriteProductEntity) o;
                 favoriteProductsCache.put(favoriteProduct.getId(), favoriteProduct);
-                Log.d(TAG, "onFavoriteProductLoaded: local repo has product");
-                callback.onFavoriteProductLoaded(favoriteProduct);
+                callback.onItemLoaded(favoriteProduct);
             }
 
             @Override
@@ -140,28 +143,32 @@ public class FavoriteProductsRepository implements FavoriteProductsDataSource {
     @Nullable
     private FavoriteProductEntity getFavoriteProductWithId(String favoriteProductId) {
         checkNotNull(favoriteProductId);
-        if (favoriteProductsCache == null || favoriteProductsCache.isEmpty()) return null;
-        else return favoriteProductsCache.get(favoriteProductId);
+        if (favoriteProductsCache == null || favoriteProductsCache.isEmpty())
+            return null;
+        else return
+                favoriteProductsCache.get(favoriteProductId);
     }
 
     @Override
     public void getFavoriteProductByProductId(@NonNull String productId,
-                                              @NonNull GetFavoriteProductCallback callback) {
+                                              @NonNull GetItemCallback callback) {
         checkNotNull(productId);
         checkNotNull(callback);
 
         FavoriteProductEntity cachedFavoriteProduct = getFavoriteProductWithProductId(productId);
         if (cachedFavoriteProduct !=null) {
-            callback.onFavoriteProductLoaded(cachedFavoriteProduct);
+            callback.onItemLoaded(cachedFavoriteProduct);
             return;
         }
 
-        localDataSource.getFavoriteProductByProductId(productId, new GetFavoriteProductCallback() {
+        localDataSource.getFavoriteProductByProductId(productId, new GetItemCallback() {
             @Override
-            public void onFavoriteProductLoaded(FavoriteProductEntity favoriteProduct) {
-                if (favoriteProductsCache == null) favoriteProductsCache = new LinkedHashMap<>();
+            public void onItemLoaded(Object o) {
+                if (favoriteProductsCache == null)
+                    favoriteProductsCache = new LinkedHashMap<>();
+                FavoriteProductEntity favoriteProduct = (FavoriteProductEntity) o;
                 favoriteProductsCache.put(favoriteProduct.getId(), favoriteProduct);
-                callback.onFavoriteProductLoaded(favoriteProduct);
+                callback.onItemLoaded(favoriteProduct);
             }
 
             @Override
@@ -186,35 +193,39 @@ public class FavoriteProductsRepository implements FavoriteProductsDataSource {
     }
 
     @Override
-    public void saveFavoriteProduct(@NonNull FavoriteProductEntity favoriteProduct) {
+    public void save(@NonNull Object o) {
+        FavoriteProductEntity favoriteProduct = (FavoriteProductEntity) o;
         checkNotNull(favoriteProduct);
 
-        remoteDataSource.saveFavoriteProduct(favoriteProduct);
-        localDataSource.saveFavoriteProduct(favoriteProduct);
-        if (favoriteProductsCache == null) favoriteProductsCache = new LinkedHashMap<>();
+        remoteDataSource.save(favoriteProduct);
+        localDataSource.save(favoriteProduct);
+
+        if (favoriteProductsCache == null)
+            favoriteProductsCache = new LinkedHashMap<>();
         favoriteProductsCache.put(favoriteProduct.getId(), favoriteProduct);
     }
 
     @Override
-    public void refreshFavoriteProducts() {
+    public void refreshData() {
         cacheIsDirty = true;
     }
 
     @Override
-    public void deleteAllFavoriteProducts() {
-        remoteDataSource.deleteAllFavoriteProducts();
-        localDataSource.deleteAllFavoriteProducts();
+    public void deleteAll() {
+        remoteDataSource.deleteAll();
+        localDataSource.deleteAll();
 
-        if (favoriteProductsCache == null) favoriteProductsCache = new LinkedHashMap<>();
+        if (favoriteProductsCache == null)
+            favoriteProductsCache = new LinkedHashMap<>();
         favoriteProductsCache.clear();
     }
 
     @Override
-    public void deleteFavoriteProduct(String favoriteProductId) {
-        Log.d(TAG, "deleteFavoriteProduct: called with id=" + favoriteProductId);
-        remoteDataSource.deleteFavoriteProduct(favoriteProductId);
-        localDataSource.deleteFavoriteProduct(favoriteProductId);
+    public void deleteById(@NonNull String favoriteProductId) {
+        remoteDataSource.deleteById(favoriteProductId);
+        localDataSource.deleteById(favoriteProductId);
         favoriteProductsCache.remove(favoriteProductId);
+
         for (Map.Entry<String, FavoriteProductEntity> model : favoriteProductsCache.entrySet()) {
             Log.d(TAG, "deleteFavoriteProduct: map has entry=" + model.getKey());
         }

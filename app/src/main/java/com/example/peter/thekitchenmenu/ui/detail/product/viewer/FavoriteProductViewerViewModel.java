@@ -15,7 +15,7 @@ import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 
 public class FavoriteProductViewerViewModel
         extends AndroidViewModel
-        implements FavoriteProductsDataSource.GetFavoriteProductCallback {
+        implements FavoriteProductsDataSource.GetItemCallback {
 
     private static final String TAG = "tkm-FavProductViewerVM";
 
@@ -50,8 +50,8 @@ public class FavoriteProductViewerViewModel
     }
 
     @Override
-    public void onFavoriteProductLoaded(FavoriteProductEntity favoriteProduct) {
-        Log.d(TAG, "onFavoriteProductLoaded: ");
+    public void onItemLoaded(Object o) {
+        FavoriteProductEntity favoriteProduct = (FavoriteProductEntity) o;
         setFavoriteProduct(favoriteProduct);
     }
 
@@ -98,7 +98,7 @@ public class FavoriteProductViewerViewModel
     void deleteFavoriteProduct() {
         Log.d(TAG, "deleteFavoriteProduct=" + favoriteProduct.get());
         if (favoriteProduct.get() != null) {
-            repository.deleteFavoriteProduct(favoriteProduct.get().getId());
+            repository.deleteById(favoriteProduct.get().getId());
             favoriteProduct.set(null);
             isFavorite.set(false);
         }

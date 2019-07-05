@@ -9,7 +9,7 @@ import androidx.databinding.BindingAdapter;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.utils.DecimalDigitsInputFilter;
 
-public class RecipeTimesEditTextSetup {
+public class RecipeTimesBindingAdapter {
     @BindingAdapter(value = {"setupEditTextForRecipeTimes"})
     public static void setupEditTextForRecipeTimesInput(EditText editText, int time) {
         int viewId = editText.getId();

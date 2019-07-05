@@ -1,6 +1,7 @@
 package com.example.peter.thekitchenmenu.ui.catalog.recipe;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -30,8 +31,14 @@ public class RecipeCatalogViewModel extends AndroidViewModel {
     }
 
     public void addRecipe() {
-        navigator.addRecipe();
+        Log.d(TAG, "addRecipe: navigatorIsNull!");
+
+        if (navigator != null)
+            Log.d(TAG, "addRecipe: called!");
+            navigator.addRecipe();
     }
 
+    void prepareData() {
 
+    }
 }

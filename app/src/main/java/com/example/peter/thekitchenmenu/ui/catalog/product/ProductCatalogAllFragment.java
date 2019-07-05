@@ -1,7 +1,6 @@
 package com.example.peter.thekitchenmenu.ui.catalog.product;
 
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,11 +21,11 @@ import androidx.recyclerview.widget.RecyclerView;
 public class ProductCatalogAllFragment extends Fragment {
 
     // TODO - make a super class, for FragmentCommunityProducts and FragmentMyProducts to inherit.
-    private static final String TAG = "tkm-ProductCatalogAllFragment";
+    private static final String TAG = "tkm-ProductCatAllFrag";
 
     private ProductCatalogViewModel viewModel;
     private ProductCatalogAllFragmentBinding binding;
-    private CatalogAllRecyclerAdapter adapter;
+    private ProductCatalogAllRecyclerAdapter adapter;
 
     public ProductCatalogAllFragment() {
     }
@@ -70,38 +69,21 @@ public class ProductCatalogAllFragment extends Fragment {
                 getResources().getBoolean(R.bool.is_landscape)) {
 
             GridLayoutManager gridManager = new GridLayoutManager((requireActivity())
-                    .getApplicationContext(), columnCalculator());
+                    .getApplicationContext(), 2);
 
-            binding.fragmentCatalogProductsRv.setLayoutManager(gridManager);
+            binding.productCatalogAllFragmentRecyclerView.setLayoutManager(gridManager);
 
         } else {
             LinearLayoutManager linearManager = new LinearLayoutManager(requireActivity()
                     .getApplicationContext(), RecyclerView.VERTICAL, false);
 
-            binding.fragmentCatalogProductsRv.setLayoutManager(linearManager);
+            binding.productCatalogAllFragmentRecyclerView.setLayoutManager(linearManager);
         }
 
-        binding.fragmentCatalogProductsRv.setHasFixedSize(true);
-        adapter = new CatalogAllRecyclerAdapter(viewModel);
-        binding.fragmentCatalogProductsRv.setAdapter(adapter);
+        binding.productCatalogAllFragmentRecyclerView.setHasFixedSize(true);
+        adapter = new ProductCatalogAllRecyclerAdapter(viewModel);
+        binding.productCatalogAllFragmentRecyclerView.setAdapter(adapter);
 
         return binding.getRoot();
-    }
-
-    /**
-     * Screen width column calculator
-     */
-    private int columnCalculator() {
-
-        DisplayMetrics metrics = new DisplayMetrics();
-        requireActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
-        // Width of smallest tablet
-        int divider = 600;
-        int width = metrics.widthPixels;
-        int columns = width / divider;
-        if (columns < 2) return 2;
-
-        return columns;
     }
 }

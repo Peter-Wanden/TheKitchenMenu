@@ -22,6 +22,7 @@ import com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductEditorAc
 import com.example.peter.thekitchenmenu.ui.detail.product.viewer.ProductViewerActivity;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.ObservableBoolean;
 import androidx.lifecycle.AndroidViewModel;
@@ -69,8 +70,9 @@ public class ProductCatalogViewModel extends AndroidViewModel {
         itemNavigator = null;
     }
 
-    void addNewProduct() {
-        if (productNavigator != null) productNavigator.addNewProduct();
+    public void addProduct() {
+        if (productNavigator != null)
+            productNavigator.addNewProduct();
     }
 
     void prepareData() {
@@ -87,7 +89,7 @@ public class ProductCatalogViewModel extends AndroidViewModel {
     }
 
     /**
-     * @param forceUpdate   Pass in true to refresh the data in the {@link ProductDataSource}
+     * @param forceUpdate   Pass in true to refreshData the data in the {@link ProductDataSource}
      * @param showLoadingUI Pass in true to display a loading icon in the UI
      */
     private void loadProductEntities(boolean forceUpdate, final boolean showLoadingUI) {
@@ -132,25 +134,27 @@ public class ProductCatalogViewModel extends AndroidViewModel {
     private void loadFavoriteProductEntities(boolean forceUpdate, boolean showLoadingUi) {
         favoriteProductMap.clear();
         favoriteProductsLoading = true;
-        if (showLoadingUi) dataLoading.set(true);
+        if (showLoadingUi)
+            dataLoading.set(true);
 
         if (forceUpdate) {
             repositoryProduct.refreshProducts();
-            repositoryFavoriteProducts.refreshFavoriteProducts();
+            repositoryFavoriteProducts.refreshData();
         }
 
-        repositoryFavoriteProducts.getFavoriteProducts(
-                new FavoriteProductsDataSource.LoadFavoriteProductsCallback() {
+        repositoryFavoriteProducts.getAll(new FavoriteProductsDataSource.LoadAllCallback() {
                     @Override
-                    public void onFavoriteProductsLoaded(
-                            List<FavoriteProductEntity> favoriteProductEntities) {
+                    public <E> void onAllLoaded(List<E> favoriteProductEntities) {
 
                         if (showLoadingUi) dataLoading.set(false);
                         isDataLoadingError.set(false);
                         favoriteProductsLoading = false;
 
-                        if (favoriteProductMap == null) favoriteProductMap = new LinkedHashMap<>();
-                        for (FavoriteProductEntity favoriteProductEntity : favoriteProductEntities) {
+                        if (favoriteProductMap == null)
+                            favoriteProductMap = new LinkedHashMap<>();
+
+                        for (FavoriteProductEntity favoriteProductEntity :
+                                (ArrayList<FavoriteProductEntity>) favoriteProductEntities) {
                             favoriteProductMap.put(
                                     favoriteProductEntity.getProductId(),
                                     favoriteProductEntity);
@@ -229,7 +233,7 @@ public class ProductCatalogViewModel extends AndroidViewModel {
     }
 
     void removeFromFavorites(String favoriteProductId) {
-        repositoryFavoriteProducts.deleteFavoriteProduct(favoriteProductId);
+        repositoryFavoriteProducts.deleteById(favoriteProductId);
         prepareData();
     }
 
@@ -269,4 +273,6 @@ public class ProductCatalogViewModel extends AndroidViewModel {
     MutableLiveData<String> getSearchQueryEvent() {
         return searchQueryEvent;
     }
+
+
 }
