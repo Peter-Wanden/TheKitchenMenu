@@ -8,14 +8,14 @@ import androidx.databinding.ObservableField;
 import androidx.lifecycle.AndroidViewModel;
 
 import com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity;
-import com.example.peter.thekitchenmenu.data.repository.FavoriteProductsDataSource;
+import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.FavoriteProductsRepository;
 import com.example.peter.thekitchenmenu.ui.detail.product.favoriteeditor.FavoriteProductEditorActivity;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 
 public class FavoriteProductViewerViewModel
         extends AndroidViewModel
-        implements FavoriteProductsDataSource.GetItemCallback {
+        implements DataSource.GetEntityCallback {
 
     private static final String TAG = "tkm-FavProductViewerVM";
 
@@ -50,7 +50,7 @@ public class FavoriteProductViewerViewModel
     }
 
     @Override
-    public void onItemLoaded(Object o) {
+    public void onEntityLoaded(Object o) {
         FavoriteProductEntity favoriteProduct = (FavoriteProductEntity) o;
         setFavoriteProduct(favoriteProduct);
     }

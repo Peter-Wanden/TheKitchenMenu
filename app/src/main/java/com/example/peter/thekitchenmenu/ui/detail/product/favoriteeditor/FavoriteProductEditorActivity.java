@@ -32,7 +32,6 @@ public class FavoriteProductEditorActivity
     public static final int RESULT_ADD_EDIT_FAVORITE_PRODUCT_OK = RESULT_FIRST_USER + 1;
 
     private FavoriteProductEditorActivityBinding binding;
-    private ProductViewerViewModel productViewerViewModel;
     private FavoriteProductEditorViewModel favoriteProductEditorViewModel;
 
     @Override
@@ -62,7 +61,7 @@ public class FavoriteProductEditorActivity
     }
 
     private void setupViewModels() {
-        productViewerViewModel = obtainProductViewerViewModel(this);
+        ProductViewerViewModel productViewerViewModel = obtainProductViewerViewModel(this);
         productViewerViewModel.canAddRemoveFavorites.set(false);
         favoriteProductEditorViewModel = obtainFavoriteProductEditorViewModel(this);
     }

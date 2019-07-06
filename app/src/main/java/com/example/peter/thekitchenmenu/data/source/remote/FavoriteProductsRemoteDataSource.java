@@ -2,6 +2,7 @@ package com.example.peter.thekitchenmenu.data.source.remote;
 
 import androidx.annotation.NonNull;
 
+import com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity;
 import com.example.peter.thekitchenmenu.data.repository.FavoriteProductsDataSource;
 
 public class FavoriteProductsRemoteDataSource implements FavoriteProductsDataSource {
@@ -14,22 +15,23 @@ public class FavoriteProductsRemoteDataSource implements FavoriteProductsDataSou
     }
 
     @Override
-    public void getAll(@NonNull LoadAllCallback callback) {
+    public void getAll(@NonNull LoadAllCallback<FavoriteProductEntity> callback) {
         callback.onDataNotAvailable();
     }
 
     @Override
-    public void getById(@NonNull String id, @NonNull GetItemCallback callback) {
+    public void getById(@NonNull String id,
+                        @NonNull GetEntityCallback<FavoriteProductEntity> callback) {
         callback.onDataNotAvailable();
     }
 
-    public void getFavoriteProductByProductId(@NonNull String productId,
-                                              @NonNull GetItemCallback callback) {
+    public void getFavoriteProductByProductId(
+            @NonNull String productId, @NonNull GetEntityCallback<FavoriteProductEntity> callback) {
         callback.onDataNotAvailable();
     }
 
     @Override
-    public void save(@NonNull Object o) {
+    public void save(@NonNull FavoriteProductEntity favoriteProductEntity) {
 
     }
 

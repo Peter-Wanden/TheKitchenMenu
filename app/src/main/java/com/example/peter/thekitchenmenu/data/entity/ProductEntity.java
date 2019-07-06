@@ -17,7 +17,7 @@ import java.util.Calendar;
 import java.util.UUID;
 
 @Entity(tableName = ProductEntity.TABLE_PRODUCT)
-public final class ProductEntity implements Parcelable {
+public final class ProductEntity implements Parcelable, TkmEntity {
 
     public static final String TAG = "tkm-ProductEntity";
 
@@ -328,6 +328,7 @@ public final class ProductEntity implements Parcelable {
     }
 
     @NonNull
+    @Override
     public String getId() {
         return id;
     }

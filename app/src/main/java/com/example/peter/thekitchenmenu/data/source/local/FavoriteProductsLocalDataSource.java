@@ -36,7 +36,7 @@ public class FavoriteProductsLocalDataSource implements FavoriteProductsDataSour
     }
 
     @Override
-    public void getAll(@NonNull LoadAllCallback callback) {
+    public void getAll(@NonNull LoadAllCallback<FavoriteProductEntity> callback) {
         Runnable runnable = () -> {
             final List<FavoriteProductEntity> favoriteProducts = favoriteProductEntityDao.getAll();
             appExecutors.mainThread().execute(() -> {
@@ -50,13 +50,14 @@ public class FavoriteProductsLocalDataSource implements FavoriteProductsDataSour
     }
 
     @Override
-    public void getById(@NonNull String favoriteProductId, @NonNull GetItemCallback callback) {
+    public void getById(@NonNull String favoriteProductId,
+                        @NonNull GetEntityCallback<FavoriteProductEntity> callback) {
         Runnable runnable = () -> {
             final FavoriteProductEntity favoriteProduct =
                     favoriteProductEntityDao.getById(favoriteProductId);
             appExecutors.mainThread().execute(() -> {
                 if (favoriteProduct != null){
-                    callback.onItemLoaded(favoriteProduct);
+                    callback.onEntityLoaded(favoriteProduct);
                 }
 
                 else
@@ -66,14 +67,16 @@ public class FavoriteProductsLocalDataSource implements FavoriteProductsDataSour
         appExecutors.diskIO().execute(runnable);
     }
 
-    public void getFavoriteProductByProductId(@NonNull String productId,
-                                              @NonNull GetItemCallback callback) {
+    public void getFavoriteProductByProductId(
+            @NonNull String productId,
+            @NonNull GetEntityCallback<FavoriteProductEntity> callback) {
+
         Runnable runnable = () -> {
             final FavoriteProductEntity favoriteProduct =
                     favoriteProductEntityDao.getByProductId(productId);
             appExecutors.mainThread().execute(() -> {
                 if (favoriteProduct != null)
-                    callback.onItemLoaded(favoriteProduct);
+                    callback.onEntityLoaded(favoriteProduct);
                 else
                     callback.onDataNotAvailable();
             });
@@ -82,9 +85,9 @@ public class FavoriteProductsLocalDataSource implements FavoriteProductsDataSour
     }
 
     @Override
-    public void save(@NonNull Object object) {
-        checkNotNull(object);
-        Runnable runnable = () -> favoriteProductEntityDao.insert((FavoriteProductEntity) object);
+    public void save(@NonNull FavoriteProductEntity favoriteProductEntity) {
+        checkNotNull(favoriteProductEntity);
+        Runnable runnable = () -> favoriteProductEntityDao.insert(favoriteProductEntity);
         appExecutors.diskIO().execute(runnable);
     }
 

@@ -2,30 +2,27 @@ package com.example.peter.thekitchenmenu.data.repository;
 
 import androidx.annotation.NonNull;
 
-import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public interface DataSource<T> {
 
-    interface LoadAllCallback {
+    interface LoadAllCallback<T> {
 
-        <E> void onAllLoaded(List<E> entities);
-
-        void onDataNotAvailable();
-    }
-
-    interface GetItemCallback<T> {
-
-        void onItemLoaded(T Object);
+        void onAllLoaded(List<T> entities);
 
         void onDataNotAvailable();
     }
 
-    void getAll(@NonNull LoadAllCallback callback);
+    interface GetEntityCallback<T> {
 
-    void getById(@NonNull String id, @NonNull GetItemCallback callback);
+        void onEntityLoaded(T object);
+
+        void onDataNotAvailable();
+    }
+
+    void getAll(@NonNull LoadAllCallback<T> callback);
+
+    void getById(@NonNull String id, @NonNull GetEntityCallback<T> callback);
 
     void save(@NonNull T object);
 

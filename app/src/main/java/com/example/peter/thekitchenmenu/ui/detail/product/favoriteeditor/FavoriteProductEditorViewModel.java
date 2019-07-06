@@ -5,7 +5,7 @@ import android.util.Log;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity;
-import com.example.peter.thekitchenmenu.data.repository.FavoriteProductsDataSource;
+import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.FavoriteProductsRepository;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 import com.example.peter.thekitchenmenu.utils.TextValidationHandler;
@@ -22,7 +22,7 @@ import java.text.NumberFormat;
 
 public class FavoriteProductEditorViewModel
         extends AndroidViewModel
-        implements FavoriteProductsDataSource.GetItemCallback {
+        implements DataSource.GetEntityCallback {
 
     private static final String TAG = "tkm-FavProductEditorVM";
 
@@ -92,10 +92,13 @@ public class FavoriteProductEditorViewModel
     void start(String productId, String favoriteProductId) {
 
         Log.d(TAG, "start: productId=" + productId);
-        if (favoriteProductId != null) Log.d(TAG, "start: favoriteProductId=" + favoriteProductId);
+        if (favoriteProductId != null)
+            Log.d(TAG, "start: favoriteProductId=" + favoriteProductId);
 
         this.productId = productId;
-        if (dataIsLoading.get()) return;
+
+        if (dataIsLoading.get())
+            return;
 
         this.favoriteProductId = favoriteProductId;
 
@@ -104,7 +107,8 @@ public class FavoriteProductEditorViewModel
             return;
         }
 
-        if (dataHasLoaded) return;
+        if (dataHasLoaded)
+            return;
         isNewFavoriteProduct = false;
         dataIsLoading.set(true);
 
@@ -112,7 +116,7 @@ public class FavoriteProductEditorViewModel
     }
 
     @Override
-    public void onItemLoaded(Object o) {
+    public void onEntityLoaded(Object o) {
         Log.d(TAG, "onFavoriteProductLoaded: ");
 
         FavoriteProductEntity favoriteProduct = (FavoriteProductEntity) o;

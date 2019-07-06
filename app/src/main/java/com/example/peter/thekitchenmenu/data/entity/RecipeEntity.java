@@ -13,7 +13,7 @@ import java.util.Calendar;
 import java.util.UUID;
 
 @Entity(tableName = RecipeEntity.TABLE_RECIPE)
-public class RecipeEntity {
+public class RecipeEntity implements TkmEntity {
 
     public static final String TAG = "RecipeEntity";
 
@@ -143,6 +143,7 @@ public class RecipeEntity {
     }
 
     @NonNull
+    @Override
     public String getId() {
         return id;
     }

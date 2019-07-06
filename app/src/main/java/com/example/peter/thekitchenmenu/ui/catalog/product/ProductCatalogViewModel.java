@@ -13,6 +13,7 @@ import com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.data.model.FavoriteProductModel;
 import com.example.peter.thekitchenmenu.data.model.ProductModel;
+import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.ProductDataSource;
 import com.example.peter.thekitchenmenu.data.repository.ProductRepository;
 import com.example.peter.thekitchenmenu.data.repository.FavoriteProductsDataSource;
@@ -22,7 +23,6 @@ import com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductEditorAc
 import com.example.peter.thekitchenmenu.ui.detail.product.viewer.ProductViewerActivity;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.ObservableBoolean;
 import androidx.lifecycle.AndroidViewModel;
@@ -39,8 +39,8 @@ public class ProductCatalogViewModel extends AndroidViewModel {
 
     private boolean productsLoading;
     private boolean favoriteProductsLoading;
-    private final ObservableBoolean dataLoading = new ObservableBoolean(false);
-    private final ObservableBoolean isDataLoadingError = new ObservableBoolean(false);
+    public final ObservableBoolean dataLoading = new ObservableBoolean(false);
+    public final ObservableBoolean isDataLoadingError = new ObservableBoolean(false);
 
     private LinkedHashMap<String, ProductEntity> productMap = new LinkedHashMap<>();
     private LinkedHashMap<String, FavoriteProductEntity> favoriteProductMap = new LinkedHashMap<>();
@@ -70,12 +70,12 @@ public class ProductCatalogViewModel extends AndroidViewModel {
         itemNavigator = null;
     }
 
-    public void addProduct() {
+    void addProduct() {
         if (productNavigator != null)
             productNavigator.addNewProduct();
     }
 
-    void prepareData() {
+    void start() {
         loadProductEntities();
         loadFavoriteProductEntities();
     }
@@ -95,18 +95,28 @@ public class ProductCatalogViewModel extends AndroidViewModel {
     private void loadProductEntities(boolean forceUpdate, final boolean showLoadingUI) {
         productMap.clear();
         productsLoading = true;
-        if (showLoadingUI) dataLoading.set(true);
-        if (forceUpdate) repositoryProduct.refreshProducts();
+
+        if (showLoadingUI)
+            dataLoading.set(true);
+
+        if (forceUpdate)
+            repositoryProduct.refreshProducts();
 
         repositoryProduct.getProducts(new ProductDataSource.LoadProductsCallback() {
             @Override
             public void onProductsLoaded(List<ProductEntity> productEntities) {
 
-                if (showLoadingUI) dataLoading.set(false);
+                if (showLoadingUI)
+                    dataLoading.set(false);
+
                 isDataLoadingError.set(false);
                 productsLoading = false;
 
-                if (productMap == null) productMap = new LinkedHashMap<>();
+                if (productMap == null)
+                    productMap = new LinkedHashMap<>();
+                else
+                    productMap.clear();
+
                 for (ProductEntity productEntity : productEntities) {
                     productMap.put(productEntity.getId(), productEntity);
                 }
@@ -142,9 +152,10 @@ public class ProductCatalogViewModel extends AndroidViewModel {
             repositoryFavoriteProducts.refreshData();
         }
 
-        repositoryFavoriteProducts.getAll(new FavoriteProductsDataSource.LoadAllCallback() {
+        repositoryFavoriteProducts.getAll(
+                new FavoriteProductsDataSource.LoadAllCallback<FavoriteProductEntity>() {
                     @Override
-                    public <E> void onAllLoaded(List<E> favoriteProductEntities) {
+                    public void onAllLoaded(List<FavoriteProductEntity> favoriteProductEntities) {
 
                         if (showLoadingUi) dataLoading.set(false);
                         isDataLoadingError.set(false);
@@ -154,7 +165,7 @@ public class ProductCatalogViewModel extends AndroidViewModel {
                             favoriteProductMap = new LinkedHashMap<>();
 
                         for (FavoriteProductEntity favoriteProductEntity :
-                                (ArrayList<FavoriteProductEntity>) favoriteProductEntities) {
+                                favoriteProductEntities) {
                             favoriteProductMap.put(
                                     favoriteProductEntity.getProductId(),
                                     favoriteProductEntity);
@@ -162,7 +173,7 @@ public class ProductCatalogViewModel extends AndroidViewModel {
                         prepareModels();
                     }
 
-                    @Override
+            @Override
                     public void onDataNotAvailable() {
                         // TODO - Show empty screen
                         isDataLoadingError.set(true);
@@ -234,7 +245,7 @@ public class ProductCatalogViewModel extends AndroidViewModel {
 
     void removeFromFavorites(String favoriteProductId) {
         repositoryFavoriteProducts.deleteById(favoriteProductId);
-        prepareData();
+        start();
     }
 
     void handleActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -242,26 +253,26 @@ public class ProductCatalogViewModel extends AndroidViewModel {
 
         if (ProductViewerActivity.REQUEST_VIEW_PRODUCT == requestCode) {
             if (resultCode == ProductEditorActivity.RESULT_ADD_EDIT_PRODUCT_OK) {
-                prepareData();
+                start();
             } else if (resultCode == ProductViewerActivity.RESULT_DELETE_PRODUCT_OK) {
-                prepareData();
+                start();
             } else if (resultCode == ProductViewerActivity.RESULT_FAVORITE_ADDED_OK) {
-                prepareData();
+                start();
             }
         }
 
         if (ProductViewerActivity.REQUEST_REVIEW_PRODUCT == requestCode) {
 
             if (ProductViewerActivity.RESULT_FAVORITE_NOT_ADDED == resultCode) {
-                prepareData();
+                start();
             } else if (ProductViewerActivity.RESULT_FAVORITE_ADDED_OK == resultCode) {
-                prepareData();
+                start();
             }
         }
 
         if (FavoriteProductEditorActivity.REQUEST_ADD_EDIT_FAVORITE_PRODUCT == requestCode) {
             if (resultCode == FavoriteProductEditorActivity.RESULT_ADD_EDIT_FAVORITE_PRODUCT_OK) {
-                prepareData();
+                start();
             }
         }
     }

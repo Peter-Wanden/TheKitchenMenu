@@ -16,7 +16,7 @@ import java.util.UUID;
 import static com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity.TABLE_FAVORITE_PRODUCTS;
 
 @Entity(tableName = TABLE_FAVORITE_PRODUCTS)
-public final class FavoriteProductEntity {
+public final class FavoriteProductEntity implements TkmEntity {
 
     public static final String TAG = "FavoriteProductEntity";
 
@@ -156,6 +156,7 @@ public final class FavoriteProductEntity {
     }
 
     @NonNull
+    @Override
     public String getId() {
         return id;
     }

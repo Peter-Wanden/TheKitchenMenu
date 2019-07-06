@@ -17,6 +17,7 @@ import com.example.peter.thekitchenmenu.databinding.RecipeCatalogActivityBinding
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryRecipe;
 import com.example.peter.thekitchenmenu.ui.catalog.CatalogFragmentPageAdapter;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.RecipeEditorActivity;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class RecipeCatalogActivity extends AppCompatActivity implements RecipeNavigator {
 
@@ -31,6 +32,7 @@ public class RecipeCatalogActivity extends AppCompatActivity implements RecipeNa
 
         initialiseBindings();
         setupToolbar();
+        setupFab();
         setupViewModel();
         setupFragmentPageAdapter();
         setTitle(this.getResources().getString(R.string.activity_title_recipe_catalog));
@@ -41,10 +43,8 @@ public class RecipeCatalogActivity extends AppCompatActivity implements RecipeNa
         binding.setViewModel(viewModel);
         binding.setLifecycleOwner(this);
 
-        binding.recipeCatalogActivityFab.setOnClickListener(view -> {
-            Log.d(TAG, "initialiseBindings: fab clicked");
-            viewModel.addRecipe();
-        });
+        FloatingActionButton fab = findViewById(R.id.recipe_catalog_activity_fab);
+        fab.setOnClickListener(view -> viewModel.addRecipe());
     }
 
     private void setupToolbar() {
@@ -59,10 +59,15 @@ public class RecipeCatalogActivity extends AppCompatActivity implements RecipeNa
         }
     }
 
+    private void setupFab() {
+        FloatingActionButton fab = findViewById(R.id.recipe_catalog_activity_fab);
+        fab.setOnClickListener(view -> viewModel.addRecipe());
+    }
+
     private void setupViewModel() {
         viewModel = obtainViewModel(this);
         viewModel.setNavigator(this);
-        viewModel.prepareData();
+        viewModel.start();
     }
 
     private void setupFragmentPageAdapter() {

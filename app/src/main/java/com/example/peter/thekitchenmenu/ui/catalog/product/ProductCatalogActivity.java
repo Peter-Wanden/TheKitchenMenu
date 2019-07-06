@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.ProductCatalogActivityBinding;
@@ -13,6 +12,7 @@ import com.example.peter.thekitchenmenu.ui.catalog.CatalogFragmentPageAdapter;
 import com.example.peter.thekitchenmenu.ui.detail.product.favoriteeditor.FavoriteProductEditorActivity;
 import com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductEditorActivity;
 import com.example.peter.thekitchenmenu.ui.detail.product.viewer.ProductViewerActivity;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -39,6 +39,7 @@ public class ProductCatalogActivity
         initialiseBindings();
         setupSearch();
         setupToolBar();
+        setupFab();
         setupViewModel();
         subscribeNavigationChanges();
         setupFragmentPageAdapter();
@@ -57,7 +58,7 @@ public class ProductCatalogActivity
     private void setupViewModel() {
         viewModel = obtainViewModel(this);
         viewModel.setNavigators(this, this);
-        viewModel.prepareData();
+        viewModel.start();
     }
 
     public static ProductCatalogViewModel obtainViewModel(FragmentActivity activity) {
@@ -97,6 +98,11 @@ public class ProductCatalogActivity
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+    }
+
+    private void setupFab(){
+        FloatingActionButton fab = findViewById(R.id.product_catalog_activity_fab);
+        fab.setOnClickListener(view -> viewModel.addProduct());
     }
 
     @Override
