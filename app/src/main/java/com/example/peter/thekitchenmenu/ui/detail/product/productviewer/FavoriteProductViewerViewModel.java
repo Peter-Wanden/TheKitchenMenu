@@ -1,6 +1,7 @@
-package com.example.peter.thekitchenmenu.ui.detail.product.viewer;
+package com.example.peter.thekitchenmenu.ui.detail.product.productviewer;
 
 import android.app.Application;
+import android.os.Bundle;
 import android.util.Log;
 
 import androidx.databinding.ObservableBoolean;
@@ -9,17 +10,17 @@ import androidx.lifecycle.AndroidViewModel;
 
 import com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
-import com.example.peter.thekitchenmenu.data.repository.FavoriteProductsRepository;
-import com.example.peter.thekitchenmenu.ui.detail.product.favoriteeditor.FavoriteProductEditorActivity;
+import com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorActivity;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
+import com.google.android.gms.common.util.Strings;
 
 public class FavoriteProductViewerViewModel
         extends AndroidViewModel
-        implements DataSource.GetEntityCallback {
+        implements DataSource.GetEntityCallback<FavoriteProductEntity> {
 
     private static final String TAG = "tkm-FavProductViewerVM";
 
-    private FavoriteProductsRepository repository;
+    private DataSource<FavoriteProductEntity> favoriteProductEntityDataSource;
     private FavoriteProductViewerNavigator navigator;
 
     private boolean dataIsLoading;
@@ -28,10 +29,12 @@ public class FavoriteProductViewerViewModel
     private boolean favoriteAddedEdited;
     private final SingleLiveEvent<Boolean> setFabIcon = new SingleLiveEvent<>();
 
-    public FavoriteProductViewerViewModel(Application application,
-                                          FavoriteProductsRepository repository) {
+    public FavoriteProductViewerViewModel(
+            Application application,
+            DataSource<FavoriteProductEntity> favoriteProductEntityDataSource) {
+
         super(application);
-        this.repository = repository;
+        this.favoriteProductEntityDataSource = favoriteProductEntityDataSource;
     }
 
     void setNavigator(FavoriteProductViewerNavigator navigator) {
@@ -42,17 +45,16 @@ public class FavoriteProductViewerViewModel
         navigator = null;
     }
 
-    public void start(String productId) {
-        if (productId != null) {
+    public void start(String favoriteProductId) {
+        if (Strings.emptyToNull(favoriteProductId) != null) {
             dataIsLoading = true;
-            repository.getFavoriteProductByProductId(productId, this);
+            favoriteProductEntityDataSource.getById(favoriteProductId, this);
         }
     }
 
     @Override
-    public void onEntityLoaded(Object o) {
-        FavoriteProductEntity favoriteProduct = (FavoriteProductEntity) o;
-        setFavoriteProduct(favoriteProduct);
+    public void onEntityLoaded(FavoriteProductEntity favoriteProductEntity) {
+        setFavoriteProduct(favoriteProductEntity);
     }
 
     private void setFavoriteProduct(FavoriteProductEntity favoriteProduct) {
@@ -64,7 +66,6 @@ public class FavoriteProductViewerViewModel
 
     @Override
     public void onDataNotAvailable() {
-        Log.d(TAG, "onDataNotAvailable: ");
         favoriteProduct.set(null);
         isFavorite.set(false);
         setFabIcon.setValue(false);
@@ -98,7 +99,7 @@ public class FavoriteProductViewerViewModel
     void deleteFavoriteProduct() {
         Log.d(TAG, "deleteFavoriteProduct=" + favoriteProduct.get());
         if (favoriteProduct.get() != null) {
-            repository.deleteById(favoriteProduct.get().getId());
+            favoriteProductEntityDataSource.deleteById(favoriteProduct.get().getId());
             favoriteProduct.set(null);
             isFavorite.set(false);
         }

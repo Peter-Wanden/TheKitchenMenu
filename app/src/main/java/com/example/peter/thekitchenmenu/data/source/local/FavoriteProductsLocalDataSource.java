@@ -4,20 +4,21 @@ import androidx.annotation.NonNull;
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
 import com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity;
-import com.example.peter.thekitchenmenu.data.repository.FavoriteProductsDataSource;
+import com.example.peter.thekitchenmenu.data.repository.DataSource;
 
 import java.util.List;
 
 import static androidx.core.util.Preconditions.checkNotNull;
 
-public class FavoriteProductsLocalDataSource implements FavoriteProductsDataSource {
+public class FavoriteProductsLocalDataSource implements DataSource<FavoriteProductEntity> {
 
     private static volatile FavoriteProductsLocalDataSource INSTANCE;
     private FavoriteProductEntityDao favoriteProductEntityDao;
     private AppExecutors appExecutors;
 
-    private FavoriteProductsLocalDataSource(@NonNull AppExecutors appExecutors,
-                                            @NonNull FavoriteProductEntityDao favoriteProductEntityDao) {
+    private FavoriteProductsLocalDataSource(
+            @NonNull AppExecutors appExecutors,
+            @NonNull FavoriteProductEntityDao favoriteProductEntityDao) {
         this.appExecutors = appExecutors;
         this.favoriteProductEntityDao = favoriteProductEntityDao;
     }
@@ -27,16 +28,17 @@ public class FavoriteProductsLocalDataSource implements FavoriteProductsDataSour
                 @NonNull FavoriteProductEntityDao favoriteProductEntityDao) {
         if (INSTANCE == null) {
             synchronized (FavoriteProductsLocalDataSource.class) {
-                if (INSTANCE == null) INSTANCE= new FavoriteProductsLocalDataSource(
-                        appExecutors,
-                        favoriteProductEntityDao);
+                if (INSTANCE == null)
+                    INSTANCE = new FavoriteProductsLocalDataSource(
+                            appExecutors,
+                            favoriteProductEntityDao);
             }
         }
         return INSTANCE;
     }
 
     @Override
-    public void getAll(@NonNull LoadAllCallback<FavoriteProductEntity> callback) {
+    public void getAll(@NonNull GetAllCallback<FavoriteProductEntity> callback) {
         Runnable runnable = () -> {
             final List<FavoriteProductEntity> favoriteProducts = favoriteProductEntityDao.getAll();
             appExecutors.mainThread().execute(() -> {
@@ -56,28 +58,9 @@ public class FavoriteProductsLocalDataSource implements FavoriteProductsDataSour
             final FavoriteProductEntity favoriteProduct =
                     favoriteProductEntityDao.getById(favoriteProductId);
             appExecutors.mainThread().execute(() -> {
-                if (favoriteProduct != null){
+                if (favoriteProduct != null) {
                     callback.onEntityLoaded(favoriteProduct);
-                }
-
-                else
-                    callback.onDataNotAvailable();
-            });
-        };
-        appExecutors.diskIO().execute(runnable);
-    }
-
-    public void getFavoriteProductByProductId(
-            @NonNull String productId,
-            @NonNull GetEntityCallback<FavoriteProductEntity> callback) {
-
-        Runnable runnable = () -> {
-            final FavoriteProductEntity favoriteProduct =
-                    favoriteProductEntityDao.getByProductId(productId);
-            appExecutors.mainThread().execute(() -> {
-                if (favoriteProduct != null)
-                    callback.onEntityLoaded(favoriteProduct);
-                else
+                } else
                     callback.onDataNotAvailable();
             });
         };
@@ -93,7 +76,7 @@ public class FavoriteProductsLocalDataSource implements FavoriteProductsDataSour
 
     @Override
     public void refreshData() {
-        // Not required because the {@link ProductRepository} handles the logic of refreshing the
+        // Not required because the {@link Repository} handles the logic of refreshing the
         // tasks from all the available data sources.
     }
 

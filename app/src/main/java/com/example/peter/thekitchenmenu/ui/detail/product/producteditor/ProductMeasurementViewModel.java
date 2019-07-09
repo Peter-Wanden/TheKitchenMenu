@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.detail.product.editor;
+package com.example.peter.thekitchenmenu.ui.detail.product.producteditor;
 
 import android.app.Application;
 

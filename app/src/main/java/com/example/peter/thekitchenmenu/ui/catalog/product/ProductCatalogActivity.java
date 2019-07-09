@@ -6,12 +6,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.peter.thekitchenmenu.R;
+import com.example.peter.thekitchenmenu.data.model.ProductModel;
 import com.example.peter.thekitchenmenu.databinding.ProductCatalogActivityBinding;
-import com.example.peter.thekitchenmenu.ui.ViewModelFactoryFavoriteProduct;
+import com.example.peter.thekitchenmenu.ui.ViewModelFactoryProduct;
 import com.example.peter.thekitchenmenu.ui.catalog.CatalogFragmentPageAdapter;
-import com.example.peter.thekitchenmenu.ui.detail.product.favoriteeditor.FavoriteProductEditorActivity;
-import com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductEditorActivity;
-import com.example.peter.thekitchenmenu.ui.detail.product.viewer.ProductViewerActivity;
+import com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorActivity;
+import com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductEditorActivity;
+import com.example.peter.thekitchenmenu.ui.detail.product.productviewer.ProductViewerActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.annotation.Nullable;
@@ -29,6 +30,8 @@ public class ProductCatalogActivity
     private static final String TAG = "tkm-ProductCatalogAct";
 
     public static final String NEW_PRODUCT_ID_ADDED = "NEW_PRODUCT_ID_ADDED";
+    public static final String PRODUCT_ID = "PRODUCT_ID";
+    public static final String FAVORITE_PRODUCT_ID = "FAVORITE_PRODUCT_ID";
     private ProductCatalogViewModel viewModel;
     private ProductCatalogActivityBinding binding;
 
@@ -63,18 +66,20 @@ public class ProductCatalogActivity
 
     public static ProductCatalogViewModel obtainViewModel(FragmentActivity activity) {
         // Use a Factory to inject dependencies into the ViewModel
-        ViewModelFactoryFavoriteProduct factory =
-                ViewModelFactoryFavoriteProduct.getInstance(activity.getApplication());
+        ViewModelFactoryProduct factory =
+                ViewModelFactoryProduct.getInstance(activity.getApplication());
         return ViewModelProviders.of(activity, factory).get(ProductCatalogViewModel.class);
     }
 
     private void subscribeNavigationChanges() {
-        viewModel.getOpenProductEvent().observe(this, productId -> {
-            if (productId != null) viewProduct(productId);
+        viewModel.getViewProductEvent().observe(this, productModel -> {
+            if (productModel != null)
+                viewProduct(productModel);
         });
 
         viewModel.getAddToFavoritesEvent().observe(this, productId -> {
-            if (productId != null) addToFavorites(productId);
+            if (productId != null)
+                addToFavorites(productId);
         });
     }
 
@@ -115,14 +120,8 @@ public class ProductCatalogActivity
     public void addToFavorites(String productId) {
         // Launch AddToFavorites, don't forget to deal with onActivityResult
         Intent intent = new Intent(this, FavoriteProductEditorActivity.class);
-
-        intent.putExtra(
-                FavoriteProductEditorActivity.EXTRA_PRODUCT_ID,
-                productId);
-
-        startActivityForResult(
-                intent,
-                FavoriteProductEditorActivity.REQUEST_ADD_EDIT_FAVORITE_PRODUCT);
+        intent.putExtra(FavoriteProductEditorActivity.EXTRA_PRODUCT_ID, productId);
+        startActivity(intent);
     }
 
     @Override
@@ -131,9 +130,15 @@ public class ProductCatalogActivity
     }
 
     @Override
-    public void viewProduct(String productId) {
-        Intent intent = new Intent(ProductCatalogActivity.this, ProductViewerActivity.class);
-        intent.putExtra(ProductViewerActivity.EXTRA_PRODUCT_ID, productId);
+    public void viewProduct(ProductModel productModel) {
+        Intent intent = new Intent(this, ProductViewerActivity.class);
+        intent.putExtra(ProductViewerActivity.EXTRA_PRODUCT_ID,
+                productModel.getProductEntity().getId());
+
+        if (productModel.getFavoriteProductEntity() != null){
+            intent.putExtra(ProductViewerActivity.EXTRA_FAVORITE_PRODUCT_ID,
+                    productModel.getFavoriteProductEntity().getId());
+        }
         startActivityForResult(intent, ProductViewerActivity.REQUEST_VIEW_PRODUCT);
     }
 

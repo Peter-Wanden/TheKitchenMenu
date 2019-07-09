@@ -4,23 +4,12 @@ import android.app.Application;
 import android.content.Intent;
 import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
-import com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity;
-import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
-import com.example.peter.thekitchenmenu.data.model.FavoriteProductModel;
 import com.example.peter.thekitchenmenu.data.model.ProductModel;
-import com.example.peter.thekitchenmenu.data.repository.DataSource;
-import com.example.peter.thekitchenmenu.data.repository.ProductDataSource;
-import com.example.peter.thekitchenmenu.data.repository.ProductRepository;
-import com.example.peter.thekitchenmenu.data.repository.FavoriteProductsDataSource;
-import com.example.peter.thekitchenmenu.data.repository.FavoriteProductsRepository;
-import com.example.peter.thekitchenmenu.ui.detail.product.favoriteeditor.FavoriteProductEditorActivity;
-import com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductEditorActivity;
-import com.example.peter.thekitchenmenu.ui.detail.product.viewer.ProductViewerActivity;
+import com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorActivity;
+import com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductEditorActivity;
+import com.example.peter.thekitchenmenu.ui.detail.product.productviewer.ProductViewerActivity;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 
 import androidx.annotation.Nullable;
@@ -32,31 +21,26 @@ public class ProductCatalogViewModel extends AndroidViewModel {
 
     private static final String TAG = "tkm-CatalogProductsVM";
 
-    private ProductRepository repositoryProduct;
-    private FavoriteProductsRepository repositoryFavoriteProducts;
+    // TODO - Move data loading to interactor
+    private ProductCatalogInteractor productInteractor;
     private ProductNavigator productNavigator;
     private ProductItemNavigator itemNavigator;
 
-    private boolean productsLoading;
-    private boolean favoriteProductsLoading;
-    public final ObservableBoolean dataLoading = new ObservableBoolean(false);
+    public final ObservableBoolean productDataLoading = new ObservableBoolean(false);
+    public final ObservableBoolean favoriteProductDataLoading = new ObservableBoolean(false);
     public final ObservableBoolean isDataLoadingError = new ObservableBoolean(false);
 
-    private LinkedHashMap<String, ProductEntity> productMap = new LinkedHashMap<>();
-    private LinkedHashMap<String, FavoriteProductEntity> favoriteProductMap = new LinkedHashMap<>();
-    private final MutableLiveData<List<ProductModel>> productModels = new MutableLiveData<>();
-    private final MutableLiveData<List<FavoriteProductModel>> favoriteProducts = new MutableLiveData<>();
+    private final MutableLiveData<List<ProductModel>> productModelList = new MutableLiveData<>();
+    private final MutableLiveData<List<ProductModel>> favoriteProductModelList = new MutableLiveData<>();
 
-    private final SingleLiveEvent<String> openProductEvent = new SingleLiveEvent<>();
+    private final SingleLiveEvent<ProductModel> viewProductEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<String> addToFavoritesEvent = new SingleLiveEvent<>();
     private final MutableLiveData<String> searchQueryEvent = new MutableLiveData<>();
 
-    public ProductCatalogViewModel(Application application,
-                                   FavoriteProductsRepository repositoryFavoriteProducts,
-                                   ProductRepository repositoryProduct) {
+    public ProductCatalogViewModel(
+            Application application) {
         super(application);
-        this.repositoryFavoriteProducts = repositoryFavoriteProducts;
-        this.repositoryProduct = repositoryProduct;
+        productInteractor = ProductCatalogInteractorImpl.getInstance(application);
     }
 
     void setNavigators(ProductNavigator productNavigator, ProductItemNavigator itemNavigator) {
@@ -76,167 +60,90 @@ public class ProductCatalogViewModel extends AndroidViewModel {
     }
 
     void start() {
-        loadProductEntities();
-        loadFavoriteProductEntities();
+        loadProductModelList();
+        loadFavoriteProductModelList();
     }
 
-    private void loadProductEntities() {
-        loadProductEntities(false);
+    private void loadProductModelList() {
+        loadProductModelList(false);
     }
 
-    private void loadProductEntities(boolean forceUpdate) {
-        loadProductEntities(forceUpdate, true);
+    private void loadProductModelList(boolean forceUpdate) {
+        loadProductModelList(forceUpdate, true);
     }
 
     /**
-     * @param forceUpdate   Pass in true to refreshData the data in the {@link ProductDataSource}
+     * @param forceUpdate   Pass in true to refreshData the data in the {@link }
      * @param showLoadingUI Pass in true to display a loading icon in the UI
      */
-    private void loadProductEntities(boolean forceUpdate, final boolean showLoadingUI) {
-        productMap.clear();
-        productsLoading = true;
-
+    private void loadProductModelList(boolean forceUpdate, final boolean showLoadingUI) {
         if (showLoadingUI)
-            dataLoading.set(true);
+            productDataLoading.set(true);
 
-        if (forceUpdate)
-            repositoryProduct.refreshProducts();
+//        if (forceUpdate)
+//            productEntityDataSource.refreshData();
 
-        repositoryProduct.getProducts(new ProductDataSource.LoadProductsCallback() {
+        productInteractor.getProductModelList(new ProductCatalogInteractor.GetAllCallback() {
             @Override
-            public void onProductsLoaded(List<ProductEntity> productEntities) {
-
-                if (showLoadingUI)
-                    dataLoading.set(false);
-
+            public void onAllLoaded(List<ProductModel> modelList) {
                 isDataLoadingError.set(false);
-                productsLoading = false;
 
-                if (productMap == null)
-                    productMap = new LinkedHashMap<>();
-                else
-                    productMap.clear();
+                if(showLoadingUI)
+                    productDataLoading.set(false);
 
-                for (ProductEntity productEntity : productEntities) {
-                    productMap.put(productEntity.getId(), productEntity);
-                }
-                prepareModels();
+                productModelList.postValue(modelList);
             }
 
             @Override
             public void onDataNotAvailable() {
-                // TODO - Show empty screen
                 isDataLoadingError.set(true);
-                productsLoading = false;
-                prepareModels();
             }
         });
     }
 
-    private void loadFavoriteProductEntities() {
-        loadFavoriteProductEntities(false);
+    MutableLiveData<List<ProductModel>> getProductModelList() {
+        return productModelList;
     }
 
-    private void loadFavoriteProductEntities(boolean forceUpdate) {
-        loadFavoriteProductEntities(forceUpdate, false);
+    private void loadFavoriteProductModelList() {
+        loadFavoriteProductModelList(false);
     }
 
-    private void loadFavoriteProductEntities(boolean forceUpdate, boolean showLoadingUi) {
-        favoriteProductMap.clear();
-        favoriteProductsLoading = true;
+    private void loadFavoriteProductModelList(boolean forceUpdate) {
+        loadFavoriteProductModelList(forceUpdate, true);
+    }
+
+    private void loadFavoriteProductModelList(boolean forceUpdate, boolean showLoadingUi) {
         if (showLoadingUi)
-            dataLoading.set(true);
+            favoriteProductDataLoading.set(true);
 
-        if (forceUpdate) {
-            repositoryProduct.refreshProducts();
-            repositoryFavoriteProducts.refreshData();
-        }
+//        if (forceUpdate)
+//            favoriteProductEntityDataSource.refreshData();
 
-        repositoryFavoriteProducts.getAll(
-                new FavoriteProductsDataSource.LoadAllCallback<FavoriteProductEntity>() {
-                    @Override
-                    public void onAllLoaded(List<FavoriteProductEntity> favoriteProductEntities) {
+        productInteractor.getFavoriteProductModelList(new ProductCatalogInteractor.GetAllCallback() {
+            @Override
+            public void onAllLoaded(List<ProductModel> modelList) {
+                isDataLoadingError.set(false);
 
-                        if (showLoadingUi) dataLoading.set(false);
-                        isDataLoadingError.set(false);
-                        favoriteProductsLoading = false;
+                if (showLoadingUi)
+                    favoriteProductDataLoading.set(false);
 
-                        if (favoriteProductMap == null)
-                            favoriteProductMap = new LinkedHashMap<>();
-
-                        for (FavoriteProductEntity favoriteProductEntity :
-                                favoriteProductEntities) {
-                            favoriteProductMap.put(
-                                    favoriteProductEntity.getProductId(),
-                                    favoriteProductEntity);
-                        }
-                        prepareModels();
-                    }
+                favoriteProductModelList.postValue(modelList);
+            }
 
             @Override
-                    public void onDataNotAvailable() {
-                        // TODO - Show empty screen
-                        isDataLoadingError.set(true);
-                        favoriteProductsLoading = false;
-                        prepareModels();
-                    }
-                });
-    }
-
-    private void prepareModels() {
-        if (!productsLoading && !favoriteProductsLoading) {
-            prepareProductModels();
-            prepareFavoriteProductModels();
-        }
-    }
-
-    private void prepareProductModels() {
-        List<ProductModel> productModelList = new ArrayList<>();
-        for (Map.Entry<String, ProductEntity> productEntityEntry : productMap.entrySet()) {
-            ProductModel productModel = new ProductModel();
-            productModel.setProduct(productEntityEntry.getValue());
-
-            if (favoriteProductMap.containsKey(productEntityEntry.getValue().getId())) {
-                productModel.setFavorite(true);
-                productModel.setFavoriteProductId(
-                        favoriteProductMap.get(productEntityEntry.getValue().getId()).getId());
-
-            } else productModel.setFavorite(false);
-
-            productModelList.add(productModel);
-
-        }
-        productModels.setValue(productModelList);
-    }
-
-    private void prepareFavoriteProductModels() {
-        List<FavoriteProductModel> favoriteProductModelList = new ArrayList<>();
-
-        for (Map.Entry<String, FavoriteProductEntity> favoriteProductEntityEntry :
-                favoriteProductMap.entrySet()) {
-            FavoriteProductModel favoriteProductModel = new FavoriteProductModel();
-
-            if (productMap.containsKey(favoriteProductEntityEntry.getKey())) {
-                favoriteProductModel.setFavoriteProduct(favoriteProductEntityEntry.getValue());
-                favoriteProductModel.setProduct(productMap.get(
-                        favoriteProductEntityEntry.getKey()));
-
+            public void onDataNotAvailable() {
+                isDataLoadingError.set(true);
             }
-            favoriteProductModelList.add(favoriteProductModel);
-        }
-        favoriteProducts.setValue(favoriteProductModelList);
+        });
     }
 
-    MutableLiveData<List<ProductModel>> getProductModels() {
-        return productModels;
+    MutableLiveData<List<ProductModel>> getFavoriteProductModelList() {
+        return favoriteProductModelList;
     }
 
-    MutableLiveData<List<FavoriteProductModel>> getFavoriteProducts() {
-        return favoriteProducts;
-    }
-
-    SingleLiveEvent<String> getOpenProductEvent() {
-        return openProductEvent;
+    SingleLiveEvent<ProductModel> getViewProductEvent() {
+        return viewProductEvent;
     }
 
     SingleLiveEvent<String> getAddToFavoritesEvent() {
@@ -244,7 +151,7 @@ public class ProductCatalogViewModel extends AndroidViewModel {
     }
 
     void removeFromFavorites(String favoriteProductId) {
-        repositoryFavoriteProducts.deleteById(favoriteProductId);
+        productInteractor.removeFavoriteProduct(favoriteProductId);
         start();
     }
 
@@ -284,6 +191,4 @@ public class ProductCatalogViewModel extends AndroidViewModel {
     MutableLiveData<String> getSearchQueryEvent() {
         return searchQueryEvent;
     }
-
-
 }

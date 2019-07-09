@@ -10,7 +10,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.data.model.FavoriteProductModel;
+import com.example.peter.thekitchenmenu.data.model.ProductModel;
 import com.example.peter.thekitchenmenu.databinding.FavoriteProductListItemBinding;
 
 import java.util.ArrayList;
@@ -23,8 +23,8 @@ public class ProductCatalogFavoritesRecyclerAdapter
     private static final String TAG = "tkm-CatalogFavAdapter";
 
     private final ProductCatalogViewModel viewModel;
-    private List<FavoriteProductModel> favoriteProductModels;
-    private List<FavoriteProductModel> favoriteProductModelListFull;
+    private List<ProductModel> productModels;
+    private List<ProductModel> productModelListFull;
 
     ProductCatalogFavoritesRecyclerAdapter(ProductCatalogViewModel viewModel) {
         this.viewModel = viewModel;
@@ -45,14 +45,14 @@ public class ProductCatalogFavoritesRecyclerAdapter
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        final FavoriteProductModel favoriteProductModel = favoriteProductModels.get(position);
-        holder.bind(favoriteProductModel);
+        final ProductModel productModel = productModels.get(position);
+        holder.bind(productModel);
     }
 
     @Override
     public int getItemCount() {
-        if (favoriteProductModels == null) return 0;
-        return favoriteProductModels.size();
+        if (productModels == null) return 0;
+        return productModels.size();
     }
 
     @Override
@@ -63,15 +63,15 @@ public class ProductCatalogFavoritesRecyclerAdapter
     private Filter filterResults = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
-            List<FavoriteProductModel> filteredList = new ArrayList<>();
+            List<ProductModel> filteredList = new ArrayList<>();
 
             if (constraint == null || constraint.length() == 0) {
-                filteredList.addAll(favoriteProductModelListFull);
+                filteredList.addAll(productModelListFull);
             } else {
                 String filterPattern = constraint.toString().toLowerCase().trim();
 
-                for (FavoriteProductModel model : favoriteProductModelListFull) {
-                    String description = model.getProduct().getDescription().toLowerCase();
+                for (ProductModel model : productModelListFull) {
+                    String description = model.getProductEntity().getDescription().toLowerCase();
 
                     if (description.contains(filterPattern)) {
                         filteredList.add(model);
@@ -85,19 +85,19 @@ public class ProductCatalogFavoritesRecyclerAdapter
 
         @Override
         protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-            favoriteProductModels.clear();
-            favoriteProductModels.addAll((List) filterResults.values);
+            productModels.clear();
+            productModels.addAll((List) filterResults.values);
             notifyDataSetChanged();
         }
     };
 
-    public List<FavoriteProductModel> getFavoriteProductModels() {
-        return favoriteProductModels;
+    public List<ProductModel> getProductModels() {
+        return productModels;
     }
 
-    void setFavoriteProductModels(List<FavoriteProductModel> favoriteProductModels) {
-        this.favoriteProductModels = favoriteProductModels;
-        favoriteProductModelListFull = new ArrayList<>(favoriteProductModels);
+    void setProductModels(List<ProductModel> productModels) {
+        this.productModels = productModels;
+        productModelListFull = new ArrayList<>(productModels);
         notifyDataSetChanged();
     }
 
@@ -107,13 +107,13 @@ public class ProductCatalogFavoritesRecyclerAdapter
 
         FavoriteProductItemUserActionsListener listener = new FavoriteProductItemUserActionsListener() {
             @Override
-            public void onFavoriteProductClicked(FavoriteProductModel favoriteProduct) {
-                viewModel.getOpenProductEvent().setValue(favoriteProduct.getProduct().getId());
+            public void onFavoriteProductClicked(ProductModel productModel) {
+                viewModel.getViewProductEvent().setValue(productModel);
             }
 
             @Override
-            public void onRemoveFromFavoritesClicked(FavoriteProductModel favoriteProductModel) {
-                viewModel.removeFromFavorites(favoriteProductModel.getFavoriteProduct().getId());
+            public void onRemoveFromFavoritesClicked(ProductModel productModel) {
+                viewModel.removeFromFavorites(productModel.getFavoriteProductEntity().getId());
             }
         };
 
@@ -122,8 +122,8 @@ public class ProductCatalogFavoritesRecyclerAdapter
             this.binding = binding;
         }
 
-        void bind(FavoriteProductModel favoriteProductModel) {
-            binding.setFavoriteProductModel(favoriteProductModel);
+        void bind(ProductModel productModel) {
+            binding.setProductModel(productModel);
             binding.setListener(listener);
             binding.executePendingBindings();
         }

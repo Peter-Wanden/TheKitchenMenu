@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.detail.product.viewer;
+package com.example.peter.thekitchenmenu.ui.detail.product.productviewer;
 
 /**
  * Defines the actions that can be called from the ProductViewer details screen

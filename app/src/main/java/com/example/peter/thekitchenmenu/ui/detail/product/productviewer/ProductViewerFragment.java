@@ -1,7 +1,6 @@
-package com.example.peter.thekitchenmenu.ui.detail.product.viewer;
+package com.example.peter.thekitchenmenu.ui.detail.product.productviewer;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,7 +20,7 @@ public class ProductViewerFragment extends Fragment {
 
     private static final String TAG = "tkm-ProductViewerFrag";
 
-    public static final String ARGUMENT_PRODUCT_ID = "PRODUCT_ID";
+    private static final String ARGUMENT_PRODUCT_ID = "PRODUCT_ID";
 
     private ProductViewerDetailFragmentBinding binding;
     private ProductViewerViewModel productViewerViewModel;

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.example.peter.thekitchenmenu.R;
 
+import com.example.peter.thekitchenmenu.data.model.ProductModel;
 import com.example.peter.thekitchenmenu.databinding.ProductCatalogAllFragmentBinding;
 
 import androidx.annotation.NonNull;
@@ -38,14 +39,13 @@ public class ProductCatalogAllFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        viewModel.getProductModels().observe(requireActivity(), productModels -> {
-            if (productModels != null) {
-                adapter.setProductModels(productModels);
+        viewModel.getProductModelList().observe(requireActivity(), productModelList -> {
+            if (productModelList != null) {
+                adapter.setProductModels(productModelList);
             }
         });
 
         viewModel.getSearchQueryEvent().observe(requireActivity(), searchQuery -> {
-            Log.d(TAG, "onResume: searchQuery=" + searchQuery);
             adapter.getFilter().filter(searchQuery);
         });
     }

@@ -14,14 +14,33 @@ import static androidx.core.util.Preconditions.checkNotNull;
 
 public abstract class Repository<T extends TkmEntity> implements DataSource<T> {
 
-    private static final String TAG = "tkm-RepositoryAbstract";
-    protected DataSource remoteDataSource;
-    protected DataSource localDataSource;
-    protected Map<String, T> entityCache;
-    protected boolean cacheIsDirty;
+    private static final String TAG = "tkm-Repository";
+
+//    public static Repository INSTANCE = null;
+
+    DataSource remoteDataSource;
+    DataSource localDataSource;
+    private Map<String, T> entityCache;
+    private boolean cacheIsDirty;
+
+//    private Repository(@NonNull DataSource<T> remoteDataSource,
+//                       @NonNull DataSource<T> localDataSource) {
+//
+//        this.remoteDataSource = checkNotNull(remoteDataSource);
+//        this.localDataSource = checkNotNull(localDataSource);
+//    }
+
+//    public static <T extends TkmEntity> Repository<T> getInstance(
+//            DataSource<T> remoteDataSource,
+//            DataSource<T> localDataSource) {
+//
+//        if (INSTANCE == null)
+//            INSTANCE = new Repository<>(remoteDataSource, localDataSource);
+//        return INSTANCE;
+//    }
 
     @Override
-    public void getAll(@NonNull LoadAllCallback<T> callback) {
+    public void getAll(@NonNull GetAllCallback<T> callback) {
         checkNotNull(callback);
 
         if (entityCache != null && cacheIsDirty) {
@@ -32,7 +51,7 @@ public abstract class Repository<T extends TkmEntity> implements DataSource<T> {
             getItemsFromRemoteDataSource(callback);
         else {
             //noinspection unchecked
-            localDataSource.getAll(new LoadAllCallback<T>() {
+            localDataSource.getAll(new GetAllCallback<T>() {
                 @Override
                 public void onAllLoaded(List<T> entities) {
                     refreshCache(entities);
@@ -46,9 +65,9 @@ public abstract class Repository<T extends TkmEntity> implements DataSource<T> {
             });
         }
     }
-    private void getItemsFromRemoteDataSource(@NonNull final LoadAllCallback<T> callback) {
+    private void getItemsFromRemoteDataSource(@NonNull final GetAllCallback<T> callback) {
         //noinspection unchecked
-        remoteDataSource.getAll(new LoadAllCallback<T>() {
+        remoteDataSource.getAll(new GetAllCallback<T>() {
             @Override
             public void onAllLoaded(List<T> entities) {
                 refreshCache(entities);

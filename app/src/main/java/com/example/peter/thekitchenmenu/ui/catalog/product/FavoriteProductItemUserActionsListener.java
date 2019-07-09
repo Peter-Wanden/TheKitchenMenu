@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.ui.catalog.product;
 
-import com.example.peter.thekitchenmenu.data.model.FavoriteProductModel;
+import com.example.peter.thekitchenmenu.data.model.ProductModel;
 
 /**
  * Listener used with data binding to process user actions on a favorite product list item in a
@@ -8,7 +8,7 @@ import com.example.peter.thekitchenmenu.data.model.FavoriteProductModel;
  */
 public interface FavoriteProductItemUserActionsListener {
 
-    void onFavoriteProductClicked(FavoriteProductModel favoriteProduct);
+    void onFavoriteProductClicked(ProductModel productModel);
 
-    void onRemoveFromFavoritesClicked(FavoriteProductModel favoriteProductModel);
+    void onRemoveFromFavoritesClicked(ProductModel productModel);
 }

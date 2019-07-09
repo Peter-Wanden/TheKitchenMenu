@@ -10,15 +10,15 @@
 
         <variable
             name="listener"
-            type="com.example.peter.thekitchenmenu.ui.detail.product.viewer.FavoriteProductUserActionsListener" />
+            type="com.example.peter.thekitchenmenu.ui.detail.product.productviewer.FavoriteProductUserActionsListener" />
 
         <variable
             name="viewModelProduct"
-            type="com.example.peter.thekitchenmenu.ui.detail.product.viewer.ProductViewerViewModel" />
+            type="com.example.peter.thekitchenmenu.ui.detail.product.productviewer.ProductViewerViewModel" />
 
         <variable
             name="viewModelFavoriteProduct"
-            type="com.example.peter.thekitchenmenu.ui.detail.product.viewer.FavoriteProductViewerViewModel" />
+            type="com.example.peter.thekitchenmenu.ui.detail.product.productviewer.FavoriteProductViewerViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

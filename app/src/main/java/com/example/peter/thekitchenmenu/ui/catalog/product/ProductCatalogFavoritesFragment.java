@@ -1,12 +1,14 @@
 package com.example.peter.thekitchenmenu.ui.catalog.product;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.peter.thekitchenmenu.R;
 
+import com.example.peter.thekitchenmenu.data.model.ProductModel;
 import com.example.peter.thekitchenmenu.databinding.ProductCatalogFavoritesFragmentBinding;
 
 import androidx.annotation.NonNull;
@@ -35,9 +37,9 @@ public class ProductCatalogFavoritesFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        viewModel.getFavoriteProducts().observe(requireActivity(), favoriteProducts -> {
-            if (favoriteProducts != null) {
-                adapter.setFavoriteProductModels(favoriteProducts);
+        viewModel.getFavoriteProductModelList().observe(requireActivity(), modelList -> {
+            if (modelList != null) {
+                adapter.setProductModels(modelList);
             }
         });
 

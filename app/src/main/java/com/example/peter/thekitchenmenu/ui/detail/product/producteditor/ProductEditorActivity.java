@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.detail.product.editor;
+package com.example.peter.thekitchenmenu.ui.detail.product.producteditor;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,7 +13,7 @@ import com.example.peter.thekitchenmenu.data.model.ProductIdentityModel;
 import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
 import com.example.peter.thekitchenmenu.databinding.ProductEditorBinding;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryProduct;
-import com.example.peter.thekitchenmenu.ui.detail.product.viewer.ProductViewerActivity;
+import com.example.peter.thekitchenmenu.ui.detail.product.productviewer.ProductViewerActivity;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.ui.imageeditor.ImageEditorViewModel;
 

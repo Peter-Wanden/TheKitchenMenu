@@ -6,14 +6,14 @@ import androidx.annotation.NonNull;
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
-import com.example.peter.thekitchenmenu.data.repository.ProductDataSource;
+import com.example.peter.thekitchenmenu.data.repository.DataSource;
 
 import java.util.List;
 
 import static androidx.core.util.Preconditions.checkNotNull;
 
 
-public class ProductLocalDataSource implements ProductDataSource {
+public class ProductLocalDataSource implements DataSource<ProductEntity> {
 
     private static volatile ProductLocalDataSource INSTANCE;
     private ProductEntityDao productDao;
@@ -37,30 +37,32 @@ public class ProductLocalDataSource implements ProductDataSource {
     }
 
     /**
-     * Note: {@link LoadProductsCallback#onDataNotAvailable()} is fired if the database doesn't
-     * exist or the table is empty
+     * Note: {@link GetAllCallback#onDataNotAvailable()} is fired if the
+     * database doesn't exist or the table is empty
      */
     @Override
-    public void getProducts(LoadProductsCallback callback) {
+    public void getAll(@NonNull GetAllCallback<ProductEntity> callback) {
         Runnable getAllProductsRunnable = () -> {
             final List<ProductEntity> products = productDao.getAll();
             appExecutors.mainThread().execute(() -> {
                 if (products.isEmpty())
                     callback.onDataNotAvailable(); // if new or empty table
                 else
-                    callback.onProductsLoaded(products);
+                    callback.onAllLoaded(products);
             });
         };
         appExecutors.diskIO().execute(getAllProductsRunnable);
     }
 
     @Override
-    public void getProduct(@NonNull String productId, @NonNull GetProductCallback callback) {
+    public void getById(@NonNull String productId,
+                        @NonNull GetEntityCallback<ProductEntity> callback) {
+
         Runnable getProductByIdRunnable = () -> {
             final ProductEntity product = productDao.getById(productId);
             appExecutors.mainThread().execute(() -> {
                 if (product != null)
-                    callback.onProductLoaded(product);
+                    callback.onEntityLoaded(product);
                 else
                     callback.onDataNotAvailable();
             });
@@ -69,31 +71,30 @@ public class ProductLocalDataSource implements ProductDataSource {
     }
 
     @Override
-    public void saveProduct(ProductEntity product) {
+    public void save(@NonNull ProductEntity product) {
         checkNotNull(product);
         Runnable saveProductRunnable = () -> productDao.insert(product);
         appExecutors.diskIO().execute(saveProductRunnable);
     }
 
     @Override
-    public void refreshProducts() {
-        // Not required because the {@link ProductRepository} handles the logic of refreshing the
+    public void refreshData() {
+        // Not required because the {@link Repository} handles the logic of refreshing the
         // tasks from all the available data sources.
     }
 
     @Override
-    public void deleteAllProducts() {
+    public void deleteAll() {
         Runnable deleteAllRunnable = () -> productDao.deleteProducts();
         appExecutors.diskIO().execute(deleteAllRunnable);
     }
 
     @Override
-    public void deleteProduct(@NonNull final String productId) {
+    public void deleteById(@NonNull final String productId) {
         Runnable deleteProductRunnable = () -> productDao.deleteById(productId);
         appExecutors.diskIO().execute(deleteProductRunnable);
     }
 
-    @Override
     public Cursor getMatchingProducts(String searchQuery) {
         return productDao.findProductsThatMatch(searchQuery);
     }

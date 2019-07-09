@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.detail.product.viewer;
+package com.example.peter.thekitchenmenu.ui.detail.product.productviewer;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,9 +16,9 @@ import com.example.peter.thekitchenmenu.databinding.ProductViewerActivityBinding
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryProduct;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryFavoriteProduct;
 import com.example.peter.thekitchenmenu.ui.catalog.product.ProductCatalogActivity;
-import com.example.peter.thekitchenmenu.ui.detail.product.favoriteeditor.FavoriteProductEditorActivity;
-import com.example.peter.thekitchenmenu.ui.detail.product.favoriteeditor.FavoriteProductEditorFragment;
-import com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductEditorActivity;
+import com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorActivity;
+import com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorFragment;
+import com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductEditorActivity;
 import com.example.peter.thekitchenmenu.utils.ActivityUtils;
 
 public class ProductViewerActivity
@@ -28,6 +28,7 @@ public class ProductViewerActivity
     private static final String TAG = "tkm-ProductViewerAct";
 
     public static final String EXTRA_PRODUCT_ID = "PRODUCT_ID";
+    public static final String EXTRA_FAVORITE_PRODUCT_ID = "FAVORITE_PRODUCT_ID";
     public static final String EXTRA_NEW_PRODUCT_ID = "NEW_PRODUCT_ID";
     public static final int REQUEST_VIEW_PRODUCT = 1;
     public static final int REQUEST_REVIEW_PRODUCT = 2;
@@ -45,6 +46,8 @@ public class ProductViewerActivity
         super.onCreate(savedInstanceState);
 
         String productId = "";
+        String favoriteProductId = "";
+
         if (getIntent().getStringExtra(EXTRA_PRODUCT_ID) != null) {
             setTitle(R.string.activity_title_view_product);
             productId = getIntent().getStringExtra(EXTRA_PRODUCT_ID);
@@ -54,10 +57,15 @@ public class ProductViewerActivity
             productId = getIntent().getStringExtra(EXTRA_NEW_PRODUCT_ID);
             productAdded = true;
         }
+
+        if (getIntent().getStringExtra(EXTRA_FAVORITE_PRODUCT_ID) != null) {
+            favoriteProductId = getIntent().getStringExtra(EXTRA_FAVORITE_PRODUCT_ID);
+        }
+
         initialiseBindings();
         setupToolbar();
         setupViewModels();
-        addFragments(productId);
+        addFragments(productId, favoriteProductId);
     }
 
     private void initialiseBindings() {
@@ -66,6 +74,7 @@ public class ProductViewerActivity
 
     private void setupToolbar() {
         setSupportActionBar(binding.productViewerActivityToolbar);
+
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
@@ -94,7 +103,7 @@ public class ProductViewerActivity
         return ViewModelProviders.of(activity, factory).get(FavoriteProductViewerViewModel.class);
     }
 
-    private void addFragments(String productId) {
+    private void addFragments(String productId, String favoriteProductId) {
 
         ProductViewerFragment productViewerFragment =
                 findOrReplaceViewerFragment(productId);
@@ -105,7 +114,7 @@ public class ProductViewerActivity
                 R.id.product_viewer_content_frame);
 
         FavoriteProductViewerFragment favoriteProductViewerFragment =
-                findOrReplaceFavoriteProductViewerFragment(productId);
+                findOrReplaceFavoriteProductViewerFragment(favoriteProductId);
 
         ActivityUtils.replaceFragmentInActivity(
                 getSupportFragmentManager(),
@@ -119,19 +128,21 @@ public class ProductViewerActivity
         ProductViewerFragment fragment = (ProductViewerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.product_viewer_content_frame);
 
-        if (fragment == null) fragment = ProductViewerFragment.newInstance(productId);
+        if (fragment == null)
+            fragment = ProductViewerFragment.newInstance(productId);
         return fragment;
     }
 
     @NonNull
     private FavoriteProductViewerFragment findOrReplaceFavoriteProductViewerFragment(
-            String productId) {
+            String favoriteProductId) {
 
         FavoriteProductViewerFragment fragment = (FavoriteProductViewerFragment)
                 getSupportFragmentManager().findFragmentById(
                         R.id.favorite_product_viewer_content_frame);
 
-        if (fragment == null) fragment = FavoriteProductViewerFragment.newInstance(productId);
+        if (fragment == null)
+            fragment = FavoriteProductViewerFragment.newInstance(favoriteProductId);
         return fragment;
     }
 

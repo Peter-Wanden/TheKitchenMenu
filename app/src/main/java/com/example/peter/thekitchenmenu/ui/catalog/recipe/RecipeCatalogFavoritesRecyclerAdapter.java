@@ -10,11 +10,8 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.data.model.FavoriteProductModel;
 import com.example.peter.thekitchenmenu.data.model.FavoriteRecipeModel;
-import com.example.peter.thekitchenmenu.databinding.FavoriteProductListItemBinding;
 import com.example.peter.thekitchenmenu.databinding.FavoriteRecipeListItemBinding;
-import com.example.peter.thekitchenmenu.ui.catalog.product.FavoriteProductItemUserActionsListener;
 
 import java.util.ArrayList;
 import java.util.List;

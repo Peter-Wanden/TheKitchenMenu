@@ -8,7 +8,7 @@
 
         <variable
             name="viewModel"
-            type="com.example.peter.thekitchenmenu.ui.detail.product.editor.ProductIdentityViewModel" />
+            type="com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductIdentityViewModel" />
 
         <variable
             name="identityModel"

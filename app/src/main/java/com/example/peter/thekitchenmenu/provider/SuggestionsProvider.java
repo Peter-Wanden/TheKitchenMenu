@@ -7,8 +7,9 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
 
+import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
-import com.example.peter.thekitchenmenu.data.repository.ProductRepository;
+import com.example.peter.thekitchenmenu.data.repository.Repository;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,29 +34,36 @@ public class SuggestionsProvider extends ContentProvider {
 
     @Nullable
     @Override
-    public Cursor query(@NonNull Uri uri,
-                        @Nullable String[] projection,
-                        @Nullable String selection,
-                        @Nullable String[] selectionArgs,
-                        @Nullable String sortOrder) {
-
-        // Match the Uri.
-        final int matchCode = MATCHER.match(uri);
-        if (matchCode == SEARCH_SUGGEST) {
-
-            if (selectionArgs == null) {
-                throw new IllegalArgumentException(
-                        "selectionArgs must be provided for the URI: " + uri);
-            }
-
-            // Get the cursor async and append a wildcard.
-            ProductRepository repository = DatabaseInjection.provideProductsRepository(getContext());
-            return repository.getMatchingProducts(selectionArgs[0] + "*");
-
-        } else {
-            throw new IllegalArgumentException("Unknown URI: " + uri);
-        }
+    public Cursor query(@NonNull Uri uri, @Nullable String[] strings, @Nullable String s, @Nullable String[] strings1, @Nullable String s1) {
+        return null;
     }
+
+
+//    @Nullable
+//    @Override
+//    public Cursor query(@NonNull Uri uri,
+//                        @Nullable String[] projection,
+//                        @Nullable String selection,
+//                        @Nullable String[] selectionArgs,
+//                        @Nullable String sortOrder) {
+//
+//        // Match the Uri.
+//        final int matchCode = MATCHER.match(uri);
+//        if (matchCode == SEARCH_SUGGEST) {
+//
+//            if (selectionArgs == null) {
+//                throw new IllegalArgumentException(
+//                        "selectionArgs must be provided for the URI: " + uri);
+//            }
+//
+//            // Get the cursor async and append a wildcard.
+//            Repository<ProductEntity> repository = DatabaseInjection.provideProductsDataSource(getContext());
+////            return repository.getMatchingProducts(selectionArgs[0] + "*");
+//
+//        } else {
+//            throw new IllegalArgumentException("Unknown URI: " + uri);
+//        }
+//    }
 
     @Nullable
     @Override

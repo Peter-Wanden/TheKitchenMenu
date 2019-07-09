@@ -1,19 +1,28 @@
 package com.example.peter.thekitchenmenu.data.model;
 
+import com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 
 public class ProductModel {
 
-    private ProductEntity product;
+    private ProductEntity productEntity;
+    private FavoriteProductEntity favoriteProductEntity;
     private boolean isFavorite;
-    private String favoriteProductId;
 
-    public ProductEntity getProduct() {
-        return product;
+    public ProductEntity getProductEntity() {
+        return productEntity;
     }
 
-    public void setProduct(ProductEntity product) {
-        this.product = product;
+    public void setProductEntity(ProductEntity productEntity) {
+        this.productEntity = productEntity;
+    }
+
+    public FavoriteProductEntity getFavoriteProductEntity() {
+        return favoriteProductEntity;
+    }
+
+    public void setFavoriteProductEntity(FavoriteProductEntity favoriteProductEntity) {
+        this.favoriteProductEntity = favoriteProductEntity;
     }
 
     public boolean isFavorite() {
@@ -22,13 +31,5 @@ public class ProductModel {
 
     public void setFavorite(boolean favorite) {
         isFavorite = favorite;
-    }
-
-    public String getFavoriteProductId() {
-        return favoriteProductId;
-    }
-
-    public void setFavoriteProductId(String favoriteProductId) {
-        this.favoriteProductId = favoriteProductId;
     }
 }

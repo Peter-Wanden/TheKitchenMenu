@@ -1,6 +1,7 @@
-package com.example.peter.thekitchenmenu.ui.detail.product.viewer;
+package com.example.peter.thekitchenmenu.ui.detail.product.productviewer;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,18 +17,18 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class FavoriteProductViewerFragment extends Fragment {
 
-    private static final String TAG = "tkm-FavProductViewerFrag";
+    private static final String TAG = "tkm-FavProdViewerFrag";
 
-    public static final String ARGUMENT_PRODUCT_ID = "PRODUCT_ID";
+    private static final String ARGUMENT_FAVORITE_PRODUCT_ID = "PRODUCT_ID";
 
     private FavoriteProductViewerBinding binding;
     private FavoriteProductViewerViewModel viewModel;
     private FloatingActionButton fab;
 
-    static FavoriteProductViewerFragment newInstance(String productId) {
+    static FavoriteProductViewerFragment newInstance(String favoriteProductId) {
 
         Bundle arguments = new Bundle();
-        arguments.putString(ARGUMENT_PRODUCT_ID, productId);
+        arguments.putString(ARGUMENT_FAVORITE_PRODUCT_ID, favoriteProductId);
         FavoriteProductViewerFragment fragment = new FavoriteProductViewerFragment();
         fragment.setArguments(arguments);
         return fragment;
@@ -36,7 +37,9 @@ public class FavoriteProductViewerFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (getArguments() !=null) viewModel.start(getArguments().getString(ARGUMENT_PRODUCT_ID));
+
+        if (getArguments() != null)
+            viewModel.start(getArguments().getString(ARGUMENT_FAVORITE_PRODUCT_ID));
     }
 
     @Nullable
@@ -77,6 +80,7 @@ public class FavoriteProductViewerFragment extends Fragment {
         viewModel.getSetFabIcon().observe(this, this::setFabIcon);
     }
 
+    // todo - move to viewModel, see TODO
     private void setFabIcon(boolean setEditIcon) {
         if (setEditIcon)
             fab.setImageResource(R.drawable.ic_edit_white);

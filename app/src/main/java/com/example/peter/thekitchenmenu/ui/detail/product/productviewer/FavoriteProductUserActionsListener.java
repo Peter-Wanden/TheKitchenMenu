@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.detail.product.viewer;
+package com.example.peter.thekitchenmenu.ui.detail.product.productviewer;
 
 public interface FavoriteProductUserActionsListener {
 

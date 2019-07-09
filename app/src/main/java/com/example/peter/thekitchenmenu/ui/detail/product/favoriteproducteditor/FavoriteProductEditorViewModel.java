@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.detail.product.favoriteeditor;
+package com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor;
 
 import android.app.Application;
 import android.util.Log;
@@ -6,7 +6,6 @@ import android.util.Log;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
-import com.example.peter.thekitchenmenu.data.repository.FavoriteProductsRepository;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 import com.example.peter.thekitchenmenu.utils.TextValidationHandler;
 import com.google.android.gms.common.util.Strings;
@@ -22,7 +21,7 @@ import java.text.NumberFormat;
 
 public class FavoriteProductEditorViewModel
         extends AndroidViewModel
-        implements DataSource.GetEntityCallback {
+        implements DataSource.GetEntityCallback<FavoriteProductEntity> {
 
     private static final String TAG = "tkm-FavProductEditorVM";
 
@@ -48,17 +47,19 @@ public class FavoriteProductEditorViewModel
     private final SingleLiveEvent<Void> favoriteProductSaved = new SingleLiveEvent<>();
 
     private Application appContext;
-    private FavoriteProductsRepository repository;
+    private DataSource<FavoriteProductEntity> favoriteProductEntityDataSource;
 
     private String productId;
     private boolean isNewFavoriteProduct;
     private boolean dataHasLoaded;
 
-    public FavoriteProductEditorViewModel(@NonNull Application application,
-                                          @NonNull FavoriteProductsRepository repository) {
+    public FavoriteProductEditorViewModel(
+            @NonNull Application application,
+            @NonNull DataSource<FavoriteProductEntity> favoriteProductEntityDataSource) {
+
         super(application);
         this.appContext = application;
-        this.repository = repository;
+        this.favoriteProductEntityDataSource = favoriteProductEntityDataSource;
 
         retailer.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
@@ -112,20 +113,19 @@ public class FavoriteProductEditorViewModel
         isNewFavoriteProduct = false;
         dataIsLoading.set(true);
 
-        repository.getById(favoriteProductId, this);
+        favoriteProductEntityDataSource.getById(favoriteProductId, this);
     }
 
     @Override
-    public void onEntityLoaded(Object o) {
+    public void onEntityLoaded(FavoriteProductEntity favoriteProductEntity) {
         Log.d(TAG, "onFavoriteProductLoaded: ");
 
-        FavoriteProductEntity favoriteProduct = (FavoriteProductEntity) o;
-        if (favoriteProduct != null) {
-            createDate = favoriteProduct.getCreateDate();
-            retailer.set(favoriteProduct.getRetailer());
-            locationRoom.set(favoriteProduct.getLocationRoom());
-            locationInRoom.set(favoriteProduct.getLocationInRoom());
-            price.set(favoriteProduct.getPrice());
+        if (favoriteProductEntity != null) {
+            createDate = favoriteProductEntity.getCreateDate();
+            retailer.set(favoriteProductEntity.getRetailer());
+            locationRoom.set(favoriteProductEntity.getLocationRoom());
+            locationInRoom.set(favoriteProductEntity.getLocationInRoom());
+            price.set(favoriteProductEntity.getPrice());
 
             dataIsLoading.set(false);
             dataHasLoaded = true;
@@ -276,14 +276,14 @@ public class FavoriteProductEditorViewModel
     }
 
     private void createFavoriteProduct(FavoriteProductEntity favoriteProduct) {
-        repository.save(favoriteProduct);
+        favoriteProductEntityDataSource.save(favoriteProduct);
         favoriteProductSaved.call();
     }
 
     private void updateFavoriteProduct(FavoriteProductEntity favoriteProduct) {
         if (isNewFavoriteProduct)
             throw new RuntimeException("updateFavoriteProduct called but is new favorite Product.");
-        repository.save(favoriteProduct);
+        favoriteProductEntityDataSource.save(favoriteProduct);
         favoriteProductSaved.call();
     }
 

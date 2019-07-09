@@ -96,7 +96,7 @@
 
         <!-- Activity view of a single productEntities details -->
         <activity
-            android:name=".ui.detail.product.editor.ProductEditorActivity"
+            android:name=".ui.detail.product.producteditor.ProductEditorActivity"
             android:theme="@style/AppTheme">
         </activity>
 
@@ -140,12 +140,12 @@
         </activity>
 
         <activity
-            android:name=".ui.detail.product.viewer.ProductViewerActivity"
+            android:name=".ui.detail.product.productviewer.ProductViewerActivity"
             android:label="@string/activity_title_view_product"
             android:theme="@style/AppTheme">
         </activity>
 
-        <activity android:name=".ui.detail.product.favoriteeditor.FavoriteProductEditorActivity"
+        <activity android:name=".ui.detail.product.favoriteproducteditor.FavoriteProductEditorActivity"
             android:theme="@style/AppTheme">
         </activity>
 

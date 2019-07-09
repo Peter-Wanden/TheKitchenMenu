@@ -5,9 +5,9 @@ import android.database.Cursor;
 import androidx.annotation.NonNull;
 
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
-import com.example.peter.thekitchenmenu.data.repository.ProductDataSource;
+import com.example.peter.thekitchenmenu.data.repository.DataSource;
 
-public class ProductRemoteDataSource implements ProductDataSource {
+public class ProductRemoteDataSource implements DataSource<ProductEntity> {
 
     private static ProductRemoteDataSource INSTANCE;
 
@@ -18,37 +18,38 @@ public class ProductRemoteDataSource implements ProductDataSource {
     }
 
     @Override
-    public void getProducts(final @NonNull LoadProductsCallback callback) {
+    public void getAll(@NonNull GetAllCallback<ProductEntity> callback) {
         callback.onDataNotAvailable();
     }
 
     @Override
-    public void getProduct(@NonNull String productId, final @NonNull GetProductCallback callback) {
+    public void getById(
+            @NonNull String productId,
+            @NonNull GetEntityCallback<ProductEntity> callback) {
         callback.onDataNotAvailable();
     }
 
     @Override
-    public void saveProduct(ProductEntity product) {
+    public void save(@NonNull ProductEntity product) {
 
     }
 
     @Override
-    public void refreshProducts() {
-        // Not required because the {@link ProductRepository} handles the logic of refreshing the
+    public void refreshData() {
+        // Not required because the {@link Repository} handles the logic of refreshing the
         // products from all the available data sources.
     }
 
     @Override
-    public void deleteAllProducts() {
+    public void deleteAll() {
 
     }
 
     @Override
-    public void deleteProduct(@NonNull String productId) {
+    public void deleteById(@NonNull String productId) {
 
     }
 
-    @Override
     public Cursor getMatchingProducts(String searchQuery) {
         // Managed by the local data source
         return null;

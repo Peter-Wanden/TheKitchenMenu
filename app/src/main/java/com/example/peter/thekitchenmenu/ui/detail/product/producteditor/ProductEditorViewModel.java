@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.detail.product.editor;
+package com.example.peter.thekitchenmenu.ui.detail.product.producteditor;
 
 import android.app.Application;
 
@@ -7,8 +7,7 @@ import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.data.model.ProductIdentityModel;
 import com.example.peter.thekitchenmenu.data.model.ImageModel;
 import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
-import com.example.peter.thekitchenmenu.data.repository.ProductDataSource;
-import com.example.peter.thekitchenmenu.data.repository.ProductRepository;
+import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 
@@ -19,7 +18,7 @@ public class ProductEditorViewModel extends ObservableViewModel {
 
     private static final String TAG = "tkm-EditorViewModel";
 
-    private ProductRepository repository;
+    private DataSource<ProductEntity> productEntityDataSource;
     private AddEditProductNavigator navigator;
 
     private final MutableLiveData<ProductEntity> existingProductEntity = new MutableLiveData<>();
@@ -35,9 +34,10 @@ public class ProductEditorViewModel extends ObservableViewModel {
             measurementModelIsValid = false;
     // TODO - Change category and shelf life to an enum
 
-    public ProductEditorViewModel(@NonNull Application application, ProductRepository repository) {
+    public ProductEditorViewModel(@NonNull Application application,
+                                  DataSource<ProductEntity> productEntityDataSource) {
         super(application);
-        this.repository = repository;
+        this.productEntityDataSource = productEntityDataSource;
     }
 
     void setNavigator(AddEditProductNavigator navigator) {
@@ -49,9 +49,9 @@ public class ProductEditorViewModel extends ObservableViewModel {
     }
 
     void editProduct(String productId) {
-        repository.getProduct(productId, new ProductDataSource.GetProductCallback() {
+        productEntityDataSource.getById(productId, new DataSource.GetEntityCallback<ProductEntity>() {
             @Override
-            public void onProductLoaded(ProductEntity productEntity) {
+            public void onEntityLoaded(ProductEntity productEntity) {
                 existingProductEntity.setValue(productEntity);
             }
 
@@ -107,7 +107,9 @@ public class ProductEditorViewModel extends ObservableViewModel {
 
     void saveProduct() {
 
+        @NonNull
         ProductEntity productEntity;
+
         if (isExistingProduct) {
             productEntity = ProductEntity.updateProduct(
                     existingProductEntity.getValue().getId(),
@@ -142,7 +144,7 @@ public class ProductEditorViewModel extends ObservableViewModel {
             );
         }
 
-        repository.saveProduct(productEntity);
+        productEntityDataSource.save(productEntity);
         navigator.reviewProduct(productEntity.getId());
     }
 

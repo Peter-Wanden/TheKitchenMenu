@@ -72,7 +72,7 @@ public class ProductCatalogAllRecyclerAdapter
                 String filterPattern = constraint.toString().toLowerCase().trim();
 
                 for (ProductModel model : productModelListFull) {
-                    String description = model.getProduct().getDescription().toLowerCase();
+                    String description = model.getProductEntity().getDescription().toLowerCase();
 
                     if (description.contains(filterPattern)) {
                         filteredList.add(model);
@@ -110,17 +110,17 @@ public class ProductCatalogAllRecyclerAdapter
         ProductItemUserActionsListener listener = new ProductItemUserActionsListener() {
             @Override
             public void onProductClicked(ProductModel productModel) {
-                viewModel.getOpenProductEvent().setValue(productModel.getProduct().getId());
+                viewModel.getViewProductEvent().setValue(productModel);
             }
 
             @Override
             public void onAddToFavoritesClicked(ProductModel productModel) {
-                viewModel.getAddToFavoritesEvent().setValue(productModel.getProduct().getId());
+                viewModel.getAddToFavoritesEvent().setValue(productModel.getProductEntity().getId());
             }
 
             @Override
             public void onRemoveFromFavoritesClicked(ProductModel productModel) {
-                viewModel.removeFromFavorites(productModel.getFavoriteProductId());
+                viewModel.removeFromFavorites(productModel.getFavoriteProductEntity().getId());
             }
         };
 

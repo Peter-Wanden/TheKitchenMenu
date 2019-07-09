@@ -8,8 +8,8 @@
         <import type="android.view.View.OnClickListener"/>
 
         <variable
-            name="favoriteProductModel"
-            type="com.example.peter.thekitchenmenu.data.model.FavoriteProductModel" />
+            name="productModel"
+            type="com.example.peter.thekitchenmenu.data.model.ProductModel" />
 
         <variable
             name="listener"
@@ -29,7 +29,7 @@
         android:foregroundGravity="center"
         app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="4dp"
-        android:onClick="@{() -> listener.onFavoriteProductClicked(favoriteProductModel)}" >
+        android:onClick="@{() -> listener.onFavoriteProductClicked(productModel)}" >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/favorite_product_list_item_cl"
@@ -53,7 +53,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Cirio canned chopped tomatoes"
-                android:text="@{favoriteProductModel.product.description}"
+                android:text="@{productModel.productEntity.description}"
                 />
 
             <ImageView
@@ -68,8 +68,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:webImageUrl='@{favoriteProductModel.product.webImageUrl}'
-                app:remoteSmallImageUri='@{favoriteProductModel.product.remoteSmallImageUri}' />
+                app:webImageUrl='@{productModel.productEntity.webImageUrl}'
+                app:remoteSmallImageUri='@{productModel.productEntity.remoteSmallImageUri}' />
 
             <TextView
                 android:id="@+id/product_list_item_measurement"
@@ -82,9 +82,9 @@
                 android:textColor="@color/grey"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/product_list_item_description"
-                app:setLabelForSubtypeInt="@{favoriteProductModel.product.unitOfMeasureSubtype}"
-                app:formatBaseUnits="@{favoriteProductModel.product.baseUnits}"
-                app:formatNumberOfItems="@{favoriteProductModel.product.numberOfProducts}"
+                app:setLabelForSubtypeInt="@{productModel.productEntity.unitOfMeasureSubtype}"
+                app:formatBaseUnits="@{productModel.productEntity.baseUnits}"
+                app:formatNumberOfItems="@{productModel.productEntity.numberOfProducts}"
                 tools:text="400ml"
                 />
 
@@ -101,7 +101,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 tools:text="£24.99"
-                app:stringToCurrency="@{favoriteProductModel.favoriteProduct.price}"/>
+                app:stringToCurrency="@{productModel.favoriteProductEntity.price}"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/favorite_product_list_item_last_updated_label"
@@ -131,7 +131,7 @@
                 app:layout_constraintStart_toEndOf="@+id/favorite_product_list_item_last_updated_label"
                 app:layout_constraintTop_toTopOf="@id/favorite_product_list_item_price"
                 tools:text="01 Apr 2019"
-                app:longToDate="@{favoriteProductModel.favoriteProduct.lastUpdate}"/>
+                app:longToDate="@{productModel.favoriteProductEntity.lastUpdate}"/>
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/product_list_item_remove_from_favorites"
@@ -140,7 +140,7 @@
                 android:layout_margin="8dp"
                 android:src="@drawable/ic_list_add_check"
                 android:tint="@color/primaryColor"
-                android:onClick="@{() -> listener.onRemoveFromFavoritesClicked(favoriteProductModel)}"
+                android:onClick="@{() -> listener.onRemoveFromFavoritesClicked(productModel)}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 />

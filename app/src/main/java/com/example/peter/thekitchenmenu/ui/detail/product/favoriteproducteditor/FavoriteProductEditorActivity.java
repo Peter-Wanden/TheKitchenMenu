@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.detail.product.favoriteeditor;
+package com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor;
 
 import android.os.Bundle;
 
@@ -14,8 +14,8 @@ import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.FavoriteProductEditorActivityBinding;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryProduct;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryFavoriteProduct;
-import com.example.peter.thekitchenmenu.ui.detail.product.viewer.ProductViewerFragment;
-import com.example.peter.thekitchenmenu.ui.detail.product.viewer.ProductViewerViewModel;
+import com.example.peter.thekitchenmenu.ui.detail.product.productviewer.ProductViewerFragment;
+import com.example.peter.thekitchenmenu.ui.detail.product.productviewer.ProductViewerViewModel;
 import com.example.peter.thekitchenmenu.utils.ActivityUtils;
 
 public class FavoriteProductEditorActivity

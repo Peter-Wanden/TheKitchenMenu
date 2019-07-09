@@ -124,14 +124,14 @@ public final class FavoriteProductEntity implements TkmEntity {
         if (o == null || getClass() != o.getClass()) return false;
         FavoriteProductEntity entity = (FavoriteProductEntity) o;
 
-        return Objects.equal(id,                entity.id)              &&
-               Objects.equal(productId,         entity.productId)       &&
-               Objects.equal(retailer,          entity.retailer)        &&
-               Objects.equal(locationRoom,      entity.locationRoom)    &&
-               Objects.equal(locationInRoom,    entity.locationInRoom)  &&
-               Objects.equal(price,             entity.price)           &&
-               Objects.equal(createDate,        entity.createDate)      &&
-               Objects.equal(lastUpdate,        entity.lastUpdate);
+        return Objects.equal(id, entity.id) &&
+                Objects.equal(productId, entity.productId) &&
+                Objects.equal(retailer, entity.retailer) &&
+                Objects.equal(locationRoom, entity.locationRoom) &&
+                Objects.equal(locationInRoom, entity.locationInRoom) &&
+                Objects.equal(price, entity.price) &&
+                Objects.equal(createDate, entity.createDate) &&
+                Objects.equal(lastUpdate, entity.lastUpdate);
     }
 
     public boolean isEmpty() {

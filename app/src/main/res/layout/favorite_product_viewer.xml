@@ -9,7 +9,7 @@
 
         <variable
             name="viewModel"
-            type="com.example.peter.thekitchenmenu.ui.detail.product.viewer.FavoriteProductViewerViewModel" />
+            type="com.example.peter.thekitchenmenu.ui.detail.product.productviewer.FavoriteProductViewerViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

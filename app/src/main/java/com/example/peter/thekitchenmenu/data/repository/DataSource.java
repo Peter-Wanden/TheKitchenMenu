@@ -2,13 +2,15 @@ package com.example.peter.thekitchenmenu.data.repository;
 
 import androidx.annotation.NonNull;
 
+import com.example.peter.thekitchenmenu.data.entity.TkmEntity;
+
 import java.util.List;
 
-public interface DataSource<T> {
+public interface DataSource<T extends TkmEntity> {
 
-    interface LoadAllCallback<T> {
+    interface GetAllCallback<E extends TkmEntity> {
 
-        void onAllLoaded(List<T> entities);
+        void onAllLoaded(List<E> entities);
 
         void onDataNotAvailable();
     }
@@ -20,7 +22,7 @@ public interface DataSource<T> {
         void onDataNotAvailable();
     }
 
-    void getAll(@NonNull LoadAllCallback<T> callback);
+    void getAll(@NonNull GetAllCallback<T> callback);
 
     void getById(@NonNull String id, @NonNull GetEntityCallback<T> callback);
 

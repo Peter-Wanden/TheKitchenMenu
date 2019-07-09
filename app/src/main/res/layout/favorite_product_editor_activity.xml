@@ -7,14 +7,14 @@
         <import type="android.view.View" />
         <variable
             name="viewModel"
-            type="com.example.peter.thekitchenmenu.ui.detail.product.favoriteeditor.FavoriteProductEditorViewModel" />
+            type="com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorViewModel" />
     </data>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context=".ui.detail.product.favoriteeditor.FavoriteProductEditorActivity">
+        tools:context=".ui.detail.product.favoriteproducteditor.FavoriteProductEditorActivity">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appbar"
