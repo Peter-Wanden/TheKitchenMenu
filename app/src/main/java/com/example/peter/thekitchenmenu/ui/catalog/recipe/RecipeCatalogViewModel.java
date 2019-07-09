@@ -9,8 +9,7 @@ import androidx.lifecycle.AndroidViewModel;
 
 import com.example.peter.thekitchenmenu.data.entity.FavoriteRecipeEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
-import com.example.peter.thekitchenmenu.data.repository.RecipeDataSource;
-import com.example.peter.thekitchenmenu.data.repository.RecipeRepository;
+import com.example.peter.thekitchenmenu.data.repository.DataSource;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -19,7 +18,7 @@ public class RecipeCatalogViewModel extends AndroidViewModel {
 
     private static final String TAG = "tkm-RecipeCatalogVM";
 
-    private RecipeRepository recipeRepository;
+    private DataSource<RecipeEntity> recipeRepository;
     private RecipeNavigator navigator;
 
     public ObservableBoolean dataLoading = new ObservableBoolean(); // todo - setup empty screen
@@ -31,7 +30,7 @@ public class RecipeCatalogViewModel extends AndroidViewModel {
     private boolean favoriteRecipesAreLoading;
 
     public RecipeCatalogViewModel(@NonNull Application application,
-                                  RecipeRepository recipeRepository) {
+                                  DataSource<RecipeEntity> recipeRepository) {
         super(application);
         this.recipeRepository = recipeRepository;
     }
@@ -64,10 +63,10 @@ public class RecipeCatalogViewModel extends AndroidViewModel {
         if (showLoadingUi)
             dataLoading.set(true);
 
-        if (forceUpdate)
-            recipeRepository.refresh();
+//        if (forceUpdate)
+//            recipeRepository.refresh();
 
-        recipeRepository.getAll(new RecipeDataSource.LoadAllCallback() {
+        recipeRepository.getAll(new DataSource.GetAllCallback<RecipeEntity>() {
             @Override
             public void onAllLoaded(List<RecipeEntity> recipeEntities) {
                 if (showLoadingUi)

@@ -4,13 +4,13 @@ import androidx.annotation.NonNull;
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
 import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
-import com.example.peter.thekitchenmenu.data.repository.RecipeDataSource;
+import com.example.peter.thekitchenmenu.data.repository.DataSource;
 
 import java.util.List;
 
 import static androidx.core.util.Preconditions.checkNotNull;
 
-public class RecipeLocalDataSource implements RecipeDataSource {
+public class RecipeLocalDataSource implements DataSource<RecipeEntity> {
 
     private static volatile RecipeLocalDataSource INSTANCE;
     private RecipeEntityDao recipeEntityDao;
@@ -34,7 +34,7 @@ public class RecipeLocalDataSource implements RecipeDataSource {
     }
 
     @Override
-    public void getAll(@NonNull LoadAllCallback callback) {
+    public void getAll(@NonNull GetAllCallback<RecipeEntity> callback) {
         Runnable runnable = () -> {
             final List<RecipeEntity> recipeEntityList = recipeEntityDao.getAll();
             appExecutors.mainThread().execute(() -> {
@@ -48,12 +48,12 @@ public class RecipeLocalDataSource implements RecipeDataSource {
     }
 
     @Override
-    public void getById(@NonNull String recipeId, @NonNull GetItemCallback callback) {
+    public void getById(@NonNull String recipeId, @NonNull GetEntityCallback<RecipeEntity> callback) {
         Runnable runnable = () -> {
             final RecipeEntity recipeEntity = recipeEntityDao.getById(recipeId);
             appExecutors.mainThread().execute(() -> {
                 if (recipeEntity != null)
-                    callback.onItemLoaded(recipeEntity);
+                    callback.onEntityLoaded(recipeEntity);
                 else
                     callback.onDataNotAvailable();
             });
@@ -69,8 +69,8 @@ public class RecipeLocalDataSource implements RecipeDataSource {
     }
 
     @Override
-    public void refresh() {
-        // Not required because the {@link RecipeRepository} handles the logic of refreshing the
+    public void refreshData() {
+        // Not required because the {@link RepositoryRecipe} handles the logic of refreshing the
         // tasks from all the available data sources.
     }
 

@@ -43,12 +43,12 @@ public class DatabaseInjection {
                                 database.favoriteProductEntityDao()));
     }
 
-    public static RecipeRepository provideRecipesRepository(@NonNull Context context) {
+    public static RepositoryRecipe provideRecipesRepository(@NonNull Context context) {
         checkNotNull(context);
 
         TKMDatabase database = TKMDatabase.getInstance(context, new AppExecutors());
 
-        return RecipeRepository.getInstance(
+        return RepositoryRecipe.getInstance(
                 RecipeRemoteDataSource.getInstance(),
                 RecipeLocalDataSource.getInstance(new AppExecutors(), database.recipeEntityDao()));
     }

@@ -3,9 +3,9 @@ package com.example.peter.thekitchenmenu.data.source.remote;
 import androidx.annotation.NonNull;
 
 import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
-import com.example.peter.thekitchenmenu.data.repository.RecipeDataSource;
+import com.example.peter.thekitchenmenu.data.repository.DataSource;
 
-public class RecipeRemoteDataSource implements RecipeDataSource {
+public class RecipeRemoteDataSource implements DataSource<RecipeEntity> {
 
     private static RecipeRemoteDataSource INSTANCE;
 
@@ -17,23 +17,23 @@ public class RecipeRemoteDataSource implements RecipeDataSource {
     }
 
     @Override
-    public void getAll(@NonNull LoadAllCallback callback) {
+    public void getAll(@NonNull GetAllCallback callback) {
         callback.onDataNotAvailable();
     }
 
     @Override
-    public void getById(@NonNull String recipeId, @NonNull GetItemCallback callback) {
+    public void getById(@NonNull String recipeId, @NonNull GetEntityCallback<RecipeEntity> callback) {
         callback.onDataNotAvailable();
     }
 
     @Override
     public void save(@NonNull RecipeEntity recipeEntity) {
-        // Not required because the {@link RecipeRepository} handles the logic of refreshing the
+        // Not required because the {@link RepositoryRecipe} handles the logic of refreshing the
         // recipes from all the available data sources.
     }
 
     @Override
-    public void refresh() {
+    public void refreshData() {
 
     }
 

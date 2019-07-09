@@ -11,16 +11,15 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
 import com.example.peter.thekitchenmenu.data.model.ImageModel;
 import com.example.peter.thekitchenmenu.data.model.RecipeIdentityModel;
-import com.example.peter.thekitchenmenu.data.repository.RecipeDataSource;
-import com.example.peter.thekitchenmenu.data.repository.RecipeRepository;
+import com.example.peter.thekitchenmenu.data.repository.DataSource;
 
 public class RecipeEditorViewModel
         extends AndroidViewModel
-        implements RecipeDataSource.GetItemCallback{
+        implements DataSource.GetEntityCallback<RecipeEntity>{
 
     private static final String TAG = "tkm-RecipeEditorVM";
 
-    private RecipeRepository recipeRepository;
+    private DataSource<RecipeEntity> recipeRepository;
     private RecipeEntity recipeEntity;
     private RecipeEntity tempRecipeEntity;
     MutableLiveData<ImageModel> imageModel = new MutableLiveData<>();
@@ -34,7 +33,7 @@ public class RecipeEditorViewModel
     private boolean dataHasLoaded = false;
 
     public RecipeEditorViewModel(@NonNull Application application,
-                                 RecipeRepository recipeRepository) {
+                                 DataSource<RecipeEntity> recipeRepository) {
         super(application);
         this.recipeRepository = recipeRepository;
 
@@ -60,7 +59,7 @@ public class RecipeEditorViewModel
         if (this.recipeId == null) {
             // No need to populate, it's a new recipe
             isNewRecipe = true;
-            onItemLoaded(tempRecipeEntity);
+            onEntityLoaded(tempRecipeEntity);
             return;
         }
         if (dataHasLoaded) {
@@ -73,7 +72,7 @@ public class RecipeEditorViewModel
     }
 
     @Override
-    public void onItemLoaded(RecipeEntity recipeEntity) {
+    public void onEntityLoaded(RecipeEntity recipeEntity) {
         this.recipeEntity = recipeEntity;
         dataLoading.set(false);
         dataHasLoaded = true;
