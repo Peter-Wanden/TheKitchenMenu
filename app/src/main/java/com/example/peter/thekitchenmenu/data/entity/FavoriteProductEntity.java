@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import com.google.android.gms.common.internal.Objects;
@@ -13,9 +14,11 @@ import com.google.android.gms.common.util.Strings;
 import java.util.Calendar;
 import java.util.UUID;
 
+import static com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity.PRODUCT_ID;
 import static com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity.TABLE_FAVORITE_PRODUCTS;
 
-@Entity(tableName = TABLE_FAVORITE_PRODUCTS)
+@Entity(tableName = TABLE_FAVORITE_PRODUCTS,
+        indices = {@Index(value = {PRODUCT_ID}, unique = true)})
 public final class FavoriteProductEntity implements TkmEntity {
 
     public static final String TAG = "FavoriteProductEntity";

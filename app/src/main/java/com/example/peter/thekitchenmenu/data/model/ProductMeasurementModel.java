@@ -11,6 +11,16 @@ public class ProductMeasurementModel {
     private int numberOfProducts = 1;
     private double baseUnits;
 
+    public ProductMeasurementModel(){}
+
+    public ProductMeasurementModel(MeasurementSubtype measurementSubtype,
+                                   int numberOfProducts,
+                                   double baseUnits) {
+        this.measurementSubtype = measurementSubtype;
+        this.numberOfProducts = numberOfProducts;
+        this.baseUnits = baseUnits;
+    }
+
     public MeasurementSubtype getMeasurementSubtype() {
         return measurementSubtype;
     }

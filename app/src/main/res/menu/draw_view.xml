@@ -14,7 +14,7 @@
             android:title="@string/nav_products"/>
         <item
             android:id="@+id/nav_planner"
-            android:icon="@drawable/ic_event_white"
+            android:icon="@drawable/ic_event"
             android:title="@string/meal_planner"/>
         <item
             android:id="@+id/nav_lists"

@@ -41,7 +41,6 @@ public class ProductIdentityEditorFragment extends Fragment {
         binding.setLifecycleOwner(this);
 
         setViewModel();
-        setObservers();
         setBindingInstanceVariables();
         setupSpinners();
         subscribeToEvents();
@@ -55,17 +54,8 @@ public class ProductIdentityEditorFragment extends Fragment {
                 get(ProductIdentityViewModel.class);
     }
 
-    private void setObservers() {
-        final Observer<ProductIdentityModel> identityModelObserver = identityModel -> {
-            binding.setIdentityModel(identityModel);
-            viewModel.setEditedIdentityModel(identityModel);
-        };
-        viewModel.getExistingIdentityModel().observe(this, identityModelObserver);
-    }
-
     private void setBindingInstanceVariables() {
         binding.setViewModel(viewModel);
-        binding.setIdentityModel(viewModel.getEditedIdentityModel());
     }
 
     private void subscribeToEvents() {

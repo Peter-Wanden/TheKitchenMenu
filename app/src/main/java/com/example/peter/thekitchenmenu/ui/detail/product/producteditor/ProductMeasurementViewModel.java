@@ -46,9 +46,10 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
     }
 
     void setMeasurementModel(ProductMeasurementModel measurementModel) {
+        // Always add a measurement in this order, subType - baseUnits - numberOfProducts
         setSubtype(measurementModel.getMeasurementSubtype());
-        setNumberOfProducts(measurementModel.getNumberOfProducts());
         setBaseUnits(measurementModel.getBaseUnits());
+        setNumberOfProducts(measurementModel.getNumberOfProducts());
     }
 
     @Bindable

@@ -1,5 +1,6 @@
 package com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,6 +15,7 @@ import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.FavoriteProductEditorActivityBinding;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryProduct;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryFavoriteProduct;
+import com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductEditorActivity;
 import com.example.peter.thekitchenmenu.ui.detail.product.productviewer.ProductViewerFragment;
 import com.example.peter.thekitchenmenu.ui.detail.product.productviewer.ProductViewerViewModel;
 import com.example.peter.thekitchenmenu.utils.ActivityUtils;
@@ -24,11 +26,8 @@ public class FavoriteProductEditorActivity
 
     private static final String TAG = "tkm-FavProductEditAct";
 
-    // Intent data
-    public static final String EXTRA_PRODUCT_ID = "PRODUCT_ID";
-    // Intent requests
+    public static final String EXTRA_FAVORITE_PRODUCT_ID = "FAVORITE_PRODUCT_ID";
     public static final int REQUEST_ADD_EDIT_FAVORITE_PRODUCT = 3;
-    // Intent results
     public static final int RESULT_ADD_EDIT_FAVORITE_PRODUCT_OK = RESULT_FIRST_USER + 1;
 
     private FavoriteProductEditorActivityBinding binding;
@@ -91,13 +90,12 @@ public class FavoriteProductEditorActivity
         String productId = null;
         String favoriteProductId = null;
 
-        if (getIntent().hasExtra(EXTRA_PRODUCT_ID)) {
-            productId = getIntent().getStringExtra(EXTRA_PRODUCT_ID);
+        if (getIntent().hasExtra(ProductEditorActivity.EXTRA_PRODUCT_ID)) {
+            productId = getIntent().getStringExtra(ProductEditorActivity.EXTRA_PRODUCT_ID);
         }
 
-        if (getIntent().hasExtra(FavoriteProductEditorFragment.ARGUMENT_FAVORITE_PRODUCT_ID)) {
-            favoriteProductId = getIntent().getStringExtra(
-                    FavoriteProductEditorFragment.ARGUMENT_FAVORITE_PRODUCT_ID);
+        if (getIntent().hasExtra(EXTRA_FAVORITE_PRODUCT_ID)) {
+            favoriteProductId = getIntent().getStringExtra(EXTRA_FAVORITE_PRODUCT_ID);
         }
 
         ProductViewerFragment productViewerFragment =
@@ -123,13 +121,15 @@ public class FavoriteProductEditorActivity
                 getSupportFragmentManager().
                 findFragmentById(R.id.product_viewer_contentFrame);
 
-        if (fragment == null) fragment = ProductViewerFragment.newInstance(productId);
+        if (fragment == null)
+            fragment = ProductViewerFragment.newInstance(productId);
 
         return fragment;
     }
 
     private FavoriteProductEditorFragment findOrCreateFavoriteProductEditorFragment(
             String productId, String favoriteProductId) {
+
         FavoriteProductEditorFragment fragment = (FavoriteProductEditorFragment)
                 getSupportFragmentManager().
                 findFragmentById(R.id.favorite_product_editor_contentFrame);
@@ -145,8 +145,8 @@ public class FavoriteProductEditorActivity
     }
 
     private void subscribeToNavigationChanges() {
-        favoriteProductEditorViewModel.getFavoriteProductSaved().observe(this, saved ->
-                FavoriteProductEditorActivity.this.onFavoriteProductSaved());
+        favoriteProductEditorViewModel.getFavoriteProductSaved().observe(
+                this, FavoriteProductEditorActivity.this::onFavoriteProductSaved);
     }
 
     private void setActivityTitle() {
@@ -156,8 +156,10 @@ public class FavoriteProductEditorActivity
     }
 
     @Override
-    public void onFavoriteProductSaved() {
-        setResult(RESULT_ADD_EDIT_FAVORITE_PRODUCT_OK);
+    public void onFavoriteProductSaved(String productId) {
+        Intent intent = new Intent();
+        intent.putExtra(EXTRA_FAVORITE_PRODUCT_ID, productId);
+        setResult(RESULT_ADD_EDIT_FAVORITE_PRODUCT_OK, intent);
         finish();
     }
 

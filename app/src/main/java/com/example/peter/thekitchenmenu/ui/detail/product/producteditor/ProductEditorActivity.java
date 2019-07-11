@@ -29,7 +29,7 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
 
     private static final String TAG = "tkm-EditorActivity";
 
-    public static final String EXTRA_PRODUCT_ID = "PRODUCT_ID";
+    public static final String EXTRA_PRODUCT_ID = "EXTRA_PRODUCT_ID";
     public static final int REQUEST_ADD_EDIT_PRODUCT = 5;
     public static final int RESULT_ADD_EDIT_PRODUCT_OK = RESULT_FIRST_USER + 4;
 
@@ -85,55 +85,54 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
 
     private void setObservers() {
 
-        // Dish out the entity values to the models
+        // Calve up the entity into models and set them to their respective view models
         final Observer<ProductEntity> productObserver = productEntity -> {
 
             if (productEntity != null) {
 
-                ImageModel imageModel = new ImageModel();
-                imageModel.setWebImageUrl(productEntity.getWebImageUrl());
-                imageModel.setRemoteSmallImageUri(imageModel.getRemoteSmallImageUri());
-                imageModel.setRemoteMediumImageUri(imageModel.getRemoteMediumImageUri());
-                imageModel.setRemoteLargeImageUri(imageModel.getRemoteLargeImageUri());
-
+                ImageModel imageModel = new ImageModel(
+                        productEntity.getRemoteLargeImageUri(),
+                        null,
+                        productEntity.getRemoteMediumImageUri(),
+                        null,
+                        productEntity.getRemoteSmallImageUri(),
+                        null,
+                        productEntity.getWebImageUrl()
+                );
                 imageEditorViewModel.getExistingImageModel().setValue(imageModel);
 
-                ProductIdentityModel identityModel = new ProductIdentityModel();
-                identityModel.setDescription(productEntity.getDescription());
-                identityModel.setShoppingListItemName(productEntity.getShoppingListItemName());
-                identityModel.setCategory(productEntity.getCategory());
-                identityModel.setShelfLife(productEntity.getShelfLife());
+                ProductIdentityModel identityModel = new ProductIdentityModel(
+                        productEntity.getDescription(),
+                        productEntity.getShoppingListItemName(),
+                        productEntity.getCategory(),
+                        productEntity.getShelfLife()
+                );
+                identityEditorViewModel.setIdentityModel(identityModel);
 
-                identityEditorViewModel.getExistingIdentityModel().setValue(identityModel);
-
-                ProductMeasurementModel measurementModel = new ProductMeasurementModel();
-                measurementModel.setMeasurementSubtype(
-                        MeasurementSubtype.values()[productEntity.getUnitOfMeasureSubtype()]);
-                measurementModel.setNumberOfProducts(productEntity.getNumberOfProducts());
-                measurementModel.setBaseUnits(productEntity.getBaseUnits());
-
+                ProductMeasurementModel measurementModel = new ProductMeasurementModel(
+                        MeasurementSubtype.values()[productEntity.getUnitOfMeasureSubtype()],
+                        productEntity.getNumberOfProducts(),
+                        productEntity.getBaseUnits()
+                );
                 measurementEditorViewModel.setMeasurementModel(measurementModel);
-                Log.d(TAG, "setObservers: measurementModel=" + measurementModel.toString());
             }
         };
 
         productEditorViewModel.getExistingProductEntity().observe(this, productObserver);
 
+        // Observe the models within their view models, set changes to the entity
         final Observer<ImageModel> imageModelObserver = imageModel ->
                 productEditorViewModel.setUpdatedImageModel(imageModel);
-
         imageEditorViewModel.getExistingImageModel().observe(
                 this, imageModelObserver);
 
         final Observer<ProductIdentityModel> identityModelObserver = IdentityModel ->
                 productEditorViewModel.setUpdatedIdentityModel(IdentityModel);
-
         identityEditorViewModel.getExistingIdentityModel().observe(
                 this, identityModelObserver);
 
         final Observer<ProductMeasurementModel> measurementModelObserver = measurementModel ->
                 productEditorViewModel.setUpdatedMeasurementModel(measurementModel);
-
         measurementEditorViewModel.getMeasurementModel().observe(
                 this, measurementModelObserver);
     }
@@ -147,15 +146,18 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
                 this, measurementModelIsValid ->
                         productEditorViewModel.setMeasurementModelIsValid(measurementModelIsValid));
 
-        productEditorViewModel.getShowSaveButtonEvent().observe(this, showSaveButton -> {
+        productEditorViewModel.getShowSaveButtonEvent().observe(
+                this, showSaveButton -> {
             ProductEditorActivity.this.showSaveButton = showSaveButton;
+
             invalidateOptionsMenu();
         });
     }
 
     private void getProductId() {
         if (getIntent().getStringExtra(EXTRA_PRODUCT_ID) != null) {
-            productEditorViewModel.editProduct(getIntent().getStringExtra(EXTRA_PRODUCT_ID));
+            productEditorViewModel.editProduct(getIntent().getStringExtra(
+                    EXTRA_PRODUCT_ID));
             productEditorViewModel.setExistingProduct(true);
         } else {
             productEditorViewModel.setExistingProduct(false);

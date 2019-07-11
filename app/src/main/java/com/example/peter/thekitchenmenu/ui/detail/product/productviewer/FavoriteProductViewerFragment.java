@@ -8,29 +8,32 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.appcompat.view.menu.MenuPopupHelper;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.databinding.FavoriteProductViewerBinding;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.example.peter.thekitchenmenu.databinding.FavoriteProductViewerFragmentBinding;
+import com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorFragment;
 
 public class FavoriteProductViewerFragment extends Fragment {
 
     private static final String TAG = "tkm-FavProdViewerFrag";
 
-    private static final String ARGUMENT_FAVORITE_PRODUCT_ID = "PRODUCT_ID";
-
-    private FavoriteProductViewerBinding binding;
+    private FavoriteProductViewerFragmentBinding binding;
     private FavoriteProductViewerViewModel viewModel;
-    private FloatingActionButton fab;
 
     static FavoriteProductViewerFragment newInstance(String favoriteProductId) {
 
         Bundle arguments = new Bundle();
-        arguments.putString(ARGUMENT_FAVORITE_PRODUCT_ID, favoriteProductId);
+        arguments.putString(
+                FavoriteProductEditorFragment.ARGUMENT_FAVORITE_PRODUCT_ID,
+                favoriteProductId);
         FavoriteProductViewerFragment fragment = new FavoriteProductViewerFragment();
         fragment.setArguments(arguments);
+
         return fragment;
     }
 
@@ -39,7 +42,8 @@ public class FavoriteProductViewerFragment extends Fragment {
         super.onResume();
 
         if (getArguments() != null)
-            viewModel.start(getArguments().getString(ARGUMENT_FAVORITE_PRODUCT_ID));
+            viewModel.start(getArguments().getString(
+                    FavoriteProductEditorFragment.ARGUMENT_FAVORITE_PRODUCT_ID));
     }
 
     @Nullable
@@ -50,15 +54,14 @@ public class FavoriteProductViewerFragment extends Fragment {
 
         binding = DataBindingUtil.inflate(
                 inflater,
-                R.layout.favorite_product_viewer,
+                R.layout.favorite_product_viewer_fragment,
                 container,
                 false);
 
         setViewModel();
         setBindingInstanceVariables();
-        setupFab();
         setHasOptionsMenu(true);
-        subscribeToNavigationChanges();
+        setupPopupMenu();
 
         return binding.getRoot();
     }
@@ -71,20 +74,22 @@ public class FavoriteProductViewerFragment extends Fragment {
         binding.setViewModel(viewModel);
     }
 
-    private void setupFab() {
-        fab = getActivity().findViewById(R.id.product_viewer_activity_fab);
-        fab.setOnClickListener(v -> viewModel.onFabClicked());
-    }
+    private void setupPopupMenu() {
+        PopupMenu popupMenu = new PopupMenu(this.getContext(), binding.floatingContextMenuButton);
+        popupMenu.getMenuInflater().inflate(
+                R.menu.menu_favorite_viewer_fragment, popupMenu.getMenu());
 
-    private void subscribeToNavigationChanges() {
-        viewModel.getSetFabIcon().observe(this, this::setFabIcon);
-    }
+        popupMenu.setOnMenuItemClickListener(menuItem -> {
+            viewModel.favoritePopUpMenuItemSelected(menuItem.getItemId());
+            return true;
+        });
 
-    // todo - move to viewModel, see TODO
-    private void setFabIcon(boolean setEditIcon) {
-        if (setEditIcon)
-            fab.setImageResource(R.drawable.ic_edit_white);
-        else
-            fab.setImageResource(R.drawable.ic_list_add);
+        MenuPopupHelper menuHelper = new MenuPopupHelper(
+                getContext(),
+                (MenuBuilder) popupMenu.getMenu(),
+                binding.floatingContextMenuButton);
+        menuHelper.setForceShowIcon(true);
+
+        binding.floatingContextMenuButton.setOnClickListener(view -> menuHelper.show());
     }
 }

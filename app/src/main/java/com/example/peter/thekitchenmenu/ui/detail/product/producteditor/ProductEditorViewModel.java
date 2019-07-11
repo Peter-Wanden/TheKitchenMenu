@@ -25,7 +25,7 @@ public class ProductEditorViewModel extends ObservableViewModel {
     private final SingleLiveEvent<Boolean> showSaveButtonEvent = new SingleLiveEvent<>();
 
     private ImageModel updatedImageModel = new ImageModel();
-    private ProductIdentityModel updatedIdentityModel = new ProductIdentityModel();
+    private ProductIdentityModel updatedIdentityModel;
     private ProductMeasurementModel updatedMeasurementModel = new ProductMeasurementModel();
 
     private boolean

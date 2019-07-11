@@ -51,7 +51,7 @@
                     android:id="@+id/image_editor_fragment"
                     android:name="com.example.peter.thekitchenmenu.ui.imageeditor.ImageEditorFragment"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     bind:layout="@layout/image_editor">
                 </fragment>
 
@@ -70,6 +70,11 @@
                     android:layout_height="wrap_content"
                     bind:layout="@layout/product_editor_measurement">
                 </fragment>
+
+                <FrameLayout
+                    android:id="@+id/product_editor_information_content_frame"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"/>
             </LinearLayout>
         </ScrollView>
     </RelativeLayout>

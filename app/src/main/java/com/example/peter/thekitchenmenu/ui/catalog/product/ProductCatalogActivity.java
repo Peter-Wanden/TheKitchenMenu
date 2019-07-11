@@ -30,8 +30,6 @@ public class ProductCatalogActivity
     private static final String TAG = "tkm-ProductCatalogAct";
 
     public static final String NEW_PRODUCT_ID_ADDED = "NEW_PRODUCT_ID_ADDED";
-    public static final String PRODUCT_ID = "PRODUCT_ID";
-    public static final String FAVORITE_PRODUCT_ID = "FAVORITE_PRODUCT_ID";
     private ProductCatalogViewModel viewModel;
     private ProductCatalogActivityBinding binding;
 
@@ -120,7 +118,7 @@ public class ProductCatalogActivity
     public void addToFavorites(String productId) {
         // Launch AddToFavorites, don't forget to deal with onActivityResult
         Intent intent = new Intent(this, FavoriteProductEditorActivity.class);
-        intent.putExtra(FavoriteProductEditorActivity.EXTRA_PRODUCT_ID, productId);
+        intent.putExtra(ProductEditorActivity.EXTRA_PRODUCT_ID, productId);
         startActivity(intent);
     }
 
@@ -132,11 +130,11 @@ public class ProductCatalogActivity
     @Override
     public void viewProduct(ProductModel productModel) {
         Intent intent = new Intent(this, ProductViewerActivity.class);
-        intent.putExtra(ProductViewerActivity.EXTRA_PRODUCT_ID,
+        intent.putExtra(ProductEditorActivity.EXTRA_PRODUCT_ID,
                 productModel.getProductEntity().getId());
 
         if (productModel.getFavoriteProductEntity() != null){
-            intent.putExtra(ProductViewerActivity.EXTRA_FAVORITE_PRODUCT_ID,
+            intent.putExtra(FavoriteProductEditorActivity.EXTRA_FAVORITE_PRODUCT_ID,
                     productModel.getFavoriteProductEntity().getId());
         }
         startActivityForResult(intent, ProductViewerActivity.REQUEST_VIEW_PRODUCT);

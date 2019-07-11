@@ -48,7 +48,7 @@ public class ImageBindingAdapters {
     private static void setImageToView(ImageView imageView, String uri) {
         Glide.with(imageView.getContext())
                 .load(uri)
-                .placeholder(R.drawable.placeholder)
+                .placeholder(R.drawable.ic_photo_white)
                 .into(imageView);
 
     }

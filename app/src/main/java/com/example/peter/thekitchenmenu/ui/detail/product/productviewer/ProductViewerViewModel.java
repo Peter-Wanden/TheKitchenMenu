@@ -8,6 +8,7 @@ import androidx.lifecycle.AndroidViewModel;
 
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 
 public class ProductViewerViewModel
         extends AndroidViewModel
@@ -19,8 +20,11 @@ public class ProductViewerViewModel
     private ProductViewerNavigator navigator;
 
     private boolean dataIsLoading;
+    private boolean newProductAdded;
     public final ObservableField<ProductEntity> product = new ObservableField<>();
     public final ObservableBoolean canAddRemoveFavorites = new ObservableBoolean();
+
+    private final SingleLiveEvent<Boolean> hasOptionsMenuEvent = new SingleLiveEvent<>();
 
     public ProductViewerViewModel(Application application,
                                   DataSource<ProductEntity> productEntityDataSource) {
@@ -43,6 +47,14 @@ public class ProductViewerViewModel
         }
     }
 
+    boolean isNewProductAdded() {
+        return newProductAdded;
+    }
+
+    void setNewProductAdded(boolean newProductAdded) {
+        this.newProductAdded = newProductAdded;
+    }
+
     @Override
     public void onEntityLoaded(ProductEntity product) {
         setProduct(product);
@@ -60,8 +72,8 @@ public class ProductViewerViewModel
     }
 
     void deleteProduct() {
-        navigator.deleteProduct(product.get().getId());
         productEntityDataSource.deleteById(product.get().getId());
+        navigator.deleteProduct(product.get().getId());
     }
 
     void editProduct() {
@@ -70,5 +82,9 @@ public class ProductViewerViewModel
 
     ObservableBoolean getCanAddRemoveFavorites() {
         return canAddRemoveFavorites;
+    }
+
+    SingleLiveEvent<Boolean> getHasOptionsMenuEvent() {
+        return hasOptionsMenuEvent;
     }
 }

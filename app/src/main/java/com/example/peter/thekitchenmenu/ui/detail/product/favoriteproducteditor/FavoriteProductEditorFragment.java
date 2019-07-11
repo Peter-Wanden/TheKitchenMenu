@@ -19,7 +19,7 @@ public class FavoriteProductEditorFragment extends Fragment {
 
     private static final String TAG = "tkm-FavProductEditFrag";
 
-    public static final String ARGUMENT_PRODUCT_ID = "PRODUCT_ID";
+    private static final String ARGUMENT_PRODUCT_ID = "PRODUCT_ID";
     public static final String ARGUMENT_FAVORITE_PRODUCT_ID = "FAVORITE_PRODUCT_ID";
 
     private FavoriteProductEditorFragmentBinding binding;
@@ -62,6 +62,7 @@ public class FavoriteProductEditorFragment extends Fragment {
     }
 
     private void subscribeToEvents() {
+        // TODO Change these to observable Strings that fire straight at the view from the model
         viewModel.getRetailerErrorEvent().observe(this, this::retailerError);
         viewModel.getLocationRoomErrorEvent().observe(this, this::locationRoomError);
         viewModel.getLocationInRoomErrorEvent().observe(this, this::locationInRoomError);

@@ -18,6 +18,18 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp">
 
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/floating_context_menu_button"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:background="@drawable/ic_more_vertical"
+            android:backgroundTint="@color/primaryColor"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="@{viewModel.isFavorite ? View.VISIBLE : View.GONE}"
+
+            />
+
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/retailer_label"
             style="@style/ViewerCategoryStyle"
@@ -27,7 +39,9 @@
             android:visibility="@{viewModel.isFavorite ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintBottom_toBottomOf="@id/retailer"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/retailer" />
+            app:layout_constraintTop_toTopOf="@id/retailer"
+
+            />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/retailer"
@@ -118,7 +132,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_list_add"
-            android:tint="@color/darkGrey"
+            android:tint="@color/primaryColor"
             android:layout_marginEnd="4dp"
             android:visibility="@{viewModel.isFavorite ? View.GONE : View.VISIBLE}"
             android:onClick="@{() -> viewModel.addFavoriteProduct()}"
@@ -131,11 +145,11 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/empty_screen_not_in_favorites_label"
-            style="@style/ViewerCategoryStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginStart="4dp"
+            android:textColor="@color/darkGrey"
             android:text="@string/empty_screen_add_to_favorites_message"
             android:visibility="@{viewModel.isFavorite ? View.GONE : View.VISIBLE}"
             android:onClick="@{() -> viewModel.addFavoriteProduct()}"

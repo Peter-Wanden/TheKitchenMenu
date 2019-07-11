@@ -264,14 +264,20 @@
     <string name="hint_web_image_url">Paste a web image url here</string>
     <string name="activity_title_image_cropper">TKM - Image Cropper</string>
     <string name="empty_screen_add_to_favorites_message">Add to favorites</string>
+
+    <!-- Menu items for ProductViewerFragment -->
     <string name="menu_item_edit_product">Edit product</string>
+    <string name="menu_item_delete_product">Delete product</string>
+
+    <!-- Menu items for FavoriteProductViewerFragment -->
+    <string name="menu_item_edit_favorite">Edit favorite info</string>
+    <string name="menu_item_delete_favorite">Remove from favorites</string>
 
     <!-- PRICING -->
     <string name="min_currency_value">0.01</string>
     <string name="max_price_for_product">100</string>
     <string name="maximum_currency_value_shopping_list">1000</string>
     <string name="lasUpdated">last updated</string>
-    <string name="action_delete_product">Delete product</string>
     <string name="add_ingredients">ADD INGREDIENTS</string>
     <string name="recipe_title_label">Title</string>
 </resources>

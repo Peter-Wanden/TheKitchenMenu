@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <import type="android.view.View" />
 
         <variable
@@ -62,16 +61,6 @@
                         android:layout_height="wrap_content" />
                 </LinearLayout>
             </ScrollView>
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/product_viewer_activity_fab"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/fab_margin"
-                bind:backgroundTint="@color/textColorHighlight"
-                bind:fabSize="normal"
-                bind:layout_anchor="@id/product_user_data_fragments_LL"
-                bind:layout_anchorGravity="bottom|right|end" />
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
     </LinearLayout>
 </layout>

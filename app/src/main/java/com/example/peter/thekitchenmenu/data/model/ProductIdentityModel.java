@@ -1,68 +1,42 @@
 package com.example.peter.thekitchenmenu.data.model;
 
-import com.example.peter.thekitchenmenu.BR;
-
 import androidx.annotation.NonNull;
-import androidx.databinding.BaseObservable;
-import androidx.databinding.Bindable;
 
-public class ProductIdentityModel extends BaseObservable {
+public class ProductIdentityModel {
 
     private static final String TAG = "tkm - ProductIdentityModel";
 
-    private String description = "";
-    private String shoppingListItemName = "";
-    private int category;
-    private int shelfLife;
+    @NonNull
+    private final String description;
+    @NonNull
+    private final String shoppingListItemName;
+    private final int category;
+    private final int shelfLife;
 
-    @Bindable
+    public ProductIdentityModel(@NonNull String description, @NonNull String shoppingListItemName,
+                                int category, int shelfLife) {
+        this.description = description;
+        this.shoppingListItemName = shoppingListItemName;
+        this.category = category;
+        this.shelfLife = shelfLife;
+    }
+
+    @NonNull
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-        notifyPropertyChanged(BR.description);
-    }
-
-    @Bindable
+    @NonNull
     public String getShoppingListItemName() {
         return shoppingListItemName;
     }
 
-    public void setShoppingListItemName(String shoppingListItemName) {
-        this.shoppingListItemName = shoppingListItemName;
-        notifyPropertyChanged(BR.shoppingListItemName);
-    }
-
-    @Bindable
     public int getCategory() {
         return category;
     }
 
-    public void setCategory(int category) {
-        this.category = category;
-        notifyPropertyChanged(BR.category);
-    }
-
-    @Bindable
     public int getShelfLife() {
         return shelfLife;
     }
 
-    public void setShelfLife(int shelfLife) {
-        this.shelfLife = shelfLife;
-        notifyPropertyChanged(BR.shelfLife);
-    }
-
-    @NonNull
-    @Override
-    public String toString() {
-        return "\ntkm-ProductIdentityModel{"+
-                "\ndescription="            + description +
-                "\nshoppingListName="       + shoppingListItemName +
-                "\ncategory="               + category +
-                "\nshelfLife="              + shelfLife +
-                '}';
-    }
 }

@@ -44,7 +44,7 @@ public class FavoriteProductEditorViewModel
     public final ObservableBoolean allFieldsValidated = new ObservableBoolean();
 
     private final ObservableBoolean dataIsLoading = new ObservableBoolean();
-    private final SingleLiveEvent<Void> favoriteProductSaved = new SingleLiveEvent<>();
+    private final SingleLiveEvent<String> favoriteProductSaved = new SingleLiveEvent<>();
 
     private Application appContext;
     private DataSource<FavoriteProductEntity> favoriteProductEntityDataSource;
@@ -90,6 +90,7 @@ public class FavoriteProductEditorViewModel
         });
     }
 
+    // Takes either a productId(setup to add favorite) OR a favoriteProductId (setup to edit favorite)
     void start(String productId, String favoriteProductId) {
 
         Log.d(TAG, "start: productId=" + productId);
@@ -277,17 +278,17 @@ public class FavoriteProductEditorViewModel
 
     private void createFavoriteProduct(FavoriteProductEntity favoriteProduct) {
         favoriteProductEntityDataSource.save(favoriteProduct);
-        favoriteProductSaved.call();
+        favoriteProductSaved.setValue(favoriteProduct.getId());
     }
 
     private void updateFavoriteProduct(FavoriteProductEntity favoriteProduct) {
         if (isNewFavoriteProduct)
             throw new RuntimeException("updateFavoriteProduct called but is new favorite Product.");
         favoriteProductEntityDataSource.save(favoriteProduct);
-        favoriteProductSaved.call();
+        favoriteProductSaved.setValue(favoriteProduct.getId());
     }
 
-    SingleLiveEvent<Void> getFavoriteProductSaved() {
+    SingleLiveEvent<String> getFavoriteProductSaved() {
         return favoriteProductSaved;
     }
 }

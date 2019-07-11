@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.ProductViewerDetailFragmentBinding;
@@ -54,7 +55,7 @@ public class ProductViewerFragment extends Fragment {
 
         setViewModels();
         setBindingInstanceVariables();
-        setHasOptionsMenu(true);
+        setupObservers();
 
         return binding.getRoot();
     }
@@ -77,6 +78,15 @@ public class ProductViewerFragment extends Fragment {
             binding.setViewModelFavoriteProduct(favoriteProductViewerViewModel);
             binding.setListener(getFavoriteProductUserActionsListener());
         }
+    }
+
+    private void setupObservers() {
+        productViewerViewModel.getHasOptionsMenuEvent().observe(
+                this, ProductViewerFragment.this::setOptionsMenu);
+    }
+
+    private void setOptionsMenu(boolean hasOptionsMenu) {
+        setHasOptionsMenu(hasOptionsMenu);
     }
 
     private FavoriteProductUserActionsListener getFavoriteProductUserActionsListener() {
