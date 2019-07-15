@@ -9,16 +9,8 @@
         <import type="android.view.View.OnClickListener"/>
 
         <variable
-            name="listener"
-            type="com.example.peter.thekitchenmenu.ui.detail.product.productviewer.FavoriteProductUserActionsListener" />
-
-        <variable
             name="viewModelProduct"
             type="com.example.peter.thekitchenmenu.ui.detail.product.productviewer.ProductViewerViewModel" />
-
-        <variable
-            name="viewModelFavoriteProduct"
-            type="com.example.peter.thekitchenmenu.ui.detail.product.productviewer.FavoriteProductViewerViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -71,30 +63,5 @@
             bind:webImageUrl='@{viewModelProduct.product.webImageUrl}'
             tools:src="@drawable/cirio_tinned_tomatoes">
         </androidx.appcompat.widget.AppCompatImageView>
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/product_list_item_add_to_favorites"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_margin="8dp"
-            android:src="@drawable/ic_list_add"
-            android:tint="@color/primaryColor"
-            android:visibility="@{viewModelProduct.canAddRemoveFavorites &amp;&amp; !viewModelFavoriteProduct.isFavorite ? View.VISIBLE : View.GONE}"
-            android:onClick="@{() -> listener.addToFavorites()}"
-            bind:layout_constraintEnd_toEndOf="@id/product_viewer_image"
-            bind:layout_constraintTop_toTopOf="@id/product_viewer_image"
-            />
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/product_list_item_remove_from_favorites"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_margin="8dp"
-            android:src="@drawable/ic_list_add_check"
-            android:tint="@color/primaryColor"
-            android:visibility="@{viewModelProduct.canAddRemoveFavorites &amp;&amp; viewModelFavoriteProduct.isFavorite? View.VISIBLE : View.GONE}"
-            android:onClick="@{() -> listener.removeFromFavorites()}"
-            bind:layout_constraintEnd_toEndOf="@id/product_viewer_image"
-            bind:layout_constraintTop_toTopOf="@id/product_viewer_image"
-            />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

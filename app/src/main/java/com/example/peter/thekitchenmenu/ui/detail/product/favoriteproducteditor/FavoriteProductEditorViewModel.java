@@ -119,7 +119,6 @@ public class FavoriteProductEditorViewModel
 
     @Override
     public void onEntityLoaded(FavoriteProductEntity favoriteProductEntity) {
-        Log.d(TAG, "onFavoriteProductLoaded: ");
 
         if (favoriteProductEntity != null) {
             createDate = favoriteProductEntity.getCreateDate();

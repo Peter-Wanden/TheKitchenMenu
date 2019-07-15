@@ -30,7 +30,7 @@ public class DatabaseInjection {
                         new AppExecutors(), database.productEntityDao()));
     }
 
-    public static DataSource<FavoriteProductEntity> provideFavoritesProductsDataSource(
+    public static FavoriteProductsDataSource provideFavoritesProductsDataSource(
             @NonNull Context context) {
         checkNotNull(context);
 

@@ -3,12 +3,9 @@ package com.example.peter.thekitchenmenu.data.source.remote;
 import androidx.annotation.NonNull;
 
 import com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity;
-import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.repository.FavoriteProductsDataSource;
 
-import java.util.List;
-
-public class FavoriteProductsRemoteDataSource
-        implements DataSource<FavoriteProductEntity> {
+public class FavoriteProductsRemoteDataSource implements FavoriteProductsDataSource {
 
     private static FavoriteProductsRemoteDataSource INSTANCE;
 
@@ -26,6 +23,11 @@ public class FavoriteProductsRemoteDataSource
     @Override
     public void getById(@NonNull String id,
                         @NonNull GetEntityCallback<FavoriteProductEntity> callback) {
+        callback.onDataNotAvailable();
+    }
+
+    @Override
+    public void getByProductId(@NonNull String productId, @NonNull GetEntityCallback<FavoriteProductEntity> callback) {
         callback.onDataNotAvailable();
     }
 

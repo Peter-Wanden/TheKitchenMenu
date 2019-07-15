@@ -5,12 +5,13 @@ import androidx.annotation.NonNull;
 import com.example.peter.thekitchenmenu.app.AppExecutors;
 import com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.repository.FavoriteProductsDataSource;
 
 import java.util.List;
 
 import static androidx.core.util.Preconditions.checkNotNull;
 
-public class FavoriteProductsLocalDataSource implements DataSource<FavoriteProductEntity> {
+public class FavoriteProductsLocalDataSource implements FavoriteProductsDataSource {
 
     private static volatile FavoriteProductsLocalDataSource INSTANCE;
     private FavoriteProductEntityDao favoriteProductEntityDao;
@@ -61,6 +62,22 @@ public class FavoriteProductsLocalDataSource implements DataSource<FavoriteProdu
                 if (favoriteProduct != null) {
                     callback.onEntityLoaded(favoriteProduct);
                 } else
+                    callback.onDataNotAvailable();
+            });
+        };
+        appExecutors.diskIO().execute(runnable);
+    }
+
+    @Override
+    public void getByProductId(@NonNull String productId,
+                               @NonNull GetEntityCallback<FavoriteProductEntity> callback) {
+        Runnable runnable = () -> {
+            final FavoriteProductEntity favoriteProduct =
+                    favoriteProductEntityDao.getByProductId(productId);
+            appExecutors.mainThread().execute(() -> {
+                if (favoriteProduct != null)
+                    callback.onEntityLoaded(favoriteProduct);
+                else
                     callback.onDataNotAvailable();
             });
         };

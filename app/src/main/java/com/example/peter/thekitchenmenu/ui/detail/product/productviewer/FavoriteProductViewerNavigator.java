@@ -5,6 +5,6 @@ package com.example.peter.thekitchenmenu.ui.detail.product.productviewer;
  */
 public interface FavoriteProductViewerNavigator {
 
-    void addFavoriteProduct();
+    void addFavoriteProduct(String productId);
     void editFavoriteProduct();
 }

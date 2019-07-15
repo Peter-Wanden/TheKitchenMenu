@@ -30,6 +30,7 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
     private static final String TAG = "tkm-EditorActivity";
 
     public static final String EXTRA_PRODUCT_ID = "EXTRA_PRODUCT_ID";
+    public static final String EXTRA_PRODUCT_ENTITY = "EXTRA_PRODUCT_ENTITY";
     public static final int REQUEST_ADD_EDIT_PRODUCT = 5;
     public static final int RESULT_ADD_EDIT_PRODUCT_OK = RESULT_FIRST_USER + 4;
 
@@ -84,7 +85,6 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
     }
 
     private void setObservers() {
-
         // Calve up the entity into models and set them to their respective view models
         final Observer<ProductEntity> productObserver = productEntity -> {
 
@@ -155,9 +155,8 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
     }
 
     private void getProductId() {
-        if (getIntent().getStringExtra(EXTRA_PRODUCT_ID) != null) {
-            productEditorViewModel.editProduct(getIntent().getStringExtra(
-                    EXTRA_PRODUCT_ID));
+        if (getIntent().hasExtra(EXTRA_PRODUCT_ENTITY)) {
+            productEditorViewModel.editProduct(getIntent().getParcelableExtra(EXTRA_PRODUCT_ENTITY));
             productEditorViewModel.setExistingProduct(true);
         } else {
             productEditorViewModel.setExistingProduct(false);
@@ -203,10 +202,19 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
     }
 
     @Override
-    public void reviewProduct(String productId) {
-        Intent intent = new Intent(
-                ProductEditorActivity.this, ProductViewerActivity.class);
-        intent.putExtra(ProductViewerActivity.EXTRA_NEW_PRODUCT_ID, productId);
+    public void reviewEditedProduct(ProductEntity productEntity) {
+        setResult(RESULT_ADD_EDIT_PRODUCT_OK, intentWithEntity(productEntity));
+        finish();
+    }
+
+    private Intent intentWithEntity(ProductEntity productEntity) {
+        return new Intent().putExtra(EXTRA_PRODUCT_ENTITY, productEntity);
+    }
+
+    @Override
+    public void reviewNewProduct(ProductEntity productEntity) {
+        Intent intent = new Intent(this, ProductViewerActivity.class);
+        intent.putExtra(EXTRA_PRODUCT_ENTITY, productEntity);
         startActivity(intent);
     }
 
@@ -215,4 +223,5 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
         productEditorViewModel.onActivityDestroyed();
         super.onDestroy();
     }
+
 }

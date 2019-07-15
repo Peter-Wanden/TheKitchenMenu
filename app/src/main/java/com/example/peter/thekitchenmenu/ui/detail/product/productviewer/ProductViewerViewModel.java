@@ -1,6 +1,7 @@
 package com.example.peter.thekitchenmenu.ui.detail.product.productviewer;
 
 import android.app.Application;
+import android.content.Intent;
 
 import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
@@ -8,6 +9,7 @@ import androidx.lifecycle.AndroidViewModel;
 
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductEditorActivity;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 
 public class ProductViewerViewModel
@@ -22,7 +24,6 @@ public class ProductViewerViewModel
     private boolean dataIsLoading;
     private boolean newProductAdded;
     public final ObservableField<ProductEntity> product = new ObservableField<>();
-    public final ObservableBoolean canAddRemoveFavorites = new ObservableBoolean();
 
     private final SingleLiveEvent<Boolean> hasOptionsMenuEvent = new SingleLiveEvent<>();
 
@@ -77,14 +78,20 @@ public class ProductViewerViewModel
     }
 
     void editProduct() {
-        navigator.editProduct(product.get().getId());
-    }
-
-    ObservableBoolean getCanAddRemoveFavorites() {
-        return canAddRemoveFavorites;
+        navigator.editProduct(product.get());
     }
 
     SingleLiveEvent<Boolean> getHasOptionsMenuEvent() {
         return hasOptionsMenuEvent;
+    }
+
+    void handleActivityResult(int resultCode, Intent data) {
+        if (resultCode == ProductEditorActivity.RESULT_ADD_EDIT_PRODUCT_OK) {
+            if (data.hasExtra(ProductEditorActivity.EXTRA_PRODUCT_ENTITY)) {
+                product.set(data.getParcelableExtra(
+                        ProductEditorActivity.EXTRA_PRODUCT_ENTITY));
+            }
+        }
+
     }
 }

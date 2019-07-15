@@ -59,7 +59,7 @@ public class ViewModelFactoryProduct extends ViewModelProvider.NewInstanceFactor
 
         if (modelClass.isAssignableFrom(ProductEditorViewModel.class)) {
             //noinspection unchecked
-            return (T) new ProductEditorViewModel(application, productEntityDataSource);
+            return (T) new ProductEditorViewModel(application);
         }
         else if (modelClass.isAssignableFrom(ProductViewerViewModel.class)) {
             //noinspection unchecked

@@ -1,19 +1,18 @@
 package com.example.peter.thekitchenmenu.ui.detail.product.productviewer;
 
 import android.app.Application;
+import android.content.Intent;
 import android.content.res.Resources;
-import android.util.Log;
 
 import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity;
+import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorActivity;
-import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 import com.google.android.gms.common.util.Strings;
 
 public class FavoriteProductViewerViewModel
@@ -32,8 +31,6 @@ public class FavoriteProductViewerViewModel
     private boolean dataIsLoading;
     private boolean favoriteAddedEdited;
     public final ObservableBoolean isFavorite = new ObservableBoolean();
-    private final SingleLiveEvent<Void> deleteFavoriteEvent = new SingleLiveEvent<>();
-    private final SingleLiveEvent<Void> editFavoriteEvent = new SingleLiveEvent<>();
 
     public FavoriteProductViewerViewModel(
             Application application,
@@ -50,6 +47,10 @@ public class FavoriteProductViewerViewModel
 
     void onActivityDestroyed() {
         navigator = null;
+    }
+
+    public void start(ProductEntity productEntity) {
+
     }
 
     public void start(String favoriteProductId) {
@@ -82,33 +83,22 @@ public class FavoriteProductViewerViewModel
         dataIsLoading = false;
     }
 
-    void favoritePopUpMenuItemSelected(int menuItemId) {
-        if (menuItemId == R.id.menu_item_edit_favorite) {
-            Log.d(TAG, "onMenuItemClick: edit favorite selected");
-            // TODO - delete from the database and update the display
-        }
-        if(menuItemId == R.id.menu_item_delete_favorite) {
-            Log.d(TAG, "onMenuItemClick: delete favorite selected");
-            // TODO - Launch the favorite editor activity for result to favorite viewer
-        }
-    }
-
-    void handleActivityResult(int requestCode, int resultCode, String productId) {
-        Log.d(TAG, "handleActivityResult: requestCode=" + requestCode + " resultCode=" + resultCode);
-        if (FavoriteProductEditorActivity.REQUEST_ADD_EDIT_FAVORITE_PRODUCT == requestCode) {
-            if (resultCode == FavoriteProductEditorActivity.RESULT_ADD_EDIT_FAVORITE_PRODUCT_OK) {
-                favoriteAddedEdited = true;
-                start(productId);
-            }
+    void handleActivityResult(int resultCode, Intent data) {
+        if (resultCode == FavoriteProductEditorActivity.RESULT_ADD_EDIT_FAVORITE_PRODUCT_OK) {
+            favoriteAddedEdited = true;
+            start(data.getStringExtra(FavoriteProductEditorActivity.EXTRA_FAVORITE_PRODUCT_ID));
         }
     }
 
     public void addFavoriteProduct() {
-        navigator.addFavoriteProduct();
+        navigator.addFavoriteProduct(productId.getValue());
+    }
+
+    void editFavoriteProduct() {
+        navigator.editFavoriteProduct();
     }
 
     void deleteFavoriteProduct() {
-        Log.d(TAG, "deleteFavoriteProduct=" + favoriteProduct.get());
         if (favoriteProduct.get() != null) {
             favoriteProductEntityDataSource.deleteById(favoriteProduct.get().getId());
             isFavorite.set(false);

@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.peter.thekitchenmenu.R;
+import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.databinding.ProductViewerActivityBinding;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryProduct;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryFavoriteProduct;
@@ -49,8 +50,7 @@ public class ProductViewerActivity
         setupViewModels();
         setupObservers();
         addFragments();
-        setActivityTitle();
-        productViewerViewModel.getHasOptionsMenuEvent().setValue(true);
+        start();
     }
 
     private void initialiseBindings() {
@@ -67,6 +67,7 @@ public class ProductViewerActivity
     private void setupViewModels() {
         productViewerViewModel = obtainProductViewerViewModel(this);
         productViewerViewModel.setNavigator(this);
+        productViewerViewModel.getHasOptionsMenuEvent().setValue(true);
 
         if (getIntent().hasExtra(EXTRA_NEW_PRODUCT_ID))
             productViewerViewModel.setNewProductAdded(true);
@@ -80,6 +81,10 @@ public class ProductViewerActivity
     private void setupObservers() {
         favoriteProductViewerViewModel.getProductId().observe(
                 this, this::startProductViewerViewModel);
+    }
+
+    private void startProductViewerViewModel(String productId) {
+        productViewerViewModel.start(productId);
     }
 
     public static ProductViewerViewModel obtainProductViewerViewModel(
@@ -153,6 +158,28 @@ public class ProductViewerActivity
         return fragment;
     }
 
+    // Start modes:
+    private void start() {
+        Intent intent = getIntent();
+
+        // Review and save added/edited product
+        if (intent.hasExtra(ProductEditorActivity.EXTRA_PRODUCT_ENTITY)) {
+            ProductEntity productEntity = getIntent().getParcelableExtra(
+                    ProductEditorActivity.EXTRA_PRODUCT_ENTITY);
+            productViewerViewModel.product.set(productEntity);
+        }
+        // View product with favorite
+        else if (intent.hasExtra(FavoriteProductEditorActivity.EXTRA_FAVORITE_PRODUCT_ID)) {
+            favoriteProductViewerViewModel.start(intent.getStringExtra(
+                    FavoriteProductEditorActivity.EXTRA_FAVORITE_PRODUCT_ID));
+        }
+        // View product (has no favorite)
+        else if (intent.hasExtra(ProductEditorActivity.EXTRA_PRODUCT_ID)) {
+            productViewerViewModel.start(intent.getStringExtra(
+                    ProductEditorActivity.EXTRA_PRODUCT_ID));
+        }
+    }
+
     private void setActivityTitle() {
         if (getIntent().hasExtra(ProductEditorActivity.EXTRA_PRODUCT_ID))
             setTitle(R.string.activity_title_view_product);
@@ -186,9 +213,9 @@ public class ProductViewerActivity
     }
 
     @Override
-    public void editProduct(String productId) {
+    public void editProduct(ProductEntity productEntity) {
         Intent intent = new Intent(this, ProductEditorActivity.class);
-        intent.putExtra(ProductEditorActivity.EXTRA_PRODUCT_ID, productId);
+        intent.putExtra(ProductEditorActivity.EXTRA_PRODUCT_ENTITY, productEntity);
         startActivityForResult(intent, ProductEditorActivity.REQUEST_ADD_EDIT_PRODUCT);
     }
 
@@ -200,13 +227,10 @@ public class ProductViewerActivity
     }
 
     @Override
-    public void addFavoriteProduct() {
+    public void addFavoriteProduct(String productId) {
         Intent intent = new Intent(this, FavoriteProductEditorActivity.class);
-        intent.putExtra(
-                ProductEditorActivity.EXTRA_PRODUCT_ID,
-                productViewerViewModel.product.get().getId());
-        startActivityForResult(
-                intent,
+        intent.putExtra(ProductEditorActivity.EXTRA_PRODUCT_ID, productId);
+        startActivityForResult(intent,
                 FavoriteProductEditorActivity.REQUEST_ADD_EDIT_FAVORITE_PRODUCT);
     }
 
@@ -229,13 +253,12 @@ public class ProductViewerActivity
         super.onActivityResult(requestCode, resultCode, data);
         Log.d(TAG, "onActivityResult: requestCode=" + requestCode + " resultCode=" + resultCode);
 
-        if (requestCode == FavoriteProductEditorActivity.REQUEST_ADD_EDIT_FAVORITE_PRODUCT &&
-                resultCode == FavoriteProductEditorActivity.RESULT_ADD_EDIT_FAVORITE_PRODUCT_OK) {
-
-            favoriteProductViewerViewModel.handleActivityResult(
-                    requestCode,
-                    resultCode,
-                    data.getStringExtra(FavoriteProductEditorActivity.EXTRA_FAVORITE_PRODUCT_ID));
+        if (requestCode == FavoriteProductEditorActivity.REQUEST_ADD_EDIT_FAVORITE_PRODUCT) {
+            favoriteProductViewerViewModel.handleActivityResult(resultCode, data);
+        }
+        else if (requestCode == ProductEditorActivity.REQUEST_ADD_EDIT_PRODUCT) {
+            productViewerViewModel.handleActivityResult(resultCode, data);
+            favoriteProductViewerViewModel.handleActivityResult(resultCode, data);
         }
     }
 
@@ -244,9 +267,5 @@ public class ProductViewerActivity
         productViewerViewModel.onActivityDestroyed();
         favoriteProductViewerViewModel.onActivityDestroyed();
         super.onDestroy();
-    }
-
-    private void startProductViewerViewModel(String productId) {
-        productViewerViewModel.start(productId);
     }
 }

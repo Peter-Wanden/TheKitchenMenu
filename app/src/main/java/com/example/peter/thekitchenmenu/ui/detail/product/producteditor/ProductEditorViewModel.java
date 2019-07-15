@@ -18,7 +18,6 @@ public class ProductEditorViewModel extends ObservableViewModel {
 
     private static final String TAG = "tkm-EditorViewModel";
 
-    private DataSource<ProductEntity> productEntityDataSource;
     private AddEditProductNavigator navigator;
 
     private final MutableLiveData<ProductEntity> existingProductEntity = new MutableLiveData<>();
@@ -34,10 +33,8 @@ public class ProductEditorViewModel extends ObservableViewModel {
             measurementModelIsValid = false;
     // TODO - Change category and shelf life to an enum
 
-    public ProductEditorViewModel(@NonNull Application application,
-                                  DataSource<ProductEntity> productEntityDataSource) {
+    public ProductEditorViewModel(@NonNull Application application) {
         super(application);
-        this.productEntityDataSource = productEntityDataSource;
     }
 
     void setNavigator(AddEditProductNavigator navigator) {
@@ -48,18 +45,8 @@ public class ProductEditorViewModel extends ObservableViewModel {
         navigator = null;
     }
 
-    void editProduct(String productId) {
-        productEntityDataSource.getById(productId, new DataSource.GetEntityCallback<ProductEntity>() {
-            @Override
-            public void onEntityLoaded(ProductEntity productEntity) {
-                existingProductEntity.setValue(productEntity);
-            }
-
-            @Override
-            public void onDataNotAvailable() {
-                // This is an error, as there should always be a product available
-            }
-        });
+    void editProduct(ProductEntity productEntity) {
+        existingProductEntity.setValue(productEntity);
     }
 
     void setExistingProduct(boolean existingProduct) {
@@ -106,7 +93,6 @@ public class ProductEditorViewModel extends ObservableViewModel {
     }
 
     void saveProduct() {
-
         @NonNull
         ProductEntity productEntity;
 
@@ -127,7 +113,9 @@ public class ProductEditorViewModel extends ObservableViewModel {
                     updatedImageModel.getLocalLargeImageUri(),
                     existingProductEntity.getValue().getCreateDate()
             );
-        } else {
+            navigator.reviewEditedProduct(productEntity);
+        }
+        else {
             productEntity = ProductEntity.createProduct(
                     updatedIdentityModel.getDescription(),
                     updatedIdentityModel.getShoppingListItemName(),
@@ -142,10 +130,8 @@ public class ProductEditorViewModel extends ObservableViewModel {
                     updatedImageModel.getRemoteMediumImageUri(),
                     updatedImageModel.getLocalLargeImageUri()
             );
+            navigator.reviewNewProduct(productEntity);
         }
-
-        productEntityDataSource.save(productEntity);
-        navigator.reviewProduct(productEntity.getId());
     }
 
     @Override

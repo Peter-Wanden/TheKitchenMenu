@@ -55,7 +55,7 @@
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
             android:backgroundTint="@color/primaryLightColor"
-            android:inputType="textCapSentences|textMultiLine"
+            android:inputType="textCapWords"
             android:hint="@string/hint_description"
             android:text='@={viewModel.description}'
             app:layout_constraintStart_toStartOf="parent"

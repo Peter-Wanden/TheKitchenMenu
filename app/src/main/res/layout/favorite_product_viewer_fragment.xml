@@ -18,18 +18,6 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp">
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/floating_context_menu_button"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:background="@drawable/ic_more_vertical"
-            android:backgroundTint="@color/primaryColor"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:visibility="@{viewModel.isFavorite ? View.VISIBLE : View.GONE}"
-
-            />
-
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/retailer_label"
             style="@style/ViewerCategoryStyle"
@@ -40,7 +28,6 @@
             app:layout_constraintBottom_toBottomOf="@id/retailer"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/retailer"
-
             />
 
         <androidx.appcompat.widget.AppCompatTextView

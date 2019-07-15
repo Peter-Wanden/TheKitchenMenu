@@ -25,7 +25,6 @@ public class ProductViewerFragment extends Fragment {
 
     private ProductViewerDetailFragmentBinding binding;
     private ProductViewerViewModel productViewerViewModel;
-    private FavoriteProductViewerViewModel favoriteProductViewerViewModel;
 
     public static ProductViewerFragment newInstance(String productId) {
         Bundle arguments = new Bundle();
@@ -53,31 +52,20 @@ public class ProductViewerFragment extends Fragment {
                 container,
                 false);
 
-        setViewModels();
+        setViewModel();
         setBindingInstanceVariables();
         setupObservers();
 
         return binding.getRoot();
     }
 
-    private void setViewModels() {
+    private void setViewModel() {
         productViewerViewModel = ProductViewerActivity.obtainProductViewerViewModel(
                 requireActivity());
-
-        if (requireActivity() instanceof ProductViewerActivity) {
-            productViewerViewModel.canAddRemoveFavorites.set(true);
-            favoriteProductViewerViewModel = ProductViewerActivity.obtainFavoriteProductViewerViewModel(
-                    requireActivity());
-        }
     }
 
     private void setBindingInstanceVariables() {
         binding.setViewModelProduct(productViewerViewModel);
-
-        if (requireActivity() instanceof ProductViewerActivity) {
-            binding.setViewModelFavoriteProduct(favoriteProductViewerViewModel);
-            binding.setListener(getFavoriteProductUserActionsListener());
-        }
     }
 
     private void setupObservers() {
@@ -87,20 +75,6 @@ public class ProductViewerFragment extends Fragment {
 
     private void setOptionsMenu(boolean hasOptionsMenu) {
         setHasOptionsMenu(hasOptionsMenu);
-    }
-
-    private FavoriteProductUserActionsListener getFavoriteProductUserActionsListener() {
-        return new FavoriteProductUserActionsListener() {
-            @Override
-            public void addToFavorites() {
-                favoriteProductViewerViewModel.addFavoriteProduct();
-            }
-
-            @Override
-            public void removeFromFavorites() {
-                favoriteProductViewerViewModel.deleteFavoriteProduct();
-            }
-        };
     }
 
     @Override

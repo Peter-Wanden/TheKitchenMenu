@@ -111,7 +111,7 @@
     <string name="activity_title_product_catalog">Product catalog</string>
     <string name="activity_detail_product_title">Product details</string>
     <string name="activity_title_view_product">Product viewer</string>
-    <string name="activity_title_review_new_product">Review new product</string>
+    <string name="activity_title_review_new_product">Review before post</string>
     <string name="activity_title_edit_product">Edit product</string>
     <string name="activity_title_add_new_product">Add new product</string>
     <string name="widget_product_title_latest_products">Latest products</string>

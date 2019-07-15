@@ -14,30 +14,10 @@ import static androidx.core.util.Preconditions.checkNotNull;
 
 public abstract class Repository<T extends TkmEntity> implements DataSource<T> {
 
-    private static final String TAG = "tkm-Repository";
-
-//    public static Repository INSTANCE = null;
-
     DataSource remoteDataSource;
     DataSource localDataSource;
-    private Map<String, T> entityCache;
+    Map<String, T> entityCache;
     private boolean cacheIsDirty;
-
-//    private Repository(@NonNull DataSource<T> remoteDataSource,
-//                       @NonNull DataSource<T> localDataSource) {
-//
-//        this.remoteDataSource = checkNotNull(remoteDataSource);
-//        this.localDataSource = checkNotNull(localDataSource);
-//    }
-
-//    public static <T extends TkmEntity> Repository<T> getInstance(
-//            DataSource<T> remoteDataSource,
-//            DataSource<T> localDataSource) {
-//
-//        if (INSTANCE == null)
-//            INSTANCE = new Repository<>(remoteDataSource, localDataSource);
-//        return INSTANCE;
-//    }
 
     @Override
     public void getAll(@NonNull GetAllCallback<T> callback) {
@@ -126,6 +106,27 @@ public abstract class Repository<T extends TkmEntity> implements DataSource<T> {
 
             @Override
             public void onDataNotAvailable() {
+                //noinspection unchecked
+                remoteDataSource.getById(id, new GetEntityCallback<T>() {
+                    @Override
+                    public void onEntityLoaded(T entity) {
+                        if (entity == null) {
+                            onDataNotAvailable();
+                            return;
+                        }
+
+                        if (entityCache == null)
+                            entityCache = new LinkedHashMap<>();
+
+                        entityCache.put(entity.getId(), entity);
+                        callback.onEntityLoaded(entity);
+                    }
+
+                    @Override
+                    public void onDataNotAvailable() {
+                        callback.onDataNotAvailable();
+                    }
+                });
                 callback.onDataNotAvailable();
             }
         });
