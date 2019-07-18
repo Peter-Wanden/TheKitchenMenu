@@ -1,6 +1,5 @@
 package com.example.peter.thekitchenmenu.ui.imageeditor;
 
-import android.util.Log;
 import android.widget.ImageView;
 
 import androidx.databinding.BindingAdapter;
@@ -48,7 +47,7 @@ public class ImageBindingAdapters {
     private static void setImageToView(ImageView imageView, String uri) {
         Glide.with(imageView.getContext())
                 .load(uri)
-                .placeholder(R.drawable.ic_photo_white)
+                .placeholder(R.drawable.ic_photo)
                 .into(imageView);
 
     }

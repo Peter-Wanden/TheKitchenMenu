@@ -39,12 +39,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/fab_margin"
-            android:src="@drawable/ic_add_white"
-            android:tint="@color/white"
-            app:backgroundTint="@color/textColorHighlight"
             app:fabSize="normal"
             app:layout_anchor="@id/recipe_catalog_activity_viewPager"
             app:layout_anchorGravity="bottom|right|end"
+            android:src="@drawable/ic_add"
             >
         </com.google.android.material.floatingactionbutton.FloatingActionButton>
 
@@ -52,27 +50,20 @@
             android:id="@+id/recipe_catalog_activity_appBarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/primaryColor"
-            android:theme="@style/ThemeOverlay.AppCompat.Light"
             >
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/recipe_catalog_activity_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="@color/primaryColor"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:layout_scrollFlags="scroll|enterAlways|snap"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+                app:layout_scrollFlags="scroll|enterAlways|snap">
             </androidx.appcompat.widget.Toolbar>
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/recipe_catalog_activity_tabLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:tabIndicatorColor="@color/white"
-                app:tabSelectedTextColor="@color/white"
-                app:tabTextColor="@color/brightGrey">
+                >
             </com.google.android.material.tabs.TabLayout>
         </com.google.android.material.appbar.AppBarLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

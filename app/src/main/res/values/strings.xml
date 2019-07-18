@@ -115,7 +115,7 @@
     <string name="activity_title_edit_product">Edit product</string>
     <string name="activity_title_add_new_product">Add new product</string>
     <string name="widget_product_title_latest_products">Latest products</string>
-    <string name="activity_title_add_favorite_product">Add to favorites</string>
+    <string name="activity_title_add_favorite_product">Add favorite</string>
     <string name="activity_title_edit_favorite_product">Edit favorite</string>
     <string name="activity_title_recipe_catalog">Recipe catalog</string>
     <string name="activity_title_add_new_recipe">Add new recipe</string>
@@ -266,8 +266,15 @@
     <string name="empty_screen_add_to_favorites_message">Add to favorites</string>
 
     <!-- Menu items for ProductViewerFragment -->
+    <string name="menu_item_post_product">POST</string>
     <string name="menu_item_edit_product">Edit product</string>
     <string name="menu_item_delete_product">Delete product</string>
+    <!-- ProductViewer Activity -->
+    <string name="review_before_post_message">This is how your product will look. Please review the
+        details to ensure they are as accurate as possible. When complete press ‘POST’ and your
+        product will be available to the community to share. Once your product is used by others
+        you will not be able to edit it, so please double check to make sure everything is correct.
+        Thank you for adding products, its an enormous help to our community!</string>
 
     <!-- Menu items for FavoriteProductViewerFragment -->
     <string name="menu_item_edit_favorite">Edit favorite info</string>

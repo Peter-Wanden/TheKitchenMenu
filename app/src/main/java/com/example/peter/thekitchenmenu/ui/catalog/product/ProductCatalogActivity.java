@@ -132,11 +132,6 @@ public class ProductCatalogActivity
         Intent intent = new Intent(this, ProductViewerActivity.class);
         intent.putExtra(ProductEditorActivity.EXTRA_PRODUCT_ID,
                 productModel.getProductEntity().getId());
-
-        if (productModel.getFavoriteProductEntity() != null){
-            intent.putExtra(FavoriteProductEditorActivity.EXTRA_FAVORITE_PRODUCT_ID,
-                    productModel.getFavoriteProductEntity().getId());
-        }
         startActivityForResult(intent, ProductViewerActivity.REQUEST_VIEW_PRODUCT);
     }
 

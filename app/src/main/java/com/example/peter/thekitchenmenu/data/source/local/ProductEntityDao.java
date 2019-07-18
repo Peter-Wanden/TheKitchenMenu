@@ -22,7 +22,7 @@ import static com.example.peter.thekitchenmenu.data.entity.ProductEntity.TABLE_P
 import static com.example.peter.thekitchenmenu.data.entity.ProductFastTextSearch.TABLE_FTS_PRODUCT;
 
 @Dao
-public interface ProductEntityDao {
+public interface ProductEntityDao extends BaseDao<ProductEntity>{
 
     @Query("SELECT * FROM " + TABLE_PRODUCT + " ORDER BY " + DESCRIPTION)
     List<ProductEntity> getAll();

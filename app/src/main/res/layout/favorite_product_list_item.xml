@@ -23,11 +23,7 @@
         android:layout_marginEnd="@dimen/card_view_margin"
         android:layout_marginTop="@dimen/card_view_margin_top_bottom"
         android:layout_marginBottom="@dimen/card_view_margin_top_bottom"
-        android:clickable="true"
         android:elevation="@dimen/card_view_elevation"
-        android:focusable="true"
-        android:foregroundGravity="center"
-        app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="4dp"
         android:onClick="@{() -> listener.onFavoriteProductClicked(productModel)}" >
 
@@ -36,50 +32,50 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent=".73">
+            </androidx.constraintlayout.widget.Guideline>
+
             <TextView
                 android:id="@+id/product_list_item_description"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:ellipsize="marquee"
                 android:fontFamily="sans-serif-medium"
                 android:gravity="start|top"
-                android:maxLines="3"
                 android:paddingEnd="@dimen/list_item_top_full_margin"
                 android:paddingStart="@dimen/list_item_top_full_margin"
                 android:paddingTop="@dimen/list_item_top_half_margin"
-                android:textAppearance="?android:textAppearanceMedium"
-                android:textColor="@color/darkGrey"
                 app:layout_constraintEnd_toStartOf="@+id/product_list_item_image"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="Cirio canned chopped tomatoes"
                 android:text="@{productModel.productEntity.description}"
+                tools:text="Cirio canned chopped tomatoes"
                 />
-
             <ImageView
                 android:id="@+id/product_list_item_image"
                 android:contentDescription="@string/cd_picture_of_product"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:layout_margin="@dimen/list_item_bottom_margin"
-                android:layout_marginEnd="8dp"
-                android:src="@drawable/cirio_tinned_tomatoes"
-                android:transitionName="@string/transition_product"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintStart_toEndOf="@id/guideline"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:webImageUrl='@{productModel.productEntity.webImageUrl}'
-                app:remoteSmallImageUri='@{productModel.productEntity.remoteSmallImageUri}' />
-
+                app:remoteSmallImageUri='@{productModel.productEntity.remoteSmallImageUri}'
+                tools:src="@drawable/cirio_tinned_tomatoes"
+                />
             <TextView
                 android:id="@+id/product_list_item_measurement"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:fontFamily="sans-serif"
                 android:paddingEnd="@dimen/list_item_top_half_margin"
                 android:paddingStart="@dimen/list_item_top_full_margin"
-                android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="@color/grey"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/product_list_item_description"
                 app:setLabelForSubtypeInt="@{productModel.productEntity.unitOfMeasureSubtype}"
@@ -87,36 +83,29 @@
                 app:formatNumberOfItems="@{productModel.productEntity.numberOfProducts}"
                 tools:text="400ml"
                 />
-
             <TextView
                 android:id="@+id/favorite_product_list_item_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="sans-serif"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
                 android:paddingBottom="8dp"
-                android:textAppearance="?android:textAppearanceMedium"
-                android:textColor="@color/darkGrey"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:stringToCurrency="@{productModel.favoriteProductEntity.price}"
                 tools:text="£24.99"
-                app:stringToCurrency="@{productModel.favoriteProductEntity.price}"/>
-
+                />
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/favorite_product_list_item_last_updated_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="@color/grey"
                 android:paddingBottom="8dp"
                 app:layout_constraintBaseline_toBaselineOf="@id/favorite_product_list_item_price"
                 app:layout_constraintTop_toTopOf="@id/favorite_product_list_item_price"
                 app:layout_constraintBottom_toBottomOf="@id/favorite_product_list_item_price"
                 app:layout_constraintStart_toEndOf="@id/favorite_product_list_item_price"
-                android:text="@string/lasUpdated"
+                tools:text="@string/lasUpdated"
                 />
-
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/favorite_product_list_item_last_updated_date"
                 android:layout_width="wrap_content"
@@ -124,27 +113,24 @@
                 android:paddingBottom="8dp"
                 android:paddingStart="4dp"
                 android:paddingEnd="4dp"
-                android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="@color/grey"
                 app:layout_constraintBaseline_toBaselineOf="@id/favorite_product_list_item_price"
                 app:layout_constraintBottom_toBottomOf="@id/favorite_product_list_item_price"
                 app:layout_constraintStart_toEndOf="@+id/favorite_product_list_item_last_updated_label"
                 app:layout_constraintTop_toTopOf="@id/favorite_product_list_item_price"
+                app:longToDate="@{productModel.favoriteProductEntity.lastUpdate}"
                 tools:text="01 Apr 2019"
-                app:longToDate="@{productModel.favoriteProductEntity.lastUpdate}"/>
-
+                />
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/product_list_item_remove_from_favorites"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_margin="8dp"
-                android:src="@drawable/ic_list_add_check"
                 android:tint="@color/primaryColor"
-                android:onClick="@{() -> listener.onRemoveFromFavoritesClicked(productModel)}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                android:onClick="@{() -> listener.onRemoveFromFavoritesClicked(productModel)}"
+                android:src="@drawable/ic_list_add_check"
                 />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </layout>

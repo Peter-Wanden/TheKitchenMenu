@@ -7,10 +7,6 @@
     android:layout_height="wrap_content"
     android:gravity="center|start"
     android:textSize="18sp"
-    android:paddingStart="8dp"
-    android:paddingEnd="8dp"
-    android:paddingTop="8dp"
-    android:paddingBottom="8dp"
-    android:textColor="@color/darkGrey"
+    android:padding="8dp"
     android:backgroundTint="@color/primaryLightColor"
     tools:text="Please select" />

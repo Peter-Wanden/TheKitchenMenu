@@ -49,7 +49,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/ic_photo_white"
+            tools:src="@drawable/ic_photo"
             android:tint="@color/brightGrey"
             />
 
@@ -59,12 +59,10 @@
             android:layout_height="@dimen/image_button_width"
             android:layout_marginStart="8dp"
             android:layout_marginBottom="8dp"
-            android:backgroundTint="@color/textColorHighlight"
             android:contentDescription="@string/cd_add_image_from_camera"
             android:elevation="@dimen/standard_margin"
+            android:src="@drawable/ic_photo_camera"
             android:onClick="@{() -> imageViewModel.getImageFromCamera()}"
-            android:src="@drawable/ic_photo_camera_white"
-            android:tint="@color/white"
             android:visibility="@{imageViewModel.canTakePictures ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@id/product_image"
             app:layout_constraintStart_toStartOf="@+id/product_image" />
@@ -75,12 +73,10 @@
             android:layout_height="@dimen/image_button_width"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:backgroundTint="@color/textColorHighlight"
             android:contentDescription="@string/cd_add_image_from_gallery"
             android:elevation="@dimen/standard_margin"
             android:onClick="@{() -> imageViewModel.getImageFromGallery()}"
-            android:src="@drawable/ic_photo_white"
-            android:tint="@color/white"
+            android:src="@drawable/ic_photo"
             app:layout_constraintBottom_toBottomOf="@id/product_image"
             app:layout_constraintEnd_toEndOf="@+id/product_image" />
 
@@ -93,7 +89,6 @@
             android:paddingTop="4dp"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
-            android:textColor="@color/darkGrey"
             android:text="@string/add_web_image_url"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/product_image"
@@ -110,7 +105,6 @@
             android:layout_marginTop="4dp"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
-            android:textColor="@color/darkGrey"
             android:backgroundTint="@color/primaryLightColor"
             android:hint="@string/hint_web_image_url"
             android:text='@={imageModel.webImageUrl}'
@@ -129,8 +123,7 @@
             android:contentDescription="@string/cd_launch_browser_to_get_image_url"
             android:elevation="@dimen/standard_margin"
             android:onClick='@{() -> imageViewModel.launchBrowser()}'
-            android:src="@drawable/ic_open_in_browser_vector"
-            android:tint="@color/white"
+            android:src="@drawable/ic_open_in_browser"
             app:layout_constraintTop_toTopOf="@+id/editable_image_web_url"
             app:layout_constraintBottom_toBottomOf="@+id/editable_image_web_url"
             app:layout_constraintEnd_toEndOf="@+id/product_image"

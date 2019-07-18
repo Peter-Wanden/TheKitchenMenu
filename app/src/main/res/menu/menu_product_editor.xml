@@ -11,6 +11,6 @@
         android:id="@+id/menu_product_editor_action_save"
         android:contentDescription="@string/cd_save_product"
         android:title="@string/action_save"
-        android:icon="@drawable/ic_done_white"
+        android:icon="@drawable/ic_done"
         app:showAsAction="ifRoom" />
 </menu>

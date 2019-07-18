@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -9,7 +9,7 @@
         <import type="android.view.View.OnClickListener"/>
 
         <variable
-            name="viewModelProduct"
+            name="viewModel"
             type="com.example.peter.thekitchenmenu.ui.detail.product.productviewer.ProductViewerViewModel" />
     </data>
 
@@ -19,49 +19,48 @@
 
         <TextView
             android:id="@+id/product_viewer_description"
-            style="@style/ViewerCategoryStyle"
-            android:textSize="20sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            android:text="@{viewModelProduct.product.description}"
-            bind:layout_constraintEnd_toEndOf="parent"
-            bind:layout_constraintStart_toStartOf="parent"
-            bind:layout_constraintTop_toTopOf="parent"
-            tools:text="Dove Original antiperspirant roll on deodorant">
-        </TextView>
+            android:text="@{viewModel.productEntityObservable.description}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Dove Original antiperspirant roll on deodorant"
+            />
 
         <TextView
             android:id="@+id/product_viewer_size"
-            style="@style/ViewerTextFieldStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            bind:setLabelForSubtypeInt="@{viewModelProduct.product.unitOfMeasureSubtype}"
-            bind:formatBaseUnits="@{viewModelProduct.product.baseUnits}"
-            bind:formatNumberOfItems="@{viewModelProduct.product.numberOfProducts}"
-            bind:layout_constraintTop_toBottomOf="@id/product_viewer_description"
-            bind:layout_constraintStart_toStartOf="parent"
-            tools:text="50ml">
-        </TextView>
+            app:setLabelForSubtypeInt="@{viewModel.productEntityObservable.unitOfMeasureSubtype}"
+            app:formatBaseUnits="@{viewModel.productEntityObservable.baseUnits}"
+            app:formatNumberOfItems="@{viewModel.productEntityObservable.numberOfProducts}"
+            app:layout_constraintTop_toBottomOf="@id/product_viewer_description"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="50ml"
+            />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/product_viewer_image"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="200dp"
+            android:maxHeight="200dp"
             android:layout_margin="8dp"
             android:contentDescription="@string/cd_picture_of_product"
-            bind:layout_constraintDimensionRatio="W, 1:1"
-            bind:layout_constraintEnd_toEndOf="parent"
-            bind:layout_constraintStart_toStartOf="parent"
-            bind:layout_constraintTop_toBottomOf="@id/product_viewer_size"
-            bind:remoteLargeImageUri='@{viewModelProduct.product.remoteLargeImageUri}'
-            bind:webImageUrl='@{viewModelProduct.product.webImageUrl}'
-            tools:src="@drawable/cirio_tinned_tomatoes">
-        </androidx.appcompat.widget.AppCompatImageView>
+            app:layout_constraintDimensionRatio="W, 1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/product_viewer_size"
+            app:remoteLargeImageUri="@{viewModel.productEntityObservable.remoteLargeImageUri}"
+            app:webImageUrl="@{viewModel.productEntityObservable.webImageUrl}"
+            tools:src="@drawable/cirio_tinned_tomatoes"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

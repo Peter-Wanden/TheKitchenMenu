@@ -1,6 +1,7 @@
 package com.example.peter.thekitchenmenu.ui.detail.product.productviewer;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,6 +17,7 @@ import androidx.lifecycle.Observer;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.ProductViewerDetailFragmentBinding;
+import com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorActivity;
 
 public class ProductViewerFragment extends Fragment {
 
@@ -25,6 +27,7 @@ public class ProductViewerFragment extends Fragment {
 
     private ProductViewerDetailFragmentBinding binding;
     private ProductViewerViewModel productViewerViewModel;
+    private boolean setMenuOptionsToPost;
 
     public static ProductViewerFragment newInstance(String productId) {
         Bundle arguments = new Bundle();
@@ -60,26 +63,49 @@ public class ProductViewerFragment extends Fragment {
     }
 
     private void setViewModel() {
-        productViewerViewModel = ProductViewerActivity.obtainProductViewerViewModel(
-                requireActivity());
+        if (requireActivity() instanceof ProductViewerActivity)
+            productViewerViewModel = ProductViewerActivity.obtainProductViewerViewModel(
+                    requireActivity());
+
+        if (requireActivity() instanceof FavoriteProductEditorActivity)
+            productViewerViewModel = FavoriteProductEditorActivity.obtainProductViewerViewModel(
+                    requireActivity());
     }
 
     private void setBindingInstanceVariables() {
-        binding.setViewModelProduct(productViewerViewModel);
+        binding.setViewModel(productViewerViewModel);
     }
 
     private void setupObservers() {
         productViewerViewModel.getHasOptionsMenuEvent().observe(
                 this, ProductViewerFragment.this::setOptionsMenu);
+
+        productViewerViewModel.getSetMenuOptionsToPostEvent().observe(
+                this, ProductViewerFragment.this::setMenuOptionsToPost);
     }
 
     private void setOptionsMenu(boolean hasOptionsMenu) {
         setHasOptionsMenu(hasOptionsMenu);
     }
 
+    private void setMenuOptionsToPost(boolean seMenuOptionsToPost) {
+        this.setMenuOptionsToPost = seMenuOptionsToPost;
+        requireActivity().invalidateOptionsMenu();
+    }
+
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.menu_product_viewer_fragment, menu);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        if (setMenuOptionsToPost)
+            menu.findItem(R.id.menu_item_post_product).setVisible(true);
+        else
+            menu.findItem(R.id.menu_item_post_product).setVisible(false);
+
+        super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -91,6 +117,8 @@ public class ProductViewerFragment extends Fragment {
             case R.id.menu_item_delete_product:
                 productViewerViewModel.deleteProduct();
                 return true;
+            case R.id.menu_item_post_product:
+                productViewerViewModel.postProduct();
         }
         return false;
     }

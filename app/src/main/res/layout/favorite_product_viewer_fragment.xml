@@ -18,116 +18,111 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp">
 
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".3"/>
+
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/retailer_label"
-            style="@style/ViewerCategoryStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/label_retailer"
-            android:visibility="@{viewModel.isFavorite ? View.VISIBLE : View.INVISIBLE}"
-            app:layout_constraintBottom_toBottomOf="@id/retailer"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/retailer"
+            app:layout_constraintBaseline_toBaselineOf="@id/retailer"
+            android:visibility="@{viewModel.isFavorite ? View.VISIBLE : View.INVISIBLE}"
+            android:text="@string/label_retailer"
+            />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/retailer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/guideline"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="@{viewModel.favoriteProduct.retailer}"
+            android:visibility="@{viewModel.isFavorite ? View.VISIBLE : View.INVISIBLE}"
+            tools:text="Waitrose"
             />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/retailer"
-            style="@style/ViewerTextFieldStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="bottom"
-            android:text="@{viewModel.favoriteProduct.retailer}"
-            android:visibility="@{viewModel.isFavorite ? View.VISIBLE : View.INVISIBLE}"
-            app:layout_constraintStart_toStartOf="@id/guideline"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Waitrose" />
-
-        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/price_label"
-            style="@style/ViewerCategoryStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/label_price"
-            android:visibility="@{viewModel.isFavorite ? View.VISIBLE : View.INVISIBLE}"
-            app:layout_constraintBottom_toBottomOf="@id/price"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/price" />
+            app:layout_constraintBaseline_toBaselineOf="@id/price"
+            android:visibility="@{viewModel.isFavorite ? View.VISIBLE : View.INVISIBLE}"
+            android:text="@string/label_price"
+            />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/price"
-            style="@style/ViewerTextFieldStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="bottom"
-            android:visibility="@{viewModel.isFavorite ? View.VISIBLE : View.INVISIBLE}"
-            app:stringToCurrency="@{viewModel.favoriteProduct.price}"
             app:layout_constraintStart_toStartOf="@id/guideline"
             app:layout_constraintTop_toBottomOf="@id/retailer"
-            tools:text="99.95" />
+            app:stringToCurrency="@{viewModel.favoriteProduct.price}"
+            android:visibility="@{viewModel.isFavorite ? View.VISIBLE : View.INVISIBLE}"
+            tools:text="99.95"
+            />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/location_room_label"
-            style="@style/ViewerCategoryStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/label_location_room"
-            android:visibility="@{viewModel.isFavorite ? View.VISIBLE : View.INVISIBLE}"
-            app:layout_constraintBottom_toBottomOf="@id/location_room"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/location_room" />
+            app:layout_constraintBaseline_toBaselineOf="@id/location_room"
+            android:visibility="@{viewModel.isFavorite ? View.VISIBLE : View.INVISIBLE}"
+            android:text="@string/label_location_room"
+            />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/location_room"
-            style="@style/ViewerTextFieldStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="bottom"
-            android:text="@{viewModel.favoriteProduct.locationRoom}"
-            android:visibility="@{viewModel.isFavorite ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintStart_toStartOf="@id/guideline"
             app:layout_constraintTop_toBottomOf="@id/price"
-            tools:text="Kitchen" />
+            android:visibility="@{viewModel.isFavorite ? View.VISIBLE : View.INVISIBLE}"
+            android:text="@{viewModel.favoriteProduct.locationRoom}"
+            tools:text="Kitchen"
+            />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/location_in_room_label"
-            style="@style/ViewerCategoryStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/label_location_in_room"
-            android:visibility="@{viewModel.isFavorite ? View.VISIBLE : View.INVISIBLE}"
-            app:layout_constraintBottom_toBottomOf="@id/location_in_room"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/location_in_room" />
+            app:layout_constraintBaseline_toBaselineOf="@id/location_in_room"
+            android:visibility="@{viewModel.isFavorite ? View.VISIBLE : View.INVISIBLE}"
+            android:text="@string/label_location_in_room"
+            />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/location_in_room"
-            style="@style/ViewerTextFieldStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="bottom"
-            android:text="@{viewModel.favoriteProduct.locationInRoom}"
-            android:visibility="@{viewModel.isFavorite ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintStart_toStartOf="@id/guideline"
             app:layout_constraintTop_toBottomOf="@id/location_room"
-            tools:text="Cupboard under sink" />
+            android:text="@{viewModel.favoriteProduct.locationInRoom}"
+            android:visibility="@{viewModel.isFavorite ? View.VISIBLE : View.INVISIBLE}"
+            tools:text="Cupboard under sink"
+            />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/empty_screen_favorite_product_list_drawable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_list_add"
             android:tint="@color/primaryColor"
             android:layout_marginEnd="4dp"
-            android:visibility="@{viewModel.isFavorite ? View.GONE : View.VISIBLE}"
-            android:onClick="@{() -> viewModel.addFavoriteProduct()}"
             app:layout_constraintBottom_toBottomOf="@id/empty_screen_not_in_favorites_label"
-            app:layout_constraintEnd_toStartOf="@id/empty_screen_not_in_favorites_label"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/empty_screen_not_in_favorites_label"
             app:layout_constraintTop_toTopOf="@id/empty_screen_not_in_favorites_label"
             app:layout_constraintHorizontal_chainStyle="packed"
+            android:visibility="@{viewModel.isFavorite ? View.GONE : View.VISIBLE}"
+            android:onClick="@{() -> viewModel.addFavoriteProduct()}"
+            android:src="@drawable/ic_list_add"
             />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -136,21 +131,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginStart="4dp"
-            android:textColor="@color/darkGrey"
-            android:text="@string/empty_screen_add_to_favorites_message"
+            app:layout_constraintStart_toEndOf="@id/empty_screen_favorite_product_list_drawable"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             android:visibility="@{viewModel.isFavorite ? View.GONE : View.VISIBLE}"
             android:onClick="@{() -> viewModel.addFavoriteProduct()}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/empty_screen_favorite_product_list_drawable"
-            app:layout_constraintTop_toTopOf="parent"
+            android:text="@string/empty_screen_add_to_favorites_message"
             />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_begin="116dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

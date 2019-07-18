@@ -8,7 +8,8 @@
 
     <uses-feature
         android:name="android.hardware.camera.any"
-        android:required="false">
+        android:required="false"
+        >
     </uses-feature>
 
     <application
@@ -16,7 +17,8 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        >
 
         <!-- TODO: Auto backup see: https://developer.android.com/guide/topics/data/autobackup -->
 
@@ -28,54 +30,62 @@
 
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths">
+                android:resource="@xml/file_paths"
+                >
             </meta-data>
         </provider>
 
         <provider
             android:name=".provider.SuggestionsProvider"
             android:authorities="com.example.peter.thekitchenmenu.provider.SuggestionsProvider"
-            android:exported="false">
+            android:exported="false"
+            >
         </provider>
 
         <provider
             android:name=".provider.RecentSuggestionsProvider"
             android:authorities="com.example.peter.thekitchenmenu.provider.RecentSuggestionsProvider"
-            android:exported="false">
+            android:exported="false"
+            >
         </provider>
 
         <service
             android:name=".widget.WidgetServiceList"
-            android:permission="android.permission.BIND_REMOTEVIEWS">
+            android:permission="android.permission.BIND_REMOTEVIEWS"
+            >
         </service>
 
         <service
-            android:name=".widget.WidgetService">
+            android:name=".widget.WidgetService"
+            >
         </service>
 
         <receiver
-            android:name=".widget.TKMWidgetProvider">
+            android:name=".widget.TKMWidgetProvider"
+            >
 
             <intent-filter>
                 <action
-                    android:name="android.appwidget.action.APPWIDGET_UPDATE">
+                    android:name="android.appwidget.action.APPWIDGET_UPDATE"
+                    >
                 </action>
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/tkmwidget_provider_info">
+                android:resource="@xml/tkmwidget_provider_info"
+                >
             </meta-data>
         </receiver>
 
         <activity
             android:name=".ui.main.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme">
-
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"
+                    />
             </intent-filter>
         </activity>
 
@@ -83,54 +93,59 @@
         <activity
             android:name=".ui.catalog.product.ProductCatalogActivity"
             android:label="@string/activity_title_product_catalog"
-            android:theme="@style/AppTheme"
-            android:parentActivityName=".ui.main.MainActivity">
+            android:parentActivityName=".ui.main.MainActivity"
+            >
 
             <!-- Activates the search widget and points to the correct SearchableActivity -->
             <meta-data
                 android:name="android.app.default_searchable"
-                android:value=".ui.catalog.ActivitySearchProd">
+                android:value=".ui.catalog.ActivitySearchProd"
+                >
             </meta-data>
         </activity>
 
         <!-- Activity view of a single productEntities details -->
         <activity
             android:name=".ui.detail.product.producteditor.ProductEditorActivity"
-            android:theme="@style/AppTheme">
+            >
         </activity>
 
         <!-- Searchable activity for finding Products -->
         <activity
             android:name=".ui.catalog.product.SearchProducts"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            >
 
             <!-- Receives a query with a request to SEARCH -->
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
+                <action android:name="android.intent.action.SEARCH"
+                    />
             </intent-filter>
 
             <!-- Receives a query with a request to view a specific item -->
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.VIEW"
+                    />
             </intent-filter>
 
             <!-- Points to searchable configuration for this search activity -->
             <meta-data
                 android:name="android.app.searchable"
-                android:resource="@xml/searchable_product">
+                android:resource="@xml/searchable_product"
+                >
             </meta-data>
         </activity>
 
         <activity
             android:name=".ui.catalog.recipe.RecipeCatalogActivity"
             android:label="@string/title_recipe_catalog"
-            android:theme="@style/AppTheme">
+            >
         </activity>
 
         <activity
             android:name=".ui.detail.recipe.RecipeEditorActivity"
             android:label="@string/title_recipe_editor"
-            android:theme="@style/AppTheme">
+            >
         </activity>
 
         <activity
@@ -141,16 +156,18 @@
         <activity
             android:name=".ui.detail.product.productviewer.ProductViewerActivity"
             android:label="@string/activity_title_view_product"
-            android:theme="@style/AppTheme">
+            >
         </activity>
 
-        <activity android:name=".ui.detail.product.favoriteproducteditor.FavoriteProductEditorActivity"
-            android:theme="@style/AppTheme">
+        <activity
+            android:name=".ui.detail.product.favoriteproducteditor.FavoriteProductEditorActivity"
+            >
         </activity>
 
         <uses-library
             android:name="android.test.runner"
-            android:required="false">
+            android:required="false"
+            >
         </uses-library>
     </application>
 </manifest>

@@ -203,12 +203,9 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
 
     @Override
     public void reviewEditedProduct(ProductEntity productEntity) {
-        setResult(RESULT_ADD_EDIT_PRODUCT_OK, intentWithEntity(productEntity));
+        setResult(RESULT_ADD_EDIT_PRODUCT_OK, new Intent().putExtra(
+                EXTRA_PRODUCT_ENTITY, productEntity));
         finish();
-    }
-
-    private Intent intentWithEntity(ProductEntity productEntity) {
-        return new Intent().putExtra(EXTRA_PRODUCT_ENTITY, productEntity);
     }
 
     @Override

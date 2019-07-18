@@ -18,7 +18,6 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/retailer_label"
-            style="@style/EditableCategoryStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -29,7 +28,6 @@
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/editable_retailer"
-            style="@style/EditableFieldStyle"
             android:layout_width="0dp"
             android:layout_height="@dimen/standard_input_item_height"
             android:layout_marginStart="8dp"
@@ -45,7 +43,6 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/price_label"
-            style="@style/EditableCategoryStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -57,7 +54,6 @@
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/editable_price"
-            style="@style/EditableFieldStyle"
             android:layout_width="0dp"
             android:layout_height="@dimen/standard_input_item_height"
             android:layout_marginStart="8dp"
@@ -73,7 +69,6 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/storage_room_label"
-            style="@style/EditableCategoryStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -85,7 +80,6 @@
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/editable_location_room"
-            style="@style/EditableFieldStyle"
             android:layout_width="0dp"
             android:layout_height="@dimen/standard_input_item_height"
             android:layout_marginStart="8dp"
@@ -101,7 +95,6 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/location_in_room_label"
-            style="@style/EditableCategoryStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -113,7 +106,6 @@
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/editable_location_in_room"
-            style="@style/EditableFieldStyle"
             android:layout_width="0dp"
             android:layout_height="@dimen/standard_input_item_height"
             android:layout_marginStart="8dp"

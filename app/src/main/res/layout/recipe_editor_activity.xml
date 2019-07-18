@@ -16,17 +16,14 @@
                 android:id="@+id/recipe_editor_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/primaryColor"
-                android:fitsSystemWindows="true"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+                android:fitsSystemWindows="true"/>
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:id="@+id/recipe_editor_coordinatorLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/brightGrey">
+            >
 
             <ScrollView
                 android:layout_width="match_parent"

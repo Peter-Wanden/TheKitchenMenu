@@ -24,11 +24,7 @@
         android:layout_marginEnd="@dimen/card_view_margin"
         android:layout_marginTop="@dimen/card_view_margin_top_bottom"
         android:layout_marginBottom="@dimen/card_view_margin_top_bottom"
-        android:clickable="true"
         android:elevation="@dimen/card_view_elevation"
-        android:focusable="true"
-        android:foregroundGravity="center"
-        android:background="@color/white"
         app:cardCornerRadius="4dp"
         android:onClick="@{() -> listener.onFavoriteRecipeClicked(favoriteRecipeModel)}"
         >
@@ -38,20 +34,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent=".73">
+            </androidx.constraintlayout.widget.Guideline>
+
             <TextView
                 android:id="@+id/recipe_list_item_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:ellipsize="marquee"
-                android:fontFamily="sans-serif-medium"
-                android:gravity="start|top"
-                android:maxLines="3"
                 android:paddingEnd="@dimen/list_item_top_full_margin"
                 android:paddingStart="@dimen/list_item_top_full_margin"
                 android:paddingTop="@dimen/list_item_top_half_margin"
-                android:textAppearance="?android:textAppearanceMedium"
-                android:textColor="@color/darkGrey"
-                app:layout_constraintEnd_toStartOf="@+id/product_list_item_image"
+                app:layout_constraintEnd_toStartOf="@id/guideline"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Cirio canned chopped tomatoes"
@@ -60,36 +58,28 @@
             <ImageView
                 android:id="@+id/product_list_item_image"
                 android:contentDescription="@string/cd_picture_of_product"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:layout_margin="@dimen/list_item_bottom_margin"
-                android:layout_marginEnd="8dp"
-                android:src="@drawable/cirio_tinned_tomatoes"
-                android:transitionName="@string/transition_product"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintStart_toEndOf="@id/guideline"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@drawable/cirio_tinned_tomatoes"
+                />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/recipe_list_item_add_to_favorites"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_margin="8dp"
+                android:tint="@color/primaryColor"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 android:src="@drawable/ic_list_add"
-                android:tint="@color/primaryColor"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
                 />
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/recipe_list_item_remove_from_favorites"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_margin="8dp"
-                android:src="@drawable/ic_list_add_check"
-                android:tint="@color/primaryColor"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </layout>

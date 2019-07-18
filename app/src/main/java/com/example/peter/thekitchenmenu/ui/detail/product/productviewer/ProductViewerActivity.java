@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.peter.thekitchenmenu.R;
@@ -35,7 +36,6 @@ public class ProductViewerActivity
     public static final int RESULT_DELETE_PRODUCT_OK = RESULT_FIRST_USER + 1;
     public static final int RESULT_FAVORITE_ADDED_OK = RESULT_FIRST_USER + 2;
     public static final int RESULT_FAVORITE_NOT_ADDED = RESULT_FIRST_USER + 3;
-    public static final int RESULT_PRODUCT_UNAVAILABLE = RESULT_FIRST_USER + 4;
 
     private ProductViewerActivityBinding binding;
     private ProductViewerViewModel productViewerViewModel;
@@ -59,7 +59,6 @@ public class ProductViewerActivity
 
     private void setupToolbar() {
         setSupportActionBar(binding.productViewerActivityToolbar);
-
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -67,24 +66,18 @@ public class ProductViewerActivity
     private void setupViewModels() {
         productViewerViewModel = obtainProductViewerViewModel(this);
         productViewerViewModel.setNavigator(this);
-        productViewerViewModel.getHasOptionsMenuEvent().setValue(true);
-
-        if (getIntent().hasExtra(EXTRA_NEW_PRODUCT_ID))
-            productViewerViewModel.setNewProductAdded(true);
-        else
-            productViewerViewModel.setNewProductAdded(false);
+        binding.setViewModel(productViewerViewModel);
 
         favoriteProductViewerViewModel = obtainFavoriteProductViewerViewModel(this);
         favoriteProductViewerViewModel.setNavigator(this);
     }
 
     private void setupObservers() {
-        favoriteProductViewerViewModel.getProductId().observe(
-                this, this::startProductViewerViewModel);
+        productViewerViewModel.getSetTitleEvent().observe(this, this::setActivityTitle);
     }
 
-    private void startProductViewerViewModel(String productId) {
-        productViewerViewModel.start(productId);
+    private void setActivityTitle(String title) {
+        setTitle(title);
     }
 
     public static ProductViewerViewModel obtainProductViewerViewModel(
@@ -104,112 +97,73 @@ public class ProductViewerActivity
     }
 
     private void addFragments() {
-        String productId = null;
-
-        if (getIntent().hasExtra(ProductEditorActivity.EXTRA_PRODUCT_ID)) {
-            productId = getIntent().getStringExtra(ProductEditorActivity.EXTRA_PRODUCT_ID);
-
-        } else if (getIntent().hasExtra(EXTRA_NEW_PRODUCT_ID)) {
-            productId = getIntent().getStringExtra(EXTRA_NEW_PRODUCT_ID);
-        }
-
-        ProductViewerFragment productViewerFragment =
-                findOrReplaceViewerFragment(productId);
-
-        ActivityUtils.replaceFragmentInActivity(
-                getSupportFragmentManager(),
-                productViewerFragment,
-                R.id.product_viewer_content_frame);
-
-        FavoriteProductViewerFragment favoriteProductViewerFragment =
-                findOrReplaceFavoriteProductViewerFragment();
-
-        ActivityUtils.replaceFragmentInActivity(
-                getSupportFragmentManager(),
-                favoriteProductViewerFragment,
-                R.id.favorite_product_viewer_content_frame);
+        String productId = getIntent().getStringExtra(ProductEditorActivity.EXTRA_PRODUCT_ID);
+        findOrReplaceViewerFragment(productId);
+        findOrReplaceFavoriteProductViewerFragment(productId);
     }
 
-    @NonNull
-    private ProductViewerFragment findOrReplaceViewerFragment(String productId) {
+    private void findOrReplaceViewerFragment(String productId) {
         ProductViewerFragment fragment = (ProductViewerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.product_viewer_content_frame);
 
         if (fragment == null)
             fragment = ProductViewerFragment.newInstance(productId);
-        return fragment;
+
+        ActivityUtils.replaceFragmentInActivity(getSupportFragmentManager(),
+                fragment, R.id.product_viewer_content_frame);
     }
 
-    @NonNull
-    private FavoriteProductViewerFragment findOrReplaceFavoriteProductViewerFragment() {
+    private void findOrReplaceFavoriteProductViewerFragment(String productId) {
         FavoriteProductViewerFragment fragment = (FavoriteProductViewerFragment)
                 getSupportFragmentManager().findFragmentById(
                         R.id.favorite_product_viewer_content_frame);
 
         if (fragment == null) {
-            String favoriteProductId = null;
-
-            if (getIntent().hasExtra(FavoriteProductEditorActivity.EXTRA_FAVORITE_PRODUCT_ID)) {
-                favoriteProductId = getIntent().getStringExtra(
-                        FavoriteProductEditorActivity.EXTRA_FAVORITE_PRODUCT_ID);
-            }
-            fragment = FavoriteProductViewerFragment.newInstance(favoriteProductId);
+            fragment = FavoriteProductViewerFragment.newInstance(productId);
         }
-        return fragment;
+        ActivityUtils.replaceFragmentInActivity(getSupportFragmentManager(),
+                fragment, R.id.favorite_product_viewer_content_frame);
     }
 
-    // Start modes:
+
+    // Start modes
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onActivityResult: requestCode=" + requestCode + " resultCode=" + resultCode);
+
+        if (requestCode == ProductEditorActivity.REQUEST_ADD_EDIT_PRODUCT) {
+            productViewerViewModel.handleActivityResult(requestCode, resultCode, data);
+            favoriteProductViewerViewModel.start(
+                    productViewerViewModel.productEntityObservable.get().getId());
+        }
+
+        else if (requestCode == FavoriteProductEditorActivity.REQUEST_ADD_EDIT_FAVORITE_PRODUCT) {
+            favoriteProductViewerViewModel.handleActivityResult(resultCode, data);
+            productViewerViewModel.handleActivityResult(requestCode, resultCode, data);
+        }
+    }
+
     private void start() {
         Intent intent = getIntent();
 
-        // Review and save added/edited product
         if (intent.hasExtra(ProductEditorActivity.EXTRA_PRODUCT_ENTITY)) {
             ProductEntity productEntity = getIntent().getParcelableExtra(
                     ProductEditorActivity.EXTRA_PRODUCT_ENTITY);
-            productViewerViewModel.product.set(productEntity);
+            productViewerViewModel.start(productEntity);
+            favoriteProductViewerViewModel.start(productEntity.getId());
         }
-        // View product with favorite
-        else if (intent.hasExtra(FavoriteProductEditorActivity.EXTRA_FAVORITE_PRODUCT_ID)) {
-            favoriteProductViewerViewModel.start(intent.getStringExtra(
-                    FavoriteProductEditorActivity.EXTRA_FAVORITE_PRODUCT_ID));
-        }
-        // View product (has no favorite)
         else if (intent.hasExtra(ProductEditorActivity.EXTRA_PRODUCT_ID)) {
-            productViewerViewModel.start(intent.getStringExtra(
-                    ProductEditorActivity.EXTRA_PRODUCT_ID));
+            String productId = intent.getStringExtra(ProductEditorActivity.EXTRA_PRODUCT_ID);
+            productViewerViewModel.start(productId);
+            favoriteProductViewerViewModel.start(productId);
         }
-    }
-
-    private void setActivityTitle() {
-        if (getIntent().hasExtra(ProductEditorActivity.EXTRA_PRODUCT_ID))
-            setTitle(R.string.activity_title_view_product);
-        else if (getIntent().hasExtra(EXTRA_NEW_PRODUCT_ID))
-            setTitle(R.string.activity_title_review_new_product);
     }
 
     @Override
     public boolean onSupportNavigateUp() {
-        if (productViewerViewModel.isNewProductAdded()) {
-            goToProductCatalog();
-        }
-        if (favoriteProductViewerViewModel.isFavoriteAddedEdited()) {
-            setResult(FavoriteProductEditorActivity.RESULT_ADD_EDIT_FAVORITE_PRODUCT_OK);
-        }
-        finish();
+        onBackPressed();
         return true;
-    }
-
-    private void goToProductCatalog() {
-        Intent intent = new Intent(this, ProductCatalogActivity.class);
-        intent.putExtra(
-                ProductCatalogActivity.NEW_PRODUCT_ID_ADDED,
-                productViewerViewModel.product.get().getId());
-        startActivity(intent);
-    }
-
-    @Override
-    public void onBackPressed() {
-        goToProductCatalog();
     }
 
     @Override
@@ -228,6 +182,7 @@ public class ProductViewerActivity
 
     @Override
     public void addFavoriteProduct(String productId) {
+        Log.d(TAG, "addFavoriteProduct: productId=" + productId);
         Intent intent = new Intent(this, FavoriteProductEditorActivity.class);
         intent.putExtra(ProductEditorActivity.EXTRA_PRODUCT_ID, productId);
         startActivityForResult(intent,
@@ -235,31 +190,11 @@ public class ProductViewerActivity
     }
 
     @Override
-    public void editFavoriteProduct() {
+    public void editFavoriteProduct(String productId) {
         Intent intent = new Intent(this, FavoriteProductEditorActivity.class);
-        intent.putExtra(
-                ProductEditorActivity.EXTRA_PRODUCT_ID,
-                productViewerViewModel.product.get().getId());
-        intent.putExtra(
-                FavoriteProductEditorActivity.EXTRA_FAVORITE_PRODUCT_ID,
-                favoriteProductViewerViewModel.favoriteProduct.get().getId());
-        startActivityForResult(
-                intent,
+        intent.putExtra(ProductEditorActivity.EXTRA_PRODUCT_ID, productId);
+        startActivityForResult(intent,
                 FavoriteProductEditorActivity.REQUEST_ADD_EDIT_FAVORITE_PRODUCT);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "onActivityResult: requestCode=" + requestCode + " resultCode=" + resultCode);
-
-        if (requestCode == FavoriteProductEditorActivity.REQUEST_ADD_EDIT_FAVORITE_PRODUCT) {
-            favoriteProductViewerViewModel.handleActivityResult(resultCode, data);
-        }
-        else if (requestCode == ProductEditorActivity.REQUEST_ADD_EDIT_PRODUCT) {
-            productViewerViewModel.handleActivityResult(resultCode, data);
-            favoriteProductViewerViewModel.handleActivityResult(resultCode, data);
-        }
     }
 
     @Override

@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
+import com.example.peter.thekitchenmenu.data.repository.FavoriteProductsDataSource;
 import com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.product.productviewer.FavoriteProductViewerViewModel;
 
@@ -18,11 +19,11 @@ public class ViewModelFactoryFavoriteProduct extends ViewModelProvider.NewInstan
     @SuppressLint("StaticFieldLeak")
     private static volatile ViewModelFactoryFavoriteProduct INSTANCE;
     private final Application application;
-    private final DataSource<FavoriteProductEntity> favoriteProductEntityDataSource;
+    private final FavoriteProductsDataSource favoriteProductEntityDataSource;
 
     private ViewModelFactoryFavoriteProduct(
             Application application,
-            DataSource<FavoriteProductEntity> favoriteProductEntityDataSource) {
+            FavoriteProductsDataSource favoriteProductEntityDataSource) {
 
         this.application = application;
         this.favoriteProductEntityDataSource = favoriteProductEntityDataSource;

@@ -32,7 +32,6 @@
 
         <TextView
             android:id="@+id/description_label"
-            android:textColor="@color/darkGrey"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -47,14 +46,12 @@
 
         <EditText
             android:id="@+id/editable_description"
-            android:textColor="@color/darkGrey"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
-            android:backgroundTint="@color/primaryLightColor"
             android:inputType="textCapWords"
             android:hint="@string/hint_description"
             android:text='@={viewModel.description}'
@@ -67,7 +64,6 @@
             android:id="@+id/made_by_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/darkGrey"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:paddingStart="8dp"
@@ -85,8 +81,6 @@
             android:layout_marginEnd="8dp"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
-            android:textColor="@color/darkGrey"
-            android:backgroundTint="@color/primaryLightColor"
             android:text='@={viewModel.shoppingListItemName}'
             android:hint="@string/hint_shopping_list_item"
             android:inputType="textCapSentences"
@@ -97,7 +91,6 @@
 
         <TextView
             android:id="@+id/category_label"
-            android:textColor="@color/darkGrey"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingStart="8dp"
@@ -110,11 +103,9 @@
 
         <Spinner
             android:id="@+id/spinner_category"
-            style="@style/spinner_style"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/standard_input_item_height"
             android:spinnerMode="dropdown"
-            android:backgroundTint="@color/primaryLightColor"
             android:selectedItemPosition='@={viewModel.category}'
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/spinner_shelf_life"
@@ -123,7 +114,6 @@
 
         <TextView
             android:id="@+id/shelf_life_label"
-            android:textColor="@color/darkGrey"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingStart="8dp"
@@ -137,17 +127,14 @@
 
         <Spinner
             android:id="@+id/spinner_shelf_life"
-            style="@style/spinner_style"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/standard_input_item_height"
             android:spinnerMode="dropdown"
-            android:backgroundTint="@color/primaryLightColor"
             android:selectedItemPosition='@={viewModel.shelfLife}'
             android:visibility='@{viewModel.category == 1 ? View.VISIBLE : View.GONE}'
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/spinner_category"
             app:layout_constraintTop_toBottomOf="@id/shelf_life_label"
-
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -4,6 +4,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/menu_item_post_product"
+        android:title="@string/menu_item_post_product"
+        app:showAsAction="always|withText">
+    </item>
+
+    <item
         android:id="@+id/menu_item_edit_product"
         android:title="@string/menu_item_edit_product"
         android:icon="@drawable/ic_edit"
