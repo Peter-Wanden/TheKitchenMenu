@@ -130,13 +130,10 @@ public class ProductEditorViewModel extends ObservableViewModel {
                     updatedImageModel.getRemoteMediumImageUri(),
                     updatedImageModel.getLocalLargeImageUri()
             );
+            // If back pressed in instantiating activity, stops same product being saved with new ID
+            isExistingProduct = false;
+
             navigator.reviewNewProduct(productEntity);
         }
-    }
-
-    @Override
-    protected void onCleared() {
-        super.onCleared();
-        // TODO - Abort all network operations, unsubscribe observers and drop callbacks.
     }
 }

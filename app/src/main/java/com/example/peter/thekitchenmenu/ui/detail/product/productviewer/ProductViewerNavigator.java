@@ -8,5 +8,8 @@ import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 public interface ProductViewerNavigator {
 
     void editProduct(ProductEntity productEntity);
+
     void deleteProduct(String productId);
+
+    void doneWithProduct(String productId);
 }

@@ -175,8 +175,21 @@ public class ProductViewerActivity
 
     @Override
     public void deleteProduct(String productId) {
+        // Product has been deleted, if favorite exists it must delete also
         favoriteProductViewerViewModel.deleteFavoriteProduct();
         setResult(RESULT_DELETE_PRODUCT_OK);
+        // todo - clear the backstack in the intent
+        finish();
+    }
+
+    @Override
+    public void doneWithProduct(String productId) {
+        if (productId != null) {
+            Intent intent = new Intent();
+            intent.putExtra(ProductEditorActivity.EXTRA_PRODUCT_ID, productId);
+        }
+        setResult(ProductEditorActivity.RESULT_ADD_EDIT_PRODUCT_OK);
+        // todo - clear the backstack
         finish();
     }
 

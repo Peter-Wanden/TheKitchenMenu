@@ -108,7 +108,7 @@ public class ProductCatalogFavoritesRecyclerAdapter
         FavoriteProductItemUserActionsListener listener = new FavoriteProductItemUserActionsListener() {
             @Override
             public void onFavoriteProductClicked(ProductModel productModel) {
-                viewModel.getViewProductEvent().setValue(productModel);
+                viewModel.viewProduct(productModel);
             }
 
             @Override

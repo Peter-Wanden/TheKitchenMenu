@@ -19,7 +19,7 @@ import com.google.android.gms.common.util.Strings;
 
 public class ProductViewerViewModel
         extends AndroidViewModel
-        implements DataSource.GetEntityCallback<ProductEntity> {
+        implements DataSource.GetEntityCallback<ProductEntity>, ProductViewerNavigator{
 
     private static final String TAG = "tkm-ProductViewerVM";
 
@@ -58,9 +58,11 @@ public class ProductViewerViewModel
     }
 
     public void start(String productId) {
-        if (!Strings.isEmptyOrWhitespace(productId)) {
-            dataIsLoading = true;
-            productEntityDataSource.getById(productId, this);
+        if (!showPostMessageEvent.get()) {
+            if (!Strings.isEmptyOrWhitespace(productId)) {
+                dataIsLoading = true;
+                productEntityDataSource.getById(productId, this);
+            }
         }
     }
 
@@ -74,6 +76,7 @@ public class ProductViewerViewModel
 
     @Override
     public void onEntityLoaded(ProductEntity product) {
+        Log.d(TAG, "onEntityLoaded: ");
         setProductEntityObservable(product);
         dataIsLoading = false;
         setupDisplayAsViewer();
@@ -89,17 +92,8 @@ public class ProductViewerViewModel
         dataIsLoading = false;
     }
 
-    void deleteProduct() {
-        // todo, what if there is no product to delete (product added somewhere else, view before save here, then delete?)
-        productEntityDataSource.deleteById(productEntityObservable.get().getId());
-        navigator.deleteProduct(productEntityObservable.get().getId());
-    }
-
-    void editProduct() {
-        navigator.editProduct(productEntityObservable.get());
-    }
-
     void postProduct() {
+        Log.d(TAG, "postProduct: ");
         productEntityDataSource.save(productEntityObservable.get());
         setupDisplayAsViewer();
     }
@@ -110,17 +104,20 @@ public class ProductViewerViewModel
 
     void handleActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == ProductEditorActivity.RESULT_ADD_EDIT_PRODUCT_OK) {
-            productEntityObservable.set(data.getParcelableExtra(
-                    ProductEditorActivity.EXTRA_PRODUCT_ENTITY));
-            setupDisplayAsReviewAfterEdit();
+
+            ProductEntity productEntity = data.getParcelableExtra(
+                    ProductEditorActivity.EXTRA_PRODUCT_ENTITY);
+            start(productEntity);
         }
 
         else if (requestCode == FavoriteProductEditorActivity.REQUEST_ADD_EDIT_FAVORITE_PRODUCT) {
+            Log.d(TAG, "handleActivityResult: ");
             setupDisplayAsViewer();
         }
     }
 
     private void setupDisplayAsReviewAfterEdit() {
+        Log.d(TAG, "setupDisplayAsReviewAfterEdit: ");
         setTitleEvent.setValue(resources.getString(R.string.activity_title_review_new_product));
         hasOptionsMenuEvent.setValue(true);
         setMenuOptionsToPostEvent.setValue(true);
@@ -129,6 +126,7 @@ public class ProductViewerViewModel
     }
 
     private void setupDisplayAsViewer() {
+        Log.d(TAG, "setupDisplayAsViewer: ");
         setTitleEvent.setValue(resources.getString(R.string.activity_title_view_product));
         showPostMessageEvent.set(false);
 
@@ -140,5 +138,44 @@ public class ProductViewerViewModel
 
     public void setViewOnly(boolean viewOnly) {
         this.viewOnly = viewOnly;
+    }
+
+    void editProduct() {
+        editProduct(productEntityObservable.get());
+    }
+
+    @Override
+    public void editProduct(ProductEntity productEntity) {
+        navigator.editProduct(productEntity);
+    }
+
+    void deleteProduct() {
+        if (showPostMessageEvent.get()) {
+            // Product add/edit has not been saved so exit as is.
+            productEntityObservable.set(null);
+            doneWithProduct();
+        }
+        else {
+            productEntityDataSource.deleteById(productEntityObservable.get().getId());
+            navigator.deleteProduct(productEntityObservable.get().getId());
+        }
+    }
+
+    @Override
+    public void deleteProduct(String productId) {
+
+    }
+
+    void doneWithProduct() {
+        if (productEntityObservable.get() != null) {
+            doneWithProduct(productEntityObservable.get().getId());
+        }
+        else
+            doneWithProduct(null);
+    }
+
+    @Override
+    public void doneWithProduct(String productId) {
+        navigator.doneWithProduct(productId);
     }
 }

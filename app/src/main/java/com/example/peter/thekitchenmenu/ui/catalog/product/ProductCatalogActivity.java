@@ -42,7 +42,6 @@ public class ProductCatalogActivity
         setupToolBar();
         setupFab();
         setupViewModel();
-        subscribeNavigationChanges();
         setupFragmentPageAdapter();
         setTitle(this.getResources().getString(R.string.activity_title_product_catalog));
     }
@@ -69,18 +68,6 @@ public class ProductCatalogActivity
         return ViewModelProviders.of(activity, factory).get(ProductCatalogViewModel.class);
     }
 
-    private void subscribeNavigationChanges() {
-        viewModel.getViewProductEvent().observe(this, productModel -> {
-            if (productModel != null)
-                viewProduct(productModel);
-        });
-
-        viewModel.getAddToFavoritesEvent().observe(this, productId -> {
-            if (productId != null)
-                addToFavorites(productId);
-        });
-    }
-
     private void setupFragmentPageAdapter() {
         CatalogFragmentPageAdapter fragmentPageAdapter =
                 new CatalogFragmentPageAdapter(getSupportFragmentManager());
@@ -105,7 +92,7 @@ public class ProductCatalogActivity
 
     private void setupFab(){
         FloatingActionButton fab = findViewById(R.id.product_catalog_activity_fab);
-        fab.setOnClickListener(view -> viewModel.addProduct());
+        fab.setOnClickListener(view -> viewModel.addNewProduct());
     }
 
     @Override
@@ -116,7 +103,6 @@ public class ProductCatalogActivity
 
     @Override
     public void addToFavorites(String productId) {
-        // Launch AddToFavorites, don't forget to deal with onActivityResult
         Intent intent = new Intent(this, FavoriteProductEditorActivity.class);
         intent.putExtra(ProductEditorActivity.EXTRA_PRODUCT_ID, productId);
         startActivity(intent);

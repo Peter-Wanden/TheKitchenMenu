@@ -85,30 +85,35 @@
                 app:formatNumberOfItems="@{productModel.productEntity.numberOfProducts}"
                 tools:text="400 ml" />
 
-            <!-- TODO - Change for a single image view and swap out the image resource -->
-            <androidx.appcompat.widget.AppCompatImageView
+            <!-- TODO - Change for a single IMAGE BUTTON! and swap out the image resource -->
+            <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/product_list_item_add_to_favorites"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:layout_margin="8dp"
+                android:elevation="4dp"
+                android:tint="@color/white"
+                android:backgroundTint="@color/primaryDarkColor"
                 android:src="@drawable/ic_list_add"
                 android:visibility="@{productModel.favorite ? View.GONE : View.VISIBLE}"
                 android:onClick="@{() -> listener.onAddToFavoritesClicked(productModel)}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 />
-            <androidx.appcompat.widget.AppCompatImageView
+            <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/product_list_item_remove_from_favorites"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:layout_margin="8dp"
+                android:elevation="4dp"
+                android:tint="@color/white"
+                android:backgroundTint="@color/primaryDarkColor"
                 android:src="@drawable/ic_list_add_check"
                 android:visibility="@{productModel.favorite ? View.VISIBLE : View.GONE}"
                 android:onClick="@{() -> listener.onRemoveFromFavoritesClicked(productModel)}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </layout>

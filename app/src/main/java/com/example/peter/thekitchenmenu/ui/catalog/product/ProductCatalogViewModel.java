@@ -17,11 +17,11 @@ import androidx.databinding.ObservableBoolean;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
-public class ProductCatalogViewModel extends AndroidViewModel {
+public class ProductCatalogViewModel extends AndroidViewModel
+        implements ProductNavigator, ProductItemNavigator {
 
     private static final String TAG = "tkm-CatalogProductsVM";
 
-    // TODO - Move data loading to interactor
     private ProductCatalogInteractor productInteractor;
     private ProductNavigator productNavigator;
     private ProductItemNavigator itemNavigator;
@@ -33,8 +33,6 @@ public class ProductCatalogViewModel extends AndroidViewModel {
     private final MutableLiveData<List<ProductModel>> productModelList = new MutableLiveData<>();
     private final MutableLiveData<List<ProductModel>> favoriteProductModelList = new MutableLiveData<>();
 
-    private final SingleLiveEvent<ProductModel> viewProductEvent = new SingleLiveEvent<>();
-    private final SingleLiveEvent<String> addToFavoritesEvent = new SingleLiveEvent<>();
     private final MutableLiveData<String> searchQueryEvent = new MutableLiveData<>();
 
     public ProductCatalogViewModel(
@@ -54,7 +52,8 @@ public class ProductCatalogViewModel extends AndroidViewModel {
         itemNavigator = null;
     }
 
-    void addProduct() {
+    @Override
+    public void addNewProduct() {
         if (productNavigator != null)
             productNavigator.addNewProduct();
     }
@@ -142,15 +141,18 @@ public class ProductCatalogViewModel extends AndroidViewModel {
         return favoriteProductModelList;
     }
 
-    SingleLiveEvent<ProductModel> getViewProductEvent() {
-        return viewProductEvent;
+    @Override
+    public void viewProduct(ProductModel productModel) {
+        itemNavigator.viewProduct(productModel);
     }
 
-    SingleLiveEvent<String> getAddToFavoritesEvent() {
-        return addToFavoritesEvent;
+    @Override
+    public void addToFavorites(String productId) {
+        itemNavigator.addToFavorites(productId);
     }
 
-    void removeFromFavorites(String favoriteProductId) {
+    @Override
+    public void removeFromFavorites(String favoriteProductId) {
         productInteractor.removeFavoriteProduct(favoriteProductId);
         start();
     }

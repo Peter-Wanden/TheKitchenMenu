@@ -99,7 +99,7 @@
             <!-- Activates the search widget and points to the correct SearchableActivity -->
             <meta-data
                 android:name="android.app.default_searchable"
-                android:value=".ui.catalog.ActivitySearchProd"
+                android:value=".ui.catalog.product.SearchProducts"
                 >
             </meta-data>
         </activity>

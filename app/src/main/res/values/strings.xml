@@ -267,6 +267,7 @@
 
     <!-- Menu items for ProductViewerFragment -->
     <string name="menu_item_post_product">POST</string>
+    <string name="menu_item_done">DONE</string>
     <string name="menu_item_edit_product">Edit product</string>
     <string name="menu_item_delete_product">Delete product</string>
     <!-- ProductViewer Activity -->

@@ -1,7 +1,6 @@
 package com.example.peter.thekitchenmenu.ui.detail.product.productviewer;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.ProductViewerDetailFragmentBinding;
@@ -100,10 +98,14 @@ public class ProductViewerFragment extends Fragment {
 
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
-        if (setMenuOptionsToPost)
+        if (setMenuOptionsToPost) {
+            menu.findItem(R.id.menu_item_done).setVisible(false);
             menu.findItem(R.id.menu_item_post_product).setVisible(true);
-        else
+        }
+        else {
             menu.findItem(R.id.menu_item_post_product).setVisible(false);
+            menu.findItem(R.id.menu_item_done).setVisible(true);
+        }
 
         super.onPrepareOptionsMenu(menu);
     }
@@ -119,6 +121,8 @@ public class ProductViewerFragment extends Fragment {
                 return true;
             case R.id.menu_item_post_product:
                 productViewerViewModel.postProduct();
+            case R.id.menu_item_done:
+                productViewerViewModel.doneWithProduct();
         }
         return false;
     }
