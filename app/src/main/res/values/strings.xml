@@ -7,7 +7,7 @@
     <string name="cd_add_image_from_camera">Select to add image from camera</string>
     <string name="cd_add_image_from_gallery">Click to add image from gallery</string>
     <!-- Attach to any ImageView's of the recipe -->
-    <string name="cd_save_product">Click to save the current product</string>
+    <string name="cd_done">Click when done editing product</string>
     <string name="cd_delete_product">Click to delete the current product</string>
     <string name="cd_action_edit_product">Click to edit the current product</string>
     <string name="cd_add_image">Click to add a picture</string>
@@ -197,7 +197,7 @@
 
     <!-- ProductCatalogActivity -->
     <string name="product_catalog_empty_view_title_text">The cupboards are empty.</string>
-    <string name="product_catalog_empty_view_subtitle_text">Press + to add some productEntities!</string>
+    <string name="product_catalog_empty_view_subtitle_text">Press + to add some products!</string>
     <string name="image_of_meal">An image of the selected recipe</string>
     <string name="activity_catalog_products_tab_1_title">All Products</string>
     <string name="activity_catalog_products_tab_2_title">My Favorites</string>
@@ -233,7 +233,7 @@
 
     <!-- Search strings -->
     <string name="search">Search</string>
-    <string name="search_hint">Search productEntities…</string>
+    <string name="search_hint">Search products…</string>
     <string name="tkm_product_descriptions">Product descriptions</string>
 
     <!-- Recipe Catalog -->
@@ -270,16 +270,29 @@
     <string name="menu_item_done">DONE</string>
     <string name="menu_item_edit_product">Edit product</string>
     <string name="menu_item_delete_product">Delete product</string>
+    <string name="menu_item_discard_changes">Discard changes</string>
+
+    <!-- Menu items for FavoriteProductViewerFragment -->
+    <string name="menu_item_edit_favorite">Edit favorite info</string>
+    <string name="menu_item_delete_favorite">Remove from favorites</string>
+
+    <!-- Menu items for ProductEditor activity -->
+    <string name="menu_item_review">REVIEW</string>
+
+    <!-- Standard Dialog messages when editing -->
+    <!-- Dialog message when user is leaving editor but hasn't saved changes [CHAR LIMIT=NONE] -->
+    <string name="unsaved_changes_dialog_msg">Discard your changes and quit editing?</string>
+    <!-- Dialog button text for the option to discard a user's changes [CHAR LIMIT=20] -->
+    <string name="discard">Discard</string>
+    <!-- Dialog button text for the option to keep editing [CHAR LIMIT=20] -->
+    <string name="keep_editing">Keep editing</string>
+
     <!-- ProductViewer Activity -->
     <string name="review_before_post_message">This is how your product will look. Please review the
         details to ensure they are as accurate as possible. When complete press ‘POST’ and your
         product will be available to the community to share. Once your product is used by others
         you will not be able to edit it, so please double check to make sure everything is correct.
         Thank you for adding products, its an enormous help to our community!</string>
-
-    <!-- Menu items for FavoriteProductViewerFragment -->
-    <string name="menu_item_edit_favorite">Edit favorite info</string>
-    <string name="menu_item_delete_favorite">Remove from favorites</string>
 
     <!-- PRICING -->
     <string name="min_currency_value">0.01</string>

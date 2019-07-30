@@ -1,13 +1,14 @@
 package com.example.peter.thekitchenmenu.ui.detail.product.producteditor;
 
+import android.app.AlertDialog;
 import android.app.Application;
 
+import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.data.model.ProductIdentityModel;
 import com.example.peter.thekitchenmenu.data.model.ImageModel;
 import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
-import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 
@@ -22,6 +23,7 @@ public class ProductEditorViewModel extends ObservableViewModel {
 
     private final MutableLiveData<ProductEntity> existingProductEntity = new MutableLiveData<>();
     private final SingleLiveEvent<Boolean> showSaveButtonEvent = new SingleLiveEvent<>();
+    private final SingleLiveEvent<Void> showUnsavedChangesDialogEvent = new SingleLiveEvent<>();
 
     private ImageModel updatedImageModel = new ImageModel();
     private ProductIdentityModel updatedIdentityModel;
@@ -30,7 +32,8 @@ public class ProductEditorViewModel extends ObservableViewModel {
     private boolean
             isExistingProduct = false,
             identityModelIsValid = false,
-            measurementModelIsValid = false;
+            measurementModelIsValid = false,
+            productEntityHasUpdates = false;
     // TODO - Change category and shelf life to an enum
 
     public ProductEditorViewModel(@NonNull Application application) {
@@ -58,6 +61,7 @@ public class ProductEditorViewModel extends ObservableViewModel {
     }
 
     void setUpdatedImageModel(ImageModel updatedImageModel) {
+        productEntityHasUpdates = true;
         this.updatedImageModel = updatedImageModel;
         // TODO Save images to remote database
     }
@@ -85,6 +89,7 @@ public class ProductEditorViewModel extends ObservableViewModel {
     }
 
     private void checkAllModelsAreValid() {
+        productEntityHasUpdates = true;
         if (identityModelIsValid && measurementModelIsValid) {
             showSaveButtonEvent.setValue(true);
         } else {
@@ -92,7 +97,7 @@ public class ProductEditorViewModel extends ObservableViewModel {
         }
     }
 
-    void saveProduct() {
+    void createOrUpdateProduct() {
         @NonNull
         ProductEntity productEntity;
 
@@ -114,8 +119,7 @@ public class ProductEditorViewModel extends ObservableViewModel {
                     existingProductEntity.getValue().getCreateDate()
             );
             navigator.reviewEditedProduct(productEntity);
-        }
-        else {
+        } else {
             productEntity = ProductEntity.createProduct(
                     updatedIdentityModel.getDescription(),
                     updatedIdentityModel.getShoppingListItemName(),
@@ -130,10 +134,18 @@ public class ProductEditorViewModel extends ObservableViewModel {
                     updatedImageModel.getRemoteMediumImageUri(),
                     updatedImageModel.getLocalLargeImageUri()
             );
-            // If back pressed in instantiating activity, stops same product being saved with new ID
-            isExistingProduct = false;
 
             navigator.reviewNewProduct(productEntity);
         }
+    }
+
+    void backPressed() {
+        if (productEntityHasUpdates) {
+            showUnsavedChangesDialogEvent.call();
+        }
+    }
+
+    SingleLiveEvent<Void> getShowUnsavedChangesDialogEvent() {
+        return showUnsavedChangesDialogEvent;
     }
 }

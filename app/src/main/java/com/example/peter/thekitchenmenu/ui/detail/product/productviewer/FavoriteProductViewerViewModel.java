@@ -24,12 +24,11 @@ public class FavoriteProductViewerViewModel
     private FavoriteProductViewerNavigator navigator;
 
     private FavoriteProductsDataSource favoriteProductEntityDataSource;
-    private final ObservableBoolean dataIsLoading = new ObservableBoolean();
+    public final ObservableBoolean dataIsLoading = new ObservableBoolean();
     public final ObservableField<FavoriteProductEntity> favoriteProduct = new ObservableField<>();
     public final ObservableBoolean isFavorite = new ObservableBoolean();
 
-    private final SingleLiveEvent<Boolean> hasOptionsMenuEvent = new SingleLiveEvent<>();
-    private final SingleLiveEvent<Boolean> hasEditDeleteMenuOptions = new SingleLiveEvent<>();
+    private final SingleLiveEvent<Void> hasOptionsMenuEvent = new SingleLiveEvent<>();
 
     private boolean favoriteAddedEdited;
     private String productId;
@@ -55,7 +54,6 @@ public class FavoriteProductViewerViewModel
             this.productId = productId;
             dataIsLoading.set(true);
             favoriteProductEntityDataSource.getByProductId(productId, this);
-            setDisplayAsViewAndEdit();
         }
     }
 
@@ -68,14 +66,19 @@ public class FavoriteProductViewerViewModel
     private void setFavoriteProduct(FavoriteProductEntity favoriteProductEntity) {
         this.favoriteProduct.set(favoriteProductEntity);
         isFavorite.set(true);
-        dataIsLoading.set(false);
+        hasOptionsMenuEvent.call();
     }
 
     @Override
     public void onDataNotAvailable() {
+        dataIsLoading.set(false);
+        setAddFavoriteMode();
+    }
+
+    private void setAddFavoriteMode() {
         favoriteProduct.set(null);
         isFavorite.set(false);
-        dataIsLoading.set(false);
+        hasOptionsMenuEvent.call();
     }
 
     void handleActivityResult(int resultCode, Intent data) {
@@ -98,27 +101,15 @@ public class FavoriteProductViewerViewModel
             favoriteProductEntityDataSource.deleteById(favoriteProduct.get().getId());
             isFavorite.set(false);
             favoriteProduct.set(null);
+            hasOptionsMenuEvent.call();
         }
     }
 
-    boolean isFavoriteAddedEdited() {
-        return favoriteAddedEdited;
-    }
-
-    private void setDisplayAsViewAndEdit() {
-        if (isFavorite.get()) {
-            hasOptionsMenuEvent.setValue(true);
-            hasEditDeleteMenuOptions.setValue(true);
-        }
-        else
-            hasOptionsMenuEvent.setValue(false);
-    }
-
-    SingleLiveEvent<Boolean> getHasOptionsMenuEvent() {
+    SingleLiveEvent<Void> getHasOptionsMenuEvent() {
         return hasOptionsMenuEvent;
     }
 
-    SingleLiveEvent<Boolean> getHasEditDeleteMenuOptions() {
-        return hasEditDeleteMenuOptions;
+    public boolean isFavoriteAddedEdited() {
+        return favoriteAddedEdited;
     }
 }

@@ -105,7 +105,7 @@ public class ProductCatalogFavoritesRecyclerAdapter
     class ViewHolder extends RecyclerView.ViewHolder {
         FavoriteProductListItemBinding binding;
 
-        FavoriteProductItemUserActionsListener listener = new FavoriteProductItemUserActionsListener() {
+        FavoriteItemNavigator listener = new FavoriteItemNavigator() {
             @Override
             public void onFavoriteProductClicked(ProductModel productModel) {
                 viewModel.viewProduct(productModel);

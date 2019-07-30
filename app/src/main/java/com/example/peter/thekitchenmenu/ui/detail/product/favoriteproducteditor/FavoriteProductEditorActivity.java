@@ -2,7 +2,6 @@ package com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -10,7 +9,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.peter.thekitchenmenu.R;
@@ -62,7 +60,7 @@ public class FavoriteProductEditorActivity
     private void setupViewModels() {
         favoriteProductEditorViewModel = obtainFavoriteProductEditorViewModel(this);
         ProductViewerViewModel viewModel = obtainProductViewerViewModel(this);
-        viewModel.setViewOnly(true);
+        viewModel.setViewOnlyMode(true);
     }
 
     @NonNull

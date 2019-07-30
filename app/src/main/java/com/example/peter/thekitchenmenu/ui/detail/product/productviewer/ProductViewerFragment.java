@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.ProductViewerDetailFragmentBinding;
@@ -25,7 +26,6 @@ public class ProductViewerFragment extends Fragment {
 
     private ProductViewerDetailFragmentBinding binding;
     private ProductViewerViewModel productViewerViewModel;
-    private boolean setMenuOptionsToPost;
 
     public static ProductViewerFragment newInstance(String productId) {
         Bundle arguments = new Bundle();
@@ -78,17 +78,12 @@ public class ProductViewerFragment extends Fragment {
         productViewerViewModel.getHasOptionsMenuEvent().observe(
                 this, ProductViewerFragment.this::setOptionsMenu);
 
-        productViewerViewModel.getSetMenuOptionsToPostEvent().observe(
-                this, ProductViewerFragment.this::setMenuOptionsToPost);
+        productViewerViewModel.getResetOptionsMenu().observe(
+                this, aVoid -> requireActivity().invalidateOptionsMenu());
     }
 
     private void setOptionsMenu(boolean hasOptionsMenu) {
         setHasOptionsMenu(hasOptionsMenu);
-    }
-
-    private void setMenuOptionsToPost(boolean seMenuOptionsToPost) {
-        this.setMenuOptionsToPost = seMenuOptionsToPost;
-        requireActivity().invalidateOptionsMenu();
     }
 
     @Override
@@ -98,13 +93,19 @@ public class ProductViewerFragment extends Fragment {
 
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
-        if (setMenuOptionsToPost) {
-            menu.findItem(R.id.menu_item_done).setVisible(false);
+        if (productViewerViewModel.isPostMode()) {
             menu.findItem(R.id.menu_item_post_product).setVisible(true);
+            menu.findItem(R.id.menu_item_discard_changes).setVisible(true);
+
+            menu.findItem(R.id.menu_item_done).setVisible(false);
+            menu.findItem(R.id.menu_item_delete_product).setVisible(false);
         }
         else {
-            menu.findItem(R.id.menu_item_post_product).setVisible(false);
             menu.findItem(R.id.menu_item_done).setVisible(true);
+            menu.findItem(R.id.menu_item_delete_product).setVisible(true);
+
+            menu.findItem(R.id.menu_item_post_product).setVisible(false);
+            menu.findItem(R.id.menu_item_discard_changes).setVisible(false);
         }
 
         super.onPrepareOptionsMenu(menu);
@@ -114,15 +115,26 @@ public class ProductViewerFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_item_edit_product:
-                productViewerViewModel.editProduct();
+                productViewerViewModel.editProduct(
+                        productViewerViewModel.productEntityObservable.get());
                 return true;
+
             case R.id.menu_item_delete_product:
-                productViewerViewModel.deleteProduct();
+                productViewerViewModel.deleteProduct(
+                        productViewerViewModel.productEntityObservable.get().getId());
                 return true;
+
             case R.id.menu_item_post_product:
                 productViewerViewModel.postProduct();
+                return true;
+
+            case R.id.menu_item_discard_changes:
+                productViewerViewModel.discardChanges();
+
             case R.id.menu_item_done:
-                productViewerViewModel.doneWithProduct();
+                productViewerViewModel.doneWithProduct(
+                        productViewerViewModel.productEntityObservable.get().getId());
+                return true;
         }
         return false;
     }

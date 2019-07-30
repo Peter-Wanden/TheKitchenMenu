@@ -107,20 +107,20 @@ public class ProductCatalogAllRecyclerAdapter
     class ViewHolder extends RecyclerView.ViewHolder {
         ProductListItemBinding binding;
 
-        ProductItemUserActionsListener listener = new ProductItemUserActionsListener() {
+        ProductItemNavigator listener = new ProductItemNavigator() {
             @Override
-            public void onProductClicked(ProductModel productModel) {
+            public void viewProduct(ProductModel productModel) {
                 viewModel.viewProduct(productModel);
             }
 
             @Override
-            public void onAddToFavoritesClicked(ProductModel productModel) {
-                viewModel.addToFavorites(productModel.getProductEntity().getId());
+            public void addToFavorites(String productId) {
+                viewModel.addToFavorites(productId);
             }
 
             @Override
-            public void onRemoveFromFavoritesClicked(ProductModel productModel) {
-                viewModel.removeFromFavorites(productModel.getFavoriteProductEntity().getId());
+            public void removeFromFavorites(String favoriteId) {
+                viewModel.removeFromFavorites(favoriteId);
             }
         };
 

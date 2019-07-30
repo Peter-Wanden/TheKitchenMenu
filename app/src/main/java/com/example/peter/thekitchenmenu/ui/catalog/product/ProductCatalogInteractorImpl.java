@@ -93,10 +93,6 @@ public class ProductCatalogInteractorImpl implements ProductCatalogInteractor {
                 new DataSource.GetAllCallback<FavoriteProductEntity>() {
                     @Override
                     public void onAllLoaded(List<FavoriteProductEntity> favoriteProductEntityList) {
-
-                        for (FavoriteProductEntity entity : favoriteProductEntityList)
-                            Log.d(TAG, "onAllLoaded: fav=" + entity.getId());
-
                         favoriteProductsMap.clear();
 
                         for (FavoriteProductEntity favoriteProductEntity : favoriteProductEntityList) {
@@ -140,12 +136,6 @@ public class ProductCatalogInteractorImpl implements ProductCatalogInteractor {
 
             productModels.add(productModel);
         }
-
-        for (ProductModel model : productModels)
-            Log.d(TAG, "sortAndReturnData: prod=" + model.getProductEntity().getDescription());
-        for (ProductModel model : favoriteProductModels)
-            Log.d(TAG, "sortAndReturnData: fav=" + model.getProductEntity().getDescription());
-
         productListCallback.onAllLoaded(productModels);
         favoriteProductListCallback.onAllLoaded(favoriteProductModels);
     }

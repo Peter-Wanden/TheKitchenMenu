@@ -292,13 +292,11 @@ public class FavoriteProductEditorViewModel
     }
 
     private void saveNewFavoriteProduct(FavoriteProductEntity favoriteProduct) {
-        Log.d(TAG, "saveNewFavoriteProduct: " + favoriteProduct.toString());
         favoriteProductEntityDataSource.save(favoriteProduct);
         favoriteProductSaved.setValue(productId);
     }
 
     private void updateFavoriteProduct(FavoriteProductEntity favoriteProduct) {
-        Log.d(TAG, "updateFavoriteProduct: " + favoriteProduct.toString());
         if (isNewFavoriteProduct)
             throw new RuntimeException("updateFavoriteProduct called but is new favorite Product.");
         favoriteProductEntityDataSource.save(favoriteProduct);

@@ -13,26 +13,26 @@
 
         <variable
             name="listener"
-            type="com.example.peter.thekitchenmenu.ui.catalog.product.ProductItemUserActionsListener" />
+            type="com.example.peter.thekitchenmenu.ui.catalog.product.ProductItemNavigator" />
     </data>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/product_list_item_cardView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:layout_marginStart="@dimen/card_view_margin"
         android:layout_marginEnd="@dimen/card_view_margin"
         android:layout_marginTop="@dimen/card_view_margin_top_bottom"
         android:layout_marginBottom="@dimen/card_view_margin_top_bottom"
         android:elevation="@dimen/card_view_elevation"
         app:cardCornerRadius="4dp"
-        android:onClick="@{() -> listener.onProductClicked(productModel)}"
+        android:onClick="@{() -> listener.viewProduct(productModel)}"
         >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/product_list_item_constraintLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline"
@@ -96,7 +96,7 @@
                 android:backgroundTint="@color/primaryDarkColor"
                 android:src="@drawable/ic_list_add"
                 android:visibility="@{productModel.favorite ? View.GONE : View.VISIBLE}"
-                android:onClick="@{() -> listener.onAddToFavoritesClicked(productModel)}"
+                android:onClick="@{() -> listener.addToFavorites(productModel.productEntity.id)}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 />
@@ -110,7 +110,7 @@
                 android:backgroundTint="@color/primaryDarkColor"
                 android:src="@drawable/ic_list_add_check"
                 android:visibility="@{productModel.favorite ? View.VISIBLE : View.GONE}"
-                android:onClick="@{() -> listener.onRemoveFromFavoritesClicked(productModel)}"
+                android:onClick="@{() -> listener.removeFromFavorites(productModel.favoriteProductEntity.id)}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 />

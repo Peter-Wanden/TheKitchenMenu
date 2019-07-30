@@ -24,7 +24,6 @@ public class ProductCatalogFavoritesFragment extends Fragment {
     private static final String TAG = "tkm-CatalogFavFrag";
 
     private ProductCatalogViewModel viewModel;
-    private ProductCatalogFavoritesFragmentBinding binding;
     private ProductCatalogFavoritesRecyclerAdapter adapter;
 
     public ProductCatalogFavoritesFragment(){}
@@ -53,7 +52,7 @@ public class ProductCatalogFavoritesFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        binding = DataBindingUtil.inflate(
+        ProductCatalogFavoritesFragmentBinding binding = DataBindingUtil.inflate(
                 inflater,
                 R.layout.product_catalog_favorites_fragment,
                 container,

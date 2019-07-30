@@ -2,6 +2,7 @@ package com.example.peter.thekitchenmenu.ui.catalog.product;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -29,7 +30,6 @@ public class ProductCatalogActivity
 
     private static final String TAG = "tkm-ProductCatalogAct";
 
-    public static final String NEW_PRODUCT_ID_ADDED = "NEW_PRODUCT_ID_ADDED";
     private ProductCatalogViewModel viewModel;
     private ProductCatalogActivityBinding binding;
 
@@ -98,19 +98,20 @@ public class ProductCatalogActivity
     @Override
     public void addNewProduct() {
         Intent intent = new Intent(this, ProductEditorActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, ProductEditorActivity.REQUEST_ADD_EDIT_PRODUCT);
     }
 
     @Override
     public void addToFavorites(String productId) {
         Intent intent = new Intent(this, FavoriteProductEditorActivity.class);
         intent.putExtra(ProductEditorActivity.EXTRA_PRODUCT_ID, productId);
-        startActivity(intent);
+        startActivityForResult(
+                intent, FavoriteProductEditorActivity.REQUEST_ADD_EDIT_FAVORITE_PRODUCT);
     }
 
     @Override
     public void removeFromFavorites(String productId) {
-        // Delete from FavoriteProducts / or show dialog and refreshData data
+        // Handled by interactor in view model
     }
 
     @Override
@@ -172,18 +173,6 @@ public class ProductCatalogActivity
         appData.putString("fromClass", TAG);
         startSearch(null, false, appData, false);
         return true;
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
     @Override

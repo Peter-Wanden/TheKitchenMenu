@@ -27,14 +27,20 @@ public class ProductViewerViewModel
     private ProductViewerNavigator navigator;
     private DataSource<ProductEntity> productEntityDataSource;
 
-    private boolean dataIsLoading;
+    public final ObservableBoolean dataIsLoading = new ObservableBoolean();
     public final ObservableField<ProductEntity> productEntityObservable = new ObservableField<>();
+    private boolean dataHasChanged;
+    private ProductEntity productEntityPreEditing;
+
     public final ObservableBoolean showPostMessageEvent = new ObservableBoolean();
     public final ObservableField<String> reviewBeforePostMessage = new ObservableField<>();
-    private boolean viewOnly;
+
+    // Non-default modes of operation
+    private boolean viewOnlyMode;
+    private boolean postMode;
 
     private final SingleLiveEvent<Boolean> hasOptionsMenuEvent = new SingleLiveEvent<>();
-    private final SingleLiveEvent<Boolean> setMenuOptionsToPostEvent = new SingleLiveEvent<>();
+    private final SingleLiveEvent<Void> resetOptionsMenu = new SingleLiveEvent<>();
     private final SingleLiveEvent<String> setTitleEvent = new SingleLiveEvent<>();
 
     public ProductViewerViewModel(Application application,
@@ -60,100 +66,90 @@ public class ProductViewerViewModel
     public void start(String productId) {
         if (!showPostMessageEvent.get()) {
             if (!Strings.isEmptyOrWhitespace(productId)) {
-                dataIsLoading = true;
+                dataIsLoading.set(true);
                 productEntityDataSource.getById(productId, this);
             }
         }
     }
 
-    SingleLiveEvent<String> getSetTitleEvent() {
-        return setTitleEvent;
-    }
-
-    SingleLiveEvent<Boolean> getSetMenuOptionsToPostEvent() {
-        return setMenuOptionsToPostEvent;
+    @Override
+    public void onEntityLoaded(ProductEntity product) {
+        dataIsLoading.set(false);
+        setProductEntityObservable(product);
+        setupDisplayAsViewer();
     }
 
     @Override
-    public void onEntityLoaded(ProductEntity product) {
-        Log.d(TAG, "onEntityLoaded: ");
-        setProductEntityObservable(product);
-        dataIsLoading = false;
-        setupDisplayAsViewer();
+    public void onDataNotAvailable() {
+        // This is an error
     }
 
     private void setProductEntityObservable(ProductEntity productEntityObservable) {
         this.productEntityObservable.set(productEntityObservable);
     }
 
-    @Override
-    public void onDataNotAvailable() {
-        productEntityObservable.set(null);
-        dataIsLoading = false;
+    void handleActivityResult(int resultCode, Intent data) {
+        if (resultCode == ProductEditorActivity.RESULT_ADD_EDIT_PRODUCT_OK) {
+            dataHasChanged = true;
+            ProductEntity productEntity = data.getParcelableExtra(
+                    ProductEditorActivity.EXTRA_PRODUCT_ENTITY);
+            start(productEntity);
+        }
     }
 
-    void postProduct() {
-        Log.d(TAG, "postProduct: ");
-        productEntityDataSource.save(productEntityObservable.get());
-        setupDisplayAsViewer();
+    private void setupDisplayAsReviewAfterEdit() {
+        postMode = true;
+        dataHasChanged = true;
+        setTitleEvent.setValue(resources.getString(R.string.activity_title_review_new_product));
+        hasOptionsMenuEvent.setValue(true);
+        resetOptionsMenu.call();
+        showPostMessageEvent.set(true);
+        reviewBeforePostMessage.set(resources.getString(R.string.review_before_post_message));
+    }
+
+    SingleLiveEvent<String> getSetTitleEvent() {
+        return setTitleEvent;
+    }
+
+    SingleLiveEvent<Void> getResetOptionsMenu() {
+        return resetOptionsMenu;
     }
 
     SingleLiveEvent<Boolean> getHasOptionsMenuEvent() {
         return hasOptionsMenuEvent;
     }
 
-    void handleActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == ProductEditorActivity.RESULT_ADD_EDIT_PRODUCT_OK) {
-
-            ProductEntity productEntity = data.getParcelableExtra(
-                    ProductEditorActivity.EXTRA_PRODUCT_ENTITY);
-            start(productEntity);
-        }
-
-        else if (requestCode == FavoriteProductEditorActivity.REQUEST_ADD_EDIT_FAVORITE_PRODUCT) {
-            Log.d(TAG, "handleActivityResult: ");
-            setupDisplayAsViewer();
-        }
-    }
-
-    private void setupDisplayAsReviewAfterEdit() {
-        Log.d(TAG, "setupDisplayAsReviewAfterEdit: ");
-        setTitleEvent.setValue(resources.getString(R.string.activity_title_review_new_product));
-        hasOptionsMenuEvent.setValue(true);
-        setMenuOptionsToPostEvent.setValue(true);
-        showPostMessageEvent.set(true);
-        reviewBeforePostMessage.set(resources.getString(R.string.review_before_post_message));
-    }
-
     private void setupDisplayAsViewer() {
-        Log.d(TAG, "setupDisplayAsViewer: ");
-        setTitleEvent.setValue(resources.getString(R.string.activity_title_view_product));
+        postMode = false;
         showPostMessageEvent.set(false);
 
-        if (!viewOnly) {
+        setTitleEvent.setValue(resources.getString(R.string.activity_title_view_product));
+        if (!viewOnlyMode) {
             hasOptionsMenuEvent.setValue(true);
-            setMenuOptionsToPostEvent.setValue(false);
+            resetOptionsMenu.call();
         }
     }
 
-    public void setViewOnly(boolean viewOnly) {
-        this.viewOnly = viewOnly;
+    public void setViewOnlyMode(boolean viewOnlyMode) {
+        this.viewOnlyMode = viewOnlyMode;
     }
 
-    void editProduct() {
-        editProduct(productEntityObservable.get());
+    boolean isPostMode() {
+        return postMode;
     }
 
     @Override
     public void editProduct(ProductEntity productEntity) {
+        productEntityPreEditing = productEntity;
         navigator.editProduct(productEntity);
     }
 
-    void deleteProduct() {
+    @Override
+    public void deleteProduct(String productId) {
         if (showPostMessageEvent.get()) {
             // Product add/edit has not been saved so exit as is.
             productEntityObservable.set(null);
-            doneWithProduct();
+            doneWithProduct(productEntityObservable.get().getId());
         }
         else {
             productEntityDataSource.deleteById(productEntityObservable.get().getId());
@@ -162,20 +158,22 @@ public class ProductViewerViewModel
     }
 
     @Override
-    public void deleteProduct(String productId) {
+    public void discardChanges() {
 
-    }
-
-    void doneWithProduct() {
-        if (productEntityObservable.get() != null) {
-            doneWithProduct(productEntityObservable.get().getId());
-        }
-        else
-            doneWithProduct(null);
     }
 
     @Override
     public void doneWithProduct(String productId) {
         navigator.doneWithProduct(productId);
+    }
+
+    @Override
+    public void postProduct() {
+        productEntityDataSource.save(productEntityObservable.get());
+        setupDisplayAsViewer();
+    }
+
+    public boolean isDataHasChanged() {
+        return dataHasChanged;
     }
 }

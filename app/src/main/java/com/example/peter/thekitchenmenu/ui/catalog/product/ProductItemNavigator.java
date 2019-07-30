@@ -7,7 +7,7 @@ import com.example.peter.thekitchenmenu.data.model.ProductModel;
  */
 public interface ProductItemNavigator {
 
-    void viewProduct(ProductModel productId);
+    void viewProduct(ProductModel productModel);
 
     void addToFavorites(String productId);
 

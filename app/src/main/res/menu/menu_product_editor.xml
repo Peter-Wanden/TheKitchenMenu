@@ -9,9 +9,8 @@
     tools:context=".ui.detail.ProductDetail">
 
     <item
-        android:id="@+id/menu_product_editor_action_save"
-        android:contentDescription="@string/cd_save_product"
-        android:title="@string/action_save"
-        android:icon="@drawable/ic_done"
-        app:showAsAction="ifRoom" />
+        android:id="@+id/menu_product_editor_action_review"
+        android:contentDescription="@string/cd_done"
+        android:title="@string/menu_item_review"
+        app:showAsAction="always" />
 </menu>

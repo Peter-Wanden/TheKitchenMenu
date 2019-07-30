@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
     private void launchProductActivity() {
         Intent intent = new Intent(this, ProductCatalogActivity.class);
         startActivity(intent);
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+//        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
     @Override
@@ -98,29 +98,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-
-//        remoteSignIn.authStateListener(true);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-//        remoteSignIn.authStateListener(false);
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
 //        remoteSignIn.signInResult(requestCode, resultCode, data);
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 }

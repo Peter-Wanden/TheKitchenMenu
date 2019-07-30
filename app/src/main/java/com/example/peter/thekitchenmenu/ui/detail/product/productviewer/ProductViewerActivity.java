@@ -28,14 +28,8 @@ public class ProductViewerActivity
 
     private static final String TAG = "tkm-ProductViewerAct";
 
-    public static final String EXTRA_NEW_PRODUCT_ID = "NEW_PRODUCT_ID";
-    // Request codes other activities use to determine the type of request they made to this activity
     public static final int REQUEST_VIEW_PRODUCT = 1;
-    public static final int REQUEST_REVIEW_PRODUCT = 2;
-    // Result codes this activity provides
-    public static final int RESULT_DELETE_PRODUCT_OK = RESULT_FIRST_USER + 1;
-    public static final int RESULT_FAVORITE_ADDED_OK = RESULT_FIRST_USER + 2;
-    public static final int RESULT_FAVORITE_NOT_ADDED = RESULT_FIRST_USER + 3;
+    public static final int RESULT_DATA_HAS_CHANGED = RESULT_FIRST_USER + 1;
 
     private ProductViewerActivityBinding binding;
     private ProductViewerViewModel productViewerViewModel;
@@ -130,18 +124,12 @@ public class ProductViewerActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "onActivityResult: requestCode=" + requestCode + " resultCode=" + resultCode);
 
-        if (requestCode == ProductEditorActivity.REQUEST_ADD_EDIT_PRODUCT) {
-            productViewerViewModel.handleActivityResult(requestCode, resultCode, data);
-            favoriteProductViewerViewModel.start(
-                    productViewerViewModel.productEntityObservable.get().getId());
-        }
+        if (requestCode == ProductEditorActivity.REQUEST_ADD_EDIT_PRODUCT)
+            productViewerViewModel.handleActivityResult(resultCode, data);
 
-        else if (requestCode == FavoriteProductEditorActivity.REQUEST_ADD_EDIT_FAVORITE_PRODUCT) {
+        else if (requestCode == FavoriteProductEditorActivity.REQUEST_ADD_EDIT_FAVORITE_PRODUCT)
             favoriteProductViewerViewModel.handleActivityResult(resultCode, data);
-            productViewerViewModel.handleActivityResult(requestCode, resultCode, data);
-        }
     }
 
     private void start() {
@@ -175,27 +163,38 @@ public class ProductViewerActivity
 
     @Override
     public void deleteProduct(String productId) {
-        // Product has been deleted, if favorite exists it must delete also
+        // Product has been deleted, if favorite exists it too must be deleted
         favoriteProductViewerViewModel.deleteFavoriteProduct();
-        setResult(RESULT_DELETE_PRODUCT_OK);
-        // todo - clear the backstack in the intent
+        setResult(RESULT_DATA_HAS_CHANGED);
         finish();
     }
 
     @Override
     public void doneWithProduct(String productId) {
-        if (productId != null) {
-            Intent intent = new Intent();
-            intent.putExtra(ProductEditorActivity.EXTRA_PRODUCT_ID, productId);
+        Intent intent = new Intent();
+        intent.putExtra(ProductEditorActivity.EXTRA_PRODUCT_ID, productId);
+
+        if ((productViewerViewModel.isDataHasChanged() ||
+                favoriteProductViewerViewModel.isFavoriteAddedEdited()) ||
+                productViewerViewModel.isDataHasChanged() &&
+                        favoriteProductViewerViewModel.isFavoriteAddedEdited()) {
+            setResult(RESULT_DATA_HAS_CHANGED);
         }
-        setResult(ProductEditorActivity.RESULT_ADD_EDIT_PRODUCT_OK);
-        // todo - clear the backstack
         finish();
     }
 
     @Override
+    public void postProduct() {
+        // Handled by {@link ProductViewerViewModel}
+    }
+
+    @Override
+    public void discardChanges() {
+        // Handled by {@link ProductViewerViewModel}
+    }
+
+    @Override
     public void addFavoriteProduct(String productId) {
-        Log.d(TAG, "addFavoriteProduct: productId=" + productId);
         Intent intent = new Intent(this, FavoriteProductEditorActivity.class);
         intent.putExtra(ProductEditorActivity.EXTRA_PRODUCT_ID, productId);
         startActivityForResult(intent,

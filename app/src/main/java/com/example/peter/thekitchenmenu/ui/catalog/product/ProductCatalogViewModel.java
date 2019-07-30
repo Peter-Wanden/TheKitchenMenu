@@ -6,6 +6,7 @@ import android.util.Log;
 
 import java.util.List;
 
+import com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity;
 import com.example.peter.thekitchenmenu.data.model.ProductModel;
 import com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorActivity;
 import com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductEditorActivity;
@@ -20,7 +21,7 @@ import androidx.lifecycle.MutableLiveData;
 public class ProductCatalogViewModel extends AndroidViewModel
         implements ProductNavigator, ProductItemNavigator {
 
-    private static final String TAG = "tkm-CatalogProductsVM";
+    private static final String TAG = "tkm-ProductCatalogVM";
 
     private ProductCatalogInteractor productInteractor;
     private ProductNavigator productNavigator;
@@ -47,15 +48,8 @@ public class ProductCatalogViewModel extends AndroidViewModel
     }
 
     void onActivityDestroyed() {
-        // Clear references to avoid potential memory leaks
         productNavigator = null;
         itemNavigator = null;
-    }
-
-    @Override
-    public void addNewProduct() {
-        if (productNavigator != null)
-            productNavigator.addNewProduct();
     }
 
     void start() {
@@ -87,7 +81,7 @@ public class ProductCatalogViewModel extends AndroidViewModel
             public void onAllLoaded(List<ProductModel> modelList) {
                 isDataLoadingError.set(false);
 
-                if(showLoadingUI)
+                if (showLoadingUI)
                     productDataLoading.set(false);
 
                 productModelList.postValue(modelList);
@@ -142,6 +136,12 @@ public class ProductCatalogViewModel extends AndroidViewModel
     }
 
     @Override
+    public void addNewProduct() {
+        if (productNavigator != null)
+            productNavigator.addNewProduct();
+    }
+
+    @Override
     public void viewProduct(ProductModel productModel) {
         itemNavigator.viewProduct(productModel);
     }
@@ -160,30 +160,17 @@ public class ProductCatalogViewModel extends AndroidViewModel
     void handleActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         Log.d(TAG, "handleActivityResult: requestCode=" + requestCode + " resultCode=" + resultCode);
 
-        if (ProductViewerActivity.REQUEST_VIEW_PRODUCT == requestCode) {
-            if (resultCode == ProductEditorActivity.RESULT_ADD_EDIT_PRODUCT_OK) {
-                start();
-            } else if (resultCode == ProductViewerActivity.RESULT_DELETE_PRODUCT_OK) {
-                start();
-            } else if (resultCode == ProductViewerActivity.RESULT_FAVORITE_ADDED_OK) {
-                start();
-            }
-        }
+        if (requestCode == ProductViewerActivity.REQUEST_VIEW_PRODUCT &&
+                resultCode == ProductViewerActivity.RESULT_DATA_HAS_CHANGED)
+            start();
 
-        if (ProductViewerActivity.REQUEST_REVIEW_PRODUCT == requestCode) {
+        if (requestCode == FavoriteProductEditorActivity.REQUEST_ADD_EDIT_FAVORITE_PRODUCT &&
+                resultCode == FavoriteProductEditorActivity.RESULT_ADD_EDIT_FAVORITE_PRODUCT_OK)
+            start();
 
-            if (ProductViewerActivity.RESULT_FAVORITE_NOT_ADDED == resultCode) {
-                start();
-            } else if (ProductViewerActivity.RESULT_FAVORITE_ADDED_OK == resultCode) {
-                start();
-            }
-        }
-
-        if (FavoriteProductEditorActivity.REQUEST_ADD_EDIT_FAVORITE_PRODUCT == requestCode) {
-            if (resultCode == FavoriteProductEditorActivity.RESULT_ADD_EDIT_FAVORITE_PRODUCT_OK) {
-                start();
-            }
-        }
+        if (ProductEditorActivity.REQUEST_ADD_EDIT_PRODUCT == requestCode &&
+                resultCode == ProductViewerActivity.RESULT_DATA_HAS_CHANGED)
+            start();
     }
 
     void searchQuery(String query) {
@@ -194,3 +181,21 @@ public class ProductCatalogViewModel extends AndroidViewModel
         return searchQueryEvent;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

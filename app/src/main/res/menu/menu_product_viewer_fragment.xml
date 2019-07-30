@@ -27,4 +27,9 @@
         android:title="@string/menu_item_delete_product"
         android:icon="@drawable/ic_delete"
         />
+
+    <item
+        android:id="@+id/menu_item_discard_changes"
+        android:title="@string/menu_item_discard_changes"
+        />
 </menu>
