@@ -7,4 +7,6 @@ public interface AddEditProductNavigator {
     void reviewEditedProduct(ProductEntity productEntity);
 
     void reviewNewProduct(ProductEntity productEntity);
+
+    void cancelEditing();
 }

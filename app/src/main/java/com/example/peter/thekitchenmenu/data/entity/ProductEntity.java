@@ -124,6 +124,26 @@ public final class ProductEntity implements Parcelable, TkmEntity {
         this.lastUpdate = lastUpdate;
     }
 
+    @Ignore
+    public static ProductEntity shallowCopy(ProductEntity productEntity) {
+        return new ProductEntity(
+                productEntity.getId(),
+                productEntity.getDescription(),
+                productEntity.getShoppingListItemName(),
+                productEntity.getCategory(),
+                productEntity.getShelfLife(),
+                productEntity.getNumberOfProducts(),
+                productEntity.getBaseUnits(),
+                productEntity.getUnitOfMeasureSubtype(),
+                productEntity.getCreatedBy(),
+                productEntity.getWebImageUrl(),
+                productEntity.getRemoteSmallImageUri(),
+                productEntity.getRemoteMediumImageUri(),
+                productEntity.getRemoteLargeImageUri(),
+                productEntity.getCreateDate(),
+                productEntity.getLastUpdate());
+    }
+
     /**
      * Use this constructor when creating a new product entity
      *

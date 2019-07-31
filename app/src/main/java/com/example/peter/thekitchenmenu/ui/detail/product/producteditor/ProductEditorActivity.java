@@ -2,6 +2,7 @@ package com.example.peter.thekitchenmenu.ui.detail.product.producteditor;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -35,6 +36,7 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
     public static final String EXTRA_PRODUCT_ENTITY = "EXTRA_PRODUCT_ENTITY";
     public static final int REQUEST_ADD_EDIT_PRODUCT = 5;
     public static final int RESULT_ADD_EDIT_PRODUCT_OK = RESULT_FIRST_USER + 1;
+    public static final int RESULT_ADD_EDIT_PRODUCT_CANCELLED = RESULT_FIRST_USER + 2;
 
     private ProductEditorBinding productEditorBinding;
 
@@ -43,11 +45,10 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
     private ProductIdentityViewModel identityEditorViewModel;
     private ProductMeasurementViewModel measurementEditorViewModel;
 
-    private boolean showSaveButton;
-
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
+        Log.d(TAG, "onSupportNavigateUp: clicked");
         return true;
     }
 
@@ -63,9 +64,12 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
         initialiseBindings();
         setupToolbar();
         setViewModels();
-        setObservers();
+        setEntityObserver();
+        setModelObservers();
+        setModelValidationObservers();
+        setActivityObservers();
         subscribeToNavigationChanges();
-        getProductId();
+        start();
     }
 
     private void initialiseBindings() {
@@ -93,8 +97,8 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
         return ViewModelProviders.of(activity, factory).get(ProductEditorViewModel.class);
     }
 
-    private void setObservers() {
-        // Calve up the entity into models and set them to their respective view models
+    private void setEntityObserver() {
+        // Calve up the incoming entity into models and set them to their respective view models
         final Observer<ProductEntity> productObserver = productEntity -> {
 
             if (productEntity != null) {
@@ -127,9 +131,11 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
             }
         };
 
-        productEditorViewModel.getExistingProductEntity().observe(this, productObserver);
+        productEditorViewModel.getUneditedProductEntity().observe(this, productObserver);
+    }
 
-        // Observe the models within their view models, set changes to the entity
+    private void setModelObservers() {
+        // Observe the models within their respective view models, set changes to the edited entity
         final Observer<ImageModel> imageModelObserver = imageModel ->
                 productEditorViewModel.setUpdatedImageModel(imageModel);
         imageEditorViewModel.getExistingImageModel().observe(
@@ -144,9 +150,11 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
                 productEditorViewModel.setUpdatedMeasurementModel(measurementModel);
         measurementEditorViewModel.getMeasurementModel().observe(
                 this, measurementModelObserver);
+
     }
 
-    private void subscribeToNavigationChanges() {
+    private void setModelValidationObservers() {
+        // Once a model is validated by its view model, let the main view model know
         identityEditorViewModel.getIdentityModelValidEvent().observe(
                 this, identityModelIsValid ->
                         productEditorViewModel.setIdentityModelIsValid(identityModelIsValid));
@@ -154,38 +162,34 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
         measurementEditorViewModel.getMeasurementModelIsValidEvent().observe(
                 this, measurementModelIsValid ->
                         productEditorViewModel.setMeasurementModelIsValid(measurementModelIsValid));
+    }
 
-        productEditorViewModel.getShowSaveButtonEvent().observe(
-                this, showSaveButton -> {
-                    ProductEditorActivity.this.showSaveButton = showSaveButton;
-                    invalidateOptionsMenu();
-                });
+    private void setActivityObservers() {
+        productEditorViewModel.getSetActivityTitleEvent().observe(
+                this, this::setTitle);
+    }
+
+    private void subscribeToNavigationChanges() {
+        productEditorViewModel.getUpdateOptionsMenuEvent().observe(
+                this, aVoid -> invalidateOptionsMenu());
 
         productEditorViewModel.getShowUnsavedChangesDialogEvent().observe(
                 this, aVoid -> showUnsavedChangesDialog());
     }
 
-    private void getProductId() {
+    private void start() {
         if (getIntent().hasExtra(EXTRA_PRODUCT_ENTITY)) {
-            productEditorViewModel.editProduct(getIntent().getParcelableExtra(EXTRA_PRODUCT_ENTITY));
-            productEditorViewModel.setExistingProduct(true);
-        } else {
-            productEditorViewModel.setExistingProduct(false);
+            Log.d(TAG, "start: entity=" + getIntent().getParcelableExtra(EXTRA_PRODUCT_ENTITY).toString());
+            productEditorViewModel.start(getIntent().getParcelableExtra(EXTRA_PRODUCT_ENTITY));
         }
+        else
+            productEditorViewModel.start();
     }
 
     private void setupToolbar() {
         setSupportActionBar(productEditorBinding.toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-
-        if (getIntent() != null && getIntent().getStringExtra(EXTRA_PRODUCT_ID) != null) {
-            productEditorBinding.toolbar.setTitle(
-                    this.getString(R.string.activity_title_edit_product));
-        } else {
-            productEditorBinding.toolbar.setTitle(
-                    this.getString(R.string.activity_title_add_new_product));
         }
     }
 
@@ -197,7 +201,8 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.menu_product_editor_action_review).setVisible(showSaveButton);
+        menu.findItem(R.id.menu_product_editor_action_review).setVisible(
+                productEditorViewModel.isShowReviewButton());
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -212,16 +217,25 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
 
     @Override
     public void reviewEditedProduct(ProductEntity productEntity) {
+        Log.d(TAG, "reviewEditedProduct: entity=" + productEntity.toString());
         setResult(RESULT_ADD_EDIT_PRODUCT_OK,
                 new Intent().putExtra(EXTRA_PRODUCT_ENTITY, productEntity));
+        finish();
     }
 
     @Override
     public void reviewNewProduct(ProductEntity productEntity) {
+        Log.d(TAG, "reviewNewProduct: entity=" + productEntity.toString());
         Intent intent = new Intent(this, ProductViewerActivity.class);
         intent.putExtra(EXTRA_PRODUCT_ENTITY, productEntity);
         intent.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
         startActivity(intent);
+    }
+
+    @Override
+    public void cancelEditing() {
+        setResult(RESULT_ADD_EDIT_PRODUCT_CANCELLED);
+        finish();
     }
 
     @Override
@@ -235,6 +249,7 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
 
         Fragment previousDialog = getSupportFragmentManager().findFragmentByTag(
                 UnsavedChangesDialogFragment.TAG);
+
         if (previousDialog != null)
             ft.remove(previousDialog);
         ft.addToBackStack(null);

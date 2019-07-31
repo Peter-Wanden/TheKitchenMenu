@@ -1,6 +1,7 @@
 package com.example.peter.thekitchenmenu.ui.detail.product.producteditor;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
@@ -46,7 +47,7 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
     }
 
     void setMeasurementModel(ProductMeasurementModel measurementModel) {
-        // Always add a measurement in this order, subType - baseUnits - numberOfProducts
+        // Always add a measurement in this order: 1.subType 2.baseUnits 3.numberOfProducts
         setSubtype(measurementModel.getMeasurementSubtype());
         setBaseUnits(measurementModel.getBaseUnits());
         setNumberOfProducts(measurementModel.getNumberOfProducts());
@@ -212,16 +213,17 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
     }
 
     private void updateUi() {
-        if (subtype != unitOfMeasure.getMeasurementSubtype()) {
+        if (subtype != unitOfMeasure.getMeasurementSubtype())
             subtype = unitOfMeasure.getMeasurementSubtype();
-        }
-        if (numberOfMeasurementUnits != unitOfMeasure.getNumberOfMeasurementUnits()) {
+
+        if (numberOfMeasurementUnits != unitOfMeasure.getNumberOfMeasurementUnits())
             numberOfMeasurementUnits = unitOfMeasure.getNumberOfMeasurementUnits();
-        }
-        if (numberOfProducts != unitOfMeasure.getNumberOfProducts()) {
+
+        if (numberOfProducts != unitOfMeasure.getNumberOfProducts())
             numberOfProducts = unitOfMeasure.getNumberOfProducts();
-        }
+
         int unitsAfterDecimal = (int) unitOfMeasure.getMeasurementUnitsDigitWidths()[0].second;
+
         if (unitsAfterDecimal > 0) {
             packMeasurementOne = String.valueOf(unitOfMeasure.getPackMeasurementOne());
             productMeasurementOne = String.valueOf(unitOfMeasure.getProductMeasurementOne());
@@ -244,7 +246,7 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
         measurementModel.setBaseUnits(unitOfMeasure.getBaseUnits());
 
         if (unitOfMeasure.isValidMeasurement()) {
-            getMeasurementModel().setValue(measurementModel);
+            this.measurementModel.setValue(measurementModel);
             measurementModelIsValidEvent.setValue(true);
         } else
             measurementModelIsValidEvent.setValue(false);

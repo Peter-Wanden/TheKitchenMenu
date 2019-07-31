@@ -12,7 +12,6 @@ import androidx.lifecycle.AndroidViewModel;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
-import com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorActivity;
 import com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductEditorActivity;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 import com.google.android.gms.common.util.Strings;
@@ -169,11 +168,12 @@ public class ProductViewerViewModel
 
     @Override
     public void postProduct() {
+        Log.d(TAG, "postProduct: saving entity=" + productEntityObservable.get().toString());
         productEntityDataSource.save(productEntityObservable.get());
         setupDisplayAsViewer();
     }
 
-    public boolean isDataHasChanged() {
+    boolean isDataHasChanged() {
         return dataHasChanged;
     }
 }

@@ -16,6 +16,7 @@ import com.example.peter.thekitchenmenu.R;
 public class UnsavedChangesDialogFragment extends DialogFragment {
 
     public static final String TAG = "UnsavedChangesDialog";
+    public static final int RESULT_CANCELLED_AFTER_EDIT = 500;
 
     public static UnsavedChangesDialogFragment newInstance(String title) {
         UnsavedChangesDialogFragment dialogFragment = new UnsavedChangesDialogFragment();
@@ -39,8 +40,11 @@ public class UnsavedChangesDialogFragment extends DialogFragment {
                         dialog.dismiss();
                     }
                 })
-                .setPositiveButton(R.string.discard, (dialogInterface, i) ->
-                        getActivity().finish())
+                .setPositiveButton(R.string.discard, (dialogInterface, i) -> {
+                            getActivity().setResult(RESULT_CANCELLED_AFTER_EDIT);
+                            getActivity().finish();
+                        }
+                )
                 .create();
 
         alertDialog.setOnShowListener(dialogInterface -> {

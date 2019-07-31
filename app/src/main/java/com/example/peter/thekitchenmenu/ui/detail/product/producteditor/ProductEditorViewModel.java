@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.ui.detail.product.producteditor;
 
-import android.app.AlertDialog;
 import android.app.Application;
+import android.util.Log;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
@@ -21,19 +21,22 @@ public class ProductEditorViewModel extends ObservableViewModel {
 
     private AddEditProductNavigator navigator;
 
-    private final MutableLiveData<ProductEntity> existingProductEntity = new MutableLiveData<>();
-    private final SingleLiveEvent<Boolean> showSaveButtonEvent = new SingleLiveEvent<>();
+    private final MutableLiveData<ProductEntity> uneditedProductEntity = new MutableLiveData<>();
+
+    private final SingleLiveEvent<Void> updateOptionsMenuEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<Void> showUnsavedChangesDialogEvent = new SingleLiveEvent<>();
+    private final SingleLiveEvent<Integer> setActivityTitleEvent = new SingleLiveEvent<>();
 
     private ImageModel updatedImageModel = new ImageModel();
     private ProductIdentityModel updatedIdentityModel;
-    private ProductMeasurementModel updatedMeasurementModel = new ProductMeasurementModel();
+    private ProductMeasurementModel updatedMeasurementModel;
 
     private boolean
-            isExistingProduct = false,
-            identityModelIsValid = false,
-            measurementModelIsValid = false,
-            productEntityHasUpdates = false;
+            isExistingProductEntity,
+            identityModelIsValid,
+            measurementModelIsValid,
+            showReviewButton;
+
     // TODO - Change category and shelf life to an enum
 
     public ProductEditorViewModel(@NonNull Application application) {
@@ -48,62 +51,56 @@ public class ProductEditorViewModel extends ObservableViewModel {
         navigator = null;
     }
 
-    void editProduct(ProductEntity productEntity) {
-        existingProductEntity.setValue(productEntity);
+    void start(ProductEntity productEntity) {
+        isExistingProductEntity = true;
+        uneditedProductEntity.setValue(productEntity);
+        setActivityTitleEvent.setValue(R.string.activity_title_edit_product);
     }
 
-    void setExistingProduct(boolean existingProduct) {
-        isExistingProduct = existingProduct;
+    void start() {
+        isExistingProductEntity = false;
+        setActivityTitleEvent.setValue(R.string.activity_title_add_new_product);
     }
 
-    MutableLiveData<ProductEntity> getExistingProductEntity() {
-        return existingProductEntity;
+    MutableLiveData<ProductEntity> getUneditedProductEntity() {
+        return uneditedProductEntity;
     }
 
     void setUpdatedImageModel(ImageModel updatedImageModel) {
-        productEntityHasUpdates = true;
         this.updatedImageModel = updatedImageModel;
-        // TODO Save images to remote database
-    }
-
-    void setIdentityModelIsValid(boolean identityModelIsValid) {
-        this.identityModelIsValid = identityModelIsValid;
-        checkAllModelsAreValid();
     }
 
     void setUpdatedIdentityModel(ProductIdentityModel updatedIdentityModel) {
         this.updatedIdentityModel = updatedIdentityModel;
     }
 
-    void setMeasurementModelIsValid(boolean measurementModelIsValid) {
-        this.measurementModelIsValid = measurementModelIsValid;
-        checkAllModelsAreValid();
+    void setIdentityModelIsValid(boolean identityModelIsValid) {
+        this.identityModelIsValid = identityModelIsValid;
+        enableReviewIfAllIsValid();
     }
 
     void setUpdatedMeasurementModel(ProductMeasurementModel updatedMeasurementModel) {
         this.updatedMeasurementModel = updatedMeasurementModel;
     }
 
-    SingleLiveEvent<Boolean> getShowSaveButtonEvent() {
-        return showSaveButtonEvent;
+    void setMeasurementModelIsValid(boolean measurementModelIsValid) {
+        this.measurementModelIsValid = measurementModelIsValid;
+        enableReviewIfAllIsValid();
     }
 
-    private void checkAllModelsAreValid() {
-        productEntityHasUpdates = true;
-        if (identityModelIsValid && measurementModelIsValid) {
-            showSaveButtonEvent.setValue(true);
+    private void enableReviewIfAllIsValid() {
+        if (identityModelIsValid && measurementModelIsValid &&
+                (isExistingProductEntityThatsBeenEdited() || !isExistingProductEntity)) {
+            showReviewButton();
         } else {
-            showSaveButtonEvent.setValue(false);
+            hideReviewButton();
         }
     }
 
-    void createOrUpdateProduct() {
-        @NonNull
-        ProductEntity productEntity;
-
-        if (isExistingProduct) {
-            productEntity = ProductEntity.updateProduct(
-                    existingProductEntity.getValue().getId(),
+    private boolean isExistingProductEntityThatsBeenEdited() {
+        if (isExistingProductEntity) {
+            ProductEntity productEntity = new ProductEntity(
+                    uneditedProductEntity.getValue().getId(),
                     updatedIdentityModel.getDescription(),
                     updatedIdentityModel.getShoppingListItemName(),
                     updatedIdentityModel.getCategory(),
@@ -111,14 +108,63 @@ public class ProductEditorViewModel extends ObservableViewModel {
                     updatedMeasurementModel.getNumberOfProducts(),
                     updatedMeasurementModel.getBaseUnits(),
                     updatedMeasurementModel.getMeasurementSubtype().ordinal(),
-                    existingProductEntity.getValue().getCreatedBy(),
+                    uneditedProductEntity.getValue().getCreatedBy(),
+                    updatedImageModel.getWebImageUrl(),
+                    updatedImageModel.getRemoteSmallImageUri(),
+                    updatedImageModel.getRemoteMediumImageUri(),
+                    updatedImageModel.getRemoteLargeImageUri(),
+                    uneditedProductEntity.getValue().getCreateDate(),
+                    uneditedProductEntity.getValue().getLastUpdate()
+            );
+            Log.d(TAG, "isExistingProductEntityThatsBeenEdited: unedited=" + uneditedProductEntity.getValue().toString());
+            Log.d(TAG, "isExistingProductEntityThatsBeenEdited: edited=" + productEntity.toString());
+            Log.d(TAG, "isExistingProductEntityThatsBeenEdited: equals=" + uneditedProductEntity.getValue().equals(productEntity));
+            return !uneditedProductEntity.getValue().equals(productEntity);
+        }
+        return false;
+    }
+
+    private void showReviewButton() {
+        showReviewButton = true;
+        updateOptionsMenuEvent.call();
+    }
+
+    private void hideReviewButton() {
+        showReviewButton = false;
+        updateOptionsMenuEvent.call();
+    }
+
+    boolean isShowReviewButton() {
+        return showReviewButton;
+    }
+
+    SingleLiveEvent<Void> getUpdateOptionsMenuEvent() {
+        return updateOptionsMenuEvent;
+    }
+
+    void createOrUpdateProduct() {
+        @NonNull
+        ProductEntity productEntity;
+
+        if (isExistingProductEntity) {
+            productEntity = ProductEntity.updateProduct(
+                    uneditedProductEntity.getValue().getId(),
+                    updatedIdentityModel.getDescription(),
+                    updatedIdentityModel.getShoppingListItemName(),
+                    updatedIdentityModel.getCategory(),
+                    updatedIdentityModel.getShelfLife(),
+                    updatedMeasurementModel.getNumberOfProducts(),
+                    updatedMeasurementModel.getBaseUnits(),
+                    updatedMeasurementModel.getMeasurementSubtype().ordinal(),
+                    uneditedProductEntity.getValue().getCreatedBy(),
                     updatedImageModel.getWebImageUrl(),
                     updatedImageModel.getRemoteSmallImageUri(),
                     updatedImageModel.getRemoteMediumImageUri(),
                     updatedImageModel.getLocalLargeImageUri(),
-                    existingProductEntity.getValue().getCreateDate()
+                    uneditedProductEntity.getValue().getCreateDate()
             );
             navigator.reviewEditedProduct(productEntity);
+
         } else {
             productEntity = ProductEntity.createProduct(
                     updatedIdentityModel.getDescription(),
@@ -134,18 +180,32 @@ public class ProductEditorViewModel extends ObservableViewModel {
                     updatedImageModel.getRemoteMediumImageUri(),
                     updatedImageModel.getLocalLargeImageUri()
             );
-
             navigator.reviewNewProduct(productEntity);
         }
     }
 
     void backPressed() {
-        if (productEntityHasUpdates) {
+        if (isExistingProductEntity)
             showUnsavedChangesDialogEvent.call();
-        }
+
+        else if (updatedImageModel != null)
+            showUnsavedChangesDialogEvent.call();
+
+        else if (updatedIdentityModel != null)
+            showUnsavedChangesDialogEvent.call();
+
+        else if (updatedMeasurementModel != null)
+            showUnsavedChangesDialogEvent.call();
+
+        else
+            navigator.cancelEditing();
     }
 
     SingleLiveEvent<Void> getShowUnsavedChangesDialogEvent() {
         return showUnsavedChangesDialogEvent;
+    }
+
+    SingleLiveEvent<Integer> getSetActivityTitleEvent() {
+        return setActivityTitleEvent;
     }
 }

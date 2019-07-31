@@ -104,11 +104,9 @@
             </meta-data>
         </activity>
 
-        <!-- Activity view of a single productEntities details
-            flag noHistory prevents users from using onBackPressed() -->
+        <!-- Activity view of a single productEntities details -->
         <activity
             android:name=".ui.detail.product.producteditor.ProductEditorActivity"
-            android:noHistory="true"
             >
         </activity>
 
