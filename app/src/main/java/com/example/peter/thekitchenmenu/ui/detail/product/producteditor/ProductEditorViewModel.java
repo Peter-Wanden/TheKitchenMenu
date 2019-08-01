@@ -76,7 +76,7 @@ public class ProductEditorViewModel extends ObservableViewModel {
 
     void setIdentityModelIsValid(boolean identityModelIsValid) {
         this.identityModelIsValid = identityModelIsValid;
-        enableReviewIfAllIsValid();
+        enableReviewIfValidProductEntity();
     }
 
     void setUpdatedMeasurementModel(ProductMeasurementModel updatedMeasurementModel) {
@@ -85,19 +85,30 @@ public class ProductEditorViewModel extends ObservableViewModel {
 
     void setMeasurementModelIsValid(boolean measurementModelIsValid) {
         this.measurementModelIsValid = measurementModelIsValid;
-        enableReviewIfAllIsValid();
+        enableReviewIfValidProductEntity();
     }
 
-    private void enableReviewIfAllIsValid() {
-        if (identityModelIsValid && measurementModelIsValid &&
-                (isExistingProductEntityThatsBeenEdited() || !isExistingProductEntity)) {
+    private void enableReviewIfValidProductEntity() {
+        if (isValidatedProductEntity()) {
             showReviewButton();
         } else {
             hideReviewButton();
         }
     }
 
-    private boolean isExistingProductEntityThatsBeenEdited() {
+    void upOrBackPressed() {
+        if (isValidatedProductEntity()) {
+            showUnsavedChangesDialogEvent.call();
+        } else
+            navigator.cancelEditing();
+    }
+
+    private boolean isValidatedProductEntity() {
+        return identityModelIsValid && measurementModelIsValid &&
+                (isExistingProductEntityThatHasBeenEdited() || !isExistingProductEntity);
+    }
+
+    private boolean isExistingProductEntityThatHasBeenEdited() {
         if (isExistingProductEntity) {
             ProductEntity productEntity = new ProductEntity(
                     uneditedProductEntity.getValue().getId(),
@@ -116,9 +127,9 @@ public class ProductEditorViewModel extends ObservableViewModel {
                     uneditedProductEntity.getValue().getCreateDate(),
                     uneditedProductEntity.getValue().getLastUpdate()
             );
-            Log.d(TAG, "isExistingProductEntityThatsBeenEdited: unedited=" + uneditedProductEntity.getValue().toString());
-            Log.d(TAG, "isExistingProductEntityThatsBeenEdited: edited=" + productEntity.toString());
-            Log.d(TAG, "isExistingProductEntityThatsBeenEdited: equals=" + uneditedProductEntity.getValue().equals(productEntity));
+            Log.d(TAG, "isExistingProductEntityThatHasBeenEdited: unedited=" + uneditedProductEntity.getValue().toString());
+            Log.d(TAG, "isExistingProductEntityThatHasBeenEdited: edited=" + productEntity.toString());
+            Log.d(TAG, "isExistingProductEntityThatHasBeenEdited: equals=" + uneditedProductEntity.getValue().equals(productEntity));
             return !uneditedProductEntity.getValue().equals(productEntity);
         }
         return false;
@@ -182,23 +193,6 @@ public class ProductEditorViewModel extends ObservableViewModel {
             );
             navigator.reviewNewProduct(productEntity);
         }
-    }
-
-    void backPressed() {
-        if (isExistingProductEntity)
-            showUnsavedChangesDialogEvent.call();
-
-        else if (updatedImageModel != null)
-            showUnsavedChangesDialogEvent.call();
-
-        else if (updatedIdentityModel != null)
-            showUnsavedChangesDialogEvent.call();
-
-        else if (updatedMeasurementModel != null)
-            showUnsavedChangesDialogEvent.call();
-
-        else
-            navigator.cancelEditing();
     }
 
     SingleLiveEvent<Void> getShowUnsavedChangesDialogEvent() {

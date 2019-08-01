@@ -12,13 +12,11 @@ import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.FavoriteProductEditorFragmentBinding;
 import com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductEditorActivity;
 import com.example.peter.thekitchenmenu.utils.CurrencyInputWatcher;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 
 public class FavoriteProductEditorFragment extends Fragment {
 
@@ -76,11 +74,11 @@ public class FavoriteProductEditorFragment extends Fragment {
 
     private void subscribeToEvents() {
         // TODO Change these to observable Strings that fire straight at the view from the model
-        viewModel.getCanSaveFavorite().observe(this, this::setOptionsMenu);
         viewModel.getRetailerErrorEvent().observe(this, this::retailerError);
         viewModel.getLocationRoomErrorEvent().observe(this, this::locationRoomError);
         viewModel.getLocationInRoomErrorEvent().observe(this, this::locationInRoomError);
         viewModel.getPriceErrorEvent().observe(this, this::priceError);
+        viewModel.getAllInputValuesAreValidEvent().observe(this, this::setHasOptionsMenu);
     }
 
     private void loadData() {
@@ -106,10 +104,6 @@ public class FavoriteProductEditorFragment extends Fragment {
     private void setUpPricingInput() {
         binding.editablePrice.addTextChangedListener(
                 new CurrencyInputWatcher(binding.editablePrice));
-    }
-
-    private void setOptionsMenu(boolean hasOptionMenu) {
-        setHasOptionsMenu(hasOptionMenu);
     }
 
     @Override

@@ -38,8 +38,9 @@ public class FavoriteProductViewerFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        if (getArguments() != null)
-            viewModel.start(getArguments().getString(ProductEditorActivity.EXTRA_PRODUCT_ID));
+        if (getArguments().containsKey(ProductEditorActivity.EXTRA_PRODUCT_ID))
+            viewModel.start(getArguments().getString(
+                    ProductEditorActivity.EXTRA_PRODUCT_ID));
     }
 
     @Nullable

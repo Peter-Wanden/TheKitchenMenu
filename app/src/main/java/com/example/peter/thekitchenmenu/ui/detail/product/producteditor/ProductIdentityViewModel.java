@@ -23,7 +23,8 @@ public class ProductIdentityViewModel extends AndroidViewModel {
 
     private Resources resources;
 
-    // Observed by the main ProductEditorViewModel, to save a new model set it here.
+    // Observed by the main ProductEditorViewModel, to save a new model set it to
+    // existingIdentityModel
     private final MutableLiveData<ProductIdentityModel> existingIdentityModel =
             new MutableLiveData<>();
 

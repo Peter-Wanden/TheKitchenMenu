@@ -281,6 +281,11 @@ public class ImageEditorViewModel extends ObservableViewModel {
         }
 
         BitmapUtils.deleteImageFile(appContext, fullSizeImageFile.getAbsolutePath());
+
+        updateExistingImageModelWithNewValues();
+    }
+
+    private void updateExistingImageModelWithNewValues() {
         existingImageModel.setValue(updatedImageModel);
     }
 

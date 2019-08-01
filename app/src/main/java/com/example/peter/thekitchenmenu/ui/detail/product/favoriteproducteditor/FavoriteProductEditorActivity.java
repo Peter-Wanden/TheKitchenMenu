@@ -2,17 +2,21 @@ package com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.FavoriteProductEditorActivityBinding;
+import com.example.peter.thekitchenmenu.ui.UnsavedChangesDialogFragment;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryProduct;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryFavoriteProduct;
 import com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductEditorActivity;
@@ -28,6 +32,7 @@ public class FavoriteProductEditorActivity
 
     public static final int REQUEST_ADD_EDIT_FAVORITE_PRODUCT = 3;
     public static final int RESULT_ADD_EDIT_FAVORITE_PRODUCT_OK = RESULT_FIRST_USER + 1;
+    public static final int RESULT_ADD_EDIT_FAVORITE_CANCELLED = RESULT_FIRST_USER + 2;
 
     private FavoriteProductEditorActivityBinding binding;
     private FavoriteProductEditorViewModel favoriteProductEditorViewModel;
@@ -85,9 +90,8 @@ public class FavoriteProductEditorActivity
     }
 
     private void findOrCreateFragments() {
-        String productId = getProductId();
-        findOrCreateProductViewerFragment(productId);
-        findOrCreateFavoriteProductEditorFragment(productId);
+        findOrCreateProductViewerFragment(getProductId());
+        findOrCreateFavoriteProductEditorFragment(getProductId());
     }
 
     private String getProductId() {
@@ -119,21 +123,22 @@ public class FavoriteProductEditorActivity
     }
 
     private void subscribeToNavigationChanges() {
-        favoriteProductEditorViewModel.getFavoriteProductSaved().observe(
+        favoriteProductEditorViewModel.getFavoriteProductSavedEvent().observe(
                 this, FavoriteProductEditorActivity.this::onFavoriteProductSaved);
     }
 
     private void setupObservables() {
-        favoriteProductEditorViewModel.getSetActivityTitle().observe(
-                this, this::setActivityTitle);
-    }
-
-    private void setActivityTitle(String activityTitle) {
-        setTitle(activityTitle);
+        favoriteProductEditorViewModel.getSetActivityTitleEvent().observe(
+                this, this::setTitle);
+        favoriteProductEditorViewModel.getShowUnsavedChangesDialogEvent().observe(
+                this, aVoid -> showUnsavedChangesDialog());
+        favoriteProductEditorViewModel.getFavoriteProductCancelledEvent().observe(
+                this, this::onFavoriteEditAddCancelled);
     }
 
     @Override
     public void onFavoriteProductSaved(String productId) {
+        Log.d(TAG, "onFavoriteProductSaved: setResult=RESULT_ADD_EDIT_FAVORITE_PRODUCT_OK, productId");
         Intent intent = new Intent();
         intent.putExtra(ProductEditorActivity.EXTRA_PRODUCT_ID, productId);
         setResult(RESULT_ADD_EDIT_FAVORITE_PRODUCT_OK, intent);
@@ -144,6 +149,35 @@ public class FavoriteProductEditorActivity
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        favoriteProductEditorViewModel.upOrBackPressed();
+    }
+
+    @Override
+    public void onFavoriteEditAddCancelled(String productId) {
+        Log.d(TAG, "onFavoriteEditAddCancelled: setResult=RESULT_ADD_EDIT_FAVORITE_CANCELLED, productId");
+        Intent intent = new Intent();
+        intent.putExtra(ProductEditorActivity.EXTRA_PRODUCT_ID, productId);
+        setResult(RESULT_ADD_EDIT_FAVORITE_CANCELLED, intent);
+        finish();
+    }
+
+    private void showUnsavedChangesDialog() {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+
+        Fragment previousDialog = getSupportFragmentManager().findFragmentByTag(
+                UnsavedChangesDialogFragment.TAG);
+
+        if (previousDialog != null)
+            ft.remove(previousDialog);
+        ft.addToBackStack(null);
+
+        UnsavedChangesDialogFragment dialogFragment = UnsavedChangesDialogFragment.newInstance(
+                this.getTitle().toString());
+        dialogFragment.show(ft, UnsavedChangesDialogFragment.TAG);
     }
 }
 

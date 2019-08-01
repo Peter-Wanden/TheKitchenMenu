@@ -60,7 +60,6 @@ public final class FavoriteProductEntity implements TkmEntity {
     @ColumnInfo(name = LAST_UPDATE)
     private final long lastUpdate;
 
-    // Required by room, do not use
     public FavoriteProductEntity(@NonNull String id,
                                  @NonNull String productId,
                                  @Nullable String retailer,

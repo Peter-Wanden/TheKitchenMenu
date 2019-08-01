@@ -97,6 +97,7 @@ public class ProductCatalogActivity
 
     @Override
     public void addNewProduct() {
+        Log.d(TAG, "addNewProduct: starting ProductEditor for result");
         Intent intent = new Intent(this, ProductEditorActivity.class);
         startActivityForResult(intent, ProductEditorActivity.REQUEST_ADD_EDIT_PRODUCT);
     }

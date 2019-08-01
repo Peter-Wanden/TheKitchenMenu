@@ -3,7 +3,6 @@ package com.example.peter.thekitchenmenu.ui.detail.product.productviewer;
 import android.app.Application;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.util.Log;
 
 import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
@@ -168,7 +167,6 @@ public class ProductViewerViewModel
 
     @Override
     public void postProduct() {
-        Log.d(TAG, "postProduct: saving entity=" + productEntityObservable.get().toString());
         productEntityDataSource.save(productEntityObservable.get());
         setupDisplayAsViewer();
     }

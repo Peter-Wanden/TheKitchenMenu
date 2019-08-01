@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 
 import com.example.peter.thekitchenmenu.R;
+import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.databinding.ProductViewerDetailFragmentBinding;
 import com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorActivity;
 
@@ -23,6 +24,8 @@ public class ProductViewerFragment extends Fragment {
     private static final String TAG = "tkm-ProductViewerFrag";
 
     private static final String ARGUMENT_PRODUCT_ID = "PRODUCT_ID";
+    private static final String ARGUMENT_PRODUCT_ENTITY = "PRODUCT_ENTITY";
+
 
     private ProductViewerDetailFragmentBinding binding;
     private ProductViewerViewModel productViewerViewModel;
@@ -35,10 +38,24 @@ public class ProductViewerFragment extends Fragment {
         return fragment;
     }
 
+    public static ProductViewerFragment newInstance(ProductEntity productEntity) {
+        Bundle arguments = new Bundle();
+        arguments.putParcelable(ARGUMENT_PRODUCT_ENTITY, productEntity);
+        ProductViewerFragment fragment = new ProductViewerFragment();
+        fragment.setArguments(arguments);
+        return fragment;
+    }
+
     @Override
     public void onResume() {
         super.onResume();
-        productViewerViewModel.start(getArguments().getString(ARGUMENT_PRODUCT_ID));
+
+        if (getArguments().containsKey(ARGUMENT_PRODUCT_ID))
+            productViewerViewModel.start(getArguments().getString(ARGUMENT_PRODUCT_ID));
+
+        else if (getArguments().containsKey(ARGUMENT_PRODUCT_ENTITY))
+            productViewerViewModel.start(
+                    (ProductEntity) getArguments().getParcelable(ARGUMENT_PRODUCT_ENTITY));
     }
 
     @Nullable
@@ -99,8 +116,7 @@ public class ProductViewerFragment extends Fragment {
 
             menu.findItem(R.id.menu_item_done).setVisible(false);
             menu.findItem(R.id.menu_item_delete_product).setVisible(false);
-        }
-        else {
+        } else {
             menu.findItem(R.id.menu_item_done).setVisible(true);
             menu.findItem(R.id.menu_item_delete_product).setVisible(true);
 

@@ -2,7 +2,6 @@ package com.example.peter.thekitchenmenu.ui.detail.product.producteditor;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -48,13 +47,12 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
-        Log.d(TAG, "onSupportNavigateUp: clicked");
         return true;
     }
 
     @Override
     public void onBackPressed() {
-        productEditorViewModel.backPressed();
+        productEditorViewModel.upOrBackPressed();
     }
 
     @Override
@@ -68,7 +66,6 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
         setModelObservers();
         setModelValidationObservers();
         setActivityObservers();
-        subscribeToNavigationChanges();
         start();
     }
 
@@ -154,7 +151,8 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
     }
 
     private void setModelValidationObservers() {
-        // Once a model is validated by its view model, let the main view model know
+        // Once a model is validated by its respective view model, let the main
+        // ProductEditorViewModel know
         identityEditorViewModel.getIdentityModelValidEvent().observe(
                 this, identityModelIsValid ->
                         productEditorViewModel.setIdentityModelIsValid(identityModelIsValid));
@@ -167,23 +165,19 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
     private void setActivityObservers() {
         productEditorViewModel.getSetActivityTitleEvent().observe(
                 this, this::setTitle);
-    }
-
-    private void subscribeToNavigationChanges() {
         productEditorViewModel.getUpdateOptionsMenuEvent().observe(
                 this, aVoid -> invalidateOptionsMenu());
-
         productEditorViewModel.getShowUnsavedChangesDialogEvent().observe(
                 this, aVoid -> showUnsavedChangesDialog());
     }
 
     private void start() {
         if (getIntent().hasExtra(EXTRA_PRODUCT_ENTITY)) {
-            Log.d(TAG, "start: entity=" + getIntent().getParcelableExtra(EXTRA_PRODUCT_ENTITY).toString());
             productEditorViewModel.start(getIntent().getParcelableExtra(EXTRA_PRODUCT_ENTITY));
         }
-        else
+        else {
             productEditorViewModel.start();
+        }
     }
 
     private void setupToolbar() {
@@ -217,7 +211,6 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
 
     @Override
     public void reviewEditedProduct(ProductEntity productEntity) {
-        Log.d(TAG, "reviewEditedProduct: entity=" + productEntity.toString());
         setResult(RESULT_ADD_EDIT_PRODUCT_OK,
                 new Intent().putExtra(EXTRA_PRODUCT_ENTITY, productEntity));
         finish();
@@ -225,11 +218,11 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
 
     @Override
     public void reviewNewProduct(ProductEntity productEntity) {
-        Log.d(TAG, "reviewNewProduct: entity=" + productEntity.toString());
         Intent intent = new Intent(this, ProductViewerActivity.class);
         intent.putExtra(EXTRA_PRODUCT_ENTITY, productEntity);
         intent.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
         startActivity(intent);
+        finish();
     }
 
     @Override
@@ -255,7 +248,7 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
         ft.addToBackStack(null);
 
         UnsavedChangesDialogFragment dialogFragment = UnsavedChangesDialogFragment.newInstance(
-                ProductEditorActivity.this.getTitle().toString());
+                this.getTitle().toString());
         dialogFragment.show(ft, UnsavedChangesDialogFragment.TAG);
     }
 }

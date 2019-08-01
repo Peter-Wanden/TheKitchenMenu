@@ -158,6 +158,7 @@ public class ProductCatalogViewModel extends AndroidViewModel
     }
 
     void handleActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
         Log.d(TAG, "handleActivityResult: requestCode=" + requestCode + " resultCode=" + resultCode);
 
         if (requestCode == ProductViewerActivity.REQUEST_VIEW_PRODUCT &&
@@ -168,7 +169,7 @@ public class ProductCatalogViewModel extends AndroidViewModel
                 resultCode == FavoriteProductEditorActivity.RESULT_ADD_EDIT_FAVORITE_PRODUCT_OK)
             start();
 
-        if (ProductEditorActivity.REQUEST_ADD_EDIT_PRODUCT == requestCode &&
+        if (requestCode == ProductEditorActivity.REQUEST_ADD_EDIT_PRODUCT &&
                 resultCode == ProductViewerActivity.RESULT_DATA_HAS_CHANGED)
             start();
     }

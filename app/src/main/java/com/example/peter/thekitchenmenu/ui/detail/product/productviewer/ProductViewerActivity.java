@@ -4,12 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.peter.thekitchenmenu.R;
@@ -17,7 +15,6 @@ import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.databinding.ProductViewerActivityBinding;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryProduct;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryFavoriteProduct;
-import com.example.peter.thekitchenmenu.ui.catalog.product.ProductCatalogActivity;
 import com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorActivity;
 import com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductEditorActivity;
 import com.example.peter.thekitchenmenu.utils.ActivityUtils;
@@ -44,7 +41,6 @@ public class ProductViewerActivity
         setupViewModels();
         setupObservers();
         addFragments();
-        start();
     }
 
     private void initialiseBindings() {
@@ -67,11 +63,7 @@ public class ProductViewerActivity
     }
 
     private void setupObservers() {
-        productViewerViewModel.getSetTitleEvent().observe(this, this::setActivityTitle);
-    }
-
-    private void setActivityTitle(String title) {
-        setTitle(title);
+        productViewerViewModel.getSetTitleEvent().observe(this, this::setTitle);
     }
 
     public static ProductViewerViewModel obtainProductViewerViewModel(
@@ -91,9 +83,32 @@ public class ProductViewerActivity
     }
 
     private void addFragments() {
-        String productId = getIntent().getStringExtra(ProductEditorActivity.EXTRA_PRODUCT_ID);
-        findOrReplaceViewerFragment(productId);
+        Intent intent = getIntent();
+        String productId = null;
+
+        if (intent.hasExtra(ProductEditorActivity.EXTRA_PRODUCT_ENTITY)) {
+            ProductEntity productEntity = getIntent().getParcelableExtra(
+                    ProductEditorActivity.EXTRA_PRODUCT_ENTITY);
+            productId = productEntity.getId();
+            findOrReplaceViewerFragment(productEntity);
+
+        } else if (intent.hasExtra(ProductEditorActivity.EXTRA_PRODUCT_ID)) {
+            Log.d(TAG, "addFragments: intent has product ID");
+            productId = getIntent().getStringExtra(ProductEditorActivity.EXTRA_PRODUCT_ID);
+            findOrReplaceViewerFragment(productId);
+        }
         findOrReplaceFavoriteProductViewerFragment(productId);
+    }
+
+    private void findOrReplaceViewerFragment(ProductEntity productEntity) {
+        ProductViewerFragment fragment = (ProductViewerFragment)
+                getSupportFragmentManager().findFragmentById(R.id.product_viewer_content_frame);
+
+        if (fragment == null)
+            fragment = ProductViewerFragment.newInstance(productEntity);
+
+        ActivityUtils.replaceFragmentInActivity(getSupportFragmentManager(),
+                fragment, R.id.product_viewer_content_frame);
     }
 
     private void findOrReplaceViewerFragment(String productId) {
@@ -112,13 +127,12 @@ public class ProductViewerActivity
                 getSupportFragmentManager().findFragmentById(
                         R.id.favorite_product_viewer_content_frame);
 
-        if (fragment == null) {
+        if (fragment == null)
             fragment = FavoriteProductViewerFragment.newInstance(productId);
-        }
+
         ActivityUtils.replaceFragmentInActivity(getSupportFragmentManager(),
                 fragment, R.id.favorite_product_viewer_content_frame);
     }
-
 
     // Start modes
     @Override
@@ -130,22 +144,6 @@ public class ProductViewerActivity
 
         else if (requestCode == FavoriteProductEditorActivity.REQUEST_ADD_EDIT_FAVORITE_PRODUCT)
             favoriteProductViewerViewModel.handleActivityResult(resultCode, data);
-    }
-
-    private void start() {
-        Intent intent = getIntent();
-
-        if (intent.hasExtra(ProductEditorActivity.EXTRA_PRODUCT_ENTITY)) {
-            ProductEntity productEntity = getIntent().getParcelableExtra(
-                    ProductEditorActivity.EXTRA_PRODUCT_ENTITY);
-            productViewerViewModel.start(productEntity);
-            favoriteProductViewerViewModel.start(productEntity.getId());
-        }
-        else if (intent.hasExtra(ProductEditorActivity.EXTRA_PRODUCT_ID)) {
-            String productId = intent.getStringExtra(ProductEditorActivity.EXTRA_PRODUCT_ID);
-            productViewerViewModel.start(productId);
-            favoriteProductViewerViewModel.start(productId);
-        }
     }
 
     @Override
@@ -171,14 +169,15 @@ public class ProductViewerActivity
 
     @Override
     public void doneWithProduct(String productId) {
-        Intent intent = new Intent();
-        intent.putExtra(ProductEditorActivity.EXTRA_PRODUCT_ID, productId);
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra(ProductEditorActivity.EXTRA_PRODUCT_ID, productId);
+//        resultIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         if ((productViewerViewModel.isDataHasChanged() ||
                 favoriteProductViewerViewModel.isFavoriteAddedEdited()) ||
                 productViewerViewModel.isDataHasChanged() &&
                         favoriteProductViewerViewModel.isFavoriteAddedEdited()) {
-            setResult(RESULT_DATA_HAS_CHANGED);
+            setResult(RESULT_DATA_HAS_CHANGED, resultIntent);
         }
         finish();
     }
@@ -195,6 +194,7 @@ public class ProductViewerActivity
 
     @Override
     public void addFavoriteProduct(String productId) {
+        Log.d(TAG, "addFavoriteProduct: Intent for result to FavProductEditor, ProductId");
         Intent intent = new Intent(this, FavoriteProductEditorActivity.class);
         intent.putExtra(ProductEditorActivity.EXTRA_PRODUCT_ID, productId);
         startActivityForResult(intent,
