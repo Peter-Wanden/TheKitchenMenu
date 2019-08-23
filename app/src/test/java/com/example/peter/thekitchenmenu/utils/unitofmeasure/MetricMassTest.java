@@ -3,8 +3,10 @@ package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 import org.junit.Test;
 
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MAXIMUM_MASS;
+import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
+
 
 public class MetricMassTest {
 
@@ -14,7 +16,7 @@ public class MetricMassTest {
     @Test
     public void testBaseSiInRangeMin() { // IN RANGE MIN
 
-        assertThat(metricMass.baseUnitsAreSet(1), is(true));
+        assertTrue(metricMass.baseUnitsAreSet(1));
 
         assertThat(metricMass.getPackMeasurementOne(), is(1.));
         assertThat(metricMass.getPackMeasurementTwo(), is(0));

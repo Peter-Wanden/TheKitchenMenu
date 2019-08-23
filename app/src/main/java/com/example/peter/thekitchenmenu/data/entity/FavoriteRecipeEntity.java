@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 
 public class FavoriteRecipeEntity implements TkmEntity {
 
-
     @NonNull
     @Override
     public String getId() {

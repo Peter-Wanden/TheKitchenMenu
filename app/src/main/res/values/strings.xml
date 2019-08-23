@@ -7,7 +7,7 @@
     <string name="cd_add_image_from_camera">Select to add image from camera</string>
     <string name="cd_add_image_from_gallery">Click to add image from gallery</string>
     <!-- Attach to any ImageView's of the recipe -->
-    <string name="cd_done">Click when done editing product</string>
+    <string name="cd_done">Click when done editing</string>
     <string name="cd_delete_product">Click to delete the current product</string>
     <string name="cd_action_edit_product">Click to edit the current product</string>
     <string name="cd_add_image">Click to add a picture</string>
@@ -183,7 +183,7 @@
 
     <!-- RecipeIdentity input error messages -->
     <string name="input_error_recipe_prep_time_too_long">Prep time needs to be under 100 hours</string>
-    <string name="input_error_recipe_cook_time_too_long">Prep time needs to be under 100 hours</string>
+    <string name="input_error_recipe_cook_time_too_long">Cook time needs to be under 100 hours</string>
 
     <!-- Recipe course labels -->
     <string name="course_label_breakfast">Breakfast</string>
@@ -301,4 +301,5 @@
     <string name="lasUpdated">last updated</string>
     <string name="add_ingredients">ADD INGREDIENTS</string>
     <string name="recipe_title_label">Title</string>
+    <string name="invalid_number">Invalid number entered</string>
 </resources>

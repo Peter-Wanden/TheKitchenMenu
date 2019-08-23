@@ -73,9 +73,9 @@ public class RecipeCatalogAllRecyclerAdapter
                 String filterPattern = constraint.toString().toLowerCase().trim();
 
                 for (RecipeModel model : recipeModelListFull) {
-//                    String title = model.getTitle.toLowerCase();
+//                    String titleObservable = model.getTitle.toLowerCase();
 //
-//                    if (title.contains(filterPattern)) {
+//                    if (titleObservable.contains(filterPattern)) {
 //                        filteredList.add(model);
 //                    }
                 }

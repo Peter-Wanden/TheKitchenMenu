@@ -9,8 +9,8 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.0-rc01'
-        classpath 'com.google.gms:google-services:4.2.0'
+        classpath 'com.android.tools.build:gradle:3.5.0'
+        classpath 'com.google.gms:google-services:4.3.0'
     }
 }
 
@@ -29,62 +29,75 @@ ext {
     compileSdkVersion = 29
     minSdkVersion = 21
     targetSdkVersion = 29
-    androidSupportVersion = "29.0.0"
+    androidSupportVersion = '29.0.0'
 
 
     // Firebase
-    firebaseDatabase = "17.0.0"
-    firebaseCore = "16.0.9"
-    firebaseAuth = "17.0.0"
-    firebaseStorage = "17.0.0"
-    firebaseConfigVersion = "17.0.0"
+    firebaseAuth = '18.1.0'
+    firebaseConfigVersion = '18.0.0'
+    firebaseCore = '17.0.1'
+    firebaseDatabase = '18.0.1'
+    firebaseStorage = '18.1.1'
 
-    firebaseUiAuth = "4.1.0"
-    firebaseVersion = "16.0.5"
+    firebaseUiAuth = '4.1.0'
+    firebaseVersion = '16.0.5'
 
     // Image manipulation
-    picassoVersion = "2.71828"
-    glideVersion = "4.9.0"
+    picassoVersion = '2.71828'
+    glideVersion = '4.9.0'
 
-    playServicesA = '16.0.0'
-    playServicesB = '16.0.1'
-    playServicesC = '16.2.0'
-    playServicesBase = '16.1.0'
+    playServicesAddsIdentifier = '17.0.0'
+    playServicesAuth = '17.0.0'
+    playServicesAuthApiPhone = '17.1.0'
+    playServicesAuthBase = '17.0.0'
+    playServicesBase = '17.1.0'
+    playServicesBasement = '17.1.0'
+    playServicesFlags = '17.0.0'
+    playServicesPhenotype = '17.0.0'
+    playServicesStats = '17.0.0'
+    playServicesTasks = '16.0.1'
 
     // Support
-    androidxSupportVersion = "1.0.0"
-    androidxAppcompat = "1.1.0-beta01"
-    androidMaterial = "1.1.0-alpha07"
-    androidxRecyclerView = "1.1.0-alpha06"
+    androidxSupportVersion = '1.0.0'
+    androidxAppcompat = '1.1.0-rc01'
+    androidxRecyclerView = '1.1.0-beta03'
+    androidMaterial = '1.1.0-alpha09'
 
     // Constraint
-    androidxConstraintLayoutVersion = "1.1.3"
+    androidxConstraintLayoutVersion = '1.1.3'
 
     // Architecture Components
-    androidxArchComponentsVersion = "2.0.0-rc01"
-    androidxLifecycleExtensions = "2.2.0-alpha01"
-    androidxLifecycleRuntime = "2.1.0-alpha04"
-    androidxLifscycleCommon = "2.0.0-rc01"
+    androidxArchComponentsVersion = '2.0.0-rc01'
+    androidxLifecycleExtensions = '2.2.0-alpha03'
+    androidxLifecycleRuntime = '2.1.0-alpha04'
+    androidxLifscycleCommon = '2.0.0-rc01'
 
     // Paging runtime
-    androidxPagingRuntimeVersion = "2.1.0"
+    androidxPagingRuntimeVersion = '2.1.0'
 
     // Room
-    androidxRoomVersion = "2.1.0-rc01"
-    androidxRoomRuntime = "2.1.0-alpha03"
+    androidxRoomVersion = '2.2.0-alpha02'
+    androidxRoomRuntime = '2.1.0-alpha03'
 
     // Testing
-    junit = '4.13-beta-2'
-
+    junitVersion = '4.13-beta-2'
     androidxTestCore = "1.1.1-alpha02"
-    androidxTestRunner = "1.1.0"
-    androidxTestRules = "1.1.0"
-    androidxTestExtJunit = "1.1.0"
+    androidxCoreTesting ='2.0.0-rc01'
+    androidxRoomTestingVersion = '2.0.0-rc01'
+    androidxTestRunner = '1.1.0'
+    androidxTestRules = '1.1.0'
+    androidxTestExtJunit = '1.1.0'
 
-    androidxEspresso = "3.1.0"
+    androidxEspresso = '3.1.0'
+    espressoConcurrent = '3.1.0'
+    espressoIdlingResource = '3.2.0'
 
     mockitoVersion = '2.0.2-beta'
+    mockitoCoreVersion = '1.10.19'
     powerMockito = '1.6.6'
+
+    annotations = '1.0.0'
+    coreCore = '1.2.0-alpha03'
 
     hamcrest = '1.3'
     var = '1.8'

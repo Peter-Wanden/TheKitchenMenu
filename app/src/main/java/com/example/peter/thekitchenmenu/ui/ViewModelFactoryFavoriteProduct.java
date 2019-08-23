@@ -13,6 +13,7 @@ import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
 import com.example.peter.thekitchenmenu.data.repository.FavoriteProductsDataSource;
 import com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.product.productviewer.FavoriteProductViewerViewModel;
+import com.example.peter.thekitchenmenu.utils.TextValidationHandler;
 
 public class ViewModelFactoryFavoriteProduct extends ViewModelProvider.NewInstanceFactory {
 
@@ -49,7 +50,7 @@ public class ViewModelFactoryFavoriteProduct extends ViewModelProvider.NewInstan
         if (modelClass.isAssignableFrom(FavoriteProductEditorViewModel.class)) {
             //noinspection unchecked
             return (T) new FavoriteProductEditorViewModel(
-                    application, favoriteProductEntityDataSource);
+                    application, favoriteProductEntityDataSource, new TextValidationHandler());
         }
         else if (modelClass.isAssignableFrom(FavoriteProductViewerViewModel.class)) {
             //noinspection unchecked

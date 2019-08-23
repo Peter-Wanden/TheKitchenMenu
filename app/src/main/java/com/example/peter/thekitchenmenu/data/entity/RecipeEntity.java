@@ -10,16 +10,17 @@ import androidx.room.PrimaryKey;
 import com.example.peter.thekitchenmenu.app.Constants;
 
 import java.util.Calendar;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity(tableName = RecipeEntity.TABLE_RECIPE)
-public class RecipeEntity implements TkmEntity {
+public final class RecipeEntity implements TkmEntity {
 
     public static final String TAG = "RecipeEntity";
 
     public static final String TABLE_RECIPE = "recipe";
     public static final String ID = "id";
-    public static final String TITLE = "title";
+    public static final String TITLE = "titleObservable";
     private static final String DESCRIPTION = "description";
 
     @PrimaryKey
@@ -44,27 +45,12 @@ public class RecipeEntity implements TkmEntity {
     @ColumnInfo(name = "createdBy")
     private final String createdBy;
 
-    @Nullable
-    @ColumnInfo(name = "webImageUrl")
-    private final String webImageUrl;
-
-    @Nullable
-    @ColumnInfo(name = "remoteSmallImageUri")
-    private final String remoteSmallImageUri;
-
-    @Nullable
-    @ColumnInfo(name = "remoteMediumImageUri")
-    private final String remoteMediumImageUri;
-
-    @Nullable
-    @ColumnInfo(name = "remoteLargeImageUri")
-    private final String remoteLargeImageUri;
-
     @ColumnInfo(name = "createDate")
     private final long createDate;
 
     @ColumnInfo(name = "lastUpdate")
     private final long lastUpdate;
+
 
     public RecipeEntity(@NonNull String id,
                         @Nullable String title,
@@ -72,10 +58,6 @@ public class RecipeEntity implements TkmEntity {
                         int preparationTime,
                         int cookingTime,
                         String createdBy,
-                        @Nullable String webImageUrl,
-                        @Nullable String remoteSmallImageUri,
-                        @Nullable String remoteMediumImageUri,
-                        @Nullable String remoteLargeImageUri,
                         long createDate,
                         long lastUpdate) {
         this.id = id;
@@ -84,62 +66,52 @@ public class RecipeEntity implements TkmEntity {
         this.preparationTime = preparationTime;
         this.cookingTime = cookingTime;
         this.createdBy = createdBy;
-        this.webImageUrl = webImageUrl;
-        this.remoteSmallImageUri = remoteSmallImageUri;
-        this.remoteMediumImageUri = remoteMediumImageUri;
-        this.remoteLargeImageUri = remoteLargeImageUri;
         this.createDate = createDate;
         this.lastUpdate = lastUpdate;
     }
 
-    @Ignore
-    public static RecipeEntity createRecipe(String title,
-                                            String description,
-                                            int preparationTime,
-                                            int cookingTime,
-                                            String webImageUrl,
-                                            String remoteSmallImageUri,
-                                            String remoteMediumImageUri,
-                                            String remoteLargeImageUri) {
-        return new RecipeEntity(UUID.randomUUID().toString(),
-                title, description,
-                preparationTime,
-                cookingTime,
-                Constants.getUserId().getValue(),
-                webImageUrl,
-                remoteSmallImageUri,
-                remoteMediumImageUri,
-                remoteLargeImageUri,
-                getDate(),
-                getDate());
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RecipeEntity that = (RecipeEntity) o;
+        return preparationTime == that.preparationTime &&
+                cookingTime == that.cookingTime &&
+                createDate == that.createDate &&
+                lastUpdate == that.lastUpdate &&
+                id.equals(that.id) &&
+                title.equals(that.title) &&
+                description.equals(that.description) &&
+                createdBy.equals(that.createdBy);
     }
 
-    @Ignore
-    public static RecipeEntity updateRecipe(String id,
-                                            String title,
-                                            String description,
-                                            int preparationTime,
-                                            int cookingTime,
-                                            String createdBy,
-                                            String webImageUrl,
-                                            String remoteSmallImageUri,
-                                            String remoteMediumImageUri,
-                                            String remoteLargeImageUri,
-                                            long createDate) {
-        return new RecipeEntity(id,
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                id,
                 title,
                 description,
                 preparationTime,
                 cookingTime,
                 createdBy,
-                webImageUrl,
-                remoteSmallImageUri,
-                remoteMediumImageUri,
-                remoteLargeImageUri, createDate, getDate());
+                createDate,
+                lastUpdate);
     }
 
-    private static long getDate() {
-        return Calendar.getInstance().getTimeInMillis();
+    @NonNull
+    @Override
+    public String toString() {
+        return "RecipeEntity{" +
+                "id='" + id + '\'' +
+                ", titleObservable='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", preparationTime=" + preparationTime +
+                ", cookingTime=" + cookingTime +
+                ", createdBy='" + createdBy + '\'' +
+                ", createDate=" + createDate +
+                ", lastUpdate=" + lastUpdate +
+                '}';
     }
 
     @NonNull
@@ -168,26 +140,6 @@ public class RecipeEntity implements TkmEntity {
 
     public String getCreatedBy() {
         return createdBy;
-    }
-
-    @Nullable
-    public String getWebImageUrl() {
-        return webImageUrl;
-    }
-
-    @Nullable
-    public String getRemoteSmallImageUri() {
-        return remoteSmallImageUri;
-    }
-
-    @Nullable
-    public String getRemoteMediumImageUri() {
-        return remoteMediumImageUri;
-    }
-
-    @Nullable
-    public String getRemoteLargeImageUri() {
-        return remoteLargeImageUri;
     }
 
     public long getCreateDate() {

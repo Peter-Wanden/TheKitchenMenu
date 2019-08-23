@@ -25,7 +25,7 @@ public class TKMWidgetProvider extends AppWidgetProvider {
         /* Remove the empty view */
         remoteViews.setViewVisibility(R.id.tmkwidget_provider_tv_empty_view, View.GONE);
 
-        // Set the title in the widget
+        // Set the titleObservable in the widget
         remoteViews.setTextViewText(
                 R.id.tmkwidget_provider_product_title,
                 context.getString(R.string.widget_title_latest_products));

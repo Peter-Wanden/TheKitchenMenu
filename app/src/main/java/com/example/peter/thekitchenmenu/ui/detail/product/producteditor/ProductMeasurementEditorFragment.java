@@ -18,14 +18,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 public class ProductMeasurementEditorFragment extends Fragment {
 
-    private static final String TAG = "tkm-MeasurementFragment";
-
     private ProductEditorMeasurementBinding binding;
     private ProductMeasurementViewModel viewModel;
+
+    static ProductMeasurementEditorFragment newInstance() {
+        return new ProductMeasurementEditorFragment();
+    }
 
     @Nullable
     @Override
@@ -51,8 +53,7 @@ public class ProductMeasurementEditorFragment extends Fragment {
     }
 
     private void setViewModel() {
-        viewModel = ViewModelProviders.of(requireActivity()).
-                get(ProductMeasurementViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(ProductMeasurementViewModel.class);
     }
 
     private void setValidationHandlersToBinding() {

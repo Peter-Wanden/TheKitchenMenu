@@ -5,14 +5,17 @@ import android.os.Bundle;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.databinding.ProductViewerActivityBinding;
+import com.example.peter.thekitchenmenu.ui.AppCompatActivityDialogActions;
+import com.example.peter.thekitchenmenu.ui.UnsavedChangesDialogFragment;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryProduct;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryFavoriteProduct;
 import com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorActivity;
@@ -20,13 +23,14 @@ import com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductE
 import com.example.peter.thekitchenmenu.utils.ActivityUtils;
 
 public class ProductViewerActivity
-        extends AppCompatActivity
+        extends AppCompatActivityDialogActions
         implements ProductViewerNavigator, FavoriteProductViewerNavigator {
 
     private static final String TAG = "tkm-ProductViewerAct";
 
     public static final int REQUEST_VIEW_PRODUCT = 1;
-    public static final int RESULT_DATA_HAS_CHANGED = RESULT_FIRST_USER + 1;
+    public static final int RESULT_VIEW_DATA_CHANGED = RESULT_FIRST_USER + 1;
+    public static final int RESULT_VIEW_NO_DATA_CHANGED = RESULT_FIRST_USER + 2;
 
     private ProductViewerActivityBinding binding;
     private ProductViewerViewModel productViewerViewModel;
@@ -64,6 +68,8 @@ public class ProductViewerActivity
 
     private void setupObservers() {
         productViewerViewModel.getSetTitleEvent().observe(this, this::setTitle);
+        favoriteProductViewerViewModel.isFavoriteAddedEdited().observe(this,
+                favoriteChanged -> productViewerViewModel.setDataHasChanged(favoriteChanged));
     }
 
     public static ProductViewerViewModel obtainProductViewerViewModel(
@@ -71,7 +77,8 @@ public class ProductViewerActivity
 
         ViewModelFactoryProduct factory = ViewModelFactoryProduct.getInstance(
                 activity.getApplication());
-        return ViewModelProviders.of(activity, factory).get(ProductViewerViewModel.class);
+
+        return new ViewModelProvider(activity, factory).get(ProductViewerViewModel.class);
     }
 
     public static FavoriteProductViewerViewModel obtainFavoriteProductViewerViewModel(
@@ -79,7 +86,8 @@ public class ProductViewerActivity
 
         ViewModelFactoryFavoriteProduct factory = ViewModelFactoryFavoriteProduct.getInstance(
                 activity.getApplication());
-        return ViewModelProviders.of(activity, factory).get(FavoriteProductViewerViewModel.class);
+
+        return new ViewModelProvider(activity, factory).get(FavoriteProductViewerViewModel.class);
     }
 
     private void addFragments() {
@@ -89,18 +97,19 @@ public class ProductViewerActivity
         if (intent.hasExtra(ProductEditorActivity.EXTRA_PRODUCT_ENTITY)) {
             ProductEntity productEntity = getIntent().getParcelableExtra(
                     ProductEditorActivity.EXTRA_PRODUCT_ENTITY);
+            Log.d(TAG, "addFragments: incoming intent has EXTRA_PRODUCT");
             productId = productEntity.getId();
-            findOrReplaceViewerFragment(productEntity);
+            findOrReplaceProductViewerFragment(productEntity);
 
         } else if (intent.hasExtra(ProductEditorActivity.EXTRA_PRODUCT_ID)) {
-            Log.d(TAG, "addFragments: intent has product ID");
+            Log.d(TAG, "addFragments: incoming intent has EXTRA_PRODUCT_ID");
             productId = getIntent().getStringExtra(ProductEditorActivity.EXTRA_PRODUCT_ID);
-            findOrReplaceViewerFragment(productId);
+            findOrReplaceProductViewerFragment(productId);
         }
         findOrReplaceFavoriteProductViewerFragment(productId);
     }
 
-    private void findOrReplaceViewerFragment(ProductEntity productEntity) {
+    private void findOrReplaceProductViewerFragment(ProductEntity productEntity) {
         ProductViewerFragment fragment = (ProductViewerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.product_viewer_content_frame);
 
@@ -111,7 +120,7 @@ public class ProductViewerActivity
                 fragment, R.id.product_viewer_content_frame);
     }
 
-    private void findOrReplaceViewerFragment(String productId) {
+    private void findOrReplaceProductViewerFragment(String productId) {
         ProductViewerFragment fragment = (ProductViewerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.product_viewer_content_frame);
 
@@ -134,16 +143,19 @@ public class ProductViewerActivity
                 fragment, R.id.favorite_product_viewer_content_frame);
     }
 
-    // Start modes
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == ProductEditorActivity.REQUEST_ADD_EDIT_PRODUCT)
+        if (requestCode == ProductEditorActivity.REQUEST_ADD_EDIT_PRODUCT) {
+            Log.d(TAG, "onActivityResult: REQUEST_ADD_EDIT_PRODUCT");
             productViewerViewModel.handleActivityResult(resultCode, data);
+        }
 
-        else if (requestCode == FavoriteProductEditorActivity.REQUEST_ADD_EDIT_FAVORITE_PRODUCT)
+        else if (requestCode == FavoriteProductEditorActivity.REQUEST_ADD_EDIT_FAVORITE_PRODUCT) {
+            Log.d(TAG, "onActivityResult: REQUEST_ADD_EDIT_FAVORITE_PRODUCT, received");
             favoriteProductViewerViewModel.handleActivityResult(resultCode, data);
+        }
     }
 
     @Override
@@ -153,7 +165,13 @@ public class ProductViewerActivity
     }
 
     @Override
+    public void onBackPressed() {
+        productViewerViewModel.upOrBackPressed();
+    }
+
+    @Override
     public void editProduct(ProductEntity productEntity) {
+        Log.d(TAG, "editProduct: Outgoing to ProductEditor, EXTRA_PRODUCT_ENTITY, for result ");
         Intent intent = new Intent(this, ProductEditorActivity.class);
         intent.putExtra(ProductEditorActivity.EXTRA_PRODUCT_ENTITY, productEntity);
         startActivityForResult(intent, ProductEditorActivity.REQUEST_ADD_EDIT_PRODUCT);
@@ -161,24 +179,20 @@ public class ProductViewerActivity
 
     @Override
     public void deleteProduct(String productId) {
-        // Product has been deleted, if favorite exists it too must be deleted
+        // Product deleted by view model, if favorite exists it too must be deleted
         favoriteProductViewerViewModel.deleteFavoriteProduct();
-        setResult(RESULT_DATA_HAS_CHANGED);
+        Log.d(TAG, "deleteProduct: Outgoing, setResult(RESULT_VIEW_DATA_CHANGED), finish()");
+        setResult(RESULT_VIEW_DATA_CHANGED);
         finish();
     }
 
     @Override
     public void doneWithProduct(String productId) {
+        Log.d(TAG, "doneWithProduct: Outgoing, EXTRA_PRODUCT_ID, setResult(RESULT_VIEW_DATA_CHANGED), finish()");
         Intent resultIntent = new Intent();
         resultIntent.putExtra(ProductEditorActivity.EXTRA_PRODUCT_ID, productId);
-//        resultIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-        if ((productViewerViewModel.isDataHasChanged() ||
-                favoriteProductViewerViewModel.isFavoriteAddedEdited()) ||
-                productViewerViewModel.isDataHasChanged() &&
-                        favoriteProductViewerViewModel.isFavoriteAddedEdited()) {
-            setResult(RESULT_DATA_HAS_CHANGED, resultIntent);
-        }
+        setResult(RESULT_VIEW_DATA_CHANGED, resultIntent);
         finish();
     }
 
@@ -188,13 +202,30 @@ public class ProductViewerActivity
     }
 
     @Override
+    public void discardProductEdits() {
+        discardChanges();
+    }
+
+    @Override
     public void discardChanges() {
-        // Handled by {@link ProductViewerViewModel}
+        Log.d(TAG, "discardChanges: Outgoing, setResult(RESULT_VIEW_NO_DATA_CHANGED), and finish()");
+        setResult(RESULT_VIEW_NO_DATA_CHANGED);
+        finish();
     }
 
     @Override
     public void addFavoriteProduct(String productId) {
-        Log.d(TAG, "addFavoriteProduct: Intent for result to FavProductEditor, ProductId");
+        Log.d(TAG, "addFavoriteProduct: Outgoing to FavoriteEditor, startForResult(EXTRA_PRODUCT_ID), request(REQUEST_ADD_EDIT_FAVORITE_PRODUCT), productId");
+        addEditFavoriteProduct(productId);
+    }
+
+    @Override
+    public void editFavoriteProduct(String productId) {
+        Log.d(TAG, "editFavoriteProduct: Outgoing to FavoriteEditor, startForResult(EXTRA_PRODUCT_ID), request(REQUEST_ADD_EDIT_FAVORITE_PRODUCT), productId");
+        addEditFavoriteProduct(productId);
+    }
+
+    private void addEditFavoriteProduct(String productId) {
         Intent intent = new Intent(this, FavoriteProductEditorActivity.class);
         intent.putExtra(ProductEditorActivity.EXTRA_PRODUCT_ID, productId);
         startActivityForResult(intent,
@@ -202,11 +233,19 @@ public class ProductViewerActivity
     }
 
     @Override
-    public void editFavoriteProduct(String productId) {
-        Intent intent = new Intent(this, FavoriteProductEditorActivity.class);
-        intent.putExtra(ProductEditorActivity.EXTRA_PRODUCT_ID, productId);
-        startActivityForResult(intent,
-                FavoriteProductEditorActivity.REQUEST_ADD_EDIT_FAVORITE_PRODUCT);
+    public void showUnsavedChangesDialog() {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+
+        Fragment previousDialog = getSupportFragmentManager().findFragmentByTag(
+                UnsavedChangesDialogFragment.TAG);
+
+        if (previousDialog != null)
+            ft.remove(previousDialog);
+        ft.addToBackStack(null);
+
+        UnsavedChangesDialogFragment dialogFragment = UnsavedChangesDialogFragment.newInstance(
+                this.getTitle().toString());
+        dialogFragment.show(ft, UnsavedChangesDialogFragment.TAG);
     }
 
     @Override

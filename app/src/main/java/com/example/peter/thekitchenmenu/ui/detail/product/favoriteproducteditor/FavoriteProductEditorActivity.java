@@ -7,15 +7,15 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.FavoriteProductEditorActivityBinding;
+import com.example.peter.thekitchenmenu.ui.AppCompatActivityDialogActions;
 import com.example.peter.thekitchenmenu.ui.UnsavedChangesDialogFragment;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryProduct;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryFavoriteProduct;
@@ -25,17 +25,17 @@ import com.example.peter.thekitchenmenu.ui.detail.product.productviewer.ProductV
 import com.example.peter.thekitchenmenu.utils.ActivityUtils;
 
 public class FavoriteProductEditorActivity
-        extends AppCompatActivity
+        extends AppCompatActivityDialogActions
         implements AddEditFavoriteProductNavigator {
 
     private static final String TAG = "tkm-FavProductEditAct";
 
     public static final int REQUEST_ADD_EDIT_FAVORITE_PRODUCT = 3;
     public static final int RESULT_ADD_EDIT_FAVORITE_PRODUCT_OK = RESULT_FIRST_USER + 1;
-    public static final int RESULT_ADD_EDIT_FAVORITE_CANCELLED = RESULT_FIRST_USER + 2;
+    public static final int RESULT_ADD_EDIT_FAVORITE_CANCELED = RESULT_FIRST_USER + 2;
 
     private FavoriteProductEditorActivityBinding binding;
-    private FavoriteProductEditorViewModel favoriteProductEditorViewModel;
+    private FavoriteProductEditorViewModel viewModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,7 +45,6 @@ public class FavoriteProductEditorActivity
         setupToolbar();
         findOrCreateFragments();
         setupViewModels();
-        subscribeToNavigationChanges();
         setupObservables();
     }
 
@@ -63,9 +62,16 @@ public class FavoriteProductEditorActivity
     }
 
     private void setupViewModels() {
-        favoriteProductEditorViewModel = obtainFavoriteProductEditorViewModel(this);
-        ProductViewerViewModel viewModel = obtainProductViewerViewModel(this);
-        viewModel.setViewOnlyMode(true);
+        viewModel = obtainFavoriteProductEditorViewModel(this);
+        viewModel.setNavigator(this);
+        ProductViewerViewModel vm = obtainProductViewerViewModel(this);
+        vm.setViewOnlyMode(true);
+    }
+
+    @Override
+    protected void onDestroy() {
+        viewModel.onActivityDestroyed();
+        super.onDestroy();
     }
 
     @NonNull
@@ -75,7 +81,7 @@ public class FavoriteProductEditorActivity
         ViewModelFactoryProduct factoryProduct =
                 ViewModelFactoryProduct.getInstance(activity.getApplication());
 
-        return ViewModelProviders.of(activity, factoryProduct).get(ProductViewerViewModel.class);
+        return new ViewModelProvider(activity, factoryProduct).get(ProductViewerViewModel.class);
     }
 
     @NonNull
@@ -85,7 +91,7 @@ public class FavoriteProductEditorActivity
         ViewModelFactoryFavoriteProduct factoryFavoriteProduct =
                 ViewModelFactoryFavoriteProduct.getInstance(activity.getApplication());
 
-        return ViewModelProviders.of(activity, factoryFavoriteProduct).
+        return new ViewModelProvider(activity, factoryFavoriteProduct).
                 get(FavoriteProductEditorViewModel.class);
     }
 
@@ -122,25 +128,18 @@ public class FavoriteProductEditorActivity
                 fragment, R.id.favorite_product_editor_contentFrame);
     }
 
-    private void subscribeToNavigationChanges() {
-        favoriteProductEditorViewModel.getFavoriteProductSavedEvent().observe(
-                this, FavoriteProductEditorActivity.this::onFavoriteProductSaved);
-    }
-
     private void setupObservables() {
-        favoriteProductEditorViewModel.getSetActivityTitleEvent().observe(
+        viewModel.getSetActivityTitleEvent().observe(
                 this, this::setTitle);
-        favoriteProductEditorViewModel.getShowUnsavedChangesDialogEvent().observe(
+        viewModel.getShowUnsavedChangesDialogEvent().observe(
                 this, aVoid -> showUnsavedChangesDialog());
-        favoriteProductEditorViewModel.getFavoriteProductCancelledEvent().observe(
-                this, this::onFavoriteEditAddCancelled);
     }
 
     @Override
-    public void onFavoriteProductSaved(String productId) {
+    public void onFavoriteProductSaved() {
         Log.d(TAG, "onFavoriteProductSaved: setResult=RESULT_ADD_EDIT_FAVORITE_PRODUCT_OK, productId");
         Intent intent = new Intent();
-        intent.putExtra(ProductEditorActivity.EXTRA_PRODUCT_ID, productId);
+        intent.putExtra(ProductEditorActivity.EXTRA_PRODUCT_ID, viewModel.getProductId());
         setResult(RESULT_ADD_EDIT_FAVORITE_PRODUCT_OK, intent);
         finish();
     }
@@ -153,19 +152,11 @@ public class FavoriteProductEditorActivity
 
     @Override
     public void onBackPressed() {
-        favoriteProductEditorViewModel.upOrBackPressed();
+        viewModel.upOrBackPressed();
     }
 
     @Override
-    public void onFavoriteEditAddCancelled(String productId) {
-        Log.d(TAG, "onFavoriteEditAddCancelled: setResult=RESULT_ADD_EDIT_FAVORITE_CANCELLED, productId");
-        Intent intent = new Intent();
-        intent.putExtra(ProductEditorActivity.EXTRA_PRODUCT_ID, productId);
-        setResult(RESULT_ADD_EDIT_FAVORITE_CANCELLED, intent);
-        finish();
-    }
-
-    private void showUnsavedChangesDialog() {
+    public void showUnsavedChangesDialog() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
         Fragment previousDialog = getSupportFragmentManager().findFragmentByTag(
@@ -179,5 +170,18 @@ public class FavoriteProductEditorActivity
                 this.getTitle().toString());
         dialogFragment.show(ft, UnsavedChangesDialogFragment.TAG);
     }
-}
 
+    @Override
+    public void discardChanges() {
+        onFavoriteEditAddCanceled();
+    }
+
+    @Override
+    public void onFavoriteEditAddCanceled() {
+        Log.d(TAG, "onFavoriteEditAddCanceled: setResult=RESULT_ADD_EDIT_FAVORITE_CANCELED, productId");
+        Intent intent = new Intent();
+        intent.putExtra(ProductEditorActivity.EXTRA_PRODUCT_ID, viewModel.getProductId());
+        setResult(RESULT_ADD_EDIT_FAVORITE_CANCELED, intent);
+        finish();
+    }
+}

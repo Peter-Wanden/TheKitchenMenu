@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class ProductCatalogAllFragment extends Fragment {
 
-    // TODO - make a super class, for FragmentCommunityProducts and FragmentMyProducts to inherit.
+    // TODO - make a super class, for AllProducts and MyProducts to inherit.
     private static final String TAG = "tkm-ProductCatAllFrag";
 
     private ProductCatalogViewModel viewModel;
@@ -45,9 +45,8 @@ public class ProductCatalogAllFragment extends Fragment {
             }
         });
 
-        viewModel.getSearchQueryEvent().observe(requireActivity(), searchQuery -> {
-            adapter.getFilter().filter(searchQuery);
-        });
+        viewModel.getSearchQueryEvent().observe(requireActivity(), searchQuery ->
+                adapter.getFilter().filter(searchQuery));
     }
 
     @Nullable

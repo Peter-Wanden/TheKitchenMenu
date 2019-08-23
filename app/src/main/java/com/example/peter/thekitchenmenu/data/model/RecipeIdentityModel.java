@@ -3,6 +3,8 @@ package com.example.peter.thekitchenmenu.data.model;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.util.Objects;
+
 public class RecipeIdentityModel {
 
     @NonNull
@@ -38,5 +40,31 @@ public class RecipeIdentityModel {
 
     public int getCookTime() {
         return cookTime;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RecipeIdentityModel that = (RecipeIdentityModel) o;
+        return prepTime == that.prepTime &&
+                cookTime == that.cookTime &&
+                title.equals(that.title) &&
+                description.equals(that.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, description, prepTime, cookTime);
+    }
+
+    @Override
+    public String toString() {
+        return "RecipeIdentityModel{" +
+                "titleObservable='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", prepTime=" + prepTime +
+                ", cookTime=" + cookTime +
+                '}';
     }
 }

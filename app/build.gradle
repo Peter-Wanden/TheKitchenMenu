@@ -95,23 +95,23 @@ dependencies {
     implementation "com.theartofdev.edmodo:android-image-cropper:2.8.0"
 
     // Play services
-    implementation "com.google.android.gms:play-services-ads-identifier:$playServicesA"
-    implementation "com.google.android.gms:play-services-auth-api-phone:$playServicesA"
-    implementation "com.google.android.gms:play-services-auth-base:$playServicesA"
-    implementation "com.google.android.gms:play-services-phenotype:$playServicesA"
-    implementation "com.google.android.gms:play-services-auth:$playServicesB"
+    implementation "com.google.android.gms:play-services-ads-identifier:$playServicesAddsIdentifier"
+    implementation "com.google.android.gms:play-services-auth:$playServicesAuth"
+    implementation "com.google.android.gms:play-services-auth-api-phone:$playServicesAuthApiPhone"
+    implementation "com.google.android.gms:play-services-auth-base:$playServicesAuthBase"
     implementation "com.google.android.gms:play-services-base:$playServicesBase"
-    implementation "com.google.android.gms:play-services-stats:$playServicesB"
-    implementation "com.google.android.gms:play-services-flags:$playServicesB"
-    implementation "com.google.android.gms:play-services-tasks:$playServicesB"
-    implementation "com.google.android.gms:play-services-basement:$playServicesC"
+    implementation "com.google.android.gms:play-services-basement:$playServicesBasement"
+    implementation "com.google.android.gms:play-services-flags:$playServicesFlags"
+    implementation "com.google.android.gms:play-services-phenotype:$playServicesPhenotype"
+    implementation "com.google.android.gms:play-services-stats:$playServicesStats"
+    implementation "com.google.android.gms:play-services-tasks:$playServicesTasks"
 
     // Firebase
-    implementation "com.google.firebase:firebase-database:$firebaseDatabase"
-    implementation "com.google.firebase:firebase-core:$firebaseCore"
     implementation "com.google.firebase:firebase-auth:$firebaseAuth"
-    implementation "com.google.firebase:firebase-storage:$firebaseStorage"
     implementation "com.google.firebase:firebase-config:$firebaseConfigVersion"
+    implementation "com.google.firebase:firebase-core:$firebaseCore"
+    implementation "com.google.firebase:firebase-database:$firebaseDatabase"
+    implementation "com.google.firebase:firebase-storage:$firebaseStorage"
 
     //////// Firebase UI ////////
     implementation "com.firebaseui:firebase-ui-auth:$firebaseUiAuth"
@@ -121,35 +121,57 @@ dependencies {
 
     //////// TESTING ////////
     // Core library
-    testImplementation "junit:junit:$rootProject.ext.junit"
-    androidTestImplementation "androidx.test:core:$androidxTestCore"
+//    androidTestImplementation "androidx.test:core:$androidxTestCore"
+
+//    testImplementation "org.powermock:powermock-module-junit4:$powerMockito"
+//    testImplementation "org.powermock:powermock-api-mockito:$powerMockito"
+
+//    androidTestImplementation "androidx.test.ext:junit:$androidxTestExtJunit"
+//    androidTestImplementation 'androidx.test.ext:truth:1.2.0'
+//    androidTestImplementation 'com.google.truth:truth:0.42'
+
+    testImplementation "junit:junit:$junitVersion"
+    testImplementation "org.mockito:mockito-all:$mockitoVersion"
+    testImplementation "org.hamcrest:hamcrest-all:$hamcrest"
+
+    testImplementation "androidx.arch.core:core-testing:$androidxCoreTesting"
 
     // AndroidJUnitRunner and JUnit Rules
     androidTestImplementation "androidx.test:runner:$androidxTestRunner"
     androidTestImplementation "androidx.test:rules:$androidxTestRules"
 
-    // Assertions
-    androidTestImplementation "androidx.test.ext:junit:$androidxTestExtJunit"
+    androidTestImplementation "androidx.room:room-testing:$androidxRoomTestingVersion"
+
+    // Dependencies for Android unit tests
+    androidTestImplementation "junit:junit:$junitVersion"
+    androidTestImplementation "org.mockito:mockito-core:$mockitoCoreVersion"
+    androidTestImplementation 'com.google.dexmaker:dexmaker:1.2'
+    androidTestImplementation 'com.google.dexmaker:dexmaker-mockito:1.2'
 
     // Espresso UI Testing dependencies.
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspresso"
     androidTestImplementation "androidx.test.espresso:espresso-contrib:$androidxEspresso"
     androidTestImplementation "androidx.test.espresso:espresso-intents:$androidxEspresso"
+    androidTestImplementation "androidx.test.espresso.idling:idling-concurrent:$espressoConcurrent"
+    implementation "androidx.test.espresso:espresso-idling-resource:$espressoIdlingResource"
 
-    testImplementation "org.mockito:mockito-all:$mockitoVersion"
-    testImplementation "org.powermock:powermock-module-junit4:$powerMockito"
-    testImplementation "org.powermock:powermock-api-mockito:$powerMockito"
-
-    testImplementation "org.hamcrest:hamcrest-all:$hamcrest"
+    /*
+    Resolves dependency versions across test and production APKs, specifically, transitive
+    dependencies. This is required since Espresso internally has a dependency on support-annotations.
+    */
+    androidTestImplementation "androidx.annotation:annotation:$annotations"
+    androidTestImplementation "androidx.legacy:legacy-support-v4:$androidxSupportVersion"
+    androidTestImplementation "androidx.recyclerview:recyclerview:$androidxRecyclerView"
+    androidTestImplementation "androidx.appcompat:appcompat:$androidxAppcompat"
+    androidTestImplementation "androidx.core:core:$coreCore"
+    androidTestImplementation "com.google.android.material:material:$androidMaterial"
+    implementation "com.google.code.findbugs:jsr305:3.0.2"
 }
 
 // Reads the configuration information in app/google-services.json
 apply plugin: 'com.google.gms.google-services'
 
-/*
-Resolves dependency versions across test and production APKs, specifically, transitive
-dependencies. This is required since Espresso internally has a dependency on support-annotations.
-*/
-configurations.all {
-    resolutionStrategy.force "androidx.annotation:annotation:$androidxSupportVersion"
-}
+
+//configurations.all {
+//    resolutionStrategy.force "androidx.annotation:annotation:$androidxSupportVersion"
+//}

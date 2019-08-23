@@ -20,7 +20,7 @@ import java.util.Arrays;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
-import static com.example.peter.thekitchenmenu.app.Constants.ANONYMOUS;
+import static com.example.peter.thekitchenmenu.app.Constants.ANONYMOUS_USER;
 import static com.example.peter.thekitchenmenu.app.Constants.REQUEST_CODE_SIGN_IN;
 
 // For more examples of sign in see:
@@ -49,7 +49,7 @@ public class RemoteSignIn {
                 onSignedInInitialise(user.getUid());
 
             } else {
-                Constants.getUserId().setValue(ANONYMOUS);
+                Constants.getUserId().setValue(ANONYMOUS_USER);
                 mainActivity.startActivityForResult(
                         AuthUI.getInstance()
                                 .createSignInIntentBuilder()
@@ -102,7 +102,7 @@ public class RemoteSignIn {
 
     public void signOut(Context context) {
         Log.i(TAG, "--- User signed out from remote database");
-        Constants.getUserId().setValue(ANONYMOUS);
+        Constants.getUserId().setValue(ANONYMOUS_USER);
         AuthUI.getInstance().signOut(context);
     }
 }

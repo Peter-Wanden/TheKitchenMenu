@@ -9,11 +9,13 @@ public interface ProductViewerNavigator {
 
     void editProduct(ProductEntity productEntity);
 
-    void discardChanges();
+    void discardProductEdits();
 
     void deleteProduct(String productId);
 
     void doneWithProduct(String productId);
 
     void postProduct();
+
+    void showUnsavedChangesDialog();
 }

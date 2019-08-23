@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -45,6 +44,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" >
                     </FrameLayout>
+
+                    <FrameLayout
+                        android:id="@+id/recipe_editor_information_content_frame"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"/>
                 </LinearLayout>
             </ScrollView>
         </androidx.coordinatorlayout.widget.CoordinatorLayout>

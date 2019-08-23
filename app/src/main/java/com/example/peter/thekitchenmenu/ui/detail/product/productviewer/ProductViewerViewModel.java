@@ -3,6 +3,7 @@ package com.example.peter.thekitchenmenu.ui.detail.product.productviewer;
 import android.app.Application;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.util.Log;
 
 import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
@@ -28,14 +29,13 @@ public class ProductViewerViewModel
     public final ObservableBoolean dataIsLoading = new ObservableBoolean();
     public final ObservableField<ProductEntity> productEntityObservable = new ObservableField<>();
     private boolean dataHasChanged;
-    private ProductEntity productEntityPreEditing;
 
     public final ObservableBoolean showPostMessageEvent = new ObservableBoolean();
     public final ObservableField<String> reviewBeforePostMessage = new ObservableField<>();
 
     // Non-default modes of operation
     private boolean viewOnlyMode;
-    private boolean postMode;
+    private boolean reviewBeforePostMode;
 
     private final SingleLiveEvent<Boolean> hasOptionsMenuEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<Void> resetOptionsMenu = new SingleLiveEvent<>();
@@ -57,11 +57,13 @@ public class ProductViewerViewModel
     }
 
     public void start(ProductEntity productEntity) {
+        Log.d(TAG, "start: ProductEntity passed in, setting up display as 'review before post'");
         productEntityObservable.set(productEntity);
         setupDisplayAsReviewAfterEdit();
     }
 
     public void start(String productId) {
+        Log.d(TAG, "start: Product ID passed in, setting up display as product viewer");
         if (!showPostMessageEvent.get()) {
             if (!Strings.isEmptyOrWhitespace(productId)) {
                 dataIsLoading.set(true);
@@ -88,16 +90,15 @@ public class ProductViewerViewModel
 
     void handleActivityResult(int resultCode, Intent data) {
         if (resultCode == ProductEditorActivity.RESULT_ADD_EDIT_PRODUCT_OK) {
-            dataHasChanged = true;
             ProductEntity productEntity = data.getParcelableExtra(
                     ProductEditorActivity.EXTRA_PRODUCT_ENTITY);
+            Log.d(TAG, "handleActivityResult: result='RESULT_ADD_EDIT_PRODUCT_OK', starting with EXTRA_PRODUCT_ENTITY");
             start(productEntity);
         }
     }
 
     private void setupDisplayAsReviewAfterEdit() {
-        postMode = true;
-        dataHasChanged = true;
+        reviewBeforePostMode = true;
         setTitleEvent.setValue(resources.getString(R.string.activity_title_review_new_product));
         hasOptionsMenuEvent.setValue(true);
         resetOptionsMenu.call();
@@ -118,7 +119,7 @@ public class ProductViewerViewModel
     }
 
     private void setupDisplayAsViewer() {
-        postMode = false;
+        reviewBeforePostMode = false;
         showPostMessageEvent.set(false);
 
         setTitleEvent.setValue(resources.getString(R.string.activity_title_view_product));
@@ -132,13 +133,12 @@ public class ProductViewerViewModel
         this.viewOnlyMode = viewOnlyMode;
     }
 
-    boolean isPostMode() {
-        return postMode;
+    boolean isReviewBeforePostMode() {
+        return reviewBeforePostMode;
     }
 
     @Override
     public void editProduct(ProductEntity productEntity) {
-        productEntityPreEditing = productEntity;
         navigator.editProduct(productEntity);
     }
 
@@ -156,8 +156,9 @@ public class ProductViewerViewModel
     }
 
     @Override
-    public void discardChanges() {
-
+    public void discardProductEdits() {
+        // Reloads the product to reset it to its last saved state
+        start(productEntityObservable.get().getId());
     }
 
     @Override
@@ -168,10 +169,28 @@ public class ProductViewerViewModel
     @Override
     public void postProduct() {
         productEntityDataSource.save(productEntityObservable.get());
+        dataHasChanged = true;
         setupDisplayAsViewer();
     }
 
-    boolean isDataHasChanged() {
-        return dataHasChanged;
+    void setDataHasChanged(boolean dataHasChanged) {
+        this.dataHasChanged = dataHasChanged;
+    }
+
+    void upOrBackPressed() {
+        if (reviewBeforePostMode) {
+            showUnsavedChangesDialog();
+
+        } else if (dataHasChanged) {
+            navigator.doneWithProduct(productEntityObservable.get().getId());
+
+        } else {
+            navigator.discardProductEdits();
+        }
+    }
+
+    @Override
+    public void showUnsavedChangesDialog() {
+        navigator.showUnsavedChangesDialog();
     }
 }

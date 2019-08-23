@@ -35,7 +35,7 @@ public abstract class Constants {
     /* *******
      * Users *
      *********/
-    public static final String ANONYMOUS = "anonymous";
+    public static final String ANONYMOUS_USER = "anonymous_user";
     public static final String USER_ID_KEY = "user_id_key";
 
     /*
@@ -43,7 +43,7 @@ public abstract class Constants {
      * see: https://developer.android.com/topic/libraries/architecture/livedata
      */
     @NonNull
-    private static MutableLiveData<String> USER_ID = new MutableLiveData<>(ANONYMOUS);
+    private static MutableLiveData<String> USER_ID = new MutableLiveData<>(ANONYMOUS_USER);
     public static MutableLiveData<String> getUserId() {
         return USER_ID;
     }

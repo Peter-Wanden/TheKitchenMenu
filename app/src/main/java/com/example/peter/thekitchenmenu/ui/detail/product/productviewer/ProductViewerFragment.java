@@ -1,6 +1,7 @@
 package com.example.peter.thekitchenmenu.ui.detail.product.productviewer;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -12,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
@@ -24,8 +24,7 @@ public class ProductViewerFragment extends Fragment {
     private static final String TAG = "tkm-ProductViewerFrag";
 
     private static final String ARGUMENT_PRODUCT_ID = "PRODUCT_ID";
-    private static final String ARGUMENT_PRODUCT_ENTITY = "PRODUCT_ENTITY";
-
+    static final String ARGUMENT_PRODUCT_ENTITY = "PRODUCT_ENTITY";
 
     private ProductViewerDetailFragmentBinding binding;
     private ProductViewerViewModel productViewerViewModel;
@@ -50,12 +49,17 @@ public class ProductViewerFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        if (getArguments().containsKey(ARGUMENT_PRODUCT_ID))
+        if (getArguments().containsKey(ARGUMENT_PRODUCT_ID)) {
+            Log.d(TAG, "onResume: started with ARGUMENT_PRODUCT_ID");
             productViewerViewModel.start(getArguments().getString(ARGUMENT_PRODUCT_ID));
+        }
 
-        else if (getArguments().containsKey(ARGUMENT_PRODUCT_ENTITY))
+        else if (getArguments().containsKey(ARGUMENT_PRODUCT_ENTITY)) {
+            Log.d(TAG, "onResume: started with ARGUMENT_PRODUCT_ENTITY");
             productViewerViewModel.start(
                     (ProductEntity) getArguments().getParcelable(ARGUMENT_PRODUCT_ENTITY));
+            getArguments().remove(ARGUMENT_PRODUCT_ENTITY);
+        }
     }
 
     @Nullable
@@ -110,7 +114,7 @@ public class ProductViewerFragment extends Fragment {
 
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
-        if (productViewerViewModel.isPostMode()) {
+        if (productViewerViewModel.isReviewBeforePostMode()) {
             menu.findItem(R.id.menu_item_post_product).setVisible(true);
             menu.findItem(R.id.menu_item_discard_changes).setVisible(true);
 
@@ -145,7 +149,8 @@ public class ProductViewerFragment extends Fragment {
                 return true;
 
             case R.id.menu_item_discard_changes:
-                productViewerViewModel.discardChanges();
+                productViewerViewModel.discardProductEdits();
+                return true;
 
             case R.id.menu_item_done:
                 productViewerViewModel.doneWithProduct(

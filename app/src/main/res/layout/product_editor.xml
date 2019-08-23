@@ -44,29 +44,23 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <fragment
-                    android:id="@+id/image_editor_fragment"
-                    android:name="com.example.peter.thekitchenmenu.ui.imageeditor.ImageEditorFragment"
+                <FrameLayout
+                    android:id="@+id/image_editor_content_frame"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    bind:layout="@layout/image_editor">
-                </fragment>
+                    android:layout_height="wrap_content">
+                </FrameLayout>
 
-                <fragment
-                    android:id="@+id/product_identity_fragment"
-                    android:name="com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductIdentityEditorFragment"
+                <FrameLayout
+                    android:id="@+id/product_identity_content_frame"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    bind:layout="@layout/product_editor_identity">
-                </fragment>
+                    android:layout_height="wrap_content">
+                </FrameLayout>
 
-                <fragment
-                    android:id="@+id/product_size_fragment"
-                    android:name="com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductMeasurementEditorFragment"
+                <FrameLayout
+                    android:id="@+id/product_measurement_content_frame"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    bind:layout="@layout/product_editor_measurement">
-                </fragment>
+                    android:layout_height="wrap_content">
+                </FrameLayout>
 
                 <FrameLayout
                     android:id="@+id/product_editor_information_content_frame"

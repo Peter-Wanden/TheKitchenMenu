@@ -19,7 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import static com.example.peter.thekitchenmenu.ui.imageeditor.ImageEditorViewModel.*;
 
@@ -58,7 +58,7 @@ public class ImageEditorFragment extends Fragment {
     }
 
     private void setViewModel() {
-        viewModel = ViewModelProviders.of(requireActivity()).get(ImageEditorViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(ImageEditorViewModel.class);
     }
 
     private void setObservers() {

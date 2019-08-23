@@ -1,6 +1,5 @@
 package com.example.peter.thekitchenmenu.utils;
 
-import android.util.Log;
 import android.widget.TextView;
 
 import androidx.databinding.BindingAdapter;

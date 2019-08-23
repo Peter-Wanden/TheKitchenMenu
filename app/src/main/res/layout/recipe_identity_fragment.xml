@@ -5,18 +5,18 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     >
-
     <data>
+        <import type="android.view.View" />
         <variable
             name="viewModel"
-            type="com.example.peter.thekitchenmenu.ui.detail.recipe.RecipeIdentityViewModel">
+            type="com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeIdentityViewModel">
         </variable>
     </data>
 
 <androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/recipe_identity_editor_constraint_parent"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/recipe_editor_center_guideline"
@@ -58,7 +58,8 @@
         android:layout_marginEnd="8dp"
         android:paddingStart="8dp"
         android:paddingEnd="8dp"
-        android:text="@={viewModel.title}"
+        android:text="@={viewModel.titleObservable}"
+        app:editTextErrorSetter="@{viewModel.titleErrorMessage}"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/recipe_editor_title_label"
@@ -87,7 +88,8 @@
         android:layout_marginBottom="8dp"
         android:paddingStart="8dp"
         android:paddingEnd="8dp"
-        android:text="@{viewModel.description}"
+        android:text="@={viewModel.descriptionObservable}"
+        app:editTextErrorSetter="@{viewModel.descriptionErrorMessage}"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/recipe_description_label"
@@ -141,8 +143,8 @@
         android:id="@+id/recipe_identity_editor_breakfast_check_box"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="12dp"
         app:layout_constraintEnd_toStartOf="@id/recipe_editor_center_guideline"
+        app:layout_constraintStart_toEndOf="@id/recipe_editor_center_guideline"
         app:layout_constraintTop_toBottomOf="@id/recipe_identity_editor_select_all_that_apply_label" />
 
     <TextView
@@ -152,16 +154,16 @@
         android:layout_marginStart="24dp"
         android:text="@string/course_label_lunch"
         app:layout_constraintBaseline_toBaselineOf="@id/recipe_identity_editor_lunch_check_box"
-        app:layout_constraintStart_toStartOf="@id/recipe_identity_editor_course_selector_box"
+        app:layout_constraintStart_toStartOf="parent"
         />
 
     <com.google.android.material.checkbox.MaterialCheckBox
         android:id="@+id/recipe_identity_editor_lunch_check_box"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="12dp"
-        app:layout_constraintTop_toBottomOf="@id/recipe_identity_editor_breakfast_check_box"
         app:layout_constraintEnd_toStartOf="@id/recipe_editor_center_guideline"
+        app:layout_constraintStart_toEndOf="@id/recipe_editor_center_guideline"
+        app:layout_constraintTop_toBottomOf="@id/recipe_identity_editor_breakfast_check_box"
         />
 
     <TextView
@@ -171,16 +173,16 @@
         android:layout_marginStart="24dp"
         android:text="@string/course_label_dinner"
         app:layout_constraintBaseline_toBaselineOf="@id/recipe_identity_editor_main_course_check_box"
-        app:layout_constraintStart_toStartOf="@id/recipe_identity_editor_course_selector_box"
+        app:layout_constraintStart_toStartOf="parent"
         />
 
     <com.google.android.material.checkbox.MaterialCheckBox
         android:id="@+id/recipe_identity_editor_main_course_check_box"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="12dp"
-        app:layout_constraintTop_toBottomOf="@id/recipe_identity_editor_lunch_check_box"
         app:layout_constraintEnd_toStartOf="@id/recipe_editor_center_guideline"
+        app:layout_constraintStart_toEndOf="@id/recipe_editor_center_guideline"
+        app:layout_constraintTop_toBottomOf="@id/recipe_identity_editor_lunch_check_box"
         />
 
     <TextView
@@ -190,23 +192,22 @@
         android:layout_marginStart="24dp"
         android:text="@string/course_label_accompaniment"
         app:layout_constraintBaseline_toBaselineOf="@id/recipe_identity_editor_accompaniment_check_box"
-        app:layout_constraintStart_toStartOf="@id/recipe_identity_editor_course_selector_box"
+        app:layout_constraintStart_toStartOf="parent"
         />
 
     <com.google.android.material.checkbox.MaterialCheckBox
         android:id="@+id/recipe_identity_editor_accompaniment_check_box"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="12dp"
-        app:layout_constraintTop_toBottomOf="@id/recipe_identity_editor_main_course_check_box"
         app:layout_constraintEnd_toStartOf="@id/recipe_editor_center_guideline"
+        app:layout_constraintStart_toEndOf="@id/recipe_editor_center_guideline"
+        app:layout_constraintTop_toBottomOf="@id/recipe_identity_editor_main_course_check_box"
         />
 
     <com.google.android.material.checkbox.MaterialCheckBox
         android:id="@+id/recipe_identity_editor_desert_check_box"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="12dp"
         app:layout_constraintTop_toBottomOf="@id/recipe_identity_editor_select_all_that_apply_label"
         app:layout_constraintEnd_toEndOf="@id/recipe_identity_editor_course_selector_box"
         />
@@ -225,7 +226,6 @@
         android:id="@+id/recipe_identity_editor_side_dish_check_box"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="12dp"
         app:layout_constraintTop_toBottomOf="@id/recipe_identity_editor_desert_check_box"
         app:layout_constraintEnd_toEndOf="@id/recipe_identity_editor_course_selector_box"
         />
@@ -244,7 +244,6 @@
         android:id="@+id/recipe_identity_editor_snack_check_box"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="12dp"
         app:layout_constraintTop_toBottomOf="@id/recipe_identity_editor_side_dish_check_box"
         app:layout_constraintEnd_toEndOf="@id/recipe_identity_editor_course_selector_box"
         />
@@ -263,10 +262,8 @@
         android:id="@+id/recipe_identity_editor_drink_check_box"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="12dp"
-        app:layout_constraintTop_toBottomOf="@id/recipe_identity_editor_snack_check_box"
         app:layout_constraintEnd_toEndOf="@id/recipe_identity_editor_course_selector_box"
-        />
+        app:layout_constraintTop_toBottomOf="@id/recipe_identity_editor_snack_check_box" />
 
     <TextView
         android:id="@+id/recipe_identity_editor_drink_label"
@@ -301,7 +298,8 @@
         android:padding="4dp"
         android:text="@string/recipe_preparation_time_label"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/recipe_identity_editor_accompaniment_check_box" />
+        app:layout_constraintTop_toBottomOf="@id/recipe_identity_editor_accompaniment_check_box"
+        />
 
     <TextView
         android:id="@+id/recipe_editor_prep_time_hours_label"
@@ -320,11 +318,15 @@
         android:layout_marginEnd="24dp"
         android:layout_marginStart="24dp"
         android:gravity="center_horizontal"
+        android:text="@={viewModel.prepHoursObservable}"
+        app:setupEditTextForRecipeTimes="@{viewModel.prepHoursObservable}"
+        app:editTextErrorSetter="@{viewModel.prepTimeErrorMessage}"
         app:layout_constraintTop_toBottomOf="@id/recipe_editor_prep_time_label"
         app:layout_constraintStart_toEndOf="@id/recipe_editor_prep_time_hours_label"
         app:layout_constraintEnd_toStartOf="@id/recipe_editor_center_guideline"
-        app:setupEditTextForRecipeTimes="@{viewModel.prepHours}"
         />
+
+<!--    -->
 
     <TextView
         android:id="@+id/recipe_editor_prep_time_minutes_label"
@@ -343,10 +345,12 @@
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:gravity="center_horizontal"
+        android:text="@={viewModel.prepMinutesObservable}"
+        app:setupEditTextForRecipeTimes="@{viewModel.prepMinutesObservable}"
         app:layout_constraintBaseline_toBaselineOf="@id/editable_recipe_prep_time_hours"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/recipe_editor_prep_time_minutes_label"
-        app:setupEditTextForRecipeTimes="@{viewModel.prepMinutes}" />
+        />
 
     <TextView
         android:id="@+id/recipe_identity_editor_cook_time_label"
@@ -377,11 +381,15 @@
         android:layout_marginEnd="24dp"
         android:layout_marginStart="24dp"
         android:gravity="center_horizontal"
-        app:setupEditTextForRecipeTimes="@{viewModel.cookHours}"
+        android:text="@={viewModel.cookHoursObservable}"
+        app:setupEditTextForRecipeTimes="@{viewModel.cookHoursObservable}"
+        app:editTextErrorSetter="@{viewModel.cookTimeErrorMessage}"
         app:layout_constraintTop_toBottomOf="@id/recipe_identity_editor_cook_time_label"
         app:layout_constraintStart_toEndOf="@id/recipe_editor_cooking_time_hours_label"
         app:layout_constraintEnd_toStartOf="@id/recipe_editor_center_guideline"
         />
+
+<!--    -->
 
     <TextView
         android:id="@+id/recipe_editor_cooking_time_minutes_label"
@@ -400,11 +408,11 @@
         android:layout_marginEnd="24dp"
         android:layout_marginStart="24dp"
         android:gravity="center_horizontal"
-        app:setupEditTextForRecipeTimes="@{viewModel.cookMinutes}"
+        android:text="@={viewModel.cookMinutesObservable}"
+        app:setupEditTextForRecipeTimes="@{viewModel.cookMinutesObservable}"
         app:layout_constraintBaseline_toBaselineOf="@id/editable_recipe_cooking_time_hours"
         app:layout_constraintStart_toEndOf="@id/recipe_editor_cooking_time_minutes_label"
         app:layout_constraintEnd_toEndOf="parent"
         />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

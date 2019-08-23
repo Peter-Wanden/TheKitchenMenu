@@ -28,43 +28,46 @@ public class FavoriteProductEditorViewModel
     private static final String TAG = "tkm-FavProductEditorVM";
 
     private Resources resources;
+    private AddEditFavoriteProductNavigator navigator;
+    private TextValidationHandler validationHandler;
+
+    private String productId;
+    private FavoriteProductEntity favoriteProductEntity;
 
     public final ObservableField<String> retailer = new ObservableField<>();
     public final ObservableField<String> locationRoom = new ObservableField<>();
     public final ObservableField<String> locationInRoom = new ObservableField<>();
     public final ObservableField<String> price = new ObservableField<>();
+
+    public final ObservableField<String> retailerErrorMessage = new ObservableField<>();
+    public final ObservableField<String> locationRoomErrorMessage = new ObservableField<>();
+    public final ObservableField<String> locationInRoomErrorMessage = new ObservableField<>();
+    public final ObservableField<String> priceErrorMessage = new ObservableField<>();
     private long createDate;
 
     private final SingleLiveEvent<String> setActivityTitleEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<Boolean> allInputValuesAreValidEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<Void> showUnsavedChangesDialogEvent = new SingleLiveEvent<>();
-    private final SingleLiveEvent<String> retailerErrorEvent = new SingleLiveEvent<>();
-    private final SingleLiveEvent<String> locationRoomErrorEvent = new SingleLiveEvent<>();
-    private final SingleLiveEvent<String> locationInRoomErrorEvent = new SingleLiveEvent<>();
-    private final SingleLiveEvent<String> priceErrorEvent = new SingleLiveEvent<>();
-    private final SingleLiveEvent<String> favoriteProductSavedEvent = new SingleLiveEvent<>();
-    private final SingleLiveEvent<String> favoriteProductCancelledEvent = new SingleLiveEvent<>();
 
-    private FavoriteProductEntity favoriteProductEntity;
-    private String productId;
-    private boolean retailerValidated;
-    private boolean locationRoomValidated;
-    private boolean locationInRoomValidated;
-    private boolean priceValidated;
-
-    public final ObservableBoolean dataIsLoading = new ObservableBoolean();
+    private boolean
+            retailerValidated,
+            locationRoomValidated,
+            locationInRoomValidated,
+            priceValidated;
 
     private FavoriteProductsDataSource favoriteProductEntityDataSource;
-
+    public final ObservableBoolean dataIsLoading = new ObservableBoolean();
     private boolean isExistingFavoriteProductEntity;
 
     public FavoriteProductEditorViewModel(
             @NonNull Application application,
-            @NonNull FavoriteProductsDataSource favoriteProductEntityDataSource) {
+            @NonNull FavoriteProductsDataSource favoriteProductEntityDataSource,
+            TextValidationHandler validationHandler) {
 
         super(application);
         this.favoriteProductEntityDataSource = favoriteProductEntityDataSource;
         resources = application.getResources();
+        this.validationHandler = validationHandler;
 
         retailer.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
@@ -95,6 +98,14 @@ public class FavoriteProductEditorViewModel
         });
     }
 
+    void setNavigator(AddEditFavoriteProductNavigator navigator) {
+        this.navigator = navigator;
+    }
+
+    void onActivityDestroyed() {
+        navigator = null;
+    }
+
     void start(String productId) {
         this.productId = productId;
         dataIsLoading.set(true);
@@ -103,17 +114,14 @@ public class FavoriteProductEditorViewModel
 
     @Override
     public void onEntityLoaded(FavoriteProductEntity favoriteProductEntity) {
-        this.favoriteProductEntity = favoriteProductEntity;
-        isExistingFavoriteProductEntity = true;
         dataIsLoading.set(false);
-        setEntityValuesToObservables(favoriteProductEntity);
-        setTitle();
+        this.favoriteProductEntity = favoriteProductEntity;
+        setUpForExistingFavoriteProductEntity();
     }
 
-    @Override
-    public void onDataNotAvailable() {
-        dataIsLoading.set(false);
-        isExistingFavoriteProductEntity = false;
+    private void setUpForExistingFavoriteProductEntity() {
+        isExistingFavoriteProductEntity = true;
+        setEntityValuesToObservables(favoriteProductEntity);
         setTitle();
     }
 
@@ -123,6 +131,17 @@ public class FavoriteProductEditorViewModel
         locationRoom.set(favoriteProductEntity.getLocationRoom());
         locationInRoom.set(favoriteProductEntity.getLocationInRoom());
         price.set(favoriteProductEntity.getPrice());
+    }
+
+    @Override
+    public void onDataNotAvailable() {
+        dataIsLoading.set(false);
+        setUpForNewFavoriteProductEntity();
+    }
+
+    private void setUpForNewFavoriteProductEntity() {
+        isExistingFavoriteProductEntity = false;
+        setTitle();
     }
 
     private void setTitle() {
@@ -138,51 +157,52 @@ public class FavoriteProductEditorViewModel
         return setActivityTitleEvent;
     }
 
-    SingleLiveEvent<Boolean> getAllInputValuesAreValidEvent() {
-        return allInputValuesAreValidEvent;
-    }
-
     private void retailerChanged() {
+        retailerErrorMessage.set(null);
         String retailerValidationResponse = validateText(retailer.get());
 
-        if (retailerValidationResponse.equals(TextValidationHandler.VALIDATED))
+        if (retailerValidationResponse.equals(validationHandler.VALIDATED)) {
             retailerValidated = true;
+        }
         else {
             retailerValidated = false;
-            retailerErrorEvent.setValue(retailerValidationResponse);
+            retailerErrorMessage.set(retailerValidationResponse);
         }
         checkAllFieldsValidated();
     }
 
     private void locationRoomChanged() {
+        locationRoomErrorMessage.set(null);
         String locationRoomValidationResponse = validateText(locationRoom.get());
 
-        if (locationRoomValidationResponse.equals(TextValidationHandler.VALIDATED))
+        if (locationRoomValidationResponse.equals(validationHandler.VALIDATED))
             locationRoomValidated = true;
         else {
             locationRoomValidated = false;
-            locationRoomErrorEvent.setValue(locationRoomValidationResponse);
+            locationRoomErrorMessage.set(locationRoomValidationResponse);
         }
         checkAllFieldsValidated();
     }
 
     private void locationInRoomChanged() {
+        locationInRoomErrorMessage.set(null);
         String locationInRoomValidationResponse = validateText(locationInRoom.get());
 
-        if (locationInRoomValidationResponse.equals(TextValidationHandler.VALIDATED))
+        if (locationInRoomValidationResponse.equals(validationHandler.VALIDATED))
             locationInRoomValidated = true;
         else {
             locationInRoomValidated = false;
-            locationInRoomErrorEvent.setValue(locationInRoomValidationResponse);
+            locationInRoomErrorMessage.set(locationInRoomValidationResponse);
         }
         checkAllFieldsValidated();
     }
 
     private String validateText(String textToValidate) {
-        return TextValidationHandler.validateShortText(resources, textToValidate);
+        return validationHandler.validateShortText(resources, textToValidate);
     }
 
     private void priceChanged() {
+        priceErrorMessage.set(null);
         if (Strings.isEmptyOrWhitespace(price.get()))
             return;
 
@@ -194,8 +214,7 @@ public class FavoriteProductEditorViewModel
             priceValidated = true;
         else {
             priceValidated = false;
-            priceErrorEvent.setValue(resources.getString(
-                    R.string.input_error_product_pack_price));
+            priceErrorMessage.set(resources.getString(R.string.input_error_product_pack_price));
         }
         checkAllFieldsValidated();
     }
@@ -219,7 +238,6 @@ public class FavoriteProductEditorViewModel
     }
 
     private void checkAllFieldsValidated() {
-
         if (retailerValidated &&
                 locationRoomValidated &&
                 locationInRoomValidated &&
@@ -234,12 +252,16 @@ public class FavoriteProductEditorViewModel
         if (isValidFavoriteProductEntity()) {
             showUnsavedChangesDialogEvent.call();
         } else
-            favoriteProductCancelledEvent.setValue(productId);
+            navigator.onFavoriteEditAddCanceled();
     }
 
     private boolean isValidFavoriteProductEntity() {
         return allInputValuesAreValidEvent.getValue() &&
                 (!isExistingFavoriteProductEntity || isExistingFavoriteProductThatHasBeenEdited());
+    }
+
+    SingleLiveEvent<Boolean> getAllInputValuesAreValidEvent() {
+        return allInputValuesAreValidEvent;
     }
 
     private boolean isExistingFavoriteProductThatHasBeenEdited() {
@@ -257,26 +279,6 @@ public class FavoriteProductEditorViewModel
             return this.favoriteProductEntity.equals(favoriteProductEntity);
         }
         return false;
-    }
-
-    SingleLiveEvent<String> getFavoriteProductCancelledEvent() {
-        return favoriteProductCancelledEvent;
-    }
-
-    SingleLiveEvent<String> getRetailerErrorEvent() {
-        return retailerErrorEvent;
-    }
-
-    SingleLiveEvent<String> getLocationRoomErrorEvent() {
-        return locationRoomErrorEvent;
-    }
-
-    SingleLiveEvent<String> getLocationInRoomErrorEvent() {
-        return locationInRoomErrorEvent;
-    }
-
-    SingleLiveEvent<String> getPriceErrorEvent() {
-        return priceErrorEvent;
     }
 
     void saveFavoriteProduct() {
@@ -315,18 +317,18 @@ public class FavoriteProductEditorViewModel
 
     private void saveNewFavoriteProduct(FavoriteProductEntity favoriteProduct) {
         favoriteProductEntityDataSource.save(favoriteProduct);
-        favoriteProductSavedEvent.setValue(productId);
+        navigator.onFavoriteProductSaved();
     }
 
     private void updateFavoriteProduct(FavoriteProductEntity favoriteProduct) {
         if (!isExistingFavoriteProductEntity)
             throw new RuntimeException("updateFavoriteProduct called but is new favorite Product.");
         favoriteProductEntityDataSource.save(favoriteProduct);
-        favoriteProductSavedEvent.setValue(productId);
+        navigator.onFavoriteProductSaved();
     }
 
-    SingleLiveEvent<String> getFavoriteProductSavedEvent() {
-        return favoriteProductSavedEvent;
+    public String getProductId() {
+        return productId;
     }
 
     SingleLiveEvent<Void> getShowUnsavedChangesDialogEvent() {

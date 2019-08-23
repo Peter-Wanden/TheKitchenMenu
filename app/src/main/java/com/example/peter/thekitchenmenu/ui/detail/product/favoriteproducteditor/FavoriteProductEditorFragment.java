@@ -73,32 +73,11 @@ public class FavoriteProductEditorFragment extends Fragment {
     }
 
     private void subscribeToEvents() {
-        // TODO Change these to observable Strings that fire straight at the view from the model
-        viewModel.getRetailerErrorEvent().observe(this, this::retailerError);
-        viewModel.getLocationRoomErrorEvent().observe(this, this::locationRoomError);
-        viewModel.getLocationInRoomErrorEvent().observe(this, this::locationInRoomError);
-        viewModel.getPriceErrorEvent().observe(this, this::priceError);
         viewModel.getAllInputValuesAreValidEvent().observe(this, this::setHasOptionsMenu);
     }
 
     private void loadData() {
         viewModel.start(getArguments().getString(ProductEditorActivity.EXTRA_PRODUCT_ID));
-    }
-
-    private void retailerError(String retailerError) {
-        binding.editableRetailer.setError(retailerError);
-    }
-
-    private void locationRoomError(String locationRoomError) {
-        binding.editableLocationRoom.setError(locationRoomError);
-    }
-
-    private void locationInRoomError(String locationInRoomError) {
-        binding.editableLocationInRoom.setError(locationInRoomError);
-    }
-
-    private void priceError(String priceError) {
-        binding.editablePrice.setError(priceError);
     }
 
     private void setUpPricingInput() {

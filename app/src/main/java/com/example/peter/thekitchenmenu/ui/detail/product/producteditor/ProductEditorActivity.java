@@ -14,6 +14,8 @@ import com.example.peter.thekitchenmenu.databinding.ProductEditorBinding;
 import com.example.peter.thekitchenmenu.ui.UnsavedChangesDialogFragment;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryProduct;
 import com.example.peter.thekitchenmenu.ui.detail.product.productviewer.ProductViewerActivity;
+import com.example.peter.thekitchenmenu.ui.imageeditor.ImageEditorFragment;
+import com.example.peter.thekitchenmenu.utils.ActivityUtils;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.ui.imageeditor.ImageEditorViewModel;
 
@@ -24,7 +26,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class ProductEditorActivity extends AppCompatActivity implements AddEditProductNavigator {
@@ -35,7 +37,7 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
     public static final String EXTRA_PRODUCT_ENTITY = "EXTRA_PRODUCT_ENTITY";
     public static final int REQUEST_ADD_EDIT_PRODUCT = 5;
     public static final int RESULT_ADD_EDIT_PRODUCT_OK = RESULT_FIRST_USER + 1;
-    public static final int RESULT_ADD_EDIT_PRODUCT_CANCELLED = RESULT_FIRST_USER + 2;
+    public static final int RESULT_ADD_EDIT_PRODUCT_CANCELED = RESULT_FIRST_USER + 2;
 
     private ProductEditorBinding productEditorBinding;
 
@@ -43,17 +45,6 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
     private ImageEditorViewModel imageEditorViewModel;
     private ProductIdentityViewModel identityEditorViewModel;
     private ProductMeasurementViewModel measurementEditorViewModel;
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
-    }
-
-    @Override
-    public void onBackPressed() {
-        productEditorViewModel.upOrBackPressed();
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,6 +57,7 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
         setModelObservers();
         setModelValidationObservers();
         setActivityObservers();
+        setupFragments();
         start();
     }
 
@@ -74,24 +66,31 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
         productEditorBinding.setLifecycleOwner(this);
     }
 
+    private void setupToolbar() {
+        setSupportActionBar(productEditorBinding.toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
     private void setViewModels() {
         productEditorViewModel = obtainViewModel(this);
         productEditorViewModel.setNavigator(this);
 
-        imageEditorViewModel = ViewModelProviders.of(
-                this).get(ImageEditorViewModel.class);
+        imageEditorViewModel = new ViewModelProvider(this).
+                get(ImageEditorViewModel.class);
 
-        identityEditorViewModel = ViewModelProviders.of(
-                this).get(ProductIdentityViewModel.class);
+        identityEditorViewModel = new ViewModelProvider(this).
+                get(ProductIdentityViewModel.class);
 
-        measurementEditorViewModel = ViewModelProviders.of(
-                this).get(ProductMeasurementViewModel.class);
+        measurementEditorViewModel = new ViewModelProvider(this).
+                get(ProductMeasurementViewModel.class);
     }
 
     private static ProductEditorViewModel obtainViewModel(FragmentActivity activity) {
         ViewModelFactoryProduct factory = ViewModelFactoryProduct.getInstance(
                 activity.getApplication());
-        return ViewModelProviders.of(activity, factory).get(ProductEditorViewModel.class);
+        return new ViewModelProvider(activity, factory).get(ProductEditorViewModel.class);
     }
 
     private void setEntityObserver() {
@@ -171,19 +170,70 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
                 this, aVoid -> showUnsavedChangesDialog());
     }
 
+    private void setupFragments() {
+        ImageEditorFragment imageEditorFragment = obtainImageEditorFragment();
+        ActivityUtils.replaceFragmentInActivity(
+                getSupportFragmentManager(),
+                imageEditorFragment,
+                R.id.image_editor_content_frame);
+
+        ProductIdentityEditorFragment productIdentityEditorFragment =
+                obtainProductIdentityEditorFragment();
+        ActivityUtils.replaceFragmentInActivity(
+                getSupportFragmentManager(),
+                productIdentityEditorFragment,
+                R.id.product_identity_content_frame);
+
+        ProductMeasurementEditorFragment productMeasurementEditorFragment =
+                obtainProductMeasurementEditorFragment();
+        ActivityUtils.replaceFragmentInActivity(
+                getSupportFragmentManager(),
+                productMeasurementEditorFragment,
+                R.id.product_measurement_content_frame);
+    }
+
+    @NonNull
+    private ImageEditorFragment obtainImageEditorFragment() {
+        ImageEditorFragment imageEditorFragment =
+                (ImageEditorFragment) getSupportFragmentManager().
+                        findFragmentById(R.id.image_editor_content_frame);
+
+        if (imageEditorFragment == null) {
+            imageEditorFragment = ImageEditorFragment.newInstance();
+        }
+        return imageEditorFragment;
+    }
+
+    @NonNull
+    private ProductIdentityEditorFragment obtainProductIdentityEditorFragment() {
+        ProductIdentityEditorFragment productIdentityEditorFragment =
+                (ProductIdentityEditorFragment) getSupportFragmentManager().
+                        findFragmentById(R.id.product_identity_content_frame);
+
+        if (productIdentityEditorFragment == null) {
+            productIdentityEditorFragment = ProductIdentityEditorFragment.newInstance();
+        }
+        return productIdentityEditorFragment;
+    }
+
+    @NonNull
+    private ProductMeasurementEditorFragment obtainProductMeasurementEditorFragment() {
+        ProductMeasurementEditorFragment productMeasurementEditorFragment =
+                (ProductMeasurementEditorFragment) getSupportFragmentManager().
+                        findFragmentById(R.id.product_measurement_content_frame);
+
+        if (productMeasurementEditorFragment == null) {
+            productMeasurementEditorFragment = ProductMeasurementEditorFragment.newInstance();
+        }
+        return productMeasurementEditorFragment;
+    }
+
     private void start() {
         if (getIntent().hasExtra(EXTRA_PRODUCT_ENTITY)) {
             productEditorViewModel.start(getIntent().getParcelableExtra(EXTRA_PRODUCT_ENTITY));
         }
         else {
             productEditorViewModel.start();
-        }
-    }
-
-    private void setupToolbar() {
-        setSupportActionBar(productEditorBinding.toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
 
@@ -227,14 +277,19 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
 
     @Override
     public void cancelEditing() {
-        setResult(RESULT_ADD_EDIT_PRODUCT_CANCELLED);
+        setResult(RESULT_ADD_EDIT_PRODUCT_CANCELED);
         finish();
     }
 
     @Override
-    protected void onDestroy() {
-        productEditorViewModel.onActivityDestroyed();
-        super.onDestroy();
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        productEditorViewModel.upOrBackPressed();
     }
 
     private void showUnsavedChangesDialog() {
@@ -250,5 +305,11 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
         UnsavedChangesDialogFragment dialogFragment = UnsavedChangesDialogFragment.newInstance(
                 this.getTitle().toString());
         dialogFragment.show(ft, UnsavedChangesDialogFragment.TAG);
+    }
+
+    @Override
+    protected void onDestroy() {
+        productEditorViewModel.onActivityDestroyed();
+        super.onDestroy();
     }
 }

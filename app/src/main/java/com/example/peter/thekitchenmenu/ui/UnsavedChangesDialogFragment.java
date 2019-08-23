@@ -16,12 +16,12 @@ import com.example.peter.thekitchenmenu.R;
 public class UnsavedChangesDialogFragment extends DialogFragment {
 
     public static final String TAG = "UnsavedChangesDialog";
-    public static final int RESULT_CANCELLED_AFTER_EDIT = 500;
+    public static final int RESULT_CANCELED_AFTER_EDIT = 500;
 
     public static UnsavedChangesDialogFragment newInstance(String title) {
         UnsavedChangesDialogFragment dialogFragment = new UnsavedChangesDialogFragment();
         Bundle args = new Bundle();
-        args.putString("title", title);
+        args.putString("titleObservable", title);
         dialogFragment.setArguments(args);
         return dialogFragment;
     }
@@ -29,7 +29,7 @@ public class UnsavedChangesDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        String title = getArguments().getString("title");
+        String title = getArguments().getString("titleObservable");
 
         Dialog alertDialog = new AlertDialog.Builder(getActivity())
                 .setIcon(R.drawable.ic_warning_primary_dark_color_24dp)
@@ -40,11 +40,8 @@ public class UnsavedChangesDialogFragment extends DialogFragment {
                         dialog.dismiss();
                     }
                 })
-                .setPositiveButton(R.string.discard, (dialogInterface, i) -> {
-                            getActivity().setResult(RESULT_CANCELLED_AFTER_EDIT);
-                            getActivity().finish();
-                        }
-                )
+                .setPositiveButton(R.string.discard, (dialogInterface, i) ->
+                        ((AppCompatActivityDialogActions)getActivity()).discardChanges())
                 .create();
 
         alertDialog.setOnShowListener(dialogInterface -> {

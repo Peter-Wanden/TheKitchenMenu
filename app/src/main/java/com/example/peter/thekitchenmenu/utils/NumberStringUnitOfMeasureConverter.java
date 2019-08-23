@@ -15,7 +15,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
 
-public class NumberStringFormatConverter {
+public class NumberStringUnitOfMeasureConverter {
 
     private static final String TAG = "tkm-StringFormatConvert";
 
@@ -50,15 +50,17 @@ public class NumberStringFormatConverter {
                 if (parsedInView == parsedModelValue) {
                     if (parsedInView == 0)
                         return "";
-                    else return
-                            editText.getText().toString();
+                    else
+                        return editText.getText().toString();
                 }
             } catch (ParseException e) {
                 // Number set from Product is broken
             }
 
-            if (parsedModelValue == 0) return "";
-            else return numberFormat.format(parsedModelValue);
+            if (parsedModelValue == 0)
+                return "";
+            else
+                return numberFormat.format(parsedModelValue);
 
         } else {
             double parsedModelValue = 0.;
@@ -75,15 +77,19 @@ public class NumberStringFormatConverter {
                 double parsedInView = numberFormat.parse(numberInView).doubleValue();
 
                 if (parsedInView == parsedModelValue) {
-                    if (parsedInView == 0.0) return "";
-                    else return editText.getText().toString();
+                    if (parsedInView == 0.0)
+                        return "";
+                    else
+                        return editText.getText().toString();
                 }
             } catch (ParseException e) {
                 // Number set from Product is broken
             }
 
-            if (parsedModelValue == 0.0) return "";
-            else return numberFormat.format(parsedModelValue);
+            if (parsedModelValue == 0.0)
+                return "";
+            else
+                return numberFormat.format(parsedModelValue);
         }
     }
 

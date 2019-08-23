@@ -23,7 +23,7 @@ public class ProductCatalogFavoritesRecyclerAdapter
     private static final String TAG = "tkm-CatalogFavAdapter";
 
     private final ProductCatalogViewModel viewModel;
-    private List<ProductModel> productModels;
+    private List<ProductModel> productModelList;
     private List<ProductModel> productModelListFull;
 
     ProductCatalogFavoritesRecyclerAdapter(ProductCatalogViewModel viewModel) {
@@ -45,14 +45,14 @@ public class ProductCatalogFavoritesRecyclerAdapter
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        final ProductModel productModel = productModels.get(position);
+        final ProductModel productModel = productModelList.get(position);
         holder.bind(productModel);
     }
 
     @Override
     public int getItemCount() {
-        if (productModels == null) return 0;
-        return productModels.size();
+        if (productModelList == null) return 0;
+        return productModelList.size();
     }
 
     @Override
@@ -85,19 +85,19 @@ public class ProductCatalogFavoritesRecyclerAdapter
 
         @Override
         protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-            productModels.clear();
-            productModels.addAll((List) filterResults.values);
+            productModelList.clear();
+            productModelList.addAll((List) filterResults.values);
             notifyDataSetChanged();
         }
     };
 
-    public List<ProductModel> getProductModels() {
-        return productModels;
+    public List<ProductModel> getProductModelList() {
+        return productModelList;
     }
 
-    void setProductModels(List<ProductModel> productModels) {
-        this.productModels = productModels;
-        productModelListFull = new ArrayList<>(productModels);
+    void setProductModelList(List<ProductModel> productModelList) {
+        this.productModelList = productModelList;
+        productModelListFull = new ArrayList<>(productModelList);
         notifyDataSetChanged();
     }
 

@@ -2,21 +2,19 @@ package com.example.peter.thekitchenmenu.ui.catalog.recipe;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.RecipeCatalogActivityBinding;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryRecipe;
 import com.example.peter.thekitchenmenu.ui.catalog.CatalogFragmentPageAdapter;
-import com.example.peter.thekitchenmenu.ui.detail.recipe.RecipeEditorActivity;
+import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeEditorActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class RecipeCatalogActivity extends AppCompatActivity implements RecipeNavigator {
@@ -93,7 +91,7 @@ public class RecipeCatalogActivity extends AppCompatActivity implements RecipeNa
     public static RecipeCatalogViewModel obtainViewModel(FragmentActivity activity) {
         ViewModelFactoryRecipe factoryRecipe = ViewModelFactoryRecipe.getInstance(
                 activity.getApplication());
-        return ViewModelProviders.of(activity, factoryRecipe).get(RecipeCatalogViewModel.class);
+        return new ViewModelProvider(activity, factoryRecipe).get(RecipeCatalogViewModel.class);
     }
 
     @Override

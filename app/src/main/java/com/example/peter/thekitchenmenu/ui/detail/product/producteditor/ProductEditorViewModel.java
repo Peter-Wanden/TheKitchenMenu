@@ -51,15 +51,19 @@ public class ProductEditorViewModel extends ObservableViewModel {
         navigator = null;
     }
 
+    void start() {
+        isExistingProductEntity = false;
+        setActivityTitleEvent.setValue(R.string.activity_title_add_new_product);
+    }
+
     void start(ProductEntity productEntity) {
         isExistingProductEntity = true;
         uneditedProductEntity.setValue(productEntity);
         setActivityTitleEvent.setValue(R.string.activity_title_edit_product);
     }
 
-    void start() {
-        isExistingProductEntity = false;
-        setActivityTitleEvent.setValue(R.string.activity_title_add_new_product);
+    SingleLiveEvent<Integer> getSetActivityTitleEvent() {
+        return setActivityTitleEvent;
     }
 
     MutableLiveData<ProductEntity> getUneditedProductEntity() {
@@ -89,17 +93,16 @@ public class ProductEditorViewModel extends ObservableViewModel {
     }
 
     private void enableReviewIfValidProductEntity() {
-        if (isValidatedProductEntity()) {
+        if (isValidatedProductEntity())
             showReviewButton();
-        } else {
+        else
             hideReviewButton();
-        }
     }
 
     void upOrBackPressed() {
-        if (isValidatedProductEntity()) {
+        if (isValidatedProductEntity())
             showUnsavedChangesDialogEvent.call();
-        } else
+        else
             navigator.cancelEditing();
     }
 
@@ -127,9 +130,6 @@ public class ProductEditorViewModel extends ObservableViewModel {
                     uneditedProductEntity.getValue().getCreateDate(),
                     uneditedProductEntity.getValue().getLastUpdate()
             );
-            Log.d(TAG, "isExistingProductEntityThatHasBeenEdited: unedited=" + uneditedProductEntity.getValue().toString());
-            Log.d(TAG, "isExistingProductEntityThatHasBeenEdited: edited=" + productEntity.toString());
-            Log.d(TAG, "isExistingProductEntityThatHasBeenEdited: equals=" + uneditedProductEntity.getValue().equals(productEntity));
             return !uneditedProductEntity.getValue().equals(productEntity);
         }
         return false;
@@ -197,9 +197,5 @@ public class ProductEditorViewModel extends ObservableViewModel {
 
     SingleLiveEvent<Void> getShowUnsavedChangesDialogEvent() {
         return showUnsavedChangesDialogEvent;
-    }
-
-    SingleLiveEvent<Integer> getSetActivityTitleEvent() {
-        return setActivityTitleEvent;
     }
 }

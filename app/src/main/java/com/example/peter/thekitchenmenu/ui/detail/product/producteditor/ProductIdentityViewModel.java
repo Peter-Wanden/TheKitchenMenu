@@ -2,19 +2,16 @@ package com.example.peter.thekitchenmenu.ui.detail.product.producteditor;
 
 import android.app.Application;
 import android.content.res.Resources;
-import android.text.Editable;
 
 import com.example.peter.thekitchenmenu.data.model.ProductIdentityModel;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 import com.example.peter.thekitchenmenu.utils.TextValidationHandler;
-import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.Observable;
 import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableInt;
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 
 public class ProductIdentityViewModel extends AndroidViewModel {
@@ -22,6 +19,7 @@ public class ProductIdentityViewModel extends AndroidViewModel {
     private static final String TAG = "tkm - ProductIdentityVM";
 
     private Resources resources;
+    private TextValidationHandler validationHandler;
 
     // Observed by the main ProductEditorViewModel, to save a new model set it to
     // existingIdentityModel
@@ -29,20 +27,22 @@ public class ProductIdentityViewModel extends AndroidViewModel {
             new MutableLiveData<>();
 
     public final ObservableField<String> description = new ObservableField<>();
+    public final ObservableField<String> descriptionErrorMessage = new ObservableField<>();
     public final ObservableField<String> shoppingListItemName = new ObservableField<>();
+    public final ObservableField<String> shoppingListItemNameErrorMessage = new ObservableField<>();
     public final ObservableInt category = new ObservableInt();
     public final ObservableInt shelfLife = new ObservableInt();
 
-    private final SingleLiveEvent<String> descriptionErrorEvent = new SingleLiveEvent<>();
-    private final SingleLiveEvent<String> shoppingListItemNameErrorEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<Boolean> identityModelValidEvent = new SingleLiveEvent<>();
 
     private boolean descriptionValidated = false;
     private boolean shoppingItemNameValidated = false;
 
-    public ProductIdentityViewModel(@NonNull Application application) {
+    public ProductIdentityViewModel(@NonNull Application application,
+                                    TextValidationHandler validationHandler) {
         super(application);
         resources = application.getResources();
+        this.validationHandler = validationHandler;
 
         description.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
@@ -72,35 +72,29 @@ public class ProductIdentityViewModel extends AndroidViewModel {
     }
 
     private void descriptionChanged() {
+        descriptionErrorMessage.set(null);
         String descriptionValidationResponse = validateText(description.get());
 
-        if (descriptionValidationResponse.equals(TextValidationHandler.VALIDATED)) {
+        if (descriptionValidationResponse.equals(validationHandler.VALIDATED)) {
             descriptionValidated = true;
         } else {
             descriptionValidated = false;
-            descriptionErrorEvent.setValue(descriptionValidationResponse);
+            descriptionErrorMessage.set(descriptionValidationResponse);
         }
         checkAllFieldsValidated();
-    }
-
-    SingleLiveEvent<String> getDescriptionErrorEvent() {
-        return descriptionErrorEvent;
     }
 
     private void shoppingListItemNameChanged() {
+        shoppingListItemNameErrorMessage.set(null);
         String shoppingListItemNameValidationResponse = validateText(shoppingListItemName.get());
 
-        if (shoppingListItemNameValidationResponse.equals(TextValidationHandler.VALIDATED)) {
+        if (shoppingListItemNameValidationResponse.equals(validationHandler.VALIDATED)) {
             shoppingItemNameValidated = true;
         } else {
             shoppingItemNameValidated = false;
-            shoppingListItemNameErrorEvent.setValue(shoppingListItemNameValidationResponse);
+            shoppingListItemNameErrorMessage.set(shoppingListItemNameValidationResponse);
         }
         checkAllFieldsValidated();
-    }
-
-    SingleLiveEvent<String> getShoppingListItemNameErrorEvent() {
-        return shoppingListItemNameErrorEvent;
     }
 
     SingleLiveEvent<Boolean> getIdentityModelValidEvent() {
@@ -108,7 +102,7 @@ public class ProductIdentityViewModel extends AndroidViewModel {
     }
 
     private String validateText(String textToValidate) {
-        return TextValidationHandler.validateShortText(resources, textToValidate);
+        return validationHandler.validateShortText(resources, textToValidate);
     }
 
     private void checkAllFieldsValidated() {

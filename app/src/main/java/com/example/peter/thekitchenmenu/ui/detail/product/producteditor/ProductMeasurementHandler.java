@@ -55,7 +55,6 @@ public class ProductMeasurementHandler {
     }
 
     private void setNumberFormatExceptionError(TextView editable) {
-        editable.setError(editable.getContext().
-                getResources().getString(R.string.number_format_exception));
+        editable.setError(editable.getResources().getString(R.string.number_format_exception));
     }
 }

@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.detail.recipe;
+package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 
 import android.text.InputFilter;
 import android.text.InputType;
@@ -11,7 +11,7 @@ import com.example.peter.thekitchenmenu.utils.DecimalDigitsInputFilter;
 
 public class RecipeTimesBindingAdapter {
     @BindingAdapter(value = {"setupEditTextForRecipeTimes"})
-    public static void setupEditTextForRecipeTimesInput(EditText editText, int time) {
+    public static void setupEditTextForRecipeTimesInput(EditText editText, String time) {
         int viewId = editText.getId();
         editText.setInputType(InputType.TYPE_CLASS_NUMBER);
 
@@ -25,6 +25,5 @@ public class RecipeTimesBindingAdapter {
             editText.setFilters(new InputFilter[]{
                     new DecimalDigitsInputFilter(2, 0)});
         }
-        editText.setText(String.valueOf(time));
     }
 }

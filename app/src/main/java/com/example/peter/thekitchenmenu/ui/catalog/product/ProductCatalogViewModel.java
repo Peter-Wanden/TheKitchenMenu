@@ -4,14 +4,13 @@ import android.app.Application;
 import android.content.Intent;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity;
 import com.example.peter.thekitchenmenu.data.model.ProductModel;
 import com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorActivity;
 import com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductEditorActivity;
 import com.example.peter.thekitchenmenu.ui.detail.product.productviewer.ProductViewerActivity;
-import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 
 import androidx.annotation.Nullable;
 import androidx.databinding.ObservableBoolean;
@@ -127,6 +126,12 @@ public class ProductCatalogViewModel extends AndroidViewModel
             @Override
             public void onDataNotAvailable() {
                 isDataLoadingError.set(true);
+
+                if (showLoadingUi)
+                    favoriteProductDataLoading.set(false);
+
+                List<ProductModel> emptyProductModelList = new ArrayList<>();
+                favoriteProductModelList.postValue(emptyProductModelList);
             }
         });
     }
@@ -162,7 +167,7 @@ public class ProductCatalogViewModel extends AndroidViewModel
         Log.d(TAG, "handleActivityResult: requestCode=" + requestCode + " resultCode=" + resultCode);
 
         if (requestCode == ProductViewerActivity.REQUEST_VIEW_PRODUCT &&
-                resultCode == ProductViewerActivity.RESULT_DATA_HAS_CHANGED)
+                resultCode == ProductViewerActivity.RESULT_VIEW_DATA_CHANGED)
             start();
 
         if (requestCode == FavoriteProductEditorActivity.REQUEST_ADD_EDIT_FAVORITE_PRODUCT &&
@@ -170,7 +175,7 @@ public class ProductCatalogViewModel extends AndroidViewModel
             start();
 
         if (requestCode == ProductEditorActivity.REQUEST_ADD_EDIT_PRODUCT &&
-                resultCode == ProductViewerActivity.RESULT_DATA_HAS_CHANGED)
+                resultCode == ProductViewerActivity.RESULT_VIEW_DATA_CHANGED)
             start();
     }
 

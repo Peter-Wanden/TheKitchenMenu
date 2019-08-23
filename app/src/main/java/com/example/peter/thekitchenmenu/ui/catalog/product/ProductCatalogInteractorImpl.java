@@ -61,13 +61,12 @@ public class ProductCatalogInteractorImpl implements ProductCatalogInteractor {
     @Override
     public void getProductModelList(@NonNull GetAllCallback productListCallback) {
         this.productListCallback = productListCallback;
+        productsMap.clear();
         productEntitiesLoading = true;
         productEntityDataSource.getAll(
                 new DataSource.GetAllCallback<ProductEntity>() {
                     @Override
                     public void onAllLoaded(List<ProductEntity> productEntityList) {
-
-                        productsMap.clear();
 
                         for (ProductEntity productEntity : productEntityList) {
                             productsMap.put(productEntity.getId(), productEntity);
@@ -81,6 +80,7 @@ public class ProductCatalogInteractorImpl implements ProductCatalogInteractor {
                     public void onDataNotAvailable() {
                         productEntitiesLoading = false;
                         productListCallback.onDataNotAvailable();
+                        sortDataWhenLoaded();
                     }
                 });
     }
@@ -88,12 +88,12 @@ public class ProductCatalogInteractorImpl implements ProductCatalogInteractor {
     @Override
     public void getFavoriteProductModelList(@NonNull GetAllCallback favoriteProductListCallback) {
         this.favoriteProductListCallback = favoriteProductListCallback;
+        favoriteProductsMap.clear();
         favoriteProductEntitiesLoading = true;
         favoriteProductEntityDataSource.getAll(
                 new DataSource.GetAllCallback<FavoriteProductEntity>() {
                     @Override
                     public void onAllLoaded(List<FavoriteProductEntity> favoriteProductEntityList) {
-                        favoriteProductsMap.clear();
 
                         for (FavoriteProductEntity favoriteProductEntity : favoriteProductEntityList) {
                             favoriteProductsMap.put(
@@ -108,6 +108,7 @@ public class ProductCatalogInteractorImpl implements ProductCatalogInteractor {
                     public void onDataNotAvailable() {
                         favoriteProductEntitiesLoading = false;
                         favoriteProductListCallback.onDataNotAvailable();
+                        sortDataWhenLoaded();
                     }
                 });
     }
@@ -136,8 +137,18 @@ public class ProductCatalogInteractorImpl implements ProductCatalogInteractor {
 
             productModels.add(productModel);
         }
-        productListCallback.onAllLoaded(productModels);
+
+        int favoriteCount = 0;
+        for (ProductModel pm : productModels)
+            if (pm.isFavorite())
+                favoriteCount++;
+
+        Log.d(TAG, "sortAndReturnData: favorite count in product models=" + favoriteCount);
+        Log.d(TAG, "sortAndReturnData: Number of favorite product models=" + favoriteProductModels.size());
+
         favoriteProductListCallback.onAllLoaded(favoriteProductModels);
+        productListCallback.onAllLoaded(productModels);
+
     }
 
     @Override

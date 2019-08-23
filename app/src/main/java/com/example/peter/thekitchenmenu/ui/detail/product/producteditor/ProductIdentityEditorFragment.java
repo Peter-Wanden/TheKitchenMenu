@@ -7,15 +7,13 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.data.model.ProductIdentityModel;
 import com.example.peter.thekitchenmenu.databinding.ProductEditorIdentityBinding;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 
 public class ProductIdentityEditorFragment extends Fragment {
@@ -24,6 +22,10 @@ public class ProductIdentityEditorFragment extends Fragment {
 
     private ProductEditorIdentityBinding binding;
     private ProductIdentityViewModel viewModel;
+
+    static ProductIdentityEditorFragment newInstance() {
+        return new ProductIdentityEditorFragment();
+    }
 
     @Nullable
     @Override
@@ -43,38 +45,16 @@ public class ProductIdentityEditorFragment extends Fragment {
         setViewModel();
         setBindingInstanceVariables();
         setupSpinners();
-        subscribeToEvents();
-        setInputFilters();
 
         return rootView;
     }
 
     private void setViewModel() {
-        viewModel = ViewModelProviders.of(requireActivity()).
-                get(ProductIdentityViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(ProductIdentityViewModel.class);
     }
 
     private void setBindingInstanceVariables() {
         binding.setViewModel(viewModel);
-    }
-
-    private void subscribeToEvents() {
-        viewModel.getDescriptionErrorEvent().observe(
-                this, this::descriptionError);
-
-        viewModel.getShoppingListItemNameErrorEvent().observe(
-                this, this::shoppingListItemNameError);
-    }
-
-    private void setInputFilters() {
-    }
-
-    private void descriptionError(String descriptionError) {
-        binding.editableDescription.setError(descriptionError);
-    }
-
-    private void shoppingListItemNameError(String shoppingListItemNameError) {
-        binding.editableShoppingItemListName.setError(shoppingListItemNameError);
     }
 
     private void setupSpinners() {

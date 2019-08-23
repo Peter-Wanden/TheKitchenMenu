@@ -10,6 +10,7 @@ import androidx.lifecycle.AndroidViewModel;
 import com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.FavoriteProductsDataSource;
+import com.example.peter.thekitchenmenu.ui.UnsavedChangesDialogFragment;
 import com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorActivity;
 import com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductEditorActivity;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
@@ -30,7 +31,8 @@ public class FavoriteProductViewerViewModel
 
     private final SingleLiveEvent<Void> hasOptionsMenuEvent = new SingleLiveEvent<>();
 
-    private boolean favoriteAddedEdited;
+    // Tells any listeners if this view model has added or edited any data
+    private final SingleLiveEvent<Boolean> favoriteAddedEdited = new SingleLiveEvent<>();
     private String productId;
 
     public FavoriteProductViewerViewModel(
@@ -83,8 +85,12 @@ public class FavoriteProductViewerViewModel
 
     void handleActivityResult(int resultCode, Intent data) {
         if (resultCode == FavoriteProductEditorActivity.RESULT_ADD_EDIT_FAVORITE_PRODUCT_OK) {
-            favoriteAddedEdited = true;
+            favoriteAddedEdited.setValue(true);
             start(data.getStringExtra(ProductEditorActivity.EXTRA_PRODUCT_ID));
+
+        } else if (resultCode == FavoriteProductEditorActivity.RESULT_ADD_EDIT_FAVORITE_CANCELED ||
+                resultCode == UnsavedChangesDialogFragment.RESULT_CANCELED_AFTER_EDIT) {
+            favoriteAddedEdited.setValue(false);
         }
     }
 
@@ -109,7 +115,7 @@ public class FavoriteProductViewerViewModel
         return hasOptionsMenuEvent;
     }
 
-    public boolean isFavoriteAddedEdited() {
+    SingleLiveEvent<Boolean> isFavoriteAddedEdited() {
         return favoriteAddedEdited;
     }
 }

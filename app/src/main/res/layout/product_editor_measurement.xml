@@ -10,7 +10,7 @@
         <import type="android.view.View" />
         <import type="com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtypeConverter" />
         <import type="com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtype"/>
-        <import type="com.example.peter.thekitchenmenu.utils.NumberStringFormatConverter"/>
+        <import type="com.example.peter.thekitchenmenu.utils.NumberStringUnitOfMeasureConverter"/>
 
         <variable
             name="viewModel"
@@ -69,6 +69,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             />
+
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/products_in_pack_label"
@@ -144,7 +145,7 @@
             android:textAlignment="textEnd"
             app:setUpEditTextForSubtypeSelected="@{viewModel.subtype}"
             android:afterTextChanged="@{() -> measurementHandler.newMeasurementReceived(packEditableMeasurementTwo)}"
-            android:text="@{NumberStringFormatConverter.toFormat(packEditableMeasurementTwo, viewModel.packMeasurementTwo, viewModel.subtype)}"
+            android:text="@{NumberStringUnitOfMeasureConverter.toFormat(packEditableMeasurementTwo, viewModel.packMeasurementTwo, viewModel.subtype)}"
             app:fieldVisibilityNumberOfMeasurementUnits="@{viewModel.numberOfMeasurementUnits}"
             app:fieldVisibilityNumberOfProducts="@{viewModel.numberOfProducts}"
             app:layout_constraintBaseline_toBaselineOf="@id/pack_editable_measurement_one"
@@ -181,7 +182,7 @@
             android:textAlignment="textEnd"
             app:setUpEditTextForSubtypeSelected="@{viewModel.subtype}"
             android:afterTextChanged="@{() -> measurementHandler.newMeasurementReceived(packEditableMeasurementOne)}"
-            android:text="@{NumberStringFormatConverter.toFormat(packEditableMeasurementOne, viewModel.packMeasurementOne, viewModel.subtype)}"
+            android:text="@{NumberStringUnitOfMeasureConverter.toFormat(packEditableMeasurementOne, viewModel.packMeasurementOne, viewModel.subtype)}"
             app:fieldVisibilityNumberOfProducts="@{viewModel.numberOfProducts}"
             app:layout_constraintStart_toEndOf="@id/pack_measurement_label_two"
             app:layout_constraintTop_toBottomOf="@id/multi_pack_minus"
@@ -227,7 +228,7 @@
             android:paddingEnd="8dp"
             android:textAlignment="textEnd"
             android:afterTextChanged="@{() -> measurementHandler.newMeasurementReceived(productEditableMeasurementTwo)}"
-            android:text="@{NumberStringFormatConverter.toFormat(productEditableMeasurementTwo, viewModel.productMeasurementTwo, viewModel.subtype)}"
+            android:text="@{NumberStringUnitOfMeasureConverter.toFormat(productEditableMeasurementTwo, viewModel.productMeasurementTwo, viewModel.subtype)}"
             app:setUpEditTextForSubtypeSelected="@{viewModel.subtype}"
             app:fieldVisibilityNumberOfMeasurementUnits="@{viewModel.numberOfMeasurementUnits}"
             app:layout_constraintBaseline_toBaselineOf="@id/product_editable_measurement_one"
@@ -261,7 +262,7 @@
             android:paddingEnd="8dp"
             android:textAlignment="textEnd"
             android:afterTextChanged="@{() -> measurementHandler.newMeasurementReceived(productEditableMeasurementOne)}"
-            android:text="@{NumberStringFormatConverter.toFormat(productEditableMeasurementOne, viewModel.productMeasurementOne, viewModel.subtype)}"
+            android:text="@{NumberStringUnitOfMeasureConverter.toFormat(productEditableMeasurementOne, viewModel.productMeasurementOne, viewModel.subtype)}"
             app:setUpEditTextForSubtypeSelected="@{viewModel.subtype}"
             app:layout_constraintStart_toEndOf="@id/product_measurement_label_two"
             app:layout_constraintTop_toBottomOf="@id/pack_editable_measurement_one"

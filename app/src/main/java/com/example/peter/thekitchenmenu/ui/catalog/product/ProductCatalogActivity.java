@@ -22,7 +22,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.app.NavUtils;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 public class ProductCatalogActivity
         extends AppCompatActivity
@@ -48,7 +48,6 @@ public class ProductCatalogActivity
 
     private void initialiseBindings() {
         binding = DataBindingUtil.setContentView(this, R.layout.product_catalog_activity);
-        binding.setLifecycleOwner(this);
     }
 
     private void setupSearch() {
@@ -65,7 +64,7 @@ public class ProductCatalogActivity
         // Use a Factory to inject dependencies into the ViewModel
         ViewModelFactoryProduct factory =
                 ViewModelFactoryProduct.getInstance(activity.getApplication());
-        return ViewModelProviders.of(activity, factory).get(ProductCatalogViewModel.class);
+        return new ViewModelProvider(activity, factory).get(ProductCatalogViewModel.class);
     }
 
     private void setupFragmentPageAdapter() {

@@ -35,7 +35,8 @@
             android:text="@string/label_retailer"
             app:layout_constraintBottom_toTopOf="@id/editable_retailer"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            />
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/editable_retailer"
@@ -47,10 +48,12 @@
             android:hint="@string/hint_retailer"
             android:inputType="textCapSentences"
             android:text='@={viewModel.retailer}'
+            app:editTextErrorSetter="@{viewModel.retailerErrorMessage}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/retailer_label"
-            app:layout_constraintBottom_toTopOf="@id/price_label" />
+            app:layout_constraintBottom_toTopOf="@id/price_label"
+            />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/price_label"
@@ -61,7 +64,8 @@
             android:text="@string/label_price"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/editable_retailer"
-            app:layout_constraintBottom_toTopOf="@id/editable_price"/>
+            app:layout_constraintBottom_toTopOf="@id/editable_price"
+            />
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/editable_price"
@@ -72,11 +76,13 @@
             android:layout_marginEnd="8dp"
             android:hint="@string/hint_price"
             android:text='@={viewModel.price}'
+            app:editTextErrorSetter="@{viewModel.priceErrorMessage}"
             android:inputType="numberDecimal"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/price_label"
-            app:layout_constraintBottom_toTopOf="@id/storage_room_label"/>
+            app:layout_constraintBottom_toTopOf="@id/storage_room_label"
+            />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/storage_room_label"
@@ -87,7 +93,8 @@
             android:text="@string/label_location_room"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/editable_price"
-            app:layout_constraintBottom_toTopOf="@id/editable_location_room"/>
+            app:layout_constraintBottom_toTopOf="@id/editable_location_room"
+            />
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/editable_location_room"
@@ -98,11 +105,13 @@
             android:layout_marginEnd="8dp"
             android:hint="@string/hint_location_room"
             android:text='@={viewModel.locationRoom}'
+            app:editTextErrorSetter="@{viewModel.locationRoomErrorMessage}"
             android:inputType="textCapSentences"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/storage_room_label"
-            app:layout_constraintBottom_toTopOf="@id/location_in_room_label"/>
+            app:layout_constraintBottom_toTopOf="@id/location_in_room_label"
+            />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/location_in_room_label"
@@ -113,7 +122,8 @@
             android:text="@string/label_location_in_room"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/editable_location_room"
-            app:layout_constraintBottom_toTopOf="@id/editable_location_in_room"/>
+            app:layout_constraintBottom_toTopOf="@id/editable_location_in_room"
+            />
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/editable_location_in_room"
@@ -124,10 +134,12 @@
             android:layout_marginEnd="8dp"
             android:hint="@string/hint_location_in_room"
             android:text='@={viewModel.locationInRoom}'
+            app:editTextErrorSetter="@{viewModel.locationInRoomErrorMessage}"
             android:inputType="textCapSentences"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/location_in_room_label"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
