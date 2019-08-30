@@ -50,7 +50,7 @@ public class RecipeIdentityViewModelTest {
     private static final int VALID_EXISTING_COOK_TIME = VALID_EXISTING_RECIPE_ENTITY.getCookingTime();
 
     private static final String VALIDATED = TextValidationHandler.VALIDATED;
-    private static final RecipeEntity EMPTY_RECIPE_ENTITY = RecipeEditorViewModel.EMPTY_RECIPE;
+    private static final RecipeEntity EMPTY_RECIPE_ENTITY = getEmptyRecipeEntity();
 
     private static final String INVALID_TITLE = "ti";
     private static final String INVALID_DESCRIPTION = "de";
@@ -367,14 +367,14 @@ public class RecipeIdentityViewModelTest {
                 VALID_EXISTING_PREP_TIME / 60);
         // Act
         SUT.onStart(VALID_EXISTING_RECIPE_ENTITY);
-        SUT.titleObservable.set("This is the new valid titleObservable");
+        SUT.titleObservable.set("This is the new valid title");
         // Assert
         verify(identityModelMetaDataObserverMock).onChanged(ac.capture());
         RecipeIdentityModelMetaData modelMetaData = ac.getValue();
         assertTrue(modelMetaData.isValidModel());
         assertTrue(modelMetaData.isModelChanged());
         RecipeIdentityModel identityModel = modelMetaData.getIdentityModel();
-        assertEquals("This is the new valid titleObservable", identityModel.getTitle());
+        assertEquals("This is the new valid title", identityModel.getTitle());
     }
 
     @Test

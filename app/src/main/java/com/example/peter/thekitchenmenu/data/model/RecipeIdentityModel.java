@@ -61,7 +61,7 @@ public class RecipeIdentityModel {
     @Override
     public String toString() {
         return "RecipeIdentityModel{" +
-                "titleObservable='" + title + '\'' +
+                "title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", prepTime=" + prepTime +
                 ", cookTime=" + cookTime +

@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.data.source.local;
+package com.example.peter.thekitchenmenu.data.repository.source.local;
 
 import static com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity.TABLE_FAVORITE_PRODUCTS;
 import static com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity.PRODUCT_ID;

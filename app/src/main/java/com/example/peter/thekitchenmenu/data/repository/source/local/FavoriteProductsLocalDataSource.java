@@ -1,10 +1,9 @@
-package com.example.peter.thekitchenmenu.data.source.local;
+package com.example.peter.thekitchenmenu.data.repository.source.local;
 
 import androidx.annotation.NonNull;
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
 import com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity;
-import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.FavoriteProductsDataSource;
 
 import java.util.List;

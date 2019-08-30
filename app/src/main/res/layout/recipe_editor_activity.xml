@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeEditorViewModel" />
+    </data>
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -15,14 +24,13 @@
                 android:id="@+id/recipe_editor_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fitsSystemWindows="true"/>
+                android:fitsSystemWindows="true" />
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:id="@+id/recipe_editor_coordinatorLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
+            android:layout_height="match_parent">
 
             <ScrollView
                 android:layout_width="match_parent"
@@ -42,13 +50,30 @@
                     <FrameLayout
                         android:id="@+id/recipe_editor_recipe_identity_content_frame"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" >
+                        android:layout_height="wrap_content"
+                        >
                     </FrameLayout>
 
                     <FrameLayout
+                        android:id="@+id/recipe_editor_course_selector_content_frame"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                    </FrameLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/recipe_editor_add_ingredients_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@{viewModel.ingredientsButtonTextObservable}"
+                        android:visibility="@{viewModel.showIngredientsButtonObservable ? View.VISIBLE : View.GONE}"
+                        tools:text="Ingredients button"
+                        />
+                    <FrameLayout
                         android:id="@+id/recipe_editor_information_content_frame"
                         android:layout_width="match_parent"
-                        android:layout_height="200dp"/>
+                        android:layout_height="200dp">
+                    </FrameLayout>
                 </LinearLayout>
             </ScrollView>
         </androidx.coordinatorlayout.widget.CoordinatorLayout>

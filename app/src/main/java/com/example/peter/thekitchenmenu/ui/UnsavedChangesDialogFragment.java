@@ -21,7 +21,7 @@ public class UnsavedChangesDialogFragment extends DialogFragment {
     public static UnsavedChangesDialogFragment newInstance(String title) {
         UnsavedChangesDialogFragment dialogFragment = new UnsavedChangesDialogFragment();
         Bundle args = new Bundle();
-        args.putString("titleObservable", title);
+        args.putString("title", title);
         dialogFragment.setArguments(args);
         return dialogFragment;
     }
@@ -29,7 +29,7 @@ public class UnsavedChangesDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        String title = getArguments().getString("titleObservable");
+        String title = getArguments().getString("title");
 
         Dialog alertDialog = new AlertDialog.Builder(getActivity())
                 .setIcon(R.drawable.ic_warning_primary_dark_color_24dp)

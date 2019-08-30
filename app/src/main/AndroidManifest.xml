@@ -164,6 +164,7 @@
             android:noHistory="true"
             >
         </activity>
+        <activity android:name=".ui.detail.recipe.revipeviewer.RecipeViewerActivity" />
 
         <uses-library
             android:name="android.test.runner"

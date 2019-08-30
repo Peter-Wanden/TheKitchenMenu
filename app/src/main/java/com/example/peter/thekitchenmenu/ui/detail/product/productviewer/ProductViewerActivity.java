@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.peter.thekitchenmenu.R;
@@ -67,7 +68,9 @@ public class ProductViewerActivity
     }
 
     private void setupObservers() {
-        productViewerViewModel.getSetTitleEvent().observe(this, this::setTitle);
+        productViewerViewModel.getSetTitleEvent().observe(this, titleStringResourceId ->
+                setTitle(ProductViewerActivity.this.getResources().getString(titleStringResourceId)));
+
         favoriteProductViewerViewModel.isFavoriteAddedEdited().observe(this,
                 favoriteChanged -> productViewerViewModel.setDataHasChanged(favoriteChanged));
     }

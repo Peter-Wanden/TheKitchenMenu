@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.provider;
+package com.example.peter.thekitchenmenu.utils;
 
 public class TimeProvider {
 

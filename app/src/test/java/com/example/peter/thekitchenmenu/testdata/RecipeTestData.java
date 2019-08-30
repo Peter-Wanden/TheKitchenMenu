@@ -8,10 +8,6 @@ import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeIden
 
 public class RecipeTestData {
 
-    public static RecipeEntity getEmptyRecipeEntity() {
-        return RecipeEditorViewModel.EMPTY_RECIPE;
-    }
-
     public static int getMaxPrepTime() {
         return 6000;
     }
@@ -20,10 +16,12 @@ public class RecipeTestData {
         return 6000;
     }
 
+    // A valid recipe entered by the current user
     public static RecipeEntity getValidExistingRecipeEntity() {
         return new RecipeEntity(
                 "id",
-                "titleObservable",
+                "id",
+                "title",
                 "description",
                 90,
                 90,
@@ -32,7 +30,7 @@ public class RecipeTestData {
                 10L
         );
     }
-
+    // A valid recipe identity model with meta data
     public static RecipeIdentityModelMetaData getValidExistingRecipeIdentityModelMetadataData() {
         return new RecipeIdentityModelMetaData(
                 getValidExistingRecipeIdentityModelData(),
@@ -41,28 +39,59 @@ public class RecipeTestData {
         );
     }
 
+    // A valid recipe identity model
     public static RecipeIdentityModel getValidExistingRecipeIdentityModelData() {
         return new RecipeIdentityModel(
-                "titleObservable",
-                "description",
-                90,
-                90
+                getValidExistingRecipeEntity().getTitle(),
+                getValidExistingRecipeEntity().getDescription(),
+                getValidExistingRecipeEntity().getPreparationTime(),
+                getValidExistingRecipeEntity().getCookingTime()
         );
     }
 
+    // The applications invalid empty entity
+    public static RecipeEntity getEmptyRecipeEntity() {
+        return new RecipeEntity(
+                "",
+                "",
+                "",
+                "",
+                0,
+                0,
+                "",
+                0L,
+                0L);
+    }
+
+    // An invalid empty recipe identity model with meta data
     public static RecipeIdentityModelMetaData getEmptyRecipeIdentityModelMetadata() {
         return new RecipeIdentityModelMetaData(
                 getEmptyRecipeIdentityModel(), false, false
         );
     }
 
+    // An invalid empty recipe identity model
     public static RecipeIdentityModel getEmptyRecipeIdentityModel() {
         return new RecipeIdentityModel(
-                "",
-                "",
-                0,
-                0
+                getEmptyRecipeEntity().getTitle(),
+                getEmptyRecipeEntity().getDescription(),
+                getEmptyRecipeEntity().getPreparationTime(),
+                getEmptyRecipeEntity().getCookingTime()
         );
+    }
+
+    // An invalid recipe entity
+    public static RecipeEntity getInvalidRecipeEntity() {
+        return new RecipeEntity(
+                "id",
+                "id",
+                "ti",
+                "de",
+                10000,
+                10000,
+                Constants.getUserId().getValue(),
+                10L,
+                10L);
     }
 
     public static RecipeIdentityModelMetaData getInvalidRecipeIdentityModelMetaData() {
@@ -75,11 +104,25 @@ public class RecipeTestData {
 
     public static RecipeIdentityModel getInvalidRecipeIdentityModel() {
         return new RecipeIdentityModel(
-                "",
-                "de",
-                10000,
-                10000
+                getInvalidRecipeEntity().getTitle(),
+                getEmptyRecipeEntity().getDescription(),
+                getInvalidRecipeEntity().getPreparationTime(),
+                getInvalidRecipeEntity().getCookingTime()
         );
+    }
+
+    public static RecipeEntity getValidRecipeEntityUpdatedByOwner() {
+        return new RecipeEntity(
+                getValidExistingRecipeEntity().getId(),
+                getValidExistingRecipeEntity().getId(),
+                getValidExistingRecipeEntity().getTitle(),
+                "updated description",
+                120,
+                120,
+                Constants.getUserId().getValue(),
+                10L,
+                15L);
+
     }
 
     public static RecipeIdentityModelMetaData getValidRecipeIdentityModelMetadataUpdatedData() {
@@ -92,23 +135,72 @@ public class RecipeTestData {
 
     public static RecipeIdentityModel getValidRecipeIdentityModelUpdatedData() {
         return new RecipeIdentityModel(
-                "titleObservable",
-                "description",
-                120,
-                120
+                getValidExistingRecipeEntity().getTitle(),
+                getValidRecipeEntityUpdatedByOwner().getDescription(),
+                getValidRecipeEntityUpdatedByOwner().getPreparationTime(),
+                getValidRecipeEntityUpdatedByOwner().getCookingTime()
         );
     }
 
-    public static RecipeEntity getRecipeEntityWithUpdatedData() {
+    public static RecipeEntity getValidRecipeEntityFromAnotherUser() {
         return new RecipeEntity(
-                getValidExistingRecipeEntity().getId(),
-                getValidRecipeIdentityModelUpdatedData().getTitle(),
-                getValidRecipeIdentityModelUpdatedData().getDescription(),
-                getValidRecipeIdentityModelUpdatedData().getPrepTime(),
-                getValidRecipeIdentityModelUpdatedData().getCookTime(),
-                getValidExistingRecipeEntity().getCreatedBy(),
-                getValidExistingRecipeEntity().getCreateDate(),
+                "id1",
+                "1d1",
+                "title1",
+                "description1",
+                150,
+                150,
+                "anotherUser",
+                5L,
+                10L
+        );
+    }
+
+    public static RecipeIdentityModelMetaData getValidRecipeIdentityModelMetaDataFromAnotherUser() {
+        return new RecipeIdentityModelMetaData(
+                getValidRecipeIdentityModelFromAnotherUser(),
+                false,
+                true
+        );
+    }
+
+    public static RecipeIdentityModel getValidRecipeIdentityModelFromAnotherUser() {
+        return new RecipeIdentityModel(
+                getValidRecipeEntityFromAnotherUser().getId(),
+                getValidRecipeEntityFromAnotherUser().getDescription(),
+                getValidRecipeEntityFromAnotherUser().getPreparationTime(),
+                getValidRecipeEntityFromAnotherUser().getCookingTime()
+        );
+    }
+
+    public static RecipeEntity getValidClonedRecipeEntity() {
+        return new RecipeEntity(
+                "id2",
+                getValidRecipeEntityFromAnotherUser().getId(),
+                getValidRecipeEntityFromAnotherUser().getTitle(),
+                "description2",
+                45,
+                45,
+                Constants.getUserId().getValue(),
+                20L,
                 20L
+        );
+    }
+
+    public static RecipeIdentityModelMetaData getValidClonedRecipeIdentityModelMetaData() {
+        return new RecipeIdentityModelMetaData(
+                getValidClonedRecipeIdentityModel(),
+                true,
+                true
+        );
+    }
+
+    public static RecipeIdentityModel getValidClonedRecipeIdentityModel() {
+        return new RecipeIdentityModel(
+                getValidRecipeEntityFromAnotherUser().getTitle(),
+                getValidClonedRecipeEntity().getDescription(),
+                getValidClonedRecipeEntity().getPreparationTime(),
+                getValidClonedRecipeEntity().getCookingTime()
         );
     }
 }

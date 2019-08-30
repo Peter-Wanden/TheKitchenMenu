@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.data.source.local;
+package com.example.peter.thekitchenmenu.data.repository.source.local;
 
 import androidx.room.Dao;
 import androidx.room.Insert;

@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 
 import com.example.peter.thekitchenmenu.data.model.RecipeIdentityModel;
 
-public class RecipeIdentityModelMetaData {
+public final class RecipeIdentityModelMetaData {
 
     private final RecipeIdentityModel identityModel;
     private final boolean modelChanged;

@@ -13,11 +13,9 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
 import com.example.peter.thekitchenmenu.databinding.RecipeEditorActivityBinding;
 import com.example.peter.thekitchenmenu.ui.UnsavedChangesDialogFragment;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryRecipe;
@@ -29,7 +27,6 @@ public class RecipeEditorActivity extends AppCompatActivity implements AddEditRe
     private static final String TAG = "tkm-RecipeEditorAct";
 
     public static final String EXTRA_RECIPE_ID = "RECIPE_ID";
-    public static final String EXTRA_RECIPE_ENTITY = "EXTRA_RECIPE_ENTITY";
     public static final int REQUEST_ADD_EDIT_RECIPE = 50;
     public static final int RESULT_ADD_EDIT_RECIPE_OK = RESULT_FIRST_USER + 1;
     public static final int RESULT_ADD_EDIT_RECIPE_CANCELLED = RESULT_FIRST_USER + 2;
@@ -77,6 +74,7 @@ public class RecipeEditorActivity extends AppCompatActivity implements AddEditRe
     private void setViewModels() {
         recipeEditorViewModel = obtainRecipeEditorViewModel(this);
         recipeEditorViewModel.setNavigator(this);
+        binding.setViewModel(recipeEditorViewModel);
 
         recipeIdentityViewModel = obtainIdentityViewModel(this);
     }
@@ -84,9 +82,8 @@ public class RecipeEditorActivity extends AppCompatActivity implements AddEditRe
     private void setViewModelObservers() {
         // Events
         recipeEditorViewModel.getSetActivityTitleEvent().observe(this, this::setTitle);
-        recipeEditorViewModel.getEnableReviewButtonEvent().observe(this, aVoid -> {
-            invalidateOptionsMenu();
-        });
+        recipeEditorViewModel.getEnableReviewButtonEvent().observe(this, aVoid ->
+                invalidateOptionsMenu());
         recipeEditorViewModel.getShowUnsavedChangesDialogEvent().observe(this, aVoid ->
                 showUnsavedChangesDialogEvent());
 
@@ -125,6 +122,12 @@ public class RecipeEditorActivity extends AppCompatActivity implements AddEditRe
                 getSupportFragmentManager(),
                 recipeIdentityFragment,
                 R.id.recipe_editor_recipe_identity_content_frame);
+
+        RecipeCourseSelectorFragment courseSelectorFragment = obtainCourseSelectorFragment();
+        ActivityUtils.replaceFragmentInActivity(
+                getSupportFragmentManager(),
+                courseSelectorFragment,
+                R.id.recipe_editor_course_selector_content_frame);
     }
 
     @NonNull
@@ -149,9 +152,19 @@ public class RecipeEditorActivity extends AppCompatActivity implements AddEditRe
         return imageEditorFragment;
     }
 
+    private RecipeCourseSelectorFragment obtainCourseSelectorFragment() {
+        RecipeCourseSelectorFragment courseSelectorFragment =
+                (RecipeCourseSelectorFragment) getSupportFragmentManager().
+                        findFragmentById(R.id.recipe_editor_course_selector_content_frame);
+
+        if (courseSelectorFragment == null)
+            courseSelectorFragment = RecipeCourseSelectorFragment.newInstance();
+        return courseSelectorFragment;
+    }
+
     private void start() {
-        if (getIntent().hasExtra(EXTRA_RECIPE_ENTITY)) {
-            recipeEditorViewModel.start(getIntent().getParcelableExtra(EXTRA_RECIPE_ENTITY));
+        if (getIntent().hasExtra(EXTRA_RECIPE_ID)) {
+            recipeEditorViewModel.start(getIntent().getStringExtra(EXTRA_RECIPE_ID));
         } else {
             recipeEditorViewModel.start();
         }
@@ -174,25 +187,39 @@ public class RecipeEditorActivity extends AppCompatActivity implements AddEditRe
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.menu_recipe_editor_action_review) {
-            recipeEditorViewModel.createOrUpdateRecipe();
+            recipeEditorViewModel.reviewButtonPressed();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
-    public void reviewNewRecipe(RecipeEntity recipeEntity) {
-        setResult(RESULT_ADD_EDIT_RECIPE_OK);
-        finish();
+    public void reviewNewRecipe(String recipeId) {
+
     }
 
     @Override
-    public void updateExistingRecipe(RecipeEntity recipeEntity) {
+    public void reviewEditedRecipe(String recipeId) {
+
+    }
+
+    @Override
+    public void reviewClonedRecipe(String recipeId) {
 
     }
 
     @Override
     public void addIngredients(String recipeId) {
+
+    }
+
+    @Override
+    public void editIngredients(String recipeId) {
+
+    }
+
+    @Override
+    public void reviewIngredients(String recipeId) {
 
     }
 

@@ -9,12 +9,13 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipe;
-import com.example.peter.thekitchenmenu.provider.TimeProvider;
+import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.ui.catalog.recipe.RecipeCatalogViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeEditorViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeIdentityViewModel;
 import com.example.peter.thekitchenmenu.utils.ParseIntegerFromObservable;
 import com.example.peter.thekitchenmenu.utils.TextValidationHandler;
+import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 
 /**
  * A creator is used to inject the product ID into the ViewModel
@@ -60,7 +61,11 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
 
         } else if (modelClass.isAssignableFrom(RecipeEditorViewModel.class)) {
             //noinspection unchecked
-            return (T) new RecipeEditorViewModel(application, new TimeProvider());
+            return (T) new RecipeEditorViewModel(
+                    new TimeProvider(),
+                    repository,
+                    new UniqueIdProvider(),
+                    application.getResources());
 
         } else if (modelClass.isAssignableFrom(RecipeIdentityViewModel.class)) {
             //noinspection unchecked

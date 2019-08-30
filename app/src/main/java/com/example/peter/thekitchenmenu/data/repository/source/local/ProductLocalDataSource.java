@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.data.source.local;
+package com.example.peter.thekitchenmenu.data.repository.source.local;
 
 import android.database.Cursor;
 
@@ -11,7 +11,6 @@ import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import java.util.List;
 
 import static androidx.core.util.Preconditions.checkNotNull;
-
 
 public class ProductLocalDataSource implements DataSource<ProductEntity> {
 

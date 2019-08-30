@@ -1,14 +1,18 @@
 package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 
-import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
-
 public interface AddEditRecipeNavigator {
 
-    void reviewNewRecipe(RecipeEntity recipeEntity);
+    void reviewNewRecipe(String recipeId);
 
-    void updateExistingRecipe(RecipeEntity recipeEntity);
+    void reviewEditedRecipe(String recipeId);
+
+    void reviewClonedRecipe(String recipeId);
 
     void addIngredients(String recipeId);
+
+    void editIngredients(String recipeId);
+
+    void reviewIngredients(String recipeId);
 
     void cancelEditing();
 }

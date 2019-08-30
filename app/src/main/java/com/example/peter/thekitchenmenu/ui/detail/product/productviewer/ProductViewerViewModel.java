@@ -39,7 +39,7 @@ public class ProductViewerViewModel
 
     private final SingleLiveEvent<Boolean> hasOptionsMenuEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<Void> resetOptionsMenu = new SingleLiveEvent<>();
-    private final SingleLiveEvent<String> setTitleEvent = new SingleLiveEvent<>();
+    private final SingleLiveEvent<Integer> setTitleEvent = new SingleLiveEvent<>();
 
     public ProductViewerViewModel(Application application,
                                   DataSource<ProductEntity> productEntityDataSource) {
@@ -99,14 +99,14 @@ public class ProductViewerViewModel
 
     private void setupDisplayAsReviewAfterEdit() {
         reviewBeforePostMode = true;
-        setTitleEvent.setValue(resources.getString(R.string.activity_title_review_new_product));
+        setTitleEvent.setValue(R.string.activity_title_review_new_product);
         hasOptionsMenuEvent.setValue(true);
         resetOptionsMenu.call();
         showPostMessageEvent.set(true);
         reviewBeforePostMessage.set(resources.getString(R.string.review_before_post_message));
     }
 
-    SingleLiveEvent<String> getSetTitleEvent() {
+    SingleLiveEvent<Integer> getSetTitleEvent() {
         return setTitleEvent;
     }
 
@@ -122,7 +122,7 @@ public class ProductViewerViewModel
         reviewBeforePostMode = false;
         showPostMessageEvent.set(false);
 
-        setTitleEvent.setValue(resources.getString(R.string.activity_title_view_product));
+        setTitleEvent.setValue(R.string.activity_title_view_product);
         if (!viewOnlyMode) {
             hasOptionsMenuEvent.setValue(true);
             resetOptionsMenu.call();

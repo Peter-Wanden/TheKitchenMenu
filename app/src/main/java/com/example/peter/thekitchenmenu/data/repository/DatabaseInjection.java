@@ -5,15 +5,14 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
-import com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
-import com.example.peter.thekitchenmenu.data.source.local.ProductLocalDataSource;
-import com.example.peter.thekitchenmenu.data.source.local.RecipeLocalDataSource;
-import com.example.peter.thekitchenmenu.data.source.local.TKMDatabase;
-import com.example.peter.thekitchenmenu.data.source.local.FavoriteProductsLocalDataSource;
-import com.example.peter.thekitchenmenu.data.source.remote.ProductRemoteDataSource;
-import com.example.peter.thekitchenmenu.data.source.remote.FavoriteProductsRemoteDataSource;
-import com.example.peter.thekitchenmenu.data.source.remote.RecipeRemoteDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.local.ProductLocalDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.local.RecipeLocalDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.local.TKMDatabase;
+import com.example.peter.thekitchenmenu.data.repository.source.local.FavoriteProductsLocalDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.remote.ProductRemoteDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.remote.FavoriteProductsRemoteDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.remote.RecipeRemoteDataSource;
 
 import static androidx.core.util.Preconditions.checkNotNull;
 

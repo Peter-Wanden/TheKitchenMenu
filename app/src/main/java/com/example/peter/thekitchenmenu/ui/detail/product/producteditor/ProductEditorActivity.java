@@ -80,8 +80,7 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
         imageEditorViewModel = new ViewModelProvider(this).
                 get(ImageEditorViewModel.class);
 
-        identityEditorViewModel = new ViewModelProvider(this).
-                get(ProductIdentityViewModel.class);
+        identityEditorViewModel = obtainProductIdentityViewModel(this);
 
         measurementEditorViewModel = new ViewModelProvider(this).
                 get(ProductMeasurementViewModel.class);
@@ -91,6 +90,12 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
         ViewModelFactoryProduct factory = ViewModelFactoryProduct.getInstance(
                 activity.getApplication());
         return new ViewModelProvider(activity, factory).get(ProductEditorViewModel.class);
+    }
+
+    private static ProductIdentityViewModel obtainProductIdentityViewModel(FragmentActivity activity) {
+        ViewModelFactoryProduct factory = ViewModelFactoryProduct.getInstance(
+                activity.getApplication());
+        return new ViewModelProvider(activity, factory).get(ProductIdentityViewModel.class);
     }
 
     private void setEntityObserver() {

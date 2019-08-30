@@ -17,7 +17,7 @@ public class RecipeIdentityFragment extends Fragment {
 
     private static final String TAG = "tkm-RecipeIdentityFrag";
 
-    public static final String ARGUMENT_EDIT_RECIPE_ID = "EDIT_RECIPE_ID";
+    private static final String ARGUMENT_EDIT_RECIPE_ID = "EDIT_RECIPE_ID";
 
     private RecipeIdentityFragmentBinding binding;
     private RecipeIdentityViewModel viewModel;

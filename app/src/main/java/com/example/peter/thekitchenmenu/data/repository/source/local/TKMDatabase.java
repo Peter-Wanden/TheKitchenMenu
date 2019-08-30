@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.data.source.local;
+package com.example.peter.thekitchenmenu.data.repository.source.local;
 
 import android.content.Context;
 
@@ -6,6 +6,7 @@ import com.example.peter.thekitchenmenu.app.AppExecutors;
 import com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.data.entity.ProductFastTextSearch;
+import com.example.peter.thekitchenmenu.data.entity.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
 
 import androidx.annotation.NonNull;
@@ -24,7 +25,8 @@ import static com.example.peter.thekitchenmenu.data.entity.ProductFastTextSearch
         ProductEntity.class,
         ProductFastTextSearch.class,
         FavoriteProductEntity.class,
-        RecipeEntity.class},
+        RecipeEntity.class,
+        RecipeCourseEntity.class},
         version = 2,
         exportSchema = false)
 public abstract class TKMDatabase extends RoomDatabase {

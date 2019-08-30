@@ -75,7 +75,7 @@ public class ProductIdentityViewModel extends AndroidViewModel {
         descriptionErrorMessage.set(null);
         String descriptionValidationResponse = validateText(description.get());
 
-        if (descriptionValidationResponse.equals(validationHandler.VALIDATED)) {
+        if (descriptionValidationResponse.equals(TextValidationHandler.VALIDATED)) {
             descriptionValidated = true;
         } else {
             descriptionValidated = false;
@@ -88,7 +88,7 @@ public class ProductIdentityViewModel extends AndroidViewModel {
         shoppingListItemNameErrorMessage.set(null);
         String shoppingListItemNameValidationResponse = validateText(shoppingListItemName.get());
 
-        if (shoppingListItemNameValidationResponse.equals(validationHandler.VALIDATED)) {
+        if (shoppingListItemNameValidationResponse.equals(TextValidationHandler.VALIDATED)) {
             shoppingItemNameValidated = true;
         } else {
             shoppingItemNameValidated = false;

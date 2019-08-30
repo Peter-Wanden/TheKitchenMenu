@@ -14,7 +14,9 @@ import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
 import com.example.peter.thekitchenmenu.ui.catalog.product.ProductCatalogViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductEditorViewModel;
+import com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductIdentityViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.product.productviewer.ProductViewerViewModel;
+import com.example.peter.thekitchenmenu.utils.TextValidationHandler;
 
 /**
  * A creator is used to inject the product ID into the ViewModel
@@ -68,6 +70,10 @@ public class ViewModelFactoryProduct extends ViewModelProvider.NewInstanceFactor
         else if (modelClass.isAssignableFrom(ProductCatalogViewModel.class)) {
             //noinspection unchecked
             return (T) new ProductCatalogViewModel(application);
+        }
+        else if (modelClass.isAssignableFrom(ProductIdentityViewModel.class)) {
+            //noinspection unchecked
+            return(T) new ProductIdentityViewModel(application, new TextValidationHandler());
         }
         throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
     }

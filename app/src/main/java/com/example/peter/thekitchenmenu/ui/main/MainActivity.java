@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.data.source.remote.RemoteSignIn;
+import com.example.peter.thekitchenmenu.data.repository.source.remote.RemoteSignIn;
 import com.example.peter.thekitchenmenu.ui.catalog.product.ProductCatalogActivity;
 import com.example.peter.thekitchenmenu.ui.catalog.recipe.RecipeCatalogActivity;
 import com.google.android.material.navigation.NavigationView;

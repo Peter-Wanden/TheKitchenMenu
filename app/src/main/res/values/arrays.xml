@@ -74,4 +74,5 @@
         <item>@string/non_food</item>
         <item>@string/food</item>
     </string-array>
+
 </resources>

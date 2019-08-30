@@ -4,14 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-import com.example.peter.thekitchenmenu.app.Constants;
-
-import java.util.Calendar;
 import java.util.Objects;
-import java.util.UUID;
 
 @Entity(tableName = RecipeEntity.TABLE_RECIPE)
 public final class RecipeEntity implements TkmEntity {
@@ -20,13 +15,18 @@ public final class RecipeEntity implements TkmEntity {
 
     public static final String TABLE_RECIPE = "recipe";
     public static final String ID = "id";
-    public static final String TITLE = "titleObservable";
-    private static final String DESCRIPTION = "description";
+    public static final String PARENT_ID = "parentId";
+    public static final String TITLE = "title";
+    public static final String DESCRIPTION = "description";
 
     @PrimaryKey
     @NonNull
     @ColumnInfo(name = ID)
     private final String id;
+
+    @NonNull
+    @ColumnInfo(name = PARENT_ID)
+    private final String parentId;
 
     @Nullable
     @ColumnInfo(name = TITLE)
@@ -51,8 +51,8 @@ public final class RecipeEntity implements TkmEntity {
     @ColumnInfo(name = "lastUpdate")
     private final long lastUpdate;
 
-
     public RecipeEntity(@NonNull String id,
+                        @NonNull String parentId,
                         @Nullable String title,
                         @NonNull String description,
                         int preparationTime,
@@ -61,6 +61,7 @@ public final class RecipeEntity implements TkmEntity {
                         long createDate,
                         long lastUpdate) {
         this.id = id;
+        this.parentId = parentId;
         this.title = title;
         this.description = description;
         this.preparationTime = preparationTime;
@@ -81,6 +82,7 @@ public final class RecipeEntity implements TkmEntity {
                 createDate == that.createDate &&
                 lastUpdate == that.lastUpdate &&
                 id.equals(that.id) &&
+                parentId.equals(that.parentId) &&
                 title.equals(that.title) &&
                 description.equals(that.description) &&
                 createdBy.equals(that.createdBy);
@@ -90,6 +92,7 @@ public final class RecipeEntity implements TkmEntity {
     public int hashCode() {
         return Objects.hash(
                 id,
+                parentId,
                 title,
                 description,
                 preparationTime,
@@ -104,7 +107,8 @@ public final class RecipeEntity implements TkmEntity {
     public String toString() {
         return "RecipeEntity{" +
                 "id='" + id + '\'' +
-                ", titleObservable='" + title + '\'' +
+                ", parentId=" + parentId + '\'' +
+                ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", preparationTime=" + preparationTime +
                 ", cookingTime=" + cookingTime +
@@ -118,6 +122,11 @@ public final class RecipeEntity implements TkmEntity {
     @Override
     public String getId() {
         return id;
+    }
+
+    @NonNull
+    public String getParentId() {
+        return parentId;
     }
 
     @Nullable

@@ -72,9 +72,9 @@ public class RecipeCatalogFavoritesRecyclerAdapter
                 String filterPattern = constraint.toString().toLowerCase().trim();
 
                 for (FavoriteRecipeModel model : favoriteRecipeModelListFull) {
-//                    String titleObservable = model.getTitle().toLowerCase();
+//                    String title = model.getTitle().toLowerCase();
 //
-//                    if (titleObservable.contains(filterPattern)) {
+//                    if (title.contains(filterPattern)) {
 //                        filteredList.add(model);
 //                    }
                 }

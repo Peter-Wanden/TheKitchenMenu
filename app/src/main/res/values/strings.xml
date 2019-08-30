@@ -194,6 +194,11 @@
     <string name="course_label_accompaniment">Accompaniment</string>
     <string name="course_label_snack">Snack</string>
     <string name="course_label_drink">Drink</string>
+    
+    <!-- Ingredients -->
+    <string name="add_ingredients">Add ingredients</string>
+    <string name="edit_ingredients">Edit ingredients</string>
+    <string name="review_ingredients">Review ingredients</string>
 
     <!-- ProductCatalogActivity -->
     <string name="product_catalog_empty_view_title_text">The cupboards are empty.</string>
@@ -299,7 +304,6 @@
     <string name="max_price_for_product">100</string>
     <string name="maximum_currency_value_shopping_list">1000</string>
     <string name="lasUpdated">last updated</string>
-    <string name="add_ingredients">ADD INGREDIENTS</string>
     <string name="recipe_title_label">Title</string>
     <string name="invalid_number">Invalid number entered</string>
 </resources>
