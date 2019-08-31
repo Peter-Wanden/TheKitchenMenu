@@ -5,6 +5,8 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.util.Objects;
+
 import static com.example.peter.thekitchenmenu.data.entity.RecipeCourseEntity.*;
 
 @Entity(tableName = TABLE_RECIPE_COURSES)
@@ -46,5 +48,29 @@ public final class RecipeCourseEntity implements TkmEntity {
     @NonNull
     public String getRecipeId() {
         return recipeId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RecipeCourseEntity that = (RecipeCourseEntity) o;
+        return courseNo == that.courseNo &&
+                id.equals(that.id) &&
+                recipeId.equals(that.recipeId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, courseNo, recipeId);
+    }
+
+    @Override
+    public String toString() {
+        return "RecipeCourseEntity{" +
+                "id='" + id + '\'' +
+                ", courseNo=" + courseNo +
+                ", recipeId='" + recipeId + '\'' +
+                '}';
     }
 }

@@ -6,6 +6,16 @@ import com.example.peter.thekitchenmenu.data.entity.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.repository.RecipeCourseDataSource;
 
 public class RecipeCourseRemoteDataSource implements RecipeCourseDataSource {
+
+    private static RecipeCourseRemoteDataSource INSTANCE;
+
+    public static RecipeCourseRemoteDataSource getInstance() {
+        if (INSTANCE == null)
+            INSTANCE = new RecipeCourseRemoteDataSource();
+        return INSTANCE;
+    }
+
+
     @Override
     public void getAllRecipesForCourseNo(int courseNo, @NonNull GetAllCallback<RecipeCourseEntity> callback) {
         callback.onDataNotAvailable();

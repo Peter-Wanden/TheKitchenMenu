@@ -32,8 +32,10 @@ public class RecipeEditorActivity extends AppCompatActivity implements AddEditRe
     public static final int RESULT_ADD_EDIT_RECIPE_CANCELLED = RESULT_FIRST_USER + 2;
 
     private RecipeEditorActivityBinding binding;
+
     private RecipeEditorViewModel recipeEditorViewModel;
     private RecipeIdentityViewModel recipeIdentityViewModel;
+    private RecipeCourseSelectorViewModel recipeCourseSelectorViewModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,6 +79,7 @@ public class RecipeEditorActivity extends AppCompatActivity implements AddEditRe
         binding.setViewModel(recipeEditorViewModel);
 
         recipeIdentityViewModel = obtainIdentityViewModel(this);
+        recipeCourseSelectorViewModel = obtainRecipeCourseSelectorViewModel(this);
     }
 
     private void setViewModelObservers() {
@@ -89,25 +92,40 @@ public class RecipeEditorActivity extends AppCompatActivity implements AddEditRe
 
         // Populate models with entity
         recipeEditorViewModel.getRecipeEntity().observe(this,
-                recipeEntity ->
-                        recipeIdentityViewModel.onStart(recipeEntity));
+                recipeEntity -> {
+                    recipeIdentityViewModel.onStart(recipeEntity);
+                    recipeCourseSelectorViewModel.onStart(recipeEntity.getId());
+                });
 
         // Return updated model data to entity
         recipeIdentityViewModel.getRecipeIdentityModelMetaData().observe(this,
                 recipeIdentityModelMetaData ->
                         recipeEditorViewModel.setRecipeIdentityModel(recipeIdentityModelMetaData));
+
     }
 
-    private static RecipeEditorViewModel obtainRecipeEditorViewModel(FragmentActivity activity) {
+    private static RecipeEditorViewModel obtainRecipeEditorViewModel(
+            FragmentActivity activity) {
         ViewModelFactoryRecipe factoryRecipe = ViewModelFactoryRecipe.getInstance(
                 activity.getApplication());
-        return new ViewModelProvider(activity, factoryRecipe).get(RecipeEditorViewModel.class);
+        return new ViewModelProvider(activity, factoryRecipe).get(
+                RecipeEditorViewModel.class);
     }
 
-    static RecipeIdentityViewModel obtainIdentityViewModel(FragmentActivity activity) {
+    static RecipeIdentityViewModel obtainIdentityViewModel(
+            FragmentActivity activity) {
         ViewModelFactoryRecipe factoryRecipe = ViewModelFactoryRecipe.getInstance(
                 activity.getApplication());
-        return new ViewModelProvider(activity, factoryRecipe).get(RecipeIdentityViewModel.class);
+        return new ViewModelProvider(activity, factoryRecipe).get(
+                RecipeIdentityViewModel.class);
+    }
+
+    static RecipeCourseSelectorViewModel obtainRecipeCourseSelectorViewModel(
+            FragmentActivity activity) {
+        ViewModelFactoryRecipe factoryRecipe = ViewModelFactoryRecipe.getInstance(
+                activity.getApplication());
+        return new ViewModelProvider(activity, factoryRecipe).get(
+                RecipeCourseSelectorViewModel.class);
     }
 
     private void setupFragments() {
@@ -152,6 +170,7 @@ public class RecipeEditorActivity extends AppCompatActivity implements AddEditRe
         return imageEditorFragment;
     }
 
+    @NonNull
     private RecipeCourseSelectorFragment obtainCourseSelectorFragment() {
         RecipeCourseSelectorFragment courseSelectorFragment =
                 (RecipeCourseSelectorFragment) getSupportFragmentManager().

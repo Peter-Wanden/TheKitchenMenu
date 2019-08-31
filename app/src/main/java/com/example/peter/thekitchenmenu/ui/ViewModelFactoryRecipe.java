@@ -9,6 +9,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipe;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeCourse;
+import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeCourseSelectorViewModel;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.ui.catalog.recipe.RecipeCatalogViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeEditorViewModel;
@@ -27,11 +29,15 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
     @SuppressLint("StaticFieldLeak")
     private static volatile ViewModelFactoryRecipe INSTANCE;
     private final Application application;
-    private final RepositoryRecipe repository;
+    private final RepositoryRecipe recipeRepository;
+    private final RepositoryRecipeCourse recipeCourseRepository;
 
-    private ViewModelFactoryRecipe(Application application, RepositoryRecipe repository) {
+    private ViewModelFactoryRecipe(Application application,
+                                   RepositoryRecipe recipeRepository,
+                                   RepositoryRecipeCourse recipeCourseRepository) {
         this.application = application;
-        this.repository = repository;
+        this.recipeRepository = recipeRepository;
+        this.recipeCourseRepository = recipeCourseRepository;
     }
 
     public static ViewModelFactoryRecipe getInstance(Application application) {
@@ -39,9 +45,11 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
             synchronized (ViewModelFactoryRecipe.class) {
                 if (INSTANCE == null)
                     INSTANCE = new ViewModelFactoryRecipe(
-                        application,
-                        DatabaseInjection.provideRecipesRepository(
-                                application.getApplicationContext()));
+                            application,
+                            DatabaseInjection.provideRecipesDataSource(
+                                    application.getApplicationContext()),
+                            DatabaseInjection.provideRecipeCourseDataSource(
+                                    application.getApplicationContext()));
             }
         }
         return INSTANCE;
@@ -57,13 +65,15 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
 
         if (modelClass.isAssignableFrom(RecipeCatalogViewModel.class)) {
             //noinspection unchecked
-            return (T) new RecipeCatalogViewModel(application, repository);
+            return (T) new RecipeCatalogViewModel(
+                    application,
+                    recipeRepository);
 
         } else if (modelClass.isAssignableFrom(RecipeEditorViewModel.class)) {
             //noinspection unchecked
             return (T) new RecipeEditorViewModel(
                     new TimeProvider(),
-                    repository,
+                    recipeRepository,
                     new UniqueIdProvider(),
                     application.getResources());
 
@@ -73,6 +83,12 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
                     application.getResources(),
                     new TextValidationHandler(),
                     new ParseIntegerFromObservable());
+
+        } else if (modelClass.isAssignableFrom(RecipeCourseSelectorViewModel.class)) {
+            //noinspection unchecked
+            return (T) new RecipeCourseSelectorViewModel(
+                    recipeCourseRepository,
+                    new UniqueIdProvider());
         }
 
         throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());

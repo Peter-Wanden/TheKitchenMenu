@@ -13,7 +13,6 @@ public class RecipeRemoteDataSource implements DataSource<RecipeEntity> {
         if (INSTANCE == null)
             INSTANCE = new RecipeRemoteDataSource();
         return INSTANCE;
-
     }
 
     @Override
