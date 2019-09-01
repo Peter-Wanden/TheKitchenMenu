@@ -23,7 +23,7 @@ public class RecipeLocalDataSource implements DataSource<RecipeEntity> {
     }
 
     public static RecipeLocalDataSource getInstance(@NonNull AppExecutors appExecutors,
-                                                    RecipeEntityDao recipeEntityDao) {
+                                                    @NonNull RecipeEntityDao recipeEntityDao) {
         if (INSTANCE == null) {
             synchronized (RecipeLocalDataSource.class) {
                 if (INSTANCE == null)

@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.detail.recipe.revipeviewer;
+package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeviewer;
 
 import androidx.appcompat.app.AppCompatActivity;
 

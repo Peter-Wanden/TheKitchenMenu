@@ -16,7 +16,9 @@ import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 
-public class RecipeEditorViewModel extends ViewModel implements DataSource.GetEntityCallback<RecipeEntity> {
+public class RecipeEditorViewModel
+        extends ViewModel
+        implements DataSource.GetEntityCallback<RecipeEntity> {
 
     private DataSource<RecipeEntity> recipeEntityDataSource;
     private AddEditRecipeNavigator navigator;

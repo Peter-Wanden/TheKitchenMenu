@@ -155,7 +155,7 @@ public class RecipeEditorActivity extends AppCompatActivity implements AddEditRe
                         findFragmentById(R.id.recipe_editor_recipe_identity_content_frame);
 
         if (recipeIdentityFragment == null)
-            recipeIdentityFragment = RecipeIdentityFragment.newInstance(null); //todo add the recipeID
+            recipeIdentityFragment = RecipeIdentityFragment.newInstance(); //todo add the recipeID
         return recipeIdentityFragment;
     }
 

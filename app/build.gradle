@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
 
     compileSdkVersion rootProject.compileSdkVersion
-    buildToolsVersion '29.0.0'
+    buildToolsVersion '29.0.2'
 
     signingConfigs {
 
@@ -163,7 +163,7 @@ dependencies {
     androidTestImplementation "androidx.legacy:legacy-support-v4:$androidxSupportVersion"
     androidTestImplementation "androidx.recyclerview:recyclerview:$androidxRecyclerView"
     androidTestImplementation "androidx.appcompat:appcompat:$androidxAppcompat"
-    androidTestImplementation "androidx.core:core:$coreCore"
+//    androidTestImplementation "androidx.core:core:$coreCore"
     androidTestImplementation "com.google.android.material:material:$androidMaterial"
     implementation "com.google.code.findbugs:jsr305:3.0.2"
 }

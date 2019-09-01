@@ -17,8 +17,6 @@ import java.util.Locale;
 
 public class NumberStringUnitOfMeasureConverter {
 
-    private static final String TAG = "tkm-StringFormatConvert";
-
     public static String toFormat(EditText editText,
                                   String measurementModelValue,
                                   MeasurementSubtype subtype) {
