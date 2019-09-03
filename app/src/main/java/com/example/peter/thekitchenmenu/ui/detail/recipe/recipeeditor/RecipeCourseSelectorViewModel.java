@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.peter.thekitchenmenu.data.entity.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
-import com.example.peter.thekitchenmenu.data.repository.RecipeCourseDataSource;
+import com.example.peter.thekitchenmenu.data.repository.DataSourceRecipeCourse;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 
 import java.util.List;
@@ -16,7 +16,7 @@ public class RecipeCourseSelectorViewModel
         extends ViewModel
         implements DataSource.GetAllCallback<RecipeCourseEntity> {
 
-    private RecipeCourseDataSource recipeCourseDataSource;
+    private DataSourceRecipeCourse dataSourceRecipeCourse;
     private UniqueIdProvider idProvider;
 
     private String recipeId;
@@ -31,9 +31,9 @@ public class RecipeCourseSelectorViewModel
     public final ObservableBoolean courseSixObservable = new ObservableBoolean();
     public final ObservableBoolean courseSevenObservable = new ObservableBoolean();
 
-    public RecipeCourseSelectorViewModel(RecipeCourseDataSource recipeCourseDataSource,
+    public RecipeCourseSelectorViewModel(DataSourceRecipeCourse dataSourceRecipeCourse,
                                          UniqueIdProvider idProvider) {
-        this.recipeCourseDataSource = recipeCourseDataSource;
+        this.dataSourceRecipeCourse = dataSourceRecipeCourse;
         this.idProvider = idProvider;
 
         courseZeroObservable.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
@@ -124,7 +124,7 @@ public class RecipeCourseSelectorViewModel
     }
 
     private void getCoursesForRecipe(String recipeId) {
-        recipeCourseDataSource.getCoursesForRecipe(recipeId, this);
+        dataSourceRecipeCourse.getCoursesForRecipe(recipeId, this);
     }
 
     @Override
@@ -171,7 +171,7 @@ public class RecipeCourseSelectorViewModel
 
     private void addCourse(int course) {
         if (recipeId != null)
-            recipeCourseDataSource.save(new RecipeCourseEntity(
+            dataSourceRecipeCourse.save(new RecipeCourseEntity(
                     idProvider.getUId(),
                     course,
                     recipeId));
@@ -192,7 +192,7 @@ public class RecipeCourseSelectorViewModel
     }
 
     private void deleteCourseFromDatabase(String recipeCourseEntityEntryId) {
-        recipeCourseDataSource.deleteById(recipeCourseEntityEntryId);
+        dataSourceRecipeCourse.deleteById(recipeCourseEntityEntryId);
     }
 
 }

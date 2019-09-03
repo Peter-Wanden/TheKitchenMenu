@@ -7,7 +7,7 @@ import android.util.Log;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
-import com.example.peter.thekitchenmenu.data.repository.FavoriteProductsDataSource;
+import com.example.peter.thekitchenmenu.data.repository.DataSourceFavoriteProducts;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 import com.example.peter.thekitchenmenu.utils.TextValidationHandler;
 import com.google.android.gms.common.util.Strings;
@@ -55,13 +55,13 @@ public class FavoriteProductEditorViewModel
             locationInRoomValidated,
             priceValidated;
 
-    private FavoriteProductsDataSource favoriteProductEntityDataSource;
+    private DataSourceFavoriteProducts favoriteProductEntityDataSource;
     public final ObservableBoolean dataIsLoading = new ObservableBoolean();
     private boolean isExistingFavoriteProductEntity;
 
     public FavoriteProductEditorViewModel(
             @NonNull Application application,
-            @NonNull FavoriteProductsDataSource favoriteProductEntityDataSource,
+            @NonNull DataSourceFavoriteProducts favoriteProductEntityDataSource,
             TextValidationHandler validationHandler) {
 
         super(application);

@@ -2,6 +2,7 @@ package com.example.peter.thekitchenmenu.testdata;
 
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
+import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.model.RecipeIdentityModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeEditorViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeIdentityModelMetaData;
@@ -44,6 +45,7 @@ public class RecipeTestData {
         return new RecipeIdentityModel(
                 getValidExistingRecipeEntity().getTitle(),
                 getValidExistingRecipeEntity().getDescription(),
+                getValidExistingRecipeEntity().getId(),
                 getValidExistingRecipeEntity().getPreparationTime(),
                 getValidExistingRecipeEntity().getCookingTime()
         );
@@ -75,6 +77,7 @@ public class RecipeTestData {
         return new RecipeIdentityModel(
                 getEmptyRecipeEntity().getTitle(),
                 getEmptyRecipeEntity().getDescription(),
+                getValidExistingRecipeEntity().getId(),
                 getEmptyRecipeEntity().getPreparationTime(),
                 getEmptyRecipeEntity().getCookingTime()
         );
@@ -106,6 +109,7 @@ public class RecipeTestData {
         return new RecipeIdentityModel(
                 getInvalidRecipeEntity().getTitle(),
                 getEmptyRecipeEntity().getDescription(),
+                getValidExistingRecipeEntity().getId(),
                 getInvalidRecipeEntity().getPreparationTime(),
                 getInvalidRecipeEntity().getCookingTime()
         );
@@ -137,6 +141,7 @@ public class RecipeTestData {
         return new RecipeIdentityModel(
                 getValidExistingRecipeEntity().getTitle(),
                 getValidRecipeEntityUpdatedByOwner().getDescription(),
+                getValidExistingRecipeEntity().getId(),
                 getValidRecipeEntityUpdatedByOwner().getPreparationTime(),
                 getValidRecipeEntityUpdatedByOwner().getCookingTime()
         );
@@ -166,8 +171,9 @@ public class RecipeTestData {
 
     public static RecipeIdentityModel getValidRecipeIdentityModelFromAnotherUser() {
         return new RecipeIdentityModel(
-                getValidRecipeEntityFromAnotherUser().getId(),
+                getValidRecipeEntityFromAnotherUser().getTitle(),
                 getValidRecipeEntityFromAnotherUser().getDescription(),
+                getValidRecipeEntityFromAnotherUser().getId(),
                 getValidRecipeEntityFromAnotherUser().getPreparationTime(),
                 getValidRecipeEntityFromAnotherUser().getCookingTime()
         );
@@ -187,11 +193,16 @@ public class RecipeTestData {
         );
     }
 
-    public static RecipeIdentityModelMetaData getValidClonedRecipeIdentityModelMetaData() {
-        return new RecipeIdentityModelMetaData(
-                getValidClonedRecipeIdentityModel(),
-                true,
-                true
+    public static RecipeIdentityEntity getValidRecipeIdentityEntity() {
+        return new RecipeIdentityEntity(
+                getValidExistingRecipeEntity().getId(),
+                getValidExistingRecipeEntity().getParentId(),
+                getValidExistingRecipeEntity().getTitle(),
+                getValidExistingRecipeEntity().getDescription(),
+                getValidExistingRecipeEntity().getPreparationTime(),
+                getValidExistingRecipeEntity().getCookingTime(),
+                getValidExistingRecipeEntity().getCreateDate(),
+                getValidExistingRecipeEntity().getLastUpdate()
         );
     }
 
@@ -199,6 +210,7 @@ public class RecipeTestData {
         return new RecipeIdentityModel(
                 getValidRecipeEntityFromAnotherUser().getTitle(),
                 getValidClonedRecipeEntity().getDescription(),
+                getValidExistingRecipeEntity().getId(),
                 getValidClonedRecipeEntity().getPreparationTime(),
                 getValidClonedRecipeEntity().getCookingTime()
         );

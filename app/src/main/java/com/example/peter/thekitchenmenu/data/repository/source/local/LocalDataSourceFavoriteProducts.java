@@ -4,32 +4,32 @@ import androidx.annotation.NonNull;
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
 import com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity;
-import com.example.peter.thekitchenmenu.data.repository.FavoriteProductsDataSource;
+import com.example.peter.thekitchenmenu.data.repository.DataSourceFavoriteProducts;
 
 import java.util.List;
 
 import static androidx.core.util.Preconditions.checkNotNull;
 
-public class FavoriteProductsLocalDataSource implements FavoriteProductsDataSource {
+public class LocalDataSourceFavoriteProducts implements DataSourceFavoriteProducts {
 
-    private static volatile FavoriteProductsLocalDataSource INSTANCE;
+    private static volatile LocalDataSourceFavoriteProducts INSTANCE;
     private FavoriteProductEntityDao favoriteProductEntityDao;
     private AppExecutors appExecutors;
 
-    private FavoriteProductsLocalDataSource(
+    private LocalDataSourceFavoriteProducts(
             @NonNull AppExecutors appExecutors,
             @NonNull FavoriteProductEntityDao favoriteProductEntityDao) {
         this.appExecutors = appExecutors;
         this.favoriteProductEntityDao = favoriteProductEntityDao;
     }
 
-    public static FavoriteProductsLocalDataSource
+    public static LocalDataSourceFavoriteProducts
     getInstance(@NonNull AppExecutors appExecutors,
                 @NonNull FavoriteProductEntityDao favoriteProductEntityDao) {
         if (INSTANCE == null) {
-            synchronized (FavoriteProductsLocalDataSource.class) {
+            synchronized (LocalDataSourceFavoriteProducts.class) {
                 if (INSTANCE == null)
-                    INSTANCE = new FavoriteProductsLocalDataSource(
+                    INSTANCE = new LocalDataSourceFavoriteProducts(
                             appExecutors,
                             favoriteProductEntityDao);
             }

@@ -10,12 +10,13 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipe;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeCourse;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeCourseSelectorViewModel;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.ui.catalog.recipe.RecipeCatalogViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeEditorViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeIdentityViewModel;
-import com.example.peter.thekitchenmenu.utils.ParseIntegerFromObservable;
+import com.example.peter.thekitchenmenu.utils.ParseIntegerFromObservableHandler;
 import com.example.peter.thekitchenmenu.utils.TextValidationHandler;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 
@@ -31,13 +32,16 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
     private final Application application;
     private final RepositoryRecipe recipeRepository;
     private final RepositoryRecipeCourse recipeCourseRepository;
+    private final RepositoryRecipeIdentity recipeIdentityRepository;
 
     private ViewModelFactoryRecipe(Application application,
                                    RepositoryRecipe recipeRepository,
-                                   RepositoryRecipeCourse recipeCourseRepository) {
+                                   RepositoryRecipeCourse recipeCourseRepository,
+                                   RepositoryRecipeIdentity recipeIdentityRepository) {
         this.application = application;
         this.recipeRepository = recipeRepository;
         this.recipeCourseRepository = recipeCourseRepository;
+        this.recipeIdentityRepository = recipeIdentityRepository;
     }
 
     public static ViewModelFactoryRecipe getInstance(Application application) {
@@ -47,9 +51,15 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
                     INSTANCE = new ViewModelFactoryRecipe(
                             application,
                             DatabaseInjection.provideRecipesDataSource(
-                                    application.getApplicationContext()),
+                                    application.getApplicationContext()
+                            ),
                             DatabaseInjection.provideRecipeCourseDataSource(
-                                    application.getApplicationContext()));
+                                    application.getApplicationContext()
+                            ),
+                            DatabaseInjection.provideRecipeIdentityDataSource(
+                                    application.getApplicationContext()
+                            )
+                    );
             }
         }
         return INSTANCE;
@@ -80,9 +90,12 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
         } else if (modelClass.isAssignableFrom(RecipeIdentityViewModel.class)) {
             //noinspection unchecked
             return (T) new RecipeIdentityViewModel(
+                    recipeIdentityRepository,
+                    new TimeProvider(),
+                    new UniqueIdProvider(),
                     application.getResources(),
                     new TextValidationHandler(),
-                    new ParseIntegerFromObservable());
+                    new ParseIntegerFromObservableHandler());
 
         } else if (modelClass.isAssignableFrom(RecipeCourseSelectorViewModel.class)) {
             //noinspection unchecked

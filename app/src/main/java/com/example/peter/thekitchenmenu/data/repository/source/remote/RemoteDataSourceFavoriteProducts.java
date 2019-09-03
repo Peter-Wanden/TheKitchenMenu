@@ -3,15 +3,15 @@ package com.example.peter.thekitchenmenu.data.repository.source.remote;
 import androidx.annotation.NonNull;
 
 import com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity;
-import com.example.peter.thekitchenmenu.data.repository.FavoriteProductsDataSource;
+import com.example.peter.thekitchenmenu.data.repository.DataSourceFavoriteProducts;
 
-public class FavoriteProductsRemoteDataSource implements FavoriteProductsDataSource {
+public class RemoteDataSourceFavoriteProducts implements DataSourceFavoriteProducts {
 
-    private static FavoriteProductsRemoteDataSource INSTANCE;
+    private static RemoteDataSourceFavoriteProducts INSTANCE;
 
-    public static FavoriteProductsRemoteDataSource getInstance() {
+    public static RemoteDataSourceFavoriteProducts getInstance() {
         if (INSTANCE == null)
-            INSTANCE = new FavoriteProductsRemoteDataSource();
+            INSTANCE = new RemoteDataSourceFavoriteProducts();
         return INSTANCE;
     }
 

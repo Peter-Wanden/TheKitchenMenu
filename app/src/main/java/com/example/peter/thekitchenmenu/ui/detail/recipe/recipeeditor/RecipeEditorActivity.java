@@ -93,15 +93,9 @@ public class RecipeEditorActivity extends AppCompatActivity implements AddEditRe
         // Populate models with entity
         recipeEditorViewModel.getRecipeEntity().observe(this,
                 recipeEntity -> {
-                    recipeIdentityViewModel.onStart(recipeEntity);
+                    recipeIdentityViewModel.onStart(recipeEntity.getId());
                     recipeCourseSelectorViewModel.onStart(recipeEntity.getId());
                 });
-
-        // Return updated model data to entity
-        recipeIdentityViewModel.getRecipeIdentityModelMetaData().observe(this,
-                recipeIdentityModelMetaData ->
-                        recipeEditorViewModel.setRecipeIdentityModel(recipeIdentityModelMetaData));
-
     }
 
     private static RecipeEditorViewModel obtainRecipeEditorViewModel(

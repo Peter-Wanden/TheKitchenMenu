@@ -12,22 +12,22 @@ import static androidx.core.util.Preconditions.checkNotNull;
 
 public class RepositoryRecipeCourse
         extends Repository<RecipeCourseEntity>
-        implements RecipeCourseDataSource {
+        implements DataSourceRecipeCourse {
 
     public static RepositoryRecipeCourse INSTANCE;
-    private RecipeCourseDataSource recipeCourseRemoteDataSource;
-    private RecipeCourseDataSource recipeCourseLocalDataSource;
+    private DataSourceRecipeCourse recipeCourseRemoteDataSource;
+    private DataSourceRecipeCourse recipeCourseLocalDataSource;
 
-    private RepositoryRecipeCourse(@NonNull RecipeCourseDataSource remoteDataSource,
-                                   @NonNull RecipeCourseDataSource localDataSource) {
+    private RepositoryRecipeCourse(@NonNull DataSourceRecipeCourse remoteDataSource,
+                                   @NonNull DataSourceRecipeCourse localDataSource) {
         this.remoteDataSource = checkNotNull(remoteDataSource);
         this.localDataSource = checkNotNull(localDataSource);
         recipeCourseRemoteDataSource = checkNotNull(remoteDataSource);
         recipeCourseLocalDataSource = checkNotNull(localDataSource);
     }
 
-    public static RepositoryRecipeCourse getInstance(RecipeCourseDataSource remoteDataSource,
-                                                     RecipeCourseDataSource localDataSource) {
+    public static RepositoryRecipeCourse getInstance(DataSourceRecipeCourse remoteDataSource,
+                                                     DataSourceRecipeCourse localDataSource) {
         if (INSTANCE == null)
             INSTANCE = new RepositoryRecipeCourse(remoteDataSource, localDataSource);
         return INSTANCE;

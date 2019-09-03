@@ -21,6 +21,9 @@ public interface RecipeIdentityEntityDao {
     @Query("SELECT * FROM " + TABLE_RECIPE_IDENTITY + " WHERE " + ID + " = :id")
     RecipeIdentityEntity getById(String id);
 
+    @Query("SELECT * FROM " + TABLE_RECIPE_IDENTITY + " WHERE " + RECIPE_ID + " = :recipeId")
+    RecipeIdentityEntity getByRecipeId(String recipeId);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(RecipeIdentityEntity recipeIdentityEntity);
 

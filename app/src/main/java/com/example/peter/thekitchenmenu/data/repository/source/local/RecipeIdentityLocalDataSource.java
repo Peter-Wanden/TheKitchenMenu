@@ -4,13 +4,13 @@ import androidx.annotation.NonNull;
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
 import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
-import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.repository.DataSourceRecipeIdentity;
 
 import java.util.List;
 
 import static androidx.core.util.Preconditions.checkNotNull;
 
-public class RecipeIdentityLocalDataSource implements DataSource<RecipeIdentityEntity> {
+public class RecipeIdentityLocalDataSource implements DataSourceRecipeIdentity {
 
     private static volatile RecipeIdentityLocalDataSource INSTANCE;
     private RecipeIdentityEntityDao recipeIdentityEntityDao;
@@ -55,9 +55,25 @@ public class RecipeIdentityLocalDataSource implements DataSource<RecipeIdentityE
     @Override
     public void getById(@NonNull String id,
                         @NonNull GetEntityCallback<RecipeIdentityEntity> callback) {
-        Runnable runnable = () -> {
+        Runnable runnable = ()-> {
             final RecipeIdentityEntity recipeIdentityEntity = recipeIdentityEntityDao.getById(id);
             appExecutors.mainThread().execute(() -> {
+                if (recipeIdentityEntity != null)
+                    callback.onEntityLoaded(recipeIdentityEntity);
+                else
+                    callback.onDataNotAvailable();
+            });
+        };
+        appExecutors.diskIO().execute(runnable);
+    }
+
+    @Override
+    public void getByRecipeId(@NonNull String recipeId,
+                              @NonNull GetEntityCallback<RecipeIdentityEntity> callback) {
+        Runnable runnable = ()-> {
+            final RecipeIdentityEntity recipeIdentityEntity =
+                    recipeIdentityEntityDao.getByRecipeId(recipeId);
+            appExecutors.mainThread().execute(()-> {
                 if (recipeIdentityEntity != null)
                     callback.onEntityLoaded(recipeIdentityEntity);
                 else

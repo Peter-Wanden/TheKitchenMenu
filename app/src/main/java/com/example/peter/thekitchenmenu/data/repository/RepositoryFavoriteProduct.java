@@ -10,15 +10,15 @@ import static androidx.core.util.Preconditions.checkNotNull;
 
 public class RepositoryFavoriteProduct
         extends Repository<FavoriteProductEntity>
-        implements FavoriteProductsDataSource {
+        implements DataSourceFavoriteProducts {
 
     public static RepositoryFavoriteProduct INSTANCE = null;
-    private FavoriteProductsDataSource favoriteRemoteDataSource;
-    private FavoriteProductsDataSource favoriteLocalDataSource;
+    private DataSourceFavoriteProducts favoriteRemoteDataSource;
+    private DataSourceFavoriteProducts favoriteLocalDataSource;
 
     private RepositoryFavoriteProduct(
-            @NonNull FavoriteProductsDataSource remoteDataSource,
-            @NonNull FavoriteProductsDataSource localDataSource) {
+            @NonNull DataSourceFavoriteProducts remoteDataSource,
+            @NonNull DataSourceFavoriteProducts localDataSource) {
 
         this.remoteDataSource = checkNotNull(remoteDataSource);
         this.localDataSource = checkNotNull(localDataSource);
@@ -27,9 +27,8 @@ public class RepositoryFavoriteProduct
     }
 
     public static RepositoryFavoriteProduct getInstance(
-            FavoriteProductsDataSource remoteDataSource,
-            FavoriteProductsDataSource localDataSource) {
-
+            DataSourceFavoriteProducts remoteDataSource,
+            DataSourceFavoriteProducts localDataSource) {
         if (INSTANCE == null)
             INSTANCE = new RepositoryFavoriteProduct(remoteDataSource, localDataSource);
         return INSTANCE;
@@ -48,7 +47,9 @@ public class RepositoryFavoriteProduct
             callback.onEntityLoaded(cachedEntity);
             return;
         }
-        favoriteLocalDataSource.getByProductId(productId, new GetEntityCallback<FavoriteProductEntity>() {
+        favoriteLocalDataSource.getByProductId(
+                productId,
+                new GetEntityCallback<FavoriteProductEntity>() {
             @Override
             public void onEntityLoaded(FavoriteProductEntity favoriteProductEntity) {
                 if (entityCache == null)
@@ -94,9 +95,8 @@ public class RepositoryFavoriteProduct
             return null;
         else {
             for (FavoriteProductEntity entity : entityCache.values()) {
-                if (entity.getProductId().equals(productId)) {
+                if (entity.getProductId().equals(productId))
                     return entity;
-                }
             }
             return null;
         }

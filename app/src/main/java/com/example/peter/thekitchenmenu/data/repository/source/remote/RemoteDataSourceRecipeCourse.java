@@ -3,15 +3,15 @@ package com.example.peter.thekitchenmenu.data.repository.source.remote;
 import androidx.annotation.NonNull;
 
 import com.example.peter.thekitchenmenu.data.entity.RecipeCourseEntity;
-import com.example.peter.thekitchenmenu.data.repository.RecipeCourseDataSource;
+import com.example.peter.thekitchenmenu.data.repository.DataSourceRecipeCourse;
 
-public class RecipeCourseRemoteDataSource implements RecipeCourseDataSource {
+public class RemoteDataSourceRecipeCourse implements DataSourceRecipeCourse {
 
-    private static RecipeCourseRemoteDataSource INSTANCE;
+    private static RemoteDataSourceRecipeCourse INSTANCE;
 
-    public static RecipeCourseRemoteDataSource getInstance() {
+    public static RemoteDataSourceRecipeCourse getInstance() {
         if (INSTANCE == null)
-            INSTANCE = new RecipeCourseRemoteDataSource();
+            INSTANCE = new RemoteDataSourceRecipeCourse();
         return INSTANCE;
     }
 

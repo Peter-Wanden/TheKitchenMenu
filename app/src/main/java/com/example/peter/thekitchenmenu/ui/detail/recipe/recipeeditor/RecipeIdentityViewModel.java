@@ -4,27 +4,31 @@ import android.content.res.Resources;
 
 import androidx.databinding.Observable;
 import androidx.databinding.ObservableField;
-import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
-import com.example.peter.thekitchenmenu.data.model.RecipeIdentityModel;
-import com.example.peter.thekitchenmenu.utils.ParseIntegerFromObservable;
+import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
+import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.repository.DataSourceRecipeIdentity;
+import com.example.peter.thekitchenmenu.utils.ParseIntegerFromObservableHandler;
 import com.example.peter.thekitchenmenu.utils.TextValidationHandler;
+import com.example.peter.thekitchenmenu.utils.TimeProvider;
+import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 
 import static com.example.peter.thekitchenmenu.utils.TextValidationHandler.*;
 
-public class RecipeIdentityViewModel extends ViewModel {
-
-//    private static final String TAG = "tkm-RecipeIdentityVM";
+public class RecipeIdentityViewModel
+        extends ViewModel
+        implements DataSource.GetEntityCallback<RecipeIdentityEntity> {
 
     private Resources resources;
     private TextValidationHandler validationHandler;
-    private ParseIntegerFromObservable intFromObservable;
+    private ParseIntegerFromObservableHandler intFromObservable;
+    private DataSourceRecipeIdentity recipeIdentityDataSource;
+    private TimeProvider timeProvider;
+    private UniqueIdProvider idProvider;
 
-    private final MediatorLiveData<RecipeIdentityModelMetaData> recipeIdentityModelMetaData =
-            new MediatorLiveData<>();
+    private String recipeId;
 
     public final ObservableField<String> titleObservable = new ObservableField<>("");
     public final ObservableField<String> descriptionObservable = new ObservableField<>("");
@@ -38,9 +42,7 @@ public class RecipeIdentityViewModel extends ViewModel {
     public final ObservableField<String> prepTimeErrorMessage = new ObservableField<>();
     public final ObservableField<String> cookTimeErrorMessage = new ObservableField<>();
 
-    private RecipeIdentityModel uneditedIdentityModel = new RecipeIdentityModel(
-            "", "", 0, 0
-    );
+    private RecipeIdentityEntity existingIdentityEntity;
 
     private int prepHours;
     private int prepMinutes;
@@ -48,15 +50,21 @@ public class RecipeIdentityViewModel extends ViewModel {
     private int cookMinutes;
 
     private boolean
-            updatingModel,
-            titleValidated,
-            descriptionValidated,
-            prepTimeValidated,
-            cookTimeValidated;
+            isNewIdentityModel,
+            titleValid,
+            descriptionValid = true,
+            prepTimeValid = true,
+            cookTimeValid = true;
 
-    public RecipeIdentityViewModel(Resources resources,
+    public RecipeIdentityViewModel(DataSourceRecipeIdentity recipeIdentityDataSource,
+                                   TimeProvider timeProvider,
+                                   UniqueIdProvider idProvider,
+                                   Resources resources,
                                    TextValidationHandler validationHandler,
-                                   ParseIntegerFromObservable intFromObservable) {
+                                   ParseIntegerFromObservableHandler intFromObservable) {
+        this.recipeIdentityDataSource = recipeIdentityDataSource;
+        this.timeProvider = timeProvider;
+        this.idProvider = idProvider;
         this.resources = resources;
         this.validationHandler = validationHandler;
         this.intFromObservable = intFromObservable;
@@ -99,42 +107,44 @@ public class RecipeIdentityViewModel extends ViewModel {
         });
     }
 
-    MediatorLiveData<RecipeIdentityModelMetaData> getRecipeIdentityModelMetaData() {
-        return recipeIdentityModelMetaData;
-    }
-
-    void onStart(RecipeEntity recipeEntity) {
-        if (recipeEntity != null) {
-            updatingModel = true;
-            setUneditedModel(recipeEntity);
-
-            titleObservable.set(recipeEntity.getTitle());
-            descriptionObservable.set(recipeEntity.getDescription());
-            prepHoursObservable.set(String.valueOf(getHours(recipeEntity.getPreparationTime())));
-            prepMinutesObservable.set(String.valueOf(getMinutes(recipeEntity.getPreparationTime())));
-            cookHoursObservable.set(String.valueOf(getHours(recipeEntity.getCookingTime())));
-            cookMinutesObservable.set(String.valueOf(getMinutes(recipeEntity.getCookingTime())));
-            updatingModel = false;
+    void onStart(String recipeId) {
+        if (recipeId != null) {
+            this.recipeId = recipeId;
+            recipeIdentityDataSource.getByRecipeId(recipeId, this);
         } else {
-            throw new RuntimeException("Recipe cannot be null");
+            throw new RuntimeException("Recipe id cannot be null");
         }
     }
 
-    private void setUneditedModel(RecipeEntity recipeEntity) {
-        uneditedIdentityModel = new RecipeIdentityModel(
-                recipeEntity.getTitle(),
-                recipeEntity.getDescription(),
-                recipeEntity.getPreparationTime(),
-                recipeEntity.getCookingTime()
-        );
+    @Override
+    public void onEntityLoaded(RecipeIdentityEntity identityEntity) {
+        isNewIdentityModel = false;
+        existingIdentityEntity = identityEntity;
+        updateObservables();
+    }
+
+    private void updateObservables() {
+        titleObservable.set(existingIdentityEntity.getTitle());
+        descriptionObservable.set(existingIdentityEntity.getDescription());
+        prepHoursObservable.set(String.valueOf(getHours(existingIdentityEntity.getPrepTime())));
+        prepMinutesObservable.set(String.valueOf(getMinutes(existingIdentityEntity.getPrepTime())));
+        cookHoursObservable.set(String.valueOf(getHours(existingIdentityEntity.getCookTime())));
+        cookMinutesObservable.set(String.valueOf(getMinutes(existingIdentityEntity.getCookTime())));
+    }
+
+    @Override
+    public void onDataNotAvailable() {
+        isNewIdentityModel = true;
+        existingIdentityEntity = createNewIdentityEntity();
     }
 
     private void titleChanged() {
         titleErrorMessage.set(null);
         String validationResponse = validateShortText(titleObservable.get());
 
-        titleValidated = validationResponse.equals(VALIDATED);
-        if (!titleValidated) titleErrorMessage.set(validationResponse);
+        titleValid = validationResponse.equals(VALIDATED);
+        if (!titleValid)
+            titleErrorMessage.set(validationResponse);
 
         checkValidationStatus();
     }
@@ -143,8 +153,8 @@ public class RecipeIdentityViewModel extends ViewModel {
         descriptionErrorMessage.set(null);
         String validationResponse = validateLongText(descriptionObservable.get());
 
-        descriptionValidated = validationResponse.equals(VALIDATED);
-        if (!descriptionValidated) descriptionErrorMessage.set(validationResponse);
+        descriptionValid = validationResponse.equals(VALIDATED);
+        if (!descriptionValid) descriptionErrorMessage.set(validationResponse);
 
         checkValidationStatus();
     }
@@ -182,8 +192,8 @@ public class RecipeIdentityViewModel extends ViewModel {
         int totalPrepTime = calculateTotalInMinutes(prepHours, prepMinutes);
         String errorMessage = resources.getString(R.string.input_error_recipe_prep_time_too_long);
 
-        prepTimeValidated = totalPrepTime <= maxAllowedPrepTime;
-        if (!prepTimeValidated) prepTimeErrorMessage.set(errorMessage);
+        prepTimeValid = totalPrepTime <= maxAllowedPrepTime;
+        if (!prepTimeValid) prepTimeErrorMessage.set(errorMessage);
 
         checkValidationStatus();
     }
@@ -205,8 +215,8 @@ public class RecipeIdentityViewModel extends ViewModel {
         // todo - make the time in this string a calculation
         String errorMessage = resources.getString(R.string.input_error_recipe_cook_time_too_long);
 
-        cookTimeValidated = totalCookTime <= maxAllowedCookTime;
-        if (!cookTimeValidated) cookTimeErrorMessage.set(errorMessage);
+        cookTimeValid = totalCookTime <= maxAllowedCookTime;
+        if (!cookTimeValid) cookTimeErrorMessage.set(errorMessage);
 
         checkValidationStatus();
     }
@@ -220,32 +230,49 @@ public class RecipeIdentityViewModel extends ViewModel {
     }
 
     private void checkValidationStatus() {
-        updateRecipeWithIdentityModel(
-                titleValidated &&
-                descriptionValidated &&
-                prepTimeValidated &&
-                cookTimeValidated);
+        saveIdentityModel(
+                titleValid &&
+                        descriptionValid &&
+                        prepTimeValid &&
+                        cookTimeValid);
     }
 
-    private void updateRecipeWithIdentityModel(boolean allFieldsValidated) {
-        if (!updatingModel)
-            recipeIdentityModelMetaData.setValue(new RecipeIdentityModelMetaData(
-                    getLatestModel(),
-                    isModelChanged(),
-                    allFieldsValidated
-            ));
+    private void saveIdentityModel(boolean allFieldsValidated) {
+        if (allFieldsValidated) {
+            RecipeIdentityEntity identityEntity;
+            if (isNewIdentityModel) {
+                identityEntity = createNewIdentityEntity();
+            } else {
+                identityEntity = updateExistingIdentityEntity();
+            }
+            recipeIdentityDataSource.save(identityEntity);
+        }
     }
 
-    private RecipeIdentityModel getLatestModel() {
-        return new RecipeIdentityModel(
-                titleObservable.get(),
+    private RecipeIdentityEntity updateExistingIdentityEntity() {
+        return new RecipeIdentityEntity(
+                existingIdentityEntity.getId(),
+                recipeId,
+                existingIdentityEntity.getTitle(),
                 descriptionObservable.get(),
                 calculateTotalInMinutes(prepHours, prepMinutes),
-                calculateTotalInMinutes(cookHours, cookMinutes)
+                calculateTotalInMinutes(cookHours, cookMinutes),
+                existingIdentityEntity.getCreateDate(),
+                timeProvider.getCurrentTimestamp()
         );
     }
 
-    private boolean isModelChanged() {
-        return !uneditedIdentityModel.equals(getLatestModel());
+    private RecipeIdentityEntity createNewIdentityEntity() {
+        long currentTime = timeProvider.getCurrentTimestamp();
+
+        return new RecipeIdentityEntity(
+                idProvider.getUId(),
+                recipeId,
+                titleObservable.get(),
+                descriptionObservable.get(),
+                calculateTotalInMinutes(prepHours, prepMinutes),
+                calculateTotalInMinutes(cookHours, cookMinutes),
+                currentTime,
+                currentTime);
     }
 }

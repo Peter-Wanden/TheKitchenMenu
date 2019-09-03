@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.example.peter.thekitchenmenu.data.entity.RecipeCourseEntity;
 
-public interface RecipeCourseDataSource extends DataSource<RecipeCourseEntity> {
+public interface DataSourceRecipeCourse extends DataSource<RecipeCourseEntity> {
 
     void getAllRecipesForCourseNo(int courseNo,
                                   @NonNull GetAllCallback<RecipeCourseEntity> callback);

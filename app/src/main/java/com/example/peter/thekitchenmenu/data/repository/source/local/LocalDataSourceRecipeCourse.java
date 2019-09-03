@@ -4,31 +4,31 @@ import androidx.annotation.NonNull;
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
 import com.example.peter.thekitchenmenu.data.entity.RecipeCourseEntity;
-import com.example.peter.thekitchenmenu.data.repository.RecipeCourseDataSource;
+import com.example.peter.thekitchenmenu.data.repository.DataSourceRecipeCourse;
 
 import java.util.List;
 
 import static androidx.core.util.Preconditions.checkNotNull;
 
-public class RecipeCourseLocalDataSource implements RecipeCourseDataSource {
+public class LocalDataSourceRecipeCourse implements DataSourceRecipeCourse {
 
-    private static volatile RecipeCourseLocalDataSource INSTANCE;
+    private static volatile LocalDataSourceRecipeCourse INSTANCE;
     private RecipeCourseEntityDao recipeCourseEntityDao;
     private AppExecutors appExecutors;
 
-    private RecipeCourseLocalDataSource(@NonNull AppExecutors appExecutors,
+    private LocalDataSourceRecipeCourse(@NonNull AppExecutors appExecutors,
                                         @NonNull RecipeCourseEntityDao recipeCourseEntityDao) {
         this.appExecutors = appExecutors;
         this.recipeCourseEntityDao = recipeCourseEntityDao;
     }
 
-    public static RecipeCourseLocalDataSource getInstance(
+    public static LocalDataSourceRecipeCourse getInstance(
             @NonNull AppExecutors appExecutors,
             @NonNull RecipeCourseEntityDao recipeCourseEntityDao) {
         if (INSTANCE == null) {
-            synchronized (RecipeCourseLocalDataSource.class) {
+            synchronized (LocalDataSourceRecipeCourse.class) {
                 if (INSTANCE == null)
-                    INSTANCE = new RecipeCourseLocalDataSource(appExecutors, recipeCourseEntityDao);
+                    INSTANCE = new LocalDataSourceRecipeCourse(appExecutors, recipeCourseEntityDao);
             }
         }
         return INSTANCE;

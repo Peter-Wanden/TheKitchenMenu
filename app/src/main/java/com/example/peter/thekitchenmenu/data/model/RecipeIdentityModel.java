@@ -11,15 +11,19 @@ public class RecipeIdentityModel {
     private final String title;
     @Nullable
     private final String description;
+    @NonNull
+    private final String recipeId;
     private final int prepTime;
     private final int cookTime;
 
     public RecipeIdentityModel(@NonNull String title,
                                @Nullable String description,
+                               @NonNull String recipeId,
                                int prepTime,
                                int cookTime) {
         this.title = title;
         this.description = description;
+        this.recipeId = recipeId;
         this.prepTime = prepTime;
         this.cookTime = cookTime;
     }
@@ -32,6 +36,11 @@ public class RecipeIdentityModel {
     @Nullable
     public String getDescription() {
         return description;
+    }
+
+    @NonNull
+    public String getRecipeId() {
+        return recipeId;
     }
 
     public int getPrepTime() {
@@ -50,12 +59,13 @@ public class RecipeIdentityModel {
         return prepTime == that.prepTime &&
                 cookTime == that.cookTime &&
                 title.equals(that.title) &&
-                description.equals(that.description);
+                description.equals(that.description) &&
+                recipeId.equals(that.recipeId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(title, description, prepTime, cookTime);
+        return Objects.hash(title, description, recipeId, prepTime, cookTime);
     }
 
     @Override
@@ -63,6 +73,7 @@ public class RecipeIdentityModel {
         return "RecipeIdentityModel{" +
                 "title='" + title + '\'' +
                 ", description='" + description + '\'' +
+                ", recipeId='" + recipeId + '\'' +
                 ", prepTime=" + prepTime +
                 ", cookTime=" + cookTime +
                 '}';

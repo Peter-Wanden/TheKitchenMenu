@@ -9,7 +9,7 @@ import androidx.lifecycle.AndroidViewModel;
 
 import com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
-import com.example.peter.thekitchenmenu.data.repository.FavoriteProductsDataSource;
+import com.example.peter.thekitchenmenu.data.repository.DataSourceFavoriteProducts;
 import com.example.peter.thekitchenmenu.ui.UnsavedChangesDialogFragment;
 import com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorActivity;
 import com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductEditorActivity;
@@ -24,7 +24,7 @@ public class FavoriteProductViewerViewModel
 
     private FavoriteProductViewerNavigator navigator;
 
-    private FavoriteProductsDataSource favoriteProductEntityDataSource;
+    private DataSourceFavoriteProducts favoriteProductEntityDataSource;
     public final ObservableBoolean dataIsLoading = new ObservableBoolean();
     public final ObservableField<FavoriteProductEntity> favoriteProduct = new ObservableField<>();
     public final ObservableBoolean isFavorite = new ObservableBoolean();
@@ -37,7 +37,7 @@ public class FavoriteProductViewerViewModel
 
     public FavoriteProductViewerViewModel(
             Application application,
-            FavoriteProductsDataSource favoriteProductEntityDataSource) {
+            DataSourceFavoriteProducts favoriteProductEntityDataSource) {
 
         super(application);
         this.favoriteProductEntityDataSource = favoriteProductEntityDataSource;

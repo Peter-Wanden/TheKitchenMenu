@@ -10,7 +10,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
 
-public class ParseIntegerFromObservable {
+public class ParseIntegerFromObservableHandler {
 
     private Resources resources;
 

@@ -7,10 +7,8 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity;
-import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
-import com.example.peter.thekitchenmenu.data.repository.FavoriteProductsDataSource;
+import com.example.peter.thekitchenmenu.data.repository.DataSourceFavoriteProducts;
 import com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.product.productviewer.FavoriteProductViewerViewModel;
 import com.example.peter.thekitchenmenu.utils.TextValidationHandler;
@@ -20,11 +18,11 @@ public class ViewModelFactoryFavoriteProduct extends ViewModelProvider.NewInstan
     @SuppressLint("StaticFieldLeak")
     private static volatile ViewModelFactoryFavoriteProduct INSTANCE;
     private final Application application;
-    private final FavoriteProductsDataSource favoriteProductEntityDataSource;
+    private final DataSourceFavoriteProducts favoriteProductEntityDataSource;
 
     private ViewModelFactoryFavoriteProduct(
             Application application,
-            FavoriteProductsDataSource favoriteProductEntityDataSource) {
+            DataSourceFavoriteProducts favoriteProductEntityDataSource) {
 
         this.application = application;
         this.favoriteProductEntityDataSource = favoriteProductEntityDataSource;

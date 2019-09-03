@@ -15,7 +15,8 @@ public final class RecipeIdentityEntity implements TkmEntity {
     public static final String RECIPE_ID = "recipeId";
     public static final String TITLE = "title";
     public static final String DESCRIPTION = "description";
-    public static final String CREATED_BY = "createdBy";
+    public static final String PREP_TIME = "prepTime";
+    public static final String COOK_TIME = "cookTime";
     public static final String CREATE_DATE = "createDate";
     public static final String LAST_UPDATE = "lastUpdate";
 
@@ -35,9 +36,11 @@ public final class RecipeIdentityEntity implements TkmEntity {
     @ColumnInfo(name = DESCRIPTION)
     private final String description;
 
-    @NonNull
-    @ColumnInfo(name = CREATED_BY)
-    private final String createdBy;
+    @ColumnInfo(name = PREP_TIME)
+    private final int prepTime;
+
+    @ColumnInfo(name = COOK_TIME)
+    private final int cookTime;
 
     @ColumnInfo(name = CREATE_DATE)
     private final long createDate;
@@ -49,14 +52,16 @@ public final class RecipeIdentityEntity implements TkmEntity {
                                 @NonNull String recipeId,
                                 @NonNull String title,
                                 String description,
-                                @NonNull String createdBy,
+                                int prepTime,
+                                int cookTime,
                                 long createDate,
                                 long lastUpdate) {
         this.id = id;
         this.recipeId = recipeId;
         this.title = title;
         this.description = description;
-        this.createdBy = createdBy;
+        this.prepTime = prepTime;
+        this.cookTime = cookTime;
         this.createDate = createDate;
         this.lastUpdate = lastUpdate;
     }
@@ -66,13 +71,14 @@ public final class RecipeIdentityEntity implements TkmEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RecipeIdentityEntity that = (RecipeIdentityEntity) o;
-        return createDate == that.createDate &&
+        return prepTime == that.prepTime &&
+                cookTime == that.cookTime &&
+                createDate == that.createDate &&
                 lastUpdate == that.lastUpdate &&
                 id.equals(that.id) &&
                 recipeId.equals(that.recipeId) &&
                 title.equals(that.title) &&
-                description.equals(that.description) &&
-                createdBy.equals(that.createdBy);
+                description.equals(that.description);
     }
 
     @Override
@@ -82,7 +88,8 @@ public final class RecipeIdentityEntity implements TkmEntity {
                 recipeId,
                 title,
                 description,
-                createdBy,
+                prepTime,
+                cookTime,
                 createDate,
                 lastUpdate);
     }
@@ -94,7 +101,8 @@ public final class RecipeIdentityEntity implements TkmEntity {
                 ", recipeId='" + recipeId + '\'' +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
-                ", createdBy='" + createdBy + '\'' +
+                ", prepTime=" + prepTime +
+                ", cookTime=" + cookTime +
                 ", createDate=" + createDate +
                 ", lastUpdate=" + lastUpdate +
                 '}';
@@ -120,9 +128,12 @@ public final class RecipeIdentityEntity implements TkmEntity {
         return description;
     }
 
-    @NonNull
-    public String getCreatedBy() {
-        return createdBy;
+    public int getPrepTime() {
+        return prepTime;
+    }
+
+    public int getCookTime() {
+        return cookTime;
     }
 
     public long getCreateDate() {
