@@ -2,7 +2,6 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 
 import android.content.res.Resources;
 
-import androidx.core.util.Pair;
 import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
 import androidx.lifecycle.MutableLiveData;
@@ -16,6 +15,8 @@ import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 
+import static com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidator.*;
+
 public class RecipeEditorViewModel
         extends ViewModel
         implements DataSource.GetEntityCallback<RecipeEntity> {
@@ -25,6 +26,8 @@ public class RecipeEditorViewModel
     private UniqueIdProvider idProvider;
     private Resources resources;
     private TimeProvider timeProvider;
+    private RecipeValidationStatus recipeValidationStatus = RecipeValidationStatus.INVALID_MISSING_MODELS;
+    private RecipeValidator validator;
 
     private final SingleLiveEvent<Void> showUnsavedChangesDialogEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<Integer> setActivityTitleEvent = new SingleLiveEvent<>();
@@ -40,16 +43,17 @@ public class RecipeEditorViewModel
 
     private boolean isNewRecipe;
     private boolean showReviewButton;
-    private boolean identityModelChanged;
 
     public RecipeEditorViewModel(TimeProvider timeProvider,
                                  DataSource<RecipeEntity> recipeEntityDataSource,
                                  UniqueIdProvider idProvider,
-                                 Resources resources) {
+                                 Resources resources,
+                                 RecipeValidator validator) {
         this.timeProvider = timeProvider;
         this.recipeEntityDataSource = recipeEntityDataSource;
         this.idProvider = idProvider;
         this.resources = resources;
+        this.validator = validator;
     }
 
     void setNavigator(AddEditRecipeNavigator navigator) {
@@ -128,11 +132,10 @@ public class RecipeEditorViewModel
         return enableReviewButtonEvent;
     }
 
-    void reportIdentityEntityChanges(Pair<Boolean, Boolean> identityEntityChanges) {
-        boolean modelIsValid = identityEntityChanges.first;
-        identityModelChanged = identityEntityChanges.second;
+    void reportRecipeModelStatus(RecipeModelStatus modelStatus) {
+        recipeValidationStatus = validator.getRecipeValidationStatus(modelStatus);
 
-        if (modelIsValid && identityModelChanged)
+        if (recipeValidationStatus == RecipeValidationStatus.VALID_HAS_CHANGES)
             showButtons();
         else
             hideButtons();
@@ -155,15 +158,11 @@ public class RecipeEditorViewModel
     }
 
     void upOrBackPressed() {
-        if (modelsHaveChanged()) {
+        if (recipeValidationStatus == RecipeValidationStatus.INVALID_HAS_CHANGES) {
             showUnsavedChangesDialogEvent.call();
         } else {
             navigator.cancelEditing();
         }
-    }
-
-    private boolean modelsHaveChanged() {
-        return identityModelChanged;
     }
 
     SingleLiveEvent<Void> getShowUnsavedChangesDialogEvent() {

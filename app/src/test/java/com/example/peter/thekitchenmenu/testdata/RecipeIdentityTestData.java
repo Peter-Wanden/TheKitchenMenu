@@ -18,5 +18,4 @@ public class RecipeIdentityTestData {
                 10L
         );
     }
-
 }
