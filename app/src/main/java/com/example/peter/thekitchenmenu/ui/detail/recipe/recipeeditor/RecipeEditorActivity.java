@@ -83,19 +83,18 @@ public class RecipeEditorActivity extends AppCompatActivity implements AddEditRe
     }
 
     private void setViewModelObservers() {
-        // Events
+        // Ui Events
         recipeEditorViewModel.getSetActivityTitleEvent().observe(this, this::setTitle);
         recipeEditorViewModel.getEnableReviewButtonEvent().observe(this, aVoid ->
                 invalidateOptionsMenu());
         recipeEditorViewModel.getShowUnsavedChangesDialogEvent().observe(this, aVoid ->
                 showUnsavedChangesDialogEvent());
 
-        // Populate models with entity
-        recipeEditorViewModel.getRecipeEntity().observe(this,
-                recipeEntity -> {
-                    recipeIdentityViewModel.onStart(recipeEntity.getId());
-                    recipeCourseSelectorViewModel.onStart(recipeEntity.getId());
-                });
+        // Start models with recipeId
+        recipeEditorViewModel.getRecipeIdLiveData().observe(this, recipeId -> {
+            recipeIdentityViewModel.onStart(recipeId);
+            recipeCourseSelectorViewModel.onStart(recipeId);
+        });
     }
 
     private static RecipeEditorViewModel obtainRecipeEditorViewModel(

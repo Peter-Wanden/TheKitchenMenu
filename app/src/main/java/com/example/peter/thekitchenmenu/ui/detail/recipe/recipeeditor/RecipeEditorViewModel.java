@@ -2,6 +2,7 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 
 import android.content.res.Resources;
 
+import androidx.core.util.Pair;
 import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
 import androidx.lifecycle.MutableLiveData;
@@ -10,7 +11,6 @@ import androidx.lifecycle.ViewModel;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
-import com.example.peter.thekitchenmenu.data.model.RecipeIdentityModel;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
@@ -34,13 +34,13 @@ public class RecipeEditorViewModel
     public final ObservableField<String> ingredientsButtonTextObservable = new ObservableField<>();
     public final ObservableBoolean dataIsLoadingObservable = new ObservableBoolean();
 
-    // Models listen to this recipeEntityLiveData for their initial values
+    // the listener attached to this live data starts the other recipe models
+    private final MutableLiveData<String> recipeIdLiveData = new MutableLiveData<>();
     private final MutableLiveData<RecipeEntity> recipeEntity = new MutableLiveData<>();
 
-    private RecipeIdentityModel identityModel;
     private boolean isNewRecipe;
-    private boolean identityModelChanged;
     private boolean showReviewButton;
+    private boolean identityModelChanged;
 
     public RecipeEditorViewModel(TimeProvider timeProvider,
                                  DataSource<RecipeEntity> recipeEntityDataSource,
@@ -67,6 +67,7 @@ public class RecipeEditorViewModel
     private void setupForNewRecipe() {
         isNewRecipe = true;
         recipeEntity.setValue(getEmptyRecipe());
+        recipeIdLiveData.setValue(recipeEntity.getValue().getId());
         setActivityTitleEvent.setValue(R.string.activity_title_add_new_recipe);
         setIngredientsButton();
     }
@@ -95,6 +96,7 @@ public class RecipeEditorViewModel
     private void setupForExistingRecipe(RecipeEntity recipeEntity) {
         isNewRecipe = false;
         this.recipeEntity.setValue(recipeEntity);
+        recipeIdLiveData.setValue(recipeEntity.getId());
         setActivityTitleEvent.setValue(R.string.activity_title_edit_recipe);
         setIngredientsButton();
     }
@@ -114,8 +116,8 @@ public class RecipeEditorViewModel
         }
     }
 
-    MutableLiveData<RecipeEntity> getRecipeEntity() {
-        return recipeEntity;
+    MutableLiveData<String> getRecipeIdLiveData() {
+        return recipeIdLiveData;
     }
 
     SingleLiveEvent<Integer> getSetActivityTitleEvent() {
@@ -126,16 +128,14 @@ public class RecipeEditorViewModel
         return enableReviewButtonEvent;
     }
 
-    void setRecipeIdentityModel(RecipeIdentityModelMetaData identityModelMetaData) {
-        identityModel = identityModelMetaData.getIdentityModel();
-        boolean validIdentityModel = identityModelMetaData.isValidModel();
-        identityModelChanged = identityModelMetaData.isModelChanged();
+    void reportIdentityEntityChanges(Pair<Boolean, Boolean> identityEntityChanges) {
+        boolean modelIsValid = identityEntityChanges.first;
+        identityModelChanged = identityEntityChanges.second;
 
-        if (validIdentityModel && identityModelChanged) {
+        if (modelIsValid && identityModelChanged)
             showButtons();
-        } else {
+        else
             hideButtons();
-        }
     }
 
     private void showButtons() {
@@ -231,10 +231,6 @@ public class RecipeEditorViewModel
         return new RecipeEntity(
                 id,
                 id,
-                "",
-                "",
-                0,
-                0,
                 Constants.getUserId().getValue(),
                 timeStamp,
                 timeStamp
@@ -247,10 +243,6 @@ public class RecipeEditorViewModel
         return new RecipeEntity(
                 id,
                 id,
-                identityModel.getTitle(),
-                identityModel.getDescription(),
-                identityModel.getPrepTime(),
-                identityModel.getCookTime(),
                 Constants.getUserId().getValue(),
                 timeStamp,
                 timeStamp
@@ -261,10 +253,6 @@ public class RecipeEditorViewModel
         return new RecipeEntity(
                 recipeEntity.getValue().getId(),
                 recipeEntity.getValue().getId(),
-                identityModel.getTitle(),
-                identityModel.getDescription(),
-                identityModel.getPrepTime(),
-                identityModel.getCookTime(),
                 recipeEntity.getValue().getCreatedBy(),
                 recipeEntity.getValue().getCreateDate(),
                 timeProvider.getCurrentTimestamp()
@@ -276,10 +264,6 @@ public class RecipeEditorViewModel
         return new RecipeEntity(
                 idProvider.getUId(),
                 recipeEntity.getValue().getId(),
-                recipeEntity.getValue().getTitle(),
-                identityModel.getDescription(),
-                identityModel.getPrepTime(),
-                identityModel.getCookTime(),
                 recipeEntity.getValue().getCreatedBy(),
                 timeStamp,
                 timeStamp

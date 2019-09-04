@@ -3,14 +3,13 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 import android.content.res.Resources;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
-import androidx.lifecycle.Observer;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
-import com.example.peter.thekitchenmenu.data.model.RecipeIdentityModel;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.DataSourceRecipeIdentity;
+import com.example.peter.thekitchenmenu.testdata.RecipeIdentityTestData;
 import com.example.peter.thekitchenmenu.utils.ParseIntegerFromObservableHandler;
 import com.example.peter.thekitchenmenu.utils.TextValidationHandler;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
@@ -40,18 +39,18 @@ public class RecipeIdentityViewModelTest {
     // region constants ----------------------------------------------------------------------------
     private static final RecipeEntity VALID_EXISTING_RECIPE_ENTITY = getValidExistingRecipeEntity();
     private static final String VALID_EXISTING_RECIPE_ID = VALID_EXISTING_RECIPE_ENTITY.getId();
-    private static final RecipeIdentityModel VALID_EXISTING_IDENTITY_MODEL =
-            getValidExistingRecipeIdentityModelData();
     private static final RecipeIdentityEntity VALID_EXISTING_IDENTITY_ENTITY =
-            getValidRecipeIdentityEntity();
+            RecipeIdentityTestData.getValidRecipeIdentityEntity();
 
-    private static final String VALID_EXISTING_TITLE = VALID_EXISTING_RECIPE_ENTITY.getTitle();
-    private static final String VALID_EXISTING_DESCRIPTION = VALID_EXISTING_RECIPE_ENTITY.getDescription();
-    private static final int VALID_EXISTING_PREP_TIME = VALID_EXISTING_RECIPE_ENTITY.getPreparationTime();
-    private static final int VALID_EXISTING_COOK_TIME = VALID_EXISTING_RECIPE_ENTITY.getCookingTime();
+    private static final String VALID_EXISTING_IDENTITY_ID = VALID_EXISTING_IDENTITY_ENTITY.getId();
+    private static final String VALID_EXISTING_TITLE = VALID_EXISTING_IDENTITY_ENTITY.getTitle();
+    private static final String VALID_EXISTING_DESCRIPTION = VALID_EXISTING_IDENTITY_ENTITY.getDescription();
+    private static final int VALID_EXISTING_PREP_TIME = VALID_EXISTING_IDENTITY_ENTITY.getPrepTime();
+    private static final int VALID_EXISTING_COOK_TIME = VALID_EXISTING_IDENTITY_ENTITY.getCookTime();
+    private static final long VALID_EXISTING_CREATE_DATE = VALID_EXISTING_IDENTITY_ENTITY.getCreateDate();
+    private static final long VALID_EXISTING_LAST_UPDATE = VALID_EXISTING_IDENTITY_ENTITY.getLastUpdate();
 
     private static final String VALIDATED = TextValidationHandler.VALIDATED;
-    private static final RecipeEntity EMPTY_RECIPE_ENTITY = getEmptyRecipeEntity();
 
     private static final String INVALID_TITLE = "ti";
     private static final String INVALID_DESCRIPTION = "de";
@@ -72,8 +71,6 @@ public class RecipeIdentityViewModelTest {
     Resources resourcesMock;
     @Mock
     TextValidationHandler textValidationHandlerMock;
-    @Mock
-    Observer<RecipeIdentityModelMetaData> identityModelMetaDataObserverMock;
     @Mock
     ParseIntegerFromObservableHandler intFromObservableMock;
     @Captor
@@ -139,7 +136,7 @@ public class RecipeIdentityViewModelTest {
         SUT.onStart(VALID_EXISTING_RECIPE_ID);
         simulateGetValidRecipeIdentityEntityFromDatabase();
         // Assert
-        assertEquals(getValidRecipeIdentityEntity().getTitle(), SUT.titleObservable.get());
+        assertEquals(VALID_EXISTING_TITLE, SUT.titleObservable.get());
     }
 
     @Test
@@ -242,14 +239,14 @@ public class RecipeIdentityViewModelTest {
     public void observableTitleUpdatedWithValidValue_allOtherFieldsEmpty_entitySavedToDatabase() throws Exception {
         // Arrange
         RecipeIdentityEntity identityEntity = new RecipeIdentityEntity(
-                getValidRecipeIdentityEntity().getId(),
+                VALID_EXISTING_IDENTITY_ID,
                 VALID_EXISTING_RECIPE_ID,
                 VALID_EXISTING_TITLE,
                 "",
                 0,
                 0,
-                getValidRecipeIdentityEntity().getCreateDate(),
-                getValidRecipeIdentityEntity().getLastUpdate()
+                VALID_EXISTING_CREATE_DATE,
+                VALID_EXISTING_LAST_UPDATE
         );
         whenShortTextValidationReturnValidated();
         whenIdProviderThenReturnExistingRecipeId();
@@ -461,18 +458,18 @@ public class RecipeIdentityViewModelTest {
         verify(identityDataSourceMock).getByRecipeId(eq(VALID_EXISTING_RECIPE_ID),
                 getEntityCallbackArgumentCaptor.capture());
         // simulate no recipe identity returned
-        getEntityCallbackArgumentCaptor.getValue().onEntityLoaded(getValidRecipeIdentityEntity());
+        getEntityCallbackArgumentCaptor.getValue().onEntityLoaded(VALID_EXISTING_IDENTITY_ENTITY);
     }
 
     private void whenTextValidationValidateTitleAndDescription() {
         when(textValidationHandlerMock.validateShortText(
                 eq(resourcesMock),
-                eq(getValidRecipeIdentityEntity().getTitle()))).
+                eq(VALID_EXISTING_IDENTITY_ENTITY.getTitle()))).
                 thenReturn(VALIDATED);
 
         when(textValidationHandlerMock.validateLongText(
                 eq(resourcesMock),
-                eq(getValidRecipeIdentityEntity().getDescription()))).
+                eq(VALID_EXISTING_IDENTITY_ENTITY.getDescription()))).
                 thenReturn(VALIDATED);
     }
 
@@ -516,12 +513,12 @@ public class RecipeIdentityViewModelTest {
     }
     private void whenIdProviderThenReturnExistingRecipeId() {
         when(uniqueIdProviderMock.getUId()).thenReturn(
-                getValidRecipeIdentityEntity().getId());
+                VALID_EXISTING_IDENTITY_ENTITY.getId());
     }
 
     private void whenTimeProviderThenReturnExistingRecipeCreateDate() {
         when(timeProviderMock.getCurrentTimestamp()).thenReturn(
-                getValidRecipeIdentityEntity().getCreateDate());
+                VALID_EXISTING_IDENTITY_ENTITY.getCreateDate());
     }
     // endregion helper methods --------------------------------------------------------------------
 

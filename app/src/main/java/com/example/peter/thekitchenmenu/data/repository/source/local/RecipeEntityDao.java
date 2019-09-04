@@ -12,12 +12,11 @@ import java.util.List;
 
 import static com.example.peter.thekitchenmenu.data.entity.RecipeEntity.ID;
 import static com.example.peter.thekitchenmenu.data.entity.RecipeEntity.TABLE_RECIPE;
-import static com.example.peter.thekitchenmenu.data.entity.RecipeEntity.TITLE;
 
 @Dao
 public interface RecipeEntityDao {
 
-    @Query("SELECT * FROM " + TABLE_RECIPE + " ORDER BY " + TITLE)
+    @Query("SELECT * FROM " + TABLE_RECIPE)
     List<RecipeEntity> getAll();
 
     @Query("SELECT * FROM " + TABLE_RECIPE + " WHERE " + ID + " = :id")
