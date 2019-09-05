@@ -19,7 +19,8 @@ import static com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.Rec
 
 public class RecipeEditorViewModel
         extends ViewModel
-        implements DataSource.GetEntityCallback<RecipeEntity> {
+        implements
+        DataSource.GetEntityCallback<RecipeEntity>, RecipeValidation.RecipeEditor {
 
     private DataSource<RecipeEntity> recipeEntityDataSource;
     private AddEditRecipeNavigator navigator;
@@ -54,6 +55,7 @@ public class RecipeEditorViewModel
         this.idProvider = idProvider;
         this.resources = resources;
         this.validator = validator;
+        validator.setRecipeEditor(this);
     }
 
     void setNavigator(AddEditRecipeNavigator navigator) {
@@ -132,8 +134,22 @@ public class RecipeEditorViewModel
         return enableReviewButtonEvent;
     }
 
+    public RecipeValidator getValidator() {
+        return validator;
+    }
+
     void reportRecipeModelStatus(RecipeModelStatus modelStatus) {
         recipeValidationStatus = validator.getRecipeValidationStatus(modelStatus);
+
+        if (recipeValidationStatus == RecipeValidationStatus.VALID_HAS_CHANGES)
+            showButtons();
+        else
+            hideButtons();
+    }
+
+    @Override
+    public void setRecipeValidationStatus(RecipeValidationStatus recipeValidationStatus) {
+        this.recipeValidationStatus = recipeValidationStatus;
 
         if (recipeValidationStatus == RecipeValidationStatus.VALID_HAS_CHANGES)
             showButtons();

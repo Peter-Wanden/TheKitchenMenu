@@ -27,8 +27,7 @@ public class RecipeIdentityViewModel
     private DataSourceRecipeIdentity recipeIdentityDataSource;
     private TimeProvider timeProvider;
     private UniqueIdProvider idProvider;
-
-    private String recipeId;
+    private RecipeValidation.RecipeValidatorModelSubmission modelSubmitter;
 
     public final ObservableField<String> titleObservable = new ObservableField<>("");
     public final ObservableField<String> descriptionObservable = new ObservableField<>("");
@@ -43,7 +42,7 @@ public class RecipeIdentityViewModel
     public final ObservableField<String> cookTimeErrorMessage = new ObservableField<>();
 
     private RecipeIdentityEntity existingIdentityEntity;
-
+    private String recipeId;
     private int prepHours;
     private int prepMinutes;
     private int cookHours;
@@ -114,6 +113,10 @@ public class RecipeIdentityViewModel
         } else {
             throw new RuntimeException("Recipe id cannot be null");
         }
+    }
+
+    void setModelSubmitter(RecipeValidation.RecipeValidatorModelSubmission modelSubmitter) {
+        this.modelSubmitter = modelSubmitter;
     }
 
     @Override

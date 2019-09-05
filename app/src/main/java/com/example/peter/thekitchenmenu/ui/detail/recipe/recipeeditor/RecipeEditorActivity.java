@@ -79,7 +79,10 @@ public class RecipeEditorActivity extends AppCompatActivity implements AddEditRe
         binding.setViewModel(recipeEditorViewModel);
 
         recipeIdentityViewModel = obtainIdentityViewModel(this);
+        recipeIdentityViewModel.setModelSubmitter(recipeEditorViewModel.getValidator());
+
         recipeCourseSelectorViewModel = obtainRecipeCourseSelectorViewModel(this);
+        recipeCourseSelectorViewModel.setModelSubmitter(recipeEditorViewModel.getValidator());
     }
 
     private void setViewModelObservers() {

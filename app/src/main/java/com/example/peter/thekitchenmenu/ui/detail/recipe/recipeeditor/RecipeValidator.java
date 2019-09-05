@@ -1,13 +1,11 @@
 package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 
-import androidx.annotation.VisibleForTesting;
-
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import static com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidator.RecipeValidationStatus.*;
 
-public class RecipeValidator {
+public class RecipeValidator implements RecipeValidation.RecipeValidatorModelSubmission {
 
     enum RecipeValidationStatus {
         INVALID_MISSING_MODELS,
@@ -22,15 +20,26 @@ public class RecipeValidator {
         COURSES_MODEL
     }
 
+    private RecipeValidation.RecipeEditor recipeEditor;
     private HashMap<ModelName, RecipeModelStatus> recipeModelStatusList = new LinkedHashMap<>();
     private final int numberOfModels = ModelName.values().length;
 
-    RecipeValidationStatus getRecipeValidationStatus(RecipeModelStatus modelStatus) {
-        recipeModelStatusList.put(modelStatus.getModelName(), modelStatus);
-        return checkRecipeValidationStatus();
+    void setRecipeEditor(RecipeValidation.RecipeEditor recipeEditor) {
+        this.recipeEditor = recipeEditor;
     }
 
-    private RecipeValidationStatus checkRecipeValidationStatus() {
+    @Override
+    public void submitModelStatus(RecipeModelStatus modelStatus) {
+        recipeModelStatusList.put(modelStatus.getModelName(), modelStatus);
+        recipeEditor.setRecipeValidationStatus(getRecipeValidationStatus());
+    }
+
+    RecipeValidationStatus getRecipeValidationStatus(RecipeModelStatus modelStatus) {
+        recipeModelStatusList.put(modelStatus.getModelName(), modelStatus);
+        return getRecipeValidationStatus();
+    }
+
+    private RecipeValidationStatus getRecipeValidationStatus() {
         int numberOfModelsInList = recipeModelStatusList.size();
 
         if (numberOfModels == numberOfModelsInList) {

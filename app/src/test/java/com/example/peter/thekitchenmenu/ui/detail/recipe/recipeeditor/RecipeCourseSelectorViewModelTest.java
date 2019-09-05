@@ -2,10 +2,8 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 
-import com.example.peter.thekitchenmenu.data.entity.RecipeCourseEntity;
-import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
-import com.example.peter.thekitchenmenu.data.repository.DataSource;
-import com.example.peter.thekitchenmenu.data.repository.DataSourceRecipeCourse;
+import com.example.peter.thekitchenmenu.data.entity.*;
+import com.example.peter.thekitchenmenu.data.repository.*;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 
 import org.junit.*;
@@ -15,6 +13,7 @@ import java.util.ArrayList;
 
 import static com.example.peter.thekitchenmenu.testdata.RecipeCourseTestData.*;
 import static com.example.peter.thekitchenmenu.testdata.RecipeTestData.*;
+import static com.example.peter.thekitchenmenu.testdata.RecipeValidatorTestData.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -23,6 +22,11 @@ public class RecipeCourseSelectorViewModelTest {
     // region constants ----------------------------------------------------------------------------
     private static final RecipeEntity VALID_EXISTING_RECIPE_ENTITY = getValidExistingRecipeEntity();
     private static final String VALID_EXISTING_RECIPE_ID = VALID_EXISTING_RECIPE_ENTITY.getId();
+
+    private RecipeModelStatus COURSES_MODEL_UNCHANGED_INVALID = getCoursesModelStatusUnchangedInvalid();
+    private RecipeModelStatus COURSES_MODEL_UNCHANGED_VALID = getCoursesModelStatusUnchangedValid();
+    private RecipeModelStatus COURSES_MODEL_CHANGED_INVALID = getCoursesModelStatusChangedInvalid();
+    private RecipeModelStatus COURSES_MODEL_CHANGED_VALID = getCoursesModelStatusChangedValid();
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
@@ -34,7 +38,8 @@ public class RecipeCourseSelectorViewModelTest {
     DataSourceRecipeCourse dataSourceRecipeCourseMock;
     @Mock
     UniqueIdProvider idProviderMock;
-
+    @Mock
+    RecipeValidation.RecipeValidatorModelSubmission modelSubmissionMock;
     // endregion helper fields ---------------------------------------------------------------------
 
     private RecipeCourseSelectorViewModel SUT;
@@ -43,13 +48,14 @@ public class RecipeCourseSelectorViewModelTest {
     public void setup() throws Exception {
         MockitoAnnotations.initMocks(this);
         SUT = new RecipeCourseSelectorViewModel(dataSourceRecipeCourseMock, idProviderMock);
+        SUT.setModelSubmitter(modelSubmissionMock);
+        SUT.onStart(VALID_EXISTING_RECIPE_ID);
     }
 
     @Test
     public void onStart_recipeIdSupplied_databaseCalledForListOfCourses() throws Exception {
         // Arrange
         // Act
-        SUT.onStart(VALID_EXISTING_RECIPE_ID);
         // Assert
         verify(dataSourceRecipeCourseMock).getCoursesForRecipe(eq(VALID_EXISTING_RECIPE_ID),
                 getEntityCallbackArgumentCaptor.capture());
@@ -59,8 +65,7 @@ public class RecipeCourseSelectorViewModelTest {
     public void onStart_recipeIdSupplied_observersCalled() throws Exception {
         // Arrange
         // Act
-        SUT.onStart(VALID_EXISTING_RECIPE_ID);
-        simulateGetCoursesForRecipeFromDatabase();
+        simulateGetAllCoursesForRecipeFromDatabase();
         // Assert
         assertTrue(SUT.courseZeroObservable.get());
         assertTrue(SUT.courseOneObservable.get());
@@ -76,7 +81,6 @@ public class RecipeCourseSelectorViewModelTest {
     public void onStart_recipeIdSupplied_evenObserversCalledOnly() throws Exception {
         // Arrange
         // Act
-        SUT.onStart(VALID_EXISTING_RECIPE_ID);
         simulateGetEvenCoursesForRecipeFromDatabase();
         // Assert
         assertTrue(SUT.courseZeroObservable.get());
@@ -94,7 +98,6 @@ public class RecipeCourseSelectorViewModelTest {
         // Arrange
         when(idProviderMock.getUId()).thenReturn(getRecipeCourseZero().getId());
         // Act
-        SUT.onStart(VALID_EXISTING_RECIPE_ID);
         SUT.courseZeroObservable.set(true);
         // Assert
         verify(dataSourceRecipeCourseMock).save(getRecipeCourseZero());
@@ -105,8 +108,7 @@ public class RecipeCourseSelectorViewModelTest {
         // Arrange
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
         // Act
-        SUT.onStart(VALID_EXISTING_RECIPE_ID);
-        simulateGetCoursesForRecipeFromDatabase();
+        simulateGetAllCoursesForRecipeFromDatabase();
         SUT.courseZeroObservable.set(false);
         // Assert
         verify(dataSourceRecipeCourseMock).deleteById(ac.capture());
@@ -118,7 +120,6 @@ public class RecipeCourseSelectorViewModelTest {
         // Arrange
         when(idProviderMock.getUId()).thenReturn(getRecipeCourseOne().getId());
         // Act
-        SUT.onStart(VALID_EXISTING_RECIPE_ID);
         SUT.courseOneObservable.set(true);
         // Assert
         verify(dataSourceRecipeCourseMock).save(getRecipeCourseOne());
@@ -129,8 +130,7 @@ public class RecipeCourseSelectorViewModelTest {
         // Arrange
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
         // Act
-        SUT.onStart(VALID_EXISTING_RECIPE_ID);
-        simulateGetCoursesForRecipeFromDatabase();
+        simulateGetAllCoursesForRecipeFromDatabase();
         SUT.courseOneObservable.set(false);
         // Assert
         verify(dataSourceRecipeCourseMock).deleteById(ac.capture());
@@ -142,7 +142,6 @@ public class RecipeCourseSelectorViewModelTest {
         // Arrange
         when(idProviderMock.getUId()).thenReturn(getRecipeCourseTwo().getId());
         // Act
-        SUT.onStart(VALID_EXISTING_RECIPE_ID);
         SUT.courseTwoObservable.set(true);
         // Assert
         verify(dataSourceRecipeCourseMock).save(getRecipeCourseTwo());
@@ -153,8 +152,7 @@ public class RecipeCourseSelectorViewModelTest {
         // Arrange
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
         // Act
-        SUT.onStart(VALID_EXISTING_RECIPE_ID);
-        simulateGetCoursesForRecipeFromDatabase();
+        simulateGetAllCoursesForRecipeFromDatabase();
         SUT.courseTwoObservable.set(false);
         // Assert
         verify(dataSourceRecipeCourseMock).deleteById(ac.capture());
@@ -166,7 +164,6 @@ public class RecipeCourseSelectorViewModelTest {
         // Arrange
         when(idProviderMock.getUId()).thenReturn(getRecipeCourseThree().getId());
         // Act
-        SUT.onStart(VALID_EXISTING_RECIPE_ID);
         SUT.courseThreeObservable.set(true);
         // Assert
         verify(dataSourceRecipeCourseMock).save(getRecipeCourseThree());
@@ -177,8 +174,7 @@ public class RecipeCourseSelectorViewModelTest {
         // Arrange
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
         // Act
-        SUT.onStart(VALID_EXISTING_RECIPE_ID);
-        simulateGetCoursesForRecipeFromDatabase();
+        simulateGetAllCoursesForRecipeFromDatabase();
         SUT.courseThreeObservable.set(false);
         // Assert
         verify(dataSourceRecipeCourseMock).deleteById(ac.capture());
@@ -190,7 +186,6 @@ public class RecipeCourseSelectorViewModelTest {
         // Arrange
         when(idProviderMock.getUId()).thenReturn(getRecipeCourseFour().getId());
         // Act
-        SUT.onStart(VALID_EXISTING_RECIPE_ID);
         SUT.courseFourObservable.set(true);
         // Assert
         verify(dataSourceRecipeCourseMock).save(getRecipeCourseFour());
@@ -201,8 +196,7 @@ public class RecipeCourseSelectorViewModelTest {
         // Arrange
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
         // Act
-        SUT.onStart(VALID_EXISTING_RECIPE_ID);
-        simulateGetCoursesForRecipeFromDatabase();
+        simulateGetAllCoursesForRecipeFromDatabase();
         SUT.courseFourObservable.set(false);
         // Assert
         verify(dataSourceRecipeCourseMock).deleteById(ac.capture());
@@ -214,7 +208,6 @@ public class RecipeCourseSelectorViewModelTest {
         // Arrange
         when(idProviderMock.getUId()).thenReturn(getRecipeCourseFive().getId());
         // Act
-        SUT.onStart(VALID_EXISTING_RECIPE_ID);
         SUT.courseFiveObservable.set(true);
         // Assert
         verify(dataSourceRecipeCourseMock).save(getRecipeCourseFive());
@@ -225,8 +218,7 @@ public class RecipeCourseSelectorViewModelTest {
         // Arrange
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
         // Act
-        SUT.onStart(VALID_EXISTING_RECIPE_ID);
-        simulateGetCoursesForRecipeFromDatabase();
+        simulateGetAllCoursesForRecipeFromDatabase();
         SUT.courseFiveObservable.set(false);
         // Assert
         verify(dataSourceRecipeCourseMock).deleteById(ac.capture());
@@ -238,7 +230,6 @@ public class RecipeCourseSelectorViewModelTest {
         // Arrange
         when(idProviderMock.getUId()).thenReturn(getRecipeCourseSix().getId());
         // Act
-        SUT.onStart(VALID_EXISTING_RECIPE_ID);
         SUT.courseSixObservable.set(true);
         // Assert
         verify(dataSourceRecipeCourseMock).save(getRecipeCourseSix());
@@ -249,8 +240,7 @@ public class RecipeCourseSelectorViewModelTest {
         // Arrange
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
         // Act
-        SUT.onStart(VALID_EXISTING_RECIPE_ID);
-        simulateGetCoursesForRecipeFromDatabase();
+        simulateGetAllCoursesForRecipeFromDatabase();
         SUT.courseSixObservable.set(false);
         // Assert
         verify(dataSourceRecipeCourseMock).deleteById(ac.capture());
@@ -262,7 +252,6 @@ public class RecipeCourseSelectorViewModelTest {
         // Arrange
         when(idProviderMock.getUId()).thenReturn(getRecipeCourseSeven().getId());
         // Act
-        SUT.onStart(VALID_EXISTING_RECIPE_ID);
         SUT.courseSevenObservable.set(true);
         // Assert
         verify(dataSourceRecipeCourseMock).save(getRecipeCourseSeven());
@@ -273,8 +262,7 @@ public class RecipeCourseSelectorViewModelTest {
         // Arrange
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
         // Act
-        SUT.onStart(VALID_EXISTING_RECIPE_ID);
-        simulateGetCoursesForRecipeFromDatabase();
+        simulateGetAllCoursesForRecipeFromDatabase();
         SUT.courseSevenObservable.set(false);
         // Assert
         verify(dataSourceRecipeCourseMock).deleteById(ac.capture());
@@ -292,9 +280,72 @@ public class RecipeCourseSelectorViewModelTest {
         assertEquals(exception.getMessage(), "This should throw an error!");
     }
 
+    @Test
+    public void onStart_recipeIdSupplied_COURSES_MODEL_UNCHANGED_INVALID() throws Exception {
+        // Arrange
+        ArgumentCaptor<RecipeModelStatus> ac = ArgumentCaptor.forClass(RecipeModelStatus.class);
+        // Act
+        simulateReturnNoCoursesForRecipeFromDatabase();
+        // Assert
+        verify(modelSubmissionMock).submitModelStatus(ac.capture());
+        RecipeModelStatus modelStatus = ac.getValue();
+        assertEquals(COURSES_MODEL_UNCHANGED_INVALID, modelStatus);
+    }
+
+    @Test
+    public void onStart_recipeIdSupplied_COURSES_MODEL_UNCHANGED_VALID() throws Exception {
+        // Arrange
+        ArgumentCaptor<RecipeModelStatus> ac = ArgumentCaptor.forClass(RecipeModelStatus.class);
+        // Act
+        simulateGetAllCoursesForRecipeFromDatabase();
+        // Assert
+        verify(modelSubmissionMock).submitModelStatus(ac.capture());
+        RecipeModelStatus modelStatus = ac.getValue();
+        assertEquals(COURSES_MODEL_UNCHANGED_VALID, modelStatus);
+    }
+
+    @Test
+    public void allOptionsDeselected_recipeIdSupplied_COURSES_MODEL_CHANGED_INVALID() throws Exception {
+        // Arrange
+        ArgumentCaptor<RecipeModelStatus> ac = ArgumentCaptor.forClass(RecipeModelStatus.class);
+        // Act
+        simulateGetAllCoursesForRecipeFromDatabase();
+        SUT.courseZeroObservable.set(false);
+        SUT.courseOneObservable.set(false);
+        SUT.courseTwoObservable.set(false);
+        SUT.courseThreeObservable.set(false);
+        SUT.courseFourObservable.set(false);
+        SUT.courseFiveObservable.set(false);
+        SUT.courseSixObservable.set(false);
+        SUT.courseSevenObservable.set(false);
+        // Assert
+        verify(modelSubmissionMock, times(9)).submitModelStatus(ac.capture());
+        RecipeModelStatus modelStatus = ac.getValue();
+        assertEquals(COURSES_MODEL_CHANGED_INVALID, modelStatus);
+    }
+
+    @Test
+    public void allButOneOptionsDeselected_recipeIdSupplied_modelStatusChangedValid() throws Exception {
+        // Arrange
+        ArgumentCaptor<RecipeModelStatus> ac = ArgumentCaptor.forClass(RecipeModelStatus.class);
+        // Act
+        simulateGetAllCoursesForRecipeFromDatabase();
+        SUT.courseZeroObservable.set(false);
+        SUT.courseOneObservable.set(false);
+        SUT.courseTwoObservable.set(false);
+        SUT.courseThreeObservable.set(false);
+        SUT.courseFourObservable.set(false);
+        SUT.courseFiveObservable.set(false);
+        SUT.courseSixObservable.set(false);
+        // Assert
+        verify(modelSubmissionMock, times(8)).submitModelStatus(ac.capture());
+        RecipeModelStatus modelStatus = ac.getValue();
+        assertEquals(COURSES_MODEL_CHANGED_VALID, modelStatus);
+    }
+
     // region helper methods -----------------------------------------------------------------------
-    private void simulateGetCoursesForRecipeFromDatabase() {
-        // call database with recipe id
+    private void simulateGetAllCoursesForRecipeFromDatabase() {
+        // verify call database with recipe id
         verify(dataSourceRecipeCourseMock).getCoursesForRecipe(eq(VALID_EXISTING_RECIPE_ID),
                 getEntityCallbackArgumentCaptor.capture());
         // simulate list of courses returned
@@ -303,12 +354,20 @@ public class RecipeCourseSelectorViewModelTest {
     }
 
     private void simulateGetEvenCoursesForRecipeFromDatabase() {
-        // call database with recipe id
+        // verify call database with recipe id
         verify(dataSourceRecipeCourseMock).getCoursesForRecipe(eq(VALID_EXISTING_RECIPE_ID),
                 getEntityCallbackArgumentCaptor.capture());
         // simulate list of courses returned
         getEntityCallbackArgumentCaptor.getValue().onAllLoaded(
                 getEvenRecipeCoursesDatabaseResponse());
+    }
+
+    private void simulateReturnNoCoursesForRecipeFromDatabase() {
+        // verify call database with recipe id
+        verify(dataSourceRecipeCourseMock).getCoursesForRecipe(eq(VALID_EXISTING_RECIPE_ID),
+                getEntityCallbackArgumentCaptor.capture());
+        // simulate list no courses returned
+        getEntityCallbackArgumentCaptor.getValue().onDataNotAvailable();
     }
     // endregion helper methods --------------------------------------------------------------------
 
