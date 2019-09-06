@@ -1,6 +1,7 @@
 package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 
 import android.content.res.Resources;
+import android.util.Log;
 
 import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
@@ -16,18 +17,21 @@ import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 
 import static com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidator.*;
+import static com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidator.RecipeValidationStatus.*;
 
 public class RecipeEditorViewModel
         extends ViewModel
         implements
         DataSource.GetEntityCallback<RecipeEntity>, RecipeValidation.RecipeEditor {
 
+    private static final String TAG = "tkm-RecipeEditorVM";
+
     private DataSource<RecipeEntity> recipeEntityDataSource;
     private AddEditRecipeNavigator navigator;
     private UniqueIdProvider idProvider;
     private Resources resources;
     private TimeProvider timeProvider;
-    private RecipeValidationStatus recipeValidationStatus = RecipeValidationStatus.INVALID_MISSING_MODELS;
+    private RecipeValidationStatus recipeValidationStatus = INVALID_MISSING_MODELS;
     private RecipeValidator validator;
 
     private final SingleLiveEvent<Void> showUnsavedChangesDialogEvent = new SingleLiveEvent<>();
@@ -38,9 +42,9 @@ public class RecipeEditorViewModel
     public final ObservableField<String> ingredientsButtonTextObservable = new ObservableField<>();
     public final ObservableBoolean dataIsLoadingObservable = new ObservableBoolean();
 
-    // the listener attached to this live data starts the other recipe models
+    // the listener attached to this live data starts all other recipe view models
     private final MutableLiveData<String> recipeIdLiveData = new MutableLiveData<>();
-    private final MutableLiveData<RecipeEntity> recipeEntity = new MutableLiveData<>();
+    private RecipeEntity recipeEntity;
 
     private boolean isNewRecipe;
     private boolean showReviewButton;
@@ -72,8 +76,8 @@ public class RecipeEditorViewModel
 
     private void setupForNewRecipe() {
         isNewRecipe = true;
-        recipeEntity.setValue(getEmptyRecipe());
-        recipeIdLiveData.setValue(recipeEntity.getValue().getId());
+        recipeEntity = getEmptyRecipe();
+        recipeIdLiveData.setValue(recipeEntity.getId());
         setActivityTitleEvent.setValue(R.string.activity_title_add_new_recipe);
         setIngredientsButton();
     }
@@ -101,10 +105,14 @@ public class RecipeEditorViewModel
 
     private void setupForExistingRecipe(RecipeEntity recipeEntity) {
         isNewRecipe = false;
-        this.recipeEntity.setValue(recipeEntity);
+        this.recipeEntity = recipeEntity;
         recipeIdLiveData.setValue(recipeEntity.getId());
         setActivityTitleEvent.setValue(R.string.activity_title_edit_recipe);
         setIngredientsButton();
+    }
+
+    SingleLiveEvent<Integer> getSetActivityTitleEvent() {
+        return setActivityTitleEvent;
     }
 
     private void setIngredientsButton() {
@@ -121,37 +129,24 @@ public class RecipeEditorViewModel
             throwUnknownEditingModeException();
         }
     }
+    SingleLiveEvent<Void> getEnableReviewButtonEvent() {
+        return enableReviewButtonEvent;
+    }
 
     MutableLiveData<String> getRecipeIdLiveData() {
         return recipeIdLiveData;
     }
 
-    SingleLiveEvent<Integer> getSetActivityTitleEvent() {
-        return setActivityTitleEvent;
-    }
-
-    SingleLiveEvent<Void> getEnableReviewButtonEvent() {
-        return enableReviewButtonEvent;
-    }
-
-    public RecipeValidator getValidator() {
+    RecipeValidator getValidator() {
         return validator;
-    }
-
-    void reportRecipeModelStatus(RecipeModelStatus modelStatus) {
-        recipeValidationStatus = validator.getRecipeValidationStatus(modelStatus);
-
-        if (recipeValidationStatus == RecipeValidationStatus.VALID_HAS_CHANGES)
-            showButtons();
-        else
-            hideButtons();
     }
 
     @Override
     public void setRecipeValidationStatus(RecipeValidationStatus recipeValidationStatus) {
         this.recipeValidationStatus = recipeValidationStatus;
 
-        if (recipeValidationStatus == RecipeValidationStatus.VALID_HAS_CHANGES)
+        if (recipeValidationStatus == VALID_HAS_CHANGES ||
+                recipeValidationStatus == VALID_NO_CHANGES)
             showButtons();
         else
             hideButtons();
@@ -174,7 +169,7 @@ public class RecipeEditorViewModel
     }
 
     void upOrBackPressed() {
-        if (recipeValidationStatus == RecipeValidationStatus.INVALID_HAS_CHANGES) {
+        if (recipeValidationStatus == INVALID_HAS_CHANGES) {
             showUnsavedChangesDialogEvent.call();
         } else {
             navigator.cancelEditing();
@@ -266,10 +261,10 @@ public class RecipeEditorViewModel
 
     private RecipeEntity getEditedRecipe() {
         return new RecipeEntity(
-                recipeEntity.getValue().getId(),
-                recipeEntity.getValue().getId(),
-                recipeEntity.getValue().getCreatedBy(),
-                recipeEntity.getValue().getCreateDate(),
+                recipeEntity.getId(),
+                recipeEntity.getId(),
+                recipeEntity.getCreatedBy(),
+                recipeEntity.getCreateDate(),
                 timeProvider.getCurrentTimestamp()
         );
     }
@@ -278,15 +273,15 @@ public class RecipeEditorViewModel
         long timeStamp = timeProvider.getCurrentTimestamp();
         return new RecipeEntity(
                 idProvider.getUId(),
-                recipeEntity.getValue().getId(),
-                recipeEntity.getValue().getCreatedBy(),
+                recipeEntity.getId(),
+                recipeEntity.getCreatedBy(),
                 timeStamp,
                 timeStamp
         );
     }
 
     private boolean creatorIsEditingOwnRecipe() {
-        return recipeEntity.getValue().getCreatedBy().equals(Constants.getUserId().getValue());
+        return recipeEntity.getCreatedBy().equals(Constants.getUserId().getValue());
     }
 
     private boolean recipeIsCloned() {

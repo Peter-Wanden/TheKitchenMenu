@@ -47,7 +47,8 @@ public class SingleLiveEvent<T> extends MutableLiveData<T> {
     @MainThread
     public void setValue(@Nullable T t) {
         mPending.set(true);
-        super.setValue(t);
+        super.postValue(t); // TODO - changed from set to post error reported 'cannot set to a
+                            // todo - background thread' - why?
     }
 
     /**

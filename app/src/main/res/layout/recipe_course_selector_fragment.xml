@@ -25,20 +25,20 @@
             />
 
         <ImageView
-            android:id="@+id/recipe_identity_editor_course_selector_box"
+            android:id="@+id/recipe_course_editor_border"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:src="@drawable/rectangle"
-            app:layout_constraintBottom_toBottomOf="@id/recipe_identity_editor_accompaniment_check_box"
+            app:layout_constraintBottom_toBottomOf="@id/recipe_course_editor_check_box_three"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/recipe_identity_editor_course_selector_label"
+            app:layout_constraintTop_toTopOf="@id/recipe_course_editor_title_label"
             />
 
         <TextView
-            android:id="@+id/recipe_identity_editor_course_selector_label"
+            android:id="@+id/recipe_course_editor_title_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -50,170 +50,170 @@
             />
 
         <TextView
-            android:id="@+id/recipe_identity_editor_select_all_that_apply_label"
+            android:id="@+id/recipe_course_editor_advice_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/recipe_select_all_that_apply"
-            app:layout_constraintBaseline_toBaselineOf="@id/recipe_identity_editor_course_selector_label"
-            app:layout_constraintStart_toEndOf="@id/recipe_identity_editor_course_selector_label"
+            app:layout_constraintBaseline_toBaselineOf="@id/recipe_course_editor_title_label"
+            app:layout_constraintStart_toEndOf="@id/recipe_course_editor_title_label"
             />
 
         <TextView
-            android:id="@+id/recipe_identity_editor_breakfast_label"
+            android:id="@+id/recipe_course_editor_course_zero_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:text="@string/course_label_breakfast"
-            app:layout_constraintBaseline_toBaselineOf="@id/recipe_identity_editor_breakfast_check_box"
+            app:layout_constraintBaseline_toBaselineOf="@id/recipe_course_editor_check_box_zero"
             app:layout_constraintStart_toStartOf="parent"
             />
 
         <com.google.android.material.checkbox.MaterialCheckBox
-            android:id="@+id/recipe_identity_editor_breakfast_check_box"
+            android:id="@+id/recipe_course_editor_check_box_zero"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checked="@{viewModel.courseZeroObservable}"
+            android:checked="@={viewModel.courseZeroObservable}"
             app:layout_constraintEnd_toStartOf="@id/recipe_course_editor_center_guideline"
             app:layout_constraintStart_toEndOf="@id/recipe_course_editor_center_guideline"
-            app:layout_constraintTop_toBottomOf="@id/recipe_identity_editor_select_all_that_apply_label"
+            app:layout_constraintTop_toBottomOf="@id/recipe_course_editor_advice_label"
             tools:checked="true"
             />
 
         <TextView
-            android:id="@+id/recipe_identity_editor_lunch_label"
+            android:id="@+id/recipe_course_editor_course_one_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:text="@string/course_label_lunch"
-            app:layout_constraintBaseline_toBaselineOf="@id/recipe_identity_editor_lunch_check_box"
+            app:layout_constraintBaseline_toBaselineOf="@id/recipe_course_editor_check_box_one"
             app:layout_constraintStart_toStartOf="parent"
             />
 
         <com.google.android.material.checkbox.MaterialCheckBox
-            android:id="@+id/recipe_identity_editor_lunch_check_box"
+            android:id="@+id/recipe_course_editor_check_box_one"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checked="@{viewModel.courseOneObservable}"
+            android:checked="@={viewModel.courseOneObservable}"
             app:layout_constraintEnd_toStartOf="@id/recipe_course_editor_center_guideline"
             app:layout_constraintStart_toEndOf="@id/recipe_course_editor_center_guideline"
-            app:layout_constraintTop_toBottomOf="@id/recipe_identity_editor_breakfast_check_box"
+            app:layout_constraintTop_toBottomOf="@id/recipe_course_editor_check_box_zero"
             />
 
         <TextView
-            android:id="@+id/recipe_identity_editor_main_course_label"
+            android:id="@+id/recipe_course_editor_course_two_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:text="@string/course_label_dinner"
-            app:layout_constraintBaseline_toBaselineOf="@id/recipe_identity_editor_main_course_check_box"
+            app:layout_constraintBaseline_toBaselineOf="@id/recipe_course_editor_check_box_two"
             app:layout_constraintStart_toStartOf="parent"
             />
 
         <com.google.android.material.checkbox.MaterialCheckBox
-            android:id="@+id/recipe_identity_editor_main_course_check_box"
+            android:id="@+id/recipe_course_editor_check_box_two"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checked="@{viewModel.courseTwoObservable}"
+            android:checked="@={viewModel.courseTwoObservable}"
             app:layout_constraintEnd_toStartOf="@id/recipe_course_editor_center_guideline"
             app:layout_constraintStart_toEndOf="@id/recipe_course_editor_center_guideline"
-            app:layout_constraintTop_toBottomOf="@id/recipe_identity_editor_lunch_check_box"
+            app:layout_constraintTop_toBottomOf="@id/recipe_course_editor_check_box_one"
             />
 
         <TextView
-            android:id="@+id/recipe_identity_editor_accompaniment_label"
+            android:id="@+id/recipe_course_editor_course_three_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:text="@string/course_label_accompaniment"
-            app:layout_constraintBaseline_toBaselineOf="@id/recipe_identity_editor_accompaniment_check_box"
+            app:layout_constraintBaseline_toBaselineOf="@id/recipe_course_editor_check_box_three"
             app:layout_constraintStart_toStartOf="parent"
             />
 
         <com.google.android.material.checkbox.MaterialCheckBox
-            android:id="@+id/recipe_identity_editor_accompaniment_check_box"
+            android:id="@+id/recipe_course_editor_check_box_three"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checked="@{viewModel.courseThreeObservable}"
+            android:checked="@={viewModel.courseThreeObservable}"
             app:layout_constraintEnd_toStartOf="@id/recipe_course_editor_center_guideline"
             app:layout_constraintStart_toEndOf="@id/recipe_course_editor_center_guideline"
-            app:layout_constraintTop_toBottomOf="@id/recipe_identity_editor_main_course_check_box"
+            app:layout_constraintTop_toBottomOf="@id/recipe_course_editor_check_box_two"
             />
 
         <TextView
-            android:id="@+id/recipe_identity_editor_desert_label"
+            android:id="@+id/recipe_course_editor_course_four_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:text="@string/course_label_desert"
-            app:layout_constraintBaseline_toBaselineOf="@id/recipe_identity_editor_desert_check_box"
+            app:layout_constraintBaseline_toBaselineOf="@id/recipe_course_editor_check_box_four"
             app:layout_constraintStart_toEndOf="@id/recipe_course_editor_center_guideline"
             />
 
         <com.google.android.material.checkbox.MaterialCheckBox
-            android:id="@+id/recipe_identity_editor_desert_check_box"
+            android:id="@+id/recipe_course_editor_check_box_four"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checked="@{viewModel.courseFourObservable}"
-            app:layout_constraintEnd_toEndOf="@id/recipe_identity_editor_course_selector_box"
-            app:layout_constraintTop_toBottomOf="@id/recipe_identity_editor_select_all_that_apply_label"
+            android:checked="@={viewModel.courseFourObservable}"
+            app:layout_constraintEnd_toEndOf="@id/recipe_course_editor_border"
+            app:layout_constraintTop_toBottomOf="@id/recipe_course_editor_advice_label"
             />
 
         <TextView
-            android:id="@+id/recipe_identity_editor_side_dish_label"
+            android:id="@+id/recipe_course_editor_course_five_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:text="@string/course_label_side_dish"
-            app:layout_constraintBaseline_toBaselineOf="@id/recipe_identity_editor_side_dish_check_box"
+            app:layout_constraintBaseline_toBaselineOf="@id/recipe_course_editor_check_box_five"
             app:layout_constraintStart_toEndOf="@id/recipe_course_editor_center_guideline"
             />
 
         <com.google.android.material.checkbox.MaterialCheckBox
-            android:id="@+id/recipe_identity_editor_side_dish_check_box"
+            android:id="@+id/recipe_course_editor_check_box_five"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checked="@{viewModel.courseFiveObservable}"
-            app:layout_constraintEnd_toEndOf="@id/recipe_identity_editor_course_selector_box"
-            app:layout_constraintTop_toBottomOf="@id/recipe_identity_editor_desert_check_box"
+            android:checked="@={viewModel.courseFiveObservable}"
+            app:layout_constraintEnd_toEndOf="@id/recipe_course_editor_border"
+            app:layout_constraintTop_toBottomOf="@id/recipe_course_editor_check_box_four"
             />
 
         <TextView
-            android:id="@+id/recipe_identity_editor_snack_label"
+            android:id="@+id/recipe_course_editor_course_six_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:text="@string/course_label_snack"
-            app:layout_constraintBaseline_toBaselineOf="@id/recipe_identity_editor_snack_check_box"
+            app:layout_constraintBaseline_toBaselineOf="@id/recipe_course_editor_check_box_six"
             app:layout_constraintStart_toEndOf="@id/recipe_course_editor_center_guideline"
             />
 
         <com.google.android.material.checkbox.MaterialCheckBox
-            android:id="@+id/recipe_identity_editor_snack_check_box"
+            android:id="@+id/recipe_course_editor_check_box_six"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checked="@{viewModel.courseSixObservable}"
-            app:layout_constraintEnd_toEndOf="@id/recipe_identity_editor_course_selector_box"
-            app:layout_constraintTop_toBottomOf="@id/recipe_identity_editor_side_dish_check_box"
+            android:checked="@={viewModel.courseSixObservable}"
+            app:layout_constraintEnd_toEndOf="@id/recipe_course_editor_border"
+            app:layout_constraintTop_toBottomOf="@id/recipe_course_editor_check_box_five"
             tools:checked="true"
             />
 
         <TextView
-            android:id="@+id/recipe_identity_editor_drink_label"
+            android:id="@+id/recipe_course_editor_course_seven_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:text="@string/course_label_drink"
-            app:layout_constraintBaseline_toBaselineOf="@+id/recipe_identity_editor_drink_check_box"
+            app:layout_constraintBaseline_toBaselineOf="@+id/recipe_course_editor_check_box_seven"
             app:layout_constraintStart_toEndOf="@id/recipe_course_editor_center_guideline"
             />
 
         <com.google.android.material.checkbox.MaterialCheckBox
-            android:id="@+id/recipe_identity_editor_drink_check_box"
+            android:id="@+id/recipe_course_editor_check_box_seven"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checked="@{viewModel.courseSevenObservable}"
-            app:layout_constraintEnd_toEndOf="@id/recipe_identity_editor_course_selector_box"
-            app:layout_constraintTop_toBottomOf="@id/recipe_identity_editor_snack_check_box"
+            android:checked="@={viewModel.courseSevenObservable}"
+            app:layout_constraintEnd_toEndOf="@id/recipe_course_editor_border"
+            app:layout_constraintTop_toBottomOf="@id/recipe_course_editor_check_box_six"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

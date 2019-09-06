@@ -281,7 +281,7 @@ public class RecipeCourseSelectorViewModelTest {
     }
 
     @Test
-    public void onStart_recipeIdSupplied_COURSES_MODEL_UNCHANGED_INVALID() throws Exception {
+    public void onStart_recipeIdSupplied_RecipeModelStatus_COURSES_MODEL_UNCHANGED_INVALID() throws Exception {
         // Arrange
         ArgumentCaptor<RecipeModelStatus> ac = ArgumentCaptor.forClass(RecipeModelStatus.class);
         // Act
@@ -293,7 +293,7 @@ public class RecipeCourseSelectorViewModelTest {
     }
 
     @Test
-    public void onStart_recipeIdSupplied_COURSES_MODEL_UNCHANGED_VALID() throws Exception {
+    public void onStart_recipeIdSupplied_RecipeModelStatus_COURSES_MODEL_UNCHANGED_VALID() throws Exception {
         // Arrange
         ArgumentCaptor<RecipeModelStatus> ac = ArgumentCaptor.forClass(RecipeModelStatus.class);
         // Act
@@ -305,7 +305,7 @@ public class RecipeCourseSelectorViewModelTest {
     }
 
     @Test
-    public void allOptionsDeselected_recipeIdSupplied_COURSES_MODEL_CHANGED_INVALID() throws Exception {
+    public void allOptionsDeselected_recipeIdSupplied_RecipeModelStatus_COURSES_MODEL_CHANGED_INVALID() throws Exception {
         // Arrange
         ArgumentCaptor<RecipeModelStatus> ac = ArgumentCaptor.forClass(RecipeModelStatus.class);
         // Act
@@ -325,7 +325,7 @@ public class RecipeCourseSelectorViewModelTest {
     }
 
     @Test
-    public void allButOneOptionsDeselected_recipeIdSupplied_modelStatusChangedValid() throws Exception {
+    public void allButOneOptionsDeselected_recipeIdSupplied_RecipeModelStatus_COURSES_MODEL_CHANGED_VALID() throws Exception {
         // Arrange
         ArgumentCaptor<RecipeModelStatus> ac = ArgumentCaptor.forClass(RecipeModelStatus.class);
         // Act

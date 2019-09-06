@@ -195,7 +195,6 @@ public class RecipeEditorActivity extends AppCompatActivity implements AddEditRe
     public boolean onPrepareOptionsMenu(Menu menu) {
         menu.findItem(R.id.menu_recipe_editor_action_review).setVisible(
                 recipeEditorViewModel.isShowReviewButton());
-        Log.d(TAG, "onPrepareOptionsMenu: isShowReviewButton=" + recipeEditorViewModel.isShowReviewButton());
         return super.onPrepareOptionsMenu(menu);
     }
 

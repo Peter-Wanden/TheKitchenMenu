@@ -1,11 +1,15 @@
 package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 
+import android.util.Log;
+
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import static com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidator.RecipeValidationStatus.*;
 
 public class RecipeValidator implements RecipeValidation.RecipeValidatorModelSubmission {
+
+    private static final String TAG = "tkm-RecipeValidator";
 
     enum RecipeValidationStatus {
         INVALID_MISSING_MODELS,
@@ -32,11 +36,6 @@ public class RecipeValidator implements RecipeValidation.RecipeValidatorModelSub
     public void submitModelStatus(RecipeModelStatus modelStatus) {
         recipeModelStatusList.put(modelStatus.getModelName(), modelStatus);
         recipeEditor.setRecipeValidationStatus(getRecipeValidationStatus());
-    }
-
-    RecipeValidationStatus getRecipeValidationStatus(RecipeModelStatus modelStatus) {
-        recipeModelStatusList.put(modelStatus.getModelName(), modelStatus);
-        return getRecipeValidationStatus();
     }
 
     private RecipeValidationStatus getRecipeValidationStatus() {
