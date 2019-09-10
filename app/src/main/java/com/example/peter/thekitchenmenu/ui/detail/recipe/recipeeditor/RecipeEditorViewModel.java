@@ -1,7 +1,6 @@
 package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 
 import android.content.res.Resources;
-import android.util.Log;
 
 import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
@@ -15,6 +14,9 @@ import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidator.*;
 import static com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidator.RecipeValidationStatus.*;
@@ -43,9 +45,12 @@ public class RecipeEditorViewModel
     public final ObservableBoolean dataIsLoadingObservable = new ObservableBoolean();
 
     // the listener attached to this live data starts all other recipe view models
+    private List<RecipeComponent> recipeComponents = new ArrayList<>();
     private final MutableLiveData<String> recipeIdLiveData = new MutableLiveData<>();
+
     private RecipeEntity recipeEntity;
 
+    private boolean isDraft;
     private boolean isNewRecipe;
     private boolean showReviewButton;
 
@@ -76,9 +81,12 @@ public class RecipeEditorViewModel
 
     private void setupForNewRecipe() {
         isNewRecipe = true;
-        recipeEntity = getEmptyRecipe();
-        recipeIdLiveData.setValue(recipeEntity.getId());
         setActivityTitleEvent.setValue(R.string.activity_title_add_new_recipe);
+
+        recipeEntity = createNewEntity();
+        saveRecipe(recipeEntity);
+        recipeIdLiveData.setValue(recipeEntity.getId()); // todo - remove when RecipeComponent interface complete
+        startRecipeComponentModels();
         setIngredientsButton();
     }
 
@@ -94,21 +102,55 @@ public class RecipeEditorViewModel
     @Override
     public void onEntityLoaded(RecipeEntity recipeEntity) {
         dataIsLoadingObservable.set(false);
-        setupForExistingRecipe(recipeEntity);
+        this.recipeEntity = recipeEntity;
+
+        if (creatorIsEditingOwnRecipe())
+            setupForExistingRecipe();
+        else {
+            setupForClonedRecipe();
+        }
+    }
+
+    private void setupForExistingRecipe() {
+        isNewRecipe = false;
+        setActivityTitleEvent.setValue(R.string.activity_title_edit_recipe);
+
+        recipeIdLiveData.setValue(recipeEntity.getId()); // todo - remove when RecipeComponent interface complete
+        startRecipeComponentModels();
+        setIngredientsButton();
+    }
+
+    private void setupForClonedRecipe() {
+        isNewRecipe = false;
+        setActivityTitleEvent.setValue(R.string.activity_title_copy_recipe);
+
+        recipeEntity = getClonedRecipeEntity();
+        saveRecipe(recipeEntity);
+        requestAllRecipeComponentsCloneThemselves();
+        setIngredientsButton();
+    }
+
+    private void startRecipeComponentModels() {
+
+    }
+
+    private void requestAllRecipeComponentsCloneThemselves() {
+        String oldRecipeId = recipeEntity.getParentId();
+        String newRecipeId = recipeEntity.getId();
+
+        if (!recipeComponents.isEmpty())
+            for (RecipeComponent rc : recipeComponents)
+                rc.cloneComponent(oldRecipeId, newRecipeId);
+    }
+
+    void setComponent(RecipeComponent recipeComponent) {
+        recipeComponents.add(recipeComponent);
     }
 
     @Override
     public void onDataNotAvailable() {
         dataIsLoadingObservable.set(false);
         setupForNewRecipe();
-    }
-
-    private void setupForExistingRecipe(RecipeEntity recipeEntity) {
-        isNewRecipe = false;
-        this.recipeEntity = recipeEntity;
-        recipeIdLiveData.setValue(recipeEntity.getId());
-        setActivityTitleEvent.setValue(R.string.activity_title_edit_recipe);
-        setIngredientsButton();
     }
 
     SingleLiveEvent<Integer> getSetActivityTitleEvent() {
@@ -129,6 +171,7 @@ public class RecipeEditorViewModel
             throwUnknownEditingModeException();
         }
     }
+
     SingleLiveEvent<Void> getEnableReviewButtonEvent() {
         return enableReviewButtonEvent;
     }
@@ -145,17 +188,30 @@ public class RecipeEditorViewModel
     public void setRecipeValidationStatus(RecipeValidationStatus recipeValidationStatus) {
         this.recipeValidationStatus = recipeValidationStatus;
 
-        if (recipeValidationStatus == VALID_HAS_CHANGES ||
-                recipeValidationStatus == VALID_NO_CHANGES)
-            showButtons();
-        else
-            hideButtons();
+        isDraft = recipeValidationStatus != VALID_HAS_CHANGES &&
+                recipeValidationStatus != VALID_NO_CHANGES;
+
+        if (recipeValidationStatus != VALID_NO_CHANGES) {
+            recipeEntity = createNewEntity();
+            saveRecipe(recipeEntity);
+        }
+        updateButtonVisibility();
     }
 
-    private void showButtons() {
-        showIngredientsButtonObservable.set(true);
-        showReviewButton = true;
-        enableReviewButtonEvent.call();
+    private void updateButtonVisibility() {
+        if (recipeValidationStatus == VALID_HAS_CHANGES) {
+            showIngredientsButtonObservable.set(true);
+            showReviewButton = true;
+            enableReviewButtonEvent.call();
+
+        } else if (recipeValidationStatus == VALID_NO_CHANGES) {
+            showIngredientsButtonObservable.set(true);
+            showReviewButton = false;
+            enableReviewButtonEvent.call();
+
+        } else {
+            hideButtons();
+        }
     }
 
     private void hideButtons() {
@@ -216,7 +272,6 @@ public class RecipeEditorViewModel
 
     private String getRecipeId() {
         RecipeEntity recipeEntity = createNewEntity();
-        saveRecipe(recipeEntity);
         return recipeEntity.getId();
     }
 
@@ -228,23 +283,11 @@ public class RecipeEditorViewModel
             return getEditedRecipe();
 
         } else if (recipeIsCloned()) {
-            return getClonedRecipe();
+            return getClonedRecipeEntity();
 
         } else {
             throw new RuntimeException("Unknown editing mode type");
         }
-    }
-
-    private RecipeEntity getEmptyRecipe() {
-        String id = idProvider.getUId();
-        long timeStamp = timeProvider.getCurrentTimestamp();
-        return new RecipeEntity(
-                id,
-                id,
-                Constants.getUserId().getValue(),
-                timeStamp,
-                timeStamp
-        );
     }
 
     private RecipeEntity getNewRecipe() {
@@ -255,7 +298,8 @@ public class RecipeEditorViewModel
                 id,
                 Constants.getUserId().getValue(),
                 timeStamp,
-                timeStamp
+                timeStamp,
+                true
         );
     }
 
@@ -265,18 +309,20 @@ public class RecipeEditorViewModel
                 recipeEntity.getId(),
                 recipeEntity.getCreatedBy(),
                 recipeEntity.getCreateDate(),
-                timeProvider.getCurrentTimestamp()
+                timeProvider.getCurrentTimestamp(),
+                isDraft
         );
     }
 
-    private RecipeEntity getClonedRecipe() {
+    private RecipeEntity getClonedRecipeEntity() {
         long timeStamp = timeProvider.getCurrentTimestamp();
         return new RecipeEntity(
                 idProvider.getUId(),
                 recipeEntity.getId(),
                 recipeEntity.getCreatedBy(),
                 timeStamp,
-                timeStamp
+                timeStamp,
+                isDraft
         );
     }
 

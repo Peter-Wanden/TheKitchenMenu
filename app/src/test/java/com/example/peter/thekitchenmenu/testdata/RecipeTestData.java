@@ -13,6 +13,17 @@ public class RecipeTestData {
         return 6000;
     }
 
+    public static final RecipeEntity getNewEmptyDraftRecipeEntity() {
+        return new RecipeEntity(
+                "newId",
+                "newId",
+                 Constants.getUserId().getValue(),
+                10L,
+                10L,
+                true
+        );
+    }
+
     // An invalid empty recipe
     public static RecipeEntity getEmptyRecipeEntity() {
         return new RecipeEntity(
@@ -20,7 +31,9 @@ public class RecipeTestData {
                 "",
                 "",
                 0L,
-                0L);
+                0L,
+                true
+                );
     }
 
     // A valid recipe entered by the current user
@@ -30,7 +43,8 @@ public class RecipeTestData {
                 "id",
                 Constants.getUserId().getValue(),
                 10L,
-                10L
+                10L,
+                false
         );
     }
 
@@ -40,7 +54,8 @@ public class RecipeTestData {
                 "1d1",
                 "anotherUser",
                 5L,
-                10L
+                10L,
+                false
         );
     }
 
@@ -50,7 +65,8 @@ public class RecipeTestData {
                 getValidRecipeEntityFromAnotherUser().getId(),
                 Constants.getUserId().getValue(),
                 20L,
-                20L
+                20L,
+                false
         );
     }
 }

@@ -13,6 +13,10 @@ public final class RecipeEntity implements TkmEntity {
     public static final String TABLE_RECIPE = "recipe";
     public static final String ID = "id";
     public static final String PARENT_ID = "parentId";
+    public static final String CREATED_BY = "createdBy";
+    public static final String CREATE_DATE = "createDate";
+    public static final String LAST_UPDATE = "lastUpdate";
+    public static final String IS_DRAFT = "isDraft";
 
     @PrimaryKey
     @NonNull
@@ -23,25 +27,31 @@ public final class RecipeEntity implements TkmEntity {
     @ColumnInfo(name = PARENT_ID)
     private final String parentId;
 
-    @ColumnInfo(name = "createdBy")
+    @NonNull
+    @ColumnInfo(name = CREATED_BY)
     private final String createdBy;
 
-    @ColumnInfo(name = "createDate")
+    @ColumnInfo(name = CREATE_DATE)
     private final long createDate;
 
-    @ColumnInfo(name = "lastUpdate")
+    @ColumnInfo(name = LAST_UPDATE)
     private final long lastUpdate;
+
+    @ColumnInfo(name = IS_DRAFT)
+    private final boolean isDraft;
 
     public RecipeEntity(@NonNull String id,
                         @NonNull String parentId,
-                        String createdBy,
+                        @NonNull String createdBy,
                         long createDate,
-                        long lastUpdate) {
+                        long lastUpdate,
+                        boolean isDraft) {
         this.id = id;
         this.parentId = parentId;
         this.createdBy = createdBy;
         this.createDate = createDate;
         this.lastUpdate = lastUpdate;
+        this.isDraft = isDraft;
     }
 
     @Override
@@ -51,6 +61,7 @@ public final class RecipeEntity implements TkmEntity {
         RecipeEntity that = (RecipeEntity) o;
         return createDate == that.createDate &&
                 lastUpdate == that.lastUpdate &&
+                isDraft == that.isDraft &&
                 id.equals(that.id) &&
                 parentId.equals(that.parentId) &&
                 createdBy.equals(that.createdBy);
@@ -58,7 +69,7 @@ public final class RecipeEntity implements TkmEntity {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, parentId, createdBy, createDate, lastUpdate);
+        return Objects.hash(id, parentId, createdBy, createDate, lastUpdate, isDraft);
     }
 
     @Override
@@ -69,6 +80,7 @@ public final class RecipeEntity implements TkmEntity {
                 ", createdBy='" + createdBy + '\'' +
                 ", createDate=" + createDate +
                 ", lastUpdate=" + lastUpdate +
+                ", isDraft=" + isDraft +
                 '}';
     }
 
@@ -83,6 +95,7 @@ public final class RecipeEntity implements TkmEntity {
         return parentId;
     }
 
+    @NonNull
     public String getCreatedBy() {
         return createdBy;
     }
@@ -93,5 +106,9 @@ public final class RecipeEntity implements TkmEntity {
 
     public long getLastUpdate() {
         return lastUpdate;
+    }
+
+    public boolean isDraft() {
+        return isDraft;
     }
 }

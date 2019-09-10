@@ -10,10 +10,7 @@ import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.DataSourceRecipeIdentity;
 import com.example.peter.thekitchenmenu.testdata.RecipeIdentityTestData;
-import com.example.peter.thekitchenmenu.utils.ParseIntegerFromObservableHandler;
-import com.example.peter.thekitchenmenu.utils.TextValidationHandler;
-import com.example.peter.thekitchenmenu.utils.TimeProvider;
-import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
+import com.example.peter.thekitchenmenu.utils.*;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -29,14 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.peter.thekitchenmenu.testdata.RecipeTestData.*;
-import static com.example.peter.thekitchenmenu.testdata.RecipeValidatorTestData.getCoursesModelStatusChangedInvalid;
-import static com.example.peter.thekitchenmenu.testdata.RecipeValidatorTestData.getCoursesModelStatusChangedValid;
-import static com.example.peter.thekitchenmenu.testdata.RecipeValidatorTestData.getCoursesModelStatusUnchangedInvalid;
-import static com.example.peter.thekitchenmenu.testdata.RecipeValidatorTestData.getCoursesModelStatusUnchangedValid;
-import static com.example.peter.thekitchenmenu.testdata.RecipeValidatorTestData.getIdentityModelStatusChangedInvalid;
-import static com.example.peter.thekitchenmenu.testdata.RecipeValidatorTestData.getIdentityModelStatusChangedValid;
-import static com.example.peter.thekitchenmenu.testdata.RecipeValidatorTestData.getIdentityModelStatusUnChangedInValid;
-import static com.example.peter.thekitchenmenu.testdata.RecipeValidatorTestData.getIdentityModelStatusUnChangedValid;
+import static com.example.peter.thekitchenmenu.testdata.RecipeValidatorTestData.*;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
