@@ -9,7 +9,7 @@
 
         <variable
             name="recipeModel"
-            type="com.example.peter.thekitchenmenu.data.model.RecipeModel" />
+            type="com.example.peter.thekitchenmenu.data.entity.RecipeEntity" />
 
         <variable
             name="listener"
@@ -26,8 +26,9 @@
         android:layout_marginBottom="@dimen/card_view_margin_top_bottom"
         android:elevation="@dimen/card_view_elevation"
         app:cardCornerRadius="4dp"
-        android:onClick="@{() -> listener.onRecipeClicked(recipeModel)}"
         >
+
+        <!-- android:onClick="@{() -> listener.onRecipeClicked(recipeEntity)}" -->
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/recipe_list_item_constraintLayout"

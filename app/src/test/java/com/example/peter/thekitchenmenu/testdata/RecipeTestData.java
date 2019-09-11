@@ -13,11 +13,11 @@ public class RecipeTestData {
         return 6000;
     }
 
-    public static final RecipeEntity getNewEmptyDraftRecipeEntity() {
+    public static RecipeEntity getNewEmptyDraftRecipeEntity() {
         return new RecipeEntity(
                 "newId",
                 "newId",
-                 Constants.getUserId().getValue(),
+                Constants.getUserId().getValue(),
                 10L,
                 10L,
                 true
@@ -33,7 +33,7 @@ public class RecipeTestData {
                 0L,
                 0L,
                 true
-                );
+        );
     }
 
     // A valid recipe entered by the current user
@@ -68,5 +68,31 @@ public class RecipeTestData {
                 20L,
                 false
         );
+    }
+
+    public static RecipeEntity getInvalidClonedRecipeEntity() {
+        return new RecipeEntity(
+                "id2",
+                getValidRecipeEntityFromAnotherUser().getId(),
+                Constants.getUserId().getValue(),
+                20L,
+                20L,
+                true
+        );
+    }
+
+    public static RecipeEntity getInvalidDraftRecipeEntity() {
+        return new RecipeEntity(
+                "id3",
+                "id3",
+                Constants.getUserId().getValue(),
+                10L,
+                10L,
+                false
+        );
+    }
+
+    public static String getNewRecipeId() {
+        return "newId";
     }
 }

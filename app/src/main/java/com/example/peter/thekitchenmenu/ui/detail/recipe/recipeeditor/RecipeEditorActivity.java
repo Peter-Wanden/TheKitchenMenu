@@ -1,7 +1,6 @@
 package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -32,10 +31,7 @@ public class RecipeEditorActivity extends AppCompatActivity implements AddEditRe
     public static final int RESULT_ADD_EDIT_RECIPE_CANCELLED = RESULT_FIRST_USER + 2;
 
     private RecipeEditorActivityBinding binding;
-
     private RecipeEditorViewModel recipeEditorViewModel;
-    private RecipeIdentityViewModel recipeIdentityViewModel;
-    private RecipeCourseSelectorViewModel recipeCourseSelectorViewModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,7 +40,7 @@ public class RecipeEditorActivity extends AppCompatActivity implements AddEditRe
         initialiseBindings();
         setupToolbar();
         setupActionBar();
-        setViewModels();
+        setupViewModels();
         setViewModelObservers();
         setupFragments();
         start();
@@ -73,16 +69,21 @@ public class RecipeEditorActivity extends AppCompatActivity implements AddEditRe
             actionBar.setTitle(R.string.activity_title_add_new_recipe);
     }
 
-    private void setViewModels() {
-        recipeEditorViewModel = obtainRecipeEditorViewModel(this);
+    private void setupViewModels() {
+        recipeEditorViewModel = obtainEditorViewModel(this);
         recipeEditorViewModel.setNavigator(this);
         binding.setViewModel(recipeEditorViewModel);
 
-        recipeIdentityViewModel = obtainIdentityViewModel(this);
-        recipeIdentityViewModel.setModelSubmitter(recipeEditorViewModel.getValidator());
+        RecipeModelComposite recipeModelComposite = new RecipeModelComposite();
+        recipeEditorViewModel.setRecipeModelComposite(recipeModelComposite);
 
-        recipeCourseSelectorViewModel = obtainRecipeCourseSelectorViewModel(this);
-        recipeCourseSelectorViewModel.setModelSubmitter(recipeEditorViewModel.getValidator());
+        RecipeIdentityViewModel identityViewModel = obtainIdentityViewModel(this);
+        identityViewModel.setModelValidationSubmitter(recipeEditorViewModel.getValidator());
+        recipeModelComposite.registerModel(identityViewModel);
+
+        RecipeCourseSelectorViewModel courseSelectorViewModel = obtainCourseSelectorViewModel(this);
+        courseSelectorViewModel.setModelValidationSubmitter(recipeEditorViewModel.getValidator());
+        recipeModelComposite.registerModel(courseSelectorViewModel);
     }
 
     private void setViewModelObservers() {
@@ -92,15 +93,9 @@ public class RecipeEditorActivity extends AppCompatActivity implements AddEditRe
                 invalidateOptionsMenu());
         recipeEditorViewModel.getShowUnsavedChangesDialogEvent().observe(this, aVoid ->
                 showUnsavedChangesDialogEvent());
-
-        // Start models with recipeId
-        recipeEditorViewModel.getRecipeIdLiveData().observe(this, recipeId -> {
-            recipeIdentityViewModel.onStart(recipeId);
-            recipeCourseSelectorViewModel.onStart(recipeId);
-        });
     }
 
-    private static RecipeEditorViewModel obtainRecipeEditorViewModel(
+    private static RecipeEditorViewModel obtainEditorViewModel(
             FragmentActivity activity) {
         ViewModelFactoryRecipe factoryRecipe = ViewModelFactoryRecipe.getInstance(
                 activity.getApplication());
@@ -116,7 +111,7 @@ public class RecipeEditorActivity extends AppCompatActivity implements AddEditRe
                 RecipeIdentityViewModel.class);
     }
 
-    static RecipeCourseSelectorViewModel obtainRecipeCourseSelectorViewModel(
+    static RecipeCourseSelectorViewModel obtainCourseSelectorViewModel(
             FragmentActivity activity) {
         ViewModelFactoryRecipe factoryRecipe = ViewModelFactoryRecipe.getInstance(
                 activity.getApplication());

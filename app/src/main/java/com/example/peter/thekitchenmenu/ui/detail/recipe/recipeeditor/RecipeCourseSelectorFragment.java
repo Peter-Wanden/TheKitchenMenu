@@ -33,7 +33,7 @@ public class RecipeCourseSelectorFragment extends Fragment {
                 container,
                 false);
 
-        binding.setViewModel(RecipeEditorActivity.obtainRecipeCourseSelectorViewModel(
+        binding.setViewModel(RecipeEditorActivity.obtainCourseSelectorViewModel(
                 getActivity()));
 
         return binding.getRoot();

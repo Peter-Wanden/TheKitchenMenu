@@ -18,8 +18,11 @@ import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 import static com.example.peter.thekitchenmenu.utils.TextValidationHandler.*;
 
 public class RecipeIdentityViewModel
-        extends ViewModel
-        implements DataSource.GetEntityCallback<RecipeIdentityEntity> {
+        extends
+        ViewModel
+        implements
+        DataSource.GetEntityCallback<RecipeIdentityEntity>,
+        RecipeModelComposite.RecipeModelActions {
 
     private Resources resources;
     private TextValidationHandler validationHandler;
@@ -31,10 +34,10 @@ public class RecipeIdentityViewModel
 
     public final ObservableField<String> titleObservable = new ObservableField<>("");
     public final ObservableField<String> descriptionObservable = new ObservableField<>("");
-    public final ObservableField<String> prepHoursObservable = new ObservableField<>("");
-    public final ObservableField<String> prepMinutesObservable = new ObservableField<>("");
-    public final ObservableField<String> cookHoursObservable = new ObservableField<>("");
-    public final ObservableField<String> cookMinutesObservable = new ObservableField<>("");
+    public final ObservableField<String> prepHoursObservable = new ObservableField<>();
+    public final ObservableField<String> prepMinutesObservable = new ObservableField<>();
+    public final ObservableField<String> cookHoursObservable = new ObservableField<>();
+    public final ObservableField<String> cookMinutesObservable = new ObservableField<>();
 
     public final ObservableField<String> titleErrorMessage = new ObservableField<>();
     public final ObservableField<String> descriptionErrorMessage = new ObservableField<>();
@@ -51,6 +54,7 @@ public class RecipeIdentityViewModel
     private boolean
             modelUpdating,
             isNewIdentityEntity,
+            isCloned,
             titleValid,
             descriptionValid = true,
             prepTimeValid = true,
@@ -113,7 +117,12 @@ public class RecipeIdentityViewModel
         });
     }
 
-    void onStart(String recipeId) {
+    void setModelValidationSubmitter(RecipeValidation.RecipeValidatorModelSubmission modelSubmitter) {
+        this.modelSubmitter = modelSubmitter;
+    }
+
+    @Override
+    public void start(String recipeId) {
         if (recipeId != null) {
             this.recipeId = recipeId;
             recipeIdentityDataSource.getByRecipeId(recipeId, this);
@@ -122,14 +131,30 @@ public class RecipeIdentityViewModel
         }
     }
 
-    void setModelSubmitter(RecipeValidation.RecipeValidatorModelSubmission modelSubmitter) {
-        this.modelSubmitter = modelSubmitter;
+    @Override
+    public void startByCloningModel(String oldRecipeId, String newRecipeId) {
+        isCloned = true;
+        this.recipeId = newRecipeId;
+        recipeIdentityDataSource.getByRecipeId(oldRecipeId, this);
     }
 
     @Override
     public void onEntityLoaded(RecipeIdentityEntity identityEntity) {
         isNewIdentityEntity = false;
         oldIdentityEntity = identityEntity;
+
+        if (isCloned) {
+
+            oldIdentityEntity = cloneIdentityEntity();
+            saveIdentityEntity();
+        }
+        updateObservables();
+    }
+
+    @Override
+    public void onDataNotAvailable() {
+        isNewIdentityEntity = true;
+        oldIdentityEntity = createNewIdentityEntity();
         updateObservables();
     }
 
@@ -155,13 +180,6 @@ public class RecipeIdentityViewModel
         return totalTime % 60;
     }
 
-    @Override
-    public void onDataNotAvailable() {
-        isNewIdentityEntity = true;
-        oldIdentityEntity = createNewIdentityEntity();
-        reportRecipeModelStatus();
-    }
-
     private void titleChanged() {
         titleErrorMessage.set(null);
         String validationResponse = validateShortText(titleObservable.get());
@@ -179,7 +197,8 @@ public class RecipeIdentityViewModel
         String validationResponse = validateLongText(descriptionObservable.get());
 
         descriptionValid = validationResponse.equals(VALIDATED);
-        if (!descriptionValid) descriptionErrorMessage.set(validationResponse);
+        if (!descriptionValid)
+            descriptionErrorMessage.set(validationResponse);
 
         reportRecipeModelStatus();
     }
@@ -210,7 +229,9 @@ public class RecipeIdentityViewModel
         String errorMessage = resources.getString(R.string.input_error_recipe_prep_time_too_long);
 
         prepTimeValid = totalPrepTime <= maxAllowedPrepTime;
-        if (!prepTimeValid) prepTimeErrorMessage.set(errorMessage);
+
+        if (!prepTimeValid)
+            prepTimeErrorMessage.set(errorMessage);
 
         reportRecipeModelStatus();
     }
@@ -254,7 +275,7 @@ public class RecipeIdentityViewModel
                     isValid()
             ));
 
-            if (isValid() && isChanged())
+            if (isValid() && isChanged() || isCloned || isNewIdentityEntity)
                 saveIdentityEntity();
         }
     }
@@ -284,10 +305,16 @@ public class RecipeIdentityViewModel
         RecipeIdentityEntity identityEntity;
         if (isNewIdentityEntity) {
             identityEntity = createNewIdentityEntity();
+
+        } else if(isCloned) {
+            identityEntity = oldIdentityEntity;
+
         } else {
             identityEntity = updateExistingIdentityEntity();
         }
         recipeIdentityDataSource.save(identityEntity);
+        isCloned = false;
+        isNewIdentityEntity = false;
     }
 
     private RecipeIdentityEntity updateExistingIdentityEntity() {
@@ -315,5 +342,19 @@ public class RecipeIdentityViewModel
                 calculateTotalInMinutes(cookHours, cookMinutes),
                 currentTime,
                 currentTime);
+    }
+
+    private RecipeIdentityEntity cloneIdentityEntity() {
+        long currentTime = timeProvider.getCurrentTimestamp();
+        return new RecipeIdentityEntity(
+                idProvider.getUId(),
+                recipeId,
+                oldIdentityEntity.getTitle(),
+                oldIdentityEntity.getDescription(),
+                oldIdentityEntity.getPrepTime(),
+                oldIdentityEntity.getCookTime(),
+                currentTime,
+                currentTime
+        );
     }
 }

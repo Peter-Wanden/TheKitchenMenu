@@ -1,7 +1,5 @@
 package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 
-import android.util.Log;
-
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -35,7 +33,7 @@ public class RecipeValidator implements RecipeValidation.RecipeValidatorModelSub
     @Override
     public void submitModelStatus(RecipeModelStatus modelStatus) {
         recipeModelStatusList.put(modelStatus.getModelName(), modelStatus);
-        recipeEditor.setRecipeValidationStatus(getRecipeValidationStatus());
+        recipeEditor.setValidationStatus(getRecipeValidationStatus());
     }
 
     private RecipeValidationStatus getRecipeValidationStatus() {

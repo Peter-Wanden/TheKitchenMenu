@@ -84,4 +84,53 @@ public class RecipeCourseTestData {
         courseEntities.add(getRecipeCourseSix());
         return courseEntities;
     }
+
+    public static RecipeCourseEntity getClonedRecipeCourseZero() {
+        return new RecipeCourseEntity(
+                "id0",
+                getRecipeCourseZero().getCourseNo(),
+                RecipeTestData.getNewRecipeId()
+        );
+    }
+
+    public static RecipeCourseEntity getClonedRecipeCourseOne() {
+        return new RecipeCourseEntity(
+                "id1",
+                getRecipeCourseOne().getCourseNo(),
+                RecipeTestData.getNewRecipeId()
+        );
+    }
+
+    public static RecipeCourseEntity getClonedRecipeCourseTwo() {
+        return new RecipeCourseEntity(
+                "id2",
+                getRecipeCourseTwo().getCourseNo(),
+                RecipeTestData.getNewRecipeId()
+        );
+    }
+
+    public static RecipeCourseEntity getClonedRecipeCourseFour() {
+        return new RecipeCourseEntity(
+                "id4",
+                getRecipeCourseFour().getCourseNo(),
+                RecipeTestData.getNewRecipeId()
+        );
+    }
+
+    public static RecipeCourseEntity getClonedRecipeCourseSix() {
+        return new RecipeCourseEntity(
+                "id6",
+                getRecipeCourseSix().getCourseNo(),
+                RecipeTestData.getNewRecipeId()
+        );
+    }
+
+    public static List<RecipeCourseEntity> getAllEvenRecipeCourseClones() {
+        List<RecipeCourseEntity> clonedRecipeCourseEntities = new ArrayList<>();
+        clonedRecipeCourseEntities.add(getClonedRecipeCourseZero());
+        clonedRecipeCourseEntities.add(getClonedRecipeCourseTwo());
+        clonedRecipeCourseEntities.add(getClonedRecipeCourseFour());
+        clonedRecipeCourseEntities.add(getClonedRecipeCourseSix());
+        return clonedRecipeCourseEntities;
+    }
 }

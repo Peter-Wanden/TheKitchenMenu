@@ -16,8 +16,11 @@ import java.util.List;
 import java.util.Map;
 
 public class RecipeCourseSelectorViewModel
-        extends ViewModel
-        implements DataSource.GetAllCallback<RecipeCourseEntity> {
+        extends
+        ViewModel
+        implements
+        DataSource.GetAllCallback<RecipeCourseEntity>,
+        RecipeModelComposite.RecipeModelActions {
 
     private enum Courses {
         COURSE_ZERO(0),
@@ -58,6 +61,7 @@ public class RecipeCourseSelectorViewModel
     private HashMap<Courses, RecipeCourseEntity> oldCourseList = new LinkedHashMap<>();
     private HashMap<Courses, RecipeCourseEntity> newCourseList = new LinkedHashMap<>();
     private boolean modelIsUpdating;
+    private boolean cloneModel;
 
     public final ObservableBoolean courseZeroObservable = new ObservableBoolean();
     public final ObservableBoolean courseOneObservable = new ObservableBoolean();
@@ -155,13 +159,21 @@ public class RecipeCourseSelectorViewModel
         });
     }
 
-    void setModelSubmitter(RecipeValidation.RecipeValidatorModelSubmission modelSubmitter) {
+    void setModelValidationSubmitter(RecipeValidation.RecipeValidatorModelSubmission modelSubmitter) {
         this.modelSubmitter = modelSubmitter;
     }
 
-    void onStart(@NonNull String recipeId) {
+    @Override
+    public void start(String recipeId) {
         this.recipeId = recipeId;
         getCoursesForRecipe(recipeId);
+    }
+
+    @Override
+    public void startByCloningModel(String oldRecipeId, String newRecipeId) {
+        cloneModel = true;
+        recipeId = newRecipeId;
+        getCoursesForRecipe(oldRecipeId);
     }
 
     private void getCoursesForRecipe(String recipeId) {
@@ -170,6 +182,9 @@ public class RecipeCourseSelectorViewModel
 
     @Override
     public void onAllLoaded(List<RecipeCourseEntity> recipeCourseEntities) {
+        if (cloneModel)
+            cloneRecipeCourseEntities(recipeCourseEntities);
+
         modelIsUpdating = true;
 
         for (RecipeCourseEntity courseEntity : recipeCourseEntities)
@@ -177,6 +192,11 @@ public class RecipeCourseSelectorViewModel
 
         newCourseList.putAll(oldCourseList);
         setRecipeCoursesToObservables();
+    }
+
+    private void cloneRecipeCourseEntities(List<RecipeCourseEntity> recipeCourseEntities) {
+        for (RecipeCourseEntity recipeCourseEntity : recipeCourseEntities)
+            dataSourceRecipeCourse.save(createNewCourseEntity(recipeCourseEntity.getCourseNo()));
     }
 
     private void setRecipeCoursesToObservables() {

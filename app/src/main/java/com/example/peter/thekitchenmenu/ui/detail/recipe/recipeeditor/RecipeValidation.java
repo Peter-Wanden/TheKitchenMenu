@@ -7,6 +7,6 @@ public interface RecipeValidation {
     }
 
     interface RecipeEditor {
-        void setRecipeValidationStatus(RecipeValidator.RecipeValidationStatus validationStatus);
+        void setValidationStatus(RecipeValidator.RecipeValidationStatus validationStatus);
     }
 }

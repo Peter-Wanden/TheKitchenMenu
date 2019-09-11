@@ -4,7 +4,6 @@ import android.content.res.Resources;
 
 import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.peter.thekitchenmenu.R;
@@ -14,9 +13,6 @@ import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidator.*;
 import static com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidator.RecipeValidationStatus.*;
@@ -44,9 +40,7 @@ public class RecipeEditorViewModel
     public final ObservableField<String> ingredientsButtonTextObservable = new ObservableField<>();
     public final ObservableBoolean dataIsLoadingObservable = new ObservableBoolean();
 
-    // the listener attached to this live data starts all other recipe view models
-    private List<RecipeComponent> recipeComponents = new ArrayList<>();
-    private final MutableLiveData<String> recipeIdLiveData = new MutableLiveData<>();
+    private RecipeModelComposite recipeModels;
 
     private RecipeEntity recipeEntity;
 
@@ -75,6 +69,10 @@ public class RecipeEditorViewModel
         navigator = null;
     }
 
+    void setRecipeModelComposite(RecipeModelComposite recipeModels) {
+        this.recipeModels = recipeModels;
+    }
+
     void start() {
         setupForNewRecipe();
     }
@@ -85,8 +83,7 @@ public class RecipeEditorViewModel
 
         recipeEntity = createNewEntity();
         saveRecipe(recipeEntity);
-        recipeIdLiveData.setValue(recipeEntity.getId()); // todo - remove when RecipeComponent interface complete
-        startRecipeComponentModels();
+        startModels();
         setIngredientsButton();
     }
 
@@ -115,8 +112,7 @@ public class RecipeEditorViewModel
         isNewRecipe = false;
         setActivityTitleEvent.setValue(R.string.activity_title_edit_recipe);
 
-        recipeIdLiveData.setValue(recipeEntity.getId()); // todo - remove when RecipeComponent interface complete
-        startRecipeComponentModels();
+        startModels();
         setIngredientsButton();
     }
 
@@ -126,25 +122,18 @@ public class RecipeEditorViewModel
 
         recipeEntity = getClonedRecipeEntity();
         saveRecipe(recipeEntity);
-        requestAllRecipeComponentsCloneThemselves();
+        startModelsWithClone();
         setIngredientsButton();
     }
 
-    private void startRecipeComponentModels() {
-
+    private void startModels() {
+        recipeModels.start(recipeEntity.getId());
     }
 
-    private void requestAllRecipeComponentsCloneThemselves() {
+    private void startModelsWithClone() {
         String oldRecipeId = recipeEntity.getParentId();
         String newRecipeId = recipeEntity.getId();
-
-        if (!recipeComponents.isEmpty())
-            for (RecipeComponent rc : recipeComponents)
-                rc.cloneComponent(oldRecipeId, newRecipeId);
-    }
-
-    void setComponent(RecipeComponent recipeComponent) {
-        recipeComponents.add(recipeComponent);
+        recipeModels.startWithClonedModel(oldRecipeId, newRecipeId);
     }
 
     @Override
@@ -176,22 +165,19 @@ public class RecipeEditorViewModel
         return enableReviewButtonEvent;
     }
 
-    MutableLiveData<String> getRecipeIdLiveData() {
-        return recipeIdLiveData;
-    }
-
     RecipeValidator getValidator() {
         return validator;
     }
 
     @Override
-    public void setRecipeValidationStatus(RecipeValidationStatus recipeValidationStatus) {
+    public void setValidationStatus(RecipeValidationStatus recipeValidationStatus) {
         this.recipeValidationStatus = recipeValidationStatus;
 
         isDraft = recipeValidationStatus != VALID_HAS_CHANGES &&
                 recipeValidationStatus != VALID_NO_CHANGES;
 
-        if (recipeValidationStatus != VALID_NO_CHANGES) {
+        if (recipeValidationStatus != INVALID_NO_CHANGES &&
+                recipeValidationStatus != VALID_NO_CHANGES) {
             recipeEntity = createNewEntity();
             saveRecipe(recipeEntity);
         }

@@ -10,7 +10,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.data.model.RecipeModel;
+import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
 import com.example.peter.thekitchenmenu.databinding.RecipeListItemBinding;
 
 import java.util.ArrayList;
@@ -23,8 +23,8 @@ public class RecipeCatalogAllRecyclerAdapter
     private static final String TAG = "tkm-CatalogAdapter";
 
     private final RecipeCatalogViewModel viewModel;
-    private List<RecipeModel> recipeModelList;
-    private List<RecipeModel> recipeModelListFull;
+    private List<RecipeEntity> recipeModelList;
+    private List<RecipeEntity> recipeModelListFull;
 
     RecipeCatalogAllRecyclerAdapter(RecipeCatalogViewModel viewModel) {
         this.viewModel = viewModel;
@@ -46,7 +46,7 @@ public class RecipeCatalogAllRecyclerAdapter
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        final RecipeModel recipeModel = recipeModelList.get(position);
+        final RecipeEntity recipeModel = recipeModelList.get(position);
         holder.bind(recipeModel);
     }
 
@@ -65,14 +65,14 @@ public class RecipeCatalogAllRecyclerAdapter
     private Filter filterResults = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
-            List<RecipeModel> filteredList = new ArrayList<>();
+            List<RecipeEntity> filteredList = new ArrayList<>();
 
             if (constraint == null || constraint.length() == 0) {
                 filteredList.addAll(recipeModelListFull);
             } else {
                 String filterPattern = constraint.toString().toLowerCase().trim();
 
-                for (RecipeModel model : recipeModelListFull) {
+                for (RecipeEntity model : recipeModelListFull) {
 //                    String title = model.getTitle.toLowerCase();
 //
 //                    if (title.contains(filterPattern)) {
@@ -94,11 +94,11 @@ public class RecipeCatalogAllRecyclerAdapter
     };
 
     /* Getter for the current list of products */
-    public List<RecipeModel> getRecipes() {
+    public List<RecipeEntity> getRecipes() {
         return recipeModelList;
     }
 
-    void setRecipeModels(List<RecipeModel> recipeModelList) {
+    void setRecipeModels(List<RecipeEntity> recipeModelList) {
         this.recipeModelList = recipeModelList;
         recipeModelListFull = new ArrayList<>(recipeModelList);
         notifyDataSetChanged();
@@ -110,15 +110,15 @@ public class RecipeCatalogAllRecyclerAdapter
 
         RecipeItemUserActionsListener listener = new RecipeItemUserActionsListener() {
             @Override
-            public void onRecipeClicked(RecipeModel recipeModel) {
+            public void onRecipeClicked(RecipeEntity recipeEntity) {
             }
 
             @Override
-            public void onAddToFavoritesClicked(RecipeModel recipeModel) {
+            public void onAddToFavoritesClicked(RecipeEntity recipeEntity) {
             }
 
             @Override
-            public void onRemoveFromFavoritesClicked(RecipeModel recipeModel) {
+            public void onRemoveFromFavoritesClicked(RecipeEntity recipeEntity) {
             }
         };
 
@@ -127,7 +127,7 @@ public class RecipeCatalogAllRecyclerAdapter
             this.binding = binding;
         }
 
-        void bind(RecipeModel recipeModel) {
+        void bind(RecipeEntity recipeModel) {
             binding.setRecipeModel(recipeModel);
             binding.setListener(listener);
             binding.executePendingBindings();
