@@ -127,7 +127,6 @@ public abstract class Repository<T extends TkmEntity> implements DataSource<T> {
                         callback.onDataNotAvailable();
                     }
                 });
-                callback.onDataNotAvailable();
             }
         });
     }

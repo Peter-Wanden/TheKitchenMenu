@@ -94,7 +94,6 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
             return (T) new RecipeIdentityViewModel(
                     recipeIdentityRepository,
                     new TimeProvider(),
-                    new UniqueIdProvider(),
                     application.getResources(),
                     new TextValidationHandler(),
                     new ParseIntegerFromObservableHandler());

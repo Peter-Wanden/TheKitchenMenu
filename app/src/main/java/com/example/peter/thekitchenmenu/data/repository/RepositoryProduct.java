@@ -13,7 +13,6 @@ public class RepositoryProduct extends Repository<ProductEntity> {
     private RepositoryProduct(
             @NonNull DataSource<ProductEntity> remoteDataSource,
             @NonNull DataSource<ProductEntity> localDataSource) {
-
         this.remoteDataSource = checkNotNull(remoteDataSource);
         this.localDataSource = checkNotNull(localDataSource);
     }

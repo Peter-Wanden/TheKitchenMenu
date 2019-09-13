@@ -3,9 +3,9 @@ package com.example.peter.thekitchenmenu.data.repository.source.remote;
 import androidx.annotation.NonNull;
 
 import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
-import com.example.peter.thekitchenmenu.data.repository.DataSourceRecipeIdentity;
+import com.example.peter.thekitchenmenu.data.repository.DataSource;
 
-public class RecipeIdentityRemoteDataSource implements DataSourceRecipeIdentity {
+public class RecipeIdentityRemoteDataSource implements DataSource<RecipeIdentityEntity> {
 
     private static RecipeIdentityRemoteDataSource INSTANCE;
 
@@ -22,11 +22,6 @@ public class RecipeIdentityRemoteDataSource implements DataSourceRecipeIdentity 
 
     @Override
     public void getById(@NonNull String id, @NonNull GetEntityCallback<RecipeIdentityEntity> callback) {
-        callback.onDataNotAvailable();
-    }
-
-    @Override
-    public void getByRecipeId(@NonNull String recipeId, @NonNull GetEntityCallback<RecipeIdentityEntity> callback) {
         callback.onDataNotAvailable();
     }
 

@@ -1,6 +1,7 @@
 package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 
 import android.content.res.Resources;
+import android.util.Log;
 
 import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
@@ -9,6 +10,7 @@ import androidx.lifecycle.ViewModel;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
+import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
@@ -31,6 +33,7 @@ public class RecipeEditorViewModel
     private TimeProvider timeProvider;
     private RecipeValidationStatus recipeValidationStatus = INVALID_MISSING_MODELS;
     private RecipeValidator validator;
+    private RecipeModelComposite recipeModels;
 
     private final SingleLiveEvent<Void> showUnsavedChangesDialogEvent = new SingleLiveEvent<>();
     private final SingleLiveEvent<Integer> setActivityTitleEvent = new SingleLiveEvent<>();
@@ -39,8 +42,6 @@ public class RecipeEditorViewModel
     public final ObservableBoolean showIngredientsButtonObservable = new ObservableBoolean();
     public final ObservableField<String> ingredientsButtonTextObservable = new ObservableField<>();
     public final ObservableBoolean dataIsLoadingObservable = new ObservableBoolean();
-
-    private RecipeModelComposite recipeModels;
 
     private RecipeEntity recipeEntity;
 
@@ -79,10 +80,12 @@ public class RecipeEditorViewModel
 
     private void setupForNewRecipe() {
         isNewRecipe = true;
+
         setActivityTitleEvent.setValue(R.string.activity_title_add_new_recipe);
 
-        recipeEntity = createNewEntity();
-        saveRecipe(recipeEntity);
+        recipeEntity = getNewRecipe();
+//        Log.d(TAG, "setupForNewRecipe: Save called");
+        saveRecipe();
         startModels();
         setIngredientsButton();
     }
@@ -121,7 +124,8 @@ public class RecipeEditorViewModel
         setActivityTitleEvent.setValue(R.string.activity_title_copy_recipe);
 
         recipeEntity = getClonedRecipeEntity();
-        saveRecipe(recipeEntity);
+//        Log.d(TAG, "setupForClonedRecipe: save called");
+        saveRecipe();
         startModelsWithClone();
         setIngredientsButton();
     }
@@ -148,6 +152,7 @@ public class RecipeEditorViewModel
 
     private void setIngredientsButton() {
         if (isNewRecipe) {
+            // Todo - isNewRecipe, change to ifNoIngredients when ingredient component added
             ingredientsButtonTextObservable.set(resources.getString(R.string.add_ingredients));
 
         } else if (creatorIsEditingOwnRecipe()) {
@@ -173,13 +178,16 @@ public class RecipeEditorViewModel
     public void setValidationStatus(RecipeValidationStatus recipeValidationStatus) {
         this.recipeValidationStatus = recipeValidationStatus;
 
+//        Log.d(TAG, "setValidationStatus=" + recipeValidationStatus);
+
         isDraft = recipeValidationStatus != VALID_HAS_CHANGES &&
                 recipeValidationStatus != VALID_NO_CHANGES;
 
         if (recipeValidationStatus != INVALID_NO_CHANGES &&
                 recipeValidationStatus != VALID_NO_CHANGES) {
-            recipeEntity = createNewEntity();
-            saveRecipe(recipeEntity);
+
+            this.recipeEntity = createNewEntity();
+            saveRecipe();
         }
         updateButtonVisibility();
     }
@@ -223,7 +231,7 @@ public class RecipeEditorViewModel
     }
 
     void reviewButtonPressed() {
-        String recipeId = getRecipeId();
+        String recipeId = recipeEntity.getId();
 
         if (isNewRecipe) {
             navigator.reviewNewRecipe(recipeId);
@@ -240,7 +248,7 @@ public class RecipeEditorViewModel
     }
 
     void ingredientsButtonPressed() {
-        String recipeId = getRecipeId();
+        String recipeId = recipeEntity.getId();
 
         if (isNewRecipe) {
             navigator.addIngredients(recipeId);
@@ -262,10 +270,7 @@ public class RecipeEditorViewModel
     }
 
     private RecipeEntity createNewEntity() {
-        if (isNewRecipe) {
-            return getNewRecipe();
-
-        } else if (creatorIsEditingOwnRecipe()) {
+        if (creatorIsEditingOwnRecipe()) {
             return getEditedRecipe();
 
         } else if (recipeIsCloned()) {
@@ -320,7 +325,8 @@ public class RecipeEditorViewModel
         return !creatorIsEditingOwnRecipe();
     }
 
-    private void saveRecipe(RecipeEntity recipeEntity) {
+    private void saveRecipe() {
+//        Log.d(TAG, "saveRecipe: " + recipeEntity);
         recipeEntityDataSource.save(recipeEntity);
     }
 

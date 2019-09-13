@@ -310,6 +310,8 @@ public class RecipeEditorViewModelTest {
         when(uniqueIdProviderMock.getUId()).thenReturn(NEW_ID);
         // Act
         SUT.start();
+        SUT.setValidationStatus(VALID_HAS_CHANGES);
+        assertTrue(SUT.showIngredientsButtonObservable.get()); // Verify button is shown
         SUT.ingredientsButtonPressed();
         // Assert
         verify(addEditRecipeNavigatorMock).addIngredients(ac.capture());

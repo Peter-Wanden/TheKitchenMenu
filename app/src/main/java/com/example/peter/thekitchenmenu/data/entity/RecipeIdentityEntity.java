@@ -12,7 +12,6 @@ public final class RecipeIdentityEntity implements TkmEntity {
 
     public static final String TABLE_RECIPE_IDENTITY = "recipeIdentity";
     public static final String ID = "id";
-    public static final String RECIPE_ID = "recipeId";
     public static final String TITLE = "title";
     public static final String DESCRIPTION = "description";
     public static final String PREP_TIME = "prepTime";
@@ -24,10 +23,6 @@ public final class RecipeIdentityEntity implements TkmEntity {
     @NonNull
     @ColumnInfo(name = ID)
     private final String id;
-
-    @NonNull
-    @ColumnInfo(name = RECIPE_ID)
-    private final String recipeId;
 
     @NonNull
     @ColumnInfo(name = TITLE)
@@ -49,7 +44,6 @@ public final class RecipeIdentityEntity implements TkmEntity {
     private final long lastUpdate;
 
     public RecipeIdentityEntity(@NonNull String id,
-                                @NonNull String recipeId,
                                 @NonNull String title,
                                 String description,
                                 int prepTime,
@@ -57,7 +51,6 @@ public final class RecipeIdentityEntity implements TkmEntity {
                                 long createDate,
                                 long lastUpdate) {
         this.id = id;
-        this.recipeId = recipeId;
         this.title = title;
         this.description = description;
         this.prepTime = prepTime;
@@ -76,7 +69,6 @@ public final class RecipeIdentityEntity implements TkmEntity {
                 createDate == that.createDate &&
                 lastUpdate == that.lastUpdate &&
                 id.equals(that.id) &&
-                recipeId.equals(that.recipeId) &&
                 title.equals(that.title) &&
                 description.equals(that.description);
     }
@@ -85,7 +77,6 @@ public final class RecipeIdentityEntity implements TkmEntity {
     public int hashCode() {
         return Objects.hash(
                 id,
-                recipeId,
                 title,
                 description,
                 prepTime,
@@ -98,7 +89,6 @@ public final class RecipeIdentityEntity implements TkmEntity {
     public String toString() {
         return "RecipeIdentityEntity{" +
                 "id='" + id + '\'' +
-                ", recipeId='" + recipeId + '\'' +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", prepTime=" + prepTime +
@@ -112,11 +102,6 @@ public final class RecipeIdentityEntity implements TkmEntity {
     @NonNull
     public String getId() {
         return id;
-    }
-
-    @NonNull
-    public String getRecipeId() {
-        return recipeId;
     }
 
     @NonNull

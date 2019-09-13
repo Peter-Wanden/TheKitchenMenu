@@ -2,14 +2,11 @@ package com.example.peter.thekitchenmenu.testdata;
 
 import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
 
-import static com.example.peter.thekitchenmenu.testdata.RecipeTestData.*;
-
 public class RecipeIdentityTestData {
 
     public static RecipeIdentityEntity getValidRecipeIdentityEntity() {
         return new RecipeIdentityEntity(
                 "id",
-                getValidExistingRecipeEntity().getId(),
                 "title",
                 "description",
                 90,
@@ -22,7 +19,6 @@ public class RecipeIdentityTestData {
     public static RecipeIdentityEntity getValidRecipeIdentityEntityFromAnotherUser() {
         return new RecipeIdentityEntity (
                 "id1",
-                RecipeTestData.getValidRecipeEntityFromAnotherUser().getId(),
                 "titleFromAnotherRecipe",
                 "descriptionFromAnotherRecipe",
                 150,
@@ -35,7 +31,6 @@ public class RecipeIdentityTestData {
     public static RecipeIdentityEntity getValidClonedRecipeIdentityEntity() {
         return new RecipeIdentityEntity(
                 "clonedIdentityEntityNewId",
-                getValidRecipeIdentityEntityFromAnotherUser().getRecipeId(),
                 getValidRecipeIdentityEntityFromAnotherUser().getTitle(),
                 getValidRecipeIdentityEntityFromAnotherUser().getDescription(),
                 getValidRecipeIdentityEntityFromAnotherUser().getPrepTime(),
@@ -45,10 +40,21 @@ public class RecipeIdentityTestData {
         );
     }
 
+    public static RecipeIdentityEntity getInvalidIdentityEntityWithNothingUpdated() {
+        return new RecipeIdentityEntity(
+                getValidRecipeIdentityEntity().getId(),
+                "",
+                "",
+                0,
+                0,
+                getValidRecipeIdentityEntity().getCreateDate(),
+                getValidRecipeIdentityEntity().getCreateDate()
+        );
+    }
+
     public static RecipeIdentityEntity getValidIdentityEntityWithOnlyTitleUpdated() {
         return new RecipeIdentityEntity(
                 getValidRecipeIdentityEntity().getId(),
-                RecipeTestData.getValidExistingRecipeEntity().getId(),
                 getValidRecipeIdentityEntity().getTitle(),
                 "",
                 0,
@@ -61,7 +67,6 @@ public class RecipeIdentityTestData {
     public static RecipeIdentityEntity getClonedIdentityEntityWithDescriptionUpdated() {
         return new RecipeIdentityEntity(
                 getValidClonedRecipeIdentityEntity().getId(),
-                getValidClonedRecipeIdentityEntity().getRecipeId(),
                 getValidRecipeIdentityEntityFromAnotherUser().getTitle(),
                 "updated description",
                 getValidRecipeIdentityEntityFromAnotherUser().getPrepTime(),
@@ -74,7 +79,6 @@ public class RecipeIdentityTestData {
     public static RecipeIdentityEntity getEmptyClonedIdentityEntityWithNoUpdates() {
         return new RecipeIdentityEntity(
                 getValidClonedRecipeIdentityEntity().getId(),
-                getValidClonedRecipeIdentityEntity().getRecipeId(),
                 "",
                 "",
                 0,

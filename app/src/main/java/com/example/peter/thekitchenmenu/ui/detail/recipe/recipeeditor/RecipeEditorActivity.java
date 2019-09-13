@@ -23,7 +23,6 @@ import com.example.peter.thekitchenmenu.utils.ActivityUtils;
 
 public class RecipeEditorActivity extends AppCompatActivity implements AddEditRecipeNavigator {
 
-    private static final String TAG = "tkm-RecipeEditorAct";
 
     public static final String EXTRA_RECIPE_ID = "RECIPE_ID";
     public static final int REQUEST_ADD_EDIT_RECIPE = 50;
@@ -146,7 +145,7 @@ public class RecipeEditorActivity extends AppCompatActivity implements AddEditRe
                         findFragmentById(R.id.recipe_editor_recipe_identity_content_frame);
 
         if (recipeIdentityFragment == null)
-            recipeIdentityFragment = RecipeIdentityFragment.newInstance(); //todo add the recipeID
+            recipeIdentityFragment = RecipeIdentityFragment.newInstance();
         return recipeIdentityFragment;
     }
 

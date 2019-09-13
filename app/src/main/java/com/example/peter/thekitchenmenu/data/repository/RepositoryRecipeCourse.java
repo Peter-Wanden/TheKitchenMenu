@@ -86,7 +86,6 @@ public class RepositoryRecipeCourse
                                         callback.onDataNotAvailable();
                                     }
                                 });
-                        callback.onDataNotAvailable();
                     }
                 });
     }
@@ -157,7 +156,6 @@ public class RepositoryRecipeCourse
                                         callback.onDataNotAvailable();
                                     }
                                 });
-                        callback.onDataNotAvailable();
                     }
                 });
     }

@@ -83,7 +83,6 @@ public class RepositoryFavoriteProduct
                         callback.onDataNotAvailable();
                     }
                 });
-                callback.onDataNotAvailable();
             }
         });
     }

@@ -1,5 +1,7 @@
 package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
@@ -7,6 +9,7 @@ import java.util.List;
 
 // Allows RecipeEditorVM to push commands to registered RecipeViewModels
 class RecipeModelComposite {
+    private static final String TAG = "tkm-RecipeModelComposite";
 
     public interface RecipeModelActions {
 
@@ -18,6 +21,7 @@ class RecipeModelComposite {
     private List<RecipeModelActions> recipeModelCompositeList = new ArrayList<>();
 
     void registerModel(RecipeModelActions recipeModelActions) {
+        Log.d(TAG, "registerModel: models registered");
         recipeModelCompositeList.add(recipeModelActions);
     }
 
