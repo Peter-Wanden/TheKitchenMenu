@@ -36,8 +36,8 @@ public class ProductRemoteDataSource implements DataSource<ProductEntity> {
 
     @Override
     public void refreshData() {
-        // Not required because the {@link Repository} handles the logic of refreshing the
-        // products from all the available data sources.
+        // Not required because the {@link Repository} handles the logic of refreshing data
+        // from all the available data sources.
     }
 
     @Override

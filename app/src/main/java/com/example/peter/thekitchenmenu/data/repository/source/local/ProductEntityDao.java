@@ -40,7 +40,7 @@ public interface ProductEntityDao {
     void deleteById(String id);
 
     @Query("DELETE FROM " + TABLE_PRODUCT)
-    void deleteProducts();
+    void deleteAll();
 
     @Query("SELECT " +
             TABLE_PRODUCT + "." + ID + " AS _id, " +

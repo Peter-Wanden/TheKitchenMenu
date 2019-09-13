@@ -25,5 +25,4 @@ public class RepositoryProduct extends Repository<ProductEntity> {
             INSTANCE = new RepositoryProduct(remoteDataSource, localDataSource);
         return INSTANCE;
     }
-
 }

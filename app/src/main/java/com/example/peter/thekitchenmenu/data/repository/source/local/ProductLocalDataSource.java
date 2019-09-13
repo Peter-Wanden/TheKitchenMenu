@@ -78,13 +78,13 @@ public class ProductLocalDataSource implements DataSource<ProductEntity> {
 
     @Override
     public void refreshData() {
-        // Not required because the {@link Repository} handles the logic of refreshing the
-        // tasks from all the available data sources.
+        // Not required because the {@link Repository} handles the logic of refreshing data
+        // from all the available data sources.
     }
 
     @Override
     public void deleteAll() {
-        Runnable deleteAllRunnable = () -> productDao.deleteProducts();
+        Runnable deleteAllRunnable = () -> productDao.deleteAll();
         appExecutors.diskIO().execute(deleteAllRunnable);
     }
 

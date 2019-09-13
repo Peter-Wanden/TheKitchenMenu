@@ -178,7 +178,7 @@
     <string name="recipe_sittings_label">No of sittings</string>
     <string name="recipe_total_servings_label">Total number of servings</string>
     <string name="recipe_preparation_time_label">Prep time</string>
-    <string name="recipe_cooking_time_label">Cooking time</string>
+    <string name="recipe_cooking_time_label">Cook time</string>
     <string name="recipe_hours_label">Hours</string>
     <string name="recipe_minutes_label">Minutes</string>
 

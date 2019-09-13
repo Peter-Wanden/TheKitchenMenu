@@ -58,6 +58,12 @@
                         android:layout_height="wrap_content">
                     </FrameLayout>
 
+                    <FrameLayout
+                        android:id="@+id/recipe_duration_content_frame"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                    </FrameLayout>
+
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/recipe_editor_add_ingredients_button"
                         android:layout_width="wrap_content"

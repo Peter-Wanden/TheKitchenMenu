@@ -29,7 +29,7 @@ public class RecipeIdentityViewModel
     private Resources resources;
     private TextValidationHandler validationHandler;
     private ParseIntegerFromObservableHandler intFromObservable;
-    private DataSource<RecipeIdentityEntity> recipeIdentityDataSource;
+    private DataSource<RecipeIdentityEntity> identityEntityDataSource;
     private TimeProvider timeProvider;
     private RecipeValidatorModelSubmission modelSubmitter;
 
@@ -60,12 +60,12 @@ public class RecipeIdentityViewModel
             prepTimeValid = true,
             cookTimeValid = true;
 
-    public RecipeIdentityViewModel(DataSource<RecipeIdentityEntity> recipeIdentityDataSource,
+    public RecipeIdentityViewModel(DataSource<RecipeIdentityEntity> identityEntityDataSource,
                                    TimeProvider timeProvider,
                                    Resources resources,
                                    TextValidationHandler validationHandler,
                                    ParseIntegerFromObservableHandler intFromObservable) {
-        this.recipeIdentityDataSource = recipeIdentityDataSource;
+        this.identityEntityDataSource = identityEntityDataSource;
         this.timeProvider = timeProvider;
         this.resources = resources;
         this.validationHandler = validationHandler;
@@ -124,7 +124,7 @@ public class RecipeIdentityViewModel
         if (recipeId != null) {
             this.recipeId = recipeId;
             Log.d(TAG, "start: called");
-            recipeIdentityDataSource.getById(recipeId, this);
+            identityEntityDataSource.getById(recipeId, this);
         } else {
             throw new RuntimeException("Recipe id cannot be null");
         }
@@ -135,7 +135,7 @@ public class RecipeIdentityViewModel
         Log.d(TAG, "startByCloningModel: start by clone called");
         isCloned = true;
         this.recipeId = newRecipeId;
-        recipeIdentityDataSource.getById(oldRecipeId, this);
+        identityEntityDataSource.getById(oldRecipeId, this);
     }
 
     @Override
@@ -309,7 +309,7 @@ public class RecipeIdentityViewModel
     }
 
     private void save(RecipeIdentityEntity identityEntity) {
-        recipeIdentityDataSource.save(identityEntity);
+        identityEntityDataSource.save(identityEntity);
     }
 
     private RecipeIdentityEntity updatedIdentityEntity() {

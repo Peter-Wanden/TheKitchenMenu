@@ -8,11 +8,13 @@ import com.example.peter.thekitchenmenu.app.AppExecutors;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.ProductLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.LocalDataSourceRecipeCourse;
+import com.example.peter.thekitchenmenu.data.repository.source.local.RecipeDurationLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.RecipeIdentityLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.RecipeLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.TKMDatabase;
 import com.example.peter.thekitchenmenu.data.repository.source.local.LocalDataSourceFavoriteProducts;
 import com.example.peter.thekitchenmenu.data.repository.source.remote.ProductRemoteDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.remote.RecipeDurationRemoteDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.remote.RemoteDataSourceFavoriteProducts;
 import com.example.peter.thekitchenmenu.data.repository.source.remote.RemoteDataSourceRecipeCourse;
 import com.example.peter.thekitchenmenu.data.repository.source.remote.RecipeIdentityRemoteDataSource;
@@ -82,5 +84,18 @@ public class DatabaseInjection {
                 RecipeIdentityLocalDataSource.getInstance(
                         new AppExecutors(),
                         database.recipeIdentityEntityDao()));
+    }
+
+    public static RepositoryRecipeDuration provideRecipeDurationDataSource(
+            @NonNull Context context) {
+        checkNotNull(context);
+
+        TKMDatabase database = TKMDatabase.getInstance(context, new AppExecutors());
+
+        return RepositoryRecipeDuration.getInstance(
+                RecipeDurationRemoteDataSource.getInstance(),
+                RecipeDurationLocalDataSource.getInstance(
+                        new AppExecutors(),
+                        database.recipeDurationEntityDao()));
     }
 }

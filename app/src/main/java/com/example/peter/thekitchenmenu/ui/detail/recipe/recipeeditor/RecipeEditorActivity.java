@@ -76,13 +76,23 @@ public class RecipeEditorActivity extends AppCompatActivity implements AddEditRe
         RecipeModelComposite recipeModelComposite = new RecipeModelComposite();
         recipeEditorViewModel.setRecipeModelComposite(recipeModelComposite);
 
-        RecipeIdentityViewModel identityViewModel = obtainIdentityViewModel(this);
-        identityViewModel.setModelValidationSubmitter(recipeEditorViewModel.getValidator());
+        RecipeIdentityViewModel identityViewModel =
+                obtainIdentityViewModel(this);
+        identityViewModel.setModelValidationSubmitter(
+                recipeEditorViewModel.getValidator());
         recipeModelComposite.registerModel(identityViewModel);
 
-        RecipeCourseSelectorViewModel courseSelectorViewModel = obtainCourseSelectorViewModel(this);
-        courseSelectorViewModel.setModelValidationSubmitter(recipeEditorViewModel.getValidator());
+        RecipeCourseSelectorViewModel courseSelectorViewModel =
+                obtainCourseSelectorViewModel(this);
+        courseSelectorViewModel.setModelValidationSubmitter(
+                recipeEditorViewModel.getValidator());
         recipeModelComposite.registerModel(courseSelectorViewModel);
+
+        RecipeDurationViewModel durationViewModel =
+                obtainDurationViewModel(this);
+        durationViewModel.setModelValidationSubmitter(
+                recipeEditorViewModel.getValidator());
+        recipeModelComposite.registerModel(durationViewModel);
     }
 
     private void setViewModelObservers() {
@@ -118,6 +128,14 @@ public class RecipeEditorActivity extends AppCompatActivity implements AddEditRe
                 RecipeCourseSelectorViewModel.class);
     }
 
+    static RecipeDurationViewModel obtainDurationViewModel(
+            FragmentActivity activity) {
+        ViewModelFactoryRecipe factoryRecipe = ViewModelFactoryRecipe.getInstance(
+                activity.getApplication());
+        return new ViewModelProvider(activity, factoryRecipe).get(
+                RecipeDurationViewModel.class);
+    }
+
     private void setupFragments() {
         ImageEditorFragment imageEditorFragment = obtainImageEditorFragment();
         ActivityUtils.replaceFragmentInActivity(
@@ -136,6 +154,12 @@ public class RecipeEditorActivity extends AppCompatActivity implements AddEditRe
                 getSupportFragmentManager(),
                 courseSelectorFragment,
                 R.id.recipe_editor_course_selector_content_frame);
+
+        RecipeDurationFragment durationFragment = obtainDurationFragment();
+        ActivityUtils.replaceFragmentInActivity(
+                getSupportFragmentManager(),
+                durationFragment,
+                R.id.recipe_duration_content_frame);
     }
 
     @NonNull
@@ -169,6 +193,17 @@ public class RecipeEditorActivity extends AppCompatActivity implements AddEditRe
         if (courseSelectorFragment == null)
             courseSelectorFragment = RecipeCourseSelectorFragment.newInstance();
         return courseSelectorFragment;
+    }
+
+    @NonNull
+    private RecipeDurationFragment obtainDurationFragment() {
+        RecipeDurationFragment durationFragment =
+                (RecipeDurationFragment) getSupportFragmentManager().
+                        findFragmentById(R.id.recipe_duration_content_frame);
+
+        if (durationFragment == null)
+            durationFragment = RecipeDurationFragment.newInstance();
+        return durationFragment;
     }
 
     private void start() {

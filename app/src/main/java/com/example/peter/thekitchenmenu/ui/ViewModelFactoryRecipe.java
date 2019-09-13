@@ -10,8 +10,10 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipe;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeCourse;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeCourseSelectorViewModel;
+import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeDurationViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidator;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.ui.catalog.recipe.RecipeCatalogViewModel;
@@ -34,15 +36,18 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
     private final RepositoryRecipe recipeRepository;
     private final RepositoryRecipeCourse recipeCourseRepository;
     private final RepositoryRecipeIdentity recipeIdentityRepository;
+    private final RepositoryRecipeDuration recipeDurationRepository;
 
     private ViewModelFactoryRecipe(Application application,
                                    RepositoryRecipe recipeRepository,
                                    RepositoryRecipeCourse recipeCourseRepository,
-                                   RepositoryRecipeIdentity recipeIdentityRepository) {
+                                   RepositoryRecipeIdentity recipeIdentityRepository,
+                                   RepositoryRecipeDuration recipeDurationRepository) {
         this.application = application;
         this.recipeRepository = recipeRepository;
         this.recipeCourseRepository = recipeCourseRepository;
         this.recipeIdentityRepository = recipeIdentityRepository;
+        this.recipeDurationRepository = recipeDurationRepository;
     }
 
     public static ViewModelFactoryRecipe getInstance(Application application) {
@@ -58,6 +63,9 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
                                     application.getApplicationContext()
                             ),
                             DatabaseInjection.provideRecipeIdentityDataSource(
+                                    application.getApplicationContext()
+                            ),
+                            DatabaseInjection.provideRecipeDurationDataSource(
                                     application.getApplicationContext()
                             )
                     );
@@ -103,6 +111,11 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
             return (T) new RecipeCourseSelectorViewModel(
                     recipeCourseRepository,
                     new UniqueIdProvider());
+
+        } else if (modelClass.isAssignableFrom(RecipeDurationViewModel.class)) {
+            // noinspection unchecked
+            return (T) new RecipeDurationViewModel(
+                    recipeDurationRepository);
         }
 
         throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
