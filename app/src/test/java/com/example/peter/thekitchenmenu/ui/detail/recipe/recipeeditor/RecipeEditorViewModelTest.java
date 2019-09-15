@@ -19,7 +19,7 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static com.example.peter.thekitchenmenu.testdata.RecipeTestData.*;
+import static com.example.peter.thekitchenmenu.testdata.RecipeEntityTestData.*;
 import static com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidator.RecipeValidationStatus.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -34,16 +34,16 @@ import static org.mockito.Mockito.when;
 public class RecipeEditorViewModelTest {
 
     // region constants ----------------------------------------------------------------------------
-    private static final RecipeEntity VALID_RECIPE_ENTITY = getValidExistingRecipeEntity();
+    private static final RecipeEntity VALID_RECIPE_ENTITY = getValidExisting();
     private static final String VALID_RECIPE_ID = VALID_RECIPE_ENTITY.getId();
     private static final RecipeEntity VALID_RECIPE_ENTITY_FROM_ANOTHER_USER =
-            getValidRecipeEntityFromAnotherUser();
+            getValidFromAnotherUser();
     private static final String VALID_RECIPE_ID_FROM_ANOTHER_USER =
             VALID_RECIPE_ENTITY_FROM_ANOTHER_USER.getId();
 
-    private static final RecipeEntity NEW_EMPTY_DRAFT_RECIPE_ENTITY = getNewEmptyDraftRecipeEntity();
-    private static final String NEW_ID = getNewEmptyDraftRecipeEntity().getId();
-    private static final RecipeEntity INVALID_DRAFT_RECIPE_ENTITY = getInvalidDraftRecipeEntity();
+    private static final RecipeEntity NEW_EMPTY_DRAFT_RECIPE_ENTITY = getInvalidNew();
+    private static final String NEW_ID = getInvalidNew().getId();
+    private static final RecipeEntity INVALID_DRAFT_RECIPE_ENTITY = getInvalidExisting();
     private static final String INVALID_DRAFT_RECIPE_ID = INVALID_DRAFT_RECIPE_ENTITY.getId();
 
     private static final long CURRENT_TIME = 10L;

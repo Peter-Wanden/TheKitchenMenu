@@ -4,7 +4,7 @@ import org.junit.*;
 import org.mockito.*;
 
 import static com.example.peter.thekitchenmenu.testdata.RecipeValidatorTestData.*;
-import static com.example.peter.thekitchenmenu.testdata.RecipeValidatorTestData.getIdentityModelStatusChangedValid;
+import static com.example.peter.thekitchenmenu.testdata.RecipeValidatorTestData.getChangedValid;
 import static com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidator.*;
 import static com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidator.RecipeValidationStatus.*;
 import static org.junit.Assert.*;
@@ -14,10 +14,10 @@ import static org.mockito.Mockito.verify;
 public class RecipeValidatorTest {
 
     // region constants ----------------------------------------------------------------------------
-    private RecipeModelStatus IDENTITY_MODEL_UNCHANGED_INVALID = getIdentityModelStatusUnChangedInValid();
-    private RecipeModelStatus IDENTITY_MODEL_UNCHANGED_VALID = getIdentityModelStatusUnChangedValid();
-    private RecipeModelStatus IDENTITY_MODEL_CHANGED_INVALID = getIdentityModelStatusChangedInvalid();
-    private RecipeModelStatus IDENTITY_MODEL_CHANGED_VALID = getIdentityModelStatusChangedValid();
+    private RecipeModelStatus IDENTITY_MODEL_UNCHANGED_INVALID = getUnchangedInvalid();
+    private RecipeModelStatus IDENTITY_MODEL_UNCHANGED_VALID = getUnchangedValid();
+    private RecipeModelStatus IDENTITY_MODEL_CHANGED_INVALID = getChangedInvalid();
+    private RecipeModelStatus IDENTITY_MODEL_CHANGED_VALID = getChangedValid();
     private RecipeModelStatus COURSES_MODEL_UNCHANGED_INVALID = getCoursesModelStatusUnchangedInvalid();
     private RecipeModelStatus COURSES_MODEL_UNCHANGED_VALID = getCoursesModelStatusUnchangedValid();
     private RecipeModelStatus COURSES_MODEL_CHANGED_INVALID = getCoursesModelStatusChangedInvalid();

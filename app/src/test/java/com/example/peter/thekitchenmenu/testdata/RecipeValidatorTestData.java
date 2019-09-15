@@ -5,28 +5,28 @@ import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeVali
 
 public class RecipeValidatorTestData {
 
-    public static RecipeModelStatus getIdentityModelStatusUnChangedInValid() {
+    public static RecipeModelStatus getUnchangedInvalid() {
         return new RecipeModelStatus(
                 RecipeValidator.ModelName.IDENTITY_MODEL,
                 false,
                 false);
     }
 
-    public static RecipeModelStatus getIdentityModelStatusUnChangedValid() {
+    public static RecipeModelStatus getUnchangedValid() {
         return new RecipeModelStatus(
                 RecipeValidator.ModelName.IDENTITY_MODEL,
                 false,
                 true);
     }
 
-    public static RecipeModelStatus getIdentityModelStatusChangedInvalid() {
+    public static RecipeModelStatus getChangedInvalid() {
         return new RecipeModelStatus(
                 RecipeValidator.ModelName.IDENTITY_MODEL,
                 true,
                 false);
     }
 
-    public static RecipeModelStatus getIdentityModelStatusChangedValid() {
+    public static RecipeModelStatus getChangedValid() {
         return new RecipeModelStatus(
                 RecipeValidator.ModelName.IDENTITY_MODEL,
                 true,

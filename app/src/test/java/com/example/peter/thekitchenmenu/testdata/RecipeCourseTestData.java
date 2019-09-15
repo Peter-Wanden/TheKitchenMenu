@@ -7,60 +7,74 @@ import java.util.List;
 
 public class RecipeCourseTestData {
 
+    private static final String EXISTING_RECIPE_ID =
+            RecipeEntityTestData.getValidExisting().getId();
+
+    private static final String NEW_RECIPE_ID =
+            RecipeEntityTestData.getInvalidNew().getId();
+
     public static RecipeCourseEntity getRecipeCourseZero() {
         return new RecipeCourseEntity(
                 "id0",
                 0,
-                RecipeTestData.getValidExistingRecipeEntity().getId());
+                EXISTING_RECIPE_ID
+        );
     }
 
     public static RecipeCourseEntity getRecipeCourseOne() {
         return new RecipeCourseEntity(
                 "id1",
                 1,
-                RecipeTestData.getValidExistingRecipeEntity().getId());
+                EXISTING_RECIPE_ID
+        );
     }
 
     public static RecipeCourseEntity getRecipeCourseTwo() {
         return new RecipeCourseEntity(
                 "id2",
                 2,
-                RecipeTestData.getValidExistingRecipeEntity().getId());
+                EXISTING_RECIPE_ID
+        );
     }
 
     public static RecipeCourseEntity getRecipeCourseThree() {
         return new RecipeCourseEntity(
                 "id3",
                 3,
-                RecipeTestData.getValidExistingRecipeEntity().getId());
+                EXISTING_RECIPE_ID
+        );
     }
 
     public static RecipeCourseEntity getRecipeCourseFour() {
         return new RecipeCourseEntity(
                 "id4",
                 4,
-                RecipeTestData.getValidExistingRecipeEntity().getId());
+                EXISTING_RECIPE_ID
+        );
     }
 
     public static RecipeCourseEntity getRecipeCourseFive() {
         return new RecipeCourseEntity(
                 "id5",
                 5,
-                RecipeTestData.getValidExistingRecipeEntity().getId());
+                EXISTING_RECIPE_ID
+        );
     }
 
     public static RecipeCourseEntity getRecipeCourseSix() {
         return new RecipeCourseEntity(
                 "id6",
                 6,
-                RecipeTestData.getValidExistingRecipeEntity().getId());
+                EXISTING_RECIPE_ID
+        );
     }
 
     public static RecipeCourseEntity getRecipeCourseSeven() {
         return new RecipeCourseEntity(
                 "id7",
                 7,
-                RecipeTestData.getValidExistingRecipeEntity().getId());
+                EXISTING_RECIPE_ID
+        );
     }
 
     public static List<RecipeCourseEntity> getAllRecipeCoursesDatabaseResponse() {
@@ -89,7 +103,7 @@ public class RecipeCourseTestData {
         return new RecipeCourseEntity(
                 "id0",
                 getRecipeCourseZero().getCourseNo(),
-                RecipeTestData.getNewRecipeId()
+                NEW_RECIPE_ID
         );
     }
 
@@ -97,7 +111,7 @@ public class RecipeCourseTestData {
         return new RecipeCourseEntity(
                 "id1",
                 getRecipeCourseOne().getCourseNo(),
-                RecipeTestData.getNewRecipeId()
+                NEW_RECIPE_ID
         );
     }
 
@@ -105,7 +119,7 @@ public class RecipeCourseTestData {
         return new RecipeCourseEntity(
                 "id2",
                 getRecipeCourseTwo().getCourseNo(),
-                RecipeTestData.getNewRecipeId()
+                NEW_RECIPE_ID
         );
     }
 
@@ -113,7 +127,7 @@ public class RecipeCourseTestData {
         return new RecipeCourseEntity(
                 "id4",
                 getRecipeCourseFour().getCourseNo(),
-                RecipeTestData.getNewRecipeId()
+                NEW_RECIPE_ID
         );
     }
 
@@ -121,7 +135,7 @@ public class RecipeCourseTestData {
         return new RecipeCourseEntity(
                 "id6",
                 getRecipeCourseSix().getCourseNo(),
-                RecipeTestData.getNewRecipeId()
+                NEW_RECIPE_ID
         );
     }
 

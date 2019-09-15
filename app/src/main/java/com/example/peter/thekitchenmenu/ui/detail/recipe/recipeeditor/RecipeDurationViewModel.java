@@ -82,7 +82,6 @@ public class RecipeDurationViewModel
                     getCookMinutes();
             }
         });
-
     }
 
     @Override

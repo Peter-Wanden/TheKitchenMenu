@@ -115,7 +115,10 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
         } else if (modelClass.isAssignableFrom(RecipeDurationViewModel.class)) {
             // noinspection unchecked
             return (T) new RecipeDurationViewModel(
-                    recipeDurationRepository);
+                    recipeDurationRepository,
+                    application.getResources(),
+                    new TimeProvider(),
+                    new ParseIntegerFromObservableHandler());
         }
 
         throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());

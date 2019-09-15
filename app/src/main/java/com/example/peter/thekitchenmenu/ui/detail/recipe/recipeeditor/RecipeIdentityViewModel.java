@@ -123,7 +123,7 @@ public class RecipeIdentityViewModel
     public void start(String recipeId) {
         if (recipeId != null) {
             this.recipeId = recipeId;
-            Log.d(TAG, "start: called");
+//            Log.d(TAG, "start: called");
             identityEntityDataSource.getById(recipeId, this);
         } else {
             throw new RuntimeException("Recipe id cannot be null");
@@ -132,7 +132,7 @@ public class RecipeIdentityViewModel
 
     @Override
     public void startByCloningModel(String oldRecipeId, String newRecipeId) {
-        Log.d(TAG, "startByCloningModel: start by clone called");
+//        Log.d(TAG, "startByCloningModel: start by clone called");
         isCloned = true;
         this.recipeId = newRecipeId;
         identityEntityDataSource.getById(oldRecipeId, this);
@@ -145,7 +145,7 @@ public class RecipeIdentityViewModel
         if (isCloned) {
             this.identityEntity = cloneIdentityEntity();
             updateObservables();
-            Log.d(TAG, "onEntityLoaded: saving clone");
+//            Log.d(TAG, "onEntityLoaded: saving clone");
             save(updatedIdentityEntity());
         } else
             updateObservables();
@@ -154,7 +154,7 @@ public class RecipeIdentityViewModel
     @Override
     public void onDataNotAvailable() {
         identityEntity = createNewIdentityEntity();
-        Log.d(TAG, "onDataNotAvailable: saving new");
+//        Log.d(TAG, "onDataNotAvailable: saving new");
         save(identityEntity);
         updateObservables();
     }
@@ -282,7 +282,7 @@ public class RecipeIdentityViewModel
             ));
 
             if (isValid() && isChanged()) {
-                Log.d(TAG, "reportRecipeModelStatus: saving updated");
+//                Log.d(TAG, "reportRecipeModelStatus: saving updated");
                 save(updatedIdentityEntity());
             }
         }

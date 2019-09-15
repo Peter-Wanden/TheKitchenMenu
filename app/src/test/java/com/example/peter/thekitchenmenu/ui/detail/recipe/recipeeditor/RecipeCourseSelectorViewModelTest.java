@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 
 import com.example.peter.thekitchenmenu.data.entity.*;
 import com.example.peter.thekitchenmenu.data.repository.*;
+import com.example.peter.thekitchenmenu.testdata.RecipeEntityTestData;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 
 import org.junit.*;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.peter.thekitchenmenu.testdata.RecipeCourseTestData.*;
-import static com.example.peter.thekitchenmenu.testdata.RecipeTestData.*;
+import static com.example.peter.thekitchenmenu.testdata.RecipeEntityTestData.*;
 import static com.example.peter.thekitchenmenu.testdata.RecipeValidatorTestData.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -21,9 +22,9 @@ import static org.mockito.Mockito.*;
 public class RecipeCourseSelectorViewModelTest {
 
     // region constants ----------------------------------------------------------------------------
-    private RecipeEntity VALID_EXISTING_RECIPE_ENTITY = getValidExistingRecipeEntity();
+    private RecipeEntity VALID_EXISTING_RECIPE_ENTITY = getValidExisting();
     private String EXISTING_RECIPE_ID = VALID_EXISTING_RECIPE_ENTITY.getId();
-    private String NEW_RECIPE_ID = getNewRecipeId();
+    private String NEW_RECIPE_ID = RecipeEntityTestData.getInvalidNew().getId();
 
     private RecipeModelStatus COURSES_MODEL_UNCHANGED_INVALID = getCoursesModelStatusUnchangedInvalid();
     private RecipeModelStatus COURSES_MODEL_UNCHANGED_VALID = getCoursesModelStatusUnchangedValid();
