@@ -5,28 +5,28 @@ import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeVali
 
 public class RecipeValidatorTestData {
 
-    public static RecipeModelStatus getUnchangedInvalid() {
+    public static RecipeModelStatus getIdentityModelStatusUnchangedInvalid() {
         return new RecipeModelStatus(
                 RecipeValidator.ModelName.IDENTITY_MODEL,
                 false,
                 false);
     }
 
-    public static RecipeModelStatus getUnchangedValid() {
+    public static RecipeModelStatus getIdentityModelStatusUnchangedValid() {
         return new RecipeModelStatus(
                 RecipeValidator.ModelName.IDENTITY_MODEL,
                 false,
                 true);
     }
 
-    public static RecipeModelStatus getChangedInvalid() {
+    public static RecipeModelStatus getIdentityModelStatusChangedInvalid() {
         return new RecipeModelStatus(
                 RecipeValidator.ModelName.IDENTITY_MODEL,
                 true,
                 false);
     }
 
-    public static RecipeModelStatus getChangedValid() {
+    public static RecipeModelStatus getIdentityModelStatusChangedValid() {
         return new RecipeModelStatus(
                 RecipeValidator.ModelName.IDENTITY_MODEL,
                 true,
@@ -59,6 +59,38 @@ public class RecipeValidatorTestData {
     public static RecipeModelStatus getCoursesModelStatusChangedValid() {
         return new RecipeModelStatus(
                 RecipeValidator.ModelName.COURSES_MODEL,
+                true,
+                true
+        );
+    }
+
+    public static RecipeModelStatus getDurationModelStatusUnchangedInvalid() {
+        return new RecipeModelStatus(
+                RecipeValidator.ModelName.DURATION_MODEL,
+                false,
+                false
+        );
+    }
+
+    public static RecipeModelStatus getDurationModelStatusUnchangedValid() {
+        return new RecipeModelStatus(
+                RecipeValidator.ModelName.DURATION_MODEL,
+                false,
+                true
+        );
+    }
+
+    public static RecipeModelStatus getDurationModelStatusChangedInvalid() {
+        return new RecipeModelStatus(
+                RecipeValidator.ModelName.DURATION_MODEL,
+                true,
+                false
+        );
+    }
+
+    public static RecipeModelStatus getDurationModelStatusChangedValid() {
+        return new RecipeModelStatus(
+                RecipeValidator.ModelName.DURATION_MODEL,
                 true,
                 true
         );

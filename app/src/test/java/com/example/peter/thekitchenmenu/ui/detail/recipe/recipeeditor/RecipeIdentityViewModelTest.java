@@ -5,12 +5,8 @@ import android.content.res.Resources;
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.data.entity.RecipeDurationEntity;
-import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
-import com.example.peter.thekitchenmenu.testdata.RecipeDurationTestData;
-import com.example.peter.thekitchenmenu.testdata.RecipeEntityTestData;
 import com.example.peter.thekitchenmenu.testdata.RecipeIdentityEntityTestData;
 import com.example.peter.thekitchenmenu.testdata.RecipeValidatorTestData;
 import com.example.peter.thekitchenmenu.utils.*;
@@ -28,8 +24,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.peter.thekitchenmenu.testdata.RecipeIdentityEntityTestData.*;
-import static com.example.peter.thekitchenmenu.testdata.RecipeEntityTestData.*;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
@@ -38,86 +32,44 @@ import static org.mockito.Mockito.*;
 public class RecipeIdentityViewModelTest {
 
     // region constants ----------------------------------------------------------------------------
-    private static final RecipeIdentityEntity INVALID_NEW_EMPTY_ENTITY = RecipeIdentityEntityTestData.getInvalidNewEmpty();
-    private static final String INVALID_NEW_EMPTY_RECIPE_ID = INVALID_NEW_EMPTY_ENTITY.getId();
-    private static final String INVALID_NEW_EMPTY_TITLE = INVALID_NEW_EMPTY_ENTITY.getTitle();
-    private static final String INVALID_NEW_EMPTY_DESCRIPTION = INVALID_NEW_EMPTY_ENTITY.getDescription();
-    private static final int INVALID_NEW_EMPTY_PREP_TIME_HOURS = INVALID_NEW_EMPTY_ENTITY.getPrepTime() / 60;
-    private static final int INVALID_NEW_EMPTY_PREP_TIME_MINUTES = INVALID_NEW_EMPTY_ENTITY.getPrepTime() % 60;
-    private static final int INVALID_NEW_EMPTY_COOK_TIME_HOURS = INVALID_NEW_EMPTY_ENTITY.getCookTime() / 60;
-    private static final int INVALID_NEW_EMPTY_COOK_TIME_MINUTES = INVALID_NEW_EMPTY_ENTITY.getCookTime() % 60;
-    private static final long INVALID_NEW_EMPTY_CREATE_DATE = INVALID_NEW_EMPTY_ENTITY.getCreateDate();
-    private static final long INVALID_NEW_EMPTY_LAST_UPDATE = INVALID_NEW_EMPTY_ENTITY.getLastUpdate();
-
-    private static final RecipeIdentityEntity INVALID_NEW_ENTITY_TITLE_INVALID_VALUE =
+    private static final RecipeIdentityEntity INVALID_NEW_EMPTY =
+            RecipeIdentityEntityTestData.getInvalidNewEmpty();
+    private static final RecipeIdentityEntity INVALID_NEW_TITLE_INVALID =
             RecipeIdentityEntityTestData.getInvalidNewTitleUpdatedWithInvalidValue();
-    private static final RecipeIdentityEntity INVALID_NEW_ENTITY_TITLE_VALID_VALUE =
-            RecipeIdentityEntityTestData.getInvalidNewTitleUpdatedWithInvalidValue();
-    private static final RecipeIdentityEntity INVALID_NEW_ENTITY_TITLE_INVALID_DESCRIPTION_VALID =
+    private static final RecipeIdentityEntity INVALID_NEW_TITLE_INVALID_DESCRIPTION_VALID =
             RecipeIdentityEntityTestData.getInvalidNewTitleInvalidDescriptionValid();
-    private static final RecipeIdentityEntity VALID_NEW_COMPLETE_ENTITY =
+    private static final RecipeIdentityEntity VALID_NEW_TITLE_VALID =
+            RecipeIdentityEntityTestData.getValidNewTitleUpdatedWithValidValue();
+    private static final RecipeIdentityEntity VALID_NEW_COMPLETE =
             RecipeIdentityEntityTestData.getValidNewComplete();
-
-    private static final RecipeIdentityEntity VALID_EXISTING_ENTITY =
+    private static final RecipeIdentityEntity INVALID_EXISTING_INCOMPLETE_INVALID_TITLE =
+            RecipeIdentityEntityTestData.getInvalidExistingIncomplete();
+    private static final RecipeIdentityEntity VALID_EXISTING_COMPLETE =
             RecipeIdentityEntityTestData.getValidExistingComplete();
-    private static final String VALID_EXISTING_ID = VALID_EXISTING_ENTITY.getId();
-    private static final String VALID_EXISTING_TITLE = VALID_EXISTING_ENTITY.getTitle();
-    private static final String VALID_EXISTING_DESCRIPTION = VALID_EXISTING_ENTITY.getDescription();
-    private static final int VALID_EXISTING_PREP_TIME = VALID_EXISTING_ENTITY.getPrepTime();
-    private static final int VALID_EXISTING_COOK_TIME = VALID_EXISTING_ENTITY.getCookTime();
-    private static final long VALID_EXISTING_CREATE_DATE = VALID_EXISTING_ENTITY.getCreateDate();
-    private static final long VALID_EXISTING_LAST_UPDATE = VALID_EXISTING_ENTITY.getLastUpdate();
+    private static final RecipeIdentityEntity VALID_FROM_ANOTHER_USER =
+            RecipeIdentityEntityTestData.getValidCompleteFromAnotherUser();
+    private static final RecipeIdentityEntity INVALID_FROM_ANOTHER_USER =
+            RecipeIdentityEntityTestData.getInvalidCompleteFromAnotherUser();
+    private static final RecipeIdentityEntity VALID_NEW_CLONED =
+            RecipeIdentityEntityTestData.getValidNewCloned();
+    private static final RecipeIdentityEntity INVALID_NEW_CLONED =
+            RecipeIdentityEntityTestData.getInvalidNewCloned();
+    private static final RecipeIdentityEntity VALID_CLONED_DESCRIPTION_UPDATED =
+            RecipeIdentityEntityTestData.getValidNewClonedDescriptionUpdatedComplete();
 
+    private RecipeModelStatus UNCHANGED_INVALID =
+            RecipeValidatorTestData.getIdentityModelStatusUnchangedInvalid();
+    private RecipeModelStatus UNCHANGED_VALID =
+            RecipeValidatorTestData.getIdentityModelStatusUnchangedValid();
+    private RecipeModelStatus CHANGED_INVALID =
+            RecipeValidatorTestData.getIdentityModelStatusChangedInvalid();
+    private RecipeModelStatus CHANGED_VALID =
+            RecipeValidatorTestData.getIdentityModelStatusChangedValid();
 
-    private static final RecipeEntity VALID_EXISTING_RECIPE_ENTITY = getValidExisting();
-    private static final String VALID_EXISTING_RECIPE_ID = VALID_EXISTING_RECIPE_ENTITY.getId();
-
-    private static final RecipeEntity VALID_ENTITY_FROM_ANOTHER_USER =
-            RecipeEntityTestData.getValidFromAnotherUser();
-    private static final String VALID_ID_FROM_ANOTHER_USER = VALID_ENTITY_FROM_ANOTHER_USER.getId();
-
-
-
-
-
-
-
-
-
-    private static final String RECIPE_ID_FROM_ANOTHER_USER =
-            getValidFromAnotherUser().getId();
-    private static final RecipeDurationEntity VALID_RECIPE_DURATION =
-            RecipeDurationTestData.getValidExistingComplete();
-    private static final String NEW_RECIPE_ID = "newId";
-    private static final String VALIDATED = TextValidationHandler.VALIDATED;
-
-    private static final String INVALID_TITLE = "ti";
-    private static final String INVALID_DESCRIPTION = "de";
     private static final String ERROR_MESSAGE_TOO_LONG = "error_message_too_long";
-    private static final String ERROR_MESSAGE_TOO_SHORT = "error_message_too_short";
 
-    private static final int MAX_PREP_TIME = RecipeDurationTestData.getMaxPrepTime();
-    private static final int MAX_COOK_TIME = RecipeDurationTestData.getMaxCookTime();
     private static final String LONG_TEXT_VALIDATION_ERROR = "long_text_validation_error";
     private static final String SHORT_TEXT_VALIDATION_ERROR = "short_text_validation_error";
-
-
-    private static final RecipeIdentityEntity VALID_IDENTITY_ENTITY_FROM_ANOTHER_USER =
-            getValidCompleteFromAnotherUser();
-    private static final String VALID_IDENTITY_ID_FROM_ANOTHER_USER =
-            VALID_IDENTITY_ENTITY_FROM_ANOTHER_USER.getId();
-
-    private static final RecipeIdentityEntity VALID_CLONED_RECIPE_IDENTITY_ENTITY =
-            RecipeIdentityEntityTestData.getValidNewCloned();
-
-    private static final String NEW_IDENTITY_ID = VALID_CLONED_RECIPE_IDENTITY_ENTITY.getId();
-    private static final int PREP_TIME_FROM_ANOTHER_USER = VALID_IDENTITY_ENTITY_FROM_ANOTHER_USER.getPrepTime();
-    private static final int COOK_TIME_FROM_ANOTHER_USER = VALID_IDENTITY_ENTITY_FROM_ANOTHER_USER.getCookTime();
-
-    private RecipeModelStatus IDENTITY_MODEL_UNCHANGED_INVALID = RecipeValidatorTestData.getUnchangedInvalid();
-    private RecipeModelStatus IDENTITY_MODEL_UNCHANGED_VALID = RecipeValidatorTestData.getUnchangedValid();
-    private RecipeModelStatus IDENTITY_MODEL_CHANGED_INVALID = RecipeValidatorTestData.getChangedInvalid();
-    private RecipeModelStatus IDENTITY_MODEL_CHANGED_VALID = RecipeValidatorTestData.getChangedValid();
 
     // endregion constants -------------------------------------------------------------------------
 
@@ -128,656 +80,382 @@ public class RecipeIdentityViewModelTest {
     Resources resourcesMock;
     @Mock
     TextValidationHandler textValidationHandlerMock;
-    @Mock
-    ParseIntegerFromObservableHandler intFromObservableMock;
     @Captor
-    ArgumentCaptor<DataSource.GetEntityCallback<RecipeIdentityEntity>> getEntityCallbackArgumentCaptor;
+    ArgumentCaptor<DataSource.GetEntityCallback<RecipeIdentityEntity>>
+            getEntityCallbackArgumentCaptor;
     @Mock
     DataSource<RecipeIdentityEntity> identityDataSourceMock;
     @Mock
     TimeProvider timeProviderMock;
     @Mock
-    UniqueIdProvider uniqueIdProviderMock;
-    @Mock
-    RecipeValidation.RecipeValidatorModelSubmission modelSubmissionMock;
+    RecipeValidation.RecipeValidatorModelSubmission modelValidationSubmitterMock;
     // endregion helper fields ---------------------------------------------------------------------
 
     private RecipeIdentityViewModel SUT;
 
     @Before
-    public void setup() throws Exception {
+    public void setup() {
         MockitoAnnotations.initMocks(this);
         setupResourceMockReturnValues();
-        when(uniqueIdProviderMock.getUId()).thenReturn(VALID_EXISTING_RECIPE_ID);
 
         SUT = new RecipeIdentityViewModel(
                 identityDataSourceMock,
                 timeProviderMock,
                 resourcesMock,
-                textValidationHandlerMock,
-                intFromObservableMock);
+                textValidationHandlerMock
+        );
 
-        SUT.setModelValidationSubmitter(modelSubmissionMock);
+        SUT.setModelValidationSubmitter(modelValidationSubmitterMock);
     }
 
     @Test
-    public void start_recipeId_databaseCalledWithRecipeId() throws Exception {
+    public void start_recipeId_databaseCalledWithRecipeId() {
         // Arrange
         // Act
-        SUT.start(INVALID_NEW_EMPTY_RECIPE_ID);
+        SUT.start(INVALID_NEW_EMPTY.getId());
         // Assert
-        verify(identityDataSourceMock).getById(eq(INVALID_NEW_EMPTY_RECIPE_ID),
+        verify(identityDataSourceMock).getById(eq(INVALID_NEW_EMPTY.getId()),
                 getEntityCallbackArgumentCaptor.capture());
     }
 
     @Test
-    public void start_recipeIdWithNoRecipe_nothingSetToObservers() throws Exception {
+    public void start_recipeIdWithNoRecipe_nothingSetToObservers() {
         // Arrange
         // Act
-        SUT.start(INVALID_NEW_EMPTY_RECIPE_ID);
+        SUT.start(INVALID_NEW_EMPTY.getId());
         simulateNothingReturnedFromDatabase();
         // Assert
-        assertEquals(INVALID_NEW_EMPTY_TITLE, SUT.titleObservable.get());
-        assertEquals(INVALID_NEW_EMPTY_DESCRIPTION, SUT.descriptionObservable.get());
-        assertEquals(String.valueOf(INVALID_NEW_EMPTY_PREP_TIME_HOURS), SUT.prepHoursObservable.get());
-        assertEquals(String.valueOf(INVALID_NEW_EMPTY_PREP_TIME_MINUTES), SUT.prepMinutesObservable.get());
-        assertEquals(String.valueOf(INVALID_NEW_EMPTY_COOK_TIME_HOURS), SUT.cookHoursObservable.get());
-        assertEquals(String.valueOf(INVALID_NEW_EMPTY_COOK_TIME_MINUTES), SUT.cookMinutesObservable.get());
+        assertEquals(INVALID_NEW_EMPTY.getTitle(), SUT.titleObservable.get());
+        assertEquals(INVALID_NEW_EMPTY.getDescription(), SUT.descriptionObservable.get());
         assertNull(SUT.titleErrorMessage.get());
         assertNull(SUT.descriptionErrorMessage.get());
-        assertNull(SUT.prepTimeErrorMessage.get());
-        assertNull(SUT.cookTimeErrorMessage.get());
     }
 
     @Test
-    public void start_recipeIdWithNoRecipe_RecipeModelStatusIDENTITY_MODEL_UNCHANGED_INVALID() throws Exception {
+    public void start_newRecipeId_RecipeModelStatusUNCHANGED_INVALID() {
         // Arrange
         ArgumentCaptor<RecipeModelStatus> ac = ArgumentCaptor.forClass(RecipeModelStatus.class);
         // Act
-        SUT.start(INVALID_NEW_EMPTY_RECIPE_ID);
+        SUT.start(INVALID_NEW_EMPTY.getId());
         simulateNothingReturnedFromDatabase();
         // Assert
-        verify(modelSubmissionMock).submitModelStatus(ac.capture());
+        verify(modelValidationSubmitterMock).submitModelStatus(ac.capture());
         RecipeModelStatus modelStatus = ac.getValue();
-        assertEquals(IDENTITY_MODEL_UNCHANGED_INVALID, modelStatus);
+        assertEquals(UNCHANGED_INVALID, modelStatus);
     }
 
     @Test
-    public void start_validRecipeId_titleSetToObservable() throws Exception {
+    public void start_validExistingCompleteRecipeId_titleSetToObservable() {
         // Arrange
         whenTextValidationValidateTitleAndDescription();
         // Act
-        SUT.start(VALID_EXISTING_ID);
-        simulateGetValidRecipeIdentityEntityFromDatabase();
+        SUT.start(VALID_EXISTING_COMPLETE.getId());
+        simulateGetValidExistingCompleteFromDatabase();
         // Assert
-        assertEquals(VALID_EXISTING_TITLE, SUT.titleObservable.get());
+        assertEquals(VALID_EXISTING_COMPLETE.getTitle(), SUT.titleObservable.get());
     }
 
     @Test
-    public void start_validRecipeId_descriptionSetToObservable() throws Exception {
+    public void start_validExistingCompleteRecipeId_descriptionSetToObservable() {
         // Arrange
         whenTextValidationValidateTitleAndDescription();
         // Act
-        SUT.start(VALID_EXISTING_ID);
-        simulateGetValidRecipeIdentityEntityFromDatabase();
+        SUT.start(VALID_EXISTING_COMPLETE.getId());
+        simulateGetValidExistingCompleteFromDatabase();
         // Assert
-        assertEquals(VALID_EXISTING_DESCRIPTION, SUT.descriptionObservable.get());
+        assertEquals(VALID_EXISTING_COMPLETE.getDescription(), SUT.descriptionObservable.get());
     }
 
     @Test
-    public void start_validRecipeId_prepHoursSetToObservable() throws Exception {
-        // Arrange
-        whenTextValidationValidateTitleAndDescription();
-        String prepHours = String.valueOf(VALID_EXISTING_PREP_TIME / 60);
-        // Act
-        SUT.start(VALID_EXISTING_ID);
-        simulateGetValidRecipeIdentityEntityFromDatabase();
-        // Assert
-        assertEquals(prepHours, SUT.prepHoursObservable.get());
-    }
-
-    @Test
-    public void start_validRecipeId_prepMinutesSetToObservable() throws Exception {
-        // Arrange
-        whenTextValidationValidateTitleAndDescription();
-        String prepMinutes = String.valueOf(VALID_EXISTING_PREP_TIME % 60);
-        // Act
-        SUT.start(VALID_EXISTING_ID);
-        simulateGetValidRecipeIdentityEntityFromDatabase();
-        // Assert
-        assertEquals(prepMinutes, SUT.prepMinutesObservable.get());
-    }
-
-    @Test
-    public void start_validRecipeId_cookHoursSetToObservable() throws Exception {
-        // Arrange
-        whenTextValidationValidateTitleAndDescription();
-        String cookHours = String.valueOf(VALID_EXISTING_COOK_TIME / 60);
-        // Act
-        SUT.start(VALID_EXISTING_ID);
-        simulateGetValidRecipeIdentityEntityFromDatabase();
-        // Assert
-        assertEquals(cookHours, SUT.cookHoursObservable.get());
-    }
-
-    @Test
-    public void start_validRecipeId_cookMinutesSetToObservable() throws Exception {
-        // Arrange
-        whenTextValidationValidateTitleAndDescription();
-        String cookMinutes = String.valueOf(VALID_EXISTING_COOK_TIME % 60);
-        // Act
-        SUT.start(VALID_EXISTING_ID);
-        simulateGetValidRecipeIdentityEntityFromDatabase();
-        // Assert
-        assertEquals(cookMinutes, SUT.cookMinutesObservable.get());
-    }
-
-    @Test
-    public void start_validRecipeId_RecipeModelStatusIDENTITY_MODEL_UNCHANGED_VALID() throws Exception {
+    public void start_validExistingCompleteRecipeId_RecipeModelStatusIDENTITY_MODEL_UNCHANGED_VALID() {
         // Arrange
         ArgumentCaptor<RecipeModelStatus> ac = ArgumentCaptor.forClass(RecipeModelStatus.class);
         whenTextValidationValidateTitleAndDescription();
-        whenIntFromObserverMockReturnValidRecipeTimes();
+//        whenIntFromObserverMockReturnExistingValidCompleteRecipeTimes();
         // Act
-        SUT.start(VALID_EXISTING_ID);
+        SUT.start(VALID_EXISTING_COMPLETE.getId());
         // Assert
-        simulateGetValidRecipeIdentityEntityFromDatabase();
-        verify(modelSubmissionMock).submitModelStatus(ac.capture());
+        simulateGetValidExistingCompleteFromDatabase();
+        verify(modelValidationSubmitterMock).submitModelStatus(ac.capture());
         RecipeModelStatus modelStatus = ac.getValue();
-        assertEquals(IDENTITY_MODEL_UNCHANGED_VALID, modelStatus);
+        assertEquals(UNCHANGED_VALID, modelStatus);
     }
 
-    @Test
-    public void startWithClonedModel_oldAndNewRecipeIdSupplied_databaseCalledWithOldId() throws Exception {
-        // Arrange
-        // Act
-        SUT.startByCloningModel(VALID_ID_FROM_ANOTHER_USER,
-                INVALID_NEW_EMPTY_RECIPE_ID);
-        // Assert
-        verify(identityDataSourceMock).getById(eq(VALID_ID_FROM_ANOTHER_USER), eq(SUT));
-    }
+
+
+
 
     @Test
-    public void startWithClonedModel_oldAndNewRecipeIdSupplied_oldModelSavedWithNewId() throws Exception {
+    public void startWithCloned_existingAndNewRecipeIdSupplied_databaseCalledWithOldId() {
         // Arrange
-        ArgumentCaptor<RecipeIdentityEntity> ac = ArgumentCaptor.forClass(RecipeIdentityEntity.class);
-        when(uniqueIdProviderMock.getUId()).thenReturn(NEW_IDENTITY_ID);
-        whenTimeProviderMockThenReturnClonedRecipeIdentityEntityTimes();
-        whenShortTextValidationReturnValidated();
-        whenLongTextValidationReturnValidated();
-        whenIntFromObserverMockReturnRecipeTimesFromAnotherUser();
-        // Act
-        SUT.startByCloningModel(RECIPE_ID_FROM_ANOTHER_USER, VALID_CLONED_RECIPE_IDENTITY_ENTITY.getId());
-        simulateGetValidRecipeIdentityEntityFromAnotherUserFromDatabase();
-        // Assert
-        verify(identityDataSourceMock).save(eq(VALID_CLONED_RECIPE_IDENTITY_ENTITY));
-    }
-
-    @Test
-    public void startWithClonedModel_descriptionChanged_modelSavedWithUpdatedDescription() throws Exception {
-        // Arrange
-        ArgumentCaptor<RecipeIdentityEntity> ac = ArgumentCaptor.forClass(RecipeIdentityEntity.class);
-        when(uniqueIdProviderMock.getUId()).thenReturn(
-                getValidNewClonedDescriptionUpdatedComplete().getId());
-        whenTimeProviderMockThenReturnClonedRecipeIdentityEntityTimes();
-        whenShortTextValidationReturnValidated();
-        whenLongTextValidationReturnValidated();
-        whenIntFromObserverMockReturnRecipeTimesFromAnotherUser();
         // Act
         SUT.startByCloningModel(
-                RECIPE_ID_FROM_ANOTHER_USER,
-                getValidNewClonedDescriptionUpdatedComplete().
-                        getId());
-        simulateGetValidRecipeIdentityEntityFromAnotherUserFromDatabase();
-        SUT.descriptionObservable.set(getValidNewClonedDescriptionUpdatedComplete().getDescription());
+                VALID_FROM_ANOTHER_USER.getId(), INVALID_NEW_EMPTY.getId());
         // Assert
-        verify(identityDataSourceMock, times(2)).save(ac.capture());
-        assertEquals(getValidNewClonedDescriptionUpdatedComplete(), ac.getAllValues().get(1));
+        verify(identityDataSourceMock).getById(eq(VALID_FROM_ANOTHER_USER.getId()), eq(SUT));
     }
 
     @Test
-    public void startWithClonedModel_originalModelNotAvailable_newModelCreatedAndSaved() throws Exception {
+    public void startWithCloned_existingAndNewRecipeIdSupplied_existingSavedWithNewId() {
+        // Arrange
+        whenTimeProviderThenReturnClonedTimes();
+        whenShortTextValidationReturnValidated();
+        whenLongTextValidationReturnValidated();
+        // Act
+        SUT.startByCloningModel(
+                VALID_FROM_ANOTHER_USER.getId(), INVALID_NEW_EMPTY.getId());
+        simulateGetValidEntityFromAnotherUserFromDatabase();
+        // Assert
+        verify(identityDataSourceMock).save(eq(VALID_NEW_CLONED));
+    }
+
+    @Test
+    public void startWithCloned_descriptionChanged_modelSavedWithUpdatedDescription() {
         // Arrange
         ArgumentCaptor<RecipeIdentityEntity> ac = ArgumentCaptor.forClass(RecipeIdentityEntity.class);
-        when(uniqueIdProviderMock.getUId()).thenReturn(
-                getInvalidNewEmpty().getId());
+        whenTimeProviderThenReturnClonedTimes();
+        whenShortTextValidationReturnValidated();
+        whenLongTextValidationReturnValidated();
+        // Act
+        SUT.startByCloningModel(
+                VALID_FROM_ANOTHER_USER.getId(), INVALID_NEW_EMPTY.getId());
+        simulateGetValidEntityFromAnotherUserFromDatabase();
+        SUT.descriptionObservable.set(VALID_CLONED_DESCRIPTION_UPDATED.getDescription());
+        // Assert
+        verify(identityDataSourceMock, times(2)).save(ac.capture());
+        assertEquals(VALID_CLONED_DESCRIPTION_UPDATED, ac.getAllValues().get(1));
+    }
+
+    @Test
+    public void startWithCloned_originalModelNotAvailable_newModelCreatedAndSaved() {
+        // Arrange
         whenShortTextValidationReturnErrorMessage();
         whenLongTextValidationReturnValidated();
-        when(intFromObservableMock.parseInt(anyObject(), anyObject(), anyInt())).thenReturn(0);
-        whenTimeProviderMockThenReturnClonedRecipeIdentityEntityTimes();
+        whenTimeProviderThenReturnClonedTimes();
         // Act
-        SUT.startByCloningModel(RECIPE_ID_FROM_ANOTHER_USER,
-                getInvalidNewEmpty().getId());
+        SUT.startByCloningModel(
+                VALID_FROM_ANOTHER_USER.getId(), INVALID_NEW_EMPTY.getId());
 
-        verify(identityDataSourceMock).getById(eq(RECIPE_ID_FROM_ANOTHER_USER),
+        verify(identityDataSourceMock).getById(eq(VALID_FROM_ANOTHER_USER.getId()),
                 getEntityCallbackArgumentCaptor.capture());
         getEntityCallbackArgumentCaptor.getValue().onDataNotAvailable();
 
         // Assert
-        verify(identityDataSourceMock).save(eq(getInvalidNewEmpty()));
+        verify(identityDataSourceMock).save(eq(INVALID_NEW_EMPTY));
     }
 
     @Test
-    public void observableTitleUpdatedWithInvalidValue_allOtherFieldsEmpty_errorMessageObservableUpdatedWithErrorMessage() throws Exception {
+    public void observableTitleUpdatedWithInvalidValue_allOtherFieldsEmpty_errorMessageObservableUpdatedWithErrorMessage() {
         // Arrange
         whenShortTextValidationReturnErrorMessage();
         // Act
-        SUT.start(INVALID_NEW_EMPTY_RECIPE_ID);
+        SUT.start(INVALID_NEW_EMPTY.getId());
         simulateNothingReturnedFromDatabase();
-        SUT.titleObservable.set("ti");
+        SUT.titleObservable.set(INVALID_NEW_TITLE_INVALID.getTitle());
         // Assert
         assertEquals(SUT.titleErrorMessage.get(), SHORT_TEXT_VALIDATION_ERROR);
     }
 
     @Test
-    public void observableTitleUpdatedWithInvalidValue_allOtherFieldsValid_errorMessageObservableUpdatedWithErrorMessage() throws Exception {
+    public void observableTitleUpdatedWithInvalidValue_allOtherFieldsValid_errorMessageObservableUpdatedWithErrorMessage() {
         // Arrange
         whenShortTextValidationReturnErrorMessage();
         whenLongTextValidationReturnValidated();
         // Act
-        SUT.start(VALID_EXISTING_RECIPE_ID);
-        simulateGetValidRecipeIdentityEntityFromDatabase();
-        SUT.titleObservable.set("ti");
+        SUT.start(VALID_EXISTING_COMPLETE.getId());
+        simulateGetValidExistingCompleteFromDatabase();
+        SUT.titleObservable.set(INVALID_EXISTING_INCOMPLETE_INVALID_TITLE.getTitle());
         // Assert
         assertEquals(SUT.titleErrorMessage.get(), SHORT_TEXT_VALIDATION_ERROR);
     }
 
     @Test
-    public void observableTitleUpdatedWithInvalidValue_allOtherFieldsEmpty_RecipeModelStatus_IDENTITY_MODEL_CHANGED_INVALID() throws Exception {
+    public void observableTitleUpdatedWithInvalidValue_allOtherFieldsEmpty_RecipeModelStatus_IDENTITY_MODEL_CHANGED_INVALID() {
         // Arrange
         ArgumentCaptor<RecipeModelStatus> ac = ArgumentCaptor.forClass(RecipeModelStatus.class);
         whenShortTextValidationReturnErrorMessage();
         // Act
-        SUT.start(INVALID_NEW_EMPTY_RECIPE_ID);
+        SUT.start(INVALID_NEW_EMPTY.getId());
         simulateNothingReturnedFromDatabase();
-        SUT.titleObservable.set(INVALID_TITLE);
+        SUT.titleObservable.set(INVALID_NEW_TITLE_INVALID.getTitle());
         // Assert
-        verify(modelSubmissionMock, times(2)).submitModelStatus(ac.capture());
+        verify(modelValidationSubmitterMock, times(2)).submitModelStatus(ac.capture());
         RecipeModelStatus modelStatus = ac.getValue();
-        assertEquals(IDENTITY_MODEL_CHANGED_INVALID, modelStatus);
+        assertEquals(CHANGED_INVALID, modelStatus);
     }
 
     @Test
-    public void observableTitleUpdatedWithValidValue_allOtherFieldsEmpty_errorMessageObservableUpdatedWithNull() throws Exception {
+    public void observableTitleUpdatedWithValidValue_allOtherFieldsEmpty_errorMessageObservableUpdatedWithNull() {
         // Arrange
         whenShortTextValidationReturnValidated();
         // Act
-        SUT.start(INVALID_NEW_EMPTY_RECIPE_ID);
+        SUT.start(INVALID_NEW_EMPTY.getId());
         simulateNothingReturnedFromDatabase();
-        SUT.titleObservable.set(VALID_EXISTING_TITLE);
+        SUT.titleObservable.set(VALID_NEW_TITLE_VALID.getTitle());
         // Assert
         assertNull(SUT.titleErrorMessage.get());
     }
 
     @Test
-    public void observableTitleUpdatedWithValidValue_allOtherFieldsEmpty_entitySavedToDatabase() throws Exception {
+    public void observableTitleUpdatedWithValidValue_allOtherFieldsEmpty_entitySavedToDatabase() {
         // Arrange
         whenShortTextValidationReturnValidated();
-        whenIdProviderThenReturnExistingRecipeId();
-        whenTimeProviderMockThenReturnNewIdentityEntityCreateDate();
+        whenTimeProviderThenReturnNewEntityCreateDate();
         // Act
-        SUT.start(INVALID_NEW_ENTITY_TITLE_VALID_VALUE.getId());
+        SUT.start(INVALID_NEW_EMPTY.getId());
         simulateNothingReturnedFromDatabase();
-        SUT.titleObservable.set(INVALID_NEW_ENTITY_TITLE_VALID_VALUE.getTitle());
+        SUT.titleObservable.set(VALID_NEW_TITLE_VALID.getTitle());
         // Assert
-        verify(identityDataSourceMock).save(eq(INVALID_NEW_ENTITY_TITLE_VALID_VALUE));
+        verify(identityDataSourceMock).save(eq(VALID_NEW_TITLE_VALID));
     }
 
     @Test
-    public void observableTitleUpdatedWithValidValue_allOtherFieldsEmpty_RecipeModelStatus_IDENTITY_MODEL_CHANGED_VALID() throws Exception {
+    public void observableTitleUpdatedWithValidValue_allOtherFieldsEmpty_RecipeModelStatus_IDENTITY_MODEL_CHANGED_VALID() {
         // Arrange
         ArgumentCaptor<RecipeModelStatus> ac = ArgumentCaptor.forClass(RecipeModelStatus.class);
         whenShortTextValidationReturnValidated();
         // Act
-        SUT.start(INVALID_NEW_EMPTY_RECIPE_ID);
+        SUT.start(INVALID_NEW_EMPTY.getId());
         simulateNothingReturnedFromDatabase();
-        SUT.titleObservable.set(RecipeIdentityEntityTestData.
-                getInvalidNewTitleUpdatedWithInvalidValue().getTitle());
+        SUT.titleObservable.set(VALID_NEW_TITLE_VALID.getTitle());
         // Assert
-        verify(modelSubmissionMock, times(2)).submitModelStatus(ac.capture());
+        verify(modelValidationSubmitterMock, times(2)).submitModelStatus(ac.capture());
         RecipeModelStatus modelStatus = ac.getValue();
-        assertEquals(IDENTITY_MODEL_CHANGED_VALID, modelStatus);
+        assertEquals(CHANGED_VALID, modelStatus);
     }
 
     @Test
-    public void observableDescriptionUpdatedWithInvalidValue_titleValid_errorMessageObservableUpdatedWithErrorMessage() throws Exception {
+    public void observableDescriptionUpdatedWithInvalidValue_titleValid_errorMessageObservableUpdatedWithErrorMessage() {
         // Arrange
         whenShortTextValidationReturnValidated();
         whenLongTextValidationReturnErrorMessage();
         // Act
-        SUT.start(INVALID_NEW_EMPTY_RECIPE_ID);
+        SUT.start(INVALID_NEW_EMPTY.getId());
         simulateNothingReturnedFromDatabase();
-        SUT.titleObservable.set(VALID_EXISTING_TITLE);
-        SUT.descriptionObservable.set(INVALID_DESCRIPTION);
+        SUT.titleObservable.set(VALID_NEW_TITLE_VALID.getTitle());
+        SUT.descriptionObservable.set("Doesn't matter what is here as returning an error message!");
         // Assert
         assertEquals(LONG_TEXT_VALIDATION_ERROR, SUT.descriptionErrorMessage.get());
     }
 
     @Test
-    public void observableDescriptionUpdatedWithInvalidValue_titleValid_entityNotSavedToDatabase() throws Exception {
+    public void observableDescriptionUpdatedWithInvalidValue_titleValid_entityNotSavedToDatabase() {
         // Arrange
         whenShortTextValidationReturnValidated();
         whenLongTextValidationReturnErrorMessage();
         // Act
-        SUT.start(INVALID_NEW_EMPTY_RECIPE_ID);
+        SUT.start(INVALID_NEW_EMPTY.getId());
         simulateNothingReturnedFromDatabase();
-        SUT.titleObservable.set(VALID_EXISTING_TITLE);
-        SUT.descriptionObservable.set(INVALID_DESCRIPTION);
-        // Assert (only one save for new Identity, one for the valid title, no save for
-        // invalid description)
+        SUT.titleObservable.set(VALID_NEW_TITLE_VALID.getTitle());
+        SUT.descriptionObservable.set("Doesn't matter what is here as returning an error message!");
         verify(identityDataSourceMock, times(2)).save(anyObject());
     }
 
     @Test
-    public void observableDescriptionUpdatedWithInvalidValue_titleValid_RecipeModelStatus_IDENTITY_MODEL_CHANGED_INVALID() throws Exception {
+    public void observableDescriptionUpdatedWithInvalidValue_titleValid_RecipeModelStatus_IDENTITY_MODEL_CHANGED_INVALID() {
         // Arrange
         ArgumentCaptor<RecipeModelStatus> ac = ArgumentCaptor.forClass(RecipeModelStatus.class);
         whenShortTextValidationReturnValidated();
         whenLongTextValidationReturnErrorMessage();
         // Act
-        SUT.start(INVALID_NEW_EMPTY_RECIPE_ID);
+        SUT.start(INVALID_NEW_EMPTY.getId());
         simulateNothingReturnedFromDatabase();
-        SUT.titleObservable.set(VALID_EXISTING_TITLE);
-        SUT.descriptionObservable.set(INVALID_DESCRIPTION);
+        SUT.titleObservable.set(VALID_NEW_TITLE_VALID.getTitle());
+        SUT.descriptionObservable.set("Doesn't matter what is here as returning an error message!");
         // Assert
-        verify(modelSubmissionMock, times(3)).submitModelStatus(ac.capture());
+        verify(modelValidationSubmitterMock, times(3)).submitModelStatus(ac.capture());
         RecipeModelStatus modelStatus = ac.getValue();
-        assertEquals(IDENTITY_MODEL_CHANGED_INVALID, modelStatus);
+        assertEquals(CHANGED_INVALID, modelStatus);
     }
 
     @Test
-    public void observableDescriptionUpdatedWithValidValue_titleValid_errorMessageObservableUpdatedWithNull() throws Exception {
+    public void observableDescriptionUpdatedWithValidValue_titleValid_errorMessageObservableUpdatedWithNull() {
         // Arrange
         whenShortTextValidationReturnValidated();
         whenLongTextValidationReturnValidated();
         // Act
-        SUT.start(INVALID_NEW_EMPTY_RECIPE_ID);
+        SUT.start(INVALID_NEW_EMPTY.getId());
         simulateNothingReturnedFromDatabase();
-        SUT.titleObservable.set(VALID_EXISTING_TITLE);
-        SUT.descriptionObservable.set(VALID_EXISTING_DESCRIPTION);
+        SUT.titleObservable.set(VALID_NEW_COMPLETE.getTitle());
+        SUT.descriptionObservable.set(VALID_NEW_COMPLETE.getDescription());
         // Assert
         assertNull(SUT.titleErrorMessage.get());
         assertNull(SUT.descriptionErrorMessage.get());
     }
 
     @Test
-    public void observableDescriptionUpdatedWithValidValue_titleValid_entitySavedToDatabase() throws Exception {
+    public void observableDescriptionUpdatedWithValidValue_titleValid_entitySavedToDatabase() {
         // Arrange
         ArgumentCaptor<RecipeIdentityEntity> ac = ArgumentCaptor.forClass(RecipeIdentityEntity.class);
         whenShortTextValidationReturnValidated();
         whenLongTextValidationReturnValidated();
-        whenTimeProviderThenReturnExistingIdentityEntityCreateDate();
+        whenTimeProviderThenReturnExistingCreateDate();
         // Act
-        SUT.start(INVALID_NEW_EMPTY_RECIPE_ID);
+        SUT.start(INVALID_NEW_EMPTY.getId());
         simulateNothingReturnedFromDatabase();
-        SUT.titleObservable.set(VALID_EXISTING_TITLE);
-        SUT.descriptionObservable.set(VALID_EXISTING_DESCRIPTION);
+        SUT.titleObservable.set(VALID_NEW_COMPLETE.getTitle());
+        SUT.descriptionObservable.set(VALID_NEW_COMPLETE.getDescription());
         // Assert
         verify(identityDataSourceMock, times(3)).save(ac.capture());
         List<RecipeIdentityEntity> identityEntities = ac.getAllValues();
         RecipeIdentityEntity identityEntity = identityEntities.get(2);
-        assertEquals(VALID_EXISTING_TITLE, identityEntity.getTitle());
-        assertEquals(VALID_EXISTING_DESCRIPTION, identityEntity.getDescription());
+        assertEquals(VALID_NEW_COMPLETE.getTitle(), identityEntity.getTitle());
+        assertEquals(VALID_NEW_COMPLETE.getDescription(), identityEntity.getDescription());
     }
 
     @Test
-    public void observableDescriptionUpdatedWithValidValue_titleValid_RecipeModelStatus_IDENTITY_MODEL_CHANGED_VALID() throws Exception {
+    public void observableDescriptionUpdatedWithValidValue_titleValid_RecipeModelStatus_IDENTITY_MODEL_CHANGED_VALID() {
         // Arrange
         ArgumentCaptor<RecipeModelStatus> ac = ArgumentCaptor.forClass(RecipeModelStatus.class);
         whenShortTextValidationReturnValidated();
         whenLongTextValidationReturnValidated();
         // Act
-        SUT.start(INVALID_NEW_EMPTY_RECIPE_ID);
+        SUT.start(INVALID_NEW_EMPTY.getId());
         simulateNothingReturnedFromDatabase();
-        SUT.titleObservable.set(VALID_EXISTING_TITLE);
-        SUT.descriptionObservable.set(VALID_EXISTING_DESCRIPTION);
+        SUT.titleObservable.set(VALID_NEW_COMPLETE.getTitle());
+        SUT.descriptionObservable.set(VALID_NEW_COMPLETE.getDescription());
         // Assert
-        verify(modelSubmissionMock, times(3)).submitModelStatus(ac.capture());
+        verify(modelValidationSubmitterMock, times(3)).submitModelStatus(ac.capture());
         RecipeModelStatus modelStatus = ac.getValue();
-        assertEquals(IDENTITY_MODEL_CHANGED_VALID, modelStatus);
+        assertEquals(CHANGED_VALID, modelStatus);
     }
 
     @Test
-    public void observableDescriptionUpdatedWithValidValue_titleInvalid_entityNotSavedToDatabase() throws Exception {
-        ArgumentCaptor<RecipeIdentityEntity> ac = ArgumentCaptor.forClass(RecipeIdentityEntity.class);
+    public void observableDescriptionUpdatedWithValidValue_titleInvalid_emptyEntitySaved() {
         whenShortTextValidationReturnErrorMessage();
         whenLongTextValidationReturnValidated();
-        whenTimeProviderThenReturnExistingIdentityEntityCreateDate();
+        whenTimeProviderThenReturnNewEntityCreateDate();
         // Act
-        SUT.start(INVALID_NEW_EMPTY_RECIPE_ID);
+        SUT.start(INVALID_NEW_EMPTY.getId());
         simulateNothingReturnedFromDatabase();
-        SUT.titleObservable.set(INVALID_NEW_ENTITY_TITLE_INVALID_VALUE.getTitle());
-        SUT.descriptionObservable.set(INVALID_NEW_ENTITY_TITLE_INVALID_DESCRIPTION_VALID.getDescription());
+        SUT.titleObservable.set(INVALID_NEW_TITLE_INVALID_DESCRIPTION_VALID.getTitle());
+        SUT.descriptionObservable.set(INVALID_NEW_TITLE_INVALID_DESCRIPTION_VALID.getDescription());
         // Assert
-        verify(identityDataSourceMock).save(ac.capture());
-        for (RecipeIdentityEntity identityEntity : ac.getAllValues())
-            System.out.println(identityEntity);
-    }
-
-    @Test
-    public void observablePrepMinutes_validValue_prepTimeErrorMessageObservableNull() throws Exception {
-        whenIntFromObserver_thenReturn(VALID_EXISTING_PREP_TIME % 60);
-        // Act
-        SUT.start(INVALID_NEW_EMPTY_RECIPE_ID);
-        simulateNothingReturnedFromDatabase();
-        SUT.prepMinutesObservable.set(String.valueOf(VALID_EXISTING_PREP_TIME % 60));
-        // Assert
-        assertNull(SUT.prepTimeErrorMessage.get());
-    }
-
-    @Test
-    public void observablePrepMinutes_invalidValue_prepTimeErrorMessageObservableErrorMessage() throws Exception {
-        whenIntFromObserver_thenReturn(MAX_PREP_TIME + 1);
-        // Act
-        SUT.start(INVALID_NEW_EMPTY_RECIPE_ID);
-        simulateNothingReturnedFromDatabase();
-        SUT.prepMinutesObservable.set(String.valueOf(MAX_PREP_TIME + 1));
-        // Assert
-        assertEquals(ERROR_MESSAGE_TOO_LONG, SUT.prepTimeErrorMessage.get());
-    }
-
-    @Test
-    public void observablePrepHours_validValue_prepTimeErrorMessageObservableNull() throws Exception {
-        whenIntFromObserver_thenReturn(MAX_PREP_TIME / 600);
-        // Act
-        SUT.start(INVALID_NEW_EMPTY_RECIPE_ID);
-        simulateNothingReturnedFromDatabase();
-        SUT.prepHoursObservable.set(String.valueOf(MAX_PREP_TIME / 60));
-        // Assert
-        assertNull(SUT.prepTimeErrorMessage.get());
-    }
-
-    @Test
-    public void observablePrepHours_invalidValue_prepTimeErrorMessageObservableErrorMessage() throws Exception {
-        whenIntFromObserver_thenReturn(MAX_PREP_TIME / 60 + 1);
-        // Act
-        SUT.start(INVALID_NEW_EMPTY_RECIPE_ID);
-        simulateNothingReturnedFromDatabase();
-        SUT.prepHoursObservable.set(String.valueOf(MAX_PREP_TIME / 60 + 1));
-        // Assert
-        assertEquals(ERROR_MESSAGE_TOO_LONG, SUT.prepTimeErrorMessage.get());
-    }
-
-    @Test
-    public void observablePrepHoursMinutes_validPrepTime_prepTimeSaved() throws Exception {
-        // Arrange
-        ArgumentCaptor<RecipeIdentityEntity> ac = ArgumentCaptor.forClass(RecipeIdentityEntity.class);
-        whenShortTextValidationReturnValidated();
-        whenLongTextValidationReturnValidated();
-        whenIntFromObserverMockReturnMaxPrepAndCookTimes();
-        // Act
-        SUT.start(INVALID_NEW_EMPTY_RECIPE_ID);
-        simulateNothingReturnedFromDatabase();
-        SUT.titleObservable.set(VALID_EXISTING_TITLE); // makes the model valid
-        SUT.prepHoursObservable.set(String.valueOf(MAX_PREP_TIME / 60));
-        SUT.prepMinutesObservable.set(String.valueOf(MAX_PREP_TIME % 60));
-        // Assert
-        verify(identityDataSourceMock, times(3)).save(ac.capture());
-    }
-
-    @Test
-    public void observablePrepHoursMinutes_invalidPrepTime_invalidTimeNotSaved() throws Exception {
-        // Arrange
-        ArgumentCaptor<RecipeIdentityEntity> ac = ArgumentCaptor.forClass(RecipeIdentityEntity.class);
-        whenShortTextValidationReturnValidated();
-        whenIntFromObserverMockReturnMaxPrepAndCookTimesPlusOne();
-        // Act
-        SUT.start(INVALID_NEW_EMPTY_RECIPE_ID);
-        simulateNothingReturnedFromDatabase();
-        SUT.titleObservable.set(VALID_EXISTING_TITLE); // makes the model valid
-        SUT.prepHoursObservable.set(String.valueOf(MAX_PREP_TIME / 60));
-        SUT.prepMinutesObservable.set(String.valueOf(MAX_PREP_TIME % 60 + 1));
-        // Assert (save title, save valid prep hours, don't save invalid prep time when minutes added)
-        verify(identityDataSourceMock, times(3)).save(ac.capture());
-        RecipeIdentityEntity identityEntity = ac.getAllValues().get(2);
-        assertTrue(identityEntity.getPrepTime() != 6001);
-    }
-
-    @Test
-    public void observablePrepHoursMinutes_inValidPrepTime_RecipeModelStatus_IDENTITY_MODEL_CHANGED_INVALID() throws Exception {
-        // Arrange
-        ArgumentCaptor<RecipeModelStatus> ac = ArgumentCaptor.forClass(RecipeModelStatus.class);
-        whenShortTextValidationReturnValidated();
-        whenIntFromObserverMockReturnMaxPrepAndCookTimesPlusOne();
-        // Act
-        SUT.start(INVALID_NEW_EMPTY_RECIPE_ID);
-        simulateNothingReturnedFromDatabase();
-        SUT.titleObservable.set(VALID_EXISTING_TITLE); // makes the model valid
-        SUT.prepHoursObservable.set(String.valueOf(MAX_PREP_TIME / 60));
-        SUT.prepMinutesObservable.set(String.valueOf(MAX_PREP_TIME % 60 + 1));
-
-        verify(modelSubmissionMock, times(4)).submitModelStatus(ac.capture());
-        verify(modelSubmissionMock).submitModelStatus(eq(IDENTITY_MODEL_CHANGED_INVALID));
-    }
-
-    @Test
-    public void observablePrepHoursMinutes_validPrepTime_RecipeModelStatus_IDENTITY_MODEL_CHANGED_VALID() throws Exception {
-        // Arrange
-        whenShortTextValidationReturnValidated();
-        whenIntFromObserverMockReturnMaxPrepAndCookTimes();
-        // Act
-        SUT.start(INVALID_NEW_EMPTY_RECIPE_ID);
-        simulateNothingReturnedFromDatabase();
-        SUT.titleObservable.set(VALID_EXISTING_TITLE); // makes the model valid
-        SUT.prepHoursObservable.set(String.valueOf(MAX_PREP_TIME / 60));
-        SUT.prepMinutesObservable.set(String.valueOf(MAX_PREP_TIME % 60));
-        verify(modelSubmissionMock, times(2)).
-                submitModelStatus(IDENTITY_MODEL_CHANGED_VALID);
-    }
-
-    @Test
-    public void observableCookMinutes_validValue_cookTimeErrorMessageObservableNull() throws Exception {
-        whenShortTextValidationReturnValidated();
-        when(intFromObservableMock.parseInt(anyObject(), eq(SUT.cookMinutesObservable), anyInt())).
-                thenReturn(0, MAX_COOK_TIME);
-        // Act
-        SUT.start(INVALID_NEW_EMPTY_RECIPE_ID);
-        simulateNothingReturnedFromDatabase();
-        SUT.titleObservable.set(VALID_EXISTING_TITLE); // make the model valid
-        SUT.cookMinutesObservable.set(String.valueOf(MAX_COOK_TIME));
-        // Assert
-        assertNull(SUT.cookTimeErrorMessage.get());
-    }
-
-    @Test
-    public void observableCookMinutes_invalidValue_cookTimeErrorMessageObservableErrorMessage() throws Exception {
-        whenShortTextValidationReturnValidated();
-        when(intFromObservableMock.parseInt(anyObject(), eq(SUT.cookMinutesObservable), anyInt())).
-                thenReturn(0, MAX_COOK_TIME + 1);
-        // Act
-        SUT.start(INVALID_NEW_EMPTY_RECIPE_ID);
-        simulateNothingReturnedFromDatabase();
-        SUT.titleObservable.set(VALID_EXISTING_TITLE); // make the model valid
-        SUT.cookMinutesObservable.set(String.valueOf(MAX_COOK_TIME + 1));
-        // Assert
-        assertEquals(ERROR_MESSAGE_TOO_LONG, SUT.cookTimeErrorMessage.get());
-    }
-
-    @Test
-    public void observableCookHours_validValue_cookTimeErrorMessageObservableNull() throws Exception {
-        whenShortTextValidationReturnValidated();
-        whenIntFromObserverMockReturnMaxPrepAndCookTimes();
-        // Act
-        SUT.start(INVALID_NEW_EMPTY_RECIPE_ID);
-        simulateNothingReturnedFromDatabase();
-        SUT.titleObservable.set(VALID_EXISTING_TITLE); // make the model valid
-        SUT.cookHoursObservable.set(String.valueOf(MAX_COOK_TIME / 60));
-        // Assert
-        assertNull(SUT.cookTimeErrorMessage.get());
-    }
-
-    @Test
-    public void observableCookHours_invalidValue_cookTimeErrorMessageObservableErrorMessage() throws Exception {
-        whenShortTextValidationReturnValidated();
-        when(intFromObservableMock.parseInt(anyObject(), eq(SUT.cookHoursObservable), anyInt())).
-                thenReturn(MAX_COOK_TIME / 60 + 1);
-        // Act
-        SUT.start(INVALID_NEW_EMPTY_RECIPE_ID);
-        simulateNothingReturnedFromDatabase();
-        SUT.titleObservable.set(VALID_EXISTING_TITLE); // make the model valid
-        SUT.cookHoursObservable.set(String.valueOf(MAX_COOK_TIME / 60 + 1));
-        // Assert
-        assertEquals(ERROR_MESSAGE_TOO_LONG, SUT.cookTimeErrorMessage.get());
-    }
-
-    @Test
-    public void observableCookHoursMinutes_validTime_savedToDatabase() throws Exception {
-        // Arrange
-        whenShortTextValidationReturnValidated();
-        whenIntFromObserverMockReturnMaxPrepAndCookTimes();
-        // Act
-        SUT.start(INVALID_NEW_EMPTY_RECIPE_ID);
-        simulateNothingReturnedFromDatabase();
-        SUT.titleObservable.set(VALID_EXISTING_TITLE); // make the model valid
-        SUT.cookHoursObservable.set(String.valueOf(MAX_COOK_TIME / 60));
-        SUT.cookMinutesObservable.set(String.valueOf(MAX_COOK_TIME % 60));
-        // Assert
-        verify(identityDataSourceMock, times(3)).save(anyObject());
-    }
-
-    @Test
-    public void observableCookHoursMinutes_invalidValue_prepTimeErrorMessageObservableErrorString() throws Exception {
-        whenShortTextValidationReturnValidated();
-        whenIntFromObserverMockReturnMaxPrepAndCookTimesPlusOne();
-        // Act
-        SUT.start(INVALID_NEW_EMPTY_RECIPE_ID);
-        simulateNothingReturnedFromDatabase();
-        SUT.titleObservable.set(VALID_EXISTING_TITLE); // make the model valid
-        SUT.cookHoursObservable.set(String.valueOf(MAX_COOK_TIME / 60));
-        SUT.cookMinutesObservable.set(String.valueOf(MAX_COOK_TIME % 60 + 1));
-        // Assert
-        assertEquals(ERROR_MESSAGE_TOO_LONG, SUT.cookTimeErrorMessage.get());
+        verify(identityDataSourceMock).save(INVALID_NEW_EMPTY);
     }
 
     @Test // Simulates user input for a complete new recipe IdentityModel
-    public void allObservablesUpdatedWithValidData_newRecipeIdSupplied_identityModelSavedToDatabase() throws Exception {
+    public void allObservablesUpdatedWithValidData_newRecipeIdSupplied_identityModelSavedToDatabase() {
         // Arrange
         ArgumentCaptor<RecipeIdentityEntity> ac = ArgumentCaptor.forClass(RecipeIdentityEntity.class);
         whenShortTextValidationReturnValidated();
         whenLongTextValidationReturnValidated();
-        whenIdProviderMockThenReturnNewEmptyDraftRecipeId();
-        whenTimeProviderMockThenReturnNewIdentityEntityCreateDate();
-        whenIntFromObserverMockReturnValidRecipeTimes();
-
+        whenTimeProviderThenReturnNewEntityCreateDate();
         // Act
-        SUT.start(INVALID_NEW_EMPTY_ENTITY.getId());
+        SUT.start(INVALID_NEW_EMPTY.getId());
         simulateNothingReturnedFromDatabase();
-        SUT.titleObservable.set(VALID_NEW_COMPLETE_ENTITY.getTitle());
-        SUT.descriptionObservable.set(VALID_NEW_COMPLETE_ENTITY.getDescription());
-        SUT.prepHoursObservable.set(String.valueOf(VALID_NEW_COMPLETE_ENTITY.getPrepTime() / 60));
-        SUT.prepMinutesObservable.set(String.valueOf(VALID_NEW_COMPLETE_ENTITY.getPrepTime() % 60));
-        SUT.cookHoursObservable.set(String.valueOf(VALID_NEW_COMPLETE_ENTITY.getCookTime() / 60));
-        SUT.cookMinutesObservable.set(String.valueOf(VALID_NEW_COMPLETE_ENTITY.getCookTime() % 60));
+        SUT.titleObservable.set(VALID_NEW_COMPLETE.getTitle());
+        SUT.descriptionObservable.set(VALID_NEW_COMPLETE.getDescription());
         // Assert
-        verify(identityDataSourceMock, times(5)).save(ac.capture());
+        verify(identityDataSourceMock, times(3)).save(ac.capture());
         List<RecipeIdentityEntity> identityList = ac.getAllValues();
-        RecipeIdentityEntity newCompleteIdentityEntity = identityList.get(4);
+        RecipeIdentityEntity newCompleteIdentityEntity = identityList.get(2);
 
-        assertEquals(VALID_NEW_COMPLETE_ENTITY, newCompleteIdentityEntity);
+        assertEquals(VALID_NEW_COMPLETE, newCompleteIdentityEntity);
     }
 
     @Test(expected = RuntimeException.class)
-    public void start_nullRecipe_runtimeExceptionThrown() throws Exception {
+    public void start_nullRecipe_runtimeExceptionThrown() {
         // Arrange
         // Act
         SUT.start(null);
@@ -788,52 +466,50 @@ public class RecipeIdentityViewModelTest {
     }
 
     // region helper methods -------------------------------------------------------------------
-    private void simulateGetValidRecipeIdentityEntityFromDatabase() {
-        verify(identityDataSourceMock).getById(eq(
-                VALID_EXISTING_ID),
+    private void simulateNothingReturnedFromDatabase() {
+        verify(identityDataSourceMock).getById(eq(INVALID_NEW_EMPTY.getId()),
                 getEntityCallbackArgumentCaptor.capture());
-
-        getEntityCallbackArgumentCaptor.getValue().onEntityLoaded(
-                VALID_EXISTING_ENTITY);
+        getEntityCallbackArgumentCaptor.getValue().onDataNotAvailable();
     }
 
-    private void simulateGetValidRecipeIdentityEntityFromAnotherUserFromDatabase() {
+    private void simulateGetValidExistingCompleteFromDatabase() {
         verify(identityDataSourceMock).getById(eq(
-                VALID_IDENTITY_ID_FROM_ANOTHER_USER),
+                VALID_EXISTING_COMPLETE.getId()),
                 getEntityCallbackArgumentCaptor.capture());
 
         getEntityCallbackArgumentCaptor.getValue().onEntityLoaded(
-                VALID_IDENTITY_ENTITY_FROM_ANOTHER_USER);
+                VALID_EXISTING_COMPLETE);
+    }
+
+    private void simulateGetValidEntityFromAnotherUserFromDatabase() {
+        verify(identityDataSourceMock).getById(eq(
+                VALID_FROM_ANOTHER_USER.getId()),
+                getEntityCallbackArgumentCaptor.capture());
+
+        getEntityCallbackArgumentCaptor.getValue().onEntityLoaded(
+                VALID_FROM_ANOTHER_USER);
     }
 
     private void whenTextValidationValidateTitleAndDescription() {
         when(textValidationHandlerMock.validateShortText(
                 eq(resourcesMock),
-                eq(VALID_EXISTING_ENTITY.getTitle()))).
-                thenReturn(VALIDATED);
+                eq(VALID_EXISTING_COMPLETE.getTitle()))).
+                thenReturn(TextValidationHandler.VALIDATED);
 
         when(textValidationHandlerMock.validateLongText(
                 eq(resourcesMock),
-                eq(VALID_EXISTING_ENTITY.getDescription()))).
-                thenReturn(VALIDATED);
-    }
-
-    private void simulateNothingReturnedFromDatabase() {
-        verify(identityDataSourceMock).getById(eq(INVALID_NEW_EMPTY_RECIPE_ID),
-                getEntityCallbackArgumentCaptor.capture());
-        getEntityCallbackArgumentCaptor.getValue().onDataNotAvailable();
+                eq(VALID_EXISTING_COMPLETE.getDescription()))).
+                thenReturn(TextValidationHandler.VALIDATED);
     }
 
     private void setupResourceMockReturnValues() {
-        when(resourcesMock.getInteger(R.integer.recipe_max_cook_time_in_minutes)).thenReturn(MAX_PREP_TIME);
-        when(resourcesMock.getInteger(R.integer.recipe_max_prep_time_in_minutes)).thenReturn(MAX_COOK_TIME);
         when(resourcesMock.getString(R.string.input_error_recipe_prep_time_too_long)).thenReturn(ERROR_MESSAGE_TOO_LONG);
         when(resourcesMock.getString(R.string.input_error_recipe_cook_time_too_long)).thenReturn(ERROR_MESSAGE_TOO_LONG);
     }
 
     private void whenShortTextValidationReturnValidated() {
         when(textValidationHandlerMock.validateShortText(anyObject(), anyString())).
-                thenReturn(VALIDATED);
+                thenReturn(TextValidationHandler.VALIDATED);
     }
 
     private void whenShortTextValidationReturnErrorMessage() {
@@ -843,7 +519,7 @@ public class RecipeIdentityViewModelTest {
 
     private void whenLongTextValidationReturnValidated() {
         when(textValidationHandlerMock.validateLongText(anyObject(), anyString())).
-                thenReturn(VALIDATED);
+                thenReturn(TextValidationHandler.VALIDATED);
     }
 
     private void whenLongTextValidationReturnErrorMessage() {
@@ -851,77 +527,68 @@ public class RecipeIdentityViewModelTest {
                 thenReturn(LONG_TEXT_VALIDATION_ERROR);
     }
 
-    private void whenIntFromObserver_thenReturn(int returnValue) {
-        when(intFromObservableMock.parseInt(anyObject(), anyObject(), anyInt())).thenReturn(
-                returnValue);
-    }
+//    private void whenIntFromObserver_thenReturn(int returnValue) {
+//        when(intFromObservableMock.parseInt(anyObject(), anyObject(), anyInt())).thenReturn(
+//                returnValue);
+//    }
 
-    private void whenIntFromObserverMockReturnValidRecipeTimes() {
-        when(intFromObservableMock.parseInt(anyObject(), eq(SUT.prepHoursObservable), anyInt())).
-                thenReturn(VALID_EXISTING_PREP_TIME / 60);
-        when(intFromObservableMock.parseInt(anyObject(), eq(SUT.prepMinutesObservable), anyInt())).
-                thenReturn(VALID_EXISTING_PREP_TIME % 60);
-        when(intFromObservableMock.parseInt(anyObject(), eq(SUT.cookHoursObservable), anyInt())).
-                thenReturn(VALID_EXISTING_COOK_TIME / 60);
-        when(intFromObservableMock.parseInt(anyObject(), eq(SUT.cookMinutesObservable), anyInt())).
-                thenReturn(VALID_EXISTING_COOK_TIME % 60);
-    }
+//    private void whenIntFromObserverMockReturnExistingValidCompleteRecipeTimes() {
+//        when(intFromObservableMock.parseInt(anyObject(), eq(SUT.prepHoursObservable), anyInt())).
+//                thenReturn(VALID_EXISTING_COMPLETE.getPrepTime() / 60);
+//        when(intFromObservableMock.parseInt(anyObject(), eq(SUT.prepMinutesObservable), anyInt())).
+//                thenReturn(VALID_EXISTING_COMPLETE.getPrepTime() % 60);
+//        when(intFromObservableMock.parseInt(anyObject(), eq(SUT.cookHoursObservable), anyInt())).
+//                thenReturn(VALID_EXISTING_COMPLETE.getCookTime() / 60);
+//        when(intFromObservableMock.parseInt(anyObject(), eq(SUT.cookMinutesObservable), anyInt())).
+//                thenReturn(VALID_EXISTING_COMPLETE.getCookTime() % 60);
+//    }
 
-    private void whenIntFromObserverMockReturnMaxPrepAndCookTimes() {
-        when(intFromObservableMock.parseInt(anyObject(), eq(SUT.prepHoursObservable), anyInt())).
-                thenReturn(0, MAX_PREP_TIME / 60);
-        when(intFromObservableMock.parseInt(anyObject(), eq(SUT.prepMinutesObservable), anyInt())).
-                thenReturn(0, MAX_PREP_TIME % 60);
-        when(intFromObservableMock.parseInt(anyObject(), eq(SUT.cookHoursObservable), anyInt())).
-                thenReturn(0, MAX_COOK_TIME / 60);
-        when(intFromObservableMock.parseInt(anyObject(), eq(SUT.cookMinutesObservable), anyInt())).
-                thenReturn(0, MAX_COOK_TIME % 60);
-    }
+//    private void whenIntFromObserverMockReturnMaxPrepAndCookTimes() {
+//        when(intFromObservableMock.parseInt(anyObject(), eq(SUT.prepHoursObservable), anyInt())).
+//                thenReturn(0, MAX_PREP_TIME / 60);
+//        when(intFromObservableMock.parseInt(anyObject(), eq(SUT.prepMinutesObservable), anyInt())).
+//                thenReturn(0, MAX_PREP_TIME % 60);
+//        when(intFromObservableMock.parseInt(anyObject(), eq(SUT.cookHoursObservable), anyInt())).
+//                thenReturn(0, MAX_COOK_TIME / 60);
+//        when(intFromObservableMock.parseInt(anyObject(), eq(SUT.cookMinutesObservable), anyInt())).
+//                thenReturn(0, MAX_COOK_TIME % 60);
+//    }
 
-    private void whenIntFromObserverMockReturnMaxPrepAndCookTimesPlusOne() {
-        when(intFromObservableMock.parseInt(anyObject(), eq(SUT.prepHoursObservable), anyInt())).
-                thenReturn(0, MAX_PREP_TIME / 60);
-        when(intFromObservableMock.parseInt(anyObject(), eq(SUT.prepMinutesObservable), anyInt())).
-                thenReturn(0, MAX_PREP_TIME % 60 + 1);
-        when(intFromObservableMock.parseInt(anyObject(), eq(SUT.cookHoursObservable), anyInt())).
-                thenReturn(0, MAX_COOK_TIME / 60);
-        when(intFromObservableMock.parseInt(anyObject(), eq(SUT.cookMinutesObservable), anyInt())).
-                thenReturn(0, MAX_COOK_TIME % 60 + 1);
-    }
+//    private void whenIntFromObserverMockReturnMaxPrepAndCookTimesPlusOne() {
+//        when(intFromObservableMock.parseInt(anyObject(), eq(SUT.prepHoursObservable), anyInt())).
+//                thenReturn(0, MAX_PREP_TIME / 60);
+//        when(intFromObservableMock.parseInt(anyObject(), eq(SUT.prepMinutesObservable), anyInt())).
+//                thenReturn(0, MAX_PREP_TIME % 60 + 1);
+//        when(intFromObservableMock.parseInt(anyObject(), eq(SUT.cookHoursObservable), anyInt())).
+//                thenReturn(0, MAX_COOK_TIME / 60);
+//        when(intFromObservableMock.parseInt(anyObject(), eq(SUT.cookMinutesObservable), anyInt())).
+//                thenReturn(0, MAX_COOK_TIME % 60 + 1);
+//    }
 
-    private void whenIntFromObserverMockReturnRecipeTimesFromAnotherUser() {
-        when(intFromObservableMock.parseInt(anyObject(), eq(SUT.cookHoursObservable), anyInt())).
-                thenReturn(COOK_TIME_FROM_ANOTHER_USER / 60);
-        when(intFromObservableMock.parseInt(anyObject(), eq(SUT.cookMinutesObservable), anyInt())).
-                thenReturn(COOK_TIME_FROM_ANOTHER_USER % 60);
-        when(intFromObservableMock.parseInt(anyObject(), eq(SUT.prepHoursObservable), anyInt())).
-                thenReturn(PREP_TIME_FROM_ANOTHER_USER / 60);
-        when(intFromObservableMock.parseInt(anyObject(), eq(SUT.prepMinutesObservable), anyInt())).
-                thenReturn(PREP_TIME_FROM_ANOTHER_USER % 60);
-    }
+//    private void whenIntFromObserverMockReturnRecipeTimesFromAnotherUser() {
+//        when(intFromObservableMock.parseInt(anyObject(), eq(SUT.cookHoursObservable), anyInt())).
+//                thenReturn(VALID_FROM_ANOTHER_USER.getCookTime() / 60);
+//        when(intFromObservableMock.parseInt(anyObject(), eq(SUT.cookMinutesObservable), anyInt())).
+//                thenReturn(VALID_FROM_ANOTHER_USER.getCookTime() % 60);
+//        when(intFromObservableMock.parseInt(anyObject(), eq(SUT.prepHoursObservable), anyInt())).
+//                thenReturn(VALID_FROM_ANOTHER_USER.getPrepTime() / 60);
+//        when(intFromObservableMock.parseInt(anyObject(), eq(SUT.prepMinutesObservable), anyInt())).
+//                thenReturn(VALID_FROM_ANOTHER_USER.getPrepTime() % 60);
+//    }
 
-    private void whenIdProviderMockThenReturnNewEmptyDraftRecipeId() {
-        when(uniqueIdProviderMock.getUId()).thenReturn(INVALID_NEW_EMPTY_RECIPE_ID);
-    }
-
-    private void whenIdProviderThenReturnExistingRecipeId() {
-        when(uniqueIdProviderMock.getUId()).thenReturn(
-                VALID_EXISTING_ENTITY.getId());
-    }
-
-    private void whenTimeProviderMockThenReturnNewIdentityEntityCreateDate() {
+    private void whenTimeProviderThenReturnNewEntityCreateDate() {
         when(timeProviderMock.getCurrentTimestamp()).thenReturn(
-                INVALID_NEW_EMPTY_ENTITY.getCreateDate());
+                INVALID_NEW_EMPTY.getCreateDate());
     }
 
-    private void whenTimeProviderThenReturnExistingIdentityEntityCreateDate() {
+    private void whenTimeProviderThenReturnExistingCreateDate() {
         when(timeProviderMock.getCurrentTimestamp()).thenReturn(
-                VALID_EXISTING_ENTITY.getCreateDate());
+                VALID_EXISTING_COMPLETE.getCreateDate());
     }
 
-    private void whenTimeProviderMockThenReturnClonedRecipeIdentityEntityTimes() {
+    private void whenTimeProviderThenReturnClonedTimes() {
         when(timeProviderMock.getCurrentTimestamp()).thenReturn(
-                VALID_CLONED_RECIPE_IDENTITY_ENTITY.getLastUpdate());
+                VALID_NEW_CLONED.getLastUpdate());
     }
     // endregion helper methods --------------------------------------------------------------------
 

@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.testdata;
 
 import com.example.peter.thekitchenmenu.data.entity.RecipeDurationEntity;
 
-public class RecipeDurationTestData {
+public class RecipeDurationEntityTestData {
 
     public static int getMaxPrepTime() {
         return 6000;
@@ -22,21 +22,41 @@ public class RecipeDurationTestData {
         );
     }
 
-    public static RecipeDurationEntity getNewPrepTimeUpdatedInvalid() {
+    public static RecipeDurationEntity getInvalidNewPrepTimeInvalid() {
         return new RecipeDurationEntity(
                 RecipeEntityTestData.getInvalidNew().getId(),
                 6001,
-                0,
+                getValidNewEmpty().getCookTime(),
                 RecipeEntityTestData.getInvalidNew().getCreateDate(),
                 RecipeEntityTestData.getInvalidNew().getLastUpdate()
         );
     }
 
-    public static RecipeDurationEntity getNewCookTimeUpdatedInvalid() {
+    public static RecipeDurationEntity getInvalidNewCookTimeInvalid() {
         return new RecipeDurationEntity(
                 RecipeEntityTestData.getInvalidNew().getId(),
-                0,
+                getValidNewEmpty().getPrepTime(),
                 6001,
+                RecipeEntityTestData.getInvalidNew().getCreateDate(),
+                RecipeEntityTestData.getInvalidNew().getLastUpdate()
+        );
+    }
+
+    public static RecipeDurationEntity getValidNewPrepTimeValid() {
+        return new RecipeDurationEntity(
+                RecipeEntityTestData.getInvalidNew().getId(),
+                6000,
+                getValidNewEmpty().getCookTime(),
+                RecipeEntityTestData.getInvalidNew().getCreateDate(),
+                RecipeEntityTestData.getInvalidNew().getLastUpdate()
+        );
+    }
+
+    public static RecipeDurationEntity getValidNewCookTimeValid() {
+        return new RecipeDurationEntity(
+                RecipeEntityTestData.getInvalidNew().getId(),
+                getValidNewEmpty().getPrepTime(),
+                6000,
                 RecipeEntityTestData.getInvalidNew().getCreateDate(),
                 RecipeEntityTestData.getInvalidNew().getLastUpdate()
         );
@@ -45,14 +65,14 @@ public class RecipeDurationTestData {
     public static RecipeDurationEntity getValidNewComplete() {
         return new RecipeDurationEntity(
                 RecipeEntityTestData.getInvalidNew().getId(),
-                6000,
-                6000,
+                getValidNewPrepTimeValid().getPrepTime(),
+                getValidNewPrepTimeValid().getCookTime(),
                 RecipeEntityTestData.getInvalidNew().getCreateDate(),
                 RecipeEntityTestData.getInvalidNew().getLastUpdate()
         );
     }
 
-    public static RecipeDurationEntity getInvalidExisting() {
+    public static RecipeDurationEntity getInvalidExistingComplete() {
         return new RecipeDurationEntity(
                 RecipeEntityTestData.getInvalidExisting().getId(),
                 6001,
@@ -82,7 +102,6 @@ public class RecipeDurationTestData {
         );
     }
 
-    // getInvalidFromAnotherUser
     public static RecipeDurationEntity getInvalidCompleteFromAnotherUser() {
         return new RecipeDurationEntity(
                 RecipeEntityTestData.getInvalidFromAnotherUser().getId(),
@@ -106,13 +125,22 @@ public class RecipeDurationTestData {
     public static RecipeDurationEntity getInvalidNewCloned() {
         return new RecipeDurationEntity(
                 RecipeEntityTestData.getInvalidNewCloned().getId(),
-                getInvalidExisting().getPrepTime(),
-                getInvalidExisting().getCookTime(),
+                getInvalidExistingComplete().getPrepTime(),
+                getInvalidExistingComplete().getCookTime(),
                 RecipeEntityTestData.getInvalidNewCloned().getCreateDate(),
                 RecipeEntityTestData.getInvalidNewCloned().getLastUpdate()
         );
     }
 
+    public static RecipeDurationEntity getValidNewClonedPrepTimeUpdated() {
+        return new RecipeDurationEntity(
+                RecipeEntityTestData.getInvalidNewCloned().getId(),
+                3000,
+                getValidCompleteFromAnotherUser().getCookTime(),
+                RecipeEntityTestData.getInvalidNewCloned().getCreateDate(),
+                RecipeEntityTestData.getInvalidNewCloned().getLastUpdate()
+        );
+    }
 
 }
 

@@ -13,7 +13,7 @@ import org.mockito.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.peter.thekitchenmenu.testdata.RecipeCourseTestData.*;
+import static com.example.peter.thekitchenmenu.testdata.RecipeCourseEntityTestData.*;
 import static com.example.peter.thekitchenmenu.testdata.RecipeEntityTestData.*;
 import static com.example.peter.thekitchenmenu.testdata.RecipeValidatorTestData.*;
 import static org.junit.Assert.*;

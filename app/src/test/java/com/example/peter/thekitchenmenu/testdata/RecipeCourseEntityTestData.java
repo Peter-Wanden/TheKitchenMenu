@@ -5,7 +5,7 @@ import com.example.peter.thekitchenmenu.data.entity.RecipeCourseEntity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecipeCourseTestData {
+public class RecipeCourseEntityTestData {
 
     private static final String EXISTING_RECIPE_ID =
             RecipeEntityTestData.getValidExisting().getId();

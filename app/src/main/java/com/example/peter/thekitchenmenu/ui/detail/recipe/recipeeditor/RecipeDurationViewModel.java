@@ -108,6 +108,24 @@ public class RecipeDurationViewModel
             updateObservables();
     }
 
+    @Override
+    public void onDataNotAvailable() {
+        durationEntity = createNewDurationEntity();
+        save(durationEntity);
+        updateObservables();
+    }
+
+    private RecipeDurationEntity createNewDurationEntity() {
+        long currentTime = timeProvider.getCurrentTimestamp();
+        return new RecipeDurationEntity(
+                recipeId,
+                0,
+                0,
+                currentTime,
+                currentTime
+        );
+    }
+
     private RecipeDurationEntity cloneDurationEntity() {
         isCloned = false;
         long currentTime = timeProvider.getCurrentTimestamp();
@@ -150,42 +168,6 @@ public class RecipeDurationViewModel
 
     private int calculateTotalInMinutes(int hours, int minutes) {
         return hours * 60 + minutes;
-    }
-
-    private boolean isChanged() {
-        if (durationEntity != null) {
-            RecipeDurationEntity latestDurations = new RecipeDurationEntity(
-                    durationEntity.getId(),
-                    calculateTotalInMinutes(prepHours, prepMinutes),
-                    calculateTotalInMinutes(cookHours, cookMinutes),
-                    durationEntity.getCreateDate(),
-                    durationEntity.getLastUpdate()
-            );
-            return !durationEntity.equals(latestDurations);
-        } else
-            return false;
-    }
-
-    private boolean isValid() {
-        return prepTimeValid && cookTimeValid;
-    }
-
-    @Override
-    public void onDataNotAvailable() {
-        durationEntity = createNewDurationEntity();
-        save(durationEntity);
-        updateObservables();
-    }
-
-    private RecipeDurationEntity createNewDurationEntity() {
-        long currentTime = timeProvider.getCurrentTimestamp();
-        return new RecipeDurationEntity(
-                recipeId,
-                0,
-                0,
-                currentTime,
-                currentTime
-        );
     }
 
     private void getPrepHours() {
@@ -244,12 +226,13 @@ public class RecipeDurationViewModel
         return intFromObservable.parseInt(resources, observable, oldValue);
     }
 
+
     // todo, as these two methods are implemented in all models that should be part of an interface
     // todo, possible move {@link RecipeModelComposite} to recipeValidator?
-
     void setModelValidationSubmitter(RecipeValidation.RecipeValidatorModelSubmission modelSubmitter) {
         this.modelSubmitter = modelSubmitter;
     }
+
     private void reportModelStatus() {
         if (!modelUpdating) {
             modelSubmitter.submitModelStatus(new RecipeModelStatus(
@@ -261,6 +244,25 @@ public class RecipeDurationViewModel
             if (isChanged() && isValid())
                 save(updatedDurationEntity());
         }
+    }
+
+    private boolean isChanged() {
+        if (durationEntity != null) {
+            RecipeDurationEntity latestDurationModel = new RecipeDurationEntity(
+                    durationEntity.getId(),
+                    calculateTotalInMinutes(prepHours, prepMinutes),
+                    calculateTotalInMinutes(cookHours, cookMinutes),
+                    durationEntity.getCreateDate(),
+                    durationEntity.getLastUpdate()
+            );
+
+            return !durationEntity.equals(latestDurationModel);
+        } else
+            return false;
+    }
+
+    private boolean isValid() {
+        return prepTimeValid && cookTimeValid;
     }
 
     private void save(RecipeDurationEntity durationEntity) {

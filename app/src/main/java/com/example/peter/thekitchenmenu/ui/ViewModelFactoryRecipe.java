@@ -103,8 +103,7 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
                     recipeIdentityRepository,
                     new TimeProvider(),
                     application.getResources(),
-                    new TextValidationHandler(),
-                    new ParseIntegerFromObservableHandler());
+                    new TextValidationHandler());
 
         } else if (modelClass.isAssignableFrom(RecipeCourseSelectorViewModel.class)) {
             //noinspection unchecked

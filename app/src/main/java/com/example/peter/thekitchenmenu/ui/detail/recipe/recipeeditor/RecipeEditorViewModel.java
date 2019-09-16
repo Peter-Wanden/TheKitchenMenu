@@ -1,7 +1,6 @@
 package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 
 import android.content.res.Resources;
-import android.util.Log;
 
 import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
@@ -10,7 +9,6 @@ import androidx.lifecycle.ViewModel;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
-import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;

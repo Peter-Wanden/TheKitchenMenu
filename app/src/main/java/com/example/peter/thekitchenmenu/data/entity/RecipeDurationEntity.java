@@ -64,6 +64,17 @@ public final class RecipeDurationEntity implements TkmEntity {
     }
 
     @Override
+    public String toString() {
+        return "RecipeDurationEntity{" +
+                "id='" + id + '\'' +
+                ", prepTime=" + prepTime +
+                ", cookTime=" + cookTime +
+                ", createDate=" + createDate +
+                ", lastUpdate=" + lastUpdate +
+                '}';
+    }
+
+    @Override
     @NonNull
     public String getId() {
         return id;
