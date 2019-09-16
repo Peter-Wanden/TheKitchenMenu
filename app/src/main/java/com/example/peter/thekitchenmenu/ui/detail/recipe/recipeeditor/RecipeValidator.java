@@ -11,10 +11,10 @@ public class RecipeValidator implements RecipeValidation.RecipeValidatorModelSub
 
     enum RecipeValidationStatus {
         INVALID_MISSING_MODELS,
-        INVALID_NO_CHANGES,
-        INVALID_HAS_CHANGES,
-        VALID_NO_CHANGES,
-        VALID_HAS_CHANGES
+        INVALID_UNCHANGED,
+        INVALID_CHANGED,
+        VALID_UNCHANGED,
+        VALID_CHANGED
     }
 
     public enum ModelName {
@@ -55,15 +55,15 @@ public class RecipeValidator implements RecipeValidation.RecipeValidatorModelSub
             }
 
             if(!recipeIsValid && !recipeHasChanged)
-                return INVALID_NO_CHANGES;
+                return INVALID_UNCHANGED;
 
             if (!recipeIsValid && recipeHasChanged)
-                return INVALID_HAS_CHANGES;
+                return INVALID_CHANGED;
 
             if (recipeIsValid && !recipeHasChanged)
-                return VALID_NO_CHANGES;
+                return VALID_UNCHANGED;
 
-            return VALID_HAS_CHANGES;
+            return VALID_CHANGED;
 
         } else
             return INVALID_MISSING_MODELS;

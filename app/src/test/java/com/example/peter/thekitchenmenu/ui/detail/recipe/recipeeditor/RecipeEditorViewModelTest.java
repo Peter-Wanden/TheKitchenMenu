@@ -178,7 +178,7 @@ public class RecipeEditorViewModelTest {
         // Act
         SUT.start(VALID_RECIPE_ID);
         simulateReturnValidRecipeDatabaseCall();
-        SUT.setValidationStatus(VALID_HAS_CHANGES);
+        SUT.setValidationStatus(VALID_CHANGED);
         // Assert
         assertTrue(SUT.showIngredientsButtonObservable.get());
     }
@@ -190,7 +190,7 @@ public class RecipeEditorViewModelTest {
         // Act
         SUT.start(VALID_RECIPE_ID);
         simulateReturnValidRecipeDatabaseCall();
-        SUT.setValidationStatus(VALID_HAS_CHANGES);
+        SUT.setValidationStatus(VALID_CHANGED);
         // Assert
         assertTrue(SUT.isShowReviewButton());
         verify(voidEventObserverMock).onChanged(any());
@@ -201,7 +201,7 @@ public class RecipeEditorViewModelTest {
         // Arrange
         SUT.getEnableReviewButtonEvent().observeForever(voidEventObserverMock);
         // Act
-        SUT.setValidationStatus(VALID_NO_CHANGES);
+        SUT.setValidationStatus(VALID_UNCHANGED);
         // Assert
         assertFalse(SUT.isShowReviewButton());
         verify(voidEventObserverMock).onChanged(any());
@@ -232,7 +232,7 @@ public class RecipeEditorViewModelTest {
         // Act
         SUT.start(INVALID_DRAFT_RECIPE_ID);
         returnInvalidDraftRecipeFromDatabaseCall();
-        SUT.setValidationStatus(INVALID_HAS_CHANGES);
+        SUT.setValidationStatus(INVALID_CHANGED);
         SUT.upOrBackPressed();
         // Assert
         verify(voidEventObserverMock).onChanged(any());
@@ -244,7 +244,7 @@ public class RecipeEditorViewModelTest {
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
         when(uniqueIdProviderMock.getUId()).thenReturn(VALID_RECIPE_ENTITY.getId());
         SUT.start();
-        SUT.setValidationStatus(VALID_HAS_CHANGES);
+        SUT.setValidationStatus(VALID_CHANGED);
         // Act
         assertTrue(SUT.isShowReviewButton()); // ensure review button is visible
         SUT.reviewButtonPressed();
@@ -260,7 +260,7 @@ public class RecipeEditorViewModelTest {
         // Act
         SUT.start(VALID_RECIPE_ID);
         simulateReturnValidRecipeDatabaseCall();
-        SUT.setValidationStatus(VALID_HAS_CHANGES);
+        SUT.setValidationStatus(VALID_CHANGED);
         assertTrue(SUT.isShowReviewButton()); // ensure review button is visible
         SUT.reviewButtonPressed();
         // Assert
@@ -310,7 +310,7 @@ public class RecipeEditorViewModelTest {
         when(uniqueIdProviderMock.getUId()).thenReturn(NEW_ID);
         // Act
         SUT.start();
-        SUT.setValidationStatus(VALID_HAS_CHANGES);
+        SUT.setValidationStatus(VALID_CHANGED);
         assertTrue(SUT.showIngredientsButtonObservable.get()); // Verify button is shown
         SUT.ingredientsButtonPressed();
         // Assert
@@ -325,7 +325,7 @@ public class RecipeEditorViewModelTest {
         // Act
         SUT.start(VALID_RECIPE_ID);
         simulateReturnValidRecipeDatabaseCall();
-        SUT.setValidationStatus(VALID_HAS_CHANGES);
+        SUT.setValidationStatus(VALID_CHANGED);
         // verify the add ingredients button is visible
         assertTrue(SUT.showIngredientsButtonObservable.get());
         // press the button
@@ -343,7 +343,7 @@ public class RecipeEditorViewModelTest {
         // Act
         SUT.start(VALID_RECIPE_ID_FROM_ANOTHER_USER);
         simulateReturnValidRecipeFromAnotherUserDatabaseCall();
-        SUT.setValidationStatus(VALID_NO_CHANGES);
+        SUT.setValidationStatus(VALID_UNCHANGED);
         assertTrue(SUT.showIngredientsButtonObservable.get()); // ensure ingredients button is visible
         SUT.ingredientsButtonPressed();
         // Assert
@@ -399,7 +399,7 @@ public class RecipeEditorViewModelTest {
         // Act
         SUT.start(VALID_RECIPE_ID);
         simulateReturnValidRecipeDatabaseCall();
-        SUT.setValidationStatus(VALID_NO_CHANGES);
+        SUT.setValidationStatus(VALID_UNCHANGED);
         // Assert
         verifyNoMoreInteractions(recipeEntityDataSourceMock);
     }
@@ -451,7 +451,7 @@ public class RecipeEditorViewModelTest {
         // Act
         SUT.start(INVALID_DRAFT_RECIPE_ID);
         returnInvalidDraftRecipeFromDatabaseCall();
-        SUT.setValidationStatus(INVALID_NO_CHANGES);
+        SUT.setValidationStatus(INVALID_UNCHANGED);
         // Assert
         verifyNoMoreInteractions(recipeEntityDataSourceMock);
     }
@@ -463,7 +463,7 @@ public class RecipeEditorViewModelTest {
         // Act
         SUT.start(VALID_RECIPE_ID);
         simulateReturnValidRecipeDatabaseCall();
-        SUT.setValidationStatus(INVALID_HAS_CHANGES);
+        SUT.setValidationStatus(INVALID_CHANGED);
         // Assert
         verify(recipeEntityDataSourceMock).save(ac.capture());
         RecipeEntity recipeEntity = ac.getValue();
@@ -476,7 +476,7 @@ public class RecipeEditorViewModelTest {
         // Act
         SUT.start(VALID_RECIPE_ID);
         simulateReturnValidRecipeDatabaseCall();
-        SUT.setValidationStatus(VALID_NO_CHANGES);
+        SUT.setValidationStatus(VALID_UNCHANGED);
         // Assert
         verifyNoMoreInteractions(recipeEntityDataSourceMock);
     }
@@ -488,7 +488,7 @@ public class RecipeEditorViewModelTest {
         // Act
         SUT.start(VALID_RECIPE_ID);
         simulateReturnValidRecipeDatabaseCall();
-        SUT.setValidationStatus(VALID_HAS_CHANGES);
+        SUT.setValidationStatus(VALID_CHANGED);
         // Assert
         verify(recipeEntityDataSourceMock).save(ac.capture());
         RecipeEntity recipeEntity = ac.getValue();

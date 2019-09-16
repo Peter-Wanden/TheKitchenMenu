@@ -178,11 +178,11 @@ public class RecipeEditorViewModel
 
 //        Log.d(TAG, "setValidationStatus=" + recipeValidationStatus);
 
-        isDraft = recipeValidationStatus != VALID_HAS_CHANGES &&
-                recipeValidationStatus != VALID_NO_CHANGES;
+        isDraft = recipeValidationStatus != VALID_CHANGED &&
+                recipeValidationStatus != VALID_UNCHANGED;
 
-        if (recipeValidationStatus != INVALID_NO_CHANGES &&
-                recipeValidationStatus != VALID_NO_CHANGES) {
+        if (recipeValidationStatus != INVALID_UNCHANGED &&
+                recipeValidationStatus != VALID_UNCHANGED) {
 
             this.recipeEntity = createNewEntity();
             saveRecipe();
@@ -191,12 +191,12 @@ public class RecipeEditorViewModel
     }
 
     private void updateButtonVisibility() {
-        if (recipeValidationStatus == VALID_HAS_CHANGES) {
+        if (recipeValidationStatus == VALID_CHANGED) {
             showIngredientsButtonObservable.set(true);
             showReviewButton = true;
             enableReviewButtonEvent.call();
 
-        } else if (recipeValidationStatus == VALID_NO_CHANGES) {
+        } else if (recipeValidationStatus == VALID_UNCHANGED) {
             showIngredientsButtonObservable.set(true);
             showReviewButton = false;
             enableReviewButtonEvent.call();
@@ -217,7 +217,7 @@ public class RecipeEditorViewModel
     }
 
     void upOrBackPressed() {
-        if (recipeValidationStatus == INVALID_HAS_CHANGES) {
+        if (recipeValidationStatus == INVALID_CHANGED) {
             showUnsavedChangesDialogEvent.call();
         } else {
             navigator.cancelEditing();

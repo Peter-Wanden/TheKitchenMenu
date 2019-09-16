@@ -57,13 +57,13 @@ public class RecipeIdentityViewModelTest {
     private static final RecipeIdentityEntity VALID_CLONED_DESCRIPTION_UPDATED =
             RecipeIdentityEntityTestData.getValidNewClonedDescriptionUpdatedComplete();
 
-    private RecipeModelStatus UNCHANGED_INVALID =
+    private RecipeModelStatus INVALID_UNCHANGED =
             RecipeValidatorTestData.getIdentityModelStatusUnchangedInvalid();
-    private RecipeModelStatus UNCHANGED_VALID =
-            RecipeValidatorTestData.getIdentityModelStatusUnchangedValid();
-    private RecipeModelStatus CHANGED_INVALID =
+    private RecipeModelStatus INVALID_CHANGED =
             RecipeValidatorTestData.getIdentityModelStatusChangedInvalid();
-    private RecipeModelStatus CHANGED_VALID =
+    private RecipeModelStatus VALID_UNCHANGED =
+            RecipeValidatorTestData.getIdentityModelStatusUnchangedValid();
+    private RecipeModelStatus VALID_CHANGED =
             RecipeValidatorTestData.getIdentityModelStatusChangedValid();
 
     private static final String ERROR_MESSAGE_TOO_LONG = "error_message_too_long";
@@ -109,17 +109,7 @@ public class RecipeIdentityViewModelTest {
     }
 
     @Test
-    public void start_recipeId_databaseCalledWithRecipeId() {
-        // Arrange
-        // Act
-        SUT.start(INVALID_NEW_EMPTY.getId());
-        // Assert
-        verify(identityDataSourceMock).getById(eq(INVALID_NEW_EMPTY.getId()),
-                getEntityCallbackArgumentCaptor.capture());
-    }
-
-    @Test
-    public void start_recipeIdWithNoRecipe_nothingSetToObservers() {
+    public void startNewRecipeId_nothingSetToObservers() {
         // Arrange
         // Act
         SUT.start(INVALID_NEW_EMPTY.getId());
@@ -132,7 +122,18 @@ public class RecipeIdentityViewModelTest {
     }
 
     @Test
-    public void start_newRecipeId_RecipeModelStatusUNCHANGED_INVALID() {
+    public void startNewRecipeId_newEmptyEntitySaved() throws Exception {
+        // Arrange
+        when(timeProviderMock.getCurrentTimestamp()).thenReturn(INVALID_NEW_EMPTY.getCreateDate());
+        // Act
+        SUT.start(INVALID_NEW_EMPTY.getId());
+        simulateNothingReturnedFromDatabase();
+        // Assert
+        verify(identityDataSourceMock).save(eq(INVALID_NEW_EMPTY));
+    }
+
+    @Test
+    public void startNewRecipeId_RecipeModelStatusINVALID_UNCHANGED() {
         // Arrange
         ArgumentCaptor<RecipeModelStatus> ac = ArgumentCaptor.forClass(RecipeModelStatus.class);
         // Act
@@ -141,111 +142,11 @@ public class RecipeIdentityViewModelTest {
         // Assert
         verify(modelValidationSubmitterMock).submitModelStatus(ac.capture());
         RecipeModelStatus modelStatus = ac.getValue();
-        assertEquals(UNCHANGED_INVALID, modelStatus);
+        assertEquals(INVALID_UNCHANGED, modelStatus);
     }
 
     @Test
-    public void start_validExistingCompleteRecipeId_titleSetToObservable() {
-        // Arrange
-        whenTextValidationValidateTitleAndDescription();
-        // Act
-        SUT.start(VALID_EXISTING_COMPLETE.getId());
-        simulateGetValidExistingCompleteFromDatabase();
-        // Assert
-        assertEquals(VALID_EXISTING_COMPLETE.getTitle(), SUT.titleObservable.get());
-    }
-
-    @Test
-    public void start_validExistingCompleteRecipeId_descriptionSetToObservable() {
-        // Arrange
-        whenTextValidationValidateTitleAndDescription();
-        // Act
-        SUT.start(VALID_EXISTING_COMPLETE.getId());
-        simulateGetValidExistingCompleteFromDatabase();
-        // Assert
-        assertEquals(VALID_EXISTING_COMPLETE.getDescription(), SUT.descriptionObservable.get());
-    }
-
-    @Test
-    public void start_validExistingCompleteRecipeId_RecipeModelStatusIDENTITY_MODEL_UNCHANGED_VALID() {
-        // Arrange
-        ArgumentCaptor<RecipeModelStatus> ac = ArgumentCaptor.forClass(RecipeModelStatus.class);
-        whenTextValidationValidateTitleAndDescription();
-//        whenIntFromObserverMockReturnExistingValidCompleteRecipeTimes();
-        // Act
-        SUT.start(VALID_EXISTING_COMPLETE.getId());
-        // Assert
-        simulateGetValidExistingCompleteFromDatabase();
-        verify(modelValidationSubmitterMock).submitModelStatus(ac.capture());
-        RecipeModelStatus modelStatus = ac.getValue();
-        assertEquals(UNCHANGED_VALID, modelStatus);
-    }
-
-
-
-
-
-    @Test
-    public void startWithCloned_existingAndNewRecipeIdSupplied_databaseCalledWithOldId() {
-        // Arrange
-        // Act
-        SUT.startByCloningModel(
-                VALID_FROM_ANOTHER_USER.getId(), INVALID_NEW_EMPTY.getId());
-        // Assert
-        verify(identityDataSourceMock).getById(eq(VALID_FROM_ANOTHER_USER.getId()), eq(SUT));
-    }
-
-    @Test
-    public void startWithCloned_existingAndNewRecipeIdSupplied_existingSavedWithNewId() {
-        // Arrange
-        whenTimeProviderThenReturnClonedTimes();
-        whenShortTextValidationReturnValidated();
-        whenLongTextValidationReturnValidated();
-        // Act
-        SUT.startByCloningModel(
-                VALID_FROM_ANOTHER_USER.getId(), INVALID_NEW_EMPTY.getId());
-        simulateGetValidEntityFromAnotherUserFromDatabase();
-        // Assert
-        verify(identityDataSourceMock).save(eq(VALID_NEW_CLONED));
-    }
-
-    @Test
-    public void startWithCloned_descriptionChanged_modelSavedWithUpdatedDescription() {
-        // Arrange
-        ArgumentCaptor<RecipeIdentityEntity> ac = ArgumentCaptor.forClass(RecipeIdentityEntity.class);
-        whenTimeProviderThenReturnClonedTimes();
-        whenShortTextValidationReturnValidated();
-        whenLongTextValidationReturnValidated();
-        // Act
-        SUT.startByCloningModel(
-                VALID_FROM_ANOTHER_USER.getId(), INVALID_NEW_EMPTY.getId());
-        simulateGetValidEntityFromAnotherUserFromDatabase();
-        SUT.descriptionObservable.set(VALID_CLONED_DESCRIPTION_UPDATED.getDescription());
-        // Assert
-        verify(identityDataSourceMock, times(2)).save(ac.capture());
-        assertEquals(VALID_CLONED_DESCRIPTION_UPDATED, ac.getAllValues().get(1));
-    }
-
-    @Test
-    public void startWithCloned_originalModelNotAvailable_newModelCreatedAndSaved() {
-        // Arrange
-        whenShortTextValidationReturnErrorMessage();
-        whenLongTextValidationReturnValidated();
-        whenTimeProviderThenReturnClonedTimes();
-        // Act
-        SUT.startByCloningModel(
-                VALID_FROM_ANOTHER_USER.getId(), INVALID_NEW_EMPTY.getId());
-
-        verify(identityDataSourceMock).getById(eq(VALID_FROM_ANOTHER_USER.getId()),
-                getEntityCallbackArgumentCaptor.capture());
-        getEntityCallbackArgumentCaptor.getValue().onDataNotAvailable();
-
-        // Assert
-        verify(identityDataSourceMock).save(eq(INVALID_NEW_EMPTY));
-    }
-
-    @Test
-    public void observableTitleUpdatedWithInvalidValue_allOtherFieldsEmpty_errorMessageObservableUpdatedWithErrorMessage() {
+    public void startNewRecipeId_invalidTitle_errorMessageSetToObservable() {
         // Arrange
         whenShortTextValidationReturnErrorMessage();
         // Act
@@ -257,20 +158,7 @@ public class RecipeIdentityViewModelTest {
     }
 
     @Test
-    public void observableTitleUpdatedWithInvalidValue_allOtherFieldsValid_errorMessageObservableUpdatedWithErrorMessage() {
-        // Arrange
-        whenShortTextValidationReturnErrorMessage();
-        whenLongTextValidationReturnValidated();
-        // Act
-        SUT.start(VALID_EXISTING_COMPLETE.getId());
-        simulateGetValidExistingCompleteFromDatabase();
-        SUT.titleObservable.set(INVALID_EXISTING_INCOMPLETE_INVALID_TITLE.getTitle());
-        // Assert
-        assertEquals(SUT.titleErrorMessage.get(), SHORT_TEXT_VALIDATION_ERROR);
-    }
-
-    @Test
-    public void observableTitleUpdatedWithInvalidValue_allOtherFieldsEmpty_RecipeModelStatus_IDENTITY_MODEL_CHANGED_INVALID() {
+    public void startNewRecipeId_invalidTitle_recipeModelStatusINVALID_CHANGED() {
         // Arrange
         ArgumentCaptor<RecipeModelStatus> ac = ArgumentCaptor.forClass(RecipeModelStatus.class);
         whenShortTextValidationReturnErrorMessage();
@@ -281,11 +169,25 @@ public class RecipeIdentityViewModelTest {
         // Assert
         verify(modelValidationSubmitterMock, times(2)).submitModelStatus(ac.capture());
         RecipeModelStatus modelStatus = ac.getValue();
-        assertEquals(CHANGED_INVALID, modelStatus);
+        assertEquals(INVALID_CHANGED, modelStatus);
     }
 
     @Test
-    public void observableTitleUpdatedWithValidValue_allOtherFieldsEmpty_errorMessageObservableUpdatedWithNull() {
+    public void startNewRecipeId_invalidTitleValidDescription_emptyEntitySaved() {
+        whenShortTextValidationReturnErrorMessage();
+        whenLongTextValidationReturnValidated();
+        whenTimeProviderThenReturnNewEntityCreateDate();
+        // Act
+        SUT.start(INVALID_NEW_EMPTY.getId());
+        simulateNothingReturnedFromDatabase();
+        SUT.titleObservable.set(INVALID_NEW_TITLE_INVALID_DESCRIPTION_VALID.getTitle());
+        SUT.descriptionObservable.set(INVALID_NEW_TITLE_INVALID_DESCRIPTION_VALID.getDescription());
+        // Assert
+        verify(identityDataSourceMock).save(INVALID_NEW_EMPTY);
+    }
+
+    @Test
+    public void startNewRecipeId_validTitle_errorMessageObservableNull() {
         // Arrange
         whenShortTextValidationReturnValidated();
         // Act
@@ -297,7 +199,7 @@ public class RecipeIdentityViewModelTest {
     }
 
     @Test
-    public void observableTitleUpdatedWithValidValue_allOtherFieldsEmpty_entitySavedToDatabase() {
+    public void startNewRecipeId_validTitle_titleSaved() {
         // Arrange
         whenShortTextValidationReturnValidated();
         whenTimeProviderThenReturnNewEntityCreateDate();
@@ -310,7 +212,7 @@ public class RecipeIdentityViewModelTest {
     }
 
     @Test
-    public void observableTitleUpdatedWithValidValue_allOtherFieldsEmpty_RecipeModelStatus_IDENTITY_MODEL_CHANGED_VALID() {
+    public void startNewRecipeId_validTitle_recipeModelStatusVALID_CHANGED() {
         // Arrange
         ArgumentCaptor<RecipeModelStatus> ac = ArgumentCaptor.forClass(RecipeModelStatus.class);
         whenShortTextValidationReturnValidated();
@@ -321,11 +223,11 @@ public class RecipeIdentityViewModelTest {
         // Assert
         verify(modelValidationSubmitterMock, times(2)).submitModelStatus(ac.capture());
         RecipeModelStatus modelStatus = ac.getValue();
-        assertEquals(CHANGED_VALID, modelStatus);
+        assertEquals(VALID_CHANGED, modelStatus);
     }
 
     @Test
-    public void observableDescriptionUpdatedWithInvalidValue_titleValid_errorMessageObservableUpdatedWithErrorMessage() {
+    public void startNewRecipeId_validTitleInvalidDescription_errorMessageSetToObservable() {
         // Arrange
         whenShortTextValidationReturnValidated();
         whenLongTextValidationReturnErrorMessage();
@@ -339,7 +241,7 @@ public class RecipeIdentityViewModelTest {
     }
 
     @Test
-    public void observableDescriptionUpdatedWithInvalidValue_titleValid_entityNotSavedToDatabase() {
+    public void startNewRecipeId_validTitleInvalidDescription_descriptionNotSaved() {
         // Arrange
         whenShortTextValidationReturnValidated();
         whenLongTextValidationReturnErrorMessage();
@@ -352,7 +254,7 @@ public class RecipeIdentityViewModelTest {
     }
 
     @Test
-    public void observableDescriptionUpdatedWithInvalidValue_titleValid_RecipeModelStatus_IDENTITY_MODEL_CHANGED_INVALID() {
+    public void startNewRecipeId_validTitleInvalidDescription_recipeModelStatusINVALID_CHANGED() {
         // Arrange
         ArgumentCaptor<RecipeModelStatus> ac = ArgumentCaptor.forClass(RecipeModelStatus.class);
         whenShortTextValidationReturnValidated();
@@ -365,11 +267,11 @@ public class RecipeIdentityViewModelTest {
         // Assert
         verify(modelValidationSubmitterMock, times(3)).submitModelStatus(ac.capture());
         RecipeModelStatus modelStatus = ac.getValue();
-        assertEquals(CHANGED_INVALID, modelStatus);
+        assertEquals(INVALID_CHANGED, modelStatus);
     }
 
     @Test
-    public void observableDescriptionUpdatedWithValidValue_titleValid_errorMessageObservableUpdatedWithNull() {
+    public void startNewRecipeId_validTitleValidDescription_errorMessageObservableNull() {
         // Arrange
         whenShortTextValidationReturnValidated();
         whenLongTextValidationReturnValidated();
@@ -384,7 +286,7 @@ public class RecipeIdentityViewModelTest {
     }
 
     @Test
-    public void observableDescriptionUpdatedWithValidValue_titleValid_entitySavedToDatabase() {
+    public void startNewRecipeId_validTitleValidDescription_saved() {
         // Arrange
         ArgumentCaptor<RecipeIdentityEntity> ac = ArgumentCaptor.forClass(RecipeIdentityEntity.class);
         whenShortTextValidationReturnValidated();
@@ -404,7 +306,7 @@ public class RecipeIdentityViewModelTest {
     }
 
     @Test
-    public void observableDescriptionUpdatedWithValidValue_titleValid_RecipeModelStatus_IDENTITY_MODEL_CHANGED_VALID() {
+    public void startNewRecipeId_validTitleValidDescription_recipeModelStatusVALID_CHANGED() {
         // Arrange
         ArgumentCaptor<RecipeModelStatus> ac = ArgumentCaptor.forClass(RecipeModelStatus.class);
         whenShortTextValidationReturnValidated();
@@ -417,25 +319,126 @@ public class RecipeIdentityViewModelTest {
         // Assert
         verify(modelValidationSubmitterMock, times(3)).submitModelStatus(ac.capture());
         RecipeModelStatus modelStatus = ac.getValue();
-        assertEquals(CHANGED_VALID, modelStatus);
+        assertEquals(VALID_CHANGED, modelStatus);
     }
 
     @Test
-    public void observableDescriptionUpdatedWithValidValue_titleInvalid_emptyEntitySaved() {
-        whenShortTextValidationReturnErrorMessage();
-        whenLongTextValidationReturnValidated();
-        whenTimeProviderThenReturnNewEntityCreateDate();
+    public void startValidExistingRecipeId_titleSetToObservable() {
+        // Arrange
+        whenTextValidationValidateTitleAndDescription();
         // Act
-        SUT.start(INVALID_NEW_EMPTY.getId());
-        simulateNothingReturnedFromDatabase();
-        SUT.titleObservable.set(INVALID_NEW_TITLE_INVALID_DESCRIPTION_VALID.getTitle());
-        SUT.descriptionObservable.set(INVALID_NEW_TITLE_INVALID_DESCRIPTION_VALID.getDescription());
+        SUT.start(VALID_EXISTING_COMPLETE.getId());
+        simulateGetValidExistingCompleteFromDatabase();
         // Assert
-        verify(identityDataSourceMock).save(INVALID_NEW_EMPTY);
+        assertEquals(VALID_EXISTING_COMPLETE.getTitle(), SUT.titleObservable.get());
     }
 
-    @Test // Simulates user input for a complete new recipe IdentityModel
-    public void allObservablesUpdatedWithValidData_newRecipeIdSupplied_identityModelSavedToDatabase() {
+    @Test
+    public void startValidExistingRecipeId_descriptionSetToObservable() {
+        // Arrange
+        whenTextValidationValidateTitleAndDescription();
+        // Act
+        SUT.start(VALID_EXISTING_COMPLETE.getId());
+        simulateGetValidExistingCompleteFromDatabase();
+        // Assert
+        assertEquals(VALID_EXISTING_COMPLETE.getDescription(), SUT.descriptionObservable.get());
+    }
+
+    @Test
+    public void startValidExistingRecipeId_recipeModelStatusVALID_UNCHANGED() {
+        // Arrange
+        ArgumentCaptor<RecipeModelStatus> ac = ArgumentCaptor.forClass(RecipeModelStatus.class);
+        whenTextValidationValidateTitleAndDescription();
+//        whenIntFromObserverMockReturnExistingValidCompleteRecipeTimes();
+        // Act
+        SUT.start(VALID_EXISTING_COMPLETE.getId());
+        // Assert
+        simulateGetValidExistingCompleteFromDatabase();
+        verify(modelValidationSubmitterMock).submitModelStatus(ac.capture());
+        RecipeModelStatus modelStatus = ac.getValue();
+        assertEquals(VALID_UNCHANGED, modelStatus);
+    }
+
+    @Test
+    public void startValidExistingRecipeId_invalidTitle_errorMessageSetToObservable() {
+        // Arrange
+        whenShortTextValidationReturnErrorMessage();
+        whenLongTextValidationReturnValidated();
+        // Act
+        SUT.start(VALID_EXISTING_COMPLETE.getId());
+        simulateGetValidExistingCompleteFromDatabase();
+        SUT.titleObservable.set(INVALID_EXISTING_INCOMPLETE_INVALID_TITLE.getTitle());
+        // Assert
+        assertEquals(SUT.titleErrorMessage.get(), SHORT_TEXT_VALIDATION_ERROR);
+    }
+    // startValidExistingRecipeId_invalidTitle_notSaved
+    // startValidExistingRecipeId_invalidTitle_recipeModelStatusINVALID_CHANGED
+
+    // startInvalidExistingRecipeId_recipeModelStatusINVALID_UNCHANGED
+
+    @Test
+    public void startWithCloned_validExistingAndNewRecipeId_databaseCalledWithExistingId() {
+        // Arrange
+        // Act
+        SUT.startByCloningModel(
+                VALID_FROM_ANOTHER_USER.getId(), INVALID_NEW_EMPTY.getId());
+        // Assert
+        verify(identityDataSourceMock).getById(eq(VALID_FROM_ANOTHER_USER.getId()), eq(SUT));
+    }
+
+    @Test
+    public void startWithCloned_validExistingAndNewRecipeId_existingCopiedAndSavedWithNewId() {
+        // Arrange
+        whenTimeProviderThenReturnClonedTimes();
+        whenShortTextValidationReturnValidated();
+        whenLongTextValidationReturnValidated();
+        // Act
+        SUT.startByCloningModel(
+                VALID_FROM_ANOTHER_USER.getId(), INVALID_NEW_EMPTY.getId());
+        simulateGetValidEntityFromAnotherUserFromDatabase();
+        // Assert
+        verify(identityDataSourceMock).save(eq(VALID_NEW_CLONED));
+    }
+
+    @Test
+    public void startWithCloned_validExistingAndNewRecipeIdValidDescriptionChanged_existingCopiedAndSavedWithUpdatedDescription() {
+        // Arrange
+        ArgumentCaptor<RecipeIdentityEntity> ac = ArgumentCaptor.forClass(RecipeIdentityEntity.class);
+        whenTimeProviderThenReturnClonedTimes();
+        whenShortTextValidationReturnValidated();
+        whenLongTextValidationReturnValidated();
+        // Act
+        SUT.startByCloningModel(
+                VALID_FROM_ANOTHER_USER.getId(), INVALID_NEW_EMPTY.getId());
+        simulateGetValidEntityFromAnotherUserFromDatabase();
+        SUT.descriptionObservable.set(VALID_CLONED_DESCRIPTION_UPDATED.getDescription());
+        // Assert
+        verify(identityDataSourceMock, times(2)).save(ac.capture());
+        assertEquals(VALID_CLONED_DESCRIPTION_UPDATED, ac.getAllValues().get(1));
+    }
+
+    @Test
+    public void startWithCloned_existingMissingAndNewRecipeId_newEntityCreatedAndSaved() {
+        // Arrange
+        whenShortTextValidationReturnErrorMessage();
+        whenLongTextValidationReturnValidated();
+        whenTimeProviderThenReturnClonedTimes();
+        // Act
+        SUT.startByCloningModel(
+                VALID_FROM_ANOTHER_USER.getId(), INVALID_NEW_EMPTY.getId());
+
+        verify(identityDataSourceMock).getById(eq(VALID_FROM_ANOTHER_USER.getId()),
+                getEntityCallbackArgumentCaptor.capture());
+        getEntityCallbackArgumentCaptor.getValue().onDataNotAvailable();
+
+        // Assert
+        verify(identityDataSourceMock).save(eq(INVALID_NEW_EMPTY));
+    }
+
+    // startWithCloned_invalidExistingAndNewRecipeId_emptyEntitySaved
+
+    @Test
+    public void startNewRecipeId_titleValidDescriptionValid_newEntitySaved() {
         // Arrange
         ArgumentCaptor<RecipeIdentityEntity> ac = ArgumentCaptor.forClass(RecipeIdentityEntity.class);
         whenShortTextValidationReturnValidated();

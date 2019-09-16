@@ -102,7 +102,7 @@ public class RecipeValidatorTest {
         verify(recipeEditorMock, times(2)).
                 setValidationStatus(ac.capture());
         RecipeValidationStatus validationStatus = ac.getAllValues().get(1);
-        assertEquals(INVALID_NO_CHANGES, validationStatus);
+        assertEquals(INVALID_UNCHANGED, validationStatus);
     }
 
     @Test
@@ -117,7 +117,7 @@ public class RecipeValidatorTest {
         verify(recipeEditorMock, times(2)).
                 setValidationStatus(ac.capture());
         RecipeValidationStatus validationStatus = ac.getAllValues().get(1);
-        assertEquals(INVALID_HAS_CHANGES, validationStatus);
+        assertEquals(INVALID_CHANGED, validationStatus);
     }
 
     @Test
@@ -132,7 +132,7 @@ public class RecipeValidatorTest {
         verify(recipeEditorMock, times(2)).
                 setValidationStatus(ac.capture());
         RecipeValidationStatus validationStatus = ac.getAllValues().get(1);
-        assertEquals(INVALID_HAS_CHANGES, validationStatus);
+        assertEquals(INVALID_CHANGED, validationStatus);
     }
 
     @Test
@@ -147,7 +147,7 @@ public class RecipeValidatorTest {
         verify(recipeEditorMock, times(2)).
                 setValidationStatus(ac.capture());
         RecipeValidationStatus validationStatus = ac.getAllValues().get(1);
-        assertEquals(INVALID_HAS_CHANGES, validationStatus);
+        assertEquals(INVALID_CHANGED, validationStatus);
     }
 
     @Test
@@ -162,7 +162,7 @@ public class RecipeValidatorTest {
         verify(recipeEditorMock, times(2)).
                 setValidationStatus(ac.capture());
         RecipeValidationStatus validationStatus = ac.getAllValues().get(1);
-        assertEquals(INVALID_HAS_CHANGES, validationStatus);
+        assertEquals(INVALID_CHANGED, validationStatus);
     }
 
     @Test
@@ -176,7 +176,7 @@ public class RecipeValidatorTest {
         verify(recipeEditorMock, times(2)).
                 setValidationStatus(ac.capture());
         RecipeValidationStatus validationStatus = ac.getAllValues().get(1);
-        assertEquals(VALID_NO_CHANGES, validationStatus);
+        assertEquals(VALID_UNCHANGED, validationStatus);
     }
 
     @Test
@@ -190,7 +190,7 @@ public class RecipeValidatorTest {
         verify(recipeEditorMock, times(2)).
                 setValidationStatus(ac.capture());
         RecipeValidationStatus validationStatus = ac.getAllValues().get(1);
-        assertEquals(VALID_HAS_CHANGES, validationStatus);
+        assertEquals(VALID_CHANGED, validationStatus);
     }
 
     @Test
@@ -204,7 +204,7 @@ public class RecipeValidatorTest {
         verify(recipeEditorMock, times(2)).
                 setValidationStatus(ac.capture());
         RecipeValidationStatus validationStatus = ac.getAllValues().get(1);
-        assertEquals(VALID_HAS_CHANGES, validationStatus);
+        assertEquals(VALID_CHANGED, validationStatus);
     }
 
     @Test
