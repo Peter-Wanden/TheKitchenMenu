@@ -118,14 +118,12 @@
 
             <!-- Receives a query with a request to SEARCH -->
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH"
-                    />
+                <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>
 
             <!-- Receives a query with a request to view a specific item -->
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"
-                    />
+                <action android:name="android.intent.action.VIEW"/>
             </intent-filter>
 
             <!-- Points to searchable configuration for this search activity -->
@@ -164,7 +162,15 @@
             android:noHistory="true"
             >
         </activity>
-        <activity android:name=".ui.detail.recipe.recipeviewer.RecipeViewerActivity" />
+        <activity
+            android:name=".ui.detail.recipe.recipeviewer.RecipeViewerActivity"
+            >
+        </activity>
+
+        <activity
+            android:name=".ui.detail.ingredient.IngredientEditor"
+            >
+        </activity>
 
         <uses-library
             android:name="android.test.runner"

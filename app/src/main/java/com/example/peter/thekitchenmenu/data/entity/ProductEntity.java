@@ -26,7 +26,7 @@ public final class ProductEntity implements Parcelable, TkmEntity {
     public static final String DESCRIPTION = "description";
     public static final String SHOPPING_LIST_ITEM_NAME = "shoppingListItemName";
     private static final String CATEGORY = "category";
-    private static final String NUMBER_OF_PRODUCTS = "number_of_products";
+    private static final String NUMBER_OF_PRODUCTS = "numberOfProducts";
     private static final String SHELF_LIFE = "shelfLife";
     private static final String BASE_UNITS = "baseUnits";
     private static final String UNIT_OF_MEASURE_SUB_TYPE = "unitOfMeasureSubtype";

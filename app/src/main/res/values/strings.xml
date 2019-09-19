@@ -109,7 +109,7 @@
 
     <!-- Activity titles -->
     <string name="activity_title_product_catalog">Product catalog</string>
-    <string name="activity_detail_product_title">Product details</string>
+    <string name="activity_title_product_detail">Product details</string>
     <string name="activity_title_view_product">Product viewer</string>
     <string name="activity_title_review_new_product">Review before post</string>
     <string name="activity_title_edit_product">Edit product</string>
@@ -121,6 +121,9 @@
     <string name="activity_title_add_new_recipe">Add new recipe</string>
     <string name="activity_title_edit_recipe">Edit recipe</string>
     <string name="activity_title_copy_recipe">Copy recipe</string>
+    <string name="activity_title_image_cropper">TKM - Image Cropper</string>
+    <string name="activity_title_add_new_ingredient">Add new ingredient</string>
+    <string name="activity_title_edit_ingredient">Edit ingredient</string>
 
     <!-- ProductDetail user input error codes -->
     <string name="input_error_short_text_too_short">Too short, needs to be between 3 and 70 characters.</string>
@@ -248,6 +251,10 @@
     <!-- Recipe Editor -->
     <string name="title_recipe_editor">Recipe Editor</string>
 
+    <!-- Ingredient -->
+    <string name="ingredient_name_label">Name</string>
+    <string name="ingredient_description_label">Description</string>
+
     <!-- Navigation drawer -->
     <string name="nav_recipes">Recipes</string>
     <string name="nav_products">Products</string>
@@ -268,7 +275,6 @@
     <string name="cd_launch_browser_to_get_image_url">Press to launch browser for image url</string>
     <string name="product_image">Product image</string>
     <string name="hint_web_image_url">Paste a web image url here</string>
-    <string name="activity_title_image_cropper">TKM - Image Cropper</string>
     <string name="empty_screen_add_to_favorites_message">Add to favorites</string>
 
     <!-- Menu items for ProductViewerFragment -->
@@ -307,4 +313,5 @@
     <string name="lasUpdated">last updated</string>
     <string name="recipe_title_label">Title</string>
     <string name="invalid_number">Invalid number entered</string>
+
 </resources>

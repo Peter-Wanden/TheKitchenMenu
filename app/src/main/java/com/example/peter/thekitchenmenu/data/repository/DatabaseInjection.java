@@ -6,6 +6,8 @@ import androidx.annotation.NonNull;
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.IngredientEntityDao;
+import com.example.peter.thekitchenmenu.data.repository.source.local.IngredientLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.ProductLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.LocalDataSourceRecipeCourse;
 import com.example.peter.thekitchenmenu.data.repository.source.local.RecipeDurationLocalDataSource;
@@ -13,6 +15,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.local.RecipeIdent
 import com.example.peter.thekitchenmenu.data.repository.source.local.RecipeLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.TKMDatabase;
 import com.example.peter.thekitchenmenu.data.repository.source.local.LocalDataSourceFavoriteProducts;
+import com.example.peter.thekitchenmenu.data.repository.source.remote.IngredientRemoteDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.remote.ProductRemoteDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.remote.RecipeDurationRemoteDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.remote.RemoteDataSourceFavoriteProducts;
@@ -97,5 +100,17 @@ public class DatabaseInjection {
                 RecipeDurationLocalDataSource.getInstance(
                         new AppExecutors(),
                         database.recipeDurationEntityDao()));
+    }
+
+    public static RepositoryIngredient provideIngredientEntityDataSource(@NonNull Context context) {
+        checkNotNull(context);
+
+        TKMDatabase database = TKMDatabase.getInstance(context, new AppExecutors());
+
+        return RepositoryIngredient.getInstance(
+                IngredientRemoteDataSource.getInstance(),
+                IngredientLocalDataSource.getInstance(
+                        new AppExecutors(),
+                        database.ingredientEntityDao()));
     }
 }

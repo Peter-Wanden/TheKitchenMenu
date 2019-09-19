@@ -32,7 +32,6 @@ public class ViewModelFactoryProduct extends ViewModelProvider.NewInstanceFactor
 
     private ViewModelFactoryProduct(Application application,
                                     DataSource<ProductEntity> productEntityDataSource) {
-
         this.application = application;
         this.productEntityDataSource = productEntityDataSource;
     }

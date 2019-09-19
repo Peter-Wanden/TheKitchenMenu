@@ -1,7 +1,6 @@
 package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 
 import android.content.res.Resources;
-import android.util.Log;
 
 import androidx.databinding.Observable;
 import androidx.databinding.ObservableField;
@@ -22,11 +21,9 @@ public class RecipeIdentityViewModel
         DataSource.GetEntityCallback<RecipeIdentityEntity>,
         RecipeModelComposite.RecipeModelActions {
 
-    private static final String TAG = "tkm-RecipeIdentityVM";
-
     private Resources resources;
-    private TextValidationHandler validationHandler;
-    private DataSource<RecipeIdentityEntity> identityEntityDataSource;
+    private TextValidationHandler textValidationHandler;
+    private DataSource<RecipeIdentityEntity> dataSource;
     private TimeProvider timeProvider;
     private RecipeValidatorModelSubmission modelSubmitter;
 
@@ -45,14 +42,14 @@ public class RecipeIdentityViewModel
             titleValid,
             descriptionValid = true;
 
-    public RecipeIdentityViewModel(DataSource<RecipeIdentityEntity> identityEntityDataSource,
+    public RecipeIdentityViewModel(DataSource<RecipeIdentityEntity> dataSource,
                                    TimeProvider timeProvider,
                                    Resources resources,
-                                   TextValidationHandler validationHandler) {
-        this.identityEntityDataSource = identityEntityDataSource;
+                                   TextValidationHandler textValidationHandler) {
+        this.dataSource = dataSource;
         this.timeProvider = timeProvider;
         this.resources = resources;
-        this.validationHandler = validationHandler;
+        this.textValidationHandler = textValidationHandler;
 
         titleObservable.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
@@ -78,8 +75,7 @@ public class RecipeIdentityViewModel
     public void start(String recipeId) {
         if (recipeId != null) {
             this.recipeId = recipeId;
-//            Log.d(TAG, "start: called");
-            identityEntityDataSource.getById(recipeId, this);
+            dataSource.getById(recipeId, this);
         } else {
             throw new RuntimeException("Recipe id cannot be null");
         }
@@ -87,10 +83,9 @@ public class RecipeIdentityViewModel
 
     @Override
     public void startByCloningModel(String oldRecipeId, String newRecipeId) {
-//        Log.d(TAG, "startByCloningModel: start by clone called");
         isCloned = true;
         this.recipeId = newRecipeId;
-        identityEntityDataSource.getById(oldRecipeId, this);
+        dataSource.getById(oldRecipeId, this);
     }
 
     @Override
@@ -100,7 +95,6 @@ public class RecipeIdentityViewModel
         if (isCloned) {
             this.identityEntity = cloneIdentityEntity();
             updateObservables();
-//            Log.d(TAG, "onEntityLoaded: saving clone");
             save(updatedIdentityEntity());
         } else
             updateObservables();
@@ -109,7 +103,6 @@ public class RecipeIdentityViewModel
     @Override
     public void onDataNotAvailable() {
         identityEntity = createNewIdentityEntity();
-//        Log.d(TAG, "onDataNotAvailable: saving new");
         save(identityEntity);
         updateObservables();
     }
@@ -148,11 +141,11 @@ public class RecipeIdentityViewModel
     }
 
     private String validateShortText(String textToValidate) {
-        return validationHandler.validateShortText(resources, textToValidate);
+        return textValidationHandler.validateShortText(resources, textToValidate);
     }
 
     private String validateLongText(String textToValidate) {
-        return validationHandler.validateLongText(resources, textToValidate);
+        return textValidationHandler.validateLongText(resources, textToValidate);
     }
 
     private void reportRecipeModelStatus() {
@@ -164,7 +157,6 @@ public class RecipeIdentityViewModel
             ));
 
             if (isValid() && isChanged()) {
-//                Log.d(TAG, "reportRecipeModelStatus: saving updated");
                 save(updatedIdentityEntity());
             }
         }
@@ -176,20 +168,20 @@ public class RecipeIdentityViewModel
 
     private boolean isChanged() {
         if (identityEntity != null) {
-            RecipeIdentityEntity updatedIdentityEntity = (new RecipeIdentityEntity(
+            RecipeIdentityEntity updatedIdentityEntity = new RecipeIdentityEntity(
                     identityEntity.getId(),
                     titleObservable.get(),
                     descriptionObservable.get(),
                     identityEntity.getCreateDate(),
                     identityEntity.getLastUpdate()
-            ));
+            );
             return !identityEntity.equals(updatedIdentityEntity);
         } else
             return false;
     }
 
     private void save(RecipeIdentityEntity identityEntity) {
-        identityEntityDataSource.save(identityEntity);
+        dataSource.save(identityEntity);
     }
 
     private RecipeIdentityEntity updatedIdentityEntity() {
