@@ -8,6 +8,7 @@ import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.repository.source.remote.RemoteSignIn;
 import com.example.peter.thekitchenmenu.ui.catalog.product.ProductCatalogActivity;
 import com.example.peter.thekitchenmenu.ui.catalog.recipe.RecipeCatalogActivity;
+import com.example.peter.thekitchenmenu.ui.detail.ingredient.IngredientEditorActivity;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.Nullable;
@@ -68,6 +69,10 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.nav_products:
                     launchProductActivity();
                     return true;
+
+                case R.id.nav_add_ingredient:
+                    launchIngredientActivity();
+                    return true;
             }
             return true;
         });
@@ -82,6 +87,11 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ProductCatalogActivity.class);
         startActivity(intent);
 //        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+    }
+
+    private void launchIngredientActivity() {
+        Intent intent = new Intent(this, IngredientEditorActivity.class);
+        startActivity(intent);
     }
 
     @Override

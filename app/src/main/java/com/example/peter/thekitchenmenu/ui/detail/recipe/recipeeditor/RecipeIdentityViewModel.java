@@ -37,7 +37,7 @@ public class RecipeIdentityViewModel
     private String recipeId;
 
     private boolean
-            modelUpdating,
+            observablesUpdating,
             isCloned,
             titleValid,
             descriptionValid = true;
@@ -108,12 +108,10 @@ public class RecipeIdentityViewModel
     }
 
     private void updateObservables() {
-        modelUpdating = true;
-
+        observablesUpdating = true;
         titleObservable.set(identityEntity.getTitle());
         descriptionObservable.set(identityEntity.getDescription());
-
-        modelUpdating = false;
+        observablesUpdating = false;
         reportRecipeModelStatus();
     }
 
@@ -149,7 +147,7 @@ public class RecipeIdentityViewModel
     }
 
     private void reportRecipeModelStatus() {
-        if (!modelUpdating) {
+        if (!observablesUpdating) {
             modelSubmitter.submitModelStatus(new RecipeModelStatus(
                     RecipeValidator.ModelName.IDENTITY_MODEL,
                     isChanged(),

@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
+import com.example.peter.thekitchenmenu.ui.detail.ingredient.IngredientDuplicateChecker;
 import com.example.peter.thekitchenmenu.ui.detail.ingredient.IngredientViewModel;
 import com.example.peter.thekitchenmenu.utils.TextValidationHandler;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
@@ -53,7 +54,8 @@ public class ViewModelFactoryIngredient extends ViewModelProvider.NewInstanceFac
                     ingredientEntityDataSource,
                     new TextValidationHandler(),
                     new UniqueIdProvider(),
-                    new TimeProvider());
+                    new TimeProvider(),
+                    new IngredientDuplicateChecker(ingredientEntityDataSource));
         }
         throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
     }

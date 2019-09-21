@@ -7,9 +7,11 @@ import androidx.databinding.ObservableField;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 import com.example.peter.thekitchenmenu.utils.TextValidationHandler;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
@@ -18,84 +20,116 @@ import static com.example.peter.thekitchenmenu.utils.TextValidationHandler.VALID
 
 public class IngredientViewModel
         extends ViewModel
-        implements DataSource.GetEntityCallback<IngredientEntity> {
+        implements
+        DataSource.GetEntityCallback<IngredientEntity>,
+        IngredientDuplicateChecker.DuplicateCallback {
 
     private Resources resources;
     private DataSource<IngredientEntity> dataSource;
     private TextValidationHandler textValidationHandler;
     private UniqueIdProvider idProvider;
     private TimeProvider timeProvider;
+    private AddEditIngredientNavigator navigator;
+    private IngredientDuplicateChecker duplicateChecker;
 
-    public final ObservableField<String> nameObservable = new ObservableField<>("");
-    public final ObservableField<String> descriptionObservable = new ObservableField<>("");
+    private final SingleLiveEvent<Integer> setActivityTitleEvent = new SingleLiveEvent<>();
+
+    public final ObservableField<String> nameObservable = new ObservableField<>();
+    public final ObservableField<String> descriptionObservable = new ObservableField<>();
 
     public final ObservableField<String> nameErrorMessageObservable = new ObservableField<>();
     public final ObservableField<String> descriptionErrorMessageObservable = new ObservableField<>();
-    public final MutableLiveData<Boolean> showDoneButtonLiveData = new MutableLiveData<>();
-
+    final MutableLiveData<Boolean> showDoneButtonLiveData = new MutableLiveData<>(false);
 
     private IngredientEntity ingredientEntity;
-    private String ingredientId;
 
-    private boolean modelUpdating;
+    private boolean observablesUpdating;
     private boolean nameValid;
     private boolean descriptionValid = true;
+
+    // TODO - Cannot duplicate ingredient name!
+    // Write test class
 
     public IngredientViewModel(Resources resources,
                                DataSource<IngredientEntity> dataSource,
                                TextValidationHandler textValidationHandler,
                                UniqueIdProvider idProvider,
-                               TimeProvider timeProvider) {
+                               TimeProvider timeProvider,
+                               IngredientDuplicateChecker duplicateChecker) {
         this.resources = resources;
         this.dataSource = dataSource;
         this.textValidationHandler = textValidationHandler;
         this.idProvider = idProvider;
         this.timeProvider = timeProvider;
+        this.duplicateChecker = duplicateChecker;
 
         nameObservable.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
                 if (!nameObservable.get().isEmpty())
-                    nameChanged();
+                    nameUpdated();
             }
         });
         descriptionObservable.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
                 if (!descriptionObservable.get().isEmpty())
-                    descriptionChanged();
+                    descriptionUpdated();
             }
         });
     }
 
+    void setNavigator(AddEditIngredientNavigator navigator) {
+        this.navigator = navigator;
+    }
+
+    void onActivityDestroyed() {
+        navigator = null;
+    }
+
     void start() {
+        setActivityTitleEvent.setValue(R.string.activity_title_add_new_ingredient);
         ingredientEntity = createNewIngredientEntity();
+        System.out.println("createNew=" + ingredientEntity);
+        updateObservables();
     }
 
     void start(String ingredientId) {
-        this.ingredientId = ingredientId;
         dataSource.getById(ingredientId, this);
+    }
+
+    SingleLiveEvent<Integer> getSetActivityTitleEvent() {
+        return setActivityTitleEvent;
     }
 
     @Override
     public void onEntityLoaded(IngredientEntity ingredientEntity) {
-        this.ingredientEntity = ingredientEntity;
-        updateObservables();
+        if (editorIsCreator(ingredientEntity.getCreatedBy())) {
+            setActivityTitleEvent.setValue(R.string.activity_title_edit_ingredient);
+            this.ingredientEntity = ingredientEntity;
+            updateObservables();
+        } else
+            navigator.finishActivity();
+    }
+
+    private boolean editorIsCreator(String createdBy) {
+        return Constants.getUserId().getValue().equals(createdBy);
     }
 
     @Override
     public void onDataNotAvailable() {
-        ingredientEntity = createNewIngredientEntity();
+        start();
     }
 
     private void updateObservables() {
-        modelUpdating = true;
+        observablesUpdating = true;
         nameObservable.set(ingredientEntity.getName());
         descriptionObservable.set(ingredientEntity.getDescription());
-        modelUpdating = false;
+        observablesUpdating = false;
+        updateModel();
     }
 
-    private void nameChanged() {
+    private void nameUpdated() {
         nameErrorMessageObservable.set(null);
         String validationResponse = validateShortText(nameObservable.get());
 
@@ -104,14 +138,30 @@ public class IngredientViewModel
         if (!nameValid)
             nameErrorMessageObservable.set(validationResponse);
 
-        updateModel();
+        else if (!observablesUpdating && nameHasChangedSinceLastSave()) {
+            duplicateChecker.checkForDuplicateAndNotify(nameObservable.get(), this);
+        }
     }
 
-    private void descriptionChanged() {
+    private boolean nameHasChangedSinceLastSave() {
+        return !ingredientEntity.getName().trim().equals(nameObservable.get().trim());
+    }
+
+    @Override
+    public void duplicateCheckResult(boolean isDuplicate) {
+        if (isDuplicate)
+            nameErrorMessageObservable.set(resources.getString(
+                    R.string.ingredient_name_duplicate_error_message));
+        else
+            updateModel();
+    }
+
+    private void descriptionUpdated() {
         descriptionErrorMessageObservable.set(null);
         String validationResponse = validateLongText(descriptionObservable.get());
 
         descriptionValid = validationResponse.equals(VALIDATED);
+
         if (!descriptionValid)
             descriptionErrorMessageObservable.set(validationResponse);
 
@@ -127,12 +177,13 @@ public class IngredientViewModel
     }
 
     private void updateModel() {
-        if (!modelUpdating) {
+        if (!observablesUpdating) {
             if (isModelValid() && modelHasChanged()) {
                 ingredientEntity = getUpdatedIngredientEntity();
                 saveModel();
-            }
-            showDoneButtonLiveData.setValue(isModelValid());
+                showDoneButtonLiveData.setValue(true);
+            } else
+                showDoneButtonLiveData.setValue(false);
         }
     }
 
@@ -150,6 +201,8 @@ public class IngredientViewModel
                     ingredientEntity.getCreateDate(),
                     ingredientEntity.getLastUpdate()
             );
+            System.out.println("hasChangedMember =" + ingredientEntity);
+            System.out.println("hasChangedUpdated=" + updatedEntity);
             return !ingredientEntity.equals(updatedEntity);
         } else
             return false;
@@ -157,8 +210,9 @@ public class IngredientViewModel
 
     private IngredientEntity createNewIngredientEntity() {
         long currentTime = timeProvider.getCurrentTimestamp();
+        String id = idProvider.getUId();
         return new IngredientEntity(
-                idProvider.getUId(),
+                id,
                 "",
                 "",
                 Constants.getUserId().getValue(),

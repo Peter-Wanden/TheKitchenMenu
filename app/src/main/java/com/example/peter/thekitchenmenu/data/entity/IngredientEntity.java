@@ -14,10 +14,10 @@ public class IngredientEntity implements TkmEntity {
     public static final String TABLE_INGREDIENTS = "ingredients";
     public static final String ID = "id";
     public static final String NAME = "name";
-    public static final String DESCRIPTION = "description";
-    public static final String CREATED_BY = "createdBy";
-    public static final String CREATE_DATE = "createDate";
-    public static final String LAST_UPDATE = "lastUpdate";
+    private static final String DESCRIPTION = "description";
+    private static final String CREATED_BY = "createdBy";
+    private static final String CREATE_DATE = "createDate";
+    private static final String LAST_UPDATE = "lastUpdate";
 
     @PrimaryKey
     @NonNull
@@ -74,9 +74,23 @@ public class IngredientEntity implements TkmEntity {
         return Objects.hash(id, name, description, createdBy, createDate, lastUpdate);
     }
 
+    @NonNull
+    @Override
+    public String toString() {
+        return "IngredientEntity{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", createdBy='" + createdBy + '\'' +
+                ", createDate=" + createDate +
+                ", lastUpdate=" + lastUpdate +
+                '}';
+    }
+
+    @NonNull
     @Override
     public String getId() {
-        return null;
+        return id;
     }
 
     @NonNull

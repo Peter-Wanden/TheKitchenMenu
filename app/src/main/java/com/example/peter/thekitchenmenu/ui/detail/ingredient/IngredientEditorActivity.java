@@ -16,7 +16,9 @@ import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.IngredientEditorBinding;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryIngredient;
 
-public class IngredientEditor extends AppCompatActivity {
+public class IngredientEditorActivity
+        extends AppCompatActivity
+        implements AddEditIngredientNavigator {
 
     private static final String EXTRA_INGREDIENT_ID = "EXTRA_INGREDIENT_ID";
     private IngredientEditorBinding binding;
@@ -31,11 +33,6 @@ public class IngredientEditor extends AppCompatActivity {
         setUpActionBar();
         setupViewModels();
         setViewModelObservers();
-        // TODO
-        // Set activity title
-        // Done button pressed
-        // Write test class
-        // Separate out ingredient editor VM from ingredient identity VM
     }
 
     private void initialiseBindings() {
@@ -63,6 +60,7 @@ public class IngredientEditor extends AppCompatActivity {
 
     private void setupViewModels() {
         viewModel = obtainIdentityEditorViewModel(this);
+        viewModel.setNavigator(this);
     }
 
     private static IngredientViewModel obtainIdentityEditorViewModel(
@@ -76,6 +74,7 @@ public class IngredientEditor extends AppCompatActivity {
     private void setViewModelObservers() {
         viewModel.showDoneButtonLiveData.observe(this,
                 isShowButton -> invalidateOptionsMenu());
+        viewModel.getSetActivityTitleEvent().observe(this, this::setTitle);
     }
 
     @Override
@@ -98,5 +97,16 @@ public class IngredientEditor extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void finishActivity() {
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        viewModel.onActivityDestroyed();
+        super.onDestroy();
     }
 }

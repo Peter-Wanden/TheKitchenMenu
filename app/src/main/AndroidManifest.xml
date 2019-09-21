@@ -168,7 +168,7 @@
         </activity>
 
         <activity
-            android:name=".ui.detail.ingredient.IngredientEditor"
+            android:name=".ui.detail.ingredient.IngredientEditorActivity"
             >
         </activity>
 

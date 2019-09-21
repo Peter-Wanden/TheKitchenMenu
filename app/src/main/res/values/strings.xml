@@ -313,5 +313,6 @@
     <string name="lasUpdated">last updated</string>
     <string name="recipe_title_label">Title</string>
     <string name="invalid_number">Invalid number entered</string>
+    <string name="ingredient_name_duplicate_error_message">An ingredient with this name already exists, please choose another name.</string>
 
 </resources>

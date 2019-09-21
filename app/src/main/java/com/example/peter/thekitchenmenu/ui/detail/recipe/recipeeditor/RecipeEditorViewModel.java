@@ -82,7 +82,6 @@ public class RecipeEditorViewModel
         setActivityTitleEvent.setValue(R.string.activity_title_add_new_recipe);
 
         recipeEntity = getNewRecipe();
-//        Log.d(TAG, "setupForNewRecipe: Save called");
         saveRecipe();
         startModels();
         setIngredientsButton();

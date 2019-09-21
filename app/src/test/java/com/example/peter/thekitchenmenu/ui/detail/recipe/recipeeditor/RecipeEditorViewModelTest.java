@@ -54,8 +54,6 @@ public class RecipeEditorViewModelTest {
     @Rule
     public InstantTaskExecutorRule instantExecutorRule = new InstantTaskExecutorRule();
     @Mock
-    Observer<String> stringObserverMock;
-    @Mock
     Observer<Integer> integerObserveMock;
     @Mock
     Observer<Void> voidEventObserverMock;
