@@ -20,8 +20,13 @@ public class IngredientDuplicateCheckerTest {
             IngredientEntityTestData.getAllIngredients();
     private String VALID_NAME_NO_DUPLICATE =
             IngredientEntityTestData.getValidNameNoDuplicate();
-    private String VALID_NAME_DUPLICATE =
-            IngredientEntityTestData.getExistingValidNameValidDescription().getName();
+    private IngredientEntity VALID_DUPLICATE =
+            IngredientEntityTestData.getExistingValidNameValidDescription();
+    private String VALID_NAME_DUPLICATE_IS_BEING_EDITED =
+            IngredientEntityTestData.getNewValidName().getName();
+    private String INGREDIENT_ID =
+            IngredientEntityTestData.getNewValidName().getId();
+    private String NO_DUPLICATE_FOUND = IngredientDuplicateChecker.NO_DUPLICATE_FOUND;
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
@@ -45,7 +50,7 @@ public class IngredientDuplicateCheckerTest {
     public void checkForDuplicate_invalidName_noDatabaseRequest() {
         // Arrange
         // Act
-        SUT.checkForDuplicateAndNotify("", callbackMock);
+        SUT.checkForDuplicateAndNotify("", INGREDIENT_ID, callbackMock);
         // Assert
         verifyNoMoreInteractions(dataSourceMock);
     }
@@ -54,29 +59,42 @@ public class IngredientDuplicateCheckerTest {
     public void checkForDuplicate_validName_databaseRequest() {
         // Arrange
         // Act
-        SUT.checkForDuplicateAndNotify("validName", callbackMock);
+        SUT.checkForDuplicateAndNotify("validName", INGREDIENT_ID, callbackMock);
         // Assert
         verify(dataSourceMock).getAll(eq(SUT));
     }
 
     @Test
-    public void checkForDuplicate_validNameNoDuplicate_callbackNotifiedFalse() {
+    public void checkForDuplicate_validNameNoDuplicate_callbackFalse() {
         // Arrange
         // Act
-        SUT.checkForDuplicateAndNotify(VALID_NAME_NO_DUPLICATE, callbackMock);
+        SUT.checkForDuplicateAndNotify(VALID_NAME_NO_DUPLICATE, INGREDIENT_ID, callbackMock);
         // Assert
         simulateGetAllFromDatabase();
-        verify(callbackMock).duplicateCheckResult(eq(false));
+        verify(callbackMock).duplicateCheckResult(eq(NO_DUPLICATE_FOUND));
     }
 
     @Test
-    public void checkForDuplicate_validNameDuplicate_callbackNotifiedTrue() {
+    public void checkForDuplicate_validNameDuplicateIsIngredientBeingEdited_callbackFalse() {
         // Arrange
         // Act
-        SUT.checkForDuplicateAndNotify(VALID_NAME_DUPLICATE, callbackMock);
+        SUT.checkForDuplicateAndNotify(
+                VALID_NAME_DUPLICATE_IS_BEING_EDITED,
+                INGREDIENT_ID,
+                callbackMock);
         // Assert
         simulateGetAllFromDatabase();
-        verify(callbackMock).duplicateCheckResult(eq(true));
+        verify(callbackMock).duplicateCheckResult(eq(NO_DUPLICATE_FOUND));
+    }
+
+    @Test
+    public void checkForDuplicate_validNameDuplicateIsNotIngredientBeingEdited_callbackTrue() {
+        // Arrange
+        // Act
+        SUT.checkForDuplicateAndNotify(VALID_DUPLICATE.getName(), INGREDIENT_ID, callbackMock);
+        // Assert
+        simulateGetAllFromDatabase();
+        verify(callbackMock).duplicateCheckResult(eq(VALID_DUPLICATE.getId()));
     }
 
     // region helper methods -----------------------------------------------------------------------
@@ -88,6 +106,4 @@ public class IngredientDuplicateCheckerTest {
 
     // region helper classes -----------------------------------------------------------------------
     // endregion helper classes --------------------------------------------------------------------
-
-
 }

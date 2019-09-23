@@ -33,6 +33,11 @@ public class IngredientEditorActivity
         setUpActionBar();
         setupViewModels();
         setViewModelObservers();
+
+        if (getIntent().hasExtra(EXTRA_INGREDIENT_ID))
+            viewModel.start(getIntent().getStringExtra(EXTRA_INGREDIENT_ID));
+        else
+            viewModel.start();
     }
 
     private void initialiseBindings() {
@@ -61,6 +66,7 @@ public class IngredientEditorActivity
     private void setupViewModels() {
         viewModel = obtainIdentityEditorViewModel(this);
         viewModel.setNavigator(this);
+        binding.setViewModel(viewModel);
     }
 
     private static IngredientViewModel obtainIdentityEditorViewModel(
@@ -72,7 +78,7 @@ public class IngredientEditorActivity
     }
 
     private void setViewModelObservers() {
-        viewModel.showDoneButtonLiveData.observe(this,
+        viewModel.showUseButtonLiveData.observe(this,
                 isShowButton -> invalidateOptionsMenu());
         viewModel.getSetActivityTitleEvent().observe(this, this::setTitle);
     }
@@ -86,22 +92,22 @@ public class IngredientEditorActivity
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         menu.findItem(R.id.menu_ingredient_editor_action_done).setVisible(
-                viewModel.showDoneButtonLiveData.getValue());
+                viewModel.showUseButtonLiveData.getValue());
         return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.menu_ingredient_editor_action_done) {
-            viewModel.doneButtonPressed();
+            viewModel.useButtonPressed();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
-    public void finishActivity() {
-
+    public void finishActivity(String ingredientId) {
+        finish();
     }
 
     @Override

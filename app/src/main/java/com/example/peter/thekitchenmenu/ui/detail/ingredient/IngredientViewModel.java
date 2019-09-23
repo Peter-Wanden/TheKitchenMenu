@@ -24,6 +24,8 @@ public class IngredientViewModel
         DataSource.GetEntityCallback<IngredientEntity>,
         IngredientDuplicateChecker.DuplicateCallback {
 
+    private static final String TAG = "tkm-IngredientVM";
+
     private Resources resources;
     private DataSource<IngredientEntity> dataSource;
     private TextValidationHandler textValidationHandler;
@@ -39,16 +41,14 @@ public class IngredientViewModel
 
     public final ObservableField<String> nameErrorMessageObservable = new ObservableField<>();
     public final ObservableField<String> descriptionErrorMessageObservable = new ObservableField<>();
-    final MutableLiveData<Boolean> showDoneButtonLiveData = new MutableLiveData<>(false);
+
+    final MutableLiveData<Boolean> showUseButtonLiveData = new MutableLiveData<>(false);
 
     private IngredientEntity ingredientEntity;
 
     private boolean observablesUpdating;
     private boolean nameValid;
     private boolean descriptionValid = true;
-
-    // TODO - Cannot duplicate ingredient name!
-    // Write test class
 
     public IngredientViewModel(Resources resources,
                                DataSource<IngredientEntity> dataSource,
@@ -90,7 +90,6 @@ public class IngredientViewModel
     void start() {
         setActivityTitleEvent.setValue(R.string.activity_title_add_new_ingredient);
         ingredientEntity = createNewIngredientEntity();
-        System.out.println("createNew=" + ingredientEntity);
         updateObservables();
     }
 
@@ -109,7 +108,7 @@ public class IngredientViewModel
             this.ingredientEntity = ingredientEntity;
             updateObservables();
         } else
-            navigator.finishActivity();
+            navigator.finishActivity(null);
     }
 
     private boolean editorIsCreator(String createdBy) {
@@ -126,7 +125,7 @@ public class IngredientViewModel
         nameObservable.set(ingredientEntity.getName());
         descriptionObservable.set(ingredientEntity.getDescription());
         observablesUpdating = false;
-        updateModel();
+        updateUseButtonVisibility();
     }
 
     private void nameUpdated() {
@@ -138,22 +137,27 @@ public class IngredientViewModel
         if (!nameValid)
             nameErrorMessageObservable.set(validationResponse);
 
-        else if (!observablesUpdating && nameHasChangedSinceLastSave()) {
-            duplicateChecker.checkForDuplicateAndNotify(nameObservable.get(), this);
-        }
+        else if (!observablesUpdating && nameHasChanged())
+            duplicateChecker.checkForDuplicateAndNotify(
+                    nameObservable.get(),
+                    ingredientEntity.getId(),
+                    this);
+        updateUseButtonVisibility();
     }
 
-    private boolean nameHasChangedSinceLastSave() {
+    private boolean nameHasChanged() {
         return !ingredientEntity.getName().trim().equals(nameObservable.get().trim());
     }
 
     @Override
-    public void duplicateCheckResult(boolean isDuplicate) {
-        if (isDuplicate)
-            nameErrorMessageObservable.set(resources.getString(
-                    R.string.ingredient_name_duplicate_error_message));
-        else
-            updateModel();
+    public void duplicateCheckResult(String duplicateId) {
+        if (duplicateId.equals(IngredientDuplicateChecker.NO_DUPLICATE_FOUND))
+            updateUseButtonVisibility();
+        else {
+            nameErrorMessageObservable.set(
+                    resources.getString(R.string.ingredient_name_duplicate_error_message));
+            showUseButtonLiveData.setValue(false);
+        }
     }
 
     private void descriptionUpdated() {
@@ -165,7 +169,7 @@ public class IngredientViewModel
         if (!descriptionValid)
             descriptionErrorMessageObservable.set(validationResponse);
 
-        updateModel();
+        updateUseButtonVisibility();
     }
 
     private String validateShortText(String textToValidate) {
@@ -176,14 +180,12 @@ public class IngredientViewModel
         return textValidationHandler.validateLongText(resources, textToValidate);
     }
 
-    private void updateModel() {
+    private void updateUseButtonVisibility() {
         if (!observablesUpdating) {
             if (isModelValid() && modelHasChanged()) {
-                ingredientEntity = getUpdatedIngredientEntity();
-                saveModel();
-                showDoneButtonLiveData.setValue(true);
+                showUseButtonLiveData.setValue(true);
             } else
-                showDoneButtonLiveData.setValue(false);
+                showUseButtonLiveData.setValue(false);
         }
     }
 
@@ -201,8 +203,6 @@ public class IngredientViewModel
                     ingredientEntity.getCreateDate(),
                     ingredientEntity.getLastUpdate()
             );
-            System.out.println("hasChangedMember =" + ingredientEntity);
-            System.out.println("hasChangedUpdated=" + updatedEntity);
             return !ingredientEntity.equals(updatedEntity);
         } else
             return false;
@@ -236,7 +236,11 @@ public class IngredientViewModel
         dataSource.save(ingredientEntity);
     }
 
-    void doneButtonPressed() {
-
+    void useButtonPressed() {
+        if (isModelValid() && modelHasChanged()) {
+            ingredientEntity = getUpdatedIngredientEntity();
+            saveModel();
+        }
+        navigator.finishActivity(ingredientEntity.getId());
     }
 }
