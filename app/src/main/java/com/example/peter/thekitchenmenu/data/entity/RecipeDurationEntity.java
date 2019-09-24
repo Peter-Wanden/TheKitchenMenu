@@ -7,10 +7,10 @@ import androidx.room.PrimaryKey;
 
 import java.util.Objects;
 
-@Entity(tableName = RecipeDurationEntity.TABLE_NAME)
+@Entity(tableName = RecipeDurationEntity.TABLE_RECIPE_DURATION)
 public final class RecipeDurationEntity implements TkmEntity {
 
-    public static final String TABLE_NAME = "recipeDuration";
+    public static final String TABLE_RECIPE_DURATION = "recipeDuration";
     public static final String ID = "id";
     public static final String PREP_TIME = "prepTime";
     public static final String COOK_TIME = "cookTime";

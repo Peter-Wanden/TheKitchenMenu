@@ -24,8 +24,6 @@ public class IngredientViewModel
         DataSource.GetEntityCallback<IngredientEntity>,
         IngredientDuplicateChecker.DuplicateCallback {
 
-    private static final String TAG = "tkm-IngredientVM";
-
     private Resources resources;
     private DataSource<IngredientEntity> dataSource;
     private TextValidationHandler textValidationHandler;
@@ -138,7 +136,7 @@ public class IngredientViewModel
             nameErrorMessageObservable.set(validationResponse);
 
         else if (!observablesUpdating && nameHasChanged())
-            duplicateChecker.checkForDuplicateAndNotify(
+            duplicateChecker.checkForDuplicatesAndNotify(
                     nameObservable.get(),
                     ingredientEntity.getId(),
                     this);
@@ -197,8 +195,8 @@ public class IngredientViewModel
         if (ingredientEntity != null) {
             IngredientEntity updatedEntity = new IngredientEntity(
                     ingredientEntity.getId(),
-                    nameObservable.get(),
-                    descriptionObservable.get(),
+                    nameObservable.get().trim(),
+                    descriptionObservable.get().trim(),
                     ingredientEntity.getCreatedBy(),
                     ingredientEntity.getCreateDate(),
                     ingredientEntity.getLastUpdate()

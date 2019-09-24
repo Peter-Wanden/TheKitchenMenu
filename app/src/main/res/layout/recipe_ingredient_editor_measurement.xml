@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/recipe_ingredient_measurement_editor_parentCL"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/vertical_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".26"
+            />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@drawable/rectangle"
+            app:layout_constraintStart_toStartOf="@id/unit_of_measure_label"
+            app:layout_constraintEnd_toEndOf="@id/spinner_unit_of_measure"
+            app:layout_constraintTop_toTopOf="@id/recipe_ingredient_editor_recipe_name_label"
+            app:layout_constraintBottom_toBottomOf="@id/product_editable_measurement_one"
+            />
+
+        <TextView
+            android:id="@+id/recipe_ingredient_editor_recipe_name_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:text="@string/recipe_ingredient_recipe_name"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/unit_of_measure_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:text="@string/recipe_ingredient_unit_of_measure_label"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/spinner_unit_of_measure"
+            app:layout_constraintBottom_toBottomOf="@id/spinner_unit_of_measure"
+            />
+
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/spinner_unit_of_measure"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/standard_input_item_height"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            android:dropDownWidth="wrap_content"
+            android:spinnerMode="dropdown"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/vertical_guideline"
+            app:layout_constraintTop_toBottomOf="@id/recipe_ingredient_editor_recipe_name_label"
+            />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/product_size_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:setLabelForSubtypeSelected="@{viewModel.subtype}"
+            app:layout_constraintBaseline_toBaselineOf="@id/product_editable_measurement_one"
+            tools:text="@string/product_size_label" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/product_editable_measurement_two"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minEms="3"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:textAlignment="textEnd"
+            android:afterTextChanged="@{() -> measurementHandler.newMeasurementReceived(productEditableMeasurementTwo)}"
+            android:text="@{NumberStringUnitOfMeasureConverter.toFormat(productEditableMeasurementTwo, viewModel.productMeasurementTwo, viewModel.subtype)}"
+            app:setUpEditTextForSubtypeSelected="@{viewModel.subtype}"
+            app:fieldVisibilityNumberOfMeasurementUnits="@{viewModel.numberOfMeasurementUnits}"
+            app:layout_constraintBaseline_toBaselineOf="@id/product_editable_measurement_one"
+            app:layout_constraintStart_toStartOf="@id/vertical_guideline"
+            tools:text="22"
+            />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/product_measurement_label_two"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            app:fieldVisibilityNumberOfMeasurementUnits="@{viewModel.numberOfMeasurementUnits}"
+            app:setLabelForSubtypeSelected="@{viewModel.subtype}"
+            app:layout_constraintBaseline_toBaselineOf="@id/product_editable_measurement_one"
+            app:layout_constraintStart_toEndOf="@id/product_editable_measurement_two"
+            tools:text="l" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/product_editable_measurement_one"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minEms="3"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:textAlignment="textEnd"
+            android:afterTextChanged="@{() -> measurementHandler.newMeasurementReceived(productEditableMeasurementOne)}"
+            android:text="@{NumberStringUnitOfMeasureConverter.toFormat(productEditableMeasurementOne, viewModel.productMeasurementOne, viewModel.subtype)}"
+            app:setUpEditTextForSubtypeSelected="@{viewModel.subtype}"
+            app:layout_constraintStart_toEndOf="@id/product_measurement_label_two"
+            app:layout_constraintTop_toBottomOf="@id/spinner_unit_of_measure"
+            tools:text="16" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/product_measurement_label_one"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            app:setLabelForSubtypeSelected="@{viewModel.subtype}"
+            app:layout_constraintBaseline_toBaselineOf="@id/product_editable_measurement_one"
+            app:layout_constraintStart_toEndOf="@id/product_editable_measurement_one"
+            tools:text="ml" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

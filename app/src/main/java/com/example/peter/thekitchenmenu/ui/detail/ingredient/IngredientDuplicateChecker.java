@@ -24,9 +24,9 @@ public class IngredientDuplicateChecker implements DataSource.GetAllCallback<Ing
         this.dataSource = dataSource;
     }
 
-    void checkForDuplicateAndNotify(String nameToCheck,
-                                    String ingredientId,
-                                    DuplicateCallback callback) {
+    void checkForDuplicatesAndNotify(String nameToCheck,
+                                     String ingredientId,
+                                     DuplicateCallback callback) {
         if (!Strings.isEmptyOrWhitespace(nameToCheck)) {
             this.callback = callback;
             this.keyToCheck = makeKey(nameToCheck);

@@ -93,6 +93,12 @@ public class RecipeEditorActivity extends AppCompatActivity implements AddEditRe
         durationViewModel.setModelValidationSubmitter(
                 recipeEditorViewModel.getValidator());
         recipeModelComposite.registerModel(durationViewModel);
+
+        RecipePortionsViewModel portionsViewModel =
+                obtainPortionsViewModel(this);
+        portionsViewModel.setModelValidationSubmitter(
+                recipeEditorViewModel.getValidator());
+        recipeModelComposite.registerModel(portionsViewModel);
     }
 
     private void setViewModelObservers() {
@@ -136,6 +142,14 @@ public class RecipeEditorActivity extends AppCompatActivity implements AddEditRe
                 RecipeDurationViewModel.class);
     }
 
+    static RecipePortionsViewModel obtainPortionsViewModel(
+            FragmentActivity activity) {
+        ViewModelFactoryRecipe factoryRecipe = ViewModelFactoryRecipe.getInstance(
+                activity.getApplication());
+        return new ViewModelProvider(activity, factoryRecipe).get(
+                RecipePortionsViewModel.class);
+    }
+
     private void setupFragments() {
         ImageEditorFragment imageEditorFragment = obtainImageEditorFragment();
         ActivityUtils.replaceFragmentInActivity(
@@ -160,6 +174,12 @@ public class RecipeEditorActivity extends AppCompatActivity implements AddEditRe
                 getSupportFragmentManager(),
                 durationFragment,
                 R.id.recipe_duration_content_frame);
+
+        RecipePortionsFragment portionsFragment = obtainPortionsFragment();
+        ActivityUtils.replaceFragmentInActivity(
+                getSupportFragmentManager(),
+                portionsFragment,
+                R.id.recipe_portions_content_frame);
     }
 
     @NonNull
@@ -204,6 +224,17 @@ public class RecipeEditorActivity extends AppCompatActivity implements AddEditRe
         if (durationFragment == null)
             durationFragment = RecipeDurationFragment.newInstance();
         return durationFragment;
+    }
+
+    @NonNull
+    private RecipePortionsFragment obtainPortionsFragment() {
+        RecipePortionsFragment portionsFragment =
+                (RecipePortionsFragment) getSupportFragmentManager().
+                        findFragmentById(R.id.recipe_portions_content_frame);
+
+        if (portionsFragment == null)
+            portionsFragment = RecipePortionsFragment.newInstance();
+        return portionsFragment;
     }
 
     private void start() {

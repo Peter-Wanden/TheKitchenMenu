@@ -15,10 +15,10 @@ import static com.example.peter.thekitchenmenu.data.entity.RecipeDurationEntity.
 @Dao
 public interface RecipeDurationEntityDao {
 
-    @Query("SELECT * FROM " + TABLE_NAME)
+    @Query("SELECT * FROM " + TABLE_RECIPE_DURATION)
     List<RecipeDurationEntity> getAll();
 
-    @Query("SELECT * FROM " + TABLE_NAME + " WHERE id = :id")
+    @Query("SELECT * FROM " + TABLE_RECIPE_DURATION + " WHERE id = :id")
     RecipeDurationEntity getById(String id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -27,10 +27,10 @@ public interface RecipeDurationEntityDao {
     @Update
     void update(RecipeDurationEntity recipeDurationEntity);
 
-    @Query("DELETE FROM " + TABLE_NAME + " WHERE " + ID + " = :id")
+    @Query("DELETE FROM " + TABLE_RECIPE_DURATION + " WHERE " + ID + " = :id")
     void deleteById(String id);
 
-    @Query("DELETE FROM " + TABLE_NAME)
+    @Query("DELETE FROM " + TABLE_RECIPE_DURATION)
     void deleteAll();
 
 }

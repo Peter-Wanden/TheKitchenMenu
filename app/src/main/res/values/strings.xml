@@ -213,6 +213,9 @@
     <string name="activity_catalog_recipes_tab_1_title">All recipes</string>
     <string name="activity_catalog_recipes_tab_2_title">My favorites</string>
 
+    <!-- Recipe ingredient Editor -->
+    <string name="recipe_ingredient_recipe_name">Enter an amount for this ingredient</string>
+
     <!-- AdapterProduct -->
     <string name="adapter_catalog_product_creator_yes">Yes</string>
     <string name="adapter_catalog_product_creator_no">No</string>
@@ -279,7 +282,7 @@
 
     <!-- Menu items for ProductViewerFragment -->
     <string name="menu_item_post_product">POST</string>
-    <string name="menu_item_done">DONE</string>
+    <string name="menu_item_done">USE</string>
     <string name="menu_item_edit_product">Edit product</string>
     <string name="menu_item_delete_product">Delete product</string>
     <string name="menu_item_discard_changes">Discard changes</string>
@@ -314,5 +317,15 @@
     <string name="recipe_title_label">Title</string>
     <string name="invalid_number">Invalid number entered</string>
     <string name="ingredient_name_duplicate_error_message">An ingredient with this name already exists, please choose another name.</string>
+
+    <!-- Sittings servings portions layout -->
+    <string name="sittings_label">Sittings</string>
+    <string name="servings_label">Servings</string>
+    <string name="portions_label">Portions</string>
+
+    <!-- Recipe measurement editor -->
+    <string name="recipe_ingredient_unit_of_measure_label">Unit</string>
+    <string name="add_recommended_product">Add recommended product</string>
+
 
 </resources>

@@ -101,7 +101,7 @@ public class LocalDataSourceRecipeCourse implements DataSourceRecipeCourse {
     @Override
     public void refreshData() {
         // Not required because the {@link Repository} handles the logic of refreshing the
-        // tasks from all the available data sources.
+        // data from all the available sources.
     }
 
     @Override

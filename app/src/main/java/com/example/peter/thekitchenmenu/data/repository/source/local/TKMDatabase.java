@@ -11,6 +11,7 @@ import com.example.peter.thekitchenmenu.data.entity.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipeDurationEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
+import com.example.peter.thekitchenmenu.data.entity.RecipePortionsEntity;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -32,7 +33,8 @@ import static com.example.peter.thekitchenmenu.data.entity.ProductFastTextSearch
         RecipeCourseEntity.class,
         RecipeIdentityEntity.class,
         RecipeDurationEntity.class,
-        IngredientEntity.class},
+        IngredientEntity.class,
+        RecipePortionsEntity.class},
         version = 2,
         exportSchema = false)
 public abstract class TKMDatabase extends RoomDatabase {
@@ -47,6 +49,7 @@ public abstract class TKMDatabase extends RoomDatabase {
     public abstract RecipeIdentityEntityDao recipeIdentityEntityDao();
     public abstract RecipeDurationEntityDao recipeDurationEntityDao();
     public abstract IngredientEntityDao ingredientEntityDao();
+    public abstract RecipePortionsEntityDao portionsEntityDao();
 
     private final MutableLiveData<Boolean> isDatabaseCreated = new MutableLiveData<>();
 

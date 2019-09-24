@@ -50,7 +50,7 @@ public class IngredientDuplicateCheckerTest {
     public void checkForDuplicate_invalidName_noDatabaseRequest() {
         // Arrange
         // Act
-        SUT.checkForDuplicateAndNotify("", INGREDIENT_ID, callbackMock);
+        SUT.checkForDuplicatesAndNotify("", INGREDIENT_ID, callbackMock);
         // Assert
         verifyNoMoreInteractions(dataSourceMock);
     }
@@ -59,7 +59,7 @@ public class IngredientDuplicateCheckerTest {
     public void checkForDuplicate_validName_databaseRequest() {
         // Arrange
         // Act
-        SUT.checkForDuplicateAndNotify("validName", INGREDIENT_ID, callbackMock);
+        SUT.checkForDuplicatesAndNotify("validName", INGREDIENT_ID, callbackMock);
         // Assert
         verify(dataSourceMock).getAll(eq(SUT));
     }
@@ -68,7 +68,7 @@ public class IngredientDuplicateCheckerTest {
     public void checkForDuplicate_validNameNoDuplicate_callbackFalse() {
         // Arrange
         // Act
-        SUT.checkForDuplicateAndNotify(VALID_NAME_NO_DUPLICATE, INGREDIENT_ID, callbackMock);
+        SUT.checkForDuplicatesAndNotify(VALID_NAME_NO_DUPLICATE, INGREDIENT_ID, callbackMock);
         // Assert
         simulateGetAllFromDatabase();
         verify(callbackMock).duplicateCheckResult(eq(NO_DUPLICATE_FOUND));
@@ -78,7 +78,7 @@ public class IngredientDuplicateCheckerTest {
     public void checkForDuplicate_validNameDuplicateIsIngredientBeingEdited_callbackFalse() {
         // Arrange
         // Act
-        SUT.checkForDuplicateAndNotify(
+        SUT.checkForDuplicatesAndNotify(
                 VALID_NAME_DUPLICATE_IS_BEING_EDITED,
                 INGREDIENT_ID,
                 callbackMock);
@@ -91,7 +91,7 @@ public class IngredientDuplicateCheckerTest {
     public void checkForDuplicate_validNameDuplicateIsNotIngredientBeingEdited_callbackTrue() {
         // Arrange
         // Act
-        SUT.checkForDuplicateAndNotify(VALID_DUPLICATE.getName(), INGREDIENT_ID, callbackMock);
+        SUT.checkForDuplicatesAndNotify(VALID_DUPLICATE.getName(), INGREDIENT_ID, callbackMock);
         // Assert
         simulateGetAllFromDatabase();
         verify(callbackMock).duplicateCheckResult(eq(VALID_DUPLICATE.getId()));

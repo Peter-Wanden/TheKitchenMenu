@@ -238,7 +238,7 @@ public class IngredientViewModelTest {
         SUT.start();
         SUT.nameObservable.set(VALID_EXISTING_COMPLETE.getName());
         // Assert
-        verify(duplicateCheckerMock).checkForDuplicateAndNotify(
+        verify(duplicateCheckerMock).checkForDuplicatesAndNotify(
                 eq(VALID_EXISTING_COMPLETE.getName()),
                 eq(NEW.getId()),
                 duplicateCallbackArgumentCaptor.capture());
@@ -257,7 +257,7 @@ public class IngredientViewModelTest {
         SUT.start();
         SUT.nameObservable.set(VALID_EXISTING_COMPLETE.getName());
         // Assert
-        verify(duplicateCheckerMock).checkForDuplicateAndNotify(
+        verify(duplicateCheckerMock).checkForDuplicatesAndNotify(
                 eq(VALID_EXISTING_COMPLETE.getName()),
                 eq(NEW.getId()),
                 duplicateCallbackArgumentCaptor.capture());
@@ -291,14 +291,14 @@ public class IngredientViewModelTest {
         // Act
         SUT.start();
         SUT.nameObservable.set(NEW_VALID_NAME.getName());
-        verify(duplicateCheckerMock).checkForDuplicateAndNotify(
+        verify(duplicateCheckerMock).checkForDuplicatesAndNotify(
                 eq(NEW_VALID_NAME.getName()), eq(NEW.getId()),
                 duplicateCallbackArgumentCaptor.capture());
         duplicateCallbackArgumentCaptor.getValue().duplicateCheckResult(
                 IngredientDuplicateChecker.NO_DUPLICATE_FOUND);
 
         SUT.nameObservable.set(VALID_EXISTING_COMPLETE.getName());
-        verify(duplicateCheckerMock).checkForDuplicateAndNotify(
+        verify(duplicateCheckerMock).checkForDuplicatesAndNotify(
                 eq(VALID_EXISTING_COMPLETE.getName()),
                 eq(NEW.getId()),
                 duplicateCallbackArgumentCaptor.capture());
@@ -319,7 +319,7 @@ public class IngredientViewModelTest {
         // Act
         SUT.start();
         SUT.nameObservable.set(NEW_VALID_NAME.getName());
-        verify(duplicateCheckerMock).checkForDuplicateAndNotify(
+        verify(duplicateCheckerMock).checkForDuplicatesAndNotify(
                 eq(NEW_VALID_NAME.getName()),
                 eq(NEW_VALID_NAME.getId()),
                 duplicateCallbackArgumentCaptor.capture());
@@ -327,7 +327,7 @@ public class IngredientViewModelTest {
                 IngredientDuplicateChecker.NO_DUPLICATE_FOUND);
 
         SUT.nameObservable.set(VALID_EXISTING_COMPLETE.getName());
-        verify(duplicateCheckerMock).checkForDuplicateAndNotify(
+        verify(duplicateCheckerMock).checkForDuplicatesAndNotify(
                 eq(VALID_EXISTING_COMPLETE.getName()), eq(NEW_VALID_NAME.getId()),
                 duplicateCallbackArgumentCaptor.capture());
         duplicateCallbackArgumentCaptor.getValue().duplicateCheckResult(
@@ -442,8 +442,8 @@ public class IngredientViewModelTest {
     }
 
     // startExistingId_nameUpdatedToNameInUseThenBackToOriginal_duplicateErrorNotShown
-    // startExistingId_nameUpdatedToNameInUseThenBackToOriginal_doneButtonNotShown
-    // startExistingId_descriptionUpdated_doneButtonShown
+    // startExistingId_nameUpdatedToNameInUseThenBackToOriginal_useButtonNotShown
+    // startExistingId_descriptionUpdated_useButtonShown
     // startExistingId_descriptionUpdated_saved
 
     @Test
@@ -608,7 +608,7 @@ public class IngredientViewModelTest {
         simulateGetValidExistingCompleteFromDatabase();
         SUT.nameObservable.set(VALID_EXISTING_FROM_ANOTHER_USER.getName());
 
-        verify(duplicateCheckerMock).checkForDuplicateAndNotify(
+        verify(duplicateCheckerMock).checkForDuplicatesAndNotify(
                 eq(VALID_EXISTING_FROM_ANOTHER_USER.getName()),
                 eq(VALID_EXISTING_COMPLETE.getId()),
                 duplicateCallbackArgumentCaptor.capture());
@@ -628,7 +628,7 @@ public class IngredientViewModelTest {
         simulateGetValidExistingCompleteFromDatabase();
         SUT.nameObservable.set(VALID_EXISTING_FROM_ANOTHER_USER.getName());
 
-        verify(duplicateCheckerMock).checkForDuplicateAndNotify(
+        verify(duplicateCheckerMock).checkForDuplicatesAndNotify(
                 eq(VALID_EXISTING_FROM_ANOTHER_USER.getName()),
                 eq(VALID_EXISTING_COMPLETE.getId()),
                 duplicateCallbackArgumentCaptor.capture());
@@ -773,7 +773,7 @@ public class IngredientViewModelTest {
     }
 
     private void whenDuplicateNameCheckForNewIngredientReturnNonFound() {
-        verify(duplicateCheckerMock).checkForDuplicateAndNotify(
+        verify(duplicateCheckerMock).checkForDuplicatesAndNotify(
                 anyString(),
                 anyString(),
                 duplicateCallbackArgumentCaptor.capture());
@@ -782,7 +782,7 @@ public class IngredientViewModelTest {
     }
 
     private void whenDuplicateNameCheckForNewIngredientReturnDuplicateFound() {
-        verify(duplicateCheckerMock).checkForDuplicateAndNotify(
+        verify(duplicateCheckerMock).checkForDuplicatesAndNotify(
                 anyString(),
                 anyString(),
                 duplicateCallbackArgumentCaptor.capture());
