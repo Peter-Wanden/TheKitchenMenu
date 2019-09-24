@@ -49,7 +49,7 @@ public abstract class TKMDatabase extends RoomDatabase {
     public abstract RecipeIdentityEntityDao recipeIdentityEntityDao();
     public abstract RecipeDurationEntityDao recipeDurationEntityDao();
     public abstract IngredientEntityDao ingredientEntityDao();
-    public abstract RecipePortionsEntityDao portionsEntityDao();
+    public abstract RecipePortionsEntityDao recipePortionsEntityDao();
 
     private final MutableLiveData<Boolean> isDatabaseCreated = new MutableLiveData<>();
 

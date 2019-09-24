@@ -6,8 +6,8 @@ import androidx.annotation.NonNull;
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
-import com.example.peter.thekitchenmenu.data.repository.source.local.IngredientEntityDao;
 import com.example.peter.thekitchenmenu.data.repository.source.local.IngredientLocalDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.local.LocalDataSourceRecipePortions;
 import com.example.peter.thekitchenmenu.data.repository.source.local.ProductLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.LocalDataSourceRecipeCourse;
 import com.example.peter.thekitchenmenu.data.repository.source.local.RecipeDurationLocalDataSource;
@@ -22,6 +22,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.remote.RemoteData
 import com.example.peter.thekitchenmenu.data.repository.source.remote.RemoteDataSourceRecipeCourse;
 import com.example.peter.thekitchenmenu.data.repository.source.remote.RecipeIdentityRemoteDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.remote.RecipeRemoteDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.remote.RemoteDataSourceRecipePortions;
 
 import static androidx.core.util.Preconditions.checkNotNull;
 
@@ -112,5 +113,18 @@ public class DatabaseInjection {
                 IngredientLocalDataSource.getInstance(
                         new AppExecutors(),
                         database.ingredientEntityDao()));
+    }
+
+    public static RepositoryRecipePortions provideRecipePortionsEntityDataSource(
+            @NonNull Context context) {
+        checkNotNull(context);
+
+        TKMDatabase database = TKMDatabase.getInstance(context, new AppExecutors());
+
+        return RepositoryRecipePortions.getInstance(
+                RemoteDataSourceRecipePortions.getInstance(),
+                LocalDataSourceRecipePortions.getInstance(
+                        new AppExecutors(),
+                        database.recipePortionsEntityDao()));
     }
 }

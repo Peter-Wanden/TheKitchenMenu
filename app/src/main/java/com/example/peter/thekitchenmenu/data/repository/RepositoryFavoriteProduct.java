@@ -66,11 +66,6 @@ public class RepositoryFavoriteProduct
                         new GetEntityCallback<FavoriteProductEntity>() {
                     @Override
                     public void onEntityLoaded(FavoriteProductEntity favoriteProductEntity) {
-                        if (favoriteProductEntity == null) {
-                            onDataNotAvailable();
-                            return;
-                        }
-
                         if (entityCache == null)
                             entityCache = new LinkedHashMap<>();
 

@@ -226,7 +226,6 @@ public class RecipeDurationViewModel
         return intFromObservable.parseInt(resources, observable, oldValue);
     }
 
-
     // todo, as these two methods are implemented in all models that should be part of an interface
     // todo, possible move {@link RecipeModelComposite} to recipeValidator?
     void setModelValidationSubmitter(RecipeValidation.RecipeValidatorModelSubmission modelSubmitter) {
