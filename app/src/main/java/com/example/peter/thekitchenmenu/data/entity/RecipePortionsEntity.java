@@ -15,7 +15,6 @@ public class RecipePortionsEntity implements TkmEntity {
     public static final String RECIPE_ID = "recipeId";
     public static final String SERVINGS = "servings";
     public static final String SITTINGS = "sittings";
-    public static final String CREATED_BY = "createdBy";
     public static final String CREATE_DATE = "createDate";
     public static final String LAST_UPDATE = "lastUpdate";
 
@@ -34,10 +33,6 @@ public class RecipePortionsEntity implements TkmEntity {
     @ColumnInfo(name = SITTINGS)
     private final int sittings;
 
-    @NonNull
-    @ColumnInfo(name = CREATED_BY)
-    private final String createdBy;
-
     @ColumnInfo(name = CREATE_DATE)
     private final long createDate;
 
@@ -48,14 +43,12 @@ public class RecipePortionsEntity implements TkmEntity {
                                 @NonNull String recipeId,
                                 int servings,
                                 int sittings,
-                                @NonNull String createdBy,
                                 long createDate,
                                 long lastUpdate) {
         this.id = id;
         this.recipeId = recipeId;
         this.servings = servings;
         this.sittings = sittings;
-        this.createdBy = createdBy;
         this.createDate = createDate;
         this.lastUpdate = lastUpdate;
     }
@@ -70,8 +63,7 @@ public class RecipePortionsEntity implements TkmEntity {
                 createDate == that.createDate &&
                 lastUpdate == that.lastUpdate &&
                 id.equals(that.id) &&
-                recipeId.equals(that.recipeId) &&
-                createdBy.equals(that.createdBy);
+                recipeId.equals(that.recipeId);
     }
 
     @Override
@@ -81,7 +73,6 @@ public class RecipePortionsEntity implements TkmEntity {
                 ", recipeId='" + recipeId + '\'' +
                 ", servings=" + servings +
                 ", sittings=" + sittings +
-                ", createdBy='" + createdBy + '\'' +
                 ", createDate=" + createDate +
                 ", lastUpdate=" + lastUpdate +
                 '}';
@@ -89,7 +80,13 @@ public class RecipePortionsEntity implements TkmEntity {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, recipeId, servings, sittings, createdBy, createDate, lastUpdate);
+        return Objects.hash(
+                id,
+                recipeId,
+                servings,
+                sittings,
+                createDate,
+                lastUpdate);
     }
 
     @NonNull
@@ -109,11 +106,6 @@ public class RecipePortionsEntity implements TkmEntity {
 
     public int getSittings() {
         return sittings;
-    }
-
-    @NonNull
-    public String getCreatedBy() {
-        return createdBy;
     }
 
     public long getCreateDate() {

@@ -95,4 +95,36 @@ public class RecipeValidatorTestData {
                 true
         );
     }
+
+    public static RecipeModelStatus getPortionsModelStatusUnchangedInvalid() {
+        return new RecipeModelStatus(
+                RecipeValidator.ModelName.PORTIONS_MODEL,
+                false,
+                false
+        );
+    }
+
+    public static RecipeModelStatus getPortionsModelStatusUnchangedValid() {
+        return new RecipeModelStatus(
+                RecipeValidator.ModelName.PORTIONS_MODEL,
+                false,
+                true
+        );
+    }
+
+    public static RecipeModelStatus getPortionsModelStatusChangedInvalid() {
+        return new RecipeModelStatus(
+                RecipeValidator.ModelName.PORTIONS_MODEL,
+                true,
+                false
+        );
+    }
+
+    public static RecipeModelStatus getPortionsModelStatusChangedValid() {
+        return new RecipeModelStatus(
+                RecipeValidator.ModelName.PORTIONS_MODEL,
+                true,
+                true
+        );
+    }
 }

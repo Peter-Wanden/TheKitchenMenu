@@ -31,75 +31,75 @@
             android:animateLayoutChanges="true"
             >
 
-            <TextView
-                android:id="@+id/recipe_ingredient_editor_recipe_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:padding="4dp"
-                android:textAppearance="bold"
-                android:textSize="24sp"
-                app:layout_constraintStart_toStartOf="@id/recipe_ingredient_editor_parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                tools:text="Butter Chicken Curry" />
+<!--            <TextView-->
+<!--                android:id="@+id/recipe_ingredient_editor_recipe_name"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="8dp"-->
+<!--                android:padding="4dp"-->
+<!--                android:textAppearance="bold"-->
+<!--                android:textSize="24sp"-->
+<!--                app:layout_constraintStart_toStartOf="@id/recipe_ingredient_editor_parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                tools:text="Butter Chicken Curry" />-->
 
-            <include
-                android:id="@+id/portion_information"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                layout="@layout/recipe_portions_view"
-                app:layout_constraintTop_toBottomOf="@id/recipe_ingredient_editor_recipe_name"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                >
-            </include>
+<!--            <include-->
+<!--                android:id="@+id/portion_information"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                layout="@layout/recipe_portions_view"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/recipe_ingredient_editor_recipe_name"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                >-->
+<!--            </include>-->
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/recipe_ingredient_editor_image"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="4dp"
-                app:layout_constraintStart_toStartOf="@id/recipe_ingredient_editor_parent"
-                app:layout_constraintTop_toBottomOf="@id/portion_information"
-                tools:src="@drawable/mild_curry_powder"
-                />
+<!--            <androidx.appcompat.widget.AppCompatImageView-->
+<!--                android:id="@+id/recipe_ingredient_editor_image"-->
+<!--                android:layout_width="48dp"-->
+<!--                android:layout_height="48dp"-->
+<!--                android:layout_marginStart="12dp"-->
+<!--                android:layout_marginTop="4dp"-->
+<!--                app:layout_constraintStart_toStartOf="@id/recipe_ingredient_editor_parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/portion_information"-->
+<!--                tools:src="@drawable/mild_curry_powder"-->
+<!--                />-->
 
-            <TextView
-                android:id="@+id/recipe_ingredient_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:padding="4dp"
-                android:textSize="18sp"
-                app:layout_constraintStart_toEndOf="@id/recipe_ingredient_editor_image"
-                app:layout_constraintTop_toTopOf="@+id/recipe_ingredient_editor_image"
-                app:layout_constraintBottom_toBottomOf="@id/recipe_ingredient_editor_image"
-                tools:text="Mild curry powder"
-                />
+<!--            <TextView-->
+<!--                android:id="@+id/recipe_ingredient_name"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="8dp"-->
+<!--                android:padding="4dp"-->
+<!--                android:textSize="18sp"-->
+<!--                app:layout_constraintStart_toEndOf="@id/recipe_ingredient_editor_image"-->
+<!--                app:layout_constraintTop_toTopOf="@+id/recipe_ingredient_editor_image"-->
+<!--                app:layout_constraintBottom_toBottomOf="@id/recipe_ingredient_editor_image"-->
+<!--                tools:text="Mild curry powder"-->
+<!--                />-->
 
-            <include
-                android:id="@+id/ingredient_measurement_information"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                layout="@layout/recipe_ingredient_editor_measurement"
-                android:layout_marginTop="4dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/recipe_ingredient_editor_image"
-                >
-            </include>
+<!--            <include-->
+<!--                android:id="@+id/ingredient_measurement_information"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                layout="@layout/recipe_ingredient_editor_measurement"-->
+<!--                android:layout_marginTop="4dp"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/recipe_ingredient_editor_image"-->
+<!--                >-->
+<!--            </include>-->
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/recipe_editor_add_ingredients_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/add_recommended_product"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ingredient_measurement_information"
-                />
+<!--            <com.google.android.material.button.MaterialButton-->
+<!--                android:id="@+id/recipe_editor_add_ingredients_button"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="@string/add_recommended_product"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/ingredient_measurement_information"-->
+<!--                />-->
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

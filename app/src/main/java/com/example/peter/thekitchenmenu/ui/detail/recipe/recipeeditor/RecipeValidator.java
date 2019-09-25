@@ -20,7 +20,8 @@ public class RecipeValidator implements RecipeValidation.RecipeValidatorModelSub
     public enum ModelName {
         IDENTITY_MODEL,
         COURSES_MODEL,
-        DURATION_MODEL
+        DURATION_MODEL,
+        PORTIONS_MODEL
     }
 
     private RecipeValidation.RecipeEditor recipeEditor;

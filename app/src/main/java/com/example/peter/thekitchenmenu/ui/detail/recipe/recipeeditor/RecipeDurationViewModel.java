@@ -43,7 +43,7 @@ public class RecipeDurationViewModel
     private boolean prepTimeValid = true;
     private boolean cookTimeValid = true;
     private boolean isCloned;
-    private boolean modelUpdating;
+    private boolean observablesUpdating;
 
     public RecipeDurationViewModel(DataSource<RecipeDurationEntity> durationEntityDataSource,
                                    Resources resources,
@@ -58,28 +58,28 @@ public class RecipeDurationViewModel
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
                 if (!prepHoursObservable.get().isEmpty())
-                    getPrepHours();
+                    updatePrepHours();
             }
         });
         prepMinutesObservable.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
                 if (!prepMinutesObservable.get().isEmpty())
-                    getPrepMinutes();
+                    updatePrepMinutes();
             }
         });
         cookHoursObservable.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
                 if (!cookHoursObservable.get().isEmpty())
-                    getCookHours();
+                    updateCookHours();
             }
         });
         cookMinutesObservable.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
                 if (!cookMinutesObservable.get().isEmpty())
-                    getCookMinutes();
+                    updateCookMinutes();
             }
         });
     }
@@ -139,13 +139,13 @@ public class RecipeDurationViewModel
     }
 
     private void updateObservables() {
-        modelUpdating = true;
+        observablesUpdating = true;
         prepHoursObservable.set(String.valueOf(getHours(durationEntity.getPrepTime())));
         prepMinutesObservable.set(String.valueOf(getMinutes(durationEntity.getPrepTime())));
         cookHoursObservable.set(String.valueOf(getHours(durationEntity.getCookTime())));
         cookMinutesObservable.set(String.valueOf(getMinutes(durationEntity.getCookTime())));
-        modelUpdating = false;
-        reportModelStatus();
+        observablesUpdating = false;
+        submitModelStatus();
     }
 
     private RecipeDurationEntity updatedDurationEntity() {
@@ -170,13 +170,13 @@ public class RecipeDurationViewModel
         return hours * 60 + minutes;
     }
 
-    private void getPrepHours() {
+    private void updatePrepHours() {
         prepHours = parseIntegerFromObservableField(prepHoursObservable, prepHours);
         if (prepHours > 0)
             validatePrepTime();
     }
 
-    private void getPrepMinutes() {
+    private void updatePrepMinutes() {
         prepMinutes = parseIntegerFromObservableField(prepMinutesObservable, prepMinutes);
         if (prepMinutes > 0)
             validatePrepTime();
@@ -193,16 +193,16 @@ public class RecipeDurationViewModel
         if (!prepTimeValid)
             prepTimeErrorMessage.set(errorMessage);
 
-        reportModelStatus();
+        submitModelStatus();
     }
 
-    private void getCookHours() {
+    private void updateCookHours() {
         cookHours = parseIntegerFromObservableField(cookHoursObservable, cookHours);
         if (cookHours > 0)
             validateCookTime();
     }
 
-    private void getCookMinutes() {
+    private void updateCookMinutes() {
         cookMinutes = parseIntegerFromObservableField(cookMinutesObservable, cookMinutes);
         if (cookMinutes > 0)
             validateCookTime();
@@ -219,7 +219,7 @@ public class RecipeDurationViewModel
         if (!cookTimeValid)
             cookTimeErrorMessage.set(errorMessage);
 
-        reportModelStatus();
+        submitModelStatus();
     }
 
     private int parseIntegerFromObservableField(ObservableField<String> observable, int oldValue) {
@@ -232,14 +232,13 @@ public class RecipeDurationViewModel
         this.modelSubmitter = modelSubmitter;
     }
 
-    private void reportModelStatus() {
-        if (!modelUpdating) {
+    private void submitModelStatus() {
+        if (!observablesUpdating) {
             modelSubmitter.submitModelStatus(new RecipeModelStatus(
                     RecipeValidator.ModelName.DURATION_MODEL,
                     isChanged(),
                     isValid()
             ));
-
             if (isChanged() && isValid())
                 save(updatedDurationEntity());
         }

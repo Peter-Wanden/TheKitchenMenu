@@ -115,7 +115,7 @@ public class DatabaseInjection {
                         database.ingredientEntityDao()));
     }
 
-    public static RepositoryRecipePortions provideRecipePortionsEntityDataSource(
+    public static RepositoryRecipePortions provideRecipePortionsDataSource(
             @NonNull Context context) {
         checkNotNull(context);
 

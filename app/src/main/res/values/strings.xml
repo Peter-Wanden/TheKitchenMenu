@@ -160,7 +160,10 @@
         characters.</string>
     <string name="input_error_recipe_description_too_long">Recipe description too long, needs to be
         between 1 and 120 characters</string>
-    <string name="input_error_recipe_servings">Recipe must make more than one portion.</string>
+    <string name="input_error_recipe_servings">Recipe must make between %1$d and %2$d
+        servings.</string>
+    <string name="input_error_recipe_sittings">Recipe must make between %1$d and %2$d
+        sittings.</string>
     <string name="validation_error_unit_of_measure">Please select a valid
         unit of measure.</string>
     <string name="validation_error_shelf_life">Please select a

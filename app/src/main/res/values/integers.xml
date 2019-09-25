@@ -48,4 +48,12 @@
     -->
     <integer name="recipe_max_prep_time_in_minutes">6000</integer>
     <integer name="recipe_max_cook_time_in_minutes">6000</integer>
+
+    <!--
+    Min and max servings and sittings
+    -->
+    <integer name="recipe_min_servings">1</integer>
+    <integer name="recipe_max_servings">10</integer>
+    <integer name="recipe_min_sittings">1</integer>
+    <integer name="recipe_max_sittings">10</integer>
 </resources>

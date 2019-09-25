@@ -12,6 +12,7 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipe;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeCourse;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeCourseSelectorViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeDurationViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipePortionsViewModel;
@@ -38,17 +39,20 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
     private final RepositoryRecipeCourse recipeCourseRepository;
     private final RepositoryRecipeIdentity recipeIdentityRepository;
     private final RepositoryRecipeDuration recipeDurationRepository;
+    private final RepositoryRecipePortions recipePortionsRepository;
 
     private ViewModelFactoryRecipe(Application application,
                                    RepositoryRecipe recipeRepository,
                                    RepositoryRecipeCourse recipeCourseRepository,
                                    RepositoryRecipeIdentity recipeIdentityRepository,
-                                   RepositoryRecipeDuration recipeDurationRepository) {
+                                   RepositoryRecipeDuration recipeDurationRepository,
+                                   RepositoryRecipePortions recipePortionsRepository) {
         this.application = application;
         this.recipeRepository = recipeRepository;
         this.recipeCourseRepository = recipeCourseRepository;
         this.recipeIdentityRepository = recipeIdentityRepository;
         this.recipeDurationRepository = recipeDurationRepository;
+        this.recipePortionsRepository = recipePortionsRepository;
     }
 
     public static ViewModelFactoryRecipe getInstance(Application application) {
@@ -67,6 +71,9 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
                                     application.getApplicationContext()
                             ),
                             DatabaseInjection.provideRecipeDurationDataSource(
+                                    application.getApplicationContext()
+                            ),
+                            DatabaseInjection.provideRecipePortionsDataSource(
                                     application.getApplicationContext()
                             )
                     );
@@ -123,7 +130,11 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
         } else if (modelClass.isAssignableFrom(RecipePortionsViewModel.class)) {
             // noinspection unchecked
             return (T) new RecipePortionsViewModel(
-
+                    recipePortionsRepository,
+                    new TimeProvider(),
+                    new UniqueIdProvider(),
+                    application.getResources(),
+                    new ParseIntegerFromObservableHandler()
             );
         }
 

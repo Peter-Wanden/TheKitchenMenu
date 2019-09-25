@@ -175,7 +175,6 @@ public class RecipeDurationViewModelTest {
     @Test
     public void startNewRecipeId_invalidPrepHours_recipeModelStatusINVALID_CHANGED() {
         // Arrange
-        ArgumentCaptor<RecipeModelStatus> ac = ArgumentCaptor.forClass(RecipeModelStatus.class);
         when(intFromObservableMock.parseInt(anyObject(), eq(SUT.prepHoursObservable), anyInt())).
                 thenReturn(INVALID_NEW_PREP_TIME_INVALID.getPrepTime() / 60 + 1);
         when(timeProviderMock.getCurrentTimestamp()).thenReturn(VALID_NEW_EMPTY.getCreateDate());
