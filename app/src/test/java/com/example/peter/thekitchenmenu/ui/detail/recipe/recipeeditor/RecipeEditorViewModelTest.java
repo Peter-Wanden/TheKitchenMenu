@@ -78,7 +78,7 @@ public class RecipeEditorViewModelTest {
     private RecipeEditorViewModel SUT;
 
     @Before
-    public void setup() throws Exception {
+    public void setup() {
         MockitoAnnotations.initMocks(this);
 
         SUT = new RecipeEditorViewModel(
@@ -93,7 +93,7 @@ public class RecipeEditorViewModelTest {
     }
 
     @Test
-    public void onStart_noRecipeIdSupplied_titleEventCalledWithAddNewRecipeResourceId() throws Exception {
+    public void onStart_noRecipeIdSupplied_titleEventCalledWithAddNewRecipeResourceId() {
         // Arrange
         SUT.getSetActivityTitleEvent().observeForever(integerObserveMock);
         // Act
@@ -103,7 +103,7 @@ public class RecipeEditorViewModelTest {
     }
 
     @Test
-    public void onStart_noRecipeIdSupplied_startRecipeComponentsNewRecipeId() throws Exception {
+    public void onStart_noRecipeIdSupplied_startRecipeComponentsNewRecipeId() {
         // Arrange
         returnNewIdFromUniqueIdProviderMock();
         // Act
@@ -113,7 +113,7 @@ public class RecipeEditorViewModelTest {
     }
 
     @Test
-    public void onStart_noRecipeId_newRecipeSavedToDatabaseAsDraft() throws Exception {
+    public void onStart_noRecipeId_newRecipeSavedToDatabaseAsDraft() {
         // Arrange
         ArgumentCaptor<RecipeEntity> ac = ArgumentCaptor.forClass(RecipeEntity.class);
         when(uniqueIdProviderMock.getUId()).thenReturn(NEW_ID);
@@ -127,7 +127,7 @@ public class RecipeEditorViewModelTest {
     }
 
     @Test
-    public void onStart_recipeIdSupplied_titleEventCalledWithEditRecipeResourceId() throws Exception {
+    public void onStart_recipeIdSupplied_titleEventCalledWithEditRecipeResourceId() {
         // Arrange
         SUT.getSetActivityTitleEvent().observeForever(integerObserveMock);
         // Act
@@ -138,7 +138,7 @@ public class RecipeEditorViewModelTest {
     }
 
     @Test
-    public void onStart_recipeIdSupplied_startRecipeComponentsValidRecipeId() throws Exception {
+    public void onStart_recipeIdSupplied_startRecipeComponentsValidRecipeId() {
         // Arrange
         // Act
         SUT.start(VALID_RECIPE_ID);
@@ -148,7 +148,7 @@ public class RecipeEditorViewModelTest {
     }
 
     @Test
-    public void setRecipeValidationStatus_recipeInvalid_enableReviewButtonEventCalledIsShowReviewButtonFalse() throws Exception {
+    public void setRecipeValidationStatus_recipeInvalid_enableReviewButtonEventCalledIsShowReviewButtonFalse() {
         // Arrange
         SUT.getEnableReviewButtonEvent().observeForever(voidEventObserverMock);
         // Act
@@ -160,7 +160,7 @@ public class RecipeEditorViewModelTest {
     }
 
     @Test
-    public void setRecipeValidationStatus_recipeInvalid_setVisibilityShowIngredientsButtonObservableCalledWithFalse() throws Exception {
+    public void setRecipeValidationStatus_recipeInvalid_setVisibilityShowIngredientsButtonObservableCalledWithFalse() {
         // Arrange
         // Act
         SUT.start(VALID_RECIPE_ID);
@@ -171,7 +171,7 @@ public class RecipeEditorViewModelTest {
     }
 
     @Test
-    public void setRecipeValidationStatus_validRecipe_setVisibilityShowIngredientsButtonObservableCalledWithTrue() throws Exception {
+    public void setRecipeValidationStatus_validRecipe_setVisibilityShowIngredientsButtonObservableCalledWithTrue() {
         // Arrange
         // Act
         SUT.start(VALID_RECIPE_ID);
@@ -182,7 +182,7 @@ public class RecipeEditorViewModelTest {
     }
 
     @Test
-    public void setRecipeValidationStatus_recipeValid_enableReviewEventCalledIsShowReviewTrue() throws Exception {
+    public void setRecipeValidationStatus_recipeValid_enableReviewEventCalledIsShowReviewTrue() {
         // Arrange
         SUT.getEnableReviewButtonEvent().observeForever(voidEventObserverMock);
         // Act
@@ -195,7 +195,7 @@ public class RecipeEditorViewModelTest {
     }
 
     @Test
-    public void setRecipeValidationStatus_validNothingChanged_enableReviewEventCalledIsShowReviewFalse() throws Exception {
+    public void setRecipeValidationStatus_validNothingChanged_enableReviewEventCalledIsShowReviewFalse() {
         // Arrange
         SUT.getEnableReviewButtonEvent().observeForever(voidEventObserverMock);
         // Act
@@ -206,7 +206,7 @@ public class RecipeEditorViewModelTest {
     }
 
     @Test
-    public void onActivityDestroyed_invalidateNavigator_navigatorEqualsNull() throws Exception {
+    public void onActivityDestroyed_invalidateNavigator_navigatorEqualsNull() {
         // Arrange
         // Act
         SUT.onActivityDestroyed();
@@ -215,7 +215,7 @@ public class RecipeEditorViewModelTest {
     }
 
     @Test
-    public void upOrBackPressed_recipeInvalid_navigatorCancelEditingCalled() throws Exception {
+    public void upOrBackPressed_recipeInvalid_navigatorCancelEditingCalled() {
         // Arrange
         // Act
         SUT.upOrBackPressed();
@@ -224,7 +224,7 @@ public class RecipeEditorViewModelTest {
     }
 
     @Test
-    public void upOrBackPressed_invalidRecipeChanged_showUnsavedChangesDialogEventCalled() throws Exception {
+    public void upOrBackPressed_invalidRecipeChanged_showUnsavedChangesDialogEventCalled() {
         // Arrange
         SUT.getShowUnsavedChangesDialogEvent().observeForever(voidEventObserverMock);
         // Act
@@ -237,7 +237,7 @@ public class RecipeEditorViewModelTest {
     }
 
     @Test
-    public void reviewRecipe_newRecipe_navigatorReviewNewRecipeCalledWithRecipeExpectedId() throws Exception {
+    public void reviewRecipe_newRecipe_navigatorReviewNewRecipeCalledWithRecipeExpectedId() {
         // Arrange
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
         when(uniqueIdProviderMock.getUId()).thenReturn(VALID_RECIPE_ENTITY.getId());
@@ -252,7 +252,7 @@ public class RecipeEditorViewModelTest {
     }
 
     @Test
-    public void reviewRecipe_existingRecipeEditedByOwner_navigatorReviewEditedRecipeCalledWithExpectedId() throws Exception {
+    public void reviewRecipe_existingRecipeEditedByOwner_navigatorReviewEditedRecipeCalledWithExpectedId() {
         // Arrange
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
         // Act
@@ -267,7 +267,7 @@ public class RecipeEditorViewModelTest {
     }
 
     @Test
-    public void getIngredientButtonText_newRecipe_addIngredients() throws Exception {
+    public void getIngredientButtonText_newRecipe_addIngredients() {
         String addIngredients = "add ingredients";
         when(resourcesMock.getString(R.string.add_ingredients)).thenReturn(addIngredients);
         // Arrange
@@ -278,7 +278,7 @@ public class RecipeEditorViewModelTest {
     }
 
     @Test
-    public void getIngredientButtonText_existingRecipe_editIngredients() throws Exception {
+    public void getIngredientButtonText_existingRecipe_editIngredients() {
         // Arrange
         String editIngredients = "edit ingredients";
         when(resourcesMock.getString(R.string.edit_ingredients)).thenReturn(editIngredients);
@@ -290,7 +290,7 @@ public class RecipeEditorViewModelTest {
     }
 
     @Test
-    public void getIngredientButtonText_clonedRecipe_reviewIngredients() throws Exception {
+    public void getIngredientButtonText_clonedRecipe_reviewIngredients() {
         // Arrange
         String reviewIngredients = "review ingredients";
         when(resourcesMock.getString(R.string.review_ingredients)).thenReturn(reviewIngredients);
@@ -302,7 +302,7 @@ public class RecipeEditorViewModelTest {
     }
 
     @Test
-    public void ingredientsButtonPressed_newRecipe_navigatorAddIngredientsRecipeId() throws Exception {
+    public void ingredientsButtonPressed_newRecipe_navigatorAddIngredientsRecipeId() {
         // Arrange
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
         when(uniqueIdProviderMock.getUId()).thenReturn(NEW_ID);
@@ -317,7 +317,7 @@ public class RecipeEditorViewModelTest {
     }
 
     @Test
-    public void editIngredients_existingValidRecipe_navigatorEditIngredients() throws Exception {
+    public void editIngredients_existingValidRecipe_navigatorEditIngredients() {
         // Arrange
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
         // Act
@@ -334,7 +334,7 @@ public class RecipeEditorViewModelTest {
     }
 
     @Test
-    public void reviewIngredients_clonedRecipe_navigatorReviewIngredientsRecipeId() throws Exception {
+    public void reviewIngredients_clonedRecipe_navigatorReviewIngredientsRecipeId() {
         // Arrange
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
         when(uniqueIdProviderMock.getUId()).thenReturn(NEW_ID);
@@ -350,7 +350,7 @@ public class RecipeEditorViewModelTest {
     }
 
     @Test
-    public void onStart_validRecipeLoading_loadingIndicatorShownThenOffWhenLoaded() throws Exception {
+    public void onStart_validRecipeLoading_loadingIndicatorShownThenOffWhenLoaded() {
         // Arrange
         // Act
         SUT.start(VALID_RECIPE_ID);
@@ -365,7 +365,7 @@ public class RecipeEditorViewModelTest {
     }
 
     @Test
-    public void onStart_newRecipeIdSupplied_loadingIndicatorShownThenOffWhenDataNotAvailable() throws Exception {
+    public void onStart_newRecipeIdSupplied_loadingIndicatorShownThenOffWhenDataNotAvailable() {
         // Arrange
         // Act
         SUT.start(VALID_RECIPE_ID);
@@ -380,7 +380,7 @@ public class RecipeEditorViewModelTest {
     }
 
     @Test
-    public void onStart_noRecipeIdSupplied_recipeSavedAsDraft_recipeIdAndParentIdSame() throws Exception {
+    public void onStart_noRecipeIdSupplied_recipeSavedAsDraft_recipeIdAndParentIdSame() {
         // Arrange
         ArgumentCaptor<RecipeEntity> ac = ArgumentCaptor.forClass(RecipeEntity.class);
         when(uniqueIdProviderMock.getUId()).thenReturn(NEW_ID);
@@ -392,7 +392,7 @@ public class RecipeEditorViewModelTest {
     }
 
     @Test
-    public void onStart_recipeIdSuppliedEditorIsRecipeOwner_recipeIsNotSaved() throws Exception {
+    public void onStart_recipeIdSuppliedEditorIsRecipeOwner_recipeIsNotSaved() {
         // Arrange
         // Act
         SUT.start(VALID_RECIPE_ID);
@@ -403,7 +403,7 @@ public class RecipeEditorViewModelTest {
     }
 
     @Test
-    public void onStart_recipeIdSuppliedEditorIsNotOwner_recipeClonedAndSaved_recipeIdAndParentIdNotSame() throws Exception {
+    public void onStart_recipeIdSuppliedEditorIsNotOwner_recipeClonedAndSaved_recipeIdAndParentIdNotSame() {
         // Arrange
         ArgumentCaptor<RecipeEntity> ac = ArgumentCaptor.forClass(RecipeEntity.class);
         when(uniqueIdProviderMock.getUId()).thenReturn(NEW_ID);
@@ -418,7 +418,7 @@ public class RecipeEditorViewModelTest {
     }
 
     @Test
-    public void onStart_recipeIdSuppliedEditorIsNotOwner_recipeModelsStartedInClonedMode() throws Exception {
+    public void onStart_recipeIdSuppliedEditorIsNotOwner_recipeModelsStartedInClonedMode() {
         // Arrange
         when(uniqueIdProviderMock.getUId()).thenReturn(NEW_ID);
         // Act
@@ -430,7 +430,7 @@ public class RecipeEditorViewModelTest {
     }
 
     @Test
-    public void recipeValidationStatusINVALID_MISSING_MODELS_recipeIsSavedAsDraft() throws Exception {
+    public void recipeValidationStatusINVALID_MISSING_MODELS_recipeIsSavedAsDraft() {
         // Arrange
         ArgumentCaptor<RecipeEntity> ac = ArgumentCaptor.forClass(RecipeEntity.class);
         when(uniqueIdProviderMock.getUId()).thenReturn(NEW_ID);
@@ -444,7 +444,7 @@ public class RecipeEditorViewModelTest {
     }
 
     @Test
-    public void recipeValidationStatusINVALID_NO_CHANGES_recipeIsNotSaved() throws Exception {
+    public void recipeValidationStatusINVALID_NO_CHANGES_recipeIsNotSaved() {
         // Arrange
         // Act
         SUT.start(INVALID_DRAFT_RECIPE_ID);
@@ -455,7 +455,7 @@ public class RecipeEditorViewModelTest {
     }
 
     @Test
-    public void recipeValidationStatusINVALID_HAS_CHANGES_recipeIsSavedAsDraft() throws Exception {
+    public void recipeValidationStatusINVALID_HAS_CHANGES_recipeIsSavedAsDraft() {
         // Arrange
         ArgumentCaptor<RecipeEntity> ac = ArgumentCaptor.forClass(RecipeEntity.class);
         // Act
@@ -469,7 +469,7 @@ public class RecipeEditorViewModelTest {
     }
 
     @Test
-    public void recipeValidationStatusVALID_NO_CHANGES_recipeIsNotSaved() throws Exception {
+    public void recipeValidationStatusVALID_NO_CHANGES_recipeIsNotSaved() {
         // Arrange
         // Act
         SUT.start(VALID_RECIPE_ID);
@@ -480,7 +480,7 @@ public class RecipeEditorViewModelTest {
     }
 
     @Test
-    public void recipeValidationStatusVALID_HAS_CHANGES_recipeIsSavedDraftFlagFalse() throws Exception {
+    public void recipeValidationStatusVALID_HAS_CHANGES_recipeIsSavedDraftFlagFalse() {
         // Arrange
         ArgumentCaptor<RecipeEntity> ac = ArgumentCaptor.forClass(RecipeEntity.class);
         // Act

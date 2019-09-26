@@ -1,6 +1,7 @@
 package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 
 import android.content.res.Resources;
+import android.util.Log;
 
 import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
@@ -121,7 +122,6 @@ public class RecipeEditorViewModel
         setActivityTitleEvent.setValue(R.string.activity_title_copy_recipe);
 
         recipeEntity = getClonedRecipeEntity();
-//        Log.d(TAG, "setupForClonedRecipe: save called");
         saveRecipe();
         startModelsWithClone();
         setIngredientsButton();
@@ -174,8 +174,6 @@ public class RecipeEditorViewModel
     @Override
     public void setValidationStatus(RecipeValidationStatus recipeValidationStatus) {
         this.recipeValidationStatus = recipeValidationStatus;
-
-//        Log.d(TAG, "setValidationStatus=" + recipeValidationStatus);
 
         isDraft = recipeValidationStatus != VALID_CHANGED &&
                 recipeValidationStatus != VALID_UNCHANGED;
@@ -261,11 +259,6 @@ public class RecipeEditorViewModel
         }
     }
 
-    private String getRecipeId() {
-        RecipeEntity recipeEntity = createNewEntity();
-        return recipeEntity.getId();
-    }
-
     private RecipeEntity createNewEntity() {
         if (creatorIsEditingOwnRecipe()) {
             return getEditedRecipe();
@@ -323,7 +316,6 @@ public class RecipeEditorViewModel
     }
 
     private void saveRecipe() {
-//        Log.d(TAG, "saveRecipe: " + recipeEntity);
         recipeEntityDataSource.save(recipeEntity);
     }
 

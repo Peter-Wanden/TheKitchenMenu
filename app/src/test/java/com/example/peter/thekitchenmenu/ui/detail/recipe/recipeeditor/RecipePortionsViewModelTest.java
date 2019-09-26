@@ -21,9 +21,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 public class RecipePortionsViewModelTest {
@@ -37,7 +39,7 @@ public class RecipePortionsViewModelTest {
     private final int MAX_SITTINGS = RecipePortionsEntityTestData.getMaxSittings();
 
     private final RecipePortionsEntity NEW_EMPTY =
-            RecipePortionsEntityTestData.getNewEmpty();
+            RecipePortionsEntityTestData.getNewValidEmpty();
     private final RecipePortionsEntity NEW_INVALID =
             RecipePortionsEntityTestData.getNewInvalidServingsInvalidSittings();
     private final RecipePortionsEntity NEW_INVALID_SERVINGS_VALID_SITTINGS =
@@ -48,11 +50,16 @@ public class RecipePortionsViewModelTest {
             RecipePortionsEntityTestData.getNewValidServingsValidSittings();
     private final RecipePortionsEntity EXISTING_VALID =
             RecipePortionsEntityTestData.getExistingValid();
+    private final RecipePortionsEntity EXISTING_VALID_UPDATED_SERVINGS =
+            RecipePortionsEntityTestData.getExistingValidUpdatedServings();
+    private final RecipePortionsEntity EXISTING_VALID_UPDATED_SITTINGS =
+            RecipePortionsEntityTestData.getExistingValidUpdatedSittings();
     private final RecipePortionsEntity EXISTING_VALID_CLONE =
             RecipePortionsEntityTestData.getExistingValidClone();
+    private final RecipePortionsEntity EXISTING_VALID_CLONE_UPDATED_SITTINGS_SERVINGS =
+            RecipePortionsEntityTestData.getExistingClonedUpdatedSittingsServings();
     private final RecipePortionsEntity EXISTING_VALID_FROM_ANOTHER_USER =
             RecipePortionsEntityTestData.getValidCloneFromAnotherUser();
-
     private static final RecipeModelStatus INVALID_UNCHANGED =
             RecipeValidatorTestData.getPortionsModelStatusUnchangedInvalid();
     private static final RecipeModelStatus INVALID_CHANGED =
@@ -118,12 +125,14 @@ public class RecipePortionsViewModelTest {
         whenIdProviderReturnNewEmptyId();
         when(intFromObservableMock.parseInt(
                 eq(resourcesMock),
-                eq(SUT.servingsObservable), anyInt())).
+                eq(SUT.servingsObservable),
+                anyInt())).
                 thenReturn(NEW_EMPTY.getServings());
 
         when(intFromObservableMock.parseInt(
                 eq(resourcesMock),
-                eq(SUT.sittingsObservable), anyInt())).
+                eq(SUT.sittingsObservable),
+                anyInt())).
                 thenReturn(NEW_EMPTY.getSittings());
 
         // Act
@@ -140,12 +149,14 @@ public class RecipePortionsViewModelTest {
         whenIdProviderReturnNewEmptyId();
         when(intFromObservableMock.parseInt(
                 eq(resourcesMock),
-                eq(SUT.servingsObservable), anyInt())).
+                eq(SUT.servingsObservable),
+                anyInt())).
                 thenReturn(NEW_INVALID.getServings(), NEW_INVALID.getServings());
 
         when(intFromObservableMock.parseInt(
                 eq(resourcesMock),
-                eq(SUT.sittingsObservable), anyInt())).
+                eq(SUT.sittingsObservable),
+                anyInt())).
                 thenReturn(NEW_INVALID.getSittings(), NEW_INVALID.getSittings());
         // Act
         SUT.start(NEW_EMPTY.getRecipeId());
@@ -273,13 +284,15 @@ public class RecipePortionsViewModelTest {
         whenIdProviderReturnNewEmptyId();
         when(intFromObservableMock.parseInt(
                 eq(resourcesMock),
-                eq(SUT.servingsObservable), anyInt())).thenReturn(
+                eq(SUT.servingsObservable),
+                anyInt())).thenReturn(
                 NEW_EMPTY.getServings(),
                 NEW_VALID.getServings());
 
         when(intFromObservableMock.parseInt(
                 eq(resourcesMock),
-                eq(SUT.sittingsObservable), anyInt())).thenReturn(
+                eq(SUT.sittingsObservable),
+                anyInt())).thenReturn(
                 NEW_EMPTY.getSittings(),
                 NEW_VALID.getSittings());
         // Act
@@ -364,34 +377,192 @@ public class RecipePortionsViewModelTest {
     public void startExisting_validRecipePortionId_recipeModelStatusVALID_UNCHANGED() {
         // Arrange
         when(intFromObservableMock.parseInt(
-                eq(resourcesMock),
+                anyObject(),
                 eq(SUT.servingsObservable),
-                eq(EXISTING_VALID.getServings()))).
+                anyInt())).
                 thenReturn(EXISTING_VALID.getServings());
         when(intFromObservableMock.parseInt(
                 eq(resourcesMock),
                 eq(SUT.sittingsObservable),
-                eq(EXISTING_VALID.getSittings()))).
+                anyInt())).
                 thenReturn(EXISTING_VALID.getSittings());
         // Act
         SUT.start(EXISTING_VALID.getRecipeId());
         simulateExistingValidReturnedFromDatabase();
         // Assert
-        
-//        verify(modelValidationSubmitterMock, times(2)).submitModelStatus(eq(
-//                VALID_UNCHANGED));
+        verify(modelValidationSubmitterMock).submitModelStatus(eq(
+                VALID_UNCHANGED));
     }
 
-    // startExisting_invalidUpdatedServings_notSaved
-    // startExisting_invalidUpdatedSittings_notSaved
-    // startExisting_validUpdatedServings_saved
-    // startExisting_validUpdatedSittings_saved
+    @Test
+    public void startExisting_invalidUpdatedServings_invalidValueNotSaved() {
+        // Arrange
+        when(intFromObservableMock.parseInt(
+                anyObject(),
+                eq(SUT.servingsObservable),
+                anyInt())).
+                thenReturn(EXISTING_VALID.getServings(), NEW_INVALID.getServings());
+        when(intFromObservableMock.parseInt(
+                eq(resourcesMock),
+                eq(SUT.sittingsObservable),
+                anyInt())).
+                thenReturn(EXISTING_VALID.getSittings());
+        // Act
+        SUT.start(EXISTING_VALID.getRecipeId());
+        simulateExistingValidReturnedFromDatabase();
+        SUT.servingsObservable.set(String.valueOf(NEW_INVALID.getServings()));
+        // Assert
+        verifyNoMoreInteractions(dataSourceMock);
+    }
 
-    // startByCloningModel_existingAndNewRecipeId_recipeModelStatusVALID_UNCHANGED
-    // startByCloningModel_existingAndNewRecipeId_databaseCalledWithExistingId
-    // startByCloningModel_existingAndNewRecipeId_cloneSavedWithUpdatedSittingsServings
-    // startByCloningModel_existingAndNewRecipeId_existingFromAnotherUserCopiedAndSavedWithNewId
-    // startByCloningModel_existingAndNewRecipeId_existingFromUserCopiedAndSavedWithNewId
+    @Test
+    public void startExisting_validUpdatedServings_validValueSaved() {
+        // Arrange
+        when(timeProviderMock.getCurrentTimestamp()).
+                thenReturn(EXISTING_VALID_UPDATED_SERVINGS.getLastUpdate());
+        when(intFromObservableMock.parseInt(
+                anyObject(),
+                eq(SUT.servingsObservable),
+                anyInt())).
+                thenReturn(
+                        EXISTING_VALID.getServings(),
+                        EXISTING_VALID_UPDATED_SERVINGS.getServings());
+        when(intFromObservableMock.parseInt(
+                eq(resourcesMock),
+                eq(SUT.sittingsObservable),
+                anyInt())).
+                thenReturn(EXISTING_VALID.getSittings());
+        // Act
+        SUT.start(EXISTING_VALID.getRecipeId());
+        simulateExistingValidReturnedFromDatabase();
+        SUT.servingsObservable.set(String.valueOf(
+                EXISTING_VALID_UPDATED_SERVINGS.getServings()));
+        // Assert
+        verify(dataSourceMock).save(eq(EXISTING_VALID_UPDATED_SERVINGS));
+    }
+
+    @Test
+    public void startExisting_invalidUpdatedSittings_invalidValueNotSaved() {
+        // Arrange
+        when(intFromObservableMock.parseInt(
+                anyObject(),
+                eq(SUT.servingsObservable),
+                anyInt())).
+                thenReturn(EXISTING_VALID.getServings());
+        when(intFromObservableMock.parseInt(
+                eq(resourcesMock),
+                eq(SUT.sittingsObservable),
+                anyInt())).
+                thenReturn(EXISTING_VALID.getSittings(), NEW_INVALID.getSittings());
+        // Act
+        SUT.start(EXISTING_VALID.getRecipeId());
+        simulateExistingValidReturnedFromDatabase();
+        SUT.sittingsObservable.set(String.valueOf(NEW_INVALID.getSittings()));
+        // Assert
+        verifyNoMoreInteractions(dataSourceMock);
+    }
+
+    @Test
+    public void startExisting_validUpdatedSittings_validValueSaved() {
+        // Arrange
+        when(timeProviderMock.getCurrentTimestamp()).
+                thenReturn(EXISTING_VALID_UPDATED_SITTINGS.getLastUpdate());
+        when(intFromObservableMock.parseInt(
+                anyObject(),
+                eq(SUT.servingsObservable),
+                anyInt())).
+                thenReturn(EXISTING_VALID.getServings());
+        when(intFromObservableMock.parseInt(
+                eq(resourcesMock),
+                eq(SUT.sittingsObservable),
+                anyInt())).
+                thenReturn(
+                        EXISTING_VALID.getSittings(),
+                        EXISTING_VALID_UPDATED_SITTINGS.getSittings());
+        // Act
+        SUT.start(EXISTING_VALID.getRecipeId());
+        simulateExistingValidReturnedFromDatabase();
+        SUT.sittingsObservable.set(String.valueOf(
+                EXISTING_VALID_UPDATED_SITTINGS.getSittings()));
+        // Assert
+        verify(dataSourceMock).save(eq(EXISTING_VALID_UPDATED_SITTINGS));
+    }
+
+    @Test
+    public void startByCloningModel_existingAndNewRecipeId_existingSavedWithNewId() {
+        // Arrange
+        whenIdProviderReturnNewEmptyId();
+        when(timeProviderMock.getCurrentTimestamp()).thenReturn(
+                EXISTING_VALID_CLONE.getLastUpdate());
+        when(intFromObservableMock.parseInt(
+                eq(resourcesMock),
+                eq(SUT.servingsObservable),
+                anyInt())).
+                thenReturn(EXISTING_VALID.getServings());
+        when(intFromObservableMock.parseInt(
+                eq(resourcesMock),
+                eq(SUT.sittingsObservable),
+                anyInt())).
+                thenReturn(EXISTING_VALID.getSittings());
+        // Act
+        SUT.startByCloningModel(EXISTING_VALID.getRecipeId(), NEW_EMPTY.getRecipeId());
+        simulateExistingValidReturnedFromDatabase();
+        // Assert
+        verify(dataSourceMock).save(EXISTING_VALID_CLONE);
+    }
+
+    @Test
+    public void startByCloningModel_existingAndNewRecipeId_recipeModelStatusVALID_UNCHANGED() {
+        // Arrange
+        whenIdProviderReturnNewEmptyId();
+        when(timeProviderMock.getCurrentTimestamp()).thenReturn(
+                EXISTING_VALID_CLONE.getLastUpdate());
+        when(intFromObservableMock.parseInt(
+                eq(resourcesMock),
+                eq(SUT.servingsObservable),
+                anyInt())).
+                thenReturn(EXISTING_VALID.getServings());
+        when(intFromObservableMock.parseInt(
+                eq(resourcesMock),
+                eq(SUT.sittingsObservable),
+                anyInt())).
+                thenReturn(EXISTING_VALID.getSittings());
+        // Act
+        SUT.startByCloningModel(EXISTING_VALID.getRecipeId(), NEW_EMPTY.getRecipeId());
+        simulateExistingValidReturnedFromDatabase();
+        // Assert
+        verify(modelValidationSubmitterMock).submitModelStatus(eq(
+                VALID_UNCHANGED));
+    }
+
+    @Test
+    public void startByCloningModel_existingAndNewRecipeId_cloneSavedWithUpdatedSittingsServings() {
+        // Arrange
+        whenIdProviderReturnNewEmptyId();
+        when(timeProviderMock.getCurrentTimestamp()).thenReturn(
+                EXISTING_VALID_CLONE.getLastUpdate());
+        when(intFromObservableMock.parseInt(
+                eq(resourcesMock),
+                eq(SUT.servingsObservable),
+                anyInt())).
+                thenReturn(
+                        EXISTING_VALID.getServings(),
+                        EXISTING_VALID_UPDATED_SERVINGS.getServings());
+        when(intFromObservableMock.parseInt(
+                eq(resourcesMock),
+                eq(SUT.sittingsObservable),
+                anyInt())).
+                thenReturn(
+                        EXISTING_VALID.getSittings(),
+                        EXISTING_VALID_UPDATED_SITTINGS.getSittings());
+        // Act
+        SUT.startByCloningModel(EXISTING_VALID.getRecipeId(), NEW_EMPTY.getRecipeId());
+        simulateExistingValidReturnedFromDatabase();
+        SUT.servingsObservable.set(String.valueOf(EXISTING_VALID_UPDATED_SERVINGS.getServings()));
+        SUT.sittingsObservable.set(String.valueOf(EXISTING_VALID_UPDATED_SITTINGS.getSittings()));
+        // Assert
+        verify(dataSourceMock).save(eq(EXISTING_VALID_CLONE_UPDATED_SITTINGS_SERVINGS));
+    }
 
     // region helper methods -----------------------------------------------------------------------
     private void setupResourceMockReturnValues() {

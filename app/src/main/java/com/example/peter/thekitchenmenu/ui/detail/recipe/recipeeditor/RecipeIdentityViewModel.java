@@ -103,7 +103,6 @@ public class RecipeIdentityViewModel
     @Override
     public void onDataNotAvailable() {
         identityEntity = createNewIdentityEntity();
-        save(identityEntity);
         updateObservables();
     }
 

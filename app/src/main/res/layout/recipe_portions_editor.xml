@@ -1,4 +1,6 @@
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="UTF-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -12,22 +14,26 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:src="@drawable/rectangle"
-            app:layout_constraintStart_toStartOf="@id/servings_label"
-            app:layout_constraintBottom_toBottomOf="@id/editable_servings"
-            app:layout_constraintEnd_toEndOf="@id/portions_label"
-            app:layout_constraintTop_toTopOf="@id/servings_label" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/servings_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:padding="4dp"
             android:text="@string/servings_label"
             app:layout_constraintEnd_toStartOf="@id/sittings_label"
@@ -41,6 +47,9 @@
             android:layout_height="wrap_content"
             android:padding="4dp"
             android:textSize="18sp"
+            android:text="@={viewModel.servingsObservable}"
+            app:setUpEditTextForRecipePortions="@{viewModel.servingsObservable}"
+            app:editTextErrorSetter="@{viewModel.servingsErrorMessage}"
             app:layout_constraintEnd_toEndOf="@id/servings_label"
             app:layout_constraintStart_toStartOf="@id/servings_label"
             app:layout_constraintTop_toBottomOf="@id/servings_label"
@@ -51,6 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:padding="4dp"
             android:text="@string/sittings_label"
             app:layout_constraintEnd_toStartOf="@id/portions_label"
@@ -63,6 +73,9 @@
             android:layout_height="wrap_content"
             android:padding="4dp"
             android:textSize="18sp"
+            android:text="@={viewModel.sittingsObservable}"
+            app:setUpEditTextForRecipePortions="@{viewModel.sittingsObservable}"
+            app:editTextErrorSetter="@{viewModel.sittingsErrorMessage}"
             app:layout_constraintEnd_toEndOf="@id/sittings_label"
             app:layout_constraintStart_toStartOf="@id/sittings_label"
             app:layout_constraintTop_toBottomOf="@id/sittings_label"
@@ -73,18 +86,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:padding="4dp"
             android:text="@string/portions_label"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/sittings_label"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatEditText
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/editable_portions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="4dp"
             android:textSize="18sp"
+            android:textStyle="bold"
+            android:text="@={viewModel.portionsObservable}"
             app:layout_constraintEnd_toEndOf="@id/portions_label"
             app:layout_constraintStart_toStartOf="@id/portions_label"
             app:layout_constraintTop_toBottomOf="@id/portions_label"

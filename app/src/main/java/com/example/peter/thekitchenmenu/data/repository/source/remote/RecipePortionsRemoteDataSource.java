@@ -5,13 +5,13 @@ import androidx.annotation.NonNull;
 import com.example.peter.thekitchenmenu.data.entity.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSourceRecipePortions;
 
-public class RemoteDataSourceRecipePortions implements DataSourceRecipePortions {
+public class RecipePortionsRemoteDataSource implements DataSourceRecipePortions {
 
-    private static RemoteDataSourceRecipePortions INSTANCE;
+    private static RecipePortionsRemoteDataSource INSTANCE;
 
-    public static RemoteDataSourceRecipePortions getInstance() {
+    public static RecipePortionsRemoteDataSource getInstance() {
         if (INSTANCE == null)
-            INSTANCE = new RemoteDataSourceRecipePortions();
+            INSTANCE = new RecipePortionsRemoteDataSource();
         return INSTANCE;
     }
 

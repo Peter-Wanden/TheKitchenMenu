@@ -17,12 +17,12 @@ public class RecipePortionsEntityTestData {
         return 10;
     }
 
-    public static RecipePortionsEntity getNewEmpty() {
+    public static RecipePortionsEntity getNewValidEmpty() {
         return new RecipePortionsEntity(
                 "portionId",
                 RecipeEntityTestData.getInvalidNew().getId(),
-                1,
-                1,
+                getMinServings(),
+                getMinSittings(),
                 RecipeEntityTestData.getInvalidNew().getCreateDate(),
                 RecipeEntityTestData.getInvalidNew().getLastUpdate()
         );
@@ -30,10 +30,10 @@ public class RecipePortionsEntityTestData {
 
     public static RecipePortionsEntity getNewInvalidServingsInvalidSittings() {
         return new RecipePortionsEntity(
-                getNewEmpty().getId(),
+                getNewValidEmpty().getId(),
                 RecipeEntityTestData.getInvalidNew().getId(),
-                11,
-                11,
+                getMaxServings() + 1,
+                getMaxSittings() + 1,
                 RecipeEntityTestData.getInvalidNew().getCreateDate(),
                 RecipeEntityTestData.getInvalidNew().getLastUpdate()
         );
@@ -41,10 +41,10 @@ public class RecipePortionsEntityTestData {
 
     public static RecipePortionsEntity getNewInvalidServingsValidSittings() {
         return new RecipePortionsEntity(
-                getNewEmpty().getId(),
+                getNewValidEmpty().getId(),
                 RecipeEntityTestData.getInvalidNew().getId(),
-                11,
-                1,
+                getMaxServings() + 1,
+                getMinSittings(),
                 RecipeEntityTestData.getInvalidNew().getCreateDate(),
                 RecipeEntityTestData.getInvalidNew().getLastUpdate()
         );
@@ -52,10 +52,10 @@ public class RecipePortionsEntityTestData {
 
     public static RecipePortionsEntity getNewValidServingsInvalidSittings() {
         return new RecipePortionsEntity(
-                getNewEmpty().getId(),
+                getNewValidEmpty().getId(),
                 RecipeEntityTestData.getInvalidNew().getId(),
-                1,
-                11,
+                getMinServings(),
+                getMaxSittings() + 1,
                 RecipeEntityTestData.getInvalidNew().getCreateDate(),
                 RecipeEntityTestData.getInvalidNew().getLastUpdate()
         );
@@ -63,12 +63,23 @@ public class RecipePortionsEntityTestData {
 
     public static RecipePortionsEntity getNewValidServingsValidSittings() {
         return new RecipePortionsEntity(
-                getNewEmpty().getId(),
+                getNewValidEmpty().getId(),
                 RecipeEntityTestData.getInvalidNew().getId(),
-                10,
-                10,
+                getMaxServings(),
+                getMaxSittings(),
                 RecipeEntityTestData.getInvalidNew().getCreateDate(),
                 RecipeEntityTestData.getInvalidNew().getLastUpdate()
+        );
+    }
+
+    public static RecipePortionsEntity getExistingInvalid() {
+        return new RecipePortionsEntity(
+                "validExistingPortionId",
+                RecipeEntityTestData.getValidExisting().getId(),
+                getMaxServings() + 1,
+                getMaxSittings() + 1,
+                RecipeEntityTestData.getValidExisting().getCreateDate(),
+                RecipeEntityTestData.getValidExisting().getLastUpdate()
         );
     }
 
@@ -83,12 +94,45 @@ public class RecipePortionsEntityTestData {
         );
     }
 
+    public static RecipePortionsEntity getExistingValidUpdatedServings() {
+        return new RecipePortionsEntity(
+                "validExistingPortionId",
+                RecipeEntityTestData.getValidExisting().getId(),
+                getNewValidServingsValidSittings().getServings(),
+                getExistingValid().getSittings(),
+                RecipeEntityTestData.getValidExisting().getCreateDate(),
+                RecipeEntityTestData.getValidExisting().getLastUpdate()
+        );
+    }
+
+    public static RecipePortionsEntity getExistingValidUpdatedSittings() {
+        return new RecipePortionsEntity(
+                "validExistingPortionId",
+                RecipeEntityTestData.getValidExisting().getId(),
+                getExistingValid().getServings(),
+                getNewValidServingsValidSittings().getSittings(),
+                RecipeEntityTestData.getValidExisting().getCreateDate(),
+                RecipeEntityTestData.getValidExisting().getLastUpdate()
+        );
+    }
+
     public static RecipePortionsEntity getExistingValidClone() {
         return new RecipePortionsEntity(
-                getNewEmpty().getId(),
+                getNewValidEmpty().getId(),
                 RecipeEntityTestData.getValidNewCloned().getId(),
-                5,
-                5,
+                getExistingValid().getServings(),
+                getExistingValid().getSittings(),
+                RecipeEntityTestData.getValidNewCloned().getCreateDate(),
+                RecipeEntityTestData.getValidNewCloned().getLastUpdate()
+        );
+    }
+
+    public static RecipePortionsEntity getExistingClonedUpdatedSittingsServings() {
+        return new RecipePortionsEntity(
+                getNewValidEmpty().getId(),
+                RecipeEntityTestData.getValidNewCloned().getId(),
+                getExistingValidUpdatedServings().getServings(),
+                getExistingValidUpdatedSittings().getSittings(),
                 RecipeEntityTestData.getValidNewCloned().getCreateDate(),
                 RecipeEntityTestData.getValidNewCloned().getLastUpdate()
         );
@@ -96,7 +140,7 @@ public class RecipePortionsEntityTestData {
 
     public static RecipePortionsEntity getValidCloneFromAnotherUser() {
         return new RecipePortionsEntity(
-                getNewEmpty().getId(),
+                getNewValidEmpty().getId(),
                 RecipeEntityTestData.getValidFromAnotherUser().getId(),
                 5,
                 5,

@@ -171,6 +171,7 @@
             android:name=".ui.detail.ingredient.IngredientEditorActivity"
             >
         </activity>
+        <activity android:name=".ui.detail.recipe.recipeIngredientEditor.RecipeIngredientEditorActivity" />
 
         <uses-library
             android:name="android.test.runner"

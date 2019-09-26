@@ -21,7 +21,9 @@ import com.example.peter.thekitchenmenu.ui.ViewModelFactoryRecipe;
 import com.example.peter.thekitchenmenu.ui.imageeditor.ImageEditorFragment;
 import com.example.peter.thekitchenmenu.utils.ActivityUtils;
 
-public class RecipeEditorActivity extends AppCompatActivity implements AddEditRecipeNavigator {
+public class RecipeEditorActivity
+        extends AppCompatActivity
+        implements AddEditRecipeNavigator {
 
 
     public static final String EXTRA_RECIPE_ID = "RECIPE_ID";

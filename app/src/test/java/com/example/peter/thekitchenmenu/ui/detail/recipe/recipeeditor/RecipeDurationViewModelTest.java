@@ -11,6 +11,7 @@ import com.example.peter.thekitchenmenu.testdata.RecipeDurationEntityTestData;
 import com.example.peter.thekitchenmenu.testdata.RecipeValidatorTestData;
 import com.example.peter.thekitchenmenu.utils.ParseIntegerFromObservableHandler;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
+import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 
 import org.junit.*;
 import org.mockito.*;
@@ -204,25 +205,26 @@ public class RecipeDurationViewModelTest {
     @Test
     public void startNewRecipeId_validPrepHours_recipeModelStatusVALID_CHANGED() {
         // Arrange
-        ArgumentCaptor<RecipeModelStatus> ac = ArgumentCaptor.forClass(RecipeModelStatus.class);
-        when(intFromObservableMock.parseInt(anyObject(), eq(SUT.prepHoursObservable), anyInt())).
+        when(intFromObservableMock.parseInt(
+                anyObject(),
+                eq(SUT.prepHoursObservable),
+                anyInt())).
                 thenReturn(VALID_NEW_PREP_TIME_VALID.getPrepTime() / 60);
         // Act
         SUT.start(VALID_NEW_EMPTY.getId());
         simulateNothingReturnedFromDatabase();
         SUT.prepHoursObservable.set(String.valueOf(VALID_NEW_PREP_TIME_VALID.getPrepTime() / 60));
         // Assert
-        verify(modelValidationSubmitterMock, times(2)).
-                submitModelStatus(ac.capture());
-        assertEquals(VALID_CHANGED, ac.getValue());
+        verify(modelValidationSubmitterMock).submitModelStatus(eq(VALID_CHANGED));
     }
 
     @Test
     public void startNewRecipeId_validPrepHours_prepHoursSaved() {
         // Arrange
-        ArgumentCaptor<RecipeDurationEntity> ac =
-                ArgumentCaptor.forClass(RecipeDurationEntity.class);
-        when(intFromObservableMock.parseInt(anyObject(), eq(SUT.prepHoursObservable), anyInt())).
+        when(intFromObservableMock.parseInt(
+                anyObject(),
+                eq(SUT.prepHoursObservable),
+                anyInt())).
                 thenReturn(VALID_NEW_PREP_TIME_VALID.getPrepTime() / 60);
         when(timeProviderMock.getCurrentTimestamp()).thenReturn(VALID_NEW_EMPTY.getCreateDate());
         // Act
@@ -230,8 +232,7 @@ public class RecipeDurationViewModelTest {
         simulateNothingReturnedFromDatabase();
         SUT.prepHoursObservable.set(String.valueOf(VALID_NEW_PREP_TIME_VALID.getPrepTime() / 60));
         // Assert
-        verify(durationEntityDataSourceMock, times(3)).save(ac.capture());
-        assertEquals(VALID_NEW_PREP_TIME_VALID, ac.getValue());
+        verify(durationEntityDataSourceMock).save(eq(VALID_NEW_PREP_TIME_VALID));
     }
 
     @Test
@@ -299,14 +300,16 @@ public class RecipeDurationViewModelTest {
         simulateNothingReturnedFromDatabase();
         SUT.prepMinutesObservable.set(String.valueOf(VALID_NEW_PREP_TIME_VALID.getPrepTime()));
         // Assert
-        verify(modelValidationSubmitterMock, times(2)).
-                submitModelStatus(eq(VALID_CHANGED));
+        verify(modelValidationSubmitterMock).submitModelStatus(eq(VALID_CHANGED));
     }
 
     @Test
     public void startNewRecipeId_validPrepMinutes_prepMinutesSaved() {
         // Arrange
-        when(intFromObservableMock.parseInt(anyObject(), eq(SUT.prepMinutesObservable), anyInt())).
+        when(intFromObservableMock.parseInt(
+                anyObject(),
+                eq(SUT.prepMinutesObservable),
+                anyInt())).
                 thenReturn(VALID_NEW_PREP_TIME_VALID.getPrepTime());
         when(timeProviderMock.getCurrentTimestamp()).
                 thenReturn(VALID_NEW_PREP_TIME_VALID.getCreateDate());
@@ -315,8 +318,7 @@ public class RecipeDurationViewModelTest {
         simulateNothingReturnedFromDatabase();
         SUT.prepMinutesObservable.set(String.valueOf(VALID_NEW_PREP_TIME_VALID.getPrepTime()));
         // Assert
-        verify(durationEntityDataSourceMock, times(2)).
-                save(eq(VALID_NEW_PREP_TIME_VALID));
+        verify(durationEntityDataSourceMock).save(eq(VALID_NEW_PREP_TIME_VALID));
     }
 
     @Test
@@ -713,6 +715,7 @@ public class RecipeDurationViewModelTest {
     @Test
     public void startWithCloned_existingAndNewRecipeId_existingFromAnotherUserCopiedAndSavedWithNewId() {
         // Arrange
+
         when(timeProviderMock.getCurrentTimestamp()).thenReturn(VALID_NEW_CLONED.getCreateDate());
         whenIntFromObserverMockReturnRecipeTimesFromAnotherUser();
         // Act
@@ -739,8 +742,8 @@ public class RecipeDurationViewModelTest {
         SUT.prepMinutesObservable.set(
                 String.valueOf(VALID_NEW_CLONED_PREP_TIME_UPDATED.getPrepTime() % 60));
         // Assert
-        verify(durationEntityDataSourceMock, times(3)).save(ac.capture());
-        assertEquals(VALID_NEW_CLONED_PREP_TIME_UPDATED, ac.getAllValues().get(2));
+        verify(durationEntityDataSourceMock, times(2)).save(ac.capture());
+        assertEquals(VALID_NEW_CLONED_PREP_TIME_UPDATED, ac.getValue());
     }
 
     @Test

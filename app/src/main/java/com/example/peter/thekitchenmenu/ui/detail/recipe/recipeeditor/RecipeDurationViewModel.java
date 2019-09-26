@@ -102,10 +102,9 @@ public class RecipeDurationViewModel
         this.durationEntity = durationEntity;
         if (isCloned) {
             this.durationEntity = cloneDurationEntity();
-            updateObservables();
             save(updatedDurationEntity());
-        } else
-            updateObservables();
+        }
+        updateObservables();
     }
 
     @Override
@@ -265,5 +264,6 @@ public class RecipeDurationViewModel
 
     private void save(RecipeDurationEntity durationEntity) {
         durationEntityDataSource.save(durationEntity);
+        this.durationEntity = durationEntity;
     }
 }

@@ -10,25 +10,25 @@ import java.util.List;
 
 import static androidx.core.util.Preconditions.checkNotNull;
 
-public class LocalDataSourceRecipeCourse implements DataSourceRecipeCourse {
+public class RecipeCourseLocalDataSource implements DataSourceRecipeCourse {
 
-    private static volatile LocalDataSourceRecipeCourse INSTANCE;
+    private static volatile RecipeCourseLocalDataSource INSTANCE;
     private RecipeCourseEntityDao recipeCourseEntityDao;
     private AppExecutors appExecutors;
 
-    private LocalDataSourceRecipeCourse(@NonNull AppExecutors appExecutors,
+    private RecipeCourseLocalDataSource(@NonNull AppExecutors appExecutors,
                                         @NonNull RecipeCourseEntityDao recipeCourseEntityDao) {
         this.appExecutors = appExecutors;
         this.recipeCourseEntityDao = recipeCourseEntityDao;
     }
 
-    public static LocalDataSourceRecipeCourse getInstance(
+    public static RecipeCourseLocalDataSource getInstance(
             @NonNull AppExecutors appExecutors,
             @NonNull RecipeCourseEntityDao recipeCourseEntityDao) {
         if (INSTANCE == null) {
-            synchronized (LocalDataSourceRecipeCourse.class) {
+            synchronized (RecipeCourseLocalDataSource.class) {
                 if (INSTANCE == null)
-                    INSTANCE = new LocalDataSourceRecipeCourse(appExecutors, recipeCourseEntityDao);
+                    INSTANCE = new RecipeCourseLocalDataSource(appExecutors, recipeCourseEntityDao);
             }
         }
         return INSTANCE;

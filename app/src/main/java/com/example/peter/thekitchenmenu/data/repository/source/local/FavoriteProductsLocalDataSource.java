@@ -10,26 +10,26 @@ import java.util.List;
 
 import static androidx.core.util.Preconditions.checkNotNull;
 
-public class LocalDataSourceFavoriteProducts implements DataSourceFavoriteProducts {
+public class FavoriteProductsLocalDataSource implements DataSourceFavoriteProducts {
 
-    private static volatile LocalDataSourceFavoriteProducts INSTANCE;
+    private static volatile FavoriteProductsLocalDataSource INSTANCE;
     private FavoriteProductEntityDao favoriteProductEntityDao;
     private AppExecutors appExecutors;
 
-    private LocalDataSourceFavoriteProducts(
+    private FavoriteProductsLocalDataSource(
             @NonNull AppExecutors appExecutors,
             @NonNull FavoriteProductEntityDao favoriteProductEntityDao) {
         this.appExecutors = appExecutors;
         this.favoriteProductEntityDao = favoriteProductEntityDao;
     }
 
-    public static LocalDataSourceFavoriteProducts
+    public static FavoriteProductsLocalDataSource
     getInstance(@NonNull AppExecutors appExecutors,
                 @NonNull FavoriteProductEntityDao favoriteProductEntityDao) {
         if (INSTANCE == null) {
-            synchronized (LocalDataSourceFavoriteProducts.class) {
+            synchronized (FavoriteProductsLocalDataSource.class) {
                 if (INSTANCE == null)
-                    INSTANCE = new LocalDataSourceFavoriteProducts(
+                    INSTANCE = new FavoriteProductsLocalDataSource(
                             appExecutors,
                             favoriteProductEntityDao);
             }

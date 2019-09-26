@@ -5,13 +5,13 @@ import androidx.annotation.NonNull;
 import com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSourceFavoriteProducts;
 
-public class RemoteDataSourceFavoriteProducts implements DataSourceFavoriteProducts {
+public class FavoriteProductsRemoteDataSource implements DataSourceFavoriteProducts {
 
-    private static RemoteDataSourceFavoriteProducts INSTANCE;
+    private static FavoriteProductsRemoteDataSource INSTANCE;
 
-    public static RemoteDataSourceFavoriteProducts getInstance() {
+    public static FavoriteProductsRemoteDataSource getInstance() {
         if (INSTANCE == null)
-            INSTANCE = new RemoteDataSourceFavoriteProducts();
+            INSTANCE = new FavoriteProductsRemoteDataSource();
         return INSTANCE;
     }
 
@@ -39,7 +39,7 @@ public class RemoteDataSourceFavoriteProducts implements DataSourceFavoriteProdu
     @Override
     public void refreshData() {
         // Not required because the {@link TasksRepository} handles the logic of refreshing the
-        // tasks from all the available data sources.
+        // data from all the available sources.
     }
 
     @Override

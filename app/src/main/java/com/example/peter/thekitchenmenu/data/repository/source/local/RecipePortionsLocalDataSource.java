@@ -10,24 +10,24 @@ import java.util.List;
 
 import static androidx.core.util.Preconditions.checkNotNull;
 
-public class LocalDataSourceRecipePortions implements DataSourceRecipePortions {
+public class RecipePortionsLocalDataSource implements DataSourceRecipePortions {
 
-    private static volatile LocalDataSourceRecipePortions INSTANCE;
+    private static volatile RecipePortionsLocalDataSource INSTANCE;
     private AppExecutors appExecutors;
     private RecipePortionsEntityDao dao;
 
-    private LocalDataSourceRecipePortions(@NonNull AppExecutors appExecutors,
+    private RecipePortionsLocalDataSource(@NonNull AppExecutors appExecutors,
                                           @NonNull RecipePortionsEntityDao dao) {
         this.appExecutors = appExecutors;
         this.dao = dao;
     }
 
-    public static LocalDataSourceRecipePortions getInstance(@NonNull AppExecutors appExecutors,
+    public static RecipePortionsLocalDataSource getInstance(@NonNull AppExecutors appExecutors,
                                                             @NonNull RecipePortionsEntityDao dao) {
         if (INSTANCE == null) {
-            synchronized (LocalDataSourceRecipePortions.class) {
+            synchronized (RecipePortionsLocalDataSource.class) {
                 if (INSTANCE == null)
-                    INSTANCE = new LocalDataSourceRecipePortions(appExecutors, dao);
+                    INSTANCE = new RecipePortionsLocalDataSource(appExecutors, dao);
             }
         }
         return INSTANCE;

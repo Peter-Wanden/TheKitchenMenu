@@ -7,22 +7,22 @@ import androidx.annotation.NonNull;
 import com.example.peter.thekitchenmenu.app.AppExecutors;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.IngredientLocalDataSource;
-import com.example.peter.thekitchenmenu.data.repository.source.local.LocalDataSourceRecipePortions;
+import com.example.peter.thekitchenmenu.data.repository.source.local.RecipePortionsLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.ProductLocalDataSource;
-import com.example.peter.thekitchenmenu.data.repository.source.local.LocalDataSourceRecipeCourse;
+import com.example.peter.thekitchenmenu.data.repository.source.local.RecipeCourseLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.RecipeDurationLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.RecipeIdentityLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.RecipeLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.TKMDatabase;
-import com.example.peter.thekitchenmenu.data.repository.source.local.LocalDataSourceFavoriteProducts;
+import com.example.peter.thekitchenmenu.data.repository.source.local.FavoriteProductsLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.remote.IngredientRemoteDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.remote.ProductRemoteDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.remote.RecipeDurationRemoteDataSource;
-import com.example.peter.thekitchenmenu.data.repository.source.remote.RemoteDataSourceFavoriteProducts;
-import com.example.peter.thekitchenmenu.data.repository.source.remote.RemoteDataSourceRecipeCourse;
+import com.example.peter.thekitchenmenu.data.repository.source.remote.FavoriteProductsRemoteDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.remote.RecipeCourseRemoteDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.remote.RecipeIdentityRemoteDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.remote.RecipeRemoteDataSource;
-import com.example.peter.thekitchenmenu.data.repository.source.remote.RemoteDataSourceRecipePortions;
+import com.example.peter.thekitchenmenu.data.repository.source.remote.RecipePortionsRemoteDataSource;
 
 import static androidx.core.util.Preconditions.checkNotNull;
 
@@ -47,8 +47,8 @@ public class DatabaseInjection {
         TKMDatabase database = TKMDatabase.getInstance(context, new AppExecutors());
 
         return RepositoryFavoriteProduct.getInstance(
-                        RemoteDataSourceFavoriteProducts.getInstance(),
-                        LocalDataSourceFavoriteProducts.getInstance(
+                        FavoriteProductsRemoteDataSource.getInstance(),
+                        FavoriteProductsLocalDataSource.getInstance(
                                 new AppExecutors(),
                                 database.favoriteProductEntityDao()));
     }
@@ -71,8 +71,8 @@ public class DatabaseInjection {
         TKMDatabase database = TKMDatabase.getInstance(context, new AppExecutors());
 
         return RepositoryRecipeCourse.getInstance(
-                RemoteDataSourceRecipeCourse.getInstance(),
-                LocalDataSourceRecipeCourse.getInstance(
+                RecipeCourseRemoteDataSource.getInstance(),
+                RecipeCourseLocalDataSource.getInstance(
                         new AppExecutors(),
                         database.recipeCourseEntityDao()));
     }
@@ -122,8 +122,8 @@ public class DatabaseInjection {
         TKMDatabase database = TKMDatabase.getInstance(context, new AppExecutors());
 
         return RepositoryRecipePortions.getInstance(
-                RemoteDataSourceRecipePortions.getInstance(),
-                LocalDataSourceRecipePortions.getInstance(
+                RecipePortionsRemoteDataSource.getInstance(),
+                RecipePortionsLocalDataSource.getInstance(
                         new AppExecutors(),
                         database.recipePortionsEntityDao()));
     }

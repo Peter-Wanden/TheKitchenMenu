@@ -51,12 +51,12 @@ public class RepositoryFavoriteProduct
                 productId,
                 new GetEntityCallback<FavoriteProductEntity>() {
             @Override
-            public void onEntityLoaded(FavoriteProductEntity favoriteProductEntity) {
+            public void onEntityLoaded(FavoriteProductEntity entity) {
                 if (entityCache == null)
                     entityCache = new LinkedHashMap<>();
 
-                entityCache.put(favoriteProductEntity.getId(), favoriteProductEntity);
-                callback.onEntityLoaded(favoriteProductEntity);
+                entityCache.put(entity.getId(), entity);
+                callback.onEntityLoaded(entity);
             }
 
             @Override
@@ -65,12 +65,12 @@ public class RepositoryFavoriteProduct
                         productId,
                         new GetEntityCallback<FavoriteProductEntity>() {
                     @Override
-                    public void onEntityLoaded(FavoriteProductEntity favoriteProductEntity) {
+                    public void onEntityLoaded(FavoriteProductEntity entity) {
                         if (entityCache == null)
                             entityCache = new LinkedHashMap<>();
 
-                        entityCache.put(favoriteProductEntity.getId(), favoriteProductEntity);
-                        callback.onEntityLoaded(favoriteProductEntity);
+                        entityCache.put(entity.getId(), entity);
+                        callback.onEntityLoaded(entity);
                     }
 
                     @Override

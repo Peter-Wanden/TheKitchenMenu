@@ -41,6 +41,7 @@ public class RecipePortionsViewModel
     private int sittings;
     private boolean servingsValid;
     private boolean sittingsValid;
+    private boolean isCloned;
 
     private boolean observablesUpdating;
 
@@ -58,8 +59,9 @@ public class RecipePortionsViewModel
         servingsObservable.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
-                if (!servingsObservable.get().isEmpty())
+                if (!servingsObservable.get().isEmpty()) {
                     updateServings();
+                }
             }
         });
         sittingsObservable.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
@@ -78,9 +80,33 @@ public class RecipePortionsViewModel
     }
 
     @Override
+    public void startByCloningModel(String oldRecipeId, String newRecipeId) {
+        isCloned = true;
+        this.recipeId = newRecipeId;
+        dataSource.getPortionsForRecipe(oldRecipeId, this);
+    }
+
+    @Override
     public void onEntityLoaded(RecipePortionsEntity portionsEntity) {
         this.portionsEntity = portionsEntity;
+        if (isCloned) {
+            this.portionsEntity = clonePortionsEntity();
+            save(this.portionsEntity);
+        }
         updateObservables();
+    }
+
+    private RecipePortionsEntity clonePortionsEntity() {
+        isCloned = false;
+        long currentTimeStamp = timeProvider.getCurrentTimestamp();
+        return new RecipePortionsEntity(
+                idProvider.getUId(),
+                recipeId,
+                portionsEntity.getServings(),
+                portionsEntity.getSittings(),
+                currentTimeStamp,
+                currentTimeStamp
+        );
     }
 
     @Override
@@ -112,40 +138,6 @@ public class RecipePortionsViewModel
         submitModelStatus();
     }
 
-    @Override
-    public void startByCloningModel(String oldRecipeId, String newRecipeId) {
-        if (!observablesUpdating) {
-            modelSubmitter.submitModelStatus(new RecipeModelStatus(
-                    RecipeValidator.ModelName.PORTIONS_MODEL,
-                    isChanged(),
-                    isValid()
-            ));
-
-            if (isChanged() && isValid())
-                save(updatedEntity());
-        }
-    }
-
-    private boolean isChanged() {
-        if (portionsEntity != null) {
-            RecipePortionsEntity latestPortionsEntity = new RecipePortionsEntity(
-                    portionsEntity.getId(),
-                    portionsEntity.getRecipeId(),
-                    Integer.valueOf(servingsObservable.get()),
-                    Integer.valueOf(sittingsObservable.get()),
-                    portionsEntity.getCreateDate(),
-                    portionsEntity.getLastUpdate()
-            );
-
-            return !portionsEntity.equals(latestPortionsEntity);
-        } else
-            return false;
-    }
-
-    private boolean isValid() {
-        return servingsValid && sittingsValid;
-    }
-
     private void updateServings() {
         servings = parseIntegerFromObservableField(servingsObservable, servings);
         if (servings > 0)
@@ -164,7 +156,6 @@ public class RecipePortionsViewModel
         if (!servingsValid)
             servingsErrorMessage.set(errorMessage);
 
-        System.out.println("servingsValid=" + servingsValid);
         updatePortions();
         submitModelStatus();
     }
@@ -187,7 +178,6 @@ public class RecipePortionsViewModel
         if (!sittingsValid)
             sittingsErrorMessage.set(errorMessage);
 
-        System.out.println("sittingsValid=" + sittingsValid);
         updatePortions();
         submitModelStatus();
     }
@@ -197,7 +187,7 @@ public class RecipePortionsViewModel
     }
 
     private void updatePortions() {
-        int portions = servings + sittings;
+        int portions = servings * sittings;
         portionsObservable.set(String.valueOf(portions));
     }
 
@@ -229,7 +219,28 @@ public class RecipePortionsViewModel
         }
     }
 
+    private boolean isChanged() {
+        if (portionsEntity != null) {
+            RecipePortionsEntity latestPortionsEntity = new RecipePortionsEntity(
+                    portionsEntity.getId(),
+                    portionsEntity.getRecipeId(),
+                    sittings,
+                    servings,
+                    portionsEntity.getCreateDate(),
+                    portionsEntity.getLastUpdate()
+            );
+
+            return !portionsEntity.equals(latestPortionsEntity);
+        } else
+            return false;
+    }
+
+    private boolean isValid() {
+        return servingsValid && sittingsValid;
+    }
+
     private void save(RecipePortionsEntity entity) {
         dataSource.save(entity);
+        portionsEntity = entity;
     }
 }

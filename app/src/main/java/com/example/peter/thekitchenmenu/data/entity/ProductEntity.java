@@ -19,8 +19,6 @@ import java.util.UUID;
 @Entity(tableName = ProductEntity.TABLE_PRODUCT)
 public final class ProductEntity implements Parcelable, TkmEntity {
 
-    public static final String TAG = "tkm-ProductEntity";
-
     public static final String TABLE_PRODUCT = "product";
     public static final String ID = "id";
     public static final String DESCRIPTION = "description";
@@ -29,7 +27,7 @@ public final class ProductEntity implements Parcelable, TkmEntity {
     private static final String NUMBER_OF_PRODUCTS = "numberOfProducts";
     private static final String SHELF_LIFE = "shelfLife";
     private static final String BASE_UNITS = "baseUnits";
-    private static final String UNIT_OF_MEASURE_SUB_TYPE = "unitOfMeasureSubtype";
+    private static final String UNIT_OF_MEASURE_SUBTYPE = "unitOfMeasureSubtype";
     private static final String CREATED_BY = "createdBy";
     private static final String WEB_IMAGE_URL = "webImageUrl";
     private static final String REMOTE_SMALL_IMAGE_URI = "remoteSmallImageUri";
@@ -63,7 +61,7 @@ public final class ProductEntity implements Parcelable, TkmEntity {
     @ColumnInfo(name = BASE_UNITS)
     private final double baseUnits;
 
-    @ColumnInfo(name = UNIT_OF_MEASURE_SUB_TYPE)
+    @ColumnInfo(name = UNIT_OF_MEASURE_SUBTYPE)
     private final int unitOfMeasureSubtype;
 
     @ColumnInfo(name = CREATED_BY)
@@ -122,26 +120,6 @@ public final class ProductEntity implements Parcelable, TkmEntity {
         this.remoteLargeImageUri = remoteLargeImageUri;
         this.createDate = createDate;
         this.lastUpdate = lastUpdate;
-    }
-
-    @Ignore
-    public static ProductEntity shallowCopy(ProductEntity productEntity) {
-        return new ProductEntity(
-                productEntity.getId(),
-                productEntity.getDescription(),
-                productEntity.getShoppingListItemName(),
-                productEntity.getCategory(),
-                productEntity.getShelfLife(),
-                productEntity.getNumberOfProducts(),
-                productEntity.getBaseUnits(),
-                productEntity.getUnitOfMeasureSubtype(),
-                productEntity.getCreatedBy(),
-                productEntity.getWebImageUrl(),
-                productEntity.getRemoteSmallImageUri(),
-                productEntity.getRemoteMediumImageUri(),
-                productEntity.getRemoteLargeImageUri(),
-                productEntity.getCreateDate(),
-                productEntity.getLastUpdate());
     }
 
     /**
