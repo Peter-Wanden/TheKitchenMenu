@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.detail.product.producteditor;
+package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
 import android.content.Context;
 import android.view.LayoutInflater;

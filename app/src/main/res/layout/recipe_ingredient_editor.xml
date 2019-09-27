@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    >
 
     <data>
         <import type="android.view.View" />
+        <variable
+            name="viewModel"
+            type="com.example.peter.thekitchenmenu.ui.detail.recipe.recipeIngredientEditor.RecipeIngredientEditorViewModel" />
     </data>
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -30,14 +33,12 @@
             android:layout_height="wrap_content"
             android:animateLayoutChanges="true"
             >
-
             <TextView
                 android:id="@+id/recipe_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:padding="4dp"
-                android:textAppearance="bold"
                 android:textSize="24sp"
                 app:layout_constraintStart_toStartOf="@id/recipe_ingredient_editor_parent"
                 app:layout_constraintTop_toTopOf="@id/recipe_ingredient_editor_parent"
@@ -49,14 +50,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 layout="@layout/recipe_portions_view"
-                app:layout_constraintTop_toTopOf="@id/recipe_ingredient_editor_parent"
+                app:layout_constraintTop_toBottomOf="@id/recipe_name"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 >
             </include>
 
             <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/recipe_ingredient_editor_image"
+                android:id="@+id/ingredient_image"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_marginStart="12dp"
@@ -67,29 +68,28 @@
                 />
 
             <TextView
-                android:id="@+id/recipe_ingredient_name"
+                android:id="@+id/ingredient_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:padding="4dp"
                 android:textSize="18sp"
-                app:layout_constraintStart_toEndOf="@id/recipe_ingredient_editor_image"
-                app:layout_constraintTop_toTopOf="@+id/recipe_ingredient_editor_image"
-                app:layout_constraintBottom_toBottomOf="@id/recipe_ingredient_editor_image"
+                app:layout_constraintStart_toEndOf="@id/ingredient_image"
+                app:layout_constraintTop_toTopOf="@+id/ingredient_image"
+                app:layout_constraintBottom_toBottomOf="@id/ingredient_image"
                 tools:text="Mild curry powder"
                 />
 
-            <include
-                android:id="@+id/ingredient_measurement_information"
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/recipe_ingredient_editor_measurement_content_frame"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                layout="@layout/recipe_ingredient_editor_measurement"
                 android:layout_marginTop="4dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/recipe_ingredient_editor_image"
+                app:layout_constraintTop_toBottomOf="@id/ingredient_image"
                 >
-            </include>
+            </androidx.fragment.app.FragmentContainerView>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/recipe_editor_add_ingredients_button"
@@ -98,7 +98,7 @@
                 android:text="@string/add_recommended_product"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ingredient_measurement_information"
+                app:layout_constraintTop_toBottomOf="@id/recipe_ingredient_editor_measurement_content_frame"
                 />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.appcompat.widget.LinearLayoutCompat>

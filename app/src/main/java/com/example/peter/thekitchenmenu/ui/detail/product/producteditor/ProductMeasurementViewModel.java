@@ -1,7 +1,6 @@
 package com.example.peter.thekitchenmenu.ui.detail.product.producteditor;
 
 import android.app.Application;
-import android.util.Log;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
@@ -105,14 +104,14 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
     }
 
     private void setBaseUnits(double newBaseUnits) {
-        if (newBaseUnitsReceived(newBaseUnits))
+        if (baseUnitsValueChanged(newBaseUnits))
             if (canChangeToNewNumberOfBaseUnits(newBaseUnits))
                 updateUi(); // with new value
                 // if required, add error message here
             else updateUi(); // with old value
     }
 
-    private boolean newBaseUnitsReceived(double newBaseUnits) {
+    private boolean baseUnitsValueChanged(double newBaseUnits) {
         return unitOfMeasure.getBaseUnits() != newBaseUnits;
     }
 

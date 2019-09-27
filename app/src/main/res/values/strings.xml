@@ -43,7 +43,7 @@
     <string name="label_category">Category</string>
     <string name="label_quantity">Quantity</string>
 
-    <!-- ProductDetail unit of measure spinner options -->
+    <!-- Unit of measure spinner options -->
     <!-- See arrays.xml "unit_of_measure_options" for usage -->
     <string name="unit_of_measure_default">Please select</string>
     <string name="grams">g</string>
@@ -59,6 +59,8 @@
     <string name="each">each</string>
     <string name="piece">piece</string>
     <string name="items">items</string>
+    <string name="teaspoon">tsp</string>
+    <string name="tablespoon">Tbsp</string>
 
     <!-- Unit of measure types -->
     <string name="mass">weight</string>
@@ -124,6 +126,7 @@
     <string name="activity_title_image_cropper">TKM - Image Cropper</string>
     <string name="activity_title_add_new_ingredient">Add new ingredient</string>
     <string name="activity_title_edit_ingredient">Edit ingredient</string>
+    <string name="activity_title_recipe_ingredient_editor">Recipe ingredient editor</string>
 
     <!-- ProductDetail user input error codes -->
     <string name="input_error_short_text_too_short">Too short, needs to be between 3 and 70 characters.</string>

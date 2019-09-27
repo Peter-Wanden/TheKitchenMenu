@@ -36,7 +36,7 @@ public class ViewModelFactoryIngredient extends ViewModelProvider.NewInstanceFac
                 if (INSTANCE == null)
                     INSTANCE = new ViewModelFactoryIngredient(
                             application,
-                            DatabaseInjection.provideIngredientEntityDataSource(
+                            DatabaseInjection.provideIngredientDataSource(
                                     application.getApplicationContext()
                             ));
             }

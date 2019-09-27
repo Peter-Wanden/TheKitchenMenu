@@ -26,7 +26,7 @@ public class RecipeIngredientRemoteDataSource implements DataSourceRecipeIngredi
     }
 
     @Override
-    public void getByIngredientId(@NonNull String ingredientId, @NonNull GetEntityCallback<RecipeIngredientEntity> callback) {
+    public void getByIngredientId(@NonNull String ingredientId, @NonNull GetAllCallback<RecipeIngredientEntity> callback) {
         callback.onDataNotAvailable();
     }
 

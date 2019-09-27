@@ -13,5 +13,5 @@ public interface DataSourceRecipeIngredient extends DataSource<RecipeIngredientE
                         @NonNull GetAllCallback<RecipeIngredientEntity> callback);
 
     void getByIngredientId(@NonNull String ingredientId,
-                           @NonNull GetEntityCallback<RecipeIngredientEntity> callback);
+                           @NonNull GetAllCallback<RecipeIngredientEntity> callback);
 }

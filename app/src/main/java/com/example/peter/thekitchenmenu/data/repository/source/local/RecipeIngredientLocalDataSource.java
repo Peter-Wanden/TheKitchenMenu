@@ -80,14 +80,14 @@ public class RecipeIngredientLocalDataSource implements DataSourceRecipeIngredie
 
     @Override
     public void getByIngredientId(@NonNull String ingredientId,
-                                  @NonNull GetEntityCallback<RecipeIngredientEntity> callback) {
+                                  @NonNull GetAllCallback<RecipeIngredientEntity> callback) {
         Runnable runnable = () -> {
-            final RecipeIngredientEntity entity = dao.getByIngredientId(ingredientId);
+            final List<RecipeIngredientEntity> entities = dao.getByIngredientId(ingredientId);
             appExecutors.mainThread().execute(() -> {
-                if (entity != null)
-                    callback.onEntityLoaded(entity);
-                else
+                if (entities.isEmpty())
                     callback.onDataNotAvailable();
+                else
+                    callback.onAllLoaded(entities);
             });
         };
         appExecutors.diskIO().execute(runnable);

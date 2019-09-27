@@ -1,8 +1,8 @@
 package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
+import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
 
-import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -338,6 +338,7 @@ public abstract class UnitOfMeasureImpl implements UnitOfMeasure {
         }
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "UnitOfMeasureImpl{" +

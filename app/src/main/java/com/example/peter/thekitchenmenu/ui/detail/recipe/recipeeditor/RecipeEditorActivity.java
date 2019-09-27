@@ -39,7 +39,6 @@ public class RecipeEditorActivity
         super.onCreate(savedInstanceState);
 
         initialiseBindings();
-        setupToolbar();
         setupActionBar();
         setupViewModels();
         setViewModelObservers();
@@ -52,11 +51,8 @@ public class RecipeEditorActivity
         binding.setLifecycleOwner(this);
     }
 
-    private void setupToolbar() {
-        setSupportActionBar(binding.recipeEditorToolbar);
-    }
-
     private void setupActionBar() {
+        setSupportActionBar(binding.recipeEditorToolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar == null)
             return;

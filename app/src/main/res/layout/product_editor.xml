@@ -2,8 +2,7 @@
 
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:bind="http://schemas.android.com/tools">
-
+    >
     <data>
         <import type="android.view.View" />
 

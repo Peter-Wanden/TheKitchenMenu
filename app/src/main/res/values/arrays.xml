@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--
-    These are the options displayed in the activity_product_detail drop-down spinners. The string
-    values of these options can be found in strings.xml.
-    -->
-
     <string-array name="unit_of_measure_options">
         <item>@string/unit_of_measure_default</item>
         <item>@string/grams</item>
@@ -50,6 +45,11 @@
 
     <string-array name="unit_of_measure_options_count">
         <item>@string/each</item>
+    </string-array>
+    
+    <string-array name="unit_of_measure_options_volume_spoon">
+        <item>@string/teaspoon</item>
+        <item>@string/tablespoon</item>
     </string-array>
 
     <string-array name="shelf_life_options">

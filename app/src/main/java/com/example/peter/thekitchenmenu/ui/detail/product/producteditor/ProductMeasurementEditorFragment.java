@@ -9,6 +9,9 @@ import android.widget.SpinnerAdapter;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.ProductEditorMeasurementBinding;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtype;
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.SpinnerItemType;
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureSpinnerAdapter;
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureSpinnerItem;
 
 import java.util.ArrayList;
 import java.util.Arrays;

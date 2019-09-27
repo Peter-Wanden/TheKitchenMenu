@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import com.example.peter.thekitchenmenu.app.AppExecutors;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.IngredientLocalDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.local.RecipeIngredientLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.RecipePortionsLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.ProductLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.RecipeCourseLocalDataSource;
@@ -21,6 +22,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.remote.RecipeDura
 import com.example.peter.thekitchenmenu.data.repository.source.remote.FavoriteProductsRemoteDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.remote.RecipeCourseRemoteDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.remote.RecipeIdentityRemoteDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.remote.RecipeIngredientRemoteDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.remote.RecipeRemoteDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.remote.RecipePortionsRemoteDataSource;
 
@@ -103,7 +105,7 @@ public class DatabaseInjection {
                         database.recipeDurationEntityDao()));
     }
 
-    public static RepositoryIngredient provideIngredientEntityDataSource(@NonNull Context context) {
+    public static RepositoryIngredient provideIngredientDataSource(@NonNull Context context) {
         checkNotNull(context);
 
         TKMDatabase database = TKMDatabase.getInstance(context, new AppExecutors());
@@ -126,5 +128,18 @@ public class DatabaseInjection {
                 RecipePortionsLocalDataSource.getInstance(
                         new AppExecutors(),
                         database.recipePortionsEntityDao()));
+    }
+
+    public static RepositoryRecipeIngredient provideRecipeIngredientDataSource(
+            @NonNull Context context) {
+        checkNotNull(context);
+
+        TKMDatabase database = TKMDatabase.getInstance(context, new AppExecutors());
+
+        return RepositoryRecipeIngredient.getInstance(
+                RecipeIngredientRemoteDataSource.getInstance(),
+                RecipeIngredientLocalDataSource.getInstance(
+                        new AppExecutors(),
+                        database.recipeIngredientEntityDao()));
     }
 }

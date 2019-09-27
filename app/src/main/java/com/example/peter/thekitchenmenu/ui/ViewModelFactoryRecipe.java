@@ -8,11 +8,15 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipe;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeCourse;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
+import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeIngredientEditor.RecipeIngredientEditorViewModel;
+import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeIngredientEditor.RecipeIngredientMeasurementViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeCourseSelectorViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeDurationViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipePortionsViewModel;
@@ -40,19 +44,25 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
     private final RepositoryRecipeIdentity recipeIdentityRepository;
     private final RepositoryRecipeDuration recipeDurationRepository;
     private final RepositoryRecipePortions recipePortionsRepository;
+    private final RepositoryRecipeIngredient recipeIngredientRepository;
+    private final RepositoryIngredient ingredientRepository;
 
     private ViewModelFactoryRecipe(Application application,
                                    RepositoryRecipe recipeRepository,
                                    RepositoryRecipeCourse recipeCourseRepository,
                                    RepositoryRecipeIdentity recipeIdentityRepository,
                                    RepositoryRecipeDuration recipeDurationRepository,
-                                   RepositoryRecipePortions recipePortionsRepository) {
+                                   RepositoryRecipePortions recipePortionsRepository,
+                                   RepositoryRecipeIngredient recipeIngredientRepository,
+                                   RepositoryIngredient ingredientRepository) {
         this.application = application;
         this.recipeRepository = recipeRepository;
         this.recipeCourseRepository = recipeCourseRepository;
         this.recipeIdentityRepository = recipeIdentityRepository;
         this.recipeDurationRepository = recipeDurationRepository;
         this.recipePortionsRepository = recipePortionsRepository;
+        this.recipeIngredientRepository = recipeIngredientRepository;
+        this.ingredientRepository = ingredientRepository;
     }
 
     public static ViewModelFactoryRecipe getInstance(Application application) {
@@ -74,6 +84,12 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
                                     application.getApplicationContext()
                             ),
                             DatabaseInjection.provideRecipePortionsDataSource(
+                                    application.getApplicationContext()
+                            ),
+                            DatabaseInjection.provideRecipeIngredientDataSource(
+                                    application.getApplicationContext()
+                            ),
+                            DatabaseInjection.provideIngredientDataSource(
                                     application.getApplicationContext()
                             )
                     );
@@ -134,7 +150,20 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
                     new TimeProvider(),
                     new UniqueIdProvider(),
                     application.getResources(),
-                    new ParseIntegerFromObservableHandler()
+                    new ParseIntegerFromObservableHandler());
+
+        } else if (modelClass.isAssignableFrom(RecipeIngredientEditorViewModel.class)) {
+            // noinspection unchecked
+            return (T) new RecipeIngredientEditorViewModel(
+                    recipeIdentityRepository,
+                    recipePortionsRepository,
+                    ingredientRepository,
+                    recipeIngredientRepository);
+
+        } else if (modelClass.isAssignableFrom(RecipeIngredientMeasurementViewModel.class)) {
+            // noinspection unchecked
+            return (T) new RecipeIngredientMeasurementViewModel(
+
             );
         }
 

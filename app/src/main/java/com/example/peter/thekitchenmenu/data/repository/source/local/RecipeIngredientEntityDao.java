@@ -24,11 +24,11 @@ public interface RecipeIngredientEntityDao {
     @Query("SELECT * FROM " + TABLE_RECIPE_INGREDIENT + " WHERE " + PRODUCT_ID + " = :productId")
     List<RecipeIngredientEntity> getByProductId(String productId);
 
+    @Query("SELECT * FROM " + TABLE_RECIPE_INGREDIENT + " WHERE " + INGREDIENT_ID + " = :ingredientId")
+    List<RecipeIngredientEntity> getByIngredientId(String ingredientId);
+
     @Query("SELECT * FROM " + TABLE_RECIPE_INGREDIENT + " WHERE " + ID + " = :id")
     RecipeIngredientEntity getById(String id);
-
-    @Query("SELECT * FROM " + TABLE_RECIPE_INGREDIENT + " WHERE " + INGREDIENT_ID + " = :ingredientId")
-    RecipeIngredientEntity getByIngredientId(String ingredientId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(RecipeIngredientEntity ingredientEntity);
