@@ -6,7 +6,7 @@ public class UnitOfMeasureSpinnerItem {
     private String measurementUnit;
 
 
-    UnitOfMeasureSpinnerItem(SpinnerItemType type, String measurementUnit) {
+    public UnitOfMeasureSpinnerItem(SpinnerItemType type, String measurementUnit) {
         this.type = type;
         this.measurementUnit = measurementUnit;
     }

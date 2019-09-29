@@ -1,5 +1,6 @@
 package com.example.peter.thekitchenmenu.ui.detail.ingredient;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.IngredientEditorBinding;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryIngredient;
+import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeIngredientEditor.RecipeIngredientEditorActivity;
 
 public class IngredientEditorActivity
         extends AppCompatActivity
@@ -107,6 +109,8 @@ public class IngredientEditorActivity
 
     @Override
     public void finishActivity(String ingredientId) {
+        Intent intent = new Intent(this, RecipeIngredientEditorActivity.class);
+        intent.putExtra(RecipeIngredientEditorActivity.EXTRA_INGREDIENT_ID, ingredientId);
         finish();
     }
 

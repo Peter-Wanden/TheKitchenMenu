@@ -172,6 +172,7 @@
             >
         </activity>
         <activity android:name=".ui.detail.recipe.recipeIngredientEditor.RecipeIngredientEditorActivity" />
+        <activity android:name=".ui.detail.recipe.recipeingredientlist.RecipeIngredientListActivity" />
 
         <uses-library
             android:name="android.test.runner"

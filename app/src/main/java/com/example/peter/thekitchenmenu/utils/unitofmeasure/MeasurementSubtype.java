@@ -55,11 +55,4 @@ public enum MeasurementSubtype {
     }
 
     public abstract UnitOfMeasure getMeasurementClass();
-
-    // TODO - add String resource getters for:
-    // 1. Type
-    // 2. Subtype
-    // 3. Label 1
-    // 4. Label 2
-    // 5. Label 3
 }

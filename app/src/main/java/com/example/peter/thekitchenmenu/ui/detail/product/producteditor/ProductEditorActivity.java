@@ -216,7 +216,7 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
                         findFragmentById(R.id.product_identity_content_frame);
 
         if (productIdentityEditorFragment == null) {
-            productIdentityEditorFragment = ProductIdentityEditorFragment.newInstance();
+            productIdentityEditorFragment = ProductIdentityEditorFragment.getInstance();
         }
         return productIdentityEditorFragment;
     }

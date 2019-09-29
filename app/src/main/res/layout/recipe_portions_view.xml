@@ -4,6 +4,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist.RecipeIngredientListRecipeViewModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -36,6 +42,7 @@
             android:layout_height="wrap_content"
             android:padding="4dp"
             android:textSize="18sp"
+            android:text="@{viewModel.servingsObservable}"
             app:layout_constraintEnd_toEndOf="@id/servings_label"
             app:layout_constraintStart_toStartOf="@id/servings_label"
             app:layout_constraintTop_toBottomOf="@id/servings_label"
@@ -58,6 +65,7 @@
             android:layout_height="wrap_content"
             android:padding="4dp"
             android:textSize="18sp"
+            android:text="@{viewModel.sittingsObservable}"
             app:layout_constraintEnd_toEndOf="@id/sittings_label"
             app:layout_constraintStart_toStartOf="@id/sittings_label"
             app:layout_constraintTop_toBottomOf="@id/sittings_label"
@@ -80,6 +88,7 @@
             android:layout_height="wrap_content"
             android:padding="4dp"
             android:textSize="18sp"
+            android:text="@{viewModel.portionsObservable}"
             app:layout_constraintEnd_toEndOf="@id/portions_label"
             app:layout_constraintStart_toStartOf="@id/portions_label"
             app:layout_constraintTop_toBottomOf="@id/portions_label"

@@ -18,12 +18,10 @@ import androidx.lifecycle.ViewModelProvider;
 
 public class ProductIdentityEditorFragment extends Fragment {
 
-    private static final String TAG = "ProductIdentityEditorFr";
-
     private ProductEditorIdentityBinding binding;
     private ProductIdentityViewModel viewModel;
 
-    static ProductIdentityEditorFragment newInstance() {
+    static ProductIdentityEditorFragment getInstance() {
         return new ProductIdentityEditorFragment();
     }
 

@@ -19,7 +19,7 @@ public class UnitOfMeasureSpinnerAdapter extends ArrayAdapter<UnitOfMeasureSpinn
     private LayoutInflater inflater;
     private ArrayList<UnitOfMeasureSpinnerItem> unitOfMeasureList;
 
-    UnitOfMeasureSpinnerAdapter(
+    public UnitOfMeasureSpinnerAdapter(
             @NonNull Context context,
             ArrayList<UnitOfMeasureSpinnerItem> unitOfMeasureList) {
 

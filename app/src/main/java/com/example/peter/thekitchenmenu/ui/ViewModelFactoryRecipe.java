@@ -21,6 +21,7 @@ import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeCour
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeDurationViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipePortionsViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidator;
+import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist.RecipeIngredientListRecipeViewModel;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.ui.catalog.recipe.RecipeCatalogViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeEditorViewModel;
@@ -163,7 +164,13 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
         } else if (modelClass.isAssignableFrom(RecipeIngredientMeasurementViewModel.class)) {
             // noinspection unchecked
             return (T) new RecipeIngredientMeasurementViewModel(
+            );
 
+        } else if (modelClass.isAssignableFrom(RecipeIngredientListRecipeViewModel.class)) {
+            // noinspection unchecked
+            return (T) new RecipeIngredientListRecipeViewModel(
+                    recipeIdentityRepository,
+                    recipePortionsRepository
             );
         }
 

@@ -15,6 +15,8 @@
     <string name="cd_add_product">Add a product</string>
     <string name="cd_brand_logo">The kitchen menu brand logo</string>
 
+    <string name="cd_picture_of_ingredient">A image of the ingredient to be used with this recipe</string>
+
     <!-- Common field labels and hints -->
     <string name="label_description">Manufacturer or retailers exact description</string>
     <string name="hint_description">eg. Lurpak spreadable lighter, unsalted</string>
@@ -127,6 +129,7 @@
     <string name="activity_title_add_new_ingredient">Add new ingredient</string>
     <string name="activity_title_edit_ingredient">Edit ingredient</string>
     <string name="activity_title_recipe_ingredient_editor">Recipe ingredient editor</string>
+    <string name="activity_title_recipe_ingredient_list_activity">Recipe ingredients list</string>
 
     <!-- ProductDetail user input error codes -->
     <string name="input_error_short_text_too_short">Too short, needs to be between 3 and 70 characters.</string>
@@ -322,7 +325,8 @@
     <string name="lasUpdated">last updated</string>
     <string name="recipe_title_label">Title</string>
     <string name="invalid_number">Invalid number entered</string>
-    <string name="ingredient_name_duplicate_error_message">An ingredient with this name already exists, please choose another name.</string>
+    <string name="ingredient_name_duplicate_error_message">An ingredient with this name already
+        exists, please choose another name.</string>
 
     <!-- Sittings servings portions layout -->
     <string name="sittings_label">Sittings</string>
@@ -332,6 +336,13 @@
     <!-- Recipe measurement editor -->
     <string name="recipe_ingredient_unit_of_measure_label">Unit</string>
     <string name="add_recommended_product">Add recommended product</string>
+
+    <!-- Recipe ingredients list -->
+    <string name="recipe_ingredient_list_header">Ingredients for:</string>
+    <string name="add_ingredient">Add ingredient</string>
+    <string name="empty_recipe_ingredients_message">There are currently no ingredients associated
+        with this recipe.</string>
+
 
 
 </resources>

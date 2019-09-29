@@ -3,14 +3,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-
     <data>
         <import type="android.view.View"/>
         <import type="android.view.View.OnClickListener"/>
 
         <variable
-            name="productModel"
-            type="com.example.peter.thekitchenmenu.data.model.ProductModel" />
+            name="viewModel"
+            type="com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist.RecipeIngredientListItemViewModel" />
 
         <variable
             name="listener"
@@ -18,7 +17,7 @@
     </data>
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/product_list_item_cardView"
+        android:id="@+id/recipe_ingredient_list_item_cardView"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_marginStart="@dimen/card_view_margin"
@@ -27,11 +26,10 @@
         android:layout_marginBottom="@dimen/card_view_margin_top_bottom"
         android:elevation="@dimen/card_view_elevation"
         app:cardCornerRadius="4dp"
-        android:onClick="@{() -> listener.viewProduct(productModel)}"
         >
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/product_list_item_constraintLayout"
+            android:id="@+id/recipe_ingredient_list_item_constraintLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -44,22 +42,34 @@
             </androidx.constraintlayout.widget.Guideline>
 
             <TextView
-                android:id="@+id/product_list_item_description"
+                android:id="@+id/recipe_ingredient_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:paddingEnd="@dimen/list_item_top_full_margin"
                 android:paddingStart="@dimen/list_item_top_full_margin"
                 android:paddingTop="@dimen/list_item_top_half_margin"
-                app:layout_constraintEnd_toStartOf="@+id/product_list_item_image"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:text="@{productModel.productEntity.description}"
-                tools:text="Cirio canned chopped tomatoes"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/recipe_ingredient_image"
+                android:text="@{viewModel.}"
+                tools:text="Mild curry powder"
                 />
-
+            <TextView
+                android:id="@+id/recipe_ingredient_measurement"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingEnd="@dimen/list_item_top_full_margin"
+                android:paddingStart="@dimen/list_item_top_full_margin"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/recipe_ingredient_name"
+                app:setLabelForSubtypeInt="@{productModel.productEntity.unitOfMeasureSubtype}"
+                app:formatBaseUnits="@{productModel.productEntity.baseUnits}"
+                app:formatNumberOfItems="@{productModel.productEntity.numberOfProducts}"
+                tools:text="2 tsp"
+                />
             <ImageView
-                android:id="@+id/product_list_item_image"
-                android:contentDescription="@string/cd_picture_of_product"
+                android:id="@+id/recipe_ingredient_image"
+                android:contentDescription="@string/cd_picture_of_ingredient"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_margin="@dimen/list_item_bottom_margin"
@@ -70,50 +80,23 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:webImageUrl="@{productModel.productEntity.webImageUrl}"
                 app:remoteSmallImageUri="@{productModel.productEntity.remoteSmallImageUri}"
-                tools:src="@drawable/cirio_tinned_tomatoes"
+                tools:src="@drawable/mild_curry_powder"
                 />
-
-            <TextView
-                android:id="@+id/product_list_item_measurement"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:paddingEnd="@dimen/list_item_top_full_margin"
-                android:paddingStart="@dimen/list_item_top_full_margin"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/product_list_item_description"
-                app:setLabelForSubtypeInt="@{productModel.productEntity.unitOfMeasureSubtype}"
-                app:formatBaseUnits="@{productModel.productEntity.baseUnits}"
-                app:formatNumberOfItems="@{productModel.productEntity.numberOfProducts}"
-                tools:text="400 ml" />
-
             <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/product_list_item_add_to_favorites"
+                android:id="@+id/recipe_ingredient_remove_button"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:layout_margin="8dp"
                 android:elevation="4dp"
                 android:tint="@color/white"
                 android:backgroundTint="@color/primaryDarkColor"
-                android:src="@drawable/ic_list_add"
+                android:src="@drawable/ic_delete"
                 android:visibility="@{productModel.favorite ? View.GONE : View.VISIBLE}"
                 android:onClick="@{() -> listener.addToFavorites(productModel.productEntity.id)}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 />
-            <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/product_list_item_remove_from_favorites"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_margin="8dp"
-                android:elevation="4dp"
-                android:tint="@color/white"
-                android:backgroundTint="@color/primaryDarkColor"
-                android:src="@drawable/ic_list_add_check"
-                android:visibility="@{productModel.favorite ? View.VISIBLE : View.GONE}"
-                android:onClick="@{() -> listener.removeFromFavorites(productModel.favoriteProductEntity.id)}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
+
 </layout>
