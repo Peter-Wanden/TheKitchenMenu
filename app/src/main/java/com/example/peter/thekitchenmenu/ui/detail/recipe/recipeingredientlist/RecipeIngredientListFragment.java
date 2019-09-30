@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.databinding.RecipeIngredientListFragmentBinding;
 import com.example.peter.thekitchenmenu.databinding.RecipeIngredientListItemBinding;
@@ -77,11 +78,13 @@ public class RecipeIngredientListFragment extends Fragment {
 
     private void setupListAdapter() {
         ListView listView = binding.recipeIngredientsList;
+
         adapter = new RecipeIngredientListAdapter(
                 new ArrayList<>(0),
                 (RecipeIngredientListActivity) getActivity(),
-                viewModel,
                 DatabaseInjection.provideRecipeIngredientDataSource(
+                        getContext().getApplicationContext()),
+                DatabaseInjection.provideIngredientDataSource(
                         getContext().getApplicationContext()));
         listView.setAdapter(adapter);
     }
@@ -90,17 +93,17 @@ public class RecipeIngredientListFragment extends Fragment {
 
         @Nullable
         private RecipeIngredientListItemNavigator navigator;
-        private final RecipeIngredientListViewModel viewModel;
         private List<RecipeIngredientEntity> recipeIngredients;
-        private RepositoryRecipeIngredient repository;
+        private RepositoryRecipeIngredient repositoryRecipeIngredient;
+        private RepositoryIngredient repositoryIngredient;
 
-        public RecipeIngredientListAdapter(List<RecipeIngredientEntity> recipeIngredients,
+        RecipeIngredientListAdapter(List<RecipeIngredientEntity> recipeIngredients,
                                            @Nullable RecipeIngredientListItemNavigator navigator,
-                                           RecipeIngredientListViewModel viewModel,
-                                           RepositoryRecipeIngredient repository) {
+                                           RepositoryRecipeIngredient repositoryRecipeIngredient,
+                                           RepositoryIngredient repositoryIngredient) {
             this.navigator = navigator;
-            this.viewModel = viewModel;
-            this.repository = repository;
+            this.repositoryRecipeIngredient = repositoryRecipeIngredient;
+            this.repositoryIngredient = repositoryIngredient;
             setList(recipeIngredients);
         }
 
@@ -149,7 +152,8 @@ public class RecipeIngredientListFragment extends Fragment {
             final RecipeIngredientListItemViewModel viewModel =
                     new RecipeIngredientListItemViewModel(
                             viewGroup.getContext().getApplicationContext(),
-                            repository);
+                            repositoryRecipeIngredient,
+                            repositoryIngredient);
 
             viewModel.setNavigator(navigator);
             binding.setViewModel(viewModel);

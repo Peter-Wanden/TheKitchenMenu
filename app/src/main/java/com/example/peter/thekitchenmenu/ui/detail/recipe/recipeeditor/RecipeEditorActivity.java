@@ -1,5 +1,6 @@
 package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,6 +19,7 @@ import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.RecipeEditorActivityBinding;
 import com.example.peter.thekitchenmenu.ui.UnsavedChangesDialogFragment;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryRecipe;
+import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist.RecipeIngredientListActivity;
 import com.example.peter.thekitchenmenu.ui.imageeditor.ImageEditorFragment;
 import com.example.peter.thekitchenmenu.utils.ActivityUtils;
 
@@ -282,12 +284,13 @@ public class RecipeEditorActivity
 
     @Override
     public void addIngredients(String recipeId) {
-
+        Intent intent = new Intent(this, RecipeIngredientListActivity.class);
+        intent.putExtra(RecipeIngredientListActivity.EXTRA_RECIPE_ID, recipeId);
+        startActivity(intent);
     }
 
     @Override
     public void editIngredients(String recipeId) {
-
     }
 
     @Override

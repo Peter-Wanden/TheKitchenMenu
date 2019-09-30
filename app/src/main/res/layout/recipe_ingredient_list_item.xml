@@ -51,7 +51,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/recipe_ingredient_image"
-                android:text="@{viewModel.}"
+                android:text="@{viewModel.ingredientNameObservable}"
                 tools:text="Mild curry powder"
                 />
             <TextView
@@ -62,9 +62,6 @@
                 android:paddingStart="@dimen/list_item_top_full_margin"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/recipe_ingredient_name"
-                app:setLabelForSubtypeInt="@{productModel.productEntity.unitOfMeasureSubtype}"
-                app:formatBaseUnits="@{productModel.productEntity.baseUnits}"
-                app:formatNumberOfItems="@{productModel.productEntity.numberOfProducts}"
                 tools:text="2 tsp"
                 />
             <ImageView
@@ -78,8 +75,6 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:webImageUrl="@{productModel.productEntity.webImageUrl}"
-                app:remoteSmallImageUri="@{productModel.productEntity.remoteSmallImageUri}"
                 tools:src="@drawable/mild_curry_powder"
                 />
             <androidx.appcompat.widget.AppCompatImageButton
@@ -91,8 +86,7 @@
                 android:tint="@color/white"
                 android:backgroundTint="@color/primaryDarkColor"
                 android:src="@drawable/ic_delete"
-                android:visibility="@{productModel.favorite ? View.GONE : View.VISIBLE}"
-                android:onClick="@{() -> listener.addToFavorites(productModel.productEntity.id)}"
+                android:onClick="@{() -> viewModel.deleteIngredientClicked()}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 />

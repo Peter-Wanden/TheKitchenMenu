@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="ingredient"
+            type="com.example.peter.thekitchenmenu.ui.detail.ingredient.IngredientViewerViewModel" />
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/ingredient_list_item_cardView"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginStart="@dimen/card_view_margin"
+        android:layout_marginEnd="@dimen/card_view_margin"
+        android:layout_marginTop="@dimen/card_view_margin_top_bottom"
+        android:layout_marginBottom="@dimen/card_view_margin_top_bottom"
+        android:elevation="@dimen/card_view_elevation"
+        app:cardCornerRadius="4dp"
+        >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/product_list_item_constraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent=".73">
+            </androidx.constraintlayout.widget.Guideline>
+
+            <TextView
+                android:id="@+id/product_list_item_description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:padding="4dp"
+                android:textSize="18sp"
+                android:text="@{ingredient.ingredientName}"
+                app:layout_constraintEnd_toStartOf="@+id/guideline"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/ingredient_list_item_image"
+                app:layout_constraintBottom_toBottomOf="@id/ingredient_list_item_image"
+                tools:text="Mild curry powder"
+                />
+
+            <ImageView
+                android:id="@+id/ingredient_list_item_image"
+                android:contentDescription="@string/cd_picture_of_ingredient"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_margin="@dimen/list_item_bottom_margin"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintStart_toStartOf="@id/guideline"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:src="@drawable/mild_curry_powder"
+                tools:src="@drawable/mild_curry_powder"
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</layout>

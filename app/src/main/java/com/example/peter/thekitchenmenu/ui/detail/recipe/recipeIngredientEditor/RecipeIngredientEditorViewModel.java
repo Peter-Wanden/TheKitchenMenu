@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeIngredientEditor;
+package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor;
 
 import androidx.databinding.Observable;
 import androidx.databinding.ObservableField;
@@ -22,15 +22,9 @@ import java.util.List;
 public class RecipeIngredientEditorViewModel extends ViewModel {
 
     private RecipeIngredientEditorNavigator navigator;
-    private RepositoryRecipeIdentity repositoryRecipeIdentity;
     private RepositoryIngredient repositoryIngredient;
-    private RepositoryRecipePortions repositoryRecipePortions;
     private RepositoryRecipeIngredient repositoryRecipeIngredient;
 
-    public final ObservableField<String> recipeTitleObservable = new ObservableField<>();
-    public final ObservableField<String> servingsObservable = new ObservableField<>();
-    public final ObservableField<String> sittingsObservable = new ObservableField<>();
-    public final ObservableField<String> portionsObservable = new ObservableField<>();
     public final ObservableField<String> ingredientObservable = new ObservableField<>();
     public final ObservableField<MeasurementSubtype> subtypeObservable = new ObservableField<>();
 
@@ -39,12 +33,8 @@ public class RecipeIngredientEditorViewModel extends ViewModel {
     private RecipeIngredientEntity ingredientEntity;
     private UnitOfMeasure unitOfMeasure;
 
-    public RecipeIngredientEditorViewModel(RepositoryRecipeIdentity repositoryRecipeIdentity,
-                                           RepositoryRecipePortions repositoryRecipePortions,
-                                           RepositoryIngredient repositoryIngredient,
+    public RecipeIngredientEditorViewModel(RepositoryIngredient repositoryIngredient,
                                            RepositoryRecipeIngredient repositoryRecipeIngredient) {
-        this.repositoryRecipeIdentity = repositoryRecipeIdentity;
-        this.repositoryRecipePortions = repositoryRecipePortions;
         this.repositoryIngredient = repositoryIngredient;
         this.repositoryRecipeIngredient = repositoryRecipeIngredient;
     }
@@ -66,45 +56,7 @@ public class RecipeIngredientEditorViewModel extends ViewModel {
     public void start(String recipeId, String ingredientId) {
         this.recipeId = recipeId;
         this.ingredientId = ingredientId;
-        setRecipeIdentity();
-        setRecipePortions();
         setIngredient();
-    }
-
-    private void setRecipeIdentity() {
-        repositoryRecipeIdentity.getById(
-                recipeId,
-                new DataSource.GetEntityCallback<RecipeIdentityEntity>() {
-            @Override
-            public void onEntityLoaded(RecipeIdentityEntity identityEntity) {
-                recipeTitleObservable.set(identityEntity.getTitle());
-            }
-
-            @Override
-            public void onDataNotAvailable() {
-
-            }
-        });
-    }
-
-    private void setRecipePortions() {
-        repositoryRecipePortions.getPortionsForRecipe(
-                recipeId,
-                new DataSource.GetEntityCallback<RecipePortionsEntity>() {
-            @Override
-            public void onEntityLoaded(RecipePortionsEntity portionsEntity) {
-                int servings = portionsEntity.getServings();
-                int sittings = portionsEntity.getSittings();
-                servingsObservable.set(String.valueOf(servings));
-                sittingsObservable.set(String.valueOf(sittings));
-                portionsObservable.set(String.valueOf(servings * sittings));
-            }
-
-            @Override
-            public void onDataNotAvailable() {
-
-            }
-        });
     }
 
     private void setIngredient() {

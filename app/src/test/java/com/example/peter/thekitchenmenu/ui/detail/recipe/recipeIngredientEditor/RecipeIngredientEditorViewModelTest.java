@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeIngredientEditor;
+package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 

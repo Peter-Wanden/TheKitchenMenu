@@ -18,7 +18,7 @@ import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 
 import static com.example.peter.thekitchenmenu.utils.TextValidationHandler.VALIDATED;
 
-public class IngredientViewModel
+public class IngredientEditorViewModel
         extends ViewModel
         implements
         DataSource.GetEntityCallback<IngredientEntity>,
@@ -48,12 +48,12 @@ public class IngredientViewModel
     private boolean nameValid;
     private boolean descriptionValid = true;
 
-    public IngredientViewModel(Resources resources,
-                               DataSource<IngredientEntity> dataSource,
-                               TextValidationHandler textValidationHandler,
-                               UniqueIdProvider idProvider,
-                               TimeProvider timeProvider,
-                               IngredientDuplicateChecker duplicateChecker) {
+    public IngredientEditorViewModel(Resources resources,
+                                     DataSource<IngredientEntity> dataSource,
+                                     TextValidationHandler textValidationHandler,
+                                     UniqueIdProvider idProvider,
+                                     TimeProvider timeProvider,
+                                     IngredientDuplicateChecker duplicateChecker) {
         this.resources = resources;
         this.dataSource = dataSource;
         this.textValidationHandler = textValidationHandler;

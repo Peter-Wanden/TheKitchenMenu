@@ -8,7 +8,7 @@
         <import type="com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtypeConverter" />
         <variable
             name="viewModel"
-            type="com.example.peter.thekitchenmenu.ui.detail.recipe.recipeIngredientEditor.RecipeIngredientMeasurementViewModel" />
+            type="com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor.RecipeIngredientMeasurementViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -68,11 +68,11 @@
             android:layout_marginEnd="8dp"
             android:dropDownWidth="wrap_content"
             android:spinnerMode="dropdown"
-            android:selectedItemPosition="@={MeasurementSubtypeConverter.toInt(viewModel.subtype)}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/vertical_guideline"
             app:layout_constraintTop_toBottomOf="@id/recipe_ingredient_measurement_editor_label"
             />
+<!--        android:selectedItemPosition="@={MeasurementSubtypeConverter.toInt(viewModel.subtype)}"-->
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/ingredient_size_label"

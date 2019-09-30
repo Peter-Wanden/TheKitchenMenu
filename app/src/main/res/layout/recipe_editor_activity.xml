@@ -75,6 +75,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:onClick="@{() -> viewModel.ingredientsButtonPressed()}"
                         android:text="@{viewModel.ingredientsButtonTextObservable}"
                         android:visibility="@{viewModel.showIngredientsButtonObservable ? View.VISIBLE : View.GONE}"
                         tools:text="Ingredients button"

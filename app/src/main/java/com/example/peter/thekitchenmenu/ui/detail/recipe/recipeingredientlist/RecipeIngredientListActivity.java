@@ -1,5 +1,6 @@
 package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,6 +14,8 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.RecipeIngredientListActivityBinding;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryRecipe;
+import com.example.peter.thekitchenmenu.ui.detail.ingredient.IngredientEditorActivity;
+import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor.RecipeIngredientEditorActivity;
 import com.example.peter.thekitchenmenu.utils.ActivityUtils;
 
 public class RecipeIngredientListActivity
@@ -22,7 +25,7 @@ public class RecipeIngredientListActivity
     public static final String EXTRA_RECIPE_ID = "RECIPE_ID";
 
     private RecipeIngredientListActivityBinding binding;
-    private RecipeIngredientListRecipeViewModel recipeViewModel;
+    private RecipeNameAndPortionsViewModel nameAndPortionsViewModel;
     private RecipeIngredientListViewModel recipeIngredientListViewModel;
 
     @Override
@@ -52,19 +55,19 @@ public class RecipeIngredientListActivity
     }
 
     private void setupViewModel() {
-        recipeViewModel = obtainRecipeIngredientListRecipeViewModel(this);
-        recipeViewModel.setNavigator(this);
-        binding.setViewModel(recipeViewModel);
+        nameAndPortionsViewModel = obtainRecipeNameAndPortionsViewModel(this);
+        binding.setNameAndPortions(nameAndPortionsViewModel);
 
         recipeIngredientListViewModel = obtainRecipeIngredientListViewModel(this);
+        recipeIngredientListViewModel.setNavigator(this);
     }
 
-    static RecipeIngredientListRecipeViewModel obtainRecipeIngredientListRecipeViewModel(
+    static RecipeNameAndPortionsViewModel obtainRecipeNameAndPortionsViewModel(
             FragmentActivity activity) {
         ViewModelFactoryRecipe factory = ViewModelFactoryRecipe.getInstance(
                 activity.getApplication());
         return new ViewModelProvider(activity, factory).get(
-                RecipeIngredientListRecipeViewModel.class);
+                RecipeNameAndPortionsViewModel.class);
     }
 
     static RecipeIngredientListViewModel obtainRecipeIngredientListViewModel(
@@ -80,8 +83,7 @@ public class RecipeIngredientListActivity
         ActivityUtils.replaceFragmentInActivity(
                 getSupportFragmentManager(),
                 fragment,
-                R.id.recipeIngredientListContentFrame
-        );
+                R.id.recipeIngredientListContentFrame);
     }
 
     @NonNull
@@ -95,18 +97,20 @@ public class RecipeIngredientListActivity
 
     private void start() {
         String recipeId = getIntent().getStringExtra(EXTRA_RECIPE_ID);
-        recipeViewModel.start(recipeId);
+        nameAndPortionsViewModel.start(recipeId);
         recipeIngredientListViewModel.start(recipeId);
     }
 
     @Override
-    public void addRecipeIngredient() {
-
+    public void addRecipeIngredient(String recipeId) {
+        Intent intent = new Intent(this, IngredientEditorActivity.class);
+        intent.putExtra(RecipeIngredientEditorActivity.EXTRA_RECIPE_ID, recipeId);
+        startActivityForResult(intent, IngredientEditorActivity.REQUEST_ADD_INGREDIENT);
     }
 
     @Override
     protected void onDestroy() {
-        recipeViewModel.onActivityDestroyed();
+        recipeIngredientListViewModel.onActivityDestroyed();
         super.onDestroy();
     }
 

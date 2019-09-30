@@ -16,15 +16,16 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.IngredientEditorBinding;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryIngredient;
-import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeIngredientEditor.RecipeIngredientEditorActivity;
+import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor.RecipeIngredientEditorActivity;
 
 public class IngredientEditorActivity
         extends AppCompatActivity
         implements AddEditIngredientNavigator {
 
+    public static final int REQUEST_ADD_INGREDIENT = 1;
     private static final String EXTRA_INGREDIENT_ID = "EXTRA_INGREDIENT_ID";
     private IngredientEditorBinding binding;
-    private IngredientViewModel viewModel;
+    private IngredientEditorViewModel viewModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,12 +72,12 @@ public class IngredientEditorActivity
         binding.setViewModel(viewModel);
     }
 
-    private static IngredientViewModel obtainIdentityEditorViewModel(
+    private static IngredientEditorViewModel obtainIdentityEditorViewModel(
             FragmentActivity activity) {
         ViewModelFactoryIngredient factoryIngredient =
                 ViewModelFactoryIngredient.getInstance(activity.getApplication());
         return new ViewModelProvider(activity, factoryIngredient).get(
-                IngredientViewModel.class);
+                IngredientEditorViewModel.class);
     }
 
     private void setViewModelObservers() {
@@ -109,8 +110,18 @@ public class IngredientEditorActivity
 
     @Override
     public void finishActivity(String ingredientId) {
+        Intent intentThatLaunchedActivity = getIntent();
         Intent intent = new Intent(this, RecipeIngredientEditorActivity.class);
+
+        if (intentThatLaunchedActivity.hasExtra(RecipeIngredientEditorActivity.EXTRA_RECIPE_ID)) {
+            intent.putExtra(RecipeIngredientEditorActivity.EXTRA_RECIPE_ID,
+                    intentThatLaunchedActivity.getStringExtra(
+                            RecipeIngredientEditorActivity.EXTRA_RECIPE_ID));
+        }
+
         intent.putExtra(RecipeIngredientEditorActivity.EXTRA_INGREDIENT_ID, ingredientId);
+        intent.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+        startActivity(intent);
         finish();
     }
 

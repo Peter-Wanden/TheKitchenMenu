@@ -30,7 +30,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
-public class IngredientViewModelTest {
+public class IngredientEditorViewModelTest {
 
     // region constants ----------------------------------------------------------------------------
     private IngredientEntity NEW =
@@ -87,14 +87,14 @@ public class IngredientViewModelTest {
     ArgumentCaptor<IngredientDuplicateChecker.DuplicateCallback> duplicateCallbackArgumentCaptor;
     // endregion helper fields ---------------------------------------------------------------------
 
-    private IngredientViewModel SUT;
+    private IngredientEditorViewModel SUT;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
         setupResources();
 
-        SUT = new IngredientViewModel(
+        SUT = new IngredientEditorViewModel(
                 resourcesMock,
                 dataSourceMock,
                 textValidationHandlerMock,

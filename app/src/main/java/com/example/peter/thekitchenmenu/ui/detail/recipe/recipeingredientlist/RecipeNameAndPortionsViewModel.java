@@ -9,32 +9,23 @@ import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
 
-public class RecipeIngredientListRecipeViewModel extends ViewModel {
+public class RecipeNameAndPortionsViewModel extends ViewModel {
 
     private RepositoryRecipeIdentity repositoryRecipeIdentity;
     private RepositoryRecipePortions repositoryRecipePortions;
-    private RecipeIngredientListNavigator navigator;
 
     public final ObservableField<String> recipeTitleObservable = new ObservableField<>();
     public final ObservableField<String> servingsObservable = new ObservableField<>();
     public final ObservableField<String> sittingsObservable = new ObservableField<>();
     public final ObservableField<String> portionsObservable = new ObservableField<>();
 
-    public RecipeIngredientListRecipeViewModel(RepositoryRecipeIdentity repositoryRecipeIdentity,
-                                               RepositoryRecipePortions repositoryRecipePortions) {
+    public RecipeNameAndPortionsViewModel(RepositoryRecipeIdentity repositoryRecipeIdentity,
+                                          RepositoryRecipePortions repositoryRecipePortions) {
         this.repositoryRecipeIdentity = repositoryRecipeIdentity;
         this.repositoryRecipePortions = repositoryRecipePortions;
     }
 
-    void setNavigator(RecipeIngredientListNavigator navigator) {
-        this.navigator = navigator;
-    }
-
-    void onActivityDestroyed() {
-        navigator = null;
-    }
-
-    void start(String recipeId) {
+    public void start(String recipeId) {
         getRecipeIdentity(recipeId);
         getRecipePortions(recipeId);
     }
@@ -79,9 +70,5 @@ public class RecipeIngredientListRecipeViewModel extends ViewModel {
         sittingsObservable.set(String.valueOf(recipePortions.getSittings()));
         portionsObservable.set(String.valueOf(
                 recipePortions.getServings() * recipePortions.getSittings()));
-    }
-
-    public void addIngredientButtonPressed() {
-        navigator.addRecipeIngredient();
     }
 }

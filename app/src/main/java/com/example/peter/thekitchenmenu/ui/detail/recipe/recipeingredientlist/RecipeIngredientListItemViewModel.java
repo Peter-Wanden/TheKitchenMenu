@@ -8,21 +8,24 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
 
 import java.lang.ref.WeakReference;
 
 public class RecipeIngredientListItemViewModel
-        extends ViewModel
-        implements DataSource.GetEntityCallback<RecipeIngredientEntity> {
+        extends ViewModel {
 
     @Nullable
     private WeakReference<RecipeIngredientListItemNavigator> navigator;
-    private RepositoryRecipeIngredient repository;
+    private RepositoryRecipeIngredient repositoryRecipeIngredient;
+    private RepositoryIngredient repositoryIngredient;
 
     private final ObservableField<RecipeIngredientEntity> recipeIngredientObservable =
             new ObservableField<>();
     public final ObservableField<String> ingredientNameObservable = new ObservableField<>();
+    public final ObservableField<String> ingredientMeasurementObservable = new ObservableField<>();
+    public final ObservableField<String> ingredientMeasurementUnitObservable = new ObservableField<>();
 
     private RecipeIngredientEntity ingredientEntity = new RecipeIngredientEntity(
             "id",
@@ -35,8 +38,10 @@ public class RecipeIngredientListItemViewModel
 
 
     public RecipeIngredientListItemViewModel(Context context,
-                                             RepositoryRecipeIngredient repository) {
-        this.repository = repository;
+                                             RepositoryRecipeIngredient repositoryRecipeIngredient,
+                                             RepositoryIngredient repositoryIngredient) {
+        this.repositoryRecipeIngredient = repositoryRecipeIngredient;
+        this.repositoryIngredient = repositoryIngredient;
     }
 
     public void setNavigator(RecipeIngredientListItemNavigator navigator) {
@@ -47,17 +52,11 @@ public class RecipeIngredientListItemViewModel
         recipeIngredientObservable.set(recipeIngredient);
     }
 
+    public void start(String recipeId) {
+
+    }
+
     public void deleteIngredientClicked() {
-
-    }
-
-    @Override
-    public void onEntityLoaded(RecipeIngredientEntity object) {
-
-    }
-
-    @Override
-    public void onDataNotAvailable() {
 
     }
 }

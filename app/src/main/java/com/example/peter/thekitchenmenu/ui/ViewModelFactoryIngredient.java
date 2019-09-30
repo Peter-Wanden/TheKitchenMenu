@@ -7,11 +7,11 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
-import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.ui.detail.ingredient.IngredientDuplicateChecker;
-import com.example.peter.thekitchenmenu.ui.detail.ingredient.IngredientViewModel;
+import com.example.peter.thekitchenmenu.ui.detail.ingredient.IngredientEditorViewModel;
+import com.example.peter.thekitchenmenu.ui.detail.ingredient.IngredientViewerViewModel;
 import com.example.peter.thekitchenmenu.utils.TextValidationHandler;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
@@ -21,13 +21,13 @@ public class ViewModelFactoryIngredient extends ViewModelProvider.NewInstanceFac
     @SuppressLint("StaticFieldLeak")
     private static volatile ViewModelFactoryIngredient INSTANCE;
     private final Application application;
-    private final DataSource<IngredientEntity> ingredientEntityDataSource;
+    private final RepositoryIngredient repositoryIngredient;
 
     private ViewModelFactoryIngredient(
             Application application,
-            DataSource<IngredientEntity> ingredientEntityDataSource) {
+            RepositoryIngredient repositoryIngredient) {
         this.application = application;
-        this.ingredientEntityDataSource = ingredientEntityDataSource;
+        this.repositoryIngredient = repositoryIngredient;
     }
 
     public static ViewModelFactoryIngredient getInstance(Application application) {
@@ -47,15 +47,21 @@ public class ViewModelFactoryIngredient extends ViewModelProvider.NewInstanceFac
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        if (modelClass.isAssignableFrom(IngredientViewModel.class)) {
+        if (modelClass.isAssignableFrom(IngredientEditorViewModel.class)) {
             // noinspection unchecked
-            return (T) new IngredientViewModel(
+            return (T) new IngredientEditorViewModel(
                     application.getResources(),
-                    ingredientEntityDataSource,
+                    repositoryIngredient,
                     new TextValidationHandler(),
                     new UniqueIdProvider(),
                     new TimeProvider(),
-                    new IngredientDuplicateChecker(ingredientEntityDataSource));
+                    new IngredientDuplicateChecker(repositoryIngredient));
+
+        } else if (modelClass.isAssignableFrom(IngredientViewerViewModel.class)) {
+            // noinspection unchecked
+            return (T) new IngredientViewerViewModel(
+                    repositoryIngredient
+            );
         }
         throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
     }

@@ -242,7 +242,8 @@ public class RecipeEditorViewModel
         }
     }
 
-    void ingredientsButtonPressed() {
+    public void ingredientsButtonPressed() {
+        Log.d(TAG, "ingredientsButtonPressed: ");
         String recipeId = recipeEntity.getId();
 
         if (isNewRecipe) {

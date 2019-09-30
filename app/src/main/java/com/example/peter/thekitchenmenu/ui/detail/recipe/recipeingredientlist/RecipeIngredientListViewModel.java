@@ -13,15 +13,17 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredie
 
 import java.util.List;
 
-class RecipeIngredientListViewModel extends ViewModel {
+public class RecipeIngredientListViewModel extends ViewModel {
+
+    private final RepositoryRecipeIngredient repositoryRecipeIngredient;
+    private Context context;
+    private RecipeIngredientListNavigator navigator;
 
     public final ObservableList<RecipeIngredientEntity> recipeIngredients =
             new ObservableArrayList<>();
     public final ObservableBoolean hasIngredients = new ObservableBoolean(false);
 
-    private final RepositoryRecipeIngredient repositoryRecipeIngredient;
-
-    private Context context;
+    private String recipeId;
 
     public RecipeIngredientListViewModel(RepositoryRecipeIngredient repositoryRecipeIngredient,
                                          Context context) {
@@ -29,7 +31,16 @@ class RecipeIngredientListViewModel extends ViewModel {
         this.context = context;
     }
 
+    void setNavigator(RecipeIngredientListNavigator navigator) {
+        this.navigator = navigator;
+    }
+
+    void onActivityDestroyed() {
+        navigator = null;
+    }
+
     void start(String recipeId) {
+        this.recipeId = recipeId;
         loadRecipeIngredients(recipeId);
     }
 
@@ -49,5 +60,9 @@ class RecipeIngredientListViewModel extends ViewModel {
                 hasIngredients.set(false);
             }
         });
+    }
+
+    public void addIngredientButtonPressed() {
+        navigator.addRecipeIngredient(recipeId);
     }
 }
