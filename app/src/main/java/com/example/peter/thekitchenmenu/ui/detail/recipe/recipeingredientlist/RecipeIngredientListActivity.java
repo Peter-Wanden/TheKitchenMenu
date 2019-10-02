@@ -79,7 +79,7 @@ public class RecipeIngredientListActivity
     }
 
     private void setupFragment() {
-        RecipeIngredientListFragment fragment = obtainRecipeIngredientListFragment();
+        RecipeIngredientListFragment fragment = findOrCreateRecipeIngredientListFragment();
         ActivityUtils.replaceFragmentInActivity(
                 getSupportFragmentManager(),
                 fragment,
@@ -87,8 +87,9 @@ public class RecipeIngredientListActivity
     }
 
     @NonNull
-    private RecipeIngredientListFragment obtainRecipeIngredientListFragment() {
-        RecipeIngredientListFragment fragment = (RecipeIngredientListFragment) getSupportFragmentManager().
+    private RecipeIngredientListFragment findOrCreateRecipeIngredientListFragment() {
+        RecipeIngredientListFragment fragment =
+                (RecipeIngredientListFragment) getSupportFragmentManager().
                 findFragmentById(R.id.recipeIngredientListContentFrame);
         if (fragment == null)
             fragment = new RecipeIngredientListFragment();

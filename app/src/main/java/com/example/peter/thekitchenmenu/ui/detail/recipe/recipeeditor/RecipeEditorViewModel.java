@@ -1,7 +1,6 @@
 package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 
 import android.content.res.Resources;
-import android.util.Log;
 
 import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
@@ -11,6 +10,7 @@ import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipe;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
@@ -23,9 +23,7 @@ public class RecipeEditorViewModel
         implements
         DataSource.GetEntityCallback<RecipeEntity>, RecipeValidation.RecipeEditor {
 
-    private static final String TAG = "tkm-RecipeEditorVM";
-
-    private DataSource<RecipeEntity> recipeEntityDataSource;
+    private RepositoryRecipe repositoryRecipe;
     private AddEditRecipeNavigator navigator;
     private UniqueIdProvider idProvider;
     private Resources resources;
@@ -49,12 +47,12 @@ public class RecipeEditorViewModel
     private boolean showReviewButton;
 
     public RecipeEditorViewModel(TimeProvider timeProvider,
-                                 DataSource<RecipeEntity> recipeEntityDataSource,
+                                 RepositoryRecipe repositoryRecipe,
                                  UniqueIdProvider idProvider,
                                  Resources resources,
                                  RecipeValidator validator) {
         this.timeProvider = timeProvider;
-        this.recipeEntityDataSource = recipeEntityDataSource;
+        this.repositoryRecipe = repositoryRecipe;
         this.idProvider = idProvider;
         this.resources = resources;
         this.validator = validator;
@@ -74,7 +72,8 @@ public class RecipeEditorViewModel
     }
 
     void start() {
-        setupForNewRecipe();
+        if (recipeEntity == null)
+            setupForNewRecipe();
     }
 
     private void setupForNewRecipe() {
@@ -94,7 +93,7 @@ public class RecipeEditorViewModel
 
     private void loadExistingRecipe(String recipeId) {
         dataIsLoadingObservable.set(true);
-        recipeEntityDataSource.getById(recipeId, this);
+        repositoryRecipe.getById(recipeId, this);
     }
 
     @Override
@@ -243,7 +242,6 @@ public class RecipeEditorViewModel
     }
 
     public void ingredientsButtonPressed() {
-        Log.d(TAG, "ingredientsButtonPressed: ");
         String recipeId = recipeEntity.getId();
 
         if (isNewRecipe) {
@@ -317,7 +315,7 @@ public class RecipeEditorViewModel
     }
 
     private void saveRecipe() {
-        recipeEntityDataSource.save(recipeEntity);
+        repositoryRecipe.save(recipeEntity);
     }
 
     private void throwUnknownEditingModeException() {

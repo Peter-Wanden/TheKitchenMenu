@@ -21,35 +21,36 @@
         <item>@string/header_volume_metric</item>
         <item>@string/header_volume_imperial</item>
         <item>@string/header_count</item>
+        <item>@string/header_volume_imperial_spoon</item>
     </string-array>
 
     <string-array name="unit_of_measure_options_mass_metric">
-        <item>@string/grams</item>
         <item>@string/kilograms</item>
+        <item>@string/grams</item>
     </string-array>
 
     <string-array name="unit_of_measure_options_mass_imperial">
-        <item>@string/ounces</item>
         <item>@string/pounds</item>
+        <item>@string/ounces</item>
     </string-array>
 
     <string-array name="unit_of_measure_options_volume_metric">
-        <item>@string/millilitres</item>
         <item>@string/litres</item>
+        <item>@string/millilitres</item>
     </string-array>
 
     <string-array name="unit_of_measure_options_volume_imperial">
-        <item>@string/fluidOunce</item>
         <item>@string/pints</item>
+        <item>@string/fluidOunce</item>
     </string-array>
 
     <string-array name="unit_of_measure_options_count">
         <item>@string/each</item>
     </string-array>
     
-    <string-array name="unit_of_measure_options_volume_spoon">
-        <item>@string/teaspoon</item>
+    <string-array name="unit_of_measure_options_volume_teaspoon">
         <item>@string/tablespoon</item>
+        <item>@string/teaspoon</item>
     </string-array>
 
     <string-array name="shelf_life_options">

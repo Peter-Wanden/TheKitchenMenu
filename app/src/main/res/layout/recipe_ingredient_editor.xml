@@ -14,10 +14,6 @@
         <variable
             name="ingredient"
             type="com.example.peter.thekitchenmenu.ui.detail.ingredient.IngredientViewerViewModel" />
-
-        <variable
-            name="ingredientMeasurements"
-            type="com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor.RecipeIngredientEditorViewModel" />
     </data>
 
     <androidx.appcompat.widget.LinearLayoutCompat

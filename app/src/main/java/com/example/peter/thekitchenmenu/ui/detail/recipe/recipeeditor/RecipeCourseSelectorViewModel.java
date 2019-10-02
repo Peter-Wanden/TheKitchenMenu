@@ -1,5 +1,7 @@
 package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 
+import android.annotation.SuppressLint;
+
 import androidx.annotation.NonNull;
 import androidx.databinding.Observable;
 import androidx.databinding.ObservableBoolean;
@@ -33,6 +35,7 @@ public class RecipeCourseSelectorViewModel
         COURSE_SEVEN(7);
 
         private final int courseNo;
+        @SuppressLint("UseSparseArrays")
         private static Map<Integer, Courses> map = new HashMap<>();
 
         Courses(int courseNo) {

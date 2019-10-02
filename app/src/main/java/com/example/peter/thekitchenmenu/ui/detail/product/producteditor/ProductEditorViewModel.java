@@ -1,7 +1,6 @@
 package com.example.peter.thekitchenmenu.ui.detail.product.producteditor;
 
 import android.app.Application;
-import android.util.Log;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
@@ -16,8 +15,6 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 public class ProductEditorViewModel extends ObservableViewModel {
-
-    private static final String TAG = "tkm-EditorViewModel";
 
     private AddEditProductNavigator navigator;
 
@@ -121,7 +118,7 @@ public class ProductEditorViewModel extends ObservableViewModel {
                     updatedIdentityModel.getShelfLife(),
                     updatedMeasurementModel.getNumberOfProducts(),
                     updatedMeasurementModel.getBaseUnits(),
-                    updatedMeasurementModel.getMeasurementSubtype().ordinal(),
+                    updatedMeasurementModel.getMeasurementSubtype().asInt(),
                     uneditedProductEntity.getValue().getCreatedBy(),
                     updatedImageModel.getWebImageUrl(),
                     updatedImageModel.getRemoteSmallImageUri(),
@@ -166,7 +163,7 @@ public class ProductEditorViewModel extends ObservableViewModel {
                     updatedIdentityModel.getShelfLife(),
                     updatedMeasurementModel.getNumberOfProducts(),
                     updatedMeasurementModel.getBaseUnits(),
-                    updatedMeasurementModel.getMeasurementSubtype().ordinal(),
+                    updatedMeasurementModel.getMeasurementSubtype().asInt(),
                     uneditedProductEntity.getValue().getCreatedBy(),
                     updatedImageModel.getWebImageUrl(),
                     updatedImageModel.getRemoteSmallImageUri(),
@@ -184,7 +181,7 @@ public class ProductEditorViewModel extends ObservableViewModel {
                     updatedIdentityModel.getShelfLife(),
                     updatedMeasurementModel.getNumberOfProducts(),
                     updatedMeasurementModel.getBaseUnits(),
-                    updatedMeasurementModel.getMeasurementSubtype().ordinal(),
+                    updatedMeasurementModel.getMeasurementSubtype().asInt(),
                     Constants.getUserId().getValue(),
                     updatedImageModel.getWebImageUrl(),
                     updatedImageModel.getRemoteSmallImageUri(),

@@ -15,8 +15,6 @@ import androidx.lifecycle.MutableLiveData;
 
 public class ProductMeasurementViewModel extends ObservableViewModel {
 
-    private static final String TAG = "tkm-MeasurementVM";
-
     private final MutableLiveData<ProductMeasurementModel> measurementModel = new MutableLiveData<>();
     private final SingleLiveEvent<Boolean> measurementModelIsValidEvent = new SingleLiveEvent<>();
     private ProductMeasurementHandler measurementHandler;
@@ -239,13 +237,13 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
     }
 
     private void updateMeasurementModel() {
-        ProductMeasurementModel measurementModel = new ProductMeasurementModel();
-        measurementModel.setMeasurementSubtype(unitOfMeasure.getMeasurementSubtype());
-        measurementModel.setNumberOfProducts(unitOfMeasure.getNumberOfProducts());
-        measurementModel.setBaseUnits(unitOfMeasure.getBaseUnits());
+        ProductMeasurementModel model = new ProductMeasurementModel();
+        model.setMeasurementSubtype(unitOfMeasure.getMeasurementSubtype());
+        model.setNumberOfProducts(unitOfMeasure.getNumberOfProducts());
+        model.setBaseUnits(unitOfMeasure.getBaseUnits());
 
         if (unitOfMeasure.isValidMeasurement()) {
-            this.measurementModel.setValue(measurementModel);
+            this.measurementModel.setValue(model);
             measurementModelIsValidEvent.setValue(true);
         } else
             measurementModelIsValidEvent.setValue(false);

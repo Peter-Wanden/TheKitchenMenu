@@ -8,6 +8,7 @@ import androidx.lifecycle.Observer;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipe;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 
@@ -62,7 +63,7 @@ public class RecipeEditorViewModelTest {
     @Mock
     TimeProvider timeProviderMock;
     @Mock
-    DataSource<RecipeEntity> recipeEntityDataSourceMock;
+    RepositoryRecipe recipeEntityDataSourceMock;
     @Mock
     UniqueIdProvider uniqueIdProviderMock;
     @Mock

@@ -29,6 +29,7 @@
     <string name="label_location_in_room">Where abouts?</string>
     <string name="hint_location_in_room">Where abouts in the room?</string>
     <string name="pack_size_label">Total %1$s</string>
+    <string name="ingredient_size_label">Total %1$s</string>
     <string name="product_size_label">Item %1$s</string>
     <string name="pack_size_total_hint">How many %1$s?</string>
     <string name="item_size_hint">How many %1$s?</string>
@@ -82,6 +83,7 @@
     <string name="header_volume_metric">Volume metric</string>
     <string name="header_volume_imperial">Volume imperial</string>
     <string name="header_count">Count</string>
+    <string name="header_volume_imperial_spoon">Volume imperial</string>
 
     <!-- ProductDetail shelf life spinner options -->
     <string name="one_day">1 day</string>

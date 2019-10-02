@@ -3,7 +3,7 @@ package com.example.peter.thekitchenmenu.ui;
 import android.annotation.SuppressLint;
 import android.app.Application;
 
-import androidx.annotation.VisibleForTesting;
+import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -15,7 +15,6 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
-import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor.RecipeIngredientEditorViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor.RecipeIngredientMeasurementViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeCourseSelectorViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeDurationViewModel;
@@ -31,12 +30,7 @@ import com.example.peter.thekitchenmenu.utils.ParseIntegerFromObservableHandler;
 import com.example.peter.thekitchenmenu.utils.TextValidationHandler;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 
-/**
- * A creator is used to inject the product ID into the ViewModel
- */
 public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory {
-
-    private static final String TAG = "tkm-FactoryRecipeVM";
 
     @SuppressLint("StaticFieldLeak")
     private static volatile ViewModelFactoryRecipe INSTANCE;
@@ -100,11 +94,7 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
         return INSTANCE;
     }
 
-    @VisibleForTesting
-    public static void destroyInstance() {
-        INSTANCE = null;
-    }
-
+    @NonNull
     @Override
     public <T extends ViewModel> T create(Class<T> modelClass) {
 
@@ -154,15 +144,12 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
                     application.getResources(),
                     new ParseIntegerFromObservableHandler());
 
-        } else if (modelClass.isAssignableFrom(RecipeIngredientEditorViewModel.class)) {
-            // noinspection unchecked
-            return (T) new RecipeIngredientEditorViewModel(
-                    ingredientRepository,
-                    recipeIngredientRepository);
-
         } else if (modelClass.isAssignableFrom(RecipeIngredientMeasurementViewModel.class)) {
             // noinspection unchecked
-            return (T) new RecipeIngredientMeasurementViewModel();
+            return (T) new RecipeIngredientMeasurementViewModel(
+                    ingredientRepository,
+                    recipeIngredientRepository
+            );
 
         } else if (modelClass.isAssignableFrom(RecipeNameAndPortionsViewModel.class)) {
             // noinspection unchecked

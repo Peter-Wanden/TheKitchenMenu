@@ -69,18 +69,18 @@ public class RecipeEditorActivity
     }
 
     private void setupViewModels() {
-        recipeEditorViewModel = obtainEditorViewModel(this);
+        recipeEditorViewModel = findOrCreateEditorViewModel(this);
         recipeEditorViewModel.setNavigator(this);
         binding.setViewModel(recipeEditorViewModel);
 
         RecipeModelComposite recipeModelComposite = new RecipeModelComposite();
         recipeEditorViewModel.setRecipeModelComposite(recipeModelComposite);
 
-        RecipeIdentityViewModel identityViewModel =
+        RecipeIdentityViewModel recipeIdentityViewModel =
                 obtainIdentityViewModel(this);
-        identityViewModel.setModelValidationSubmitter(
+        recipeIdentityViewModel.setModelValidationSubmitter(
                 recipeEditorViewModel.getValidator());
-        recipeModelComposite.registerModel(identityViewModel);
+        recipeModelComposite.registerModel(recipeIdentityViewModel);
 
         RecipeCourseSelectorViewModel courseSelectorViewModel =
                 obtainCourseSelectorViewModel(this);
@@ -110,12 +110,12 @@ public class RecipeEditorActivity
                 showUnsavedChangesDialogEvent());
     }
 
-    private static RecipeEditorViewModel obtainEditorViewModel(
+    private RecipeEditorViewModel findOrCreateEditorViewModel(
             FragmentActivity activity) {
         ViewModelFactoryRecipe factoryRecipe = ViewModelFactoryRecipe.getInstance(
                 activity.getApplication());
         return new ViewModelProvider(activity, factoryRecipe).get(
-                RecipeEditorViewModel.class);
+                        RecipeEditorViewModel.class);
     }
 
     static RecipeIdentityViewModel obtainIdentityViewModel(
@@ -151,31 +151,31 @@ public class RecipeEditorActivity
     }
 
     private void setupFragments() {
-        ImageEditorFragment imageEditorFragment = obtainImageEditorFragment();
+        ImageEditorFragment imageEditorFragment = findOrCreateImageEditorFragment();
         ActivityUtils.replaceFragmentInActivity(
                 getSupportFragmentManager(),
                 imageEditorFragment,
                 R.id.recipe_editor_image_editor_content_frame);
 
-        RecipeIdentityFragment recipeIdentityFragment = obtainRecipeIdentityFragment();
+        RecipeIdentityFragment recipeIdentityFragment = findOrCreateRecipeIdentityFragment();
         ActivityUtils.replaceFragmentInActivity(
                 getSupportFragmentManager(),
                 recipeIdentityFragment,
                 R.id.recipe_editor_recipe_identity_content_frame);
 
-        RecipeCourseSelectorFragment courseSelectorFragment = obtainCourseSelectorFragment();
+        RecipeCourseSelectorFragment courseSelectorFragment = findOrCreateCourseSelectorFragment();
         ActivityUtils.replaceFragmentInActivity(
                 getSupportFragmentManager(),
                 courseSelectorFragment,
                 R.id.recipe_editor_course_selector_content_frame);
 
-        RecipeDurationFragment durationFragment = obtainDurationFragment();
+        RecipeDurationFragment durationFragment = findOrCreateDurationFragment();
         ActivityUtils.replaceFragmentInActivity(
                 getSupportFragmentManager(),
                 durationFragment,
                 R.id.recipe_duration_content_frame);
 
-        RecipePortionsFragment portionsFragment = obtainPortionsFragment();
+        RecipePortionsFragment portionsFragment = findOrCreatePortionsFragment();
         ActivityUtils.replaceFragmentInActivity(
                 getSupportFragmentManager(),
                 portionsFragment,
@@ -183,7 +183,7 @@ public class RecipeEditorActivity
     }
 
     @NonNull
-    private RecipeIdentityFragment obtainRecipeIdentityFragment() {
+    private RecipeIdentityFragment findOrCreateRecipeIdentityFragment() {
         RecipeIdentityFragment recipeIdentityFragment =
                 (RecipeIdentityFragment) getSupportFragmentManager().
                         findFragmentById(R.id.recipe_editor_recipe_identity_content_frame);
@@ -194,7 +194,7 @@ public class RecipeEditorActivity
     }
 
     @NonNull
-    private ImageEditorFragment obtainImageEditorFragment() {
+    private ImageEditorFragment findOrCreateImageEditorFragment() {
         ImageEditorFragment imageEditorFragment =
                 (ImageEditorFragment) getSupportFragmentManager().
                         findFragmentById(R.id.recipe_editor_image_editor_content_frame);
@@ -205,7 +205,7 @@ public class RecipeEditorActivity
     }
 
     @NonNull
-    private RecipeCourseSelectorFragment obtainCourseSelectorFragment() {
+    private RecipeCourseSelectorFragment findOrCreateCourseSelectorFragment() {
         RecipeCourseSelectorFragment courseSelectorFragment =
                 (RecipeCourseSelectorFragment) getSupportFragmentManager().
                         findFragmentById(R.id.recipe_editor_course_selector_content_frame);
@@ -216,7 +216,7 @@ public class RecipeEditorActivity
     }
 
     @NonNull
-    private RecipeDurationFragment obtainDurationFragment() {
+    private RecipeDurationFragment findOrCreateDurationFragment() {
         RecipeDurationFragment durationFragment =
                 (RecipeDurationFragment) getSupportFragmentManager().
                         findFragmentById(R.id.recipe_duration_content_frame);
@@ -227,7 +227,7 @@ public class RecipeEditorActivity
     }
 
     @NonNull
-    private RecipePortionsFragment obtainPortionsFragment() {
+    private RecipePortionsFragment findOrCreatePortionsFragment() {
         RecipePortionsFragment portionsFragment =
                 (RecipePortionsFragment) getSupportFragmentManager().
                         findFragmentById(R.id.recipe_portions_content_frame);

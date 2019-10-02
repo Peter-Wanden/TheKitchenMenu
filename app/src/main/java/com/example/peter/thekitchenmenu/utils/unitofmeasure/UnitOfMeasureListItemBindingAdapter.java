@@ -18,14 +18,14 @@ public class UnitOfMeasureListItemBindingAdapter {
 
     private static final String TAG = "tkm-UOMListItemAdapter";
 
-    // TodO send in a measurement model- also use one in measurement viewmodel instead of bindable viewmodel
+    // Todo send in a measurement model- also use one in measurement viewmodel instead of bindable viewmodel
     @BindingAdapter(value = {"setLabelForSubtypeInt", "formatBaseUnits", "formatNumberOfItems"})
     public static void setLabelForSubtypeInt(TextView view,
                                              int subtypeInt,
                                              double baseUnits,
                                              int numberOfItems) {
 
-        UnitOfMeasure unitOfMeasure = MeasurementSubtype.values()[subtypeInt].getMeasurementClass();
+        UnitOfMeasure unitOfMeasure = MeasurementSubtype.valueOf(subtypeInt).getMeasurementClass();
         boolean baseUnitsAreSet = unitOfMeasure.baseUnitsAreSet(baseUnits);
         boolean numberOfItemsAreSet = unitOfMeasure.numberOfProductsIsSet(numberOfItems);
         Resources resources = view.getResources();

@@ -22,15 +22,13 @@ import com.example.peter.thekitchenmenu.utils.ActivityUtils;
 public class RecipeIngredientEditorActivity
         extends AppCompatActivity implements RecipeIngredientEditorNavigator {
 
-    private static final String TAG = "tkm-RecipeIngredientEdt";
-
     public static final String EXTRA_RECIPE_ID = "RECIPE_ID";
     public static final String EXTRA_INGREDIENT_ID = "INGREDIENT_ID";
 
     private RecipeIngredientEditorBinding binding;
-    private RecipeIngredientEditorViewModel recipeIngredientEditorViewModel;
     private RecipeNameAndPortionsViewModel recipeNameAndPortionsViewModel;
     private IngredientViewerViewModel ingredientViewerViewModel;
+    private RecipeIngredientMeasurementViewModel measurementViewModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,23 +60,13 @@ public class RecipeIngredientEditorActivity
     }
 
     private void setupViewModels() {
-        recipeIngredientEditorViewModel = obtainRecipeIngredientEditorViewModel(this);
-        recipeIngredientEditorViewModel.setNavigator(this);
-        binding.setIngredientMeasurements(recipeIngredientEditorViewModel);
-
         recipeNameAndPortionsViewModel = obtainRecipeNameAndPortionsViewModel(this);
         binding.setNameAndPortions(recipeNameAndPortionsViewModel);
 
         ingredientViewerViewModel = obtainIngredientViewerViewModel(this);
         binding.setIngredient(ingredientViewerViewModel);
-    }
 
-    static RecipeIngredientEditorViewModel obtainRecipeIngredientEditorViewModel(
-            FragmentActivity activity) {
-        ViewModelFactoryRecipe factory = ViewModelFactoryRecipe.getInstance(
-                activity.getApplication());
-        return new ViewModelProvider(activity, factory).get(
-                RecipeIngredientEditorViewModel.class);
+        measurementViewModel = obtainRecipeIngredientMeasurementViewModel(this);
     }
 
     static RecipeNameAndPortionsViewModel obtainRecipeNameAndPortionsViewModel(
@@ -105,7 +93,7 @@ public class RecipeIngredientEditorActivity
     }
 
     private void setupFragments() {
-        RecipeIngredientMeasurementFragment measurementFragment = obtainMeasurementFragment();
+        RecipeIngredientMeasurementFragment measurementFragment = findOrCreateMeasurementFragment();
         ActivityUtils.replaceFragmentInActivity(
                 getSupportFragmentManager(),
                 measurementFragment,
@@ -114,13 +102,18 @@ public class RecipeIngredientEditorActivity
     }
 
     @NonNull
-    private RecipeIngredientMeasurementFragment obtainMeasurementFragment() {
+    private RecipeIngredientMeasurementFragment findOrCreateMeasurementFragment() {
+        Intent intent = getIntent();
+        String recipeId = intent.getStringExtra(EXTRA_RECIPE_ID);
+        String ingredientId = intent.getStringExtra(EXTRA_INGREDIENT_ID);
+
         RecipeIngredientMeasurementFragment fragment =
                 (RecipeIngredientMeasurementFragment) getSupportFragmentManager().
                         findFragmentById(R.id.recipe_ingredient_editor_measurement_content_frame);
 
-        if (fragment == null)
-            fragment = new RecipeIngredientMeasurementFragment();
+        if (fragment == null) {
+            fragment = RecipeIngredientMeasurementFragment.newInstance(recipeId, ingredientId);
+        }
         return fragment;
     }
 
@@ -142,7 +135,6 @@ public class RecipeIngredientEditorActivity
 
     @Override
     protected void onDestroy() {
-        recipeIngredientEditorViewModel.onActivityDestroyed();
         super.onDestroy();
     }
 
@@ -152,6 +144,6 @@ public class RecipeIngredientEditorActivity
         String ingredientId = intent.getStringExtra(EXTRA_INGREDIENT_ID);
         recipeNameAndPortionsViewModel.start(recipeId);
         ingredientViewerViewModel.start(ingredientId);
-        recipeIngredientEditorViewModel.start(recipeId, ingredientId);
+        measurementViewModel.start(recipeId, ingredientId);
     }
 }

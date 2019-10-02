@@ -2,6 +2,7 @@ package com.example.peter.thekitchenmenu.ui.detail.product.producteditor;
 
 import android.app.Application;
 import android.content.res.Resources;
+import android.util.Log;
 
 import com.example.peter.thekitchenmenu.data.model.ProductIdentityModel;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
@@ -16,7 +17,7 @@ import androidx.lifecycle.MutableLiveData;
 
 public class ProductIdentityViewModel extends AndroidViewModel {
 
-    private static final String TAG = "tkm - ProductIdentityVM";
+    private static final String TAG = "tkm-ProductIdentityVM";
 
     private Resources resources;
     private TextValidationHandler validationHandler;
@@ -58,6 +59,7 @@ public class ProductIdentityViewModel extends AndroidViewModel {
             }
         });
 
+        Log.d(TAG, "ProductIdentityViewModel: recreated");
     }
 
     MutableLiveData<ProductIdentityModel> getExistingIdentityModel() {

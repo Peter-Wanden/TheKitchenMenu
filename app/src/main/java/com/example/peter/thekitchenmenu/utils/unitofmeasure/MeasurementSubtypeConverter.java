@@ -6,10 +6,10 @@ public class MeasurementSubtypeConverter {
 
     @InverseMethod("toSubtype")
     public static int toInt(MeasurementSubtype subtype) {
-        return subtype.ordinal();
+        return subtype.asInt();
     }
 
-    public static MeasurementSubtype toSubtype(int ordinal) {
-        return MeasurementSubtype.values()[ordinal];
+    public static MeasurementSubtype toSubtype(int subtypeAsInt) {
+        return MeasurementSubtype.valueOf(subtypeAsInt);
     }
 }

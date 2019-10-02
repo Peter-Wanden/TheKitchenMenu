@@ -86,13 +86,15 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
                 get(ProductMeasurementViewModel.class);
     }
 
-    private static ProductEditorViewModel obtainViewModel(FragmentActivity activity) {
+    private static ProductEditorViewModel obtainViewModel(
+            FragmentActivity activity) {
         ViewModelFactoryProduct factory = ViewModelFactoryProduct.getInstance(
                 activity.getApplication());
         return new ViewModelProvider(activity, factory).get(ProductEditorViewModel.class);
     }
 
-    private static ProductIdentityViewModel obtainProductIdentityViewModel(FragmentActivity activity) {
+    private static ProductIdentityViewModel obtainProductIdentityViewModel(
+            FragmentActivity activity) {
         ViewModelFactoryProduct factory = ViewModelFactoryProduct.getInstance(
                 activity.getApplication());
         return new ViewModelProvider(activity, factory).get(ProductIdentityViewModel.class);
@@ -124,7 +126,7 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
                 identityEditorViewModel.setIdentityModel(identityModel);
 
                 ProductMeasurementModel measurementModel = new ProductMeasurementModel(
-                        MeasurementSubtype.values()[productEntity.getUnitOfMeasureSubtype()],
+                        MeasurementSubtype.valueOf(productEntity.getUnitOfMeasureSubtype()),
                         productEntity.getNumberOfProducts(),
                         productEntity.getBaseUnits()
                 );
@@ -176,21 +178,21 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
     }
 
     private void setupFragments() {
-        ImageEditorFragment imageEditorFragment = obtainImageEditorFragment();
+        ImageEditorFragment imageEditorFragment = findOrCreateImageEditorFragment();
         ActivityUtils.replaceFragmentInActivity(
                 getSupportFragmentManager(),
                 imageEditorFragment,
                 R.id.image_editor_content_frame);
 
         ProductIdentityEditorFragment productIdentityEditorFragment =
-                obtainProductIdentityEditorFragment();
+                findOrCreateProductIdentityEditorFragment();
         ActivityUtils.replaceFragmentInActivity(
                 getSupportFragmentManager(),
                 productIdentityEditorFragment,
                 R.id.product_identity_content_frame);
 
         ProductMeasurementEditorFragment productMeasurementEditorFragment =
-                obtainProductMeasurementEditorFragment();
+                findOrCreateProductMeasurementEditorFragment();
         ActivityUtils.replaceFragmentInActivity(
                 getSupportFragmentManager(),
                 productMeasurementEditorFragment,
@@ -198,7 +200,7 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
     }
 
     @NonNull
-    private ImageEditorFragment obtainImageEditorFragment() {
+    private ImageEditorFragment findOrCreateImageEditorFragment() {
         ImageEditorFragment imageEditorFragment =
                 (ImageEditorFragment) getSupportFragmentManager().
                         findFragmentById(R.id.image_editor_content_frame);
@@ -210,7 +212,7 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
     }
 
     @NonNull
-    private ProductIdentityEditorFragment obtainProductIdentityEditorFragment() {
+    private ProductIdentityEditorFragment findOrCreateProductIdentityEditorFragment() {
         ProductIdentityEditorFragment productIdentityEditorFragment =
                 (ProductIdentityEditorFragment) getSupportFragmentManager().
                         findFragmentById(R.id.product_identity_content_frame);
@@ -222,7 +224,7 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
     }
 
     @NonNull
-    private ProductMeasurementEditorFragment obtainProductMeasurementEditorFragment() {
+    private ProductMeasurementEditorFragment findOrCreateProductMeasurementEditorFragment() {
         ProductMeasurementEditorFragment productMeasurementEditorFragment =
                 (ProductMeasurementEditorFragment) getSupportFragmentManager().
                         findFragmentById(R.id.product_measurement_content_frame);

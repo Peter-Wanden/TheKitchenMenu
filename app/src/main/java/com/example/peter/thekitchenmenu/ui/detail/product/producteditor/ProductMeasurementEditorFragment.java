@@ -98,7 +98,7 @@ public class ProductMeasurementEditorFragment extends Fragment {
 
         for (int header = 0; header < unitOfMeasureHeaders.size(); header++) {
 
-            if (header == MeasurementSubtype.TYPE_METRIC_MASS.ordinal()) {
+            if (header == MeasurementSubtype.TYPE_METRIC_MASS.asInt()) {
                 UnitOfMeasureSpinnerItem headerItem = new UnitOfMeasureSpinnerItem(
                         SpinnerItemType.LIST_ITEM,
                         unitOfMeasureHeaders.get(header).
@@ -109,7 +109,7 @@ public class ProductMeasurementEditorFragment extends Fragment {
                 unitOfMeasureList.add(headerItem);
             }
 
-            if (header == MeasurementSubtype.TYPE_IMPERIAL_MASS.ordinal()) {
+            if (header == MeasurementSubtype.TYPE_IMPERIAL_MASS.asInt()) {
                 UnitOfMeasureSpinnerItem headerItem = new UnitOfMeasureSpinnerItem(
                         SpinnerItemType.LIST_ITEM,
                         unitOfMeasureHeaders.get(header).
@@ -120,7 +120,7 @@ public class ProductMeasurementEditorFragment extends Fragment {
                 unitOfMeasureList.add(headerItem);
             }
 
-            if (header == MeasurementSubtype.TYPE_METRIC_VOLUME.ordinal()) {
+            if (header == MeasurementSubtype.TYPE_METRIC_VOLUME.asInt()) {
                 UnitOfMeasureSpinnerItem headerItem = new UnitOfMeasureSpinnerItem(
                         SpinnerItemType.LIST_ITEM,
                         unitOfMeasureHeaders.get(header).
@@ -131,7 +131,7 @@ public class ProductMeasurementEditorFragment extends Fragment {
                 unitOfMeasureList.add(headerItem);
             }
 
-            if (header == MeasurementSubtype.TYPE_IMPERIAL_VOLUME.ordinal()) {
+            if (header == MeasurementSubtype.TYPE_IMPERIAL_VOLUME.asInt()) {
                 UnitOfMeasureSpinnerItem headerItem = new UnitOfMeasureSpinnerItem(
                         SpinnerItemType.LIST_ITEM,
                         unitOfMeasureHeaders.get(header).
@@ -142,7 +142,7 @@ public class ProductMeasurementEditorFragment extends Fragment {
                 unitOfMeasureList.add(headerItem);
             }
 
-            if (header == MeasurementSubtype.TYPE_COUNT.ordinal()) {
+            if (header == MeasurementSubtype.TYPE_COUNT.asInt()) {
                 UnitOfMeasureSpinnerItem headerItem = new UnitOfMeasureSpinnerItem(
                         SpinnerItemType.LIST_ITEM,
                         unitOfMeasureHeaders.get(header).

@@ -10,22 +10,10 @@
             type="com.example.peter.thekitchenmenu.ui.detail.ingredient.IngredientViewerViewModel" />
     </data>
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/ingredient_list_item_cardView"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginStart="@dimen/card_view_margin"
-        android:layout_marginEnd="@dimen/card_view_margin"
-        android:layout_marginTop="@dimen/card_view_margin_top_bottom"
-        android:layout_marginBottom="@dimen/card_view_margin_top_bottom"
-        android:elevation="@dimen/card_view_elevation"
-        app:cardCornerRadius="4dp"
-        >
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/product_list_item_constraintLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline"
@@ -66,5 +54,4 @@
                 tools:src="@drawable/mild_curry_powder"
                 />
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
 </layout>

@@ -9,9 +9,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.databinding.RecipeIdentityFragmentBinding;
+import com.example.peter.thekitchenmenu.databinding.RecipeIdentityEditorFragmentBinding;
 
 public class RecipeIdentityFragment extends Fragment {
 
@@ -27,13 +28,15 @@ public class RecipeIdentityFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        RecipeIdentityFragmentBinding binding = DataBindingUtil.inflate(
+        RecipeIdentityEditorFragmentBinding binding = DataBindingUtil.inflate(
                 inflater,
-                R.layout.recipe_identity_fragment,
+                R.layout.recipe_identity_editor_fragment,
                 container,
                 false);
+        binding.setLifecycleOwner(this);
 
-        binding.setViewModel(RecipeEditorActivity.obtainIdentityViewModel(getActivity()));
+        binding.setViewModel(new ViewModelProvider(requireActivity()).
+                get(RecipeIdentityViewModel.class));
 
         return binding.getRoot();
     }

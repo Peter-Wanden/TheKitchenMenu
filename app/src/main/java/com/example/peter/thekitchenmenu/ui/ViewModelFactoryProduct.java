@@ -18,9 +18,6 @@ import com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductI
 import com.example.peter.thekitchenmenu.ui.detail.product.productviewer.ProductViewerViewModel;
 import com.example.peter.thekitchenmenu.utils.TextValidationHandler;
 
-/**
- * A creator is used to inject the product ID into the ViewModel
- */
 public class ViewModelFactoryProduct extends ViewModelProvider.NewInstanceFactory {
 
     private static final String TAG = "tkm-VM_FactoryProduct";

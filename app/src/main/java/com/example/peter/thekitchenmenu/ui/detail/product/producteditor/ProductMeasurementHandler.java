@@ -10,7 +10,7 @@ public class ProductMeasurementHandler {
     private static final int MEASUREMENT_ERROR = -1;
     private ProductMeasurementViewModel viewModel;
 
-    public ProductMeasurementHandler(ProductMeasurementViewModel viewModel) {
+    ProductMeasurementHandler(ProductMeasurementViewModel viewModel) {
         this.viewModel = viewModel;
     }
 
@@ -22,12 +22,14 @@ public class ProductMeasurementHandler {
         if (viewId == R.id.pack_editable_measurement_one ||
                 viewId == R.id.product_editable_measurement_one) {
             decimalMeasurement = parseDecimalFromString(editableMeasurement);
-            if (decimalMeasurement == MEASUREMENT_ERROR) return;
+            if (decimalMeasurement == MEASUREMENT_ERROR)
+                return;
             viewModel.newDecimalMeasurementReceived(viewId, decimalMeasurement);
 
         } else {
             integerMeasurement = parseIntegerFromString(editableMeasurement);
-            if (integerMeasurement == MEASUREMENT_ERROR) return;
+            if (integerMeasurement == MEASUREMENT_ERROR)
+                return;
             viewModel.newIntegerMeasurementReceived(viewId, integerMeasurement);
         }
     }
