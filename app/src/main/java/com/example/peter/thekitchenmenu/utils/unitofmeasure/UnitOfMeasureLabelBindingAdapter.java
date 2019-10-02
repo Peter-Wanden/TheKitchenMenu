@@ -34,7 +34,9 @@ public class UnitOfMeasureLabelBindingAdapter {
             if (viewId == R.id.pack_measurement_label_one ||
                     viewId == R.id.product_measurement_label_one ||
                     viewId == R.id.pack_measurement_label_two ||
-                    viewId == R.id.product_measurement_label_two)
+                    viewId == R.id.product_measurement_label_two ||
+                    viewId == R.id.ingredient_measurement_label_one ||
+                    viewId == R.id.ingredient_measurement_label_two)
                 setMeasurementUnitLabels(textView, unitOfMeasure);
         }
     }
@@ -63,7 +65,8 @@ public class UnitOfMeasureLabelBindingAdapter {
     private static void setMeasurementUnitLabels(TextView textView, UnitOfMeasure unitOfMeasure) {
         int viewId = textView.getId();
         if (viewId == R.id.pack_measurement_label_one ||
-                viewId == R.id.product_measurement_label_one)
+                viewId == R.id.product_measurement_label_one ||
+                viewId == R.id.ingredient_measurement_label_one)
             textView.setText(unitOfMeasure.getUnitOneLabelStringResourceId());
 
         else if (viewId == R.id.pack_measurement_label_two ||

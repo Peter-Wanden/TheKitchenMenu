@@ -40,7 +40,7 @@ public class MeasurementSubtypeTest {
         int integerForSubtypeImperialMass = 1;
         MeasurementSubtype expectedResult = MeasurementSubtype.TYPE_IMPERIAL_MASS;
         // Act
-        MeasurementSubtype actualResult = MeasurementSubtype.valueOf(integerForSubtypeImperialMass);
+        MeasurementSubtype actualResult = MeasurementSubtype.fromInt(integerForSubtypeImperialMass);
         // Assert
         assertEquals(expectedResult, actualResult);
     }
@@ -50,7 +50,7 @@ public class MeasurementSubtypeTest {
         // Arrange
         int integerForImperialVolume = 3;
         // Act
-        UnitOfMeasure result = MeasurementSubtype.valueOf(integerForImperialVolume).getMeasurementClass();
+        UnitOfMeasure result = MeasurementSubtype.fromInt(integerForImperialVolume).getMeasurementClass();
         // Assert
         assertTrue(result instanceof ImperialVolume);
     }

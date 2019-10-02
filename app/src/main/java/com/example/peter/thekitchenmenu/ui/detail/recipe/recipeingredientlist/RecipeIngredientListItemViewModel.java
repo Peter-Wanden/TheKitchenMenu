@@ -6,8 +6,8 @@ import androidx.annotation.Nullable;
 import androidx.databinding.ObservableField;
 import androidx.lifecycle.ViewModel;
 
+import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientEntity;
-import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
 
@@ -33,7 +33,10 @@ public class RecipeIngredientListItemViewModel
             "ingredientId",
             "productId",
             1000,
-            0
+            0,
+            Constants.getUserId().getValue(),
+            10L,
+            10L
     );
 
 

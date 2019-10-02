@@ -87,7 +87,7 @@ public enum MeasurementSubtype {
             map.put(subtype.asInt(), subtype);
     }
 
-    public static MeasurementSubtype valueOf(int subTypeAsInt) {
+    public static MeasurementSubtype fromInt(int subTypeAsInt) {
         return map.get(subTypeAsInt);
     }
 

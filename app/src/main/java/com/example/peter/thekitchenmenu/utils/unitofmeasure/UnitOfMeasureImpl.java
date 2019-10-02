@@ -210,7 +210,8 @@ public abstract class UnitOfMeasureImpl implements UnitOfMeasure {
             lastMeasurementUpdated = PACK_MEASUREMENT;
             return true;
 
-        } else baseUnitsAreSet(baseUnitsWithNewPackMeasurementOne(0.));
+        } else
+            baseUnitsAreSet(baseUnitsWithNewPackMeasurementOne(0.));
         return false;
     }
 
@@ -229,7 +230,8 @@ public abstract class UnitOfMeasureImpl implements UnitOfMeasure {
             lastMeasurementUpdated = PRODUCT_MEASUREMENT;
             return true;
 
-        } else baseUnitsAreSet(baseUnitsWithNewProductMeasurementOne(0.));
+        } else
+            baseUnitsAreSet(baseUnitsWithNewProductMeasurementOne(0.));
         return false;
     }
 
@@ -254,7 +256,8 @@ public abstract class UnitOfMeasureImpl implements UnitOfMeasure {
             lastMeasurementUpdated = PACK_MEASUREMENT;
             return true;
 
-        } else baseUnitsAreSet(baseUnitsWithNewPackMeasurementTwo(0));
+        } else
+            baseUnitsAreSet(baseUnitsWithNewPackMeasurementTwo(0));
         return false;
     }
 
@@ -273,7 +276,8 @@ public abstract class UnitOfMeasureImpl implements UnitOfMeasure {
             lastMeasurementUpdated = PRODUCT_MEASUREMENT;
             return true;
 
-        } else baseUnitsAreSet(baseUnitsWithNewProductMeasurementTwo(0));
+        } else
+            baseUnitsAreSet(baseUnitsWithNewProductMeasurementTwo(0));
         return false;
     }
 

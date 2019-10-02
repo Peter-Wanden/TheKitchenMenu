@@ -10,6 +10,6 @@ public class MeasurementSubtypeConverter {
     }
 
     public static MeasurementSubtype toSubtype(int subtypeAsInt) {
-        return MeasurementSubtype.valueOf(subtypeAsInt);
+        return MeasurementSubtype.fromInt(subtypeAsInt);
     }
 }

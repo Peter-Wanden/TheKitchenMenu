@@ -126,7 +126,7 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
                 identityEditorViewModel.setIdentityModel(identityModel);
 
                 ProductMeasurementModel measurementModel = new ProductMeasurementModel(
-                        MeasurementSubtype.valueOf(productEntity.getUnitOfMeasureSubtype()),
+                        MeasurementSubtype.fromInt(productEntity.getUnitOfMeasureSubtype()),
                         productEntity.getNumberOfProducts(),
                         productEntity.getBaseUnits()
                 );

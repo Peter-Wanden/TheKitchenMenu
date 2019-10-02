@@ -2,7 +2,6 @@ package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
 import android.content.res.Resources;
 import android.os.Build;
-import android.util.Log;
 import android.widget.TextView;
 
 import androidx.databinding.BindingAdapter;
@@ -25,7 +24,7 @@ public class UnitOfMeasureListItemBindingAdapter {
                                              double baseUnits,
                                              int numberOfItems) {
 
-        UnitOfMeasure unitOfMeasure = MeasurementSubtype.valueOf(subtypeInt).getMeasurementClass();
+        UnitOfMeasure unitOfMeasure = MeasurementSubtype.fromInt(subtypeInt).getMeasurementClass();
         boolean baseUnitsAreSet = unitOfMeasure.baseUnitsAreSet(baseUnits);
         boolean numberOfItemsAreSet = unitOfMeasure.numberOfProductsIsSet(numberOfItems);
         Resources resources = view.getResources();
