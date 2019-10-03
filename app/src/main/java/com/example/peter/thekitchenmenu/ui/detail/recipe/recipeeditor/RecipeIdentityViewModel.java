@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.utils.TextValidationHandler;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 
@@ -23,7 +24,7 @@ public class RecipeIdentityViewModel
 
     private Resources resources;
     private TextValidationHandler textValidationHandler;
-    private DataSource<RecipeIdentityEntity> dataSource;
+    private RepositoryRecipeIdentity repository;
     private TimeProvider timeProvider;
     private RecipeValidatorModelSubmission modelSubmitter;
 
@@ -42,11 +43,11 @@ public class RecipeIdentityViewModel
             titleValid,
             descriptionValid = true;
 
-    public RecipeIdentityViewModel(DataSource<RecipeIdentityEntity> dataSource,
+    public RecipeIdentityViewModel(RepositoryRecipeIdentity repository,
                                    TimeProvider timeProvider,
                                    Resources resources,
                                    TextValidationHandler textValidationHandler) {
-        this.dataSource = dataSource;
+        this.repository = repository;
         this.timeProvider = timeProvider;
         this.resources = resources;
         this.textValidationHandler = textValidationHandler;
@@ -75,7 +76,7 @@ public class RecipeIdentityViewModel
     public void start(String recipeId) {
         if (recipeId != null) {
             this.recipeId = recipeId;
-            dataSource.getById(recipeId, this);
+            repository.getById(recipeId, this);
         } else {
             throw new RuntimeException("Recipe id cannot be null");
         }
@@ -85,7 +86,7 @@ public class RecipeIdentityViewModel
     public void startByCloningModel(String oldRecipeId, String newRecipeId) {
         isCloned = true;
         this.recipeId = newRecipeId;
-        dataSource.getById(oldRecipeId, this);
+        repository.getById(oldRecipeId, this);
     }
 
     @Override
@@ -178,7 +179,7 @@ public class RecipeIdentityViewModel
     }
 
     private void save(RecipeIdentityEntity identityEntity) {
-        dataSource.save(identityEntity);
+        repository.save(identityEntity);
     }
 
     private RecipeIdentityEntity updatedIdentityEntity() {

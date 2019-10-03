@@ -7,7 +7,7 @@ import java.util.Map;
 
 public enum MeasurementSubtype {
 
-    TYPE_METRIC_MASS(MeasurementType.TYPE_MASS) {
+    METRIC_MASS(MeasurementType.MASS) {
         @Override
         public UnitOfMeasure getMeasurementClass() {
             return new MetricMass();
@@ -19,7 +19,7 @@ public enum MeasurementSubtype {
         }
     },
 
-    TYPE_IMPERIAL_MASS(MeasurementType.TYPE_MASS) {
+    IMPERIAL_MASS(MeasurementType.MASS) {
         @Override
         public UnitOfMeasure getMeasurementClass() {
             return new ImperialMass();
@@ -31,7 +31,7 @@ public enum MeasurementSubtype {
         }
     },
 
-    TYPE_METRIC_VOLUME(MeasurementType.TYPE_VOLUME) {
+    METRIC_VOLUME(MeasurementType.VOLUME) {
         @Override
         public UnitOfMeasure getMeasurementClass() {
             return new MetricVolume();
@@ -43,7 +43,7 @@ public enum MeasurementSubtype {
         }
     },
 
-    TYPE_IMPERIAL_VOLUME(MeasurementType.TYPE_VOLUME) {
+    IMPERIAL_VOLUME(MeasurementType.VOLUME) {
         @Override
         public UnitOfMeasure getMeasurementClass() {
             return new ImperialVolume();
@@ -55,7 +55,7 @@ public enum MeasurementSubtype {
         }
     },
 
-    TYPE_COUNT(MeasurementType.TYPE_COUNT) {
+    COUNT(MeasurementType.COUNT) {
         @Override
         public UnitOfMeasure getMeasurementClass() {
             return new Count();
@@ -67,7 +67,7 @@ public enum MeasurementSubtype {
         }
     },
 
-    TYPE_IMPERIAL_SPOON(MeasurementType.TYPE_VOLUME) {
+    IMPERIAL_SPOON(MeasurementType.VOLUME) {
         @Override
         public UnitOfMeasure getMeasurementClass() {
             return new ImperialSpoon();

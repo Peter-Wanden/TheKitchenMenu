@@ -8,9 +8,16 @@ import androidx.databinding.ObservableInt;
 import androidx.lifecycle.ViewModel;
 
 import com.example.peter.thekitchenmenu.R;
+import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientEntity;
+import com.example.peter.thekitchenmenu.data.entity.RecipePortionsEntity;
+import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
+import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
+import com.example.peter.thekitchenmenu.utils.TimeProvider;
+import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasure;
 
@@ -18,9 +25,12 @@ public class RecipeIngredientMeasurementViewModel extends ViewModel {
 
     private static final String TAG = "tkm-RecipeIngredientMeasurementVM";
 
-    private RepositoryIngredient repositoryIngredient;
+    private RepositoryRecipePortions repositoryRecipePortions;
     private RepositoryRecipeIngredient repositoryRecipeIngredient;
+
     private Resources resources;
+    private UniqueIdProvider idProvider;
+    private TimeProvider timeProvider;
 
     private static final int MEASUREMENT_ERROR = -1;
 
@@ -32,22 +42,24 @@ public class RecipeIngredientMeasurementViewModel extends ViewModel {
     public final ObservableField<String> measurementOneErrorMessage = new ObservableField<>();
     public final ObservableField<String> measurementTwoErrorMessage = new ObservableField<>();
 
-
     private String recipeId;
     private String ingredientId;
-    private RecipeIngredientEntity ingredientEntity;
+    private int numberOfPortions;
+    private RecipeIngredientEntity recipeIngredientEntity;
     private UnitOfMeasure unitOfMeasure;
-    private String ingredientMeasurementOne;
-    private String ingredientMeasurementTwo;
 
     public RecipeIngredientMeasurementViewModel(
-            RepositoryIngredient repositoryIngredient,
+            RepositoryRecipePortions repositoryRecipePortions,
             RepositoryRecipeIngredient repositoryRecipeIngredient,
-            Resources resources) {
+            Resources resources,
+            UniqueIdProvider idProvider,
+            TimeProvider timeProvider) {
 
-        this.repositoryIngredient = repositoryIngredient;
+        this.repositoryRecipePortions = repositoryRecipePortions;
         this.repositoryRecipeIngredient = repositoryRecipeIngredient;
         this.resources = resources;
+        this.idProvider = idProvider;
+        this.timeProvider = timeProvider;
 
         unitOfMeasureSpinnerInt.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
@@ -74,7 +86,45 @@ public class RecipeIngredientMeasurementViewModel extends ViewModel {
     public void start(String recipeId, String ingredientId) {
         this.recipeId = recipeId;
         this.ingredientId = ingredientId;
+        numberOfPortions = 1;
         subTypeUpdated();
+        recipeIngredientEntity = createNewRecipeIngredientEntity();
+    }
+
+    public void start(String recipeIngredientId) {
+        repositoryRecipeIngredient.getById(
+                recipeIngredientId,
+                new DataSource.GetEntityCallback<RecipeIngredientEntity>() {
+            @Override
+            public void onEntityLoaded(RecipeIngredientEntity recipeIngredientEntity) {
+                recipeId = recipeIngredientEntity.getRecipeId();
+                getPortions();
+                // Always add a measurement in this order: 1.subType 2.baseUnits 3.numberOfItems
+                subtype.set(MeasurementSubtype.fromInt(recipeIngredientEntity.getUnitOfMeasureSubtype()));
+                unitOfMeasure.baseUnitsAreSet(recipeIngredientEntity.getBaseUnits());
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+
+            }
+        });
+    }
+
+    private void getPortions() {
+        repositoryRecipePortions.getPortionsForRecipe(
+                recipeId,
+                new DataSource.GetEntityCallback<RecipePortionsEntity>() {
+            @Override
+            public void onEntityLoaded(RecipePortionsEntity portionsEntity) {
+                numberOfPortions = portionsEntity.getServings() * portionsEntity.getSittings();
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+
+            }
+        });
     }
 
     private void subTypeUpdated() {
@@ -82,6 +132,7 @@ public class RecipeIngredientMeasurementViewModel extends ViewModel {
         if (subtype.get() != newSubtype) {
             subtype.set(newSubtype);
             unitOfMeasure = newSubtype.getMeasurementClass();
+            unitOfMeasure.numberOfItemsIsSet(numberOfPortions);
             setNumberOfMeasurementUnits();
         }
     }
@@ -95,10 +146,7 @@ public class RecipeIngredientMeasurementViewModel extends ViewModel {
     }
 
     private void measurementOneUpdated() {
-        int unitOneDigitsAfterDecimal =
-                (int) unitOfMeasure.getMeasurementUnitsDigitWidths()[0].second;
-
-        if (unitOneDigitsAfterDecimal > 0)
+        if (unitsAfterDecimal() > 0)
             processDecimalMeasurement();
         else
             processIntegerMeasurement(measurementOne);
@@ -106,20 +154,24 @@ public class RecipeIngredientMeasurementViewModel extends ViewModel {
 
     private void processDecimalMeasurement() {
         double decimalMeasurement = parseDecimalFromString();
-        if (decimalMeasurementHasChanged(decimalMeasurement)) {
-            updateDecimalMeasurement(decimalMeasurement);
+        if (decimalMeasurement == 0) {
+            measurementOne.set("");
+            return;
         }
+        if (decimalMeasurement != MEASUREMENT_ERROR)
+            if (decimalMeasurementHasChanged(decimalMeasurement))
+                updateDecimalMeasurement(decimalMeasurement);
     }
 
     private void updateDecimalMeasurement(double decimalMeasurement) {
-        boolean measurementIsSet = unitOfMeasure.productMeasurementOneIsSet(decimalMeasurement);
+        boolean measurementIsSet = unitOfMeasure.totalMeasurementOneIsSet(decimalMeasurement);
         if (measurementIsSet) {
             updateUi();
         }
     }
 
     private boolean decimalMeasurementHasChanged(double newMeasurement) {
-        double oldMeasurement = unitOfMeasure.getPackMeasurementOne();
+        double oldMeasurement = unitOfMeasure.getTotalMeasurementOne();
         return oldMeasurement != newMeasurement;
     }
 
@@ -141,19 +193,15 @@ public class RecipeIngredientMeasurementViewModel extends ViewModel {
 
     private void processIntegerMeasurement(ObservableField<String> measurement) {
         int integerMeasurement = parseIntegerFromString(measurement);
-        if (integerMeasurementHasChanged(measurement, integerMeasurement)) {
-            updateIntegerMeasurement(measurement, integerMeasurement);
+        if (integerMeasurement == 0) {
+            measurement.set("");
+            return;
         }
-
-        boolean measurementIsSet = false;
-        if (measurement == measurementOne) {
-            measurementIsSet = unitOfMeasure.productMeasurementOneIsSet(integerMeasurement);
-
-        } else if (measurement == measurementTwo) {
-            measurementIsSet = unitOfMeasure.productMeasurementTwoIsSet(integerMeasurement);
+        if (integerMeasurement != MEASUREMENT_ERROR) {
+            if (integerMeasurementHasChanged(measurement, integerMeasurement)) {
+                updateIntegerMeasurement(measurement, integerMeasurement);
+            }
         }
-        if (measurementIsSet)
-            updateUi();
     }
 
     private int parseIntegerFromString(ObservableField<String> measurement) {
@@ -174,20 +222,23 @@ public class RecipeIngredientMeasurementViewModel extends ViewModel {
     private boolean integerMeasurementHasChanged(ObservableField<String> measurement, int newMeasurement) {
         int oldMeasurement = 0;
         if (measurement == measurementOne)
-            oldMeasurement = (int) unitOfMeasure.getProductMeasurementOne();
+            oldMeasurement = (int) unitOfMeasure.getItemMeasurementOne();
         if (measurement == measurementTwo)
-            oldMeasurement = unitOfMeasure.getProductMeasurementTwo();
+            oldMeasurement = unitOfMeasure.getItemMeasurementTwo();
         return oldMeasurement != newMeasurement;
     }
 
     private void updateIntegerMeasurement(ObservableField<String> measurement, int newMeasurement) {
         boolean measurementIsSet = false;
         if (measurement == measurementOne)
-            measurementIsSet = unitOfMeasure.productMeasurementOneIsSet(newMeasurement);
+            measurementIsSet = unitOfMeasure.itemMeasurementOneIsSet(newMeasurement);
         if (measurement == measurementTwo)
-            measurementIsSet = unitOfMeasure.productMeasurementTwoIsSet(newMeasurement);
-        if (measurementIsSet)
+            measurementIsSet = unitOfMeasure.itemMeasurementTwoIsSet(newMeasurement);
+        if (measurementIsSet) {
             updateUi();
+        } else {
+            updateUi();
+        }
     }
 
     private void updateUi() {
@@ -196,16 +247,75 @@ public class RecipeIngredientMeasurementViewModel extends ViewModel {
         if (numberOfMeasurementUnits.get() != unitOfMeasure.getNumberOfMeasurementUnits())
             numberOfMeasurementUnits.set(unitOfMeasure.getNumberOfMeasurementUnits());
 
-        if (unitsAfterDecimal() > 0)
-            measurementOne.set(String.valueOf(unitOfMeasure.getPackMeasurementOne()));
-        else
-            measurementOne.set(String.valueOf((int) unitOfMeasure.getPackMeasurementOne()));
+        if (unitsAfterDecimal() > 0) {
+            measurementOne.set(String.valueOf(unitOfMeasure.getTotalMeasurementOne()));
+        } else {
+            measurementOne.set(String.valueOf((int) unitOfMeasure.getTotalMeasurementOne()));
+        }
 
-        if (numberOfMeasurementUnits.get() > 1)
-            measurementTwo.set(String.valueOf(unitOfMeasure.getPackMeasurementTwo()));
+        if (numberOfMeasurementUnits.get() > 1) {
+            measurementTwo.set(String.valueOf(unitOfMeasure.getTotalMeasurementTwo()));
+        }
+
+        if (isChanged()) {
+            save(updatedRecipeIngredientEntity());
+        }
     }
 
     private int unitsAfterDecimal() {
         return (int) unitOfMeasure.getMeasurementUnitsDigitWidths()[0].second;
+    }
+
+    private RecipeIngredientEntity updatedRecipeIngredientEntity() {
+        return new RecipeIngredientEntity(
+                recipeIngredientEntity.getId(),
+                recipeIngredientEntity.getRecipeId(),
+                recipeIngredientEntity.getIngredientId(),
+                recipeIngredientEntity.getProductId(),
+                unitOfMeasure.getItemBaseUnits(),
+                unitOfMeasure.getMeasurementSubtype().asInt(),
+                recipeIngredientEntity.getCreatedBy(),
+                recipeIngredientEntity.getCreateDate(),
+                timeProvider.getCurrentTimestamp()
+        );
+    }
+
+    private RecipeIngredientEntity createNewRecipeIngredientEntity() {
+        long currentTime = timeProvider.getCurrentTimestamp();
+        return new RecipeIngredientEntity(
+                idProvider.getUId(),
+                recipeId,
+                ingredientId,
+                "",
+                unitOfMeasure.getItemBaseUnits(),
+                unitOfMeasure.getMeasurementSubtype().asInt(),
+                Constants.getUserId().getValue(),
+                currentTime,
+                currentTime
+        );
+    }
+
+    private boolean isChanged() {
+        if (recipeIngredientEntity != null) {
+            RecipeIngredientEntity updatedEntity = new RecipeIngredientEntity(
+                    recipeIngredientEntity.getId(),
+                    recipeIngredientEntity.getRecipeId(),
+                    recipeIngredientEntity.getIngredientId(),
+                    recipeIngredientEntity.getProductId(),
+                    unitOfMeasure.getItemBaseUnits(),
+                    unitOfMeasure.getMeasurementSubtype().asInt(),
+                    Constants.getUserId().getValue(),
+                    recipeIngredientEntity.getCreateDate(),
+                    recipeIngredientEntity.getLastUpdate()
+            );
+            return !recipeIngredientEntity.equals(updatedEntity);
+
+        } else
+            return false;
+    }
+
+    private void save(RecipeIngredientEntity recipeIngredientEntity) {
+        repositoryRecipeIngredient.save(recipeIngredientEntity);
+        this.recipeIngredientEntity = recipeIngredientEntity;
     }
 }

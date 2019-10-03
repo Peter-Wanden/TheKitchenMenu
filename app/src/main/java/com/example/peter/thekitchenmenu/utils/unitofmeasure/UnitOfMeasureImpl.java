@@ -19,8 +19,8 @@ public abstract class UnitOfMeasureImpl implements UnitOfMeasure {
 
     MeasurementSubtype subtype;
 
-    private static final boolean PACK_MEASUREMENT = false;
-    private static final boolean PRODUCT_MEASUREMENT = true;
+    private static final boolean TOTAL_MEASUREMENT = false;
+    private static final boolean ITEM_MEASUREMENT = true;
     private boolean lastMeasurementUpdated = false;
 
     int typeStringResourceId;
@@ -29,13 +29,13 @@ public abstract class UnitOfMeasureImpl implements UnitOfMeasure {
     int unitTwoLabelStringResourceId;
 
     private double baseUnits;
-    private int numberOfProducts = UnitOfMeasureConstants.MINIMUM_NUMBER_OF_PRODUCTS;
-    private int oldNumberOfProducts;
-    private double productSize = smallestUnit;
-    private int packMeasurementTwo;
-    private double packMeasurementOne;
-    private int productMeasurementTwo;
-    private double productMeasurementOne;
+    private int numberOfItems = UnitOfMeasureConstants.MINIMUM_NUMBER_OF_ITEMS;
+    private int oldNumberOfItems;
+    private double itemSize = smallestUnit;
+    private int totalMeasurementTwo;
+    private double totalMeasurementOne;
+    private int itemMeasurementTwo;
+    private double itemMeasurementOne;
 
     UnitOfMeasureImpl() {}
 
@@ -55,45 +55,51 @@ public abstract class UnitOfMeasureImpl implements UnitOfMeasure {
     }
 
     @Override
-    public double getBaseUnits() {
+    public double getTotalBaseUnits() {
         return baseUnits;
+    }
+
+    @Override
+    public double getItemBaseUnits() {
+        return baseUnits / numberOfItems;
     }
 
     @Override
     public boolean baseUnitsAreSet(double baseUnits) {
         if (baseUnitsWithinBounds(baseUnits)) {
             this.baseUnits = baseUnits;
-            setNewPackMeasurements();
-            setNewProductMeasurements();
+            setNewTotalMeasurements();
+            setNewItemMeasurements();
             return true;
 
         } else if (baseUnits == 0.) { // allows for a reset
             this.baseUnits = 0.;
-            packMeasurementOne = 0.;
-            packMeasurementTwo = 0;
-            productMeasurementOne = 0.;
-            productMeasurementTwo = 0;
+            totalMeasurementOne = 0.;
+            totalMeasurementTwo = 0;
+            itemMeasurementOne = 0.;
+            itemMeasurementTwo = 0;
         }
         return false;
     }
 
     private boolean baseUnitsWithinBounds(double baseUnits) {
-        if (baseUnits == 0) return false;
+        if (baseUnits == 0)
+            return false;
         if (baseUnitsWithinUpperBounds(baseUnits)) {
             if (baseUnitsWithinLowerBounds(baseUnits)) {
-                if (oldNumberOfProductsLargerThanCurrentNumberOfProducts()) {
-                    if (settingOldNumberOfProductsBreaksMinimumMeasurement(baseUnits)) {
-                        adjustNumberOfProductsSoBaseUnitsFitWithinLowerBounds(baseUnits);
+                if (oldNumberOfItemsLargerThanCurrentNumberOfItems()) {
+                    if (settingOldNumberOfItemsBreaksMinimumMeasurement(baseUnits)) {
+                        adjustNumberOfItemsSoBaseUnitsFitWithinLowerBounds(baseUnits);
                     } else {
                         this.baseUnits = baseUnits;
-                        numberOfProductsIsSet(oldNumberOfProducts);
-                        oldNumberOfProducts = 0;
+                        numberOfItemsIsSet(oldNumberOfItems);
+                        oldNumberOfItems = 0;
                     }
                 } // What if its smaller??
                 return true;
             } else {
-                oldNumberOfProducts = numberOfProducts;
-                adjustNumberOfProductsSoBaseUnitsFitWithinLowerBounds(baseUnits);
+                oldNumberOfItems = numberOfItems;
+                adjustNumberOfItemsSoBaseUnitsFitWithinLowerBounds(baseUnits);
                 return true;
             }
         }
@@ -105,31 +111,31 @@ public abstract class UnitOfMeasureImpl implements UnitOfMeasure {
     }
 
     private boolean baseUnitsWithinLowerBounds(double baseUnits) {
-        return baseUnits >= minimumMeasurement * numberOfProducts;
+        return baseUnits >= minimumMeasurement * numberOfItems;
     }
 
-    private boolean oldNumberOfProductsLargerThanCurrentNumberOfProducts() {
-        return oldNumberOfProducts > numberOfProducts;
+    private boolean oldNumberOfItemsLargerThanCurrentNumberOfItems() {
+        return oldNumberOfItems > numberOfItems;
     }
 
-    private boolean settingOldNumberOfProductsBreaksMinimumMeasurement(double baseUnits) {
-        return baseUnits / minimumMeasurement < oldNumberOfProducts;
+    private boolean settingOldNumberOfItemsBreaksMinimumMeasurement(double baseUnits) {
+        return baseUnits / minimumMeasurement < oldNumberOfItems;
     }
 
-    private void adjustNumberOfProductsSoBaseUnitsFitWithinLowerBounds(double baseUnits) {
+    private void adjustNumberOfItemsSoBaseUnitsFitWithinLowerBounds(double baseUnits) {
         this.baseUnits = baseUnits;
-        numberOfProductsIsSet((int) (baseUnits / minimumMeasurement));
+        numberOfItemsIsSet((int) (baseUnits / minimumMeasurement));
     }
 
-    private void setNewPackMeasurements() {
-        packMeasurementOne = getUnitOneMeasurement(baseUnits);
-        packMeasurementTwo = getUnitTwoMeasurement(baseUnits);
+    private void setNewTotalMeasurements() {
+        totalMeasurementOne = getUnitOneMeasurement(baseUnits);
+        totalMeasurementTwo = getUnitTwoMeasurement(baseUnits);
     }
 
-    private void setNewProductMeasurements() {
-        productSize = baseUnits / numberOfProducts;
-        productMeasurementOne = getUnitOneMeasurement(productSize);
-        productMeasurementTwo = getUnitTwoMeasurement(productSize);
+    private void setNewItemMeasurements() {
+        itemSize = baseUnits / numberOfItems;
+        itemMeasurementOne = getUnitOneMeasurement(itemSize);
+        itemMeasurementTwo = getUnitTwoMeasurement(itemSize);
     }
 
     private double getUnitOneMeasurement(double baseUnits) {
@@ -143,25 +149,25 @@ public abstract class UnitOfMeasureImpl implements UnitOfMeasure {
     }
 
     @Override
-    public int getNumberOfProducts() {
-        return numberOfProducts;
+    public int getNumberOfItems() {
+        return numberOfItems;
     }
 
     @Override
-    public boolean numberOfProductsIsSet(int numberOfProducts) {
-        if (numberOfProductsInPackAreWithinBounds(numberOfProducts)) {
+    public boolean numberOfItemsIsSet(int numberOfItems) {
+        if (numberOfItemsInTotalAreWithinBounds(numberOfItems)) {
             if (baseUnits == UnitOfMeasureConstants.NOT_YET_SET) {
-                this.numberOfProducts = numberOfProducts;
+                this.numberOfItems = numberOfItems;
                 return true;
             } else {
-                if (lastMeasurementUpdated == PACK_MEASUREMENT) {
-                    if (productSizeNotLessThanSmallestUnit(numberOfProducts)) {
-                        setNumberOfProductsInPackByAdjustingProductSize(numberOfProducts);
+                if (lastMeasurementUpdated == TOTAL_MEASUREMENT) {
+                    if (itemSizeNotLessThanSmallestUnit(numberOfItems)) {
+                        setNumberOfItemsInTotalByAdjustingItemSize(numberOfItems);
                         return true;
                     }
-                } else if (lastMeasurementUpdated == PRODUCT_MEASUREMENT) {
-                    if (productSizeMultipliedByNumberOfProductsDoesNotExceedMaximum(numberOfProducts)) {
-                        setNumberOfProductsInPackByAdjustingPackSize(numberOfProducts);
+                } else if (lastMeasurementUpdated == ITEM_MEASUREMENT) {
+                    if (itemSizeMultipliedByNumberOfItemsDoesNotExceedMaximum(numberOfItems)) {
+                        setNumberOfItemsInTotalByAdjustingTotal(numberOfItems);
                         return true;
                     }
                 }
@@ -170,28 +176,27 @@ public abstract class UnitOfMeasureImpl implements UnitOfMeasure {
         return false;
     }
 
-    private boolean numberOfProductsInPackAreWithinBounds(int numberOfProducts) {
-        return numberOfProducts >= UnitOfMeasureConstants.MINIMUM_NUMBER_OF_PRODUCTS &&
-                numberOfProducts <= UnitOfMeasureConstants.MAXIMUM_NUMBER_OF_PRODUCTS;
+    private boolean numberOfItemsInTotalAreWithinBounds(int numberOfItems) {
+        return numberOfItems >= UnitOfMeasureConstants.MINIMUM_NUMBER_OF_ITEMS &&
+                numberOfItems <= UnitOfMeasureConstants.MAXIMUM_NUMBER_OF_ITEMS;
     }
 
-    private boolean productSizeNotLessThanSmallestUnit(int numberOfProducts) {
-        return baseUnits / numberOfProducts >= smallestUnit;
+    private boolean itemSizeNotLessThanSmallestUnit(int numberOfItems) {
+        return baseUnits / numberOfItems >= smallestUnit;
     }
 
-    private void setNumberOfProductsInPackByAdjustingProductSize(int numberOfProducts) {
-        this.numberOfProducts = numberOfProducts;
-        setNewProductMeasurements();
+    private void setNumberOfItemsInTotalByAdjustingItemSize(int numberOfItems) {
+        this.numberOfItems = numberOfItems;
+        setNewItemMeasurements();
     }
 
-    private boolean productSizeMultipliedByNumberOfProductsDoesNotExceedMaximum(
-            int numberOfProducts) {
-        return productSize * numberOfProducts <= maximumMeasurement;
+    private boolean itemSizeMultipliedByNumberOfItemsDoesNotExceedMaximum(int numberOfItems) {
+        return itemSize * numberOfItems <= maximumMeasurement;
     }
 
-    private void setNumberOfProductsInPackByAdjustingPackSize(int numberOfProducts) {
-        this.numberOfProducts = numberOfProducts;
-        baseUnitsAreSet(productSize * numberOfProducts);
+    private void setNumberOfItemsInTotalByAdjustingTotal(int numberOfItems) {
+        this.numberOfItems = numberOfItems;
+        baseUnitsAreSet(itemSize * numberOfItems);
     }
 
     @Override
@@ -200,44 +205,43 @@ public abstract class UnitOfMeasureImpl implements UnitOfMeasure {
     }
 
     @Override
-    public double getPackMeasurementOne() {
-        return roundDecimal(packMeasurementOne);
+    public double getTotalMeasurementOne() {
+        return roundDecimal(totalMeasurementOne);
     }
 
     @Override
-    public boolean packMeasurementOneIsSet(double newPackMeasurementOne) {
-        if (baseUnitsAreSet(baseUnitsWithNewPackMeasurementOne(newPackMeasurementOne))) {
-            lastMeasurementUpdated = PACK_MEASUREMENT;
+    public boolean totalMeasurementOneIsSet(double newTotalMeasurementOne) {
+        if (baseUnitsAreSet(baseUnitsWithNewTotalMeasurementOne(newTotalMeasurementOne))) {
+            lastMeasurementUpdated = TOTAL_MEASUREMENT;
             return true;
 
         } else
-            baseUnitsAreSet(baseUnitsWithNewPackMeasurementOne(0.));
+            baseUnitsAreSet(baseUnitsWithNewTotalMeasurementOne(0.));
         return false;
     }
 
-    private double baseUnitsWithNewPackMeasurementOne(double newPackMeasurementOne) {
-        return (packMeasurementTwo * unitTwo) + (newPackMeasurementOne * unitOne);
+    private double baseUnitsWithNewTotalMeasurementOne(double newTotalMeasurementOne) {
+        return (totalMeasurementTwo * unitTwo) + (newTotalMeasurementOne * unitOne);
     }
 
     @Override
-    public double getProductMeasurementOne() {
-        return roundDecimal(productMeasurementOne);
+    public double getItemMeasurementOne() {
+        return roundDecimal(itemMeasurementOne);
     }
 
     @Override
-    public boolean productMeasurementOneIsSet(double newProductMeasurementOne) {
-        if (baseUnitsAreSet(baseUnitsWithNewProductMeasurementOne(newProductMeasurementOne))) {
-            lastMeasurementUpdated = PRODUCT_MEASUREMENT;
+    public boolean itemMeasurementOneIsSet(double newItemMeasurementOne) {
+        if (baseUnitsAreSet(baseUnitsWithNewItemMeasurementOne(newItemMeasurementOne))) {
+            lastMeasurementUpdated = ITEM_MEASUREMENT;
             return true;
 
         } else
-            baseUnitsAreSet(baseUnitsWithNewProductMeasurementOne(0.));
+            baseUnitsAreSet(baseUnitsWithNewItemMeasurementOne(0.));
         return false;
     }
 
-    private double baseUnitsWithNewProductMeasurementOne(double productMeasurementOne) {
-        return ((productMeasurementTwo * unitTwo) + (productMeasurementOne * unitOne)) *
-                numberOfProducts;
+    private double baseUnitsWithNewItemMeasurementOne(double newItemMeasurementOne) {
+        return ((itemMeasurementTwo * unitTwo) + (newItemMeasurementOne * unitOne)) * numberOfItems;
     }
 
     @Override
@@ -246,51 +250,50 @@ public abstract class UnitOfMeasureImpl implements UnitOfMeasure {
     }
 
     @Override
-    public int getPackMeasurementTwo() {
-        return packMeasurementTwo;
+    public int getTotalMeasurementTwo() {
+        return totalMeasurementTwo;
     }
 
     @Override
-    public boolean packMeasurementTwoIsSet(int newPackMeasurementTwo) {
-        if (baseUnitsAreSet(baseUnitsWithNewPackMeasurementTwo(newPackMeasurementTwo))) {
-            lastMeasurementUpdated = PACK_MEASUREMENT;
+    public boolean totalMeasurementTwoIsSet(int newTotalMeasurementTwo) {
+        if (baseUnitsAreSet(baseUnitsWithNewTotalMeasurementTwo(newTotalMeasurementTwo))) {
+            lastMeasurementUpdated = TOTAL_MEASUREMENT;
             return true;
 
         } else
-            baseUnitsAreSet(baseUnitsWithNewPackMeasurementTwo(0));
+            baseUnitsAreSet(baseUnitsWithNewTotalMeasurementTwo(0));
         return false;
     }
 
-    private double baseUnitsWithNewPackMeasurementTwo(int newPackMeasurementTwo) {
-        return (newPackMeasurementTwo * unitTwo) + (packMeasurementOne * unitOne);
+    private double baseUnitsWithNewTotalMeasurementTwo(int newTotalMeasurementTwo) {
+        return (newTotalMeasurementTwo * unitTwo) + (totalMeasurementOne * unitOne);
     }
 
     @Override
-    public int getProductMeasurementTwo() {
-        return productMeasurementTwo;
+    public int getItemMeasurementTwo() {
+        return itemMeasurementTwo;
     }
 
     @Override
-    public boolean productMeasurementTwoIsSet(int newProductMeasurementTwo) {
-        if (baseUnitsAreSet(baseUnitsWithNewProductMeasurementTwo(newProductMeasurementTwo))) {
-            lastMeasurementUpdated = PRODUCT_MEASUREMENT;
+    public boolean itemMeasurementTwoIsSet(int newItemMeasurementTwo) {
+        if (baseUnitsAreSet(baseUnitsWithNewItemMeasurementTwo(newItemMeasurementTwo))) {
+            lastMeasurementUpdated = ITEM_MEASUREMENT;
             return true;
 
         } else
-            baseUnitsAreSet(baseUnitsWithNewProductMeasurementTwo(0));
+            baseUnitsAreSet(baseUnitsWithNewItemMeasurementTwo(0));
         return false;
     }
 
-    private double baseUnitsWithNewProductMeasurementTwo(int newProductMeasurementTwo) {
-        return ((newProductMeasurementTwo * unitTwo) + (productMeasurementOne * unitOne)) *
-                numberOfProducts;
+    private double baseUnitsWithNewItemMeasurementTwo(int newItemMeasurementTwo) {
+        return ((newItemMeasurementTwo * unitTwo) + (itemMeasurementOne * unitOne)) * numberOfItems;
     }
 
     @Override
     public boolean isValidMeasurement() {
         return (baseUnits >= minimumMeasurement &&
                 baseUnits <= maximumMeasurement &&
-                numberOfProducts > 0);
+                numberOfItems > 0);
     }
 
     @Override
@@ -337,9 +340,8 @@ public abstract class UnitOfMeasureImpl implements UnitOfMeasure {
                 ((DecimalFormat) decimalFormat).applyPattern("##.#");
 
             return Double.parseDouble(decimalFormat.format(valueToRound));
-        } else {
+        } else
             return (int) Math.floor(valueToRound * 1);
-        }
     }
 
     @NonNull
@@ -360,13 +362,13 @@ public abstract class UnitOfMeasureImpl implements UnitOfMeasure {
                 ", \nunitOneLabelStringResourceId=" + unitOneLabelStringResourceId +
                 ", \nunitTwoLabelStringResourceId=" + unitTwoLabelStringResourceId +
                 ", \nbaseUnits=" + baseUnits +
-                ", \nnumberOfProducts=" + numberOfProducts +
-                ", \noldNumberOfProducts=" + oldNumberOfProducts +
-                ", \nproductSize=" + productSize +
-                ", \npackMeasurementTwo=" + packMeasurementTwo +
-                ", \npackMeasurementOne=" + packMeasurementOne +
-                ", \nproductMeasurementTwo=" + productMeasurementTwo +
-                ", \nproductMeasurementOne=" + productMeasurementOne +
+                ", \nnumberOfItems=" + numberOfItems +
+                ", \noldNumberOfItems=" + oldNumberOfItems +
+                ", \nitemSize=" + itemSize +
+                ", \ntotalMeasurementTwo=" + totalMeasurementTwo +
+                ", \ntotalMeasurementOne=" + totalMeasurementOne +
+                ", \nitemMeasurementTwo=" + itemMeasurementTwo +
+                ", \nitemMeasurementOne=" + itemMeasurementOne +
                 '}';
     }
 }

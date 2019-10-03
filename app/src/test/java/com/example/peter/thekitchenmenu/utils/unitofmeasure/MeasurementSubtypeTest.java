@@ -27,7 +27,7 @@ public class MeasurementSubtypeTest {
     public void returnIntFromSubtype() {
         // Arrange
         int integerForSubtypeMetricVolume = 2;
-        MeasurementSubtype subtype = MeasurementSubtype.TYPE_METRIC_VOLUME;
+        MeasurementSubtype subtype = MeasurementSubtype.METRIC_VOLUME;
         // Act
         int result = subtype.asInt();
         // Assert
@@ -38,7 +38,7 @@ public class MeasurementSubtypeTest {
     public void returnSubtypeFromInt() {
         // Arrange
         int integerForSubtypeImperialMass = 1;
-        MeasurementSubtype expectedResult = MeasurementSubtype.TYPE_IMPERIAL_MASS;
+        MeasurementSubtype expectedResult = MeasurementSubtype.IMPERIAL_MASS;
         // Act
         MeasurementSubtype actualResult = MeasurementSubtype.fromInt(integerForSubtypeImperialMass);
         // Assert

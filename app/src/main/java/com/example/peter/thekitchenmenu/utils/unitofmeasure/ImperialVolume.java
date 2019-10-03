@@ -13,7 +13,7 @@ class ImperialVolume extends UnitOfMeasureImpl {
         unitOneDecimal = unitOne / 10; // One tenth of a fl oz
         smallestUnit = unitOneDecimal;
 
-        subtype = MeasurementSubtype.TYPE_IMPERIAL_VOLUME;
+        subtype = MeasurementSubtype.IMPERIAL_VOLUME;
 
         typeStringResourceId = R.string.volume;
         subtypeStringResourceId = R.string.sub_type_imperial_volume;

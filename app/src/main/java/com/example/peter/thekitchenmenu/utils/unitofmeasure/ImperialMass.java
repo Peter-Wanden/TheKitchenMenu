@@ -13,7 +13,7 @@ class ImperialMass extends UnitOfMeasureImpl {
         unitOneDecimal = unitOne / 10; // one tenth of an ounce
         smallestUnit = unitOneDecimal;
 
-        subtype = MeasurementSubtype.TYPE_IMPERIAL_MASS;
+        subtype = MeasurementSubtype.IMPERIAL_MASS;
 
         typeStringResourceId = R.string.mass;
         subtypeStringResourceId = R.string.sub_type_imperial_mass;

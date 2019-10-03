@@ -592,6 +592,8 @@ public class RecipePortionsViewModelTest {
     private void whenIdProviderReturnNewEmptyId() {
         when(idProviderMock.getUId()).thenReturn(NEW_EMPTY.getId());
     }
+
+
     // endregion helper methods --------------------------------------------------------------------
 
     // region helper classes -----------------------------------------------------------------------

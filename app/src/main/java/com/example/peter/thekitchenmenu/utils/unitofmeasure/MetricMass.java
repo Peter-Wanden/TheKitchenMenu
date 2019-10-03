@@ -13,7 +13,7 @@ class MetricMass extends UnitOfMeasureImpl {
         unitOneDecimal = 0; // no fractions of a gram
         smallestUnit = unitOne;
 
-        subtype = MeasurementSubtype.TYPE_METRIC_MASS;
+        subtype = MeasurementSubtype.METRIC_MASS;
 
         typeStringResourceId = R.string.mass;
         subtypeStringResourceId = R.string.sub_type_metric_mass;

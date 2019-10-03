@@ -8,25 +8,27 @@ public interface UnitOfMeasure {
 
     MeasurementSubtype getMeasurementSubtype();
 
-    double getBaseUnits();
+    double getTotalBaseUnits();
     boolean baseUnitsAreSet(double baseUnits);
 
-    int getNumberOfProducts();
-    boolean numberOfProductsIsSet(int numberOfProducts);
+    double getItemBaseUnits();
+
+    int getNumberOfItems();
+    boolean numberOfItemsIsSet(int numberOfItems);
 
     int getNumberOfMeasurementUnits();
 
     int getUnitOneLabelStringResourceId();
-    double getPackMeasurementOne();
-    boolean packMeasurementOneIsSet(double newPackMeasurementOne);
-    double getProductMeasurementOne();
-    boolean productMeasurementOneIsSet(double newProductMeasurementOne);
+    double getTotalMeasurementOne();
+    boolean totalMeasurementOneIsSet(double newTotalMeasurementOne);
+    double getItemMeasurementOne();
+    boolean itemMeasurementOneIsSet(double newItemMeasurementOne);
 
     int getUnitTwoLabelStringResourceId();
-    int getPackMeasurementTwo();
-    boolean packMeasurementTwoIsSet(int newPackMeasurementTwo);
-    int getProductMeasurementTwo();
-    boolean productMeasurementTwoIsSet(int newProductMeasurementTwo);
+    int getTotalMeasurementTwo();
+    boolean totalMeasurementTwoIsSet(int newTotalMeasurementTwo);
+    int getItemMeasurementTwo();
+    boolean itemMeasurementTwoIsSet(int newItemMeasurementTwo);
 
     boolean isValidMeasurement();
     Pair[] getMeasurementUnitsDigitWidths();

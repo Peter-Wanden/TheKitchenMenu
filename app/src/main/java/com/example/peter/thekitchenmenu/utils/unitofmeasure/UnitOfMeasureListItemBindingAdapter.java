@@ -26,7 +26,7 @@ public class UnitOfMeasureListItemBindingAdapter {
 
         UnitOfMeasure unitOfMeasure = MeasurementSubtype.fromInt(subtypeInt).getMeasurementClass();
         boolean baseUnitsAreSet = unitOfMeasure.baseUnitsAreSet(baseUnits);
-        boolean numberOfItemsAreSet = unitOfMeasure.numberOfProductsIsSet(numberOfItems);
+        boolean numberOfItemsAreSet = unitOfMeasure.numberOfItemsIsSet(numberOfItems);
         Resources resources = view.getResources();
         String measurement = "";
 
@@ -45,7 +45,7 @@ public class UnitOfMeasureListItemBindingAdapter {
 
     private static String getMetricMeasurement(UnitOfMeasure unitOfMeasure, Resources resources) {
         StringBuilder formattedMeasurement = new StringBuilder();
-        int numberOfItems = unitOfMeasure.getNumberOfProducts();
+        int numberOfItems = unitOfMeasure.getNumberOfItems();
 
         if (numberOfItems > 1) {
             formattedMeasurement.append(numberOfItems).append(" x ");
@@ -53,16 +53,16 @@ public class UnitOfMeasureListItemBindingAdapter {
             formattedMeasurement.append(formattedMetricMeasurement(
                     resources,
                     unitOfMeasure,
-                    unitOfMeasure.getProductMeasurementTwo(),
-                    unitOfMeasure.getProductMeasurementOne()));
+                    unitOfMeasure.getItemMeasurementTwo(),
+                    unitOfMeasure.getItemMeasurementOne()));
             formattedMeasurement.append(" (");
         }
 
         formattedMeasurement.append(formattedMetricMeasurement(
                 resources,
                 unitOfMeasure,
-                unitOfMeasure.getPackMeasurementTwo(),
-                unitOfMeasure.getPackMeasurementOne()));
+                unitOfMeasure.getTotalMeasurementTwo(),
+                unitOfMeasure.getTotalMeasurementOne()));
 
         if (numberOfItems > 1) {
             formattedMeasurement.append(")");
@@ -108,11 +108,11 @@ public class UnitOfMeasureListItemBindingAdapter {
     private static String getImperialMeasurement(UnitOfMeasure unitOfMeasure, Resources resources) {
         NumberFormat numberFormat = getNumberFormat(resources);
         StringBuilder formattedMeasurement = new StringBuilder();
-        int numberOfProducts = unitOfMeasure.getNumberOfProducts();
-        int packUnitTwoValue = unitOfMeasure.getPackMeasurementTwo();
-        double packUnitOneValue = unitOfMeasure.getPackMeasurementOne();
-        int productUnitTwo = unitOfMeasure.getProductMeasurementTwo();
-        double productUnitOne = unitOfMeasure.getProductMeasurementOne();
+        int numberOfProducts = unitOfMeasure.getNumberOfItems();
+        int packUnitTwoValue = unitOfMeasure.getTotalMeasurementTwo();
+        double packUnitOneValue = unitOfMeasure.getTotalMeasurementOne();
+        int productUnitTwo = unitOfMeasure.getItemMeasurementTwo();
+        double productUnitOne = unitOfMeasure.getItemMeasurementOne();
         String unitOneLabel = resources.getString(unitOfMeasure.getUnitOneLabelStringResourceId());
         String unitTwoLabel = resources.getString(unitOfMeasure.getUnitTwoLabelStringResourceId());
 
@@ -142,7 +142,7 @@ public class UnitOfMeasureListItemBindingAdapter {
 
     private static String getCountMeasurement(UnitOfMeasure unitOfMeasure, Resources resources) {
         StringBuilder measurement = new StringBuilder();
-        String baseUnits = String.valueOf(unitOfMeasure.getBaseUnits());
+        String baseUnits = String.valueOf(unitOfMeasure.getTotalBaseUnits());
         NumberFormat numberFormat = getNumberFormat(resources);
         int parsedValue = 0;
 

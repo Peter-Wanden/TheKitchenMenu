@@ -8,6 +8,7 @@ import com.example.peter.thekitchenmenu.data.entity.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
+import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 
 public class RecipeNameAndPortionsViewModel extends ViewModel {
 
@@ -68,7 +69,10 @@ public class RecipeNameAndPortionsViewModel extends ViewModel {
     private void setPortionsToView(RecipePortionsEntity recipePortions) {
         servingsObservable.set(String.valueOf(recipePortions.getServings()));
         sittingsObservable.set(String.valueOf(recipePortions.getSittings()));
-        portionsObservable.set(String.valueOf(
-                recipePortions.getServings() * recipePortions.getSittings()));
+        portionsObservable.set(String.valueOf(calculatePortions(recipePortions)));
+    }
+
+    private int calculatePortions(RecipePortionsEntity recipePortions) {
+        return recipePortions.getServings() * recipePortions.getSittings();
     }
 }

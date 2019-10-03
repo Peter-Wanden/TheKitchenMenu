@@ -7,6 +7,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.testdata.RecipeIdentityEntityTestData;
 import com.example.peter.thekitchenmenu.testdata.RecipeValidatorTestData;
 import com.example.peter.thekitchenmenu.utils.*;
@@ -84,7 +85,7 @@ public class RecipeIdentityViewModelTest {
     ArgumentCaptor<DataSource.GetEntityCallback<RecipeIdentityEntity>>
             getEntityCallbackArgumentCaptor;
     @Mock
-    DataSource<RecipeIdentityEntity> dataSourceMock;
+    RepositoryRecipeIdentity dataSourceMock;
     @Mock
     TimeProvider timeProviderMock;
     @Mock

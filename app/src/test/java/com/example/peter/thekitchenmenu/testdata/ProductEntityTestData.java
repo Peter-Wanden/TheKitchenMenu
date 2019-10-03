@@ -43,4 +43,24 @@ public class ProductEntityTestData {
                 10L,
                 20L);
     }
+
+    public static ProductEntity getExistingValid() {
+        return new ProductEntity(
+                "existing_valid_id",
+                "description",
+                "shoppingListItemName",
+                1,
+                1,
+                1,
+                5000,
+                0,
+                Constants.getUserId().getValue(),
+                "webImageUrl",
+                "remoteSmallImageUri",
+                "remoteMediumImageUri",
+                "remoteLargeImageUri",
+                30L,
+                40L
+        );
+    }
 }

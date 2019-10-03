@@ -24,6 +24,7 @@ public class RecipeIngredientEditorActivity
 
     public static final String EXTRA_RECIPE_ID = "RECIPE_ID";
     public static final String EXTRA_INGREDIENT_ID = "INGREDIENT_ID";
+    public static final String EXTRA_RECIPE_INGREDIENT_ID = "EXTRA_RECIPE_INGREDIENT_ID";
 
     private RecipeIngredientEditorBinding binding;
     private RecipeNameAndPortionsViewModel recipeNameAndPortionsViewModel;
@@ -103,16 +104,12 @@ public class RecipeIngredientEditorActivity
 
     @NonNull
     private RecipeIngredientMeasurementFragment findOrCreateMeasurementFragment() {
-        Intent intent = getIntent();
-        String recipeId = intent.getStringExtra(EXTRA_RECIPE_ID);
-        String ingredientId = intent.getStringExtra(EXTRA_INGREDIENT_ID);
-
         RecipeIngredientMeasurementFragment fragment =
                 (RecipeIngredientMeasurementFragment) getSupportFragmentManager().
                         findFragmentById(R.id.recipe_ingredient_editor_measurement_content_frame);
 
         if (fragment == null) {
-            fragment = RecipeIngredientMeasurementFragment.newInstance(recipeId, ingredientId);
+            fragment = RecipeIngredientMeasurementFragment.newInstance();
         }
         return fragment;
     }
@@ -140,10 +137,12 @@ public class RecipeIngredientEditorActivity
 
     private void start() {
         Intent intent = getIntent();
-        String recipeId = intent.getStringExtra(EXTRA_RECIPE_ID);
-        String ingredientId = intent.getStringExtra(EXTRA_INGREDIENT_ID);
-        recipeNameAndPortionsViewModel.start(recipeId);
-        ingredientViewerViewModel.start(ingredientId);
-        measurementViewModel.start(recipeId, ingredientId);
+        if (intent.hasExtra(EXTRA_RECIPE_ID) && intent.hasExtra(EXTRA_INGREDIENT_ID)) {
+            recipeNameAndPortionsViewModel.start(intent.getStringExtra(EXTRA_RECIPE_ID));
+            ingredientViewerViewModel.start(intent.getStringExtra(EXTRA_INGREDIENT_ID));
+        }
+        else if (intent.hasExtra(EXTRA_RECIPE_ID) && intent.hasExtra(EXTRA_RECIPE_INGREDIENT_ID)) {
+            measurementViewModel.start(intent.getStringExtra(EXTRA_RECIPE_INGREDIENT_ID));
+        }
     }
 }

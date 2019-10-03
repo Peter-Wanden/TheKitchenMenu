@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.RecipeIngredientEditorMeasurementBinding;
@@ -25,27 +24,11 @@ import java.util.List;
 
 public class RecipeIngredientMeasurementFragment extends Fragment {
 
-    private static final String ARGUMENT_RECIPE_ID = "RECIPE_ID";
-    private static final String ARGUMENT_INGREDIENT_ID = "INGREDIENT_ID";
-
     private RecipeIngredientEditorMeasurementBinding binding;
     private RecipeIngredientMeasurementViewModel viewModel;
 
-    static RecipeIngredientMeasurementFragment newInstance(String recipeId, String ingredientId) {
-        Bundle arguments = new Bundle();
-        arguments.putString(ARGUMENT_RECIPE_ID, recipeId);
-        arguments.putString(ARGUMENT_INGREDIENT_ID, ingredientId);
-        RecipeIngredientMeasurementFragment fragment = new RecipeIngredientMeasurementFragment();
-        fragment.setArguments(arguments);
-        return fragment;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        String recipeId = getArguments().getString(ARGUMENT_RECIPE_ID);
-        String ingredientId = getArguments().getString(ARGUMENT_INGREDIENT_ID);
-        viewModel.start(recipeId, ingredientId);
+    static RecipeIngredientMeasurementFragment newInstance() {
+        return new RecipeIngredientMeasurementFragment();
     }
 
     @Nullable
@@ -108,7 +91,7 @@ public class RecipeIngredientMeasurementFragment extends Fragment {
 
         for (int header = 0; header < unitOfMeasureHeaders.size(); header++) {
 
-            if (header == MeasurementSubtype.TYPE_METRIC_MASS.asInt()) {
+            if (header == MeasurementSubtype.METRIC_MASS.asInt()) {
                 UnitOfMeasureSpinnerItem headerItem = new UnitOfMeasureSpinnerItem(
                         SpinnerItemType.LIST_ITEM,
                         unitOfMeasureHeaders.get(header).
@@ -119,7 +102,7 @@ public class RecipeIngredientMeasurementFragment extends Fragment {
                 unitOfMeasureList.add(headerItem);
             }
 
-            if (header == MeasurementSubtype.TYPE_IMPERIAL_MASS.asInt()) {
+            if (header == MeasurementSubtype.IMPERIAL_MASS.asInt()) {
                 UnitOfMeasureSpinnerItem headerItem = new UnitOfMeasureSpinnerItem(
                         SpinnerItemType.LIST_ITEM,
                         unitOfMeasureHeaders.get(header).
@@ -130,7 +113,7 @@ public class RecipeIngredientMeasurementFragment extends Fragment {
                 unitOfMeasureList.add(headerItem);
             }
 
-            if (header == MeasurementSubtype.TYPE_METRIC_VOLUME.asInt()) {
+            if (header == MeasurementSubtype.METRIC_VOLUME.asInt()) {
                 UnitOfMeasureSpinnerItem headerItem = new UnitOfMeasureSpinnerItem(
                         SpinnerItemType.LIST_ITEM,
                         unitOfMeasureHeaders.get(header).
@@ -141,7 +124,7 @@ public class RecipeIngredientMeasurementFragment extends Fragment {
                 unitOfMeasureList.add(headerItem);
             }
 
-            if (header == MeasurementSubtype.TYPE_IMPERIAL_VOLUME.asInt()) {
+            if (header == MeasurementSubtype.IMPERIAL_VOLUME.asInt()) {
                 UnitOfMeasureSpinnerItem headerItem = new UnitOfMeasureSpinnerItem(
                         SpinnerItemType.LIST_ITEM,
                         unitOfMeasureHeaders.get(header).
@@ -152,7 +135,7 @@ public class RecipeIngredientMeasurementFragment extends Fragment {
                 unitOfMeasureList.add(headerItem);
             }
 
-            if (header == MeasurementSubtype.TYPE_COUNT.asInt()) {
+            if (header == MeasurementSubtype.COUNT.asInt()) {
                 UnitOfMeasureSpinnerItem headerItem = new UnitOfMeasureSpinnerItem(
                         SpinnerItemType.LIST_ITEM,
                         unitOfMeasureHeaders.get(header).
@@ -163,7 +146,7 @@ public class RecipeIngredientMeasurementFragment extends Fragment {
                 unitOfMeasureList.add(headerItem);
             }
 
-            if (header == MeasurementSubtype.TYPE_IMPERIAL_SPOON.asInt()) {
+            if (header == MeasurementSubtype.IMPERIAL_SPOON.asInt()) {
                 UnitOfMeasureSpinnerItem headerItem = new UnitOfMeasureSpinnerItem(
                         SpinnerItemType.LIST_ITEM,
                         unitOfMeasureHeaders.get(header).

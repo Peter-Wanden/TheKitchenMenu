@@ -13,7 +13,7 @@ class MetricVolume extends UnitOfMeasureImpl {
         unitOneDecimal = 0;
         smallestUnit = unitOne;
 
-        subtype = MeasurementSubtype.TYPE_METRIC_VOLUME;
+        subtype = MeasurementSubtype.METRIC_VOLUME;
 
         typeStringResourceId = R.string.volume;
         subtypeStringResourceId = R.string.sub_type_metric_volume;

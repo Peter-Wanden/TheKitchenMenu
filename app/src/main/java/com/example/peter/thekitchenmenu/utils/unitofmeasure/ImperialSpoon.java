@@ -13,7 +13,7 @@ class ImperialSpoon extends UnitOfMeasureImpl {
         unitOneDecimal = 0; // No decimal places
         smallestUnit = unitOne;
 
-        subtype = MeasurementSubtype.TYPE_IMPERIAL_SPOON;
+        subtype = MeasurementSubtype.IMPERIAL_SPOON;
 
         typeStringResourceId = R.string.volume;
         subtypeStringResourceId = R.string.sub_type_imperial_volume;
