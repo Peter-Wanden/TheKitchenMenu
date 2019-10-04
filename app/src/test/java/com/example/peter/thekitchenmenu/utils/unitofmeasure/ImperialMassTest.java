@@ -21,7 +21,7 @@ public class ImperialMassTest {
     @Test
     public void testBaseSiInRangeMin() { // IN RANGE MIN
 
-        assertThat(imperialMass.baseUnitsAreSet(2.834952313), is(true));
+        assertThat(imperialMass.totalBaseUnitsAreSet(2.834952313), is(true));
 
         assertThat(imperialMass.getTotalMeasurementOne(), is(.1));
         assertThat(imperialMass.getTotalMeasurementTwo(), is(0));
@@ -35,7 +35,7 @@ public class ImperialMassTest {
     @Test
     public void testBaseSiOutOfRangeMin() { // OUT OF RANGE MIN
 
-        assertThat(imperialMass.baseUnitsAreSet(2.83495231), is(false));
+        assertThat(imperialMass.totalBaseUnitsAreSet(2.83495231), is(false));
 
         assertThat(imperialMass.getTotalMeasurementOne(), is(0.));
         assertThat(imperialMass.getItemMeasurementOne(), is(0.));
@@ -49,7 +49,7 @@ public class ImperialMassTest {
     @Test
     public void testBaseSiInRangeMax() { // IN RANGE MAX
 
-        assertThat(imperialMass.baseUnitsAreSet((MAXIMUM_MASS)), is(true));
+        assertThat(imperialMass.totalBaseUnitsAreSet((MAXIMUM_MASS)), is(true));
 
         assertThat(imperialMass.getTotalMeasurementOne(), is(.7));
         assertThat(imperialMass.getTotalMeasurementTwo(), is(22));
@@ -63,7 +63,7 @@ public class ImperialMassTest {
     @Test
     public void testBaseSiOutOfRangeMax() { // OUT OF RANGE MAX
 
-        assertThat(imperialMass.baseUnitsAreSet(MAXIMUM_MASS + 1), is(false));
+        assertThat(imperialMass.totalBaseUnitsAreSet(MAXIMUM_MASS + 1), is(false));
 
         assertThat(imperialMass.getTotalMeasurementOne(), is(0.));
         assertThat(imperialMass.getTotalMeasurementTwo(), is(0));
@@ -79,7 +79,7 @@ public class ImperialMassTest {
 
         assertThat(imperialMass.numberOfItemsIsSet(2), is(true));
 
-        assertThat(imperialMass.baseUnitsAreSet(5.6699), is(false));
+        assertThat(imperialMass.totalBaseUnitsAreSet(5.6699), is(false));
 
         assertThat(imperialMass.getTotalMeasurementOne(), is(0.));
         assertThat(imperialMass.getTotalMeasurementTwo(), is(0));
@@ -95,7 +95,7 @@ public class ImperialMassTest {
 
         assertThat(imperialMass.numberOfItemsIsSet(2), is(true));
 
-        assertThat(imperialMass.baseUnitsAreSet(5.7), is(true));
+        assertThat(imperialMass.totalBaseUnitsAreSet(5.7), is(true));
 
         assertThat(imperialMass.getTotalMeasurementOne(), is(.2));
         assertThat(imperialMass.getTotalMeasurementTwo(), is(0));
@@ -110,7 +110,7 @@ public class ImperialMassTest {
     public void testBaseSiRetrieveFromPackAndItem() {// CONDITION: BASE SI SET, CHECK PACK AND ITEM UPDATED
 
         // Set base SI
-        assertThat(imperialMass.baseUnitsAreSet(5500.), is(true));
+        assertThat(imperialMass.totalBaseUnitsAreSet(5500.), is(true));
 
         // Check pack and item values have updated correctly
         assertThat(imperialMass.getTotalMeasurementOne(), is(2.));

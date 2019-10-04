@@ -114,7 +114,7 @@ public class ProductMeasurementViewModel extends ObservableViewModel {
     }
 
     private boolean canChangeToNewNumberOfBaseUnits(double newBaseUnits) {
-        return unitOfMeasure.baseUnitsAreSet(newBaseUnits);
+        return unitOfMeasure.totalBaseUnitsAreSet(newBaseUnits);
     }
 
     @Bindable

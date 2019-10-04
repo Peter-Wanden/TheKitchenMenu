@@ -8,13 +8,13 @@ import static org.junit.Assert.*;
 
 public class CountTest {
 
-    private Count count = new Count();
+    private UnitOfMeasure count = new Count();
 
     //////////////////////////// SETTING AND GETTING BASE SI TESTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\
     @Test
     public void testBaseUnitsInRangeMin() { // IN RANGE MIN
 
-        assertThat(count.baseUnitsAreSet(1), is(true));
+        assertThat(count.totalBaseUnitsAreSet(1), is(true));
 
         assertThat(count.getTotalMeasurementOne(), is(1.));
         assertThat(count.getItemMeasurementOne(), is(1.));
@@ -24,7 +24,7 @@ public class CountTest {
     @Test
     public void testBaseUnitsOutOfRangeMin() { // OUT OF RANGE MIN
 
-        assertThat(count.baseUnitsAreSet(0.9), is(false));
+        assertThat(count.totalBaseUnitsAreSet(0.9), is(false));
 
         assertThat(count.getTotalMeasurementOne(), is(0.));
         assertThat(count.getItemMeasurementOne(), is(0.));
@@ -34,7 +34,7 @@ public class CountTest {
     @Test
     public void testBaseUnitsInRangeMax() { // IN RANGE MAX
 
-        assertThat(count.baseUnitsAreSet(MAXIMUM_COUNT), is(true));
+        assertThat(count.totalBaseUnitsAreSet(MAXIMUM_COUNT), is(true));
 
         assertThat(count.getTotalMeasurementOne(), is(99.));
         assertThat(count.getItemMeasurementOne(), is(99.));
@@ -44,7 +44,7 @@ public class CountTest {
     @Test
     public void testBaseUnitsOutOfRangeMax() { // OUT OF RANGE MAX
 
-        assertThat(count.baseUnitsAreSet(MAXIMUM_COUNT + 1), is(false));
+        assertThat(count.totalBaseUnitsAreSet(MAXIMUM_COUNT + 1), is(false));
 
         assertThat(count.getTotalMeasurementOne(), is(0.));
         assertThat(count.getItemMeasurementOne(), is(0.));
@@ -55,7 +55,7 @@ public class CountTest {
     public void testBaseUnitsViolatesMinimumItemSize() { // CONDITION: BASE SI SMALLER THAN SMALLEST ITEM
 
         assertThat(count.numberOfItemsIsSet(5), is(true));
-        assertThat(count.baseUnitsAreSet(4), is(false));
+        assertThat(count.totalBaseUnitsAreSet(4), is(false));
 
         assertThat(count.getTotalMeasurementOne(), is(0.));
         assertThat(count.getItemMeasurementOne(), is(0.));
@@ -66,7 +66,7 @@ public class CountTest {
     public void testBaseUnitsAtMinimumItemSize() { // CONDITION: BASE SI SAME AS SMALLEST ITEM
 
         assertThat(count.numberOfItemsIsSet(5), is(true));
-        assertThat(count.baseUnitsAreSet(5), is(true));
+        assertThat(count.totalBaseUnitsAreSet(5), is(true));
 
         assertThat(count.getTotalMeasurementOne(), is(5.));
         assertThat(count.getItemMeasurementOne(), is(1.));
@@ -77,7 +77,7 @@ public class CountTest {
     public void testBaseUnitsRetrieveFromPackAndItem() {// CONDITION: BASE SI SET, CHECK PACK AND ITEM UPDATED
 
         // Set base SI
-        assertThat(count.baseUnitsAreSet(55), is(true));
+        assertThat(count.totalBaseUnitsAreSet(55), is(true));
 
         // Check pack and item values have updated correctly
         assertThat(count.getTotalMeasurementOne(), is(55.));
@@ -343,7 +343,7 @@ public class CountTest {
     @Test
     public void testMixedNumberReturnValues() {
 
-        assertThat(count.baseUnitsAreSet(5), is(true));
+        assertThat(count.totalBaseUnitsAreSet(5), is(true));
         assertThat(count.numberOfItemsIsSet(3), is(true));
         assertThat(count.getTotalMeasurementOne(), is(5.));
         assertThat(count.getItemMeasurementOne(), is(1.0));
@@ -388,7 +388,7 @@ public class CountTest {
         assertThat(count.totalMeasurementOneIsSet(5), is(true));
         assertThat(count.getTotalBaseUnits(), is(5.));
 
-        assertThat(count.baseUnitsAreSet(0), is(false));
+        assertThat(count.totalBaseUnitsAreSet(0), is(false));
         assertThat(count.getTotalBaseUnits(), is(0.));
 
         assertThat(count.getTotalMeasurementOne(), is(0.));

@@ -1,8 +1,9 @@
 package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
+import org.junit.Before;
 import org.junit.Test;
 
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MAXIMUM_MASS;
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.*;
 import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
@@ -10,526 +11,375 @@ import static org.junit.Assert.*;
 
 public class MetricMassTest {
 
-    private MetricMass metricMass = new MetricMass();
+    // region constants ----------------------------------------------------------------------------
+    private double ERROR_MARGIN_DELTA = 0.00001;
+    // endregion constants -------------------------------------------------------------------------
 
-    //////////////////////////// SETTING AND GETTING BASE SI TESTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\
-    @Test
-    public void testBaseSiInRangeMin() { // IN RANGE MIN
+    // region helper fields ------------------------------------------------------------------------
+    // endregion helper fields ---------------------------------------------------------------------
 
-        assertTrue(metricMass.baseUnitsAreSet(1));
+    private UnitOfMeasure SUT;
 
-        assertThat(metricMass.getTotalMeasurementOne(), is(1.));
-        assertThat(metricMass.getTotalMeasurementTwo(), is(0));
-        assertThat(metricMass.getItemMeasurementOne(), is(1.));
-        assertThat(metricMass.getItemMeasurementTwo(), is(0));
-        assertThat(metricMass.getTotalBaseUnits(), is(1.));
+    @Before
+    public void setup() {
+        SUT = new MetricMass();
     }
 
     @Test
-    public void testBaseSiOutOfRangeMin() { // OUT OF RANGE MIN
+    public void baseUnitsAreSet_inRangeMin_setTrue() { // IN RANGE MIN
 
-        assertThat(metricMass.baseUnitsAreSet(0.9), is(false));
-
-        assertThat(metricMass.getTotalMeasurementOne(), is(0.));
-        assertThat(metricMass.getItemMeasurementOne(), is(0.));
-        assertThat(metricMass.getTotalMeasurementTwo(), is(0));
-        assertThat(metricMass.getItemMeasurementTwo(), is(0));
-        assertThat(metricMass.getTotalBaseUnits(), is(0.));
+        assertTrue(SUT.totalBaseUnitsAreSet(MINIMUM_MASS));
+        assertEquals(MINIMUM_MASS, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
     }
 
     @Test
-    public void testBaseSiInRangeMax() { // IN RANGE MAX
+    public void baseUnitsAreSet_outOfRangeMin_setFalse() {
 
-        assertThat(metricMass.baseUnitsAreSet(MAXIMUM_MASS), is(true));
-
-        assertThat(metricMass.getTotalMeasurementOne(), is(0.));
-        assertThat(metricMass.getTotalMeasurementTwo(), is(10));
-        assertThat(metricMass.getItemMeasurementOne(), is(0.));
-        assertThat(metricMass.getItemMeasurementTwo(), is(10));
-        assertThat(metricMass.getTotalBaseUnits(), is(MAXIMUM_MASS));
+        assertFalse(SUT.totalBaseUnitsAreSet(MINIMUM_MASS - .1));
+        assertEquals(0, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
     }
 
     @Test
-    public void testBaseSiOutOfRangeMax() { // OUT OF RANGE MAX
+    public void baseUnitsAreSet_inRangeMax_setTrue() {
 
-        assertThat(metricMass.baseUnitsAreSet(MAXIMUM_MASS + 1), is(false));
-
-        assertThat(metricMass.getTotalMeasurementOne(), is(0.));
-        assertThat(metricMass.getTotalMeasurementTwo(), is(0));
-        assertThat(metricMass.getItemMeasurementOne(), is(0.));
-        assertThat(metricMass.getItemMeasurementTwo(), is(0));
-        assertThat(metricMass.getTotalBaseUnits(), is(0.));
+        assertTrue(SUT.totalBaseUnitsAreSet(MAXIMUM_MASS));
+        assertEquals(SUT.getTotalBaseUnits(), MAXIMUM_MASS, ERROR_MARGIN_DELTA);
     }
 
     @Test
-    public void testBaseSiViolatesMinimumItemSize() { // CONDITION: BASE SI SMALLER THAN SMALLEST ITEM
+    public void baseUnitsAreSet_outOfRangeMax_setFalse() {
 
-        assertThat(metricMass.numberOfItemsIsSet(5), is(true));
-
-        assertThat(metricMass.baseUnitsAreSet(4), is(false));
-
-        assertThat(metricMass.getTotalMeasurementOne(), is(0.));
-        assertThat(metricMass.getTotalMeasurementTwo(), is(0));
-        assertThat(metricMass.getItemMeasurementOne(), is(0.));
-        assertThat(metricMass.getItemMeasurementTwo(), is(0));
-        assertThat(metricMass.getTotalBaseUnits(), is(0.));
+        assertFalse(SUT.totalBaseUnitsAreSet(MAXIMUM_MASS + 1));
+        assertEquals(0, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
     }
 
     @Test
-    public void testBaseSiAtMinimumItemSize() { // CONDITION: BASE SI SAME AS SMALLEST ITEM
+    public void baseUnitsAreSet_baseUnitsViolateMinimumItemSize_noOfItemsAdjusted() {
 
-        assertThat(metricMass.numberOfItemsIsSet(5), is(true));
-
-        assertThat(metricMass.baseUnitsAreSet(5), is(true));
-
-        assertThat(metricMass.getTotalMeasurementOne(), is(5.));
-        assertThat(metricMass.getTotalMeasurementTwo(), is(0));
-        assertThat(metricMass.getItemMeasurementOne(), is(1.));
-        assertThat(metricMass.getItemMeasurementTwo(), is(0));
-        assertThat(metricMass.getTotalBaseUnits(), is(5.));
+        assertTrue(SUT.numberOfItemsIsSet(5));
+        assertTrue(SUT.totalBaseUnitsAreSet(4));
+        assertEquals(4, SUT.getNumberOfItems());
+        assertEquals(4, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
     }
 
     @Test
-    public void testBaseSiRetrieveFromPackAndItem() {// CONDITION: BASE SI SET, CHECK PACK AND ITEM UPDATED
+    public void baseUnitsAreSet_baseAtMinimumItemSize_setTrue() {
 
-        // Set base SI
-        assertThat(metricMass.baseUnitsAreSet(5500), is(true));
-
-        // Check pack and item values have updated correctly
-        assertThat(metricMass.getTotalMeasurementOne(), is(500.));
-        assertThat(metricMass.getTotalMeasurementTwo(), is(5));
-        assertThat(metricMass.getItemMeasurementOne(), is(500.));
-        assertThat(metricMass.getItemMeasurementTwo(), is(5));
-        assertThat(metricMass.getTotalBaseUnits(), is(5500.));
-    }
-
-    //////////////////////////// PACK MEASUREMENT ONE TESTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-    @Test
-    public void testMeasurementUnitOneInRangeMax() { // IN RANGE MAX
-
-        // Set to max
-        assertThat(metricMass.totalMeasurementOneIsSet(MAXIMUM_MASS), is(true));
-
-        // Check value set
-        assertThat(metricMass.getTotalMeasurementOne(), is(0.));
-        assertThat(metricMass.getTotalMeasurementTwo(), is(10));
-        assertThat(metricMass.getItemMeasurementOne(), is(0.));
-        assertThat(metricMass.getItemMeasurementTwo(), is(10));
-        assertThat(metricMass.getTotalBaseUnits(), is(MAXIMUM_MASS));
+        assertTrue(SUT.numberOfItemsIsSet(5));
+        assertTrue(SUT.totalBaseUnitsAreSet(5));
+        assertEquals(MINIMUM_MASS, SUT.getItemMeasurementOne(), ERROR_MARGIN_DELTA);
+        assertEquals(5, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
     }
 
     @Test
-    public void testMeasurementUnitOneOutOfRangeMax() { // OUT OF RANGE MAX
+    public void baseUnitsAreSet_totalAndItemUpdated() {
 
-        // Set to max plus 1
-        assertThat(metricMass.totalMeasurementOneIsSet(10001), is(false));
+        assertTrue(SUT.totalBaseUnitsAreSet(5500));
 
-        // Check values unchanged
-        assertThat(metricMass.getTotalMeasurementOne(), is(0.));
-        assertThat(metricMass.getTotalMeasurementTwo(), is(0));
-        assertThat(metricMass.getItemMeasurementOne(), is(0.));
-        assertThat(metricMass.getItemMeasurementTwo(), is(0));
-        assertThat(metricMass.getTotalBaseUnits(), is(0.));
+        assertEquals(500, SUT.getTotalMeasurementOne(), ERROR_MARGIN_DELTA);
+        assertEquals(5, SUT.getTotalMeasurementTwo(), ERROR_MARGIN_DELTA);
+        assertEquals(500, SUT.getItemMeasurementOne(), ERROR_MARGIN_DELTA);
+        assertEquals(5, SUT.getItemMeasurementTwo());
     }
 
     @Test
-    public void testMeasurementUnitOneInRangeMin() { // IN RANGE MIN
+    public void totalMeasurementOne_inRangeMax_setTrue() {
 
-        // Set to minimum
-        assertThat(metricMass.totalMeasurementOneIsSet(1.), is(true));
+        assertTrue(SUT.totalMeasurementOneIsSet(MAXIMUM_MASS));
 
-        // Check set
-        assertThat(metricMass.getTotalMeasurementOne(), is(1.));
-        assertThat(metricMass.getTotalMeasurementTwo(), is(0));
-        assertThat(metricMass.getItemMeasurementOne(), is(1.));
-        assertThat(metricMass.getItemMeasurementTwo(), is(0));
-        assertThat(metricMass.getTotalBaseUnits(), is(1.));
+        assertEquals(0, SUT.getTotalMeasurementOne(), ERROR_MARGIN_DELTA);
+        assertEquals((int) MAXIMUM_MASS / 1000, SUT.getTotalMeasurementTwo());
+        assertEquals((int) MAXIMUM_MASS % 1000, SUT.getItemMeasurementOne(), ERROR_MARGIN_DELTA);
+        assertEquals((int) MAXIMUM_MASS / 1000, SUT.getItemMeasurementTwo());
+
+        assertEquals(MAXIMUM_MASS, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
     }
 
     @Test
-    public void testMeasurementUnitOneOutOfRangeMin() { // OUT OF RANGE MIN
+    public void totalMeasurementOne_outOfRangeMax_setFalse() {
 
-        // Set to .1 below min
-        assertThat(metricMass.totalMeasurementOneIsSet(0.9), is(false));
-
-        // Check values unchanged
-        assertThat(metricMass.getTotalMeasurementOne(), is(0.));
-        assertThat(metricMass.getTotalMeasurementTwo(), is(0));
-        assertThat(metricMass.getItemMeasurementOne(), is(0.));
-        assertThat(metricMass.getItemMeasurementTwo(), is(0));
-        assertThat(metricMass.getTotalBaseUnits(), is(0.));
-    }
-
-    //////////////////////////// PACK MEASUREMENT TWO TESTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-    @Test
-    public void testMaximumInRangeMeasurementUnitTwo() { // IN RANGE MAX
-
-        // Set to max
-        assertThat(metricMass.totalMeasurementTwoIsSet(10), is(true));
-
-        // Check value set
-        assertThat(metricMass.getTotalMeasurementOne(), is(0.));
-        assertThat(metricMass.getTotalMeasurementTwo(), is(10));
-        assertThat(metricMass.getItemMeasurementOne(), is(0.));
-        assertThat(metricMass.getItemMeasurementTwo(), is(10));
+        assertFalse(SUT.totalMeasurementOneIsSet(MAXIMUM_MASS + 1));
+        assertEquals(0, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
     }
 
     @Test
-    public void testMaximumOutOfRangeMeasurementUnitTwo() { // OUT OF RANGE MAX
+    public void totalMeasurementOne_inRangeMin_setTrue() {
 
-        // Set to max +1
-        assertThat(metricMass.totalMeasurementTwoIsSet(11), is(false));
+        assertTrue(SUT.totalMeasurementOneIsSet(MINIMUM_MASS));
 
-        // Check values unchanged
-        assertThat(metricMass.getTotalMeasurementOne(), is(0.));
-        assertThat(metricMass.getTotalMeasurementTwo(), is(0));
-        assertThat(metricMass.getItemMeasurementOne(), is(0.));
-        assertThat(metricMass.getItemMeasurementTwo(), is(0));
-        assertThat(metricMass.getTotalBaseUnits(), is(0.));
+        assertEquals(MINIMUM_MASS, SUT.getTotalMeasurementOne(), ERROR_MARGIN_DELTA);
+        assertEquals(MINIMUM_MASS, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
     }
 
     @Test
-    public void testMinInRangeMeasurementUnitTwo() { // IN RANGE MIN
+    public void totalMeasurementOne_outOfRangeMin_setFalse() {
 
-        // Set to min
-        assertThat(metricMass.totalMeasurementTwoIsSet(1), is(true));
-
-        // Check value set
-        assertThat(metricMass.getTotalMeasurementOne(), is(0.));
-        assertThat(metricMass.getTotalMeasurementTwo(), is(1));
-        assertThat(metricMass.getItemMeasurementOne(), is(0.));
-        assertThat(metricMass.getItemMeasurementTwo(), is(1));
-        assertThat(metricMass.getTotalBaseUnits(), is(1000.));
+        assertFalse(SUT.totalMeasurementOneIsSet(MINIMUM_MASS - .1));
+        assertEquals(0, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
     }
 
     @Test
-    public void testMinimumOutOfRangeMeasurementTwo() { // OUT OF RANGE MIN
+    public void totalMeasurementTwoIsSet_inRangeMax_setTrue() {
 
-        // Set to min -1
-        assertThat(metricMass.totalMeasurementTwoIsSet(-1), is(false));
-
-        // Check values unchanged
-        assertThat(metricMass.getTotalMeasurementOne(), is(0.));
-        assertThat(metricMass.getTotalMeasurementTwo(), is(0));
-        assertThat(metricMass.getItemMeasurementOne(), is(0.));
-        assertThat(metricMass.getItemMeasurementTwo(), is(0));
-        assertThat(metricMass.getTotalBaseUnits(), is(0.));
-    }
-
-    //////////////////////////// PACK ONE AND TWO TESTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-    @Test
-    public void testInRangeMeasurementOneAndTwo() { // CONDITION: IN RANGE
-
-        // Set arbitrary in range value
-        assertThat(metricMass.totalMeasurementOneIsSet(500), is(true));
-        assertThat(metricMass.totalMeasurementTwoIsSet(5), is(true));
-
-        // Check values set
-        assertThat(metricMass.getTotalMeasurementOne(), is(500.));
-        assertThat(metricMass.getTotalMeasurementTwo(), is(5));
-        assertThat(metricMass.getItemMeasurementOne(), is(500.));
-        assertThat(metricMass.getItemMeasurementTwo(), is(5));
-        assertThat(metricMass.getTotalBaseUnits(), is(5500.));
-    }
-
-    //TODO////////////////////////// ITEM ONE AND TWO TESTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-    //////////////////////////// SETTING NUMBER OF ITEMS TESTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-    @Test
-    public void testSetNumberOfItemsMinInRangeWithNoBaseSi() { // CONDITION: BASE SI NOT YET SET - IN RANGE MIN
-
-        // Set arbitrary number of items, base si at zero
-        assertThat(metricMass.numberOfItemsIsSet(5), is(true));
-
-        // Check set
-        assertThat(metricMass.getNumberOfItems(), is(5));
-        // Check values unchanged
-        assertThat(metricMass.getTotalMeasurementOne(), is(0.));
-        assertThat(metricMass.getTotalMeasurementTwo(), is(0));
-        assertThat(metricMass.getItemMeasurementOne(), is(0.));
-        assertThat(metricMass.getItemMeasurementTwo(), is(0));
-        assertThat(metricMass.getTotalBaseUnits(), is(0.));
+        assertTrue(SUT.totalMeasurementTwoIsSet((int) MAXIMUM_MASS / 1000));
+        assertEquals(MAXIMUM_MASS, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
     }
 
     @Test
-    public void testSetNumberOfItemsMinOutOfRangeWithNoBaseSi() { // CONDITION: BASE SI NOT YET SET - OUT OF RANGE MIN
+    public void totalMeasurementTwoIsSet_outOfRangeMax_setFalse() {
 
-        // Set out of range min
-        assertThat(metricMass.numberOfItemsIsSet(0), is(false));
-
-        // Check values unchanged (1 is default)
-        assertThat(metricMass.getNumberOfItems(), is(1));
-
-        // Check values unchanged
-        assertThat(metricMass.getTotalMeasurementOne(), is(0.));
-        assertThat(metricMass.getTotalMeasurementTwo(), is(0));
-        assertThat(metricMass.getItemMeasurementOne(), is(0.));
-        assertThat(metricMass.getItemMeasurementTwo(), is(0));
-        assertThat(metricMass.getTotalBaseUnits(), is(0.));
+        assertFalse(SUT.totalMeasurementTwoIsSet((int) (MAXIMUM_MASS / 1000) + 1));
+        assertEquals(0, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
     }
 
     @Test
-    public void testNumberOfItemsInRangeMaxWithNoBaseSI() { // CONDITION: BASE SI NOT YET SET - IN RANGE MAX
+    public void totalMeasurementTwoIsSet_inRangeMin_setTrue() {
 
-        // Set to max within range
-        assertThat(metricMass.numberOfItemsIsSet(999), is(true));
-
-        // Check set
-        assertThat(metricMass.getNumberOfItems(), is(999));
-
-        // Check values unchanged
-        assertThat(metricMass.getTotalMeasurementOne(), is(0.));
-        assertThat(metricMass.getTotalMeasurementTwo(), is(0));
-        assertThat(metricMass.getItemMeasurementOne(), is(0.));
-        assertThat(metricMass.getItemMeasurementTwo(), is(0));
-        assertThat(metricMass.getTotalBaseUnits(), is(0.));
+        assertTrue(SUT.totalMeasurementTwoIsSet((int) MAXIMUM_MASS / 10000));
+        assertEquals(MAXIMUM_MASS / 10, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
     }
 
     @Test
-    public void testNumberOfItemsOutOfRangeMaxWithNoBaseSI() { // CONDITION: BASE SI NOT YET SET - OUT OF RANGE MAX
+    public void totalMeasurementOneAndTwo_inRange_setTrue() {
 
-        // Set to max +1
-        assertThat(metricMass.numberOfItemsIsSet(1000), is(false));
+        assertTrue(SUT.totalMeasurementOneIsSet(500));
+        assertTrue(SUT.totalMeasurementTwoIsSet(5));
 
-        // Check values unchanged
-        assertThat(metricMass.getNumberOfItems(), is(1));
+        assertEquals(500, SUT.getTotalMeasurementOne(), ERROR_MARGIN_DELTA);
+        assertEquals(5, SUT.getTotalMeasurementTwo());
 
-        // Check values unchanged
-        assertThat(metricMass.getTotalMeasurementOne(), is(0.));
-        assertThat(metricMass.getTotalMeasurementTwo(), is(0));
-        assertThat(metricMass.getItemMeasurementOne(), is(0.));
-        assertThat(metricMass.getItemMeasurementTwo(), is(0));
-        assertThat(metricMass.getTotalBaseUnits(), is(0.));
+        assertEquals(5500, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
     }
 
     @Test
-    public void testNumberOfItemsInRangeMinWithBaseSI() { // CONDITION: BASE SI SET BY PACK ONE - NO OF ITEMS IN RANGE MIN
-
-        // Set value to pack measurement - sets lastMeasurementUpdated to PACK
-        // When number of items is updated item measurement should change
-        assertThat(metricMass.totalMeasurementOneIsSet(2), is(true));
-
-        // Set number of items
-        assertThat(metricMass.numberOfItemsIsSet(2), is(true));
-
-        // Check item measurement changed
-        assertThat(metricMass.getTotalMeasurementOne(), is(2.));
-        assertThat(metricMass.getTotalMeasurementTwo(), is(0));
-        assertThat(metricMass.getItemMeasurementOne(), is(1.));
-        assertThat(metricMass.getItemMeasurementTwo(), is(0));
-        assertThat(metricMass.getTotalBaseUnits(), is(2.));
+    public void numberOfItemsIsSet_noBaseUnitsInRangeMax_setTrue() {
+        assertTrue(SUT.numberOfItemsIsSet(MAXIMUM_NUMBER_OF_ITEMS));
     }
 
     @Test
-    public void testNumberOfItemsOutOfRangeAdjustsItemSize() { // CONDITION: BASE SI SET BY PACK ONE - NO OF ITEMS IN RANGE (ODD)
+    public void numberOfItemsIsSet_noBaseUnitsMinOutOfRange_setFalse() {
+        assertFalse(SUT.numberOfItemsIsSet(MINIMUM_NUMBER_OF_ITEMS - 1));
+        assertEquals(MINIMUM_NUMBER_OF_ITEMS, SUT.getNumberOfItems());
+    }
 
-        // Set pack to number not divisible by number of items
-        assertThat(metricMass.totalMeasurementOneIsSet(3), is(true));
+    @Test
+    public void numberOfItemsIsSet_noBaseUnitsOutOfRangeMax_setFalse() {
+        assertFalse(SUT.numberOfItemsIsSet(MAXIMUM_NUMBER_OF_ITEMS + 1));
+        assertEquals(MINIMUM_NUMBER_OF_ITEMS, SUT.getNumberOfItems());
+    }
+
+    @Test
+    public void numberOfItemsIsSet_inRangeMinWithBaseUnitsSet_setTrue() {
+
+        assertTrue(SUT.totalMeasurementOneIsSet(2));
+        assertTrue(SUT.numberOfItemsIsSet(2));
+        assertEquals(2, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
+    }
+
+    @Test
+    public void numberOfItemsIsSet_outOfRangeOdd_adjustsItemSize() {
+
+        // Set total to number not divisible by number of items
+        assertTrue(SUT.totalMeasurementOneIsSet(3));
 
         // Set number of items not divisible by pack size
-        assertThat(metricMass.numberOfItemsIsSet(2), is(true));
+        assertTrue(SUT.numberOfItemsIsSet(2));
 
         // Check item measurements have rounded correctly
-        assertThat(metricMass.getTotalMeasurementOne(), is(3.));
-        assertThat(metricMass.getTotalMeasurementTwo(), is(0));
-        assertThat(metricMass.getItemMeasurementOne(), is(1.));
-        assertThat(metricMass.getItemMeasurementTwo(), is(0));
-        assertThat(metricMass.getTotalBaseUnits(), is(3.));
+        assertEquals(3, SUT.getTotalMeasurementOne(), ERROR_MARGIN_DELTA);
+        assertEquals(0, SUT.getTotalMeasurementTwo());
+        assertEquals(1, SUT.getItemMeasurementOne(), ERROR_MARGIN_DELTA);
+        assertEquals(0, SUT.getItemMeasurementTwo(), ERROR_MARGIN_DELTA);
+        assertEquals(3, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
     }
 
     @Test
-    public void testNumberOfItemsAdjustsItemSize() { // CONDITION: BASE SI SET BY PACK ONE & TWO - NO OF ITEMS ADJUSTS ITEM SIZE
+    public void numberOfItemsIsSet_addingNumberOfItemsAdjustsItemSize_setTrue() {
 
         // Set value to both pack measurements - sets lastMeasurementUpdated to PACK
         // When number of items is updated item measurement should change
-        assertThat(metricMass.totalMeasurementOneIsSet(500), is(true));
-        assertThat(metricMass.totalMeasurementTwoIsSet(1), is(true));
-
+        assertTrue(SUT.totalMeasurementOneIsSet(500));
+        assertTrue(SUT.totalMeasurementTwoIsSet(1));
         // Set number of items
-        assertThat(metricMass.numberOfItemsIsSet(2), is(true));
-
+        assertTrue(SUT.numberOfItemsIsSet(2));
         // Check item measurements have changed
-        assertThat(metricMass.getTotalMeasurementOne(), is(500.));
-        assertThat(metricMass.getTotalMeasurementTwo(), is(1));
-        assertThat(metricMass.getItemMeasurementOne(), is(750.));
-        assertThat(metricMass.getItemMeasurementTwo(), is(0));
-        assertThat(metricMass.getTotalBaseUnits(), is(1500.));
+        assertEquals(750, SUT.getItemMeasurementOne(), ERROR_MARGIN_DELTA);
+        assertEquals(0, SUT.getItemMeasurementTwo());
+        assertEquals(1500, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
     }
 
     @Test
-    public void testNumberOfItemsOneAdjustsPackSize() { // CONDITION: BASE SI SET BY ITEM ONE - NO OF ITEMS ADJUSTS PACK SIZE
+    public void numberOfItemsIsSet_numberOfItemsAdjustsTotalSize_setTrue() {
 
         // Set value to item measurement - sets lastMeasurementUpdated to ITEM
-        // When number of items is updated PACK measurement should change
-        assertThat(metricMass.itemMeasurementOneIsSet(500), is(true));
-
+        // When number of items is updated TOTAL measurement should change
+        assertTrue(SUT.itemMeasurementOneIsSet(500));
         // Set number of items
-        assertThat(metricMass.numberOfItemsIsSet(2), is(true));
-
+        assertTrue(SUT.numberOfItemsIsSet(2));
         // Check pack measurement have changed
-        assertThat(metricMass.getTotalMeasurementOne(), is(0.));
-        assertThat(metricMass.getTotalMeasurementTwo(), is(1));
-        assertThat(metricMass.getItemMeasurementOne(), is(500.));
-        assertThat(metricMass.getItemMeasurementTwo(), is(0));
-        assertThat(metricMass.getTotalBaseUnits(), is(1000.));
+        assertEquals(1, SUT.getTotalMeasurementTwo());
+        assertEquals(500, SUT.getItemMeasurementOne(), ERROR_MARGIN_DELTA);
+        assertEquals(1000, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
     }
 
     @Test
-    public void testNumberOfItemsOneAndTwoAdjustsPackSize() { // CONDITION: BASE SI SET BY ITEM ONE & TWO - NO OF ITEMS ADJUSTS PACK SIZE - IN RANGE
+    public void numberOfItemsIsSet_itemsOneAndTwoAdjustsTotalSize_setTrue() {
 
         // Set value to both item measurements - sets lastMeasurementUpdated to ITEM
-        // When number of items is updated PACK measurement should change
-        assertThat(metricMass.itemMeasurementOneIsSet(500), is(true));
-        assertThat(metricMass.itemMeasurementTwoIsSet(1), is(true));
+        // When number of items is updated TOTAL measurement should change
+        assertTrue(SUT.itemMeasurementOneIsSet(500));
+        assertTrue(SUT.itemMeasurementTwoIsSet(1));
 
         // Set items
-        assertThat(metricMass.numberOfItemsIsSet(2), is(true));
+        assertTrue(SUT.numberOfItemsIsSet(2));
 
         // Check PACK measurements have changed
-        assertThat(metricMass.getTotalMeasurementOne(), is(0.));
-        assertThat(metricMass.getTotalMeasurementTwo(), is(3));
-        assertThat(metricMass.getItemMeasurementOne(), is(500.));
-        assertThat(metricMass.getItemMeasurementTwo(), is(1));
-        assertThat(metricMass.getTotalBaseUnits(), is(3000.));
+        assertEquals(0, SUT.getTotalMeasurementOne(), ERROR_MARGIN_DELTA);
+        assertEquals(3, SUT.getTotalMeasurementTwo());
+        assertEquals(500, SUT.getItemMeasurementOne(), ERROR_MARGIN_DELTA);
+        assertEquals(1, SUT.getItemMeasurementTwo());
+        assertEquals(3000, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
     }
 
     @Test
-    public void testNumberOfItemsSetItemOneAndTwoAdjustsPackSizeOutOfRange() { // CONDITION: BASE SI SET BY ITEM ONE & TWO - NO OF ITEMS ADJUSTS PACK SIZE - OUT OF RANGE MAX
+    public void numberOfItemsIsSet_itemOneAndTwoAdjustsTotalSizeOutOfRange_setFalse() {
 
         // Set value to both item measurements - sets lastMeasurementUpdated to ITEM
-        // When number of items is updated PACK measurement should change
-        assertThat(metricMass.itemMeasurementOneIsSet(1), is(true));
-        assertThat(metricMass.itemMeasurementTwoIsSet(5), is(true));
+        // When number of items is updated TOTAL measurement should change
+        assertTrue(SUT.itemMeasurementTwoIsSet((int) MAXIMUM_MASS / 2 / 1000));
+        assertTrue(SUT.itemMeasurementOneIsSet(1));
 
-        // Set items so to high
-        assertThat(metricMass.numberOfItemsIsSet(2), is(false));
+        // Set items out of range for this measurement (2 * 5001 = 10002 > MAX_MASS)
+        assertFalse(SUT.numberOfItemsIsSet(2));
 
         // Check values unchanged
-        assertThat(metricMass.getTotalMeasurementOne(), is(1.));
-        assertThat(metricMass.getTotalMeasurementTwo(), is(5));
-        assertThat(metricMass.getItemMeasurementOne(), is(1.));
-        assertThat(metricMass.getItemMeasurementTwo(), is(5));
-        assertThat(metricMass.getTotalBaseUnits(), is(5001.));
+        assertEquals(5001, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
     }
 
     @Test
-    public void testNumberOfItemsInRangeSetWithItemWithBaseSiThenChangedAgain() {
-        // CONDITION: BASE SI SET BY ITEM - NO OF ITEMS CHANGED - THEN NO OF ITEMS CHANGED AGAIN
-
-        // Set item measurement last changed by setting item measurement
-        assertThat(metricMass.itemMeasurementOneIsSet(500), is(true));
-        assertThat(metricMass.itemMeasurementTwoIsSet(1), is(true));
+    public void numberOfItemsIsSet_inRangeSetWithItemWithBaseSiThenChanged_measurementsAsExpected() {
+        // Set item measurement as last changed
+        assertTrue(SUT.itemMeasurementOneIsSet(500));
+        assertTrue(SUT.itemMeasurementTwoIsSet(1));
 
         // Change number of items
-        assertThat(metricMass.numberOfItemsIsSet(3), is(true));
+        assertTrue(SUT.numberOfItemsIsSet(3));
 
-        // Check pack measurement has changed
-        assertThat(metricMass.getTotalMeasurementOne(), is(500.));
-        assertThat(metricMass.getTotalMeasurementTwo(), is(4));
-        assertThat(metricMass.getItemMeasurementOne(), is(500.));
-        assertThat(metricMass.getItemMeasurementTwo(), is(1));
-        assertThat(metricMass.getTotalBaseUnits(), is(4500.));
+        // Check total measurement has changed
+        assertEquals(500, SUT.getTotalMeasurementOne(), ERROR_MARGIN_DELTA);
+        assertEquals(4, SUT.getTotalMeasurementTwo());
+        assertEquals(500, SUT.getItemMeasurementOne(), ERROR_MARGIN_DELTA);
+        assertEquals(1, SUT.getItemMeasurementTwo());
+        assertEquals(4500, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
 
-        // Set item measurement again
-        assertThat(metricMass.numberOfItemsIsSet(5), is(true));
+        // Set number of items again
+        assertTrue(SUT.numberOfItemsIsSet(5));
 
-        // Check pack measurement changed
-        assertThat(metricMass.getTotalMeasurementOne(), is(500.));
-        assertThat(metricMass.getTotalMeasurementTwo(), is(7));
-        assertThat(metricMass.getItemMeasurementOne(), is(500.));
-        assertThat(metricMass.getItemMeasurementTwo(), is(1));
-        assertThat(metricMass.getTotalBaseUnits(), is(7500.));
+        // Check total measurement changed again
+        assertEquals(500, SUT.getTotalMeasurementOne(), ERROR_MARGIN_DELTA);
+        assertEquals(7, SUT.getTotalMeasurementTwo());
+        assertEquals(500, SUT.getItemMeasurementOne(), ERROR_MARGIN_DELTA);
+        assertEquals(1, SUT.getItemMeasurementTwo());
+        assertEquals(7500, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
     }
 
     @Test
     public void testNumberOfItemsInRangeSetWith_ItemWithBaseSI() {
-        // CONDITION: BASE SI SET BY PACK - NO OF ITEMS CHANGED - THEN NO OF ITEMS CHANGED AGAIN
-
-        // Set pack measurement last changed by setting pack measurement
-        assertThat(metricMass.totalMeasurementTwoIsSet(10), is(true));
-        assertThat(metricMass.getTotalBaseUnits(), is(MAXIMUM_MASS));
+        // Set total measurement as last
+        assertTrue(SUT.totalMeasurementTwoIsSet((int) MAXIMUM_MASS / 1000));
+        assertEquals(MAXIMUM_MASS, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
 
         // Change number of items
-        assertThat(metricMass.numberOfItemsIsSet(10), is(true));
-
-        assertThat(metricMass.getTotalMeasurementOne(), is(0.));
-        assertThat(metricMass.getTotalMeasurementTwo(), is(10));
+        assertTrue(SUT.numberOfItemsIsSet(10));
+        assertEquals(10, SUT.getTotalMeasurementTwo());
 
         // Check item measurements have changed
-        assertThat(metricMass.getItemMeasurementOne(), is(0.));
-        assertThat(metricMass.getItemMeasurementTwo(), is(1));
-        assertThat(metricMass.getTotalBaseUnits(), is(MAXIMUM_MASS));
+        assertEquals(0, SUT.getItemMeasurementOne(), ERROR_MARGIN_DELTA);
+        assertEquals(1, SUT.getItemMeasurementTwo(), ERROR_MARGIN_DELTA);
+        assertEquals(MAXIMUM_MASS, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
 
         // Change number of items
-        assertThat(metricMass.numberOfItemsIsSet(20), is(true));
+        assertTrue(SUT.numberOfItemsIsSet(20));
 
-        assertThat(metricMass.getTotalMeasurementOne(), is(0.));
-        assertThat(metricMass.getTotalMeasurementTwo(), is(10));
+        assertEquals(0, SUT.getTotalMeasurementOne(), ERROR_MARGIN_DELTA);
+        assertEquals(10, SUT.getTotalMeasurementTwo());
         // Check item measurements have changed
-        assertThat(metricMass.getItemMeasurementOne(), is(500.));
-        assertThat(metricMass.getItemMeasurementTwo(), is(0));
-        assertThat(metricMass.getTotalBaseUnits(), is(MAXIMUM_MASS));
+        assertEquals(500, SUT.getItemMeasurementOne(), ERROR_MARGIN_DELTA);
+        assertEquals(0, SUT.getItemMeasurementTwo());
+        assertEquals(MAXIMUM_MASS, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
     }
 
     @Test
-    public void testMixedNumberReturnValues() {
-
-        assertThat(metricMass.baseUnitsAreSet(5), is(true));
-        assertThat(metricMass.numberOfItemsIsSet(3), is(true));
-        assertThat(metricMass.getTotalMeasurementOne(), is(5.));
-        assertThat(metricMass.getItemMeasurementOne(), is(1.0));
+    public void baseUnitsAreSet_testMixedNumberReturnValues() {
+        assertTrue(SUT.totalBaseUnitsAreSet(5));
+        assertTrue(SUT.numberOfItemsIsSet(3));
+        assertEquals(5, SUT.getTotalMeasurementOne(), ERROR_MARGIN_DELTA);
+        assertEquals(1, SUT.getItemMeasurementOne(), ERROR_MARGIN_DELTA);
     }
 
     @Test
-    public void test_setting_pack_one() {
-
-        assertThat(metricMass.getTotalBaseUnits(), is(0.));
-        assertThat(metricMass.numberOfItemsIsSet(2), is(true));
-        assertThat(metricMass.totalMeasurementOneIsSet(2.), is(true));
-        assertThat(metricMass.getTotalBaseUnits(), is(2.));
-        assertThat(metricMass.totalMeasurementOneIsSet(20.), is(true));
-        assertThat(metricMass.getTotalBaseUnits(), is(20.));
+    public void setTotalMeasurementOne_measurementIsSet() {
+        assertTrue(SUT.numberOfItemsIsSet(2));
+        assertTrue(SUT.totalMeasurementOneIsSet(2.));
+        assertEquals(2, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
+        assertTrue(SUT.totalMeasurementOneIsSet(20));
+        assertEquals(20, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
     }
 
     @Test
-    public void settingBaseSi() {
-
-        assertThat(metricMass.numberOfItemsIsSet(2), is(true));
-        assertThat(metricMass.totalMeasurementOneIsSet(2), is(true));
-        assertThat(metricMass.totalMeasurementOneIsSet(20.), is(true));
-        assertThat(metricMass.getTotalBaseUnits(), is(20.));
-        assertThat(metricMass.getTotalMeasurementOne(), is(20.));
+    public void baseUnitsAreSet_setTrue() {
+        assertTrue(SUT.numberOfItemsIsSet(2));
+        assertTrue(SUT.totalMeasurementOneIsSet(2));
+        assertTrue(SUT.totalMeasurementOneIsSet(20));
+        assertEquals(20, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
+        assertEquals(20, SUT.getTotalMeasurementOne(), ERROR_MARGIN_DELTA);
     }
 
     @Test
     public void test_for_zero_base_units_with_false_return() {
-
-        // Setup
-        assertThat(metricMass.numberOfItemsIsSet(2), is(true));
-        assertThat(metricMass.totalMeasurementOneIsSet(500), is(true));
-        assertThat(metricMass.totalMeasurementTwoIsSet(1), is(true));
-        assertThat(metricMass.getTotalBaseUnits(), is(1500.));
+        assertTrue(SUT.numberOfItemsIsSet(2));
+        assertTrue(SUT.totalMeasurementOneIsSet(500));
+        assertTrue(SUT.totalMeasurementTwoIsSet(1));
+        assertEquals(1500, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
 
         // Gradual teardown, as the user would type
-        assertThat(metricMass.totalMeasurementTwoIsSet(0), is(true));
-        assertThat(metricMass.getTotalBaseUnits(), is(500.));
+        assertTrue(SUT.totalMeasurementTwoIsSet(0));
+        assertEquals(500, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
 
-        assertThat(metricMass.totalMeasurementOneIsSet(50), is(true));
-        assertThat(metricMass.getTotalBaseUnits(), is(50.));
+        assertTrue(SUT.totalMeasurementOneIsSet(50));
+        assertEquals(50, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
 
-        assertThat(metricMass.totalMeasurementOneIsSet(5), is(true));
-        assertThat(metricMass.getTotalBaseUnits(), is(5.));
+        assertTrue(SUT.totalMeasurementOneIsSet(5));
+        assertEquals(5, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
 
-        assertThat(metricMass.baseUnitsAreSet(0), is(false));
-        assertThat(metricMass.getTotalBaseUnits(), is(0.));
+        assertFalse(SUT.totalBaseUnitsAreSet(0));
+        assertEquals(0, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
 
-        assertThat(metricMass.getTotalMeasurementOne(), is(0.));
-        assertThat(metricMass.getItemMeasurementOne(), is(0.));
-        assertThat(metricMass.getTotalMeasurementTwo(), is(0));
-        assertThat(metricMass.getItemMeasurementTwo(), is(0));
+        assertEquals(0, SUT.getTotalMeasurementOne(), ERROR_MARGIN_DELTA);
+        assertEquals(0, SUT.getTotalMeasurementTwo());
+        assertEquals(0, SUT.getItemMeasurementOne(), ERROR_MARGIN_DELTA);
+        assertEquals(0, SUT.getItemMeasurementTwo());
+    }
+
+    @Test
+    public void itemBaseUnitsAreSet_thenNumberOfItems_itemSizeIsTotalBaseUnitsDivNumberItems() {
+        // Arrange
+        // Act
+        SUT.itemBaseUnitsAreSet(2000);
+        SUT.numberOfItemsIsSet(4);
+        // Assert
+        assertEquals(2, SUT.getTotalMeasurementTwo());
+        assertEquals(500, SUT.getItemMeasurementOne(), ERROR_MARGIN_DELTA);
+    }
+
+    @Test
+    public void numberOfItemsIsSet_thenItemBaseUnitsAreSet_itemSizeIsTotalBaseUnitsMultipliedByNumberItems() {
+        // Arrange
+        // Act
+        SUT.numberOfItemsIsSet(4);
+        SUT.itemBaseUnitsAreSet(2000);
+        // Assert
+        assertEquals(8, SUT.getTotalMeasurementTwo());
+        assertEquals(0, SUT.getItemMeasurementOne(), ERROR_MARGIN_DELTA);
     }
 }

@@ -25,7 +25,7 @@ public class UnitOfMeasureListItemBindingAdapter {
                                              int numberOfItems) {
 
         UnitOfMeasure unitOfMeasure = MeasurementSubtype.fromInt(subtypeInt).getMeasurementClass();
-        boolean baseUnitsAreSet = unitOfMeasure.baseUnitsAreSet(baseUnits);
+        boolean baseUnitsAreSet = unitOfMeasure.totalBaseUnitsAreSet(baseUnits);
         boolean numberOfItemsAreSet = unitOfMeasure.numberOfItemsIsSet(numberOfItems);
         Resources resources = view.getResources();
         String measurement = "";

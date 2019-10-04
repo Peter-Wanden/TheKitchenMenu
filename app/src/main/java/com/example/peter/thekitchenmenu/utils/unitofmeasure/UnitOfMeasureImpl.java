@@ -28,7 +28,7 @@ public abstract class UnitOfMeasureImpl implements UnitOfMeasure {
     int unitOneLabelStringResourceId;
     int unitTwoLabelStringResourceId;
 
-    private double baseUnits;
+    private double totalBaseUnits;
     private int numberOfItems = UnitOfMeasureConstants.MINIMUM_NUMBER_OF_ITEMS;
     private int oldNumberOfItems;
     private double itemSize = smallestUnit;
@@ -55,25 +55,30 @@ public abstract class UnitOfMeasureImpl implements UnitOfMeasure {
     }
 
     @Override
-    public double getTotalBaseUnits() {
-        return baseUnits;
-    }
-
-    @Override
     public double getItemBaseUnits() {
-        return baseUnits / numberOfItems;
+        return totalBaseUnits / numberOfItems;
     }
 
     @Override
-    public boolean baseUnitsAreSet(double baseUnits) {
-        if (baseUnitsWithinBounds(baseUnits)) {
-            this.baseUnits = baseUnits;
+    public boolean itemBaseUnitsAreSet(double itemBaseUnits) {
+        return totalBaseUnitsAreSet(itemBaseUnits * numberOfItems);
+    }
+
+    @Override
+    public double getTotalBaseUnits() {
+        return totalBaseUnits;
+    }
+
+    @Override
+    public boolean totalBaseUnitsAreSet(double totalBaseUnits) {
+        if (baseUnitsWithinBounds(totalBaseUnits)) {
+            this.totalBaseUnits = totalBaseUnits;
             setNewTotalMeasurements();
             setNewItemMeasurements();
             return true;
 
-        } else if (baseUnits == 0.) { // allows for a reset
-            this.baseUnits = 0.;
+        } else if (totalBaseUnits == 0.) { // allows for a reset
+            this.totalBaseUnits = 0.;
             totalMeasurementOne = 0.;
             totalMeasurementTwo = 0;
             itemMeasurementOne = 0.;
@@ -91,13 +96,13 @@ public abstract class UnitOfMeasureImpl implements UnitOfMeasure {
                     if (settingOldNumberOfItemsBreaksMinimumMeasurement(baseUnits)) {
                         adjustNumberOfItemsSoBaseUnitsFitWithinLowerBounds(baseUnits);
                     } else {
-                        this.baseUnits = baseUnits;
+                        this.totalBaseUnits = baseUnits;
                         numberOfItemsIsSet(oldNumberOfItems);
                         oldNumberOfItems = 0;
                     }
                 } // What if its smaller??
                 return true;
-            } else {
+            } else if (baseUnits > minimumMeasurement) {
                 oldNumberOfItems = numberOfItems;
                 adjustNumberOfItemsSoBaseUnitsFitWithinLowerBounds(baseUnits);
                 return true;
@@ -123,17 +128,17 @@ public abstract class UnitOfMeasureImpl implements UnitOfMeasure {
     }
 
     private void adjustNumberOfItemsSoBaseUnitsFitWithinLowerBounds(double baseUnits) {
-        this.baseUnits = baseUnits;
+        this.totalBaseUnits = baseUnits;
         numberOfItemsIsSet((int) (baseUnits / minimumMeasurement));
     }
 
     private void setNewTotalMeasurements() {
-        totalMeasurementOne = getUnitOneMeasurement(baseUnits);
-        totalMeasurementTwo = getUnitTwoMeasurement(baseUnits);
+        totalMeasurementOne = getUnitOneMeasurement(totalBaseUnits);
+        totalMeasurementTwo = getUnitTwoMeasurement(totalBaseUnits);
     }
 
     private void setNewItemMeasurements() {
-        itemSize = baseUnits / numberOfItems;
+        itemSize = totalBaseUnits / numberOfItems;
         itemMeasurementOne = getUnitOneMeasurement(itemSize);
         itemMeasurementTwo = getUnitTwoMeasurement(itemSize);
     }
@@ -156,7 +161,7 @@ public abstract class UnitOfMeasureImpl implements UnitOfMeasure {
     @Override
     public boolean numberOfItemsIsSet(int numberOfItems) {
         if (numberOfItemsInTotalAreWithinBounds(numberOfItems)) {
-            if (baseUnits == UnitOfMeasureConstants.NOT_YET_SET) {
+            if (totalBaseUnits == UnitOfMeasureConstants.NOT_YET_SET) {
                 this.numberOfItems = numberOfItems;
                 return true;
             } else {
@@ -182,7 +187,7 @@ public abstract class UnitOfMeasureImpl implements UnitOfMeasure {
     }
 
     private boolean itemSizeNotLessThanSmallestUnit(int numberOfItems) {
-        return baseUnits / numberOfItems >= smallestUnit;
+        return totalBaseUnits / numberOfItems >= smallestUnit;
     }
 
     private void setNumberOfItemsInTotalByAdjustingItemSize(int numberOfItems) {
@@ -196,7 +201,7 @@ public abstract class UnitOfMeasureImpl implements UnitOfMeasure {
 
     private void setNumberOfItemsInTotalByAdjustingTotal(int numberOfItems) {
         this.numberOfItems = numberOfItems;
-        baseUnitsAreSet(itemSize * numberOfItems);
+        totalBaseUnitsAreSet(itemSize * numberOfItems);
     }
 
     @Override
@@ -211,12 +216,12 @@ public abstract class UnitOfMeasureImpl implements UnitOfMeasure {
 
     @Override
     public boolean totalMeasurementOneIsSet(double newTotalMeasurementOne) {
-        if (baseUnitsAreSet(baseUnitsWithNewTotalMeasurementOne(newTotalMeasurementOne))) {
+        if (totalBaseUnitsAreSet(baseUnitsWithNewTotalMeasurementOne(newTotalMeasurementOne))) {
             lastMeasurementUpdated = TOTAL_MEASUREMENT;
             return true;
 
         } else
-            baseUnitsAreSet(baseUnitsWithNewTotalMeasurementOne(0.));
+            totalBaseUnitsAreSet(baseUnitsWithNewTotalMeasurementOne(0.));
         return false;
     }
 
@@ -231,12 +236,12 @@ public abstract class UnitOfMeasureImpl implements UnitOfMeasure {
 
     @Override
     public boolean itemMeasurementOneIsSet(double newItemMeasurementOne) {
-        if (baseUnitsAreSet(baseUnitsWithNewItemMeasurementOne(newItemMeasurementOne))) {
+        if (totalBaseUnitsAreSet(baseUnitsWithNewItemMeasurementOne(newItemMeasurementOne))) {
             lastMeasurementUpdated = ITEM_MEASUREMENT;
             return true;
 
         } else
-            baseUnitsAreSet(baseUnitsWithNewItemMeasurementOne(0.));
+            totalBaseUnitsAreSet(baseUnitsWithNewItemMeasurementOne(0.));
         return false;
     }
 
@@ -256,12 +261,12 @@ public abstract class UnitOfMeasureImpl implements UnitOfMeasure {
 
     @Override
     public boolean totalMeasurementTwoIsSet(int newTotalMeasurementTwo) {
-        if (baseUnitsAreSet(baseUnitsWithNewTotalMeasurementTwo(newTotalMeasurementTwo))) {
+        if (totalBaseUnitsAreSet(baseUnitsWithNewTotalMeasurementTwo(newTotalMeasurementTwo))) {
             lastMeasurementUpdated = TOTAL_MEASUREMENT;
             return true;
 
         } else
-            baseUnitsAreSet(baseUnitsWithNewTotalMeasurementTwo(0));
+            totalBaseUnitsAreSet(baseUnitsWithNewTotalMeasurementTwo(0));
         return false;
     }
 
@@ -276,12 +281,12 @@ public abstract class UnitOfMeasureImpl implements UnitOfMeasure {
 
     @Override
     public boolean itemMeasurementTwoIsSet(int newItemMeasurementTwo) {
-        if (baseUnitsAreSet(baseUnitsWithNewItemMeasurementTwo(newItemMeasurementTwo))) {
+        if (totalBaseUnitsAreSet(baseUnitsWithNewItemMeasurementTwo(newItemMeasurementTwo))) {
             lastMeasurementUpdated = ITEM_MEASUREMENT;
             return true;
 
         } else
-            baseUnitsAreSet(baseUnitsWithNewItemMeasurementTwo(0));
+            totalBaseUnitsAreSet(baseUnitsWithNewItemMeasurementTwo(0));
         return false;
     }
 
@@ -291,8 +296,8 @@ public abstract class UnitOfMeasureImpl implements UnitOfMeasure {
 
     @Override
     public boolean isValidMeasurement() {
-        return (baseUnits >= minimumMeasurement &&
-                baseUnits <= maximumMeasurement &&
+        return (totalBaseUnits >= minimumMeasurement &&
+                totalBaseUnits <= maximumMeasurement &&
                 numberOfItems > 0);
     }
 
@@ -361,7 +366,7 @@ public abstract class UnitOfMeasureImpl implements UnitOfMeasure {
                 ", \nsubtypeStringResourceId=" + subtypeStringResourceId +
                 ", \nunitOneLabelStringResourceId=" + unitOneLabelStringResourceId +
                 ", \nunitTwoLabelStringResourceId=" + unitTwoLabelStringResourceId +
-                ", \nbaseUnits=" + baseUnits +
+                ", \ntotalBaseUnits=" + totalBaseUnits +
                 ", \nnumberOfItems=" + numberOfItems +
                 ", \noldNumberOfItems=" + oldNumberOfItems +
                 ", \nitemSize=" + itemSize +

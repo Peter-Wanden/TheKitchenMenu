@@ -59,14 +59,14 @@ public class Count implements UnitOfMeasure {
     }
 
     @Override
-    public boolean baseUnitsAreSet(double baseUnits) {
-        if (newCountIsWithinBounds(baseUnits)) {
-            this.baseUnits = baseUnits;
+    public boolean totalBaseUnitsAreSet(double totalBaseUnits) {
+        if (newCountIsWithinBounds(totalBaseUnits)) {
+            this.baseUnits = totalBaseUnits;
             packMeasurementCount = this.baseUnits;
             itemMeasurementCount = this.baseUnits / numberOfProducts;
             return true;
 
-        } else if (baseUnits == 0.) {
+        } else if (totalBaseUnits == 0.) {
             this.baseUnits = 0.; // allows for a reset
             packMeasurementCount = 0;
             itemMeasurementCount = 0;
@@ -77,6 +77,11 @@ public class Count implements UnitOfMeasure {
     @Override
     public double getItemBaseUnits() {
         return 0;
+    }
+
+    @Override
+    public boolean itemBaseUnitsAreSet(double itemBaseUnits) {
+        return false;
     }
 
     private boolean newCountIsWithinBounds(double newCount) {
@@ -149,7 +154,7 @@ public class Count implements UnitOfMeasure {
 
     private void setProductsInPackByAdjustingPackSize(int numberOfProducts) {
         this.numberOfProducts = numberOfProducts;
-        baseUnitsAreSet(singlePackSizeInCountUnits * numberOfProducts);
+        totalBaseUnitsAreSet(singlePackSizeInCountUnits * numberOfProducts);
     }
 
     @Override
@@ -164,11 +169,11 @@ public class Count implements UnitOfMeasure {
 
     @Override
     public boolean totalMeasurementOneIsSet(double newTotalMeasurementOne) {
-        if (baseUnitsAreSet(newTotalMeasurementOne)) {
+        if (totalBaseUnitsAreSet(newTotalMeasurementOne)) {
             lastMeasurementUpdated = PACK_MEASUREMENT;
             return true;
 
-        } else baseUnitsAreSet(0.);
+        } else totalBaseUnitsAreSet(0.);
         return false;
     }
 
@@ -179,11 +184,11 @@ public class Count implements UnitOfMeasure {
 
     @Override
     public boolean itemMeasurementOneIsSet(double newItemMeasurementOne) {
-        if (baseUnitsAreSet(newItemMeasurementOne * numberOfProducts)) {
+        if (totalBaseUnitsAreSet(newItemMeasurementOne * numberOfProducts)) {
             lastMeasurementUpdated = ITEM_MEASUREMENT;
             return true;
 
-        } else baseUnitsAreSet(0.);
+        } else totalBaseUnitsAreSet(0.);
         return false;
     }
 

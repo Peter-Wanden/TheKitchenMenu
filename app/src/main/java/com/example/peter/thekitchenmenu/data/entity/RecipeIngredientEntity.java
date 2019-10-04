@@ -16,7 +16,7 @@ public final class RecipeIngredientEntity implements TkmEntity {
     public static final String RECIPE_ID = "recipeId";
     public static final String INGREDIENT_ID = "ingredientId";
     public static final String PRODUCT_ID = "productId";
-    private static final String BASE_UNITS = "baseUnits";
+    private static final String BASE_UNITS = "itemBaseUnits";
     private static final String UNIT_OF_MEASURE_SUBTYPE = "UnitOfMeasureSubType";
     private static final String CREATED_BY = "createdBy";
     private static final String CREATE_DATE = "createDate";
@@ -40,7 +40,7 @@ public final class RecipeIngredientEntity implements TkmEntity {
     private final String productId;
 
     @ColumnInfo(name = BASE_UNITS)
-    private final double baseUnits;
+    private final double itemBaseUnits;
 
     @ColumnInfo(name = UNIT_OF_MEASURE_SUBTYPE)
     private final int unitOfMeasureSubtype;
@@ -59,7 +59,7 @@ public final class RecipeIngredientEntity implements TkmEntity {
                                   @NonNull String recipeId,
                                   @NonNull String ingredientId,
                                   @Nullable String productId,
-                                  double baseUnits,
+                                  double itemBaseUnits,
                                   int unitOfMeasureSubtype,
                                   @NonNull String createdBy,
                                   long createDate,
@@ -68,7 +68,7 @@ public final class RecipeIngredientEntity implements TkmEntity {
         this.recipeId = recipeId;
         this.ingredientId = ingredientId;
         this.productId = productId;
-        this.baseUnits = baseUnits;
+        this.itemBaseUnits = itemBaseUnits;
         this.unitOfMeasureSubtype = unitOfMeasureSubtype;
         this.createdBy = createdBy;
         this.createDate = createDate;
@@ -80,7 +80,7 @@ public final class RecipeIngredientEntity implements TkmEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RecipeIngredientEntity entity = (RecipeIngredientEntity) o;
-        return Double.compare(entity.baseUnits, baseUnits) == 0 &&
+        return Double.compare(entity.itemBaseUnits, itemBaseUnits) == 0 &&
                 unitOfMeasureSubtype == entity.unitOfMeasureSubtype &&
                 createDate == entity.createDate &&
                 lastUpdate == entity.lastUpdate &&
@@ -98,7 +98,7 @@ public final class RecipeIngredientEntity implements TkmEntity {
                 recipeId,
                 ingredientId,
                 productId,
-                baseUnits,
+                itemBaseUnits,
                 unitOfMeasureSubtype,
                 createdBy,
                 createDate,
@@ -112,7 +112,7 @@ public final class RecipeIngredientEntity implements TkmEntity {
                 ", recipeId='" + recipeId + '\'' +
                 ", ingredientId='" + ingredientId + '\'' +
                 ", productId='" + productId + '\'' +
-                ", baseUnits=" + baseUnits +
+                ", itemBaseUnits=" + itemBaseUnits +
                 ", unitOfMeasureSubtype=" + unitOfMeasureSubtype +
                 ", createdBy='" + createdBy + '\'' +
                 ", createDate=" + createDate +
@@ -141,8 +141,8 @@ public final class RecipeIngredientEntity implements TkmEntity {
         return productId;
     }
 
-    public double getBaseUnits() {
-        return baseUnits;
+    public double getItemBaseUnits() {
+        return itemBaseUnits;
     }
 
     public int getUnitOfMeasureSubtype() {

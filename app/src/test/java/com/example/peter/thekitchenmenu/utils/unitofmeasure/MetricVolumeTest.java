@@ -14,7 +14,7 @@ public class MetricVolumeTest {
     @Test
     public void testBaseUnitsInRangeMin() { // IN RANGE MIN
 
-        assertThat(metricVolume.baseUnitsAreSet(1), is(true));
+        assertThat(metricVolume.totalBaseUnitsAreSet(1), is(true));
 
         assertThat(metricVolume.getTotalMeasurementOne(), is(1.));
         assertThat(metricVolume.getTotalMeasurementTwo(), is(0));
@@ -28,7 +28,7 @@ public class MetricVolumeTest {
     @Test
     public void testBaseUnitsOutOfRangeMin() { // OUT OF RANGE MIN
 
-        assertThat(metricVolume.baseUnitsAreSet(0.9), is(false));
+        assertThat(metricVolume.totalBaseUnitsAreSet(0.9), is(false));
 
         assertThat(metricVolume.getTotalMeasurementOne(), is(0.));
         assertThat(metricVolume.getItemMeasurementOne(), is(0.));
@@ -42,7 +42,7 @@ public class MetricVolumeTest {
     @Test
     public void testBaseUnitsInRangeMax() { // IN RANGE MAX
 
-        assertThat(metricVolume.baseUnitsAreSet(MAXIMUM_VOLUME), is(true));
+        assertThat(metricVolume.totalBaseUnitsAreSet(MAXIMUM_VOLUME), is(true));
 
         assertThat(metricVolume.getTotalMeasurementOne(), is(0.));
         assertThat(metricVolume.getTotalMeasurementTwo(), is(10));
@@ -56,7 +56,7 @@ public class MetricVolumeTest {
     @Test
     public void testBaseUnitsOutOfRangeMax() { // OUT OF RANGE MAX
 
-        assertThat(metricVolume.baseUnitsAreSet(MAXIMUM_VOLUME + 1), is(false));
+        assertThat(metricVolume.totalBaseUnitsAreSet(MAXIMUM_VOLUME + 1), is(false));
 
         assertThat(metricVolume.getTotalMeasurementOne(), is(0.));
         assertThat(metricVolume.getTotalMeasurementTwo(), is(0));
@@ -72,7 +72,7 @@ public class MetricVolumeTest {
 
         assertThat(metricVolume.numberOfItemsIsSet(5), is(true));
 
-        assertThat(metricVolume.baseUnitsAreSet(4), is(false));
+        assertThat(metricVolume.totalBaseUnitsAreSet(4), is(false));
 
         assertThat(metricVolume.getTotalMeasurementOne(), is(0.));
         assertThat(metricVolume.getTotalMeasurementTwo(), is(0));
@@ -88,7 +88,7 @@ public class MetricVolumeTest {
 
         assertThat(metricVolume.numberOfItemsIsSet(5), is(true));
 
-        assertThat(metricVolume.baseUnitsAreSet(5), is(true));
+        assertThat(metricVolume.totalBaseUnitsAreSet(5), is(true));
 
         assertThat(metricVolume.getTotalMeasurementOne(), is(5.));
         assertThat(metricVolume.getTotalMeasurementTwo(), is(0));
@@ -103,7 +103,7 @@ public class MetricVolumeTest {
     public void testBaseUnitsRetrieveFromPackAndItem() {// CONDITION: BASE SI SET, CHECK PACK AND ITEM UPDATED
 
         // Set base SI
-        assertThat(metricVolume.baseUnitsAreSet(5500), is(true));
+        assertThat(metricVolume.totalBaseUnitsAreSet(5500), is(true));
 
         // Check pack and item values have updated correctly
         assertThat(metricVolume.getTotalMeasurementOne(), is(500.));
@@ -499,7 +499,7 @@ public class MetricVolumeTest {
     @Test
     public void testMixedNumberReturnValues() {
 
-        assertThat(metricVolume.baseUnitsAreSet(5), is(true));
+        assertThat(metricVolume.totalBaseUnitsAreSet(5), is(true));
         assertThat(metricVolume.numberOfItemsIsSet(3), is(true));
         assertThat(metricVolume.getTotalMeasurementOne(), is(5.));
         assertThat(metricVolume.getItemMeasurementOne(), is(1.0));
@@ -545,7 +545,7 @@ public class MetricVolumeTest {
         assertThat(metricVolume.totalMeasurementOneIsSet(5), is(true));
         assertThat(metricVolume.getTotalBaseUnits(), is(5.));
 
-        assertThat(metricVolume.baseUnitsAreSet(0), is(false));
+        assertThat(metricVolume.totalBaseUnitsAreSet(0), is(false));
         assertThat(metricVolume.getTotalBaseUnits(), is(0.));
 
         assertThat(metricVolume.getTotalMeasurementOne(), is(0.));
