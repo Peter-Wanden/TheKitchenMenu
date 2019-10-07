@@ -59,7 +59,7 @@ public class RecipeIngredientMeasurementViewModelTest {
             RecipeEntityTestData.getValidNew().getId(),
             IngredientEntityTestData.getNewValidName().getId(),
             "",
-            1500,
+            150, // per portion value
             0,
             Constants.getUserId().getValue(),
             10L,
@@ -92,7 +92,13 @@ public class RecipeIngredientMeasurementViewModelTest {
             30L
     );
 
-    private RecipePortionsEntity EXISTING_VALID_PORTIONS =
+    private RecipePortionsEntity NEW_VALID_FOUR_PORTIONS =
+            RecipePortionsEntityTestData.getNewValidFourPortions();
+
+    private RecipePortionsEntity NEW_VALID_SIXTEEN_PORTIONS =
+            RecipePortionsEntityTestData.getNewValidSixteenPortions();
+
+    private RecipePortionsEntity EXISTING_VALID_NINE_PORTIONS =
             RecipePortionsEntityTestData.getExistingValid();
 
     private RecipeIngredientEntity EXISTING_VALID_METRIC_MEASUREMENT_UPDATED =
@@ -101,12 +107,14 @@ public class RecipeIngredientMeasurementViewModelTest {
                     EXISTING_VALID_METRIC.getRecipeId(),
                     EXISTING_VALID_METRIC.getIngredientId(),
                     EXISTING_VALID_METRIC.getProductId(),
-                    EXISTING_VALID_METRIC.getItemBaseUnits() + 1250,
+                    EXISTING_VALID_METRIC.getItemBaseUnits() + 250,
                     EXISTING_VALID_METRIC.getUnitOfMeasureSubtype(),
                     EXISTING_VALID_METRIC.getCreatedBy(),
                     EXISTING_VALID_METRIC.getCreateDate(),
                     EXISTING_VALID_METRIC.getLastUpdate() + 10
             );
+
+
 
     // endregion constants -------------------------------------------------------------------------
 
@@ -194,9 +202,18 @@ public class RecipeIngredientMeasurementViewModelTest {
         // Arrange
         whenIdProviderReturnNewValidId();
         whenTimeProviderThenReturnNewValidTime();
+
+        int totalBaseUnits = (int) NEW_VALID_METRIC.getItemBaseUnits() *
+                NEW_VALID_FOUR_PORTIONS.getServings() *
+                NEW_VALID_FOUR_PORTIONS.getSittings();
         // Act
         SUT.start(NEW_VALID_METRIC.getRecipeId(), NEW_VALID_METRIC.getIngredientId());
-        SUT.measurementOne.set(String.valueOf((int) NEW_VALID_METRIC.getItemBaseUnits()));
+
+        verify(repositoryRecipePortionsMock).getPortionsForRecipe(eq(NEW_VALID_METRIC.getRecipeId()),
+                getRecipePortionsCallbackCaptor.capture());
+        getRecipePortionsCallbackCaptor.getValue().onEntityLoaded(NEW_VALID_FOUR_PORTIONS);
+
+        SUT.measurementOne.set(String.valueOf(totalBaseUnits));
         // Assert
         verify(repositoryRecipeIngredient).save(eq(NEW_VALID_METRIC));
     }
@@ -206,10 +223,20 @@ public class RecipeIngredientMeasurementViewModelTest {
         // Arrange
         whenIdProviderReturnNewValidId();
         whenTimeProviderThenReturnNewValidTime();
+
+        int totalBaseUnits = (int) NEW_VALID_METRIC.getItemBaseUnits() *
+                NEW_VALID_SIXTEEN_PORTIONS.getServings() *
+                NEW_VALID_SIXTEEN_PORTIONS.getSittings();
+
         // Act
         SUT.start(NEW_VALID_METRIC.getRecipeId(), NEW_VALID_METRIC.getIngredientId());
-        SUT.measurementOne.set(String.valueOf((int) NEW_VALID_METRIC.getItemBaseUnits() % 1000));
-        SUT.measurementTwo.set(String.valueOf((int) NEW_VALID_METRIC.getItemBaseUnits() / 1000));
+
+        verify(repositoryRecipePortionsMock).getPortionsForRecipe(eq(NEW_VALID_METRIC.getRecipeId()),
+                getRecipePortionsCallbackCaptor.capture());
+        getRecipePortionsCallbackCaptor.getValue().onEntityLoaded(NEW_VALID_SIXTEEN_PORTIONS);
+
+        SUT.measurementOne.set(String.valueOf(totalBaseUnits % 1000));
+        SUT.measurementTwo.set(String.valueOf(totalBaseUnits / 1000));
         // Assert
         verify(repositoryRecipeIngredient).save(eq(NEW_VALID_METRIC));
     }
@@ -221,6 +248,7 @@ public class RecipeIngredientMeasurementViewModelTest {
         whenTimeProviderThenReturnNewValidTime();
         // Act
         SUT.start(NEW_VALID_METRIC.getRecipeId(), NEW_VALID_METRIC.getIngredientId());
+
         SUT.measurementTwo.set(String.valueOf(UnitOfMeasureConstants.MAXIMUM_MASS / 1000 + 1));
         // Assert
         verifyNoMoreInteractions(repositoryRecipeIngredient);
@@ -287,7 +315,7 @@ public class RecipeIngredientMeasurementViewModelTest {
         verify(repositoryRecipePortionsMock).getPortionsForRecipe(
                 eq(EXISTING_VALID_METRIC.getRecipeId()),
                 getRecipePortionsCallbackCaptor.capture());
-        getRecipePortionsCallbackCaptor.getValue().onEntityLoaded(EXISTING_VALID_PORTIONS);
+        getRecipePortionsCallbackCaptor.getValue().onEntityLoaded(EXISTING_VALID_NINE_PORTIONS);
     }
 
     @Test
@@ -295,7 +323,9 @@ public class RecipeIngredientMeasurementViewModelTest {
         // Arrange
         UnitOfMeasure unitOfMeasure = MeasurementSubtype.fromInt(
                 EXISTING_VALID_METRIC.getUnitOfMeasureSubtype()).getMeasurementClass();
-        int portions = EXISTING_VALID_PORTIONS.getServings() * EXISTING_VALID_PORTIONS.getSittings();
+
+        int portions = EXISTING_VALID_NINE_PORTIONS.getServings() *
+                EXISTING_VALID_NINE_PORTIONS.getSittings();
         // Act
         SUT.start(EXISTING_VALID_METRIC.getId());
         // Assert
@@ -306,17 +336,17 @@ public class RecipeIngredientMeasurementViewModelTest {
         verify(repositoryRecipePortionsMock).getPortionsForRecipe(
                 eq(EXISTING_VALID_METRIC.getRecipeId()),
                 getRecipePortionsCallbackCaptor.capture());
-        getRecipePortionsCallbackCaptor.getValue().onEntityLoaded(EXISTING_VALID_PORTIONS);
+        getRecipePortionsCallbackCaptor.getValue().onEntityLoaded(EXISTING_VALID_NINE_PORTIONS);
 
         assertEquals(EXISTING_VALID_METRIC.getUnitOfMeasureSubtype(), SUT.unitOfMeasureSpinnerInt.get());
         assertEquals(EXISTING_VALID_METRIC.getUnitOfMeasureSubtype(), SUT.subtype.get().asInt());
         assertEquals(unitOfMeasure.getNumberOfMeasurementUnits(), SUT.numberOfMeasurementUnits.get());
 
         assertEquals(
-                (int) EXISTING_VALID_METRIC.getItemBaseUnits() / 1000 * portions,
+                (int) EXISTING_VALID_METRIC.getItemBaseUnits() * portions / 1000,
                 Integer.parseInt(SUT.measurementTwo.get()));
         assertEquals(
-                (int) EXISTING_VALID_METRIC.getItemBaseUnits() % 1000 * portions,
+                (int) EXISTING_VALID_METRIC.getItemBaseUnits() * portions % 1000 ,
                 Integer.parseInt(SUT.measurementOne.get()));
     }
 
@@ -325,6 +355,9 @@ public class RecipeIngredientMeasurementViewModelTest {
         // Arrange
         when(timeProviderMock.getCurrentTimestamp()).thenReturn(
                 EXISTING_VALID_METRIC_MEASUREMENT_UPDATED.getLastUpdate());
+
+        int portions = EXISTING_VALID_NINE_PORTIONS.getServings() *
+                EXISTING_VALID_NINE_PORTIONS.getSittings();
         // Act
         SUT.start(EXISTING_VALID_METRIC.getId());
 
@@ -335,20 +368,17 @@ public class RecipeIngredientMeasurementViewModelTest {
         verify(repositoryRecipePortionsMock).getPortionsForRecipe(
                 eq(EXISTING_VALID_METRIC.getRecipeId()),
                 getRecipePortionsCallbackCaptor.capture());
-        getRecipePortionsCallbackCaptor.getValue().onEntityLoaded(EXISTING_VALID_PORTIONS);
+        getRecipePortionsCallbackCaptor.getValue().onEntityLoaded(EXISTING_VALID_NINE_PORTIONS);
 
         SUT.measurementTwo.set(String.valueOf(
-                (int) EXISTING_VALID_METRIC_MEASUREMENT_UPDATED.getItemBaseUnits() / 1000
+                (int) EXISTING_VALID_METRIC_MEASUREMENT_UPDATED.getItemBaseUnits() * portions / 1000
         ));
         SUT.measurementOne.set(String.valueOf(
-                (int) EXISTING_VALID_METRIC_MEASUREMENT_UPDATED.getItemBaseUnits() % 1000
+                (int) EXISTING_VALID_METRIC_MEASUREMENT_UPDATED.getItemBaseUnits() * portions % 1000
         ));
         // Assert
         verify(repositoryRecipeIngredient).save(EXISTING_VALID_METRIC_MEASUREMENT_UPDATED);
     }
-
-    // startExistingRecipeIngredientId_unitTwoUpdatedInvalidValue_errorMessageSet
-    // startExistingRecipeIngredientId_
 
     private void setupResources() {
         when(resourcesMock.getString(eq(R.string.number_format_exception))).

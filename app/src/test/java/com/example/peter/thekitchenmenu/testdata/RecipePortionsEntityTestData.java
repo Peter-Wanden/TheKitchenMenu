@@ -28,6 +28,28 @@ public class RecipePortionsEntityTestData {
         );
     }
 
+    public static RecipePortionsEntity getNewValidFourPortions() {
+        return new RecipePortionsEntity(
+                getNewValidEmpty().getId(),
+                RecipeEntityTestData.getInvalidNew().getId(),
+                2,
+                2,
+                RecipeEntityTestData.getInvalidNew().getCreateDate(),
+                RecipeEntityTestData.getInvalidNew().getLastUpdate()
+        );
+    }
+
+    public static RecipePortionsEntity getNewValidSixteenPortions() {
+        return new RecipePortionsEntity(
+                getNewValidEmpty().getId(),
+                RecipeEntityTestData.getInvalidNew().getId(),
+                4,
+                4,
+                RecipeEntityTestData.getInvalidNew().getCreateDate(),
+                RecipeEntityTestData.getInvalidNew().getLastUpdate()
+        );
+    }
+
     public static RecipePortionsEntity getNewInvalidServingsInvalidSittings() {
         return new RecipePortionsEntity(
                 getNewValidEmpty().getId(),

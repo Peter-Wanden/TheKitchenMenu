@@ -21,8 +21,6 @@ import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasure;
 
 public class RecipeIngredientMeasurementViewModel extends ViewModel {
 
-    private static final String TAG = "tkm-RecipeIngredientMeasurementVM";
-
     private RepositoryRecipePortions repositoryRecipePortions;
     private RepositoryRecipeIngredient repositoryRecipeIngredient;
 
@@ -179,9 +177,10 @@ public class RecipeIngredientMeasurementViewModel extends ViewModel {
 
     private void updateDecimalMeasurement(double decimalMeasurement) {
         boolean measurementIsSet = unitOfMeasure.totalMeasurementOneIsSet(decimalMeasurement);
-        if (measurementIsSet) {
+        if (measurementIsSet)
             updateUi();
-        }
+        else
+            updateUi();
     }
 
     private boolean decimalMeasurementHasChanged(double newMeasurement) {
@@ -272,8 +271,9 @@ public class RecipeIngredientMeasurementViewModel extends ViewModel {
         if (numberOfMeasurementUnits.get() > 1)
             measurementTwo.set(String.valueOf(unitOfMeasure.getTotalMeasurementTwo()));
 
-        if (isChanged())
+        if (isChanged()) {
             save(updatedRecipeIngredientEntity());
+        }
     }
 
     private int unitsAfterDecimal() {

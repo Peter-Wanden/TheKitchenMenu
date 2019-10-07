@@ -57,13 +57,11 @@ public class ProductViewerViewModel
     }
 
     public void start(ProductEntity productEntity) {
-        Log.d(TAG, "onStart: ProductEntity passed in, setting up display as 'review before post'");
         productEntityObservable.set(productEntity);
         setupDisplayAsReviewAfterEdit();
     }
 
     public void start(String productId) {
-        Log.d(TAG, "onStart: Product ID passed in, setting up display as product viewer");
         if (!showPostMessageEvent.get()) {
             if (!Strings.isEmptyOrWhitespace(productId)) {
                 dataIsLoading.set(true);
