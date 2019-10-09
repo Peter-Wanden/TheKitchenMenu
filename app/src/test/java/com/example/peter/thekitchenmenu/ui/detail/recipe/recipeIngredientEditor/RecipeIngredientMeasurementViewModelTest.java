@@ -5,18 +5,14 @@ import android.content.res.Resources;
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
-import com.example.peter.thekitchenmenu.testdata.IngredientEntityTestData;
-import com.example.peter.thekitchenmenu.testdata.ProductEntityTestData;
-import com.example.peter.thekitchenmenu.testdata.RecipeEntityTestData;
+import com.example.peter.thekitchenmenu.testdata.RecipeIngredientEntityTestData;
 import com.example.peter.thekitchenmenu.testdata.RecipePortionsEntityTestData;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor.RecipeIngredientMeasurementViewModel;
-import com.example.peter.thekitchenmenu.utils.ParseIntegerFromObservableHandler;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtype;
@@ -42,55 +38,19 @@ public class RecipeIngredientMeasurementViewModelTest {
     // region constants ----------------------------------------------------------------------------
     private static final String NUMBER_FORMAT_EXCEPTION_ERROR = "Please enter numbers only.";
 
-    private RecipeIngredientEntity NEW_INVALID = new RecipeIngredientEntity(
-            "newId",
-            RecipeEntityTestData.getInvalidNew().getId(),
-            IngredientEntityTestData.getNew().getId(),
-            ProductEntityTestData.getNewInvalid().getId(),
-            0,
-            0,
-            Constants.getUserId().getValue(),
-            10L,
-            10L
-    );
+    private RecipeIngredientEntity NEW_INVALID =
+            RecipeIngredientEntityTestData.getNewInvalid();
 
-    private RecipeIngredientEntity NEW_VALID_METRIC = new RecipeIngredientEntity(
-            "new_valid_measurement_one_id",
-            RecipeEntityTestData.getValidNew().getId(),
-            IngredientEntityTestData.getNewValidName().getId(),
-            "",
-            150, // per portion value
-            0,
-            Constants.getUserId().getValue(),
-            10L,
-            10L
-    );
+    private RecipeIngredientEntity NEW_VALID_METRIC =
+            RecipeIngredientEntityTestData.getNewValidMetric();
 
-    private RecipeIngredientEntity NEW_VALID_IMPERIAL = new RecipeIngredientEntity(
-            NEW_VALID_METRIC.getId(),
-            RecipeEntityTestData.getValidNew().getId(),
-            IngredientEntityTestData.getNewValidName().getId(),
-            "",
-            144.5825679375, // 5.1lbs
-            1,
-            Constants.getUserId().getValue(),
-            20L,
-            20L
-    );
+    private RecipeIngredientEntity NEW_VALID_IMPERIAL =
+            RecipeIngredientEntityTestData.getNewValidImperial();
 
     private static final double NEW_VALID_IMPERIAL_OZ = 5.1;
 
-    private RecipeIngredientEntity EXISTING_VALID_METRIC = new RecipeIngredientEntity(
-            "existing_valid_id",
-            RecipeEntityTestData.getValidExisting().getId(),
-            IngredientEntityTestData.getExistingValidNameValidDescription().getId(),
-            ProductEntityTestData.getExistingValid().getId(),
-            250,
-            2,
-            Constants.getUserId().getValue(),
-            30L,
-            30L
-    );
+    private RecipeIngredientEntity EXISTING_VALID_METRIC =
+            RecipeIngredientEntityTestData.getExistingValidMetric();
 
     private RecipePortionsEntity NEW_VALID_FOUR_PORTIONS =
             RecipePortionsEntityTestData.getNewValidFourPortions();
@@ -102,20 +62,7 @@ public class RecipeIngredientMeasurementViewModelTest {
             RecipePortionsEntityTestData.getExistingValid();
 
     private RecipeIngredientEntity EXISTING_VALID_METRIC_MEASUREMENT_UPDATED =
-            new RecipeIngredientEntity(
-                    EXISTING_VALID_METRIC.getId(),
-                    EXISTING_VALID_METRIC.getRecipeId(),
-                    EXISTING_VALID_METRIC.getIngredientId(),
-                    EXISTING_VALID_METRIC.getProductId(),
-                    EXISTING_VALID_METRIC.getItemBaseUnits() + 250,
-                    EXISTING_VALID_METRIC.getUnitOfMeasureSubtype(),
-                    EXISTING_VALID_METRIC.getCreatedBy(),
-                    EXISTING_VALID_METRIC.getCreateDate(),
-                    EXISTING_VALID_METRIC.getLastUpdate() + 10
-            );
-
-
-
+            RecipeIngredientEntityTestData.getExistingValidMetricMeasurementUpdated();
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
@@ -137,8 +84,6 @@ public class RecipeIngredientMeasurementViewModelTest {
     private Resources resourcesMock;
     @Mock
     private UniqueIdProvider idProviderMock;
-    @Mock
-    ParseIntegerFromObservableHandler intFromObservableMock;
     // endregion helper fields ---------------------------------------------------------------------
 
     private RecipeIngredientMeasurementViewModel SUT;

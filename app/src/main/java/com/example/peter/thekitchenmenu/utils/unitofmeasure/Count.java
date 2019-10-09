@@ -54,6 +54,11 @@ public class Count implements UnitOfMeasure {
     }
 
     @Override
+    public void setConversionFactor(double conversionFactor) {
+
+    }
+
+    @Override
     public double getTotalBaseUnits() {
         return baseUnits;
     }
@@ -158,7 +163,7 @@ public class Count implements UnitOfMeasure {
     }
 
     @Override
-    public int getUnitOneLabelStringResourceId() {
+    public int getUnitOneLabelResourceId() {
         return unitOneLabelStringResourceId;
     }
 
@@ -193,7 +198,7 @@ public class Count implements UnitOfMeasure {
     }
 
     @Override
-    public int getUnitTwoLabelStringResourceId() {
+    public int getUnitTwoLabelResourceId() {
         return R.string.empty_string;
     }
 

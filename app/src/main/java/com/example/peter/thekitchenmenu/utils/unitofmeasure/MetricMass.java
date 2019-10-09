@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
 import com.example.peter.thekitchenmenu.R;
 
-class MetricMass extends UnitOfMeasureImpl {
+class MetricMass extends UnitOfMeasureAbstract {
 
     MetricMass() {
         numberOfMeasurementUnits = 2;

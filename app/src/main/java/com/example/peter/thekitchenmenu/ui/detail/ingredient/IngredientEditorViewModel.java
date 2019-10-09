@@ -36,7 +36,6 @@ public class IngredientEditorViewModel
 
     public final ObservableField<String> nameObservable = new ObservableField<>();
     public final ObservableField<String> descriptionObservable = new ObservableField<>();
-
     public final ObservableField<String> nameErrorMessageObservable = new ObservableField<>();
     public final ObservableField<String> descriptionErrorMessageObservable = new ObservableField<>();
 
@@ -197,6 +196,7 @@ public class IngredientEditorViewModel
                     ingredientEntity.getId(),
                     nameObservable.get().trim(),
                     descriptionObservable.get().trim(),
+                    0,
                     ingredientEntity.getCreatedBy(),
                     ingredientEntity.getCreateDate(),
                     ingredientEntity.getLastUpdate()
@@ -213,6 +213,7 @@ public class IngredientEditorViewModel
                 id,
                 "",
                 "",
+                0,
                 Constants.getUserId().getValue(),
                 currentTime,
                 currentTime
@@ -224,6 +225,7 @@ public class IngredientEditorViewModel
                 ingredientEntity.getId(),
                 nameObservable.get(),
                 descriptionObservable.get(),
+                0,
                 ingredientEntity.getCreatedBy(),
                 ingredientEntity.getCreateDate(),
                 timeProvider.getCurrentTimestamp()

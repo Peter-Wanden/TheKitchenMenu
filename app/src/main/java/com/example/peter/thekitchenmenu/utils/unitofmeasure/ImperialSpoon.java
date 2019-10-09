@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
 import com.example.peter.thekitchenmenu.R;
 
-class ImperialSpoon extends UnitOfMeasureIngredient {
+class ImperialSpoon extends UnitOfMeasureAbstract {
 
     ImperialSpoon() {
         numberOfMeasurementUnits = 2;
@@ -19,15 +19,5 @@ class ImperialSpoon extends UnitOfMeasureIngredient {
         subtypeStringResourceId = R.string.sub_type_imperial_volume;
         unitOneLabelStringResourceId = R.string.teaspoon;
         unitTwoLabelStringResourceId = R.string.tablespoon;
-    }
-
-    // Translates volume to weight - oneMLEqualsNGrams = The weight of 1ml in grams
-    void setOneMLEqualsNGrams(double oneMLEqualsNGrams) {
-        unitOne = oneMLEqualsNGrams * 5;
-        unitTwo = oneMLEqualsNGrams * 15;
-    }
-
-    double getItemSizeInBaseUnits() {
-        return itemSize;
     }
 }

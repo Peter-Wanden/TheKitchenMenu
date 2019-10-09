@@ -8,6 +8,8 @@ public interface UnitOfMeasure {
 
     MeasurementSubtype getMeasurementSubtype();
 
+    void setConversionFactor(double conversionFactor);
+
     double getTotalBaseUnits();
     boolean totalBaseUnitsAreSet(double totalBaseUnits);
 
@@ -19,13 +21,13 @@ public interface UnitOfMeasure {
 
     int getNumberOfMeasurementUnits();
 
-    int getUnitOneLabelStringResourceId();
+    int getUnitOneLabelResourceId();
     double getTotalMeasurementOne();
     boolean totalMeasurementOneIsSet(double newTotalMeasurementOne);
     double getItemMeasurementOne();
     boolean itemMeasurementOneIsSet(double newItemMeasurementOne);
 
-    int getUnitTwoLabelStringResourceId();
+    int getUnitTwoLabelResourceId();
     int getTotalMeasurementTwo();
     boolean totalMeasurementTwoIsSet(int newTotalMeasurementTwo);
     int getItemMeasurementTwo();

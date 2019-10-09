@@ -37,7 +37,7 @@ public class UnitOfMeasureFieldVisibilityBindingAdapter {
 
         if (viewId == R.id.product_editable_measurement_two ||
                 viewId == R.id.product_measurement_label_two ||
-                viewId == R.id.ingredient_editable_measurement_two) {
+                viewId == R.id.editable_measurement_two) {
             view.setVisibility(numberOfMeasurementUnits > 1 ? View.VISIBLE : View.GONE);
         }
     }

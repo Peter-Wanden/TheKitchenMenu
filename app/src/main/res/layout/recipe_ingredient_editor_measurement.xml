@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View"/>
         <import type="com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtypeConverter" />
         <variable
             name="viewModel"
@@ -32,7 +33,7 @@
             app:layout_constraintStart_toStartOf="@id/unit_of_measure_label"
             app:layout_constraintEnd_toEndOf="@id/spinner_unit_of_measure"
             app:layout_constraintTop_toTopOf="@id/recipe_ingredient_measurement_editor_label"
-            app:layout_constraintBottom_toBottomOf="@id/editable_measurement_one"
+            app:layout_constraintBottom_toBottomOf="@id/editable_conversion_factor"
             />
 
         <TextView
@@ -87,7 +88,7 @@
             tools:text="@string/product_size_label" />
 
         <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/ingredient_editable_measurement_two"
+            android:id="@+id/editable_measurement_two"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minEms="3"
@@ -116,7 +117,7 @@
             app:fieldVisibilityNumberOfMeasurementUnits="@{viewModel.numberOfMeasurementUnits}"
             app:setLabelForSubtypeSelected="@{viewModel.subtype}"
             app:layout_constraintBaseline_toBaselineOf="@id/editable_measurement_one"
-            app:layout_constraintStart_toEndOf="@id/ingredient_editable_measurement_two"
+            app:layout_constraintStart_toEndOf="@id/editable_measurement_two"
             tools:text="l" />
 
         <androidx.appcompat.widget.AppCompatEditText
@@ -149,5 +150,49 @@
             app:layout_constraintStart_toEndOf="@id/editable_measurement_one"
             tools:text="ml" />
 
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/recipe_ingredient_advanced_check_box"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@id/vertical_guideline"
+            app:layout_constraintTop_toBottomOf="@id/editable_measurement_one"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/ingredient_measurement_advanced_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Advanced: Volume to weight conversion"
+            app:layout_constraintStart_toStartOf="@id/vertical_guideline"
+            app:layout_constraintTop_toTopOf="@id/recipe_ingredient_advanced_check_box"
+            app:layout_constraintBottom_toBottomOf="@id/recipe_ingredient_advanced_check_box"
+            />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/conversion_factor_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="How many grams does 1ml (1cm3) of this ingredient weigh?"
+            app:layout_constraintTop_toBottomOf="@id/recipe_ingredient_advanced_check_box"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="@{recipeIngredientAdvancedCheckBox.checked ? View.VISIBLE : View.GONE}"
+            />
+
+        <EditText
+            android:id="@+id/editable_conversion_factor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:textAlignment="center"
+            android:ems="8"
+            app:layout_constraintTop_toBottomOf="@id/conversion_factor_label"
+            app:layout_constraintStart_toStartOf="@id/vertical_guideline"
+            android:visibility="@{recipeIngredientAdvancedCheckBox.checked ? View.VISIBLE : View.GONE}"
+            tools:text="9.20349"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

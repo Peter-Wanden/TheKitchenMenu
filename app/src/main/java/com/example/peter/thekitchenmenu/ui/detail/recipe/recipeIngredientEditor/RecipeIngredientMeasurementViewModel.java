@@ -95,8 +95,7 @@ public class RecipeIngredientMeasurementViewModel extends ViewModel {
 
     private void updateUnitOfMeasureFromRecipeIngredient() {
         // Always add measurement in this order: 1.subType 2.baseUnits 3.numberOfItems/portions
-        unitOfMeasure = MeasurementSubtype.fromInt(
-                recipeIngredientEntity.getUnitOfMeasureSubtype()).getMeasurementClass();
+        setUnitOfMeasureSubtypeFromRecipeIngredientEntity();
         unitOfMeasure.itemBaseUnitsAreSet(recipeIngredientEntity.getItemBaseUnits());
         getPortions();
     }
@@ -111,6 +110,7 @@ public class RecipeIngredientMeasurementViewModel extends ViewModel {
                         ingredientId = recipeIngredientEntity.getIngredientId();
                         RecipeIngredientMeasurementViewModel.this.recipeIngredientEntity =
                                 recipeIngredientEntity;
+                        setUnitOfMeasureSubtypeFromRecipeIngredientEntity();
                         getPortions();
                     }
 
@@ -129,8 +129,6 @@ public class RecipeIngredientMeasurementViewModel extends ViewModel {
                     public void onEntityLoaded(RecipePortionsEntity portionsEntity) {
                         int portions = portionsEntity.getServings() * portionsEntity.getSittings();
                         numberOfPortions = portions;
-                        unitOfMeasure = MeasurementSubtype.fromInt(
-                                recipeIngredientEntity.getUnitOfMeasureSubtype()).getMeasurementClass();
                         unitOfMeasure.numberOfItemsIsSet(portions);
                         unitOfMeasure.itemBaseUnitsAreSet(recipeIngredientEntity.getItemBaseUnits());
                         updateUi();
@@ -141,6 +139,13 @@ public class RecipeIngredientMeasurementViewModel extends ViewModel {
 
                     }
                 });
+    }
+
+    private void setUnitOfMeasureSubtypeFromRecipeIngredientEntity() {
+        unitOfMeasure = MeasurementSubtype.fromInt(
+                recipeIngredientEntity.
+                getUnitOfMeasureSubtype()).
+                getMeasurementClass();
     }
 
     private void subTypeUpdated() {

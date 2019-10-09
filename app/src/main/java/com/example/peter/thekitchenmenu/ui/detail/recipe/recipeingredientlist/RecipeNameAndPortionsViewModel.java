@@ -8,7 +8,6 @@ import com.example.peter.thekitchenmenu.data.entity.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
-import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 
 public class RecipeNameAndPortionsViewModel extends ViewModel {
 

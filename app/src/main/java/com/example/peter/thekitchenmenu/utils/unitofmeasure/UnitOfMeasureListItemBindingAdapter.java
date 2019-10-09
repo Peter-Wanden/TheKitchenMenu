@@ -79,8 +79,8 @@ public class UnitOfMeasureListItemBindingAdapter {
                                                             UnitOfMeasure unitOfMeasure,
                                                             int unitTwoValue,
                                                             double unitOneValue) {
-        String unitOneLabel = resources.getString(unitOfMeasure.getUnitOneLabelStringResourceId());
-        String unitTwoLabel = resources.getString(unitOfMeasure.getUnitTwoLabelStringResourceId());
+        String unitOneLabel = resources.getString(unitOfMeasure.getUnitOneLabelResourceId());
+        String unitTwoLabel = resources.getString(unitOfMeasure.getUnitTwoLabelResourceId());
         StringBuilder unformattedMeasurement = new StringBuilder();
         StringBuilder formattedMeasurement = new StringBuilder();
         NumberFormat numberFormat = getNumberFormat(resources);
@@ -113,8 +113,8 @@ public class UnitOfMeasureListItemBindingAdapter {
         double packUnitOneValue = unitOfMeasure.getTotalMeasurementOne();
         int productUnitTwo = unitOfMeasure.getItemMeasurementTwo();
         double productUnitOne = unitOfMeasure.getItemMeasurementOne();
-        String unitOneLabel = resources.getString(unitOfMeasure.getUnitOneLabelStringResourceId());
-        String unitTwoLabel = resources.getString(unitOfMeasure.getUnitTwoLabelStringResourceId());
+        String unitOneLabel = resources.getString(unitOfMeasure.getUnitOneLabelResourceId());
+        String unitTwoLabel = resources.getString(unitOfMeasure.getUnitTwoLabelResourceId());
 
         if (numberOfProducts > 1) {
             formattedMeasurement.append(numberOfProducts).append(" x ");

@@ -15,6 +15,7 @@ public class IngredientEntity implements TkmEntity {
     public static final String ID = "id";
     public static final String NAME = "name";
     private static final String DESCRIPTION = "description";
+    private static final String CONVERSION_FACTOR = "conversionFactor";
     private static final String CREATED_BY = "createdBy";
     private static final String CREATE_DATE = "createDate";
     private static final String LAST_UPDATE = "lastUpdate";
@@ -32,6 +33,9 @@ public class IngredientEntity implements TkmEntity {
     @ColumnInfo(name = DESCRIPTION)
     private final String description;
 
+    @ColumnInfo(name = CONVERSION_FACTOR)
+    private final double conversionFactor;
+
     @NonNull
     @ColumnInfo(name = CREATED_BY)
     private final String createdBy;
@@ -45,12 +49,14 @@ public class IngredientEntity implements TkmEntity {
     public IngredientEntity(@NonNull String id,
                             @NonNull String name,
                             @Nullable String description,
+                            double conversionFactor,
                             @NonNull String createdBy,
                             long createDate,
                             long lastUpdate) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.conversionFactor = conversionFactor;
         this.createdBy = createdBy;
         this.createDate = createDate;
         this.lastUpdate = lastUpdate;
@@ -60,18 +66,26 @@ public class IngredientEntity implements TkmEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        IngredientEntity that = (IngredientEntity) o;
-        return createDate == that.createDate &&
-                lastUpdate == that.lastUpdate &&
-                id.equals(that.id) &&
-                name.equals(that.name) &&
-                description.equals(that.description) &&
-                createdBy.equals(that.createdBy);
+        IngredientEntity entity = (IngredientEntity) o;
+        return Double.compare(entity.conversionFactor, conversionFactor) == 0 &&
+                createDate == entity.createDate &&
+                lastUpdate == entity.lastUpdate &&
+                id.equals(entity.id) &&
+                name.equals(entity.name) &&
+                description.equals(entity.description) &&
+                createdBy.equals(entity.createdBy);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, createdBy, createDate, lastUpdate);
+        return Objects.hash(
+                id,
+                name,
+                description,
+                conversionFactor,
+                createdBy,
+                createDate,
+                lastUpdate);
     }
 
     @NonNull
@@ -81,6 +95,7 @@ public class IngredientEntity implements TkmEntity {
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
+                ", conversionFactor=" + conversionFactor +
                 ", createdBy='" + createdBy + '\'' +
                 ", createDate=" + createDate +
                 ", lastUpdate=" + lastUpdate +
@@ -101,6 +116,10 @@ public class IngredientEntity implements TkmEntity {
     @Nullable
     public String getDescription() {
         return description;
+    }
+
+    public double getConversionFactor() {
+        return conversionFactor;
     }
 
     @NonNull

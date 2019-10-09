@@ -18,10 +18,7 @@ import org.junit.*;
 import org.mockito.*;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -779,15 +776,6 @@ public class IngredientEditorViewModelTest {
                 duplicateCallbackArgumentCaptor.capture());
         duplicateCallbackArgumentCaptor.getValue().duplicateCheckResult(
                 IngredientDuplicateChecker.NO_DUPLICATE_FOUND);
-    }
-
-    private void whenDuplicateNameCheckForNewIngredientReturnDuplicateFound() {
-        verify(duplicateCheckerMock).checkForDuplicatesAndNotify(
-                anyString(),
-                anyString(),
-                duplicateCallbackArgumentCaptor.capture());
-        duplicateCallbackArgumentCaptor.getValue().duplicateCheckResult(
-                VALID_EXISTING_COMPLETE.getId());
     }
 
     private void setupResources() {

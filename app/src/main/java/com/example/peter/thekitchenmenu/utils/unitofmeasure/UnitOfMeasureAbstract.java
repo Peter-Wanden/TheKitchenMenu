@@ -7,7 +7,7 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
-public abstract class UnitOfMeasureImpl implements UnitOfMeasure {
+public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
 
     int numberOfMeasurementUnits;
     double maximumMeasurement;
@@ -17,7 +17,7 @@ public abstract class UnitOfMeasureImpl implements UnitOfMeasure {
     double unitOneDecimal;
     double smallestUnit;
 
-    MeasurementSubtype subtype;
+    protected MeasurementSubtype subtype;
 
     private static final boolean TOTAL_MEASUREMENT = false;
     private static final boolean ITEM_MEASUREMENT = true;
@@ -37,7 +37,7 @@ public abstract class UnitOfMeasureImpl implements UnitOfMeasure {
     private int itemMeasurementTwo;
     private double itemMeasurementOne;
 
-    UnitOfMeasureImpl() {}
+    UnitOfMeasureAbstract() {}
 
     @Override
     public int getNumberOfMeasurementUnits() {
@@ -52,6 +52,12 @@ public abstract class UnitOfMeasureImpl implements UnitOfMeasure {
     @Override
     public MeasurementSubtype getMeasurementSubtype() {
         return subtype;
+    }
+
+    @Override
+    public void setConversionFactor(double conversionFactor) {
+        unitOne = conversionFactor * unitOne;
+        unitTwo = conversionFactor * unitTwo;
     }
 
     @Override
@@ -205,7 +211,7 @@ public abstract class UnitOfMeasureImpl implements UnitOfMeasure {
     }
 
     @Override
-    public int getUnitOneLabelStringResourceId() {
+    public int getUnitOneLabelResourceId() {
         return unitOneLabelStringResourceId;
     }
 
@@ -250,7 +256,7 @@ public abstract class UnitOfMeasureImpl implements UnitOfMeasure {
     }
 
     @Override
-    public int getUnitTwoLabelStringResourceId() {
+    public int getUnitTwoLabelResourceId() {
         return unitTwoLabelStringResourceId;
     }
 
@@ -352,7 +358,7 @@ public abstract class UnitOfMeasureImpl implements UnitOfMeasure {
     @NonNull
     @Override
     public String toString() {
-        return "UnitOfMeasureImpl{" +
+        return "UnitOfMeasureAbstract{" +
                 "\nnumberOfMeasurementUnits=" + numberOfMeasurementUnits +
                 ", \nmaximumMeasurement=" + maximumMeasurement +
                 ", \nminimumMeasurement=" + minimumMeasurement +

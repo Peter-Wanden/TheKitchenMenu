@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
 import com.example.peter.thekitchenmenu.R;
 
-class ImperialVolume extends UnitOfMeasureImpl {
+class ImperialVolume extends UnitOfMeasureAbstract {
 
     ImperialVolume() {
         numberOfMeasurementUnits = 2;

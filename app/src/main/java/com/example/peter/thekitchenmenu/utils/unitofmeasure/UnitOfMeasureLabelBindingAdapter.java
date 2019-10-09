@@ -67,11 +67,11 @@ public class UnitOfMeasureLabelBindingAdapter {
         if (viewId == R.id.pack_measurement_label_one ||
                 viewId == R.id.product_measurement_label_one ||
                 viewId == R.id.ingredient_measurement_label_one)
-            textView.setText(unitOfMeasure.getUnitOneLabelStringResourceId());
+            textView.setText(unitOfMeasure.getUnitOneLabelResourceId());
 
         else if (viewId == R.id.pack_measurement_label_two ||
                 viewId == R.id.product_measurement_label_two ||
                 viewId == R.id.ingredient_measurement_label_two)
-            textView.setText(unitOfMeasure.getUnitTwoLabelStringResourceId());
+            textView.setText(unitOfMeasure.getUnitTwoLabelResourceId());
     }
 }
