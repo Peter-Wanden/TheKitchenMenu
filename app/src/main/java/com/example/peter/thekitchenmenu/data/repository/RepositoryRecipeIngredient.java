@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.data.repository;
 
 import androidx.annotation.NonNull;
 
-import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientEntity;
+import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientQuantityEntity;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -11,7 +11,7 @@ import java.util.List;
 import static androidx.core.util.Preconditions.checkNotNull;
 
 public class RepositoryRecipeIngredient
-        extends Repository<RecipeIngredientEntity>
+        extends Repository<RecipeIngredientQuantityEntity>
         implements DataSourceRecipeIngredient {
 
     public static RepositoryRecipeIngredient INSTANCE = null;
@@ -36,11 +36,11 @@ public class RepositoryRecipeIngredient
 
     @Override
     public void getByRecipeId(@NonNull String recipeId,
-                              @NonNull GetAllCallback<RecipeIngredientEntity> callback) {
+                              @NonNull GetAllCallback<RecipeIngredientQuantityEntity> callback) {
         checkNotNull(recipeId);
         checkNotNull(callback);
 
-        List<RecipeIngredientEntity> cachedEntities = getFromCachedByRecipeId(recipeId);
+        List<RecipeIngredientQuantityEntity> cachedEntities = getFromCachedByRecipeId(recipeId);
 
         if (cachedEntities != null && !cachedEntities.isEmpty()) {
             callback.onAllLoaded(cachedEntities);
@@ -48,13 +48,13 @@ public class RepositoryRecipeIngredient
         }
         recipeIngredientLocalDataSource.getByRecipeId(
                 recipeId,
-                new GetAllCallback<RecipeIngredientEntity>() {
+                new GetAllCallback<RecipeIngredientQuantityEntity>() {
                     @Override
-                    public void onAllLoaded(List<RecipeIngredientEntity> entities) {
+                    public void onAllLoaded(List<RecipeIngredientQuantityEntity> entities) {
                         if (entityCache == null)
                             entityCache = new LinkedHashMap<>();
 
-                        for (RecipeIngredientEntity entity : entities)
+                        for (RecipeIngredientQuantityEntity entity : entities)
                             entityCache.put(entity.getId(), entity);
 
                         callback.onAllLoaded(entities);
@@ -64,13 +64,13 @@ public class RepositoryRecipeIngredient
                     public void onDataNotAvailable() {
                         recipeIngredientRemoteDataSource.getByRecipeId(
                                 recipeId,
-                                new GetAllCallback<RecipeIngredientEntity>() {
+                                new GetAllCallback<RecipeIngredientQuantityEntity>() {
                                     @Override
-                                    public void onAllLoaded(List<RecipeIngredientEntity> entities) {
+                                    public void onAllLoaded(List<RecipeIngredientQuantityEntity> entities) {
                                         if (entityCache == null)
                                             entityCache = new LinkedHashMap<>();
 
-                                        for (RecipeIngredientEntity entity : entities)
+                                        for (RecipeIngredientQuantityEntity entity : entities)
                                             entityCache.put(entity.getId(), entity);
 
                                         callback.onAllLoaded(entities);
@@ -87,11 +87,11 @@ public class RepositoryRecipeIngredient
 
     @Override
     public void getByProductId(@NonNull String productId,
-                               @NonNull GetAllCallback<RecipeIngredientEntity> callback) {
+                               @NonNull GetAllCallback<RecipeIngredientQuantityEntity> callback) {
         checkNotNull(productId);
         checkNotNull(callback);
 
-        List<RecipeIngredientEntity> cachedEntities = getFromCacheByProductId(productId);
+        List<RecipeIngredientQuantityEntity> cachedEntities = getFromCacheByProductId(productId);
 
         if (cachedEntities == null || !cachedEntities.isEmpty()) {
             callback.onAllLoaded(cachedEntities);
@@ -99,13 +99,13 @@ public class RepositoryRecipeIngredient
         }
         recipeIngredientLocalDataSource.getByProductId(
                 productId,
-                new GetAllCallback<RecipeIngredientEntity>() {
+                new GetAllCallback<RecipeIngredientQuantityEntity>() {
                     @Override
-                    public void onAllLoaded(List<RecipeIngredientEntity> entities) {
+                    public void onAllLoaded(List<RecipeIngredientQuantityEntity> entities) {
                         if (entityCache == null)
                             entityCache = new LinkedHashMap<>();
 
-                        for (RecipeIngredientEntity entity : entities)
+                        for (RecipeIngredientQuantityEntity entity : entities)
                             entityCache.put(entity.getId(), entity);
 
                         callback.onAllLoaded(entities);
@@ -115,13 +115,13 @@ public class RepositoryRecipeIngredient
                     public void onDataNotAvailable() {
                         recipeIngredientRemoteDataSource.getByProductId(
                                 productId,
-                                new GetAllCallback<RecipeIngredientEntity>() {
+                                new GetAllCallback<RecipeIngredientQuantityEntity>() {
                                     @Override
-                                    public void onAllLoaded(List<RecipeIngredientEntity> entities) {
+                                    public void onAllLoaded(List<RecipeIngredientQuantityEntity> entities) {
                                         if (entityCache == null)
                                             entityCache = new LinkedHashMap<>();
 
-                                        for (RecipeIngredientEntity entity : entities)
+                                        for (RecipeIngredientQuantityEntity entity : entities)
                                             entityCache.put(entity.getId(), entity);
 
                                         callback.onAllLoaded(entities);
@@ -138,24 +138,24 @@ public class RepositoryRecipeIngredient
 
     @Override
     public void getByIngredientId(@NonNull String ingredientId,
-                                  @NonNull GetAllCallback<RecipeIngredientEntity> callback) {
+                                  @NonNull GetAllCallback<RecipeIngredientQuantityEntity> callback) {
         checkNotNull(ingredientId);
         checkNotNull(callback);
 
-        List<RecipeIngredientEntity> entities = getFromCacheByIngredientId(ingredientId);
+        List<RecipeIngredientQuantityEntity> entities = getFromCacheByIngredientId(ingredientId);
         if (entities != null || !entities.isEmpty()) {
             callback.onAllLoaded(entities);
             return;
         }
         recipeIngredientLocalDataSource.getByIngredientId(
                 ingredientId,
-                new GetAllCallback<RecipeIngredientEntity>() {
+                new GetAllCallback<RecipeIngredientQuantityEntity>() {
                     @Override
-                    public void onAllLoaded(List<RecipeIngredientEntity> entities) {
+                    public void onAllLoaded(List<RecipeIngredientQuantityEntity> entities) {
                         if (entityCache == null)
                             entityCache = new LinkedHashMap<>();
 
-                        for (RecipeIngredientEntity entity : entities)
+                        for (RecipeIngredientQuantityEntity entity : entities)
                             entityCache.put(entity.getId(), entity);
                         callback.onAllLoaded(entities);
                     }
@@ -164,13 +164,13 @@ public class RepositoryRecipeIngredient
                     public void onDataNotAvailable() {
                         recipeIngredientRemoteDataSource.getByIngredientId(
                                 ingredientId,
-                                new GetAllCallback<RecipeIngredientEntity>() {
+                                new GetAllCallback<RecipeIngredientQuantityEntity>() {
                                     @Override
-                                    public void onAllLoaded(List<RecipeIngredientEntity> entities) {
+                                    public void onAllLoaded(List<RecipeIngredientQuantityEntity> entities) {
                                         if (entityCache == null)
                                             entityCache = new LinkedHashMap<>();
 
-                                        for (RecipeIngredientEntity entity : entities)
+                                        for (RecipeIngredientQuantityEntity entity : entities)
                                             entityCache.put(entity.getId(), entity);
 
                                         callback.onAllLoaded(entities);
@@ -186,15 +186,15 @@ public class RepositoryRecipeIngredient
         );
     }
 
-    private List<RecipeIngredientEntity> getFromCachedByRecipeId(String recipeId) {
+    private List<RecipeIngredientQuantityEntity> getFromCachedByRecipeId(String recipeId) {
         checkNotNull(recipeId);
 
         if (entityCache == null)
             return null;
         else {
-            List<RecipeIngredientEntity> entities = new ArrayList<>();
+            List<RecipeIngredientQuantityEntity> entities = new ArrayList<>();
 
-            for (RecipeIngredientEntity entity : entityCache.values())
+            for (RecipeIngredientQuantityEntity entity : entityCache.values())
                 if (entity.getRecipeId().equals(recipeId))
                     entities.add(entity);
 
@@ -202,15 +202,15 @@ public class RepositoryRecipeIngredient
         }
     }
 
-    private List<RecipeIngredientEntity> getFromCacheByProductId(String productId) {
+    private List<RecipeIngredientQuantityEntity> getFromCacheByProductId(String productId) {
         checkNotNull(productId);
 
         if (entityCache == null)
             return null;
         else {
-            List<RecipeIngredientEntity> entities = new ArrayList<>();
+            List<RecipeIngredientQuantityEntity> entities = new ArrayList<>();
 
-            for (RecipeIngredientEntity entity : entities)
+            for (RecipeIngredientQuantityEntity entity : entities)
                 if (entity.getProductId().equals(productId))
                     entities.add(entity);
 
@@ -218,14 +218,14 @@ public class RepositoryRecipeIngredient
         }
     }
 
-    private List<RecipeIngredientEntity> getFromCacheByIngredientId(String ingredientId) {
+    private List<RecipeIngredientQuantityEntity> getFromCacheByIngredientId(String ingredientId) {
         checkNotNull(ingredientId);
 
         if (entityCache == null)
             return null;
         else {
-            List<RecipeIngredientEntity> entities = new ArrayList<>();
-            for (RecipeIngredientEntity entity : entities)
+            List<RecipeIngredientQuantityEntity> entities = new ArrayList<>();
+            for (RecipeIngredientQuantityEntity entity : entities)
                 if (entity.getIngredientId().equals(ingredientId))
                     entities.add(entity);
             return entities;

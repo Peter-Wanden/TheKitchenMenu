@@ -3,7 +3,7 @@ package com.example.peter.thekitchenmenu.data.repository.source.local;
 import androidx.annotation.NonNull;
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
-import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientEntity;
+import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientQuantityEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSourceRecipeIngredient;
 
 import java.util.List;
@@ -35,9 +35,9 @@ public class RecipeIngredientLocalDataSource implements DataSourceRecipeIngredie
     }
 
     @Override
-    public void getAll(@NonNull GetAllCallback<RecipeIngredientEntity> callback) {
+    public void getAll(@NonNull GetAllCallback<RecipeIngredientQuantityEntity> callback) {
         Runnable runnable = () -> {
-            final List<RecipeIngredientEntity> entities = dao.getAll();
+            final List<RecipeIngredientQuantityEntity> entities = dao.getAll();
             appExecutors.mainThread().execute(() -> {
                 if (entities.isEmpty())
                     callback.onDataNotAvailable();
@@ -50,9 +50,9 @@ public class RecipeIngredientLocalDataSource implements DataSourceRecipeIngredie
 
     @Override
     public void getByRecipeId(@NonNull String recipeId,
-                              @NonNull GetAllCallback<RecipeIngredientEntity> callback) {
+                              @NonNull GetAllCallback<RecipeIngredientQuantityEntity> callback) {
         Runnable runnable = () -> {
-            final List<RecipeIngredientEntity> entities = dao.getByRecipeId(recipeId);
+            final List<RecipeIngredientQuantityEntity> entities = dao.getByRecipeId(recipeId);
             appExecutors.mainThread().execute(() -> {
                 if (entities.isEmpty())
                     callback.onDataNotAvailable();
@@ -65,9 +65,9 @@ public class RecipeIngredientLocalDataSource implements DataSourceRecipeIngredie
 
     @Override
     public void getByProductId(@NonNull String productId,
-                               @NonNull GetAllCallback<RecipeIngredientEntity> callback) {
+                               @NonNull GetAllCallback<RecipeIngredientQuantityEntity> callback) {
         Runnable runnable = () -> {
-            final List<RecipeIngredientEntity> entities = dao.getByProductId(productId);
+            final List<RecipeIngredientQuantityEntity> entities = dao.getByProductId(productId);
             appExecutors.mainThread().execute(() -> {
                 if (entities.isEmpty())
                     callback.onDataNotAvailable();
@@ -80,9 +80,9 @@ public class RecipeIngredientLocalDataSource implements DataSourceRecipeIngredie
 
     @Override
     public void getByIngredientId(@NonNull String ingredientId,
-                                  @NonNull GetAllCallback<RecipeIngredientEntity> callback) {
+                                  @NonNull GetAllCallback<RecipeIngredientQuantityEntity> callback) {
         Runnable runnable = () -> {
-            final List<RecipeIngredientEntity> entities = dao.getByIngredientId(ingredientId);
+            final List<RecipeIngredientQuantityEntity> entities = dao.getByIngredientId(ingredientId);
             appExecutors.mainThread().execute(() -> {
                 if (entities.isEmpty())
                     callback.onDataNotAvailable();
@@ -95,9 +95,9 @@ public class RecipeIngredientLocalDataSource implements DataSourceRecipeIngredie
 
     @Override
     public void getById(@NonNull String id,
-                        @NonNull GetEntityCallback<RecipeIngredientEntity> callback) {
+                        @NonNull GetEntityCallback<RecipeIngredientQuantityEntity> callback) {
         Runnable runnable = () -> {
-            final RecipeIngredientEntity entity = dao.getById(id);
+            final RecipeIngredientQuantityEntity entity = dao.getById(id);
             appExecutors.mainThread().execute(() -> {
                 if (entity != null)
                     callback.onEntityLoaded(entity);
@@ -109,7 +109,7 @@ public class RecipeIngredientLocalDataSource implements DataSourceRecipeIngredie
     }
 
     @Override
-    public void save(@NonNull RecipeIngredientEntity entity) {
+    public void save(@NonNull RecipeIngredientQuantityEntity entity) {
         checkNotNull(entity);
         Runnable runnable = () -> dao.insert(entity);
         appExecutors.diskIO().execute(runnable);

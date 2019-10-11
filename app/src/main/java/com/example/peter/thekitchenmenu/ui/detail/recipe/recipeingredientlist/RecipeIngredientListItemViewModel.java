@@ -7,7 +7,7 @@ import androidx.databinding.ObservableField;
 import androidx.lifecycle.ViewModel;
 
 import com.example.peter.thekitchenmenu.app.Constants;
-import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientEntity;
+import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientQuantityEntity;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
 
@@ -21,13 +21,13 @@ public class RecipeIngredientListItemViewModel
     private RepositoryRecipeIngredient repositoryRecipeIngredient;
     private RepositoryIngredient repositoryIngredient;
 
-    private final ObservableField<RecipeIngredientEntity> recipeIngredientObservable =
+    private final ObservableField<RecipeIngredientQuantityEntity> recipeIngredientObservable =
             new ObservableField<>();
     public final ObservableField<String> ingredientNameObservable = new ObservableField<>();
     public final ObservableField<String> ingredientMeasurementObservable = new ObservableField<>();
     public final ObservableField<String> ingredientMeasurementUnitObservable = new ObservableField<>();
 
-    private RecipeIngredientEntity ingredientEntity = new RecipeIngredientEntity(
+    private RecipeIngredientQuantityEntity ingredientEntity = new RecipeIngredientQuantityEntity(
             "id",
             "recipeId",
             "ingredientId",
@@ -51,7 +51,7 @@ public class RecipeIngredientListItemViewModel
         this.navigator = new WeakReference<>(navigator);
     }
 
-    public void setRecipeIngredient(RecipeIngredientEntity recipeIngredient) {
+    public void setRecipeIngredient(RecipeIngredientQuantityEntity recipeIngredient) {
         recipeIngredientObservable.set(recipeIngredient);
     }
 

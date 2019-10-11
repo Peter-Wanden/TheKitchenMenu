@@ -8,7 +8,8 @@ public interface UnitOfMeasure {
 
     MeasurementSubtype getMeasurementSubtype();
 
-    void setConversionFactor(double conversionFactor);
+    double getConversionFactor();
+    boolean conversionFactorIsSet(double conversionFactor);
 
     double getTotalBaseUnits();
     boolean totalBaseUnitsAreSet(double totalBaseUnits);

@@ -121,10 +121,8 @@ public class RecipeCatalogViewModel extends AndroidViewModel {
     }
 
     public void addRecipe() {
-        Log.d(TAG, "addRecipe: navigatorIsNull!");
 
         if (navigator != null)
-            Log.d(TAG, "addRecipe: called!");
             navigator.addRecipe();
     }
 }

@@ -8,8 +8,8 @@ import androidx.room.PrimaryKey;
 
 import java.util.Objects;
 
-@Entity(tableName = RecipeIngredientEntity.TABLE_RECIPE_INGREDIENT)
-public final class RecipeIngredientEntity implements TkmEntity {
+@Entity(tableName = RecipeIngredientQuantityEntity.TABLE_RECIPE_INGREDIENT)
+public final class RecipeIngredientQuantityEntity implements TkmEntity {
 
     public static final String TABLE_RECIPE_INGREDIENT = "recipeIngredient";
     public static final String ID = "id";
@@ -55,15 +55,15 @@ public final class RecipeIngredientEntity implements TkmEntity {
     @ColumnInfo(name = LAST_UPDATE)
     private final long lastUpdate;
 
-    public RecipeIngredientEntity(@NonNull String id,
-                                  @NonNull String recipeId,
-                                  @NonNull String ingredientId,
-                                  @Nullable String productId,
-                                  double itemBaseUnits,
-                                  int unitOfMeasureSubtype,
-                                  @NonNull String createdBy,
-                                  long createDate,
-                                  long lastUpdate) {
+    public RecipeIngredientQuantityEntity(@NonNull String id,
+                                          @NonNull String recipeId,
+                                          @NonNull String ingredientId,
+                                          @Nullable String productId,
+                                          double itemBaseUnits,
+                                          int unitOfMeasureSubtype,
+                                          @NonNull String createdBy,
+                                          long createDate,
+                                          long lastUpdate) {
         this.id = id;
         this.recipeId = recipeId;
         this.ingredientId = ingredientId;
@@ -79,7 +79,7 @@ public final class RecipeIngredientEntity implements TkmEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RecipeIngredientEntity entity = (RecipeIngredientEntity) o;
+        RecipeIngredientQuantityEntity entity = (RecipeIngredientQuantityEntity) o;
         return Double.compare(entity.itemBaseUnits, itemBaseUnits) == 0 &&
                 unitOfMeasureSubtype == entity.unitOfMeasureSubtype &&
                 createDate == entity.createDate &&
@@ -107,7 +107,7 @@ public final class RecipeIngredientEntity implements TkmEntity {
 
     @Override
     public String toString() {
-        return "RecipeIngredientEntity{" +
+        return "RecipeIngredientQuantityEntity{" +
                 "id='" + id + '\'' +
                 ", recipeId='" + recipeId + '\'' +
                 ", ingredientId='" + ingredientId + '\'' +

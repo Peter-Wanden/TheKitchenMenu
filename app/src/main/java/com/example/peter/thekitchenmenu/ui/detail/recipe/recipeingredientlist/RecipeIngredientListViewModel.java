@@ -7,7 +7,7 @@ import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableList;
 import androidx.lifecycle.ViewModel;
 
-import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientEntity;
+import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientQuantityEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
 
@@ -19,7 +19,7 @@ public class RecipeIngredientListViewModel extends ViewModel {
     private Context context;
     private RecipeIngredientListNavigator navigator;
 
-    public final ObservableList<RecipeIngredientEntity> recipeIngredients =
+    public final ObservableList<RecipeIngredientQuantityEntity> recipeIngredients =
             new ObservableArrayList<>();
     public final ObservableBoolean hasIngredients = new ObservableBoolean(false);
 
@@ -47,9 +47,9 @@ public class RecipeIngredientListViewModel extends ViewModel {
     private void loadRecipeIngredients(String recipeId) {
         repositoryRecipeIngredient.getByRecipeId(
                 recipeId,
-                new DataSource.GetAllCallback<RecipeIngredientEntity>() {
+                new DataSource.GetAllCallback<RecipeIngredientQuantityEntity>() {
             @Override
-            public void onAllLoaded(List<RecipeIngredientEntity> recipeIngredients) {
+            public void onAllLoaded(List<RecipeIngredientQuantityEntity> recipeIngredients) {
                 hasIngredients.set(true);
                 RecipeIngredientListViewModel.this.recipeIngredients.clear();
                 RecipeIngredientListViewModel.this.recipeIngredients.addAll(recipeIngredients);

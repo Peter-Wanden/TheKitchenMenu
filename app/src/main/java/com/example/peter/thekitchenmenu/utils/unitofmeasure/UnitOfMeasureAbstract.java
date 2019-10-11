@@ -7,7 +7,15 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureAbstract.LastMeasurementUpdated.*;
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.*;
+
 public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
+
+    enum LastMeasurementUpdated {
+        TOTAL_MEASUREMENT,
+        ITEM_MEASUREMENT
+    }
 
     int numberOfMeasurementUnits;
     double maximumMeasurement;
@@ -16,12 +24,9 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     double unitOne;
     double unitOneDecimal;
     double smallestUnit;
+    private LastMeasurementUpdated lastMeasurementUpdated;
 
     protected MeasurementSubtype subtype;
-
-    private static final boolean TOTAL_MEASUREMENT = false;
-    private static final boolean ITEM_MEASUREMENT = true;
-    private boolean lastMeasurementUpdated = false;
 
     int typeStringResourceId;
     int subtypeStringResourceId;
@@ -29,13 +34,14 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     int unitTwoLabelStringResourceId;
 
     private double totalBaseUnits;
-    private int numberOfItems = UnitOfMeasureConstants.MINIMUM_NUMBER_OF_ITEMS;
+    private int numberOfItems = MINIMUM_NUMBER_OF_ITEMS;
     private int oldNumberOfItems;
     private double itemSize = smallestUnit;
     private int totalMeasurementTwo;
     private double totalMeasurementOne;
     private int itemMeasurementTwo;
     private double itemMeasurementOne;
+    private double conversionFactor;
 
     UnitOfMeasureAbstract() {}
 
@@ -55,9 +61,21 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     }
 
     @Override
-    public void setConversionFactor(double conversionFactor) {
-        unitOne = conversionFactor * unitOne;
-        unitTwo = conversionFactor * unitTwo;
+    public boolean conversionFactorIsSet(double conversionFactor) {
+        if (conversionFactor > MINIMUM_CONVERSION_FACTOR &&
+                conversionFactor < MAXIMUM_CONVERSION_FACTOR) {
+            this.conversionFactor = conversionFactor;
+            unitOne = conversionFactor * unitOne;
+            unitTwo = conversionFactor * unitTwo;
+            totalBaseUnitsAreSet((totalMeasurementTwo * unitTwo) + (totalMeasurementOne * unitOne));
+            return true;
+        } else
+            return false;
+    }
+
+    @Override
+    public double getConversionFactor() {
+        return conversionFactor;
     }
 
     @Override
@@ -67,7 +85,11 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
 
     @Override
     public boolean itemBaseUnitsAreSet(double itemBaseUnits) {
-        return totalBaseUnitsAreSet(itemBaseUnits * numberOfItems);
+        if (totalBaseUnitsAreSet(itemBaseUnits * numberOfItems)) {
+            lastMeasurementUpdated = ITEM_MEASUREMENT;
+            return true;
+        } else
+            return false;
     }
 
     @Override
@@ -167,7 +189,7 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     @Override
     public boolean numberOfItemsIsSet(int numberOfItems) {
         if (numberOfItemsInTotalAreWithinBounds(numberOfItems)) {
-            if (totalBaseUnits == UnitOfMeasureConstants.NOT_YET_SET) {
+            if (totalBaseUnits == NOT_YET_SET) {
                 this.numberOfItems = numberOfItems;
                 return true;
             } else {
@@ -188,8 +210,7 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     }
 
     private boolean numberOfItemsInTotalAreWithinBounds(int numberOfItems) {
-        return numberOfItems >= UnitOfMeasureConstants.MINIMUM_NUMBER_OF_ITEMS &&
-                numberOfItems <= UnitOfMeasureConstants.MAXIMUM_NUMBER_OF_ITEMS;
+        return numberOfItems >= MINIMUM_NUMBER_OF_ITEMS && numberOfItems <= MAXIMUM_NUMBER_OF_ITEMS;
     }
 
     private boolean itemSizeNotLessThanSmallestUnit(int numberOfItems) {
@@ -225,7 +246,6 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
         if (totalBaseUnitsAreSet(baseUnitsWithNewTotalMeasurementOne(newTotalMeasurementOne))) {
             lastMeasurementUpdated = TOTAL_MEASUREMENT;
             return true;
-
         } else
             totalBaseUnitsAreSet(baseUnitsWithNewTotalMeasurementOne(0.));
         return false;
@@ -245,7 +265,6 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
         if (totalBaseUnitsAreSet(baseUnitsWithNewItemMeasurementOne(newItemMeasurementOne))) {
             lastMeasurementUpdated = ITEM_MEASUREMENT;
             return true;
-
         } else
             totalBaseUnitsAreSet(baseUnitsWithNewItemMeasurementOne(0.));
         return false;
@@ -270,7 +289,6 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
         if (totalBaseUnitsAreSet(baseUnitsWithNewTotalMeasurementTwo(newTotalMeasurementTwo))) {
             lastMeasurementUpdated = TOTAL_MEASUREMENT;
             return true;
-
         } else
             totalBaseUnitsAreSet(baseUnitsWithNewTotalMeasurementTwo(0));
         return false;
@@ -290,7 +308,6 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
         if (totalBaseUnitsAreSet(baseUnitsWithNewItemMeasurementTwo(newItemMeasurementTwo))) {
             lastMeasurementUpdated = ITEM_MEASUREMENT;
             return true;
-
         } else
             totalBaseUnitsAreSet(baseUnitsWithNewItemMeasurementTwo(0));
         return false;
@@ -320,10 +337,10 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
         Pair<Integer, Integer> unitTwoDigitsWidth = new Pair<>(unitTwoDigits, 0);
 
         // Calculates the max digit width of unit one
-        int maximumUnitOneValue = (int) (unitTwo / unitOne) -1;
+        int maximumUnitOneValue = (int) (unitTwo / unitOne) - 1;
         int unitOneDigitsBeforeDecimal = 0;
         while (maximumUnitOneValue > 0) {
-            unitOneDigitsBeforeDecimal ++;
+            unitOneDigitsBeforeDecimal++;
             maximumUnitOneValue = maximumUnitOneValue / 10;
         }
         int unitsOneDigitsAfterDecimal = 0;
@@ -359,27 +376,27 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     @Override
     public String toString() {
         return "UnitOfMeasureAbstract{" +
-                "\nnumberOfMeasurementUnits=" + numberOfMeasurementUnits +
-                ", \nmaximumMeasurement=" + maximumMeasurement +
-                ", \nminimumMeasurement=" + minimumMeasurement +
-                ", \nunitTwo=" + unitTwo +
-                ", \nunitOne=" + unitOne +
-                ", \nunitOneDecimal=" + unitOneDecimal +
-                ", \nsmallestUnit=" + smallestUnit +
-                ", \nsubtype=" + subtype +
-                ", \nlastMeasurementUpdated=" + lastMeasurementUpdated +
-                ", \ntypeStringResourceId=" + typeStringResourceId +
-                ", \nsubtypeStringResourceId=" + subtypeStringResourceId +
-                ", \nunitOneLabelStringResourceId=" + unitOneLabelStringResourceId +
-                ", \nunitTwoLabelStringResourceId=" + unitTwoLabelStringResourceId +
-                ", \ntotalBaseUnits=" + totalBaseUnits +
-                ", \nnumberOfItems=" + numberOfItems +
-                ", \noldNumberOfItems=" + oldNumberOfItems +
-                ", \nitemSize=" + itemSize +
-                ", \ntotalMeasurementTwo=" + totalMeasurementTwo +
-                ", \ntotalMeasurementOne=" + totalMeasurementOne +
-                ", \nitemMeasurementTwo=" + itemMeasurementTwo +
-                ", \nitemMeasurementOne=" + itemMeasurementOne +
+                "numberOfMeasurementUnits=" + numberOfMeasurementUnits +
+                ", maximumMeasurement=" + maximumMeasurement +
+                ", minimumMeasurement=" + minimumMeasurement +
+                ", unitTwo=" + unitTwo +
+                ", unitOne=" + unitOne +
+                ", unitOneDecimal=" + unitOneDecimal +
+                ", smallestUnit=" + smallestUnit +
+                ", lastMeasurementUpdated=" + lastMeasurementUpdated +
+                ", subtype=" + subtype +
+                ", typeStringResourceId=" + typeStringResourceId +
+                ", subtypeStringResourceId=" + subtypeStringResourceId +
+                ", unitOneLabelStringResourceId=" + unitOneLabelStringResourceId +
+                ", unitTwoLabelStringResourceId=" + unitTwoLabelStringResourceId +
+                ", totalBaseUnits=" + totalBaseUnits +
+                ", numberOfItems=" + numberOfItems +
+                ", oldNumberOfItems=" + oldNumberOfItems +
+                ", itemSize=" + itemSize +
+                ", totalMeasurementTwo=" + totalMeasurementTwo +
+                ", totalMeasurementOne=" + totalMeasurementOne +
+                ", itemMeasurementTwo=" + itemMeasurementTwo +
+                ", itemMeasurementOne=" + itemMeasurementOne +
                 '}';
     }
 }

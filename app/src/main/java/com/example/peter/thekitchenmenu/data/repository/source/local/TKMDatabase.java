@@ -11,7 +11,7 @@ import com.example.peter.thekitchenmenu.data.entity.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipeDurationEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
-import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientEntity;
+import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientQuantityEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipePortionsEntity;
 
 import androidx.annotation.NonNull;
@@ -36,7 +36,7 @@ import static com.example.peter.thekitchenmenu.data.entity.ProductFastTextSearch
         RecipeDurationEntity.class,
         IngredientEntity.class,
         RecipePortionsEntity.class,
-        RecipeIngredientEntity.class},
+        RecipeIngredientQuantityEntity.class},
         version = 2,
         exportSchema = false)
 public abstract class TKMDatabase extends RoomDatabase {

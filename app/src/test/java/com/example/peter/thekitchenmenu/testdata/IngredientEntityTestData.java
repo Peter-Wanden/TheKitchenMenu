@@ -79,6 +79,18 @@ public class IngredientEntityTestData {
         );
     }
 
+    public static IngredientEntity getNewValidNameValidDescriptionConversionFactorUpdated() {
+        return new IngredientEntity(
+                getNew().getId(),
+                getNewValidName().getName(),
+                getNewInvalidNameValidDescription().getDescription(),
+                0.5,
+                getNew().getCreatedBy(),
+                getNew().getCreateDate(),
+                70L
+        );
+    }
+
     public static IngredientEntity getExistingValidNameValidDescription() {
         return new IngredientEntity(
                 "existingId",
@@ -153,21 +165,34 @@ public class IngredientEntityTestData {
         );
     }
 
+    public static IngredientEntity getExistingValidWithConversionFactor() {
+        return new IngredientEntity(
+                getExistingValidNameValidDescription().getId(),
+                getExistingValidNameValidDescription().getName(),
+                getExistingValidNameValidDescription().getDescription(),
+                0.5,
+                getExistingValidNameValidDescription().getCreatedBy(),
+                getExistingValidNameValidDescription().getCreateDate(),
+                110L
+        );
+    }
+
     public static List<IngredientEntity> getAllIngredients() {
-        List<IngredientEntity> entityList = new ArrayList<>();
-        entityList.add(getNew());
-        entityList.add(getNewInvalidName());
-        entityList.add(getNewValidName());
-        entityList.add(getNewValidNameInvalidDescription());
-        entityList.add(getNewInvalidNameValidDescription());
-        entityList.add(getNewValidNameValidDescription());
-        entityList.add(getExistingValidNameValidDescription());
-        entityList.add(getExistingUpdatedWithInvalidName());
-        entityList.add(getExistingUpdatedWithValidName());
-        entityList.add(getExistingUpdatedWithInvalidDescription());
-        entityList.add(getExistingUpdatedWithValidDescription());
-        entityList.add(getExistingValidNameValidDescriptionFromAnotherUser());
-        return entityList;
+        List<IngredientEntity> ingredients = new ArrayList<>();
+        ingredients.add(getNew());
+        ingredients.add(getNewInvalidName());
+        ingredients.add(getNewValidName());
+        ingredients.add(getNewValidNameInvalidDescription());
+        ingredients.add(getNewInvalidNameValidDescription());
+        ingredients.add(getNewValidNameValidDescription());
+        ingredients.add(getExistingValidNameValidDescription());
+        ingredients.add(getExistingUpdatedWithInvalidName());
+        ingredients.add(getExistingUpdatedWithValidName());
+        ingredients.add(getExistingUpdatedWithInvalidDescription());
+        ingredients.add(getExistingUpdatedWithValidDescription());
+        ingredients.add(getExistingValidNameValidDescriptionFromAnotherUser());
+        ingredients.add(getExistingValidWithConversionFactor());
+        return ingredients;
     }
 
     public static String getValidNameNoDuplicate() {

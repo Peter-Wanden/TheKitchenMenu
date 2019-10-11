@@ -4,14 +4,14 @@ import android.widget.ListView;
 
 import androidx.databinding.BindingAdapter;
 
-import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientEntity;
+import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientQuantityEntity;
 
 import java.util.List;
 
 public class RecipeIngredientListBindings {
     @BindingAdapter("app:recipeIngredients")
     public static void setRecipeIngredients(ListView listView,
-                                            List<RecipeIngredientEntity> recipeIngredients) {
+                                            List<RecipeIngredientQuantityEntity> recipeIngredients) {
 
         RecipeIngredientListFragment.RecipeIngredientListAdapter adapter =
                 (RecipeIngredientListFragment.RecipeIngredientListAdapter) listView.getAdapter();

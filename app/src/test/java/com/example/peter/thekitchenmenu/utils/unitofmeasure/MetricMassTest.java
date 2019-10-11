@@ -374,6 +374,7 @@ public class MetricMassTest {
 
     @Test
     public void numberOfItemsIsSet_thenItemBaseUnitsAreSet_itemSizeIsTotalBaseUnitsMultipliedByNumberItems() {
+
         // Arrange
         // Act
         SUT.numberOfItemsIsSet(4);
@@ -382,4 +383,10 @@ public class MetricMassTest {
         assertEquals(8, SUT.getTotalMeasurementTwo());
         assertEquals(0, SUT.getItemMeasurementOne(), ERROR_MARGIN_DELTA);
     }
+
+    // region helper methods -----------------------------------------------------------------------
+    // endregion helper methods --------------------------------------------------------------------
+
+    // region helper classes -----------------------------------------------------------------------
+    // endregion helper classes --------------------------------------------------------------------
 }

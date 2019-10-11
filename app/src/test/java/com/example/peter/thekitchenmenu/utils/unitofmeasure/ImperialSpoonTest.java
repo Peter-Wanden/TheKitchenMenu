@@ -10,6 +10,8 @@ public class ImperialSpoonTest {
 
     // region constants ----------------------------------------------------------------------------
     private double DELTA = 0.00001;
+    private double MAX_CONVERSION_FACTOR = UnitOfMeasureConstants.MAXIMUM_CONVERSION_FACTOR;
+    private double MIN_CONVERSION_FACTOR = UnitOfMeasureConstants.MINIMUM_CONVERSION_FACTOR;
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
@@ -24,6 +26,22 @@ public class ImperialSpoonTest {
 
     }
 
+    @Test
+    public void setConversionFactorOutOfRangeMax_setFalse() {
+        // Arrange
+        // Act
+        // Assert
+        assertFalse(SUT.conversionFactorIsSet(MAX_CONVERSION_FACTOR + 0.0001));
+    }
+
+    @Test
+    public void setConversionFactor_outOfRangeMin_setFalse() {
+        // Arrange
+        // Act
+        // Assert
+        assertFalse(SUT.conversionFactorIsSet(MIN_CONVERSION_FACTOR - 0.0001));
+    }
+
     // Test data from Butter Chicken recipe
     @Test
     public void testButter() {
@@ -34,7 +52,7 @@ public class ImperialSpoonTest {
         int numberOfPortions = 16;
         double total = 57.57;
         // Act
-        SUT.setConversionFactor(conversionFactor);
+        SUT.conversionFactorIsSet(conversionFactor);
         SUT.numberOfItemsIsSet(numberOfPortions);
         SUT.totalMeasurementTwoIsSet(fourTablespoons);
         // Assert
@@ -51,7 +69,7 @@ public class ImperialSpoonTest {
         double quantityPerServing = 1.07625;
         double total = 17.22;
         // Act
-        SUT.setConversionFactor(conversionFactor);
+        SUT.conversionFactorIsSet(conversionFactor);
         SUT.numberOfItemsIsSet(numberOfPortions);
         SUT.totalMeasurementOneIsSet(fourTeaspoons);
         // Assert
@@ -70,7 +88,7 @@ public class ImperialSpoonTest {
         double total = 10.8;
         // Act
         SUT.numberOfItemsIsSet(numberOfPortions);
-        SUT.setConversionFactor(conversionFactor);
+        SUT.conversionFactorIsSet(conversionFactor);
         SUT.totalMeasurementTwoIsSet(twoTableSpoons);
         // Assert
         assertEquals(total, SUT.getTotalBaseUnits(), DELTA);
@@ -89,11 +107,51 @@ public class ImperialSpoonTest {
         double total = 0.3;
         // Act
         assertTrue(SUT.numberOfItemsIsSet(numberOfPortions));
-        SUT.setConversionFactor(conversionFactor);
+        SUT.conversionFactorIsSet(conversionFactor);
         assertTrue(SUT.totalMeasurementOneIsSet(halfATeaSpoon));
         // Assert
         assertEquals(total, SUT.getTotalBaseUnits(), DELTA);
         assertEquals(quantityPerServing, SUT.getItemBaseUnits(), DELTA);
+    }
+
+    @Test
+    public void conversionFactorIsSet_beforeMeasurement_itemBaseUnitsCorrect() {
+        // Arrange
+        int numberOfPortions = 4;
+        double numberOfTeaspoons = 1;
+        double conversionFactor = 0.5;
+        int volumeOfTeaSpoon = 5;
+        // Act
+        // Assert
+        assertTrue(SUT.numberOfItemsIsSet(numberOfPortions));
+        assertTrue(SUT.conversionFactorIsSet(conversionFactor));
+        assertTrue(SUT.totalMeasurementOneIsSet(numberOfTeaspoons));
+        assertEquals(
+                numberOfTeaspoons * volumeOfTeaSpoon * conversionFactor,
+                SUT.getTotalBaseUnits(), DELTA);
+        assertEquals(
+                numberOfTeaspoons * volumeOfTeaSpoon * conversionFactor / numberOfPortions,
+                SUT.getItemBaseUnits(), DELTA);
+    }
+
+    @Test
+    public void conversionFactorIsSet_afterMeasurement_itemBaseUnitsCorrect() {
+        // Arrange
+        int numberOfPortions = 4;
+        double numberOfTeaspoons = 1;
+        double conversionFactor = 0.5;
+        int volumeOfTeaSpoon = 5;
+        // Act
+        // Assert
+        assertTrue(SUT.numberOfItemsIsSet(numberOfPortions));
+        assertTrue(SUT.totalMeasurementOneIsSet(numberOfTeaspoons));
+        assertTrue(SUT.conversionFactorIsSet(conversionFactor));
+        assertEquals(
+                numberOfTeaspoons * volumeOfTeaSpoon * conversionFactor,
+                SUT.getTotalBaseUnits(), DELTA);
+        assertEquals(
+                numberOfTeaspoons * volumeOfTeaSpoon * conversionFactor / numberOfPortions,
+                SUT.getItemBaseUnits(), DELTA);
     }
 
     // region helper methods -----------------------------------------------------------------------

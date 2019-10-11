@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.data.repository.source.remote;
 
 import androidx.annotation.NonNull;
 
-import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientEntity;
+import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientQuantityEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSourceRecipeIngredient;
 
 public class RecipeIngredientRemoteDataSource implements DataSourceRecipeIngredient {
@@ -16,32 +16,32 @@ public class RecipeIngredientRemoteDataSource implements DataSourceRecipeIngredi
     }
 
     @Override
-    public void getByRecipeId(@NonNull String recipeId, @NonNull GetAllCallback<RecipeIngredientEntity> callback) {
+    public void getByRecipeId(@NonNull String recipeId, @NonNull GetAllCallback<RecipeIngredientQuantityEntity> callback) {
         callback.onDataNotAvailable();
     }
 
     @Override
-    public void getByProductId(@NonNull String productId, @NonNull GetAllCallback<RecipeIngredientEntity> callback) {
+    public void getByProductId(@NonNull String productId, @NonNull GetAllCallback<RecipeIngredientQuantityEntity> callback) {
         callback.onDataNotAvailable();
     }
 
     @Override
-    public void getByIngredientId(@NonNull String ingredientId, @NonNull GetAllCallback<RecipeIngredientEntity> callback) {
+    public void getByIngredientId(@NonNull String ingredientId, @NonNull GetAllCallback<RecipeIngredientQuantityEntity> callback) {
         callback.onDataNotAvailable();
     }
 
     @Override
-    public void getAll(@NonNull GetAllCallback<RecipeIngredientEntity> callback) {
+    public void getAll(@NonNull GetAllCallback<RecipeIngredientQuantityEntity> callback) {
         callback.onDataNotAvailable();
     }
 
     @Override
-    public void getById(@NonNull String id, @NonNull GetEntityCallback<RecipeIngredientEntity> callback) {
+    public void getById(@NonNull String id, @NonNull GetEntityCallback<RecipeIngredientQuantityEntity> callback) {
         callback.onDataNotAvailable();
     }
 
     @Override
-    public void save(@NonNull RecipeIngredientEntity object) {
+    public void save(@NonNull RecipeIngredientQuantityEntity object) {
 
     }
 

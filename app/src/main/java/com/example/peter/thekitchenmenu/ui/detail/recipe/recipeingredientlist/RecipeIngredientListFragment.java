@@ -13,7 +13,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientEntity;
+import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientQuantityEntity;
 import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
@@ -93,11 +93,11 @@ public class RecipeIngredientListFragment extends Fragment {
 
         @Nullable
         private RecipeIngredientListItemNavigator navigator;
-        private List<RecipeIngredientEntity> recipeIngredients;
+        private List<RecipeIngredientQuantityEntity> recipeIngredients;
         private RepositoryRecipeIngredient repositoryRecipeIngredient;
         private RepositoryIngredient repositoryIngredient;
 
-        RecipeIngredientListAdapter(List<RecipeIngredientEntity> recipeIngredients,
+        RecipeIngredientListAdapter(List<RecipeIngredientQuantityEntity> recipeIngredients,
                                            @Nullable RecipeIngredientListItemNavigator navigator,
                                            RepositoryRecipeIngredient repositoryRecipeIngredient,
                                            RepositoryIngredient repositoryIngredient) {
@@ -111,11 +111,11 @@ public class RecipeIngredientListFragment extends Fragment {
             navigator = null;
         }
 
-        void replaceData(List<RecipeIngredientEntity> ingredientList) {
+        void replaceData(List<RecipeIngredientQuantityEntity> ingredientList) {
             setList(ingredientList);
         }
 
-        private void setList(List<RecipeIngredientEntity> recipeIngredients) {
+        private void setList(List<RecipeIngredientQuantityEntity> recipeIngredients) {
             this.recipeIngredients = recipeIngredients;
             notifyDataSetChanged();
         }
@@ -126,7 +126,7 @@ public class RecipeIngredientListFragment extends Fragment {
         }
 
         @Override
-        public RecipeIngredientEntity getItem(int i) {
+        public RecipeIngredientQuantityEntity getItem(int i) {
             return recipeIngredients.get(i);
         }
 
@@ -137,7 +137,7 @@ public class RecipeIngredientListFragment extends Fragment {
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
-            RecipeIngredientEntity recipeIngredient = getItem(i);
+            RecipeIngredientQuantityEntity recipeIngredient = getItem(i);
             RecipeIngredientListItemBinding binding;
             if (view == null) {
                 LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());

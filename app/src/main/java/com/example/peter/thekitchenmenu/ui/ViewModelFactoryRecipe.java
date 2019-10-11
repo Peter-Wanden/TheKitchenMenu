@@ -149,6 +149,7 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
             return (T) new RecipeIngredientMeasurementViewModel(
                     recipePortionsRepository,
                     recipeIngredientRepository,
+                    ingredientRepository,
                     application.getResources(),
                     new UniqueIdProvider(),
                     new TimeProvider()

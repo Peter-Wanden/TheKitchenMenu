@@ -196,7 +196,7 @@ public class IngredientEditorViewModel
                     ingredientEntity.getId(),
                     nameObservable.get().trim(),
                     descriptionObservable.get().trim(),
-                    0,
+                    ingredientEntity.getConversionFactor(),
                     ingredientEntity.getCreatedBy(),
                     ingredientEntity.getCreateDate(),
                     ingredientEntity.getLastUpdate()
@@ -225,7 +225,7 @@ public class IngredientEditorViewModel
                 ingredientEntity.getId(),
                 nameObservable.get(),
                 descriptionObservable.get(),
-                0,
+                ingredientEntity.getConversionFactor(),
                 ingredientEntity.getCreatedBy(),
                 ingredientEntity.getCreateDate(),
                 timeProvider.getCurrentTimestamp()

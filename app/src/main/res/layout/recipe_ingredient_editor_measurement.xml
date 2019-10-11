@@ -53,6 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
             android:text="@string/recipe_ingredient_unit_of_measure_label"
@@ -155,7 +156,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toStartOf="@id/vertical_guideline"
-            app:layout_constraintTop_toBottomOf="@id/editable_measurement_one"/>
+            app:layout_constraintTop_toBottomOf="@id/editable_measurement_one"
+            android:visibility="@{viewModel.isConversionFactorEnabled ? View.VISIBLE : View.GONE}"
+            />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/ingredient_measurement_advanced_label"
@@ -165,13 +168,18 @@
             app:layout_constraintStart_toStartOf="@id/vertical_guideline"
             app:layout_constraintTop_toTopOf="@id/recipe_ingredient_advanced_check_box"
             app:layout_constraintBottom_toBottomOf="@id/recipe_ingredient_advanced_check_box"
+            android:visibility="@{viewModel.isConversionFactorEnabled ? View.VISIBLE : View.GONE}"
             />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/conversion_factor_label"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="How many grams does 1ml (1cm3) of this ingredient weigh?"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:text="Please enter the exact weight of 1ml (1cm3) of this ingredient?"
             app:layout_constraintTop_toBottomOf="@id/recipe_ingredient_advanced_check_box"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -189,10 +197,11 @@
             android:paddingEnd="8dp"
             android:textAlignment="center"
             android:ems="8"
+            android:text="@={viewModel.conversionFactor}"
             app:layout_constraintTop_toBottomOf="@id/conversion_factor_label"
             app:layout_constraintStart_toStartOf="@id/vertical_guideline"
             android:visibility="@{recipeIngredientAdvancedCheckBox.checked ? View.VISIBLE : View.GONE}"
-            tools:text="9.20349"
+            tools:text="0.20349"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
