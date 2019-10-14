@@ -166,7 +166,7 @@ public class RecipeIngredientMeasurementViewModelTest {
         // Act
         SUT.start(NEW_INVALID.getRecipeId(), NEW_INVALID.getIngredientId());
         // Assert
-        assertEquals(0, SUT.unitOfMeasureSpinnerInt.get());
+        assertEquals(MeasurementSubtype.METRIC_MASS, SUT.subtype.get());
     }
 
     @Test
@@ -245,21 +245,8 @@ public class RecipeIngredientMeasurementViewModelTest {
         verifyRepoPortionsCalledAndReturnNewValidFourPortions();
         SUT.measurementTwo.set(String.valueOf((int) UnitOfMeasureConstants.MAXIMUM_MASS / 1000 + 1));
         // Assert
-        assertEquals("", SUT.measurementOne.get());
-        assertEquals("", SUT.measurementTwo.get());
-    }
-
-    @Test
-    public void startNewRecipeAndIngredientId_unitOfMeasureImperialMass_subtypeUpdated() {
-        // Arrange
-        when(idProviderMock.getUId()).thenReturn(NEW_VALID_METRIC.getId());
-        // Act
-        SUT.start(NEW_VALID_METRIC.getRecipeId(), NEW_VALID_METRIC.getIngredientId());
-        verifyRepoIngredientCalledAndReturnNewValidName();
-        verifyRepoPortionsCalledAndReturnNewValidFourPortions();
-        SUT.unitOfMeasureSpinnerInt.set(MeasurementSubtype.IMPERIAL_MASS.asInt());
-        // Assert
-        assertEquals(MeasurementSubtype.IMPERIAL_MASS, SUT.subtype.get());
+        assertEquals("0", SUT.measurementOne.get());
+        assertEquals("0", SUT.measurementTwo.get());
     }
 
     @Test
@@ -271,8 +258,23 @@ public class RecipeIngredientMeasurementViewModelTest {
         SUT.start(NEW_VALID_IMPERIAL.getRecipeId(), NEW_VALID_IMPERIAL.getIngredientId());
         verifyRepoIngredientCalledAndReturnNewValidName();
         verifyRepoPortionsCalledAndReturnNewValidFourPortions();
-        SUT.unitOfMeasureSpinnerInt.set(MeasurementSubtype.IMPERIAL_MASS.asInt());
+        SUT.subtype.set(MeasurementSubtype.IMPERIAL_MASS);
         SUT.measurementOne.set(String.valueOf(NEW_VALID_IMPERIAL_OZ));
+        // Assert
+        verify(repositoryRecipeIngredientMock).save(eq(NEW_VALID_IMPERIAL));
+    }
+
+    @Test
+    public void startNewRecipeAndIngredientId_unitOfMeasureSpoon_decimalMeasurementProcessed() {
+        // Arrange
+        when(timeProviderMock.getCurrentTimestamp()).thenReturn(NEW_VALID_IMPERIAL.getCreateDate());
+        when(idProviderMock.getUId()).thenReturn(NEW_VALID_IMPERIAL.getId());
+        // Act
+        SUT.start(NEW_VALID_IMPERIAL.getRecipeId(), NEW_VALID_IMPERIAL.getIngredientId());
+        verifyRepoIngredientCalledAndReturnNewValidName();
+        verifyRepoPortionsCalledAndReturnNewValidFourPortions();
+        SUT.subtype.set(MeasurementSubtype.IMPERIAL_SPOON);
+        SUT.measurementOne.set(String.valueOf(1.5));
         // Assert
         verify(repositoryRecipeIngredientMock).save(eq(NEW_VALID_IMPERIAL));
     }
@@ -286,7 +288,7 @@ public class RecipeIngredientMeasurementViewModelTest {
         verifyRepoIngredientCalledAndReturnNewValidName();
         verifyRepoPortionsCalledAndReturnNewValidFourPortions();
 
-        SUT.unitOfMeasureSpinnerInt.set(MeasurementSubtype.COUNT.asInt());
+        SUT.subtype.set(MeasurementSubtype.COUNT);
         // Assert
         assertEquals(1, SUT.numberOfMeasurementUnits.get());
     }
@@ -302,7 +304,7 @@ public class RecipeIngredientMeasurementViewModelTest {
         // Assert
         verifyRepoIngredientCalledAndReturnNewValidName();
         verifyRepoPortionsCalledAndReturnNewValidFourPortions();
-        SUT.unitOfMeasureSpinnerInt.set(MeasurementSubtype.IMPERIAL_SPOON.asInt());
+        SUT.subtype.set(MeasurementSubtype.IMPERIAL_SPOON);
         SUT.measurementOne.set("1");
         verifyNoMoreInteractions(repositoryIngredientMock);
         verify(repositoryRecipeIngredientMock).save(eq(NEW_VALID_ONE_TEASPOON_NO_CONVERSION));
@@ -319,7 +321,7 @@ public class RecipeIngredientMeasurementViewModelTest {
         // Assert
         verifyRepoIngredientCalledAndReturnNewValidNameValidDescription();
         verifyRepoPortionsCalledAndReturnNewValidFourPortions();
-        SUT.unitOfMeasureSpinnerInt.set(MeasurementSubtype.IMPERIAL_SPOON.asInt());
+        SUT.subtype.set(MeasurementSubtype.IMPERIAL_SPOON);
         SUT.measurementOne.set("1");
         SUT.conversionFactor.set(String.valueOf(
                 INGREDIENT_NEW_VALID_CONVERSION_FACTOR_UPDATED.getConversionFactor()));
@@ -337,7 +339,7 @@ public class RecipeIngredientMeasurementViewModelTest {
         // Assert
         verifyRepoIngredientCalledAndReturnNewValidNameValidDescription();
         verifyRepoPortionsCalledAndReturnNewValidFourPortions();
-        SUT.unitOfMeasureSpinnerInt.set(MeasurementSubtype.IMPERIAL_SPOON.asInt());
+        SUT.subtype.set(MeasurementSubtype.IMPERIAL_SPOON);
         SUT.measurementOne.set("1");
         SUT.conversionFactor.set(String.valueOf(
                 INGREDIENT_NEW_VALID_CONVERSION_FACTOR_UPDATED.getConversionFactor()));
@@ -370,7 +372,6 @@ public class RecipeIngredientMeasurementViewModelTest {
         verifyRepoIngredientCalledAndReturnExistingValidNameDescription();
         verifyRepoPortionsCalledAndReturnExistingValidNinePortions();
 
-        assertEquals(EXISTING_VALID_METRIC.getUnitOfMeasureSubtype(), SUT.unitOfMeasureSpinnerInt.get());
         assertEquals(EXISTING_VALID_METRIC.getUnitOfMeasureSubtype(), SUT.subtype.get().asInt());
         assertEquals(unitOfMeasure.getNumberOfMeasurementUnits(), SUT.numberOfMeasurementUnits.get());
 

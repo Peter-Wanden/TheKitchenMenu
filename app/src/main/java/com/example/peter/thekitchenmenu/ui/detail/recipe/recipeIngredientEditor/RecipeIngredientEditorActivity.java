@@ -138,8 +138,11 @@ public class RecipeIngredientEditorActivity
     private void start() {
         Intent intent = getIntent();
         if (intent.hasExtra(EXTRA_RECIPE_ID) && intent.hasExtra(EXTRA_INGREDIENT_ID)) {
-            recipeNameAndPortionsViewModel.start(intent.getStringExtra(EXTRA_RECIPE_ID));
-            ingredientViewerViewModel.start(intent.getStringExtra(EXTRA_INGREDIENT_ID));
+            String recipeId = intent.getStringExtra(EXTRA_RECIPE_ID);
+            String ingredientId = intent.getStringExtra(EXTRA_INGREDIENT_ID);
+            recipeNameAndPortionsViewModel.start(recipeId);
+            ingredientViewerViewModel.start(ingredientId);
+            measurementViewModel.start(recipeId, ingredientId);
         }
         else if (intent.hasExtra(EXTRA_RECIPE_ID) && intent.hasExtra(EXTRA_RECIPE_INGREDIENT_ID)) {
             measurementViewModel.start(intent.getStringExtra(EXTRA_RECIPE_INGREDIENT_ID));

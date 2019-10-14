@@ -16,6 +16,7 @@ public class UnitOfMeasureConstants {
 
     static final int NOT_YET_SET = 0;
 
-    static final double MAXIMUM_CONVERSION_FACTOR = 5.;
-    static final double MINIMUM_CONVERSION_FACTOR = .001;
+    // density
+    public static final double MAXIMUM_CONVERSION_FACTOR = 1.5;
+    public static final double MINIMUM_CONVERSION_FACTOR = .001;
 }

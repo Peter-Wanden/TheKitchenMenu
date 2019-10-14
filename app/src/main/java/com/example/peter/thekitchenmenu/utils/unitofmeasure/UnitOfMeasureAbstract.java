@@ -62,8 +62,8 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
 
     @Override
     public boolean conversionFactorIsSet(double conversionFactor) {
-        if (conversionFactor > MINIMUM_CONVERSION_FACTOR &&
-                conversionFactor < MAXIMUM_CONVERSION_FACTOR) {
+        if (conversionFactor >= MINIMUM_CONVERSION_FACTOR &&
+                conversionFactor <= MAXIMUM_CONVERSION_FACTOR) {
             this.conversionFactor = conversionFactor;
             unitOne = conversionFactor * unitOne;
             unitTwo = conversionFactor * unitTwo;
@@ -349,10 +349,13 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
         Pair<Integer, Integer> unitOneDigitsWidth = new Pair<>
                 (unitOneDigitsBeforeDecimal, unitsOneDigitsAfterDecimal);
 
+        // Sets the digit widths for the conversion factor
+        Pair<Integer, Integer> conversionFactorDigitWidths = new Pair<>(1, 3);
 
-        Pair[] measurementUnitDigitWidths = new Pair[2];
+        Pair[] measurementUnitDigitWidths = new Pair[3];
         measurementUnitDigitWidths[0] = unitOneDigitsWidth;
         measurementUnitDigitWidths[1] = unitTwoDigitsWidth;
+        measurementUnitDigitWidths[2] = conversionFactorDigitWidths;
 
         return measurementUnitDigitWidths;
     }

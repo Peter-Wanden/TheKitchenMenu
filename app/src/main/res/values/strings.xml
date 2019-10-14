@@ -345,6 +345,8 @@
     <string name="empty_recipe_ingredients_message">There are currently no ingredients associated
         with this recipe.</string>
 
-
-
+    <!-- Conversion factor -->
+    <string name="volume_to_weight_conversion_advanced_label">Advanced: Volume to weight conversion</string>
+    <string name="volume_to_weight_conversion_factor_label">Please enter the exact weight of 1ml (1cm3) of this ingredient:</string>
+    <string name="conversion_factor_error_message">Please enter a value between %1$.3f and %2$.1f</string>
 </resources>
