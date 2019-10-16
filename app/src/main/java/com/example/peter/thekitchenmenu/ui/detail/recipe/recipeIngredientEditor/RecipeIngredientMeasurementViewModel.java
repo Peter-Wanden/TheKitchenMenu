@@ -1,35 +1,43 @@
 package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor;
 
+import android.app.Application;
 import android.content.res.Resources;
-import android.util.Log;
 
 import androidx.databinding.Observable;
 import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableInt;
-import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.AndroidViewModel;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientQuantityEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipePortionsEntity;
+import com.example.peter.thekitchenmenu.data.model.MeasurementModel;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
+import com.example.peter.thekitchenmenu.ui.UseCaseFactory;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementResult;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtype;
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.PortionUseCaseViewModel;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasure;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants;
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasurePortionUseCase;
 
-public class RecipeIngredientMeasurementViewModel extends ViewModel {
+public class RecipeIngredientMeasurementViewModel
+        extends AndroidViewModel
+        implements PortionUseCaseViewModel {
 
     private RepositoryRecipePortions portionsRepository;
     private RepositoryRecipeIngredient recipeIngredientRepository;
     private RepositoryIngredient ingredientRepository;
     private MeasurementSubtype defaultSubtype = MeasurementSubtype.METRIC_MASS;
+    private UnitOfMeasurePortionUseCase portionUseCase;
 
     private Resources resources;
     private UniqueIdProvider idProvider;
@@ -43,8 +51,8 @@ public class RecipeIngredientMeasurementViewModel extends ViewModel {
     public final ObservableField<String> measurementTwo = new ObservableField<>();
     public final ObservableField<String> measurementOneErrorMessage = new ObservableField<>();
     public final ObservableField<String> measurementTwoErrorMessage = new ObservableField<>();
-    public final ObservableBoolean isConversionFactorEnabled = new ObservableBoolean();
     public final ObservableField<String> conversionFactor = new ObservableField<>();
+    public final ObservableBoolean isConversionFactorEnabled = new ObservableBoolean();
     public final ObservableField<String> conversionFactorErrorMessage = new ObservableField<>();
 
     private String recipeId;
@@ -54,14 +62,14 @@ public class RecipeIngredientMeasurementViewModel extends ViewModel {
     private IngredientEntity ingredientEntity;
     private UnitOfMeasure unitOfMeasure = defaultSubtype.getMeasurementClass();
 
-    public RecipeIngredientMeasurementViewModel(
-            RepositoryRecipePortions portionsRepository,
-            RepositoryRecipeIngredient recipeIngredientRepository,
-            RepositoryIngredient ingredientRepository,
-            Resources resources,
-            UniqueIdProvider idProvider,
-            TimeProvider timeProvider) {
-
+    public RecipeIngredientMeasurementViewModel(Application application,
+                                                RepositoryRecipePortions portionsRepository,
+                                                RepositoryRecipeIngredient recipeIngredientRepository,
+                                                RepositoryIngredient ingredientRepository,
+                                                Resources resources,
+                                                UniqueIdProvider idProvider,
+                                                TimeProvider timeProvider) {
+        super(application);
         this.portionsRepository = portionsRepository;
         this.recipeIngredientRepository = recipeIngredientRepository;
         this.ingredientRepository = ingredientRepository;
@@ -73,6 +81,7 @@ public class RecipeIngredientMeasurementViewModel extends ViewModel {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
                 subTypeUpdated();
+                updateMeasurementModel();
             }
         });
 
@@ -96,11 +105,20 @@ public class RecipeIngredientMeasurementViewModel extends ViewModel {
                 conversionFactorUpdated();
             }
         });
+
+        setupUseCase(application);
+    }
+
+    private void setupUseCase(Application application) {
+        UseCaseFactory factory = UseCaseFactory.getInstance(application);
+        portionUseCase = factory.providePortionsUseCase(this);
     }
 
     public void start(String recipeId, String ingredientId) {
         this.recipeId = recipeId;
         this.ingredientId = ingredientId;
+        portionUseCase.start(recipeId, ingredientId);
+
         recipeIngredientQuantityEntity = createNewRecipeIngredientQuantityEntity();
         loadIngredient();
     }
@@ -118,6 +136,11 @@ public class RecipeIngredientMeasurementViewModel extends ViewModel {
                 currentTime,
                 currentTime
         );
+    }
+
+    @Override
+    public void setResult(MeasurementResult result) {
+
     }
 
     public void start(String recipeIngredientId) {
@@ -184,7 +207,8 @@ public class RecipeIngredientMeasurementViewModel extends ViewModel {
     private void setupUnitOfMeasure() {
         unitOfMeasure = MeasurementSubtype.fromInt(recipeIngredientQuantityEntity.
                 getUnitOfMeasureSubtype()).getMeasurementClass();
-        unitOfMeasure.conversionFactorIsSet(ingredientEntity.getConversionFactor());
+        if (ingredientEntity.getConversionFactor() != 1)
+            unitOfMeasure.conversionFactorIsSet(ingredientEntity.getConversionFactor());
         unitOfMeasure.itemBaseUnitsAreSet(recipeIngredientQuantityEntity.getItemBaseUnits());
         unitOfMeasure.numberOfItemsIsSet(numberOfPortions);
         updateUi();
@@ -196,6 +220,70 @@ public class RecipeIngredientMeasurementViewModel extends ViewModel {
             if (numberOfPortions > 1)
                 unitOfMeasure.numberOfItemsIsSet(numberOfPortions);
             updateUi();
+        }
+    }
+
+    private void updateMeasurementModel() {
+        MeasurementModel updatedModel = createUpdatedMeasurementModel();
+        portionUseCase.setModel(updatedModel);
+    }
+
+    private MeasurementModel createUpdatedMeasurementModel() {
+        return new MeasurementModel(
+                subtype.get(),
+                numberOfPortions,
+                getDecimalValue(conversionFactor),
+                getDecimalValue(measurementOne),
+                getIntegerValue(),
+                0,
+                0,
+                portionUseCase.BASE_UNITS_NOT_SET
+        );
+    }
+
+    private double getDecimalValue(ObservableField<String> valueInView) {
+        double decimalMeasurement = parseDoubleFromString(valueInView);
+        if (decimalMeasurement == MEASUREMENT_ERROR)
+            return 0;
+        else
+            return decimalMeasurement;
+    }
+
+    private double parseDoubleFromString(ObservableField<String> valueInView) {
+        String rawValue = valueInView.get();
+        if (rawValue.isEmpty())
+            return 0;
+        try {
+            return Double.parseDouble(rawValue);
+        } catch (NumberFormatException e) {
+            if (valueInView == measurementOne)
+                measurementOneErrorMessage.set(
+                        resources.getString(R.string.number_format_exception));
+            else if (valueInView == conversionFactor)
+                conversionFactorErrorMessage.set(
+                        resources.getString(R.string.number_format_exception));
+            return MEASUREMENT_ERROR;
+        }
+    }
+
+    private int getIntegerValue() {
+        int integerMeasurement = parseIntFromString();
+        if (integerMeasurement == MEASUREMENT_ERROR)
+            return 0;
+        else
+            return integerMeasurement;
+
+    }
+
+    private int parseIntFromString() {
+        String rawValue = measurementTwo.get();
+        if (rawValue.isEmpty())
+            return 0;
+        try {
+            return Integer.parseInt(rawValue);
+        } catch (NumberFormatException e) {
+            measurementTwoErrorMessage.set(resources.getString(R.string.number_format_exception));
+            return MEASUREMENT_ERROR;
         }
     }
 
@@ -255,15 +343,15 @@ public class RecipeIngredientMeasurementViewModel extends ViewModel {
 
     private double parseDecimalFromString(ObservableField<String> measurement) {
         String rawValue = measurement.get();
-        if (rawValue.isEmpty()) {
-//            measurement.set("");
-            return 0;
-        }
+//        if (rawValue.isEmpty()) {
+////            measurement.set("");
+//            return 0;
+//        }
         try {
             return Double.parseDouble(rawValue);
         } catch (NumberFormatException e) {
-            if (measurement == measurementOne)
-                measurementOneErrorMessage.set(resources.getString(R.string.number_format_exception));
+//            if (measurement == measurementOne)
+            measurementOneErrorMessage.set(resources.getString(R.string.number_format_exception));
             return MEASUREMENT_ERROR;
         }
     }
@@ -334,7 +422,6 @@ public class RecipeIngredientMeasurementViewModel extends ViewModel {
 
     private void updateUi() {
         updateUnitOfMeasure();
-        updateMeasurementSubtype();
         updateNumberOfMeasurementUnits();
         updateConversionFactor();
         updateMeasurementUnits();
@@ -348,11 +435,6 @@ public class RecipeIngredientMeasurementViewModel extends ViewModel {
         if (subtype.get() != unitOfMeasure.getMeasurementSubtype()) {
             subtype.set(unitOfMeasure.getMeasurementSubtype());
         }
-    }
-
-    private void updateMeasurementSubtype() {
-        if (subtype.get() != unitOfMeasure.getMeasurementSubtype())
-            subtype.set(unitOfMeasure.getMeasurementSubtype());
     }
 
     private void updateNumberOfMeasurementUnits() {

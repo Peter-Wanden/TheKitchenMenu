@@ -26,6 +26,7 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     double smallestUnit;
     private LastMeasurementUpdated lastMeasurementUpdated;
 
+
     protected MeasurementSubtype subtype;
 
     int typeStringResourceId;

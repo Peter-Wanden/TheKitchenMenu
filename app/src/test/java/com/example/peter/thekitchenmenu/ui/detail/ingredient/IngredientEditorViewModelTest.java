@@ -204,7 +204,7 @@ public class IngredientEditorViewModelTest {
         // Act
         SUT.start();
         SUT.nameObservable.set(NEW_VALID_NAME.getName());
-        whenDuplicateNameCheckForNewIngredientReturnNonFound();
+        whenDuplicateNameCheckForNewIngredientReturnNoneFound();
         // Assert
         verify(useButtonVisibilityObserverMock, times(2)).
                 onChanged(eq(true));
@@ -220,7 +220,7 @@ public class IngredientEditorViewModelTest {
         // Act
         SUT.start();
         SUT.nameObservable.set(NEW_VALID_NAME.getName());
-        whenDuplicateNameCheckForNewIngredientReturnNonFound();
+        whenDuplicateNameCheckForNewIngredientReturnNoneFound();
         // Assert
         SUT.useButtonPressed();
         verify(dataSourceMock).save(eq(NEW_VALID_NAME));
@@ -273,7 +273,7 @@ public class IngredientEditorViewModelTest {
         // Act
         SUT.start();
         SUT.nameObservable.set(VALID_EXISTING_VALID_NAME_UPDATE.getName());
-        whenDuplicateNameCheckForNewIngredientReturnNonFound();
+        whenDuplicateNameCheckForNewIngredientReturnNoneFound();
         // Assert
         assertNull(SUT.nameErrorMessageObservable.get());
     }
@@ -415,7 +415,7 @@ public class IngredientEditorViewModelTest {
         // Act
         SUT.start();
         SUT.nameObservable.set(NEW_VALID_NAME_VALID_DESCRIPTION.getName());
-        whenDuplicateNameCheckForNewIngredientReturnNonFound();
+        whenDuplicateNameCheckForNewIngredientReturnNoneFound();
         SUT.descriptionObservable.set(NEW_VALID_NAME_VALID_DESCRIPTION.getDescription());
         // Assert
         verify(useButtonVisibilityObserverMock, times(3)).onChanged(eq(true));
@@ -555,7 +555,7 @@ public class IngredientEditorViewModelTest {
         SUT.start(VALID_EXISTING_COMPLETE.getId());
         simulateGetValidExistingCompleteFromDatabase();
         SUT.nameObservable.set(VALID_EXISTING_VALID_NAME_UPDATE.getName());
-        whenDuplicateNameCheckForNewIngredientReturnNonFound();
+        whenDuplicateNameCheckForNewIngredientReturnNoneFound();
         // Assert
         verify(useButtonVisibilityObserverMock, times(2)).
                 onChanged(false);
@@ -572,7 +572,7 @@ public class IngredientEditorViewModelTest {
         SUT.start(VALID_EXISTING_COMPLETE.getId());
         simulateGetValidExistingCompleteFromDatabase();
         SUT.nameObservable.set(VALID_EXISTING_VALID_NAME_UPDATE.getName());
-        whenDuplicateNameCheckForNewIngredientReturnNonFound();
+        whenDuplicateNameCheckForNewIngredientReturnNoneFound();
         // Assert
         verify(useButtonVisibilityObserverMock, times(2)).
                 onChanged(eq(true));
@@ -769,7 +769,7 @@ public class IngredientEditorViewModelTest {
                 VALID_EXISTING_FROM_ANOTHER_USER);
     }
 
-    private void whenDuplicateNameCheckForNewIngredientReturnNonFound() {
+    private void whenDuplicateNameCheckForNewIngredientReturnNoneFound() {
         verify(duplicateCheckerMock).checkForDuplicatesAndNotify(
                 anyString(),
                 anyString(),

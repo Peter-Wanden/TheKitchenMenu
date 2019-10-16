@@ -13,7 +13,7 @@ public class IngredientEntityTestData {
                 "newId",
                 "",
                 "",
-                0,
+                1,
                 Constants.getUserId().getValue(),
                 10L,
                 10L);
@@ -24,7 +24,7 @@ public class IngredientEntityTestData {
                 getNew().getId(),
                 "na",
                 getNew().getDescription(),
-                0,
+                1,
                 getNew().getCreatedBy(),
                 getNew().getCreateDate(),
                 20L
@@ -36,7 +36,7 @@ public class IngredientEntityTestData {
                 getNew().getId(),
                 "name",
                 getNew().getDescription(),
-                0,
+                1,
                 getNew().getCreatedBy(),
                 getNew().getCreateDate(),
                 30L
@@ -48,7 +48,7 @@ public class IngredientEntityTestData {
                 getNew().getId(),
                 getNewValidName().getName(),
                 "de",
-                0,
+                1,
                 getNew().getCreatedBy(),
                 getNew().getCreateDate(),
                 40L
@@ -60,7 +60,7 @@ public class IngredientEntityTestData {
                 getNew().getId(),
                 getNewInvalidName().getName(),
                 "description",
-                0,
+                1,
                 getNew().getCreatedBy(),
                 getNew().getCreateDate(),
                 50L
@@ -72,7 +72,7 @@ public class IngredientEntityTestData {
                 getNew().getId(),
                 getNewValidName().getName(),
                 getNewInvalidNameValidDescription().getDescription(),
-                0,
+                1,
                 getNew().getCreatedBy(),
                 getNew().getCreateDate(),
                 60L
@@ -96,7 +96,7 @@ public class IngredientEntityTestData {
                 "existingId",
                 "existingName",
                 "existingDescription",
-                0,
+                1,
                 Constants.getUserId().getValue(),
                 70L,
                 80L
@@ -109,7 +109,7 @@ public class IngredientEntityTestData {
                 getExistingValidNameValidDescription().getId(),
                 "na",
                 getExistingValidNameValidDescription().getDescription(),
-                0,
+                1,
                 getExistingValidNameValidDescription().getCreatedBy(),
                 getExistingValidNameValidDescription().getCreateDate(),
                 getExistingValidNameValidDescription().getLastUpdate()
@@ -121,7 +121,7 @@ public class IngredientEntityTestData {
                 getExistingValidNameValidDescription().getId(),
                 "existingNameUpdated",
                 getExistingValidNameValidDescription().getDescription(),
-                0,
+                1,
                 getExistingValidNameValidDescription().getCreatedBy(),
                 getExistingValidNameValidDescription().getCreateDate(),
                 90L
@@ -133,7 +133,7 @@ public class IngredientEntityTestData {
                 getExistingValidNameValidDescription().getId(),
                 getExistingValidNameValidDescription().getName(),
                 "de",
-                0,
+                1,
                 getExistingValidNameValidDescription().getCreatedBy(),
                 getExistingValidNameValidDescription().getCreateDate(),
                 90L
@@ -145,7 +145,7 @@ public class IngredientEntityTestData {
                 getExistingValidNameValidDescription().getId(),
                 getExistingValidNameValidDescription().getName(),
                 "existingDescriptionUpdated",
-                0,
+                1,
                 getExistingValidNameValidDescription().getCreatedBy(),
                 getExistingValidNameValidDescription().getCreateDate(),
                 100L
@@ -157,7 +157,7 @@ public class IngredientEntityTestData {
                 "existingIdFromAnotherUser",
                 "existingNameFromAnotherUser",
                 "existingDescriptionFromAnotherUser",
-                0,
+                1,
                 "anotherUsersId",
                 1000L,
                 2000L

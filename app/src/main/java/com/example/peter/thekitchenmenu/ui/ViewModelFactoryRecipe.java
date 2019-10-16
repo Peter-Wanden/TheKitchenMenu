@@ -147,6 +147,7 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
         } else if (modelClass.isAssignableFrom(RecipeIngredientMeasurementViewModel.class)) {
             // noinspection unchecked
             return (T) new RecipeIngredientMeasurementViewModel(
+                    application,
                     recipePortionsRepository,
                     recipeIngredientRepository,
                     ingredientRepository,

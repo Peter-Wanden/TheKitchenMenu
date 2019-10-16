@@ -43,6 +43,7 @@ public class IngredientEditorViewModel
 
     private IngredientEntity ingredientEntity;
 
+    private final int DEFAULT_CONVERSION_FACTOR = 1;
     private boolean observablesUpdating;
     private boolean nameValid;
     private boolean descriptionValid = true;
@@ -213,7 +214,7 @@ public class IngredientEditorViewModel
                 id,
                 "",
                 "",
-                0,
+                DEFAULT_CONVERSION_FACTOR,
                 Constants.getUserId().getValue(),
                 currentTime,
                 currentTime
