@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
 import org.junit.Test;
 
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MAXIMUM_VOLUME;
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MAX_VOLUME;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
@@ -42,13 +42,13 @@ public class MetricVolumeTest {
     @Test
     public void testBaseUnitsInRangeMax() { // IN RANGE MAX
 
-        assertThat(metricVolume.totalBaseUnitsAreSet(MAXIMUM_VOLUME), is(true));
+        assertThat(metricVolume.totalBaseUnitsAreSet(MAX_VOLUME), is(true));
 
         assertThat(metricVolume.getTotalMeasurementOne(), is(0.));
         assertThat(metricVolume.getTotalMeasurementTwo(), is(10));
         assertThat(metricVolume.getItemMeasurementOne(), is(0.));
         assertThat(metricVolume.getItemMeasurementTwo(), is(10));
-        assertThat(metricVolume.getTotalBaseUnits(), is(MAXIMUM_VOLUME));
+        assertThat(metricVolume.getTotalBaseUnits(), is(MAX_VOLUME));
 
         System.out.println();
     }
@@ -56,7 +56,7 @@ public class MetricVolumeTest {
     @Test
     public void testBaseUnitsOutOfRangeMax() { // OUT OF RANGE MAX
 
-        assertThat(metricVolume.totalBaseUnitsAreSet(MAXIMUM_VOLUME + 1), is(false));
+        assertThat(metricVolume.totalBaseUnitsAreSet(MAX_VOLUME + 1), is(false));
 
         assertThat(metricVolume.getTotalMeasurementOne(), is(0.));
         assertThat(metricVolume.getTotalMeasurementTwo(), is(0));
@@ -121,14 +121,14 @@ public class MetricVolumeTest {
     public void testMeasurementUnitOneInRangeMax() { // IN RANGE MAX
 
         // Set to max
-        assertThat(metricVolume.totalMeasurementOneIsSet(MAXIMUM_VOLUME), is(true));
+        assertThat(metricVolume.totalMeasurementOneIsSet(MAX_VOLUME), is(true));
 
         // Check value set
         assertThat(metricVolume.getTotalMeasurementOne(), is(0.));
         assertThat(metricVolume.getTotalMeasurementTwo(), is(10));
         assertThat(metricVolume.getItemMeasurementOne(), is(0.));
         assertThat(metricVolume.getItemMeasurementTwo(), is(10));
-        assertThat(metricVolume.getTotalBaseUnits(), is(MAXIMUM_VOLUME));
+        assertThat(metricVolume.getTotalBaseUnits(), is(MAX_VOLUME));
 
         System.out.println();
     }
@@ -472,7 +472,7 @@ public class MetricVolumeTest {
 
         // Set pack measurement last changed by setting pack measurement
         assertThat(metricVolume.totalMeasurementTwoIsSet(10), is(true));
-        assertThat(metricVolume.getTotalBaseUnits(), is(MAXIMUM_VOLUME));
+        assertThat(metricVolume.getTotalBaseUnits(), is(MAX_VOLUME));
 
         // Change number of items
         assertThat(metricVolume.numberOfItemsIsSet(10), is(true));
@@ -483,7 +483,7 @@ public class MetricVolumeTest {
         // Check item measurements have changed
         assertThat(metricVolume.getItemMeasurementOne(), is(0.));
         assertThat(metricVolume.getItemMeasurementTwo(), is(1));
-        assertThat(metricVolume.getTotalBaseUnits(), is(MAXIMUM_VOLUME));
+        assertThat(metricVolume.getTotalBaseUnits(), is(MAX_VOLUME));
 
         // Change number of items
         assertThat(metricVolume.numberOfItemsIsSet(20), is(true));
@@ -493,7 +493,7 @@ public class MetricVolumeTest {
         // Check item measurements have changed
         assertThat(metricVolume.getItemMeasurementOne(), is(500.));
         assertThat(metricVolume.getItemMeasurementTwo(), is(0));
-        assertThat(metricVolume.getTotalBaseUnits(), is(MAXIMUM_VOLUME));
+        assertThat(metricVolume.getTotalBaseUnits(), is(MAX_VOLUME));
     }
 
     @Test

@@ -15,7 +15,7 @@ import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementResult.*;
 
 /**
- * Calculates the measurement of an ingredient for a single portion of the recipe.
+ * Calculates the measurement of an ingredient for a single portion of a recipe.
  */
 public class UnitOfMeasurePortionUseCase {
 
@@ -176,23 +176,40 @@ public class UnitOfMeasurePortionUseCase {
                     ingredientEntity.getConversionFactor());
             portionsAreSet = unitOfMeasure.numberOfItemsIsSet(numberOfPortions);
 
-
-        }
-        if (model.getConversionFactor() != unitOfMeasure.getConversionFactor()) {
+        } else if (model.getConversionFactor() != unitOfMeasure.getConversionFactor()) {
             conversionFactorChanged = true;
-            conversionFactorIsSet = unitOfMeasure.conversionFactorIsSet(model.getConversionFactor());
-        }
-        if (model.getTotalMeasurementOne() != unitOfMeasure.getTotalMeasurementOne()) {
+            conversionFactorIsSet = unitOfMeasure.conversionFactorIsSet(
+                    model.getConversionFactor());
+            if (conversionFactorIsSet)
+                saveConversionFactorToIngredient();
+
+        } else if (model.getTotalMeasurementOne() != unitOfMeasure.getTotalMeasurementOne()) {
             totalMeasurementOneChanged = true;
             totalMeasurementOneIsSet = unitOfMeasure.totalMeasurementOneIsSet(
                     model.getTotalMeasurementOne());
-        }
-        if (model.getTotalMeasurementTwo() != unitOfMeasure.getTotalMeasurementTwo()) {
+
+        } else if (model.getTotalMeasurementTwo() != unitOfMeasure.getTotalMeasurementTwo()) {
             totalMeasurementTwoChanged = true;
             totalMeasurementTwoIsSet = unitOfMeasure.totalMeasurementTwoIsSet(
                     model.getTotalMeasurementTwo());
         }
         returnResult(getResultStatus());
+    }
+
+    private void saveConversionFactorToIngredient() {
+        ingredientRepository.save(getUpdatedIngredientEntity());
+    }
+
+    private IngredientEntity getUpdatedIngredientEntity() {
+        return new IngredientEntity(
+                ingredientEntity.getId(),
+                ingredientEntity.getName(),
+                ingredientEntity.getDescription(),
+                unitOfMeasure.getConversionFactor(),
+                ingredientEntity.getCreatedBy(),
+                ingredientEntity.getCreateDate(),
+                timeProvider.getCurrentTimestamp()
+        );
     }
 
     private void returnResult(ResultStatus resultStatus) {
@@ -211,12 +228,6 @@ public class UnitOfMeasurePortionUseCase {
         MeasurementResult result = new MeasurementResult(updatedModel, resultStatus);
         saveIfValid();
         viewModel.setResult(result);
-    }
-
-    private void saveIfValid() {
-        if (quantityEntityHasChanged() && unitOfMeasure.isValidMeasurement()) {
-            save(updatedRecipeIngredientEntity());
-        }
     }
 
     private ResultStatus getResultStatus() {
@@ -240,6 +251,12 @@ public class UnitOfMeasurePortionUseCase {
             return ResultStatus.INVALID_MEASUREMENT;
         }
         return ResultStatus.RESULT_OK;
+    }
+
+    private void saveIfValid() {
+        if (quantityEntityHasChanged() && unitOfMeasure.isValidMeasurement()) {
+            save(updatedRecipeIngredientEntity());
+        }
     }
 
     private boolean quantityEntityHasChanged() {

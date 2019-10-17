@@ -24,8 +24,8 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     double unitOne;
     double unitOneDecimal;
     double smallestUnit;
-    private LastMeasurementUpdated lastMeasurementUpdated;
-
+    private LastMeasurementUpdated lastMeasurementUpdated = TOTAL_MEASUREMENT;
+    private final double NO_CONVERSION_FACTOR_SET = 1;
 
     protected MeasurementSubtype subtype;
 
@@ -35,16 +35,17 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     int unitTwoLabelStringResourceId;
 
     private double totalBaseUnits;
-    private int numberOfItems = MINIMUM_NUMBER_OF_ITEMS;
+    private int numberOfItems = MIN_NUMBER_OF_ITEMS;
     private int oldNumberOfItems;
     private double itemSize = smallestUnit;
     private int totalMeasurementTwo;
     private double totalMeasurementOne;
     private int itemMeasurementTwo;
     private double itemMeasurementOne;
-    private double conversionFactor;
+    private double conversionFactor = NO_CONVERSION_FACTOR_SET;
 
-    UnitOfMeasureAbstract() {}
+    UnitOfMeasureAbstract() {
+    }
 
     @Override
     public int getNumberOfMeasurementUnits() {
@@ -63,10 +64,10 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
 
     @Override
     public boolean conversionFactorIsSet(double conversionFactor) {
-        if (conversionFactor >= MINIMUM_CONVERSION_FACTOR &&
-                conversionFactor <= MAXIMUM_CONVERSION_FACTOR) {
+        if (conversionFactor >= MIN_CONVERSION_FACTOR && conversionFactor <= MAX_CONVERSION_FACTOR) {
             this.conversionFactor = conversionFactor;
             unitOne = conversionFactor * unitOne;
+            smallestUnit = unitOne;
             unitTwo = conversionFactor * unitTwo;
             totalBaseUnitsAreSet((totalMeasurementTwo * unitTwo) + (totalMeasurementOne * unitOne));
             return true;
@@ -211,7 +212,7 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     }
 
     private boolean numberOfItemsInTotalAreWithinBounds(int numberOfItems) {
-        return numberOfItems >= MINIMUM_NUMBER_OF_ITEMS && numberOfItems <= MAXIMUM_NUMBER_OF_ITEMS;
+        return numberOfItems >= MIN_NUMBER_OF_ITEMS && numberOfItems <= MAX_NUMBER_OF_ITEMS;
     }
 
     private boolean itemSizeNotLessThanSmallestUnit(int numberOfItems) {
@@ -389,10 +390,6 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
                 ", smallestUnit=" + smallestUnit +
                 ", lastMeasurementUpdated=" + lastMeasurementUpdated +
                 ", subtype=" + subtype +
-                ", typeStringResourceId=" + typeStringResourceId +
-                ", subtypeStringResourceId=" + subtypeStringResourceId +
-                ", unitOneLabelStringResourceId=" + unitOneLabelStringResourceId +
-                ", unitTwoLabelStringResourceId=" + unitTwoLabelStringResourceId +
                 ", totalBaseUnits=" + totalBaseUnits +
                 ", numberOfItems=" + numberOfItems +
                 ", oldNumberOfItems=" + oldNumberOfItems +

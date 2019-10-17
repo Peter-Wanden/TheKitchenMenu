@@ -12,7 +12,7 @@ public class Count implements UnitOfMeasure {
 
     // Unit values
     private static final int COUNT_NUMBER_OF_MEASUREMENT_UNITS = 1;
-    private static final double UNIT_COUNT = MINIMUM_COUNT;
+    private static final double UNIT_COUNT = MIN_COUNT;
 
     // Keeps track of the last updated measurement
     private static final boolean PACK_MEASUREMENT = false;
@@ -25,7 +25,7 @@ public class Count implements UnitOfMeasure {
     private int unitOneLabelStringResourceId;
     private int unitTwoLabelStringResourceId;
 
-    private int numberOfProducts = MINIMUM_NUMBER_OF_ITEMS;
+    private int numberOfProducts = MIN_NUMBER_OF_ITEMS;
     private double singlePackSizeInCountUnits = UNIT_COUNT;
     private double baseUnits = 0.;
     private double packMeasurementCount = 0;
@@ -104,7 +104,7 @@ public class Count implements UnitOfMeasure {
     }
 
     private boolean newCountIsWithinMaxCount(double newCount) {
-        return newCount <= MAXIMUM_COUNT;
+        return newCount <= MAX_COUNT;
     }
 
     @Override
@@ -140,8 +140,8 @@ public class Count implements UnitOfMeasure {
     }
 
     private boolean numberOfProductsInPackAreWithinBounds(int numberOfProducts) {
-        return numberOfProducts >= MINIMUM_NUMBER_OF_ITEMS &&
-                numberOfProducts <= MAXIMUM_NUMBER_OF_ITEMS;
+        return numberOfProducts >= MIN_NUMBER_OF_ITEMS &&
+                numberOfProducts <= MAX_NUMBER_OF_ITEMS;
     }
 
     private boolean singlePackSizeNotLessThanSmallestUnit(int numberOfProducts) {
@@ -159,7 +159,7 @@ public class Count implements UnitOfMeasure {
     }
 
     private boolean singlePackSizeMultipliedByNumberOfPacksDoNotExceedMaxCount(int numberOfProducts) {
-        return singlePackSizeInCountUnits * numberOfProducts <= MAXIMUM_COUNT;
+        return singlePackSizeInCountUnits * numberOfProducts <= MAX_COUNT;
     }
 
     private void setProductsInPackByAdjustingPackSize(int numberOfProducts) {
@@ -229,13 +229,13 @@ public class Count implements UnitOfMeasure {
 
     @Override
     public boolean isValidMeasurement() {
-        return (baseUnits >= UNIT_COUNT && baseUnits <= MAXIMUM_COUNT);
+        return (baseUnits >= UNIT_COUNT && baseUnits <= MAX_COUNT);
     }
 
     @Override
     public Pair[] getMeasurementUnitsDigitWidths() {
 
-        Pair<Integer, Integer> unitOneDigitsFilter = new Pair<>(MAXIMUM_NUMBER_OF_ITEMS, 0);
+        Pair<Integer, Integer> unitOneDigitsFilter = new Pair<>(MAX_NUMBER_OF_ITEMS, 0);
         Pair<Integer, Integer> unitTwoDigitsFilter = new Pair<>(0, 0);
 
         Pair[] digitFilters = new Pair[2];

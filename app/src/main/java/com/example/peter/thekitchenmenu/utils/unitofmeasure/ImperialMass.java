@@ -6,8 +6,8 @@ class ImperialMass extends UnitOfMeasureAbstract {
 
     ImperialMass() {
         numberOfMeasurementUnits = 2;
-        maximumMeasurement = UnitOfMeasureConstants.MAXIMUM_MASS;
-        minimumMeasurement = UnitOfMeasureConstants.MINIMUM_MASS;
+        maximumMeasurement = UnitOfMeasureConstants.MAX_MASS;
+        minimumMeasurement = UnitOfMeasureConstants.MIN_MASS;
         unitTwo = minimumMeasurement * 453.59237; // 1 pound
         unitOne = unitTwo / 16; // 1 ounce
         unitOneDecimal = unitOne / 10; // one tenth of an ounce

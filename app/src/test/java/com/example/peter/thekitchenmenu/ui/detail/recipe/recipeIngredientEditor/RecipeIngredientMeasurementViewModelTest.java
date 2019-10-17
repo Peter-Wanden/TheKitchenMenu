@@ -234,7 +234,7 @@ public class RecipeIngredientMeasurementViewModelTest {
         // Act
         SUT.start(QUANTITY_NEW_VALID_METRIC.getRecipeId(), QUANTITY_NEW_VALID_METRIC.getIngredientId());
 
-        SUT.measurementTwo.set(String.valueOf(UnitOfMeasureConstants.MAXIMUM_MASS / 1000 + 1));
+        SUT.measurementTwo.set(String.valueOf(UnitOfMeasureConstants.MAX_MASS / 1000 + 1));
         // Assert
         verifyNoMoreInteractions(repositoryRecipeIngredientMock);
     }
@@ -248,7 +248,7 @@ public class RecipeIngredientMeasurementViewModelTest {
         SUT.start(QUANTITY_NEW_VALID_METRIC.getRecipeId(), QUANTITY_NEW_VALID_METRIC.getIngredientId());
         verifyRepoIngredientCalledAndReturnNewValidName();
         verifyRepoPortionsCalledAndReturnNewValidFourPortions();
-        SUT.measurementTwo.set(String.valueOf((int) UnitOfMeasureConstants.MAXIMUM_MASS / 1000 + 1));
+        SUT.measurementTwo.set(String.valueOf((int) UnitOfMeasureConstants.MAX_MASS / 1000 + 1));
         // Assert
         assertEquals("0", SUT.measurementOne.get());
         assertEquals("0", SUT.measurementTwo.get());

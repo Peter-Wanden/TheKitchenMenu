@@ -6,8 +6,8 @@ class MetricMass extends UnitOfMeasureAbstract {
 
     MetricMass() {
         numberOfMeasurementUnits = 2;
-        maximumMeasurement = UnitOfMeasureConstants.MAXIMUM_MASS;
-        minimumMeasurement = UnitOfMeasureConstants.MINIMUM_MASS;
+        maximumMeasurement = UnitOfMeasureConstants.MAX_MASS;
+        minimumMeasurement = UnitOfMeasureConstants.MIN_MASS;
         unitTwo = minimumMeasurement * 1000; // 1 kilogram
         unitOne = unitTwo / 1000; // 1 gram
         unitOneDecimal = 0; // no fractions of a gram

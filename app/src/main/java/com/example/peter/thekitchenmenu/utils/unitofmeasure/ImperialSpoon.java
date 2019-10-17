@@ -6,8 +6,8 @@ class ImperialSpoon extends UnitOfMeasureAbstract {
 
     ImperialSpoon() {
         numberOfMeasurementUnits = 2;
-        maximumMeasurement = UnitOfMeasureConstants.MAXIMUM_VOLUME;
-        minimumMeasurement = UnitOfMeasureConstants.MINIMUM_VOLUME / 1000;
+        maximumMeasurement = UnitOfMeasureConstants.MAX_VOLUME;
+        minimumMeasurement = UnitOfMeasureConstants.MIN_VOLUME / 1000;
         unitOne = 5; // 5ml
         unitTwo = 15; // 15ml
         unitOneDecimal = 1; // One decimal place for half / quarter / whatever of a teaspoon

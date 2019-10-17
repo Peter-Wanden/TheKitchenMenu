@@ -10,8 +10,8 @@ public class ImperialSpoonTest {
 
     // region constants ----------------------------------------------------------------------------
     private double DELTA = 0.00001;
-    private double MAX_CONVERSION_FACTOR = UnitOfMeasureConstants.MAXIMUM_CONVERSION_FACTOR;
-    private double MIN_CONVERSION_FACTOR = UnitOfMeasureConstants.MINIMUM_CONVERSION_FACTOR;
+    private double MAX_CONVERSION_FACTOR = UnitOfMeasureConstants.MAX_CONVERSION_FACTOR;
+    private double MIN_CONVERSION_FACTOR = UnitOfMeasureConstants.MIN_CONVERSION_FACTOR;
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------

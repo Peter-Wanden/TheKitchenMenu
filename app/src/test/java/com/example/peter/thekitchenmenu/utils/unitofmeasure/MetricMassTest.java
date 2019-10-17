@@ -28,28 +28,28 @@ public class MetricMassTest {
     @Test
     public void baseUnitsAreSet_inRangeMin_setTrue() { // IN RANGE MIN
 
-        assertTrue(SUT.totalBaseUnitsAreSet(MINIMUM_MASS));
-        assertEquals(MINIMUM_MASS, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
+        assertTrue(SUT.totalBaseUnitsAreSet(MIN_MASS));
+        assertEquals(MIN_MASS, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
     }
 
     @Test
     public void baseUnitsAreSet_outOfRangeMin_setFalse() {
 
-        assertFalse(SUT.totalBaseUnitsAreSet(MINIMUM_MASS - .1));
+        assertFalse(SUT.totalBaseUnitsAreSet(MIN_MASS - .1));
         assertEquals(0, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
     }
 
     @Test
     public void baseUnitsAreSet_inRangeMax_setTrue() {
 
-        assertTrue(SUT.totalBaseUnitsAreSet(MAXIMUM_MASS));
-        assertEquals(SUT.getTotalBaseUnits(), MAXIMUM_MASS, ERROR_MARGIN_DELTA);
+        assertTrue(SUT.totalBaseUnitsAreSet(MAX_MASS));
+        assertEquals(SUT.getTotalBaseUnits(), MAX_MASS, ERROR_MARGIN_DELTA);
     }
 
     @Test
     public void baseUnitsAreSet_outOfRangeMax_setFalse() {
 
-        assertFalse(SUT.totalBaseUnitsAreSet(MAXIMUM_MASS + 1));
+        assertFalse(SUT.totalBaseUnitsAreSet(MAX_MASS + 1));
         assertEquals(0, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
     }
 
@@ -67,7 +67,7 @@ public class MetricMassTest {
 
         assertTrue(SUT.numberOfItemsIsSet(5));
         assertTrue(SUT.totalBaseUnitsAreSet(5));
-        assertEquals(MINIMUM_MASS, SUT.getItemMeasurementOne(), ERROR_MARGIN_DELTA);
+        assertEquals(MIN_MASS, SUT.getItemMeasurementOne(), ERROR_MARGIN_DELTA);
         assertEquals(5, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
     }
 
@@ -85,58 +85,58 @@ public class MetricMassTest {
     @Test
     public void totalMeasurementOne_inRangeMax_setTrue() {
 
-        assertTrue(SUT.totalMeasurementOneIsSet(MAXIMUM_MASS));
+        assertTrue(SUT.totalMeasurementOneIsSet(MAX_MASS));
 
         assertEquals(0, SUT.getTotalMeasurementOne(), ERROR_MARGIN_DELTA);
-        assertEquals((int) MAXIMUM_MASS / 1000, SUT.getTotalMeasurementTwo());
-        assertEquals((int) MAXIMUM_MASS % 1000, SUT.getItemMeasurementOne(), ERROR_MARGIN_DELTA);
-        assertEquals((int) MAXIMUM_MASS / 1000, SUT.getItemMeasurementTwo());
+        assertEquals((int) MAX_MASS / 1000, SUT.getTotalMeasurementTwo());
+        assertEquals((int) MAX_MASS % 1000, SUT.getItemMeasurementOne(), ERROR_MARGIN_DELTA);
+        assertEquals((int) MAX_MASS / 1000, SUT.getItemMeasurementTwo());
 
-        assertEquals(MAXIMUM_MASS, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
+        assertEquals(MAX_MASS, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
     }
 
     @Test
     public void totalMeasurementOne_outOfRangeMax_setFalse() {
 
-        assertFalse(SUT.totalMeasurementOneIsSet(MAXIMUM_MASS + 1));
+        assertFalse(SUT.totalMeasurementOneIsSet(MAX_MASS + 1));
         assertEquals(0, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
     }
 
     @Test
     public void totalMeasurementOne_inRangeMin_setTrue() {
 
-        assertTrue(SUT.totalMeasurementOneIsSet(MINIMUM_MASS));
+        assertTrue(SUT.totalMeasurementOneIsSet(MIN_MASS));
 
-        assertEquals(MINIMUM_MASS, SUT.getTotalMeasurementOne(), ERROR_MARGIN_DELTA);
-        assertEquals(MINIMUM_MASS, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
+        assertEquals(MIN_MASS, SUT.getTotalMeasurementOne(), ERROR_MARGIN_DELTA);
+        assertEquals(MIN_MASS, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
     }
 
     @Test
     public void totalMeasurementOne_outOfRangeMin_setFalse() {
 
-        assertFalse(SUT.totalMeasurementOneIsSet(MINIMUM_MASS - .1));
+        assertFalse(SUT.totalMeasurementOneIsSet(MIN_MASS - .1));
         assertEquals(0, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
     }
 
     @Test
     public void totalMeasurementTwoIsSet_inRangeMax_setTrue() {
 
-        assertTrue(SUT.totalMeasurementTwoIsSet((int) MAXIMUM_MASS / 1000));
-        assertEquals(MAXIMUM_MASS, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
+        assertTrue(SUT.totalMeasurementTwoIsSet((int) MAX_MASS / 1000));
+        assertEquals(MAX_MASS, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
     }
 
     @Test
     public void totalMeasurementTwoIsSet_outOfRangeMax_setFalse() {
 
-        assertFalse(SUT.totalMeasurementTwoIsSet((int) (MAXIMUM_MASS / 1000) + 1));
+        assertFalse(SUT.totalMeasurementTwoIsSet((int) (MAX_MASS / 1000) + 1));
         assertEquals(0, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
     }
 
     @Test
     public void totalMeasurementTwoIsSet_inRangeMin_setTrue() {
 
-        assertTrue(SUT.totalMeasurementTwoIsSet((int) MAXIMUM_MASS / 10000));
-        assertEquals(MAXIMUM_MASS / 10, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
+        assertTrue(SUT.totalMeasurementTwoIsSet((int) MAX_MASS / 10000));
+        assertEquals(MAX_MASS / 10, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
     }
 
     @Test
@@ -153,19 +153,19 @@ public class MetricMassTest {
 
     @Test
     public void numberOfItemsIsSet_noBaseUnitsInRangeMax_setTrue() {
-        assertTrue(SUT.numberOfItemsIsSet(MAXIMUM_NUMBER_OF_ITEMS));
+        assertTrue(SUT.numberOfItemsIsSet(MAX_NUMBER_OF_ITEMS));
     }
 
     @Test
     public void numberOfItemsIsSet_noBaseUnitsMinOutOfRange_setFalse() {
-        assertFalse(SUT.numberOfItemsIsSet(MINIMUM_NUMBER_OF_ITEMS - 1));
-        assertEquals(MINIMUM_NUMBER_OF_ITEMS, SUT.getNumberOfItems());
+        assertFalse(SUT.numberOfItemsIsSet(MIN_NUMBER_OF_ITEMS - 1));
+        assertEquals(MIN_NUMBER_OF_ITEMS, SUT.getNumberOfItems());
     }
 
     @Test
     public void numberOfItemsIsSet_noBaseUnitsOutOfRangeMax_setFalse() {
-        assertFalse(SUT.numberOfItemsIsSet(MAXIMUM_NUMBER_OF_ITEMS + 1));
-        assertEquals(MINIMUM_NUMBER_OF_ITEMS, SUT.getNumberOfItems());
+        assertFalse(SUT.numberOfItemsIsSet(MAX_NUMBER_OF_ITEMS + 1));
+        assertEquals(MIN_NUMBER_OF_ITEMS, SUT.getNumberOfItems());
     }
 
     @Test
@@ -246,7 +246,7 @@ public class MetricMassTest {
 
         // Set value to both item measurements - sets lastMeasurementUpdated to ITEM
         // When number of items is updated TOTAL measurement should change
-        assertTrue(SUT.itemMeasurementTwoIsSet((int) MAXIMUM_MASS / 2 / 1000));
+        assertTrue(SUT.itemMeasurementTwoIsSet((int) MAX_MASS / 2 / 1000));
         assertTrue(SUT.itemMeasurementOneIsSet(1));
 
         // Set items out of range for this measurement (2 * 5001 = 10002 > MAX_MASS)
@@ -286,8 +286,8 @@ public class MetricMassTest {
     @Test
     public void testNumberOfItemsInRangeSetWith_ItemWithBaseSI() {
         // Set total measurement as last
-        assertTrue(SUT.totalMeasurementTwoIsSet((int) MAXIMUM_MASS / 1000));
-        assertEquals(MAXIMUM_MASS, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
+        assertTrue(SUT.totalMeasurementTwoIsSet((int) MAX_MASS / 1000));
+        assertEquals(MAX_MASS, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
 
         // Change number of items
         assertTrue(SUT.numberOfItemsIsSet(10));
@@ -296,7 +296,7 @@ public class MetricMassTest {
         // Check item measurements have changed
         assertEquals(0, SUT.getItemMeasurementOne(), ERROR_MARGIN_DELTA);
         assertEquals(1, SUT.getItemMeasurementTwo(), ERROR_MARGIN_DELTA);
-        assertEquals(MAXIMUM_MASS, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
+        assertEquals(MAX_MASS, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
 
         // Change number of items
         assertTrue(SUT.numberOfItemsIsSet(20));
@@ -306,7 +306,7 @@ public class MetricMassTest {
         // Check item measurements have changed
         assertEquals(500, SUT.getItemMeasurementOne(), ERROR_MARGIN_DELTA);
         assertEquals(0, SUT.getItemMeasurementTwo());
-        assertEquals(MAXIMUM_MASS, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
+        assertEquals(MAX_MASS, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
     }
 
     @Test

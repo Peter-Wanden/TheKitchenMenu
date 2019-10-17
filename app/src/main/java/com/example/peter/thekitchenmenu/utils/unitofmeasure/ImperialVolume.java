@@ -6,8 +6,8 @@ class ImperialVolume extends UnitOfMeasureAbstract {
 
     ImperialVolume() {
         numberOfMeasurementUnits = 2;
-        maximumMeasurement = UnitOfMeasureConstants.MAXIMUM_VOLUME;
-        minimumMeasurement = UnitOfMeasureConstants.MINIMUM_VOLUME;
+        maximumMeasurement = UnitOfMeasureConstants.MAX_VOLUME;
+        minimumMeasurement = UnitOfMeasureConstants.MIN_VOLUME;
         unitTwo = minimumMeasurement * 568.26125; // 1 Pint
         unitOne = unitTwo / 20; // 1 fluid ounce
         unitOneDecimal = unitOne / 10; // One tenth of a fl oz
