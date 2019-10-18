@@ -50,14 +50,13 @@ public class UseCaseFactory {
         return INSTANCE;
     }
 
-    public UnitOfMeasurePortionUseCase providePortionsUseCase(PortionUseCaseViewModel viewModel) {
+    public UnitOfMeasurePortionUseCase providePortionsUseCase() {
         return new UnitOfMeasurePortionUseCase(
                 portionsRepository,
                 recipeIngredientRepository,
                 ingredientRepository,
                 new UniqueIdProvider(),
-                new TimeProvider(),
-                viewModel
+                new TimeProvider()
         );
     }
 }

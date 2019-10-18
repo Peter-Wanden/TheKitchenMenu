@@ -10,38 +10,24 @@ import androidx.databinding.ObservableInt;
 import androidx.lifecycle.AndroidViewModel;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.app.Constants;
-import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
-import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientQuantityEntity;
-import com.example.peter.thekitchenmenu.data.entity.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.model.MeasurementModel;
-import com.example.peter.thekitchenmenu.data.repository.DataSource;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.ui.UseCaseFactory;
-import com.example.peter.thekitchenmenu.utils.TimeProvider;
-import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementResult;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.PortionUseCaseViewModel;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasure;
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasurePortionUseCase;
+
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementResult.*;
 
 public class RecipeIngredientMeasurementViewModel
         extends AndroidViewModel
         implements PortionUseCaseViewModel {
 
-    private RepositoryRecipePortions portionsRepository;
-    private RepositoryRecipeIngredient recipeIngredientRepository;
-    private RepositoryIngredient ingredientRepository;
     private MeasurementSubtype defaultSubtype = MeasurementSubtype.METRIC_MASS;
-    private UnitOfMeasurePortionUseCase portionUseCase;
+    private UnitOfMeasurePortionUseCase useCase;
 
     private Resources resources;
-    private UniqueIdProvider idProvider;
-    private TimeProvider timeProvider;
 
     private static final int MEASUREMENT_ERROR = -1;
 
@@ -55,33 +41,23 @@ public class RecipeIngredientMeasurementViewModel
     public final ObservableBoolean isConversionFactorEnabled = new ObservableBoolean();
     public final ObservableField<String> conversionFactorErrorMessage = new ObservableField<>();
 
-    private String recipeId;
-    private String ingredientId;
-    private int numberOfPortions;
-    private RecipeIngredientQuantityEntity recipeIngredientQuantityEntity;
-    private IngredientEntity ingredientEntity;
     private UnitOfMeasure unitOfMeasure = defaultSubtype.getMeasurementClass();
+    private double conversionFactorParsed;
+    private double measurementOneParsed;
+    private int measurementTwoParsed;
+
+    private MeasurementModel measurementModel;
 
     public RecipeIngredientMeasurementViewModel(Application application,
-                                                RepositoryRecipePortions portionsRepository,
-                                                RepositoryRecipeIngredient recipeIngredientRepository,
-                                                RepositoryIngredient ingredientRepository,
-                                                Resources resources,
-                                                UniqueIdProvider idProvider,
-                                                TimeProvider timeProvider) {
+                                                UnitOfMeasurePortionUseCase useCase) {
         super(application);
-        this.portionsRepository = portionsRepository;
-        this.recipeIngredientRepository = recipeIngredientRepository;
-        this.ingredientRepository = ingredientRepository;
-        this.resources = resources;
-        this.idProvider = idProvider;
-        this.timeProvider = timeProvider;
+        this.resources = application.getResources();
+        this.useCase = useCase;
 
         subtype.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
                 subTypeUpdated();
-                updateMeasurementModel();
             }
         });
 
@@ -106,335 +82,49 @@ public class RecipeIngredientMeasurementViewModel
             }
         });
 
-        setupUseCase(application);
+        setViewModel();
     }
 
-    private void setupUseCase(Application application) {
-        UseCaseFactory factory = UseCaseFactory.getInstance(application);
-        portionUseCase = factory.providePortionsUseCase(this);
+    private void setViewModel() {
+        useCase.setViewModel(this);
     }
 
     public void start(String recipeId, String ingredientId) {
-        this.recipeId = recipeId;
-        this.ingredientId = ingredientId;
-        portionUseCase.start(recipeId, ingredientId);
-
-        recipeIngredientQuantityEntity = createNewRecipeIngredientQuantityEntity();
-        loadIngredient();
+        useCase.start(recipeId, ingredientId);
     }
 
-    private RecipeIngredientQuantityEntity createNewRecipeIngredientQuantityEntity() {
-        long currentTime = timeProvider.getCurrentTimestamp();
-        return new RecipeIngredientQuantityEntity(
-                idProvider.getUId(),
-                recipeId,
-                ingredientId,
-                "",
-                0,
-                0,
-                Constants.getUserId().getValue(),
-                currentTime,
-                currentTime
-        );
+    public void start(String recipeIngredientId) {
+        useCase.start(recipeIngredientId);
     }
 
     @Override
     public void setResult(MeasurementResult result) {
+        measurementModel = result.getModel();
+        processMeasurementModel();
+        processResultStatus(result.getResult());
+    }
+
+    private void processMeasurementModel() {
 
     }
 
-    public void start(String recipeIngredientId) {
-        loadExistingRecipeIngredient(recipeIngredientId);
-    }
-
-    private void loadExistingRecipeIngredient(String recipeIngredientId) {
-        recipeIngredientRepository.getById(
-                recipeIngredientId,
-                new DataSource.GetEntityCallback<RecipeIngredientQuantityEntity>() {
-                    @Override
-                    public void onEntityLoaded(RecipeIngredientQuantityEntity
-                                                       recipeIngredientQuantityEntity) {
-                        recipeId = recipeIngredientQuantityEntity.getRecipeId();
-                        ingredientId = recipeIngredientQuantityEntity.getIngredientId();
-                        RecipeIngredientMeasurementViewModel.this.recipeIngredientQuantityEntity =
-                                recipeIngredientQuantityEntity;
-                        loadIngredient();
-                    }
-
-                    @Override
-                    public void onDataNotAvailable() {
-
-                    }
-                });
-    }
-
-    private void loadIngredient() {
-        ingredientRepository.getById(
-                ingredientId,
-                new DataSource.GetEntityCallback<IngredientEntity>() {
-                    @Override
-                    public void onEntityLoaded(IngredientEntity ingredientEntity) {
-                        RecipeIngredientMeasurementViewModel.this.ingredientEntity =
-                                ingredientEntity;
-                        loadPortions();
-                    }
-
-                    @Override
-                    public void onDataNotAvailable() {
-
-                    }
-                });
-    }
-
-    private void loadPortions() {
-        portionsRepository.getPortionsForRecipe(
-                recipeId,
-                new DataSource.GetEntityCallback<RecipePortionsEntity>() {
-                    @Override
-                    public void onEntityLoaded(RecipePortionsEntity portionsEntity) {
-                        numberOfPortions = portionsEntity.getServings() *
-                                portionsEntity.getSittings();
-                        setupUnitOfMeasure();
-                    }
-
-                    @Override
-                    public void onDataNotAvailable() {
-
-                    }
-                });
-    }
-
-    private void setupUnitOfMeasure() {
-        unitOfMeasure = MeasurementSubtype.fromInt(recipeIngredientQuantityEntity.
-                getUnitOfMeasureSubtype()).getMeasurementClass();
-        if (ingredientEntity.getConversionFactor() != 1)
-            unitOfMeasure.conversionFactorIsSet(ingredientEntity.getConversionFactor());
-        unitOfMeasure.itemBaseUnitsAreSet(recipeIngredientQuantityEntity.getItemBaseUnits());
-        unitOfMeasure.numberOfItemsIsSet(numberOfPortions);
-        updateUi();
+    private void processResultStatus(ResultStatus resultStatus) {
+        if (resultStatus == ResultStatus.INVALID_CONVERSION_FACTOR) {
+            conversionFactorErrorMessage.set(resources.getString(
+                    R.string.conversion_factor_error_message));
+        }
+        if (resultStatus == ResultStatus.INVALID_TOTAL_MEASUREMENT_ONE) {
+            measurementOneErrorMessage.set("Measurement one needs to be between x and y");
+        }
+        if (resultStatus == ResultStatus.INVALID_TOTAL_MEASUREMENT_TWO) {
+            measurementTwoErrorMessage.set("Measurement two needs to be between x and y");
+        }
     }
 
     private void subTypeUpdated() {
-        if (unitOfMeasure.getMeasurementSubtype() != subtype.get()) {
-            unitOfMeasure = subtype.get().getMeasurementClass();
-            if (numberOfPortions > 1)
-                unitOfMeasure.numberOfItemsIsSet(numberOfPortions);
-            updateUi();
-        }
-    }
-
-    private void updateMeasurementModel() {
-        MeasurementModel updatedModel = createUpdatedMeasurementModel();
-        portionUseCase.setModel(updatedModel);
-    }
-
-    private MeasurementModel createUpdatedMeasurementModel() {
-        return new MeasurementModel(
-                subtype.get(),
-                numberOfPortions,
-                getDecimalValue(conversionFactor),
-                getDecimalValue(measurementOne),
-                getIntegerValue(),
-                0,
-                0,
-                portionUseCase.BASE_UNITS_NOT_SET
-        );
-    }
-
-    private double getDecimalValue(ObservableField<String> valueInView) {
-        double decimalMeasurement = parseDoubleFromString(valueInView);
-        if (decimalMeasurement == MEASUREMENT_ERROR)
-            return 0;
-        else
-            return decimalMeasurement;
-    }
-
-    private double parseDoubleFromString(ObservableField<String> valueInView) {
-        String rawValue = valueInView.get();
-        if (rawValue.isEmpty())
-            return 0;
-        try {
-            return Double.parseDouble(rawValue);
-        } catch (NumberFormatException e) {
-            if (valueInView == measurementOne)
-                measurementOneErrorMessage.set(
-                        resources.getString(R.string.number_format_exception));
-            else if (valueInView == conversionFactor)
-                conversionFactorErrorMessage.set(
-                        resources.getString(R.string.number_format_exception));
-            return MEASUREMENT_ERROR;
-        }
-    }
-
-    private int getIntegerValue() {
-        int integerMeasurement = parseIntFromString();
-        if (integerMeasurement == MEASUREMENT_ERROR)
-            return 0;
-        else
-            return integerMeasurement;
-
-    }
-
-    private int parseIntFromString() {
-        String rawValue = measurementTwo.get();
-        if (rawValue.isEmpty())
-            return 0;
-        try {
-            return Integer.parseInt(rawValue);
-        } catch (NumberFormatException e) {
-            measurementTwoErrorMessage.set(resources.getString(R.string.number_format_exception));
-            return MEASUREMENT_ERROR;
-        }
-    }
-
-    private void conversionFactorUpdated() {
-        double conversionFactorDecimal = parseDecimalFromString(conversionFactor);
-        if (conversionFactorHasChanged(conversionFactorDecimal))
-            updateConversionFactor(conversionFactorDecimal);
-    }
-
-    private boolean conversionFactorHasChanged(double newConversionFactor) {
-        return unitOfMeasure.getConversionFactor() != newConversionFactor;
-    }
-
-    private void updateConversionFactor(double conversionFactor) {
-        conversionFactorErrorMessage.set(null);
-        boolean conversionFactorIsSet = unitOfMeasure.conversionFactorIsSet(conversionFactor);
-        if (conversionFactorIsSet && conversionFactor != ingredientEntity.getConversionFactor()) {
-            saveUpdatedConversionFactorToIngredient(conversionFactor);
-            if (recipeIngredientQuantityIsChanged())
-                save(updatedRecipeIngredientEntity());
-        } else {
-            this.conversionFactor.set(String.valueOf(unitOfMeasure.getConversionFactor()));
-            conversionFactorErrorMessage.set(
-                    resources.getString(
-                            R.string.conversion_factor_error_message,
-                            UnitOfMeasureConstants.MINIMUM_CONVERSION_FACTOR,
-                            UnitOfMeasureConstants.MAXIMUM_CONVERSION_FACTOR));
-        }
-    }
-
-    private void saveUpdatedConversionFactorToIngredient(double conversionFactor) {
-        IngredientEntity updatedEntity = new IngredientEntity(
-                ingredientEntity.getId(),
-                ingredientEntity.getName(),
-                ingredientEntity.getDescription(),
-                conversionFactor,
-                ingredientEntity.getCreatedBy(),
-                ingredientEntity.getCreateDate(),
-                timeProvider.getCurrentTimestamp()
-        );
-        ingredientRepository.save(updatedEntity);
-    }
-
-    private void measurementOneUpdated() {
-        if (unitsAfterDecimal() > 0)
-            processDecimalMeasurement();
-        else
-            processIntegerMeasurement(measurementOne);
-    }
-
-    private void processDecimalMeasurement() {
-        double decimalMeasurement = parseDecimalFromString(measurementOne);
-        if (decimalMeasurement != MEASUREMENT_ERROR)
-            if (decimalMeasurementHasChanged(decimalMeasurement))
-                updateDecimalMeasurement(decimalMeasurement);
-    }
-
-    private double parseDecimalFromString(ObservableField<String> measurement) {
-        String rawValue = measurement.get();
-//        if (rawValue.isEmpty()) {
-////            measurement.set("");
-//            return 0;
-//        }
-        try {
-            return Double.parseDouble(rawValue);
-        } catch (NumberFormatException e) {
-//            if (measurement == measurementOne)
-            measurementOneErrorMessage.set(resources.getString(R.string.number_format_exception));
-            return MEASUREMENT_ERROR;
-        }
-    }
-
-    private boolean decimalMeasurementHasChanged(double newMeasurement) {
-        double oldMeasurement = unitOfMeasure.getTotalMeasurementOne();
-        return oldMeasurement != newMeasurement;
-    }
-
-    private void updateDecimalMeasurement(double decimalMeasurement) {
-        boolean measurementIsSet = unitOfMeasure.totalMeasurementOneIsSet(decimalMeasurement);
-        if (measurementIsSet)
-            updateUi();
-        else
-            updateUi();
-    }
-
-    private void measurementTwoUpdated() {
-        processIntegerMeasurement(measurementTwo);
-    }
-
-    private void processIntegerMeasurement(ObservableField<String> measurement) {
-        int integerMeasurement = parseIntegerFromString(measurement);
-        if (integerMeasurement != MEASUREMENT_ERROR) {
-            if (integerMeasurementHasChanged(measurement, integerMeasurement))
-                updateIntegerMeasurement(measurement, integerMeasurement);
-        }
-    }
-
-    private int parseIntegerFromString(ObservableField<String> measurement) {
-        String rawMeasurement = measurement.get();
-        if (rawMeasurement.isEmpty()) {
-            return 0;
-        }
-        try {
-            return Integer.parseInt(rawMeasurement);
-        } catch (NumberFormatException e) {
-            if (measurement == measurementOne)
-                measurementOneErrorMessage.set(resources.getString(R.string.number_format_exception));
-            else if (measurement == measurementTwo)
-                measurementTwoErrorMessage.set(resources.getString(R.string.number_format_exception));
-            return MEASUREMENT_ERROR;
-        }
-    }
-
-    private boolean integerMeasurementHasChanged(ObservableField<String> measurement,
-                                                 int newMeasurement) {
-        int oldMeasurement = 0;
-        if (measurement == measurementOne)
-            oldMeasurement = (int) unitOfMeasure.getTotalMeasurementOne();
-        if (measurement == measurementTwo)
-            oldMeasurement = unitOfMeasure.getTotalMeasurementTwo();
-        return oldMeasurement != newMeasurement;
-    }
-
-    private void updateIntegerMeasurement(ObservableField<String> measurement,
-                                          int newMeasurement) {
-        boolean measurementIsSet = false;
-        if (measurement == measurementOne)
-            measurementIsSet = unitOfMeasure.totalMeasurementOneIsSet(newMeasurement);
-        if (measurement == measurementTwo)
-            measurementIsSet = unitOfMeasure.totalMeasurementTwoIsSet(newMeasurement);
-        if (measurementIsSet)
-            updateUi();
-        else
-            updateUi();
-    }
-
-    private void updateUi() {
-        updateUnitOfMeasure();
+        unitOfMeasure = subtype.get().getMeasurementClass();
         updateNumberOfMeasurementUnits();
-        updateConversionFactor();
-        updateMeasurementUnits();
-
-        if (recipeIngredientQuantityIsChanged() && unitOfMeasure.isValidMeasurement()) {
-            save(updatedRecipeIngredientEntity());
-        }
-    }
-
-    private void updateUnitOfMeasure() {
-        if (subtype.get() != unitOfMeasure.getMeasurementSubtype()) {
-            subtype.set(unitOfMeasure.getMeasurementSubtype());
-        }
+        updateMeasurementModel();
     }
 
     private void updateNumberOfMeasurementUnits() {
@@ -442,69 +132,78 @@ public class RecipeIngredientMeasurementViewModel
             numberOfMeasurementUnits.set(unitOfMeasure.getNumberOfMeasurementUnits());
     }
 
-    private int unitsAfterDecimal() {
-        return (int) unitOfMeasure.getMeasurementUnitsDigitWidths()[0].second;
+    private void conversionFactorUpdated() {
+        double conversionFactorParsed = parseDecimalFromString(conversionFactor);
+        if (conversionFactorParsed != MEASUREMENT_ERROR) {
+            this.conversionFactorParsed = conversionFactorParsed;
+            updateMeasurementModel();
+        }
     }
 
-    private void updateConversionFactor() {
-        if (unitOfMeasure.getMeasurementSubtype() == MeasurementSubtype.IMPERIAL_SPOON &&
-                ingredientEditorIsIngredientOwner())
-            isConversionFactorEnabled.set(true);
-        else
-            isConversionFactorEnabled.set(false);
-
-        conversionFactor.set(String.valueOf(unitOfMeasure.getConversionFactor()));
+    private void measurementOneUpdated() {
+        processMeasurementOne();
     }
 
-    private void updateMeasurementUnits() {
-        if (unitsAfterDecimal() > 0)
-            measurementOne.set(String.valueOf(unitOfMeasure.getTotalMeasurementOne()));
-        else
-            measurementOne.set(String.valueOf((int) unitOfMeasure.getTotalMeasurementOne()));
-
-        if (numberOfMeasurementUnits.get() > 1)
-            measurementTwo.set(String.valueOf(unitOfMeasure.getTotalMeasurementTwo()));
+    private void processMeasurementOne() {
+        double measurementOneParsed = parseDecimalFromString(measurementOne);
+        if (measurementOneParsed != MEASUREMENT_ERROR) {
+            this.measurementOneParsed = measurementOneParsed;
+            updateMeasurementModel();
+        }
     }
 
-    private boolean ingredientEditorIsIngredientOwner() {
-        return Constants.getUserId().getValue().equals(ingredientEntity.getCreatedBy());
+    private double parseDecimalFromString(ObservableField<String> measurement) {
+        String rawValue = measurement.get();
+        try {
+            return Double.parseDouble(rawValue);
+        } catch (NumberFormatException e) {
+            if (measurement == measurementOne)
+                measurementOneErrorMessage.set(
+                        resources.getString(R.string.number_format_exception));
+            if (measurement == conversionFactor)
+                conversionFactorErrorMessage.set(
+                        resources.getString(R.string.number_format_exception));
+                return MEASUREMENT_ERROR;
+        }
     }
 
-    private RecipeIngredientQuantityEntity updatedRecipeIngredientEntity() {
-        return new RecipeIngredientQuantityEntity(
-                recipeIngredientQuantityEntity.getId(),
-                recipeIngredientQuantityEntity.getRecipeId(),
-                recipeIngredientQuantityEntity.getIngredientId(),
-                recipeIngredientQuantityEntity.getProductId(),
-                unitOfMeasure.getItemBaseUnits(),
-                unitOfMeasure.getMeasurementSubtype().asInt(),
-                recipeIngredientQuantityEntity.getCreatedBy(),
-                recipeIngredientQuantityEntity.getCreateDate(),
-                timeProvider.getCurrentTimestamp()
+    private void measurementTwoUpdated() {
+        processMeasurementTwo();
+    }
+
+    private void processMeasurementTwo() {
+        int measurementTwoParsed = parseIntegerFromString();
+        if (measurementTwoParsed != MEASUREMENT_ERROR) {
+            this.measurementTwoParsed = measurementTwoParsed;
+            updateMeasurementModel();
+        }
+    }
+
+    private int parseIntegerFromString() {
+        String rawMeasurement = measurementTwo.get();
+        try {
+            return Integer.parseInt(rawMeasurement);
+        } catch (NumberFormatException e) {
+            measurementTwoErrorMessage.set(resources.getString(R.string.number_format_exception));
+            return MEASUREMENT_ERROR;
+        }
+    }
+
+    private void updateMeasurementModel() {
+        MeasurementModel updatedModel = getUpdatedMeasurementModel();
+        useCase.setModel(updatedModel);
+    }
+
+    private MeasurementModel getUpdatedMeasurementModel() {
+        return new MeasurementModel(
+                unitOfMeasure.getMeasurementSubtype(),
+                measurementModel.getNumberOfItems(),
+                conversionFactorParsed,
+                measurementOneParsed,
+                measurementTwoParsed,
+                measurementModel.getItemMeasurementOne(),
+                measurementModel.getItemMeasurementTwo(),
+                measurementModel.getItemBaseUnits()
         );
-    }
-
-    private boolean recipeIngredientQuantityIsChanged() {
-        if (recipeIngredientQuantityEntity != null) {
-            RecipeIngredientQuantityEntity updatedEntity = new RecipeIngredientQuantityEntity(
-                    recipeIngredientQuantityEntity.getId(),
-                    recipeIngredientQuantityEntity.getRecipeId(),
-                    recipeIngredientQuantityEntity.getIngredientId(),
-                    recipeIngredientQuantityEntity.getProductId(),
-                    unitOfMeasure.getItemBaseUnits(),
-                    unitOfMeasure.getMeasurementSubtype().asInt(),
-                    Constants.getUserId().getValue(),
-                    recipeIngredientQuantityEntity.getCreateDate(),
-                    recipeIngredientQuantityEntity.getLastUpdate()
-            );
-            return !recipeIngredientQuantityEntity.equals(updatedEntity);
-
-        } else
-            return false;
-    }
-
-    private void save(RecipeIngredientQuantityEntity recipeIngredientQuantityEntity) {
-        this.recipeIngredientQuantityEntity = recipeIngredientQuantityEntity;
-        recipeIngredientRepository.save(recipeIngredientQuantityEntity);
     }
 }

@@ -2,6 +2,7 @@ package com.example.peter.thekitchenmenu.ui;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
@@ -29,6 +30,7 @@ import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeIden
 import com.example.peter.thekitchenmenu.utils.ParseIntegerFromObservableHandler;
 import com.example.peter.thekitchenmenu.utils.TextValidationHandler;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasurePortionUseCase;
 
 public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory {
 
@@ -148,13 +150,7 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
             // noinspection unchecked
             return (T) new RecipeIngredientMeasurementViewModel(
                     application,
-                    recipePortionsRepository,
-                    recipeIngredientRepository,
-                    ingredientRepository,
-                    application.getResources(),
-                    new UniqueIdProvider(),
-                    new TimeProvider()
-            );
+                    getPortionsUseCase());
 
         } else if (modelClass.isAssignableFrom(RecipeNameAndPortionsViewModel.class)) {
             // noinspection unchecked
@@ -171,5 +167,10 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
         }
 
         throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
+    }
+
+    private UnitOfMeasurePortionUseCase getPortionsUseCase() {
+        UseCaseFactory factory = UseCaseFactory.getInstance(application);
+        return factory.providePortionsUseCase();
     }
 }

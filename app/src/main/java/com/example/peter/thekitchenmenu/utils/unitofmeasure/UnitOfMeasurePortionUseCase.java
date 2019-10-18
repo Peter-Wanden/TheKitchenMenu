@@ -27,8 +27,6 @@ public class UnitOfMeasurePortionUseCase {
     private PortionUseCaseViewModel viewModel;
 
     private UnitOfMeasure unitOfMeasure = MeasurementSubtype.METRIC_MASS.getMeasurementClass();
-    public final int BASE_UNITS_NOT_SET = 0;
-    public final int NO_CONVERSION_FACTOR = 1;
     private boolean conversionFactorChanged;
     private boolean conversionFactorIsSet;
     private boolean portionsChanged;
@@ -52,13 +50,15 @@ public class UnitOfMeasurePortionUseCase {
                                        RepositoryRecipeIngredient recipeIngredientRepository,
                                        RepositoryIngredient ingredientRepository,
                                        UniqueIdProvider idProvider,
-                                       TimeProvider timeProvider,
-                                       PortionUseCaseViewModel viewModel) {
+                                       TimeProvider timeProvider) {
         this.portionsRepository = portionsRepository;
         this.recipeIngredientRepository = recipeIngredientRepository;
         this.ingredientRepository = ingredientRepository;
         this.idProvider = idProvider;
         this.timeProvider = timeProvider;
+    }
+
+    public void setViewModel(PortionUseCaseViewModel viewModel) {
         this.viewModel = viewModel;
     }
 

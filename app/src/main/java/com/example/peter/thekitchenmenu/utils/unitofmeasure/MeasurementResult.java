@@ -8,7 +8,7 @@ import java.util.Objects;
 
 public class MeasurementResult {
 
-    enum ResultStatus {
+    public enum ResultStatus {
         INVALID_CONVERSION_FACTOR,
         INVALID_PORTIONS,
         INVALID_TOTAL_MEASUREMENT_ONE,
@@ -51,6 +51,7 @@ public class MeasurementResult {
         return Objects.hash(model, result);
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "MeasurementResult{" +

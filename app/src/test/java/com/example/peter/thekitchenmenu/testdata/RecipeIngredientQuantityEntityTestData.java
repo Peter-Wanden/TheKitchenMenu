@@ -3,6 +3,7 @@ package com.example.peter.thekitchenmenu.testdata;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientQuantityEntity;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtype;
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants;
 
 public class RecipeIngredientQuantityEntityTestData {
 
@@ -46,6 +47,26 @@ public class RecipeIngredientQuantityEntityTestData {
                 20L,
                 20L
         );
+    }
+
+    public static RecipeIngredientQuantityEntity getNewValidMetricMaxMassDivPortions() {
+        return new RecipeIngredientQuantityEntity(
+                getNewValidMetric().getId(),
+                getNewValidMetric().getRecipeId(),
+                getNewValidMetric().getIngredientId(),
+                getNewValidMetric().getProductId(),
+                getMaxMassDivFourPortions(),
+                getNewValidMetric().getUnitOfMeasureSubtype(),
+                getNewValidMetric().getCreatedBy(),
+                getNewValidMetric().getCreateDate(),
+                getNewValidMetric().getLastUpdate()
+        );
+    }
+
+    private static double getMaxMassDivFourPortions() {
+        return UnitOfMeasureConstants.MAX_MASS /
+                (RecipePortionsEntityTestData.getNewValidFourPortions().getSittings() *
+                RecipePortionsEntityTestData.getNewValidFourPortions().getServings());
     }
 
     public static RecipeIngredientQuantityEntity getExistingValidMetric() {

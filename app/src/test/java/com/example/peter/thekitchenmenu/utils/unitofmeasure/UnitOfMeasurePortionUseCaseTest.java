@@ -9,6 +9,7 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.testdata.IngredientEntityTestData;
+import com.example.peter.thekitchenmenu.testdata.MeasurementModelTestData;
 import com.example.peter.thekitchenmenu.testdata.RecipeIngredientQuantityEntityTestData;
 import com.example.peter.thekitchenmenu.testdata.RecipePortionsEntityTestData;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
@@ -75,51 +76,47 @@ public class UnitOfMeasurePortionUseCaseTest {
             RecipeIngredientQuantityEntityTestData.
                     getNewValidImperialOneTeaspoonConversionFactorApplied();
 
-    private MeasurementModel MEASUREMENT_EMPTY = new MeasurementModel(
-            MeasurementSubtype.METRIC_MASS,
-            PORTIONS_NEW_VALID_FOUR.getServings() *
-                    PORTIONS_NEW_VALID_FOUR.getSittings(),
-            1,
-            0,
-            0,
-            0,
-            0,
-            0
-    );
-    private MeasurementResult RESULT_INVALID_MEASUREMENT = new MeasurementResult(
-            MEASUREMENT_EMPTY,
-            ResultStatus.INVALID_MEASUREMENT
-    );
+    private RecipeIngredientQuantityEntity QUANTITY_NEW_VALID_MAX_MASS_DIV_FOUR_PORTIONS =
+            RecipeIngredientQuantityEntityTestData.getNewValidMetricMaxMassDivPortions();
 
-    private MeasurementModel MEASUREMENT_EXISTING_VALID = new MeasurementModel(
-            MeasurementSubtype.fromInt(QUANTITY_EXISTING_VALID_METRIC.getUnitOfMeasureSubtype()),
-            portions(),
-            INGREDIENT_EXISTING_VALID_NAME_DESCRIPTION.getConversionFactor(),
-            totalOne(),
-            totalTwo(),
-            QUANTITY_EXISTING_VALID_METRIC.getItemBaseUnits() % 1000,
-            (int) QUANTITY_EXISTING_VALID_METRIC.getItemBaseUnits() / 1000,
-            QUANTITY_EXISTING_VALID_METRIC.getItemBaseUnits()
-    );
+    private MeasurementModel MEASUREMENT_EMPTY =
+            MeasurementModelTestData.getEmptyModel();
+    private MeasurementResult MEASUREMENT_EMPTY_RESULT =
+            MeasurementModelTestData.getResultInvalidMeasurement();
 
-    private int portions() {
-        return PORTIONS_EXISTING_VALID_NINE.getServings() *
-                PORTIONS_EXISTING_VALID_NINE.getServings();
-    }
+    private MeasurementModel MEASUREMENT_INVALID_TOTAL_ONE =
+            MeasurementModelTestData.getNewInvalidTotalMeasurementOne();
+    private MeasurementResult MEASUREMENT_INVALID_TOTAL_ONE_RESULT =
+            MeasurementModelTestData.getResultNewInvalidTotalMeasurementOne();
 
-    private double totalOne() {
-        return QUANTITY_EXISTING_VALID_METRIC.getItemBaseUnits() * portions() % 1000;
-    }
+    private MeasurementModel MEASUREMENT_VALID_TOTAL_ONE =
+            MeasurementModelTestData.getNewValidTotalMeasurementOne();
+    private MeasurementResult MEASUREMENT_VALID_TOTAL_ONE_RESULT =
+            MeasurementModelTestData.getResultNewValidTotalMeasurementOne();
 
-    private int totalTwo() {
-        return (int) QUANTITY_EXISTING_VALID_METRIC.getItemBaseUnits() * portions() / 1000;
-    }
+    private MeasurementModel MEASUREMENT_INVALID_TOTAL_TWO =
+            MeasurementModelTestData.getNewInvalidTotalMeasurementTwo();
+    private MeasurementResult MEASUREMENT_INVALID_TOTAL_TWO_RESULT =
+            MeasurementModelTestData.getResultNewInvalidTotalMeasurementTwo();
+
+    private MeasurementModel MEASUREMENT_VALID_TOTAL_TWO =
+            MeasurementModelTestData.getNewValidTotalMeasurementTwo();
+    private MeasurementResult MEASUREMENT_VALID_TOTAL_TWO_RESULT =
+            MeasurementModelTestData.getResultNewValidTotalMeasurementTwo();
+
+    private MeasurementModel MEASUREMENT_UNIT_OF_MEASURE_CHANGED =
+            MeasurementModelTestData.getNewInvalidUnitOfMeasureChanged();
+    private MeasurementResult MEASUREMENT_UNIT_OF_MEASURE_CHANGED_RESULT =
+            MeasurementModelTestData.getResultNewInvalidUnitOfMeasureChanged();
+
+    private final double DELTA = 0.0001;
+    private MeasurementModel MEASUREMENT_EXISTING_VALID =
+            MeasurementModelTestData.getExistingValid();
 
     private MeasurementResult RESULT_EXISTING_VALID_METRIC = new MeasurementResult(
             MEASUREMENT_EXISTING_VALID,
             ResultStatus.RESULT_OK);
 
-    private final double DELTA = 0.0001;
     // endregion constants -------------------------------------------------------------------------
     // region helper fields ------------------------------------------------------------------------
     @Mock
@@ -161,8 +158,9 @@ public class UnitOfMeasurePortionUseCaseTest {
                 repositoryRecipeIngredientMock,
                 repositoryIngredientMock,
                 idProviderMock,
-                timeProviderMock,
-                viewModelMock);
+                timeProviderMock);
+
+        SUT.setViewModel(viewModelMock);
     }
 
     @Test
@@ -176,7 +174,7 @@ public class UnitOfMeasurePortionUseCaseTest {
         // Assert recipeIngredient not saved
         verifyNoMoreInteractions(repositoryRecipeIngredientMock);
         // Assert incomplete model returned
-        verify(viewModelMock).setResult(eq(RESULT_INVALID_MEASUREMENT));
+        verify(viewModelMock).setResult(eq(MEASUREMENT_EMPTY_RESULT));
     }
 
     @Test
@@ -188,7 +186,7 @@ public class UnitOfMeasurePortionUseCaseTest {
         verifyRepoIngredientCalledReturnNewValidNameValidDescription();
         verifyRepoPortionsCalledReturnNewValidFourPortions();
         // Assert incomplete model returned
-        verify(viewModelMock).setResult(eq(RESULT_INVALID_MEASUREMENT));
+        verify(viewModelMock).setResult(eq(MEASUREMENT_EMPTY_RESULT));
     }
 
     @Test
@@ -197,25 +195,13 @@ public class UnitOfMeasurePortionUseCaseTest {
         whenIdProviderReturnNewValidId();
         whenTimeProviderThenReturnNewValidTime();
 
-        MeasurementModel model = new MeasurementModel(
-                MeasurementSubtype.fromInt(QUANTITY_NEW_VALID_METRIC.getUnitOfMeasureSubtype()),
-                PORTIONS_NEW_VALID_FOUR.getServings() *
-                        PORTIONS_NEW_VALID_FOUR.getSittings(),
-                INGREDIENT_NEW_VALID_NAME.getConversionFactor(),
-                UnitOfMeasureConstants.MAX_MASS + 1,
-                0,
-                0,
-                0,
-                0
-        );
-
         // Act
         SUT.start(QUANTITY_NEW_VALID_METRIC.getRecipeId(),
                 QUANTITY_NEW_VALID_METRIC.getIngredientId());
         verifyRepoIngredientCalledAndReturnNewValidName();
         verifyRepoPortionsCalledAndReturnNewValidFourPortions();
 
-        SUT.setModel(model); // Set new measurement
+        SUT.setModel(MEASUREMENT_INVALID_TOTAL_ONE);
         // Assert
         verifyNoMoreInteractions(repositoryRecipeIngredientMock);
     }
@@ -223,21 +209,10 @@ public class UnitOfMeasurePortionUseCaseTest {
     @Test
     public void startNewRecipeAndIngredientId_invalidTotalMeasurementOneUpdated_INVALID_TOTAL_MEASUREMENT_ONE() {
         // Arrange
-        ArgumentCaptor<MeasurementResult> ac = ArgumentCaptor.forClass(MeasurementResult.class);
+        ArgumentCaptor<MeasurementResult> actualResult = ArgumentCaptor.forClass(
+                MeasurementResult.class);
         whenIdProviderReturnNewValidId();
         whenTimeProviderThenReturnNewValidTime();
-
-        MeasurementModel model = new MeasurementModel(
-                MeasurementSubtype.fromInt(QUANTITY_NEW_VALID_METRIC.getUnitOfMeasureSubtype()),
-                PORTIONS_NEW_VALID_FOUR.getServings() *
-                        PORTIONS_NEW_VALID_FOUR.getSittings(),
-                INGREDIENT_NEW_VALID_NAME.getConversionFactor(),
-                UnitOfMeasureConstants.MAX_MASS + 1,
-                0,
-                0,
-                0,
-                0
-        );
 
         // Act
         SUT.start(QUANTITY_NEW_VALID_METRIC.getRecipeId(),
@@ -245,12 +220,10 @@ public class UnitOfMeasurePortionUseCaseTest {
         verifyRepoIngredientCalledAndReturnNewValidName();
         verifyRepoPortionsCalledAndReturnNewValidFourPortions();
 
-        SUT.setModel(model); // Set new measurement
+        SUT.setModel(MEASUREMENT_INVALID_TOTAL_ONE);
         // Assert
-        verify(viewModelMock, times(2)).setResult(ac.capture());
-        MeasurementResult measurementResult = ac.getValue();
-        assertEquals(ResultStatus.INVALID_TOTAL_MEASUREMENT_ONE,
-                measurementResult.getResult());
+        verify(viewModelMock, times(2)).setResult(actualResult.capture());
+        assertEquals(MEASUREMENT_INVALID_TOTAL_ONE_RESULT, actualResult.getValue());
     }
 
     @Test
@@ -259,66 +232,25 @@ public class UnitOfMeasurePortionUseCaseTest {
         whenIdProviderReturnNewValidId();
         whenTimeProviderThenReturnNewValidTime();
 
-        int totalBaseUnits = (int) QUANTITY_NEW_VALID_METRIC.getItemBaseUnits() *
-                PORTIONS_NEW_VALID_FOUR.getServings() *
-                PORTIONS_NEW_VALID_FOUR.getSittings();
-
-        MeasurementModel model = new MeasurementModel(
-                MeasurementSubtype.fromInt(QUANTITY_NEW_VALID_METRIC.getUnitOfMeasureSubtype()),
-                PORTIONS_NEW_VALID_FOUR.getServings() *
-                        PORTIONS_NEW_VALID_FOUR.getSittings(),
-                INGREDIENT_NEW_VALID_NAME.getConversionFactor(),
-                totalBaseUnits, // update to measurementOne
-                0,
-                0,
-                0,
-                0
-        );
-
         // Act
         SUT.start(QUANTITY_NEW_VALID_METRIC.getRecipeId(),
                 QUANTITY_NEW_VALID_METRIC.getIngredientId());
         verifyRepoIngredientCalledAndReturnNewValidName();
         verifyRepoPortionsCalledAndReturnNewValidFourPortions();
 
-        SUT.setModel(model); // Set new measurement
+        SUT.setModel(MEASUREMENT_VALID_TOTAL_ONE);
+
         // Assert
         verify(repositoryRecipeIngredientMock).save(eq(QUANTITY_NEW_VALID_METRIC));
+        verify(viewModelMock, times(2)).setResult(
+                resultArgumentCaptor.capture());
     }
 
     @Test
     public void startNewRecipeAndIngredientId_validTotalMeasurementOneUpdated_RESULT_OK() {
         // Arrange
-        ArgumentCaptor<MeasurementResult> ac = ArgumentCaptor.forClass(MeasurementResult.class);
         whenIdProviderReturnNewValidId();
         whenTimeProviderThenReturnNewValidTime();
-
-        int portions = PORTIONS_NEW_VALID_FOUR.getServings() * PORTIONS_NEW_VALID_FOUR.getSittings();
-        int totalBaseUnits = (int) QUANTITY_NEW_VALID_METRIC.getItemBaseUnits() * portions;
-
-        MeasurementModel inputModel = new MeasurementModel(
-                MeasurementSubtype.fromInt(QUANTITY_NEW_VALID_METRIC.getUnitOfMeasureSubtype()),
-                PORTIONS_NEW_VALID_FOUR.getServings() *
-                        PORTIONS_NEW_VALID_FOUR.getSittings(),
-                INGREDIENT_NEW_VALID_NAME.getConversionFactor(),
-                totalBaseUnits, // update to measurementOne
-                0,
-                0,
-                0,
-                0
-        );
-
-        MeasurementModel outputModel = new MeasurementModel(
-                MeasurementSubtype.fromInt(QUANTITY_NEW_VALID_METRIC.getUnitOfMeasureSubtype()),
-                PORTIONS_NEW_VALID_FOUR.getServings() *
-                        PORTIONS_NEW_VALID_FOUR.getSittings(),
-                INGREDIENT_NEW_VALID_NAME.getConversionFactor(),
-                totalBaseUnits, // update to measurementOne
-                0,
-                totalBaseUnits / portions,
-                0,
-                totalBaseUnits / portions
-        );
 
         // Act
         SUT.start(QUANTITY_NEW_VALID_METRIC.getRecipeId(),
@@ -326,13 +258,12 @@ public class UnitOfMeasurePortionUseCaseTest {
         verifyRepoIngredientCalledAndReturnNewValidName();
         verifyRepoPortionsCalledAndReturnNewValidFourPortions();
 
-        SUT.setModel(inputModel); // Set new measurement
+        SUT.setModel(MEASUREMENT_VALID_TOTAL_ONE);
         // Assert
-        verify(viewModelMock, times(2)).setResult(ac.capture());
-        MeasurementModel measurementModel = ac.getValue().getModel();
-        ResultStatus resultStatus = ac.getValue().getResult();
-        assertEquals(outputModel, measurementModel);
-        assertEquals(ResultStatus.RESULT_OK, resultStatus);
+        verify(viewModelMock, times(2)).setResult(
+                resultArgumentCaptor.capture());
+        MeasurementResult actualResult = resultArgumentCaptor.getValue();
+        assertEquals(MEASUREMENT_VALID_TOTAL_ONE_RESULT, actualResult);
     }
 
     @Test
@@ -341,25 +272,13 @@ public class UnitOfMeasurePortionUseCaseTest {
         whenIdProviderReturnNewValidId();
         whenTimeProviderThenReturnNewValidTime();
 
-        MeasurementModel model = new MeasurementModel(
-                MeasurementSubtype.fromInt(QUANTITY_NEW_VALID_METRIC.getUnitOfMeasureSubtype()),
-                PORTIONS_NEW_VALID_FOUR.getServings() *
-                        PORTIONS_NEW_VALID_FOUR.getSittings(),
-                INGREDIENT_NEW_VALID_NAME.getConversionFactor(),
-                0,
-                (int) UnitOfMeasureConstants.MAX_MASS / 1000 + 1,
-                0,
-                0,
-                0
-        );
-
         // Act
         SUT.start(QUANTITY_NEW_VALID_METRIC.getRecipeId(),
                 QUANTITY_NEW_VALID_METRIC.getIngredientId());
         verifyRepoIngredientCalledAndReturnNewValidName();
         verifyRepoPortionsCalledAndReturnNewValidFourPortions();
 
-        SUT.setModel(model); // Set new measurement
+        SUT.setModel(MEASUREMENT_INVALID_TOTAL_TWO);
         // Assert
         verifyNoMoreInteractions(repositoryRecipeIngredientMock);
     }
@@ -367,21 +286,8 @@ public class UnitOfMeasurePortionUseCaseTest {
     @Test
     public void startNewRecipeAndIngredientId_invalidTotalMeasurementTwoUpdated_INVALID_TOTAL_MEASUREMENT_TWO() {
         // Arrange
-        ArgumentCaptor<MeasurementResult> ac = ArgumentCaptor.forClass(MeasurementResult.class);
         whenIdProviderReturnNewValidId();
         whenTimeProviderThenReturnNewValidTime();
-
-        MeasurementModel model = new MeasurementModel(
-                MeasurementSubtype.fromInt(QUANTITY_NEW_VALID_METRIC.getUnitOfMeasureSubtype()),
-                PORTIONS_NEW_VALID_FOUR.getServings() *
-                        PORTIONS_NEW_VALID_FOUR.getSittings(),
-                INGREDIENT_NEW_VALID_NAME.getConversionFactor(),
-                0,
-                (int) UnitOfMeasureConstants.MAX_MASS / 1000 + 1,
-                0,
-                0,
-                0
-        );
 
         // Act
         SUT.start(QUANTITY_NEW_VALID_METRIC.getRecipeId(),
@@ -389,37 +295,18 @@ public class UnitOfMeasurePortionUseCaseTest {
         verifyRepoIngredientCalledAndReturnNewValidName();
         verifyRepoPortionsCalledAndReturnNewValidFourPortions();
 
-        SUT.setModel(model); // Set new measurement
+        SUT.setModel(MEASUREMENT_INVALID_TOTAL_TWO);
         // Assert
-        verify(viewModelMock, times(2)).setResult(ac.capture());
-        MeasurementResult measurementResult = ac.getValue();
-        assertEquals(ResultStatus.INVALID_TOTAL_MEASUREMENT_TWO,
-                measurementResult.getResult());
+        verify(viewModelMock, times(2)).setResult(
+                resultArgumentCaptor.capture());
+        assertEquals(MEASUREMENT_INVALID_TOTAL_TWO_RESULT, resultArgumentCaptor.getValue());
     }
 
     @Test
     public void startNewRecipeAndIngredientId_validTotalMeasurementTwoUpdated_saved() {
         // Arrange
-        ArgumentCaptor<RecipeIngredientQuantityEntity> ac =
-                ArgumentCaptor.forClass(RecipeIngredientQuantityEntity.class);
         whenIdProviderReturnNewValidId();
         whenTimeProviderThenReturnNewValidTime();
-
-        int portions = PORTIONS_NEW_VALID_FOUR.getServings() *
-                PORTIONS_NEW_VALID_FOUR.getSittings();
-        int totalBaseUnits = (int) UnitOfMeasureConstants.MAX_MASS;
-        double expectedItemBaseUnits = UnitOfMeasureConstants.MAX_MASS / portions;
-
-        MeasurementModel model = new MeasurementModel(
-                MeasurementSubtype.fromInt(QUANTITY_NEW_VALID_METRIC.getUnitOfMeasureSubtype()),
-                portions,
-                INGREDIENT_NEW_VALID_NAME.getConversionFactor(),
-                0,
-                totalBaseUnits / 1000,
-                0,
-                0,
-                0
-        );
 
         // Act
         SUT.start(QUANTITY_NEW_VALID_METRIC.getRecipeId(),
@@ -427,34 +314,18 @@ public class UnitOfMeasurePortionUseCaseTest {
         verifyRepoIngredientCalledAndReturnNewValidName();
         verifyRepoPortionsCalledAndReturnNewValidFourPortions();
 
-        SUT.setModel(model); // Set new measurement
+        SUT.setModel(MEASUREMENT_VALID_TOTAL_TWO);
         // Assert
-        verify(repositoryRecipeIngredientMock).save(ac.capture());
-        RecipeIngredientQuantityEntity quantityEntity = ac.getValue();
-        assertEquals(expectedItemBaseUnits, quantityEntity.getItemBaseUnits(), DELTA);
+        verify(repositoryRecipeIngredientMock).save(recipeIngredientCaptor.capture());
+        RecipeIngredientQuantityEntity actualResult = recipeIngredientCaptor.getValue();
+        assertEquals(QUANTITY_NEW_VALID_MAX_MASS_DIV_FOUR_PORTIONS, actualResult);
     }
 
     @Test
     public void startNewRecipeAndIngredientId_validTotalMeasurementTwoUpdated_RESULT_OK() {
         // Arrange
-        ArgumentCaptor<MeasurementResult> ac = ArgumentCaptor.forClass(MeasurementResult.class);
         whenIdProviderReturnNewValidId();
         whenTimeProviderThenReturnNewValidTime();
-
-        int portions = PORTIONS_NEW_VALID_FOUR.getServings() *
-                PORTIONS_NEW_VALID_FOUR.getSittings();
-        int totalBaseUnits = (int) UnitOfMeasureConstants.MAX_MASS;
-
-        MeasurementModel model = new MeasurementModel(
-                MeasurementSubtype.fromInt(QUANTITY_NEW_VALID_METRIC.getUnitOfMeasureSubtype()),
-                portions,
-                INGREDIENT_NEW_VALID_NAME.getConversionFactor(),
-                0,
-                totalBaseUnits / 1000,
-                0,
-                0,
-                0
-        );
 
         // Act
         SUT.start(QUANTITY_NEW_VALID_METRIC.getRecipeId(),
@@ -462,30 +333,20 @@ public class UnitOfMeasurePortionUseCaseTest {
         verifyRepoIngredientCalledAndReturnNewValidName();
         verifyRepoPortionsCalledAndReturnNewValidFourPortions();
 
-        SUT.setModel(model); // Set new measurement
+        SUT.setModel(MEASUREMENT_VALID_TOTAL_TWO);
         // Assert
-        verify(viewModelMock, times(2)).setResult(ac.capture());
-        MeasurementResult result = ac.getValue();
-        assertEquals(ResultStatus.RESULT_OK, result.getResult());
+        verify(viewModelMock, times(2)).setResult(
+                resultArgumentCaptor.capture());
+        MeasurementResult actualResult = resultArgumentCaptor.getValue();
+        assertEquals(MEASUREMENT_VALID_TOTAL_TWO_RESULT, actualResult);
+        assertEquals(ResultStatus.RESULT_OK, actualResult.getResult());
     }
 
     @Test
     public void startNewRecipeAndIngredientId_unitOfMeasureChanged_INVALID_MEASUREMENT() {
         // Arrange
-        ArgumentCaptor<MeasurementResult> ac = ArgumentCaptor.forClass(MeasurementResult.class);
         whenIdProviderReturnNewValidId();
         whenTimeProviderThenReturnNewValidTime();
-
-        MeasurementModel emptyModel = new MeasurementModel(
-                MeasurementSubtype.IMPERIAL_MASS,
-                MEASUREMENT_EMPTY.getNumberOfItems(),
-                MEASUREMENT_EMPTY.getConversionFactor(),
-                MEASUREMENT_EMPTY.getTotalMeasurementOne(),
-                MEASUREMENT_EMPTY.getTotalMeasurementTwo(),
-                MEASUREMENT_EMPTY.getItemMeasurementOne(),
-                MEASUREMENT_EMPTY.getItemMeasurementTwo(),
-                MEASUREMENT_EMPTY.getItemBaseUnits()
-        );
 
         // Act
         SUT.start(QUANTITY_NEW_VALID_METRIC.getRecipeId(),
@@ -493,11 +354,13 @@ public class UnitOfMeasurePortionUseCaseTest {
         verifyRepoIngredientCalledAndReturnNewValidName();
         verifyRepoPortionsCalledAndReturnNewValidFourPortions();
 
-        SUT.setModel(emptyModel);
+        SUT.setModel(MEASUREMENT_UNIT_OF_MEASURE_CHANGED);
         // Assert
-        verify(viewModelMock, times(2)).setResult(ac.capture());
-        MeasurementResult result = ac.getValue();
-        assertEquals(ResultStatus.INVALID_MEASUREMENT, result.getResult());
+        verify(viewModelMock, times(2)).setResult(
+                resultArgumentCaptor.capture());
+        MeasurementResult actualResult = resultArgumentCaptor.getValue();
+        assertEquals(MEASUREMENT_UNIT_OF_MEASURE_CHANGED_RESULT, actualResult);
+        assertEquals(ResultStatus.INVALID_MEASUREMENT, actualResult.getResult());
     }
 
     @Test
@@ -507,29 +370,21 @@ public class UnitOfMeasurePortionUseCaseTest {
         whenIdProviderReturnNewValidId();
         whenTimeProviderThenReturnNewValidTime();
 
-        MeasurementModel emptyModel = new MeasurementModel(
-                MeasurementSubtype.IMPERIAL_MASS,
-                MEASUREMENT_EMPTY.getNumberOfItems(),
-                MEASUREMENT_EMPTY.getConversionFactor(),
-                MEASUREMENT_EMPTY.getTotalMeasurementOne(),
-                MEASUREMENT_EMPTY.getTotalMeasurementTwo(),
-                MEASUREMENT_EMPTY.getItemMeasurementOne(),
-                MEASUREMENT_EMPTY.getItemMeasurementTwo(),
-                MEASUREMENT_EMPTY.getItemBaseUnits()
-        );
-
         // Act
         SUT.start(QUANTITY_NEW_VALID_METRIC.getRecipeId(),
                 QUANTITY_NEW_VALID_METRIC.getIngredientId());
         verifyRepoIngredientCalledAndReturnNewValidName();
         verifyRepoPortionsCalledAndReturnNewValidFourPortions();
 
-        SUT.setModel(emptyModel);
+        SUT.setModel(MEASUREMENT_UNIT_OF_MEASURE_CHANGED);
         // Assert
-        verify(viewModelMock, times(2)).setResult(ac.capture());
-        MeasurementResult result = ac.getValue();
-        MeasurementModel actualModel = result.getModel();
-        assertEquals(emptyModel, actualModel);
+        verify(viewModelMock, times(2)).setResult(
+                resultArgumentCaptor.capture());
+        MeasurementResult actualResult = resultArgumentCaptor.getValue();
+        assertEquals(MEASUREMENT_UNIT_OF_MEASURE_CHANGED_RESULT, actualResult);
+
+        MeasurementModel actualModel = actualResult.getModel();
+        assertEquals(MEASUREMENT_UNIT_OF_MEASURE_CHANGED_RESULT.getModel(), actualModel);
     }
 
     @Test
@@ -1068,7 +923,6 @@ public class UnitOfMeasurePortionUseCaseTest {
                 INGREDIENT_EXISTING_VALID_NAME_DESCRIPTION.getLastUpdate(),
                 QUANTITY_EXISTING_VALID_METRIC.getLastUpdate());
 
-        // update the unit of measure to a volume to weight
         MeasurementModel initialModelSetToUi = new MeasurementModel(
                 MeasurementSubtype.fromInt(QUANTITY_EXISTING_VALID_METRIC.getUnitOfMeasureSubtype()),
                 portions,
@@ -1209,7 +1063,7 @@ public class UnitOfMeasurePortionUseCaseTest {
         // confirm nothing saved
         verifyNoMoreInteractions(repositoryRecipeIngredientMock);
 
-        // user updates measurement unit one (2 teaspoons)
+        // user updates measurement unit one
         SUT.setModel(measurementOneChangeFromUi);
         // verify expected UI updates returned
         verify(viewModelMock, times(3)).setResult(
@@ -1238,7 +1092,7 @@ public class UnitOfMeasurePortionUseCaseTest {
         IngredientEntity actualIngredientEntity = ingredientArgumentCaptor.getValue();
         assertEquals(expectedIngredientEntitySaveAfterConversionFactorUpdated,
                 actualIngredientEntity);
-        // verify recipeIngredientQuantityEntity saved with updated values
+        // verify valid measurement saved to quantity entity
         verify(repositoryRecipeIngredientMock, times(2)).save(
                 recipeIngredientCaptor.capture());
         RecipeIngredientQuantityEntity actualQuantityEntityWithUpdatedConversion =
