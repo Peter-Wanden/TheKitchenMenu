@@ -125,6 +125,20 @@ public class RecipeIngredientQuantityEntityTestData {
         );
     }
 
+    public static RecipeIngredientQuantityEntity getNewValidImperialSpoonMaxConversionFactor() {
+        return new RecipeIngredientQuantityEntity(
+                getNewValidMetric().getId(),
+                getNewInvalid().getRecipeId(),
+                getNewInvalid().getIngredientId(),
+                "",
+                 7.5,
+                getNewValidImperialOneTeaspoonConversionFactorApplied().getUnitOfMeasureSubtype(),
+                getNewInvalid().getCreatedBy(),
+                10L,
+                10L
+        );
+    }
+
     private static double getItemBaseUnits() {
         double conversionFactor = IngredientEntityTestData.
                         getNewValidNameValidDescriptionConversionFactorUpdated().

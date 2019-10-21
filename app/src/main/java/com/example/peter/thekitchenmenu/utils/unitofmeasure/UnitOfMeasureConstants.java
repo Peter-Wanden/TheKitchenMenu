@@ -6,7 +6,7 @@ public class UnitOfMeasureConstants {
     public static final double MAX_MASS = 10000.; // 10kg
 
     static final double MIN_VOLUME = 1.; // 1ml
-    static final double MAX_VOLUME = 10000.; // 10 litres
+    public static final double MAX_VOLUME = 10000.; // 10 litres
 
     static final int MIN_COUNT = 1;
     static final int MAX_COUNT = 500;

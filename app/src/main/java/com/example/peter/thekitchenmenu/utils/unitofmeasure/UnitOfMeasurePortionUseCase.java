@@ -244,7 +244,7 @@ public class UnitOfMeasurePortionUseCase {
             return ResultStatus.INVALID_TOTAL_MEASUREMENT_ONE;
         }
         if (totalMeasurementTwoChanged && !totalMeasurementTwoIsSet) {
-            totalMeasurementOneChanged = false;
+            totalMeasurementTwoChanged = false;
             return ResultStatus.INVALID_TOTAL_MEASUREMENT_TWO;
         }
         if (!unitOfMeasure.isValidMeasurement()) {
