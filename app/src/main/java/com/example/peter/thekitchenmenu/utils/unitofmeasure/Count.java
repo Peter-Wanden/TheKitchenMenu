@@ -54,6 +54,11 @@ public class Count implements UnitOfMeasure {
     }
 
     @Override
+    public boolean isConversionFactorEnabled() {
+        return false;
+    }
+
+    @Override
     public boolean conversionFactorIsSet(double conversionFactor) {
         return false;
     }

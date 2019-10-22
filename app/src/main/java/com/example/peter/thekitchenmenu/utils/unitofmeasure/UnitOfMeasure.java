@@ -8,6 +8,7 @@ public interface UnitOfMeasure {
 
     MeasurementSubtype getMeasurementSubtype();
 
+    boolean isConversionFactorEnabled();
     double getConversionFactor();
     boolean conversionFactorIsSet(double conversionFactor);
 

@@ -12,6 +12,7 @@ class MetricVolume extends UnitOfMeasureAbstract {
         unitOne = unitTwo / 1000;
         unitOneDecimal = 0;
         smallestUnit = unitOne;
+        isConversionFactorEnabled = false;
 
         subtype = MeasurementSubtype.METRIC_VOLUME;
 

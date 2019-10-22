@@ -12,6 +12,7 @@ class ImperialSpoon extends UnitOfMeasureAbstract {
         unitTwo = 15; // 15ml
         unitOneDecimal = 1; // One decimal place representing 10ths of a teaspoon
         smallestUnit = unitOne;
+        isConversionFactorEnabled = true;
 
         subtype = MeasurementSubtype.IMPERIAL_SPOON;
 

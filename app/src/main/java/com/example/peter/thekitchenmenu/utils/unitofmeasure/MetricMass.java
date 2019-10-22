@@ -12,6 +12,7 @@ class MetricMass extends UnitOfMeasureAbstract {
         unitOne = unitTwo / 1000; // 1 gram
         unitOneDecimal = 0; // no fractions of a gram
         smallestUnit = unitOne;
+        isConversionFactorEnabled = false;
 
         subtype = MeasurementSubtype.METRIC_MASS;
 

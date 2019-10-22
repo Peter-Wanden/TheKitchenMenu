@@ -1,5 +1,7 @@
 package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
+import android.util.Log;
+
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientQuantityEntity;
@@ -18,6 +20,8 @@ import static com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementRe
  * Calculates the measurement of an ingredient for a single portion of a recipe.
  */
 public class UnitOfMeasurePortionUseCase {
+
+    private static final String TAG = "tkm-PortionsUseCase";
 
     private RepositoryRecipeIngredient recipeIngredientRepository;
     private RepositoryRecipePortions portionsRepository;
@@ -166,6 +170,7 @@ public class UnitOfMeasurePortionUseCase {
     }
 
     public void setModel(MeasurementModel model) {
+        Log.d(TAG, "setModel: " + model);
         checkForChanges(model);
     }
 
@@ -227,6 +232,7 @@ public class UnitOfMeasurePortionUseCase {
         this.model = updatedModel;
         MeasurementResult result = new MeasurementResult(updatedModel, resultStatus);
         saveIfValid();
+        Log.d(TAG, "returnResult: " + result);
         viewModel.setResult(result);
     }
 

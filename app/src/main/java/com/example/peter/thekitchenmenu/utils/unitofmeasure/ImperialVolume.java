@@ -12,6 +12,7 @@ class ImperialVolume extends UnitOfMeasureAbstract {
         unitOne = unitTwo / 20; // 1 fluid ounce
         unitOneDecimal = unitOne / 10; // One tenth of a fl oz
         smallestUnit = unitOneDecimal;
+        isConversionFactorEnabled = false;
 
         subtype = MeasurementSubtype.IMPERIAL_VOLUME;
 

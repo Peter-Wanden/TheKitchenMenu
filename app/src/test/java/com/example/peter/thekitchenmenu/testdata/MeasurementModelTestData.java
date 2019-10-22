@@ -229,6 +229,13 @@ public class MeasurementModelTestData {
         );
     }
 
+    public static MeasurementResult getResultExistingMetricValid() {
+        return new MeasurementResult(
+                getExistingMetricValid(),
+                MeasurementResult.ResultStatus.RESULT_OK
+        );
+    }
+
     public static MeasurementModel getExistingMetricInvalidTotalOne() {
         return new MeasurementModel(
                 getExistingMetricValid().getSubtype(),

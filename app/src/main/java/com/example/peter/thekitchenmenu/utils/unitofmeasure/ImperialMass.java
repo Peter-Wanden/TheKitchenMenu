@@ -12,6 +12,7 @@ class ImperialMass extends UnitOfMeasureAbstract {
         unitOne = unitTwo / 16; // 1 ounce
         unitOneDecimal = unitOne / 10; // one tenth of an ounce
         smallestUnit = unitOneDecimal;
+        isConversionFactorEnabled = false;
 
         subtype = MeasurementSubtype.IMPERIAL_MASS;
 

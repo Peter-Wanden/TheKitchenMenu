@@ -6,7 +6,7 @@ import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtype;
 
 import java.util.Objects;
 
-public class MeasurementModel {
+public final class MeasurementModel {
 
     @NonNull
     private final MeasurementSubtype subtype;
@@ -17,6 +17,23 @@ public class MeasurementModel {
     private final double itemMeasurementOne;
     private final int itemMeasurementTwo;
     private final double itemBaseUnits;
+    // Min total measurement one
+    // Max total measurement one
+
+    // Min total measurement two
+    // Max total measurement two
+
+    // Min item measurement one
+    // Given number of items, max item measurement one
+    // Min item measurement two
+    // Given number of items, max item measurement two
+
+    // Number of measurement units
+
+    // isConversionFactorEnabled
+    // Max & min conversionFactor
+
+    // Generate a UseCase for getting resource Id's, unit digit widths and error messages
 
     public MeasurementModel(@NonNull MeasurementSubtype subtype,
                             int numberOfItems,

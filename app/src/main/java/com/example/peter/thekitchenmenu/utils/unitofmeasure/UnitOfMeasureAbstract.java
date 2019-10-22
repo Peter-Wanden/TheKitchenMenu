@@ -25,6 +25,7 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     double unitOneDecimal;
     double smallestUnit;
     private LastMeasurementUpdated lastMeasurementUpdated = TOTAL_MEASUREMENT;
+    boolean isConversionFactorEnabled;
     private final double NO_CONVERSION_FACTOR_SET = 1;
 
     protected MeasurementSubtype subtype;
@@ -63,16 +64,26 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     }
 
     @Override
+    public boolean isConversionFactorEnabled() {
+        return isConversionFactorEnabled;
+    }
+
+    @Override
     public boolean conversionFactorIsSet(double conversionFactor) {
-        if (conversionFactor >= MIN_CONVERSION_FACTOR && conversionFactor <= MAX_CONVERSION_FACTOR) {
-            this.conversionFactor = conversionFactor;
-            unitOne = conversionFactor * unitOne;
-            smallestUnit = unitOne;
-            unitTwo = conversionFactor * unitTwo;
-            totalBaseUnitsAreSet((totalMeasurementTwo * unitTwo) + (totalMeasurementOne * unitOne));
-            return true;
-        } else
-            return false;
+        if (isConversionFactorEnabled) {
+            if (conversionFactor >= MIN_CONVERSION_FACTOR &&
+                    conversionFactor <= MAX_CONVERSION_FACTOR) {
+                this.conversionFactor = conversionFactor;
+                unitOne = conversionFactor * unitOne;
+                smallestUnit = unitOne;
+                unitTwo = conversionFactor * unitTwo;
+                totalBaseUnitsAreSet(
+                        (totalMeasurementTwo * unitTwo) + (totalMeasurementOne * unitOne)
+                );
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

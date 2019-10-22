@@ -150,7 +150,8 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
             // noinspection unchecked
             return (T) new RecipeIngredientMeasurementViewModel(
                     application,
-                    getPortionsUseCase());
+                    getPortionsUseCase(),
+                    application.getResources());
 
         } else if (modelClass.isAssignableFrom(RecipeNameAndPortionsViewModel.class)) {
             // noinspection unchecked
