@@ -2,6 +2,7 @@ package com.example.peter.thekitchenmenu.testdata;
 
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +41,18 @@ public class IngredientEntityTestData {
                 getNew().getCreatedBy(),
                 getNew().getCreateDate(),
                 30L
+        );
+    }
+
+    public static IngredientEntity getNewValidNameMaxConversionFactor() {
+        return new IngredientEntity(
+                getNew().getId(),
+                getNewValidName().getName(),
+                getNew().getDescription(),
+                UnitOfMeasureConstants.MAX_CONVERSION_FACTOR,
+                getNew().getCreatedBy(),
+                getNew().getCreateDate(),
+                getNew().getLastUpdate()
         );
     }
 

@@ -141,17 +141,30 @@ public class ImperialSpoonTest {
         double numberOfTeaspoons = 1;
         double conversionFactor = 0.5;
         int volumeOfTeaSpoon = 5;
+        double expectedTotalBaseUnits = numberOfTeaspoons * volumeOfTeaSpoon * conversionFactor;
+        double expectedItemBaseUnits = numberOfTeaspoons * volumeOfTeaSpoon * conversionFactor /
+                numberOfPortions;
         // Act
         // Assert
         assertTrue(SUT.numberOfItemsIsSet(numberOfPortions));
         assertTrue(SUT.totalMeasurementOneIsSet(numberOfTeaspoons));
         assertTrue(SUT.conversionFactorIsSet(conversionFactor));
-        assertEquals(
-                numberOfTeaspoons * volumeOfTeaSpoon * conversionFactor,
-                SUT.getTotalBaseUnits(), DELTA);
-        assertEquals(
-                numberOfTeaspoons * volumeOfTeaSpoon * conversionFactor / numberOfPortions,
-                SUT.getItemBaseUnits(), DELTA);
+        assertEquals(expectedTotalBaseUnits, SUT.getTotalBaseUnits(), DELTA);
+        assertEquals(expectedItemBaseUnits, SUT.getItemBaseUnits(), DELTA);
+    }
+
+    @Test
+    public void totalMeasurementOneIsSet_measurementBelowZero_measurementSetOk() {
+        // Arrange
+        int numberOfPortions = 1;
+        double numberOfTeaspoons = 0.5;
+        double conversionFactor = 1;
+        int volumeOfTeaspoon = 5;
+        double expectedTotalBaseUnits = 2.5;
+        // Act
+        // Assert
+        assertTrue(SUT.totalMeasurementOneIsSet(numberOfTeaspoons));
+        assertEquals(expectedTotalBaseUnits, SUT.getTotalBaseUnits(), DELTA);
     }
 
     // region helper methods -----------------------------------------------------------------------

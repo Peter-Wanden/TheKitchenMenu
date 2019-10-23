@@ -2,6 +2,7 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor
 
 import android.app.Application;
 import android.content.res.Resources;
+import android.util.Log;
 
 import androidx.databinding.Observable;
 import androidx.databinding.ObservableBoolean;
@@ -22,6 +23,8 @@ import static com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementRe
 public class RecipeIngredientMeasurementViewModel
         extends AndroidViewModel
         implements PortionUseCaseViewModel {
+
+    private static final String TAG = "tkm-IngredientQuantityVM";
 
     private Resources resources;
 
@@ -117,12 +120,16 @@ public class RecipeIngredientMeasurementViewModel
 
     private void conversionFactorUpdated() {
         if (!measurementModelUpdating) {
-            clearErrors();
-            double conversionFactorParsed = parseDecimalFromString(conversionFactor);
-            if (conversionFactorParsed != MEASUREMENT_ERROR) {
-                this.conversionFactorParsed = conversionFactorParsed;
-                updateMeasurementModel();
-            }
+            processConversionFactor();
+        }
+    }
+
+    private void processConversionFactor() {
+        clearErrors();
+        double conversionFactorParsed = parseDecimalFromString(conversionFactor);
+        if (conversionFactorParsed != MEASUREMENT_ERROR) {
+            this.conversionFactorParsed = conversionFactorParsed;
+            updateMeasurementModel();
         }
     }
 
@@ -141,20 +148,19 @@ public class RecipeIngredientMeasurementViewModel
     }
 
     private double parseDecimalFromString(ObservableField<String> measurement) {
-        String rawValue = measurement.get();
-        try {
-            return Double.parseDouble(rawValue);
-        } catch (NumberFormatException e) {
-            if (!measurement.get().isEmpty()) {
-                if (measurement == measurementOne && !measurementOne.get().isEmpty())
-                    measurementOneErrorMessage.set(
-                            resources.getString(R.string.number_format_exception));
-                if (measurement == conversionFactor && !conversionFactor.get().isEmpty())
-                    conversionFactorErrorMessage.set(
-                            resources.getString(R.string.number_format_exception));
-                return MEASUREMENT_ERROR;
-            }
+        String rawMeasurement = measurement.get();
+        if (rawMeasurement.isEmpty() || rawMeasurement.equals("."))
             return 0;
+        try {
+            return Double.parseDouble(rawMeasurement);
+        } catch (NumberFormatException e) {
+            if (measurement == measurementOne)
+                measurementOneErrorMessage.set(
+                        resources.getString(R.string.number_format_exception));
+            if (measurement == conversionFactor)
+                conversionFactorErrorMessage.set(
+                        resources.getString(R.string.number_format_exception));
+            return MEASUREMENT_ERROR;
         }
     }
 
@@ -180,20 +186,21 @@ public class RecipeIngredientMeasurementViewModel
 
     private int parseIntegerFromString() {
         String rawMeasurement = measurementTwo.get();
+        if (rawMeasurement.isEmpty())
+            return 0;
         try {
             return Integer.parseInt(rawMeasurement);
         } catch (NumberFormatException e) {
-            if (!measurementTwo.get().isEmpty()) {
-                measurementTwoErrorMessage.set(resources.getString(R.string.number_format_exception));
-                return MEASUREMENT_ERROR;
-            }
-            return 0;
+            measurementTwoErrorMessage.set(resources.getString(R.string.number_format_exception));
+            return MEASUREMENT_ERROR;
         }
     }
 
     private void updateMeasurementModel() {
-        MeasurementModel updatedModel = getUpdatedMeasurementModel();
-        useCase.setModel(updatedModel);
+        if (measurementModelHasChanged()) {
+            Log.d(TAG, "fromUi=" + getUpdatedMeasurementModel());
+            useCase.modelIn(getUpdatedMeasurementModel());
+        }
     }
 
     private MeasurementModel getUpdatedMeasurementModel() {
@@ -209,9 +216,14 @@ public class RecipeIngredientMeasurementViewModel
         );
     }
 
+    private boolean measurementModelHasChanged() {
+        return !measurementModel.equals(getUpdatedMeasurementModel());
+    }
+
     @Override
-    public void setResult(MeasurementResult result) {
+    public void modelOut(MeasurementResult result) {
         measurementModel = result.getModel();
+        Log.d(TAG, "  toUi=" + measurementModel);
         processMeasurementModel();
         processResultStatus(result.getResult());
     }
@@ -230,17 +242,17 @@ public class RecipeIngredientMeasurementViewModel
 
         if (measurementModel.getConversionFactor() != conversionFactorParsed) {
             conversionFactorParsed = measurementModel.getConversionFactor();
-            conversionFactor.set(String.valueOf(conversionFactorParsed));
+            conversionFactor.set(String.valueOf(conversionFactorParsed)); // format number
         }
 
         if (measurementModel.getTotalMeasurementOne() != measurementOneParsed) {
             measurementOneParsed = measurementModel.getItemMeasurementOne();
-            measurementOne.set(String.valueOf(measurementOneParsed));
+            formatDecimalNumberOutput(measurementOneParsed);
         }
 
         if (measurementModel.getTotalMeasurementTwo() != measurementTwoParsed) {
             measurementTwoParsed = measurementModel.getTotalMeasurementTwo();
-            measurementTwo.set(String.valueOf(measurementTwoParsed));
+            formatIntegerNumberOutput(measurementTwoParsed);
         }
     }
 
@@ -250,11 +262,37 @@ public class RecipeIngredientMeasurementViewModel
                     R.string.conversion_factor_error_message));
 
         } else if (resultStatus == ResultStatus.INVALID_TOTAL_MEASUREMENT_ONE) {
-            measurementOneErrorMessage.set("Total measurement one needs to be between x and y");
+            measurementOneErrorMessage.set("Measurement one needs to be between x and y");
 
         } else if (resultStatus == ResultStatus.INVALID_TOTAL_MEASUREMENT_TWO) {
-            measurementTwoErrorMessage.set("Total measurement two needs to be between x and y");
+            measurementTwoErrorMessage.set("Tablespoons and/or teaspoons needs to have a value");
         }
         measurementModelUpdating = false;
+    }
+
+    private void formatIntegerNumberOutput(int measurement) {
+        if (measurement == measurementTwoParsed) {
+            if (measurement == 0) {
+                measurementTwo.set("");
+            } else {
+                measurementTwo.set(String.valueOf(measurementTwoParsed));
+            }
+        }
+    }
+
+    private void formatDecimalNumberOutput(double measurement) {
+        if (measurement == measurementOneParsed) {
+            if (measurement == 0) {
+                measurementOne.set("");
+            } else {
+                measurementOne.set(String.valueOf(measurementOneParsed));
+            }
+        } else if (measurement == conversionFactorParsed) {
+            if (measurement == 0) {
+                conversionFactor.set("");
+            } else {
+                conversionFactor.set(String.valueOf(conversionFactorParsed));
+            }
+        }
     }
 }

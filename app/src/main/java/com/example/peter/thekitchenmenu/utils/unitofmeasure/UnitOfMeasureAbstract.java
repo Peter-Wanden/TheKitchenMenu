@@ -375,7 +375,9 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
 
     private double roundDecimal(double valueToRound) {
 
-        if (this instanceof ImperialMass || this instanceof ImperialVolume) {
+        if (this instanceof ImperialMass ||
+                this instanceof ImperialVolume ||
+                this instanceof ImperialSpoon) {
 
             NumberFormat decimalFormat = NumberFormat.getInstance();
             decimalFormat.setRoundingMode(RoundingMode.HALF_EVEN);
@@ -386,6 +388,10 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
             return Double.parseDouble(decimalFormat.format(valueToRound));
         } else
             return (int) Math.floor(valueToRound * 1);
+    }
+
+    private double roundDecimalThousandths(double valueToRound) {
+        return 0;
     }
 
     @NonNull

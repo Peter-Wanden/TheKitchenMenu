@@ -168,6 +168,39 @@ public class MeasurementModelTestData {
         );
     }
 
+    public static MeasurementModel getNewValidHalfImperialSpoonUnitOneUpdated() {
+        return new MeasurementModel(
+                getNewInvalidUnitOfMeasureChangedImperialSpoon().getSubtype(),
+                getNewInvalidUnitOfMeasureChangedImperialSpoon().getNumberOfItems(),
+                getNewInvalidUnitOfMeasureChangedImperialSpoon().getConversionFactor(),
+                0.5,
+                getNewInvalidUnitOfMeasureChangedImperialSpoon().getTotalMeasurementTwo(),
+                getNewInvalidUnitOfMeasureChangedImperialSpoon().getItemMeasurementOne(),
+                getNewInvalidUnitOfMeasureChangedImperialSpoon().getItemMeasurementTwo(),
+                getNewInvalidUnitOfMeasureChangedImperialSpoon().getItemBaseUnits()
+        );
+    }
+
+    public static MeasurementResult getNewValidHalfImperialSpoonUnitOneUpdatedResult() {
+        return new MeasurementResult(
+                getNewValidHalfImperialSpoonUnitOneUpdatedResultModel(),
+                MeasurementResult.ResultStatus.RESULT_OK
+        );
+    }
+
+    private static MeasurementModel getNewValidHalfImperialSpoonUnitOneUpdatedResultModel() {
+        return new MeasurementModel(
+                getNewInvalidUnitOfMeasureChangedImperialSpoon().getSubtype(),
+                getNewInvalidUnitOfMeasureChangedImperialSpoon().getNumberOfItems(),
+                getNewInvalidUnitOfMeasureChangedImperialSpoon().getConversionFactor(),
+                0.5,
+                getNewInvalidUnitOfMeasureChangedImperialSpoon().getTotalMeasurementTwo(),
+                (0.5 / getNewInvalidUnitOfMeasureChangedImperialSpoon().getNumberOfItems()),
+                getNewInvalidUnitOfMeasureChangedImperialSpoon().getItemMeasurementTwo(),
+                (5 * 0.5 / getNewInvalidUnitOfMeasureChangedImperialSpoon().getNumberOfItems())
+        );
+    }
+
     public static MeasurementModel getNewInvalidConversionFactor() {
         return new MeasurementModel(
                 getNewValidMetricSubtype(),

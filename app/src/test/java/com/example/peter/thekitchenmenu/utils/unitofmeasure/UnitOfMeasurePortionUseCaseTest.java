@@ -47,6 +47,9 @@ public class UnitOfMeasurePortionUseCaseTest {
     private IngredientEntity INGREDIENT_NEW_VALID_NAME =
             IngredientEntityTestData.getNewValidName();
 
+    private IngredientEntity INGREDIENT_NEW_VALID_NAME_MAX_CONVERSION_FACTOR =
+            IngredientEntityTestData.getNewValidNameMaxConversionFactor();
+
     private IngredientEntity INGREDIENT_EXISTING_VALID_NAME_DESCRIPTION =
             IngredientEntityTestData.getExistingValidNameValidDescription();
 
@@ -83,8 +86,13 @@ public class UnitOfMeasurePortionUseCaseTest {
 
     private MeasurementModel MEASUREMENT_UNIT_OF_MEASURE_CHANGED_IMPERIAL_SPOON =
             MeasurementModelTestData.getNewInvalidUnitOfMeasureChangedImperialSpoon();
-    private MeasurementResult MEASUREMENT_UNIT_OF_MEASURE_CHANGED_RESULT =
+    private MeasurementResult MEASUREMENT_UNIT_OF_MEASURE_CHANGED_IMPERIAL_SPOON_RESULT =
             MeasurementModelTestData.getResultNewInvalidUnitOfMeasureChangedImperialSpoon();
+
+    private MeasurementModel MEASUREMENT_NEW_VALID_HALF_IMPERIAL_SPOON_UNIT_ONE_UPDATED =
+            MeasurementModelTestData.getNewValidHalfImperialSpoonUnitOneUpdated();
+    private MeasurementResult MEASUREMENT_NEW_VALID_HALF_IMPERIAL_SPOON_UNIT_ONE_UPDATED_RESULT =
+            MeasurementModelTestData.getNewValidHalfImperialSpoonUnitOneUpdatedResult();
 
     private MeasurementModel MEASUREMENT_INVALID_CONVERSION_FACTOR =
             MeasurementModelTestData.getNewInvalidConversionFactor();
@@ -132,7 +140,7 @@ public class UnitOfMeasurePortionUseCaseTest {
     // endregion constants -------------------------------------------------------------------------
     // region helper fields ------------------------------------------------------------------------
     @Mock
-    RepositoryRecipePortions repositoryRecipePortionsMock;
+    RepositoryRecipePortions repoRecipePortionsMock;
     @Captor
     ArgumentCaptor<DataSource.GetEntityCallback<RecipePortionsEntity>>
             getRecipePortionsCallbackCaptor;
@@ -142,7 +150,7 @@ public class UnitOfMeasurePortionUseCaseTest {
     ArgumentCaptor<DataSource.GetEntityCallback<RecipeIngredientQuantityEntity>>
             getRecipeIngredientCallbackCaptor;
     @Mock
-    RepositoryIngredient repositoryIngredientMock;
+    RepositoryIngredient repoIngredientMock;
     @Captor
     ArgumentCaptor<DataSource.GetEntityCallback<IngredientEntity>>
             getIngredientCallbackCaptor;
@@ -166,9 +174,9 @@ public class UnitOfMeasurePortionUseCaseTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         SUT = new UnitOfMeasurePortionUseCase(
-                repositoryRecipePortionsMock,
+                repoRecipePortionsMock,
                 repoRecipeIngredientMock,
-                repositoryIngredientMock,
+                repoIngredientMock,
                 idProviderMock,
                 timeProviderMock);
 
@@ -185,8 +193,6 @@ public class UnitOfMeasurePortionUseCaseTest {
         verifyRepoPortionsCalledReturnNewValidFourPortions();
         // Assert recipeIngredient not saved
         verifyNoMoreInteractions(repoRecipeIngredientMock);
-        // Assert incomplete model returned
-        verify(viewModelMock).setResult(eq(MEASUREMENT_EMPTY_RESULT));
     }
 
     @Test
@@ -198,7 +204,7 @@ public class UnitOfMeasurePortionUseCaseTest {
         verifyRepoIngredientCalledReturnNewValidNameValidDescription();
         verifyRepoPortionsCalledReturnNewValidFourPortions();
         // Assert incomplete model returned
-        verify(viewModelMock).setResult(eq(MEASUREMENT_EMPTY_RESULT));
+        verify(viewModelMock).modelOut(eq(MEASUREMENT_EMPTY_RESULT));
     }
 
     @Test
@@ -213,7 +219,7 @@ public class UnitOfMeasurePortionUseCaseTest {
         verifyRepoIngredientCalledAndReturnNewValidName();
         verifyRepoPortionsCalledAndReturnNewValidFourPortions();
 
-        SUT.setModel(MEASUREMENT_INVALID_TOTAL_ONE);
+        SUT.modelIn(MEASUREMENT_INVALID_TOTAL_ONE);
         // Assert
         verifyNoMoreInteractions(repoRecipeIngredientMock);
     }
@@ -221,8 +227,6 @@ public class UnitOfMeasurePortionUseCaseTest {
     @Test
     public void startNewRecipeAndIngredientId_invalidTotalMeasurementOneUpdated_INVALID_TOTAL_MEASUREMENT_ONE() {
         // Arrange
-        ArgumentCaptor<MeasurementResult> actualResult = ArgumentCaptor.forClass(
-                MeasurementResult.class);
         whenIdProviderReturnNewValidId();
         whenTimeProviderThenReturnNewValidTime();
 
@@ -232,10 +236,11 @@ public class UnitOfMeasurePortionUseCaseTest {
         verifyRepoIngredientCalledAndReturnNewValidName();
         verifyRepoPortionsCalledAndReturnNewValidFourPortions();
 
-        SUT.setModel(MEASUREMENT_INVALID_TOTAL_ONE);
+        SUT.modelIn(MEASUREMENT_INVALID_TOTAL_ONE);
         // Assert
-        verify(viewModelMock, times(2)).setResult(actualResult.capture());
-        assertEquals(MEASUREMENT_INVALID_TOTAL_ONE_RESULT, actualResult.getValue());
+        verify(viewModelMock, times((2))).modelOut(resultArgumentCaptor.capture());
+        MeasurementResult actualResult = resultArgumentCaptor.getValue();
+        assertEquals(MEASUREMENT_INVALID_TOTAL_ONE_RESULT, actualResult);
     }
 
     @Test
@@ -243,19 +248,16 @@ public class UnitOfMeasurePortionUseCaseTest {
         // Arrange
         whenIdProviderReturnNewValidId();
         whenTimeProviderThenReturnNewValidTime();
-
         // Act
         SUT.start(QUANTITY_NEW_VALID_METRIC.getRecipeId(),
                 QUANTITY_NEW_VALID_METRIC.getIngredientId());
         verifyRepoIngredientCalledAndReturnNewValidName();
         verifyRepoPortionsCalledAndReturnNewValidFourPortions();
 
-        SUT.setModel(MEASUREMENT_VALID_TOTAL_ONE);
+        SUT.modelIn(MEASUREMENT_VALID_TOTAL_ONE);
 
         // Assert
         verify(repoRecipeIngredientMock).save(eq(QUANTITY_NEW_VALID_METRIC));
-        verify(viewModelMock, times(2)).setResult(
-                resultArgumentCaptor.capture());
     }
 
     @Test
@@ -270,10 +272,9 @@ public class UnitOfMeasurePortionUseCaseTest {
         verifyRepoIngredientCalledAndReturnNewValidName();
         verifyRepoPortionsCalledAndReturnNewValidFourPortions();
 
-        SUT.setModel(MEASUREMENT_VALID_TOTAL_ONE);
+        SUT.modelIn(MEASUREMENT_VALID_TOTAL_ONE);
         // Assert
-        verify(viewModelMock, times(2)).setResult(
-                resultArgumentCaptor.capture());
+        verify(viewModelMock, times((2))).modelOut(resultArgumentCaptor.capture());
         MeasurementResult actualResult = resultArgumentCaptor.getValue();
         assertEquals(MEASUREMENT_VALID_TOTAL_ONE_RESULT, actualResult);
     }
@@ -290,7 +291,7 @@ public class UnitOfMeasurePortionUseCaseTest {
         verifyRepoIngredientCalledAndReturnNewValidName();
         verifyRepoPortionsCalledAndReturnNewValidFourPortions();
 
-        SUT.setModel(MEASUREMENT_INVALID_TOTAL_TWO);
+        SUT.modelIn(MEASUREMENT_INVALID_TOTAL_TWO);
         // Assert
         verifyNoMoreInteractions(repoRecipeIngredientMock);
     }
@@ -307,10 +308,9 @@ public class UnitOfMeasurePortionUseCaseTest {
         verifyRepoIngredientCalledAndReturnNewValidName();
         verifyRepoPortionsCalledAndReturnNewValidFourPortions();
 
-        SUT.setModel(MEASUREMENT_INVALID_TOTAL_TWO);
+        SUT.modelIn(MEASUREMENT_INVALID_TOTAL_TWO);
         // Assert
-        verify(viewModelMock, times(2)).setResult(
-                resultArgumentCaptor.capture());
+        verify(viewModelMock, times((2))).modelOut(resultArgumentCaptor.capture());
         assertEquals(MEASUREMENT_INVALID_TOTAL_TWO_RESULT, resultArgumentCaptor.getValue());
     }
 
@@ -326,7 +326,7 @@ public class UnitOfMeasurePortionUseCaseTest {
         verifyRepoIngredientCalledAndReturnNewValidName();
         verifyRepoPortionsCalledAndReturnNewValidFourPortions();
 
-        SUT.setModel(MEASUREMENT_VALID_TOTAL_TWO);
+        SUT.modelIn(MEASUREMENT_VALID_TOTAL_TWO);
         // Assert
         verify(repoRecipeIngredientMock).save(recipeIngredientCaptor.capture());
         RecipeIngredientQuantityEntity actualResult = recipeIngredientCaptor.getValue();
@@ -345,10 +345,9 @@ public class UnitOfMeasurePortionUseCaseTest {
         verifyRepoIngredientCalledAndReturnNewValidName();
         verifyRepoPortionsCalledAndReturnNewValidFourPortions();
 
-        SUT.setModel(MEASUREMENT_VALID_TOTAL_TWO);
+        SUT.modelIn(MEASUREMENT_VALID_TOTAL_TWO);
         // Assert
-        verify(viewModelMock, times(2)).setResult(
-                resultArgumentCaptor.capture());
+        verify(viewModelMock, times((2))).modelOut(resultArgumentCaptor.capture());
         MeasurementResult actualResult = resultArgumentCaptor.getValue();
         assertEquals(MEASUREMENT_VALID_TOTAL_TWO_RESULT, actualResult);
         assertEquals(ResultStatus.RESULT_OK, actualResult.getResult());
@@ -366,12 +365,11 @@ public class UnitOfMeasurePortionUseCaseTest {
         verifyRepoIngredientCalledAndReturnNewValidName();
         verifyRepoPortionsCalledAndReturnNewValidFourPortions();
 
-        SUT.setModel(MEASUREMENT_UNIT_OF_MEASURE_CHANGED_IMPERIAL_SPOON);
+        SUT.modelIn(MEASUREMENT_UNIT_OF_MEASURE_CHANGED_IMPERIAL_SPOON);
         // Assert
-        verify(viewModelMock, times(2)).setResult(
-                resultArgumentCaptor.capture());
+        verify(viewModelMock, times((2))).modelOut(resultArgumentCaptor.capture());
         MeasurementResult actualResult = resultArgumentCaptor.getValue();
-        assertEquals(MEASUREMENT_UNIT_OF_MEASURE_CHANGED_RESULT, actualResult);
+        assertEquals(MEASUREMENT_UNIT_OF_MEASURE_CHANGED_IMPERIAL_SPOON_RESULT, actualResult);
         assertEquals(ResultStatus.INVALID_MEASUREMENT, actualResult.getResult());
     }
 
@@ -380,22 +378,49 @@ public class UnitOfMeasurePortionUseCaseTest {
         // Arrange
         whenIdProviderReturnNewValidId();
         whenTimeProviderThenReturnNewValidTime();
-
         // Act
         SUT.start(QUANTITY_NEW_VALID_METRIC.getRecipeId(),
                 QUANTITY_NEW_VALID_METRIC.getIngredientId());
         verifyRepoIngredientCalledAndReturnNewValidName();
         verifyRepoPortionsCalledAndReturnNewValidFourPortions();
 
-        SUT.setModel(MEASUREMENT_UNIT_OF_MEASURE_CHANGED_IMPERIAL_SPOON);
+        SUT.modelIn(MEASUREMENT_UNIT_OF_MEASURE_CHANGED_IMPERIAL_SPOON);
         // Assert
-        verify(viewModelMock, times(2)).setResult(
-                resultArgumentCaptor.capture());
+        verify(viewModelMock, times((2))).modelOut(resultArgumentCaptor.capture());
         MeasurementResult actualResult = resultArgumentCaptor.getValue();
-        assertEquals(MEASUREMENT_UNIT_OF_MEASURE_CHANGED_RESULT, actualResult);
+        assertEquals(MEASUREMENT_UNIT_OF_MEASURE_CHANGED_IMPERIAL_SPOON_RESULT, actualResult);
 
         MeasurementModel actualModel = actualResult.getModel();
-        assertEquals(MEASUREMENT_UNIT_OF_MEASURE_CHANGED_RESULT.getModel(), actualModel);
+        assertEquals(MEASUREMENT_UNIT_OF_MEASURE_CHANGED_IMPERIAL_SPOON_RESULT.getModel(), actualModel);
+    }
+
+    @Test
+    public void startNewRecipeAndIngredientId_unitOfMeasureChangedImperialSpoon_userWalkThrough() {
+        // Arrange
+        whenIdProviderReturnNewValidId();
+        whenTimeProviderThenReturnNewValidTime();
+        // Act
+        SUT.start(QUANTITY_NEW_VALID_METRIC.getRecipeId(),
+                QUANTITY_NEW_VALID_METRIC.getIngredientId());
+        verifyRepoIngredientCalledAndReturnNewValidName();
+        verifyRepoPortionsCalledAndReturnNewValidFourPortions();
+
+        // Start of user interaction //
+        // Change unit of measure
+        SUT.modelIn(MEASUREMENT_UNIT_OF_MEASURE_CHANGED_IMPERIAL_SPOON);
+        // Assert
+        verify(viewModelMock, times((2))).modelOut(resultArgumentCaptor.capture());
+        MeasurementResult unitOfMeasureResult = resultArgumentCaptor.getValue();
+        assertEquals(MEASUREMENT_UNIT_OF_MEASURE_CHANGED_IMPERIAL_SPOON_RESULT, unitOfMeasureResult);
+
+        // Change measurement one
+        SUT.modelIn(MEASUREMENT_NEW_VALID_HALF_IMPERIAL_SPOON_UNIT_ONE_UPDATED);
+        System.out.println("modelIn=                       "
+                + MEASUREMENT_NEW_VALID_HALF_IMPERIAL_SPOON_UNIT_ONE_UPDATED);
+        verify(viewModelMock, times((3))).modelOut(resultArgumentCaptor.capture());
+        MeasurementResult halfSpoonResult = resultArgumentCaptor.getValue();
+        System.out.println("expect=" + MEASUREMENT_NEW_VALID_HALF_IMPERIAL_SPOON_UNIT_ONE_UPDATED_RESULT);
+        System.out.println("result=" + halfSpoonResult);
     }
 
     @Test
@@ -409,7 +434,7 @@ public class UnitOfMeasurePortionUseCaseTest {
         verifyRepoIngredientCalledAndReturnNewValidName();
         verifyRepoPortionsCalledAndReturnNewValidFourPortions();
 
-        SUT.setModel(MEASUREMENT_INVALID_CONVERSION_FACTOR);
+        SUT.modelIn(MEASUREMENT_INVALID_CONVERSION_FACTOR);
         // Assert
         verifyNoMoreInteractions(repoRecipeIngredientMock);
     }
@@ -426,10 +451,9 @@ public class UnitOfMeasurePortionUseCaseTest {
         verifyRepoIngredientCalledAndReturnNewValidName();
         verifyRepoPortionsCalledAndReturnNewValidFourPortions();
 
-        SUT.setModel(MEASUREMENT_INVALID_CONVERSION_FACTOR);
+        SUT.modelIn(MEASUREMENT_INVALID_CONVERSION_FACTOR);
         // Assert
-        verify(viewModelMock, times(2)).setResult(
-                resultArgumentCaptor.capture());
+        verify(viewModelMock, times((2))).modelOut(resultArgumentCaptor.capture());
         MeasurementResult actualResult = resultArgumentCaptor.getValue();
         assertEquals(MEASUREMENT_INVALID_CONVERSION_FACTOR_RESULT, actualResult);
         MeasurementResult result = resultArgumentCaptor.getValue();
@@ -447,15 +471,12 @@ public class UnitOfMeasurePortionUseCaseTest {
         verifyRepoIngredientCalledAndReturnNewValidName();
         verifyRepoPortionsCalledAndReturnNewValidFourPortions();
 
-        SUT.setModel(MEASUREMENT_UNIT_OF_MEASURE_CHANGED_IMPERIAL_SPOON);
-        SUT.setModel(MEASUREMENT_VALID_MAX_CONVERSION_FACTOR); // setConversion factor
-        SUT.setModel(MEASUREMENT_VALID_MAX_CONVERSION_FACTOR); // setMeasurementOne
-        SUT.setModel(MEASUREMENT_VALID_MAX_CONVERSION_FACTOR); // setMeasurementTwo
+        SUT.modelIn(MEASUREMENT_UNIT_OF_MEASURE_CHANGED_IMPERIAL_SPOON);
+        SUT.modelIn(MEASUREMENT_VALID_MAX_CONVERSION_FACTOR); // setConversion factor
         // Assert
-        verify(repoRecipeIngredientMock, times(2)).save(
-                recipeIngredientCaptor.capture());
-        RecipeIngredientQuantityEntity actualResult = recipeIngredientCaptor.getValue();
-        assertEquals(QUANTITY_NEW_VALID_IMPERIAL_SPOON_MAX_CONVERSION_FACTOR, actualResult);
+        verify(repoIngredientMock).save(ingredientArgumentCaptor.capture());
+        IngredientEntity actualResult = ingredientArgumentCaptor.getValue();
+        assertEquals(INGREDIENT_NEW_VALID_NAME_MAX_CONVERSION_FACTOR, actualResult);
     }
 
     @Test
@@ -468,15 +489,13 @@ public class UnitOfMeasurePortionUseCaseTest {
         verifyRepoIngredientCalledAndReturnNewValidName();
         verifyRepoPortionsCalledAndReturnNewValidFourPortions();
 
-        SUT.setModel(MEASUREMENT_UNIT_OF_MEASURE_CHANGED_IMPERIAL_SPOON);
-        SUT.setModel(MEASUREMENT_VALID_MAX_CONVERSION_FACTOR); // setConversion factor
-        SUT.setModel(MEASUREMENT_VALID_MAX_CONVERSION_FACTOR); // setMeasurementOne
-        SUT.setModel(MEASUREMENT_VALID_MAX_CONVERSION_FACTOR); // setMeasurementTwo
+        SUT.modelIn(MEASUREMENT_UNIT_OF_MEASURE_CHANGED_IMPERIAL_SPOON);
+        SUT.modelIn(MEASUREMENT_VALID_MAX_CONVERSION_FACTOR); // setConversion factor
+        SUT.modelIn(MEASUREMENT_VALID_MAX_CONVERSION_FACTOR); // setMeasurementOne
+        SUT.modelIn(MEASUREMENT_VALID_MAX_CONVERSION_FACTOR); // setMeasurementTwo
         // Assert
-        verify(repoRecipeIngredientMock, times(2)).save(
-                recipeIngredientCaptor.capture());
-        verify(viewModelMock, times(5)).setResult(
-                resultArgumentCaptor.capture());
+        verify(repoRecipeIngredientMock, times((2))).save(recipeIngredientCaptor.capture());
+        verify(viewModelMock, times((5))).modelOut(resultArgumentCaptor.capture());
         MeasurementResult actualResult = resultArgumentCaptor.getValue();
         assertEquals(MEASUREMENT_VALID_MAX_CONVERSION_FACTOR_RESULT, actualResult);
     }
@@ -491,15 +510,13 @@ public class UnitOfMeasurePortionUseCaseTest {
         verifyRepoIngredientCalledAndReturnNewValidName();
         verifyRepoPortionsCalledAndReturnNewValidFourPortions();
 
-        SUT.setModel(MEASUREMENT_UNIT_OF_MEASURE_CHANGED_IMPERIAL_SPOON);
-        SUT.setModel(MEASUREMENT_VALID_MAX_CONVERSION_FACTOR); // setConversion factor
-        SUT.setModel(MEASUREMENT_VALID_MAX_CONVERSION_FACTOR); // setMeasurementOne
-        SUT.setModel(MEASUREMENT_VALID_MAX_CONVERSION_FACTOR); // setMeasurementTwo
+        SUT.modelIn(MEASUREMENT_UNIT_OF_MEASURE_CHANGED_IMPERIAL_SPOON);
+        SUT.modelIn(MEASUREMENT_VALID_MAX_CONVERSION_FACTOR); // setConversion factor
+        SUT.modelIn(MEASUREMENT_VALID_MAX_CONVERSION_FACTOR); // setMeasurementOne
+        SUT.modelIn(MEASUREMENT_VALID_MAX_CONVERSION_FACTOR); // setMeasurementTwo
         // Assert
-        verify(repoRecipeIngredientMock, times(2)).save(
-                recipeIngredientCaptor.capture());
-        verify(viewModelMock, times(5)).setResult(
-                resultArgumentCaptor.capture());
+        verify(repoRecipeIngredientMock, times((2))).save(recipeIngredientCaptor.capture());
+        verify(viewModelMock, times((5))).modelOut(resultArgumentCaptor.capture());
         MeasurementResult actualResult = resultArgumentCaptor.getValue();
         assertEquals(MEASUREMENT_VALID_MAX_CONVERSION_FACTOR_RESULT, actualResult);
         assertEquals(ResultStatus.RESULT_OK, actualResult.getResult());
@@ -517,7 +534,7 @@ public class UnitOfMeasurePortionUseCaseTest {
     }
 
     @Test
-    public void startExistingRecipeIngredientId_RESULT_OK() {
+    public void startExistingRecipeIngredientId_expectedResultSentToViewModel() {
         // Arrange
         // Act
         SUT.start(QUANTITY_EXISTING_VALID_METRIC.getId());
@@ -526,10 +543,9 @@ public class UnitOfMeasurePortionUseCaseTest {
         verifyRepoIngredientCalledAndReturnExistingValidNameDescription();
         verifyRepoPortionsCalledAndReturnExistingValidNinePortions();
 
-        verify(viewModelMock).setResult(resultArgumentCaptor.capture());
+        verify(viewModelMock).modelOut(resultArgumentCaptor.capture());
         MeasurementResult actualResult = resultArgumentCaptor.getValue();
         assertEquals(MEASUREMENT_EXISTING_VALID_METRIC_RESULT, actualResult);
-        assertEquals(ResultStatus.RESULT_OK, actualResult.getResult());
     }
 
     @Test
@@ -541,11 +557,10 @@ public class UnitOfMeasurePortionUseCaseTest {
         verifyRepoIngredientCalledAndReturnExistingValidNameDescription();
         verifyRepoPortionsCalledAndReturnExistingValidNinePortions();
 
-        SUT.setModel(MEASUREMENT_EXISTING_INVALID_TOTAL_ONE);
+        SUT.modelIn(MEASUREMENT_EXISTING_INVALID_TOTAL_ONE);
 
         // Assert
-        verify(viewModelMock, times(2)).setResult(
-                resultArgumentCaptor.capture());
+        verify(viewModelMock, times((2))).modelOut(resultArgumentCaptor.capture());
         MeasurementResult actualResult = resultArgumentCaptor.getValue();
         assertEquals(MEASUREMENT_EXISTING_INVALID_TOTAL_ONE_RESULT, actualResult);
 
@@ -565,10 +580,9 @@ public class UnitOfMeasurePortionUseCaseTest {
         verifyRepoIngredientCalledAndReturnExistingValidNameDescription();
         verifyRepoPortionsCalledAndReturnExistingValidNinePortions();
 
-        SUT.setModel(MEASUREMENT_EXISTING_INVALID_TOTAL_TWO);
+        SUT.modelIn(MEASUREMENT_EXISTING_INVALID_TOTAL_TWO);
         // Assert
-        verify(viewModelMock, times(2)).setResult(
-                resultArgumentCaptor.capture());
+        verify(viewModelMock, times((2))).modelOut(resultArgumentCaptor.capture());
         MeasurementResult actualResult = resultArgumentCaptor.getValue();
         assertEquals(MEASUREMENT_EXISTING_INVALID_TOTAL_TWO_RESULT, actualResult);
 
@@ -590,7 +604,7 @@ public class UnitOfMeasurePortionUseCaseTest {
         verifyRepoIngredientCalledAndReturnExistingValidNameDescription();
         verifyRepoPortionsCalledAndReturnExistingValidNinePortions();
 
-        SUT.setModel(MEASUREMENT_EXISTING_VALID_TOTAL_TWO_UPDATED);
+        SUT.modelIn(MEASUREMENT_EXISTING_VALID_TOTAL_TWO_UPDATED);
         // Assert
         verify(repoRecipeIngredientMock).save(recipeIngredientCaptor.capture());
         RecipeIngredientQuantityEntity saveResult = recipeIngredientCaptor.getValue();
@@ -609,10 +623,9 @@ public class UnitOfMeasurePortionUseCaseTest {
         verifyRepoIngredientCalledAndReturnExistingValidNameDescription();
         verifyRepoPortionsCalledAndReturnExistingValidNinePortions();
 
-        SUT.setModel(MEASUREMENT_EXISTING_VALID_TOTAL_TWO_UPDATED);
+        SUT.modelIn(MEASUREMENT_EXISTING_VALID_TOTAL_TWO_UPDATED);
         // Assert
-        verify(viewModelMock, times(2)).setResult(
-                resultArgumentCaptor.capture());
+        verify(viewModelMock, times((2))).modelOut(resultArgumentCaptor.capture());
         ResultStatus resultStatus = resultArgumentCaptor.getValue().getResult();
         assertEquals(ResultStatus.RESULT_OK, resultStatus);
     }
@@ -627,10 +640,9 @@ public class UnitOfMeasurePortionUseCaseTest {
         verifyRepoIngredientCalledAndReturnExistingValidNameDescription();
         verifyRepoPortionsCalledAndReturnExistingValidNinePortions();
 
-        SUT.setModel(MEASUREMENT_EXISTING_INVALID_UNIT_OF_MEASURE_CHANGED);
+        SUT.modelIn(MEASUREMENT_EXISTING_INVALID_UNIT_OF_MEASURE_CHANGED);
         // Assert
-        verify(viewModelMock, times(2)).setResult(
-                resultArgumentCaptor.capture());
+        verify(viewModelMock, times((2))).modelOut(resultArgumentCaptor.capture());
         ResultStatus resultStatus = resultArgumentCaptor.getValue().getResult();
         assertEquals(ResultStatus.INVALID_MEASUREMENT, resultStatus);
     }
@@ -645,10 +657,9 @@ public class UnitOfMeasurePortionUseCaseTest {
         verifyRepoIngredientCalledAndReturnExistingValidNameDescription();
         verifyRepoPortionsCalledAndReturnExistingValidNinePortions();
 
-        SUT.setModel(MEASUREMENT_EXISTING_INVALID_UNIT_OF_MEASURE_CHANGED);
+        SUT.modelIn(MEASUREMENT_EXISTING_INVALID_UNIT_OF_MEASURE_CHANGED);
         // Assert
-        verify(viewModelMock, times(2)).setResult(
-                resultArgumentCaptor.capture());
+        verify(viewModelMock, times((2))).modelOut(resultArgumentCaptor.capture());
         MeasurementModel actualModel = resultArgumentCaptor.getValue().getModel();
         assertEquals(MEASUREMENT_EXISTING_INVALID_UNIT_OF_MEASURE_CHANGED_RESULT.getModel(),
                 actualModel);
@@ -664,7 +675,7 @@ public class UnitOfMeasurePortionUseCaseTest {
         verifyRepoIngredientCalledAndReturnExistingValidNameDescription();
         verifyRepoPortionsCalledAndReturnExistingValidNinePortions();
 
-        SUT.setModel(MEASUREMENT_EXISTING_INVALID_CONVERSION_FACTOR);
+        SUT.modelIn(MEASUREMENT_EXISTING_INVALID_CONVERSION_FACTOR);
         // Assert
         verifyNoMoreInteractions(repoRecipeIngredientMock);
     }
@@ -679,10 +690,9 @@ public class UnitOfMeasurePortionUseCaseTest {
         verifyRepoIngredientCalledAndReturnExistingValidNameDescription();
         verifyRepoPortionsCalledAndReturnExistingValidNinePortions();
 
-        SUT.setModel(MEASUREMENT_EXISTING_INVALID_CONVERSION_FACTOR);
+        SUT.modelIn(MEASUREMENT_EXISTING_INVALID_CONVERSION_FACTOR);
         // Assert
-        verify(viewModelMock, times(2)).setResult(
-                resultArgumentCaptor.capture());
+        verify(viewModelMock, times((2))).modelOut(resultArgumentCaptor.capture());
         ResultStatus actualResultStatus = resultArgumentCaptor.getValue().getResult();
         assertEquals(ResultStatus.INVALID_CONVERSION_FACTOR, actualResultStatus);
     }
@@ -696,10 +706,9 @@ public class UnitOfMeasurePortionUseCaseTest {
         verifyRepoIngredientCalledAndReturnExistingValidNameDescription();
         verifyRepoPortionsCalledAndReturnExistingValidNinePortions();
 
-        SUT.setModel(MEASUREMENT_EXISTING_INVALID_CONVERSION_FACTOR);
+        SUT.modelIn(MEASUREMENT_EXISTING_INVALID_CONVERSION_FACTOR);
         // Assert
-        verify(viewModelMock, times(2)).setResult(
-                resultArgumentCaptor.capture());
+        verify(viewModelMock, times((2))).modelOut(resultArgumentCaptor.capture());
         MeasurementResult actualResult = resultArgumentCaptor.getValue();
         assertEquals(MEASUREMENT_EXISTING_INVALID_CONVERSION_FACTOR_RESULT, actualResult);
 
@@ -721,7 +730,7 @@ public class UnitOfMeasurePortionUseCaseTest {
                 INGREDIENT_EXISTING_VALID_NAME_DESCRIPTION.getLastUpdate(),
                 QUANTITY_EXISTING_VALID_METRIC.getLastUpdate());
 
-        MeasurementModel initialModelSetToUi = new MeasurementModel(
+        MeasurementModel expectedModelLoaded = new MeasurementModel(
                 MeasurementSubtype.fromInt(QUANTITY_EXISTING_VALID_METRIC.getUnitOfMeasureSubtype()),
                 portions,
                 INGREDIENT_EXISTING_VALID_NAME_DESCRIPTION.getConversionFactor(),
@@ -734,19 +743,19 @@ public class UnitOfMeasurePortionUseCaseTest {
 
         MeasurementModel unitOfMeasureChangeToImperialSpoonFromUi = new MeasurementModel(
                 MeasurementSubtype.IMPERIAL_SPOON,
-                initialModelSetToUi.getNumberOfItems(),
-                initialModelSetToUi.getConversionFactor(),
-                initialModelSetToUi.getTotalMeasurementOne(),
-                initialModelSetToUi.getTotalMeasurementTwo(),
-                initialModelSetToUi.getItemMeasurementOne(),
-                initialModelSetToUi.getItemMeasurementTwo(),
-                initialModelSetToUi.getItemBaseUnits()
+                expectedModelLoaded.getNumberOfItems(),
+                expectedModelLoaded.getConversionFactor(),
+                expectedModelLoaded.getTotalMeasurementOne(),
+                expectedModelLoaded.getTotalMeasurementTwo(),
+                expectedModelLoaded.getItemMeasurementOne(),
+                expectedModelLoaded.getItemMeasurementTwo(),
+                expectedModelLoaded.getItemBaseUnits()
         );
 
         MeasurementModel expectedResultFromUnitOfMeasureChange = new MeasurementModel(
                 unitOfMeasureChangeToImperialSpoonFromUi.getSubtype(),
                 portions,
-                initialModelSetToUi.getConversionFactor(),
+                expectedModelLoaded.getConversionFactor(),
                 MEASUREMENT_EMPTY.getTotalMeasurementOne(),
                 MEASUREMENT_EMPTY.getTotalMeasurementTwo(),
                 MEASUREMENT_EMPTY.getItemMeasurementOne(),
@@ -842,29 +851,27 @@ public class UnitOfMeasurePortionUseCaseTest {
         verifyRepoIngredientCalledAndReturnExistingValidNameDescription();
         verifyRepoPortionsCalledAndReturnExistingValidNinePortions();
         // verify existing data loaded and set to UI
-        verify(viewModelMock, times(1)).setResult(
-                resultArgumentCaptor.capture());
-        MeasurementModel existingDataLoadResult = resultArgumentCaptor.getValue().getModel();
-        assertEquals(initialModelSetToUi, existingDataLoadResult);
+        verify(viewModelMock).modelOut(resultArgumentCaptor.capture());
+        MeasurementModel actualModelLoaded = resultArgumentCaptor.getValue().getModel();
+        assertEquals(expectedModelLoaded, actualModelLoaded);
         assertEquals(ResultStatus.RESULT_OK, resultArgumentCaptor.getValue().getResult());
 
         //** Start of simulated user interaction **//
         // user updates unit of measure
-        SUT.setModel(unitOfMeasureChangeToImperialSpoonFromUi);
+        SUT.modelIn(unitOfMeasureChangeToImperialSpoonFromUi);
         // verify expected UI updates returned
-        verify(viewModelMock, times(2)).setResult(
-                resultArgumentCaptor.capture());
-        MeasurementModel actualResultFromUnitOfMeasureChange =
-                resultArgumentCaptor.getValue().getModel();
+        verify(viewModelMock, times((2))).modelOut(resultArgumentCaptor.capture());
+        MeasurementResult unitOfMeasureChangeResult = resultArgumentCaptor.getValue();
+        MeasurementModel actualResultFromUnitOfMeasureChange = unitOfMeasureChangeResult.getModel();
         assertEquals(expectedResultFromUnitOfMeasureChange, actualResultFromUnitOfMeasureChange);
-        assertEquals(ResultStatus.INVALID_MEASUREMENT, resultArgumentCaptor.getValue().getResult());
+        assertEquals(ResultStatus.INVALID_MEASUREMENT, unitOfMeasureChangeResult.getResult());
         // confirm nothing saved
         verifyNoMoreInteractions(repoRecipeIngredientMock);
 
         // user updates measurement unit one
-        SUT.setModel(measurementOneChangeFromUi);
+        SUT.modelIn(measurementOneChangeFromUi);
         // verify expected UI updates returned
-        verify(viewModelMock, times(3)).setResult(
+        verify(viewModelMock, times(3)).modelOut(
                 resultArgumentCaptor.capture());
         MeasurementModel actualResultFromMeasurementOneChange =
                 resultArgumentCaptor.getValue().getModel();
@@ -876,9 +883,9 @@ public class UnitOfMeasurePortionUseCaseTest {
         assertEquals(expectedQuantityEntitySaveAfterMeasurementOneChange, actualQuantityEntity);
 
         // user updates conversion factor
-        SUT.setModel(conversionFactorChangeFromUi);
+        SUT.modelIn(conversionFactorChangeFromUi);
         // verify expected UI updates returned
-        verify(viewModelMock, times(4)).setResult(
+        verify(viewModelMock, times(4)).modelOut(
                 resultArgumentCaptor.capture());
         MeasurementModel actualResultFromConversionFactorChange =
                 resultArgumentCaptor.getValue().getModel();
@@ -886,7 +893,7 @@ public class UnitOfMeasurePortionUseCaseTest {
                 actualResultFromConversionFactorChange);
         assertEquals(ResultStatus.RESULT_OK, resultArgumentCaptor.getValue().getResult());
         // verify ingredient conversion factor saved
-        verify(repositoryIngredientMock).save(ingredientArgumentCaptor.capture());
+        verify(repoIngredientMock).save(ingredientArgumentCaptor.capture());
         IngredientEntity actualIngredientEntity = ingredientArgumentCaptor.getValue();
         assertEquals(expectedIngredientEntitySaveAfterConversionFactorUpdated,
                 actualIngredientEntity);
@@ -901,7 +908,7 @@ public class UnitOfMeasurePortionUseCaseTest {
 
     // region helper methods -----------------------------------------------------------------------
     private void verifyRepoIngredientCalledReturnNewValidNameValidDescription() {
-        verify(repositoryIngredientMock).getById(eq(
+        verify(repoIngredientMock).getById(eq(
                 INGREDIENT_NEW_VALID_NAME_DESCRIPTION.getId()),
                 getIngredientCallbackCaptor.capture());
         getIngredientCallbackCaptor.getValue().onEntityLoaded(
@@ -909,7 +916,7 @@ public class UnitOfMeasurePortionUseCaseTest {
     }
 
     private void verifyRepoPortionsCalledReturnNewValidFourPortions() {
-        verify(repositoryRecipePortionsMock).getPortionsForRecipe(
+        verify(repoRecipePortionsMock).getPortionsForRecipe(
                 eq(QUANTITY_NEW_INVALID.getRecipeId()),
                 getRecipePortionsCallbackCaptor.capture());
         getRecipePortionsCallbackCaptor.getValue().onEntityLoaded(
@@ -923,7 +930,7 @@ public class UnitOfMeasurePortionUseCaseTest {
     }
 
     private void verifyRepoIngredientCalledAndReturnExistingValidNameDescription() {
-        verify(repositoryIngredientMock).getById(
+        verify(repoIngredientMock).getById(
                 eq(INGREDIENT_EXISTING_VALID_NAME_DESCRIPTION.getId()),
                 getIngredientCallbackCaptor.capture());
         getIngredientCallbackCaptor.getValue().onEntityLoaded(
@@ -931,21 +938,21 @@ public class UnitOfMeasurePortionUseCaseTest {
     }
 
     private void verifyRepoPortionsCalledAndReturnExistingValidNinePortions() {
-        verify(repositoryRecipePortionsMock).getPortionsForRecipe(
+        verify(repoRecipePortionsMock).getPortionsForRecipe(
                 eq(QUANTITY_EXISTING_VALID_METRIC.getRecipeId()),
                 getRecipePortionsCallbackCaptor.capture());
         getRecipePortionsCallbackCaptor.getValue().onEntityLoaded(PORTIONS_EXISTING_VALID_NINE);
     }
 
     private void verifyRepoIngredientCalledAndReturnNewValidName() {
-        verify(repositoryIngredientMock).getById(
+        verify(repoIngredientMock).getById(
                 eq(INGREDIENT_NEW_VALID_NAME.getId()),
                 getIngredientCallbackCaptor.capture());
         getIngredientCallbackCaptor.getValue().onEntityLoaded(INGREDIENT_NEW_VALID_NAME);
     }
 
     private void verifyRepoPortionsCalledAndReturnNewValidFourPortions() {
-        verify(repositoryRecipePortionsMock).getPortionsForRecipe(
+        verify(repoRecipePortionsMock).getPortionsForRecipe(
                 eq(QUANTITY_NEW_VALID_METRIC.getRecipeId()),
                 getRecipePortionsCallbackCaptor.capture());
         getRecipePortionsCallbackCaptor.getValue().onEntityLoaded(PORTIONS_NEW_VALID_FOUR);

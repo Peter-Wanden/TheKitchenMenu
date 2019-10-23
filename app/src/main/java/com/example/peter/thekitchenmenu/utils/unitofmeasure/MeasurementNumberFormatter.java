@@ -37,67 +37,64 @@ public class MeasurementNumberFormatter {
 
         NumberFormat numberFormat = getNumberFormat(editText);
 
-        if (measurementModelValue != null) {
-            if (digitsAfterDecimal == 0) {
-                int parsedModelValue = 0;
+        if (digitsAfterDecimal == 0) {
+            int parsedModelValue = 0;
 
-                try {
-                    parsedModelValue = numberFormat.parse(measurementModelValue).intValue();
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-                try {
-                    // Don't return a different value if the parsed value doesn't change
-                    String numberInView = editText.getText().toString();
-                    int parsedInView = numberFormat.parse(numberInView).intValue();
-
-                    if (parsedInView == parsedModelValue) {
-                        if (parsedInView == 0)
-                            return "";
-                        else
-                            return editText.getText().toString();
-                    }
-                } catch (ParseException e) {
-                    // Number is broken
-                }
-
-                if (parsedModelValue == 0)
-                    return "";
-                else
-                    return numberFormat.format(parsedModelValue);
-
-            } else {
-                double parsedModelValue = 0.;
-
-                try {
-                    parsedModelValue = numberFormat.parse(measurementModelValue).doubleValue();
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-                try {
-                    // Don't return a different value if the parsed value doesn't change
-                    String numberInView = editText.getText().toString();
-                    double parsedInView = numberFormat.parse(numberInView).doubleValue();
-
-                    if (parsedInView == parsedModelValue) {
-                        if (parsedInView == 0.0)
-                            return "";
-                        else
-                            return editText.getText().toString();
-                    }
-                } catch (ParseException e) {
-                    // Number is broken
-                }
-
-                if (parsedModelValue == 0.0)
-                    return "";
-                else
-                    return numberFormat.format(parsedModelValue);
+            try {
+                parsedModelValue = numberFormat.parse(measurementModelValue).intValue();
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
-    } else
-        return "";
+
+            try {
+                // Don't return a different value if the parsed value doesn't change
+                String numberInView = editText.getText().toString();
+                int parsedInView = numberFormat.parse(numberInView).intValue();
+
+                if (parsedInView == parsedModelValue) {
+                    if (parsedInView == 0)
+                        return "";
+                    else
+                        return editText.getText().toString();
+                }
+            } catch (ParseException e) {
+                // Number is broken
+            }
+
+            if (parsedModelValue == 0)
+                return "";
+            else
+                return numberFormat.format(parsedModelValue);
+
+        } else {
+            double parsedModelValue = 0.;
+
+            try {
+                parsedModelValue = numberFormat.parse(oldValue).doubleValue();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                // Don't return a different value if the parsed value doesn't change
+                String numberInView = editText.getText().toString();
+                double parsedInView = numberFormat.parse(numberInView).doubleValue();
+
+                if (parsedInView == parsedModelValue) {
+                    if (parsedInView == 0.0)
+                        return "";
+                    else
+                        return editText.getText().toString();
+                }
+            } catch (ParseException e) {
+                // Number is broken
+            }
+
+            if (parsedModelValue == 0.0)
+                return "";
+            else
+                return numberFormat.format(parsedModelValue);
+        }
     }
 
     public static String toReturn(EditText editText,

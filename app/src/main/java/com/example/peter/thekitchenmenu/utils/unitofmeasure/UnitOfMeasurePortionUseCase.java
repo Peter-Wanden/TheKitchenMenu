@@ -1,7 +1,5 @@
 package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
-import android.util.Log;
-
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientQuantityEntity;
@@ -45,7 +43,8 @@ public class UnitOfMeasurePortionUseCase {
     private String ingredientId;
     private int numberOfPortions;
 
-    private MeasurementModel model;
+    private MeasurementModel modelIn;
+    private MeasurementModel existingModel;
     private RecipeIngredientQuantityEntity quantityEntity;
     private IngredientEntity ingredientEntity;
 
@@ -165,40 +164,40 @@ public class UnitOfMeasurePortionUseCase {
             totalMeasurementTwoIsSet = true;
         }
 
-        saveIfValid();
-        returnResult(getResultStatus());
+        returnResult();
     }
 
-    public void setModel(MeasurementModel model) {
-        Log.d(TAG, "setModel: " + model);
-        checkForChanges(model);
+    public void modelIn(MeasurementModel modelIn) {
+        this.modelIn = modelIn;
+        checkForChanges();
     }
 
-    private void checkForChanges(MeasurementModel model) {
-        if (this.model.getSubtype() != model.getSubtype()) {
-            unitOfMeasure = model.getSubtype().getMeasurementClass();
+    private void checkForChanges() {
+        if (existingModel.getSubtype() != modelIn.getSubtype()) {
+            unitOfMeasure = modelIn.getSubtype().getMeasurementClass();
             conversionFactorIsSet = unitOfMeasure.conversionFactorIsSet(
                     ingredientEntity.getConversionFactor());
             portionsAreSet = unitOfMeasure.numberOfItemsIsSet(numberOfPortions);
 
-        } else if (model.getConversionFactor() != unitOfMeasure.getConversionFactor()) {
+        } else if (modelIn.getConversionFactor() != unitOfMeasure.getConversionFactor()) {
             conversionFactorChanged = true;
             conversionFactorIsSet = unitOfMeasure.conversionFactorIsSet(
-                    model.getConversionFactor());
+                    modelIn.getConversionFactor());
+
             if (conversionFactorIsSet)
                 saveConversionFactorToIngredient();
 
-        } else if (model.getTotalMeasurementOne() != unitOfMeasure.getTotalMeasurementOne()) {
+        } else if (modelIn.getTotalMeasurementOne() != unitOfMeasure.getTotalMeasurementOne()) {
             totalMeasurementOneChanged = true;
             totalMeasurementOneIsSet = unitOfMeasure.totalMeasurementOneIsSet(
-                    model.getTotalMeasurementOne());
+                    modelIn.getTotalMeasurementOne());
 
-        } else if (model.getTotalMeasurementTwo() != unitOfMeasure.getTotalMeasurementTwo()) {
+        } else if (modelIn.getTotalMeasurementTwo() != unitOfMeasure.getTotalMeasurementTwo()) {
             totalMeasurementTwoChanged = true;
             totalMeasurementTwoIsSet = unitOfMeasure.totalMeasurementTwoIsSet(
-                    model.getTotalMeasurementTwo());
+                    modelIn.getTotalMeasurementTwo());
         }
-        returnResult(getResultStatus());
+        returnResult();
     }
 
     private void saveConversionFactorToIngredient() {
@@ -217,8 +216,8 @@ public class UnitOfMeasurePortionUseCase {
         );
     }
 
-    private void returnResult(ResultStatus resultStatus) {
-        MeasurementModel updatedModel = new MeasurementModel(
+    private void returnResult() {
+        existingModel = new MeasurementModel(
                 unitOfMeasure.getMeasurementSubtype(),
                 unitOfMeasure.getNumberOfItems(),
                 unitOfMeasure.getConversionFactor(),
@@ -229,11 +228,10 @@ public class UnitOfMeasurePortionUseCase {
                 unitOfMeasure.getItemBaseUnits()
         );
 
-        this.model = updatedModel;
-        MeasurementResult result = new MeasurementResult(updatedModel, resultStatus);
+        MeasurementResult result = new MeasurementResult(existingModel, getResultStatus());
+
         saveIfValid();
-        Log.d(TAG, "returnResult: " + result);
-        viewModel.setResult(result);
+        viewModel.modelOut(result);
     }
 
     private ResultStatus getResultStatus() {
