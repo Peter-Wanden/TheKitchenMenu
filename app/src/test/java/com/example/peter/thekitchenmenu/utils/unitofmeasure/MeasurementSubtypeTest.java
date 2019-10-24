@@ -48,9 +48,9 @@ public class MeasurementSubtypeTest {
     @Test
     public void returnUnitOfMeasureClassFromInt() {
         // Arrange
-        int integerForImperialVolume = 3;
+        int intForImperialVolume = 3;
         // Act
-        UnitOfMeasure result = MeasurementSubtype.fromInt(integerForImperialVolume).getMeasurementClass();
+        UnitOfMeasure result = MeasurementSubtype.fromInt(intForImperialVolume).getMeasurementClass();
         // Assert
         assertTrue(result instanceof ImperialVolume);
     }

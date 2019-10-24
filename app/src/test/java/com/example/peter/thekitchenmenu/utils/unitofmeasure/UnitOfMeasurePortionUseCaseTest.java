@@ -479,6 +479,8 @@ public class UnitOfMeasurePortionUseCaseTest {
         assertEquals(INGREDIENT_NEW_VALID_NAME_MAX_CONVERSION_FACTOR, actualResult);
     }
 
+    // invalid number of items as breaks smallest unit (ie 1000th of a gram)
+
     @Test
     public void startNewRecipeAndIngredientId_validConversionFactor_itemBaseUnitsUpdated() {
         whenIdProviderReturnNewValidId();

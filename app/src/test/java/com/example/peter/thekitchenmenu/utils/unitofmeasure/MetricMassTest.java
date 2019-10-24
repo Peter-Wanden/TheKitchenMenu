@@ -368,8 +368,8 @@ public class MetricMassTest {
         SUT.itemBaseUnitsAreSet(2000);
         SUT.numberOfItemsIsSet(4);
         // Assert
-        assertEquals(2, SUT.getTotalMeasurementTwo());
-        assertEquals(500, SUT.getItemMeasurementOne(), ERROR_MARGIN_DELTA);
+        assertEquals(8, SUT.getTotalMeasurementTwo());
+        assertEquals(2, SUT.getItemMeasurementTwo(), ERROR_MARGIN_DELTA);
     }
 
     @Test

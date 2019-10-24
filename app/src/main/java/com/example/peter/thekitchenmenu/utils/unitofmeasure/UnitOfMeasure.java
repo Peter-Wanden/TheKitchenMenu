@@ -6,6 +6,7 @@ public interface UnitOfMeasure {
 
     int getTypeStringResourceId();
 
+    MeasurementType getMeasurementType();
     MeasurementSubtype getMeasurementSubtype();
 
     boolean isConversionFactorEnabled();

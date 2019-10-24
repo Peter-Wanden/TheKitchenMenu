@@ -201,7 +201,7 @@ public class ImperialVolumeTest {
     public void testMeasurementUnitOneOutOfRangeMin() { // OUT OF RANGE MIN
 
         // Set to .01 below min
-        assertThat(imperialVolume.totalMeasurementOneIsSet(0.09), is(false));
+        assertFalse(imperialVolume.totalMeasurementOneIsSet(0.09));
 
         // Check values unchanged
         assertThat(imperialVolume.getTotalMeasurementOne(), is(0.));

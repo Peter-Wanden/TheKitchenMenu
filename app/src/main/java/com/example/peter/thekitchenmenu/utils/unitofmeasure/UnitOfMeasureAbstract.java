@@ -15,8 +15,11 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     enum LastMeasurementUpdated {
         TOTAL_MEASUREMENT,
         ITEM_MEASUREMENT
+
     }
 
+    protected MeasurementType measurementType;
+    protected MeasurementSubtype subtype;
     int numberOfMeasurementUnits;
     double maximumMeasurement;
     double minimumMeasurement;
@@ -28,7 +31,6 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     boolean isConversionFactorEnabled;
     private final double NO_CONVERSION_FACTOR_SET = 1;
 
-    protected MeasurementSubtype subtype;
 
     int typeStringResourceId;
     int subtypeStringResourceId;
@@ -49,6 +51,16 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     }
 
     @Override
+    public MeasurementType getMeasurementType() {
+        return measurementType;
+    }
+
+    @Override
+    public MeasurementSubtype getMeasurementSubtype() {
+        return subtype;
+    }
+
+    @Override
     public int getNumberOfMeasurementUnits() {
         return numberOfMeasurementUnits;
     }
@@ -56,11 +68,6 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     @Override
     public int getTypeStringResourceId() {
         return typeStringResourceId;
-    }
-
-    @Override
-    public MeasurementSubtype getMeasurementSubtype() {
-        return subtype;
     }
 
     @Override
@@ -143,11 +150,12 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
                     }
                 } // What if its smaller??
                 return true;
-            } else if (baseUnits > minimumMeasurement) {
+            } else if (baseUnits > smallestUnit && !isConversionFactorEnabled) {
                 oldNumberOfItems = numberOfItems;
                 adjustNumberOfItemsSoBaseUnitsFitWithinLowerBounds(baseUnits);
                 return true;
-            }
+            } else
+                return isConversionFactorEnabled;
         }
         return false;
     }
@@ -157,7 +165,7 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     }
 
     private boolean baseUnitsWithinLowerBounds(double baseUnits) {
-        return baseUnits >= minimumMeasurement * numberOfItems;
+        return baseUnits >= smallestUnit * numberOfItems;
     }
 
     private boolean oldNumberOfItemsLargerThanCurrentNumberOfItems() {

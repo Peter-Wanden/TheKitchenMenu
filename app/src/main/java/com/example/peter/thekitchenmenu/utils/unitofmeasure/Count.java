@@ -39,6 +39,11 @@ public class Count implements UnitOfMeasure {
     }
 
     @Override
+    public MeasurementType getMeasurementType() {
+        return MeasurementType.COUNT;
+    }
+
+    @Override
     public int getNumberOfMeasurementUnits() {
         return COUNT_NUMBER_OF_MEASUREMENT_UNITS;
     }

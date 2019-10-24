@@ -2,19 +2,21 @@ package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
 import com.example.peter.thekitchenmenu.R;
 
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.*;
+
 class ImperialSpoon extends UnitOfMeasureAbstract {
 
     ImperialSpoon() {
-        numberOfMeasurementUnits = 2;
-        maximumMeasurement = UnitOfMeasureConstants.MAX_VOLUME;
-        minimumMeasurement = UnitOfMeasureConstants.MIN_VOLUME / 1000;
-        unitOne = 5; // 5ml
-        unitTwo = 15; // 15ml
-        unitOneDecimal = 1; // One decimal place representing 10ths of a teaspoon
-        smallestUnit = unitOne;
-        isConversionFactorEnabled = true;
-
-        subtype = MeasurementSubtype.IMPERIAL_SPOON;
+        measurementType = IMPERIAL_SPOON_TYPE;
+        subtype = IMPERIAL_SPOON_SUBTYPE;
+        numberOfMeasurementUnits = IMPERIAL_SPOON_NUMBER_OF_MEASUREMENT_UNITS;
+        maximumMeasurement = IMPERIAL_SPOON_MAX_MEASUREMENT;
+        minimumMeasurement = IMPERIAL_SPOON_MIN_MEASUREMENT;
+        unitTwo = IMPERIAL_SPOON_UNIT_TWO;
+        unitOne = IMPERIAL_SPOON_UNIT_ONE;
+        unitOneDecimal = IMPERIAL_SPOON_UNIT_ONE_DECIMAL;
+        smallestUnit = IMPERIAL_SPOON_SMALLEST_UNIT;
+        isConversionFactorEnabled = IMPERIAL_SPOON_IS_CONVERSION_FACTOR_ENABLED;
 
         typeStringResourceId = R.string.volume;
         subtypeStringResourceId = R.string.sub_type_imperial_volume;
