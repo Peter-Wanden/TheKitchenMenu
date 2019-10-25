@@ -182,7 +182,7 @@ public class RecipeIngredientMeasurementViewModelTest {
     @Test
     public void startRecipeIdIngredientId_measurementTwoInvalidReturned_errorMessageShown() {
         // Arrange
-        String expectedError = "Measurement two needs to be between x and y";
+        String expectedError = "Tablespoons and/or teaspoons needs to have a value";
         // Act
         SUT.start(RECIPE_VALID_NEW.getId(), INGREDIENT_NEW_VALID_NAME_DESCRIPTION.getId());
         verify(useCaseMock).start(recipeIdCaptor.capture(), ingredientIdCaptor.capture());

@@ -298,10 +298,8 @@ public class RecipePortionsViewModelTest {
         // Act
         SUT.start(NEW_EMPTY.getRecipeId());
         simulateNothingReturnedFromDatabase();
-        SUT.servingsObservable.set(String.valueOf(
-                NEW_VALID.getServings()));
-        SUT.sittingsObservable.set(String.valueOf(
-                NEW_VALID.getSittings()));
+        SUT.servingsObservable.set(String.valueOf(NEW_VALID.getServings()));
+        SUT.sittingsObservable.set(String.valueOf(NEW_VALID.getSittings()));
         // Assert
         verify(modelValidationSubmitterMock, times(2)).submitModelStatus(eq(
                 VALID_CHANGED));
@@ -325,14 +323,11 @@ public class RecipePortionsViewModelTest {
         // Act
         SUT.start(NEW_EMPTY.getRecipeId());
         simulateNothingReturnedFromDatabase();
-        SUT.servingsObservable.set(String.valueOf(
-                NEW_VALID.getServings()));
-        SUT.sittingsObservable.set(String.valueOf(
-                NEW_VALID.getSittings()));
+        SUT.servingsObservable.set(String.valueOf(NEW_VALID.getServings()));
+        SUT.sittingsObservable.set(String.valueOf(NEW_VALID.getSittings()));
         // Assert
-        assertEquals(String.valueOf(
-                NEW_VALID.getServings() + NEW_VALID.getSittings()),
-                SUT.portionsObservable.get());
+        String expectedPortions = String.valueOf(NEW_VALID.getServings() * NEW_VALID.getSittings());
+        assertEquals(expectedPortions, SUT.portionsObservable.get());
     }
 
     @Test

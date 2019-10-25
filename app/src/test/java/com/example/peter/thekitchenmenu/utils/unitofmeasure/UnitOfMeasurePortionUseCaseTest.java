@@ -19,6 +19,7 @@ import org.junit.*;
 import org.mockito.*;
 
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementResult.*;
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.assertEquals;
@@ -415,12 +416,9 @@ public class UnitOfMeasurePortionUseCaseTest {
 
         // Change measurement one
         SUT.modelIn(MEASUREMENT_NEW_VALID_HALF_IMPERIAL_SPOON_UNIT_ONE_UPDATED);
-        System.out.println("modelIn=                       "
-                + MEASUREMENT_NEW_VALID_HALF_IMPERIAL_SPOON_UNIT_ONE_UPDATED);
         verify(viewModelMock, times((3))).modelOut(resultArgumentCaptor.capture());
         MeasurementResult halfSpoonResult = resultArgumentCaptor.getValue();
-        System.out.println("expect=" + MEASUREMENT_NEW_VALID_HALF_IMPERIAL_SPOON_UNIT_ONE_UPDATED_RESULT);
-        System.out.println("result=" + halfSpoonResult);
+        assertEquals(MEASUREMENT_NEW_VALID_HALF_IMPERIAL_SPOON_UNIT_ONE_UPDATED_RESULT, halfSpoonResult);
     }
 
     @Test
@@ -722,11 +720,12 @@ public class UnitOfMeasurePortionUseCaseTest {
     public void startExistingRecipeIngredientId_userUpdateExistingFlow_allValuesAsExpected() {
         // Arrange
         int portions = MEASUREMENT_EXISTING_VALID_METRIC.getNumberOfItems();
-        double twoTeaspoons = 2;
-        double volumePerTeaspoon = 5;
-        double itemBaseUnitsWithConversionFactorApplied =
-                (twoTeaspoons * volumePerTeaspoon / portions) *
-                        UnitOfMeasureConstants.MAX_CONVERSION_FACTOR;
+        double numberOfTeaspoons = 2;
+        double teaspoonVolume = IMPERIAL_SPOON_UNIT_ONE;
+        double itemBaseUnits =
+                (numberOfTeaspoons * teaspoonVolume / portions) * MAX_CONVERSION_FACTOR;
+
+
         when(timeProviderMock.getCurrentTimestamp()).thenReturn(
                 QUANTITY_EXISTING_VALID_METRIC.getCreateDate(),
                 INGREDIENT_EXISTING_VALID_NAME_DESCRIPTION.getLastUpdate(),
@@ -769,7 +768,7 @@ public class UnitOfMeasurePortionUseCaseTest {
                 expectedResultFromUnitOfMeasureChange.getSubtype(),
                 expectedResultFromUnitOfMeasureChange.getNumberOfItems(),
                 expectedResultFromUnitOfMeasureChange.getConversionFactor(),
-                twoTeaspoons,
+                numberOfTeaspoons,
                 expectedResultFromUnitOfMeasureChange.getTotalMeasurementTwo(),
                 expectedResultFromUnitOfMeasureChange.getItemMeasurementOne(),
                 expectedResultFromUnitOfMeasureChange.getItemMeasurementTwo(),
@@ -782,9 +781,9 @@ public class UnitOfMeasurePortionUseCaseTest {
                 measurementOneChangeFromUi.getConversionFactor(),
                 measurementOneChangeFromUi.getTotalMeasurementOne(),
                 measurementOneChangeFromUi.getTotalMeasurementTwo(),
-                measurementOneChangeFromUi.getItemMeasurementOne(),
+                0.2,
                 measurementOneChangeFromUi.getItemMeasurementTwo(),
-                (twoTeaspoons * volumePerTeaspoon / portions)
+                (numberOfTeaspoons * teaspoonVolume / portions)
         );
 
         RecipeIngredientQuantityEntity expectedQuantityEntitySaveAfterMeasurementOneChange =
@@ -803,7 +802,7 @@ public class UnitOfMeasurePortionUseCaseTest {
         MeasurementModel conversionFactorChangeFromUi = new MeasurementModel(
                 expectedResultFromMeasurementOneChange.getSubtype(),
                 expectedResultFromMeasurementOneChange.getNumberOfItems(),
-                UnitOfMeasureConstants.MAX_CONVERSION_FACTOR,
+                MAX_CONVERSION_FACTOR,
                 expectedResultFromMeasurementOneChange.getTotalMeasurementOne(),
                 expectedResultFromMeasurementOneChange.getTotalMeasurementTwo(),
                 expectedResultFromMeasurementOneChange.getItemMeasurementOne(),
@@ -819,7 +818,7 @@ public class UnitOfMeasurePortionUseCaseTest {
                 conversionFactorChangeFromUi.getTotalMeasurementTwo(),
                 conversionFactorChangeFromUi.getItemMeasurementOne(),
                 conversionFactorChangeFromUi.getItemMeasurementTwo(),
-                itemBaseUnitsWithConversionFactorApplied
+                itemBaseUnits
         );
 
         IngredientEntity expectedIngredientEntitySaveAfterConversionFactorUpdated =
@@ -839,7 +838,7 @@ public class UnitOfMeasurePortionUseCaseTest {
                         QUANTITY_EXISTING_VALID_METRIC.getRecipeId(),
                         QUANTITY_EXISTING_VALID_METRIC.getIngredientId(),
                         QUANTITY_EXISTING_VALID_METRIC.getProductId(),
-                        itemBaseUnitsWithConversionFactorApplied,
+                        itemBaseUnits,
                         expectedResultFromUnitOfMeasureChange.getSubtype().asInt(),
                         QUANTITY_EXISTING_VALID_METRIC.getCreatedBy(),
                         QUANTITY_EXISTING_VALID_METRIC.getCreateDate(),

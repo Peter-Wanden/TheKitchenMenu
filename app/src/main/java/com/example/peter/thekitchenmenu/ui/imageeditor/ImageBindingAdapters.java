@@ -12,9 +12,9 @@ public class ImageBindingAdapters {
     private static final String TAG = "tkm-ImageBindingAdapter";
 
     @BindingAdapter(value = {
-            "app:localLargeImageUri",
-            "app:remoteLargeImageUri",
-            "app:webImageUrl"},
+            "localLargeImageUri",
+            "remoteLargeImageUri",
+            "webImageUrl"},
             requireAll = false)
     public static void setImage(ImageView imageView,
                          String localUri,
@@ -31,8 +31,8 @@ public class ImageBindingAdapters {
     }
 
     @BindingAdapter(value = {
-            "app:remoteSmallImageUri",
-            "app:webImageUrl"},
+            "remoteSmallImageUri",
+            "webImageUrl"},
             requireAll = false)
     public static void setSmallImage(ImageView imageView,
                                      String smallImageUri,

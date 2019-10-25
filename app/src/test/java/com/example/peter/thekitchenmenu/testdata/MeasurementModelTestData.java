@@ -5,6 +5,10 @@ import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementResult;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
 public class MeasurementModelTestData {
 
     public static MeasurementModel getEmptyModel() {
@@ -195,7 +199,8 @@ public class MeasurementModelTestData {
                 getNewInvalidUnitOfMeasureChangedImperialSpoon().getConversionFactor(),
                 0.5,
                 getNewInvalidUnitOfMeasureChangedImperialSpoon().getTotalMeasurementTwo(),
-                (0.5 / getNewInvalidUnitOfMeasureChangedImperialSpoon().getNumberOfItems()),
+                roundDecimalToTenths((0.5 / getNewInvalidUnitOfMeasureChangedImperialSpoon().
+                        getNumberOfItems())),
                 getNewInvalidUnitOfMeasureChangedImperialSpoon().getItemMeasurementTwo(),
                 (5 * 0.5 / getNewInvalidUnitOfMeasureChangedImperialSpoon().getNumberOfItems())
         );
@@ -478,5 +483,12 @@ public class MeasurementModelTestData {
                 getExistingMetricValid(),
                 MeasurementResult.ResultStatus.INVALID_CONVERSION_FACTOR
         );
+    }
+
+    private static double roundDecimalToTenths(double valueToRound) {
+        NumberFormat decimalFormat = NumberFormat.getInstance();
+        decimalFormat.setRoundingMode(RoundingMode.HALF_EVEN);
+        ((DecimalFormat) decimalFormat).applyPattern("##.#");
+        return Double.parseDouble(decimalFormat.format(valueToRound));
     }
 }

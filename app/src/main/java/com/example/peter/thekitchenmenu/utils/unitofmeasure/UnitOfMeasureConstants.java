@@ -84,4 +84,17 @@ public class UnitOfMeasureConstants {
     static final double METRIC_VOLUME_SMALLEST_UNIT = METRIC_VOLUME_UNIT_ONE;
     static final boolean METRIC_VOLUME_IS_CONVERSION_FACTOR_ENABLED = false;
     // endregion metric volume constants -----------------------------------------------------------
+
+    // region count constants --------------------------------------------------------------
+    static final MeasurementType COUNT_TYPE = MeasurementType.COUNT;
+    static final MeasurementSubtype COUNT_SUBTYPE = MeasurementSubtype.COUNT;
+    static final int COUNT_NUMBER_OF_MEASUREMENT_UNITS = 1;
+    static final double COUNT_MAX_MEASUREMENT = MAX_COUNT;
+    static final double COUNT_MIN_MEASUREMENT = MIN_COUNT;
+    static final double COUNT_UNIT_TWO = 1; // only unit two is used with count
+    static final double COUNT_UNIT_ONE = 1; // unit one not used
+    static final double COUNT_UNIT_ONE_DECIMAL = 0;
+    static final double COUNT_SMALLEST_UNIT = MIN_COUNT;
+    static final boolean COUNT_IS_CONVERSION_FACTOR_ENABLED = false;
+    // endregion count constants -----------------------------------------------------------
 }

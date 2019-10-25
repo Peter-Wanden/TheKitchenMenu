@@ -198,7 +198,6 @@ public class RecipeIngredientMeasurementViewModel
 
     private void updateMeasurementModel() {
         if (measurementModelHasChanged()) {
-            Log.d(TAG, "fromUi=" + getUpdatedMeasurementModel());
             useCase.modelIn(getUpdatedMeasurementModel());
         }
     }
@@ -223,7 +222,6 @@ public class RecipeIngredientMeasurementViewModel
     @Override
     public void modelOut(MeasurementResult result) {
         measurementModel = result.getModel();
-        Log.d(TAG, "  toUi=" + measurementModel);
         processMeasurementModel();
         processResultStatus(result.getResult());
     }

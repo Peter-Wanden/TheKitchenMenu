@@ -8,31 +8,29 @@ import java.util.Objects;
 
 public final class MeasurementModel {
 
+    // MeasurementType
     @NonNull
     private final MeasurementSubtype subtype;
     private final int numberOfItems;
-    private final double conversionFactor;
-    private final double totalMeasurementOne;
-    private final int totalMeasurementTwo;
-    private final double itemMeasurementOne;
-    private final int itemMeasurementTwo;
-    private final double itemBaseUnits;
-    // Min total measurement one
-    // Max total measurement one
-
-    // Min total measurement two
-    // Max total measurement two
-
-    // Min item measurement one
-    // Given number of items, max item measurement one
-    // Min item measurement two
-    // Given number of items, max item measurement two
-
-    // Number of measurement units
-
     // isConversionFactorEnabled
-    // Max & min conversionFactor
-
+    // minConversionFactor
+    // maxConversionFactor
+    private final double conversionFactor;
+    private final double itemBaseUnits;
+    // minTotalMeasurementOne
+    // maxTotalMeasurementOne
+    private final double totalMeasurementOne;
+    // minTotalMeasurementTwo
+    // maxTotalMeasurementTwo
+    private final int totalMeasurementTwo;
+    // minItemMeasurementOne
+    // Given number of items, max item measurement one
+    private final double itemMeasurementOne;
+    // minItemMeasurementTwo
+    // Given number of items, max item measurement two
+    private final int itemMeasurementTwo;
+    // numberOfMeasurementUnits
+    // isValidMeasurement
     // Generate a UseCase for getting resource Id's, unit digit widths and error messages
 
     public MeasurementModel(@NonNull MeasurementSubtype subtype,

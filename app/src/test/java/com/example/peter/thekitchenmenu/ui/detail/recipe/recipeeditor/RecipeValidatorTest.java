@@ -14,211 +14,202 @@ import static org.mockito.Mockito.verify;
 public class RecipeValidatorTest {
 
     // region constants ----------------------------------------------------------------------------
-    private RecipeModelStatus IDENTITY_MODEL_UNCHANGED_INVALID = getIdentityModelStatusUnchangedInvalid();
-    private RecipeModelStatus IDENTITY_MODEL_UNCHANGED_VALID = getIdentityModelStatusUnchangedValid();
-    private RecipeModelStatus IDENTITY_MODEL_CHANGED_INVALID = getIdentityModelStatusChangedInvalid();
-    private RecipeModelStatus IDENTITY_MODEL_CHANGED_VALID = getIdentityModelStatusChangedValid();
-    private RecipeModelStatus COURSES_MODEL_UNCHANGED_INVALID = getCoursesModelStatusUnchangedInvalid();
-    private RecipeModelStatus COURSES_MODEL_UNCHANGED_VALID = getCoursesModelStatusUnchangedValid();
-    private RecipeModelStatus COURSES_MODEL_CHANGED_INVALID = getCoursesModelStatusChangedInvalid();
-    private RecipeModelStatus COURSES_MODEL_CHANGED_VALID = getCoursesModelStatusChangedValid();
+    private RecipeModelStatus IDENTITY_INVALID_UNCHANGED = getIdentityModelStatusUnchangedInvalid();
+    private RecipeModelStatus IDENTITY_VALID_UNCHANGED = getIdentityModelStatusUnchangedValid();
+    private RecipeModelStatus IDENTITY_INVALID_CHANGED = getIdentityModelStatusChangedInvalid();
+    private RecipeModelStatus IDENTITY_VALID_CHANGED = getIdentityModelStatusChangedValid();
+    private RecipeModelStatus COURSES_INVALID_UNCHANGED = getCoursesModelStatusUnchangedInvalid();
+    private RecipeModelStatus COURSES_VALID_UNCHANGED = getCoursesModelStatusUnchangedValid();
+    private RecipeModelStatus COURSES_INVALID_CHANGED = getCoursesModelStatusChangedInvalid();
+    private RecipeModelStatus COURSES_VALID_CHANGED = getCoursesModelStatusChangedValid();
+    private RecipeModelStatus DURATION_INVALID_UNCHANGED = getDurationModelStatusUnchangedInvalid();
+    private RecipeModelStatus DURATION_VALID_UNCHANGED = getDurationModelStatusUnchangedValid();
+    private RecipeModelStatus DURATION_INVALID_CHANGED = getDurationModelStatusChangedInvalid();
+    private RecipeModelStatus DURATION_VALID_CHANGED = getDurationModelStatusChangedValid();
+    private RecipeModelStatus PORTIONS_INVALID_UNCHANGED = getPortionsModelStatusUnchangedInvalid();
+    private RecipeModelStatus PORTIONS_VALID_UNCHANGED = getPortionsModelStatusUnchangedValid();
+    private RecipeModelStatus PORTIONS_INVALID_CHANGED = getPortionsModelStatusChangedInvalid();
+    private RecipeModelStatus PORTIONS_VALID_CHANGED = getPortionsModelStatusChangedValid();
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
     @Mock
     private RecipeValidation.RecipeEditor recipeEditorMock;
+    @Captor
+    ArgumentCaptor<RecipeValidationStatus> recipeStatusCaptor;
     // endregion helper fields ---------------------------------------------------------------------
 
     private RecipeValidator SUT;
 
     @Before
-    public void setup() throws Exception {
+    public void setup() {
         MockitoAnnotations.initMocks(this);
         SUT = new RecipeValidator();
         SUT.setRecipeEditor(recipeEditorMock);
     }
 
     @Test
-    public void setModelStatus_oneValidModelNoChanges_INVALID_MISSING_MODELS() throws Exception {
+    public void setModelStatus_oneValidModelNoChanges_INVALID_MISSING_MODELS() {
         // Arrange
-        ArgumentCaptor<RecipeValidationStatus> ac = ArgumentCaptor.forClass(
-                RecipeValidationStatus.class);
         // Act
-        SUT.submitModelStatus(IDENTITY_MODEL_UNCHANGED_VALID);
+        SUT.submitModelStatus(IDENTITY_VALID_UNCHANGED);
         // Assert
-        verify(recipeEditorMock).setValidationStatus(ac.capture());
-        RecipeValidationStatus validationStatus = ac.getValue();
+        verify(recipeEditorMock).setValidationStatus(recipeStatusCaptor.capture());
+        RecipeValidationStatus validationStatus = recipeStatusCaptor.getValue();
         assertEquals(INVALID_MISSING_MODELS, validationStatus);
     }
 
     @Test
-    public void setModelStatus_oneInvalidModelNoChanges_INVALID_MISSING_MODELS() throws Exception {
+    public void setModelStatus_oneInvalidModelNoChanges_INVALID_MISSING_MODELS() {
         // Arrange
-        ArgumentCaptor<RecipeValidationStatus> ac = ArgumentCaptor.forClass(
-                RecipeValidationStatus.class);
         // Act
-        SUT.submitModelStatus(IDENTITY_MODEL_UNCHANGED_INVALID);
+        SUT.submitModelStatus(IDENTITY_INVALID_UNCHANGED);
         // Assert
-        verify(recipeEditorMock).setValidationStatus(ac.capture());
-        RecipeValidationStatus validationStatus = ac.getValue();
+        verify(recipeEditorMock).setValidationStatus(recipeStatusCaptor.capture());
+        RecipeValidationStatus validationStatus = recipeStatusCaptor.getValue();
         assertEquals(INVALID_MISSING_MODELS, validationStatus);
     }
 
     @Test
-    public void setModelStatus_oneValidModelChanges_INVALID_MISSING_MODELS() throws Exception {
+    public void setModelStatus_oneValidModelChanges_INVALID_MISSING_MODELS() {
         // Arrange
-        ArgumentCaptor<RecipeValidationStatus> ac = ArgumentCaptor.forClass(
-                RecipeValidationStatus.class);
         // Act
-        SUT.submitModelStatus(IDENTITY_MODEL_CHANGED_VALID);
+        SUT.submitModelStatus(IDENTITY_VALID_CHANGED);
         // Assert
-        verify(recipeEditorMock).setValidationStatus(ac.capture());
-        RecipeValidationStatus validationStatus = ac.getValue();
+        verify(recipeEditorMock).setValidationStatus(recipeStatusCaptor.capture());
+        RecipeValidationStatus validationStatus = recipeStatusCaptor.getValue();
         assertEquals(INVALID_MISSING_MODELS, validationStatus);
     }
 
     @Test
-    public void setModelStatus_oneInvalidModelChanges_INVALID_MISSING_MODELS() throws Exception {
+    public void setModelStatus_oneInvalidModelChanges_INVALID_MISSING_MODELS() {
         // Arrange
-        ArgumentCaptor<RecipeValidationStatus> ac = ArgumentCaptor.forClass(
-                RecipeValidationStatus.class);
         // Act
-        SUT.submitModelStatus(IDENTITY_MODEL_CHANGED_INVALID);
+        SUT.submitModelStatus(IDENTITY_INVALID_CHANGED);
         // Assert
-        verify(recipeEditorMock).setValidationStatus(ac.capture());
-        RecipeValidationStatus validationStatus = ac.getValue();
+        verify(recipeEditorMock).setValidationStatus(recipeStatusCaptor.capture());
+        RecipeValidationStatus validationStatus = recipeStatusCaptor.getValue();
         assertEquals(INVALID_MISSING_MODELS, validationStatus);
     }
 
     @Test
-    public void setModelStatus_twoInvalidUnchangedModels_INVALID_NO_CHANGES() throws Exception {
+    public void setModelStatus_allInvalidUnchangedModels_INVALID_UNCHANGED() {
         // Arrange
-        ArgumentCaptor<RecipeValidationStatus> ac = ArgumentCaptor.forClass(
-                RecipeValidationStatus.class);
         // Act
-        SUT.submitModelStatus(IDENTITY_MODEL_UNCHANGED_INVALID);
-        SUT.submitModelStatus(COURSES_MODEL_UNCHANGED_INVALID);
+        SUT.submitModelStatus(IDENTITY_INVALID_UNCHANGED);
+        SUT.submitModelStatus(COURSES_INVALID_UNCHANGED);
+        SUT.submitModelStatus(DURATION_INVALID_UNCHANGED);
+        SUT.submitModelStatus(PORTIONS_INVALID_UNCHANGED);
         // Assert
-        verify(recipeEditorMock, times(2)).
-                setValidationStatus(ac.capture());
-        RecipeValidationStatus validationStatus = ac.getAllValues().get(1);
+        verify(recipeEditorMock, times((4))).setValidationStatus(recipeStatusCaptor.capture());
+        RecipeValidationStatus validationStatus = recipeStatusCaptor.getValue();
         assertEquals(INVALID_UNCHANGED, validationStatus);
     }
 
     @Test
-    public void setModelStatus_oneInvalidUnchangedOneInvalidChanged_INVALID_HAS_CHANGES() throws Exception {
+    public void setModelStatus_oneInvalidUnchangedRemainderInvalidChanged_INVALID_CHANGED() {
         // Arrange
-        ArgumentCaptor<RecipeValidationStatus> ac = ArgumentCaptor.forClass(
-                RecipeValidationStatus.class);
         // Act
-        SUT.submitModelStatus(IDENTITY_MODEL_UNCHANGED_INVALID);
-        SUT.submitModelStatus(COURSES_MODEL_CHANGED_INVALID);
+        SUT.submitModelStatus(IDENTITY_INVALID_UNCHANGED);
+        SUT.submitModelStatus(COURSES_INVALID_CHANGED);
+        SUT.submitModelStatus(DURATION_INVALID_CHANGED);
+        SUT.submitModelStatus(PORTIONS_INVALID_CHANGED);
         // Assert
-        verify(recipeEditorMock, times(2)).
-                setValidationStatus(ac.capture());
-        RecipeValidationStatus validationStatus = ac.getAllValues().get(1);
+        verify(recipeEditorMock, times((4))).setValidationStatus(recipeStatusCaptor.capture());
+        RecipeValidationStatus validationStatus = recipeStatusCaptor.getValue();
         assertEquals(INVALID_CHANGED, validationStatus);
     }
 
     @Test
-    public void setModelStatus_twoInvalidChanged_INVALID_HAS_CHANGES() throws Exception {
+    public void setModelStatus_allInvalidChanged_INVALID_CHANGED() {
         // Arrange
-        ArgumentCaptor<RecipeValidationStatus> ac = ArgumentCaptor.forClass(
-                RecipeValidationStatus.class);
         // Act
-        SUT.submitModelStatus(IDENTITY_MODEL_CHANGED_INVALID);
-        SUT.submitModelStatus(COURSES_MODEL_CHANGED_INVALID);
+        SUT.submitModelStatus(IDENTITY_INVALID_CHANGED);
+        SUT.submitModelStatus(COURSES_INVALID_CHANGED);
+        SUT.submitModelStatus(DURATION_INVALID_CHANGED);
+        SUT.submitModelStatus(PORTIONS_INVALID_CHANGED);
         // Assert
-        verify(recipeEditorMock, times(2)).
-                setValidationStatus(ac.capture());
-        RecipeValidationStatus validationStatus = ac.getAllValues().get(1);
+        verify(recipeEditorMock, times((4))).setValidationStatus(recipeStatusCaptor.capture());
+        RecipeValidationStatus validationStatus = recipeStatusCaptor.getValue();
         assertEquals(INVALID_CHANGED, validationStatus);
     }
 
     @Test
-    public void setModelStatus_oneValidChangedOneInvalidUnchanged_INVALID_HAS_CHANGES() throws Exception {
+    public void setModelStatus_oneValidChangedRemainderInvalidUnchanged_INVALID_CHANGED() {
         // Arrange
-        ArgumentCaptor<RecipeValidationStatus> ac = ArgumentCaptor.forClass(
-                RecipeValidationStatus.class);
         // Act
-        SUT.submitModelStatus(IDENTITY_MODEL_CHANGED_VALID);
-        SUT.submitModelStatus(COURSES_MODEL_UNCHANGED_INVALID);
+        SUT.submitModelStatus(IDENTITY_VALID_CHANGED);
+        SUT.submitModelStatus(COURSES_INVALID_UNCHANGED);
+        SUT.submitModelStatus(DURATION_INVALID_UNCHANGED);
+        SUT.submitModelStatus(PORTIONS_INVALID_UNCHANGED);
         // Assert
-        verify(recipeEditorMock, times(2)).
-                setValidationStatus(ac.capture());
-        RecipeValidationStatus validationStatus = ac.getAllValues().get(1);
+        verify(recipeEditorMock, times((4))).setValidationStatus(recipeStatusCaptor.capture());
+        RecipeValidationStatus validationStatus = recipeStatusCaptor.getValue();
         assertEquals(INVALID_CHANGED, validationStatus);
     }
 
     @Test
-    public void setModelStatus_oneInvalidChangedOneValidUnchanged_INVALID_HAS_CHANGES() throws Exception {
+    public void setModelStatus_oneInvalidChangedRemainderValidUnchanged_INVALID_CHANGED() {
         // Arrange
-        ArgumentCaptor<RecipeValidationStatus> ac = ArgumentCaptor.forClass(
-                RecipeValidationStatus.class);
         // Act
-        SUT.submitModelStatus(IDENTITY_MODEL_CHANGED_INVALID);
-        SUT.submitModelStatus(COURSES_MODEL_UNCHANGED_VALID);
+        SUT.submitModelStatus(IDENTITY_INVALID_CHANGED);
+        SUT.submitModelStatus(COURSES_VALID_UNCHANGED);
+        SUT.submitModelStatus(DURATION_VALID_UNCHANGED);
+        SUT.submitModelStatus(PORTIONS_VALID_UNCHANGED);
         // Assert
-        verify(recipeEditorMock, times(2)).
-                setValidationStatus(ac.capture());
-        RecipeValidationStatus validationStatus = ac.getAllValues().get(1);
+        verify(recipeEditorMock, times((4))).setValidationStatus(recipeStatusCaptor.capture());
+        RecipeValidationStatus validationStatus = recipeStatusCaptor.getValue();
         assertEquals(INVALID_CHANGED, validationStatus);
     }
 
     @Test
-    public void setModelStatus_twoValidUnchanged_VALID_NO_CHANGES() throws Exception {
+    public void setModelStatus_twoValidUnchanged_VALID_UNCHANGED() {
         // Arrange
-        ArgumentCaptor<RecipeValidationStatus> ac = ArgumentCaptor.forClass(
-                RecipeValidationStatus.class);
-        SUT.submitModelStatus(IDENTITY_MODEL_UNCHANGED_VALID);
-        SUT.submitModelStatus(COURSES_MODEL_UNCHANGED_VALID);
+        SUT.submitModelStatus(IDENTITY_VALID_UNCHANGED);
+        SUT.submitModelStatus(COURSES_VALID_UNCHANGED);
+        SUT.submitModelStatus(DURATION_VALID_UNCHANGED);
+        SUT.submitModelStatus(PORTIONS_VALID_UNCHANGED);
         // Assert
-        verify(recipeEditorMock, times(2)).
-                setValidationStatus(ac.capture());
-        RecipeValidationStatus validationStatus = ac.getAllValues().get(1);
+        verify(recipeEditorMock, times((4))).setValidationStatus(recipeStatusCaptor.capture());
+        RecipeValidationStatus validationStatus = recipeStatusCaptor.getValue();
         assertEquals(VALID_UNCHANGED, validationStatus);
     }
 
     @Test
-    public void setModelStatus_oneValidChangedOneValidUnchanged_VALID_HAS_CHANGES() throws Exception {
+    public void setModelStatus_oneValidChangedRemainderValidUnchanged_VALID_CHANGED() {
         // Arrange
-        ArgumentCaptor<RecipeValidationStatus> ac = ArgumentCaptor.forClass(
-                RecipeValidationStatus.class);
-        SUT.submitModelStatus(IDENTITY_MODEL_CHANGED_VALID);
-        SUT.submitModelStatus(COURSES_MODEL_UNCHANGED_VALID);
+        SUT.submitModelStatus(IDENTITY_VALID_CHANGED);
+        SUT.submitModelStatus(COURSES_VALID_UNCHANGED);
+        SUT.submitModelStatus(DURATION_VALID_UNCHANGED);
+        SUT.submitModelStatus(PORTIONS_VALID_UNCHANGED);
         // Assert
-        verify(recipeEditorMock, times(2)).
-                setValidationStatus(ac.capture());
-        RecipeValidationStatus validationStatus = ac.getAllValues().get(1);
+        verify(recipeEditorMock, times((4))).setValidationStatus(recipeStatusCaptor.capture());
+        RecipeValidationStatus validationStatus = recipeStatusCaptor.getValue();
         assertEquals(VALID_CHANGED, validationStatus);
     }
 
     @Test
-    public void setModelStatus_twoValidChanged_VALID_HAS_CHANGES() throws Exception {
+    public void setModelStatus_allValidChanged_VALID_CHANGED() {
         // Arrange
-        ArgumentCaptor<RecipeValidationStatus> ac = ArgumentCaptor.forClass(
-                RecipeValidationStatus.class);
-        SUT.submitModelStatus(IDENTITY_MODEL_CHANGED_VALID);
-        SUT.submitModelStatus(COURSES_MODEL_CHANGED_VALID);
+        SUT.submitModelStatus(IDENTITY_VALID_CHANGED);
+        SUT.submitModelStatus(COURSES_VALID_CHANGED);
+        SUT.submitModelStatus(DURATION_VALID_CHANGED);
+        SUT.submitModelStatus(PORTIONS_VALID_CHANGED);
         // Assert
-        verify(recipeEditorMock, times(2)).
-                setValidationStatus(ac.capture());
-        RecipeValidationStatus validationStatus = ac.getAllValues().get(1);
+        verify(recipeEditorMock, times((4))).setValidationStatus(recipeStatusCaptor.capture());
+        RecipeValidationStatus validationStatus = recipeStatusCaptor.getValue();
         assertEquals(VALID_CHANGED, validationStatus);
     }
 
     @Test
-    public void setModelStatus_twoSameValidChangedModels_INVALID_MISSING_MODELS() throws Exception {
+    public void setModelStatus_twoSameValidChangedModels_INVALID_MISSING_MODELS() {
         // Arrange
-        ArgumentCaptor<RecipeValidationStatus> ac = ArgumentCaptor.forClass(
-                RecipeValidationStatus.class);
         // Act
-        SUT.submitModelStatus(IDENTITY_MODEL_CHANGED_VALID);
-        SUT.submitModelStatus(IDENTITY_MODEL_CHANGED_VALID);
+        SUT.submitModelStatus(IDENTITY_VALID_CHANGED);
+        SUT.submitModelStatus(IDENTITY_VALID_CHANGED);
         // Assert
-        verify(recipeEditorMock, times(2)).
-                setValidationStatus(ac.capture());
-        RecipeValidationStatus validationStatus = ac.getAllValues().get(1);
+        verify(recipeEditorMock, times((2))).setValidationStatus(recipeStatusCaptor.capture());
+        RecipeValidationStatus validationStatus = recipeStatusCaptor.getValue();
         assertEquals(INVALID_MISSING_MODELS, validationStatus);
     }
 

@@ -15,7 +15,6 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     enum LastMeasurementUpdated {
         TOTAL_MEASUREMENT,
         ITEM_MEASUREMENT
-
     }
 
     protected MeasurementType measurementType;
@@ -396,10 +395,6 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
             return Double.parseDouble(decimalFormat.format(valueToRound));
         } else
             return (int) Math.floor(valueToRound * 1);
-    }
-
-    private double roundDecimalThousandths(double valueToRound) {
-        return 0;
     }
 
     @NonNull

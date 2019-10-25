@@ -188,6 +188,24 @@ public class ImperialSpoonTest {
         assertEquals(expectedQuantityPerServing, SUT.getItemBaseUnits(), DELTA);
     }
 
+    @Test
+    public void name() {
+        // Arrange
+        double numberOfTeaspoons = 2;
+        int numberOfPortions = 9;
+
+        double expectedTotalQuantity = numberOfTeaspoons * TEASPOON_VOLUME * MAX_CONVERSION_FACTOR;
+        double expectedQuantityPerServing = expectedTotalQuantity / numberOfPortions;
+        // Act
+        assertTrue(SUT.totalMeasurementOneIsSet(numberOfTeaspoons));
+        assertTrue(SUT.numberOfItemsIsSet(numberOfPortions));
+        assertTrue(SUT.conversionFactorIsSet(MAX_CONVERSION_FACTOR));
+        // Assert
+        assertEquals(expectedTotalQuantity, SUT.getTotalBaseUnits(), DELTA);
+        assertEquals(expectedQuantityPerServing, SUT.getItemBaseUnits(), DELTA);
+        System.out.println(SUT);
+    }
+
     // region helper methods -----------------------------------------------------------------------
     // endregion helper methods --------------------------------------------------------------------
 

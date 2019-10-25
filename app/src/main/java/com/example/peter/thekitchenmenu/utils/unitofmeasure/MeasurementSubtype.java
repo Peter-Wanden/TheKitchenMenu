@@ -77,6 +77,7 @@ public enum MeasurementSubtype {
         public int asInt() {
             return 5;
         }
+
     };
 
     @SuppressLint("UseSparseArrays")

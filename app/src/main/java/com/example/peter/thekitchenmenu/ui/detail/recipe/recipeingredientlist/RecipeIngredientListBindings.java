@@ -9,7 +9,7 @@ import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientQuantityEnti
 import java.util.List;
 
 public class RecipeIngredientListBindings {
-    @BindingAdapter("app:recipeIngredients")
+    @BindingAdapter("recipeIngredients")
     public static void setRecipeIngredients(ListView listView,
                                             List<RecipeIngredientQuantityEntity> recipeIngredients) {
 

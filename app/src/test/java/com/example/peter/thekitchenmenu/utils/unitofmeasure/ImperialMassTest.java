@@ -33,8 +33,8 @@ public class ImperialMassTest {
         // Act
         assertTrue(SUT.totalBaseUnitsAreSet(IMPERIAL_MASS_SMALLEST_UNIT));
         // Assert
-        assertEquals(0.1, SUT.getTotalMeasurementOne(), DELTA);
-        assertEquals(0.1, SUT.getItemMeasurementOne(), DELTA);
+        assertEquals((0.1), SUT.getTotalMeasurementOne(), DELTA);
+        assertEquals((0.1), SUT.getItemMeasurementOne(), DELTA);
         assertEquals(IMPERIAL_MASS_SMALLEST_UNIT, SUT.getTotalBaseUnits(), DELTA);
     }
 
@@ -44,7 +44,7 @@ public class ImperialMassTest {
         // Act
         assertFalse(SUT.totalBaseUnitsAreSet(IMPERIAL_MASS_UNIT_ONE_DECIMAL - DELTA));
         // Assert
-        assertEquals(0, SUT.getTotalBaseUnits(), DELTA);
+        assertEquals((0), SUT.getTotalBaseUnits(), DELTA);
     }
 
     @Test
@@ -70,7 +70,7 @@ public class ImperialMassTest {
         // Act
         assertFalse(SUT.totalBaseUnitsAreSet(IMPERIAL_MASS_MAX_MEASUREMENT + 1));
         // Assert
-        assertEquals(0, SUT.getTotalBaseUnits(), DELTA);
+        assertEquals((0), SUT.getTotalBaseUnits(), DELTA);
     }
 
     @Test
@@ -81,21 +81,18 @@ public class ImperialMassTest {
         assertTrue(SUT.numberOfItemsIsSet(2));
         assertTrue(SUT.totalBaseUnitsAreSet(slightlySmallerThanTwoSmallestItems));
         // Assert
-        assertEquals(1, SUT.getNumberOfItems());
+        assertEquals((1), SUT.getNumberOfItems());
     }
 
     @Test
-    public void testBaseSiAtMinimumItemSize() { // CONDITION: BASE SI SAME AS SMALLEST ITEM
-
-        assertThat(SUT.numberOfItemsIsSet(2), is(true));
-
-        assertThat(SUT.totalBaseUnitsAreSet(5.7), is(true));
-
-        assertThat(SUT.getTotalMeasurementOne(), is(.2));
-        assertThat(SUT.getTotalMeasurementTwo(), is(0));
-        assertThat(SUT.getItemMeasurementOne(), is(.1));
-        assertThat(SUT.getItemMeasurementTwo(), is(0));
-        assertThat(SUT.getTotalBaseUnits(), is(5.7));
+    public void totalBaseUnitsAreSetNumberOfItemsIsSet_minimumValues_itemMeasurementOneMinimum() {
+        // Arrange
+        assertTrue(SUT.numberOfItemsIsSet(2));
+        // Act
+        assertTrue(SUT.totalBaseUnitsAreSet(IMPERIAL_MASS_SMALLEST_UNIT * 2));
+        // Assert
+        assertEquals((0.2), SUT.getTotalMeasurementOne(), DELTA);
+        assertEquals((0.1), SUT.getItemMeasurementOne(), DELTA);
     }
 
     @Test
@@ -113,8 +110,7 @@ public class ImperialMassTest {
     }
 
     @Test
-    public void testBaseSiRetrieveFromPackAndItem() {// CONDITION: BASE SI SET, CHECK PACK AND ITEM UPDATED
-
+    public void testBaseRetrieveFromPackAndItem() {// CONDITION: BASE SI SET, CHECK PACK AND ITEM UPDATED
         // Set base SI
         assertThat(SUT.totalBaseUnitsAreSet(5500.), is(true));
 
