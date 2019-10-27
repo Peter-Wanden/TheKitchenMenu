@@ -34,71 +34,61 @@ ext {
 
     // Firebase
     firebaseAuth = '19.1.0'
-    firebaseConfigVersion = '19.0.3'
-    firebaseCore = '17.2.0'
+    firebaseConfig = '19.0.3'
+    firebaseCore = '17.2.1'
     firebaseDatabase = '19.2.0'
     firebaseStorage = '19.1.0'
 
     firebaseUiAuth = '4.1.0'
-    firebaseVersion = '16.0.5'
 
     // Image manipulation
-    picassoVersion = '2.71828'
-    glideVersion = '4.10.0'
+    picasso = '2.71828'
+    glide = '4.10.0'
+    imageCropper = '2.8.0'
 
-    playServicesAddsIdentifier = '17.0.0'
-    playServicesAuth = '17.0.0'
+    // Play services
+    playServices = '17.0.0'
     playServicesAuthApiPhone = '17.3.0'
-    playServicesAuthBase = '17.0.0'
-    playServicesBase = '17.1.0'
     playServicesBasement = '17.1.1'
-    playServicesFlags = '17.0.0'
-    playServicesPhenotype = '17.0.0'
-    playServicesStats = '17.0.0'
-    playServicesTasks = '16.0.1'
 
     // Support
-    androidxSupportVersion = '1.0.0'
+    androidxSupport = '1.0.0'
     androidxAppcompat = '1.1.0'
     androidxRecyclerView = '1.1.0-rc01'
-    androidMaterial = '1.1.0-beta01'
+    androidMaterial = '1.2.0-alpha01'
 
     // Constraint
-    androidxConstraintLayoutVersion = '1.1.3'
+    androidxConstraintLayout = '1.1.3'
 
     // Architecture Components
-    androidxArchComponentsVersion = '2.0.0-rc01'
-    androidxLifecycleExtensions = '2.2.0-beta01'
-    androidxLifecycleRuntime = '2.1.0-alpha04'
-    androidxLifscycleCommon = '2.0.0-rc01'
+    androidxLifecycle = '2.2.0-rc01'
 
     // Paging runtime
-    androidxPagingRuntimeVersion = '2.1.0'
+    androidxPagingRuntime = '2.1.0'
 
     // Room
-    androidxRoomVersion = '2.2.0'
-    androidxRoomRuntime = '2.1.0-alpha03'
+    androidxRoom = '2.2.1'
 
     // Testing
-    junitVersion = '4.13-beta-2'
+    junit = '4.13-beta-3'
     androidxTestCore = "1.1.1-alpha02"
-    androidxCoreTesting ='2.0.0-rc01'
-    androidxRoomTestingVersion = '2.0.0'
-    androidxTestRunner = '1.1.0'
-    androidxTestRules = '1.1.0'
+    androidxArchCoreTesting ='2.1.0'
+    androidxRoomTesting = '2.2.1'
+    androidxTestRunner = '1.2.0'
+    androidxTestRules = '1.2.0'
     androidxTestExtJunit = '1.1.0'
 
-    androidxEspresso = '3.1.0'
-    espressoConcurrent = '3.1.0'
-    espressoIdlingResource = '3.2.0'
+    androidxEspresso = '3.2.0'
 
-    mockitoVersion = '2.0.2-beta'
-    mockitoCoreVersion = '1.10.19'
-    powerMockito = '1.6.6'
+    googleDexmaker = '1.2'
+    googleFindBugs = '3.0.2'
+    mockito = '2.0.2-beta'
+    mockitoCore = '1.10.19'
 
     annotations = '1.1.0'
     coreCore = '1.2.0-alpha03'
 
     hamcrest = '1.3'
     var = '1.8'
+    gson = '2.8.6'
 }

@@ -19,8 +19,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class ProductCatalogFavoritesFragment extends Fragment {
 
-    private static final String TAG = "tkm-CatalogFavFrag";
-
     private ProductCatalogViewModel viewModel;
     private ProductCatalogFavoritesRecyclerAdapter adapter;
 

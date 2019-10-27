@@ -11,8 +11,6 @@ import androidx.databinding.BindingAdapter;
 
 public class UnitOfMeasureLabelBindingAdapter {
 
-    private static final String TAG = "tkm-UomLabelBinding";
-
     @BindingAdapter(value = {"setLabelForSubtypeSelected"})
     public static void setLabelForSubtypeSelected(TextView textView, MeasurementSubtype subtype) {
         setUpViewLabels(textView, subtype);
@@ -26,7 +24,7 @@ public class UnitOfMeasureLabelBindingAdapter {
             if (viewId == R.id.pack_size_label)
                 setPackSizeLabel(textView, unitOfMeasure);
 
-            if (viewId == R.id.ingredient_size_label)
+            if (viewId == R.id.recipe_ingredient_size_label)
                 setIngredientSizeLabel(textView, unitOfMeasure);
 
             if (viewId == R.id.product_size_label)
@@ -36,8 +34,8 @@ public class UnitOfMeasureLabelBindingAdapter {
                     viewId == R.id.product_measurement_label_one ||
                     viewId == R.id.pack_measurement_label_two ||
                     viewId == R.id.product_measurement_label_two ||
-                    viewId == R.id.ingredient_measurement_label_one ||
-                    viewId == R.id.ingredient_measurement_label_two)
+                    viewId == R.id.recipe_ingredient_measurement_label_one ||
+                    viewId == R.id.recipe_ingredient_measurement_label_two)
                 setMeasurementUnitLabels(textView, unitOfMeasure);
         }
     }
@@ -67,12 +65,12 @@ public class UnitOfMeasureLabelBindingAdapter {
         int viewId = textView.getId();
         if (viewId == R.id.pack_measurement_label_one ||
                 viewId == R.id.product_measurement_label_one ||
-                viewId == R.id.ingredient_measurement_label_one)
+                viewId == R.id.recipe_ingredient_measurement_label_one)
             textView.setText(unitOfMeasure.getUnitOneLabelResourceId());
 
         else if (viewId == R.id.pack_measurement_label_two ||
                 viewId == R.id.product_measurement_label_two ||
-                viewId == R.id.ingredient_measurement_label_two)
+                viewId == R.id.recipe_ingredient_measurement_label_two)
             textView.setText(unitOfMeasure.getUnitTwoLabelResourceId());
     }
 }

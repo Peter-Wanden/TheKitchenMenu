@@ -20,8 +20,6 @@ public class ProductCatalogAllRecyclerAdapter
         extends RecyclerView.Adapter<ProductCatalogAllRecyclerAdapter.ViewHolder>
         implements Filterable {
 
-    private static final String TAG = "tkm-CatalogAdapter";
-
     private final ProductCatalogViewModel viewModel;
     private List<ProductModel> productModelList;
     private List<ProductModel> productModelListFull;

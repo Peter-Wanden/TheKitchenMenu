@@ -97,10 +97,10 @@ public class ProductViewerFragment extends Fragment {
 
     private void setupObservers() {
         productViewerViewModel.getHasOptionsMenuEvent().observe(
-                this, ProductViewerFragment.this::setOptionsMenu);
+                getViewLifecycleOwner(), ProductViewerFragment.this::setOptionsMenu);
 
         productViewerViewModel.getResetOptionsMenu().observe(
-                this, aVoid -> requireActivity().invalidateOptionsMenu());
+                getViewLifecycleOwner(), aVoid -> requireActivity().invalidateOptionsMenu());
     }
 
     private void setOptionsMenu(boolean hasOptionsMenu) {

@@ -64,52 +64,52 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "androidx.appcompat:appcompat:$androidxAppcompat"
     implementation "androidx.recyclerview:recyclerview:$androidxRecyclerView"
-    implementation "androidx.cardview:cardview:$androidxSupportVersion"
-    implementation "androidx.exifinterface:exifinterface:$androidxSupportVersion"
-    implementation "androidx.legacy:legacy-support-v4:$androidxSupportVersion"
-    implementation "androidx.browser:browser:$androidxSupportVersion"
-    implementation "com.google.android.material:material:1.2.0-alpha01"
+    implementation "androidx.cardview:cardview:$androidxSupport"
+    implementation "androidx.exifinterface:exifinterface:$androidxSupport"
+    implementation "androidx.legacy:legacy-support-v4:$androidxSupport"
+    implementation "androidx.browser:browser:$androidxSupport"
+    implementation "com.google.android.material:material:$androidMaterial"
 
     // Architecture components
-    implementation "androidx.lifecycle:lifecycle-extensions:2.2.0-rc01"
-    implementation "androidx.lifecycle:lifecycle-runtime:2.2.0-rc01"
-    implementation "androidx.lifecycle:lifecycle-common-java8:2.2.0-rc01"
+    implementation "androidx.lifecycle:lifecycle-extensions:$androidxLifecycle"
+    implementation "androidx.lifecycle:lifecycle-runtime:$androidxLifecycle"
+    implementation "androidx.lifecycle:lifecycle-common-java8:$androidxLifecycle"
 
     // Room
-    implementation "androidx.room:room-runtime:2.2.1"
-    annotationProcessor "androidx.room:room-compiler:2.2.1"
+    implementation "androidx.room:room-runtime:$androidxRoom"
+    annotationProcessor "androidx.room:room-compiler:$androidxRoom"
 
     // Paging
-    implementation "androidx.paging:paging-runtime:$androidxPagingRuntimeVersion"
+    implementation "androidx.paging:paging-runtime:$androidxPagingRuntime"
 
     // Constraint layout
-    implementation "androidx.constraintlayout:constraintlayout:$androidxConstraintLayoutVersion"
+    implementation "androidx.constraintlayout:constraintlayout:$androidxConstraintLayout"
 
     // Gson
-    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation "com.google.code.gson:gson:$gson"
 
     // Image processing TODO - Replace with Glide
-    implementation "com.squareup.picasso:picasso:$picassoVersion"
-    implementation "com.github.bumptech.glide:glide:$glideVersion"
-    annotationProcessor "com.github.bumptech.glide:compiler:$glideVersion"
-    implementation "com.theartofdev.edmodo:android-image-cropper:2.8.0"
+    implementation "com.squareup.picasso:picasso:$picasso"
+    implementation "com.github.bumptech.glide:glide:$glide"
+    annotationProcessor "com.github.bumptech.glide:compiler:$glide"
+    implementation "com.theartofdev.edmodo:android-image-cropper:$imageCropper"
 
     // Play services
-    implementation "com.google.android.gms:play-services-ads-identifier:$playServicesAddsIdentifier"
-    implementation "com.google.android.gms:play-services-auth:$playServicesAuth"
+    implementation "com.google.android.gms:play-services-ads-identifier:$playServices"
+    implementation "com.google.android.gms:play-services-auth:$playServices"
+    implementation "com.google.android.gms:play-services-auth-base:$playServices"
+    implementation "com.google.android.gms:play-services-base:$playServices"
+    implementation "com.google.android.gms:play-services-flags:$playServices"
+    implementation "com.google.android.gms:play-services-phenotype:$playServices"
+    implementation "com.google.android.gms:play-services-stats:$playServices"
+    implementation "com.google.android.gms:play-services-tasks:$playServices"
     implementation "com.google.android.gms:play-services-auth-api-phone:$playServicesAuthApiPhone"
-    implementation "com.google.android.gms:play-services-auth-base:$playServicesAuthBase"
-    implementation "com.google.android.gms:play-services-base:$playServicesBase"
     implementation "com.google.android.gms:play-services-basement:$playServicesBasement"
-    implementation "com.google.android.gms:play-services-flags:$playServicesFlags"
-    implementation "com.google.android.gms:play-services-phenotype:$playServicesPhenotype"
-    implementation "com.google.android.gms:play-services-stats:$playServicesStats"
-    implementation "com.google.android.gms:play-services-tasks:17.0.0"
 
     // Firebase
     implementation "com.google.firebase:firebase-auth:$firebaseAuth"
-    implementation "com.google.firebase:firebase-config:$firebaseConfigVersion"
-    implementation "com.google.firebase:firebase-core:17.2.1"
+    implementation "com.google.firebase:firebase-config:$firebaseConfig"
+    implementation "com.google.firebase:firebase-core:$firebaseCore"
     implementation "com.google.firebase:firebase-database:$firebaseDatabase"
     implementation "com.google.firebase:firebase-storage:$firebaseStorage"
 
@@ -120,41 +120,40 @@ dependencies {
     implementation "com.firebaseui:firebase-ui-database:$firebaseUiAuth"
 
     //////// TESTING ////////
-    testImplementation "junit:junit:4.13-beta-3"
-    testImplementation "org.mockito:mockito-all:$mockitoVersion"
+    testImplementation "junit:junit:$junit"
+    testImplementation "org.mockito:mockito-all:$mockito"
     testImplementation "org.hamcrest:hamcrest-all:$hamcrest"
 
-    testImplementation "androidx.arch.core:core-testing:2.1.0"
+    testImplementation "androidx.arch.core:core-testing:$androidxArchCoreTesting"
 
     // AndroidJUnitRunner and JUnit Rules
-    androidTestImplementation "androidx.test:runner:1.2.0"
-    androidTestImplementation "androidx.test:rules:1.2.0"
+    androidTestImplementation "androidx.test:runner:$androidxTestRunner"
+    androidTestImplementation "androidx.test:rules:$androidxTestRules"
 
-    androidTestImplementation "androidx.room:room-testing:2.2.1"
+    androidTestImplementation "androidx.room:room-testing:$androidxRoomTesting"
 
     // Dependencies for Android unit tests
-    androidTestImplementation "junit:junit:4.13-beta-3"
-    androidTestImplementation "org.mockito:mockito-core:$mockitoCoreVersion"
-    androidTestImplementation 'com.google.dexmaker:dexmaker:1.2'
-    androidTestImplementation 'com.google.dexmaker:dexmaker-mockito:1.2'
+    androidTestImplementation "junit:junit:$junit"
+    androidTestImplementation "org.mockito:mockito-core:$mockitoCore"
+    androidTestImplementation "com.google.dexmaker:dexmaker:$googleDexmaker"
 
     // Espresso UI Testing dependencies.
-    androidTestImplementation "androidx.test.espresso:espresso-core:3.2.0"
-    androidTestImplementation "androidx.test.espresso:espresso-contrib:3.2.0"
-    androidTestImplementation "androidx.test.espresso:espresso-intents:3.2.0"
-    androidTestImplementation "androidx.test.espresso.idling:idling-concurrent:3.2.0"
-    implementation "androidx.test.espresso:espresso-idling-resource:$espressoIdlingResource"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspresso"
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:$androidxEspresso"
+    androidTestImplementation "androidx.test.espresso:espresso-intents:$androidxEspresso"
+    androidTestImplementation "androidx.test.espresso.idling:idling-concurrent:$androidxEspresso"
+    implementation "androidx.test.espresso:espresso-idling-resource:$androidxEspresso"
 
     /*
     Resolves dependency versions across test and production APKs, specifically, transitive
     dependencies. This is required since Espresso internally has a dependency on support-annotations.
     */
     androidTestImplementation "androidx.annotation:annotation:$annotations"
-    androidTestImplementation "androidx.legacy:legacy-support-v4:$androidxSupportVersion"
+    androidTestImplementation "androidx.legacy:legacy-support-v4:$androidxSupport"
     androidTestImplementation "androidx.recyclerview:recyclerview:$androidxRecyclerView"
     androidTestImplementation "androidx.appcompat:appcompat:$androidxAppcompat"
-    androidTestImplementation "com.google.android.material:material:1.2.0-alpha01"
-    implementation "com.google.code.findbugs:jsr305:3.0.2"
+    androidTestImplementation "com.google.android.material:material:$androidMaterial"
+    implementation "com.google.code.findbugs:jsr305:$googleFindBugs"
 }
 
 // Reads the configuration information in app/google-services.json

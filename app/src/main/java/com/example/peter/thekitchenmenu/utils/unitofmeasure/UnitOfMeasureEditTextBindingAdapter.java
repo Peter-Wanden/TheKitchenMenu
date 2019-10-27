@@ -1,6 +1,7 @@
 package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
 import android.text.InputFilter;
+import android.util.Log;
 import android.widget.EditText;
 
 import com.example.peter.thekitchenmenu.R;
@@ -34,8 +35,8 @@ public class UnitOfMeasureEditTextBindingAdapter {
                 viewId == R.id.product_editable_measurement_one ||
                 viewId == R.id.pack_editable_measurement_two && units > 1 ||
                 viewId == R.id.product_editable_measurement_two && units > 1 ||
-                viewId == R.id.recipe_ingredient_editable_measurement_one ||
-                viewId == R.id.recipe_ingredient_editable_measurement_two && units > 1)
+                viewId == R.id.recipe_ingredient_editable_measurement_one && units > 1 ||
+                viewId == R.id.recipe_ingredient_editable_measurement_two)
 
             setInputFilters(viewId, editText, unitOfMeasure);
     }
@@ -66,15 +67,17 @@ public class UnitOfMeasureEditTextBindingAdapter {
     public static void setUpEditTextForConversionFactor(EditText editText,
                                                         MeasurementSubtype subtype) {
         UnitOfMeasure unitOfMeasure = subtype.getMeasurementClass();
-        int viewId = editText.getId();
-        int digitsBeforeDecimal = (int) unitOfMeasure.getMeasurementUnitsDigitWidths()[2].first;
-        int digitsAfterDecimal = (int) unitOfMeasure.getMeasurementUnitsDigitWidths()[2].second;
+        if (unitOfMeasure.isConversionFactorEnabled()) {
+            int viewId = editText.getId();
+            int digitsBeforeDecimal = (int) unitOfMeasure.getMeasurementUnitsDigitWidths()[2].first;
+            int digitsAfterDecimal = (int) unitOfMeasure.getMeasurementUnitsDigitWidths()[2].second;
 
-        if (viewId == R.id.recipe_ingredient_editable_conversion_factor) {
+            if (viewId == R.id.recipe_ingredient_editable_conversion_factor) {
 
-            editText.setInputType(TYPE_CLASS_NUMBER | TYPE_NUMBER_FLAG_DECIMAL);
-            editText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(
-                    digitsBeforeDecimal, digitsAfterDecimal)});
+                editText.setInputType(TYPE_CLASS_NUMBER | TYPE_NUMBER_FLAG_DECIMAL);
+                editText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(
+                        digitsBeforeDecimal, digitsAfterDecimal)});
+            }
         }
     }
 }

@@ -57,7 +57,7 @@ public class RecipeIngredientMeasurementFragment extends Fragment {
     }
 
     private void setupUnitOfMeasureSpinner() {
-        binding.spinnerUnitOfMeasure.setAdapter(getUnitOfMeasureSpinnerAdapter());
+        binding.recipeIngredientUnitOfMeasureSpinner.setAdapter(getUnitOfMeasureSpinnerAdapter());
     }
 
     private SpinnerAdapter getUnitOfMeasureSpinnerAdapter() {

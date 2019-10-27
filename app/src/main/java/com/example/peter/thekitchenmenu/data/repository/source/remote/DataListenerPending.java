@@ -13,8 +13,6 @@ import com.google.firebase.database.ValueEventListener;
  */
 public class DataListenerPending {
 
-    private static final String TAG = "DataListenerPending";
-
     private final Handler handler = new Handler();
     private final Query query;
     private final ValueEventListener listener;

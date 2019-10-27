@@ -20,8 +20,6 @@ import com.example.peter.thekitchenmenu.utils.TextValidationHandler;
 
 public class ViewModelFactoryProduct extends ViewModelProvider.NewInstanceFactory {
 
-    private static final String TAG = "tkm-VM_FactoryProduct";
-
     @SuppressLint("StaticFieldLeak")
     private static volatile ViewModelFactoryProduct INSTANCE;
     private final Application application;

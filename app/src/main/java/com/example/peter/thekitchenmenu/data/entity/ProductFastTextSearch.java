@@ -2,7 +2,6 @@ package com.example.peter.thekitchenmenu.data.entity;
 
 import androidx.room.Entity;
 import androidx.room.Fts4;
-import androidx.room.FtsOptions;
 
 import static com.example.peter.thekitchenmenu.data.entity.ProductFastTextSearch.TABLE_FTS_PRODUCT;
 

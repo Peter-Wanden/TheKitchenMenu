@@ -24,7 +24,7 @@ public class RecipeIngredientMeasurementViewModel
         extends AndroidViewModel
         implements PortionUseCaseViewModel {
 
-    private static final String TAG = "tkm-IngredientQuantityVM";
+    private static final String TAG = "tkm-RecipeIngredientMea";
 
     private Resources resources;
 
@@ -87,7 +87,6 @@ public class RecipeIngredientMeasurementViewModel
                 conversionFactorUpdated();
             }
         });
-
         setViewModel();
     }
 
@@ -221,6 +220,7 @@ public class RecipeIngredientMeasurementViewModel
 
     @Override
     public void modelOut(MeasurementResult result) {
+        Log.d(TAG, "modelOut: " + result);
         measurementModel = result.getModel();
         processMeasurementModel();
         processResultStatus(result.getResult());

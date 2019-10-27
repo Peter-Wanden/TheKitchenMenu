@@ -32,8 +32,8 @@
             android:layout_height="0dp"
             android:src="@drawable/rectangle"
             app:layout_constraintStart_toStartOf="@id/unit_of_measure_label"
-            app:layout_constraintEnd_toEndOf="@id/spinner_unit_of_measure"
-            app:layout_constraintTop_toTopOf="@id/spinner_unit_of_measure"
+            app:layout_constraintEnd_toEndOf="@id/unit_of_measure_spinner"
+            app:layout_constraintTop_toTopOf="@id/unit_of_measure_spinner"
             app:layout_constraintBottom_toBottomOf="@id/product_editable_measurement_one"
             />
 
@@ -52,12 +52,12 @@
             android:layout_marginStart="8dp"
             android:padding="8dp"
             android:text="@string/unit_of_measure_label"
-            app:layout_constraintBaseline_toBaselineOf="@id/spinner_unit_of_measure"
+            app:layout_constraintBaseline_toBaselineOf="@id/unit_of_measure_spinner"
             app:layout_constraintStart_toStartOf="parent"
             />
 
         <androidx.appcompat.widget.AppCompatSpinner
-            android:id="@+id/spinner_unit_of_measure"
+            android:id="@+id/unit_of_measure_spinner"
             android:layout_width="0dp"
             android:layout_height="@dimen/standard_input_item_height"
             android:layout_marginTop="4dp"
@@ -89,7 +89,7 @@
             android:onClick="@{() -> viewModel.decrementNumberOfProducts()}"
             android:text="@string/minus_sign"
             app:layout_constraintStart_toStartOf="@id/vertical_guideline"
-            app:layout_constraintTop_toBottomOf="@id/spinner_unit_of_measure"
+            app:layout_constraintTop_toBottomOf="@id/unit_of_measure_spinner"
             />
 
         <androidx.appcompat.widget.AppCompatTextView

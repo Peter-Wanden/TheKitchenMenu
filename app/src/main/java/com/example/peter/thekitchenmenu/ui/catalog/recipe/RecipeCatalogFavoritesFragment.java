@@ -14,15 +14,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.databinding.ProductCatalogFavoritesFragmentBinding;
 import com.example.peter.thekitchenmenu.databinding.RecipeCatalogFavoritesFragmentBinding;
-import com.example.peter.thekitchenmenu.ui.catalog.product.ProductCatalogFavoritesRecyclerAdapter;
-import com.example.peter.thekitchenmenu.ui.catalog.product.ProductCatalogActivity;
-import com.example.peter.thekitchenmenu.ui.catalog.product.ProductCatalogViewModel;
 
 public class RecipeCatalogFavoritesFragment extends Fragment {
-
-    private static final String TAG = "tkm-CatalogFavFrag";
 
     private RecipeCatalogViewModel viewModel;
     private RecipeCatalogFavoritesRecyclerAdapter adapter;

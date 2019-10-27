@@ -68,7 +68,7 @@ public class ProductMeasurementEditorFragment extends Fragment {
     }
 
     private void setupUnitOfMeasureSpinner() {
-        binding.spinnerUnitOfMeasure.setAdapter(getUnitOfMeasureSpinnerAdapter());
+        binding.unitOfMeasureSpinner.setAdapter(getUnitOfMeasureSpinnerAdapter());
     }
 
     private SpinnerAdapter getUnitOfMeasureSpinnerAdapter() {
