@@ -66,6 +66,7 @@ public class RecipePortionsEntity implements TkmEntity {
                 recipeId.equals(that.recipeId);
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "RecipePortionsEntity{" +

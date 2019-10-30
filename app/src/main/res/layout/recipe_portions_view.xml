@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="nameAndPortions"
             type="com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist.RecipeNameAndPortionsViewModel" />
@@ -14,15 +14,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!--        <ImageView-->
-        <!--            android:layout_width="0dp"-->
-        <!--            android:layout_height="0dp"-->
-        <!--            android:src="@drawable/rectangle"-->
-        <!--            app:layout_constraintStart_toStartOf="@id/sittings_label"-->
-        <!--            app:layout_constraintEnd_toEndOf="@id/portions_label"-->
-        <!--            app:layout_constraintTop_toTopOf="parent"-->
-        <!--            app:layout_constraintBottom_toBottomOf="@id/sittings"-->
-        <!--            />-->
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@drawable/rectangle_radius_4dp"
+            app:layout_constraintBottom_toBottomOf="@id/editable_sittings"
+            app:layout_constraintEnd_toEndOf="@id/portions_label"
+            app:layout_constraintStart_toStartOf="@id/servings_label"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/servings_label"
@@ -41,8 +40,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="4dp"
-            android:textSize="18sp"
             android:text="@{nameAndPortions.servingsObservable}"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="@id/servings_label"
             app:layout_constraintStart_toStartOf="@id/servings_label"
             app:layout_constraintTop_toBottomOf="@id/servings_label"
@@ -64,8 +63,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="4dp"
-            android:textSize="18sp"
             android:text="@{nameAndPortions.sittingsObservable}"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="@id/sittings_label"
             app:layout_constraintStart_toStartOf="@id/sittings_label"
             app:layout_constraintTop_toBottomOf="@id/sittings_label"
@@ -87,8 +86,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="4dp"
-            android:textSize="18sp"
             android:text="@{nameAndPortions.portionsObservable}"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="@id/portions_label"
             app:layout_constraintStart_toStartOf="@id/portions_label"
             app:layout_constraintTop_toBottomOf="@id/portions_label"

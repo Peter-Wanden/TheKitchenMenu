@@ -24,11 +24,11 @@
         android:id="@+id/recipe_identity_editor_identity_box"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:src="@drawable/rectangle_radius_4dp"
         app:layout_constraintBottom_toBottomOf="@id/editable_recipe_description"
         app:layout_constraintEnd_toEndOf="@id/editable_recipe_title"
         app:layout_constraintStart_toStartOf="@id/editable_recipe_title"
         app:layout_constraintTop_toTopOf="@id/recipe_editor_title_label"
-        android:src="@drawable/rectangle"
         />
 
     <TextView

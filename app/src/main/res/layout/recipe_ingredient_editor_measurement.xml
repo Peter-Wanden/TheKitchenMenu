@@ -7,7 +7,6 @@
     <data>
         <import type="android.view.View"/>
         <import type="com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtypeConverter" />
-        <import type="com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementNumberFormatter"/>
         <variable
             name="viewModel"
             type="com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor.RecipeIngredientMeasurementViewModel" />
@@ -30,12 +29,12 @@
         <ImageView
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:src="@drawable/rectangle"
+            android:src="@drawable/rectangle_radius_4dp"
             app:layout_constraintStart_toStartOf="@id/recipe_ingredient_unit_of_measure_label"
             app:layout_constraintEnd_toEndOf="@id/recipe_ingredient_unit_of_measure_spinner"
             app:layout_constraintTop_toTopOf="@id/recipe_ingredient_measurement_editor_label"
             app:layout_constraintBottom_toBottomOf="@id/recipe_ingredient_editable_conversion_factor"
-            />
+            android:contentDescription="TODO" />
 
         <TextView
             android:id="@+id/recipe_ingredient_measurement_editor_label"
@@ -79,8 +78,6 @@
             app:layout_constraintTop_toBottomOf="@id/recipe_ingredient_measurement_editor_label"
             />
 
-<!--        android:layout_height="@dimen/standard_input_item_height"-->
-
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/recipe_ingredient_size_label"
             android:layout_width="wrap_content"
@@ -103,7 +100,7 @@
             android:layout_marginBottom="8dp"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
-            android:textAlignment="textEnd"
+            android:textAlignment="center"
             android:text="@={viewModel.measurementTwo}"
             app:setUpEditTextForSubtypeSelected="@{viewModel.subtype}"
             app:editTextErrorSetter="@{viewModel.measurementTwoErrorMessage}"
@@ -133,15 +130,14 @@
             android:minEms="3"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
-            android:textAlignment="textEnd"
             android:text="@={viewModel.measurementOne}"
-            app:setUpEditTextForSubtypeSelected="@{viewModel.subtype}"
+            android:textAlignment="center"
             app:editTextErrorSetter="@{viewModel.measurementOneErrorMessage}"
             app:fieldVisibilityNumberOfMeasurementUnits="@{viewModel.numberOfMeasurementUnits}"
-            app:layout_constraintStart_toEndOf="@id/recipe_ingredient_measurement_label_two"
             app:layout_constraintBaseline_toBaselineOf="@id/recipe_ingredient_editable_measurement_two"
-            tools:text="16"
-            />
+            app:layout_constraintStart_toEndOf="@id/recipe_ingredient_measurement_label_two"
+            app:setUpEditTextForSubtypeSelected="@{viewModel.subtype}"
+            tools:text="16" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/recipe_ingredient_measurement_label_one"
@@ -161,9 +157,10 @@
             android:id="@+id/recipe_ingredient_advanced_check_box"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:checked="@={viewModel.advancedCheckBox}"
+            android:visibility="@{viewModel.isConversionFactorEnabled ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toStartOf="@id/vertical_guideline"
             app:layout_constraintTop_toBottomOf="@id/recipe_ingredient_editable_measurement_two"
-            android:visibility="@{viewModel.isConversionFactorEnabled ? View.VISIBLE : View.GONE}"
             />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -186,7 +183,7 @@
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
             android:text="@string/volume_to_weight_conversion_factor_label"
-            android:visibility="@{recipeIngredientAdvancedCheckBox.checked &amp;&amp; viewModel.isConversionFactorEnabled ? View.VISIBLE : View.GONE}"
+            android:visibility="@{viewModel.showConversionFactorFields ? View.VISIBLE : View.GONE}"
             app:layout_constraintTop_toBottomOf="@id/recipe_ingredient_advanced_check_box"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -203,7 +200,7 @@
             android:textAlignment="center"
             android:ems="8"
             android:text="@={viewModel.conversionFactor}"
-            android:visibility='@{recipeIngredientAdvancedCheckBox.checked &amp;&amp; viewModel.isConversionFactorEnabled ? View.VISIBLE : View.GONE}'
+            android:visibility='@{viewModel.showConversionFactorFields ? View.VISIBLE : View.GONE}'
             app:setUpEditTextForConversionFactor="@{viewModel.subtype}"
             app:editTextErrorSetter="@{viewModel.conversionFactorErrorMessage}"
             app:layout_constraintTop_toBottomOf="@id/recipe_ingredient_conversion_factor_label"

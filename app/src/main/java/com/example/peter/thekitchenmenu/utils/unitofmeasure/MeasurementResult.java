@@ -19,6 +19,7 @@ public class MeasurementResult {
 
     @NonNull
     private final MeasurementModel model;
+
     @NonNull
     private final ResultStatus result;
 

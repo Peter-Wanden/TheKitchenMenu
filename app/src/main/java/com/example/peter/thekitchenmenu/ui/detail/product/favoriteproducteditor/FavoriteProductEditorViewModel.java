@@ -161,7 +161,7 @@ public class FavoriteProductEditorViewModel
         retailerErrorMessage.set(null);
         String retailerValidationResponse = validateText(retailer.get());
 
-        if (retailerValidationResponse.equals(validationHandler.VALIDATED)) {
+        if (retailerValidationResponse.equals(TextValidationHandler.VALIDATED)) {
             retailerValidated = true;
         }
         else {
@@ -175,7 +175,7 @@ public class FavoriteProductEditorViewModel
         locationRoomErrorMessage.set(null);
         String locationRoomValidationResponse = validateText(locationRoom.get());
 
-        if (locationRoomValidationResponse.equals(validationHandler.VALIDATED))
+        if (locationRoomValidationResponse.equals(TextValidationHandler.VALIDATED))
             locationRoomValidated = true;
         else {
             locationRoomValidated = false;
@@ -188,7 +188,7 @@ public class FavoriteProductEditorViewModel
         locationInRoomErrorMessage.set(null);
         String locationInRoomValidationResponse = validateText(locationInRoom.get());
 
-        if (locationInRoomValidationResponse.equals(validationHandler.VALIDATED))
+        if (locationInRoomValidationResponse.equals(TextValidationHandler.VALIDATED))
             locationInRoomValidated = true;
         else {
             locationInRoomValidated = false;

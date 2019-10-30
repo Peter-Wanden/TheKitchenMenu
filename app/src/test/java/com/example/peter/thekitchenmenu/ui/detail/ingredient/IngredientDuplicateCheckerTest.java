@@ -9,9 +9,7 @@ import org.mockito.*;
 
 import java.util.List;
 
-import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
-import static org.junit.Assert.assertEquals;
 
 public class IngredientDuplicateCheckerTest {
 

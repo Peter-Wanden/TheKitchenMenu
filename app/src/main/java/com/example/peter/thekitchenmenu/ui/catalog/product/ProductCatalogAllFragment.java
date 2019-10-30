@@ -1,14 +1,12 @@
 package com.example.peter.thekitchenmenu.ui.catalog.product;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.peter.thekitchenmenu.R;
 
-import com.example.peter.thekitchenmenu.data.model.ProductModel;
 import com.example.peter.thekitchenmenu.databinding.ProductCatalogAllFragmentBinding;
 
 import androidx.annotation.NonNull;

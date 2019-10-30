@@ -38,14 +38,15 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/recipeName"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:textSize="24sp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"
             android:layout_marginEnd="8dp"
-            android:paddingStart="4dp"
-            android:paddingEnd="4dp"
-            android:textSize="20sp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:gravity="center"
             android:text="@{nameAndPortions.recipeTitleObservable}"
             tools:text="Halloumi &amp; Mediterranean Vegetables" />
 
@@ -54,6 +55,10 @@
             layout="@layout/recipe_portions_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
             bind:nameAndPortions="@{nameAndPortions}"/>
 
         <FrameLayout

@@ -89,22 +89,44 @@ public class RecipeIdentityViewModel
         repository.getById(oldRecipeId, this);
     }
 
+    private RecipeIdentityEntity cloneEntity() {
+        isCloned = false;
+        long currentTime = timeProvider.getCurrentTimestamp();
+        return new RecipeIdentityEntity(
+                recipeId,
+                identityEntity.getTitle(),
+                identityEntity.getDescription(),
+                currentTime,
+                currentTime
+        );
+    }
+
     @Override
     public void onEntityLoaded(RecipeIdentityEntity identityEntity) {
         this.identityEntity = identityEntity;
 
         if (isCloned) {
-            this.identityEntity = cloneIdentityEntity();
+            this.identityEntity = cloneEntity();
             updateObservables();
-            save(updatedIdentityEntity());
+            save(updatedEntity());
         } else
             updateObservables();
     }
 
     @Override
     public void onDataNotAvailable() {
-        identityEntity = createNewIdentityEntity();
+        identityEntity = createEntity();
         updateObservables();
+    }
+
+    private RecipeIdentityEntity createEntity() {
+        long currentTime = timeProvider.getCurrentTimestamp();
+        return new RecipeIdentityEntity(
+                recipeId,
+                "",
+                "",
+                currentTime,
+                currentTime);
     }
 
     private void updateObservables() {
@@ -112,7 +134,7 @@ public class RecipeIdentityViewModel
         titleObservable.set(identityEntity.getTitle());
         descriptionObservable.set(identityEntity.getDescription());
         observablesUpdating = false;
-        reportRecipeModelStatus();
+        submitModelStatus();
     }
 
     private void titleChanged() {
@@ -124,7 +146,7 @@ public class RecipeIdentityViewModel
         if (!titleValid)
             titleErrorMessage.set(validationResponse);
 
-        reportRecipeModelStatus();
+        submitModelStatus();
     }
 
     private void descriptionChanged() {
@@ -135,7 +157,7 @@ public class RecipeIdentityViewModel
         if (!descriptionValid)
             descriptionErrorMessage.set(validationResponse);
 
-        reportRecipeModelStatus();
+        submitModelStatus();
     }
 
     private String validateShortText(String textToValidate) {
@@ -146,16 +168,15 @@ public class RecipeIdentityViewModel
         return textValidationHandler.validateLongText(resources, textToValidate);
     }
 
-    private void reportRecipeModelStatus() {
+    private void submitModelStatus() {
         if (!observablesUpdating) {
             modelSubmitter.submitModelStatus(new RecipeModelStatus(
                     RecipeValidator.ModelName.IDENTITY_MODEL,
                     isChanged(),
                     isValid()
             ));
-
             if (isValid() && isChanged()) {
-                save(updatedIdentityEntity());
+                save(updatedEntity());
             }
         }
     }
@@ -166,23 +187,19 @@ public class RecipeIdentityViewModel
 
     private boolean isChanged() {
         if (identityEntity != null) {
-            RecipeIdentityEntity updatedIdentityEntity = new RecipeIdentityEntity(
+            RecipeIdentityEntity updatedEntity = new RecipeIdentityEntity(
                     identityEntity.getId(),
                     titleObservable.get(),
                     descriptionObservable.get(),
                     identityEntity.getCreateDate(),
                     identityEntity.getLastUpdate()
             );
-            return !identityEntity.equals(updatedIdentityEntity);
+            return !identityEntity.equals(updatedEntity);
         } else
             return false;
     }
 
-    private void save(RecipeIdentityEntity identityEntity) {
-        repository.save(identityEntity);
-    }
-
-    private RecipeIdentityEntity updatedIdentityEntity() {
+    private RecipeIdentityEntity updatedEntity() {
         return new RecipeIdentityEntity(
                 identityEntity.getId(),
                 titleObservable.get(),
@@ -192,25 +209,8 @@ public class RecipeIdentityViewModel
         );
     }
 
-    private RecipeIdentityEntity createNewIdentityEntity() {
-        long currentTime = timeProvider.getCurrentTimestamp();
-        return new RecipeIdentityEntity(
-                recipeId,
-                "",
-                "",
-                currentTime,
-                currentTime);
-    }
-
-    private RecipeIdentityEntity cloneIdentityEntity() {
-        isCloned = false;
-        long currentTime = timeProvider.getCurrentTimestamp();
-        return new RecipeIdentityEntity(
-                recipeId,
-                identityEntity.getTitle(),
-                identityEntity.getDescription(),
-                currentTime,
-                currentTime
-        );
+    private void save(RecipeIdentityEntity entity) {
+        identityEntity = entity;
+        repository.save(entity);
     }
 }

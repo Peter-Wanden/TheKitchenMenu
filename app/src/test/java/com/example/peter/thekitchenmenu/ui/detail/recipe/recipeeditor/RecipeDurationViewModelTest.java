@@ -11,7 +11,6 @@ import com.example.peter.thekitchenmenu.testdata.RecipeDurationEntityTestData;
 import com.example.peter.thekitchenmenu.testdata.RecipeValidatorTestData;
 import com.example.peter.thekitchenmenu.utils.ParseIntegerFromObservableHandler;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
-import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 
 import org.junit.*;
 import org.mockito.*;

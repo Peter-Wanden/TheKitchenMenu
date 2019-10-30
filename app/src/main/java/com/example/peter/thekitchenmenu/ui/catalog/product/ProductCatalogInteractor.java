@@ -2,7 +2,6 @@ package com.example.peter.thekitchenmenu.ui.catalog.product;
 
 import androidx.annotation.NonNull;
 
-import com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity;
 import com.example.peter.thekitchenmenu.data.model.ProductModel;
 
 import java.util.List;

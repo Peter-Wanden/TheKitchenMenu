@@ -15,8 +15,10 @@ import com.example.peter.thekitchenmenu.testdata.MeasurementModelTestData;
 import com.example.peter.thekitchenmenu.testdata.RecipeEntityTestData;
 import com.example.peter.thekitchenmenu.testdata.RecipeIngredientQuantityEntityTestData;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor.RecipeIngredientMeasurementViewModel;
+import com.example.peter.thekitchenmenu.utils.NumberFormatter;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementResult;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtype;
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasurePortionUseCase;
 
 import org.junit.Before;
@@ -91,13 +93,15 @@ public class RecipeIngredientMeasurementViewModelTest {
     @Mock
     UnitOfMeasurePortionUseCase useCaseMock;
     @Captor
-    ArgumentCaptor<MeasurementModel> measurementModelCaptor;
+    ArgumentCaptor<MeasurementModel> requestModelCaptor;
     @Captor
     ArgumentCaptor<String> recipeIdCaptor;
     @Captor
     ArgumentCaptor<String> ingredientIdCaptor;
     @Captor
-    ArgumentCaptor<String> recipeIngredientQuantityIdCaptor;
+    ArgumentCaptor<MeasurementResult> resultModelCaptor;
+    @Mock
+    NumberFormatter numberFormatterMock;
     // endregion helper fields ---------------------------------------------------------------------
 
     private RecipeIngredientMeasurementViewModel SUT;
@@ -110,7 +114,8 @@ public class RecipeIngredientMeasurementViewModelTest {
         SUT = new RecipeIngredientMeasurementViewModel(
                 mock(Application.class),
                 useCaseMock,
-                resourcesMock
+                resourcesMock,
+                numberFormatterMock
         );
     }
 
@@ -132,20 +137,23 @@ public class RecipeIngredientMeasurementViewModelTest {
         SUT.start(RECIPE_VALID_NEW.getId(), INGREDIENT_NEW_VALID_NAME_DESCRIPTION.getId());
         // Assert
         verify(useCaseMock).start(recipeIdCaptor.capture(), ingredientIdCaptor.capture());
-        SUT.modelOut(MEASUREMENT_NEW_EMPTY_INVALID);
-        verify(useCaseMock, never()).modelIn(anyObject());
+        SUT.useCaseResultModel(MEASUREMENT_NEW_EMPTY_INVALID);
+        verify(useCaseMock, never()).processModel(anyObject());
     }
 
     @Test
     public void startRecipeIdIngredientId_emptyModelReturned_valuesSetToDisplay() {
         // Arrange
+        MeasurementModel model = MEASUREMENT_NEW_EMPTY_INVALID.getModel();
+        when(numberFormatterMock.formatDecimalForDisplay(eq(model.getConversionFactor()))).
+                thenReturn(String.valueOf(model.getConversionFactor()));
         // Act
         SUT.start(RECIPE_VALID_NEW.getId(), INGREDIENT_NEW_VALID_NAME_DESCRIPTION.getId());
         // Assert
         verify(useCaseMock).start(recipeIdCaptor.capture(), ingredientIdCaptor.capture());
-        SUT.modelOut(MEASUREMENT_NEW_EMPTY_INVALID);
+        SUT.useCaseResultModel(MEASUREMENT_NEW_EMPTY_INVALID);
         // Assert
-        MeasurementModel model = MEASUREMENT_NEW_EMPTY_INVALID.getModel();
+
         assertEquals(model.getSubtype(), SUT.subtype.get());
         assertEquals(String.valueOf(model.getConversionFactor()), SUT.conversionFactor.get());
         assertNull(SUT.conversionFactorErrorMessage.get());
@@ -159,21 +167,25 @@ public class RecipeIngredientMeasurementViewModelTest {
         SUT.start(RECIPE_VALID_NEW.getId(), INGREDIENT_NEW_VALID_NAME_DESCRIPTION.getId());
         // Assert
         verify(useCaseMock).start(recipeIdCaptor.capture(), ingredientIdCaptor.capture());
-        SUT.modelOut(MEASUREMENT_NEW_INVALID_ONE);
+        SUT.useCaseResultModel(MEASUREMENT_NEW_INVALID_ONE);
 
-        assertEquals("Measurement one needs to be between x and y",
+        assertEquals("Tablespoons and/or teaspoons need to have a value between 0.1 tsp and 666 Tbsp",
                 SUT.measurementOneErrorMessage.get());
     }
 
     @Test
     public void startRecipeIdIngredientId_measurementOneValidReturned_valuesSetToDisplay() {
         // Arrange
+        when(numberFormatterMock.formatDecimalForDisplay(MEASUREMENT_NEW_VALID_ONE.getModel().
+                getItemMeasurementOne())).
+                thenReturn(String.valueOf(MEASUREMENT_NEW_VALID_ONE.getModel().
+                getItemMeasurementOne()));
         String expectedMeasurementOne = String.valueOf(MEASUREMENT_NEW_VALID_ONE.getModel().
                 getItemMeasurementOne());
         // Act
         SUT.start(RECIPE_VALID_NEW.getId(), INGREDIENT_NEW_VALID_NAME_DESCRIPTION.getId());
         verify(useCaseMock).start(recipeIdCaptor.capture(), ingredientIdCaptor.capture());
-        SUT.modelOut(MEASUREMENT_NEW_VALID_ONE);
+        SUT.useCaseResultModel(MEASUREMENT_NEW_VALID_ONE);
         // Assert
         String actualMeasurementOne = SUT.measurementOne.get();
         assertEquals(expectedMeasurementOne, actualMeasurementOne);
@@ -182,11 +194,11 @@ public class RecipeIngredientMeasurementViewModelTest {
     @Test
     public void startRecipeIdIngredientId_measurementTwoInvalidReturned_errorMessageShown() {
         // Arrange
-        String expectedError = "Tablespoons and/or teaspoons needs to have a value";
+        String expectedError = "Tablespoons and/or teaspoons need to have a value between 0.1 tsp and 666 Tbsp";
         // Act
         SUT.start(RECIPE_VALID_NEW.getId(), INGREDIENT_NEW_VALID_NAME_DESCRIPTION.getId());
         verify(useCaseMock).start(recipeIdCaptor.capture(), ingredientIdCaptor.capture());
-        SUT.modelOut(MEASUREMENT_NEW_INVALID_TWO);
+        SUT.useCaseResultModel(MEASUREMENT_NEW_INVALID_TWO);
         // Assert
         String actualError = SUT.measurementTwoErrorMessage.get();
         assertEquals(expectedError, actualError);
@@ -195,12 +207,14 @@ public class RecipeIngredientMeasurementViewModelTest {
     @Test
     public void startRecipeIdIngredientId_measurementTwoValidReturned_valueSetToDisplay() {
         // Arrange
-        String expectedResult = String.valueOf(MEASUREMENT_NEW_VALID_TWO.getModel().
-                getTotalMeasurementTwo());
+        int expectedMeasurement = MEASUREMENT_NEW_VALID_TWO.getModel().getTotalMeasurementTwo();
+        when(numberFormatterMock.formatIntegerForDisplay(expectedMeasurement)).
+                thenReturn(String.valueOf(expectedMeasurement));
+        String expectedResult = String.valueOf(expectedMeasurement);
         // Act
         SUT.start(RECIPE_VALID_NEW.getId(), INGREDIENT_NEW_VALID_NAME_DESCRIPTION.getId());
         verify(useCaseMock).start(recipeIdCaptor.capture(), ingredientIdCaptor.capture());
-        SUT.modelOut(MEASUREMENT_NEW_VALID_TWO);
+        SUT.useCaseResultModel(MEASUREMENT_NEW_VALID_TWO);
         // Assert
         String actualResult = SUT.measurementTwo.get();
         assertEquals(expectedResult, actualResult);
@@ -214,7 +228,7 @@ public class RecipeIngredientMeasurementViewModelTest {
         // Act
         SUT.start(RECIPE_VALID_NEW.getId(), INGREDIENT_NEW_VALID_NAME_DESCRIPTION.getId());
         verify(useCaseMock).start(recipeIdCaptor.capture(), ingredientIdCaptor.capture());
-        SUT.modelOut(MEASUREMENT_NEW_INVALID_UNIT_OF_MEASURE_SPOON);
+        SUT.useCaseResultModel(MEASUREMENT_NEW_INVALID_UNIT_OF_MEASURE_SPOON);
         // Assert
         MeasurementSubtype actualSubType = SUT.subtype.get();
         assertEquals(expectedSubType, actualSubType);
@@ -226,7 +240,7 @@ public class RecipeIngredientMeasurementViewModelTest {
         // Act
         SUT.start(RECIPE_VALID_NEW.getId(), INGREDIENT_NEW_VALID_NAME_DESCRIPTION.getId());
         verify(useCaseMock).start(recipeIdCaptor.capture(), ingredientIdCaptor.capture());
-        SUT.modelOut(MEASUREMENT_NEW_INVALID_CONVERSION_FACTOR);
+        SUT.useCaseResultModel(MEASUREMENT_NEW_INVALID_CONVERSION_FACTOR);
         // Assert
         String actualErrorMessage = SUT.conversionFactorErrorMessage.get();
         assertEquals(CONVERSION_FACTOR_ERROR_MESSAGE, actualErrorMessage);
@@ -238,12 +252,13 @@ public class RecipeIngredientMeasurementViewModelTest {
         // Act
         SUT.start(RECIPE_VALID_NEW.getId(), INGREDIENT_NEW_VALID_NAME_DESCRIPTION.getId());
         verify(useCaseMock).start(recipeIdCaptor.capture(), ingredientIdCaptor.capture());
-        SUT.modelOut(MEASUREMENT_NEW_VALID_IMPERIAL_SPOON_WITH_CONVERSION_FACTOR);
+        SUT.useCaseResultModel(MEASUREMENT_NEW_VALID_IMPERIAL_SPOON_WITH_CONVERSION_FACTOR);
         // Assert
         assertTrue(SUT.isConversionFactorEnabled.get());
     }
 
     // startRecipeIdIngredientId_measurementOneSetToHalfTeaspoon_RESULT_OK
+    // startRecipeIdIngredientId_
 
     @Test
     public void startRecipeIngredientId_existingValuesSetToDisplay() {
@@ -254,11 +269,17 @@ public class RecipeIngredientMeasurementViewModelTest {
         String expectedMeasurementOne = String.valueOf(model.getTotalMeasurementOne());
         String expectedMeasurementTwo = String.valueOf(model.getTotalMeasurementTwo());
 
+        when(numberFormatterMock.formatDecimalForDisplay(model.getConversionFactor())).
+                thenReturn(expectedConversionFactor);
+        when(numberFormatterMock.formatDecimalForDisplay(model.getTotalMeasurementOne())).
+                thenReturn(expectedMeasurementOne);
+        when(numberFormatterMock.formatIntegerForDisplay(model.getTotalMeasurementTwo())).
+                thenReturn(expectedMeasurementTwo);
         // Act
         SUT.start(QUANTITY_EXISTING_VALID_METRIC.getId());
         // Assert
         verify(useCaseMock).start(eq(QUANTITY_EXISTING_VALID_METRIC.getId()));
-        SUT.modelOut(MEASUREMENT_EXISTING_VALID_METRIC);
+        SUT.useCaseResultModel(MEASUREMENT_EXISTING_VALID_METRIC);
 
         assertEquals(expectedSubtype, SUT.subtype.get());
         assertEquals(expectedConversionFactor, SUT.conversionFactor.get());
@@ -270,7 +291,9 @@ public class RecipeIngredientMeasurementViewModelTest {
     private void setupResources() {
         when(resourcesMock.getString(eq(R.string.number_format_exception))).
                 thenReturn(NUMBER_FORMAT_EXCEPTION_ERROR);
-        when(resourcesMock.getString(eq(R.string.conversion_factor_error_message))).
+        when(resourcesMock.getString(R.string.conversion_factor_error_message,
+                UnitOfMeasureConstants.MIN_CONVERSION_FACTOR,
+                UnitOfMeasureConstants.MAX_CONVERSION_FACTOR)).
                 thenReturn(CONVERSION_FACTOR_ERROR_MESSAGE);
     }
     // endregion helper methods --------------------------------------------------------------------

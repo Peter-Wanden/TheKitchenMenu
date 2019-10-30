@@ -5,7 +5,6 @@ import org.junit.Test;
 
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.*;
 import static junit.framework.TestCase.assertTrue;
-import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 

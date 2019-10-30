@@ -73,7 +73,9 @@ public class FavoriteProductEditorFragment extends Fragment {
     }
 
     private void subscribeToEvents() {
-        viewModel.getAllInputValuesAreValidEvent().observe(this, this::setHasOptionsMenu);
+        viewModel.getAllInputValuesAreValidEvent().observe(
+                getViewLifecycleOwner(),
+                this::setHasOptionsMenu);
     }
 
     private void loadData() {

@@ -4,7 +4,6 @@ import org.junit.*;
 import org.mockito.*;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
 
 public class MeasurementSubtypeTest {
 

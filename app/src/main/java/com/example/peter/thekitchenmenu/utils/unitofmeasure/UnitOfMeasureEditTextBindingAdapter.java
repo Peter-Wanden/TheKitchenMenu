@@ -1,7 +1,6 @@
 package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
 import android.text.InputFilter;
-import android.util.Log;
 import android.widget.EditText;
 
 import com.example.peter.thekitchenmenu.R;
@@ -14,6 +13,8 @@ import static android.text.InputType.TYPE_CLASS_NUMBER;
 import static android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL;
 
 public class UnitOfMeasureEditTextBindingAdapter {
+
+    private static final String TAG = "tkm-EditTextAdapter";
 
     @BindingAdapter(value = {"setUpEditTextForSubtypeSelected"})
     public static void setUpEditTextForSubtypeSelected(EditText editText,
@@ -66,7 +67,7 @@ public class UnitOfMeasureEditTextBindingAdapter {
     @BindingAdapter(value = {"setUpEditTextForConversionFactor"})
     public static void setUpEditTextForConversionFactor(EditText editText,
                                                         MeasurementSubtype subtype) {
-        UnitOfMeasure unitOfMeasure = subtype.getMeasurementClass();
+                UnitOfMeasure unitOfMeasure = subtype.getMeasurementClass();
         if (unitOfMeasure.isConversionFactorEnabled()) {
             int viewId = editText.getId();
             int digitsBeforeDecimal = (int) unitOfMeasure.getMeasurementUnitsDigitWidths()[2].first;

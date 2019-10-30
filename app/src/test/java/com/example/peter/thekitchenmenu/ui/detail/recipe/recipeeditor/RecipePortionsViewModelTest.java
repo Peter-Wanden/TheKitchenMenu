@@ -7,7 +7,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.entity.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
-import com.example.peter.thekitchenmenu.data.repository.DataSourceRecipePortions;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.testdata.RecipePortionsEntityTestData;
 import com.example.peter.thekitchenmenu.testdata.RecipeValidatorTestData;
 import com.example.peter.thekitchenmenu.utils.ParseIntegerFromObservableHandler;
@@ -19,7 +19,6 @@ import org.mockito.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
@@ -74,7 +73,7 @@ public class RecipePortionsViewModelTest {
     @Rule
     public InstantTaskExecutorRule instantExecutorRule = new InstantTaskExecutorRule();
     @Mock
-    private DataSourceRecipePortions dataSourceMock;
+    private RepositoryRecipePortions repoRecipePortions;
     @Captor
     ArgumentCaptor<DataSource.GetEntityCallback<RecipePortionsEntity>>
             getEntityCallbackArgumentCaptor;
@@ -98,7 +97,7 @@ public class RecipePortionsViewModelTest {
         setupResourceMockReturnValues();
 
         SUT = new RecipePortionsViewModel(
-                dataSourceMock,
+                repoRecipePortions,
                 timeProviderMock,
                 idProviderMock,
                 resourcesMock,
@@ -161,10 +160,8 @@ public class RecipePortionsViewModelTest {
         // Act
         SUT.start(NEW_EMPTY.getRecipeId());
         simulateNothingReturnedFromDatabase();
-        SUT.servingsObservable.set(
-                String.valueOf(NEW_INVALID.getServings()));
-        SUT.sittingsObservable.set(
-                String.valueOf(NEW_INVALID.getSittings()));
+        SUT.servingsObservable.set(String.valueOf(NEW_INVALID.getServings()));
+        SUT.sittingsObservable.set(String.valueOf(NEW_INVALID.getSittings()));
         // Assert
         assertEquals(ERROR_MESSAGE_SERVINGS, SUT.servingsErrorMessage.get());
         assertEquals(ERROR_MESSAGE_SITTINGS, SUT.sittingsErrorMessage.get());
@@ -220,8 +217,7 @@ public class RecipePortionsViewModelTest {
         SUT.sittingsObservable.set(String.valueOf(
                 NEW_INVALID_SERVINGS_VALID_SITTINGS.getSittings()));
         // Assert
-        verify(modelValidationSubmitterMock, times(2)).
-                submitModelStatus(eq(INVALID_CHANGED));
+        verify(modelValidationSubmitterMock).submitModelStatus(eq(INVALID_CHANGED));
     }
 
     @Test
@@ -354,7 +350,7 @@ public class RecipePortionsViewModelTest {
         SUT.sittingsObservable.set(String.valueOf(
                 NEW_VALID.getSittings()));
         // Assert
-        verify(dataSourceMock).save(eq(NEW_VALID));
+        verify(repoRecipePortions).save(eq(NEW_VALID));
     }
 
     @Test
@@ -407,7 +403,7 @@ public class RecipePortionsViewModelTest {
         simulateExistingValidReturnedFromDatabase();
         SUT.servingsObservable.set(String.valueOf(NEW_INVALID.getServings()));
         // Assert
-        verifyNoMoreInteractions(dataSourceMock);
+        verifyNoMoreInteractions(repoRecipePortions);
     }
 
     @Test
@@ -433,7 +429,7 @@ public class RecipePortionsViewModelTest {
         SUT.servingsObservable.set(String.valueOf(
                 EXISTING_VALID_UPDATED_SERVINGS.getServings()));
         // Assert
-        verify(dataSourceMock).save(eq(EXISTING_VALID_UPDATED_SERVINGS));
+        verify(repoRecipePortions).save(eq(EXISTING_VALID_UPDATED_SERVINGS));
     }
 
     @Test
@@ -454,7 +450,7 @@ public class RecipePortionsViewModelTest {
         simulateExistingValidReturnedFromDatabase();
         SUT.sittingsObservable.set(String.valueOf(NEW_INVALID.getSittings()));
         // Assert
-        verifyNoMoreInteractions(dataSourceMock);
+        verifyNoMoreInteractions(repoRecipePortions);
     }
 
     @Test
@@ -480,7 +476,7 @@ public class RecipePortionsViewModelTest {
         SUT.sittingsObservable.set(String.valueOf(
                 EXISTING_VALID_UPDATED_SITTINGS.getSittings()));
         // Assert
-        verify(dataSourceMock).save(eq(EXISTING_VALID_UPDATED_SITTINGS));
+        verify(repoRecipePortions).save(eq(EXISTING_VALID_UPDATED_SITTINGS));
     }
 
     @Test
@@ -503,7 +499,7 @@ public class RecipePortionsViewModelTest {
         SUT.startByCloningModel(EXISTING_VALID.getRecipeId(), NEW_EMPTY.getRecipeId());
         simulateExistingValidReturnedFromDatabase();
         // Assert
-        verify(dataSourceMock).save(EXISTING_VALID_CLONE);
+        verify(repoRecipePortions).save(EXISTING_VALID_CLONE);
     }
 
     @Test
@@ -556,7 +552,7 @@ public class RecipePortionsViewModelTest {
         SUT.servingsObservable.set(String.valueOf(EXISTING_VALID_UPDATED_SERVINGS.getServings()));
         SUT.sittingsObservable.set(String.valueOf(EXISTING_VALID_UPDATED_SITTINGS.getSittings()));
         // Assert
-        verify(dataSourceMock).save(eq(EXISTING_VALID_CLONE_UPDATED_SITTINGS_SERVINGS));
+        verify(repoRecipePortions).save(eq(EXISTING_VALID_CLONE_UPDATED_SITTINGS_SERVINGS));
     }
 
     // region helper methods -----------------------------------------------------------------------
@@ -573,13 +569,13 @@ public class RecipePortionsViewModelTest {
     }
 
     private void simulateNothingReturnedFromDatabase() {
-        verify(dataSourceMock).getPortionsForRecipe(eq(NEW_EMPTY.getRecipeId()),
+        verify(repoRecipePortions).getPortionsForRecipe(eq(NEW_EMPTY.getRecipeId()),
                 getEntityCallbackArgumentCaptor.capture());
         getEntityCallbackArgumentCaptor.getValue().onDataNotAvailable();
     }
 
     private void simulateExistingValidReturnedFromDatabase() {
-        verify(dataSourceMock).getPortionsForRecipe(eq(EXISTING_VALID.getRecipeId()),
+        verify(repoRecipePortions).getPortionsForRecipe(eq(EXISTING_VALID.getRecipeId()),
                 getEntityCallbackArgumentCaptor.capture());
         getEntityCallbackArgumentCaptor.getValue().onEntityLoaded(EXISTING_VALID);
     }

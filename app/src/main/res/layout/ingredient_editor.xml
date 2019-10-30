@@ -43,7 +43,7 @@
             app:layout_constraintEnd_toEndOf="@id/editable_ingredient_name"
             app:layout_constraintStart_toStartOf="@id/editable_ingredient_name"
             app:layout_constraintTop_toTopOf="@id/ingredient_editor_name_label"
-            android:src="@drawable/rectangle"
+            android:src="@drawable/rectangle_radius_4dp"
             />
 
         <TextView

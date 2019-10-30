@@ -4,7 +4,6 @@ import org.junit.*;
 import org.mockito.*;
 
 import static com.example.peter.thekitchenmenu.testdata.RecipeValidatorTestData.*;
-import static com.example.peter.thekitchenmenu.testdata.RecipeValidatorTestData.getIdentityModelStatusChangedValid;
 import static com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidator.*;
 import static com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidator.RecipeValidationStatus.*;
 import static org.junit.Assert.*;

@@ -1,7 +1,6 @@
 package com.example.peter.thekitchenmenu.ui.catalog.recipe;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableBoolean;

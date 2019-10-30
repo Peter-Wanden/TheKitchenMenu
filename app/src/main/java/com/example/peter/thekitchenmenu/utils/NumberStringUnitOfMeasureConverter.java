@@ -17,6 +17,7 @@ import java.util.Locale;
 
 public class NumberStringUnitOfMeasureConverter {
 
+//    @InverseMethod("toReturn")
     public static String toFormat(EditText editText,
                                   String measurementModelValue,
                                   MeasurementSubtype subtype) {
@@ -114,5 +115,12 @@ public class NumberStringUnitOfMeasureConverter {
             decimalFormat.setGroupingUsed(false);
         }
         return format;
+    }
+
+    public static String toReturn(EditText editText,
+                                  MeasurementSubtype subtype,
+                                  String oldString,
+                                  String newString) {
+        return editText.getText().toString();
     }
 }

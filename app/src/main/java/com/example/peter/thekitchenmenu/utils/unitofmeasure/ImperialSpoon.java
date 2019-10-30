@@ -14,6 +14,8 @@ class ImperialSpoon extends UnitOfMeasureAbstract {
         minimumMeasurement = IMPERIAL_SPOON_MIN_MEASUREMENT;
         unitTwo = IMPERIAL_SPOON_UNIT_TWO;
         unitOne = IMPERIAL_SPOON_UNIT_ONE;
+        unitTwoNoConversionFactor = IMPERIAL_SPOON_UNIT_TWO;
+        unitOneNoConversionFactor = IMPERIAL_SPOON_UNIT_ONE;
         unitOneDecimal = IMPERIAL_SPOON_UNIT_ONE_DECIMAL;
         smallestUnit = IMPERIAL_SPOON_SMALLEST_UNIT;
         isConversionFactorEnabled = IMPERIAL_SPOON_IS_CONVERSION_FACTOR_ENABLED;

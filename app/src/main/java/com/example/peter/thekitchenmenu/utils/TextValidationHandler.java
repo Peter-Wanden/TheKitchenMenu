@@ -2,13 +2,10 @@ package com.example.peter.thekitchenmenu.utils;
 
 import android.content.res.Resources;
 import android.text.Html;
-import android.util.Log;
 
 import com.example.peter.thekitchenmenu.R;
 
 public class TextValidationHandler {
-
-    private static final String TAG = "tkm-TextValidation";
 
     public static final String VALIDATED = "validated";
 

@@ -22,7 +22,7 @@
             android:title="@string/nav_lists"/>
         <item
             android:id="@+id/nav_add_ingredient"
-            android:title="Add ingredient"
+            android:title="@string/add_ingredient"
             />
 
     </group>

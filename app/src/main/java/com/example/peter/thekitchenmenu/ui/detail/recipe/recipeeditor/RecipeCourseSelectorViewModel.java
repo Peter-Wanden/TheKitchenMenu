@@ -2,7 +2,6 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 
 import android.annotation.SuppressLint;
 
-import androidx.annotation.NonNull;
 import androidx.databinding.Observable;
 import androidx.databinding.ObservableBoolean;
 import androidx.lifecycle.ViewModel;

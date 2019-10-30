@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.RecipeCatalogAllFragmentBinding;
-import com.example.peter.thekitchenmenu.ui.catalog.product.ProductCatalogAllRecyclerAdapter;
 
 public class RecipeCatalogAllFragment extends Fragment {
 

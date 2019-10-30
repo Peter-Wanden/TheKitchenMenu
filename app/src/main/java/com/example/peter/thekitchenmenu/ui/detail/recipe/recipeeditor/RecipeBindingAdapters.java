@@ -3,7 +3,6 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 import android.content.res.Resources;
 import android.text.InputFilter;
 import android.text.InputType;
-import android.util.Log;
 import android.widget.EditText;
 
 import androidx.databinding.BindingAdapter;

@@ -1,14 +1,14 @@
 package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
-import android.util.Log;
 import android.view.View;
 
 import com.example.peter.thekitchenmenu.R;
-import com.google.android.material.checkbox.MaterialCheckBox;
 
 import androidx.databinding.BindingAdapter;
 
 public class UnitOfMeasureFieldVisibilityBindingAdapter {
+
+    private static final String TAG = "tkm-FieldVisibility";
 
     @BindingAdapter(value = {
             "fieldVisibilityNumberOfProducts",

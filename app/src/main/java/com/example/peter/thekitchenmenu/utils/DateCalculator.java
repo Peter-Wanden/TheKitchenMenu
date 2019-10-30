@@ -1,5 +1,7 @@
 package com.example.peter.thekitchenmenu.utils;
 
+import androidx.annotation.NonNull;
+
 import java.util.GregorianCalendar;
 
 /**
@@ -134,6 +136,7 @@ public class DateCalculator {
         return n;
     }
 
+    @NonNull
     public String toString () {
         return String.format("%04d-%02d-%02d", year, month, date);
     }

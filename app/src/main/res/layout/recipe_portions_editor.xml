@@ -22,12 +22,12 @@
             android:layout_marginTop="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            android:src="@drawable/rectangle"
+            android:src="@drawable/rectangle_radius_4dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
+            app:layout_constraintTop_toTopOf="parent"
+            />
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/servings_label"
             android:layout_width="wrap_content"
@@ -39,8 +39,8 @@
             app:layout_constraintEnd_toStartOf="@id/sittings_label"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
+            app:layout_constraintTop_toTopOf="parent"
+            />
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/editable_servings"
             android:layout_width="wrap_content"
@@ -53,8 +53,8 @@
             app:layout_constraintEnd_toEndOf="@id/servings_label"
             app:layout_constraintStart_toStartOf="@id/servings_label"
             app:layout_constraintTop_toBottomOf="@id/servings_label"
-            tools:text="10" />
-
+            tools:text="10"
+            />
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/sittings_label"
             android:layout_width="wrap_content"
@@ -65,8 +65,8 @@
             android:text="@string/sittings_label"
             app:layout_constraintEnd_toStartOf="@id/portions_label"
             app:layout_constraintStart_toEndOf="@id/servings_label"
-            app:layout_constraintTop_toTopOf="parent" />
-
+            app:layout_constraintTop_toTopOf="parent"
+            />
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/editable_sittings"
             android:layout_width="wrap_content"
@@ -79,8 +79,8 @@
             app:layout_constraintEnd_toEndOf="@id/sittings_label"
             app:layout_constraintStart_toStartOf="@id/sittings_label"
             app:layout_constraintTop_toBottomOf="@id/sittings_label"
-            tools:text="10" />
-
+            tools:text="10"
+            />
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/portions_label"
             android:layout_width="wrap_content"
@@ -91,8 +91,8 @@
             android:text="@string/portions_label"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/sittings_label"
-            app:layout_constraintTop_toTopOf="parent" />
-
+            app:layout_constraintTop_toTopOf="parent"
+            />
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/editable_portions"
             android:layout_width="wrap_content"
@@ -104,6 +104,7 @@
             app:layout_constraintEnd_toEndOf="@id/portions_label"
             app:layout_constraintStart_toStartOf="@id/portions_label"
             app:layout_constraintTop_toBottomOf="@id/portions_label"
-            tools:text="100" />
+            tools:text="100"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

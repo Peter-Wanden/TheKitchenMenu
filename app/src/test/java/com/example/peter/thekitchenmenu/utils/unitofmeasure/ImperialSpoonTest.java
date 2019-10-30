@@ -5,7 +5,6 @@ import org.mockito.*;
 
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.*;
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
 
 public class ImperialSpoonTest {
 
@@ -204,6 +203,33 @@ public class ImperialSpoonTest {
         assertEquals(expectedTotalQuantity, SUT.getTotalBaseUnits(), DELTA);
         assertEquals(expectedQuantityPerServing, SUT.getItemBaseUnits(), DELTA);
         System.out.println(SUT);
+    }
+
+    @Test
+    public void conversionFactorIsSet_conversionFactorChangedMultipleTimes_correctValuesReturned() {
+        // Arrange
+        int volume = 5;
+        double numberOfTeaspoons = 2;
+        int numberOfPortions = 1;
+        double conversionFactorHigh = 1.5;
+        double expectedTotalConversionFactorHigh = volume * numberOfTeaspoons * conversionFactorHigh;
+        double conversionFactorLow = 0.5;
+        double expectedTotalConversionFactorLow = volume * numberOfTeaspoons * conversionFactorLow;
+        double noConversionFactor = 1;
+        double expectedTotalNoConversionFactor = volume * numberOfTeaspoons * noConversionFactor;
+        SUT.totalMeasurementOneIsSet(numberOfTeaspoons);
+        SUT.numberOfItemsIsSet(numberOfPortions);
+        // Act
+        SUT.conversionFactorIsSet(conversionFactorHigh);
+        assertEquals(expectedTotalConversionFactorHigh, SUT.getTotalBaseUnits(), DELTA);
+
+        SUT.conversionFactorIsSet(conversionFactorLow);
+        assertEquals(expectedTotalConversionFactorLow, SUT.getTotalBaseUnits(), DELTA);
+
+        SUT.conversionFactorIsSet(noConversionFactor);
+        assertEquals(expectedTotalNoConversionFactor, SUT.getTotalBaseUnits(), DELTA);
+
+        // Assert
     }
 
     // region helper methods -----------------------------------------------------------------------

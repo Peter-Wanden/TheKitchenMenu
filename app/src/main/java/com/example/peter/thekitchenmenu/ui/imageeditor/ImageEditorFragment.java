@@ -65,7 +65,7 @@ public class ImageEditorFragment extends Fragment {
         final Observer<ImageModel> imageModelObserver = imageModel ->
                 imageEditorBinding.setImageModel(imageModel);
 
-        viewModel.getExistingImageModel().observe(this, imageModelObserver);
+        viewModel.getExistingImageModel().observe(getViewLifecycleOwner(), imageModelObserver);
     }
 
     private void setBindingInstanceVariables() {
@@ -74,10 +74,10 @@ public class ImageEditorFragment extends Fragment {
     }
 
     private void subscribeToEvents() {
-        viewModel.getImageFromCameraEvent().observe(this, this::getImageFromCamera);
-        viewModel.getImageFromGalleryEvent().observe(this, event -> getImageFromGallery());
-        viewModel.launchBrowserEvent().observe(this, event -> launchBrowser());
-        viewModel.cropFullSizeImageEvent().observe(this, event -> cropImage());
+        viewModel.getImageFromCameraEvent().observe(getViewLifecycleOwner(), this::getImageFromCamera);
+        viewModel.getImageFromGalleryEvent().observe(getViewLifecycleOwner(), event -> getImageFromGallery());
+        viewModel.launchBrowserEvent().observe(getViewLifecycleOwner(), event -> launchBrowser());
+        viewModel.cropFullSizeImageEvent().observe(getViewLifecycleOwner(), event -> cropImage());
     }
 
     private void getImageFromCamera(Uri fullSizeImageUri) {

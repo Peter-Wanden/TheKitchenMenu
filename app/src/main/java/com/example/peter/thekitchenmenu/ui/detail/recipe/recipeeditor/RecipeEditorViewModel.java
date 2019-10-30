@@ -23,6 +23,8 @@ public class RecipeEditorViewModel
         implements
         DataSource.GetEntityCallback<RecipeEntity>, RecipeValidation.RecipeEditor {
 
+    private static final String TAG = "tkm-RecipeEditorViewModel";
+
     private RepositoryRecipe repositoryRecipe;
     private AddEditRecipeNavigator navigator;
     private UniqueIdProvider idProvider;
@@ -72,8 +74,9 @@ public class RecipeEditorViewModel
     }
 
     void start() {
-        if (recipeEntity == null)
+        if (recipeEntity == null) {
             setupForNewRecipe();
+        }
     }
 
     private void setupForNewRecipe() {

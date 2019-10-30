@@ -24,6 +24,8 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     double minimumMeasurement;
     double unitTwo;
     double unitOne;
+    double unitTwoNoConversionFactor;
+    double unitOneNoConversionFactor;
     double unitOneDecimal;
     double smallestUnit;
     private LastMeasurementUpdated lastMeasurementUpdated = TOTAL_MEASUREMENT;
@@ -77,19 +79,41 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     @Override
     public boolean conversionFactorIsSet(double conversionFactor) {
         if (isConversionFactorEnabled) {
-            if (conversionFactor >= MIN_CONVERSION_FACTOR &&
-                    conversionFactor <= MAX_CONVERSION_FACTOR) {
-                this.conversionFactor = conversionFactor;
-                unitOne = conversionFactor * unitOne;
-                smallestUnit = unitOne;
-                unitTwo = conversionFactor * unitTwo;
-                totalBaseUnitsAreSet(
-                        (totalMeasurementTwo * unitTwo) + (totalMeasurementOne * unitOne)
-                );
-                return true;
+            if (conversionFactorIsWithinBounds(conversionFactor)) {
+                if (conversionFactorHasPreviouslyChanged()) {
+                    resetToOriginalValuesBeforeConversionFactorChanged();
+                }
+                return applyNewConversionFactor(conversionFactor);
             }
         }
         return false;
+    }
+
+    private boolean conversionFactorIsWithinBounds(double conversionFactor) {
+        return conversionFactor >= MIN_CONVERSION_FACTOR &&
+                conversionFactor <= MAX_CONVERSION_FACTOR;
+    }
+
+    private boolean conversionFactorHasPreviouslyChanged() {
+        return conversionFactor != NO_CONVERSION_FACTOR_SET;
+    }
+
+    private void resetToOriginalValuesBeforeConversionFactorChanged() {
+        unitOne = unitOneNoConversionFactor;
+        smallestUnit = unitOne;
+        unitTwo = unitTwoNoConversionFactor;
+        totalBaseUnitsAreSet((totalMeasurementTwo * unitTwo) +
+                (totalMeasurementOne * unitOne)
+        );
+    }
+
+    private boolean applyNewConversionFactor(double conversionFactor) {
+        this.conversionFactor = conversionFactor;
+        unitOne = conversionFactor * unitOne;
+        smallestUnit = unitOne;
+        unitTwo = conversionFactor * unitTwo;
+        totalBaseUnitsAreSet((totalMeasurementTwo * unitTwo) + (totalMeasurementOne * unitOne));
+        return true;
     }
 
     @Override
@@ -119,19 +143,27 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     @Override
     public boolean totalBaseUnitsAreSet(double totalBaseUnits) {
         if (baseUnitsWithinBounds(totalBaseUnits)) {
-            this.totalBaseUnits = totalBaseUnits;
-            setNewTotalMeasurements();
-            setNewItemMeasurements();
+            updateNewMeasurements(totalBaseUnits);
             return true;
 
-        } else if (totalBaseUnits == 0.) { // allows for a reset
-            this.totalBaseUnits = 0.;
-            totalMeasurementOne = 0.;
-            totalMeasurementTwo = 0;
-            itemMeasurementOne = 0.;
-            itemMeasurementTwo = 0;
+        } else if (totalBaseUnits == 0) {
+            resetMeasurements();
         }
         return false;
+    }
+
+    private void updateNewMeasurements(double totalBaseUnits) {
+        this.totalBaseUnits = totalBaseUnits;
+        setNewTotalMeasurements();
+        setNewItemMeasurements();
+    }
+
+    private void resetMeasurements() {
+        this.totalBaseUnits = 0;
+        totalMeasurementOne = 0;
+        totalMeasurementTwo = 0;
+        itemMeasurementOne = 0;
+        itemMeasurementTwo = 0;
     }
 
     private boolean baseUnitsWithinBounds(double baseUnits) {

@@ -34,7 +34,6 @@ public class RecipeCatalogAllRecyclerAdapter
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
-
         RecipeListItemBinding binding = DataBindingUtil.inflate(
                 LayoutInflater.from(viewGroup.getContext()),
                 R.layout.recipe_list_item,

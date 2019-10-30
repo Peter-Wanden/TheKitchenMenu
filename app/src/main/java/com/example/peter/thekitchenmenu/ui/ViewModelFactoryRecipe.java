@@ -2,7 +2,6 @@ package com.example.peter.thekitchenmenu.ui;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
@@ -23,6 +22,7 @@ import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipePort
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidator;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist.RecipeNameAndPortionsViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist.RecipeIngredientListViewModel;
+import com.example.peter.thekitchenmenu.utils.NumberFormatter;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.ui.catalog.recipe.RecipeCatalogViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeEditorViewModel;
@@ -151,7 +151,8 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
             return (T) new RecipeIngredientMeasurementViewModel(
                     application,
                     getPortionsUseCase(),
-                    application.getResources());
+                    application.getResources(),
+                    new NumberFormatter(application.getResources()));
 
         } else if (modelClass.isAssignableFrom(RecipeNameAndPortionsViewModel.class)) {
             // noinspection unchecked

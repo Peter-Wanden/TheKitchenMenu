@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.entity.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
-import com.example.peter.thekitchenmenu.data.repository.DataSourceRecipePortions;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.utils.ParseIntegerFromObservableHandler;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
@@ -21,12 +21,14 @@ public class RecipePortionsViewModel
         RecipeModelComposite.RecipeModelActions,
         DataSource.GetEntityCallback<RecipePortionsEntity> {
 
-    private RecipeValidation.RecipeValidatorModelSubmission modelSubmitter;
-    private DataSourceRecipePortions dataSource;
+    private static final String TAG = "tkm-RecipePortionsVM";
+
+    private Resources resources;
     private TimeProvider timeProvider;
     private UniqueIdProvider idProvider;
-    private Resources resources;
+    private RepositoryRecipePortions repository;
     private ParseIntegerFromObservableHandler intFromObservable;
+    private RecipeValidation.RecipeValidatorModelSubmission modelSubmitter;
 
     public final ObservableField<String> servingsObservable = new ObservableField<>();
     public final ObservableField<String> sittingsObservable = new ObservableField<>();
@@ -35,22 +37,22 @@ public class RecipePortionsViewModel
     public final ObservableField<String> servingsErrorMessage = new ObservableField<>();
     public final ObservableField<String> sittingsErrorMessage = new ObservableField<>();
 
-    private RecipePortionsEntity portionsEntity;
-    private String recipeId;
     private int servings;
     private int sittings;
+    private String recipeId;
+    private boolean isCloned;
     private boolean servingsValid;
     private boolean sittingsValid;
-    private boolean isCloned;
+    private RecipePortionsEntity portionsEntity;
 
-    private boolean observablesUpdating;
+    private boolean updatingObservables;
 
-    public RecipePortionsViewModel(DataSourceRecipePortions dataSource,
+    public RecipePortionsViewModel(RepositoryRecipePortions repository,
                                    TimeProvider timeProvider,
                                    UniqueIdProvider idProvider,
                                    Resources resources,
                                    ParseIntegerFromObservableHandler intFromObservable) {
-        this.dataSource = dataSource;
+        this.repository = repository;
         this.timeProvider = timeProvider;
         this.idProvider = idProvider;
         this.resources = resources;
@@ -60,7 +62,7 @@ public class RecipePortionsViewModel
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
                 if (!servingsObservable.get().isEmpty()) {
-                    updateServings();
+                    servingsChanged();
                 }
             }
         });
@@ -68,35 +70,34 @@ public class RecipePortionsViewModel
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
                 if (!sittingsObservable.get().isEmpty())
-                    updateSittings();
+                    sittingsChanged();
             }
         });
     }
 
+    void setModelValidationSubmitter(
+            RecipeValidation.RecipeValidatorModelSubmission modelSubmitter) {
+        this.modelSubmitter = modelSubmitter;
+    }
+
     @Override
     public void start(String recipeId) {
-        this.recipeId = recipeId;
-        dataSource.getPortionsForRecipe(recipeId, this);
+        if (recipeId != null) {
+            this.recipeId = recipeId;
+            repository.getPortionsForRecipe(recipeId, this);
+        } else {
+            throw new RuntimeException("Recipe id cannot be null");
+        }
     }
 
     @Override
     public void startByCloningModel(String oldRecipeId, String newRecipeId) {
         isCloned = true;
         this.recipeId = newRecipeId;
-        dataSource.getPortionsForRecipe(oldRecipeId, this);
+        repository.getPortionsForRecipe(oldRecipeId, this);
     }
 
-    @Override
-    public void onEntityLoaded(RecipePortionsEntity portionsEntity) {
-        this.portionsEntity = portionsEntity;
-        if (isCloned) {
-            this.portionsEntity = clonePortionsEntity();
-            save(this.portionsEntity);
-        }
-        updateObservables();
-    }
-
-    private RecipePortionsEntity clonePortionsEntity() {
+    private RecipePortionsEntity cloneEntity() {
         isCloned = false;
         long currentTimeStamp = timeProvider.getCurrentTimestamp();
         return new RecipePortionsEntity(
@@ -110,13 +111,26 @@ public class RecipePortionsViewModel
     }
 
     @Override
+    public void onEntityLoaded(RecipePortionsEntity portionsEntity) {
+        this.portionsEntity = portionsEntity;
+
+        if (isCloned) {
+            this.portionsEntity = cloneEntity();
+            updateObservables();
+            save(this.portionsEntity);
+        } else {
+            updateObservables();
+        }
+    }
+
+    @Override
     public void onDataNotAvailable() {
-        portionsEntity = createNewPortionsEntity(recipeId);
+        portionsEntity = createEntity(recipeId);
         save(portionsEntity);
         updateObservables();
     }
 
-    private RecipePortionsEntity createNewPortionsEntity(String recipeId) {
+    private RecipePortionsEntity createEntity(String recipeId) {
         long currentTime = timeProvider.getCurrentTimestamp();
         int minServings = resources.getInteger(R.integer.recipe_min_servings);
         int minSittings = resources.getInteger(R.integer.recipe_min_sittings);
@@ -131,55 +145,53 @@ public class RecipePortionsViewModel
     }
 
     private void updateObservables() {
-        observablesUpdating = true;
+        updatingObservables = true;
         servingsObservable.set(String.valueOf(portionsEntity.getServings()));
         sittingsObservable.set(String.valueOf(portionsEntity.getSittings()));
-        observablesUpdating = false;
+        updatingObservables = false;
         submitModelStatus();
     }
 
-    private void updateServings() {
+    private void servingsChanged() {
+        servingsErrorMessage.set(null);
+        int oldValue = servings;
         servings = parseIntegerFromObservableField(servingsObservable, servings);
-        if (servings > 0)
-            validateServings();
+
+        if (servings > 0) validateServings();
+        if (servings != oldValue) submitModelStatus();
     }
 
     private void validateServings() {
-        servingsErrorMessage.set(null);
         int minServings = resources.getInteger(R.integer.recipe_min_servings);
         int maxServings = resources.getInteger(R.integer.recipe_max_servings);
         String errorMessage = resources.getString(R.string.input_error_recipe_servings,
                 minServings, maxServings);
 
         servingsValid = servings >= minServings && servings <= maxServings;
-
         if (!servingsValid)
             servingsErrorMessage.set(errorMessage);
-
         updatePortions();
-        submitModelStatus();
     }
 
-    private void updateSittings() {
+    private void sittingsChanged() {
+        sittingsErrorMessage.set(null);
+        int oldValue = sittings;
         sittings = parseIntegerFromObservableField(sittingsObservable, sittings);
-        if (sittings > 0)
-            validateSittings();
+
+        if (sittings > 0) validateSittings();
+        if (sittings != oldValue) submitModelStatus();
     }
 
     private void validateSittings() {
-        sittingsErrorMessage.set(null);
         int minSittings = resources.getInteger(R.integer.recipe_min_sittings);
         int maxSittings = resources.getInteger(R.integer.recipe_max_sittings);
         String errorMessage = resources.getString(R.string.input_error_recipe_sittings,
                 minSittings, maxSittings);
 
         sittingsValid = sittings >= minSittings && sittings <= maxSittings;
-
         if (!sittingsValid)
             sittingsErrorMessage.set(errorMessage);
-
         updatePortions();
-        submitModelStatus();
     }
 
     private int parseIntegerFromObservableField(ObservableField<String> observable, int oldValue) {
@@ -189,11 +201,6 @@ public class RecipePortionsViewModel
     private void updatePortions() {
         int portions = servings * sittings;
         portionsObservable.set(String.valueOf(portions));
-    }
-
-    void setModelValidationSubmitter(
-            RecipeValidation.RecipeValidatorModelSubmission modelSubmitter) {
-        this.modelSubmitter = modelSubmitter;
     }
 
     private RecipePortionsEntity updatedEntity() {
@@ -208,20 +215,24 @@ public class RecipePortionsViewModel
     }
 
     private void submitModelStatus() {
-        if (!observablesUpdating) {
+        if (!updatingObservables) {
             modelSubmitter.submitModelStatus(new RecipeModelStatus(
                     RecipeValidator.ModelName.PORTIONS_MODEL,
                     isChanged(),
-                    isValid()
-            ));
+                    isValid()));
+
             if (isChanged() && isValid())
                 save(updatedEntity());
         }
     }
 
+    private boolean isValid() {
+        return servingsValid && sittingsValid;
+    }
+
     private boolean isChanged() {
         if (portionsEntity != null) {
-            RecipePortionsEntity latestPortionsEntity = new RecipePortionsEntity(
+            RecipePortionsEntity updatedEntity = new RecipePortionsEntity(
                     portionsEntity.getId(),
                     portionsEntity.getRecipeId(),
                     sittings,
@@ -229,18 +240,13 @@ public class RecipePortionsViewModel
                     portionsEntity.getCreateDate(),
                     portionsEntity.getLastUpdate()
             );
-
-            return !portionsEntity.equals(latestPortionsEntity);
+            return !portionsEntity.equals(updatedEntity);
         } else
             return false;
     }
 
-    private boolean isValid() {
-        return servingsValid && sittingsValid;
-    }
-
     private void save(RecipePortionsEntity entity) {
-        dataSource.save(entity);
         portionsEntity = entity;
+        repository.save(entity);
     }
 }

@@ -1,7 +1,6 @@
 package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
 import android.content.res.Resources;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -10,6 +9,8 @@ import com.example.peter.thekitchenmenu.R;
 import androidx.databinding.BindingAdapter;
 
 public class UnitOfMeasureLabelBindingAdapter {
+
+    private static final String TAG = "tkm-LabelAdapter";
 
     @BindingAdapter(value = {"setLabelForSubtypeSelected"})
     public static void setLabelForSubtypeSelected(TextView textView, MeasurementSubtype subtype) {

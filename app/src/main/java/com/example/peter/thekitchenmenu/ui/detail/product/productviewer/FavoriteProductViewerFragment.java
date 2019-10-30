@@ -71,7 +71,9 @@ public class FavoriteProductViewerFragment extends Fragment {
     }
 
     private void setupObservers() {
-        viewModel.getHasOptionsMenuEvent().observe(this, aVoid -> hasMenuOptions());
+        viewModel.getHasOptionsMenuEvent().observe(
+                getViewLifecycleOwner(),
+                aVoid -> hasMenuOptions());
     }
 
     private void hasMenuOptions() {

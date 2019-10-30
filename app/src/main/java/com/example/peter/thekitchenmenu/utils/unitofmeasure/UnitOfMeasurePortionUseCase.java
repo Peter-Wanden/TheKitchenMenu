@@ -1,5 +1,7 @@
 package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
+import android.util.Log;
+
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientQuantityEntity;
@@ -167,7 +169,8 @@ public class UnitOfMeasurePortionUseCase {
         returnResult();
     }
 
-    public void modelIn(MeasurementModel modelIn) {
+    public void processModel(MeasurementModel modelIn) {
+        Log.d(TAG, "processModel:                   model=" + modelIn);
         this.modelIn = modelIn;
         checkForChanges();
     }
@@ -217,21 +220,57 @@ public class UnitOfMeasurePortionUseCase {
     }
 
     private void returnResult() {
-        existingModel = new MeasurementModel(
-                unitOfMeasure.getMeasurementSubtype(),
-                unitOfMeasure.getNumberOfItems(),
-                unitOfMeasure.getConversionFactor(),
-                unitOfMeasure.getTotalMeasurementOne(),
-                unitOfMeasure.getTotalMeasurementTwo(),
-                unitOfMeasure.getItemMeasurementOne(),
-                unitOfMeasure.getItemMeasurementTwo(),
-                unitOfMeasure.getItemBaseUnits()
-        );
+        if (modelIn != null && !conversionFactorIsSet) {
+            existingModel = new MeasurementModel(
+                    unitOfMeasure.getMeasurementSubtype(),
+                    unitOfMeasure.getNumberOfItems(),
+                    modelIn.getConversionFactor(),
+                    unitOfMeasure.getTotalMeasurementOne(),
+                    unitOfMeasure.getTotalMeasurementTwo(),
+                    unitOfMeasure.getItemMeasurementOne(),
+                    unitOfMeasure.getItemMeasurementTwo(),
+                    unitOfMeasure.getItemBaseUnits()
+            );
+        } else if (modelIn != null && !totalMeasurementTwoIsSet) {
+            existingModel = new MeasurementModel(
+                    unitOfMeasure.getMeasurementSubtype(),
+                    unitOfMeasure.getNumberOfItems(),
+                    unitOfMeasure.getConversionFactor(),
+                    unitOfMeasure.getTotalMeasurementOne(),
+                    modelIn.getTotalMeasurementTwo(),
+                    unitOfMeasure.getItemMeasurementOne(),
+                    unitOfMeasure.getItemMeasurementTwo(),
+                    unitOfMeasure.getItemBaseUnits()
+            );
+        } else if (modelIn != null && !totalMeasurementOneIsSet) {
+            existingModel = new MeasurementModel(
+                    unitOfMeasure.getMeasurementSubtype(),
+                    unitOfMeasure.getNumberOfItems(),
+                    unitOfMeasure.getConversionFactor(),
+                    modelIn.getTotalMeasurementOne(),
+                    unitOfMeasure.getTotalMeasurementTwo(),
+                    unitOfMeasure.getItemMeasurementOne(),
+                    unitOfMeasure.getItemMeasurementTwo(),
+                    unitOfMeasure.getItemBaseUnits()
+            );
+        } else {
+            existingModel = new MeasurementModel(
+                    unitOfMeasure.getMeasurementSubtype(),
+                    unitOfMeasure.getNumberOfItems(),
+                    unitOfMeasure.getConversionFactor(),
+                    unitOfMeasure.getTotalMeasurementOne(),
+                    unitOfMeasure.getTotalMeasurementTwo(),
+                    unitOfMeasure.getItemMeasurementOne(),
+                    unitOfMeasure.getItemMeasurementTwo(),
+                    unitOfMeasure.getItemBaseUnits()
+            );
+        }
 
         MeasurementResult result = new MeasurementResult(existingModel, getResultStatus());
 
         saveIfValid();
-        viewModel.modelOut(result);
+        Log.d(TAG, "returnResult: " + result);
+        viewModel.useCaseResultModel(result);
     }
 
     private ResultStatus getResultStatus() {
