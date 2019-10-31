@@ -168,14 +168,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/volume_to_weight_conversion_advanced_label"
+            android:visibility="@{viewModel.isConversionFactorEnabled ? View.VISIBLE : View.GONE}"
             app:layout_constraintStart_toStartOf="@id/vertical_guideline"
             app:layout_constraintTop_toTopOf="@id/recipe_ingredient_advanced_check_box"
             app:layout_constraintBottom_toBottomOf="@id/recipe_ingredient_advanced_check_box"
-            android:visibility="@{viewModel.isConversionFactorEnabled ? View.VISIBLE : View.GONE}"
             />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/recipe_ingredient_conversion_factor_label"
+            android:id="@+id/recipe_ingredient_conversion_factor_message"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -184,10 +184,11 @@
             android:paddingEnd="8dp"
             android:text="@string/volume_to_weight_conversion_factor_label"
             android:visibility="@{viewModel.showConversionFactorFields ? View.VISIBLE : View.GONE}"
-            app:layout_constraintTop_toBottomOf="@id/recipe_ingredient_advanced_check_box"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            />
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/recipe_ingredient_advanced_check_box" />
+
         <EditText
             android:id="@+id/recipe_ingredient_editable_conversion_factor"
             android:layout_width="wrap_content"
@@ -203,8 +204,42 @@
             android:visibility='@{viewModel.showConversionFactorFields ? View.VISIBLE : View.GONE}'
             app:setUpEditTextForConversionFactor="@{viewModel.subtype}"
             app:editTextErrorSetter="@{viewModel.conversionFactorErrorMessage}"
-            app:layout_constraintTop_toBottomOf="@id/recipe_ingredient_conversion_factor_label"
+            app:layout_constraintTop_toBottomOf="@id/recipe_ingredient_conversion_factor_message"
             app:layout_constraintStart_toStartOf="@id/vertical_guideline"
+            tools:text="0.20349"
+            />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/recipe_ingredient_conversion_factor_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:gravity="center"
+            android:text="@string/conversion_factor_used_for_this_ingredient"
+            android:visibility="@{viewModel.showUneditableConversionFactorFields ? View.VISIBLE : View.GONE}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/recipe_ingredient_editable_measurement_two"
+            />
+        <TextView
+            android:id="@+id/recipe_ingredient_conversion_factor"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:textAlignment="center"
+            android:text="@={viewModel.conversionFactor}"
+            android:textSize="18sp"
+            android:visibility="@{viewModel.showUneditableConversionFactorFields ? View.VISIBLE : View.GONE}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/recipe_ingredient_conversion_factor_label"
             tools:text="0.20349"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>

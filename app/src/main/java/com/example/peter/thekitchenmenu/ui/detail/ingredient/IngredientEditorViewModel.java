@@ -15,6 +15,7 @@ import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 import com.example.peter.thekitchenmenu.utils.TextValidationHandler;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants;
 
 import static com.example.peter.thekitchenmenu.utils.TextValidationHandler.VALIDATED;
 
@@ -43,7 +44,6 @@ public class IngredientEditorViewModel
 
     private IngredientEntity ingredientEntity;
 
-    private final int DEFAULT_CONVERSION_FACTOR = 1;
     private boolean observablesUpdating;
     private boolean nameValid;
     private boolean descriptionValid = true;
@@ -214,7 +214,7 @@ public class IngredientEditorViewModel
                 id,
                 "",
                 "",
-                DEFAULT_CONVERSION_FACTOR,
+                UnitOfMeasureConstants.NO_CONVERSION_FACTOR,
                 Constants.getUserId().getValue(),
                 currentTime,
                 currentTime

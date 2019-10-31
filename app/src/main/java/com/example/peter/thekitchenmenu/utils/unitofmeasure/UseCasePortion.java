@@ -19,7 +19,7 @@ import static com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementRe
 /**
  * Calculates the measurement of an ingredient for a single portion of a recipe.
  */
-public class UnitOfMeasurePortionUseCase {
+public class UseCasePortion {
 
     private static final String TAG = "tkm-PortionsUseCase";
 
@@ -28,7 +28,7 @@ public class UnitOfMeasurePortionUseCase {
     private RepositoryIngredient ingredientRepository;
     private UniqueIdProvider idProvider;
     private TimeProvider timeProvider;
-    private PortionUseCaseViewModel viewModel;
+    private UseCasePortionViewModel viewModel;
 
     private UnitOfMeasure unitOfMeasure = MeasurementSubtype.METRIC_MASS.getMeasurementClass();
     private boolean conversionFactorChanged;
@@ -51,11 +51,11 @@ public class UnitOfMeasurePortionUseCase {
     private IngredientEntity ingredientEntity;
 
 
-    public UnitOfMeasurePortionUseCase(RepositoryRecipePortions portionsRepository,
-                                       RepositoryRecipeIngredient recipeIngredientRepository,
-                                       RepositoryIngredient ingredientRepository,
-                                       UniqueIdProvider idProvider,
-                                       TimeProvider timeProvider) {
+    public UseCasePortion(RepositoryRecipePortions portionsRepository,
+                          RepositoryRecipeIngredient recipeIngredientRepository,
+                          RepositoryIngredient ingredientRepository,
+                          UniqueIdProvider idProvider,
+                          TimeProvider timeProvider) {
         this.portionsRepository = portionsRepository;
         this.recipeIngredientRepository = recipeIngredientRepository;
         this.ingredientRepository = ingredientRepository;
@@ -63,7 +63,7 @@ public class UnitOfMeasurePortionUseCase {
         this.timeProvider = timeProvider;
     }
 
-    public void setViewModel(PortionUseCaseViewModel viewModel) {
+    public void setViewModel(UseCasePortionViewModel viewModel) {
         this.viewModel = viewModel;
     }
 
@@ -101,7 +101,7 @@ public class UnitOfMeasurePortionUseCase {
                     public void onEntityLoaded(RecipeIngredientQuantityEntity quantityEntity) {
                         recipeId = quantityEntity.getRecipeId();
                         ingredientId = quantityEntity.getIngredientId();
-                        UnitOfMeasurePortionUseCase.this.quantityEntity = quantityEntity;
+                        UseCasePortion.this.quantityEntity = quantityEntity;
                         loadIngredient();
                     }
 
@@ -118,7 +118,7 @@ public class UnitOfMeasurePortionUseCase {
                 new DataSource.GetEntityCallback<IngredientEntity>() {
                     @Override
                     public void onEntityLoaded(IngredientEntity ingredientEntity) {
-                        UnitOfMeasurePortionUseCase.this.ingredientEntity = ingredientEntity;
+                        UseCasePortion.this.ingredientEntity = ingredientEntity;
                         loadPortions();
                     }
 
@@ -220,7 +220,7 @@ public class UnitOfMeasurePortionUseCase {
     }
 
     private void returnResult() {
-        if (modelIn != null && !conversionFactorIsSet) {
+        if (conversionFactorChanged && !conversionFactorIsSet) {
             existingModel = new MeasurementModel(
                     unitOfMeasure.getMeasurementSubtype(),
                     unitOfMeasure.getNumberOfItems(),
@@ -231,18 +231,8 @@ public class UnitOfMeasurePortionUseCase {
                     unitOfMeasure.getItemMeasurementTwo(),
                     unitOfMeasure.getItemBaseUnits()
             );
-        } else if (modelIn != null && !totalMeasurementTwoIsSet) {
-            existingModel = new MeasurementModel(
-                    unitOfMeasure.getMeasurementSubtype(),
-                    unitOfMeasure.getNumberOfItems(),
-                    unitOfMeasure.getConversionFactor(),
-                    unitOfMeasure.getTotalMeasurementOne(),
-                    modelIn.getTotalMeasurementTwo(),
-                    unitOfMeasure.getItemMeasurementOne(),
-                    unitOfMeasure.getItemMeasurementTwo(),
-                    unitOfMeasure.getItemBaseUnits()
-            );
-        } else if (modelIn != null && !totalMeasurementOneIsSet) {
+
+        } else if (totalMeasurementOneChanged && !totalMeasurementOneIsSet) {
             existingModel = new MeasurementModel(
                     unitOfMeasure.getMeasurementSubtype(),
                     unitOfMeasure.getNumberOfItems(),
@@ -253,24 +243,40 @@ public class UnitOfMeasurePortionUseCase {
                     unitOfMeasure.getItemMeasurementTwo(),
                     unitOfMeasure.getItemBaseUnits()
             );
-        } else {
+
+        } else if (totalMeasurementTwoChanged && !totalMeasurementTwoIsSet) {
             existingModel = new MeasurementModel(
                     unitOfMeasure.getMeasurementSubtype(),
                     unitOfMeasure.getNumberOfItems(),
                     unitOfMeasure.getConversionFactor(),
                     unitOfMeasure.getTotalMeasurementOne(),
-                    unitOfMeasure.getTotalMeasurementTwo(),
+                    modelIn.getTotalMeasurementTwo(),
                     unitOfMeasure.getItemMeasurementOne(),
                     unitOfMeasure.getItemMeasurementTwo(),
                     unitOfMeasure.getItemBaseUnits()
             );
+
+        } else {
+            updateModelsFromUnitOfMeasure();
         }
 
         MeasurementResult result = new MeasurementResult(existingModel, getResultStatus());
-
-        saveIfValid();
         Log.d(TAG, "returnResult: " + result);
-        viewModel.useCaseResultModel(result);
+        saveIfValid();
+        viewModel.useCasePortionResult(result);
+    }
+
+    private void updateModelsFromUnitOfMeasure() {
+        existingModel = new MeasurementModel(
+                unitOfMeasure.getMeasurementSubtype(),
+                unitOfMeasure.getNumberOfItems(),
+                unitOfMeasure.getConversionFactor(),
+                unitOfMeasure.getTotalMeasurementOne(),
+                unitOfMeasure.getTotalMeasurementTwo(),
+                unitOfMeasure.getItemMeasurementOne(),
+                unitOfMeasure.getItemMeasurementTwo(),
+                unitOfMeasure.getItemBaseUnits()
+        );
     }
 
     private ResultStatus getResultStatus() {
@@ -338,5 +344,9 @@ public class UnitOfMeasurePortionUseCase {
     private void save(RecipeIngredientQuantityEntity quantityEntity) {
         this.quantityEntity = quantityEntity;
         recipeIngredientRepository.save(quantityEntity);
+    }
+
+    public String getIngredientId() {
+        return ingredientId;
     }
 }

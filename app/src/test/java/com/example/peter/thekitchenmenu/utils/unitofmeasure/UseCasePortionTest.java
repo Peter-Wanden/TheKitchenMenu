@@ -23,7 +23,7 @@ import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasure
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.assertEquals;
 
-public class UnitOfMeasurePortionUseCaseTest {
+public class UseCasePortionTest {
 
     // region constants ----------------------------------------------------------------------------
     private final double DELTA = 0.0001;
@@ -158,7 +158,7 @@ public class UnitOfMeasurePortionUseCaseTest {
     @Mock
     TimeProvider timeProviderMock;
     @Mock
-    PortionUseCaseViewModel viewModelMock;
+    UseCasePortionViewModel viewModelMock;
     @Captor
     ArgumentCaptor<MeasurementResult> resultArgumentCaptor;
     @Captor
@@ -167,12 +167,12 @@ public class UnitOfMeasurePortionUseCaseTest {
     ArgumentCaptor<IngredientEntity> ingredientArgumentCaptor;
     // endregion helper fields ---------------------------------------------------------------------
 
-    private UnitOfMeasurePortionUseCase SUT;
+    private UseCasePortion SUT;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        SUT = new UnitOfMeasurePortionUseCase(
+        SUT = new UseCasePortion(
                 repoRecipePortionsMock,
                 repoRecipeIngredientMock,
                 repoIngredientMock,
@@ -203,7 +203,7 @@ public class UnitOfMeasurePortionUseCaseTest {
         verifyRepoIngredientCalledReturnNewValidNameValidDescription();
         verifyRepoPortionsCalledReturnNewValidFourPortions();
         // Assert incomplete model returned
-        verify(viewModelMock).useCaseResultModel(eq(MEASUREMENT_EMPTY_RESULT));
+        verify(viewModelMock).useCasePortionResult(eq(MEASUREMENT_EMPTY_RESULT));
     }
 
     @Test
@@ -237,7 +237,7 @@ public class UnitOfMeasurePortionUseCaseTest {
 
         SUT.processModel(MEASUREMENT_INVALID_TOTAL_ONE);
         // Assert
-        verify(viewModelMock, times((2))).useCaseResultModel(resultArgumentCaptor.capture());
+        verify(viewModelMock, times((2))).useCasePortionResult(resultArgumentCaptor.capture());
         MeasurementResult actualResult = resultArgumentCaptor.getValue();
         assertEquals(MEASUREMENT_INVALID_TOTAL_ONE_RESULT, actualResult);
     }
@@ -273,7 +273,7 @@ public class UnitOfMeasurePortionUseCaseTest {
 
         SUT.processModel(MEASUREMENT_VALID_TOTAL_ONE);
         // Assert
-        verify(viewModelMock, times((2))).useCaseResultModel(resultArgumentCaptor.capture());
+        verify(viewModelMock, times((2))).useCasePortionResult(resultArgumentCaptor.capture());
         MeasurementResult actualResult = resultArgumentCaptor.getValue();
         assertEquals(MEASUREMENT_VALID_TOTAL_ONE_RESULT, actualResult);
     }
@@ -309,7 +309,7 @@ public class UnitOfMeasurePortionUseCaseTest {
 
         SUT.processModel(MEASUREMENT_INVALID_TOTAL_TWO);
         // Assert
-        verify(viewModelMock, times((2))).useCaseResultModel(resultArgumentCaptor.capture());
+        verify(viewModelMock, times((2))).useCasePortionResult(resultArgumentCaptor.capture());
         assertEquals(MEASUREMENT_INVALID_TOTAL_TWO_RESULT, resultArgumentCaptor.getValue());
     }
 
@@ -346,7 +346,7 @@ public class UnitOfMeasurePortionUseCaseTest {
 
         SUT.processModel(MEASUREMENT_VALID_TOTAL_TWO);
         // Assert
-        verify(viewModelMock, times((2))).useCaseResultModel(resultArgumentCaptor.capture());
+        verify(viewModelMock, times((2))).useCasePortionResult(resultArgumentCaptor.capture());
         MeasurementResult actualResult = resultArgumentCaptor.getValue();
         assertEquals(MEASUREMENT_VALID_TOTAL_TWO_RESULT, actualResult);
         assertEquals(ResultStatus.RESULT_OK, actualResult.getResult());
@@ -366,7 +366,7 @@ public class UnitOfMeasurePortionUseCaseTest {
 
         SUT.processModel(MEASUREMENT_UNIT_OF_MEASURE_CHANGED_IMPERIAL_SPOON);
         // Assert
-        verify(viewModelMock, times((2))).useCaseResultModel(resultArgumentCaptor.capture());
+        verify(viewModelMock, times((2))).useCasePortionResult(resultArgumentCaptor.capture());
         MeasurementResult actualResult = resultArgumentCaptor.getValue();
         assertEquals(MEASUREMENT_UNIT_OF_MEASURE_CHANGED_IMPERIAL_SPOON_RESULT, actualResult);
         assertEquals(ResultStatus.INVALID_MEASUREMENT, actualResult.getResult());
@@ -385,7 +385,7 @@ public class UnitOfMeasurePortionUseCaseTest {
 
         SUT.processModel(MEASUREMENT_UNIT_OF_MEASURE_CHANGED_IMPERIAL_SPOON);
         // Assert
-        verify(viewModelMock, times((2))).useCaseResultModel(resultArgumentCaptor.capture());
+        verify(viewModelMock, times((2))).useCasePortionResult(resultArgumentCaptor.capture());
         MeasurementResult actualResult = resultArgumentCaptor.getValue();
         assertEquals(MEASUREMENT_UNIT_OF_MEASURE_CHANGED_IMPERIAL_SPOON_RESULT, actualResult);
 
@@ -408,13 +408,13 @@ public class UnitOfMeasurePortionUseCaseTest {
         // Change unit of measure
         SUT.processModel(MEASUREMENT_UNIT_OF_MEASURE_CHANGED_IMPERIAL_SPOON);
         // Assert
-        verify(viewModelMock, times((2))).useCaseResultModel(resultArgumentCaptor.capture());
+        verify(viewModelMock, times((2))).useCasePortionResult(resultArgumentCaptor.capture());
         MeasurementResult unitOfMeasureResult = resultArgumentCaptor.getValue();
         assertEquals(MEASUREMENT_UNIT_OF_MEASURE_CHANGED_IMPERIAL_SPOON_RESULT, unitOfMeasureResult);
 
         // Change measurement one
         SUT.processModel(MEASUREMENT_NEW_VALID_HALF_IMPERIAL_SPOON_UNIT_ONE_UPDATED);
-        verify(viewModelMock, times((3))).useCaseResultModel(resultArgumentCaptor.capture());
+        verify(viewModelMock, times((3))).useCasePortionResult(resultArgumentCaptor.capture());
         MeasurementResult halfSpoonResult = resultArgumentCaptor.getValue();
         assertEquals(MEASUREMENT_NEW_VALID_HALF_IMPERIAL_SPOON_UNIT_ONE_UPDATED_RESULT, halfSpoonResult);
     }
@@ -449,7 +449,7 @@ public class UnitOfMeasurePortionUseCaseTest {
 
         SUT.processModel(MEASUREMENT_INVALID_CONVERSION_FACTOR);
         // Assert
-        verify(viewModelMock, times((2))).useCaseResultModel(resultArgumentCaptor.capture());
+        verify(viewModelMock, times((2))).useCasePortionResult(resultArgumentCaptor.capture());
         MeasurementResult actualResult = resultArgumentCaptor.getValue();
         assertEquals(MEASUREMENT_INVALID_CONVERSION_FACTOR_RESULT, actualResult);
         MeasurementResult result = resultArgumentCaptor.getValue();
@@ -493,7 +493,7 @@ public class UnitOfMeasurePortionUseCaseTest {
         SUT.processModel(MEASUREMENT_VALID_MAX_CONVERSION_FACTOR); // setMeasurementTwo
         // Assert
         verify(repoRecipeIngredientMock, times((2))).save(recipeIngredientCaptor.capture());
-        verify(viewModelMock, times((5))).useCaseResultModel(resultArgumentCaptor.capture());
+        verify(viewModelMock, times((5))).useCasePortionResult(resultArgumentCaptor.capture());
         MeasurementResult actualResult = resultArgumentCaptor.getValue();
         assertEquals(MEASUREMENT_VALID_MAX_CONVERSION_FACTOR_RESULT, actualResult);
     }
@@ -514,7 +514,7 @@ public class UnitOfMeasurePortionUseCaseTest {
         SUT.processModel(MEASUREMENT_VALID_MAX_CONVERSION_FACTOR); // setMeasurementTwo
         // Assert
         verify(repoRecipeIngredientMock, times((2))).save(recipeIngredientCaptor.capture());
-        verify(viewModelMock, times((5))).useCaseResultModel(resultArgumentCaptor.capture());
+        verify(viewModelMock, times((5))).useCasePortionResult(resultArgumentCaptor.capture());
         MeasurementResult actualResult = resultArgumentCaptor.getValue();
         assertEquals(MEASUREMENT_VALID_MAX_CONVERSION_FACTOR_RESULT, actualResult);
         assertEquals(ResultStatus.RESULT_OK, actualResult.getResult());
@@ -541,7 +541,7 @@ public class UnitOfMeasurePortionUseCaseTest {
         verifyRepoIngredientCalledAndReturnExistingValidNameDescription();
         verifyRepoPortionsCalledAndReturnExistingValidNinePortions();
 
-        verify(viewModelMock).useCaseResultModel(resultArgumentCaptor.capture());
+        verify(viewModelMock).useCasePortionResult(resultArgumentCaptor.capture());
         MeasurementResult actualResult = resultArgumentCaptor.getValue();
         assertEquals(MEASUREMENT_EXISTING_VALID_METRIC_RESULT, actualResult);
     }
@@ -558,7 +558,7 @@ public class UnitOfMeasurePortionUseCaseTest {
         SUT.processModel(MEASUREMENT_EXISTING_INVALID_TOTAL_ONE);
 
         // Assert
-        verify(viewModelMock, times((2))).useCaseResultModel(resultArgumentCaptor.capture());
+        verify(viewModelMock, times((2))).useCasePortionResult(resultArgumentCaptor.capture());
         MeasurementResult actualResult = resultArgumentCaptor.getValue();
         assertEquals(MEASUREMENT_EXISTING_INVALID_TOTAL_ONE_RESULT, actualResult);
 
@@ -580,7 +580,7 @@ public class UnitOfMeasurePortionUseCaseTest {
 
         SUT.processModel(MEASUREMENT_EXISTING_INVALID_TOTAL_TWO);
         // Assert
-        verify(viewModelMock, times((2))).useCaseResultModel(resultArgumentCaptor.capture());
+        verify(viewModelMock, times((2))).useCasePortionResult(resultArgumentCaptor.capture());
         MeasurementResult actualResult = resultArgumentCaptor.getValue();
         assertEquals(MEASUREMENT_EXISTING_INVALID_TOTAL_TWO_RESULT, actualResult);
 
@@ -623,7 +623,7 @@ public class UnitOfMeasurePortionUseCaseTest {
 
         SUT.processModel(MEASUREMENT_EXISTING_VALID_TOTAL_TWO_UPDATED);
         // Assert
-        verify(viewModelMock, times((2))).useCaseResultModel(resultArgumentCaptor.capture());
+        verify(viewModelMock, times((2))).useCasePortionResult(resultArgumentCaptor.capture());
         ResultStatus resultStatus = resultArgumentCaptor.getValue().getResult();
         assertEquals(ResultStatus.RESULT_OK, resultStatus);
     }
@@ -640,7 +640,7 @@ public class UnitOfMeasurePortionUseCaseTest {
 
         SUT.processModel(MEASUREMENT_EXISTING_INVALID_UNIT_OF_MEASURE_CHANGED);
         // Assert
-        verify(viewModelMock, times((2))).useCaseResultModel(resultArgumentCaptor.capture());
+        verify(viewModelMock, times((2))).useCasePortionResult(resultArgumentCaptor.capture());
         ResultStatus resultStatus = resultArgumentCaptor.getValue().getResult();
         assertEquals(ResultStatus.INVALID_MEASUREMENT, resultStatus);
     }
@@ -657,7 +657,7 @@ public class UnitOfMeasurePortionUseCaseTest {
 
         SUT.processModel(MEASUREMENT_EXISTING_INVALID_UNIT_OF_MEASURE_CHANGED);
         // Assert
-        verify(viewModelMock, times((2))).useCaseResultModel(resultArgumentCaptor.capture());
+        verify(viewModelMock, times((2))).useCasePortionResult(resultArgumentCaptor.capture());
         MeasurementModel actualModel = resultArgumentCaptor.getValue().getModel();
         assertEquals(MEASUREMENT_EXISTING_INVALID_UNIT_OF_MEASURE_CHANGED_RESULT.getModel(),
                 actualModel);
@@ -690,7 +690,7 @@ public class UnitOfMeasurePortionUseCaseTest {
 
         SUT.processModel(MEASUREMENT_EXISTING_INVALID_CONVERSION_FACTOR);
         // Assert
-        verify(viewModelMock, times((2))).useCaseResultModel(resultArgumentCaptor.capture());
+        verify(viewModelMock, times((2))).useCasePortionResult(resultArgumentCaptor.capture());
         ResultStatus actualResultStatus = resultArgumentCaptor.getValue().getResult();
         assertEquals(ResultStatus.INVALID_CONVERSION_FACTOR, actualResultStatus);
     }
@@ -706,7 +706,7 @@ public class UnitOfMeasurePortionUseCaseTest {
 
         SUT.processModel(MEASUREMENT_EXISTING_INVALID_CONVERSION_FACTOR);
         // Assert
-        verify(viewModelMock, times((2))).useCaseResultModel(resultArgumentCaptor.capture());
+        verify(viewModelMock, times((2))).useCasePortionResult(resultArgumentCaptor.capture());
         MeasurementResult actualResult = resultArgumentCaptor.getValue();
         assertEquals(MEASUREMENT_EXISTING_INVALID_CONVERSION_FACTOR_RESULT, actualResult);
 
@@ -850,7 +850,7 @@ public class UnitOfMeasurePortionUseCaseTest {
         verifyRepoIngredientCalledAndReturnExistingValidNameDescription();
         verifyRepoPortionsCalledAndReturnExistingValidNinePortions();
         // verify existing data loaded and set to UI
-        verify(viewModelMock).useCaseResultModel(resultArgumentCaptor.capture());
+        verify(viewModelMock).useCasePortionResult(resultArgumentCaptor.capture());
         MeasurementModel actualModelLoaded = resultArgumentCaptor.getValue().getModel();
         assertEquals(expectedModelLoaded, actualModelLoaded);
         assertEquals(ResultStatus.RESULT_OK, resultArgumentCaptor.getValue().getResult());
@@ -859,7 +859,7 @@ public class UnitOfMeasurePortionUseCaseTest {
         // user updates unit of measure
         SUT.processModel(unitOfMeasureChangeToImperialSpoonFromUi);
         // verify expected UI updates returned
-        verify(viewModelMock, times((2))).useCaseResultModel(resultArgumentCaptor.capture());
+        verify(viewModelMock, times((2))).useCasePortionResult(resultArgumentCaptor.capture());
         MeasurementResult unitOfMeasureChangeResult = resultArgumentCaptor.getValue();
         MeasurementModel actualResultFromUnitOfMeasureChange = unitOfMeasureChangeResult.getModel();
         assertEquals(expectedResultFromUnitOfMeasureChange, actualResultFromUnitOfMeasureChange);
@@ -870,7 +870,7 @@ public class UnitOfMeasurePortionUseCaseTest {
         // user updates measurement unit one
         SUT.processModel(measurementOneChangeFromUi);
         // verify expected UI updates returned
-        verify(viewModelMock, times(3)).useCaseResultModel(
+        verify(viewModelMock, times(3)).useCasePortionResult(
                 resultArgumentCaptor.capture());
         MeasurementModel actualResultFromMeasurementOneChange =
                 resultArgumentCaptor.getValue().getModel();
@@ -884,7 +884,7 @@ public class UnitOfMeasurePortionUseCaseTest {
         // user updates conversion factor
         SUT.processModel(conversionFactorChangeFromUi);
         // verify expected UI updates returned
-        verify(viewModelMock, times((4))).useCaseResultModel(resultArgumentCaptor.capture());
+        verify(viewModelMock, times((4))).useCasePortionResult(resultArgumentCaptor.capture());
         MeasurementModel actualResultFromConversionFactorChange =
                 resultArgumentCaptor.getValue().getModel();
         assertEquals(expectedResultFromConversionFactorChanged,

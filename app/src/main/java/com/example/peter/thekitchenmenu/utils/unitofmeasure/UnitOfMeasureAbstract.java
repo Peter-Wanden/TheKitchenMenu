@@ -30,7 +30,6 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     double smallestUnit;
     private LastMeasurementUpdated lastMeasurementUpdated = TOTAL_MEASUREMENT;
     boolean isConversionFactorEnabled;
-    private final double NO_CONVERSION_FACTOR_SET = 1;
 
 
     int typeStringResourceId;
@@ -46,7 +45,7 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     private double totalMeasurementOne;
     private int itemMeasurementTwo;
     private double itemMeasurementOne;
-    private double conversionFactor = NO_CONVERSION_FACTOR_SET;
+    private double conversionFactor = NO_CONVERSION_FACTOR;
 
     UnitOfMeasureAbstract() {
     }
@@ -95,7 +94,7 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     }
 
     private boolean conversionFactorHasPreviouslyChanged() {
-        return conversionFactor != NO_CONVERSION_FACTOR_SET;
+        return conversionFactor != NO_CONVERSION_FACTOR;
     }
 
     private void resetToOriginalValuesBeforeConversionFactorChanged() {

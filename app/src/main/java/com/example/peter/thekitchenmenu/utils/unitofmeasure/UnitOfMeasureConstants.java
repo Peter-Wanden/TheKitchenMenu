@@ -17,8 +17,9 @@ public class UnitOfMeasureConstants {
     static final int NOT_YET_SET = 0;
 
     // density
-    public static final double MAX_CONVERSION_FACTOR = 1.5;
     public static final double MIN_CONVERSION_FACTOR = .001;
+    public static final double NO_CONVERSION_FACTOR = 1;
+    public static final double MAX_CONVERSION_FACTOR = 1.5;
 
     // region imperial mass constants --------------------------------------------------------------
     static final MeasurementType IMPERIAL_MASS_TYPE = MeasurementType.MASS;

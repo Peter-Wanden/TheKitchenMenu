@@ -30,7 +30,8 @@ import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeIden
 import com.example.peter.thekitchenmenu.utils.ParseIntegerFromObservableHandler;
 import com.example.peter.thekitchenmenu.utils.TextValidationHandler;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasurePortionUseCase;
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.UseCaseConversionFactorStatus;
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.UseCasePortion;
 
 public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory {
 
@@ -151,6 +152,7 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
             return (T) new RecipeIngredientMeasurementViewModel(
                     application,
                     getPortionsUseCase(),
+                    getConversionFactorUseCase(),
                     application.getResources(),
                     new NumberFormatter(application.getResources()));
 
@@ -171,8 +173,13 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
         throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
     }
 
-    private UnitOfMeasurePortionUseCase getPortionsUseCase() {
+    private UseCasePortion getPortionsUseCase() {
         UseCaseFactory factory = UseCaseFactory.getInstance(application);
         return factory.providePortionsUseCase();
+    }
+
+    private UseCaseConversionFactorStatus getConversionFactorUseCase() {
+        UseCaseFactory factory = UseCaseFactory.getInstance(application);
+        return factory.provideConversionFactorUseCase();
     }
 }

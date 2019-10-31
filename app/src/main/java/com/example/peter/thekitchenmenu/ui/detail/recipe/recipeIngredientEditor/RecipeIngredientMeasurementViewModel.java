@@ -14,16 +14,19 @@ import com.example.peter.thekitchenmenu.data.model.MeasurementModel;
 import com.example.peter.thekitchenmenu.utils.NumberFormatter;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementResult;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtype;
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.PortionUseCaseViewModel;
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.UseCaseConversionFactorStatus;
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.UseCaseConversionFactorViewModel;
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.UseCasePortionViewModel;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasure;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants;
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasurePortionUseCase;
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.UseCasePortion;
 
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementResult.*;
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UseCaseConversionFactorStatus.*;
 
 public class RecipeIngredientMeasurementViewModel
         extends AndroidViewModel
-        implements PortionUseCaseViewModel {
+        implements UseCasePortionViewModel, UseCaseConversionFactorViewModel {
 
     private static final String TAG = "tkm-RecipeIngredientMea";
 
@@ -32,7 +35,8 @@ public class RecipeIngredientMeasurementViewModel
 
     private MeasurementSubtype defaultSubtype = MeasurementSubtype.METRIC_MASS;
     private UnitOfMeasure unitOfMeasure = defaultSubtype.getMeasurementClass();
-    private UnitOfMeasurePortionUseCase useCase;
+    private UseCasePortion useCasePortion;
+    private UseCaseConversionFactorStatus useCaseConversionFactorStatus;
     private static final int MEASUREMENT_ERROR = -1;
 
     public final ObservableField<MeasurementSubtype> subtype = new ObservableField<>(defaultSubtype);
@@ -44,6 +48,7 @@ public class RecipeIngredientMeasurementViewModel
     public final ObservableBoolean isConversionFactorEnabled = new ObservableBoolean();
     public final ObservableBoolean advancedCheckBox = new ObservableBoolean();
     public final ObservableBoolean showConversionFactorFields = new ObservableBoolean();
+    public final ObservableBoolean showUneditableConversionFactorFields = new ObservableBoolean();
     public final ObservableField<String> measurementOne = new ObservableField<>();
     public final ObservableField<String> measurementTwo = new ObservableField<>();
     public final ObservableField<String> measurementOneErrorMessage = new ObservableField<>();
@@ -57,12 +62,14 @@ public class RecipeIngredientMeasurementViewModel
     private boolean updatingDisplay;
 
     public RecipeIngredientMeasurementViewModel(Application application,
-                                                UnitOfMeasurePortionUseCase useCase,
+                                                UseCasePortion useCasePortion,
+                                                UseCaseConversionFactorStatus useCaseConversionFactor,
                                                 Resources resources,
                                                 NumberFormatter numberFormatter) {
         super(application);
+        this.useCasePortion = useCasePortion;
+        this.useCaseConversionFactorStatus = useCaseConversionFactor;
         this.resources = resources;
-        this.useCase = useCase;
         this.numberFormatter = numberFormatter;
 
         subtype.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
@@ -103,15 +110,16 @@ public class RecipeIngredientMeasurementViewModel
     }
 
     private void setViewModel() {
-        useCase.setViewModel(this);
+        useCasePortion.setViewModel(this);
+        useCaseConversionFactorStatus.setViewModel(this);
     }
 
     public void start(String recipeId, String ingredientId) {
-        useCase.start(recipeId, ingredientId);
+        useCasePortion.start(recipeId, ingredientId);
     }
 
     public void start(String recipeIngredientId) {
-        useCase.start(recipeIngredientId);
+        useCasePortion.start(recipeIngredientId);
     }
 
     private void subTypeUpdated() {
@@ -200,17 +208,14 @@ public class RecipeIngredientMeasurementViewModel
     private void advancedCheckBoxUpdated() {
         if (isConversionFactorEnabled.get() && advancedCheckBox.get())
             showConversionFactorFields.set(true);
-    }
-
-    private void clearMeasurementErrors() {
-        measurementOneErrorMessage.set(null);
-        measurementTwoErrorMessage.set(null);
+        else
+            showConversionFactorFields.set(false);
     }
 
     private void updateMeasurementModel() {
         if (measurementModelHasChanged()) {
             MeasurementModel updatedMeasurementModel = getUpdatedMeasurementModel();
-            useCase.processModel(updatedMeasurementModel);
+            useCasePortion.processModel(updatedMeasurementModel);
         }
     }
 
@@ -232,7 +237,7 @@ public class RecipeIngredientMeasurementViewModel
     }
 
     @Override
-    public void useCaseResultModel(MeasurementResult result) {
+    public void useCasePortionResult(MeasurementResult result) {
         measurementModel = result.getModel();
         processMeasurementModel();
         processResultStatus(result.getResult());
@@ -248,24 +253,15 @@ public class RecipeIngredientMeasurementViewModel
                 subtype.set(unitOfMeasure.getMeasurementSubtype());
 
             isConversionFactorEnabled.set(unitOfMeasure.isConversionFactorEnabled());
-
-            final int DEFAULT_CONVERSION_FACTOR = 1;
-            if (isConversionFactorEnabled.get() && measurementModel.getConversionFactor()
-                    != DEFAULT_CONVERSION_FACTOR) {
-                advancedCheckBox.set(true);
-            }
         }
-
         if (measurementModel.getConversionFactor() != conversionFactorParsed) {
             conversionFactorParsed = measurementModel.getConversionFactor();
             conversionFactor.set(numberFormatter.formatDecimalForDisplay(conversionFactorParsed));
         }
-
         if (measurementModel.getTotalMeasurementOne() != measurementOneParsed) {
             measurementOneParsed = measurementModel.getItemMeasurementOne();
             measurementOne.set(numberFormatter.formatDecimalForDisplay(measurementOneParsed));
         }
-
         if (measurementModel.getTotalMeasurementTwo() != measurementTwoParsed) {
             measurementTwoParsed = measurementModel.getTotalMeasurementTwo();
             measurementTwo.set(numberFormatter.formatIntegerForDisplay(measurementTwoParsed));
@@ -274,17 +270,67 @@ public class RecipeIngredientMeasurementViewModel
 
     private void processResultStatus(ResultStatus resultStatus) {
         if (resultStatus == ResultStatus.INVALID_CONVERSION_FACTOR) {
+            conversionFactorErrorMessage.set(null);
             conversionFactorErrorMessage.set(resources.getString(
                     R.string.conversion_factor_error_message,
                     UnitOfMeasureConstants.MIN_CONVERSION_FACTOR,
                     UnitOfMeasureConstants.MAX_CONVERSION_FACTOR));
 
         } else if (resultStatus == ResultStatus.INVALID_TOTAL_MEASUREMENT_ONE) {
+            measurementOneErrorMessage.set(null);
             measurementOneErrorMessage.set("Tablespoons and/or teaspoons need to have a value between 0.1 tsp and 666 Tbsp");
 
         } else if (resultStatus == ResultStatus.INVALID_TOTAL_MEASUREMENT_TWO) {
+            measurementTwoErrorMessage.set(null);
             measurementTwoErrorMessage.set("Tablespoons and/or teaspoons need to have a value between 0.1 tsp and 666 Tbsp");
+
+        } else if (resultStatus == ResultStatus.RESULT_OK) {
+            conversionFactorErrorMessage.set(null);
+            measurementOneErrorMessage.set(null);
+            measurementTwoErrorMessage.set(null);
+        }
+        useCaseConversionFactorStatus.getConversionFactorStatus(
+                subtype.get(),
+                useCasePortion.getIngredientId());
+    }
+
+    @Override
+    public void useCaseConversionFactorResult(UseCaseConversionFactorResult result) {
+        if (result == UseCaseConversionFactorResult.DISABLED) {
+            hideAllConversionFactorInformation();
+        } else if (result == UseCaseConversionFactorResult.ENABLED_UNEDITABLE) {
+            showUneditableConversionFactorInformation();
+        } else if (result == UseCaseConversionFactorResult.ENABLED_EDITABLE_UNSET) {
+            showOptionToAddConversionFactorInformation();
+        } else if (result == UseCaseConversionFactorResult.ENABLED_EDITABLE_SET) {
+            showAllConversionFactorInformation();
         }
         updatingDisplay = false;
+    }
+
+    private void hideAllConversionFactorInformation() {
+        isConversionFactorEnabled.set(false);
+        showConversionFactorFields.set(false);
+        showUneditableConversionFactorFields.set(false);
+    }
+
+    private void showUneditableConversionFactorInformation() {
+        isConversionFactorEnabled.set(true);
+        showConversionFactorFields.set(false);
+        showUneditableConversionFactorFields.set(true);
+    }
+
+    private void showOptionToAddConversionFactorInformation(){
+        isConversionFactorEnabled.set(true);
+        showConversionFactorFields.set(false);
+        advancedCheckBox.set(false);
+        showUneditableConversionFactorFields.set(false);
+    }
+
+    private void showAllConversionFactorInformation() {
+        isConversionFactorEnabled.set(true);
+        showConversionFactorFields.set(true);
+        advancedCheckBox.set(true);
+        showUneditableConversionFactorFields.set(false);
     }
 }
