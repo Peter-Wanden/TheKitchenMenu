@@ -144,8 +144,7 @@ public class IngredientEditorViewModelTest {
         // Act
         SUT.start();
         // Assert
-        verify(useButtonVisibilityObserverMock, times(2)).
-                onChanged(false);
+        verify(useButtonVisibilityObserverMock, times((2))).onChanged(false);
     }
 
     @Test
@@ -167,8 +166,7 @@ public class IngredientEditorViewModelTest {
     @Test
     public void startNewIngredientId_invalidName_useButtonNotShown() {
         // Arrange
-        when(uniqueIdProviderMock.getUId()).thenReturn(
-                NEW_INVALID_NAME.getId());
+        when(uniqueIdProviderMock.getUId()).thenReturn(NEW_INVALID_NAME.getId());
         when(timeProviderMock.getCurrentTimestamp()).thenReturn(
                 NEW_INVALID_NAME.getCreateDate());
         whenShortTextValidationReturnErrorMessage();
@@ -176,8 +174,7 @@ public class IngredientEditorViewModelTest {
         SUT.start();
         SUT.nameObservable.set(NEW_INVALID_NAME.getName());
         // Assert
-        verify(useButtonVisibilityObserverMock, times(3)).
-                onChanged(eq(false));
+        verify(useButtonVisibilityObserverMock, times((3))).onChanged(eq(false));
     }
 
     @Test
@@ -206,8 +203,7 @@ public class IngredientEditorViewModelTest {
         SUT.nameObservable.set(NEW_VALID_NAME.getName());
         whenDuplicateNameCheckForNewIngredientReturnNoneFound();
         // Assert
-        verify(useButtonVisibilityObserverMock, times(2)).
-                onChanged(eq(true));
+        verify(useButtonVisibilityObserverMock, times((2))).onChanged(eq(true));
     }
 
     @Test
@@ -261,8 +257,7 @@ public class IngredientEditorViewModelTest {
         duplicateCallbackArgumentCaptor.getValue().duplicateCheckResult(
                 VALID_EXISTING_COMPLETE.getId());
 
-        verify(useButtonVisibilityObserverMock, times(3)).
-                onChanged(eq(false));
+        verify(useButtonVisibilityObserverMock, times((3))).onChanged(eq(false));
     }
 
     @Test
@@ -332,8 +327,7 @@ public class IngredientEditorViewModelTest {
 
         SUT.nameObservable.set(NEW_VALID_NAME.getName());
         // Assert
-        verify(useButtonVisibilityObserverMock, times(4)).
-                onChanged(eq(true));
+        verify(useButtonVisibilityObserverMock, times((4))).onChanged(eq(true));
     }
 
     @Test
@@ -366,8 +360,7 @@ public class IngredientEditorViewModelTest {
         SUT.nameObservable.set(NEW_VALID_NAME_INVALID_DESCRIPTION.getName());
         SUT.descriptionObservable.set(NEW_VALID_NAME_INVALID_DESCRIPTION.getDescription());
         // Assert
-        verify(useButtonVisibilityObserverMock, times(3)).
-                onChanged(false);
+        verify(useButtonVisibilityObserverMock, times((3))).onChanged(false);
     }
 
     @Test
@@ -383,8 +376,7 @@ public class IngredientEditorViewModelTest {
         SUT.nameObservable.set(NEW_INVALID_NAME_VALID_DESCRIPTION.getName());
         SUT.descriptionObservable.set(NEW_INVALID_NAME_VALID_DESCRIPTION.getDescription());
         // Assert
-        verify(useButtonVisibilityObserverMock, times(4)).
-                onChanged(false);
+        verify(useButtonVisibilityObserverMock, times((4))).onChanged(false);
     }
 
     @Test
@@ -418,7 +410,7 @@ public class IngredientEditorViewModelTest {
         whenDuplicateNameCheckForNewIngredientReturnNoneFound();
         SUT.descriptionObservable.set(NEW_VALID_NAME_VALID_DESCRIPTION.getDescription());
         // Assert
-        verify(useButtonVisibilityObserverMock, times(3)).onChanged(eq(true));
+        verify(useButtonVisibilityObserverMock, times((3))).onChanged(eq(true));
     }
 
     @Test
@@ -502,8 +494,7 @@ public class IngredientEditorViewModelTest {
         SUT.start(VALID_EXISTING_COMPLETE.getId());
         simulateGetValidExistingCompleteFromDatabase();
         // Assert
-        verify(useButtonVisibilityObserverMock, times(2)).
-                onChanged(eq(false));
+        verify(useButtonVisibilityObserverMock, times((2))).onChanged(eq(false));
     }
 
     @Test
@@ -528,8 +519,7 @@ public class IngredientEditorViewModelTest {
         simulateGetValidExistingCompleteFromDatabase();
         SUT.nameObservable.set(VALID_EXISTING_INVALID_NAME_UPDATE.getName());
         // Assert
-        verify(useButtonVisibilityObserverMock, times(3)).
-                onChanged(eq(false));
+        verify(useButtonVisibilityObserverMock, times((3))).onChanged(eq(false));
     }
 
     @Test
@@ -557,8 +547,7 @@ public class IngredientEditorViewModelTest {
         SUT.nameObservable.set(VALID_EXISTING_VALID_NAME_UPDATE.getName());
         whenDuplicateNameCheckForNewIngredientReturnNoneFound();
         // Assert
-        verify(useButtonVisibilityObserverMock, times(2)).
-                onChanged(false);
+        verify(useButtonVisibilityObserverMock, times((2))).onChanged(false);
     }
 
     @Test
@@ -574,8 +563,7 @@ public class IngredientEditorViewModelTest {
         SUT.nameObservable.set(VALID_EXISTING_VALID_NAME_UPDATE.getName());
         whenDuplicateNameCheckForNewIngredientReturnNoneFound();
         // Assert
-        verify(useButtonVisibilityObserverMock, times(2)).
-                onChanged(eq(true));
+        verify(useButtonVisibilityObserverMock, times((2))).onChanged(eq(true));
         SUT.useButtonPressed();
         verify(dataSourceMock).save(eq(VALID_EXISTING_VALID_NAME_UPDATE));
     }
@@ -612,8 +600,7 @@ public class IngredientEditorViewModelTest {
         duplicateCallbackArgumentCaptor.getValue().duplicateCheckResult(
                 VALID_EXISTING_FROM_ANOTHER_USER.getId());
         // Assert
-        verify(useButtonVisibilityObserverMock, times(3)).
-                onChanged(false);
+        verify(useButtonVisibilityObserverMock, times((3))).onChanged(false);
     }
 
     @Test
@@ -645,8 +632,7 @@ public class IngredientEditorViewModelTest {
         simulateGetValidExistingCompleteFromDatabase();
         SUT.descriptionObservable.set(VALID_EXISTING_INVALID_DESCRIPTION_UPDATE.getName());
         // Assert
-        verify(useButtonVisibilityObserverMock, times(3)).
-                onChanged(false);
+        verify(useButtonVisibilityObserverMock, times((3))).onChanged(false);
     }
 
     @Test

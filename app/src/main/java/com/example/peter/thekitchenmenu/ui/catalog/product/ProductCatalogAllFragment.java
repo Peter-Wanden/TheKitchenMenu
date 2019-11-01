@@ -23,7 +23,6 @@ public class ProductCatalogAllFragment extends Fragment {
     private static final String TAG = "tkm-ProductCatAllFrag";
 
     private ProductCatalogViewModel viewModel;
-    private ProductCatalogAllFragmentBinding binding;
     private ProductCatalogAllRecyclerAdapter adapter;
 
     public ProductCatalogAllFragment() {
@@ -53,7 +52,7 @@ public class ProductCatalogAllFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        binding = DataBindingUtil.inflate(
+        ProductCatalogAllFragmentBinding binding = DataBindingUtil.inflate(
                 inflater,
                 R.layout.product_catalog_all_fragment,
                 container,

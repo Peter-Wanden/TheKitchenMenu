@@ -56,7 +56,7 @@ public class MeasurementModelTestData {
 
     public static MeasurementResult getResultNewInvalidTotalMeasurementOne() {
         return new MeasurementResult(
-                getEmptyModel(),
+                getNewInvalidTotalMeasurementOne(),
                 MeasurementResult.ResultStatus.INVALID_TOTAL_MEASUREMENT_ONE
         );
     }
@@ -114,7 +114,7 @@ public class MeasurementModelTestData {
 
     public static MeasurementResult getResultNewInvalidTotalMeasurementTwo() {
         return new MeasurementResult(
-                getEmptyModel(),
+                getNewInvalidTotalMeasurementTwo(),
                 MeasurementResult.ResultStatus.INVALID_TOTAL_MEASUREMENT_TWO
         );
     }
@@ -220,7 +220,8 @@ public class MeasurementModelTestData {
     }
 
     public static MeasurementResult getResultNewInvalidConversionFactor() {
-        return new MeasurementResult(getEmptyModel(),
+        return new MeasurementResult(
+                getNewInvalidConversionFactor(),
                 MeasurementResult.ResultStatus.INVALID_CONVERSION_FACTOR
         );
     }
@@ -299,7 +300,7 @@ public class MeasurementModelTestData {
                 getExistingValidSubtype(),
                 getExistingValidNinePortions(),
                 getExistingValidConversionFactor(),
-                0,
+                getExistingMetricInvalidTotalOne().getTotalMeasurementOne(),
                 getExistingValidTotalMeasurementTwo(),
                 ((int) getExistingMetricValidItemBaseUnitsMinusTotalMeasurementOne() % 1000),
                 getExistingValidItemMeasurementTwo(),
@@ -333,14 +334,12 @@ public class MeasurementModelTestData {
 
     private static int getExistingValidItemMeasurementTwo() {
         return (int) RecipeIngredientQuantityEntityTestData.
-                getExistingValidMetric().
-                getItemBaseUnits() / 1000;
+                getExistingValidMetric().getItemBaseUnits() / 1000;
     }
 
     private static double getExistingValidItemMeasurementOne() {
         return RecipeIngredientQuantityEntityTestData.
-                getExistingValidMetric().
-                getItemBaseUnits() % 1000;
+                getExistingValidMetric().getItemBaseUnits() % 1000;
     }
 
     public static MeasurementResult getExistingInvalidTotalTwoResult() {
@@ -356,8 +355,8 @@ public class MeasurementModelTestData {
                 getExistingValidNinePortions(),
                 getExistingValidConversionFactor(),
                 getExistingValidTotalMeasurementOne(),
-                0,
-                (int) getExistingMetricValidItemBaseUnits() % 1000,
+                getExistingMetricInvalidTotalTwo().getTotalMeasurementTwo(),
+                (int) (getExistingMetricValidItemBaseUnits() % 1000),
                 0,
                 getExistingMetricValidItemBaseUnits()
         );
@@ -480,7 +479,7 @@ public class MeasurementModelTestData {
 
     public static MeasurementResult getExistingMetricInvalidConversionFactorResult() {
         return new MeasurementResult(
-                getExistingMetricValid(),
+                getExistingMetricInvalidConversionFactor(),
                 MeasurementResult.ResultStatus.INVALID_CONVERSION_FACTOR
         );
     }

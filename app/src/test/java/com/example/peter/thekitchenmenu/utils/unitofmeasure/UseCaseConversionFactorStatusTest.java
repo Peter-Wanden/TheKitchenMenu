@@ -8,6 +8,7 @@ import com.example.peter.thekitchenmenu.testdata.IngredientEntityTestData;
 import org.junit.*;
 import org.mockito.*;
 
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UseCaseConversionFactorStatus.*;
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UseCaseConversionFactorStatus.UseCaseConversionFactorResult.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
@@ -30,9 +31,7 @@ public class UseCaseConversionFactorStatusTest {
     @Mock
     RepositoryIngredient repoMock;
     @Mock
-    UseCaseConversionFactorViewModel viewModelMock;
-    @Captor
-    ArgumentCaptor<String> ingredientIdCaptor;
+    UseCaseConversionFactorCallback viewModelMock;
     @Captor
     ArgumentCaptor<DataSource.GetEntityCallback<IngredientEntity>> getEntityCallbackCaptor;
     // endregion helper fields ---------------------------------------------------------------------
@@ -43,7 +42,7 @@ public class UseCaseConversionFactorStatusTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         SUT = new UseCaseConversionFactorStatus(repoMock);
-        SUT.setViewModel(viewModelMock);
+        SUT.setResultStatusReceiver(viewModelMock);
     }
 
     @Test

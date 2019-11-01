@@ -5,10 +5,17 @@ import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UseCaseConversionFactorStatus.UseCaseConversionFactorResult.*;
 
 public class UseCaseConversionFactorStatus
         implements DataSource.GetEntityCallback<IngredientEntity> {
+
+    public interface UseCaseConversionFactorCallback {
+        void useCaseConversionFactorResult(UseCaseConversionFactorResult result);
+    }
 
     public enum UseCaseConversionFactorResult {
         DISABLED,
@@ -17,7 +24,7 @@ public class UseCaseConversionFactorStatus
         ENABLED_EDITABLE_SET
     }
 
-    private UseCaseConversionFactorViewModel viewModel;
+    private List<UseCaseConversionFactorCallback> statusReceivers = new ArrayList<>();
     private RepositoryIngredient repository;
     private boolean isConversionFactorEnabled;
     private IngredientEntity ingredientEntity;
@@ -26,8 +33,12 @@ public class UseCaseConversionFactorStatus
         this.repository = repository;
     }
 
-    public void setViewModel(UseCaseConversionFactorViewModel viewModel) {
-        this.viewModel = viewModel;
+    public void registerListener(UseCaseConversionFactorCallback listener) {
+        statusReceivers.add(listener);
+    }
+
+    public void unregisterListener(UseCaseConversionFactorCallback listener) {
+        statusReceivers.remove(listener);
     }
 
     public void getConversionFactorStatus(MeasurementSubtype subtype,
@@ -54,22 +65,22 @@ public class UseCaseConversionFactorStatus
 
     @Override
     public void onDataNotAvailable() {
-
+        notifyListeners(DISABLED);
     }
 
     private void getResult() {
         if (isConversionFactorEnabled) {
             if (userCanEditIngredient()) {
-                if (conversionFactorSet()) {
-                    viewModel.useCaseConversionFactorResult(ENABLED_EDITABLE_SET);
+                if (conversionFactorIsSet()) {
+                    notifyListeners(ENABLED_EDITABLE_SET);
                 } else {
-                    viewModel.useCaseConversionFactorResult(ENABLED_EDITABLE_UNSET);
+                    notifyListeners(ENABLED_EDITABLE_UNSET);
                 }
             } else {
-                viewModel.useCaseConversionFactorResult(ENABLED_UNEDITABLE);
+                notifyListeners(ENABLED_UNEDITABLE);
             }
         } else {
-            viewModel.useCaseConversionFactorResult(DISABLED);
+            notifyListeners(DISABLED);
         }
     }
 
@@ -77,7 +88,12 @@ public class UseCaseConversionFactorStatus
         return Constants.getUserId().getValue().equals(ingredientEntity.getCreatedBy());
     }
 
-    private boolean conversionFactorSet() {
+    private boolean conversionFactorIsSet() {
         return ingredientEntity.getConversionFactor() != UnitOfMeasureConstants.NO_CONVERSION_FACTOR;
+    }
+
+    private void notifyListeners(UseCaseConversionFactorResult result) {
+        for (UseCaseConversionFactorCallback callback : statusReceivers)
+            callback.useCaseConversionFactorResult(result);
     }
 }

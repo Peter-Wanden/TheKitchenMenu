@@ -23,8 +23,8 @@
             android:id="@+id/recipeIngredientsLL"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
+            android:orientation="vertical"
+            >
             <ListView
                 android:id="@+id/recipeIngredientsList"
                 android:layout_width="match_parent"

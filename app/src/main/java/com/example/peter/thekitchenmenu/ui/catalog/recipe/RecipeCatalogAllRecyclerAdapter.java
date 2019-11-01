@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
+import com.example.peter.thekitchenmenu.data.model.RecipeListItemModel;
 import com.example.peter.thekitchenmenu.databinding.RecipeListItemBinding;
 
 import java.util.ArrayList;
@@ -23,8 +24,8 @@ public class RecipeCatalogAllRecyclerAdapter
     private static final String TAG = "tkm-CatalogAdapter";
 
     private final RecipeCatalogViewModel viewModel;
-    private List<RecipeEntity> recipeModelList;
-    private List<RecipeEntity> recipeModelListFull;
+    private List<RecipeListItemModel> recipeModelList;
+    private List<RecipeListItemModel> recipeModelListFull;
 
     RecipeCatalogAllRecyclerAdapter(RecipeCatalogViewModel viewModel) {
         this.viewModel = viewModel;
@@ -45,8 +46,8 @@ public class RecipeCatalogAllRecyclerAdapter
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        final RecipeEntity recipeModel = recipeModelList.get(position);
-        holder.bind(recipeModel);
+        final RecipeListItemModel listItemModel = recipeModelList.get(position);
+        holder.bind(listItemModel);
     }
 
     @Override
@@ -64,19 +65,19 @@ public class RecipeCatalogAllRecyclerAdapter
     private Filter filterResults = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
-            List<RecipeEntity> filteredList = new ArrayList<>();
+            List<RecipeListItemModel> filteredList = new ArrayList<>();
 
             if (constraint == null || constraint.length() == 0) {
                 filteredList.addAll(recipeModelListFull);
             } else {
                 String filterPattern = constraint.toString().toLowerCase().trim();
 
-                for (RecipeEntity model : recipeModelListFull) {
-//                    String title = model.getTitle.toLowerCase();
-//
-//                    if (title.contains(filterPattern)) {
-//                        filteredList.add(model);
-//                    }
+                for (RecipeListItemModel model : recipeModelListFull) {
+                    String title = model.getRecipeName().toLowerCase();
+
+                    if (title.contains(filterPattern)) {
+                        filteredList.add(model);
+                    }
                 }
             }
             FilterResults results = new FilterResults();
@@ -92,12 +93,12 @@ public class RecipeCatalogAllRecyclerAdapter
         }
     };
 
-    /* Getter for the current list of products */
-    public List<RecipeEntity> getRecipes() {
+    /* Getter for the current list of recipes */
+    public List<RecipeListItemModel> getRecipes() {
         return recipeModelList;
     }
 
-    void setRecipeModels(List<RecipeEntity> recipeModelList) {
+    void setRecipeModels(List<RecipeListItemModel> recipeModelList) {
         this.recipeModelList = recipeModelList;
         recipeModelListFull = new ArrayList<>(recipeModelList);
         notifyDataSetChanged();
@@ -109,15 +110,18 @@ public class RecipeCatalogAllRecyclerAdapter
 
         RecipeItemUserActionsListener listener = new RecipeItemUserActionsListener() {
             @Override
-            public void onRecipeClicked(RecipeEntity recipeEntity) {
+            public void onRecipeClicked(RecipeListItemModel listItemModel) {
+                viewModel.viewRecipe(listItemModel);
             }
 
             @Override
-            public void onAddToFavoritesClicked(RecipeEntity recipeEntity) {
+            public void onAddToFavoritesClicked(RecipeListItemModel listItemModel) {
+                viewModel.addToFavorites(listItemModel);
             }
 
             @Override
-            public void onRemoveFromFavoritesClicked(RecipeEntity recipeEntity) {
+            public void onRemoveFromFavoritesClicked(RecipeListItemModel listItemModel) {
+                viewModel.removeFromFavorites(listItemModel);
             }
         };
 
@@ -126,7 +130,7 @@ public class RecipeCatalogAllRecyclerAdapter
             this.binding = binding;
         }
 
-        void bind(RecipeEntity recipeModel) {
+        void bind(RecipeListItemModel recipeModel) {
             binding.setRecipeModel(recipeModel);
             binding.setListener(listener);
             binding.executePendingBindings();

@@ -15,6 +15,7 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
+import com.example.peter.thekitchenmenu.ui.catalog.recipe.RecipeListDataInteractor;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor.RecipeIngredientMeasurementViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeCourseSelectorViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeDurationViewModel;
@@ -104,8 +105,10 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
         if (modelClass.isAssignableFrom(RecipeCatalogViewModel.class)) {
             //noinspection unchecked
             return (T) new RecipeCatalogViewModel(
-                    application,
-                    recipeRepository);
+                    new RecipeListDataInteractor(
+                            recipeIdentityRepository,
+                            recipeDurationRepository
+                    ));
 
         } else if (modelClass.isAssignableFrom(RecipeEditorViewModel.class)) {
             //noinspection unchecked

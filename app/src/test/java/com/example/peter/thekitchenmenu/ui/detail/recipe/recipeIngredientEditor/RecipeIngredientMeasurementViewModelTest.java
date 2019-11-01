@@ -96,13 +96,9 @@ public class RecipeIngredientMeasurementViewModelTest {
     @Mock
     UseCaseConversionFactorStatus useCaseConversionFactorMock;
     @Captor
-    ArgumentCaptor<MeasurementModel> requestModelCaptor;
-    @Captor
     ArgumentCaptor<String> recipeIdCaptor;
     @Captor
     ArgumentCaptor<String> ingredientIdCaptor;
-    @Captor
-    ArgumentCaptor<MeasurementResult> resultModelCaptor;
     @Mock
     NumberFormatter numberFormatterMock;
     // endregion helper fields ---------------------------------------------------------------------

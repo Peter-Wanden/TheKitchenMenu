@@ -9,12 +9,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.peter.thekitchenmenu.R;
+import com.example.peter.thekitchenmenu.data.model.RecipeListItemModel;
 import com.example.peter.thekitchenmenu.databinding.RecipeCatalogAllFragmentBinding;
+
+import java.util.List;
 
 public class RecipeCatalogAllFragment extends Fragment {
 
@@ -33,9 +37,10 @@ public class RecipeCatalogAllFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        // todo - add observers
-
+        viewModel.getRecipeListLiveData().observe(requireActivity(), recipeListItemModels -> {
+            if (recipeListItemModels != null)
+                adapter.setRecipeModels(recipeListItemModels);
+        });
     }
 
     @Nullable

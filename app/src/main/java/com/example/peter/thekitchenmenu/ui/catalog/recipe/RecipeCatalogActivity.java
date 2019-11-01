@@ -8,16 +8,22 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.peter.thekitchenmenu.R;
+import com.example.peter.thekitchenmenu.data.model.RecipeListItemModel;
 import com.example.peter.thekitchenmenu.databinding.RecipeCatalogActivityBinding;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryRecipe;
 import com.example.peter.thekitchenmenu.ui.catalog.CatalogFragmentPageAdapter;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeEditorActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-public class RecipeCatalogActivity extends AppCompatActivity implements RecipeNavigator {
+import java.util.List;
+
+public class RecipeCatalogActivity
+        extends AppCompatActivity
+        implements RecipeNavigator {
 
     private static final String TAG = "tkm-RecipeCatalogAct";
 
@@ -104,6 +110,11 @@ public class RecipeCatalogActivity extends AppCompatActivity implements RecipeNa
     public void addRecipe() {
         Intent intent = new Intent(this, RecipeEditorActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void viewRecipe() {
+
     }
 
     @Override

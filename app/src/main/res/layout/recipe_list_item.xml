@@ -10,7 +10,7 @@
 
         <variable
             name="recipeModel"
-            type="com.example.peter.thekitchenmenu.data.entity.RecipeEntity" />
+            type="com.example.peter.thekitchenmenu.data.model.RecipeListItemModel" />
 
         <variable
             name="listener"
@@ -27,6 +27,7 @@
         android:layout_marginBottom="@dimen/card_view_margin_top_bottom"
         android:elevation="@dimen/card_view_elevation"
         app:cardCornerRadius="4dp"
+        android:onClick="@{() -> listener.onRecipeClicked(recipeModel)}"
         >
 
         <!-- android:onClick="@{() -> listener.onRecipeClicked(recipeEntity)}" -->
@@ -50,10 +51,85 @@
                 android:paddingEnd="@dimen/list_item_top_full_margin"
                 android:paddingStart="@dimen/list_item_top_full_margin"
                 android:paddingTop="@dimen/list_item_top_half_margin"
+                android:text="@{recipeModel.recipeName}"
                 app:layout_constraintEnd_toStartOf="@+id/guideline"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Cirio canned chopped tomatoes"
+                />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/time_guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent=".25"
+                />
+
+            <TextView
+                android:id="@+id/recipe_list_item_prep_time_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="@dimen/list_item_top_full_margin"
+                android:paddingStart="@dimen/list_item_top_full_margin"
+                android:paddingTop="@dimen/list_item_top_half_margin"
+                android:text="@string/recipe_preparation_time_label"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/recipe_list_item_title"
+                />
+
+            <TextView
+                android:id="@+id/recipe_list_item_pre_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{`` + recipeModel.prepTime}"
+                app:layout_constraintStart_toEndOf="@id/time_guideline"
+                app:layout_constraintBaseline_toBaselineOf="@id/recipe_list_item_prep_time_label"
+                tools:text="10"
+                />
+
+            <TextView
+                android:id="@+id/recipe_list_item_cook_time_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="@dimen/list_item_top_full_margin"
+                android:paddingStart="@dimen/list_item_top_full_margin"
+                android:paddingTop="@dimen/list_item_top_half_margin"
+                android:text="@string/recipe_cooking_time_label"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/recipe_list_item_prep_time_label"
+                />
+
+            <TextView
+                android:id="@+id/recipe_list_item_cook_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{`` + recipeModel.cookTime}"
+                app:layout_constraintStart_toEndOf="@id/time_guideline"
+                app:layout_constraintBaseline_toBaselineOf="@id/recipe_list_item_cook_time_label"
+                tools:text="10"
+                />
+
+            <TextView
+                android:id="@+id/recipe_list_item_total_time_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="@dimen/list_item_top_full_margin"
+                android:paddingStart="@dimen/list_item_top_full_margin"
+                android:paddingTop="@dimen/list_item_top_half_margin"
+                android:text="@string/recipe_total_time"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/recipe_list_item_cook_time_label"
+                />
+
+            <TextView
+                android:id="@+id/recipe_list_item_total_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                app:layout_constraintStart_toEndOf="@id/time_guideline"
+                app:layout_constraintBaseline_toBaselineOf="@id/recipe_list_item_total_time_label"
+                tools:text="100"
                 />
 
             <ImageView

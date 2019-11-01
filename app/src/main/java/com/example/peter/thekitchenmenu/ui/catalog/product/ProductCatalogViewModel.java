@@ -35,8 +35,7 @@ public class ProductCatalogViewModel extends AndroidViewModel
 
     private final MutableLiveData<String> searchQueryEvent = new MutableLiveData<>();
 
-    public ProductCatalogViewModel(
-            Application application) {
+    public ProductCatalogViewModel(Application application) {
         super(application);
         productInteractor = ProductCatalogInteractorImpl.getInstance(application);
     }

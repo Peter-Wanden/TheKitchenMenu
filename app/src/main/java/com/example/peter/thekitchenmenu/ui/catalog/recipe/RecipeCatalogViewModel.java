@@ -1,37 +1,35 @@
 package com.example.peter.thekitchenmenu.ui.catalog.recipe;
 
-import android.app.Application;
-
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableBoolean;
-import androidx.lifecycle.AndroidViewModel;
 
-import com.example.peter.thekitchenmenu.data.entity.FavoriteRecipeEntity;
-import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
-import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
+import com.example.peter.thekitchenmenu.data.model.RecipeListItemModel;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 
-public class RecipeCatalogViewModel extends AndroidViewModel {
+import static com.example.peter.thekitchenmenu.ui.catalog.recipe.RecipeListDataInteractor.*;
+
+public class RecipeCatalogViewModel
+        extends ViewModel
+        implements RecipeListCallback {
 
     private static final String TAG = "tkm-RecipeCatalogVM";
 
-    private DataSource<RecipeEntity> recipeRepository;
+    @NonNull
+    private RecipeListDataInteractor dataInteractor;
     private RecipeNavigator navigator;
 
     public ObservableBoolean dataLoading = new ObservableBoolean(); // todo - setup empty screen
     public ObservableBoolean isDataLoadingError = new ObservableBoolean();
+    public ObservableBoolean showEmptyScreen = new ObservableBoolean();
 
-    private LinkedHashMap<String, RecipeEntity> recipeMap = new LinkedHashMap<>();
-    private boolean recipesAreLoading;
-    private LinkedHashMap<String, FavoriteRecipeEntity> favoriteRecipeMap = new LinkedHashMap<>();
-    private boolean favoriteRecipesAreLoading;
+    private MutableLiveData<List<RecipeListItemModel>> recipeList = new MutableLiveData<>();
 
-    public RecipeCatalogViewModel(@NonNull Application application,
-                                  DataSource<RecipeEntity> recipeRepository) {
-        super(application);
-        this.recipeRepository = recipeRepository;
+    public RecipeCatalogViewModel(@NonNull RecipeListDataInteractor dataInteractor) {
+        this.dataInteractor = dataInteractor;
+        dataInteractor.registerListener(this);
     }
 
     void setNavigator(RecipeNavigator navigator) {
@@ -42,86 +40,53 @@ public class RecipeCatalogViewModel extends AndroidViewModel {
         navigator = null;
     }
 
+    MutableLiveData<List<RecipeListItemModel>> getRecipeListLiveData() {
+        return recipeList;
+    }
+
     void start() {
-        loadRecipeEntities();
-        loadFavoriteRecipeEntities(); // todo
+        loadRecipes();
     }
 
-    private void loadRecipeEntities() {
-        loadRecipeEntities(false);
+    private void loadRecipes() {
+        dataLoading.set(true);
+        dataInteractor.getRecipes(RecipeFilter.ALL);
     }
 
-    private void loadRecipeEntities(boolean forceUpdate) {
-        loadRecipeEntities(forceUpdate, true);
+    @Override
+    public void recipeList(List<RecipeListItemModel> recipeList) {
+        dataLoading.set(false);
+        this.recipeList.setValue(recipeList);
     }
 
-    private void loadRecipeEntities(boolean forceUpdate, final boolean showLoadingUi) {
-        recipeMap.clear();
-        recipesAreLoading = true;
-
-        if (showLoadingUi)
-            dataLoading.set(true);
-
-//        if (forceUpdate)
-//            recipeRepository.refresh();
-
-        recipeRepository.getAll(new DataSource.GetAllCallback<RecipeEntity>() {
-            @Override
-            public void onAllLoaded(List<RecipeEntity> recipeEntities) {
-                if (showLoadingUi)
-                    dataLoading.set(false);
-
-                isDataLoadingError.set(false); // todo - setup loading error screen
-                recipesAreLoading = false;
-
-                if (recipeMap == null)
-                    recipeMap = new LinkedHashMap<>();
-                else
-                    recipeMap.clear();
-
-                for (RecipeEntity entity : recipeEntities) {
-                    recipeMap.put(entity.getId(), entity);
-                }
-                prepareModels();
-
-            }
-
-            @Override
-            public void onDataNotAvailable() {
-                isDataLoadingError.set(true);
-                recipesAreLoading = false;
-                prepareModels();
-            }
-        });
-    }
-
-    private void loadFavoriteRecipeEntities() {
-        loadFavoriteRecipeEntities(false);
-    }
-
-    private void loadFavoriteRecipeEntities(boolean forceUpdate) {
-        loadFavoriteRecipeEntities(forceUpdate, false);
-    }
-
-    private void loadFavoriteRecipeEntities(boolean forceUpdate, boolean showLoadingUi) {
-        favoriteRecipeMap.clear();
-        favoriteRecipesAreLoading = true;
-
-        if (showLoadingUi)
-            dataLoading.set(true);
-
-        if (forceUpdate) {
-
+    @Override
+    public void dataLoadingFailed(FailReason reason) {
+        dataLoading.set(false);
+        if (reason == FailReason.NO_DATA_AVAILABLE) {
+            showEmptyScreen();
+        } else if (reason == FailReason.DATA_LOADING_ERROR) {
+            isDataLoadingError.set(true);
         }
     }
 
-    private void prepareModels() {
+    private void showEmptyScreen() {
+        showEmptyScreen.set(true);
+    }
+
+    void addRecipe() {
+        if (navigator != null)
+            navigator.addRecipe();
+    }
+
+    void viewRecipe(RecipeListItemModel listItemModel) {
 
     }
 
-    public void addRecipe() {
+    void addToFavorites(RecipeListItemModel listItemModel) {
 
-        if (navigator != null)
-            navigator.addRecipe();
+    }
+
+    void removeFromFavorites(RecipeListItemModel listItemModel) {
+
     }
 }

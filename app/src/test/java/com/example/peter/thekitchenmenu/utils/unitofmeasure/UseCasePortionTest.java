@@ -158,7 +158,7 @@ public class UseCasePortionTest {
     @Mock
     TimeProvider timeProviderMock;
     @Mock
-    UseCasePortionViewModel viewModelMock;
+    UseCasePortion.UseCasePortionCallback viewModelMock;
     @Captor
     ArgumentCaptor<MeasurementResult> resultArgumentCaptor;
     @Captor
@@ -179,7 +179,7 @@ public class UseCasePortionTest {
                 idProviderMock,
                 timeProviderMock);
 
-        SUT.setViewModel(viewModelMock);
+        SUT.setResultReceiver(viewModelMock);
     }
 
     @Test
@@ -711,7 +711,7 @@ public class UseCasePortionTest {
         assertEquals(MEASUREMENT_EXISTING_INVALID_CONVERSION_FACTOR_RESULT, actualResult);
 
         MeasurementModel actualModel = resultArgumentCaptor.getValue().getModel();
-        assertEquals(MEASUREMENT_EXISTING_VALID_METRIC, actualModel);
+        assertEquals(MEASUREMENT_EXISTING_INVALID_CONVERSION_FACTOR, actualModel);
     }
 
     @Test

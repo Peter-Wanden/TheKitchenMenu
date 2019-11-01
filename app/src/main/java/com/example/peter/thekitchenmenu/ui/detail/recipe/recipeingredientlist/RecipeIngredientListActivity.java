@@ -116,6 +116,11 @@ public class RecipeIngredientListActivity
     }
 
     @Override
+    public void editIngredient(String ingredientId) {
+
+    }
+
+    @Override
     public void deleteIngredient(String ingredientId) {
 
     }

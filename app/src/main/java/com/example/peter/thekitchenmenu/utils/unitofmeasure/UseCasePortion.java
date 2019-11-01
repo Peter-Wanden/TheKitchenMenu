@@ -1,7 +1,5 @@
 package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
-import android.util.Log;
-
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientQuantityEntity;
@@ -14,12 +12,25 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementResult.*;
 
 /**
  * Calculates the measurement of an ingredient for a single portion of a recipe.
  */
 public class UseCasePortion {
+
+    public interface UseCasePortionCallback {
+        void useCasePortionResult(MeasurementResult result);
+        void dataLoadingFailed(FailReason reason);
+    }
+
+    public enum FailReason {
+        NO_DATA_AVAILABLE,
+        DATA_LOADING_ERROR
+    }
 
     private static final String TAG = "tkm-PortionsUseCase";
 
@@ -28,7 +39,7 @@ public class UseCasePortion {
     private RepositoryIngredient ingredientRepository;
     private UniqueIdProvider idProvider;
     private TimeProvider timeProvider;
-    private UseCasePortionViewModel viewModel;
+    private List<UseCasePortionCallback> listeners = new ArrayList<>();
 
     private UnitOfMeasure unitOfMeasure = MeasurementSubtype.METRIC_MASS.getMeasurementClass();
     private boolean conversionFactorChanged;
@@ -63,8 +74,12 @@ public class UseCasePortion {
         this.timeProvider = timeProvider;
     }
 
-    public void setViewModel(UseCasePortionViewModel viewModel) {
-        this.viewModel = viewModel;
+    public void registerListener(UseCasePortionCallback listener) {
+        listeners.add(listener);
+    }
+
+    public void unregisterListener(UseCasePortionCallback listener) {
+        listeners.remove(listener);
     }
 
     public void start(String recipeId, String ingredientId) {
@@ -170,7 +185,7 @@ public class UseCasePortion {
     }
 
     public void processModel(MeasurementModel modelIn) {
-        Log.d(TAG, "processModel:                   model=" + modelIn);
+//        Log.d(TAG, "processModel:                   model=" + modelIn);
         this.modelIn = modelIn;
         checkForChanges();
     }
@@ -261,9 +276,9 @@ public class UseCasePortion {
         }
 
         MeasurementResult result = new MeasurementResult(existingModel, getResultStatus());
-        Log.d(TAG, "returnResult: " + result);
+//        Log.d(TAG, "returnResult: " + result);
         saveIfValid();
-        viewModel.useCasePortionResult(result);
+        notifyListeners(result);
     }
 
     private void updateModelsFromUnitOfMeasure() {
@@ -305,6 +320,12 @@ public class UseCasePortion {
     private void saveIfValid() {
         if (quantityEntityHasChanged() && unitOfMeasure.isValidMeasurement()) {
             save(updatedRecipeIngredientEntity());
+        }
+    }
+
+    private void notifyListeners(MeasurementResult result) {
+        for (UseCasePortionCallback callback : listeners) {
+            callback.useCasePortionResult(result);
         }
     }
 

@@ -11,7 +11,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.databinding.RecipeDurationFragmentBinding;
+import com.example.peter.thekitchenmenu.databinding.RecipeDurationFragmentEditorBinding;
 
 public class RecipeDurationFragment extends Fragment {
 
@@ -27,9 +27,9 @@ public class RecipeDurationFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        RecipeDurationFragmentBinding binding = DataBindingUtil.inflate(
+        RecipeDurationFragmentEditorBinding binding = DataBindingUtil.inflate(
                 inflater,
-                R.layout.recipe_duration_fragment,
+                R.layout.recipe_duration_fragment_editor,
                 container,
                 false);
 
