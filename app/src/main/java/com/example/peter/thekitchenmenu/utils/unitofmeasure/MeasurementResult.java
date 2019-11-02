@@ -8,22 +8,14 @@ import java.util.Objects;
 
 public class MeasurementResult {
 
-    public enum ResultStatus {
-        INVALID_CONVERSION_FACTOR,
-        INVALID_PORTIONS,
-        INVALID_TOTAL_MEASUREMENT_ONE,
-        INVALID_TOTAL_MEASUREMENT_TWO,
-        INVALID_MEASUREMENT,
-        RESULT_OK
-    }
-
     @NonNull
     private final MeasurementModel model;
 
     @NonNull
-    private final ResultStatus result;
+    private final UseCasePortion.ResultStatus result;
 
-    public MeasurementResult(@NonNull MeasurementModel model, @NonNull ResultStatus result) {
+    public MeasurementResult(@NonNull MeasurementModel model,
+                             @NonNull UseCasePortion.ResultStatus result) {
         this.model = model;
         this.result = result;
     }
@@ -34,7 +26,7 @@ public class MeasurementResult {
     }
 
     @NonNull
-    public ResultStatus getResult() {
+    public UseCasePortion.ResultStatus getResult() {
         return result;
     }
 

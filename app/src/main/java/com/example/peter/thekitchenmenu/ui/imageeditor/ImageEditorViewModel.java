@@ -15,7 +15,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.peter.thekitchenmenu.data.model.ImageModel;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
-import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
+import com.example.peter.thekitchenmenu.ui.ObservableAndroidViewModel;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.File;
@@ -28,7 +28,7 @@ import static android.app.Activity.RESULT_OK;
 import static com.example.peter.thekitchenmenu.app.Constants.FILE_PROVIDER_AUTHORITY;
 import static com.example.peter.thekitchenmenu.data.model.ImageModel.*;
 
-public class ImageEditorViewModel extends ObservableViewModel {
+public class ImageEditorViewModel extends ObservableAndroidViewModel {
 
     private static final String TAG = "tkm-ImageEditorVM";
 

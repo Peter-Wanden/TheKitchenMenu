@@ -7,14 +7,23 @@ public class RecipeListItemModel {
     private final String recipeId;
     @NonNull
     private final String recipeName;
+    private final String recipeDescription;
     private final int prepTime;
     private final int cookTime;
+    private final int totalTime;
 
-    public RecipeListItemModel(@NonNull String recipeId, @NonNull String recipeName, int prepTime, int cookTime) {
+    public RecipeListItemModel(@NonNull String recipeId,
+                               @NonNull String recipeName,
+                               String recipeDescription,
+                               int prepTime,
+                               int cookTime,
+                               int totalTime) {
         this.recipeId = recipeId;
         this.recipeName = recipeName;
+        this.recipeDescription = recipeDescription;
         this.prepTime = prepTime;
         this.cookTime = cookTime;
+        this.totalTime = totalTime;
     }
 
     @NonNull
@@ -27,11 +36,19 @@ public class RecipeListItemModel {
         return recipeName;
     }
 
+    public String getRecipeDescription() {
+        return recipeDescription;
+    }
+
     public int getPrepTime() {
         return prepTime;
     }
 
     public int getCookTime() {
         return cookTime;
+    }
+
+    public int getTotalTime() {
+        return totalTime;
     }
 }

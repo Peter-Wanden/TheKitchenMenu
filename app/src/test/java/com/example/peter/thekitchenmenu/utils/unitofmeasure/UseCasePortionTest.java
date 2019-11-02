@@ -20,6 +20,7 @@ import org.mockito.*;
 
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementResult.*;
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.*;
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UseCasePortion.*;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.assertEquals;
 
@@ -109,7 +110,8 @@ public class UseCasePortionTest {
     private MeasurementModel MEASUREMENT_EXISTING_VALID_METRIC =
             MeasurementModelTestData.getExistingMetricValid();
     private MeasurementResult MEASUREMENT_EXISTING_VALID_METRIC_RESULT =
-            new MeasurementResult(MEASUREMENT_EXISTING_VALID_METRIC, ResultStatus.RESULT_OK);
+            new MeasurementResult(MEASUREMENT_EXISTING_VALID_METRIC,
+                    ResultStatus.RESULT_OK);
 
     private MeasurementModel MEASUREMENT_EXISTING_INVALID_TOTAL_ONE =
             MeasurementModelTestData.getExistingMetricInvalidTotalOne();
@@ -158,7 +160,7 @@ public class UseCasePortionTest {
     @Mock
     TimeProvider timeProviderMock;
     @Mock
-    UseCasePortion.UseCasePortionCallback viewModelMock;
+    UseCasePortionCallback viewModelMock;
     @Captor
     ArgumentCaptor<MeasurementResult> resultArgumentCaptor;
     @Captor
@@ -179,7 +181,7 @@ public class UseCasePortionTest {
                 idProviderMock,
                 timeProviderMock);
 
-        SUT.setResultReceiver(viewModelMock);
+        SUT.registerListener(viewModelMock);
     }
 
     @Test

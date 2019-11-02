@@ -2,6 +2,7 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor
 
 import android.app.Application;
 import android.content.res.Resources;
+import android.util.Log;
 
 import androidx.databinding.Observable;
 import androidx.databinding.ObservableBoolean;
@@ -34,11 +35,12 @@ public class RecipeIngredientMeasurementViewModel
     private Resources resources;
     private NumberFormatter numberFormatter;
 
+    private static final int MEASUREMENT_ERROR = -1;
     private MeasurementSubtype defaultSubtype = MeasurementSubtype.METRIC_MASS;
     private UnitOfMeasure unitOfMeasure = defaultSubtype.getMeasurementClass();
+
     private UseCasePortion useCasePortion;
     private UseCaseConversionFactorStatus useCaseConversionFactorStatus;
-    private static final int MEASUREMENT_ERROR = -1;
 
     public final ObservableField<MeasurementSubtype> subtype = new ObservableField<>(defaultSubtype);
     public final ObservableInt numberOfMeasurementUnits = new ObservableInt(
@@ -107,10 +109,10 @@ public class RecipeIngredientMeasurementViewModel
                 advancedCheckBoxUpdated();
             }
         });
-        registerAsListenerOfUseCaseResults();
+        registerAsListenerOfUseCases();
     }
 
-    private void registerAsListenerOfUseCaseResults() {
+    private void registerAsListenerOfUseCases() {
         useCasePortion.registerListener(this);
         useCaseConversionFactorStatus.registerListener(this);
     }
@@ -242,7 +244,7 @@ public class RecipeIngredientMeasurementViewModel
 
     @Override
     public void dataLoadingFailed(UseCasePortion.FailReason reason) {
-
+        // TODO
     }
 
     @Override
@@ -308,23 +310,23 @@ public class RecipeIngredientMeasurementViewModel
         measurementTwo.set(numberFormatter.formatIntegerForDisplay(measurementTwoParsed));
     }
 
-    private void processResultStatus(ResultStatus resultStatus) {
-        if (resultStatus == ResultStatus.INVALID_CONVERSION_FACTOR) {
+    private void processResultStatus(UseCasePortion.ResultStatus resultStatus) {
+        if (resultStatus == UseCasePortion.ResultStatus.INVALID_CONVERSION_FACTOR) {
             conversionFactorErrorMessage.set(null);
             conversionFactorErrorMessage.set(resources.getString(
                     R.string.conversion_factor_error_message,
                     UnitOfMeasureConstants.MIN_CONVERSION_FACTOR,
                     UnitOfMeasureConstants.MAX_CONVERSION_FACTOR));
 
-        } else if (resultStatus == ResultStatus.INVALID_TOTAL_MEASUREMENT_ONE) {
+        } else if (resultStatus == UseCasePortion.ResultStatus.INVALID_TOTAL_MEASUREMENT_ONE) {
             measurementOneErrorMessage.set(null);
             measurementOneErrorMessage.set("Tablespoons and/or teaspoons need to have a value between 0.1 tsp and 666 Tbsp");
 
-        } else if (resultStatus == ResultStatus.INVALID_TOTAL_MEASUREMENT_TWO) {
+        } else if (resultStatus == UseCasePortion.ResultStatus.INVALID_TOTAL_MEASUREMENT_TWO) {
             measurementTwoErrorMessage.set(null);
             measurementTwoErrorMessage.set("Tablespoons and/or teaspoons need to have a value between 0.1 tsp and 666 Tbsp");
 
-        } else if (resultStatus == ResultStatus.RESULT_OK) {
+        } else if (resultStatus == UseCasePortion.ResultStatus.RESULT_OK) {
             hideAllInputErrors();
         }
         useCaseConversionFactorStatus.getConversionFactorStatus(
@@ -378,5 +380,12 @@ public class RecipeIngredientMeasurementViewModel
         showConversionFactorFields.set(true);
         advancedCheckBox.set(true);
         showUneditableConversionFactorFields.set(false);
+    }
+
+    @Override
+    protected void onCleared() {
+        useCasePortion.unregisterListener(this);
+        useCaseConversionFactorStatus.unregisterListener(this);
+        super.onCleared();
     }
 }

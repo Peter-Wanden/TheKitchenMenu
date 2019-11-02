@@ -63,14 +63,10 @@ public class RecipeCatalogViewModel
     public void dataLoadingFailed(FailReason reason) {
         dataLoading.set(false);
         if (reason == FailReason.NO_DATA_AVAILABLE) {
-            showEmptyScreen();
+            showEmptyScreen.set(true);
         } else if (reason == FailReason.DATA_LOADING_ERROR) {
             isDataLoadingError.set(true);
         }
-    }
-
-    private void showEmptyScreen() {
-        showEmptyScreen.set(true);
     }
 
     void addRecipe() {

@@ -9,9 +9,7 @@ import java.util.List;
 class RecipeModelComposite {
 
     public interface RecipeModelActions {
-
         void start(String recipeId);
-
         void startByCloningModel(String oldRecipeId, String newRecipeId);
     }
 

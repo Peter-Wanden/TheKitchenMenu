@@ -15,8 +15,6 @@ import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementResult.*;
-
 /**
  * Calculates the measurement of an ingredient for a single portion of a recipe.
  */
@@ -25,6 +23,15 @@ public class UseCasePortion {
     public interface UseCasePortionCallback {
         void useCasePortionResult(MeasurementResult result);
         void dataLoadingFailed(FailReason reason);
+    }
+
+    public enum ResultStatus {
+        INVALID_CONVERSION_FACTOR,
+        INVALID_PORTIONS,
+        INVALID_TOTAL_MEASUREMENT_ONE,
+        INVALID_TOTAL_MEASUREMENT_TWO,
+        INVALID_MEASUREMENT,
+        RESULT_OK
     }
 
     public enum FailReason {

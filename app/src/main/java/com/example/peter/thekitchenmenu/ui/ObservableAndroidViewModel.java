@@ -1,14 +1,18 @@
 package com.example.peter.thekitchenmenu.ui;
 
+import android.app.Application;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.databinding.Observable;
 import androidx.databinding.PropertyChangeRegistry;
-import androidx.lifecycle.ViewModel;
 
-public class ObservableViewModel extends ViewModel implements Observable {
+public class ObservableAndroidViewModel extends AndroidViewModel implements Observable {
 
     private PropertyChangeRegistry callbacks = new PropertyChangeRegistry();
 
-    public ObservableViewModel() {
+    public ObservableAndroidViewModel(@NonNull Application application) {
+        super(application);
     }
 
     @Override

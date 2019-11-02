@@ -74,9 +74,8 @@ public class RecipeEditorViewModel
     }
 
     void start() {
-        if (recipeEntity == null) {
+        if (recipeEntity == null)
             setupForNewRecipe();
-        }
     }
 
     private void setupForNewRecipe() {
@@ -106,9 +105,8 @@ public class RecipeEditorViewModel
 
         if (creatorIsEditingOwnRecipe())
             setupForExistingRecipe();
-        else {
+        else
             setupForClonedRecipe();
-        }
     }
 
     private void setupForExistingRecipe() {

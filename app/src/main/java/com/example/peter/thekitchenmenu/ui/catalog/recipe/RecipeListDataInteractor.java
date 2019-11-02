@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-// Creates and returns lists of recipe list item models based on a filter
+// Creates and returns lists of 'recipe list item models' based on a filter
 public class RecipeListDataInteractor {
 
     public interface RecipeListCallback {
@@ -112,8 +112,10 @@ public class RecipeListDataInteractor {
             RecipeListItemModel model = new RecipeListItemModel(
                     recipeId,
                     recipeIdentity.getTitle(),
+                    recipeIdentity.getDescription(),
                     durationEntity.getPrepTime(),
-                    durationEntity.getCookTime()
+                    durationEntity.getCookTime(),
+                    (durationEntity.getPrepTime() + durationEntity.getCookTime())
             );
             recipeListItemModels.add(model);
         });

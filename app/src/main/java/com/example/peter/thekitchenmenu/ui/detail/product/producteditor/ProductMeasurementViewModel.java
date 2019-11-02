@@ -7,13 +7,13 @@ import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasure;
-import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
+import com.example.peter.thekitchenmenu.ui.ObservableAndroidViewModel;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.Bindable;
 import androidx.lifecycle.MutableLiveData;
 
-public class ProductMeasurementViewModel extends ObservableViewModel {
+public class ProductMeasurementViewModel extends ObservableAndroidViewModel {
 
     private final MutableLiveData<ProductMeasurementModel> measurementModel = new MutableLiveData<>();
     private final SingleLiveEvent<Boolean> measurementModelIsValidEvent = new SingleLiveEvent<>();

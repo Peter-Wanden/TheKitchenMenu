@@ -1,14 +1,16 @@
 package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 
 import android.content.res.Resources;
+import android.util.Log;
 
-import androidx.databinding.Observable;
+import androidx.databinding.Bindable;
 import androidx.databinding.ObservableField;
-import androidx.lifecycle.ViewModel;
+import androidx.databinding.library.baseAdapters.BR;
 
 import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
+import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 import com.example.peter.thekitchenmenu.utils.TextValidationHandler;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 
@@ -17,10 +19,12 @@ import static com.example.peter.thekitchenmenu.utils.TextValidationHandler.*;
 
 public class RecipeIdentityViewModel
         extends
-        ViewModel
+        ObservableViewModel
         implements
         DataSource.GetEntityCallback<RecipeIdentityEntity>,
         RecipeModelComposite.RecipeModelActions {
+
+    private static final String TAG = "tkm-RecipeIdentityVM";
 
     private Resources resources;
     private TextValidationHandler textValidationHandler;
@@ -28,8 +32,8 @@ public class RecipeIdentityViewModel
     private TimeProvider timeProvider;
     private RecipeValidatorModelSubmission modelSubmitter;
 
-    public final ObservableField<String> titleObservable = new ObservableField<>("");
-    public final ObservableField<String> descriptionObservable = new ObservableField<>("");
+    private String title = "";
+    private String description = "";
 
     public final ObservableField<String> titleErrorMessage = new ObservableField<>();
     public final ObservableField<String> descriptionErrorMessage = new ObservableField<>();
@@ -51,21 +55,6 @@ public class RecipeIdentityViewModel
         this.timeProvider = timeProvider;
         this.resources = resources;
         this.textValidationHandler = textValidationHandler;
-
-        titleObservable.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                if (!titleObservable.get().isEmpty())
-                    titleChanged();
-            }
-        });
-        descriptionObservable.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                if (!descriptionObservable.get().isEmpty())
-                    descriptionChanged();
-            }
-        });
     }
 
     void setModelValidationSubmitter(RecipeValidatorModelSubmission modelSubmitter) {
@@ -131,31 +120,61 @@ public class RecipeIdentityViewModel
 
     private void updateObservables() {
         observablesUpdating = true;
-        titleObservable.set(identityEntity.getTitle());
-        descriptionObservable.set(identityEntity.getDescription());
+        title = identityEntity.getTitle();
+        notifyPropertyChanged(BR.title);
+        description = identityEntity.getDescription();
+        notifyPropertyChanged(BR.description);
         observablesUpdating = false;
         submitModelStatus();
     }
 
-    private void titleChanged() {
+    @Bindable
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        if (!this.title.equals(title))
+            titleChanged(title);
+    }
+
+    private void titleChanged(String title) {
         titleErrorMessage.set(null);
-        String validationResponse = validateShortText(titleObservable.get());
+        String validationResponse = validateShortText(title);
 
         titleValid = validationResponse.equals(VALIDATED);
 
         if (!titleValid)
             titleErrorMessage.set(validationResponse);
-
+        else {
+            this.title = title;
+            notifyPropertyChanged(BR.title);
+        }
         submitModelStatus();
     }
 
-    private void descriptionChanged() {
+    @Bindable
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        if (!this.description.equals(description))
+            descriptionChanged(description);
+    }
+
+    private void descriptionChanged(String description) {
         descriptionErrorMessage.set(null);
-        String validationResponse = validateLongText(descriptionObservable.get());
+        String validationResponse = validateLongText(description);
 
         descriptionValid = validationResponse.equals(VALIDATED);
+
         if (!descriptionValid)
             descriptionErrorMessage.set(validationResponse);
+        else {
+            this.description = description;
+            notifyPropertyChanged(BR.description);
+        }
 
         submitModelStatus();
     }
@@ -189,8 +208,8 @@ public class RecipeIdentityViewModel
         if (identityEntity != null) {
             RecipeIdentityEntity updatedEntity = new RecipeIdentityEntity(
                     identityEntity.getId(),
-                    titleObservable.get(),
-                    descriptionObservable.get(),
+                    title,
+                    description,
                     identityEntity.getCreateDate(),
                     identityEntity.getLastUpdate()
             );
@@ -202,8 +221,8 @@ public class RecipeIdentityViewModel
     private RecipeIdentityEntity updatedEntity() {
         return new RecipeIdentityEntity(
                 identityEntity.getId(),
-                titleObservable.get(),
-                descriptionObservable.get(),
+                title,
+                description,
                 identityEntity.getCreateDate(),
                 timeProvider.getCurrentTimestamp()
         );

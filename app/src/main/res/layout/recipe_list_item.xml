@@ -20,7 +20,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/recipe_list_item_cardView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
         android:layout_marginStart="@dimen/card_view_margin"
         android:layout_marginEnd="@dimen/card_view_margin"
         android:layout_marginTop="@dimen/card_view_margin_top_bottom"
@@ -35,14 +35,14 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/recipe_list_item_constraintLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent=".73"/>
+                app:layout_constraintGuide_percent=".5"/>
 
             <TextView
                 android:id="@+id/recipe_list_item_title"
@@ -51,12 +51,27 @@
                 android:paddingEnd="@dimen/list_item_top_full_margin"
                 android:paddingStart="@dimen/list_item_top_full_margin"
                 android:paddingTop="@dimen/list_item_top_half_margin"
+                android:textStyle="bold"
+                android:textSize="18sp"
                 android:text="@{recipeModel.recipeName}"
                 app:layout_constraintEnd_toStartOf="@+id/guideline"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Cirio canned chopped tomatoes"
                 />
+
+            <TextView
+                android:id="@+id/recipe_list_item_description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingEnd="@dimen/list_item_top_full_margin"
+                android:paddingStart="@dimen/list_item_top_full_margin"
+                android:paddingTop="@dimen/list_item_top_half_margin"
+                android:text="@{recipeModel.recipeDescription}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/guideline"
+                app:layout_constraintTop_toBottomOf="@+id/recipe_list_item_title"
+                tools:text="Baked beans on toast with all the trimmings. Makes a great snack."/>
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/time_guideline"
@@ -75,7 +90,7 @@
                 android:paddingTop="@dimen/list_item_top_half_margin"
                 android:text="@string/recipe_preparation_time_label"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/recipe_list_item_title"
+                app:layout_constraintTop_toBottomOf="@id/recipe_list_item_description"
                 />
 
             <TextView
@@ -126,7 +141,7 @@
                 android:id="@+id/recipe_list_item_total_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
+                android:text="@{`` + recipeModel.totalTime}"
                 app:layout_constraintStart_toEndOf="@id/time_guideline"
                 app:layout_constraintBaseline_toBaselineOf="@id/recipe_list_item_total_time_label"
                 tools:text="100"

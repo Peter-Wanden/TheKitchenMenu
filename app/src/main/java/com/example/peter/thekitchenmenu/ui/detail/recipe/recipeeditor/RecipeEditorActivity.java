@@ -76,29 +76,21 @@ public class RecipeEditorActivity
         RecipeModelComposite recipeModelComposite = new RecipeModelComposite();
         recipeEditorViewModel.setRecipeModelComposite(recipeModelComposite);
 
-        RecipeIdentityViewModel recipeIdentityViewModel =
-                obtainIdentityViewModel(this);
-        recipeIdentityViewModel.setModelValidationSubmitter(
-                recipeEditorViewModel.getValidator());
+        RecipeIdentityViewModel recipeIdentityViewModel = obtainIdentityViewModel(this);
         recipeModelComposite.registerModel(recipeIdentityViewModel);
+        recipeIdentityViewModel.setModelValidationSubmitter(recipeEditorViewModel.getValidator());
 
-        RecipeCourseSelectorViewModel courseSelectorViewModel =
-                obtainCourseSelectorViewModel(this);
-        courseSelectorViewModel.setModelValidationSubmitter(
-                recipeEditorViewModel.getValidator());
+        RecipeCourseSelectorViewModel courseSelectorViewModel = obtainCourseSelectorViewModel((this));
         recipeModelComposite.registerModel(courseSelectorViewModel);
+        courseSelectorViewModel.setModelValidationSubmitter(recipeEditorViewModel.getValidator());
 
-        RecipeDurationViewModel durationViewModel =
-                obtainDurationViewModel(this);
-        durationViewModel.setModelValidationSubmitter(
-                recipeEditorViewModel.getValidator());
+        RecipeDurationViewModel durationViewModel = obtainDurationViewModel(this);
         recipeModelComposite.registerModel(durationViewModel);
+        durationViewModel.setModelValidationSubmitter(recipeEditorViewModel.getValidator());
 
-        RecipePortionsViewModel portionsViewModel =
-                obtainPortionsViewModel(this);
-        portionsViewModel.setModelValidationSubmitter(
-                recipeEditorViewModel.getValidator());
+        RecipePortionsViewModel portionsViewModel = obtainPortionsViewModel(this);
         recipeModelComposite.registerModel(portionsViewModel);
+        portionsViewModel.setModelValidationSubmitter(recipeEditorViewModel.getValidator());
     }
 
     private void setViewModelObservers() {

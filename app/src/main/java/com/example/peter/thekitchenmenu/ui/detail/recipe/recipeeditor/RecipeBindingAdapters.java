@@ -14,6 +14,7 @@ public class RecipeBindingAdapters {
 
     @BindingAdapter(value = {"setupEditTextForRecipeTimes"})
     public static void setupEditTextForRecipeDurationInput(EditText editText, String time) {
+
         int viewId = editText.getId();
         int maxValue = 0;
         Resources resources = editText.getResources();

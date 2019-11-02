@@ -42,7 +42,7 @@ public class UseCaseConversionFactorStatusTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         SUT = new UseCaseConversionFactorStatus(repoMock);
-        SUT.setResultStatusReceiver(viewModelMock);
+        SUT.registerListener(viewModelMock);
     }
 
     @Test

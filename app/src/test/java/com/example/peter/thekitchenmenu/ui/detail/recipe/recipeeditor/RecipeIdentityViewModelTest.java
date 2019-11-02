@@ -110,8 +110,8 @@ public class RecipeIdentityViewModelTest {
         SUT.start(INVALID_NEW_EMPTY.getId());
         simulateNothingReturnedFromDatabase();
         // Assert
-        assertEquals(INVALID_NEW_EMPTY.getTitle(), SUT.titleObservable.get());
-        assertEquals(INVALID_NEW_EMPTY.getDescription(), SUT.descriptionObservable.get());
+        assertEquals(INVALID_NEW_EMPTY.getTitle(), SUT.getTitle());
+        assertEquals(INVALID_NEW_EMPTY.getDescription(), SUT.getDescription());
         assertNull(SUT.titleErrorMessage.get());
         assertNull(SUT.descriptionErrorMessage.get());
     }
@@ -146,7 +146,7 @@ public class RecipeIdentityViewModelTest {
         // Act
         SUT.start(INVALID_NEW_EMPTY.getId());
         simulateNothingReturnedFromDatabase();
-        SUT.titleObservable.set(INVALID_NEW_TITLE_INVALID.getTitle());
+        SUT.setTitle(INVALID_NEW_TITLE_INVALID.getTitle());
         // Assert
         assertEquals(SHORT_TEXT_VALIDATION_ERROR, SUT.titleErrorMessage.get());
     }
@@ -158,7 +158,7 @@ public class RecipeIdentityViewModelTest {
         // Act
         SUT.start(INVALID_NEW_EMPTY.getId());
         simulateNothingReturnedFromDatabase();
-        SUT.titleObservable.set(INVALID_NEW_TITLE_INVALID.getTitle());
+        SUT.setTitle(INVALID_NEW_TITLE_INVALID.getTitle());
         // Assert
         verify(modelValidationSubmitterMock, times((2))).submitModelStatus(
                 statusArgumentCaptor.capture());
@@ -174,8 +174,8 @@ public class RecipeIdentityViewModelTest {
         // Act
         SUT.start(INVALID_NEW_EMPTY.getId());
         simulateNothingReturnedFromDatabase();
-        SUT.titleObservable.set(INVALID_NEW_TITLE_INVALID_DESCRIPTION_VALID.getTitle());
-        SUT.descriptionObservable.set(INVALID_NEW_TITLE_INVALID_DESCRIPTION_VALID.getDescription());
+        SUT.setTitle(INVALID_NEW_TITLE_INVALID_DESCRIPTION_VALID.getTitle());
+        SUT.setDescription(INVALID_NEW_TITLE_INVALID_DESCRIPTION_VALID.getDescription());
         // Assert
         verifyNoMoreInteractions(dataSourceMock);
     }
@@ -187,7 +187,7 @@ public class RecipeIdentityViewModelTest {
         // Act
         SUT.start(INVALID_NEW_EMPTY.getId());
         simulateNothingReturnedFromDatabase();
-        SUT.titleObservable.set(VALID_NEW_TITLE_VALID.getTitle());
+        SUT.setTitle(VALID_NEW_TITLE_VALID.getTitle());
         // Assert
         assertNull(SUT.titleErrorMessage.get());
     }
@@ -200,7 +200,7 @@ public class RecipeIdentityViewModelTest {
         // Act
         SUT.start(INVALID_NEW_EMPTY.getId());
         simulateNothingReturnedFromDatabase();
-        SUT.titleObservable.set(VALID_NEW_TITLE_VALID.getTitle());
+        SUT.setTitle(VALID_NEW_TITLE_VALID.getTitle());
         // Assert
         verify(dataSourceMock).save(eq(VALID_NEW_TITLE_VALID));
     }
@@ -212,7 +212,7 @@ public class RecipeIdentityViewModelTest {
         // Act
         SUT.start(INVALID_NEW_EMPTY.getId());
         simulateNothingReturnedFromDatabase();
-        SUT.titleObservable.set(VALID_NEW_TITLE_VALID.getTitle());
+        SUT.setTitle(VALID_NEW_TITLE_VALID.getTitle());
         // Assert
         verify(modelValidationSubmitterMock, times((2))).submitModelStatus(
                 statusArgumentCaptor.capture());
@@ -228,8 +228,8 @@ public class RecipeIdentityViewModelTest {
         // Act
         SUT.start(INVALID_NEW_EMPTY.getId());
         simulateNothingReturnedFromDatabase();
-        SUT.titleObservable.set(VALID_NEW_TITLE_VALID.getTitle());
-        SUT.descriptionObservable.set("Doesn't matter what is here as returning an error message!");
+        SUT.setTitle(VALID_NEW_TITLE_VALID.getTitle());
+        SUT.setDescription("Doesn't matter what is here as returning an error message!");
         // Assert
         assertEquals(LONG_TEXT_VALIDATION_ERROR, SUT.descriptionErrorMessage.get());
     }
@@ -244,8 +244,8 @@ public class RecipeIdentityViewModelTest {
         // Act
         SUT.start(INVALID_NEW_EMPTY.getId());
         simulateNothingReturnedFromDatabase();
-        SUT.titleObservable.set(VALID_NEW_TITLE_VALID.getTitle());
-        SUT.descriptionObservable.set("Doesn't matter what is here as returning an error message!");
+        SUT.setTitle(VALID_NEW_TITLE_VALID.getTitle());
+        SUT.setDescription("Doesn't matter what is here as returning an error message!");
         verify(dataSourceMock).save(eq(VALID_NEW_TITLE_VALID));
     }
 
@@ -257,8 +257,8 @@ public class RecipeIdentityViewModelTest {
         // Act
         SUT.start(INVALID_NEW_EMPTY.getId());
         simulateNothingReturnedFromDatabase();
-        SUT.titleObservable.set(VALID_NEW_TITLE_VALID.getTitle());
-        SUT.descriptionObservable.set("Doesn't matter what is here as returning an error message!");
+        SUT.setTitle(VALID_NEW_TITLE_VALID.getTitle());
+        SUT.setDescription("Doesn't matter what is here as returning an error message!");
         // Assert
         verify(modelValidationSubmitterMock, times((3))).submitModelStatus(
                 statusArgumentCaptor.capture());
@@ -274,8 +274,8 @@ public class RecipeIdentityViewModelTest {
         // Act
         SUT.start(INVALID_NEW_EMPTY.getId());
         simulateNothingReturnedFromDatabase();
-        SUT.titleObservable.set(VALID_NEW_COMPLETE.getTitle());
-        SUT.descriptionObservable.set(VALID_NEW_COMPLETE.getDescription());
+        SUT.setTitle(VALID_NEW_COMPLETE.getTitle());
+        SUT.setDescription(VALID_NEW_COMPLETE.getDescription());
         // Assert
         assertNull(SUT.titleErrorMessage.get());
         assertNull(SUT.descriptionErrorMessage.get());
@@ -290,8 +290,8 @@ public class RecipeIdentityViewModelTest {
         // Act
         SUT.start(INVALID_NEW_EMPTY.getId());
         simulateNothingReturnedFromDatabase();
-        SUT.titleObservable.set(VALID_NEW_COMPLETE.getTitle());
-        SUT.descriptionObservable.set(VALID_NEW_COMPLETE.getDescription());
+        SUT.setTitle(VALID_NEW_COMPLETE.getTitle());
+        SUT.setDescription(VALID_NEW_COMPLETE.getDescription());
         // Assert
         verify(dataSourceMock, times((1))).save(eq(VALID_NEW_COMPLETE));
     }
@@ -304,8 +304,8 @@ public class RecipeIdentityViewModelTest {
         // Act
         SUT.start(INVALID_NEW_EMPTY.getId());
         simulateNothingReturnedFromDatabase();
-        SUT.titleObservable.set(VALID_NEW_COMPLETE.getTitle());
-        SUT.descriptionObservable.set(VALID_NEW_COMPLETE.getDescription());
+        SUT.setTitle(VALID_NEW_COMPLETE.getTitle());
+        SUT.setDescription(VALID_NEW_COMPLETE.getDescription());
         // Assert
         verify(modelValidationSubmitterMock, times((3))).submitModelStatus(
                 statusArgumentCaptor.capture());
@@ -321,7 +321,7 @@ public class RecipeIdentityViewModelTest {
         SUT.start(VALID_EXISTING_COMPLETE.getId());
         simulateGetValidExistingCompleteFromDatabase();
         // Assert
-        assertEquals(VALID_EXISTING_COMPLETE.getTitle(), SUT.titleObservable.get());
+        assertEquals(VALID_EXISTING_COMPLETE.getTitle(), SUT.getTitle());
     }
 
     @Test
@@ -332,7 +332,7 @@ public class RecipeIdentityViewModelTest {
         SUT.start(VALID_EXISTING_COMPLETE.getId());
         simulateGetValidExistingCompleteFromDatabase();
         // Assert
-        assertEquals(VALID_EXISTING_COMPLETE.getDescription(), SUT.descriptionObservable.get());
+        assertEquals(VALID_EXISTING_COMPLETE.getDescription(), SUT.getDescription());
     }
 
     @Test
@@ -356,7 +356,7 @@ public class RecipeIdentityViewModelTest {
         // Act
         SUT.start(VALID_EXISTING_COMPLETE.getId());
         simulateGetValidExistingCompleteFromDatabase();
-        SUT.titleObservable.set(INVALID_EXISTING_INCOMPLETE_INVALID_TITLE.getTitle());
+        SUT.setTitle(INVALID_EXISTING_INCOMPLETE_INVALID_TITLE.getTitle());
         // Assert
         assertEquals(SUT.titleErrorMessage.get(), SHORT_TEXT_VALIDATION_ERROR);
     }
@@ -399,7 +399,7 @@ public class RecipeIdentityViewModelTest {
         SUT.startByCloningModel(
                 VALID_FROM_ANOTHER_USER.getId(), INVALID_NEW_EMPTY.getId());
         simulateGetValidEntityFromAnotherUserFromDatabase();
-        SUT.descriptionObservable.set(VALID_CLONED_DESCRIPTION_UPDATED.getDescription());
+        SUT.setDescription(VALID_CLONED_DESCRIPTION_UPDATED.getDescription());
         // Assert
         verify(dataSourceMock, times((2))).save(ac.capture());
         assertEquals(VALID_CLONED_DESCRIPTION_UPDATED, ac.getAllValues().get(1));
@@ -414,8 +414,8 @@ public class RecipeIdentityViewModelTest {
         // Act
         SUT.start(INVALID_NEW_EMPTY.getId());
         simulateNothingReturnedFromDatabase();
-        SUT.titleObservable.set(VALID_NEW_COMPLETE.getTitle());
-        SUT.descriptionObservable.set(VALID_NEW_COMPLETE.getDescription());
+        SUT.setTitle(VALID_NEW_COMPLETE.getTitle());
+        SUT.setDescription(VALID_NEW_COMPLETE.getDescription());
         // Assert
         verify(dataSourceMock).save(eq(VALID_NEW_COMPLETE));
     }

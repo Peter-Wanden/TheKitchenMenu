@@ -227,6 +227,7 @@ public class RecipeDurationViewModel
 
     // todo, as these two methods are implemented in all models that should be part of an interface
     // todo, possible move {@link RecipeModelComposite} to recipeValidator?
+    // todo - Or, add them as listeners / requester's
     void setModelValidationSubmitter(RecipeValidation.RecipeValidatorModelSubmission modelSubmitter) {
         this.modelSubmitter = modelSubmitter;
     }
