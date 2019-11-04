@@ -2,7 +2,6 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor
 
 import android.app.Application;
 import android.content.res.Resources;
-import android.util.Log;
 
 import androidx.databinding.Observable;
 import androidx.databinding.ObservableBoolean;
@@ -20,7 +19,6 @@ import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasure;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.UseCasePortion;
 
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementResult.*;
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UseCaseConversionFactorStatus.*;
 
 public class RecipeIngredientMeasurementViewModel
@@ -62,7 +60,7 @@ public class RecipeIngredientMeasurementViewModel
     private int measurementTwoParsed;
 
     private MeasurementModel measurementModel;
-    private boolean updatingDisplay;
+    private boolean updatingUi;
 
     public RecipeIngredientMeasurementViewModel(Application application,
                                                 UseCasePortion useCasePortion,
@@ -126,7 +124,7 @@ public class RecipeIngredientMeasurementViewModel
     }
 
     private void subTypeUpdated() {
-        if (!updatingDisplay) {
+        if (!updatingUi) {
             unitOfMeasure = subtype.get().getMeasurementClass();
             isConversionFactorEnabled.set(unitOfMeasure.isConversionFactorEnabled());
             updateNumberOfMeasurementUnits();
@@ -140,7 +138,7 @@ public class RecipeIngredientMeasurementViewModel
     }
 
     private void conversionFactorUpdated() {
-        if (!updatingDisplay)
+        if (!updatingUi)
             processConversionFactor();
     }
 
@@ -153,7 +151,7 @@ public class RecipeIngredientMeasurementViewModel
     }
 
     private void measurementOneUpdated() {
-        if (!updatingDisplay)
+        if (!updatingUi)
             processMeasurementOne();
     }
 
@@ -185,7 +183,7 @@ public class RecipeIngredientMeasurementViewModel
     }
 
     private void measurementTwoUpdated() {
-        if (!updatingDisplay)
+        if (!updatingUi)
             processMeasurementTwo();
     }
 
@@ -255,7 +253,7 @@ public class RecipeIngredientMeasurementViewModel
     }
 
     private void processMeasurementModelResult() {
-        updatingDisplay = true;
+        updatingUi = true;
         if (measurementSubtypeHasChanged())
             updateUnitOfMeasureVariables();
 
@@ -353,7 +351,7 @@ public class RecipeIngredientMeasurementViewModel
 
         else if (result == UseCaseConversionFactorResult.ENABLED_EDITABLE_SET)
             showAllConversionFactorInformation();
-        updatingDisplay = false;
+        updatingUi = false;
     }
 
     private void hideAllConversionFactorInformation() {

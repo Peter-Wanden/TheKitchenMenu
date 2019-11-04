@@ -198,35 +198,67 @@ public class UseCasePortion {
     }
 
     private void checkForChanges() {
-        if (existingModel.getSubtype() != modelIn.getSubtype()) {
-            unitOfMeasure = modelIn.getSubtype().getMeasurementClass();
-            conversionFactorIsSet = unitOfMeasure.conversionFactorIsSet(
-                    ingredientEntity.getConversionFactor());
-            portionsAreSet = unitOfMeasure.numberOfItemsIsSet(numberOfPortions);
+        if (isSubtypeChanged()) {
+            setupForNewSubtype();
 
-        } else if (modelIn.getConversionFactor() != unitOfMeasure.getConversionFactor()) {
-            conversionFactorChanged = true;
-            conversionFactorIsSet = unitOfMeasure.conversionFactorIsSet(
-                    modelIn.getConversionFactor());
+        } else if (isConversionFactorChanged()) {
+            processNewConversionFactor();
 
-            if (conversionFactorIsSet)
-                saveConversionFactorToIngredient();
+        } else if (isTotalMeasurementOneChanged()) {
+            processChangesToNewTotalMeasurementOne();
 
-        } else if (modelIn.getTotalMeasurementOne() != unitOfMeasure.getTotalMeasurementOne()) {
-            totalMeasurementOneChanged = true;
-            totalMeasurementOneIsSet = unitOfMeasure.totalMeasurementOneIsSet(
-                    modelIn.getTotalMeasurementOne());
-
-        } else if (modelIn.getTotalMeasurementTwo() != unitOfMeasure.getTotalMeasurementTwo()) {
-            totalMeasurementTwoChanged = true;
-            totalMeasurementTwoIsSet = unitOfMeasure.totalMeasurementTwoIsSet(
-                    modelIn.getTotalMeasurementTwo());
+        } else if (isTotalMeasurementTwoChanged()) {
+            processChangesToNewTotalMeasurementTwo();
         }
         returnResult();
     }
 
+    private boolean isSubtypeChanged() {
+        return existingModel.getSubtype() != modelIn.getSubtype();
+    }
+
+    private void setupForNewSubtype() {
+        unitOfMeasure = modelIn.getSubtype().getMeasurementClass();
+        conversionFactorIsSet = unitOfMeasure.conversionFactorIsSet(
+                ingredientEntity.getConversionFactor());
+        portionsAreSet = unitOfMeasure.numberOfItemsIsSet(numberOfPortions);
+    }
+
+    private boolean isConversionFactorChanged() {
+        return modelIn.getConversionFactor() != unitOfMeasure.getConversionFactor();
+    }
+
+    private void processNewConversionFactor() {
+        conversionFactorChanged = true;
+        conversionFactorIsSet = unitOfMeasure.conversionFactorIsSet(
+                modelIn.getConversionFactor());
+
+        if (conversionFactorIsSet)
+            saveConversionFactorToIngredient();
+    }
+
     private void saveConversionFactorToIngredient() {
         ingredientRepository.save(getUpdatedIngredientEntity());
+    }
+
+    private boolean isTotalMeasurementOneChanged() {
+        return modelIn.getTotalMeasurementOne() != unitOfMeasure.getTotalMeasurementOne();
+    }
+
+    private void processChangesToNewTotalMeasurementOne() {
+        totalMeasurementOneChanged = true;
+        totalMeasurementOneIsSet = unitOfMeasure.totalMeasurementOneIsSet(
+                modelIn.getTotalMeasurementOne());
+    }
+
+    private boolean isTotalMeasurementTwoChanged() {
+        return modelIn.getTotalMeasurementTwo() != unitOfMeasure.getTotalMeasurementTwo();
+    }
+
+    private void processChangesToNewTotalMeasurementTwo() {
+        totalMeasurementTwoChanged = true;
+        totalMeasurementTwoIsSet = unitOfMeasure.totalMeasurementTwoIsSet(
+                modelIn.getTotalMeasurementTwo());
     }
 
     private IngredientEntity getUpdatedIngredientEntity() {

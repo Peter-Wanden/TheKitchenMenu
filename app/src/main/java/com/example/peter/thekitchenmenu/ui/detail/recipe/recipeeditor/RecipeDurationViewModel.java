@@ -2,159 +2,154 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 
 import android.content.res.Resources;
 
+import androidx.databinding.Bindable;
 import androidx.databinding.Observable;
 import androidx.databinding.ObservableField;
-import androidx.lifecycle.ViewModel;
+import androidx.databinding.library.baseAdapters.BR;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.entity.RecipeDurationEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration;
+import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
+import com.example.peter.thekitchenmenu.utils.NumberFormatter;
 import com.example.peter.thekitchenmenu.utils.ParseIntegerFromObservableHandler;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 
 public class RecipeDurationViewModel
         extends
-        ViewModel
+        ObservableViewModel
         implements
         DataSource.GetEntityCallback<RecipeDurationEntity>,
         RecipeModelComposite.RecipeModelActions {
 
-    private DataSource<RecipeDurationEntity> durationEntityDataSource;
+    private static final int MEASUREMENT_ERROR = -1;
+    private RepositoryRecipeDuration repository;
+    private NumberFormatter numberFormatter;
     private Resources resources;
-    private RecipeValidation.RecipeValidatorModelSubmission modelSubmitter;
     private ParseIntegerFromObservableHandler intFromObservable;
+    private RecipeValidation.RecipeValidatorModelSubmission modelSubmitter;
     private TimeProvider timeProvider;
-
-    public final ObservableField<String> prepHoursObservable = new ObservableField<>();
-    public final ObservableField<String> prepMinutesObservable = new ObservableField<>();
-    public final ObservableField<String> cookHoursObservable = new ObservableField<>();
-    public final ObservableField<String> cookMinutesObservable = new ObservableField<>();
 
     public final ObservableField<String> prepTimeErrorMessage = new ObservableField<>();
     public final ObservableField<String> cookTimeErrorMessage = new ObservableField<>();
 
     private String recipeId;
     private RecipeDurationEntity durationEntity;
+
+    private String prepHoursInView = "";
     private int prepHours;
+    private String prepMinutesInView = "";
     private int prepMinutes;
+
+    private String cookHoursInView = "";
     private int cookHours;
+    private String cookMinutesInView = "";
     private int cookMinutes;
 
     private boolean prepTimeValid = true;
     private boolean cookTimeValid = true;
     private boolean isCloned;
-    private boolean observablesUpdating;
+    private boolean updatingUi;
+    private boolean dataLoading;
 
-    public RecipeDurationViewModel(DataSource<RecipeDurationEntity> durationEntityDataSource,
+    public RecipeDurationViewModel(RepositoryRecipeDuration repository,
+                                   NumberFormatter numberFormatter,
                                    Resources resources,
                                    TimeProvider timeProvider,
                                    ParseIntegerFromObservableHandler intFromObservable)  {
-        this.durationEntityDataSource = durationEntityDataSource;
+        this.repository = repository;
+        this.numberFormatter = numberFormatter;
         this.resources = resources;
         this.timeProvider = timeProvider;
         this.intFromObservable = intFromObservable;
-
-        prepHoursObservable.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                if (!prepHoursObservable.get().isEmpty())
-                    updatePrepHours();
-            }
-        });
-        prepMinutesObservable.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                if (!prepMinutesObservable.get().isEmpty())
-                    updatePrepMinutes();
-            }
-        });
-        cookHoursObservable.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                if (!cookHoursObservable.get().isEmpty())
-                    updateCookHours();
-            }
-        });
-        cookMinutesObservable.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                if (!cookMinutesObservable.get().isEmpty())
-                    updateCookMinutes();
-            }
-        });
     }
 
     @Override
     public void start(String recipeId) {
         this.recipeId = recipeId;
-        durationEntityDataSource.getById(recipeId, this);
+        dataLoading = true;
+        repository.getById(recipeId, this);
     }
 
     @Override
     public void startByCloningModel(String oldRecipeId, String newRecipeId) {
         isCloned = true;
         this.recipeId = newRecipeId;
-        durationEntityDataSource.getById(oldRecipeId, this);
+        dataLoading = true;
+        repository.getById(oldRecipeId, this);
     }
 
     @Override
     public void onEntityLoaded(RecipeDurationEntity durationEntity) {
-        this.durationEntity = durationEntity;
-        if (isCloned) {
-            this.durationEntity = cloneDurationEntity();
-            save(updatedDurationEntity());
-        }
+        if (isCloned)
+            this.durationEntity = cloneEntity(durationEntity);
+        else
+            this.durationEntity = durationEntity;
         updateObservables();
     }
 
-    @Override
-    public void onDataNotAvailable() {
-        durationEntity = createNewDurationEntity();
-        save(durationEntity);
-        updateObservables();
-    }
-
-    private RecipeDurationEntity createNewDurationEntity() {
+    private RecipeDurationEntity cloneEntity(RecipeDurationEntity toClone) {
         long currentTime = timeProvider.getCurrentTimestamp();
         return new RecipeDurationEntity(
                 recipeId,
-                0,
-                0,
+                toClone.getPrepTime(),
+                toClone.getCookTime(),
                 currentTime,
                 currentTime
         );
     }
 
-    private RecipeDurationEntity cloneDurationEntity() {
-        isCloned = false;
+    @Override
+    public void onDataNotAvailable() {
+        durationEntity = createNewEntity();
+        save(durationEntity);
+        dataLoading = false;
+        updateObservables();
+    }
+
+    private RecipeDurationEntity createNewEntity() {
         long currentTime = timeProvider.getCurrentTimestamp();
         return new RecipeDurationEntity(
                 recipeId,
-                durationEntity.getPrepTime(),
-                durationEntity.getCookTime(),
+                0,
+                0,
                 currentTime,
                 currentTime
         );
     }
 
     private void updateObservables() {
-        observablesUpdating = true;
-        prepHoursObservable.set(String.valueOf(getHours(durationEntity.getPrepTime())));
-        prepMinutesObservable.set(String.valueOf(getMinutes(durationEntity.getPrepTime())));
-        cookHoursObservable.set(String.valueOf(getHours(durationEntity.getCookTime())));
-        cookMinutesObservable.set(String.valueOf(getMinutes(durationEntity.getCookTime())));
-        observablesUpdating = false;
-        submitModelStatus();
-    }
+        updatingUi = true;
 
-    private RecipeDurationEntity updatedDurationEntity() {
-        return new RecipeDurationEntity(
-                durationEntity.getId(),
-                calculateTotalInMinutes(prepHours, prepMinutes),
-                calculateTotalInMinutes(cookHours, cookMinutes),
-                durationEntity.getCreateDate(),
-                timeProvider.getCurrentTimestamp()
-        );
+        prepHours = getHours(durationEntity.getPrepTime());
+        prepHoursInView = String.valueOf(prepHours);
+        notifyPropertyChanged(BR.prepHoursInView);
+
+        prepMinutes = getMinutes(durationEntity.getPrepTime());
+        prepMinutesInView = String.valueOf(prepMinutes);
+        notifyPropertyChanged(BR.prepMinutesInView);
+
+        cookHours = getHours(durationEntity.getCookTime());
+        cookHoursInView = String.valueOf(cookHours);
+        notifyPropertyChanged(BR.cookHoursInView);
+
+        cookMinutes = getMinutes(durationEntity.getCookTime());
+        cookMinutesInView = String.valueOf(cookMinutes);
+        notifyPropertyChanged(BR.cookMinutesInView);
+
+        updatingUi = false;
+
+        if (dataLoading) {
+            validatePrepTime();
+            dataLoading = false;
+        } else
+            submitModelStatus();
+
+        if (isCloned && isValid()) {
+            save(durationEntity);
+            isCloned = false;
+        }
     }
 
     private int getHours(int totalTime) {
@@ -169,16 +164,116 @@ public class RecipeDurationViewModel
         return hours * 60 + minutes;
     }
 
-    private void updatePrepHours() {
-        prepHours = parseIntegerFromObservableField(prepHoursObservable, prepHours);
-        if (prepHours > 0)
-            validatePrepTime();
+    @Bindable
+    public String getPrepHoursInView() {
+        return prepHoursInView;
     }
 
-    private void updatePrepMinutes() {
-        prepMinutes = parseIntegerFromObservableField(prepMinutesObservable, prepMinutes);
-        if (prepMinutes > 0)
-            validatePrepTime();
+    public void setPrepHoursInView(String prepHoursInView) {
+        if (isPrepHoursInViewChanged(prepHoursInView)) {
+            if (!prepHoursInView.isEmpty()) {
+                int prepHoursParsed = parseIntegerFromString(prepHoursInView);
+
+                if (prepHoursParsed == MEASUREMENT_ERROR)
+                    prepTimeErrorMessage.set(numberFormatExceptionErrorMessage());
+                else {
+                    this.prepHoursInView = prepHoursInView;
+                    this.prepHours = prepHoursParsed;
+                    validatePrepTime();
+                }
+            }
+        }
+    }
+
+    private boolean isPrepHoursInViewChanged(String prepHoursInView) {
+        return !this.prepHoursInView.equals(prepHoursInView);
+    }
+
+    @Bindable
+    public String getPrepMinutesInView() {
+        return prepMinutesInView;
+    }
+
+    public void setPrepMinutesInView(String prepMinutesInView) {
+        if (isPrepMinutesInViewChanged(prepMinutesInView)) {
+            if (!prepMinutesInView.isEmpty()) {
+                int prepMinutesParsed = parseIntegerFromString(prepMinutesInView);
+
+                if (prepMinutesParsed == MEASUREMENT_ERROR)
+                    prepTimeErrorMessage.set(numberFormatExceptionErrorMessage());
+                else {
+                    this.prepMinutesInView = prepMinutesInView;
+                    this.prepMinutes = prepMinutesParsed;
+                    validatePrepTime();
+                }
+            }
+        }
+    }
+
+    private boolean isPrepMinutesInViewChanged(String prepMinutesInView) {
+        return !this.prepMinutesInView.equals(prepMinutesInView);
+    }
+
+    @Bindable
+    public String getCookHoursInView() {
+        return cookHoursInView;
+    }
+
+    public void setCookHoursInView(String cookHoursInView) {
+        if (isCookHoursInViewChanged(cookHoursInView)) {
+            if (!cookHoursInView.isEmpty()) {
+                int cookHoursParsed = parseIntegerFromString(cookHoursInView);
+
+                if (cookHoursParsed == MEASUREMENT_ERROR)
+                    cookTimeErrorMessage.set(numberFormatExceptionErrorMessage());
+                else {
+                    this.cookHoursInView = cookHoursInView;
+                    this.cookHours = cookHoursParsed;
+                    validateCookTime();
+                }
+            }
+        }
+    }
+
+    private boolean isCookHoursInViewChanged(String cookHoursInView) {
+        return !this.cookHoursInView.equals(cookHoursInView);
+    }
+
+    @Bindable
+    public String getCookMinutesInView() {
+        return cookMinutesInView;
+    }
+
+    public void setCookMinutesInView(String cookMinutesInView) {
+        if (isCookMinutesInViewChanged(cookMinutesInView)) {
+            if (!cookMinutesInView.isEmpty()) {
+                int cookMinutesParsed = parseIntegerFromString(cookMinutesInView);
+
+                if (cookMinutesParsed == MEASUREMENT_ERROR)
+                    cookTimeErrorMessage.set(numberFormatExceptionErrorMessage());
+                else {
+                    this.cookMinutesInView = cookMinutesInView;
+                    this.cookMinutes = cookMinutesParsed;
+                    validateCookTime();
+                }
+            }
+        }
+    }
+
+    private boolean isCookMinutesInViewChanged(String cookMinutesInView) {
+        return !this.cookMinutesInView.equals(cookMinutesInView);
+    }
+
+    private int parseIntegerFromString(String integerToParse) {
+        try {
+            return Integer.parseInt(integerToParse);
+        } catch (NumberFormatException e) {
+            return MEASUREMENT_ERROR;
+        }
+    }
+
+    private String numberFormatExceptionErrorMessage() {
+        return resources.getString(R.string.number_format_exception);
     }
 
     private void validatePrepTime() {
@@ -195,18 +290,6 @@ public class RecipeDurationViewModel
         submitModelStatus();
     }
 
-    private void updateCookHours() {
-        cookHours = parseIntegerFromObservableField(cookHoursObservable, cookHours);
-        if (cookHours > 0)
-            validateCookTime();
-    }
-
-    private void updateCookMinutes() {
-        cookMinutes = parseIntegerFromObservableField(cookMinutesObservable, cookMinutes);
-        if (cookMinutes > 0)
-            validateCookTime();
-    }
-
     private void validateCookTime() {
         cookTimeErrorMessage.set(null);
         int maxAllowedCookTime = resources.getInteger(R.integer.recipe_max_cook_time_in_minutes);
@@ -221,26 +304,24 @@ public class RecipeDurationViewModel
         submitModelStatus();
     }
 
-    private int parseIntegerFromObservableField(ObservableField<String> observable, int oldValue) {
-        return intFromObservable.parseInt(resources, observable, oldValue);
-    }
-
     // todo, as these two methods are implemented in all models that should be part of an interface
     // todo, possible move {@link RecipeModelComposite} to recipeValidator?
     // todo - Or, add them as listeners / requester's
+
     void setModelValidationSubmitter(RecipeValidation.RecipeValidatorModelSubmission modelSubmitter) {
         this.modelSubmitter = modelSubmitter;
     }
-
     private void submitModelStatus() {
-        if (!observablesUpdating) {
+        if (!updatingUi) {
             modelSubmitter.submitModelStatus(new RecipeModelStatus(
                     RecipeValidator.ModelName.DURATION_MODEL,
                     isChanged(),
                     isValid()
             ));
-            if (isChanged() && isValid())
-                save(updatedDurationEntity());
+            if (isChanged() && isValid()) {
+                RecipeDurationEntity entity = updatedDurationEntity();
+                save(entity);
+            }
         }
     }
 
@@ -253,7 +334,6 @@ public class RecipeDurationViewModel
                     durationEntity.getCreateDate(),
                     durationEntity.getLastUpdate()
             );
-
             return !durationEntity.equals(latestDurationModel);
         } else
             return false;
@@ -263,8 +343,18 @@ public class RecipeDurationViewModel
         return prepTimeValid && cookTimeValid;
     }
 
+    private RecipeDurationEntity updatedDurationEntity() {
+        return new RecipeDurationEntity(
+                durationEntity.getId(),
+                calculateTotalInMinutes(prepHours, prepMinutes),
+                calculateTotalInMinutes(cookHours, cookMinutes),
+                durationEntity.getCreateDate(),
+                timeProvider.getCurrentTimestamp()
+        );
+    }
+
     private void save(RecipeDurationEntity durationEntity) {
-        durationEntityDataSource.save(durationEntity);
+        repository.save(durationEntity);
         this.durationEntity = durationEntity;
     }
 }

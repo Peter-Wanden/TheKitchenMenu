@@ -19,6 +19,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 
+import static com.example.peter.thekitchenmenu.utils.TextValidationHandler.VALIDATED;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -120,6 +121,10 @@ public class RecipeIdentityViewModelTest {
     public void startNewRecipeId_newEmptyEntityNotSaved() {
         // Arrange
         when(timeProviderMock.getCurrentTimestamp()).thenReturn(INVALID_NEW_EMPTY.getCreateDate());
+        when(textValidationHandlerMock.validateShortText(eq(resourcesMock), eq(""))).
+                thenReturn(SHORT_TEXT_VALIDATION_ERROR);
+        when(textValidationHandlerMock.validateLongText(eq(resourcesMock), eq(""))).
+                thenReturn(VALIDATED);
         // Act
         SUT.start(INVALID_NEW_EMPTY.getId());
         simulateNothingReturnedFromDatabase();
@@ -209,13 +214,14 @@ public class RecipeIdentityViewModelTest {
     public void startNewRecipeId_validTitle_recipeModelStatusVALID_CHANGED() {
         // Arrange
         whenShortTextValidationReturnValidated();
+        whenLongTextValidationReturnValidated();
         // Act
         SUT.start(INVALID_NEW_EMPTY.getId());
         simulateNothingReturnedFromDatabase();
         SUT.setTitle(VALID_NEW_TITLE_VALID.getTitle());
         // Assert
-        verify(modelValidationSubmitterMock, times((2))).submitModelStatus(
-                statusArgumentCaptor.capture());
+        verify(modelValidationSubmitterMock, times((2))).
+                submitModelStatus(statusArgumentCaptor.capture());
         RecipeModelStatus actualStatus = statusArgumentCaptor.getValue();
         assertEquals(VALID_CHANGED, actualStatus);
     }
@@ -343,7 +349,7 @@ public class RecipeIdentityViewModelTest {
         SUT.start(VALID_EXISTING_COMPLETE.getId());
         // Assert
         simulateGetValidExistingCompleteFromDatabase();
-        verify(modelValidationSubmitterMock).submitModelStatus(statusArgumentCaptor.capture());
+        verify(modelValidationSubmitterMock, times((2))).submitModelStatus(statusArgumentCaptor.capture());
         RecipeModelStatus actualStatus = statusArgumentCaptor.getValue();
         assertEquals(VALID_UNCHANGED, actualStatus);
     }
@@ -460,12 +466,12 @@ public class RecipeIdentityViewModelTest {
         when(textValidationHandlerMock.validateShortText(
                 eq(resourcesMock),
                 eq(VALID_EXISTING_COMPLETE.getTitle()))).
-                thenReturn(TextValidationHandler.VALIDATED);
+                thenReturn(VALIDATED);
 
         when(textValidationHandlerMock.validateLongText(
                 eq(resourcesMock),
                 eq(VALID_EXISTING_COMPLETE.getDescription()))).
-                thenReturn(TextValidationHandler.VALIDATED);
+                thenReturn(VALIDATED);
     }
 
     private void setupResourceMockReturnValues() {
@@ -475,7 +481,7 @@ public class RecipeIdentityViewModelTest {
 
     private void whenShortTextValidationReturnValidated() {
         when(textValidationHandlerMock.validateShortText(anyObject(), anyString())).
-                thenReturn(TextValidationHandler.VALIDATED);
+                thenReturn(VALIDATED);
     }
 
     private void whenShortTextValidationReturnErrorMessage() {
@@ -485,7 +491,7 @@ public class RecipeIdentityViewModelTest {
 
     private void whenLongTextValidationReturnValidated() {
         when(textValidationHandlerMock.validateLongText(anyObject(), anyString())).
-                thenReturn(TextValidationHandler.VALIDATED);
+                thenReturn(VALIDATED);
     }
 
     private void whenLongTextValidationReturnErrorMessage() {

@@ -2,13 +2,13 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 
 import android.annotation.SuppressLint;
 
-import androidx.databinding.Observable;
-import androidx.databinding.ObservableBoolean;
-import androidx.lifecycle.ViewModel;
+import androidx.databinding.Bindable;
+import androidx.databinding.library.baseAdapters.BR;
 
 import com.example.peter.thekitchenmenu.data.entity.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
-import com.example.peter.thekitchenmenu.data.repository.DataSourceRecipeCourse;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeCourse;
+import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 
 import java.util.HashMap;
@@ -18,12 +18,12 @@ import java.util.Map;
 
 public class RecipeCourseSelectorViewModel
         extends
-        ViewModel
+        ObservableViewModel
         implements
         DataSource.GetAllCallback<RecipeCourseEntity>,
         RecipeModelComposite.RecipeModelActions {
 
-    private enum Courses {
+    private enum Course {
         COURSE_ZERO(0),
         COURSE_ONE(1),
         COURSE_TWO(2),
@@ -35,18 +35,18 @@ public class RecipeCourseSelectorViewModel
 
         private final int courseNo;
         @SuppressLint("UseSparseArrays")
-        private static Map<Integer, Courses> map = new HashMap<>();
+        private static Map<Integer, Course> map = new HashMap<>();
 
-        Courses(int courseNo) {
+        Course(int courseNo) {
             this.courseNo = courseNo;
         }
 
         static {
-            for (Courses course : Courses.values())
+            for (Course course : Course.values())
                 map.put(course.courseNo, course);
         }
 
-        public static Courses valueOf(int courseNo) {
+        public static Course valueOf(int courseNo) {
             return map.get(courseNo);
         }
 
@@ -55,110 +55,20 @@ public class RecipeCourseSelectorViewModel
         }
     }
 
-    private DataSourceRecipeCourse dataSourceRecipeCourse;
+    private RepositoryRecipeCourse repository;
     private UniqueIdProvider idProvider;
     private RecipeValidation.RecipeValidatorModelSubmission modelSubmitter;
 
     private String recipeId;
-    private HashMap<Courses, RecipeCourseEntity> oldCourseList = new LinkedHashMap<>();
-    private HashMap<Courses, RecipeCourseEntity> newCourseList = new LinkedHashMap<>();
-    private boolean modelIsUpdating;
+    private HashMap<Course, RecipeCourseEntity> oldCourseList = new LinkedHashMap<>();
+    private HashMap<Course, RecipeCourseEntity> newCourseList = new LinkedHashMap<>();
+    private boolean modelUpdating;
     private boolean cloneModel;
 
-    public final ObservableBoolean courseZeroObservable = new ObservableBoolean();
-    public final ObservableBoolean courseOneObservable = new ObservableBoolean();
-    public final ObservableBoolean courseTwoObservable = new ObservableBoolean();
-    public final ObservableBoolean courseThreeObservable = new ObservableBoolean();
-    public final ObservableBoolean courseFourObservable = new ObservableBoolean();
-    public final ObservableBoolean courseFiveObservable = new ObservableBoolean();
-    public final ObservableBoolean courseSixObservable = new ObservableBoolean();
-    public final ObservableBoolean courseSevenObservable = new ObservableBoolean();
-
-    public RecipeCourseSelectorViewModel(DataSourceRecipeCourse dataSourceRecipeCourse,
+    public RecipeCourseSelectorViewModel(RepositoryRecipeCourse repository,
                                          UniqueIdProvider idProvider) {
-        this.dataSourceRecipeCourse = dataSourceRecipeCourse;
+        this.repository = repository;
         this.idProvider = idProvider;
-
-        courseZeroObservable.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                boolean courseAdded = courseZeroObservable.get();
-                if (courseAdded)
-                    addCourse(Courses.COURSE_ZERO);
-                else
-                    removeCourse(Courses.COURSE_ZERO);
-            }
-        });
-        courseOneObservable.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                boolean courseAdded = courseOneObservable.get();
-                if (courseAdded)
-                    addCourse(Courses.COURSE_ONE);
-                else
-                    removeCourse(Courses.COURSE_ONE);
-            }
-        });
-        courseTwoObservable.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                boolean courseAdded = courseTwoObservable.get();
-                if (courseAdded)
-                    addCourse(Courses.COURSE_TWO);
-                else
-                    removeCourse(Courses.COURSE_TWO);
-            }
-        });
-        courseThreeObservable.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                boolean courseAdded = courseThreeObservable.get();
-                if (courseAdded)
-                    addCourse(Courses.COURSE_THREE);
-                else
-                    removeCourse(Courses.COURSE_THREE);
-            }
-        });
-        courseFourObservable.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                boolean courseAdded = courseFourObservable.get();
-                if (courseAdded)
-                    addCourse(Courses.COURSE_FOUR);
-                else
-                    removeCourse(Courses.COURSE_FOUR);
-            }
-        });
-        courseFiveObservable.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                boolean courseAdded = courseFiveObservable.get();
-                if (courseAdded)
-                    addCourse(Courses.COURSE_FIVE);
-                else
-                    removeCourse(Courses.COURSE_FIVE);
-            }
-        });
-        courseSixObservable.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                boolean courseAdded = courseSixObservable.get();
-                if (courseAdded)
-                    addCourse(Courses.COURSE_SIX);
-                else
-                    removeCourse(Courses.COURSE_SIX);
-            }
-        });
-        courseSevenObservable.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                boolean courseAdded = courseSevenObservable.get();
-                if (courseAdded)
-                    addCourse(Courses.COURSE_SEVEN);
-                else
-                    removeCourse(Courses.COURSE_SEVEN);
-            }
-        });
     }
 
     void setModelValidationSubmitter(RecipeValidation.RecipeValidatorModelSubmission modelSubmitter) {
@@ -179,7 +89,7 @@ public class RecipeCourseSelectorViewModel
     }
 
     private void getCoursesForRecipe(String recipeId) {
-        dataSourceRecipeCourse.getCoursesForRecipe(recipeId, this);
+        repository.getCoursesForRecipe(recipeId, this);
     }
 
     @Override
@@ -187,50 +97,60 @@ public class RecipeCourseSelectorViewModel
         if (cloneModel)
             cloneRecipeCourseEntities(recipeCourseEntities);
 
-        modelIsUpdating = true;
+        modelUpdating = true;
 
         for (RecipeCourseEntity courseEntity : recipeCourseEntities)
-            oldCourseList.put(Courses.valueOf(courseEntity.getCourseNo()), courseEntity);
+            oldCourseList.put(Course.valueOf(courseEntity.getCourseNo()), courseEntity);
 
-        newCourseList.putAll(oldCourseList);
+        if (!cloneModel)
+            newCourseList.putAll(oldCourseList);
+
         setRecipeCoursesToObservables();
     }
 
     private void cloneRecipeCourseEntities(List<RecipeCourseEntity> recipeCourseEntities) {
         for (RecipeCourseEntity recipeCourseEntity : recipeCourseEntities)
-            dataSourceRecipeCourse.save(createNewCourseEntity(recipeCourseEntity.getCourseNo()));
+            addCourse(Course.valueOf(recipeCourseEntity.getCourseNo()));
     }
 
     private void setRecipeCoursesToObservables() {
-        for (Courses courseName : newCourseList.keySet()) {
+        for (Course courseName : newCourseList.keySet()) {
             switch (courseName) {
                 case COURSE_ZERO:
-                    courseZeroObservable.set(true);
+                    addCourse(Course.COURSE_ZERO);
+                    notifyPropertyChanged(BR.courseZero);
                     break;
                 case COURSE_ONE:
-                    courseOneObservable.set(true);
+                    addCourse(Course.COURSE_ONE);
+                    notifyPropertyChanged(BR.courseOne);
                     break;
                 case COURSE_TWO:
-                    courseTwoObservable.set(true);
+                    addCourse(Course.COURSE_TWO);
+                    notifyPropertyChanged(BR.courseTwo);
                     break;
                 case COURSE_THREE:
-                    courseThreeObservable.set(true);
+                    addCourse(Course.COURSE_THREE);
+                    notifyPropertyChanged(BR.courseThree);
                     break;
                 case COURSE_FOUR:
-                    courseFourObservable.set(true);
+                    addCourse(Course.COURSE_FOUR);
+                    notifyPropertyChanged(BR.courseFour);
                     break;
                 case COURSE_FIVE:
-                    courseFiveObservable.set(true);
+                    addCourse(Course.COURSE_FIVE);
+                    notifyPropertyChanged(BR.courseFive);
                     break;
                 case COURSE_SIX:
-                    courseSixObservable.set(true);
+                    addCourse(Course.COURSE_SIX);
+                    notifyPropertyChanged(BR.courseSix);
                     break;
                 case COURSE_SEVEN:
-                    courseSevenObservable.set(true);
+                    addCourse(Course.COURSE_SEVEN);
+                    notifyPropertyChanged(BR.courseSeven);
                     break;
             }
         }
-        modelIsUpdating = false;
+        modelUpdating = false;
         compareCourseLists();
     }
 
@@ -239,13 +159,96 @@ public class RecipeCourseSelectorViewModel
         reportModelValidationStatus(false, false);
     }
 
-    private void addCourse(Courses course) {
+    @Bindable
+    public boolean isCourseZero() {
+        return newCourseList.get(Course.COURSE_ZERO) != null;
+    }
+
+    public void setCourseZero(boolean courseZero) {
+        addOrRemoveCourse(courseZero, Course.COURSE_ZERO);
+    }
+
+    @Bindable
+    public boolean isCourseOne() {
+        return newCourseList.get(Course.COURSE_ONE) != null;
+    }
+
+    public void setCourseOne(boolean courseOne) {
+        addOrRemoveCourse(courseOne, Course.COURSE_ONE);
+    }
+
+    @Bindable
+    public boolean isCourseTwo() {
+        return newCourseList.get(Course.COURSE_TWO) != null;
+    }
+
+    public void setCourseTwo(boolean courseTwo) {
+        addOrRemoveCourse(courseTwo, Course.COURSE_TWO);
+    }
+
+    @Bindable
+    public boolean isCourseThree() {
+        return newCourseList.get(Course.COURSE_THREE) != null;
+    }
+
+    public void setCourseThree(boolean courseThree) {
+        addOrRemoveCourse(courseThree, Course.COURSE_THREE);
+    }
+
+    @Bindable
+    public boolean isCourseFour() {
+        return newCourseList.get(Course.COURSE_FOUR) != null;
+    }
+
+    public void setCourseFour(boolean courseFour) {
+        addOrRemoveCourse(courseFour, Course.COURSE_FOUR);
+    }
+
+    @Bindable
+    public boolean isCourseFive() {
+        return newCourseList.get(Course.COURSE_FIVE) != null;
+    }
+
+    public void setCourseFive(boolean courseFive) {
+        addOrRemoveCourse(courseFive, Course.COURSE_FIVE);
+    }
+
+    @Bindable
+    public boolean isCourseSix() {
+        return newCourseList.get(Course.COURSE_SIX) != null;
+    }
+
+    public void setCourseSix(boolean courseSix) {
+        addOrRemoveCourse(courseSix, Course.COURSE_SIX);
+    }
+
+    @Bindable
+    public boolean isCourseSeven() {
+        return newCourseList.get(Course.COURSE_SEVEN) != null;
+    }
+
+    public void setCourseSeven(boolean courseSeven) {
+        addOrRemoveCourse(courseSeven, Course.COURSE_SEVEN);
+    }
+
+    private void addOrRemoveCourse(boolean addCourse, Course course) {
+        if (addCourse && !courseInList(course))
+            addCourse(course);
+        else if (!addCourse && courseInList(course))
+            removeCourse(course);
+    }
+
+    private boolean courseInList(Course course) {
+        return !(newCourseList.get(course) == null);
+    }
+
+    private void addCourse(Course course) {
         if (newCourseList.get(course) == null) {
             RecipeCourseEntity newCourseEntity = createNewCourseEntity(course.getCourseNo());
             newCourseList.put(course, newCourseEntity);
-            dataSourceRecipeCourse.save(newCourseEntity);
+            repository.save(newCourseEntity);
         }
-        if (!modelIsUpdating)
+        if (!modelUpdating)
             compareCourseLists();
     }
 
@@ -256,14 +259,14 @@ public class RecipeCourseSelectorViewModel
                 recipeId);
     }
 
-    private void removeCourse(Courses course) {
+    private void removeCourse(Course course) {
         deleteCourseFromDatabase(newCourseList.get(course).getId());
         newCourseList.remove(course);
         compareCourseLists();
     }
 
     private void deleteCourseFromDatabase(String recipeCourseEntityId) {
-        dataSourceRecipeCourse.deleteById(recipeCourseEntityId);
+        repository.deleteById(recipeCourseEntityId);
     }
 
     private void compareCourseLists() {
@@ -273,7 +276,14 @@ public class RecipeCourseSelectorViewModel
         isChanged = !oldCourseList.keySet().equals(newCourseList.keySet());
         isValid = !newCourseList.isEmpty();
 
+        makeOldListEquivalentToNew();
+
         reportModelValidationStatus(isChanged, isValid);
+    }
+
+    private void makeOldListEquivalentToNew() {
+        oldCourseList.clear();
+        oldCourseList.putAll(newCourseList);
     }
 
     private void reportModelValidationStatus(boolean isChanged, boolean isValid) {

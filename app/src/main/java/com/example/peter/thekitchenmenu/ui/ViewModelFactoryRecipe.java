@@ -137,6 +137,7 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
             // noinspection unchecked
             return (T) new RecipeDurationViewModel(
                     recipeDurationRepository,
+                    new NumberFormatter(application.getResources()),
                     application.getResources(),
                     new TimeProvider(),
                     new ParseIntegerFromObservableHandler());
