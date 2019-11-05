@@ -440,7 +440,7 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
                 ", unitOneDecimal=" + unitOneDecimal +
                 ", smallestUnit=" + smallestUnit +
                 ", lastMeasurementUpdated=" + lastMeasurementUpdated +
-                ", subtype=" + subtype +
+                ", subtypeObservableField=" + subtype +
                 ", totalBaseUnits=" + totalBaseUnits +
                 ", numberOfItems=" + numberOfItems +
                 ", oldNumberOfItems=" + oldNumberOfItems +

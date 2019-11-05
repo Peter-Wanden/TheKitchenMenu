@@ -80,7 +80,7 @@ public class RecipeEditorActivity
         recipeModelComposite.registerModel(recipeIdentityViewModel);
         recipeIdentityViewModel.setModelValidationSubmitter(recipeEditorViewModel.getValidator());
 
-        RecipeCourseSelectorViewModel courseSelectorViewModel = obtainCourseSelectorViewModel((this));
+        RecipeCourseEditorViewModel courseSelectorViewModel = obtainCourseSelectorViewModel((this));
         recipeModelComposite.registerModel(courseSelectorViewModel);
         courseSelectorViewModel.setModelValidationSubmitter(recipeEditorViewModel.getValidator());
 
@@ -88,7 +88,7 @@ public class RecipeEditorActivity
         recipeModelComposite.registerModel(durationViewModel);
         durationViewModel.setModelValidationSubmitter(recipeEditorViewModel.getValidator());
 
-        RecipePortionsViewModel portionsViewModel = obtainPortionsViewModel(this);
+        RecipePortionsEditorViewModel portionsViewModel = obtainPortionsViewModel(this);
         recipeModelComposite.registerModel(portionsViewModel);
         portionsViewModel.setModelValidationSubmitter(recipeEditorViewModel.getValidator());
     }
@@ -118,12 +118,12 @@ public class RecipeEditorActivity
                 RecipeIdentityViewModel.class);
     }
 
-    static RecipeCourseSelectorViewModel obtainCourseSelectorViewModel(
+    static RecipeCourseEditorViewModel obtainCourseSelectorViewModel(
             FragmentActivity activity) {
         ViewModelFactoryRecipe factoryRecipe = ViewModelFactoryRecipe.getInstance(
                 activity.getApplication());
         return new ViewModelProvider(activity, factoryRecipe).get(
-                RecipeCourseSelectorViewModel.class);
+                RecipeCourseEditorViewModel.class);
     }
 
     static RecipeDurationViewModel obtainDurationViewModel(
@@ -134,12 +134,12 @@ public class RecipeEditorActivity
                 RecipeDurationViewModel.class);
     }
 
-    static RecipePortionsViewModel obtainPortionsViewModel(
+    static RecipePortionsEditorViewModel obtainPortionsViewModel(
             FragmentActivity activity) {
         ViewModelFactoryRecipe factoryRecipe = ViewModelFactoryRecipe.getInstance(
                 activity.getApplication());
         return new ViewModelProvider(activity, factoryRecipe).get(
-                RecipePortionsViewModel.class);
+                RecipePortionsEditorViewModel.class);
     }
 
     private void setupFragments() {

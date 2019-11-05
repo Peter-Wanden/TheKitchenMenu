@@ -11,7 +11,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.databinding.RecipeCourseSelectorFragmentBinding;
+import com.example.peter.thekitchenmenu.databinding.RecipeCourseEditorFragmentBinding;
 
 public class RecipeCourseSelectorFragment extends Fragment {
 
@@ -27,9 +27,9 @@ public class RecipeCourseSelectorFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        RecipeCourseSelectorFragmentBinding binding = DataBindingUtil.inflate(
+        RecipeCourseEditorFragmentBinding binding = DataBindingUtil.inflate(
                 inflater,
-                R.layout.recipe_course_selector_fragment,
+                R.layout.recipe_course_editor_fragment,
                 container,
                 false);
 

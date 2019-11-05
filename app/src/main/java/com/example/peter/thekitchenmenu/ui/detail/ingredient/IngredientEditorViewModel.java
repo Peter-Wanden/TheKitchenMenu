@@ -208,7 +208,7 @@ public class IngredientEditorViewModel
     }
 
     private IngredientEntity createNewIngredientEntity() {
-        long currentTime = timeProvider.getCurrentTimestamp();
+        long currentTime = timeProvider.getCurrentTimeInMills();
         String id = idProvider.getUId();
         return new IngredientEntity(
                 id,
@@ -229,7 +229,7 @@ public class IngredientEditorViewModel
                 ingredientEntity.getConversionFactor(),
                 ingredientEntity.getCreatedBy(),
                 ingredientEntity.getCreateDate(),
-                timeProvider.getCurrentTimestamp()
+                timeProvider.getCurrentTimeInMills()
         );
     }
 

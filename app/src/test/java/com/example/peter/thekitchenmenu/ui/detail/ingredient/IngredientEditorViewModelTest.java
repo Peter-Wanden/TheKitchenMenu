@@ -107,7 +107,7 @@ public class IngredientEditorViewModelTest {
     public void startNewIngredientId_nothingSetToObservers() {
         // Arrange
         when(uniqueIdProviderMock.getUId()).thenReturn(NEW.getId());
-        when(timeProviderMock.getCurrentTimestamp()).thenReturn(NEW.getCreateDate());
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(NEW.getCreateDate());
         // Act
         SUT.start();
         // Assert
@@ -119,7 +119,7 @@ public class IngredientEditorViewModelTest {
     public void startNewIngredientId_nothingSaved() {
         // Arrange
         when(uniqueIdProviderMock.getUId()).thenReturn(NEW.getId());
-        when(timeProviderMock.getCurrentTimestamp()).thenReturn(NEW.getCreateDate());
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(NEW.getCreateDate());
         // Act
         SUT.start();
         // Assert
@@ -140,7 +140,7 @@ public class IngredientEditorViewModelTest {
     public void startNewIngredientId_useButtonNotShown() {
         // Arrange
         when(uniqueIdProviderMock.getUId()).thenReturn(NEW.getId());
-        when(timeProviderMock.getCurrentTimestamp()).thenReturn(NEW.getCreateDate());
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(NEW.getCreateDate());
         // Act
         SUT.start();
         // Assert
@@ -152,7 +152,7 @@ public class IngredientEditorViewModelTest {
         // Arrange
         when(uniqueIdProviderMock.getUId()).thenReturn(
                 NEW_INVALID_NAME.getId());
-        when(timeProviderMock.getCurrentTimestamp()).thenReturn(
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 NEW_INVALID_NAME.getCreateDate());
         whenShortTextValidationReturnErrorMessage();
         // Act
@@ -167,7 +167,7 @@ public class IngredientEditorViewModelTest {
     public void startNewIngredientId_invalidName_useButtonNotShown() {
         // Arrange
         when(uniqueIdProviderMock.getUId()).thenReturn(NEW_INVALID_NAME.getId());
-        when(timeProviderMock.getCurrentTimestamp()).thenReturn(
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 NEW_INVALID_NAME.getCreateDate());
         whenShortTextValidationReturnErrorMessage();
         // Act
@@ -181,7 +181,7 @@ public class IngredientEditorViewModelTest {
     public void startNewIngredientId_validName_nameErrorMessageNull() {
         // Arrange
         whenIdProviderGetIdReturnNewEntityId();
-        when(timeProviderMock.getCurrentTimestamp()).thenReturn(
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 NEW.getCreateDate(), NEW_VALID_NAME.getLastUpdate());
         whenShortTextValidationReturnValidated();
         // Act
@@ -195,7 +195,7 @@ public class IngredientEditorViewModelTest {
     public void startNewIngredientId_validName_useButtonShown() {
         // Arrange
         whenIdProviderGetIdReturnNewEntityId();
-        when(timeProviderMock.getCurrentTimestamp()).thenReturn(
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 NEW.getCreateDate(), NEW_VALID_NAME.getLastUpdate());
         whenShortTextValidationReturnValidated();
         // Act
@@ -211,7 +211,7 @@ public class IngredientEditorViewModelTest {
         // Arrange
         whenIdProviderGetIdReturnNewEntityId();
         whenShortTextValidationReturnValidated();
-        when(timeProviderMock.getCurrentTimestamp()).thenReturn(
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 NEW.getCreateDate(), NEW_VALID_NAME.getLastUpdate());
         // Act
         SUT.start();
@@ -278,7 +278,7 @@ public class IngredientEditorViewModelTest {
         // Arrange
         whenShortTextValidationReturnValidated();
         whenIdProviderGetIdReturnNewEntityId();
-        when(timeProviderMock.getCurrentTimestamp()).thenReturn(
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 NEW_VALID_NAME.getCreateDate(), NEW_VALID_NAME.getLastUpdate());
         // Act
         SUT.start();
@@ -306,7 +306,7 @@ public class IngredientEditorViewModelTest {
         // Arrange
         whenShortTextValidationReturnValidated();
         whenIdProviderGetIdReturnNewEntityId();
-        when(timeProviderMock.getCurrentTimestamp()).thenReturn(
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 NEW_VALID_NAME.getCreateDate(), NEW_VALID_NAME.getLastUpdate());
         // Act
         SUT.start();
@@ -334,7 +334,7 @@ public class IngredientEditorViewModelTest {
     public void startNewIngredientId_validNameInvalidDescription_descriptionErrorMessageSet() {
         // Arrange
         whenIdProviderGetIdReturnNewEntityId();
-        when(timeProviderMock.getCurrentTimestamp()).thenReturn(
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 NEW.getCreateDate(), NEW_VALID_NAME_INVALID_DESCRIPTION.getLastUpdate());
         whenShortTextValidationReturnValidated();
         whenLongTextValidationReturnErrorMessage();
@@ -351,7 +351,7 @@ public class IngredientEditorViewModelTest {
     public void startNewIngredientId_validNameInvalidDescription_useButtonNotShown() {
         // Arrange
         whenIdProviderGetIdReturnNewEntityId();
-        when(timeProviderMock.getCurrentTimestamp()).thenReturn(
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 NEW.getCreateDate(), NEW_VALID_NAME.getLastUpdate());
         whenShortTextValidationReturnValidated();
         whenLongTextValidationReturnErrorMessage();
@@ -367,7 +367,7 @@ public class IngredientEditorViewModelTest {
     public void startNewIngredientId_invalidNameValidDescription_useButtonNotShown() {
         // Arrange
         whenIdProviderGetIdReturnNewEntityId();
-        when(timeProviderMock.getCurrentTimestamp()).thenReturn(
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 NEW.getCreateDate(), NEW.getLastUpdate());
         whenShortTextValidationReturnErrorMessage();
         whenLongTextValidationReturnValidated();
@@ -383,7 +383,7 @@ public class IngredientEditorViewModelTest {
     public void startNewIngredientId_validNameValidDescription_errorMessageObservablesNull() {
         // Arrange
         whenIdProviderGetIdReturnNewEntityId();
-        when(timeProviderMock.getCurrentTimestamp()).thenReturn(
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 NEW.getCreateDate(), NEW_VALID_NAME_VALID_DESCRIPTION.getLastUpdate());
         whenShortTextValidationReturnValidated();
         whenLongTextValidationReturnValidated();
@@ -400,7 +400,7 @@ public class IngredientEditorViewModelTest {
     public void startNewIngredientId_validNameValidDescription_useButtonShown() {
         // Arrange
         whenIdProviderGetIdReturnNewEntityId();
-        when(timeProviderMock.getCurrentTimestamp()).thenReturn(
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 NEW.getCreateDate(), NEW_VALID_NAME_VALID_DESCRIPTION.getLastUpdate());
         whenShortTextValidationReturnValidated();
         whenLongTextValidationReturnValidated();
@@ -417,7 +417,7 @@ public class IngredientEditorViewModelTest {
     public void startNewIngredientId_validNameValidDescription_saved() {
         // Arrange
         whenIdProviderGetIdReturnNewEntityId();
-        when(timeProviderMock.getCurrentTimestamp()).thenReturn(
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 NEW.getCreateDate(), NEW_VALID_NAME_VALID_DESCRIPTION.getLastUpdate());
         whenShortTextValidationReturnValidated();
         whenLongTextValidationReturnValidated();
@@ -555,7 +555,7 @@ public class IngredientEditorViewModelTest {
         // Arrange
         whenShortTextValidationReturnValidated();
         whenLongTextValidationReturnValidated();
-        when(timeProviderMock.getCurrentTimestamp()).thenReturn(
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 VALID_EXISTING_VALID_NAME_UPDATE.getLastUpdate());
         // Act
         SUT.start(VALID_EXISTING_COMPLETE.getId());
@@ -573,7 +573,7 @@ public class IngredientEditorViewModelTest {
         // Arrange
         whenShortTextValidationReturnValidated();
         whenLongTextValidationReturnValidated();
-        when(timeProviderMock.getCurrentTimestamp()).thenReturn(
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 VALID_EXISTING_VALID_NAME_UPDATE.getLastUpdate());
         // Act
         SUT.start(VALID_EXISTING_COMPLETE.getId());
@@ -667,7 +667,7 @@ public class IngredientEditorViewModelTest {
         // Arrange
         whenShortTextValidationReturnValidated();
         whenLongTextValidationReturnValidated();
-        when(timeProviderMock.getCurrentTimestamp()).thenReturn(
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 VALID_EXISTING_VALID_DESCRIPTION_UPDATE.getLastUpdate());
         // Act
         SUT.start(VALID_EXISTING_COMPLETE.getId());
@@ -684,7 +684,7 @@ public class IngredientEditorViewModelTest {
         // Arrange
         whenShortTextValidationReturnValidated();
         whenLongTextValidationReturnValidated();
-        when(timeProviderMock.getCurrentTimestamp()).thenReturn(
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 VALID_EXISTING_VALID_DESCRIPTION_UPDATE.getLastUpdate());
         // Act
         SUT.start(VALID_EXISTING_COMPLETE.getId());
@@ -699,7 +699,7 @@ public class IngredientEditorViewModelTest {
         // Arrange
         whenShortTextValidationReturnValidated();
         whenLongTextValidationReturnValidated();
-        when(timeProviderMock.getCurrentTimestamp()).thenReturn(
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 VALID_EXISTING_VALID_DESCRIPTION_UPDATE.getLastUpdate());
         // Act
         SUT.start(VALID_EXISTING_FROM_ANOTHER_USER.getId());

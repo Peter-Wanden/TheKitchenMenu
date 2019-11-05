@@ -82,7 +82,7 @@ public final class MeasurementModel {
     @Override
     public String toString() {
         return "MeasurementModel{" +
-                "subtype=" + subtype +
+                "subtypeObservableField=" + subtype +
                 ", numberOfItems=" + numberOfItems +
                 ", conversionFactor=" + conversionFactor +
                 ", totalMeasurementOne=" + totalMeasurementOne +

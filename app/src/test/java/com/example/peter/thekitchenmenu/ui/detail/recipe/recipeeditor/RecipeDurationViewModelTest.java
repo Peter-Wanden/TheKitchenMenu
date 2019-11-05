@@ -82,10 +82,6 @@ public class RecipeDurationViewModelTest {
     @Mock
     TimeProvider timeProviderMock;
     @Mock
-    NumberFormatter numberFormatterMock;
-    @Mock
-    ParseIntegerFromObservableHandler intFromObservableMock;
-    @Mock
     RecipeValidation.RecipeValidatorModelSubmission modelValidationSubmitterMock;
     // endregion helper fields ---------------------------------------------------------------------
 
@@ -98,10 +94,8 @@ public class RecipeDurationViewModelTest {
 
         SUT = new RecipeDurationViewModel(
                 repoDurationMock,
-                numberFormatterMock,
                 resourcesMock,
-                timeProviderMock,
-                intFromObservableMock
+                timeProviderMock
         );
 
         SUT.setModelValidationSubmitter(modelValidationSubmitterMock);
@@ -123,7 +117,7 @@ public class RecipeDurationViewModelTest {
     @Test
     public void startNewRecipeId_newEmptyEntitySaved() {
         // Arrange
-        when(timeProviderMock.getCurrentTimestamp()).thenReturn(VALID_NEW_EMPTY.getCreateDate());
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(VALID_NEW_EMPTY.getCreateDate());
         // Act
         SUT.start(VALID_NEW_EMPTY.getId());
         simulateNothingReturnedFromDatabase();
@@ -135,7 +129,7 @@ public class RecipeDurationViewModelTest {
     @Test
     public void startNewRecipeId_RecipeModelStatusVALID_UNCHANGED() {
         // Arrange
-        when(timeProviderMock.getCurrentTimestamp()).thenReturn(VALID_NEW_EMPTY.getCreateDate());
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(VALID_NEW_EMPTY.getCreateDate());
         // Act
         SUT.start(VALID_NEW_EMPTY.getId());
         simulateNothingReturnedFromDatabase();
@@ -159,7 +153,7 @@ public class RecipeDurationViewModelTest {
     @Test
     public void startNewRecipeId_invalidPrepHours_invalidValueNotSaved() {
         // Arrange
-        when(timeProviderMock.getCurrentTimestamp()).thenReturn(VALID_NEW_EMPTY.getCreateDate());
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(VALID_NEW_EMPTY.getCreateDate());
         // Act
         SUT.start(VALID_NEW_EMPTY.getId());
         simulateNothingReturnedFromDatabase();
@@ -172,7 +166,7 @@ public class RecipeDurationViewModelTest {
     @Test
     public void startNewRecipeId_invalidPrepHours_recipeModelStatusINVALID_CHANGED() {
         // Arrange
-        when(timeProviderMock.getCurrentTimestamp()).thenReturn(VALID_NEW_EMPTY.getCreateDate());
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(VALID_NEW_EMPTY.getCreateDate());
         // Act
         SUT.start(VALID_NEW_EMPTY.getId());
         simulateNothingReturnedFromDatabase();
@@ -209,7 +203,7 @@ public class RecipeDurationViewModelTest {
     @Test
     public void startNewRecipeId_validPrepHours_prepHoursSaved() {
         // Arrange
-        when(timeProviderMock.getCurrentTimestamp()).thenReturn(VALID_NEW_EMPTY.getCreateDate());
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(VALID_NEW_EMPTY.getCreateDate());
         // Act
         SUT.start(VALID_NEW_EMPTY.getId());
         simulateNothingReturnedFromDatabase();
@@ -244,7 +238,7 @@ public class RecipeDurationViewModelTest {
 
     @Test
     public void startNewRecipeId_invalidPrepMinutes_invalidValueNotSaved() {
-        when(timeProviderMock.getCurrentTimestamp()).thenReturn(VALID_NEW_EMPTY.getCreateDate());
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(VALID_NEW_EMPTY.getCreateDate());
         // Act
         SUT.start(VALID_NEW_EMPTY.getId());
         simulateNothingReturnedFromDatabase();
@@ -280,7 +274,7 @@ public class RecipeDurationViewModelTest {
     @Test
     public void startNewRecipeId_validPrepMinutes_prepMinutesSaved() {
         // Arrange
-        when(timeProviderMock.getCurrentTimestamp()).
+        when(timeProviderMock.getCurrentTimeInMills()).
                 thenReturn(VALID_NEW_PREP_TIME_VALID.getCreateDate());
         // Act
         SUT.start(VALID_NEW_EMPTY.getId());
@@ -294,7 +288,7 @@ public class RecipeDurationViewModelTest {
     @Test
     public void startNewRecipeId_validPrepHoursAndMinutes_prepTimeSaved() {
         // Arrange
-        when(timeProviderMock.getCurrentTimestamp()).thenReturn(
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 VALID_NEW_PREP_TIME_VALID.getCreateDate());
         // Act
         SUT.start(VALID_NEW_EMPTY.getId());
@@ -320,7 +314,7 @@ public class RecipeDurationViewModelTest {
     @Test
     public void startNewRecipeId_invalidPrepHoursAndMinutes_onlyValidPartOfPrepTimeSaved() {
         // Arrange
-        when(timeProviderMock.getCurrentTimestamp()).thenReturn(
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 INVALID_NEW_PREP_TIME_INVALID.getCreateDate());
         // Act
         SUT.start(VALID_NEW_EMPTY.getId());
@@ -360,7 +354,7 @@ public class RecipeDurationViewModelTest {
     @Test
     public void startNewRecipeId_validCookHours_RecipeModelStatusVALID_CHANGED() {
         // Arrange
-        when(timeProviderMock.getCurrentTimestamp()).thenReturn(
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 VALID_NEW_COOK_TIME_VALID.getCreateDate());
         // Act
         SUT.start(VALID_NEW_EMPTY.getId());
@@ -374,7 +368,7 @@ public class RecipeDurationViewModelTest {
     @Test
     public void startNewRecipeId_validCookHours_cookHoursSaved() {
         // Arrange
-        when(timeProviderMock.getCurrentTimestamp()).thenReturn(
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 VALID_NEW_COOK_TIME_VALID.getCreateDate());
         // Act
         SUT.start(VALID_NEW_EMPTY.getId());
@@ -411,7 +405,7 @@ public class RecipeDurationViewModelTest {
     @Test
     public void startNewRecipeId_invalidCookHours_invalidValueNotSaved() {
         // Arrange
-        when(timeProviderMock.getCurrentTimestamp()).thenReturn(VALID_NEW_EMPTY.getCreateDate());
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(VALID_NEW_EMPTY.getCreateDate());
         // Act
         SUT.start(VALID_NEW_EMPTY.getId());
         simulateNothingReturnedFromDatabase();
@@ -447,7 +441,7 @@ public class RecipeDurationViewModelTest {
     @Test
     public void startNewRecipeId_validCookMinutes_cookHoursSaved() {
         // Arrange
-        when(timeProviderMock.getCurrentTimestamp()).
+        when(timeProviderMock.getCurrentTimeInMills()).
                 thenReturn(VALID_NEW_COOK_TIME_VALID.getCreateDate());
         // Act
         SUT.start(VALID_NEW_EMPTY.getId());
@@ -484,7 +478,7 @@ public class RecipeDurationViewModelTest {
     @Test
     public void startNewRecipeId_invalidCookMinutes_invalidValueNotSaved() {
         // Arrange
-        when(timeProviderMock.getCurrentTimestamp()).
+        when(timeProviderMock.getCurrentTimeInMills()).
                 thenReturn(INVALID_NEW_COOK_TIME_INVALID.getCreateDate());
         // Act
         SUT.start(VALID_NEW_EMPTY.getId());
@@ -510,7 +504,7 @@ public class RecipeDurationViewModelTest {
     @Test
     public void startNewRecipeId_validCookHoursAndMinutes_recipeModelStatusVALID_CHANGED() {
         // Arrange
-        when(timeProviderMock.getCurrentTimestamp()).
+        when(timeProviderMock.getCurrentTimeInMills()).
                 thenReturn(VALID_NEW_COOK_TIME_VALID.getCreateDate());
         // Act
         SUT.start(VALID_NEW_EMPTY.getId());
@@ -524,7 +518,7 @@ public class RecipeDurationViewModelTest {
     @Test
     public void startNewRecipeId_validCookHoursAndMinutes_cookTimeSaved() {
         // Arrange
-        when(timeProviderMock.getCurrentTimestamp()).
+        when(timeProviderMock.getCurrentTimeInMills()).
                 thenReturn(VALID_NEW_COOK_TIME_VALID.getCreateDate());
         // Act
         SUT.start(VALID_NEW_EMPTY.getId());
@@ -563,7 +557,7 @@ public class RecipeDurationViewModelTest {
     @Test
     public void startNewRecipeId_invalidCookHoursAndMinutes_onlyValidPartOfPrepTimeSaved() {
         // Arrange
-        when(timeProviderMock.getCurrentTimestamp()).thenReturn(
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 INVALID_NEW_COOK_TIME_INVALID.getCreateDate());
         // Act
         SUT.start(VALID_NEW_EMPTY.getId());
@@ -620,13 +614,13 @@ public class RecipeDurationViewModelTest {
 
     @Test
     public void start_validExistingRecipeId_RecipeModelStatusVALID_UNCHANGED() {
-        when(timeProviderMock.getCurrentTimestamp()).thenReturn(
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 VALID_EXISTING_COMPLETE.getCreateDate());
         // Act
         SUT.start(VALID_EXISTING_COMPLETE.getId());
         simulateGetValidExistingCompleteFromDatabase();
         // Assert
-        verify(modelValidationSubmitterMock).submitModelStatus(modelStatusCaptor.capture());
+        verify(modelValidationSubmitterMock, times((2))).submitModelStatus(modelStatusCaptor.capture());
         RecipeModelStatus modelStatus = modelStatusCaptor.getValue();
         assertEquals(VALID_UNCHANGED, modelStatus);
     }
@@ -642,7 +636,7 @@ public class RecipeDurationViewModelTest {
     @Test
     public void startWithCloned_existingAndNewRecipeId_existingFromAnotherUserCopiedAndSavedWithNewId() {
         // Arrange
-        when(timeProviderMock.getCurrentTimestamp()).thenReturn(VALID_NEW_CLONED.getCreateDate());
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(VALID_NEW_CLONED.getCreateDate());
         // Act
         SUT.startByCloningModel(VALID_COMPLETE_FROM_ANOTHER_USER.getId(), VALID_NEW_EMPTY.getId());
         simulateGetValidEntityFromAnotherUserFromDatabase();
@@ -653,7 +647,7 @@ public class RecipeDurationViewModelTest {
     @Test
     public void startWithCloned_prepTimeChanged_savedWithUpdatedPrepTime() {
         // Arrange
-        when(timeProviderMock.getCurrentTimestamp()).thenReturn(
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 VALID_NEW_CLONED_PREP_TIME_UPDATED.getCreateDate());
         // Act
         SUT.startByCloningModel(VALID_COMPLETE_FROM_ANOTHER_USER.getId(), VALID_NEW_EMPTY.getId());
@@ -668,7 +662,7 @@ public class RecipeDurationViewModelTest {
     @Test
     public void startWithCloned_modelFromAnotherUserNotAvailable_newModelCreatedAndSavedWithNewId() {
         // Arrange
-        when(timeProviderMock.getCurrentTimestamp()).thenReturn(VALID_NEW_EMPTY.getCreateDate());
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(VALID_NEW_EMPTY.getCreateDate());
         // Act
         SUT.startByCloningModel(INVALID_COMPLETE_FROM_ANOTHER_USER.getId(), VALID_NEW_EMPTY.getId());
         verify(repoDurationMock).getById(eq(INVALID_COMPLETE_FROM_ANOTHER_USER.getId()),
@@ -676,7 +670,7 @@ public class RecipeDurationViewModelTest {
         getEntityCallbackCaptor.getValue().onDataNotAvailable();
 
         // Assert
-        verify(repoDurationMock, times((2))).save(eq(VALID_NEW_EMPTY));
+        verify(repoDurationMock).save(eq(VALID_NEW_EMPTY));
     }
 
     // region helper methods -----------------------------------------------------------------------

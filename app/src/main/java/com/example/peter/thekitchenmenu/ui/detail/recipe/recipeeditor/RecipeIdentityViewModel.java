@@ -26,9 +26,9 @@ public class RecipeIdentityViewModel
     private static final String TAG = "tkm-RecipeIdentityVM";
 
     private Resources resources;
-    private TextValidationHandler textValidationHandler;
-    private RepositoryRecipeIdentity repository;
     private TimeProvider timeProvider;
+    private RepositoryRecipeIdentity repository;
+    private TextValidationHandler textValidationHandler;
     private RecipeValidatorModelSubmission modelSubmitter;
 
     private String title = "";
@@ -56,23 +56,22 @@ public class RecipeIdentityViewModel
         this.textValidationHandler = textValidationHandler;
     }
 
-    void setModelValidationSubmitter(RecipeValidatorModelSubmission modelSubmitter) {
-        this.modelSubmitter = modelSubmitter;
-    }
-
     @Override
     public void start(String recipeId) {
         this.recipeId = recipeId;
-        dataLoading = true;
-        repository.getById(recipeId, this);
+        getData(recipeId);
     }
 
     @Override
     public void startByCloningModel(String oldRecipeId, String newRecipeId) {
         isCloned = true;
-        this.recipeId = newRecipeId;
+        recipeId = newRecipeId;
+        getData(oldRecipeId);
+    }
+
+    private void getData(String recipeId) {
         dataLoading = true;
-        repository.getById(oldRecipeId, this);
+        repository.getById(recipeId, this);
     }
 
     @Override
@@ -85,7 +84,7 @@ public class RecipeIdentityViewModel
     }
 
     private RecipeIdentityEntity cloneEntity(RecipeIdentityEntity toClone) {
-        long currentTime = timeProvider.getCurrentTimestamp();
+        long currentTime = timeProvider.getCurrentTimeInMills();
         return new RecipeIdentityEntity(
                 recipeId,
                 toClone.getTitle(),
@@ -103,7 +102,7 @@ public class RecipeIdentityViewModel
     }
 
     private RecipeIdentityEntity createNewEntity() {
-        long currentTime = timeProvider.getCurrentTimestamp();
+        long currentTime = timeProvider.getCurrentTimeInMills();
         return new RecipeIdentityEntity(
                 recipeId,
                 title,
@@ -114,21 +113,18 @@ public class RecipeIdentityViewModel
 
     private void updateObservables() {
         updatingUi = true;
-
-        title = identityEntity.getTitle();
-        notifyPropertyChanged(BR.title);
-
-        description = identityEntity.getDescription();
-        notifyPropertyChanged(BR.description);
-
+        updateTitle(identityEntity.getTitle());
+        updateDescription(identityEntity.getDescription());
         updatingUi = false;
 
         if (dataLoading) {
-            validateTitle(identityEntity.getTitle());
-            validateDescription(identityEntity.getDescription());
+            validateTitle();
+            validateDescription();
             dataLoading = false;
-        } else
-            submitModelStatus();
+        } else {
+            submitModelStatus(isChanged(), isValid());
+            return;
+        }
 
         if (isCloned && isValid()) {
             save(identityEntity);
@@ -144,7 +140,7 @@ public class RecipeIdentityViewModel
     public void setTitle(String title) {
         if (isTitleChanged(title)) {
             this.title = title;
-            validateTitle(title);
+            validateTitle();
         }
     }
 
@@ -152,15 +148,21 @@ public class RecipeIdentityViewModel
         return !updatingUi && !this.title.equals(title);
     }
 
-    private void validateTitle(String title) {
+    private void validateTitle() {
         titleErrorMessage.set(null);
         String validationResponse = validateShortText(title);
-        titleValid = validationResponse.equals(VALIDATED);
 
+        titleValid = validationResponse.equals(VALIDATED);
         if (!titleValid)
             titleErrorMessage.set(validationResponse);
 
+        updateTitle(title);
         saveValidChanges();
+    }
+
+    private void updateTitle(String title) {
+        this.title = title;
+        notifyPropertyChanged(BR.title);
     }
 
     @Bindable
@@ -171,7 +173,7 @@ public class RecipeIdentityViewModel
     public void setDescription(String description) {
         if (isDescriptionChanged(description)) {
             this.description = description;
-            validateDescription(description);
+            validateDescription();
         }
     }
 
@@ -179,15 +181,21 @@ public class RecipeIdentityViewModel
         return !updatingUi && !this.description.equals(description);
     }
 
-    private void validateDescription(String description) {
+    private void validateDescription() {
         descriptionErrorMessage.set(null);
         String validationResponse = validateLongText(description);
-        descriptionValid = validationResponse.equals(VALIDATED);
 
+        descriptionValid = validationResponse.equals(VALIDATED);
         if (!descriptionValid)
             descriptionErrorMessage.set(validationResponse);
 
+        updateDescription(description);
         saveValidChanges();
+    }
+
+    private void updateDescription(String description) {
+        this.description = description;
+        notifyPropertyChanged(BR.description);
     }
 
 
@@ -199,44 +207,52 @@ public class RecipeIdentityViewModel
         return textValidationHandler.validateLongText(resources, textToValidate);
     }
 
-    private void saveValidChanges() {
-        RecipeIdentityEntity updatedEntity = updatedEntity();
-
-        System.out.println("isValid=" + isValid() + " isChanged=" + isChanged());
-
-        if (isValid() && isChanged())
-            save(updatedEntity);
-
-        submitModelStatus();
-        identityEntity = updatedEntity;
+    void setModelValidationSubmitter(RecipeValidatorModelSubmission modelSubmitter) {
+        this.modelSubmitter = modelSubmitter;
     }
 
-    private void submitModelStatus() {
+    private void saveValidChanges() {
+        RecipeIdentityEntity updatedEntity = updatedEntity();
+        boolean isChanged = isChanged();
+        boolean isValid = isValid();
+
+        if (isChanged && isValid)
+            save(updatedEntity);
+
+        equaliseState(updatedEntity);
+        submitModelStatus(isChanged, isValid);
+    }
+
+    private void equaliseState(RecipeIdentityEntity entity) {
+        identityEntity = entity;
+    }
+
+    private void submitModelStatus(boolean isChanged, boolean isValid) {
         if (!updatingUi) {
             modelSubmitter.submitModelStatus(new RecipeModelStatus(
                     RecipeValidator.ModelName.IDENTITY_MODEL,
-                    isChanged(),
-                    isValid()
+                    isChanged,
+                    isValid
             ));
         }
     }
 
-    private boolean isValid() {
-        return titleValid && descriptionValid;
-    }
-
     private boolean isChanged() {
         if (identityEntity != null) {
-            RecipeIdentityEntity updatedEntity = new RecipeIdentityEntity(
+            RecipeIdentityEntity latestData = new RecipeIdentityEntity(
                     identityEntity.getId(),
                     title,
                     description,
                     identityEntity.getCreateDate(),
                     identityEntity.getLastUpdate()
             );
-            return !identityEntity.equals(updatedEntity);
+            return !identityEntity.equals(latestData);
         } else
             return false;
+    }
+
+    private boolean isValid() {
+        return titleValid && descriptionValid;
     }
 
     private RecipeIdentityEntity updatedEntity() {
@@ -245,7 +261,7 @@ public class RecipeIdentityViewModel
                 title,
                 description,
                 identityEntity.getCreateDate(),
-                timeProvider.getCurrentTimestamp()
+                timeProvider.getCurrentTimeInMills()
         );
     }
 

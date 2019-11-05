@@ -18,13 +18,12 @@ import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 import org.junit.*;
 import org.mockito.*;
 
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementResult.*;
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.*;
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UseCasePortion.*;
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UseCaseIngredientPortionCalculator.*;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.assertEquals;
 
-public class UseCasePortionTest {
+public class UseCaseIngredientPortionCalculatorTest {
 
     // region constants ----------------------------------------------------------------------------
     private final double DELTA = 0.0001;
@@ -169,12 +168,12 @@ public class UseCasePortionTest {
     ArgumentCaptor<IngredientEntity> ingredientArgumentCaptor;
     // endregion helper fields ---------------------------------------------------------------------
 
-    private UseCasePortion SUT;
+    private UseCaseIngredientPortionCalculator SUT;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        SUT = new UseCasePortion(
+        SUT = new UseCaseIngredientPortionCalculator(
                 repoRecipePortionsMock,
                 repoRecipeIngredientMock,
                 repoIngredientMock,
@@ -726,7 +725,7 @@ public class UseCasePortionTest {
                 (numberOfTeaspoons * teaspoonVolume / portions) * MAX_CONVERSION_FACTOR;
 
 
-        when(timeProviderMock.getCurrentTimestamp()).thenReturn(
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 QUANTITY_EXISTING_VALID_METRIC.getCreateDate(),
                 INGREDIENT_EXISTING_VALID_NAME_DESCRIPTION.getLastUpdate(),
                 QUANTITY_EXISTING_VALID_METRIC.getLastUpdate());
@@ -964,7 +963,7 @@ public class UseCasePortionTest {
     }
 
     private void whenTimeProviderThenReturnNewValidTime() {
-        when(timeProviderMock.getCurrentTimestamp()).
+        when(timeProviderMock.getCurrentTimeInMills()).
                 thenReturn(QUANTITY_NEW_VALID_METRIC.getCreateDate());
     }
     // endregion helper methods --------------------------------------------------------------------

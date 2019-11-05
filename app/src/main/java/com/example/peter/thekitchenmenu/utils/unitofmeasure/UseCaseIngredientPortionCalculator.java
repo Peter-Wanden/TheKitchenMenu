@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Calculates the measurement of an ingredient for a single portion of a recipe.
  */
-public class UseCasePortion {
+public class UseCaseIngredientPortionCalculator {
 
     public interface UseCasePortionCallback {
         void useCasePortionResult(MeasurementResult result);
@@ -69,11 +69,11 @@ public class UseCasePortion {
     private IngredientEntity ingredientEntity;
 
 
-    public UseCasePortion(RepositoryRecipePortions portionsRepository,
-                          RepositoryRecipeIngredient recipeIngredientRepository,
-                          RepositoryIngredient ingredientRepository,
-                          UniqueIdProvider idProvider,
-                          TimeProvider timeProvider) {
+    public UseCaseIngredientPortionCalculator(RepositoryRecipePortions portionsRepository,
+                                              RepositoryRecipeIngredient recipeIngredientRepository,
+                                              RepositoryIngredient ingredientRepository,
+                                              UniqueIdProvider idProvider,
+                                              TimeProvider timeProvider) {
         this.portionsRepository = portionsRepository;
         this.recipeIngredientRepository = recipeIngredientRepository;
         this.ingredientRepository = ingredientRepository;
@@ -97,7 +97,7 @@ public class UseCasePortion {
     }
 
     private RecipeIngredientQuantityEntity createNewRecipeIngredientQuantityEntity() {
-        long currentTime = timeProvider.getCurrentTimestamp();
+        long currentTime = timeProvider.getCurrentTimeInMills();
         return new RecipeIngredientQuantityEntity(
                 idProvider.getUId(),
                 recipeId,
@@ -123,7 +123,7 @@ public class UseCasePortion {
                     public void onEntityLoaded(RecipeIngredientQuantityEntity quantityEntity) {
                         recipeId = quantityEntity.getRecipeId();
                         ingredientId = quantityEntity.getIngredientId();
-                        UseCasePortion.this.quantityEntity = quantityEntity;
+                        UseCaseIngredientPortionCalculator.this.quantityEntity = quantityEntity;
                         loadIngredient();
                     }
 
@@ -140,7 +140,7 @@ public class UseCasePortion {
                 new DataSource.GetEntityCallback<IngredientEntity>() {
                     @Override
                     public void onEntityLoaded(IngredientEntity ingredientEntity) {
-                        UseCasePortion.this.ingredientEntity = ingredientEntity;
+                        UseCaseIngredientPortionCalculator.this.ingredientEntity = ingredientEntity;
                         loadPortions();
                     }
 
@@ -269,7 +269,7 @@ public class UseCasePortion {
                 unitOfMeasure.getConversionFactor(),
                 ingredientEntity.getCreatedBy(),
                 ingredientEntity.getCreateDate(),
-                timeProvider.getCurrentTimestamp()
+                timeProvider.getCurrentTimeInMills()
         );
     }
 
@@ -397,7 +397,7 @@ public class UseCasePortion {
                 unitOfMeasure.getMeasurementSubtype().asInt(),
                 quantityEntity.getCreatedBy(),
                 quantityEntity.getCreateDate(),
-                timeProvider.getCurrentTimestamp()
+                timeProvider.getCurrentTimeInMills()
         );
     }
 

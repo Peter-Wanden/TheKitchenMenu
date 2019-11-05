@@ -4,7 +4,7 @@ import com.example.peter.thekitchenmenu.data.model.MeasurementModel;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementResult;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants;
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.UseCasePortion;
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.UseCaseIngredientPortionCalculator;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -33,7 +33,7 @@ public class MeasurementModelTestData {
     public static MeasurementResult getResultInvalidMeasurement() {
         return new MeasurementResult(
                 getEmptyModel(),
-                UseCasePortion.ResultStatus.INVALID_MEASUREMENT);
+                UseCaseIngredientPortionCalculator.ResultStatus.INVALID_MEASUREMENT);
     }
 
     public static MeasurementModel getNewInvalidTotalMeasurementOne() {
@@ -58,7 +58,7 @@ public class MeasurementModelTestData {
     public static MeasurementResult getResultNewInvalidTotalMeasurementOne() {
         return new MeasurementResult(
                 getNewInvalidTotalMeasurementOne(),
-                UseCasePortion.ResultStatus.INVALID_TOTAL_MEASUREMENT_ONE
+                UseCaseIngredientPortionCalculator.ResultStatus.INVALID_TOTAL_MEASUREMENT_ONE
         );
     }
 
@@ -96,7 +96,7 @@ public class MeasurementModelTestData {
     public static MeasurementResult getResultNewValidTotalMeasurementOne() {
         return new MeasurementResult(
                 getNewTotalMeasurementOneResultModel(),
-                UseCasePortion.ResultStatus.RESULT_OK
+                UseCaseIngredientPortionCalculator.ResultStatus.RESULT_OK
         );
     }
 
@@ -116,7 +116,7 @@ public class MeasurementModelTestData {
     public static MeasurementResult getResultNewInvalidTotalMeasurementTwo() {
         return new MeasurementResult(
                 getNewInvalidTotalMeasurementTwo(),
-                UseCasePortion.ResultStatus.INVALID_TOTAL_MEASUREMENT_TWO
+                UseCaseIngredientPortionCalculator.ResultStatus.INVALID_TOTAL_MEASUREMENT_TWO
         );
     }
 
@@ -149,7 +149,7 @@ public class MeasurementModelTestData {
     public static MeasurementResult getResultNewValidTotalMeasurementTwo() {
         return new MeasurementResult(
                 getNewTotalMeasurementTwoModelResult(),
-                UseCasePortion.ResultStatus.RESULT_OK
+                UseCaseIngredientPortionCalculator.ResultStatus.RESULT_OK
         );
     }
 
@@ -169,7 +169,7 @@ public class MeasurementModelTestData {
     public static MeasurementResult getResultNewInvalidUnitOfMeasureChangedImperialSpoon() {
         return new MeasurementResult(
                 getNewInvalidUnitOfMeasureChangedImperialSpoon(),
-                UseCasePortion.ResultStatus.INVALID_MEASUREMENT
+                UseCaseIngredientPortionCalculator.ResultStatus.INVALID_MEASUREMENT
         );
     }
 
@@ -189,7 +189,7 @@ public class MeasurementModelTestData {
     public static MeasurementResult getNewValidHalfImperialSpoonUnitOneUpdatedResult() {
         return new MeasurementResult(
                 getNewValidHalfImperialSpoonUnitOneUpdatedResultModel(),
-                UseCasePortion.ResultStatus.RESULT_OK
+                UseCaseIngredientPortionCalculator.ResultStatus.RESULT_OK
         );
     }
 
@@ -223,7 +223,7 @@ public class MeasurementModelTestData {
     public static MeasurementResult getResultNewInvalidConversionFactor() {
         return new MeasurementResult(
                 getNewInvalidConversionFactor(),
-                UseCasePortion.ResultStatus.INVALID_CONVERSION_FACTOR
+                UseCaseIngredientPortionCalculator.ResultStatus.INVALID_CONVERSION_FACTOR
         );
     }
 
@@ -244,7 +244,7 @@ public class MeasurementModelTestData {
     public static MeasurementResult getResultNewValidImperialSpoonWithConversionFactor() {
         return new MeasurementResult(
                 getNewValidImperialSpoonWithConversionFactor(),
-                UseCasePortion.ResultStatus.RESULT_OK
+                UseCaseIngredientPortionCalculator.ResultStatus.RESULT_OK
         );
     }
 
@@ -272,7 +272,7 @@ public class MeasurementModelTestData {
     public static MeasurementResult getResultExistingMetricValid() {
         return new MeasurementResult(
                 getExistingMetricValid(),
-                UseCasePortion.ResultStatus.RESULT_OK
+                UseCaseIngredientPortionCalculator.ResultStatus.RESULT_OK
         );
     }
 
@@ -292,7 +292,7 @@ public class MeasurementModelTestData {
     public static MeasurementResult getExistingMetricInvalidTotalOneResult() {
         return new MeasurementResult(
                 getExistingMetricInvalidTotalOneResultModel(),
-                UseCasePortion.ResultStatus.INVALID_TOTAL_MEASUREMENT_ONE
+                UseCaseIngredientPortionCalculator.ResultStatus.INVALID_TOTAL_MEASUREMENT_ONE
         );
     }
 
@@ -346,7 +346,7 @@ public class MeasurementModelTestData {
     public static MeasurementResult getExistingInvalidTotalTwoResult() {
         return new MeasurementResult(
                 getExistingMetricInvalidTotalTwoModelResult(),
-                UseCasePortion.ResultStatus.INVALID_TOTAL_MEASUREMENT_TWO
+                UseCaseIngredientPortionCalculator.ResultStatus.INVALID_TOTAL_MEASUREMENT_TWO
         );
     }
 
@@ -405,7 +405,7 @@ public class MeasurementModelTestData {
     public static MeasurementResult getExistingMetricValidTwoUpdatedResult() {
         return new MeasurementResult(
                 getExistingMetricValidTwoUpdatedResultModel(),
-                UseCasePortion.ResultStatus.RESULT_OK
+                UseCaseIngredientPortionCalculator.ResultStatus.RESULT_OK
         );
     }
 
@@ -448,7 +448,7 @@ public class MeasurementModelTestData {
     public static MeasurementResult getExistingMetricUnitOfMeasureUpdatedToImperialResult() {
         return new MeasurementResult(
                 getExistingMetricUnitOfMeasureUpdatedToImperialResultModel(),
-                UseCasePortion.ResultStatus.INVALID_MEASUREMENT
+                UseCaseIngredientPortionCalculator.ResultStatus.INVALID_MEASUREMENT
         );
     }
 
@@ -481,7 +481,7 @@ public class MeasurementModelTestData {
     public static MeasurementResult getExistingMetricInvalidConversionFactorResult() {
         return new MeasurementResult(
                 getExistingMetricInvalidConversionFactor(),
-                UseCasePortion.ResultStatus.INVALID_CONVERSION_FACTOR
+                UseCaseIngredientPortionCalculator.ResultStatus.INVALID_CONVERSION_FACTOR
         );
     }
 

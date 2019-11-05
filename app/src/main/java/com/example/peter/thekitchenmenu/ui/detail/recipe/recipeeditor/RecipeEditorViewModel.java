@@ -273,7 +273,7 @@ public class RecipeEditorViewModel
 
     private RecipeEntity getNewRecipe() {
         String id = idProvider.getUId();
-        long timeStamp = timeProvider.getCurrentTimestamp();
+        long timeStamp = timeProvider.getCurrentTimeInMills();
         return new RecipeEntity(
                 id,
                 id,
@@ -290,13 +290,13 @@ public class RecipeEditorViewModel
                 recipeEntity.getId(),
                 recipeEntity.getCreatedBy(),
                 recipeEntity.getCreateDate(),
-                timeProvider.getCurrentTimestamp(),
+                timeProvider.getCurrentTimeInMills(),
                 isDraft
         );
     }
 
     private RecipeEntity getClonedRecipeEntity() {
-        long timeStamp = timeProvider.getCurrentTimestamp();
+        long timeStamp = timeProvider.getCurrentTimeInMills();
         return new RecipeEntity(
                 idProvider.getUId(),
                 recipeEntity.getId(),

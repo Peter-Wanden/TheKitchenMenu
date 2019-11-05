@@ -118,7 +118,7 @@ public class RecipeEditorViewModelTest {
         // Arrange
         ArgumentCaptor<RecipeEntity> ac = ArgumentCaptor.forClass(RecipeEntity.class);
         when(uniqueIdProviderMock.getUId()).thenReturn(NEW_ID);
-        when(timeProviderMock.getCurrentTimestamp()).thenReturn(CURRENT_TIME);
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(CURRENT_TIME);
         // Act
         SUT.start();
         // Assert

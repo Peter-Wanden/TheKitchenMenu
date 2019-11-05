@@ -16,10 +16,10 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.ui.catalog.recipe.RecipeListDataInteractor;
+import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeCourseEditorViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor.RecipeIngredientMeasurementViewModel;
-import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeCourseSelectorViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeDurationViewModel;
-import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipePortionsViewModel;
+import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipePortionsEditorViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidator;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist.RecipeNameAndPortionsViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist.RecipeIngredientListViewModel;
@@ -28,11 +28,10 @@ import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.ui.catalog.recipe.RecipeCatalogViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeEditorViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeIdentityViewModel;
-import com.example.peter.thekitchenmenu.utils.ParseIntegerFromObservableHandler;
 import com.example.peter.thekitchenmenu.utils.TextValidationHandler;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.UseCaseConversionFactorStatus;
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.UseCasePortion;
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.UseCaseIngredientPortionCalculator;
 
 public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory {
 
@@ -127,9 +126,9 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
                     application.getResources(),
                     new TextValidationHandler());
 
-        } else if (modelClass.isAssignableFrom(RecipeCourseSelectorViewModel.class)) {
+        } else if (modelClass.isAssignableFrom(RecipeCourseEditorViewModel.class)) {
             //noinspection unchecked
-            return (T) new RecipeCourseSelectorViewModel(
+            return (T) new RecipeCourseEditorViewModel(
                     recipeCourseRepository,
                     new UniqueIdProvider());
 
@@ -137,24 +136,20 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
             // noinspection unchecked
             return (T) new RecipeDurationViewModel(
                     recipeDurationRepository,
-                    new NumberFormatter(application.getResources()),
                     application.getResources(),
-                    new TimeProvider(),
-                    new ParseIntegerFromObservableHandler());
+                    new TimeProvider());
 
-        } else if (modelClass.isAssignableFrom(RecipePortionsViewModel.class)) {
+        } else if (modelClass.isAssignableFrom(RecipePortionsEditorViewModel.class)) {
             // noinspection unchecked
-            return (T) new RecipePortionsViewModel(
+            return (T) new RecipePortionsEditorViewModel(
                     recipePortionsRepository,
                     new TimeProvider(),
                     new UniqueIdProvider(),
-                    application.getResources(),
-                    new ParseIntegerFromObservableHandler());
+                    application.getResources());
 
         } else if (modelClass.isAssignableFrom(RecipeIngredientMeasurementViewModel.class)) {
             // noinspection unchecked
             return (T) new RecipeIngredientMeasurementViewModel(
-                    application,
                     getPortionsUseCase(),
                     getConversionFactorUseCase(),
                     application.getResources(),
@@ -177,7 +172,7 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
         throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
     }
 
-    private UseCasePortion getPortionsUseCase() {
+    private UseCaseIngredientPortionCalculator getPortionsUseCase() {
         UseCaseFactory factory = UseCaseFactory.getInstance(application);
         return factory.providePortionsUseCase();
     }

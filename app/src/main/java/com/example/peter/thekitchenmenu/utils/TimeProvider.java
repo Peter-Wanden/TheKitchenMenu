@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.utils;
 
 public class TimeProvider {
 
-    public long getCurrentTimestamp() {
+    public long getCurrentTimeInMills() {
         return System.currentTimeMillis();
     }
 }

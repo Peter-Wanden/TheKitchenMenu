@@ -200,7 +200,7 @@
             android:paddingEnd="8dp"
             android:textAlignment="center"
             android:ems="8"
-            android:text="@={viewModel.conversionFactor}"
+            android:text="@={viewModel.conversionFactorInView}"
             android:visibility='@{viewModel.showConversionFactorFields ? View.VISIBLE : View.GONE}'
             app:setUpEditTextForConversionFactor="@{viewModel.subtype}"
             app:editTextErrorSetter="@{viewModel.conversionFactorErrorMessage}"
@@ -234,7 +234,7 @@
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
             android:textAlignment="center"
-            android:text="@={viewModel.conversionFactor}"
+            android:text="@={viewModel.conversionFactorInView}"
             android:textSize="18sp"
             android:visibility="@{viewModel.showUneditableConversionFactorFields ? View.VISIBLE : View.GONE}"
             app:layout_constraintStart_toStartOf="parent"

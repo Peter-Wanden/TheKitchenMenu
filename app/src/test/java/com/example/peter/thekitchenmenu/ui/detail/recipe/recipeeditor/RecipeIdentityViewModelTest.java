@@ -120,7 +120,7 @@ public class RecipeIdentityViewModelTest {
     @Test
     public void startNewRecipeId_newEmptyEntityNotSaved() {
         // Arrange
-        when(timeProviderMock.getCurrentTimestamp()).thenReturn(INVALID_NEW_EMPTY.getCreateDate());
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(INVALID_NEW_EMPTY.getCreateDate());
         when(textValidationHandlerMock.validateShortText(eq(resourcesMock), eq(""))).
                 thenReturn(SHORT_TEXT_VALIDATION_ERROR);
         when(textValidationHandlerMock.validateLongText(eq(resourcesMock), eq(""))).
@@ -243,7 +243,7 @@ public class RecipeIdentityViewModelTest {
     @Test
     public void startNewRecipeId_validTitleInvalidDescription_descriptionNotSaved() {
         // Arrange
-        when(timeProviderMock.getCurrentTimestamp()).
+        when(timeProviderMock.getCurrentTimeInMills()).
                 thenReturn(VALID_NEW_TITLE_VALID.getCreateDate());
         whenShortTextValidationReturnValidated();
         whenLongTextValidationReturnErrorMessage();
@@ -292,7 +292,7 @@ public class RecipeIdentityViewModelTest {
         // Arrange
         whenShortTextValidationReturnValidated();
         whenLongTextValidationReturnValidated();
-        when(timeProviderMock.getCurrentTimestamp()).thenReturn(VALID_NEW_COMPLETE.getCreateDate());
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(VALID_NEW_COMPLETE.getCreateDate());
         // Act
         SUT.start(INVALID_NEW_EMPTY.getId());
         simulateNothingReturnedFromDatabase();
@@ -500,17 +500,17 @@ public class RecipeIdentityViewModelTest {
     }
 
     private void whenTimeProviderThenReturnNewEntityCreateDate() {
-        when(timeProviderMock.getCurrentTimestamp()).thenReturn(
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 INVALID_NEW_EMPTY.getCreateDate());
     }
 
     private void whenTimeProviderThenReturnExistingCreateDate() {
-        when(timeProviderMock.getCurrentTimestamp()).thenReturn(
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 VALID_EXISTING_COMPLETE.getCreateDate());
     }
 
     private void whenTimeProviderThenReturnClonedTimes() {
-        when(timeProviderMock.getCurrentTimestamp()).thenReturn(
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 VALID_NEW_CLONED.getLastUpdate());
     }
     // endregion helper methods --------------------------------------------------------------------

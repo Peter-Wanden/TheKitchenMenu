@@ -8,7 +8,7 @@
         <import type="android.view.View" />
         <variable
             name="viewModel"
-            type="com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipePortionsViewModel">
+            type="com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipePortionsEditorViewModel">
         </variable>
     </data>
 
@@ -47,8 +47,8 @@
             android:layout_height="wrap_content"
             android:padding="4dp"
             android:textSize="18sp"
-            android:text="@={viewModel.servingsObservable}"
-            app:setUpEditTextForRecipePortions="@{viewModel.servingsObservable}"
+            android:text="@={viewModel.servingsInView}"
+            app:setUpEditTextForRecipePortions="@{viewModel.servingsInView}"
             app:editTextErrorSetter="@{viewModel.servingsErrorMessage}"
             app:layout_constraintEnd_toEndOf="@id/servings_label"
             app:layout_constraintStart_toStartOf="@id/servings_label"
@@ -73,8 +73,8 @@
             android:layout_height="wrap_content"
             android:padding="4dp"
             android:textSize="18sp"
-            android:text="@={viewModel.sittingsObservable}"
-            app:setUpEditTextForRecipePortions="@{viewModel.sittingsObservable}"
+            android:text="@={viewModel.sittingsInView}"
+            app:setUpEditTextForRecipePortions="@{viewModel.sittingsInView}"
             app:editTextErrorSetter="@{viewModel.sittingsErrorMessage}"
             app:layout_constraintEnd_toEndOf="@id/sittings_label"
             app:layout_constraintStart_toStartOf="@id/sittings_label"
@@ -100,7 +100,7 @@
             android:padding="4dp"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:text="@={viewModel.portionsObservable}"
+            android:text="@{viewModel.portionsInView}"
             app:layout_constraintEnd_toEndOf="@id/portions_label"
             app:layout_constraintStart_toStartOf="@id/portions_label"
             app:layout_constraintTop_toBottomOf="@id/portions_label"

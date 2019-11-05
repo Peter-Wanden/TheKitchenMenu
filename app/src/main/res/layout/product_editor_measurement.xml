@@ -151,7 +151,7 @@
             tools:text="22"
             />
 
-        <!--            android:text="@{NumberStringUnitOfMeasureConverter.toFormat(packEditableMeasurementTwo, viewModel.packMeasurementTwo, viewModel.subtype)}"-->
+        <!--            android:text="@{NumberStringUnitOfMeasureConverter.toFormat(packEditableMeasurementTwo, viewModel.packMeasurementTwo, viewModel.subtypeObservableField)}"-->
 
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -188,7 +188,7 @@
             app:layout_constraintTop_toBottomOf="@id/multi_pack_minus"
             tools:text="16"
             />
-<!--        android:text="@{NumberStringUnitOfMeasureConverter.toFormat(packEditableMeasurementOne, viewModel.packMeasurementOne, viewModel.subtype)}"-->
+<!--        android:text="@{NumberStringUnitOfMeasureConverter.toFormat(packEditableMeasurementOne, viewModel.packMeasurementOne, viewModel.subtypeObservableField)}"-->
 <!---->
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -237,7 +237,7 @@
             tools:text="22"
             />
 
-<!--        android:text="@{NumberStringUnitOfMeasureConverter.toFormat(productEditableMeasurementTwo, viewModel.productMeasurementTwo, viewModel.subtype)}"-->
+<!--        android:text="@{NumberStringUnitOfMeasureConverter.toFormat(productEditableMeasurementTwo, viewModel.productMeasurementTwo, viewModel.subtypeObservableField)}"-->
 
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -271,7 +271,7 @@
             app:layout_constraintTop_toBottomOf="@id/pack_editable_measurement_one"
             tools:text="16" />
 
-<!--        android:text="@{NumberStringUnitOfMeasureConverter.toFormat(productEditableMeasurementOne, viewModel.productMeasurementOne, viewModel.subtype)}"-->
+<!--        android:text="@{NumberStringUnitOfMeasureConverter.toFormat(productEditableMeasurementOne, viewModel.productMeasurementOne, viewModel.subtypeObservableField)}"-->
 
 
         <androidx.appcompat.widget.AppCompatTextView

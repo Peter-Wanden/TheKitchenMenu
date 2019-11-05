@@ -19,7 +19,7 @@ import static com.example.peter.thekitchenmenu.testdata.RecipeValidatorTestData.
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-public class RecipeCourseSelectorViewModelTest {
+public class RecipeCourseEditorViewModelTest {
 
     // region constants ----------------------------------------------------------------------------
     private RecipeEntity VALID_EXISTING_RECIPE_ENTITY = getValidExisting();
@@ -45,12 +45,12 @@ public class RecipeCourseSelectorViewModelTest {
     RecipeValidation.RecipeValidatorModelSubmission modelSubmissionMock;
     // endregion helper fields ---------------------------------------------------------------------
 
-    private RecipeCourseSelectorViewModel SUT;
+    private RecipeCourseEditorViewModel SUT;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        SUT = new RecipeCourseSelectorViewModel(repoRecipeCourseMock, idProviderMock);
+        SUT = new RecipeCourseEditorViewModel(repoRecipeCourseMock, idProviderMock);
         SUT.setModelValidationSubmitter(modelSubmissionMock);
     }
 

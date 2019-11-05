@@ -16,7 +16,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RecipeCourseSelectorViewModel
+public class RecipeCourseEditorViewModel
         extends
         ObservableViewModel
         implements
@@ -62,11 +62,12 @@ public class RecipeCourseSelectorViewModel
     private String recipeId;
     private HashMap<Course, RecipeCourseEntity> oldCourseList = new LinkedHashMap<>();
     private HashMap<Course, RecipeCourseEntity> newCourseList = new LinkedHashMap<>();
-    private boolean modelUpdating;
-    private boolean cloneModel;
+    private boolean updatingUi;
+    private boolean isCloned;
+    private boolean dataLoading;
 
-    public RecipeCourseSelectorViewModel(RepositoryRecipeCourse repository,
-                                         UniqueIdProvider idProvider) {
+    public RecipeCourseEditorViewModel(RepositoryRecipeCourse repository,
+                                       UniqueIdProvider idProvider) {
         this.repository = repository;
         this.idProvider = idProvider;
     }
@@ -78,85 +79,88 @@ public class RecipeCourseSelectorViewModel
     @Override
     public void start(String recipeId) {
         this.recipeId = recipeId;
-        getCoursesForRecipe(recipeId);
+        getData(recipeId);
     }
 
     @Override
     public void startByCloningModel(String oldRecipeId, String newRecipeId) {
-        cloneModel = true;
+        isCloned = true;
         recipeId = newRecipeId;
-        getCoursesForRecipe(oldRecipeId);
+        getData(oldRecipeId);
     }
 
-    private void getCoursesForRecipe(String recipeId) {
+    private void getData(String recipeId) {
+        dataLoading = true;
         repository.getCoursesForRecipe(recipeId, this);
     }
 
     @Override
     public void onAllLoaded(List<RecipeCourseEntity> recipeCourseEntities) {
-        if (cloneModel)
+        if (isCloned)
             cloneRecipeCourseEntities(recipeCourseEntities);
+        else
+            addEntitiesToNewList(recipeCourseEntities);
 
-        modelUpdating = true;
-
-        for (RecipeCourseEntity courseEntity : recipeCourseEntities)
-            oldCourseList.put(Course.valueOf(courseEntity.getCourseNo()), courseEntity);
-
-        if (!cloneModel)
-            newCourseList.putAll(oldCourseList);
-
+        equaliseState();
         setRecipeCoursesToObservables();
+    }
+
+    private void addEntitiesToNewList(List<RecipeCourseEntity> recipeCourseEntities) {
+        for (RecipeCourseEntity courseEntity : recipeCourseEntities)
+            newCourseList.put(Course.valueOf(courseEntity.getCourseNo()), courseEntity);
     }
 
     private void cloneRecipeCourseEntities(List<RecipeCourseEntity> recipeCourseEntities) {
         for (RecipeCourseEntity recipeCourseEntity : recipeCourseEntities)
-            addCourse(Course.valueOf(recipeCourseEntity.getCourseNo()));
-    }
-
-    private void setRecipeCoursesToObservables() {
-        for (Course courseName : newCourseList.keySet()) {
-            switch (courseName) {
-                case COURSE_ZERO:
-                    addCourse(Course.COURSE_ZERO);
-                    notifyPropertyChanged(BR.courseZero);
-                    break;
-                case COURSE_ONE:
-                    addCourse(Course.COURSE_ONE);
-                    notifyPropertyChanged(BR.courseOne);
-                    break;
-                case COURSE_TWO:
-                    addCourse(Course.COURSE_TWO);
-                    notifyPropertyChanged(BR.courseTwo);
-                    break;
-                case COURSE_THREE:
-                    addCourse(Course.COURSE_THREE);
-                    notifyPropertyChanged(BR.courseThree);
-                    break;
-                case COURSE_FOUR:
-                    addCourse(Course.COURSE_FOUR);
-                    notifyPropertyChanged(BR.courseFour);
-                    break;
-                case COURSE_FIVE:
-                    addCourse(Course.COURSE_FIVE);
-                    notifyPropertyChanged(BR.courseFive);
-                    break;
-                case COURSE_SIX:
-                    addCourse(Course.COURSE_SIX);
-                    notifyPropertyChanged(BR.courseSix);
-                    break;
-                case COURSE_SEVEN:
-                    addCourse(Course.COURSE_SEVEN);
-                    notifyPropertyChanged(BR.courseSeven);
-                    break;
-            }
-        }
-        modelUpdating = false;
-        compareCourseLists();
+            addOrRemoveCourse(true, Course.valueOf(recipeCourseEntity.getCourseNo()));
     }
 
     @Override
     public void onDataNotAvailable() {
-        reportModelValidationStatus(false, false);
+        submitModelStatus(false, false);
+    }
+
+    private void setRecipeCoursesToObservables() {
+        updatingUi = true;
+        for (Course courseName : newCourseList.keySet()) {
+            switch (courseName) {
+                case COURSE_ZERO:
+                    addOrRemoveCourse(true, Course.COURSE_ZERO);
+                    notifyPropertyChanged(BR.courseZero);
+                    break;
+                case COURSE_ONE:
+                    addOrRemoveCourse(true, Course.COURSE_ONE);
+                    notifyPropertyChanged(BR.courseOne);
+                    break;
+                case COURSE_TWO:
+                    addOrRemoveCourse(true, Course.COURSE_TWO);
+                    notifyPropertyChanged(BR.courseTwo);
+                    break;
+                case COURSE_THREE:
+                    addOrRemoveCourse(true, Course.COURSE_THREE);
+                    notifyPropertyChanged(BR.courseThree);
+                    break;
+                case COURSE_FOUR:
+                    addOrRemoveCourse(true, Course.COURSE_FOUR);
+                    notifyPropertyChanged(BR.courseFour);
+                    break;
+                case COURSE_FIVE:
+                    addOrRemoveCourse(true, Course.COURSE_FIVE);
+                    notifyPropertyChanged(BR.courseFive);
+                    break;
+                case COURSE_SIX:
+                    addOrRemoveCourse(true, Course.COURSE_SIX);
+                    notifyPropertyChanged(BR.courseSix);
+                    break;
+                case COURSE_SEVEN:
+                    addOrRemoveCourse(true, Course.COURSE_SEVEN);
+                    notifyPropertyChanged(BR.courseSeven);
+                    break;
+            }
+        }
+        updatingUi = false;
+        dataLoading = false;
+        compareCourseLists();
     }
 
     @Bindable
@@ -232,23 +236,22 @@ public class RecipeCourseSelectorViewModel
     }
 
     private void addOrRemoveCourse(boolean addCourse, Course course) {
-        if (addCourse && !courseInList(course))
+        if (addCourse && !isCourseInList(course))
             addCourse(course);
-        else if (!addCourse && courseInList(course))
+        else if (!addCourse && isCourseInList(course))
             removeCourse(course);
     }
 
-    private boolean courseInList(Course course) {
+    private boolean isCourseInList(Course course) {
         return !(newCourseList.get(course) == null);
     }
 
     private void addCourse(Course course) {
-        if (newCourseList.get(course) == null) {
-            RecipeCourseEntity newCourseEntity = createNewCourseEntity(course.getCourseNo());
-            newCourseList.put(course, newCourseEntity);
-            repository.save(newCourseEntity);
-        }
-        if (!modelUpdating)
+        RecipeCourseEntity newCourseEntity = createNewCourseEntity(course.getCourseNo());
+        newCourseList.put(course, newCourseEntity);
+        repository.save(newCourseEntity);
+
+        if (!updatingUi)
             compareCourseLists();
     }
 
@@ -260,37 +263,41 @@ public class RecipeCourseSelectorViewModel
     }
 
     private void removeCourse(Course course) {
-        deleteCourseFromDatabase(newCourseList.get(course).getId());
+        deleteCourse(newCourseList.get(course).getId());
         newCourseList.remove(course);
         compareCourseLists();
     }
 
-    private void deleteCourseFromDatabase(String recipeCourseEntityId) {
-        repository.deleteById(recipeCourseEntityId);
+    private void deleteCourse(String Id) {
+        repository.deleteById(Id);
     }
 
     private void compareCourseLists() {
-        boolean isChanged;
-        boolean isValid;
+        boolean isChanged = isChanged();
+        boolean isValid = isValid();
 
-        isChanged = !oldCourseList.keySet().equals(newCourseList.keySet());
-        isValid = !newCourseList.isEmpty();
-
-        makeOldListEquivalentToNew();
-
-        reportModelValidationStatus(isChanged, isValid);
+        equaliseState();
+        submitModelStatus(isChanged, isValid);
     }
 
-    private void makeOldListEquivalentToNew() {
+    private void equaliseState() {
         oldCourseList.clear();
         oldCourseList.putAll(newCourseList);
     }
 
-    private void reportModelValidationStatus(boolean isChanged, boolean isValid) {
+    private void submitModelStatus(boolean isChanged, boolean isValid) {
         modelSubmitter.submitModelStatus(new RecipeModelStatus(
                 RecipeValidator.ModelName.COURSES_MODEL,
                 isChanged,
                 isValid
         ));
+    }
+
+    private boolean isChanged() {
+        return !oldCourseList.keySet().equals(newCourseList.keySet());
+    }
+
+    private boolean isValid() {
+        return !newCourseList.isEmpty();
     }
 }
