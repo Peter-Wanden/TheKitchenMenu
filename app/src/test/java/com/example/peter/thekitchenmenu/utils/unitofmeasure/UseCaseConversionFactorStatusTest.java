@@ -50,7 +50,7 @@ public class UseCaseConversionFactorStatusTest {
         // Arrange
         String ingredientId = INGREDIENT_NEW_VALID_NAME_DESCRIPTION.getId();
         // Act
-        SUT.getConversionFactorStatus(UNEDITABLE_SUBTYPE, ingredientId);
+        SUT.getStatus(UNEDITABLE_SUBTYPE, ingredientId);
         // Assert
         verifyNoMoreInteractions(repoMock);
         verify(viewModelMock).useCaseConversionFactorResult(DISABLED);
@@ -61,7 +61,7 @@ public class UseCaseConversionFactorStatusTest {
         // Arrange
         String ingredientId = INGREDIENT_VALID_FROM_ANOTHER_USER.getId();
         // Act
-        SUT.getConversionFactorStatus(EDITABLE_SUBTYPE, ingredientId);
+        SUT.getStatus(EDITABLE_SUBTYPE, ingredientId);
         // Assert
         verifyRepoCalledWithIngredientValidFromAnotherUser();
         verify(viewModelMock).useCaseConversionFactorResult(ENABLED_UNEDITABLE);
@@ -72,7 +72,7 @@ public class UseCaseConversionFactorStatusTest {
         // Arrange
         String ingredientId = INGREDIENT_NEW_VALID_NAME_DESCRIPTION.getId();
         // Act
-        SUT.getConversionFactorStatus(EDITABLE_SUBTYPE, ingredientId);
+        SUT.getStatus(EDITABLE_SUBTYPE, ingredientId);
         // Assert
         verifyRepoCalledWithIngredientNewValidNameDescription();
         verify(viewModelMock).useCaseConversionFactorResult(ENABLED_EDITABLE_UNSET);
@@ -83,7 +83,7 @@ public class UseCaseConversionFactorStatusTest {
         // Arrange
         String ingredientId = INGREDIENT_VALID_WITH_CONVERSION_FACTOR.getId();
         // Act
-        SUT.getConversionFactorStatus(EDITABLE_SUBTYPE, ingredientId);
+        SUT.getStatus(EDITABLE_SUBTYPE, ingredientId);
         verifyRepoCalledWithIngredientValidWithConversionFactor();
         // Assert
         verify(viewModelMock).useCaseConversionFactorResult(ENABLED_EDITABLE_SET);

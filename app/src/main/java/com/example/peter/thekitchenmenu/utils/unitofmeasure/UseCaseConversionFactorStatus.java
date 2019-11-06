@@ -41,8 +41,8 @@ public class UseCaseConversionFactorStatus
         statusReceivers.remove(listener);
     }
 
-    public void getConversionFactorStatus(MeasurementSubtype subtype,
-                                          String ingredientId) {
+    public void getStatus(MeasurementSubtype subtype,
+                          String ingredientId) {
         UnitOfMeasure unitOfMeasure = subtype.getMeasurementClass();
         isConversionFactorEnabled = unitOfMeasure.isConversionFactorEnabled();
 

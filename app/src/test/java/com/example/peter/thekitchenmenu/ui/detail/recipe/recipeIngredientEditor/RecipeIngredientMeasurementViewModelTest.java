@@ -1,6 +1,5 @@
 package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeIngredientEditor;
 
-import android.app.Application;
 import android.content.res.Resources;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
@@ -36,7 +35,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -154,9 +152,9 @@ public class RecipeIngredientMeasurementViewModelTest {
         // Assert
 
         assertEquals(model.getSubtype(), SUT.getSubtype());
-        assertEquals(String.valueOf(model.getConversionFactor()), SUT.conversionFactor.get());
+        assertEquals(String.valueOf(model.getConversionFactor()), SUT.getConversionFactor());
         assertNull(SUT.conversionFactorErrorMessage.get());
-        assertFalse(SUT.isConversionFactorEnabled.get());
+        assertFalse(SUT.isConversionFactorEnabledObservable.get());
     }
 
     @Test
@@ -186,7 +184,7 @@ public class RecipeIngredientMeasurementViewModelTest {
         verify(useCaseIngredientPortionCalculatorMock).start(recipeIdCaptor.capture(), ingredientIdCaptor.capture());
         SUT.useCasePortionResult(MEASUREMENT_NEW_VALID_ONE);
         // Assert
-        String actualMeasurementOne = SUT.measurementOne.get();
+        String actualMeasurementOne = SUT.getMeasurementOne();
         assertEquals(expectedMeasurementOne, actualMeasurementOne);
     }
 
@@ -215,7 +213,7 @@ public class RecipeIngredientMeasurementViewModelTest {
         verify(useCaseIngredientPortionCalculatorMock).start(recipeIdCaptor.capture(), ingredientIdCaptor.capture());
         SUT.useCasePortionResult(MEASUREMENT_NEW_VALID_TWO);
         // Assert
-        String actualResult = SUT.measurementTwo.get();
+        String actualResult = SUT.getMeasurementTwo();
         assertEquals(expectedResult, actualResult);
     }
 
@@ -253,7 +251,7 @@ public class RecipeIngredientMeasurementViewModelTest {
         verify(useCaseIngredientPortionCalculatorMock).start(recipeIdCaptor.capture(), ingredientIdCaptor.capture());
         SUT.useCasePortionResult(MEASUREMENT_NEW_VALID_IMPERIAL_SPOON_WITH_CONVERSION_FACTOR);
         // Assert
-        assertTrue(SUT.isConversionFactorEnabled.get());
+        assertTrue(SUT.isConversionFactorEnabledObservable.get());
     }
 
     // startRecipeIdIngredientId_measurementOneSetToHalfTeaspoon_RESULT_OK
@@ -281,9 +279,9 @@ public class RecipeIngredientMeasurementViewModelTest {
         SUT.useCasePortionResult(MEASUREMENT_EXISTING_VALID_METRIC);
 
         assertEquals(expectedSubtype, SUT.getSubtype());
-        assertEquals(expectedConversionFactor, SUT.conversionFactor.get());
-        assertEquals(expectedMeasurementOne, SUT.measurementOne.get());
-        assertEquals(expectedMeasurementTwo, SUT.measurementTwo.get());
+        assertEquals(expectedConversionFactor, SUT.getConversionFactor());
+        assertEquals(expectedMeasurementOne, SUT.getMeasurementOne());
+        assertEquals(expectedMeasurementTwo, SUT.getMeasurementTwo());
     }
 
     // region helper methods -----------------------------------------------------------------------

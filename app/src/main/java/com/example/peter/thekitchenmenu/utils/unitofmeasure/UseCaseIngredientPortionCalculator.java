@@ -276,42 +276,69 @@ public class UseCaseIngredientPortionCalculator {
     private void returnResult() {
         if (conversionFactorChanged && !conversionFactorIsSet) {
             existingModel = new MeasurementModel(
+                    unitOfMeasure.getMeasurementType(),
                     unitOfMeasure.getMeasurementSubtype(),
-                    unitOfMeasure.getNumberOfItems(),
+                    unitOfMeasure.getNumberOfMeasurementUnits(),
+                    unitOfMeasure.isConversionFactorEnabled(),
                     modelIn.getConversionFactor(),
+                    unitOfMeasure.getItemBaseUnits(),
+                    unitOfMeasure.getTotalBaseUnits(),
+                    unitOfMeasure.getNumberOfItems(),
                     unitOfMeasure.getTotalMeasurementOne(),
-                    unitOfMeasure.getTotalMeasurementTwo(),
                     unitOfMeasure.getItemMeasurementOne(),
+                    unitOfMeasure.getTotalMeasurementTwo(),
                     unitOfMeasure.getItemMeasurementTwo(),
-                    unitOfMeasure.getItemBaseUnits()
+                    unitOfMeasure.isValidMeasurement(),
+                    unitOfMeasure.getMinimumMeasurementOne(),
+                    unitOfMeasure.getMaximumMeasurementOne(),
+                    unitOfMeasure.getMaximumMeasurementTwo(),
+                    unitOfMeasure.getMeasurementUnitsDigitWidths()
             );
 
         } else if (totalMeasurementOneChanged && !totalMeasurementOneIsSet) {
             existingModel = new MeasurementModel(
+                    unitOfMeasure.getMeasurementType(),
                     unitOfMeasure.getMeasurementSubtype(),
-                    unitOfMeasure.getNumberOfItems(),
+                    unitOfMeasure.getNumberOfMeasurementUnits(),
+                    unitOfMeasure.isConversionFactorEnabled(),
                     unitOfMeasure.getConversionFactor(),
+                    unitOfMeasure.getItemBaseUnits(),
+                    unitOfMeasure.getTotalBaseUnits(),
+                    unitOfMeasure.getNumberOfItems(),
                     modelIn.getTotalMeasurementOne(),
-                    unitOfMeasure.getTotalMeasurementTwo(),
                     unitOfMeasure.getItemMeasurementOne(),
+                    unitOfMeasure.getTotalMeasurementTwo(),
                     unitOfMeasure.getItemMeasurementTwo(),
-                    unitOfMeasure.getItemBaseUnits()
+                    unitOfMeasure.isValidMeasurement(),
+                    unitOfMeasure.getMinimumMeasurementOne(),
+                    unitOfMeasure.getMaximumMeasurementOne(),
+                    unitOfMeasure.getMaximumMeasurementTwo(),
+                    unitOfMeasure.getMeasurementUnitsDigitWidths()
             );
 
         } else if (totalMeasurementTwoChanged && !totalMeasurementTwoIsSet) {
             existingModel = new MeasurementModel(
+                    unitOfMeasure.getMeasurementType(),
                     unitOfMeasure.getMeasurementSubtype(),
-                    unitOfMeasure.getNumberOfItems(),
+                    unitOfMeasure.getNumberOfMeasurementUnits(),
+                    unitOfMeasure.isConversionFactorEnabled(),
                     unitOfMeasure.getConversionFactor(),
+                    unitOfMeasure.getItemBaseUnits(),
+                    unitOfMeasure.getTotalBaseUnits(),
+                    unitOfMeasure.getNumberOfItems(),
                     unitOfMeasure.getTotalMeasurementOne(),
-                    modelIn.getTotalMeasurementTwo(),
                     unitOfMeasure.getItemMeasurementOne(),
+                    modelIn.getTotalMeasurementTwo(),
                     unitOfMeasure.getItemMeasurementTwo(),
-                    unitOfMeasure.getItemBaseUnits()
+                    unitOfMeasure.isValidMeasurement(),
+                    unitOfMeasure.getMinimumMeasurementOne(),
+                    unitOfMeasure.getMaximumMeasurementOne(),
+                    unitOfMeasure.getMaximumMeasurementTwo(),
+                    unitOfMeasure.getMeasurementUnitsDigitWidths()
             );
 
         } else {
-            updateModelsFromUnitOfMeasure();
+            updateModelFromUnitOfMeasure();
         }
 
         MeasurementResult result = new MeasurementResult(existingModel, getResultStatus());
@@ -320,16 +347,25 @@ public class UseCaseIngredientPortionCalculator {
         notifyListeners(result);
     }
 
-    private void updateModelsFromUnitOfMeasure() {
+    private void updateModelFromUnitOfMeasure() {
         existingModel = new MeasurementModel(
+                unitOfMeasure.getMeasurementType(),
                 unitOfMeasure.getMeasurementSubtype(),
-                unitOfMeasure.getNumberOfItems(),
+                unitOfMeasure.getNumberOfMeasurementUnits(),
+                unitOfMeasure.isConversionFactorEnabled(),
                 unitOfMeasure.getConversionFactor(),
+                unitOfMeasure.getItemBaseUnits(),
+                unitOfMeasure.getTotalBaseUnits(),
+                unitOfMeasure.getNumberOfItems(),
                 unitOfMeasure.getTotalMeasurementOne(),
-                unitOfMeasure.getTotalMeasurementTwo(),
                 unitOfMeasure.getItemMeasurementOne(),
+                unitOfMeasure.getTotalMeasurementTwo(),
                 unitOfMeasure.getItemMeasurementTwo(),
-                unitOfMeasure.getItemBaseUnits()
+                unitOfMeasure.isValidMeasurement(),
+                unitOfMeasure.getMinimumMeasurementOne(),
+                unitOfMeasure.getMaximumMeasurementOne(),
+                unitOfMeasure.getMaximumMeasurementTwo(),
+                unitOfMeasure.getMeasurementUnitsDigitWidths()
         );
     }
 

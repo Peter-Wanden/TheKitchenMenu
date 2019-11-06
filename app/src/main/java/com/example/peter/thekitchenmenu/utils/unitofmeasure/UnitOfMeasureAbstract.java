@@ -376,6 +376,21 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     }
 
     @Override
+    public double getMinimumMeasurementOne() {
+        return smallestUnit;
+    }
+
+    @Override
+    public double getMaximumMeasurementOne() {
+        return (maximumMeasurement % unitTwo) / unitOne;
+    }
+
+    @Override
+    public int getMaximumMeasurementTwo() {
+        return (int) (maximumMeasurement / unitTwo);
+    }
+
+    @Override
     public Pair[] getMeasurementUnitsDigitWidths() {
 
         // Calculates the max digit width of unit two
