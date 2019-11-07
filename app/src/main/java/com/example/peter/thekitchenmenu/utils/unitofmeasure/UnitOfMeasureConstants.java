@@ -1,5 +1,7 @@
 package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
+import com.example.peter.thekitchenmenu.data.model.MeasurementModel;
+
 public class UnitOfMeasureConstants {
 
     public static final double MIN_MASS = 1.; // 1g
@@ -98,4 +100,27 @@ public class UnitOfMeasureConstants {
     static final double COUNT_SMALLEST_UNIT = MIN_COUNT;
     static final boolean COUNT_IS_CONVERSION_FACTOR_ENABLED = false;
     // endregion count constants -----------------------------------------------------------
+
+    public static final UnitOfMeasure DEFAULT_UNIT_OF_MEASURE =
+            MeasurementSubtype.METRIC_MASS.getMeasurementClass();
+
+    public static final MeasurementModel DEFAULT_MEASUREMENT_MODEL = new MeasurementModel(
+            DEFAULT_UNIT_OF_MEASURE.getMeasurementType(),
+            DEFAULT_UNIT_OF_MEASURE.getMeasurementSubtype(),
+            DEFAULT_UNIT_OF_MEASURE.getNumberOfMeasurementUnits(),
+            DEFAULT_UNIT_OF_MEASURE.isConversionFactorEnabled(),
+            DEFAULT_UNIT_OF_MEASURE.getConversionFactor(),
+            DEFAULT_UNIT_OF_MEASURE.getItemBaseUnits(),
+            DEFAULT_UNIT_OF_MEASURE.getTotalBaseUnits(),
+            DEFAULT_UNIT_OF_MEASURE.getNumberOfItems(),
+            DEFAULT_UNIT_OF_MEASURE.getTotalMeasurementOne(),
+            DEFAULT_UNIT_OF_MEASURE.getItemMeasurementOne(),
+            DEFAULT_UNIT_OF_MEASURE.getTotalMeasurementTwo(),
+            DEFAULT_UNIT_OF_MEASURE.getItemMeasurementTwo(),
+            DEFAULT_UNIT_OF_MEASURE.isValidMeasurement(),
+            DEFAULT_UNIT_OF_MEASURE.getMinimumMeasurementOne(),
+            DEFAULT_UNIT_OF_MEASURE.getItemMeasurementOne(),
+            DEFAULT_UNIT_OF_MEASURE.getItemMeasurementTwo(),
+            DEFAULT_UNIT_OF_MEASURE.getMeasurementUnitsDigitWidths()
+    );
 }

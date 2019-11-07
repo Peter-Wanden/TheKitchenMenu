@@ -157,7 +157,7 @@
             android:id="@+id/recipe_ingredient_advanced_check_box"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checked="@={viewModel.advancedCheckBox}"
+            android:checked="@={viewModel.advancedCheckBoxChecked}"
             android:visibility="@{viewModel.isConversionFactorEnabled ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toStartOf="@id/vertical_guideline"
             app:layout_constraintTop_toBottomOf="@id/recipe_ingredient_editable_measurement_two"
@@ -201,7 +201,7 @@
             android:textAlignment="center"
             android:ems="8"
             android:text="@={viewModel.conversionFactor}"
-            android:visibility='@{viewModel.showConversionFactorFields ? View.VISIBLE : View.GONE}'
+            android:visibility="@{viewModel.showConversionFactorFields ? View.VISIBLE : View.GONE}"
             app:setUpEditTextForConversionFactor="@{viewModel.subtype}"
             app:editTextErrorSetter="@{viewModel.conversionFactorErrorMessage}"
             app:layout_constraintTop_toBottomOf="@id/recipe_ingredient_conversion_factor_message"

@@ -3,9 +3,6 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor
 import android.content.res.Resources;
 
 import androidx.databinding.Bindable;
-import androidx.databinding.Observable;
-import androidx.databinding.ObservableBoolean;
-import androidx.databinding.ObservableField;
 import androidx.databinding.library.baseAdapters.BR;
 
 import com.example.peter.thekitchenmenu.R;
@@ -15,7 +12,6 @@ import com.example.peter.thekitchenmenu.utils.NumberFormatter;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementResult;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.UseCaseConversionFactorStatus;
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasure;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.UseCaseIngredientPortionCalculator;
 
@@ -34,25 +30,19 @@ public class RecipeIngredientMeasurementViewModel
     private NumberFormatter numberFormatter;
 
     private static final int MEASUREMENT_ERROR = -1;
-    private MeasurementSubtype subtype = MeasurementSubtype.METRIC_MASS;
-    private UnitOfMeasure unitOfMeasure = subtype.getMeasurementClass();
-    private int numberOfMeasurementUnits = unitOfMeasure.getNumberOfMeasurementUnits();
 
     private UseCaseIngredientPortionCalculator useCasePortionCalculator;
-
     private UseCaseConversionFactorStatus useCaseConversionFactorStatus;
-    public final ObservableField<String> conversionFactorErrorMessage = new ObservableField<>();
-    public final ObservableBoolean advancedCheckBox = new ObservableBoolean();
-    public final ObservableBoolean showConversionFactorFields = new ObservableBoolean();
-    public final ObservableBoolean showUneditableConversionFactorFields = new ObservableBoolean();
 
+    private boolean advancedCheckBoxChecked;
+    private boolean showConversionFactorFields;
+    private boolean showUneditableConversionFactorFields;
 
-    private boolean isConversionFactorEnabled;
+    private String conversionFactorErrorMessage;
+    private String measurementOneErrorMessage;
+    private String measurementTwoErrorMessage;
 
-    public final ObservableField<String> measurementOneErrorMessage = new ObservableField<>();
-    public final ObservableField<String> measurementTwoErrorMessage = new ObservableField<>();
-
-    private MeasurementModel measurementModel;
+    private MeasurementModel measurementModel = UnitOfMeasureConstants.DEFAULT_MEASUREMENT_MODEL;
     private boolean updatingUi;
 
     public RecipeIngredientMeasurementViewModel(UseCaseIngredientPortionCalculator useCasePortionCalculator,
@@ -63,13 +53,6 @@ public class RecipeIngredientMeasurementViewModel
         this.useCaseConversionFactorStatus = useCaseConversionFactor;
         this.resources = resources;
         this.numberFormatter = numberFormatter;
-
-        advancedCheckBox.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                advancedCheckBoxUpdated();
-            }
-        });
         registerWithUseCase();
     }
 
@@ -85,7 +68,6 @@ public class RecipeIngredientMeasurementViewModel
     public void start(String recipeIngredientId) {
         useCasePortionCalculator.start(recipeIngredientId);
     }
-
 
     @Bindable
     public MeasurementSubtype getSubtype() {
@@ -125,7 +107,27 @@ public class RecipeIngredientMeasurementViewModel
 
     @Bindable
     public boolean isConversionFactorEnabled() {
-        return isConversionFactorEnabled;
+        return measurementModel.isConversionFactorEnabled();
+    }
+
+    @Bindable
+    public boolean isShowConversionFactorFields() {
+        return showConversionFactorFields;
+    }
+
+    @Bindable
+    public boolean isShowUneditableConversionFactorFields() {
+        return showUneditableConversionFactorFields;
+    }
+
+    @Bindable
+    public boolean isAdvancedCheckBoxChecked() {
+        return advancedCheckBoxChecked;
+    }
+
+    public void setAdvancedCheckBoxChecked(boolean advancedCheckBoxChecked) {
+        showConversionFactorFields = advancedCheckBoxChecked;
+        notifyPropertyChanged(BR.showConversionFactorFields);
     }
 
     @Bindable
@@ -138,10 +140,11 @@ public class RecipeIngredientMeasurementViewModel
             if (!conversionFactor.isEmpty()) {
                 double conversionFactorParsed = parseDecimalFromString(conversionFactor);
 
-                if (conversionFactorParsed == MEASUREMENT_ERROR)
-                    conversionFactorErrorMessage.set(numberFormatExceptionErrorMessage());
+                if (conversionFactorParsed == MEASUREMENT_ERROR) {
+                    conversionFactorErrorMessage = numberFormatExceptionErrorMessage();
+                    notifyPropertyChanged(BR.conversionFactorErrorMessage);
 
-                else if (isConversionFactorChanged(conversionFactorParsed)) {
+                } else if (isConversionFactorChanged(conversionFactorParsed)) {
                     useCasePortionCalculator.processModel(new MeasurementModel(
                             measurementModel.getType(),
                             measurementModel.getSubtype(),
@@ -172,6 +175,11 @@ public class RecipeIngredientMeasurementViewModel
     }
 
     @Bindable
+    public String getConversionFactorErrorMessage() {
+        return conversionFactorErrorMessage;
+    }
+
+    @Bindable
     public String getMeasurementOne() {
         return numberFormatter.formatDecimalForDisplay(measurementModel.getTotalMeasurementOne());
     }
@@ -181,10 +189,11 @@ public class RecipeIngredientMeasurementViewModel
             if (!measurementOne.isEmpty()) {
                 double measurementOneParsed = parseDecimalFromString(measurementOne);
 
-                if (measurementOneParsed == MEASUREMENT_ERROR)
-                    measurementOneErrorMessage.set(numberFormatExceptionErrorMessage());
+                if (measurementOneParsed == MEASUREMENT_ERROR) {
+                    measurementOneErrorMessage = numberFormatExceptionErrorMessage();
+                    notifyPropertyChanged(BR.measurementOneErrorMessage);
 
-                else if (isMeasurementOneChanged(measurementOneParsed)) {
+                } else if (isMeasurementOneChanged(measurementOneParsed)) {
                     useCasePortionCalculator.processModel(new MeasurementModel(
                             measurementModel.getType(),
                             measurementModel.getSubtype(),
@@ -221,6 +230,10 @@ public class RecipeIngredientMeasurementViewModel
         }
     }
 
+    @Bindable
+    public String getMeasurementOneErrorMessage() {
+        return measurementOneErrorMessage;
+    }
 
     @Bindable
     public String getMeasurementTwo() {
@@ -232,10 +245,11 @@ public class RecipeIngredientMeasurementViewModel
             if (!measurementTwo.isEmpty()) {
                 int measurementTwoParsed = parseIntegerFromString(measurementTwo);
 
-                if (measurementTwoParsed == MEASUREMENT_ERROR)
-                    measurementTwoErrorMessage.set(numberFormatExceptionErrorMessage());
+                if (measurementTwoParsed == MEASUREMENT_ERROR) {
+                    measurementTwoErrorMessage = numberFormatExceptionErrorMessage();
+                    notifyPropertyChanged(BR.measurementTwoErrorMessage);
 
-                else if (isMeasurementTwoChanged(measurementTwoParsed)){
+                } else if (isMeasurementTwoChanged(measurementTwoParsed)){
                     useCasePortionCalculator.processModel(new MeasurementModel(
                             measurementModel.getType(),
                             measurementModel.getSubtype(),
@@ -272,6 +286,11 @@ public class RecipeIngredientMeasurementViewModel
         }
     }
 
+    @Bindable
+    public String getMeasurementTwoErrorMessage() {
+        return measurementTwoErrorMessage;
+    }
+
     private String numberFormatExceptionErrorMessage() {
         return resources.getString(R.string.number_format_exception);
     }
@@ -293,38 +312,47 @@ public class RecipeIngredientMeasurementViewModel
 
         notifyPropertyChanged(BR.subtype);
         notifyPropertyChanged(BR.numberOfMeasurementUnits);
-        notifyPropertyChanged(BR.conversionFactorEnabled);
+//        notifyPropertyChanged(BR.conversionFactorEnabled);
         notifyPropertyChanged(BR.conversionFactor);
         notifyPropertyChanged(BR.measurementOne);
         notifyPropertyChanged(BR.measurementTwo);
     }
 
     private void processResultStatus(UseCaseIngredientPortionCalculator.ResultStatus resultStatus) {
-        if (resultStatus == UseCaseIngredientPortionCalculator.ResultStatus.INVALID_CONVERSION_FACTOR) {
-            conversionFactorErrorMessage.set(null);
-            conversionFactorErrorMessage.set(resources.getString(
+        if (resultStatus == UseCaseIngredientPortionCalculator.
+                ResultStatus.INVALID_CONVERSION_FACTOR) {
+            conversionFactorErrorMessage = null;
+            conversionFactorErrorMessage = resources.getString(
                     R.string.conversion_factor_error_message,
                     UnitOfMeasureConstants.MIN_CONVERSION_FACTOR,
-                    UnitOfMeasureConstants.MAX_CONVERSION_FACTOR));
+                    UnitOfMeasureConstants.MAX_CONVERSION_FACTOR);
 
-        } else if (resultStatus == UseCaseIngredientPortionCalculator.ResultStatus.INVALID_TOTAL_MEASUREMENT_ONE) {
-            measurementOneErrorMessage.set(null);
-            measurementOneErrorMessage.set("Tablespoons and/or teaspoons need to have a value between 0.1 tsp and 666 Tbsp");
+        } else if (resultStatus ==
+                UseCaseIngredientPortionCalculator.
+                        ResultStatus.INVALID_TOTAL_MEASUREMENT_ONE) {
+            measurementOneErrorMessage = null;
+            measurementOneErrorMessage = "Tablespoons and/or teaspoons need to have a value " +
+                    "between 0.1 tsp and 666 Tbsp";
 
-        } else if (resultStatus == UseCaseIngredientPortionCalculator.ResultStatus.INVALID_TOTAL_MEASUREMENT_TWO) {
-            measurementTwoErrorMessage.set(null);
-            measurementTwoErrorMessage.set("Tablespoons and/or teaspoons need to have a value between 0.1 tsp and 666 Tbsp");
+        } else if (resultStatus == UseCaseIngredientPortionCalculator.
+                ResultStatus.INVALID_TOTAL_MEASUREMENT_TWO) {
+            measurementTwoErrorMessage = null;
+            measurementTwoErrorMessage = "Tablespoons and/or teaspoons need to have a value " +
+                    "between 0.1 tsp and 666 Tbsp";
 
-        } else if (resultStatus == UseCaseIngredientPortionCalculator.ResultStatus.RESULT_OK) {
+        } else if (resultStatus == UseCaseIngredientPortionCalculator.
+                ResultStatus.RESULT_OK) {
             hideAllInputErrors();
         }
-        useCaseConversionFactorStatus.getStatus(subtype, useCasePortionCalculator.getIngredientId());
+        useCaseConversionFactorStatus.getStatus(
+                measurementModel.getSubtype(),
+                useCasePortionCalculator.getIngredientId());
     }
 
     private void hideAllInputErrors() {
-        conversionFactorErrorMessage.set(null);
-        measurementOneErrorMessage.set(null);
-        measurementTwoErrorMessage.set(null);
+        conversionFactorErrorMessage = null;
+        measurementOneErrorMessage = null;
+        measurementTwoErrorMessage = null;
     }
 
     @Override
@@ -344,81 +372,40 @@ public class RecipeIngredientMeasurementViewModel
     }
 
     private void hideAllConversionFactorInformation() {
-//        isConversionFactorEnabledObservable.set(false);
-        showConversionFactorFields.set(false);
-        showUneditableConversionFactorFields.set(false);
+        notifyPropertyChanged(BR.conversionFactorEnabled);
+        showConversionFactorFields = false;
+        notifyPropertyChanged(BR.showConversionFactorFields);
+        showUneditableConversionFactorFields = false;
+        notifyPropertyChanged(BR.showUneditableConversionFactorFields);
     }
 
     private void showUneditableConversionFactorInformation() {
-//        isConversionFactorEnabledObservable.set(true);
-        showConversionFactorFields.set(false);
-        showUneditableConversionFactorFields.set(true);
+        notifyPropertyChanged(BR.conversionFactorEnabled);
+        showConversionFactorFields = false;
+        notifyPropertyChanged(BR.showConversionFactorFields);
+        showUneditableConversionFactorFields = true;
+        notifyPropertyChanged(BR.showUneditableConversionFactorFields);
     }
 
     private void showOptionToAddConversionFactorInformation() {
-//        isConversionFactorEnabledObservable.set(true);
-        showConversionFactorFields.set(false);
-        advancedCheckBox.set(false);
-        showUneditableConversionFactorFields.set(false);
+        notifyPropertyChanged(BR.conversionFactorEnabled);
+        showConversionFactorFields = false;
+        notifyPropertyChanged(BR.showConversionFactorFields);
+        showUneditableConversionFactorFields = false;
+        notifyPropertyChanged(BR.showUneditableConversionFactorFields);
+        advancedCheckBoxChecked = false;
+        notifyPropertyChanged(BR.advancedCheckBoxChecked);
     }
 
     private void showAllConversionFactorInformation() {
-//        isConversionFactorEnabledObservable.set(true);
-        showConversionFactorFields.set(true);
-        advancedCheckBox.set(true);
-        showUneditableConversionFactorFields.set(false);
+        notifyPropertyChanged(BR.conversionFactorEnabled);
+        showConversionFactorFields = true;
+        notifyPropertyChanged(BR.showConversionFactorFields);
+        showUneditableConversionFactorFields = false;
+        notifyPropertyChanged(BR.showUneditableConversionFactorFields);
+        advancedCheckBoxChecked = true;
+        notifyPropertyChanged(BR.advancedCheckBoxChecked);
     }
-
-    private void setupForNewSubtype() {
-        unitOfMeasure = subtype.getMeasurementClass();
-//        isConversionFactorEnabledObservable.set(unitOfMeasure.isConversionFactorEnabled());
-        updateNumberOfMeasurementUnits();
-//        updateMeasurementModel();
-    }
-
-    private boolean numberOfMeasurementUnitsHaveChanged() {
-        return numberOfMeasurementUnits != unitOfMeasure.getNumberOfMeasurementUnits();
-    }
-
-    private void updateNumberOfMeasurementUnits() {
-        if (numberOfMeasurementUnitsHaveChanged()) {
-            numberOfMeasurementUnits = unitOfMeasure.getNumberOfMeasurementUnits();
-            notifyPropertyChanged(BR.numberOfMeasurementUnits);
-        }
-    }
-
-    private void advancedCheckBoxUpdated() {
-//        if (shouldShowConversionFactorFields())
-            showConversionFactorFields.set(true);
-//        else
-//            showConversionFactorFields.set(false);
-    }
-
-//    private boolean shouldShowConversionFactorFields() {
-////        return isConversionFactorEnabledObservable.get() && advancedCheckBox.get();
-//    }
-
-//    private void updateMeasurementModel() {
-//        if (measurementModelHasChanged())
-//            useCasePortionCalculator.processModel(updatedMeasurementModel());
-//    }
-//
-//    private boolean measurementModelHasChanged() {
-//        return !measurementModel.equals(updatedMeasurementModel());
-//    }
-
-//    private MeasurementModel updatedMeasurementModel() {
-//        return new MeasurementModel(
-//                unitOfMeasure.getMeasurementSubtype(),
-//                measurementModel.getNumberOfItems(),
-//                conversionFactorParsed,
-//                measurementOneParsed,
-//                measurementTwoParsed,
-//                measurementModel.getItemMeasurementOne(),
-//                measurementModel.getItemMeasurementTwo(),
-//                measurementModel.getItemBaseUnits()
-//        );
-//    }
 
     @Override
     protected void onCleared() {

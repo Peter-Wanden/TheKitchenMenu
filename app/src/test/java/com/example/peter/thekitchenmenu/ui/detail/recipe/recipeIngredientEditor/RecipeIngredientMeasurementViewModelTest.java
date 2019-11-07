@@ -53,7 +53,7 @@ public class RecipeIngredientMeasurementViewModelTest {
             IngredientEntityTestData.getNewValidNameValidDescription();
 
     private MeasurementResult MEASUREMENT_NEW_EMPTY_INVALID =
-            MeasurementModelTestData.getResultInvalidMeasurement();
+            MeasurementModelTestData.useCasePortionCalcGetResultInvalidEmptyFourPortionsSet();
 
     private MeasurementResult MEASUREMENT_NEW_INVALID_ONE =
             MeasurementModelTestData.getResultNewInvalidTotalMeasurementOne();
@@ -80,7 +80,7 @@ public class RecipeIngredientMeasurementViewModelTest {
             RecipeIngredientQuantityEntityTestData.getExistingValidMetric();
 
     private MeasurementResult MEASUREMENT_EXISTING_VALID_METRIC =
-            MeasurementModelTestData.getResultExistingMetricValid();
+            MeasurementModelTestData.getResultExistingValidMetric();
 
     // endregion constants -------------------------------------------------------------------------
 
@@ -153,7 +153,7 @@ public class RecipeIngredientMeasurementViewModelTest {
 
         assertEquals(model.getSubtype(), SUT.getSubtype());
         assertEquals(String.valueOf(model.getConversionFactor()), SUT.getConversionFactor());
-        assertNull(SUT.conversionFactorErrorMessage.get());
+        assertNull(SUT.conversionFactorErrorMessageObs.get());
         assertFalse(SUT.isConversionFactorEnabledObservable.get());
     }
 
@@ -167,7 +167,7 @@ public class RecipeIngredientMeasurementViewModelTest {
         SUT.useCasePortionResult(MEASUREMENT_NEW_INVALID_ONE);
 
         assertEquals("Tablespoons and/or teaspoons need to have a value between 0.1 tsp and 666 Tbsp",
-                SUT.measurementOneErrorMessage.get());
+                SUT.measurementOneErrorMessageObs.get());
     }
 
     @Test
@@ -197,7 +197,7 @@ public class RecipeIngredientMeasurementViewModelTest {
         verify(useCaseIngredientPortionCalculatorMock).start(recipeIdCaptor.capture(), ingredientIdCaptor.capture());
         SUT.useCasePortionResult(MEASUREMENT_NEW_INVALID_TWO);
         // Assert
-        String actualError = SUT.measurementTwoErrorMessage.get();
+        String actualError = SUT.measurementTwoErrorMessageObs.get();
         assertEquals(expectedError, actualError);
     }
 
@@ -239,7 +239,7 @@ public class RecipeIngredientMeasurementViewModelTest {
         verify(useCaseIngredientPortionCalculatorMock).start(recipeIdCaptor.capture(), ingredientIdCaptor.capture());
         SUT.useCasePortionResult(MEASUREMENT_NEW_INVALID_CONVERSION_FACTOR);
         // Assert
-        String actualErrorMessage = SUT.conversionFactorErrorMessage.get();
+        String actualErrorMessage = SUT.conversionFactorErrorMessageObs.get();
         assertEquals(CONVERSION_FACTOR_ERROR_MESSAGE, actualErrorMessage);
     }
 

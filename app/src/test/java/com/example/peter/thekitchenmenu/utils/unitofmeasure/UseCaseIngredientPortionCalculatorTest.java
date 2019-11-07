@@ -58,59 +58,71 @@ public class UseCaseIngredientPortionCalculatorTest {
     private RecipeIngredientQuantityEntity QUANTITY_NEW_VALID_MAX_MASS_DIV_FOUR_PORTIONS =
             RecipeIngredientQuantityEntityTestData.getNewValidMetricMaxMassDivPortions();
 
-    private MeasurementModel MEASUREMENT_EMPTY =
-            MeasurementModelTestData.getEmptyModel();
-    private MeasurementResult MEASUREMENT_EMPTY_RESULT =
-            MeasurementModelTestData.getResultInvalidMeasurement();
+    //----------------------
+    private MeasurementModel MEASUREMENT_EMPTY_FOUR_PORTIONS =
+            MeasurementModelTestData.measurementGetInvalidEmptyFourPortionsSet();
+    private MeasurementResult MEASUREMENT_EMPTY_FOUR_PORTIONS_RESULT =
+            UseCaseIngredientPortionCalculatorTestData.
+                    useCasePortionCalcGetResultInvalidEmptyFourPortionsSet();
 
+    //----------------------
     private MeasurementModel MEASUREMENT_INVALID_TOTAL_ONE =
-            MeasurementModelTestData.getNewInvalidTotalMeasurementOne();
+            MeasurementModelTestData.measurementGetNewInvalidTotalMeasurementOne();
     private MeasurementResult MEASUREMENT_INVALID_TOTAL_ONE_RESULT =
-            MeasurementModelTestData.getResultNewInvalidTotalMeasurementOne();
+            UseCaseIngredientPortionCalculatorTestData.getResultNewInvalidTotalMeasurementOne();
 
+    //----------------------
     private MeasurementModel MEASUREMENT_VALID_TOTAL_ONE =
-            MeasurementModelTestData.getNewValidTotalMeasurementOne();
+            MeasurementModelTestData.measurementGetNewValidTotalMeasurementOne();
     private MeasurementResult MEASUREMENT_VALID_TOTAL_ONE_RESULT =
-            MeasurementModelTestData.getResultNewValidTotalMeasurementOne();
+            UseCaseIngredientPortionCalculatorTestData.getResultNewValidTotalMeasurementOne();
 
+    //----------------------
     private MeasurementModel MEASUREMENT_INVALID_TOTAL_TWO =
-            MeasurementModelTestData.getNewInvalidTotalMeasurementTwo();
+            MeasurementModelTestData.measurementGetNewInvalidTotalMeasurementTwo();
     private MeasurementResult MEASUREMENT_INVALID_TOTAL_TWO_RESULT =
-            MeasurementModelTestData.getResultNewInvalidTotalMeasurementTwo();
+            UseCaseIngredientPortionCalculatorTestData.getResultNewInvalidTotalMeasurementTwo();
 
+    //----------------------
     private MeasurementModel MEASUREMENT_VALID_TOTAL_TWO =
-            MeasurementModelTestData.getNewValidTotalMeasurementTwo();
+            MeasurementModelTestData.measurementGetNewValidTotalMeasurementTwo();
     private MeasurementResult MEASUREMENT_VALID_TOTAL_TWO_RESULT =
-            MeasurementModelTestData.getResultNewValidTotalMeasurementTwo();
+            UseCaseIngredientPortionCalculatorTestData.getResultNewValidTotalMeasurementTwo();
 
+    //----------------------
     private MeasurementModel MEASUREMENT_UNIT_OF_MEASURE_CHANGED_IMPERIAL_SPOON =
-            MeasurementModelTestData.getNewInvalidUnitOfMeasureChangedImperialSpoon();
+            MeasurementModelTestData.measurementGetNewInvalidUnitOfMeasureChangedImperialSpoon();
     private MeasurementResult MEASUREMENT_UNIT_OF_MEASURE_CHANGED_IMPERIAL_SPOON_RESULT =
-            MeasurementModelTestData.getResultNewInvalidUnitOfMeasureChangedImperialSpoon();
+            UseCaseIngredientPortionCalculatorTestData.
+                    getResultNewInvalidUnitOfMeasureChangedImperialSpoon();
 
+    //----------------------
     private MeasurementModel MEASUREMENT_NEW_VALID_HALF_IMPERIAL_SPOON_UNIT_ONE_UPDATED =
-            MeasurementModelTestData.getNewValidHalfImperialSpoonUnitOneUpdated();
+            MeasurementModelTestData.measurementGetNewValidHalfImperialSpoonUnitOneUpdated();
     private MeasurementResult MEASUREMENT_NEW_VALID_HALF_IMPERIAL_SPOON_UNIT_ONE_UPDATED_RESULT =
-            MeasurementModelTestData.getNewValidHalfImperialSpoonUnitOneUpdatedResult();
+            UseCaseIngredientPortionCalculatorTestData.
+                    getNewValidHalfImperialSpoonUnitOneUpdatedResult();
 
+    //----------------------
     private MeasurementModel MEASUREMENT_INVALID_CONVERSION_FACTOR =
-            MeasurementModelTestData.getNewInvalidConversionFactor();
+            MeasurementModelTestData.measurementGetNewInvalidConversionFactor();
     private MeasurementResult MEASUREMENT_INVALID_CONVERSION_FACTOR_RESULT =
-            MeasurementModelTestData.getResultNewInvalidConversionFactor();
+            UseCaseIngredientPortionCalculatorTestData.getResultNewInvalidConversionFactor();
 
+    //----------------------
     private MeasurementModel MEASUREMENT_VALID_MAX_CONVERSION_FACTOR =
-            MeasurementModelTestData.getNewValidImperialSpoonWithConversionFactor();
+            MeasurementModelTestData.measurementGetNewValidImperialSpoonWithConversionFactor();
     private MeasurementResult MEASUREMENT_VALID_MAX_CONVERSION_FACTOR_RESULT =
-            MeasurementModelTestData.getResultNewValidImperialSpoonWithConversionFactor();
+            UseCaseIngredientPortionCalculatorTestData.
+                    getResultNewValidImperialSpoonWithConversionFactor();
 
     private RecipeIngredientQuantityEntity QUANTITY_NEW_VALID_IMPERIAL_SPOON_MAX_CONVERSION_FACTOR =
             RecipeIngredientQuantityEntityTestData.getNewValidImperialSpoonMaxConversionFactor();
 
     private MeasurementModel MEASUREMENT_EXISTING_VALID_METRIC =
-            MeasurementModelTestData.getExistingMetricValid();
+            MeasurementModelTestData.measurementGetExistingValidMetric();
     private MeasurementResult MEASUREMENT_EXISTING_VALID_METRIC_RESULT =
-            new MeasurementResult(MEASUREMENT_EXISTING_VALID_METRIC,
-                    ResultStatus.RESULT_OK);
+            UseCaseIngredientPortionCalculatorTestData.getResultExistingValidMetric();
 
     private MeasurementModel MEASUREMENT_EXISTING_INVALID_TOTAL_ONE =
             MeasurementModelTestData.getExistingMetricInvalidTotalOne();
@@ -204,7 +216,7 @@ public class UseCaseIngredientPortionCalculatorTest {
         verifyRepoIngredientCalledReturnNewValidNameValidDescription();
         verifyRepoPortionsCalledReturnNewValidFourPortions();
         // Assert incomplete model returned
-        verify(viewModelMock).useCasePortionResult(eq(MEASUREMENT_EMPTY_RESULT));
+        verify(viewModelMock).useCasePortionResult(eq(MEASUREMENT_EMPTY_FOUR_PORTIONS_RESULT));
     }
 
     @Test
@@ -756,11 +768,11 @@ public class UseCaseIngredientPortionCalculatorTest {
                 unitOfMeasureChangeToImperialSpoonFromUi.getSubtype(),
                 portions,
                 expectedModelLoaded.getConversionFactor(),
-                MEASUREMENT_EMPTY.getTotalMeasurementOne(),
-                MEASUREMENT_EMPTY.getTotalMeasurementTwo(),
-                MEASUREMENT_EMPTY.getItemMeasurementOne(),
-                MEASUREMENT_EMPTY.getItemMeasurementTwo(),
-                MEASUREMENT_EMPTY.getItemBaseUnits()
+                MEASUREMENT_EMPTY_FOUR_PORTIONS.getTotalMeasurementOne(),
+                MEASUREMENT_EMPTY_FOUR_PORTIONS.getTotalMeasurementTwo(),
+                MEASUREMENT_EMPTY_FOUR_PORTIONS.getItemMeasurementOne(),
+                MEASUREMENT_EMPTY_FOUR_PORTIONS.getItemMeasurementTwo(),
+                MEASUREMENT_EMPTY_FOUR_PORTIONS.getItemBaseUnits()
         );
 
         MeasurementModel measurementOneChangeFromUi = new MeasurementModel(

@@ -3,289 +3,548 @@ package com.example.peter.thekitchenmenu.testdata;
 import com.example.peter.thekitchenmenu.data.model.MeasurementModel;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementResult;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtype;
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants;
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementType;
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasure;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.UseCaseIngredientPortionCalculator;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
+import static com.example.peter.thekitchenmenu.testdata.RecipeIngredientQuantityEntityTestData.getNewValidImperialSpoonMaxConversionFactor;
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.*;
+
 public class MeasurementModelTestData {
 
-    public static MeasurementModel getEmptyModel() {
+    //-----------
+    public static MeasurementModel measurementGetInvalidEmptyFourPortionsSet() {
+        UnitOfMeasure unitOfMeasure = getSubtypeFromNewInvalidMetric().getMeasurementClass();
+        boolean isPortionsSet = unitOfMeasure.numberOfItemsIsSet(getEmptyModelFourPortions());
+
+        if (!isPortionsSet) {
+            throwNumberOfItemsException(isPortionsSet);
+        }
+
         return new MeasurementModel(
-                MeasurementSubtype.METRIC_MASS,
-                getEmptyModelPortions(),
-                1,
-                0,
-                0,
-                0,
-                0,
-                0
+                unitOfMeasure.getMeasurementType(),
+                unitOfMeasure.getMeasurementSubtype(),
+                unitOfMeasure.getNumberOfMeasurementUnits(),
+                unitOfMeasure.isConversionFactorEnabled(),
+                unitOfMeasure.getConversionFactor(),
+                unitOfMeasure.getItemBaseUnits(),
+                unitOfMeasure.getTotalBaseUnits(),
+                unitOfMeasure.getNumberOfItems(),
+                unitOfMeasure.getTotalMeasurementOne(),
+                unitOfMeasure.getItemMeasurementOne(),
+                unitOfMeasure.getTotalMeasurementTwo(),
+                unitOfMeasure.getItemMeasurementTwo(),
+                unitOfMeasure.isValidMeasurement(),
+                unitOfMeasure.getMinimumMeasurementOne(),
+                unitOfMeasure.getMaximumMeasurementOne(),
+                unitOfMeasure.getMaximumMeasurementTwo(),
+                unitOfMeasure.getMeasurementUnitsDigitWidths()
         );
     }
 
-    private static int getEmptyModelPortions() {
-        return RecipePortionsEntityTestData.getNewValidFourPortions().getServings()
-                * RecipePortionsEntityTestData.getNewValidFourPortions().getSittings();
-    }
-
-    public static MeasurementResult getResultInvalidMeasurement() {
-        return new MeasurementResult(
-                getEmptyModel(),
-                UseCaseIngredientPortionCalculator.ResultStatus.INVALID_MEASUREMENT);
-    }
-
-    public static MeasurementModel getNewInvalidTotalMeasurementOne() {
-        return new MeasurementModel(
-                getNewValidMetricSubtype(),
-                getEmptyModelPortions(),
-                getEmptyModel().getConversionFactor(),
-                UnitOfMeasureConstants.MAX_MASS + 1,
-                0,
-                0,
-                0,
-                0
-        );
-    }
-
-    private static MeasurementSubtype getNewValidMetricSubtype() {
+    private static MeasurementSubtype getSubtypeFromNewInvalidMetric() {
         return MeasurementSubtype.fromInt(RecipeIngredientQuantityEntityTestData.
-                getNewValidMetric().
-                getUnitOfMeasureSubtype());
+                getNewInvalid().getUnitOfMeasureSubtype());
     }
 
-    public static MeasurementResult getResultNewInvalidTotalMeasurementOne() {
-        return new MeasurementResult(
-                getNewInvalidTotalMeasurementOne(),
-                UseCaseIngredientPortionCalculator.ResultStatus.INVALID_TOTAL_MEASUREMENT_ONE
-        );
-    }
+    //----------
+    public static MeasurementModel measurementGetNewInvalidTotalMeasurementOne() {
+        UnitOfMeasure unitOfMeasure = getSubtypeForValidNewMetric().getMeasurementClass();
+        boolean isNumberOfItemsSet = unitOfMeasure.numberOfItemsIsSet(getEmptyModelFourPortions());
 
-    public static MeasurementModel getNewValidTotalMeasurementOne() {
+        if (!isNumberOfItemsSet) {
+            throwNumberOfItemsException(isNumberOfItemsSet);
+        }
+
+        if (unitOfMeasure.isConversionFactorEnabled()) {
+            double conversionFactor = measurementGetInvalidEmptyFourPortionsSet().
+                    getConversionFactor();
+
+            boolean isConversionFactorSet = unitOfMeasure.conversionFactorIsSet(conversionFactor);
+
+            if (!isConversionFactorSet)
+                throwConversionFactorException(isConversionFactorSet);
+        }
+
+        double invalidTotalMeasurementOne;
+        MeasurementType type = unitOfMeasure.getMeasurementType();
+        switch (type) {
+            case MASS:
+                invalidTotalMeasurementOne = MAX_MASS + 1;
+                break;
+            case VOLUME:
+                invalidTotalMeasurementOne = MAX_VOLUME + 1;
+                break;
+            case COUNT:
+                throw new RuntimeException("Can't set totalMeasurementOne() for type COUNT");
+            default:
+                throw new RuntimeException("Unit of measure Type not recognised");
+        }
+
+        boolean isTotalMeasurementOneSet = unitOfMeasure.
+                totalMeasurementOneIsSet(invalidTotalMeasurementOne);
+
+        if (isTotalMeasurementOneSet)
+            throwMeasurementOneException(isTotalMeasurementOneSet);
+
         return new MeasurementModel(
-                getNewValidMetricSubtype(),
-                getEmptyModelPortions(),
-                getEmptyModel().getConversionFactor(),
-                getNewValidMetricTotalBasUnits(),
-                0,
-                0,
-                0,
-                0
+                unitOfMeasure.getMeasurementType(),
+                unitOfMeasure.getMeasurementSubtype(),
+                unitOfMeasure.getNumberOfMeasurementUnits(),
+                unitOfMeasure.isConversionFactorEnabled(),
+                unitOfMeasure.getConversionFactor(),
+                unitOfMeasure.getItemBaseUnits(),
+                unitOfMeasure.getTotalBaseUnits(),
+                unitOfMeasure.getNumberOfItems(),
+                invalidTotalMeasurementOne,
+                unitOfMeasure.getItemMeasurementOne(),
+                unitOfMeasure.getTotalMeasurementTwo(),
+                unitOfMeasure.getItemMeasurementTwo(),
+                unitOfMeasure.isValidMeasurement(),
+                unitOfMeasure.getMinimumMeasurementOne(),
+                unitOfMeasure.getItemMeasurementOne(),
+                unitOfMeasure.getItemMeasurementTwo(),
+                unitOfMeasure.getMeasurementUnitsDigitWidths()
         );
     }
 
-    private static double getNewValidMetricTotalBasUnits() {
+    //-----------
+    public static MeasurementModel measurementGetNewValidTotalMeasurementOne() {
+        UnitOfMeasure unitOfMeasure = getSubtypeForValidNewMetric().getMeasurementClass();
+
+        boolean isPortionsSet = unitOfMeasure.numberOfItemsIsSet(getEmptyModelFourPortions());
+        if (!isPortionsSet) {
+            throwNumberOfItemsException(isPortionsSet);
+        }
+
+        boolean isConversionFactorSet;
+        if (unitOfMeasure.isConversionFactorEnabled()) {
+            isConversionFactorSet = unitOfMeasure.conversionFactorIsSet(
+                    measurementGetInvalidEmptyFourPortionsSet().getConversionFactor());
+            if (!isConversionFactorSet) {
+                throwConversionFactorException(isConversionFactorSet);
+            }
+        }
+
+        UnitOfMeasure forCalculatingUnitOneValue = getSubtypeForValidNewMetric().getMeasurementClass();
+        boolean isTotalBaseUnitsSet = forCalculatingUnitOneValue.totalBaseUnitsAreSet(
+                getBaseUnitsForNewValidTotalMeasurementOne());
+        if (!isTotalBaseUnitsSet) {
+            throwTotalBaseUnitsException(isTotalBaseUnitsSet);
+        }
+
+        boolean isTotalMeasurementOneIsSet = unitOfMeasure.totalMeasurementOneIsSet(
+                forCalculatingUnitOneValue.getTotalMeasurementOne());
+        if (!isTotalMeasurementOneIsSet) {
+            throwMeasurementOneException(isTotalMeasurementOneIsSet);
+        }
+
+        return getMeasurementModel(unitOfMeasure);
+    }
+    private static double getBaseUnitsForNewValidTotalMeasurementOne() {
         return RecipeIngredientQuantityEntityTestData.getNewValidMetric().getItemBaseUnits() *
                 RecipePortionsEntityTestData.getNewValidFourPortions().getServings() *
                 RecipePortionsEntityTestData.getNewValidFourPortions().getServings();
     }
 
-    private static MeasurementModel getNewTotalMeasurementOneResultModel() {
+    //-----------
+    public static MeasurementModel measurementGetNewInvalidTotalMeasurementTwo() {
+        UnitOfMeasure unitOfMeasure = getSubtypeForValidNewMetric().getMeasurementClass();
+        boolean isNumberOfItemsSet = unitOfMeasure.numberOfItemsIsSet(getEmptyModelFourPortions());
+
+        if (!isNumberOfItemsSet) {
+            throwNumberOfItemsException(isNumberOfItemsSet);
+        }
+
+        if (unitOfMeasure.isConversionFactorEnabled()) {
+            double conversionFactor = measurementGetInvalidEmptyFourPortionsSet().
+                    getConversionFactor();
+
+            boolean isConversionFactorSet = unitOfMeasure.conversionFactorIsSet(conversionFactor);
+
+            if (!isConversionFactorSet)
+                throwConversionFactorException(isConversionFactorSet);
+        }
+
+        UnitOfMeasure forCalculatingMaxValueOfTotalTwo = getSubtypeForValidNewMetric().
+                getMeasurementClass();
+
+        MeasurementType type = unitOfMeasure.getMeasurementType();
+        switch (type) {
+            case MASS:
+                forCalculatingMaxValueOfTotalTwo.totalBaseUnitsAreSet(MAX_MASS);
+                break;
+            case VOLUME:
+                forCalculatingMaxValueOfTotalTwo.totalBaseUnitsAreSet(MAX_VOLUME);
+                break;
+            case COUNT:
+                throw new RuntimeException("Can't set totalMeasurementOne() for type COUNT");
+            default:
+                throw new RuntimeException("Unit of measure Type not recognised");
+        }
+
+        int totalMeasurementTwo = forCalculatingMaxValueOfTotalTwo.getTotalMeasurementTwo();
+        int invalidTotalMeasurementTwo = totalMeasurementTwo + 1;
+        boolean isTotalMeasurementTwoSet = unitOfMeasure.
+                totalMeasurementTwoIsSet(invalidTotalMeasurementTwo);
+
+        if (isTotalMeasurementTwoSet)
+            throwMeasurementTwoException(isTotalMeasurementTwoSet);
+
         return new MeasurementModel(
-                getNewValidMetricSubtype(),
-                getEmptyModelPortions(),
-                getEmptyModel().getConversionFactor(),
-                (getNewValidMetricTotalBasUnits() % 1000),
-                ((int) getNewValidMetricTotalBasUnits() / 1000),
-                (getNewValidMetricTotalBasUnits() % 1000 / getEmptyModelPortions()),
-                ((int) getNewValidMetricTotalBasUnits() / 1000 / getEmptyModelPortions()),
-                (getNewValidMetricTotalBasUnits() / getEmptyModelPortions()));
+                unitOfMeasure.getMeasurementType(),
+                unitOfMeasure.getMeasurementSubtype(),
+                unitOfMeasure.getNumberOfMeasurementUnits(),
+                unitOfMeasure.isConversionFactorEnabled(),
+                unitOfMeasure.getConversionFactor(),
+                unitOfMeasure.getItemBaseUnits(),
+                unitOfMeasure.getTotalBaseUnits(),
+                unitOfMeasure.getNumberOfItems(),
+                invalidTotalMeasurementTwo,
+                unitOfMeasure.getItemMeasurementOne(),
+                unitOfMeasure.getTotalMeasurementTwo(),
+                unitOfMeasure.getItemMeasurementTwo(),
+                unitOfMeasure.isValidMeasurement(),
+                unitOfMeasure.getMinimumMeasurementOne(),
+                unitOfMeasure.getItemMeasurementOne(),
+                unitOfMeasure.getItemMeasurementTwo(),
+                unitOfMeasure.getMeasurementUnitsDigitWidths()
+        );
     }
 
-    public static MeasurementResult getResultNewValidTotalMeasurementOne() {
+    //-----------
+    public static MeasurementModel measurementGetNewValidTotalMeasurementTwo() {
+        UnitOfMeasure unitOfMeasure = getSubtypeForValidNewMetric().getMeasurementClass();
+
+        boolean isNumberOfItemsSet = unitOfMeasure.numberOfItemsIsSet(getEmptyModelFourPortions());
+        if (!isNumberOfItemsSet) {
+            throwNumberOfItemsException(isNumberOfItemsSet);
+        }
+
+        if (unitOfMeasure.isConversionFactorEnabled()) {
+            double conversionFactor = measurementGetInvalidEmptyFourPortionsSet().
+                    getConversionFactor();
+
+            boolean isConversionFactorSet = unitOfMeasure.conversionFactorIsSet(conversionFactor);
+
+            if (!isConversionFactorSet)
+                throwConversionFactorException(isConversionFactorSet);
+        }
+
+        UnitOfMeasure forCalculatingMaxValueOfTotalTwo = getSubtypeForValidNewMetric().
+                getMeasurementClass();
+
+        MeasurementType type = unitOfMeasure.getMeasurementType();
+        switch (type) {
+            case MASS:
+                forCalculatingMaxValueOfTotalTwo.totalBaseUnitsAreSet(MAX_MASS);
+                break;
+            case VOLUME:
+                forCalculatingMaxValueOfTotalTwo.totalBaseUnitsAreSet(MAX_VOLUME);
+                break;
+            case COUNT:
+                throw new RuntimeException("Can't set totalMeasurementOne() for type COUNT");
+            default:
+                throw new RuntimeException("Unit of measure Type not recognised");
+        }
+
+        int totalMeasurementTwo = forCalculatingMaxValueOfTotalTwo.getTotalMeasurementTwo();
+        boolean isTotalMeasurementTwoSet = unitOfMeasure.
+                totalMeasurementTwoIsSet(totalMeasurementTwo);
+
+        if (!isTotalMeasurementTwoSet)
+            throwMeasurementTwoException(isTotalMeasurementTwoSet);
+
+        return getMeasurementModel(unitOfMeasure);
+    }
+
+    private static MeasurementSubtype getSubtypeForValidNewMetric() {
+        return MeasurementSubtype.fromInt(RecipeIngredientQuantityEntityTestData.
+                getNewValidMetric().getUnitOfMeasureSubtype());
+    }
+
+    //-----------
+    public static MeasurementModel measurementGetNewInvalidUnitOfMeasureChangedImperialSpoon() {
+        UnitOfMeasure unitOfMeasure = getSubtypeForNewValidImperialSpoon().getMeasurementClass();
+
+        boolean isNumberOfItemsSet = unitOfMeasure.numberOfItemsIsSet(getEmptyModelFourPortions());
+        if (!isNumberOfItemsSet) {
+            throwNumberOfItemsException(isNumberOfItemsSet);
+        }
+
+        if (unitOfMeasure.isConversionFactorEnabled()) {
+            double conversionFactor = measurementGetInvalidEmptyFourPortionsSet().
+                    getConversionFactor();
+
+            boolean isConversionFactorSet = unitOfMeasure.conversionFactorIsSet(conversionFactor);
+
+            if (!isConversionFactorSet)
+                throwConversionFactorException(isConversionFactorSet);
+        }
+
+        return getMeasurementModel(unitOfMeasure);
+    }
+
+    //-----------
+    public static MeasurementModel measurementGetNewValidHalfImperialSpoonUnitOneUpdated() {
+        UnitOfMeasure unitOfMeasure = getSubtypeForNewValidImperialSpoon().getMeasurementClass();
+        UnitOfMeasure forCalculatingUnitOneValue = getSubtypeForNewValidImperialSpoon().
+                getMeasurementClass();
+
+        boolean isNumberOfItemsSet = unitOfMeasure.numberOfItemsIsSet(getEmptyModelFourPortions());
+        forCalculatingUnitOneValue.numberOfItemsIsSet(getEmptyModelFourPortions());
+        if (!isNumberOfItemsSet) {
+            throwNumberOfItemsException(isNumberOfItemsSet);
+        }
+
+        if (unitOfMeasure.isConversionFactorEnabled()) {
+            double conversionFactor = measurementGetInvalidEmptyFourPortionsSet().
+                    getConversionFactor();
+
+            boolean isConversionFactorSet = unitOfMeasure.conversionFactorIsSet(conversionFactor);
+            forCalculatingUnitOneValue.conversionFactorIsSet(conversionFactor);
+
+            if (!isConversionFactorSet)
+                throwConversionFactorException(isConversionFactorSet);
+        }
+
+        forCalculatingUnitOneValue.itemBaseUnitsAreSet(RecipeIngredientQuantityEntityTestData.
+                        getNewValidImperialOneTeaspoonNoConversionFactor().
+                        getItemBaseUnits());
+
+        boolean isTotalMeasurementOneSet = unitOfMeasure.totalMeasurementOneIsSet(
+                forCalculatingUnitOneValue.getTotalMeasurementOne()
+        );
+
+        if (!isTotalMeasurementOneSet)
+            throwMeasurementOneException(isTotalMeasurementOneSet);
+
+        return getMeasurementModel(unitOfMeasure);
+    }
+
+    //-----------
+    public static MeasurementModel measurementGetNewInvalidConversionFactor() {
+        UnitOfMeasure unitOfMeasure = getSubtypeForNewValidImperialSpoon().getMeasurementClass();
+
+        boolean isNumberOfItemsSet = unitOfMeasure.numberOfItemsIsSet(getEmptyModelFourPortions());
+        if (!isNumberOfItemsSet) {
+            throwNumberOfItemsException(isNumberOfItemsSet);
+        }
+
+
+        double conversionFactor = MAX_CONVERSION_FACTOR + .1;
+        if (unitOfMeasure.isConversionFactorEnabled()) {
+            boolean isConversionFactorSet = unitOfMeasure.conversionFactorIsSet(conversionFactor);
+            if (isConversionFactorSet)
+                throwConversionFactorException(isConversionFactorSet);
+        }
+
+        return new MeasurementModel(
+                unitOfMeasure.getMeasurementType(),
+                unitOfMeasure.getMeasurementSubtype(),
+                unitOfMeasure.getNumberOfMeasurementUnits(),
+                unitOfMeasure.isConversionFactorEnabled(),
+                conversionFactor,
+                unitOfMeasure.getItemBaseUnits(),
+                unitOfMeasure.getTotalBaseUnits(),
+                unitOfMeasure.getNumberOfItems(),
+                unitOfMeasure.getTotalMeasurementOne(),
+                unitOfMeasure.getItemMeasurementOne(),
+                unitOfMeasure.getTotalMeasurementTwo(),
+                unitOfMeasure.getItemMeasurementTwo(),
+                unitOfMeasure.isValidMeasurement(),
+                unitOfMeasure.getMinimumMeasurementOne(),
+                unitOfMeasure.getMaximumMeasurementOne(),
+                unitOfMeasure.getMaximumMeasurementTwo(),
+                unitOfMeasure.getMeasurementUnitsDigitWidths()
+        );
+    }
+
+    //-----------
+    public static MeasurementModel measurementGetNewValidImperialSpoonWithConversionFactor() {
+        UnitOfMeasure unitOfMeasure = getSubtypeForNewValidImperialSpoon().getMeasurementClass();
+
+        boolean isNumberOfItemsSet = unitOfMeasure.numberOfItemsIsSet(getEmptyModelFourPortions());
+        if (!isNumberOfItemsSet) {
+            throwNumberOfItemsException(isNumberOfItemsSet);
+        }
+
+        if (unitOfMeasure.isConversionFactorEnabled()) {
+            boolean isConversionFactorSet = unitOfMeasure.conversionFactorIsSet(
+                    MAX_CONVERSION_FACTOR);
+
+            if (!isConversionFactorSet)
+                throwConversionFactorException(isConversionFactorSet);
+        }
+
+        boolean itemBaseUnitsAreSet = unitOfMeasure.itemBaseUnitsAreSet(
+                getNewValidImperialSpoonMaxConversionFactor().getItemBaseUnits()
+        );
+        if (!itemBaseUnitsAreSet) {
+            throwItemBaseUnitsAreSetException(itemBaseUnitsAreSet);
+        }
+
+        return getMeasurementModel(unitOfMeasure);
+    }
+
+    private static MeasurementSubtype getSubtypeForNewValidImperialSpoon() {
+        return MeasurementSubtype.fromInt(RecipeIngredientQuantityEntityTestData.
+                getNewValidImperialOneTeaspoonNoConversionFactor().getUnitOfMeasureSubtype());
+    }
+
+    private static int getEmptyModelFourPortions() {
+        return RecipePortionsEntityTestData.getNewValidFourPortions().getServings()
+                * RecipePortionsEntityTestData.getNewValidFourPortions().getSittings();
+    }
+
+    //-----------
+    public static MeasurementModel measurementGetExistingValidMetric() {
+        UnitOfMeasure unitOfMeasure = getExistingValidSubtype().getMeasurementClass();
+
+        boolean isNumberOfItemsSet = unitOfMeasure.numberOfItemsIsSet(getExistingValidNinePortions());
+        if (!isNumberOfItemsSet) {
+            throwNumberOfItemsException(isNumberOfItemsSet);
+        }
+
+        if (unitOfMeasure.isConversionFactorEnabled()) {
+            boolean isConversionFactorSet = unitOfMeasure.conversionFactorIsSet(
+                    getExistingValidConversionFactor());
+
+            if (!isConversionFactorSet)
+                throwConversionFactorException(isConversionFactorSet);
+        }
+
+        boolean itemBaseUnitsAreSet = unitOfMeasure.itemBaseUnitsAreSet(
+                RecipeIngredientQuantityEntityTestData.getExistingValidMetric().getItemBaseUnits()
+        );
+        if (!itemBaseUnitsAreSet) {
+            throwItemBaseUnitsAreSetException(itemBaseUnitsAreSet);
+        }
+
+
+        return getMeasurementModel(unitOfMeasure);
+    }
+
+    public static MeasurementResult getResultExistingValidMetric() {
         return new MeasurementResult(
-                getNewTotalMeasurementOneResultModel(),
+                measurementGetExistingValidMetric(),
                 UseCaseIngredientPortionCalculator.ResultStatus.RESULT_OK
         );
     }
 
-    public static MeasurementModel getNewInvalidTotalMeasurementTwo() {
-        return new MeasurementModel(
-                getNewValidMetricSubtype(),
-                getEmptyModelPortions(),
-                getEmptyModel().getConversionFactor(),
-                0,
-                (int) UnitOfMeasureConstants.MAX_MASS / 1000 + 1,
-                0,
-                0,
-                0
-        );
+    private static MeasurementSubtype getExistingValidSubtype() {
+        return MeasurementSubtype.fromInt(RecipeIngredientQuantityEntityTestData.
+                getExistingValidMetric().
+                getUnitOfMeasureSubtype());
     }
 
-    public static MeasurementResult getResultNewInvalidTotalMeasurementTwo() {
+    private static int getExistingValidNinePortions() {
+        return RecipePortionsEntityTestData.getExistingValid().getServings() *
+                RecipePortionsEntityTestData.getExistingValid().getSittings();
+    }
+
+    private static double getExistingValidConversionFactor() {
+        return IngredientEntityTestData.getExistingValidNameValidDescription().getConversionFactor();
+    }
+
+
+    public static MeasurementResult getExistingInvalidTotalTwoResult() {
         return new MeasurementResult(
-                getNewInvalidTotalMeasurementTwo(),
+                getExistingMetricInvalidTotalTwoModelResult(),
                 UseCaseIngredientPortionCalculator.ResultStatus.INVALID_TOTAL_MEASUREMENT_TWO
         );
     }
 
-    public static MeasurementModel getNewValidTotalMeasurementTwo() {
+    private static MeasurementModel getMeasurementModel(UnitOfMeasure unitOfMeasure) {
         return new MeasurementModel(
-                getNewValidMetricSubtype(),
-                getEmptyModelPortions(),
-                getEmptyModel().getConversionFactor(),
-                getEmptyModel().getTotalMeasurementOne(),
-                ((int) UnitOfMeasureConstants.MAX_MASS / 1000),
-                getEmptyModel().getItemMeasurementOne(),
-                getEmptyModel().getItemMeasurementTwo(),
-                getEmptyModel().getItemBaseUnits()
+                unitOfMeasure.getMeasurementType(),
+                unitOfMeasure.getMeasurementSubtype(),
+                unitOfMeasure.getNumberOfMeasurementUnits(),
+                unitOfMeasure.isConversionFactorEnabled(),
+                unitOfMeasure.getConversionFactor(),
+                unitOfMeasure.getItemBaseUnits(),
+                unitOfMeasure.getTotalBaseUnits(),
+                unitOfMeasure.getNumberOfItems(),
+                unitOfMeasure.getTotalMeasurementOne(),
+                unitOfMeasure.getItemMeasurementOne(),
+                unitOfMeasure.getTotalMeasurementTwo(),
+                unitOfMeasure.getItemMeasurementTwo(),
+                unitOfMeasure.isValidMeasurement(),
+                unitOfMeasure.getMinimumMeasurementOne(),
+                unitOfMeasure.getMaximumMeasurementOne(),
+                unitOfMeasure.getMaximumMeasurementTwo(),
+                unitOfMeasure.getMeasurementUnitsDigitWidths()
         );
     }
 
-    private static MeasurementModel getNewTotalMeasurementTwoModelResult() {
-        return new MeasurementModel(
-                getNewValidMetricSubtype(),
-                getEmptyModelPortions(),
-                getEmptyModel().getConversionFactor(),
-                getEmptyModel().getTotalMeasurementOne(),
-                getNewValidTotalMeasurementTwo().getTotalMeasurementTwo(),
-                (UnitOfMeasureConstants.MAX_MASS / getEmptyModelPortions() % 1000),
-                ((int) UnitOfMeasureConstants.MAX_MASS / getEmptyModelPortions() / 1000),
-                (UnitOfMeasureConstants.MAX_MASS / getEmptyModelPortions())
-        );
+    private static void throwNumberOfItemsException(boolean isSet) {
+        if (isSet)
+            throw new RuntimeException("numberOfItems() is true and should be false, there, may " +
+                    "be a problem with the test data.");
+        else
+            throw new RuntimeException("numberOfItems() is false and should be true, there may " +
+                    "be a problem with the test data.");
     }
 
-    public static MeasurementResult getResultNewValidTotalMeasurementTwo() {
-        return new MeasurementResult(
-                getNewTotalMeasurementTwoModelResult(),
-                UseCaseIngredientPortionCalculator.ResultStatus.RESULT_OK
-        );
+    private static void throwMeasurementOneException(boolean isSet) {
+        if (isSet)
+            throw new RuntimeException("totalMeasurementOne is true and it should be false. " +
+                    "There may be a problem with the test data");
+        else
+            throw new RuntimeException("totalMeasurementOne is false and it should be true. " +
+                    "There may be a problem with the test data.");
     }
 
-    public static MeasurementModel getNewInvalidUnitOfMeasureChangedImperialSpoon() {
-        return new MeasurementModel(
-                MeasurementSubtype.IMPERIAL_SPOON,
-                getEmptyModel().getNumberOfItems(),
-                getEmptyModel().getConversionFactor(),
-                getEmptyModel().getTotalMeasurementOne(),
-                getEmptyModel().getTotalMeasurementTwo(),
-                getEmptyModel().getItemMeasurementOne(),
-                getEmptyModel().getItemMeasurementTwo(),
-                getEmptyModel().getItemBaseUnits()
-        );
+    private static void throwMeasurementTwoException(boolean isSet) {
+        if (isSet)
+            throw new RuntimeException("totalMeasurementTwo() is true and it should be false. " +
+                    "There may be a problem with the test data");
+        else
+            throw new RuntimeException("totalMeasurementTwo() is false and it should be true. " +
+                    "There may be a problem with the test data.");
     }
 
-    public static MeasurementResult getResultNewInvalidUnitOfMeasureChangedImperialSpoon() {
-        return new MeasurementResult(
-                getNewInvalidUnitOfMeasureChangedImperialSpoon(),
-                UseCaseIngredientPortionCalculator.ResultStatus.INVALID_MEASUREMENT
-        );
+    private static void throwConversionFactorException(boolean isSet) {
+        if (isSet)
+            throw new RuntimeException("isConversionFactorSet is true and should be false. " +
+                    "There may be a problem with the test data.");
+        else
+            throw new RuntimeException("isConversionFactorSet is false and should be true. " +
+                    "There may be a problem with the test data.");
     }
 
-    public static MeasurementModel getNewValidHalfImperialSpoonUnitOneUpdated() {
-        return new MeasurementModel(
-                getNewInvalidUnitOfMeasureChangedImperialSpoon().getSubtype(),
-                getNewInvalidUnitOfMeasureChangedImperialSpoon().getNumberOfItems(),
-                getNewInvalidUnitOfMeasureChangedImperialSpoon().getConversionFactor(),
-                0.5,
-                getNewInvalidUnitOfMeasureChangedImperialSpoon().getTotalMeasurementTwo(),
-                getNewInvalidUnitOfMeasureChangedImperialSpoon().getItemMeasurementOne(),
-                getNewInvalidUnitOfMeasureChangedImperialSpoon().getItemMeasurementTwo(),
-                getNewInvalidUnitOfMeasureChangedImperialSpoon().getItemBaseUnits()
-        );
+    private static void throwTotalBaseUnitsException(boolean isSet) {
+        if (isSet)
+            throw new RuntimeException("totalBaseUnitsAreSet() is true and should be false. " +
+                    "There may be a problem with the test data.");
+        else
+            throw new RuntimeException("totalBaseUnitsAreSet() is false and should be true. " +
+                    "There may be a problem with the test data.");
     }
 
-    public static MeasurementResult getNewValidHalfImperialSpoonUnitOneUpdatedResult() {
-        return new MeasurementResult(
-                getNewValidHalfImperialSpoonUnitOneUpdatedResultModel(),
-                UseCaseIngredientPortionCalculator.ResultStatus.RESULT_OK
-        );
-    }
-
-    private static MeasurementModel getNewValidHalfImperialSpoonUnitOneUpdatedResultModel() {
-        return new MeasurementModel(
-                getNewInvalidUnitOfMeasureChangedImperialSpoon().getSubtype(),
-                getNewInvalidUnitOfMeasureChangedImperialSpoon().getNumberOfItems(),
-                getNewInvalidUnitOfMeasureChangedImperialSpoon().getConversionFactor(),
-                0.5,
-                getNewInvalidUnitOfMeasureChangedImperialSpoon().getTotalMeasurementTwo(),
-                roundDecimalToTenths((0.5 / getNewInvalidUnitOfMeasureChangedImperialSpoon().
-                        getNumberOfItems())),
-                getNewInvalidUnitOfMeasureChangedImperialSpoon().getItemMeasurementTwo(),
-                (5 * 0.5 / getNewInvalidUnitOfMeasureChangedImperialSpoon().getNumberOfItems())
-        );
-    }
-
-    public static MeasurementModel getNewInvalidConversionFactor() {
-        return new MeasurementModel(
-                getNewValidMetricSubtype(),
-                getEmptyModelPortions(),
-                UnitOfMeasureConstants.MAX_CONVERSION_FACTOR + 0.1,
-                0,
-                0,
-                0,
-                0,
-                0
-        );
-    }
-
-    public static MeasurementResult getResultNewInvalidConversionFactor() {
-        return new MeasurementResult(
-                getNewInvalidConversionFactor(),
-                UseCaseIngredientPortionCalculator.ResultStatus.INVALID_CONVERSION_FACTOR
-        );
-    }
-
-    public static MeasurementModel getNewValidImperialSpoonWithConversionFactor() {
-        return new MeasurementModel(
-                getNewInvalidUnitOfMeasureChangedImperialSpoon().getSubtype(),
-                getEmptyModelPortions(),
-                UnitOfMeasureConstants.MAX_CONVERSION_FACTOR,
-                1,
-                1,
-                1,
-                0,
-                (getImperialTeaspoonVolume() + getImperialTableSpoonVolume()) *
-                        UnitOfMeasureConstants.MAX_CONVERSION_FACTOR / getEmptyModelPortions()
-        );
-    }
-
-    public static MeasurementResult getResultNewValidImperialSpoonWithConversionFactor() {
-        return new MeasurementResult(
-                getNewValidImperialSpoonWithConversionFactor(),
-                UseCaseIngredientPortionCalculator.ResultStatus.RESULT_OK
-        );
-    }
-
-    private static double getImperialTeaspoonVolume() {
-        return 5;
-    }
-
-    private static double getImperialTableSpoonVolume() {
-        return 15;
-    }
-
-    public static MeasurementModel getExistingMetricValid() {
-        return new MeasurementModel(
-                getExistingValidSubtype(),
-                getExistingValidNinePortions(),
-                getExistingValidConversionFactor(),
-                getExistingValidTotalMeasurementOne(),
-                getExistingValidTotalMeasurementTwo(),
-                getExistingValidItemMeasurementOne(),
-                getExistingValidItemMeasurementTwo(),
-                RecipeIngredientQuantityEntityTestData.getExistingValidMetric().getItemBaseUnits()
-        );
-    }
-
-    public static MeasurementResult getResultExistingMetricValid() {
-        return new MeasurementResult(
-                getExistingMetricValid(),
-                UseCaseIngredientPortionCalculator.ResultStatus.RESULT_OK
-        );
+    private static void throwItemBaseUnitsAreSetException(boolean isSet) {
+        if (isSet)
+            throw new RuntimeException("itemBaseUnitsAreSet() is true and should be false. " +
+                    "There may be a problem with the test data.");
+        else
+            throw new RuntimeException("itemBaseUnitsAreSet() is false and should be true. " +
+                    "There may be a problem with the test data.");
     }
 
     public static MeasurementModel getExistingMetricInvalidTotalOne() {
         return new MeasurementModel(
-                getExistingMetricValid().getSubtype(),
-                getExistingMetricValid().getNumberOfItems(),
-                getExistingMetricValid().getConversionFactor(),
-                UnitOfMeasureConstants.MAX_VOLUME + 1,
-                getExistingMetricValid().getTotalMeasurementTwo(),
-                getExistingMetricValid().getItemMeasurementOne(),
-                getExistingMetricValid().getItemMeasurementTwo(),
-                getExistingMetricValid().getItemBaseUnits()
+                measurementGetExistingValidMetric().getSubtype(),
+                measurementGetExistingValidMetric().getNumberOfItems(),
+                measurementGetExistingValidMetric().getConversionFactor(),
+                MAX_VOLUME + 1,
+                measurementGetExistingValidMetric().getTotalMeasurementTwo(),
+                measurementGetExistingValidMetric().getItemMeasurementOne(),
+                measurementGetExistingValidMetric().getItemMeasurementTwo(),
+                measurementGetExistingValidMetric().getItemBaseUnits()
         );
     }
 
@@ -309,44 +568,16 @@ public class MeasurementModelTestData {
         );
     }
 
-    private static int getExistingValidTotalMeasurementTwo() {
-        return (int) RecipeIngredientQuantityEntityTestData.
-                getExistingValidMetric().
-                getItemBaseUnits() * getExistingValidNinePortions() / 1000;
-    }
-
-    private static double getExistingMetricValidItemBaseUnitsMinusTotalMeasurementOne() {
-        return getExistingMetricValid().getTotalMeasurementTwo()
-                * 1000 / (double) getExistingMetricValid().getNumberOfItems();
-    }
-
     public static MeasurementModel getExistingMetricInvalidTotalTwo() {
         return new MeasurementModel(
                 getExistingValidSubtype(),
                 getExistingValidNinePortions(),
                 getExistingValidConversionFactor(),
                 getExistingValidTotalMeasurementOne(),
-                (int) UnitOfMeasureConstants.MAX_VOLUME / 1000 + 1,
+                (int) MAX_VOLUME / 1000 + 1,
                 getExistingValidItemMeasurementOne(),
                 getExistingValidItemMeasurementTwo(),
                 RecipeIngredientQuantityEntityTestData.getExistingValidMetric().getItemBaseUnits()
-        );
-    }
-
-    private static int getExistingValidItemMeasurementTwo() {
-        return (int) RecipeIngredientQuantityEntityTestData.
-                getExistingValidMetric().getItemBaseUnits() / 1000;
-    }
-
-    private static double getExistingValidItemMeasurementOne() {
-        return RecipeIngredientQuantityEntityTestData.
-                getExistingValidMetric().getItemBaseUnits() % 1000;
-    }
-
-    public static MeasurementResult getExistingInvalidTotalTwoResult() {
-        return new MeasurementResult(
-                getExistingMetricInvalidTotalTwoModelResult(),
-                UseCaseIngredientPortionCalculator.ResultStatus.INVALID_TOTAL_MEASUREMENT_TWO
         );
     }
 
@@ -363,42 +594,16 @@ public class MeasurementModelTestData {
         );
     }
 
-    private static double getExistingMetricValidItemBaseUnits() {
-        return getExistingMetricValid().getTotalMeasurementOne() /
-                (double) getExistingMetricValid().getNumberOfItems();
-    }
-
-    private static MeasurementSubtype getExistingValidSubtype() {
-        return MeasurementSubtype.fromInt(RecipeIngredientQuantityEntityTestData.
-                getExistingValidMetric().
-                getUnitOfMeasureSubtype());
-    }
-
-    private static int getExistingValidNinePortions() {
-        return RecipePortionsEntityTestData.getExistingValid().getServings() *
-                RecipePortionsEntityTestData.getExistingValid().getSittings();
-    }
-
-    private static double getExistingValidConversionFactor() {
-        return IngredientEntityTestData.getExistingValidNameValidDescription().getConversionFactor();
-    }
-
-    private static double getExistingValidTotalMeasurementOne() {
-        return RecipeIngredientQuantityEntityTestData.
-                getExistingValidMetric().
-                getItemBaseUnits() * getExistingValidNinePortions() % 1000;
-    }
-
     public static MeasurementModel getExistingMetricValidTwoUpdated() {
         return new MeasurementModel(
-                getExistingMetricValid().getSubtype(),
-                getExistingMetricValid().getNumberOfItems(),
-                getExistingMetricValid().getConversionFactor(),
-                getExistingMetricValid().getTotalMeasurementOne(),
+                measurementGetExistingValidMetric().getSubtype(),
+                measurementGetExistingValidMetric().getNumberOfItems(),
+                measurementGetExistingValidMetric().getConversionFactor(),
+                measurementGetExistingValidMetric().getTotalMeasurementOne(),
                 getExistingMetricValidUpdatedTwoValue(),
-                getExistingMetricValid().getItemMeasurementOne(),
-                getExistingMetricValid().getItemMeasurementTwo(),
-                getExistingMetricValid().getItemBaseUnits()
+                measurementGetExistingValidMetric().getItemMeasurementOne(),
+                measurementGetExistingValidMetric().getItemMeasurementTwo(),
+                measurementGetExistingValidMetric().getItemBaseUnits()
         );
     }
 
@@ -411,21 +616,21 @@ public class MeasurementModelTestData {
 
     private static MeasurementModel getExistingMetricValidTwoUpdatedResultModel() {
         return new MeasurementModel(
-                getExistingMetricValid().getSubtype(),
-                getExistingMetricValid().getNumberOfItems(),
-                getExistingMetricValid().getConversionFactor(),
-                getExistingMetricValid().getTotalMeasurementOne(),
+                measurementGetExistingValidMetric().getSubtype(),
+                measurementGetExistingValidMetric().getNumberOfItems(),
+                measurementGetExistingValidMetric().getConversionFactor(),
+                measurementGetExistingValidMetric().getTotalMeasurementOne(),
                 getExistingMetricValidUpdatedTwoValue(),
                 (int) getExistingMetricValidTwoUpdatedItemBaseUnits(),
-                getExistingMetricValid().getItemMeasurementTwo(),
+                measurementGetExistingValidMetric().getItemMeasurementTwo(),
                 getExistingMetricValidTwoUpdatedItemBaseUnits()
         );
     }
 
     private static double getExistingMetricValidTwoUpdatedItemBaseUnits() {
         return (((double) getExistingMetricValidUpdatedTwoValue() * 1000) +
-                getExistingMetricValid().getTotalMeasurementOne()) /
-                (double) getExistingMetricValid().getNumberOfItems();
+                measurementGetExistingValidMetric().getTotalMeasurementOne()) /
+                (double) measurementGetExistingValidMetric().getNumberOfItems();
     }
 
     private static int getExistingMetricValidUpdatedTwoValue() {
@@ -435,13 +640,13 @@ public class MeasurementModelTestData {
     public static MeasurementModel getExistingMetricUnitOfMeasureUpdatedToImperial() {
         return new MeasurementModel(
                 MeasurementSubtype.IMPERIAL_MASS,
-                getExistingMetricValid().getNumberOfItems(),
-                getExistingMetricValid().getConversionFactor(),
-                getExistingMetricValid().getTotalMeasurementOne(),
-                getExistingMetricValid().getTotalMeasurementTwo(),
-                getExistingMetricValid().getItemMeasurementOne(),
-                getExistingMetricValid().getItemMeasurementTwo(),
-                getExistingMetricValid().getItemBaseUnits()
+                measurementGetExistingValidMetric().getNumberOfItems(),
+                measurementGetExistingValidMetric().getConversionFactor(),
+                measurementGetExistingValidMetric().getTotalMeasurementOne(),
+                measurementGetExistingValidMetric().getTotalMeasurementTwo(),
+                measurementGetExistingValidMetric().getItemMeasurementOne(),
+                measurementGetExistingValidMetric().getItemMeasurementTwo(),
+                measurementGetExistingValidMetric().getItemBaseUnits()
         );
     }
 
@@ -457,24 +662,24 @@ public class MeasurementModelTestData {
                 MeasurementSubtype.IMPERIAL_MASS,
                 getExistingMetricUnitOfMeasureUpdatedToImperial().getNumberOfItems(),
                 getExistingMetricUnitOfMeasureUpdatedToImperial().getConversionFactor(),
-                getEmptyModel().getTotalMeasurementOne(),
-                getEmptyModel().getTotalMeasurementTwo(),
-                getEmptyModel().getItemMeasurementOne(),
-                getEmptyModel().getItemMeasurementTwo(),
-                getEmptyModel().getItemBaseUnits()
+                measurementGetInvalidEmptyFourPortionsSet().getTotalMeasurementOne(),
+                measurementGetInvalidEmptyFourPortionsSet().getTotalMeasurementTwo(),
+                measurementGetInvalidEmptyFourPortionsSet().getItemMeasurementOne(),
+                measurementGetInvalidEmptyFourPortionsSet().getItemMeasurementTwo(),
+                measurementGetInvalidEmptyFourPortionsSet().getItemBaseUnits()
         );
     }
 
     public static MeasurementModel getExistingMetricInvalidConversionFactor() {
         return new MeasurementModel(
-                getExistingMetricValid().getSubtype(),
-                getExistingMetricValid().getNumberOfItems(),
-                UnitOfMeasureConstants.MAX_CONVERSION_FACTOR + .01,
-                getExistingMetricValid().getTotalMeasurementOne(),
-                getExistingMetricValid().getTotalMeasurementTwo(),
-                getExistingMetricValid().getItemMeasurementOne(),
-                getExistingMetricValid().getItemMeasurementTwo(),
-                getExistingMetricValid().getItemBaseUnits()
+                measurementGetExistingValidMetric().getSubtype(),
+                measurementGetExistingValidMetric().getNumberOfItems(),
+                MAX_CONVERSION_FACTOR + .01,
+                measurementGetExistingValidMetric().getTotalMeasurementOne(),
+                measurementGetExistingValidMetric().getTotalMeasurementTwo(),
+                measurementGetExistingValidMetric().getItemMeasurementOne(),
+                measurementGetExistingValidMetric().getItemMeasurementTwo(),
+                measurementGetExistingValidMetric().getItemBaseUnits()
         );
     }
 

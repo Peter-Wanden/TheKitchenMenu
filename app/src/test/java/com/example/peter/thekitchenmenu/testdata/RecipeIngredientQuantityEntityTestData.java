@@ -117,7 +117,7 @@ public class RecipeIngredientQuantityEntityTestData {
                 getNewInvalid().getRecipeId(),
                 getNewInvalid().getIngredientId(),
                 "",
-                getItemBaseUnits(),
+                getItemBaseUnitsWithConversionFactorApplied(),
                 MeasurementSubtype.IMPERIAL_SPOON.asInt(),
                 Constants.getUserId().getValue(),
                 40L,
@@ -139,7 +139,7 @@ public class RecipeIngredientQuantityEntityTestData {
         );
     }
 
-    private static double getItemBaseUnits() {
+    private static double getItemBaseUnitsWithConversionFactorApplied() {
         double conversionFactor = IngredientEntityTestData.
                         getNewValidNameValidDescriptionConversionFactorUpdated().
                         getConversionFactor();
