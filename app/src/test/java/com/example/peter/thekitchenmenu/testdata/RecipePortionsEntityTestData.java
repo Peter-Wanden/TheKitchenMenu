@@ -20,77 +20,77 @@ public class RecipePortionsEntityTestData {
     public static RecipePortionsEntity getNewValidEmpty() {
         return new RecipePortionsEntity(
                 "portionId",
-                RecipeEntityTestData.getInvalidNew().getId(),
+                RecipeEntityTestData.getNewInvalid().getId(),
                 getMinServings(),
                 getMinSittings(),
-                RecipeEntityTestData.getInvalidNew().getCreateDate(),
-                RecipeEntityTestData.getInvalidNew().getLastUpdate()
+                RecipeEntityTestData.getNewInvalid().getCreateDate(),
+                RecipeEntityTestData.getNewInvalid().getLastUpdate()
         );
     }
 
     public static RecipePortionsEntity getNewValidFourPortions() {
         return new RecipePortionsEntity(
                 getNewValidEmpty().getId(),
-                RecipeEntityTestData.getInvalidNew().getId(),
+                RecipeEntityTestData.getNewInvalid().getId(),
                 2,
                 2,
-                RecipeEntityTestData.getInvalidNew().getCreateDate(),
-                RecipeEntityTestData.getInvalidNew().getLastUpdate()
+                RecipeEntityTestData.getNewInvalid().getCreateDate(),
+                RecipeEntityTestData.getNewInvalid().getLastUpdate()
         );
     }
 
     public static RecipePortionsEntity getNewValidSixteenPortions() {
         return new RecipePortionsEntity(
                 getNewValidEmpty().getId(),
-                RecipeEntityTestData.getInvalidNew().getId(),
+                RecipeEntityTestData.getNewInvalid().getId(),
                 4,
                 4,
-                RecipeEntityTestData.getInvalidNew().getCreateDate(),
-                RecipeEntityTestData.getInvalidNew().getLastUpdate()
+                RecipeEntityTestData.getNewInvalid().getCreateDate(),
+                RecipeEntityTestData.getNewInvalid().getLastUpdate()
         );
     }
 
     public static RecipePortionsEntity getNewInvalidServingsInvalidSittings() {
         return new RecipePortionsEntity(
                 getNewValidEmpty().getId(),
-                RecipeEntityTestData.getInvalidNew().getId(),
+                RecipeEntityTestData.getNewInvalid().getId(),
                 getMaxServings() + 1,
                 getMaxSittings() + 1,
-                RecipeEntityTestData.getInvalidNew().getCreateDate(),
-                RecipeEntityTestData.getInvalidNew().getLastUpdate()
+                RecipeEntityTestData.getNewInvalid().getCreateDate(),
+                RecipeEntityTestData.getNewInvalid().getLastUpdate()
         );
     }
 
     public static RecipePortionsEntity getNewInvalidServingsValidSittings() {
         return new RecipePortionsEntity(
                 getNewValidEmpty().getId(),
-                RecipeEntityTestData.getInvalidNew().getId(),
+                RecipeEntityTestData.getNewInvalid().getId(),
                 getMaxServings() + 1,
                 getMinSittings(),
-                RecipeEntityTestData.getInvalidNew().getCreateDate(),
-                RecipeEntityTestData.getInvalidNew().getLastUpdate()
+                RecipeEntityTestData.getNewInvalid().getCreateDate(),
+                RecipeEntityTestData.getNewInvalid().getLastUpdate()
         );
     }
 
     public static RecipePortionsEntity getNewValidServingsInvalidSittings() {
         return new RecipePortionsEntity(
                 getNewValidEmpty().getId(),
-                RecipeEntityTestData.getInvalidNew().getId(),
+                RecipeEntityTestData.getNewInvalid().getId(),
                 getMinServings(),
                 getMaxSittings() + 1,
-                RecipeEntityTestData.getInvalidNew().getCreateDate(),
-                RecipeEntityTestData.getInvalidNew().getLastUpdate()
+                RecipeEntityTestData.getNewInvalid().getCreateDate(),
+                RecipeEntityTestData.getNewInvalid().getLastUpdate()
         );
     }
 
     public static RecipePortionsEntity getNewValidServingsValidSittings() {
         return new RecipePortionsEntity(
                 getNewValidEmpty().getId(),
-                RecipeEntityTestData.getInvalidNew().getId(),
+                RecipeEntityTestData.getNewInvalid().getId(),
                 getMaxServings(),
                 getMaxSittings(),
-                RecipeEntityTestData.getInvalidNew().getCreateDate(),
-                RecipeEntityTestData.getInvalidNew().getLastUpdate()
+                RecipeEntityTestData.getNewInvalid().getCreateDate(),
+                RecipeEntityTestData.getNewInvalid().getLastUpdate()
         );
     }
 

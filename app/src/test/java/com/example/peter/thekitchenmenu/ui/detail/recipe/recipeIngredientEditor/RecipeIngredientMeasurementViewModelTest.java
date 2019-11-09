@@ -10,7 +10,6 @@ import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientQuantityEntity;
 import com.example.peter.thekitchenmenu.data.model.MeasurementModel;
 import com.example.peter.thekitchenmenu.testdata.IngredientEntityTestData;
-import com.example.peter.thekitchenmenu.testdata.MeasurementModelTestData;
 import com.example.peter.thekitchenmenu.testdata.RecipeEntityTestData;
 import com.example.peter.thekitchenmenu.testdata.RecipeIngredientQuantityEntityTestData;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor.RecipeIngredientMeasurementViewModel;
@@ -20,6 +19,7 @@ import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.UseCaseConversionFactorStatus;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.UseCaseIngredientPortionCalculator;
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.UseCaseIngredientPortionCalculatorTestData;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -47,40 +47,42 @@ public class RecipeIngredientMeasurementViewModelTest {
     private static final String CONVERSION_FACTOR_ERROR_MESSAGE =
             "Please enter a number between n1 and n2";
 
-    private RecipeEntity RECIPE_VALID_NEW = RecipeEntityTestData.getValidNew();
+    private RecipeEntity RECIPE_VALID_NEW = RecipeEntityTestData.getNewValid();
 
     private IngredientEntity INGREDIENT_NEW_VALID_NAME_DESCRIPTION =
             IngredientEntityTestData.getNewValidNameValidDescription();
 
     private MeasurementResult MEASUREMENT_NEW_EMPTY_INVALID =
-            MeasurementModelTestData.useCasePortionCalcGetResultInvalidEmptyFourPortionsSet();
+            UseCaseIngredientPortionCalculatorTestData.getResultInvalidEmptyFourPortionsSet();
 
     private MeasurementResult MEASUREMENT_NEW_INVALID_ONE =
-            MeasurementModelTestData.getResultNewInvalidTotalMeasurementOne();
+            UseCaseIngredientPortionCalculatorTestData.getResultNewInvalidTotalMeasurementOne();
 
     private MeasurementResult MEASUREMENT_NEW_VALID_ONE =
-            MeasurementModelTestData.getResultNewValidTotalMeasurementOne();
+            UseCaseIngredientPortionCalculatorTestData.getResultNewValidTotalMeasurementOne();
 
     private MeasurementResult MEASUREMENT_NEW_INVALID_TWO =
-            MeasurementModelTestData.getResultNewInvalidTotalMeasurementTwo();
+            UseCaseIngredientPortionCalculatorTestData.getResultNewInvalidTotalMeasurementTwo();
 
     private MeasurementResult MEASUREMENT_NEW_VALID_TWO =
-            MeasurementModelTestData.getResultNewValidTotalMeasurementTwo();
+            UseCaseIngredientPortionCalculatorTestData.getResultNewValidTotalMeasurementTwo();
 
     private MeasurementResult MEASUREMENT_NEW_INVALID_UNIT_OF_MEASURE_SPOON =
-            MeasurementModelTestData.getResultNewInvalidUnitOfMeasureChangedImperialSpoon();
+            UseCaseIngredientPortionCalculatorTestData.
+                    getResultNewInvalidUnitOfMeasureChangedImperialSpoon();
 
     private MeasurementResult MEASUREMENT_NEW_INVALID_CONVERSION_FACTOR =
-            MeasurementModelTestData.getResultNewInvalidConversionFactor();
+            UseCaseIngredientPortionCalculatorTestData.getResultNewInvalidConversionFactor();
 
     private MeasurementResult MEASUREMENT_NEW_VALID_IMPERIAL_SPOON_WITH_CONVERSION_FACTOR =
-            MeasurementModelTestData.getResultNewValidImperialSpoonWithConversionFactor();
+            UseCaseIngredientPortionCalculatorTestData.
+                    getResultNewValidImperialSpoonWithConversionFactor();
 
     private RecipeIngredientQuantityEntity QUANTITY_EXISTING_VALID_METRIC =
             RecipeIngredientQuantityEntityTestData.getExistingValidMetric();
 
     private MeasurementResult MEASUREMENT_EXISTING_VALID_METRIC =
-            MeasurementModelTestData.getResultExistingValidMetric();
+            UseCaseIngredientPortionCalculatorTestData.getResultExistingValidMetric();
 
     // endregion constants -------------------------------------------------------------------------
 
@@ -153,8 +155,8 @@ public class RecipeIngredientMeasurementViewModelTest {
 
         assertEquals(model.getSubtype(), SUT.getSubtype());
         assertEquals(String.valueOf(model.getConversionFactor()), SUT.getConversionFactor());
-        assertNull(SUT.conversionFactorErrorMessageObs.get());
-        assertFalse(SUT.isConversionFactorEnabledObservable.get());
+        assertNull(SUT.getConversionFactorErrorMessage());
+        assertFalse(SUT.isConversionFactorEnabled());
     }
 
     @Test
@@ -167,7 +169,7 @@ public class RecipeIngredientMeasurementViewModelTest {
         SUT.useCasePortionResult(MEASUREMENT_NEW_INVALID_ONE);
 
         assertEquals("Tablespoons and/or teaspoons need to have a value between 0.1 tsp and 666 Tbsp",
-                SUT.measurementOneErrorMessageObs.get());
+                SUT.getMeasurementOneErrorMessage());
     }
 
     @Test
@@ -197,7 +199,7 @@ public class RecipeIngredientMeasurementViewModelTest {
         verify(useCaseIngredientPortionCalculatorMock).start(recipeIdCaptor.capture(), ingredientIdCaptor.capture());
         SUT.useCasePortionResult(MEASUREMENT_NEW_INVALID_TWO);
         // Assert
-        String actualError = SUT.measurementTwoErrorMessageObs.get();
+        String actualError = SUT.getMeasurementTwoErrorMessage();
         assertEquals(expectedError, actualError);
     }
 
@@ -239,7 +241,7 @@ public class RecipeIngredientMeasurementViewModelTest {
         verify(useCaseIngredientPortionCalculatorMock).start(recipeIdCaptor.capture(), ingredientIdCaptor.capture());
         SUT.useCasePortionResult(MEASUREMENT_NEW_INVALID_CONVERSION_FACTOR);
         // Assert
-        String actualErrorMessage = SUT.conversionFactorErrorMessageObs.get();
+        String actualErrorMessage = SUT.getConversionFactorErrorMessage();
         assertEquals(CONVERSION_FACTOR_ERROR_MESSAGE, actualErrorMessage);
     }
 
@@ -251,7 +253,7 @@ public class RecipeIngredientMeasurementViewModelTest {
         verify(useCaseIngredientPortionCalculatorMock).start(recipeIdCaptor.capture(), ingredientIdCaptor.capture());
         SUT.useCasePortionResult(MEASUREMENT_NEW_VALID_IMPERIAL_SPOON_WITH_CONVERSION_FACTOR);
         // Assert
-        assertTrue(SUT.isConversionFactorEnabledObservable.get());
+        assertTrue(SUT.isConversionFactorEnabled());
     }
 
     // startRecipeIdIngredientId_measurementOneSetToHalfTeaspoon_RESULT_OK

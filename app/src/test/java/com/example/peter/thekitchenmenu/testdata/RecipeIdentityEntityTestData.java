@@ -6,51 +6,51 @@ public class RecipeIdentityEntityTestData {
 
     public static RecipeIdentityEntity getInvalidNewEmpty() {
         return new RecipeIdentityEntity(
-                RecipeEntityTestData.getInvalidNew().getId(),
+                RecipeEntityTestData.getNewInvalid().getId(),
                 "",
                 "",
-                RecipeEntityTestData.getInvalidNew().getCreateDate(),
-                RecipeEntityTestData.getInvalidNew().getLastUpdate()
+                RecipeEntityTestData.getNewInvalid().getCreateDate(),
+                RecipeEntityTestData.getNewInvalid().getLastUpdate()
         );
     }
 
     public static RecipeIdentityEntity getInvalidNewTitleUpdatedWithInvalidValue() {
         return new RecipeIdentityEntity(
-                RecipeEntityTestData.getInvalidNew().getId(),
+                RecipeEntityTestData.getNewInvalid().getId(),
                 "ti",
                 getInvalidNewEmpty().getDescription(),
-                RecipeEntityTestData.getInvalidNew().getCreateDate(),
-                RecipeEntityTestData.getInvalidNew().getLastUpdate()
+                RecipeEntityTestData.getNewInvalid().getCreateDate(),
+                RecipeEntityTestData.getNewInvalid().getLastUpdate()
         );
     }
 
     public static RecipeIdentityEntity getInvalidNewTitleInvalidDescriptionValid() {
         return new RecipeIdentityEntity(
-                RecipeEntityTestData.getInvalidNew().getId(),
+                RecipeEntityTestData.getNewInvalid().getId(),
                 getInvalidNewTitleUpdatedWithInvalidValue().getTitle(),
                 getValidNewComplete().getDescription(),
-                RecipeEntityTestData.getInvalidNew().getCreateDate(),
-                RecipeEntityTestData.getInvalidNew().getLastUpdate()
+                RecipeEntityTestData.getNewInvalid().getCreateDate(),
+                RecipeEntityTestData.getNewInvalid().getLastUpdate()
         );
     }
 
     public static RecipeIdentityEntity getValidNewTitleUpdatedWithValidValue() {
         return new RecipeIdentityEntity(
-                RecipeEntityTestData.getValidNew().getId(),
+                RecipeEntityTestData.getNewValid().getId(),
                 "newValidTitle",
                 "",
-                RecipeEntityTestData.getValidNew().getCreateDate(),
-                RecipeEntityTestData.getValidNew().getLastUpdate()
+                RecipeEntityTestData.getNewValid().getCreateDate(),
+                RecipeEntityTestData.getNewValid().getLastUpdate()
         );
     }
 
     public static RecipeIdentityEntity getValidNewComplete() {
         return new RecipeIdentityEntity(
-                RecipeEntityTestData.getValidNew().getId(),
+                RecipeEntityTestData.getNewValid().getId(),
                 getValidNewTitleUpdatedWithValidValue().getTitle(),
                 "validNewDescription",
-                RecipeEntityTestData.getValidNew().getCreateDate(),
-                RecipeEntityTestData.getValidNew().getLastUpdate()
+                RecipeEntityTestData.getNewValid().getCreateDate(),
+                RecipeEntityTestData.getNewValid().getLastUpdate()
                 );
     }
 
@@ -96,11 +96,11 @@ public class RecipeIdentityEntityTestData {
 
     public static RecipeIdentityEntity getValidNewCloned() {
         return new RecipeIdentityEntity(
-                RecipeEntityTestData.getValidNew().getId(),
+                RecipeEntityTestData.getNewValid().getId(),
                 getValidCompleteFromAnotherUser().getTitle(),
                 getValidCompleteFromAnotherUser().getDescription(),
-                RecipeEntityTestData.getValidNew().getCreateDate(),
-                RecipeEntityTestData.getValidNew().getLastUpdate()
+                RecipeEntityTestData.getNewValid().getCreateDate(),
+                RecipeEntityTestData.getNewValid().getLastUpdate()
         );
     }
 

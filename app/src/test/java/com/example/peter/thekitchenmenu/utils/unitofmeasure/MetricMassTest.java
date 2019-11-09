@@ -126,9 +126,25 @@ public class MetricMassTest {
 
     @Test
     public void totalMeasurementTwoIsSet_outOfRangeMax_setFalse() {
+        // Arrange
+        int totalTwoOutOfRangeMax = SUT.getMaximumMeasurementTwo() + 1;
+        double noBaseUnitsSet = 0;
+        // Act
+        // Assert
+        assertFalse(SUT.totalMeasurementTwoIsSet(totalTwoOutOfRangeMax));
+        assertEquals(noBaseUnitsSet, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
+    }
 
-        assertFalse(SUT.totalMeasurementTwoIsSet((int) (MAX_MASS / 1000) + 1));
-        assertEquals(0, SUT.getTotalBaseUnits(), ERROR_MARGIN_DELTA);
+    @Test
+    public void totalMeasurementTwoIsSet_outOfRangeMax_doesNotAffectOtherValues() {
+        // Arrange
+        int totalTwoOutOfRangeMax = SUT.getMaximumMeasurementTwo() + 1;
+        // Act
+        assertTrue(SUT.numberOfItemsIsSet(9));
+        assertTrue(SUT.itemBaseUnitsAreSet(250));
+        assertFalse(SUT.totalMeasurementTwoIsSet(totalTwoOutOfRangeMax));
+        assertEquals(250, SUT.getItemBaseUnits(), ERROR_MARGIN_DELTA);
+        // Assert
     }
 
     @Test
@@ -382,6 +398,8 @@ public class MetricMassTest {
         assertEquals(8, SUT.getTotalMeasurementTwo());
         assertEquals(0, SUT.getItemMeasurementOne(), ERROR_MARGIN_DELTA);
     }
+
+
 
     // region helper methods -----------------------------------------------------------------------
     // endregion helper methods --------------------------------------------------------------------

@@ -4,72 +4,107 @@ import com.example.peter.thekitchenmenu.testdata.MeasurementModelTestData;
 
 public class UseCaseIngredientPortionCalculatorTestData {
 
-    public static MeasurementResult useCasePortionCalcGetResultInvalidEmptyFourPortionsSet() {
+    public static MeasurementResult getResultInvalidEmptyFourPortionsSet() {
         return new MeasurementResult(
-                MeasurementModelTestData.measurementGetInvalidEmptyFourPortionsSet(),
+                MeasurementModelTestData.getInvalidEmptyFourPortionsSet(),
                 UseCaseIngredientPortionCalculator.ResultStatus.INVALID_MEASUREMENT);
     }
 
     public static MeasurementResult getResultNewInvalidTotalMeasurementOne() {
         return new MeasurementResult(
-                MeasurementModelTestData.measurementGetNewInvalidTotalMeasurementOne(),
+                MeasurementModelTestData.getNewInvalidTotalMeasurementOne(),
                 UseCaseIngredientPortionCalculator.ResultStatus.INVALID_TOTAL_MEASUREMENT_ONE
         );
     }
 
     public static MeasurementResult getResultNewValidTotalMeasurementOne() {
         return new MeasurementResult(
-                MeasurementModelTestData.measurementGetNewValidTotalMeasurementOne(),
+                MeasurementModelTestData.getNewValidTotalMeasurementOne(),
                 UseCaseIngredientPortionCalculator.ResultStatus.RESULT_OK
         );
     }
 
     public static MeasurementResult getResultNewInvalidTotalMeasurementTwo() {
         return new MeasurementResult(
-                MeasurementModelTestData.measurementGetNewInvalidTotalMeasurementTwo(),
+                MeasurementModelTestData.getNewInvalidTotalMeasurementTwo(),
                 UseCaseIngredientPortionCalculator.ResultStatus.INVALID_TOTAL_MEASUREMENT_TWO
         );
     }
 
     public static MeasurementResult getResultNewValidTotalMeasurementTwo() {
         return new MeasurementResult(
-                MeasurementModelTestData.measurementGetNewValidTotalMeasurementTwo(),
+                MeasurementModelTestData.getNewValidTotalMeasurementTwo(),
                 UseCaseIngredientPortionCalculator.ResultStatus.RESULT_OK
         );
     }
 
     public static MeasurementResult getResultNewInvalidUnitOfMeasureChangedImperialSpoon() {
         return new MeasurementResult(
-                MeasurementModelTestData.measurementGetNewInvalidUnitOfMeasureChangedImperialSpoon(),
+                MeasurementModelTestData.getNewInvalidUnitOfMeasureChangedImperialSpoon(),
                 UseCaseIngredientPortionCalculator.ResultStatus.INVALID_MEASUREMENT
         );
     }
 
     public static MeasurementResult getNewValidHalfImperialSpoonUnitOneUpdatedResult() {
         return new MeasurementResult(
-                MeasurementModelTestData.measurementGetNewValidHalfImperialSpoonUnitOneUpdated(),
+                MeasurementModelTestData.getNewValidHalfImperialSpoonUnitOneUpdated(),
                 UseCaseIngredientPortionCalculator.ResultStatus.RESULT_OK
         );
     }
 
     public static MeasurementResult getResultNewInvalidConversionFactor() {
         return new MeasurementResult(
-                MeasurementModelTestData.measurementGetNewInvalidConversionFactor(),
+                MeasurementModelTestData.getNewInvalidConversionFactor(),
                 UseCaseIngredientPortionCalculator.ResultStatus.INVALID_CONVERSION_FACTOR
         );
     }
 
     public static MeasurementResult getResultNewValidImperialSpoonWithConversionFactor() {
         return new MeasurementResult(
-                MeasurementModelTestData.measurementGetNewValidImperialSpoonWithConversionFactor(),
+                MeasurementModelTestData.getNewValidImperialSpoonWithConversionFactor(),
                 UseCaseIngredientPortionCalculator.ResultStatus.RESULT_OK
         );
     }
 
     public static MeasurementResult getResultExistingValidMetric() {
         return new MeasurementResult(
-                MeasurementModelTestData.measurementGetExistingValidMetric(),
+                MeasurementModelTestData.getExistingValidMetric(),
                 UseCaseIngredientPortionCalculator.ResultStatus.RESULT_OK
+        );
+    }
+
+    public static MeasurementResult getExistingMetricInvalidTotalOneResult() {
+        return new MeasurementResult(
+                MeasurementModelTestData.getExistingMetricInvalidTotalOne(),
+                UseCaseIngredientPortionCalculator.ResultStatus.INVALID_TOTAL_MEASUREMENT_ONE
+        );
+    }
+
+    public static MeasurementResult getExistingInvalidTotalTwoResult() {
+        return new MeasurementResult(
+                MeasurementModelTestData.getExistingMetricInvalidTotalTwo(),
+                UseCaseIngredientPortionCalculator.ResultStatus.INVALID_TOTAL_MEASUREMENT_TWO
+        );
+    }
+
+    public static MeasurementResult getExistingMetricValidTwoUpdatedResult() {
+        return new MeasurementResult(
+                MeasurementModelTestData.getExistingMetricValidTwoUpdated(),
+                UseCaseIngredientPortionCalculator.ResultStatus.RESULT_OK
+        );
+    }
+
+    public static MeasurementResult getExistingMetricUnitOfMeasureUpdatedToImperialResult() {
+        return new MeasurementResult(
+                MeasurementModelTestData.getExistingMetricUnitOfMeasureUpdatedToImperial(),
+                UseCaseIngredientPortionCalculator.ResultStatus.INVALID_MEASUREMENT
+        );
+    }
+
+    public static MeasurementResult getExistingMetricInvalidConversionFactorResult() {
+        return new MeasurementResult(
+                MeasurementModelTestData.getExistingImperialSpoonInvalidConversionFactor(),
+                UseCaseIngredientPortionCalculator.ResultStatus.INVALID_CONVERSION_FACTOR
         );
     }
 }

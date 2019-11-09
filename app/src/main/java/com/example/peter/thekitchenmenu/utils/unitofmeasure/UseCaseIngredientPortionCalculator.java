@@ -188,6 +188,8 @@ public class UseCaseIngredientPortionCalculator {
             totalMeasurementTwoIsSet = true;
         }
 
+//        System.out.println("unitOfMeasureFromUseCase=" + unitOfMeasure);
+
         returnResult();
     }
 

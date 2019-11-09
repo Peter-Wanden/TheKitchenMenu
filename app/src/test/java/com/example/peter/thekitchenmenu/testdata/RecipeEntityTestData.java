@@ -6,7 +6,7 @@ import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
 public class RecipeEntityTestData {
 
     // Create new recipe, or used when cloning
-    public static RecipeEntity getInvalidNew() {
+    public static RecipeEntity getNewInvalid() {
         return new RecipeEntity(
                 "newId",
                 "newId",
@@ -18,13 +18,13 @@ public class RecipeEntityTestData {
     }
 
     // Built from new, or cloned / copied to current user
-    public static RecipeEntity getValidNew() {
+    public static RecipeEntity getNewValid() {
         return new RecipeEntity(
-                getInvalidNew().getId(),
-                getInvalidNew().getId(),
-                getInvalidNew().getCreatedBy(),
-                getInvalidNew().getCreateDate(),
-                getInvalidNew().getLastUpdate(),
+                getNewInvalid().getId(),
+                getNewInvalid().getId(),
+                getNewInvalid().getCreatedBy(),
+                getNewInvalid().getCreateDate(),
+                getNewInvalid().getLastUpdate(),
                 true
         );
     }
@@ -79,11 +79,11 @@ public class RecipeEntityTestData {
     // Existing valid recipe, expected output when cloned from another user
     public static RecipeEntity getValidNewCloned() {
         return new RecipeEntity(
-                getInvalidNew().getId(),
+                getNewInvalid().getId(),
                 getValidFromAnotherUser().getId(),
                 Constants.getUserId().getValue(),
-                getInvalidNew().getCreateDate(),
-                getInvalidNew().getLastUpdate(),
+                getNewInvalid().getCreateDate(),
+                getNewInvalid().getLastUpdate(),
                 false
         );
     }
@@ -92,11 +92,11 @@ public class RecipeEntityTestData {
     // editing clone
     public static RecipeEntity getInvalidNewCloned() {
         return new RecipeEntity(
-                getInvalidNew().getId(),
+                getNewInvalid().getId(),
                 getInvalidFromAnotherUser().getId(),
                 Constants.getUserId().getValue(),
-                getInvalidNew().getCreateDate(),
-                getInvalidNew().getLastUpdate(),
+                getNewInvalid().getCreateDate(),
+                getNewInvalid().getLastUpdate(),
                 true
         );
     }

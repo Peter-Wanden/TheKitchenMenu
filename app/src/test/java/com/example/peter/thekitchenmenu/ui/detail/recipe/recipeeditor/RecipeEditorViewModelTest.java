@@ -42,8 +42,8 @@ public class RecipeEditorViewModelTest {
     private static final String VALID_RECIPE_ID_FROM_ANOTHER_USER =
             VALID_RECIPE_ENTITY_FROM_ANOTHER_USER.getId();
 
-    private static final RecipeEntity NEW_EMPTY_DRAFT_RECIPE_ENTITY = getInvalidNew();
-    private static final String NEW_ID = getInvalidNew().getId();
+    private static final RecipeEntity NEW_EMPTY_DRAFT_RECIPE_ENTITY = getNewInvalid();
+    private static final String NEW_ID = getNewInvalid().getId();
     private static final RecipeEntity INVALID_DRAFT_RECIPE_ENTITY = getInvalidExisting();
     private static final String INVALID_DRAFT_RECIPE_ID = INVALID_DRAFT_RECIPE_ENTITY.getId();
 

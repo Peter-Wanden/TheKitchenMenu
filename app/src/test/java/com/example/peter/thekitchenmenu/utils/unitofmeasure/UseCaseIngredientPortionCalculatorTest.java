@@ -37,6 +37,9 @@ public class UseCaseIngredientPortionCalculatorTest {
     private RecipeIngredientQuantityEntity QUANTITY_EXISTING_VALID_METRIC =
             RecipeIngredientQuantityEntityTestData.getExistingValidMetric();
 
+    private RecipeIngredientQuantityEntity QUANTITY_EXISTING_VALID_IMPERIAL_SPOON =
+            RecipeIngredientQuantityEntityTestData.getExistingValidImperialSpoon();
+
     private RecipePortionsEntity PORTIONS_NEW_VALID_FOUR =
             RecipePortionsEntityTestData.getNewValidFourPortions();
 
@@ -56,98 +59,103 @@ public class UseCaseIngredientPortionCalculatorTest {
             IngredientEntityTestData.getNewValidNameValidDescription();
 
     private RecipeIngredientQuantityEntity QUANTITY_NEW_VALID_MAX_MASS_DIV_FOUR_PORTIONS =
-            RecipeIngredientQuantityEntityTestData.getNewValidMetricMaxMassDivPortions();
+            RecipeIngredientQuantityEntityTestData.getNewValidMetricMaxMassDivFourPortions();
 
     //----------------------
     private MeasurementModel MEASUREMENT_EMPTY_FOUR_PORTIONS =
-            MeasurementModelTestData.measurementGetInvalidEmptyFourPortionsSet();
+            MeasurementModelTestData.getInvalidEmptyFourPortionsSet();
     private MeasurementResult MEASUREMENT_EMPTY_FOUR_PORTIONS_RESULT =
             UseCaseIngredientPortionCalculatorTestData.
-                    useCasePortionCalcGetResultInvalidEmptyFourPortionsSet();
+                    getResultInvalidEmptyFourPortionsSet();
 
     //----------------------
     private MeasurementModel MEASUREMENT_INVALID_TOTAL_ONE =
-            MeasurementModelTestData.measurementGetNewInvalidTotalMeasurementOne();
+            MeasurementModelTestData.getNewInvalidTotalMeasurementOne();
     private MeasurementResult MEASUREMENT_INVALID_TOTAL_ONE_RESULT =
             UseCaseIngredientPortionCalculatorTestData.getResultNewInvalidTotalMeasurementOne();
 
     //----------------------
     private MeasurementModel MEASUREMENT_VALID_TOTAL_ONE =
-            MeasurementModelTestData.measurementGetNewValidTotalMeasurementOne();
+            MeasurementModelTestData.getNewValidTotalMeasurementOne();
     private MeasurementResult MEASUREMENT_VALID_TOTAL_ONE_RESULT =
             UseCaseIngredientPortionCalculatorTestData.getResultNewValidTotalMeasurementOne();
 
     //----------------------
     private MeasurementModel MEASUREMENT_INVALID_TOTAL_TWO =
-            MeasurementModelTestData.measurementGetNewInvalidTotalMeasurementTwo();
+            MeasurementModelTestData.getNewInvalidTotalMeasurementTwo();
     private MeasurementResult MEASUREMENT_INVALID_TOTAL_TWO_RESULT =
             UseCaseIngredientPortionCalculatorTestData.getResultNewInvalidTotalMeasurementTwo();
 
     //----------------------
     private MeasurementModel MEASUREMENT_VALID_TOTAL_TWO =
-            MeasurementModelTestData.measurementGetNewValidTotalMeasurementTwo();
+            MeasurementModelTestData.getNewValidTotalMeasurementTwo();
     private MeasurementResult MEASUREMENT_VALID_TOTAL_TWO_RESULT =
             UseCaseIngredientPortionCalculatorTestData.getResultNewValidTotalMeasurementTwo();
 
     //----------------------
     private MeasurementModel MEASUREMENT_UNIT_OF_MEASURE_CHANGED_IMPERIAL_SPOON =
-            MeasurementModelTestData.measurementGetNewInvalidUnitOfMeasureChangedImperialSpoon();
+            MeasurementModelTestData.getNewInvalidUnitOfMeasureChangedImperialSpoon();
     private MeasurementResult MEASUREMENT_UNIT_OF_MEASURE_CHANGED_IMPERIAL_SPOON_RESULT =
             UseCaseIngredientPortionCalculatorTestData.
                     getResultNewInvalidUnitOfMeasureChangedImperialSpoon();
 
     //----------------------
     private MeasurementModel MEASUREMENT_NEW_VALID_HALF_IMPERIAL_SPOON_UNIT_ONE_UPDATED =
-            MeasurementModelTestData.measurementGetNewValidHalfImperialSpoonUnitOneUpdated();
+            MeasurementModelTestData.getNewValidHalfImperialSpoonUnitOneUpdated();
     private MeasurementResult MEASUREMENT_NEW_VALID_HALF_IMPERIAL_SPOON_UNIT_ONE_UPDATED_RESULT =
             UseCaseIngredientPortionCalculatorTestData.
                     getNewValidHalfImperialSpoonUnitOneUpdatedResult();
 
     //----------------------
     private MeasurementModel MEASUREMENT_INVALID_CONVERSION_FACTOR =
-            MeasurementModelTestData.measurementGetNewInvalidConversionFactor();
+            MeasurementModelTestData.getNewInvalidConversionFactor();
     private MeasurementResult MEASUREMENT_INVALID_CONVERSION_FACTOR_RESULT =
             UseCaseIngredientPortionCalculatorTestData.getResultNewInvalidConversionFactor();
 
     //----------------------
     private MeasurementModel MEASUREMENT_VALID_MAX_CONVERSION_FACTOR =
-            MeasurementModelTestData.measurementGetNewValidImperialSpoonWithConversionFactor();
+            MeasurementModelTestData.getNewValidImperialSpoonWithConversionFactor();
     private MeasurementResult MEASUREMENT_VALID_MAX_CONVERSION_FACTOR_RESULT =
             UseCaseIngredientPortionCalculatorTestData.
                     getResultNewValidImperialSpoonWithConversionFactor();
 
-    private RecipeIngredientQuantityEntity QUANTITY_NEW_VALID_IMPERIAL_SPOON_MAX_CONVERSION_FACTOR =
-            RecipeIngredientQuantityEntityTestData.getNewValidImperialSpoonMaxConversionFactor();
-
+    //----------------------
     private MeasurementModel MEASUREMENT_EXISTING_VALID_METRIC =
-            MeasurementModelTestData.measurementGetExistingValidMetric();
+            MeasurementModelTestData.getExistingValidMetric();
     private MeasurementResult MEASUREMENT_EXISTING_VALID_METRIC_RESULT =
             UseCaseIngredientPortionCalculatorTestData.getResultExistingValidMetric();
 
+    //----------------------
     private MeasurementModel MEASUREMENT_EXISTING_INVALID_TOTAL_ONE =
             MeasurementModelTestData.getExistingMetricInvalidTotalOne();
     private MeasurementResult MEASUREMENT_EXISTING_INVALID_TOTAL_ONE_RESULT =
-            MeasurementModelTestData.getExistingMetricInvalidTotalOneResult();
+            UseCaseIngredientPortionCalculatorTestData.getExistingMetricInvalidTotalOneResult();
 
+    //----------------------
     private MeasurementModel MEASUREMENT_EXISTING_INVALID_TOTAL_TWO =
             MeasurementModelTestData.getExistingMetricInvalidTotalTwo();
     private MeasurementResult MEASUREMENT_EXISTING_INVALID_TOTAL_TWO_RESULT =
-            MeasurementModelTestData.getExistingInvalidTotalTwoResult();
+            UseCaseIngredientPortionCalculatorTestData.getExistingInvalidTotalTwoResult();
 
+    //----------------------
     private MeasurementModel MEASUREMENT_EXISTING_VALID_TOTAL_TWO_UPDATED =
             MeasurementModelTestData.getExistingMetricValidTwoUpdated();
     private MeasurementResult MEASUREMENT_EXISTING_VALID_TOTAL_TWO_UPDATED_RESULT =
-            MeasurementModelTestData.getExistingMetricValidTwoUpdatedResult();
+            UseCaseIngredientPortionCalculatorTestData.getExistingMetricValidTwoUpdatedResult();
 
+    //----------------------
     private MeasurementModel MEASUREMENT_EXISTING_INVALID_UNIT_OF_MEASURE_CHANGED =
             MeasurementModelTestData.getExistingMetricUnitOfMeasureUpdatedToImperial();
     private MeasurementResult MEASUREMENT_EXISTING_INVALID_UNIT_OF_MEASURE_CHANGED_RESULT =
-            MeasurementModelTestData.getExistingMetricUnitOfMeasureUpdatedToImperialResult();
+            UseCaseIngredientPortionCalculatorTestData.
+                    getExistingMetricUnitOfMeasureUpdatedToImperialResult();
 
+    //----------------------
     private MeasurementModel MEASUREMENT_EXISTING_INVALID_CONVERSION_FACTOR =
-            MeasurementModelTestData.getExistingMetricInvalidConversionFactor();
+            MeasurementModelTestData.getExistingImperialSpoonInvalidConversionFactor();
     private MeasurementResult MEASUREMENT_EXISTING_INVALID_CONVERSION_FACTOR_RESULT =
-            MeasurementModelTestData.getExistingMetricInvalidConversionFactorResult();
+            UseCaseIngredientPortionCalculatorTestData.
+                    getExistingMetricInvalidConversionFactorResult();
 
     // endregion constants -------------------------------------------------------------------------
     // region helper fields ------------------------------------------------------------------------
@@ -611,6 +619,7 @@ public class UseCaseIngredientPortionCalculatorTest {
         // Arrange
         // Act
         SUT.start(QUANTITY_EXISTING_VALID_METRIC.getId());
+
         verifyRepoRecipeIngredientCalledReturnExistingValidMetric();
         verifyRepoIngredientCalledAndReturnExistingValidNameDescription();
         verifyRepoPortionsCalledAndReturnExistingValidNinePortions();
@@ -619,10 +628,10 @@ public class UseCaseIngredientPortionCalculatorTest {
         // Assert
         verify(repoRecipeIngredientMock).save(recipeIngredientCaptor.capture());
         RecipeIngredientQuantityEntity saveResult = recipeIngredientCaptor.getValue();
-        assertEquals(MEASUREMENT_EXISTING_VALID_TOTAL_TWO_UPDATED_RESULT.
-                        getModel().
-                        getItemBaseUnits(),
-                saveResult.getItemBaseUnits(), DELTA);
+        double expectedItemBaseUnits = MEASUREMENT_EXISTING_VALID_TOTAL_TWO_UPDATED_RESULT.
+                getModel().getItemBaseUnits();
+        double actualItemBseUnits = saveResult.getItemBaseUnits();
+        assertEquals(expectedItemBaseUnits, actualItemBseUnits, DELTA);
     }
 
     @Test
@@ -711,8 +720,9 @@ public class UseCaseIngredientPortionCalculatorTest {
     @Test
     public void startExistingRecipeIngredientId_invalidConversionFactor_measurementValuesNotChanged() {
         // Act
-        SUT.start(QUANTITY_EXISTING_VALID_METRIC.getId());
+        SUT.start(QUANTITY_EXISTING_VALID_IMPERIAL_SPOON.getId());
         // Assert
+
         verifyRepoRecipeIngredientCalledReturnExistingValidMetric();
         verifyRepoIngredientCalledAndReturnExistingValidNameDescription();
         verifyRepoPortionsCalledAndReturnExistingValidNinePortions();
@@ -733,69 +743,77 @@ public class UseCaseIngredientPortionCalculatorTest {
         int portions = MEASUREMENT_EXISTING_VALID_METRIC.getNumberOfItems();
         double numberOfTeaspoons = 2;
         double teaspoonVolume = IMPERIAL_SPOON_UNIT_ONE;
-        double itemBaseUnits =
-                (numberOfTeaspoons * teaspoonVolume / portions) * MAX_CONVERSION_FACTOR;
-
+        double itemBaseUnits = (numberOfTeaspoons * teaspoonVolume / portions) *
+                MAX_CONVERSION_FACTOR;
 
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 QUANTITY_EXISTING_VALID_METRIC.getCreateDate(),
                 INGREDIENT_EXISTING_VALID_NAME_DESCRIPTION.getLastUpdate(),
                 QUANTITY_EXISTING_VALID_METRIC.getLastUpdate());
 
-        MeasurementModel expectedModelLoaded = new MeasurementModel(
-                MeasurementSubtype.fromInt(QUANTITY_EXISTING_VALID_METRIC.getUnitOfMeasureSubtype()),
-                portions,
-                INGREDIENT_EXISTING_VALID_NAME_DESCRIPTION.getConversionFactor(),
-                (QUANTITY_EXISTING_VALID_METRIC.getItemBaseUnits() * portions % 1000),
-                ((int) QUANTITY_EXISTING_VALID_METRIC.getItemBaseUnits() * portions / 1000),
-                (QUANTITY_EXISTING_VALID_METRIC.getItemBaseUnits() % 1000),
-                ((int) QUANTITY_EXISTING_VALID_METRIC.getItemBaseUnits() / 1000),
-                ((int) QUANTITY_EXISTING_VALID_METRIC.getItemBaseUnits())
-        );
+        MeasurementSubtype subtype = MeasurementSubtype.fromInt(
+                QUANTITY_EXISTING_VALID_METRIC.getUnitOfMeasureSubtype());
 
-        MeasurementModel unitOfMeasureChangeToImperialSpoonFromUi = new MeasurementModel(
+        UnitOfMeasure unitOfMeasureStartValues = subtype.getMeasurementClass();
+        unitOfMeasureStartValues.numberOfItemsIsSet(portions);
+        unitOfMeasureStartValues.itemBaseUnitsAreSet(QUANTITY_EXISTING_VALID_METRIC.getItemBaseUnits());
+        MeasurementModel expectedModelLoaded = getMeasurementModel(unitOfMeasureStartValues);
+
+        MeasurementModel requestUnitOfMeasureChangeFromUi = new MeasurementModel(
+                unitOfMeasureStartValues.getMeasurementType(),
                 MeasurementSubtype.IMPERIAL_SPOON,
-                expectedModelLoaded.getNumberOfItems(),
-                expectedModelLoaded.getConversionFactor(),
-                expectedModelLoaded.getTotalMeasurementOne(),
-                expectedModelLoaded.getTotalMeasurementTwo(),
-                expectedModelLoaded.getItemMeasurementOne(),
-                expectedModelLoaded.getItemMeasurementTwo(),
-                expectedModelLoaded.getItemBaseUnits()
+                unitOfMeasureStartValues.getNumberOfMeasurementUnits(),
+                unitOfMeasureStartValues.isConversionFactorEnabled(),
+                unitOfMeasureStartValues.getConversionFactor(),
+                unitOfMeasureStartValues.getItemBaseUnits(),
+                unitOfMeasureStartValues.getTotalBaseUnits(),
+                unitOfMeasureStartValues.getNumberOfItems(),
+                unitOfMeasureStartValues.getTotalMeasurementOne(),
+                unitOfMeasureStartValues.getItemMeasurementOne(),
+                unitOfMeasureStartValues.getTotalMeasurementTwo(),
+                unitOfMeasureStartValues.getItemMeasurementTwo(),
+                unitOfMeasureStartValues.isValidMeasurement(),
+                unitOfMeasureStartValues.getMinimumMeasurementOne(),
+                unitOfMeasureStartValues.getMaximumMeasurementOne(),
+                unitOfMeasureStartValues.getMaximumMeasurementTwo(),
+                unitOfMeasureStartValues.getMeasurementUnitsDigitWidths()
         );
 
-        MeasurementModel expectedResultFromUnitOfMeasureChange = new MeasurementModel(
-                unitOfMeasureChangeToImperialSpoonFromUi.getSubtype(),
-                portions,
-                expectedModelLoaded.getConversionFactor(),
-                MEASUREMENT_EMPTY_FOUR_PORTIONS.getTotalMeasurementOne(),
-                MEASUREMENT_EMPTY_FOUR_PORTIONS.getTotalMeasurementTwo(),
-                MEASUREMENT_EMPTY_FOUR_PORTIONS.getItemMeasurementOne(),
-                MEASUREMENT_EMPTY_FOUR_PORTIONS.getItemMeasurementTwo(),
-                MEASUREMENT_EMPTY_FOUR_PORTIONS.getItemBaseUnits()
-        );
+        UnitOfMeasure unitOfMeasureChangeToSpoonValues =
+                MeasurementSubtype.IMPERIAL_SPOON.getMeasurementClass();
+        unitOfMeasureChangeToSpoonValues.numberOfItemsIsSet(
+                unitOfMeasureStartValues.getNumberOfItems());
+        unitOfMeasureChangeToSpoonValues.conversionFactorIsSet(
+                unitOfMeasureStartValues.getConversionFactor());
+
+        MeasurementModel expectedResultFromUnitOfMeasureChange =
+                getMeasurementModel(unitOfMeasureChangeToSpoonValues);
 
         MeasurementModel measurementOneChangeFromUi = new MeasurementModel(
-                expectedResultFromUnitOfMeasureChange.getSubtype(),
-                expectedResultFromUnitOfMeasureChange.getNumberOfItems(),
-                expectedResultFromUnitOfMeasureChange.getConversionFactor(),
+                unitOfMeasureChangeToSpoonValues.getMeasurementType(),
+                unitOfMeasureChangeToSpoonValues.getMeasurementSubtype(),
+                unitOfMeasureChangeToSpoonValues.getNumberOfMeasurementUnits(),
+                unitOfMeasureChangeToSpoonValues.isConversionFactorEnabled(),
+                unitOfMeasureChangeToSpoonValues.getConversionFactor(),
+                unitOfMeasureChangeToSpoonValues.getItemBaseUnits(),
+                unitOfMeasureChangeToSpoonValues.getTotalBaseUnits(),
+                unitOfMeasureChangeToSpoonValues.getNumberOfItems(),
                 numberOfTeaspoons,
-                expectedResultFromUnitOfMeasureChange.getTotalMeasurementTwo(),
-                expectedResultFromUnitOfMeasureChange.getItemMeasurementOne(),
-                expectedResultFromUnitOfMeasureChange.getItemMeasurementTwo(),
-                expectedResultFromUnitOfMeasureChange.getItemBaseUnits()
+                unitOfMeasureChangeToSpoonValues.getItemMeasurementOne(),
+                unitOfMeasureChangeToSpoonValues.getTotalMeasurementTwo(),
+                unitOfMeasureChangeToSpoonValues.getItemMeasurementTwo(),
+                unitOfMeasureChangeToSpoonValues.isValidMeasurement(),
+                unitOfMeasureChangeToSpoonValues.getMinimumMeasurementOne(),
+                unitOfMeasureChangeToSpoonValues.getMaximumMeasurementOne(),
+                unitOfMeasureChangeToSpoonValues.getMaximumMeasurementTwo(),
+                unitOfMeasureChangeToSpoonValues.getMeasurementUnitsDigitWidths()
         );
 
-        MeasurementModel expectedResultFromMeasurementOneChange = new MeasurementModel(
-                measurementOneChangeFromUi.getSubtype(),
-                measurementOneChangeFromUi.getNumberOfItems(),
-                measurementOneChangeFromUi.getConversionFactor(),
-                measurementOneChangeFromUi.getTotalMeasurementOne(),
-                measurementOneChangeFromUi.getTotalMeasurementTwo(),
-                0.2,
-                measurementOneChangeFromUi.getItemMeasurementTwo(),
-                (numberOfTeaspoons * teaspoonVolume / portions)
-        );
+        unitOfMeasureChangeToSpoonValues.totalMeasurementOneIsSet(
+                measurementOneChangeFromUi.getTotalMeasurementOne());
+
+        MeasurementModel expectedResultFromMeasurementOneChange =
+                getMeasurementModel(unitOfMeasureChangeToSpoonValues);
 
         RecipeIngredientQuantityEntity expectedQuantityEntitySaveAfterMeasurementOneChange =
                 new RecipeIngredientQuantityEntity(
@@ -811,26 +829,30 @@ public class UseCaseIngredientPortionCalculatorTest {
                 );
 
         MeasurementModel conversionFactorChangeFromUi = new MeasurementModel(
+                expectedResultFromMeasurementOneChange.getType(),
                 expectedResultFromMeasurementOneChange.getSubtype(),
-                expectedResultFromMeasurementOneChange.getNumberOfItems(),
+                expectedResultFromMeasurementOneChange.getNumberOfMeasurementUnits(),
+                expectedResultFromMeasurementOneChange.isConversionFactorEnabled(),
                 MAX_CONVERSION_FACTOR,
+                expectedResultFromMeasurementOneChange.getItemBaseUnits(),
+                expectedResultFromMeasurementOneChange.getTotalBaseUnits(),
+                expectedResultFromMeasurementOneChange.getNumberOfItems(),
                 expectedResultFromMeasurementOneChange.getTotalMeasurementOne(),
-                expectedResultFromMeasurementOneChange.getTotalMeasurementTwo(),
                 expectedResultFromMeasurementOneChange.getItemMeasurementOne(),
+                expectedResultFromMeasurementOneChange.getTotalMeasurementTwo(),
                 expectedResultFromMeasurementOneChange.getItemMeasurementTwo(),
-                expectedResultFromMeasurementOneChange.getTotalMeasurementOne()
+                expectedResultFromMeasurementOneChange.isValidMeasurement(),
+                expectedResultFromMeasurementOneChange.getMinimumMeasurement(),
+                expectedResultFromMeasurementOneChange.getMaxMeasurementOne(),
+                expectedResultFromMeasurementOneChange.getMaxMeasurementTwo(),
+                expectedResultFromMeasurementOneChange.getMeasurementUnitDigitWidths()
         );
 
-        MeasurementModel expectedResultFromConversionFactorChanged = new MeasurementModel(
-                conversionFactorChangeFromUi.getSubtype(),
-                conversionFactorChangeFromUi.getNumberOfItems(),
-                conversionFactorChangeFromUi.getConversionFactor(),
-                conversionFactorChangeFromUi.getTotalMeasurementOne(),
-                conversionFactorChangeFromUi.getTotalMeasurementTwo(),
-                conversionFactorChangeFromUi.getItemMeasurementOne(),
-                conversionFactorChangeFromUi.getItemMeasurementTwo(),
-                itemBaseUnits
-        );
+        unitOfMeasureChangeToSpoonValues.conversionFactorIsSet(
+                conversionFactorChangeFromUi.getConversionFactor());
+
+        MeasurementModel expectedResultFromConversionFactorChanged = getMeasurementModel(
+                unitOfMeasureChangeToSpoonValues);
 
         IngredientEntity expectedIngredientEntitySaveAfterConversionFactorUpdated =
                 new IngredientEntity(
@@ -870,7 +892,7 @@ public class UseCaseIngredientPortionCalculatorTest {
 
         //** Start of simulated user interaction **//
         // user updates unit of measure
-        SUT.processModel(unitOfMeasureChangeToImperialSpoonFromUi);
+        SUT.processModel(requestUnitOfMeasureChangeFromUi);
         // verify expected UI updates returned
         verify(viewModelMock, times((2))).useCasePortionResult(resultArgumentCaptor.capture());
         MeasurementResult unitOfMeasureChangeResult = resultArgumentCaptor.getValue();
@@ -977,6 +999,28 @@ public class UseCaseIngredientPortionCalculatorTest {
     private void whenTimeProviderThenReturnNewValidTime() {
         when(timeProviderMock.getCurrentTimeInMills()).
                 thenReturn(QUANTITY_NEW_VALID_METRIC.getCreateDate());
+    }
+
+    private MeasurementModel getMeasurementModel(UnitOfMeasure unitOfMeasure) {
+        return new MeasurementModel(
+                unitOfMeasure.getMeasurementType(),
+                unitOfMeasure.getMeasurementSubtype(),
+                unitOfMeasure.getNumberOfMeasurementUnits(),
+                unitOfMeasure.isConversionFactorEnabled(),
+                unitOfMeasure.getConversionFactor(),
+                unitOfMeasure.getItemBaseUnits(),
+                unitOfMeasure.getTotalBaseUnits(),
+                unitOfMeasure.getNumberOfItems(),
+                unitOfMeasure.getTotalMeasurementOne(),
+                unitOfMeasure.getItemMeasurementOne(),
+                unitOfMeasure.getTotalMeasurementTwo(),
+                unitOfMeasure.getItemMeasurementTwo(),
+                unitOfMeasure.isValidMeasurement(),
+                unitOfMeasure.getMinimumMeasurementOne(),
+                unitOfMeasure.getMaximumMeasurementOne(),
+                unitOfMeasure.getMaximumMeasurementTwo(),
+                unitOfMeasure.getMeasurementUnitsDigitWidths()
+        );
     }
     // endregion helper methods --------------------------------------------------------------------
 

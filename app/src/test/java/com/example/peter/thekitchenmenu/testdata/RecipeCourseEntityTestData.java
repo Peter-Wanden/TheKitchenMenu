@@ -11,7 +11,7 @@ public class RecipeCourseEntityTestData {
             RecipeEntityTestData.getValidExisting().getId();
 
     private static final String NEW_RECIPE_ID =
-            RecipeEntityTestData.getInvalidNew().getId();
+            RecipeEntityTestData.getNewInvalid().getId();
 
     public static RecipeCourseEntity getRecipeCourseZero() {
         return new RecipeCourseEntity(

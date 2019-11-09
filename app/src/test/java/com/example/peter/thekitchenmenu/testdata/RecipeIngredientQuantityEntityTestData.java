@@ -3,18 +3,20 @@ package com.example.peter.thekitchenmenu.testdata;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientQuantityEntity;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtype;
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants;
+import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasure;
+
+import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.*;
 
 public class RecipeIngredientQuantityEntityTestData {
 
     public static RecipeIngredientQuantityEntity getNewInvalid() {
         return new RecipeIngredientQuantityEntity(
                 "newId",
-                RecipeEntityTestData.getInvalidNew().getId(),
+                RecipeEntityTestData.getNewInvalid().getId(),
                 IngredientEntityTestData.getNew().getId(),
                 ProductEntityTestData.getNewInvalid().getId(),
                 0,
-                0,
+                MeasurementSubtype.METRIC_MASS.asInt(),
                 Constants.getUserId().getValue(),
                 10L,
                 10L
@@ -24,11 +26,11 @@ public class RecipeIngredientQuantityEntityTestData {
     public static RecipeIngredientQuantityEntity getNewValidMetric() {
         return new RecipeIngredientQuantityEntity(
                 "new_valid_measurement_one_id",
-                RecipeEntityTestData.getValidNew().getId(),
+                RecipeEntityTestData.getNewValid().getId(),
                 IngredientEntityTestData.getNewValidName().getId(),
                 "",
                 150, // per portion value
-                0,
+                MeasurementSubtype.METRIC_MASS.asInt(),
                 Constants.getUserId().getValue(),
                 10L,
                 10L
@@ -38,66 +40,41 @@ public class RecipeIngredientQuantityEntityTestData {
     public static RecipeIngredientQuantityEntity getNewValidImperial() {
         return new RecipeIngredientQuantityEntity(
                 getNewValidMetric().getId(),
-                RecipeEntityTestData.getValidNew().getId(),
+                RecipeEntityTestData.getNewValid().getId(),
                 IngredientEntityTestData.getNewValidName().getId(),
                 "",
                 36.145641984375, // 5.1lbs / 4 portions
-                1,
+                MeasurementSubtype.IMPERIAL_MASS.asInt(),
                 Constants.getUserId().getValue(),
                 20L,
                 20L
         );
     }
 
-    public static RecipeIngredientQuantityEntity getNewValidMetricMaxMassDivPortions() {
+    public static RecipeIngredientQuantityEntity getNewValidMetricMaxMassDivFourPortions() {
+        UnitOfMeasure unitOfMeasure = MeasurementSubtype.fromInt(
+                getNewValidMetric().getUnitOfMeasureSubtype()).getMeasurementClass();
+
+        unitOfMeasure.totalBaseUnitsAreSet(MAX_MASS);
+
+        int portions = RecipePortionsEntityTestData.getNewValidFourPortions().getSittings() *
+                RecipePortionsEntityTestData.getNewValidFourPortions().getServings();
+        unitOfMeasure.numberOfItemsIsSet(portions);
+
         return new RecipeIngredientQuantityEntity(
                 getNewValidMetric().getId(),
                 getNewValidMetric().getRecipeId(),
                 getNewValidMetric().getIngredientId(),
                 getNewValidMetric().getProductId(),
-                getMaxMassDivFourPortions(),
-                getNewValidMetric().getUnitOfMeasureSubtype(),
+                unitOfMeasure.getItemBaseUnits(),
+                unitOfMeasure.getMeasurementSubtype().asInt(),
                 getNewValidMetric().getCreatedBy(),
                 getNewValidMetric().getCreateDate(),
                 getNewValidMetric().getLastUpdate()
         );
     }
 
-    private static double getMaxMassDivFourPortions() {
-        return UnitOfMeasureConstants.MAX_MASS /
-                (RecipePortionsEntityTestData.getNewValidFourPortions().getSittings() *
-                RecipePortionsEntityTestData.getNewValidFourPortions().getServings());
-    }
-
-    public static RecipeIngredientQuantityEntity getExistingValidMetric() {
-        return new RecipeIngredientQuantityEntity(
-                "existing_valid_id",
-                RecipeEntityTestData.getValidExisting().getId(),
-                IngredientEntityTestData.getExistingValidNameValidDescription().getId(),
-                ProductEntityTestData.getExistingValid().getId(),
-                250,
-                2,
-                Constants.getUserId().getValue(),
-                30L,
-                30L
-        );
-    }
-
-    public static RecipeIngredientQuantityEntity getExistingValidMetricMeasurementUpdated() {
-        return new RecipeIngredientQuantityEntity(
-                getExistingValidMetric().getId(),
-                getExistingValidMetric().getRecipeId(),
-                getExistingValidMetric().getIngredientId(),
-                getExistingValidMetric().getProductId(),
-                getExistingValidMetric().getItemBaseUnits() + 250,
-                getExistingValidMetric().getUnitOfMeasureSubtype(),
-                getExistingValidMetric().getCreatedBy(),
-                getExistingValidMetric().getCreateDate(),
-                getExistingValidMetric().getLastUpdate() + 10
-        );
-    }
-
-    public static RecipeIngredientQuantityEntity getNewValidImperialOneTeaspoonNoConversionFactor() {
+    public static RecipeIngredientQuantityEntity getNewValidImperialOneTeaspoonFourPortionsNoConversionFactor() {
         return new RecipeIngredientQuantityEntity(
                 getNewInvalid().getId(),
                 getNewInvalid().getRecipeId(),
@@ -151,5 +128,50 @@ public class RecipeIngredientQuantityEntityTestData {
         double volumeOfTeaspoon = 5;
 
         return numberOfTeaspoons * volumeOfTeaspoon * conversionFactor / numberOfPortions;
+    }
+
+    public static RecipeIngredientQuantityEntity getExistingValidMetric() {
+        return new RecipeIngredientQuantityEntity(
+                "existing_valid_id",
+                RecipeEntityTestData.getValidExisting().getId(),
+                IngredientEntityTestData.getExistingValidNameValidDescription().getId(),
+                ProductEntityTestData.getExistingValid().getId(),
+                250,
+                MeasurementSubtype.METRIC_VOLUME.asInt(),
+                Constants.getUserId().getValue(),
+                30L,
+                30L
+        );
+    }
+
+    public static RecipeIngredientQuantityEntity getExistingValidMetricMeasurementUpdated() {
+        return new RecipeIngredientQuantityEntity(
+                getExistingValidMetric().getId(),
+                getExistingValidMetric().getRecipeId(),
+                getExistingValidMetric().getIngredientId(),
+                getExistingValidMetric().getProductId(),
+                getExistingValidMetric().getItemBaseUnits() + 250,
+                getExistingValidMetric().getUnitOfMeasureSubtype(),
+                getExistingValidMetric().getCreatedBy(),
+                getExistingValidMetric().getCreateDate(),
+                getExistingValidMetric().getLastUpdate() + 10
+        );
+    }
+
+    public static RecipeIngredientQuantityEntity getExistingValidImperialSpoon() {
+
+        UnitOfMeasure unitOfMeasure = MeasurementSubtype.IMPERIAL_SPOON.getMeasurementClass();
+
+        return new RecipeIngredientQuantityEntity(
+                "existing_valid_imperialSpoon_id",
+                RecipeEntityTestData.getValidExisting().getId(),
+                IngredientEntityTestData.getExistingValidNameValidDescription().getId(),
+                ProductEntityTestData.getExistingValid().getId(),
+                5,
+                MeasurementSubtype.IMPERIAL_SPOON.asInt(),
+                Constants.getUserId().getValue(),
+                40L,
+                40L
+        );
     }
 }

@@ -24,7 +24,7 @@ public class RecipeCourseEditorViewModelTest {
     // region constants ----------------------------------------------------------------------------
     private RecipeEntity VALID_EXISTING_RECIPE_ENTITY = getValidExisting();
     private String EXISTING_RECIPE_ID = VALID_EXISTING_RECIPE_ENTITY.getId();
-    private String NEW_RECIPE_ID = RecipeEntityTestData.getInvalidNew().getId();
+    private String NEW_RECIPE_ID = RecipeEntityTestData.getNewInvalid().getId();
 
     private RecipeModelStatus COURSES_MODEL_UNCHANGED_INVALID = getCoursesModelStatusUnchangedInvalid();
     private RecipeModelStatus COURSES_MODEL_UNCHANGED_VALID = getCoursesModelStatusUnchangedValid();
