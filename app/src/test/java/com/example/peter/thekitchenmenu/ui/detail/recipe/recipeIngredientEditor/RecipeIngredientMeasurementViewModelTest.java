@@ -175,15 +175,15 @@ public class RecipeIngredientMeasurementViewModelTest {
     @Test
     public void startRecipeIdIngredientId_measurementOneValidReturned_valuesSetToDisplay() {
         // Arrange
-        when(numberFormatterMock.formatDecimalForDisplay(MEASUREMENT_NEW_VALID_ONE.getModel().
-                getItemMeasurementOne())).
-                thenReturn(String.valueOf(MEASUREMENT_NEW_VALID_ONE.getModel().
-                getItemMeasurementOne()));
-        String expectedMeasurementOne = String.valueOf(MEASUREMENT_NEW_VALID_ONE.getModel().
-                getItemMeasurementOne());
+        double expectedMeasurement = MEASUREMENT_NEW_VALID_ONE.getModel().
+                getTotalMeasurementOne();
+        when(numberFormatterMock.formatDecimalForDisplay(eq(expectedMeasurement))).
+                thenReturn(String.valueOf(expectedMeasurement));
+        String expectedMeasurementOne = String.valueOf(expectedMeasurement);
         // Act
         SUT.start(RECIPE_VALID_NEW.getId(), INGREDIENT_NEW_VALID_NAME_DESCRIPTION.getId());
-        verify(useCaseIngredientPortionCalculatorMock).start(recipeIdCaptor.capture(), ingredientIdCaptor.capture());
+        verify(useCaseIngredientPortionCalculatorMock).start(
+                recipeIdCaptor.capture(), ingredientIdCaptor.capture());
         SUT.useCasePortionResult(MEASUREMENT_NEW_VALID_ONE);
         // Assert
         String actualMeasurementOne = SUT.getMeasurementOne();
@@ -207,7 +207,7 @@ public class RecipeIngredientMeasurementViewModelTest {
     public void startRecipeIdIngredientId_measurementTwoValidReturned_valueSetToDisplay() {
         // Arrange
         int expectedMeasurement = MEASUREMENT_NEW_VALID_TWO.getModel().getTotalMeasurementTwo();
-        when(numberFormatterMock.formatIntegerForDisplay(expectedMeasurement)).
+        when(numberFormatterMock.formatIntegerForDisplay(eq(expectedMeasurement))).
                 thenReturn(String.valueOf(expectedMeasurement));
         String expectedResult = String.valueOf(expectedMeasurement);
         // Act

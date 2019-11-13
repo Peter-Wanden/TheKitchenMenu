@@ -58,6 +58,11 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
         setModelValidationObservers();
         setActivityObservers();
         setupFragments();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         start();
     }
 

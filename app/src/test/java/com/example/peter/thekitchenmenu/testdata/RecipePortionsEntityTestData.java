@@ -105,7 +105,7 @@ public class RecipePortionsEntityTestData {
         );
     }
 
-    public static RecipePortionsEntity getExistingValid() {
+    public static RecipePortionsEntity getExistingValidNinePortions() {
         return new RecipePortionsEntity(
                 "validExistingPortionId",
                 RecipeEntityTestData.getValidExisting().getId(),
@@ -121,7 +121,7 @@ public class RecipePortionsEntityTestData {
                 "validExistingPortionId",
                 RecipeEntityTestData.getValidExisting().getId(),
                 getNewValidServingsValidSittings().getServings(),
-                getExistingValid().getSittings(),
+                getExistingValidNinePortions().getSittings(),
                 RecipeEntityTestData.getValidExisting().getCreateDate(),
                 RecipeEntityTestData.getValidExisting().getLastUpdate()
         );
@@ -131,7 +131,7 @@ public class RecipePortionsEntityTestData {
         return new RecipePortionsEntity(
                 "validExistingPortionId",
                 RecipeEntityTestData.getValidExisting().getId(),
-                getExistingValid().getServings(),
+                getExistingValidNinePortions().getServings(),
                 getNewValidServingsValidSittings().getSittings(),
                 RecipeEntityTestData.getValidExisting().getCreateDate(),
                 RecipeEntityTestData.getValidExisting().getLastUpdate()
@@ -142,8 +142,8 @@ public class RecipePortionsEntityTestData {
         return new RecipePortionsEntity(
                 getNewValidEmpty().getId(),
                 RecipeEntityTestData.getValidNewCloned().getId(),
-                getExistingValid().getServings(),
-                getExistingValid().getSittings(),
+                getExistingValidNinePortions().getServings(),
+                getExistingValidNinePortions().getSittings(),
                 RecipeEntityTestData.getValidNewCloned().getCreateDate(),
                 RecipeEntityTestData.getValidNewCloned().getLastUpdate()
         );

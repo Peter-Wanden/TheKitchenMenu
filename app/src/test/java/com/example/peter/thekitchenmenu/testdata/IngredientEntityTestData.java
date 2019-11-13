@@ -104,7 +104,7 @@ public class IngredientEntityTestData {
         );
     }
 
-    public static IngredientEntity getExistingValidNameValidDescription() {
+    public static IngredientEntity getExistingValidNameValidDescriptionNoConversionFactor() {
         return new IngredientEntity(
                 "existingId",
                 "existingName",
@@ -119,48 +119,48 @@ public class IngredientEntityTestData {
 
     public static IngredientEntity getExistingUpdatedWithInvalidName() {
         return new IngredientEntity(
-                getExistingValidNameValidDescription().getId(),
+                getExistingValidNameValidDescriptionNoConversionFactor().getId(),
                 "na",
-                getExistingValidNameValidDescription().getDescription(),
+                getExistingValidNameValidDescriptionNoConversionFactor().getDescription(),
                 1,
-                getExistingValidNameValidDescription().getCreatedBy(),
-                getExistingValidNameValidDescription().getCreateDate(),
-                getExistingValidNameValidDescription().getLastUpdate()
+                getExistingValidNameValidDescriptionNoConversionFactor().getCreatedBy(),
+                getExistingValidNameValidDescriptionNoConversionFactor().getCreateDate(),
+                getExistingValidNameValidDescriptionNoConversionFactor().getLastUpdate()
         );
     }
 
     public static IngredientEntity getExistingUpdatedWithValidName() {
         return new IngredientEntity(
-                getExistingValidNameValidDescription().getId(),
+                getExistingValidNameValidDescriptionNoConversionFactor().getId(),
                 "existingNameUpdated",
-                getExistingValidNameValidDescription().getDescription(),
+                getExistingValidNameValidDescriptionNoConversionFactor().getDescription(),
                 1,
-                getExistingValidNameValidDescription().getCreatedBy(),
-                getExistingValidNameValidDescription().getCreateDate(),
+                getExistingValidNameValidDescriptionNoConversionFactor().getCreatedBy(),
+                getExistingValidNameValidDescriptionNoConversionFactor().getCreateDate(),
                 90L
         );
     }
 
     public static IngredientEntity getExistingUpdatedWithInvalidDescription() {
         return new IngredientEntity(
-                getExistingValidNameValidDescription().getId(),
-                getExistingValidNameValidDescription().getName(),
+                getExistingValidNameValidDescriptionNoConversionFactor().getId(),
+                getExistingValidNameValidDescriptionNoConversionFactor().getName(),
                 "de",
                 1,
-                getExistingValidNameValidDescription().getCreatedBy(),
-                getExistingValidNameValidDescription().getCreateDate(),
+                getExistingValidNameValidDescriptionNoConversionFactor().getCreatedBy(),
+                getExistingValidNameValidDescriptionNoConversionFactor().getCreateDate(),
                 90L
         );
     }
 
     public static IngredientEntity getExistingUpdatedWithValidDescription() {
         return new IngredientEntity(
-                getExistingValidNameValidDescription().getId(),
-                getExistingValidNameValidDescription().getName(),
+                getExistingValidNameValidDescriptionNoConversionFactor().getId(),
+                getExistingValidNameValidDescriptionNoConversionFactor().getName(),
                 "existingDescriptionUpdated",
                 1,
-                getExistingValidNameValidDescription().getCreatedBy(),
-                getExistingValidNameValidDescription().getCreateDate(),
+                getExistingValidNameValidDescriptionNoConversionFactor().getCreatedBy(),
+                getExistingValidNameValidDescriptionNoConversionFactor().getCreateDate(),
                 100L
         );
     }
@@ -180,12 +180,12 @@ public class IngredientEntityTestData {
 
     public static IngredientEntity getExistingValidWithConversionFactor() {
         return new IngredientEntity(
-                getExistingValidNameValidDescription().getId(),
-                getExistingValidNameValidDescription().getName(),
-                getExistingValidNameValidDescription().getDescription(),
+                getExistingValidNameValidDescriptionNoConversionFactor().getId(),
+                getExistingValidNameValidDescriptionNoConversionFactor().getName(),
+                getExistingValidNameValidDescriptionNoConversionFactor().getDescription(),
                 0.5,
-                getExistingValidNameValidDescription().getCreatedBy(),
-                getExistingValidNameValidDescription().getCreateDate(),
+                getExistingValidNameValidDescriptionNoConversionFactor().getCreatedBy(),
+                getExistingValidNameValidDescriptionNoConversionFactor().getCreateDate(),
                 110L
         );
     }
@@ -198,7 +198,7 @@ public class IngredientEntityTestData {
         ingredients.add(getNewValidNameInvalidDescription());
         ingredients.add(getNewInvalidNameValidDescription());
         ingredients.add(getNewValidNameValidDescription());
-        ingredients.add(getExistingValidNameValidDescription());
+        ingredients.add(getExistingValidNameValidDescriptionNoConversionFactor());
         ingredients.add(getExistingUpdatedWithInvalidName());
         ingredients.add(getExistingUpdatedWithValidName());
         ingredients.add(getExistingUpdatedWithInvalidDescription());

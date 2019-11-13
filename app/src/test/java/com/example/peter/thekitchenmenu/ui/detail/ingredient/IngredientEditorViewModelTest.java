@@ -43,7 +43,7 @@ public class IngredientEditorViewModelTest {
     private IngredientEntity NEW_VALID_NAME_VALID_DESCRIPTION =
             IngredientEntityTestData.getNewValidNameValidDescription();
     private IngredientEntity VALID_EXISTING_COMPLETE =
-            IngredientEntityTestData.getExistingValidNameValidDescription();
+            IngredientEntityTestData.getExistingValidNameValidDescriptionNoConversionFactor();
     private IngredientEntity VALID_EXISTING_INVALID_NAME_UPDATE =
             IngredientEntityTestData.getExistingUpdatedWithInvalidName();
     private IngredientEntity VALID_EXISTING_VALID_NAME_UPDATE =

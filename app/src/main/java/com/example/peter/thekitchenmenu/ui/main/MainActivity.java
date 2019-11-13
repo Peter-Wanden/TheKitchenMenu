@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.main);
 //        remoteSignIn = new RemoteSignIn(this);
-
         initialiseViews();
     }
 

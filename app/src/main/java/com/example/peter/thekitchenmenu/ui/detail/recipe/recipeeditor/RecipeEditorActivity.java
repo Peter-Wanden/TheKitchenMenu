@@ -45,6 +45,12 @@ public class RecipeEditorActivity
         setupViewModels();
         setViewModelObservers();
         setupFragments();
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         start();
     }
 

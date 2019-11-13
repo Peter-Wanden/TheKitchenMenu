@@ -100,8 +100,8 @@ public class MeasurementModelTestData {
                 unitOfMeasure.getItemMeasurementTwo(),
                 unitOfMeasure.isValidMeasurement(),
                 unitOfMeasure.getMinimumMeasurementOne(),
-                unitOfMeasure.getItemMeasurementOne(),
-                unitOfMeasure.getItemMeasurementTwo(),
+                unitOfMeasure.getMaximumMeasurementOne(),
+                unitOfMeasure.getMaximumMeasurementTwo(),
                 unitOfMeasure.getMeasurementUnitsDigitWidths()
         );
     }
@@ -139,6 +139,7 @@ public class MeasurementModelTestData {
 
         return getMeasurementModel(unitOfMeasure);
     }
+
     private static double getBaseUnitsForNewValidTotalMeasurementOne() {
         return RecipeIngredientQuantityEntityTestData.getNewValidMetric().getItemBaseUnits() *
                 RecipePortionsEntityTestData.getNewValidFourPortions().getServings() *
@@ -160,31 +161,14 @@ public class MeasurementModelTestData {
 
             boolean isConversionFactorSet = unitOfMeasure.conversionFactorIsSet(conversionFactor);
 
-            if (!isConversionFactorSet)
+            if (!isConversionFactorSet) {
                 throwConversionFactorException(isConversionFactorSet);
+            }
         }
 
-        UnitOfMeasure forCalculatingMaxValueOfTotalTwo = getSubtypeForValidNewMetric().
-                getMeasurementClass();
-
-        MeasurementType type = unitOfMeasure.getMeasurementType();
-        switch (type) {
-            case MASS:
-                forCalculatingMaxValueOfTotalTwo.totalBaseUnitsAreSet(MAX_MASS);
-                break;
-            case VOLUME:
-                forCalculatingMaxValueOfTotalTwo.totalBaseUnitsAreSet(MAX_VOLUME);
-                break;
-            case COUNT:
-                throw new RuntimeException("Can't set totalMeasurementOne() for type COUNT");
-            default:
-                throw new RuntimeException("Unit of measure Type not recognised");
-        }
-
-        int totalMeasurementTwo = forCalculatingMaxValueOfTotalTwo.getTotalMeasurementTwo();
-        int invalidTotalMeasurementTwo = totalMeasurementTwo + 1;
-        boolean isTotalMeasurementTwoSet = unitOfMeasure.
-                totalMeasurementTwoIsSet(invalidTotalMeasurementTwo);
+        int invalidMeasurementTwo = unitOfMeasure.getMaximumMeasurementTwo() + 1;
+        boolean isTotalMeasurementTwoSet = unitOfMeasure.totalMeasurementTwoIsSet(
+                invalidMeasurementTwo);
 
         if (isTotalMeasurementTwoSet)
             throwMeasurementTwoException(isTotalMeasurementTwoSet);
@@ -198,14 +182,14 @@ public class MeasurementModelTestData {
                 unitOfMeasure.getItemBaseUnits(),
                 unitOfMeasure.getTotalBaseUnits(),
                 unitOfMeasure.getNumberOfItems(),
-                invalidTotalMeasurementTwo,
+                unitOfMeasure.getTotalMeasurementOne(),
                 unitOfMeasure.getItemMeasurementOne(),
-                unitOfMeasure.getTotalMeasurementTwo(),
+                invalidMeasurementTwo,
                 unitOfMeasure.getItemMeasurementTwo(),
                 unitOfMeasure.isValidMeasurement(),
                 unitOfMeasure.getMinimumMeasurementOne(),
-                unitOfMeasure.getItemMeasurementOne(),
-                unitOfMeasure.getItemMeasurementTwo(),
+                unitOfMeasure.getMaximumMeasurementOne(),
+                unitOfMeasure.getMaximumMeasurementTwo(),
                 unitOfMeasure.getMeasurementUnitsDigitWidths()
         );
     }
@@ -291,7 +275,7 @@ public class MeasurementModelTestData {
 
         forCalculatingUnitOneValue.itemBaseUnitsAreSet(RecipeIngredientQuantityEntityTestData.
                 getNewValidImperialOneTeaspoonFourPortionsNoConversionFactor().
-                        getItemBaseUnits());
+                getItemBaseUnits());
 
         boolean isTotalMeasurementOneSet = unitOfMeasure.totalMeasurementOneIsSet(
                 forCalculatingUnitOneValue.getTotalMeasurementOne()
@@ -422,6 +406,13 @@ public class MeasurementModelTestData {
                 throwConversionFactorException(isConversionFactorSet);
         }
 
+        boolean isItemBaseUnitsSet = unitOfMeasure.itemBaseUnitsAreSet(
+                RecipeIngredientQuantityEntityTestData.getExistingValidMetric().getItemBaseUnits()
+        );
+
+        if (!isItemBaseUnitsSet)
+            throwItemBaseUnitsAreSetException(isItemBaseUnitsSet);
+
         double invalidTotalMeasurementOne;
         MeasurementType type = unitOfMeasure.getMeasurementType();
         switch (type) {
@@ -458,8 +449,8 @@ public class MeasurementModelTestData {
                 unitOfMeasure.getItemMeasurementTwo(),
                 unitOfMeasure.isValidMeasurement(),
                 unitOfMeasure.getMinimumMeasurementOne(),
-                unitOfMeasure.getItemMeasurementOne(),
-                unitOfMeasure.getItemMeasurementTwo(),
+                unitOfMeasure.getMaximumMeasurementOne(),
+                unitOfMeasure.getMaximumMeasurementTwo(),
                 unitOfMeasure.getMeasurementUnitsDigitWidths()
         );
     }
@@ -488,7 +479,6 @@ public class MeasurementModelTestData {
 
         if (!isItemBaseUnitsSet)
             throwItemBaseUnitsAreSetException(isItemBaseUnitsSet);
-//        System.out.println("unitOfMeasureFromTestData        =" + unitOfMeasure);
 
         int maxTotalMeasurementTwo = unitOfMeasure.getMaximumMeasurementTwo();
         int invalidTotalMeasurementTwo = maxTotalMeasurementTwo + 1;
@@ -499,8 +489,6 @@ public class MeasurementModelTestData {
             throwMeasurementTwoException(isTotalMeasurementTwoSet);
         }
 
-//        System.out.println("unitOfMeasureFromTestDataAfterTwo=" + unitOfMeasure);
-
         return new MeasurementModel(
                 unitOfMeasure.getMeasurementType(),
                 unitOfMeasure.getMeasurementSubtype(),
@@ -510,14 +498,14 @@ public class MeasurementModelTestData {
                 unitOfMeasure.getItemBaseUnits(),
                 unitOfMeasure.getTotalBaseUnits(),
                 unitOfMeasure.getNumberOfItems(),
-                invalidTotalMeasurementTwo,
+                unitOfMeasure.getTotalMeasurementOne(),
                 unitOfMeasure.getItemMeasurementOne(),
-                unitOfMeasure.getTotalMeasurementTwo(),
+                invalidTotalMeasurementTwo,
                 unitOfMeasure.getItemMeasurementTwo(),
                 unitOfMeasure.isValidMeasurement(),
                 unitOfMeasure.getMinimumMeasurementOne(),
-                unitOfMeasure.getItemMeasurementOne(),
-                unitOfMeasure.getItemMeasurementTwo(),
+                unitOfMeasure.getMaximumMeasurementOne(),
+                unitOfMeasure.getMaximumMeasurementTwo(),
                 unitOfMeasure.getMeasurementUnitsDigitWidths()
         );
     }
@@ -540,12 +528,21 @@ public class MeasurementModelTestData {
                 throwConversionFactorException(isConversionFactorSet);
         }
 
-        int maxTotalMeasurementTwo = unitOfMeasure.getMaximumMeasurementTwo();
+        double itemBaseUnits = RecipeIngredientQuantityEntityTestData.getExistingValidMetric().
+                getItemBaseUnits();
+        boolean isItemBaseUnitsSet = unitOfMeasure.itemBaseUnitsAreSet(itemBaseUnits);
+
+        if (!isItemBaseUnitsSet) {
+            throwItemBaseUnitsAreSetException(isItemBaseUnitsSet);
+        }
+
+        int maxTotalMeasurementTwo = 4;
         boolean isTotalMeasurementTwoSet = unitOfMeasure.
                 totalMeasurementTwoIsSet(maxTotalMeasurementTwo);
 
-        if (!isTotalMeasurementTwoSet)
+        if (!isTotalMeasurementTwoSet) {
             throwMeasurementTwoException(isTotalMeasurementTwoSet);
+        }
 
         return getMeasurementModel(unitOfMeasure);
     }
@@ -578,28 +575,33 @@ public class MeasurementModelTestData {
     }
 
     private static int getExistingValidNinePortions() {
-        return RecipePortionsEntityTestData.getExistingValid().getServings() *
-                RecipePortionsEntityTestData.getExistingValid().getSittings();
+        return RecipePortionsEntityTestData.getExistingValidNinePortions().getServings() *
+                RecipePortionsEntityTestData.getExistingValidNinePortions().getSittings();
     }
 
     private static double getExistingValidConversionFactor() {
-        return IngredientEntityTestData.getExistingValidNameValidDescription().getConversionFactor();
+        return IngredientEntityTestData.getExistingValidNameValidDescriptionNoConversionFactor().getConversionFactor();
     }
 
     //-----------
     public static MeasurementModel getExistingImperialSpoonInvalidConversionFactor() {
         UnitOfMeasure unitOfMeasure = getSubtypeForNewValidImperialSpoon().getMeasurementClass();
 
-        boolean isNumberOfItemsSet = unitOfMeasure.numberOfItemsIsSet(getEmptyModelFourPortions());
+        boolean isNumberOfItemsSet = unitOfMeasure.numberOfItemsIsSet(getExistingValidNinePortions());
         if (!isNumberOfItemsSet) {
             throwNumberOfItemsException(isNumberOfItemsSet);
         }
 
+        double itemBaseUnits = RecipeIngredientQuantityEntityTestData.
+                getExistingValidImperialTwoSpoons().getItemBaseUnits();
+        unitOfMeasure.itemBaseUnitsAreSet(itemBaseUnits);
+
         double conversionFactor = MAX_CONVERSION_FACTOR + .01;
         if (unitOfMeasure.isConversionFactorEnabled()) {
             boolean isConversionFactorSet = unitOfMeasure.conversionFactorIsSet(conversionFactor);
-            if (isConversionFactorSet)
+            if (isConversionFactorSet) {
                 throwConversionFactorException(isConversionFactorSet);
+            }
         }
 
         return new MeasurementModel(

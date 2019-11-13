@@ -36,6 +36,11 @@ public class IngredientEditorActivity
         setUpActionBar();
         setupViewModels();
         setViewModelObservers();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
 
         if (getIntent().hasExtra(EXTRA_INGREDIENT_ID))
             viewModel.start(getIntent().getStringExtra(EXTRA_INGREDIENT_ID));

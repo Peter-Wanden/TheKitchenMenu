@@ -312,7 +312,7 @@ public class RecipeIngredientMeasurementViewModel
 
         notifyPropertyChanged(BR.subtype);
         notifyPropertyChanged(BR.numberOfMeasurementUnits);
-//        notifyPropertyChanged(BR.conversionFactorEnabled);
+        notifyPropertyChanged(BR.conversionFactorEnabled);
         notifyPropertyChanged(BR.conversionFactor);
         notifyPropertyChanged(BR.measurementOne);
         notifyPropertyChanged(BR.measurementTwo);

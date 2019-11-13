@@ -19,7 +19,7 @@ public class IngredientDuplicateCheckerTest {
     private String VALID_NAME_NO_DUPLICATE =
             IngredientEntityTestData.getValidNameNoDuplicate();
     private IngredientEntity VALID_DUPLICATE =
-            IngredientEntityTestData.getExistingValidNameValidDescription();
+            IngredientEntityTestData.getExistingValidNameValidDescriptionNoConversionFactor();
     private String VALID_NAME_DUPLICATE_IS_BEING_EDITED =
             IngredientEntityTestData.getNewValidName().getName();
     private String INGREDIENT_ID =

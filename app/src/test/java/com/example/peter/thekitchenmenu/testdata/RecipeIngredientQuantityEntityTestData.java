@@ -134,7 +134,7 @@ public class RecipeIngredientQuantityEntityTestData {
         return new RecipeIngredientQuantityEntity(
                 "existing_valid_id",
                 RecipeEntityTestData.getValidExisting().getId(),
-                IngredientEntityTestData.getExistingValidNameValidDescription().getId(),
+                IngredientEntityTestData.getExistingValidNameValidDescriptionNoConversionFactor().getId(),
                 ProductEntityTestData.getExistingValid().getId(),
                 250,
                 MeasurementSubtype.METRIC_VOLUME.asInt(),
@@ -158,14 +158,18 @@ public class RecipeIngredientQuantityEntityTestData {
         );
     }
 
-    public static RecipeIngredientQuantityEntity getExistingValidImperialSpoon() {
+    public static RecipeIngredientQuantityEntity getExistingValidImperialTwoSpoons() {
 
         UnitOfMeasure unitOfMeasure = MeasurementSubtype.IMPERIAL_SPOON.getMeasurementClass();
+        int portions = RecipePortionsEntityTestData.getExistingValidNinePortions().getServings() *
+                RecipePortionsEntityTestData.getExistingValidNinePortions().getSittings();
+        unitOfMeasure.numberOfItemsIsSet(portions);
+        unitOfMeasure.totalMeasurementOneIsSet((2));
 
         return new RecipeIngredientQuantityEntity(
                 "existing_valid_imperialSpoon_id",
                 RecipeEntityTestData.getValidExisting().getId(),
-                IngredientEntityTestData.getExistingValidNameValidDescription().getId(),
+                IngredientEntityTestData.getExistingValidNameValidDescriptionNoConversionFactor().getId(),
                 ProductEntityTestData.getExistingValid().getId(),
                 5,
                 MeasurementSubtype.IMPERIAL_SPOON.asInt(),

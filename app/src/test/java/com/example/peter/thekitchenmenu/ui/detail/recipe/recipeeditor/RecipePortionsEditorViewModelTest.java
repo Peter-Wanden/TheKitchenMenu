@@ -46,7 +46,7 @@ public class RecipePortionsEditorViewModelTest {
     private final RecipePortionsEntity NEW_VALID =
             RecipePortionsEntityTestData.getNewValidServingsValidSittings();
     private final RecipePortionsEntity EXISTING_VALID =
-            RecipePortionsEntityTestData.getExistingValid();
+            RecipePortionsEntityTestData.getExistingValidNinePortions();
     private final RecipePortionsEntity EXISTING_VALID_UPDATED_SERVINGS =
             RecipePortionsEntityTestData.getExistingValidUpdatedServings();
     private final RecipePortionsEntity EXISTING_VALID_UPDATED_SITTINGS =

@@ -99,7 +99,6 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
 
     private void resetToOriginalValuesBeforeConversionFactorChanged() {
         unitOne = unitOneNoConversionFactor;
-//        smallestUnit = unitOne;
         unitTwo = unitTwoNoConversionFactor;
         totalBaseUnitsAreSet((totalMeasurementTwo * unitTwo) +
                 (totalMeasurementOne * unitOne)
@@ -109,7 +108,6 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     private boolean applyNewConversionFactor(double conversionFactor) {
         this.conversionFactor = conversionFactor;
         unitOne = conversionFactor * unitOne;
-//        smallestUnit = unitOne;
         unitTwo = conversionFactor * unitTwo;
         totalBaseUnitsAreSet((totalMeasurementTwo * unitTwo) + (totalMeasurementOne * unitOne));
         return true;
@@ -192,7 +190,6 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
 
     private boolean baseUnitsWithinUpperBounds(double baseUnits) {
         return baseUnits <= maximumMeasurement;
-//        return baseUnits <= (maximumMeasurement / smallestUnit) * smallestUnit;
     }
 
     private boolean baseUnitsWithinLowerBounds(double baseUnits) {

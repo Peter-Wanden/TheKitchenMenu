@@ -39,6 +39,11 @@ public class RecipeIngredientEditorActivity
         setupActionBar();
         setupViewModels();
         setupFragments();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         start();
     }
 
