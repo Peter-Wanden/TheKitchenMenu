@@ -11,9 +11,9 @@ class Count extends UnitOfMeasureAbstract {
     Count() {
         measurementType = COUNT_TYPE;
         subtype = COUNT_SUBTYPE;
-        numberOfMeasurementUnits = COUNT_NUMBER_OF_MEASUREMENT_UNITS;
-        maximumMeasurement = COUNT_MAX_MEASUREMENT;
-        minimumMeasurement = COUNT_MIN_MEASUREMENT;
+        numberOfUnits = COUNT_NUMBER_OF_MEASUREMENT_UNITS;
+        maxMeasurement = COUNT_MAX_MEASUREMENT;
+        minMeasurement = COUNT_MIN_MEASUREMENT;
         unitTwo = COUNT_UNIT_TWO;
         unitOne = COUNT_UNIT_ONE;
         unitOneDecimal = COUNT_UNIT_ONE_DECIMAL;
@@ -27,29 +27,29 @@ class Count extends UnitOfMeasureAbstract {
     }
 
     @Override
-    public double getTotalMeasurementOne() {
+    public double getTotalUnitOne() {
         return 0;
     }
 
     @Override
-    public boolean totalMeasurementOneIsSet(double newTotalMeasurementOne) {
+    public boolean isTotalUnitOneSet(double totalUnitOne) {
         return false;
     }
 
     @Override
-    public double getItemMeasurementOne() {
+    public double getItemUnitOne() {
         return 0;
     }
 
     @Override
-    public boolean itemMeasurementOneIsSet(double newItemMeasurementOne) {
+    public boolean isItemUnitOneSet(double itemUnitOne) {
         return false;
     }
 
     @Override
-    public Pair[] getMeasurementUnitsDigitWidths() {
+    public Pair[] getMaxUnitDigitWidths() {
         // Calculates the max digit width of unit two
-        int maximumUnitTwoValue = (int) (maximumMeasurement / unitTwo);
+        int maximumUnitTwoValue = (int) (maxMeasurement / unitTwo);
         int unitTwoDigits = 0;
         while (maximumUnitTwoValue > 0) {
             unitTwoDigits++;

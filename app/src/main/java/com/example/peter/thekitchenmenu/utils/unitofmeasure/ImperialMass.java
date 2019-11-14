@@ -9,9 +9,9 @@ class ImperialMass extends UnitOfMeasureAbstract {
     ImperialMass() {
         measurementType = IMPERIAL_MASS_TYPE;
         subtype = IMPERIAL_MASS_SUBTYPE;
-        numberOfMeasurementUnits = IMPERIAL_MASS_NUMBER_OF_MEASUREMENT_UNITS;
-        maximumMeasurement = IMPERIAL_MASS_MAX_MEASUREMENT;
-        minimumMeasurement = IMPERIAL_MASS_SMALLEST_UNIT;
+        numberOfUnits = IMPERIAL_MASS_NUMBER_OF_MEASUREMENT_UNITS;
+        maxMeasurement = IMPERIAL_MASS_MAX_MEASUREMENT;
+        minMeasurement = IMPERIAL_MASS_SMALLEST_UNIT;
         unitTwo = IMPERIAL_MASS_UNIT_TWO;
         unitOne = IMPERIAL_MASS_UNIT_ONE;
         unitOneDecimal = IMPERIAL_MASS_UNIT_ONE_DECIMAL;

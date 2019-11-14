@@ -748,35 +748,35 @@ public class UseCaseIngredientPortionCalculatorTest {
                 QUANTITY_EXISTING_VALID_METRIC.getUnitOfMeasureSubtype());
 
         UnitOfMeasure unitOfMeasureStartValues = subtype.getMeasurementClass();
-        unitOfMeasureStartValues.numberOfItemsIsSet(portions);
-        unitOfMeasureStartValues.itemBaseUnitsAreSet(QUANTITY_EXISTING_VALID_METRIC.getItemBaseUnits());
+        unitOfMeasureStartValues.isNumberOfItemsSet(portions);
+        unitOfMeasureStartValues.isItemBaseUnitsSet(QUANTITY_EXISTING_VALID_METRIC.getItemBaseUnits());
         MeasurementModel expectedModelLoaded = getMeasurementModel(unitOfMeasureStartValues);
 
         MeasurementModel requestUnitOfMeasureChangeFromUi = new MeasurementModel(
                 unitOfMeasureStartValues.getMeasurementType(),
                 MeasurementSubtype.IMPERIAL_SPOON,
-                unitOfMeasureStartValues.getNumberOfMeasurementUnits(),
+                unitOfMeasureStartValues.getNumberOfUnits(),
                 unitOfMeasureStartValues.isConversionFactorEnabled(),
                 unitOfMeasureStartValues.getConversionFactor(),
                 unitOfMeasureStartValues.getItemBaseUnits(),
                 unitOfMeasureStartValues.getTotalBaseUnits(),
                 unitOfMeasureStartValues.getNumberOfItems(),
-                unitOfMeasureStartValues.getTotalMeasurementOne(),
-                unitOfMeasureStartValues.getItemMeasurementOne(),
-                unitOfMeasureStartValues.getTotalMeasurementTwo(),
-                unitOfMeasureStartValues.getItemMeasurementTwo(),
+                unitOfMeasureStartValues.getTotalUnitOne(),
+                unitOfMeasureStartValues.getItemUnitOne(),
+                unitOfMeasureStartValues.getTotalUnitTwo(),
+                unitOfMeasureStartValues.getItemUnitTwo(),
                 unitOfMeasureStartValues.isValidMeasurement(),
-                unitOfMeasureStartValues.getMinimumMeasurementOne(),
-                unitOfMeasureStartValues.getMaximumMeasurementOne(),
-                unitOfMeasureStartValues.getMaximumMeasurementTwo(),
-                unitOfMeasureStartValues.getMeasurementUnitsDigitWidths()
+                unitOfMeasureStartValues.getMinUnitOneInBaseUnits(),
+                unitOfMeasureStartValues.getMaxUnitOne(),
+                unitOfMeasureStartValues.getMaxUnitTwo(),
+                unitOfMeasureStartValues.getMaxUnitDigitWidths()
         );
 
         UnitOfMeasure unitOfMeasureChangeToSpoonValues =
                 MeasurementSubtype.IMPERIAL_SPOON.getMeasurementClass();
-        unitOfMeasureChangeToSpoonValues.numberOfItemsIsSet(
+        unitOfMeasureChangeToSpoonValues.isNumberOfItemsSet(
                 unitOfMeasureStartValues.getNumberOfItems());
-        unitOfMeasureChangeToSpoonValues.conversionFactorIsSet(
+        unitOfMeasureChangeToSpoonValues.isConversionFactorSet(
                 unitOfMeasureStartValues.getConversionFactor());
 
         MeasurementModel expectedResultFromUnitOfMeasureChange =
@@ -785,24 +785,24 @@ public class UseCaseIngredientPortionCalculatorTest {
         MeasurementModel measurementOneChangeFromUi = new MeasurementModel(
                 unitOfMeasureChangeToSpoonValues.getMeasurementType(),
                 unitOfMeasureChangeToSpoonValues.getMeasurementSubtype(),
-                unitOfMeasureChangeToSpoonValues.getNumberOfMeasurementUnits(),
+                unitOfMeasureChangeToSpoonValues.getNumberOfUnits(),
                 unitOfMeasureChangeToSpoonValues.isConversionFactorEnabled(),
                 unitOfMeasureChangeToSpoonValues.getConversionFactor(),
                 unitOfMeasureChangeToSpoonValues.getItemBaseUnits(),
                 unitOfMeasureChangeToSpoonValues.getTotalBaseUnits(),
                 unitOfMeasureChangeToSpoonValues.getNumberOfItems(),
                 numberOfTeaspoons,
-                unitOfMeasureChangeToSpoonValues.getItemMeasurementOne(),
-                unitOfMeasureChangeToSpoonValues.getTotalMeasurementTwo(),
-                unitOfMeasureChangeToSpoonValues.getItemMeasurementTwo(),
+                unitOfMeasureChangeToSpoonValues.getItemUnitOne(),
+                unitOfMeasureChangeToSpoonValues.getTotalUnitTwo(),
+                unitOfMeasureChangeToSpoonValues.getItemUnitTwo(),
                 unitOfMeasureChangeToSpoonValues.isValidMeasurement(),
-                unitOfMeasureChangeToSpoonValues.getMinimumMeasurementOne(),
-                unitOfMeasureChangeToSpoonValues.getMaximumMeasurementOne(),
-                unitOfMeasureChangeToSpoonValues.getMaximumMeasurementTwo(),
-                unitOfMeasureChangeToSpoonValues.getMeasurementUnitsDigitWidths()
+                unitOfMeasureChangeToSpoonValues.getMinUnitOneInBaseUnits(),
+                unitOfMeasureChangeToSpoonValues.getMaxUnitOne(),
+                unitOfMeasureChangeToSpoonValues.getMaxUnitTwo(),
+                unitOfMeasureChangeToSpoonValues.getMaxUnitDigitWidths()
         );
 
-        unitOfMeasureChangeToSpoonValues.totalMeasurementOneIsSet(
+        unitOfMeasureChangeToSpoonValues.isTotalUnitOneSet(
                 measurementOneChangeFromUi.getTotalMeasurementOne());
 
         MeasurementModel expectedResultFromMeasurementOneChange =
@@ -841,7 +841,7 @@ public class UseCaseIngredientPortionCalculatorTest {
                 expectedResultFromMeasurementOneChange.getMeasurementUnitDigitWidths()
         );
 
-        unitOfMeasureChangeToSpoonValues.conversionFactorIsSet(
+        unitOfMeasureChangeToSpoonValues.isConversionFactorSet(
                 conversionFactorChangeFromUi.getConversionFactor());
 
         MeasurementModel expectedResultFromConversionFactorChanged = getMeasurementModel(
@@ -1006,21 +1006,21 @@ public class UseCaseIngredientPortionCalculatorTest {
         return new MeasurementModel(
                 unitOfMeasure.getMeasurementType(),
                 unitOfMeasure.getMeasurementSubtype(),
-                unitOfMeasure.getNumberOfMeasurementUnits(),
+                unitOfMeasure.getNumberOfUnits(),
                 unitOfMeasure.isConversionFactorEnabled(),
                 unitOfMeasure.getConversionFactor(),
                 unitOfMeasure.getItemBaseUnits(),
                 unitOfMeasure.getTotalBaseUnits(),
                 unitOfMeasure.getNumberOfItems(),
-                unitOfMeasure.getTotalMeasurementOne(),
-                unitOfMeasure.getItemMeasurementOne(),
-                unitOfMeasure.getTotalMeasurementTwo(),
-                unitOfMeasure.getItemMeasurementTwo(),
+                unitOfMeasure.getTotalUnitOne(),
+                unitOfMeasure.getItemUnitOne(),
+                unitOfMeasure.getTotalUnitTwo(),
+                unitOfMeasure.getItemUnitTwo(),
                 unitOfMeasure.isValidMeasurement(),
-                unitOfMeasure.getMinimumMeasurementOne(),
-                unitOfMeasure.getMaximumMeasurementOne(),
-                unitOfMeasure.getMaximumMeasurementTwo(),
-                unitOfMeasure.getMeasurementUnitsDigitWidths()
+                unitOfMeasure.getMinUnitOneInBaseUnits(),
+                unitOfMeasure.getMaxUnitOne(),
+                unitOfMeasure.getMaxUnitTwo(),
+                unitOfMeasure.getMaxUnitDigitWidths()
         );
     }
     // endregion helper methods --------------------------------------------------------------------

@@ -173,13 +173,13 @@ public class UseCaseIngredientPortionCalculator {
         unitOfMeasure = MeasurementSubtype.fromInt(
                 quantityEntity.getUnitOfMeasureSubtype()).getMeasurementClass();
 
-        conversionFactorIsSet = unitOfMeasure.conversionFactorIsSet(
+        conversionFactorIsSet = unitOfMeasure.isConversionFactorSet(
                 ingredientEntity.getConversionFactor());
 
-        portionsAreSet = unitOfMeasure.numberOfItemsIsSet(numberOfPortions);
+        portionsAreSet = unitOfMeasure.isNumberOfItemsSet(numberOfPortions);
 
         if (quantityEntity.getItemBaseUnits() > 0) {
-            itemBaseUnitsAreSet = unitOfMeasure.itemBaseUnitsAreSet(
+            itemBaseUnitsAreSet = unitOfMeasure.isItemBaseUnitsSet(
                     quantityEntity.getItemBaseUnits());
         }
 
@@ -218,9 +218,9 @@ public class UseCaseIngredientPortionCalculator {
 
     private void setupForNewSubtype() {
         unitOfMeasure = modelIn.getSubtype().getMeasurementClass();
-        conversionFactorIsSet = unitOfMeasure.conversionFactorIsSet(
+        conversionFactorIsSet = unitOfMeasure.isConversionFactorSet(
                 ingredientEntity.getConversionFactor());
-        portionsAreSet = unitOfMeasure.numberOfItemsIsSet(numberOfPortions);
+        portionsAreSet = unitOfMeasure.isNumberOfItemsSet(numberOfPortions);
     }
 
     private boolean isConversionFactorChanged() {
@@ -229,7 +229,7 @@ public class UseCaseIngredientPortionCalculator {
 
     private void processConversionFactor() {
         conversionFactorChanged = true;
-        conversionFactorIsSet = unitOfMeasure.conversionFactorIsSet(
+        conversionFactorIsSet = unitOfMeasure.isConversionFactorSet(
                 modelIn.getConversionFactor());
 
         if (conversionFactorIsSet) {
@@ -242,22 +242,22 @@ public class UseCaseIngredientPortionCalculator {
     }
 
     private boolean isTotalMeasurementOneChanged() {
-        return modelIn.getTotalMeasurementOne() != unitOfMeasure.getTotalMeasurementOne();
+        return modelIn.getTotalMeasurementOne() != unitOfMeasure.getTotalUnitOne();
     }
 
     private void processTotalMeasurementOne() {
         totalMeasurementOneChanged = true;
-        totalMeasurementOneIsSet = unitOfMeasure.totalMeasurementOneIsSet(
+        totalMeasurementOneIsSet = unitOfMeasure.isTotalUnitOneSet(
                 modelIn.getTotalMeasurementOne());
     }
 
     private boolean isTotalMeasurementTwoChanged() {
-        return modelIn.getTotalMeasurementTwo() != unitOfMeasure.getTotalMeasurementTwo();
+        return modelIn.getTotalMeasurementTwo() != unitOfMeasure.getTotalUnitTwo();
     }
 
     private void processTotalMeasurementTwo() {
         totalMeasurementTwoChanged = true;
-        totalMeasurementTwoIsSet = unitOfMeasure.totalMeasurementTwoIsSet(
+        totalMeasurementTwoIsSet = unitOfMeasure.isTotalUnitTwoSet(
                 modelIn.getTotalMeasurementTwo());
     }
 
@@ -277,21 +277,21 @@ public class UseCaseIngredientPortionCalculator {
         existingModel = new MeasurementModel(
                 unitOfMeasure.getMeasurementType(),
                 unitOfMeasure.getMeasurementSubtype(),
-                unitOfMeasure.getNumberOfMeasurementUnits(),
+                unitOfMeasure.getNumberOfUnits(),
                 unitOfMeasure.isConversionFactorEnabled(),
                 getConversionFactorResult(),
                 unitOfMeasure.getItemBaseUnits(),
                 unitOfMeasure.getTotalBaseUnits(),
                 unitOfMeasure.getNumberOfItems(),
                 getTotalMeasurementOneResult(),
-                unitOfMeasure.getItemMeasurementOne(),
+                unitOfMeasure.getItemUnitOne(),
                 getTotalMeasurementTwoResult(),
-                unitOfMeasure.getItemMeasurementTwo(),
+                unitOfMeasure.getItemUnitTwo(),
                 unitOfMeasure.isValidMeasurement(),
-                unitOfMeasure.getMinimumMeasurementOne(),
-                unitOfMeasure.getMaximumMeasurementOne(),
-                unitOfMeasure.getMaximumMeasurementTwo(),
-                unitOfMeasure.getMeasurementUnitsDigitWidths()
+                unitOfMeasure.getMinUnitOneInBaseUnits(),
+                unitOfMeasure.getMaxUnitOne(),
+                unitOfMeasure.getMaxUnitTwo(),
+                unitOfMeasure.getMaxUnitDigitWidths()
         );
 
         MeasurementResult result = new MeasurementResult(existingModel, getResultStatus());
@@ -306,12 +306,12 @@ public class UseCaseIngredientPortionCalculator {
 
     private double getTotalMeasurementOneResult() {
         return totalMeasurementOneChanged && !totalMeasurementOneIsSet ?
-                modelIn.getTotalMeasurementOne() : unitOfMeasure.getTotalMeasurementOne();
+                modelIn.getTotalMeasurementOne() : unitOfMeasure.getTotalUnitOne();
     }
 
     private int getTotalMeasurementTwoResult() {
         return totalMeasurementTwoChanged && !totalMeasurementTwoIsSet ?
-                modelIn.getTotalMeasurementTwo() : unitOfMeasure.getTotalMeasurementTwo();
+                modelIn.getTotalMeasurementTwo() : unitOfMeasure.getTotalUnitTwo();
     }
 
     private ResultStatus getResultStatus() {

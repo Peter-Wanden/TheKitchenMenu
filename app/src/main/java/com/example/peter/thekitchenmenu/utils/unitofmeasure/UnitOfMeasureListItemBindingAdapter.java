@@ -25,8 +25,8 @@ public class UnitOfMeasureListItemBindingAdapter {
                                              int numberOfItems) {
 
         UnitOfMeasure unitOfMeasure = MeasurementSubtype.fromInt(subtypeInt).getMeasurementClass();
-        boolean baseUnitsAreSet = unitOfMeasure.totalBaseUnitsAreSet(baseUnits);
-        boolean numberOfItemsAreSet = unitOfMeasure.numberOfItemsIsSet(numberOfItems);
+        boolean baseUnitsAreSet = unitOfMeasure.isTotalBaseUnitsSet(baseUnits);
+        boolean numberOfItemsAreSet = unitOfMeasure.isNumberOfItemsSet(numberOfItems);
         Resources resources = view.getResources();
         String measurement = "";
 
@@ -53,16 +53,16 @@ public class UnitOfMeasureListItemBindingAdapter {
             formattedMeasurement.append(formattedMetricMeasurement(
                     resources,
                     unitOfMeasure,
-                    unitOfMeasure.getItemMeasurementTwo(),
-                    unitOfMeasure.getItemMeasurementOne()));
+                    unitOfMeasure.getItemUnitTwo(),
+                    unitOfMeasure.getItemUnitOne()));
             formattedMeasurement.append(" (");
         }
 
         formattedMeasurement.append(formattedMetricMeasurement(
                 resources,
                 unitOfMeasure,
-                unitOfMeasure.getTotalMeasurementTwo(),
-                unitOfMeasure.getTotalMeasurementOne()));
+                unitOfMeasure.getTotalUnitTwo(),
+                unitOfMeasure.getTotalUnitOne()));
 
         if (numberOfItems > 1) {
             formattedMeasurement.append(")");
@@ -109,10 +109,10 @@ public class UnitOfMeasureListItemBindingAdapter {
         NumberFormat numberFormat = getNumberFormat(resources);
         StringBuilder formattedMeasurement = new StringBuilder();
         int numberOfProducts = unitOfMeasure.getNumberOfItems();
-        int packUnitTwoValue = unitOfMeasure.getTotalMeasurementTwo();
-        double packUnitOneValue = unitOfMeasure.getTotalMeasurementOne();
-        int productUnitTwo = unitOfMeasure.getItemMeasurementTwo();
-        double productUnitOne = unitOfMeasure.getItemMeasurementOne();
+        int packUnitTwoValue = unitOfMeasure.getTotalUnitTwo();
+        double packUnitOneValue = unitOfMeasure.getTotalUnitOne();
+        int productUnitTwo = unitOfMeasure.getItemUnitTwo();
+        double productUnitOne = unitOfMeasure.getItemUnitOne();
         String unitOneLabel = resources.getString(unitOfMeasure.getUnitOneLabelResourceId());
         String unitTwoLabel = resources.getString(unitOfMeasure.getUnitTwoLabelResourceId());
 

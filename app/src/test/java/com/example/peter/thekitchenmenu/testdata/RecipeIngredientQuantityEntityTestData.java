@@ -55,11 +55,11 @@ public class RecipeIngredientQuantityEntityTestData {
         UnitOfMeasure unitOfMeasure = MeasurementSubtype.fromInt(
                 getNewValidMetric().getUnitOfMeasureSubtype()).getMeasurementClass();
 
-        unitOfMeasure.totalBaseUnitsAreSet(MAX_MASS);
+        unitOfMeasure.isTotalBaseUnitsSet(MAX_MASS);
 
         int portions = RecipePortionsEntityTestData.getNewValidFourPortions().getSittings() *
                 RecipePortionsEntityTestData.getNewValidFourPortions().getServings();
-        unitOfMeasure.numberOfItemsIsSet(portions);
+        unitOfMeasure.isNumberOfItemsSet(portions);
 
         return new RecipeIngredientQuantityEntity(
                 getNewValidMetric().getId(),
@@ -163,8 +163,8 @@ public class RecipeIngredientQuantityEntityTestData {
         UnitOfMeasure unitOfMeasure = MeasurementSubtype.IMPERIAL_SPOON.getMeasurementClass();
         int portions = RecipePortionsEntityTestData.getExistingValidNinePortions().getServings() *
                 RecipePortionsEntityTestData.getExistingValidNinePortions().getSittings();
-        unitOfMeasure.numberOfItemsIsSet(portions);
-        unitOfMeasure.totalMeasurementOneIsSet((2));
+        unitOfMeasure.isNumberOfItemsSet(portions);
+        unitOfMeasure.isTotalUnitOneSet((2));
 
         return new RecipeIngredientQuantityEntity(
                 "existing_valid_imperialSpoon_id",

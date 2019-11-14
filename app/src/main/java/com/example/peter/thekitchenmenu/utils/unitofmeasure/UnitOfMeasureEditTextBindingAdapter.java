@@ -21,8 +21,8 @@ public class UnitOfMeasureEditTextBindingAdapter {
                                                        MeasurementSubtype subtype) {
         UnitOfMeasure unitOfMeasure = subtype.getMeasurementClass();
         int viewId = editText.getId();
-        int units = unitOfMeasure.getNumberOfMeasurementUnits();
-        int digitsAfterDecimal = (int) unitOfMeasure.getMeasurementUnitsDigitWidths()[0].second;
+        int units = unitOfMeasure.getNumberOfUnits();
+        int digitsAfterDecimal = (int) unitOfMeasure.getMaxUnitDigitWidths()[0].second;
 
         if (viewId == R.id.pack_editable_measurement_one && digitsAfterDecimal > 0 ||
                 viewId == R.id.product_editable_measurement_one && digitsAfterDecimal > 0 ||
@@ -45,7 +45,7 @@ public class UnitOfMeasureEditTextBindingAdapter {
     private static void setInputFilters(int viewId,
                                         EditText editText,
                                         UnitOfMeasure unitOfMeasure) {
-        Pair[] inputDigitsFilters = unitOfMeasure.getMeasurementUnitsDigitWidths();
+        Pair[] inputDigitsFilters = unitOfMeasure.getMaxUnitDigitWidths();
 
         if (viewId == R.id.pack_editable_measurement_one ||
                 viewId == R.id.product_editable_measurement_one ||
@@ -70,8 +70,8 @@ public class UnitOfMeasureEditTextBindingAdapter {
                 UnitOfMeasure unitOfMeasure = subtype.getMeasurementClass();
         if (unitOfMeasure.isConversionFactorEnabled()) {
             int viewId = editText.getId();
-            int digitsBeforeDecimal = (int) unitOfMeasure.getMeasurementUnitsDigitWidths()[2].first;
-            int digitsAfterDecimal = (int) unitOfMeasure.getMeasurementUnitsDigitWidths()[2].second;
+            int digitsBeforeDecimal = (int) unitOfMeasure.getMaxUnitDigitWidths()[2].first;
+            int digitsAfterDecimal = (int) unitOfMeasure.getMaxUnitDigitWidths()[2].second;
 
             if (viewId == R.id.recipe_ingredient_editable_conversion_factor) {
 

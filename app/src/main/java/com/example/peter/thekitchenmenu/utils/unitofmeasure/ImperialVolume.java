@@ -9,9 +9,9 @@ class ImperialVolume extends UnitOfMeasureAbstract {
     ImperialVolume() {
         measurementType = IMPERIAL_VOLUME_TYPE;
         subtype = IMPERIAL_VOLUME_SUBTYPE;
-        numberOfMeasurementUnits = IMPERIAL_VOLUME_NUMBER_OF_MEASUREMENT_UNITS;
-        maximumMeasurement = IMPERIAL_VOLUME_MAX_MEASUREMENT;
-        minimumMeasurement = IMPERIAL_VOLUME_MIN_MEASUREMENT;
+        numberOfUnits = IMPERIAL_VOLUME_NUMBER_OF_MEASUREMENT_UNITS;
+        maxMeasurement = IMPERIAL_VOLUME_MAX_MEASUREMENT;
+        minMeasurement = IMPERIAL_VOLUME_MIN_MEASUREMENT;
         unitTwo = IMPERIAL_VOLUME_UNIT_TWO;
         unitOne = IMPERIAL_VOLUME_UNIT_ONE;
         unitOneDecimal = IMPERIAL_VOLUME_UNIT_ONE_DECIMAL;

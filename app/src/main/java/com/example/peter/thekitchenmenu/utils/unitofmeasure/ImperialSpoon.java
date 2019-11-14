@@ -9,9 +9,9 @@ class ImperialSpoon extends UnitOfMeasureAbstract {
     ImperialSpoon() {
         measurementType = IMPERIAL_SPOON_TYPE;
         subtype = IMPERIAL_SPOON_SUBTYPE;
-        numberOfMeasurementUnits = IMPERIAL_SPOON_NUMBER_OF_MEASUREMENT_UNITS;
-        maximumMeasurement = IMPERIAL_SPOON_MAX_MEASUREMENT;
-        minimumMeasurement = IMPERIAL_SPOON_MIN_MEASUREMENT;
+        numberOfUnits = IMPERIAL_SPOON_NUMBER_OF_MEASUREMENT_UNITS;
+        maxMeasurement = IMPERIAL_SPOON_MAX_MEASUREMENT;
+        minMeasurement = IMPERIAL_SPOON_MIN_MEASUREMENT;
         unitTwo = IMPERIAL_SPOON_UNIT_TWO;
         unitOne = IMPERIAL_SPOON_UNIT_ONE;
         unitTwoNoConversionFactor = IMPERIAL_SPOON_UNIT_TWO;

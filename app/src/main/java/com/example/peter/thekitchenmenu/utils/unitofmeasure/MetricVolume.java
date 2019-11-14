@@ -9,9 +9,9 @@ class MetricVolume extends UnitOfMeasureAbstract {
     MetricVolume() {
         measurementType = METRIC_VOLUME_TYPE;
         subtype = METRIC_VOLUME_SUBTYPE;
-        numberOfMeasurementUnits = METRIC_VOLUME_NUMBER_OF_MEASUREMENT_UNITS;
-        maximumMeasurement = METRIC_VOLUME_MAX_MEASUREMENT;
-        minimumMeasurement = METRIC_VOLUME_MIN_MEASUREMENT;
+        numberOfUnits = METRIC_VOLUME_NUMBER_OF_MEASUREMENT_UNITS;
+        maxMeasurement = METRIC_VOLUME_MAX_MEASUREMENT;
+        minMeasurement = METRIC_VOLUME_MIN_MEASUREMENT;
         unitTwo = METRIC_VOLUME_UNIT_TWO;
         unitOne = METRIC_VOLUME_UNIT_ONE;
         unitOneDecimal = METRIC_VOLUME_UNIT_ONE_DECIMAL;

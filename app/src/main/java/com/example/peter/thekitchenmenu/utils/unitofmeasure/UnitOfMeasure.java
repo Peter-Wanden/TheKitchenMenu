@@ -11,34 +11,34 @@ public interface UnitOfMeasure {
 
     boolean isConversionFactorEnabled();
     double getConversionFactor();
-    boolean conversionFactorIsSet(double conversionFactor);
+    boolean isConversionFactorSet(double conversionFactor);
 
     double getTotalBaseUnits();
-    boolean totalBaseUnitsAreSet(double totalBaseUnits);
+    boolean isTotalBaseUnitsSet(double totalBaseUnits);
 
     double getItemBaseUnits();
-    boolean itemBaseUnitsAreSet(double itemBaseUnits);
+    boolean isItemBaseUnitsSet(double itemBaseUnits);
 
     int getNumberOfItems();
-    boolean numberOfItemsIsSet(int numberOfItems);
+    boolean isNumberOfItemsSet(int numberOfItems);
 
-    int getNumberOfMeasurementUnits();
+    int getNumberOfUnits();
 
     int getUnitOneLabelResourceId();
-    double getTotalMeasurementOne();
-    boolean totalMeasurementOneIsSet(double newTotalMeasurementOne);
-    double getItemMeasurementOne();
-    boolean itemMeasurementOneIsSet(double newItemMeasurementOne);
+    double getTotalUnitOne();
+    boolean isTotalUnitOneSet(double totalUnitOne);
+    double getItemUnitOne();
+    boolean isItemUnitOneSet(double itemUnitOne);
 
     int getUnitTwoLabelResourceId();
-    int getTotalMeasurementTwo();
-    boolean totalMeasurementTwoIsSet(int newTotalMeasurementTwo);
-    int getItemMeasurementTwo();
-    boolean itemMeasurementTwoIsSet(int newItemMeasurementTwo);
+    int getTotalUnitTwo();
+    boolean isTotalUnitTwoSet(int totalUnitTwo);
+    int getItemUnitTwo();
+    boolean isItemUnitTwoSet(int itemUnitTwo);
 
     boolean isValidMeasurement();
-    double getMinimumMeasurementOne();
-    double getMaximumMeasurementOne();
-    int getMaximumMeasurementTwo();
-    Pair[] getMeasurementUnitsDigitWidths();
+    double getMinUnitOneInBaseUnits();
+    double getMaxUnitOne();
+    int getMaxUnitTwo();
+    Pair[] getMaxUnitDigitWidths();
 }

@@ -9,9 +9,9 @@ class MetricMass extends UnitOfMeasureAbstract {
     MetricMass() {
         measurementType = METRIC_MASS_TYPE;
         subtype = METRIC_MASS_SUBTYPE;
-        numberOfMeasurementUnits = METRIC_MASS_NUMBER_OF_MEASUREMENT_UNITS;
-        maximumMeasurement = METRIC_MASS_MAX_MEASUREMENT;
-        minimumMeasurement = METRIC_MASS_MIN_MEASUREMENT;
+        numberOfUnits = METRIC_MASS_NUMBER_OF_MEASUREMENT_UNITS;
+        maxMeasurement = METRIC_MASS_MAX_MEASUREMENT;
+        minMeasurement = METRIC_MASS_MIN_MEASUREMENT;
         unitTwo = METRIC_MASS_UNIT_TWO;
         unitOne = METRIC_MASS_UNIT_ONE;
         unitOneDecimal = METRIC_MASS_UNIT_ONE_DECIMAL;

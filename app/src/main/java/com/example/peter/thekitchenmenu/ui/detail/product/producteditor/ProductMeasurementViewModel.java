@@ -98,7 +98,7 @@ public class ProductMeasurementViewModel extends ObservableAndroidViewModel {
     }
 
     private boolean canChangeToNewNumberOfProducts(int numberOfProducts) {
-        return unitOfMeasure.numberOfItemsIsSet(numberOfProducts);
+        return unitOfMeasure.isNumberOfItemsSet(numberOfProducts);
     }
 
     private void setBaseUnits(double newBaseUnits) {
@@ -114,7 +114,7 @@ public class ProductMeasurementViewModel extends ObservableAndroidViewModel {
     }
 
     private boolean canChangeToNewNumberOfBaseUnits(double newBaseUnits) {
-        return unitOfMeasure.totalBaseUnitsAreSet(newBaseUnits);
+        return unitOfMeasure.isTotalBaseUnitsSet(newBaseUnits);
     }
 
     @Bindable
@@ -147,11 +147,11 @@ public class ProductMeasurementViewModel extends ObservableAndroidViewModel {
 
         switch (viewId) {
             case R.id.pack_editable_measurement_one:
-                oldMeasurement = unitOfMeasure.getTotalMeasurementOne();
+                oldMeasurement = unitOfMeasure.getTotalUnitOne();
                 return oldMeasurement != newMeasurement;
 
             case R.id.product_editable_measurement_one:
-                oldMeasurement = unitOfMeasure.getItemMeasurementOne();
+                oldMeasurement = unitOfMeasure.getItemUnitOne();
                 return oldMeasurement != newMeasurement;
         }
         return false;
@@ -161,10 +161,10 @@ public class ProductMeasurementViewModel extends ObservableAndroidViewModel {
         boolean measurementIsSet = false;
 
         if (viewId == R.id.pack_editable_measurement_one)
-            measurementIsSet = unitOfMeasure.totalMeasurementOneIsSet(decimalMeasurement);
+            measurementIsSet = unitOfMeasure.isTotalUnitOneSet(decimalMeasurement);
 
         if (viewId == R.id.product_editable_measurement_one)
-            measurementIsSet = unitOfMeasure.itemMeasurementOneIsSet(decimalMeasurement);
+            measurementIsSet = unitOfMeasure.isItemUnitOneSet(decimalMeasurement);
 
         if (measurementIsSet)
             updateUi(); // with new value
@@ -183,11 +183,11 @@ public class ProductMeasurementViewModel extends ObservableAndroidViewModel {
 
         switch (viewId) {
             case R.id.pack_editable_measurement_two:
-                oldMeasurement = unitOfMeasure.getTotalMeasurementTwo();
+                oldMeasurement = unitOfMeasure.getTotalUnitTwo();
                 return newMeasurement != oldMeasurement;
 
             case R.id.product_editable_measurement_two:
-                oldMeasurement = unitOfMeasure.getItemMeasurementTwo();
+                oldMeasurement = unitOfMeasure.getItemUnitTwo();
                 return newMeasurement != oldMeasurement;
         }
         return false;
@@ -197,10 +197,10 @@ public class ProductMeasurementViewModel extends ObservableAndroidViewModel {
         boolean measurementIsSet = false;
 
         if (viewId == R.id.pack_editable_measurement_two)
-            measurementIsSet = unitOfMeasure.totalMeasurementTwoIsSet(newMeasurement);
+            measurementIsSet = unitOfMeasure.isTotalUnitTwoSet(newMeasurement);
 
         if (viewId == R.id.product_editable_measurement_two)
-            measurementIsSet = unitOfMeasure.itemMeasurementTwoIsSet(newMeasurement);
+            measurementIsSet = unitOfMeasure.isItemUnitTwoSet(newMeasurement);
 
         if (measurementIsSet)
             updateUi(); // with new value
@@ -213,24 +213,24 @@ public class ProductMeasurementViewModel extends ObservableAndroidViewModel {
         if (subtype != unitOfMeasure.getMeasurementSubtype())
             subtype = unitOfMeasure.getMeasurementSubtype();
 
-        if (numberOfMeasurementUnits != unitOfMeasure.getNumberOfMeasurementUnits())
-            numberOfMeasurementUnits = unitOfMeasure.getNumberOfMeasurementUnits();
+        if (numberOfMeasurementUnits != unitOfMeasure.getNumberOfUnits())
+            numberOfMeasurementUnits = unitOfMeasure.getNumberOfUnits();
 
         if (numberOfProducts != unitOfMeasure.getNumberOfItems())
             numberOfProducts = unitOfMeasure.getNumberOfItems();
 
-        int unitsAfterDecimal = (int) unitOfMeasure.getMeasurementUnitsDigitWidths()[0].second;
+        int unitsAfterDecimal = (int) unitOfMeasure.getMaxUnitDigitWidths()[0].second;
 
         if (unitsAfterDecimal > 0) {
-            packMeasurementOne = String.valueOf(unitOfMeasure.getTotalMeasurementOne());
-            productMeasurementOne = String.valueOf(unitOfMeasure.getItemMeasurementOne());
+            packMeasurementOne = String.valueOf(unitOfMeasure.getTotalUnitOne());
+            productMeasurementOne = String.valueOf(unitOfMeasure.getItemUnitOne());
         } else {
-            packMeasurementOne = String.valueOf((int) unitOfMeasure.getTotalMeasurementOne());
-            productMeasurementOne = String.valueOf((int) unitOfMeasure.getItemMeasurementOne());
+            packMeasurementOne = String.valueOf((int) unitOfMeasure.getTotalUnitOne());
+            productMeasurementOne = String.valueOf((int) unitOfMeasure.getItemUnitOne());
         }
         if (numberOfMeasurementUnits > 1) {
-            packMeasurementTwo = String.valueOf(unitOfMeasure.getTotalMeasurementTwo());
-            productMeasurementTwo = String.valueOf(unitOfMeasure.getItemMeasurementTwo());
+            packMeasurementTwo = String.valueOf(unitOfMeasure.getTotalUnitTwo());
+            productMeasurementTwo = String.valueOf(unitOfMeasure.getItemUnitTwo());
         }
         notifyChange();
         updateMeasurementModel();

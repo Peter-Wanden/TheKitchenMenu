@@ -29,10 +29,10 @@ public class NumberStringUnitOfMeasureConverter {
         if (viewId == R.id.pack_editable_measurement_one ||
                 viewId == R.id.product_editable_measurement_one ||
                 viewId == R.id.recipe_ingredient_editable_measurement_one)
-            digitsAfterDecimal = (int) unitOfMeasure.getMeasurementUnitsDigitWidths()[0].second;
+            digitsAfterDecimal = (int) unitOfMeasure.getMaxUnitDigitWidths()[0].second;
 
         else if (viewId == R.id.recipe_ingredient_editable_conversion_factor) {
-            digitsAfterDecimal = (int) unitOfMeasure.getMeasurementUnitsDigitWidths()[2].second;
+            digitsAfterDecimal = (int) unitOfMeasure.getMaxUnitDigitWidths()[2].second;
         }
 
         NumberFormat numberFormat = getNumberFormat(editText);

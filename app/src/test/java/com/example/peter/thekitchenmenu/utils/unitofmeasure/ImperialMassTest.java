@@ -11,14 +11,12 @@ import java.text.NumberFormat;
 
 import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.*;
 import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.is;
 
 public class ImperialMassTest {
     // region constants ----------------------------------------------------------------------------
     private double DELTA = 0.0001;
-    double ONE_POUND = IMPERIAL_MASS_MIN_MEASUREMENT * 453.59237;
-    double ONE_OUNCE = ONE_POUND / 16;
-    double ONE_TENTH_OUNCE = ONE_OUNCE / 10;
+    private double ONE_POUND = IMPERIAL_MASS_MIN_MEASUREMENT * 453.59237;
+    private double ONE_OUNCE = ONE_POUND / 16;
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
@@ -34,525 +32,594 @@ public class ImperialMassTest {
 
     @Test
     public void getNumberOfMeasurementUnits_NumberOfMeasurementUnitsReturned() {
-        assertEquals(IMPERIAL_MASS_NUMBER_OF_MEASUREMENT_UNITS, SUT.getNumberOfMeasurementUnits());
+        assertEquals(IMPERIAL_MASS_NUMBER_OF_MEASUREMENT_UNITS, SUT.getNumberOfUnits());
     }
 
     @Test
-    public void totalBaseUnitsAreSet_inRangeMin_true() {
+    public void getMinUnitOne_minUnitOneReturned() {
         // Arrange
-        unitValuesFromBaseUnits = getValuesFromBaseUnits(IMPERIAL_MASS_SMALLEST_UNIT);
         // Act
-        assertTrue(SUT.totalBaseUnitsAreSet(IMPERIAL_MASS_SMALLEST_UNIT));
         // Assert
-        assertEquals(unitValuesFromBaseUnits.first, SUT.getTotalMeasurementOne(), DELTA);
-        assertEquals(unitValuesFromBaseUnits.first, SUT.getItemMeasurementOne(), DELTA);
+        assertEquals(IMPERIAL_MASS_SMALLEST_UNIT, SUT.getMinUnitOneInBaseUnits(), DELTA);
+    }
+
+    @Test
+    public void getMaxUnitOne_maxUnitOneReturned() {
+        // Arrange
+        unitValuesFromBaseUnits = getUnitValuesFromBaseUnits(IMPERIAL_MASS_MAX_MEASUREMENT);
+        double expectedMaxUnitOne = roundDecimal(unitValuesFromBaseUnits.first);
+        // Act
+        // Assert
+        assertEquals(expectedMaxUnitOne, SUT.getMaxUnitOne(), DELTA);
+    }
+
+    @Test
+    public void getMaxUnitTwo_maxUnitTwoReturned() {
+        // Arrange
+        unitValuesFromBaseUnits = getUnitValuesFromBaseUnits(IMPERIAL_MASS_MAX_MEASUREMENT);
+        int expectedMaxUnitTwo = unitValuesFromBaseUnits.second;
+        // Act
+        // Assert
+        assertEquals(expectedMaxUnitTwo, SUT.getMaxUnitTwo());
+    }
+
+    // todo, test digit widths
+    // todo, test numberOfItems autoAdjust
+
+    @Test
+    public void isTotalBaseUnitsSet_inRangeMin_true() {
+        // Arrange
+        unitValuesFromBaseUnits = getUnitValuesFromBaseUnits(IMPERIAL_MASS_SMALLEST_UNIT);
+        // Act
+        assertTrue(SUT.isTotalBaseUnitsSet(IMPERIAL_MASS_SMALLEST_UNIT));
+        // Assert
+        assertEquals(unitValuesFromBaseUnits.first, SUT.getTotalUnitOne(), DELTA);
+        assertEquals(unitValuesFromBaseUnits.first, SUT.getItemUnitOne(), DELTA);
         assertEquals(IMPERIAL_MASS_SMALLEST_UNIT, SUT.getTotalBaseUnits(), DELTA);
     }
 
     @Test
-    public void totalBaseUnitsAreSet_outOfRangeMin_false() {
+    public void isTotalBaseUnitsSet_outOfRangeMin_false() {
         // Arrange
         // Act
-        assertFalse(SUT.totalBaseUnitsAreSet(IMPERIAL_MASS_UNIT_ONE_DECIMAL - DELTA));
+        assertFalse(SUT.isTotalBaseUnitsSet(IMPERIAL_MASS_UNIT_ONE_DECIMAL - DELTA));
         // Assert
-        assertEquals((0), SUT.getTotalBaseUnits(), DELTA);
+        assertEquals(NOT_SET, SUT.getTotalBaseUnits(), DELTA);
     }
 
     @Test
-    public void totalBaseUnitsAreSet_inRangeMax_true() {
+    public void isTotalBaseUnitsSet_inRangeMax_true() {
         // Arrange
-        unitValuesFromBaseUnits = getValuesFromBaseUnits(MAX_MASS);
+        unitValuesFromBaseUnits = getUnitValuesFromBaseUnits(MAX_MASS);
         double unitOne = unitValuesFromBaseUnits.first;
         int unitTwo = unitValuesFromBaseUnits.second;
         // Act
-        assertTrue(SUT.totalBaseUnitsAreSet(IMPERIAL_MASS_MAX_MEASUREMENT));
+        assertTrue(SUT.isTotalBaseUnitsSet(IMPERIAL_MASS_MAX_MEASUREMENT));
         // Assert
-        assertEquals(unitTwo, SUT.getTotalMeasurementTwo());
-        assertEquals(unitOne, SUT.getTotalMeasurementOne(), DELTA);
+        assertEquals(unitTwo, SUT.getTotalUnitTwo());
+        assertEquals(unitOne, SUT.getTotalUnitOne(), DELTA);
         assertEquals(IMPERIAL_MASS_MAX_MEASUREMENT, SUT.getTotalBaseUnits(), DELTA);
     }
 
     @Test
-    public void totalBaseUnitsAreSet_outOfRangeMax_false() {
+    public void isTotalBaseUnitsSet_outOfRangeMax_false() {
         // Arrange
         // Act
-        assertFalse(SUT.totalBaseUnitsAreSet(MAX_MASS + 1));
+        assertFalse(SUT.isTotalBaseUnitsSet(IMPERIAL_MASS_MAX_MEASUREMENT + 1));
         // Assert
-        assertEquals((0), SUT.getTotalBaseUnits(), DELTA);
+        assertEquals(NOT_SET, SUT.getTotalBaseUnits(), DELTA);
     }
 
     @Test
-    public void totalBaseUnitsAreSet_baseUnitsSmallerThanSmallestItemSize_numberOfItemsReduced() {
+    public void isTotalBaseUnitsSet_baseUnitsSmallerThanSmallestItemSize_numberOfItemsReduced() {
         // Arrange
         double slightlySmallerThanTwoSmallestItems = (IMPERIAL_MASS_SMALLEST_UNIT * 2) - (DELTA * 2);
         // Act
-        assertTrue(SUT.numberOfItemsIsSet(2));
-        assertTrue(SUT.totalBaseUnitsAreSet(slightlySmallerThanTwoSmallestItems));
+        assertTrue(SUT.isNumberOfItemsSet(2));
+        assertTrue(SUT.isTotalBaseUnitsSet(slightlySmallerThanTwoSmallestItems));
         // Assert
         assertEquals((1), SUT.getNumberOfItems());
     }
 
     @Test
-    public void totalBaseUnitsAreSetNumberOfItemsIsSet_minimumValues_itemMeasurementOneMinimum() {
+    public void isTotalBaseUnitsSet_isNumberOfItemsSet_minimumValues_itemMeasurementOneMinimum() {
         // Arrange
+        int arbitraryNumberOfItems = 4;
+        unitValuesFromBaseUnits = getUnitValuesFromBaseUnits(IMPERIAL_MASS_SMALLEST_UNIT);
+        double totalBaseUnits = arbitraryNumberOfItems * IMPERIAL_MASS_SMALLEST_UNIT;
+        double expectedTotalUnitOne = unitValuesFromBaseUnits.first * arbitraryNumberOfItems;
+        double expectedItemUnitOne = expectedTotalUnitOne / arbitraryNumberOfItems;
         // Act
-        assertTrue(SUT.numberOfItemsIsSet(2));
-        assertTrue(SUT.totalBaseUnitsAreSet(IMPERIAL_MASS_SMALLEST_UNIT * 2));
+        assertTrue(SUT.isNumberOfItemsSet(arbitraryNumberOfItems));
+        assertTrue(SUT.isTotalBaseUnitsSet(totalBaseUnits));
         // Assert
-        assertEquals((0.2), SUT.getTotalMeasurementOne(), DELTA);
-        assertEquals((0.1), SUT.getItemMeasurementOne(), DELTA);
+        assertEquals(expectedTotalUnitOne, SUT.getTotalUnitOne(), DELTA);
+        assertEquals(expectedItemUnitOne, SUT.getItemUnitOne(), DELTA);
     }
 
     @Test
-    public void totalBaseUnitsAreSet_minimumItemSize_noOfItemsNotChanged() {
+    public void isTotalBaseUnitsSet_minimumItemSize_noOfItemsNotChanged() {
         // Arrange
-        assertTrue(SUT.numberOfItemsIsSet(2));
+        int arbitraryNoOfItems = 2;
+        double totalBaseUnits = IMPERIAL_MASS_SMALLEST_UNIT * arbitraryNoOfItems;
+        unitValuesFromBaseUnits = getUnitValuesFromBaseUnits(totalBaseUnits);
+        double expectedTotalUnitOne = unitValuesFromBaseUnits.first;
+        double expectedItemUnits = unitValuesFromBaseUnits.first / arbitraryNoOfItems;
         // Act
-        assertTrue(SUT.totalBaseUnitsAreSet(IMPERIAL_MASS_SMALLEST_UNIT * 2));
+        assertTrue(SUT.isNumberOfItemsSet(arbitraryNoOfItems));
+        assertTrue(SUT.isTotalBaseUnitsSet(totalBaseUnits));
         // Assert
-        assertEquals((0.2), SUT.getTotalMeasurementOne(), DELTA);
-        assertEquals((0), SUT.getTotalMeasurementTwo(), DELTA);
-        assertEquals((0.1), SUT.getItemMeasurementOne(), DELTA);
-        assertEquals((0), SUT.getItemMeasurementTwo());
-        assertEquals((IMPERIAL_MASS_SMALLEST_UNIT * 2), SUT.getTotalBaseUnits(), DELTA);
+        assertEquals(expectedTotalUnitOne, SUT.getTotalUnitOne(), DELTA);
+        assertEquals(expectedItemUnits, SUT.getItemUnitOne(), DELTA);
     }
 
     @Test
-    public void totalBaseUnitsAreSet_packAndItemHoldCorrectValues() {
+    public void isTotalBaseUnitsSet_packAndItemHoldCorrectValues() {
         // Arrange
-        double totalBasUnits = 5500; // any arbitrary value under MAX_MASS
+        double arbitraryTotalBasUnits = 5500;
 
-        unitValuesFromBaseUnits = getValuesFromBaseUnits(totalBasUnits);
+        unitValuesFromBaseUnits = getUnitValuesFromBaseUnits(arbitraryTotalBasUnits);
         int unitTwo = unitValuesFromBaseUnits.second;
         double unitOne = unitValuesFromBaseUnits.first;
         // Act
-        assertTrue(SUT.totalBaseUnitsAreSet(totalBasUnits));
+        assertTrue(SUT.isTotalBaseUnitsSet(arbitraryTotalBasUnits));
         // Assert
-        assertEquals(unitOne, SUT.getTotalMeasurementOne(), DELTA);
-        assertEquals(unitTwo, SUT.getTotalMeasurementTwo());
-        assertEquals(unitOne, SUT.getItemMeasurementOne(), DELTA);
-        assertEquals(unitTwo, SUT.getItemMeasurementTwo());
-        assertEquals(totalBasUnits, SUT.getTotalBaseUnits(), DELTA);
+        assertEquals(unitOne, SUT.getTotalUnitOne(), DELTA);
+        assertEquals(unitTwo, SUT.getTotalUnitTwo());
+        assertEquals(unitOne, SUT.getItemUnitOne(), DELTA);
+        assertEquals(unitTwo, SUT.getItemUnitTwo());
+        assertEquals(arbitraryTotalBasUnits, SUT.getTotalBaseUnits(), DELTA);
     }
 
     @Test
-    public void totalMeasurementOneIsSet_inRangeMax_true() {
+    public void isTotalUnitOneSet_inRangeMax_true() {
         // Arrange
         double maximumMeasurementOne = roundDecimal(MAX_MASS / ONE_OUNCE);
         double expectedTotalBaseUnits = maximumMeasurementOne * ONE_OUNCE;
         // Act
-        assertTrue(SUT.totalMeasurementOneIsSet(maximumMeasurementOne));
+        assertTrue(SUT.isTotalUnitOneSet(maximumMeasurementOne));
         // Assert
         assertEquals(expectedTotalBaseUnits, SUT.getTotalBaseUnits(), DELTA);
     }
 
     @Test
-    public void totalMeasurementOneIsSet_outOfRangeMax_false() {
+    public void isTotalUnitOneSet_outOfRangeMax_false() {
         // Arrange
         double outOfRangeMaxMeasurementOne = roundDecimal(MAX_MASS / ONE_OUNCE + 0.1);
         // Act
-        assertFalse(SUT.totalMeasurementOneIsSet(outOfRangeMaxMeasurementOne));
+        assertFalse(SUT.isTotalUnitOneSet(outOfRangeMaxMeasurementOne));
         // Assert
-        assertEquals(SUT.getTotalBaseUnits(), 0, DELTA);
+        assertEquals(NOT_SET, SUT.getTotalBaseUnits(), DELTA);
     }
 
     @Test
-    public void totalMeasurementOneIsSet_inRangeMin_true() {
+    public void isTotalUnitOneSet_inRangeMin_true() {
         // Arrange
-        unitValuesFromBaseUnits = getValuesFromBaseUnits(IMPERIAL_MASS_SMALLEST_UNIT);
+        unitValuesFromBaseUnits = getUnitValuesFromBaseUnits(IMPERIAL_MASS_SMALLEST_UNIT);
         double minMeasurementOne = unitValuesFromBaseUnits.first;
         // Act
-        assertTrue(SUT.totalMeasurementOneIsSet(minMeasurementOne));
+        assertTrue(SUT.isTotalUnitOneSet(minMeasurementOne));
         // Assert
         assertEquals(IMPERIAL_MASS_SMALLEST_UNIT, SUT.getTotalBaseUnits(), DELTA);
     }
 
     @Test
-    public void totalUnitOneIsSet_outOfRangeMin_false() {
+    public void isTotalUnitOneSet_outOfRangeMin_false() {
         // Arrange
-        unitValuesFromBaseUnits = getValuesFromBaseUnits(IMPERIAL_MASS_SMALLEST_UNIT);
+        unitValuesFromBaseUnits = getUnitValuesFromBaseUnits(IMPERIAL_MASS_SMALLEST_UNIT);
         double unitOneOutOfRangeMin = unitValuesFromBaseUnits.first - DELTA;
         // Act
-        assertFalse(SUT.totalMeasurementOneIsSet(unitOneOutOfRangeMin));
+        assertFalse(SUT.isTotalUnitOneSet(unitOneOutOfRangeMin));
         // Assert
-        assertEquals(0, SUT.getTotalBaseUnits(), DELTA);
+        assertEquals(NOT_SET, SUT.getTotalBaseUnits(), DELTA);
     }
 
     @Test
-    public void totalMeasurementTwoIsSet_maxInRange_true() {
+    public void isTotalUnitTwoSet_maxInRange_true() {
         // Arrange
-        unitValuesFromBaseUnits = getValuesFromBaseUnits(MAX_MASS);
+        unitValuesFromBaseUnits = getUnitValuesFromBaseUnits(MAX_MASS);
         int maxUnitTwoValue = unitValuesFromBaseUnits.second;
         double expectedBaseUnits = getBaseUnitsFromUnitsValues(new Pair<>(0., maxUnitTwoValue));
         // Act
-        assertTrue(SUT.totalMeasurementTwoIsSet(maxUnitTwoValue));
+        assertTrue(SUT.isTotalUnitTwoSet(maxUnitTwoValue));
         // Assert
         assertEquals(expectedBaseUnits, SUT.getTotalBaseUnits(), DELTA);
     }
 
     @Test
-    public void totalMeasurementTwoIsSet_outOfRangeMax_false() {
+    public void isTotalUnitTwoSet_outOfRangeMax_false() {
         // Arrange
-        unitValuesFromBaseUnits = getValuesFromBaseUnits(MAX_MASS);
+        unitValuesFromBaseUnits = getUnitValuesFromBaseUnits(MAX_MASS);
         int outOfRangeMaxUnitTwo = unitValuesFromBaseUnits.second + 1;
         // Act
-        assertFalse(SUT.totalMeasurementTwoIsSet(outOfRangeMaxUnitTwo));
+        assertFalse(SUT.isTotalUnitTwoSet(outOfRangeMaxUnitTwo));
         // Assert
-        assertEquals(0., SUT.getTotalBaseUnits(), DELTA);
+        assertEquals(NOT_SET, SUT.getTotalBaseUnits(), DELTA);
     }
 
     @Test
-    public void totalMeasurementTwoIsSet_inRangeMin_true() {
+    public void isTotalUnitTwoSet_inRangeMin_true() {
         // Arrange
-        unitValuesFromBaseUnits = getValuesFromBaseUnits(ONE_POUND);
+        unitValuesFromBaseUnits = getUnitValuesFromBaseUnits(ONE_POUND);
         // Act
-        assertTrue(SUT.totalMeasurementTwoIsSet(unitValuesFromBaseUnits.second));
+        assertTrue(SUT.isTotalUnitTwoSet(unitValuesFromBaseUnits.second));
         // Assert
         assertEquals(ONE_POUND, SUT.getTotalBaseUnits(), DELTA);
     }
 
     @Test
-    public void totalMeasurementTwoIsSet_zeroValue_false() {
+    public void isTotalUnitTwoSet_zeroValue_false() {
         // Arrange
         // Act
-        assertFalse(SUT.totalMeasurementTwoIsSet(0));
+        assertFalse(SUT.isTotalUnitTwoSet(NOT_SET));
         // Assert
-        assertEquals(0, SUT.getTotalBaseUnits(), DELTA);
+        assertEquals(NOT_SET, SUT.getTotalBaseUnits(), DELTA);
     }
 
     @Test
-    public void totalMeasurementTwoIsSet_outOfRangeMin_false() {
+    public void isTotalUnitTwoSet_outOfRangeMin_false() {
         // Arrange
         // Act
-        assertFalse(SUT.totalMeasurementTwoIsSet(-1));
+        assertFalse(SUT.isTotalUnitTwoSet(-1));
         // Assert
-        assertEquals(0, SUT.getTotalBaseUnits(), DELTA);
+        assertEquals(NOT_SET, SUT.getTotalBaseUnits(), DELTA);
     }
 
     @Test
-    public void totalMeasurementOne_thenTotalMeasurementTwo_true() {
+    public void isTotalUnitOneSet_thenIsTotalUnitTwoSet_true() {
         // Arrange
         double arbitraryUnitOneValue = 5;
         int arbitraryUnitTwoValue = 15;
         double expectedBaseUnits = getBaseUnitsFromUnitsValues(
                 new Pair<>(arbitraryUnitOneValue, arbitraryUnitTwoValue));
         // Act
-        assertTrue(SUT.totalMeasurementOneIsSet(arbitraryUnitOneValue));
-        assertTrue(SUT.totalMeasurementTwoIsSet(arbitraryUnitTwoValue));
+        assertTrue(SUT.isTotalUnitOneSet(arbitraryUnitOneValue));
+        assertTrue(SUT.isTotalUnitTwoSet(arbitraryUnitTwoValue));
         // Assert
         assertEquals(expectedBaseUnits, SUT.getTotalBaseUnits(), DELTA);
     }
 
     @Test
-    public void numberOfItemsIsSet_inRange_true() {
+    public void isTotalUnitTwoSet_outOfBounds_existingValuesUnaffected() {
         // Arrange
-        int arbitraryNumberOfItems = 5;
+        unitValuesFromBaseUnits = getUnitValuesFromBaseUnits(IMPERIAL_MASS_MAX_MEASUREMENT);
+        double unitOneInRange = unitValuesFromBaseUnits.first;
+        int unitTwoInRange = unitValuesFromBaseUnits.second -1;
+        int unitTwoOutOfRange = unitValuesFromBaseUnits.second + 1;
         // Act
-        assertTrue(SUT.numberOfItemsIsSet(arbitraryNumberOfItems));
+        assertTrue(SUT.isTotalUnitOneSet(unitOneInRange));
+        assertTrue(SUT.isTotalUnitTwoSet(unitTwoInRange));
+        // Attempt to set total unit two out of range
+        assertFalse(SUT.isTotalUnitTwoSet(unitTwoOutOfRange));
         // Assert
-        assertEquals(0, SUT.getTotalBaseUnits(), DELTA);
+        // Check totals are unaffected
+        assertEquals(unitOneInRange, SUT.getTotalUnitOne(), DELTA);
+        assertEquals(unitTwoInRange, SUT.getTotalUnitTwo());
     }
 
     @Test
-    public void numberOfItemsIsSet_outOfRangeMin_false() {
+    public void isTotalUnitOneSet_outOfBounds_existingValuesUnaffected() {
         // Arrange
-        int numberOfItemsOutOfRangeMin = MIN_NUMBER_OF_ITEMS -1;
+        unitValuesFromBaseUnits = getUnitValuesFromBaseUnits(IMPERIAL_MASS_MAX_MEASUREMENT);
+        double unitOneInRange = unitValuesFromBaseUnits.first;
+        int unitTwoInRange = unitValuesFromBaseUnits.second;
+        double unitOneOutOfRange = unitValuesFromBaseUnits.first + 0.1;
         // Act
-        assertFalse(SUT.numberOfItemsIsSet(numberOfItemsOutOfRangeMin));
+        assertTrue(SUT.isTotalUnitTwoSet(unitTwoInRange));
+        assertTrue(SUT.isTotalUnitOneSet(unitOneInRange));
+        // Attempt to set total unit one out of range
+        assertFalse(SUT.isTotalUnitOneSet(unitOneOutOfRange));
+        // Assert
+        assertEquals(unitOneInRange, SUT.getTotalUnitOne(), DELTA);
+        assertEquals(unitTwoInRange, SUT.getTotalUnitTwo());
+    }
+
+    // Changing 'number of items' tests.
+    // Rules are as follows:
+    // -> If last measurement updated is TOTAL_UNITS, total base units remain constant
+    //      -> Increasing number of items proportionately reduces item size
+    //      -> Decreasing number of items proportionately increases item size
+    // -> If last measurement updated is ITEM_UNITS, item base units remain constant
+    //      -> Increasing number of items proportionately increases total base units
+    //      -> Decreasing number of items proportionately decreases total base units
+    // -> If neither item nor total measurements have been set, changing number of items has
+    //    no effect on the base units of either measurement
+
+    // -> The minimum number of items is 1
+    @Test
+    public void isNumberOfItemsSet_inRangeMin_true() {
+        // Arrange
+        // Act
+        assertTrue(SUT.isNumberOfItemsSet(MIN_NUMBER_OF_ITEMS));
         // Assert
         assertEquals(MIN_NUMBER_OF_ITEMS, SUT.getNumberOfItems());
     }
 
     @Test
-    public void numberOfItemsIsSet_inRangeMax_true() {
+    public void isNumberOfItemsSet_outOfRangeMin_false() {
         // Arrange
         // Act
-        assertTrue(SUT.numberOfItemsIsSet(MAX_NUMBER_OF_ITEMS));
+        assertFalse(SUT.isNumberOfItemsSet(MIN_NUMBER_OF_ITEMS -1));
         // Assert
+        assertEquals(MIN_NUMBER_OF_ITEMS, SUT.getNumberOfItems());
     }
 
     @Test
-    public void numberOfItemsAreSet_outOfRangeMax_false() {
-        // Set to max +1
-        assertFalse(SUT.numberOfItemsIsSet(MAX_NUMBER_OF_ITEMS + 1));
+    public void isNumberOfItemsSet_inRangeMax_true() {
+        // Arrange
+        // Act
+        assertTrue(SUT.isNumberOfItemsSet(MAX_NUMBER_OF_ITEMS));
+        // Assert
+        assertEquals(MAX_NUMBER_OF_ITEMS, SUT.getNumberOfItems());
     }
 
     @Test
-    public void numberOfItemsIsSet_numberOfItemsAdjustsItemMeasurements() {
+    public void isNumberOfItemsSet_outOfRangeMax_false() {
+        // Arrange
+        // Act
+        assertFalse(SUT.isNumberOfItemsSet(MAX_NUMBER_OF_ITEMS + 1));
+        // Assert
+        assertEquals(MIN_NUMBER_OF_ITEMS, SUT.getNumberOfItems());
+    }
+
+    @Test
+    public void isNumberOfItemsSet_whenLastUpdatedIsTotal_increasingNumberOfItemsDecreasesItemUnit() {
         // Arrange
         int arbitraryNumberOfItems = 2;
-        unitValuesFromBaseUnits = getValuesFromBaseUnits(IMPERIAL_MASS_SMALLEST_UNIT);
-        double minMeasurementOne = unitValuesFromBaseUnits.first;
-        double minMeasurementOneMultipliedByItems = minMeasurementOne * arbitraryNumberOfItems;
-        double expectedBaseUnits = getBaseUnitsFromUnitsValues(
-                new Pair<>(minMeasurementOneMultipliedByItems, 0));
+        // Setup test with minimum unit values
+        unitValuesFromBaseUnits = getUnitValuesFromBaseUnits(IMPERIAL_MASS_SMALLEST_UNIT);
+        double minUnitOneValue = unitValuesFromBaseUnits.first;
+
+        double minUnitOneMultipliedByNoOfItems = minUnitOneValue * arbitraryNumberOfItems;
+
+        double expectedTotalBaseUnits = getBaseUnitsFromUnitsValues(
+                new Pair<>(minUnitOneMultipliedByNoOfItems, NOT_SET)
+        );
+        double expectedItemBaseUnits = getBaseUnitsFromUnitsValues(
+                new Pair<>(minUnitOneMultipliedByNoOfItems / arbitraryNumberOfItems, NOT_SET)
+        );
         // Act
         // Set value of total measurement - sets lastMeasurementUpdated to TOTAL_MEASUREMENT
-        // When number of items is updated item measurement should change
-        assertTrue(SUT.totalMeasurementOneIsSet(minMeasurementOneMultipliedByItems));
-        // Set number of items
-        assertTrue(SUT.numberOfItemsIsSet(arbitraryNumberOfItems));
+        assertTrue(SUT.isTotalUnitOneSet(minUnitOneMultipliedByNoOfItems));
+        // Check item units equal to total units
+        assertEquals(minUnitOneMultipliedByNoOfItems, SUT.getItemUnitOne(), DELTA);
+
+        // Increase number of items
+        assertTrue(SUT.isNumberOfItemsSet(arbitraryNumberOfItems));
 
         // Assert
-        // Check pack measurement unchanged
-        assertEquals(minMeasurementOneMultipliedByItems, SUT.getTotalMeasurementOne(), DELTA);
-        assertEquals(0, SUT.getTotalMeasurementTwo());
-        // Check item measurement changed
-        assertEquals(minMeasurementOne, SUT.getItemMeasurementOne(), DELTA);
-        assertEquals(0, SUT.getItemMeasurementTwo());
-        assertEquals(expectedBaseUnits, SUT.getTotalBaseUnits(), DELTA);
+        // Check total units unchanged
+        assertEquals(minUnitOneMultipliedByNoOfItems, SUT.getTotalUnitOne(), DELTA);
+        // Check total base units unchanged
+        assertEquals(expectedTotalBaseUnits, SUT.getTotalBaseUnits(), DELTA);
+
+        // Check item units decreased proportionately
+        assertEquals(minUnitOneValue, SUT.getItemUnitOne(), DELTA);
+        // Check item base units decreased proportionately
+        assertEquals(expectedItemBaseUnits, SUT.getItemBaseUnits(), DELTA);
     }
 
     @Test
-    public void numberOfItemsIsSet_afterTotalMeasurementOneIsSet_itemSizeRoundsCorrectly() {
-        // Arrange
-        double oddMeasurementOne = 3;
-        int nonDivisibleToCardinalNumberOfItems = 2;
-        double totalBaseUnits = getBaseUnitsFromUnitsValues(new Pair<>(oddMeasurementOne, 0));
-        double expectedItemBaseUnits = totalBaseUnits / nonDivisibleToCardinalNumberOfItems;
-        unitValuesFromBaseUnits = getValuesFromBaseUnits(expectedItemBaseUnits);
-        double expectedMeasurementOne = unitValuesFromBaseUnits.first;
-        // Act
-        assertTrue(SUT.totalMeasurementOneIsSet(oddMeasurementOne));
-        assertTrue(SUT.numberOfItemsIsSet(nonDivisibleToCardinalNumberOfItems));
-        // Assert
-        assertEquals(oddMeasurementOne, SUT.getTotalMeasurementOne(), DELTA);
-        assertEquals(expectedMeasurementOne, SUT.getItemMeasurementOne(), DELTA);
-    }
-
-    @Test
-    public void testNumberOfItemsAdjustsItemSize() { // CONDITION: BASE SI SET BY PACK ONE & TWO - NO OF ITEMS ADJUSTS ITEM SIZE
-
-        // Set value to both pack measurements - sets lastMeasurementUpdated to PACK
-        // When number of items is updated item measurement should change
-        assertThat(SUT.totalMeasurementOneIsSet(5), is(true));
-        assertThat(SUT.totalMeasurementTwoIsSet(1), is(true));
-
-        // Set number of items
-        assertThat(SUT.numberOfItemsIsSet(2), is(true));
-
-        assertThat(SUT.getTotalMeasurementOne(), is(5.));
-        assertThat(SUT.getTotalMeasurementTwo(), is(1));
-        // Check item measurements have changed
-        assertThat(SUT.getItemMeasurementOne(), is(10.5));
-        assertThat(SUT.getItemMeasurementTwo(), is(0));
-
-        assertThat(SUT.getTotalBaseUnits(), is(595.339985625));
-    }
-
-    @Test
-    public void numberOfItemsIsSet_afterTotalMeasurementsSet_numberOfItemsAdjustsItemSize() {
-        // Arrange
-        double arbitraryTotalMeasurementOne = 5;
-        int arbitraryTotalMeasurementTwo = 1;
-
+    public void isNumberOfItemsSet_whenLastUpdatedIsTotal_increasingNumberOfItemsDecreasesItemUnits() {
+        // Arrange - same as above only using both units and measuring base unit output
         int arbitraryNumberOfItems = 2;
+        double arbitraryTotalUnitOne = 5;
+        int arbitraryTotalUnitTwo = 1;
 
-        double totalBaseUnitsBeforeItemsSet = getBaseUnitsFromUnitsValues(new Pair<>(5., 1));
+        double totalBaseUnitsBeforeItemsSet = getBaseUnitsFromUnitsValues(
+                new Pair<>(arbitraryTotalUnitOne, arbitraryTotalUnitTwo));
         double totalBaseUnitsAfterItemsSet = totalBaseUnitsBeforeItemsSet / arbitraryNumberOfItems;
 
-        unitValuesFromBaseUnits = getValuesFromBaseUnits(totalBaseUnitsAfterItemsSet);
+        unitValuesFromBaseUnits = getUnitValuesFromBaseUnits(totalBaseUnitsAfterItemsSet);
         double expectedItemUnitOneValue = unitValuesFromBaseUnits.first;
         int expectedItemUnitTwoValue = unitValuesFromBaseUnits.second;
         // Act
-        assertTrue(SUT.totalMeasurementOneIsSet(arbitraryTotalMeasurementOne));
-        assertTrue(SUT.totalMeasurementTwoIsSet(arbitraryTotalMeasurementTwo));
-        assertTrue(SUT.numberOfItemsIsSet(arbitraryNumberOfItems));
+        assertTrue(SUT.isTotalUnitOneSet(arbitraryTotalUnitOne));
+        assertTrue(SUT.isTotalUnitTwoSet(arbitraryTotalUnitTwo));
+        assertTrue(SUT.isNumberOfItemsSet(arbitraryNumberOfItems));
         // Assert
-        assertEquals(expectedItemUnitOneValue, SUT.getItemMeasurementOne(), DELTA);
-        assertEquals(expectedItemUnitTwoValue, SUT.getItemMeasurementTwo());
+        assertEquals(expectedItemUnitOneValue, SUT.getItemUnitOne(), DELTA);
+        assertEquals(expectedItemUnitTwoValue, SUT.getItemUnitTwo());
     }
 
     @Test
-    public void testNumberOfItemsOneAdjustsPackSize() { // CONDITION: BASE SI SET BY ITEM ONE - NO OF ITEMS ADJUSTS PACK SIZE
-
-        // Set value to item measurement - sets lastMeasurementUpdated to ITEM
-        // When number of items is updated PACK measurement should change
-        assertThat(SUT.itemMeasurementOneIsSet(5), is(true));
-
-        // Set number of items
-        assertThat(SUT.numberOfItemsIsSet(2), is(true));
-
-        // Check pack measurements have changed
-        assertThat(SUT.getTotalMeasurementOne(), is(10.));
-        assertThat(SUT.getTotalMeasurementTwo(), is(0));
-        // Check item measurement are unchanged
-        assertThat(SUT.getItemMeasurementOne(), is(5.));
-        assertThat(SUT.getItemMeasurementTwo(), is(0));
-        assertThat(SUT.getTotalBaseUnits(), is(283.49523125));
+    public void isNumberOfItemsSet_whenLastUpdatedIsTotal_itemSizeRoundsCorrectly() {
+        // Arrange
+        double oddUnitOne = 3;
+        int nonCardinalDivisibleNumberOfItems = 2;
+        double totalBaseUnits = getBaseUnitsFromUnitsValues(new Pair<>(oddUnitOne, NOT_SET));
+        double expectedItemBaseUnits = totalBaseUnits / nonCardinalDivisibleNumberOfItems;
+        unitValuesFromBaseUnits = getUnitValuesFromBaseUnits(expectedItemBaseUnits);
+        double expectedItemUnitOneValue = unitValuesFromBaseUnits.first;
+        // Act
+        assertTrue(SUT.isTotalUnitOneSet(oddUnitOne));
+        assertTrue(SUT.isNumberOfItemsSet(nonCardinalDivisibleNumberOfItems));
+        // Assert
+        assertEquals(oddUnitOne, SUT.getTotalUnitOne(), DELTA);
+        assertEquals(expectedItemUnitOneValue, SUT.getItemUnitOne(), DELTA);
     }
 
     @Test
-    public void testNumberOfItemsOneAndTwoAdjustsPackSize() { // CONDITION: BASE SI SET BY ITEM ONE & TWO - NO OF ITEMS ADJUSTS PACK SIZE - IN RANGE
-
-        // Set value to both item measurements - sets lastMeasurementUpdated to ITEM
-        // When number of items is updated PACK measurement should change
-        assertThat(SUT.itemMeasurementOneIsSet(5), is(true));
-        assertThat(SUT.itemMeasurementTwoIsSet(1), is(true));
-
-        // Set items
-        assertThat(SUT.numberOfItemsIsSet(2), is(true));
-
-        // Check PACK measurements have changed
-        assertThat(SUT.getTotalMeasurementOne(), is(10.));
-        assertThat(SUT.getTotalMeasurementTwo(), is(2));
-        // Check ITEM measurements are unchanged
-        assertThat(SUT.getItemMeasurementOne(), is(5.));
-        assertThat(SUT.getItemMeasurementTwo(), is(1));
+    public void isNumberOfItemsSet_whenLastUpdateIsTotal_decreasingNoOfItemsIncreasesItemSize() {
+        // Arrange
+        int initialNoOfItems = 10;
+        double expectedTotalUnitOneConstant = 10;
+        double expectedInitialItemUnitOne = initialNoOfItems / expectedTotalUnitOneConstant;
+        int noOfItemsDecrease = initialNoOfItems / 2;
+        double expectedUnitOneIncreaseAfterNoItemsDecrease =
+                expectedTotalUnitOneConstant / noOfItemsDecrease;
+        // Act
+        assertTrue(SUT.isNumberOfItemsSet(initialNoOfItems));
+        assertTrue(SUT.isTotalUnitOneSet(expectedTotalUnitOneConstant));
+        // Assert
+        assertEquals(expectedInitialItemUnitOne, SUT.getItemUnitOne(), DELTA);
+        // Act
+        assertTrue(SUT.isNumberOfItemsSet(noOfItemsDecrease));
+        // Assert
+        assertEquals(expectedTotalUnitOneConstant, SUT.getTotalUnitOne(), DELTA);
+        assertEquals(expectedUnitOneIncreaseAfterNoItemsDecrease, SUT.getItemUnitOne(), DELTA);
     }
 
     @Test
-    public void testNumberOfItemsSetItemOneAndTwoAdjustsPackSizeOutOfRange() { // CONDITION: BASE SI SET BY ITEM ONE & TWO - NO OF ITEMS ADJUSTS PACK SIZE - OUT OF RANGE MAX
+    public void isNumberOfItemsSet_whenLastUpdateIsItem_increasingNoOfItemsIncreasesTotals() {
+        // Arrange
+        int increasedNoOfItems = 2;
+        double expectedItemUnitOneConstant = 5;
+        int expectedItemUnitTwoConstant = 1;
+        double expectedIncreasedTotalUnitOne = increasedNoOfItems * expectedItemUnitOneConstant;
+        int expectedIncreasedTotalUnitTwo = increasedNoOfItems * expectedItemUnitTwoConstant;
+        double expectedTotalBaseUnits = getBaseUnitsFromUnitsValues(
+                new Pair<>(expectedIncreasedTotalUnitOne, expectedIncreasedTotalUnitTwo)
+        );
 
-        // Set value to both item measurements - sets lastMeasurementUpdated to ITEM
-        // When number of items is updated PACK measurement should change
-        assertThat(SUT.itemMeasurementOneIsSet(1), is(true));
-        assertThat(SUT.itemMeasurementTwoIsSet(11), is(true));
-
-        // Set items so to high
-        assertThat(SUT.numberOfItemsIsSet(2), is(false));
-
-        // Check values unchanged
-        assertThat(SUT.getTotalMeasurementOne(), is(1.));
-        assertThat(SUT.getTotalMeasurementTwo(), is(11));
-        assertThat(SUT.getItemMeasurementOne(), is(1.));
-        assertThat(SUT.getItemMeasurementTwo(), is(11));
-        assertThat(SUT.getTotalBaseUnits(), is(5017.8655931250005));
+        // Set last updated to measurement to item measurement by setting an item measurement
+        assertTrue(SUT.isItemUnitOneSet(expectedItemUnitOneConstant));
+        assertTrue(SUT.isItemUnitTwoSet(expectedItemUnitTwoConstant));
+        // Act
+        assertTrue(SUT.isNumberOfItemsSet(increasedNoOfItems));
+        // Assert
+        // Check item values have remained constant
+        assertEquals(expectedItemUnitOneConstant, SUT.getItemUnitOne(), DELTA);
+        assertEquals(expectedItemUnitTwoConstant, SUT.getItemUnitTwo());
+        // Check total values have increased
+        assertEquals(expectedIncreasedTotalUnitOne, SUT.getTotalUnitOne(), DELTA);
+        assertEquals(expectedIncreasedTotalUnitTwo, SUT.getTotalUnitTwo());
+        // Check base total units increased
+        assertEquals(expectedTotalBaseUnits, SUT.getTotalBaseUnits(), DELTA);
     }
 
     @Test
-    public void testNumberOfItemsInRangeSetWithItemWithBaseSiThenChangedAgain() {
-        // CONDITION: BASE SI SET BY ITEM - NO OF ITEMS CHANGED - THEN NO OF ITEMS CHANGED AGAIN
+    public void isNumberOfItemsSet_whenLastUpdateIsItem_increasingNoOfItemsIncreasesTotalsMoreThanOnce() {
+        // Arrange
+        int firstNoOfItems = 1;
+        double constantItemUnitOne = 15;
+        int constantItemUnitTwo = 2;
+        double expectedTotalItemBaseUnits = getBaseUnitsFromUnitsValues(
+                new Pair<>(constantItemUnitOne, constantItemUnitTwo));
+        unitValuesFromBaseUnits = getUnitValuesFromBaseUnits(expectedTotalItemBaseUnits * firstNoOfItems);
+        double expectedTotalUnitOneAfterFirstNoOfItems = unitValuesFromBaseUnits.first;
+        int expectedTotalUnitTwoAfterFirstNoOfItems = unitValuesFromBaseUnits.second;
 
-        // Set item measurement last changed by setting item measurement
-        assertThat(SUT.itemMeasurementOneIsSet(15), is(true));
-        assertThat(SUT.itemMeasurementTwoIsSet(2), is(true));
+        int secondNumberOfItems = 3;
+        double secondItemBaseUnits = expectedTotalItemBaseUnits * secondNumberOfItems;
+        unitValuesFromBaseUnits = getUnitValuesFromBaseUnits(secondItemBaseUnits);
+        double expectedTotalUnitOneAfterSecondNoOfItems = unitValuesFromBaseUnits.first;
+        int expectedTotalUnitTwoAfterSecondNoOfItems = unitValuesFromBaseUnits.second;
 
-        // Change number of items
-        assertThat(SUT.numberOfItemsIsSet(3), is(true));
+        int thirdNoOfItems = 5;
+        double thirdItemBaseUnits = expectedTotalItemBaseUnits * thirdNoOfItems;
+        unitValuesFromBaseUnits = getUnitValuesFromBaseUnits(thirdItemBaseUnits);
+        double expectedTotalUnitOneAfterThirdNoOfItems = unitValuesFromBaseUnits.first;
+        int expectedTotalUnitTwoAfterThirdNoOfItems = unitValuesFromBaseUnits.second;
 
-        // Check pack measurement has changed
-        assertThat(SUT.getTotalMeasurementOne(), is(13.));
-        assertThat(SUT.getTotalMeasurementTwo(), is(8));
-        assertThat(SUT.getItemMeasurementOne(), is(15.));
-        assertThat(SUT.getItemMeasurementTwo(), is(2));
-
-        // Set item measurement again
-        assertThat(SUT.numberOfItemsIsSet(5), is(true));
-
-        // Check pack measurement changed
-        assertThat(SUT.getTotalMeasurementOne(), is(11.));
-        assertThat(SUT.getTotalMeasurementTwo(), is(14));
-        assertThat(SUT.getItemMeasurementOne(), is(15.));
-        assertThat(SUT.getItemMeasurementTwo(), is(2));
-        assertThat(SUT.getTotalBaseUnits(), is(6662.137934375));
+        // Act
+        assertTrue(SUT.isItemUnitOneSet(constantItemUnitOne));
+        assertTrue(SUT.isItemUnitTwoSet(constantItemUnitTwo));
+        assertTrue(SUT.isNumberOfItemsSet(firstNoOfItems));
+        // Assert
+        assertEquals(expectedTotalUnitOneAfterFirstNoOfItems, SUT.getTotalUnitOne(), DELTA);
+        assertEquals(expectedTotalUnitTwoAfterFirstNoOfItems, SUT.getTotalUnitTwo());
+        // Act
+        assertTrue(SUT.isNumberOfItemsSet(secondNumberOfItems));
+        // Assert
+        assertEquals(expectedTotalUnitOneAfterSecondNoOfItems, SUT.getTotalUnitOne(), DELTA);
+        assertEquals(expectedTotalUnitTwoAfterSecondNoOfItems, SUT.getTotalUnitTwo());
+        // Act
+        assertTrue(SUT.isNumberOfItemsSet(thirdNoOfItems));
+        // Assert
+        assertEquals(expectedTotalUnitOneAfterThirdNoOfItems, SUT.getTotalUnitOne(), DELTA);
+        assertEquals(expectedTotalUnitTwoAfterThirdNoOfItems, SUT.getTotalUnitTwo());
     }
 
     @Test
-    public void test_setting_item_one_and_two() {
-
-        assertThat(SUT.numberOfItemsIsSet(2), is(true));
-        assertThat(SUT.itemMeasurementTwoIsSet(1), is(true));
-        assertThat(SUT.getTotalBaseUnits(), is(907.18474));
-        assertThat(SUT.itemMeasurementOneIsSet(2), is(true));
-        assertThat(SUT.getItemMeasurementOne(), is(2.));
-        assertThat(SUT.getTotalBaseUnits(), is(1020.5828325));
+    public void isNumberOfItemsSet_whenLastUpdateIsItem_totalExceedsMax_false() {
+        // Arrange
+        int arbitraryNoOfItems = 2;
+        unitValuesFromBaseUnits = getUnitValuesFromBaseUnits(IMPERIAL_MASS_MAX_MEASUREMENT);
+        double unitOne = unitValuesFromBaseUnits.first;
+        int unitTwo = unitValuesFromBaseUnits.second;
+        double expectedBaseUnits = getBaseUnitsFromUnitsValues(new Pair<>(unitOne, unitTwo));
+        // Act
+        assertTrue(SUT.isItemUnitOneSet(unitOne));
+        assertTrue(SUT.isItemUnitTwoSet(unitTwo));
+        // Assert
+        assertFalse(SUT.isNumberOfItemsSet(arbitraryNoOfItems));
+        assertEquals(expectedBaseUnits, SUT.getTotalBaseUnits(), DELTA);
+        assertEquals(expectedBaseUnits, SUT.getItemBaseUnits(), DELTA);
     }
 
     @Test
-    public void settingBaseSi() {
+    public void isItemUnitOneSet_IsItemUnitTwoSet_isNoOfItemsSet_valuesAsExpected() {
+        // Arrange
+        int arbitraryNoOfItems = 2;
+        int itemUnitTwo = 1;
+        double itemUnitTwoInBaseUnits = getBaseUnitsFromUnitsValues(
+                new Pair<>((double) NOT_SET, itemUnitTwo)) * arbitraryNoOfItems;
 
-        assertThat(SUT.numberOfItemsIsSet(2), is(true));
-        assertThat(SUT.totalMeasurementOneIsSet(2), is(true));
-        assertThat(SUT.totalMeasurementOneIsSet(20.), is(true));
-        assertThat(SUT.getTotalMeasurementTwo(), is(1));
-        assertThat(SUT.getTotalMeasurementOne(), is(4.));
+        double itemUnitOne = 2;
+        double totalBaseUnits = getBaseUnitsFromUnitsValues(
+                new Pair<>(itemUnitOne, itemUnitTwo)) * arbitraryNoOfItems;
+        // Act
+        assertTrue(SUT.isNumberOfItemsSet(arbitraryNoOfItems));
+        assertTrue(SUT.isItemUnitTwoSet(itemUnitTwo));
+        // Assert
+        assertEquals(itemUnitTwoInBaseUnits, SUT.getTotalBaseUnits(), DELTA);
+        // Act
+        assertTrue(SUT.isItemUnitOneSet(itemUnitOne));
+        // Assert
+        assertEquals(itemUnitOne, SUT.getItemUnitOne(), DELTA);
+        assertEquals(totalBaseUnits, SUT.getTotalBaseUnits(), DELTA);
     }
 
     @Test
-    public void test_for_zero_base_units_with_false_return() {
-
-        // Setup
-        assertThat(SUT.numberOfItemsIsSet(2), is(true));
-        assertThat(SUT.totalMeasurementOneIsSet(5.2), is(true));
-        assertThat(SUT.totalMeasurementTwoIsSet(1), is(true));
-
-        // Gradual teardown, as the user would type
-        assertThat(SUT.totalMeasurementTwoIsSet(0), is(true));
-        assertThat(SUT.totalMeasurementOneIsSet(5.), is(true));
-        assertThat(SUT.totalMeasurementOneIsSet(5), is(true));
-
-        assertThat(SUT.totalMeasurementOneIsSet(0), is(false));
-        assertThat(SUT.getTotalBaseUnits(), is(0.));
-
-        assertThat(SUT.getTotalMeasurementOne(), is(0.));
-        assertThat(SUT.getItemMeasurementOne(), is(0.));
-        assertThat(SUT.getTotalMeasurementTwo(), is(0));
-        assertThat(SUT.getItemMeasurementTwo(), is(0));
+    public void isTotalUnitOneSet_unitOneGreaterThanASingleUnitTwo_unitOneAndTwoUpdateAutomatically() {
+        // Arrange
+        // Just to be clear - if a unit one value is entered that exceeds the value of a single
+        // unit two, then the unit of measure converts the value entered into a unit one and two
+        // value. For example, there are 16fl oz in a pint. If the user enters 20 fl oz in unit one
+        // the unit of measure will update the measurement to 1pt(unitTwo) 4fl oz(unitOne).
+        double flOzFourOzGreaterThanAPint = 20;
+        int onePint = 1;
+        double fourOz = 4;
+        // Act
+        assertTrue(SUT.isTotalUnitOneSet(flOzFourOzGreaterThanAPint));
+        // Assert
+        assertEquals(onePint, SUT.getTotalUnitTwo());
+        assertEquals(fourOz, SUT.getTotalUnitOne(), DELTA);
     }
 
     @Test
-    public void pack_measurement_two_forces_out_of_bounds_is_then_zeroed_out() {
+    public void gradualDeletionOfValues_mimicsAUserDeletingValuesFromTheUi_eventualZeroValue() {
+        // Arrange
+        assertTrue(SUT.isTotalUnitOneSet(5.2));
+        assertTrue(SUT.isTotalUnitTwoSet(1));
 
-        // Setup in range values
-        assertThat(SUT.totalMeasurementOneIsSet(10), is(true));
-        assertThat(SUT.getTotalMeasurementOne(), is(10.));
+        // Gradual deletion of values, as the user would type
+        assertTrue(SUT.isTotalUnitTwoSet(NOT_SET));
+        assertTrue(SUT.isTotalUnitOneSet(5));
+        assertTrue(SUT.isTotalUnitOneSet(5));
 
-
-        assertThat(SUT.totalMeasurementTwoIsSet(19), is(true));
-        assertThat(SUT.getTotalMeasurementTwo(), is(19));
-
-        // Attempt to set pack two out of range, which should return false
-        // and zero out pack measurement two.
-        assertThat(SUT.totalMeasurementTwoIsSet(22), is(false));
-
-        // Check pack one is unaffected
-        assertThat(SUT.getTotalMeasurementOne(), is(10.));
-
-        // Check pack two is unaffected
-        assertThat(SUT.getTotalMeasurementTwo(), is(19));
-    }
-
-
-    @Test
-    public void pack_measurement_one_forces_out_of_bounds_is_then_zeroed_out() {
-
-        // Setup in range values
-        assertThat(SUT.totalMeasurementTwoIsSet(22), is(true));
-        assertThat(SUT.getTotalMeasurementTwo(), is(22));
-
-        // Attempt to set pack one out of range, which should return false
-        // and zero out pack measurement one.
-        assertThat(SUT.totalMeasurementOneIsSet(1), is(false));
-        assertThat(SUT.getTotalMeasurementOne(), is(0.));
-
+        // Assert
+        assertFalse(SUT.isTotalUnitOneSet(NOT_SET));
+        assertEquals(NOT_SET, SUT.getTotalBaseUnits(), DELTA);
+        assertEquals(NOT_SET, SUT.getTotalUnitOne(), DELTA);
+        assertEquals(NOT_SET, SUT.getItemUnitOne(), DELTA);
+        assertEquals(NOT_SET, SUT.getTotalUnitTwo());
+        assertEquals(NOT_SET, SUT.getItemUnitTwo());
     }
 
     // A crude but effective way of calculating pounds and ounces from grams
-    private Pair<Double, Integer> getValuesFromBaseUnits(double baseUnits) {
-        int pounds = (int) (baseUnits / ONE_POUND);
-        double poundsInBaseUnits = pounds * ONE_POUND;
-        double ouncesInBaseUnits = baseUnits - poundsInBaseUnits;
-        double ounces = ouncesInBaseUnits / ONE_OUNCE;
-
-        double unitOne = roundDecimal(ounces);
-
-        return new Pair<>(unitOne, pounds);
+    private Pair<Double, Integer> getUnitValuesFromBaseUnits(double baseUnits) {
+        int unitTwo = (int) (baseUnits / ONE_POUND);
+        double unitOne = (baseUnits - (unitTwo * ONE_POUND)) / ONE_OUNCE;
+        return new Pair<>(roundDecimal(unitOne), unitTwo);
     }
 
+    // A crude but effective way of calculating grams from pounds and ounces
     private double getBaseUnitsFromUnitsValues(Pair<Double, Integer> unitValues) {
         double unitOne = unitValues.first;
         int unitTwo = unitValues.second;
-
-        double unitTwoInBaseUnits = unitTwo * ONE_POUND;
-
-        int unitOneInteger = (int) unitOne;
-        double unitOneIntegerInBaseUnits = unitOneInteger * ONE_OUNCE;
-
-        double unitOneDecimal = unitOne - unitOneInteger;
-        double unitOneDecimalInBaseUnits = unitOneDecimal * ONE_OUNCE;
-
-        return unitTwoInBaseUnits + unitOneIntegerInBaseUnits + unitOneDecimalInBaseUnits;
+        return (unitTwo * ONE_POUND) + (unitOne * ONE_OUNCE);
     }
 
     private double roundDecimal(double valueToRound) {

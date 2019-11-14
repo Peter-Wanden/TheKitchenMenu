@@ -16,7 +16,7 @@ public class UnitOfMeasureConstants {
     static final int MIN_NUMBER_OF_ITEMS = 1;
     static final int MAX_NUMBER_OF_ITEMS = 1000;
 
-    static final int NOT_YET_SET = 0;
+    static final int NOT_SET = 0;
 
     // density
     public static final double MIN_CONVERSION_FACTOR = .001;
@@ -107,20 +107,20 @@ public class UnitOfMeasureConstants {
     public static final MeasurementModel DEFAULT_MEASUREMENT_MODEL = new MeasurementModel(
             DEFAULT_UNIT_OF_MEASURE.getMeasurementType(),
             DEFAULT_UNIT_OF_MEASURE.getMeasurementSubtype(),
-            DEFAULT_UNIT_OF_MEASURE.getNumberOfMeasurementUnits(),
+            DEFAULT_UNIT_OF_MEASURE.getNumberOfUnits(),
             DEFAULT_UNIT_OF_MEASURE.isConversionFactorEnabled(),
             DEFAULT_UNIT_OF_MEASURE.getConversionFactor(),
             DEFAULT_UNIT_OF_MEASURE.getItemBaseUnits(),
             DEFAULT_UNIT_OF_MEASURE.getTotalBaseUnits(),
             DEFAULT_UNIT_OF_MEASURE.getNumberOfItems(),
-            DEFAULT_UNIT_OF_MEASURE.getTotalMeasurementOne(),
-            DEFAULT_UNIT_OF_MEASURE.getItemMeasurementOne(),
-            DEFAULT_UNIT_OF_MEASURE.getTotalMeasurementTwo(),
-            DEFAULT_UNIT_OF_MEASURE.getItemMeasurementTwo(),
+            DEFAULT_UNIT_OF_MEASURE.getTotalUnitOne(),
+            DEFAULT_UNIT_OF_MEASURE.getItemUnitOne(),
+            DEFAULT_UNIT_OF_MEASURE.getTotalUnitTwo(),
+            DEFAULT_UNIT_OF_MEASURE.getItemUnitTwo(),
             DEFAULT_UNIT_OF_MEASURE.isValidMeasurement(),
-            DEFAULT_UNIT_OF_MEASURE.getMinimumMeasurementOne(),
-            DEFAULT_UNIT_OF_MEASURE.getItemMeasurementOne(),
-            DEFAULT_UNIT_OF_MEASURE.getItemMeasurementTwo(),
-            DEFAULT_UNIT_OF_MEASURE.getMeasurementUnitsDigitWidths()
+            DEFAULT_UNIT_OF_MEASURE.getMinUnitOneInBaseUnits(),
+            DEFAULT_UNIT_OF_MEASURE.getItemUnitOne(),
+            DEFAULT_UNIT_OF_MEASURE.getItemUnitTwo(),
+            DEFAULT_UNIT_OF_MEASURE.getMaxUnitDigitWidths()
     );
 }

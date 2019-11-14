@@ -31,7 +31,7 @@ public class ImperialSpoonTest {
         // Arrange
         // Act
         // Assert
-        assertFalse(SUT.conversionFactorIsSet(MAX_CONVERSION_FACTOR + 0.0001));
+        assertFalse(SUT.isConversionFactorSet(MAX_CONVERSION_FACTOR + 0.0001));
     }
 
     @Test
@@ -39,7 +39,7 @@ public class ImperialSpoonTest {
         // Arrange
         // Act
         // Assert
-        assertFalse(SUT.conversionFactorIsSet(MIN_CONVERSION_FACTOR - 0.0001));
+        assertFalse(SUT.isConversionFactorSet(MIN_CONVERSION_FACTOR - 0.0001));
     }
 
     // Test data from Butter Chicken recipe
@@ -54,9 +54,9 @@ public class ImperialSpoonTest {
         double expectedQuantityPerServing = expectedTotal / numberOfPortions;
 
         // Act
-        assertTrue(SUT.conversionFactorIsSet(conversionFactor));
-        assertTrue(SUT.numberOfItemsIsSet(numberOfPortions));
-        assertTrue(SUT.totalMeasurementTwoIsSet(numberOfTablespoons));
+        assertTrue(SUT.isConversionFactorSet(conversionFactor));
+        assertTrue(SUT.isNumberOfItemsSet(numberOfPortions));
+        assertTrue(SUT.isTotalUnitTwoSet(numberOfTablespoons));
         // Assert
         assertEquals(expectedTotal, SUT.getTotalBaseUnits(), DELTA);
         assertEquals(expectedQuantityPerServing, SUT.getItemBaseUnits(), DELTA);
@@ -72,9 +72,9 @@ public class ImperialSpoonTest {
         double expectedTotal = numberOfTeaspoons * TEASPOON_VOLUME * conversionFactor;
         double expectedQuantityPerServing = expectedTotal / numberOfPortions;
         // Act
-        assertTrue(SUT.conversionFactorIsSet(conversionFactor));
-        assertTrue(SUT.numberOfItemsIsSet(numberOfPortions));
-        assertTrue(SUT.totalMeasurementOneIsSet(numberOfTeaspoons));
+        assertTrue(SUT.isConversionFactorSet(conversionFactor));
+        assertTrue(SUT.isNumberOfItemsSet(numberOfPortions));
+        assertTrue(SUT.isTotalUnitOneSet(numberOfTeaspoons));
         // Assert
         assertEquals(expectedTotal, SUT.getTotalBaseUnits(), DELTA);
         assertEquals(expectedQuantityPerServing, SUT.getItemBaseUnits(), DELTA);
@@ -90,9 +90,9 @@ public class ImperialSpoonTest {
         double expectedTotal = numberOfTableSpoons * TABLESPOON_VOLUME * conversionFactor;
         double expectedQuantityPerServing = expectedTotal / numberOfPortions;
         // Act
-        assertTrue(SUT.numberOfItemsIsSet(numberOfPortions));
-        assertTrue(SUT.conversionFactorIsSet(conversionFactor));
-        assertTrue(SUT.totalMeasurementTwoIsSet(numberOfTableSpoons));
+        assertTrue(SUT.isNumberOfItemsSet(numberOfPortions));
+        assertTrue(SUT.isConversionFactorSet(conversionFactor));
+        assertTrue(SUT.isTotalUnitTwoSet(numberOfTableSpoons));
         // Assert
         assertEquals(expectedTotal, SUT.getTotalBaseUnits(), DELTA);
         assertEquals(expectedQuantityPerServing, SUT.getItemBaseUnits(), DELTA);
@@ -109,9 +109,9 @@ public class ImperialSpoonTest {
         double expectedTotalQuantity = numberOfTeaSpoons * TEASPOON_VOLUME * conversionFactor;
         double expectedQuantityPerServing = expectedTotalQuantity / numberOfPortions;
         // Act
-        assertTrue(SUT.numberOfItemsIsSet(numberOfPortions));
-        assertTrue(SUT.conversionFactorIsSet(conversionFactor));
-        assertTrue(SUT.totalMeasurementOneIsSet(numberOfTeaSpoons));
+        assertTrue(SUT.isNumberOfItemsSet(numberOfPortions));
+        assertTrue(SUT.isConversionFactorSet(conversionFactor));
+        assertTrue(SUT.isTotalUnitOneSet(numberOfTeaSpoons));
         // Assert
         assertEquals(expectedTotalQuantity, SUT.getTotalBaseUnits(), DELTA);
         assertEquals(expectedQuantityPerServing, SUT.getItemBaseUnits(), DELTA);
@@ -127,9 +127,9 @@ public class ImperialSpoonTest {
         double expectedTotalQuantity = numberOfTeaspoons * TEASPOON_VOLUME * conversionFactor;
         double expectedQuantityPerServing = expectedTotalQuantity / numberOfPortions;
         // Act
-        assertTrue(SUT.numberOfItemsIsSet(numberOfPortions));
-        assertTrue(SUT.conversionFactorIsSet(conversionFactor));
-        assertTrue(SUT.totalMeasurementOneIsSet(numberOfTeaspoons));
+        assertTrue(SUT.isNumberOfItemsSet(numberOfPortions));
+        assertTrue(SUT.isConversionFactorSet(conversionFactor));
+        assertTrue(SUT.isTotalUnitOneSet(numberOfTeaspoons));
         // Assert
         assertEquals(expectedTotalQuantity, SUT.getTotalBaseUnits(), DELTA);
         assertEquals(expectedQuantityPerServing, SUT.getItemBaseUnits(), DELTA);
@@ -145,9 +145,9 @@ public class ImperialSpoonTest {
         double expectedTotalQuantity = numberOfTeaspoons * TEASPOON_VOLUME * conversionFactor;
         double expectedQuantityPerServing = expectedTotalQuantity / numberOfPortions;
         // Act
-        assertTrue(SUT.numberOfItemsIsSet(numberOfPortions));
-        assertTrue(SUT.totalMeasurementOneIsSet(numberOfTeaspoons));
-        assertTrue(SUT.conversionFactorIsSet(conversionFactor));
+        assertTrue(SUT.isNumberOfItemsSet(numberOfPortions));
+        assertTrue(SUT.isTotalUnitOneSet(numberOfTeaspoons));
+        assertTrue(SUT.isConversionFactorSet(conversionFactor));
         // Assert
         assertEquals(expectedTotalQuantity, SUT.getTotalBaseUnits(), DELTA);
         assertEquals(expectedQuantityPerServing, SUT.getItemBaseUnits(), DELTA);
@@ -164,7 +164,7 @@ public class ImperialSpoonTest {
         double expectedQuantityPerServing = expectedTotalQuantity / numberOfPortions;
         // Act
         // Assert
-        assertTrue(SUT.totalMeasurementOneIsSet(numberOfTeaspoons));
+        assertTrue(SUT.isTotalUnitOneSet(numberOfTeaspoons));
         assertEquals(expectedTotalQuantity, SUT.getTotalBaseUnits(), DELTA);
         assertEquals(expectedQuantityPerServing, SUT.getItemBaseUnits(), DELTA);
     }
@@ -179,9 +179,9 @@ public class ImperialSpoonTest {
         double expectedTotalQuantity = numberOfTeaspoons * TEASPOON_VOLUME * conversionFactor;
         double expectedQuantityPerServing = expectedTotalQuantity / numberOfPortions;
         // Act
-        assertTrue(SUT.totalMeasurementOneIsSet(numberOfTeaspoons));
-        assertTrue(SUT.numberOfItemsIsSet(numberOfPortions));
-        assertTrue(SUT.conversionFactorIsSet(conversionFactor));
+        assertTrue(SUT.isTotalUnitOneSet(numberOfTeaspoons));
+        assertTrue(SUT.isNumberOfItemsSet(numberOfPortions));
+        assertTrue(SUT.isConversionFactorSet(conversionFactor));
         // Assert
         assertEquals(expectedTotalQuantity, SUT.getTotalBaseUnits(), DELTA);
         assertEquals(expectedQuantityPerServing, SUT.getItemBaseUnits(), DELTA);
@@ -196,9 +196,9 @@ public class ImperialSpoonTest {
         double expectedTotalQuantity = numberOfTeaspoons * TEASPOON_VOLUME * MAX_CONVERSION_FACTOR;
         double expectedQuantityPerServing = expectedTotalQuantity / numberOfPortions;
         // Act
-        assertTrue(SUT.totalMeasurementOneIsSet(numberOfTeaspoons));
-        assertTrue(SUT.numberOfItemsIsSet(numberOfPortions));
-        assertTrue(SUT.conversionFactorIsSet(MAX_CONVERSION_FACTOR));
+        assertTrue(SUT.isTotalUnitOneSet(numberOfTeaspoons));
+        assertTrue(SUT.isNumberOfItemsSet(numberOfPortions));
+        assertTrue(SUT.isConversionFactorSet(MAX_CONVERSION_FACTOR));
         // Assert
         assertEquals(expectedTotalQuantity, SUT.getTotalBaseUnits(), DELTA);
         assertEquals(expectedQuantityPerServing, SUT.getItemBaseUnits(), DELTA);
@@ -217,16 +217,16 @@ public class ImperialSpoonTest {
         double expectedTotalConversionFactorLow = volume * numberOfTeaspoons * conversionFactorLow;
         double noConversionFactor = 1;
         double expectedTotalNoConversionFactor = volume * numberOfTeaspoons * noConversionFactor;
-        SUT.totalMeasurementOneIsSet(numberOfTeaspoons);
-        SUT.numberOfItemsIsSet(numberOfPortions);
+        SUT.isTotalUnitOneSet(numberOfTeaspoons);
+        SUT.isNumberOfItemsSet(numberOfPortions);
         // Act
-        SUT.conversionFactorIsSet(conversionFactorHigh);
+        SUT.isConversionFactorSet(conversionFactorHigh);
         assertEquals(expectedTotalConversionFactorHigh, SUT.getTotalBaseUnits(), DELTA);
 
-        SUT.conversionFactorIsSet(conversionFactorLow);
+        SUT.isConversionFactorSet(conversionFactorLow);
         assertEquals(expectedTotalConversionFactorLow, SUT.getTotalBaseUnits(), DELTA);
 
-        SUT.conversionFactorIsSet(noConversionFactor);
+        SUT.isConversionFactorSet(noConversionFactor);
         assertEquals(expectedTotalNoConversionFactor, SUT.getTotalBaseUnits(), DELTA);
 
         // Assert
