@@ -16,21 +16,21 @@ public class ProductMeasurementHandler {
 
     public void newMeasurementReceived(EditText editableMeasurement) {
         int viewId = editableMeasurement.getId();
-        double decimalMeasurement;
-        int integerMeasurement;
+        double decimalUnit;
+        int integerUnit;
 
         if (viewId == R.id.pack_editable_measurement_one ||
                 viewId == R.id.product_editable_measurement_one) {
-            decimalMeasurement = parseDecimalFromString(editableMeasurement);
-            if (decimalMeasurement == MEASUREMENT_ERROR)
+            decimalUnit = parseDecimalFromString(editableMeasurement);
+            if (decimalUnit == MEASUREMENT_ERROR)
                 return;
-            viewModel.newDecimalMeasurementReceived(viewId, decimalMeasurement);
+            viewModel.processDecimalUnit(viewId, decimalUnit);
 
         } else {
-            integerMeasurement = parseIntegerFromString(editableMeasurement);
-            if (integerMeasurement == MEASUREMENT_ERROR)
+            integerUnit = parseIntegerFromString(editableMeasurement);
+            if (integerUnit == MEASUREMENT_ERROR)
                 return;
-            viewModel.newIntegerMeasurementReceived(viewId, integerMeasurement);
+            viewModel.processIntegerUnit(viewId, integerUnit);
         }
     }
 

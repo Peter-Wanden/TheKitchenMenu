@@ -48,8 +48,7 @@ public class RecipeIngredientEditorActivity
     }
 
     private void initialiseBindings() {
-        binding = DataBindingUtil.setContentView(this,
-                R.layout.recipe_ingredient_editor);
+        binding = DataBindingUtil.setContentView(this, R.layout.recipe_ingredient_editor);
         binding.setLifecycleOwner(this);
     }
 
@@ -57,8 +56,9 @@ public class RecipeIngredientEditorActivity
         setSupportActionBar(binding.recipeIngredientEditorToolbar);
 
         ActionBar actionBar = getSupportActionBar();
-        if (actionBar == null)
+        if (actionBar == null) {
             return;
+        }
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
 
@@ -148,8 +148,8 @@ public class RecipeIngredientEditorActivity
             recipeNameAndPortionsViewModel.start(recipeId);
             ingredientViewerViewModel.start(ingredientId);
             measurementViewModel.start(recipeId, ingredientId);
-        }
-        else if (intent.hasExtra(EXTRA_RECIPE_ID) && intent.hasExtra(EXTRA_RECIPE_INGREDIENT_ID)) {
+
+        } else if (intent.hasExtra(EXTRA_RECIPE_ID) && intent.hasExtra(EXTRA_RECIPE_INGREDIENT_ID)) {
             measurementViewModel.start(intent.getStringExtra(EXTRA_RECIPE_INGREDIENT_ID));
         }
     }

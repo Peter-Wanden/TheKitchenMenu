@@ -7,8 +7,8 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtype;
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasure;
+import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.MeasurementSubtype;
+import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasure;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;

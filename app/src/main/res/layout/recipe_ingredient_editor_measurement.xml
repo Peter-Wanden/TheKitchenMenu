@@ -6,7 +6,7 @@
 
     <data>
         <import type="android.view.View"/>
-        <import type="com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtypeConverter" />
+        <import type="com.example.peter.thekitchenmenu.ui.utils.MeasurementSubtypeConverter" />
         <variable
             name="viewModel"
             type="com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor.RecipeIngredientMeasurementViewModel" />
@@ -101,9 +101,9 @@
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
             android:textAlignment="center"
-            android:text="@={viewModel.measurementTwo}"
+            android:text="@={viewModel.unitTwo}"
             app:setUpEditTextForSubtypeSelected="@{viewModel.subtype}"
-            app:editTextErrorSetter="@{viewModel.measurementTwoErrorMessage}"
+            app:editTextErrorSetter="@{viewModel.unitTwoErrorMessage}"
             app:layout_constraintTop_toBottomOf="@id/recipe_ingredient_unit_of_measure_spinner"
             app:layout_constraintStart_toStartOf="@id/vertical_guideline"
             tools:text="22"
@@ -130,10 +130,10 @@
             android:minEms="3"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
-            android:text="@={viewModel.measurementOne}"
+            android:text="@={viewModel.unitOne}"
             android:textAlignment="center"
-            app:editTextErrorSetter="@{viewModel.measurementOneErrorMessage}"
-            app:fieldVisibilityNumberOfMeasurementUnits="@{viewModel.numberOfMeasurementUnits}"
+            app:editTextErrorSetter="@{viewModel.unitOneErrorMessage}"
+            app:fieldVisibilityNumberOfMeasurementUnits="@{viewModel.numberOfUnits}"
             app:layout_constraintBaseline_toBaselineOf="@id/recipe_ingredient_editable_measurement_two"
             app:layout_constraintStart_toEndOf="@id/recipe_ingredient_measurement_label_two"
             app:setUpEditTextForSubtypeSelected="@{viewModel.subtype}"
@@ -148,7 +148,7 @@
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
             app:setLabelForSubtypeSelected="@{viewModel.subtype}"
-            app:fieldVisibilityNumberOfMeasurementUnits="@{viewModel.numberOfMeasurementUnits}"
+            app:fieldVisibilityNumberOfMeasurementUnits="@{viewModel.numberOfUnits}"
             app:layout_constraintBaseline_toBaselineOf="@id/recipe_ingredient_editable_measurement_two"
             app:layout_constraintStart_toEndOf="@id/recipe_ingredient_editable_measurement_one"
             tools:text="ml" />

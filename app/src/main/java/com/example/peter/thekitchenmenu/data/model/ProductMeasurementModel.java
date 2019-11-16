@@ -2,23 +2,23 @@ package com.example.peter.thekitchenmenu.data.model;
 
 import androidx.annotation.NonNull;
 
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtype;
+import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.MeasurementSubtype;
 
 public class ProductMeasurementModel {
 
     private static final String TAG = "tkm - MeasurementModel";
 
     private MeasurementSubtype measurementSubtype;
-    private int numberOfProducts = 1;
+    private int numberOfItems = 1;
     private double baseUnits;
 
     public ProductMeasurementModel(){}
 
     public ProductMeasurementModel(MeasurementSubtype measurementSubtype,
-                                   int numberOfProducts,
+                                   int numberOfItems,
                                    double baseUnits) {
         this.measurementSubtype = measurementSubtype;
-        this.numberOfProducts = numberOfProducts;
+        this.numberOfItems = numberOfItems;
         this.baseUnits = baseUnits;
     }
 
@@ -30,12 +30,12 @@ public class ProductMeasurementModel {
         this.measurementSubtype = measurementSubtype;
     }
 
-    public int getNumberOfProducts() {
-        return numberOfProducts;
+    public int getNumberOfItems() {
+        return numberOfItems;
     }
 
-    public void setNumberOfProducts(int numberOfProducts) {
-        this.numberOfProducts = numberOfProducts;
+    public void setNumberOfItems(int numberOfItems) {
+        this.numberOfItems = numberOfItems;
     }
 
     public double getBaseUnits() {
@@ -51,7 +51,7 @@ public class ProductMeasurementModel {
     public String toString() {
         return "\ntkm-ProductMeasurementModel{" +
                 "\nmeasurementSubtype="         + measurementSubtype +
-                "\nnumberOfProducts="           + numberOfProducts +
+                "\nnumberOfItems="           + numberOfItems +
                 "\nbaseUnits="                  + baseUnits +
                 '}';
     }

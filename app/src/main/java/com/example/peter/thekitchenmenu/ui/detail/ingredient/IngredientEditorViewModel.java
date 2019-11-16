@@ -11,11 +11,12 @@ import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 import com.example.peter.thekitchenmenu.utils.TextValidationHandler;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants;
+import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasureConstants;
 
 import static com.example.peter.thekitchenmenu.utils.TextValidationHandler.VALIDATED;
 
@@ -26,7 +27,7 @@ public class IngredientEditorViewModel
         IngredientDuplicateChecker.DuplicateCallback {
 
     private Resources resources;
-    private DataSource<IngredientEntity> dataSource;
+    private RepositoryIngredient ingredientRepo;
     private TextValidationHandler textValidationHandler;
     private UniqueIdProvider idProvider;
     private TimeProvider timeProvider;
@@ -49,13 +50,13 @@ public class IngredientEditorViewModel
     private boolean descriptionValid = true;
 
     public IngredientEditorViewModel(Resources resources,
-                                     DataSource<IngredientEntity> dataSource,
+                                     RepositoryIngredient ingredientRepository,
                                      TextValidationHandler textValidationHandler,
                                      UniqueIdProvider idProvider,
                                      TimeProvider timeProvider,
                                      IngredientDuplicateChecker duplicateChecker) {
         this.resources = resources;
-        this.dataSource = dataSource;
+        this.ingredientRepo = ingredientRepository;
         this.textValidationHandler = textValidationHandler;
         this.idProvider = idProvider;
         this.timeProvider = timeProvider;
@@ -86,13 +87,19 @@ public class IngredientEditorViewModel
     }
 
     void start() {
+        if (ingredientEntity == null) {
+            ingredientEntity = createNewIngredientEntity();
+        }
         setActivityTitleEvent.setValue(R.string.activity_title_add_new_ingredient);
-        ingredientEntity = createNewIngredientEntity();
         updateObservables();
     }
 
     void start(String ingredientId) {
-        dataSource.getById(ingredientId, this);
+        if (ingredientEntity == null || !ingredientEntity.getId().equals(ingredientId)) {
+            ingredientRepo.getById(ingredientId, this);
+        } else {
+            updateObservables();
+        }
     }
 
     SingleLiveEvent<Integer> getSetActivityTitleEvent() {
@@ -234,7 +241,7 @@ public class IngredientEditorViewModel
     }
 
     private void saveModel() {
-        dataSource.save(ingredientEntity);
+        ingredientRepo.save(ingredientEntity);
     }
 
     void useButtonPressed() {

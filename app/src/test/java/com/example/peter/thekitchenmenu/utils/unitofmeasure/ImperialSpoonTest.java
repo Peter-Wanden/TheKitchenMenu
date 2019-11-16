@@ -1,9 +1,11 @@
 package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
+import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.ImperialSpoon;
+
 import org.junit.*;
 import org.mockito.*;
 
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.*;
+import static com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasureConstants.*;
 import static org.junit.Assert.*;
 
 public class ImperialSpoonTest {

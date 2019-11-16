@@ -81,9 +81,9 @@
                 android:paddingStart="@dimen/list_item_top_full_margin"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/product_list_item_description"
-                app:setLabelForSubtypeInt="@{productModel.productEntity.unitOfMeasureSubtype}"
+                app:setLabelForSubtypeInt="@{productModel.productEntity.subtype}"
                 app:formatBaseUnits="@{productModel.productEntity.baseUnits}"
-                app:formatNumberOfItems="@{productModel.productEntity.numberOfProducts}"
+                app:formatNumberOfItems="@{productModel.productEntity.numberOfItems}"
                 tools:text="400 ml" />
 
             <androidx.appcompat.widget.AppCompatImageButton

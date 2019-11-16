@@ -1,5 +1,7 @@
 package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
+import com.example.peter.thekitchenmenu.domain.usecase.MeasurementResult;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseIngredientPortionCalculator;
 import com.example.peter.thekitchenmenu.testdata.MeasurementModelTestData;
 
 public class UseCaseIngredientPortionCalculatorTestData {
@@ -41,6 +43,13 @@ public class UseCaseIngredientPortionCalculatorTestData {
     public static MeasurementResult getResultNewInvalidUnitOfMeasureChangedImperialSpoon() {
         return new MeasurementResult(
                 MeasurementModelTestData.getNewInvalidUnitOfMeasureChangedImperialSpoon(),
+                UseCaseIngredientPortionCalculator.ResultStatus.INVALID_MEASUREMENT
+        );
+    }
+
+    public static MeasurementResult getResultNewInvalidUnitOfMeasureChangedMetricMass() {
+        return new MeasurementResult(
+                MeasurementModelTestData.getNewInvalidUnitOfMeasureChangedMetricMass(),
                 UseCaseIngredientPortionCalculator.ResultStatus.INVALID_MEASUREMENT
         );
     }

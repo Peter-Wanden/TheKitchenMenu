@@ -8,10 +8,10 @@ import android.widget.SpinnerAdapter;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.ProductEditorMeasurementBinding;
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtype;
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.SpinnerItemType;
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureSpinnerAdapter;
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureSpinnerItem;
+import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.MeasurementSubtype;
+import com.example.peter.thekitchenmenu.ui.utils.SpinnerItemType;
+import com.example.peter.thekitchenmenu.ui.utils.UnitOfMeasureSpinnerAdapter;
+import com.example.peter.thekitchenmenu.ui.utils.UnitOfMeasureSpinnerItem;
 
 import java.util.ArrayList;
 import java.util.Arrays;

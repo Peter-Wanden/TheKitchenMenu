@@ -8,7 +8,7 @@
         <import type="android.view.View"/>
         <variable
             name="viewModel"
-            type="com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeDurationViewModel">
+            type="com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeDurationEditorViewModel">
         </variable>
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout

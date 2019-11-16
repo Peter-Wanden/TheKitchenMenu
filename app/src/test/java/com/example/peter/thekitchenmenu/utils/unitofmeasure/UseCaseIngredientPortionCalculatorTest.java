@@ -3,23 +3,28 @@ package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientQuantityEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipePortionsEntity;
-import com.example.peter.thekitchenmenu.data.model.MeasurementModel;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
+import com.example.peter.thekitchenmenu.domain.usecase.MeasurementResult;
+import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.MeasurementSubtype;
+import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasure;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseIngredientPortionCalculator;
 import com.example.peter.thekitchenmenu.testdata.IngredientEntityTestData;
 import com.example.peter.thekitchenmenu.testdata.MeasurementModelTestData;
 import com.example.peter.thekitchenmenu.testdata.RecipeIngredientQuantityEntityTestData;
 import com.example.peter.thekitchenmenu.testdata.RecipePortionsEntityTestData;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
+import com.example.peter.thekitchenmenu.domain.model.MeasurementModel;
+import com.example.peter.thekitchenmenu.domain.model.MeasurementModelBuilder;
 
 import org.junit.*;
 import org.mockito.*;
 
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.*;
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UseCaseIngredientPortionCalculator.*;
+import static com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasureConstants.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.UseCaseIngredientPortionCalculator.*;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.assertEquals;
 
@@ -98,6 +103,12 @@ public class UseCaseIngredientPortionCalculatorTest {
     private MeasurementResult MEASUREMENT_UNIT_OF_MEASURE_CHANGED_IMPERIAL_SPOON_RESULT =
             UseCaseIngredientPortionCalculatorTestData.
                     getResultNewInvalidUnitOfMeasureChangedImperialSpoon();
+
+    private MeasurementModel MEASUREMENT_UNIT_OF_MEASURE_CHANGED_TO_METRIC_MASS =
+            MeasurementModelTestData.getNewInvalidUnitOfMeasureChangedMetricMass();
+    private MeasurementResult MEASUREMENT_UNIT_OF_MEASURE_CHANGED_TO_METRIC_MASS_RESULT =
+            UseCaseIngredientPortionCalculatorTestData.
+                    getResultNewInvalidUnitOfMeasureChangedMetricMass();
 
     //----------------------
     private MeasurementModel MEASUREMENT_NEW_VALID_HALF_IMPERIAL_SPOON_UNIT_ONE_UPDATED =
@@ -415,6 +426,27 @@ public class UseCaseIngredientPortionCalculatorTest {
     }
 
     @Test
+    public void startNewRecipeAndIngredientId_unitOfMeasureChangedFromDisabled_conversionFactorDefault() {
+        // Arrange
+        whenIdProviderReturnNewValidId();
+        whenTimeProviderThenReturnNewValidTime();
+        // Act
+        SUT.start(QUANTITY_NEW_VALID_METRIC.getRecipeId(),
+                QUANTITY_NEW_VALID_METRIC.getIngredientId());
+        verifyRepoIngredientCalledAndReturnNewValidName();
+        verifyRepoPortionsCalledAndReturnNewValidFourPortions();
+        // first unit of measure change
+        MeasurementModel model = MEASUREMENT_EMPTY_FOUR_PORTIONS;
+        MeasurementModel processedModel = MeasurementModelBuilder.basedOn(model).setNumberOfItems(4).build();
+        // Update conversion factor
+
+        // Second unit of measure change
+
+        // Assert
+
+    }
+
+    @Test
     public void startNewRecipeAndIngredientId_unitOfMeasureChangedImperialSpoon_userWalkThrough() {
         // Arrange
         whenIdProviderReturnNewValidId();
@@ -511,8 +543,8 @@ public class UseCaseIngredientPortionCalculatorTest {
 
         SUT.processModel(MEASUREMENT_UNIT_OF_MEASURE_CHANGED_IMPERIAL_SPOON);
         SUT.processModel(MEASUREMENT_VALID_MAX_CONVERSION_FACTOR); // setConversion factor
-        SUT.processModel(MEASUREMENT_VALID_MAX_CONVERSION_FACTOR); // setMeasurementOne
-        SUT.processModel(MEASUREMENT_VALID_MAX_CONVERSION_FACTOR); // setMeasurementTwo
+        SUT.processModel(MEASUREMENT_VALID_MAX_CONVERSION_FACTOR); // setUnitOne
+        SUT.processModel(MEASUREMENT_VALID_MAX_CONVERSION_FACTOR); // setUnitTwo
         // Assert
         verify(repoRecipeIngredientMock, times((2))).save(recipeIngredientCaptor.capture());
         verify(viewModelMock, times((5))).useCasePortionResult(resultArgumentCaptor.capture());
@@ -532,8 +564,8 @@ public class UseCaseIngredientPortionCalculatorTest {
 
         SUT.processModel(MEASUREMENT_UNIT_OF_MEASURE_CHANGED_IMPERIAL_SPOON);
         SUT.processModel(MEASUREMENT_VALID_MAX_CONVERSION_FACTOR); // setConversion factor
-        SUT.processModel(MEASUREMENT_VALID_MAX_CONVERSION_FACTOR); // setMeasurementOne
-        SUT.processModel(MEASUREMENT_VALID_MAX_CONVERSION_FACTOR); // setMeasurementTwo
+        SUT.processModel(MEASUREMENT_VALID_MAX_CONVERSION_FACTOR); // setUnitOne
+        SUT.processModel(MEASUREMENT_VALID_MAX_CONVERSION_FACTOR); // setUnitTwo
         // Assert
         verify(repoRecipeIngredientMock, times((2))).save(recipeIngredientCaptor.capture());
         verify(viewModelMock, times((5))).useCasePortionResult(resultArgumentCaptor.capture());
@@ -803,7 +835,7 @@ public class UseCaseIngredientPortionCalculatorTest {
         );
 
         unitOfMeasureChangeToSpoonValues.isTotalUnitOneSet(
-                measurementOneChangeFromUi.getTotalMeasurementOne());
+                measurementOneChangeFromUi.getTotalUnitOne());
 
         MeasurementModel expectedResultFromMeasurementOneChange =
                 getMeasurementModel(unitOfMeasureChangeToSpoonValues);
@@ -824,21 +856,21 @@ public class UseCaseIngredientPortionCalculatorTest {
         MeasurementModel conversionFactorChangeFromUi = new MeasurementModel(
                 expectedResultFromMeasurementOneChange.getType(),
                 expectedResultFromMeasurementOneChange.getSubtype(),
-                expectedResultFromMeasurementOneChange.getNumberOfMeasurementUnits(),
+                expectedResultFromMeasurementOneChange.getNumberOfUnits(),
                 expectedResultFromMeasurementOneChange.isConversionFactorEnabled(),
                 MAX_CONVERSION_FACTOR,
                 expectedResultFromMeasurementOneChange.getItemBaseUnits(),
                 expectedResultFromMeasurementOneChange.getTotalBaseUnits(),
                 expectedResultFromMeasurementOneChange.getNumberOfItems(),
-                expectedResultFromMeasurementOneChange.getTotalMeasurementOne(),
-                expectedResultFromMeasurementOneChange.getItemMeasurementOne(),
-                expectedResultFromMeasurementOneChange.getTotalMeasurementTwo(),
-                expectedResultFromMeasurementOneChange.getItemMeasurementTwo(),
+                expectedResultFromMeasurementOneChange.getTotalUnitOne(),
+                expectedResultFromMeasurementOneChange.getItemUnitOne(),
+                expectedResultFromMeasurementOneChange.getTotalUnitTwo(),
+                expectedResultFromMeasurementOneChange.getItemUnitTwo(),
                 expectedResultFromMeasurementOneChange.isValidMeasurement(),
-                expectedResultFromMeasurementOneChange.getMinimumMeasurement(),
-                expectedResultFromMeasurementOneChange.getMaxMeasurementOne(),
-                expectedResultFromMeasurementOneChange.getMaxMeasurementTwo(),
-                expectedResultFromMeasurementOneChange.getMeasurementUnitDigitWidths()
+                expectedResultFromMeasurementOneChange.getMinUnitOne(),
+                expectedResultFromMeasurementOneChange.getMaxUnitOne(),
+                expectedResultFromMeasurementOneChange.getMaxUnitTwo(),
+                expectedResultFromMeasurementOneChange.getMaxUnitDigitWidths()
         );
 
         unitOfMeasureChangeToSpoonValues.isConversionFactorSet(

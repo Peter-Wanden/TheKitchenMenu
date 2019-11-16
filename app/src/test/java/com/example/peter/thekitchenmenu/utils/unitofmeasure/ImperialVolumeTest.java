@@ -1,12 +1,14 @@
 package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
+import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.ImperialVolume;
+
 import org.junit.Test;
 
 import java.math.RoundingMode;
 import java.text.NumberFormat;
 
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MIN_VOLUME;
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.MAX_VOLUME;
+import static com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasureConstants.MIN_VOLUME;
+import static com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasureConstants.MAX_VOLUME;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 

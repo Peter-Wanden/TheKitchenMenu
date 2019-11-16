@@ -8,17 +8,18 @@ import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientQuantityEntity;
-import com.example.peter.thekitchenmenu.data.model.MeasurementModel;
+import com.example.peter.thekitchenmenu.domain.model.MeasurementModel;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseConversionFactorStatus;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.testdata.IngredientEntityTestData;
 import com.example.peter.thekitchenmenu.testdata.RecipeEntityTestData;
 import com.example.peter.thekitchenmenu.testdata.RecipeIngredientQuantityEntityTestData;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor.RecipeIngredientMeasurementViewModel;
 import com.example.peter.thekitchenmenu.utils.NumberFormatter;
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementResult;
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtype;
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants;
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.UseCaseConversionFactorStatus;
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.UseCaseIngredientPortionCalculator;
+import com.example.peter.thekitchenmenu.domain.usecase.MeasurementResult;
+import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.MeasurementSubtype;
+import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasureConstants;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseIngredientPortionCalculator;
 import com.example.peter.thekitchenmenu.utils.unitofmeasure.UseCaseIngredientPortionCalculatorTestData;
 
 import org.junit.Before;
@@ -101,6 +102,8 @@ public class RecipeIngredientMeasurementViewModelTest {
     ArgumentCaptor<String> ingredientIdCaptor;
     @Mock
     NumberFormatter numberFormatterMock;
+    @Mock
+    UseCaseHandler useCaseHandlerMock;
     // endregion helper fields ---------------------------------------------------------------------
 
     private RecipeIngredientMeasurementViewModel SUT;
@@ -111,6 +114,7 @@ public class RecipeIngredientMeasurementViewModelTest {
         setupResources();
 
         SUT = new RecipeIngredientMeasurementViewModel(
+                useCaseHandlerMock,
                 useCaseIngredientPortionCalculatorMock,
                 useCaseConversionFactorMock,
                 resourcesMock,
@@ -169,14 +173,14 @@ public class RecipeIngredientMeasurementViewModelTest {
         SUT.useCasePortionResult(MEASUREMENT_NEW_INVALID_ONE);
 
         assertEquals("Tablespoons and/or teaspoons need to have a value between 0.1 tsp and 666 Tbsp",
-                SUT.getMeasurementOneErrorMessage());
+                SUT.getUnitOneErrorMessage());
     }
 
     @Test
     public void startRecipeIdIngredientId_measurementOneValidReturned_valuesSetToDisplay() {
         // Arrange
         double expectedMeasurement = MEASUREMENT_NEW_VALID_ONE.getModel().
-                getTotalMeasurementOne();
+                getTotalUnitOne();
         when(numberFormatterMock.formatDecimalForDisplay(eq(expectedMeasurement))).
                 thenReturn(String.valueOf(expectedMeasurement));
         String expectedMeasurementOne = String.valueOf(expectedMeasurement);
@@ -186,7 +190,7 @@ public class RecipeIngredientMeasurementViewModelTest {
                 recipeIdCaptor.capture(), ingredientIdCaptor.capture());
         SUT.useCasePortionResult(MEASUREMENT_NEW_VALID_ONE);
         // Assert
-        String actualMeasurementOne = SUT.getMeasurementOne();
+        String actualMeasurementOne = SUT.getUnitOne();
         assertEquals(expectedMeasurementOne, actualMeasurementOne);
     }
 
@@ -199,14 +203,14 @@ public class RecipeIngredientMeasurementViewModelTest {
         verify(useCaseIngredientPortionCalculatorMock).start(recipeIdCaptor.capture(), ingredientIdCaptor.capture());
         SUT.useCasePortionResult(MEASUREMENT_NEW_INVALID_TWO);
         // Assert
-        String actualError = SUT.getMeasurementTwoErrorMessage();
+        String actualError = SUT.getUnitTwoErrorMessage();
         assertEquals(expectedError, actualError);
     }
 
     @Test
     public void startRecipeIdIngredientId_measurementTwoValidReturned_valueSetToDisplay() {
         // Arrange
-        int expectedMeasurement = MEASUREMENT_NEW_VALID_TWO.getModel().getTotalMeasurementTwo();
+        int expectedMeasurement = MEASUREMENT_NEW_VALID_TWO.getModel().getTotalUnitTwo();
         when(numberFormatterMock.formatIntegerForDisplay(eq(expectedMeasurement))).
                 thenReturn(String.valueOf(expectedMeasurement));
         String expectedResult = String.valueOf(expectedMeasurement);
@@ -215,7 +219,7 @@ public class RecipeIngredientMeasurementViewModelTest {
         verify(useCaseIngredientPortionCalculatorMock).start(recipeIdCaptor.capture(), ingredientIdCaptor.capture());
         SUT.useCasePortionResult(MEASUREMENT_NEW_VALID_TWO);
         // Assert
-        String actualResult = SUT.getMeasurementTwo();
+        String actualResult = SUT.getUnitTwo();
         assertEquals(expectedResult, actualResult);
     }
 
@@ -265,14 +269,14 @@ public class RecipeIngredientMeasurementViewModelTest {
         MeasurementModel model = MEASUREMENT_EXISTING_VALID_METRIC.getModel();
         MeasurementSubtype expectedSubtype = model.getSubtype();
         String expectedConversionFactor = String.valueOf(model.getConversionFactor());
-        String expectedMeasurementOne = String.valueOf(model.getTotalMeasurementOne());
-        String expectedMeasurementTwo = String.valueOf(model.getTotalMeasurementTwo());
+        String expectedMeasurementOne = String.valueOf(model.getTotalUnitOne());
+        String expectedMeasurementTwo = String.valueOf(model.getTotalUnitTwo());
 
         when(numberFormatterMock.formatDecimalForDisplay(model.getConversionFactor())).
                 thenReturn(expectedConversionFactor);
-        when(numberFormatterMock.formatDecimalForDisplay(model.getTotalMeasurementOne())).
+        when(numberFormatterMock.formatDecimalForDisplay(model.getTotalUnitOne())).
                 thenReturn(expectedMeasurementOne);
-        when(numberFormatterMock.formatIntegerForDisplay(model.getTotalMeasurementTwo())).
+        when(numberFormatterMock.formatIntegerForDisplay(model.getTotalUnitTwo())).
                 thenReturn(expectedMeasurementTwo);
         // Act
         SUT.start(QUANTITY_EXISTING_VALID_METRIC.getId());
@@ -282,8 +286,8 @@ public class RecipeIngredientMeasurementViewModelTest {
 
         assertEquals(expectedSubtype, SUT.getSubtype());
         assertEquals(expectedConversionFactor, SUT.getConversionFactor());
-        assertEquals(expectedMeasurementOne, SUT.getMeasurementOne());
-        assertEquals(expectedMeasurementTwo, SUT.getMeasurementTwo());
+        assertEquals(expectedMeasurementOne, SUT.getUnitOne());
+        assertEquals(expectedMeasurementTwo, SUT.getUnitTwo());
     }
 
     // region helper methods -----------------------------------------------------------------------

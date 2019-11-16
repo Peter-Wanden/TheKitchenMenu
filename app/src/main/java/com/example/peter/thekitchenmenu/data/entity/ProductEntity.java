@@ -10,7 +10,7 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtype;
+import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.MeasurementSubtype;
 import com.google.android.gms.common.internal.Objects;
 
 import java.util.Calendar;
@@ -24,10 +24,10 @@ public final class ProductEntity implements Parcelable, TkmEntity {
     public static final String DESCRIPTION = "description";
     public static final String SHOPPING_LIST_ITEM_NAME = "shoppingListItemName";
     private static final String CATEGORY = "category";
-    private static final String NUMBER_OF_PRODUCTS = "numberOfProducts";
+    private static final String NUMBER_OF_ITEMS = "numberOfItems";
     private static final String SHELF_LIFE = "shelfLife";
     private static final String BASE_UNITS = "baseUnits";
-    private static final String UNIT_OF_MEASURE_SUBTYPE = "unitOfMeasureSubtype";
+    private static final String SUBTYPE = "subtype";
     private static final String CREATED_BY = "createdBy";
     private static final String WEB_IMAGE_URL = "webImageUrl";
     private static final String REMOTE_SMALL_IMAGE_URI = "remoteSmallImageUri";
@@ -55,14 +55,14 @@ public final class ProductEntity implements Parcelable, TkmEntity {
     @ColumnInfo(name = SHELF_LIFE)
     private final int shelfLife;
 
-    @ColumnInfo(name = NUMBER_OF_PRODUCTS)
-    private final int numberOfProducts;
+    @ColumnInfo(name = NUMBER_OF_ITEMS)
+    private final int numberOfItems;
 
     @ColumnInfo(name = BASE_UNITS)
     private final double baseUnits;
 
-    @ColumnInfo(name = UNIT_OF_MEASURE_SUBTYPE)
-    private final int unitOfMeasureSubtype;
+    @ColumnInfo(name = SUBTYPE)
+    private final int subtype;
 
     @ColumnInfo(name = CREATED_BY)
     private final String createdBy;
@@ -94,9 +94,9 @@ public final class ProductEntity implements Parcelable, TkmEntity {
                          @NonNull String shoppingListItemName,
                          int category,
                          int shelfLife,
-                         int numberOfProducts,
+                         int numberOfItems,
                          double baseUnits,
-                         int unitOfMeasureSubtype,
+                         int subtype,
                          @NonNull String createdBy,
                          @Nullable String webImageUrl,
                          @Nullable String remoteSmallImageUri,
@@ -109,10 +109,10 @@ public final class ProductEntity implements Parcelable, TkmEntity {
         this.description = description;
         this.shoppingListItemName = shoppingListItemName;
         this.category = category;
-        this.numberOfProducts = numberOfProducts;
+        this.numberOfItems = numberOfItems;
         this.shelfLife = shelfLife;
         this.baseUnits = baseUnits;
-        this.unitOfMeasureSubtype = unitOfMeasureSubtype;
+        this.subtype = subtype;
         this.createdBy = createdBy;
         this.webImageUrl = webImageUrl;
         this.remoteSmallImageUri = remoteSmallImageUri;
@@ -235,9 +235,9 @@ public final class ProductEntity implements Parcelable, TkmEntity {
                 Objects.equal(shoppingListItemName, entity.shoppingListItemName) &&
                 Objects.equal(category, entity.category) &&
                 Objects.equal(shelfLife, entity.shelfLife) &&
-                Objects.equal(numberOfProducts, entity.numberOfProducts) &&
+                Objects.equal(numberOfItems, entity.numberOfItems) &&
                 Objects.equal(baseUnits, entity.baseUnits) &&
-                Objects.equal(unitOfMeasureSubtype, entity.unitOfMeasureSubtype) &&
+                Objects.equal(subtype, entity.subtype) &&
                 Objects.equal(createdBy, entity.createdBy) &&
                 Objects.equal(webImageUrl, entity.webImageUrl) &&
                 Objects.equal(remoteSmallImageUri, entity.remoteSmallImageUri) &&
@@ -255,9 +255,9 @@ public final class ProductEntity implements Parcelable, TkmEntity {
                 "\nshoppingListItemName='" + shoppingListItemName + '\'' +
                 "\ncategory=" + category +
                 "\nshelfLife=" + shelfLife +
-                "\nnumberOfProducts=" + numberOfProducts +
+                "\nnumberOfItems=" + numberOfItems +
                 "\nbaseUnits=" + baseUnits +
-                "\nunitOfMeasureSubtype=" + unitOfMeasureSubtype +
+                "\nsubtype=" + subtype +
                 "\ncreatedBy='" + createdBy + '\'' +
                 "\nwebImageUrl='" + webImageUrl + '\'' +
                 "\nremoteSmallImageUri='" + remoteSmallImageUri + '\'' +
@@ -277,9 +277,9 @@ public final class ProductEntity implements Parcelable, TkmEntity {
                 "shoppingListItemName cannot be null");
         category = in.readInt();
         shelfLife = in.readInt();
-        numberOfProducts = in.readInt();
+        numberOfItems = in.readInt();
         baseUnits = in.readDouble();
-        unitOfMeasureSubtype = in.readInt();
+        subtype = in.readInt();
         createdBy = in.readString();
         webImageUrl = in.readString();
         remoteSmallImageUri = in.readString();
@@ -313,9 +313,9 @@ public final class ProductEntity implements Parcelable, TkmEntity {
         parcel.writeString(shoppingListItemName);
         parcel.writeInt(category);
         parcel.writeInt(shelfLife);
-        parcel.writeInt(numberOfProducts);
+        parcel.writeInt(numberOfItems);
         parcel.writeDouble(baseUnits);
-        parcel.writeInt(unitOfMeasureSubtype);
+        parcel.writeInt(subtype);
         parcel.writeString(createdBy);
         parcel.writeString(webImageUrl);
         parcel.writeString(remoteSmallImageUri);
@@ -345,8 +345,8 @@ public final class ProductEntity implements Parcelable, TkmEntity {
         return category;
     }
 
-    public int getNumberOfProducts() {
-        return numberOfProducts;
+    public int getNumberOfItems() {
+        return numberOfItems;
     }
 
     public int getShelfLife() {
@@ -357,8 +357,8 @@ public final class ProductEntity implements Parcelable, TkmEntity {
         return baseUnits;
     }
 
-    public int getUnitOfMeasureSubtype() {
-        return unitOfMeasureSubtype;
+    public int getSubtype() {
+        return subtype;
     }
 
     public String getCreatedBy() {

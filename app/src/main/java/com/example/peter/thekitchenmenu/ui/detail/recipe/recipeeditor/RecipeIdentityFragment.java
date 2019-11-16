@@ -36,7 +36,7 @@ public class RecipeIdentityFragment extends Fragment {
         binding.setLifecycleOwner(this);
 
         binding.setViewModel(new ViewModelProvider(requireActivity()).
-                get(RecipeIdentityViewModel.class));
+                get(RecipeIdentityEditorViewModel.class));
 
         return binding.getRoot();
     }

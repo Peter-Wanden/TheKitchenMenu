@@ -82,15 +82,15 @@ public class RecipeEditorActivity
         RecipeModelComposite recipeModelComposite = new RecipeModelComposite();
         recipeEditorViewModel.setRecipeModelComposite(recipeModelComposite);
 
-        RecipeIdentityViewModel recipeIdentityViewModel = obtainIdentityViewModel(this);
-        recipeModelComposite.registerModel(recipeIdentityViewModel);
-        recipeIdentityViewModel.setModelValidationSubmitter(recipeEditorViewModel.getValidator());
+        RecipeIdentityEditorViewModel recipeIdentityEditorViewModel = obtainIdentityViewModel(this);
+        recipeModelComposite.registerModel(recipeIdentityEditorViewModel);
+        recipeIdentityEditorViewModel.setModelValidationSubmitter(recipeEditorViewModel.getValidator());
 
         RecipeCourseEditorViewModel courseSelectorViewModel = obtainCourseSelectorViewModel((this));
         recipeModelComposite.registerModel(courseSelectorViewModel);
         courseSelectorViewModel.setModelValidationSubmitter(recipeEditorViewModel.getValidator());
 
-        RecipeDurationViewModel durationViewModel = obtainDurationViewModel(this);
+        RecipeDurationEditorViewModel durationViewModel = obtainDurationViewModel(this);
         recipeModelComposite.registerModel(durationViewModel);
         durationViewModel.setModelValidationSubmitter(recipeEditorViewModel.getValidator());
 
@@ -116,12 +116,12 @@ public class RecipeEditorActivity
                         RecipeEditorViewModel.class);
     }
 
-    static RecipeIdentityViewModel obtainIdentityViewModel(
+    static RecipeIdentityEditorViewModel obtainIdentityViewModel(
             FragmentActivity activity) {
         ViewModelFactoryRecipe factoryRecipe = ViewModelFactoryRecipe.getInstance(
                 activity.getApplication());
         return new ViewModelProvider(activity, factoryRecipe).get(
-                RecipeIdentityViewModel.class);
+                RecipeIdentityEditorViewModel.class);
     }
 
     static RecipeCourseEditorViewModel obtainCourseSelectorViewModel(
@@ -132,12 +132,12 @@ public class RecipeEditorActivity
                 RecipeCourseEditorViewModel.class);
     }
 
-    static RecipeDurationViewModel obtainDurationViewModel(
+    static RecipeDurationEditorViewModel obtainDurationViewModel(
             FragmentActivity activity) {
         ViewModelFactoryRecipe factoryRecipe = ViewModelFactoryRecipe.getInstance(
                 activity.getApplication());
         return new ViewModelProvider(activity, factoryRecipe).get(
-                RecipeDurationViewModel.class);
+                RecipeDurationEditorViewModel.class);
     }
 
     static RecipePortionsEditorViewModel obtainPortionsViewModel(

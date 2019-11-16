@@ -16,7 +16,7 @@ import com.example.peter.thekitchenmenu.ui.ViewModelFactoryProduct;
 import com.example.peter.thekitchenmenu.ui.detail.product.productviewer.ProductViewerActivity;
 import com.example.peter.thekitchenmenu.ui.imageeditor.ImageEditorFragment;
 import com.example.peter.thekitchenmenu.utils.ActivityUtils;
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtype;
+import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.ui.imageeditor.ImageEditorViewModel;
 
 import androidx.annotation.NonNull;
@@ -131,8 +131,8 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
                 identityEditorViewModel.setIdentityModel(identityModel);
 
                 ProductMeasurementModel measurementModel = new ProductMeasurementModel(
-                        MeasurementSubtype.fromInt(productEntity.getUnitOfMeasureSubtype()),
-                        productEntity.getNumberOfProducts(),
+                        MeasurementSubtype.fromInt(productEntity.getSubtype()),
+                        productEntity.getNumberOfItems(),
                         productEntity.getBaseUnits()
                 );
                 measurementEditorViewModel.setMeasurementModel(measurementModel);

@@ -1,12 +1,12 @@
 package com.example.peter.thekitchenmenu.testdata;
 
-import com.example.peter.thekitchenmenu.data.model.MeasurementModel;
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementSubtype;
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.MeasurementType;
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasure;
+import com.example.peter.thekitchenmenu.domain.model.MeasurementModel;
+import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.MeasurementSubtype;
+import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.MeasurementType;
+import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasure;
 
 import static com.example.peter.thekitchenmenu.testdata.RecipeIngredientQuantityEntityTestData.getNewValidImperialSpoonMaxConversionFactor;
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.*;
+import static com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasureConstants.*;
 
 public class MeasurementModelTestData {
 
@@ -231,6 +231,27 @@ public class MeasurementModelTestData {
     //-----------
     public static MeasurementModel getNewInvalidUnitOfMeasureChangedImperialSpoon() {
         UnitOfMeasure unitOfMeasure = getSubtypeForNewValidImperialSpoon().getMeasurementClass();
+
+        boolean isNumberOfItemsSet = unitOfMeasure.isNumberOfItemsSet(getEmptyModelFourPortions());
+        if (!isNumberOfItemsSet) {
+            throwNumberOfItemsException(isNumberOfItemsSet);
+        }
+
+        if (unitOfMeasure.isConversionFactorEnabled()) {
+            double conversionFactor = getInvalidEmptyFourPortionsSet().
+                    getConversionFactor();
+
+            boolean isConversionFactorSet = unitOfMeasure.isConversionFactorSet(conversionFactor);
+
+            if (!isConversionFactorSet)
+                throwConversionFactorException(isConversionFactorSet);
+        }
+
+        return getMeasurementModel(unitOfMeasure);
+    }
+
+    public static MeasurementModel getNewInvalidUnitOfMeasureChangedMetricMass() {
+        UnitOfMeasure unitOfMeasure = getSubtypeForValidNewMetric().getMeasurementClass();
 
         boolean isNumberOfItemsSet = unitOfMeasure.isNumberOfItemsSet(getEmptyModelFourPortions());
         if (!isNumberOfItemsSet) {

@@ -61,15 +61,19 @@ public class RecipePortionsEditorViewModel
 
     @Override
     public void start(String recipeId) {
-        this.recipeId = recipeId;
-        getData(recipeId);
+        if (this.recipeId == null || !this.recipeId.equals(recipeId)) {
+            this.recipeId = recipeId;
+            getData(recipeId);
+        }
     }
 
     @Override
     public void startByCloningModel(String oldRecipeId, String newRecipeId) {
-        isCloned = true;
-        this.recipeId = newRecipeId;
-        getData(oldRecipeId);
+        if (recipeId == null || !recipeId.equals(newRecipeId)) {
+            isCloned = true;
+            this.recipeId = newRecipeId;
+            getData(oldRecipeId);
+        }
     }
 
     private void getData(String recipeId) {
@@ -79,10 +83,11 @@ public class RecipePortionsEditorViewModel
 
     @Override
     public void onEntityLoaded(RecipePortionsEntity portionsEntity) {
-        if (isCloned)
+        if (isCloned) {
             this.portionsEntity = cloneEntity(portionsEntity);
-        else
+        } else {
             this.portionsEntity = portionsEntity;
+        }
         updateObservables();
     }
 
@@ -175,9 +180,9 @@ public class RecipePortionsEditorViewModel
                 minServings, maxServings);
 
         servingsValid = servings >= minServings && servings <= maxServings;
-        if (!servingsValid)
+        if (!servingsValid) {
             servingsErrorMessage.set(errorMessage);
-
+        }
         updateServings(servings);
         saveValidChanges();
     }
@@ -221,9 +226,9 @@ public class RecipePortionsEditorViewModel
                 minSittings, maxSittings);
 
         sittingsValid = sittings >= minSittings && sittings <= maxSittings;
-        if (!sittingsValid)
+        if (!sittingsValid) {
             sittingsErrorMessage.set(errorMessage);
-
+        }
         updateSittings(sittings);
         saveValidChanges();
     }
@@ -262,9 +267,9 @@ public class RecipePortionsEditorViewModel
         boolean isChanged = isChanged();
         boolean isValid = isValid();
 
-        if (isChanged() && isValid())
+        if (isChanged() && isValid()) {
             save(entity);
-
+        }
         equaliseState(entity);
         submitModelStatus(isChanged, isValid);
     }
@@ -294,8 +299,9 @@ public class RecipePortionsEditorViewModel
                     portionsEntity.getLastUpdate()
             );
             return !portionsEntity.equals(latestData);
-        } else
+        } else {
             return false;
+        }
     }
 
     private boolean isValid() {

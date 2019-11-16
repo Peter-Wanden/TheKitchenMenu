@@ -35,19 +35,20 @@ public class RecipeCourseEditorViewModel
 
         private final int courseNo;
         @SuppressLint("UseSparseArrays")
-        private static Map<Integer, Course> map = new HashMap<>();
+        private static Map<Integer, Course> courseMap = new HashMap<>();
 
         Course(int courseNo) {
             this.courseNo = courseNo;
         }
 
         static {
-            for (Course course : Course.values())
-                map.put(course.courseNo, course);
+            for (Course course : Course.values()) {
+                courseMap.put(course.courseNo, course);
+            }
         }
 
         public static Course valueOf(int courseNo) {
-            return map.get(courseNo);
+            return courseMap.get(courseNo);
         }
 
         public int getCourseNo() {
@@ -78,15 +79,19 @@ public class RecipeCourseEditorViewModel
 
     @Override
     public void start(String recipeId) {
-        this.recipeId = recipeId;
-        getData(recipeId);
+        if (this.recipeId == null || !this.recipeId.equals(recipeId)) {
+            this.recipeId = recipeId;
+            getData(recipeId);
+        }
     }
 
     @Override
     public void startByCloningModel(String oldRecipeId, String newRecipeId) {
-        isCloned = true;
-        recipeId = newRecipeId;
-        getData(oldRecipeId);
+        if (recipeId == null || !recipeId.equals(newRecipeId)) {
+            isCloned = true;
+            recipeId = newRecipeId;
+            getData(oldRecipeId);
+        }
     }
 
     private void getData(String recipeId) {
@@ -96,23 +101,25 @@ public class RecipeCourseEditorViewModel
 
     @Override
     public void onAllLoaded(List<RecipeCourseEntity> recipeCourseEntities) {
-        if (isCloned)
+        if (isCloned) {
             cloneRecipeCourseEntities(recipeCourseEntities);
-        else
+        } else {
             addEntitiesToNewList(recipeCourseEntities);
-
+        }
         equaliseState();
         setRecipeCoursesToObservables();
     }
 
     private void addEntitiesToNewList(List<RecipeCourseEntity> recipeCourseEntities) {
-        for (RecipeCourseEntity courseEntity : recipeCourseEntities)
+        for (RecipeCourseEntity courseEntity : recipeCourseEntities) {
             newCourseList.put(Course.valueOf(courseEntity.getCourseNo()), courseEntity);
+        }
     }
 
     private void cloneRecipeCourseEntities(List<RecipeCourseEntity> recipeCourseEntities) {
-        for (RecipeCourseEntity recipeCourseEntity : recipeCourseEntities)
+        for (RecipeCourseEntity recipeCourseEntity : recipeCourseEntities) {
             addOrRemoveCourse(true, Course.valueOf(recipeCourseEntity.getCourseNo()));
+        }
     }
 
     @Override
@@ -236,10 +243,11 @@ public class RecipeCourseEditorViewModel
     }
 
     private void addOrRemoveCourse(boolean addCourse, Course course) {
-        if (addCourse && !isCourseInList(course))
+        if (addCourse && !isCourseInList(course)) {
             addCourse(course);
-        else if (!addCourse && isCourseInList(course))
+        } else if (!addCourse && isCourseInList(course)) {
             removeCourse(course);
+        }
     }
 
     private boolean isCourseInList(Course course) {
@@ -251,8 +259,9 @@ public class RecipeCourseEditorViewModel
         newCourseList.put(course, newCourseEntity);
         repository.save(newCourseEntity);
 
-        if (!updatingUi)
+        if (!updatingUi) {
             compareCourseLists();
+        }
     }
 
     private RecipeCourseEntity createNewCourseEntity(int courseNo) {

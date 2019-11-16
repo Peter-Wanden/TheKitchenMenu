@@ -3,16 +3,16 @@ package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
+import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.MeasurementSubtype;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseConversionFactorStatus;
 import com.example.peter.thekitchenmenu.testdata.IngredientEntityTestData;
 
 import org.junit.*;
 import org.mockito.*;
 
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UseCaseConversionFactorStatus.*;
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UseCaseConversionFactorStatus.UseCaseConversionFactorResult.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.UseCaseConversionFactorStatus.UseCaseConversionFactorResult.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
-import static org.junit.Assert.assertEquals;
 
 public class UseCaseConversionFactorStatusTest {
 
@@ -30,8 +30,6 @@ public class UseCaseConversionFactorStatusTest {
     // region helper fields ------------------------------------------------------------------------
     @Mock
     RepositoryIngredient repoMock;
-    @Mock
-    UseCaseConversionFactorCallback viewModelMock;
     @Captor
     ArgumentCaptor<DataSource.GetEntityCallback<IngredientEntity>> getEntityCallbackCaptor;
     // endregion helper fields ---------------------------------------------------------------------
@@ -42,7 +40,6 @@ public class UseCaseConversionFactorStatusTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         SUT = new UseCaseConversionFactorStatus(repoMock);
-        SUT.registerListener(viewModelMock);
     }
 
     @Test
@@ -50,6 +47,7 @@ public class UseCaseConversionFactorStatusTest {
         // Arrange
         String ingredientId = INGREDIENT_NEW_VALID_NAME_DESCRIPTION.getId();
         // Act
+        SUT.
         SUT.getStatus(UNEDITABLE_SUBTYPE, ingredientId);
         // Assert
         verifyNoMoreInteractions(repoMock);

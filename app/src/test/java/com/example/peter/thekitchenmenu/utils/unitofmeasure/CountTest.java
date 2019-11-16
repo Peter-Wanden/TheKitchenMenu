@@ -1,9 +1,12 @@
 package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
+import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.Count;
+import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasure;
+
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.example.peter.thekitchenmenu.utils.unitofmeasure.UnitOfMeasureConstants.*;
+import static com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasureConstants.*;
 import static org.junit.Assert.*;
 
 public class CountTest {

@@ -9,7 +9,7 @@
         <import type="android.view.View" />
         <variable
             name="viewModel"
-            type="com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeIdentityViewModel">
+            type="com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeIdentityEditorViewModel">
         </variable>
     </data>
 

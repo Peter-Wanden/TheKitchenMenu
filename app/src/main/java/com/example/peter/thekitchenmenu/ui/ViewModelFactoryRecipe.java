@@ -15,10 +15,13 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseConversionFactorStatus;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.ui.catalog.recipe.RecipeListDataInteractor;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeCourseEditorViewModel;
+import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeDurationEditorViewModel;
+import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeIdentityEditorViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor.RecipeIngredientMeasurementViewModel;
-import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeDurationViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipePortionsEditorViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidator;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist.RecipeNameAndPortionsViewModel;
@@ -27,11 +30,9 @@ import com.example.peter.thekitchenmenu.utils.NumberFormatter;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.ui.catalog.recipe.RecipeCatalogViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeEditorViewModel;
-import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeIdentityViewModel;
 import com.example.peter.thekitchenmenu.utils.TextValidationHandler;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.UseCaseConversionFactorStatus;
-import com.example.peter.thekitchenmenu.utils.unitofmeasure.UseCaseIngredientPortionCalculator;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseIngredientPortionCalculator;
 
 public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory {
 
@@ -118,9 +119,9 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
                     application.getResources(),
                     new RecipeValidator());
 
-        } else if (modelClass.isAssignableFrom(RecipeIdentityViewModel.class)) {
+        } else if (modelClass.isAssignableFrom(RecipeIdentityEditorViewModel.class)) {
             //noinspection unchecked
-            return (T) new RecipeIdentityViewModel(
+            return (T) new RecipeIdentityEditorViewModel(
                     recipeIdentityRepository,
                     new TimeProvider(),
                     application.getResources(),
@@ -132,9 +133,9 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
                     recipeCourseRepository,
                     new UniqueIdProvider());
 
-        } else if (modelClass.isAssignableFrom(RecipeDurationViewModel.class)) {
+        } else if (modelClass.isAssignableFrom(RecipeDurationEditorViewModel.class)) {
             // noinspection unchecked
-            return (T) new RecipeDurationViewModel(
+            return (T) new RecipeDurationEditorViewModel(
                     recipeDurationRepository,
                     application.getResources(),
                     new TimeProvider());
@@ -150,6 +151,7 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
         } else if (modelClass.isAssignableFrom(RecipeIngredientMeasurementViewModel.class)) {
             // noinspection unchecked
             return (T) new RecipeIngredientMeasurementViewModel(
+                    UseCaseHandler.getInstance(),
                     getPortionsUseCase(),
                     getConversionFactorUseCase(),
                     application.getResources(),
