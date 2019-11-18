@@ -153,7 +153,7 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
             return (T) new RecipeIngredientMeasurementViewModel(
                     UseCaseHandler.getInstance(),
                     getPortionsUseCase(),
-                    getConversionFactorUseCase(),
+                    getConversionFactorStatusUseCase(),
                     application.getResources(),
                     new NumberFormatter(application.getResources()));
 
@@ -179,7 +179,7 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
         return factory.providePortionsUseCase();
     }
 
-    private UseCaseConversionFactorStatus getConversionFactorUseCase() {
+    private UseCaseConversionFactorStatus getConversionFactorStatusUseCase() {
         UseCaseFactory factory = UseCaseFactory.getInstance(application);
         return factory.provideConversionFactorUseCase();
     }

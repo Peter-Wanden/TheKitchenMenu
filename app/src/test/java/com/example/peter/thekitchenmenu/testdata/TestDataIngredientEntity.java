@@ -7,7 +7,7 @@ import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasu
 import java.util.ArrayList;
 import java.util.List;
 
-public class IngredientEntityTestData {
+public class TestDataIngredientEntity {
 
     public static IngredientEntity getNew() {
         return new IngredientEntity(

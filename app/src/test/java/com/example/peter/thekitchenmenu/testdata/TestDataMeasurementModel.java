@@ -5,10 +5,10 @@ import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.Measurement
 import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.MeasurementType;
 import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasure;
 
-import static com.example.peter.thekitchenmenu.testdata.RecipeIngredientQuantityEntityTestData.getNewValidImperialSpoonMaxConversionFactor;
+import static com.example.peter.thekitchenmenu.testdata.TestDataRecipeIngredientQuantityEntity.getNewValidImperialSpoonMaxConversionFactor;
 import static com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasureConstants.*;
 
-public class MeasurementModelTestData {
+public class TestDataMeasurementModel {
 
     //-----------
     public static MeasurementModel getInvalidEmptyFourPortionsSet() {
@@ -41,7 +41,7 @@ public class MeasurementModelTestData {
     }
 
     private static MeasurementSubtype getSubtypeFromNewInvalidMetric() {
-        return MeasurementSubtype.fromInt(RecipeIngredientQuantityEntityTestData.
+        return MeasurementSubtype.fromInt(TestDataRecipeIngredientQuantityEntity.
                 getNewInvalid().getUnitOfMeasureSubtype());
     }
 
@@ -141,9 +141,9 @@ public class MeasurementModelTestData {
     }
 
     private static double getBaseUnitsForNewValidTotalMeasurementOne() {
-        return RecipeIngredientQuantityEntityTestData.getNewValidMetric().getItemBaseUnits() *
-                RecipePortionsEntityTestData.getNewValidFourPortions().getServings() *
-                RecipePortionsEntityTestData.getNewValidFourPortions().getServings();
+        return TestDataRecipeIngredientQuantityEntity.getNewValidMetric().getItemBaseUnits() *
+                TestDataRecipePortionsEntity.getNewValidFourPortions().getServings() *
+                TestDataRecipePortionsEntity.getNewValidFourPortions().getServings();
     }
 
     //-----------
@@ -224,7 +224,7 @@ public class MeasurementModelTestData {
     }
 
     private static MeasurementSubtype getSubtypeForValidNewMetric() {
-        return MeasurementSubtype.fromInt(RecipeIngredientQuantityEntityTestData.
+        return MeasurementSubtype.fromInt(TestDataRecipeIngredientQuantityEntity.
                 getNewValidMetric().getUnitOfMeasureSubtype());
     }
 
@@ -294,7 +294,7 @@ public class MeasurementModelTestData {
                 throwConversionFactorException(isConversionFactorSet);
         }
 
-        forCalculatingUnitOneValue.isItemBaseUnitsSet(RecipeIngredientQuantityEntityTestData.
+        forCalculatingUnitOneValue.isItemBaseUnitsSet(TestDataRecipeIngredientQuantityEntity.
                 getNewValidImperialOneTeaspoonFourPortionsNoConversionFactor().
                 getItemBaseUnits());
 
@@ -374,13 +374,13 @@ public class MeasurementModelTestData {
     }
 
     private static MeasurementSubtype getSubtypeForNewValidImperialSpoon() {
-        return MeasurementSubtype.fromInt(RecipeIngredientQuantityEntityTestData.
+        return MeasurementSubtype.fromInt(TestDataRecipeIngredientQuantityEntity.
                 getNewValidImperialOneTeaspoonFourPortionsNoConversionFactor().getUnitOfMeasureSubtype());
     }
 
     private static int getEmptyModelFourPortions() {
-        return RecipePortionsEntityTestData.getNewValidFourPortions().getServings()
-                * RecipePortionsEntityTestData.getNewValidFourPortions().getSittings();
+        return TestDataRecipePortionsEntity.getNewValidFourPortions().getServings()
+                * TestDataRecipePortionsEntity.getNewValidFourPortions().getSittings();
     }
 
     //-----------
@@ -401,7 +401,7 @@ public class MeasurementModelTestData {
         }
 
         boolean itemBaseUnitsAreSet = unitOfMeasure.isItemBaseUnitsSet(
-                RecipeIngredientQuantityEntityTestData.getExistingValidMetric().getItemBaseUnits()
+                TestDataRecipeIngredientQuantityEntity.getExistingValidMetric().getItemBaseUnits()
         );
         if (!itemBaseUnitsAreSet) {
             throwItemBaseUnitsAreSetException(itemBaseUnitsAreSet);
@@ -428,7 +428,7 @@ public class MeasurementModelTestData {
         }
 
         boolean isItemBaseUnitsSet = unitOfMeasure.isItemBaseUnitsSet(
-                RecipeIngredientQuantityEntityTestData.getExistingValidMetric().getItemBaseUnits()
+                TestDataRecipeIngredientQuantityEntity.getExistingValidMetric().getItemBaseUnits()
         );
 
         if (!isItemBaseUnitsSet)
@@ -495,7 +495,7 @@ public class MeasurementModelTestData {
         }
 
         boolean isItemBaseUnitsSet = unitOfMeasure.isItemBaseUnitsSet(
-                RecipeIngredientQuantityEntityTestData.getExistingValidMetric().getItemBaseUnits()
+                TestDataRecipeIngredientQuantityEntity.getExistingValidMetric().getItemBaseUnits()
         );
 
         if (!isItemBaseUnitsSet)
@@ -549,7 +549,7 @@ public class MeasurementModelTestData {
                 throwConversionFactorException(isConversionFactorSet);
         }
 
-        double itemBaseUnits = RecipeIngredientQuantityEntityTestData.getExistingValidMetric().
+        double itemBaseUnits = TestDataRecipeIngredientQuantityEntity.getExistingValidMetric().
                 getItemBaseUnits();
         boolean isItemBaseUnitsSet = unitOfMeasure.isItemBaseUnitsSet(itemBaseUnits);
 
@@ -591,17 +591,17 @@ public class MeasurementModelTestData {
     }
 
     private static MeasurementSubtype getExistingValidSubtype() {
-        return MeasurementSubtype.fromInt(RecipeIngredientQuantityEntityTestData.
+        return MeasurementSubtype.fromInt(TestDataRecipeIngredientQuantityEntity.
                 getExistingValidMetric().getUnitOfMeasureSubtype());
     }
 
     private static int getExistingValidNinePortions() {
-        return RecipePortionsEntityTestData.getExistingValidNinePortions().getServings() *
-                RecipePortionsEntityTestData.getExistingValidNinePortions().getSittings();
+        return TestDataRecipePortionsEntity.getExistingValidNinePortions().getServings() *
+                TestDataRecipePortionsEntity.getExistingValidNinePortions().getSittings();
     }
 
     private static double getExistingValidConversionFactor() {
-        return IngredientEntityTestData.getExistingValidNameValidDescriptionNoConversionFactor().getConversionFactor();
+        return TestDataIngredientEntity.getExistingValidNameValidDescriptionNoConversionFactor().getConversionFactor();
     }
 
     //-----------
@@ -613,7 +613,7 @@ public class MeasurementModelTestData {
             throwNumberOfItemsException(isNumberOfItemsSet);
         }
 
-        double itemBaseUnits = RecipeIngredientQuantityEntityTestData.
+        double itemBaseUnits = TestDataRecipeIngredientQuantityEntity.
                 getExistingValidImperialTwoSpoons().getItemBaseUnits();
         unitOfMeasure.isItemBaseUnitsSet(itemBaseUnits);
 

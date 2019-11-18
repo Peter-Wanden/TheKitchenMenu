@@ -20,7 +20,7 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static com.example.peter.thekitchenmenu.testdata.RecipeEntityTestData.*;
+import static com.example.peter.thekitchenmenu.testdata.TestDataRecipeEntity.*;
 import static com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidator.RecipeValidationStatus.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

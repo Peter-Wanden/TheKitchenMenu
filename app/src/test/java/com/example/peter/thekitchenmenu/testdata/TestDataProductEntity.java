@@ -3,7 +3,7 @@ package com.example.peter.thekitchenmenu.testdata;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 
-public class ProductEntityTestData {
+public class TestDataProductEntity {
 
     public static ProductEntity getNewInvalid() {
         return new ProductEntity(

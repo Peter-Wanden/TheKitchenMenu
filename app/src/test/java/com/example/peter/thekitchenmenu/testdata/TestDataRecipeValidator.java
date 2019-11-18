@@ -3,7 +3,7 @@ package com.example.peter.thekitchenmenu.testdata;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeModelStatus;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidator;
 
-public class RecipeValidatorTestData {
+public class TestDataRecipeValidator {
 
     public static RecipeModelStatus getIdentityModelStatusUnchangedInvalid() {
         return new RecipeModelStatus(

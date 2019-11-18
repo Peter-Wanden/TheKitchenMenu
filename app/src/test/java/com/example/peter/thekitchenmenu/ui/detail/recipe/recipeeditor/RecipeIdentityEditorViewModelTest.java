@@ -6,8 +6,8 @@ import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
-import com.example.peter.thekitchenmenu.testdata.RecipeIdentityEntityTestData;
-import com.example.peter.thekitchenmenu.testdata.RecipeValidatorTestData;
+import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIdentityEntity;
+import com.example.peter.thekitchenmenu.testdata.TestDataRecipeValidator;
 import com.example.peter.thekitchenmenu.utils.*;
 
 import org.junit.Before;
@@ -27,38 +27,38 @@ public class RecipeIdentityEditorViewModelTest {
 
     // region constants ----------------------------------------------------------------------------
     private static final RecipeIdentityEntity INVALID_NEW_EMPTY =
-            RecipeIdentityEntityTestData.getInvalidNewEmpty();
+            TestDataRecipeIdentityEntity.getInvalidNewEmpty();
     private static final RecipeIdentityEntity INVALID_NEW_TITLE_INVALID =
-            RecipeIdentityEntityTestData.getInvalidNewTitleUpdatedWithInvalidValue();
+            TestDataRecipeIdentityEntity.getInvalidNewTitleUpdatedWithInvalidValue();
     private static final RecipeIdentityEntity INVALID_NEW_TITLE_INVALID_DESCRIPTION_VALID =
-            RecipeIdentityEntityTestData.getInvalidNewTitleInvalidDescriptionValid();
+            TestDataRecipeIdentityEntity.getInvalidNewTitleInvalidDescriptionValid();
     private static final RecipeIdentityEntity VALID_NEW_TITLE_VALID =
-            RecipeIdentityEntityTestData.getValidNewTitleUpdatedWithValidValue();
+            TestDataRecipeIdentityEntity.getValidNewTitleUpdatedWithValidValue();
     private static final RecipeIdentityEntity VALID_NEW_COMPLETE =
-            RecipeIdentityEntityTestData.getValidNewComplete();
+            TestDataRecipeIdentityEntity.getValidNewComplete();
     private static final RecipeIdentityEntity INVALID_EXISTING_INCOMPLETE_INVALID_TITLE =
-            RecipeIdentityEntityTestData.getInvalidExistingIncomplete();
+            TestDataRecipeIdentityEntity.getInvalidExistingIncomplete();
     private static final RecipeIdentityEntity VALID_EXISTING_COMPLETE =
-            RecipeIdentityEntityTestData.getValidExistingComplete();
+            TestDataRecipeIdentityEntity.getValidExistingComplete();
     private static final RecipeIdentityEntity VALID_FROM_ANOTHER_USER =
-            RecipeIdentityEntityTestData.getValidCompleteFromAnotherUser();
+            TestDataRecipeIdentityEntity.getValidCompleteFromAnotherUser();
     private static final RecipeIdentityEntity INVALID_FROM_ANOTHER_USER =
-            RecipeIdentityEntityTestData.getInvalidCompleteFromAnotherUser();
+            TestDataRecipeIdentityEntity.getInvalidCompleteFromAnotherUser();
     private static final RecipeIdentityEntity VALID_NEW_CLONED =
-            RecipeIdentityEntityTestData.getValidNewCloned();
+            TestDataRecipeIdentityEntity.getValidNewCloned();
     private static final RecipeIdentityEntity INVALID_NEW_CLONED =
-            RecipeIdentityEntityTestData.getInvalidNewCloned();
+            TestDataRecipeIdentityEntity.getInvalidNewCloned();
     private static final RecipeIdentityEntity VALID_CLONED_DESCRIPTION_UPDATED =
-            RecipeIdentityEntityTestData.getValidNewClonedDescriptionUpdatedComplete();
+            TestDataRecipeIdentityEntity.getValidNewClonedDescriptionUpdatedComplete();
 
     private RecipeModelStatus INVALID_UNCHANGED =
-            RecipeValidatorTestData.getIdentityModelStatusUnchangedInvalid();
+            TestDataRecipeValidator.getIdentityModelStatusUnchangedInvalid();
     private RecipeModelStatus INVALID_CHANGED =
-            RecipeValidatorTestData.getIdentityModelStatusChangedInvalid();
+            TestDataRecipeValidator.getIdentityModelStatusChangedInvalid();
     private RecipeModelStatus VALID_UNCHANGED =
-            RecipeValidatorTestData.getIdentityModelStatusUnchangedValid();
+            TestDataRecipeValidator.getIdentityModelStatusUnchangedValid();
     private RecipeModelStatus VALID_CHANGED =
-            RecipeValidatorTestData.getIdentityModelStatusChangedValid();
+            TestDataRecipeValidator.getIdentityModelStatusChangedValid();
 
     private static final String ERROR_MESSAGE_TOO_LONG = "error_message_too_long";
 

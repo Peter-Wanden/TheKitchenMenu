@@ -8,8 +8,8 @@ import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.entity.RecipeDurationEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration;
-import com.example.peter.thekitchenmenu.testdata.RecipeDurationEntityTestData;
-import com.example.peter.thekitchenmenu.testdata.RecipeValidatorTestData;
+import com.example.peter.thekitchenmenu.testdata.TestDataRecipeDurationEntity;
+import com.example.peter.thekitchenmenu.testdata.TestDataRecipeValidator;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 
 import org.junit.*;
@@ -23,44 +23,44 @@ public class RecipeDurationEditorViewModelTest {
 
     // region constants ----------------------------------------------------------------------------
     private static final RecipeDurationEntity VALID_NEW_EMPTY =
-            RecipeDurationEntityTestData.getValidNewEmpty();
+            TestDataRecipeDurationEntity.getValidNewEmpty();
     private static final RecipeDurationEntity INVALID_NEW_PREP_TIME_INVALID =
-            RecipeDurationEntityTestData.getInvalidNewPrepTimeInvalid();
+            TestDataRecipeDurationEntity.getInvalidNewPrepTimeInvalid();
     private static final RecipeDurationEntity INVALID_NEW_COOK_TIME_INVALID =
-            RecipeDurationEntityTestData.getInvalidNewCookTimeInvalid();
+            TestDataRecipeDurationEntity.getInvalidNewCookTimeInvalid();
     private static final RecipeDurationEntity VALID_NEW_PREP_TIME_VALID =
-            RecipeDurationEntityTestData.getValidNewPrepTimeValid();
+            TestDataRecipeDurationEntity.getValidNewPrepTimeValid();
     private static final RecipeDurationEntity VALID_NEW_COOK_TIME_VALID =
-            RecipeDurationEntityTestData.getValidNewCookTimeValid();
+            TestDataRecipeDurationEntity.getValidNewCookTimeValid();
     private static final RecipeDurationEntity VALID_NEW_COMPLETE =
-            RecipeDurationEntityTestData.getValidNewComplete();
+            TestDataRecipeDurationEntity.getValidNewComplete();
     private static final RecipeDurationEntity INVALID_EXISTING_COMPLETE =
-            RecipeDurationEntityTestData.getInvalidExistingComplete();
+            TestDataRecipeDurationEntity.getInvalidExistingComplete();
     private static final RecipeDurationEntity VALID_EXISTING_COMPLETE =
-            RecipeDurationEntityTestData.getValidExistingComplete();
+            TestDataRecipeDurationEntity.getValidExistingComplete();
     private static final RecipeDurationEntity VALID_COMPLETE_FROM_ANOTHER_USER =
-            RecipeDurationEntityTestData.getValidCompleteFromAnotherUser();
+            TestDataRecipeDurationEntity.getValidCompleteFromAnotherUser();
     private static final RecipeDurationEntity INVALID_COMPLETE_FROM_ANOTHER_USER =
-            RecipeDurationEntityTestData.getInvalidCompleteFromAnotherUser();
+            TestDataRecipeDurationEntity.getInvalidCompleteFromAnotherUser();
     private static final RecipeDurationEntity VALID_NEW_CLONED =
-            RecipeDurationEntityTestData.getValidNewCloned();
+            TestDataRecipeDurationEntity.getValidNewCloned();
     private static final RecipeDurationEntity INVALID_NEW_CLONED =
-            RecipeDurationEntityTestData.getInvalidNewCloned();
+            TestDataRecipeDurationEntity.getInvalidNewCloned();
     private static final RecipeDurationEntity VALID_NEW_CLONED_PREP_TIME_UPDATED =
-            RecipeDurationEntityTestData.getValidNewClonedPrepTimeUpdated();
+            TestDataRecipeDurationEntity.getValidNewClonedPrepTimeUpdated();
 
-    private static final int MAX_PREP_TIME = RecipeDurationEntityTestData.getMaxPrepTime();
-    private static final int MAX_COOK_TIME = RecipeDurationEntityTestData.getMaxCookTime();
+    private static final int MAX_PREP_TIME = TestDataRecipeDurationEntity.getMaxPrepTime();
+    private static final int MAX_COOK_TIME = TestDataRecipeDurationEntity.getMaxCookTime();
     private static final String ERROR_MESSAGE_TIME_TOO_LONG = "error_message_time_too_long";
 
     private static final RecipeModelStatus INVALID_UNCHANGED =
-            RecipeValidatorTestData.getDurationModelStatusUnchangedInvalid();
+            TestDataRecipeValidator.getDurationModelStatusUnchangedInvalid();
     private static final RecipeModelStatus INVALID_CHANGED =
-            RecipeValidatorTestData.getDurationModelStatusChangedInvalid();
+            TestDataRecipeValidator.getDurationModelStatusChangedInvalid();
     private static final RecipeModelStatus VALID_UNCHANGED =
-            RecipeValidatorTestData.getDurationModelStatusUnchangedValid();
+            TestDataRecipeValidator.getDurationModelStatusUnchangedValid();
     private static final RecipeModelStatus VALID_CHANGED =
-            RecipeValidatorTestData.getDurationModelStatusChangedValid();
+            TestDataRecipeValidator.getDurationModelStatusChangedValid();
 
     // endregion constants -------------------------------------------------------------------------
 

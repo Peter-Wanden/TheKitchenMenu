@@ -8,8 +8,8 @@ import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.entity.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
-import com.example.peter.thekitchenmenu.testdata.RecipePortionsEntityTestData;
-import com.example.peter.thekitchenmenu.testdata.RecipeValidatorTestData;
+import com.example.peter.thekitchenmenu.testdata.TestDataRecipePortionsEntity;
+import com.example.peter.thekitchenmenu.testdata.TestDataRecipeValidator;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 
@@ -30,41 +30,41 @@ public class RecipePortionsEditorViewModelTest {
     // region constants ----------------------------------------------------------------------------
     private static final String ERROR_MESSAGE_SERVINGS = "ERROR_MESSAGE_SERVINGS";
     private static final String ERROR_MESSAGE_SITTINGS = "ERROR_MESSAGE_SITTINGS";
-    private final int MIN_SERVINGS = RecipePortionsEntityTestData.getMinServings();
-    private final int MAX_SERVINGS = RecipePortionsEntityTestData.getMaxServings();
-    private final int MIN_SITTINGS = RecipePortionsEntityTestData.getMinSittings();
-    private final int MAX_SITTINGS = RecipePortionsEntityTestData.getMaxSittings();
+    private final int MIN_SERVINGS = TestDataRecipePortionsEntity.getMinServings();
+    private final int MAX_SERVINGS = TestDataRecipePortionsEntity.getMaxServings();
+    private final int MIN_SITTINGS = TestDataRecipePortionsEntity.getMinSittings();
+    private final int MAX_SITTINGS = TestDataRecipePortionsEntity.getMaxSittings();
 
     private final RecipePortionsEntity NEW_EMPTY =
-            RecipePortionsEntityTestData.getNewValidEmpty();
+            TestDataRecipePortionsEntity.getNewValidEmpty();
     private final RecipePortionsEntity NEW_INVALID =
-            RecipePortionsEntityTestData.getNewInvalidServingsInvalidSittings();
+            TestDataRecipePortionsEntity.getNewInvalidServingsInvalidSittings();
     private final RecipePortionsEntity NEW_INVALID_SERVINGS_VALID_SITTINGS =
-            RecipePortionsEntityTestData.getNewInvalidServingsValidSittings();
+            TestDataRecipePortionsEntity.getNewInvalidServingsValidSittings();
     private final RecipePortionsEntity NEW_VALID_SERVINGS_INVALID_SITTINGS =
-            RecipePortionsEntityTestData.getNewValidServingsInvalidSittings();
+            TestDataRecipePortionsEntity.getNewValidServingsInvalidSittings();
     private final RecipePortionsEntity NEW_VALID =
-            RecipePortionsEntityTestData.getNewValidServingsValidSittings();
+            TestDataRecipePortionsEntity.getNewValidServingsValidSittings();
     private final RecipePortionsEntity EXISTING_VALID =
-            RecipePortionsEntityTestData.getExistingValidNinePortions();
+            TestDataRecipePortionsEntity.getExistingValidNinePortions();
     private final RecipePortionsEntity EXISTING_VALID_UPDATED_SERVINGS =
-            RecipePortionsEntityTestData.getExistingValidUpdatedServings();
+            TestDataRecipePortionsEntity.getExistingValidUpdatedServings();
     private final RecipePortionsEntity EXISTING_VALID_UPDATED_SITTINGS =
-            RecipePortionsEntityTestData.getExistingValidUpdatedSittings();
+            TestDataRecipePortionsEntity.getExistingValidUpdatedSittings();
     private final RecipePortionsEntity EXISTING_VALID_CLONE =
-            RecipePortionsEntityTestData.getExistingValidClone();
+            TestDataRecipePortionsEntity.getExistingValidClone();
     private final RecipePortionsEntity EXISTING_VALID_CLONE_UPDATED_SITTINGS_SERVINGS =
-            RecipePortionsEntityTestData.getExistingClonedUpdatedSittingsServings();
+            TestDataRecipePortionsEntity.getExistingClonedUpdatedSittingsServings();
     private final RecipePortionsEntity EXISTING_VALID_FROM_ANOTHER_USER =
-            RecipePortionsEntityTestData.getValidCloneFromAnotherUser();
+            TestDataRecipePortionsEntity.getValidCloneFromAnotherUser();
     private static final RecipeModelStatus INVALID_UNCHANGED =
-            RecipeValidatorTestData.getPortionsModelStatusUnchangedInvalid();
+            TestDataRecipeValidator.getPortionsModelStatusUnchangedInvalid();
     private static final RecipeModelStatus INVALID_CHANGED =
-            RecipeValidatorTestData.getPortionsModelStatusChangedInvalid();
+            TestDataRecipeValidator.getPortionsModelStatusChangedInvalid();
     private static final RecipeModelStatus VALID_UNCHANGED =
-            RecipeValidatorTestData.getPortionsModelStatusUnchangedValid();
+            TestDataRecipeValidator.getPortionsModelStatusUnchangedValid();
     private static final RecipeModelStatus VALID_CHANGED =
-            RecipeValidatorTestData.getPortionsModelStatusChangedValid();
+            TestDataRecipeValidator.getPortionsModelStatusChangedValid();
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------

@@ -8,7 +8,9 @@ import androidx.lifecycle.Observer;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
-import com.example.peter.thekitchenmenu.testdata.IngredientEntityTestData;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
+import com.example.peter.thekitchenmenu.testdata.TestDataIngredientEntity;
 import com.example.peter.thekitchenmenu.testdata.TextValidationData;
 import com.example.peter.thekitchenmenu.utils.TextValidationHandler;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
@@ -31,29 +33,29 @@ public class IngredientEditorViewModelTest {
 
     // region constants ----------------------------------------------------------------------------
     private IngredientEntity NEW =
-            IngredientEntityTestData.getNew();
+            TestDataIngredientEntity.getNew();
     private IngredientEntity NEW_INVALID_NAME =
-            IngredientEntityTestData.getNewInvalidName();
+            TestDataIngredientEntity.getNewInvalidName();
     private IngredientEntity NEW_VALID_NAME =
-            IngredientEntityTestData.getNewValidName();
+            TestDataIngredientEntity.getNewValidName();
     private IngredientEntity NEW_VALID_NAME_INVALID_DESCRIPTION =
-            IngredientEntityTestData.getNewValidNameInvalidDescription();
+            TestDataIngredientEntity.getNewValidNameInvalidDescription();
     private IngredientEntity NEW_INVALID_NAME_VALID_DESCRIPTION =
-            IngredientEntityTestData.getNewInvalidNameValidDescription();
+            TestDataIngredientEntity.getNewInvalidNameValidDescription();
     private IngredientEntity NEW_VALID_NAME_VALID_DESCRIPTION =
-            IngredientEntityTestData.getNewValidNameValidDescription();
+            TestDataIngredientEntity.getNewValidNameValidDescription();
     private IngredientEntity VALID_EXISTING_COMPLETE =
-            IngredientEntityTestData.getExistingValidNameValidDescriptionNoConversionFactor();
+            TestDataIngredientEntity.getExistingValidNameValidDescriptionNoConversionFactor();
     private IngredientEntity VALID_EXISTING_INVALID_NAME_UPDATE =
-            IngredientEntityTestData.getExistingUpdatedWithInvalidName();
+            TestDataIngredientEntity.getExistingUpdatedWithInvalidName();
     private IngredientEntity VALID_EXISTING_VALID_NAME_UPDATE =
-            IngredientEntityTestData.getExistingUpdatedWithValidName();
+            TestDataIngredientEntity.getExistingUpdatedWithValidName();
     private IngredientEntity VALID_EXISTING_INVALID_DESCRIPTION_UPDATE =
-            IngredientEntityTestData.getExistingUpdatedWithInvalidDescription();
+            TestDataIngredientEntity.getExistingUpdatedWithInvalidDescription();
     private IngredientEntity VALID_EXISTING_VALID_DESCRIPTION_UPDATE =
-            IngredientEntityTestData.getExistingUpdatedWithValidDescription();
+            TestDataIngredientEntity.getExistingUpdatedWithValidDescription();
     private IngredientEntity VALID_EXISTING_FROM_ANOTHER_USER =
-            IngredientEntityTestData.getExistingValidNameValidDescriptionFromAnotherUser();
+            TestDataIngredientEntity.getExistingValidNameValidDescriptionFromAnotherUser();
     private static final String DUPLICATE_ERROR_MESSAGE = "DUPLICATE ERROR MESSAGE";
     // endregion constants -------------------------------------------------------------------------
 
@@ -63,7 +65,7 @@ public class IngredientEditorViewModelTest {
     @Mock
     Resources resourcesMock;
     @Mock
-    DataSource<IngredientEntity> dataSourceMock;
+    RepositoryIngredient repoIngredientMock;
     @Mock
     TextValidationHandler textValidationHandlerMock;
     @Mock
@@ -93,7 +95,7 @@ public class IngredientEditorViewModelTest {
 
         SUT = new IngredientEditorViewModel(
                 resourcesMock,
-                dataSourceMock,
+                repoIngredientMock,
                 textValidationHandlerMock,
                 uniqueIdProviderMock,
                 timeProviderMock,
@@ -123,7 +125,7 @@ public class IngredientEditorViewModelTest {
         // Act
         SUT.start();
         // Assert
-        verifyNoMoreInteractions(dataSourceMock);
+        verifyNoMoreInteractions(repoIngredientMock);
     }
 
     @Test
@@ -219,7 +221,7 @@ public class IngredientEditorViewModelTest {
         whenDuplicateNameCheckForNewIngredientReturnNoneFound();
         // Assert
         SUT.useButtonPressed();
-        verify(dataSourceMock).save(eq(NEW_VALID_NAME));
+        verify(repoIngredientMock).save(eq(NEW_VALID_NAME));
     }
 
     @Test
@@ -427,7 +429,7 @@ public class IngredientEditorViewModelTest {
         SUT.descriptionObservable.set(NEW_VALID_NAME_VALID_DESCRIPTION.getDescription());
         // Assert
         SUT.useButtonPressed();
-        verify(dataSourceMock).save(eq(NEW_VALID_NAME_VALID_DESCRIPTION));
+        verify(repoIngredientMock).save(eq(NEW_VALID_NAME_VALID_DESCRIPTION));
     }
 
     // startExistingId_nameUpdatedToNameInUseThenBackToOriginal_duplicateErrorNotShown
@@ -565,7 +567,7 @@ public class IngredientEditorViewModelTest {
         // Assert
         verify(useButtonVisibilityObserverMock, times((2))).onChanged(eq(true));
         SUT.useButtonPressed();
-        verify(dataSourceMock).save(eq(VALID_EXISTING_VALID_NAME_UPDATE));
+        verify(repoIngredientMock).save(eq(VALID_EXISTING_VALID_NAME_UPDATE));
     }
 
     @Test
@@ -676,7 +678,7 @@ public class IngredientEditorViewModelTest {
         verify(useButtonVisibilityObserverMock).onChanged(eq(true));
         SUT.useButtonPressed();
         // Assert
-//        verify(dataSourceMock).save(eq(VALID_EXISTING_VALID_DESCRIPTION_UPDATE));
+//        verify(repoIngredientMock).save(eq(VALID_EXISTING_VALID_DESCRIPTION_UPDATE));
     }
 
     @Test
@@ -738,7 +740,7 @@ public class IngredientEditorViewModelTest {
     }
 
     private void simulateGetValidExistingCompleteFromDatabase() {
-        verify(dataSourceMock).getById(eq(
+        verify(repoIngredientMock).getById(eq(
                 VALID_EXISTING_COMPLETE.getId()),
                 getEntityCallbackArgumentCaptor.capture());
 
@@ -747,7 +749,7 @@ public class IngredientEditorViewModelTest {
     }
 
     private void simulateGetValidExistingFromAnotherUserFromDatabase() {
-        verify(dataSourceMock).getById(eq(
+        verify(repoIngredientMock).getById(eq(
                 VALID_EXISTING_FROM_ANOTHER_USER.getId()),
                 getEntityCallbackArgumentCaptor.capture());
 

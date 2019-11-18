@@ -3,7 +3,7 @@ package com.example.peter.thekitchenmenu.testdata;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
 
-public class RecipeEntityTestData {
+public class TestDataRecipeEntity {
 
     // Create new recipe, or used when cloning
     public static RecipeEntity getNewInvalid() {

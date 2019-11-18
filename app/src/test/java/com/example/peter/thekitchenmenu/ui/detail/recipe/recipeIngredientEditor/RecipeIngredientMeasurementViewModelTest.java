@@ -11,9 +11,9 @@ import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientQuantityEnti
 import com.example.peter.thekitchenmenu.domain.model.MeasurementModel;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseConversionFactorStatus;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.testdata.IngredientEntityTestData;
-import com.example.peter.thekitchenmenu.testdata.RecipeEntityTestData;
-import com.example.peter.thekitchenmenu.testdata.RecipeIngredientQuantityEntityTestData;
+import com.example.peter.thekitchenmenu.testdata.TestDataIngredientEntity;
+import com.example.peter.thekitchenmenu.testdata.TestDataRecipeEntity;
+import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIngredientQuantityEntity;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor.RecipeIngredientMeasurementViewModel;
 import com.example.peter.thekitchenmenu.utils.NumberFormatter;
 import com.example.peter.thekitchenmenu.domain.usecase.MeasurementResult;
@@ -48,10 +48,10 @@ public class RecipeIngredientMeasurementViewModelTest {
     private static final String CONVERSION_FACTOR_ERROR_MESSAGE =
             "Please enter a number between n1 and n2";
 
-    private RecipeEntity RECIPE_VALID_NEW = RecipeEntityTestData.getNewValid();
+    private RecipeEntity RECIPE_VALID_NEW = TestDataRecipeEntity.getNewValid();
 
     private IngredientEntity INGREDIENT_NEW_VALID_NAME_DESCRIPTION =
-            IngredientEntityTestData.getNewValidNameValidDescription();
+            TestDataIngredientEntity.getNewValidNameValidDescription();
 
     private MeasurementResult MEASUREMENT_NEW_EMPTY_INVALID =
             UseCaseIngredientPortionCalculatorTestData.getResultInvalidEmptyFourPortionsSet();
@@ -80,7 +80,7 @@ public class RecipeIngredientMeasurementViewModelTest {
                     getResultNewValidImperialSpoonWithConversionFactor();
 
     private RecipeIngredientQuantityEntity QUANTITY_EXISTING_VALID_METRIC =
-            RecipeIngredientQuantityEntityTestData.getExistingValidMetric();
+            TestDataRecipeIngredientQuantityEntity.getExistingValidMetric();
 
     private MeasurementResult MEASUREMENT_EXISTING_VALID_METRIC =
             UseCaseIngredientPortionCalculatorTestData.getResultExistingValidMetric();
@@ -102,8 +102,6 @@ public class RecipeIngredientMeasurementViewModelTest {
     ArgumentCaptor<String> ingredientIdCaptor;
     @Mock
     NumberFormatter numberFormatterMock;
-    @Mock
-    UseCaseHandler useCaseHandlerMock;
     // endregion helper fields ---------------------------------------------------------------------
 
     private RecipeIngredientMeasurementViewModel SUT;
@@ -114,7 +112,7 @@ public class RecipeIngredientMeasurementViewModelTest {
         setupResources();
 
         SUT = new RecipeIngredientMeasurementViewModel(
-                useCaseHandlerMock,
+                UseCaseHandler.getInstance(),
                 useCaseIngredientPortionCalculatorMock,
                 useCaseConversionFactorMock,
                 resourcesMock,

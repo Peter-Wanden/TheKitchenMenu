@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.ui.detail.ingredient;
 
 import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
-import com.example.peter.thekitchenmenu.testdata.IngredientEntityTestData;
+import com.example.peter.thekitchenmenu.testdata.TestDataIngredientEntity;
 
 import org.junit.*;
 import org.mockito.*;
@@ -15,15 +15,15 @@ public class IngredientDuplicateCheckerTest {
 
     // region constants ----------------------------------------------------------------------------
     private List<IngredientEntity> LIST_OF_ALL_INGREDIENTS =
-            IngredientEntityTestData.getAllIngredients();
+            TestDataIngredientEntity.getAllIngredients();
     private String VALID_NAME_NO_DUPLICATE =
-            IngredientEntityTestData.getValidNameNoDuplicate();
+            TestDataIngredientEntity.getValidNameNoDuplicate();
     private IngredientEntity VALID_DUPLICATE =
-            IngredientEntityTestData.getExistingValidNameValidDescriptionNoConversionFactor();
+            TestDataIngredientEntity.getExistingValidNameValidDescriptionNoConversionFactor();
     private String VALID_NAME_DUPLICATE_IS_BEING_EDITED =
-            IngredientEntityTestData.getNewValidName().getName();
+            TestDataIngredientEntity.getNewValidName().getName();
     private String INGREDIENT_ID =
-            IngredientEntityTestData.getNewValidName().getId();
+            TestDataIngredientEntity.getNewValidName().getId();
     private String NO_DUPLICATE_FOUND = IngredientDuplicateChecker.NO_DUPLICATE_FOUND;
     // endregion constants -------------------------------------------------------------------------
 

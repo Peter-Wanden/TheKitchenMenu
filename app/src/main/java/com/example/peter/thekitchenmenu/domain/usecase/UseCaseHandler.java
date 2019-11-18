@@ -21,12 +21,12 @@ public class UseCaseHandler {
     }
 
     public <T extends UseCase.RequestValues,
-            R extends UseCase.ResponseValues>
-    void execute(final UseCase<T, R> useCase,
-                 T values,
-                 UseCase.UseCaseCallback<R> callback) {
-        useCase.setRequestValues(values);
-        useCase.setUseCaseCallback(new UiCallbackWrapper(callback, this));
+            R extends UseCase.ResponseValues> void execute(
+                final UseCase<T, R> useCase,
+                T requestValues,
+                UseCase.UseCaseCallback<R> callback) {
+                    useCase.setRequestValues(requestValues);
+                    useCase.setUseCaseCallback(new UiCallbackWrapper(callback, this));
 
         mUseCaseScheduler.execute(useCase::run);
     }

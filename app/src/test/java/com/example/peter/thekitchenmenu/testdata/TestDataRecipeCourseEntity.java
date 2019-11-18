@@ -5,13 +5,13 @@ import com.example.peter.thekitchenmenu.data.entity.RecipeCourseEntity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecipeCourseEntityTestData {
+public class TestDataRecipeCourseEntity {
 
     private static final String EXISTING_RECIPE_ID =
-            RecipeEntityTestData.getValidExisting().getId();
+            TestDataRecipeEntity.getValidExisting().getId();
 
     private static final String NEW_RECIPE_ID =
-            RecipeEntityTestData.getNewInvalid().getId();
+            TestDataRecipeEntity.getNewInvalid().getId();
 
     public static RecipeCourseEntity getRecipeCourseZero() {
         return new RecipeCourseEntity(

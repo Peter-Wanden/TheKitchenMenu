@@ -2,117 +2,117 @@ package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
 import com.example.peter.thekitchenmenu.domain.usecase.MeasurementResult;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseIngredientPortionCalculator;
-import com.example.peter.thekitchenmenu.testdata.MeasurementModelTestData;
+import com.example.peter.thekitchenmenu.testdata.TestDataMeasurementModel;
 
 public class UseCaseIngredientPortionCalculatorTestData {
 
     public static MeasurementResult getResultInvalidEmptyFourPortionsSet() {
         return new MeasurementResult(
-                MeasurementModelTestData.getInvalidEmptyFourPortionsSet(),
+                TestDataMeasurementModel.getInvalidEmptyFourPortionsSet(),
                 UseCaseIngredientPortionCalculator.ResultStatus.INVALID_MEASUREMENT);
     }
 
     public static MeasurementResult getResultNewInvalidTotalMeasurementOne() {
         return new MeasurementResult(
-                MeasurementModelTestData.getNewInvalidTotalMeasurementOne(),
+                TestDataMeasurementModel.getNewInvalidTotalMeasurementOne(),
                 UseCaseIngredientPortionCalculator.ResultStatus.INVALID_TOTAL_MEASUREMENT_ONE
         );
     }
 
     public static MeasurementResult getResultNewValidTotalMeasurementOne() {
         return new MeasurementResult(
-                MeasurementModelTestData.getNewValidTotalMeasurementOne(),
+                TestDataMeasurementModel.getNewValidTotalMeasurementOne(),
                 UseCaseIngredientPortionCalculator.ResultStatus.RESULT_OK
         );
     }
 
     public static MeasurementResult getResultNewInvalidTotalMeasurementTwo() {
         return new MeasurementResult(
-                MeasurementModelTestData.getNewInvalidTotalMeasurementTwo(),
+                TestDataMeasurementModel.getNewInvalidTotalMeasurementTwo(),
                 UseCaseIngredientPortionCalculator.ResultStatus.INVALID_TOTAL_MEASUREMENT_TWO
         );
     }
 
     public static MeasurementResult getResultNewValidTotalMeasurementTwo() {
         return new MeasurementResult(
-                MeasurementModelTestData.getNewValidTotalMeasurementTwo(),
+                TestDataMeasurementModel.getNewValidTotalMeasurementTwo(),
                 UseCaseIngredientPortionCalculator.ResultStatus.RESULT_OK
         );
     }
 
     public static MeasurementResult getResultNewInvalidUnitOfMeasureChangedImperialSpoon() {
         return new MeasurementResult(
-                MeasurementModelTestData.getNewInvalidUnitOfMeasureChangedImperialSpoon(),
+                TestDataMeasurementModel.getNewInvalidUnitOfMeasureChangedImperialSpoon(),
                 UseCaseIngredientPortionCalculator.ResultStatus.INVALID_MEASUREMENT
         );
     }
 
     public static MeasurementResult getResultNewInvalidUnitOfMeasureChangedMetricMass() {
         return new MeasurementResult(
-                MeasurementModelTestData.getNewInvalidUnitOfMeasureChangedMetricMass(),
+                TestDataMeasurementModel.getNewInvalidUnitOfMeasureChangedMetricMass(),
                 UseCaseIngredientPortionCalculator.ResultStatus.INVALID_MEASUREMENT
         );
     }
 
     public static MeasurementResult getNewValidHalfImperialSpoonUnitOneUpdatedResult() {
         return new MeasurementResult(
-                MeasurementModelTestData.getNewValidHalfImperialSpoonUnitOneUpdated(),
+                TestDataMeasurementModel.getNewValidHalfImperialSpoonUnitOneUpdated(),
                 UseCaseIngredientPortionCalculator.ResultStatus.RESULT_OK
         );
     }
 
     public static MeasurementResult getResultNewInvalidConversionFactor() {
         return new MeasurementResult(
-                MeasurementModelTestData.getNewInvalidConversionFactor(),
+                TestDataMeasurementModel.getNewInvalidConversionFactor(),
                 UseCaseIngredientPortionCalculator.ResultStatus.INVALID_CONVERSION_FACTOR
         );
     }
 
     public static MeasurementResult getResultNewValidImperialSpoonWithConversionFactor() {
         return new MeasurementResult(
-                MeasurementModelTestData.getNewValidImperialSpoonWithConversionFactor(),
+                TestDataMeasurementModel.getNewValidImperialSpoonWithConversionFactor(),
                 UseCaseIngredientPortionCalculator.ResultStatus.RESULT_OK
         );
     }
 
     public static MeasurementResult getResultExistingValidMetric() {
         return new MeasurementResult(
-                MeasurementModelTestData.getExistingValidMetric(),
+                TestDataMeasurementModel.getExistingValidMetric(),
                 UseCaseIngredientPortionCalculator.ResultStatus.RESULT_OK
         );
     }
 
     public static MeasurementResult getExistingMetricInvalidTotalOneResult() {
         return new MeasurementResult(
-                MeasurementModelTestData.getExistingMetricInvalidTotalOne(),
+                TestDataMeasurementModel.getExistingMetricInvalidTotalOne(),
                 UseCaseIngredientPortionCalculator.ResultStatus.INVALID_TOTAL_MEASUREMENT_ONE
         );
     }
 
     public static MeasurementResult getExistingInvalidTotalTwoResult() {
         return new MeasurementResult(
-                MeasurementModelTestData.getExistingMetricInvalidTotalTwo(),
+                TestDataMeasurementModel.getExistingMetricInvalidTotalTwo(),
                 UseCaseIngredientPortionCalculator.ResultStatus.INVALID_TOTAL_MEASUREMENT_TWO
         );
     }
 
     public static MeasurementResult getExistingMetricValidTwoUpdatedResult() {
         return new MeasurementResult(
-                MeasurementModelTestData.getExistingMetricValidTwoUpdated(),
+                TestDataMeasurementModel.getExistingMetricValidTwoUpdated(),
                 UseCaseIngredientPortionCalculator.ResultStatus.RESULT_OK
         );
     }
 
     public static MeasurementResult getExistingMetricUnitOfMeasureUpdatedToImperialResult() {
         return new MeasurementResult(
-                MeasurementModelTestData.getExistingMetricUnitOfMeasureUpdatedToImperial(),
+                TestDataMeasurementModel.getExistingMetricUnitOfMeasureUpdatedToImperial(),
                 UseCaseIngredientPortionCalculator.ResultStatus.INVALID_MEASUREMENT
         );
     }
 
     public static MeasurementResult getExistingMetricInvalidConversionFactorResult() {
         return new MeasurementResult(
-                MeasurementModelTestData.getExistingImperialSpoonInvalidConversionFactor(),
+                TestDataMeasurementModel.getExistingImperialSpoonInvalidConversionFactor(),
                 UseCaseIngredientPortionCalculator.ResultStatus.INVALID_CONVERSION_FACTOR
         );
     }
