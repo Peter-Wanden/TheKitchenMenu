@@ -1,5 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase;
 
+import androidx.annotation.NonNull;
+
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
@@ -8,6 +10,8 @@ import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.Measurement
 import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasure;
 import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasureConstants;
 
+import java.util.Objects;
+
 public class UseCaseConversionFactorStatus
         extends
         UseCase<UseCaseConversionFactorStatus.RequestValues,
@@ -15,7 +19,7 @@ public class UseCaseConversionFactorStatus
         implements
         DataSource.GetEntityCallback<IngredientEntity> {
 
-    public enum UseCaseConversionFactorResult {
+    public enum UseCaseResult {
         NO_DATA_AVAILABLE,
         DISABLED,
         ENABLED_UNEDITABLE,
@@ -42,7 +46,7 @@ public class UseCaseConversionFactorStatus
     }
 
     private void returnResultDisabled() {
-        ResponseValues rV = new ResponseValues(UseCaseConversionFactorResult.DISABLED);
+        ResponseValues rV = new ResponseValues(UseCaseResult.DISABLED);
         getUseCaseCallback().onSuccess(rV);
     }
 
@@ -58,7 +62,7 @@ public class UseCaseConversionFactorStatus
 
     @Override
     public void onDataNotAvailable() {
-        ResponseValues rV = new ResponseValues(UseCaseConversionFactorResult.NO_DATA_AVAILABLE);
+        ResponseValues rV = new ResponseValues(UseCaseResult.NO_DATA_AVAILABLE);
         getUseCaseCallback().onError(rV);
     }
 
@@ -75,7 +79,7 @@ public class UseCaseConversionFactorStatus
     }
 
     private void returnResultUneditable() {
-        ResponseValues rV  = new ResponseValues(UseCaseConversionFactorResult.ENABLED_UNEDITABLE);
+        ResponseValues rV  = new ResponseValues(UseCaseResult.ENABLED_UNEDITABLE);
         getUseCaseCallback().onSuccess(rV);
     }
 
@@ -92,42 +96,82 @@ public class UseCaseConversionFactorStatus
     }
 
     private void returnResultEnabledEditablePreviouslySet() {
-        ResponseValues rV = new ResponseValues(UseCaseConversionFactorResult.ENABLED_EDITABLE_SET);
+        ResponseValues rV = new ResponseValues(UseCaseResult.ENABLED_EDITABLE_SET);
         getUseCaseCallback().onSuccess(rV);
     }
 
     private void returnResponseEnabledEditableUnSet() {
-        ResponseValues rV = new ResponseValues(UseCaseConversionFactorResult.ENABLED_EDITABLE_UNSET);
+        ResponseValues rV = new ResponseValues(UseCaseResult.ENABLED_EDITABLE_UNSET);
         getUseCaseCallback().onSuccess(rV);
     }
 
     public static final class RequestValues implements UseCase.RequestValues {
+        @NonNull
         private MeasurementSubtype subtype;
+        @NonNull
         private String ingredientId;
 
-        public RequestValues(MeasurementSubtype subtype, String ingredientId) {
+        public RequestValues(@NonNull MeasurementSubtype subtype, @NonNull String ingredientId) {
             this.subtype = subtype;
             this.ingredientId = ingredientId;
         }
 
+        @NonNull
         public MeasurementSubtype getSubtype() {
             return subtype;
         }
 
+        @NonNull
         public String getIngredientId() {
             return ingredientId;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            RequestValues that = (RequestValues) o;
+            return subtype == that.subtype &&
+                    ingredientId.equals(that.ingredientId);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(subtype, ingredientId);
         }
     }
 
     public static final class ResponseValues implements UseCase.ResponseValues {
-        private UseCaseConversionFactorResult result;
+        @NonNull
+        private UseCaseResult result;
 
-        public ResponseValues(UseCaseConversionFactorResult result) {
+        public ResponseValues(@NonNull UseCaseResult result) {
             this.result = result;
         }
 
-        public UseCaseConversionFactorResult getResult() {
+        @NonNull
+        public UseCaseResult getResult() {
             return result;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            ResponseValues that = (ResponseValues) o;
+            return result == that.result;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(result);
+        }
+
+        @Override
+        public String toString() {
+            return "ResponseValues{" +
+                    "result=" + result +
+                    '}';
         }
     }
 }

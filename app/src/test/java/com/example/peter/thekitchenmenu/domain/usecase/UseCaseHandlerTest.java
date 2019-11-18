@@ -24,7 +24,7 @@ public class UseCaseHandlerTest {
             TestDataIngredientEntity.getNewInvalidNameValidDescription();
     private UseCaseConversionFactorStatus.RequestValues REQUEST_METRIC_NO_CONV_FACTOR_VALID_INGREDIENT =
             TestDataUseCaseConversionFactorStatusRequestResponse.getRequestMetricNoConversionFactor();
-    private UseCaseConversionFactorStatus.ResponseValues RESPONSE_NO_CONV_DISABLED =
+    private UseCaseConversionFactorStatus.ResponseValues RESPONSE_DISABLED =
             TestDataUseCaseConversionFactorStatusRequestResponse.getResponseMetricNoConversionFactor();
 
     // endregion constants -------------------------------------------------------------------------
@@ -62,7 +62,7 @@ public class UseCaseHandlerTest {
         // Assert
         verifyNoMoreInteractions(repoIngredientMock);
 
-        verify(responseCallback.getValue()).onSuccess(eq(RESPONSE_NO_CONV_DISABLED));
+        verify(responseCallback.getValue()).onSuccess(eq(RESPONSE_DISABLED));
     }
 
     // region helper methods -----------------------------------------------------------------------

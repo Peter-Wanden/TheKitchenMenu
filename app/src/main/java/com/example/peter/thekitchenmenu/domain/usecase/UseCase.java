@@ -44,7 +44,7 @@ public abstract class UseCase<Q extends UseCase.RequestValues, P extends UseCase
         mUseCaseCallback = useCaseCallback;
     }
 
-    void run() {
+    public void run() {
        executeUseCase(mRequestValues);
     }
 
