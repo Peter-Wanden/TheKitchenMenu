@@ -5,6 +5,7 @@ import androidx.core.util.Pair;
 
 import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.MeasurementType;
+import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasure;
 
 public class MeasurementModelBuilder {
 
@@ -26,7 +27,8 @@ public class MeasurementModelBuilder {
     private int maxUnitTwo;
     private Pair[] maxUnitDigitWidths;
 
-    public static MeasurementModelBuilder basedOn (@NonNull MeasurementModel oldModel) {
+
+    public static MeasurementModelBuilder basedOnModel(@NonNull MeasurementModel oldModel) {
         return new MeasurementModelBuilder().
                 setType(oldModel.getType()).
                 setSubtype(oldModel.getSubtype()).
@@ -47,6 +49,26 @@ public class MeasurementModelBuilder {
                 setMaxUnitDigitWidths(oldModel.getMaxUnitDigitWidths());
     }
 
+    public static MeasurementModelBuilder basedOnUnitOfMeasure(@NonNull UnitOfMeasure unitOfMeasure) {
+        return new MeasurementModelBuilder().
+                setType(unitOfMeasure.getMeasurementType()).
+                setSubtype(unitOfMeasure.getMeasurementSubtype()).
+                setNumberOfUnits(unitOfMeasure.getNumberOfUnits()).
+                setIsConversionFactorEnabled(unitOfMeasure.isConversionFactorEnabled()).
+                setConversionFactor(unitOfMeasure.getConversionFactor()).
+                setItemBaseUnits(unitOfMeasure.getItemBaseUnits()).
+                setTotalBaseUnits(unitOfMeasure.getTotalBaseUnits()).
+                setNumberOfItems(unitOfMeasure.getNumberOfItems()).
+                setTotalUnitOne(unitOfMeasure.getTotalUnitOne()).
+                setItemUnitOne(unitOfMeasure.getItemUnitOne()).
+                setTotalUnitTwo(unitOfMeasure.getTotalUnitTwo()).
+                setItemUnitTwo(unitOfMeasure.getItemUnitTwo()).
+                setIsValidMeasurement(unitOfMeasure.isValidMeasurement()).
+                setMinUnitOne(unitOfMeasure.getMinUnitOneInBaseUnits()).
+                setMaxUnitOne(unitOfMeasure.getMaxUnitOne()).
+                setMaxUnitTwo(unitOfMeasure.getMaxUnitTwo()).
+                setMaxUnitDigitWidths(unitOfMeasure.getMaxUnitDigitWidths());
+    }
 
     public MeasurementModelBuilder setType(MeasurementType type) {
         this.type = type;

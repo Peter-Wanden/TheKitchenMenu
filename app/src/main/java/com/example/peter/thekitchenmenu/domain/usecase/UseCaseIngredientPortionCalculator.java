@@ -8,41 +8,40 @@ import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
+import com.example.peter.thekitchenmenu.domain.model.MeasurementModelBuilder;
 import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasure;
 import com.example.peter.thekitchenmenu.domain.model.MeasurementModel;
+import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasureConstants;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Objects;
 
 /**
  * Calculates the measurement of an ingredient for a single portion of a recipe.
  */
-public class UseCaseIngredientPortionCalculator {
+public class UseCaseIngredientPortionCalculator
+        extends
+        UseCase<UseCaseIngredientPortionCalculator.RequestValues,
+                UseCaseIngredientPortionCalculator.ResponseValues> {
 
     public interface UseCasePortionCallback {
-
         void useCasePortionResult(MeasurementResult result);
-
-        void dataLoadingFailed(FailReason reason);
-
     }
 
     public enum ResultStatus {
+        QUANTITY_DATA_NOT_AVAILABLE,
+        INGREDIENT_DATA_NOT_AVAILABLE,
+        PORTIONS_DATA_NOT_AVAILABLE,
         INVALID_CONVERSION_FACTOR,
         INVALID_PORTIONS,
-        INVALID_TOTAL_MEASUREMENT_ONE,
-        INVALID_TOTAL_MEASUREMENT_TWO,
+        INVALID_TOTAL_UNIT_ONE,
+        INVALID_TOTAL_UNIT_TWO,
         INVALID_MEASUREMENT,
-        RESULT_OK;
-    }
-
-    public enum FailReason {
-        NO_DATA_AVAILABLE,
-        DATA_LOADING_ERROR;
+        RESULT_OK
     }
 
     private static final String TAG = "tkm-PortionsUseCase";
@@ -56,24 +55,24 @@ public class UseCaseIngredientPortionCalculator {
 
     private UnitOfMeasure unitOfMeasure = MeasurementSubtype.METRIC_MASS.getMeasurementClass();
     private boolean conversionFactorChanged;
-    private boolean conversionFactorIsSet;
+    private boolean isConversionFactorSet;
     private boolean portionsChanged;
-    private boolean portionsAreSet;
-    private boolean itemBaseUnitsAreSet;
-    private boolean totalMeasurementOneChanged;
-    private boolean totalMeasurementOneIsSet;
-    private boolean totalMeasurementTwoChanged;
-    private boolean totalMeasurementTwoIsSet;
+    private boolean isPortionsSet;
+    private boolean isItemBaseUnitsSet;
+    private boolean totalUnitOneChanged;
+    private boolean isTotalUnitOneSet;
+    private boolean totalUnitTwoChanged;
+    private boolean isTotalUnitTwoSet;
 
-    private String recipeId;
-    private String ingredientId;
+    private String recipeId = "";
+    private String ingredientId = "";
+    private String recipeIngredientId = "";
     private int numberOfPortions;
 
     private MeasurementModel modelIn;
     private MeasurementModel existingModel;
     private RecipeIngredientQuantityEntity quantityEntity;
     private IngredientEntity ingredientEntity;
-
 
     public UseCaseIngredientPortionCalculator(RepositoryRecipePortions portionsRepository,
                                               RepositoryRecipeIngredient recipeIngredientRepository,
@@ -85,6 +84,31 @@ public class UseCaseIngredientPortionCalculator {
         this.ingredientRepository = ingredientRepository;
         this.idProvider = idProvider;
         this.timeProvider = timeProvider;
+    }
+
+    @Override
+    protected void executeUseCase(RequestValues values) {
+        if (isNewInstantiation()) {
+            extractIdsAndStart(values);
+        } else {
+            processModel(values.getModel());
+        }
+    }
+
+    private boolean isNewInstantiation() {
+        return this.recipeIngredientId.isEmpty();
+    }
+
+    private void extractIdsAndStart(RequestValues values) {
+        if (isRecipeIngredientIdProvided(values)) {
+            start(values.getRecipeIngredientId());
+        } else {
+            start(values.getRecipeId(), values.getIngredientId());
+        }
+    }
+
+    private boolean isRecipeIngredientIdProvided(RequestValues values) {
+        return !values.getRecipeIngredientId().isEmpty();
     }
 
     public void registerListener(UseCasePortionCallback listener) {
@@ -99,6 +123,7 @@ public class UseCaseIngredientPortionCalculator {
         this.recipeId = recipeId;
         this.ingredientId = ingredientId;
         quantityEntity = createNewRecipeIngredientQuantityEntity();
+        recipeIngredientId = quantityEntity.getId();
         loadIngredient();
     }
 
@@ -118,10 +143,11 @@ public class UseCaseIngredientPortionCalculator {
     }
 
     public void start(String recipeIngredientId) {
-        loadExistingQuantityEntity(recipeIngredientId);
+        this.recipeIngredientId = recipeIngredientId;
+        loadRecipeIngredient(recipeIngredientId);
     }
 
-    private void loadExistingQuantityEntity(String recipeIngredientId) {
+    private void loadRecipeIngredient(String recipeIngredientId) {
         recipeIngredientRepository.getById(
                 recipeIngredientId,
                 new DataSource.GetEntityCallback<RecipeIngredientQuantityEntity>() {
@@ -135,7 +161,7 @@ public class UseCaseIngredientPortionCalculator {
 
                     @Override
                     public void onDataNotAvailable() {
-
+                        returnDataNotAvailable(ResultStatus.QUANTITY_DATA_NOT_AVAILABLE);
                     }
                 });
     }
@@ -152,7 +178,7 @@ public class UseCaseIngredientPortionCalculator {
 
                     @Override
                     public void onDataNotAvailable() {
-
+                        returnDataNotAvailable(ResultStatus.INGREDIENT_DATA_NOT_AVAILABLE);
                     }
                 });
     }
@@ -170,32 +196,36 @@ public class UseCaseIngredientPortionCalculator {
 
                     @Override
                     public void onDataNotAvailable() {
-
+                        returnDataNotAvailable(ResultStatus.PORTIONS_DATA_NOT_AVAILABLE);
                     }
                 });
+    }
+
+    private void returnDataNotAvailable(ResultStatus status) {
+        ResponseValues values = new ResponseValues(
+                UnitOfMeasureConstants.DEFAULT_MEASUREMENT_MODEL,
+                status);
+        getUseCaseCallback().onError(values);
     }
 
     private void setupUnitOfMeasure() {
         int subtypeAsInt = quantityEntity.getUnitOfMeasureSubtype();
         MeasurementSubtype subType = MeasurementSubtype.fromInt(subtypeAsInt);
+
         unitOfMeasure = subType.getMeasurementClass();
-
-        conversionFactorIsSet = unitOfMeasure.isConversionFactorSet(
-                ingredientEntity.getConversionFactor());
-
-        portionsAreSet = unitOfMeasure.isNumberOfItemsSet(numberOfPortions);
+        setConversionFactor();
+        setPortions();
 
         if (quantityEntity.getItemBaseUnits() > 0) {
-            itemBaseUnitsAreSet = unitOfMeasure.isItemBaseUnitsSet(
+            isItemBaseUnitsSet = unitOfMeasure.isItemBaseUnitsSet(
                     quantityEntity.getItemBaseUnits());
         }
 
-        if (itemBaseUnitsAreSet) {
-            totalMeasurementOneIsSet = true;
-            totalMeasurementTwoIsSet = true;
+        if (isItemBaseUnitsSet) {
+            isTotalUnitOneSet = true;
+            isTotalUnitTwoSet = true;
         }
-
-        returnResult();
+        updateExistingModel();
     }
 
     public void processModel(MeasurementModel modelIn) {
@@ -210,13 +240,13 @@ public class UseCaseIngredientPortionCalculator {
         } else if (isConversionFactorChanged()) {
             processConversionFactor();
 
-        } else if (isTotalMeasurementOneChanged()) {
+        } else if (isTotalUnitOneChanged()) {
             processTotalMeasurementOne();
 
-        } else if (isTotalMeasurementTwoChanged()) {
+        } else if (isTotalUnitTwoChanged()) {
             processTotalMeasurementTwo();
         }
-        returnResult();
+        updateExistingModel();
     }
 
     private boolean isSubtypeChanged() {
@@ -225,9 +255,17 @@ public class UseCaseIngredientPortionCalculator {
 
     private void setupForNewSubtype() {
         unitOfMeasure = modelIn.getSubtype().getMeasurementClass();
-        conversionFactorIsSet = unitOfMeasure.isConversionFactorSet(
+        setConversionFactor();
+        setPortions();
+    }
+
+    private void setConversionFactor() {
+        isConversionFactorSet = unitOfMeasure.isConversionFactorSet(
                 ingredientEntity.getConversionFactor());
-        portionsAreSet = unitOfMeasure.isNumberOfItemsSet(numberOfPortions);
+    }
+
+    private void setPortions() {
+        isPortionsSet = unitOfMeasure.isNumberOfItemsSet(numberOfPortions);
     }
 
     private boolean isConversionFactorChanged() {
@@ -236,10 +274,10 @@ public class UseCaseIngredientPortionCalculator {
 
     private void processConversionFactor() {
         conversionFactorChanged = true;
-        conversionFactorIsSet = unitOfMeasure.isConversionFactorSet(
+        isConversionFactorSet = unitOfMeasure.isConversionFactorSet(
                 modelIn.getConversionFactor());
 
-        if (conversionFactorIsSet) {
+        if (isConversionFactorSet) {
             saveConversionFactorToIngredient();
         }
     }
@@ -248,23 +286,23 @@ public class UseCaseIngredientPortionCalculator {
         ingredientRepository.save(getUpdatedIngredientEntity());
     }
 
-    private boolean isTotalMeasurementOneChanged() {
+    private boolean isTotalUnitOneChanged() {
         return modelIn.getTotalUnitOne() != unitOfMeasure.getTotalUnitOne();
     }
 
     private void processTotalMeasurementOne() {
-        totalMeasurementOneChanged = true;
-        totalMeasurementOneIsSet = unitOfMeasure.isTotalUnitOneSet(
+        totalUnitOneChanged = true;
+        isTotalUnitOneSet = unitOfMeasure.isTotalUnitOneSet(
                 modelIn.getTotalUnitOne());
     }
 
-    private boolean isTotalMeasurementTwoChanged() {
+    private boolean isTotalUnitTwoChanged() {
         return modelIn.getTotalUnitTwo() != unitOfMeasure.getTotalUnitTwo();
     }
 
     private void processTotalMeasurementTwo() {
-        totalMeasurementTwoChanged = true;
-        totalMeasurementTwoIsSet = unitOfMeasure.isTotalUnitTwoSet(
+        totalUnitTwoChanged = true;
+        isTotalUnitTwoSet = unitOfMeasure.isTotalUnitTwoSet(
                 modelIn.getTotalUnitTwo());
     }
 
@@ -280,62 +318,55 @@ public class UseCaseIngredientPortionCalculator {
         );
     }
 
+    private void updateExistingModel() {
+        existingModel = MeasurementModelBuilder.basedOnUnitOfMeasure(unitOfMeasure).
+                setConversionFactor(getConversionFactorResult()).
+                setTotalUnitOne(getTotalUnitOneResult()).
+                setTotalUnitTwo(getTotalUnitTwoResult()).build();
+        returnResult();
+    }
+
     private void returnResult() {
-        existingModel = new MeasurementModel(
-                unitOfMeasure.getMeasurementType(),
-                unitOfMeasure.getMeasurementSubtype(),
-                unitOfMeasure.getNumberOfUnits(),
-                unitOfMeasure.isConversionFactorEnabled(),
-                getConversionFactorResult(),
-                unitOfMeasure.getItemBaseUnits(),
-                unitOfMeasure.getTotalBaseUnits(),
-                unitOfMeasure.getNumberOfItems(),
-                getTotalMeasurementOneResult(),
-                unitOfMeasure.getItemUnitOne(),
-                getTotalMeasurementTwoResult(),
-                unitOfMeasure.getItemUnitTwo(),
-                unitOfMeasure.isValidMeasurement(),
-                unitOfMeasure.getMinUnitOneInBaseUnits(),
-                unitOfMeasure.getMaxUnitOne(),
-                unitOfMeasure.getMaxUnitTwo(),
-                unitOfMeasure.getMaxUnitDigitWidths()
-        );
-        MeasurementResult result = new MeasurementResult(existingModel, getResultStatus());
         saveIfValid();
+        ResponseValues values = new ResponseValues(existingModel, getResultStatus());
+        MeasurementResult result = new MeasurementResult(existingModel, getResultStatus());
+
+        resetResults();
+
+        if (getUseCaseCallback() != null) {
+            getUseCaseCallback().onSuccess(values);
+        }
         notifyListeners(result);
     }
 
     private double getConversionFactorResult() {
-        return conversionFactorChanged && !conversionFactorIsSet ?
+        return conversionFactorChanged && !isConversionFactorSet ?
                 modelIn.getConversionFactor() : unitOfMeasure.getConversionFactor();
     }
 
-    private double getTotalMeasurementOneResult() {
-        return totalMeasurementOneChanged && !totalMeasurementOneIsSet ?
+    private double getTotalUnitOneResult() {
+        return totalUnitOneChanged && !isTotalUnitOneSet ?
                 modelIn.getTotalUnitOne() : unitOfMeasure.getTotalUnitOne();
     }
 
-    private int getTotalMeasurementTwoResult() {
-        return totalMeasurementTwoChanged && !totalMeasurementTwoIsSet ?
+    private int getTotalUnitTwoResult() {
+        return totalUnitTwoChanged && !isTotalUnitTwoSet ?
                 modelIn.getTotalUnitTwo() : unitOfMeasure.getTotalUnitTwo();
     }
 
     private ResultStatus getResultStatus() {
-        if (portionsChanged && !portionsAreSet) {
-            portionsChanged = false;
+        if (portionsChanged && !isPortionsSet) {
             return ResultStatus.INVALID_PORTIONS;
         }
-        if (conversionFactorChanged && !conversionFactorIsSet) {
-            conversionFactorChanged = false;
+        if (conversionFactorChanged && !isConversionFactorSet) {
             return ResultStatus.INVALID_CONVERSION_FACTOR;
         }
-        if (totalMeasurementOneChanged && !totalMeasurementOneIsSet) {
-            totalMeasurementOneChanged = false;
-            return ResultStatus.INVALID_TOTAL_MEASUREMENT_ONE;
+        if (totalUnitOneChanged && !isTotalUnitOneSet) {
+            return ResultStatus.INVALID_TOTAL_UNIT_ONE;
         }
-        if (totalMeasurementTwoChanged && !totalMeasurementTwoIsSet) {
-            totalMeasurementTwoChanged = false;
-            return ResultStatus.INVALID_TOTAL_MEASUREMENT_TWO;
+
+        if (totalUnitTwoChanged && !isTotalUnitTwoSet) {
+            return ResultStatus.INVALID_TOTAL_UNIT_TWO;
         }
         if (!unitOfMeasure.isValidMeasurement()) {
             return ResultStatus.INVALID_MEASUREMENT;
@@ -343,10 +374,18 @@ public class UseCaseIngredientPortionCalculator {
         return ResultStatus.RESULT_OK;
     }
 
+    private void resetResults() {
+        portionsChanged = false;
+        conversionFactorChanged = false;
+        totalUnitOneChanged = false;
+        totalUnitTwoChanged = false;
+    }
+
     private void saveIfValid() {
         if (quantityEntityHasChanged() && unitOfMeasure.isValidMeasurement()) {
             save(updatedRecipeIngredientEntity());
         }
+
     }
 
     private void notifyListeners(MeasurementResult result) {
@@ -395,5 +434,76 @@ public class UseCaseIngredientPortionCalculator {
 
     public String getIngredientId() {
         return ingredientId;
+    }
+
+    public static final class RequestValues implements UseCase.RequestValues {
+        private String recipeId;
+        private String ingredientId;
+        private String recipeIngredientId;
+        private MeasurementModel model;
+
+        public RequestValues(String recipeId, String ingredientId,
+                             String recipeIngredientId, MeasurementModel model) {
+            this.recipeId = recipeId;
+            this.ingredientId = ingredientId;
+            this.recipeIngredientId = recipeIngredientId;
+            this.model = model;
+        }
+
+        public String getRecipeId() {
+            return recipeId;
+        }
+
+        public String getIngredientId() {
+            return ingredientId;
+        }
+
+        public String getRecipeIngredientId() {
+            return recipeIngredientId;
+        }
+
+        public MeasurementModel getModel() {
+            return model;
+        }
+    }
+
+    public static final class ResponseValues implements UseCase.ResponseValues {
+        private MeasurementModel model;
+        private UseCaseIngredientPortionCalculator.ResultStatus resultStatus;
+
+        public ResponseValues(MeasurementModel model, ResultStatus resultStatus) {
+            this.model = model;
+            this.resultStatus = resultStatus;
+        }
+
+        public MeasurementModel getModel() {
+            return model;
+        }
+
+        public ResultStatus getResultStatus() {
+            return resultStatus;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            ResponseValues values = (ResponseValues) o;
+            return model.equals(values.model) &&
+                    resultStatus == values.resultStatus;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(model, resultStatus);
+        }
+
+        @Override
+        public String toString() {
+            return "ResponseValues{" +
+                    "model=" + model +
+                    ", resultStatus=" + resultStatus +
+                    '}';
+        }
     }
 }

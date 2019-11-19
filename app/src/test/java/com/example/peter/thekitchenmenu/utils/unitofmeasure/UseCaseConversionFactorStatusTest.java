@@ -22,7 +22,7 @@ public class UseCaseConversionFactorStatusTest {
     // region constants ----------------------------------------------------------------------------
     private IngredientEntity INGREDIENT_NEW_VALID_NAME_DESCRIPTION =
             TestDataIngredientEntity.getNewInvalidNameValidDescription();
-    private UseCaseConversionFactorStatus.RequestValues REQUEST_METRIC_NO_CONVERSION_FACTOR =
+    private UseCaseConversionFactorStatus.RequestValues REQUEST_DISABLED =
             TestDataUseCaseConversionFactorStatusRequestResponse.
                     getRequestMetricNoConversionFactor();
     private UseCaseConversionFactorStatus.ResponseValues RESPONSE_DISABLED =
@@ -31,24 +31,37 @@ public class UseCaseConversionFactorStatusTest {
 
     private IngredientEntity INGREDIENT_VALID_FROM_ANOTHER_USER =
             TestDataIngredientEntity.getExistingValidNameValidDescriptionFromAnotherUser();
-    private UseCaseConversionFactorStatus.RequestValues REQUEST_METRIC_CONVERSION_FACTOR_UNEDITABLE =
+    private UseCaseConversionFactorStatus.RequestValues REQUEST_ENABLED_UNEDITABLE =
             TestDataUseCaseConversionFactorStatusRequestResponse.
                     getRequestWithConversionFactorFromAnotherUser();
     private UseCaseConversionFactorStatus.ResponseValues RESPONSE_ENABLED_UNEDITABLE =
             TestDataUseCaseConversionFactorStatusRequestResponse.
                     getResponseConversionFactorUneditable();
 
-    private IngredientEntity INGREDIENT_VALID_WITH_CONVERSION_FACTOR_UNSET =
-            TestDataIngredientEntity.getNewInvalidNameValidDescription();
-    private UseCaseConversionFactorStatus.RequestValues REQUEST_CONVERSION_FACTOR_UNSET =
+    private IngredientEntity INGREDIENT_NEW_VALID_WITH_CONVERSION_FACTOR_UNSET =
+            TestDataIngredientEntity.getNewValidNameValidDescription();
+    private UseCaseConversionFactorStatus.RequestValues REQUEST_ENABLED_EDITABLE_UNSET =
             TestDataUseCaseConversionFactorStatusRequestResponse.
                     getRequestWithConversionFactorEnabledUnset();
-    private UseCaseConversionFactorStatus.ResponseValues RESPONSE_ENABLED_UNSET =
+    private UseCaseConversionFactorStatus.ResponseValues RESPONSE_ENABLED_EDITABLE_UNSET =
             TestDataUseCaseConversionFactorStatusRequestResponse.
                     getResponseConversionFactorEnabledUnset();
 
     private IngredientEntity INGREDIENT_VALID_WITH_CONVERSION_FACTOR =
             TestDataIngredientEntity.getExistingValidWithConversionFactor();
+    private UseCaseConversionFactorStatus.RequestValues REQUEST_ENABLED_EDITABLE_SET =
+            TestDataUseCaseConversionFactorStatusRequestResponse.
+                    getRequestWithConversionFactorEnabledSet();
+    private UseCaseConversionFactorStatus.ResponseValues RESPONSE_ENABLED_EDITABLE_SET =
+            TestDataUseCaseConversionFactorStatusRequestResponse.
+                    getResponseConversionFactorEnabledSet();
+
+    private UseCaseConversionFactorStatus.RequestValues REQUEST_NO_DATA_AVAILABLE =
+            TestDataUseCaseConversionFactorStatusRequestResponse.getRequestForIngredientNotFound();
+    private UseCaseConversionFactorStatus.ResponseValues RESPONSE_NO_DATA_AVAILABLE =
+            TestDataUseCaseConversionFactorStatusRequestResponse.getResponseForIngredientNotFound();
+
+
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
@@ -71,10 +84,24 @@ public class UseCaseConversionFactorStatusTest {
     }
 
     @Test
+    public void getConversionFactorStatus_ingredientNotFound_NO__DATA_AVAILABLE() {
+        // Arrange
+        String ingredientId = REQUEST_NO_DATA_AVAILABLE.getIngredientId();
+        MeasurementSubtype subtype = REQUEST_NO_DATA_AVAILABLE.getSubtype();
+        // Act
+        handlerMock.execute(SUT, getRequestValues(subtype, ingredientId), getResponseCallback());
+        // Assert
+        verify(repoMock).getById(eq(ingredientId), getEntityCallbackCaptor.capture());
+        getEntityCallbackCaptor.getValue().onDataNotAvailable();
+
+        assertEquals(RESPONSE_NO_DATA_AVAILABLE, actualResponse);
+    }
+
+    @Test
     public void getConversionFactorStatus_disabledForUnitOfMeasure_DISABLED() {
         // Arrange
         String ingredientId = INGREDIENT_NEW_VALID_NAME_DESCRIPTION.getId();
-        MeasurementSubtype subtype = REQUEST_METRIC_NO_CONVERSION_FACTOR.getSubtype();
+        MeasurementSubtype subtype = REQUEST_DISABLED.getSubtype();
         // Act
         handlerMock.execute(SUT, getRequestValues(subtype, ingredientId), getResponseCallback());
         // Assert
@@ -86,7 +113,7 @@ public class UseCaseConversionFactorStatusTest {
     public void getConversionFactorStatus_userIsNotCreator_ENABLED_UNEDITABLE() {
         // Arrange
         String ingredientId = INGREDIENT_VALID_FROM_ANOTHER_USER.getId();
-        MeasurementSubtype subtype = REQUEST_METRIC_CONVERSION_FACTOR_UNEDITABLE.getSubtype();
+        MeasurementSubtype subtype = REQUEST_ENABLED_UNEDITABLE.getSubtype();
         // Act
         handlerMock.execute(SUT, getRequestValues(subtype, ingredientId), getResponseCallback());
         // Assert
@@ -97,25 +124,26 @@ public class UseCaseConversionFactorStatusTest {
     @Test
     public void getConversionFactorStatus_noConversionFactorSet_ENABLED_EDITABLE_UNSET() {
         // Arrange
-        String ingredientId = INGREDIENT_VALID_WITH_CONVERSION_FACTOR_UNSET.getId();
-        MeasurementSubtype subtype = REQUEST_CONVERSION_FACTOR_UNSET.getSubtype();
+        String ingredientId = INGREDIENT_NEW_VALID_WITH_CONVERSION_FACTOR_UNSET.getId();
+        MeasurementSubtype subtype = REQUEST_ENABLED_EDITABLE_UNSET.getSubtype();
         // Act
         handlerMock.execute(SUT, getRequestValues(subtype, ingredientId), getResponseCallback());
         // Assert
         verifyRepoCalledWithIngredientNewValidNameDescription();
-        assertEquals(RESPONSE_ENABLED_UNSET, actualResponse);
+        assertEquals(RESPONSE_ENABLED_EDITABLE_UNSET, actualResponse);
     }
 
-//    @Test
-//    public void getConversionFactorStatus_conversionFactorSet_ENABLED_EDITABLE_SET() {
-//        // Arrange
-//        String ingredientId = INGREDIENT_VALID_WITH_CONVERSION_FACTOR.getId();
-//        // Act
-//        SUT.getStatus(EDITABLE_SUBTYPE, ingredientId);
-//        verifyRepoCalledWithIngredientValidWithConversionFactor();
-//        // Assert
-//        verify(viewModelMock).useCaseConversionFactorResult(ENABLED_EDITABLE_SET);
-//    }
+    @Test
+    public void getConversionFactorStatus_conversionFactorSet_ENABLED_EDITABLE_SET() {
+        // Arrange
+        String ingredientId = INGREDIENT_VALID_WITH_CONVERSION_FACTOR.getId();
+        MeasurementSubtype subtype = REQUEST_ENABLED_EDITABLE_SET.getSubtype();
+        // Act
+        handlerMock.execute(SUT, getRequestValues(subtype, ingredientId), getResponseCallback());
+        verifyRepoCalledWithIngredientValidWithConversionFactor();
+        // Assert
+        assertEquals(RESPONSE_ENABLED_EDITABLE_SET, actualResponse);
+    }
 
     // region helper methods -----------------------------------------------------------------------
     private UseCaseConversionFactorStatus.RequestValues getRequestValues(MeasurementSubtype subtype,

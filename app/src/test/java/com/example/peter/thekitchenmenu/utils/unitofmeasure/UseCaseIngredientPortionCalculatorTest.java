@@ -10,11 +10,14 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions
 import com.example.peter.thekitchenmenu.domain.usecase.MeasurementResult;
 import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasure;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseIngredientPortionCalculator;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseScheduler;
 import com.example.peter.thekitchenmenu.testdata.TestDataIngredientEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataMeasurementModel;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIngredientQuantityEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipePortionsEntity;
+import com.example.peter.thekitchenmenu.testdata.TestDataUseCaseIngredientPortionCalculatorRequestResponse;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 import com.example.peter.thekitchenmenu.domain.model.MeasurementModel;
@@ -22,6 +25,9 @@ import com.example.peter.thekitchenmenu.domain.model.MeasurementModelBuilder;
 
 import org.junit.*;
 import org.mockito.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasureConstants.*;
 import static com.example.peter.thekitchenmenu.domain.usecase.UseCaseIngredientPortionCalculator.*;
@@ -33,11 +39,24 @@ public class UseCaseIngredientPortionCalculatorTest {
     // region constants ----------------------------------------------------------------------------
     private final double DELTA = 0.0001;
 
+    private List<UseCaseIngredientPortionCalculator.ResponseValues> responses = new ArrayList<>();
+
     private RecipeIngredientQuantityEntity QUANTITY_NEW_INVALID =
             TestDataRecipeIngredientQuantityEntity.getNewInvalid();
 
+    private UseCaseIngredientPortionCalculator.RequestValues REQUEST_EMPTY_FOUR_PORTIONS =
+            TestDataUseCaseIngredientPortionCalculatorRequestResponse.getRequestEmptyFourPortions();
+    private UseCaseIngredientPortionCalculator.ResponseValues RESPONSE_EMPTY_FOUR_PORTIONS =
+            TestDataUseCaseIngredientPortionCalculatorRequestResponse.getResponseEmptyFourPortions();
+
+    private UseCaseIngredientPortionCalculator.RequestValues REQUEST_INVALID_UNIT_ONE =
+            TestDataUseCaseIngredientPortionCalculatorRequestResponse.getRequestInvalidTotalUnitOne();
+    private UseCaseIngredientPortionCalculator.ResponseValues RESPONSE_INVALID_UNIT_ONE =
+            TestDataUseCaseIngredientPortionCalculatorRequestResponse.getResponseInvalidTotalUnitOne();
+
     private RecipeIngredientQuantityEntity QUANTITY_NEW_VALID_METRIC =
             TestDataRecipeIngredientQuantityEntity.getNewValidMetric();
+
 
     private RecipeIngredientQuantityEntity QUANTITY_EXISTING_VALID_METRIC =
             TestDataRecipeIngredientQuantityEntity.getExistingValidMetric();
@@ -75,7 +94,7 @@ public class UseCaseIngredientPortionCalculatorTest {
 
     //----------------------
     private MeasurementModel MEASUREMENT_INVALID_TOTAL_ONE =
-            TestDataMeasurementModel.getNewInvalidTotalMeasurementOne();
+            TestDataMeasurementModel.getNewInvalidTotalUnitOne();
     private MeasurementResult MEASUREMENT_INVALID_TOTAL_ONE_RESULT =
             UseCaseIngredientPortionCalculatorTestData.getResultNewInvalidTotalMeasurementOne();
 
@@ -170,6 +189,8 @@ public class UseCaseIngredientPortionCalculatorTest {
 
     // endregion constants -------------------------------------------------------------------------
     // region helper fields ------------------------------------------------------------------------
+    private UseCaseHandlerMock handlerMock;
+    private UseCaseIngredientPortionCalculator.ResponseValues actualResponse;
     @Mock
     RepositoryRecipePortions repoRecipePortionsMock;
     @Captor
@@ -204,6 +225,9 @@ public class UseCaseIngredientPortionCalculatorTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
+
+        handlerMock = new UseCaseHandlerMock(new UseCaseSchedulerMock());
+
         SUT = new UseCaseIngredientPortionCalculator(
                 repoRecipePortionsMock,
                 repoRecipeIngredientMock,
@@ -215,11 +239,12 @@ public class UseCaseIngredientPortionCalculatorTest {
     }
 
     @Test
-    public void startNewRecipeAndIngredientId_databaseNotCalled() {
+    public void startNewRecipeAndIngredientId_invalidMeasurementNotSaved() {
         // Arrange
         when(idProviderMock.getUId()).thenReturn(QUANTITY_NEW_INVALID.getId());
         // Act
-        SUT.start(QUANTITY_NEW_INVALID.getRecipeId(), QUANTITY_NEW_INVALID.getIngredientId());
+        handlerMock.execute(SUT, REQUEST_EMPTY_FOUR_PORTIONS, getResponseCallback());
+        // Assert
         verifyRepoIngredientCalledReturnNewValidNameValidDescription();
         verifyRepoPortionsCalledReturnNewValidFourPortions();
         // Assert recipeIngredient not saved
@@ -231,11 +256,11 @@ public class UseCaseIngredientPortionCalculatorTest {
         // Arrange
         when(idProviderMock.getUId()).thenReturn(QUANTITY_NEW_INVALID.getId());
         // Act
-        SUT.start(QUANTITY_NEW_INVALID.getRecipeId(), QUANTITY_NEW_INVALID.getIngredientId());
+        handlerMock.execute(SUT, REQUEST_EMPTY_FOUR_PORTIONS, getResponseCallback());
+        // Assert
         verifyRepoIngredientCalledReturnNewValidNameValidDescription();
         verifyRepoPortionsCalledReturnNewValidFourPortions();
-        // Assert incomplete model returned
-        verify(viewModelMock).useCasePortionResult(eq(MEASUREMENT_EMPTY_FOUR_PORTIONS_RESULT));
+        assertEquals(RESPONSE_EMPTY_FOUR_PORTIONS, actualResponse);
     }
 
     @Test
@@ -243,14 +268,11 @@ public class UseCaseIngredientPortionCalculatorTest {
         // Arrange
         whenIdProviderReturnNewValidId();
         whenTimeProviderThenReturnNewValidTime();
-
         // Act
-        SUT.start(QUANTITY_NEW_VALID_METRIC.getRecipeId(),
-                QUANTITY_NEW_VALID_METRIC.getIngredientId());
+        handlerMock.execute(SUT, REQUEST_EMPTY_FOUR_PORTIONS, getResponseCallback());
         verifyRepoIngredientCalledAndReturnNewValidName();
         verifyRepoPortionsCalledAndReturnNewValidFourPortions();
-
-        SUT.processModel(MEASUREMENT_INVALID_TOTAL_ONE);
+        handlerMock.execute(SUT, REQUEST_INVALID_UNIT_ONE, getResponseCallback());
         // Assert
         verifyNoMoreInteractions(repoRecipeIngredientMock);
     }
@@ -260,18 +282,16 @@ public class UseCaseIngredientPortionCalculatorTest {
         // Arrange
         whenIdProviderReturnNewValidId();
         whenTimeProviderThenReturnNewValidTime();
-
         // Act
-        SUT.start(QUANTITY_NEW_VALID_METRIC.getRecipeId(),
-                QUANTITY_NEW_VALID_METRIC.getIngredientId());
+        handlerMock.execute(SUT, REQUEST_INVALID_UNIT_ONE, getResponseCallback());
         verifyRepoIngredientCalledAndReturnNewValidName();
         verifyRepoPortionsCalledAndReturnNewValidFourPortions();
-
-        SUT.processModel(MEASUREMENT_INVALID_TOTAL_ONE);
+        handlerMock.execute(SUT, REQUEST_INVALID_UNIT_ONE, getResponseCallback());
         // Assert
-        verify(viewModelMock, times((2))).useCasePortionResult(resultArgumentCaptor.capture());
-        MeasurementResult actualResult = resultArgumentCaptor.getValue();
-        assertEquals(MEASUREMENT_INVALID_TOTAL_ONE_RESULT, actualResult);
+        assertEquals(2, responses.size());
+        assertEquals(RESPONSE_INVALID_UNIT_ONE, actualResponse);
+//        verify(viewModelMock, times((1))).useCasePortionResult(resultArgumentCaptor.capture());
+//        System.out.println(resultArgumentCaptor.getValue());
     }
 
     @Test
@@ -437,7 +457,7 @@ public class UseCaseIngredientPortionCalculatorTest {
         verifyRepoPortionsCalledAndReturnNewValidFourPortions();
         // first unit of measure change
         MeasurementModel model = MEASUREMENT_EMPTY_FOUR_PORTIONS;
-        MeasurementModel processedModel = MeasurementModelBuilder.basedOn(model).setNumberOfItems(4).build();
+        MeasurementModel processedModel = MeasurementModelBuilder.basedOnModel(model).setNumberOfItems(4).build();
         // Update conversion factor
 
         // Second unit of measure change
@@ -635,7 +655,7 @@ public class UseCaseIngredientPortionCalculatorTest {
         assertEquals(MEASUREMENT_EXISTING_INVALID_TOTAL_TWO_RESULT, actualResult);
 
         ResultStatus resultStatus = actualResult.getResult();
-        assertEquals(ResultStatus.INVALID_TOTAL_MEASUREMENT_TWO, resultStatus);
+        assertEquals(ResultStatus.INVALID_TOTAL_UNIT_TWO, resultStatus);
 
         verifyNoMoreInteractions(repoRecipeIngredientMock);
     }
@@ -966,6 +986,30 @@ public class UseCaseIngredientPortionCalculatorTest {
     }
 
     // region helper methods -----------------------------------------------------------------------
+    private UseCaseIngredientPortionCalculator.RequestValues getRequestValues(
+            String recipeId, String ingredientId, String recipeIngredientId, MeasurementModel model) {
+        return new UseCaseIngredientPortionCalculator.RequestValues(
+                recipeId, ingredientId, recipeIngredientId, model);
+    }
+
+    private UseCase.UseCaseCallback<UseCaseIngredientPortionCalculator.ResponseValues>
+    getResponseCallback() {
+        return new UseCase.UseCaseCallback<UseCaseIngredientPortionCalculator.ResponseValues>() {
+
+            @Override
+            public void onSuccess(UseCaseIngredientPortionCalculator.ResponseValues response) {
+                UseCaseIngredientPortionCalculatorTest.this.responses.add(response);
+                UseCaseIngredientPortionCalculatorTest.this.actualResponse = response;
+            }
+
+            @Override
+            public void onError(UseCaseIngredientPortionCalculator.ResponseValues response) {
+                UseCaseIngredientPortionCalculatorTest.this.responses.add(response);
+                UseCaseIngredientPortionCalculatorTest.this.actualResponse = response;
+            }
+        };
+    }
+
     private void verifyRepoIngredientCalledReturnNewValidNameValidDescription() {
         verify(repoIngredientMock).getById(eq(
                 INGREDIENT_NEW_VALID_NAME_DESCRIPTION.getId()),
@@ -1058,5 +1102,78 @@ public class UseCaseIngredientPortionCalculatorTest {
     // endregion helper methods --------------------------------------------------------------------
 
     // region helper classes -----------------------------------------------------------------------
+    public class UseCaseHandlerMock {
+        private final UseCaseScheduler mUseCaseScheduler;
+
+        UseCaseHandlerMock(UseCaseScheduler useCaseScheduler) {
+            mUseCaseScheduler = useCaseScheduler;
+        }
+
+        <T extends UseCase.RequestValues, R extends UseCase.ResponseValues> void execute(
+                final UseCase<T, R> useCase, T requestValues, UseCase.UseCaseCallback<R> callback) {
+
+            useCase.setRequestValues(requestValues);
+            useCase.setUseCaseCallback(
+                    new UseCaseHandlerMock.UiCallbackWrapper(callback, this));
+
+            mUseCaseScheduler.execute(useCase::run);
+        }
+
+        public <V extends UseCase.ResponseValues> void notifyResponse(
+                final V response,
+                final UseCase.UseCaseCallback<V> useCaseCallback) {
+
+            mUseCaseScheduler.notifyResponse(response, useCaseCallback);
+        }
+
+        private <V extends UseCase.ResponseValues> void notifyError(
+                final V response,
+                final UseCase.UseCaseCallback<V> useCaseCallback) {
+
+            mUseCaseScheduler.onError(response, useCaseCallback);
+        }
+
+        private final class UiCallbackWrapper<V extends UseCase.ResponseValues> implements
+                UseCase.UseCaseCallback<V> {
+
+            private final UseCase.UseCaseCallback<V> mCallback;
+            private final UseCaseHandlerMock mUseCaseHandler;
+
+            public UiCallbackWrapper(UseCase.UseCaseCallback<V> callback,
+                                     UseCaseHandlerMock useCaseHandler) {
+                mCallback = callback;
+                mUseCaseHandler = useCaseHandler;
+            }
+
+            @Override
+            public void onSuccess(V response) {
+                mUseCaseHandler.notifyResponse(response, mCallback);
+            }
+
+            @Override
+            public void onError(V response) {
+                mUseCaseHandler.notifyError(response, mCallback);
+            }
+        }
+    }
+
+    public class UseCaseSchedulerMock implements UseCaseScheduler {
+        @Override
+        public void execute(Runnable runnable) {
+            runnable.run();
+        }
+
+        @Override
+        public <V extends UseCase.ResponseValues> void notifyResponse(
+                V response, UseCase.UseCaseCallback<V> useCaseCallback) {
+            useCaseCallback.onSuccess(response);
+        }
+
+        @Override
+        public <V extends UseCase.ResponseValues> void onError(
+                V response, UseCase.UseCaseCallback<V> useCaseCallback) {
+            useCaseCallback.onError(response);
+        }
+    }
     // endregion helper classes --------------------------------------------------------------------
 }

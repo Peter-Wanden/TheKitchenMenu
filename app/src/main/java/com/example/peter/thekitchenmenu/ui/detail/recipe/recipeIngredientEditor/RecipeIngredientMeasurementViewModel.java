@@ -91,7 +91,7 @@ public class RecipeIngredientMeasurementViewModel
         if (!updatingUi) {
             if (measurementModel.getSubtype() != subtype) {
                 MeasurementModel model = MeasurementModelBuilder.
-                        basedOn(measurementModel).
+                        basedOnModel(measurementModel).
                         setSubtype(subtype).
                         build();
 
@@ -146,7 +146,7 @@ public class RecipeIngredientMeasurementViewModel
 
                 } else if (isConversionFactorChanged(conversionFactorParsed)) {
                     MeasurementModel model = MeasurementModelBuilder.
-                            basedOn(measurementModel).
+                            basedOnModel(measurementModel).
                             setConversionFactor(conversionFactorParsed).
                             build();
 
@@ -182,7 +182,7 @@ public class RecipeIngredientMeasurementViewModel
 
                 } else if (isUnitOneChanged(unitOneParsed)) {
                     MeasurementModel model = MeasurementModelBuilder.
-                            basedOn(measurementModel).
+                            basedOnModel(measurementModel).
                             setTotalUnitOne(unitOneParsed).
                             build();
 
@@ -225,7 +225,7 @@ public class RecipeIngredientMeasurementViewModel
 
                 } else if (isUnitTwoChanged(unitTwoParsed)){
                     MeasurementModel model = MeasurementModelBuilder.
-                            basedOn(measurementModel).
+                            basedOnModel(measurementModel).
                             setTotalUnitTwo(unitTwoParsed).
                             build();
 
@@ -254,11 +254,6 @@ public class RecipeIngredientMeasurementViewModel
 
     private String numberFormatExceptionErrorMessage() {
         return resources.getString(R.string.number_format_exception);
-    }
-
-    @Override
-    public void dataLoadingFailed(UseCaseIngredientPortionCalculator.FailReason reason) {
-        // TODO
     }
 
     @Override
@@ -291,13 +286,13 @@ public class RecipeIngredientMeasurementViewModel
 
         } else if (resultStatus ==
                 UseCaseIngredientPortionCalculator.
-                        ResultStatus.INVALID_TOTAL_MEASUREMENT_ONE) {
+                        ResultStatus.INVALID_TOTAL_UNIT_ONE) {
             unitOneErrorMessage = null;
             unitOneErrorMessage = "Tablespoons and/or teaspoons need to have a value " +
                     "between 0.1 tsp and 666 Tbsp";
 
         } else if (resultStatus == UseCaseIngredientPortionCalculator.
-                ResultStatus.INVALID_TOTAL_MEASUREMENT_TWO) {
+                ResultStatus.INVALID_TOTAL_UNIT_TWO) {
             unitTwoErrorMessage = null;
             unitTwoErrorMessage = "Tablespoons and/or teaspoons need to have a value " +
                     "between 0.1 tsp and 666 Tbsp";
@@ -331,17 +326,17 @@ public class RecipeIngredientMeasurementViewModel
         unitTwoErrorMessage = null;
     }
 
-    private void useCaseConversionFactorResult(UseCaseConversionFactorResult result) {
-        if (result == UseCaseConversionFactorResult.DISABLED) {
+    private void useCaseConversionFactorResult(UseCaseResult result) {
+        if (result == UseCaseResult.DISABLED) {
             hideAllConversionFactorInformation();
 
-        } else if (result == UseCaseConversionFactorResult.ENABLED_UNEDITABLE) {
+        } else if (result == UseCaseResult.ENABLED_UNEDITABLE) {
             showUneditableConversionFactorInformation();
 
-        } else if (result == UseCaseConversionFactorResult.ENABLED_EDITABLE_UNSET) {
+        } else if (result == UseCaseResult.ENABLED_EDITABLE_UNSET) {
             showOptionToAddConversionFactorInformation();
 
-        } else if (result == UseCaseConversionFactorResult.ENABLED_EDITABLE_SET) {
+        } else if (result == UseCaseResult.ENABLED_EDITABLE_SET) {
             showAllConversionFactorInformation();
         }
         updatingUi = false;

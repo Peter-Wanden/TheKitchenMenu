@@ -10,10 +10,8 @@ public class TestDataUseCaseConversionFactorStatusRequestResponse {
         return new UseCaseConversionFactorStatus.RequestValues(
                 MeasurementSubtype.fromInt(TestDataRecipeIngredientQuantityEntity.
                         getNewValidMetric().getUnitOfMeasureSubtype()),
-                TestDataIngredientEntity.getNewValidNameValidDescription().getId()
-        );
+                TestDataIngredientEntity.getNewValidNameValidDescription().getId());
     }
-
     public static UseCaseConversionFactorStatus.ResponseValues
     getResponseMetricNoConversionFactor() {
         return new UseCaseConversionFactorStatus.ResponseValues(
@@ -27,7 +25,6 @@ public class TestDataUseCaseConversionFactorStatusRequestResponse {
                 TestDataIngredientEntity.getExistingValidNameValidDescriptionFromAnotherUser().
                         getId());
     }
-
     public static UseCaseConversionFactorStatus.ResponseValues
     getResponseConversionFactorUneditable() {
         return new UseCaseConversionFactorStatus.ResponseValues(
@@ -40,10 +37,31 @@ public class TestDataUseCaseConversionFactorStatusRequestResponse {
                 MeasurementSubtype.IMPERIAL_SPOON,
                 TestDataIngredientEntity.getNewInvalidNameValidDescription().getId());
     }
-
     public static UseCaseConversionFactorStatus.ResponseValues
     getResponseConversionFactorEnabledUnset() {
         return new UseCaseConversionFactorStatus.ResponseValues(
                 UseCaseConversionFactorStatus.UseCaseResult.ENABLED_EDITABLE_UNSET);
+    }
+
+    public static UseCaseConversionFactorStatus.RequestValues
+    getRequestWithConversionFactorEnabledSet() {
+        return new UseCaseConversionFactorStatus.RequestValues(
+                MeasurementSubtype.IMPERIAL_SPOON,
+                TestDataIngredientEntity.getExistingValidWithConversionFactor().getId());
+    }
+    public static UseCaseConversionFactorStatus.ResponseValues
+    getResponseConversionFactorEnabledSet() {
+        return new UseCaseConversionFactorStatus.ResponseValues(
+                UseCaseConversionFactorStatus.UseCaseResult.ENABLED_EDITABLE_SET);
+    }
+
+    public static UseCaseConversionFactorStatus.RequestValues getRequestForIngredientNotFound() {
+        return new UseCaseConversionFactorStatus.RequestValues(
+                MeasurementSubtype.IMPERIAL_SPOON,
+                "INGREDIENT_NOT_FOUND");
+    }
+    public static UseCaseConversionFactorStatus.ResponseValues getResponseForIngredientNotFound() {
+        return new UseCaseConversionFactorStatus.ResponseValues(
+                UseCaseConversionFactorStatus.UseCaseResult.DATA_NOT_AVAILABLE);
     }
 }

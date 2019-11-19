@@ -1,6 +1,7 @@
 package com.example.peter.thekitchenmenu.testdata;
 
 import com.example.peter.thekitchenmenu.domain.model.MeasurementModel;
+import com.example.peter.thekitchenmenu.domain.model.MeasurementModelBuilder;
 import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.MeasurementType;
 import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasure;
@@ -46,7 +47,7 @@ public class TestDataMeasurementModel {
     }
 
     //----------
-    public static MeasurementModel getNewInvalidTotalMeasurementOne() {
+    public static MeasurementModel getNewInvalidTotalUnitOne() {
         UnitOfMeasure unitOfMeasure = getSubtypeForValidNewMetric().getMeasurementClass();
         boolean isNumberOfItemsSet = unitOfMeasure.isNumberOfItemsSet(getEmptyModelFourPortions());
 
@@ -85,25 +86,10 @@ public class TestDataMeasurementModel {
         if (isTotalMeasurementOneSet)
             throwMeasurementOneException(isTotalMeasurementOneSet);
 
-        return new MeasurementModel(
-                unitOfMeasure.getMeasurementType(),
-                unitOfMeasure.getMeasurementSubtype(),
-                unitOfMeasure.getNumberOfUnits(),
-                unitOfMeasure.isConversionFactorEnabled(),
-                unitOfMeasure.getConversionFactor(),
-                unitOfMeasure.getItemBaseUnits(),
-                unitOfMeasure.getTotalBaseUnits(),
-                unitOfMeasure.getNumberOfItems(),
-                invalidTotalMeasurementOne,
-                unitOfMeasure.getItemUnitOne(),
-                unitOfMeasure.getTotalUnitTwo(),
-                unitOfMeasure.getItemUnitTwo(),
-                unitOfMeasure.isValidMeasurement(),
-                unitOfMeasure.getMinUnitOneInBaseUnits(),
-                unitOfMeasure.getMaxUnitOne(),
-                unitOfMeasure.getMaxUnitTwo(),
-                unitOfMeasure.getMaxUnitDigitWidths()
-        );
+        return MeasurementModelBuilder.
+                basedOnUnitOfMeasure(unitOfMeasure).
+                setTotalUnitOne(invalidTotalMeasurementOne).
+                build();
     }
 
     //-----------

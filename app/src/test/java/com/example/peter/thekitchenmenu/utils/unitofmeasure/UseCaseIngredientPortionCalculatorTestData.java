@@ -14,8 +14,8 @@ public class UseCaseIngredientPortionCalculatorTestData {
 
     public static MeasurementResult getResultNewInvalidTotalMeasurementOne() {
         return new MeasurementResult(
-                TestDataMeasurementModel.getNewInvalidTotalMeasurementOne(),
-                UseCaseIngredientPortionCalculator.ResultStatus.INVALID_TOTAL_MEASUREMENT_ONE
+                TestDataMeasurementModel.getNewInvalidTotalUnitOne(),
+                UseCaseIngredientPortionCalculator.ResultStatus.INVALID_TOTAL_UNIT_ONE
         );
     }
 
@@ -29,7 +29,7 @@ public class UseCaseIngredientPortionCalculatorTestData {
     public static MeasurementResult getResultNewInvalidTotalMeasurementTwo() {
         return new MeasurementResult(
                 TestDataMeasurementModel.getNewInvalidTotalMeasurementTwo(),
-                UseCaseIngredientPortionCalculator.ResultStatus.INVALID_TOTAL_MEASUREMENT_TWO
+                UseCaseIngredientPortionCalculator.ResultStatus.INVALID_TOTAL_UNIT_TWO
         );
     }
 
@@ -85,14 +85,14 @@ public class UseCaseIngredientPortionCalculatorTestData {
     public static MeasurementResult getExistingMetricInvalidTotalOneResult() {
         return new MeasurementResult(
                 TestDataMeasurementModel.getExistingMetricInvalidTotalOne(),
-                UseCaseIngredientPortionCalculator.ResultStatus.INVALID_TOTAL_MEASUREMENT_ONE
+                UseCaseIngredientPortionCalculator.ResultStatus.INVALID_TOTAL_UNIT_ONE
         );
     }
 
     public static MeasurementResult getExistingInvalidTotalTwoResult() {
         return new MeasurementResult(
                 TestDataMeasurementModel.getExistingMetricInvalidTotalTwo(),
-                UseCaseIngredientPortionCalculator.ResultStatus.INVALID_TOTAL_MEASUREMENT_TWO
+                UseCaseIngredientPortionCalculator.ResultStatus.INVALID_TOTAL_UNIT_TWO
         );
     }
 

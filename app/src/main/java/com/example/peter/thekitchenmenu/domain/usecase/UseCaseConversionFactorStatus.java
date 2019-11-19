@@ -20,7 +20,7 @@ public class UseCaseConversionFactorStatus
         DataSource.GetEntityCallback<IngredientEntity> {
 
     public enum UseCaseResult {
-        NO_DATA_AVAILABLE,
+        DATA_NOT_AVAILABLE,
         DISABLED,
         ENABLED_UNEDITABLE,
         ENABLED_EDITABLE_UNSET,
@@ -37,6 +37,11 @@ public class UseCaseConversionFactorStatus
     @Override
     protected void executeUseCase(RequestValues requestValues) {
         UnitOfMeasure unitOfMeasure = requestValues.getSubtype().getMeasurementClass();
+
+        if (requestValues.getIngredientId().equals(null) ||
+                requestValues.getIngredientId().isEmpty()) {
+            returnDataNotAvailable();
+        }
 
         if (!unitOfMeasure.isConversionFactorEnabled()) {
             returnResultDisabled();
@@ -62,8 +67,12 @@ public class UseCaseConversionFactorStatus
 
     @Override
     public void onDataNotAvailable() {
-        ResponseValues rV = new ResponseValues(UseCaseResult.NO_DATA_AVAILABLE);
-        getUseCaseCallback().onError(rV);
+        returnDataNotAvailable();
+    }
+
+    private void returnDataNotAvailable() {
+        ResponseValues values = new ResponseValues(UseCaseResult.DATA_NOT_AVAILABLE);
+        getUseCaseCallback().onError(values);
     }
 
     private void checkEditableStatus() {
@@ -79,8 +88,8 @@ public class UseCaseConversionFactorStatus
     }
 
     private void returnResultUneditable() {
-        ResponseValues rV  = new ResponseValues(UseCaseResult.ENABLED_UNEDITABLE);
-        getUseCaseCallback().onSuccess(rV);
+        ResponseValues values  = new ResponseValues(UseCaseResult.ENABLED_UNEDITABLE);
+        getUseCaseCallback().onSuccess(values);
     }
 
     private void hasConversionFactorBeenPreviouslySet() {
@@ -96,13 +105,13 @@ public class UseCaseConversionFactorStatus
     }
 
     private void returnResultEnabledEditablePreviouslySet() {
-        ResponseValues rV = new ResponseValues(UseCaseResult.ENABLED_EDITABLE_SET);
-        getUseCaseCallback().onSuccess(rV);
+        ResponseValues values = new ResponseValues(UseCaseResult.ENABLED_EDITABLE_SET);
+        getUseCaseCallback().onSuccess(values);
     }
 
     private void returnResponseEnabledEditableUnSet() {
-        ResponseValues rV = new ResponseValues(UseCaseResult.ENABLED_EDITABLE_UNSET);
-        getUseCaseCallback().onSuccess(rV);
+        ResponseValues values = new ResponseValues(UseCaseResult.ENABLED_EDITABLE_UNSET);
+        getUseCaseCallback().onSuccess(values);
     }
 
     public static final class RequestValues implements UseCase.RequestValues {
