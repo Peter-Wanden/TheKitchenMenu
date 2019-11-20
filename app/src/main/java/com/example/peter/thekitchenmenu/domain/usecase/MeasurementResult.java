@@ -12,10 +12,10 @@ public class MeasurementResult {
     private final MeasurementModel model;
 
     @NonNull
-    private final UseCaseIngredientPortionCalculator.ResultStatus result;
+    private final UseCasePortionCalculator.ResultStatus result;
 
     public MeasurementResult(@NonNull MeasurementModel model,
-                             @NonNull UseCaseIngredientPortionCalculator.ResultStatus result) {
+                             @NonNull UseCasePortionCalculator.ResultStatus result) {
         this.model = model;
         this.result = result;
     }
@@ -26,7 +26,7 @@ public class MeasurementResult {
     }
 
     @NonNull
-    public UseCaseIngredientPortionCalculator.ResultStatus getResult() {
+    public UseCasePortionCalculator.ResultStatus getResult() {
         return result;
     }
 

@@ -9,7 +9,7 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseConversionFactorStatus;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseIngredientPortionCalculator;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCasePortionCalculator;
 
 public class UseCaseFactory {
 
@@ -50,8 +50,8 @@ public class UseCaseFactory {
         return INSTANCE;
     }
 
-    public UseCaseIngredientPortionCalculator providePortionsUseCase() {
-        return new UseCaseIngredientPortionCalculator(
+    public UseCasePortionCalculator providePortionsUseCase() {
+        return new UseCasePortionCalculator(
                 portionsRepository,
                 recipeIngredientRepository,
                 ingredientRepository,

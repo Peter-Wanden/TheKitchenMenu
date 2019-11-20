@@ -1,12 +1,13 @@
 package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
+import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseConversionFactorStatus;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseScheduler;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.testdata.TestDataIngredientEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataUseCaseConversionFactorStatusRequestResponse;
 
@@ -65,7 +66,7 @@ public class UseCaseConversionFactorStatusTest {
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
-    private UseCaseHandlerMock handlerMock = new UseCaseHandlerMock(new UseCaseSchedulerMock());
+    private UseCaseHandler handler = new UseCaseHandler(new UseCaseSchedulerMock());
     @Mock
     RepositoryIngredient repoMock;
     @Captor
@@ -89,7 +90,7 @@ public class UseCaseConversionFactorStatusTest {
         String ingredientId = REQUEST_NO_DATA_AVAILABLE.getIngredientId();
         MeasurementSubtype subtype = REQUEST_NO_DATA_AVAILABLE.getSubtype();
         // Act
-        handlerMock.execute(SUT, getRequestValues(subtype, ingredientId), getResponseCallback());
+        handler.execute(SUT, getRequestValues(subtype, ingredientId), getResponseCallback());
         // Assert
         verify(repoMock).getById(eq(ingredientId), getEntityCallbackCaptor.capture());
         getEntityCallbackCaptor.getValue().onDataNotAvailable();
@@ -103,7 +104,7 @@ public class UseCaseConversionFactorStatusTest {
         String ingredientId = INGREDIENT_NEW_VALID_NAME_DESCRIPTION.getId();
         MeasurementSubtype subtype = REQUEST_DISABLED.getSubtype();
         // Act
-        handlerMock.execute(SUT, getRequestValues(subtype, ingredientId), getResponseCallback());
+        handler.execute(SUT, getRequestValues(subtype, ingredientId), getResponseCallback());
         // Assert
         verifyNoMoreInteractions(repoMock);
         assertEquals(RESPONSE_DISABLED, actualResponse);
@@ -115,7 +116,7 @@ public class UseCaseConversionFactorStatusTest {
         String ingredientId = INGREDIENT_VALID_FROM_ANOTHER_USER.getId();
         MeasurementSubtype subtype = REQUEST_ENABLED_UNEDITABLE.getSubtype();
         // Act
-        handlerMock.execute(SUT, getRequestValues(subtype, ingredientId), getResponseCallback());
+        handler.execute(SUT, getRequestValues(subtype, ingredientId), getResponseCallback());
         // Assert
         verifyRepoCalledWithIngredientValidFromAnotherUser();
         assertEquals(RESPONSE_ENABLED_UNEDITABLE, actualResponse);
@@ -127,7 +128,7 @@ public class UseCaseConversionFactorStatusTest {
         String ingredientId = INGREDIENT_NEW_VALID_WITH_CONVERSION_FACTOR_UNSET.getId();
         MeasurementSubtype subtype = REQUEST_ENABLED_EDITABLE_UNSET.getSubtype();
         // Act
-        handlerMock.execute(SUT, getRequestValues(subtype, ingredientId), getResponseCallback());
+        handler.execute(SUT, getRequestValues(subtype, ingredientId), getResponseCallback());
         // Assert
         verifyRepoCalledWithIngredientNewValidNameDescription();
         assertEquals(RESPONSE_ENABLED_EDITABLE_UNSET, actualResponse);
@@ -139,7 +140,7 @@ public class UseCaseConversionFactorStatusTest {
         String ingredientId = INGREDIENT_VALID_WITH_CONVERSION_FACTOR.getId();
         MeasurementSubtype subtype = REQUEST_ENABLED_EDITABLE_SET.getSubtype();
         // Act
-        handlerMock.execute(SUT, getRequestValues(subtype, ingredientId), getResponseCallback());
+        handler.execute(SUT, getRequestValues(subtype, ingredientId), getResponseCallback());
         verifyRepoCalledWithIngredientValidWithConversionFactor();
         // Assert
         assertEquals(RESPONSE_ENABLED_EDITABLE_SET, actualResponse);
@@ -185,77 +186,5 @@ public class UseCaseConversionFactorStatusTest {
     // endregion helper methods --------------------------------------------------------------------
 
     // region helper classes -----------------------------------------------------------------------
-    public class UseCaseHandlerMock {
-        private final UseCaseScheduler mUseCaseScheduler;
-
-        UseCaseHandlerMock(UseCaseScheduler useCaseScheduler) {
-            mUseCaseScheduler = useCaseScheduler;
-        }
-
-        <T extends UseCase.RequestValues, R extends UseCase.ResponseValues> void execute(
-                final UseCase<T, R> useCase, T requestValues, UseCase.UseCaseCallback<R> callback) {
-
-            useCase.setRequestValues(requestValues);
-            useCase.setUseCaseCallback(new UiCallbackWrapper(callback, this));
-
-            mUseCaseScheduler.execute(useCase::run);
-        }
-
-        public <V extends UseCase.ResponseValues> void notifyResponse(
-                final V response,
-                final UseCase.UseCaseCallback<V> useCaseCallback) {
-
-            mUseCaseScheduler.notifyResponse(response, useCaseCallback);
-        }
-
-        private <V extends UseCase.ResponseValues> void notifyError(
-                final V response,
-                final UseCase.UseCaseCallback<V> useCaseCallback) {
-
-            mUseCaseScheduler.onError(response, useCaseCallback);
-        }
-
-        private final class UiCallbackWrapper<V extends UseCase.ResponseValues> implements
-                UseCase.UseCaseCallback<V> {
-
-            private final UseCase.UseCaseCallback<V> mCallback;
-            private final UseCaseHandlerMock mUseCaseHandler;
-
-            public UiCallbackWrapper(UseCase.UseCaseCallback<V> callback,
-                                     UseCaseHandlerMock useCaseHandler) {
-                mCallback = callback;
-                mUseCaseHandler = useCaseHandler;
-            }
-
-            @Override
-            public void onSuccess(V response) {
-                mUseCaseHandler.notifyResponse(response, mCallback);
-            }
-
-            @Override
-            public void onError(V response) {
-                mUseCaseHandler.notifyError(response, mCallback);
-            }
-        }
-    }
-
-    public class UseCaseSchedulerMock implements UseCaseScheduler {
-        @Override
-        public void execute(Runnable runnable) {
-            runnable.run();
-        }
-
-        @Override
-        public <V extends UseCase.ResponseValues> void notifyResponse(
-                V response, UseCase.UseCaseCallback<V> useCaseCallback) {
-            useCaseCallback.onSuccess(response);
-        }
-
-        @Override
-        public <V extends UseCase.ResponseValues> void onError(
-                V response, UseCase.UseCaseCallback<V> useCaseCallback) {
-            useCaseCallback.onError(response);
-        }
-    }
     // endregion helper classes --------------------------------------------------------------------
 }

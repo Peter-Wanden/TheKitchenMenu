@@ -32,7 +32,7 @@ import com.example.peter.thekitchenmenu.ui.catalog.recipe.RecipeCatalogViewModel
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeEditorViewModel;
 import com.example.peter.thekitchenmenu.utils.TextValidationHandler;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseIngredientPortionCalculator;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCasePortionCalculator;
 
 public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory {
 
@@ -174,7 +174,7 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
         throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
     }
 
-    private UseCaseIngredientPortionCalculator getPortionsUseCase() {
+    private UseCasePortionCalculator getPortionsUseCase() {
         UseCaseFactory factory = UseCaseFactory.getInstance(application);
         return factory.providePortionsUseCase();
     }

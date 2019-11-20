@@ -16,21 +16,14 @@ import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasu
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 /**
  * Calculates the measurement of an ingredient for a single portion of a recipe.
  */
-public class UseCaseIngredientPortionCalculator
-        extends
-        UseCase<UseCaseIngredientPortionCalculator.RequestValues,
-                UseCaseIngredientPortionCalculator.ResponseValues> {
-
-    public interface UseCasePortionCallback {
-        void useCasePortionResult(MeasurementResult result);
-    }
+public class UseCasePortionCalculator extends
+        UseCase<UseCasePortionCalculator.RequestValues,
+                UseCasePortionCalculator.ResponseValues> {
 
     public enum ResultStatus {
         QUANTITY_DATA_NOT_AVAILABLE,
@@ -44,14 +37,11 @@ public class UseCaseIngredientPortionCalculator
         RESULT_OK
     }
 
-    private static final String TAG = "tkm-PortionsUseCase";
-
     private RepositoryRecipeIngredient recipeIngredientRepository;
     private RepositoryRecipePortions portionsRepository;
     private RepositoryIngredient ingredientRepository;
     private UniqueIdProvider idProvider;
     private TimeProvider timeProvider;
-    private List<UseCasePortionCallback> listeners = new ArrayList<>();
 
     private UnitOfMeasure unitOfMeasure = MeasurementSubtype.METRIC_MASS.getMeasurementClass();
     private boolean conversionFactorChanged;
@@ -74,11 +64,11 @@ public class UseCaseIngredientPortionCalculator
     private RecipeIngredientQuantityEntity quantityEntity;
     private IngredientEntity ingredientEntity;
 
-    public UseCaseIngredientPortionCalculator(RepositoryRecipePortions portionsRepository,
-                                              RepositoryRecipeIngredient recipeIngredientRepository,
-                                              RepositoryIngredient ingredientRepository,
-                                              UniqueIdProvider idProvider,
-                                              TimeProvider timeProvider) {
+    public UseCasePortionCalculator(RepositoryRecipePortions portionsRepository,
+                                    RepositoryRecipeIngredient recipeIngredientRepository,
+                                    RepositoryIngredient ingredientRepository,
+                                    UniqueIdProvider idProvider,
+                                    TimeProvider timeProvider) {
         this.portionsRepository = portionsRepository;
         this.recipeIngredientRepository = recipeIngredientRepository;
         this.ingredientRepository = ingredientRepository;
@@ -111,15 +101,7 @@ public class UseCaseIngredientPortionCalculator
         return !values.getRecipeIngredientId().isEmpty();
     }
 
-    public void registerListener(UseCasePortionCallback listener) {
-        listeners.add(listener);
-    }
-
-    public void unregisterListener(UseCasePortionCallback listener) {
-        listeners.remove(listener);
-    }
-
-    public void start(String recipeId, String ingredientId) {
+    private void start(String recipeId, String ingredientId) {
         this.recipeId = recipeId;
         this.ingredientId = ingredientId;
         quantityEntity = createNewRecipeIngredientQuantityEntity();
@@ -142,7 +124,7 @@ public class UseCaseIngredientPortionCalculator
         );
     }
 
-    public void start(String recipeIngredientId) {
+    private void start(String recipeIngredientId) {
         this.recipeIngredientId = recipeIngredientId;
         loadRecipeIngredient(recipeIngredientId);
     }
@@ -155,7 +137,7 @@ public class UseCaseIngredientPortionCalculator
                     public void onEntityLoaded(RecipeIngredientQuantityEntity quantityEntity) {
                         recipeId = quantityEntity.getRecipeId();
                         ingredientId = quantityEntity.getIngredientId();
-                        UseCaseIngredientPortionCalculator.this.quantityEntity = quantityEntity;
+                        UseCasePortionCalculator.this.quantityEntity = quantityEntity;
                         loadIngredient();
                     }
 
@@ -172,7 +154,7 @@ public class UseCaseIngredientPortionCalculator
                 new DataSource.GetEntityCallback<IngredientEntity>() {
                     @Override
                     public void onEntityLoaded(IngredientEntity ingredientEntity) {
-                        UseCaseIngredientPortionCalculator.this.ingredientEntity = ingredientEntity;
+                        UseCasePortionCalculator.this.ingredientEntity = ingredientEntity;
                         loadPortions();
                     }
 
@@ -228,7 +210,7 @@ public class UseCaseIngredientPortionCalculator
         updateExistingModel();
     }
 
-    public void processModel(MeasurementModel modelIn) {
+    private void processModel(MeasurementModel modelIn) {
         this.modelIn = modelIn;
         checkForChanges();
     }
@@ -329,14 +311,11 @@ public class UseCaseIngredientPortionCalculator
     private void returnResult() {
         saveIfValid();
         ResponseValues values = new ResponseValues(existingModel, getResultStatus());
-        MeasurementResult result = new MeasurementResult(existingModel, getResultStatus());
-
         resetResults();
 
         if (getUseCaseCallback() != null) {
             getUseCaseCallback().onSuccess(values);
         }
-        notifyListeners(result);
     }
 
     private double getConversionFactorResult() {
@@ -364,7 +343,6 @@ public class UseCaseIngredientPortionCalculator
         if (totalUnitOneChanged && !isTotalUnitOneSet) {
             return ResultStatus.INVALID_TOTAL_UNIT_ONE;
         }
-
         if (totalUnitTwoChanged && !isTotalUnitTwoSet) {
             return ResultStatus.INVALID_TOTAL_UNIT_TWO;
         }
@@ -384,13 +362,6 @@ public class UseCaseIngredientPortionCalculator
     private void saveIfValid() {
         if (quantityEntityHasChanged() && unitOfMeasure.isValidMeasurement()) {
             save(updatedRecipeIngredientEntity());
-        }
-
-    }
-
-    private void notifyListeners(MeasurementResult result) {
-        for (UseCasePortionCallback callback : listeners) {
-            callback.useCasePortionResult(result);
         }
     }
 
@@ -469,7 +440,7 @@ public class UseCaseIngredientPortionCalculator
 
     public static final class ResponseValues implements UseCase.ResponseValues {
         private MeasurementModel model;
-        private UseCaseIngredientPortionCalculator.ResultStatus resultStatus;
+        private UseCasePortionCalculator.ResultStatus resultStatus;
 
         public ResponseValues(MeasurementModel model, ResultStatus resultStatus) {
             this.model = model;
