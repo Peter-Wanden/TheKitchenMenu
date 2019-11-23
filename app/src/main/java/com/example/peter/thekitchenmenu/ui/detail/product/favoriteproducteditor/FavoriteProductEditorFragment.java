@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.FavoriteProductEditorFragmentBinding;
 import com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductEditorActivity;
-import com.example.peter.thekitchenmenu.utils.CurrencyInputWatcher;
+import com.example.peter.thekitchenmenu.ui.utils.CurrencyInputWatcher;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

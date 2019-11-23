@@ -48,18 +48,22 @@ public class RecipeIngredientListViewModel extends ViewModel {
         repositoryRecipeIngredient.getByRecipeId(
                 recipeId,
                 new DataSource.GetAllCallback<RecipeIngredientQuantityEntity>() {
-            @Override
-            public void onAllLoaded(List<RecipeIngredientQuantityEntity> recipeIngredients) {
-                hasIngredients.set(true);
-                RecipeIngredientListViewModel.this.recipeIngredients.clear();
-                RecipeIngredientListViewModel.this.recipeIngredients.addAll(recipeIngredients);
-            }
+                    @Override
+                    public void onAllLoaded(List<RecipeIngredientQuantityEntity> recipeIngredients) {
+                        hasIngredients.set(true);
+                        RecipeIngredientListViewModel.this.recipeIngredients.clear();
+                        RecipeIngredientListViewModel.this.recipeIngredients.addAll(recipeIngredients);
 
-            @Override
-            public void onDataNotAvailable() {
-                hasIngredients.set(false);
-            }
-        });
+                        for (RecipeIngredientQuantityEntity entity : recipeIngredients) {
+                            System.out.println("tkm-" + entity);
+                        }
+                    }
+
+                    @Override
+                    public void onDataNotAvailable() {
+                        hasIngredients.set(false);
+                    }
+                });
     }
 
     public void addIngredientButtonPressed() {

@@ -6,10 +6,10 @@ import com.example.peter.thekitchenmenu.domain.usecase.UseCasePortionCalculator.
 import static com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasureConstants.DEFAULT_MEASUREMENT_MODEL;
 import static com.example.peter.thekitchenmenu.domain.usecase.UseCasePortionCalculator.*;
 
-public class TestDataUseCaseIngredientPortionCalculatorRequestResponse {
+public class TestDataUseCasePortionCalculatorRequestResponse {
 
     private static String NO_RECIPE_ID = "";
-    private static String NO_INGREDIENT_ID;
+    private static String NO_INGREDIENT_ID = "";
     private static String NO_RECIPE_INGREDIENT_ID = "";
 
     public static RequestValues getRequestEmptyFourPortions() {
@@ -197,7 +197,6 @@ public class TestDataUseCaseIngredientPortionCalculatorRequestResponse {
                 TestDataRecipeIngredientQuantityEntity.getExistingValidImperialTwoSpoons().getId(),
                 TestDataMeasurementModel.getExistingImperialSpoonInvalidConversionFactor());
     }
-
     public static ResponseValues getResponseExistingImperialSpoonInvalidConversionFactor() {
         return new ResponseValues(
                 TestDataMeasurementModel.getExistingImperialSpoonInvalidConversionFactor(),

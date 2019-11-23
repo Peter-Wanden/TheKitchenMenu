@@ -23,6 +23,7 @@ public class IngredientEditorActivity
         implements AddEditIngredientNavigator {
 
     public static final int REQUEST_ADD_INGREDIENT = 1;
+    public static final int RESULT_ADD_INGREDIENT_OK = 2;
     private static final String EXTRA_INGREDIENT_ID = "EXTRA_INGREDIENT_ID";
     private IngredientEditorBinding binding;
     private IngredientEditorViewModel viewModel;
@@ -42,10 +43,11 @@ public class IngredientEditorActivity
     protected void onStart() {
         super.onStart();
 
-        if (getIntent().hasExtra(EXTRA_INGREDIENT_ID))
+        if (getIntent().hasExtra(EXTRA_INGREDIENT_ID)) {
             viewModel.start(getIntent().getStringExtra(EXTRA_INGREDIENT_ID));
-        else
+        } else {
             viewModel.start();
+        }
     }
 
     private void initialiseBindings() {
@@ -59,16 +61,19 @@ public class IngredientEditorActivity
 
     private void setUpActionBar() {
         ActionBar actionBar = getSupportActionBar();
-        if (actionBar == null)
+        if (actionBar == null) {
             return;
+        }
 
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
 
-        if (getIntent().hasExtra(EXTRA_INGREDIENT_ID))
+        if (getIntent().hasExtra(EXTRA_INGREDIENT_ID)) {
             actionBar.setTitle(R.string.activity_title_edit_ingredient);
-        else
+        }
+        else {
             actionBar.setTitle(R.string.activity_title_add_new_ingredient);
+        }
     }
 
     private void setupViewModels() {

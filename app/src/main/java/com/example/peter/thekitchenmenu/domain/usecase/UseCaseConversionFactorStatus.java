@@ -20,7 +20,7 @@ public class UseCaseConversionFactorStatus
         DataSource.GetEntityCallback<IngredientEntity> {
 
     public enum UseCaseResult {
-        DATA_NOT_AVAILABLE,
+        INGREDIENT_DATA_NOT_AVAILABLE,
         DISABLED,
         ENABLED_UNEDITABLE,
         ENABLED_EDITABLE_UNSET,
@@ -71,7 +71,7 @@ public class UseCaseConversionFactorStatus
     }
 
     private void returnDataNotAvailable() {
-        ResponseValues values = new ResponseValues(UseCaseResult.DATA_NOT_AVAILABLE);
+        ResponseValues values = new ResponseValues(UseCaseResult.INGREDIENT_DATA_NOT_AVAILABLE);
         getUseCaseCallback().onError(values);
     }
 

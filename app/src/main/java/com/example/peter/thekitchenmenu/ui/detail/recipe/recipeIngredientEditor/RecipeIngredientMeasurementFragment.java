@@ -2,6 +2,9 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SpinnerAdapter;
@@ -36,6 +39,7 @@ public class RecipeIngredientMeasurementFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
         binding = DataBindingUtil.inflate(
                 inflater,
                 R.layout.recipe_ingredient_editor_measurement,
@@ -46,6 +50,7 @@ public class RecipeIngredientMeasurementFragment extends Fragment {
         setViewModel();
         binding.setViewModel(viewModel);
 
+        setObservers();
         setupUnitOfMeasureSpinner();
 
         return binding.getRoot();
@@ -54,6 +59,16 @@ public class RecipeIngredientMeasurementFragment extends Fragment {
     public void setViewModel() {
         this.viewModel = RecipeIngredientEditorActivity.
                 obtainRecipeIngredientMeasurementViewModel(requireActivity());
+    }
+
+    private void setObservers() {
+        viewModel.getIsValidMeasurement().observe(getViewLifecycleOwner(), showMenu -> {
+            if (showMenu) {
+                setHasOptionsMenu(true);
+            } else {
+                setHasOptionsMenu(false);
+            }
+        });
     }
 
     private void setupUnitOfMeasureSpinner() {
@@ -162,5 +177,19 @@ public class RecipeIngredientMeasurementFragment extends Fragment {
 
     private String removeArrayBraces(String stringWithBrackets) {
         return stringWithBrackets.substring(1, stringWithBrackets.length() - 1);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_recipe_ingredient_measurement, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.menu_recipe_ingredient_editor_action_use) {
+            viewModel.donePressed();
+            return true;
+        }
+        return false;
     }
 }

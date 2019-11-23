@@ -118,7 +118,7 @@ public class UnitOfMeasureConstants {
             DEFAULT_UNIT_OF_MEASURE.getTotalUnitTwo(),
             DEFAULT_UNIT_OF_MEASURE.getItemUnitTwo(),
             DEFAULT_UNIT_OF_MEASURE.isValidMeasurement(),
-            DEFAULT_UNIT_OF_MEASURE.getMinUnitOneInBaseUnits(),
+            DEFAULT_UNIT_OF_MEASURE.getMinUnitOne(),
             DEFAULT_UNIT_OF_MEASURE.getItemUnitOne(),
             DEFAULT_UNIT_OF_MEASURE.getItemUnitTwo(),
             DEFAULT_UNIT_OF_MEASURE.getMaxUnitDigitWidths()

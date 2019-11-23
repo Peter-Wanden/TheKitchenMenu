@@ -8,7 +8,7 @@ import android.widget.EditText;
 import androidx.databinding.BindingAdapter;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.utils.DecimalDigitsInputFilter;
+import com.example.peter.thekitchenmenu.ui.utils.DecimalDigitsInputFilter;
 
 public class RecipeBindingAdapters {
 

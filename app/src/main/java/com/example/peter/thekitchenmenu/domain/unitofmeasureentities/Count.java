@@ -45,6 +45,11 @@ public class Count extends UnitOfMeasureAbstract {
     }
 
     @Override
+    public double getMinUnitOne() {
+        return smallestUnit;
+    }
+
+    @Override
     public Pair[] getMaxUnitDigitWidths() {
         // Calculates the max digit width of unit two
         int maximumUnitTwoValue = (int) (maxMeasurement / unitTwo);

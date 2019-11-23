@@ -11,7 +11,7 @@ import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
 import com.example.peter.thekitchenmenu.data.repository.DataSourceFavoriteProducts;
 import com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.product.productviewer.FavoriteProductViewerViewModel;
-import com.example.peter.thekitchenmenu.utils.TextValidationHandler;
+import com.example.peter.thekitchenmenu.ui.utils.TextValidationHandler;
 
 public class ViewModelFactoryFavoriteProduct extends ViewModelProvider.NewInstanceFactory {
 

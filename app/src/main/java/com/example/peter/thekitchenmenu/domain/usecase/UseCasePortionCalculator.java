@@ -340,11 +340,13 @@ public class UseCasePortionCalculator extends
         if (conversionFactorChanged && !isConversionFactorSet) {
             return ResultStatus.INVALID_CONVERSION_FACTOR;
         }
-        if (totalUnitOneChanged && !isTotalUnitOneSet) {
-            return ResultStatus.INVALID_TOTAL_UNIT_ONE;
-        }
-        if (totalUnitTwoChanged && !isTotalUnitTwoSet) {
-            return ResultStatus.INVALID_TOTAL_UNIT_TWO;
+        if (unitOfMeasure.getTotalBaseUnits() > 0) {
+            if (totalUnitOneChanged && !isTotalUnitOneSet) {
+                return ResultStatus.INVALID_TOTAL_UNIT_ONE;
+            }
+            if (totalUnitTwoChanged && !isTotalUnitTwoSet) {
+                return ResultStatus.INVALID_TOTAL_UNIT_TWO;
+            }
         }
         if (!unitOfMeasure.isValidMeasurement()) {
             return ResultStatus.INVALID_MEASUREMENT;
@@ -403,6 +405,7 @@ public class UseCasePortionCalculator extends
         recipeIngredientRepository.save(quantityEntity);
     }
 
+    // todo - this should only be accessible through interface
     public String getIngredientId() {
         return ingredientId;
     }
@@ -435,6 +438,16 @@ public class UseCasePortionCalculator extends
 
         public MeasurementModel getModel() {
             return model;
+        }
+
+        @Override
+        public String toString() {
+            return "RequestValues{" +
+                    "recipeId='" + recipeId + '\'' +
+                    ", ingredientId='" + ingredientId + '\'' +
+                    ", recipeIngredientId='" + recipeIngredientId + '\'' +
+                    ", model=" + model +
+                    '}';
         }
     }
 

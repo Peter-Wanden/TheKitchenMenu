@@ -97,7 +97,7 @@ public class MetricMassTest {
     public void getMinUnitOne_correctValueReturned() {
         // Arrange
         // Act
-        assertEquals(METRIC_MASS_MIN_MEASUREMENT, SUT.getMinUnitOneInBaseUnits(), DELTA);
+        assertEquals(METRIC_MASS_MIN_MEASUREMENT, SUT.getMinUnitOne(), DELTA);
         // Assert
     }
 

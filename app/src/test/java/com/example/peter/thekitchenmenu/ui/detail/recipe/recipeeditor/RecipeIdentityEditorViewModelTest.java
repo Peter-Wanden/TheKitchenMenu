@@ -8,6 +8,7 @@ import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeValidator;
+import com.example.peter.thekitchenmenu.ui.utils.TextValidationHandler;
 import com.example.peter.thekitchenmenu.utils.*;
 
 import org.junit.Before;
@@ -19,7 +20,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 
-import static com.example.peter.thekitchenmenu.utils.TextValidationHandler.VALIDATED;
+import static com.example.peter.thekitchenmenu.ui.utils.TextValidationHandler.VALIDATED;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 

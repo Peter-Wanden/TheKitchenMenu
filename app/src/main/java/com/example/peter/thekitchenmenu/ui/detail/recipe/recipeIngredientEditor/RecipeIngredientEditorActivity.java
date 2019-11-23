@@ -22,6 +22,8 @@ import com.example.peter.thekitchenmenu.utils.ActivityUtils;
 public class RecipeIngredientEditorActivity
         extends AppCompatActivity implements RecipeIngredientEditorNavigator {
 
+    public static final int REQUEST_ADD_RECIPE_INGREDIENT = 1;
+    public static final int RESULT_OK = 2;
     public static final String EXTRA_RECIPE_ID = "RECIPE_ID";
     public static final String EXTRA_INGREDIENT_ID = "INGREDIENT_ID";
     public static final String EXTRA_RECIPE_INGREDIENT_ID = "EXTRA_RECIPE_INGREDIENT_ID";
@@ -45,6 +47,29 @@ public class RecipeIngredientEditorActivity
     protected void onStart() {
         super.onStart();
         start();
+    }
+
+    private void start() {
+        Intent intent = getIntent();
+        if (intent.hasExtra(EXTRA_RECIPE_ID) && intent.hasExtra(EXTRA_INGREDIENT_ID)) {
+            String recipeId = intent.getStringExtra(EXTRA_RECIPE_ID);
+            String ingredientId = intent.getStringExtra(EXTRA_INGREDIENT_ID);
+
+            recipeNameAndPortionsViewModel.start(recipeId);
+            ingredientViewerViewModel.start(ingredientId);
+            measurementViewModel.start(recipeId, ingredientId);
+
+            setNavigator();
+
+        } else if (intent.hasExtra(EXTRA_RECIPE_ID) && intent.hasExtra(EXTRA_RECIPE_INGREDIENT_ID)) {
+            measurementViewModel.start(intent.getStringExtra(EXTRA_RECIPE_INGREDIENT_ID));
+
+            setNavigator();
+        }
+    }
+
+    private void setNavigator() {
+        measurementViewModel.setNavigator(this);
     }
 
     private void initialiseBindings() {
@@ -121,8 +146,8 @@ public class RecipeIngredientEditorActivity
 
     @Override
     public void donePressed() {
-        // setResult() - to go back to RecipeIngredientListActivity;
-        // finish
+        setResult(RESULT_OK);
+        finish();
     }
 
     @Override
@@ -137,20 +162,7 @@ public class RecipeIngredientEditorActivity
 
     @Override
     protected void onDestroy() {
+        measurementViewModel.onActivityDestroyed();
         super.onDestroy();
-    }
-
-    private void start() {
-        Intent intent = getIntent();
-        if (intent.hasExtra(EXTRA_RECIPE_ID) && intent.hasExtra(EXTRA_INGREDIENT_ID)) {
-            String recipeId = intent.getStringExtra(EXTRA_RECIPE_ID);
-            String ingredientId = intent.getStringExtra(EXTRA_INGREDIENT_ID);
-            recipeNameAndPortionsViewModel.start(recipeId);
-            ingredientViewerViewModel.start(ingredientId);
-            measurementViewModel.start(recipeId, ingredientId);
-
-        } else if (intent.hasExtra(EXTRA_RECIPE_ID) && intent.hasExtra(EXTRA_RECIPE_INGREDIENT_ID)) {
-            measurementViewModel.start(intent.getStringExtra(EXTRA_RECIPE_INGREDIENT_ID));
-        }
     }
 }

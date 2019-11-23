@@ -62,6 +62,6 @@ public class TestDataUseCaseConversionFactorStatusRequestResponse {
     }
     public static UseCaseConversionFactorStatus.ResponseValues getResponseForIngredientNotFound() {
         return new UseCaseConversionFactorStatus.ResponseValues(
-                UseCaseConversionFactorStatus.UseCaseResult.DATA_NOT_AVAILABLE);
+                UseCaseConversionFactorStatus.UseCaseResult.INGREDIENT_DATA_NOT_AVAILABLE);
     }
 }

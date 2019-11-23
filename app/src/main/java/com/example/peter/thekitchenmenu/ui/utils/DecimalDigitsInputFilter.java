@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.utils;
+package com.example.peter.thekitchenmenu.ui.utils;
 
 import android.text.InputFilter;
 import android.text.Spanned;

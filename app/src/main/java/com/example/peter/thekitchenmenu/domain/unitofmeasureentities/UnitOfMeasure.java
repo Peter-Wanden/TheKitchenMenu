@@ -37,7 +37,7 @@ public interface UnitOfMeasure {
     boolean isItemUnitTwoSet(int itemUnitTwo);
 
     boolean isValidMeasurement();
-    double getMinUnitOneInBaseUnits();
+    double getMinUnitOne();
     double getMaxUnitOne();
     int getMaxUnitTwo();
     Pair[] getMaxUnitDigitWidths();

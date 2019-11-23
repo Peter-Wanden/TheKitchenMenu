@@ -10,11 +10,11 @@ import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
-import com.example.peter.thekitchenmenu.utils.TextValidationHandler;
+import com.example.peter.thekitchenmenu.ui.utils.TextValidationHandler;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 
 import static com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidation.*;
-import static com.example.peter.thekitchenmenu.utils.TextValidationHandler.*;
+import static com.example.peter.thekitchenmenu.ui.utils.TextValidationHandler.*;
 
 public class RecipeIdentityEditorViewModel
         extends

@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.utils;
+package com.example.peter.thekitchenmenu.ui.bindingadapters;
 
 import androidx.databinding.InverseMethod;
 

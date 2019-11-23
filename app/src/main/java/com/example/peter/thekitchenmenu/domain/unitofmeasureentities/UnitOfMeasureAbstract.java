@@ -371,12 +371,13 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     public boolean isValidMeasurement() {
         return (totalBaseUnits >= minMeasurement &&
                 totalBaseUnits <= maxMeasurement &&
-                numberOfItems > 0);
+                numberOfItems >= UnitOfMeasureConstants.MIN_NUMBER_OF_ITEMS &&
+                isConversionFactorWithinBounds(conversionFactor));
     }
 
     @Override
-    public double getMinUnitOneInBaseUnits() {
-        return smallestUnit;
+    public double getMinUnitOne() {
+        return roundDecimal(getUnitOneFromBaseUnits(smallestUnit));
     }
 
     @Override

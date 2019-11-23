@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui;
+package com.example.peter.thekitchenmenu.ui.bindingadapters;
 
 import android.widget.EditText;
 

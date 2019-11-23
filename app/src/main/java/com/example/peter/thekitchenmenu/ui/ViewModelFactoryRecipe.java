@@ -18,6 +18,7 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseConversionFactorStatus;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.ui.catalog.recipe.RecipeListDataInteractor;
+import com.example.peter.thekitchenmenu.ui.detail.common.MeasurementErrorMessageMaker;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeCourseEditorViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeDurationEditorViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeIdentityEditorViewModel;
@@ -26,11 +27,11 @@ import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipePort
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidator;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist.RecipeNameAndPortionsViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist.RecipeIngredientListViewModel;
-import com.example.peter.thekitchenmenu.utils.NumberFormatter;
+import com.example.peter.thekitchenmenu.ui.utils.NumberFormatter;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.ui.catalog.recipe.RecipeCatalogViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeEditorViewModel;
-import com.example.peter.thekitchenmenu.utils.TextValidationHandler;
+import com.example.peter.thekitchenmenu.ui.utils.TextValidationHandler;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCasePortionCalculator;
 
@@ -155,7 +156,9 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
                     getPortionsUseCase(),
                     getConversionFactorStatusUseCase(),
                     application.getResources(),
-                    new NumberFormatter(application.getResources()));
+                    new NumberFormatter(application.getResources()),
+                    new MeasurementErrorMessageMaker(application.getResources(),
+                            new NumberFormatter(application.getResources())));
 
         } else if (modelClass.isAssignableFrom(RecipeNameAndPortionsViewModel.class)) {
             // noinspection unchecked

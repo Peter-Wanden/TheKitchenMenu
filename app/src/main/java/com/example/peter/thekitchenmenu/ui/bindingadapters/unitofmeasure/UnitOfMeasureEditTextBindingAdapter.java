@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.utils;
+package com.example.peter.thekitchenmenu.ui.bindingadapters.unitofmeasure;
 
 import android.text.InputFilter;
 import android.widget.EditText;
@@ -6,7 +6,7 @@ import android.widget.EditText;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasure;
-import com.example.peter.thekitchenmenu.utils.DecimalDigitsInputFilter;
+import com.example.peter.thekitchenmenu.ui.utils.DecimalDigitsInputFilter;
 
 import androidx.core.util.Pair;
 import androidx.databinding.BindingAdapter;
@@ -15,8 +15,6 @@ import static android.text.InputType.TYPE_CLASS_NUMBER;
 import static android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL;
 
 public class UnitOfMeasureEditTextBindingAdapter {
-
-    private static final String TAG = "tkm-EditTextAdapter";
 
     @BindingAdapter(value = {"setUpEditTextForSubtypeSelected"})
     public static void setUpEditTextForSubtypeSelected(EditText editText,

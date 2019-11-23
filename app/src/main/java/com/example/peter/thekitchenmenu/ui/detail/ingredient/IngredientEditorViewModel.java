@@ -13,12 +13,12 @@ import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
-import com.example.peter.thekitchenmenu.utils.TextValidationHandler;
+import com.example.peter.thekitchenmenu.ui.utils.TextValidationHandler;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasureConstants;
 
-import static com.example.peter.thekitchenmenu.utils.TextValidationHandler.VALIDATED;
+import static com.example.peter.thekitchenmenu.ui.utils.TextValidationHandler.VALIDATED;
 
 public class IngredientEditorViewModel
         extends ViewModel

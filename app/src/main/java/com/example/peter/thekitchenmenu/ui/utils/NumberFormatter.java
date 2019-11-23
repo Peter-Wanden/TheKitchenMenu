@@ -1,33 +1,35 @@
-package com.example.peter.thekitchenmenu.utils;
+package com.example.peter.thekitchenmenu.ui.utils;
 
 import android.content.res.Resources;
 import android.os.Build;
 
-import androidx.databinding.ObservableField;
-
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.text.ParseException;
 import java.util.Locale;
 
-public class ParseIntegerFromObservableHandler {
+public class NumberFormatter {
 
     private Resources resources;
+    private NumberFormat numberFormat;
 
-    public int parseInt(Resources resources, ObservableField<String> observable, int oldValue) {
+    public NumberFormatter(Resources resources) {
         this.resources = resources;
-        NumberFormat numberformat = getNumberFormat();
-
-        try {
-            String intInObservable = observable.get();
-            return numberformat.parse(intInObservable).intValue();
-
-        } catch (ParseException e) {
-            return oldValue;
-        }
+        numberFormat = getNumberFormat();
     }
 
+    public String formatDecimalForDisplay(double numberToFormat) {
+        if (numberToFormat == 0) return "";
+        return numberFormat.format(numberToFormat);
+    }
+
+    public String formatIntegerForDisplay(int numberToFormat) {
+        if (numberToFormat == 0) return "";
+        return numberFormat.format(numberToFormat);
+    }
+
+    @SuppressWarnings("deprecation")
     private NumberFormat getNumberFormat() {
+
         Locale locale;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

@@ -2,6 +2,7 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,6 +28,7 @@ public class RecipeIngredientListActivity
     private RecipeIngredientListActivityBinding binding;
     private RecipeNameAndPortionsViewModel nameAndPortionsViewModel;
     private RecipeIngredientListViewModel recipeIngredientListViewModel;
+    private String recipeId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -102,7 +104,7 @@ public class RecipeIngredientListActivity
     }
 
     private void start() {
-        String recipeId = getIntent().getStringExtra(EXTRA_RECIPE_ID);
+        recipeId = getIntent().getStringExtra(EXTRA_RECIPE_ID);
         nameAndPortionsViewModel.start(recipeId);
         recipeIngredientListViewModel.start(recipeId);
     }
@@ -111,7 +113,7 @@ public class RecipeIngredientListActivity
     public void addRecipeIngredient(String recipeId) {
         Intent intent = new Intent(this, IngredientEditorActivity.class);
         intent.putExtra(RecipeIngredientEditorActivity.EXTRA_RECIPE_ID, recipeId);
-        startActivityForResult(intent, IngredientEditorActivity.REQUEST_ADD_INGREDIENT);
+        startActivityForResult(intent, RecipeIngredientEditorActivity.REQUEST_ADD_RECIPE_INGREDIENT);
     }
 
     @Override
@@ -128,5 +130,16 @@ public class RecipeIngredientListActivity
     @Override
     public void deleteIngredient(String ingredientId) {
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        System.out.println("tkm-RecipeIngredientListActivity: requestCode=" + requestCode + " resultCode=" + resultCode);
+        if (requestCode == RecipeIngredientEditorActivity.REQUEST_ADD_RECIPE_INGREDIENT) {
+            if (requestCode == RecipeIngredientEditorActivity.RESULT_OK) {
+                recipeIngredientListViewModel.start(recipeId);
+            }
+        }
     }
 }

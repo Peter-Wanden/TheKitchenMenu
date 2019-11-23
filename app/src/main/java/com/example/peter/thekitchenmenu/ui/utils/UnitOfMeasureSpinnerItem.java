@@ -1,7 +1,5 @@
 package com.example.peter.thekitchenmenu.ui.utils;
 
-import com.example.peter.thekitchenmenu.ui.utils.SpinnerItemType;
-
 public class UnitOfMeasureSpinnerItem {
 
     private SpinnerItemType type;

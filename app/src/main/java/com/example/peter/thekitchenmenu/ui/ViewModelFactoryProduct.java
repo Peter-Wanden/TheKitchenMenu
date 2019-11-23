@@ -15,7 +15,7 @@ import com.example.peter.thekitchenmenu.ui.catalog.product.ProductCatalogViewMod
 import com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductEditorViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductIdentityViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.product.productviewer.ProductViewerViewModel;
-import com.example.peter.thekitchenmenu.utils.TextValidationHandler;
+import com.example.peter.thekitchenmenu.ui.utils.TextValidationHandler;
 
 public class ViewModelFactoryProduct extends ViewModelProvider.NewInstanceFactory {
 

@@ -64,7 +64,7 @@ public class MeasurementModelBuilder {
                 setTotalUnitTwo(unitOfMeasure.getTotalUnitTwo()).
                 setItemUnitTwo(unitOfMeasure.getItemUnitTwo()).
                 setIsValidMeasurement(unitOfMeasure.isValidMeasurement()).
-                setMinUnitOne(unitOfMeasure.getMinUnitOneInBaseUnits()).
+                setMinUnitOne(unitOfMeasure.getMinUnitOne()).
                 setMaxUnitOne(unitOfMeasure.getMaxUnitOne()).
                 setMaxUnitTwo(unitOfMeasure.getMaxUnitTwo()).
                 setMaxUnitDigitWidths(unitOfMeasure.getMaxUnitDigitWidths());
