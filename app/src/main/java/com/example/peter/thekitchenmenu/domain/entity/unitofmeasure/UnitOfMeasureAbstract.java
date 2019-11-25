@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.unitofmeasureentities;
+package com.example.peter.thekitchenmenu.domain.entity.unitofmeasure;
 
 import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
@@ -7,7 +7,7 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
-import static com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasureAbstract.LastMeasurementUpdated.*;
+import static com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureAbstract.LastMeasurementUpdated.*;
 
 public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
 

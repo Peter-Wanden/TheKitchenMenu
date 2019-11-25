@@ -1,15 +1,10 @@
 package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist;
 
-import android.content.Context;
-
 import androidx.annotation.Nullable;
 import androidx.databinding.ObservableField;
 import androidx.lifecycle.ViewModel;
-
-import com.example.peter.thekitchenmenu.app.Constants;
-import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientQuantityEntity;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
+import com.example.peter.thekitchenmenu.domain.usecase.RecipeIngredientListItemModel;
+import com.example.peter.thekitchenmenu.ui.bindingadapters.unitofmeasure.MeasurementToStringFormatter;
 
 import java.lang.ref.WeakReference;
 
@@ -18,48 +13,50 @@ public class RecipeIngredientListItemViewModel
 
     @Nullable
     private WeakReference<RecipeIngredientListItemNavigator> navigator;
-    private RepositoryRecipeIngredient repositoryRecipeIngredient;
-    private RepositoryIngredient repositoryIngredient;
+    private MeasurementToStringFormatter formatter;
 
-    private final ObservableField<RecipeIngredientQuantityEntity> recipeIngredientObservable =
-            new ObservableField<>();
+    private RecipeIngredientListItemModel listItemModel;
+
     public final ObservableField<String> ingredientNameObservable = new ObservableField<>();
     public final ObservableField<String> ingredientMeasurementObservable = new ObservableField<>();
-    public final ObservableField<String> ingredientMeasurementUnitObservable = new ObservableField<>();
 
-    private RecipeIngredientQuantityEntity ingredientEntity = new RecipeIngredientQuantityEntity(
-            "id",
-            "recipeId",
-            "ingredientId",
-            "productId",
-            1000,
-            0,
-            Constants.getUserId().getValue(),
-            10L,
-            10L
-    );
-
-
-    public RecipeIngredientListItemViewModel(Context context,
-                                             RepositoryRecipeIngredient repositoryRecipeIngredient,
-                                             RepositoryIngredient repositoryIngredient) {
-        this.repositoryRecipeIngredient = repositoryRecipeIngredient;
-        this.repositoryIngredient = repositoryIngredient;
+    public RecipeIngredientListItemViewModel(MeasurementToStringFormatter formatter) {
+        this.formatter = formatter;
     }
 
     public void setNavigator(RecipeIngredientListItemNavigator navigator) {
         this.navigator = new WeakReference<>(navigator);
     }
 
-    public void setRecipeIngredient(RecipeIngredientQuantityEntity recipeIngredient) {
-        recipeIngredientObservable.set(recipeIngredient);
+    void setListItemModel(RecipeIngredientListItemModel listItemModel) {
+        this.listItemModel = listItemModel;
+        setResultsToDisplay();
     }
 
-    public void start(String recipeId) {
-
+    private void setResultsToDisplay() {
+        ingredientNameObservable.set(listItemModel.getIngredientName());
+        ingredientMeasurementObservable.set(
+                formatter.formatMeasurement(listItemModel.getMeasurementModel()));
     }
 
     public void deleteIngredientClicked() {
+        if (listItemModel == null) {
+            // Click happened before recipe ingredient loaded, no-op
+            return;
+        }
 
+        if (navigator != null && navigator.get() != null) {
+            navigator.get().deleteRecipeIngredient(listItemModel.getRecipeIngredientId());
+        }
+    }
+
+    public void editRecipeIngredient() {
+        if (listItemModel == null) {
+            return;
+        }
+
+        if (navigator != null && navigator.get() != null) {
+            navigator.get().editRecipeIngredient(listItemModel.getRecipeIngredientId());
+        }
     }
 }

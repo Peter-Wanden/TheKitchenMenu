@@ -1,6 +1,9 @@
-package com.example.peter.thekitchenmenu.domain.unitofmeasureentities;
+package com.example.peter.thekitchenmenu.domain.entity.unitofmeasure;
 
 import androidx.core.util.Pair;
+
+import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
+import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementType;
 
 public interface UnitOfMeasure {
 

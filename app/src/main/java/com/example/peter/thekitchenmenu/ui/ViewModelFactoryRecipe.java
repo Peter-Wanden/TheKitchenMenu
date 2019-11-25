@@ -17,6 +17,8 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredie
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseConversionFactorStatus;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseRecipeIngredientList;
+import com.example.peter.thekitchenmenu.ui.bindingadapters.unitofmeasure.MeasurementToStringFormatter;
 import com.example.peter.thekitchenmenu.ui.catalog.recipe.RecipeListDataInteractor;
 import com.example.peter.thekitchenmenu.ui.detail.common.MeasurementErrorMessageMaker;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeCourseEditorViewModel;
@@ -25,6 +27,7 @@ import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeIden
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor.RecipeIngredientMeasurementViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipePortionsEditorViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidator;
+import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist.RecipeIngredientListItemViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist.RecipeNameAndPortionsViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist.RecipeIngredientListViewModel;
 import com.example.peter.thekitchenmenu.ui.utils.NumberFormatter;
@@ -109,8 +112,8 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
                     new RecipeListDataInteractor(
                             recipeIdentityRepository,
                             recipeDurationRepository
-                    ));
-
+                    )
+            );
         } else if (modelClass.isAssignableFrom(RecipeEditorViewModel.class)) {
             //noinspection unchecked
             return (T) new RecipeEditorViewModel(
@@ -118,37 +121,37 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
                     recipeRepository,
                     new UniqueIdProvider(),
                     application.getResources(),
-                    new RecipeValidator());
-
+                    new RecipeValidator()
+            );
         } else if (modelClass.isAssignableFrom(RecipeIdentityEditorViewModel.class)) {
             //noinspection unchecked
             return (T) new RecipeIdentityEditorViewModel(
                     recipeIdentityRepository,
                     new TimeProvider(),
                     application.getResources(),
-                    new TextValidationHandler());
-
+                    new TextValidationHandler()
+            );
         } else if (modelClass.isAssignableFrom(RecipeCourseEditorViewModel.class)) {
             //noinspection unchecked
             return (T) new RecipeCourseEditorViewModel(
                     recipeCourseRepository,
-                    new UniqueIdProvider());
-
+                    new UniqueIdProvider()
+            );
         } else if (modelClass.isAssignableFrom(RecipeDurationEditorViewModel.class)) {
             // noinspection unchecked
             return (T) new RecipeDurationEditorViewModel(
                     recipeDurationRepository,
                     application.getResources(),
-                    new TimeProvider());
-
+                    new TimeProvider()
+            );
         } else if (modelClass.isAssignableFrom(RecipePortionsEditorViewModel.class)) {
             // noinspection unchecked
             return (T) new RecipePortionsEditorViewModel(
                     recipePortionsRepository,
                     new TimeProvider(),
                     new UniqueIdProvider(),
-                    application.getResources());
-
+                    application.getResources()
+            );
         } else if (modelClass.isAssignableFrom(RecipeIngredientMeasurementViewModel.class)) {
             // noinspection unchecked
             return (T) new RecipeIngredientMeasurementViewModel(
@@ -158,22 +161,26 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
                     application.getResources(),
                     new NumberFormatter(application.getResources()),
                     new MeasurementErrorMessageMaker(application.getResources(),
-                            new NumberFormatter(application.getResources())));
-
+                            new NumberFormatter(application.getResources()))
+            );
         } else if (modelClass.isAssignableFrom(RecipeNameAndPortionsViewModel.class)) {
             // noinspection unchecked
             return (T) new RecipeNameAndPortionsViewModel(
                     recipeIdentityRepository,
-                    recipePortionsRepository);
-
+                    recipePortionsRepository
+            );
         } else if (modelClass.isAssignableFrom(RecipeIngredientListViewModel.class)) {
             // noinspection unchecked
             return (T) new RecipeIngredientListViewModel(
-                    recipeIngredientRepository,
-                    application.getApplicationContext()
+                    UseCaseHandler.getInstance(),
+                    getRecipeIngredientListUseCase()
+            );
+        } else if (modelClass.isAssignableFrom(RecipeIngredientListItemViewModel.class)) {
+            // noinspection unchecked
+            return (T) new RecipeIngredientListItemViewModel(
+                    new MeasurementToStringFormatter(application.getResources())
             );
         }
-
         throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
     }
 
@@ -185,5 +192,10 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
     private UseCaseConversionFactorStatus getConversionFactorStatusUseCase() {
         UseCaseFactory factory = UseCaseFactory.getInstance(application);
         return factory.provideConversionFactorUseCase();
+    }
+
+    private UseCaseRecipeIngredientList getRecipeIngredientListUseCase() {
+        UseCaseFactory factory = UseCaseFactory.getInstance(application);
+        return factory.provideRecipeIngredientListUseCase();
     }
 }

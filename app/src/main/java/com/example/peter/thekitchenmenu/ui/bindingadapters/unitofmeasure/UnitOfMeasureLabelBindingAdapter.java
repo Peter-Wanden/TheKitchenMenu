@@ -5,8 +5,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.MeasurementSubtype;
-import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasure;
+import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
+import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasure;
 
 import androidx.databinding.BindingAdapter;
 

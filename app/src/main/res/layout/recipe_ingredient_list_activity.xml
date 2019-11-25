@@ -9,16 +9,24 @@
         <variable
             name="nameAndPortions"
             type="com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist.RecipeNameAndPortionsViewModel" />
+        <variable
+            name="viewModel"
+            type="com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist.RecipeIngredientListViewModel" />
     </data>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
         <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/recipe_ingredient_list_app_bar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            bind:layout_constraintTop_toTopOf="parent"
+            bind:layout_constraintStart_toStartOf="parent"
+            bind:layout_constraintEnd_toEndOf="parent"
+            >
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -31,10 +39,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginTop="8dp"
             android:padding="4dp"
+            android:layout_gravity="center"
             android:text="@string/recipe_ingredient_list_header"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            bind:layout_constraintTop_toBottomOf="@id/recipe_ingredient_list_app_bar"
+            bind:layout_constraintStart_toStartOf="parent"
+            bind:layout_constraintEnd_toEndOf="parent"
+            />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/recipeName"
@@ -48,22 +62,45 @@
             android:layout_marginBottom="4dp"
             android:gravity="center"
             android:text="@{nameAndPortions.recipeTitleObservable}"
+            bind:layout_constraintStart_toStartOf="parent"
+            bind:layout_constraintEnd_toEndOf="parent"
+            bind:layout_constraintTop_toBottomOf="@id/ingredientsForLabel"
             tools:text="Halloumi &amp; Mediterranean Vegetables" />
 
         <include
             android:id="@+id/portionInformation"
             layout="@layout/recipe_portions_view"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"
-            bind:nameAndPortions="@{nameAndPortions}"/>
+            bind:nameAndPortions="@{nameAndPortions}"
+            bind:layout_constraintTop_toBottomOf="@id/recipeName"
+            bind:layout_constraintStart_toStartOf="parent"
+            bind:layout_constraintEnd_toEndOf="parent"
+            />
 
         <FrameLayout
             android:id="@+id/recipeIngredientListContentFrame"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            bind:layout_constraintTop_toBottomOf="@id/portionInformation"
+            bind:layout_constraintBottom_toTopOf="@id/addIngredientButton"
+            bind:layout_constraintStart_toStartOf="parent"
+            bind:layout_constraintEnd_toEndOf="parent"
+            android:elevation="4dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/addIngredientButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_ingredient"
+            android:onClick="@{() -> viewModel.addIngredientButtonPressed()}"
+            bind:layout_constraintBottom_toBottomOf="parent"
+            bind:layout_constraintStart_toStartOf="parent"
+            bind:layout_constraintEnd_toEndOf="parent"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

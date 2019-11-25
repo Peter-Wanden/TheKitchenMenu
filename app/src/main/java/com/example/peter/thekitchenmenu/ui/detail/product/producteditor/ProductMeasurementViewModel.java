@@ -5,8 +5,8 @@ import android.app.Application;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
-import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.MeasurementSubtype;
-import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasure;
+import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
+import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasure;
 import com.example.peter.thekitchenmenu.ui.ObservableAndroidViewModel;
 
 import androidx.annotation.NonNull;

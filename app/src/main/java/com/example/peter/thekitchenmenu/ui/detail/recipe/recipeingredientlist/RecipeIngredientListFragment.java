@@ -1,5 +1,6 @@
 package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,12 +14,10 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientQuantityEntity;
-import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.databinding.RecipeIngredientListFragmentBinding;
 import com.example.peter.thekitchenmenu.databinding.RecipeIngredientListItemBinding;
+import com.example.peter.thekitchenmenu.domain.usecase.RecipeIngredientListItemModel;
+import com.example.peter.thekitchenmenu.ui.bindingadapters.unitofmeasure.MeasurementToStringFormatter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,11 +80,8 @@ public class RecipeIngredientListFragment extends Fragment {
 
         adapter = new RecipeIngredientListAdapter(
                 new ArrayList<>(0),
-                (RecipeIngredientListActivity) getActivity(),
-                DatabaseInjection.provideRecipeIngredientDataSource(
-                        getContext().getApplicationContext()),
-                DatabaseInjection.provideIngredientDataSource(
-                        getContext().getApplicationContext()));
+                (RecipeIngredientListActivity) getActivity());
+
         listView.setAdapter(adapter);
     }
 
@@ -93,29 +89,23 @@ public class RecipeIngredientListFragment extends Fragment {
 
         @Nullable
         private RecipeIngredientListItemNavigator navigator;
-        private List<RecipeIngredientQuantityEntity> recipeIngredients;
-        private RepositoryRecipeIngredient repositoryRecipeIngredient;
-        private RepositoryIngredient repositoryIngredient;
+        private List<RecipeIngredientListItemModel> recipeIngredients;
 
-        RecipeIngredientListAdapter(List<RecipeIngredientQuantityEntity> recipeIngredients,
-                                           @Nullable RecipeIngredientListItemNavigator navigator,
-                                           RepositoryRecipeIngredient repositoryRecipeIngredient,
-                                           RepositoryIngredient repositoryIngredient) {
+        RecipeIngredientListAdapter(List<RecipeIngredientListItemModel> recipeIngredientList,
+                                    @Nullable RecipeIngredientListItemNavigator navigator) {
             this.navigator = navigator;
-            this.repositoryRecipeIngredient = repositoryRecipeIngredient;
-            this.repositoryIngredient = repositoryIngredient;
-            setList(recipeIngredients);
+            setList(recipeIngredientList);
         }
 
         public void onDestroy() {
             navigator = null;
         }
 
-        void replaceData(List<RecipeIngredientQuantityEntity> ingredientList) {
+        void replaceData(List<RecipeIngredientListItemModel> ingredientList) {
             setList(ingredientList);
         }
 
-        private void setList(List<RecipeIngredientQuantityEntity> recipeIngredients) {
+        private void setList(List<RecipeIngredientListItemModel> recipeIngredients) {
             this.recipeIngredients = recipeIngredients;
             notifyDataSetChanged();
         }
@@ -126,7 +116,7 @@ public class RecipeIngredientListFragment extends Fragment {
         }
 
         @Override
-        public RecipeIngredientQuantityEntity getItem(int i) {
+        public RecipeIngredientListItemModel getItem(int i) {
             return recipeIngredients.get(i);
         }
 
@@ -137,8 +127,9 @@ public class RecipeIngredientListFragment extends Fragment {
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
-            RecipeIngredientQuantityEntity recipeIngredient = getItem(i);
+            RecipeIngredientListItemModel recipeIngredient = getItem(i);
             RecipeIngredientListItemBinding binding;
+
             if (view == null) {
                 LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
                 binding = RecipeIngredientListItemBinding.inflate(
@@ -149,15 +140,15 @@ public class RecipeIngredientListFragment extends Fragment {
                 binding = DataBindingUtil.getBinding(view);
             }
 
+            Resources resources = binding.getRoot().getContext().getResources();
+
             final RecipeIngredientListItemViewModel viewModel =
                     new RecipeIngredientListItemViewModel(
-                            viewGroup.getContext().getApplicationContext(),
-                            repositoryRecipeIngredient,
-                            repositoryIngredient);
+                            new MeasurementToStringFormatter(resources));
 
             viewModel.setNavigator(navigator);
             binding.setViewModel(viewModel);
-            viewModel.setRecipeIngredient(recipeIngredient);
+            viewModel.setListItemModel(recipeIngredient);
             return binding.getRoot();
         }
     }

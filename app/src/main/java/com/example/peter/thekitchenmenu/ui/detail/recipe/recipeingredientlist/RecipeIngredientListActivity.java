@@ -67,6 +67,7 @@ public class RecipeIngredientListActivity
 
         recipeIngredientListViewModel = obtainRecipeIngredientListViewModel(this);
         recipeIngredientListViewModel.setNavigator(this);
+        binding.setViewModel(recipeIngredientListViewModel);
     }
 
     static RecipeNameAndPortionsViewModel obtainRecipeNameAndPortionsViewModel(
@@ -123,19 +124,18 @@ public class RecipeIngredientListActivity
     }
 
     @Override
-    public void editIngredient(String ingredientId) {
+    public void editRecipeIngredient(String ingredientId) {
 
     }
 
     @Override
-    public void deleteIngredient(String ingredientId) {
+    public void deleteRecipeIngredient(String ingredientId) {
 
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        System.out.println("tkm-RecipeIngredientListActivity: requestCode=" + requestCode + " resultCode=" + resultCode);
         if (requestCode == RecipeIngredientEditorActivity.REQUEST_ADD_RECIPE_INGREDIENT) {
             if (requestCode == RecipeIngredientEditorActivity.RESULT_OK) {
                 recipeIngredientListViewModel.start(recipeId);

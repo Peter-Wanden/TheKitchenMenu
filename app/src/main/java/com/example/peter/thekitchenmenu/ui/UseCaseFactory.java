@@ -7,6 +7,7 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseConversionFactorStatus;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseRecipeIngredientList;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCasePortionCalculator;
@@ -63,6 +64,14 @@ public class UseCaseFactory {
     public UseCaseConversionFactorStatus provideConversionFactorUseCase() {
         return new UseCaseConversionFactorStatus(
                 ingredientRepository
+        );
+    }
+
+    public UseCaseRecipeIngredientList provideRecipeIngredientListUseCase() {
+        return new UseCaseRecipeIngredientList(
+                recipeIngredientRepository,
+                ingredientRepository,
+                portionsRepository
         );
     }
 }

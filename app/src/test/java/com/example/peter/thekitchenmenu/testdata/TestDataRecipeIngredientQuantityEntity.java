@@ -2,10 +2,10 @@ package com.example.peter.thekitchenmenu.testdata;
 
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientQuantityEntity;
-import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.MeasurementSubtype;
-import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasure;
+import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
+import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasure;
 
-import static com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasureConstants.*;
+import static com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants.*;
 
 public class TestDataRecipeIngredientQuantityEntity {
 

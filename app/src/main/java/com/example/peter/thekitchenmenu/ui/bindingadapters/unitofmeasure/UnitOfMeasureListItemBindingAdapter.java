@@ -7,13 +7,13 @@ import android.widget.TextView;
 import androidx.databinding.BindingAdapter;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.Count;
-import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.ImperialMass;
-import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.ImperialVolume;
-import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.MeasurementSubtype;
-import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.MetricMass;
-import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.MetricVolume;
-import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasure;
+import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.Count;
+import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.ImperialMass;
+import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.ImperialVolume;
+import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
+import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MetricMass;
+import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MetricVolume;
+import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasure;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;

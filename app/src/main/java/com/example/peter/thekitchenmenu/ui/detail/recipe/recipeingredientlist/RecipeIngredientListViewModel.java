@@ -1,34 +1,31 @@
 package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist;
 
-import android.content.Context;
-
 import androidx.databinding.ObservableArrayList;
 import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableList;
 import androidx.lifecycle.ViewModel;
 
-import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientQuantityEntity;
-import com.example.peter.thekitchenmenu.data.repository.DataSource;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
-
-import java.util.List;
+import com.example.peter.thekitchenmenu.domain.usecase.RecipeIngredientListItemModel;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseRecipeIngredientList;
 
 public class RecipeIngredientListViewModel extends ViewModel {
 
-    private final RepositoryRecipeIngredient repositoryRecipeIngredient;
-    private Context context;
     private RecipeIngredientListNavigator navigator;
+    private UseCaseHandler handler;
+    private UseCaseRecipeIngredientList useCase;
 
-    public final ObservableList<RecipeIngredientQuantityEntity> recipeIngredients =
+    public final ObservableList<RecipeIngredientListItemModel> recipeIngredientsModels =
             new ObservableArrayList<>();
     public final ObservableBoolean hasIngredients = new ObservableBoolean(false);
 
     private String recipeId;
 
-    public RecipeIngredientListViewModel(RepositoryRecipeIngredient repositoryRecipeIngredient,
-                                         Context context) {
-        this.repositoryRecipeIngredient = repositoryRecipeIngredient;
-        this.context = context;
+    public RecipeIngredientListViewModel(UseCaseHandler handler,
+                                         UseCaseRecipeIngredientList useCase) {
+        this.handler = handler;
+        this.useCase = useCase;
     }
 
     void setNavigator(RecipeIngredientListNavigator navigator) {
@@ -41,29 +38,30 @@ public class RecipeIngredientListViewModel extends ViewModel {
 
     void start(String recipeId) {
         this.recipeId = recipeId;
-        loadRecipeIngredients(recipeId);
+        loadRecipeIngredients();
     }
 
-    private void loadRecipeIngredients(String recipeId) {
-        repositoryRecipeIngredient.getByRecipeId(
-                recipeId,
-                new DataSource.GetAllCallback<RecipeIngredientQuantityEntity>() {
-                    @Override
-                    public void onAllLoaded(List<RecipeIngredientQuantityEntity> recipeIngredients) {
-                        hasIngredients.set(true);
-                        RecipeIngredientListViewModel.this.recipeIngredients.clear();
-                        RecipeIngredientListViewModel.this.recipeIngredients.addAll(recipeIngredients);
+    private void loadRecipeIngredients() {
+        handler.execute(
+                useCase,
+                new UseCaseRecipeIngredientList.RequestValues(recipeId),
+                new UseCase.UseCaseCallback<UseCaseRecipeIngredientList.ResponseValues>() {
+            @Override
+            public void onSuccess(UseCaseRecipeIngredientList.ResponseValues response) {
+                if (response.getListItemModels().size() > 0) {
+                    hasIngredients.set(true);
+                    recipeIngredientsModels.clear();
+                    recipeIngredientsModels.addAll(response.getListItemModels());
+                } else {
+                    hasIngredients.set(false);
+                }
+            }
 
-                        for (RecipeIngredientQuantityEntity entity : recipeIngredients) {
-                            System.out.println("tkm-" + entity);
-                        }
-                    }
-
-                    @Override
-                    public void onDataNotAvailable() {
-                        hasIngredients.set(false);
-                    }
-                });
+            @Override
+            public void onError(UseCaseRecipeIngredientList.ResponseValues response) {
+                hasIngredients.set(false);
+            }
+        });
     }
 
     public void addIngredientButtonPressed() {

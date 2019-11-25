@@ -1,8 +1,8 @@
-package com.example.peter.thekitchenmenu.domain.unitofmeasureentities;
+package com.example.peter.thekitchenmenu.domain.entity.unitofmeasure;
 
 import com.example.peter.thekitchenmenu.R;
 
-import static com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasureConstants.*;
+import static com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants.*;
 
 public class MetricMass extends UnitOfMeasureAbstract {
 

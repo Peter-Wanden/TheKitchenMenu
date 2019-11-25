@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.data.model;
 
 import androidx.annotation.NonNull;
 
-import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.MeasurementSubtype;
+import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
 
 public class ProductMeasurementModel {
 

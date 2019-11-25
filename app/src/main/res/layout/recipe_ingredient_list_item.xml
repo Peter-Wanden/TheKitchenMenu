@@ -60,6 +60,7 @@
                 android:layout_height="wrap_content"
                 android:paddingEnd="@dimen/list_item_top_full_margin"
                 android:paddingStart="@dimen/list_item_top_full_margin"
+                android:text="@{viewModel.ingredientMeasurementObservable}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/recipe_ingredient_name"
                 tools:text="2 tsp"
@@ -100,7 +101,7 @@
                 android:tint="@color/white"
                 android:backgroundTint="@color/primaryDarkColor"
                 android:src="@drawable/ic_edit"
-                android:onClick="@{() -> viewModel.deleteIngredientClicked()}"
+                android:onClick="@{() -> viewModel.editRecipeIngredient()}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 />

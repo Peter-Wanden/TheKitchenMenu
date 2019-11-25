@@ -8,11 +8,11 @@ import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
-import com.example.peter.thekitchenmenu.domain.model.MeasurementModelBuilder;
-import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.MeasurementSubtype;
-import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasure;
-import com.example.peter.thekitchenmenu.domain.model.MeasurementModel;
-import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasureConstants;
+import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModelBuilder;
+import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
+import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasure;
+import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
+import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 

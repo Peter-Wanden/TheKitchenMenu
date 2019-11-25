@@ -1,11 +1,11 @@
-package com.example.peter.thekitchenmenu.domain.model;
+package com.example.peter.thekitchenmenu.domain.entity.model;
 
 import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
 
-import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.MeasurementSubtype;
-import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.MeasurementType;
-import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasure;
+import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
+import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementType;
+import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasure;
 
 public class MeasurementModelBuilder {
 

@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.ui.bindingadapters;
 
 import androidx.databinding.InverseMethod;
 
-import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.MeasurementSubtype;
+import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
 
 public class MeasurementSubtypeConverter {
 

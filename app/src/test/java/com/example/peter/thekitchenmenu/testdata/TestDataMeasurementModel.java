@@ -1,13 +1,13 @@
 package com.example.peter.thekitchenmenu.testdata;
 
-import com.example.peter.thekitchenmenu.domain.model.MeasurementModel;
-import com.example.peter.thekitchenmenu.domain.model.MeasurementModelBuilder;
-import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.MeasurementSubtype;
-import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.MeasurementType;
-import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasure;
+import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
+import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModelBuilder;
+import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
+import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementType;
+import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasure;
 
 import static com.example.peter.thekitchenmenu.testdata.TestDataRecipeIngredientQuantityEntity.getNewValidImperialSpoonMaxConversionFactor;
-import static com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasureConstants.*;
+import static com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants.*;
 
 public class TestDataMeasurementModel {
 

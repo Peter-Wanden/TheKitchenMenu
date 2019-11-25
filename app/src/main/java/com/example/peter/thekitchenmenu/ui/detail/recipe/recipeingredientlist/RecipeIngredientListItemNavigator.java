@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist;
 
 public interface RecipeIngredientListItemNavigator {
 
-    void deleteIngredient(String ingredientId);
+    void deleteRecipeIngredient(String ingredientId);
 
-    void editIngredient(String ingredientId);
+    void editRecipeIngredient(String ingredientId);
 }

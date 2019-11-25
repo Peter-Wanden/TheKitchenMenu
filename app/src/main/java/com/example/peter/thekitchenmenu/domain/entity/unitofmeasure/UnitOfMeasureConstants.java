@@ -1,6 +1,6 @@
-package com.example.peter.thekitchenmenu.domain.unitofmeasureentities;
+package com.example.peter.thekitchenmenu.domain.entity.unitofmeasure;
 
-import com.example.peter.thekitchenmenu.domain.model.MeasurementModel;
+import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
 
 public class UnitOfMeasureConstants {
 

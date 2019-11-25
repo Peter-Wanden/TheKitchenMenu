@@ -16,7 +16,7 @@ import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 import com.example.peter.thekitchenmenu.ui.utils.TextValidationHandler;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
-import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasureConstants;
+import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
 
 import static com.example.peter.thekitchenmenu.ui.utils.TextValidationHandler.VALIDATED;
 

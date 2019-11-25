@@ -2,13 +2,13 @@ package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
 import androidx.core.util.Pair;
 
-import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.MetricMass;
-import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasure;
+import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MetricMass;
+import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasure;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasureConstants.*;
+import static com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants.*;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.*;
 

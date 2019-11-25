@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.utils.unitofmeasure;
 
 import androidx.core.util.Pair;
 
-import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.ImperialMass;
+import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.ImperialMass;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -11,7 +11,7 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
-import static com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasureConstants.*;
+import static com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants.*;
 import static org.junit.Assert.*;
 
 public class ImperialMassTest {

@@ -8,8 +8,8 @@ import androidx.databinding.library.baseAdapters.BR;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.domain.model.MeasurementModel;
-import com.example.peter.thekitchenmenu.domain.model.MeasurementModelBuilder;
+import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
+import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModelBuilder;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseConversionFactorStatus;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
@@ -17,12 +17,11 @@ import com.example.peter.thekitchenmenu.domain.usecase.UseCasePortionCalculator;
 import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.common.MeasurementErrorMessageMaker;
 import com.example.peter.thekitchenmenu.ui.utils.NumberFormatter;
-import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.MeasurementSubtype;
-import com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasureConstants;
-import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
+import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
+import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
 
 import static androidx.core.util.Preconditions.checkNotNull;
-import static com.example.peter.thekitchenmenu.domain.unitofmeasureentities.UnitOfMeasureConstants.NOT_SET;
+import static com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants.NOT_SET;
 import static com.example.peter.thekitchenmenu.domain.usecase.UseCaseConversionFactorStatus.*;
 
 public class RecipeIngredientMeasurementViewModel extends ObservableViewModel {
@@ -347,14 +346,12 @@ public class RecipeIngredientMeasurementViewModel extends ObservableViewModel {
     }
 
     private void executePortionCalculator(UseCasePortionCalculator.RequestValues requestValues) {
-        System.out.println("tkm-request=" + requestValues);
         useCaseHandler.execute(
                 useCasePortionCalculator,
                 requestValues,
                 new UseCaseCallback<UseCasePortionCalculator.ResponseValues>() {
                     @Override
                     public void onSuccess(UseCasePortionCalculator.ResponseValues response) {
-                        System.out.println("tkm-response=" + response);
                         processModelResult(response.getModel());
                         processResultStatus(response.getResultStatus());
 
