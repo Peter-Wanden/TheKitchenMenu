@@ -9,6 +9,8 @@ import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.UseCaseRecipeIngredientList;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.UseCaseRecipeIngredientListResponse;
 
 import org.junit.*;
 import org.mockito.*;
@@ -53,15 +55,15 @@ public class UseCaseRecipeIngredientListTest {
     }
 
     // region helper methods -----------------------------------------------------------------------
-    private UseCase.UseCaseCallback<UseCaseRecipeIngredientList.ResponseValues> responseCallback() {
-        return new UseCase.UseCaseCallback<UseCaseRecipeIngredientList.ResponseValues>() {
+    private UseCase.UseCaseCallback<UseCaseRecipeIngredientListResponse> responseCallback() {
+        return new UseCase.UseCaseCallback<UseCaseRecipeIngredientListResponse>() {
             @Override
-            public void onSuccess(UseCaseRecipeIngredientList.ResponseValues response) {
+            public void onSuccess(UseCaseRecipeIngredientListResponse response) {
 
             }
 
             @Override
-            public void onError(UseCaseRecipeIngredientList.ResponseValues response) {
+            public void onError(UseCaseRecipeIngredientListResponse response) {
 
             }
         };

@@ -16,12 +16,6 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
         ITEM_MEASUREMENT
     }
 
-    enum UnitDigit {
-        UNIT_ONE,
-        UNIT_TWO,
-        CONVERSION_FACTOR
-    }
-
     protected MeasurementType measurementType;
     protected MeasurementSubtype subtype;
     int numberOfUnits;
@@ -242,7 +236,7 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
 
     @Override
     public boolean isNumberOfItemsSet(int numberOfItems) {
-        if (isNumberOfItemsWithinMaxBounds(numberOfItems)) {
+        if (isNumberOfItemsWithinBounds(numberOfItems)) {
             if (totalBaseUnits == UnitOfMeasureConstants.NOT_SET) {
                 this.numberOfItems = numberOfItems;
                 return true;
@@ -263,8 +257,9 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
         return false;
     }
 
-    private boolean isNumberOfItemsWithinMaxBounds(int numberOfItems) {
-        return numberOfItems >= UnitOfMeasureConstants.MIN_NUMBER_OF_ITEMS && numberOfItems <= UnitOfMeasureConstants.MAX_NUMBER_OF_ITEMS;
+    private boolean isNumberOfItemsWithinBounds(int numberOfItems) {
+        return numberOfItems >= UnitOfMeasureConstants.MIN_NUMBER_OF_ITEMS &&
+                numberOfItems <= UnitOfMeasureConstants.MAX_NUMBER_OF_ITEMS;
     }
 
     private boolean isNewItemSizeGreaterThanSmallestUnit(int numberOfItems) {

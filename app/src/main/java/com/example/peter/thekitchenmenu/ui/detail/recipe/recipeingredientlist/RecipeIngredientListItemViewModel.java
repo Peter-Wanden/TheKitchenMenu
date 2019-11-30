@@ -3,7 +3,7 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist;
 import androidx.annotation.Nullable;
 import androidx.databinding.ObservableField;
 import androidx.lifecycle.ViewModel;
-import com.example.peter.thekitchenmenu.domain.usecase.RecipeIngredientListItemModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.RecipeIngredientListItemModel;
 import com.example.peter.thekitchenmenu.ui.bindingadapters.unitofmeasure.MeasurementToStringFormatter;
 
 import java.lang.ref.WeakReference;
@@ -56,7 +56,9 @@ public class RecipeIngredientListItemViewModel
         }
 
         if (navigator != null && navigator.get() != null) {
-            navigator.get().editRecipeIngredient(listItemModel.getRecipeIngredientId());
+            navigator.get().editRecipeIngredient(
+                    listItemModel.getRecipeIngredientId(),
+                    listItemModel.getIngredientId());
         }
     }
 }

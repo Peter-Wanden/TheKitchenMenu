@@ -1,67 +1,70 @@
 package com.example.peter.thekitchenmenu.testdata;
 
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseConversionFactorStatus;
+import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.UseCaseConversionFactorStatus;
+import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.UseCaseConversionFactorStatusRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.UseCaseConversionFactorStatusResponse;
 
 public class TestDataUseCaseConversionFactorStatusRequestResponse {
 
-    public static UseCaseConversionFactorStatus.RequestValues
+    public static UseCaseConversionFactorStatusRequest
     getRequestMetricNoConversionFactor() {
-        return new UseCaseConversionFactorStatus.RequestValues(
+        return new UseCaseConversionFactorStatusRequest(
                 MeasurementSubtype.fromInt(TestDataRecipeIngredientQuantityEntity.
                         getNewValidMetric().getUnitOfMeasureSubtype()),
                 TestDataIngredientEntity.getNewValidNameValidDescription().getId());
     }
-    public static UseCaseConversionFactorStatus.ResponseValues
+
+    public static UseCaseConversionFactorStatusResponse
     getResponseMetricNoConversionFactor() {
-        return new UseCaseConversionFactorStatus.ResponseValues(
+        return new UseCaseConversionFactorStatusResponse(
                 UseCaseConversionFactorStatus.UseCaseResult.DISABLED);
     }
 
-    public static UseCaseConversionFactorStatus.RequestValues
+    public static UseCaseConversionFactorStatusRequest
     getRequestWithConversionFactorFromAnotherUser() {
-        return new UseCaseConversionFactorStatus.RequestValues(
+        return new UseCaseConversionFactorStatusRequest(
                 MeasurementSubtype.IMPERIAL_SPOON,
                 TestDataIngredientEntity.getExistingValidNameValidDescriptionFromAnotherUser().
                         getId());
     }
-    public static UseCaseConversionFactorStatus.ResponseValues
+    public static UseCaseConversionFactorStatusResponse
     getResponseConversionFactorUneditable() {
-        return new UseCaseConversionFactorStatus.ResponseValues(
+        return new UseCaseConversionFactorStatusResponse(
                 UseCaseConversionFactorStatus.UseCaseResult.ENABLED_UNEDITABLE);
     }
 
-    public static UseCaseConversionFactorStatus.RequestValues
+    public static UseCaseConversionFactorStatusRequest
     getRequestWithConversionFactorEnabledUnset() {
-        return new UseCaseConversionFactorStatus.RequestValues(
+        return new UseCaseConversionFactorStatusRequest(
                 MeasurementSubtype.IMPERIAL_SPOON,
                 TestDataIngredientEntity.getNewInvalidNameValidDescription().getId());
     }
-    public static UseCaseConversionFactorStatus.ResponseValues
+    public static UseCaseConversionFactorStatusResponse
     getResponseConversionFactorEnabledUnset() {
-        return new UseCaseConversionFactorStatus.ResponseValues(
+        return new UseCaseConversionFactorStatusResponse(
                 UseCaseConversionFactorStatus.UseCaseResult.ENABLED_EDITABLE_UNSET);
     }
 
-    public static UseCaseConversionFactorStatus.RequestValues
+    public static UseCaseConversionFactorStatusRequest
     getRequestWithConversionFactorEnabledSet() {
-        return new UseCaseConversionFactorStatus.RequestValues(
+        return new UseCaseConversionFactorStatusRequest(
                 MeasurementSubtype.IMPERIAL_SPOON,
                 TestDataIngredientEntity.getExistingValidWithConversionFactor().getId());
     }
-    public static UseCaseConversionFactorStatus.ResponseValues
+    public static UseCaseConversionFactorStatusResponse
     getResponseConversionFactorEnabledSet() {
-        return new UseCaseConversionFactorStatus.ResponseValues(
+        return new UseCaseConversionFactorStatusResponse(
                 UseCaseConversionFactorStatus.UseCaseResult.ENABLED_EDITABLE_SET);
     }
 
-    public static UseCaseConversionFactorStatus.RequestValues getRequestForIngredientNotFound() {
-        return new UseCaseConversionFactorStatus.RequestValues(
+    public static UseCaseConversionFactorStatusRequest getRequestForIngredientNotFound() {
+        return new UseCaseConversionFactorStatusRequest(
                 MeasurementSubtype.IMPERIAL_SPOON,
                 "INGREDIENT_NOT_FOUND");
     }
-    public static UseCaseConversionFactorStatus.ResponseValues getResponseForIngredientNotFound() {
-        return new UseCaseConversionFactorStatus.ResponseValues(
+    public static UseCaseConversionFactorStatusResponse getResponseForIngredientNotFound() {
+        return new UseCaseConversionFactorStatusResponse(
                 UseCaseConversionFactorStatus.UseCaseResult.INGREDIENT_DATA_NOT_AVAILABLE);
     }
 }

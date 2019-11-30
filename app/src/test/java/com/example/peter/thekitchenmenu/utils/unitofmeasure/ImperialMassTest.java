@@ -42,7 +42,7 @@ public class ImperialMassTest {
         // Arrange
         // Act
         // Assert
-        assertEquals(IMPERIAL_MASS_SMALLEST_UNIT, SUT.getMinUnitOne(), DELTA);
+        assertEquals(0.1, SUT.getMinUnitOne(), DELTA);
     }
 
     @Test

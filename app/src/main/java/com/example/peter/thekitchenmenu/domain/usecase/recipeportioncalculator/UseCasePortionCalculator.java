@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecase;
+package com.example.peter.thekitchenmenu.domain.usecase.recipeportioncalculator;
 
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
@@ -13,17 +13,15 @@ import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementS
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasure;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
-
-import java.util.Objects;
 
 /**
  * Calculates the measurement of an ingredient for a single portion of a recipe.
  */
-public class UseCasePortionCalculator extends
-        UseCase<UseCasePortionCalculator.RequestValues,
-                UseCasePortionCalculator.ResponseValues> {
+public class UseCasePortionCalculator
+        extends UseCase<UseCasePortionCalculatorRequest, UseCasePortionCalculatorResponse> {
 
     public enum ResultStatus {
         QUANTITY_DATA_NOT_AVAILABLE,
@@ -77,7 +75,7 @@ public class UseCasePortionCalculator extends
     }
 
     @Override
-    protected void executeUseCase(RequestValues values) {
+    protected void executeUseCase(UseCasePortionCalculatorRequest values) {
         if (isNewInstantiation()) {
             extractIdsAndStart(values);
         } else {
@@ -89,16 +87,16 @@ public class UseCasePortionCalculator extends
         return this.recipeIngredientId.isEmpty();
     }
 
-    private void extractIdsAndStart(RequestValues values) {
-        if (isRecipeIngredientIdProvided(values)) {
-            start(values.getRecipeIngredientId());
+    private void extractIdsAndStart(UseCasePortionCalculatorRequest request) {
+        if (isRecipeIngredientIdProvided(request)) {
+            start(request.getRecipeIngredientId());
         } else {
-            start(values.getRecipeId(), values.getIngredientId());
+            start(request.getRecipeId(), request.getIngredientId());
         }
     }
 
-    private boolean isRecipeIngredientIdProvided(RequestValues values) {
-        return !values.getRecipeIngredientId().isEmpty();
+    private boolean isRecipeIngredientIdProvided(UseCasePortionCalculatorRequest request) {
+        return !request.getRecipeIngredientId().isEmpty();
     }
 
     private void start(String recipeId, String ingredientId) {
@@ -184,9 +182,10 @@ public class UseCasePortionCalculator extends
     }
 
     private void returnDataNotAvailable(ResultStatus status) {
-        ResponseValues values = new ResponseValues(
+        UseCasePortionCalculatorResponse values = new UseCasePortionCalculatorResponse(
                 UnitOfMeasureConstants.DEFAULT_MEASUREMENT_MODEL,
                 status);
+
         getUseCaseCallback().onError(values);
     }
 
@@ -305,16 +304,21 @@ public class UseCasePortionCalculator extends
                 setConversionFactor(getConversionFactorResult()).
                 setTotalUnitOne(getTotalUnitOneResult()).
                 setTotalUnitTwo(getTotalUnitTwoResult()).build();
+
         returnResult();
     }
 
     private void returnResult() {
         saveIfValid();
-        ResponseValues values = new ResponseValues(existingModel, getResultStatus());
+
+        UseCasePortionCalculatorResponse response = new UseCasePortionCalculatorResponse(
+                existingModel,
+                getResultStatus());
+
         resetResults();
 
         if (getUseCaseCallback() != null) {
-            getUseCaseCallback().onSuccess(values);
+            getUseCaseCallback().onSuccess(response);
         }
     }
 
@@ -340,13 +344,11 @@ public class UseCasePortionCalculator extends
         if (conversionFactorChanged && !isConversionFactorSet) {
             return ResultStatus.INVALID_CONVERSION_FACTOR;
         }
-        if (unitOfMeasure.getTotalBaseUnits() > 0) {
-            if (totalUnitOneChanged && !isTotalUnitOneSet) {
-                return ResultStatus.INVALID_TOTAL_UNIT_ONE;
-            }
-            if (totalUnitTwoChanged && !isTotalUnitTwoSet) {
-                return ResultStatus.INVALID_TOTAL_UNIT_TWO;
-            }
+        if (totalUnitOneChanged && !isTotalUnitOneSet) {
+            return ResultStatus.INVALID_TOTAL_UNIT_ONE;
+        }
+        if (totalUnitTwoChanged && !isTotalUnitTwoSet) {
+            return ResultStatus.INVALID_TOTAL_UNIT_TWO;
         }
         if (!unitOfMeasure.isValidMeasurement()) {
             return ResultStatus.INVALID_MEASUREMENT;
@@ -408,86 +410,5 @@ public class UseCasePortionCalculator extends
     // todo - this should only be accessible through interface
     public String getIngredientId() {
         return ingredientId;
-    }
-
-    public static final class RequestValues implements UseCase.RequestValues {
-        private String recipeId;
-        private String ingredientId;
-        private String recipeIngredientId;
-        private MeasurementModel model;
-
-        public RequestValues(String recipeId, String ingredientId,
-                             String recipeIngredientId, MeasurementModel model) {
-            this.recipeId = recipeId;
-            this.ingredientId = ingredientId;
-            this.recipeIngredientId = recipeIngredientId;
-            this.model = model;
-        }
-
-        public String getRecipeId() {
-            return recipeId;
-        }
-
-        public String getIngredientId() {
-            return ingredientId;
-        }
-
-        public String getRecipeIngredientId() {
-            return recipeIngredientId;
-        }
-
-        public MeasurementModel getModel() {
-            return model;
-        }
-
-        @Override
-        public String toString() {
-            return "RequestValues{" +
-                    "recipeId='" + recipeId + '\'' +
-                    ", ingredientId='" + ingredientId + '\'' +
-                    ", recipeIngredientId='" + recipeIngredientId + '\'' +
-                    ", model=" + model +
-                    '}';
-        }
-    }
-
-    public static final class ResponseValues implements UseCase.ResponseValues {
-        private MeasurementModel model;
-        private UseCasePortionCalculator.ResultStatus resultStatus;
-
-        public ResponseValues(MeasurementModel model, ResultStatus resultStatus) {
-            this.model = model;
-            this.resultStatus = resultStatus;
-        }
-
-        public MeasurementModel getModel() {
-            return model;
-        }
-
-        public ResultStatus getResultStatus() {
-            return resultStatus;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            ResponseValues values = (ResponseValues) o;
-            return model.equals(values.model) &&
-                    resultStatus == values.resultStatus;
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(model, resultStatus);
-        }
-
-        @Override
-        public String toString() {
-            return "ResponseValues{" +
-                    "model=" + model +
-                    ", resultStatus=" + resultStatus +
-                    '}';
-        }
     }
 }

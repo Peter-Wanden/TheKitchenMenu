@@ -1,6 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecase;
-
-import androidx.annotation.NonNull;
+package com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist;
 
 import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientQuantityEntity;
@@ -13,15 +11,15 @@ import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModelBuilder;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasure;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class UseCaseRecipeIngredientList extends
-        UseCase<UseCaseRecipeIngredientList.RequestValues,
-                UseCaseRecipeIngredientList.ResponseValues> {
+public class UseCaseRecipeIngredientList
+        extends UseCase<UseCaseRecipeIngredientListRequest, UseCaseRecipeIngredientListResponse> {
 
     private RepositoryRecipeIngredient repoRecipeIngredient;
     private RepositoryIngredient repoIngredient;
@@ -45,7 +43,7 @@ public class UseCaseRecipeIngredientList extends
     }
 
     @Override
-    protected void executeUseCase(UseCaseRecipeIngredientList.RequestValues requestValues) {
+    protected void executeUseCase(UseCaseRecipeIngredientListRequest requestValues) {
         recipeId = requestValues.getRecipeId();
         getPortionsForRecipe();
     }
@@ -70,6 +68,7 @@ public class UseCaseRecipeIngredientList extends
 
     private void getRecipeIngredientQuantities() {
         recipeIngredientQuantities.clear();
+
         repoRecipeIngredient.getByRecipeId(
                 recipeId,
                 new DataSource.GetAllCallback<RecipeIngredientQuantityEntity>() {
@@ -122,24 +121,14 @@ public class UseCaseRecipeIngredientList extends
 
                 RecipeIngredientListItemModel listItemModel = new RecipeIngredientListItemModel(
                         recipeIngredient.getId(),
+                        ingredientId,
                         ingredient.getName(),
                         ingredient.getDescription(),
                         getMeasurementModel(recipeIngredient, ingredient)
                 );
-
-                System.out.println("tkm-adding model:" + listItemModel);
-
                 listItemModels.add(listItemModel);
             }
-
-//            for (RecipeIngredientListItemModel model : listItemModels) {
-//                System.out.println("tkm-ListItemModels=" + model);
-//            }
-
-            System.out.println("tkm- " + listItemModels.size() + " models added");
-
-            getUseCaseCallback().onSuccess(
-                    new UseCaseRecipeIngredientList.ResponseValues(listItemModels));
+            getUseCaseCallback().onSuccess(new UseCaseRecipeIngredientListResponse(listItemModels));
         }
     }
 
@@ -149,6 +138,7 @@ public class UseCaseRecipeIngredientList extends
 
     private MeasurementModel getMeasurementModel(RecipeIngredientQuantityEntity quantityEntity,
                                                  IngredientEntity ingredient) {
+
         UnitOfMeasure unitOfMeasure = MeasurementSubtype.fromInt(quantityEntity.
                 getUnitOfMeasureSubtype()).getMeasurementClass();
         unitOfMeasure.isNumberOfItemsSet(portions);
@@ -159,45 +149,5 @@ public class UseCaseRecipeIngredientList extends
         unitOfMeasure.isItemBaseUnitsSet(quantityEntity.getItemBaseUnits());
 
         return MeasurementModelBuilder.basedOnUnitOfMeasure(unitOfMeasure).build();
-    }
-
-    public static final class RequestValues implements UseCase.RequestValues {
-        @NonNull
-        String recipeId;
-
-        public RequestValues(@NonNull String recipeId) {
-            this.recipeId = recipeId;
-        }
-
-        @NonNull
-        public String getRecipeId() {
-            return recipeId;
-        }
-
-        @Override
-        public String toString() {
-            return "RequestValues{" +
-                    "recipeId='" + recipeId + '\'' +
-                    '}';
-        }
-    }
-
-    public static final class ResponseValues implements  UseCase.ResponseValues {
-        private List<RecipeIngredientListItemModel> listItemModels;
-
-        public ResponseValues(List<RecipeIngredientListItemModel> listItemModels) {
-            this.listItemModels = listItemModels;
-        }
-
-        public List<RecipeIngredientListItemModel> getListItemModels() {
-            return listItemModels;
-        }
-
-        @Override
-        public String toString() {
-            return "ResponseValues{" +
-                    "listItemModels=" + listItemModels +
-                    '}';
-        }
     }
 }

@@ -15,9 +15,9 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseConversionFactorStatus;
+import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.UseCaseConversionFactorStatus;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseRecipeIngredientList;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.UseCaseRecipeIngredientList;
 import com.example.peter.thekitchenmenu.ui.bindingadapters.unitofmeasure.MeasurementToStringFormatter;
 import com.example.peter.thekitchenmenu.ui.catalog.recipe.RecipeListDataInteractor;
 import com.example.peter.thekitchenmenu.ui.detail.common.MeasurementErrorMessageMaker;
@@ -36,7 +36,7 @@ import com.example.peter.thekitchenmenu.ui.catalog.recipe.RecipeCatalogViewModel
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeEditorViewModel;
 import com.example.peter.thekitchenmenu.ui.utils.TextValidationHandler;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCasePortionCalculator;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeportioncalculator.UseCasePortionCalculator;
 
 public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory {
 

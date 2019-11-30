@@ -11,9 +11,13 @@ import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModelBuilder;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseConversionFactorStatus;
+import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.UseCaseConversionFactorStatus;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCasePortionCalculator;
+import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.UseCaseConversionFactorStatusRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.UseCaseConversionFactorStatusResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeportioncalculator.UseCasePortionCalculator;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeportioncalculator.UseCasePortionCalculatorRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeportioncalculator.UseCasePortionCalculatorResponse;
 import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.common.MeasurementErrorMessageMaker;
 import com.example.peter.thekitchenmenu.ui.utils.NumberFormatter;
@@ -22,9 +26,11 @@ import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasur
 
 import static androidx.core.util.Preconditions.checkNotNull;
 import static com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants.NOT_SET;
-import static com.example.peter.thekitchenmenu.domain.usecase.UseCaseConversionFactorStatus.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.UseCaseConversionFactorStatus.*;
 
 public class RecipeIngredientMeasurementViewModel extends ObservableViewModel {
+
+//    private static final String TAG = "tkm-RecipeIngredientMea";
 
     private Resources resources;
     private RecipeIngredientEditorNavigator navigator;
@@ -42,7 +48,6 @@ public class RecipeIngredientMeasurementViewModel extends ObservableViewModel {
     private boolean isShowConversionFactorEditableFields;
     private boolean isShowConversionFactorUneditableFields;
     private boolean isConversionFactorChangedThisSession;
-    private boolean isUnitOneChanged;
 
     private String conversionFactorErrorMessage;
     private String unitOneErrorMessage;
@@ -93,7 +98,7 @@ public class RecipeIngredientMeasurementViewModel extends ObservableViewModel {
     }
 
     private boolean isNewInstantiationOrRecipeIdChanged(String recipeId) {
-        return this.recipeId == null || !this.recipeId.equals(recipeId);
+        return this.recipeId.isEmpty() || !this.recipeId.equals(recipeId);
     }
 
     public void start(String recipeIngredientId) {
@@ -104,7 +109,7 @@ public class RecipeIngredientMeasurementViewModel extends ObservableViewModel {
     }
 
     private boolean isNewInstantiationOrRecipeIngredientIdChanged(String recipeIngredientId) {
-        return this.recipeIngredientId == null ||
+        return this.recipeIngredientId.isEmpty() ||
                 !this.recipeIngredientId.equals(recipeIngredientId);
     }
 
@@ -255,8 +260,7 @@ public class RecipeIngredientMeasurementViewModel extends ObservableViewModel {
     }
 
     private boolean isUnitOneChanged(double unitOne) {
-        isUnitOneChanged = Double.compare(measurementModel.getTotalUnitOne(), unitOne) != 0;
-        return isUnitOneChanged;
+        return Double.compare(measurementModel.getTotalUnitOne(), unitOne) != 0;
     }
 
     private double parseDecimalFromString(String decimalToParse) {
@@ -335,30 +339,28 @@ public class RecipeIngredientMeasurementViewModel extends ObservableViewModel {
     }
 
     private void createPortionCalculatorRequestValues(MeasurementModel model) {
-        UseCasePortionCalculator.RequestValues requestValues =
-                new UseCasePortionCalculator.RequestValues(
+        UseCasePortionCalculatorRequest request = new UseCasePortionCalculatorRequest(
                         recipeId,
                         ingredientId,
                         recipeIngredientId,
                         model
                 );
-        executePortionCalculator(requestValues);
+        executePortionCalculator(request);
     }
 
-    private void executePortionCalculator(UseCasePortionCalculator.RequestValues requestValues) {
+    private void executePortionCalculator(UseCasePortionCalculatorRequest request) {
         useCaseHandler.execute(
                 useCasePortionCalculator,
-                requestValues,
-                new UseCaseCallback<UseCasePortionCalculator.ResponseValues>() {
+                request,
+                new UseCaseCallback<UseCasePortionCalculatorResponse>() {
                     @Override
-                    public void onSuccess(UseCasePortionCalculator.ResponseValues response) {
+                    public void onSuccess(UseCasePortionCalculatorResponse response) {
                         processModelResult(response.getModel());
                         processResultStatus(response.getResultStatus());
-
                     }
 
                     @Override
-                    public void onError(UseCasePortionCalculator.ResponseValues response) {
+                    public void onError(UseCasePortionCalculatorResponse response) {
                         processModelResult(response.getModel());
                         processResultStatus(response.getResultStatus());
                     }
@@ -373,10 +375,7 @@ public class RecipeIngredientMeasurementViewModel extends ObservableViewModel {
         notifyPropertyChanged(BR.numberOfUnits);
         notifyPropertyChanged(BR.conversionFactor);
         notifyPropertyChanged(BR.conversionFactorEnabled);
-        if (isUnitOneChanged && measurementModel.getTotalBaseUnits() != 0) {
-            notifyPropertyChanged(BR.unitOne);
-        }
-        isUnitOneChanged = false;
+        notifyPropertyChanged(BR.unitOne);
         notifyPropertyChanged(BR.unitTwo);
     }
 
@@ -408,28 +407,31 @@ public class RecipeIngredientMeasurementViewModel extends ObservableViewModel {
     }
 
     private void executeUseCaseConversionFactorStatus() {
-        useCaseHandler.execute(useCaseConversionFactorStatus,
-                getRequestValues(), getNewResponseCallback());
+        useCaseHandler.execute(
+                useCaseConversionFactorStatus,
+                getRequest(),
+                getNewResponseCallback());
     }
 
-    private UseCaseConversionFactorStatus.RequestValues getRequestValues() {
-        return new UseCaseConversionFactorStatus.RequestValues(
+    private UseCaseConversionFactorStatusRequest getRequest() {
+        return new UseCaseConversionFactorStatusRequest(
                 measurementModel.getSubtype(),
-                useCasePortionCalculator.getIngredientId());
+                useCasePortionCalculator.getIngredientId()
+        );
     }
 
-    private UseCase.UseCaseCallback<UseCaseConversionFactorStatus.ResponseValues>
+    private UseCase.UseCaseCallback<UseCaseConversionFactorStatusResponse>
     getNewResponseCallback() {
-        return new UseCase.UseCaseCallback<UseCaseConversionFactorStatus.ResponseValues>() {
+        return new UseCase.UseCaseCallback<UseCaseConversionFactorStatusResponse>() {
 
             @Override
-            public void onSuccess(UseCaseConversionFactorStatus.ResponseValues
+            public void onSuccess(UseCaseConversionFactorStatusResponse
                                           response) {
                 processConversionFactorResult(response.getResult());
             }
 
             @Override
-            public void onError(UseCaseConversionFactorStatus.ResponseValues
+            public void onError(UseCaseConversionFactorStatusResponse
                                         response) {
                 processConversionFactorResult(response.getResult());
             }

@@ -14,9 +14,7 @@ import java.util.concurrent.Executors;
 public class AppExecutors {
 
     private final Executor diskIO;
-
     private final Executor mainThread;
-
     private final Executor networkIO;
 
     private AppExecutors(Executor diskIO, Executor networkIO, Executor mainThread) {

@@ -4,6 +4,13 @@ import androidx.core.util.Pair;
 
 import com.example.peter.thekitchenmenu.R;
 
+/**
+ * The count class uses the variable totalUnitTwo to receive the number of items for a count
+ * measurement.
+ * The variable NoOfItems takes
+ * Item unit one is the integer and ItemUnit one the decimal part of a count being apportioned,
+ *
+ */
 public class Count extends UnitOfMeasureAbstract {
 
     public Count() {
@@ -22,31 +29,6 @@ public class Count extends UnitOfMeasureAbstract {
         subtypeStringResourceId = R.string.count;
         unitOneLabelStringResourceId = R.string.empty_string; // Unit one is not used for COUNT
         unitTwoLabelStringResourceId = R.string.each;
-    }
-
-    @Override
-    public double getTotalUnitOne() {
-        return 0;
-    }
-
-    @Override
-    public boolean isTotalUnitOneSet(double totalUnitOne) {
-        return false;
-    }
-
-    @Override
-    public double getItemUnitOne() {
-        return 0;
-    }
-
-    @Override
-    public boolean isItemUnitOneSet(double itemUnitOne) {
-        return false;
-    }
-
-    @Override
-    public double getMinUnitOne() {
-        return smallestUnit;
     }
 
     @Override

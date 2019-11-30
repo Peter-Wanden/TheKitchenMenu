@@ -1,10 +1,10 @@
 package com.example.peter.thekitchenmenu.testdata;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCasePortionCalculator.ResponseValues;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCasePortionCalculator.RequestValues;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeportioncalculator.UseCasePortionCalculatorRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeportioncalculator.UseCasePortionCalculatorResponse;
 
 import static com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants.DEFAULT_MEASUREMENT_MODEL;
-import static com.example.peter.thekitchenmenu.domain.usecase.UseCasePortionCalculator.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipeportioncalculator.UseCasePortionCalculator.*;
 
 public class TestDataUseCasePortionCalculatorRequestResponse {
 
@@ -12,193 +12,199 @@ public class TestDataUseCasePortionCalculatorRequestResponse {
     private static String NO_INGREDIENT_ID = "";
     private static String NO_RECIPE_INGREDIENT_ID = "";
 
-    public static RequestValues getRequestEmptyFourPortions() {
-        return new RequestValues(
+    public static UseCasePortionCalculatorRequest getRequestEmptyFourPortions() {
+        return new UseCasePortionCalculatorRequest(
                 TestDataRecipeEntity.getNewInvalid().getId(),
                 TestDataIngredientEntity.getNewValidName().getId(),
                 NO_RECIPE_INGREDIENT_ID,
                 DEFAULT_MEASUREMENT_MODEL);
     }
-    public static ResponseValues getResponseEmptyFourPortions() {
-        return new ResponseValues(TestDataMeasurementModel.getInvalidEmptyFourPortionsSet(),
+    public static UseCasePortionCalculatorResponse getResponseEmptyFourPortions() {
+        return new UseCasePortionCalculatorResponse(
+                TestDataMeasurementModel.getInvalidEmptyFourPortionsSet(),
                 ResultStatus.INVALID_MEASUREMENT);
     }
 
-    public static RequestValues getRequestInvalidTotalUnitOne() {
-        return new RequestValues(
+    public static UseCasePortionCalculatorRequest getRequestInvalidTotalUnitOne() {
+        return new UseCasePortionCalculatorRequest(
                 TestDataRecipeEntity.getNewInvalid().getId(),
                 TestDataIngredientEntity.getNewValidName().getId(),
                 NO_RECIPE_INGREDIENT_ID,
                 TestDataMeasurementModel.getNewInvalidTotalUnitOne());
     }
-    public static ResponseValues getResponseInvalidTotalUnitOne() {
-        return new ResponseValues(TestDataMeasurementModel.getNewInvalidTotalUnitOne(),
+    public static UseCasePortionCalculatorResponse getResponseInvalidTotalUnitOne() {
+
+        return new UseCasePortionCalculatorResponse(
+                TestDataMeasurementModel.getNewInvalidTotalUnitOne(),
                 ResultStatus.INVALID_TOTAL_UNIT_ONE);
     }
 
-    public static RequestValues getRequestValidTotalUnitOne() {
-        return new RequestValues(
+    public static UseCasePortionCalculatorRequest getRequestValidTotalUnitOne() {
+        return new UseCasePortionCalculatorRequest(
                 TestDataRecipeEntity.getNewInvalid().getId(),
                 TestDataIngredientEntity.getNewValidName().getId(),
                 NO_RECIPE_INGREDIENT_ID,
                 TestDataMeasurementModel.getNewValidTotalUnitOne());
     }
-    public static ResponseValues getResponseValidTotalUnitOne() {
-        return new ResponseValues(TestDataMeasurementModel.getNewValidTotalUnitOne(),
+    public static UseCasePortionCalculatorResponse getResponseValidTotalUnitOne() {
+        return new UseCasePortionCalculatorResponse(
+                TestDataMeasurementModel.getNewValidTotalUnitOne(),
                 ResultStatus.RESULT_OK);
     }
 
-    public static RequestValues getRequestInvalidTotalUnitTwo() {
-        return new RequestValues(
+    public static UseCasePortionCalculatorRequest getRequestInvalidTotalUnitTwo() {
+        return new UseCasePortionCalculatorRequest(
                 TestDataRecipeEntity.getNewInvalid().getId(),
                 TestDataIngredientEntity.getNewValidName().getId(),
                 NO_RECIPE_INGREDIENT_ID,
                 TestDataMeasurementModel.getNewInvalidTotalUnitTwo());
     }
-    public static ResponseValues getResponseInvalidTotalUnitTwo() {
-        return new ResponseValues(TestDataMeasurementModel.getNewInvalidTotalUnitTwo(),
+    public static UseCasePortionCalculatorResponse getResponseInvalidTotalUnitTwo() {
+        return new UseCasePortionCalculatorResponse(
+                TestDataMeasurementModel.getNewInvalidTotalUnitTwo(),
                 ResultStatus.INVALID_TOTAL_UNIT_TWO);
     }
 
-    public static RequestValues getRequestValidTotalUnitTwo() {
-        return new RequestValues(
+    public static UseCasePortionCalculatorRequest getRequestValidTotalUnitTwo() {
+        return new UseCasePortionCalculatorRequest(
                 TestDataRecipeEntity.getNewInvalid().getId(),
                 TestDataIngredientEntity.getNewValidName().getId(),
                 NO_RECIPE_INGREDIENT_ID,
                 TestDataMeasurementModel.getNewValidTotalUnitTwo());
     }
-    public static ResponseValues getResponseValidTotalUnitTwo() {
-        return new ResponseValues(TestDataMeasurementModel.getNewValidTotalUnitTwo(),
+    public static UseCasePortionCalculatorResponse getResponseValidTotalUnitTwo() {
+        return new UseCasePortionCalculatorResponse(
+                TestDataMeasurementModel.getNewValidTotalUnitTwo(),
                 ResultStatus.RESULT_OK);
     }
 
-    public static RequestValues getRequestUnitOfMeasureChangeImperialSpoon() {
-        return new RequestValues(
+    public static UseCasePortionCalculatorRequest getRequestUnitOfMeasureChangeImperialSpoon() {
+        return new UseCasePortionCalculatorRequest(
                 TestDataRecipeEntity.getNewInvalid().getId(),
                 TestDataIngredientEntity.getNewValidName().getId(),
                 NO_RECIPE_INGREDIENT_ID,
                 TestDataMeasurementModel.getNewInvalidUnitOfMeasureChangedImperialSpoon());
     }
-    public static ResponseValues getResponseUnitOfMeasureChangeImperialSpoon() {
-        return new ResponseValues(TestDataMeasurementModel.
-                getNewInvalidUnitOfMeasureChangedImperialSpoon(),
+    public static UseCasePortionCalculatorResponse getResponseUnitOfMeasureChangeImperialSpoon() {
+        return new UseCasePortionCalculatorResponse(
+                TestDataMeasurementModel.getNewInvalidUnitOfMeasureChangedImperialSpoon(),
                 ResultStatus.INVALID_MEASUREMENT);
     }
 
-    public static RequestValues getRequestNewValidImperialSpoonUnitOneUpdatedHalfSpoon() {
-        return new RequestValues(
+    public static UseCasePortionCalculatorRequest getRequestNewValidImperialSpoonUnitOneUpdatedHalfSpoon() {
+        return new UseCasePortionCalculatorRequest(
                 TestDataRecipeEntity.getNewInvalid().getId(),
                 TestDataIngredientEntity.getNewValidName().getId(),
                 NO_RECIPE_INGREDIENT_ID,
                 TestDataMeasurementModel.getNewValidHalfImperialSpoonUnitOneUpdated());
     }
-    public static ResponseValues getResponseNewValidImperialSpoonUnitOneUpdatedHalfSpoon() {
-        return new ResponseValues(TestDataMeasurementModel.
-                getNewValidHalfImperialSpoonUnitOneUpdated(),
+    public static UseCasePortionCalculatorResponse getResponseNewValidImperialSpoonUnitOneUpdatedHalfSpoon() {
+        return new UseCasePortionCalculatorResponse(
+                TestDataMeasurementModel.getNewValidHalfImperialSpoonUnitOneUpdated(),
                 ResultStatus.RESULT_OK);
     }
 
-    public static RequestValues getRequestNewValidImperialSpoonInvalidConversionFactor() {
-        return new RequestValues(
+    public static UseCasePortionCalculatorRequest getRequestNewValidImperialSpoonInvalidConversionFactor() {
+        return new UseCasePortionCalculatorRequest(
                 TestDataRecipeEntity.getNewInvalid().getId(),
                 TestDataIngredientEntity.getNewValidName().getId(),
                 NO_RECIPE_INGREDIENT_ID,
                 TestDataMeasurementModel.getNewInvalidConversionFactor());
     }
-    public static ResponseValues getResponseNewValidImperialSpoonInvalidConversionFactor() {
-        return new ResponseValues(
+    public static UseCasePortionCalculatorResponse getResponseNewValidImperialSpoonInvalidConversionFactor() {
+        return new UseCasePortionCalculatorResponse(
                 TestDataMeasurementModel.getNewInvalidConversionFactor(),
                 ResultStatus.INVALID_CONVERSION_FACTOR);
     }
 
-    public static RequestValues getRequestNewValidImperialSpoonValidConversionFactor() {
-        return new RequestValues(
+    public static UseCasePortionCalculatorRequest getRequestNewValidImperialSpoonValidConversionFactor() {
+        return new UseCasePortionCalculatorRequest(
                 TestDataRecipeEntity.getNewInvalid().getId(),
                 TestDataIngredientEntity.getNewValidName().getId(),
                 NO_RECIPE_INGREDIENT_ID,
                 TestDataMeasurementModel.getNewValidImperialSpoonWithConversionFactor());
     }
-    public static ResponseValues getResponseNewValidImperialSpoonValidConversionFactor() {
-        return new ResponseValues(
+    public static UseCasePortionCalculatorResponse getResponseNewValidImperialSpoonValidConversionFactor() {
+        return new UseCasePortionCalculatorResponse(
                 TestDataMeasurementModel.getNewValidImperialSpoonWithConversionFactor(),
                 ResultStatus.RESULT_OK);
     }
 
-    public static RequestValues getRequestExistingValidMetric() {
-        return new RequestValues(
+    public static UseCasePortionCalculatorRequest getRequestExistingValidMetric() {
+        return new UseCasePortionCalculatorRequest(
                 NO_RECIPE_ID,
                 NO_INGREDIENT_ID,
                 TestDataRecipeIngredientQuantityEntity.getExistingValidMetric().getId(),
                 DEFAULT_MEASUREMENT_MODEL);
     }
-    public static ResponseValues getResponseExistingValidMetric() {
-        return new ResponseValues(
+    public static UseCasePortionCalculatorResponse getResponseExistingValidMetric() {
+        return new UseCasePortionCalculatorResponse(
                 TestDataMeasurementModel.getValidExistingMetric(),
                 ResultStatus.RESULT_OK);
     }
 
-    public static RequestValues getRequestExistingMetricInvalidTotalUnitOne() {
-        return new RequestValues(
+    public static UseCasePortionCalculatorRequest getRequestExistingMetricInvalidTotalUnitOne() {
+        return new UseCasePortionCalculatorRequest(
                 NO_RECIPE_ID,
                 NO_INGREDIENT_ID,
                 TestDataRecipeIngredientQuantityEntity.getExistingValidMetric().getId(),
                 TestDataMeasurementModel.getExistingMetricInvalidTotalOne());
     }
-    public static ResponseValues getResponseExistingMetricInvalidTotalUnitOne() {
-        return new ResponseValues(
+    public static UseCasePortionCalculatorResponse getResponseExistingMetricInvalidTotalUnitOne() {
+        return new UseCasePortionCalculatorResponse(
                 TestDataMeasurementModel.getExistingMetricInvalidTotalOne(),
                 ResultStatus.INVALID_TOTAL_UNIT_ONE);
     }
 
-    public static RequestValues getRequestExistingMetricValidTotalUnitTwo() {
-        return new RequestValues(
+    public static UseCasePortionCalculatorRequest getRequestExistingMetricValidTotalUnitTwo() {
+        return new UseCasePortionCalculatorRequest(
                 NO_RECIPE_ID,
                 NO_INGREDIENT_ID,
                 TestDataRecipeIngredientQuantityEntity.getExistingValidMetric().getId(),
                 TestDataMeasurementModel.getExistingMetricValidTwoUpdated());
     }
-    public static ResponseValues getResponseExistingMetricValidTotalUnitTwo() {
-        return new ResponseValues(
+    public static UseCasePortionCalculatorResponse getResponseExistingMetricValidTotalUnitTwo() {
+        return new UseCasePortionCalculatorResponse(
                 TestDataMeasurementModel.getExistingMetricValidTwoUpdated(),
                 ResultStatus.RESULT_OK);
     }
 
-    public static RequestValues getRequestExistingMetricUnitOfMeasureChangedToImperialSpoon() {
-        return new RequestValues(
+    public static UseCasePortionCalculatorRequest getRequestExistingMetricUnitOfMeasureChangedToImperialSpoon() {
+        return new UseCasePortionCalculatorRequest(
                 NO_RECIPE_ID,
                 NO_INGREDIENT_ID,
                 TestDataRecipeIngredientQuantityEntity.getExistingValidMetric().getId(),
                 TestDataMeasurementModel.getExistingMetricUnitOfMeasureUpdatedToImperial());
     }
-    public static ResponseValues getResponseExistingMetricUnitOfMeasureChangedToImperialSpoon() {
-        return new ResponseValues(
+    public static UseCasePortionCalculatorResponse getResponseExistingMetricUnitOfMeasureChangedToImperialSpoon() {
+        return new UseCasePortionCalculatorResponse(
                 TestDataMeasurementModel.getExistingMetricUnitOfMeasureUpdatedToImperial(),
                 ResultStatus.INVALID_MEASUREMENT);
     }
 
-    public static RequestValues getRequestExistingValidImperialSpoon() {
-        return new RequestValues(
+    public static UseCasePortionCalculatorRequest getRequestExistingValidImperialSpoon() {
+        return new UseCasePortionCalculatorRequest(
                 NO_RECIPE_ID,
                 NO_INGREDIENT_ID,
                 TestDataRecipeIngredientQuantityEntity.getExistingValidImperialTwoSpoons().getId(),
                 DEFAULT_MEASUREMENT_MODEL);
     }
-    public static ResponseValues getResponseExistingImperialSpoon() {
-        return new ResponseValues(
+    public static UseCasePortionCalculatorResponse getResponseExistingImperialSpoon() {
+        return new UseCasePortionCalculatorResponse(
                 TestDataMeasurementModel.getExistingImperialSpoonValidConversionFactorNotSet(),
                 ResultStatus.RESULT_OK
         );
     }
 
-    public static RequestValues getRequestExistingImperialSpoonInvalidConversionFactor() {
-        return new RequestValues(
+    public static UseCasePortionCalculatorRequest getRequestExistingImperialSpoonInvalidConversionFactor() {
+        return new UseCasePortionCalculatorRequest(
                 NO_RECIPE_ID,
                 NO_INGREDIENT_ID,
                 TestDataRecipeIngredientQuantityEntity.getExistingValidImperialTwoSpoons().getId(),
                 TestDataMeasurementModel.getExistingImperialSpoonInvalidConversionFactor());
     }
-    public static ResponseValues getResponseExistingImperialSpoonInvalidConversionFactor() {
-        return new ResponseValues(
+    public static UseCasePortionCalculatorResponse getResponseExistingImperialSpoonInvalidConversionFactor() {
+        return new UseCasePortionCalculatorResponse(
                 TestDataMeasurementModel.getExistingImperialSpoonInvalidConversionFactor(),
                 ResultStatus.INVALID_CONVERSION_FACTOR);
     }

@@ -16,7 +16,7 @@ import androidx.fragment.app.Fragment;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.RecipeIngredientListFragmentBinding;
 import com.example.peter.thekitchenmenu.databinding.RecipeIngredientListItemBinding;
-import com.example.peter.thekitchenmenu.domain.usecase.RecipeIngredientListItemModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.RecipeIngredientListItemModel;
 import com.example.peter.thekitchenmenu.ui.bindingadapters.unitofmeasure.MeasurementToStringFormatter;
 
 import java.util.ArrayList;

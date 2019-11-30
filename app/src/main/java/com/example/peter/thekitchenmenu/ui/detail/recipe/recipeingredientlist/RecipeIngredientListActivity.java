@@ -23,6 +23,8 @@ public class RecipeIngredientListActivity
         extends AppCompatActivity
         implements RecipeIngredientListNavigator, RecipeIngredientListItemNavigator {
 
+    private static final String TAG = "tkm-RecipeIngredientLis";
+
     public static final String EXTRA_RECIPE_ID = "RECIPE_ID";
 
     private RecipeIngredientListActivityBinding binding;
@@ -124,22 +126,24 @@ public class RecipeIngredientListActivity
     }
 
     @Override
-    public void editRecipeIngredient(String ingredientId) {
+    public void editRecipeIngredient(String recipeIngredientId, String ingredientId) {
+        Intent intent = new Intent(this, RecipeIngredientEditorActivity.class);
+        intent.putExtra(RecipeIngredientEditorActivity.EXTRA_RECIPE_ID, recipeId);
+        intent.putExtra(RecipeIngredientEditorActivity.EXTRA_INGREDIENT_ID, ingredientId);
+        intent.putExtra(RecipeIngredientEditorActivity.EXTRA_RECIPE_INGREDIENT_ID, recipeIngredientId);
 
+        startActivityForResult(intent, RecipeIngredientEditorActivity.REQUEST_ADD_RECIPE_INGREDIENT);
     }
 
     @Override
-    public void deleteRecipeIngredient(String ingredientId) {
-
+    public void deleteRecipeIngredient(String recipeIngredientId) {
+        Log.d(TAG, "deleteRecipeIngredient: " + recipeIngredientId);
+        recipeIngredientListViewModel.deleteRecipeIngredient(recipeIngredientId);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RecipeIngredientEditorActivity.REQUEST_ADD_RECIPE_INGREDIENT) {
-            if (requestCode == RecipeIngredientEditorActivity.RESULT_OK) {
-                recipeIngredientListViewModel.start(recipeId);
-            }
-        }
+        recipeIngredientListViewModel.onActivityResult(requestCode, resultCode);
     }
 }

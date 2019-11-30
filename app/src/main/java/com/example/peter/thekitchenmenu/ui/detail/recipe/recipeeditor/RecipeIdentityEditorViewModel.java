@@ -59,6 +59,8 @@ public class RecipeIdentityEditorViewModel
         if (this.recipeId == null || !this.recipeId.equals(recipeId)) {
             this.recipeId = recipeId;
             getData(recipeId);
+
+
         }
     }
 

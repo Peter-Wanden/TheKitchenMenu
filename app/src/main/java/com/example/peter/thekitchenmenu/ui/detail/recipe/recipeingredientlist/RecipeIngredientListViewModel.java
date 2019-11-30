@@ -5,10 +5,13 @@ import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableList;
 import androidx.lifecycle.ViewModel;
 
-import com.example.peter.thekitchenmenu.domain.usecase.RecipeIngredientListItemModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.RecipeIngredientListItemModel;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseRecipeIngredientList;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.UseCaseRecipeIngredientList;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.UseCaseRecipeIngredientListRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.UseCaseRecipeIngredientListResponse;
+import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor.RecipeIngredientEditorActivity;
 
 public class RecipeIngredientListViewModel extends ViewModel {
 
@@ -20,7 +23,7 @@ public class RecipeIngredientListViewModel extends ViewModel {
             new ObservableArrayList<>();
     public final ObservableBoolean hasIngredients = new ObservableBoolean(false);
 
-    private String recipeId;
+    private String recipeId = "";
 
     public RecipeIngredientListViewModel(UseCaseHandler handler,
                                          UseCaseRecipeIngredientList useCase) {
@@ -37,17 +40,27 @@ public class RecipeIngredientListViewModel extends ViewModel {
     }
 
     void start(String recipeId) {
-        this.recipeId = recipeId;
-        loadRecipeIngredients();
+        if (this.recipeId.isEmpty() || !this.recipeId.equals(recipeId)) {
+            this.recipeId = recipeId;
+            loadRecipeIngredients();
+        }
+    }
+
+    void onActivityResult(int requestCode, int resultCode) {
+        if (requestCode == RecipeIngredientEditorActivity.REQUEST_ADD_RECIPE_INGREDIENT) {
+            if (resultCode == RecipeIngredientEditorActivity.RESULT_OK) {
+                loadRecipeIngredients();
+            }
+        }
     }
 
     private void loadRecipeIngredients() {
         handler.execute(
                 useCase,
-                new UseCaseRecipeIngredientList.RequestValues(recipeId),
-                new UseCase.UseCaseCallback<UseCaseRecipeIngredientList.ResponseValues>() {
+                new UseCaseRecipeIngredientListRequest(recipeId),
+                new UseCase.UseCaseCallback<UseCaseRecipeIngredientListResponse>() {
             @Override
-            public void onSuccess(UseCaseRecipeIngredientList.ResponseValues response) {
+            public void onSuccess(UseCaseRecipeIngredientListResponse response) {
                 if (response.getListItemModels().size() > 0) {
                     hasIngredients.set(true);
                     recipeIngredientsModels.clear();
@@ -58,7 +71,7 @@ public class RecipeIngredientListViewModel extends ViewModel {
             }
 
             @Override
-            public void onError(UseCaseRecipeIngredientList.ResponseValues response) {
+            public void onError(UseCaseRecipeIngredientListResponse response) {
                 hasIngredients.set(false);
             }
         });
@@ -66,5 +79,9 @@ public class RecipeIngredientListViewModel extends ViewModel {
 
     public void addIngredientButtonPressed() {
         navigator.addRecipeIngredient(recipeId);
+    }
+
+    public void deleteRecipeIngredient(String recipeIngredientId) {
+
     }
 }

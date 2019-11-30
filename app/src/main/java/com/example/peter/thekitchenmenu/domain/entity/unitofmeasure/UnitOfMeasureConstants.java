@@ -1,6 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.entity.unitofmeasure;
 
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
+import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModelBuilder;
 
 public class UnitOfMeasureConstants {
 
@@ -91,36 +92,21 @@ public class UnitOfMeasureConstants {
     // region count constants --------------------------------------------------------------
     public static final MeasurementType COUNT_TYPE = MeasurementType.COUNT;
     public static final MeasurementSubtype COUNT_SUBTYPE = MeasurementSubtype.COUNT;
-    public static final int COUNT_NUMBER_OF_MEASUREMENT_UNITS = 1;
+    public static final int COUNT_NUMBER_OF_MEASUREMENT_UNITS = 2;
     public static final double COUNT_MAX_MEASUREMENT = MAX_COUNT;
     public static final double COUNT_MIN_MEASUREMENT = MIN_COUNT;
-    public static final double COUNT_UNIT_TWO = 1; // only unit two is used with count
-    public static final double COUNT_UNIT_ONE = 1; // unit one not used
-    public static final double COUNT_UNIT_ONE_DECIMAL = 0;
-    public static final double COUNT_SMALLEST_UNIT = MIN_COUNT;
+    public static final double COUNT_UNIT_TWO = 1;
+    public static final double COUNT_UNIT_ONE = 1;
+    public static final double COUNT_UNIT_ONE_DECIMAL = 0.1;
+    public static final double COUNT_SMALLEST_UNIT = COUNT_UNIT_ONE_DECIMAL;
     public static final boolean COUNT_IS_CONVERSION_FACTOR_ENABLED = false;
     // endregion count constants -----------------------------------------------------------
 
     public static final UnitOfMeasure DEFAULT_UNIT_OF_MEASURE =
             MeasurementSubtype.METRIC_MASS.getMeasurementClass();
 
-    public static final MeasurementModel DEFAULT_MEASUREMENT_MODEL = new MeasurementModel(
-            DEFAULT_UNIT_OF_MEASURE.getMeasurementType(),
-            DEFAULT_UNIT_OF_MEASURE.getMeasurementSubtype(),
-            DEFAULT_UNIT_OF_MEASURE.getNumberOfUnits(),
-            DEFAULT_UNIT_OF_MEASURE.isConversionFactorEnabled(),
-            DEFAULT_UNIT_OF_MEASURE.getConversionFactor(),
-            DEFAULT_UNIT_OF_MEASURE.getItemBaseUnits(),
-            DEFAULT_UNIT_OF_MEASURE.getTotalBaseUnits(),
-            DEFAULT_UNIT_OF_MEASURE.getNumberOfItems(),
-            DEFAULT_UNIT_OF_MEASURE.getTotalUnitOne(),
-            DEFAULT_UNIT_OF_MEASURE.getItemUnitOne(),
-            DEFAULT_UNIT_OF_MEASURE.getTotalUnitTwo(),
-            DEFAULT_UNIT_OF_MEASURE.getItemUnitTwo(),
-            DEFAULT_UNIT_OF_MEASURE.isValidMeasurement(),
-            DEFAULT_UNIT_OF_MEASURE.getMinUnitOne(),
-            DEFAULT_UNIT_OF_MEASURE.getItemUnitOne(),
-            DEFAULT_UNIT_OF_MEASURE.getItemUnitTwo(),
-            DEFAULT_UNIT_OF_MEASURE.getMaxUnitDigitWidths()
-    );
+    public static final MeasurementModel DEFAULT_MEASUREMENT_MODEL =
+            MeasurementModelBuilder.
+                    basedOnUnitOfMeasure(DEFAULT_UNIT_OF_MEASURE).
+                    build();
 }

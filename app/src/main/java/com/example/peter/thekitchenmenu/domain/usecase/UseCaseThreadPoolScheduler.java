@@ -9,7 +9,6 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Executes asynchronous tasks using a {@link ThreadPoolExecutor}.
- * <p>
  * See also {@link Executors} for a list of factory methods to create common
  * {@link java.util.concurrent.ExecutorService}s for different scenarios.
  */

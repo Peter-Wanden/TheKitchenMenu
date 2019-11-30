@@ -4,7 +4,6 @@ import android.content.res.Resources;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 
-import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientQuantityEntity;
@@ -15,8 +14,10 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredie
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseConversionFactorStatus;
+import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.UseCaseConversionFactorStatus;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeportioncalculator.UseCasePortionCalculatorRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeportioncalculator.UseCasePortionCalculatorResponse;
 import com.example.peter.thekitchenmenu.testdata.TestDataIngredientEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIngredientQuantityEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipePortionsEntity;
@@ -24,8 +25,7 @@ import com.example.peter.thekitchenmenu.testdata.TestDataUseCasePortionCalculato
 import com.example.peter.thekitchenmenu.ui.detail.common.MeasurementErrorMessageMaker;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor.RecipeIngredientMeasurementViewModel;
 import com.example.peter.thekitchenmenu.ui.utils.NumberFormatter;
-import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCasePortionCalculator;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeportioncalculator.UseCasePortionCalculator;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 
@@ -37,12 +37,11 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.UseCasePortionCalculator.RequestValues;
-import static com.example.peter.thekitchenmenu.domain.usecase.UseCasePortionCalculator.ResponseValues;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -51,49 +50,46 @@ public class RecipeIngredientMeasurementViewModelTest {
 
     // region constants ----------------------------------------------------------------------------
     // region - ERROR MESSAGES
-    private static final String NUMBER_FORMAT_EXCEPTION_ERROR =
-            "Please enter numbers only.";
-    private static final String CONVERSION_FACTOR_ERROR_MESSAGE =
-            "Please enter a number between n1 and n2";
+    private static final String ERROR_MESSAGE = "errorMessage";
     // endregion - ERROR MESSAGES
 
     // region - USE CASE PORTION REQUEST/RESPONSE TEST DATA
-    private RequestValues REQUEST_EMPTY_FOUR_PORTIONS =
+    private UseCasePortionCalculatorRequest REQUEST_EMPTY_FOUR_PORTIONS =
             TestDataUseCasePortionCalculatorRequestResponse.getRequestEmptyFourPortions();
-    private ResponseValues RESPONSE_EMPTY_FOUR_PORTIONS =
+    private UseCasePortionCalculatorResponse RESPONSE_EMPTY_FOUR_PORTIONS =
             TestDataUseCasePortionCalculatorRequestResponse.getResponseEmptyFourPortions();
 
-    private RequestValues REQUEST_INVALID_TOTAL_UNIT_ONE =
+    private UseCasePortionCalculatorRequest REQUEST_INVALID_TOTAL_UNIT_ONE =
             TestDataUseCasePortionCalculatorRequestResponse.getRequestInvalidTotalUnitOne();
 
-    private RequestValues REQUEST_VALID_UNIT_ONE =
+    private UseCasePortionCalculatorRequest REQUEST_VALID_UNIT_ONE =
             TestDataUseCasePortionCalculatorRequestResponse.getRequestValidTotalUnitOne();
-    private ResponseValues RESPONSE_VALID_UNIT_ONE =
+    private UseCasePortionCalculatorResponse RESPONSE_VALID_UNIT_ONE =
             TestDataUseCasePortionCalculatorRequestResponse.getResponseValidTotalUnitOne();
 
-    private RequestValues REQUEST_INVALID_UNIT_TWO =
+    private UseCasePortionCalculatorRequest REQUEST_INVALID_UNIT_TWO =
             TestDataUseCasePortionCalculatorRequestResponse.getRequestInvalidTotalUnitTwo();
 
-    private RequestValues REQUEST_VALID_UNIT_TWO =
+    private UseCasePortionCalculatorRequest REQUEST_VALID_UNIT_TWO =
             TestDataUseCasePortionCalculatorRequestResponse.getRequestValidTotalUnitTwo();
-    private ResponseValues RESPONSE_VALID_UNIT_TWO =
+    private UseCasePortionCalculatorResponse RESPONSE_VALID_UNIT_TWO =
             TestDataUseCasePortionCalculatorRequestResponse.getResponseValidTotalUnitTwo();
 
-    private RequestValues REQUEST_UNIT_OF_MEASURE_IMPERIAL_SPOON =
+    private UseCasePortionCalculatorRequest REQUEST_UNIT_OF_MEASURE_IMPERIAL_SPOON =
             TestDataUseCasePortionCalculatorRequestResponse.
                     getRequestUnitOfMeasureChangeImperialSpoon();
 
-    private RequestValues REQUEST_INVALID_CONVERSION_FACTOR =
+    private UseCasePortionCalculatorRequest REQUEST_INVALID_CONVERSION_FACTOR =
             TestDataUseCasePortionCalculatorRequestResponse.
                     getRequestNewValidImperialSpoonInvalidConversionFactor();
 
-    private RequestValues REQUEST_VALID_CONVERSION_FACTOR =
+    private UseCasePortionCalculatorRequest REQUEST_VALID_CONVERSION_FACTOR =
             TestDataUseCasePortionCalculatorRequestResponse.
                     getRequestNewValidImperialSpoonValidConversionFactor();
 
-    private RequestValues REQUEST_EXISTING_IMPERIAL_SPOON =
+    private UseCasePortionCalculatorRequest REQUEST_EXISTING_IMPERIAL_SPOON =
             TestDataUseCasePortionCalculatorRequestResponse.getRequestExistingValidImperialSpoon();
-    private ResponseValues RESPONSE_EXISTING_IMPERIAL_SPOON =
+    private UseCasePortionCalculatorResponse RESPONSE_EXISTING_IMPERIAL_SPOON =
             TestDataUseCasePortionCalculatorRequestResponse.getResponseExistingImperialSpoon();
     // endregion - USE CASE PORTION REQUEST/RESPONSE TEST DATA
 
@@ -239,14 +235,14 @@ public class RecipeIngredientMeasurementViewModelTest {
         String recipeId = REQUEST_INVALID_TOTAL_UNIT_ONE.getRecipeId();
         String ingredientId = REQUEST_INVALID_TOTAL_UNIT_ONE.getIngredientId();
         when(idProviderMock.getUId()).thenReturn(QUANTITY_NEW_INVALID.getId());
+
         SUT.start(recipeId, ingredientId);
         verifyRepoIngredientCalledReturnNewValidNameValidDescription();
         verifyRepoPortionsCalledReturnNewValidFourPortions();
         // Act
         SUT.setUnitOne(String.valueOf(model.getTotalUnitOne()));
         // Assert
-        assertEquals("Tablespoons and/or teaspoons need to have a value between 0.1 tsp " +
-                        "and 666 Tbsp", SUT.getUnitOneErrorMessage());
+        assertEquals(ERROR_MESSAGE, SUT.getUnitOneErrorMessage());
     }
 
     @Test
@@ -281,7 +277,6 @@ public class RecipeIngredientMeasurementViewModelTest {
         String recipeId = REQUEST_INVALID_UNIT_TWO.getRecipeId();
         String ingredientId = REQUEST_INVALID_UNIT_TWO.getIngredientId();
         when(idProviderMock.getUId()).thenReturn(QUANTITY_NEW_INVALID.getId());
-        String expectedError = "Tablespoons and/or teaspoons need to have a value between 0.1 tsp and 666 Tbsp";
         SUT.start(recipeId, ingredientId);
         verifyRepoIngredientCalledReturnNewValidNameValidDescription();
         verifyRepoPortionsCalledReturnNewValidFourPortions();
@@ -289,7 +284,7 @@ public class RecipeIngredientMeasurementViewModelTest {
         SUT.setUnitTwo(String.valueOf(model.getTotalUnitTwo()));
         // Assert
         String actualError = SUT.getUnitTwoErrorMessage();
-        assertEquals(expectedError, actualError);
+        assertEquals(ERROR_MESSAGE, actualError);
     }
 
     @Test
@@ -353,7 +348,7 @@ public class RecipeIngredientMeasurementViewModelTest {
         SUT.setConversionFactor(conversionFactor);
         // Assert
         String actualErrorMessage = SUT.getConversionFactorErrorMessage();
-        assertEquals(CONVERSION_FACTOR_ERROR_MESSAGE, actualErrorMessage);
+        assertEquals(ERROR_MESSAGE, actualErrorMessage);
     }
 
     @Test
@@ -405,12 +400,11 @@ public class RecipeIngredientMeasurementViewModelTest {
 
     // region helper methods -----------------------------------------------------------------------
     private void setupResources() {
-        when(resourcesMock.getString(eq(R.string.number_format_exception))).
-                thenReturn(NUMBER_FORMAT_EXCEPTION_ERROR);
-        when(resourcesMock.getString(R.string.conversion_factor_error_message,
-                UnitOfMeasureConstants.MIN_CONVERSION_FACTOR,
-                UnitOfMeasureConstants.MAX_CONVERSION_FACTOR)).
-                thenReturn(CONVERSION_FACTOR_ERROR_MESSAGE);
+        when(errorMessageMakerMock.getMeasurementErrorMessage(anyObject())).
+                thenReturn(ERROR_MESSAGE);
+
+        when(errorMessageMakerMock.getConversionFactorErrorMessage()).
+                thenReturn(ERROR_MESSAGE);
     }
 
     private void verifyRepoIngredientCalledReturnNewValidNameValidDescription() {
@@ -452,5 +446,6 @@ public class RecipeIngredientMeasurementViewModelTest {
     // endregion helper methods --------------------------------------------------------------------
 
     // region helper classes -----------------------------------------------------------------------
+
     // endregion helper classes --------------------------------------------------------------------
 }

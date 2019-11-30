@@ -9,7 +9,8 @@ import java.util.LinkedHashMap;
 import static androidx.core.util.Preconditions.checkNotNull;
 
 public class RepositoryRecipePortions
-        extends Repository<RecipePortionsEntity> implements DataSourceRecipePortions {
+        extends Repository<RecipePortionsEntity>
+        implements DataSourceRecipePortions {
 
     public static RepositoryRecipePortions INSTANCE;
     private DataSourceRecipePortions recipePortionsRemoteDataSource;
@@ -24,7 +25,7 @@ public class RepositoryRecipePortions
     }
 
     public static RepositoryRecipePortions getInstance(DataSourceRecipePortions remoteDataSource,
-                                                DataSourceRecipePortions localDataSource) {
+                                                       DataSourceRecipePortions localDataSource) {
         if (INSTANCE == null) {
             INSTANCE = new RepositoryRecipePortions(remoteDataSource, localDataSource);
         }
@@ -46,37 +47,37 @@ public class RepositoryRecipePortions
         recipePortionsLocalDataSource.getPortionsForRecipe(
                 recipeId,
                 new GetEntityCallback<RecipePortionsEntity>() {
-            @Override
-            public void onEntityLoaded(RecipePortionsEntity entity) {
-                if (entityCache == null)
-                    entityCache = new LinkedHashMap<>();
+                    @Override
+                    public void onEntityLoaded(RecipePortionsEntity entity) {
+                        if (entityCache == null)
+                            entityCache = new LinkedHashMap<>();
 
-                entityCache.put(entity.getId(), entity);
-                callback.onEntityLoaded(entity);
-            }
+                        entityCache.put(entity.getId(), entity);
+                        callback.onEntityLoaded(entity);
+                    }
 
-            @Override
-            public void onDataNotAvailable() {
-                recipePortionsRemoteDataSource.getPortionsForRecipe(
-                        recipeId,
-                        new GetEntityCallback<RecipePortionsEntity>() {
-                            @Override
-                            public void onEntityLoaded(RecipePortionsEntity entity) {
-                                if (entityCache == null)
-                                    entityCache = new LinkedHashMap<>();
+                    @Override
+                    public void onDataNotAvailable() {
+                        recipePortionsRemoteDataSource.getPortionsForRecipe(
+                                recipeId,
+                                new GetEntityCallback<RecipePortionsEntity>() {
+                                    @Override
+                                    public void onEntityLoaded(RecipePortionsEntity entity) {
+                                        if (entityCache == null)
+                                            entityCache = new LinkedHashMap<>();
 
-                                entityCache.put(entity.getId(), entity);
-                                callback.onEntityLoaded(entity);
-                            }
+                                        entityCache.put(entity.getId(), entity);
+                                        callback.onEntityLoaded(entity);
+                                    }
 
-                            @Override
-                            public void onDataNotAvailable() {
-                                callback.onDataNotAvailable();
-                            }
-                        }
-                );
-            }
-        });
+                                    @Override
+                                    public void onDataNotAvailable() {
+                                        callback.onDataNotAvailable();
+                                    }
+                                }
+                        );
+                    }
+                });
     }
 
     private RecipePortionsEntity checkCacheForId(String recipeId) {

@@ -6,8 +6,10 @@ import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseConversionFactorStatus;
+import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.UseCaseConversionFactorStatus;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.UseCaseConversionFactorStatusRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.UseCaseConversionFactorStatusResponse;
 import com.example.peter.thekitchenmenu.testdata.TestDataIngredientEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataUseCaseConversionFactorStatusRequestResponse;
 
@@ -23,43 +25,43 @@ public class UseCaseConversionFactorStatusTest {
     // region constants ----------------------------------------------------------------------------
     private IngredientEntity INGREDIENT_NEW_VALID_NAME_DESCRIPTION =
             TestDataIngredientEntity.getNewInvalidNameValidDescription();
-    private UseCaseConversionFactorStatus.RequestValues REQUEST_DISABLED =
+    private UseCaseConversionFactorStatusRequest REQUEST_DISABLED =
             TestDataUseCaseConversionFactorStatusRequestResponse.
                     getRequestMetricNoConversionFactor();
-    private UseCaseConversionFactorStatus.ResponseValues RESPONSE_DISABLED =
+    private UseCaseConversionFactorStatusResponse RESPONSE_DISABLED =
             TestDataUseCaseConversionFactorStatusRequestResponse.
                     getResponseMetricNoConversionFactor();
 
     private IngredientEntity INGREDIENT_VALID_FROM_ANOTHER_USER =
             TestDataIngredientEntity.getExistingValidNameValidDescriptionFromAnotherUser();
-    private UseCaseConversionFactorStatus.RequestValues REQUEST_ENABLED_UNEDITABLE =
+    private UseCaseConversionFactorStatusRequest REQUEST_ENABLED_UNEDITABLE =
             TestDataUseCaseConversionFactorStatusRequestResponse.
                     getRequestWithConversionFactorFromAnotherUser();
-    private UseCaseConversionFactorStatus.ResponseValues RESPONSE_ENABLED_UNEDITABLE =
+    private UseCaseConversionFactorStatusResponse RESPONSE_ENABLED_UNEDITABLE =
             TestDataUseCaseConversionFactorStatusRequestResponse.
                     getResponseConversionFactorUneditable();
 
     private IngredientEntity INGREDIENT_NEW_VALID_WITH_CONVERSION_FACTOR_UNSET =
             TestDataIngredientEntity.getNewValidNameValidDescription();
-    private UseCaseConversionFactorStatus.RequestValues REQUEST_ENABLED_EDITABLE_UNSET =
+    private UseCaseConversionFactorStatusRequest REQUEST_ENABLED_EDITABLE_UNSET =
             TestDataUseCaseConversionFactorStatusRequestResponse.
                     getRequestWithConversionFactorEnabledUnset();
-    private UseCaseConversionFactorStatus.ResponseValues RESPONSE_ENABLED_EDITABLE_UNSET =
+    private UseCaseConversionFactorStatusResponse RESPONSE_ENABLED_EDITABLE_UNSET =
             TestDataUseCaseConversionFactorStatusRequestResponse.
                     getResponseConversionFactorEnabledUnset();
 
     private IngredientEntity INGREDIENT_VALID_WITH_CONVERSION_FACTOR =
             TestDataIngredientEntity.getExistingValidWithConversionFactor();
-    private UseCaseConversionFactorStatus.RequestValues REQUEST_ENABLED_EDITABLE_SET =
+    private UseCaseConversionFactorStatusRequest REQUEST_ENABLED_EDITABLE_SET =
             TestDataUseCaseConversionFactorStatusRequestResponse.
                     getRequestWithConversionFactorEnabledSet();
-    private UseCaseConversionFactorStatus.ResponseValues RESPONSE_ENABLED_EDITABLE_SET =
+    private UseCaseConversionFactorStatusResponse RESPONSE_ENABLED_EDITABLE_SET =
             TestDataUseCaseConversionFactorStatusRequestResponse.
                     getResponseConversionFactorEnabledSet();
 
-    private UseCaseConversionFactorStatus.RequestValues REQUEST_NO_DATA_AVAILABLE =
+    private UseCaseConversionFactorStatusRequest REQUEST_NO_DATA_AVAILABLE =
             TestDataUseCaseConversionFactorStatusRequestResponse.getRequestForIngredientNotFound();
-    private UseCaseConversionFactorStatus.ResponseValues RESPONSE_NO_DATA_AVAILABLE =
+    private UseCaseConversionFactorStatusResponse RESPONSE_NO_DATA_AVAILABLE =
             TestDataUseCaseConversionFactorStatusRequestResponse.getResponseForIngredientNotFound();
 
 
@@ -72,7 +74,7 @@ public class UseCaseConversionFactorStatusTest {
     @Captor
     ArgumentCaptor<DataSource.GetEntityCallback<IngredientEntity>> getEntityCallbackCaptor;
 
-    private UseCaseConversionFactorStatus.ResponseValues actualResponse;
+    private UseCaseConversionFactorStatusResponse actualResponse;
 
     // endregion helper fields ---------------------------------------------------------------------
 
@@ -147,20 +149,20 @@ public class UseCaseConversionFactorStatusTest {
     }
 
     // region helper methods -----------------------------------------------------------------------
-    private UseCaseConversionFactorStatus.RequestValues getRequestValues(MeasurementSubtype subtype,
+    private UseCaseConversionFactorStatusRequest getRequestValues(MeasurementSubtype subtype,
                                                                          String ingredientId) {
-        return new UseCaseConversionFactorStatus.RequestValues(subtype, ingredientId);
+        return new UseCaseConversionFactorStatusRequest(subtype, ingredientId);
     }
 
-    private UseCase.UseCaseCallback<UseCaseConversionFactorStatus.ResponseValues> getResponseCallback() {
-        return new UseCase.UseCaseCallback<UseCaseConversionFactorStatus.ResponseValues>() {
+    private UseCase.UseCaseCallback<UseCaseConversionFactorStatusResponse> getResponseCallback() {
+        return new UseCase.UseCaseCallback<UseCaseConversionFactorStatusResponse>() {
             @Override
-            public void onSuccess(UseCaseConversionFactorStatus.ResponseValues response) {
+            public void onSuccess(UseCaseConversionFactorStatusResponse response) {
                 UseCaseConversionFactorStatusTest.this.actualResponse = response;
             }
 
             @Override
-            public void onError(UseCaseConversionFactorStatus.ResponseValues response) {
+            public void onError(UseCaseConversionFactorStatusResponse response) {
                 UseCaseConversionFactorStatusTest.this.actualResponse = response;
             }
         };

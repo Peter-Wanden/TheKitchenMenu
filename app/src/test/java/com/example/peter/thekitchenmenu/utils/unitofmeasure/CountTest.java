@@ -38,7 +38,7 @@ public class CountTest {
     public void totalBaseUnitsAreSet_outOfRangeMin_false() {
         // Arrange
         // Act
-        assertFalse(SUT.isTotalBaseUnitsSet(0.9));
+        assertFalse(SUT.isTotalBaseUnitsSet(0.01));
         // Assert
     }
 
@@ -58,19 +58,6 @@ public class CountTest {
         // Act
         assertFalse(SUT.isTotalBaseUnitsSet((MAX_COUNT + 1)));
         // Assert
-    }
-
-    @Test
-    public void numberOfItemsIsSet_totalBaseUnitsSetToLowerValueThanNumberOfItems_numberOfItemsAutoAdjustedToBaseUnitValue() {
-        // Arrange
-        int numberOfItemsHigherThanBaseUnits = 10;
-        double baseUnitsLowerThanNumberOfItems = 5;
-        int expectedNoOfItemsAdjustment = (int) (numberOfItemsHigherThanBaseUnits - baseUnitsLowerThanNumberOfItems);
-        // Act
-        assertTrue(SUT.isNumberOfItemsSet(numberOfItemsHigherThanBaseUnits));
-        assertTrue(SUT.isTotalBaseUnitsSet(baseUnitsLowerThanNumberOfItems));
-        // Assert
-        assertEquals(expectedNoOfItemsAdjustment, SUT.getNumberOfItems());
     }
 
     @Test
@@ -317,5 +304,32 @@ public class CountTest {
 
         assertEquals((0), SUT.getTotalUnitTwo());
         assertEquals((0), SUT.getItemUnitTwo());
+    }
+
+    @Test
+    public void totalMeasurementIsSet_totalDividedByPortions_itemAsFraction() {
+        // Arrange
+        int numberOfPortions = 16;
+        int noOfOnions = 1;
+        double expectedFractionOfAnOnionForOnePortion = noOfOnions / numberOfPortions;
+        // Act
+        SUT.isNumberOfItemsSet(numberOfPortions);
+        SUT.isTotalUnitTwoSet(noOfOnions);
+        // Assert
+        assertEquals(expectedFractionOfAnOnionForOnePortion, SUT.getItemUnitOne(), DELTA);
+    }
+
+    @Test
+    public void totalMeasurementIsSet_threePortionsAtOneAndHalf_itemIsHalf() {
+        // Arrange
+        int numberOfPortions = 3;
+        int wholeUnits = 1;
+        double fractionUnit = 0.5;
+        double expectedItemUnits = (wholeUnits + fractionUnit) / numberOfPortions;
+        // Act
+        SUT.isTotalUnitTwoSet(wholeUnits);
+        SUT.isTotalUnitOneSet(fractionUnit);
+        // Assert
+        assertEquals(expectedItemUnits, SUT.getItemUnitOne(), DELTA);
     }
 }

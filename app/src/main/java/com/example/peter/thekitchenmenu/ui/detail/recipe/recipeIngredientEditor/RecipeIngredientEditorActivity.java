@@ -2,6 +2,7 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,6 +22,8 @@ import com.example.peter.thekitchenmenu.utils.ActivityUtils;
 
 public class RecipeIngredientEditorActivity
         extends AppCompatActivity implements RecipeIngredientEditorNavigator {
+
+    private static final String TAG = "tkm-RecipeIngredientEdi";
 
     public static final int REQUEST_ADD_RECIPE_INGREDIENT = 1;
     public static final int RESULT_OK = 2;
@@ -51,24 +54,49 @@ public class RecipeIngredientEditorActivity
 
     private void start() {
         Intent intent = getIntent();
-        if (intent.hasExtra(EXTRA_RECIPE_ID) && intent.hasExtra(EXTRA_INGREDIENT_ID)) {
-            String recipeId = intent.getStringExtra(EXTRA_RECIPE_ID);
-            String ingredientId = intent.getStringExtra(EXTRA_INGREDIENT_ID);
 
-            recipeNameAndPortionsViewModel.start(recipeId);
-            ingredientViewerViewModel.start(ingredientId);
+        String recipeId;
+        String ingredientId;
+        String recipeIngredientId;
+
+        if (isCreatingNewRecipeIngredient(intent)) {
+            Log.d(TAG, "start: new");
+            recipeId = intent.getStringExtra(EXTRA_RECIPE_ID);
+            ingredientId = intent.getStringExtra(EXTRA_INGREDIENT_ID);
+
+            startViewModels(recipeId, ingredientId);
             measurementViewModel.start(recipeId, ingredientId);
 
-            setNavigator();
+        } else if (isEditingRecipeIngredient(intent)) {
+            Log.d(TAG, "start: edit");
+            recipeId = intent.getStringExtra(EXTRA_RECIPE_ID);
+            ingredientId = intent.getStringExtra(EXTRA_INGREDIENT_ID);
+            recipeIngredientId = intent.getStringExtra(EXTRA_RECIPE_INGREDIENT_ID);
 
-        } else if (intent.hasExtra(EXTRA_RECIPE_ID) && intent.hasExtra(EXTRA_RECIPE_INGREDIENT_ID)) {
-            measurementViewModel.start(intent.getStringExtra(EXTRA_RECIPE_INGREDIENT_ID));
-
-            setNavigator();
+            startViewModels(recipeId, ingredientId);
+            measurementViewModel.start(recipeIngredientId);
         }
+        setMeasurementModelNavigator();
     }
 
-    private void setNavigator() {
+    private void startViewModels(String recipeId, String ingredientId) {
+        recipeNameAndPortionsViewModel.start(recipeId);
+        ingredientViewerViewModel.start(ingredientId);
+    }
+
+    private boolean isCreatingNewRecipeIngredient(Intent intent) {
+        return intent.hasExtra(EXTRA_RECIPE_ID)
+                && intent.hasExtra(EXTRA_INGREDIENT_ID)
+                && !intent.hasExtra(EXTRA_RECIPE_INGREDIENT_ID);
+    }
+
+    private boolean isEditingRecipeIngredient(Intent intent) {
+        return intent.hasExtra(EXTRA_RECIPE_ID)
+                && intent.hasExtra(EXTRA_INGREDIENT_ID) &&
+                intent.hasExtra(EXTRA_RECIPE_INGREDIENT_ID);
+    }
+
+    private void setMeasurementModelNavigator() {
         measurementViewModel.setNavigator(this);
     }
 
