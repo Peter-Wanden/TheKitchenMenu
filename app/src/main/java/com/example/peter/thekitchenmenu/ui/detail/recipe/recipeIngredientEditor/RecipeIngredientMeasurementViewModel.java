@@ -8,11 +8,10 @@ import androidx.databinding.library.baseAdapters.BR;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.peter.thekitchenmenu.R;
+import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModelBuilder;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.UseCaseConversionFactorStatus;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.UseCaseConversionFactorStatusRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.UseCaseConversionFactorStatusResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeportioncalculator.UseCasePortionCalculator;
@@ -29,8 +28,6 @@ import static com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitO
 import static com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.UseCaseConversionFactorStatus.*;
 
 public class RecipeIngredientMeasurementViewModel extends ObservableViewModel {
-
-//    private static final String TAG = "tkm-RecipeIngredientMea";
 
     private Resources resources;
     private RecipeIngredientEditorNavigator navigator;
@@ -352,7 +349,7 @@ public class RecipeIngredientMeasurementViewModel extends ObservableViewModel {
         useCaseHandler.execute(
                 useCasePortionCalculator,
                 request,
-                new UseCaseCallback<UseCasePortionCalculatorResponse>() {
+                new Callback<UseCasePortionCalculatorResponse>() {
                     @Override
                     public void onSuccess(UseCasePortionCalculatorResponse response) {
                         processModelResult(response.getModel());
@@ -420,19 +417,17 @@ public class RecipeIngredientMeasurementViewModel extends ObservableViewModel {
         );
     }
 
-    private UseCase.UseCaseCallback<UseCaseConversionFactorStatusResponse>
+    private Callback<UseCaseConversionFactorStatusResponse>
     getNewResponseCallback() {
-        return new UseCase.UseCaseCallback<UseCaseConversionFactorStatusResponse>() {
+        return new Callback<UseCaseConversionFactorStatusResponse>() {
 
             @Override
-            public void onSuccess(UseCaseConversionFactorStatusResponse
-                                          response) {
+            public void onSuccess(UseCaseConversionFactorStatusResponse response) {
                 processConversionFactorResult(response.getResult());
             }
 
             @Override
-            public void onError(UseCaseConversionFactorStatusResponse
-                                        response) {
+            public void onError(UseCaseConversionFactorStatusResponse response) {
                 processConversionFactorResult(response.getResult());
             }
         };

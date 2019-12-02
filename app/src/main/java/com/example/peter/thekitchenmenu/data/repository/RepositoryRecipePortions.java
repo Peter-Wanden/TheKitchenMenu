@@ -13,15 +13,11 @@ public class RepositoryRecipePortions
         implements DataSourceRecipePortions {
 
     public static RepositoryRecipePortions INSTANCE;
-    private DataSourceRecipePortions recipePortionsRemoteDataSource;
-    private DataSourceRecipePortions recipePortionsLocalDataSource;
 
     private RepositoryRecipePortions(@NonNull DataSourceRecipePortions remoteDataSource,
                                      @NonNull DataSourceRecipePortions localDataSource) {
         this.remoteDataSource = checkNotNull(remoteDataSource);
         this.localDataSource = checkNotNull(localDataSource);
-        recipePortionsRemoteDataSource = checkNotNull(remoteDataSource);
-        recipePortionsLocalDataSource = checkNotNull(remoteDataSource);
     }
 
     public static RepositoryRecipePortions getInstance(DataSourceRecipePortions remoteDataSource,
@@ -44,7 +40,7 @@ public class RepositoryRecipePortions
             callback.onEntityLoaded(cachedEntity);
             return;
         }
-        recipePortionsLocalDataSource.getPortionsForRecipe(
+        ((DataSourceRecipePortions)localDataSource).getPortionsForRecipe(
                 recipeId,
                 new GetEntityCallback<RecipePortionsEntity>() {
                     @Override
@@ -58,7 +54,7 @@ public class RepositoryRecipePortions
 
                     @Override
                     public void onDataNotAvailable() {
-                        recipePortionsRemoteDataSource.getPortionsForRecipe(
+                        ((DataSourceRecipePortions)remoteDataSource).getPortionsForRecipe(
                                 recipeId,
                                 new GetEntityCallback<RecipePortionsEntity>() {
                                     @Override

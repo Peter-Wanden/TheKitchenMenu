@@ -4,10 +4,10 @@ import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
+import com.example.peter.thekitchenmenu.domain.UseCaseAbstract;
+import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.UseCaseConversionFactorStatus;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.UseCaseConversionFactorStatusRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.UseCaseConversionFactorStatusResponse;
 import com.example.peter.thekitchenmenu.testdata.TestDataIngredientEntity;
@@ -154,8 +154,8 @@ public class UseCaseConversionFactorStatusTest {
         return new UseCaseConversionFactorStatusRequest(subtype, ingredientId);
     }
 
-    private UseCase.UseCaseCallback<UseCaseConversionFactorStatusResponse> getResponseCallback() {
-        return new UseCase.UseCaseCallback<UseCaseConversionFactorStatusResponse>() {
+    private UseCaseAbstract.Callback<UseCaseConversionFactorStatusResponse> getResponseCallback() {
+        return new UseCaseAbstract.Callback<UseCaseConversionFactorStatusResponse>() {
             @Override
             public void onSuccess(UseCaseConversionFactorStatusResponse response) {
                 UseCaseConversionFactorStatusTest.this.actualResponse = response;

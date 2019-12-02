@@ -2,9 +2,9 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist;
 
 import androidx.annotation.NonNull;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.UseCaseAbstract;
 
-public final class UseCaseRecipeIngredientListRequest implements UseCase.RequestValues {
+public final class UseCaseRecipeIngredientListRequest implements UseCaseAbstract.Request {
     @NonNull
     private final String recipeId;
 
@@ -20,7 +20,7 @@ public final class UseCaseRecipeIngredientListRequest implements UseCase.Request
     @NonNull
     @Override
     public String toString() {
-        return "RequestValues{" +
+        return "Request{" +
                 "recipeId='" + recipeId + '\'' +
                 '}';
     }

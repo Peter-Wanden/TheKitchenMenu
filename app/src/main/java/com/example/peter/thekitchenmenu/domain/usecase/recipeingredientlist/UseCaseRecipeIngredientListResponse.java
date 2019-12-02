@@ -2,11 +2,11 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist;
 
 import androidx.annotation.NonNull;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.UseCaseAbstract;
 
 import java.util.List;
 
-public class UseCaseRecipeIngredientListResponse implements  UseCase.ResponseValues {
+public class UseCaseRecipeIngredientListResponse implements UseCaseAbstract.Response {
     @NonNull
     private final List<RecipeIngredientListItemModel> listItemModels;
 
@@ -23,7 +23,7 @@ public class UseCaseRecipeIngredientListResponse implements  UseCase.ResponseVal
     @NonNull
     @Override
     public String toString() {
-        return "ResponseValues{" +
+        return "Response{" +
                 "listItemModels=" + listItemModels +
                 '}';
     }

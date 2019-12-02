@@ -134,9 +134,9 @@
             android:textAlignment="center"
             app:editTextErrorSetter="@{viewModel.unitOneErrorMessage}"
             app:fieldVisibilityNumberOfMeasurementUnits="@{viewModel.numberOfUnits}"
+            app:setUpEditTextForSubtypeSelected="@{viewModel.subtype}"
             app:layout_constraintBaseline_toBaselineOf="@id/recipe_ingredient_editable_measurement_two"
             app:layout_constraintStart_toEndOf="@id/recipe_ingredient_measurement_label_two"
-            app:setUpEditTextForSubtypeSelected="@{viewModel.subtype}"
             tools:text="16" />
 
         <androidx.appcompat.widget.AppCompatTextView

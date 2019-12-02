@@ -13,8 +13,6 @@ public class RepositoryFavoriteProduct
         implements DataSourceFavoriteProducts {
 
     public static RepositoryFavoriteProduct INSTANCE = null;
-    private DataSourceFavoriteProducts favoriteRemoteDataSource;
-    private DataSourceFavoriteProducts favoriteLocalDataSource;
 
     private RepositoryFavoriteProduct(
             @NonNull DataSourceFavoriteProducts remoteDataSource,
@@ -22,8 +20,6 @@ public class RepositoryFavoriteProduct
 
         this.remoteDataSource = checkNotNull(remoteDataSource);
         this.localDataSource = checkNotNull(localDataSource);
-        favoriteRemoteDataSource = checkNotNull(remoteDataSource);
-        favoriteLocalDataSource = checkNotNull(localDataSource);
     }
 
     public static RepositoryFavoriteProduct getInstance(
@@ -47,7 +43,7 @@ public class RepositoryFavoriteProduct
             callback.onEntityLoaded(cachedEntity);
             return;
         }
-        favoriteLocalDataSource.getByProductId(
+        ((DataSourceFavoriteProducts)localDataSource).getByProductId(
                 productId,
                 new GetEntityCallback<FavoriteProductEntity>() {
             @Override
@@ -61,7 +57,7 @@ public class RepositoryFavoriteProduct
 
             @Override
             public void onDataNotAvailable() {
-                favoriteRemoteDataSource.getByProductId(
+                ((DataSourceFavoriteProducts)remoteDataSource).getByProductId(
                         productId,
                         new GetEntityCallback<FavoriteProductEntity>() {
                     @Override

@@ -7,11 +7,11 @@ import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
+import com.example.peter.thekitchenmenu.domain.UseCaseAbstract;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModelBuilder;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasure;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 public class UseCaseRecipeIngredientList
-        extends UseCase<UseCaseRecipeIngredientListRequest, UseCaseRecipeIngredientListResponse> {
+        extends UseCaseAbstract<UseCaseRecipeIngredientListRequest, UseCaseRecipeIngredientListResponse> {
 
     private RepositoryRecipeIngredient repoRecipeIngredient;
     private RepositoryIngredient repoIngredient;
@@ -43,8 +43,8 @@ public class UseCaseRecipeIngredientList
     }
 
     @Override
-    protected void executeUseCase(UseCaseRecipeIngredientListRequest requestValues) {
-        recipeId = requestValues.getRecipeId();
+    protected void execute(UseCaseRecipeIngredientListRequest request) {
+        recipeId = request.getRecipeId();
         getPortionsForRecipe();
     }
 

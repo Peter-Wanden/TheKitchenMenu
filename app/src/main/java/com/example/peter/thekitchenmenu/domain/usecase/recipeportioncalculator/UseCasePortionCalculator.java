@@ -8,12 +8,13 @@ import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
+import com.example.peter.thekitchenmenu.domain.UseCaseAbstract;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModelBuilder;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasure;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureResponse;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 
@@ -21,7 +22,9 @@ import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
  * Calculates the measurement of an ingredient for a single portion of a recipe.
  */
 public class UseCasePortionCalculator
-        extends UseCase<UseCasePortionCalculatorRequest, UseCasePortionCalculatorResponse> {
+        extends UseCaseAbstract<UseCasePortionCalculatorRequest, UseCasePortionCalculatorResponse> {
+
+    private static final String TAG = "tkm-" + UseCasePortionCalculator.class.getSimpleName() + " ";
 
     public enum ResultStatus {
         QUANTITY_DATA_NOT_AVAILABLE,
@@ -41,7 +44,7 @@ public class UseCasePortionCalculator
     private UniqueIdProvider idProvider;
     private TimeProvider timeProvider;
 
-    private UnitOfMeasure unitOfMeasure = MeasurementSubtype.METRIC_MASS.getMeasurementClass();
+    private UnitOfMeasure unitOfMeasure;
     private boolean conversionFactorChanged;
     private boolean isConversionFactorSet;
     private boolean portionsChanged;
@@ -75,11 +78,11 @@ public class UseCasePortionCalculator
     }
 
     @Override
-    protected void executeUseCase(UseCasePortionCalculatorRequest values) {
+    protected void execute(UseCasePortionCalculatorRequest request) {
         if (isNewInstantiation()) {
-            extractIdsAndStart(values);
+            extractIdsAndStart(request);
         } else {
-            processModel(values.getModel());
+            processModel(request.getModel());
         }
     }
 
@@ -182,14 +185,15 @@ public class UseCasePortionCalculator
     }
 
     private void returnDataNotAvailable(ResultStatus status) {
-        UseCasePortionCalculatorResponse values = new UseCasePortionCalculatorResponse(
+        UseCasePortionCalculatorResponse response = new UseCasePortionCalculatorResponse(
                 UnitOfMeasureConstants.DEFAULT_MEASUREMENT_MODEL,
                 status);
 
-        getUseCaseCallback().onError(values);
+        getUseCaseCallback().onError(response);
     }
 
     private void setupUnitOfMeasure() {
+
         int subtypeAsInt = quantityEntity.getUnitOfMeasureSubtype();
         MeasurementSubtype subType = MeasurementSubtype.fromInt(subtypeAsInt);
 
@@ -206,10 +210,12 @@ public class UseCasePortionCalculator
             isTotalUnitOneSet = true;
             isTotalUnitTwoSet = true;
         }
+
         updateExistingModel();
     }
 
     private void processModel(MeasurementModel modelIn) {
+        System.out.println(TAG + "modelIn=" + modelIn);
         this.modelIn = modelIn;
         checkForChanges();
     }
@@ -273,8 +279,7 @@ public class UseCasePortionCalculator
 
     private void processTotalMeasurementOne() {
         totalUnitOneChanged = true;
-        isTotalUnitOneSet = unitOfMeasure.isTotalUnitOneSet(
-                modelIn.getTotalUnitOne());
+        isTotalUnitOneSet = unitOfMeasure.isTotalUnitOneSet(modelIn.getTotalUnitOne());
     }
 
     private boolean isTotalUnitTwoChanged() {
@@ -283,8 +288,7 @@ public class UseCasePortionCalculator
 
     private void processTotalMeasurementTwo() {
         totalUnitTwoChanged = true;
-        isTotalUnitTwoSet = unitOfMeasure.isTotalUnitTwoSet(
-                modelIn.getTotalUnitTwo());
+        isTotalUnitTwoSet = unitOfMeasure.isTotalUnitTwoSet(modelIn.getTotalUnitTwo());
     }
 
     private IngredientEntity getUpdatedIngredientEntity() {
@@ -303,7 +307,8 @@ public class UseCasePortionCalculator
         existingModel = MeasurementModelBuilder.basedOnUnitOfMeasure(unitOfMeasure).
                 setConversionFactor(getConversionFactorResult()).
                 setTotalUnitOne(getTotalUnitOneResult()).
-                setTotalUnitTwo(getTotalUnitTwoResult()).build();
+                setTotalUnitTwo(getTotalUnitTwoResult()).
+                build();
 
         returnResult();
     }
@@ -311,15 +316,20 @@ public class UseCasePortionCalculator
     private void returnResult() {
         saveIfValid();
 
-        UseCasePortionCalculatorResponse response = new UseCasePortionCalculatorResponse(
-                existingModel,
-                getResultStatus());
+        UseCasePortionCalculatorResponse response = getResponse();
+
+        System.out.println(TAG + "response=" + response);
 
         resetResults();
 
-        if (getUseCaseCallback() != null) {
-            getUseCaseCallback().onSuccess(response);
-        }
+        getUseCaseCallback().onSuccess(response);
+
+    }
+
+    private UseCasePortionCalculatorResponse getResponse() {
+        return new UseCasePortionCalculatorResponse(
+                existingModel,
+                getResultStatus());
     }
 
     private double getConversionFactorResult() {
@@ -344,10 +354,10 @@ public class UseCasePortionCalculator
         if (conversionFactorChanged && !isConversionFactorSet) {
             return ResultStatus.INVALID_CONVERSION_FACTOR;
         }
-        if (totalUnitOneChanged && !isTotalUnitOneSet) {
+        if (totalUnitOneChanged && !isTotalUnitOneSet && unitOfMeasure.isValidMeasurement()) {
             return ResultStatus.INVALID_TOTAL_UNIT_ONE;
         }
-        if (totalUnitTwoChanged && !isTotalUnitTwoSet) {
+        if (totalUnitTwoChanged && !isTotalUnitTwoSet && unitOfMeasure.isValidMeasurement()) {
             return ResultStatus.INVALID_TOTAL_UNIT_TWO;
         }
         if (!unitOfMeasure.isValidMeasurement()) {

@@ -4,13 +4,6 @@ import androidx.core.util.Pair;
 
 import com.example.peter.thekitchenmenu.R;
 
-/**
- * The count class uses the variable totalUnitTwo to receive the number of items for a count
- * measurement.
- * The variable NoOfItems takes
- * Item unit one is the integer and ItemUnit one the decimal part of a count being apportioned,
- *
- */
 public class Count extends UnitOfMeasureAbstract {
 
     public Count() {
@@ -19,31 +12,32 @@ public class Count extends UnitOfMeasureAbstract {
         numberOfUnits = UnitOfMeasureConstants.COUNT_NUMBER_OF_MEASUREMENT_UNITS;
         maxMeasurement = UnitOfMeasureConstants.COUNT_MAX_MEASUREMENT;
         minMeasurement = UnitOfMeasureConstants.COUNT_MIN_MEASUREMENT;
-        unitTwo = UnitOfMeasureConstants.COUNT_UNIT_TWO;
-        unitOne = UnitOfMeasureConstants.COUNT_UNIT_ONE;
+        unitTwo = UnitOfMeasureConstants.COUNT_UNIT_TWO; // whole (e.g. 1 apple)
+        unitOne = UnitOfMeasureConstants.COUNT_UNIT_ONE; // parts of whole (e.g. half an apple)
         unitOneDecimal = UnitOfMeasureConstants.COUNT_UNIT_ONE_DECIMAL;
         smallestUnit = UnitOfMeasureConstants.COUNT_SMALLEST_UNIT;
         isConversionFactorEnabled = UnitOfMeasureConstants.COUNT_IS_CONVERSION_FACTOR_ENABLED;
 
         typeStringResourceId = R.string.count;
         subtypeStringResourceId = R.string.count;
-        unitOneLabelStringResourceId = R.string.empty_string; // Unit one is not used for COUNT
-        unitTwoLabelStringResourceId = R.string.each;
+        unitOneLabelStringResourceId = R.string.part;
+        unitTwoLabelStringResourceId = R.string.whole;
     }
 
     @Override
     public Pair[] getMaxUnitDigitWidths() {
-        // Calculates the max digit width of unit two
+        // Calculates the max digit width of unit two (whole units)
         int maximumUnitTwoValue = (int) (maxMeasurement / unitTwo);
         int unitTwoDigits = 0;
         while (maximumUnitTwoValue > 0) {
             unitTwoDigits++;
             maximumUnitTwoValue = maximumUnitTwoValue / 10;
         }
+
         Pair<Integer, Integer> unitTwoDigitsWidth = new Pair<>(unitTwoDigits, 0);
-        // unit one not used
-        Pair<Integer, Integer> unitOneDigitsWidth = new Pair<>(0, 0);
-        // Sets the digit widths for the conversion factor
+        // unit one uses one digit after decimal (for 10ths of an item)
+        Pair<Integer, Integer> unitOneDigitsWidth = new Pair<>(1, 1);
+        // No conversion factor used
         Pair<Integer, Integer> conversionFactorDigitWidths = new Pair<>(0, 0);
 
         Pair[] measurementUnitDigitWidths = new Pair[3];

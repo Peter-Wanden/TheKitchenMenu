@@ -62,6 +62,8 @@
     <string name="gallons">gal</string>
     <string name="each">each</string>
     <string name="piece">piece</string>
+    <string name="whole">whole</string>
+    <string name="part">part</string>
     <string name="items">items</string>
     <string name="teaspoon">tsp</string>
     <string name="tablespoon">Tbsp</string>

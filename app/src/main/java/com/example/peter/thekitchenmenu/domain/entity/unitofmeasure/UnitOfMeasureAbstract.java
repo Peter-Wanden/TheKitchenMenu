@@ -3,6 +3,8 @@ package com.example.peter.thekitchenmenu.domain.entity.unitofmeasure;
 import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
 
+import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
+
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -14,6 +16,11 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     enum LastMeasurementUpdated {
         TOTAL_MEASUREMENT,
         ITEM_MEASUREMENT
+    }
+
+    enum ResultStatus {
+
+        RESULT_OK,
     }
 
     protected MeasurementType measurementType;
@@ -45,8 +52,7 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     private double itemUnitOne;
     private double conversionFactor = UnitOfMeasureConstants.NO_CONVERSION_FACTOR;
 
-    UnitOfMeasureAbstract() {
-    }
+    UnitOfMeasureAbstract() {}
 
     @Override
     public MeasurementType getMeasurementType() {
@@ -98,8 +104,7 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     private void resetToOriginalValuesBeforeConversionFactorChanged() {
         unitOne = unitOneNoConversionFactor;
         unitTwo = unitTwoNoConversionFactor;
-        isTotalBaseUnitsSet((totalUnitTwo * unitTwo) +
-                (totalUnitOne * unitOne)
+        isTotalBaseUnitsSet((totalUnitTwo * unitTwo) + (totalUnitOne * unitOne)
         );
     }
 
@@ -108,7 +113,7 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
         unitOne = conversionFactor * unitOne;
         unitTwo = conversionFactor * unitTwo;
         isTotalBaseUnitsSet((totalUnitTwo * unitTwo) + (totalUnitOne * unitOne));
-        // todo - what if total base units exceed max??
+        // what if total base units exceed max??
         return true;
     }
 
@@ -318,7 +323,7 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     }
 
     private double getBaseUnitsWithItemUnitOne(double itemUnitOne) {
-        return (((itemUnitTwo * unitTwo) + (itemUnitOne * unitOne))) * numberOfItems;
+        return ((itemUnitTwo * unitTwo) + (itemUnitOne * unitOne)) * numberOfItems;
     }
 
     @Override
@@ -426,7 +431,8 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
 
         if (this instanceof ImperialMass ||
                 this instanceof ImperialVolume ||
-                this instanceof ImperialSpoon) {
+                this instanceof ImperialSpoon ||
+                this instanceof Count) {
 
             NumberFormat decimalFormat = NumberFormat.getInstance();
             decimalFormat.setRoundingMode(RoundingMode.HALF_EVEN);

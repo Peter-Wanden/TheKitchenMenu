@@ -2,12 +2,12 @@ package com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus;
 
 import androidx.annotation.NonNull;
 
+import com.example.peter.thekitchenmenu.domain.UseCaseAbstract;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 
 import java.util.Objects;
 
-public class UseCaseConversionFactorStatusRequest implements UseCase.RequestValues {
+public class UseCaseConversionFactorStatusRequest implements UseCaseAbstract.Request {
     @NonNull
     private MeasurementSubtype subtype;
     @NonNull

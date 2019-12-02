@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.commonmocks;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseScheduler;
+import com.example.peter.thekitchenmenu.domain.UseCaseAbstract;
+import com.example.peter.thekitchenmenu.domain.UseCaseScheduler;
 
 public class UseCaseSchedulerMock implements UseCaseScheduler {
     @Override
@@ -10,14 +10,14 @@ public class UseCaseSchedulerMock implements UseCaseScheduler {
     }
 
     @Override
-    public <V extends UseCase.ResponseValues> void notifyResponse(
-            V response, UseCase.UseCaseCallback<V> useCaseCallback) {
-        useCaseCallback.onSuccess(response);
+    public <V extends UseCaseAbstract.Response> void notifyResponse(
+            V response, UseCaseAbstract.Callback<V> callback) {
+        callback.onSuccess(response);
     }
 
     @Override
-    public <V extends UseCase.ResponseValues> void onError(
-            V response, UseCase.UseCaseCallback<V> useCaseCallback) {
-        useCaseCallback.onError(response);
+    public <V extends UseCaseAbstract.Response> void onError(
+            V response, UseCaseAbstract.Callback<V> callback) {
+        callback.onError(response);
     }
 }

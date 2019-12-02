@@ -8,11 +8,10 @@ import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
+import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasure;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeportioncalculator.UseCasePortionCalculator;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeportioncalculator.UseCasePortionCalculatorRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeportioncalculator.UseCasePortionCalculatorResponse;
@@ -239,7 +238,8 @@ public class UseCasePortionCalculatorTest {
                 repoRecipeIngredientMock,
                 repoIngredientMock,
                 idProviderMock,
-                timeProviderMock);
+                timeProviderMock
+        );
     }
 
     @Test
@@ -421,7 +421,7 @@ public class UseCasePortionCalculatorTest {
                 build();
         UseCasePortionCalculatorRequest requestValuesWithConversionFactor =
                 new UseCasePortionCalculatorRequest(
-                recipeId, ingredientId, NO_RECIPE_INGREDIENT_ID, updatedConversionFactor);
+                        recipeId, ingredientId, NO_RECIPE_INGREDIENT_ID, updatedConversionFactor);
 
         handler.execute(SUT, requestValuesWithConversionFactor, getResponseCallback());
         // Check conversion factor set ok in response
@@ -434,7 +434,7 @@ public class UseCasePortionCalculatorTest {
                 build();
         UseCasePortionCalculatorRequest requestUnitOfMeasureChange =
                 new UseCasePortionCalculatorRequest(
-                recipeId, ingredientId, NO_RECIPE_INGREDIENT_ID, modelWithUnitOfMeasureChange);
+                        recipeId, ingredientId, NO_RECIPE_INGREDIENT_ID, modelWithUnitOfMeasureChange);
         handler.execute(SUT, requestUnitOfMeasureChange, getResponseCallback());
         // Assert - conversion factor has reset to default
         assertEquals(UnitOfMeasureConstants.NO_CONVERSION_FACTOR,
@@ -535,7 +535,7 @@ public class UseCasePortionCalculatorTest {
         MeasurementModel unitOneUpdated = MeasurementModelBuilder.basedOnModel(
                 REQUEST_IMPERIAL_SPOON_VALID_CONVERSION_FACTOR.getModel()).
                 setTotalUnitOne(1).build();
-        UseCasePortionCalculatorRequest requestUnitOneUpdated = new UseCasePortionCalculatorRequest (
+        UseCasePortionCalculatorRequest requestUnitOneUpdated = new UseCasePortionCalculatorRequest(
                 REQUEST_IMPERIAL_SPOON_VALID_CONVERSION_FACTOR.getRecipeId(),
                 REQUEST_IMPERIAL_SPOON_VALID_CONVERSION_FACTOR.getIngredientId(),
                 NO_RECIPE_INGREDIENT_ID,
@@ -575,7 +575,7 @@ public class UseCasePortionCalculatorTest {
         MeasurementModel unitOneUpdated = MeasurementModelBuilder.basedOnModel(
                 REQUEST_IMPERIAL_SPOON_VALID_CONVERSION_FACTOR.getModel()).
                 setTotalUnitOne(1).build();
-        UseCasePortionCalculatorRequest requestUnitOneUpdated = new UseCasePortionCalculatorRequest (
+        UseCasePortionCalculatorRequest requestUnitOneUpdated = new UseCasePortionCalculatorRequest(
                 REQUEST_IMPERIAL_SPOON_VALID_CONVERSION_FACTOR.getRecipeId(),
                 REQUEST_IMPERIAL_SPOON_VALID_CONVERSION_FACTOR.getIngredientId(),
                 NO_RECIPE_INGREDIENT_ID,
@@ -587,7 +587,7 @@ public class UseCasePortionCalculatorTest {
         MeasurementModel unitTwoUpdated = MeasurementModelBuilder.basedOnModel(
                 responseUnitOneUpdated.getModel()).
                 setTotalUnitTwo(1).build();
-        UseCasePortionCalculatorRequest requestUnitTwoUpdated = new UseCasePortionCalculatorRequest (
+        UseCasePortionCalculatorRequest requestUnitTwoUpdated = new UseCasePortionCalculatorRequest(
                 REQUEST_IMPERIAL_SPOON_VALID_CONVERSION_FACTOR.getRecipeId(),
                 REQUEST_IMPERIAL_SPOON_VALID_CONVERSION_FACTOR.getIngredientId(),
                 NO_RECIPE_INGREDIENT_ID,
@@ -822,11 +822,11 @@ public class UseCasePortionCalculatorTest {
                 build();
 
         UseCasePortionCalculatorRequest updatedUnitOfMeasureRequest =
-                new UseCasePortionCalculatorRequest (
-                NO_RECIPE_ID,
-                NO_INGREDIENT_ID,
-                REQUEST_VALID_EXISTING_METRIC.getRecipeIngredientId(),
-                updatedUnitOfMeasureModel);
+                new UseCasePortionCalculatorRequest(
+                        NO_RECIPE_ID,
+                        NO_INGREDIENT_ID,
+                        REQUEST_VALID_EXISTING_METRIC.getRecipeIngredientId(),
+                        updatedUnitOfMeasureModel);
         handler.execute(SUT, updatedUnitOfMeasureRequest, getResponseCallback());
         // verify expected model and result status response
         assertEquals(MeasurementSubtype.IMPERIAL_SPOON, lastResponse.getModel().getSubtype());
@@ -839,7 +839,7 @@ public class UseCasePortionCalculatorTest {
                 basedOnModel(lastResponse.getModel()).
                 setTotalUnitOne(numberOfTeaspoons).
                 build();
-        UseCasePortionCalculatorRequest updatedUnitOneRequest = new UseCasePortionCalculatorRequest (
+        UseCasePortionCalculatorRequest updatedUnitOneRequest = new UseCasePortionCalculatorRequest(
                 NO_RECIPE_ID,
                 NO_INGREDIENT_ID,
                 REQUEST_VALID_EXISTING_METRIC.getRecipeIngredientId(),
@@ -874,12 +874,12 @@ public class UseCasePortionCalculatorTest {
                 setConversionFactor(MAX_CONVERSION_FACTOR).
                 build();
         UseCasePortionCalculatorRequest updatedConversionFactorRequest =
-                new UseCasePortionCalculatorRequest (
-                NO_RECIPE_ID,
-                NO_INGREDIENT_ID,
-                REQUEST_VALID_EXISTING_METRIC.getRecipeIngredientId(),
-                updatedConversionFactorModel
-        );
+                new UseCasePortionCalculatorRequest(
+                        NO_RECIPE_ID,
+                        NO_INGREDIENT_ID,
+                        REQUEST_VALID_EXISTING_METRIC.getRecipeIngredientId(),
+                        updatedConversionFactorModel
+                );
         handler.execute(SUT, updatedConversionFactorRequest, getResponseCallback());
 
         // verify expected UI updates returned
@@ -921,9 +921,9 @@ public class UseCasePortionCalculatorTest {
     }
 
     // region helper methods -----------------------------------------------------------------------
-    private UseCase.UseCaseCallback<UseCasePortionCalculatorResponse>
+    private Callback<UseCasePortionCalculatorResponse>
     getResponseCallback() {
-        return new UseCase.UseCaseCallback<UseCasePortionCalculatorResponse>() {
+        return new Callback<UseCasePortionCalculatorResponse>() {
 
             @Override
             public void onSuccess(UseCasePortionCalculatorResponse response) {

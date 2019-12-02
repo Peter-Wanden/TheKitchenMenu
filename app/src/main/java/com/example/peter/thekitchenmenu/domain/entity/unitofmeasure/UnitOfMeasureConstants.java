@@ -11,7 +11,7 @@ public class UnitOfMeasureConstants {
     public static final double MIN_VOLUME = 1.; // 1ml
     public static final double MAX_VOLUME = 10000.; // 10l
 
-    public static final int MIN_COUNT = 1;
+    public static final double MIN_COUNT = 0.1; // 1 tenth of a whole item
     public static final int MAX_COUNT = 500;
 
     public static final int MIN_NUMBER_OF_ITEMS = 1;

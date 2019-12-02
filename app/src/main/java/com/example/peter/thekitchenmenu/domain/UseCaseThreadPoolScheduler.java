@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecase;
+package com.example.peter.thekitchenmenu.domain;
 
 import android.os.Handler;
 
@@ -14,35 +14,38 @@ import java.util.concurrent.TimeUnit;
  */
 public class UseCaseThreadPoolScheduler implements UseCaseScheduler {
 
-    private final Handler mHandler = new Handler();
+    private final Handler handler = new Handler();
 
     public static final int POOL_SIZE = 2;
     public static final int MAX_POOL_SIZE = 4;
     public static final int TIMEOUT = 30;
 
-    ThreadPoolExecutor mThreadPoolExecutor;
+    ThreadPoolExecutor poolExecutor;
 
     public UseCaseThreadPoolScheduler() {
-        mThreadPoolExecutor = new ThreadPoolExecutor(POOL_SIZE, MAX_POOL_SIZE, TIMEOUT,
+        poolExecutor = new ThreadPoolExecutor(
+                POOL_SIZE,
+                MAX_POOL_SIZE,
+                TIMEOUT,
                 TimeUnit.SECONDS, new ArrayBlockingQueue<>(POOL_SIZE));
     }
 
     @Override
     public void execute(Runnable runnable) {
-        mThreadPoolExecutor.execute(runnable);
+        poolExecutor.execute(runnable);
     }
 
     @Override
-    public <V extends UseCase.ResponseValues> void notifyResponse(
+    public <V extends UseCaseAbstract.Response> void notifyResponse(
             final V response,
-            final UseCase.UseCaseCallback<V> useCaseCallback) {
-        mHandler.post(() -> useCaseCallback.onSuccess(response));
+            final UseCaseAbstract.Callback<V> callback) {
+        handler.post(() -> callback.onSuccess(response));
     }
 
     @Override
-    public <V extends UseCase.ResponseValues> void onError(
+    public <V extends UseCaseAbstract.Response> void onError(
             final V response,
-            final UseCase.UseCaseCallback<V> useCaseCallback) {
-        mHandler.post(() -> useCaseCallback.onError(response));
+            final UseCaseAbstract.Callback<V> callback) {
+        handler.post(() -> callback.onError(response));
     }
 }

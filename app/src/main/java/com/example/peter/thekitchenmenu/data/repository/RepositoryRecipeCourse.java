@@ -15,15 +15,11 @@ public class RepositoryRecipeCourse
         implements DataSourceRecipeCourse {
 
     public static RepositoryRecipeCourse INSTANCE;
-    private DataSourceRecipeCourse recipeCourseRemoteDataSource;
-    private DataSourceRecipeCourse recipeCourseLocalDataSource;
 
     private RepositoryRecipeCourse(@NonNull DataSourceRecipeCourse remoteDataSource,
                                    @NonNull DataSourceRecipeCourse localDataSource) {
         this.remoteDataSource = checkNotNull(remoteDataSource);
         this.localDataSource = checkNotNull(localDataSource);
-        recipeCourseRemoteDataSource = checkNotNull(remoteDataSource);
-        recipeCourseLocalDataSource = checkNotNull(localDataSource);
     }
 
     public static RepositoryRecipeCourse getInstance(DataSourceRecipeCourse remoteDataSource,
@@ -45,7 +41,7 @@ public class RepositoryRecipeCourse
             callback.onAllLoaded(recipeCourseEntities);
             return;
         }
-        recipeCourseLocalDataSource.getAllRecipesForCourseNo(
+        ((DataSourceRecipeCourse)localDataSource).getAllRecipesForCourseNo(
                 courseNo,
                 new GetAllCallback<RecipeCourseEntity>() {
                     @Override
@@ -61,7 +57,7 @@ public class RepositoryRecipeCourse
 
                     @Override
                     public void onDataNotAvailable() {
-                        recipeCourseRemoteDataSource.getAllRecipesForCourseNo(
+                        ((DataSourceRecipeCourse)remoteDataSource).getAllRecipesForCourseNo(
                                 courseNo,
                                 new GetAllCallback<RecipeCourseEntity>() {
                                     @Override
@@ -115,7 +111,7 @@ public class RepositoryRecipeCourse
             callback.onAllLoaded(recipeCourseEntities);
             return;
         }
-        recipeCourseLocalDataSource.getCoursesForRecipe(
+        ((DataSourceRecipeCourse)localDataSource).getCoursesForRecipe(
                 recipeId,
                 new GetAllCallback<RecipeCourseEntity>() {
                     @Override
@@ -131,7 +127,7 @@ public class RepositoryRecipeCourse
 
                     @Override
                     public void onDataNotAvailable() {
-                        recipeCourseRemoteDataSource.getCoursesForRecipe(
+                        ((DataSourceRecipeCourse)remoteDataSource).getCoursesForRecipe(
                                 recipeId,
                                 new GetAllCallback<RecipeCourseEntity>() {
                                     @Override

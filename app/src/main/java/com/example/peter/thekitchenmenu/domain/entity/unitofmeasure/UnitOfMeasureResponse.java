@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipeportioncalculator;
+package com.example.peter.thekitchenmenu.domain.entity.unitofmeasure;
 
 import com.example.peter.thekitchenmenu.domain.UseCaseAbstract;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
@@ -7,16 +7,17 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipeportioncalculator.UseCasePortionCalculator.*;
+import static com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureAbstract.*;
 
-public class UseCasePortionCalculatorResponse implements UseCaseAbstract.Response {
+public class UnitOfMeasureResponse implements UseCaseAbstract.Response {
+
     @Nonnull
     private final MeasurementModel model;
     @Nonnull
     private final ResultStatus resultStatus;
 
-    public UseCasePortionCalculatorResponse(@Nonnull MeasurementModel model,
-                                            @Nonnull ResultStatus resultStatus) {
+    public UnitOfMeasureResponse(@Nonnull MeasurementModel model,
+                                 @Nonnull ResultStatus resultStatus) {
         this.model = model;
         this.resultStatus = resultStatus;
     }
@@ -35,7 +36,7 @@ public class UseCasePortionCalculatorResponse implements UseCaseAbstract.Respons
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UseCasePortionCalculatorResponse that = (UseCasePortionCalculatorResponse) o;
+        UnitOfMeasureResponse that = (UnitOfMeasureResponse) o;
         return model.equals(that.model) &&
                 resultStatus == that.resultStatus;
     }
@@ -48,7 +49,7 @@ public class UseCasePortionCalculatorResponse implements UseCaseAbstract.Respons
     @Nonnull
     @Override
     public String toString() {
-        return "UseCasePortionCalculatorResponse{" +
+        return "UnitOfMeasureResponse{" +
                 "model=" + model +
                 ", resultStatus=" + resultStatus +
                 '}';

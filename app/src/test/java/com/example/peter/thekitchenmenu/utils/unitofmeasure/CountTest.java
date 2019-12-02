@@ -83,7 +83,17 @@ public class CountTest {
     }
 
     @Test
-    public void totalMeasurementOneIsSet_inRangeMax_true() {
+    public void totalMeasurementOneIsSet_inRangeMin_true() {
+        // Arrange
+        double measurement = .5;
+        // Act
+        assertTrue(SUT.isTotalUnitOneSet(measurement));
+        // Assert
+        assertEquals(measurement, SUT.getTotalUnitOne(), DELTA);
+    }
+
+    @Test
+    public void totalMeasurementTwoIsSet_inRangeMax_true() {
         // Arrange
         // Act
         assertTrue(SUT.isTotalUnitTwoSet(MAX_COUNT));
@@ -93,19 +103,10 @@ public class CountTest {
     }
 
     @Test
-    public void totalMeasurementOneIsSet_outOfRangeMax_false() {
+    public void totalMeasurementTwoIsSet_outOfRangeMax_false() {
         // Arrange
         // Act
         assertFalse(SUT.isTotalUnitTwoSet((MAX_COUNT + 1)));
-        // Assert
-        assertEquals(MIN_COUNT, SUT.getTotalBaseUnits(), DELTA);
-    }
-
-    @Test
-    public void totalMeasurementTwoIsSet_inRange_min() {
-        // Arrange
-        // Act
-        assertTrue(SUT.isTotalUnitTwoSet(MIN_COUNT));
         // Assert
         assertEquals(MIN_COUNT, SUT.getTotalBaseUnits(), DELTA);
     }
@@ -213,12 +214,11 @@ public class CountTest {
         // Act
         assertTrue(SUT.isNumberOfItemsSet(numberOfPacks));
         assertTrue(SUT.isItemUnitTwoSet((numberOfItemsInPack)));
-        assertEquals(totalNumberOfItems, SUT.getTotalUnitTwo());
 
+        // Assert
+        assertEquals(totalNumberOfItems, SUT.getTotalUnitTwo());
         assertTrue(SUT.isItemUnitTwoSet(newNumberOfItemsInPack));
         assertEquals(newTotalNumberOfItems, SUT.getTotalUnitTwo(), DELTA);
-        // Assert
-        System.out.println(SUT);
     }
 
     @Test
@@ -331,5 +331,22 @@ public class CountTest {
         SUT.isTotalUnitOneSet(fractionUnit);
         // Assert
         assertEquals(expectedItemUnits, SUT.getItemUnitOne(), DELTA);
+    }
+
+    @Test
+    public void totalMeasurementIsSet_totalIsFraction_minItemSizeExceeded() {
+        // Arrange
+        int whole = 1;
+        double part = 0.5;
+        int numberOrPortions = 4;
+        // Act
+        assertTrue(SUT.isNumberOfItemsSet(numberOrPortions));
+        assertTrue(SUT.isTotalUnitTwoSet(whole));
+        assertTrue(SUT.isTotalUnitOneSet(part));
+        // Assert
+        assertEquals(whole, SUT.getTotalUnitTwo());
+        assertEquals(part, SUT.getTotalUnitOne(), DELTA);
+        assertEquals((whole+part), SUT.getTotalBaseUnits(), DELTA);
+        assertEquals(((whole+part)/numberOrPortions), SUT.getItemBaseUnits(), DELTA);
     }
 }

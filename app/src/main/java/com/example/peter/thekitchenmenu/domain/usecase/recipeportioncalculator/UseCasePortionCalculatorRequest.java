@@ -2,12 +2,12 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipeportioncalculator;
 
 import androidx.annotation.NonNull;
 
+import com.example.peter.thekitchenmenu.domain.UseCaseAbstract;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 
 import java.util.Objects;
 
-public class UseCasePortionCalculatorRequest implements UseCase.RequestValues {
+public class UseCasePortionCalculatorRequest implements UseCaseAbstract.Request {
     @NonNull
     private final String recipeId;
     @NonNull
@@ -66,7 +66,7 @@ public class UseCasePortionCalculatorRequest implements UseCase.RequestValues {
     @NonNull
     @Override
     public String toString() {
-        return "RequestValues{" +
+        return "Request{" +
                 "recipeId='" + recipeId + '\'' +
                 ", ingredientId='" + ingredientId + '\'' +
                 ", recipeIngredientId='" + recipeIngredientId + '\'' +

@@ -12,8 +12,6 @@ import androidx.databinding.BindingAdapter;
 
 public class UnitOfMeasureLabelBindingAdapter {
 
-    private static final String TAG = "tkm-LabelAdapter";
-
     @BindingAdapter(value = {"setLabelForSubtypeSelected"})
     public static void setLabelForSubtypeSelected(TextView textView, MeasurementSubtype subtype) {
         setUpViewLabels(textView, subtype);

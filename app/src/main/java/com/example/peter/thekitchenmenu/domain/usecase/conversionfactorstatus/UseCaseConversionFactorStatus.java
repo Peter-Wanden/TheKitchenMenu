@@ -4,14 +4,13 @@ import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
+import com.example.peter.thekitchenmenu.domain.UseCaseAbstract;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasure;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 
 public class UseCaseConversionFactorStatus
-        extends UseCase<UseCaseConversionFactorStatusRequest, UseCaseConversionFactorStatusResponse>
-        implements
-        DataSource.GetEntityCallback<IngredientEntity> {
+        extends UseCaseAbstract<UseCaseConversionFactorStatusRequest, UseCaseConversionFactorStatusResponse>
+        implements DataSource.GetEntityCallback<IngredientEntity> {
 
     public enum UseCaseResult {
         INGREDIENT_DATA_NOT_AVAILABLE,
@@ -29,7 +28,7 @@ public class UseCaseConversionFactorStatus
     }
 
     @Override
-    protected void executeUseCase(UseCaseConversionFactorStatusRequest request) {
+    protected void execute(UseCaseConversionFactorStatusRequest request) {
         UnitOfMeasure unitOfMeasure = request.getSubtype().getMeasurementClass();
 
         if (request.getIngredientId().equals(null) ||
@@ -67,7 +66,8 @@ public class UseCaseConversionFactorStatus
 
     private void returnDataNotAvailable() {
         UseCaseConversionFactorStatusResponse response =
-                new UseCaseConversionFactorStatusResponse(UseCaseResult.INGREDIENT_DATA_NOT_AVAILABLE);
+                new UseCaseConversionFactorStatusResponse(
+                        UseCaseResult.INGREDIENT_DATA_NOT_AVAILABLE);
         getUseCaseCallback().onError(response);
     }
 

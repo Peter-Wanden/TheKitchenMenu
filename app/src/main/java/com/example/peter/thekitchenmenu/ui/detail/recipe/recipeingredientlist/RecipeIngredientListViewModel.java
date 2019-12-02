@@ -5,15 +5,18 @@ import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableList;
 import androidx.lifecycle.ViewModel;
 
+import com.example.peter.thekitchenmenu.domain.UseCaseAbstract;
+import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.RecipeIngredientListItemModel;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.UseCaseRecipeIngredientList;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.UseCaseRecipeIngredientListRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.UseCaseRecipeIngredientListResponse;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor.RecipeIngredientEditorActivity;
 
 public class RecipeIngredientListViewModel extends ViewModel {
+
+    private static final String TAG = "tkm-" + RecipeIngredientListViewModel.class.getSimpleName()
+            + " ";
 
     private RecipeIngredientListNavigator navigator;
     private UseCaseHandler handler;
@@ -58,7 +61,7 @@ public class RecipeIngredientListViewModel extends ViewModel {
         handler.execute(
                 useCase,
                 new UseCaseRecipeIngredientListRequest(recipeId),
-                new UseCase.UseCaseCallback<UseCaseRecipeIngredientListResponse>() {
+                new UseCaseAbstract.Callback<UseCaseRecipeIngredientListResponse>() {
             @Override
             public void onSuccess(UseCaseRecipeIngredientListResponse response) {
                 if (response.getListItemModels().size() > 0) {
@@ -81,7 +84,7 @@ public class RecipeIngredientListViewModel extends ViewModel {
         navigator.addRecipeIngredient(recipeId);
     }
 
-    public void deleteRecipeIngredient(String recipeIngredientId) {
-
+    void deleteRecipeIngredient(String recipeIngredientId) {
+        System.out.println(TAG + "delete:" + recipeIngredientId + " requested");
     }
 }

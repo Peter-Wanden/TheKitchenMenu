@@ -15,15 +15,11 @@ public class RepositoryRecipeIngredient
         implements DataSourceRecipeIngredient {
 
     public static RepositoryRecipeIngredient INSTANCE = null;
-    private DataSourceRecipeIngredient recipeIngredientRemoteDataSource;
-    private DataSourceRecipeIngredient recipeIngredientLocalDataSource;
 
     private RepositoryRecipeIngredient(@NonNull DataSourceRecipeIngredient remoteDataSource,
                                        @NonNull DataSourceRecipeIngredient localDataSource) {
         this.remoteDataSource = checkNotNull(remoteDataSource);
         this.localDataSource = checkNotNull(localDataSource);
-        recipeIngredientRemoteDataSource = checkNotNull(remoteDataSource);
-        recipeIngredientLocalDataSource = checkNotNull(localDataSource);
     }
 
     public static RepositoryRecipeIngredient getInstance(
@@ -46,7 +42,7 @@ public class RepositoryRecipeIngredient
             callback.onAllLoaded(cachedEntities);
             return;
         }
-        recipeIngredientLocalDataSource.getByRecipeId(
+        ((DataSourceRecipeIngredient)localDataSource).getByRecipeId(
                 recipeId,
                 new GetAllCallback<RecipeIngredientQuantityEntity>() {
                     @Override
@@ -62,7 +58,7 @@ public class RepositoryRecipeIngredient
 
                     @Override
                     public void onDataNotAvailable() {
-                        recipeIngredientRemoteDataSource.getByRecipeId(
+                        ((DataSourceRecipeIngredient)remoteDataSource).getByRecipeId(
                                 recipeId,
                                 new GetAllCallback<RecipeIngredientQuantityEntity>() {
                                     @Override
@@ -97,7 +93,7 @@ public class RepositoryRecipeIngredient
             callback.onAllLoaded(cachedEntities);
             return;
         }
-        recipeIngredientLocalDataSource.getByProductId(
+        ((DataSourceRecipeIngredient)localDataSource).getByProductId(
                 productId,
                 new GetAllCallback<RecipeIngredientQuantityEntity>() {
                     @Override
@@ -113,7 +109,7 @@ public class RepositoryRecipeIngredient
 
                     @Override
                     public void onDataNotAvailable() {
-                        recipeIngredientRemoteDataSource.getByProductId(
+                        ((DataSourceRecipeIngredient)remoteDataSource).getByProductId(
                                 productId,
                                 new GetAllCallback<RecipeIngredientQuantityEntity>() {
                                     @Override
@@ -147,7 +143,7 @@ public class RepositoryRecipeIngredient
             callback.onAllLoaded(entities);
             return;
         }
-        recipeIngredientLocalDataSource.getByIngredientId(
+        ((DataSourceRecipeIngredient)localDataSource).getByIngredientId(
                 ingredientId,
                 new GetAllCallback<RecipeIngredientQuantityEntity>() {
                     @Override
@@ -162,7 +158,7 @@ public class RepositoryRecipeIngredient
 
                     @Override
                     public void onDataNotAvailable() {
-                        recipeIngredientRemoteDataSource.getByIngredientId(
+                        ((DataSourceRecipeIngredient)remoteDataSource).getByIngredientId(
                                 ingredientId,
                                 new GetAllCallback<RecipeIngredientQuantityEntity>() {
                                     @Override
