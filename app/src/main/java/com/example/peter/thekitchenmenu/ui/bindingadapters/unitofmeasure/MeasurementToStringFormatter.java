@@ -39,10 +39,12 @@ public class MeasurementToStringFormatter {
 
         if (isBaseUnitsSet && isNumberOfItemSet && isConversionFactorSet) {
 
-            if (isMetricMeasurement()) {
-                measurement = getMetricMeasurement();
+//            if (isMetricMeasurement()) {
+//                measurement = getMetricMeasurement();
+//
+//            } else
 
-            } else if (isImperialMeasurement()) {
+            if (isImperialMeasurement() || isMetricMeasurement()) {
                 measurement = getImperialMeasurement();
 
             } else if (unitOfMeasure.getMeasurementSubtype() == MeasurementSubtype.COUNT) {

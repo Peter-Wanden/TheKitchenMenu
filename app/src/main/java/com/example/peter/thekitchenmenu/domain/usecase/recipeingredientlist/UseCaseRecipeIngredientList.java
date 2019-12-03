@@ -7,7 +7,7 @@ import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
-import com.example.peter.thekitchenmenu.domain.UseCaseAbstract;
+import com.example.peter.thekitchenmenu.domain.UseCaseCommandAbstract;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModelBuilder;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 public class UseCaseRecipeIngredientList
-        extends UseCaseAbstract<UseCaseRecipeIngredientListRequest, UseCaseRecipeIngredientListResponse> {
+        extends UseCaseCommandAbstract<UseCaseRecipeIngredientListRequest, UseCaseRecipeIngredientListResponse> {
 
     private RepositoryRecipeIngredient repoRecipeIngredient;
     private RepositoryIngredient repoIngredient;

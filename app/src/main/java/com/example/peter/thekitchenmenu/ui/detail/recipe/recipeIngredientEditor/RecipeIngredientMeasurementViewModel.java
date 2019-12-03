@@ -49,6 +49,7 @@ public class RecipeIngredientMeasurementViewModel extends ObservableViewModel {
     private String conversionFactorErrorMessage;
     private String unitOneErrorMessage;
     private String unitTwoErrorMessage;
+    private String unitOne = "";
     private String recipeId = "";
     private String ingredientId = "";
     private String recipeIngredientId = "";
@@ -221,11 +222,13 @@ public class RecipeIngredientMeasurementViewModel extends ObservableViewModel {
     }
 
     public void setUnitOne(String unitOne) {
-        if (!updatingUi && !unitOne.equals(".")) {
-            if (unitOne.isEmpty()) {
-                processUnitOne(NOT_SET);
-            } else {
-                parseUnitOne(unitOne);
+        if (!updatingUi) {
+            if (!unitOne.equals(".")) {
+                if (unitOne.isEmpty()) {
+                    processUnitOne(NOT_SET);
+                } else {
+                    parseUnitOne(unitOne);
+                }
             }
         }
     }
@@ -337,11 +340,11 @@ public class RecipeIngredientMeasurementViewModel extends ObservableViewModel {
 
     private void createPortionCalculatorRequestValues(MeasurementModel model) {
         UseCasePortionCalculatorRequest request = new UseCasePortionCalculatorRequest(
-                        recipeId,
-                        ingredientId,
-                        recipeIngredientId,
-                        model
-                );
+                recipeId,
+                ingredientId,
+                recipeIngredientId,
+                model
+        );
         executePortionCalculator(request);
     }
 
@@ -365,15 +368,28 @@ public class RecipeIngredientMeasurementViewModel extends ObservableViewModel {
     }
 
     private void processModelResult(MeasurementModel resultModel) {
-        measurementModel = resultModel;
         updatingUi = true;
 
-        notifyPropertyChanged(BR.subtype);
-        notifyPropertyChanged(BR.numberOfUnits);
-        notifyPropertyChanged(BR.conversionFactor);
-        notifyPropertyChanged(BR.conversionFactorEnabled);
-        notifyPropertyChanged(BR.unitOne);
-        notifyPropertyChanged(BR.unitTwo);
+        if (measurementModel.getSubtype() != resultModel.getSubtype()) {
+            notifyPropertyChanged(BR.subtype);
+        }
+        if (measurementModel.getNumberOfUnits() != resultModel.getNumberOfUnits()) {
+            notifyPropertyChanged(BR.numberOfUnits);
+        }
+        if (measurementModel.getConversionFactor() != resultModel.getConversionFactor()) {
+            notifyPropertyChanged(BR.conversionFactor);
+        }
+        if (measurementModel.isConversionFactorEnabled() != resultModel.isConversionFactorEnabled()) {
+            notifyPropertyChanged(BR.conversionFactorEnabled);
+        }
+        if (measurementModel.getTotalUnitOne() != resultModel.getTotalUnitOne()) {
+            notifyPropertyChanged(BR.unitOne);
+        }
+        if (measurementModel.getTotalUnitTwo() != resultModel.getTotalUnitTwo()) {
+            notifyPropertyChanged(BR.unitTwo);
+        }
+
+        measurementModel = resultModel;
     }
 
     private void processResultStatus(UseCasePortionCalculator.ResultStatus resultStatus) {

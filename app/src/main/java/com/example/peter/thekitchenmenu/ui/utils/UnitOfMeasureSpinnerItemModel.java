@@ -1,12 +1,12 @@
 package com.example.peter.thekitchenmenu.ui.utils;
 
-public class UnitOfMeasureSpinnerItem {
+public class UnitOfMeasureSpinnerItemModel {
 
     private SpinnerItemType type;
     private String measurementUnit;
 
 
-    public UnitOfMeasureSpinnerItem(SpinnerItemType type, String measurementUnit) {
+    public UnitOfMeasureSpinnerItemModel(SpinnerItemType type, String measurementUnit) {
         this.type = type;
         this.measurementUnit = measurementUnit;
     }

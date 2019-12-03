@@ -9,7 +9,7 @@ import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
-import com.example.peter.thekitchenmenu.domain.UseCaseAbstract;
+import com.example.peter.thekitchenmenu.domain.UseCaseCommandAbstract;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.UseCaseRecipeIngredientList;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.UseCaseRecipeIngredientListResponse;
@@ -57,8 +57,8 @@ public class UseCaseRecipeIngredientListTest {
     }
 
     // region helper methods -----------------------------------------------------------------------
-    private UseCaseAbstract.Callback<UseCaseRecipeIngredientListResponse> responseCallback() {
-        return new UseCaseAbstract.Callback<UseCaseRecipeIngredientListResponse>() {
+    private UseCaseCommandAbstract.Callback<UseCaseRecipeIngredientListResponse> responseCallback() {
+        return new UseCaseCommandAbstract.Callback<UseCaseRecipeIngredientListResponse>() {
             @Override
             public void onSuccess(UseCaseRecipeIngredientListResponse response) {
 

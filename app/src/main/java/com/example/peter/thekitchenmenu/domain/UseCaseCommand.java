@@ -1,18 +1,19 @@
 package com.example.peter.thekitchenmenu.domain;
 
 /**
- * Use cases are the entry points to the domain layer.
+ * Use cases are the entry points to the domain layer. Uses Command pattern for sending / receiving,
+ * request / response data structures between use cases and other application layers.
  *
  * @param <Q> the request type
  * @param <P> the response type
  */
-public interface UseCase<Q extends UseCase.Request, P extends UseCase.Response>{
+public interface UseCaseCommand<Q extends UseCaseCommand.Request, P extends UseCaseCommand.Response>{
 
     void setRequest(Q request);
 
     Q getRequest();
 
-    UseCase.Callback<P> getUseCaseCallback();
+    UseCaseCommand.Callback<P> getUseCaseCallback();
 
     void setUseCaseCallback(Callback<P> callback);
 

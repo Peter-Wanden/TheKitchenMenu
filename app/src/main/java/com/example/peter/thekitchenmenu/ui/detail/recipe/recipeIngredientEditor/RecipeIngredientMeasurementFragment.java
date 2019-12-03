@@ -16,14 +16,8 @@ import androidx.fragment.app.Fragment;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.RecipeIngredientEditorMeasurementBinding;
-import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
-import com.example.peter.thekitchenmenu.ui.utils.SpinnerItemType;
-import com.example.peter.thekitchenmenu.ui.utils.UnitOfMeasureSpinnerAdapter;
-import com.example.peter.thekitchenmenu.ui.utils.UnitOfMeasureSpinnerItem;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import com.example.peter.thekitchenmenu.ui.utils.CountFractionsSpinnerAdapterBuilder;
+import com.example.peter.thekitchenmenu.ui.utils.UnitOfMeasureSpinnerAdapterBuilder;
 
 public class RecipeIngredientMeasurementFragment extends Fragment {
 
@@ -51,7 +45,7 @@ public class RecipeIngredientMeasurementFragment extends Fragment {
         binding.setViewModel(viewModel);
 
         setObservers();
-        setupUnitOfMeasureSpinner();
+        setupSpinners();
 
         return binding.getRoot();
     }
@@ -71,112 +65,37 @@ public class RecipeIngredientMeasurementFragment extends Fragment {
         });
     }
 
-    private void setupUnitOfMeasureSpinner() {
+    private void setupSpinners() {
         binding.recipeIngredientUnitOfMeasureSpinner.setAdapter(getUnitOfMeasureSpinnerAdapter());
+        binding.recipeIngredientCountUnitTwoSpinner.setAdapter(getCountFractionSpinnerAdapter());
     }
 
     private SpinnerAdapter getUnitOfMeasureSpinnerAdapter() {
-        return new UnitOfMeasureSpinnerAdapter(requireActivity(), unitOfMeasureSpinnerItemArrayList());
+
+        return UnitOfMeasureSpinnerAdapterBuilder.
+                setActivity(requireActivity()).
+                addMetricMass().
+                addImperialMass().
+                addMetricVolume().
+                addImperialVolume().
+                addCount().
+                addImperialSpoon().
+                build();
     }
 
-    private ArrayList<UnitOfMeasureSpinnerItem> unitOfMeasureSpinnerItemArrayList() {
-
-        List<String> unitOfMeasureHeaders = Arrays.asList(getResources().getStringArray(
-                R.array.unit_of_measure_subtypes_as_string_array));
-
-        String massMetricUnits = removeArrayBraces(Arrays.toString(getResources().
-                getStringArray(R.array.unit_of_measure_options_mass_metric)));
-
-        String massImperialUnits = removeArrayBraces(Arrays.toString(getResources().
-                getStringArray(R.array.unit_of_measure_options_mass_imperial)));
-
-        String volumeMetricUnits = removeArrayBraces(Arrays.toString(getResources().
-                getStringArray(R.array.unit_of_measure_options_volume_metric)));
-
-        String volumeImperialUnits = removeArrayBraces(Arrays.toString(getResources().
-                getStringArray(R.array.unit_of_measure_options_volume_imperial)));
-
-        String countUnits = removeArrayBraces(Arrays.toString(getResources().
-                getStringArray(R.array.unit_of_measure_options_count)));
-
-        String spoonUnits = removeArrayBraces(Arrays.toString(getResources().
-                getStringArray(R.array.unit_of_measure_options_volume_teaspoon)));
-
-        ArrayList<UnitOfMeasureSpinnerItem> unitOfMeasureList = new ArrayList<>();
-
-        for (int header = 0; header < unitOfMeasureHeaders.size(); header++) {
-
-            if (header == MeasurementSubtype.METRIC_MASS.asInt()) {
-                UnitOfMeasureSpinnerItem headerItem = new UnitOfMeasureSpinnerItem(
-                        SpinnerItemType.LIST_ITEM,
-                        unitOfMeasureHeaders.get(header).
-                                concat(" (").
-                                concat(massMetricUnits).
-                                concat(")"));
-
-                unitOfMeasureList.add(headerItem);
-            }
-
-            if (header == MeasurementSubtype.IMPERIAL_MASS.asInt()) {
-                UnitOfMeasureSpinnerItem headerItem = new UnitOfMeasureSpinnerItem(
-                        SpinnerItemType.LIST_ITEM,
-                        unitOfMeasureHeaders.get(header).
-                                concat(" (").
-                                concat(massImperialUnits).
-                                concat(")"));
-
-                unitOfMeasureList.add(headerItem);
-            }
-
-            if (header == MeasurementSubtype.METRIC_VOLUME.asInt()) {
-                UnitOfMeasureSpinnerItem headerItem = new UnitOfMeasureSpinnerItem(
-                        SpinnerItemType.LIST_ITEM,
-                        unitOfMeasureHeaders.get(header).
-                                concat(" (").
-                                concat(volumeMetricUnits).
-                                concat(")"));
-
-                unitOfMeasureList.add(headerItem);
-            }
-
-            if (header == MeasurementSubtype.IMPERIAL_VOLUME.asInt()) {
-                UnitOfMeasureSpinnerItem headerItem = new UnitOfMeasureSpinnerItem(
-                        SpinnerItemType.LIST_ITEM,
-                        unitOfMeasureHeaders.get(header).
-                                concat(" (").
-                                concat(volumeImperialUnits).
-                                concat(")"));
-
-                unitOfMeasureList.add(headerItem);
-            }
-
-            if (header == MeasurementSubtype.COUNT.asInt()) {
-                UnitOfMeasureSpinnerItem headerItem = new UnitOfMeasureSpinnerItem(
-                        SpinnerItemType.LIST_ITEM,
-                        unitOfMeasureHeaders.get(header).
-                                concat(" (").
-                                concat(countUnits).
-                                concat(")"));
-
-                unitOfMeasureList.add(headerItem);
-            }
-
-            if (header == MeasurementSubtype.IMPERIAL_SPOON.asInt()) {
-                UnitOfMeasureSpinnerItem headerItem = new UnitOfMeasureSpinnerItem(
-                        SpinnerItemType.LIST_ITEM,
-                        unitOfMeasureHeaders.get(header).
-                                concat(" (").
-                                concat(spoonUnits).
-                                concat(")"));
-                unitOfMeasureList.add(headerItem);
-            }
-        }
-
-        return unitOfMeasureList;
-    }
-
-    private String removeArrayBraces(String stringWithBrackets) {
-        return stringWithBrackets.substring(1, stringWithBrackets.length() - 1);
+    private SpinnerAdapter getCountFractionSpinnerAdapter() {
+        return CountFractionsSpinnerAdapterBuilder.
+                setActivity(requireActivity()).
+                addOneTenth().
+                addOneFifth().
+                addThreeTenths().
+                addTwoFifths().
+                addHalf().
+                addThreeFifths().
+                addSevenTenths().
+                addFourFifths().
+                addNineTenths().
+                build();
     }
 
     @Override

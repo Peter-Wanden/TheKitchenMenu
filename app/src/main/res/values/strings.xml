@@ -110,6 +110,17 @@
     <string name="food">Food</string>
     <string name="non_food">Non food</string>
 
+    <!-- Count unitOne fraction spinner values -->
+    <string name="one_tenth"><sup>1</sup>/<sub>10</sub></string>
+    <string name="one_fifth"><sup>1</sup>/<sub>5</sub></string>
+    <string name="three_tenths"><sup>3</sup>/<sub>10</sub></string>
+    <string name="two_fifths"><sup>2</sup>/<sub>5</sub></string>
+    <string name="half"><sup>1</sup>/<sub>2</sub></string>
+    <string name="three_fifths"><sup>3</sup>/<sub>5</sub></string>
+    <string name="seven_tenths"><sup>7</sup>/<sub>10</sub></string>
+    <string name="four_fifths"><sup>4</sup>/<sub>5</sub></string>
+    <string name="nine_tenths"><sup>9</sup>/<sub>10</sub></string>
+
     <!-- Common menu bar options -->
     <string name="action_save">Save</string>
     <string name="action_delete">Delete</string>

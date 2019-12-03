@@ -71,8 +71,8 @@ public class UnitOfMeasureConstants {
     public static final double METRIC_MASS_MIN_MEASUREMENT = MIN_MASS;
     public static final double METRIC_MASS_UNIT_TWO = METRIC_MASS_MIN_MEASUREMENT * 1000; // 1kg
     public static final double METRIC_MASS_UNIT_ONE = METRIC_MASS_UNIT_TWO / 1000; // 1g
-    public static final double METRIC_MASS_UNIT_ONE_DECIMAL = 0; // no fractions of a gram
-    public static final double METRIC_MASS_SMALLEST_UNIT = METRIC_MASS_UNIT_ONE;
+    public static final double METRIC_MASS_UNIT_ONE_DECIMAL = 0.1; // 10ths of a gram
+    public static final double METRIC_MASS_SMALLEST_UNIT = METRIC_MASS_UNIT_ONE_DECIMAL;
     public static final boolean METRIC_MASS_IS_CONVERSION_FACTOR_ENABLED = false;
     // endregion metric mass constants -------------------------------------------------------------
 
@@ -84,8 +84,8 @@ public class UnitOfMeasureConstants {
     public static final double METRIC_VOLUME_MIN_MEASUREMENT = MIN_VOLUME;
     public static final double METRIC_VOLUME_UNIT_TWO = METRIC_VOLUME_MIN_MEASUREMENT * 1000; // 1l
     public static final double METRIC_VOLUME_UNIT_ONE = METRIC_VOLUME_UNIT_TWO / 1000; // 1ml
-    public static final double METRIC_VOLUME_UNIT_ONE_DECIMAL = 0;
-    public static final double METRIC_VOLUME_SMALLEST_UNIT = METRIC_VOLUME_UNIT_ONE;
+    public static final double METRIC_VOLUME_UNIT_ONE_DECIMAL = 0.1;
+    public static final double METRIC_VOLUME_SMALLEST_UNIT = METRIC_VOLUME_UNIT_ONE_DECIMAL;
     public static final boolean METRIC_VOLUME_IS_CONVERSION_FACTOR_ENABLED = false;
     // endregion metric volume constants -----------------------------------------------------------
 

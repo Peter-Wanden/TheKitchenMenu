@@ -14,14 +14,14 @@ import java.util.ArrayList;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-public class UnitOfMeasureSpinnerAdapter extends ArrayAdapter<UnitOfMeasureSpinnerItem> {
+public class UnitOfMeasureSpinnerAdapter extends ArrayAdapter<UnitOfMeasureSpinnerItemModel> {
 
     private LayoutInflater inflater;
-    private ArrayList<UnitOfMeasureSpinnerItem> unitOfMeasureList;
+    private ArrayList<UnitOfMeasureSpinnerItemModel> unitOfMeasureList;
 
     public UnitOfMeasureSpinnerAdapter(
             @NonNull Context context,
-            ArrayList<UnitOfMeasureSpinnerItem> unitOfMeasureList) {
+            ArrayList<UnitOfMeasureSpinnerItemModel> unitOfMeasureList) {
 
         super(context, 0, unitOfMeasureList);
         this.unitOfMeasureList = unitOfMeasureList;
@@ -48,7 +48,7 @@ public class UnitOfMeasureSpinnerAdapter extends ArrayAdapter<UnitOfMeasureSpinn
     private View initView(int position, View convertView, ViewGroup parent) {
 
         View view = convertView;
-        UnitOfMeasureSpinnerItem model = unitOfMeasureList.get(position);
+        UnitOfMeasureSpinnerItemModel model = unitOfMeasureList.get(position);
         SpinnerItemType type = model.getType();
 
         switch (type) {

@@ -6,7 +6,9 @@
 
     <data>
         <import type="android.view.View"/>
-        <import type="com.example.peter.thekitchenmenu.ui.bindingadapters.MeasurementSubtypeConverter" />
+        <import type="com.example.peter.thekitchenmenu.ui.bindingadapters.MeasurementSubtypeConverter"/>
+        <import type="com.example.peter.thekitchenmenu.ui.bindingadapters.CountFractionsEnumToIntConverter"/>
+
         <variable
             name="viewModel"
             type="com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor.RecipeIngredientMeasurementViewModel" />
@@ -138,6 +140,14 @@
             app:layout_constraintBaseline_toBaselineOf="@id/recipe_ingredient_editable_measurement_two"
             app:layout_constraintStart_toEndOf="@id/recipe_ingredient_measurement_label_two"
             tools:text="16" />
+
+        <Spinner
+            android:id="@+id/recipe_ingredient_count_unitTwo_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBaseline_toBaselineOf="@id/recipe_ingredient_editable_measurement_two"
+            app:layout_constraintStart_toEndOf="@id/recipe_ingredient_measurement_label_two"
+            />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/recipe_ingredient_measurement_label_one"

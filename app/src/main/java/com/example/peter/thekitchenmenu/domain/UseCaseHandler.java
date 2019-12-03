@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.domain;
 
 /**
- * Runs {@link UseCaseAbstract}s using a {@link UseCaseScheduler}.
+ * Runs {@link UseCaseCommandAbstract}s using a {@link UseCaseScheduler}.
  */
 public class UseCaseHandler {
 
@@ -19,33 +19,33 @@ public class UseCaseHandler {
         return INSTANCE;
     }
 
-    public <T extends UseCaseAbstract.Request, R extends UseCaseAbstract.Response> void execute(
-            final UseCaseAbstract<T, R> useCase, T request, UseCaseAbstract.Callback<R> callback) {
+    public <T extends UseCaseCommandAbstract.Request, R extends UseCaseCommandAbstract.Response> void execute(
+            final UseCaseCommandAbstract<T, R> useCase, T request, UseCaseCommandAbstract.Callback<R> callback) {
         useCase.setRequest(request);
         useCase.setUseCaseCallback(new UseCaseHandler.UiCallbackWrapper(callback, this));
 
         useCaseScheduler.execute(useCase::run);
     }
 
-    public <V extends UseCaseAbstract.Response> void notifyResponse(
+    public <V extends UseCaseCommandAbstract.Response> void notifyResponse(
             final V response,
-            final UseCaseAbstract.Callback<V> callback) {
+            final UseCaseCommandAbstract.Callback<V> callback) {
         useCaseScheduler.notifyResponse(response, callback);
     }
 
-    private <V extends UseCaseAbstract.Response> void notifyError(
+    private <V extends UseCaseCommandAbstract.Response> void notifyError(
             final V response,
-            final UseCaseAbstract.Callback<V> callback) {
+            final UseCaseCommandAbstract.Callback<V> callback) {
         useCaseScheduler.onError(response, callback);
     }
 
-    private static final class UiCallbackWrapper<V extends UseCaseAbstract.Response>
-            implements UseCaseAbstract.Callback<V> {
+    private static final class UiCallbackWrapper<V extends UseCaseCommandAbstract.Response>
+            implements UseCaseCommandAbstract.Callback<V> {
 
-        private final UseCaseAbstract.Callback<V> callback;
+        private final UseCaseCommandAbstract.Callback<V> callback;
         private final UseCaseHandler handler;
 
-        public UiCallbackWrapper(UseCaseAbstract.Callback<V> callback,
+        public UiCallbackWrapper(UseCaseCommandAbstract.Callback<V> callback,
                                  UseCaseHandler handler) {
             this.callback = callback;
             this.handler = handler;

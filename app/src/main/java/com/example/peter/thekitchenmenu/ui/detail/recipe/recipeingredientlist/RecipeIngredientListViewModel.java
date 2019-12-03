@@ -5,7 +5,7 @@ import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableList;
 import androidx.lifecycle.ViewModel;
 
-import com.example.peter.thekitchenmenu.domain.UseCaseAbstract;
+import com.example.peter.thekitchenmenu.domain.UseCaseCommandAbstract;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.RecipeIngredientListItemModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.UseCaseRecipeIngredientList;
@@ -61,7 +61,7 @@ public class RecipeIngredientListViewModel extends ViewModel {
         handler.execute(
                 useCase,
                 new UseCaseRecipeIngredientListRequest(recipeId),
-                new UseCaseAbstract.Callback<UseCaseRecipeIngredientListResponse>() {
+                new UseCaseCommandAbstract.Callback<UseCaseRecipeIngredientListResponse>() {
             @Override
             public void onSuccess(UseCaseRecipeIngredientListResponse response) {
                 if (response.getListItemModels().size() > 0) {

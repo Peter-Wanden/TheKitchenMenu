@@ -2,11 +2,11 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist;
 
 import androidx.annotation.NonNull;
 
-import com.example.peter.thekitchenmenu.domain.UseCaseAbstract;
+import com.example.peter.thekitchenmenu.domain.UseCaseCommandAbstract;
 
 import java.util.List;
 
-public class UseCaseRecipeIngredientListResponse implements UseCaseAbstract.Response {
+public class UseCaseRecipeIngredientListResponse implements UseCaseCommandAbstract.Response {
     @NonNull
     private final List<RecipeIngredientListItemModel> listItemModels;
 

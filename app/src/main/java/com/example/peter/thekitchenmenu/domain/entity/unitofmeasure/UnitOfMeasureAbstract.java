@@ -3,8 +3,6 @@ package com.example.peter.thekitchenmenu.domain.entity.unitofmeasure;
 import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
 
-import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
-
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -52,7 +50,8 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     private double itemUnitOne;
     private double conversionFactor = UnitOfMeasureConstants.NO_CONVERSION_FACTOR;
 
-    UnitOfMeasureAbstract() {}
+    UnitOfMeasureAbstract() {
+    }
 
     @Override
     public MeasurementType getMeasurementType() {
@@ -168,8 +167,9 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     }
 
     private boolean isBaseUnitsWithinBounds(double baseUnits) {
-        if (baseUnits == UnitOfMeasureConstants.NOT_SET)
+        if (baseUnits == UnitOfMeasureConstants.NOT_SET) {
             return false;
+        }
         if (isBaseUnitsWithinUpperBounds(baseUnits)) {
             if (isBaseUnitsWithinLowerBounds(baseUnits)) {
                 if (isOldNumberOfItemsLargerThanCurrentNumberOfItems()) {
@@ -428,25 +428,17 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     }
 
     private double roundDecimal(double valueToRound) {
+        NumberFormat decimalFormat = NumberFormat.getInstance();
+        decimalFormat.setRoundingMode(RoundingMode.HALF_EVEN);
 
-        if (this instanceof ImperialMass ||
-                this instanceof ImperialVolume ||
-                this instanceof ImperialSpoon ||
-                this instanceof Count) {
+        if (decimalFormat instanceof DecimalFormat) {
+            ((DecimalFormat) decimalFormat).applyPattern("##.#");
+        }
 
-            NumberFormat decimalFormat = NumberFormat.getInstance();
-            decimalFormat.setRoundingMode(RoundingMode.HALF_EVEN);
-
-            if (decimalFormat instanceof DecimalFormat)
-                ((DecimalFormat) decimalFormat).applyPattern("##.#");
-
-            return Double.parseDouble(decimalFormat.format(valueToRound));
-        } else
-            return (int) Math.floor(valueToRound * 1);
+        return Double.parseDouble(decimalFormat.format(valueToRound));
     }
 
     @NonNull
-
     @Override
     public String toString() {
         return "UnitOfMeasureAbstract{" +
