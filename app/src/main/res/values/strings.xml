@@ -111,15 +111,18 @@
     <string name="non_food">Non food</string>
 
     <!-- Count unitOne fraction spinner values -->
-    <string name="one_tenth"><sup>1</sup>/<sub>10</sub></string>
-    <string name="one_fifth"><sup>1</sup>/<sub>5</sub></string>
-    <string name="three_tenths"><sup>3</sup>/<sub>10</sub></string>
-    <string name="two_fifths"><sup>2</sup>/<sub>5</sub></string>
-    <string name="half"><sup>1</sup>/<sub>2</sub></string>
-    <string name="three_fifths"><sup>3</sup>/<sub>5</sub></string>
-    <string name="seven_tenths"><sup>7</sup>/<sub>10</sub></string>
-    <string name="four_fifths"><sup>4</sup>/<sub>5</sub></string>
-    <string name="nine_tenths"><sup>9</sup>/<sub>10</sub></string>
+    <string name="count_fraction_zero_value">None</string>
+    <string name="one_tenth">1/10</string>
+    <string name="one_fifth">1/5</string>
+    <string name="three_tenths">3/10</string>
+    <string name="two_fifths">2/5</string>
+    <string name="half">1/2</string>
+    <string name="three_fifths">3/5</string>
+    <string name="seven_tenths">7/10</string>
+    <string name="four_fifths">4/5</string>
+    <string name="nine_tenths">9/10</string>
+    <string name="one_quarter">1/4</string>
+    <string name="three_quarters">3/4</string>
 
     <!-- Common menu bar options -->
     <string name="action_save">Save</string>
@@ -368,4 +371,6 @@
     <string name="conversion_factor_error_message">Please enter a value between %1$.3fg and %2$.1fg</string>
     <string name="conversion_factor_used_for_this_ingredient">Conversion factor used for this ingredient</string>
     <string name="recipe_total_time">Total time</string>
+    <string name="total">total:</string>
+    <string name="approximately">approx.</string>
 </resources>

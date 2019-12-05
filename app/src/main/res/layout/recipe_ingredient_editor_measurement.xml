@@ -6,8 +6,8 @@
 
     <data>
         <import type="android.view.View"/>
-        <import type="com.example.peter.thekitchenmenu.ui.bindingadapters.MeasurementSubtypeConverter"/>
-        <import type="com.example.peter.thekitchenmenu.ui.bindingadapters.CountFractionsEnumToIntConverter"/>
+        <import type="com.example.peter.thekitchenmenu.ui.utils.unitofmeasure.MeasurementSubtypeConverter"/>
+        <import type="com.example.peter.thekitchenmenu.ui.utils.bindingadapters.CountFractionsEnumToIntConverter"/>
 
         <variable
             name="viewModel"
@@ -90,7 +90,8 @@
             app:setLabelForSubtypeSelected="@{viewModel.subtype}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBaseline_toBaselineOf="@id/recipe_ingredient_editable_measurement_one"
-            tools:text="@string/product_size_label" />
+            tools:text="@string/product_size_label"
+            />
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/recipe_ingredient_editable_measurement_two"
@@ -135,18 +136,22 @@
             android:text="@={viewModel.unitOne}"
             android:textAlignment="center"
             app:editTextErrorSetter="@{viewModel.unitOneErrorMessage}"
-            app:fieldVisibilityNumberOfMeasurementUnits="@{viewModel.numberOfUnits}"
+            app:fieldVisibilitySubtype="@{viewModel.subtype}"
             app:setUpEditTextForSubtypeSelected="@{viewModel.subtype}"
             app:layout_constraintBaseline_toBaselineOf="@id/recipe_ingredient_editable_measurement_two"
             app:layout_constraintStart_toEndOf="@id/recipe_ingredient_measurement_label_two"
-            tools:text="16" />
+            tools:text="16"
+            />
 
         <Spinner
             android:id="@+id/recipe_ingredient_count_unitTwo_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:selectedItemPosition="@={CountFractionsEnumToIntConverter.toInt(viewModel.countFraction)}"
+            app:fieldVisibilitySubtype="@{viewModel.subtype}"
             app:layout_constraintBaseline_toBaselineOf="@id/recipe_ingredient_editable_measurement_two"
-            app:layout_constraintStart_toEndOf="@id/recipe_ingredient_measurement_label_two"
+            app:layout_constraintStart_toStartOf="@id/recipe_ingredient_editable_measurement_one"
+            app:layout_constraintEnd_toEndOf="@id/recipe_ingredient_editable_measurement_one"
             />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -161,7 +166,8 @@
             app:fieldVisibilityNumberOfMeasurementUnits="@{viewModel.numberOfUnits}"
             app:layout_constraintBaseline_toBaselineOf="@id/recipe_ingredient_editable_measurement_two"
             app:layout_constraintStart_toEndOf="@id/recipe_ingredient_editable_measurement_one"
-            tools:text="ml" />
+            tools:text="ml"
+            />
 
         <com.google.android.material.checkbox.MaterialCheckBox
             android:id="@+id/recipe_ingredient_advanced_check_box"
@@ -197,7 +203,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/recipe_ingredient_advanced_check_box" />
+            app:layout_constraintTop_toBottomOf="@id/recipe_ingredient_advanced_check_box"
+            />
 
         <EditText
             android:id="@+id/recipe_ingredient_editable_conversion_factor"
@@ -234,6 +241,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/recipe_ingredient_editable_measurement_two"
             />
+
         <TextView
             android:id="@+id/recipe_ingredient_conversion_factor"
             android:layout_width="0dp"

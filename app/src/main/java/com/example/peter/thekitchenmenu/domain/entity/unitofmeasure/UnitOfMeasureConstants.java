@@ -98,7 +98,7 @@ public class UnitOfMeasureConstants {
     public static final double COUNT_UNIT_TWO = 1;
     public static final double COUNT_UNIT_ONE = 1;
     public static final double COUNT_UNIT_ONE_DECIMAL = 0.1;
-    public static final double COUNT_SMALLEST_UNIT = COUNT_UNIT_ONE_DECIMAL;
+    public static final double COUNT_SMALLEST_UNIT = COUNT_UNIT_ONE_DECIMAL / 100;
     public static final boolean COUNT_IS_CONVERSION_FACTOR_ENABLED = false;
     // endregion count constants -----------------------------------------------------------
 

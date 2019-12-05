@@ -41,22 +41,6 @@ public class RecipeIdentityFragment extends Fragment {
         binding.setViewModel(new ViewModelProvider(requireActivity()).
                 get(RecipeIdentityEditorViewModel.class));
 
-        setFractionText(binding);
-
         return binding.getRoot();
     }
-
-    private void setFractionText(RecipeIdentityEditorFragmentBinding binding) {
-        SpannableStringBuilder spannable = new SpannableStringBuilder();
-        spannable.append(Html.fromHtml(binding.getRoot().
-                                getContext().
-                                getResources().
-                                getString(R.string.half),
-                Html.FROM_HTML_MODE_LEGACY));
-
-
-        binding.editableRecipeDescription.setText(spannable);
-    }
-
-
 }

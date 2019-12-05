@@ -8,7 +8,7 @@
     <data>
 
         <import type="android.view.View" />
-        <import type="com.example.peter.thekitchenmenu.ui.bindingadapters.MeasurementSubtypeConverter" />
+        <import type="com.example.peter.thekitchenmenu.ui.utils.unitofmeasure.MeasurementSubtypeConverter" />
         <import type="com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype"/>
 
         <variable

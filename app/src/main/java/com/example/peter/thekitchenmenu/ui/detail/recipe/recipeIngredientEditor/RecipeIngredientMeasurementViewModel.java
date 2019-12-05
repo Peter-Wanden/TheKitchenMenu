@@ -19,6 +19,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipeportioncalculator.U
 import com.example.peter.thekitchenmenu.domain.usecase.recipeportioncalculator.UseCasePortionCalculatorResponse;
 import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.common.MeasurementErrorMessageMaker;
+import com.example.peter.thekitchenmenu.ui.utils.unitofmeasure.CountFraction;
 import com.example.peter.thekitchenmenu.ui.utils.NumberFormatter;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
@@ -49,7 +50,6 @@ public class RecipeIngredientMeasurementViewModel extends ObservableViewModel {
     private String conversionFactorErrorMessage;
     private String unitOneErrorMessage;
     private String unitTwoErrorMessage;
-    private String unitOne = "";
     private String recipeId = "";
     private String ingredientId = "";
     private String recipeIngredientId = "";
@@ -214,6 +214,17 @@ public class RecipeIngredientMeasurementViewModel extends ObservableViewModel {
     @Bindable
     public String getConversionFactorErrorMessage() {
         return conversionFactorErrorMessage;
+    }
+
+    @Bindable
+    public CountFraction getCountFraction() {
+        return CountFraction.findClosest(measurementModel.getTotalUnitOne());
+    }
+
+    public void setCountFraction(CountFraction countFraction) {
+        if (!updatingUi) {
+            processUnitOne(countFraction.getDecimalValue());
+        }
     }
 
     @Bindable
@@ -382,8 +393,12 @@ public class RecipeIngredientMeasurementViewModel extends ObservableViewModel {
         if (measurementModel.isConversionFactorEnabled() != resultModel.isConversionFactorEnabled()) {
             notifyPropertyChanged(BR.conversionFactorEnabled);
         }
-        if (measurementModel.getTotalUnitOne() != resultModel.getTotalUnitOne()) {
+        if (measurementModel.getTotalUnitOne() != resultModel.getTotalUnitOne() &&
+                measurementModel.getSubtype() != MeasurementSubtype.COUNT) {
             notifyPropertyChanged(BR.unitOne);
+        }
+        if (measurementModel.getSubtype() == MeasurementSubtype.COUNT) {
+            notifyPropertyChanged(BR.countFraction);
         }
         if (measurementModel.getTotalUnitTwo() != resultModel.getTotalUnitTwo()) {
             notifyPropertyChanged(BR.unitTwo);

@@ -17,7 +17,6 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     }
 
     enum ResultStatus {
-
         RESULT_OK,
     }
 
@@ -427,7 +426,7 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
         return unitDigitWidths;
     }
 
-    private double roundDecimal(double valueToRound) {
+    protected double roundDecimal(double valueToRound) {
         NumberFormat decimalFormat = NumberFormat.getInstance();
         decimalFormat.setRoundingMode(RoundingMode.HALF_EVEN);
 

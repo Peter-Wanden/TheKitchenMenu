@@ -19,7 +19,7 @@ import com.example.peter.thekitchenmenu.domain.UseCaseFactory;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.UseCaseConversionFactorStatus;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.UseCaseRecipeIngredientList;
-import com.example.peter.thekitchenmenu.ui.bindingadapters.unitofmeasure.MeasurementToStringFormatter;
+import com.example.peter.thekitchenmenu.ui.utils.unitofmeasure.MeasurementToSpannableConverter;
 import com.example.peter.thekitchenmenu.ui.catalog.recipe.RecipeListDataInteractor;
 import com.example.peter.thekitchenmenu.ui.detail.common.MeasurementErrorMessageMaker;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeCourseEditorViewModel;
@@ -179,7 +179,7 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
         } else if (modelClass.isAssignableFrom(RecipeIngredientListItemViewModel.class)) {
             // noinspection unchecked
             return (T) new RecipeIngredientListItemViewModel(
-                    new MeasurementToStringFormatter(application.getResources())
+                    new MeasurementToSpannableConverter(application.getResources())
             );
         }
         throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());

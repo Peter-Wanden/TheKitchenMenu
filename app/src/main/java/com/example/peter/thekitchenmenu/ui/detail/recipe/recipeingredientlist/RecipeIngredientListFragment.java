@@ -17,7 +17,7 @@ import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.RecipeIngredientListFragmentBinding;
 import com.example.peter.thekitchenmenu.databinding.RecipeIngredientListItemBinding;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.RecipeIngredientListItemModel;
-import com.example.peter.thekitchenmenu.ui.bindingadapters.unitofmeasure.MeasurementToStringFormatter;
+import com.example.peter.thekitchenmenu.ui.utils.unitofmeasure.MeasurementToSpannableConverter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -144,7 +144,7 @@ public class RecipeIngredientListFragment extends Fragment {
 
             final RecipeIngredientListItemViewModel viewModel =
                     new RecipeIngredientListItemViewModel(
-                            new MeasurementToStringFormatter(resources));
+                            new MeasurementToSpannableConverter(resources));
 
             viewModel.setNavigator(navigator);
             binding.setViewModel(viewModel);

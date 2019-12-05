@@ -75,16 +75,4 @@
         <item>@string/non_food</item>
         <item>@string/food</item>
     </string-array>
-
-    <string-array name="count_fractions">
-        <item>@string/one_tenth</item>
-        <item>@string/one_fifth</item>
-        <item>@string/three_tenths</item>
-        <item>@string/two_fifths</item>
-        <item>@string/half</item>
-        <item>@string/three_fifths</item>
-        <item>@string/seven_tenths</item>
-        <item>@string/four_fifths</item>
-        <item>@string/nine_tenths</item>
-    </string-array>
 </resources>

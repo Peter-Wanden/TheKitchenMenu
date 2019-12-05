@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.utils;
+package com.example.peter.thekitchenmenu.ui.utils.unitofmeasure;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.example.peter.thekitchenmenu.R;
+import com.example.peter.thekitchenmenu.ui.utils.SpinnerItemType;
+import com.example.peter.thekitchenmenu.ui.utils.unitofmeasure.UnitOfMeasureSpinnerItemModel;
 
 import java.util.ArrayList;
 

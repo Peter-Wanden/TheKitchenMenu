@@ -8,7 +8,7 @@ import android.widget.SpinnerAdapter;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.ProductEditorMeasurementBinding;
-import com.example.peter.thekitchenmenu.ui.utils.UnitOfMeasureSpinnerAdapterBuilder;
+import com.example.peter.thekitchenmenu.ui.utils.unitofmeasure.UnitOfMeasureSpinnerAdapterBuilder;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

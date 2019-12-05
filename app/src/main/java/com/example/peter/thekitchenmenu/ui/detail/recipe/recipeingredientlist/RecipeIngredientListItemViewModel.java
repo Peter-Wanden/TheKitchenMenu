@@ -1,10 +1,12 @@
 package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist;
 
+import android.text.Spanned;
+
 import androidx.annotation.Nullable;
 import androidx.databinding.ObservableField;
 import androidx.lifecycle.ViewModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.RecipeIngredientListItemModel;
-import com.example.peter.thekitchenmenu.ui.bindingadapters.unitofmeasure.MeasurementToStringFormatter;
+import com.example.peter.thekitchenmenu.ui.utils.unitofmeasure.MeasurementToSpannableConverter;
 
 import java.lang.ref.WeakReference;
 
@@ -13,14 +15,14 @@ public class RecipeIngredientListItemViewModel
 
     @Nullable
     private WeakReference<RecipeIngredientListItemNavigator> navigator;
-    private MeasurementToStringFormatter formatter;
+    private MeasurementToSpannableConverter formatter;
 
     private RecipeIngredientListItemModel listItemModel;
 
     public final ObservableField<String> ingredientNameObservable = new ObservableField<>();
-    public final ObservableField<String> ingredientMeasurementObservable = new ObservableField<>();
+    public final ObservableField<Spanned> ingredientMeasurementObservable = new ObservableField<>();
 
-    public RecipeIngredientListItemViewModel(MeasurementToStringFormatter formatter) {
+    public RecipeIngredientListItemViewModel(MeasurementToSpannableConverter formatter) {
         this.formatter = formatter;
     }
 
@@ -35,8 +37,8 @@ public class RecipeIngredientListItemViewModel
 
     private void setResultsToDisplay() {
         ingredientNameObservable.set(listItemModel.getIngredientName());
-        ingredientMeasurementObservable.set(
-                formatter.formatMeasurement(listItemModel.getMeasurementModel()));
+        ingredientMeasurementObservable.set(formatter.formatMeasurement(
+                listItemModel.getMeasurementModel()));
     }
 
     public void deleteIngredientClicked() {

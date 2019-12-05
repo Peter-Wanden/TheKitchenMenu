@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.utils;
+package com.example.peter.thekitchenmenu.ui.utils.unitofmeasure;
 
 import android.content.res.Resources;
 import android.widget.SpinnerAdapter;
@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
+import com.example.peter.thekitchenmenu.ui.utils.SpinnerItemType;
 
 import java.util.ArrayList;
 import java.util.Arrays;

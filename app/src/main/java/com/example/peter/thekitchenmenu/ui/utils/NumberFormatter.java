@@ -18,12 +18,16 @@ public class NumberFormatter {
     }
 
     public String formatDecimalForDisplay(double numberToFormat) {
-        if (numberToFormat == 0) return "";
+        if (numberToFormat == 0) {
+            return "";
+        }
         return numberFormat.format(numberToFormat);
     }
 
     public String formatIntegerForDisplay(int numberToFormat) {
-        if (numberToFormat == 0) return "";
+        if (numberToFormat == 0) {
+            return "";
+        }
         return numberFormat.format(numberToFormat);
     }
 

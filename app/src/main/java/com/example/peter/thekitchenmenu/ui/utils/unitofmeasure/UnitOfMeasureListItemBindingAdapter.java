@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.bindingadapters.unitofmeasure;
+package com.example.peter.thekitchenmenu.ui.utils.unitofmeasure;
 
 import android.content.res.Resources;
 import android.os.Build;

@@ -1,8 +1,11 @@
-package com.example.peter.thekitchenmenu.ui.bindingadapters.unitofmeasure;
+package com.example.peter.thekitchenmenu.ui.utils.unitofmeasure;
 
 import android.content.res.Resources;
 import android.os.Build;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 
+import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasure;
@@ -10,28 +13,27 @@ import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasur
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.text.ParseException;
 import java.util.Locale;
 
-public class MeasurementToStringFormatter {
+public class MeasurementToSpannableConverter {
     private Resources resources;
     private MeasurementModel model;
     private UnitOfMeasure unitOfMeasure;
     private String measurementErrorText = "There is a measurement error";
     boolean measurementError;
 
-    public MeasurementToStringFormatter(Resources resources) {
+    public MeasurementToSpannableConverter(Resources resources) {
         this.resources = resources;
     }
 
-    public String formatMeasurement(MeasurementModel model) {
+    public Spannable formatMeasurement(MeasurementModel model) {
         this.model = model;
         return convertModelToString();
     }
 
-    private String convertModelToString() {
+    private Spannable convertModelToString() {
         unitOfMeasure = model.getSubtype().getMeasurementClass();
-        String measurement = "";
+        Spannable measurement = new SpannableStringBuilder();
 
         boolean isBaseUnitsSet = isBaseUnitsSet();
         boolean isNumberOfItemSet = isNumberOfItemsSet();
@@ -39,20 +41,15 @@ public class MeasurementToStringFormatter {
 
         if (isBaseUnitsSet && isNumberOfItemSet && isConversionFactorSet) {
 
-//            if (isMetricMeasurement()) {
-//                measurement = getMetricMeasurement();
-//
-//            } else
-
             if (isImperialMeasurement() || isMetricMeasurement()) {
-                measurement = getImperialMeasurement();
+                measurement = getMetricImperialMeasurement();
 
-            } else if (unitOfMeasure.getMeasurementSubtype() == MeasurementSubtype.COUNT) {
+            } else if (model.getSubtype() == MeasurementSubtype.COUNT) {
                 measurement = getCountMeasurement();
             }
 
         } else {
-            measurement = measurementErrorText;
+            measurement = new SpannableStringBuilder(measurementErrorText);
         }
         return measurement;
     }
@@ -166,9 +163,9 @@ public class MeasurementToStringFormatter {
         }
     }
 
-    private String getImperialMeasurement() {
+    private Spannable getMetricImperialMeasurement() {
         NumberFormat numberFormat = getNumberFormat();
-        StringBuilder formattedMeasurement = new StringBuilder();
+        SpannableStringBuilder formattedMeasurement = new SpannableStringBuilder();
 
         int numberOfItems = unitOfMeasure.getNumberOfItems();
         int totalUnitTwo = unitOfMeasure.getTotalUnitTwo();
@@ -179,10 +176,14 @@ public class MeasurementToStringFormatter {
         String unitTwoLabel = resources.getString(unitOfMeasure.getUnitTwoLabelResourceId());
 
         if (numberOfItems > 1) {
-            formattedMeasurement.append(numberOfItems).append(" x ");
+            formattedMeasurement.
+                    append(String.valueOf(numberOfItems)).
+                    append(" x ");
 
             if (itemUnitTwo > 0) {
-                formattedMeasurement.append(itemUnitTwo).append(unitTwoLabel).append(" ");
+                formattedMeasurement.
+                        append(String.valueOf(itemUnitTwo)).
+                        append(unitTwoLabel).append(" ");
             }
 
             if (itemUnitOne > 0) {
@@ -191,43 +192,78 @@ public class MeasurementToStringFormatter {
             }
             formattedMeasurement.append(" (");
         }
-        if (totalUnitTwo > 0)
-            formattedMeasurement.append(totalUnitTwo).append(unitTwoLabel);
-
-        if (totalUnitTwo > 0 && totalUnitOne > 0)
-            formattedMeasurement.append(" ");
-
-        if (totalUnitOne > 0)
-            formattedMeasurement.append(numberFormat.format(totalUnitOne)).append(unitOneLabel);
-
-        if (numberOfItems > 1)
-            formattedMeasurement.append(")");
-
-        if (formattedMeasurement.toString().length() > 0) {
-            return formattedMeasurement.toString();
-
-        } else {
-            return "";
+        if (totalUnitTwo > 0) {
+            formattedMeasurement.
+                    append(String.valueOf(totalUnitTwo)).
+                    append(unitTwoLabel);
         }
+        if (totalUnitTwo > 0 && totalUnitOne > 0) {
+            formattedMeasurement.append(" ");
+        }
+        if (totalUnitOne > 0) {
+            formattedMeasurement.
+                    append(numberFormat.format(totalUnitOne)).
+                    append(unitOneLabel);
+        }
+        if (numberOfItems > 1)
+            formattedMeasurement.
+                    append(")");
+
+        return formattedMeasurement;
     }
 
-    private String getCountMeasurement() {
-        StringBuilder measurement = new StringBuilder();
-        String baseUnits = String.valueOf(unitOfMeasure.getTotalBaseUnits());
-        NumberFormat numberFormat = getNumberFormat();
-        int parsedValue = 0;
+    private Spannable getCountMeasurement() {
+        SpannableStringBuilder measurement = new SpannableStringBuilder();
+        int numberOfItems = model.getNumberOfItems();
+        int totalUnitTwo = model.getTotalUnitTwo();
+        double totalUnitOne = model.getTotalUnitOne();
+        int itemUnitTwo = model.getItemUnitTwo();
+        double itemUnitOne = model.getItemUnitOne();
 
-        try {
-            parsedValue = numberFormat.parse(baseUnits).intValue();
+        if (numberOfItems > 1) {
+            measurement.append(String.valueOf(numberOfItems)).append(" x ");
 
-            if (parsedValue < 2)
-                return "";
+            if (itemUnitTwo > 0) {
+                measurement.append(String.valueOf(itemUnitTwo)).append(" ");
+            }
 
-        } catch (ParseException e) {
-            e.printStackTrace();
+            if (itemUnitOne > 0) {
+                CountFraction countFraction = CountFraction.findClosest(itemUnitOne);
+
+                if (countFraction != CountFraction.DEFAULT) {
+                    FractionToSpannableConverter converter = new FractionToSpannableConverter();
+                    String fractionString = resources.getString(countFraction.getStringResourceId());
+
+                    measurement.append(resources.getString(R.string.approximately)).
+                            append(converter.getFractionSpannable(fractionString));
+                }
+            }
+            measurement.append("(").append(resources.getString(R.string.total));
         }
 
-        return measurement.append(parsedValue).append("s").toString();
+        if (totalUnitTwo > 0) {
+            measurement.append(String.valueOf(totalUnitTwo));
+        }
+
+        if (totalUnitTwo > 0 && totalUnitOne > 0) {
+            measurement.append(" ");
+        }
+
+        if (totalUnitOne > 0) {
+            CountFraction countFraction = CountFraction.findClosest(totalUnitOne);
+
+            if (countFraction != CountFraction.DEFAULT) {
+                FractionToSpannableConverter converter = new FractionToSpannableConverter();
+                String fractionString = resources.getString(countFraction.getStringResourceId());
+                measurement.append(converter.getFractionSpannable(fractionString));
+            }
+        }
+
+        if (numberOfItems > 1) {
+            measurement.append(")");
+        }
+
+        return measurement;
     }
 
     @SuppressWarnings("deprecation")

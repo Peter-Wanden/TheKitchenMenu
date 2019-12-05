@@ -16,8 +16,8 @@ import androidx.fragment.app.Fragment;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.RecipeIngredientEditorMeasurementBinding;
-import com.example.peter.thekitchenmenu.ui.utils.CountFractionsSpinnerAdapterBuilder;
-import com.example.peter.thekitchenmenu.ui.utils.UnitOfMeasureSpinnerAdapterBuilder;
+import com.example.peter.thekitchenmenu.ui.utils.unitofmeasure.CountFractionsSpinnerAdapterBuilder;
+import com.example.peter.thekitchenmenu.ui.utils.unitofmeasure.UnitOfMeasureSpinnerAdapterBuilder;
 
 public class RecipeIngredientMeasurementFragment extends Fragment {
 
@@ -71,9 +71,7 @@ public class RecipeIngredientMeasurementFragment extends Fragment {
     }
 
     private SpinnerAdapter getUnitOfMeasureSpinnerAdapter() {
-
-        return UnitOfMeasureSpinnerAdapterBuilder.
-                setActivity(requireActivity()).
+        return UnitOfMeasureSpinnerAdapterBuilder.setActivity(requireActivity()).
                 addMetricMass().
                 addImperialMass().
                 addMetricVolume().
@@ -84,15 +82,16 @@ public class RecipeIngredientMeasurementFragment extends Fragment {
     }
 
     private SpinnerAdapter getCountFractionSpinnerAdapter() {
-        return CountFractionsSpinnerAdapterBuilder.
-                setActivity(requireActivity()).
+        return CountFractionsSpinnerAdapterBuilder.setActivity(requireActivity()).
                 addOneTenth().
                 addOneFifth().
+                addOneQuarter().
                 addThreeTenths().
                 addTwoFifths().
                 addHalf().
                 addThreeFifths().
                 addSevenTenths().
+                addThreeQuarters().
                 addFourFifths().
                 addNineTenths().
                 build();

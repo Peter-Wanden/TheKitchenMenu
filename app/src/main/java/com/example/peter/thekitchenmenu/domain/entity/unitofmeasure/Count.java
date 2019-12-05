@@ -4,6 +4,10 @@ import androidx.core.util.Pair;
 
 import com.example.peter.thekitchenmenu.R;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
 public class Count extends UnitOfMeasureAbstract {
 
     public Count() {
@@ -22,6 +26,18 @@ public class Count extends UnitOfMeasureAbstract {
         subtypeStringResourceId = R.string.count;
         unitOneLabelStringResourceId = R.string.part;
         unitTwoLabelStringResourceId = R.string.whole;
+    }
+
+    @Override
+    protected double roundDecimal(double valueToRound) {
+        NumberFormat decimalFormat = NumberFormat.getInstance();
+        decimalFormat.setRoundingMode(RoundingMode.HALF_EVEN);
+
+        if (decimalFormat instanceof DecimalFormat) {
+            ((DecimalFormat) decimalFormat).applyPattern("#.####");
+        }
+
+        return Double.parseDouble(decimalFormat.format(valueToRound));
     }
 
     @Override
