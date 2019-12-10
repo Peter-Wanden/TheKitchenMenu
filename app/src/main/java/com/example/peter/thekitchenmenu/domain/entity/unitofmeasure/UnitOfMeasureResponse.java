@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.entity.unitofmeasure;
 
-import com.example.peter.thekitchenmenu.domain.UseCaseCommandAbstract;
+import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
 
 import java.util.Objects;
@@ -9,7 +9,7 @@ import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureAbstract.*;
 
-public class UnitOfMeasureResponse implements UseCaseCommandAbstract.Response {
+public class UnitOfMeasureResponse implements UseCaseInteractor.Response {
 
     @Nonnull
     private final MeasurementModel model;

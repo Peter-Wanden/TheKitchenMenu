@@ -4,9 +4,10 @@ import android.app.Application;
 import android.content.res.Resources;
 import android.util.Log;
 
+import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.model.ProductIdentityModel;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
-import com.example.peter.thekitchenmenu.ui.utils.TextValidationHandler;
+import com.example.peter.thekitchenmenu.ui.utils.TextValidator;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.Observable;
@@ -20,7 +21,7 @@ public class ProductIdentityViewModel extends AndroidViewModel {
     private static final String TAG = "tkm-ProductIdentityVM";
 
     private Resources resources;
-    private TextValidationHandler validationHandler;
+    private TextValidator validationHandler;
 
     // Observed by the main ProductEditorViewModel, to save a new model set it to
     // existingIdentityModel
@@ -40,7 +41,7 @@ public class ProductIdentityViewModel extends AndroidViewModel {
     private boolean shoppingItemNameValidated = false;
 
     public ProductIdentityViewModel(@NonNull Application application,
-                                    TextValidationHandler validationHandler) {
+                                    TextValidator validationHandler) {
         super(application);
         resources = application.getResources();
         this.validationHandler = validationHandler;
@@ -75,36 +76,59 @@ public class ProductIdentityViewModel extends AndroidViewModel {
 
     private void descriptionChanged() {
         descriptionErrorMessage.set(null);
-        String descriptionValidationResponse = validateText(description.get());
 
-        if (descriptionValidationResponse.equals(TextValidationHandler.VALIDATED)) {
+        TextValidator.Response response = validateText(description.get());
+
+        if (response.getResult() == TextValidator.Result.VALID) {
             descriptionValidated = true;
         } else {
             descriptionValidated = false;
-            descriptionErrorMessage.set(descriptionValidationResponse);
+            setError(descriptionErrorMessage, response);
         }
         checkAllFieldsValidated();
     }
 
     private void shoppingListItemNameChanged() {
         shoppingListItemNameErrorMessage.set(null);
-        String shoppingListItemNameValidationResponse = validateText(shoppingListItemName.get());
 
-        if (shoppingListItemNameValidationResponse.equals(TextValidationHandler.VALIDATED)) {
+        TextValidator.Response response = validateText(shoppingListItemName.get());
+
+        if (response.getResult() == TextValidator.Result.VALID) {
             shoppingItemNameValidated = true;
         } else {
             shoppingItemNameValidated = false;
-            shoppingListItemNameErrorMessage.set(shoppingListItemNameValidationResponse);
+            setError(shoppingListItemNameErrorMessage, response);
         }
         checkAllFieldsValidated();
     }
 
-    SingleLiveEvent<Boolean> getIdentityModelValidEvent() {
-        return identityModelValidEvent;
+    private TextValidator.Response validateText(String textToValidate) {
+        TextValidator.Request request = new TextValidator.Request(
+                TextValidator.RequestType.SHORT_TEXT,
+                textToValidate
+        );
+        return validationHandler.validateText(request);
     }
 
-    private String validateText(String textToValidate) {
-        return validationHandler.validateShortText(resources, textToValidate);
+    private void setError(ObservableField<String> errorObservable,
+                          TextValidator.Response response) {
+        if (response.getResult() == TextValidator.Result.TOO_SHORT) {
+            errorObservable.set(resources.getString(
+                    R.string.input_error_text_too_short,
+                    response.getMinLength(),
+                    response.getMaxLength()));
+
+        } else if (response.getResult() == TextValidator.Result.TOO_LONG) {
+            errorObservable.set(resources.getString(
+                    R.string.input_error_text_too_long,
+                    response.getMinLength(),
+                    response.getMaxLength()
+            ));
+        }
+    }
+
+    SingleLiveEvent<Boolean> getIdentityModelValidEvent() {
+        return identityModelValidEvent;
     }
 
     private void checkAllFieldsValidated() {

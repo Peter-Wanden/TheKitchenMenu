@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.ui.catalog.recipe;
 
 public interface RecipeNavigator {
 
-    void viewRecipe();
+    void viewRecipe(String recipeId);
 
     void addRecipe();
 

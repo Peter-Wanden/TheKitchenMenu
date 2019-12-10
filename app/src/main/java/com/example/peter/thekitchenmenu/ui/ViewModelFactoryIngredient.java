@@ -12,7 +12,7 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.ui.detail.ingredient.IngredientDuplicateChecker;
 import com.example.peter.thekitchenmenu.ui.detail.ingredient.IngredientEditorViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.ingredient.IngredientViewerViewModel;
-import com.example.peter.thekitchenmenu.ui.utils.TextValidationHandler;
+import com.example.peter.thekitchenmenu.ui.utils.TextValidator;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 
@@ -52,7 +52,7 @@ public class ViewModelFactoryIngredient extends ViewModelProvider.NewInstanceFac
             return (T) new IngredientEditorViewModel(
                     application.getResources(),
                     repositoryIngredient,
-                    new TextValidationHandler(),
+                    new TextValidator(application.getResources()),
                     new UniqueIdProvider(),
                     new TimeProvider(),
                     new IngredientDuplicateChecker(repositoryIngredient));

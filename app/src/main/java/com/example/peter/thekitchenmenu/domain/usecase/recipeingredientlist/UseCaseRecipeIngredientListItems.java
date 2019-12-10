@@ -7,7 +7,7 @@ import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
-import com.example.peter.thekitchenmenu.domain.UseCaseCommandAbstract;
+import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModelBuilder;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
@@ -18,8 +18,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class UseCaseRecipeIngredientList
-        extends UseCaseCommandAbstract<UseCaseRecipeIngredientListRequest, UseCaseRecipeIngredientListResponse> {
+/**
+ * Returns a list of ingredients for a given recipeId
+ */
+public class UseCaseRecipeIngredientListItems
+        extends
+        UseCaseInteractor<UseCaseRecipeIngredientListRequest, UseCaseRecipeIngredientListResponse> {
 
     private RepositoryRecipeIngredient repoRecipeIngredient;
     private RepositoryIngredient repoIngredient;
@@ -28,15 +32,13 @@ public class UseCaseRecipeIngredientList
     private String recipeId;
     private Map<String, RecipeIngredientQuantityEntity> recipeIngredientQuantities =
             new LinkedHashMap<>();
-    private Map<String, IngredientEntity> ingredients =
-            new LinkedHashMap<>();
-    private List<RecipeIngredientListItemModel> listItemModels =
-            new ArrayList<>();
+    private Map<String, IngredientEntity> ingredients = new LinkedHashMap<>();
+    private List<RecipeIngredientListItemModel> listItemModels = new ArrayList<>();
     private int portions;
 
-    public UseCaseRecipeIngredientList(RepositoryRecipeIngredient repoRecipeIngredient,
-                                       RepositoryIngredient repoIngredient,
-                                       RepositoryRecipePortions repoPortions) {
+    public UseCaseRecipeIngredientListItems(RepositoryRecipeIngredient repoRecipeIngredient,
+                                            RepositoryIngredient repoIngredient,
+                                            RepositoryRecipePortions repoPortions) {
         this.repoRecipeIngredient = repoRecipeIngredient;
         this.repoIngredient = repoIngredient;
         this.repoPortions = repoPortions;
@@ -52,18 +54,18 @@ public class UseCaseRecipeIngredientList
         repoPortions.getPortionsForRecipe(
                 recipeId,
                 new DataSource.GetEntityCallback<RecipePortionsEntity>() {
-            @Override
-            public void onEntityLoaded(RecipePortionsEntity portions) {
-                UseCaseRecipeIngredientList.this.portions =
-                        portions.getServings() * portions.getSittings();
-                getRecipeIngredientQuantities();
-            }
+                    @Override
+                    public void onEntityLoaded(RecipePortionsEntity portions) {
+                        UseCaseRecipeIngredientListItems.this.portions =
+                                portions.getServings() * portions.getSittings();
+                        getRecipeIngredientQuantities();
+                    }
 
-            @Override
-            public void onDataNotAvailable() {
+                    @Override
+                    public void onDataNotAvailable() {
 
-            }
-        });
+                    }
+                });
     }
 
     private void getRecipeIngredientQuantities() {
@@ -72,19 +74,19 @@ public class UseCaseRecipeIngredientList
         repoRecipeIngredient.getByRecipeId(
                 recipeId,
                 new DataSource.GetAllCallback<RecipeIngredientQuantityEntity>() {
-            @Override
-            public void onAllLoaded(List<RecipeIngredientQuantityEntity> entities) {
-                for (RecipeIngredientQuantityEntity entity : entities) {
-                    recipeIngredientQuantities.put(entity.getIngredientId(), entity);
-                }
-                getRecipeIngredients();
-            }
+                    @Override
+                    public void onAllLoaded(List<RecipeIngredientQuantityEntity> entities) {
+                        for (RecipeIngredientQuantityEntity entity : entities) {
+                            recipeIngredientQuantities.put(entity.getIngredientId(), entity);
+                        }
+                        getRecipeIngredients();
+                    }
 
-            @Override
-            public void onDataNotAvailable() {
+                    @Override
+                    public void onDataNotAvailable() {
 
-            }
-        });
+                    }
+                });
     }
 
     private void getRecipeIngredients() {

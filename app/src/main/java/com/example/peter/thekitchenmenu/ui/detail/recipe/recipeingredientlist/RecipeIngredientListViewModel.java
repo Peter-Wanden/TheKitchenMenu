@@ -5,10 +5,10 @@ import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableList;
 import androidx.lifecycle.ViewModel;
 
-import com.example.peter.thekitchenmenu.domain.UseCaseCommandAbstract;
+import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.RecipeIngredientListItemModel;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.UseCaseRecipeIngredientList;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.UseCaseRecipeIngredientListItems;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.UseCaseRecipeIngredientListRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.UseCaseRecipeIngredientListResponse;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor.RecipeIngredientEditorActivity;
@@ -20,7 +20,7 @@ public class RecipeIngredientListViewModel extends ViewModel {
 
     private RecipeIngredientListNavigator navigator;
     private UseCaseHandler handler;
-    private UseCaseRecipeIngredientList useCase;
+    private UseCaseRecipeIngredientListItems useCase;
 
     public final ObservableList<RecipeIngredientListItemModel> recipeIngredientsModels =
             new ObservableArrayList<>();
@@ -29,7 +29,7 @@ public class RecipeIngredientListViewModel extends ViewModel {
     private String recipeId = "";
 
     public RecipeIngredientListViewModel(UseCaseHandler handler,
-                                         UseCaseRecipeIngredientList useCase) {
+                                         UseCaseRecipeIngredientListItems useCase) {
         this.handler = handler;
         this.useCase = useCase;
     }
@@ -61,7 +61,7 @@ public class RecipeIngredientListViewModel extends ViewModel {
         handler.execute(
                 useCase,
                 new UseCaseRecipeIngredientListRequest(recipeId),
-                new UseCaseCommandAbstract.Callback<UseCaseRecipeIngredientListResponse>() {
+                new UseCaseInteractor.Callback<UseCaseRecipeIngredientListResponse>() {
             @Override
             public void onSuccess(UseCaseRecipeIngredientListResponse response) {
                 if (response.getListItemModels().size() > 0) {

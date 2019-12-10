@@ -4,12 +4,12 @@ import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
-import com.example.peter.thekitchenmenu.domain.UseCaseCommandAbstract;
+import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasure;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
 
 public class UseCaseConversionFactorStatus
-        extends UseCaseCommandAbstract<UseCaseConversionFactorStatusRequest, UseCaseConversionFactorStatusResponse>
+        extends UseCaseInteractor<UseCaseConversionFactorStatusRequest, UseCaseConversionFactorStatusResponse>
         implements DataSource.GetEntityCallback<IngredientEntity> {
 
     public enum UseCaseResult {

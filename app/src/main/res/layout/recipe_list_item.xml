@@ -10,7 +10,7 @@
 
         <variable
             name="recipeModel"
-            type="com.example.peter.thekitchenmenu.data.model.RecipeListItemModel" />
+            type="com.example.peter.thekitchenmenu.domain.usecase.recipeIdentityandduration.RecipeListItemModel" />
 
         <variable
             name="listener"
@@ -89,7 +89,7 @@
                 android:paddingEnd="@dimen/list_item_top_full_margin"
                 android:paddingStart="@dimen/list_item_top_full_margin"
                 android:paddingTop="@dimen/list_item_top_half_margin"
-                android:text="@string/recipe_preparation_time_label"
+                android:text="@string/recipe_prep_time_label"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/recipe_list_item_description"
                 />
@@ -111,7 +111,7 @@
                 android:paddingEnd="@dimen/list_item_top_full_margin"
                 android:paddingStart="@dimen/list_item_top_full_margin"
                 android:paddingTop="@dimen/list_item_top_half_margin"
-                android:text="@string/recipe_cooking_time_label"
+                android:text="@string/recipe_cook_time_label"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/recipe_list_item_prep_time_label"
                 />
@@ -133,7 +133,7 @@
                 android:paddingEnd="@dimen/list_item_top_full_margin"
                 android:paddingStart="@dimen/list_item_top_full_margin"
                 android:paddingTop="@dimen/list_item_top_half_margin"
-                android:text="@string/recipe_total_time"
+                android:text="@string/recipe_total_time_label"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/recipe_list_item_cook_time_label"
                 />

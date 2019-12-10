@@ -12,8 +12,7 @@ public class RecipeIngredientListBindings {
     public static void setRecipeIngredients(ListView listView,
                                             List<RecipeIngredientListItemModel> recipeIngredients) {
 
-        RecipeIngredientListFragment.RecipeIngredientListAdapter adapter =
-                (RecipeIngredientListFragment.RecipeIngredientListAdapter) listView.getAdapter();
+        RecipeIngredientListAdapter adapter = (RecipeIngredientListAdapter) listView.getAdapter();
         if (adapter != null)
             adapter.replaceData(recipeIngredients);
     }

@@ -8,19 +8,14 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipe;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeCourse;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.UseCaseFactory;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.UseCaseConversionFactorStatus;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.UseCaseRecipeIngredientList;
 import com.example.peter.thekitchenmenu.ui.utils.unitofmeasure.MeasurementToSpannableConverter;
-import com.example.peter.thekitchenmenu.ui.catalog.recipe.RecipeListDataInteractor;
 import com.example.peter.thekitchenmenu.ui.detail.common.MeasurementErrorMessageMaker;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeCourseEditorViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeDurationEditorViewModel;
@@ -35,39 +30,38 @@ import com.example.peter.thekitchenmenu.ui.utils.NumberFormatter;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.ui.catalog.recipe.RecipeCatalogViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeEditorViewModel;
-import com.example.peter.thekitchenmenu.ui.utils.TextValidationHandler;
+import com.example.peter.thekitchenmenu.ui.utils.TextValidator;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeportioncalculator.UseCasePortionCalculator;
 
 public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory {
 
     @SuppressLint("StaticFieldLeak")
     private static volatile ViewModelFactoryRecipe INSTANCE;
     private final Application application;
+    private final UseCaseFactory useCaseFactory;
+    private final UseCaseHandler useCaseHandler;
     private final RepositoryRecipe recipeRepository;
     private final RepositoryRecipeCourse recipeCourseRepository;
     private final RepositoryRecipeIdentity recipeIdentityRepository;
     private final RepositoryRecipeDuration recipeDurationRepository;
     private final RepositoryRecipePortions recipePortionsRepository;
-    private final RepositoryRecipeIngredient recipeIngredientRepository;
-    private final RepositoryIngredient ingredientRepository;
 
     private ViewModelFactoryRecipe(Application application,
+                                   UseCaseFactory useCaseFactory,
+                                   UseCaseHandler useCaseHandler,
                                    RepositoryRecipe recipeRepository,
                                    RepositoryRecipeCourse recipeCourseRepository,
                                    RepositoryRecipeIdentity recipeIdentityRepository,
                                    RepositoryRecipeDuration recipeDurationRepository,
-                                   RepositoryRecipePortions recipePortionsRepository,
-                                   RepositoryRecipeIngredient recipeIngredientRepository,
-                                   RepositoryIngredient ingredientRepository) {
+                                   RepositoryRecipePortions recipePortionsRepository) {
         this.application = application;
+        this.useCaseFactory = useCaseFactory;
+        this.useCaseHandler = useCaseHandler;
         this.recipeRepository = recipeRepository;
         this.recipeCourseRepository = recipeCourseRepository;
         this.recipeIdentityRepository = recipeIdentityRepository;
         this.recipeDurationRepository = recipeDurationRepository;
         this.recipePortionsRepository = recipePortionsRepository;
-        this.recipeIngredientRepository = recipeIngredientRepository;
-        this.ingredientRepository = ingredientRepository;
     }
 
     public static ViewModelFactoryRecipe getInstance(Application application) {
@@ -76,6 +70,8 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
                 if (INSTANCE == null)
                     INSTANCE = new ViewModelFactoryRecipe(
                             application,
+                            UseCaseFactory.getInstance(application),
+                            UseCaseHandler.getInstance(),
                             DatabaseInjection.provideRecipesDataSource(
                                     application.getApplicationContext()
                             ),
@@ -89,12 +85,6 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
                                     application.getApplicationContext()
                             ),
                             DatabaseInjection.provideRecipePortionsDataSource(
-                                    application.getApplicationContext()
-                            ),
-                            DatabaseInjection.provideRecipeIngredientDataSource(
-                                    application.getApplicationContext()
-                            ),
-                            DatabaseInjection.provideIngredientDataSource(
                                     application.getApplicationContext()
                             )
                     );
@@ -110,10 +100,8 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
         if (modelClass.isAssignableFrom(RecipeCatalogViewModel.class)) {
             //noinspection unchecked
             return (T) new RecipeCatalogViewModel(
-                    new RecipeListDataInteractor(
-                            recipeIdentityRepository,
-                            recipeDurationRepository
-                    )
+                    useCaseHandler,
+                    useCaseFactory.provideRecipeIdentityAndDurationListUseCase()
             );
         } else if (modelClass.isAssignableFrom(RecipeEditorViewModel.class)) {
             //noinspection unchecked
@@ -127,10 +115,10 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
         } else if (modelClass.isAssignableFrom(RecipeIdentityEditorViewModel.class)) {
             //noinspection unchecked
             return (T) new RecipeIdentityEditorViewModel(
-                    recipeIdentityRepository,
-                    new TimeProvider(),
+                    useCaseHandler,
+                    useCaseFactory.provideRecipeIdentityUseCase(),
                     application.getResources(),
-                    new TextValidationHandler()
+                    new TextValidator(application.getResources())
             );
         } else if (modelClass.isAssignableFrom(RecipeCourseEditorViewModel.class)) {
             //noinspection unchecked
@@ -156,9 +144,9 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
         } else if (modelClass.isAssignableFrom(RecipeIngredientMeasurementViewModel.class)) {
             // noinspection unchecked
             return (T) new RecipeIngredientMeasurementViewModel(
-                    UseCaseHandler.getInstance(),
-                    getPortionsUseCase(),
-                    getConversionFactorStatusUseCase(),
+                    useCaseHandler,
+                    useCaseFactory.providePortionsUseCase(),
+                    useCaseFactory.provideConversionFactorUseCase(),
                     application.getResources(),
                     new NumberFormatter(application.getResources()),
                     new MeasurementErrorMessageMaker(application.getResources(),
@@ -173,8 +161,8 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
         } else if (modelClass.isAssignableFrom(RecipeIngredientListViewModel.class)) {
             // noinspection unchecked
             return (T) new RecipeIngredientListViewModel(
-                    UseCaseHandler.getInstance(),
-                    getRecipeIngredientListUseCase()
+                    useCaseHandler,
+                    useCaseFactory.provideRecipeIngredientListUseCase()
             );
         } else if (modelClass.isAssignableFrom(RecipeIngredientListItemViewModel.class)) {
             // noinspection unchecked
@@ -183,20 +171,5 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
             );
         }
         throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
-    }
-
-    private UseCasePortionCalculator getPortionsUseCase() {
-        UseCaseFactory factory = UseCaseFactory.getInstance(application);
-        return factory.providePortionsUseCase();
-    }
-
-    private UseCaseConversionFactorStatus getConversionFactorStatusUseCase() {
-        UseCaseFactory factory = UseCaseFactory.getInstance(application);
-        return factory.provideConversionFactorUseCase();
-    }
-
-    private UseCaseRecipeIngredientList getRecipeIngredientListUseCase() {
-        UseCaseFactory factory = UseCaseFactory.getInstance(application);
-        return factory.provideRecipeIngredientListUseCase();
     }
 }

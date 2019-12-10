@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipeportioncalculator;
 
-import com.example.peter.thekitchenmenu.domain.UseCaseCommandAbstract;
+import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
 
 import java.util.Objects;
@@ -9,7 +9,7 @@ import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipeportioncalculator.UseCasePortionCalculator.*;
 
-public class UseCasePortionCalculatorResponse implements UseCaseCommandAbstract.Response {
+public class UseCasePortionCalculatorResponse implements UseCaseInteractor.Response {
     @Nonnull
     private final MeasurementModel model;
     @Nonnull

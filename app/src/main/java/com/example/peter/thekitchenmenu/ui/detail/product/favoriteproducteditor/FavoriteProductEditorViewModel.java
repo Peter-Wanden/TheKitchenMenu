@@ -9,7 +9,7 @@ import com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.DataSourceFavoriteProducts;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
-import com.example.peter.thekitchenmenu.ui.utils.TextValidationHandler;
+import com.example.peter.thekitchenmenu.ui.utils.TextValidator;
 import com.google.android.gms.common.util.Strings;
 
 import androidx.annotation.NonNull;
@@ -29,7 +29,7 @@ public class FavoriteProductEditorViewModel
 
     private Resources resources;
     private AddEditFavoriteProductNavigator navigator;
-    private TextValidationHandler validationHandler;
+    private TextValidator validationHandler;
 
     private String productId;
     private FavoriteProductEntity favoriteProductEntity;
@@ -50,8 +50,8 @@ public class FavoriteProductEditorViewModel
     private final SingleLiveEvent<Void> showUnsavedChangesDialogEvent = new SingleLiveEvent<>();
 
     private boolean
-            retailerValidated,
-            locationRoomValidated,
+            retailerValid,
+            locationRoomValid,
             locationInRoomValidated,
             priceValidated;
 
@@ -62,7 +62,7 @@ public class FavoriteProductEditorViewModel
     public FavoriteProductEditorViewModel(
             @NonNull Application application,
             @NonNull DataSourceFavoriteProducts favoriteProductEntityDataSource,
-            TextValidationHandler validationHandler) {
+            TextValidator validationHandler) {
 
         super(application);
         this.favoriteProductEntityDataSource = favoriteProductEntityDataSource;
@@ -159,46 +159,69 @@ public class FavoriteProductEditorViewModel
 
     private void retailerChanged() {
         retailerErrorMessage.set(null);
-        String retailerValidationResponse = validateText(retailer.get());
 
-        if (retailerValidationResponse.equals(TextValidationHandler.VALIDATED)) {
-            retailerValidated = true;
-        }
-        else {
-            retailerValidated = false;
-            retailerErrorMessage.set(retailerValidationResponse);
+        TextValidator.Response response = validateText(retailer.get());
+
+        if (response.getResult() == TextValidator.Result.VALID) {
+            retailerValid = true;
+        } else {
+            retailerValid = false;
+            setError(retailerErrorMessage, response);
         }
         checkAllFieldsValidated();
     }
 
     private void locationRoomChanged() {
         locationRoomErrorMessage.set(null);
-        String locationRoomValidationResponse = validateText(locationRoom.get());
 
-        if (locationRoomValidationResponse.equals(TextValidationHandler.VALIDATED))
-            locationRoomValidated = true;
-        else {
-            locationRoomValidated = false;
-            locationRoomErrorMessage.set(locationRoomValidationResponse);
+        TextValidator.Response response = validateText(locationRoom.get());
+
+        if (response.getResult() == TextValidator.Result.VALID) {
+            locationRoomValid = true;
+        } else {
+            locationRoomValid = false;
+            setError(locationRoomErrorMessage, response);
         }
         checkAllFieldsValidated();
     }
 
     private void locationInRoomChanged() {
         locationInRoomErrorMessage.set(null);
-        String locationInRoomValidationResponse = validateText(locationInRoom.get());
 
-        if (locationInRoomValidationResponse.equals(TextValidationHandler.VALIDATED))
+        TextValidator.Response response = validateText(locationInRoom.get());
+
+        if (response.getResult() == TextValidator.Result.VALID) {
             locationInRoomValidated = true;
-        else {
+        } else {
             locationInRoomValidated = false;
-            locationInRoomErrorMessage.set(locationInRoomValidationResponse);
+            setError(locationInRoomErrorMessage, response);
         }
         checkAllFieldsValidated();
     }
 
-    private String validateText(String textToValidate) {
-        return validationHandler.validateShortText(resources, textToValidate);
+    private TextValidator.Response validateText(String textToValidate) {
+        TextValidator.Request request = new TextValidator.Request(
+                TextValidator.RequestType.SHORT_TEXT,
+                textToValidate
+        );
+        return validationHandler.validateText(request);
+    }
+
+    private void setError(ObservableField<String> errorObservable,
+                          TextValidator.Response response) {
+        if (response.getResult() == TextValidator.Result.TOO_SHORT) {
+            errorObservable.set(resources.getString(
+                    R.string.input_error_text_too_short,
+                    response.getMinLength(),
+                    response.getMaxLength()));
+
+        } else if (response.getResult() == TextValidator.Result.TOO_LONG) {
+            errorObservable.set(resources.getString(
+                    R.string.input_error_text_too_long,
+                    response.getMinLength(),
+                    response.getMaxLength()
+            ));
+        }
     }
 
     private void priceChanged() {
@@ -238,14 +261,14 @@ public class FavoriteProductEditorViewModel
     }
 
     private void checkAllFieldsValidated() {
-        if (retailerValidated &&
-                locationRoomValidated &&
+        if (retailerValid &&
+                locationRoomValid &&
                 locationInRoomValidated &&
-                priceValidated)
+                priceValidated) {
             allInputValuesAreValidEvent.setValue(true);
-
-        else
+        } else {
             allInputValuesAreValidEvent.setValue(false);
+        }
     }
 
     void upOrBackPressed() {

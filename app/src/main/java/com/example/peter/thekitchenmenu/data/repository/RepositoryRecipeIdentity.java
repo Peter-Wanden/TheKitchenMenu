@@ -10,9 +10,8 @@ public class RepositoryRecipeIdentity extends Repository<RecipeIdentityEntity> {
 
     public static RepositoryRecipeIdentity INSTANCE = null;
 
-    private RepositoryRecipeIdentity(
-            @NonNull DataSource<RecipeIdentityEntity> remoteDataSource,
-            @NonNull DataSource<RecipeIdentityEntity> localDataSource) {
+    private RepositoryRecipeIdentity(@NonNull DataSource<RecipeIdentityEntity> remoteDataSource,
+                                     @NonNull DataSource<RecipeIdentityEntity> localDataSource) {
 
         this.remoteDataSource = checkNotNull(remoteDataSource);
         this.localDataSource = checkNotNull(localDataSource);

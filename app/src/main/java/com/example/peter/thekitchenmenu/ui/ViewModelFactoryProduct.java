@@ -15,7 +15,7 @@ import com.example.peter.thekitchenmenu.ui.catalog.product.ProductCatalogViewMod
 import com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductEditorViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductIdentityViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.product.productviewer.ProductViewerViewModel;
-import com.example.peter.thekitchenmenu.ui.utils.TextValidationHandler;
+import com.example.peter.thekitchenmenu.ui.utils.TextValidator;
 
 public class ViewModelFactoryProduct extends ViewModelProvider.NewInstanceFactory {
 
@@ -66,7 +66,8 @@ public class ViewModelFactoryProduct extends ViewModelProvider.NewInstanceFactor
         }
         else if (modelClass.isAssignableFrom(ProductIdentityViewModel.class)) {
             //noinspection unchecked
-            return(T) new ProductIdentityViewModel(application, new TextValidationHandler());
+            return(T) new ProductIdentityViewModel(application,
+                    new TextValidator(application.getResources()));
         }
         throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
     }

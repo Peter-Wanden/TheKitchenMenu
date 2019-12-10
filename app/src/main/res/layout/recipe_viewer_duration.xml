@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".5"
+            />
+
+        <TextView
+            android:id="@+id/recipe_viewer_duration_prep_time_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="@string/recipe_prep_time_label"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/guideline"
+            />
+
+        <TextView
+            android:id="@+id/recipe_viewer_duration_prep_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            app:layout_constraintStart_toEndOf="@id/guideline"
+            app:layout_constraintBaseline_toBaselineOf="@id/recipe_viewer_duration_prep_time_label"
+            tools:text="10"
+            />
+
+        <TextView
+            android:id="@+id/recipe_viewer_duration_cook_time_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="@string/recipe_cook_time_label"
+            app:layout_constraintEnd_toStartOf="@id/guideline"
+            app:layout_constraintTop_toBottomOf="@id/recipe_viewer_duration_prep_time_label"
+            />
+
+        <TextView
+            android:id="@+id/recipe_viewer_cook_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            app:layout_constraintStart_toEndOf="@id/guideline"
+            app:layout_constraintBaseline_toBaselineOf="@id/recipe_viewer_duration_cook_time_label"
+            tools:text="10"
+            />
+
+        <TextView
+            android:id="@+id/recipe_viewer_duration_total_time_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="@string/recipe_total_time_label"
+            app:layout_constraintEnd_toStartOf="@id/guideline"
+            app:layout_constraintTop_toBottomOf="@id/recipe_viewer_duration_cook_time_label"
+            />
+
+        <TextView
+            android:id="@+id/recipe_viewer_duration_total_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            app:layout_constraintStart_toEndOf="@id/guideline"
+            app:layout_constraintBaseline_toBaselineOf="@id/recipe_viewer_duration_total_time_label"
+            tools:text="100"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

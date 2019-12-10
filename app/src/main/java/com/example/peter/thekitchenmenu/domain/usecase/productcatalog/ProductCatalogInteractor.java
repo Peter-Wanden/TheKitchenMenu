@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.catalog.product;
+package com.example.peter.thekitchenmenu.domain.usecase.productcatalog;
 
 import androidx.annotation.NonNull;
 
@@ -6,7 +6,7 @@ import com.example.peter.thekitchenmenu.data.model.ProductModel;
 
 import java.util.List;
 
-interface ProductCatalogInteractor {
+public interface ProductCatalogInteractor {
 
     interface GetAllCallback {
 

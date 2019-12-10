@@ -155,6 +155,8 @@
     <string name="input_error_short_text_too_long">To long, needs to be between 3 and 70 characters.</string>
     <string name="input_error_long_text_too_short">Too short, needs to be between 3 and 70 characters.</string>
     <string name="input_error_long_text_too_long">To long, needs to be between 3 and 70 characters.</string>
+    <string name="input_error_text_too_short">Too short for this field, text needs to be between %1$s and %2$s characters.</string>
+    <string name="input_error_text_too_long">Too long for this field, text needs to be between %1$s and %2$s characters.</string>
 
     <string name="input_error_product_made_by_too_short">Manufacturer name too short, needs to be
         between 1 and 120 characters.</string>
@@ -210,8 +212,8 @@
     <string name="recipe_servings_label">Servings per sitting</string>
     <string name="recipe_sittings_label">No of sittings</string>
     <string name="recipe_total_servings_label">Total number of servings</string>
-    <string name="recipe_preparation_time_label">Prep time</string>
-    <string name="recipe_cooking_time_label">Cook time</string>
+    <string name="recipe_prep_time_label">Prep time</string>
+    <string name="recipe_cook_time_label">Cook time</string>
     <string name="recipe_hours_label">Hours</string>
     <string name="recipe_minutes_label">Minutes</string>
 
@@ -370,7 +372,7 @@
     <string name="volume_to_weight_conversion_factor_label">Please enter the exact weight of 1ml (1cm3) of this ingredient:</string>
     <string name="conversion_factor_error_message">Please enter a value between %1$.3fg and %2$.1fg</string>
     <string name="conversion_factor_used_for_this_ingredient">Conversion factor used for this ingredient</string>
-    <string name="recipe_total_time">Total time</string>
+    <string name="recipe_total_time_label">Total time</string>
     <string name="total">total:</string>
     <string name="approximately">approx.</string>
 </resources>

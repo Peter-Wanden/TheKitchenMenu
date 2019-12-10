@@ -132,8 +132,8 @@
             android:layout_width="wrap_content"
             android:layout_height="@dimen/standard_input_item_height"
             android:spinnerMode="dropdown"
-            android:selectedItemPosition='@={viewModel.shelfLife}'
             android:visibility='@{viewModel.category == 1 ? View.VISIBLE : View.GONE}'
+            android:selectedItemPosition='@={viewModel.shelfLife}'
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/spinner_category"
             app:layout_constraintTop_toBottomOf="@id/shelf_life_label"

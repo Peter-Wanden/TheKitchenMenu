@@ -13,12 +13,10 @@ import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
-import com.example.peter.thekitchenmenu.ui.utils.TextValidationHandler;
+import com.example.peter.thekitchenmenu.ui.utils.TextValidator;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
-
-import static com.example.peter.thekitchenmenu.ui.utils.TextValidationHandler.VALIDATED;
 
 public class IngredientEditorViewModel
         extends ViewModel
@@ -28,7 +26,7 @@ public class IngredientEditorViewModel
 
     private Resources resources;
     private RepositoryIngredient ingredientRepo;
-    private TextValidationHandler textValidationHandler;
+    private TextValidator validationHandler;
     private UniqueIdProvider idProvider;
     private TimeProvider timeProvider;
     private AddEditIngredientNavigator navigator;
@@ -51,13 +49,13 @@ public class IngredientEditorViewModel
 
     public IngredientEditorViewModel(Resources resources,
                                      RepositoryIngredient ingredientRepository,
-                                     TextValidationHandler textValidationHandler,
+                                     TextValidator validationHandler,
                                      UniqueIdProvider idProvider,
                                      TimeProvider timeProvider,
                                      IngredientDuplicateChecker duplicateChecker) {
         this.resources = resources;
         this.ingredientRepo = ingredientRepository;
-        this.textValidationHandler = textValidationHandler;
+        this.validationHandler = validationHandler;
         this.idProvider = idProvider;
         this.timeProvider = timeProvider;
         this.duplicateChecker = duplicateChecker;
@@ -135,18 +133,23 @@ public class IngredientEditorViewModel
 
     private void nameUpdated() {
         nameErrorMessageObservable.set(null);
-        String validationResponse = validateShortText(nameObservable.get());
 
-        nameValid = validationResponse.equals(VALIDATED);
+        TextValidator.Response response = validateText(
+                TextValidator.RequestType.SHORT_TEXT, nameObservable.get());
 
-        if (!nameValid)
-            nameErrorMessageObservable.set(validationResponse);
+        if (response.getResult() == TextValidator.Result.VALID) {
+            nameValid = true;
+        } else {
+            nameValid = false;
+            setError(nameErrorMessageObservable, response);
+        }
 
-        else if (!observablesUpdating && nameHasChanged())
+        if (!observablesUpdating && nameHasChanged()) {
             duplicateChecker.checkForDuplicatesAndNotify(
                     nameObservable.get(),
                     ingredientEntity.getId(),
                     this);
+        }
         updateUseButtonVisibility();
     }
 
@@ -156,9 +159,9 @@ public class IngredientEditorViewModel
 
     @Override
     public void duplicateCheckResult(String duplicateId) {
-        if (duplicateId.equals(IngredientDuplicateChecker.NO_DUPLICATE_FOUND))
+        if (duplicateId.equals(IngredientDuplicateChecker.NO_DUPLICATE_FOUND)) {
             updateUseButtonVisibility();
-        else {
+        } else {
             nameErrorMessageObservable.set(
                     resources.getString(R.string.ingredient_name_duplicate_error_message));
             showUseButtonLiveData.setValue(false);
@@ -167,22 +170,42 @@ public class IngredientEditorViewModel
 
     private void descriptionUpdated() {
         descriptionErrorMessageObservable.set(null);
-        String validationResponse = validateLongText(descriptionObservable.get());
 
-        descriptionValid = validationResponse.equals(VALIDATED);
+        TextValidator.Response response = validateText(
+                TextValidator.RequestType.LONG_TEXT,
+                descriptionObservable.get());
 
-        if (!descriptionValid)
-            descriptionErrorMessageObservable.set(validationResponse);
-
+        if (response.getResult() == TextValidator.Result.VALID) {
+            descriptionValid = true;
+        } else {
+            descriptionValid = false;
+            setError(descriptionErrorMessageObservable, response);
+        }
         updateUseButtonVisibility();
     }
 
-    private String validateShortText(String textToValidate) {
-        return textValidationHandler.validateShortText(resources, textToValidate);
+    private TextValidator.Response validateText(TextValidator.RequestType type,
+                                                String textToValidate) {
+        TextValidator.Request request = new TextValidator.Request(type, textToValidate
+        );
+        return validationHandler.validateText(request);
     }
 
-    private String validateLongText(String textToValidate) {
-        return textValidationHandler.validateLongText(resources, textToValidate);
+    private void setError(ObservableField<String> errorObservable,
+                          TextValidator.Response response) {
+        if (response.getResult() == TextValidator.Result.TOO_SHORT) {
+            errorObservable.set(resources.getString(
+                    R.string.input_error_text_too_short,
+                    response.getMinLength(),
+                    response.getMaxLength()));
+
+        } else if (response.getResult() == TextValidator.Result.TOO_LONG) {
+            errorObservable.set(resources.getString(
+                    R.string.input_error_text_too_long,
+                    response.getMinLength(),
+                    response.getMaxLength()
+            ));
+        }
     }
 
     private void updateUseButtonVisibility() {
@@ -228,18 +251,6 @@ public class IngredientEditorViewModel
         );
     }
 
-    private IngredientEntity getUpdatedIngredientEntity() {
-        return new IngredientEntity(
-                ingredientEntity.getId(),
-                nameObservable.get(),
-                descriptionObservable.get(),
-                ingredientEntity.getConversionFactor(),
-                ingredientEntity.getCreatedBy(),
-                ingredientEntity.getCreateDate(),
-                timeProvider.getCurrentTimeInMills()
-        );
-    }
-
     private void saveModel() {
         ingredientRepo.save(ingredientEntity);
     }
@@ -250,5 +261,17 @@ public class IngredientEditorViewModel
             saveModel();
         }
         navigator.finishActivity(ingredientEntity.getId());
+    }
+
+    private IngredientEntity getUpdatedIngredientEntity() {
+        return new IngredientEntity(
+                ingredientEntity.getId(),
+                nameObservable.get(),
+                descriptionObservable.get(),
+                ingredientEntity.getConversionFactor(),
+                ingredientEntity.getCreatedBy(),
+                ingredientEntity.getCreateDate(),
+                timeProvider.getCurrentTimeInMills()
+        );
     }
 }

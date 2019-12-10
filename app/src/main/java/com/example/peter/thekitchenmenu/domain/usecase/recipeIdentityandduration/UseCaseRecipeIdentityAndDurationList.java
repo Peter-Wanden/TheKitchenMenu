@@ -1,60 +1,49 @@
-package com.example.peter.thekitchenmenu.ui.catalog.recipe;
+package com.example.peter.thekitchenmenu.domain.usecase.recipeIdentityandduration;
 
 import com.example.peter.thekitchenmenu.data.entity.RecipeDurationEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
-import com.example.peter.thekitchenmenu.data.model.RecipeListItemModel;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
+import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-// Creates and returns lists of 'recipe list item models' based on a filter
-public class RecipeListDataInteractor {
+public class UseCaseRecipeIdentityAndDurationList extends
+        UseCaseInteractor<UseCaseRecipeIdentityAndDurationListRequestModel,
+                        UseCaseRecipeIdentityAndDurationListResponseModel> {
 
-    public interface RecipeListCallback {
-        void recipeList(List<RecipeListItemModel> recipeList);
-        void dataLoadingFailed(FailReason reason);
-    }
-
-    enum RecipeFilter {
+    public enum RecipeFilter {
         ALL,
         FAVORITE
     }
 
-    enum FailReason {
-        NO_DATA_AVAILABLE,
-        DATA_LOADING_ERROR
+    public enum ResultStatus {
+        DATA_LOADING_ERROR,
+        DATA_NOT_AVAILABLE,
+        RESULT_OK
     }
-
     private final RepositoryRecipeIdentity recipeIdentityRepository;
-    private final RepositoryRecipeDuration recipeDurationRepository;
 
-    private List<RecipeListCallback> listeners = new ArrayList<>();
+    private final RepositoryRecipeDuration recipeDurationRepository;
     private LinkedHashMap<String, RecipeIdentityEntity> recipeIdentities = new LinkedHashMap<>();
+
     private LinkedHashMap<String, RecipeDurationEntity> recipeDurations = new LinkedHashMap<>();
     private List<RecipeListItemModel> recipeListItemModels = new ArrayList<>();
 
-    public RecipeListDataInteractor(RepositoryRecipeIdentity recipeIdentityRepository,
-                                    RepositoryRecipeDuration recipeDurationRepository) {
-        this.recipeIdentityRepository = recipeIdentityRepository;
-        this.recipeDurationRepository = recipeDurationRepository;
+    public UseCaseRecipeIdentityAndDurationList(RepositoryRecipeIdentity identityRepository,
+                                                RepositoryRecipeDuration durationRepository) {
+        this.recipeIdentityRepository = identityRepository;
+        this.recipeDurationRepository = durationRepository;
     }
 
-    void registerListener(RecipeListCallback listener) {
-        listeners.add(listener);
-    }
-
-    void unregisterListener(RecipeListCallback listener) {
-        listeners.remove(listener);
-    }
-
-    void getRecipes(RecipeFilter filter) {
-        if (filter == RecipeFilter.ALL)
+    @Override
+    protected void execute(UseCaseRecipeIdentityAndDurationListRequestModel request) {
+        if (request.getFilter() == RecipeFilter.ALL) {
             getAllRecipes();
-        else if (filter == RecipeFilter.FAVORITE)
+        } else if (request.getFilter() == RecipeFilter.FAVORITE)
             getFavorites();
     }
 
@@ -67,7 +56,8 @@ public class RecipeListDataInteractor {
             @Override
             public void onAllLoaded(List<RecipeIdentityEntity> entities) {
                 for (RecipeIdentityEntity entity : entities) {
-                    RecipeListDataInteractor.this.recipeIdentities.put(entity.getId(), entity);
+                    UseCaseRecipeIdentityAndDurationList.this.recipeIdentities.put(
+                            entity.getId(), entity);
                 }
                 loadDurationEntities();
             }
@@ -84,14 +74,15 @@ public class RecipeListDataInteractor {
             @Override
             public void onAllLoaded(List<RecipeDurationEntity> entities) {
                 for (RecipeDurationEntity entity : entities) {
-                    RecipeListDataInteractor.this.recipeDurations.put(entity.getId(), entity);
+                    UseCaseRecipeIdentityAndDurationList.this.recipeDurations.put(
+                            entity.getId(), entity);
                 }
                 mergeLists();
             }
 
             @Override
             public void onDataNotAvailable() {
-
+                returnEmptyList();
             }
         });
     }
@@ -101,9 +92,11 @@ public class RecipeListDataInteractor {
     }
 
     private void returnEmptyList() {
-        for (RecipeListCallback callback : listeners) {
-            callback.recipeList(recipeListItemModels);
-        }
+        UseCaseRecipeIdentityAndDurationListResponseModel model = new
+                UseCaseRecipeIdentityAndDurationListResponseModel(
+                        ResultStatus.DATA_NOT_AVAILABLE, recipeListItemModels
+        );
+        getUseCaseCallback().onError(model);
     }
 
     private void mergeLists() {
@@ -123,7 +116,10 @@ public class RecipeListDataInteractor {
     }
 
     private void returnResults() {
-        for (RecipeListCallback callback : listeners)
-            callback.recipeList(recipeListItemModels);
+        UseCaseRecipeIdentityAndDurationListResponseModel model = new
+                UseCaseRecipeIdentityAndDurationListResponseModel(
+                        ResultStatus.RESULT_OK, recipeListItemModels
+        );
+        getUseCaseCallback().onSuccess(model);
     }
 }

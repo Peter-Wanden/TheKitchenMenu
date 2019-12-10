@@ -1,23 +1,23 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist;
 
-import androidx.annotation.NonNull;
+import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
 
-import com.example.peter.thekitchenmenu.domain.UseCaseCommandAbstract;
+import javax.annotation.Nonnull;
 
-public final class UseCaseRecipeIngredientListRequest implements UseCaseCommandAbstract.Request {
-    @NonNull
+public final class UseCaseRecipeIngredientListRequest implements UseCaseInteractor.Request {
+    @Nonnull
     private final String recipeId;
 
-    public UseCaseRecipeIngredientListRequest(@NonNull String recipeId) {
+    public UseCaseRecipeIngredientListRequest(@Nonnull String recipeId) {
         this.recipeId = recipeId;
     }
 
-    @NonNull
+    @Nonnull
     public String getRecipeId() {
         return recipeId;
     }
 
-    @NonNull
+    @Nonnull
     @Override
     public String toString() {
         return "Request{" +

@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.peter.thekitchenmenu.data.model.ProductModel;
+import com.example.peter.thekitchenmenu.domain.usecase.productcatalog.ProductCatalogInteractor;
+import com.example.peter.thekitchenmenu.domain.usecase.productcatalog.ProductCatalogInteractorImpl;
 import com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorActivity;
 import com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductEditorActivity;
 import com.example.peter.thekitchenmenu.ui.detail.product.productviewer.ProductViewerActivity;

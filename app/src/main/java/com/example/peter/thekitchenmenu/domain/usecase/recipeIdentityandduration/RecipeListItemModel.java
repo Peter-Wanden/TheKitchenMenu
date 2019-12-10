@@ -1,19 +1,20 @@
-package com.example.peter.thekitchenmenu.data.model;
+package com.example.peter.thekitchenmenu.domain.usecase.recipeIdentityandduration;
 
-import androidx.annotation.NonNull;
+
+import javax.annotation.Nonnull;
 
 public class RecipeListItemModel {
-    @NonNull
+    @Nonnull
     private final String recipeId;
-    @NonNull
+    @Nonnull
     private final String recipeName;
     private final String recipeDescription;
     private final int prepTime;
     private final int cookTime;
     private final int totalTime;
 
-    public RecipeListItemModel(@NonNull String recipeId,
-                               @NonNull String recipeName,
+    public RecipeListItemModel(@Nonnull String recipeId,
+                               @Nonnull String recipeName,
                                String recipeDescription,
                                int prepTime,
                                int cookTime,
@@ -26,12 +27,12 @@ public class RecipeListItemModel {
         this.totalTime = totalTime;
     }
 
-    @NonNull
+    @Nonnull
     public String getRecipeId() {
         return recipeId;
     }
 
-    @NonNull
+    @Nonnull
     public String getRecipeName() {
         return recipeName;
     }

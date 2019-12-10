@@ -58,7 +58,7 @@
 
                 <include
                     android:id="@+id/portion_information"
-                    layout="@layout/recipe_portions_view"
+                    layout="@layout/recipe_viewer_portions"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     app:layout_constraintEnd_toEndOf="parent"

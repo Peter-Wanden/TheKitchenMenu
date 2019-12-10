@@ -24,8 +24,8 @@ class RecipeModelComposite {
             recipeModelActions.start(recipeId);
     }
 
-    void startWithClonedModel(@NonNull String oldRecipeId, @NonNull String newRecipeId) {
+    void startWithClonedModel(@NonNull String cloneFromRecipeId, @NonNull String cloneToRecipeId) {
         for (RecipeModelActions recipeModelActions : recipeModelCompositeList)
-            recipeModelActions.startByCloningModel(oldRecipeId, newRecipeId);
+            recipeModelActions.startByCloningModel(cloneFromRecipeId, cloneToRecipeId);
     }
 }

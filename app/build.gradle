@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
 
-    compileSdkVersion rootProject.compileSdkVersion
+    compileSdkVersion targetSdkVersion
     buildToolsVersion '29.0.2'
 
     signingConfigs {
@@ -64,20 +64,20 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "androidx.appcompat:appcompat:$androidxAppcompat"
     implementation "androidx.recyclerview:recyclerview:$androidxRecyclerView"
-    implementation "androidx.cardview:cardview:$androidxSupport"
-    implementation "androidx.exifinterface:exifinterface:$androidxSupport"
-    implementation "androidx.legacy:legacy-support-v4:$androidxSupport"
-    implementation "androidx.browser:browser:$androidxSupport"
+    implementation "androidx.cardview:cardview:$androidxCardView"
+    implementation "androidx.exifinterface:exifinterface:$androidxExifInterface"
+    implementation "androidx.legacy:legacy-support-v4:$androidxLegacySupport"
+    implementation "androidx.browser:browser:$androidxBrowser"
     implementation "com.google.android.material:material:$androidMaterial"
 
     // Architecture components
-    implementation "androidx.lifecycle:lifecycle-extensions:$androidxLifecycle"
-    implementation "androidx.lifecycle:lifecycle-runtime:$androidxLifecycle"
-    implementation "androidx.lifecycle:lifecycle-common-java8:$androidxLifecycle"
+    implementation "androidx.lifecycle:lifecycle-extensions:$androidxLifecycleExtensions"
+    implementation "androidx.lifecycle:lifecycle-runtime:$androidxLifecycleRuntime"
+    implementation "androidx.lifecycle:lifecycle-common-java8:$androidxLifecycleCommonJava8"
 
     // Room
-    implementation "androidx.room:room-runtime:$androidxRoom"
-    annotationProcessor "androidx.room:room-compiler:$androidxRoom"
+    implementation "androidx.room:room-runtime:$androidxRoomRuntime"
+    annotationProcessor "androidx.room:room-compiler:$androidxRoomCompiler"
 
     // Paging
     implementation "androidx.paging:paging-runtime:$androidxPagingRuntime"
@@ -98,7 +98,7 @@ dependencies {
     implementation "com.google.android.gms:play-services-ads-identifier:$playServices"
     implementation "com.google.android.gms:play-services-auth:$playServices"
     implementation "com.google.android.gms:play-services-auth-base:$playServices"
-    implementation "com.google.android.gms:play-services-base:$playServices"
+    implementation "com.google.android.gms:play-services-base:$playServicesBase"
     implementation "com.google.android.gms:play-services-flags:$playServices"
     implementation "com.google.android.gms:play-services-phenotype:$playServices"
     implementation "com.google.android.gms:play-services-stats:$playServices"
@@ -149,7 +149,7 @@ dependencies {
     dependencies. This is required since Espresso internally has a dependency on support-annotations.
     */
     androidTestImplementation "androidx.annotation:annotation:$annotations"
-    androidTestImplementation "androidx.legacy:legacy-support-v4:$androidxSupport"
+    androidTestImplementation "androidx.legacy:legacy-support-v4:$androidxLegacySupport"
     androidTestImplementation "androidx.recyclerview:recyclerview:$androidxRecyclerView"
     androidTestImplementation "androidx.appcompat:appcompat:$androidxAppcompat"
     androidTestImplementation "com.google.android.material:material:$androidMaterial"

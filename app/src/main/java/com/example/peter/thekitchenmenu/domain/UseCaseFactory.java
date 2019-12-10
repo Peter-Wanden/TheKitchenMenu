@@ -4,10 +4,14 @@ import android.app.Application;
 
 import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.UseCaseConversionFactorStatus;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.UseCaseRecipeIngredientList;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeIdentity.UseCaseRecipeIdentity;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeIdentityandduration.UseCaseRecipeIdentityAndDurationList;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.UseCaseRecipeIngredientListItems;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeportioncalculator.UseCasePortionCalculator;
@@ -19,15 +23,21 @@ public class UseCaseFactory {
     private final RepositoryRecipePortions portionsRepository;
     private final RepositoryRecipeIngredient recipeIngredientRepository;
     private final RepositoryIngredient ingredientRepository;
+    private final RepositoryRecipeIdentity recipeIdentityRepository;
+    private final RepositoryRecipeDuration recipeDurationRepository;
 
     private UseCaseFactory(Application application,
-                          RepositoryRecipePortions portionsRepository,
-                          RepositoryRecipeIngredient recipeIngredientRepository,
-                          RepositoryIngredient ingredientRepository) {
+                           RepositoryRecipePortions portionsRepository,
+                           RepositoryRecipeIngredient recipeIngredientRepository,
+                           RepositoryIngredient ingredientRepository,
+                           RepositoryRecipeIdentity recipeIdentityRepository,
+                           RepositoryRecipeDuration recipeDurationRepository) {
         this.application = application;
         this.portionsRepository = portionsRepository;
         this.recipeIngredientRepository = recipeIngredientRepository;
         this.ingredientRepository = ingredientRepository;
+        this.recipeIdentityRepository = recipeIdentityRepository;
+        this.recipeDurationRepository = recipeDurationRepository;
     }
 
     public static UseCaseFactory getInstance(Application application) {
@@ -43,6 +53,12 @@ public class UseCaseFactory {
                                     application.getApplicationContext()
                             ),
                             DatabaseInjection.provideIngredientDataSource(
+                                    application.getApplicationContext()
+                            ),
+                            DatabaseInjection.provideRecipeIdentityDataSource(
+                                    application.getApplicationContext()
+                            ),
+                            DatabaseInjection.provideRecipeDurationDataSource(
                                     application.getApplicationContext()
                             )
                     );
@@ -67,11 +83,22 @@ public class UseCaseFactory {
         );
     }
 
-    public UseCaseRecipeIngredientList provideRecipeIngredientListUseCase() {
-        return new UseCaseRecipeIngredientList(
+    public UseCaseRecipeIngredientListItems provideRecipeIngredientListUseCase() {
+        return new UseCaseRecipeIngredientListItems(
                 recipeIngredientRepository,
                 ingredientRepository,
                 portionsRepository
         );
+    }
+
+    public UseCaseRecipeIdentityAndDurationList provideRecipeIdentityAndDurationListUseCase() {
+        return new UseCaseRecipeIdentityAndDurationList(
+                recipeIdentityRepository,
+                recipeDurationRepository
+        );
+    }
+
+    public UseCaseRecipeIdentity provideRecipeIdentityUseCase() {
+        return new UseCaseRecipeIdentity(recipeIdentityRepository, new TimeProvider());
     }
 }

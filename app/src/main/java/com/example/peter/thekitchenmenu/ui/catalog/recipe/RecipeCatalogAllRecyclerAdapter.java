@@ -10,8 +10,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
-import com.example.peter.thekitchenmenu.data.model.RecipeListItemModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeIdentityandduration.RecipeListItemModel;
 import com.example.peter.thekitchenmenu.databinding.RecipeListItemBinding;
 
 import java.util.ArrayList;

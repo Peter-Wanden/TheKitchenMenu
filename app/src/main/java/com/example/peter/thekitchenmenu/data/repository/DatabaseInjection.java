@@ -30,7 +30,7 @@ import static androidx.core.util.Preconditions.checkNotNull;
 
 public class DatabaseInjection {
 
-    public static DataSource<ProductEntity> provideProductsDataSource(
+    public static RepositoryProduct provideProductsDataSource(
             @NonNull Context context) {
         checkNotNull(context);
 
@@ -42,7 +42,7 @@ public class DatabaseInjection {
                         new AppExecutors(), database.productEntityDao()));
     }
 
-    public static DataSourceFavoriteProducts provideFavoritesProductsDataSource(
+    public static RepositoryFavoriteProduct provideFavoritesProductsDataSource(
             @NonNull Context context) {
         checkNotNull(context);
 

@@ -9,21 +9,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.data.model.RecipeListItemModel;
 import com.example.peter.thekitchenmenu.databinding.RecipeCatalogAllFragmentBinding;
-
-import java.util.List;
 
 public class RecipeCatalogAllFragment extends Fragment {
 
-    private static final String TAG = "tkm-RecipeCatAllFrag";
-
+    private static final String TAG = "tkm-" + RecipeCatalogAllFragment.class.getSimpleName() + " ";
     private RecipeCatalogViewModel viewModel;
     private RecipeCatalogAllRecyclerAdapter adapter;
 
@@ -38,8 +33,9 @@ public class RecipeCatalogAllFragment extends Fragment {
     public void onResume() {
         super.onResume();
         viewModel.getRecipeListLiveData().observe(requireActivity(), recipeListItemModels -> {
-            if (recipeListItemModels != null)
+            if (recipeListItemModels != null) {
                 adapter.setRecipeModels(recipeListItemModels);
+            }
         });
     }
 

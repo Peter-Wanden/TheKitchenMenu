@@ -11,7 +11,7 @@ import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.testdata.TestDataIngredientEntity;
 import com.example.peter.thekitchenmenu.testdata.TextValidationData;
-import com.example.peter.thekitchenmenu.ui.utils.TextValidationHandler;
+import com.example.peter.thekitchenmenu.ui.utils.TextValidator;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 
@@ -66,7 +66,7 @@ public class IngredientEditorViewModelTest {
     @Mock
     RepositoryIngredient repoIngredientMock;
     @Mock
-    TextValidationHandler textValidationHandlerMock;
+    TextValidator textValidatorMock;
     @Mock
     UniqueIdProvider uniqueIdProviderMock;
     @Mock
@@ -95,7 +95,7 @@ public class IngredientEditorViewModelTest {
         SUT = new IngredientEditorViewModel(
                 resourcesMock,
                 repoIngredientMock,
-                textValidationHandlerMock,
+                textValidatorMock,
                 uniqueIdProviderMock,
                 timeProviderMock,
                 duplicateCheckerMock);
@@ -155,6 +155,8 @@ public class IngredientEditorViewModelTest {
                 NEW_INVALID_NAME.getId());
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 NEW_INVALID_NAME.getCreateDate());
+
+
         whenShortTextValidationReturnErrorMessage();
         // Act
         SUT.start();
@@ -715,23 +717,27 @@ public class IngredientEditorViewModelTest {
     }
 
     private void whenShortTextValidationReturnErrorMessage() {
-        when(textValidationHandlerMock.validateShortText(anyObject(), anyString())).
-                thenReturn(TextValidationData.SHORT_TEXT_VALIDATION_ERROR);
+        when(textValidatorMock.validateText(anyObject())).
+                thenReturn(new TextValidator.Response(
+                        TextValidator.Result.TOO_SHORT, "", "3", "70"));
     }
 
     private void whenShortTextValidationReturnValidated() {
-        when(textValidationHandlerMock.validateShortText(anyObject(), anyString())).
-                thenReturn(TextValidationHandler.VALIDATED);
+        when(textValidatorMock.validateText(anyObject())).
+                thenReturn(new TextValidator.Response(
+                        TextValidator.Result.VALID, "", "3", "70"));
     }
 
     private void whenLongTextValidationReturnErrorMessage() {
-        when(textValidationHandlerMock.validateLongText(anyObject(), anyString())).
-                thenReturn(TextValidationData.LONG_TEXT_VALIDATION_ERROR);
+        when(textValidatorMock.validateText(anyObject())).
+                thenReturn(new TextValidator.Response(
+                        TextValidator.Result.TOO_LONG, "", "0", "2900"));
     }
 
     private void whenLongTextValidationReturnValidated() {
-        when(textValidationHandlerMock.validateLongText(anyObject(), anyString())).
-                thenReturn(TextValidationHandler.VALIDATED);
+        when(textValidatorMock.validateText(anyObject())).
+                thenReturn(new TextValidator.Response(
+                        TextValidator.Result.VALID, "", "0", "2900"));
     }
 
     private void whenIdProviderGetIdReturnNewEntityId() {

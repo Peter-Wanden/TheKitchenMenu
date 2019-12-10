@@ -408,15 +408,16 @@ public class RecipeIngredientMeasurementViewModelTest {
     }
 
     private void verifyRepoIngredientCalledReturnNewValidNameValidDescription() {
-        verify(repoIngredientMock).getById(eq(
-                INGREDIENT_NEW_VALID_NAME_DESCRIPTION.getId()),
+        verify(repoIngredientMock).getById(
+                eq(INGREDIENT_NEW_VALID_NAME_DESCRIPTION.getId()),
                 getIngredientCallbackCaptor.capture());
         getIngredientCallbackCaptor.getValue().onEntityLoaded(
                 INGREDIENT_NEW_VALID_NAME_DESCRIPTION);
     }
 
     private void verifyRepoPortionsCalledReturnNewValidFourPortions() {
-        verify(repoPortionsMock).getPortionsForRecipe(eq(QUANTITY_NEW_INVALID.getRecipeId()),
+        verify(repoPortionsMock).getPortionsForRecipe(
+                eq(QUANTITY_NEW_INVALID.getRecipeId()),
                 getPortionsCallbackCaptor.capture());
         getPortionsCallbackCaptor.getValue().onEntityLoaded(PORTIONS_NEW_VALID_FOUR);
     }

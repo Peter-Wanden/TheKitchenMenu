@@ -9,9 +9,9 @@ import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
-import com.example.peter.thekitchenmenu.domain.UseCaseCommandAbstract;
+import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.UseCaseRecipeIngredientList;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.UseCaseRecipeIngredientListItems;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.UseCaseRecipeIngredientListResponse;
 
 import org.junit.*;
@@ -20,7 +20,7 @@ import org.mockito.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UseCaseRecipeIngredientListTest {
+public class UseCaseRecipeIngredientListItemsTest {
 
     // region constants ----------------------------------------------------------------------------
     private final String RECIPE_ID = "RECIPE_ID";
@@ -35,7 +35,7 @@ public class UseCaseRecipeIngredientListTest {
     RepositoryIngredient repoIngredientMock;
     // endregion helper fields ---------------------------------------------------------------------
 
-    private UseCaseRecipeIngredientList SUT;
+    private UseCaseRecipeIngredientListItems SUT;
 
     @Before
     public void setup() {
@@ -43,7 +43,7 @@ public class UseCaseRecipeIngredientListTest {
 
         UseCaseHandler handler = new UseCaseHandler(new UseCaseSchedulerMock());
 
-        SUT = new UseCaseRecipeIngredientList(repoRecipeIngredientMock,
+        SUT = new UseCaseRecipeIngredientListItems(repoRecipeIngredientMock,
                 repoIngredientMock,
                 repoPortionsMock);
     }
@@ -57,8 +57,8 @@ public class UseCaseRecipeIngredientListTest {
     }
 
     // region helper methods -----------------------------------------------------------------------
-    private UseCaseCommandAbstract.Callback<UseCaseRecipeIngredientListResponse> responseCallback() {
-        return new UseCaseCommandAbstract.Callback<UseCaseRecipeIngredientListResponse>() {
+    private UseCaseInteractor.Callback<UseCaseRecipeIngredientListResponse> responseCallback() {
+        return new UseCaseInteractor.Callback<UseCaseRecipeIngredientListResponse>() {
             @Override
             public void onSuccess(UseCaseRecipeIngredientListResponse response) {
 

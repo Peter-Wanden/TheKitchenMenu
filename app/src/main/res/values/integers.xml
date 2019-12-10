@@ -38,10 +38,10 @@
     <!--
     Min and max char lengths for EditText user inputs
     -->
-    <integer name="input_validation_short_text_shortest_length">3</integer>
-    <integer name="input_validation_short_text_longest_length">70</integer>
-    <integer name="input_validation_long_text_shortest_length">0</integer>
-    <integer name="input_validation_long_text_longest_length">2900</integer>
+    <integer name="input_validation_short_text_min_length">3</integer>
+    <integer name="input_validation_short_text_max_length">70</integer>
+    <integer name="input_validation_long_text_min_length">0</integer>
+    <integer name="input_validation_long_text_max_length">2900</integer>
 
     <!--
     Min and max preparation and cooking times

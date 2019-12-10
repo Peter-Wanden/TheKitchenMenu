@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.catalog.product;
+package com.example.peter.thekitchenmenu.domain.usecase.productcatalog;
 
 import android.app.Application;
 import android.util.Log;
@@ -10,6 +10,8 @@ import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.data.model.ProductModel;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryFavoriteProduct;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryProduct;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -18,11 +20,11 @@ import java.util.Map;
 
 public class ProductCatalogInteractorImpl implements ProductCatalogInteractor {
 
-    private static final String TAG = "tkm-ProdCatInteractor";
+    private static final String TAG = "tkm-" + ProductCatalogInteractorImpl.class.getSimpleName() + " ";
 
     private static volatile ProductCatalogInteractorImpl INSTANCE = null;
-    private final DataSource<ProductEntity> productEntityDataSource;
-    private final DataSource<FavoriteProductEntity> favoriteProductEntityDataSource;
+    private final RepositoryProduct productEntityDataSource;
+    private final RepositoryFavoriteProduct favoriteProductEntityDataSource;
 
     private boolean productEntitiesLoading;
     private boolean favoriteProductEntitiesLoading;
@@ -31,14 +33,12 @@ public class ProductCatalogInteractorImpl implements ProductCatalogInteractor {
     private LinkedHashMap<String, ProductEntity> productsMap = new LinkedHashMap<>();
     private LinkedHashMap<String, FavoriteProductEntity> favoriteProductsMap = new LinkedHashMap<>();
 
-//    private static final String TAG = "tkm-ProdCatInteractor";
-
     private ProductCatalogInteractorImpl(
-            @NonNull DataSource<ProductEntity> productEntityDataSource,
-            @NonNull DataSource<FavoriteProductEntity> favoriteProductEntityDataSource) {
+            @NonNull RepositoryProduct repositoryProduct,
+            @NonNull RepositoryFavoriteProduct repositoryFavoriteProduct) {
 
-        this.productEntityDataSource = productEntityDataSource;
-        this.favoriteProductEntityDataSource = favoriteProductEntityDataSource;
+        this.productEntityDataSource = repositoryProduct;
+        this.favoriteProductEntityDataSource = repositoryFavoriteProduct;
     }
 
     public static ProductCatalogInteractorImpl getInstance(Application application) {

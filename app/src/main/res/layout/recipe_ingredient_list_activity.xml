@@ -69,7 +69,7 @@
 
         <include
             android:id="@+id/portionInformation"
-            layout="@layout/recipe_portions_view"
+            layout="@layout/recipe_viewer_portions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"

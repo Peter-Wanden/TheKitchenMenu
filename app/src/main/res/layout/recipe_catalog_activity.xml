@@ -41,10 +41,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/fab_margin"
-            app:fabSize="normal"
-            app:layout_anchor="@id/recipe_catalog_activity_viewPager"
-            app:layout_anchorGravity="bottom|right|end"
             android:src="@drawable/ic_add"
+            android:tint="@color/white"
+            app:fabSize="normal"
+            app:backgroundTint="@color/textColorHighlight"
+            app:layout_anchor="@id/recipe_catalog_activity_viewPager"
+            app:layout_anchorGravity="bottom|right"
             >
         </com.google.android.material.floatingactionbutton.FloatingActionButton>
 
