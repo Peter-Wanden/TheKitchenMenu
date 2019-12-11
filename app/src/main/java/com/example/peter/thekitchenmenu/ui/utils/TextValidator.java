@@ -104,8 +104,6 @@ public class TextValidator {
                 String.valueOf(longTextMaxLength));
     }
 
-    public static final String VALIDATED = "validated";
-
     private String stripOutHtml(String inputText) {
         return Html.fromHtml(inputText, Html.FROM_HTML_MODE_LEGACY).toString();
     }

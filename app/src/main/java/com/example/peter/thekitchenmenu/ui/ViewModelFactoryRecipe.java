@@ -41,7 +41,6 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
     private final UseCaseFactory useCaseFactory;
     private final UseCaseHandler useCaseHandler;
     private final RepositoryRecipe recipeRepository;
-    private final RepositoryRecipeCourse recipeCourseRepository;
     private final RepositoryRecipeIdentity recipeIdentityRepository;
     private final RepositoryRecipeDuration recipeDurationRepository;
     private final RepositoryRecipePortions recipePortionsRepository;
@@ -50,7 +49,6 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
                                    UseCaseFactory useCaseFactory,
                                    UseCaseHandler useCaseHandler,
                                    RepositoryRecipe recipeRepository,
-                                   RepositoryRecipeCourse recipeCourseRepository,
                                    RepositoryRecipeIdentity recipeIdentityRepository,
                                    RepositoryRecipeDuration recipeDurationRepository,
                                    RepositoryRecipePortions recipePortionsRepository) {
@@ -58,7 +56,6 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
         this.useCaseFactory = useCaseFactory;
         this.useCaseHandler = useCaseHandler;
         this.recipeRepository = recipeRepository;
-        this.recipeCourseRepository = recipeCourseRepository;
         this.recipeIdentityRepository = recipeIdentityRepository;
         this.recipeDurationRepository = recipeDurationRepository;
         this.recipePortionsRepository = recipePortionsRepository;
@@ -73,9 +70,6 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
                             UseCaseFactory.getInstance(application),
                             UseCaseHandler.getInstance(),
                             DatabaseInjection.provideRecipesDataSource(
-                                    application.getApplicationContext()
-                            ),
-                            DatabaseInjection.provideRecipeCourseDataSource(
                                     application.getApplicationContext()
                             ),
                             DatabaseInjection.provideRecipeIdentityDataSource(
@@ -123,8 +117,8 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
         } else if (modelClass.isAssignableFrom(RecipeCourseEditorViewModel.class)) {
             //noinspection unchecked
             return (T) new RecipeCourseEditorViewModel(
-                    recipeCourseRepository,
-                    new UniqueIdProvider()
+                    useCaseHandler,
+                    useCaseFactory.provideRecipeCourseUseCase()
             );
         } else if (modelClass.isAssignableFrom(RecipeDurationEditorViewModel.class)) {
             // noinspection unchecked

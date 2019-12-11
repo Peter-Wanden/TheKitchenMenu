@@ -234,6 +234,5 @@ public class RecipeIdentityEditorViewModel
         notifyPropertyChanged(BR.title);
         notifyPropertyChanged(BR.description);
         updatingUi = false;
-        dataLoading = false;
     }
 }

@@ -17,7 +17,9 @@ public class TestDataRecipeCourseEntity {
         return new RecipeCourseEntity(
                 "id0",
                 0,
-                EXISTING_RECIPE_ID
+                EXISTING_RECIPE_ID,
+                10,
+                10
         );
     }
 
@@ -25,7 +27,9 @@ public class TestDataRecipeCourseEntity {
         return new RecipeCourseEntity(
                 "id1",
                 1,
-                EXISTING_RECIPE_ID
+                EXISTING_RECIPE_ID,
+                10,
+                10
         );
     }
 
@@ -33,7 +37,9 @@ public class TestDataRecipeCourseEntity {
         return new RecipeCourseEntity(
                 "id2",
                 2,
-                EXISTING_RECIPE_ID
+                EXISTING_RECIPE_ID,
+                10,
+                10
         );
     }
 
@@ -41,7 +47,9 @@ public class TestDataRecipeCourseEntity {
         return new RecipeCourseEntity(
                 "id3",
                 3,
-                EXISTING_RECIPE_ID
+                EXISTING_RECIPE_ID,
+                10,
+                10
         );
     }
 
@@ -49,7 +57,9 @@ public class TestDataRecipeCourseEntity {
         return new RecipeCourseEntity(
                 "id4",
                 4,
-                EXISTING_RECIPE_ID
+                EXISTING_RECIPE_ID,
+                10,
+                10
         );
     }
 
@@ -57,7 +67,9 @@ public class TestDataRecipeCourseEntity {
         return new RecipeCourseEntity(
                 "id5",
                 5,
-                EXISTING_RECIPE_ID
+                EXISTING_RECIPE_ID,
+                10,
+                10
         );
     }
 
@@ -65,7 +77,9 @@ public class TestDataRecipeCourseEntity {
         return new RecipeCourseEntity(
                 "id6",
                 6,
-                EXISTING_RECIPE_ID
+                EXISTING_RECIPE_ID,
+                10,
+                10
         );
     }
 
@@ -73,7 +87,9 @@ public class TestDataRecipeCourseEntity {
         return new RecipeCourseEntity(
                 "id7",
                 7,
-                EXISTING_RECIPE_ID
+                EXISTING_RECIPE_ID,
+                10,
+                10
         );
     }
 
@@ -91,19 +107,32 @@ public class TestDataRecipeCourseEntity {
     }
 
     public static List<RecipeCourseEntity> getEvenRecipeCoursesDatabaseResponse() {
-        List<RecipeCourseEntity> courseEntities = new ArrayList<>();
-        courseEntities.add(getRecipeCourseZero());
-        courseEntities.add(getRecipeCourseTwo());
-        courseEntities.add(getRecipeCourseFour());
-        courseEntities.add(getRecipeCourseSix());
-        return courseEntities;
+        List<RecipeCourseEntity> evenCourseEntities = new ArrayList<>();
+        for (RecipeCourseEntity entity : getAllRecipeCoursesDatabaseResponse()) {
+            if (entity.getCourseNo() % 2 == 0) {
+                evenCourseEntities.add(entity);
+            }
+        }
+        return evenCourseEntities;
+    }
+
+    public static List<RecipeCourseEntity> getAllByRecipeId(String recipeId) {
+        List<RecipeCourseEntity> listToReturn = new ArrayList<>();
+        for (RecipeCourseEntity entity : getAllRecipeCoursesDatabaseResponse()) {
+            if (entity.getRecipeId().equals(recipeId)) {
+                listToReturn.add(entity);
+            }
+        }
+        return listToReturn;
     }
 
     public static RecipeCourseEntity getClonedRecipeCourseZero() {
         return new RecipeCourseEntity(
                 "id0",
                 getRecipeCourseZero().getCourseNo(),
-                NEW_RECIPE_ID
+                NEW_RECIPE_ID,
+                20,
+                20
         );
     }
 
@@ -111,7 +140,9 @@ public class TestDataRecipeCourseEntity {
         return new RecipeCourseEntity(
                 "id1",
                 getRecipeCourseOne().getCourseNo(),
-                NEW_RECIPE_ID
+                NEW_RECIPE_ID,
+                20,
+                20
         );
     }
 
@@ -119,7 +150,9 @@ public class TestDataRecipeCourseEntity {
         return new RecipeCourseEntity(
                 "id2",
                 getRecipeCourseTwo().getCourseNo(),
-                NEW_RECIPE_ID
+                NEW_RECIPE_ID,
+                20,
+                20
         );
     }
 
@@ -127,7 +160,9 @@ public class TestDataRecipeCourseEntity {
         return new RecipeCourseEntity(
                 "id4",
                 getRecipeCourseFour().getCourseNo(),
-                NEW_RECIPE_ID
+                NEW_RECIPE_ID,
+                20,
+                20
         );
     }
 
@@ -135,16 +170,29 @@ public class TestDataRecipeCourseEntity {
         return new RecipeCourseEntity(
                 "id6",
                 getRecipeCourseSix().getCourseNo(),
-                NEW_RECIPE_ID
+                NEW_RECIPE_ID,
+                20,
+                20
         );
+    }
+
+    public static List<RecipeCourseEntity> getAllRecipeCourseClones() {
+        List<RecipeCourseEntity> allClones = new ArrayList<>();
+        allClones.add(getClonedRecipeCourseZero());
+        allClones.add(getClonedRecipeCourseOne());
+        allClones.add(getClonedRecipeCourseTwo());
+        allClones.add(getClonedRecipeCourseFour());
+        allClones.add(getClonedRecipeCourseSix());
+        return allClones;
     }
 
     public static List<RecipeCourseEntity> getAllEvenRecipeCourseClones() {
         List<RecipeCourseEntity> clonedRecipeCourseEntities = new ArrayList<>();
-        clonedRecipeCourseEntities.add(getClonedRecipeCourseZero());
-        clonedRecipeCourseEntities.add(getClonedRecipeCourseTwo());
-        clonedRecipeCourseEntities.add(getClonedRecipeCourseFour());
-        clonedRecipeCourseEntities.add(getClonedRecipeCourseSix());
+        for (RecipeCourseEntity entity : getAllRecipeCourseClones()) {
+            if (entity.getCourseNo() % 2 == 0) {
+                clonedRecipeCourseEntities.add(entity);
+            }
+        }
         return clonedRecipeCourseEntities;
     }
 }
