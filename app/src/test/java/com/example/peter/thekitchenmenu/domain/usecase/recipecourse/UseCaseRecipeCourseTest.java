@@ -1,7 +1,5 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipecourse;
 
-import androidx.room.ColumnInfo;
-
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.entity.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
@@ -89,6 +87,7 @@ public class UseCaseRecipeCourseTest {
         // Assert
         confirmRepoCalledAndReturnMatchingCourses(request.getRecipeId());
         assertFalse(actualResponse.isValid());
+        assertFalse(actualResponse.isChanged());
         assertEquals(0, actualResponse.getCourseList().size());
     }
 
@@ -109,6 +108,8 @@ public class UseCaseRecipeCourseTest {
                 size();
 
         assertEquals(expectedNumberOfModels, actualNumberOfModels);
+        assertTrue(actualResponse.isValid());
+        assertFalse(actualResponse.isChanged()); // No data has been modified, just data returned
     }
 
     @Test
@@ -141,6 +142,8 @@ public class UseCaseRecipeCourseTest {
         for (RecipeCourseEntity entity : entityCaptor.getAllValues()) {
             assertEquals(NEW_RECIPE_ID, entity.getRecipeId());
         }
+        assertTrue(actualResponse.isChanged());
+        assertTrue(actualResponse.isChanged());
     }
 
     @Test
@@ -164,7 +167,7 @@ public class UseCaseRecipeCourseTest {
         // Get targets database id
         String targetsDataBaseId = actualResponse.getCourseList().
                 get(UseCaseRecipeCourse.Course.COURSE_ONE).getId();
-
+        // request delete target
         request = getRequest(
                 NEW_RECIPE_ID,
                 DO_NOT_CLONE,
@@ -175,8 +178,14 @@ public class UseCaseRecipeCourseTest {
         // Assert - confirm target deleted from database and list
         verify(repoMock).deleteById(eq(targetsDataBaseId));
         assertNull(actualResponse.getCourseList().get(UseCaseRecipeCourse.Course.COURSE_ONE));
+        // confirm data has changed
+        assertTrue(actualResponse.isChanged());
+        if (actualResponse.getCourseList().size() > 0) {
+            assertTrue(actualResponse.isValid());
+        } else {
+            assertFalse(actualResponse.isValid());
+        }
     }
-
 
     // region helper methods -----------------------------------------------------------------------
     private UseCaseRecipeCourse.Request getRequest(String recipeId,

@@ -214,7 +214,6 @@ public class UseCasePortionCalculator
     }
 
     private void processModel(MeasurementModel modelIn) {
-        System.out.println(TAG + "modelIn=" + modelIn);
         this.modelIn = modelIn;
         checkForChanges();
     }
@@ -314,15 +313,9 @@ public class UseCasePortionCalculator
 
     private void returnResult() {
         saveIfValid();
-
         UseCasePortionCalculatorResponse response = getResponse();
-
-        System.out.println(TAG + "response=" + response);
-
         resetResults();
-
         getUseCaseCallback().onSuccess(response);
-
     }
 
     private UseCasePortionCalculatorResponse getResponse() {

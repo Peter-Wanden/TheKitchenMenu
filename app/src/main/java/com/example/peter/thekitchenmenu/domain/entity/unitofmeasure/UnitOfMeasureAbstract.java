@@ -22,22 +22,22 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
 
     protected MeasurementType measurementType;
     protected MeasurementSubtype subtype;
-    int numberOfUnits;
-    double maxMeasurement;
-    double minMeasurement;
-    double unitTwo;
-    double unitOne;
-    double unitTwoNoConversionFactor;
-    double unitOneNoConversionFactor;
-    double unitOneDecimal;
-    double smallestUnit;
+    protected int numberOfUnits;
+    protected double maxMeasurement;
+    protected double minMeasurement;
+    protected double unitTwo;
+    protected double unitOne;
+    protected double unitTwoNoConversionFactor;
+    protected double unitOneNoConversionFactor;
+    protected double unitOneDecimal;
+    protected double smallestUnit;
     private LastMeasurementUpdated lastMeasurementUpdated = TOTAL_MEASUREMENT;
-    boolean isConversionFactorEnabled;
+    protected boolean isConversionFactorEnabled;
 
-    int typeStringResourceId;
-    int subtypeStringResourceId;
-    int unitOneLabelStringResourceId;
-    int unitTwoLabelStringResourceId;
+    protected int typeStringResourceId;
+    protected int subtypeStringResourceId;
+    protected int unitOneLabelStringResourceId;
+    protected int unitTwoLabelStringResourceId;
 
     private double totalBaseUnits;
     private int numberOfItems = UnitOfMeasureConstants.MIN_NUMBER_OF_ITEMS;

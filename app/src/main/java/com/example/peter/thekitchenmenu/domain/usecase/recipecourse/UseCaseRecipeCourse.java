@@ -145,6 +145,7 @@ public class UseCaseRecipeCourse
         for (RecipeCourseEntity courseEntity : courseEntities) {
             Model model = convertEntityToModel(courseEntity);
             newCourseList.put(model.getCourse(), model);
+            oldCourseList.put(model.getCourse(), model);
         }
         compareCourseLists();
     }

@@ -54,7 +54,7 @@ public class UseCaseRecipeIdentityTest {
     @Mock
     RepositoryRecipeIdentity repoMock;
     @Captor
-    ArgumentCaptor<DataSource.GetEntityCallback<RecipeIdentityEntity>> getEntityCallbackCaptor;
+    ArgumentCaptor<DataSource.GetEntityCallback<RecipeIdentityEntity>> repoCallback;
     @Mock
     TimeProvider timeProviderMock;
     private UseCaseRecipeIdentity.Response actualResponse;
@@ -180,7 +180,16 @@ public class UseCaseRecipeIdentityTest {
     }
 
     @Test
-    public void existingRecipeIdCloneToRecipeId_persistenceCalledWithExistingRecipeId() {
+    public void existingId_invalidTitle_INVALID_UNCHANGED() {
+        // Arrange
+
+        // Act
+
+        // Assert
+    }
+
+    @Test
+    public void existingIdCloneToId_persistenceCalledWithExistingRecipeId() {
         // Arrange
         UseCaseRecipeIdentity.Request request = getRequest(
                 VALID_FROM_ANOTHER_USER.getId(), VALID_NEW_CLONED.getId(), getDefaultModel());
@@ -195,7 +204,7 @@ public class UseCaseRecipeIdentityTest {
     }
 
     @Test
-    public void existingRecipeIdCloneToRecipeId_descriptionChangedAfterClone_entityOnlyClonedOnce() {
+    public void existingIdCloneToId_descriptionChangedAfterClone_savedToNewEntity() {
         // Arrange
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 VALID_CLONED_DESCRIPTION_UPDATED.getCreateDate());
@@ -268,27 +277,25 @@ public class UseCaseRecipeIdentityTest {
 
     private void simulateNothingReturnedFromDatabase() {
         verify(repoMock).getById(eq(INVALID_NEW_EMPTY.getId()),
-                getEntityCallbackCaptor.capture());
-        getEntityCallbackCaptor.getValue().onDataNotAvailable();
+                repoCallback.capture());
+        repoCallback.getValue().onDataNotAvailable();
     }
 
     private void simulateGetValidNewTitleValidFromDatabase() {
         verify(repoMock).getById(eq(VALID_NEW_TITLE_VALID.getId()),
-                getEntityCallbackCaptor.capture());
-        getEntityCallbackCaptor.getValue().onEntityLoaded(VALID_NEW_TITLE_VALID);
+                repoCallback.capture());
+        repoCallback.getValue().onEntityLoaded(VALID_NEW_TITLE_VALID);
     }
 
     private void simulateGetValidExistingCompleteFromDatabase() {
         verify(repoMock).getById(eq(VALID_EXISTING_COMPLETE.getId()),
-                getEntityCallbackCaptor.capture());
-        getEntityCallbackCaptor.getValue().onEntityLoaded(VALID_EXISTING_COMPLETE);
+                repoCallback.capture());
+        repoCallback.getValue().onEntityLoaded(VALID_EXISTING_COMPLETE);
     }
 
     private void simulateGetValidFromAnotherUserFromDatabase() {
-        verify(repoMock).getById(eq(VALID_FROM_ANOTHER_USER.getId()),
-                getEntityCallbackCaptor.capture());
-
-        getEntityCallbackCaptor.getValue().onEntityLoaded(VALID_FROM_ANOTHER_USER);
+        verify(repoMock).getById(eq(VALID_FROM_ANOTHER_USER.getId()), repoCallback.capture());
+        repoCallback.getValue().onEntityLoaded(VALID_FROM_ANOTHER_USER);
     }
 
 

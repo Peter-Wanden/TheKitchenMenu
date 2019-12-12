@@ -2,6 +2,9 @@ package com.example.peter.thekitchenmenu.testdata;
 
 import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TestDataRecipeIdentityEntity {
 
     public static RecipeIdentityEntity getInvalidNewEmpty() {
@@ -51,7 +54,7 @@ public class TestDataRecipeIdentityEntity {
                 "validNewDescription",
                 TestDataRecipeEntity.getNewValid().getCreateDate(),
                 TestDataRecipeEntity.getNewValid().getLastUpdate()
-                );
+        );
     }
 
     public static RecipeIdentityEntity getInvalidExistingIncomplete() {
@@ -75,7 +78,7 @@ public class TestDataRecipeIdentityEntity {
     }
 
     public static RecipeIdentityEntity getValidCompleteFromAnotherUser() {
-        return new RecipeIdentityEntity (
+        return new RecipeIdentityEntity(
                 TestDataRecipeEntity.getValidFromAnotherUser().getId(),
                 "validTitleFromAnotherUsersRecipe",
                 "validDescriptionFromAnotherUsersRecipe",
@@ -122,5 +125,28 @@ public class TestDataRecipeIdentityEntity {
                 TestDataRecipeEntity.getValidNewCloned().getLastUpdate(),
                 TestDataRecipeEntity.getValidNewCloned().getCreateDate()
         );
+    }
+
+    public static RecipeIdentityEntity getRecipeIdentityEntityById(String recipeId) {
+        List<RecipeIdentityEntity> entityList = new ArrayList<>();
+        entityList.add(getInvalidNewEmpty());
+        entityList.add(getInvalidNewTitleUpdatedWithInvalidValue());
+        entityList.add(getInvalidNewTitleInvalidDescriptionValid());
+        entityList.add(getValidNewTitleUpdatedWithValidValue());
+        entityList.add(getValidNewComplete());
+        entityList.add(getInvalidExistingIncomplete());
+        entityList.add(getValidExistingComplete());
+        entityList.add(getValidCompleteFromAnotherUser());
+        entityList.add(getInvalidCompleteFromAnotherUser());
+        entityList.add(getValidNewCloned());
+        entityList.add(getInvalidNewCloned());
+        entityList.add(getValidNewClonedDescriptionUpdatedComplete());
+
+        for (RecipeIdentityEntity entity : entityList) {
+            if (entity.getId().equals(recipeId)) {
+                return entity;
+            }
+        }
+        return null;
     }
 }

@@ -18,6 +18,7 @@ public final class RecipeIdentityEntity implements TkmEntity {
 
     public static final String TABLE_RECIPE_IDENTITY = "recipeIdentity";
     public static final String ID = "id";
+    public static final String RECIPE_ID = "recipeId";
     public static final String TITLE = "title";
     private static final String DESCRIPTION = "description";
     private static final String CREATE_DATE = "createDate";

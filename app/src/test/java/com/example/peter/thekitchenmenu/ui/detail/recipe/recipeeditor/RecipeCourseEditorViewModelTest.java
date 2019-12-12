@@ -139,7 +139,7 @@ public class RecipeCourseEditorViewModelTest {
     public void courseZeroSelected_true_courseZeroAndRecipeIdSavedToDatabase() {
         // Arrange
         when(idProviderMock.getUId()).thenReturn(getRecipeCourseZero().getId());
-        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(10L);
+        whenTimeProviderCalledReturnTime(getRecipeCourseZero().getCreateDate());
         // Act
         SUT.start(EXISTING_RECIPE_ID);
         SUT.setCourseZero(true);
@@ -164,6 +164,7 @@ public class RecipeCourseEditorViewModelTest {
     public void courseOneSelected_true_courseOneAndRecipeIdSavedToDatabase() {
         // Arrange
         when(idProviderMock.getUId()).thenReturn(getRecipeCourseOne().getId());
+        whenTimeProviderCalledReturnTime(getRecipeCourseFour().getCreateDate());
         // Act
         SUT.start(EXISTING_RECIPE_ID);
         SUT.setCourseOne(true);
@@ -188,6 +189,7 @@ public class RecipeCourseEditorViewModelTest {
     public void courseTwoSelected_true_courseId2AndRecipeIdSavedToDatabase() {
         // Arrange
         when(idProviderMock.getUId()).thenReturn(getRecipeCourseTwo().getId());
+        whenTimeProviderCalledReturnTime(getRecipeCourseTwo().getCreateDate());
         // Act
         SUT.start(EXISTING_RECIPE_ID);
         SUT.setCourseTwo(true);
@@ -212,6 +214,7 @@ public class RecipeCourseEditorViewModelTest {
     public void courseThreeSelected_true_courseId3AndRecipeIdSavedToDatabase() {
         // Arrange
         when(idProviderMock.getUId()).thenReturn(getRecipeCourseThree().getId());
+        whenTimeProviderCalledReturnTime(getRecipeCourseThree().getCreateDate());
         // Act
         SUT.start(EXISTING_RECIPE_ID);
         SUT.setCourseThree(true);
@@ -236,6 +239,7 @@ public class RecipeCourseEditorViewModelTest {
     public void courseFourSelected_true_courseId4AndRecipeIdSavedToDatabase() {
         // Arrange
         when(idProviderMock.getUId()).thenReturn(getRecipeCourseFour().getId());
+        whenTimeProviderCalledReturnTime(getRecipeCourseFour().getCreateDate());
         // Act
         SUT.start(EXISTING_RECIPE_ID);
         SUT.setCourseFour(true);
@@ -260,6 +264,7 @@ public class RecipeCourseEditorViewModelTest {
     public void courseFiveSelected_true_courseId5AndRecipeIdSavedToDatabase() {
         // Arrange
         when(idProviderMock.getUId()).thenReturn(getRecipeCourseFive().getId());
+        whenTimeProviderCalledReturnTime(getRecipeCourseFive().getCreateDate());
         // Act
         SUT.start(EXISTING_RECIPE_ID);
         SUT.setCourseFive(true);
@@ -284,6 +289,7 @@ public class RecipeCourseEditorViewModelTest {
     public void courseSixSelected_true_courseId6AndRecipeIdSavedToDatabase() {
         // Arrange
         when(idProviderMock.getUId()).thenReturn(getRecipeCourseSix().getId());
+        whenTimeProviderCalledReturnTime(getRecipeCourseSix().getCreateDate());
         // Act
         SUT.start(EXISTING_RECIPE_ID);
         SUT.setCourseSix(true);
@@ -308,6 +314,7 @@ public class RecipeCourseEditorViewModelTest {
     public void courseSevenSelected_true_courseId7AndRecipeIdSavedToDatabase() {
         // Arrange
         when(idProviderMock.getUId()).thenReturn(getRecipeCourseSeven().getId());
+        whenTimeProviderCalledReturnTime(getRecipeCourseSeven().getCreateDate());
         // Act
         SUT.start(EXISTING_RECIPE_ID);
         SUT.setCourseSeven(true);
@@ -435,6 +442,10 @@ public class RecipeCourseEditorViewModelTest {
                 getClonedRecipeCourseTwo().getId(),
                 getClonedRecipeCourseFour().getId(),
                 getClonedRecipeCourseSix().getId());
+    }
+
+    private void whenTimeProviderCalledReturnTime(long time) {
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(time);
     }
     // endregion helper methods --------------------------------------------------------------------
 

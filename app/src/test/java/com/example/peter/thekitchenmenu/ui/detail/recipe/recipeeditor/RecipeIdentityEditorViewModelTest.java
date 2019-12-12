@@ -68,8 +68,7 @@ public class RecipeIdentityEditorViewModelTest {
     private static final String LONG_TEXT_MIN_LENGTH = "0";
     private static final String LONG_TEXT_MAX_LENGTH = "2900";
     private static final String ERROR_MESSAGE_TOO_LONG = "error_message_too_long";
-    private static final String SHORT_TEXT_VALIDATION_ERROR = "short_text_validation_error";
-    private static final String LONG_TEXT_VALIDATION_ERROR = "long_text_validation_error";
+    private static final String ERROR_MESSAGE_TOO_SHORT = "error_message_too_short";
 
     // endregion constants -------------------------------------------------------------------------
 
@@ -81,7 +80,7 @@ public class RecipeIdentityEditorViewModelTest {
     @Mock
     RepositoryRecipeIdentity repoMock;
     @Captor
-    ArgumentCaptor<DataSource.GetEntityCallback<RecipeIdentityEntity>> identityCallbackCaptor;
+    ArgumentCaptor<DataSource.GetEntityCallback<RecipeIdentityEntity>> repoCallback;
     @Mock
     TimeProvider timeProviderMock;
     @Mock
@@ -142,64 +141,67 @@ public class RecipeIdentityEditorViewModelTest {
     @Test
     public void startNewRecipeId_invalidTitle_errorMessageSetToObservable() {
         // Arrange
-        String invalidTitle = INVALID_NEW_TITLE_INVALID.getTitle();
-        String minLength = "3";
-        String maxLength = "70";
-
-        TextValidator.Request request = new TextValidator.Request(
-                TextValidator.RequestType.SHORT_TEXT,
-                invalidTitle);
-        TextValidator.Response response = new TextValidator.Response(
-                TextValidator.Result.TOO_SHORT, invalidTitle, minLength, maxLength);
-
-        when(textValidatorMock.validateText(request)).thenReturn(response);
         String recipeId = INVALID_NEW_EMPTY.getId();
+        String invalidTitle = INVALID_NEW_TITLE_INVALID.getTitle();
+
+        when(textValidatorMock.validateText(getShortTextRequest(invalidTitle))).
+                thenReturn(getShortTextTooShortResponse(invalidTitle));
         // Act
         SUT.start(recipeId);
         simulateNothingReturnedFromDatabase(recipeId);
 
-        SUT.setTitle(INVALID_NEW_TITLE_INVALID.getTitle());
+        SUT.setTitle(invalidTitle);
         // Assert
-        assertEquals(SHORT_TEXT_VALIDATION_ERROR, SUT.titleErrorMessage.get());
-    }
-
-    private void simulateNothingReturnedFromDatabase(String recipeId) {
-        verify(repoMock).getById(eq(recipeId), identityCallbackCaptor.capture());
-        identityCallbackCaptor.getValue().onDataNotAvailable();
+        assertEquals(ERROR_MESSAGE_TOO_SHORT, SUT.titleErrorMessage.get());
     }
 
     @Test
     public void startNewRecipeId_invalidTitle_recipeModelStatusINVALID_CHANGED() {
         // Arrange
-        whenShortTextValidationReturnTooShortError("title");
+        String invalidTitle = INVALID_NEW_TITLE_INVALID.getTitle();
+        when(textValidatorMock.validateText(getShortTextRequest(invalidTitle))).
+                thenReturn(getShortTextTooShortResponse(invalidTitle));
+
+        String recipeId = INVALID_NEW_EMPTY.getId();
         // Act
-        SUT.start(INVALID_NEW_EMPTY.getId());
-        SUT.setTitle(INVALID_NEW_TITLE_INVALID.getTitle());
+        SUT.start(recipeId);
+        simulateNothingReturnedFromDatabase(recipeId);
+
+        SUT.setTitle(invalidTitle);
         // Assert
-        verify(modelValidationSubmitterMock, times((2))).submitModelStatus(
-                statusCaptor.capture());
+        verify(modelValidationSubmitterMock, times((2))).submitModelStatus(statusCaptor.capture());
         RecipeModelStatus actualStatus = statusCaptor.getValue();
         assertEquals(INVALID_CHANGED, actualStatus);
     }
 
     @Test
-    public void startNewRecipeId_invalidTitleValidDescription_emptyEntitySaved() {
-        whenShortTextValidationReturnTooShortError("title");
-        whenLongTextValidationReturnValidated("description");
+    public void startNewRecipeId_invalidTitleValidDescription_nothingSaved() {
+        String recipeId = INVALID_NEW_EMPTY.getId();
+        String invalidTitle = INVALID_NEW_TITLE_INVALID_DESCRIPTION_VALID.getTitle();
+        String validDescription = INVALID_NEW_TITLE_INVALID_DESCRIPTION_VALID.getDescription();
+
+        whenShortTextValidationReturnTooShortError(invalidTitle);
+        whenLongTextValidationReturnValidated(validDescription);
         // Act
-        SUT.start(INVALID_NEW_EMPTY.getId());
-        SUT.setTitle(INVALID_NEW_TITLE_INVALID_DESCRIPTION_VALID.getTitle());
-        SUT.setDescription(INVALID_NEW_TITLE_INVALID_DESCRIPTION_VALID.getDescription());
+        SUT.start(recipeId);
+        simulateNothingReturnedFromDatabase(recipeId);
+
+        SUT.setTitle(invalidTitle);
+        SUT.setDescription(validDescription);
         // Assert
+        verifyNoMoreInteractions(repoMock);
     }
 
     @Test
     public void startNewRecipeId_validTitle_errorMessageObservableNull() {
         // Arrange
-        whenShortTextValidationReturnValidated("title");
+        String recipeId = INVALID_NEW_EMPTY.getId();
+        String title = VALID_NEW_TITLE_VALID.getTitle();
+        whenShortTextValidationReturnValidated(title);
         // Act
-        SUT.start(INVALID_NEW_EMPTY.getId());
-        SUT.setTitle(VALID_NEW_TITLE_VALID.getTitle());
+        SUT.start(recipeId);
+        simulateNothingReturnedFromDatabase(recipeId);
+        SUT.setTitle(title);
         // Assert
         assertNull(SUT.titleErrorMessage.get());
     }
@@ -207,24 +209,32 @@ public class RecipeIdentityEditorViewModelTest {
     @Test
     public void startNewRecipeId_validTitle_titleSaved() {
         // Arrange
-        whenShortTextValidationReturnValidated("title");
+        String recipeId = INVALID_NEW_EMPTY.getId();
+        String title = VALID_NEW_TITLE_VALID.getTitle();
+        long time = VALID_NEW_TITLE_VALID.getCreateDate();
+        whenShortTextValidationReturnValidated(title);
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(time);
         // Act
-        SUT.start(INVALID_NEW_EMPTY.getId());
-        SUT.setTitle(VALID_NEW_TITLE_VALID.getTitle());
+        SUT.start(recipeId);
+        simulateNothingReturnedFromDatabase(recipeId);
+        SUT.setTitle(title);
         // Assert
+        verify(repoMock).save(VALID_NEW_TITLE_VALID);
     }
 
     @Test
     public void startNewRecipeId_validTitle_recipeModelStatusVALID_CHANGED() {
         // Arrange
-        whenShortTextValidationReturnValidated("title");
-        whenLongTextValidationReturnValidated("description");
+        String recipeId = INVALID_NEW_EMPTY.getId();
+        String title = VALID_NEW_TITLE_VALID.getTitle();
+        whenShortTextValidationReturnValidated(title);
         // Act
-        SUT.start(INVALID_NEW_EMPTY.getId());
-        SUT.setTitle(VALID_NEW_TITLE_VALID.getTitle());
+        SUT.start(recipeId);
+        simulateNothingReturnedFromDatabase(recipeId);
+
+        SUT.setTitle(title);
         // Assert
-        verify(modelValidationSubmitterMock, times((2))).
-                submitModelStatus(statusCaptor.capture());
+        verify(modelValidationSubmitterMock, times((2))).submitModelStatus(statusCaptor.capture());
         RecipeModelStatus actualStatus = statusCaptor.getValue();
         assertEquals(VALID_CHANGED, actualStatus);
     }
@@ -232,39 +242,57 @@ public class RecipeIdentityEditorViewModelTest {
     @Test
     public void startNewRecipeId_validTitleInvalidDescription_errorMessageSetToObservable() {
         // Arrange
-        whenShortTextValidationReturnValidated("title");
-        whenLongTextValidationReturnTooLongError("description");
+        String recipeId = INVALID_NEW_EMPTY.getId();
+        String title = VALID_NEW_TITLE_VALID.getTitle();
+        String description = "Doesn't matter what's here as returning an error message!";
+
+        whenShortTextValidationReturnValidated(title);
+        whenLongTextValidationReturnTooLongError(description);
         // Act
-        SUT.start(INVALID_NEW_EMPTY.getId());
-        SUT.setTitle(VALID_NEW_TITLE_VALID.getTitle());
-        SUT.setDescription("Doesn't matter what is here as returning an error message!");
+        SUT.start(recipeId);
+        simulateNothingReturnedFromDatabase(recipeId);
+
+        SUT.setTitle(title);
+        SUT.setDescription(description);
         // Assert
-        assertEquals(LONG_TEXT_VALIDATION_ERROR, SUT.descriptionErrorMessage.get());
+        assertEquals(ERROR_MESSAGE_TOO_LONG, SUT.descriptionErrorMessage.get());
     }
 
     @Test
     public void startNewRecipeId_validTitleInvalidDescription_descriptionNotSaved() {
         // Arrange
-        whenShortTextValidationReturnValidated("title");
-        whenLongTextValidationReturnTooLongError("description");
+        String recipeId = INVALID_NEW_EMPTY.getId();
+        String title = VALID_NEW_TITLE_VALID.getTitle();
+        String description = "Doesn't matter what's here as returning an error message!";
+
+        whenShortTextValidationReturnValidated(title);
+        whenLongTextValidationReturnTooLongError(description);
         // Act
-        SUT.start(INVALID_NEW_EMPTY.getId());
-        SUT.setTitle(VALID_NEW_TITLE_VALID.getTitle());
-        SUT.setDescription("Doesn't matter what is here as returning an error message!");
+        SUT.start(recipeId);
+        simulateNothingReturnedFromDatabase(recipeId);
+        SUT.setTitle(title);
+        verify(repoMock).save(anyObject());
+        SUT.setDescription(description);
+        verifyNoMoreInteractions(repoMock);
     }
 
     @Test
     public void startNewRecipeId_validTitleInvalidDescription_recipeModelStatusINVALID_CHANGED() {
         // Arrange
-        whenShortTextValidationReturnValidated("title");
-        whenLongTextValidationReturnTooLongError("description");
+        String recipeId = INVALID_NEW_EMPTY.getId();
+        String title = VALID_NEW_TITLE_VALID.getTitle();
+        String description = "Doesn't matter what's here as returning an error message!";
+
+        whenShortTextValidationReturnValidated(title);
+        whenLongTextValidationReturnTooLongError(description);
         // Act
-        SUT.start(INVALID_NEW_EMPTY.getId());
-        SUT.setTitle(VALID_NEW_TITLE_VALID.getTitle());
-        SUT.setDescription("Doesn't matter what is here as returning an error message!");
+        SUT.start(recipeId);
+        simulateNothingReturnedFromDatabase(recipeId);
+
+        SUT.setTitle(title);
+        SUT.setDescription(description);
         // Assert
-        verify(modelValidationSubmitterMock, times((3))).submitModelStatus(
-                statusCaptor.capture());
+        verify(modelValidationSubmitterMock, times((3))).submitModelStatus(statusCaptor.capture());
         RecipeModelStatus actualStatus = statusCaptor.getValue();
         assertEquals(INVALID_CHANGED, actualStatus);
     }
@@ -272,12 +300,18 @@ public class RecipeIdentityEditorViewModelTest {
     @Test
     public void startNewRecipeId_validTitleValidDescription_errorMessageObservableNull() {
         // Arrange
-        whenShortTextValidationReturnValidated("title");
-        whenLongTextValidationReturnValidated("description");
+        String recipeId = INVALID_NEW_EMPTY.getId();
+        String title = VALID_NEW_COMPLETE.getTitle();
+        String description = VALID_NEW_COMPLETE.getDescription();
+
+        whenShortTextValidationReturnValidated(title);
+        whenLongTextValidationReturnValidated(description);
         // Act
-        SUT.start(INVALID_NEW_EMPTY.getId());
-        SUT.setTitle(VALID_NEW_COMPLETE.getTitle());
-        SUT.setDescription(VALID_NEW_COMPLETE.getDescription());
+        SUT.start(recipeId);
+        simulateNothingReturnedFromDatabase(recipeId);
+
+        SUT.setTitle(title);
+        SUT.setDescription(description);
         // Assert
         assertNull(SUT.titleErrorMessage.get());
         assertNull(SUT.descriptionErrorMessage.get());
@@ -286,124 +320,153 @@ public class RecipeIdentityEditorViewModelTest {
     @Test
     public void startNewRecipeId_validTitleValidDescription_saved() {
         // Arrange
-        whenShortTextValidationReturnValidated("title");
-        whenLongTextValidationReturnValidated("description");
+        String recipeId = INVALID_NEW_EMPTY.getId();
+        String validTitle = VALID_NEW_COMPLETE.getTitle();
+        String validDescription = VALID_NEW_COMPLETE.getDescription();
+        long time = VALID_NEW_COMPLETE.getCreateDate();
+
+        whenShortTextValidationReturnValidated(validTitle);
+        whenLongTextValidationReturnValidated(validDescription);
+        whenTimeProviderReturnTime(time);
+
         // Act
-        SUT.start(INVALID_NEW_EMPTY.getId());
-        SUT.setTitle(VALID_NEW_COMPLETE.getTitle());
-        SUT.setDescription(VALID_NEW_COMPLETE.getDescription());
+        SUT.start(recipeId);
+        simulateNothingReturnedFromDatabase(recipeId);
+
         // Assert
+        SUT.setTitle(validTitle);
+        verify(repoMock).save(eq(VALID_NEW_TITLE_VALID));
+        SUT.setDescription(validDescription);
+        verify(repoMock).save(eq(VALID_NEW_COMPLETE));
     }
 
     @Test
     public void startNewRecipeId_validTitleValidDescription_recipeModelStatusVALID_CHANGED() {
         // Arrange
-        whenShortTextValidationReturnValidated("title");
-        whenLongTextValidationReturnValidated("description");
+        String recipeId = INVALID_NEW_EMPTY.getId();
+        String validTitle = VALID_NEW_COMPLETE.getTitle();
+        String validDescription = VALID_NEW_COMPLETE.getDescription();
+        long time = VALID_NEW_COMPLETE.getCreateDate();
+
+        whenShortTextValidationReturnValidated(validTitle);
+        whenLongTextValidationReturnValidated(validDescription);
+        whenTimeProviderReturnTime(time);
         // Act
-        SUT.start(INVALID_NEW_EMPTY.getId());
-        SUT.setTitle(VALID_NEW_COMPLETE.getTitle());
-        SUT.setDescription(VALID_NEW_COMPLETE.getDescription());
+        SUT.start(recipeId);
+        simulateNothingReturnedFromDatabase(recipeId);
+
+        SUT.setTitle(validTitle);
+        SUT.setDescription(validDescription);
         // Assert
-        verify(modelValidationSubmitterMock, times((3))).submitModelStatus(
-                statusCaptor.capture());
+        verify(modelValidationSubmitterMock, times((3))).submitModelStatus(statusCaptor.capture());
         RecipeModelStatus actualStatus = statusCaptor.getValue();
         assertEquals(VALID_CHANGED, actualStatus);
     }
 
     @Test
-    public void startValidExistingRecipeId_titleSetToObservable() {
+    public void startValidExistingRecipeId_textValuesSetToObservables() {
         // Arrange
-        whenShortTextValidationReturnValidated("title");
-        whenLongTextValidationReturnValidated("description");
-        // Act
-        SUT.start(VALID_EXISTING_COMPLETE.getId());
-        // Assert
-        assertEquals(VALID_EXISTING_COMPLETE.getTitle(), SUT.getTitle());
-    }
+        String recipeId = VALID_EXISTING_COMPLETE.getId();
+        String title = VALID_EXISTING_COMPLETE.getTitle();
+        String description = VALID_EXISTING_COMPLETE.getDescription();
 
-    @Test
-    public void startValidExistingRecipeId_descriptionSetToObservable() {
-        // Arrange
-        whenShortTextValidationReturnValidated("title");
-        whenLongTextValidationReturnValidated("description");
+        whenShortTextValidationReturnValidated(title);
+        whenLongTextValidationReturnValidated(description);
         // Act
-        SUT.start(VALID_EXISTING_COMPLETE.getId());
+        SUT.start(recipeId);
+        verify(repoMock).getById(eq(recipeId), repoCallback.capture());
+        repoCallback.getValue().onEntityLoaded(VALID_EXISTING_COMPLETE);
         // Assert
-        assertEquals(VALID_EXISTING_COMPLETE.getDescription(), SUT.getDescription());
+        assertEquals(title, SUT.getTitle());
+        assertEquals(description, SUT.getDescription());
     }
 
     @Test
     public void startValidExistingRecipeId_recipeModelStatusVALID_UNCHANGED() {
         // Arrange
-        whenShortTextValidationReturnValidated("title");
-        whenLongTextValidationReturnValidated("description");
+        String recipeId = VALID_EXISTING_COMPLETE.getId();
+        String title = VALID_EXISTING_COMPLETE.getTitle();
+        String description = VALID_EXISTING_COMPLETE.getDescription();
+
+        whenShortTextValidationReturnValidated(title);
+        whenLongTextValidationReturnValidated(description);
         // Act
-        SUT.start(VALID_EXISTING_COMPLETE.getId());
+        SUT.start(recipeId);
+        verify(repoMock).getById(eq(recipeId), repoCallback.capture());
+        repoCallback.getValue().onEntityLoaded(VALID_EXISTING_COMPLETE);
         // Assert
-        verify(modelValidationSubmitterMock, times((2))).submitModelStatus(statusCaptor.capture());
+        verify(modelValidationSubmitterMock).submitModelStatus(statusCaptor.capture());
         RecipeModelStatus actualStatus = statusCaptor.getValue();
         assertEquals(VALID_UNCHANGED, actualStatus);
     }
-
-    @Test
-    public void startValidExistingRecipeId_invalidTitle_errorMessageSetToObservable() {
-        // Arrange
-        whenShortTextValidationReturnValidated("title");
-        whenLongTextValidationReturnValidated("description");
-        // Act
-        SUT.start(VALID_EXISTING_COMPLETE.getId());
-        SUT.setTitle(INVALID_EXISTING_INCOMPLETE_INVALID_TITLE.getTitle());
-        // Assert
-        assertEquals(SUT.titleErrorMessage.get(), SHORT_TEXT_VALIDATION_ERROR);
-    }
+//    @Test
+//    public void startValidExistingRecipeId_invalidTitle_errorMessageSetToObservable() {
+//        // Arrange
+//        String recipeId = INVALID_EXISTING_INCOMPLETE_INVALID_TITLE.getId();
+//        String title = INVALID_EXISTING_INCOMPLETE_INVALID_TITLE.getTitle();
+//        String description = INVALID_EXISTING_INCOMPLETE_INVALID_TITLE.getDescription();
+//
+//        whenShortTextValidationReturnTooShortError(title);
+//        whenLongTextValidationReturnValidated(description);
+//
+//        // Act
+//        SUT.start(recipeId);
+//        verify(repoMock).getById(eq(recipeId), repoCallback.capture());
+//        repoCallback.getValue().onEntityLoaded(INVALID_EXISTING_INCOMPLETE_INVALID_TITLE);
+//
+//        // Assert
+//        assertEquals(ERROR_MESSAGE_TOO_SHORT, SUT.titleErrorMessage.get());
+//    }
     // startValidExistingRecipeId_invalidTitle_notSaved
+
     // startValidExistingRecipeId_invalidTitle_recipeModelStatusINVALID_CHANGED
 
     // startInvalidExistingRecipeId_recipeModelStatusINVALID_UNCHANGED
 
     @Test
-    public void startWithCloned_validExistingAndNewRecipeId_databaseCalledWithExistingId() {
+    public void startWithCloned_existingAndNewId_persistenceCalledWithExistingId() {
         // Arrange
+        String cloneFromRecipeId = VALID_FROM_ANOTHER_USER.getId();
+        String cloneToRecipeId = INVALID_NEW_EMPTY.getId();
         // Act
-        SUT.startByCloningModel(
-                VALID_FROM_ANOTHER_USER.getId(), INVALID_NEW_EMPTY.getId());
+        SUT.startByCloningModel(cloneFromRecipeId, cloneToRecipeId);
         // Assert
+        verify(repoMock).getById(eq(cloneFromRecipeId), anyObject());
     }
 
     @Test
-    public void startWithCloned_validExistingAndNewRecipeId_existingCopiedAndSavedWithNewId() {
+    public void startWithCloned_existingAndNewId_existingCopiedAndSavedWithNewId() {
         // Arrange
-        whenShortTextValidationReturnValidated("title");
-        whenLongTextValidationReturnValidated("description");
+        String cloneFromRecipeId = VALID_FROM_ANOTHER_USER.getId();
+        String cloneToRecipeId = INVALID_NEW_EMPTY.getId();
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(VALID_NEW_CLONED.getCreateDate());
         // Act
-        SUT.startByCloningModel(VALID_FROM_ANOTHER_USER.getId(), INVALID_NEW_EMPTY.getId());
+        SUT.startByCloningModel(cloneFromRecipeId, cloneToRecipeId);
+        simulateGetValidFromAnotherUserFromDatabase();
         // Assert
+        verify(repoMock).save(eq(VALID_NEW_CLONED));
     }
 
     @Test
-    public void startWithCloned_validExistingAndNewRecipeIdValidDescriptionChanged_existingCopiedAndSavedWithUpdatedDescription() {
+    public void startWithCloned_validExistingIdAndNewId_descriptionUpdatedCopiedAndSavedWithUpdatedDescription() {
         // Arrange
-        ArgumentCaptor<RecipeIdentityEntity> ac = ArgumentCaptor.forClass(RecipeIdentityEntity.class);
-        whenShortTextValidationReturnValidated("title");
-        whenLongTextValidationReturnValidated("description");
+        String cloneFromRecipeId = VALID_FROM_ANOTHER_USER.getId();
+        String cloneToRecipeId = INVALID_NEW_EMPTY.getId();
+        String title = VALID_FROM_ANOTHER_USER.getTitle();
+        String description = VALID_CLONED_DESCRIPTION_UPDATED.getDescription();
+        long time = VALID_CLONED_DESCRIPTION_UPDATED.getCreateDate();
+
+        whenShortTextValidationReturnValidated(title);
+        whenLongTextValidationReturnValidated(description);
+        whenTimeProviderReturnTime(time);
         // Act
-        SUT.startByCloningModel(VALID_FROM_ANOTHER_USER.getId(), INVALID_NEW_EMPTY.getId());
+        SUT.startByCloningModel(cloneFromRecipeId, cloneToRecipeId);
+        verify(repoMock).getById(eq(cloneFromRecipeId), repoCallback.capture());
+        repoCallback.getValue().onEntityLoaded(VALID_FROM_ANOTHER_USER);
+
         SUT.setDescription(VALID_CLONED_DESCRIPTION_UPDATED.getDescription());
         // Assert
-        assertEquals(VALID_CLONED_DESCRIPTION_UPDATED, ac.getAllValues().get(1));
-    }
-
-    @Test
-    public void startNewRecipeId_titleValidDescriptionValid_newEntitySaved() {
-        // Arrange
-        whenShortTextValidationReturnValidated("title");
-        whenLongTextValidationReturnValidated("description");
-        // Act
-        SUT.start(INVALID_NEW_EMPTY.getId());
-        SUT.setTitle(VALID_NEW_COMPLETE.getTitle());
-        SUT.setDescription(VALID_NEW_COMPLETE.getDescription());
-        // Assert
+        verify(repoMock).save(VALID_CLONED_DESCRIPTION_UPDATED);
     }
 
     @Test(expected = RuntimeException.class)
@@ -418,19 +481,31 @@ public class RecipeIdentityEditorViewModelTest {
     }
 
     // region helper methods -------------------------------------------------------------------
-
-
     private void setupResources() {
         when(resourcesMock.getString(
                 eq(R.string.input_error_text_too_short),
                 anyString(),
                 anyString())).
-                thenReturn(SHORT_TEXT_VALIDATION_ERROR);
+                thenReturn(ERROR_MESSAGE_TOO_SHORT);
         when(resourcesMock.getString(
                 eq(R.string.input_error_text_too_long),
                 anyString(),
                 anyString())).
-                thenReturn(SHORT_TEXT_VALIDATION_ERROR);
+                thenReturn(ERROR_MESSAGE_TOO_LONG);
+    }
+
+    private void whenTimeProviderReturnTime(long time) {
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(time);
+    }
+
+    private void simulateNothingReturnedFromDatabase(String recipeId) {
+        verify(repoMock).getById(eq(recipeId), repoCallback.capture());
+        repoCallback.getValue().onDataNotAvailable();
+    }
+
+    private void simulateGetValidFromAnotherUserFromDatabase() {
+        verify(repoMock).getById(eq(VALID_FROM_ANOTHER_USER.getId()), repoCallback.capture());
+        repoCallback.getValue().onEntityLoaded(VALID_FROM_ANOTHER_USER);
     }
 
     private void whenShortTextValidationReturnValidated(String title) {
@@ -443,9 +518,14 @@ public class RecipeIdentityEditorViewModelTest {
                 thenReturn(getShortTextTooShortResponse(title));
     }
 
-    private void whenShortTextValidationReturnTooLongError(String title) {
-        when(textValidatorMock.validateText(eq(getShortTextRequest(title)))).
-                thenReturn(getShortTextTooLongResponse(title));
+    private void whenLongTextValidationReturnValidated(String description) {
+        when(textValidatorMock.validateText(getLongTextRequest(description))).
+                thenReturn(getLongTextValidResponse(description));
+    }
+
+    private void whenLongTextValidationReturnTooLongError(String description) {
+        when(textValidatorMock.validateText(getLongTextRequest(description))).
+                thenReturn(getLongTextTooLongValidationResponse(description));
     }
 
     private TextValidator.Request getShortTextRequest(String title) {
@@ -465,16 +545,6 @@ public class RecipeIdentityEditorViewModelTest {
     private TextValidator.Response getShortTextTooLongResponse(String title) {
         return new TextValidator.Response(TextValidator.Result.TOO_LONG, title,
                 SHORT_TEXT_MIN_LENGTH, SHORT_TEXT_MAX_LENGTH);
-    }
-
-    private void whenLongTextValidationReturnValidated(String description) {
-        when(textValidatorMock.validateText(getLongTextRequest(description))).
-                thenReturn(getLongTextValidResponse(description));
-    }
-
-    private void whenLongTextValidationReturnTooLongError(String description) {
-        when(textValidatorMock.validateText(getLongTextRequest(description))).
-                thenReturn(getLongTextTooLongValidationResponse(description));
     }
 
     private TextValidator.Request getLongTextRequest(String description) {

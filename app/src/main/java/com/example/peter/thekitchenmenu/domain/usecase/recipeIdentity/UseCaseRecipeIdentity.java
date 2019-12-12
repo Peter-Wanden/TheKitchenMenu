@@ -42,12 +42,9 @@ public class UseCaseRecipeIdentity
     @Override
     protected void execute(Request request) {
         requestModel = request.getModel();
-
         if (isNewRequest(request)) {
             loadData(request);
-            return;
-        }
-        if (isModelChanged()) {
+        } else {
             sendResponse();
         }
     }
@@ -74,34 +71,24 @@ public class UseCaseRecipeIdentity
     @Override
     public void onEntityLoaded(RecipeIdentityEntity entity) {
         if (isCloned) {
-            requestModel = cloneModelFromEntity(entity);
+            requestModel = convertEntityToModel(entity, true);
             save(requestModel);
             isCloned = false;
         } else {
-            requestModel = convertEntityToModel(entity);
+            requestModel = convertEntityToModel(entity, false);
         }
         responseModel = requestModel;
         sendResponse();
     }
 
-    private Model cloneModelFromEntity(RecipeIdentityEntity entityToClone) {
-        long currentTime = timeProvider.getCurrentTimeInMills();
+    private Model convertEntityToModel(RecipeIdentityEntity entity, boolean isClone) {
+        long time = timeProvider.getCurrentTimeInMills();
         return new Model.Builder().
-                setId(recipeId).
-                setTitle(entityToClone.getTitle()).
-                setDescription(entityToClone.getDescription()).
-                setCreateDate(currentTime).
-                setLastUpdate(currentTime).
-                build();
-    }
-
-    private Model convertEntityToModel(RecipeIdentityEntity entity) {
-        return new Model.Builder().
-                setId(entity.getId()).
-                setTitle(entity.getTitle()).
-                setDescription(entity.getDescription()).
-                setCreateDate(entity.getCreateDate()).
-                setLastUpdate(entity.getLastUpdate()).
+                setId(isClone ? recipeId : entity.getId()).
+                setTitle(entity.getTitle() == null ? "" : entity.getTitle()).
+                setDescription(entity.getDescription() == null ? "" : entity.getDescription()).
+                setCreateDate(isClone ? time : entity.getCreateDate()).
+                setLastUpdate(isClone ? time : entity.getLastUpdate()).
                 build();
     }
 
@@ -142,7 +129,6 @@ public class UseCaseRecipeIdentity
 
         responseModel = requestModel;
         Response response = builder.setModel(responseModel).build();
-
         getUseCaseCallback().onSuccess(response);
     }
 
