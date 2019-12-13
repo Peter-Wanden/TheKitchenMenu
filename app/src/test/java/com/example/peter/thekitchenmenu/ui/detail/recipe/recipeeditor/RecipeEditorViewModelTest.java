@@ -59,7 +59,7 @@ public class RecipeEditorViewModelTest {
     @Mock
     Observer<Void> voidEventObserverMock;
     @Mock
-    AddEditRecipeNavigator addEditRecipeNavigatorMock;
+    AddEditRecipeNavigator navigatorMock;
     @Mock
     TimeProvider timeProviderMock;
     @Mock
@@ -89,18 +89,17 @@ public class RecipeEditorViewModelTest {
                 resourcesMock,
                 recipeValidatorMock);
 
-        SUT.setNavigator(addEditRecipeNavigatorMock);
+        SUT.setNavigator(navigatorMock);
         SUT.setRecipeModelComposite(recipeModelCompositeMock);
     }
 
     @Test
     public void onStart_noRecipeIdSupplied_titleEventCalledWithAddNewRecipeResourceId() {
         // Arrange
-        SUT.getSetActivityTitleEvent().observeForever(integerObserveMock);
         // Act
         SUT.start();
         // Assert
-        verify(integerObserveMock).onChanged(R.string.activity_title_add_new_recipe);
+        verify(navigatorMock).setActivityTitle(R.string.activity_title_add_new_recipe);
     }
 
     @Test
@@ -130,12 +129,11 @@ public class RecipeEditorViewModelTest {
     @Test
     public void onStart_recipeIdSupplied_titleEventCalledWithEditRecipeResourceId() {
         // Arrange
-        SUT.getSetActivityTitleEvent().observeForever(integerObserveMock);
         // Act
         SUT.start(VALID_RECIPE_ID);
         // Assert
         simulateReturnValidRecipeDatabaseCall();
-        verify(integerObserveMock).onChanged(R.string.activity_title_edit_recipe);
+        verify(navigatorMock).setActivityTitle(R.string.activity_title_edit_recipe);
     }
 
     @Test
@@ -151,12 +149,11 @@ public class RecipeEditorViewModelTest {
     @Test
     public void setRecipeValidationStatus_recipeInvalid_enableReviewButtonEventCalledIsShowReviewButtonFalse() {
         // Arrange
-        SUT.getEnableReviewButtonEvent().observeForever(voidEventObserverMock);
         // Act
         SUT.start();
         SUT.setValidationStatus(INVALID_MISSING_MODELS);
         // Assert
-        verify(voidEventObserverMock).onChanged(any());
+        verify(navigatorMock).refreshOptionsMenu();
         assertFalse(SUT.isShowReviewButton());
     }
 
@@ -185,25 +182,23 @@ public class RecipeEditorViewModelTest {
     @Test
     public void setRecipeValidationStatus_recipeValid_enableReviewEventCalledIsShowReviewTrue() {
         // Arrange
-        SUT.getEnableReviewButtonEvent().observeForever(voidEventObserverMock);
         // Act
         SUT.start(VALID_RECIPE_ID);
         simulateReturnValidRecipeDatabaseCall();
         SUT.setValidationStatus(VALID_CHANGED);
         // Assert
         assertTrue(SUT.isShowReviewButton());
-        verify(voidEventObserverMock).onChanged(any());
+        verify(navigatorMock).refreshOptionsMenu();
     }
 
     @Test
     public void setRecipeValidationStatus_validNothingChanged_enableReviewEventCalledIsShowReviewFalse() {
         // Arrange
-        SUT.getEnableReviewButtonEvent().observeForever(voidEventObserverMock);
         // Act
         SUT.setValidationStatus(VALID_UNCHANGED);
         // Assert
         assertFalse(SUT.isShowReviewButton());
-        verify(voidEventObserverMock).onChanged(any());
+        verify(navigatorMock).refreshOptionsMenu();
     }
 
     @Test
@@ -212,7 +207,7 @@ public class RecipeEditorViewModelTest {
         // Act
         SUT.onActivityDestroyed();
         // Assert
-        verifyNoMoreInteractions(addEditRecipeNavigatorMock);
+        verifyNoMoreInteractions(navigatorMock);
     }
 
     @Test
@@ -221,20 +216,19 @@ public class RecipeEditorViewModelTest {
         // Act
         SUT.upOrBackPressed();
         // Assert
-        verify(addEditRecipeNavigatorMock).cancelEditing();
+        verify(navigatorMock).cancelEditing();
     }
 
     @Test
     public void upOrBackPressed_invalidRecipeChanged_showUnsavedChangesDialogEventCalled() {
         // Arrange
-        SUT.getShowUnsavedChangesDialogEvent().observeForever(voidEventObserverMock);
         // Act
         SUT.start(INVALID_DRAFT_RECIPE_ID);
         returnInvalidDraftRecipeFromDatabaseCall();
         SUT.setValidationStatus(INVALID_CHANGED);
         SUT.upOrBackPressed();
         // Assert
-        verify(voidEventObserverMock).onChanged(any());
+        verify(navigatorMock).showUnsavedChangedDialog();
     }
 
     @Test
@@ -248,7 +242,7 @@ public class RecipeEditorViewModelTest {
         assertTrue(SUT.isShowReviewButton()); // ensure review button is visible
         SUT.reviewButtonPressed();
         // Assert
-        verify(addEditRecipeNavigatorMock).reviewNewRecipe(ac.capture());
+        verify(navigatorMock).reviewNewRecipe(ac.capture());
         assertEquals(VALID_RECIPE_ENTITY.getId(), ac.getValue());
     }
 
@@ -263,7 +257,7 @@ public class RecipeEditorViewModelTest {
         assertTrue(SUT.isShowReviewButton()); // ensure review button is visible
         SUT.reviewButtonPressed();
         // Assert
-        verify(addEditRecipeNavigatorMock).reviewEditedRecipe(ac.capture());
+        verify(navigatorMock).reviewEditedRecipe(ac.capture());
         assertEquals(VALID_RECIPE_ENTITY.getId(), ac.getValue());
     }
 
@@ -313,7 +307,7 @@ public class RecipeEditorViewModelTest {
         assertTrue(SUT.showIngredientsButtonObservable.get()); // Verify button is shown
         SUT.ingredientsButtonPressed();
         // Assert
-        verify(addEditRecipeNavigatorMock).addIngredients(ac.capture());
+        verify(navigatorMock).addIngredients(ac.capture());
         assertEquals(NEW_ID, ac.getValue());
     }
 
@@ -330,7 +324,7 @@ public class RecipeEditorViewModelTest {
         // press the button
         SUT.ingredientsButtonPressed();
         // verify navigator is called
-        verify(addEditRecipeNavigatorMock).editIngredients(ac.capture());
+        verify(navigatorMock).editIngredients(ac.capture());
         assertEquals(VALID_RECIPE_ENTITY.getId(), ac.getValue());
     }
 
@@ -346,7 +340,7 @@ public class RecipeEditorViewModelTest {
         assertTrue(SUT.showIngredientsButtonObservable.get()); // ensure ingredients button is visible
         SUT.ingredientsButtonPressed();
         // Assert
-        verify(addEditRecipeNavigatorMock).reviewIngredients(ac.capture());
+        verify(navigatorMock).reviewIngredients(ac.capture());
         assertEquals(NEW_ID, ac.getValue());
     }
 

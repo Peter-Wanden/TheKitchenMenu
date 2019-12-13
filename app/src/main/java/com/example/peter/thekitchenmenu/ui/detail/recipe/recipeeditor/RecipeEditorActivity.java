@@ -27,7 +27,6 @@ public class RecipeEditorActivity
         extends AppCompatActivity
         implements AddEditRecipeNavigator {
 
-
     public static final String EXTRA_RECIPE_ID = "RECIPE_ID";
     public static final int REQUEST_ADD_EDIT_RECIPE = 50;
     public static final int RESULT_ADD_EDIT_RECIPE_OK = RESULT_FIRST_USER + 1;
@@ -43,10 +42,8 @@ public class RecipeEditorActivity
         initialiseBindings();
         setupActionBar();
         setupViewModels();
-        setViewModelObservers();
         setupFragments();
     }
-
 
     @Override
     protected void onStart() {
@@ -97,15 +94,6 @@ public class RecipeEditorActivity
         RecipePortionsEditorViewModel portionsViewModel = obtainPortionsViewModel(this);
         recipeModelComposite.registerModel(portionsViewModel);
         portionsViewModel.setModelValidationSubmitter(recipeEditorViewModel.getValidator());
-    }
-
-    private void setViewModelObservers() {
-        // Ui Events
-        recipeEditorViewModel.getSetActivityTitleEvent().observe(this, this::setTitle);
-        recipeEditorViewModel.getEnableReviewButtonEvent().observe(this, aVoid ->
-                invalidateOptionsMenu());
-        recipeEditorViewModel.getShowUnsavedChangesDialogEvent().observe(this, aVoid ->
-                showUnsavedChangesDialogEvent());
     }
 
     private RecipeEditorViewModel findOrCreateEditorViewModel(
@@ -244,6 +232,16 @@ public class RecipeEditorActivity
     }
 
     @Override
+    public void setActivityTitle(int activityTitleResourceId) {
+        setTitle(activityTitleResourceId);
+    }
+
+    @Override
+    public void refreshOptionsMenu() {
+        invalidateOptionsMenu();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_recipe_editor, menu);
         return true;
@@ -307,7 +305,8 @@ public class RecipeEditorActivity
         recipeEditorViewModel.upOrBackPressed();
     }
 
-    private void showUnsavedChangesDialogEvent() {
+    @Override
+    public void showUnsavedChangedDialog() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
         Fragment previousDialog = getSupportFragmentManager().findFragmentByTag(

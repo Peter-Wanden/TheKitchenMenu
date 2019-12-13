@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.utils.unitofmeasure;
+package com.example.peter.thekitchenmenu.domain.entity.unitofmeasure;
 
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.ImperialVolume;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;

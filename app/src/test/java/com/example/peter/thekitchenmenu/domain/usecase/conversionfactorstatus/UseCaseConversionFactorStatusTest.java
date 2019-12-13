@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.utils.unitofmeasure;
+package com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus;
 
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
@@ -7,9 +7,6 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
-import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.UseCaseConversionFactorStatus;
-import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.UseCaseConversionFactorStatusRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.UseCaseConversionFactorStatusResponse;
 import com.example.peter.thekitchenmenu.testdata.TestDataIngredientEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataUseCaseConversionFactorStatusRequestResponse;
 

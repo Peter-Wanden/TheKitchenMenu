@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.utils.unitofmeasure;
+package com.example.peter.thekitchenmenu.domain.entity.unitofmeasure;
 
 import androidx.core.util.Pair;
 
@@ -37,9 +37,12 @@ public class MetricMassTest {
     }
 
     @Test
-    public void baseUnitsAreSet_outOfRangeMin_false() {
-        assertFalse(SUT.isTotalBaseUnitsSet(MIN_MASS - .1));
-        assertEquals(NOT_SET, SUT.getTotalBaseUnits(), DELTA);
+    public void name() {
+        // Arrange
+        double outOfRangeMin = METRIC_MASS_SMALLEST_UNIT - (METRIC_MASS_SMALLEST_UNIT / 10);
+        // Act
+        assertFalse(SUT.isTotalUnitOneSet(outOfRangeMin));
+        // Assert
     }
 
     @Test
@@ -55,26 +58,14 @@ public class MetricMassTest {
     }
 
     @Test
-    public void baseUnitsAreSet_baseUnitsViolateMinimumItemSize_noOfItemsAdjustedAccordingly() {
+    public void baseUnitsAreSet_baseAtMinimumItemSize_true() {
         // Arrange
         int noOfItems = 5;
-        double minBaseUnitsThatFitIntoNoOfItems = noOfItems / METRIC_MASS_SMALLEST_UNIT;
-        double baseUnitsBelowMinForNoOfItems = minBaseUnitsThatFitIntoNoOfItems - 1;
-        int maxNoOfItemsThatFitIntoBaseUnitsBelowMin =
-                (int) (baseUnitsBelowMinForNoOfItems / METRIC_MASS_SMALLEST_UNIT);
-
-        assertTrue(SUT.isNumberOfItemsSet(noOfItems));
-        assertTrue(SUT.isTotalBaseUnitsSet(baseUnitsBelowMinForNoOfItems));
-        assertEquals(maxNoOfItemsThatFitIntoBaseUnitsBelowMin, SUT.getNumberOfItems());
-        assertEquals(baseUnitsBelowMinForNoOfItems, SUT.getTotalBaseUnits(), DELTA);
-    }
-
-    @Test
-    public void baseUnitsAreSet_baseAtMinimumItemSize_true() {
-        int noOfItems = 5;
-        double minBaseUnitsThatFitIntoNoOfItems = noOfItems / METRIC_MASS_SMALLEST_UNIT;
+        double minBaseUnitsThatFitIntoNoOfItems = noOfItems * METRIC_MASS_SMALLEST_UNIT;
+        // Act
         assertTrue(SUT.isNumberOfItemsSet(noOfItems));
         assertTrue(SUT.isTotalBaseUnitsSet(minBaseUnitsThatFitIntoNoOfItems));
+        // Assert
         assertEquals(METRIC_MASS_SMALLEST_UNIT, SUT.getItemUnitOne(), DELTA);
     }
 
@@ -91,14 +82,6 @@ public class MetricMassTest {
         assertEquals(expectedUnitTwo, SUT.getTotalUnitTwo(), DELTA);
         assertEquals(expectedUnitOne, SUT.getItemUnitOne(), DELTA);
         assertEquals(expectedUnitTwo, SUT.getItemUnitTwo());
-    }
-
-    @Test
-    public void getMinUnitOne_correctValueReturned() {
-        // Arrange
-        // Act
-        assertEquals(METRIC_MASS_MIN_MEASUREMENT, SUT.getMinUnitOne(), DELTA);
-        // Assert
     }
 
     @Test
@@ -142,7 +125,7 @@ public class MetricMassTest {
 
     @Test
     public void totalMeasurementOne_outOfRangeMin_false() {
-        assertFalse(SUT.isTotalUnitOneSet(METRIC_MASS_MIN_MEASUREMENT - .1));
+        assertFalse(SUT.isTotalUnitOneSet(METRIC_MASS_SMALLEST_UNIT - .1));
         assertEquals((double) NOT_SET, SUT.getTotalBaseUnits(), DELTA);
     }
 
@@ -214,20 +197,16 @@ public class MetricMassTest {
     }
 
     @Test
-    public void numberOfItemsIsSet_outOfRangeOdd_adjustsItemSize() {
-
-        // Set total to number not divisible by number of items
-        assertTrue(SUT.isTotalUnitOneSet(3));
-
-        // Set number of items not divisible by pack size
-        assertTrue(SUT.isNumberOfItemsSet(2));
-
-        // Check item measurements have rounded correctly
-        assertEquals(3, SUT.getTotalUnitOne(), DELTA);
-        assertEquals(0, SUT.getTotalUnitTwo());
-        assertEquals(1, SUT.getItemUnitOne(), DELTA);
-        assertEquals(0, SUT.getItemUnitTwo(), DELTA);
-        assertEquals(3, SUT.getTotalBaseUnits(), DELTA);
+    public void isNumberOfItemsSet_producingUnitOneFraction() {
+        // Arrange
+        double unitOne = 1.;
+        int numberOfItemsNonDivisibleByUnitOne = 2;
+        double expectedItemUnitOneFraction = unitOne / numberOfItemsNonDivisibleByUnitOne;
+        // Act
+        assertTrue(SUT.isTotalUnitOneSet(unitOne));
+        assertTrue(SUT.isNumberOfItemsSet(numberOfItemsNonDivisibleByUnitOne));
+        // Assert
+        assertEquals(expectedItemUnitOneFraction, SUT.getItemUnitOne(), DELTA);
     }
 
     @Test
@@ -348,10 +327,16 @@ public class MetricMassTest {
 
     @Test
     public void baseUnitsAreSet_testMixedNumberReturnValues() {
-        assertTrue(SUT.isTotalBaseUnitsSet(5));
-        assertTrue(SUT.isNumberOfItemsSet(3));
-        assertEquals(5, SUT.getTotalUnitOne(), DELTA);
-        assertEquals(1, SUT.getItemUnitOne(), DELTA);
+        // Arrange
+        double baseUnits = 5;
+        int numberOfItems = 3;
+        double expectedItemUnitOne = Math.round((baseUnits / numberOfItems) * 10.) / 10.;
+        // Act
+        assertTrue(SUT.isTotalBaseUnitsSet(baseUnits));
+        assertTrue(SUT.isNumberOfItemsSet(numberOfItems));
+        // Assert
+        assertEquals(baseUnits, SUT.getTotalUnitOne(), DELTA);
+        assertEquals(expectedItemUnitOne, SUT.getItemUnitOne(), DELTA);
     }
 
     @Test

@@ -50,6 +50,11 @@ public class IngredientEditorActivity
         }
     }
 
+    @Override
+    public void setActivityTitle(int titleResourceId) {
+
+    }
+
     private void initialiseBindings() {
         binding = DataBindingUtil.setContentView(this, R.layout.ingredient_editor);
         binding.setLifecycleOwner(this);
@@ -93,7 +98,6 @@ public class IngredientEditorActivity
     private void setViewModelObservers() {
         viewModel.showUseButtonLiveData.observe(this,
                 isShowButton -> invalidateOptionsMenu());
-        viewModel.getSetActivityTitleEvent().observe(this, this::setTitle);
     }
 
     @Override

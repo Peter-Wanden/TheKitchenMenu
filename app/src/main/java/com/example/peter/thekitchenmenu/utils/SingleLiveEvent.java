@@ -45,7 +45,7 @@ public class SingleLiveEvent<T> extends MutableLiveData<T> {
     @MainThread
     public void setValue(@Nullable T t) {
         mPending.set(true);
-        super.setValue(t); // TODO - changed from set to post error reported 'cannot set to a
+        super.postValue(t); // TODO - changed from set to post error reported 'cannot set to a
                             // background thread' - why? Have to change back to set() for
         //  testing otherwise it interferes with the instant task executor rule that attempts
         //  to pull this back onto the main thread

@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.utils.unitofmeasure;
+package com.example.peter.thekitchenmenu.domain.entity.unitofmeasure;
 
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MetricVolume;
 
@@ -8,6 +8,8 @@ import org.mockito.MockitoAnnotations;
 
 import static com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants.MAX_NUMBER_OF_ITEMS;
 import static com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants.MAX_VOLUME;
+import static com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants.METRIC_VOLUME_SMALLEST_UNIT;
+import static com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants.METRIC_VOLUME_UNIT_TWO;
 import static com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants.MIN_VOLUME;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
@@ -38,7 +40,11 @@ public class MetricVolumeTest {
 
     @Test
     public void totalBaseUnitsAreSet_outOfRangeMin_false() {
-        assertFalse(SUT.isTotalBaseUnitsSet(MIN_VOLUME - 0.1));
+        // Arrange
+        double outOfRangeMin = METRIC_VOLUME_SMALLEST_UNIT - METRIC_VOLUME_SMALLEST_UNIT / 10;
+        // Act
+        assertFalse(SUT.isTotalBaseUnitsSet(outOfRangeMin));
+        // Assert
         assertEquals(0, SUT.getTotalBaseUnits(), DELTA);
     }
 
@@ -52,17 +58,6 @@ public class MetricVolumeTest {
     public void totalBaseUnitsAreSet_outOfRangeMax_false() {
         assertFalse(SUT.isTotalBaseUnitsSet(MAX_VOLUME + 1));
         assertEquals(0, SUT.getTotalBaseUnits(), DELTA);
-    }
-
-    @Test
-    public void totalBaseUnitsAreSet_baseUnitsViolateMinItemSize_numberOfItemsAdjusted() {
-        // Arrange
-        assertTrue(SUT.isNumberOfItemsSet(5));
-        // Act
-        assertTrue(SUT.isTotalBaseUnitsSet(4));
-        // Assert
-        assertEquals(4, SUT.getNumberOfItems());
-        assertEquals(4, SUT.getTotalBaseUnits(), DELTA);
     }
 
     @Test
@@ -80,19 +75,18 @@ public class MetricVolumeTest {
     }
 
     @Test
-    public void testBaseUnitsRetrieveFromPackAndItem() {// CONDITION: BASE SI SET, CHECK PACK AND ITEM UPDATED
-
-        // Set base SI
-        assertThat(SUT.isTotalBaseUnitsSet(5500), is(true));
-
-        // Check pack and item values have updated correctly
-        assertThat(SUT.getTotalUnitOne(), is(500.));
-        assertThat(SUT.getTotalUnitTwo(), is(5));
-        assertThat(SUT.getItemUnitOne(), is(500.));
-        assertThat(SUT.getItemUnitTwo(), is(5));
-        assertThat(SUT.getTotalBaseUnits(), is(5500.));
-
-        System.out.println();
+    public void totalBaseUnitsAreSet_totalAndItemUnitsSetToCorrectValues() {
+        // Arrange
+        double totalBaseUnits = 5500;
+        int expectedUnitTwo = (int) (totalBaseUnits / METRIC_VOLUME_UNIT_TWO);
+        double expectedUnitOne = totalBaseUnits % 1000;
+        // Act
+        assertTrue(SUT.isTotalBaseUnitsSet(totalBaseUnits));
+        // Assert
+        assertEquals(expectedUnitTwo, SUT.getTotalUnitTwo());
+        assertEquals(expectedUnitTwo, SUT.getItemUnitTwo());
+        assertEquals(expectedUnitOne, SUT.getTotalUnitOne(), DELTA);
+        assertEquals(expectedUnitOne, SUT.getItemUnitOne(), DELTA);
     }
 
     //////////////////////////// PACK MEASUREMENT ONE TESTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -144,19 +138,14 @@ public class MetricVolumeTest {
     }
 
     @Test
-    public void testMeasurementUnit_One_Out_Of_Range_Min() { // OUT OF RANGE MIN
-
-        // Set to .1 below min
-        assertThat(SUT.isTotalUnitOneSet(0.9), is(false));
-
-        // Check values unchanged
-        assertThat(SUT.getTotalUnitOne(), is(0.));
-        assertThat(SUT.getTotalUnitTwo(), is(0));
-        assertThat(SUT.getItemUnitOne(), is(0.));
-        assertThat(SUT.getItemUnitTwo(), is(0));
-        assertThat(SUT.getTotalBaseUnits(), is(0.));
+    public void isTotalUnitOneSet_outOfRangeMin_false() {
+        // Arrange
+        double totalUnitOneOutOfRangeMin = METRIC_VOLUME_SMALLEST_UNIT -
+                METRIC_VOLUME_SMALLEST_UNIT / 10;
+        // Act
+        assertFalse(SUT.isTotalUnitOneSet(totalUnitOneOutOfRangeMin));
+        // Assert
     }
-
 
     //////////////////////////// PACK MEASUREMENT TWO TESTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
@@ -236,8 +225,6 @@ public class MetricVolumeTest {
         assertThat(SUT.getTotalBaseUnits(), is(5500.));
     }
 
-    //TODO////////////////////////// ITEM ONE AND TWO TESTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
     //////////////////////////// SETTING NUMBER OF ITEMS TESTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
     @Test
@@ -312,23 +299,6 @@ public class MetricVolumeTest {
         assertThat(SUT.getItemUnitOne(), is(1.));
         assertThat(SUT.getItemUnitTwo(), is(0));
         assertThat(SUT.getTotalBaseUnits(), is(2.));
-    }
-
-    @Test
-    public void testNumberOfItemsOutOfRangeAdjustsItemSize() { // CONDITION: BASE SI SET BY PACK ONE - NO OF ITEMS IN RANGE (ODD)
-
-        // Set pack to number not divisible by number of items
-        assertThat(SUT.isTotalUnitOneSet(3), is(true));
-
-        // Set number of items not divisible by pack size
-        assertThat(SUT.isNumberOfItemsSet(2), is(true));
-
-        // Check item measurements have rounded correctly
-        assertThat(SUT.getTotalUnitOne(), is(3.));
-        assertThat(SUT.getTotalUnitTwo(), is(0));
-        assertThat(SUT.getItemUnitOne(), is(1.));
-        assertThat(SUT.getItemUnitTwo(), is(0));
-        assertThat(SUT.getTotalBaseUnits(), is(3.));
     }
 
     @Test
@@ -466,12 +436,16 @@ public class MetricVolumeTest {
     }
 
     @Test
-    public void testMixedNumberReturnValues() {
-
-        assertThat(SUT.isTotalBaseUnitsSet(5), is(true));
-        assertThat(SUT.isNumberOfItemsSet(3), is(true));
-        assertThat(SUT.getTotalUnitOne(), is(5.));
-        assertThat(SUT.getItemUnitOne(), is(1.0));
+    public void totalBaseUnitsAreSet_settingNoOfItemsProducesItemUnitOneFraction() {
+        // Arrange
+        double baseUnits = 1;
+        int numberOfItemsNonDivisibleByBaseUnits = 2;
+        double unitOneFractional = baseUnits / numberOfItemsNonDivisibleByBaseUnits;
+        // Act
+        assertTrue(SUT.isTotalBaseUnitsSet(baseUnits));
+        assertTrue(SUT.isNumberOfItemsSet(numberOfItemsNonDivisibleByBaseUnits));
+        // Assert
+        assertEquals(unitOneFractional, SUT.getItemUnitOne(), DELTA);
     }
 
     @Test

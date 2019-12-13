@@ -1,7 +1,9 @@
 package com.example.peter.thekitchenmenu.domain;
 
 import android.app.Application;
+import android.content.res.Resources;
 
+import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeCourse;
@@ -14,6 +16,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipeIdentity.UseCaseRec
 import com.example.peter.thekitchenmenu.domain.usecase.recipeIdentityandduration.UseCaseRecipeIdentityAndDurationList;
 import com.example.peter.thekitchenmenu.domain.usecase.recipecourse.UseCaseRecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.UseCaseRecipeIngredientListItems;
+import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.UseCaseTextValidator;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeportioncalculator.UseCasePortionCalculator;
@@ -117,5 +120,14 @@ public class UseCaseFactory {
                 recipeCourseRepository,
                 new UniqueIdProvider(),
                 new TimeProvider());
+    }
+
+    public UseCaseTextValidator provideTextValidatorUseCase() {
+        Resources resources = application.getResources();
+        return new UseCaseTextValidator(
+                resources.getInteger(R.integer.input_validation_short_text_min_length),
+                resources.getInteger(R.integer.input_validation_short_text_max_length),
+                resources.getInteger(R.integer.input_validation_long_text_min_length),
+                resources.getInteger(R.integer.input_validation_long_text_max_length));
     }
 }

@@ -11,7 +11,7 @@ public class TestDataIngredientEntity {
 
     public static IngredientEntity getNew() {
         return new IngredientEntity(
-                "newId",
+                "1",
                 "",
                 "",
                 1,
@@ -22,7 +22,7 @@ public class TestDataIngredientEntity {
 
     public static IngredientEntity getNewInvalidName() {
         return new IngredientEntity(
-                getNew().getId(),
+                "2",
                 "na",
                 getNew().getDescription(),
                 1,
@@ -58,7 +58,7 @@ public class TestDataIngredientEntity {
 
     public static IngredientEntity getNewValidNameInvalidDescription() {
         return new IngredientEntity(
-                getNew().getId(),
+                "5",
                 getNewValidName().getName(),
                 "de",
                 1,
@@ -70,7 +70,7 @@ public class TestDataIngredientEntity {
 
     public static IngredientEntity getNewInvalidNameValidDescription() {
         return new IngredientEntity(
-                getNew().getId(),
+                "6",
                 getNewInvalidName().getName(),
                 "description",
                 1,
@@ -94,7 +94,7 @@ public class TestDataIngredientEntity {
 
     public static IngredientEntity getNewValidNameValidDescriptionConversionFactorUpdated() {
         return new IngredientEntity(
-                getNew().getId(),
+                "8",
                 getNewValidName().getName(),
                 getNewInvalidNameValidDescription().getDescription(),
                 0.5,
@@ -106,7 +106,7 @@ public class TestDataIngredientEntity {
 
     public static IngredientEntity getExistingValidNameValidDescriptionNoConversionFactor() {
         return new IngredientEntity(
-                "existingId",
+                "9",
                 "existingName",
                 "existingDescription",
                 1,
@@ -119,7 +119,7 @@ public class TestDataIngredientEntity {
 
     public static IngredientEntity getExistingUpdatedWithInvalidName() {
         return new IngredientEntity(
-                getExistingValidNameValidDescriptionNoConversionFactor().getId(),
+                "10",
                 "na",
                 getExistingValidNameValidDescriptionNoConversionFactor().getDescription(),
                 1,
@@ -143,7 +143,7 @@ public class TestDataIngredientEntity {
 
     public static IngredientEntity getExistingUpdatedWithInvalidDescription() {
         return new IngredientEntity(
-                getExistingValidNameValidDescriptionNoConversionFactor().getId(),
+                "12",
                 getExistingValidNameValidDescriptionNoConversionFactor().getName(),
                 "de",
                 1,
@@ -167,7 +167,7 @@ public class TestDataIngredientEntity {
 
     public static IngredientEntity getExistingValidNameValidDescriptionFromAnotherUser() {
         return new IngredientEntity(
-                "existingIdFromAnotherUser",
+                "14",
                 "existingNameFromAnotherUser",
                 "existingDescriptionFromAnotherUser",
                 1,
@@ -180,7 +180,7 @@ public class TestDataIngredientEntity {
 
     public static IngredientEntity getExistingValidWithConversionFactor() {
         return new IngredientEntity(
-                getExistingValidNameValidDescriptionNoConversionFactor().getId(),
+                "15",
                 getExistingValidNameValidDescriptionNoConversionFactor().getName(),
                 getExistingValidNameValidDescriptionNoConversionFactor().getDescription(),
                 0.5,
@@ -195,9 +195,11 @@ public class TestDataIngredientEntity {
         ingredients.add(getNew());
         ingredients.add(getNewInvalidName());
         ingredients.add(getNewValidName());
+        ingredients.add(getNewValidNameMaxConversionFactor());
         ingredients.add(getNewValidNameInvalidDescription());
         ingredients.add(getNewInvalidNameValidDescription());
         ingredients.add(getNewValidNameValidDescription());
+        ingredients.add(getNewValidNameValidDescriptionConversionFactorUpdated());
         ingredients.add(getExistingValidNameValidDescriptionNoConversionFactor());
         ingredients.add(getExistingUpdatedWithInvalidName());
         ingredients.add(getExistingUpdatedWithValidName());

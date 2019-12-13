@@ -15,4 +15,10 @@ public interface AddEditRecipeNavigator {
     void reviewIngredients(String recipeId);
 
     void cancelEditing();
+
+    void refreshOptionsMenu();
+
+    void setActivityTitle(int activityTitleResourceId);
+
+    void showUnsavedChangedDialog();
 }

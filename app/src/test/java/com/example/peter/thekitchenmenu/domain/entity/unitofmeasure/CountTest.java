@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.utils.unitofmeasure;
+package com.example.peter.thekitchenmenu.domain.entity.unitofmeasure;
 
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.Count;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasure;
@@ -29,16 +29,16 @@ public class CountTest {
     public void totalBaseUnitsAreSet_inRangeMin_true() {
         // Arrange
         // Act
-        assertTrue(SUT.isTotalBaseUnitsSet(1));
+        assertTrue(SUT.isTotalBaseUnitsSet(COUNT_SMALLEST_UNIT));
         // Assert
-        assertEquals(1, SUT.getTotalBaseUnits(), DELTA);
     }
 
     @Test
     public void totalBaseUnitsAreSet_outOfRangeMin_false() {
         // Arrange
+        double outOfRangeMin = COUNT_SMALLEST_UNIT - COUNT_SMALLEST_UNIT;
         // Act
-        assertFalse(SUT.isTotalBaseUnitsSet(0.01));
+        assertFalse(SUT.isTotalBaseUnitsSet(outOfRangeMin));
         // Assert
     }
 
@@ -55,41 +55,43 @@ public class CountTest {
     @Test
     public void totalBaseUnitsAreSet_outOfRangeMax_false() {
         // Arrange
+        double outOfRangeMax = MAX_COUNT + COUNT_SMALLEST_UNIT;
         // Act
-        assertFalse(SUT.isTotalBaseUnitsSet((MAX_COUNT + 1)));
+        assertFalse(SUT.isTotalBaseUnitsSet(outOfRangeMax));
         // Assert
     }
 
     @Test
-    public void numberOfItemsIsSet_totalBaseUnitsAreSet_sameValuesOk() {
+    public void numberOfItemsIsSet_totalBaseUnitsAreSet_sameValues() {
         // Arrange
+        int measurement = 5;
         // Act
-        assertTrue(SUT.isNumberOfItemsSet(5));
-        assertTrue(SUT.isTotalBaseUnitsSet(5));
+        assertTrue(SUT.isNumberOfItemsSet(measurement));
+        assertTrue(SUT.isTotalBaseUnitsSet(measurement));
         // Assert
-        assertEquals(5, SUT.getTotalUnitTwo());
-        assertEquals(5, SUT.getTotalBaseUnits(), DELTA);
+        assertEquals(measurement, SUT.getTotalUnitTwo());
+        assertEquals(measurement, SUT.getTotalBaseUnits(), DELTA);
     }
 
     @Test
     public void totalBaseUnitsAreSet_numberOfItemsAreSet_totalAndItemMeasurementsUpdateAsExpected() {
         // Arrange
+        int measurement = 2;
         // Act
         assertTrue(SUT.isTotalBaseUnitsSet(MAX_COUNT));
-        assertTrue(SUT.isNumberOfItemsSet((2)));
+        assertTrue(SUT.isNumberOfItemsSet(measurement));
         // Assert
         assertEquals(MAX_COUNT, SUT.getTotalUnitTwo());
-        assertEquals((MAX_COUNT / 2), SUT.getItemUnitTwo());
+        assertEquals((MAX_COUNT / measurement), SUT.getItemUnitTwo());
     }
 
     @Test
     public void totalMeasurementOneIsSet_inRangeMin_true() {
         // Arrange
-        double measurement = .5;
         // Act
-        assertTrue(SUT.isTotalUnitOneSet(measurement));
+        assertTrue(SUT.isTotalUnitOneSet(COUNT_UNIT_ONE_DECIMAL));
         // Assert
-        assertEquals(measurement, SUT.getTotalUnitOne(), DELTA);
+        assertEquals(COUNT_UNIT_ONE_DECIMAL, SUT.getTotalUnitOne(), DELTA);
     }
 
     @Test
@@ -106,7 +108,7 @@ public class CountTest {
     public void totalMeasurementTwoIsSet_outOfRangeMax_false() {
         // Arrange
         // Act
-        assertFalse(SUT.isTotalUnitTwoSet((MAX_COUNT + 1)));
+        assertFalse(SUT.isTotalUnitTwoSet(MAX_COUNT + (int) COUNT_UNIT_TWO));
         // Assert
         assertEquals(MIN_COUNT, SUT.getTotalBaseUnits(), DELTA);
     }
@@ -114,8 +116,9 @@ public class CountTest {
     @Test
     public void totalMeasurementTwoIsSet_outOfRangeMin_false() {
         // Arrange
+        int outOfRangeMin = (int) (COUNT_UNIT_TWO - COUNT_UNIT_TWO);
         // Act
-        assertFalse(SUT.isTotalUnitTwoSet((0)));
+        assertFalse(SUT.isTotalUnitTwoSet(outOfRangeMin));
         // Assert
     }
 
@@ -131,7 +134,7 @@ public class CountTest {
     public void numberOfItemsIsSet_outOfRangeMin_false() {
         // Arrange
         // Act
-        assertFalse(SUT.isNumberOfItemsSet(0));
+        assertFalse(SUT.isNumberOfItemsSet(MIN_NUMBER_OF_ITEMS - 1));
         // Assert
     }
 
@@ -139,7 +142,7 @@ public class CountTest {
     public void numberOfItemsIsSet_outOfRangeMax_false() {
         // Arrange
         // Act
-        assertFalse(SUT.isNumberOfItemsSet(MAX_NUMBER_OF_ITEMS + 1));
+        assertFalse(SUT.isNumberOfItemsSet(MAX_NUMBER_OF_ITEMS + MIN_NUMBER_OF_ITEMS));
         // Assert
     }
 

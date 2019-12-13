@@ -31,7 +31,6 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     protected double unitOneNoConversionFactor;
     protected double unitOneDecimal;
     protected double smallestUnit;
-    private LastMeasurementUpdated lastMeasurementUpdated = TOTAL_MEASUREMENT;
     protected boolean isConversionFactorEnabled;
 
     protected int typeStringResourceId;
@@ -39,6 +38,7 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
     protected int unitOneLabelStringResourceId;
     protected int unitTwoLabelStringResourceId;
 
+    private LastMeasurementUpdated lastMeasurementUpdated = TOTAL_MEASUREMENT;
     private double totalBaseUnits;
     private int numberOfItems = UnitOfMeasureConstants.MIN_NUMBER_OF_ITEMS;
     private int oldNumberOfItems;

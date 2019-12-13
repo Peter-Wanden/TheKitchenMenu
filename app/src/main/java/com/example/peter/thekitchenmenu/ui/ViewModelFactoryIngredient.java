@@ -9,6 +9,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
+import com.example.peter.thekitchenmenu.domain.UseCaseFactory;
+import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.UseCaseTextValidator;
 import com.example.peter.thekitchenmenu.ui.detail.ingredient.IngredientDuplicateChecker;
 import com.example.peter.thekitchenmenu.ui.detail.ingredient.IngredientEditorViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.ingredient.IngredientViewerViewModel;
@@ -20,13 +23,19 @@ public class ViewModelFactoryIngredient extends ViewModelProvider.NewInstanceFac
 
     @SuppressLint("StaticFieldLeak")
     private static volatile ViewModelFactoryIngredient INSTANCE;
+
     private final Application application;
+    private final UseCaseHandler useCaseHandler;
+    private final UseCaseFactory useCaseFactory;
     private final RepositoryIngredient repositoryIngredient;
 
-    private ViewModelFactoryIngredient(
-            Application application,
-            RepositoryIngredient repositoryIngredient) {
+    private ViewModelFactoryIngredient(Application application,
+                                       UseCaseFactory useCaseFactory,
+                                       UseCaseHandler useCaseHandler,
+                                       RepositoryIngredient repositoryIngredient) {
         this.application = application;
+        this.useCaseFactory = useCaseFactory;
+        this.useCaseHandler = useCaseHandler;
         this.repositoryIngredient = repositoryIngredient;
     }
 
@@ -36,6 +45,8 @@ public class ViewModelFactoryIngredient extends ViewModelProvider.NewInstanceFac
                 if (INSTANCE == null)
                     INSTANCE = new ViewModelFactoryIngredient(
                             application,
+                            UseCaseFactory.getInstance(application),
+                            UseCaseHandler.getInstance(),
                             DatabaseInjection.provideIngredientDataSource(
                                     application.getApplicationContext()
                             ));
@@ -52,7 +63,8 @@ public class ViewModelFactoryIngredient extends ViewModelProvider.NewInstanceFac
             return (T) new IngredientEditorViewModel(
                     application.getResources(),
                     repositoryIngredient,
-                    new TextValidator(application.getResources()),
+                    useCaseHandler,
+                    useCaseFactory.provideTextValidatorUseCase(),
                     new UniqueIdProvider(),
                     new TimeProvider(),
                     new IngredientDuplicateChecker(repositoryIngredient));

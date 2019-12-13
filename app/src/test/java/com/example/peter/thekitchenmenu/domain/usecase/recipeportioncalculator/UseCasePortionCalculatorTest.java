@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.utils.unitofmeasure;
+package com.example.peter.thekitchenmenu.domain.usecase.recipeportioncalculator;
 
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
@@ -12,9 +12,6 @@ import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasure;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeportioncalculator.UseCasePortionCalculator;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeportioncalculator.UseCasePortionCalculatorRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeportioncalculator.UseCasePortionCalculatorResponse;
 import com.example.peter.thekitchenmenu.testdata.TestDataIngredientEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataMeasurementModel;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIngredientQuantityEntity;

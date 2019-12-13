@@ -20,10 +20,9 @@ import static com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.Rec
 
 public class RecipeEditorViewModel
         extends ViewModel
-        implements
-        DataSource.GetEntityCallback<RecipeEntity>, RecipeValidation.RecipeEditor {
+        implements DataSource.GetEntityCallback<RecipeEntity>, RecipeValidation.RecipeEditor {
 
-    private static final String TAG = "tkm-RecipeEditorViewModel";
+    private static final String TAG = "tkm-" + RecipeEditorViewModel.class.getSimpleName() + ": ";
 
     private RepositoryRecipe repositoryRecipe;
     private AddEditRecipeNavigator navigator;
@@ -33,10 +32,6 @@ public class RecipeEditorViewModel
     private RecipeValidationStatus recipeValidationStatus = INVALID_MISSING_MODELS;
     private RecipeValidator validator;
     private RecipeModelComposite recipeModels;
-
-    private final SingleLiveEvent<Void> showUnsavedChangesDialogEvent = new SingleLiveEvent<>();
-    private final SingleLiveEvent<Integer> setActivityTitleEvent = new SingleLiveEvent<>();
-    private final SingleLiveEvent<Void> enableReviewButtonEvent = new SingleLiveEvent<>();
 
     public final ObservableBoolean showIngredientsButtonObservable = new ObservableBoolean();
     public final ObservableField<String> ingredientsButtonTextObservable = new ObservableField<>();
@@ -81,7 +76,7 @@ public class RecipeEditorViewModel
     private void setupForNewRecipe() {
         isNewRecipe = true;
 
-        setActivityTitleEvent.setValue(R.string.activity_title_add_new_recipe);
+        navigator.setActivityTitle(R.string.activity_title_add_new_recipe);
 
         recipeEntity = getNewRecipe();
         saveRecipe();
@@ -111,7 +106,7 @@ public class RecipeEditorViewModel
 
     private void setupForExistingRecipe() {
         isNewRecipe = false;
-        setActivityTitleEvent.setValue(R.string.activity_title_edit_recipe);
+        navigator.setActivityTitle(R.string.activity_title_edit_recipe);
 
         startModels();
         setIngredientsButton();
@@ -119,7 +114,7 @@ public class RecipeEditorViewModel
 
     private void setupForClonedRecipe() {
         isNewRecipe = false;
-        setActivityTitleEvent.setValue(R.string.activity_title_copy_recipe);
+        navigator.setActivityTitle(R.string.activity_title_copy_recipe);
 
         recipeEntity = getClonedRecipeEntity();
         saveRecipe();
@@ -143,10 +138,6 @@ public class RecipeEditorViewModel
         setupForNewRecipe();
     }
 
-    SingleLiveEvent<Integer> getSetActivityTitleEvent() {
-        return setActivityTitleEvent;
-    }
-
     private void setIngredientsButton() {
         if (isNewRecipe) {
             // Todo - isNewRecipe, change to ifNoIngredients when ingredient component added
@@ -161,10 +152,6 @@ public class RecipeEditorViewModel
         } else {
             throwUnknownEditingModeException();
         }
-    }
-
-    SingleLiveEvent<Void> getEnableReviewButtonEvent() {
-        return enableReviewButtonEvent;
     }
 
     RecipeValidator getValidator() {
@@ -191,12 +178,12 @@ public class RecipeEditorViewModel
         if (recipeValidationStatus == VALID_CHANGED) {
             showIngredientsButtonObservable.set(true);
             showReviewButton = true;
-            enableReviewButtonEvent.call();
+            navigator.refreshOptionsMenu();
 
         } else if (recipeValidationStatus == VALID_UNCHANGED) {
             showIngredientsButtonObservable.set(true);
             showReviewButton = false;
-            enableReviewButtonEvent.call();
+            navigator.refreshOptionsMenu();
 
         } else {
             hideButtons();
@@ -206,7 +193,7 @@ public class RecipeEditorViewModel
     private void hideButtons() {
         showIngredientsButtonObservable.set(false);
         showReviewButton = false;
-        enableReviewButtonEvent.call();
+        navigator.refreshOptionsMenu();
     }
 
     boolean isShowReviewButton() {
@@ -215,14 +202,10 @@ public class RecipeEditorViewModel
 
     void upOrBackPressed() {
         if (recipeValidationStatus == INVALID_CHANGED) {
-            showUnsavedChangesDialogEvent.call();
+            navigator.showUnsavedChangedDialog();
         } else {
             navigator.cancelEditing();
         }
-    }
-
-    SingleLiveEvent<Void> getShowUnsavedChangesDialogEvent() {
-        return showUnsavedChangesDialogEvent;
     }
 
     void reviewButtonPressed() {

@@ -12,8 +12,8 @@ import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
-import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
-import com.example.peter.thekitchenmenu.ui.utils.TextValidator;
+import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.UseCaseTextValidator;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
@@ -24,15 +24,16 @@ public class IngredientEditorViewModel
         DataSource.GetEntityCallback<IngredientEntity>,
         IngredientDuplicateChecker.DuplicateCallback {
 
+    private static final String TAG = "tkm-" + IngredientEditorViewModel.class.getSimpleName() + ": ";
+
     private Resources resources;
     private RepositoryIngredient ingredientRepo;
-    private TextValidator validationHandler;
+    private UseCaseHandler handler;
+    private UseCaseTextValidator textValidator;
     private UniqueIdProvider idProvider;
     private TimeProvider timeProvider;
     private AddEditIngredientNavigator navigator;
     private IngredientDuplicateChecker duplicateChecker;
-
-    private final SingleLiveEvent<Integer> setActivityTitleEvent = new SingleLiveEvent<>();
 
     public final ObservableField<String> nameObservable = new ObservableField<>();
     public final ObservableField<String> descriptionObservable = new ObservableField<>();
@@ -49,13 +50,15 @@ public class IngredientEditorViewModel
 
     public IngredientEditorViewModel(Resources resources,
                                      RepositoryIngredient ingredientRepository,
-                                     TextValidator validationHandler,
+                                     UseCaseHandler handler,
+                                     UseCaseTextValidator textValidator,
                                      UniqueIdProvider idProvider,
                                      TimeProvider timeProvider,
                                      IngredientDuplicateChecker duplicateChecker) {
         this.resources = resources;
         this.ingredientRepo = ingredientRepository;
-        this.validationHandler = validationHandler;
+        this.handler = handler;
+        this.textValidator = textValidator;
         this.idProvider = idProvider;
         this.timeProvider = timeProvider;
         this.duplicateChecker = duplicateChecker;
@@ -63,15 +66,17 @@ public class IngredientEditorViewModel
         nameObservable.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
-                if (!nameObservable.get().isEmpty())
+                if (!nameObservable.get().isEmpty() || nameObservable.get() != null) {
                     nameUpdated();
+                }
             }
         });
         descriptionObservable.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
-                if (!descriptionObservable.get().isEmpty())
+                if (!descriptionObservable.get().isEmpty() || descriptionObservable.get() != null) {
                     descriptionUpdated();
+                }
             }
         });
     }
@@ -88,33 +93,37 @@ public class IngredientEditorViewModel
         if (ingredientEntity == null) {
             ingredientEntity = createNewIngredientEntity();
         }
-        setActivityTitleEvent.setValue(R.string.activity_title_add_new_ingredient);
+        navigator.setActivityTitle(R.string.activity_title_add_new_ingredient);
         updateObservables();
     }
 
     void start(String ingredientId) {
-        if (ingredientEntity == null || !ingredientEntity.getId().equals(ingredientId)) {
-            ingredientRepo.getById(ingredientId, this);
+        if (isNewInstantiationOrIngredientIdChanged(ingredientId)) {
+            loadData(ingredientId);
         } else {
             updateObservables();
         }
     }
 
-    SingleLiveEvent<Integer> getSetActivityTitleEvent() {
-        return setActivityTitleEvent;
+    private boolean isNewInstantiationOrIngredientIdChanged(String ingredientId) {
+        return ingredientEntity == null || !ingredientEntity.getId().equals(ingredientId);
+    }
+
+    private void loadData(String ingredientId) {
+        ingredientRepo.getById(ingredientId, this);
     }
 
     @Override
     public void onEntityLoaded(IngredientEntity ingredientEntity) {
-        if (editorIsCreator(ingredientEntity.getCreatedBy())) {
-            setActivityTitleEvent.setValue(R.string.activity_title_edit_ingredient);
+        if (isEditorCreator(ingredientEntity.getCreatedBy())) {
+            navigator.setActivityTitle(R.string.activity_title_edit_ingredient);
             this.ingredientEntity = ingredientEntity;
             updateObservables();
         } else
             navigator.finishActivity(null);
     }
 
-    private boolean editorIsCreator(String createdBy) {
+    private boolean isEditorCreator(String createdBy) {
         return Constants.getUserId().getValue().equals(createdBy);
     }
 
@@ -134,10 +143,30 @@ public class IngredientEditorViewModel
     private void nameUpdated() {
         nameErrorMessageObservable.set(null);
 
-        TextValidator.Response response = validateText(
-                TextValidator.RequestType.SHORT_TEXT, nameObservable.get());
+        UseCaseTextValidator.Request request = getTextValidatorRequest(
+                UseCaseTextValidator.RequestType.SHORT_TEXT,
+                nameObservable.get());
 
-        if (response.getResult() == TextValidator.Result.VALID) {
+        handler.execute(textValidator, request, getShortValidatorCallback());
+    }
+
+    private UseCaseTextValidator.Callback<UseCaseTextValidator.Response> getShortValidatorCallback() {
+        return new UseCaseTextValidator.Callback<UseCaseTextValidator.Response>() {
+
+            @Override
+            public void onSuccess(UseCaseTextValidator.Response response) {
+                processShortTextValidationResponse(response);
+            }
+
+            @Override
+            public void onError(UseCaseTextValidator.Response response) {
+                processShortTextValidationResponse(response);
+            }
+        };
+    }
+
+    private void processShortTextValidationResponse(UseCaseTextValidator.Response response) {
+        if (response.getResult() == UseCaseTextValidator.Result.VALID) {
             nameValid = true;
         } else {
             nameValid = false;
@@ -171,35 +200,57 @@ public class IngredientEditorViewModel
     private void descriptionUpdated() {
         descriptionErrorMessageObservable.set(null);
 
-        TextValidator.Response response = validateText(
-                TextValidator.RequestType.LONG_TEXT,
+        UseCaseTextValidator.Request request = getTextValidatorRequest(
+                UseCaseTextValidator.RequestType.LONG_TEXT,
                 descriptionObservable.get());
 
-        if (response.getResult() == TextValidator.Result.VALID) {
+        handler.execute(textValidator, request, getLongTextValidatorCallback());
+    }
+
+    private UseCaseTextValidator.Request getTextValidatorRequest(
+            UseCaseTextValidator.RequestType type,
+            String textToValidate) {
+        return new UseCaseTextValidator.Request(
+                type,
+                new UseCaseTextValidator.Model(textToValidate));
+    }
+
+    private UseCaseTextValidator.Callback<UseCaseTextValidator.Response> getLongTextValidatorCallback() {
+        return new UseCaseTextValidator.Callback<UseCaseTextValidator.Response>() {
+
+            @Override
+            public void onSuccess(UseCaseTextValidator.Response response) {
+                processLongTextValidationResponse(response);
+            }
+
+            @Override
+            public void onError(UseCaseTextValidator.Response response) {
+                processLongTextValidationResponse(response);
+            }
+        };
+    }
+
+    private void processLongTextValidationResponse(UseCaseTextValidator.Response response) {
+        if (response.getResult() == UseCaseTextValidator.Result.VALID) {
             descriptionValid = true;
         } else {
             descriptionValid = false;
             setError(descriptionErrorMessageObservable, response);
         }
         updateUseButtonVisibility();
-    }
 
-    private TextValidator.Response validateText(TextValidator.RequestType type,
-                                                String textToValidate) {
-        TextValidator.Request request = new TextValidator.Request(type, textToValidate
-        );
-        return validationHandler.validateText(request);
     }
 
     private void setError(ObservableField<String> errorObservable,
-                          TextValidator.Response response) {
-        if (response.getResult() == TextValidator.Result.TOO_SHORT) {
+                          UseCaseTextValidator.Response response) {
+
+        if (response.getResult() == UseCaseTextValidator.Result.TOO_SHORT) {
             errorObservable.set(resources.getString(
                     R.string.input_error_text_too_short,
                     response.getMinLength(),
                     response.getMaxLength()));
 
-        } else if (response.getResult() == TextValidator.Result.TOO_LONG) {
+        } else if (response.getResult() == UseCaseTextValidator.Result.TOO_LONG) {
             errorObservable.set(resources.getString(
                     R.string.input_error_text_too_long,
                     response.getMinLength(),
@@ -210,18 +261,18 @@ public class IngredientEditorViewModel
 
     private void updateUseButtonVisibility() {
         if (!observablesUpdating) {
-            if (isModelValid() && modelHasChanged()) {
+            if (isValid() && isChanged()) {
                 showUseButtonLiveData.setValue(true);
             } else
                 showUseButtonLiveData.setValue(false);
         }
     }
 
-    private boolean isModelValid() {
+    private boolean isValid() {
         return nameValid && descriptionValid;
     }
 
-    private boolean modelHasChanged() {
+    private boolean isChanged() {
         if (ingredientEntity != null) {
             IngredientEntity updatedEntity = new IngredientEntity(
                     ingredientEntity.getId(),
@@ -256,7 +307,7 @@ public class IngredientEditorViewModel
     }
 
     void useButtonPressed() {
-        if (isModelValid() && modelHasChanged()) {
+        if (isValid() && isChanged()) {
             ingredientEntity = getUpdatedIngredientEntity();
             saveModel();
         }

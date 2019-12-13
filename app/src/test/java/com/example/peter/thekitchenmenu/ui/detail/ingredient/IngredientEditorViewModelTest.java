@@ -2,16 +2,18 @@ package com.example.peter.thekitchenmenu.ui.detail.ingredient;
 
 import android.content.res.Resources;
 
+import androidx.annotation.NonNull;
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.Observer;
 
 import com.example.peter.thekitchenmenu.R;
+import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
+import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.UseCaseTextValidator;
 import com.example.peter.thekitchenmenu.testdata.TestDataIngredientEntity;
-import com.example.peter.thekitchenmenu.testdata.TextValidationData;
-import com.example.peter.thekitchenmenu.ui.utils.TextValidator;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 
@@ -20,7 +22,6 @@ import org.mockito.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
@@ -55,34 +56,37 @@ public class IngredientEditorViewModelTest {
             TestDataIngredientEntity.getExistingUpdatedWithValidDescription();
     private IngredientEntity VALID_EXISTING_FROM_ANOTHER_USER =
             TestDataIngredientEntity.getExistingValidNameValidDescriptionFromAnotherUser();
+
     private static final String DUPLICATE_ERROR_MESSAGE = "DUPLICATE ERROR MESSAGE";
+    private static final String TEXT_TOO_SHORT_ERROR_MESSAGE = "TEXT_TOO_SHORT_ERROR_MESSAGE";
+    private static final String TEXT_TOO_LONG_ERROR_MESSAGE = "TEXT_TOO_LONG_ERROR_MESSAGE";
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
     @Rule
     public InstantTaskExecutorRule instantExecutorRule = new InstantTaskExecutorRule();
+//    @Mock
+//    Resources resourcesMock;
+    private ResourcesMock resourcesMock;
     @Mock
-    Resources resourcesMock;
+    RepositoryIngredient repoMock;
+    @Captor
+    ArgumentCaptor<DataSource.GetEntityCallback<IngredientEntity>> repoCallbackCaptor;
     @Mock
-    RepositoryIngredient repoIngredientMock;
-    @Mock
-    TextValidator textValidatorMock;
-    @Mock
-    UniqueIdProvider uniqueIdProviderMock;
+    UniqueIdProvider idProviderMock;
     @Mock
     TimeProvider timeProviderMock;
-    @Captor
-    ArgumentCaptor<DataSource.GetEntityCallback<IngredientEntity>> getEntityCallbackArgumentCaptor;
     @Mock
     Observer<Integer> integerObserverMock;
     @Mock
     Observer<Boolean> useButtonVisibilityObserverMock;
     @Mock
-    AddEditIngredientNavigator addEditIngredientNavigatorMock;
+    AddEditIngredientNavigator navigatorMock;
     @Mock
     IngredientDuplicateChecker duplicateCheckerMock;
     @Captor
     ArgumentCaptor<IngredientDuplicateChecker.DuplicateCallback> duplicateCallbackArgumentCaptor;
+    private int[] textLengthValues = {3, 70, 0, 500};
     // endregion helper fields ---------------------------------------------------------------------
 
     private IngredientEditorViewModel SUT;
@@ -90,24 +94,40 @@ public class IngredientEditorViewModelTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        setupResources();
+//        setupResources();
+        resourcesMock = new ResourcesMock();
 
-        SUT = new IngredientEditorViewModel(
-                resourcesMock,
-                repoIngredientMock,
-                textValidatorMock,
-                uniqueIdProviderMock,
-                timeProviderMock,
-                duplicateCheckerMock);
+        SUT = givenViewModel();
 
-        SUT.setNavigator(addEditIngredientNavigatorMock);
+        SUT.setNavigator(navigatorMock);
         observeUseButtonLiveData();
+    }
+
+    private IngredientEditorViewModel givenViewModel() {
+        UseCaseHandler handler = new UseCaseHandler(new UseCaseSchedulerMock());
+
+        UseCaseTextValidator textValidator = new UseCaseTextValidator(
+                textLengthValues[0],
+                textLengthValues[1],
+                textLengthValues[2],
+                textLengthValues[3]
+        );
+
+        return new IngredientEditorViewModel(
+                resourcesMock,
+                repoMock,
+                handler,
+                textValidator,
+                idProviderMock,
+                timeProviderMock,
+                duplicateCheckerMock
+        );
     }
 
     @Test
     public void startNewIngredientId_nothingSetToObservers() {
         // Arrange
-        when(uniqueIdProviderMock.getUId()).thenReturn(NEW.getId());
+        when(idProviderMock.getUId()).thenReturn(NEW.getId());
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(NEW.getCreateDate());
         // Act
         SUT.start();
@@ -119,28 +139,27 @@ public class IngredientEditorViewModelTest {
     @Test
     public void startNewIngredientId_nothingSaved() {
         // Arrange
-        when(uniqueIdProviderMock.getUId()).thenReturn(NEW.getId());
+        when(idProviderMock.getUId()).thenReturn(NEW.getId());
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(NEW.getCreateDate());
         // Act
         SUT.start();
         // Assert
-        verifyNoMoreInteractions(repoIngredientMock);
+        verifyNoMoreInteractions(repoMock);
     }
 
     @Test
     public void startNewIngredientId_activityTitleSetToAddIngredient() {
         // Arrange
-        SUT.getSetActivityTitleEvent().observeForever(integerObserverMock);
         // Act
         SUT.start();
         // Assert
-        verify(integerObserverMock).onChanged(R.string.activity_title_add_new_ingredient);
+        verify(navigatorMock).setActivityTitle(eq(R.string.activity_title_add_new_ingredient));
     }
 
     @Test
     public void startNewIngredientId_useButtonNotShown() {
         // Arrange
-        when(uniqueIdProviderMock.getUId()).thenReturn(NEW.getId());
+        when(idProviderMock.getUId()).thenReturn(NEW.getId());
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(NEW.getCreateDate());
         // Act
         SUT.start();
@@ -151,28 +170,21 @@ public class IngredientEditorViewModelTest {
     @Test
     public void startNewIngredientId_invalidName_nameErrorMessageSetToObserver() {
         // Arrange
-        when(uniqueIdProviderMock.getUId()).thenReturn(
-                NEW_INVALID_NAME.getId());
-        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
-                NEW_INVALID_NAME.getCreateDate());
-
-
-        whenShortTextValidationReturnErrorMessage();
+        when(idProviderMock.getUId()).thenReturn(NEW_INVALID_NAME.getId());
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(NEW_INVALID_NAME.getCreateDate());
         // Act
         SUT.start();
         SUT.nameObservable.set(NEW_INVALID_NAME.getName());
         // Assert
-        assertEquals(TextValidationData.SHORT_TEXT_VALIDATION_ERROR,
-                SUT.nameErrorMessageObservable.get());
+//        assertEquals(, SUT.nameErrorMessageObservable.get());
     }
 
     @Test
     public void startNewIngredientId_invalidName_useButtonNotShown() {
         // Arrange
-        when(uniqueIdProviderMock.getUId()).thenReturn(NEW_INVALID_NAME.getId());
+        when(idProviderMock.getUId()).thenReturn(NEW_INVALID_NAME.getId());
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 NEW_INVALID_NAME.getCreateDate());
-        whenShortTextValidationReturnErrorMessage();
         // Act
         SUT.start();
         SUT.nameObservable.set(NEW_INVALID_NAME.getName());
@@ -186,7 +198,6 @@ public class IngredientEditorViewModelTest {
         whenIdProviderGetIdReturnNewEntityId();
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 NEW.getCreateDate(), NEW_VALID_NAME.getLastUpdate());
-        whenShortTextValidationReturnValidated();
         // Act
         SUT.start();
         SUT.nameObservable.set(NEW_VALID_NAME.getName());
@@ -200,7 +211,6 @@ public class IngredientEditorViewModelTest {
         whenIdProviderGetIdReturnNewEntityId();
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 NEW.getCreateDate(), NEW_VALID_NAME.getLastUpdate());
-        whenShortTextValidationReturnValidated();
         // Act
         SUT.start();
         SUT.nameObservable.set(NEW_VALID_NAME.getName());
@@ -213,7 +223,6 @@ public class IngredientEditorViewModelTest {
     public void startNewIngredientId_validName_saved() {
         // Arrange
         whenIdProviderGetIdReturnNewEntityId();
-        whenShortTextValidationReturnValidated();
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 NEW.getCreateDate(), NEW_VALID_NAME.getLastUpdate());
         // Act
@@ -222,13 +231,12 @@ public class IngredientEditorViewModelTest {
         whenDuplicateNameCheckForNewIngredientReturnNoneFound();
         // Assert
         SUT.useButtonPressed();
-        verify(repoIngredientMock).save(eq(NEW_VALID_NAME));
+        verify(repoMock).save(eq(NEW_VALID_NAME));
     }
 
     @Test
     public void startNewIngredientId_validNameDuplicate_duplicateNameErrorSetToObservable() {
         // Arrange
-        whenShortTextValidationReturnValidated();
         whenIdProviderGetIdReturnNewEntityId();
         // Act
         SUT.start();
@@ -247,7 +255,6 @@ public class IngredientEditorViewModelTest {
     @Test
     public void startNewIngredientId_validNameDuplicate_useButtonNotShown() {
         // Arrange
-        whenShortTextValidationReturnValidated();
         whenIdProviderGetIdReturnNewEntityId();
         // Act
         SUT.start();
@@ -266,7 +273,6 @@ public class IngredientEditorViewModelTest {
     @Test
     public void startNewIngredientId_validName_nameInUseErrorNull() {
         // Arrange
-        whenShortTextValidationReturnValidated();
         whenIdProviderGetIdReturnNewEntityId();
         // Act
         SUT.start();
@@ -279,7 +285,6 @@ public class IngredientEditorViewModelTest {
     @Test
     public void startNewIngredientId_validNameDuplicateNameBackValidName_nameInUseErrorNull() {
         // Arrange
-        whenShortTextValidationReturnValidated();
         whenIdProviderGetIdReturnNewEntityId();
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 NEW_VALID_NAME.getCreateDate(), NEW_VALID_NAME.getLastUpdate());
@@ -307,7 +312,6 @@ public class IngredientEditorViewModelTest {
     @Test
     public void startNewIngredientId_validNameDuplicateNameBackValidName_useButtonVisible() {
         // Arrange
-        whenShortTextValidationReturnValidated();
         whenIdProviderGetIdReturnNewEntityId();
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 NEW_VALID_NAME.getCreateDate(), NEW_VALID_NAME.getLastUpdate());
@@ -339,15 +343,15 @@ public class IngredientEditorViewModelTest {
         whenIdProviderGetIdReturnNewEntityId();
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 NEW.getCreateDate(), NEW_VALID_NAME_INVALID_DESCRIPTION.getLastUpdate());
-        whenShortTextValidationReturnValidated();
-        whenLongTextValidationReturnErrorMessage();
+
+        String description = getStringOfExactLength(textLengthValues[3]);
+        description += "a";
         // Act
         SUT.start();
         SUT.nameObservable.set(NEW_VALID_NAME_INVALID_DESCRIPTION.getName());
-        SUT.descriptionObservable.set(NEW_VALID_NAME_INVALID_DESCRIPTION.getDescription());
+        SUT.descriptionObservable.set(description);
         // Assert
-        assertEquals(TextValidationData.LONG_TEXT_VALIDATION_ERROR,
-                SUT.descriptionErrorMessageObservable.get());
+        assertEquals(TEXT_TOO_LONG_ERROR_MESSAGE, SUT.descriptionErrorMessageObservable.get());
     }
 
     @Test
@@ -356,12 +360,13 @@ public class IngredientEditorViewModelTest {
         whenIdProviderGetIdReturnNewEntityId();
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 NEW.getCreateDate(), NEW_VALID_NAME.getLastUpdate());
-        whenShortTextValidationReturnValidated();
-        whenLongTextValidationReturnErrorMessage();
+        int maxDescriptionLength = textLengthValues[3];
+        String invalidDescription = getStringOfExactLength(maxDescriptionLength);
+        invalidDescription = lengthenStringByOneCharacter(invalidDescription);
         // Act
         SUT.start();
         SUT.nameObservable.set(NEW_VALID_NAME_INVALID_DESCRIPTION.getName());
-        SUT.descriptionObservable.set(NEW_VALID_NAME_INVALID_DESCRIPTION.getDescription());
+        SUT.descriptionObservable.set(invalidDescription);
         // Assert
         verify(useButtonVisibilityObserverMock, times((3))).onChanged(false);
     }
@@ -372,8 +377,7 @@ public class IngredientEditorViewModelTest {
         whenIdProviderGetIdReturnNewEntityId();
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 NEW.getCreateDate(), NEW.getLastUpdate());
-        whenShortTextValidationReturnErrorMessage();
-        whenLongTextValidationReturnValidated();
+
         // Act
         SUT.start();
         SUT.nameObservable.set(NEW_INVALID_NAME_VALID_DESCRIPTION.getName());
@@ -388,8 +392,7 @@ public class IngredientEditorViewModelTest {
         whenIdProviderGetIdReturnNewEntityId();
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 NEW.getCreateDate(), NEW_VALID_NAME_VALID_DESCRIPTION.getLastUpdate());
-        whenShortTextValidationReturnValidated();
-        whenLongTextValidationReturnValidated();
+
         // Act
         SUT.start();
         SUT.nameObservable.set(NEW_VALID_NAME_VALID_DESCRIPTION.getName());
@@ -405,8 +408,7 @@ public class IngredientEditorViewModelTest {
         whenIdProviderGetIdReturnNewEntityId();
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 NEW.getCreateDate(), NEW_VALID_NAME_VALID_DESCRIPTION.getLastUpdate());
-        whenShortTextValidationReturnValidated();
-        whenLongTextValidationReturnValidated();
+
         // Act
         SUT.start();
         SUT.nameObservable.set(NEW_VALID_NAME_VALID_DESCRIPTION.getName());
@@ -422,15 +424,13 @@ public class IngredientEditorViewModelTest {
         whenIdProviderGetIdReturnNewEntityId();
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 NEW.getCreateDate(), NEW_VALID_NAME_VALID_DESCRIPTION.getLastUpdate());
-        whenShortTextValidationReturnValidated();
-        whenLongTextValidationReturnValidated();
         // Act
         SUT.start();
         SUT.nameObservable.set(NEW_VALID_NAME_VALID_DESCRIPTION.getName());
         SUT.descriptionObservable.set(NEW_VALID_NAME_VALID_DESCRIPTION.getDescription());
         // Assert
         SUT.useButtonPressed();
-        verify(repoIngredientMock).save(eq(NEW_VALID_NAME_VALID_DESCRIPTION));
+        verify(repoMock).save(eq(NEW_VALID_NAME_VALID_DESCRIPTION));
     }
 
     // startExistingId_nameUpdatedToNameInUseThenBackToOriginal_duplicateErrorNotShown
@@ -441,21 +441,17 @@ public class IngredientEditorViewModelTest {
     @Test
     public void startExistingId_validNameValidDescription_activityTitleSetToEdit() {
         // Arrange
-        SUT.getSetActivityTitleEvent().observeForever(integerObserverMock);
-        whenShortTextValidationReturnValidated();
-        whenLongTextValidationReturnValidated();
         // Act
         SUT.start(VALID_EXISTING_COMPLETE.getId());
         simulateGetValidExistingCompleteFromDatabase();
         // Assert
-        verify(integerObserverMock).onChanged(eq(R.string.activity_title_edit_ingredient));
+        verify(navigatorMock).setActivityTitle(eq(R.string.activity_title_edit_ingredient));
     }
 
     @Test
     public void startExistingId_validNameValidDescription_nameSetToObserver() {
         // Arrange
-        whenShortTextValidationReturnValidated();
-        whenLongTextValidationReturnValidated();
+
         // Act
         SUT.start(VALID_EXISTING_COMPLETE.getId());
         simulateGetValidExistingCompleteFromDatabase();
@@ -466,8 +462,7 @@ public class IngredientEditorViewModelTest {
     @Test
     public void startExistingId_validNameValidDescription_descriptionSetToObserver() {
         // Arrange
-        whenShortTextValidationReturnValidated();
-        whenLongTextValidationReturnValidated();
+
         // Act
         SUT.start(VALID_EXISTING_COMPLETE.getId());
         simulateGetValidExistingCompleteFromDatabase();
@@ -478,8 +473,7 @@ public class IngredientEditorViewModelTest {
     @Test
     public void startExistingId_validNameValidDescription_noErrorMessagesSet() {
         // Arrange
-        whenShortTextValidationReturnValidated();
-        whenLongTextValidationReturnValidated();
+
         // Act
         SUT.start(VALID_EXISTING_COMPLETE.getId());
         simulateGetValidExistingCompleteFromDatabase();
@@ -491,8 +485,7 @@ public class IngredientEditorViewModelTest {
     @Test
     public void startExistingId_validNameValidDescription_useButtonNotShown() {
         // Arrange
-        whenShortTextValidationReturnValidated();
-        whenLongTextValidationReturnValidated();
+
         // Act
         SUT.start(VALID_EXISTING_COMPLETE.getId());
         simulateGetValidExistingCompleteFromDatabase();
@@ -503,8 +496,8 @@ public class IngredientEditorViewModelTest {
     @Test
     public void startExistingId_validNameValidDescription_duplicateErrorNotShown() {
         // Arrange
-        whenShortTextValidationReturnValidated();
-        whenLongTextValidationReturnValidated();
+
+
         // Act
         SUT.start(VALID_EXISTING_COMPLETE.getId());
         simulateGetValidExistingCompleteFromDatabase();
@@ -515,8 +508,8 @@ public class IngredientEditorViewModelTest {
     @Test
     public void startExistingId_validNameValidDescriptionNameUpdatedWithInvalidValue_useButtonNotShown() {
         // Arrange
-        whenShortTextValidationReturnErrorMessage();
-        whenLongTextValidationReturnValidated();
+
+
         // Act
         SUT.start(VALID_EXISTING_COMPLETE.getId());
         simulateGetValidExistingCompleteFromDatabase();
@@ -528,22 +521,20 @@ public class IngredientEditorViewModelTest {
     @Test
     public void startExistingId_validNameValidDescriptionNameUpdatedWithInvalidValue_nameErrorMessageSet() {
         // Arrange
-        whenShortTextValidationReturnErrorMessage();
-        whenLongTextValidationReturnValidated();
+        int shortTextMinLength = textLengthValues[0];
+        String nameTooShort = getStringOfExactLength(shortTextMinLength);
+        nameTooShort = shortenStringByOneCharacter(nameTooShort);
         // Act
         SUT.start(VALID_EXISTING_COMPLETE.getId());
         simulateGetValidExistingCompleteFromDatabase();
-        SUT.nameObservable.set(VALID_EXISTING_INVALID_NAME_UPDATE.getName());
+        SUT.nameObservable.set(nameTooShort);
         // Assert
-        assertEquals(TextValidationData.SHORT_TEXT_VALIDATION_ERROR,
-                SUT.nameErrorMessageObservable.get());
+        assertEquals(TEXT_TOO_SHORT_ERROR_MESSAGE, SUT.nameErrorMessageObservable.get());
     }
 
     @Test
     public void startExistingId_validNameValidDescriptionNameUpdatedWithValidValue_useButtonShown() {
         // Arrange
-        whenShortTextValidationReturnValidated();
-        whenLongTextValidationReturnValidated();
         // Act
         SUT.start(VALID_EXISTING_COMPLETE.getId());
         simulateGetValidExistingCompleteFromDatabase();
@@ -556,8 +547,6 @@ public class IngredientEditorViewModelTest {
     @Test
     public void startExistingId_validNameValidDescriptionNameUpdatedWithValidValue_saved() {
         // Arrange
-        whenShortTextValidationReturnValidated();
-        whenLongTextValidationReturnValidated();
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 VALID_EXISTING_VALID_NAME_UPDATE.getLastUpdate());
         // Act
@@ -568,14 +557,14 @@ public class IngredientEditorViewModelTest {
         // Assert
         verify(useButtonVisibilityObserverMock, times((2))).onChanged(eq(true));
         SUT.useButtonPressed();
-        verify(repoIngredientMock).save(eq(VALID_EXISTING_VALID_NAME_UPDATE));
+        verify(repoMock).save(eq(VALID_EXISTING_VALID_NAME_UPDATE));
     }
 
     @Test
     public void startExistingId_validNameValidDescriptionNameUpdatedWithValidValue_nameErrorMessageNull() {
         // Arrange
-        whenShortTextValidationReturnValidated();
-        whenLongTextValidationReturnValidated();
+
+
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 VALID_EXISTING_VALID_NAME_UPDATE.getLastUpdate());
         // Act
@@ -589,8 +578,6 @@ public class IngredientEditorViewModelTest {
     @Test
     public void startExistingId_validNameValidDescriptionDuplicateName_useButtonNotShown() {
         // Arrange
-        whenShortTextValidationReturnValidated();
-        whenLongTextValidationReturnValidated();
         // Act
         SUT.start(VALID_EXISTING_COMPLETE.getId());
         simulateGetValidExistingCompleteFromDatabase();
@@ -608,8 +595,7 @@ public class IngredientEditorViewModelTest {
 
     @Test
     public void startExistingId_validNameValidDescriptionDuplicateName_duplicateErrorShown() {
-        whenShortTextValidationReturnValidated();
-        whenLongTextValidationReturnValidated();
+        // Arrange
         // Act
         SUT.start(VALID_EXISTING_COMPLETE.getId());
         simulateGetValidExistingCompleteFromDatabase();
@@ -628,12 +614,12 @@ public class IngredientEditorViewModelTest {
     @Test
     public void startExistingId_validNameValidDescriptionDescriptionUpdatedWithInvalidValue_useButtonNotShown() {
         // Arrange
-        whenShortTextValidationReturnValidated();
-        whenLongTextValidationReturnErrorMessage();
+        String description = getStringOfExactLength(textLengthValues[3]);
+        description = lengthenStringByOneCharacter(description);
         // Act
         SUT.start(VALID_EXISTING_COMPLETE.getId());
         simulateGetValidExistingCompleteFromDatabase();
-        SUT.descriptionObservable.set(VALID_EXISTING_INVALID_DESCRIPTION_UPDATE.getName());
+        SUT.descriptionObservable.set(description);
         // Assert
         verify(useButtonVisibilityObserverMock, times((3))).onChanged(false);
     }
@@ -641,22 +627,23 @@ public class IngredientEditorViewModelTest {
     @Test
     public void startExistingId_validNameValidDescriptionDescriptionUpdatedWithInvalidValue_descriptionErrorMessageShown() {
         // Arrange
-        whenShortTextValidationReturnValidated();
-        whenLongTextValidationReturnErrorMessage();
+        int maxLengthOfDescriptionString = textLengthValues[3];
+        String description = getStringOfExactLength(maxLengthOfDescriptionString);
+        description = lengthenStringByOneCharacter(description);
+
         // Act
         SUT.start(VALID_EXISTING_COMPLETE.getId());
         simulateGetValidExistingCompleteFromDatabase();
-        SUT.descriptionObservable.set(VALID_EXISTING_INVALID_DESCRIPTION_UPDATE.getName());
+        SUT.descriptionObservable.set(description);
         // Assert
-        assertEquals(TextValidationData.LONG_TEXT_VALIDATION_ERROR,
-                SUT.descriptionErrorMessageObservable.get());
+        assertEquals(TEXT_TOO_LONG_ERROR_MESSAGE, SUT.descriptionErrorMessageObservable.get());
     }
 
     @Test
     public void startExistingId_validNameValidDescriptionDescriptionUpdatedWithValidValue_useButtonShown() {
         // Arrange
-        whenShortTextValidationReturnValidated();
-        whenLongTextValidationReturnValidated();
+
+
         // Act
         SUT.start(VALID_EXISTING_COMPLETE.getId());
         simulateGetValidExistingCompleteFromDatabase();
@@ -668,8 +655,6 @@ public class IngredientEditorViewModelTest {
     @Test
     public void startExistingId_validNameValidDescriptionDescriptionUpdatedWithValidValue_saved() {
         // Arrange
-        whenShortTextValidationReturnValidated();
-        whenLongTextValidationReturnValidated();
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 VALID_EXISTING_VALID_DESCRIPTION_UPDATE.getLastUpdate());
         // Act
@@ -679,14 +664,14 @@ public class IngredientEditorViewModelTest {
         verify(useButtonVisibilityObserverMock).onChanged(eq(true));
         SUT.useButtonPressed();
         // Assert
-//        verify(repoIngredientMock).save(eq(VALID_EXISTING_VALID_DESCRIPTION_UPDATE));
+        verify(repoMock).save(eq(VALID_EXISTING_VALID_DESCRIPTION_UPDATE));
     }
 
     @Test
     public void startExistingId_validNameValidDescriptionDescriptionUpdatedWithValidValue_descriptionErrorMessageNull() {
         // Arrange
-        whenShortTextValidationReturnValidated();
-        whenLongTextValidationReturnValidated();
+
+
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 VALID_EXISTING_VALID_DESCRIPTION_UPDATE.getLastUpdate());
         // Act
@@ -700,15 +685,15 @@ public class IngredientEditorViewModelTest {
     @Test
     public void startExistingId_validNameValidDescriptionFromAnotherUser_callFinishImmediately() {
         // Arrange
-        whenShortTextValidationReturnValidated();
-        whenLongTextValidationReturnValidated();
+
+
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 VALID_EXISTING_VALID_DESCRIPTION_UPDATE.getLastUpdate());
         // Act
         SUT.start(VALID_EXISTING_FROM_ANOTHER_USER.getId());
         simulateGetValidExistingFromAnotherUserFromDatabase();
         // Assert
-        verify(addEditIngredientNavigatorMock).finishActivity(null);
+        verify(navigatorMock).finishActivity(null);
     }
 
     // region helper methods -----------------------------------------------------------------------
@@ -716,50 +701,19 @@ public class IngredientEditorViewModelTest {
         SUT.showUseButtonLiveData.observeForever(useButtonVisibilityObserverMock);
     }
 
-    private void whenShortTextValidationReturnErrorMessage() {
-        when(textValidatorMock.validateText(anyObject())).
-                thenReturn(new TextValidator.Response(
-                        TextValidator.Result.TOO_SHORT, "", "3", "70"));
-    }
-
-    private void whenShortTextValidationReturnValidated() {
-        when(textValidatorMock.validateText(anyObject())).
-                thenReturn(new TextValidator.Response(
-                        TextValidator.Result.VALID, "", "3", "70"));
-    }
-
-    private void whenLongTextValidationReturnErrorMessage() {
-        when(textValidatorMock.validateText(anyObject())).
-                thenReturn(new TextValidator.Response(
-                        TextValidator.Result.TOO_LONG, "", "0", "2900"));
-    }
-
-    private void whenLongTextValidationReturnValidated() {
-        when(textValidatorMock.validateText(anyObject())).
-                thenReturn(new TextValidator.Response(
-                        TextValidator.Result.VALID, "", "0", "2900"));
-    }
-
     private void whenIdProviderGetIdReturnNewEntityId() {
-        when(uniqueIdProviderMock.getUId()).thenReturn(NEW.getId());
+        when(idProviderMock.getUId()).thenReturn(NEW.getId());
     }
 
     private void simulateGetValidExistingCompleteFromDatabase() {
-        verify(repoIngredientMock).getById(eq(
-                VALID_EXISTING_COMPLETE.getId()),
-                getEntityCallbackArgumentCaptor.capture());
-
-        getEntityCallbackArgumentCaptor.getValue().onEntityLoaded(
-                VALID_EXISTING_COMPLETE);
+        verify(repoMock).getById(eq(VALID_EXISTING_COMPLETE.getId()), repoCallbackCaptor.capture());
+        repoCallbackCaptor.getValue().onEntityLoaded(VALID_EXISTING_COMPLETE);
     }
 
     private void simulateGetValidExistingFromAnotherUserFromDatabase() {
-        verify(repoIngredientMock).getById(eq(
-                VALID_EXISTING_FROM_ANOTHER_USER.getId()),
-                getEntityCallbackArgumentCaptor.capture());
-
-        getEntityCallbackArgumentCaptor.getValue().onEntityLoaded(
-                VALID_EXISTING_FROM_ANOTHER_USER);
+        verify(repoMock).getById(eq(VALID_EXISTING_FROM_ANOTHER_USER.getId()),
+                repoCallbackCaptor.capture());
+        repoCallbackCaptor.getValue().onEntityLoaded(VALID_EXISTING_FROM_ANOTHER_USER);
     }
 
     private void whenDuplicateNameCheckForNewIngredientReturnNoneFound() {
@@ -771,12 +725,51 @@ public class IngredientEditorViewModelTest {
                 IngredientDuplicateChecker.NO_DUPLICATE_FOUND);
     }
 
-    private void setupResources() {
-        when(resourcesMock.getString(R.string.ingredient_name_duplicate_error_message)).
-                thenReturn(DUPLICATE_ERROR_MESSAGE);
+    private String getStringOfExactLength(int length) {
+        StringBuilder builder = new StringBuilder();
+        String a="a";
+        for (int i=0; i<length; i++) {
+            builder.append(a);
+        }
+        return builder.toString();
+    }
+
+    private String lengthenStringByOneCharacter(String stringToLengthen) {
+        return stringToLengthen += "a";
+    }
+
+    private String shortenStringByOneCharacter(String stringToShorten) {
+        return stringToShorten.substring(0, stringToShorten.length() -1);
     }
     // endregion helper methods --------------------------------------------------------------------
 
     // region helper classes -----------------------------------------------------------------------
+    private class ResourcesMock extends Resources {
+        public ResourcesMock(){
+            super(null, null, null);
+        }
+
+        @NonNull
+        @Override
+        public String getString(int id) throws NotFoundException {
+            if (id == R.string.ingredient_name_duplicate_error_message) {
+                return DUPLICATE_ERROR_MESSAGE;
+
+            }
+            return "";
+        }
+
+        @NonNull
+        @Override
+        public String getString(int id, Object... formatArgs) throws NotFoundException {
+            if (id == R.string.input_error_text_too_short) {
+                return TEXT_TOO_SHORT_ERROR_MESSAGE;
+
+            } else if (id == R.string.input_error_text_too_long) {
+                return TEXT_TOO_LONG_ERROR_MESSAGE;
+            }
+            return "";
+        }
+    }
     // endregion helper classes --------------------------------------------------------------------
 }
