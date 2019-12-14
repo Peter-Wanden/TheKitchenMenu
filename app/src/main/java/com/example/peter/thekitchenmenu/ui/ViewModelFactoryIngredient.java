@@ -11,11 +11,9 @@ import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.domain.UseCaseFactory;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.UseCaseTextValidator;
 import com.example.peter.thekitchenmenu.ui.detail.ingredient.IngredientDuplicateChecker;
 import com.example.peter.thekitchenmenu.ui.detail.ingredient.IngredientEditorViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.ingredient.IngredientViewerViewModel;
-import com.example.peter.thekitchenmenu.ui.utils.TextValidator;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 

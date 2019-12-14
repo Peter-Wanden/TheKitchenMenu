@@ -61,7 +61,6 @@ public class UseCaseConversionFactorStatusTest {
     private UseCaseConversionFactorStatusResponse RESPONSE_NO_DATA_AVAILABLE =
             TestDataUseCaseConversionFactorStatusRequestResponse.getResponseForIngredientNotFound();
 
-
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------

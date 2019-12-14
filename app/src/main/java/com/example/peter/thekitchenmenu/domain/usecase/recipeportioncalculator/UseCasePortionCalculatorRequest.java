@@ -73,4 +73,40 @@ public class UseCasePortionCalculatorRequest implements UseCaseInteractor.Reques
                 ", model=" + model +
                 '}';
     }
+
+    public static class Builder {
+        private String recipeId;
+        private String ingredientId;
+        private String recipeIngredientId;
+        private MeasurementModel model;
+
+        public Builder setRecipeId(String recipeId) {
+            this.recipeId = recipeId;
+            return this;
+        }
+
+        public Builder setIngredientId(String ingredientId) {
+            this.ingredientId = ingredientId;
+            return this;
+        }
+
+        public Builder setRecipeIngredientId(String recipeIngredientId) {
+            this.recipeIngredientId = recipeIngredientId;
+            return this;
+        }
+
+        public Builder setMeasurementModel(MeasurementModel model) {
+            this.model = model;
+            return this;
+        }
+
+        public UseCasePortionCalculatorRequest build() {
+            return new UseCasePortionCalculatorRequest(
+                    recipeId,
+                    ingredientId,
+                    recipeIngredientId,
+                    model
+            );
+        }
+    }
 }

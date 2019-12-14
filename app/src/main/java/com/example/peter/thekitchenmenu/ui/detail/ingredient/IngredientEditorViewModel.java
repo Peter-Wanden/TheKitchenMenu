@@ -145,8 +145,8 @@ public class IngredientEditorViewModel
 
         UseCaseTextValidator.Request request = getTextValidatorRequest(
                 UseCaseTextValidator.RequestType.SHORT_TEXT,
-                nameObservable.get());
-
+                nameObservable.get()
+        );
         handler.execute(textValidator, request, getShortValidatorCallback());
     }
 
@@ -208,8 +208,7 @@ public class IngredientEditorViewModel
     }
 
     private UseCaseTextValidator.Request getTextValidatorRequest(
-            UseCaseTextValidator.RequestType type,
-            String textToValidate) {
+            UseCaseTextValidator.RequestType type, String textToValidate) {
         return new UseCaseTextValidator.Request(
                 type,
                 new UseCaseTextValidator.Model(textToValidate));

@@ -2,6 +2,7 @@ package com.example.peter.thekitchenmenu.ui.detail.ingredient;
 
 import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.google.android.gms.common.util.Strings;
 
 import java.util.LinkedHashMap;
@@ -13,15 +14,15 @@ public class IngredientDuplicateChecker implements DataSource.GetAllCallback<Ing
         void duplicateCheckResult(String duplicateId);
     }
 
-    private DataSource<IngredientEntity> dataSource;
+    private RepositoryIngredient repository;
     private LinkedHashMap<String, String> existingIngredients;
     private DuplicateCallback callback;
     private String keyToCheck;
     private String ingredientId;
     static final String NO_DUPLICATE_FOUND = "";
 
-    public IngredientDuplicateChecker(DataSource<IngredientEntity> dataSource) {
-        this.dataSource = dataSource;
+    public IngredientDuplicateChecker(RepositoryIngredient repository) {
+        this.repository = repository;
     }
 
     void checkForDuplicatesAndNotify(String nameToCheck,
@@ -31,7 +32,7 @@ public class IngredientDuplicateChecker implements DataSource.GetAllCallback<Ing
             this.callback = callback;
             this.keyToCheck = makeKey(nameToCheck);
             this.ingredientId = ingredientId;
-            dataSource.getAll(this);
+            repository.getAll(this);
         }
     }
 
@@ -44,8 +45,9 @@ public class IngredientDuplicateChecker implements DataSource.GetAllCallback<Ing
     }
 
     private void createExistingIngredientList(List<IngredientEntity> entities) {
-        if (existingIngredients == null)
+        if (existingIngredients == null) {
             existingIngredients = new LinkedHashMap<>();
+        }
 
         existingIngredients.clear();
 

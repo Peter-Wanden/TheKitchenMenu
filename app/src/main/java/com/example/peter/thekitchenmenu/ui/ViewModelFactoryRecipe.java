@@ -111,8 +111,8 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
             return (T) new RecipeIdentityEditorViewModel(
                     useCaseHandler,
                     useCaseFactory.provideRecipeIdentityUseCase(),
-                    application.getResources(),
-                    new TextValidator(application.getResources())
+                    useCaseFactory.provideTextValidatorUseCase(),
+                    application.getResources()
             );
         } else if (modelClass.isAssignableFrom(RecipeCourseEditorViewModel.class)) {
             //noinspection unchecked

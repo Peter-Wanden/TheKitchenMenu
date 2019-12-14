@@ -70,7 +70,7 @@ public class TestDataIngredientEntity {
 
     public static IngredientEntity getNewInvalidNameValidDescription() {
         return new IngredientEntity(
-                "6",
+                getNew().getId(),
                 getNewInvalidName().getName(),
                 "description",
                 1,
@@ -94,7 +94,7 @@ public class TestDataIngredientEntity {
 
     public static IngredientEntity getNewValidNameValidDescriptionConversionFactorUpdated() {
         return new IngredientEntity(
-                "8",
+                getNewValidName().getId(),
                 getNewValidName().getName(),
                 getNewInvalidNameValidDescription().getDescription(),
                 0.5,

@@ -377,16 +377,97 @@ public class TestDataMeasurementModel {
                 throw new RuntimeException("Unit of measure Type not recognised");
         }
 
-        boolean isTotalMeasurementOneSet = unitOfMeasure.
+        boolean isTotalUnitOneSet = unitOfMeasure.
                 isTotalUnitOneSet(invalidTotalUnitOne);
 
-        if (isTotalMeasurementOneSet)
-            throwTotalUnitOneException(isTotalMeasurementOneSet);
+        if (isTotalUnitOneSet)
+            throwTotalUnitOneException(isTotalUnitOneSet);
 
         return MeasurementModelBuilder.
                 basedOnUnitOfMeasure(unitOfMeasure).
                 setTotalUnitOne(invalidTotalUnitOne).
                 build();
+    }
+
+    public static MeasurementModel getExistingMetricValidUnitOneUpdated() {
+        UnitOfMeasure unitOfMeasure = getExistingValidSubtype().getMeasurementClass();
+
+        boolean isNumberOfItemsSet = unitOfMeasure.isNumberOfItemsSet(getExistingValidNinePortions());
+        if (!isNumberOfItemsSet) {
+            throwNumberOfItemsException(isNumberOfItemsSet);
+        }
+
+        if (unitOfMeasure.isConversionFactorEnabled()) {
+            boolean isConversionFactorSet = unitOfMeasure.isConversionFactorSet(
+                    getExistingValidConversionFactor());
+
+            if (!isConversionFactorSet)
+                throwConversionFactorException(isConversionFactorSet);
+        }
+
+        boolean isItemBaseUnitsSet = unitOfMeasure.isItemBaseUnitsSet(
+                TestDataRecipeIngredientQuantityEntity.getExistingValidMetric().getItemBaseUnits()
+        );
+
+        if (!isItemBaseUnitsSet)
+            throwItemBaseUnitsAreSetException(isItemBaseUnitsSet);
+
+        double unitOneValue = MAX_VOLUME - (unitOfMeasure.getTotalUnitTwo() * 1000);
+        System.out.println(unitOneValue);
+
+        boolean isUnitOneUpdated = unitOfMeasure.isTotalUnitOneSet(unitOneValue);
+        if (!isUnitOneUpdated) {
+            throwTotalUnitOneException(isUnitOneUpdated);
+        }
+
+        return MeasurementModelBuilder.basedOnUnitOfMeasure(unitOfMeasure).build();
+    }
+
+    public static MeasurementModel getExistingMetricValidTotalOne() {
+        UnitOfMeasure unitOfMeasure = getExistingValidSubtype().getMeasurementClass();
+
+        boolean isNumberOfItemsSet = unitOfMeasure.isNumberOfItemsSet(getExistingValidNinePortions());
+        if (!isNumberOfItemsSet) {
+            throwNumberOfItemsException(isNumberOfItemsSet);
+        }
+
+        if (unitOfMeasure.isConversionFactorEnabled()) {
+            boolean isConversionFactorSet = unitOfMeasure.isConversionFactorSet(
+                    getExistingValidConversionFactor());
+
+            if (!isConversionFactorSet)
+                throwConversionFactorException(isConversionFactorSet);
+        }
+
+        boolean isItemBaseUnitsSet = unitOfMeasure.isItemBaseUnitsSet(
+                TestDataRecipeIngredientQuantityEntity.getExistingValidMetric().getItemBaseUnits()
+        );
+
+        if (!isItemBaseUnitsSet)
+            throwItemBaseUnitsAreSetException(isItemBaseUnitsSet);
+
+        double validTotalUnitOne;
+        MeasurementType type = unitOfMeasure.getMeasurementType();
+        switch (type) {
+            case MASS:
+                validTotalUnitOne = MAX_MASS - (unitOfMeasure.getTotalUnitTwo() * 1000);
+                break;
+            case VOLUME:
+                validTotalUnitOne = MAX_VOLUME - (unitOfMeasure.getTotalUnitTwo() * 1000);
+                break;
+            case COUNT:
+                validTotalUnitOne = .999;
+                break;
+            default:
+                throw new RuntimeException("Unit of measure Type not recognised");
+        }
+
+        boolean isTotalUnitOneSet = unitOfMeasure.isTotalUnitOneSet(validTotalUnitOne);
+
+        if (!isTotalUnitOneSet)
+            throwTotalUnitOneException(isTotalUnitOneSet);
+
+        return MeasurementModelBuilder.basedOnUnitOfMeasure(unitOfMeasure).build();
     }
 
     public static MeasurementModel getExistingMetricInvalidTotalTwo() {

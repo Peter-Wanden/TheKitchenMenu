@@ -156,6 +156,21 @@ public class TestDataUseCasePortionCalculatorRequestResponse {
                 ResultStatus.INVALID_TOTAL_UNIT_ONE);
     }
 
+    public static UseCasePortionCalculatorRequest getRequestExistingMetricValidTotalUnitOne() {
+        return new UseCasePortionCalculatorRequest(
+                NO_RECIPE_ID,
+                NO_INGREDIENT_ID,
+                TestDataRecipeIngredientQuantityEntity.getExistingValidMetric().getId(),
+                TestDataMeasurementModel.getExistingMetricValidUnitOneUpdated()
+        );
+    }
+    public static UseCasePortionCalculatorResponse getResponseExistingMetricValidTotalUnitOne() {
+        return new UseCasePortionCalculatorResponse(
+                TestDataMeasurementModel.getExistingMetricValidTotalOne(),
+                ResultStatus.RESULT_OK
+        );
+    }
+
     public static UseCasePortionCalculatorRequest getRequestExistingMetricValidTotalUnitTwo() {
         return new UseCasePortionCalculatorRequest(
                 NO_RECIPE_ID,

@@ -7,6 +7,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.Observer;
 
 import com.example.peter.thekitchenmenu.R;
+import com.example.peter.thekitchenmenu.commonmocks.StringMaker;
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
@@ -77,8 +78,6 @@ public class IngredientEditorViewModelTest {
     @Mock
     TimeProvider timeProviderMock;
     @Mock
-    Observer<Integer> integerObserverMock;
-    @Mock
     Observer<Boolean> useButtonVisibilityObserverMock;
     @Mock
     AddEditIngredientNavigator navigatorMock;
@@ -86,7 +85,10 @@ public class IngredientEditorViewModelTest {
     IngredientDuplicateChecker duplicateCheckerMock;
     @Captor
     ArgumentCaptor<IngredientDuplicateChecker.DuplicateCallback> duplicateCallbackArgumentCaptor;
-    private int[] textLengthValues = {3, 70, 0, 500};
+    private int shortTextMinLength = 3;
+    private int shortTextMaxLength = 70;
+    private int longTextMinLength = 0;
+    private int longTextMaxLength = 500;
     // endregion helper fields ---------------------------------------------------------------------
 
     private IngredientEditorViewModel SUT;
@@ -94,7 +96,6 @@ public class IngredientEditorViewModelTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-//        setupResources();
         resourcesMock = new ResourcesMock();
 
         SUT = givenViewModel();
@@ -107,10 +108,7 @@ public class IngredientEditorViewModelTest {
         UseCaseHandler handler = new UseCaseHandler(new UseCaseSchedulerMock());
 
         UseCaseTextValidator textValidator = new UseCaseTextValidator(
-                textLengthValues[0],
-                textLengthValues[1],
-                textLengthValues[2],
-                textLengthValues[3]
+                shortTextMinLength, shortTextMaxLength, longTextMinLength, longTextMaxLength
         );
 
         return new IngredientEditorViewModel(
@@ -176,7 +174,7 @@ public class IngredientEditorViewModelTest {
         SUT.start();
         SUT.nameObservable.set(NEW_INVALID_NAME.getName());
         // Assert
-//        assertEquals(, SUT.nameErrorMessageObservable.get());
+        assertEquals(TEXT_TOO_SHORT_ERROR_MESSAGE, SUT.nameErrorMessageObservable.get());
     }
 
     @Test
@@ -344,8 +342,10 @@ public class IngredientEditorViewModelTest {
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 NEW.getCreateDate(), NEW_VALID_NAME_INVALID_DESCRIPTION.getLastUpdate());
 
-        String description = getStringOfExactLength(textLengthValues[3]);
-        description += "a";
+        String description = new StringMaker().
+                makeStringOfExactLength(longTextMaxLength).
+                addOneCharacter().
+                build();
         // Act
         SUT.start();
         SUT.nameObservable.set(NEW_VALID_NAME_INVALID_DESCRIPTION.getName());
@@ -360,13 +360,15 @@ public class IngredientEditorViewModelTest {
         whenIdProviderGetIdReturnNewEntityId();
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 NEW.getCreateDate(), NEW_VALID_NAME.getLastUpdate());
-        int maxDescriptionLength = textLengthValues[3];
-        String invalidDescription = getStringOfExactLength(maxDescriptionLength);
-        invalidDescription = lengthenStringByOneCharacter(invalidDescription);
+
+        String description = new StringMaker().
+                makeStringOfExactLength(longTextMaxLength).
+                addOneCharacter().
+                build();
         // Act
         SUT.start();
         SUT.nameObservable.set(NEW_VALID_NAME_INVALID_DESCRIPTION.getName());
-        SUT.descriptionObservable.set(invalidDescription);
+        SUT.descriptionObservable.set(description);
         // Assert
         verify(useButtonVisibilityObserverMock, times((3))).onChanged(false);
     }
@@ -521,9 +523,10 @@ public class IngredientEditorViewModelTest {
     @Test
     public void startExistingId_validNameValidDescriptionNameUpdatedWithInvalidValue_nameErrorMessageSet() {
         // Arrange
-        int shortTextMinLength = textLengthValues[0];
-        String nameTooShort = getStringOfExactLength(shortTextMinLength);
-        nameTooShort = shortenStringByOneCharacter(nameTooShort);
+        String nameTooShort = new StringMaker().
+                makeStringOfExactLength(shortTextMinLength).
+                removeOneCharacter().
+                build();
         // Act
         SUT.start(VALID_EXISTING_COMPLETE.getId());
         simulateGetValidExistingCompleteFromDatabase();
@@ -614,8 +617,10 @@ public class IngredientEditorViewModelTest {
     @Test
     public void startExistingId_validNameValidDescriptionDescriptionUpdatedWithInvalidValue_useButtonNotShown() {
         // Arrange
-        String description = getStringOfExactLength(textLengthValues[3]);
-        description = lengthenStringByOneCharacter(description);
+        String description = new StringMaker().
+                makeStringOfExactLength(longTextMaxLength).
+                addOneCharacter().
+                build();
         // Act
         SUT.start(VALID_EXISTING_COMPLETE.getId());
         simulateGetValidExistingCompleteFromDatabase();
@@ -627,10 +632,10 @@ public class IngredientEditorViewModelTest {
     @Test
     public void startExistingId_validNameValidDescriptionDescriptionUpdatedWithInvalidValue_descriptionErrorMessageShown() {
         // Arrange
-        int maxLengthOfDescriptionString = textLengthValues[3];
-        String description = getStringOfExactLength(maxLengthOfDescriptionString);
-        description = lengthenStringByOneCharacter(description);
-
+        String description = new StringMaker().
+                makeStringOfExactLength(longTextMaxLength).
+                addOneCharacter().
+                build();
         // Act
         SUT.start(VALID_EXISTING_COMPLETE.getId());
         simulateGetValidExistingCompleteFromDatabase();
@@ -723,23 +728,6 @@ public class IngredientEditorViewModelTest {
                 duplicateCallbackArgumentCaptor.capture());
         duplicateCallbackArgumentCaptor.getValue().duplicateCheckResult(
                 IngredientDuplicateChecker.NO_DUPLICATE_FOUND);
-    }
-
-    private String getStringOfExactLength(int length) {
-        StringBuilder builder = new StringBuilder();
-        String a="a";
-        for (int i=0; i<length; i++) {
-            builder.append(a);
-        }
-        return builder.toString();
-    }
-
-    private String lengthenStringByOneCharacter(String stringToLengthen) {
-        return stringToLengthen += "a";
-    }
-
-    private String shortenStringByOneCharacter(String stringToShorten) {
-        return stringToShorten.substring(0, stringToShorten.length() -1);
     }
     // endregion helper methods --------------------------------------------------------------------
 

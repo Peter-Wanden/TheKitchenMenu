@@ -3,15 +3,16 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 import android.content.res.Resources;
 
 import com.example.peter.thekitchenmenu.R;
+import com.example.peter.thekitchenmenu.commonmocks.StringMaker;
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeIdentity.UseCaseRecipeIdentity;
+import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.UseCaseTextValidator;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeValidator;
-import com.example.peter.thekitchenmenu.ui.utils.TextValidator;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 
 import org.junit.Before;
@@ -63,20 +64,14 @@ public class RecipeIdentityEditorViewModelTest {
     private RecipeModelStatus VALID_CHANGED =
             TestDataRecipeValidator.getIdentityModelStatusChangedValid();
 
-    private static final String SHORT_TEXT_MIN_LENGTH = "3";
-    private static final String SHORT_TEXT_MAX_LENGTH = "70";
-    private static final String LONG_TEXT_MIN_LENGTH = "0";
-    private static final String LONG_TEXT_MAX_LENGTH = "2900";
-    private static final String ERROR_MESSAGE_TOO_LONG = "error_message_too_long";
-    private static final String ERROR_MESSAGE_TOO_SHORT = "error_message_too_short";
+    private static final String ERROR_MESSAGE_TOO_LONG = "ERROR_MESSAGE_TOO_LONG";
+    private static final String ERROR_MESSAGE_TOO_SHORT = "ERROR_MESSAGE_TOO_LONG";
 
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
     @Mock
     Resources resourcesMock;
-    @Mock
-    TextValidator textValidatorMock;
     @Mock
     RepositoryRecipeIdentity repoMock;
     @Captor
@@ -87,6 +82,11 @@ public class RecipeIdentityEditorViewModelTest {
     RecipeValidation.RecipeValidatorModelSubmission modelValidationSubmitterMock;
     @Captor
     ArgumentCaptor<RecipeModelStatus> statusCaptor;
+
+    private int shortTextMinLength = 3;
+    private int shortTextMaxLength = 70;
+    private int longTextMinLength = 0;
+    private int longTextMaxLength = 500;
 
     // endregion helper fields ---------------------------------------------------------------------
 
@@ -103,9 +103,18 @@ public class RecipeIdentityEditorViewModelTest {
 
     private RecipeIdentityEditorViewModel givenViewModel() {
         UseCaseHandler handler = new UseCaseHandler(new UseCaseSchedulerMock());
-        UseCaseRecipeIdentity useCase = new UseCaseRecipeIdentity(repoMock, timeProviderMock);
 
-        return new RecipeIdentityEditorViewModel(handler, useCase, resourcesMock, textValidatorMock);
+        UseCaseRecipeIdentity useCaseRecipeIdentity = new UseCaseRecipeIdentity(
+                repoMock, timeProviderMock);
+
+        UseCaseTextValidator useCaseTextValidator = new UseCaseTextValidator(
+                shortTextMinLength, shortTextMaxLength, longTextMinLength, longTextMaxLength);
+
+        return new RecipeIdentityEditorViewModel(
+                handler,
+                useCaseRecipeIdentity,
+                useCaseTextValidator,
+                resourcesMock);
     }
 
     @Test
@@ -143,9 +152,6 @@ public class RecipeIdentityEditorViewModelTest {
         // Arrange
         String recipeId = INVALID_NEW_EMPTY.getId();
         String invalidTitle = INVALID_NEW_TITLE_INVALID.getTitle();
-
-        when(textValidatorMock.validateText(getShortTextRequest(invalidTitle))).
-                thenReturn(getShortTextTooShortResponse(invalidTitle));
         // Act
         SUT.start(recipeId);
         simulateNothingReturnedFromDatabase(recipeId);
@@ -159,8 +165,6 @@ public class RecipeIdentityEditorViewModelTest {
     public void startNewRecipeId_invalidTitle_recipeModelStatusINVALID_CHANGED() {
         // Arrange
         String invalidTitle = INVALID_NEW_TITLE_INVALID.getTitle();
-        when(textValidatorMock.validateText(getShortTextRequest(invalidTitle))).
-                thenReturn(getShortTextTooShortResponse(invalidTitle));
 
         String recipeId = INVALID_NEW_EMPTY.getId();
         // Act
@@ -179,9 +183,6 @@ public class RecipeIdentityEditorViewModelTest {
         String recipeId = INVALID_NEW_EMPTY.getId();
         String invalidTitle = INVALID_NEW_TITLE_INVALID_DESCRIPTION_VALID.getTitle();
         String validDescription = INVALID_NEW_TITLE_INVALID_DESCRIPTION_VALID.getDescription();
-
-        whenShortTextValidationReturnTooShortError(invalidTitle);
-        whenLongTextValidationReturnValidated(validDescription);
         // Act
         SUT.start(recipeId);
         simulateNothingReturnedFromDatabase(recipeId);
@@ -197,7 +198,6 @@ public class RecipeIdentityEditorViewModelTest {
         // Arrange
         String recipeId = INVALID_NEW_EMPTY.getId();
         String title = VALID_NEW_TITLE_VALID.getTitle();
-        whenShortTextValidationReturnValidated(title);
         // Act
         SUT.start(recipeId);
         simulateNothingReturnedFromDatabase(recipeId);
@@ -212,7 +212,6 @@ public class RecipeIdentityEditorViewModelTest {
         String recipeId = INVALID_NEW_EMPTY.getId();
         String title = VALID_NEW_TITLE_VALID.getTitle();
         long time = VALID_NEW_TITLE_VALID.getCreateDate();
-        whenShortTextValidationReturnValidated(title);
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(time);
         // Act
         SUT.start(recipeId);
@@ -227,7 +226,6 @@ public class RecipeIdentityEditorViewModelTest {
         // Arrange
         String recipeId = INVALID_NEW_EMPTY.getId();
         String title = VALID_NEW_TITLE_VALID.getTitle();
-        whenShortTextValidationReturnValidated(title);
         // Act
         SUT.start(recipeId);
         simulateNothingReturnedFromDatabase(recipeId);
@@ -243,11 +241,15 @@ public class RecipeIdentityEditorViewModelTest {
     public void startNewRecipeId_validTitleInvalidDescription_errorMessageSetToObservable() {
         // Arrange
         String recipeId = INVALID_NEW_EMPTY.getId();
-        String title = VALID_NEW_TITLE_VALID.getTitle();
-        String description = "Doesn't matter what's here as returning an error message!";
 
-        whenShortTextValidationReturnValidated(title);
-        whenLongTextValidationReturnTooLongError(description);
+        String title = new StringMaker().
+                makeStringOfExactLength(shortTextMaxLength).
+                build();
+
+        String description = new StringMaker().
+                makeStringOfExactLength(longTextMaxLength).
+                addOneCharacter().
+                build();
         // Act
         SUT.start(recipeId);
         simulateNothingReturnedFromDatabase(recipeId);
@@ -262,11 +264,15 @@ public class RecipeIdentityEditorViewModelTest {
     public void startNewRecipeId_validTitleInvalidDescription_descriptionNotSaved() {
         // Arrange
         String recipeId = INVALID_NEW_EMPTY.getId();
-        String title = VALID_NEW_TITLE_VALID.getTitle();
-        String description = "Doesn't matter what's here as returning an error message!";
 
-        whenShortTextValidationReturnValidated(title);
-        whenLongTextValidationReturnTooLongError(description);
+        String title = new StringMaker().
+                makeStringOfExactLength(shortTextMaxLength).
+                build();
+
+        String description = new StringMaker().
+                makeStringOfExactLength(longTextMaxLength).
+                addOneCharacter().
+                build();
         // Act
         SUT.start(recipeId);
         simulateNothingReturnedFromDatabase(recipeId);
@@ -280,11 +286,15 @@ public class RecipeIdentityEditorViewModelTest {
     public void startNewRecipeId_validTitleInvalidDescription_recipeModelStatusINVALID_CHANGED() {
         // Arrange
         String recipeId = INVALID_NEW_EMPTY.getId();
-        String title = VALID_NEW_TITLE_VALID.getTitle();
-        String description = "Doesn't matter what's here as returning an error message!";
 
-        whenShortTextValidationReturnValidated(title);
-        whenLongTextValidationReturnTooLongError(description);
+        String title = new StringMaker().
+                makeStringOfExactLength(shortTextMaxLength).
+                build();
+
+        String description = new StringMaker().
+                makeStringOfExactLength(longTextMaxLength).
+                addOneCharacter().
+                build();
         // Act
         SUT.start(recipeId);
         simulateNothingReturnedFromDatabase(recipeId);
@@ -303,9 +313,6 @@ public class RecipeIdentityEditorViewModelTest {
         String recipeId = INVALID_NEW_EMPTY.getId();
         String title = VALID_NEW_COMPLETE.getTitle();
         String description = VALID_NEW_COMPLETE.getDescription();
-
-        whenShortTextValidationReturnValidated(title);
-        whenLongTextValidationReturnValidated(description);
         // Act
         SUT.start(recipeId);
         simulateNothingReturnedFromDatabase(recipeId);
@@ -324,9 +331,6 @@ public class RecipeIdentityEditorViewModelTest {
         String validTitle = VALID_NEW_COMPLETE.getTitle();
         String validDescription = VALID_NEW_COMPLETE.getDescription();
         long time = VALID_NEW_COMPLETE.getCreateDate();
-
-        whenShortTextValidationReturnValidated(validTitle);
-        whenLongTextValidationReturnValidated(validDescription);
         whenTimeProviderReturnTime(time);
 
         // Act
@@ -347,9 +351,6 @@ public class RecipeIdentityEditorViewModelTest {
         String validTitle = VALID_NEW_COMPLETE.getTitle();
         String validDescription = VALID_NEW_COMPLETE.getDescription();
         long time = VALID_NEW_COMPLETE.getCreateDate();
-
-        whenShortTextValidationReturnValidated(validTitle);
-        whenLongTextValidationReturnValidated(validDescription);
         whenTimeProviderReturnTime(time);
         // Act
         SUT.start(recipeId);
@@ -369,9 +370,6 @@ public class RecipeIdentityEditorViewModelTest {
         String recipeId = VALID_EXISTING_COMPLETE.getId();
         String title = VALID_EXISTING_COMPLETE.getTitle();
         String description = VALID_EXISTING_COMPLETE.getDescription();
-
-        whenShortTextValidationReturnValidated(title);
-        whenLongTextValidationReturnValidated(description);
         // Act
         SUT.start(recipeId);
         verify(repoMock).getById(eq(recipeId), repoCallback.capture());
@@ -385,11 +383,6 @@ public class RecipeIdentityEditorViewModelTest {
     public void startValidExistingRecipeId_recipeModelStatusVALID_UNCHANGED() {
         // Arrange
         String recipeId = VALID_EXISTING_COMPLETE.getId();
-        String title = VALID_EXISTING_COMPLETE.getTitle();
-        String description = VALID_EXISTING_COMPLETE.getDescription();
-
-        whenShortTextValidationReturnValidated(title);
-        whenLongTextValidationReturnValidated(description);
         // Act
         SUT.start(recipeId);
         verify(repoMock).getById(eq(recipeId), repoCallback.capture());
@@ -452,12 +445,8 @@ public class RecipeIdentityEditorViewModelTest {
         // Arrange
         String cloneFromRecipeId = VALID_FROM_ANOTHER_USER.getId();
         String cloneToRecipeId = INVALID_NEW_EMPTY.getId();
-        String title = VALID_FROM_ANOTHER_USER.getTitle();
-        String description = VALID_CLONED_DESCRIPTION_UPDATED.getDescription();
         long time = VALID_CLONED_DESCRIPTION_UPDATED.getCreateDate();
 
-        whenShortTextValidationReturnValidated(title);
-        whenLongTextValidationReturnValidated(description);
         whenTimeProviderReturnTime(time);
         // Act
         SUT.startByCloningModel(cloneFromRecipeId, cloneToRecipeId);
@@ -506,59 +495,6 @@ public class RecipeIdentityEditorViewModelTest {
     private void simulateGetValidFromAnotherUserFromDatabase() {
         verify(repoMock).getById(eq(VALID_FROM_ANOTHER_USER.getId()), repoCallback.capture());
         repoCallback.getValue().onEntityLoaded(VALID_FROM_ANOTHER_USER);
-    }
-
-    private void whenShortTextValidationReturnValidated(String title) {
-        when(textValidatorMock.validateText(eq(getShortTextRequest(title)))).
-                thenReturn(getShortTextValidResponse(title));
-    }
-
-    private void whenShortTextValidationReturnTooShortError(String title) {
-        when(textValidatorMock.validateText(eq(getShortTextRequest(title)))).
-                thenReturn(getShortTextTooShortResponse(title));
-    }
-
-    private void whenLongTextValidationReturnValidated(String description) {
-        when(textValidatorMock.validateText(getLongTextRequest(description))).
-                thenReturn(getLongTextValidResponse(description));
-    }
-
-    private void whenLongTextValidationReturnTooLongError(String description) {
-        when(textValidatorMock.validateText(getLongTextRequest(description))).
-                thenReturn(getLongTextTooLongValidationResponse(description));
-    }
-
-    private TextValidator.Request getShortTextRequest(String title) {
-        return new TextValidator.Request(TextValidator.RequestType.SHORT_TEXT, title);
-    }
-
-    private TextValidator.Response getShortTextValidResponse(String title) {
-        return new TextValidator.Response(TextValidator.Result.VALID, title,
-                SHORT_TEXT_MIN_LENGTH, SHORT_TEXT_MAX_LENGTH);
-    }
-
-    private TextValidator.Response getShortTextTooShortResponse(String title) {
-        return new TextValidator.Response(TextValidator.Result.TOO_SHORT, title,
-                SHORT_TEXT_MIN_LENGTH, SHORT_TEXT_MAX_LENGTH);
-    }
-
-    private TextValidator.Response getShortTextTooLongResponse(String title) {
-        return new TextValidator.Response(TextValidator.Result.TOO_LONG, title,
-                SHORT_TEXT_MIN_LENGTH, SHORT_TEXT_MAX_LENGTH);
-    }
-
-    private TextValidator.Request getLongTextRequest(String description) {
-        return new TextValidator.Request(TextValidator.RequestType.LONG_TEXT, description);
-    }
-
-    private TextValidator.Response getLongTextValidResponse(String description) {
-        return new TextValidator.Response(TextValidator.Result.VALID, description,
-                LONG_TEXT_MIN_LENGTH, LONG_TEXT_MAX_LENGTH);
-    }
-
-    private TextValidator.Response getLongTextTooLongValidationResponse(String description) {
-        return new TextValidator.Response(TextValidator.Result.TOO_LONG, description,
-                LONG_TEXT_MIN_LENGTH, LONG_TEXT_MAX_LENGTH);
     }
     // endregion helper methods --------------------------------------------------------------------
 

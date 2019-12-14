@@ -2,6 +2,7 @@ package com.example.peter.thekitchenmenu.ui.detail.ingredient;
 
 import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.testdata.TestDataIngredientEntity;
 
 import org.junit.*;
@@ -19,7 +20,7 @@ public class IngredientDuplicateCheckerTest {
     private String VALID_NAME_NO_DUPLICATE =
             TestDataIngredientEntity.getValidNameNoDuplicate();
     private IngredientEntity VALID_DUPLICATE =
-            TestDataIngredientEntity.getExistingValidNameValidDescriptionNoConversionFactor();
+            TestDataIngredientEntity.getExistingValidWithConversionFactor();
     private String VALID_NAME_DUPLICATE_IS_BEING_EDITED =
             TestDataIngredientEntity.getNewValidName().getName();
     private String INGREDIENT_ID =
@@ -29,9 +30,9 @@ public class IngredientDuplicateCheckerTest {
 
     // region helper fields ------------------------------------------------------------------------
     @Mock
-    DataSource<IngredientEntity> dataSourceMock;
+    RepositoryIngredient repoMock;
     @Captor
-    ArgumentCaptor<DataSource.GetAllCallback<IngredientEntity>> getAllCallbackArgumentCaptor;
+    ArgumentCaptor<DataSource.GetAllCallback<IngredientEntity>> getRepoCallbackCaptor;
     @Mock
     IngredientDuplicateChecker.DuplicateCallback callbackMock;
     // endregion helper fields ---------------------------------------------------------------------
@@ -41,7 +42,7 @@ public class IngredientDuplicateCheckerTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        SUT = new IngredientDuplicateChecker(dataSourceMock);
+        SUT = new IngredientDuplicateChecker(repoMock);
     }
 
     @Test
@@ -50,7 +51,7 @@ public class IngredientDuplicateCheckerTest {
         // Act
         SUT.checkForDuplicatesAndNotify("", INGREDIENT_ID, callbackMock);
         // Assert
-        verifyNoMoreInteractions(dataSourceMock);
+        verifyNoMoreInteractions(repoMock);
     }
 
     @Test
@@ -59,7 +60,7 @@ public class IngredientDuplicateCheckerTest {
         // Act
         SUT.checkForDuplicatesAndNotify("validName", INGREDIENT_ID, callbackMock);
         // Assert
-        verify(dataSourceMock).getAll(eq(SUT));
+        verify(repoMock).getAll(eq(SUT));
     }
 
     @Test
@@ -97,8 +98,8 @@ public class IngredientDuplicateCheckerTest {
 
     // region helper methods -----------------------------------------------------------------------
     private void simulateGetAllFromDatabase() {
-        verify(dataSourceMock).getAll(getAllCallbackArgumentCaptor.capture());
-        getAllCallbackArgumentCaptor.getValue().onAllLoaded(LIST_OF_ALL_INGREDIENTS);
+        verify(repoMock).getAll(getRepoCallbackCaptor.capture());
+        getRepoCallbackCaptor.getValue().onAllLoaded(LIST_OF_ALL_INGREDIENTS);
     }
     // endregion helper methods --------------------------------------------------------------------
 

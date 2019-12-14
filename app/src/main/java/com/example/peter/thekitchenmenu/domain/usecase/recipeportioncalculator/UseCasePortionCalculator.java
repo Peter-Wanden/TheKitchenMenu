@@ -154,6 +154,7 @@ public class UseCasePortionCalculator
                 new DataSource.GetEntityCallback<IngredientEntity>() {
                     @Override
                     public void onEntityLoaded(IngredientEntity ingredientEntity) {
+                        ingredientId = ingredientEntity.getId();
                         UseCasePortionCalculator.this.ingredientEntity = ingredientEntity;
                         loadPortions();
                     }
@@ -254,7 +255,10 @@ public class UseCasePortionCalculator
     }
 
     private boolean isConversionFactorChanged() {
-        return modelIn.getConversionFactor() != unitOfMeasure.getConversionFactor();
+        if (Double.compare(modelIn.getConversionFactor(), unitOfMeasure.getConversionFactor()) !=0) {
+            return conversionFactorChanged = true;
+        }
+        return false;
     }
 
     private void processConversionFactor() {
@@ -272,20 +276,24 @@ public class UseCasePortionCalculator
     }
 
     private boolean isTotalUnitOneChanged() {
-        return modelIn.getTotalUnitOne() != unitOfMeasure.getTotalUnitOne();
+        if (Double.compare(modelIn.getTotalUnitOne(), unitOfMeasure.getTotalUnitOne()) != 0) {
+            return totalUnitOneChanged = true;
+        }
+        return false;
     }
 
     private void processTotalMeasurementOne() {
-        totalUnitOneChanged = true;
         isTotalUnitOneSet = unitOfMeasure.isTotalUnitOneSet(modelIn.getTotalUnitOne());
     }
 
     private boolean isTotalUnitTwoChanged() {
-        return modelIn.getTotalUnitTwo() != unitOfMeasure.getTotalUnitTwo();
+        if (modelIn.getTotalUnitTwo() != unitOfMeasure.getTotalUnitTwo()) {
+            return totalUnitTwoChanged = true;
+        }
+        return false;
     }
 
     private void processTotalMeasurementTwo() {
-        totalUnitTwoChanged = true;
         isTotalUnitTwoSet = unitOfMeasure.isTotalUnitTwoSet(modelIn.getTotalUnitTwo());
     }
 
@@ -340,16 +348,17 @@ public class UseCasePortionCalculator
     }
 
     private ResultStatus getResultStatus() {
+
         if (portionsChanged && !isPortionsSet) {
             return ResultStatus.INVALID_PORTIONS;
         }
         if (conversionFactorChanged && !isConversionFactorSet) {
             return ResultStatus.INVALID_CONVERSION_FACTOR;
         }
-        if (totalUnitOneChanged && !isTotalUnitOneSet && unitOfMeasure.isValidMeasurement()) {
+        if (totalUnitOneChanged && !isTotalUnitOneSet) {
             return ResultStatus.INVALID_TOTAL_UNIT_ONE;
         }
-        if (totalUnitTwoChanged && !isTotalUnitTwoSet && unitOfMeasure.isValidMeasurement()) {
+        if (totalUnitTwoChanged && !isTotalUnitTwoSet) {
             return ResultStatus.INVALID_TOTAL_UNIT_TWO;
         }
         if (!unitOfMeasure.isValidMeasurement()) {

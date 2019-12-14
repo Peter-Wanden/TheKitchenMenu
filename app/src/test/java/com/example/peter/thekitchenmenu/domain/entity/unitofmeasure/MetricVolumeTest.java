@@ -50,7 +50,10 @@ public class MetricVolumeTest {
 
     @Test
     public void totalBaseUnitsAreSet_inRangeMax_true() {
+        // Arrange
+        // Act
         assertTrue(SUT.isTotalBaseUnitsSet(MAX_VOLUME));
+        // Assert
         assertEquals(MAX_VOLUME, SUT.getTotalBaseUnits(), DELTA);
     }
 
@@ -89,26 +92,17 @@ public class MetricVolumeTest {
         assertEquals(expectedUnitOne, SUT.getItemUnitOne(), DELTA);
     }
 
-    //////////////////////////// PACK MEASUREMENT ONE TESTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
     @Test
-    public void testMeasurementUnitOneInRangeMax() { // IN RANGE MAX
-
-        // Set to max
-        assertThat(SUT.isTotalUnitOneSet(MAX_VOLUME), is(true));
-
-        // Check value set
-        assertThat(SUT.getTotalUnitOne(), is(0.));
-        assertThat(SUT.getTotalUnitTwo(), is(10));
-        assertThat(SUT.getItemUnitOne(), is(0.));
-        assertThat(SUT.getItemUnitTwo(), is(10));
-        assertThat(SUT.getTotalBaseUnits(), is(MAX_VOLUME));
-
-        System.out.println();
+    public void isUnitOneSet_inRangeMax_true() {
+        // Arrange
+        // Act
+        assertTrue(SUT.isTotalUnitOneSet(MAX_VOLUME));
+        // Assert
+        assertEquals(MAX_VOLUME, SUT.getTotalBaseUnits(), DELTA);
     }
 
     @Test
-    public void testMeasurementUnitOneOutOfRangeMax() { // OUT OF RANGE MAX
+    public void unitOneOutOfRangeMax() { // OUT OF RANGE MAX
 
         // Set to max plus 1
         assertThat(SUT.isTotalUnitOneSet(10001), is(false));
@@ -124,7 +118,7 @@ public class MetricVolumeTest {
     }
 
     @Test
-    public void testMeasurementUnitOneInRangeMin() { // IN RANGE MIN
+    public void unitOneInRangeMin() { // IN RANGE MIN
 
         // Set to minimum
         assertThat(SUT.isTotalUnitOneSet(1.), is(true));
@@ -147,25 +141,16 @@ public class MetricVolumeTest {
         // Assert
     }
 
-    //////////////////////////// PACK MEASUREMENT TWO TESTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
     @Test
-    public void testMaximumInRangeMeasurementUnitTwo() { // IN RANGE MAX
-
-        // Set to max
-        assertThat(SUT.isTotalUnitTwoSet(10), is(true));
-
-        // Check value set
-        assertThat(SUT.getTotalUnitOne(), is(0.));
-        assertThat(SUT.getTotalUnitTwo(), is(10));
-        assertThat(SUT.getItemUnitOne(), is(0.));
-        assertThat(SUT.getItemUnitTwo(), is(10));
-
-        System.out.println();
+    public void isTotalUnitTwoSet_inRangeMax_true() {
+        // Arrange
+        // Act
+        assertTrue(SUT.isTotalUnitTwoSet((int) (MAX_VOLUME / 1000)));
+        // Assert
     }
 
     @Test
-    public void testMaximumOutOfRangeMeasurementUnitTwo() { // OUT OF RANGE MAX
+    public void testMaxOutOfRangeUnitTwo() { // OUT OF RANGE MAX
 
         // Set to max +1
         assertThat(SUT.isTotalUnitTwoSet(11), is(false));
@@ -181,7 +166,7 @@ public class MetricVolumeTest {
     }
 
     @Test
-    public void testMinInRangeMeasurementUnitTwo() { // IN RANGE MIN
+    public void testMinInRangeUnitTwo() { // IN RANGE MIN
 
         // Set to min
         assertThat(SUT.isTotalUnitTwoSet(1), is(true));
@@ -208,10 +193,8 @@ public class MetricVolumeTest {
         assertThat(SUT.getTotalBaseUnits(), is(0.));
     }
 
-    //////////////////////////// PACK ONE AND TWO TESTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
     @Test
-    public void testInRangeMeasurementOneAndTwo() { // CONDITION: IN RANGE
+    public void testInRangeUnitOneAndTwo() { // CONDITION: IN RANGE
 
         // Set arbitrary in range value
         assertThat(SUT.isTotalUnitOneSet(500), is(true));
@@ -224,8 +207,6 @@ public class MetricVolumeTest {
         assertThat(SUT.getItemUnitTwo(), is(5));
         assertThat(SUT.getTotalBaseUnits(), is(5500.));
     }
-
-    //////////////////////////// SETTING NUMBER OF ITEMS TESTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
     @Test
     public void testSetNumberOfItemsMinInRangeWithNoBaseUnits() { // CONDITION: BASE SI NOT YET SET - IN RANGE MIN
@@ -446,6 +427,17 @@ public class MetricVolumeTest {
         assertTrue(SUT.isNumberOfItemsSet(numberOfItemsNonDivisibleByBaseUnits));
         // Assert
         assertEquals(unitOneFractional, SUT.getItemUnitOne(), DELTA);
+    }
+
+    @Test
+    public void isTotalUnitOnSet_noOfItemsSet_baseUnitsDividedByUnitsAndItems() {
+        // Arrange
+        assertTrue(SUT.isNumberOfItemsSet(9));
+        assertTrue(SUT.isItemBaseUnitsSet(250));
+        // Act
+        // Assert
+        assertTrue(SUT.isTotalUnitOneSet(8000));
+        System.out.println(SUT);
     }
 
     @Test
