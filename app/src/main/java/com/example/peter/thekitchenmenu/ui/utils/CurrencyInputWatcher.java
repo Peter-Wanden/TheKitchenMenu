@@ -10,7 +10,7 @@ import java.text.NumberFormat;
 
 public class CurrencyInputWatcher implements TextWatcher {
 
-    private static final String TAG = "tkm-PriceInputWatcher";
+    private static final String TAG = "tkm-" + CurrencyInputWatcher.class.getSimpleName() + ":";
 
     private final WeakReference<EditText> editTextWeakReference;
 

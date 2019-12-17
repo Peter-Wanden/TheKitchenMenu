@@ -23,7 +23,8 @@ public class RecipeIngredientListActivity
         extends AppCompatActivity
         implements RecipeIngredientListNavigator, RecipeIngredientListItemNavigator {
 
-    private static final String TAG = "tkm-RecipeIngredientLis";
+    private static final String TAG = "tkm-" + RecipeIngredientListActivity.class.getSimpleName()
+        + ":";
 
     public static final String EXTRA_RECIPE_ID = "RECIPE_ID";
 
@@ -137,7 +138,6 @@ public class RecipeIngredientListActivity
 
     @Override
     public void deleteRecipeIngredient(String recipeIngredientId) {
-        Log.d(TAG, "deleteRecipeIngredient: " + recipeIngredientId);
         recipeIngredientListViewModel.deleteRecipeIngredient(recipeIngredientId);
     }
 

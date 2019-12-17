@@ -20,7 +20,8 @@ public class FavoriteProductViewerViewModel
         extends AndroidViewModel
         implements DataSource.GetEntityCallback<FavoriteProductEntity> {
 
-    private static final String TAG = "tkm-FavProductViewerVM";
+    private static final String TAG = "tkm-" + FavoriteProductViewerViewModel.class.getSimpleName()
+            + ":";
 
     private FavoriteProductViewerNavigator navigator;
 

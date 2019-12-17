@@ -21,8 +21,7 @@ import java.util.Map;
 /**
  * Returns a list of ingredients for a given recipeId
  */
-public class UseCaseRecipeIngredientListItems
-        extends
+public class UseCaseRecipeIngredientListItems extends
         UseCaseInteractor<UseCaseRecipeIngredientListRequest, UseCaseRecipeIngredientListResponse> {
 
     private RepositoryRecipeIngredient repoRecipeIngredient;

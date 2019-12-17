@@ -57,13 +57,13 @@ public class RecipePortionsEditorViewModelTest {
             TestDataRecipePortionsEntity.getExistingClonedUpdatedSittingsServings();
     private final RecipePortionsEntity EXISTING_VALID_FROM_ANOTHER_USER =
             TestDataRecipePortionsEntity.getValidCloneFromAnotherUser();
-    private static final RecipeModelStatus INVALID_UNCHANGED =
+    private static final RecipeComponentStatus INVALID_UNCHANGED =
             TestDataRecipeValidator.getPortionsModelStatusUnchangedInvalid();
-    private static final RecipeModelStatus INVALID_CHANGED =
+    private static final RecipeComponentStatus INVALID_CHANGED =
             TestDataRecipeValidator.getPortionsModelStatusChangedInvalid();
-    private static final RecipeModelStatus VALID_UNCHANGED =
+    private static final RecipeComponentStatus VALID_UNCHANGED =
             TestDataRecipeValidator.getPortionsModelStatusUnchangedValid();
-    private static final RecipeModelStatus VALID_CHANGED =
+    private static final RecipeComponentStatus VALID_CHANGED =
             TestDataRecipeValidator.getPortionsModelStatusChangedValid();
     // endregion constants -------------------------------------------------------------------------
 
@@ -121,7 +121,7 @@ public class RecipePortionsEditorViewModelTest {
         SUT.start(NEW_EMPTY.getRecipeId());
         simulateNothingReturnedFromDatabase();
         // Assert
-        verify(modelValidationSubmitterMock).submitModelStatus(eq(VALID_UNCHANGED));
+        verify(modelValidationSubmitterMock).submitRecipeComponentStatus(eq(VALID_UNCHANGED));
     }
 
     @Test
@@ -148,7 +148,7 @@ public class RecipePortionsEditorViewModelTest {
         SUT.setServingsInView(String.valueOf(NEW_INVALID.getServings()));
         SUT.setSittingsInView(String.valueOf(NEW_INVALID.getSittings()));
         // Assert
-        verify(modelValidationSubmitterMock, times((2))).submitModelStatus(eq(INVALID_CHANGED));
+        verify(modelValidationSubmitterMock, times((2))).submitRecipeComponentStatus(eq(INVALID_CHANGED));
     }
 
     @Test
@@ -161,7 +161,7 @@ public class RecipePortionsEditorViewModelTest {
         SUT.setServingsInView(String.valueOf(NEW_INVALID_SERVINGS_VALID_SITTINGS.getServings()));
         SUT.setSittingsInView(String.valueOf(NEW_INVALID_SERVINGS_VALID_SITTINGS.getSittings()));
         // Assert
-        verify(modelValidationSubmitterMock).submitModelStatus(eq(INVALID_CHANGED));
+        verify(modelValidationSubmitterMock).submitRecipeComponentStatus(eq(INVALID_CHANGED));
     }
 
     @Test
@@ -174,7 +174,7 @@ public class RecipePortionsEditorViewModelTest {
         SUT.setServingsInView(String.valueOf(NEW_VALID_SERVINGS_INVALID_SITTINGS.getServings()));
         SUT.setSittingsInView(String.valueOf(NEW_VALID_SERVINGS_INVALID_SITTINGS.getSittings()));
         // Assert
-        verify(modelValidationSubmitterMock).submitModelStatus(eq(INVALID_CHANGED));
+        verify(modelValidationSubmitterMock).submitRecipeComponentStatus(eq(INVALID_CHANGED));
     }
 
     @Test
@@ -201,7 +201,7 @@ public class RecipePortionsEditorViewModelTest {
         SUT.setServingsInView(String.valueOf(NEW_VALID.getServings()));
         SUT.setSittingsInView(String.valueOf(NEW_VALID.getSittings()));
         // Assert
-        verify(modelValidationSubmitterMock, times((2))).submitModelStatus(eq(VALID_CHANGED));
+        verify(modelValidationSubmitterMock, times((2))).submitRecipeComponentStatus(eq(VALID_CHANGED));
     }
 
     @Test
@@ -250,7 +250,7 @@ public class RecipePortionsEditorViewModelTest {
         SUT.start(EXISTING_VALID.getRecipeId());
         simulateExistingValidReturnedFromDatabase();
         // Assert
-        verify(modelValidationSubmitterMock).submitModelStatus(eq(VALID_UNCHANGED));
+        verify(modelValidationSubmitterMock).submitRecipeComponentStatus(eq(VALID_UNCHANGED));
     }
 
     @Test
@@ -324,7 +324,7 @@ public class RecipePortionsEditorViewModelTest {
         SUT.startByCloningModel(EXISTING_VALID.getRecipeId(), NEW_EMPTY.getRecipeId());
         simulateExistingValidReturnedFromDatabase();
         // Assert
-        verify(modelValidationSubmitterMock).submitModelStatus(eq(VALID_UNCHANGED));
+        verify(modelValidationSubmitterMock).submitRecipeComponentStatus(eq(VALID_UNCHANGED));
     }
 
     @Test

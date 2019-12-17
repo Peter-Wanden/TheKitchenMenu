@@ -25,7 +25,8 @@ public class FavoriteProductEditorViewModel
         extends AndroidViewModel
         implements DataSource.GetEntityCallback<FavoriteProductEntity> {
 
-    private static final String TAG = "tkm-FavProductEditorVM";
+    private static final String TAG = "tkm-" + FavoriteProductEditorViewModel.class.getSimpleName()
+            + ":";
 
     private Resources resources;
     private AddEditFavoriteProductNavigator navigator;
@@ -334,7 +335,7 @@ public class FavoriteProductEditorViewModel
         }
 
         if (favoriteProduct.isEmpty()) {
-            Log.d(TAG, "saveFavoriteProduct: cannot save empty favorite product");
+            System.out.println(TAG + "saveFavoriteProduct: cannot save empty favorite product");
         }
     }
 

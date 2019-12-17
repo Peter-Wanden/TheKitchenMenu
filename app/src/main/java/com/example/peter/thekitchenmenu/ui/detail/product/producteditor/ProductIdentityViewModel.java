@@ -18,7 +18,7 @@ import androidx.lifecycle.MutableLiveData;
 
 public class ProductIdentityViewModel extends AndroidViewModel {
 
-    private static final String TAG = "tkm-ProductIdentityVM";
+    private static final String TAG = "tkm-" + ProductIdentityViewModel.class.getSimpleName() + ":";
 
     private Resources resources;
     private TextValidator validationHandler;
@@ -59,8 +59,6 @@ public class ProductIdentityViewModel extends AndroidViewModel {
                 shoppingListItemNameChanged();
             }
         });
-
-        Log.d(TAG, "ProductIdentityViewModel: recreated");
     }
 
     MutableLiveData<ProductIdentityModel> getExistingIdentityModel() {

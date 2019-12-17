@@ -101,7 +101,7 @@ public class RecipeCourseEditorViewModel
     }
 
     private void submitModelStatus(boolean isChanged, boolean isValid) {
-        modelSubmitter.submitModelStatus(new RecipeModelStatus(
+        modelSubmitter.submitRecipeComponentStatus(new RecipeComponentStatus(
                 RecipeValidator.ModelName.COURSES_MODEL,
                 isChanged,
                 isValid

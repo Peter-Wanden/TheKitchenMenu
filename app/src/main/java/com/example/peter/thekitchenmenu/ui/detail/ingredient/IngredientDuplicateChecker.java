@@ -10,7 +10,7 @@ import java.util.List;
 
 public class IngredientDuplicateChecker implements DataSource.GetAllCallback<IngredientEntity> {
 
-    interface DuplicateCallback {
+    public interface DuplicateCallback {
         void duplicateCheckResult(String duplicateId);
     }
 
@@ -19,13 +19,13 @@ public class IngredientDuplicateChecker implements DataSource.GetAllCallback<Ing
     private DuplicateCallback callback;
     private String keyToCheck;
     private String ingredientId;
-    static final String NO_DUPLICATE_FOUND = "";
+    public static final String NO_DUPLICATE_FOUND = "";
 
     public IngredientDuplicateChecker(RepositoryIngredient repository) {
         this.repository = repository;
     }
 
-    void checkForDuplicatesAndNotify(String nameToCheck,
+    public void checkForDuplicatesAndNotify(String nameToCheck,
                                      String ingredientId,
                                      DuplicateCallback callback) {
         if (!Strings.isEmptyOrWhitespace(nameToCheck)) {

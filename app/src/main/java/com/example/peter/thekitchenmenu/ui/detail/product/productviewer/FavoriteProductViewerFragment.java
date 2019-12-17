@@ -19,7 +19,8 @@ import com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductE
 
 public class FavoriteProductViewerFragment extends Fragment {
 
-    private static final String TAG = "tkm-FavProdViewerFrag";
+    private static final String TAG = "tkm-" + FavoriteProductViewerFragment.class.getSimpleName() +
+            ":";
 
     private FavoriteProductViewerFragmentBinding binding;
     private FavoriteProductViewerViewModel viewModel;

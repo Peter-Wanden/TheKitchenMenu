@@ -12,11 +12,13 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.UseCaseConversionFactorStatus;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeIdentity.UseCaseRecipeIdentity;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeIdentityandduration.UseCaseRecipeIdentityAndDurationList;
+import com.example.peter.thekitchenmenu.domain.usecase.ingredient.UseCaseIngredient;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.UseCaseRecipeIdentity;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeidentityandduration.UseCaseRecipeIdentityAndDurationList;
 import com.example.peter.thekitchenmenu.domain.usecase.recipecourse.UseCaseRecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.UseCaseRecipeIngredientListItems;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.UseCaseTextValidator;
+import com.example.peter.thekitchenmenu.ui.detail.ingredient.IngredientDuplicateChecker;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeportioncalculator.UseCasePortionCalculator;
@@ -124,10 +126,25 @@ public class UseCaseFactory {
 
     public UseCaseTextValidator provideTextValidatorUseCase() {
         Resources resources = application.getResources();
-        return new UseCaseTextValidator(
-                resources.getInteger(R.integer.input_validation_short_text_min_length),
-                resources.getInteger(R.integer.input_validation_short_text_max_length),
-                resources.getInteger(R.integer.input_validation_long_text_min_length),
-                resources.getInteger(R.integer.input_validation_long_text_max_length));
+
+        return new UseCaseTextValidator.Builder().
+                setShortTextMinLength(
+                        resources.getInteger(R.integer.input_validation_short_text_min_length)).
+                setShrotTextMaxLength(
+                        resources.getInteger(R.integer.input_validation_short_text_max_length)).
+                setLongTextMinLength(
+                        resources.getInteger(R.integer.input_validation_long_text_min_length)).
+                setLongTextMaxLength(
+                        resources.getInteger(R.integer.input_validation_long_text_max_length)).
+                build();
+    }
+
+    public UseCaseIngredient provideIngredientEditorUseCase() {
+        return new UseCaseIngredient(
+                ingredientRepository,
+                new UniqueIdProvider(),
+                new TimeProvider(),
+                new IngredientDuplicateChecker(ingredientRepository)
+                );
     }
 }

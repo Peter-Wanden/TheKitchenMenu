@@ -28,7 +28,7 @@ public class ProductCatalogActivity
         extends AppCompatActivity
         implements ProductNavigator, ProductItemNavigator {
 
-    private static final String TAG = "tkm-ProductCatalogAct";
+    private static final String TAG = "tkm-" + ProductCatalogActivity.class.getSimpleName() + ":";
 
     private ProductCatalogViewModel viewModel;
     private ProductCatalogActivityBinding binding;
@@ -96,7 +96,7 @@ public class ProductCatalogActivity
 
     @Override
     public void addNewProduct() {
-        Log.d(TAG, "addNewProduct: starting ProductEditor for result");
+        System.out.println(TAG + "addNewProduct: starting ProductEditor for result");
         Intent intent = new Intent(this, ProductEditorActivity.class);
         startActivityForResult(intent, ProductEditorActivity.REQUEST_ADD_EDIT_PRODUCT);
     }

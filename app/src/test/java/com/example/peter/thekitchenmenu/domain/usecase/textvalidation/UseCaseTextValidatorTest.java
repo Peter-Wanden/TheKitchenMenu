@@ -27,11 +27,12 @@ public class UseCaseTextValidatorTest {
         MockitoAnnotations.initMocks(this);
         handler = new UseCaseHandler(new UseCaseSchedulerMock());
 
-        SUT = new UseCaseTextValidator(
-                textLengthValues[0],
-                textLengthValues[1],
-                textLengthValues[2],
-                textLengthValues[3]);
+        SUT = new UseCaseTextValidator.Builder().
+                setShortTextMinLength(textLengthValues[0]).
+                setShrotTextMaxLength(textLengthValues[1]).
+                setLongTextMinLength(textLengthValues[2]).
+                setLongTextMaxLength(textLengthValues[3]).
+                build();
     }
 
     @Test

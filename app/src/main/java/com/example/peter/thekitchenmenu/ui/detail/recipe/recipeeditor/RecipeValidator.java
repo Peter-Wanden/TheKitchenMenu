@@ -7,7 +7,7 @@ import static com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.Rec
 
 public class RecipeValidator implements RecipeValidation.RecipeValidatorModelSubmission {
 
-    private static final String TAG = "tkm-RecipeValidator";
+    private static final String TAG = "tkm-" + RecipeValidator.class.getSimpleName() + ":";
 
     enum RecipeValidationStatus {
         INVALID_MISSING_MODELS,
@@ -25,7 +25,7 @@ public class RecipeValidator implements RecipeValidation.RecipeValidatorModelSub
     }
 
     private RecipeValidation.RecipeEditor recipeEditor;
-    private HashMap<ModelName, RecipeModelStatus> recipeModelStatusList = new LinkedHashMap<>();
+    private HashMap<ModelName, RecipeComponentStatus> recipeModelStatusList = new LinkedHashMap<>();
     private final int numberOfModels = ModelName.values().length;
 
     void setRecipeEditor(RecipeValidation.RecipeEditor recipeEditor) {
@@ -33,7 +33,7 @@ public class RecipeValidator implements RecipeValidation.RecipeValidatorModelSub
     }
 
     @Override
-    public void submitModelStatus(RecipeModelStatus modelStatus) {
+    public void submitRecipeComponentStatus(RecipeComponentStatus modelStatus) {
         recipeModelStatusList.put(modelStatus.getModelName(), modelStatus);
         recipeEditor.setValidationStatus(getRecipeValidationStatus());
     }
@@ -46,7 +46,7 @@ public class RecipeValidator implements RecipeValidation.RecipeValidatorModelSub
             boolean recipeIsValid = true;
 
             for (ModelName modelName : ModelName.values()) {
-                RecipeModelStatus modelStatus = recipeModelStatusList.get(modelName);
+                RecipeComponentStatus modelStatus = recipeModelStatusList.get(modelName);
 
                 if (modelStatus.isChanged())
                     recipeHasChanged = true;

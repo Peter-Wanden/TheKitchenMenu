@@ -11,11 +11,8 @@ import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.domain.UseCaseFactory;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
-import com.example.peter.thekitchenmenu.ui.detail.ingredient.IngredientDuplicateChecker;
 import com.example.peter.thekitchenmenu.ui.detail.ingredient.IngredientEditorViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.ingredient.IngredientViewerViewModel;
-import com.example.peter.thekitchenmenu.utils.TimeProvider;
-import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 
 public class ViewModelFactoryIngredient extends ViewModelProvider.NewInstanceFactory {
 
@@ -60,12 +57,9 @@ public class ViewModelFactoryIngredient extends ViewModelProvider.NewInstanceFac
             // noinspection unchecked
             return (T) new IngredientEditorViewModel(
                     application.getResources(),
-                    repositoryIngredient,
                     useCaseHandler,
                     useCaseFactory.provideTextValidatorUseCase(),
-                    new UniqueIdProvider(),
-                    new TimeProvider(),
-                    new IngredientDuplicateChecker(repositoryIngredient));
+                    useCaseFactory.provideIngredientEditorUseCase());
 
         } else if (modelClass.isAssignableFrom(IngredientViewerViewModel.class)) {
             // noinspection unchecked

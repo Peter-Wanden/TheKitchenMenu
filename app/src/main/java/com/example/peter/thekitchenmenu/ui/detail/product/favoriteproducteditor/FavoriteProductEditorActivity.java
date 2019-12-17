@@ -28,7 +28,8 @@ public class FavoriteProductEditorActivity
         extends AppCompatActivityDialogActions
         implements AddEditFavoriteProductNavigator {
 
-    private static final String TAG = "tkm-FavProductEditAct";
+    private static final String TAG = "tkm-" + FavoriteProductEditorActivity.class.getSimpleName()
+            + ":";
 
     public static final int REQUEST_ADD_EDIT_FAVORITE_PRODUCT = 3;
     public static final int RESULT_ADD_EDIT_FAVORITE_PRODUCT_OK = RESULT_FIRST_USER + 1;
@@ -137,7 +138,6 @@ public class FavoriteProductEditorActivity
 
     @Override
     public void onFavoriteProductSaved() {
-        Log.d(TAG, "onFavoriteProductSaved: setResult=RESULT_ADD_EDIT_FAVORITE_PRODUCT_OK, productId");
         Intent intent = new Intent();
         intent.putExtra(ProductEditorActivity.EXTRA_PRODUCT_ID, viewModel.getProductId());
         setResult(RESULT_ADD_EDIT_FAVORITE_PRODUCT_OK, intent);
@@ -159,8 +159,8 @@ public class FavoriteProductEditorActivity
     public void showUnsavedChangesDialog() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
-        Fragment previousDialog = getSupportFragmentManager().findFragmentByTag(
-                UnsavedChangesDialogFragment.TAG);
+        Fragment previousDialog = getSupportFragmentManager().
+                findFragmentByTag(UnsavedChangesDialogFragment.TAG);
 
         if (previousDialog != null)
             ft.remove(previousDialog);
@@ -178,7 +178,6 @@ public class FavoriteProductEditorActivity
 
     @Override
     public void onFavoriteEditAddCanceled() {
-        Log.d(TAG, "onFavoriteEditAddCanceled: setResult=RESULT_ADD_EDIT_FAVORITE_CANCELED, productId");
         Intent intent = new Intent();
         intent.putExtra(ProductEditorActivity.EXTRA_PRODUCT_ID, viewModel.getProductId());
         setResult(RESULT_ADD_EDIT_FAVORITE_CANCELED, intent);

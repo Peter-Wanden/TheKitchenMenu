@@ -25,7 +25,7 @@ import static com.example.peter.thekitchenmenu.ui.imageeditor.ImageEditorViewMod
 
 public class ImageEditorFragment extends Fragment {
 
-    private static final String TAG = "ImageEditorFragment";
+    private static final String TAG = "tkm-" + ImageEditorFragment.class.getSimpleName() + ":";
 
     private ImageEditorBinding imageEditorBinding;
     private ImageEditorViewModel viewModel;

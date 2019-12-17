@@ -4,16 +4,16 @@ import androidx.annotation.NonNull;
 
 import java.util.Objects;
 
-public final class RecipeModelStatus {
+public final class RecipeComponentStatus {
 
     @NonNull
     private final RecipeValidator.ModelName modelName;
     private final boolean isChanged;
     private final boolean isValid;
 
-    public RecipeModelStatus(@NonNull RecipeValidator.ModelName modelName,
-                             boolean isChanged,
-                             boolean isValid) {
+    public RecipeComponentStatus(@NonNull RecipeValidator.ModelName modelName,
+                                 boolean isChanged,
+                                 boolean isValid) {
         this.modelName = modelName;
         this.isChanged = isChanged;
         this.isValid = isValid;
@@ -34,7 +34,7 @@ public final class RecipeModelStatus {
 
     @Override
     public String toString() {
-        return "RecipeModelStatus{" +
+        return "RecipeComponentStatus{" +
                 "modelName=" + modelName +
                 ", isChanged=" + isChanged +
                 ", isValid=" + isValid +
@@ -45,7 +45,7 @@ public final class RecipeModelStatus {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RecipeModelStatus that = (RecipeModelStatus) o;
+        RecipeComponentStatus that = (RecipeComponentStatus) o;
         return isChanged == that.isChanged &&
                 isValid == that.isValid &&
                 modelName == that.modelName;

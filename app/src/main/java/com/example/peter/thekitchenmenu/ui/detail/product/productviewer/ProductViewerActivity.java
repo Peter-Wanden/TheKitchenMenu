@@ -26,7 +26,7 @@ public class ProductViewerActivity
         extends AppCompatActivityDialogActions
         implements ProductViewerNavigator, FavoriteProductViewerNavigator {
 
-    private static final String TAG = "tkm-ProductViewerAct";
+    private static final String TAG = "tkm-" + ProductViewerActivity.class.getSimpleName() + ":";
 
     public static final int REQUEST_VIEW_PRODUCT = 1;
     public static final int RESULT_VIEW_DATA_CHANGED = RESULT_FIRST_USER + 1;
@@ -99,12 +99,10 @@ public class ProductViewerActivity
         if (intent.hasExtra(ProductEditorActivity.EXTRA_PRODUCT_ENTITY)) {
             ProductEntity productEntity = getIntent().getParcelableExtra(
                     ProductEditorActivity.EXTRA_PRODUCT_ENTITY);
-            Log.d(TAG, "addFragments: incoming intent has EXTRA_PRODUCT");
             productId = productEntity.getId();
             findOrReplaceProductViewerFragment(productEntity);
 
         } else if (intent.hasExtra(ProductEditorActivity.EXTRA_PRODUCT_ID)) {
-            Log.d(TAG, "addFragments: incoming intent has EXTRA_PRODUCT_ID");
             productId = getIntent().getStringExtra(ProductEditorActivity.EXTRA_PRODUCT_ID);
             findOrReplaceProductViewerFragment(productId);
         }
@@ -150,12 +148,10 @@ public class ProductViewerActivity
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == ProductEditorActivity.REQUEST_ADD_EDIT_PRODUCT) {
-            Log.d(TAG, "onActivityResult: REQUEST_ADD_EDIT_PRODUCT");
             productViewerViewModel.handleActivityResult(resultCode, data);
         }
 
         else if (requestCode == FavoriteProductEditorActivity.REQUEST_ADD_EDIT_FAVORITE_PRODUCT) {
-            Log.d(TAG, "onActivityResult: REQUEST_ADD_EDIT_FAVORITE_PRODUCT, received");
             favoriteProductViewerViewModel.handleActivityResult(resultCode, data);
         }
     }
@@ -173,7 +169,6 @@ public class ProductViewerActivity
 
     @Override
     public void editProduct(ProductEntity productEntity) {
-        Log.d(TAG, "editProduct: Outgoing to ProductEditor, EXTRA_PRODUCT_ENTITY, for result ");
         Intent intent = new Intent(this, ProductEditorActivity.class);
         intent.putExtra(ProductEditorActivity.EXTRA_PRODUCT_ENTITY, productEntity);
         startActivityForResult(intent, ProductEditorActivity.REQUEST_ADD_EDIT_PRODUCT);
@@ -183,14 +178,12 @@ public class ProductViewerActivity
     public void deleteProduct(String productId) {
         // Product deleted by view model, if favorite exists it too must be deleted
         favoriteProductViewerViewModel.deleteFavoriteProduct();
-        Log.d(TAG, "deleteProduct: Outgoing, setResult(RESULT_VIEW_DATA_CHANGED), finish()");
         setResult(RESULT_VIEW_DATA_CHANGED);
         finish();
     }
 
     @Override
     public void doneWithProduct(String productId) {
-        Log.d(TAG, "doneWithProduct: Outgoing, EXTRA_PRODUCT_ID, setResult(RESULT_VIEW_DATA_CHANGED), finish()");
         Intent resultIntent = new Intent();
         resultIntent.putExtra(ProductEditorActivity.EXTRA_PRODUCT_ID, productId);
 
@@ -210,20 +203,17 @@ public class ProductViewerActivity
 
     @Override
     public void discardChanges() {
-        Log.d(TAG, "discardChanges: Outgoing, setResult(RESULT_VIEW_NO_DATA_CHANGED), and finish()");
         setResult(RESULT_VIEW_NO_DATA_CHANGED);
         finish();
     }
 
     @Override
     public void addFavoriteProduct(String productId) {
-        Log.d(TAG, "addFavoriteProduct: Outgoing to FavoriteEditor, startForResult(EXTRA_PRODUCT_ID), request(REQUEST_ADD_EDIT_FAVORITE_PRODUCT), productId");
         addEditFavoriteProduct(productId);
     }
 
     @Override
     public void editFavoriteProduct(String productId) {
-        Log.d(TAG, "editFavoriteProduct: Outgoing to FavoriteEditor, startForResult(EXTRA_PRODUCT_ID), request(REQUEST_ADD_EDIT_FAVORITE_PRODUCT), productId");
         addEditFavoriteProduct(productId);
     }
 

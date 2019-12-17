@@ -27,7 +27,7 @@ import androidx.loader.content.CursorLoader;
 
 public class BitmapUtils {
 
-    private static final String TAG = "BitmapUtils";
+    private static final String TAG = "tkm-" + BitmapUtils.class.getSimpleName() + ":";
     // TODO - Use ForkJoinPool for a threaded implementation
     // TODO - See: https://docs.oracle.com/javase/tutorial/essential/concurrency/forkjoin.html
     // TODO - Can also use a callback if fast enough

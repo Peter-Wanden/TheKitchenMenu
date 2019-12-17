@@ -96,7 +96,7 @@ public class IngredientEditorActivity
     }
 
     private void setViewModelObservers() {
-        viewModel.showUseButtonLiveData.observe(this,
+        viewModel.showUseButton.observe(this,
                 isShowButton -> invalidateOptionsMenu());
     }
 
@@ -109,7 +109,7 @@ public class IngredientEditorActivity
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         menu.findItem(R.id.menu_ingredient_editor_action_done).setVisible(
-                viewModel.showUseButtonLiveData.getValue());
+                viewModel.showUseButton.getValue());
         return super.onPrepareOptionsMenu(menu);
     }
 

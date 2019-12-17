@@ -2,7 +2,6 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,7 +22,7 @@ import com.example.peter.thekitchenmenu.utils.ActivityUtils;
 public class RecipeIngredientEditorActivity
         extends AppCompatActivity implements RecipeIngredientEditorNavigator {
 
-    private static final String TAG = "tkm-RecipeIngredientEdi";
+    private static final String TAG = "tkm-" + RecipeIngredientEditorActivity.class.getSimpleName() + ":";
 
     public static final int REQUEST_ADD_RECIPE_INGREDIENT = 1;
     public static final int RESULT_OK = 2;
@@ -60,7 +59,6 @@ public class RecipeIngredientEditorActivity
         String recipeIngredientId;
 
         if (isCreatingNewRecipeIngredient(intent)) {
-            Log.d(TAG, "start: new");
             recipeId = intent.getStringExtra(EXTRA_RECIPE_ID);
             ingredientId = intent.getStringExtra(EXTRA_INGREDIENT_ID);
 
@@ -68,7 +66,6 @@ public class RecipeIngredientEditorActivity
             measurementViewModel.start(recipeId, ingredientId);
 
         } else if (isEditingRecipeIngredient(intent)) {
-            Log.d(TAG, "start: edit");
             recipeId = intent.getStringExtra(EXTRA_RECIPE_ID);
             ingredientId = intent.getStringExtra(EXTRA_INGREDIENT_ID);
             recipeIngredientId = intent.getStringExtra(EXTRA_RECIPE_INGREDIENT_ID);

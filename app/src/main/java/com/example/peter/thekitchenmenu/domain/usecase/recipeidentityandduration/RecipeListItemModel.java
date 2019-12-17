@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipeIdentityandduration;
+package com.example.peter.thekitchenmenu.domain.usecase.recipeidentityandduration;
 
 
 import javax.annotation.Nonnull;

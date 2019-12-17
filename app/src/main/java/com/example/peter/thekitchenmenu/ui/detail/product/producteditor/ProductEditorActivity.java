@@ -31,7 +31,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class ProductEditorActivity extends AppCompatActivity implements AddEditProductNavigator {
 
-    private static final String TAG = "tkm-EditorActivity";
+    private static final String TAG = "tkm-" + ProductEditorActivity.class.getSimpleName() + ":";
 
     public static final String EXTRA_PRODUCT_ID = "EXTRA_PRODUCT_ID";
     public static final String EXTRA_PRODUCT_ENTITY = "EXTRA_PRODUCT_ENTITY";

@@ -20,7 +20,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "tkm-" + MainActivity.class.getSimpleName() + ":";
 
     RemoteSignIn remoteSignIn;
 

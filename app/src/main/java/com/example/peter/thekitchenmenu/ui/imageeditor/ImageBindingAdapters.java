@@ -9,7 +9,7 @@ import com.example.peter.thekitchenmenu.R;
 
 public class ImageBindingAdapters {
 
-    private static final String TAG = "tkm-ImageBindingAdapter";
+    private static final String TAG = "tkm-" + ImageBindingAdapters.class.getSimpleName() + ":";
 
     @BindingAdapter(value = {
             "localLargeImageUri",

@@ -9,7 +9,7 @@ import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeIdentity.UseCaseRecipeIdentity;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.UseCaseRecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.UseCaseTextValidator;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeValidator;
@@ -55,13 +55,13 @@ public class RecipeIdentityEditorViewModelTest {
     private static final RecipeIdentityEntity VALID_CLONED_DESCRIPTION_UPDATED =
             TestDataRecipeIdentityEntity.getValidNewClonedDescriptionUpdatedComplete();
 
-    private RecipeModelStatus INVALID_UNCHANGED =
+    private RecipeComponentStatus INVALID_UNCHANGED =
             TestDataRecipeValidator.getIdentityModelStatusUnchangedInvalid();
-    private RecipeModelStatus INVALID_CHANGED =
+    private RecipeComponentStatus INVALID_CHANGED =
             TestDataRecipeValidator.getIdentityModelStatusChangedInvalid();
-    private RecipeModelStatus VALID_UNCHANGED =
+    private RecipeComponentStatus VALID_UNCHANGED =
             TestDataRecipeValidator.getIdentityModelStatusUnchangedValid();
-    private RecipeModelStatus VALID_CHANGED =
+    private RecipeComponentStatus VALID_CHANGED =
             TestDataRecipeValidator.getIdentityModelStatusChangedValid();
 
     private static final String ERROR_MESSAGE_TOO_LONG = "ERROR_MESSAGE_TOO_LONG";
@@ -81,7 +81,7 @@ public class RecipeIdentityEditorViewModelTest {
     @Mock
     RecipeValidation.RecipeValidatorModelSubmission modelValidationSubmitterMock;
     @Captor
-    ArgumentCaptor<RecipeModelStatus> statusCaptor;
+    ArgumentCaptor<RecipeComponentStatus> statusCaptor;
 
     private int shortTextMinLength = 3;
     private int shortTextMaxLength = 70;
@@ -107,8 +107,12 @@ public class RecipeIdentityEditorViewModelTest {
         UseCaseRecipeIdentity useCaseRecipeIdentity = new UseCaseRecipeIdentity(
                 repoMock, timeProviderMock);
 
-        UseCaseTextValidator useCaseTextValidator = new UseCaseTextValidator(
-                shortTextMinLength, shortTextMaxLength, longTextMinLength, longTextMaxLength);
+        UseCaseTextValidator useCaseTextValidator = new UseCaseTextValidator.Builder().
+                setShortTextMinLength(shortTextMinLength).
+                setShrotTextMaxLength(shortTextMaxLength).
+                setLongTextMinLength(longTextMinLength).
+                setLongTextMaxLength(longTextMaxLength).
+                build();
 
         return new RecipeIdentityEditorViewModel(
                 handler,
@@ -142,8 +146,8 @@ public class RecipeIdentityEditorViewModelTest {
         SUT.start(recipeId);
         simulateNothingReturnedFromDatabase(recipeId);
         // Assert
-        verify(modelValidationSubmitterMock).submitModelStatus(statusCaptor.capture());
-        RecipeModelStatus actualStatus = statusCaptor.getValue();
+        verify(modelValidationSubmitterMock).submitRecipeComponentStatus(statusCaptor.capture());
+        RecipeComponentStatus actualStatus = statusCaptor.getValue();
         assertEquals(INVALID_UNCHANGED, actualStatus);
     }
 
@@ -173,8 +177,8 @@ public class RecipeIdentityEditorViewModelTest {
 
         SUT.setTitle(invalidTitle);
         // Assert
-        verify(modelValidationSubmitterMock, times((2))).submitModelStatus(statusCaptor.capture());
-        RecipeModelStatus actualStatus = statusCaptor.getValue();
+        verify(modelValidationSubmitterMock, times((2))).submitRecipeComponentStatus(statusCaptor.capture());
+        RecipeComponentStatus actualStatus = statusCaptor.getValue();
         assertEquals(INVALID_CHANGED, actualStatus);
     }
 
@@ -232,8 +236,8 @@ public class RecipeIdentityEditorViewModelTest {
 
         SUT.setTitle(title);
         // Assert
-        verify(modelValidationSubmitterMock, times((2))).submitModelStatus(statusCaptor.capture());
-        RecipeModelStatus actualStatus = statusCaptor.getValue();
+        verify(modelValidationSubmitterMock, times((2))).submitRecipeComponentStatus(statusCaptor.capture());
+        RecipeComponentStatus actualStatus = statusCaptor.getValue();
         assertEquals(VALID_CHANGED, actualStatus);
     }
 
@@ -302,8 +306,8 @@ public class RecipeIdentityEditorViewModelTest {
         SUT.setTitle(title);
         SUT.setDescription(description);
         // Assert
-        verify(modelValidationSubmitterMock, times((3))).submitModelStatus(statusCaptor.capture());
-        RecipeModelStatus actualStatus = statusCaptor.getValue();
+        verify(modelValidationSubmitterMock, times((3))).submitRecipeComponentStatus(statusCaptor.capture());
+        RecipeComponentStatus actualStatus = statusCaptor.getValue();
         assertEquals(INVALID_CHANGED, actualStatus);
     }
 
@@ -359,8 +363,8 @@ public class RecipeIdentityEditorViewModelTest {
         SUT.setTitle(validTitle);
         SUT.setDescription(validDescription);
         // Assert
-        verify(modelValidationSubmitterMock, times((3))).submitModelStatus(statusCaptor.capture());
-        RecipeModelStatus actualStatus = statusCaptor.getValue();
+        verify(modelValidationSubmitterMock, times((3))).submitRecipeComponentStatus(statusCaptor.capture());
+        RecipeComponentStatus actualStatus = statusCaptor.getValue();
         assertEquals(VALID_CHANGED, actualStatus);
     }
 
@@ -388,8 +392,8 @@ public class RecipeIdentityEditorViewModelTest {
         verify(repoMock).getById(eq(recipeId), repoCallback.capture());
         repoCallback.getValue().onEntityLoaded(VALID_EXISTING_COMPLETE);
         // Assert
-        verify(modelValidationSubmitterMock).submitModelStatus(statusCaptor.capture());
-        RecipeModelStatus actualStatus = statusCaptor.getValue();
+        verify(modelValidationSubmitterMock).submitRecipeComponentStatus(statusCaptor.capture());
+        RecipeComponentStatus actualStatus = statusCaptor.getValue();
         assertEquals(VALID_UNCHANGED, actualStatus);
     }
 //    @Test

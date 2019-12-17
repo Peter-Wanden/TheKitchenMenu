@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class SearchProducts extends AppCompatActivity {
 
-    private static final String TAG = SearchProducts.class.getSimpleName();
+    private static final String TAG = "tkm-" + SearchProducts.class.getSimpleName() + ":";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,17 +37,17 @@ public class SearchProducts extends AppCompatActivity {
         // Verifies the intent action
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 
-            Log.e(TAG, "tkm - Intent action is SEARCH");
-            Log.e(TAG, "tkm - Query is: " + intent.getStringExtra(SearchManager.QUERY));
-            Log.e(TAG, "tkm - Originating class is: " + b.getString(TAG));
-            Log.e(TAG, "tkm - Intent extra data is: " + intent.getData());
+            System.out.println(TAG + "tkm - Intent action is SEARCH");
+            System.out.println(TAG + "tkm - Query is: " + intent.getStringExtra(SearchManager.QUERY));
+            System.out.println(TAG + "tkm - Originating class is: " + b.getString(TAG));
+            System.out.println(TAG + "tkm - Intent extra data is: " + intent.getData());
 
         } else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
 
-            Log.d(TAG, "tkm - Intent action is VIEW" );
-            Log.d(TAG, "tkm - Query is: " + intent.getStringExtra(SearchManager.QUERY));
-            Log.d(TAG, "tkm - Originating class is: " + b.getString(TAG));
-            Log.e(TAG, "tkm - Intent extra data is: " + intent.getData());
+            System.out.println(TAG + "tkm - Intent action is VIEW" );
+            System.out.println(TAG + "tkm - Query is: " + intent.getStringExtra(SearchManager.QUERY));
+            System.out.println(TAG + "tkm - Originating class is: " + b.getString(TAG));
+            System.out.println(TAG + "tkm - Intent extra data is: " + intent.getData());
         }
     }
 }

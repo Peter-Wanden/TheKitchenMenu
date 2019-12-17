@@ -10,7 +10,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeIdentityandduration.RecipeListItemModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeidentityandduration.RecipeListItemModel;
 import com.example.peter.thekitchenmenu.databinding.RecipeListItemBinding;
 
 import java.util.ArrayList;
@@ -20,7 +20,8 @@ public class RecipeCatalogAllRecyclerAdapter
         extends RecyclerView.Adapter<RecipeCatalogAllRecyclerAdapter.ViewHolder>
         implements Filterable {
 
-    private static final String TAG = "tkm-CatalogAdapter";
+    private static final String TAG = "tkm-" + RecipeCatalogAllRecyclerAdapter.class.getSimpleName()
+            + ":";
 
     private final RecipeCatalogViewModel viewModel;
     private List<RecipeListItemModel> recipeModelList;

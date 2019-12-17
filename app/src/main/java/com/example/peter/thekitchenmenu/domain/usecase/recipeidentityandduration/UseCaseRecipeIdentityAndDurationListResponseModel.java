@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipeIdentityandduration;
+package com.example.peter.thekitchenmenu.domain.usecase.recipeidentityandduration;
 
 import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
 
@@ -7,7 +7,7 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipeIdentityandduration.
+import static com.example.peter.thekitchenmenu.domain.usecase.recipeidentityandduration.
         UseCaseRecipeIdentityAndDurationList.*;
 
 public class UseCaseRecipeIdentityAndDurationListResponseModel

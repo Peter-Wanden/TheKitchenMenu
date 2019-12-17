@@ -3,7 +3,7 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 public interface RecipeValidation {
 
     interface RecipeValidatorModelSubmission {
-        void submitModelStatus(RecipeModelStatus modelStatus);
+        void submitRecipeComponentStatus(RecipeComponentStatus modelStatus);
     }
 
     interface RecipeEditor {

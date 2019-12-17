@@ -15,7 +15,8 @@ import com.example.peter.thekitchenmenu.R;
 
 public class UnsavedChangesDialogFragment extends DialogFragment {
 
-    public static final String TAG = "UnsavedChangesDialog";
+    public static final String TAG = "tkm-" + UnsavedChangesDialogFragment.class.getSimpleName() + ":";
+
     public static final int RESULT_CANCELED_AFTER_EDIT = 500;
 
     public static UnsavedChangesDialogFragment newInstance(String title) {

@@ -30,7 +30,6 @@ import com.example.peter.thekitchenmenu.ui.utils.NumberFormatter;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.ui.catalog.recipe.RecipeCatalogViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeEditorViewModel;
-import com.example.peter.thekitchenmenu.ui.utils.TextValidator;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 
 public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory {

@@ -20,7 +20,7 @@ public class ProductViewerViewModel
         extends AndroidViewModel
         implements DataSource.GetEntityCallback<ProductEntity>, ProductViewerNavigator{
 
-    private static final String TAG = "tkm-ProductViewerVM";
+    private static final String TAG = "tkm-" + ProductViewerViewModel.class.getSimpleName() + ":";
 
     private Resources resources;
     private ProductViewerNavigator navigator;
@@ -90,7 +90,6 @@ public class ProductViewerViewModel
         if (resultCode == ProductEditorActivity.RESULT_ADD_EDIT_PRODUCT_OK) {
             ProductEntity productEntity = data.getParcelableExtra(
                     ProductEditorActivity.EXTRA_PRODUCT_ENTITY);
-            Log.d(TAG, "handleActivityResult: result='RESULT_ADD_EDIT_PRODUCT_OK', starting with EXTRA_PRODUCT_ENTITY");
             start(productEntity);
         }
     }

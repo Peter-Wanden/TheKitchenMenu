@@ -9,7 +9,7 @@ import javax.annotation.Nonnull;
 public class UseCaseTextValidator
         extends UseCaseInteractor<UseCaseTextValidator.Request, UseCaseTextValidator.Response> {
 
-    private static final String TAG = "tkm-" + UseCaseTextValidator.class.getSimpleName() + ": ";
+    private static final String TAG = "tkm-" + UseCaseTextValidator.class.getSimpleName() + ":";
 
     public enum RequestType {
         SHORT_TEXT,
@@ -27,7 +27,7 @@ public class UseCaseTextValidator
     private final int defaultLongTextMinLength;
     private final int defaultLongTextMaxLength;
 
-    public UseCaseTextValidator(int defaultShortTextMinLength,
+    private UseCaseTextValidator(int defaultShortTextMinLength,
                                 int defaultShortTextMaxLength,
                                 int defaultLongTextMinLength,
                                 int defaultLongTextMaxLength) {
@@ -119,7 +119,44 @@ public class UseCaseTextValidator
                 setMaxLength(String.valueOf(defaultLongTextMaxLength));
     }
 
+    public static class Builder {
+        private int shortTextMinLength;
+        private int shortTextMaxLength;
+        private int longTextMinLength;
+        private int longTextMaxLength;
+
+        public Builder setShortTextMinLength(int shortTextMinLength) {
+            this.shortTextMinLength = shortTextMinLength;
+            return this;
+        }
+
+        public Builder setShrotTextMaxLength(int shortTextMaxLength) {
+            this.shortTextMaxLength = shortTextMaxLength;
+            return this;
+        }
+
+        public Builder setLongTextMinLength(int longTextMinLength) {
+            this.longTextMinLength = longTextMinLength;
+            return this;
+        }
+
+        public Builder setLongTextMaxLength(int longTextMaxLength) {
+            this.longTextMaxLength = longTextMaxLength;
+            return this;
+        }
+
+        public UseCaseTextValidator build() {
+            return new UseCaseTextValidator(
+                    shortTextMinLength,
+                    shortTextMaxLength,
+                    longTextMinLength,
+                    longTextMaxLength
+            );
+        }
+    }
+
     public static final class Model {
+
         @Nonnull
         private final String text;
 

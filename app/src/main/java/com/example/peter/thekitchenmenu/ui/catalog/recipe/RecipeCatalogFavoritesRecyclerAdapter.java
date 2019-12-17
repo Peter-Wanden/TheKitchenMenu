@@ -20,7 +20,8 @@ public class RecipeCatalogFavoritesRecyclerAdapter
         extends RecyclerView.Adapter<RecipeCatalogFavoritesRecyclerAdapter.ViewHolder>
         implements Filterable {
 
-    private static final String TAG = "tkm-CatalogFavAdapter";
+    private static final String TAG = "tkm-" + RecipeCatalogFavoritesRecyclerAdapter.class.
+            getSimpleName() + ":";
 
     private final RecipeCatalogViewModel viewModel;
     private List<FavoriteRecipeModel> favoriteRecipeModels;

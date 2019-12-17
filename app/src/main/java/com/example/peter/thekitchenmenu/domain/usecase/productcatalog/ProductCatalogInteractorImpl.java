@@ -20,7 +20,8 @@ import java.util.Map;
 
 public class ProductCatalogInteractorImpl implements ProductCatalogInteractor {
 
-    private static final String TAG = "tkm-" + ProductCatalogInteractorImpl.class.getSimpleName() + " ";
+    private static final String TAG = "tkm-" + ProductCatalogInteractorImpl.class.getSimpleName()
+            + ":";
 
     private static volatile ProductCatalogInteractorImpl INSTANCE = null;
     private final RepositoryProduct productEntityDataSource;
@@ -137,14 +138,6 @@ public class ProductCatalogInteractorImpl implements ProductCatalogInteractor {
 
             productModels.add(productModel);
         }
-
-        int favoriteCount = 0;
-        for (ProductModel pm : productModels)
-            if (pm.isFavorite())
-                favoriteCount++;
-
-        Log.d(TAG, "sortAndReturnData: favorite count in product models=" + favoriteCount);
-        Log.d(TAG, "sortAndReturnData: Number of favorite product models=" + favoriteProductModels.size());
 
         favoriteProductListCallback.onAllLoaded(favoriteProductModels);
         productListCallback.onAllLoaded(productModels);

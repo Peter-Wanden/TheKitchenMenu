@@ -16,7 +16,7 @@ import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor.
 public class RecipeIngredientListViewModel extends ViewModel {
 
     private static final String TAG = "tkm-" + RecipeIngredientListViewModel.class.getSimpleName()
-            + " ";
+            + ":";
 
     private RecipeIngredientListNavigator navigator;
     private UseCaseHandler handler;
@@ -85,6 +85,5 @@ public class RecipeIngredientListViewModel extends ViewModel {
     }
 
     void deleteRecipeIngredient(String recipeIngredientId) {
-        System.out.println(TAG + "delete:" + recipeIngredientId + " requested");
     }
 }

@@ -19,7 +19,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class RecipeCatalogActivity extends AppCompatActivity implements RecipeNavigator {
 
-    private static final String TAG = "tkm-RecipeCatalogAct";
+    private static final String TAG = "tkm-" + RecipeCatalogActivity.class.getSimpleName() + ":";
 
     private RecipeCatalogViewModel viewModel;
     private RecipeCatalogActivityBinding binding;

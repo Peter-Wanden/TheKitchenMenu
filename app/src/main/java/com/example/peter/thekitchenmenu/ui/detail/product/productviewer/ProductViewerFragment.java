@@ -21,7 +21,7 @@ import com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.
 
 public class ProductViewerFragment extends Fragment {
 
-    private static final String TAG = "tkm-ProductViewerFrag";
+    private static final String TAG = "tkm-" + ProductViewerFragment.class.getSimpleName() + ":";
 
     private static final String ARGUMENT_PRODUCT_ID = "PRODUCT_ID";
     static final String ARGUMENT_PRODUCT_ENTITY = "PRODUCT_ENTITY";
@@ -50,12 +50,10 @@ public class ProductViewerFragment extends Fragment {
         super.onResume();
 
         if (getArguments().containsKey(ARGUMENT_PRODUCT_ID)) {
-            Log.d(TAG, "onResume: started with ARGUMENT_PRODUCT_ID");
             productViewerViewModel.start(getArguments().getString(ARGUMENT_PRODUCT_ID));
         }
 
         else if (getArguments().containsKey(ARGUMENT_PRODUCT_ENTITY)) {
-            Log.d(TAG, "onResume: started with ARGUMENT_PRODUCT_ENTITY");
             productViewerViewModel.start(
                     (ProductEntity) getArguments().getParcelable(ARGUMENT_PRODUCT_ENTITY));
             getArguments().remove(ARGUMENT_PRODUCT_ENTITY);

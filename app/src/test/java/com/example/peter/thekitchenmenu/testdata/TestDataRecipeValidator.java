@@ -1,127 +1,127 @@
 package com.example.peter.thekitchenmenu.testdata;
 
-import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeModelStatus;
+import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeComponentStatus;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidator;
 
 public class TestDataRecipeValidator {
 
-    public static RecipeModelStatus getIdentityModelStatusUnchangedInvalid() {
-        return new RecipeModelStatus(
+    public static RecipeComponentStatus getIdentityModelStatusUnchangedInvalid() {
+        return new RecipeComponentStatus(
                 RecipeValidator.ModelName.IDENTITY_MODEL,
                 false,
                 false);
     }
 
-    public static RecipeModelStatus getIdentityModelStatusUnchangedValid() {
-        return new RecipeModelStatus(
+    public static RecipeComponentStatus getIdentityModelStatusUnchangedValid() {
+        return new RecipeComponentStatus(
                 RecipeValidator.ModelName.IDENTITY_MODEL,
                 false,
                 true);
     }
 
-    public static RecipeModelStatus getIdentityModelStatusChangedInvalid() {
-        return new RecipeModelStatus(
+    public static RecipeComponentStatus getIdentityModelStatusChangedInvalid() {
+        return new RecipeComponentStatus(
                 RecipeValidator.ModelName.IDENTITY_MODEL,
                 true,
                 false);
     }
 
-    public static RecipeModelStatus getIdentityModelStatusChangedValid() {
-        return new RecipeModelStatus(
+    public static RecipeComponentStatus getIdentityModelStatusChangedValid() {
+        return new RecipeComponentStatus(
                 RecipeValidator.ModelName.IDENTITY_MODEL,
                 true,
                 true);
     }
 
-    public static RecipeModelStatus getCoursesModelStatusUnchangedInvalid() {
-        return new RecipeModelStatus(
+    public static RecipeComponentStatus getCoursesModelStatusUnchangedInvalid() {
+        return new RecipeComponentStatus(
                 RecipeValidator.ModelName.COURSES_MODEL,
                 false,
                 false);
     }
 
-    public static RecipeModelStatus getCoursesModelStatusUnchangedValid() {
-        return new RecipeModelStatus(
+    public static RecipeComponentStatus getCoursesModelStatusUnchangedValid() {
+        return new RecipeComponentStatus(
                 RecipeValidator.ModelName.COURSES_MODEL,
                 false,
                 true
         );
     }
 
-    public static RecipeModelStatus getCoursesModelStatusChangedInvalid() {
-        return new RecipeModelStatus(
+    public static RecipeComponentStatus getCoursesModelStatusChangedInvalid() {
+        return new RecipeComponentStatus(
                 RecipeValidator.ModelName.COURSES_MODEL,
                 true,
                 false
         );
     }
 
-    public static RecipeModelStatus getCoursesModelStatusChangedValid() {
-        return new RecipeModelStatus(
+    public static RecipeComponentStatus getCoursesModelStatusChangedValid() {
+        return new RecipeComponentStatus(
                 RecipeValidator.ModelName.COURSES_MODEL,
                 true,
                 true
         );
     }
 
-    public static RecipeModelStatus getDurationModelStatusUnchangedInvalid() {
-        return new RecipeModelStatus(
+    public static RecipeComponentStatus getDurationModelStatusUnchangedInvalid() {
+        return new RecipeComponentStatus(
                 RecipeValidator.ModelName.DURATION_MODEL,
                 false,
                 false
         );
     }
 
-    public static RecipeModelStatus getDurationModelStatusUnchangedValid() {
-        return new RecipeModelStatus(
+    public static RecipeComponentStatus getDurationModelStatusUnchangedValid() {
+        return new RecipeComponentStatus(
                 RecipeValidator.ModelName.DURATION_MODEL,
                 false,
                 true
         );
     }
 
-    public static RecipeModelStatus getDurationModelStatusChangedInvalid() {
-        return new RecipeModelStatus(
+    public static RecipeComponentStatus getDurationModelStatusChangedInvalid() {
+        return new RecipeComponentStatus(
                 RecipeValidator.ModelName.DURATION_MODEL,
                 true,
                 false
         );
     }
 
-    public static RecipeModelStatus getDurationModelStatusChangedValid() {
-        return new RecipeModelStatus(
+    public static RecipeComponentStatus getDurationModelStatusChangedValid() {
+        return new RecipeComponentStatus(
                 RecipeValidator.ModelName.DURATION_MODEL,
                 true,
                 true
         );
     }
 
-    public static RecipeModelStatus getPortionsModelStatusUnchangedInvalid() {
-        return new RecipeModelStatus(
+    public static RecipeComponentStatus getPortionsModelStatusUnchangedInvalid() {
+        return new RecipeComponentStatus(
                 RecipeValidator.ModelName.PORTIONS_MODEL,
                 false,
                 false
         );
     }
 
-    public static RecipeModelStatus getPortionsModelStatusUnchangedValid() {
-        return new RecipeModelStatus(
+    public static RecipeComponentStatus getPortionsModelStatusUnchangedValid() {
+        return new RecipeComponentStatus(
                 RecipeValidator.ModelName.PORTIONS_MODEL,
                 false,
                 true
         );
     }
 
-    public static RecipeModelStatus getPortionsModelStatusChangedInvalid() {
-        return new RecipeModelStatus(
+    public static RecipeComponentStatus getPortionsModelStatusChangedInvalid() {
+        return new RecipeComponentStatus(
                 RecipeValidator.ModelName.PORTIONS_MODEL,
                 true,
                 false
         );
     }
 
-    public static RecipeModelStatus getPortionsModelStatusChangedValid() {
-        return new RecipeModelStatus(
+    public static RecipeComponentStatus getPortionsModelStatusChangedValid() {
+        return new RecipeComponentStatus(
                 RecipeValidator.ModelName.PORTIONS_MODEL,
                 true,
                 true

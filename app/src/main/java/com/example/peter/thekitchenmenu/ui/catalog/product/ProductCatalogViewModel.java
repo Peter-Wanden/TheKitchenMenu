@@ -22,7 +22,7 @@ import androidx.lifecycle.MutableLiveData;
 public class ProductCatalogViewModel extends AndroidViewModel
         implements ProductNavigator, ProductItemNavigator {
 
-    private static final String TAG = "tkm-ProductCatalogVM";
+    private static final String TAG = "tkm-" + ProductCatalogViewModel.class.getSimpleName() + ":";
 
     private ProductCatalogInteractor productInteractor;
     private ProductNavigator productNavigator;
@@ -164,8 +164,6 @@ public class ProductCatalogViewModel extends AndroidViewModel
     }
 
     void handleActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-
-        Log.d(TAG, "handleActivityResult: requestCode=" + requestCode + " resultCode=" + resultCode);
 
         if (requestCode == ProductViewerActivity.REQUEST_VIEW_PRODUCT &&
                 resultCode == ProductViewerActivity.RESULT_VIEW_DATA_CHANGED)

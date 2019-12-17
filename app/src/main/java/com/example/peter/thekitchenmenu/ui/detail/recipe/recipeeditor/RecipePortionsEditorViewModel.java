@@ -21,7 +21,8 @@ public class RecipePortionsEditorViewModel
         RecipeModelComposite.RecipeModelActions,
         DataSource.GetEntityCallback<RecipePortionsEntity> {
 
-    private static final String TAG = "tkm-RecipePortionsVM";
+    private static final String TAG = "tkm-" + RecipePortionsEditorViewModel.class.getSimpleName()
+            + ":";
 
     private static final int MEASUREMENT_ERROR = -1;
 
@@ -276,7 +277,7 @@ public class RecipePortionsEditorViewModel
 
     private void submitModelStatus(boolean isChanged, boolean isValid) {
         if (!updatingUi) {
-            modelSubmitter.submitModelStatus(new RecipeModelStatus(
+            modelSubmitter.submitRecipeComponentStatus(new RecipeComponentStatus(
                     RecipeValidator.ModelName.PORTIONS_MODEL,
                     isChanged,
                     isValid

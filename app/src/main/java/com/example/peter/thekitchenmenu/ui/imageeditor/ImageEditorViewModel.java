@@ -30,7 +30,7 @@ import static com.example.peter.thekitchenmenu.data.model.ImageModel.*;
 
 public class ImageEditorViewModel extends ObservableAndroidViewModel {
 
-    private static final String TAG = "tkm-ImageEditorVM";
+    private static final String TAG = "tkm-" + ImageEditorViewModel.class.getSimpleName() + ":";
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int REQUEST_IMAGE_IMPORT = 2;
@@ -110,10 +110,11 @@ public class ImageEditorViewModel extends ObservableAndroidViewModel {
             if (fileAge > MAX_FILE_AGE) {
                 try {
                     boolean fileIsDeleted = file.delete();
-                    if (!fileIsDeleted) Log.e(
-                            TAG, "deleteOutOfDateFiles: Can't delete file:" + file.getName());
+                    if (!fileIsDeleted)
+                        System.out.println(TAG + "deleteOutOfDateFiles: Can't delete file:" +
+                                file.getName());
                 } catch (SecurityException e) {
-                    Log.e(TAG, "deleteOutOfDateFiles: security exception: " + e);
+                    System.out.println(TAG + "deleteOutOfDateFiles: security exception: " + e);
                 }
             }
         }
@@ -201,7 +202,7 @@ public class ImageEditorViewModel extends ObservableAndroidViewModel {
                 importAndProcessCroppedImage(croppedImageUri);
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
-                Log.e(TAG, "onActivityResult: ", error);
+                System.out.println(TAG + "onActivityResult: " + error);
             }
         }
     }
@@ -222,7 +223,7 @@ public class ImageEditorViewModel extends ObservableAndroidViewModel {
 
         } catch (IOException e) {
             e.printStackTrace();
-            Log.e(TAG, "Error: " + e.getMessage() + "Could not open URI: " +
+            System.out.println(TAG + "Error: " + e.getMessage() + "Could not open URI: " +
                     uriOfImageToImport);
 
             return null;

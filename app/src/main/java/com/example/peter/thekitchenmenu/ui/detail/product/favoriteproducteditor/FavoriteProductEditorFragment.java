@@ -20,7 +20,8 @@ import androidx.fragment.app.Fragment;
 
 public class FavoriteProductEditorFragment extends Fragment {
 
-    private static final String TAG = "tkm-FavProductEditFrag";
+    private static final String TAG = "tkm-" + FavoriteProductEditorFragment.class.getSimpleName()
+            + ":";
 
     private FavoriteProductEditorFragmentBinding binding;
     private FavoriteProductEditorViewModel viewModel;

@@ -453,7 +453,7 @@ public class UseCasePortionCalculatorTest {
     }
 
     @Test
-    public void startNewRecipeAndIngredientId_sewuenceUnitOfMeasureChangedImperialSpoonAndUpdateMeasurementOne() {
+    public void startNewRecipeAndIngredientId_sequenceUnitOfMeasureChangedImperialSpoonAndUpdateMeasurementOne() {
         // Arrange
         whenIdProviderReturnNewValidId();
         whenTimeProviderThenReturnNewValidTime();

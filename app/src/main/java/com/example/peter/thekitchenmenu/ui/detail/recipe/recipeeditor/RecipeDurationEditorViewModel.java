@@ -336,7 +336,7 @@ public class RecipeDurationEditorViewModel
 
     private void submitModelStatus(boolean isChanged, boolean isValid) {
         if (!updatingUi) {
-            modelSubmitter.submitModelStatus(new RecipeModelStatus(
+            modelSubmitter.submitRecipeComponentStatus(new RecipeComponentStatus(
                     RecipeValidator.ModelName.DURATION_MODEL,
                     isChanged,
                     isValid

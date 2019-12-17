@@ -20,7 +20,8 @@ import androidx.recyclerview.widget.RecyclerView;
 public class ProductCatalogAllFragment extends Fragment {
 
     // TODO - make a super class, for AllProducts and MyProducts to inherit.
-    private static final String TAG = "tkm-ProductCatAllFrag";
+    private static final String TAG = "tkm-" + ProductCatalogAllFragment.class.getSimpleName() +
+            ":";
 
     private ProductCatalogViewModel viewModel;
     private ProductCatalogAllRecyclerAdapter adapter;

@@ -6,18 +6,18 @@ import androidx.databinding.ObservableBoolean;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.peter.thekitchenmenu.domain.usecase.recipeIdentityandduration.RecipeListItemModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeidentityandduration.RecipeListItemModel;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeIdentityandduration.UseCaseRecipeIdentityAndDurationList;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeIdentityandduration.UseCaseRecipeIdentityAndDurationListRequestModel;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeIdentityandduration.UseCaseRecipeIdentityAndDurationListResponseModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeidentityandduration.UseCaseRecipeIdentityAndDurationList;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeidentityandduration.UseCaseRecipeIdentityAndDurationListRequestModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeidentityandduration.UseCaseRecipeIdentityAndDurationListResponseModel;
 
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipeIdentityandduration.UseCaseRecipeIdentityAndDurationList.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipeidentityandduration.UseCaseRecipeIdentityAndDurationList.*;
 
 public class RecipeCatalogViewModel extends ViewModel {
 

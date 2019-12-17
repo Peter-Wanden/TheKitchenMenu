@@ -22,7 +22,7 @@ public class RecipeEditorViewModel
         extends ViewModel
         implements DataSource.GetEntityCallback<RecipeEntity>, RecipeValidation.RecipeEditor {
 
-    private static final String TAG = "tkm-" + RecipeEditorViewModel.class.getSimpleName() + ": ";
+    private static final String TAG = "tkm-" + RecipeEditorViewModel.class.getSimpleName() + ":";
 
     private RepositoryRecipe repositoryRecipe;
     private AddEditRecipeNavigator navigator;

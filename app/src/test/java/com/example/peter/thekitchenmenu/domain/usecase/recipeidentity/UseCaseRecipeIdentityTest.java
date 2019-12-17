@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipeIdentity;
+package com.example.peter.thekitchenmenu.domain.usecase.recipeidentity;
 
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
@@ -12,7 +12,7 @@ import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import org.junit.*;
 import org.mockito.*;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipeIdentity.UseCaseRecipeIdentity.DO_NOT_CLONE;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.UseCaseRecipeIdentity.DO_NOT_CLONE;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.assertEquals;
