@@ -147,7 +147,7 @@
     <string name="activity_title_image_cropper">TKM - Image Cropper</string>
     <string name="activity_title_add_new_ingredient">Add new ingredient</string>
     <string name="activity_title_edit_ingredient">Edit ingredient</string>
-    <string name="activity_title_recipe_ingredient_editor">Recipe ingredient editor</string>
+    <string name="activity_title_recipe_ingredient_editor">Recipe ingredient ingredientEditor</string>
     <string name="activity_title_recipe_ingredient_list_activity">Recipe ingredients list</string>
 
     <!-- ProductDetail user input error codes -->
@@ -328,7 +328,7 @@
     <string name="menu_item_review">REVIEW</string>
 
     <!-- Standard Dialog messages when editing -->
-    <!-- Dialog message when user is leaving editor but hasn't saved changes [CHAR LIMIT=NONE] -->
+    <!-- Dialog message when user is leaving ingredientEditor but hasn't saved changes [CHAR LIMIT=NONE] -->
     <string name="unsaved_changes_dialog_msg">Discard your changes and quit editing?</string>
     <!-- Dialog button text for the option to discard a user's changes [CHAR LIMIT=20] -->
     <string name="discard">Discard</string>
@@ -357,7 +357,7 @@
     <string name="servings_label">Servings</string>
     <string name="portions_label">Portions</string>
 
-    <!-- Recipe measurement editor -->
+    <!-- Recipe measurement ingredientEditor -->
     <string name="recipe_ingredient_unit_of_measure_label">Unit</string>
     <string name="add_recommended_product">Add recommended product</string>
 

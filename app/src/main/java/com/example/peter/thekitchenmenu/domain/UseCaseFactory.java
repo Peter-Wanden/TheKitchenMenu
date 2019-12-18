@@ -18,7 +18,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipeidentityandduration
 import com.example.peter.thekitchenmenu.domain.usecase.recipecourse.UseCaseRecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.UseCaseRecipeIngredientListItems;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.UseCaseTextValidator;
-import com.example.peter.thekitchenmenu.ui.detail.ingredient.IngredientDuplicateChecker;
+import com.example.peter.thekitchenmenu.domain.usecase.ingredient.UseCaseIngredientDuplicateChecker;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeportioncalculator.UseCasePortionCalculator;
@@ -144,7 +144,7 @@ public class UseCaseFactory {
                 ingredientRepository,
                 new UniqueIdProvider(),
                 new TimeProvider(),
-                new IngredientDuplicateChecker(ingredientRepository)
+                new UseCaseIngredientDuplicateChecker(ingredientRepository)
                 );
     }
 }

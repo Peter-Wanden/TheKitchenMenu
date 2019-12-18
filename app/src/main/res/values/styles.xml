@@ -6,7 +6,7 @@
         <item name="colorAccent">@color/colorAccent</item>
 
         <!-- Style for a TextView field in product_viewer_identity view mode -->
-        <!-- Style for an EditText field in the editor -->
+        <!-- Style for an EditText field in the ingredientEditor -->
         <!-- Card View styles -->
         <!-- Style for the list items in the widget -->
         <!-- Style for the drop down spinners -->

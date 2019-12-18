@@ -1,8 +1,9 @@
-package com.example.peter.thekitchenmenu.ui.detail.ingredient;
+package com.example.peter.thekitchenmenu.domain.usecase.ingredient;
 
 import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
+import com.example.peter.thekitchenmenu.domain.usecase.ingredient.UseCaseIngredientDuplicateChecker;
 import com.example.peter.thekitchenmenu.testdata.TestDataIngredientEntity;
 
 import org.junit.*;
@@ -12,7 +13,7 @@ import java.util.List;
 
 import static org.mockito.Mockito.*;
 
-public class IngredientDuplicateCheckerTest {
+public class UseCaseIngredientDuplicateCheckerTest {
 
     // region constants ----------------------------------------------------------------------------
     private List<IngredientEntity> LIST_OF_ALL_INGREDIENTS =
@@ -25,7 +26,7 @@ public class IngredientDuplicateCheckerTest {
             TestDataIngredientEntity.getNewValidName().getName();
     private String INGREDIENT_ID =
             TestDataIngredientEntity.getNewValidName().getId();
-    private String NO_DUPLICATE_FOUND = IngredientDuplicateChecker.NO_DUPLICATE_FOUND;
+    private String NO_DUPLICATE_FOUND = UseCaseIngredientDuplicateChecker.NO_DUPLICATE_FOUND;
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
@@ -34,22 +35,22 @@ public class IngredientDuplicateCheckerTest {
     @Captor
     ArgumentCaptor<DataSource.GetAllCallback<IngredientEntity>> getRepoCallbackCaptor;
     @Mock
-    IngredientDuplicateChecker.DuplicateCallback callbackMock;
+    UseCaseIngredientDuplicateChecker.DuplicateCallback callbackMock;
     // endregion helper fields ---------------------------------------------------------------------
 
-    private IngredientDuplicateChecker SUT;
+    private UseCaseIngredientDuplicateChecker SUT;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        SUT = new IngredientDuplicateChecker(repoMock);
+        SUT = new UseCaseIngredientDuplicateChecker(repoMock);
     }
 
     @Test
     public void checkForDuplicate_invalidName_noDatabaseRequest() {
         // Arrange
         // Act
-        SUT.checkForDuplicatesAndNotify("", INGREDIENT_ID, callbackMock);
+        SUT.checkForDuplicateAndNotify("", INGREDIENT_ID, callbackMock);
         // Assert
         verifyNoMoreInteractions(repoMock);
     }
@@ -58,7 +59,7 @@ public class IngredientDuplicateCheckerTest {
     public void checkForDuplicate_validName_databaseRequest() {
         // Arrange
         // Act
-        SUT.checkForDuplicatesAndNotify("validName", INGREDIENT_ID, callbackMock);
+        SUT.checkForDuplicateAndNotify("validName", INGREDIENT_ID, callbackMock);
         // Assert
         verify(repoMock).getAll(eq(SUT));
     }
@@ -67,7 +68,7 @@ public class IngredientDuplicateCheckerTest {
     public void checkForDuplicate_validNameNoDuplicate_callbackFalse() {
         // Arrange
         // Act
-        SUT.checkForDuplicatesAndNotify(VALID_NAME_NO_DUPLICATE, INGREDIENT_ID, callbackMock);
+        SUT.checkForDuplicateAndNotify(VALID_NAME_NO_DUPLICATE, INGREDIENT_ID, callbackMock);
         // Assert
         simulateGetAllFromDatabase();
         verify(callbackMock).duplicateCheckResult(eq(NO_DUPLICATE_FOUND));
@@ -77,7 +78,7 @@ public class IngredientDuplicateCheckerTest {
     public void checkForDuplicate_validNameDuplicateIsIngredientBeingEdited_callbackFalse() {
         // Arrange
         // Act
-        SUT.checkForDuplicatesAndNotify(
+        SUT.checkForDuplicateAndNotify(
                 VALID_NAME_DUPLICATE_IS_BEING_EDITED,
                 INGREDIENT_ID,
                 callbackMock);
@@ -90,7 +91,7 @@ public class IngredientDuplicateCheckerTest {
     public void checkForDuplicate_validNameDuplicateIsNotIngredientBeingEdited_callbackTrue() {
         // Arrange
         // Act
-        SUT.checkForDuplicatesAndNotify(VALID_DUPLICATE.getName(), INGREDIENT_ID, callbackMock);
+        SUT.checkForDuplicateAndNotify(VALID_DUPLICATE.getName(), INGREDIENT_ID, callbackMock);
         // Assert
         simulateGetAllFromDatabase();
         verify(callbackMock).duplicateCheckResult(eq(VALID_DUPLICATE.getId()));

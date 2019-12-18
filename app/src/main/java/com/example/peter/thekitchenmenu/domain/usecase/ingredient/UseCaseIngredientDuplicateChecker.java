@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.ui.detail.ingredient;
+package com.example.peter.thekitchenmenu.domain.usecase.ingredient;
 
 import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
@@ -8,7 +8,7 @@ import com.google.android.gms.common.util.Strings;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-public class IngredientDuplicateChecker implements DataSource.GetAllCallback<IngredientEntity> {
+public class UseCaseIngredientDuplicateChecker implements DataSource.GetAllCallback<IngredientEntity> {
 
     public interface DuplicateCallback {
         void duplicateCheckResult(String duplicateId);
@@ -21,13 +21,13 @@ public class IngredientDuplicateChecker implements DataSource.GetAllCallback<Ing
     private String ingredientId;
     public static final String NO_DUPLICATE_FOUND = "";
 
-    public IngredientDuplicateChecker(RepositoryIngredient repository) {
+    public UseCaseIngredientDuplicateChecker(RepositoryIngredient repository) {
         this.repository = repository;
     }
 
-    public void checkForDuplicatesAndNotify(String nameToCheck,
-                                     String ingredientId,
-                                     DuplicateCallback callback) {
+    public void checkForDuplicateAndNotify(String nameToCheck,
+                                           String ingredientId,
+                                           DuplicateCallback callback) {
         if (!Strings.isEmptyOrWhitespace(nameToCheck)) {
             this.callback = callback;
             this.keyToCheck = makeKey(nameToCheck);

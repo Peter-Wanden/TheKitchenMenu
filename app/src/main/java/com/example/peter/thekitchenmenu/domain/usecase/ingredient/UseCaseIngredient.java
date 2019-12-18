@@ -5,7 +5,7 @@ import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
-import com.example.peter.thekitchenmenu.ui.detail.ingredient.IngredientDuplicateChecker;
+import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
 import com.example.peter.thekitchenmenu.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
 
@@ -13,13 +13,15 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.ui.detail.ingredient.IngredientDuplicateChecker.NO_DUPLICATE_FOUND;
+import static com.example.peter.thekitchenmenu.domain.usecase.ingredient.UseCaseIngredientDuplicateChecker.NO_DUPLICATE_FOUND;
 
 public class UseCaseIngredient
         extends
         UseCaseInteractor<UseCaseIngredient.Request, UseCaseIngredient.Response>
         implements
         DataSource.GetEntityCallback<IngredientEntity> {
+
+    //    private static final String TAG = "tkm-" + UseCaseIngredient.class.getSimpleName() + ":";
 
     public enum Result {
         DATA_UNAVAILABLE,
@@ -31,14 +33,12 @@ public class UseCaseIngredient
         CHANGED_VALID
     }
 
-    private static final String TAG = "tkm-" + UseCaseIngredient.class.getSimpleName() + ":";
-
-    public static final String CREATE_NEW_INGREDIENT = "";
+    private static final String CREATE_NEW_INGREDIENT = "";
 
     private RepositoryIngredient repository;
     private UniqueIdProvider idProvider;
     private TimeProvider timeProvider;
-    private IngredientDuplicateChecker duplicateChecker;
+    private UseCaseIngredientDuplicateChecker duplicateNameChecker;
 
     private boolean isDuplicate;
     private Model requestModel = new Model.Builder().getDefault().build();
@@ -47,29 +47,25 @@ public class UseCaseIngredient
     public UseCaseIngredient(RepositoryIngredient repository,
                              UniqueIdProvider idProvider,
                              TimeProvider timeProvider,
-                             IngredientDuplicateChecker duplicateChecker) {
+                             UseCaseIngredientDuplicateChecker duplicateNameChecker) {
         this.repository = repository;
         this.idProvider = idProvider;
         this.timeProvider = timeProvider;
-        this.duplicateChecker = duplicateChecker;
+        this.duplicateNameChecker = duplicateNameChecker;
     }
 
     @Override
     protected void execute(Request request) {
-        System.out.println(TAG + request);
         requestModel = request.getModel();
         String ingredientId = request.getModel().getIngredientId();
 
         if (isCreateNew(ingredientId)) {
-            System.out.println(TAG + "isNew");
             requestModel = createNewIngredientModel();
             sendResponse();
         } else if (isEditExisting(ingredientId)) {
-            System.out.println(TAG + "isEdit");
             loadData(ingredientId);
         } else {
-            System.out.println(TAG + "isAlreadyLoaded");
-            checkForDuplicates();
+            checkForChanges();
         }
     }
 
@@ -78,7 +74,11 @@ public class UseCaseIngredient
     }
 
     private boolean isEditExisting(String ingredientId) {
-        Model model = new Model.Builder().getDefault().setIngredientId(ingredientId).build();
+        Model model = new Model.Builder().
+                getDefault().
+                setIngredientId(ingredientId).
+                build();
+
         return this.requestModel.equals(model);
     }
 
@@ -89,26 +89,27 @@ public class UseCaseIngredient
     @Override
     public void onEntityLoaded(IngredientEntity entity) {
         requestModel = convertEntityToModel(entity);
-        responseModel = requestModel;
+        equaliseRequestResponseStates();
         sendResponse();
     }
 
     private Model convertEntityToModel(IngredientEntity entity) {
-        return new Model(
-                entity.getId(),
-                entity.getName(),
-                entity.getDescription(),
-                entity.getConversionFactor(),
-                entity.getCreatedBy(),
-                entity.getCreateDate(),
-                entity.getLastUpdate()
-        );
+        return new Model.Builder().
+                setIngredientId(entity.getId()).
+                setName(entity.getName()).
+                setDescription(entity.getDescription()).
+                setConversionFactor(entity.getConversionFactor()).
+                setCreatedBy(entity.getCreatedBy()).
+                setCreateDate(entity.getCreateDate()).
+                setLastUpdate(entity.getLastUpdate()).
+                build();
     }
 
     @Override
     public void onDataNotAvailable() {
-        responseModel = createNewIngredientModel();
-        requestModel = responseModel;
+        requestModel = createNewIngredientModel();
+        equaliseRequestResponseStates();
+
         Response response = new Response(
                 Result.DATA_UNAVAILABLE,
                 responseModel
@@ -118,51 +119,47 @@ public class UseCaseIngredient
 
     private Model createNewIngredientModel() {
         long currentTime = timeProvider.getCurrentTimeInMills();
-        String id = idProvider.getUId();
+        String ingredientId = idProvider.getUId();
 
         return new Model.Builder().
                 getDefault().
-                setIngredientId(id).
+                setIngredientId(ingredientId).
                 setCreateDate(currentTime).
                 setLastUpdate(currentTime).
                 build();
     }
 
-    private void checkForDuplicates() {
-        System.out.println(TAG + "responseModel=" + responseModel);
-        System.out.println(TAG + "requestModel =" + requestModel);
-        System.out.println(TAG + "descChanged=" + isDescriptionChanged());
-        System.out.println(TAG + "nameChanged=" + isNameChanged());
+    private void checkForChanges() {
         if (isNameChanged()) {
-            duplicateChecker.checkForDuplicatesAndNotify(
-                    requestModel.getName(),
-                    requestModel.getIngredientId(),
-
-                    duplicateId -> {
-                        isDuplicate = !duplicateId.equals(NO_DUPLICATE_FOUND);
-
-                        if (!isDuplicate) {
-                            requestModel = getUpdatedModel();
-                            System.out.println(TAG + "NameIsChanged=" + requestModel);
-                            save();
-                        }
-                        sendResponse();
-                    }
-            );
+            checkForDuplicateName();
         } else if (isDescriptionChanged()) {
-            requestModel = getUpdatedModel();
-            System.out.println(TAG + "descriptionIsChanged=" + requestModel);
-            save();
-            sendResponse();
+            saveIfValid();
         }
     }
 
-    private Model getUpdatedModel() {
-        Model.Builder builder = Model.Builder.basedOn(requestModel);
+    private void checkForDuplicateName() {
+        duplicateNameChecker.checkForDuplicateAndNotify(
+                requestModel.getName(),
+                requestModel.getIngredientId(),
 
-        if (isChanged()) {
-            builder.setLastUpdate(timeProvider.getCurrentTimeInMills());
+                duplicateId -> {
+                    isDuplicate = !duplicateId.equals(NO_DUPLICATE_FOUND);
+                    saveIfValid();
+                });
+
+    }
+
+    private void saveIfValid() {
+        if (getResult() == Result.CHANGED_VALID) {
+            requestModel = setLasUpdateToCurrentTime();
+            save();
         }
+        sendResponse();
+    }
+
+    private Model setLasUpdateToCurrentTime() {
+        Model.Builder builder = Model.Builder.basedOn(requestModel);
+        builder.setLastUpdate(timeProvider.getCurrentTimeInMills());
         return builder.build();
     }
 
@@ -183,38 +180,38 @@ public class UseCaseIngredient
     }
 
     private void sendResponse() {
-        Response response = new Response(
-                getResult(),
-                requestModel
-        );
-        equaliseModelState();
-        System.out.println(TAG + "finalResponseModel=" + response);
+        Response response = new Response(getResult(), requestModel);
+        equaliseRequestResponseStates();
         getUseCaseCallback().onSuccess(response);
     }
 
     private Result getResult() {
         if (!isEditable()) {
             return Result.UNEDITABLE;
-        }
-        if (isDuplicate) {
+
+        } else if (isDuplicate) {
             return Result.IS_DUPLICATE;
-        }
-        if (isChanged()) {
+
+        } else if (isNameChanged() || isDescriptionChanged()) {
             if (isNameValid()) {
                 return Result.CHANGED_VALID;
-            }
-            return Result.CHANGED_INVALID;
-        } else {
-            if (isNameValid()) {
-                return Result.UNCHANGED_VALID;
             } else {
-                return Result.UNCHANGED_INVALID;
+                return Result.CHANGED_INVALID;
             }
+
+        } else if (isNameValid()) {
+            return Result.UNCHANGED_VALID;
+        } else {
+            return Result.UNCHANGED_INVALID;
         }
     }
 
-    private void equaliseModelState() {
-        requestModel = responseModel;
+    private boolean isEditable() {
+        return Constants.getUserId().getValue().equals(responseModel.getUserId());
+    }
+
+    private void equaliseRequestResponseStates() {
+        responseModel = requestModel;
     }
 
     private boolean isNameChanged() {
@@ -227,15 +224,6 @@ public class UseCaseIngredient
 
     private boolean isDescriptionChanged() {
         return !requestModel.getDescription().equals(responseModel.getDescription());
-    }
-
-    private boolean isChanged() {
-        return (isNameChanged() || isDescriptionChanged()) ||
-                (isNameChanged() && isDescriptionChanged());
-    }
-
-    private boolean isEditable() {
-        return Constants.getUserId().getValue().equals(requestModel.getUserId());
     }
 
     public static final class Model {
@@ -252,12 +240,12 @@ public class UseCaseIngredient
         private final long lastUpdate;
 
         private Model(@Nonnull String ingredientId,
-                     @Nonnull String name,
-                     @Nonnull String description,
-                     double conversionFactor,
-                     @Nonnull String userId,
-                     long createDate,
-                     long lastUpdate) {
+                      @Nonnull String name,
+                      @Nonnull String description,
+                      double conversionFactor,
+                      @Nonnull String userId,
+                      long createDate,
+                      long lastUpdate) {
             this.ingredientId = ingredientId;
             this.name = name;
             this.description = description;
@@ -347,7 +335,7 @@ public class UseCaseIngredient
                         setName(model.getName()).
                         setDescription(model.getDescription()).
                         setConversionFactor(model.getConversionFactor()).
-                        setUserId(model.getUserId()).
+                        setCreatedBy(model.getUserId()).
                         setCreateDate(model.getCreateDate()).
                         setLastUpdate(model.getLastUpdate());
             }
@@ -372,7 +360,7 @@ public class UseCaseIngredient
                 return this;
             }
 
-            public Builder setUserId(String userId) {
+            public Builder setCreatedBy(String userId) {
                 this.userId = userId;
                 return this;
             }
@@ -388,10 +376,10 @@ public class UseCaseIngredient
             }
 
             public Builder getDefault() {
-                ingredientId = "";
+                ingredientId = CREATE_NEW_INGREDIENT;
                 name = "";
                 description = "";
-                conversionFactor = 0;
+                conversionFactor = UnitOfMeasureConstants.NO_CONVERSION_FACTOR;
                 userId = Constants.getUserId().getValue();
                 createDate = 0L;
                 lastUpdate = 0L;

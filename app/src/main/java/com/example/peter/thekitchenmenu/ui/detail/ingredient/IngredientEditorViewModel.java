@@ -14,7 +14,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.UseCaseTex
 
 public class IngredientEditorViewModel extends ViewModel {
 
-    private static final String TAG = "tkm-" + IngredientEditorViewModel.class.getSimpleName() + ":";
+//    private static final String TAG = "tkm-" + IngredientEditorViewModel.class.getSimpleName() + ":";
 
     private Resources resources;
     private UseCaseHandler handler;
@@ -24,7 +24,6 @@ public class IngredientEditorViewModel extends ViewModel {
 
     public final ObservableField<String> showNameError = new ObservableField<>();
     public final ObservableField<String> showDescriptionError = new ObservableField<>();
-    public final ObservableField<String> showDuplicateError = new ObservableField<>();
     final MutableLiveData<Boolean> showUseButton = new MutableLiveData<>(false);
     private MutableLiveData<Boolean> dataLoading = new MutableLiveData<>(false);
     private MutableLiveData<Boolean> dataLoadingError = new MutableLiveData<>(false);
@@ -32,8 +31,7 @@ public class IngredientEditorViewModel extends ViewModel {
     private String ingredientId = "";
     private UseCaseIngredient.Response ingredientResponse;
     private boolean updatingUi;
-    private boolean isNameValid;
-    private boolean isDescriptionValid;
+
     private boolean isChanged;
     private boolean isValid;
 
@@ -58,7 +56,6 @@ public class IngredientEditorViewModel extends ViewModel {
     void start() {
         if (isNewInstantiation()) {
             navigator.setActivityTitle(R.string.activity_title_add_new_ingredient);
-            dataLoading.setValue(true);
 
             UseCaseIngredient.Model model = new UseCaseIngredient.Model.Builder().
                     getDefault().
@@ -71,7 +68,6 @@ public class IngredientEditorViewModel extends ViewModel {
     void start(String ingredientId) {
         if (isNewInstantiation() || isIngredientIdChanged(ingredientId)) {
             navigator.setActivityTitle(R.string.activity_title_edit_ingredient);
-            dataLoading.setValue(true);
 
             UseCaseIngredient.Model model = new UseCaseIngredient.Model.Builder().
                     getDefault().
@@ -97,7 +93,8 @@ public class IngredientEditorViewModel extends ViewModel {
         handler.execute(
                 useCaseIngredient,
                 request,
-                getUseCaseIngredientCallback());
+                getUseCaseIngredientCallback()
+        );
     }
 
     private UseCaseInteractor.Callback<UseCaseIngredient.Response> getUseCaseIngredientCallback() {
@@ -119,51 +116,56 @@ public class IngredientEditorViewModel extends ViewModel {
         dataLoading.setValue(false);
         ingredientResponse = response;
 
-        System.out.println(TAG + response);
-
         UseCaseIngredient.Result result = response.getResult();
 
         if (result == UseCaseIngredient.Result.DATA_UNAVAILABLE) {
             dataLoadingError.setValue(true);
-            showUseButton.setValue(false);
-        } else if (result == UseCaseIngredient.Result.UNEDITABLE) {
-            navigator.finishActivity("");
-        } else if (result == UseCaseIngredient.Result.IS_DUPLICATE) {
-            showUseButton.setValue(false);
             isValid = false;
-            showDuplicateError.set("Duplicate name");
+            isChanged = false;
+            return;
+        } else {
+            dataLoadingError.setValue(false);
+        }
+
+        if (result == UseCaseIngredient.Result.UNEDITABLE) {
+            navigator.finishActivity("");
+
+        } else if (result == UseCaseIngredient.Result.IS_DUPLICATE) {
+            isValid = false;
+            isChanged = false;
+            showNameError.set(resources.getString(R.string.ingredient_name_duplicate_error_message));
+
         } else if (result == UseCaseIngredient.Result.UNCHANGED_INVALID) {
-            showUseButton.setValue(false);
             isChanged = false;
             isValid = false;
-            updateObservables();
+
         } else if (result == UseCaseIngredient.Result.UNCHANGED_VALID) {
-            isChanged = true;
+            isChanged = false;
             isValid = true;
-            showUseButton.setValue(true);
+
         } else if (result == UseCaseIngredient.Result.CHANGED_INVALID) {
             isChanged = true;
             isValid = false;
-            showUseButton.setValue(false);
-            updateObservables();
+
         } else if (result == UseCaseIngredient.Result.CHANGED_VALID) {
             isChanged = true;
             isValid = true;
-            showUseButton.setValue(true);
-            updateObservables();
         }
+        updateObservables();
     }
 
     private void updateObservables() {
-        updatingUi = true;
-        setName(ingredientResponse.getModel().getName());
-        setDescription(ingredientResponse.getModel().getName());
-        updatingUi = false;
+        if (isChanged) {
+            updatingUi = true;
+            setName(ingredientResponse.getModel().getName());
+            setDescription(ingredientResponse.getModel().getName());
+            updatingUi = false;
+        }
         updateUseButtonVisibility();
     }
 
     public String getName() {
-        return ingredientResponse.getModel().getName();
+        return ingredientResponse == null ? "" : ingredientResponse.getModel().getName();
     }
 
     public void setName(String name) {
@@ -174,6 +176,8 @@ public class IngredientEditorViewModel extends ViewModel {
 
     private void validateName(String name) {
         showNameError.set(null);
+
+        // todo - strip out html
 
         UseCaseTextValidator.Request request = getTextValidatorRequest(
                 UseCaseTextValidator.RequestType.SHORT_TEXT,
@@ -203,7 +207,6 @@ public class IngredientEditorViewModel extends ViewModel {
 
     private void processShortTextValidationResponse(UseCaseTextValidator.Response response) {
         if (response.getResult() == UseCaseTextValidator.Result.VALID) {
-            isNameValid = true;
 
             UseCaseIngredient.Model model = UseCaseIngredient.Model.Builder.
                     basedOn(ingredientResponse.getModel()).
@@ -212,14 +215,13 @@ public class IngredientEditorViewModel extends ViewModel {
             executeUseCaseIngredient(model);
 
         } else {
-            isNameValid = false;
             setError(showNameError, response);
             updateUseButtonVisibility();
         }
     }
 
     public String getDescription() {
-        return ingredientResponse.getModel().getDescription();
+        return ingredientResponse == null ? "" : ingredientResponse.getModel().getDescription();
     }
 
     public void setDescription(String description) {
@@ -267,7 +269,6 @@ public class IngredientEditorViewModel extends ViewModel {
 
     private void processLongTextValidationResponse(UseCaseTextValidator.Response longTextResponse) {
         if (longTextResponse.getResult() == UseCaseTextValidator.Result.VALID) {
-            isDescriptionValid = true;
 
             UseCaseIngredient.Model model = UseCaseIngredient.Model.Builder.
                     basedOn(ingredientResponse.getModel()).
@@ -276,9 +277,8 @@ public class IngredientEditorViewModel extends ViewModel {
 
             executeUseCaseIngredient(model);
         } else {
-            isDescriptionValid = false;
-            updateUseButtonVisibility();
             setError(showDescriptionError, longTextResponse);
+            updateUseButtonVisibility();
         }
     }
 
@@ -302,15 +302,11 @@ public class IngredientEditorViewModel extends ViewModel {
 
     private void updateUseButtonVisibility() {
         if (!updatingUi) {
-            if (isValid() && isChanged) {
+            if (isValid && isChanged) {
                 showUseButton.setValue(true);
             } else
                 showUseButton.setValue(false);
         }
-    }
-
-    private boolean isValid() {
-        return isNameValid && isDescriptionValid;
     }
 
     void useButtonPressed() {
