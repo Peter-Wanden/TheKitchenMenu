@@ -49,7 +49,7 @@ public class RemoteSignIn {
                 onSignedInInitialise(user.getUid());
 
             } else {
-                Constants.getUserId().setValue(ANONYMOUS_USER);
+                Constants.setUserId(ANONYMOUS_USER);
                 mainActivity.startActivityForResult(
                         AuthUI.getInstance()
                                 .createSignInIntentBuilder()
@@ -72,7 +72,7 @@ public class RemoteSignIn {
     }
 
     private void onSignedInInitialise(String userUid) {
-        Constants.getUserId().setValue(userUid);
+        Constants.setUserId(userUid);
     }
 
     public void authStateListener(boolean attachState) {
@@ -102,7 +102,7 @@ public class RemoteSignIn {
 
     public void signOut(Context context) {
         Log.i(TAG, "--- User signed out from remote database");
-        Constants.getUserId().setValue(ANONYMOUS_USER);
+        Constants.setUserId(ANONYMOUS_USER);
         AuthUI.getInstance().signOut(context);
     }
 }

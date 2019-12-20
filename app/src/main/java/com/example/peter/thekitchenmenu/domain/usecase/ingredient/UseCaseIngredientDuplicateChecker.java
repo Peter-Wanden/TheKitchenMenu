@@ -8,7 +8,8 @@ import com.google.android.gms.common.util.Strings;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-public class UseCaseIngredientDuplicateChecker implements DataSource.GetAllCallback<IngredientEntity> {
+public class UseCaseIngredientDuplicateChecker
+        implements DataSource.GetAllCallback<IngredientEntity> {
 
     public interface DuplicateCallback {
         void duplicateCheckResult(String duplicateId);

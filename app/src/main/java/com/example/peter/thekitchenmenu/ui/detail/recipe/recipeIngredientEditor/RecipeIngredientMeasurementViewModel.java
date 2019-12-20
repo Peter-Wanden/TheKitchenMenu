@@ -14,9 +14,9 @@ import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModelBuil
 import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.UseCaseConversionFactorStatus;
 import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.UseCaseConversionFactorStatusRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.UseCaseConversionFactorStatusResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeportioncalculator.UseCasePortionCalculator;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeportioncalculator.UseCasePortionCalculatorRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeportioncalculator.UseCasePortionCalculatorResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientcalculator.UseCaseIngredientCalculator;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientcalculator.UseCaseIngredientCalculatorRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientcalculator.UseCaseIngredientCalculatorResponse;
 import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.common.MeasurementErrorMessageMaker;
 import com.example.peter.thekitchenmenu.ui.utils.unitofmeasure.CountFraction;
@@ -35,7 +35,7 @@ public class RecipeIngredientMeasurementViewModel extends ObservableViewModel {
     private UseCaseHandler useCaseHandler;
     private NumberFormatter numberFormatter;
     private MeasurementErrorMessageMaker errorMessageMaker;
-    private UseCasePortionCalculator useCasePortionCalculator;
+    private UseCaseIngredientCalculator useCaseIngredientCalculator;
     private UseCaseConversionFactorStatus useCaseConversionFactorStatus;
 
     private static final int MEASUREMENT_ERROR = -1;
@@ -59,7 +59,7 @@ public class RecipeIngredientMeasurementViewModel extends ObservableViewModel {
 
     public RecipeIngredientMeasurementViewModel(
             @NonNull UseCaseHandler useCaseHandler,
-            @NonNull UseCasePortionCalculator useCasePortionCalculator,
+            @NonNull UseCaseIngredientCalculator useCaseIngredientCalculator,
             @NonNull UseCaseConversionFactorStatus useCaseConversionFactor,
             @NonNull Resources resources,
             @NonNull NumberFormatter numberFormatter,
@@ -67,8 +67,8 @@ public class RecipeIngredientMeasurementViewModel extends ObservableViewModel {
 
         this.useCaseHandler = checkNotNull(
                 useCaseHandler, "useCaseHandler cannot be null");
-        this.useCasePortionCalculator = checkNotNull(
-                useCasePortionCalculator, "useCasePortionCalculator cannot be null");
+        this.useCaseIngredientCalculator = checkNotNull(
+                useCaseIngredientCalculator, "useCaseIngredientCalculator cannot be null");
         this.useCaseConversionFactorStatus = checkNotNull(
                 useCaseConversionFactor, "useCaseConversionFactor cannot be null");
         this.resources = checkNotNull(
@@ -350,7 +350,7 @@ public class RecipeIngredientMeasurementViewModel extends ObservableViewModel {
     }
 
     private void createPortionCalculatorRequestValues(MeasurementModel model) {
-        UseCasePortionCalculatorRequest request = new UseCasePortionCalculatorRequest(
+        UseCaseIngredientCalculatorRequest request = new UseCaseIngredientCalculatorRequest(
                 recipeId,
                 ingredientId,
                 recipeIngredientId,
@@ -359,19 +359,19 @@ public class RecipeIngredientMeasurementViewModel extends ObservableViewModel {
         executePortionCalculator(request);
     }
 
-    private void executePortionCalculator(UseCasePortionCalculatorRequest request) {
+    private void executePortionCalculator(UseCaseIngredientCalculatorRequest request) {
         useCaseHandler.execute(
-                useCasePortionCalculator,
+                useCaseIngredientCalculator,
                 request,
-                new Callback<UseCasePortionCalculatorResponse>() {
+                new Callback<UseCaseIngredientCalculatorResponse>() {
                     @Override
-                    public void onSuccess(UseCasePortionCalculatorResponse response) {
+                    public void onSuccess(UseCaseIngredientCalculatorResponse response) {
                         processModelResult(response.getModel());
                         processResultStatus(response.getResultStatus());
                     }
 
                     @Override
-                    public void onError(UseCasePortionCalculatorResponse response) {
+                    public void onError(UseCaseIngredientCalculatorResponse response) {
                         processModelResult(response.getModel());
                         processResultStatus(response.getResultStatus());
                     }
@@ -407,18 +407,18 @@ public class RecipeIngredientMeasurementViewModel extends ObservableViewModel {
         measurementModel = resultModel;
     }
 
-    private void processResultStatus(UseCasePortionCalculator.ResultStatus resultStatus) {
+    private void processResultStatus(UseCaseIngredientCalculator.ResultStatus resultStatus) {
         hideAllInputErrors();
 
-        if (resultStatus == UseCasePortionCalculator.ResultStatus.INVALID_CONVERSION_FACTOR) {
+        if (resultStatus == UseCaseIngredientCalculator.ResultStatus.INVALID_CONVERSION_FACTOR) {
             conversionFactorErrorMessage = errorMessageMaker.getConversionFactorErrorMessage();
             notifyPropertyChanged(BR.conversionFactorErrorMessage);
 
-        } else if (resultStatus == UseCasePortionCalculator.ResultStatus.INVALID_TOTAL_UNIT_ONE) {
+        } else if (resultStatus == UseCaseIngredientCalculator.ResultStatus.INVALID_TOTAL_UNIT_ONE) {
             unitOneErrorMessage = errorMessageMaker.getMeasurementErrorMessage(measurementModel);
             notifyPropertyChanged(BR.unitOneErrorMessage);
 
-        } else if (resultStatus == UseCasePortionCalculator.ResultStatus.INVALID_TOTAL_UNIT_TWO) {
+        } else if (resultStatus == UseCaseIngredientCalculator.ResultStatus.INVALID_TOTAL_UNIT_TWO) {
             unitTwoErrorMessage = errorMessageMaker.getMeasurementErrorMessage(measurementModel);
             notifyPropertyChanged(BR.unitTwoErrorMessage);
         }
@@ -444,7 +444,7 @@ public class RecipeIngredientMeasurementViewModel extends ObservableViewModel {
     private UseCaseConversionFactorStatusRequest getRequest() {
         return new UseCaseConversionFactorStatusRequest(
                 measurementModel.getSubtype(),
-                useCasePortionCalculator.getIngredientId()
+                useCaseIngredientCalculator.getIngredientId()
         );
     }
 

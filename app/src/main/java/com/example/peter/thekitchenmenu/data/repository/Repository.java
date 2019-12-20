@@ -12,10 +12,11 @@ import java.util.Map;
 
 import static androidx.core.util.Preconditions.checkNotNull;
 
+
 public abstract class Repository<T extends TkmEntity> implements DataSource<T> {
 
-    DataSource remoteDataSource;
-    DataSource localDataSource;
+    DataSource<T> remoteDataSource;
+    DataSource<T> localDataSource;
     Map<String, T> entityCache;
     private boolean cacheIsDirty;
 
@@ -30,7 +31,6 @@ public abstract class Repository<T extends TkmEntity> implements DataSource<T> {
         if (cacheIsDirty)
             getItemsFromRemoteDataSource(callback);
         else {
-            //noinspection unchecked
             localDataSource.getAll(new GetAllCallback<T>() {
                 @Override
                 public void onAllLoaded(List<T> entities) {
@@ -46,7 +46,6 @@ public abstract class Repository<T extends TkmEntity> implements DataSource<T> {
         }
     }
     private void getItemsFromRemoteDataSource(@NonNull final GetAllCallback<T> callback) {
-        //noinspection unchecked
         remoteDataSource.getAll(new GetAllCallback<T>() {
             @Override
             public void onAllLoaded(List<T> entities) {
@@ -78,7 +77,6 @@ public abstract class Repository<T extends TkmEntity> implements DataSource<T> {
         localDataSource.deleteAll();
 
         for (T entity : entities)
-            //noinspection unchecked
             localDataSource.save(entity);
     }
 
@@ -93,7 +91,6 @@ public abstract class Repository<T extends TkmEntity> implements DataSource<T> {
             callback.onEntityLoaded(cachedEntity);
             return;
         }
-        //noinspection unchecked
         localDataSource.getById(id, new GetEntityCallback<T>() {
             @Override
             public void onEntityLoaded(T entity) {
@@ -106,7 +103,6 @@ public abstract class Repository<T extends TkmEntity> implements DataSource<T> {
 
             @Override
             public void onDataNotAvailable() {
-                //noinspection unchecked
                 remoteDataSource.getById(id, new GetEntityCallback<T>() {
                     @Override
                     public void onEntityLoaded(T entity) {
@@ -144,9 +140,7 @@ public abstract class Repository<T extends TkmEntity> implements DataSource<T> {
     @Override
     public void save(@NonNull T entity) {
         checkNotNull(entity);
-        //noinspection unchecked
         remoteDataSource.save(entity);
-        //noinspection unchecked
         localDataSource.save(entity);
 
         if (entityCache == null)

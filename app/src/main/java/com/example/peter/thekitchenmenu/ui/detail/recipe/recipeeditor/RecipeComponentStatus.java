@@ -37,7 +37,7 @@ public final class RecipeComponentStatus {
         return "RecipeComponentStatus{" +
                 "modelName=" + modelName +
                 ", isChanged=" + isChanged +
-                ", isValid=" + isValid +
+                ", isModelValid=" + isValid +
                 '}';
     }
 

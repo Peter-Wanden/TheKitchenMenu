@@ -15,7 +15,7 @@ public class TestDataIngredientEntity {
                 "",
                 "",
                 1,
-                Constants.getUserId().getValue(),
+                Constants.getUserId(),
                 10L,
                 10L);
     }
@@ -110,7 +110,7 @@ public class TestDataIngredientEntity {
                 "existingName",
                 "existingDescription",
                 1,
-                Constants.getUserId().getValue(),
+                Constants.getUserId(),
                 70L,
                 80L
 

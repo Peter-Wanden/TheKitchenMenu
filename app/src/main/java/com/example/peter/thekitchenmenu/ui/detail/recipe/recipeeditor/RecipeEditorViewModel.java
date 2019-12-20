@@ -11,9 +11,8 @@ import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipe;
-import com.example.peter.thekitchenmenu.utils.TimeProvider;
-import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
-import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
+import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
+import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import static com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidator.*;
 import static com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidator.RecipeValidationStatus.*;
@@ -260,7 +259,7 @@ public class RecipeEditorViewModel
         return new RecipeEntity(
                 id,
                 id,
-                Constants.getUserId().getValue(),
+                Constants.getUserId(),
                 timeStamp,
                 timeStamp,
                 true
@@ -291,7 +290,7 @@ public class RecipeEditorViewModel
     }
 
     private boolean creatorIsEditingOwnRecipe() {
-        return recipeEntity.getCreatedBy().equals(Constants.getUserId().getValue());
+        return recipeEntity.getCreatedBy().equals(Constants.getUserId());
     }
 
     private boolean recipeIsCloned() {

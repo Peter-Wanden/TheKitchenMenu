@@ -7,8 +7,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.peter.thekitchenmenu.R;
+import com.example.peter.thekitchenmenu.domain.UseCaseCommand;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.UseCaseIngredient;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.UseCaseTextValidator;
 
@@ -86,6 +86,104 @@ public class IngredientEditorViewModel extends ViewModel {
         return !this.ingredientId.equals(ingredientId);
     }
 
+    public String getName() {
+        return ingredientResponse == null ? "" : ingredientResponse.getModel().getName();
+    }
+
+    public void setName(String name) {
+        if (!updatingUi) {
+            validateName(name);
+        }
+    }
+
+    private void validateName(String name) {
+        showNameError.set(null);
+        // todo - strip out html
+        UseCaseTextValidator.Request request = new UseCaseTextValidator.Request(
+                UseCaseTextValidator.RequestType.SHORT_TEXT,
+                new UseCaseTextValidator.Model(name)
+        );
+        handler.execute(
+                useCaseTextValidator,
+                request,
+                new UseCaseCommand.Callback<UseCaseTextValidator.Response>() {
+                    @Override
+                    public void onSuccess(UseCaseTextValidator.Response response) {
+                        processNameTextValidationResponse(response);
+                    }
+
+                    @Override
+                    public void onError(UseCaseTextValidator.Response response) {
+                        processNameTextValidationResponse(response);
+                    }
+                });
+    }
+
+    private void processNameTextValidationResponse(UseCaseTextValidator.Response response) {
+        if (response.getResult() == UseCaseTextValidator.Result.VALID) {
+
+            UseCaseIngredient.Model model = UseCaseIngredient.Model.Builder.
+                    basedOn(ingredientResponse.getModel()).
+                    setName(response.getModel().getText()).
+                    build();
+            executeUseCaseIngredient(model);
+
+        } else {
+            setError(showNameError, response);
+            updateUseButtonVisibility();
+        }
+    }
+
+    public String getDescription() {
+        return ingredientResponse == null ? "" : ingredientResponse.getModel().getDescription();
+    }
+
+    public void setDescription(String description) {
+        if (!updatingUi) {
+            validateDescription(description);
+        }
+    }
+
+    private void validateDescription(String description) {
+        showDescriptionError.set(null);
+
+        UseCaseTextValidator.Request request = new UseCaseTextValidator.Request(
+                UseCaseTextValidator.RequestType.LONG_TEXT,
+                new UseCaseTextValidator.Model(description)
+        );
+
+        handler.execute(
+                useCaseTextValidator,
+                request,
+                new UseCaseCommand.Callback<UseCaseTextValidator.Response>() {
+                    @Override
+                    public void onSuccess(UseCaseTextValidator.Response response) {
+                        processDescriptionTextValidationResponse(response);
+                    }
+
+                    @Override
+                    public void onError(UseCaseTextValidator.Response response) {
+                        processDescriptionTextValidationResponse(response);
+                    }
+                });
+    }
+
+    private void processDescriptionTextValidationResponse(UseCaseTextValidator.Response
+                                                                  longTextResponse) {
+        if (longTextResponse.getResult() == UseCaseTextValidator.Result.VALID) {
+
+            UseCaseIngredient.Model model = UseCaseIngredient.Model.Builder.
+                    basedOn(ingredientResponse.getModel()).
+                    setDescription(longTextResponse.getModel().getText()).
+                    build();
+
+            executeUseCaseIngredient(model);
+        } else {
+            setError(showDescriptionError, longTextResponse);
+            updateUseButtonVisibility();
+        }
+    }
+
     private void executeUseCaseIngredient(UseCaseIngredient.Model model) {
         dataLoading.setValue(true);
         UseCaseIngredient.Request request = new UseCaseIngredient.Request(model);
@@ -93,23 +191,18 @@ public class IngredientEditorViewModel extends ViewModel {
         handler.execute(
                 useCaseIngredient,
                 request,
-                getUseCaseIngredientCallback()
+                new UseCaseCommand.Callback<UseCaseIngredient.Response>() {
+                    @Override
+                    public void onSuccess(UseCaseIngredient.Response response) {
+                        processUseCaseIngredientResponse(response);
+                    }
+
+                    @Override
+                    public void onError(UseCaseIngredient.Response response) {
+                        processUseCaseIngredientResponse(response);
+                    }
+                }
         );
-    }
-
-    private UseCaseInteractor.Callback<UseCaseIngredient.Response> getUseCaseIngredientCallback() {
-        return new UseCaseInteractor.Callback<UseCaseIngredient.Response>() {
-
-            @Override
-            public void onSuccess(UseCaseIngredient.Response response) {
-                processUseCaseIngredientResponse(response);
-            }
-
-            @Override
-            public void onError(UseCaseIngredient.Response response) {
-                processUseCaseIngredientResponse(response);
-            }
-        };
     }
 
     private void processUseCaseIngredientResponse(UseCaseIngredient.Response response) {
@@ -162,124 +255,6 @@ public class IngredientEditorViewModel extends ViewModel {
             updatingUi = false;
         }
         updateUseButtonVisibility();
-    }
-
-    public String getName() {
-        return ingredientResponse == null ? "" : ingredientResponse.getModel().getName();
-    }
-
-    public void setName(String name) {
-        if (!updatingUi) {
-            validateName(name);
-        }
-    }
-
-    private void validateName(String name) {
-        showNameError.set(null);
-
-        // todo - strip out html
-
-        UseCaseTextValidator.Request request = getTextValidatorRequest(
-                UseCaseTextValidator.RequestType.SHORT_TEXT,
-                name
-        );
-        handler.execute(
-                useCaseTextValidator,
-                request,
-                getShortTextValidatorCallback());
-    }
-
-    private UseCaseTextValidator.Callback<UseCaseTextValidator.Response>
-    getShortTextValidatorCallback() {
-        return new UseCaseTextValidator.Callback<UseCaseTextValidator.Response>() {
-
-            @Override
-            public void onSuccess(UseCaseTextValidator.Response response) {
-                processShortTextValidationResponse(response);
-            }
-
-            @Override
-            public void onError(UseCaseTextValidator.Response response) {
-                processShortTextValidationResponse(response);
-            }
-        };
-    }
-
-    private void processShortTextValidationResponse(UseCaseTextValidator.Response response) {
-        if (response.getResult() == UseCaseTextValidator.Result.VALID) {
-
-            UseCaseIngredient.Model model = UseCaseIngredient.Model.Builder.
-                    basedOn(ingredientResponse.getModel()).
-                    setName(response.getModel().getText()).
-                    build();
-            executeUseCaseIngredient(model);
-
-        } else {
-            setError(showNameError, response);
-            updateUseButtonVisibility();
-        }
-    }
-
-    public String getDescription() {
-        return ingredientResponse == null ? "" : ingredientResponse.getModel().getDescription();
-    }
-
-    public void setDescription(String description) {
-        if (!updatingUi) {
-            validateDescription(description);
-        }
-    }
-
-    private void validateDescription(String description) {
-        showDescriptionError.set(null);
-
-        UseCaseTextValidator.Request request = getTextValidatorRequest(
-                UseCaseTextValidator.RequestType.LONG_TEXT,
-                description);
-
-        handler.execute(
-                useCaseTextValidator,
-                request,
-                getLongTextValidatorCallback());
-
-    }
-
-    private UseCaseTextValidator.Request getTextValidatorRequest(
-            UseCaseTextValidator.RequestType type, String textToValidate) {
-        return new UseCaseTextValidator.Request(
-                type,
-                new UseCaseTextValidator.Model(textToValidate));
-    }
-
-    private UseCaseTextValidator.Callback<UseCaseTextValidator.Response>
-    getLongTextValidatorCallback() {
-        return new UseCaseTextValidator.Callback<UseCaseTextValidator.Response>() {
-
-            @Override
-            public void onSuccess(UseCaseTextValidator.Response response) {
-                processLongTextValidationResponse(response);
-            }
-
-            @Override
-            public void onError(UseCaseTextValidator.Response response) {
-                processLongTextValidationResponse(response);
-            }
-        };
-    }
-
-    private void processLongTextValidationResponse(UseCaseTextValidator.Response longTextResponse) {
-        if (longTextResponse.getResult() == UseCaseTextValidator.Result.VALID) {
-
-            UseCaseIngredient.Model model = UseCaseIngredient.Model.Builder.
-                    basedOn(ingredientResponse.getModel()).
-                    setDescription(longTextResponse.getModel().getText()).
-                    build();
-
-            executeUseCaseIngredient(model);
-        } else {
-            setError(showDescriptionError, longTextResponse);
-            updateUseButtonVisibility();
-        }
     }
 
     private void setError(ObservableField<String> errorObservable,

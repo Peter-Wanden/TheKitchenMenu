@@ -182,7 +182,7 @@ public class ProductEditorViewModel extends ObservableAndroidViewModel {
                     updatedMeasurementModel.getNumberOfItems(),
                     updatedMeasurementModel.getBaseUnits(),
                     updatedMeasurementModel.getMeasurementSubtype().asInt(),
-                    Constants.getUserId().getValue(),
+                    Constants.getUserId(),
                     updatedImageModel.getWebImageUrl(),
                     updatedImageModel.getRemoteSmallImageUri(),
                     updatedImageModel.getRemoteMediumImageUri(),

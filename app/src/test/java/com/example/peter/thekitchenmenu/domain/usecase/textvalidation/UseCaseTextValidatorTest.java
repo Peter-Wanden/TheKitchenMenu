@@ -29,7 +29,7 @@ public class UseCaseTextValidatorTest {
 
         SUT = new UseCaseTextValidator.Builder().
                 setShortTextMinLength(textLengthValues[0]).
-                setShrotTextMaxLength(textLengthValues[1]).
+                setShortTextMaxLength(textLengthValues[1]).
                 setLongTextMinLength(textLengthValues[2]).
                 setLongTextMaxLength(textLengthValues[3]).
                 build();

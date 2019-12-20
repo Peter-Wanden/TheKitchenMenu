@@ -42,9 +42,12 @@ public abstract class Constants {
      * This field is updated when the user logs in / out.
      * see: https://developer.android.com/topic/libraries/architecture/livedata
      */
-    @NonNull
-    private static MutableLiveData<String> USER_ID = new MutableLiveData<>(ANONYMOUS_USER);
-    public static MutableLiveData<String> getUserId() {
-        return USER_ID;
+    private static String userId = ANONYMOUS_USER;
+    public static String getUserId() {
+        return userId;
+    }
+
+    public static void setUserId(String userId) {
+        Constants.userId = userId;
     }
 }

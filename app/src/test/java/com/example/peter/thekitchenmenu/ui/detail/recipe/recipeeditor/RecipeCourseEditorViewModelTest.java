@@ -8,8 +8,8 @@ import com.example.peter.thekitchenmenu.data.repository.*;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipecourse.UseCaseRecipeCourse;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeEntity;
-import com.example.peter.thekitchenmenu.utils.TimeProvider;
-import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
+import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
+import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import org.junit.*;
 import org.mockito.*;

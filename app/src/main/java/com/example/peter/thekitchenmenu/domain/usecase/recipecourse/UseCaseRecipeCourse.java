@@ -6,8 +6,8 @@ import com.example.peter.thekitchenmenu.data.entity.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeCourse;
 import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
-import com.example.peter.thekitchenmenu.utils.TimeProvider;
-import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
+import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
+import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -419,7 +419,7 @@ public class UseCaseRecipeCourse
             return "Response{" +
                     "courseList=" + courseList +
                     ", isChanged=" + isChanged +
-                    ", isValid=" + isValid +
+                    ", isModelValid=" + isValid +
                     '}';
         }
     }

@@ -13,7 +13,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.UseCaseRec
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.UseCaseTextValidator;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeValidator;
-import com.example.peter.thekitchenmenu.utils.TimeProvider;
+import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -109,7 +109,7 @@ public class RecipeIdentityEditorViewModelTest {
 
         UseCaseTextValidator useCaseTextValidator = new UseCaseTextValidator.Builder().
                 setShortTextMinLength(shortTextMinLength).
-                setShrotTextMaxLength(shortTextMaxLength).
+                setShortTextMaxLength(shortTextMaxLength).
                 setLongTextMinLength(longTextMinLength).
                 setLongTextMaxLength(longTextMaxLength).
                 build();

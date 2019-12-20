@@ -93,7 +93,7 @@ public class UseCaseRecipeIngredientListItemsTest {
                 "",
                 100,
                 0,
-                Constants.getUserId().getValue(),
+                Constants.getUserId(),
                 10,
                 10
         );
@@ -105,7 +105,7 @@ public class UseCaseRecipeIngredientListItemsTest {
                 "",
                 150,
                 1,
-                Constants.getUserId().getValue(),
+                Constants.getUserId(),
                 20,
                 20
         );
@@ -117,7 +117,7 @@ public class UseCaseRecipeIngredientListItemsTest {
                 "",
                 100,
                 2,
-                Constants.getUserId().getValue(),
+                Constants.getUserId(),
                 30,
                 30
         );
@@ -129,7 +129,7 @@ public class UseCaseRecipeIngredientListItemsTest {
                 "",
                 100,
                 3,
-                Constants.getUserId().getValue(),
+                Constants.getUserId(),
                 40,
                 40
         );
@@ -150,7 +150,7 @@ public class UseCaseRecipeIngredientListItemsTest {
                 "NAME_1",
                 "DESC_1",
                 1,
-                Constants.getUserId().getValue(),
+                Constants.getUserId(),
                 10,
                 20
         );
@@ -160,7 +160,7 @@ public class UseCaseRecipeIngredientListItemsTest {
                 "NAME_2",
                 "DESC_2",
                 1.1,
-                Constants.getUserId().getValue(),
+                Constants.getUserId(),
                 20,
                 30
         );
@@ -170,7 +170,7 @@ public class UseCaseRecipeIngredientListItemsTest {
                 "NAME_3",
                 "DESC_3",
                 1.2,
-                Constants.getUserId().getValue(),
+                Constants.getUserId(),
                 40,
                 50
         );
@@ -180,7 +180,7 @@ public class UseCaseRecipeIngredientListItemsTest {
                 "NAME_4",
                 "DESC_4",
                 1.5,
-                Constants.getUserId().getValue(),
+                Constants.getUserId(),
                 10,
                 20
         );

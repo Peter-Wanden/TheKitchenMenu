@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipeportioncalculator;
+package com.example.peter.thekitchenmenu.domain.usecase.recipeingredientcalculator;
 
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
@@ -14,16 +14,16 @@ import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementS
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasure;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
-import com.example.peter.thekitchenmenu.utils.TimeProvider;
-import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
+import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
+import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 /**
  * Calculates the measurement of an ingredient for a single portion of a recipe.
  */
-public class UseCasePortionCalculator
-        extends UseCaseInteractor<UseCasePortionCalculatorRequest, UseCasePortionCalculatorResponse> {
+public class UseCaseIngredientCalculator
+        extends UseCaseInteractor<UseCaseIngredientCalculatorRequest, UseCaseIngredientCalculatorResponse> {
 
-    private static final String TAG = "tkm-" + UseCasePortionCalculator.class.getSimpleName() + " ";
+    private static final String TAG = "tkm-" + UseCaseIngredientCalculator.class.getSimpleName() + " ";
 
     public enum ResultStatus {
         QUANTITY_DATA_NOT_AVAILABLE,
@@ -64,11 +64,11 @@ public class UseCasePortionCalculator
     private RecipeIngredientQuantityEntity quantityEntity;
     private IngredientEntity ingredientEntity;
 
-    public UseCasePortionCalculator(RepositoryRecipePortions portionsRepository,
-                                    RepositoryRecipeIngredient recipeIngredientRepository,
-                                    RepositoryIngredient ingredientRepository,
-                                    UniqueIdProvider idProvider,
-                                    TimeProvider timeProvider) {
+    public UseCaseIngredientCalculator(RepositoryRecipePortions portionsRepository,
+                                       RepositoryRecipeIngredient recipeIngredientRepository,
+                                       RepositoryIngredient ingredientRepository,
+                                       UniqueIdProvider idProvider,
+                                       TimeProvider timeProvider) {
         this.portionsRepository = portionsRepository;
         this.recipeIngredientRepository = recipeIngredientRepository;
         this.ingredientRepository = ingredientRepository;
@@ -77,7 +77,7 @@ public class UseCasePortionCalculator
     }
 
     @Override
-    protected void execute(UseCasePortionCalculatorRequest request) {
+    protected void execute(UseCaseIngredientCalculatorRequest request) {
         if (isNewInstantiation()) {
             extractIdsAndStart(request);
         } else {
@@ -89,7 +89,7 @@ public class UseCasePortionCalculator
         return this.recipeIngredientId.isEmpty();
     }
 
-    private void extractIdsAndStart(UseCasePortionCalculatorRequest request) {
+    private void extractIdsAndStart(UseCaseIngredientCalculatorRequest request) {
         if (isRecipeIngredientIdProvided(request)) {
             start(request.getRecipeIngredientId());
         } else {
@@ -97,7 +97,7 @@ public class UseCasePortionCalculator
         }
     }
 
-    private boolean isRecipeIngredientIdProvided(UseCasePortionCalculatorRequest request) {
+    private boolean isRecipeIngredientIdProvided(UseCaseIngredientCalculatorRequest request) {
         return !request.getRecipeIngredientId().isEmpty();
     }
 
@@ -118,7 +118,7 @@ public class UseCasePortionCalculator
                 "",
                 0,
                 0,
-                Constants.getUserId().getValue(),
+                Constants.getUserId(),
                 currentTime,
                 currentTime
         );
@@ -137,7 +137,7 @@ public class UseCasePortionCalculator
                     public void onEntityLoaded(RecipeIngredientQuantityEntity quantityEntity) {
                         recipeId = quantityEntity.getRecipeId();
                         ingredientId = quantityEntity.getIngredientId();
-                        UseCasePortionCalculator.this.quantityEntity = quantityEntity;
+                        UseCaseIngredientCalculator.this.quantityEntity = quantityEntity;
                         loadIngredient();
                     }
 
@@ -155,7 +155,7 @@ public class UseCasePortionCalculator
                     @Override
                     public void onEntityLoaded(IngredientEntity ingredientEntity) {
                         ingredientId = ingredientEntity.getId();
-                        UseCasePortionCalculator.this.ingredientEntity = ingredientEntity;
+                        UseCaseIngredientCalculator.this.ingredientEntity = ingredientEntity;
                         loadPortions();
                     }
 
@@ -185,7 +185,7 @@ public class UseCasePortionCalculator
     }
 
     private void returnDataNotAvailable(ResultStatus status) {
-        UseCasePortionCalculatorResponse response = new UseCasePortionCalculatorResponse(
+        UseCaseIngredientCalculatorResponse response = new UseCaseIngredientCalculatorResponse(
                 UnitOfMeasureConstants.DEFAULT_MEASUREMENT_MODEL,
                 status);
 
@@ -321,13 +321,13 @@ public class UseCasePortionCalculator
 
     private void returnResult() {
         saveIfValid();
-        UseCasePortionCalculatorResponse response = getResponse();
+        UseCaseIngredientCalculatorResponse response = getResponse();
         resetResults();
         getUseCaseCallback().onSuccess(response);
     }
 
-    private UseCasePortionCalculatorResponse getResponse() {
-        return new UseCasePortionCalculatorResponse(
+    private UseCaseIngredientCalculatorResponse getResponse() {
+        return new UseCaseIngredientCalculatorResponse(
                 existingModel,
                 getResultStatus());
     }
@@ -389,7 +389,7 @@ public class UseCasePortionCalculator
                     quantityEntity.getProductId(),
                     unitOfMeasure.getItemBaseUnits(),
                     unitOfMeasure.getMeasurementSubtype().asInt(),
-                    Constants.getUserId().getValue(),
+                    Constants.getUserId(),
                     quantityEntity.getCreateDate(),
                     quantityEntity.getLastUpdate()
             );

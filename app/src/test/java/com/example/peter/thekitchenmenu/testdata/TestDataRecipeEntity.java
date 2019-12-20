@@ -10,7 +10,7 @@ public class TestDataRecipeEntity {
         return new RecipeEntity(
                 "newId",
                 "newId",
-                Constants.getUserId().getValue(),
+                Constants.getUserId(),
                 10L,
                 10L,
                 true
@@ -34,7 +34,7 @@ public class TestDataRecipeEntity {
         return new RecipeEntity(
                 "validExistingRecipeId",
                 "validExistingRecipeId",
-                Constants.getUserId().getValue(),
+                Constants.getUserId(),
                 20L,
                 20L,
                 false
@@ -46,7 +46,7 @@ public class TestDataRecipeEntity {
         return new RecipeEntity(
                 "invalidExistingId",
                 "invalidExistingId",
-                Constants.getUserId().getValue(),
+                Constants.getUserId(),
                 70L,
                 70L,
                 true
@@ -81,7 +81,7 @@ public class TestDataRecipeEntity {
         return new RecipeEntity(
                 getNewInvalid().getId(),
                 getValidFromAnotherUser().getId(),
-                Constants.getUserId().getValue(),
+                Constants.getUserId(),
                 getNewInvalid().getCreateDate(),
                 getNewInvalid().getLastUpdate(),
                 false
@@ -94,7 +94,7 @@ public class TestDataRecipeEntity {
         return new RecipeEntity(
                 getNewInvalid().getId(),
                 getInvalidFromAnotherUser().getId(),
-                Constants.getUserId().getValue(),
+                Constants.getUserId(),
                 getNewInvalid().getCreateDate(),
                 getNewInvalid().getLastUpdate(),
                 true

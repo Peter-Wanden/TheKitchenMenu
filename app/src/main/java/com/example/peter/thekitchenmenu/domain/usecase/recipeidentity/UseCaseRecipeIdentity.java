@@ -4,7 +4,7 @@ import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
-import com.example.peter.thekitchenmenu.utils.TimeProvider;
+import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 
 import java.util.Objects;
 

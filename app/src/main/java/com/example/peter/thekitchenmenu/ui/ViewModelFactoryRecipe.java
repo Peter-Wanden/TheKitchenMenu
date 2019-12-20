@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipe;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeCourse;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
@@ -27,10 +26,10 @@ import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist.Re
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist.RecipeNameAndPortionsViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist.RecipeIngredientListViewModel;
 import com.example.peter.thekitchenmenu.ui.utils.NumberFormatter;
-import com.example.peter.thekitchenmenu.utils.TimeProvider;
+import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.ui.catalog.recipe.RecipeCatalogViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeEditorViewModel;
-import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
+import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory {
 

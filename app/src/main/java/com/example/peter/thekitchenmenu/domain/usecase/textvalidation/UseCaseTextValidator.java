@@ -130,7 +130,7 @@ public class UseCaseTextValidator
             return this;
         }
 
-        public Builder setShrotTextMaxLength(int shortTextMaxLength) {
+        public Builder setShortTextMaxLength(int shortTextMaxLength) {
             this.shortTextMaxLength = shortTextMaxLength;
             return this;
         }

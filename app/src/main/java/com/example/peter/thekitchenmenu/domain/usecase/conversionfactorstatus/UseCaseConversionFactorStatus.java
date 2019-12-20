@@ -80,7 +80,7 @@ public class UseCaseConversionFactorStatus
     }
 
     private boolean userCanEditIngredient() {
-        return Constants.getUserId().getValue().equals(ingredientEntity.getCreatedBy());
+        return Constants.getUserId().equals(ingredientEntity.getCreatedBy());
     }
 
     private void returnResultUneditable() {

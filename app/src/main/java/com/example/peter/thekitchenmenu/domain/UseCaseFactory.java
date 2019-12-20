@@ -19,9 +19,9 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipecourse.UseCaseRecip
 import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.UseCaseRecipeIngredientListItems;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.UseCaseTextValidator;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.UseCaseIngredientDuplicateChecker;
-import com.example.peter.thekitchenmenu.utils.TimeProvider;
-import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeportioncalculator.UseCasePortionCalculator;
+import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
+import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientcalculator.UseCaseIngredientCalculator;
 
 public class UseCaseFactory {
 
@@ -80,8 +80,8 @@ public class UseCaseFactory {
         return INSTANCE;
     }
 
-    public UseCasePortionCalculator providePortionsUseCase() {
-        return new UseCasePortionCalculator(
+    public UseCaseIngredientCalculator providePortionsUseCase() {
+        return new UseCaseIngredientCalculator(
                 portionsRepository,
                 recipeIngredientRepository,
                 ingredientRepository,
@@ -130,7 +130,7 @@ public class UseCaseFactory {
         return new UseCaseTextValidator.Builder().
                 setShortTextMinLength(
                         resources.getInteger(R.integer.input_validation_short_text_min_length)).
-                setShrotTextMaxLength(
+                setShortTextMaxLength(
                         resources.getInteger(R.integer.input_validation_short_text_max_length)).
                 setLongTextMinLength(
                         resources.getInteger(R.integer.input_validation_long_text_min_length)).

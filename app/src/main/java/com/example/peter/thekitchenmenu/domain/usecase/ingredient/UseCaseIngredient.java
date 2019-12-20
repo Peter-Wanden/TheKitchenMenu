@@ -6,8 +6,8 @@ import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
-import com.example.peter.thekitchenmenu.utils.TimeProvider;
-import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
+import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
+import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import java.util.Objects;
 
@@ -173,7 +173,7 @@ public class UseCaseIngredient
                 model.getName(),
                 model.getDescription(),
                 model.getConversionFactor(),
-                Constants.getUserId().getValue(),
+                Constants.getUserId(),
                 model.getCreateDate(),
                 model.getLastUpdate()
         );
@@ -207,7 +207,7 @@ public class UseCaseIngredient
     }
 
     private boolean isEditable() {
-        return Constants.getUserId().getValue().equals(responseModel.getUserId());
+        return Constants.getUserId().equals(responseModel.getUserId());
     }
 
     private void equaliseRequestResponseStates() {
@@ -380,7 +380,7 @@ public class UseCaseIngredient
                 name = "";
                 description = "";
                 conversionFactor = UnitOfMeasureConstants.NO_CONVERSION_FACTOR;
-                userId = Constants.getUserId().getValue();
+                userId = Constants.getUserId();
                 createDate = 0L;
                 lastUpdate = 0L;
 

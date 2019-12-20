@@ -7,7 +7,7 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIdentityEntity;
-import com.example.peter.thekitchenmenu.utils.TimeProvider;
+import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 
 import org.junit.*;
 import org.mockito.*;

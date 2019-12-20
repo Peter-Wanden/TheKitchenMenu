@@ -17,8 +17,8 @@ import com.example.peter.thekitchenmenu.domain.usecase.ingredient.UseCaseIngredi
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.UseCaseIngredientDuplicateChecker;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.UseCaseTextValidator;
 import com.example.peter.thekitchenmenu.testdata.TestDataIngredientEntity;
-import com.example.peter.thekitchenmenu.utils.TimeProvider;
-import com.example.peter.thekitchenmenu.utils.UniqueIdProvider;
+import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
+import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import org.junit.*;
 import org.mockito.*;
@@ -111,7 +111,7 @@ public class IngredientEditorViewModelTest {
 
         UseCaseTextValidator useCaseTextValidator = new UseCaseTextValidator.Builder().
                 setShortTextMinLength(shortTextMinLength).
-                setShrotTextMaxLength(shortTextMaxLength).
+                setShortTextMaxLength(shortTextMaxLength).
                 setLongTextMinLength(longTextMinLength).
                 setLongTextMaxLength(longTextMaxLength).
                 build();

@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipeportioncalculator;
+package com.example.peter.thekitchenmenu.domain.usecase.recipeingredientcalculator;
 
 import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
@@ -7,16 +7,16 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipeportioncalculator.UseCasePortionCalculator.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipeingredientcalculator.UseCaseIngredientCalculator.*;
 
-public class UseCasePortionCalculatorResponse implements UseCaseInteractor.Response {
+public class UseCaseIngredientCalculatorResponse implements UseCaseInteractor.Response {
     @Nonnull
     private final MeasurementModel model;
     @Nonnull
     private final ResultStatus resultStatus;
 
-    public UseCasePortionCalculatorResponse(@Nonnull MeasurementModel model,
-                                            @Nonnull ResultStatus resultStatus) {
+    public UseCaseIngredientCalculatorResponse(@Nonnull MeasurementModel model,
+                                               @Nonnull ResultStatus resultStatus) {
         this.model = model;
         this.resultStatus = resultStatus;
     }
@@ -35,7 +35,7 @@ public class UseCasePortionCalculatorResponse implements UseCaseInteractor.Respo
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UseCasePortionCalculatorResponse that = (UseCasePortionCalculatorResponse) o;
+        UseCaseIngredientCalculatorResponse that = (UseCaseIngredientCalculatorResponse) o;
         return model.equals(that.model) &&
                 resultStatus == that.resultStatus;
     }
@@ -48,7 +48,7 @@ public class UseCasePortionCalculatorResponse implements UseCaseInteractor.Respo
     @Nonnull
     @Override
     public String toString() {
-        return "UseCasePortionCalculatorResponse{" +
+        return "UseCaseIngredientCalculatorResponse{" +
                 "model=" + model +
                 ", resultStatus=" + resultStatus +
                 '}';

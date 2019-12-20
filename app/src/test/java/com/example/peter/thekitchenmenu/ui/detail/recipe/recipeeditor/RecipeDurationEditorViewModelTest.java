@@ -10,7 +10,7 @@ import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeDurationEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeValidator;
-import com.example.peter.thekitchenmenu.utils.TimeProvider;
+import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 
 import org.junit.*;
 import org.mockito.*;

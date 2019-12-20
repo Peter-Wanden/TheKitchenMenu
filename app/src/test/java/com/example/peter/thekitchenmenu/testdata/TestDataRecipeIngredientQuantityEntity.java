@@ -17,7 +17,7 @@ public class TestDataRecipeIngredientQuantityEntity {
                 TestDataProductEntity.getNewInvalid().getId(),
                 0,
                 MeasurementSubtype.METRIC_MASS.asInt(),
-                Constants.getUserId().getValue(),
+                Constants.getUserId(),
                 10L,
                 10L
         );
@@ -31,7 +31,7 @@ public class TestDataRecipeIngredientQuantityEntity {
                 "",
                 150, // per portion value
                 MeasurementSubtype.METRIC_MASS.asInt(),
-                Constants.getUserId().getValue(),
+                Constants.getUserId(),
                 10L,
                 10L
         );
@@ -45,7 +45,7 @@ public class TestDataRecipeIngredientQuantityEntity {
                 "",
                 36.145641984375, // 5.1lbs / 4 portions
                 MeasurementSubtype.IMPERIAL_MASS.asInt(),
-                Constants.getUserId().getValue(),
+                Constants.getUserId(),
                 20L,
                 20L
         );
@@ -82,7 +82,7 @@ public class TestDataRecipeIngredientQuantityEntity {
                 "",
                 1.25,
                 MeasurementSubtype.IMPERIAL_SPOON.asInt(),
-                Constants.getUserId().getValue(),
+                Constants.getUserId(),
                 40L,
                 40L
         );
@@ -96,7 +96,7 @@ public class TestDataRecipeIngredientQuantityEntity {
                 "",
                 getItemBaseUnitsWithConversionFactorApplied(),
                 MeasurementSubtype.IMPERIAL_SPOON.asInt(),
-                Constants.getUserId().getValue(),
+                Constants.getUserId(),
                 40L,
                 40L
         );
@@ -138,7 +138,7 @@ public class TestDataRecipeIngredientQuantityEntity {
                 TestDataProductEntity.getExistingValid().getId(),
                 250,
                 MeasurementSubtype.METRIC_VOLUME.asInt(),
-                Constants.getUserId().getValue(),
+                Constants.getUserId(),
                 30L,
                 30L
         );
@@ -173,7 +173,7 @@ public class TestDataRecipeIngredientQuantityEntity {
                 TestDataProductEntity.getExistingValid().getId(),
                 5,
                 MeasurementSubtype.IMPERIAL_SPOON.asInt(),
-                Constants.getUserId().getValue(),
+                Constants.getUserId(),
                 40L,
                 40L
         );

@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipeportioncalculator;
+package com.example.peter.thekitchenmenu.domain.usecase.recipeingredientcalculator;
 
 import androidx.annotation.NonNull;
 
@@ -7,7 +7,7 @@ import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
 
 import java.util.Objects;
 
-public class UseCasePortionCalculatorRequest implements UseCaseInteractor.Request {
+public class UseCaseIngredientCalculatorRequest implements UseCaseInteractor.Request {
     @NonNull
     private final String recipeId;
     @NonNull
@@ -17,10 +17,10 @@ public class UseCasePortionCalculatorRequest implements UseCaseInteractor.Reques
     @NonNull
     private final MeasurementModel model;
 
-    public UseCasePortionCalculatorRequest(@NonNull String recipeId,
-                                           @NonNull String ingredientId,
-                                           @NonNull String recipeIngredientId,
-                                           @NonNull MeasurementModel model) {
+    public UseCaseIngredientCalculatorRequest(@NonNull String recipeId,
+                                              @NonNull String ingredientId,
+                                              @NonNull String recipeIngredientId,
+                                              @NonNull MeasurementModel model) {
         this.recipeId = recipeId;
         this.ingredientId = ingredientId;
         this.recipeIngredientId = recipeIngredientId;
@@ -51,7 +51,7 @@ public class UseCasePortionCalculatorRequest implements UseCaseInteractor.Reques
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UseCasePortionCalculatorRequest that = (UseCasePortionCalculatorRequest) o;
+        UseCaseIngredientCalculatorRequest that = (UseCaseIngredientCalculatorRequest) o;
         return recipeId.equals(that.recipeId) &&
                 ingredientId.equals(that.ingredientId) &&
                 recipeIngredientId.equals(that.recipeIngredientId) &&
@@ -100,8 +100,8 @@ public class UseCasePortionCalculatorRequest implements UseCaseInteractor.Reques
             return this;
         }
 
-        public UseCasePortionCalculatorRequest build() {
-            return new UseCasePortionCalculatorRequest(
+        public UseCaseIngredientCalculatorRequest build() {
+            return new UseCaseIngredientCalculatorRequest(
                     recipeId,
                     ingredientId,
                     recipeIngredientId,
