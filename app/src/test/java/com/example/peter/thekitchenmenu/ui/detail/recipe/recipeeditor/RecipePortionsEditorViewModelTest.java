@@ -71,10 +71,10 @@ public class RecipePortionsEditorViewModelTest {
     @Rule
     public InstantTaskExecutorRule instantExecutorRule = new InstantTaskExecutorRule();
     @Mock
-    private RepositoryRecipePortions repoRecipePortions;
+    private RepositoryRecipePortions repoMock;
     @Captor
     ArgumentCaptor<DataSource.GetEntityCallback<RecipePortionsEntity>>
-            getEntityCallbackArgumentCaptor;
+            repoCallback;
     @Mock
     private TimeProvider timeProviderMock;
     @Mock
@@ -93,7 +93,7 @@ public class RecipePortionsEditorViewModelTest {
         setupResourceMockReturnValues();
 
         SUT = new RecipePortionsEditorViewModel(
-                repoRecipePortions,
+                repoMock,
                 timeProviderMock,
                 idProviderMock,
                 resourcesMock);
@@ -168,9 +168,9 @@ public class RecipePortionsEditorViewModelTest {
     public void startNewRecipeId_validServingsInvalidSittings_recipeModelStatusINVALID_CHANGED() {
         // Arrange
         whenIdProviderReturnNewEmptyId();
-        // Act
         SUT.start(NEW_EMPTY.getRecipeId());
         simulateNothingReturnedFromDatabase();
+        // Act
         SUT.setServingsInView(String.valueOf(NEW_VALID_SERVINGS_INVALID_SITTINGS.getServings()));
         SUT.setSittingsInView(String.valueOf(NEW_VALID_SERVINGS_INVALID_SITTINGS.getSittings()));
         // Assert
@@ -229,7 +229,7 @@ public class RecipePortionsEditorViewModelTest {
         SUT.setServingsInView(String.valueOf(NEW_VALID.getServings()));
         SUT.setSittingsInView(String.valueOf(NEW_VALID.getSittings()));
         // Assert
-        verify(repoRecipePortions).save(eq(NEW_VALID));
+        verify(repoMock).save(eq(NEW_VALID));
     }
 
     @Test
@@ -261,7 +261,7 @@ public class RecipePortionsEditorViewModelTest {
         simulateExistingValidReturnedFromDatabase();
         SUT.setServingsInView(String.valueOf(NEW_INVALID.getServings()));
         // Assert
-        verifyNoMoreInteractions(repoRecipePortions);
+        verifyNoMoreInteractions(repoMock);
     }
 
     @Test
@@ -274,7 +274,7 @@ public class RecipePortionsEditorViewModelTest {
         simulateExistingValidReturnedFromDatabase();
         SUT.setServingsInView(String.valueOf(EXISTING_VALID_UPDATED_SERVINGS.getServings()));
         // Assert
-        verify(repoRecipePortions).save(eq(EXISTING_VALID_UPDATED_SERVINGS));
+        verify(repoMock).save(eq(EXISTING_VALID_UPDATED_SERVINGS));
     }
 
     @Test
@@ -285,7 +285,7 @@ public class RecipePortionsEditorViewModelTest {
         simulateExistingValidReturnedFromDatabase();
         SUT.setSittingsInView(String.valueOf(NEW_INVALID.getSittings()));
         // Assert
-        verifyNoMoreInteractions(repoRecipePortions);
+        verifyNoMoreInteractions(repoMock);
     }
 
     @Test
@@ -298,7 +298,7 @@ public class RecipePortionsEditorViewModelTest {
         simulateExistingValidReturnedFromDatabase();
         SUT.setSittingsInView(String.valueOf(EXISTING_VALID_UPDATED_SITTINGS.getSittings()));
         // Assert
-        verify(repoRecipePortions).save(eq(EXISTING_VALID_UPDATED_SITTINGS));
+        verify(repoMock).save(eq(EXISTING_VALID_UPDATED_SITTINGS));
     }
 
     @Test
@@ -311,7 +311,7 @@ public class RecipePortionsEditorViewModelTest {
         SUT.startByCloningModel(EXISTING_VALID.getRecipeId(), NEW_EMPTY.getRecipeId());
         simulateExistingValidReturnedFromDatabase();
         // Assert
-        verify(repoRecipePortions).save(EXISTING_VALID_CLONE);
+        verify(repoMock).save(EXISTING_VALID_CLONE);
     }
 
     @Test
@@ -339,7 +339,7 @@ public class RecipePortionsEditorViewModelTest {
         SUT.setServingsInView(String.valueOf(EXISTING_VALID_UPDATED_SERVINGS.getServings()));
         SUT.setSittingsInView(String.valueOf(EXISTING_VALID_UPDATED_SITTINGS.getSittings()));
         // Assert
-        verify(repoRecipePortions).save(eq(EXISTING_VALID_CLONE_UPDATED_SITTINGS_SERVINGS));
+        verify(repoMock).save(eq(EXISTING_VALID_CLONE_UPDATED_SITTINGS_SERVINGS));
     }
 
     // region helper methods -----------------------------------------------------------------------
@@ -358,15 +358,13 @@ public class RecipePortionsEditorViewModelTest {
     }
 
     private void simulateNothingReturnedFromDatabase() {
-        verify(repoRecipePortions).getPortionsForRecipe(eq(NEW_EMPTY.getRecipeId()),
-                getEntityCallbackArgumentCaptor.capture());
-        getEntityCallbackArgumentCaptor.getValue().onDataNotAvailable();
+        verify(repoMock).getPortionsForRecipe(eq(NEW_EMPTY.getRecipeId()), repoCallback.capture());
+        repoCallback.getValue().onDataNotAvailable();
     }
 
     private void simulateExistingValidReturnedFromDatabase() {
-        verify(repoRecipePortions).getPortionsForRecipe(eq(EXISTING_VALID.getRecipeId()),
-                getEntityCallbackArgumentCaptor.capture());
-        getEntityCallbackArgumentCaptor.getValue().onEntityLoaded(EXISTING_VALID);
+        verify(repoMock).getPortionsForRecipe(eq(EXISTING_VALID.getRecipeId()), repoCallback.capture());
+        repoCallback.getValue().onEntityLoaded(EXISTING_VALID);
     }
 
     private void whenIdProviderReturnNewEmptyId() {

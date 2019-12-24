@@ -21,7 +21,7 @@ public class UseCaseIngredient
         implements
         DataSource.GetEntityCallback<IngredientEntity> {
 
-    //    private static final String TAG = "tkm-" + UseCaseIngredient.class.getSimpleName() + ":";
+        private static final String TAG = "tkm-" + UseCaseIngredient.class.getSimpleName() + ":";
 
     public enum Result {
         DATA_UNAVAILABLE,

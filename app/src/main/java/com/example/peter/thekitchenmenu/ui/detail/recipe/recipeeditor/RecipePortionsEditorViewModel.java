@@ -62,7 +62,7 @@ public class RecipePortionsEditorViewModel
 
     @Override
     public void start(String recipeId) {
-        if (this.recipeId == null || !this.recipeId.equals(recipeId)) {
+        if (isNewInstantiationOrIdChanged(recipeId)) {
             this.recipeId = recipeId;
             getData(recipeId);
         }
@@ -70,11 +70,15 @@ public class RecipePortionsEditorViewModel
 
     @Override
     public void startByCloningModel(String oldRecipeId, String newRecipeId) {
-        if (recipeId == null || !recipeId.equals(newRecipeId)) {
+        if (isNewInstantiationOrIdChanged(newRecipeId)) {
             isCloned = true;
             this.recipeId = newRecipeId;
             getData(oldRecipeId);
         }
+    }
+
+    private boolean isNewInstantiationOrIdChanged(String recipeId) {
+        return this.recipeId == null || !this.recipeId.equals(recipeId);
     }
 
     private void getData(String recipeId) {

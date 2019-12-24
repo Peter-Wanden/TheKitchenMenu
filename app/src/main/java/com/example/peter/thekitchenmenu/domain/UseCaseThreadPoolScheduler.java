@@ -39,6 +39,7 @@ public class UseCaseThreadPoolScheduler implements UseCaseScheduler {
     public <V extends UseCaseInteractor.Response> void notifyResponse(
             final V response,
             final UseCaseInteractor.Callback<V> callback) {
+
         handler.post(() -> callback.onSuccess(response));
     }
 

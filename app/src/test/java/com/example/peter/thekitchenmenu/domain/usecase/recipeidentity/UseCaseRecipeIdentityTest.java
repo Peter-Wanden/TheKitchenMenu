@@ -85,8 +85,7 @@ public class UseCaseRecipeIdentityTest {
     @Test
     public void newRecipeId_invalidTitleValidDescription_responseInvalidChanged() {
         // Arrange
-        when(timeProviderMock.getCurrentTimeInMills()).
-                thenReturn(INVALID_NEW_EMPTY.getCreateDate());
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(INVALID_NEW_EMPTY.getCreateDate());
 
         givenNewEmptyModelSimulateNothingReturnedFromDatabase();
 
@@ -256,7 +255,11 @@ public class UseCaseRecipeIdentityTest {
     private UseCaseRecipeIdentity.Request getRequest(String recipeId,
                                                      String cloneToRecipeId,
                                                      UseCaseRecipeIdentity.Model model) {
-        return new UseCaseRecipeIdentity.Request(recipeId, cloneToRecipeId, model);
+        return new UseCaseRecipeIdentity.Request.Builder().
+                setRecipeId(recipeId).
+                setCloneToRecipeId(cloneToRecipeId).
+                setModel(model).
+                build();
     }
 
     private UseCaseInteractor.Callback<UseCaseRecipeIdentity.Response> getCallback() {

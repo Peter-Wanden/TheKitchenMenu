@@ -24,7 +24,7 @@ public class UseCaseHandler {
                  T request,
                  UseCaseInteractor.Callback<R> callback) {
         useCase.setRequest(request);
-        useCase.setUseCaseCallback(new UseCaseHandler.UiCallbackWrapper(callback, this));
+        useCase.setUseCaseCallback(new UseCaseHandler.UiCallbackWrapper<>(callback, this));
 
         useCaseScheduler.execute(useCase::run);
     }

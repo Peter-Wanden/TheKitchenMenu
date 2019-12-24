@@ -1,23 +1,20 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipeidentity;
+package com.example.peter.thekitchenmenu.domain.usecase.recipeportions;
 
-import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
+import com.example.peter.thekitchenmenu.data.entity.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
+import com.example.peter.thekitchenmenu.domain.model.PersistenceModel;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
+import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-public class UseCaseRecipeIdentity
-        extends UseCaseInteractor<UseCaseRecipeIdentity.Request, UseCaseRecipeIdentity.Response>
-        implements DataSource.GetEntityCallback<RecipeIdentityEntity> {
-
-    private static final String TAG = "tkm-" + UseCaseRecipeIdentity.class.getSimpleName() + " ";
-
-    public static final String DO_NOT_CLONE = "";
+public class UseCaseRecipePortions
+        extends UseCaseInteractor<UseCaseRecipePortions.Request, UseCaseRecipePortions.Response>
+        implements DataSource.GetEntityCallback<RecipePortionsEntity>{
 
     public enum Result {
         DATA_UNAVAILABLE,
@@ -27,17 +24,32 @@ public class UseCaseRecipeIdentity
         VALID_CHANGED,
     }
 
-    private RepositoryRecipeIdentity repository;
+    public static final String DO_NOT_CLONE = "";
+    public static final int MIN_SERVINGS = 1;
+    public static final int MIN_SITTINGS = 1;
+
     private TimeProvider timeProvider;
+    private UniqueIdProvider idProvider;
+    private RepositoryRecipePortions repository;
+
+    private String recipeId = "";
     private Model requestModel = new Model.Builder().getDefault().build();
     private Model responseModel = new Model.Builder().getDefault().build();
 
-    private String recipeId = "";
+    private final int maxServings;
+    private final int maxSittings;
     private boolean isCloned;
 
-    public UseCaseRecipeIdentity(RepositoryRecipeIdentity repository, TimeProvider timeProvider) {
-        this.repository = repository;
+    public UseCaseRecipePortions(TimeProvider timeProvider,
+                                 UniqueIdProvider idProvider,
+                                 RepositoryRecipePortions repository,
+                                 int maxServings,
+                                 int maxSittings) {
         this.timeProvider = timeProvider;
+        this.idProvider = idProvider;
+        this.repository = repository;
+        this.maxServings = maxServings;
+        this.maxSittings = maxSittings;
     }
 
     @Override
@@ -51,8 +63,8 @@ public class UseCaseRecipeIdentity
     }
 
     private boolean isNewRequest(Request request) {
-        return !recipeId.equals(request.getRecipeId()) || requestModel.equals(
-                new Model.Builder().getDefault().build());
+        return !recipeId.equals(request.getRecipeId()) ||
+                requestModel.equals(new Model.Builder().getDefault().build());
     }
 
     private void loadData(Request request) {
@@ -62,7 +74,7 @@ public class UseCaseRecipeIdentity
         } else {
             recipeId = request.getRecipeId();
         }
-        repository.getById(request.getRecipeId(), this);
+        repository.getPortionsForRecipe(request.getRecipeId(), this);
     }
 
     private boolean isCloneRequest(Request request) {
@@ -70,53 +82,56 @@ public class UseCaseRecipeIdentity
     }
 
     @Override
-    public void onEntityLoaded(RecipeIdentityEntity entity) {
+    public void onEntityLoaded(RecipePortionsEntity entity) {
         requestModel = convertEntityToModel(entity);
 
         if (isCloned) {
             save(requestModel);
             isCloned = false;
         }
-        responseModel = requestModel;
+
+        equaliseState();
         sendResponse();
     }
 
-    private Model convertEntityToModel(RecipeIdentityEntity entity) {
-        long time = timeProvider.getCurrentTimeInMills();
+    private Model convertEntityToModel(RecipePortionsEntity entity) {
+        long currentTime = timeProvider.getCurrentTimeInMills();
         return new Model.Builder().
-                setId(isCloned ? recipeId : entity.getId()).
-                setTitle(entity.getTitle() == null ? "" : entity.getTitle()).
-                setDescription(entity.getDescription() == null ? "" : entity.getDescription()).
-                setCreateDate(isCloned ? time : entity.getCreateDate()).
-                setLastUpdate(isCloned ? time : entity.getLastUpdate()).
+                setId(isCloned ? idProvider.getUId() : entity.getId()).
+                setRecipeId(isCloned ? recipeId : entity.getRecipeId()).
+                setServings(entity.getServings()).
+                setSittings(entity.getSittings()).
+                setCreateDate(isCloned ? currentTime : entity.getCreateDate()).
+                setLastUpdate(isCloned ? currentTime : entity.getLastUpdate()).
                 build();
     }
 
     @Override
     public void onDataNotAvailable() {
         requestModel = createNewModel();
-        responseModel = requestModel;
-
-        Response response = new Response.Builder().
-                setModel(responseModel).
-                setRecipeId(recipeId).
-                setResult(Result.DATA_UNAVAILABLE).
-                build();
-
-        getUseCaseCallback().onSuccess(response);
+        equaliseState();
+        save(responseModel);
+        sendResponse();
     }
 
     private Model createNewModel() {
-        long time = timeProvider.getCurrentTimeInMills();
-        return new Model.Builder().getDefault().
-                setId(recipeId).
-                setCreateDate(time).
-                setLastUpdate(time).
+        long currentTime = timeProvider.getCurrentTimeInMills();
+        return new Model.Builder().
+                setId(idProvider.getUId()).
+                setRecipeId(recipeId).
+                setServings(MIN_SERVINGS).
+                setSittings(MIN_SITTINGS).
+                setCreateDate(currentTime).
+                setLastUpdate(currentTime).
                 build();
     }
 
+    private void equaliseState() {
+        responseModel = requestModel;
+    }
+
     private void sendResponse() {
-        Response.Builder builder = new Response.Builder().setRecipeId(recipeId);
+        Response.Builder builder = new Response.Builder();
 
         if (!isValid() && !isModelChanged()) {
             builder.setResult(Result.INVALID_UNCHANGED);
@@ -129,74 +144,78 @@ public class UseCaseRecipeIdentity
             save(requestModel);
         }
 
-        responseModel = requestModel;
+        equaliseState();
         Response response = builder.setModel(responseModel).build();
         getUseCaseCallback().onSuccess(response);
+    }
+
+    private boolean isValid() {
+        return requestModel.getServings() >= MIN_SERVINGS &&
+                requestModel.getServings() <= maxServings &&
+                requestModel.getSittings() >= MIN_SITTINGS &&
+                requestModel.getSittings() <= maxSittings;
     }
 
     private boolean isModelChanged() {
         return !requestModel.equals(responseModel);
     }
 
-    private boolean isValid() {
-        if (requestModel.equals(new Model.Builder().getDefault().build())) {
-            return false;
-        } else {
-            return !requestModel.getTitle().isEmpty();
-        }
-    }
-
     private void save(Model model) {
         repository.save(convertModelToEntity(model));
     }
 
-    // todo - move model / entity conversions to the data layer
-    private RecipeIdentityEntity convertModelToEntity(Model model) {
-        return new RecipeIdentityEntity(
+    private RecipePortionsEntity convertModelToEntity(Model model) {
+        return new RecipePortionsEntity(
                 model.getId(),
-                model.getTitle(),
-                model.getDescription(),
+                model.getRecipeId(),
+                model.getServings(),
+                model.getSittings(),
                 model.getCreateDate(),
                 model.getLastUpdate()
         );
     }
 
-    public static class Model {
-
+    public static final class Model implements PersistenceModel {
         @Nonnull
         private final String id;
         @Nonnull
-        private final String title;
-        @Nullable
-        private final String description;
+        private final String recipeId;
+        private final int servings;
+        private final int sittings;
         private final long createDate;
         private final long lastUpdate;
 
-        public Model(@Nonnull String id,
-                     @Nonnull String title,
-                     @Nullable String description,
+        private Model(@Nonnull String id,
+                     @Nonnull String recipeId,
+                     int servings,
+                     int sittings,
                      long createDate,
                      long lastUpdate) {
             this.id = id;
-            this.title = title;
-            this.description = description;
+            this.recipeId = recipeId;
+            this.servings = servings;
+            this.sittings = sittings;
             this.createDate = createDate;
             this.lastUpdate = lastUpdate;
         }
 
+        @Override
         @Nonnull
         public String getId() {
             return id;
         }
 
         @Nonnull
-        public String getTitle() {
-            return title;
+        public String getRecipeId() {
+            return recipeId;
         }
 
-        @Nullable
-        public String getDescription() {
-            return description;
+        public int getServings() {
+            return servings;
+        }
+
+        public int getSittings() {
+            return sittings;
         }
 
         public long getCreateDate() {
@@ -211,26 +230,27 @@ public class UseCaseRecipeIdentity
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
-            Model that = (Model) o;
-            return createDate == that.createDate &&
-                    lastUpdate == that.lastUpdate &&
-                    id.equals(that.id) &&
-                    title.equals(that.title) &&
-                    Objects.equals(description, that.description);
+            Model model = (Model) o;
+            return servings == model.servings &&
+                    sittings == model.sittings &&
+                    createDate == model.createDate &&
+                    lastUpdate == model.lastUpdate &&
+                    id.equals(model.id) &&
+                    recipeId.equals(model.recipeId);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(id, title, description, createDate, lastUpdate);
+            return Objects.hash(id, recipeId, servings, sittings, createDate, lastUpdate);
         }
 
-        @Nonnull
         @Override
         public String toString() {
             return "Model{" +
                     "id='" + id + '\'' +
-                    ", title='" + title + '\'' +
-                    ", description='" + description + '\'' +
+                    ", recipeId='" + recipeId + '\'' +
+                    ", servings=" + servings +
+                    ", sittings=" + sittings +
                     ", createDate=" + createDate +
                     ", lastUpdate=" + lastUpdate +
                     '}';
@@ -238,41 +258,43 @@ public class UseCaseRecipeIdentity
 
         public static class Builder {
             private String id;
-            private String title;
-            private String description;
+            private String recipeId;
+            private int servings;
+            private int sittings;
             private long createDate;
             private long lastUpdate;
 
             public static Builder basedOn(@Nonnull Model oldModel) {
                 return new Builder().
                         setId(oldModel.getId()).
-                        setTitle(oldModel.getTitle()).
-                        setDescription(oldModel.getDescription()).
+                        setRecipeId(oldModel.getRecipeId()).
+                        setServings(oldModel.getServings()).
+                        setSittings(oldModel.getSittings()).
                         setCreateDate(oldModel.getCreateDate()).
                         setLastUpdate(oldModel.getLastUpdate());
             }
 
             public Builder getDefault() {
-                return new Builder().
-                        setId("").
-                        setTitle("").
-                        setDescription("").
-                        setCreateDate(0).
-                        setLastUpdate(0);
+                return new Builder().setServings(MIN_SERVINGS).setSittings(MIN_SITTINGS);
             }
 
-            public Builder setId(String id) {
+            public Builder setId(@Nonnull String id) {
                 this.id = id;
                 return this;
             }
 
-            public Builder setTitle(String title) {
-                this.title = title;
+            public Builder setRecipeId(@Nonnull String recipeId) {
+                this.recipeId = recipeId;
                 return this;
             }
 
-            public Builder setDescription(String description) {
-                this.description = description;
+            public Builder setServings(int servings) {
+                this.servings = servings;
+                return this;
+            }
+
+            public Builder setSittings(int sittings) {
+                this.sittings = sittings;
                 return this;
             }
 
@@ -289,8 +311,9 @@ public class UseCaseRecipeIdentity
             public Model build() {
                 return new Model(
                         id,
-                        title,
-                        description,
+                        recipeId,
+                        servings,
+                        sittings,
                         createDate,
                         lastUpdate
                 );
@@ -299,17 +322,16 @@ public class UseCaseRecipeIdentity
     }
 
     public static final class Request implements UseCaseInteractor.Request {
-
         @Nonnull
         private final String recipeId;
         @Nonnull
         private final String cloneToRecipeId;
-        @Nullable
+        @Nonnull
         private final Model model;
 
         private Request(@Nonnull String recipeId,
                        @Nonnull String cloneToRecipeId,
-                       @Nullable Model model) {
+                       @Nonnull Model model) {
             this.recipeId = recipeId;
             this.cloneToRecipeId = cloneToRecipeId;
             this.model = model;
@@ -325,7 +347,7 @@ public class UseCaseRecipeIdentity
             return cloneToRecipeId;
         }
 
-        @Nullable
+        @Nonnull
         public Model getModel() {
             return model;
         }
@@ -337,7 +359,7 @@ public class UseCaseRecipeIdentity
             Request request = (Request) o;
             return recipeId.equals(request.recipeId) &&
                     cloneToRecipeId.equals(request.cloneToRecipeId) &&
-                    Objects.equals(model, request.model);
+                    model.equals(request.model);
         }
 
         @Override
@@ -363,7 +385,9 @@ public class UseCaseRecipeIdentity
                 return new Builder().
                         setRecipeId("").
                         setCloneToRecipeId("").
-                        setModel(new Model.Builder().getDefault().build());
+                        setModel(new Model.Builder().
+                                getDefault().
+                                build());
             }
 
             public Builder setRecipeId(String recipeId) {
@@ -392,24 +416,19 @@ public class UseCaseRecipeIdentity
     }
 
     public static final class Response implements UseCaseInteractor.Response {
-
         @Nonnull
-        private final String recipeId;
+        private final Result result;
         @Nonnull
         private final Model model;
-        private final Result result;
 
-        private Response(@Nonnull String recipeId,
-                        @Nonnull Model model,
-                        @Nonnull Result result) {
-            this.recipeId = recipeId;
-            this.model = model;
+        private Response(@Nonnull Result result, @Nonnull Model model) {
             this.result = result;
+            this.model = model;
         }
 
         @Nonnull
-        public String getRecipeId() {
-            return recipeId;
+        public Result getResult() {
+            return result;
         }
 
         @Nonnull
@@ -417,34 +436,34 @@ public class UseCaseRecipeIdentity
             return model;
         }
 
-        public Result getResult() {
-            return result;
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Response response = (Response) o;
+            return result == response.result &&
+                    model.equals(response.model);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(result, model);
         }
 
         @Override
         public String toString() {
             return "Response{" +
-                    "recipeId='" + recipeId + '\'' +
+                    "result=" + result +
                     ", model=" + model +
-                    ", response=" + result +
                     '}';
         }
 
-        public static class Builder {
-            private String recipeId;
-            private Model model;
+        public static final class Builder {
             private Result result;
+            private Model model;
 
-            public Builder getDefault() {
-                return new Builder().
-                        setRecipeId("").
-                        setModel(new Model.Builder().
-                                getDefault().
-                                build());
-            }
-
-            public Builder setRecipeId(String recipeId) {
-                this.recipeId = recipeId;
+            public Builder setResult(Result result) {
+                this.result = result;
                 return this;
             }
 
@@ -453,16 +472,10 @@ public class UseCaseRecipeIdentity
                 return this;
             }
 
-            public Builder setResult(Result result) {
-                this.result = result;
-                return this;
-            }
-
             public Response build() {
                 return new Response(
-                        recipeId,
-                        model,
-                        result
+                        result,
+                        model
                 );
             }
         }

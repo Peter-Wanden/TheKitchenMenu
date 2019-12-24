@@ -86,7 +86,7 @@ public class UseCaseIngredientCalculator
     }
 
     private boolean isNewInstantiation() {
-        return this.recipeIngredientId.isEmpty();
+        return recipeIngredientId.isEmpty();
     }
 
     private void extractIdsAndStart(UseCaseIngredientCalculatorRequest request) {
