@@ -162,7 +162,6 @@ public class UseCaseRecipeIdentity
     }
 
     public static class Model {
-
         @Nonnull
         private final String id;
         @Nonnull
@@ -299,7 +298,6 @@ public class UseCaseRecipeIdentity
     }
 
     public static final class Request implements UseCaseInteractor.Request {
-
         @Nonnull
         private final String recipeId;
         @Nonnull
@@ -363,7 +361,9 @@ public class UseCaseRecipeIdentity
                 return new Builder().
                         setRecipeId("").
                         setCloneToRecipeId("").
-                        setModel(new Model.Builder().getDefault().build());
+                        setModel(new Model.Builder().
+                                getDefault().
+                                build());
             }
 
             public Builder setRecipeId(String recipeId) {

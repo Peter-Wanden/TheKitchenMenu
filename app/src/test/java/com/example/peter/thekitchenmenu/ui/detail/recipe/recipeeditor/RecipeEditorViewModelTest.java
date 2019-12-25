@@ -73,7 +73,7 @@ public class RecipeEditorViewModelTest {
     @Mock
     RecipeValidator recipeValidatorMock;
     @Mock
-    RecipeModelComposite recipeModelCompositeMock;
+    RecipeModelObserver recipeModelObserverMock;
     // endregion helper fields ---------------------------------------------------------------------
 
     private RecipeEditorViewModel SUT;
@@ -90,7 +90,7 @@ public class RecipeEditorViewModelTest {
                 recipeValidatorMock);
 
         SUT.setNavigator(navigatorMock);
-        SUT.setRecipeModelComposite(recipeModelCompositeMock);
+        SUT.setRecipeModelComposite(recipeModelObserverMock);
     }
 
     @Test
@@ -109,7 +109,7 @@ public class RecipeEditorViewModelTest {
         // Act
         SUT.start();
         // Assert
-        verify(recipeModelCompositeMock).start(eq(NEW_ID));
+        verify(recipeModelObserverMock).start(eq(NEW_ID));
     }
 
     @Test
@@ -143,7 +143,7 @@ public class RecipeEditorViewModelTest {
         SUT.start(VALID_RECIPE_ID);
         simulateReturnValidRecipeDatabaseCall();
         // Assert
-        verify(recipeModelCompositeMock).start(eq(VALID_RECIPE_ID));
+        verify(recipeModelObserverMock).start(eq(VALID_RECIPE_ID));
     }
 
     @Test
@@ -420,7 +420,7 @@ public class RecipeEditorViewModelTest {
         SUT.start(VALID_RECIPE_ID_FROM_ANOTHER_USER);
         simulateReturnValidRecipeFromAnotherUserDatabaseCall();
         // Assert
-        verify(recipeModelCompositeMock).startWithClonedModel(eq(VALID_RECIPE_ID_FROM_ANOTHER_USER),
+        verify(recipeModelObserverMock).startWithClonedModel(eq(VALID_RECIPE_ID_FROM_ANOTHER_USER),
                 eq(NEW_ID));
     }
 

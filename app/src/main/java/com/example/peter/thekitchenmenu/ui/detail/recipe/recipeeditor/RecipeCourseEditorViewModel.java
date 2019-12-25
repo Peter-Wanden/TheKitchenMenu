@@ -12,7 +12,7 @@ import java.util.HashMap;
 
 public class RecipeCourseEditorViewModel
         extends ObservableViewModel
-        implements RecipeModelComposite.RecipeModelActions {
+        implements RecipeModelObserver.RecipeModelActions {
 
     private UseCaseHandler handler;
     private UseCaseRecipeCourse useCase;

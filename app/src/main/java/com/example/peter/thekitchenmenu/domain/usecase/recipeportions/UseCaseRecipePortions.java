@@ -14,7 +14,7 @@ import javax.annotation.Nonnull;
 
 public class UseCaseRecipePortions
         extends UseCaseInteractor<UseCaseRecipePortions.Request, UseCaseRecipePortions.Response>
-        implements DataSource.GetEntityCallback<RecipePortionsEntity>{
+        implements DataSource.GetEntityCallback<RecipePortionsEntity> {
 
     public enum Result {
         DATA_UNAVAILABLE,
@@ -186,11 +186,11 @@ public class UseCaseRecipePortions
         private final long lastUpdate;
 
         private Model(@Nonnull String id,
-                     @Nonnull String recipeId,
-                     int servings,
-                     int sittings,
-                     long createDate,
-                     long lastUpdate) {
+                      @Nonnull String recipeId,
+                      int servings,
+                      int sittings,
+                      long createDate,
+                      long lastUpdate) {
             this.id = id;
             this.recipeId = recipeId;
             this.servings = servings;
@@ -275,7 +275,9 @@ public class UseCaseRecipePortions
             }
 
             public Builder getDefault() {
-                return new Builder().setServings(MIN_SERVINGS).setSittings(MIN_SITTINGS);
+                return new Builder().
+                        setServings(MIN_SERVINGS).
+                        setSittings(MIN_SITTINGS);
             }
 
             public Builder setId(@Nonnull String id) {
@@ -330,8 +332,8 @@ public class UseCaseRecipePortions
         private final Model model;
 
         private Request(@Nonnull String recipeId,
-                       @Nonnull String cloneToRecipeId,
-                       @Nonnull Model model) {
+                        @Nonnull String cloneToRecipeId,
+                        @Nonnull Model model) {
             this.recipeId = recipeId;
             this.cloneToRecipeId = cloneToRecipeId;
             this.model = model;
@@ -388,6 +390,13 @@ public class UseCaseRecipePortions
                         setModel(new Model.Builder().
                                 getDefault().
                                 build());
+            }
+
+            public static Builder basedOnRequest(@Nonnull Request request) {
+                return new Builder().
+                        setRecipeId(request.getRecipeId()).
+                        setCloneToRecipeId(request.getCloneToRecipeId()).
+                        setModel(request.getModel());
             }
 
             public Builder setRecipeId(String recipeId) {
@@ -461,6 +470,14 @@ public class UseCaseRecipePortions
         public static final class Builder {
             private Result result;
             private Model model;
+
+            public Builder getDefault() {
+                return new Builder().
+                        setResult(Result.INVALID_UNCHANGED).
+                        setModel(new Model.Builder().
+                                getDefault().
+                                build());
+            }
 
             public Builder setResult(Result result) {
                 this.result = result;

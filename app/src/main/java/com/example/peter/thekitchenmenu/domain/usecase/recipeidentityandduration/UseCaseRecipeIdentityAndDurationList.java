@@ -10,10 +10,13 @@ import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Objects;
+
+import javax.annotation.Nonnull;
 
 public class UseCaseRecipeIdentityAndDurationList extends
-        UseCaseInteractor<UseCaseRecipeIdentityAndDurationListRequestModel,
-                        UseCaseRecipeIdentityAndDurationListResponseModel> {
+        UseCaseInteractor<UseCaseRecipeIdentityAndDurationList.Request,
+                UseCaseRecipeIdentityAndDurationList.Response> {
 
     public enum RecipeFilter {
         ALL,
@@ -25,13 +28,13 @@ public class UseCaseRecipeIdentityAndDurationList extends
         DATA_NOT_AVAILABLE,
         RESULT_OK
     }
+
     private final RepositoryRecipeIdentity recipeIdentityRepository;
-
     private final RepositoryRecipeDuration recipeDurationRepository;
-    private LinkedHashMap<String, RecipeIdentityEntity> recipeIdentities = new LinkedHashMap<>();
 
+    private LinkedHashMap<String, RecipeIdentityEntity> recipeIdentities = new LinkedHashMap<>();
     private LinkedHashMap<String, RecipeDurationEntity> recipeDurations = new LinkedHashMap<>();
-    private List<RecipeListItemModel> recipeListItemModels = new ArrayList<>();
+    private List<ListItemModel> recipeListItemModels = new ArrayList<>();
 
     public UseCaseRecipeIdentityAndDurationList(RepositoryRecipeIdentity identityRepository,
                                                 RepositoryRecipeDuration durationRepository) {
@@ -40,7 +43,7 @@ public class UseCaseRecipeIdentityAndDurationList extends
     }
 
     @Override
-    protected void execute(UseCaseRecipeIdentityAndDurationListRequestModel request) {
+    protected void execute(Request request) {
         if (request.getFilter() == RecipeFilter.ALL) {
             getAllRecipes();
         } else if (request.getFilter() == RecipeFilter.FAVORITE)
@@ -56,8 +59,7 @@ public class UseCaseRecipeIdentityAndDurationList extends
             @Override
             public void onAllLoaded(List<RecipeIdentityEntity> entities) {
                 for (RecipeIdentityEntity entity : entities) {
-                    UseCaseRecipeIdentityAndDurationList.this.recipeIdentities.put(
-                            entity.getId(), entity);
+                    recipeIdentities.put(entity.getId(), entity);
                 }
                 loadDurationEntities();
             }
@@ -74,8 +76,7 @@ public class UseCaseRecipeIdentityAndDurationList extends
             @Override
             public void onAllLoaded(List<RecipeDurationEntity> entities) {
                 for (RecipeDurationEntity entity : entities) {
-                    UseCaseRecipeIdentityAndDurationList.this.recipeDurations.put(
-                            entity.getId(), entity);
+                    recipeDurations.put(entity.getId(), entity);
                 }
                 mergeLists();
             }
@@ -92,17 +93,14 @@ public class UseCaseRecipeIdentityAndDurationList extends
     }
 
     private void returnEmptyList() {
-        UseCaseRecipeIdentityAndDurationListResponseModel model = new
-                UseCaseRecipeIdentityAndDurationListResponseModel(
-                        ResultStatus.DATA_NOT_AVAILABLE, recipeListItemModels
-        );
+        Response model = new Response(ResultStatus.DATA_NOT_AVAILABLE, recipeListItemModels);
         getUseCaseCallback().onError(model);
     }
 
     private void mergeLists() {
         recipeIdentities.forEach((recipeId, recipeIdentity) -> {
             RecipeDurationEntity durationEntity = recipeDurations.get(recipeId);
-            RecipeListItemModel model = new RecipeListItemModel(
+            ListItemModel model = new ListItemModel(
                     recipeId,
                     recipeIdentity.getTitle(),
                     recipeIdentity.getDescription(),
@@ -116,10 +114,159 @@ public class UseCaseRecipeIdentityAndDurationList extends
     }
 
     private void returnResults() {
-        UseCaseRecipeIdentityAndDurationListResponseModel model = new
-                UseCaseRecipeIdentityAndDurationListResponseModel(
-                        ResultStatus.RESULT_OK, recipeListItemModels
-        );
+        Response model = new Response(ResultStatus.RESULT_OK, recipeListItemModels);
         getUseCaseCallback().onSuccess(model);
+    }
+
+    public static final class ListItemModel {
+        @Nonnull
+        private final String recipeId;
+        @Nonnull
+        private final String recipeName;
+        private final String recipeDescription;
+        private final int prepTime;
+        private final int cookTime;
+        private final int totalTime;
+
+        public ListItemModel(@Nonnull String recipeId,
+                             @Nonnull String recipeName,
+                             String recipeDescription,
+                             int prepTime,
+                             int cookTime,
+                             int totalTime) {
+            this.recipeId = recipeId;
+            this.recipeName = recipeName;
+            this.recipeDescription = recipeDescription;
+            this.prepTime = prepTime;
+            this.cookTime = cookTime;
+            this.totalTime = totalTime;
+        }
+
+        @Nonnull
+        public String getRecipeId() {
+            return recipeId;
+        }
+
+        @Nonnull
+        public String getRecipeName() {
+            return recipeName;
+        }
+
+        public String getRecipeDescription() {
+            return recipeDescription;
+        }
+
+        public int getPrepTime() {
+            return prepTime;
+        }
+
+        public int getCookTime() {
+            return cookTime;
+        }
+
+        public int getTotalTime() {
+            return totalTime;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            ListItemModel that = (ListItemModel) o;
+            return prepTime == that.prepTime &&
+                    cookTime == that.cookTime &&
+                    totalTime == that.totalTime &&
+                    recipeId.equals(that.recipeId) &&
+                    recipeName.equals(that.recipeName) &&
+                    recipeDescription.equals(that.recipeDescription);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(recipeId, recipeName, recipeDescription, prepTime, cookTime, totalTime);
+        }
+    }
+
+    public static final class Request implements UseCaseInteractor.Request {
+        @Nonnull
+        private final RecipeFilter filter;
+
+        public Request(@Nonnull RecipeFilter filter) {
+            this.filter = filter;
+        }
+
+        @Nonnull
+        public RecipeFilter getFilter() {
+            return filter;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Request that = (Request) o;
+            return filter == that.filter;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(filter);
+        }
+
+        @Nonnull
+        @Override
+        public String toString() {
+            return "Model{" +
+                    "filter=" + filter +
+                    '}';
+        }
+    }
+
+    public class Response implements UseCaseInteractor.Response {
+        @Nonnull
+        private final ResultStatus resultStatus;
+
+        @Nonnull
+        private final List<ListItemModel> recipeListItemModels;
+
+        public Response(
+                @Nonnull ResultStatus resultStatus,
+                @Nonnull List<ListItemModel> recipeListItemModels) {
+            this.resultStatus = resultStatus;
+            this.recipeListItemModels = recipeListItemModels;
+        }
+
+        @Nonnull
+        public ResultStatus getResultStatus() {
+            return resultStatus;
+        }
+
+        @Nonnull
+        public List<ListItemModel> getRecipeListItemModels() {
+            return recipeListItemModels;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Response that = (Response) o;
+            return resultStatus == that.resultStatus &&
+                    recipeListItemModels.equals(that.recipeListItemModels);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(resultStatus, recipeListItemModels);
+        }
+
+        @Nonnull
+        @Override
+        public String toString() {
+            return "Response{" +
+                    "resultStatus=" + resultStatus +
+                    ", recipeListItemModels=" + recipeListItemModels +
+                    '}';
+        }
     }
 }

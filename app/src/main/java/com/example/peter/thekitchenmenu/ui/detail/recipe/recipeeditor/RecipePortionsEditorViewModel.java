@@ -7,155 +7,142 @@ import androidx.databinding.ObservableField;
 import androidx.databinding.library.baseAdapters.BR;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.data.entity.RecipePortionsEntity;
-import com.example.peter.thekitchenmenu.data.repository.DataSource;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
+import com.example.peter.thekitchenmenu.domain.UseCaseCommand;
+import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.UseCaseRecipePortions;
 import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
-import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
-import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
+
+import javax.annotation.Nonnull;
+
+import static com.example.peter.thekitchenmenu.domain.usecase.recipeportions.UseCaseRecipePortions.DO_NOT_CLONE;
 
 public class RecipePortionsEditorViewModel
-        extends
-        ObservableViewModel
-        implements
-        RecipeModelComposite.RecipeModelActions,
-        DataSource.GetEntityCallback<RecipePortionsEntity> {
+        extends ObservableViewModel
+        implements RecipeModelObserver.RecipeModelActions {
 
     private static final String TAG = "tkm-" + RecipePortionsEditorViewModel.class.getSimpleName()
             + ":";
 
     private static final int MEASUREMENT_ERROR = -1;
 
+    @Nonnull
+    private UseCaseHandler handler;
+    @Nonnull
+    private UseCaseRecipePortions useCase;
     private Resources resources;
-    private TimeProvider timeProvider;
-    private UniqueIdProvider idProvider;
-    private RepositoryRecipePortions repository;
+    private UseCaseRecipePortions.Response useCaseResponse = new UseCaseRecipePortions.Response.
+            Builder().
+            getDefault().
+            build();
+
+    private boolean dataLoadingError;
+
     private RecipeValidation.RecipeValidatorModelSubmission modelSubmitter;
 
     public final ObservableField<String> servingsErrorMessage = new ObservableField<>();
     public final ObservableField<String> sittingsErrorMessage = new ObservableField<>();
 
-    private String recipeId;
-    private RecipePortionsEntity portionsEntity;
-
-    private int servings;
-    private String servingsInView = "";
-    private boolean servingsValid;
-
-    private int sittings;
-    private String sittingsInView = "";
-    private boolean sittingsValid;
-
-    private boolean isCloned;
     private boolean dataLoading;
     private boolean updatingUi;
 
-    public RecipePortionsEditorViewModel(RepositoryRecipePortions repository,
-                                         TimeProvider timeProvider,
-                                         UniqueIdProvider idProvider,
+    public RecipePortionsEditorViewModel(@Nonnull UseCaseHandler handler,
+                                         @Nonnull UseCaseRecipePortions useCase,
                                          Resources resources) {
-        this.repository = repository;
-        this.timeProvider = timeProvider;
-        this.idProvider = idProvider;
+        this.handler = handler;
+        this.useCase = useCase;
         this.resources = resources;
+    }
+
+    void setModelValidationSubmitter(
+            RecipeValidation.RecipeValidatorModelSubmission modelSubmitter) {
+        this.modelSubmitter = modelSubmitter;
     }
 
     @Override
     public void start(String recipeId) {
-        if (isNewInstantiationOrIdChanged(recipeId)) {
-            this.recipeId = recipeId;
-            getData(recipeId);
-        }
+        executeUseCase(
+                recipeId,
+                DO_NOT_CLONE,
+                new UseCaseRecipePortions.Model.Builder().
+                        getDefault().
+                        build());
     }
 
     @Override
-    public void startByCloningModel(String oldRecipeId, String newRecipeId) {
-        if (isNewInstantiationOrIdChanged(newRecipeId)) {
-            isCloned = true;
-            this.recipeId = newRecipeId;
-            getData(oldRecipeId);
-        }
+    public void startByCloningModel(String oldRecipeId, String cloneToRecipeId) {
+        executeUseCase(
+                oldRecipeId,
+                cloneToRecipeId,
+                new UseCaseRecipePortions.Model.Builder().
+                        getDefault().
+                        build());
     }
 
-    private boolean isNewInstantiationOrIdChanged(String recipeId) {
-        return this.recipeId == null || !this.recipeId.equals(recipeId);
-    }
+    private void executeUseCase(String recipeId,
+                                String cloneToRecipeId,
+                                UseCaseRecipePortions.Model model) {
+        UseCaseRecipePortions.Request request = new UseCaseRecipePortions.Request.Builder().
+                setRecipeId(recipeId).
+                setCloneToRecipeId(cloneToRecipeId).
+                setModel(model).
+                build();
 
-    private void getData(String recipeId) {
         dataLoading = true;
-        repository.getPortionsForRecipe(recipeId, this);
+        handler.execute(useCase, request, getCallback());
     }
 
-    @Override
-    public void onEntityLoaded(RecipePortionsEntity portionsEntity) {
-        if (isCloned) {
-            this.portionsEntity = cloneEntity(portionsEntity);
-        } else {
-            this.portionsEntity = portionsEntity;
+    private UseCaseInteractor.Callback<UseCaseRecipePortions.Response> getCallback() {
+        return new UseCaseCommand.Callback<UseCaseRecipePortions.Response>() {
+            @Override
+            public void onSuccess(UseCaseRecipePortions.Response response) {
+                processUseCaseResponse(response);
+            }
+
+            @Override
+            public void onError(UseCaseRecipePortions.Response response) {
+                processUseCaseResponse(response);
+            }
+        };
+    }
+
+    private void processUseCaseResponse(UseCaseRecipePortions.Response response) {
+        useCaseResponse = response;
+        dataLoading = false;
+        setPortionsErrorMessage(false);
+        if (response.getResult() == UseCaseRecipePortions.Result.DATA_UNAVAILABLE) {
+            dataLoadingError = true;
+            updateRecipeComponentStatus(false, false);
+            return;
+        } else if (response.getResult() == UseCaseRecipePortions.Result.INVALID_UNCHANGED) {
+            setPortionsErrorMessage(true);
+            updateRecipeComponentStatus(false, false);
+        } else if (response.getResult() == UseCaseRecipePortions.Result.VALID_UNCHANGED) {
+            updateRecipeComponentStatus(true, false);
+        } else if (response.getResult() == UseCaseRecipePortions.Result.INVALID_CHANGED) {
+            setPortionsErrorMessage(true);
+            updateRecipeComponentStatus(false, true);
+        } else if (response.getResult() == UseCaseRecipePortions.Result.VALID_CHANGED) {
+            updateRecipeComponentStatus(true, true);
         }
         updateObservables();
-    }
-
-    private RecipePortionsEntity cloneEntity(RecipePortionsEntity toClone) {
-        long currentTime = timeProvider.getCurrentTimeInMills();
-        return new RecipePortionsEntity(
-                idProvider.getUId(),
-                recipeId,
-                toClone.getServings(),
-                toClone.getSittings(),
-                currentTime,
-                currentTime
-        );
-    }
-
-    @Override
-    public void onDataNotAvailable() {
-        portionsEntity = createNewEntity();
-        servingsValid = true;
-        sittingsValid = true;
-        save(portionsEntity);
-        dataLoading = false;
-        updateObservables();
-    }
-
-    private RecipePortionsEntity createNewEntity() {
-        long currentTime = timeProvider.getCurrentTimeInMills();
-        int minServings = resources.getInteger(R.integer.recipe_min_servings);
-        int minSittings = resources.getInteger(R.integer.recipe_min_sittings);
-        return new RecipePortionsEntity(
-                idProvider.getUId(),
-                recipeId,
-                minServings,
-                minSittings,
-                currentTime,
-                currentTime
-        );
     }
 
     private void updateObservables() {
         updatingUi = true;
-        updateServings(portionsEntity.getServings());
-        updateSittings(portionsEntity.getSittings());
+        notifyPropertyChanged(BR.servingsInView);
+        notifyPropertyChanged(BR.sittingsInView);
+        notifyPropertyChanged(BR.portionsInView);
         updatingUi = false;
-
-        if (dataLoading) {
-            validateServings();
-            validateSittings();
-            dataLoading = false;
-        } else {
-            submitModelStatus(isChanged(), isValid());
-            return;
-        }
-
-        if (isCloned && isValid()) {
-            save(portionsEntity);
-            isCloned = false;
-        }
     }
 
     @Bindable
     public String getServingsInView() {
-        return servingsInView;
+        if (useCaseResponse != null) {
+            return String.valueOf(useCaseResponse.getModel().getServings());
+        } else {
+            return "";
+        }
     }
 
     public void setServingsInView(String servingsInView) {
@@ -166,42 +153,39 @@ public class RecipePortionsEditorViewModel
                 if (servingsParsed == MEASUREMENT_ERROR)
                     servingsErrorMessage.set(numberFormatExceptionErrorMessage());
                 else {
-                    servings = servingsParsed;
-                    validateServings();
+                    UseCaseRecipePortions.Model model = UseCaseRecipePortions.Model.Builder.basedOn(
+                            useCaseResponse.getModel()).
+                            setServings(servingsParsed).
+                            build();
+                    executeUseCase(useCaseResponse.getModel().getRecipeId(), DO_NOT_CLONE, model);
                 }
             }
         }
     }
 
     private boolean isServingsInViewChanged(String servingsInView) {
-        return !this.servingsInView.equals(servingsInView);
+        return !String.valueOf(useCaseResponse.getModel().getServings()).equals(servingsInView);
     }
 
-    private void validateServings() {
-        servingsErrorMessage.set(null);
-        int minServings = resources.getInteger(R.integer.recipe_min_servings);
-        int maxServings = resources.getInteger(R.integer.recipe_max_servings);
-        String errorMessage = resources.getString(R.string.input_error_recipe_servings,
-                minServings, maxServings);
-
-        servingsValid = servings >= minServings && servings <= maxServings;
-        if (!servingsValid) {
+    private void setPortionsErrorMessage(boolean showErrorMessage) {
+        if (showErrorMessage) {
+            int minServings = resources.getInteger(R.integer.recipe_min_servings);
+            int maxServings = resources.getInteger(R.integer.recipe_max_servings);
+            String errorMessage = resources.getString(R.string.input_error_recipe_servings,
+                    minServings, maxServings);
             servingsErrorMessage.set(errorMessage);
+        } else {
+            servingsErrorMessage.set(null);
         }
-        updateServings(servings);
-        saveValidChanges();
-    }
-
-    private void updateServings(int servings) {
-        this.servings = servings;
-        servingsInView = String.valueOf(servings);
-        notifyPropertyChanged(BR.servingsInView);
-        notifyPropertyChanged(BR.portionsInView);
     }
 
     @Bindable
     public String getSittingsInView() {
-        return sittingsInView;
+        if (useCaseResponse != null) {
+            return String.valueOf(useCaseResponse.getModel().getSittings());
+        } else {
+            return "";
+        }
     }
 
     public void setSittingsInView(String sittingsInView) {
@@ -212,42 +196,25 @@ public class RecipePortionsEditorViewModel
                 if (sittingsParsed == MEASUREMENT_ERROR)
                     sittingsErrorMessage.set(numberFormatExceptionErrorMessage());
                 else {
-                    sittings = sittingsParsed;
-                    validateSittings();
+                    UseCaseRecipePortions.Model model = UseCaseRecipePortions.Model.Builder.basedOn(
+                            useCaseResponse.getModel()).
+                            setSittings(sittingsParsed).
+                            build();
+                    executeUseCase(useCaseResponse.getModel().getRecipeId(), DO_NOT_CLONE, model);
                 }
             }
         }
     }
 
     private boolean isSittingsInViewChanged(String sittingsInView) {
-        return !this.sittingsInView.equals(sittingsInView);
-    }
-
-    private void validateSittings() {
-        sittingsErrorMessage.set(null);
-        int minSittings = resources.getInteger(R.integer.recipe_min_sittings);
-        int maxSittings = resources.getInteger(R.integer.recipe_max_sittings);
-        String errorMessage = resources.getString(R.string.input_error_recipe_sittings,
-                minSittings, maxSittings);
-
-        sittingsValid = sittings >= minSittings && sittings <= maxSittings;
-        if (!sittingsValid) {
-            sittingsErrorMessage.set(errorMessage);
-        }
-        updateSittings(sittings);
-        saveValidChanges();
-    }
-
-    private void updateSittings(int sittings) {
-        this.sittings = sittings;
-        sittingsInView = String.valueOf(sittings);
-        notifyPropertyChanged(BR.sittingsInView);
-        notifyPropertyChanged(BR.portionsInView);
+        return !String.valueOf(useCaseResponse.getModel().getSittings()).equals(sittingsInView);
     }
 
     @Bindable
     public String getPortionsInView() {
-        return String.valueOf(servings * sittings);
+        return String.valueOf(
+                useCaseResponse.getModel().getServings() *
+                useCaseResponse.getModel().getSittings());
     }
 
     private int parseIntegerFromString(String integerToParse) {
@@ -262,24 +229,7 @@ public class RecipePortionsEditorViewModel
         return resources.getString(R.string.number_format_exception);
     }
 
-    void setModelValidationSubmitter(
-            RecipeValidation.RecipeValidatorModelSubmission modelSubmitter) {
-        this.modelSubmitter = modelSubmitter;
-    }
-
-    private void saveValidChanges() {
-        RecipePortionsEntity entity = updatedEntity();
-        boolean isChanged = isChanged();
-        boolean isValid = isValid();
-
-        if (isChanged() && isValid()) {
-            save(entity);
-        }
-        equaliseState(entity);
-        submitModelStatus(isChanged, isValid);
-    }
-
-    private void submitModelStatus(boolean isChanged, boolean isValid) {
+    private void updateRecipeComponentStatus(boolean isValid, boolean isChanged) {
         if (!updatingUi) {
             modelSubmitter.submitRecipeComponentStatus(new RecipeComponentStatus(
                     RecipeValidator.ModelName.PORTIONS_MODEL,
@@ -287,44 +237,5 @@ public class RecipePortionsEditorViewModel
                     isValid
             ));
         }
-    }
-
-    private void equaliseState(RecipePortionsEntity entity) {
-        this.portionsEntity = entity;
-    }
-
-    private boolean isChanged() {
-        if (portionsEntity != null) {
-            RecipePortionsEntity latestData = new RecipePortionsEntity(
-                    portionsEntity.getId(),
-                    portionsEntity.getRecipeId(),
-                    sittings,
-                    servings,
-                    portionsEntity.getCreateDate(),
-                    portionsEntity.getLastUpdate()
-            );
-            return !portionsEntity.equals(latestData);
-        } else {
-            return false;
-        }
-    }
-
-    private boolean isValid() {
-        return servingsValid && sittingsValid;
-    }
-
-    private RecipePortionsEntity updatedEntity() {
-        return new RecipePortionsEntity(
-                portionsEntity.getId(),
-                portionsEntity.getRecipeId(),
-                servings,
-                sittings,
-                portionsEntity.getCreateDate(),
-                timeProvider.getCurrentTimeInMills()
-        );
-    }
-
-    private void save(RecipePortionsEntity entity) {
-        repository.save(entity);
     }
 }

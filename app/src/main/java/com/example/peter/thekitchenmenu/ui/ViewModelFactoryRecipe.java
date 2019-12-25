@@ -39,24 +39,18 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
     private final UseCaseFactory useCaseFactory;
     private final UseCaseHandler useCaseHandler;
     private final RepositoryRecipe recipeRepository;
-    private final RepositoryRecipeIdentity recipeIdentityRepository;
     private final RepositoryRecipeDuration recipeDurationRepository;
-    private final RepositoryRecipePortions recipePortionsRepository;
 
     private ViewModelFactoryRecipe(Application application,
                                    UseCaseFactory useCaseFactory,
                                    UseCaseHandler useCaseHandler,
                                    RepositoryRecipe recipeRepository,
-                                   RepositoryRecipeIdentity recipeIdentityRepository,
-                                   RepositoryRecipeDuration recipeDurationRepository,
-                                   RepositoryRecipePortions recipePortionsRepository) {
+                                   RepositoryRecipeDuration recipeDurationRepository) {
         this.application = application;
         this.useCaseFactory = useCaseFactory;
         this.useCaseHandler = useCaseHandler;
         this.recipeRepository = recipeRepository;
-        this.recipeIdentityRepository = recipeIdentityRepository;
         this.recipeDurationRepository = recipeDurationRepository;
-        this.recipePortionsRepository = recipePortionsRepository;
     }
 
     public static ViewModelFactoryRecipe getInstance(Application application) {
@@ -70,13 +64,7 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
                             DatabaseInjection.provideRecipesDataSource(
                                     application.getApplicationContext()
                             ),
-                            DatabaseInjection.provideRecipeIdentityDataSource(
-                                    application.getApplicationContext()
-                            ),
                             DatabaseInjection.provideRecipeDurationDataSource(
-                                    application.getApplicationContext()
-                            ),
-                            DatabaseInjection.provideRecipePortionsDataSource(
                                     application.getApplicationContext()
                             )
                     );
@@ -128,9 +116,8 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
         } else if (modelClass.isAssignableFrom(RecipePortionsEditorViewModel.class)) {
             // noinspection unchecked
             return (T) new RecipePortionsEditorViewModel(
-                    recipePortionsRepository,
-                    new TimeProvider(),
-                    new UniqueIdProvider(),
+                    useCaseHandler,
+                    useCaseFactory.provideRecipePortionsUseCase(),
                     application.getResources()
             );
         } else if (modelClass.isAssignableFrom(RecipeIngredientMeasurementViewModel.class)) {
@@ -147,8 +134,9 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
         } else if (modelClass.isAssignableFrom(RecipeNameAndPortionsViewModel.class)) {
             // noinspection unchecked
             return (T) new RecipeNameAndPortionsViewModel(
-                    recipeIdentityRepository,
-                    recipePortionsRepository
+                    useCaseHandler,
+                    useCaseFactory.provideRecipeIdentityUseCase(),
+                    useCaseFactory.provideRecipePortionsUseCase()
             );
         } else if (modelClass.isAssignableFrom(RecipeIngredientListViewModel.class)) {
             // noinspection unchecked

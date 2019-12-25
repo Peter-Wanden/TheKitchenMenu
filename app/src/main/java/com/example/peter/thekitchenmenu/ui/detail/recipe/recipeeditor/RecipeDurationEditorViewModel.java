@@ -18,7 +18,7 @@ public class RecipeDurationEditorViewModel
         ObservableViewModel
         implements
         DataSource.GetEntityCallback<RecipeDurationEntity>,
-        RecipeModelComposite.RecipeModelActions {
+        RecipeModelObserver.RecipeModelActions {
 
     private static final int MEASUREMENT_ERROR = -1;
 

@@ -30,7 +30,7 @@ public class RecipeEditorViewModel
     private TimeProvider timeProvider;
     private RecipeValidationStatus recipeValidationStatus = INVALID_MISSING_MODELS;
     private RecipeValidator validator;
-    private RecipeModelComposite recipeModels;
+    private RecipeModelObserver recipeModels;
 
     public final ObservableBoolean showIngredientsButtonObservable = new ObservableBoolean();
     public final ObservableField<String> ingredientsButtonTextObservable = new ObservableField<>();
@@ -63,7 +63,7 @@ public class RecipeEditorViewModel
         navigator = null;
     }
 
-    void setRecipeModelComposite(RecipeModelComposite recipeModels) {
+    void setRecipeModelComposite(RecipeModelObserver recipeModels) {
         this.recipeModels = recipeModels;
     }
 

@@ -8,6 +8,7 @@ import androidx.databinding.ObservableField;
 import androidx.databinding.library.baseAdapters.BR;
 
 import com.example.peter.thekitchenmenu.R;
+import com.example.peter.thekitchenmenu.domain.UseCaseCommand;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.UseCaseRecipeIdentity;
@@ -20,7 +21,7 @@ import static com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.Rec
 
 public class RecipeIdentityEditorViewModel
         extends ObservableViewModel
-        implements RecipeModelComposite.RecipeModelActions {
+        implements RecipeModelObserver.RecipeModelActions {
 
     private static final String TAG =
             "tkm-" + RecipeIdentityEditorViewModel.class.getSimpleName() + ":";
@@ -64,7 +65,7 @@ public class RecipeIdentityEditorViewModel
 
     @Override
     public void start(String recipeId) {
-        if (isNewInstantiationOrRecipeIdChanged(recipeId)) {
+        if (isNewInstantiationOrRecipeIdChanged(recipeId)) { // todo, don't think this check is required
             executeUseCaseRecipeIdentity(
                     recipeId,
                     UseCaseRecipeIdentity.DO_NOT_CLONE,
@@ -98,7 +99,7 @@ public class RecipeIdentityEditorViewModel
                 build();
 
         dataLoading = true;
-        handler.execute(useCaseRecipeIdentity, request, getUseCaseRecipeIdentityCallback());
+        handler.execute(useCaseRecipeIdentity, request, getCallback());
     }
 
     @Bindable
@@ -121,24 +122,17 @@ public class RecipeIdentityEditorViewModel
         );
         handler.execute(
                 useCaseTextValidator,
-                request,
-                getShortTextValidatorCallback());
-    }
+                request, new UseCaseCommand.Callback<UseCaseTextValidator.Response>() {
+                    @Override
+                    public void onSuccess(UseCaseTextValidator.Response response) {
+                        processShortTextValidationResponse(response);
+                    }
 
-    private UseCaseTextValidator.Callback<UseCaseTextValidator.Response>
-    getShortTextValidatorCallback() {
-        return new UseCaseTextValidator.Callback<UseCaseTextValidator.Response>() {
-
-            @Override
-            public void onSuccess(UseCaseTextValidator.Response response) {
-                processShortTextValidationResponse(response);
-            }
-
-            @Override
-            public void onError(UseCaseTextValidator.Response response) {
-                processShortTextValidationResponse(response);
-            }
-        };
+                    @Override
+                    public void onError(UseCaseTextValidator.Response response) {
+                        processShortTextValidationResponse(response);
+                    }
+                });
     }
 
     private void processShortTextValidationResponse(UseCaseTextValidator.Response response) {
@@ -151,7 +145,7 @@ public class RecipeIdentityEditorViewModel
             );
         } else {
             setError(titleErrorMessage, response);
-            updateRecipeComponentStatus(true, false);
+            updateRecipeComponentStatus(false, true);
         }
     }
 
@@ -177,23 +171,17 @@ public class RecipeIdentityEditorViewModel
         handler.execute(
                 useCaseTextValidator,
                 request,
-                getLongTextValidatorCallback());
-    }
+                new UseCaseCommand.Callback<UseCaseTextValidator.Response>() {
+                    @Override
+                    public void onSuccess(UseCaseTextValidator.Response response) {
+                        processLongTextValidationResponse(response);
+                    }
 
-    private UseCaseTextValidator.Callback<UseCaseTextValidator.Response>
-    getLongTextValidatorCallback() {
-        return new UseCaseTextValidator.Callback<UseCaseTextValidator.Response>() {
-
-            @Override
-            public void onSuccess(UseCaseTextValidator.Response response) {
-                processLongTextValidationResponse(response);
-            }
-
-            @Override
-            public void onError(UseCaseTextValidator.Response response) {
-                processLongTextValidationResponse(response);
-            }
-        };
+                    @Override
+                    public void onError(UseCaseTextValidator.Response response) {
+                        processLongTextValidationResponse(response);
+                    }
+                });
     }
 
     private void processLongTextValidationResponse(UseCaseTextValidator.Response response) {
@@ -206,7 +194,7 @@ public class RecipeIdentityEditorViewModel
             );
         } else {
             setError(descriptionErrorMessage, response);
-            updateRecipeComponentStatus(true, false);
+            updateRecipeComponentStatus(false, true);
         }
     }
 
@@ -246,11 +234,10 @@ public class RecipeIdentityEditorViewModel
         handler.execute(
                 useCaseRecipeIdentity,
                 request,
-                getUseCaseRecipeIdentityCallback());
+                getCallback());
     }
 
-    private UseCaseInteractor.Callback<UseCaseRecipeIdentity.Response>
-    getUseCaseRecipeIdentityCallback() {
+    private UseCaseInteractor.Callback<UseCaseRecipeIdentity.Response> getCallback() {
         return new UseCaseInteractor.Callback<UseCaseRecipeIdentity.Response>() {
 
             @Override
@@ -275,16 +262,16 @@ public class RecipeIdentityEditorViewModel
         } else if (response.getResult() == UseCaseRecipeIdentity.Result.INVALID_UNCHANGED) {
             updateRecipeComponentStatus(false, false);
         } else if (response.getResult() == UseCaseRecipeIdentity.Result.VALID_UNCHANGED) {
-            updateRecipeComponentStatus(false, true);
-        } else if (response.getResult() == UseCaseRecipeIdentity.Result.INVALID_CHANGED) {
             updateRecipeComponentStatus(true, false);
+        } else if (response.getResult() == UseCaseRecipeIdentity.Result.INVALID_CHANGED) {
+            updateRecipeComponentStatus(false, true);
         } else if (response.getResult() == UseCaseRecipeIdentity.Result.VALID_CHANGED) {
             updateRecipeComponentStatus(true, true);
         }
         updateObservables();
     }
 
-    private void updateRecipeComponentStatus(boolean isChanged, boolean isValid) {
+    private void updateRecipeComponentStatus(boolean isValid, boolean isChanged) {
         if (!updatingUi) {
             modelSubmitter.submitRecipeComponentStatus(new RecipeComponentStatus(
                     RecipeValidator.ModelName.IDENTITY_MODEL,

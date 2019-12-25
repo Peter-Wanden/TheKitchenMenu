@@ -76,23 +76,23 @@ public class RecipeEditorActivity
         recipeEditorViewModel.setNavigator(this);
         binding.setViewModel(recipeEditorViewModel);
 
-        RecipeModelComposite recipeModelComposite = new RecipeModelComposite();
-        recipeEditorViewModel.setRecipeModelComposite(recipeModelComposite);
+        RecipeModelObserver recipeModelObserver = new RecipeModelObserver();
+        recipeEditorViewModel.setRecipeModelComposite(recipeModelObserver);
 
         RecipeIdentityEditorViewModel recipeIdentityEditorViewModel = obtainIdentityViewModel(this);
-        recipeModelComposite.registerModel(recipeIdentityEditorViewModel);
+        recipeModelObserver.registerModel(recipeIdentityEditorViewModel);
         recipeIdentityEditorViewModel.setModelValidationSubmitter(recipeEditorViewModel.getValidator());
 
         RecipeCourseEditorViewModel courseSelectorViewModel = obtainCourseSelectorViewModel((this));
-        recipeModelComposite.registerModel(courseSelectorViewModel);
+        recipeModelObserver.registerModel(courseSelectorViewModel);
         courseSelectorViewModel.setModelValidationSubmitter(recipeEditorViewModel.getValidator());
 
         RecipeDurationEditorViewModel durationViewModel = obtainDurationViewModel(this);
-        recipeModelComposite.registerModel(durationViewModel);
+        recipeModelObserver.registerModel(durationViewModel);
         durationViewModel.setModelValidationSubmitter(recipeEditorViewModel.getValidator());
 
         RecipePortionsEditorViewModel portionsViewModel = obtainPortionsViewModel(this);
-        recipeModelComposite.registerModel(portionsViewModel);
+        recipeModelObserver.registerModel(portionsViewModel);
         portionsViewModel.setModelValidationSubmitter(recipeEditorViewModel.getValidator());
     }
 

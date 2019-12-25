@@ -10,11 +10,12 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeidentityandduration.RecipeListItemModel;
 import com.example.peter.thekitchenmenu.databinding.RecipeListItemBinding;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.example.peter.thekitchenmenu.domain.usecase.recipeidentityandduration.UseCaseRecipeIdentityAndDurationList.*;
 
 public class RecipeCatalogAllRecyclerAdapter
         extends RecyclerView.Adapter<RecipeCatalogAllRecyclerAdapter.ViewHolder>
@@ -24,8 +25,8 @@ public class RecipeCatalogAllRecyclerAdapter
             + ":";
 
     private final RecipeCatalogViewModel viewModel;
-    private List<RecipeListItemModel> recipeModelList;
-    private List<RecipeListItemModel> recipeModelListFull;
+    private List<ListItemModel> recipeModelList;
+    private List<ListItemModel> recipeModelListFull;
 
     RecipeCatalogAllRecyclerAdapter(RecipeCatalogViewModel viewModel) {
         this.viewModel = viewModel;
@@ -46,7 +47,7 @@ public class RecipeCatalogAllRecyclerAdapter
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        final RecipeListItemModel listItemModel = recipeModelList.get(position);
+        final ListItemModel listItemModel = recipeModelList.get(position);
         holder.bind(listItemModel);
     }
 
@@ -65,14 +66,14 @@ public class RecipeCatalogAllRecyclerAdapter
     private Filter filterResults = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
-            List<RecipeListItemModel> filteredList = new ArrayList<>();
+            List<ListItemModel> filteredList = new ArrayList<>();
 
             if (constraint == null || constraint.length() == 0) {
                 filteredList.addAll(recipeModelListFull);
             } else {
                 String filterPattern = constraint.toString().toLowerCase().trim();
 
-                for (RecipeListItemModel model : recipeModelListFull) {
+                for (ListItemModel model : recipeModelListFull) {
                     String title = model.getRecipeName().toLowerCase();
 
                     if (title.contains(filterPattern)) {
@@ -94,11 +95,11 @@ public class RecipeCatalogAllRecyclerAdapter
     };
 
     /* Getter for the current list of recipes */
-    public List<RecipeListItemModel> getRecipes() {
+    public List<ListItemModel> getRecipes() {
         return recipeModelList;
     }
 
-    void setRecipeModels(List<RecipeListItemModel> recipeModelList) {
+    void setRecipeModels(List<ListItemModel> recipeModelList) {
         this.recipeModelList = recipeModelList;
         recipeModelListFull = new ArrayList<>(recipeModelList);
         notifyDataSetChanged();
@@ -110,17 +111,17 @@ public class RecipeCatalogAllRecyclerAdapter
 
         RecipeItemUserActionsListener listener = new RecipeItemUserActionsListener() {
             @Override
-            public void onRecipeClicked(RecipeListItemModel listItemModel) {
+            public void onRecipeClicked(ListItemModel listItemModel) {
                 viewModel.viewRecipe(listItemModel);
             }
 
             @Override
-            public void onAddToFavoritesClicked(RecipeListItemModel listItemModel) {
+            public void onAddToFavoritesClicked(ListItemModel listItemModel) {
                 viewModel.addToFavorites(listItemModel);
             }
 
             @Override
-            public void onRemoveFromFavoritesClicked(RecipeListItemModel listItemModel) {
+            public void onRemoveFromFavoritesClicked(ListItemModel listItemModel) {
                 viewModel.removeFromFavorites(listItemModel);
             }
         };
@@ -130,7 +131,7 @@ public class RecipeCatalogAllRecyclerAdapter
             this.binding = binding;
         }
 
-        void bind(RecipeListItemModel recipeModel) {
+        void bind(ListItemModel recipeModel) {
             binding.setRecipeModel(recipeModel);
             binding.setListener(listener);
             binding.executePendingBindings();

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 // Allows RecipeEditorVM to push commands to registered RecipeViewModels
-class RecipeModelComposite {
+class RecipeModelObserver {
 
     public interface RecipeModelActions {
         void start(String recipeId);

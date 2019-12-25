@@ -65,7 +65,7 @@ public class RecipeIdentityEditorViewModelTest {
             TestDataRecipeValidator.getIdentityModelStatusChangedValid();
 
     private static final String ERROR_MESSAGE_TOO_LONG = "ERROR_MESSAGE_TOO_LONG";
-    private static final String ERROR_MESSAGE_TOO_SHORT = "ERROR_MESSAGE_TOO_LONG";
+    private static final String ERROR_MESSAGE_TOO_SHORT = "ERROR_MESSAGE_TOO_SHORT";
 
     // endregion constants -------------------------------------------------------------------------
 
@@ -102,11 +102,11 @@ public class RecipeIdentityEditorViewModelTest {
     }
 
     private RecipeIdentityEditorViewModel givenViewModel() {
-        UseCaseHandler handler = new UseCaseHandler(new UseCaseSchedulerMock());
-
+        UseCaseHandler handler = new UseCaseHandler(new UseCaseSchedulerMock()
+        );
         UseCaseRecipeIdentity useCaseRecipeIdentity = new UseCaseRecipeIdentity(
-                repoMock, timeProviderMock);
-
+                repoMock, timeProviderMock
+        );
         UseCaseTextValidator useCaseTextValidator = new UseCaseTextValidator.Builder().
                 setShortTextMinLength(shortTextMinLength).
                 setShortTextMaxLength(shortTextMaxLength).

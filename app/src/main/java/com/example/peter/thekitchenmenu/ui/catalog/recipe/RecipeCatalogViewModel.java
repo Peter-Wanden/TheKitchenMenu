@@ -6,12 +6,9 @@ import androidx.databinding.ObservableBoolean;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.peter.thekitchenmenu.domain.usecase.recipeidentityandduration.RecipeListItemModel;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentityandduration.UseCaseRecipeIdentityAndDurationList;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeidentityandduration.UseCaseRecipeIdentityAndDurationListRequestModel;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeidentityandduration.UseCaseRecipeIdentityAndDurationListResponseModel;
 
 import java.util.List;
 
@@ -33,7 +30,7 @@ public class RecipeCatalogViewModel extends ViewModel {
     public ObservableBoolean isDataLoadingError = new ObservableBoolean();
     public ObservableBoolean showEmptyScreen = new ObservableBoolean();
 
-    private MutableLiveData<List<RecipeListItemModel>> recipeList = new MutableLiveData<>();
+    private MutableLiveData<List<UseCaseRecipeIdentityAndDurationList.ListItemModel>> recipeList = new MutableLiveData<>();
 
     public RecipeCatalogViewModel(@Nonnull UseCaseHandler handler,
                                   @Nonnull UseCaseRecipeIdentityAndDurationList useCase) {
@@ -49,7 +46,7 @@ public class RecipeCatalogViewModel extends ViewModel {
         navigator = null;
     }
 
-    MutableLiveData<List<RecipeListItemModel>> getRecipeListLiveData() {
+    MutableLiveData<List<UseCaseRecipeIdentityAndDurationList.ListItemModel>> getRecipeListLiveData() {
         return recipeList;
     }
 
@@ -67,23 +64,23 @@ public class RecipeCatalogViewModel extends ViewModel {
         );
     }
 
-    private UseCaseRecipeIdentityAndDurationListRequestModel getRequestModel(
+    private UseCaseRecipeIdentityAndDurationList.Request getRequestModel(
             UseCaseRecipeIdentityAndDurationList.RecipeFilter filter) {
-        return new UseCaseRecipeIdentityAndDurationListRequestModel(filter);
+        return new UseCaseRecipeIdentityAndDurationList.Request(filter);
     }
 
-    private UseCaseInteractor.Callback<UseCaseRecipeIdentityAndDurationListResponseModel>
+    private UseCaseInteractor.Callback<UseCaseRecipeIdentityAndDurationList.Response>
     getCallback() {
-        return new UseCaseInteractor.Callback<UseCaseRecipeIdentityAndDurationListResponseModel>() {
+        return new UseCaseInteractor.Callback<UseCaseRecipeIdentityAndDurationList.Response>() {
 
             @Override
-            public void onSuccess(UseCaseRecipeIdentityAndDurationListResponseModel response) {
+            public void onSuccess(UseCaseRecipeIdentityAndDurationList.Response response) {
                 dataLoading.set(false);
                 RecipeCatalogViewModel.this.recipeList.setValue(response.getRecipeListItemModels());
             }
 
             @Override
-            public void onError(UseCaseRecipeIdentityAndDurationListResponseModel response) {
+            public void onError(UseCaseRecipeIdentityAndDurationList.Response response) {
                 dataLoading.set(false);
                 dataLoadingFailed(response.getResultStatus());
 
@@ -105,15 +102,15 @@ public class RecipeCatalogViewModel extends ViewModel {
             navigator.addRecipe();
     }
 
-    void viewRecipe(RecipeListItemModel listItemModel) {
+    void viewRecipe(UseCaseRecipeIdentityAndDurationList.ListItemModel listItemModel) {
         navigator.viewRecipe(listItemModel.getRecipeId());
     }
 
-    void addToFavorites(RecipeListItemModel listItemModel) {
+    void addToFavorites(UseCaseRecipeIdentityAndDurationList.ListItemModel listItemModel) {
 
     }
 
-    void removeFromFavorites(RecipeListItemModel listItemModel) {
+    void removeFromFavorites(UseCaseRecipeIdentityAndDurationList.ListItemModel listItemModel) {
 
     }
 }
