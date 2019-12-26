@@ -31,8 +31,8 @@ public class RecipePortionsEditorViewModel
     @Nonnull
     private UseCaseRecipePortions useCase;
     private Resources resources;
-    private UseCaseRecipePortions.Response useCaseResponse = new UseCaseRecipePortions.Response.
-            Builder().
+    private UseCaseRecipePortions.Response useCaseResponse = UseCaseRecipePortions.Response.
+            Builder.
             getDefault().
             build();
 
@@ -64,7 +64,7 @@ public class RecipePortionsEditorViewModel
         executeUseCase(
                 recipeId,
                 DO_NOT_CLONE,
-                new UseCaseRecipePortions.Model.Builder().
+                UseCaseRecipePortions.Model.Builder.
                         getDefault().
                         build());
     }
@@ -74,7 +74,7 @@ public class RecipePortionsEditorViewModel
         executeUseCase(
                 oldRecipeId,
                 cloneToRecipeId,
-                new UseCaseRecipePortions.Model.Builder().
+                UseCaseRecipePortions.Model.Builder.
                         getDefault().
                         build());
     }
@@ -214,7 +214,7 @@ public class RecipePortionsEditorViewModel
     public String getPortionsInView() {
         return String.valueOf(
                 useCaseResponse.getModel().getServings() *
-                useCaseResponse.getModel().getSittings());
+                        useCaseResponse.getModel().getSittings());
     }
 
     private int parseIntegerFromString(String integerToParse) {

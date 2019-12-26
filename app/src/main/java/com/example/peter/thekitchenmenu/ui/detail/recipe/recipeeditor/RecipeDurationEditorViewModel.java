@@ -66,10 +66,10 @@ public class RecipeDurationEditorViewModel
     }
 
     @Override
-    public void startByCloningModel(String oldRecipeId, String newRecipeId) {
-        if (recipeId == null || !recipeId.equals(newRecipeId)) {
+    public void startByCloningModel(String oldRecipeId, String cloneToRecipeId) {
+        if (recipeId == null || !recipeId.equals(cloneToRecipeId)) {
             isCloned = true;
-            recipeId = newRecipeId;
+            recipeId = cloneToRecipeId;
             getData(oldRecipeId);
         }
     }
@@ -195,7 +195,7 @@ public class RecipeDurationEditorViewModel
     private void validatePrepTime() {
         prepTimeErrorMessage.set(null);
         int maxAllowedPrepTime = resources.getInteger(R.integer.recipe_max_prep_time_in_minutes);
-        int totalPrepTime = calculateTotalInMinutes(prepHours, prepMinutes);
+        int totalPrepTime = calculateTotalMinutes(prepHours, prepMinutes);
         String errorMessage = resources.getString(R.string.input_error_recipe_prep_time_too_long);
 
         prepTimeValid = totalPrepTime <= maxAllowedPrepTime;
@@ -271,7 +271,7 @@ public class RecipeDurationEditorViewModel
     private void validateCookTime() {
         cookTimeErrorMessage.set(null);
         int maxAllowedCookTime = resources.getInteger(R.integer.recipe_max_cook_time_in_minutes);
-        int totalCookTime = calculateTotalInMinutes(cookHours, cookMinutes);
+        int totalCookTime = calculateTotalMinutes(cookHours, cookMinutes);
         // todo - make the time in this string a calculation
         String errorMessage = resources.getString(R.string.input_error_recipe_cook_time_too_long);
 
@@ -310,7 +310,7 @@ public class RecipeDurationEditorViewModel
         return totalTime % 60;
     }
 
-    private int calculateTotalInMinutes(int hours, int minutes) {
+    private int calculateTotalMinutes(int hours, int minutes) {
         return hours * 60 + minutes;
     }
 
@@ -352,8 +352,8 @@ public class RecipeDurationEditorViewModel
         if (durationEntity != null) {
             RecipeDurationEntity latestData = new RecipeDurationEntity(
                     durationEntity.getId(),
-                    calculateTotalInMinutes(prepHours, prepMinutes),
-                    calculateTotalInMinutes(cookHours, cookMinutes),
+                    calculateTotalMinutes(prepHours, prepMinutes),
+                    calculateTotalMinutes(cookHours, cookMinutes),
                     durationEntity.getCreateDate(),
                     durationEntity.getLastUpdate()
             );
@@ -370,8 +370,8 @@ public class RecipeDurationEditorViewModel
     private RecipeDurationEntity updatedEntity() {
         return new RecipeDurationEntity(
                 durationEntity.getId(),
-                calculateTotalInMinutes(prepHours, prepMinutes),
-                calculateTotalInMinutes(cookHours, cookMinutes),
+                calculateTotalMinutes(prepHours, prepMinutes),
+                calculateTotalMinutes(cookHours, cookMinutes),
                 durationEntity.getCreateDate(),
                 timeProvider.getCurrentTimeInMills()
         );

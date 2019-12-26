@@ -28,16 +28,16 @@ public class UseCaseRecipePortions
     public static final int MIN_SERVINGS = 1;
     public static final int MIN_SITTINGS = 1;
 
-    private TimeProvider timeProvider;
-    private UniqueIdProvider idProvider;
-    private RepositoryRecipePortions repository;
-
-    private String recipeId = "";
-    private Model requestModel = new Model.Builder().getDefault().build();
-    private Model responseModel = new Model.Builder().getDefault().build();
+    private final TimeProvider timeProvider;
+    private final UniqueIdProvider idProvider;
+    private final RepositoryRecipePortions repository;
 
     private final int maxServings;
     private final int maxSittings;
+
+    private String recipeId = "";
+    private Model requestModel = Model.Builder.getDefault().build();
+    private Model responseModel = Model.Builder.getDefault().build();
     private boolean isCloned;
 
     public UseCaseRecipePortions(TimeProvider timeProvider,
@@ -64,7 +64,7 @@ public class UseCaseRecipePortions
 
     private boolean isNewRequest(Request request) {
         return !recipeId.equals(request.getRecipeId()) ||
-                requestModel.equals(new Model.Builder().getDefault().build());
+                requestModel.equals(Model.Builder.getDefault().build());
     }
 
     private void loadData(Request request) {
@@ -133,13 +133,13 @@ public class UseCaseRecipePortions
     private void sendResponse() {
         Response.Builder builder = new Response.Builder();
 
-        if (!isValid() && !isModelChanged()) {
+        if (!isValid() && !isChanged()) {
             builder.setResult(Result.INVALID_UNCHANGED);
-        } else if (isValid() && !isModelChanged()) {
+        } else if (isValid() && !isChanged()) {
             builder.setResult(Result.VALID_UNCHANGED);
-        } else if (!isValid() && isModelChanged()) {
+        } else if (!isValid() && isChanged()) {
             builder.setResult(Result.INVALID_CHANGED);
-        } else if (isValid() && isModelChanged()) {
+        } else if (isValid() && isChanged()) {
             builder.setResult(Result.VALID_CHANGED);
             save(requestModel);
         }
@@ -156,7 +156,7 @@ public class UseCaseRecipePortions
                 requestModel.getSittings() <= maxSittings;
     }
 
-    private boolean isModelChanged() {
+    private boolean isChanged() {
         return !requestModel.equals(responseModel);
     }
 
@@ -274,7 +274,7 @@ public class UseCaseRecipePortions
                         setLastUpdate(oldModel.getLastUpdate());
             }
 
-            public Builder getDefault() {
+            public static Builder getDefault() {
                 return new Builder().
                         setServings(MIN_SERVINGS).
                         setSittings(MIN_SITTINGS);
@@ -387,7 +387,7 @@ public class UseCaseRecipePortions
                 return new Builder().
                         setRecipeId("").
                         setCloneToRecipeId("").
-                        setModel(new Model.Builder().
+                        setModel(Model.Builder.
                                 getDefault().
                                 build());
             }
@@ -467,14 +467,14 @@ public class UseCaseRecipePortions
                     '}';
         }
 
-        public static final class Builder {
+        public static class Builder {
             private Result result;
             private Model model;
 
-            public Builder getDefault() {
+            public static Builder getDefault() {
                 return new Builder().
                         setResult(Result.INVALID_UNCHANGED).
-                        setModel(new Model.Builder().
+                        setModel(Model.Builder.
                                 getDefault().
                                 build());
             }
