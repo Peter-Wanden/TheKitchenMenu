@@ -13,6 +13,7 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredie
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.UseCaseConversionFactorStatus;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.UseCaseIngredient;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.UseCaseRecipeDuration;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.UseCaseRecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentityandduration.UseCaseRecipeIdentityAndDurationList;
 import com.example.peter.thekitchenmenu.domain.usecase.recipecourse.UseCaseRecipeCourse;
@@ -157,6 +158,16 @@ public class UseCaseFactory {
                 recipePortionsRepository,
                 resources.getInteger(R.integer.recipe_max_servings),
                 resources.getInteger(R.integer.recipe_max_sittings)
+        );
+    }
+
+    public UseCaseRecipeDuration provideRecipeDurationUseCase() {
+        Resources resources = application.getResources();
+        return new UseCaseRecipeDuration(
+                recipeDurationRepository,
+                new TimeProvider(),
+                resources.getInteger(R.integer.recipe_max_prep_time_in_minutes),
+                resources.getInteger(R.integer.recipe_max_cook_time_in_minutes)
         );
     }
 }

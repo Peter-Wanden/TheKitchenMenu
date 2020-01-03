@@ -2,8 +2,6 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 
 import android.content.res.Resources;
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
-
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.entity.RecipePortionsEntity;

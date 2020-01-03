@@ -7,6 +7,8 @@ import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
 import com.example.peter.thekitchenmenu.domain.model.PersistenceModel;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
@@ -15,12 +17,12 @@ public class UseCaseRecipeDuration
         extends UseCaseInteractor<UseCaseRecipeDuration.Request, UseCaseRecipeDuration.Response>
         implements DataSource.GetEntityCallback<RecipeDurationEntity> {
 
-    public enum Result {
-        DATA_UNAVAILABLE,
-        INVALID_UNCHANGED,
-        VALID_UNCHANGED,
-        INVALID_CHANGED,
-        VALID_CHANGED,
+    private static final String TAG = "tkm-" + UseCaseRecipeDuration.class.getSimpleName() + ":";
+
+    public enum FailReason {
+        INVALID_PREP_TIME,
+        INVALID_COOK_TIME,
+        NONE
     }
 
     public static final String DO_NOT_CLONE = "";
@@ -48,10 +50,11 @@ public class UseCaseRecipeDuration
     @Override
     protected void execute(Request request) {
         requestModel = request.getModel();
+        System.out.println(TAG + " requestModelBeforeProcessing:" + requestModel);
         if (isNewRequest(request)) {
             loadData(request);
         } else {
-            sendResponse();
+            calculateValues();
         }
     }
 
@@ -83,7 +86,7 @@ public class UseCaseRecipeDuration
         }
 
         equaliseState();
-        sendResponse();
+        buildResponse();
     }
 
     private Model convertEntityToModel(RecipeDurationEntity entity) {
@@ -107,7 +110,7 @@ public class UseCaseRecipeDuration
         requestModel = createNewModel();
         equaliseState();
         save(responseModel);
-        sendResponse();
+        buildResponse();
     }
 
     private Model createNewModel() {
@@ -118,6 +121,26 @@ public class UseCaseRecipeDuration
                 setCreateDate(currentTime).
                 setLastUpdate(currentTime).
                 build();
+    }
+
+    private void calculateValues() {
+        int totalPrepTime = calculateTotalMinutes(requestModel.getPrepHours(),
+                requestModel.getPrepMinutes());
+
+        int totalCookTime = calculateTotalMinutes(requestModel.getCookHours(),
+                requestModel.getCookMinutes());
+
+        requestModel = Model.Builder.
+                basedOn(requestModel).
+                setPrepHours(getHours(totalPrepTime)).
+                setPrepMinutes(getMinutes(totalPrepTime)).
+                setTotalPrepTime(totalPrepTime).
+                setCookHours(getHours(totalCookTime)).
+                setCookMinutes(getMinutes(totalCookTime)).
+                setTotalCookTime(totalCookTime).
+                build();
+
+        buildResponse();
     }
 
     private int getHours(int totalTime) {
@@ -132,27 +155,62 @@ public class UseCaseRecipeDuration
         return hours * 60 + minutes;
     }
 
+    private void buildResponse() {
+        Response.Builder builder = new Response.Builder()
+                .setFailReasons(getFailReasons())
+                .setResult(getResult());
+
+        equaliseState();
+
+        Response response = builder.
+                setModel(responseModel).
+                build();
+
+        sendResponse(response);
+    }
+
     private void equaliseState() {
         responseModel = requestModel;
     }
 
-    private void sendResponse() {
-        Response.Builder builder = new Response.Builder();
-
-        if (!isValid() && !isChanged()) {
-            builder.setResult(Result.INVALID_UNCHANGED);
-        } else if (isValid() && !isChanged()) {
-            builder.setResult(Result.VALID_UNCHANGED);
-        } else if (!isValid() && isChanged()) {
-            builder.setResult(Result.INVALID_CHANGED);
-        } else if (isValid() && isChanged()) {
-            builder.setResult(Result.VALID_CHANGED);
-            save(requestModel);
+    private void sendResponse(Response response) {
+        if (response.getResult() == Result.VALID_CHANGED ||
+                response.getResult() == Result.VALID_UNCHANGED) {
+            getUseCaseCallback().onSuccess(response);
+        } else {
+            getUseCaseCallback().onError(response);
         }
+    }
 
-        equaliseState();
-        Response response = builder.setModel(responseModel).build();
-        getUseCaseCallback().onSuccess(response);
+    private List<FailReason> getFailReasons() {
+        List<FailReason> failReasons = new LinkedList<>();
+
+        if (requestModel.getTotalPrepTime() > MAX_PREP_TIME) {
+            failReasons.add(FailReason.INVALID_PREP_TIME);
+        }
+        if (requestModel.getTotalCookTime() > MAX_COOK_TIME) {
+            failReasons.add(FailReason.INVALID_COOK_TIME);
+        }
+        if (isValid()) {
+            failReasons.add(FailReason.NONE);
+        }
+        return failReasons;
+    }
+
+    private Result getResult() {
+        if (!isValid() && !isChanged()) {
+            return Result.INVALID_UNCHANGED;
+
+        } else if (isValid() && !isChanged()) {
+            return Result.VALID_UNCHANGED;
+
+        } else if (!isValid() && isChanged()) {
+            return Result.INVALID_CHANGED;
+
+        } else {
+            save(requestModel);
+            return Result.VALID_CHANGED;
+        }
     }
 
     private boolean isValid() {
@@ -161,7 +219,7 @@ public class UseCaseRecipeDuration
     }
 
     private boolean isChanged() {
-        return requestModel.equals(responseModel);
+        return !requestModel.equals(responseModel);
     }
 
     private void save(Model model) {
@@ -431,22 +489,76 @@ public class UseCaseRecipeDuration
         public Model getModel() {
             return model;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Request request = (Request) o;
+            return recipeId.equals(request.recipeId) &&
+                    cloneToRecipeId.equals(request.cloneToRecipeId) &&
+                    model.equals(request.model);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(recipeId, cloneToRecipeId, model);
+        }
+
+        public static class Builder {
+            private String recipeId;
+            private String cloneToRecipeId;
+            private Model model;
+
+            public Builder setRecipeId(String recipeId) {
+                this.recipeId = recipeId;
+                return this;
+            }
+
+            public Builder setCloneToRecipeId(String cloneToRecipeId) {
+                this.cloneToRecipeId = cloneToRecipeId;
+                return this;
+            }
+
+            public Builder setModel(Model model) {
+                this.model = model;
+                return this;
+            }
+
+            public Request build() {
+                return new Request(
+                        recipeId,
+                        cloneToRecipeId,
+                        model
+                );
+            }
+        }
     }
 
     public static final class Response implements UseCaseInteractor.Response {
         @Nonnull
         private final Result result;
         @Nonnull
+        private final List<FailReason> failReasons;
+        @Nonnull
         private final Model model;
 
-        public Response(@Nonnull Result result, @Nonnull Model model) {
+        public Response(@Nonnull Result result,
+                        @Nonnull List<FailReason> failReasons,
+                        @Nonnull Model model) {
             this.result = result;
+            this.failReasons = failReasons;
             this.model = model;
         }
 
         @Nonnull
         public Result getResult() {
             return result;
+        }
+
+        @Nonnull
+        public List<FailReason> getFailReasons() {
+            return failReasons;
         }
 
         @Nonnull
@@ -460,29 +572,33 @@ public class UseCaseRecipeDuration
             if (o == null || getClass() != o.getClass()) return false;
             Response response = (Response) o;
             return result == response.result &&
+                    failReasons.equals(response.failReasons) &&
                     model.equals(response.model);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(result, model);
+            return Objects.hash(result, failReasons, model);
         }
 
         @Override
         public String toString() {
             return "Response{" +
                     "result=" + result +
+                    ", failReasons=" + failReasons +
                     ", model=" + model +
                     '}';
         }
 
         public static class Builder {
             private Result result;
+            private List<FailReason> failReasons;
             private Model model;
 
             public static Builder getDefault() {
                 return new Builder().
                         setResult(Result.INVALID_UNCHANGED).
+                        setFailReasons(getDefaultFailReasons()).
                         setModel(Model.Builder.
                                 getDefault().
                                 build());
@@ -490,6 +606,11 @@ public class UseCaseRecipeDuration
 
             public Builder setResult(Result result) {
                 this.result = result;
+                return this;
+            }
+
+            public Builder setFailReasons(List<FailReason> failReasons) {
+                this.failReasons = failReasons;
                 return this;
             }
 
@@ -501,8 +622,15 @@ public class UseCaseRecipeDuration
             public Response build() {
                 return new Response(
                         result,
+                        failReasons,
                         model
                 );
+            }
+
+            private static List<FailReason> getDefaultFailReasons() {
+                List<FailReason> defaultFailReasons = new LinkedList<>();
+                defaultFailReasons.add(FailReason.NONE);
+                return defaultFailReasons;
             }
         }
     }

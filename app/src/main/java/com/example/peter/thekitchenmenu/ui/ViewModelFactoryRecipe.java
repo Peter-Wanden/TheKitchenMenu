@@ -10,8 +10,6 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipe;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.UseCaseFactory;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
 import com.example.peter.thekitchenmenu.ui.utils.unitofmeasure.MeasurementToSpannableConverter;
@@ -39,18 +37,15 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
     private final UseCaseFactory useCaseFactory;
     private final UseCaseHandler useCaseHandler;
     private final RepositoryRecipe recipeRepository;
-    private final RepositoryRecipeDuration recipeDurationRepository;
 
     private ViewModelFactoryRecipe(Application application,
                                    UseCaseFactory useCaseFactory,
                                    UseCaseHandler useCaseHandler,
-                                   RepositoryRecipe recipeRepository,
-                                   RepositoryRecipeDuration recipeDurationRepository) {
+                                   RepositoryRecipe recipeRepository) {
         this.application = application;
         this.useCaseFactory = useCaseFactory;
         this.useCaseHandler = useCaseHandler;
         this.recipeRepository = recipeRepository;
-        this.recipeDurationRepository = recipeDurationRepository;
     }
 
     public static ViewModelFactoryRecipe getInstance(Application application) {
@@ -62,9 +57,6 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
                             UseCaseFactory.getInstance(application),
                             UseCaseHandler.getInstance(),
                             DatabaseInjection.provideRecipesDataSource(
-                                    application.getApplicationContext()
-                            ),
-                            DatabaseInjection.provideRecipeDurationDataSource(
                                     application.getApplicationContext()
                             )
                     );
@@ -109,9 +101,9 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
         } else if (modelClass.isAssignableFrom(RecipeDurationEditorViewModel.class)) {
             // noinspection unchecked
             return (T) new RecipeDurationEditorViewModel(
-                    recipeDurationRepository,
-                    application.getResources(),
-                    new TimeProvider()
+                    useCaseHandler,
+                    useCaseFactory.provideRecipeDurationUseCase(),
+                    application.getResources()
             );
         } else if (modelClass.isAssignableFrom(RecipePortionsEditorViewModel.class)) {
             // noinspection unchecked

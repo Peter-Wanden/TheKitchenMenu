@@ -2,7 +2,6 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 
 import android.content.res.Resources;
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.Observer;
 
 import com.example.peter.thekitchenmenu.R;
@@ -52,8 +51,6 @@ public class RecipeEditorViewModelTest {
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
-    @Rule
-    public InstantTaskExecutorRule instantExecutorRule = new InstantTaskExecutorRule();
     @Mock
     Observer<Integer> integerObserveMock;
     @Mock

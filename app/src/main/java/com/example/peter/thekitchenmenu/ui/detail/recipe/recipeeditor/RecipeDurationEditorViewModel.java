@@ -7,142 +7,179 @@ import androidx.databinding.ObservableField;
 import androidx.databinding.library.baseAdapters.BR;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.data.entity.RecipeDurationEntity;
-import com.example.peter.thekitchenmenu.data.repository.DataSource;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration;
+import com.example.peter.thekitchenmenu.domain.UseCaseCommand;
+import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.UseCaseRecipeDuration;
 import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
-import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
+
+import javax.annotation.Nonnull;
+
+import static com.example.peter.thekitchenmenu.domain.UseCaseInteractor.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipeduration.UseCaseRecipeDuration.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipeduration.UseCaseRecipeDuration.DO_NOT_CLONE;
 
 public class RecipeDurationEditorViewModel
-        extends
-        ObservableViewModel
-        implements
-        DataSource.GetEntityCallback<RecipeDurationEntity>,
-        RecipeModelObserver.RecipeModelActions {
+        extends ObservableViewModel
+        implements RecipeModelObserver.RecipeModelActions {
+
+    private static final String TAG = "tkm-" + RecipeDurationEditorViewModel.class.getSimpleName()
+            + ":";
 
     private static final int MEASUREMENT_ERROR = -1;
 
+    @Nonnull
+    private UseCaseHandler handler;
+    @Nonnull
+    private UseCaseRecipeDuration useCase;
+    private UseCaseRecipeDuration.Response useCaseResponse;
+
     private Resources resources;
-    private TimeProvider timeProvider;
-    private RepositoryRecipeDuration repository;
     private RecipeValidation.RecipeValidatorModelSubmission modelSubmitter;
 
     public final ObservableField<String> prepTimeErrorMessage = new ObservableField<>();
     public final ObservableField<String> cookTimeErrorMessage = new ObservableField<>();
 
     private String recipeId;
-    private RecipeDurationEntity durationEntity;
 
-    private int prepHours;
-    private String prepHoursInView = "";
-    private int prepMinutes;
-    private String prepMinutesInView = "";
-    private boolean prepTimeValid = true;
-
-    private int cookHours;
-    private String cookHoursInView = "";
-    private int cookMinutes;
-    private String cookMinutesInView = "";
-    private boolean cookTimeValid = true;
-
-    private boolean isCloned;
     private boolean dataLoading;
+    private boolean dataLoadingError;
     private boolean updatingUi;
 
-    public RecipeDurationEditorViewModel(RepositoryRecipeDuration repository,
-                                         Resources resources,
-                                         TimeProvider timeProvider)  {
-        this.repository = repository;
+    public RecipeDurationEditorViewModel(@Nonnull UseCaseHandler handler,
+                                         @Nonnull UseCaseRecipeDuration useCase,
+                                         Resources resources) {
+        this.handler = handler;
+        this.useCase = useCase;
         this.resources = resources;
-        this.timeProvider = timeProvider;
+        useCaseResponse = UseCaseRecipeDuration.Response.Builder.
+                getDefault().
+                build();
+    }
+
+    void setModelValidationSubmitter(RecipeValidation.RecipeValidatorModelSubmission
+                                             modelSubmitter) {
+        this.modelSubmitter = modelSubmitter;
     }
 
     @Override
     public void start(String recipeId) {
-        if (this.recipeId == null || !this.recipeId.equals(recipeId)) {
+        if (isRecipeIdChanged(recipeId)) {
             this.recipeId = recipeId;
-            getData(recipeId);
+
+            executeUseCase(
+                    recipeId,
+                    DO_NOT_CLONE,
+                    Model.Builder.
+                            getDefault().
+                            build());
         }
     }
 
     @Override
     public void startByCloningModel(String oldRecipeId, String cloneToRecipeId) {
-        if (recipeId == null || !recipeId.equals(cloneToRecipeId)) {
-            isCloned = true;
-            recipeId = cloneToRecipeId;
-            getData(oldRecipeId);
+        if (isRecipeIdChanged(cloneToRecipeId)) {
+            this.recipeId = cloneToRecipeId;
+
+            executeUseCase(
+                    oldRecipeId,
+                    cloneToRecipeId,
+                    Model.Builder.
+                            getDefault().
+                            build());
         }
     }
 
-    private void getData(String recipeId) {
-        dataLoading = true;
-        repository.getById(recipeId, this);
+    private boolean isRecipeIdChanged(String recipeId) {
+        return this.recipeId == null || !this.recipeId.equals(recipeId);
     }
 
-    @Override
-    public void onEntityLoaded(RecipeDurationEntity durationEntity) {
-        if (isCloned) {
-            this.durationEntity = cloneEntity(durationEntity);
-        } else {
-            this.durationEntity = durationEntity;
-        }
-        updateObservables();
+    private UseCaseInteractor.Callback<UseCaseRecipeDuration.Response> getUseCaseCallback() {
+        return new UseCaseCommand.Callback<UseCaseRecipeDuration.Response>() {
+            @Override
+            public void onSuccess(UseCaseRecipeDuration.Response response) {
+                processUseCaseResponse(response);
+            }
+
+            @Override
+            public void onError(UseCaseRecipeDuration.Response response) {
+                processUseCaseResponse(response);
+            }
+        };
     }
 
-    private RecipeDurationEntity cloneEntity(RecipeDurationEntity toClone) {
-        long currentTime = timeProvider.getCurrentTimeInMills();
-        return new RecipeDurationEntity(
-                recipeId,
-                toClone.getPrepTime(),
-                toClone.getCookTime(),
-                currentTime,
-                currentTime
-        );
-    }
-
-    @Override
-    public void onDataNotAvailable() {
-        durationEntity = createNewEntity();
-        save(durationEntity);
+    private void processUseCaseResponse(UseCaseRecipeDuration.Response response) {
+        useCaseResponse = response;
         dataLoading = false;
+        Result result = response.getResult();
+
+        if (result == Result.DATA_UNAVAILABLE) {
+            dataLoadingError = true;
+            updateRecipeComponentStatus(false, false);
+            return;
+        } else if (result == Result.INVALID_UNCHANGED) {
+            updateRecipeComponentStatus(false, false);
+        } else if (result == Result.VALID_UNCHANGED) {
+            updateRecipeComponentStatus(true, false);
+        } else if (result == Result.INVALID_CHANGED) {
+            updateRecipeComponentStatus(false, true);
+        } else if (result == Result.VALID_CHANGED) {
+            updateRecipeComponentStatus(true, true);
+        }
         updateObservables();
     }
 
-    private RecipeDurationEntity createNewEntity() {
-        long currentTime = timeProvider.getCurrentTimeInMills();
-        return new RecipeDurationEntity(
-                recipeId,
-                0,
-                0,
-                currentTime,
-                currentTime
-        );
+    private void updateRecipeComponentStatus(boolean isValid, boolean isChanged) {
+        if (!updatingUi) {
+            modelSubmitter.submitRecipeComponentStatus(new RecipeComponentStatus(
+                    RecipeValidator.ModelName.DURATION_MODEL,
+                    isChanged,
+                    isValid
+            ));
+        }
     }
 
     private void updateObservables() {
         updatingUi = true;
-        updatePrepTime(durationEntity.getPrepTime());
-        updateCookTime(durationEntity.getCookTime());
+        notifyPropertyChanged(BR.prepHoursInView);
+        notifyPropertyChanged(BR.prepMinutesInView);
+        notifyPropertyChanged(BR.cookHoursInView);
+        notifyPropertyChanged(BR.cookMinutesInView);
         updatingUi = false;
 
-        if (dataLoading) {
-            validatePrepTime();
-            validateCookTime();
-            dataLoading = false;
-        } else {
-            submitModelStatus(isChanged(), isValid());
-            return;
+        if (hasFailReasons()) {
+            displayErrors();
         }
+    }
 
-        if (isCloned && isValid()) {
-            save(durationEntity);
-            isCloned = false;
-        }
+    private boolean hasFailReasons() {
+        return !useCaseResponse.getFailReasons().contains(FailReason.NONE);
+    }
+
+    private void displayErrors() {
+        prepTimeErrorMessage.set(isInvalidPrepTime() ? getPrepTimeErrorMessage() : null);
+        cookTimeErrorMessage.set(isInvalidCookTime() ? getCookTimeErrorMessage() : null);
+    }
+
+    private boolean isInvalidPrepTime() {
+        return useCaseResponse.getFailReasons().contains(FailReason.INVALID_PREP_TIME);
+    }
+
+    private String getPrepTimeErrorMessage() {
+        return resources.getString(R.string.input_error_recipe_prep_time_too_long);
+    }
+
+    private boolean isInvalidCookTime() {
+        return useCaseResponse.getFailReasons().contains(FailReason.INVALID_COOK_TIME);
+    }
+
+    private String getCookTimeErrorMessage() {
+        return resources.getString(R.string.input_error_recipe_cook_time_too_long);
     }
 
     @Bindable
     public String getPrepHoursInView() {
-        return prepHoursInView;
+        return String.valueOf(useCaseResponse.getModel().getPrepHours());
     }
 
     public void setPrepHoursInView(String prepHoursInView) {
@@ -154,8 +191,11 @@ public class RecipeDurationEditorViewModel
                     if (prepHoursParsed == MEASUREMENT_ERROR)
                         prepTimeErrorMessage.set(numberFormatExceptionErrorMessage());
                     else {
-                        prepHours = prepHoursParsed;
-                        validatePrepTime();
+                        Model model = Model.Builder.
+                                basedOn(useCaseResponse.getModel()).
+                                setPrepHours(prepHoursParsed).
+                                build();
+                        executeUseCase(recipeId, DO_NOT_CLONE, model);
                     }
                 }
             }
@@ -163,12 +203,12 @@ public class RecipeDurationEditorViewModel
     }
 
     private boolean isPrepHoursInViewChanged(String prepHoursInView) {
-        return !this.prepHoursInView.equals(prepHoursInView);
+        return !String.valueOf(useCaseResponse.getModel().getPrepHours()).equals(prepHoursInView);
     }
 
     @Bindable
     public String getPrepMinutesInView() {
-        return prepMinutesInView;
+        return String.valueOf(useCaseResponse.getModel().getPrepMinutes());
     }
 
     public void setPrepMinutesInView(String prepMinutesInView) {
@@ -180,8 +220,11 @@ public class RecipeDurationEditorViewModel
                     if (prepMinutesParsed == MEASUREMENT_ERROR)
                         prepTimeErrorMessage.set(numberFormatExceptionErrorMessage());
                     else {
-                        prepMinutes = prepMinutesParsed;
-                        validatePrepTime();
+                        Model model = Model.Builder.
+                                basedOn(useCaseResponse.getModel()).
+                                setPrepMinutes(prepMinutesParsed).
+                                build();
+                        executeUseCase(recipeId, DO_NOT_CLONE, model);
                     }
                 }
             }
@@ -189,36 +232,12 @@ public class RecipeDurationEditorViewModel
     }
 
     private boolean isPrepMinutesInViewChanged(String prepMinutesInView) {
-        return !this.prepMinutesInView.equals(prepMinutesInView);
-    }
-
-    private void validatePrepTime() {
-        prepTimeErrorMessage.set(null);
-        int maxAllowedPrepTime = resources.getInteger(R.integer.recipe_max_prep_time_in_minutes);
-        int totalPrepTime = calculateTotalMinutes(prepHours, prepMinutes);
-        String errorMessage = resources.getString(R.string.input_error_recipe_prep_time_too_long);
-
-        prepTimeValid = totalPrepTime <= maxAllowedPrepTime;
-        if (!prepTimeValid) {
-            prepTimeErrorMessage.set(errorMessage);
-        }
-        updatePrepTime(totalPrepTime);
-        saveValidChanges();
-    }
-
-    private void updatePrepTime(int totalPrepTime) {
-        prepHours = getHours(totalPrepTime);
-        prepHoursInView = String.valueOf(prepHours);
-        notifyPropertyChanged(BR.prepHoursInView);
-
-        prepMinutes = getMinutes(totalPrepTime);
-        prepMinutesInView = String.valueOf(prepMinutes);
-        notifyPropertyChanged(BR.prepMinutesInView);
+        return !String.valueOf(useCaseResponse.getModel().getPrepMinutes()).equals(prepMinutesInView);
     }
 
     @Bindable
     public String getCookHoursInView() {
-        return cookHoursInView;
+        return String.valueOf(useCaseResponse.getModel().getCookHours());
     }
 
     public void setCookHoursInView(String cookHoursInView) {
@@ -230,8 +249,11 @@ public class RecipeDurationEditorViewModel
                     if (cookHoursParsed == MEASUREMENT_ERROR)
                         cookTimeErrorMessage.set(numberFormatExceptionErrorMessage());
                     else {
-                        this.cookHours = cookHoursParsed;
-                        validateCookTime();
+                        Model model = Model.Builder.
+                                basedOn(useCaseResponse.getModel()).
+                                setCookHours(cookHoursParsed).
+                                build();
+                        executeUseCase(recipeId, DO_NOT_CLONE, model);
                     }
                 }
             }
@@ -239,12 +261,12 @@ public class RecipeDurationEditorViewModel
     }
 
     private boolean isCookHoursInViewChanged(String cookHoursInView) {
-        return !this.cookHoursInView.equals(cookHoursInView);
+        return !String.valueOf(useCaseResponse.getModel().getCookHours()).equals(cookHoursInView);
     }
 
     @Bindable
     public String getCookMinutesInView() {
-        return cookMinutesInView;
+        return String.valueOf(useCaseResponse.getModel().getCookMinutes());
     }
 
     public void setCookMinutesInView(String cookMinutesInView) {
@@ -256,8 +278,11 @@ public class RecipeDurationEditorViewModel
                     if (cookMinutesParsed == MEASUREMENT_ERROR)
                         cookTimeErrorMessage.set(numberFormatExceptionErrorMessage());
                     else {
-                        cookMinutes = cookMinutesParsed;
-                        validateCookTime();
+                        Model model = Model.Builder.
+                                basedOn(useCaseResponse.getModel()).
+                                setCookMinutes(cookMinutesParsed).
+                                build();
+                        executeUseCase(recipeId, DO_NOT_CLONE, model);
                     }
                 }
             }
@@ -265,33 +290,19 @@ public class RecipeDurationEditorViewModel
     }
 
     private boolean isCookMinutesInViewChanged(String cookMinutesInView) {
-        return !this.cookMinutesInView.equals(cookMinutesInView);
+        return !String.valueOf(useCaseResponse.getModel().getCookMinutes()).equals(cookMinutesInView);
     }
 
-    private void validateCookTime() {
-        cookTimeErrorMessage.set(null);
-        int maxAllowedCookTime = resources.getInteger(R.integer.recipe_max_cook_time_in_minutes);
-        int totalCookTime = calculateTotalMinutes(cookHours, cookMinutes);
-        // todo - make the time in this string a calculation
-        String errorMessage = resources.getString(R.string.input_error_recipe_cook_time_too_long);
-
-        cookTimeValid = totalCookTime <= maxAllowedCookTime;
-
-        if (!cookTimeValid) {
-            cookTimeErrorMessage.set(errorMessage);
-        }
-        updateCookTime(totalCookTime);
-        saveValidChanges();
-    }
-
-    private void updateCookTime(int totalCookTime) {
-        cookHours = getHours(totalCookTime);
-        cookHoursInView = String.valueOf(cookHours);
-        notifyPropertyChanged(BR.cookHoursInView);
-
-        cookMinutes = getMinutes(totalCookTime);
-        cookMinutesInView = String.valueOf(cookMinutes);
-        notifyPropertyChanged(BR.cookMinutesInView);
+    private void executeUseCase(String recipeId,
+                                String cloneToRecipeId,
+                                Model model) {
+        UseCaseRecipeDuration.Request request = new UseCaseRecipeDuration.Request.Builder().
+                setRecipeId(recipeId).
+                setCloneToRecipeId(cloneToRecipeId).
+                setModel(model).
+                build();
+        dataLoading = true;
+        handler.execute(useCase, request, getUseCaseCallback());
     }
 
     private int parseIntegerFromString(String integerToParse) {
@@ -302,82 +313,7 @@ public class RecipeDurationEditorViewModel
         }
     }
 
-    private int getHours(int totalTime) {
-        return totalTime / 60;
-    }
-
-    private int getMinutes(int totalTime) {
-        return totalTime % 60;
-    }
-
-    private int calculateTotalMinutes(int hours, int minutes) {
-        return hours * 60 + minutes;
-    }
-
     private String numberFormatExceptionErrorMessage() {
         return resources.getString(R.string.number_format_exception);
-    }
-
-    void setModelValidationSubmitter(RecipeValidation.RecipeValidatorModelSubmission modelSubmitter) {
-        this.modelSubmitter = modelSubmitter;
-    }
-
-    private void saveValidChanges() {
-        RecipeDurationEntity entity = updatedEntity();
-        boolean isChanged = isChanged();
-        boolean isValid = isValid();
-
-        if (isChanged && isValid) {
-            save(entity);
-        }
-        equaliseState(entity);
-        submitModelStatus(isChanged, isValid);
-    }
-
-    private void submitModelStatus(boolean isChanged, boolean isValid) {
-        if (!updatingUi) {
-            modelSubmitter.submitRecipeComponentStatus(new RecipeComponentStatus(
-                    RecipeValidator.ModelName.DURATION_MODEL,
-                    isChanged,
-                    isValid
-            ));
-        }
-    }
-
-    private void equaliseState(RecipeDurationEntity durationEntity) {
-        this.durationEntity = durationEntity;
-    }
-
-    private boolean isChanged() {
-        if (durationEntity != null) {
-            RecipeDurationEntity latestData = new RecipeDurationEntity(
-                    durationEntity.getId(),
-                    calculateTotalMinutes(prepHours, prepMinutes),
-                    calculateTotalMinutes(cookHours, cookMinutes),
-                    durationEntity.getCreateDate(),
-                    durationEntity.getLastUpdate()
-            );
-            return !durationEntity.equals(latestData);
-        } else {
-            return false;
-        }
-    }
-
-    private boolean isValid() {
-        return prepTimeValid && cookTimeValid;
-    }
-
-    private RecipeDurationEntity updatedEntity() {
-        return new RecipeDurationEntity(
-                durationEntity.getId(),
-                calculateTotalMinutes(prepHours, prepMinutes),
-                calculateTotalMinutes(cookHours, cookMinutes),
-                durationEntity.getCreateDate(),
-                timeProvider.getCurrentTimeInMills()
-        );
-    }
-
-    private void save(RecipeDurationEntity durationEntity) {
-        repository.save(durationEntity);
     }
 }

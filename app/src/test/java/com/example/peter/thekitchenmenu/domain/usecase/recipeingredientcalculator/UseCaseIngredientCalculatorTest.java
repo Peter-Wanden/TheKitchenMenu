@@ -1021,8 +1021,7 @@ public class UseCaseIngredientCalculatorTest {
     }
 
     // region helper methods -----------------------------------------------------------------------
-    private Callback<UseCaseIngredientCalculatorResponse>
-    getResponseCallback() {
+    private Callback<UseCaseIngredientCalculatorResponse> getResponseCallback() {
         return new Callback<UseCaseIngredientCalculatorResponse>() {
 
             @Override

@@ -30,11 +30,9 @@ public class RecipePortionsEditorViewModel
     private UseCaseHandler handler;
     @Nonnull
     private UseCaseRecipePortions useCase;
+    @Nonnull
     private Resources resources;
-    private UseCaseRecipePortions.Response useCaseResponse = UseCaseRecipePortions.Response.
-            Builder.
-            getDefault().
-            build();
+    private UseCaseRecipePortions.Response useCaseResponse;
 
     private boolean dataLoadingError;
 
@@ -48,14 +46,17 @@ public class RecipePortionsEditorViewModel
 
     public RecipePortionsEditorViewModel(@Nonnull UseCaseHandler handler,
                                          @Nonnull UseCaseRecipePortions useCase,
-                                         Resources resources) {
+                                         @Nonnull Resources resources) {
         this.handler = handler;
         this.useCase = useCase;
         this.resources = resources;
+        useCaseResponse = UseCaseRecipePortions.Response.Builder.
+                getDefault().
+                build();
     }
 
-    void setModelValidationSubmitter(
-            RecipeValidation.RecipeValidatorModelSubmission modelSubmitter) {
+    void setModelValidationSubmitter(RecipeValidation.RecipeValidatorModelSubmission
+                                             modelSubmitter) {
         this.modelSubmitter = modelSubmitter;
     }
 
@@ -138,11 +139,8 @@ public class RecipePortionsEditorViewModel
 
     @Bindable
     public String getServingsInView() {
-        if (useCaseResponse != null) {
-            return String.valueOf(useCaseResponse.getModel().getServings());
-        } else {
-            return "";
-        }
+        return useCaseResponse == null ? "" : String.valueOf(useCaseResponse.getModel().
+                        getServings());
     }
 
     public void setServingsInView(String servingsInView) {
