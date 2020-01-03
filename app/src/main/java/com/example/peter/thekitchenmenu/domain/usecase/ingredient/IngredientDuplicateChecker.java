@@ -8,7 +8,7 @@ import com.google.android.gms.common.util.Strings;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-public class UseCaseIngredientDuplicateChecker
+public class IngredientDuplicateChecker
         implements DataSource.GetAllCallback<IngredientEntity> {
 
     public interface DuplicateCallback {
@@ -22,7 +22,7 @@ public class UseCaseIngredientDuplicateChecker
     private String ingredientId;
     public static final String NO_DUPLICATE_FOUND = "";
 
-    public UseCaseIngredientDuplicateChecker(RepositoryIngredient repository) {
+    public IngredientDuplicateChecker(RepositoryIngredient repository) {
         this.repository = repository;
     }
 

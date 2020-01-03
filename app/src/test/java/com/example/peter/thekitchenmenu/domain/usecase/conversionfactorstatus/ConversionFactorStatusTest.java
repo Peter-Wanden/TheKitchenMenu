@@ -17,48 +17,48 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
-public class UseCaseConversionFactorStatusTest {
+public class ConversionFactorStatusTest {
 
     // region constants ----------------------------------------------------------------------------
     private IngredientEntity INGREDIENT_NEW_VALID_NAME_DESCRIPTION =
             TestDataIngredientEntity.getNewInvalidNameValidDescription();
-    private UseCaseConversionFactorStatusRequest REQUEST_DISABLED =
+    private ConversionFactorStatusRequest REQUEST_DISABLED =
             TestDataUseCaseConversionFactorStatusRequestResponse.
                     getRequestMetricNoConversionFactor();
-    private UseCaseConversionFactorStatusResponse RESPONSE_DISABLED =
+    private ConversionFactorStatusResponse RESPONSE_DISABLED =
             TestDataUseCaseConversionFactorStatusRequestResponse.
                     getResponseMetricNoConversionFactor();
 
     private IngredientEntity INGREDIENT_VALID_FROM_ANOTHER_USER =
             TestDataIngredientEntity.getExistingValidNameValidDescriptionFromAnotherUser();
-    private UseCaseConversionFactorStatusRequest REQUEST_ENABLED_UNEDITABLE =
+    private ConversionFactorStatusRequest REQUEST_ENABLED_UNEDITABLE =
             TestDataUseCaseConversionFactorStatusRequestResponse.
                     getRequestWithConversionFactorFromAnotherUser();
-    private UseCaseConversionFactorStatusResponse RESPONSE_ENABLED_UNEDITABLE =
+    private ConversionFactorStatusResponse RESPONSE_ENABLED_UNEDITABLE =
             TestDataUseCaseConversionFactorStatusRequestResponse.
                     getResponseConversionFactorUneditable();
 
     private IngredientEntity INGREDIENT_NEW_VALID_WITH_CONVERSION_FACTOR_UNSET =
             TestDataIngredientEntity.getNewValidNameValidDescription();
-    private UseCaseConversionFactorStatusRequest REQUEST_ENABLED_EDITABLE_UNSET =
+    private ConversionFactorStatusRequest REQUEST_ENABLED_EDITABLE_UNSET =
             TestDataUseCaseConversionFactorStatusRequestResponse.
                     getRequestWithConversionFactorEnabledUnset();
-    private UseCaseConversionFactorStatusResponse RESPONSE_ENABLED_EDITABLE_UNSET =
+    private ConversionFactorStatusResponse RESPONSE_ENABLED_EDITABLE_UNSET =
             TestDataUseCaseConversionFactorStatusRequestResponse.
                     getResponseConversionFactorEnabledUnset();
 
     private IngredientEntity INGREDIENT_VALID_WITH_CONVERSION_FACTOR =
             TestDataIngredientEntity.getExistingValidWithConversionFactor();
-    private UseCaseConversionFactorStatusRequest REQUEST_ENABLED_EDITABLE_SET =
+    private ConversionFactorStatusRequest REQUEST_ENABLED_EDITABLE_SET =
             TestDataUseCaseConversionFactorStatusRequestResponse.
                     getRequestWithConversionFactorEnabledSet();
-    private UseCaseConversionFactorStatusResponse RESPONSE_ENABLED_EDITABLE_SET =
+    private ConversionFactorStatusResponse RESPONSE_ENABLED_EDITABLE_SET =
             TestDataUseCaseConversionFactorStatusRequestResponse.
                     getResponseConversionFactorEnabledSet();
 
-    private UseCaseConversionFactorStatusRequest REQUEST_NO_DATA_AVAILABLE =
+    private ConversionFactorStatusRequest REQUEST_NO_DATA_AVAILABLE =
             TestDataUseCaseConversionFactorStatusRequestResponse.getRequestForIngredientNotFound();
-    private UseCaseConversionFactorStatusResponse RESPONSE_NO_DATA_AVAILABLE =
+    private ConversionFactorStatusResponse RESPONSE_NO_DATA_AVAILABLE =
             TestDataUseCaseConversionFactorStatusRequestResponse.getResponseForIngredientNotFound();
 
     // endregion constants -------------------------------------------------------------------------
@@ -70,16 +70,16 @@ public class UseCaseConversionFactorStatusTest {
     @Captor
     ArgumentCaptor<DataSource.GetEntityCallback<IngredientEntity>> getEntityCallbackCaptor;
 
-    private UseCaseConversionFactorStatusResponse actualResponse;
+    private ConversionFactorStatusResponse actualResponse;
 
     // endregion helper fields ---------------------------------------------------------------------
 
-    private UseCaseConversionFactorStatus SUT;
+    private ConversionFactorStatus SUT;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        SUT = new UseCaseConversionFactorStatus(repoMock);
+        SUT = new ConversionFactorStatus(repoMock);
     }
 
     @Test
@@ -145,21 +145,21 @@ public class UseCaseConversionFactorStatusTest {
     }
 
     // region helper methods -----------------------------------------------------------------------
-    private UseCaseConversionFactorStatusRequest getRequestValues(MeasurementSubtype subtype,
-                                                                         String ingredientId) {
-        return new UseCaseConversionFactorStatusRequest(subtype, ingredientId);
+    private ConversionFactorStatusRequest getRequestValues(MeasurementSubtype subtype,
+                                                           String ingredientId) {
+        return new ConversionFactorStatusRequest(subtype, ingredientId);
     }
 
-    private UseCaseInteractor.Callback<UseCaseConversionFactorStatusResponse> getResponseCallback() {
-        return new UseCaseInteractor.Callback<UseCaseConversionFactorStatusResponse>() {
+    private UseCaseInteractor.Callback<ConversionFactorStatusResponse> getResponseCallback() {
+        return new UseCaseInteractor.Callback<ConversionFactorStatusResponse>() {
             @Override
-            public void onSuccess(UseCaseConversionFactorStatusResponse response) {
-                UseCaseConversionFactorStatusTest.this.actualResponse = response;
+            public void onSuccess(ConversionFactorStatusResponse response) {
+                ConversionFactorStatusTest.this.actualResponse = response;
             }
 
             @Override
-            public void onError(UseCaseConversionFactorStatusResponse response) {
-                UseCaseConversionFactorStatusTest.this.actualResponse = response;
+            public void onError(ConversionFactorStatusResponse response) {
+                ConversionFactorStatusTest.this.actualResponse = response;
             }
         };
     }

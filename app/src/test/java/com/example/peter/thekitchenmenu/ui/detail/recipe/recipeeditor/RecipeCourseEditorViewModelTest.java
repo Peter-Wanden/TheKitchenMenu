@@ -6,7 +6,7 @@ import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.entity.*;
 import com.example.peter.thekitchenmenu.data.repository.*;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipecourse.UseCaseRecipeCourse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipecourse.RecipeCourse;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeEntity;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
@@ -61,7 +61,7 @@ public class RecipeCourseEditorViewModelTest {
 
     private RecipeCourseEditorViewModel givenViewModel() {
         UseCaseHandler handler = new UseCaseHandler(new UseCaseSchedulerMock());
-        UseCaseRecipeCourse useCase = new UseCaseRecipeCourse(
+        RecipeCourse useCase = new RecipeCourse(
                 repoMock,
                 idProviderMock,
                 timeProviderMock);

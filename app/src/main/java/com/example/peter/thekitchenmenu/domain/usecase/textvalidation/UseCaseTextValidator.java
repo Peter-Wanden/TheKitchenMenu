@@ -7,7 +7,8 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 
 public class UseCaseTextValidator
-        extends UseCaseInteractor<UseCaseTextValidator.Request, UseCaseTextValidator.Response> {
+        extends
+        UseCaseInteractor<UseCaseTextValidator.Request, UseCaseTextValidator.Response> {
 
     private static final String TAG = "tkm-" + UseCaseTextValidator.class.getSimpleName() + ":";
 

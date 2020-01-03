@@ -6,17 +6,17 @@ import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
 
 import java.util.Objects;
 
-public class UseCaseConversionFactorStatusResponse implements UseCaseInteractor.Response {
+public class ConversionFactorStatusResponse implements UseCaseInteractor.Response {
     @NonNull
-    private UseCaseConversionFactorStatus.UseCaseResult result;
+    private ConversionFactorStatus.Result result;
 
-    public UseCaseConversionFactorStatusResponse(
-            @NonNull UseCaseConversionFactorStatus.UseCaseResult result) {
+    public ConversionFactorStatusResponse(
+            @NonNull ConversionFactorStatus.Result result) {
         this.result = result;
     }
 
     @NonNull
-    public UseCaseConversionFactorStatus.UseCaseResult getResult() {
+    public ConversionFactorStatus.Result getResult() {
         return result;
     }
 
@@ -24,7 +24,7 @@ public class UseCaseConversionFactorStatusResponse implements UseCaseInteractor.
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UseCaseConversionFactorStatusResponse that = (UseCaseConversionFactorStatusResponse) o;
+        ConversionFactorStatusResponse that = (ConversionFactorStatusResponse) o;
         return result == that.result;
     }
 

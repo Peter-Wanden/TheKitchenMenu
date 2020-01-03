@@ -37,7 +37,7 @@ import static org.junit.Assert.assertEquals;
  * Tests the boundary between UI components and use case
  * and the boundary between the use case and data persistence
  */
-public class UseCaseIngredientCalculatorTest {
+public class IngredientCalculatorTest {
 
     // region constants ----------------------------------------------------------------------------
     private final double DELTA = 0.0001;
@@ -1026,14 +1026,14 @@ public class UseCaseIngredientCalculatorTest {
 
             @Override
             public void onSuccess(UseCaseIngredientCalculatorResponse response) {
-                UseCaseIngredientCalculatorTest.this.responses.add(response);
-                UseCaseIngredientCalculatorTest.this.actualResponse = response;
+                IngredientCalculatorTest.this.responses.add(response);
+                IngredientCalculatorTest.this.actualResponse = response;
             }
 
             @Override
             public void onError(UseCaseIngredientCalculatorResponse response) {
-                UseCaseIngredientCalculatorTest.this.responses.add(response);
-                UseCaseIngredientCalculatorTest.this.actualResponse = response;
+                IngredientCalculatorTest.this.responses.add(response);
+                IngredientCalculatorTest.this.actualResponse = response;
             }
         };
     }

@@ -10,14 +10,16 @@ import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.domain.UseCaseCommand;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.UseCaseRecipeDuration;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDurationModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDurationRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDuration;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDurationResponse;
 import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.UseCaseInteractor.*;
-import static com.example.peter.thekitchenmenu.domain.usecase.recipeduration.UseCaseRecipeDuration.*;
-import static com.example.peter.thekitchenmenu.domain.usecase.recipeduration.UseCaseRecipeDuration.DO_NOT_CLONE;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDuration.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDuration.DO_NOT_CLONE;
 
 public class RecipeDurationEditorViewModel
         extends ObservableViewModel
@@ -31,8 +33,8 @@ public class RecipeDurationEditorViewModel
     @Nonnull
     private UseCaseHandler handler;
     @Nonnull
-    private UseCaseRecipeDuration useCase;
-    private UseCaseRecipeDuration.Response useCaseResponse;
+    private RecipeDuration useCase;
+    private RecipeDurationResponse useCaseResponse;
 
     private Resources resources;
     private RecipeValidation.RecipeValidatorModelSubmission modelSubmitter;
@@ -47,12 +49,12 @@ public class RecipeDurationEditorViewModel
     private boolean updatingUi;
 
     public RecipeDurationEditorViewModel(@Nonnull UseCaseHandler handler,
-                                         @Nonnull UseCaseRecipeDuration useCase,
+                                         @Nonnull RecipeDuration useCase,
                                          Resources resources) {
         this.handler = handler;
         this.useCase = useCase;
         this.resources = resources;
-        useCaseResponse = UseCaseRecipeDuration.Response.Builder.
+        useCaseResponse = RecipeDurationResponse.Builder.
                 getDefault().
                 build();
     }
@@ -70,7 +72,7 @@ public class RecipeDurationEditorViewModel
             executeUseCase(
                     recipeId,
                     DO_NOT_CLONE,
-                    Model.Builder.
+                    RecipeDurationModel.Builder.
                             getDefault().
                             build());
         }
@@ -84,7 +86,7 @@ public class RecipeDurationEditorViewModel
             executeUseCase(
                     oldRecipeId,
                     cloneToRecipeId,
-                    Model.Builder.
+                    RecipeDurationModel.Builder.
                             getDefault().
                             build());
         }
@@ -94,24 +96,24 @@ public class RecipeDurationEditorViewModel
         return this.recipeId == null || !this.recipeId.equals(recipeId);
     }
 
-    private UseCaseInteractor.Callback<UseCaseRecipeDuration.Response> getUseCaseCallback() {
-        return new UseCaseCommand.Callback<UseCaseRecipeDuration.Response>() {
+    private UseCaseInteractor.Callback<RecipeDurationResponse> getUseCaseCallback() {
+        return new UseCaseCommand.Callback<RecipeDurationResponse>() {
             @Override
-            public void onSuccess(UseCaseRecipeDuration.Response response) {
+            public void onSuccess(RecipeDurationResponse response) {
                 processUseCaseResponse(response);
             }
 
             @Override
-            public void onError(UseCaseRecipeDuration.Response response) {
+            public void onError(RecipeDurationResponse response) {
                 processUseCaseResponse(response);
             }
         };
     }
 
-    private void processUseCaseResponse(UseCaseRecipeDuration.Response response) {
+    private void processUseCaseResponse(RecipeDurationResponse response) {
         useCaseResponse = response;
         dataLoading = false;
-        Result result = response.getResult();
+        RecipeDuration.Result result = response.getResult();
 
         if (result == Result.DATA_UNAVAILABLE) {
             dataLoadingError = true;
@@ -191,7 +193,7 @@ public class RecipeDurationEditorViewModel
                     if (prepHoursParsed == MEASUREMENT_ERROR)
                         prepTimeErrorMessage.set(numberFormatExceptionErrorMessage());
                     else {
-                        Model model = Model.Builder.
+                        RecipeDurationModel model = RecipeDurationModel.Builder.
                                 basedOn(useCaseResponse.getModel()).
                                 setPrepHours(prepHoursParsed).
                                 build();
@@ -220,7 +222,7 @@ public class RecipeDurationEditorViewModel
                     if (prepMinutesParsed == MEASUREMENT_ERROR)
                         prepTimeErrorMessage.set(numberFormatExceptionErrorMessage());
                     else {
-                        Model model = Model.Builder.
+                        RecipeDurationModel model = RecipeDurationModel.Builder.
                                 basedOn(useCaseResponse.getModel()).
                                 setPrepMinutes(prepMinutesParsed).
                                 build();
@@ -249,7 +251,7 @@ public class RecipeDurationEditorViewModel
                     if (cookHoursParsed == MEASUREMENT_ERROR)
                         cookTimeErrorMessage.set(numberFormatExceptionErrorMessage());
                     else {
-                        Model model = Model.Builder.
+                        RecipeDurationModel model = RecipeDurationModel.Builder.
                                 basedOn(useCaseResponse.getModel()).
                                 setCookHours(cookHoursParsed).
                                 build();
@@ -278,7 +280,7 @@ public class RecipeDurationEditorViewModel
                     if (cookMinutesParsed == MEASUREMENT_ERROR)
                         cookTimeErrorMessage.set(numberFormatExceptionErrorMessage());
                     else {
-                        Model model = Model.Builder.
+                        RecipeDurationModel model = RecipeDurationModel.Builder.
                                 basedOn(useCaseResponse.getModel()).
                                 setCookMinutes(cookMinutesParsed).
                                 build();
@@ -295,8 +297,8 @@ public class RecipeDurationEditorViewModel
 
     private void executeUseCase(String recipeId,
                                 String cloneToRecipeId,
-                                Model model) {
-        UseCaseRecipeDuration.Request request = new UseCaseRecipeDuration.Request.Builder().
+                                RecipeDurationModel model) {
+        RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                 setRecipeId(recipeId).
                 setCloneToRecipeId(cloneToRecipeId).
                 setModel(model).

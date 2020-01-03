@@ -3,7 +3,6 @@ package com.example.peter.thekitchenmenu.domain.usecase.ingredient;
 import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
-import com.example.peter.thekitchenmenu.domain.usecase.ingredient.UseCaseIngredientDuplicateChecker;
 import com.example.peter.thekitchenmenu.testdata.TestDataIngredientEntity;
 
 import org.junit.*;
@@ -13,7 +12,7 @@ import java.util.List;
 
 import static org.mockito.Mockito.*;
 
-public class UseCaseIngredientDuplicateCheckerTest {
+public class IngredientDuplicateCheckerTest {
 
     // region constants ----------------------------------------------------------------------------
     private List<IngredientEntity> LIST_OF_ALL_INGREDIENTS =
@@ -26,7 +25,7 @@ public class UseCaseIngredientDuplicateCheckerTest {
             TestDataIngredientEntity.getNewValidName().getName();
     private String INGREDIENT_ID =
             TestDataIngredientEntity.getNewValidName().getId();
-    private String NO_DUPLICATE_FOUND = UseCaseIngredientDuplicateChecker.NO_DUPLICATE_FOUND;
+    private String NO_DUPLICATE_FOUND = IngredientDuplicateChecker.NO_DUPLICATE_FOUND;
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
@@ -35,15 +34,15 @@ public class UseCaseIngredientDuplicateCheckerTest {
     @Captor
     ArgumentCaptor<DataSource.GetAllCallback<IngredientEntity>> getRepoCallbackCaptor;
     @Mock
-    UseCaseIngredientDuplicateChecker.DuplicateCallback callbackMock;
+    IngredientDuplicateChecker.DuplicateCallback callbackMock;
     // endregion helper fields ---------------------------------------------------------------------
 
-    private UseCaseIngredientDuplicateChecker SUT;
+    private IngredientDuplicateChecker SUT;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        SUT = new UseCaseIngredientDuplicateChecker(repoMock);
+        SUT = new IngredientDuplicateChecker(repoMock);
     }
 
     @Test

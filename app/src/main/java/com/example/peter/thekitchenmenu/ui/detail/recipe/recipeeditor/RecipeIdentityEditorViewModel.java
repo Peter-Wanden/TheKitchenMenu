@@ -11,7 +11,10 @@ import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.domain.UseCaseCommand;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.UseCaseRecipeIdentity;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentity;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.UseCaseTextValidator;
 import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 
@@ -29,7 +32,7 @@ public class RecipeIdentityEditorViewModel
     @Nonnull
     private UseCaseHandler handler;
     @Nonnull
-    private UseCaseRecipeIdentity useCaseRecipeIdentity;
+    private RecipeIdentity recipeIdentity;
     @Nonnull
     private UseCaseTextValidator useCaseTextValidator;
     @Nonnull
@@ -41,22 +44,20 @@ public class RecipeIdentityEditorViewModel
     public final ObservableField<String> descriptionErrorMessage = new ObservableField<>();
     public final ObservableBoolean dataLoadingError = new ObservableBoolean();
 
-    private UseCaseRecipeIdentity.Response identityResponse = new UseCaseRecipeIdentity.Response.
-            Builder().
-            getDefault().
-            build();
+    private RecipeIdentityResponse response;
 
     private boolean updatingUi;
     private boolean dataLoading;
 
     public RecipeIdentityEditorViewModel(@Nonnull UseCaseHandler handler,
-                                         @Nonnull UseCaseRecipeIdentity useCaseRecipeIdentity,
+                                         @Nonnull RecipeIdentity recipeIdentity,
                                          @Nonnull UseCaseTextValidator useCaseTextValidator,
                                          @Nonnull Resources resources) {
         this.handler = handler;
-        this.useCaseRecipeIdentity = useCaseRecipeIdentity;
+        this.recipeIdentity = recipeIdentity;
         this.useCaseTextValidator = useCaseTextValidator;
         this.resources = resources;
+        response = new RecipeIdentityResponse.Builder().getDefault().build();
     }
 
     void setModelValidationSubmitter(RecipeValidatorModelSubmission modelSubmitter) {
@@ -68,8 +69,8 @@ public class RecipeIdentityEditorViewModel
         if (isNewInstantiationOrRecipeIdChanged(recipeId)) { // todo, don't think this check is required
             executeUseCaseRecipeIdentity(
                     recipeId,
-                    UseCaseRecipeIdentity.DO_NOT_CLONE,
-                    identityResponse.getModel());
+                    RecipeIdentity.DO_NOT_CLONE,
+                    response.getModel());
         }
     }
 
@@ -79,32 +80,32 @@ public class RecipeIdentityEditorViewModel
             executeUseCaseRecipeIdentity(
                     cloneFromRecipeId,
                     cloneToRecipeId,
-                    identityResponse.getModel());
+                    response.getModel());
         }
     }
 
     private boolean isNewInstantiationOrRecipeIdChanged(String recipeId) {
-        return identityResponse.getRecipeId().isEmpty() ||
-                !identityResponse.getRecipeId().equals(recipeId);
+        return response.getRecipeId().isEmpty() ||
+                !response.getRecipeId().equals(recipeId);
     }
 
     private void executeUseCaseRecipeIdentity(String recipeId,
                                               String cloneToRecipeId,
-                                              UseCaseRecipeIdentity.Model model) {
+                                              RecipeIdentityModel model) {
 
-        UseCaseRecipeIdentity.Request request = new UseCaseRecipeIdentity.Request.Builder().
+        RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
                 setRecipeId(recipeId).
                 setCloneToRecipeId(cloneToRecipeId).
                 setModel(model).
                 build();
 
         dataLoading = true;
-        handler.execute(useCaseRecipeIdentity, request, getCallback());
+        handler.execute(recipeIdentity, request, getCallback());
     }
 
     @Bindable
     public String getTitle() {
-        return identityResponse.getModel().getTitle();
+        return response.getModel().getTitle();
     }
 
     public void setTitle(String title) {
@@ -138,8 +139,8 @@ public class RecipeIdentityEditorViewModel
     private void processShortTextValidationResponse(UseCaseTextValidator.Response response) {
         if (response.getResult() == UseCaseTextValidator.Result.VALID) {
 
-            executeUseCaseRecipeIdentity(UseCaseRecipeIdentity.Model.Builder.
-                    basedOn(identityResponse.getModel()).
+            executeUseCaseRecipeIdentity(RecipeIdentityModel.Builder.
+                    basedOn(this.response.getModel()).
                     setTitle(response.getModel().getText()).
                     build()
             );
@@ -151,7 +152,7 @@ public class RecipeIdentityEditorViewModel
 
     @Bindable
     public String getDescription() {
-        return identityResponse.getModel().getDescription();
+        return response.getModel().getDescription();
     }
 
     public void setDescription(String description) {
@@ -187,8 +188,8 @@ public class RecipeIdentityEditorViewModel
     private void processLongTextValidationResponse(UseCaseTextValidator.Response response) {
         if (response.getResult() == UseCaseTextValidator.Result.VALID) {
 
-            executeUseCaseRecipeIdentity(UseCaseRecipeIdentity.Model.Builder.
-                    basedOn(identityResponse.getModel()).
+            executeUseCaseRecipeIdentity(RecipeIdentityModel.Builder.
+                    basedOn(this.response.getModel()).
                     setDescription(response.getModel().getText()).
                     build()
             );
@@ -222,50 +223,50 @@ public class RecipeIdentityEditorViewModel
         }
     }
 
-    private void executeUseCaseRecipeIdentity(UseCaseRecipeIdentity.Model model) {
+    private void executeUseCaseRecipeIdentity(RecipeIdentityModel model) {
         dataLoading = true;
 
-        UseCaseRecipeIdentity.Request request = new UseCaseRecipeIdentity.Request.Builder().
-                setRecipeId(identityResponse.getRecipeId()).
+        RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
+                setRecipeId(response.getRecipeId()).
                 setCloneToRecipeId("").
                 setModel(model).
                 build();
 
         handler.execute(
-                useCaseRecipeIdentity,
+                recipeIdentity,
                 request,
                 getCallback());
     }
 
-    private UseCaseInteractor.Callback<UseCaseRecipeIdentity.Response> getCallback() {
-        return new UseCaseInteractor.Callback<UseCaseRecipeIdentity.Response>() {
+    private UseCaseInteractor.Callback<RecipeIdentityResponse> getCallback() {
+        return new UseCaseInteractor.Callback<RecipeIdentityResponse>() {
 
             @Override
-            public void onSuccess(UseCaseRecipeIdentity.Response response) {
+            public void onSuccess(RecipeIdentityResponse response) {
                 processUseCaseResponse(response);
             }
 
             @Override
-            public void onError(UseCaseRecipeIdentity.Response response) {
+            public void onError(RecipeIdentityResponse response) {
                 processUseCaseResponse(response);
             }
         };
     }
 
-    private void processUseCaseResponse(UseCaseRecipeIdentity.Response response) {
-        identityResponse = response;
+    private void processUseCaseResponse(RecipeIdentityResponse response) {
+        this.response = response;
         dataLoading = false;
-        if (response.getResult() == UseCaseRecipeIdentity.Result.DATA_UNAVAILABLE) {
+        if (response.getResult() == RecipeIdentity.Result.DATA_UNAVAILABLE) {
             dataLoadingError.set(true);
             updateRecipeComponentStatus(false, false);
             return;
-        } else if (response.getResult() == UseCaseRecipeIdentity.Result.INVALID_UNCHANGED) {
+        } else if (response.getResult() == RecipeIdentity.Result.INVALID_UNCHANGED) {
             updateRecipeComponentStatus(false, false);
-        } else if (response.getResult() == UseCaseRecipeIdentity.Result.VALID_UNCHANGED) {
+        } else if (response.getResult() == RecipeIdentity.Result.VALID_UNCHANGED) {
             updateRecipeComponentStatus(true, false);
-        } else if (response.getResult() == UseCaseRecipeIdentity.Result.INVALID_CHANGED) {
+        } else if (response.getResult() == RecipeIdentity.Result.INVALID_CHANGED) {
             updateRecipeComponentStatus(false, true);
-        } else if (response.getResult() == UseCaseRecipeIdentity.Result.VALID_CHANGED) {
+        } else if (response.getResult() == RecipeIdentity.Result.VALID_CHANGED) {
             updateRecipeComponentStatus(true, true);
         }
         updateObservables();

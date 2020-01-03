@@ -16,6 +16,14 @@ public class UseCaseRecipePortions
         extends UseCaseInteractor<UseCaseRecipePortions.Request, UseCaseRecipePortions.Response>
         implements DataSource.GetEntityCallback<RecipePortionsEntity> {
 
+    public enum Result {
+        DATA_UNAVAILABLE,
+        INVALID_UNCHANGED,
+        VALID_UNCHANGED,
+        INVALID_CHANGED,
+        VALID_CHANGED,
+    }
+
     public static final String DO_NOT_CLONE = "";
     public static final int MIN_SERVINGS = 1;
     public static final int MIN_SITTINGS = 1;

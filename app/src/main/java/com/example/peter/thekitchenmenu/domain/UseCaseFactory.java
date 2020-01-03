@@ -11,16 +11,16 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
-import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.UseCaseConversionFactorStatus;
-import com.example.peter.thekitchenmenu.domain.usecase.ingredient.UseCaseIngredient;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.UseCaseRecipeDuration;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.UseCaseRecipeIdentity;
+import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.ConversionFactorStatus;
+import com.example.peter.thekitchenmenu.domain.usecase.ingredient.Ingredient;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDuration;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentityandduration.UseCaseRecipeIdentityAndDurationList;
-import com.example.peter.thekitchenmenu.domain.usecase.recipecourse.UseCaseRecipeCourse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipecourse.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.UseCaseRecipeIngredientListItems;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.UseCaseRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.UseCaseTextValidator;
-import com.example.peter.thekitchenmenu.domain.usecase.ingredient.UseCaseIngredientDuplicateChecker;
+import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientDuplicateChecker;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientcalculator.UseCaseIngredientCalculator;
@@ -92,8 +92,8 @@ public class UseCaseFactory {
         );
     }
 
-    public UseCaseConversionFactorStatus provideConversionFactorUseCase() {
-        return new UseCaseConversionFactorStatus(
+    public ConversionFactorStatus provideConversionFactorUseCase() {
+        return new ConversionFactorStatus(
                 ingredientRepository
         );
     }
@@ -113,14 +113,14 @@ public class UseCaseFactory {
         );
     }
 
-    public UseCaseRecipeIdentity provideRecipeIdentityUseCase() {
-        return new UseCaseRecipeIdentity(
+    public RecipeIdentity provideRecipeIdentityUseCase() {
+        return new RecipeIdentity(
                 recipeIdentityRepository,
                 new TimeProvider());
     }
 
-    public UseCaseRecipeCourse provideRecipeCourseUseCase() {
-        return new UseCaseRecipeCourse(
+    public RecipeCourse provideRecipeCourseUseCase() {
+        return new RecipeCourse(
                 recipeCourseRepository,
                 new UniqueIdProvider(),
                 new TimeProvider());
@@ -141,12 +141,12 @@ public class UseCaseFactory {
                 build();
     }
 
-    public UseCaseIngredient provideIngredientEditorUseCase() {
-        return new UseCaseIngredient(
+    public Ingredient provideIngredientEditorUseCase() {
+        return new Ingredient(
                 ingredientRepository,
                 new UniqueIdProvider(),
                 new TimeProvider(),
-                new UseCaseIngredientDuplicateChecker(ingredientRepository)
+                new IngredientDuplicateChecker(ingredientRepository)
                 );
     }
 
@@ -161,9 +161,9 @@ public class UseCaseFactory {
         );
     }
 
-    public UseCaseRecipeDuration provideRecipeDurationUseCase() {
+    public RecipeDuration provideRecipeDurationUseCase() {
         Resources resources = application.getResources();
-        return new UseCaseRecipeDuration(
+        return new RecipeDuration(
                 recipeDurationRepository,
                 new TimeProvider(),
                 resources.getInteger(R.integer.recipe_max_prep_time_in_minutes),

@@ -11,9 +11,9 @@ import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModelBuilder;
-import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.UseCaseConversionFactorStatus;
-import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.UseCaseConversionFactorStatusRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.UseCaseConversionFactorStatusResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.ConversionFactorStatusRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.ConversionFactorStatus;
+import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.ConversionFactorStatusResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientcalculator.UseCaseIngredientCalculator;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientcalculator.UseCaseIngredientCalculatorRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientcalculator.UseCaseIngredientCalculatorResponse;
@@ -26,7 +26,7 @@ import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasur
 
 import static androidx.core.util.Preconditions.checkNotNull;
 import static com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants.NOT_SET;
-import static com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.UseCaseConversionFactorStatus.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.ConversionFactorStatus.*;
 
 public class RecipeIngredientMeasurementViewModel extends ObservableViewModel {
 
@@ -36,7 +36,7 @@ public class RecipeIngredientMeasurementViewModel extends ObservableViewModel {
     private NumberFormatter numberFormatter;
     private MeasurementErrorMessageMaker errorMessageMaker;
     private UseCaseIngredientCalculator useCaseIngredientCalculator;
-    private UseCaseConversionFactorStatus useCaseConversionFactorStatus;
+    private ConversionFactorStatus conversionFactorStatus;
 
     private static final int MEASUREMENT_ERROR = -1;
 
@@ -60,7 +60,7 @@ public class RecipeIngredientMeasurementViewModel extends ObservableViewModel {
     public RecipeIngredientMeasurementViewModel(
             @NonNull UseCaseHandler useCaseHandler,
             @NonNull UseCaseIngredientCalculator useCaseIngredientCalculator,
-            @NonNull UseCaseConversionFactorStatus useCaseConversionFactor,
+            @NonNull ConversionFactorStatus useCaseConversionFactor,
             @NonNull Resources resources,
             @NonNull NumberFormatter numberFormatter,
             @NonNull MeasurementErrorMessageMaker errorMessageMaker) {
@@ -69,7 +69,7 @@ public class RecipeIngredientMeasurementViewModel extends ObservableViewModel {
                 useCaseHandler, "useCaseHandler cannot be null");
         this.useCaseIngredientCalculator = checkNotNull(
                 useCaseIngredientCalculator, "useCaseIngredientCalculator cannot be null");
-        this.useCaseConversionFactorStatus = checkNotNull(
+        this.conversionFactorStatus = checkNotNull(
                 useCaseConversionFactor, "useCaseConversionFactor cannot be null");
         this.resources = checkNotNull(
                 resources, "resources cannot be null");
@@ -436,47 +436,47 @@ public class RecipeIngredientMeasurementViewModel extends ObservableViewModel {
 
     private void executeUseCaseConversionFactorStatus() {
         useCaseHandler.execute(
-                useCaseConversionFactorStatus,
+                conversionFactorStatus,
                 getRequest(),
                 getNewResponseCallback());
     }
 
-    private UseCaseConversionFactorStatusRequest getRequest() {
-        return new UseCaseConversionFactorStatusRequest(
+    private ConversionFactorStatusRequest getRequest() {
+        return new ConversionFactorStatusRequest(
                 measurementModel.getSubtype(),
                 useCaseIngredientCalculator.getIngredientId()
         );
     }
 
-    private Callback<UseCaseConversionFactorStatusResponse>
+    private Callback<ConversionFactorStatusResponse>
     getNewResponseCallback() {
-        return new Callback<UseCaseConversionFactorStatusResponse>() {
+        return new Callback<ConversionFactorStatusResponse>() {
 
             @Override
-            public void onSuccess(UseCaseConversionFactorStatusResponse response) {
+            public void onSuccess(ConversionFactorStatusResponse response) {
                 processConversionFactorResult(response.getResult());
             }
 
             @Override
-            public void onError(UseCaseConversionFactorStatusResponse response) {
+            public void onError(ConversionFactorStatusResponse response) {
                 processConversionFactorResult(response.getResult());
             }
         };
     }
 
-    private void processConversionFactorResult(UseCaseResult result) {
-        if (result == UseCaseResult.DISABLED) {
+    private void processConversionFactorResult(ConversionFactorStatus.Result result) {
+        if (result == ConversionFactorStatus.Result.DISABLED) {
             hideAllConversionFactorInformation();
 
-        } else if (result == UseCaseResult.ENABLED_UNEDITABLE) {
+        } else if (result == ConversionFactorStatus.Result.ENABLED_UNEDITABLE) {
             showUneditableConversionFactorInformation();
 
-        } else if (result == UseCaseResult.ENABLED_EDITABLE_UNSET) {
+        } else if (result == ConversionFactorStatus.Result.ENABLED_EDITABLE_UNSET) {
             if (!isConversionFactorChangedThisSession) {
                 showOptionToAddConversionFactorInformation();
             }
 
-        } else if (result == UseCaseResult.ENABLED_EDITABLE_SET) {
+        } else if (result == ConversionFactorStatus.Result.ENABLED_EDITABLE_SET) {
             showAllConversionFactorInformation();
         }
 

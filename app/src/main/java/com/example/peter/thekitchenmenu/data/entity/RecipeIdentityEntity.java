@@ -5,13 +5,13 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.UseCaseRecipeIdentity;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityModel;
 
 import java.util.Objects;
 
 /**
  * Used only for data access. For the corresponding domain model
- * see {@link UseCaseRecipeIdentity.Model}
+ * see {@link RecipeIdentityModel}
  */
 @Entity(tableName = RecipeIdentityEntity.TABLE_RECIPE_IDENTITY)
 public final class RecipeIdentityEntity implements TkmEntity {

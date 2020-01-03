@@ -12,15 +12,15 @@ import org.junit.*;
 import org.mockito.*;
 
 import static com.example.peter.thekitchenmenu.domain.UseCaseCommand.*;
-import static com.example.peter.thekitchenmenu.domain.usecase.recipeduration.UseCaseRecipeDuration.*;
-import static com.example.peter.thekitchenmenu.domain.usecase.recipeduration.UseCaseRecipeDuration.DO_NOT_CLONE;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDuration.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDuration.DO_NOT_CLONE;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
-public class UseCaseRecipeDurationTest {
+public class RecipeDurationTest {
 
     // region constants ----------------------------------------------------------------------------
     private static final RecipeDurationEntity VALID_NEW_EMPTY =
@@ -41,7 +41,7 @@ public class UseCaseRecipeDurationTest {
 
     // region helper fields ------------------------------------------------------------------------
     private UseCaseHandler handler;
-    private UseCaseRecipeDuration.Response actualResponse;
+    private RecipeDurationResponse actualResponse;
     @Mock
     RepositoryRecipeDuration repoMock;
     @Captor
@@ -52,7 +52,7 @@ public class UseCaseRecipeDurationTest {
     public static int MAX_COOK_TIME = 6000;
     // endregion helper fields ---------------------------------------------------------------------
 
-    private UseCaseRecipeDuration SUT;
+    private RecipeDuration SUT;
 
     @Before
     public void setup() {
@@ -60,9 +60,9 @@ public class UseCaseRecipeDurationTest {
         SUT = givenUseCase();
     }
 
-    private UseCaseRecipeDuration givenUseCase() {
+    private RecipeDuration givenUseCase() {
         handler = new UseCaseHandler(new UseCaseSchedulerMock());
-        return new UseCaseRecipeDuration(repoMock, timeProviderMock, MAX_PREP_TIME, MAX_COOK_TIME);
+        return new RecipeDuration(repoMock, timeProviderMock, MAX_PREP_TIME, MAX_COOK_TIME);
     }
 
     @Test
@@ -70,12 +70,12 @@ public class UseCaseRecipeDurationTest {
         // Arrange
         whenTimeProviderCalledReturn(VALID_NEW_EMPTY.getCreateDate());
         String recipeId = VALID_NEW_EMPTY.getId();
-        Model model = Model.Builder.
+        RecipeDurationModel model = RecipeDurationModel.Builder.
                 getDefault().
                 setId(recipeId).
                 build();
 
-        UseCaseRecipeDuration.Request request = new UseCaseRecipeDuration.Request(
+        RecipeDurationRequest request = new RecipeDurationRequest(
                 recipeId,
                 DO_NOT_CLONE,
                 model
@@ -92,12 +92,12 @@ public class UseCaseRecipeDurationTest {
         // Arrange
         whenTimeProviderCalledReturn(VALID_NEW_EMPTY.getCreateDate());
         String recipeId = VALID_NEW_EMPTY.getId();
-        Model model = Model.Builder.
+        RecipeDurationModel model = RecipeDurationModel.Builder.
                 getDefault().
                 setId(recipeId).
                 build();
 
-        UseCaseRecipeDuration.Request request = new UseCaseRecipeDuration.Request(
+        RecipeDurationRequest request = new RecipeDurationRequest(
                 recipeId,
                 DO_NOT_CLONE,
                 model
@@ -114,11 +114,11 @@ public class UseCaseRecipeDurationTest {
         // Arrange
         givenNewModel();
         // Act
-        Model invalidModel = Model.Builder.
+        RecipeDurationModel invalidModel = RecipeDurationModel.Builder.
                 basedOn(actualResponse.getModel()).
                 setPrepHours(MAX_PREP_TIME / 60 + 1).
                 build();
-        UseCaseRecipeDuration.Request invalidRequest = new UseCaseRecipeDuration.Request(
+        RecipeDurationRequest invalidRequest = new RecipeDurationRequest(
                 VALID_NEW_EMPTY.getId(), DO_NOT_CLONE, invalidModel
         );
         handler.execute(SUT, invalidRequest, getUseCaseCallback());
@@ -131,11 +131,11 @@ public class UseCaseRecipeDurationTest {
         // Arrange
         givenNewModel();
         // Act
-        Model invalidModel = Model.Builder.
+        RecipeDurationModel invalidModel = RecipeDurationModel.Builder.
                 basedOn(actualResponse.getModel()).
                 setPrepHours(MAX_PREP_TIME / 60 + 1).
                 build();
-        UseCaseRecipeDuration.Request invalidRequest = new UseCaseRecipeDuration.Request(
+        RecipeDurationRequest invalidRequest = new RecipeDurationRequest(
                 VALID_NEW_EMPTY.getId(), DO_NOT_CLONE, invalidModel
         );
         handler.execute(SUT, invalidRequest, getUseCaseCallback());
@@ -149,11 +149,11 @@ public class UseCaseRecipeDurationTest {
         givenNewModel();
         // Act
         int noOfExpectedErrors = 1;
-        Model invalidModel = Model.Builder.
+        RecipeDurationModel invalidModel = RecipeDurationModel.Builder.
                 basedOn(actualResponse.getModel()).
                 setPrepHours(MAX_PREP_TIME / 60 + 1).
                 build();
-        UseCaseRecipeDuration.Request invalidRequest = new UseCaseRecipeDuration.Request(
+        RecipeDurationRequest invalidRequest = new RecipeDurationRequest(
                 VALID_NEW_EMPTY.getId(), DO_NOT_CLONE, invalidModel
         );
         handler.execute(SUT, invalidRequest, getUseCaseCallback());
@@ -168,11 +168,11 @@ public class UseCaseRecipeDurationTest {
         // Arrange
         givenNewModel();
         // Act
-        Model validModel = Model.Builder.
+        RecipeDurationModel validModel = RecipeDurationModel.Builder.
                 basedOn(actualResponse.getModel()).
                 setPrepHours(VALID_NEW_PREP_TIME_VALID.getPrepTime() / 60).
                 build();
-        UseCaseRecipeDuration.Request validRequest = new UseCaseRecipeDuration.Request(
+        RecipeDurationRequest validRequest = new RecipeDurationRequest(
                 VALID_NEW_EMPTY.getId(), DO_NOT_CLONE, validModel
         );
         handler.execute(SUT, validRequest, getUseCaseCallback());
@@ -185,11 +185,11 @@ public class UseCaseRecipeDurationTest {
         // Arrange
         givenNewModel();
         // Act
-        Model validModel = Model.Builder.
+        RecipeDurationModel validModel = RecipeDurationModel.Builder.
                 basedOn(actualResponse.getModel()).
                 setPrepHours(VALID_NEW_PREP_TIME_VALID.getPrepTime() / 60).
                 build();
-        UseCaseRecipeDuration.Request validRequest = new UseCaseRecipeDuration.Request(
+        RecipeDurationRequest validRequest = new RecipeDurationRequest(
                 VALID_NEW_EMPTY.getId(), DO_NOT_CLONE, validModel
         );
         handler.execute(SUT, validRequest, getUseCaseCallback());
@@ -202,11 +202,11 @@ public class UseCaseRecipeDurationTest {
         // Arrange
         givenNewModel();
         // Act
-        Model validModel = Model.Builder.
+        RecipeDurationModel validModel = RecipeDurationModel.Builder.
                 basedOn(actualResponse.getModel()).
                 setPrepHours(VALID_NEW_PREP_TIME_VALID.getPrepTime() / 60).
                 build();
-        UseCaseRecipeDuration.Request validPrepHoursRequest = new UseCaseRecipeDuration.Request(
+        RecipeDurationRequest validPrepHoursRequest = new RecipeDurationRequest(
                 VALID_NEW_EMPTY.getId(), DO_NOT_CLONE, validModel
         );
         handler.execute(SUT, validPrepHoursRequest, getUseCaseCallback());
@@ -219,11 +219,11 @@ public class UseCaseRecipeDurationTest {
         // Arrange
         givenNewModel();
         // Act
-        Model invalidModel = Model.Builder.
+        RecipeDurationModel invalidModel = RecipeDurationModel.Builder.
                 basedOn(actualResponse.getModel()).
                 setPrepMinutes(MAX_PREP_TIME + 1).
                 build();
-        UseCaseRecipeDuration.Request invalidRequest = new UseCaseRecipeDuration.Request(
+        RecipeDurationRequest invalidRequest = new RecipeDurationRequest(
                 VALID_NEW_EMPTY.getId(), DO_NOT_CLONE, invalidModel
         );
         handler.execute(SUT, invalidRequest, getUseCaseCallback());
@@ -235,11 +235,11 @@ public class UseCaseRecipeDurationTest {
         // Arrange
         givenNewModel();
         // Act
-        Model invalidModel = Model.Builder.
+        RecipeDurationModel invalidModel = RecipeDurationModel.Builder.
                 basedOn(actualResponse.getModel()).
                 setPrepMinutes(MAX_PREP_TIME + 1).
                 build();
-        UseCaseRecipeDuration.Request invalidRequest = new UseCaseRecipeDuration.Request(
+        RecipeDurationRequest invalidRequest = new RecipeDurationRequest(
                 VALID_NEW_EMPTY.getId(), DO_NOT_CLONE, invalidModel
         );
         handler.execute(SUT, invalidRequest, getUseCaseCallback());
@@ -252,11 +252,11 @@ public class UseCaseRecipeDurationTest {
         // Arrange
         givenNewModel();
         // Act
-        Model invalidModel = Model.Builder.
+        RecipeDurationModel invalidModel = RecipeDurationModel.Builder.
                 basedOn(actualResponse.getModel()).
                 setPrepMinutes(MAX_PREP_TIME + 1).
                 build();
-        UseCaseRecipeDuration.Request invalidRequest = new UseCaseRecipeDuration.Request(
+        RecipeDurationRequest invalidRequest = new RecipeDurationRequest(
                 VALID_NEW_EMPTY.getId(), DO_NOT_CLONE, invalidModel
         );
         handler.execute(SUT, invalidRequest, getUseCaseCallback());
@@ -270,11 +270,11 @@ public class UseCaseRecipeDurationTest {
         // Arrange
         givenNewModel();
         // Act
-        Model validModel = Model.Builder.
+        RecipeDurationModel validModel = RecipeDurationModel.Builder.
                 basedOn(actualResponse.getModel()).
                 setPrepMinutes(VALID_NEW_PREP_TIME_VALID.getPrepTime()).
                 build();
-        UseCaseRecipeDuration.Request validRequest = new UseCaseRecipeDuration.Request(
+        RecipeDurationRequest validRequest = new RecipeDurationRequest(
                 VALID_NEW_EMPTY.getId(), DO_NOT_CLONE, validModel
         );
         handler.execute(SUT, validRequest, getUseCaseCallback());
@@ -287,11 +287,11 @@ public class UseCaseRecipeDurationTest {
         // Arrange
         givenNewModel();
         // Act
-        Model validModel = Model.Builder.
+        RecipeDurationModel validModel = RecipeDurationModel.Builder.
                 basedOn(actualResponse.getModel()).
                 setPrepMinutes(VALID_NEW_PREP_TIME_VALID.getPrepTime()).
                 build();
-        UseCaseRecipeDuration.Request validRequest = new UseCaseRecipeDuration.Request(
+        RecipeDurationRequest validRequest = new RecipeDurationRequest(
                 VALID_NEW_EMPTY.getId(), DO_NOT_CLONE, validModel
         );
         handler.execute(SUT, validRequest, getUseCaseCallback());
@@ -305,11 +305,11 @@ public class UseCaseRecipeDurationTest {
         // Arrange
         givenNewModel();
         // Act
-        Model validModel = Model.Builder.
+        RecipeDurationModel validModel = RecipeDurationModel.Builder.
                 basedOn(actualResponse.getModel()).
                 setPrepMinutes(VALID_NEW_PREP_TIME_VALID.getPrepTime()).
                 build();
-        UseCaseRecipeDuration.Request validRequest = new UseCaseRecipeDuration.Request(
+        RecipeDurationRequest validRequest = new RecipeDurationRequest(
                 VALID_NEW_EMPTY.getId(), DO_NOT_CLONE, validModel
         );
         handler.execute(SUT, validRequest, getUseCaseCallback());
@@ -322,11 +322,11 @@ public class UseCaseRecipeDurationTest {
         // Arrange
         givenNewModel();
         // Act
-        Model invalidModel = Model.Builder.
+        RecipeDurationModel invalidModel = RecipeDurationModel.Builder.
                 basedOn(actualResponse.getModel()).
                 setCookHours(MAX_COOK_TIME / 60 + 1).
                 build();
-        UseCaseRecipeDuration.Request invalidRequest = new UseCaseRecipeDuration.Request(
+        RecipeDurationRequest invalidRequest = new RecipeDurationRequest(
                 VALID_NEW_EMPTY.getId(), DO_NOT_CLONE, invalidModel
         );
         handler.execute(SUT, invalidRequest, getUseCaseCallback());
@@ -339,11 +339,11 @@ public class UseCaseRecipeDurationTest {
         // Arrange
         givenNewModel();
         // Act
-        Model invalidModel = Model.Builder.
+        RecipeDurationModel invalidModel = RecipeDurationModel.Builder.
                 basedOn(actualResponse.getModel()).
                 setCookHours(MAX_COOK_TIME / 60 + 1).
                 build();
-        UseCaseRecipeDuration.Request invalidRequest = new UseCaseRecipeDuration.Request(
+        RecipeDurationRequest invalidRequest = new RecipeDurationRequest(
                 VALID_NEW_EMPTY.getId(), DO_NOT_CLONE, invalidModel
         );
         handler.execute(SUT, invalidRequest, getUseCaseCallback());
@@ -356,11 +356,11 @@ public class UseCaseRecipeDurationTest {
         // Arrange
         givenNewModel();
         // Act
-        Model invalidModel = Model.Builder.
+        RecipeDurationModel invalidModel = RecipeDurationModel.Builder.
                 basedOn(actualResponse.getModel()).
                 setCookHours(MAX_COOK_TIME / 60 + 1).
                 build();
-        UseCaseRecipeDuration.Request invalidRequest = new UseCaseRecipeDuration.Request(
+        RecipeDurationRequest invalidRequest = new RecipeDurationRequest(
                 VALID_NEW_EMPTY.getId(), DO_NOT_CLONE, invalidModel
         );
         handler.execute(SUT, invalidRequest, getUseCaseCallback());
@@ -374,11 +374,11 @@ public class UseCaseRecipeDurationTest {
         // Arrange
         givenNewModel();
         // Act
-        Model validModel = Model.Builder.
+        RecipeDurationModel validModel = RecipeDurationModel.Builder.
                 basedOn(actualResponse.getModel()).
                 setCookHours(VALID_NEW_COOK_TIME_VALID.getCookTime() / 60).
                 build();
-        UseCaseRecipeDuration.Request validRequest = new UseCaseRecipeDuration.Request(
+        RecipeDurationRequest validRequest = new RecipeDurationRequest(
                 VALID_NEW_EMPTY.getId(), DO_NOT_CLONE, validModel
         );
         handler.execute(SUT, validRequest, getUseCaseCallback());
@@ -391,11 +391,11 @@ public class UseCaseRecipeDurationTest {
         // Arrange
         givenNewModel();
         // Act
-        Model validModel = Model.Builder.
+        RecipeDurationModel validModel = RecipeDurationModel.Builder.
                 basedOn(actualResponse.getModel()).
                 setCookHours(VALID_NEW_COOK_TIME_VALID.getCookTime() / 60).
                 build();
-        UseCaseRecipeDuration.Request validRequest = new UseCaseRecipeDuration.Request(
+        RecipeDurationRequest validRequest = new RecipeDurationRequest(
                 VALID_NEW_EMPTY.getId(), DO_NOT_CLONE, validModel
         );
         handler.execute(SUT, validRequest, getUseCaseCallback());
@@ -408,11 +408,11 @@ public class UseCaseRecipeDurationTest {
         // Arrange
         givenNewModel();
         // Act
-        Model validModel = Model.Builder.
+        RecipeDurationModel validModel = RecipeDurationModel.Builder.
                 basedOn(actualResponse.getModel()).
                 setCookHours(VALID_NEW_COOK_TIME_VALID.getCookTime() / 60).
                 build();
-        UseCaseRecipeDuration.Request validRequest = new UseCaseRecipeDuration.Request(
+        RecipeDurationRequest validRequest = new RecipeDurationRequest(
                 VALID_NEW_EMPTY.getId(), DO_NOT_CLONE, validModel
         );
         handler.execute(SUT, validRequest, getUseCaseCallback());
@@ -426,11 +426,11 @@ public class UseCaseRecipeDurationTest {
         // Arrange
         givenNewModel();
         // Act
-        Model invalidModel = Model.Builder.
+        RecipeDurationModel invalidModel = RecipeDurationModel.Builder.
                 basedOn(actualResponse.getModel()).
                 setCookMinutes(MAX_COOK_TIME + 1).
                 build();
-        UseCaseRecipeDuration.Request request = new UseCaseRecipeDuration.Request(
+        RecipeDurationRequest request = new RecipeDurationRequest(
                 VALID_NEW_EMPTY.getId(), DO_NOT_CLONE, invalidModel
         );
         handler.execute(SUT, request, getUseCaseCallback());
@@ -443,11 +443,11 @@ public class UseCaseRecipeDurationTest {
         // Arrange
         givenNewModel();
         // Act
-        Model invalidModel = Model.Builder.
+        RecipeDurationModel invalidModel = RecipeDurationModel.Builder.
                 basedOn(actualResponse.getModel()).
                 setCookMinutes(MAX_COOK_TIME + 1).
                 build();
-        UseCaseRecipeDuration.Request request = new UseCaseRecipeDuration.Request(
+        RecipeDurationRequest request = new RecipeDurationRequest(
                 VALID_NEW_EMPTY.getId(), DO_NOT_CLONE, invalidModel
         );
         handler.execute(SUT, request, getUseCaseCallback());
@@ -460,11 +460,11 @@ public class UseCaseRecipeDurationTest {
         // Arrange
         givenNewModel();
         // Act
-        Model invalidModel = Model.Builder.
+        RecipeDurationModel invalidModel = RecipeDurationModel.Builder.
                 basedOn(actualResponse.getModel()).
                 setCookMinutes(MAX_COOK_TIME + 1).
                 build();
-        UseCaseRecipeDuration.Request request = new UseCaseRecipeDuration.Request(
+        RecipeDurationRequest request = new RecipeDurationRequest(
                 VALID_NEW_EMPTY.getId(), DO_NOT_CLONE, invalidModel
         );
         handler.execute(SUT, request, getUseCaseCallback());
@@ -478,11 +478,11 @@ public class UseCaseRecipeDurationTest {
         // Arrange
         givenNewModel();
         // Act
-        Model model = Model.Builder.
+        RecipeDurationModel model = RecipeDurationModel.Builder.
                 basedOn(actualResponse.getModel()).
                 setCookMinutes(VALID_NEW_COOK_TIME_VALID.getCookTime())
                 .build();
-        UseCaseRecipeDuration.Request request = new UseCaseRecipeDuration.Request(
+        RecipeDurationRequest request = new RecipeDurationRequest(
                 VALID_NEW_EMPTY.getId(), DO_NOT_CLONE, model
         );
         handler.execute(SUT, request, getUseCaseCallback());
@@ -495,11 +495,11 @@ public class UseCaseRecipeDurationTest {
         // Arrange
         givenNewModel();
         // Act
-        Model model = Model.Builder.
+        RecipeDurationModel model = RecipeDurationModel.Builder.
                 basedOn(actualResponse.getModel()).
                 setCookMinutes(VALID_NEW_COOK_TIME_VALID.getCookTime())
                 .build();
-        UseCaseRecipeDuration.Request request = new UseCaseRecipeDuration.Request(
+        RecipeDurationRequest request = new RecipeDurationRequest(
                 VALID_NEW_EMPTY.getId(), DO_NOT_CLONE, model
         );
         handler.execute(SUT, request, getUseCaseCallback());
@@ -512,11 +512,11 @@ public class UseCaseRecipeDurationTest {
         // Arrange
         givenNewModel();
         // Act
-        Model model = Model.Builder.
+        RecipeDurationModel model = RecipeDurationModel.Builder.
                 basedOn(actualResponse.getModel()).
                 setCookMinutes(VALID_NEW_COOK_TIME_VALID.getCookTime())
                 .build();
-        UseCaseRecipeDuration.Request request = new UseCaseRecipeDuration.Request(
+        RecipeDurationRequest request = new RecipeDurationRequest(
                 VALID_NEW_EMPTY.getId(), DO_NOT_CLONE, model
         );
         handler.execute(SUT, request, getUseCaseCallback());
@@ -562,12 +562,12 @@ public class UseCaseRecipeDurationTest {
         // Arrange
         givenClonedModel();
         // Act
-        Model model = Model.Builder.
+        RecipeDurationModel model = RecipeDurationModel.Builder.
                 basedOn(actualResponse.getModel()).
                 setPrepHours(VALID_NEW_CLONED_PREP_TIME_UPDATED.getPrepTime() / 60).
                 setPrepMinutes(VALID_NEW_CLONED_PREP_TIME_UPDATED.getPrepTime() % 60).
                 build();
-        UseCaseRecipeDuration.Request request = new UseCaseRecipeDuration.Request(
+        RecipeDurationRequest request = new RecipeDurationRequest(
                 VALID_NEW_EMPTY.getId(),
                 DO_NOT_CLONE,
                 model
@@ -582,8 +582,8 @@ public class UseCaseRecipeDurationTest {
         // Arrange
         whenTimeProviderCalledReturn(VALID_NEW_EMPTY.getCreateDate());
         // Act
-        Model model = Model.Builder.getDefault().build();
-        UseCaseRecipeDuration.Request request = new UseCaseRecipeDuration.Request(
+        RecipeDurationModel model = RecipeDurationModel.Builder.getDefault().build();
+        RecipeDurationRequest request = new RecipeDurationRequest(
                 VALID_COMPLETE_FROM_ANOTHER_USER.getId(), VALID_NEW_EMPTY.getId(), model
         );
         // Act
@@ -596,16 +596,16 @@ public class UseCaseRecipeDurationTest {
     }
 
     // region helper methods -----------------------------------------------------------------------
-    private Callback<UseCaseRecipeDuration.Response> getUseCaseCallback() {
+    private Callback<RecipeDurationResponse> getUseCaseCallback() {
 
-        return new Callback<UseCaseRecipeDuration.Response>() {
+        return new Callback<RecipeDurationResponse>() {
             @Override
-            public void onSuccess(UseCaseRecipeDuration.Response response) {
+            public void onSuccess(RecipeDurationResponse response) {
                 actualResponse = response;
             }
 
             @Override
-            public void onError(UseCaseRecipeDuration.Response response) {
+            public void onError(RecipeDurationResponse response) {
                 actualResponse = response;
             }
         };
@@ -623,9 +623,9 @@ public class UseCaseRecipeDurationTest {
     private void givenNewModel() {
         whenTimeProviderCalledReturn(VALID_NEW_EMPTY.getCreateDate());
         String recipeId = VALID_NEW_EMPTY.getId();
-        Model model = Model.Builder.getDefault().setId(recipeId).build();
+        RecipeDurationModel model = RecipeDurationModel.Builder.getDefault().setId(recipeId).build();
 
-        UseCaseRecipeDuration.Request request = new UseCaseRecipeDuration.Request(
+        RecipeDurationRequest request = new RecipeDurationRequest(
                 recipeId, DO_NOT_CLONE, model
         );
         handler.execute(SUT, request, getUseCaseCallback());
@@ -636,8 +636,8 @@ public class UseCaseRecipeDurationTest {
     private void givenValidExistingModel() {
         // Arrange
         String recipeId = VALID_EXISTING_COMPLETE.getId();
-        Model model = Model.Builder.getDefault().setId(recipeId).build();
-        UseCaseRecipeDuration.Request request = new UseCaseRecipeDuration.Request(
+        RecipeDurationModel model = RecipeDurationModel.Builder.getDefault().setId(recipeId).build();
+        RecipeDurationRequest request = new RecipeDurationRequest(
                 recipeId, DO_NOT_CLONE, model
         );
         // Act
@@ -649,8 +649,8 @@ public class UseCaseRecipeDurationTest {
     private void givenClonedModel() {
         // Arrange
         whenTimeProviderCalledReturn(VALID_NEW_CLONED.getCreateDate());
-        Model model = Model.Builder.getDefault().build();
-        UseCaseRecipeDuration.Request request = new UseCaseRecipeDuration.Request(
+        RecipeDurationModel model = RecipeDurationModel.Builder.getDefault().build();
+        RecipeDurationRequest request = new RecipeDurationRequest(
                 VALID_COMPLETE_FROM_ANOTHER_USER.getId(), VALID_NEW_EMPTY.getId(), model
         );
         // Act

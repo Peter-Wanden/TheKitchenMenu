@@ -12,12 +12,12 @@ import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import org.junit.*;
 import org.mockito.*;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.UseCaseRecipeIdentity.DO_NOT_CLONE;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentity.DO_NOT_CLONE;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.assertEquals;
 
-public class UseCaseRecipeIdentityTest {
+public class RecipeIdentityTest {
 
     // region constants ----------------------------------------------------------------------------
     private static final RecipeIdentityEntity INVALID_NEW_EMPTY =
@@ -57,10 +57,10 @@ public class UseCaseRecipeIdentityTest {
     ArgumentCaptor<DataSource.GetEntityCallback<RecipeIdentityEntity>> repoCallback;
     @Mock
     TimeProvider timeProviderMock;
-    private UseCaseRecipeIdentity.Response actualResponse;
+    private RecipeIdentityResponse actualResponse;
     // endregion helper fields ---------------------------------------------------------------------
 
-    private UseCaseRecipeIdentity SUT;
+    private RecipeIdentity SUT;
 
     @Before
     public void setup() {
@@ -69,8 +69,8 @@ public class UseCaseRecipeIdentityTest {
         SUT = givenUseCase();
     }
 
-    private UseCaseRecipeIdentity givenUseCase() {
-        return new UseCaseRecipeIdentity(repoMock, timeProviderMock);
+    private RecipeIdentity givenUseCase() {
+        return new RecipeIdentity(repoMock, timeProviderMock);
     }
 
     @Test
@@ -79,7 +79,7 @@ public class UseCaseRecipeIdentityTest {
         // Act
         givenNewEmptyModelSimulateNothingReturnedFromDatabase();
         // Assert
-        assertEquals(UseCaseRecipeIdentity.Result.DATA_UNAVAILABLE, actualResponse.getResult());
+        assertEquals(RecipeIdentity.Result.DATA_UNAVAILABLE, actualResponse.getResult());
     }
 
     @Test
@@ -89,7 +89,7 @@ public class UseCaseRecipeIdentityTest {
 
         givenNewEmptyModelSimulateNothingReturnedFromDatabase();
 
-        UseCaseRecipeIdentity.Model modelValidDescription = new UseCaseRecipeIdentity.Model.
+        RecipeIdentityModel modelValidDescription = new RecipeIdentityModel.
                 Builder().
                 setId(INVALID_NEW_EMPTY.getId()).
                 setTitle(INVALID_TITLE).
@@ -105,7 +105,7 @@ public class UseCaseRecipeIdentityTest {
                 getCallback());
 
         // Assert
-        assertEquals(UseCaseRecipeIdentity.Result.INVALID_CHANGED, actualResponse.getResult());
+        assertEquals(RecipeIdentity.Result.INVALID_CHANGED, actualResponse.getResult());
     }
 
     @Test
@@ -116,7 +116,7 @@ public class UseCaseRecipeIdentityTest {
 
         givenNewEmptyModelSimulateNothingReturnedFromDatabase();
 
-        UseCaseRecipeIdentity.Model validTitleModel = new UseCaseRecipeIdentity.Model.Builder().
+        RecipeIdentityModel validTitleModel = new RecipeIdentityModel.Builder().
                 setId(actualResponse.getRecipeId()).
                 setTitle(VALID_NEW_TITLE_VALID.getTitle()).
                 setDescription(actualResponse.getModel().getDescription()).
@@ -133,7 +133,7 @@ public class UseCaseRecipeIdentityTest {
 
         // Assert
         verify(repoMock).save(eq(VALID_NEW_TITLE_VALID));
-        assertEquals(UseCaseRecipeIdentity.Result.VALID_CHANGED, actualResponse.getResult());
+        assertEquals(RecipeIdentity.Result.VALID_CHANGED, actualResponse.getResult());
     }
 
     @Test
@@ -143,7 +143,7 @@ public class UseCaseRecipeIdentityTest {
                 thenReturn(VALID_NEW_COMPLETE.getCreateDate());
         givenNewEmptyModelSimulateNothingReturnedFromDatabase();
 
-        UseCaseRecipeIdentity.Model validTitleAndDescription = new UseCaseRecipeIdentity.Model.
+        RecipeIdentityModel validTitleAndDescription = new RecipeIdentityModel.
                 Builder().
                 setId(INVALID_NEW_EMPTY.getId()).
                 setTitle(VALID_NEW_COMPLETE.getTitle()).
@@ -152,7 +152,7 @@ public class UseCaseRecipeIdentityTest {
                 setLastUpdate(VALID_NEW_COMPLETE.getLastUpdate()).
                 build();
 
-        UseCaseRecipeIdentity.Request request = new UseCaseRecipeIdentity.Request.Builder().
+        RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
                 setRecipeId(INVALID_NEW_EMPTY.getId()).
                 setCloneToRecipeId(DO_NOT_CLONE).
                 setModel(validTitleAndDescription).
@@ -162,20 +162,20 @@ public class UseCaseRecipeIdentityTest {
 
         // Assert
         verify(repoMock).save(VALID_NEW_COMPLETE);
-        assertEquals(UseCaseRecipeIdentity.Result.VALID_CHANGED, actualResponse.getResult());
+        assertEquals(RecipeIdentity.Result.VALID_CHANGED, actualResponse.getResult());
     }
 
     @Test
     public void existingRecipeId_existingValidValuesLoaded_Result_VALID_UNCHANGED() {
         // Arrange
-        UseCaseRecipeIdentity.Request request = getRequest(
+        RecipeIdentityRequest request = getRequest(
                 VALID_EXISTING_COMPLETE.getId(), DO_NOT_CLONE, getDefaultModel());
         // Act
         handler.execute(SUT, request, getCallback());
 
         simulateGetValidExistingCompleteFromDatabase();
         // Assert
-        assertEquals(UseCaseRecipeIdentity.Result.VALID_UNCHANGED, actualResponse.getResult());
+        assertEquals(RecipeIdentity.Result.VALID_UNCHANGED, actualResponse.getResult());
     }
 
     @Test
@@ -190,7 +190,7 @@ public class UseCaseRecipeIdentityTest {
     @Test
     public void existingIdCloneToId_persistenceCalledWithExistingRecipeId() {
         // Arrange
-        UseCaseRecipeIdentity.Request request = getRequest(
+        RecipeIdentityRequest request = getRequest(
                 VALID_FROM_ANOTHER_USER.getId(), VALID_NEW_CLONED.getId(), getDefaultModel());
 
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(VALID_NEW_CLONED.getCreateDate());
@@ -199,7 +199,7 @@ public class UseCaseRecipeIdentityTest {
         // Assert
         simulateGetValidFromAnotherUserFromDatabase();
         verify(repoMock).save(eq(VALID_NEW_CLONED));
-        assertEquals(UseCaseRecipeIdentity.Result.VALID_UNCHANGED, actualResponse.getResult());
+        assertEquals(RecipeIdentity.Result.VALID_UNCHANGED, actualResponse.getResult());
     }
 
     @Test
@@ -208,7 +208,7 @@ public class UseCaseRecipeIdentityTest {
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 VALID_CLONED_DESCRIPTION_UPDATED.getCreateDate());
 
-        UseCaseRecipeIdentity.Request requestClone = getRequest(
+        RecipeIdentityRequest requestClone = getRequest(
                 VALID_FROM_ANOTHER_USER.getId(),
                 VALID_CLONED_DESCRIPTION_UPDATED.getId(),
                 getDefaultModel());
@@ -220,10 +220,10 @@ public class UseCaseRecipeIdentityTest {
         verify(repoMock).save(VALID_NEW_CLONED);
 
         // Arrange
-        UseCaseRecipeIdentity.Request requestUpdateDescription = getRequest(
+        RecipeIdentityRequest requestUpdateDescription = getRequest(
                 actualResponse.getRecipeId(),
                 DO_NOT_CLONE,
-                new UseCaseRecipeIdentity.Model(
+                new RecipeIdentityModel(
                         actualResponse.getModel().getId(),
                         actualResponse.getModel().getTitle(),
                         VALID_CLONED_DESCRIPTION_UPDATED.getDescription(),
@@ -233,12 +233,12 @@ public class UseCaseRecipeIdentityTest {
         handler.execute(SUT, requestUpdateDescription, getCallback());
         // Assert
         verify(repoMock).save(VALID_CLONED_DESCRIPTION_UPDATED);
-        assertEquals(UseCaseRecipeIdentity.Result.VALID_CHANGED, actualResponse.getResult());
+        assertEquals(RecipeIdentity.Result.VALID_CHANGED, actualResponse.getResult());
     }
 
     // region helper methods -----------------------------------------------------------------------
     private void givenNewEmptyModelSimulateNothingReturnedFromDatabase() {
-        UseCaseRecipeIdentity.Model initialModel = new UseCaseRecipeIdentity.Model.Builder().
+        RecipeIdentityModel initialModel = new RecipeIdentityModel.Builder().
                 getDefault().setId(INVALID_NEW_EMPTY.getId()).build();
 
         handler.execute(
@@ -248,32 +248,32 @@ public class UseCaseRecipeIdentityTest {
         simulateNothingReturnedFromDatabase();
     }
 
-    private UseCaseRecipeIdentity.Model getDefaultModel() {
-        return new UseCaseRecipeIdentity.Model.Builder().getDefault().build();
+    private RecipeIdentityModel getDefaultModel() {
+        return new RecipeIdentityModel.Builder().getDefault().build();
     }
 
-    private UseCaseRecipeIdentity.Request getRequest(String recipeId,
-                                                     String cloneToRecipeId,
-                                                     UseCaseRecipeIdentity.Model model) {
-        return new UseCaseRecipeIdentity.Request.Builder().
+    private RecipeIdentityRequest getRequest(String recipeId,
+                                              String cloneToRecipeId,
+                                              RecipeIdentityModel model) {
+        return new RecipeIdentityRequest.Builder().
                 setRecipeId(recipeId).
                 setCloneToRecipeId(cloneToRecipeId).
                 setModel(model).
                 build();
     }
 
-    private UseCaseInteractor.Callback<UseCaseRecipeIdentity.Response> getCallback() {
-        return new UseCaseInteractor.Callback<UseCaseRecipeIdentity.Response>() {
+    private UseCaseInteractor.Callback<RecipeIdentityResponse> getCallback() {
+        return new UseCaseInteractor.Callback<RecipeIdentityResponse>() {
 
             @Override
-            public void onSuccess(UseCaseRecipeIdentity.Response response) {
-                UseCaseRecipeIdentityTest.this.actualResponse = response;
+            public void onSuccess(RecipeIdentityResponse response) {
+                RecipeIdentityTest.this.actualResponse = response;
 
             }
 
             @Override
-            public void onError(UseCaseRecipeIdentity.Response response) {
-                UseCaseRecipeIdentityTest.this.actualResponse = response;
+            public void onError(RecipeIdentityResponse response) {
+                RecipeIdentityTest.this.actualResponse = response;
             }
         };
     }

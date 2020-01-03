@@ -4,14 +4,6 @@ public abstract class UseCaseInteractor
         <Q extends UseCaseCommand.Request, P extends UseCaseCommand.Response>
         implements UseCaseCommand<Q, P> {
 
-    public enum Result {
-        DATA_UNAVAILABLE,
-        INVALID_UNCHANGED,
-        VALID_UNCHANGED,
-        INVALID_CHANGED,
-        VALID_CHANGED,
-    }
-
     private Q request;
     private Callback<P> callback;
 

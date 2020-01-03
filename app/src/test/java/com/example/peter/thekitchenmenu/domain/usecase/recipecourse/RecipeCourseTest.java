@@ -17,7 +17,7 @@ import org.mockito.*;
 
 import java.util.List;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipecourse.UseCaseRecipeCourse.DO_NOT_CLONE;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipecourse.RecipeCourse.DO_NOT_CLONE;
 import static com.example.peter.thekitchenmenu.testdata.TestDataRecipeCourseEntity.getAllByRecipeId;
 import static com.example.peter.thekitchenmenu.testdata.TestDataRecipeEntity.getValidExisting;
 import static org.junit.Assert.assertFalse;
@@ -27,7 +27,7 @@ import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.assertEquals;
 
-public class UseCaseRecipeCourseTest {
+public class RecipeCourseTest {
 
     // region constants ----------------------------------------------------------------------------
     private String NEW_RECIPE_ID = TestDataRecipeEntity.getNewInvalid().getId();
@@ -47,11 +47,11 @@ public class UseCaseRecipeCourseTest {
     @Captor
     ArgumentCaptor<RecipeCourseEntity> entityCaptor;
     private UseCaseHandler handler;
-    private UseCaseRecipeCourse.Request request;
-    private UseCaseRecipeCourse.Response actualResponse;
+    private RecipeCourseRequest request;
+    private RecipeCourseResponse actualResponse;
     // endregion helper fields ---------------------------------------------------------------------
 
-    private UseCaseRecipeCourse SUT;
+    private RecipeCourse SUT;
 
     @Before
     public void setup() {
@@ -60,8 +60,8 @@ public class UseCaseRecipeCourseTest {
         SUT = givenUseCase();
     }
 
-    private UseCaseRecipeCourse givenUseCase() {
-        return new UseCaseRecipeCourse(
+    private RecipeCourse givenUseCase() {
+        return new RecipeCourse(
                 repoMock,
                 idProviderMock,
                 timeProviderMock
@@ -158,26 +158,26 @@ public class UseCaseRecipeCourseTest {
         // Assert
         confirmRepoCalledAndReturnMatchingCourses(request.getRecipeId());
         // confirm target is in results
-        assertTrue(actualResponse.getCourseList().containsKey(UseCaseRecipeCourse.Course.COURSE_ONE));
+        assertTrue(actualResponse.getCourseList().containsKey(RecipeCourse.Course.COURSE_ONE));
         // confirm target has correct recipeId
         String expectedRecipeId = actualResponse.getCourseList().
-                get(UseCaseRecipeCourse.Course.COURSE_ONE).getRecipeId();
+                get(RecipeCourse.Course.COURSE_ONE).getRecipeId();
         assertEquals(NEW_RECIPE_ID, expectedRecipeId);
         // Arrange request to delete target
         // Get targets database id
         String targetsDataBaseId = actualResponse.getCourseList().
-                get(UseCaseRecipeCourse.Course.COURSE_ONE).getId();
+                get(RecipeCourse.Course.COURSE_ONE).getId();
         // request delete target
         request = getRequest(
                 NEW_RECIPE_ID,
                 DO_NOT_CLONE,
-                UseCaseRecipeCourse.Course.COURSE_ONE,
+                RecipeCourse.Course.COURSE_ONE,
                 false);
         // Act
         handler.execute(SUT, request, getCallback());
         // Assert - confirm target deleted from database and list
         verify(repoMock).deleteById(eq(targetsDataBaseId));
-        assertNull(actualResponse.getCourseList().get(UseCaseRecipeCourse.Course.COURSE_ONE));
+        assertNull(actualResponse.getCourseList().get(RecipeCourse.Course.COURSE_ONE));
         // confirm data has changed
         assertTrue(actualResponse.isChanged());
         if (actualResponse.getCourseList().size() > 0) {
@@ -188,26 +188,26 @@ public class UseCaseRecipeCourseTest {
     }
 
     // region helper methods -----------------------------------------------------------------------
-    private UseCaseRecipeCourse.Request getRequest(String recipeId,
-                                                   String toCloneToId,
-                                                   UseCaseRecipeCourse.Course course,
-                                                   boolean isAdd) {
-        return new UseCaseRecipeCourse.Request(recipeId, toCloneToId, course, isAdd
+    private RecipeCourseRequest getRequest(String recipeId,
+                                            String toCloneToId,
+                                            RecipeCourse.Course course,
+                                            boolean isAdd) {
+        return new RecipeCourseRequest(recipeId, toCloneToId, course, isAdd
         );
     }
 
-    private UseCaseInteractor.Callback<UseCaseRecipeCourse.Response> getCallback() {
-        return new UseCaseInteractor.Callback<UseCaseRecipeCourse.Response>() {
+    private UseCaseInteractor.Callback<RecipeCourseResponse> getCallback() {
+        return new UseCaseInteractor.Callback<RecipeCourseResponse>() {
 
             @Override
-            public void onSuccess(UseCaseRecipeCourse.Response response) {
-                UseCaseRecipeCourseTest.this.actualResponse = response;
+            public void onSuccess(RecipeCourseResponse response) {
+                RecipeCourseTest.this.actualResponse = response;
 
             }
 
             @Override
-            public void onError(UseCaseRecipeCourse.Response response) {
-                UseCaseRecipeCourseTest.this.actualResponse = response;
+            public void onError(RecipeCourseResponse response) {
+                RecipeCourseTest.this.actualResponse = response;
             }
         };
     }

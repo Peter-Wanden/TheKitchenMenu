@@ -15,7 +15,7 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
-import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.UseCaseConversionFactorStatus;
+import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.ConversionFactorStatus;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientcalculator.UseCaseIngredientCalculator;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientcalculator.UseCaseIngredientCalculatorRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientcalculator.UseCaseIngredientCalculatorResponse;
@@ -174,7 +174,7 @@ public class RecipeIngredientMeasurementViewModelTest {
                 idProviderMock,
                 timeProviderMock
         );
-        UseCaseConversionFactorStatus conversionFactorStatus = new UseCaseConversionFactorStatus(
+        ConversionFactorStatus conversionFactorStatus = new ConversionFactorStatus(
                 repoIngredientMock
         );
         return new RecipeIngredientMeasurementViewModel(

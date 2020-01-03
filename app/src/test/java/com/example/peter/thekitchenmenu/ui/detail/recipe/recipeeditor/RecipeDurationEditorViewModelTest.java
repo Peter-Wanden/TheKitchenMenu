@@ -8,8 +8,8 @@ import com.example.peter.thekitchenmenu.data.entity.RecipeDurationEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.UseCaseRecipeDuration;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.UseCaseRecipeDurationTest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDuration;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDurationTest;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeDurationEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeValidator;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
@@ -98,11 +98,11 @@ public class RecipeDurationEditorViewModelTest {
     private RecipeDurationEditorViewModel givenViewModel() {
         UseCaseHandler handler = new UseCaseHandler(new UseCaseSchedulerMock()
         );
-        UseCaseRecipeDuration useCase = new UseCaseRecipeDuration(
+        RecipeDuration useCase = new RecipeDuration(
                 repoMock,
                 timeProviderMock,
-                UseCaseRecipeDurationTest.MAX_PREP_TIME,
-                UseCaseRecipeDurationTest.MAX_COOK_TIME
+                RecipeDurationTest.MAX_PREP_TIME,
+                RecipeDurationTest.MAX_COOK_TIME
         );
         return new RecipeDurationEditorViewModel(
                 handler, useCase, resourcesMock

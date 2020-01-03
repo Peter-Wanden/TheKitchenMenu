@@ -8,12 +8,12 @@ import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasure;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
 
-public class UseCaseConversionFactorStatus
-        extends UseCaseInteractor<UseCaseConversionFactorStatusRequest, UseCaseConversionFactorStatusResponse>
+public class ConversionFactorStatus
+        extends UseCaseInteractor<ConversionFactorStatusRequest, ConversionFactorStatusResponse>
         implements DataSource.GetEntityCallback<IngredientEntity> {
 
-    public enum UseCaseResult {
-        INGREDIENT_DATA_NOT_AVAILABLE,
+    public enum Result {
+        DATA_UNAVAILABLE,
         DISABLED,
         ENABLED_UNEDITABLE,
         ENABLED_EDITABLE_UNSET,
@@ -23,12 +23,12 @@ public class UseCaseConversionFactorStatus
     private RepositoryIngredient repository;
     private IngredientEntity ingredientEntity;
 
-    public UseCaseConversionFactorStatus(RepositoryIngredient repository) {
+    public ConversionFactorStatus(RepositoryIngredient repository) {
         this.repository = repository;
     }
 
     @Override
-    protected void execute(UseCaseConversionFactorStatusRequest request) {
+    protected void execute(ConversionFactorStatusRequest request) {
         UnitOfMeasure unitOfMeasure = request.getSubtype().getMeasurementClass();
 
         if (request.getIngredientId().equals(null) ||
@@ -44,8 +44,8 @@ public class UseCaseConversionFactorStatus
     }
 
     private void returnResultDisabled() {
-        UseCaseConversionFactorStatusResponse response = new
-                UseCaseConversionFactorStatusResponse(UseCaseResult.DISABLED);
+        ConversionFactorStatusResponse response = new
+                ConversionFactorStatusResponse(Result.DISABLED);
         getUseCaseCallback().onSuccess(response);
     }
 
@@ -65,15 +65,15 @@ public class UseCaseConversionFactorStatus
     }
 
     private void returnDataNotAvailable() {
-        UseCaseConversionFactorStatusResponse response =
-                new UseCaseConversionFactorStatusResponse(
-                        UseCaseResult.INGREDIENT_DATA_NOT_AVAILABLE);
+        ConversionFactorStatusResponse response =
+                new ConversionFactorStatusResponse(
+                        Result.DATA_UNAVAILABLE);
         getUseCaseCallback().onError(response);
     }
 
     private void checkEditableStatus() {
         if (userCanEditIngredient()) {
-            hasConversionFactorBeenPreviouslySet();
+            isConversionFactorPreviouslySet();
         } else {
             returnResultUneditable();
         }
@@ -84,16 +84,16 @@ public class UseCaseConversionFactorStatus
     }
 
     private void returnResultUneditable() {
-        UseCaseConversionFactorStatusResponse response  =
-                new UseCaseConversionFactorStatusResponse(UseCaseResult.ENABLED_UNEDITABLE);
+        ConversionFactorStatusResponse response  =
+                new ConversionFactorStatusResponse(Result.ENABLED_UNEDITABLE);
         getUseCaseCallback().onSuccess(response);
     }
 
-    private void hasConversionFactorBeenPreviouslySet() {
+    private void isConversionFactorPreviouslySet() {
         if (conversionFactorPreviouslySet()) {
             returnResultEnabledEditablePreviouslySet();
         } else {
-            returnResponseEnabledEditableUnSet();
+            returnResultEnabledEditableUnSet();
         }
     }
 
@@ -102,14 +102,14 @@ public class UseCaseConversionFactorStatus
     }
 
     private void returnResultEnabledEditablePreviouslySet() {
-        UseCaseConversionFactorStatusResponse response =
-                new UseCaseConversionFactorStatusResponse(UseCaseResult.ENABLED_EDITABLE_SET);
+        ConversionFactorStatusResponse response =
+                new ConversionFactorStatusResponse(Result.ENABLED_EDITABLE_SET);
         getUseCaseCallback().onSuccess(response);
     }
 
-    private void returnResponseEnabledEditableUnSet() {
-        UseCaseConversionFactorStatusResponse response =
-                new UseCaseConversionFactorStatusResponse(UseCaseResult.ENABLED_EDITABLE_UNSET);
+    private void returnResultEnabledEditableUnSet() {
+        ConversionFactorStatusResponse response =
+                new ConversionFactorStatusResponse(Result.ENABLED_EDITABLE_UNSET);
         getUseCaseCallback().onSuccess(response);
     }
 }

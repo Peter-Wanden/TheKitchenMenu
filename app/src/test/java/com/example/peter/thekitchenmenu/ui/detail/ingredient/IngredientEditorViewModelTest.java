@@ -13,8 +13,8 @@ import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.ingredient.UseCaseIngredient;
-import com.example.peter.thekitchenmenu.domain.usecase.ingredient.UseCaseIngredientDuplicateChecker;
+import com.example.peter.thekitchenmenu.domain.usecase.ingredient.Ingredient;
+import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientDuplicateChecker;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.UseCaseTextValidator;
 import com.example.peter.thekitchenmenu.testdata.TestDataIngredientEntity;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
@@ -82,9 +82,9 @@ public class IngredientEditorViewModelTest {
     @Mock
     AddEditIngredientNavigator navigatorMock;
     @Mock
-    UseCaseIngredientDuplicateChecker duplicateCheckerMock;
+    IngredientDuplicateChecker duplicateCheckerMock;
     @Captor
-    ArgumentCaptor<UseCaseIngredientDuplicateChecker.DuplicateCallback> duplicateCallbackCaptor;
+    ArgumentCaptor<IngredientDuplicateChecker.DuplicateCallback> duplicateCallbackCaptor;
     @Captor
     ArgumentCaptor<IngredientEntity> ingredientEntityCaptor;
     private int shortTextMinLength = 3;
@@ -116,7 +116,7 @@ public class IngredientEditorViewModelTest {
                 setLongTextMaxLength(longTextMaxLength).
                 build();
 
-        UseCaseIngredient useCaseIngredient = new UseCaseIngredient(
+        Ingredient ingredient = new Ingredient(
                 repoMock,
                 idProviderMock,
                 timeProviderMock,
@@ -126,7 +126,7 @@ public class IngredientEditorViewModelTest {
                 resourcesMock,
                 handler,
                 useCaseTextValidator,
-                useCaseIngredient
+                ingredient
         );
     }
 
@@ -301,7 +301,7 @@ public class IngredientEditorViewModelTest {
                 eq(NEW_VALID_NAME.getName()), eq(NEW.getId()),
                 duplicateCallbackCaptor.capture());
         duplicateCallbackCaptor.getValue().duplicateCheckResult(
-                UseCaseIngredientDuplicateChecker.NO_DUPLICATE_FOUND);
+                IngredientDuplicateChecker.NO_DUPLICATE_FOUND);
 
         SUT.setName(VALID_EXISTING_COMPLETE.getName());
         verify(duplicateCheckerMock).checkForDuplicateAndNotify(
@@ -329,7 +329,7 @@ public class IngredientEditorViewModelTest {
                 eq(NEW_VALID_NAME.getId()),
                 duplicateCallbackCaptor.capture());
         duplicateCallbackCaptor.getValue().duplicateCheckResult(
-                UseCaseIngredientDuplicateChecker.NO_DUPLICATE_FOUND);
+                IngredientDuplicateChecker.NO_DUPLICATE_FOUND);
 
         SUT.setName(VALID_EXISTING_COMPLETE.getName());
         verify(duplicateCheckerMock).checkForDuplicateAndNotify(
@@ -733,7 +733,7 @@ public class IngredientEditorViewModelTest {
                 anyString(),
                 duplicateCallbackCaptor.capture());
         duplicateCallbackCaptor.getValue().duplicateCheckResult(
-                UseCaseIngredientDuplicateChecker.NO_DUPLICATE_FOUND);
+                IngredientDuplicateChecker.NO_DUPLICATE_FOUND);
     }
     // endregion helper methods --------------------------------------------------------------------
 

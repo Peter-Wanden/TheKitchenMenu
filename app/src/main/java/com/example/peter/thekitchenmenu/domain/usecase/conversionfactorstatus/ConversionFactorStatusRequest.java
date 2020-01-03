@@ -7,14 +7,14 @@ import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementS
 
 import java.util.Objects;
 
-public class UseCaseConversionFactorStatusRequest implements UseCaseInteractor.Request {
+public class ConversionFactorStatusRequest implements UseCaseInteractor.Request {
     @NonNull
     private MeasurementSubtype subtype;
     @NonNull
     private String ingredientId;
 
-    public UseCaseConversionFactorStatusRequest(@NonNull MeasurementSubtype subtype,
-                                                @NonNull String ingredientId) {
+    public ConversionFactorStatusRequest(@NonNull MeasurementSubtype subtype,
+                                         @NonNull String ingredientId) {
         this.subtype = subtype;
         this.ingredientId = ingredientId;
     }
@@ -33,7 +33,7 @@ public class UseCaseConversionFactorStatusRequest implements UseCaseInteractor.R
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UseCaseConversionFactorStatusRequest that = (UseCaseConversionFactorStatusRequest) o;
+        ConversionFactorStatusRequest that = (ConversionFactorStatusRequest) o;
         return subtype == that.subtype &&
                 ingredientId.equals(that.ingredientId);
     }
@@ -46,7 +46,7 @@ public class UseCaseConversionFactorStatusRequest implements UseCaseInteractor.R
     @NonNull
     @Override
     public String toString() {
-        return "UseCaseConversionFactorStatusRequest{" +
+        return "ConversionFactorStatusRequest{" +
                 "subtype=" + subtype +
                 ", ingredientId='" + ingredientId + '\'' +
                 '}';
