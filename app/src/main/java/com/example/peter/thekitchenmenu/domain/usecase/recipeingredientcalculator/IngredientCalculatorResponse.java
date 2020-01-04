@@ -7,16 +7,16 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipeingredientcalculator.UseCaseIngredientCalculator.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipeingredientcalculator.IngredientCalculator.*;
 
-public class UseCaseIngredientCalculatorResponse implements UseCaseInteractor.Response {
+public final class IngredientCalculatorResponse implements UseCaseInteractor.Response {
     @Nonnull
     private final MeasurementModel model;
     @Nonnull
     private final ResultStatus resultStatus;
 
-    public UseCaseIngredientCalculatorResponse(@Nonnull MeasurementModel model,
-                                               @Nonnull ResultStatus resultStatus) {
+    public IngredientCalculatorResponse(@Nonnull MeasurementModel model,
+                                        @Nonnull ResultStatus resultStatus) {
         this.model = model;
         this.resultStatus = resultStatus;
     }
@@ -35,7 +35,7 @@ public class UseCaseIngredientCalculatorResponse implements UseCaseInteractor.Re
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UseCaseIngredientCalculatorResponse that = (UseCaseIngredientCalculatorResponse) o;
+        IngredientCalculatorResponse that = (IngredientCalculatorResponse) o;
         return model.equals(that.model) &&
                 resultStatus == that.resultStatus;
     }
@@ -48,7 +48,7 @@ public class UseCaseIngredientCalculatorResponse implements UseCaseInteractor.Re
     @Nonnull
     @Override
     public String toString() {
-        return "UseCaseIngredientCalculatorResponse{" +
+        return "IngredientCalculatorResponse{" +
                 "model=" + model +
                 ", resultStatus=" + resultStatus +
                 '}';

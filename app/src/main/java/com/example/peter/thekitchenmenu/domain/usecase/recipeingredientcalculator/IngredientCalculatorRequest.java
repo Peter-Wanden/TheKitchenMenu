@@ -7,7 +7,7 @@ import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
 
 import java.util.Objects;
 
-public class UseCaseIngredientCalculatorRequest implements UseCaseInteractor.Request {
+public final class IngredientCalculatorRequest implements UseCaseInteractor.Request {
     @NonNull
     private final String recipeId;
     @NonNull
@@ -17,10 +17,10 @@ public class UseCaseIngredientCalculatorRequest implements UseCaseInteractor.Req
     @NonNull
     private final MeasurementModel model;
 
-    public UseCaseIngredientCalculatorRequest(@NonNull String recipeId,
-                                              @NonNull String ingredientId,
-                                              @NonNull String recipeIngredientId,
-                                              @NonNull MeasurementModel model) {
+    public IngredientCalculatorRequest(@NonNull String recipeId,
+                                       @NonNull String ingredientId,
+                                       @NonNull String recipeIngredientId,
+                                       @NonNull MeasurementModel model) {
         this.recipeId = recipeId;
         this.ingredientId = ingredientId;
         this.recipeIngredientId = recipeIngredientId;
@@ -51,7 +51,7 @@ public class UseCaseIngredientCalculatorRequest implements UseCaseInteractor.Req
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UseCaseIngredientCalculatorRequest that = (UseCaseIngredientCalculatorRequest) o;
+        IngredientCalculatorRequest that = (IngredientCalculatorRequest) o;
         return recipeId.equals(that.recipeId) &&
                 ingredientId.equals(that.ingredientId) &&
                 recipeIngredientId.equals(that.recipeIngredientId) &&
@@ -100,8 +100,8 @@ public class UseCaseIngredientCalculatorRequest implements UseCaseInteractor.Req
             return this;
         }
 
-        public UseCaseIngredientCalculatorRequest build() {
-            return new UseCaseIngredientCalculatorRequest(
+        public IngredientCalculatorRequest build() {
+            return new IngredientCalculatorRequest(
                     recipeId,
                     ingredientId,
                     recipeIngredientId,

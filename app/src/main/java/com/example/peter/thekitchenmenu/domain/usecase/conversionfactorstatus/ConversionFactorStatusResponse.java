@@ -6,7 +6,7 @@ import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
 
 import java.util.Objects;
 
-public class ConversionFactorStatusResponse implements UseCaseInteractor.Response {
+public final class ConversionFactorStatusResponse implements UseCaseInteractor.Response {
     @NonNull
     private ConversionFactorStatus.Result result;
 

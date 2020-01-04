@@ -21,8 +21,8 @@ import java.util.Map;
 /**
  * Returns a list of ingredients for a given recipeId
  */
-public class UseCaseRecipeIngredientListItems extends
-        UseCaseInteractor<UseCaseRecipeIngredientListRequest, UseCaseRecipeIngredientListResponse> {
+public class RecipeIngredientListItems extends
+        UseCaseInteractor<RecipeIngredientListRequest, RecipeIngredientListResponse> {
 
     private RepositoryRecipeIngredient repoRecipeIngredient;
     private RepositoryIngredient repoIngredient;
@@ -35,16 +35,16 @@ public class UseCaseRecipeIngredientListItems extends
     private List<RecipeIngredientListItemModel> listItemModels = new ArrayList<>();
     private int portions;
 
-    public UseCaseRecipeIngredientListItems(RepositoryRecipeIngredient repoRecipeIngredient,
-                                            RepositoryIngredient repoIngredient,
-                                            RepositoryRecipePortions repoPortions) {
+    public RecipeIngredientListItems(RepositoryRecipeIngredient repoRecipeIngredient,
+                                     RepositoryIngredient repoIngredient,
+                                     RepositoryRecipePortions repoPortions) {
         this.repoRecipeIngredient = repoRecipeIngredient;
         this.repoIngredient = repoIngredient;
         this.repoPortions = repoPortions;
     }
 
     @Override
-    protected void execute(UseCaseRecipeIngredientListRequest request) {
+    protected void execute(RecipeIngredientListRequest request) {
         recipeId = request.getRecipeId();
         getPortionsForRecipe();
     }
@@ -55,7 +55,7 @@ public class UseCaseRecipeIngredientListItems extends
                 new DataSource.GetEntityCallback<RecipePortionsEntity>() {
                     @Override
                     public void onEntityLoaded(RecipePortionsEntity portions) {
-                        UseCaseRecipeIngredientListItems.this.portions =
+                        RecipeIngredientListItems.this.portions =
                                 portions.getServings() * portions.getSittings();
                         getRecipeIngredientQuantities();
                     }
@@ -129,7 +129,7 @@ public class UseCaseRecipeIngredientListItems extends
                 );
                 listItemModels.add(listItemModel);
             }
-            getUseCaseCallback().onSuccess(new UseCaseRecipeIngredientListResponse(listItemModels));
+            getUseCaseCallback().onSuccess(new RecipeIngredientListResponse(listItemModels));
         }
     }
 

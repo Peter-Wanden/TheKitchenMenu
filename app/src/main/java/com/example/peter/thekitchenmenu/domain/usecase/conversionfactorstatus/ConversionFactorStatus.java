@@ -31,11 +31,9 @@ public class ConversionFactorStatus
     protected void execute(ConversionFactorStatusRequest request) {
         UnitOfMeasure unitOfMeasure = request.getSubtype().getMeasurementClass();
 
-        if (request.getIngredientId().equals(null) ||
-                request.getIngredientId().isEmpty()) {
+        if (isNoIdSupplied(request)) {
             returnDataNotAvailable();
         }
-
         if (!unitOfMeasure.isConversionFactorEnabled()) {
             returnResultDisabled();
             return;
@@ -43,9 +41,14 @@ public class ConversionFactorStatus
         loadIngredient(request.getIngredientId());
     }
 
+    private boolean isNoIdSupplied(ConversionFactorStatusRequest request) {
+        return request.getIngredientId().equals(null) || request.getIngredientId().isEmpty();
+    }
+
     private void returnResultDisabled() {
-        ConversionFactorStatusResponse response = new
-                ConversionFactorStatusResponse(Result.DISABLED);
+        ConversionFactorStatusResponse response = new ConversionFactorStatusResponse(
+                Result.DISABLED
+        );
         getUseCaseCallback().onSuccess(response);
     }
 
@@ -65,9 +68,9 @@ public class ConversionFactorStatus
     }
 
     private void returnDataNotAvailable() {
-        ConversionFactorStatusResponse response =
-                new ConversionFactorStatusResponse(
-                        Result.DATA_UNAVAILABLE);
+        ConversionFactorStatusResponse response = new ConversionFactorStatusResponse(
+                        Result.DATA_UNAVAILABLE
+        );
         getUseCaseCallback().onError(response);
     }
 
@@ -84,8 +87,9 @@ public class ConversionFactorStatus
     }
 
     private void returnResultUneditable() {
-        ConversionFactorStatusResponse response  =
-                new ConversionFactorStatusResponse(Result.ENABLED_UNEDITABLE);
+        ConversionFactorStatusResponse response = new ConversionFactorStatusResponse(
+                Result.ENABLED_UNEDITABLE
+        );
         getUseCaseCallback().onSuccess(response);
     }
 
@@ -102,14 +106,16 @@ public class ConversionFactorStatus
     }
 
     private void returnResultEnabledEditablePreviouslySet() {
-        ConversionFactorStatusResponse response =
-                new ConversionFactorStatusResponse(Result.ENABLED_EDITABLE_SET);
+        ConversionFactorStatusResponse response = new ConversionFactorStatusResponse(
+                Result.ENABLED_EDITABLE_SET
+        );
         getUseCaseCallback().onSuccess(response);
     }
 
     private void returnResultEnabledEditableUnSet() {
-        ConversionFactorStatusResponse response =
-                new ConversionFactorStatusResponse(Result.ENABLED_EDITABLE_UNSET);
+        ConversionFactorStatusResponse response = new ConversionFactorStatusResponse(
+                Result.ENABLED_EDITABLE_UNSET
+        );
         getUseCaseCallback().onSuccess(response);
     }
 }

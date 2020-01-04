@@ -17,13 +17,13 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDura
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentityandduration.UseCaseRecipeIdentityAndDurationList;
 import com.example.peter.thekitchenmenu.domain.usecase.recipecourse.RecipeCourse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.UseCaseRecipeIngredientListItems;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.UseCaseRecipePortions;
-import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.UseCaseTextValidator;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.RecipeIngredientListItems;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortions;
+import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientDuplicateChecker;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientcalculator.UseCaseIngredientCalculator;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientcalculator.IngredientCalculator;
 
 public class UseCaseFactory {
 
@@ -82,8 +82,8 @@ public class UseCaseFactory {
         return INSTANCE;
     }
 
-    public UseCaseIngredientCalculator providePortionsUseCase() {
-        return new UseCaseIngredientCalculator(
+    public IngredientCalculator providePortionsUseCase() {
+        return new IngredientCalculator(
                 recipePortionsRepository,
                 recipeIngredientRepository,
                 ingredientRepository,
@@ -98,8 +98,8 @@ public class UseCaseFactory {
         );
     }
 
-    public UseCaseRecipeIngredientListItems provideRecipeIngredientListUseCase() {
-        return new UseCaseRecipeIngredientListItems(
+    public RecipeIngredientListItems provideRecipeIngredientListUseCase() {
+        return new RecipeIngredientListItems(
                 recipeIngredientRepository,
                 ingredientRepository,
                 recipePortionsRepository
@@ -126,10 +126,10 @@ public class UseCaseFactory {
                 new TimeProvider());
     }
 
-    public UseCaseTextValidator provideTextValidatorUseCase() {
+    public TextValidator provideTextValidatorUseCase() {
         Resources resources = application.getResources();
 
-        return new UseCaseTextValidator.Builder().
+        return new TextValidator.Builder().
                 setShortTextMinLength(
                         resources.getInteger(R.integer.input_validation_short_text_min_length)).
                 setShortTextMaxLength(
@@ -150,9 +150,9 @@ public class UseCaseFactory {
                 );
     }
 
-    public UseCaseRecipePortions provideRecipePortionsUseCase() {
+    public RecipePortions provideRecipePortionsUseCase() {
         Resources resources = application.getResources();
-        return new UseCaseRecipePortions(
+        return new RecipePortions(
                 new TimeProvider(),
                 new UniqueIdProvider(),
                 recipePortionsRepository,

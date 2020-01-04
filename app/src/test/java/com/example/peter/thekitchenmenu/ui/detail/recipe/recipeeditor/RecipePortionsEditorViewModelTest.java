@@ -8,7 +8,7 @@ import com.example.peter.thekitchenmenu.data.entity.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.UseCaseRecipePortions;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortions;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipePortionsEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeValidator;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
@@ -97,7 +97,7 @@ public class RecipePortionsEditorViewModelTest {
     private RecipePortionsEditorViewModel givenViewModel() {
         UseCaseHandler handler = new UseCaseHandler(new UseCaseSchedulerMock()
         );
-        UseCaseRecipePortions useCase = new UseCaseRecipePortions(
+        RecipePortions useCase = new RecipePortions(
                 timeProviderMock, idProviderMock, repoMock, MAX_SERVINGS, MAX_SITTINGS
         );
 

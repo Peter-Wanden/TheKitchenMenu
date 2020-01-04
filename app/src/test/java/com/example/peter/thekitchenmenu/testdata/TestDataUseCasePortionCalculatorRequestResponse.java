@@ -1,10 +1,10 @@
 package com.example.peter.thekitchenmenu.testdata;
 
-import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientcalculator.UseCaseIngredientCalculatorRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientcalculator.UseCaseIngredientCalculatorResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientcalculator.IngredientCalculatorRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientcalculator.IngredientCalculatorResponse;
 
 import static com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants.DEFAULT_MEASUREMENT_MODEL;
-import static com.example.peter.thekitchenmenu.domain.usecase.recipeingredientcalculator.UseCaseIngredientCalculator.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipeingredientcalculator.IngredientCalculator.*;
 
 public class TestDataUseCasePortionCalculatorRequestResponse {
 
@@ -12,214 +12,214 @@ public class TestDataUseCasePortionCalculatorRequestResponse {
     private static String NO_INGREDIENT_ID = "";
     private static String NO_RECIPE_INGREDIENT_ID = "";
 
-    public static UseCaseIngredientCalculatorRequest getRequestEmptyFourPortions() {
-        return new UseCaseIngredientCalculatorRequest(
+    public static IngredientCalculatorRequest getRequestEmptyFourPortions() {
+        return new IngredientCalculatorRequest(
                 TestDataRecipeEntity.getNewInvalid().getId(),
                 TestDataIngredientEntity.getNewValidName().getId(),
                 NO_RECIPE_INGREDIENT_ID,
                 DEFAULT_MEASUREMENT_MODEL);
     }
-    public static UseCaseIngredientCalculatorResponse getResponseEmptyFourPortions() {
-        return new UseCaseIngredientCalculatorResponse(
+    public static IngredientCalculatorResponse getResponseEmptyFourPortions() {
+        return new IngredientCalculatorResponse(
                 TestDataMeasurementModel.getInvalidEmptyFourPortionsSet(),
                 ResultStatus.INVALID_MEASUREMENT);
     }
 
-    public static UseCaseIngredientCalculatorRequest getRequestInvalidTotalUnitOne() {
-        return new UseCaseIngredientCalculatorRequest(
+    public static IngredientCalculatorRequest getRequestInvalidTotalUnitOne() {
+        return new IngredientCalculatorRequest(
                 TestDataRecipeEntity.getNewInvalid().getId(),
                 TestDataIngredientEntity.getNewValidName().getId(),
                 NO_RECIPE_INGREDIENT_ID,
                 TestDataMeasurementModel.getNewInvalidTotalUnitOne());
     }
-    public static UseCaseIngredientCalculatorResponse getResponseInvalidTotalUnitOne() {
+    public static IngredientCalculatorResponse getResponseInvalidTotalUnitOne() {
 
-        return new UseCaseIngredientCalculatorResponse(
+        return new IngredientCalculatorResponse(
                 TestDataMeasurementModel.getNewInvalidTotalUnitOne(),
                 ResultStatus.INVALID_TOTAL_UNIT_ONE);
     }
 
-    public static UseCaseIngredientCalculatorRequest getRequestValidTotalUnitOne() {
-        return new UseCaseIngredientCalculatorRequest(
+    public static IngredientCalculatorRequest getRequestValidTotalUnitOne() {
+        return new IngredientCalculatorRequest(
                 TestDataRecipeEntity.getNewInvalid().getId(),
                 TestDataIngredientEntity.getNewValidName().getId(),
                 NO_RECIPE_INGREDIENT_ID,
                 TestDataMeasurementModel.getNewValidTotalUnitOne());
     }
-    public static UseCaseIngredientCalculatorResponse getResponseValidTotalUnitOne() {
-        return new UseCaseIngredientCalculatorResponse(
+    public static IngredientCalculatorResponse getResponseValidTotalUnitOne() {
+        return new IngredientCalculatorResponse(
                 TestDataMeasurementModel.getNewValidTotalUnitOne(),
                 ResultStatus.RESULT_OK);
     }
 
-    public static UseCaseIngredientCalculatorRequest getRequestInvalidTotalUnitTwo() {
-        return new UseCaseIngredientCalculatorRequest(
+    public static IngredientCalculatorRequest getRequestInvalidTotalUnitTwo() {
+        return new IngredientCalculatorRequest(
                 TestDataRecipeEntity.getNewInvalid().getId(),
                 TestDataIngredientEntity.getNewValidName().getId(),
                 NO_RECIPE_INGREDIENT_ID,
                 TestDataMeasurementModel.getNewInvalidTotalUnitTwo());
     }
-    public static UseCaseIngredientCalculatorResponse getResponseInvalidTotalUnitTwo() {
-        return new UseCaseIngredientCalculatorResponse(
+    public static IngredientCalculatorResponse getResponseInvalidTotalUnitTwo() {
+        return new IngredientCalculatorResponse(
                 TestDataMeasurementModel.getNewInvalidTotalUnitTwo(),
                 ResultStatus.INVALID_TOTAL_UNIT_TWO);
     }
 
-    public static UseCaseIngredientCalculatorRequest getRequestValidTotalUnitTwo() {
-        return new UseCaseIngredientCalculatorRequest(
+    public static IngredientCalculatorRequest getRequestValidTotalUnitTwo() {
+        return new IngredientCalculatorRequest(
                 TestDataRecipeEntity.getNewInvalid().getId(),
                 TestDataIngredientEntity.getNewValidName().getId(),
                 NO_RECIPE_INGREDIENT_ID,
                 TestDataMeasurementModel.getNewValidTotalUnitTwo());
     }
-    public static UseCaseIngredientCalculatorResponse getResponseValidTotalUnitTwo() {
-        return new UseCaseIngredientCalculatorResponse(
+    public static IngredientCalculatorResponse getResponseValidTotalUnitTwo() {
+        return new IngredientCalculatorResponse(
                 TestDataMeasurementModel.getNewValidTotalUnitTwo(),
                 ResultStatus.RESULT_OK);
     }
 
-    public static UseCaseIngredientCalculatorRequest getRequestUnitOfMeasureChangeImperialSpoon() {
-        return new UseCaseIngredientCalculatorRequest(
+    public static IngredientCalculatorRequest getRequestUnitOfMeasureChangeImperialSpoon() {
+        return new IngredientCalculatorRequest(
                 TestDataRecipeEntity.getNewInvalid().getId(),
                 TestDataIngredientEntity.getNewValidName().getId(),
                 NO_RECIPE_INGREDIENT_ID,
                 TestDataMeasurementModel.getNewInvalidUnitOfMeasureChangedImperialSpoon());
     }
-    public static UseCaseIngredientCalculatorResponse getResponseUnitOfMeasureChangeImperialSpoon() {
-        return new UseCaseIngredientCalculatorResponse(
+    public static IngredientCalculatorResponse getResponseUnitOfMeasureChangeImperialSpoon() {
+        return new IngredientCalculatorResponse(
                 TestDataMeasurementModel.getNewInvalidUnitOfMeasureChangedImperialSpoon(),
                 ResultStatus.INVALID_MEASUREMENT);
     }
 
-    public static UseCaseIngredientCalculatorRequest getRequestNewValidImperialSpoonUnitOneUpdatedHalfSpoon() {
-        return new UseCaseIngredientCalculatorRequest(
+    public static IngredientCalculatorRequest getRequestNewValidImperialSpoonUnitOneUpdatedHalfSpoon() {
+        return new IngredientCalculatorRequest(
                 TestDataRecipeEntity.getNewInvalid().getId(),
                 TestDataIngredientEntity.getNewValidName().getId(),
                 NO_RECIPE_INGREDIENT_ID,
                 TestDataMeasurementModel.getNewValidHalfImperialSpoonUnitOneUpdated());
     }
-    public static UseCaseIngredientCalculatorResponse getResponseNewValidImperialSpoonUnitOneUpdatedHalfSpoon() {
-        return new UseCaseIngredientCalculatorResponse(
+    public static IngredientCalculatorResponse getResponseNewValidImperialSpoonUnitOneUpdatedHalfSpoon() {
+        return new IngredientCalculatorResponse(
                 TestDataMeasurementModel.getNewValidHalfImperialSpoonUnitOneUpdated(),
                 ResultStatus.RESULT_OK);
     }
 
-    public static UseCaseIngredientCalculatorRequest getRequestNewValidImperialSpoonInvalidConversionFactor() {
-        return new UseCaseIngredientCalculatorRequest(
+    public static IngredientCalculatorRequest getRequestNewValidImperialSpoonInvalidConversionFactor() {
+        return new IngredientCalculatorRequest(
                 TestDataRecipeEntity.getNewInvalid().getId(),
                 TestDataIngredientEntity.getNewValidName().getId(),
                 NO_RECIPE_INGREDIENT_ID,
                 TestDataMeasurementModel.getNewInvalidConversionFactor());
     }
-    public static UseCaseIngredientCalculatorResponse getResponseNewValidImperialSpoonInvalidConversionFactor() {
-        return new UseCaseIngredientCalculatorResponse(
+    public static IngredientCalculatorResponse getResponseNewValidImperialSpoonInvalidConversionFactor() {
+        return new IngredientCalculatorResponse(
                 TestDataMeasurementModel.getNewInvalidConversionFactor(),
                 ResultStatus.INVALID_CONVERSION_FACTOR);
     }
 
-    public static UseCaseIngredientCalculatorRequest getRequestNewValidImperialSpoonValidConversionFactor() {
-        return new UseCaseIngredientCalculatorRequest(
+    public static IngredientCalculatorRequest getRequestNewValidImperialSpoonValidConversionFactor() {
+        return new IngredientCalculatorRequest(
                 TestDataRecipeEntity.getNewInvalid().getId(),
                 TestDataIngredientEntity.getNewValidName().getId(),
                 NO_RECIPE_INGREDIENT_ID,
                 TestDataMeasurementModel.getNewValidImperialSpoonWithConversionFactor());
     }
-    public static UseCaseIngredientCalculatorResponse getResponseNewValidImperialSpoonValidConversionFactor() {
-        return new UseCaseIngredientCalculatorResponse(
+    public static IngredientCalculatorResponse getResponseNewValidImperialSpoonValidConversionFactor() {
+        return new IngredientCalculatorResponse(
                 TestDataMeasurementModel.getNewValidImperialSpoonWithConversionFactor(),
                 ResultStatus.RESULT_OK);
     }
 
-    public static UseCaseIngredientCalculatorRequest getRequestExistingValidMetric() {
-        return new UseCaseIngredientCalculatorRequest(
+    public static IngredientCalculatorRequest getRequestExistingValidMetric() {
+        return new IngredientCalculatorRequest(
                 NO_RECIPE_ID,
                 NO_INGREDIENT_ID,
                 TestDataRecipeIngredientQuantityEntity.getExistingValidMetric().getId(),
                 DEFAULT_MEASUREMENT_MODEL);
     }
-    public static UseCaseIngredientCalculatorResponse getResponseExistingValidMetric() {
-        return new UseCaseIngredientCalculatorResponse(
+    public static IngredientCalculatorResponse getResponseExistingValidMetric() {
+        return new IngredientCalculatorResponse(
                 TestDataMeasurementModel.getValidExistingMetric(),
                 ResultStatus.RESULT_OK);
     }
 
-    public static UseCaseIngredientCalculatorRequest getRequestExistingMetricInvalidTotalUnitOne() {
-        return new UseCaseIngredientCalculatorRequest(
+    public static IngredientCalculatorRequest getRequestExistingMetricInvalidTotalUnitOne() {
+        return new IngredientCalculatorRequest(
                 NO_RECIPE_ID,
                 NO_INGREDIENT_ID,
                 TestDataRecipeIngredientQuantityEntity.getExistingValidMetric().getId(),
                 TestDataMeasurementModel.getExistingMetricInvalidTotalOne());
     }
-    public static UseCaseIngredientCalculatorResponse getResponseExistingMetricInvalidTotalUnitOne() {
-        return new UseCaseIngredientCalculatorResponse(
+    public static IngredientCalculatorResponse getResponseExistingMetricInvalidTotalUnitOne() {
+        return new IngredientCalculatorResponse(
                 TestDataMeasurementModel.getExistingMetricInvalidTotalOne(),
                 ResultStatus.INVALID_TOTAL_UNIT_ONE);
     }
 
-    public static UseCaseIngredientCalculatorRequest getRequestExistingMetricValidTotalUnitOne() {
-        return new UseCaseIngredientCalculatorRequest(
+    public static IngredientCalculatorRequest getRequestExistingMetricValidTotalUnitOne() {
+        return new IngredientCalculatorRequest(
                 NO_RECIPE_ID,
                 NO_INGREDIENT_ID,
                 TestDataRecipeIngredientQuantityEntity.getExistingValidMetric().getId(),
                 TestDataMeasurementModel.getExistingMetricValidUnitOneUpdated()
         );
     }
-    public static UseCaseIngredientCalculatorResponse getResponseExistingMetricValidTotalUnitOne() {
-        return new UseCaseIngredientCalculatorResponse(
+    public static IngredientCalculatorResponse getResponseExistingMetricValidTotalUnitOne() {
+        return new IngredientCalculatorResponse(
                 TestDataMeasurementModel.getExistingMetricValidTotalOne(),
                 ResultStatus.RESULT_OK
         );
     }
 
-    public static UseCaseIngredientCalculatorRequest getRequestExistingMetricValidTotalUnitTwo() {
-        return new UseCaseIngredientCalculatorRequest(
+    public static IngredientCalculatorRequest getRequestExistingMetricValidTotalUnitTwo() {
+        return new IngredientCalculatorRequest(
                 NO_RECIPE_ID,
                 NO_INGREDIENT_ID,
                 TestDataRecipeIngredientQuantityEntity.getExistingValidMetric().getId(),
                 TestDataMeasurementModel.getExistingMetricValidTwoUpdated());
     }
-    public static UseCaseIngredientCalculatorResponse getResponseExistingMetricValidTotalUnitTwo() {
-        return new UseCaseIngredientCalculatorResponse(
+    public static IngredientCalculatorResponse getResponseExistingMetricValidTotalUnitTwo() {
+        return new IngredientCalculatorResponse(
                 TestDataMeasurementModel.getExistingMetricValidTwoUpdated(),
                 ResultStatus.RESULT_OK);
     }
 
-    public static UseCaseIngredientCalculatorRequest getRequestExistingMetricUnitOfMeasureChangedToImperialSpoon() {
-        return new UseCaseIngredientCalculatorRequest(
+    public static IngredientCalculatorRequest getRequestExistingMetricUnitOfMeasureChangedToImperialSpoon() {
+        return new IngredientCalculatorRequest(
                 NO_RECIPE_ID,
                 NO_INGREDIENT_ID,
                 TestDataRecipeIngredientQuantityEntity.getExistingValidMetric().getId(),
                 TestDataMeasurementModel.getExistingMetricUnitOfMeasureUpdatedToImperial());
     }
-    public static UseCaseIngredientCalculatorResponse getResponseExistingMetricUnitOfMeasureChangedToImperialSpoon() {
-        return new UseCaseIngredientCalculatorResponse(
+    public static IngredientCalculatorResponse getResponseExistingMetricUnitOfMeasureChangedToImperialSpoon() {
+        return new IngredientCalculatorResponse(
                 TestDataMeasurementModel.getExistingMetricUnitOfMeasureUpdatedToImperial(),
                 ResultStatus.INVALID_MEASUREMENT);
     }
 
-    public static UseCaseIngredientCalculatorRequest getRequestExistingValidImperialSpoon() {
-        return new UseCaseIngredientCalculatorRequest(
+    public static IngredientCalculatorRequest getRequestExistingValidImperialSpoon() {
+        return new IngredientCalculatorRequest(
                 NO_RECIPE_ID,
                 NO_INGREDIENT_ID,
                 TestDataRecipeIngredientQuantityEntity.getExistingValidImperialTwoSpoons().getId(),
                 DEFAULT_MEASUREMENT_MODEL);
     }
-    public static UseCaseIngredientCalculatorResponse getResponseExistingImperialSpoon() {
-        return new UseCaseIngredientCalculatorResponse(
+    public static IngredientCalculatorResponse getResponseExistingImperialSpoon() {
+        return new IngredientCalculatorResponse(
                 TestDataMeasurementModel.getExistingImperialSpoonValidConversionFactorNotSet(),
                 ResultStatus.RESULT_OK
         );
     }
 
-    public static UseCaseIngredientCalculatorRequest getRequestExistingImperialSpoonInvalidConversionFactor() {
-        return new UseCaseIngredientCalculatorRequest(
+    public static IngredientCalculatorRequest getRequestExistingImperialSpoonInvalidConversionFactor() {
+        return new IngredientCalculatorRequest(
                 NO_RECIPE_ID,
                 NO_INGREDIENT_ID,
                 TestDataRecipeIngredientQuantityEntity.getExistingValidImperialTwoSpoons().getId(),
                 TestDataMeasurementModel.getExistingImperialSpoonInvalidConversionFactor());
     }
-    public static UseCaseIngredientCalculatorResponse getResponseExistingImperialSpoonInvalidConversionFactor() {
-        return new UseCaseIngredientCalculatorResponse(
+    public static IngredientCalculatorResponse getResponseExistingImperialSpoonInvalidConversionFactor() {
+        return new IngredientCalculatorResponse(
                 TestDataMeasurementModel.getExistingImperialSpoonInvalidConversionFactor(),
                 ResultStatus.INVALID_CONVERSION_FACTOR);
     }

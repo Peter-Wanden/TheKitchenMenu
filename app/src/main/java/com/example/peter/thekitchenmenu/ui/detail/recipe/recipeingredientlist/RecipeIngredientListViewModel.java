@@ -8,9 +8,9 @@ import androidx.lifecycle.ViewModel;
 import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.RecipeIngredientListItemModel;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.UseCaseRecipeIngredientListItems;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.UseCaseRecipeIngredientListRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.UseCaseRecipeIngredientListResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.RecipeIngredientListItems;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.RecipeIngredientListRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.RecipeIngredientListResponse;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor.RecipeIngredientEditorActivity;
 
 public class RecipeIngredientListViewModel extends ViewModel {
@@ -20,7 +20,7 @@ public class RecipeIngredientListViewModel extends ViewModel {
 
     private RecipeIngredientListNavigator navigator;
     private UseCaseHandler handler;
-    private UseCaseRecipeIngredientListItems useCase;
+    private RecipeIngredientListItems useCase;
 
     public final ObservableList<RecipeIngredientListItemModel> recipeIngredientsModels =
             new ObservableArrayList<>();
@@ -29,7 +29,7 @@ public class RecipeIngredientListViewModel extends ViewModel {
     private String recipeId = "";
 
     public RecipeIngredientListViewModel(UseCaseHandler handler,
-                                         UseCaseRecipeIngredientListItems useCase) {
+                                         RecipeIngredientListItems useCase) {
         this.handler = handler;
         this.useCase = useCase;
     }
@@ -60,10 +60,10 @@ public class RecipeIngredientListViewModel extends ViewModel {
     private void loadRecipeIngredients() {
         handler.execute(
                 useCase,
-                new UseCaseRecipeIngredientListRequest(recipeId),
-                new UseCaseInteractor.Callback<UseCaseRecipeIngredientListResponse>() {
+                new RecipeIngredientListRequest(recipeId),
+                new UseCaseInteractor.Callback<RecipeIngredientListResponse>() {
             @Override
-            public void onSuccess(UseCaseRecipeIngredientListResponse response) {
+            public void onSuccess(RecipeIngredientListResponse response) {
                 if (response.getListItemModels().size() > 0) {
                     hasIngredients.set(true);
                     recipeIngredientsModels.clear();
@@ -74,7 +74,7 @@ public class RecipeIngredientListViewModel extends ViewModel {
             }
 
             @Override
-            public void onError(UseCaseRecipeIngredientListResponse response) {
+            public void onError(RecipeIngredientListResponse response) {
                 hasIngredients.set(false);
             }
         });

@@ -7,7 +7,7 @@ import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementS
 
 import java.util.Objects;
 
-public class ConversionFactorStatusRequest implements UseCaseInteractor.Request {
+public final class ConversionFactorStatusRequest implements UseCaseInteractor.Request {
     @NonNull
     private MeasurementSubtype subtype;
     @NonNull

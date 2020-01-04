@@ -9,7 +9,7 @@ import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.ingredient.Ingredient.CREATE_NEW_INGREDIENT;
 
-public class IngredientModel {
+public final class IngredientModel {
     @Nonnull
     private final String ingredientId;
     @Nonnull

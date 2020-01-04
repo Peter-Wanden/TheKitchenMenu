@@ -8,7 +8,7 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public class RecipeDurationResponse implements UseCaseInteractor.Response {
+public final class RecipeDurationResponse implements UseCaseInteractor.Response {
     @Nonnull
     private final RecipeDuration.Result result;
     @Nonnull

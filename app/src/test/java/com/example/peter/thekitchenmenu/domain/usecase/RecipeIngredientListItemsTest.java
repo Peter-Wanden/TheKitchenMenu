@@ -11,8 +11,8 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredie
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.UseCaseRecipeIngredientListItems;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.UseCaseRecipeIngredientListResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.RecipeIngredientListItems;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.RecipeIngredientListResponse;
 
 import org.junit.*;
 import org.mockito.*;
@@ -20,7 +20,7 @@ import org.mockito.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UseCaseRecipeIngredientListItemsTest {
+public class RecipeIngredientListItemsTest {
 
     // region constants ----------------------------------------------------------------------------
     private final String RECIPE_ID = "RECIPE_ID";
@@ -35,7 +35,7 @@ public class UseCaseRecipeIngredientListItemsTest {
     RepositoryIngredient repoIngredientMock;
     // endregion helper fields ---------------------------------------------------------------------
 
-    private UseCaseRecipeIngredientListItems SUT;
+    private RecipeIngredientListItems SUT;
 
     @Before
     public void setup() {
@@ -43,7 +43,7 @@ public class UseCaseRecipeIngredientListItemsTest {
 
         UseCaseHandler handler = new UseCaseHandler(new UseCaseSchedulerMock());
 
-        SUT = new UseCaseRecipeIngredientListItems(repoRecipeIngredientMock,
+        SUT = new RecipeIngredientListItems(repoRecipeIngredientMock,
                 repoIngredientMock,
                 repoPortionsMock);
     }
@@ -57,15 +57,15 @@ public class UseCaseRecipeIngredientListItemsTest {
     }
 
     // region helper methods -----------------------------------------------------------------------
-    private UseCaseInteractor.Callback<UseCaseRecipeIngredientListResponse> responseCallback() {
-        return new UseCaseInteractor.Callback<UseCaseRecipeIngredientListResponse>() {
+    private UseCaseInteractor.Callback<RecipeIngredientListResponse> responseCallback() {
+        return new UseCaseInteractor.Callback<RecipeIngredientListResponse>() {
             @Override
-            public void onSuccess(UseCaseRecipeIngredientListResponse response) {
+            public void onSuccess(RecipeIngredientListResponse response) {
 
             }
 
             @Override
-            public void onError(UseCaseRecipeIngredientListResponse response) {
+            public void onError(RecipeIngredientListResponse response) {
 
             }
         };

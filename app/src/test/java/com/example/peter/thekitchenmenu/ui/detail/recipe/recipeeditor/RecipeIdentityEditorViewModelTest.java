@@ -10,7 +10,7 @@ import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentity;
-import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.UseCaseTextValidator;
+import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeValidator;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
@@ -107,7 +107,7 @@ public class RecipeIdentityEditorViewModelTest {
         RecipeIdentity recipeIdentity = new RecipeIdentity(
                 repoMock, timeProviderMock
         );
-        UseCaseTextValidator useCaseTextValidator = new UseCaseTextValidator.Builder().
+        TextValidator textValidator = new TextValidator.Builder().
                 setShortTextMinLength(shortTextMinLength).
                 setShortTextMaxLength(shortTextMaxLength).
                 setLongTextMinLength(longTextMinLength).
@@ -117,7 +117,7 @@ public class RecipeIdentityEditorViewModelTest {
         return new RecipeIdentityEditorViewModel(
                 handler,
                 recipeIdentity,
-                useCaseTextValidator,
+                textValidator,
                 resourcesMock);
     }
 

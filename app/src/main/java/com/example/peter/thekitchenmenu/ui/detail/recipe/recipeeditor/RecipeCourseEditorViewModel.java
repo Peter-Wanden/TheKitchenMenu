@@ -65,7 +65,6 @@ public class RecipeCourseEditorViewModel
             request = new RecipeCourseRequest(
                     cloneFromRecipeId,
                     cloneToRecipeId,
-
                     null,
                     false
             );

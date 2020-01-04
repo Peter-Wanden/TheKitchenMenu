@@ -7,7 +7,7 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class RecipeIdentityModel implements PersistenceModel {
+public final class RecipeIdentityModel implements PersistenceModel {
     @Nonnull
     private final String id;
     @Nonnull

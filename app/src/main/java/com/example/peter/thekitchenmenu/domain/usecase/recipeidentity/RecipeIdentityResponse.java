@@ -4,7 +4,7 @@ import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
 
 import javax.annotation.Nonnull;
 
-public class RecipeIdentityResponse implements UseCaseInteractor.Response {
+public final class RecipeIdentityResponse implements UseCaseInteractor.Response {
 
     @Nonnull
     private final String recipeId;

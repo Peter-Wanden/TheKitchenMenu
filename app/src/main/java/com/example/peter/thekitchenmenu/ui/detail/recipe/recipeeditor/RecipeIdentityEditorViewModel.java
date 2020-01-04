@@ -15,7 +15,10 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIden
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.UseCaseTextValidator;
+import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
+import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorModel;
+import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorResponse;
 import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 
 import javax.annotation.Nonnull;
@@ -34,7 +37,7 @@ public class RecipeIdentityEditorViewModel
     @Nonnull
     private RecipeIdentity recipeIdentity;
     @Nonnull
-    private UseCaseTextValidator useCaseTextValidator;
+    private TextValidator textValidator;
     @Nonnull
     private Resources resources;
 
@@ -51,11 +54,11 @@ public class RecipeIdentityEditorViewModel
 
     public RecipeIdentityEditorViewModel(@Nonnull UseCaseHandler handler,
                                          @Nonnull RecipeIdentity recipeIdentity,
-                                         @Nonnull UseCaseTextValidator useCaseTextValidator,
+                                         @Nonnull TextValidator textValidator,
                                          @Nonnull Resources resources) {
         this.handler = handler;
         this.recipeIdentity = recipeIdentity;
-        this.useCaseTextValidator = useCaseTextValidator;
+        this.textValidator = textValidator;
         this.resources = resources;
         response = new RecipeIdentityResponse.Builder().getDefault().build();
     }
@@ -66,7 +69,7 @@ public class RecipeIdentityEditorViewModel
 
     @Override
     public void start(String recipeId) {
-        if (isNewInstantiationOrRecipeIdChanged(recipeId)) { // todo, don't think this check is required
+        if (isNewInstantiationOrRecipeIdChanged(recipeId)) { // todo, don't think this check is required??
             executeUseCaseRecipeIdentity(
                     recipeId,
                     RecipeIdentity.DO_NOT_CLONE,
@@ -85,8 +88,7 @@ public class RecipeIdentityEditorViewModel
     }
 
     private boolean isNewInstantiationOrRecipeIdChanged(String recipeId) {
-        return response.getRecipeId().isEmpty() ||
-                !response.getRecipeId().equals(recipeId);
+        return response.getRecipeId().isEmpty() || !response.getRecipeId().equals(recipeId);
     }
 
     private void executeUseCaseRecipeIdentity(String recipeId,
@@ -117,27 +119,27 @@ public class RecipeIdentityEditorViewModel
     private void validateTitle(String title) {
         titleErrorMessage.set(null);
 
-        UseCaseTextValidator.Request request = getTextValidatorRequest(
-                UseCaseTextValidator.RequestType.SHORT_TEXT,
+        TextValidatorRequest request = getTextValidatorRequest(
+                TextValidator.RequestType.SHORT_TEXT,
                 title
         );
         handler.execute(
-                useCaseTextValidator,
-                request, new UseCaseCommand.Callback<UseCaseTextValidator.Response>() {
+                textValidator,
+                request, new UseCaseCommand.Callback<TextValidatorResponse>() {
                     @Override
-                    public void onSuccess(UseCaseTextValidator.Response response) {
+                    public void onSuccess(TextValidatorResponse response) {
                         processShortTextValidationResponse(response);
                     }
 
                     @Override
-                    public void onError(UseCaseTextValidator.Response response) {
+                    public void onError(TextValidatorResponse response) {
                         processShortTextValidationResponse(response);
                     }
                 });
     }
 
-    private void processShortTextValidationResponse(UseCaseTextValidator.Response response) {
-        if (response.getResult() == UseCaseTextValidator.Result.VALID) {
+    private void processShortTextValidationResponse(TextValidatorResponse response) {
+        if (response.getResult() == TextValidator.Result.VALID) {
 
             executeUseCaseRecipeIdentity(RecipeIdentityModel.Builder.
                     basedOn(this.response.getModel()).
@@ -164,29 +166,29 @@ public class RecipeIdentityEditorViewModel
     private void validateDescription(String description) {
         descriptionErrorMessage.set(null);
 
-        UseCaseTextValidator.Request request = getTextValidatorRequest(
-                UseCaseTextValidator.RequestType.LONG_TEXT,
+        TextValidatorRequest request = getTextValidatorRequest(
+                TextValidator.RequestType.LONG_TEXT,
                 description
         );
 
         handler.execute(
-                useCaseTextValidator,
+                textValidator,
                 request,
-                new UseCaseCommand.Callback<UseCaseTextValidator.Response>() {
+                new UseCaseCommand.Callback<TextValidatorResponse>() {
                     @Override
-                    public void onSuccess(UseCaseTextValidator.Response response) {
+                    public void onSuccess(TextValidatorResponse response) {
                         processLongTextValidationResponse(response);
                     }
 
                     @Override
-                    public void onError(UseCaseTextValidator.Response response) {
+                    public void onError(TextValidatorResponse response) {
                         processLongTextValidationResponse(response);
                     }
                 });
     }
 
-    private void processLongTextValidationResponse(UseCaseTextValidator.Response response) {
-        if (response.getResult() == UseCaseTextValidator.Result.VALID) {
+    private void processLongTextValidationResponse(TextValidatorResponse response) {
+        if (response.getResult() == TextValidator.Result.VALID) {
 
             executeUseCaseRecipeIdentity(RecipeIdentityModel.Builder.
                     basedOn(this.response.getModel()).
@@ -199,22 +201,22 @@ public class RecipeIdentityEditorViewModel
         }
     }
 
-    private UseCaseTextValidator.Request getTextValidatorRequest(
-            UseCaseTextValidator.RequestType type, String textToValidate) {
-        return new UseCaseTextValidator.Request(
+    private TextValidatorRequest getTextValidatorRequest(
+            TextValidator.RequestType type, String textToValidate) {
+        return new TextValidatorRequest(
                 type,
-                new UseCaseTextValidator.Model(textToValidate));
+                new TextValidatorModel(textToValidate));
     }
 
     private void setError(ObservableField<String> errorObservable,
-                          UseCaseTextValidator.Response response) {
-        if (response.getResult() == UseCaseTextValidator.Result.TOO_SHORT) {
+                          TextValidatorResponse response) {
+        if (response.getResult() == TextValidator.Result.TOO_SHORT) {
             errorObservable.set(resources.getString(
                     R.string.input_error_text_too_short,
                     response.getMinLength(),
                     response.getMaxLength()));
 
-        } else if (response.getResult() == UseCaseTextValidator.Result.TOO_LONG) {
+        } else if (response.getResult() == TextValidator.Result.TOO_LONG) {
             errorObservable.set(resources.getString(
                     R.string.input_error_text_too_long,
                     response.getMinLength(),

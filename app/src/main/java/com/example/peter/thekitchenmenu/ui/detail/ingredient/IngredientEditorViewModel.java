@@ -13,7 +13,10 @@ import com.example.peter.thekitchenmenu.domain.usecase.ingredient.Ingredient;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientModel;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.UseCaseTextValidator;
+import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
+import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorModel;
+import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorResponse;
 
 public class IngredientEditorViewModel extends ViewModel {
 
@@ -21,7 +24,7 @@ public class IngredientEditorViewModel extends ViewModel {
 
     private Resources resources;
     private UseCaseHandler handler;
-    private UseCaseTextValidator useCaseTextValidator;
+    private TextValidator textValidator;
     private Ingredient ingredient;
     private AddEditIngredientNavigator navigator;
 
@@ -40,11 +43,11 @@ public class IngredientEditorViewModel extends ViewModel {
 
     public IngredientEditorViewModel(Resources resources,
                                      UseCaseHandler handler,
-                                     UseCaseTextValidator useCaseTextValidator,
+                                     TextValidator textValidator,
                                      Ingredient ingredient) {
         this.resources = resources;
         this.handler = handler;
-        this.useCaseTextValidator = useCaseTextValidator;
+        this.textValidator = textValidator;
         this.ingredient = ingredient;
     }
 
@@ -102,28 +105,28 @@ public class IngredientEditorViewModel extends ViewModel {
     private void validateName(String name) {
         showNameError.set(null);
         // todo - strip out html
-        UseCaseTextValidator.Request request = new UseCaseTextValidator.Request(
-                UseCaseTextValidator.RequestType.SHORT_TEXT,
-                new UseCaseTextValidator.Model(name)
+        TextValidatorRequest request = new TextValidatorRequest(
+                TextValidator.RequestType.SHORT_TEXT,
+                new TextValidatorModel(name)
         );
         handler.execute(
-                useCaseTextValidator,
+                textValidator,
                 request,
-                new UseCaseCommand.Callback<UseCaseTextValidator.Response>() {
+                new UseCaseCommand.Callback<TextValidatorResponse>() {
                     @Override
-                    public void onSuccess(UseCaseTextValidator.Response response) {
+                    public void onSuccess(TextValidatorResponse response) {
                         processNameTextValidationResponse(response);
                     }
 
                     @Override
-                    public void onError(UseCaseTextValidator.Response response) {
+                    public void onError(TextValidatorResponse response) {
                         processNameTextValidationResponse(response);
                     }
                 });
     }
 
-    private void processNameTextValidationResponse(UseCaseTextValidator.Response response) {
-        if (response.getResult() == UseCaseTextValidator.Result.VALID) {
+    private void processNameTextValidationResponse(TextValidatorResponse response) {
+        if (response.getResult() == TextValidator.Result.VALID) {
 
             IngredientModel model = IngredientModel.Builder.
                     basedOn(ingredientResponse.getModel()).
@@ -150,30 +153,30 @@ public class IngredientEditorViewModel extends ViewModel {
     private void validateDescription(String description) {
         showDescriptionError.set(null);
 
-        UseCaseTextValidator.Request request = new UseCaseTextValidator.Request(
-                UseCaseTextValidator.RequestType.LONG_TEXT,
-                new UseCaseTextValidator.Model(description)
+        TextValidatorRequest request = new TextValidatorRequest(
+                TextValidator.RequestType.LONG_TEXT,
+                new TextValidatorModel(description)
         );
 
         handler.execute(
-                useCaseTextValidator,
+                textValidator,
                 request,
-                new UseCaseCommand.Callback<UseCaseTextValidator.Response>() {
+                new UseCaseCommand.Callback<TextValidatorResponse>() {
                     @Override
-                    public void onSuccess(UseCaseTextValidator.Response response) {
+                    public void onSuccess(TextValidatorResponse response) {
                         processDescriptionTextValidationResponse(response);
                     }
 
                     @Override
-                    public void onError(UseCaseTextValidator.Response response) {
+                    public void onError(TextValidatorResponse response) {
                         processDescriptionTextValidationResponse(response);
                     }
                 });
     }
 
-    private void processDescriptionTextValidationResponse(UseCaseTextValidator.Response
+    private void processDescriptionTextValidationResponse(TextValidatorResponse
                                                                   longTextResponse) {
-        if (longTextResponse.getResult() == UseCaseTextValidator.Result.VALID) {
+        if (longTextResponse.getResult() == TextValidator.Result.VALID) {
 
             IngredientModel model = IngredientModel.Builder.
                     basedOn(ingredientResponse.getModel()).
@@ -261,15 +264,15 @@ public class IngredientEditorViewModel extends ViewModel {
     }
 
     private void setError(ObservableField<String> errorObservable,
-                          UseCaseTextValidator.Response response) {
+                          TextValidatorResponse response) {
 
-        if (response.getResult() == UseCaseTextValidator.Result.TOO_SHORT) {
+        if (response.getResult() == TextValidator.Result.TOO_SHORT) {
             errorObservable.set(resources.getString(
                     R.string.input_error_text_too_short,
                     response.getMinLength(),
                     response.getMaxLength()));
 
-        } else if (response.getResult() == UseCaseTextValidator.Result.TOO_LONG) {
+        } else if (response.getResult() == TextValidator.Result.TOO_LONG) {
             errorObservable.set(resources.getString(
                     R.string.input_error_text_too_long,
                     response.getMinLength(),

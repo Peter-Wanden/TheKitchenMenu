@@ -6,11 +6,11 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-public class UseCaseRecipeIngredientListResponse implements UseCaseInteractor.Response {
+public final class RecipeIngredientListResponse implements UseCaseInteractor.Response {
     @Nonnull
     private final List<RecipeIngredientListItemModel> listItemModels;
 
-    public UseCaseRecipeIngredientListResponse(
+    public RecipeIngredientListResponse(
             @Nonnull List<RecipeIngredientListItemModel> listItemModels) {
         this.listItemModels = listItemModels;
     }

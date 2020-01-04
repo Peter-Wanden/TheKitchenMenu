@@ -20,10 +20,10 @@ import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 /**
  * Calculates the measurement of an ingredient for a single portion of a recipe.
  */
-public class UseCaseIngredientCalculator
-        extends UseCaseInteractor<UseCaseIngredientCalculatorRequest, UseCaseIngredientCalculatorResponse> {
+public class IngredientCalculator
+        extends UseCaseInteractor<IngredientCalculatorRequest, IngredientCalculatorResponse> {
 
-    private static final String TAG = "tkm-" + UseCaseIngredientCalculator.class.getSimpleName() + " ";
+    private static final String TAG = "tkm-" + IngredientCalculator.class.getSimpleName() + " ";
 
     public enum ResultStatus {
         QUANTITY_DATA_NOT_AVAILABLE,
@@ -64,11 +64,11 @@ public class UseCaseIngredientCalculator
     private RecipeIngredientQuantityEntity quantityEntity;
     private IngredientEntity ingredientEntity;
 
-    public UseCaseIngredientCalculator(RepositoryRecipePortions portionsRepository,
-                                       RepositoryRecipeIngredient recipeIngredientRepository,
-                                       RepositoryIngredient ingredientRepository,
-                                       UniqueIdProvider idProvider,
-                                       TimeProvider timeProvider) {
+    public IngredientCalculator(RepositoryRecipePortions portionsRepository,
+                                RepositoryRecipeIngredient recipeIngredientRepository,
+                                RepositoryIngredient ingredientRepository,
+                                UniqueIdProvider idProvider,
+                                TimeProvider timeProvider) {
         this.portionsRepository = portionsRepository;
         this.recipeIngredientRepository = recipeIngredientRepository;
         this.ingredientRepository = ingredientRepository;
@@ -77,7 +77,7 @@ public class UseCaseIngredientCalculator
     }
 
     @Override
-    protected void execute(UseCaseIngredientCalculatorRequest request) {
+    protected void execute(IngredientCalculatorRequest request) {
         if (isNewInstantiation()) {
             extractIdsAndStart(request);
         } else {
@@ -89,7 +89,7 @@ public class UseCaseIngredientCalculator
         return recipeIngredientId.isEmpty();
     }
 
-    private void extractIdsAndStart(UseCaseIngredientCalculatorRequest request) {
+    private void extractIdsAndStart(IngredientCalculatorRequest request) {
         if (isRecipeIngredientIdProvided(request)) {
             start(request.getRecipeIngredientId());
         } else {
@@ -97,7 +97,7 @@ public class UseCaseIngredientCalculator
         }
     }
 
-    private boolean isRecipeIngredientIdProvided(UseCaseIngredientCalculatorRequest request) {
+    private boolean isRecipeIngredientIdProvided(IngredientCalculatorRequest request) {
         return !request.getRecipeIngredientId().isEmpty();
     }
 
@@ -137,7 +137,7 @@ public class UseCaseIngredientCalculator
                     public void onEntityLoaded(RecipeIngredientQuantityEntity quantityEntity) {
                         recipeId = quantityEntity.getRecipeId();
                         ingredientId = quantityEntity.getIngredientId();
-                        UseCaseIngredientCalculator.this.quantityEntity = quantityEntity;
+                        IngredientCalculator.this.quantityEntity = quantityEntity;
                         loadIngredient();
                     }
 
@@ -155,7 +155,7 @@ public class UseCaseIngredientCalculator
                     @Override
                     public void onEntityLoaded(IngredientEntity ingredientEntity) {
                         ingredientId = ingredientEntity.getId();
-                        UseCaseIngredientCalculator.this.ingredientEntity = ingredientEntity;
+                        IngredientCalculator.this.ingredientEntity = ingredientEntity;
                         loadPortions();
                     }
 
@@ -185,7 +185,7 @@ public class UseCaseIngredientCalculator
     }
 
     private void returnDataNotAvailable(ResultStatus status) {
-        UseCaseIngredientCalculatorResponse response = new UseCaseIngredientCalculatorResponse(
+        IngredientCalculatorResponse response = new IngredientCalculatorResponse(
                 UnitOfMeasureConstants.DEFAULT_MEASUREMENT_MODEL,
                 status);
 
@@ -321,13 +321,13 @@ public class UseCaseIngredientCalculator
 
     private void returnResult() {
         saveIfValid();
-        UseCaseIngredientCalculatorResponse response = getResponse();
+        IngredientCalculatorResponse response = getResponse();
         resetResults();
         getUseCaseCallback().onSuccess(response);
     }
 
-    private UseCaseIngredientCalculatorResponse getResponse() {
-        return new UseCaseIngredientCalculatorResponse(
+    private IngredientCalculatorResponse getResponse() {
+        return new IngredientCalculatorResponse(
                 existingModel,
                 getResultStatus());
     }

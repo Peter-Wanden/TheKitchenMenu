@@ -16,9 +16,9 @@ import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.ConversionFactorStatus;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientcalculator.UseCaseIngredientCalculator;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientcalculator.UseCaseIngredientCalculatorRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientcalculator.UseCaseIngredientCalculatorResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientcalculator.IngredientCalculator;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientcalculator.IngredientCalculatorRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientcalculator.IngredientCalculatorResponse;
 import com.example.peter.thekitchenmenu.testdata.TestDataIngredientEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIngredientQuantityEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipePortionsEntity;
@@ -54,42 +54,42 @@ public class RecipeIngredientMeasurementViewModelTest {
     // endregion - ERROR MESSAGES
 
     // region - USE CASE PORTION REQUEST/RESPONSE TEST DATA
-    private UseCaseIngredientCalculatorRequest REQUEST_EMPTY_FOUR_PORTIONS =
+    private IngredientCalculatorRequest REQUEST_EMPTY_FOUR_PORTIONS =
             TestDataUseCasePortionCalculatorRequestResponse.getRequestEmptyFourPortions();
-    private UseCaseIngredientCalculatorResponse RESPONSE_EMPTY_FOUR_PORTIONS =
+    private IngredientCalculatorResponse RESPONSE_EMPTY_FOUR_PORTIONS =
             TestDataUseCasePortionCalculatorRequestResponse.getResponseEmptyFourPortions();
 
-    private UseCaseIngredientCalculatorRequest REQUEST_INVALID_TOTAL_UNIT_ONE =
+    private IngredientCalculatorRequest REQUEST_INVALID_TOTAL_UNIT_ONE =
             TestDataUseCasePortionCalculatorRequestResponse.getRequestInvalidTotalUnitOne();
 
-    private UseCaseIngredientCalculatorRequest REQUEST_VALID_UNIT_ONE =
+    private IngredientCalculatorRequest REQUEST_VALID_UNIT_ONE =
             TestDataUseCasePortionCalculatorRequestResponse.getRequestValidTotalUnitOne();
-    private UseCaseIngredientCalculatorResponse RESPONSE_VALID_UNIT_ONE =
+    private IngredientCalculatorResponse RESPONSE_VALID_UNIT_ONE =
             TestDataUseCasePortionCalculatorRequestResponse.getResponseValidTotalUnitOne();
 
-    private UseCaseIngredientCalculatorRequest REQUEST_INVALID_UNIT_TWO =
+    private IngredientCalculatorRequest REQUEST_INVALID_UNIT_TWO =
             TestDataUseCasePortionCalculatorRequestResponse.getRequestInvalidTotalUnitTwo();
 
-    private UseCaseIngredientCalculatorRequest REQUEST_VALID_UNIT_TWO =
+    private IngredientCalculatorRequest REQUEST_VALID_UNIT_TWO =
             TestDataUseCasePortionCalculatorRequestResponse.getRequestValidTotalUnitTwo();
-    private UseCaseIngredientCalculatorResponse RESPONSE_VALID_UNIT_TWO =
+    private IngredientCalculatorResponse RESPONSE_VALID_UNIT_TWO =
             TestDataUseCasePortionCalculatorRequestResponse.getResponseValidTotalUnitTwo();
 
-    private UseCaseIngredientCalculatorRequest REQUEST_UNIT_OF_MEASURE_IMPERIAL_SPOON =
+    private IngredientCalculatorRequest REQUEST_UNIT_OF_MEASURE_IMPERIAL_SPOON =
             TestDataUseCasePortionCalculatorRequestResponse.
                     getRequestUnitOfMeasureChangeImperialSpoon();
 
-    private UseCaseIngredientCalculatorRequest REQUEST_INVALID_CONVERSION_FACTOR =
+    private IngredientCalculatorRequest REQUEST_INVALID_CONVERSION_FACTOR =
             TestDataUseCasePortionCalculatorRequestResponse.
                     getRequestNewValidImperialSpoonInvalidConversionFactor();
 
-    private UseCaseIngredientCalculatorRequest REQUEST_VALID_CONVERSION_FACTOR =
+    private IngredientCalculatorRequest REQUEST_VALID_CONVERSION_FACTOR =
             TestDataUseCasePortionCalculatorRequestResponse.
                     getRequestNewValidImperialSpoonValidConversionFactor();
 
-    private UseCaseIngredientCalculatorRequest REQUEST_EXISTING_IMPERIAL_SPOON =
+    private IngredientCalculatorRequest REQUEST_EXISTING_IMPERIAL_SPOON =
             TestDataUseCasePortionCalculatorRequestResponse.getRequestExistingValidImperialSpoon();
-    private UseCaseIngredientCalculatorResponse RESPONSE_EXISTING_IMPERIAL_SPOON =
+    private IngredientCalculatorResponse RESPONSE_EXISTING_IMPERIAL_SPOON =
             TestDataUseCasePortionCalculatorRequestResponse.getResponseExistingImperialSpoon();
     // endregion - USE CASE PORTION REQUEST/RESPONSE TEST DATA
 
@@ -167,7 +167,7 @@ public class RecipeIngredientMeasurementViewModelTest {
 
     private RecipeIngredientMeasurementViewModel givenViewModel() {
         UseCaseHandler useCaseHandler = new UseCaseHandler(new UseCaseSchedulerMock());
-        UseCaseIngredientCalculator portionCalculator = new UseCaseIngredientCalculator(
+        IngredientCalculator portionCalculator = new IngredientCalculator(
                 repoPortionsMock,
                 repoRecipeIngredientMock,
                 repoIngredientMock,

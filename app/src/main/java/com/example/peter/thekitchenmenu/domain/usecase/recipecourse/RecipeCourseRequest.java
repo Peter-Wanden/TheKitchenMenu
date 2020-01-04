@@ -7,7 +7,7 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class RecipeCourseRequest implements UseCaseInteractor.Request {
+public final class RecipeCourseRequest implements UseCaseInteractor.Request {
     @Nonnull
     private final String recipeId;
     @Nonnull
@@ -61,6 +61,7 @@ public class RecipeCourseRequest implements UseCaseInteractor.Request {
         return Objects.hash(recipeId, cloneToRecipeId, course, addCourse);
     }
 
+    @Nonnull
     @Override
     public String toString() {
         return "Request{" +

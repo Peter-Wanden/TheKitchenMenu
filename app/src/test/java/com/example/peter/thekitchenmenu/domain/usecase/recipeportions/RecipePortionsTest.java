@@ -13,14 +13,14 @@ import com.example.peter.thekitchenmenu.testdata.TestDataRecipePortionsEntity;
 import org.junit.*;
 import org.mockito.*;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipeportions.UseCaseRecipePortions.DO_NOT_CLONE;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortions.DO_NOT_CLONE;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
-public class UseCaseRecipePortionsTest {
+public class RecipePortionsTest {
 
     // region constants ----------------------------------------------------------------------------
     private final RecipePortionsEntity NEW_EMPTY =
@@ -55,12 +55,12 @@ public class UseCaseRecipePortionsTest {
     TimeProvider timeProviderMock;
     @Mock
     UniqueIdProvider idProviderMock;
-    private UseCaseRecipePortions.Response actualResponse;
+    private RecipePortionsResponse actualResponse;
     private int maxServings = TestDataRecipePortionsEntity.getMaxServings();
     private int maxSittings = TestDataRecipePortionsEntity.getMaxSittings();
     // endregion helper fields ---------------------------------------------------------------------
 
-    private UseCaseRecipePortions SUT;
+    private RecipePortions SUT;
 
     @Before
     public void setup() {
@@ -69,8 +69,8 @@ public class UseCaseRecipePortionsTest {
         SUT = givenUseCase();
     }
 
-    private UseCaseRecipePortions givenUseCase() {
-        return new UseCaseRecipePortions(
+    private RecipePortions givenUseCase() {
+        return new RecipePortions(
                 timeProviderMock, idProviderMock, repoMock, maxServings, maxSittings
         );
     }
@@ -81,10 +81,10 @@ public class UseCaseRecipePortionsTest {
         whenIdProviderReturn(NEW_EMPTY.getId());
         whenTimeProviderReturn(NEW_EMPTY.getCreateDate());
 
-        UseCaseRecipePortions.Request request = new UseCaseRecipePortions.Request.Builder().
+        RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                 getDefault().setRecipeId(NEW_EMPTY.getRecipeId()).build();
 
-        UseCaseRecipePortions.Model expectedResponseModel = getModelFromEntity(NEW_EMPTY);
+        RecipePortionsModel expectedResponseModel = getModelFromEntity(NEW_EMPTY);
         // Act
         handler.execute(SUT, request, getCallback());
         simulateNothingReturnedFromDatabase();
@@ -98,13 +98,13 @@ public class UseCaseRecipePortionsTest {
         whenIdProviderReturn(NEW_EMPTY.getId());
         whenTimeProviderReturn(NEW_EMPTY.getCreateDate());
 
-        UseCaseRecipePortions.Request request = new UseCaseRecipePortions.Request.Builder().
+        RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                 getDefault().setRecipeId(NEW_EMPTY.getRecipeId()).build();
         // Act
         handler.execute(SUT, request, getCallback());
         simulateNothingReturnedFromDatabase();
         // Assert
-        assertEquals(UseCaseRecipePortions.Result.VALID_UNCHANGED, actualResponse.getResult());
+        assertEquals(RecipePortions.Result.VALID_UNCHANGED, actualResponse.getResult());
     }
 
     @Test
@@ -113,14 +113,14 @@ public class UseCaseRecipePortionsTest {
         whenIdProviderReturn(NEW_EMPTY.getId());
         whenTimeProviderReturn(NEW_EMPTY.getCreateDate());
 
-        UseCaseRecipePortions.Request request = new UseCaseRecipePortions.Request.Builder().
+        RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                 getDefault().setRecipeId(NEW_EMPTY.getRecipeId()).build();
 
         handler.execute(SUT, request, getCallback());
         simulateNothingReturnedFromDatabase();
         // Act
-        UseCaseRecipePortions.Model invalidModel = getModelFromEntity(NEW_INVALID);
-        UseCaseRecipePortions.Request invalidRequest = new UseCaseRecipePortions.Request.Builder().
+        RecipePortionsModel invalidModel = getModelFromEntity(NEW_INVALID);
+        RecipePortionsRequest invalidRequest = new RecipePortionsRequest.Builder().
                 setRecipeId(NEW_EMPTY.getRecipeId()).
                 setCloneToRecipeId(DO_NOT_CLONE).
                 setModel(invalidModel).
@@ -128,7 +128,7 @@ public class UseCaseRecipePortionsTest {
 
         handler.execute(SUT, invalidRequest, getCallback());
         // Assert
-        assertEquals(UseCaseRecipePortions.Result.INVALID_CHANGED, actualResponse.getResult());
+        assertEquals(RecipePortions.Result.INVALID_CHANGED, actualResponse.getResult());
     }
 
     @Test
@@ -137,14 +137,14 @@ public class UseCaseRecipePortionsTest {
         whenIdProviderReturn(NEW_EMPTY.getId());
         whenTimeProviderReturn(NEW_EMPTY.getCreateDate());
 
-        UseCaseRecipePortions.Request request = new UseCaseRecipePortions.Request.Builder().
+        RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                 getDefault().setRecipeId(NEW_EMPTY.getRecipeId()).build();
 
         handler.execute(SUT, request, getCallback());
         simulateNothingReturnedFromDatabase();
         // Act
-        UseCaseRecipePortions.Model invalidModel = getModelFromEntity(NEW_INVALID_SERVINGS_VALID_SITTINGS);
-        UseCaseRecipePortions.Request invalidRequest = new UseCaseRecipePortions.Request.Builder().
+        RecipePortionsModel invalidModel = getModelFromEntity(NEW_INVALID_SERVINGS_VALID_SITTINGS);
+        RecipePortionsRequest invalidRequest = new RecipePortionsRequest.Builder().
                 setRecipeId(NEW_EMPTY.getId()).
                 setRecipeId(NEW_EMPTY.getRecipeId()).
                 setCloneToRecipeId(DO_NOT_CLONE).
@@ -152,7 +152,7 @@ public class UseCaseRecipePortionsTest {
                 build();
         handler.execute(SUT, invalidRequest, getCallback());
         // Assert
-        assertEquals(UseCaseRecipePortions.Result.INVALID_CHANGED, actualResponse.getResult());
+        assertEquals(RecipePortions.Result.INVALID_CHANGED, actualResponse.getResult());
     }
 
     @Test
@@ -161,14 +161,14 @@ public class UseCaseRecipePortionsTest {
         whenIdProviderReturn(NEW_EMPTY.getId());
         whenTimeProviderReturn(NEW_EMPTY.getCreateDate());
 
-        UseCaseRecipePortions.Request request = new UseCaseRecipePortions.Request.Builder().
+        RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                 getDefault().setRecipeId(NEW_EMPTY.getRecipeId()).build();
 
         handler.execute(SUT, request, getCallback());
         simulateNothingReturnedFromDatabase();
         // Act
-        UseCaseRecipePortions.Model invalidModel = getModelFromEntity(NEW_VALID_SERVINGS_INVALID_SITTINGS);
-        UseCaseRecipePortions.Request invalidRequest = new UseCaseRecipePortions.Request.Builder().
+        RecipePortionsModel invalidModel = getModelFromEntity(NEW_VALID_SERVINGS_INVALID_SITTINGS);
+        RecipePortionsRequest invalidRequest = new RecipePortionsRequest.Builder().
                 setRecipeId(NEW_EMPTY.getId()).
                 setRecipeId(NEW_EMPTY.getRecipeId()).
                 setCloneToRecipeId(DO_NOT_CLONE).
@@ -176,7 +176,7 @@ public class UseCaseRecipePortionsTest {
                 build();
         handler.execute(SUT, invalidRequest, getCallback());
         // Assert
-        assertEquals(UseCaseRecipePortions.Result.INVALID_CHANGED, actualResponse.getResult());
+        assertEquals(RecipePortions.Result.INVALID_CHANGED, actualResponse.getResult());
     }
 
     @Test
@@ -185,14 +185,14 @@ public class UseCaseRecipePortionsTest {
         whenIdProviderReturn(NEW_EMPTY.getId());
         whenTimeProviderReturn(NEW_EMPTY.getCreateDate());
 
-        UseCaseRecipePortions.Request request = new UseCaseRecipePortions.Request.Builder().
+        RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                 getDefault().setRecipeId(NEW_EMPTY.getRecipeId()).build();
 
         handler.execute(SUT, request, getCallback());
         simulateNothingReturnedFromDatabase();
         // Act
-        UseCaseRecipePortions.Model validModel = getModelFromEntity(NEW_VALID);
-        UseCaseRecipePortions.Request validRequest = new UseCaseRecipePortions.Request.Builder().
+        RecipePortionsModel validModel = getModelFromEntity(NEW_VALID);
+        RecipePortionsRequest validRequest = new RecipePortionsRequest.Builder().
                 setRecipeId(NEW_EMPTY.getId()).
                 setRecipeId(NEW_EMPTY.getRecipeId()).
                 setCloneToRecipeId(DO_NOT_CLONE).
@@ -200,7 +200,7 @@ public class UseCaseRecipePortionsTest {
                 build();
         handler.execute(SUT, validRequest, getCallback());
         // Assert
-        assertEquals(UseCaseRecipePortions.Result.VALID_CHANGED, actualResponse.getResult());
+        assertEquals(RecipePortions.Result.VALID_CHANGED, actualResponse.getResult());
     }
 
     @Test
@@ -209,14 +209,14 @@ public class UseCaseRecipePortionsTest {
         whenIdProviderReturn(NEW_EMPTY.getId());
         whenTimeProviderReturn(NEW_EMPTY.getCreateDate());
 
-        UseCaseRecipePortions.Request request = new UseCaseRecipePortions.Request.Builder().
+        RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                 getDefault().setRecipeId(NEW_EMPTY.getRecipeId()).build();
 
         handler.execute(SUT, request, getCallback());
         simulateNothingReturnedFromDatabase();
         // Act
-        UseCaseRecipePortions.Model validModel = getModelFromEntity(NEW_VALID);
-        UseCaseRecipePortions.Request validRequest = new UseCaseRecipePortions.Request.Builder().
+        RecipePortionsModel validModel = getModelFromEntity(NEW_VALID);
+        RecipePortionsRequest validRequest = new RecipePortionsRequest.Builder().
                 setRecipeId(NEW_EMPTY.getId()).
                 setRecipeId(NEW_EMPTY.getRecipeId()).
                 setCloneToRecipeId(DO_NOT_CLONE).
@@ -230,34 +230,34 @@ public class UseCaseRecipePortionsTest {
     @Test
     public void existingRecipeId_validRecipeId_resultVALID_UNCHANGED() {
         // Arrange
-        UseCaseRecipePortions.Request request = new UseCaseRecipePortions.Request.Builder().
+        RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                 getDefault().
                 setRecipeId(EXISTING_VALID.getRecipeId()).
                 build();
         // Act
         handler.execute(SUT, request, getCallback());
         simulateExistingValidReturnedFromDatabase();
-        UseCaseRecipePortions.Model expectedModel = getModelFromEntity(EXISTING_VALID);
+        RecipePortionsModel expectedModel = getModelFromEntity(EXISTING_VALID);
         // Assert
         assertEquals(expectedModel, actualResponse.getModel());
-        assertEquals(UseCaseRecipePortions.Result.VALID_UNCHANGED, actualResponse.getResult());
+        assertEquals(RecipePortions.Result.VALID_UNCHANGED, actualResponse.getResult());
     }
 
     @Test
     public void existingRecipeId_invalidUpdatedServings_invalidValueNotSaved() {
         // Arrange
-        UseCaseRecipePortions.Request request = new UseCaseRecipePortions.Request.Builder().
+        RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                 getDefault().
                 setRecipeId(EXISTING_VALID.getRecipeId()).
                 build();
         handler.execute(SUT, request, getCallback());
         simulateExistingValidReturnedFromDatabase();
         // Act
-        UseCaseRecipePortions.Model invalidModel = UseCaseRecipePortions.Model.Builder.
+        RecipePortionsModel invalidModel = RecipePortionsModel.Builder.
                 basedOn(actualResponse.getModel()).
                 setServings(NEW_INVALID.getServings()).
                 build();
-        UseCaseRecipePortions.Request invalidRequest = UseCaseRecipePortions.Request.Builder.
+        RecipePortionsRequest invalidRequest = RecipePortionsRequest.Builder.
                 basedOnRequest(request).setModel(invalidModel).build();
         handler.execute(SUT, invalidRequest, getCallback());
         // Assert
@@ -267,18 +267,19 @@ public class UseCaseRecipePortionsTest {
     @Test
     public void existingRecipeId_validUpdatedServings_saved() {
         // Arrange
-        UseCaseRecipePortions.Request request = new UseCaseRecipePortions.Request.Builder().
+        whenTimeProviderReturn(EXISTING_VALID_UPDATED_SERVINGS.getLastUpdate());
+        RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                 getDefault().
                 setRecipeId(EXISTING_VALID_UPDATED_SERVINGS.getRecipeId()).
                 build();
         handler.execute(SUT, request, getCallback());
         simulateExistingValidReturnedFromDatabase();
         // Act
-        UseCaseRecipePortions.Model validModel = UseCaseRecipePortions.Model.Builder.
+        RecipePortionsModel validModel = RecipePortionsModel.Builder.
                 basedOn(actualResponse.getModel()).
                 setServings(EXISTING_VALID_UPDATED_SERVINGS.getServings()).
                 build();
-        UseCaseRecipePortions.Request validRequest = UseCaseRecipePortions.Request.Builder.
+        RecipePortionsRequest validRequest = RecipePortionsRequest.Builder.
                 basedOnRequest(request).setModel(validModel).build();
         handler.execute(SUT, validRequest, getCallback());
         // Assert
@@ -287,18 +288,18 @@ public class UseCaseRecipePortionsTest {
 
     @Test
     public void existingRecipeId_invalidUpdatedSittings_invalidValueNotSaved() {
-        UseCaseRecipePortions.Request request = new UseCaseRecipePortions.Request.Builder().
+        RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                 getDefault().
                 setRecipeId(EXISTING_VALID.getRecipeId()).
                 build();
         handler.execute(SUT, request, getCallback());
         simulateExistingValidReturnedFromDatabase();
         // Act
-        UseCaseRecipePortions.Model invalidModel = UseCaseRecipePortions.Model.Builder.
+        RecipePortionsModel invalidModel = RecipePortionsModel.Builder.
                 basedOn(actualResponse.getModel()).
                 setSittings(NEW_INVALID.getSittings()).
                 build();
-        UseCaseRecipePortions.Request invalidRequest = UseCaseRecipePortions.Request.Builder.
+        RecipePortionsRequest invalidRequest = RecipePortionsRequest.Builder.
                 basedOnRequest(request).setModel(invalidModel).build();
         handler.execute(SUT, invalidRequest, getCallback());
         // Assert
@@ -308,18 +309,19 @@ public class UseCaseRecipePortionsTest {
     @Test
     public void existingRecipeId_validUpdatedSittings_saved() {
         // Arrange
-        UseCaseRecipePortions.Request request = new UseCaseRecipePortions.Request.Builder().
+        whenTimeProviderReturn(EXISTING_VALID_UPDATED_SITTINGS.getLastUpdate());
+        RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                 getDefault().
                 setRecipeId(EXISTING_VALID_UPDATED_SITTINGS.getRecipeId()).
                 build();
         handler.execute(SUT, request, getCallback());
         simulateExistingValidReturnedFromDatabase();
         // Act
-        UseCaseRecipePortions.Model validModel = UseCaseRecipePortions.Model.Builder.
+        RecipePortionsModel validModel = RecipePortionsModel.Builder.
                 basedOn(actualResponse.getModel()).
                 setSittings(EXISTING_VALID_UPDATED_SITTINGS.getSittings()).
                 build();
-        UseCaseRecipePortions.Request validRequest = UseCaseRecipePortions.Request.Builder.
+        RecipePortionsRequest validRequest = RecipePortionsRequest.Builder.
                 basedOnRequest(request).setModel(validModel).build();
         handler.execute(SUT, validRequest, getCallback());
         // Assert
@@ -331,7 +333,7 @@ public class UseCaseRecipePortionsTest {
         // Arrange
         whenIdProviderReturn(EXISTING_VALID_CLONE.getId());
         whenTimeProviderReturn(EXISTING_VALID_CLONE.getCreateDate());
-        UseCaseRecipePortions.Request request = new UseCaseRecipePortions.Request.Builder().
+        RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                 getDefault().
                 setRecipeId(EXISTING_VALID.getRecipeId()).
                 setCloneToRecipeId(EXISTING_VALID_CLONE.getRecipeId()).
@@ -348,7 +350,7 @@ public class UseCaseRecipePortionsTest {
         // Arrange
         whenIdProviderReturn(EXISTING_VALID_CLONE.getId());
         whenTimeProviderReturn(EXISTING_VALID_CLONE.getCreateDate());
-        UseCaseRecipePortions.Request request = new UseCaseRecipePortions.Request.Builder().
+        RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                 getDefault().
                 setRecipeId(EXISTING_VALID.getRecipeId()).
                 setCloneToRecipeId(EXISTING_VALID_CLONE.getRecipeId()).
@@ -357,14 +359,14 @@ public class UseCaseRecipePortionsTest {
         handler.execute(SUT, request, getCallback());
         simulateExistingValidReturnedFromDatabase();
         // Assert
-        assertEquals(UseCaseRecipePortions.Result.VALID_UNCHANGED, actualResponse.getResult());
+        assertEquals(RecipePortions.Result.VALID_UNCHANGED, actualResponse.getResult());
     }
 
     @Test
     public void existingAndCloneToRecipeId_savedWithUpdatedSittingsServings() {
         whenIdProviderReturn(EXISTING_VALID_CLONE.getId());
         whenTimeProviderReturn(EXISTING_VALID_CLONE.getCreateDate());
-        UseCaseRecipePortions.Request request = new UseCaseRecipePortions.Request.Builder().
+        RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                 getDefault().
                 setRecipeId(EXISTING_VALID.getRecipeId()).
                 setCloneToRecipeId(EXISTING_VALID_CLONE.getRecipeId()).
@@ -372,11 +374,11 @@ public class UseCaseRecipePortionsTest {
         handler.execute(SUT, request, getCallback());
         simulateExistingValidReturnedFromDatabase();
         // Act
-        UseCaseRecipePortions.Model updatedServingsModel = UseCaseRecipePortions.Model.Builder.
+        RecipePortionsModel updatedServingsModel = RecipePortionsModel.Builder.
                 basedOn(actualResponse.getModel()).
                 setServings(EXISTING_VALID_CLONE_UPDATED_SITTINGS_SERVINGS.getServings()).
                 build();
-        UseCaseRecipePortions.Request updatedServingsRequest = new UseCaseRecipePortions.Request.
+        RecipePortionsRequest updatedServingsRequest = new RecipePortionsRequest.
                 Builder().
                 setRecipeId(EXISTING_VALID_CLONE.getRecipeId()).
                 setCloneToRecipeId(DO_NOT_CLONE).
@@ -384,11 +386,11 @@ public class UseCaseRecipePortionsTest {
                 build();
         handler.execute(SUT, updatedServingsRequest, getCallback());
 
-        UseCaseRecipePortions.Model updatedSittingsModel = UseCaseRecipePortions.Model.Builder.
+        RecipePortionsModel updatedSittingsModel = RecipePortionsModel.Builder.
                 basedOn(actualResponse.getModel()).
                 setSittings(EXISTING_VALID_CLONE_UPDATED_SITTINGS_SERVINGS.getSittings()).
                 build();
-        UseCaseRecipePortions.Request updatedSittingsRequest = UseCaseRecipePortions.Request.Builder.
+        RecipePortionsRequest updatedSittingsRequest = RecipePortionsRequest.Builder.
                 basedOnRequest(updatedServingsRequest).
                 setModel(updatedSittingsModel).
                 build();
@@ -416,23 +418,23 @@ public class UseCaseRecipePortionsTest {
         repoCallback.getValue().onEntityLoaded(EXISTING_VALID);
     }
 
-    private UseCaseInteractor.Callback<UseCaseRecipePortions.Response> getCallback() {
-        return new UseCaseInteractor.Callback<UseCaseRecipePortions.Response>() {
+    private UseCaseInteractor.Callback<RecipePortionsResponse> getCallback() {
+        return new UseCaseInteractor.Callback<RecipePortionsResponse>() {
 
             @Override
-            public void onSuccess(UseCaseRecipePortions.Response response) {
+            public void onSuccess(RecipePortionsResponse response) {
                 actualResponse = response;
             }
 
             @Override
-            public void onError(UseCaseRecipePortions.Response response) {
+            public void onError(RecipePortionsResponse response) {
                 actualResponse = response;
             }
         };
     }
 
-    private UseCaseRecipePortions.Model getModelFromEntity(RecipePortionsEntity entity) {
-        return new UseCaseRecipePortions.Model.Builder().
+    private RecipePortionsModel getModelFromEntity(RecipePortionsEntity entity) {
+        return new RecipePortionsModel.Builder().
                 setId(entity.getId()).
                 setRecipeId(entity.getRecipeId()).
                 setServings(entity.getServings()).

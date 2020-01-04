@@ -4,7 +4,7 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public class RecipeCourseModel {
+public final class RecipeCourseModel {
     @Nonnull
     private final String id;
     @Nonnull

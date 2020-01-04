@@ -174,8 +174,9 @@ public class RecipeEditorActivity
                 (RecipeIdentityFragment) getSupportFragmentManager().
                         findFragmentById(R.id.recipe_editor_recipe_identity_content_frame);
 
-        if (recipeIdentityFragment == null)
+        if (recipeIdentityFragment == null) {
             recipeIdentityFragment = RecipeIdentityFragment.newInstance();
+        }
         return recipeIdentityFragment;
     }
 
@@ -185,8 +186,9 @@ public class RecipeEditorActivity
                 (ImageEditorFragment) getSupportFragmentManager().
                         findFragmentById(R.id.recipe_editor_image_editor_content_frame);
 
-        if (imageEditorFragment == null)
+        if (imageEditorFragment == null) {
             imageEditorFragment = ImageEditorFragment.newInstance();
+        }
         return imageEditorFragment;
     }
 
@@ -196,8 +198,9 @@ public class RecipeEditorActivity
                 (RecipeCourseSelectorFragment) getSupportFragmentManager().
                         findFragmentById(R.id.recipe_editor_course_selector_content_frame);
 
-        if (courseSelectorFragment == null)
+        if (courseSelectorFragment == null) {
             courseSelectorFragment = RecipeCourseSelectorFragment.newInstance();
+        }
         return courseSelectorFragment;
     }
 
@@ -207,8 +210,9 @@ public class RecipeEditorActivity
                 (RecipeDurationFragment) getSupportFragmentManager().
                         findFragmentById(R.id.recipe_duration_content_frame);
 
-        if (durationFragment == null)
+        if (durationFragment == null) {
             durationFragment = RecipeDurationFragment.newInstance();
+        }
         return durationFragment;
     }
 
@@ -218,8 +222,9 @@ public class RecipeEditorActivity
                 (RecipePortionsFragment) getSupportFragmentManager().
                         findFragmentById(R.id.recipe_portions_content_frame);
 
-        if (portionsFragment == null)
+        if (portionsFragment == null) {
             portionsFragment = RecipePortionsFragment.newInstance();
+        }
         return portionsFragment;
     }
 

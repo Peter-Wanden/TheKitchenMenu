@@ -6,7 +6,7 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public class RecipeDurationModel implements PersistenceModel {
+public final class RecipeDurationModel implements PersistenceModel {
     @Nonnull
     private final String id;
     private final int prepHours;
@@ -106,6 +106,7 @@ public class RecipeDurationModel implements PersistenceModel {
                 totalCookTime, totalTime, createDate, lastUpdate);
     }
 
+    @Nonnull
     @Override
     public String toString() {
         return "RecipeDurationModel{" +

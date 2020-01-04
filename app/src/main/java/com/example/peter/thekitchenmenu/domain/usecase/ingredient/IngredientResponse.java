@@ -6,7 +6,7 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public class IngredientResponse implements UseCaseInteractor.Response {
+public final class IngredientResponse implements UseCaseInteractor.Response {
     @Nonnull
     private final Ingredient.Result result;
     @Nonnull

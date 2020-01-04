@@ -34,8 +34,8 @@ public class Ingredient
     private IngredientDuplicateChecker duplicateNameChecker;
 
     private boolean isDuplicate;
-    private IngredientModel requestModel = new IngredientModel.Builder().getDefault().build();
-    private IngredientModel responseModel = new IngredientModel.Builder().getDefault().build();
+    private IngredientModel requestModel;
+    private IngredientModel responseModel;
 
     public Ingredient(RepositoryIngredient repository,
                       UniqueIdProvider idProvider,
@@ -45,6 +45,8 @@ public class Ingredient
         this.idProvider = idProvider;
         this.timeProvider = timeProvider;
         this.duplicateNameChecker = duplicateNameChecker;
+        requestModel = new IngredientModel.Builder().getDefault().build();
+        responseModel = new IngredientModel.Builder().getDefault().build();
     }
 
     @Override

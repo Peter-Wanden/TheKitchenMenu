@@ -9,13 +9,16 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIden
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.UseCaseRecipePortions;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortions;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortionsModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortionsRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortionsResponse;
 
 public class RecipeNameAndPortionsViewModel extends ViewModel {
 
     private UseCaseHandler handler;
     private RecipeIdentity identity;
-    private UseCaseRecipePortions portions;
+    private RecipePortions portions;
 
     public final ObservableField<String> recipeTitleObservable = new ObservableField<>();
     public final ObservableField<String> servingsObservable = new ObservableField<>();
@@ -24,7 +27,7 @@ public class RecipeNameAndPortionsViewModel extends ViewModel {
 
     public RecipeNameAndPortionsViewModel(UseCaseHandler handler,
                                           RecipeIdentity identity,
-                                          UseCaseRecipePortions portions) {
+                                          RecipePortions portions) {
         this.handler = handler;
         this.identity = identity;
         this.portions = portions;
@@ -63,7 +66,7 @@ public class RecipeNameAndPortionsViewModel extends ViewModel {
     }
 
     private void getRecipePortionsData(String recipeId) {
-        UseCaseRecipePortions.Request request = new UseCaseRecipePortions.Request.Builder().
+        RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                 getDefault().
                 setRecipeId(recipeId).
                 build();
@@ -71,27 +74,27 @@ public class RecipeNameAndPortionsViewModel extends ViewModel {
         handler.execute(
                 portions,
                 request,
-                new UseCaseCommand.Callback<UseCaseRecipePortions.Response>() {
+                new UseCaseCommand.Callback<RecipePortionsResponse>() {
 
             @Override
-            public void onSuccess(UseCaseRecipePortions.Response response) {
+            public void onSuccess(RecipePortionsResponse response) {
                 setPortionsToView(response.getModel());
             }
 
             @Override
-            public void onError(UseCaseRecipePortions.Response response) {
+            public void onError(RecipePortionsResponse response) {
 
             }
         });
     }
 
-    private void setPortionsToView(UseCaseRecipePortions.Model model) {
+    private void setPortionsToView(RecipePortionsModel model) {
         servingsObservable.set(String.valueOf(model.getServings()));
         sittingsObservable.set(String.valueOf(model.getSittings()));
         portionsObservable.set(String.valueOf(calculatePortions(model)));
     }
 
-    private int calculatePortions(UseCaseRecipePortions.Model model) {
+    private int calculatePortions(RecipePortionsModel model) {
         return model.getServings() * model.getSittings();
     }
 }

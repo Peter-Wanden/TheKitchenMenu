@@ -48,8 +48,8 @@ public class RecipeIdentity
     }
 
     private boolean isNewRequest(RecipeIdentityRequest request) {
-        return !recipeId.equals(request.getRecipeId()) || requestModel.equals(
-                new RecipeIdentityModel.Builder().getDefault().build());
+        return !recipeId.equals(request.getRecipeId()) ||
+                requestModel.equals(new RecipeIdentityModel.Builder().getDefault().build());
     }
 
     private void loadData(RecipeIdentityRequest request) {

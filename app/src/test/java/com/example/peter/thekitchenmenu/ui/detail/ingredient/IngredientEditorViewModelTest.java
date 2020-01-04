@@ -15,7 +15,7 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.Ingredient;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientDuplicateChecker;
-import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.UseCaseTextValidator;
+import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.testdata.TestDataIngredientEntity;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
@@ -109,7 +109,7 @@ public class IngredientEditorViewModelTest {
     private IngredientEditorViewModel givenViewModel() {
         UseCaseHandler handler = new UseCaseHandler(new UseCaseSchedulerMock());
 
-        UseCaseTextValidator useCaseTextValidator = new UseCaseTextValidator.Builder().
+        TextValidator textValidator = new TextValidator.Builder().
                 setShortTextMinLength(shortTextMinLength).
                 setShortTextMaxLength(shortTextMaxLength).
                 setLongTextMinLength(longTextMinLength).
@@ -125,7 +125,7 @@ public class IngredientEditorViewModelTest {
         return new IngredientEditorViewModel(
                 resourcesMock,
                 handler,
-                useCaseTextValidator,
+                textValidator,
                 ingredient
         );
     }

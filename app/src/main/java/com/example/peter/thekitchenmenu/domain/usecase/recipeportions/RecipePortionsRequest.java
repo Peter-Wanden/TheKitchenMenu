@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipeduration;
+package com.example.peter.thekitchenmenu.domain.usecase.recipeportions;
 
 import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
 
@@ -6,17 +6,17 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipeDurationRequest implements UseCaseInteractor.Request {
+public final class RecipePortionsRequest implements UseCaseInteractor.Request {
     @Nonnull
     private final String recipeId;
     @Nonnull
     private final String cloneToRecipeId;
     @Nonnull
-    private final RecipeDurationModel model;
+    private final RecipePortionsModel model;
 
-    public RecipeDurationRequest(@Nonnull String recipeId,
-                   @Nonnull String cloneToRecipeId,
-                   @Nonnull RecipeDurationModel model) {
+    private RecipePortionsRequest(@Nonnull String recipeId,
+                    @Nonnull String cloneToRecipeId,
+                    @Nonnull RecipePortionsModel model) {
         this.recipeId = recipeId;
         this.cloneToRecipeId = cloneToRecipeId;
         this.model = model;
@@ -33,7 +33,7 @@ public final class RecipeDurationRequest implements UseCaseInteractor.Request {
     }
 
     @Nonnull
-    public RecipeDurationModel getModel() {
+    public RecipePortionsModel getModel() {
         return model;
     }
 
@@ -41,20 +41,10 @@ public final class RecipeDurationRequest implements UseCaseInteractor.Request {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RecipeDurationRequest request = (RecipeDurationRequest) o;
+        RecipePortionsRequest request = (RecipePortionsRequest) o;
         return recipeId.equals(request.recipeId) &&
                 cloneToRecipeId.equals(request.cloneToRecipeId) &&
                 model.equals(request.model);
-    }
-
-    @Nonnull
-    @Override
-    public String toString() {
-        return "RecipeDurationRequest{" +
-                "recipeId='" + recipeId + '\'' +
-                ", cloneToRecipeId='" + cloneToRecipeId + '\'' +
-                ", model=" + model +
-                '}';
     }
 
     @Override
@@ -62,10 +52,36 @@ public final class RecipeDurationRequest implements UseCaseInteractor.Request {
         return Objects.hash(recipeId, cloneToRecipeId, model);
     }
 
+    @Nonnull
+    @Override
+    public String toString() {
+        return "RecipePortionsRequest{" +
+                "recipeId='" + recipeId + '\'' +
+                ", cloneToRecipeId='" + cloneToRecipeId + '\'' +
+                ", model=" + model +
+                '}';
+    }
+
     public static class Builder {
         private String recipeId;
         private String cloneToRecipeId;
-        private RecipeDurationModel model;
+        private RecipePortionsModel model;
+
+        public Builder getDefault() {
+            return new Builder().
+                    setRecipeId("").
+                    setCloneToRecipeId("").
+                    setModel(new RecipePortionsModel.Builder().
+                            getDefault().
+                            build());
+        }
+
+        public static Builder basedOnRequest(@Nonnull RecipePortionsRequest request) {
+            return new Builder().
+                    setRecipeId(request.getRecipeId()).
+                    setCloneToRecipeId(request.getCloneToRecipeId()).
+                    setModel(request.getModel());
+        }
 
         public Builder setRecipeId(String recipeId) {
             this.recipeId = recipeId;
@@ -77,13 +93,13 @@ public final class RecipeDurationRequest implements UseCaseInteractor.Request {
             return this;
         }
 
-        public Builder setModel(RecipeDurationModel model) {
+        public Builder setModel(RecipePortionsModel model) {
             this.model = model;
             return this;
         }
 
-        public RecipeDurationRequest build() {
-            return new RecipeDurationRequest(
+        public RecipePortionsRequest build() {
+            return new RecipePortionsRequest(
                     recipeId,
                     cloneToRecipeId,
                     model

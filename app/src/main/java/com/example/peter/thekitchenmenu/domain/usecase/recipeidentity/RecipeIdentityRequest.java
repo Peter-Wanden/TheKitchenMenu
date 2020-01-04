@@ -7,7 +7,7 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class RecipeIdentityRequest implements UseCaseInteractor.Request {
+public final class RecipeIdentityRequest implements UseCaseInteractor.Request {
     @Nonnull
     private final String recipeId;
     @Nonnull
