@@ -24,7 +24,7 @@ import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIngredientQuantit
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipePortionsEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataUseCasePortionCalculatorRequestResponse;
 import com.example.peter.thekitchenmenu.ui.detail.common.MeasurementErrorMessageMaker;
-import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor.RecipeIngredientMeasurementViewModel;
+import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor.RecipeIngredientCalculatorViewModel;
 import com.example.peter.thekitchenmenu.ui.utils.NumberFormatter;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
@@ -46,7 +46,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class RecipeIngredientMeasurementViewModelTest {
+public class RecipeIngredientCalculatorViewModelTest {
 
     // region constants ----------------------------------------------------------------------------
     // region - ERROR MESSAGES
@@ -155,7 +155,7 @@ public class RecipeIngredientMeasurementViewModelTest {
     MeasurementErrorMessageMaker errorMessageMakerMock;
     // endregion helper fields ---------------------------------------------------------------------
 
-    private RecipeIngredientMeasurementViewModel SUT;
+    private RecipeIngredientCalculatorViewModel SUT;
 
     @Before
     public void setup() {
@@ -165,7 +165,7 @@ public class RecipeIngredientMeasurementViewModelTest {
         SUT = givenViewModel();
     }
 
-    private RecipeIngredientMeasurementViewModel givenViewModel() {
+    private RecipeIngredientCalculatorViewModel givenViewModel() {
         UseCaseHandler useCaseHandler = new UseCaseHandler(new UseCaseSchedulerMock());
         IngredientCalculator portionCalculator = new IngredientCalculator(
                 repoPortionsMock,
@@ -177,7 +177,7 @@ public class RecipeIngredientMeasurementViewModelTest {
         ConversionFactorStatus conversionFactorStatus = new ConversionFactorStatus(
                 repoIngredientMock
         );
-        return new RecipeIngredientMeasurementViewModel(
+        return new RecipeIngredientCalculatorViewModel(
                 useCaseHandler,
                 portionCalculator,
                 conversionFactorStatus,

@@ -21,8 +21,10 @@ import java.util.Map;
 /**
  * Returns a list of ingredients for a given recipeId
  */
-public class RecipeIngredientListItems extends
+public class RecipeIngredientList extends
         UseCaseInteractor<RecipeIngredientListRequest, RecipeIngredientListResponse> {
+
+    private static final String TAG = "tkm-" + RecipeIngredientList.class.getSimpleName() + ": ";
 
     private RepositoryRecipeIngredient repoRecipeIngredient;
     private RepositoryIngredient repoIngredient;
@@ -35,9 +37,9 @@ public class RecipeIngredientListItems extends
     private List<RecipeIngredientListItemModel> listItemModels = new ArrayList<>();
     private int portions;
 
-    public RecipeIngredientListItems(RepositoryRecipeIngredient repoRecipeIngredient,
-                                     RepositoryIngredient repoIngredient,
-                                     RepositoryRecipePortions repoPortions) {
+    public RecipeIngredientList(RepositoryRecipeIngredient repoRecipeIngredient,
+                                RepositoryIngredient repoIngredient,
+                                RepositoryRecipePortions repoPortions) {
         this.repoRecipeIngredient = repoRecipeIngredient;
         this.repoIngredient = repoIngredient;
         this.repoPortions = repoPortions;
@@ -45,6 +47,7 @@ public class RecipeIngredientListItems extends
 
     @Override
     protected void execute(RecipeIngredientListRequest request) {
+        System.out.println(TAG + request);
         recipeId = request.getRecipeId();
         getPortionsForRecipe();
     }
@@ -55,7 +58,7 @@ public class RecipeIngredientListItems extends
                 new DataSource.GetEntityCallback<RecipePortionsEntity>() {
                     @Override
                     public void onEntityLoaded(RecipePortionsEntity portions) {
-                        RecipeIngredientListItems.this.portions =
+                        RecipeIngredientList.this.portions =
                                 portions.getServings() * portions.getSittings();
                         getRecipeIngredientQuantities();
                     }
@@ -129,7 +132,9 @@ public class RecipeIngredientListItems extends
                 );
                 listItemModels.add(listItemModel);
             }
-            getUseCaseCallback().onSuccess(new RecipeIngredientListResponse(listItemModels));
+            RecipeIngredientListResponse response = new RecipeIngredientListResponse(listItemModels);
+            System.out.println(TAG + response);
+            getUseCaseCallback().onSuccess(response);
         }
     }
 

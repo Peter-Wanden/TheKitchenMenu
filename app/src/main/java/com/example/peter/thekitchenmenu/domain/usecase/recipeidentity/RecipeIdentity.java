@@ -10,7 +10,7 @@ public class RecipeIdentity
         extends UseCaseInteractor<RecipeIdentityRequest, RecipeIdentityResponse>
         implements DataSource.GetEntityCallback<RecipeIdentityEntity> {
 
-    private static final String TAG = "tkm-" + RecipeIdentity.class.getSimpleName() + " ";
+    private static final String TAG = "tkm-" + RecipeIdentity.class.getSimpleName() + ": ";
 
     public static final String DO_NOT_CLONE = "";
 
@@ -39,6 +39,7 @@ public class RecipeIdentity
 
     @Override
     protected void execute(RecipeIdentityRequest request) {
+        System.out.println(TAG + request);
         requestModel = request.getModel();
         if (isNewRequest(request)) {
             loadData(request);
@@ -99,7 +100,7 @@ public class RecipeIdentity
                 setRecipeId(recipeId).
                 setResult(Result.DATA_UNAVAILABLE).
                 build();
-
+        System.out.println(TAG + response);
         getUseCaseCallback().onSuccess(response);
     }
 
@@ -123,12 +124,18 @@ public class RecipeIdentity
         } else if (!isValid() && isModelChanged()) {
             builder.setResult(Result.INVALID_CHANGED);
         } else if (isValid() && isModelChanged()) {
-            builder.setResult(Result.VALID_CHANGED);
+            requestModel = RecipeIdentityModel.Builder.
+                    basedOn(requestModel).
+                    setLastUpdate(timeProvider.getCurrentTimeInMills()).
+                    build();
             save(requestModel);
+
+            builder.setResult(Result.VALID_CHANGED);
         }
 
-        responseModel = requestModel;
+        equaliseState();
         RecipeIdentityResponse response = builder.setModel(responseModel).build();
+        System.out.println(TAG + response);
         getUseCaseCallback().onSuccess(response);
     }
 
@@ -146,6 +153,10 @@ public class RecipeIdentity
 
     private void save(RecipeIdentityModel model) {
         repository.save(convertModelToEntity(model));
+    }
+
+    private void equaliseState() {
+        responseModel = requestModel;
     }
 
     // todo - move model / entity conversions to the data layer

@@ -15,7 +15,7 @@ import com.example.peter.thekitchenmenu.databinding.RecipeListItemBinding;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipeidentityandduration.UseCaseRecipeIdentityAndDurationList.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipeidentityandduration.RecipeIdentityAndDurationList.*;
 
 public class RecipeCatalogAllRecyclerAdapter
         extends RecyclerView.Adapter<RecipeCatalogAllRecyclerAdapter.ViewHolder>

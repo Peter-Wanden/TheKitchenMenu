@@ -13,6 +13,8 @@ public class RecipeDuration
         extends UseCaseInteractor<RecipeDurationRequest, RecipeDurationResponse>
         implements DataSource.GetEntityCallback<RecipeDurationEntity> {
 
+    private static final String TAG = "tkm-" + RecipeDuration.class.getSimpleName() + ": ";
+
     public enum Result {
         DATA_UNAVAILABLE,
         INVALID_UNCHANGED,
@@ -51,6 +53,7 @@ public class RecipeDuration
 
     @Override
     protected void execute(RecipeDurationRequest request) {
+        System.out.println(TAG + request);
         requestModel = request.getModel();
         if (isNewRequest(request)) {
             loadData(request);
@@ -175,6 +178,7 @@ public class RecipeDuration
     }
 
     private void sendResponse(RecipeDurationResponse response) {
+        System.out.println(TAG + response);
         if (response.getResult() == Result.VALID_CHANGED ||
                 response.getResult() == Result.VALID_UNCHANGED) {
             getUseCaseCallback().onSuccess(response);
@@ -209,7 +213,12 @@ public class RecipeDuration
             return Result.INVALID_CHANGED;
 
         } else {
+            requestModel = RecipeDurationModel.Builder.
+                    basedOn(requestModel).
+                    setLastUpdate(timeProvider.getCurrentTimeInMills()).
+                    build();
             save(requestModel);
+
             return Result.VALID_CHANGED;
         }
     }

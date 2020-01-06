@@ -9,7 +9,6 @@ import androidx.databinding.library.baseAdapters.BR;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.domain.UseCaseCommand;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDurationModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDurationRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDuration;
@@ -22,8 +21,10 @@ import static com.example.peter.thekitchenmenu.domain.usecase.recipeduration.Rec
 import static com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDuration.DO_NOT_CLONE;
 
 public class RecipeDurationEditorViewModel
-        extends ObservableViewModel
-        implements RecipeModelObserver.RecipeModelActions {
+        extends
+        ObservableViewModel
+        implements
+        RecipeModelObserver.RecipeModelActions, UseCaseCommand.Callback<RecipeDurationResponse> {
 
     private static final String TAG = "tkm-" + RecipeDurationEditorViewModel.class.getSimpleName()
             + ":";
@@ -96,18 +97,14 @@ public class RecipeDurationEditorViewModel
         return this.recipeId == null || !this.recipeId.equals(recipeId);
     }
 
-    private UseCaseInteractor.Callback<RecipeDurationResponse> getUseCaseCallback() {
-        return new UseCaseCommand.Callback<RecipeDurationResponse>() {
-            @Override
-            public void onSuccess(RecipeDurationResponse response) {
-                processUseCaseResponse(response);
-            }
+    @Override
+    public void onSuccess(RecipeDurationResponse response) {
+        processUseCaseResponse(response);
+    }
 
-            @Override
-            public void onError(RecipeDurationResponse response) {
-                processUseCaseResponse(response);
-            }
-        };
+    @Override
+    public void onError(RecipeDurationResponse response) {
+        processUseCaseResponse(response);
     }
 
     private void processUseCaseResponse(RecipeDurationResponse response) {
@@ -133,8 +130,8 @@ public class RecipeDurationEditorViewModel
 
     private void updateRecipeComponentStatus(boolean isValid, boolean isChanged) {
         if (!updatingUi) {
-            modelSubmitter.submitRecipeComponentStatus(new RecipeComponentStatus(
-                    RecipeValidator.ModelName.DURATION_MODEL,
+            modelSubmitter.submitRecipeComponentStatus(new RecipeComponentStatusModel(
+                    RecipeValidator.ComponentName.DURATION,
                     isChanged,
                     isValid
             ));
@@ -304,7 +301,7 @@ public class RecipeDurationEditorViewModel
                 setModel(model).
                 build();
         dataLoading = true;
-        handler.execute(useCase, request, getUseCaseCallback());
+        handler.execute(useCase, request, this);
     }
 
     private int parseIntegerFromString(String integerToParse) {

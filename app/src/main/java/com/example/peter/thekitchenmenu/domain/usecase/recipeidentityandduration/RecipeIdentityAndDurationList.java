@@ -14,10 +14,13 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public class UseCaseRecipeIdentityAndDurationList
+public class RecipeIdentityAndDurationList
         extends
-        UseCaseInteractor<UseCaseRecipeIdentityAndDurationList.Request,
-                UseCaseRecipeIdentityAndDurationList.Response> {
+        UseCaseInteractor<RecipeIdentityAndDurationList.Request,
+                RecipeIdentityAndDurationList.Response> {
+
+    private static final String TAG = "tkm:" + RecipeIdentityAndDurationList.class.getSimpleName() +
+            ": ";
 
     public enum RecipeFilter {
         ALL,
@@ -37,14 +40,15 @@ public class UseCaseRecipeIdentityAndDurationList
     private LinkedHashMap<String, RecipeDurationEntity> recipeDurations = new LinkedHashMap<>();
     private List<ListItemModel> recipeListItemModels = new ArrayList<>();
 
-    public UseCaseRecipeIdentityAndDurationList(RepositoryRecipeIdentity identityRepository,
-                                                RepositoryRecipeDuration durationRepository) {
+    public RecipeIdentityAndDurationList(RepositoryRecipeIdentity identityRepository,
+                                         RepositoryRecipeDuration durationRepository) {
         this.recipeIdentityRepository = identityRepository;
         this.recipeDurationRepository = durationRepository;
     }
 
     @Override
     protected void execute(Request request) {
+        System.out.println(TAG + request);
         if (request.getFilter() == RecipeFilter.ALL) {
             getAllRecipes();
         } else if (request.getFilter() == RecipeFilter.FAVORITE)
@@ -94,8 +98,9 @@ public class UseCaseRecipeIdentityAndDurationList
     }
 
     private void returnEmptyList() {
-        Response model = new Response(ResultStatus.DATA_NOT_AVAILABLE, recipeListItemModels);
-        getUseCaseCallback().onError(model);
+        Response response = new Response(ResultStatus.DATA_NOT_AVAILABLE, recipeListItemModels);
+        System.out.println(TAG + response);
+        getUseCaseCallback().onError(response);
     }
 
     private void mergeLists() {
@@ -115,8 +120,9 @@ public class UseCaseRecipeIdentityAndDurationList
     }
 
     private void returnResults() {
-        Response model = new Response(ResultStatus.RESULT_OK, recipeListItemModels);
-        getUseCaseCallback().onSuccess(model);
+        Response response = new Response(ResultStatus.RESULT_OK, recipeListItemModels);
+        System.out.println(TAG + response);
+        getUseCaseCallback().onSuccess(response);
     }
 
     public static final class ListItemModel {
@@ -185,6 +191,18 @@ public class UseCaseRecipeIdentityAndDurationList
         @Override
         public int hashCode() {
             return Objects.hash(recipeId, recipeName, recipeDescription, prepTime, cookTime, totalTime);
+        }
+
+        @Override
+        public String toString() {
+            return "ListItemModel{" +
+                    "recipeId='" + recipeId + '\'' +
+                    ", recipeName='" + recipeName + '\'' +
+                    ", recipeDescription='" + recipeDescription + '\'' +
+                    ", prepTime=" + prepTime +
+                    ", cookTime=" + cookTime +
+                    ", totalTime=" + totalTime +
+                    '}';
         }
     }
 

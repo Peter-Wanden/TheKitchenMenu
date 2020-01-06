@@ -58,13 +58,13 @@ public class RecipePortionsEditorViewModelTest {
             TestDataRecipePortionsEntity.getExistingClonedUpdatedSittingsServings();
     private final RecipePortionsEntity EXISTING_VALID_FROM_ANOTHER_USER =
             TestDataRecipePortionsEntity.getValidCloneFromAnotherUser();
-    private static final RecipeComponentStatus INVALID_UNCHANGED =
+    private static final RecipeComponentStatusModel INVALID_UNCHANGED =
             TestDataRecipeValidator.getPortionsModelStatusUnchangedInvalid();
-    private static final RecipeComponentStatus INVALID_CHANGED =
+    private static final RecipeComponentStatusModel INVALID_CHANGED =
             TestDataRecipeValidator.getPortionsModelStatusChangedInvalid();
-    private static final RecipeComponentStatus VALID_UNCHANGED =
+    private static final RecipeComponentStatusModel VALID_UNCHANGED =
             TestDataRecipeValidator.getPortionsModelStatusUnchangedValid();
-    private static final RecipeComponentStatus VALID_CHANGED =
+    private static final RecipeComponentStatusModel VALID_CHANGED =
             TestDataRecipeValidator.getPortionsModelStatusChangedValid();
     // endregion constants -------------------------------------------------------------------------
 

@@ -189,11 +189,15 @@ public class RecipeCourseTest {
 
     // region helper methods -----------------------------------------------------------------------
     private RecipeCourseRequest getRequest(String recipeId,
-                                            String toCloneToId,
+                                            String cloneToRecipeId,
                                             RecipeCourse.Course course,
-                                            boolean isAdd) {
-        return new RecipeCourseRequest(recipeId, toCloneToId, course, isAdd
-        );
+                                            boolean isAddCourse) {
+        return new RecipeCourseRequest.Builder().
+                setRecipeId(recipeId).
+                setCloneToRecipeId(cloneToRecipeId).
+                setCourse(course).
+                setAddCourse(isAddCourse).
+                build();
     }
 
     private UseCaseInteractor.Callback<RecipeCourseResponse> getCallback() {

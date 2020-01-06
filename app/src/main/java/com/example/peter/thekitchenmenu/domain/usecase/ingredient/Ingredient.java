@@ -14,7 +14,7 @@ public class Ingredient
         extends UseCaseInteractor<IngredientRequest, IngredientResponse>
         implements DataSource.GetEntityCallback<IngredientEntity> {
 
-        private static final String TAG = "tkm-" + Ingredient.class.getSimpleName() + ":";
+        private static final String TAG = "tkm-" + Ingredient.class.getSimpleName() + ": ";
 
     public enum Result {
         UNEDITABLE,
@@ -51,6 +51,7 @@ public class Ingredient
 
     @Override
     protected void execute(IngredientRequest request) {
+        System.out.println(TAG + "request:" + request);
         requestModel = request.getModel();
         String ingredientId = request.getModel().getIngredientId();
 
@@ -109,6 +110,7 @@ public class Ingredient
                 Result.DATA_UNAVAILABLE,
                 responseModel
         );
+        System.out.println(TAG + "response" + response);
         getUseCaseCallback().onError(response);
     }
 
@@ -177,6 +179,7 @@ public class Ingredient
     private void sendResponse() {
         IngredientResponse response = new IngredientResponse(getResult(), requestModel);
         equaliseRequestResponseStates();
+        System.out.println(TAG + "response" + response);
         getUseCaseCallback().onSuccess(response);
     }
 

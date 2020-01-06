@@ -33,7 +33,7 @@ public class RecipeIngredientEditorActivity
     private RecipeIngredientEditorBinding binding;
     private RecipeNameAndPortionsViewModel recipeNameAndPortionsViewModel;
     private IngredientViewerViewModel ingredientViewerViewModel;
-    private RecipeIngredientMeasurementViewModel measurementViewModel;
+    private RecipeIngredientCalculatorViewModel measurementViewModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -133,12 +133,12 @@ public class RecipeIngredientEditorActivity
                 RecipeNameAndPortionsViewModel.class);
     }
 
-    static RecipeIngredientMeasurementViewModel obtainRecipeIngredientMeasurementViewModel(
+    static RecipeIngredientCalculatorViewModel obtainRecipeIngredientMeasurementViewModel(
             FragmentActivity activity) {
         ViewModelFactoryRecipe factory = ViewModelFactoryRecipe.getInstance(
                 activity.getApplication());
         return new ViewModelProvider(activity, factory).get(
-                RecipeIngredientMeasurementViewModel.class);
+                RecipeIngredientCalculatorViewModel.class);
     }
 
     static IngredientViewerViewModel obtainIngredientViewerViewModel(

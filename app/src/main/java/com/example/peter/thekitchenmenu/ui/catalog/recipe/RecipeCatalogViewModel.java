@@ -8,13 +8,13 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeidentityandduration.UseCaseRecipeIdentityAndDurationList;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeidentityandduration.RecipeIdentityAndDurationList;
 
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipeidentityandduration.UseCaseRecipeIdentityAndDurationList.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipeidentityandduration.RecipeIdentityAndDurationList.*;
 
 public class RecipeCatalogViewModel extends ViewModel {
 
@@ -23,17 +23,17 @@ public class RecipeCatalogViewModel extends ViewModel {
     @NonNull
     private UseCaseHandler handler;
     @Nonnull
-    private UseCaseRecipeIdentityAndDurationList useCase;
+    private RecipeIdentityAndDurationList useCase;
     private RecipeNavigator navigator;
 
     public ObservableBoolean dataLoading = new ObservableBoolean(); // todo - setup empty screen
     public ObservableBoolean isDataLoadingError = new ObservableBoolean();
     public ObservableBoolean showEmptyScreen = new ObservableBoolean();
 
-    private MutableLiveData<List<UseCaseRecipeIdentityAndDurationList.ListItemModel>> recipeList = new MutableLiveData<>();
+    private MutableLiveData<List<RecipeIdentityAndDurationList.ListItemModel>> recipeList = new MutableLiveData<>();
 
     public RecipeCatalogViewModel(@Nonnull UseCaseHandler handler,
-                                  @Nonnull UseCaseRecipeIdentityAndDurationList useCase) {
+                                  @Nonnull RecipeIdentityAndDurationList useCase) {
         this.handler = handler;
         this.useCase = useCase;
     }
@@ -46,7 +46,7 @@ public class RecipeCatalogViewModel extends ViewModel {
         navigator = null;
     }
 
-    MutableLiveData<List<UseCaseRecipeIdentityAndDurationList.ListItemModel>> getRecipeListLiveData() {
+    MutableLiveData<List<RecipeIdentityAndDurationList.ListItemModel>> getRecipeListLiveData() {
         return recipeList;
     }
 
@@ -59,28 +59,28 @@ public class RecipeCatalogViewModel extends ViewModel {
 
         handler.execute(
                 useCase,
-                getRequestModel(UseCaseRecipeIdentityAndDurationList.RecipeFilter.ALL),
+                getRequestModel(RecipeIdentityAndDurationList.RecipeFilter.ALL),
                 getCallback()
         );
     }
 
-    private UseCaseRecipeIdentityAndDurationList.Request getRequestModel(
-            UseCaseRecipeIdentityAndDurationList.RecipeFilter filter) {
-        return new UseCaseRecipeIdentityAndDurationList.Request(filter);
+    private RecipeIdentityAndDurationList.Request getRequestModel(
+            RecipeIdentityAndDurationList.RecipeFilter filter) {
+        return new RecipeIdentityAndDurationList.Request(filter);
     }
 
-    private UseCaseInteractor.Callback<UseCaseRecipeIdentityAndDurationList.Response>
+    private UseCaseInteractor.Callback<RecipeIdentityAndDurationList.Response>
     getCallback() {
-        return new UseCaseInteractor.Callback<UseCaseRecipeIdentityAndDurationList.Response>() {
+        return new UseCaseInteractor.Callback<RecipeIdentityAndDurationList.Response>() {
 
             @Override
-            public void onSuccess(UseCaseRecipeIdentityAndDurationList.Response response) {
+            public void onSuccess(RecipeIdentityAndDurationList.Response response) {
                 dataLoading.set(false);
                 RecipeCatalogViewModel.this.recipeList.setValue(response.getRecipeListItemModels());
             }
 
             @Override
-            public void onError(UseCaseRecipeIdentityAndDurationList.Response response) {
+            public void onError(RecipeIdentityAndDurationList.Response response) {
                 dataLoading.set(false);
                 dataLoadingFailed(response.getResultStatus());
 
@@ -102,15 +102,15 @@ public class RecipeCatalogViewModel extends ViewModel {
             navigator.addRecipe();
     }
 
-    void viewRecipe(UseCaseRecipeIdentityAndDurationList.ListItemModel listItemModel) {
+    void viewRecipe(RecipeIdentityAndDurationList.ListItemModel listItemModel) {
         navigator.viewRecipe(listItemModel.getRecipeId());
     }
 
-    void addToFavorites(UseCaseRecipeIdentityAndDurationList.ListItemModel listItemModel) {
+    void addToFavorites(RecipeIdentityAndDurationList.ListItemModel listItemModel) {
 
     }
 
-    void removeFromFavorites(UseCaseRecipeIdentityAndDurationList.ListItemModel listItemModel) {
+    void removeFromFavorites(RecipeIdentityAndDurationList.ListItemModel listItemModel) {
 
     }
 }

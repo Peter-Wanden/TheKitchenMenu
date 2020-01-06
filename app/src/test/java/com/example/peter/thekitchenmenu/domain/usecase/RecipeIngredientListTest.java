@@ -11,7 +11,7 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredie
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.RecipeIngredientListItems;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.RecipeIngredientList;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.RecipeIngredientListResponse;
 
 import org.junit.*;
@@ -20,7 +20,7 @@ import org.mockito.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecipeIngredientListItemsTest {
+public class RecipeIngredientListTest {
 
     // region constants ----------------------------------------------------------------------------
     private final String RECIPE_ID = "RECIPE_ID";
@@ -35,7 +35,7 @@ public class RecipeIngredientListItemsTest {
     RepositoryIngredient repoIngredientMock;
     // endregion helper fields ---------------------------------------------------------------------
 
-    private RecipeIngredientListItems SUT;
+    private RecipeIngredientList SUT;
 
     @Before
     public void setup() {
@@ -43,7 +43,7 @@ public class RecipeIngredientListItemsTest {
 
         UseCaseHandler handler = new UseCaseHandler(new UseCaseSchedulerMock());
 
-        SUT = new RecipeIngredientListItems(repoRecipeIngredientMock,
+        SUT = new RecipeIngredientList(repoRecipeIngredientMock,
                 repoIngredientMock,
                 repoPortionsMock);
     }

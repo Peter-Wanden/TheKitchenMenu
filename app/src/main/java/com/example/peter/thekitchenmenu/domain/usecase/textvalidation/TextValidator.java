@@ -2,14 +2,10 @@ package com.example.peter.thekitchenmenu.domain.usecase.textvalidation;
 
 import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
 
-import java.util.Objects;
-
-import javax.annotation.Nonnull;
-
 public class TextValidator
         extends UseCaseInteractor<TextValidatorRequest, TextValidatorResponse> {
 
-    private static final String TAG = "tkm-" + TextValidator.class.getSimpleName() + ":";
+    private static final String TAG = "tkm-" + TextValidator.class.getSimpleName() + ": ";
 
     public enum RequestType {
         SHORT_TEXT,
@@ -22,23 +18,24 @@ public class TextValidator
         VALID
     }
 
-    private final int defaultShortTextMinLength;
-    private final int defaultShortTextMaxLength;
-    private final int defaultLongTextMinLength;
-    private final int defaultLongTextMaxLength;
+    private final int shortTextMinLength;
+    private final int shortTextMaxLength;
+    private final int longTextMinLength;
+    private final int longTextMaxLength;
 
-    private TextValidator(int defaultShortTextMinLength,
-                          int defaultShortTextMaxLength,
-                          int defaultLongTextMinLength,
-                          int defaultLongTextMaxLength) {
-        this.defaultShortTextMinLength = defaultShortTextMinLength;
-        this.defaultShortTextMaxLength = defaultShortTextMaxLength;
-        this.defaultLongTextMinLength = defaultLongTextMinLength;
-        this.defaultLongTextMaxLength = defaultLongTextMaxLength;
+    private TextValidator(int shortTextMinLength,
+                          int shortTextMaxLength,
+                          int longTextMinLength,
+                          int longTextMaxLength) {
+        this.shortTextMinLength = shortTextMinLength;
+        this.shortTextMaxLength = shortTextMaxLength;
+        this.longTextMinLength = longTextMinLength;
+        this.longTextMaxLength = longTextMaxLength;
     }
 
     @Override
     protected void execute(TextValidatorRequest request) {
+        System.out.println(TAG + request);
         if (request.getType() == RequestType.SHORT_TEXT) {
             validateShortText(request);
         } else if (request.getType() == RequestType.LONG_TEXT) {
@@ -50,9 +47,9 @@ public class TextValidator
 
     private void validateShortText(TextValidatorRequest request) {
         String text = request.getModel().getText().trim();
-        if (text.length() < defaultShortTextMinLength) {
+        if (text.length() < shortTextMinLength) {
             sendTextTooShortResponse(request);
-        } else if (text.length() > defaultShortTextMaxLength) {
+        } else if (text.length() > shortTextMaxLength) {
             sendTextTooLongResponse(request);
         } else {
             sendTextValidatedResponse(request);
@@ -61,9 +58,9 @@ public class TextValidator
 
     private void validateLongText(TextValidatorRequest request) {
         String text = request.getModel().getText().trim();
-        if (text.length() < defaultLongTextMinLength) {
+        if (text.length() < longTextMinLength) {
             sendTextTooShortResponse(request);
-        } else if (text.length() > defaultLongTextMaxLength) {
+        } else if (text.length() > longTextMaxLength) {
             sendTextTooLongResponse(request);
         } else {
             sendTextValidatedResponse(request);
@@ -76,7 +73,9 @@ public class TextValidator
                 setModel(request.getModel());
         responseBuilder = addRequiredLengths(request, responseBuilder);
 
-        getUseCaseCallback().onError(responseBuilder.build());
+        TextValidatorResponse response = responseBuilder.build();
+        System.out.println(TAG + response);
+        getUseCaseCallback().onError(response);
     }
 
     private void sendTextTooLongResponse(TextValidatorRequest request) {
@@ -85,7 +84,9 @@ public class TextValidator
                 setModel(request.getModel());
         responseBuilder = addRequiredLengths(request, responseBuilder);
 
-        getUseCaseCallback().onError(responseBuilder.build());
+        TextValidatorResponse response = responseBuilder.build();
+        System.out.println(TAG + response);
+        getUseCaseCallback().onError(response);
     }
 
     private void sendTextValidatedResponse(TextValidatorRequest request) {
@@ -94,7 +95,9 @@ public class TextValidator
                 setModel(request.getModel());
         responseBuilder = addRequiredLengths(request, responseBuilder);
 
-        getUseCaseCallback().onSuccess(responseBuilder.build());
+        TextValidatorResponse response = responseBuilder.build();
+        System.out.println(TAG + response);
+        getUseCaseCallback().onError(response);
     }
 
     private TextValidatorResponse.Builder addRequiredLengths(TextValidatorRequest request,
@@ -110,14 +113,14 @@ public class TextValidator
 
     private TextValidatorResponse.Builder addShortTextLengths(TextValidatorResponse.Builder responseBuilder) {
         return responseBuilder.
-                setMinLength(String.valueOf(defaultShortTextMinLength)).
-                setMaxLength(String.valueOf(defaultShortTextMaxLength));
+                setMinLength(String.valueOf(shortTextMinLength)).
+                setMaxLength(String.valueOf(shortTextMaxLength));
     }
 
     private TextValidatorResponse.Builder addLongTextLengths(TextValidatorResponse.Builder responseBuilder) {
         return responseBuilder.
-                setMinLength(String.valueOf(defaultLongTextMinLength)).
-                setMaxLength(String.valueOf(defaultLongTextMaxLength));
+                setMinLength(String.valueOf(longTextMinLength)).
+                setMaxLength(String.valueOf(longTextMaxLength));
     }
 
     public static class Builder {

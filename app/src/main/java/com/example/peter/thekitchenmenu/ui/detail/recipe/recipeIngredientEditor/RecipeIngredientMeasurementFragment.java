@@ -22,7 +22,7 @@ import com.example.peter.thekitchenmenu.ui.utils.unitofmeasure.UnitOfMeasureSpin
 public class RecipeIngredientMeasurementFragment extends Fragment {
 
     private RecipeIngredientEditorMeasurementBinding binding;
-    private RecipeIngredientMeasurementViewModel viewModel;
+    private RecipeIngredientCalculatorViewModel viewModel;
 
     static RecipeIngredientMeasurementFragment newInstance() {
         return new RecipeIngredientMeasurementFragment();

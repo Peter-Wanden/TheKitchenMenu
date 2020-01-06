@@ -15,7 +15,7 @@ import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import static com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidator.*;
-import static com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidator.RecipeValidationStatus.*;
+import static com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidator.RecipeStatus.*;
 
 public class RecipeEditorViewModel
         extends ViewModel
@@ -28,7 +28,7 @@ public class RecipeEditorViewModel
     private UniqueIdProvider idProvider;
     private Resources resources;
     private TimeProvider timeProvider;
-    private RecipeValidationStatus recipeValidationStatus = INVALID_MISSING_MODELS;
+    private RecipeStatus recipeStatus = INVALID_MISSING_MODELS;
     private RecipeValidator validator;
     private RecipeModelObserver recipeModels;
 
@@ -158,14 +158,14 @@ public class RecipeEditorViewModel
     }
 
     @Override
-    public void setValidationStatus(RecipeValidationStatus recipeValidationStatus) {
-        this.recipeValidationStatus = recipeValidationStatus;
+    public void setValidationStatus(RecipeStatus recipeStatus) {
+        this.recipeStatus = recipeStatus;
 
-        isDraft = recipeValidationStatus != VALID_CHANGED &&
-                recipeValidationStatus != VALID_UNCHANGED;
+        isDraft = recipeStatus != VALID_CHANGED &&
+                recipeStatus != VALID_UNCHANGED;
 
-        if (recipeValidationStatus != INVALID_UNCHANGED &&
-                recipeValidationStatus != VALID_UNCHANGED) {
+        if (recipeStatus != INVALID_UNCHANGED &&
+                recipeStatus != VALID_UNCHANGED) {
 
             this.recipeEntity = createNewEntity();
             saveRecipe();
@@ -174,12 +174,12 @@ public class RecipeEditorViewModel
     }
 
     private void updateButtonVisibility() {
-        if (recipeValidationStatus == VALID_CHANGED) {
+        if (recipeStatus == VALID_CHANGED) {
             showIngredientsButtonObservable.set(true);
             showReviewButton = true;
             navigator.refreshOptionsMenu();
 
-        } else if (recipeValidationStatus == VALID_UNCHANGED) {
+        } else if (recipeStatus == VALID_UNCHANGED) {
             showIngredientsButtonObservable.set(true);
             showReviewButton = false;
             navigator.refreshOptionsMenu();
@@ -200,7 +200,7 @@ public class RecipeEditorViewModel
     }
 
     void upOrBackPressed() {
-        if (recipeValidationStatus == INVALID_CHANGED) {
+        if (recipeStatus == INVALID_CHANGED) {
             navigator.showUnsavedChangedDialog();
         } else {
             navigator.cancelEditing();

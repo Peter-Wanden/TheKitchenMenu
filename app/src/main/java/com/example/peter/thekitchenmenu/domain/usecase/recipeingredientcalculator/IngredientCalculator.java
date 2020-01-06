@@ -23,7 +23,7 @@ import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 public class IngredientCalculator
         extends UseCaseInteractor<IngredientCalculatorRequest, IngredientCalculatorResponse> {
 
-    private static final String TAG = "tkm-" + IngredientCalculator.class.getSimpleName() + " ";
+    private static final String TAG = "tkm-" + IngredientCalculator.class.getSimpleName() + ": ";
 
     public enum ResultStatus {
         QUANTITY_DATA_NOT_AVAILABLE,
@@ -78,6 +78,7 @@ public class IngredientCalculator
 
     @Override
     protected void execute(IngredientCalculatorRequest request) {
+        System.out.println(TAG + request);
         if (isNewInstantiation()) {
             extractIdsAndStart(request);
         } else {
@@ -188,7 +189,7 @@ public class IngredientCalculator
         IngredientCalculatorResponse response = new IngredientCalculatorResponse(
                 UnitOfMeasureConstants.DEFAULT_MEASUREMENT_MODEL,
                 status);
-
+        System.out.println(TAG + response);
         getUseCaseCallback().onError(response);
     }
 
@@ -323,6 +324,7 @@ public class IngredientCalculator
         saveIfValid();
         IngredientCalculatorResponse response = getResponse();
         resetResults();
+        System.out.println(TAG + response);
         getUseCaseCallback().onSuccess(response);
     }
 

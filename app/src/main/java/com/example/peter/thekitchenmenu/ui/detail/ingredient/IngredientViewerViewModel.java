@@ -7,7 +7,9 @@ import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 
-public class IngredientViewerViewModel extends ViewModel {
+public class IngredientViewerViewModel
+        extends ViewModel
+        implements DataSource.GetEntityCallback<IngredientEntity> {
 
     private RepositoryIngredient repositoryIngredient;
 
@@ -22,19 +24,17 @@ public class IngredientViewerViewModel extends ViewModel {
     }
 
     private void getIngredient(String ingredientId) {
-        repositoryIngredient.getById(
-                ingredientId,
-                new DataSource.GetEntityCallback<IngredientEntity>() {
-            @Override
-            public void onEntityLoaded(IngredientEntity ingredient) {
-                setIngredientToDisplay(ingredient);
-            }
+        repositoryIngredient.getById(ingredientId, this);
+    }
 
-            @Override
-            public void onDataNotAvailable() {
+    @Override
+    public void onEntityLoaded(IngredientEntity ingredient) {
+        setIngredientToDisplay(ingredient);
+    }
 
-            }
-        });
+    @Override
+    public void onDataNotAvailable() {
+
     }
 
     private void setIngredientToDisplay(IngredientEntity ingredient) {

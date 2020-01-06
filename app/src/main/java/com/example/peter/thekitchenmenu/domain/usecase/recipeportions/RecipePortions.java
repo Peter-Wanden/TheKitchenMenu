@@ -11,7 +11,7 @@ public class RecipePortions
         extends UseCaseInteractor<RecipePortionsRequest, RecipePortionsResponse>
         implements DataSource.GetEntityCallback<RecipePortionsEntity> {
 
-    private static final String TAG = "tkm-" + RecipePortions.class.getSimpleName() + ":";
+    private static final String TAG = "tkm-" + RecipePortions.class.getSimpleName() + ": ";
 
     public enum Result {
         DATA_UNAVAILABLE,

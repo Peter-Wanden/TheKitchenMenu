@@ -69,7 +69,8 @@ public final class RecipeIngredientListItemModel {
 
     @Override
     public int hashCode() {
-        return Objects.hash(recipeIngredientId, ingredientId, ingredientName, ingredientDescription, measurementModel);
+        return Objects.hash(recipeIngredientId, ingredientId, ingredientName,
+                ingredientDescription, measurementModel);
     }
 
     @Override

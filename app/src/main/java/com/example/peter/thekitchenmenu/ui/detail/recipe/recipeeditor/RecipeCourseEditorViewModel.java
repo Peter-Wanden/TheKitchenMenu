@@ -3,30 +3,28 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 import androidx.databinding.Bindable;
 import androidx.databinding.ObservableBoolean;
 
+import com.example.peter.thekitchenmenu.domain.UseCaseCommand;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
 import com.example.peter.thekitchenmenu.domain.usecase.recipecourse.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipecourse.RecipeCourseRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipecourse.RecipeCourseResponse;
 import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 
-import java.util.HashMap;
+import static com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidator.*;
 
 public class RecipeCourseEditorViewModel
-        extends ObservableViewModel
-        implements RecipeModelObserver.RecipeModelActions {
+        extends
+        ObservableViewModel
+        implements
+        RecipeModelObserver.RecipeModelActions,  UseCaseCommand.Callback<RecipeCourseResponse>{
 
     private UseCaseHandler handler;
     private RecipeCourse useCase;
     private RecipeValidation.RecipeValidatorModelSubmission modelSubmitter;
 
     private String recipeId = "";
-    private RecipeCourseResponse response = new RecipeCourseResponse(
-            new HashMap<>(),false,false
-    );
-    private RecipeCourseRequest request = new RecipeCourseRequest(
-            recipeId, RecipeCourse.DO_NOT_CLONE,null, false
-    );
+    private RecipeCourseResponse response;
+    private RecipeCourseRequest request;
 
     private boolean updatingUi;
     private final ObservableBoolean dataLoading = new ObservableBoolean();
@@ -35,6 +33,8 @@ public class RecipeCourseEditorViewModel
                                        RecipeCourse useCase) {
         this.handler = handler;
         this.useCase = useCase;
+        request = RecipeCourseRequest.Builder.getDefault().build();
+        response = RecipeCourseResponse.Builder.getDefault().build();
     }
 
     void setModelValidationSubmitter(RecipeValidation.RecipeValidatorModelSubmission modelSubmitter) {
@@ -47,13 +47,8 @@ public class RecipeCourseEditorViewModel
             this.recipeId = recipeId;
             dataLoading.set(true);
 
-            request = new RecipeCourseRequest(
-                    recipeId,
-                    RecipeCourse.DO_NOT_CLONE,
-                    null,
-                    false
-            );
-            handler.execute(useCase, request, getCallback());
+            request = RecipeCourseRequest.Builder.getDefault().setRecipeId(recipeId).build();
+            handler.execute(useCase, request, this);
         }
     }
 
@@ -62,13 +57,13 @@ public class RecipeCourseEditorViewModel
         if (isNewInstantiationOrRecipeIdChanged(cloneToRecipeId)) {
             recipeId = cloneToRecipeId;
             dataLoading.set(true);
-            request = new RecipeCourseRequest(
-                    cloneFromRecipeId,
-                    cloneToRecipeId,
-                    null,
-                    false
-            );
-            handler.execute(useCase, request, getCallback());
+
+            request = RecipeCourseRequest.Builder.getDefault().
+                    setRecipeId(cloneFromRecipeId).
+                    setCloneToRecipeId(cloneToRecipeId).
+                    build();
+
+            handler.execute(useCase, request, this);
         }
     }
 
@@ -76,37 +71,36 @@ public class RecipeCourseEditorViewModel
         return this.recipeId.isEmpty() || !this.recipeId.equals(recipeId);
     }
 
-    private UseCaseInteractor.Callback<RecipeCourseResponse> getCallback() {
-        return new UseCaseInteractor.Callback<RecipeCourseResponse>() {
+    @Override
+    public void onSuccess(RecipeCourseResponse response) {
+        processResponse(response);
+    }
 
-            @Override
-            public void onSuccess(RecipeCourseResponse response) {
-                processResponse(response);
-            }
-
-            @Override
-            public void onError(RecipeCourseResponse response) {
-                processResponse(response);
-            }
-        };
+    @Override
+    public void onError(RecipeCourseResponse response) {
+        processResponse(response);
     }
 
     private void processResponse(RecipeCourseResponse response) {
         dataLoading.set(false);
         this.response = response;
+        ComponentStatus status = response.getStatus();
 
-        if (response.isChanged()) {
+        if (status.equals(ComponentStatus.VALID_CHANGED) ||
+                status.equals(ComponentStatus.INVALID_CHANGED)) {
             setRecipeCoursesToObservables();
         }
-        submitModelStatus(response.isChanged(), response.isValid());
+
+        submitModelStatus(status);
     }
 
-    private void submitModelStatus(boolean isChanged, boolean isValid) {
-        modelSubmitter.submitRecipeComponentStatus(new RecipeComponentStatus(
-                RecipeValidator.ModelName.COURSES_MODEL,
-                isChanged,
-                isValid
-        ));
+    private void submitModelStatus(ComponentStatus componentStatus) {
+        RecipeComponentStatusModel model = new RecipeComponentStatusModel(
+                ComponentName.COURSES,
+                componentStatus,
+                false, false
+        );
+        modelSubmitter.submitRecipeComponentStatus(model);
     }
 
     private void setRecipeCoursesToObservables() {
@@ -122,7 +116,7 @@ public class RecipeCourseEditorViewModel
 
     public void setCourseZero(boolean isCourseZero) {
         if (!updatingUi) {
-            processRequest(RecipeCourse.Course.COURSE_ZERO, isCourseZero);
+            sendRequest(RecipeCourse.Course.COURSE_ZERO, isCourseZero);
         }
     }
 
@@ -133,7 +127,7 @@ public class RecipeCourseEditorViewModel
 
     public void setCourseOne(boolean isCourseOne) {
         if (!updatingUi) {
-            processRequest(RecipeCourse.Course.COURSE_ONE, isCourseOne);
+            sendRequest(RecipeCourse.Course.COURSE_ONE, isCourseOne);
         }
     }
 
@@ -144,7 +138,7 @@ public class RecipeCourseEditorViewModel
 
     public void setCourseTwo(boolean isCourseTwo) {
         if (!updatingUi) {
-            processRequest(RecipeCourse.Course.COURSE_TWO, isCourseTwo);
+            sendRequest(RecipeCourse.Course.COURSE_TWO, isCourseTwo);
         }
     }
 
@@ -155,7 +149,7 @@ public class RecipeCourseEditorViewModel
 
     public void setCourseThree(boolean isCourseThree) {
         if (!updatingUi) {
-            processRequest(RecipeCourse.Course.COURSE_THREE, isCourseThree);
+            sendRequest(RecipeCourse.Course.COURSE_THREE, isCourseThree);
         }
     }
 
@@ -166,7 +160,7 @@ public class RecipeCourseEditorViewModel
 
     public void setCourseFour(boolean isCourseFour) {
         if (!updatingUi) {
-            processRequest(RecipeCourse.Course.COURSE_FOUR, isCourseFour);
+            sendRequest(RecipeCourse.Course.COURSE_FOUR, isCourseFour);
         }
     }
 
@@ -177,7 +171,7 @@ public class RecipeCourseEditorViewModel
 
     public void setCourseFive(boolean isCourseFive) {
         if (!updatingUi) {
-            processRequest(RecipeCourse.Course.COURSE_FIVE, isCourseFive);
+            sendRequest(RecipeCourse.Course.COURSE_FIVE, isCourseFive);
         }
     }
 
@@ -188,7 +182,7 @@ public class RecipeCourseEditorViewModel
 
     public void setCourseSix(boolean isCourseSix) {
         if (!updatingUi) {
-            processRequest(RecipeCourse.Course.COURSE_SIX, isCourseSix);
+            sendRequest(RecipeCourse.Course.COURSE_SIX, isCourseSix);
         }
     }
 
@@ -199,18 +193,18 @@ public class RecipeCourseEditorViewModel
 
     public void setCourseSeven(boolean isCourseSeven) {
         if (!updatingUi) {
-            processRequest(RecipeCourse.Course.COURSE_SEVEN, isCourseSeven);
+            sendRequest(RecipeCourse.Course.COURSE_SEVEN, isCourseSeven);
         }
     }
 
-    private void processRequest(RecipeCourse.Course course, boolean addCourse) {
+    private void sendRequest(RecipeCourse.Course course, boolean addCourse) {
         dataLoading.set(true);
-        request = new RecipeCourseRequest(
-                recipeId,
-                RecipeCourse.DO_NOT_CLONE,
-                course,
-                addCourse
-        );
-        handler.execute(useCase, request, getCallback());
+
+        request = RecipeCourseRequest.Builder.getDefault().
+                setRecipeId(recipeId).
+                setCourse(course).
+                setAddCourse(addCourse).
+                build();
+        handler.execute(useCase, request, this);
     }
 }

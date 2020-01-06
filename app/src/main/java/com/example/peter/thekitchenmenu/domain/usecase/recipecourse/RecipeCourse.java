@@ -11,18 +11,24 @@ import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+
+import static com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidator.*;
 
 public class RecipeCourse
         extends UseCaseInteractor<RecipeCourseRequest, RecipeCourseResponse>
         implements DataSource.GetAllCallback<RecipeCourseEntity> {
 
-    private static final String TAG = "tkm-" + RecipeCourse.class.getSimpleName() + " ";
+    private static final String TAG = "tkm-" + RecipeCourse.class.getSimpleName() + ": ";
+
+    public enum FailReason {
+        NO_COURSES_SET,
+        NONE
+    }
 
     public enum Course {
         COURSE_ZERO(0),
@@ -81,6 +87,7 @@ public class RecipeCourse
 
     @Override
     protected void execute(RecipeCourseRequest request) {
+        System.out.println(TAG + request);
         if (isNewRequest(request)) {
             loadData(request);
         } else {
@@ -117,10 +124,12 @@ public class RecipeCourse
 
     @Override
     public void onDataNotAvailable() {
-        getUseCaseCallback().onError(new RecipeCourseResponse(
-                newCourseList,
-                isChanged(),
-                isValid()));
+        RecipeCourseResponse response = RecipeCourseResponse.Builder.getDefault().
+                setStatus(ComponentStatus.DATA_UNAVAILABLE).
+                setFailReasons(getFailReasons()).
+                build();
+        System.out.println(TAG + response);
+        getUseCaseCallback().onError(response);
     }
 
     private void cloneEntities(List<RecipeCourseEntity> courseEntities) {
@@ -224,11 +233,37 @@ public class RecipeCourse
     }
 
     private void sendResponse(boolean isChanged, boolean isValid) {
-        RecipeCourseResponse response = new RecipeCourseResponse(
-                newCourseList,
-                isChanged,
-                isValid
-        );
+        RecipeCourseResponse response = new RecipeCourseResponse.Builder().
+                setStatus(getStatus(isChanged, isValid)).
+                setFailReasons(getFailReasons()).
+                setCourseList(newCourseList).
+                build();
+        System.out.println(TAG + response);
         getUseCaseCallback().onSuccess(response);
+    }
+
+    private ComponentStatus getStatus(boolean isChanged, boolean isValid) {
+        if (!isValid && !isChanged) {
+            return ComponentStatus.INVALID_UNCHANGED;
+
+        } else if (isValid && !isChanged) {
+            return ComponentStatus.VALID_UNCHANGED;
+
+        } else if (!isValid && isChanged) {
+            return ComponentStatus.INVALID_CHANGED;
+
+        } else {
+            return ComponentStatus.VALID_CHANGED;
+        }
+    }
+
+    private List<FailReason> getFailReasons() {
+        List<FailReason> failReasons = new LinkedList<>();
+        if (newCourseList.isEmpty()) {
+            failReasons.add(FailReason.NO_COURSES_SET);
+        } else {
+            failReasons.add(FailReason.NONE);
+        }
+        return failReasons;
     }
 }

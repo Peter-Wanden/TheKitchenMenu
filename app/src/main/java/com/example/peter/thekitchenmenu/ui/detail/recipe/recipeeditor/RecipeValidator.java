@@ -3,13 +3,13 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-import static com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidator.RecipeValidationStatus.*;
+import static com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidator.RecipeStatus.*;
 
 public class RecipeValidator implements RecipeValidation.RecipeValidatorModelSubmission {
 
-    private static final String TAG = "tkm-" + RecipeValidator.class.getSimpleName() + ":";
+    private static final String TAG = "tkm-" + RecipeValidator.class.getSimpleName() + ": ";
 
-    enum RecipeValidationStatus {
+    enum RecipeStatus {
         INVALID_MISSING_MODELS,
         INVALID_UNCHANGED,
         INVALID_CHANGED,
@@ -17,36 +17,45 @@ public class RecipeValidator implements RecipeValidation.RecipeValidatorModelSub
         VALID_CHANGED
     }
 
-    public enum ModelName {
-        IDENTITY_MODEL,
-        COURSES_MODEL,
-        DURATION_MODEL,
-        PORTIONS_MODEL
+    public enum ComponentName {
+        IDENTITY,
+        COURSES,
+        DURATION,
+        PORTIONS
+    }
+
+    public enum ComponentStatus {
+        DATA_UNAVAILABLE,
+        INVALID_UNCHANGED,
+        VALID_UNCHANGED,
+        INVALID_CHANGED,
+        VALID_CHANGED
     }
 
     private RecipeValidation.RecipeEditor recipeEditor;
-    private HashMap<ModelName, RecipeComponentStatus> recipeModelStatusList = new LinkedHashMap<>();
-    private final int numberOfModels = ModelName.values().length;
+    private HashMap<ComponentName, RecipeComponentStatusModel> recipeModelStatusList = new LinkedHashMap<>();
+    private final int numberOfModels = ComponentName.values().length;
 
     void setRecipeEditor(RecipeValidation.RecipeEditor recipeEditor) {
         this.recipeEditor = recipeEditor;
     }
 
     @Override
-    public void submitRecipeComponentStatus(RecipeComponentStatus modelStatus) {
-        recipeModelStatusList.put(modelStatus.getModelName(), modelStatus);
+    public void submitRecipeComponentStatus(RecipeComponentStatusModel componentStatus) {
+        System.out.println(TAG + componentStatus);
+        recipeModelStatusList.put(componentStatus.getComponentName(), componentStatus);
         recipeEditor.setValidationStatus(getRecipeValidationStatus());
     }
 
-    private RecipeValidationStatus getRecipeValidationStatus() {
+    private RecipeStatus getRecipeValidationStatus() {
         int numberOfModelsInList = recipeModelStatusList.size();
 
         if (numberOfModels == numberOfModelsInList) {
             boolean recipeHasChanged = false;
             boolean recipeIsValid = true;
 
-            for (ModelName modelName : ModelName.values()) {
-                RecipeComponentStatus modelStatus = recipeModelStatusList.get(modelName);
+            for (ComponentName componentName : ComponentName.values()) {
+                RecipeComponentStatusModel modelStatus = recipeModelStatusList.get(componentName);
 
                 if (modelStatus.isChanged())
                     recipeHasChanged = true;

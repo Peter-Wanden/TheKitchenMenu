@@ -7,6 +7,8 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import static com.example.peter.thekitchenmenu.domain.usecase.recipecourse.RecipeCourse.DO_NOT_CLONE;
+
 public final class RecipeCourseRequest implements UseCaseInteractor.Request {
     @Nonnull
     private final String recipeId;
@@ -16,7 +18,7 @@ public final class RecipeCourseRequest implements UseCaseInteractor.Request {
     private final RecipeCourse.Course course;
     private final boolean addCourse;
 
-    public RecipeCourseRequest(@Nonnull String recipeId,
+    private RecipeCourseRequest(@Nonnull String recipeId,
                    @Nonnull String cloneToRecipeId,
                    @Nullable RecipeCourse.Course course,
                    boolean addCourse) {
@@ -64,11 +66,55 @@ public final class RecipeCourseRequest implements UseCaseInteractor.Request {
     @Nonnull
     @Override
     public String toString() {
-        return "Request{" +
+        return "RecipeCourseRequest{" +
                 "recipeId='" + recipeId + '\'' +
                 ", cloneToRecipeId='" + cloneToRecipeId + '\'' +
                 ", course=" + course +
                 ", addCourse=" + addCourse +
                 '}';
+    }
+
+    public static class Builder {
+        private String recipeId;
+        private String cloneToRecipeId;
+        private RecipeCourse.Course course;
+        private boolean isAddCourse;
+
+        public static Builder getDefault() {
+            return new Builder().
+                    setRecipeId("").
+                    setCloneToRecipeId(DO_NOT_CLONE).
+                    setCourse(null).
+                    setAddCourse(false);
+        }
+
+        public Builder setRecipeId(String recipeId) {
+            this.recipeId = recipeId;
+            return this;
+        }
+
+        public Builder setCloneToRecipeId(String cloneToRecipeId) {
+            this.cloneToRecipeId = cloneToRecipeId;
+            return this;
+        }
+
+        public Builder setCourse(RecipeCourse.Course course) {
+            this.course = course;
+            return this;
+        }
+
+        public Builder setAddCourse(boolean addCourse) {
+            isAddCourse = addCourse;
+            return this;
+        }
+
+        public RecipeCourseRequest build() {
+            return new RecipeCourseRequest(
+                    recipeId,
+                    cloneToRecipeId,
+                    course,
+                    isAddCourse
+            );
+        }
     }
 }

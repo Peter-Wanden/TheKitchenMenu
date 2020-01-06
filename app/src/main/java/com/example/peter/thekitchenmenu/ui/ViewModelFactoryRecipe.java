@@ -9,15 +9,14 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipe;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration;
 import com.example.peter.thekitchenmenu.domain.UseCaseFactory;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
+import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor.RecipeIngredientCalculatorViewModel;
 import com.example.peter.thekitchenmenu.ui.utils.unitofmeasure.MeasurementToSpannableConverter;
 import com.example.peter.thekitchenmenu.ui.detail.common.MeasurementErrorMessageMaker;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeCourseEditorViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeDurationEditorViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeIdentityEditorViewModel;
-import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor.RecipeIngredientMeasurementViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipePortionsEditorViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidator;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist.RecipeIngredientListItemViewModel;
@@ -112,9 +111,9 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
                     useCaseFactory.provideRecipePortionsUseCase(),
                     application.getResources()
             );
-        } else if (modelClass.isAssignableFrom(RecipeIngredientMeasurementViewModel.class)) {
+        } else if (modelClass.isAssignableFrom(RecipeIngredientCalculatorViewModel.class)) {
             // noinspection unchecked
-            return (T) new RecipeIngredientMeasurementViewModel(
+            return (T) new RecipeIngredientCalculatorViewModel(
                     useCaseHandler,
                     useCaseFactory.providePortionsUseCase(),
                     useCaseFactory.provideConversionFactorUseCase(),

@@ -147,7 +147,7 @@
     <string name="activity_title_image_cropper">TKM - Image Cropper</string>
     <string name="activity_title_add_new_ingredient">Add new ingredient</string>
     <string name="activity_title_edit_ingredient">Edit ingredient</string>
-    <string name="activity_title_recipe_ingredient_editor">Recipe ingredient ingredientEditor</string>
+    <string name="activity_title_recipe_ingredient_editor">Recipe ingredient editor</string>
     <string name="activity_title_recipe_ingredient_list_activity">Recipe ingredients list</string>
 
     <!-- ProductDetail user input error codes -->

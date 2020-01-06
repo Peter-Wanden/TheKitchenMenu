@@ -12,6 +12,8 @@ public class ConversionFactorStatus
         extends UseCaseInteractor<ConversionFactorStatusRequest, ConversionFactorStatusResponse>
         implements DataSource.GetEntityCallback<IngredientEntity> {
 
+    private static final String TAG = "tkm-" + ConversionFactorStatus.class.getSimpleName() + ": ";
+
     public enum Result {
         DATA_UNAVAILABLE,
         DISABLED,
@@ -29,6 +31,7 @@ public class ConversionFactorStatus
 
     @Override
     protected void execute(ConversionFactorStatusRequest request) {
+        System.out.println(TAG + "request:" + request);
         UnitOfMeasure unitOfMeasure = request.getSubtype().getMeasurementClass();
 
         if (isNoIdSupplied(request)) {
@@ -49,6 +52,7 @@ public class ConversionFactorStatus
         ConversionFactorStatusResponse response = new ConversionFactorStatusResponse(
                 Result.DISABLED
         );
+        System.out.println(TAG + "response" + response);
         getUseCaseCallback().onSuccess(response);
     }
 
@@ -71,6 +75,7 @@ public class ConversionFactorStatus
         ConversionFactorStatusResponse response = new ConversionFactorStatusResponse(
                         Result.DATA_UNAVAILABLE
         );
+        System.out.println(TAG + "response" + response);
         getUseCaseCallback().onError(response);
     }
 
@@ -90,6 +95,7 @@ public class ConversionFactorStatus
         ConversionFactorStatusResponse response = new ConversionFactorStatusResponse(
                 Result.ENABLED_UNEDITABLE
         );
+        System.out.println(TAG + "response" + response);
         getUseCaseCallback().onSuccess(response);
     }
 
@@ -109,6 +115,7 @@ public class ConversionFactorStatus
         ConversionFactorStatusResponse response = new ConversionFactorStatusResponse(
                 Result.ENABLED_EDITABLE_SET
         );
+        System.out.println(TAG + "response" + response);
         getUseCaseCallback().onSuccess(response);
     }
 
@@ -116,6 +123,7 @@ public class ConversionFactorStatus
         ConversionFactorStatusResponse response = new ConversionFactorStatusResponse(
                 Result.ENABLED_EDITABLE_UNSET
         );
+        System.out.println(TAG + "response" + response);
         getUseCaseCallback().onSuccess(response);
     }
 }

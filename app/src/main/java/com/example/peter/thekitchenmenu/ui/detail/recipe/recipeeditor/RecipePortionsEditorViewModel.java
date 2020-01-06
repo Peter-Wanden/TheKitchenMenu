@@ -9,7 +9,6 @@ import androidx.databinding.library.baseAdapters.BR;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.domain.UseCaseCommand;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortionsModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortionsRequest;
@@ -21,8 +20,11 @@ import javax.annotation.Nonnull;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortions.DO_NOT_CLONE;
 
 public class RecipePortionsEditorViewModel
-        extends ObservableViewModel
-        implements RecipeModelObserver.RecipeModelActions {
+        extends
+        ObservableViewModel
+        implements
+        RecipeModelObserver.RecipeModelActions,
+        UseCaseCommand.Callback<RecipePortionsResponse> {
 
     private static final String TAG = "tkm-" + RecipePortionsEditorViewModel.class.getSimpleName()
             + ":";
@@ -101,21 +103,17 @@ public class RecipePortionsEditorViewModel
                 build();
 
         dataLoading = true;
-        handler.execute(useCase, request, getCallback());
+        handler.execute(useCase, request, this);
     }
 
-    private UseCaseInteractor.Callback<RecipePortionsResponse> getCallback() {
-        return new UseCaseCommand.Callback<RecipePortionsResponse>() {
-            @Override
-            public void onSuccess(RecipePortionsResponse response) {
-                processUseCaseResponse(response);
-            }
+    @Override
+    public void onSuccess(RecipePortionsResponse response) {
+        processUseCaseResponse(response);
+    }
 
-            @Override
-            public void onError(RecipePortionsResponse response) {
-                processUseCaseResponse(response);
-            }
-        };
+    @Override
+    public void onError(RecipePortionsResponse response) {
+        processUseCaseResponse(response);
     }
 
     private void processUseCaseResponse(RecipePortionsResponse response) {
@@ -240,8 +238,8 @@ public class RecipePortionsEditorViewModel
 
     private void updateRecipeComponentStatus(boolean isValid, boolean isChanged) {
         if (!updatingUi) {
-            modelSubmitter.submitRecipeComponentStatus(new RecipeComponentStatus(
-                    RecipeValidator.ModelName.PORTIONS_MODEL,
+            modelSubmitter.submitRecipeComponentStatus(new RecipeComponentStatusModel(
+                    RecipeValidator.ComponentName.PORTIONS,
                     isChanged,
                     isValid
             ));

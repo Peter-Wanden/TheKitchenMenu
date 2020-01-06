@@ -10,7 +10,6 @@ import androidx.databinding.library.baseAdapters.BR;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.domain.UseCaseCommand;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityRequest;
@@ -26,8 +25,11 @@ import javax.annotation.Nonnull;
 import static com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidation.*;
 
 public class RecipeIdentityEditorViewModel
-        extends ObservableViewModel
-        implements RecipeModelObserver.RecipeModelActions {
+        extends
+        ObservableViewModel
+        implements
+        RecipeModelObserver.RecipeModelActions,
+        UseCaseCommand.Callback<RecipeIdentityResponse> {
 
     private static final String TAG =
             "tkm-" + RecipeIdentityEditorViewModel.class.getSimpleName() + ":";
@@ -69,7 +71,7 @@ public class RecipeIdentityEditorViewModel
 
     @Override
     public void start(String recipeId) {
-        if (isNewInstantiationOrRecipeIdChanged(recipeId)) { // todo, don't think this check is required??
+        if (isNewInstantiationOrRecipeIdChanged(recipeId)) {
             executeUseCaseRecipeIdentity(
                     recipeId,
                     RecipeIdentity.DO_NOT_CLONE,
@@ -102,7 +104,7 @@ public class RecipeIdentityEditorViewModel
                 build();
 
         dataLoading = true;
-        handler.execute(recipeIdentity, request, getCallback());
+        handler.execute(recipeIdentity, request, this);
     }
 
     @Bindable
@@ -234,25 +236,17 @@ public class RecipeIdentityEditorViewModel
                 setModel(model).
                 build();
 
-        handler.execute(
-                recipeIdentity,
-                request,
-                getCallback());
+        handler.execute(recipeIdentity, request, this);
     }
 
-    private UseCaseInteractor.Callback<RecipeIdentityResponse> getCallback() {
-        return new UseCaseInteractor.Callback<RecipeIdentityResponse>() {
+    @Override
+    public void onSuccess(RecipeIdentityResponse response) {
+        processUseCaseResponse(response);
+    }
 
-            @Override
-            public void onSuccess(RecipeIdentityResponse response) {
-                processUseCaseResponse(response);
-            }
-
-            @Override
-            public void onError(RecipeIdentityResponse response) {
-                processUseCaseResponse(response);
-            }
-        };
+    @Override
+    public void onError(RecipeIdentityResponse response) {
+        processUseCaseResponse(response);
     }
 
     private void processUseCaseResponse(RecipeIdentityResponse response) {
@@ -276,8 +270,8 @@ public class RecipeIdentityEditorViewModel
 
     private void updateRecipeComponentStatus(boolean isValid, boolean isChanged) {
         if (!updatingUi) {
-            modelSubmitter.submitRecipeComponentStatus(new RecipeComponentStatus(
-                    RecipeValidator.ModelName.IDENTITY_MODEL,
+            modelSubmitter.submitRecipeComponentStatus(new RecipeComponentStatusModel(
+                    RecipeValidator.ComponentName.IDENTITY,
                     isChanged,
                     isValid
             ));

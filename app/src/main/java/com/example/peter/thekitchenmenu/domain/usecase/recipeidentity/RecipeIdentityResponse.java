@@ -39,8 +39,8 @@ public final class RecipeIdentityResponse implements UseCaseInteractor.Response 
     public String toString() {
         return "RecipeIdentityResponse{" +
                 "recipeId='" + recipeId + '\'' +
-                ", model=" + model +
                 ", response=" + result +
+                ", model=" + model +
                 '}';
     }
 

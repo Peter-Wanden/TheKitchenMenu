@@ -11,7 +11,7 @@
 
         <variable
             name="viewModel"
-            type="com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor.RecipeIngredientMeasurementViewModel" />
+            type="com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor.RecipeIngredientCalculatorViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

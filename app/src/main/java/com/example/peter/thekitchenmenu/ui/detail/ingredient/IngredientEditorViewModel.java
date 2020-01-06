@@ -18,7 +18,9 @@ import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValida
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorResponse;
 
-public class IngredientEditorViewModel extends ViewModel {
+public class IngredientEditorViewModel
+        extends ViewModel
+        implements UseCaseCommand.Callback<IngredientResponse> {
 
     private static final String TAG = "tkm-" + IngredientEditorViewModel.class.getSimpleName() + ":";
 
@@ -194,21 +196,17 @@ public class IngredientEditorViewModel extends ViewModel {
         dataLoading.setValue(true);
         IngredientRequest request = new IngredientRequest(model);
 
-        handler.execute(
-                ingredient,
-                request,
-                new UseCaseCommand.Callback<IngredientResponse>() {
-                    @Override
-                    public void onSuccess(IngredientResponse response) {
-                        processUseCaseIngredientResponse(response);
-                    }
+        handler.execute(ingredient, request, this);
+    }
 
-                    @Override
-                    public void onError(IngredientResponse response) {
-                        processUseCaseIngredientResponse(response);
-                    }
-                }
-        );
+    @Override
+    public void onSuccess(IngredientResponse response) {
+        processUseCaseIngredientResponse(response);
+    }
+
+    @Override
+    public void onError(IngredientResponse response) {
+        processUseCaseIngredientResponse(response);
     }
 
     private void processUseCaseIngredientResponse(IngredientResponse response) {
