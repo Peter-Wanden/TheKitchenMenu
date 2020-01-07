@@ -2,8 +2,6 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 
 import android.content.res.Resources;
 
-import androidx.lifecycle.Observer;
-
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
@@ -51,10 +49,6 @@ public class RecipeEditorViewModelTest {
 
     // region helper fields ------------------------------------------------------------------------
     @Mock
-    Observer<Integer> integerObserveMock;
-    @Mock
-    Observer<Void> voidEventObserverMock;
-    @Mock
     AddEditRecipeNavigator navigatorMock;
     @Mock
     TimeProvider timeProviderMock;
@@ -65,14 +59,13 @@ public class RecipeEditorViewModelTest {
     @Mock
     Resources resourcesMock;
     @Captor
-    ArgumentCaptor<DataSource.GetEntityCallback<RecipeEntity>> getEntityCallbackArgumentCaptor;
+    ArgumentCaptor<DataSource.GetEntityCallback<RecipeEntity>> repoCallBack;
     @Mock
     RecipeValidator recipeValidatorMock;
     @Mock
     RecipeModelObserver recipeModelObserverMock;
-    // endregion helper fields ---------------------------------------------------------------------
-
     private RecipeEditorViewModel SUT;
+    // endregion helper fields ---------------------------------------------------------------------
 
     @Before
     public void setup() {
@@ -346,12 +339,12 @@ public class RecipeEditorViewModelTest {
         // Act
         SUT.start(VALID_RECIPE_ID);
         verify(recipeEntityDataSourceMock).getById(eq(VALID_RECIPE_ID),
-                getEntityCallbackArgumentCaptor.capture());
+                repoCallBack.capture());
         // Assert
         assertTrue(SUT.dataIsLoadingObservable.get());
         // Act
         // simulate return value from database
-        getEntityCallbackArgumentCaptor.getValue().onEntityLoaded(VALID_RECIPE_ENTITY);
+        repoCallBack.getValue().onEntityLoaded(VALID_RECIPE_ENTITY);
         assertFalse(SUT.dataIsLoadingObservable.get());
     }
 
@@ -361,12 +354,12 @@ public class RecipeEditorViewModelTest {
         // Act
         SUT.start(VALID_RECIPE_ID);
         verify(recipeEntityDataSourceMock).getById(eq(VALID_RECIPE_ID),
-                getEntityCallbackArgumentCaptor.capture());
+                repoCallBack.capture());
         // Assert
         assertTrue(SUT.dataIsLoadingObservable.get());
         // Act
         // simulate onDataNotAvailable return value from database
-        getEntityCallbackArgumentCaptor.getValue().onDataNotAvailable();
+        repoCallBack.getValue().onDataNotAvailable();
         assertFalse(SUT.dataIsLoadingObservable.get());
     }
 
@@ -488,18 +481,18 @@ public class RecipeEditorViewModelTest {
     private void simulateReturnValidRecipeDatabaseCall() {
         // verify database called
         verify(recipeEntityDataSourceMock).getById(eq(VALID_RECIPE_ID),
-                getEntityCallbackArgumentCaptor.capture());
+                repoCallBack.capture());
         // simulate return value from database
-        getEntityCallbackArgumentCaptor.getValue().onEntityLoaded(VALID_RECIPE_ENTITY);
+        repoCallBack.getValue().onEntityLoaded(VALID_RECIPE_ENTITY);
     }
 
     private void simulateReturnValidRecipeFromAnotherUserDatabaseCall() {
         // get database call
         verify(recipeEntityDataSourceMock).getById(eq(
                 VALID_RECIPE_ID_FROM_ANOTHER_USER),
-                getEntityCallbackArgumentCaptor.capture());
+                repoCallBack.capture());
         // return database call
-        getEntityCallbackArgumentCaptor.getValue().onEntityLoaded(
+        repoCallBack.getValue().onEntityLoaded(
                 VALID_RECIPE_ENTITY_FROM_ANOTHER_USER);
     }
 
@@ -509,8 +502,8 @@ public class RecipeEditorViewModelTest {
 
     private void returnInvalidDraftRecipeFromDatabaseCall() {
         verify(recipeEntityDataSourceMock).getById(eq(
-                INVALID_DRAFT_RECIPE_ENTITY.getId()), getEntityCallbackArgumentCaptor.capture());
-        getEntityCallbackArgumentCaptor.getValue().onEntityLoaded(INVALID_DRAFT_RECIPE_ENTITY);
+                INVALID_DRAFT_RECIPE_ENTITY.getId()), repoCallBack.capture());
+        repoCallBack.getValue().onEntityLoaded(INVALID_DRAFT_RECIPE_ENTITY);
     }
     // endregion helper methods --------------------------------------------------------------------
 

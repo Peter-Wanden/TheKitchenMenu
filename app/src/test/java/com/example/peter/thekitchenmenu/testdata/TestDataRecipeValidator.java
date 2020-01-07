@@ -1,130 +1,148 @@
 package com.example.peter.thekitchenmenu.testdata;
 
-import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeComponentStatusModel;
-import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidator;
+import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeComponentStateModel;
+
+import static com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidator.*;
 
 public class TestDataRecipeValidator {
 
-    public static RecipeComponentStatusModel getIdentityModelStatusUnchangedInvalid() {
-        return new RecipeComponentStatusModel(
-                RecipeValidator.ComponentName.IDENTITY,
-                false,
-                false);
-    }
-
-    public static RecipeComponentStatusModel getIdentityModelStatusUnchangedValid() {
-        return new RecipeComponentStatusModel(
-                RecipeValidator.ComponentName.IDENTITY,
-                false,
-                true);
-    }
-
-    public static RecipeComponentStatusModel getIdentityModelStatusChangedInvalid() {
-        return new RecipeComponentStatusModel(
-                RecipeValidator.ComponentName.IDENTITY,
-                true,
-                false);
-    }
-
-    public static RecipeComponentStatusModel getIdentityModelStatusChangedValid() {
-        return new RecipeComponentStatusModel(
-                RecipeValidator.ComponentName.IDENTITY,
-                true,
-                true);
-    }
-
-    public static RecipeComponentStatusModel getCoursesModelStatusUnchangedInvalid() {
-        return new RecipeComponentStatusModel(
-                RecipeValidator.ComponentName.COURSES,
-                false,
-                false);
-    }
-
-    public static RecipeComponentStatusModel getCoursesModelStatusUnchangedValid() {
-        return new RecipeComponentStatusModel(
-                RecipeValidator.ComponentName.COURSES,
-                false,
-                true
+    public static RecipeComponentStateModel getIdentityModelStatusDATA_UNAVAILABLE() {
+        return new RecipeComponentStateModel(
+                ComponentName.IDENTITY,
+                ComponentState.DATA_UNAVAILABLE
         );
     }
 
-    public static RecipeComponentStatusModel getCoursesModelStatusChangedInvalid() {
-        return new RecipeComponentStatusModel(
-                RecipeValidator.ComponentName.COURSES,
-                true,
-                false
+    public static RecipeComponentStateModel getIdentityModelStatusINVALID_UNCHANGED() {
+        return new RecipeComponentStateModel(
+                ComponentName.IDENTITY,
+                ComponentState.INVALID_UNCHANGED
         );
     }
 
-    public static RecipeComponentStatusModel getCoursesModelStatusChangedValid() {
-        return new RecipeComponentStatusModel(
-                RecipeValidator.ComponentName.COURSES,
-                true,
-                true
+    public static RecipeComponentStateModel getIdentityModelStatusVALID_UNCHANGED() {
+        return new RecipeComponentStateModel(
+                ComponentName.IDENTITY,
+                ComponentState.VALID_UNCHANGED
         );
     }
 
-    public static RecipeComponentStatusModel getDurationModelStatusUnchangedInvalid() {
-        return new RecipeComponentStatusModel(
-                RecipeValidator.ComponentName.DURATION,
-                false,
-                false
+    public static RecipeComponentStateModel getIdentityModelStatusINVALID_CHANGED() {
+        return new RecipeComponentStateModel(
+                ComponentName.IDENTITY,
+                ComponentState.INVALID_CHANGED
         );
     }
 
-    public static RecipeComponentStatusModel getDurationModelStatusUnchangedValid() {
-        return new RecipeComponentStatusModel(
-                RecipeValidator.ComponentName.DURATION,
-                false,
-                true
+    public static RecipeComponentStateModel getIdentityModelStatusVALID_CHANGED() {
+        return new RecipeComponentStateModel(
+                ComponentName.IDENTITY,
+                ComponentState.VALID_CHANGED
         );
     }
 
-    public static RecipeComponentStatusModel getDurationModelStatusChangedInvalid() {
-        return new RecipeComponentStatusModel(
-                RecipeValidator.ComponentName.DURATION,
-                true,
-                false
+    public static RecipeComponentStateModel getCoursesModelStatusDATA_UNAVAILABLE() {
+        return new RecipeComponentStateModel(
+                ComponentName.COURSES,
+                ComponentState.DATA_UNAVAILABLE
         );
     }
 
-    public static RecipeComponentStatusModel getDurationModelStatusChangedValid() {
-        return new RecipeComponentStatusModel(
-                RecipeValidator.ComponentName.DURATION,
-                true,
-                true
+    public static RecipeComponentStateModel getCoursesModelStatusINVALID_UNCHANGED() {
+        return new RecipeComponentStateModel(
+                ComponentName.COURSES,
+                ComponentState.INVALID_UNCHANGED
         );
     }
 
-    public static RecipeComponentStatusModel getPortionsModelStatusUnchangedInvalid() {
-        return new RecipeComponentStatusModel(
-                RecipeValidator.ComponentName.PORTIONS,
-                false,
-                false
+    public static RecipeComponentStateModel getCoursesModelStatusVALID_UNCHANGED() {
+        return new RecipeComponentStateModel(
+                ComponentName.COURSES,
+                ComponentState.VALID_UNCHANGED
         );
     }
 
-    public static RecipeComponentStatusModel getPortionsModelStatusUnchangedValid() {
-        return new RecipeComponentStatusModel(
-                RecipeValidator.ComponentName.PORTIONS,
-                false,
-                true
+    public static RecipeComponentStateModel getCoursesModelStatusINVALID_CHANGED() {
+        return new RecipeComponentStateModel(
+                ComponentName.COURSES,
+                ComponentState.INVALID_CHANGED
         );
     }
 
-    public static RecipeComponentStatusModel getPortionsModelStatusChangedInvalid() {
-        return new RecipeComponentStatusModel(
-                RecipeValidator.ComponentName.PORTIONS,
-                true,
-                false
+    public static RecipeComponentStateModel getCoursesModelStatusVALID_CHANGED() {
+        return new RecipeComponentStateModel(
+                ComponentName.COURSES,
+                ComponentState.VALID_CHANGED
         );
     }
 
-    public static RecipeComponentStatusModel getPortionsModelStatusChangedValid() {
-        return new RecipeComponentStatusModel(
-                RecipeValidator.ComponentName.PORTIONS,
-                true,
-                true
+    public static RecipeComponentStateModel getDurationStatusDATA_UNAVAILABLE() {
+        return new RecipeComponentStateModel(
+                ComponentName.DURATION,
+                ComponentState.DATA_UNAVAILABLE
+        );
+    }
+
+    public static RecipeComponentStateModel getDurationModelStatusINVALID_UNCHANGED() {
+        return new RecipeComponentStateModel(
+                ComponentName.DURATION,
+                ComponentState.INVALID_UNCHANGED
+        );
+    }
+
+    public static RecipeComponentStateModel getDurationModelStatusVALID_UNCHANGED() {
+        return new RecipeComponentStateModel(
+                ComponentName.DURATION,
+                ComponentState.VALID_UNCHANGED
+        );
+    }
+
+    public static RecipeComponentStateModel getDurationModelStatusINVALID_CHANGED() {
+        return new RecipeComponentStateModel(
+                ComponentName.DURATION,
+                ComponentState.INVALID_CHANGED
+        );
+    }
+
+    public static RecipeComponentStateModel getDurationModelStatusVALID_CHANGED() {
+        return new RecipeComponentStateModel(
+                ComponentName.DURATION,
+                ComponentState.VALID_CHANGED
+        );
+    }
+
+    public static RecipeComponentStateModel getPortionsModelStatusDATA_UNAVAILABLE() {
+        return new RecipeComponentStateModel(
+                ComponentName.PORTIONS,
+                ComponentState.DATA_UNAVAILABLE
+        );
+    }
+
+    public static RecipeComponentStateModel getPortionsModelStatusINVALID_UNCHANGED() {
+        return new RecipeComponentStateModel(
+                ComponentName.PORTIONS,
+                ComponentState.INVALID_UNCHANGED
+        );
+    }
+
+    public static RecipeComponentStateModel getPortionsModelStatusVALID_UNCHANGED() {
+        return new RecipeComponentStateModel(
+                ComponentName.PORTIONS,
+                ComponentState.VALID_UNCHANGED
+        );
+    }
+
+    public static RecipeComponentStateModel getPortionsModelStatusINVALID_CHANGED() {
+        return new RecipeComponentStateModel(
+                ComponentName.PORTIONS,
+                ComponentState.INVALID_CHANGED
+        );
+    }
+
+    public static RecipeComponentStateModel getPortionsModelStatusVALID_CHANGED() {
+        return new RecipeComponentStateModel(
+                ComponentName.PORTIONS,
+                ComponentState.VALID_CHANGED
         );
     }
 }

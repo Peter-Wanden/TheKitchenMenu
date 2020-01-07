@@ -55,14 +55,14 @@ public class RecipeDurationEditorViewModelTest {
     private static final int MAX_COOK_TIME = TestDataRecipeDurationEntity.getMaxCookTime();
     private static final String ERROR_MESSAGE_TIME_TOO_LONG = "error_message_time_too_long";
 
-    private static final RecipeComponentStatusModel INVALID_UNCHANGED =
-            TestDataRecipeValidator.getDurationModelStatusUnchangedInvalid();
-    private static final RecipeComponentStatusModel INVALID_CHANGED =
-            TestDataRecipeValidator.getDurationModelStatusChangedInvalid();
-    private static final RecipeComponentStatusModel VALID_UNCHANGED =
-            TestDataRecipeValidator.getDurationModelStatusUnchangedValid();
-    private static final RecipeComponentStatusModel VALID_CHANGED =
-            TestDataRecipeValidator.getDurationModelStatusChangedValid();
+    private static final RecipeComponentStateModel INVALID_UNCHANGED =
+            TestDataRecipeValidator.getDurationModelStatusINVALID_UNCHANGED();
+    private static final RecipeComponentStateModel INVALID_CHANGED =
+            TestDataRecipeValidator.getDurationModelStatusINVALID_CHANGED();
+    private static final RecipeComponentStateModel VALID_UNCHANGED =
+            TestDataRecipeValidator.getDurationModelStatusVALID_UNCHANGED();
+    private static final RecipeComponentStateModel VALID_CHANGED =
+            TestDataRecipeValidator.getDurationModelStatusVALID_CHANGED();
 
     // endregion constants -------------------------------------------------------------------------
 
@@ -76,7 +76,7 @@ public class RecipeDurationEditorViewModelTest {
     @Captor
     ArgumentCaptor<RecipeDurationEntity> durationEntityCaptor;
     @Captor
-    ArgumentCaptor<RecipeComponentStatusModel> modelStatusCaptor;
+    ArgumentCaptor<RecipeComponentStateModel> modelStatusCaptor;
     @Mock
     TimeProvider timeProviderMock;
     @Mock
@@ -131,7 +131,7 @@ public class RecipeDurationEditorViewModelTest {
         simulateNothingReturnedFromRepo();
         // Assert
         verify(modelValidationSubmitterMock).submitRecipeComponentStatus(modelStatusCaptor.capture());
-        RecipeComponentStatusModel modelStatus = modelStatusCaptor.getValue();
+        RecipeComponentStateModel modelStatus = modelStatusCaptor.getValue();
         assertEquals(VALID_UNCHANGED, modelStatus);
     }
 
@@ -617,7 +617,7 @@ public class RecipeDurationEditorViewModelTest {
         simulateGetValidExistingCompleteFromDatabase();
         // Assert
         verify(modelValidationSubmitterMock).submitRecipeComponentStatus(modelStatusCaptor.capture());
-        RecipeComponentStatusModel modelStatus = modelStatusCaptor.getValue();
+        RecipeComponentStateModel modelStatus = modelStatusCaptor.getValue();
         assertEquals(VALID_UNCHANGED, modelStatus);
     }
 

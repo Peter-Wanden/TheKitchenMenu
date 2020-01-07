@@ -302,6 +302,6 @@ public class RecipeEditorViewModel
     }
 
     private void throwUnknownEditingModeException() {
-        throw new RuntimeException("Unknown editing mode type");
+        throw new RuntimeException("Unknown editing mode");
     }
 }

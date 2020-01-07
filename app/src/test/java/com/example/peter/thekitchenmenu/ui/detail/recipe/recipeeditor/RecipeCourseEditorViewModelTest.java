@@ -29,10 +29,11 @@ public class RecipeCourseEditorViewModelTest {
     private String EXISTING_RECIPE_ID = VALID_EXISTING_RECIPE_ENTITY.getId();
     private String NEW_RECIPE_ID = TestDataRecipeEntity.getNewInvalid().getId();
 
-    private RecipeComponentStatusModel COURSES_MODEL_UNCHANGED_INVALID = getCoursesModelStatusUnchangedInvalid();
-    private RecipeComponentStatusModel COURSES_MODEL_UNCHANGED_VALID = getCoursesModelStatusUnchangedValid();
-    private RecipeComponentStatusModel COURSES_MODEL_CHANGED_INVALID = getCoursesModelStatusChangedInvalid();
-    private RecipeComponentStatusModel COURSES_MODEL_CHANGED_VALID = getCoursesModelStatusChangedValid();
+    private RecipeComponentStateModel COURSES_MODEL_DATA_UNAVAILABLE = getCoursesModelStatusDATA_UNAVAILABLE();
+    private RecipeComponentStateModel COURSES_MODEL_UNCHANGED_INVALID = getCoursesModelStatusINVALID_UNCHANGED();
+    private RecipeComponentStateModel COURSES_MODEL_UNCHANGED_VALID = getCoursesModelStatusVALID_UNCHANGED();
+    private RecipeComponentStateModel COURSES_MODEL_CHANGED_INVALID = getCoursesModelStatusINVALID_CHANGED();
+    private RecipeComponentStateModel COURSES_MODEL_CHANGED_VALID = getCoursesModelStatusVALID_CHANGED();
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
@@ -48,6 +49,8 @@ public class RecipeCourseEditorViewModelTest {
     TimeProvider timeProviderMock;
     @Mock
     RecipeValidation.RecipeValidatorModelSubmission modelSubmissionMock;
+    @Captor
+    ArgumentCaptor<RecipeComponentStateModel> componentStatus;
     // endregion helper fields ---------------------------------------------------------------------
 
     private RecipeCourseEditorViewModel SUT;
@@ -349,33 +352,32 @@ public class RecipeCourseEditorViewModelTest {
     @Test
     public void start_recipeIdSupplied_RecipeModelStatus_COURSES_MODEL_UNCHANGED_INVALID() {
         // Arrange
-        ArgumentCaptor<RecipeComponentStatusModel> ac = ArgumentCaptor.forClass(RecipeComponentStatusModel.class);
         // Act
         SUT.start(EXISTING_RECIPE_ID);
         simulateReturnNoCoursesForRecipeFromDatabase();
         // Assert
-        verify(modelSubmissionMock).submitRecipeComponentStatus(ac.capture());
-        RecipeComponentStatusModel modelStatus = ac.getValue();
-        assertEquals(COURSES_MODEL_UNCHANGED_INVALID, modelStatus);
+        verify(modelSubmissionMock).submitRecipeComponentStatus(componentStatus.capture());
+        RecipeComponentStateModel modelStatus = componentStatus.getValue();
+        assertEquals(COURSES_MODEL_DATA_UNAVAILABLE, modelStatus);
     }
 
     @Test
     public void start_recipeIdSupplied_RecipeModelStatus_COURSES_MODEL_UNCHANGED_VALID() {
         // Arrange
-        ArgumentCaptor<RecipeComponentStatusModel> ac = ArgumentCaptor.forClass(RecipeComponentStatusModel.class);
+        ArgumentCaptor<RecipeComponentStateModel> ac = ArgumentCaptor.forClass(RecipeComponentStateModel.class);
         // Act
         SUT.start(EXISTING_RECIPE_ID);
         confirmRepoCalledAndReturnMatchingCourses(EXISTING_RECIPE_ID);
         // Assert
         verify(modelSubmissionMock).submitRecipeComponentStatus(ac.capture());
-        RecipeComponentStatusModel modelStatus = ac.getValue();
+        RecipeComponentStateModel modelStatus = ac.getValue();
         assertEquals(COURSES_MODEL_UNCHANGED_VALID, modelStatus);
     }
 
     @Test
     public void allOptionsDeselected_recipeIdSupplied_RecipeModelStatus_COURSES_MODEL_CHANGED_INVALID() {
         // Arrange
-        ArgumentCaptor<RecipeComponentStatusModel> ac = ArgumentCaptor.forClass(RecipeComponentStatusModel.class);
+        ArgumentCaptor<RecipeComponentStateModel> ac = ArgumentCaptor.forClass(RecipeComponentStateModel.class);
         // Act
         SUT.start(EXISTING_RECIPE_ID);
         confirmRepoCalledAndReturnMatchingCourses(EXISTING_RECIPE_ID);
@@ -388,15 +390,17 @@ public class RecipeCourseEditorViewModelTest {
         SUT.setCourseSix(false);
         SUT.setCourseSeven(false);
         // Assert
-        verify(modelSubmissionMock, times(9)).submitRecipeComponentStatus(ac.capture());
-        RecipeComponentStatusModel modelStatus = ac.getValue();
+        verify(modelSubmissionMock, times(9)).
+                submitRecipeComponentStatus(componentStatus.capture());
+
+        RecipeComponentStateModel modelStatus = ac.getValue();
         assertEquals(COURSES_MODEL_CHANGED_INVALID, modelStatus);
     }
 
     @Test
     public void allButOneOptionsDeselected_recipeIdSupplied_RecipeModelStatus_COURSES_MODEL_CHANGED_VALID() {
         // Arrange
-        ArgumentCaptor<RecipeComponentStatusModel> ac = ArgumentCaptor.forClass(RecipeComponentStatusModel.class);
+        ArgumentCaptor<RecipeComponentStateModel> ac = ArgumentCaptor.forClass(RecipeComponentStateModel.class);
         // Act
         SUT.start(EXISTING_RECIPE_ID);
         confirmRepoCalledAndReturnMatchingCourses(EXISTING_RECIPE_ID);
@@ -409,7 +413,7 @@ public class RecipeCourseEditorViewModelTest {
         SUT.setCourseSix(false);
         // Assert
         verify(modelSubmissionMock, times(8)).submitRecipeComponentStatus(ac.capture());
-        RecipeComponentStatusModel modelStatus = ac.getValue();
+        RecipeComponentStateModel modelStatus = ac.getValue();
         assertEquals(COURSES_MODEL_CHANGED_VALID, modelStatus);
     }
 

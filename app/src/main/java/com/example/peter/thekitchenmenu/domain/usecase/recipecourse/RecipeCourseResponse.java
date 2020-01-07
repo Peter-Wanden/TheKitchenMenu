@@ -1,7 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipecourse;
 
 import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
-import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidator;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -14,13 +13,13 @@ import static com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.Rec
 
 public final class RecipeCourseResponse implements UseCaseInteractor.Response {
     @Nonnull
-    private final ComponentStatus status;
+    private final ComponentState status;
     @Nonnull
     private final List<RecipeCourse.FailReason> failReasons;
     @Nonnull
     private final HashMap<RecipeCourse.Course, RecipeCourseModel> courseList;
 
-    public RecipeCourseResponse(@Nonnull ComponentStatus status,
+    public RecipeCourseResponse(@Nonnull ComponentState status,
                                 @Nonnull List<RecipeCourse.FailReason> failReasons,
                                 @Nonnull HashMap<RecipeCourse.Course, RecipeCourseModel> courseList)
     {
@@ -30,7 +29,7 @@ public final class RecipeCourseResponse implements UseCaseInteractor.Response {
     }
 
     @Nonnull
-    public ComponentStatus getStatus() {
+    public ComponentState getStatus() {
         return status;
     }
 
@@ -69,18 +68,18 @@ public final class RecipeCourseResponse implements UseCaseInteractor.Response {
     }
 
     public static class Builder {
-        private ComponentStatus status;
+        private ComponentState status;
         private List<RecipeCourse.FailReason> failReasons;
         private HashMap<RecipeCourse.Course, RecipeCourseModel> courseList;
 
         public static Builder getDefault() {
             return new Builder().
-                    setStatus(ComponentStatus.INVALID_UNCHANGED).
+                    setStatus(ComponentState.INVALID_UNCHANGED).
                     setFailReasons(getDefaultFailReason()).
                     setCourseList(new HashMap<>());
         }
 
-        public Builder setStatus(ComponentStatus status) {
+        public Builder setStatus(ComponentState status) {
             this.status = status;
             return this;
         }

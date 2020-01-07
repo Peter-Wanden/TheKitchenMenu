@@ -13,22 +13,22 @@ import static org.mockito.Mockito.verify;
 public class RecipeValidatorTest {
 
     // region constants ----------------------------------------------------------------------------
-    private RecipeComponentStatusModel IDENTITY_INVALID_UNCHANGED = getIdentityModelStatusUnchangedInvalid();
-    private RecipeComponentStatusModel IDENTITY_VALID_UNCHANGED = getIdentityModelStatusUnchangedValid();
-    private RecipeComponentStatusModel IDENTITY_INVALID_CHANGED = getIdentityModelStatusChangedInvalid();
-    private RecipeComponentStatusModel IDENTITY_VALID_CHANGED = getIdentityModelStatusChangedValid();
-    private RecipeComponentStatusModel COURSES_INVALID_UNCHANGED = getCoursesModelStatusUnchangedInvalid();
-    private RecipeComponentStatusModel COURSES_VALID_UNCHANGED = getCoursesModelStatusUnchangedValid();
-    private RecipeComponentStatusModel COURSES_INVALID_CHANGED = getCoursesModelStatusChangedInvalid();
-    private RecipeComponentStatusModel COURSES_VALID_CHANGED = getCoursesModelStatusChangedValid();
-    private RecipeComponentStatusModel DURATION_INVALID_UNCHANGED = getDurationModelStatusUnchangedInvalid();
-    private RecipeComponentStatusModel DURATION_VALID_UNCHANGED = getDurationModelStatusUnchangedValid();
-    private RecipeComponentStatusModel DURATION_INVALID_CHANGED = getDurationModelStatusChangedInvalid();
-    private RecipeComponentStatusModel DURATION_VALID_CHANGED = getDurationModelStatusChangedValid();
-    private RecipeComponentStatusModel PORTIONS_INVALID_UNCHANGED = getPortionsModelStatusUnchangedInvalid();
-    private RecipeComponentStatusModel PORTIONS_VALID_UNCHANGED = getPortionsModelStatusUnchangedValid();
-    private RecipeComponentStatusModel PORTIONS_INVALID_CHANGED = getPortionsModelStatusChangedInvalid();
-    private RecipeComponentStatusModel PORTIONS_VALID_CHANGED = getPortionsModelStatusChangedValid();
+    private RecipeComponentStateModel IDENTITY_INVALID_UNCHANGED = getIdentityModelStatusINVALID_UNCHANGED();
+    private RecipeComponentStateModel IDENTITY_VALID_UNCHANGED = getIdentityModelStatusVALID_UNCHANGED();
+    private RecipeComponentStateModel IDENTITY_INVALID_CHANGED = getIdentityModelStatusINVALID_CHANGED();
+    private RecipeComponentStateModel IDENTITY_VALID_CHANGED = getIdentityModelStatusVALID_CHANGED();
+    private RecipeComponentStateModel COURSES_INVALID_UNCHANGED = getCoursesModelStatusINVALID_UNCHANGED();
+    private RecipeComponentStateModel COURSES_VALID_UNCHANGED = getCoursesModelStatusVALID_UNCHANGED();
+    private RecipeComponentStateModel COURSES_INVALID_CHANGED = getCoursesModelStatusINVALID_CHANGED();
+    private RecipeComponentStateModel COURSES_VALID_CHANGED = getCoursesModelStatusVALID_CHANGED();
+    private RecipeComponentStateModel DURATION_INVALID_UNCHANGED = getDurationModelStatusINVALID_UNCHANGED();
+    private RecipeComponentStateModel DURATION_VALID_UNCHANGED = getDurationModelStatusVALID_UNCHANGED();
+    private RecipeComponentStateModel DURATION_INVALID_CHANGED = getDurationModelStatusINVALID_CHANGED();
+    private RecipeComponentStateModel DURATION_VALID_CHANGED = getDurationModelStatusVALID_CHANGED();
+    private RecipeComponentStateModel PORTIONS_INVALID_UNCHANGED = getPortionsModelStatusINVALID_UNCHANGED();
+    private RecipeComponentStateModel PORTIONS_VALID_UNCHANGED = getPortionsModelStatusVALID_UNCHANGED();
+    private RecipeComponentStateModel PORTIONS_INVALID_CHANGED = getPortionsModelStatusINVALID_CHANGED();
+    private RecipeComponentStateModel PORTIONS_VALID_CHANGED = getPortionsModelStatusVALID_CHANGED();
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
@@ -211,6 +211,8 @@ public class RecipeValidatorTest {
         RecipeStatus validationStatus = recipeStatusCaptor.getValue();
         assertEquals(INVALID_MISSING_MODELS, validationStatus);
     }
+
+
 
     // region helper methods -----------------------------------------------------------------------
     // endregion helper methods --------------------------------------------------------------------

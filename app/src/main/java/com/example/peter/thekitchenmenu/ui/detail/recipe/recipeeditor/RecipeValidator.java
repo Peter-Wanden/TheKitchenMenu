@@ -24,7 +24,7 @@ public class RecipeValidator implements RecipeValidation.RecipeValidatorModelSub
         PORTIONS
     }
 
-    public enum ComponentStatus {
+    public enum ComponentState {
         DATA_UNAVAILABLE,
         INVALID_UNCHANGED,
         VALID_UNCHANGED,
@@ -33,7 +33,7 @@ public class RecipeValidator implements RecipeValidation.RecipeValidatorModelSub
     }
 
     private RecipeValidation.RecipeEditor recipeEditor;
-    private HashMap<ComponentName, RecipeComponentStatusModel> recipeModelStatusList = new LinkedHashMap<>();
+    private HashMap<ComponentName, RecipeComponentStateModel> recipeModelStatusList = new LinkedHashMap<>();
     private final int numberOfModels = ComponentName.values().length;
 
     void setRecipeEditor(RecipeValidation.RecipeEditor recipeEditor) {
@@ -41,7 +41,7 @@ public class RecipeValidator implements RecipeValidation.RecipeValidatorModelSub
     }
 
     @Override
-    public void submitRecipeComponentStatus(RecipeComponentStatusModel componentStatus) {
+    public void submitRecipeComponentStatus(RecipeComponentStateModel componentStatus) {
         System.out.println(TAG + componentStatus);
         recipeModelStatusList.put(componentStatus.getComponentName(), componentStatus);
         recipeEditor.setValidationStatus(getRecipeValidationStatus());
@@ -55,13 +55,13 @@ public class RecipeValidator implements RecipeValidation.RecipeValidatorModelSub
             boolean recipeIsValid = true;
 
             for (ComponentName componentName : ComponentName.values()) {
-                RecipeComponentStatusModel modelStatus = recipeModelStatusList.get(componentName);
+                RecipeComponentStateModel modelStatus = recipeModelStatusList.get(componentName);
 
-                if (modelStatus.isChanged())
-                    recipeHasChanged = true;
-
-                if (!modelStatus.isValid())
-                    recipeIsValid = false;
+//                if (modelStatus.isChanged())
+//                    recipeHasChanged = true;
+//
+//                if (!modelStatus.isValid())
+//                    recipeIsValid = false;
             }
 
             if(!recipeIsValid && !recipeHasChanged)

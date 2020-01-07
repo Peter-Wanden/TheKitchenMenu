@@ -20,6 +20,7 @@ import java.util.List;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipecourse.RecipeCourse.DO_NOT_CLONE;
 import static com.example.peter.thekitchenmenu.testdata.TestDataRecipeCourseEntity.getAllByRecipeId;
 import static com.example.peter.thekitchenmenu.testdata.TestDataRecipeEntity.getValidExisting;
+import static com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidator.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -86,8 +87,7 @@ public class RecipeCourseTest {
         handler.execute(SUT, request, getCallback());
         // Assert
         confirmRepoCalledAndReturnMatchingCourses(request.getRecipeId());
-        assertFalse(actualResponse.isValid());
-        assertFalse(actualResponse.isChanged());
+        assertEquals(ComponentState.DATA_UNAVAILABLE, actualResponse.getStatus());
         assertEquals(0, actualResponse.getCourseList().size());
     }
 
@@ -108,8 +108,8 @@ public class RecipeCourseTest {
                 size();
 
         assertEquals(expectedNumberOfModels, actualNumberOfModels);
-        assertTrue(actualResponse.isValid());
-        assertFalse(actualResponse.isChanged()); // No data has been modified, just data returned
+        // No data has been modified, just data returned
+        assertEquals(ComponentState.VALID_UNCHANGED, actualResponse.getStatus());
     }
 
     @Test
@@ -142,8 +142,7 @@ public class RecipeCourseTest {
         for (RecipeCourseEntity entity : entityCaptor.getAllValues()) {
             assertEquals(NEW_RECIPE_ID, entity.getRecipeId());
         }
-        assertTrue(actualResponse.isChanged());
-        assertTrue(actualResponse.isChanged());
+        assertEquals(ComponentState.VALID_CHANGED, actualResponse.getStatus());
     }
 
     @Test
@@ -179,11 +178,10 @@ public class RecipeCourseTest {
         verify(repoMock).deleteById(eq(targetsDataBaseId));
         assertNull(actualResponse.getCourseList().get(RecipeCourse.Course.COURSE_ONE));
         // confirm data has changed
-        assertTrue(actualResponse.isChanged());
         if (actualResponse.getCourseList().size() > 0) {
-            assertTrue(actualResponse.isValid());
+            assertEquals(ComponentState.VALID_CHANGED, actualResponse.getStatus());
         } else {
-            assertFalse(actualResponse.isValid());
+            assertEquals(ComponentState.INVALID_CHANGED, actualResponse.getStatus());
         }
     }
 
@@ -235,6 +233,4 @@ public class RecipeCourseTest {
 
     // region helper classes -----------------------------------------------------------------------
     // endregion helper classes --------------------------------------------------------------------
-
-
 }

@@ -270,11 +270,25 @@ public class RecipeIdentityEditorViewModel
 
     private void updateRecipeComponentStatus(boolean isValid, boolean isChanged) {
         if (!updatingUi) {
-            modelSubmitter.submitRecipeComponentStatus(new RecipeComponentStatusModel(
+            modelSubmitter.submitRecipeComponentStatus(new RecipeComponentStateModel(
                     RecipeValidator.ComponentName.IDENTITY,
-                    isChanged,
-                    isValid
-            ));
+                    getStatus(isChanged, isValid))
+            );
+        }
+    }
+
+    private RecipeValidator.ComponentState getStatus(boolean isChanged, boolean isValid) {
+        if (!isValid && !isChanged) {
+            return RecipeValidator.ComponentState.INVALID_UNCHANGED;
+
+        } else if (isValid && !isChanged) {
+            return RecipeValidator.ComponentState.VALID_UNCHANGED;
+
+        } else if (!isValid && isChanged) {
+            return RecipeValidator.ComponentState.INVALID_CHANGED;
+
+        } else {
+            return RecipeValidator.ComponentState.VALID_CHANGED;
         }
     }
 

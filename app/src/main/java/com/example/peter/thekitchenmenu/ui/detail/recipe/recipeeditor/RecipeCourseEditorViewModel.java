@@ -84,21 +84,20 @@ public class RecipeCourseEditorViewModel
     private void processResponse(RecipeCourseResponse response) {
         dataLoading.set(false);
         this.response = response;
-        ComponentStatus status = response.getStatus();
+        ComponentState status = response.getStatus();
 
-        if (status.equals(ComponentStatus.VALID_CHANGED) ||
-                status.equals(ComponentStatus.INVALID_CHANGED)) {
+        if (status.equals(ComponentState.VALID_CHANGED) ||
+                status.equals(ComponentState.INVALID_CHANGED)) {
             setRecipeCoursesToObservables();
         }
 
         submitModelStatus(status);
     }
 
-    private void submitModelStatus(ComponentStatus componentStatus) {
-        RecipeComponentStatusModel model = new RecipeComponentStatusModel(
+    private void submitModelStatus(ComponentState componentState) {
+        RecipeComponentStateModel model = new RecipeComponentStateModel(
                 ComponentName.COURSES,
-                componentStatus,
-                false, false
+                componentState
         );
         modelSubmitter.submitRecipeComponentStatus(model);
     }

@@ -125,7 +125,7 @@ public class RecipeCourse
     @Override
     public void onDataNotAvailable() {
         RecipeCourseResponse response = RecipeCourseResponse.Builder.getDefault().
-                setStatus(ComponentStatus.DATA_UNAVAILABLE).
+                setStatus(ComponentState.DATA_UNAVAILABLE).
                 setFailReasons(getFailReasons()).
                 build();
         System.out.println(TAG + response);
@@ -242,18 +242,18 @@ public class RecipeCourse
         getUseCaseCallback().onSuccess(response);
     }
 
-    private ComponentStatus getStatus(boolean isChanged, boolean isValid) {
+    private ComponentState getStatus(boolean isChanged, boolean isValid) {
         if (!isValid && !isChanged) {
-            return ComponentStatus.INVALID_UNCHANGED;
+            return ComponentState.INVALID_UNCHANGED;
 
         } else if (isValid && !isChanged) {
-            return ComponentStatus.VALID_UNCHANGED;
+            return ComponentState.VALID_UNCHANGED;
 
         } else if (!isValid && isChanged) {
-            return ComponentStatus.INVALID_CHANGED;
+            return ComponentState.INVALID_CHANGED;
 
         } else {
-            return ComponentStatus.VALID_CHANGED;
+            return ComponentState.VALID_CHANGED;
         }
     }
 
