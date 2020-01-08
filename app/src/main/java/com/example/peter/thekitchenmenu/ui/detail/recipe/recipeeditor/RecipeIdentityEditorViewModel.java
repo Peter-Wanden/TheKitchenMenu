@@ -14,6 +14,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIden
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipestate.RecipeState;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorModel;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorRequest;
@@ -22,6 +23,7 @@ import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 
 import javax.annotation.Nonnull;
 
+import static com.example.peter.thekitchenmenu.domain.usecase.recipestate.RecipeState.*;
 import static com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidation.*;
 
 public class RecipeIdentityEditorViewModel
@@ -90,7 +92,8 @@ public class RecipeIdentityEditorViewModel
     }
 
     private boolean isNewInstantiationOrRecipeIdChanged(String recipeId) {
-        return response.getRecipeId().isEmpty() || !response.getRecipeId().equals(recipeId);
+        return response.getModel().getId().isEmpty() ||
+                !response.getModel().getId().equals(recipeId);
     }
 
     private void executeUseCaseRecipeIdentity(String recipeId,
@@ -231,7 +234,7 @@ public class RecipeIdentityEditorViewModel
         dataLoading = true;
 
         RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
-                setRecipeId(response.getRecipeId()).
+                setRecipeId(response.getModel().getId()).
                 setCloneToRecipeId("").
                 setModel(model).
                 build();
@@ -252,17 +255,18 @@ public class RecipeIdentityEditorViewModel
     private void processUseCaseResponse(RecipeIdentityResponse response) {
         this.response = response;
         dataLoading = false;
-        if (response.getResult() == RecipeIdentity.Result.DATA_UNAVAILABLE) {
+        ComponentState state = response.getState();
+        if (state == ComponentState.DATA_UNAVAILABLE) {
             dataLoadingError.set(true);
             updateRecipeComponentStatus(false, false);
             return;
-        } else if (response.getResult() == RecipeIdentity.Result.INVALID_UNCHANGED) {
+        } else if (state == ComponentState.INVALID_UNCHANGED) {
             updateRecipeComponentStatus(false, false);
-        } else if (response.getResult() == RecipeIdentity.Result.VALID_UNCHANGED) {
+        } else if (state == ComponentState.VALID_UNCHANGED) {
             updateRecipeComponentStatus(true, false);
-        } else if (response.getResult() == RecipeIdentity.Result.INVALID_CHANGED) {
+        } else if (state == ComponentState.INVALID_CHANGED) {
             updateRecipeComponentStatus(false, true);
-        } else if (response.getResult() == RecipeIdentity.Result.VALID_CHANGED) {
+        } else if (state == ComponentState.VALID_CHANGED) {
             updateRecipeComponentStatus(true, true);
         }
         updateObservables();
@@ -271,24 +275,24 @@ public class RecipeIdentityEditorViewModel
     private void updateRecipeComponentStatus(boolean isValid, boolean isChanged) {
         if (!updatingUi) {
             modelSubmitter.submitRecipeComponentStatus(new RecipeComponentStateModel(
-                    RecipeValidator.ComponentName.IDENTITY,
+                    ComponentName.IDENTITY,
                     getStatus(isChanged, isValid))
             );
         }
     }
 
-    private RecipeValidator.ComponentState getStatus(boolean isChanged, boolean isValid) {
+    private ComponentState getStatus(boolean isChanged, boolean isValid) {
         if (!isValid && !isChanged) {
-            return RecipeValidator.ComponentState.INVALID_UNCHANGED;
+            return ComponentState.INVALID_UNCHANGED;
 
         } else if (isValid && !isChanged) {
-            return RecipeValidator.ComponentState.VALID_UNCHANGED;
+            return ComponentState.VALID_UNCHANGED;
 
         } else if (!isValid && isChanged) {
-            return RecipeValidator.ComponentState.INVALID_CHANGED;
+            return ComponentState.INVALID_CHANGED;
 
         } else {
-            return RecipeValidator.ComponentState.VALID_CHANGED;
+            return ComponentState.VALID_CHANGED;
         }
     }
 

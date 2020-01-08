@@ -2,33 +2,33 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 
 import androidx.annotation.NonNull;
 
+import com.example.peter.thekitchenmenu.domain.usecase.recipestate.RecipeState;
+
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidator.*;
-
 public final class RecipeComponentStateModel {
 
     @NonNull
-    private final ComponentName componentName;
+    private final RecipeState.ComponentName componentName;
     @Nonnull
-    private final ComponentState status;
+    private final RecipeState.ComponentState state;
 
-    public RecipeComponentStateModel(@NonNull ComponentName componentName,
-                                     @Nonnull ComponentState status) {
+    public RecipeComponentStateModel(@NonNull RecipeState.ComponentName componentName,
+                                     @Nonnull RecipeState.ComponentState state) {
         this.componentName = componentName;
-        this.status = status;
+        this.state = state;
     }
 
     @NonNull
-    ComponentName getComponentName() {
+    RecipeState.ComponentName getComponentName() {
         return componentName;
     }
 
     @Nonnull
-    public ComponentState getStatus() {
-        return status;
+    public RecipeState.ComponentState getState() {
+        return state;
     }
 
     @Override
@@ -37,19 +37,19 @@ public final class RecipeComponentStateModel {
         if (o == null || getClass() != o.getClass()) return false;
         RecipeComponentStateModel model = (RecipeComponentStateModel) o;
         return componentName == model.componentName &&
-                status == model.status;
+                state == model.state;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(componentName, status);
+        return Objects.hash(componentName, state);
     }
 
     @Override
     public String toString() {
         return "RecipeComponentStateModel{" +
                 "componentName=" + componentName +
-                ", status=" + status +
+                ", state=" + state +
                 '}';
     }
 }

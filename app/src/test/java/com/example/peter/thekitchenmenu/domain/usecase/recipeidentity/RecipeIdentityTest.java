@@ -6,6 +6,7 @@ import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
+import com.example.peter.thekitchenmenu.domain.usecase.recipestate.RecipeState;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 
@@ -13,6 +14,7 @@ import org.junit.*;
 import org.mockito.*;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentity.DO_NOT_CLONE;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipestate.RecipeState.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.assertEquals;
@@ -79,7 +81,7 @@ public class RecipeIdentityTest {
         // Act
         givenNewEmptyModelSimulateNothingReturnedFromDatabase();
         // Assert
-        assertEquals(RecipeIdentity.Result.DATA_UNAVAILABLE, actualResponse.getResult());
+        assertEquals(ComponentState.DATA_UNAVAILABLE, actualResponse.getState());
     }
 
     @Test
@@ -105,7 +107,7 @@ public class RecipeIdentityTest {
                 getCallback());
 
         // Assert
-        assertEquals(RecipeIdentity.Result.INVALID_CHANGED, actualResponse.getResult());
+        assertEquals(ComponentState.INVALID_CHANGED, actualResponse.getState());
     }
 
     @Test
@@ -117,7 +119,7 @@ public class RecipeIdentityTest {
         givenNewEmptyModelSimulateNothingReturnedFromDatabase();
 
         RecipeIdentityModel validTitleModel = new RecipeIdentityModel.Builder().
-                setId(actualResponse.getRecipeId()).
+                setId(actualResponse.getModel().getId()).
                 setTitle(VALID_NEW_TITLE_VALID.getTitle()).
                 setDescription(actualResponse.getModel().getDescription()).
                 setCreateDate(actualResponse.getModel().getCreateDate()).
@@ -133,7 +135,7 @@ public class RecipeIdentityTest {
 
         // Assert
         verify(repoMock).save(eq(VALID_NEW_TITLE_VALID));
-        assertEquals(RecipeIdentity.Result.VALID_CHANGED, actualResponse.getResult());
+        assertEquals(ComponentState.VALID_CHANGED, actualResponse.getState());
     }
 
     @Test
@@ -162,11 +164,11 @@ public class RecipeIdentityTest {
 
         // Assert
         verify(repoMock).save(VALID_NEW_COMPLETE);
-        assertEquals(RecipeIdentity.Result.VALID_CHANGED, actualResponse.getResult());
+        assertEquals(ComponentState.VALID_CHANGED, actualResponse.getState());
     }
 
     @Test
-    public void existingRecipeId_existingValidValuesLoaded_Result_VALID_UNCHANGED() {
+    public void existingRecipeId_existingValidValuesLoaded_VALID_UNCHANGED() {
         // Arrange
         RecipeIdentityRequest request = getRequest(
                 VALID_EXISTING_COMPLETE.getId(), DO_NOT_CLONE, getDefaultModel());
@@ -175,7 +177,7 @@ public class RecipeIdentityTest {
 
         simulateGetValidExistingCompleteFromDatabase();
         // Assert
-        assertEquals(RecipeIdentity.Result.VALID_UNCHANGED, actualResponse.getResult());
+        assertEquals(ComponentState.VALID_UNCHANGED, actualResponse.getState());
     }
 
     @Test
@@ -199,7 +201,7 @@ public class RecipeIdentityTest {
         // Assert
         simulateGetValidFromAnotherUserFromDatabase();
         verify(repoMock).save(eq(VALID_NEW_CLONED));
-        assertEquals(RecipeIdentity.Result.VALID_UNCHANGED, actualResponse.getResult());
+        assertEquals(ComponentState.VALID_UNCHANGED, actualResponse.getState());
     }
 
     @Test
@@ -221,7 +223,7 @@ public class RecipeIdentityTest {
 
         // Arrange
         RecipeIdentityRequest requestUpdateDescription = getRequest(
-                actualResponse.getRecipeId(),
+                actualResponse.getModel().getId(),
                 DO_NOT_CLONE,
                 new RecipeIdentityModel(
                         actualResponse.getModel().getId(),
@@ -233,7 +235,7 @@ public class RecipeIdentityTest {
         handler.execute(SUT, requestUpdateDescription, getCallback());
         // Assert
         verify(repoMock).save(VALID_CLONED_DESCRIPTION_UPDATED);
-        assertEquals(RecipeIdentity.Result.VALID_CHANGED, actualResponse.getResult());
+        assertEquals(ComponentState.VALID_CHANGED, actualResponse.getState());
     }
 
     // region helper methods -----------------------------------------------------------------------

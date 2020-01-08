@@ -6,6 +6,7 @@ import com.example.peter.thekitchenmenu.data.entity.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeCourse;
 import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
+import com.example.peter.thekitchenmenu.domain.usecase.recipestate.RecipeState;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
@@ -16,8 +17,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
-
-import static com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidator.*;
 
 public class RecipeCourse
         extends UseCaseInteractor<RecipeCourseRequest, RecipeCourseResponse>
@@ -125,7 +124,7 @@ public class RecipeCourse
     @Override
     public void onDataNotAvailable() {
         RecipeCourseResponse response = RecipeCourseResponse.Builder.getDefault().
-                setStatus(ComponentState.DATA_UNAVAILABLE).
+                setStatus(RecipeState.ComponentState.DATA_UNAVAILABLE).
                 setFailReasons(getFailReasons()).
                 build();
         System.out.println(TAG + response);
@@ -242,18 +241,18 @@ public class RecipeCourse
         getUseCaseCallback().onSuccess(response);
     }
 
-    private ComponentState getStatus(boolean isChanged, boolean isValid) {
+    private RecipeState.ComponentState getStatus(boolean isChanged, boolean isValid) {
         if (!isValid && !isChanged) {
-            return ComponentState.INVALID_UNCHANGED;
+            return RecipeState.ComponentState.INVALID_UNCHANGED;
 
         } else if (isValid && !isChanged) {
-            return ComponentState.VALID_UNCHANGED;
+            return RecipeState.ComponentState.VALID_UNCHANGED;
 
         } else if (!isValid && isChanged) {
-            return ComponentState.INVALID_CHANGED;
+            return RecipeState.ComponentState.INVALID_CHANGED;
 
         } else {
-            return ComponentState.VALID_CHANGED;
+            return RecipeState.ComponentState.VALID_CHANGED;
         }
     }
 

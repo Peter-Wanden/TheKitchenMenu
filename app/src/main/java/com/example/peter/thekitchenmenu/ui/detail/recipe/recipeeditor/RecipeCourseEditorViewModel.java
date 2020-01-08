@@ -8,9 +8,8 @@ import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipecourse.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipecourse.RecipeCourseRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipecourse.RecipeCourseResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipestate.RecipeState;
 import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
-
-import static com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidator.*;
 
 public class RecipeCourseEditorViewModel
         extends
@@ -84,19 +83,19 @@ public class RecipeCourseEditorViewModel
     private void processResponse(RecipeCourseResponse response) {
         dataLoading.set(false);
         this.response = response;
-        ComponentState status = response.getStatus();
+        RecipeState.ComponentState status = response.getStatus();
 
-        if (status.equals(ComponentState.VALID_CHANGED) ||
-                status.equals(ComponentState.INVALID_CHANGED)) {
+        if (status.equals(RecipeState.ComponentState.VALID_CHANGED) ||
+                status.equals(RecipeState.ComponentState.INVALID_CHANGED)) {
             setRecipeCoursesToObservables();
         }
 
         submitModelStatus(status);
     }
 
-    private void submitModelStatus(ComponentState componentState) {
+    private void submitModelStatus(RecipeState.ComponentState componentState) {
         RecipeComponentStateModel model = new RecipeComponentStateModel(
-                ComponentName.COURSES,
+                RecipeState.ComponentName.COURSE,
                 componentState
         );
         modelSubmitter.submitRecipeComponentStatus(model);

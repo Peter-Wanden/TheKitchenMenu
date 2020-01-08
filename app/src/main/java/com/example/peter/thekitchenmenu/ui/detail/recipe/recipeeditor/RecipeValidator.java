@@ -1,5 +1,7 @@
 package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 
+import com.example.peter.thekitchenmenu.domain.usecase.recipestate.RecipeState;
+
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -17,24 +19,9 @@ public class RecipeValidator implements RecipeValidation.RecipeValidatorModelSub
         VALID_CHANGED
     }
 
-    public enum ComponentName {
-        IDENTITY,
-        COURSES,
-        DURATION,
-        PORTIONS
-    }
-
-    public enum ComponentState {
-        DATA_UNAVAILABLE,
-        INVALID_UNCHANGED,
-        VALID_UNCHANGED,
-        INVALID_CHANGED,
-        VALID_CHANGED
-    }
-
     private RecipeValidation.RecipeEditor recipeEditor;
-    private HashMap<ComponentName, RecipeComponentStateModel> recipeModelStatusList = new LinkedHashMap<>();
-    private final int numberOfModels = ComponentName.values().length;
+    private HashMap<RecipeState.ComponentName, RecipeComponentStateModel> recipeModelStatusList = new LinkedHashMap<>();
+    private final int numberOfModels = RecipeState.ComponentName.values().length;
 
     void setRecipeEditor(RecipeValidation.RecipeEditor recipeEditor) {
         this.recipeEditor = recipeEditor;
@@ -54,7 +41,7 @@ public class RecipeValidator implements RecipeValidation.RecipeValidatorModelSub
             boolean recipeHasChanged = false;
             boolean recipeIsValid = true;
 
-            for (ComponentName componentName : ComponentName.values()) {
+            for (RecipeState.ComponentName componentName : RecipeState.ComponentName.values()) {
                 RecipeComponentStateModel modelStatus = recipeModelStatusList.get(componentName);
 
 //                if (modelStatus.isChanged())

@@ -4,6 +4,7 @@ import com.example.peter.thekitchenmenu.data.entity.RecipeDurationEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration;
 import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
+import com.example.peter.thekitchenmenu.domain.usecase.recipestate.RecipeState;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 
 import java.util.LinkedList;
@@ -14,14 +15,6 @@ public class RecipeDuration
         implements DataSource.GetEntityCallback<RecipeDurationEntity> {
 
     private static final String TAG = "tkm-" + RecipeDuration.class.getSimpleName() + ": ";
-
-    public enum Result {
-        DATA_UNAVAILABLE,
-        INVALID_UNCHANGED,
-        VALID_UNCHANGED,
-        INVALID_CHANGED,
-        VALID_CHANGED,
-    }
 
     public enum FailReason {
         INVALID_PREP_TIME,
@@ -160,9 +153,10 @@ public class RecipeDuration
     }
 
     private void buildResponse() {
-        RecipeDurationResponse.Builder builder = new RecipeDurationResponse.Builder()
-                .setFailReasons(getFailReasons())
-                .setResult(getResult());
+        RecipeDurationResponse.Builder builder = new RecipeDurationResponse.Builder().
+                setState(getState()).
+                setFailReasons(getFailReasons()
+        );
 
         equaliseState();
 
@@ -179,8 +173,8 @@ public class RecipeDuration
 
     private void sendResponse(RecipeDurationResponse response) {
         System.out.println(TAG + response);
-        if (response.getResult() == Result.VALID_CHANGED ||
-                response.getResult() == Result.VALID_UNCHANGED) {
+        if (response.getState() == RecipeState.ComponentState.VALID_CHANGED ||
+                response.getState() == RecipeState.ComponentState.VALID_UNCHANGED) {
             getUseCaseCallback().onSuccess(response);
         } else {
             getUseCaseCallback().onError(response);
@@ -202,15 +196,15 @@ public class RecipeDuration
         return failReasons;
     }
 
-    private Result getResult() {
+    private RecipeState.ComponentState getState() {
         if (!isValid() && !isChanged()) {
-            return Result.INVALID_UNCHANGED;
+            return RecipeState.ComponentState.INVALID_UNCHANGED;
 
         } else if (isValid() && !isChanged()) {
-            return Result.VALID_UNCHANGED;
+            return RecipeState.ComponentState.VALID_UNCHANGED;
 
         } else if (!isValid() && isChanged()) {
-            return Result.INVALID_CHANGED;
+            return RecipeState.ComponentState.INVALID_CHANGED;
 
         } else {
             requestModel = RecipeDurationModel.Builder.
@@ -219,7 +213,7 @@ public class RecipeDuration
                     build();
             save(requestModel);
 
-            return Result.VALID_CHANGED;
+            return RecipeState.ComponentState.VALID_CHANGED;
         }
     }
 

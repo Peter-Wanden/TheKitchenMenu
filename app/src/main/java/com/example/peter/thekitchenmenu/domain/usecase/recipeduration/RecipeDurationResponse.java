@@ -1,6 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipeduration;
 
 import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
+import com.example.peter.thekitchenmenu.domain.usecase.recipestate.RecipeState;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -10,23 +11,23 @@ import javax.annotation.Nonnull;
 
 public final class RecipeDurationResponse implements UseCaseInteractor.Response {
     @Nonnull
-    private final RecipeDuration.Result result;
+    private final RecipeState.ComponentState state;
     @Nonnull
     private final List<RecipeDuration.FailReason> failReasons;
     @Nonnull
     private final RecipeDurationModel model;
 
-    public RecipeDurationResponse(@Nonnull RecipeDuration.Result result,
+    public RecipeDurationResponse(@Nonnull RecipeState.ComponentState state,
                                   @Nonnull List<RecipeDuration.FailReason> failReasons,
                                   @Nonnull RecipeDurationModel model) {
-        this.result = result;
+        this.state = state;
         this.failReasons = failReasons;
         this.model = model;
     }
 
     @Nonnull
-    public RecipeDuration.Result getResult() {
-        return result;
+    public RecipeState.ComponentState getState() {
+        return state;
     }
 
     @Nonnull
@@ -44,42 +45,42 @@ public final class RecipeDurationResponse implements UseCaseInteractor.Response 
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RecipeDurationResponse response = (RecipeDurationResponse) o;
-        return result == response.result &&
+        return state == response.state &&
                 failReasons.equals(response.failReasons) &&
                 model.equals(response.model);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(result, failReasons, model);
+        return Objects.hash(state, failReasons, model);
     }
 
     @Nonnull
     @Override
     public String toString() {
         return "RecipeDurationResponse{" +
-                "result=" + result +
+                "state=" + state +
                 ", failReasons=" + failReasons +
                 ", model=" + model +
                 '}';
     }
 
     public static class Builder {
-        private RecipeDuration.Result result;
+        private RecipeState.ComponentState state;
         private List<RecipeDuration.FailReason> failReasons;
         private RecipeDurationModel model;
 
         public static Builder getDefault() {
             return new Builder().
-                    setResult(RecipeDuration.Result.INVALID_UNCHANGED).
+                    setState(RecipeState.ComponentState.INVALID_UNCHANGED).
                     setFailReasons(getDefaultFailReasons()).
                     setModel(RecipeDurationModel.Builder.
                             getDefault().
                             build());
         }
 
-        public Builder setResult(RecipeDuration.Result result) {
-            this.result = result;
+        public Builder setState(RecipeState.ComponentState state) {
+            this.state = state;
             return this;
         }
 
@@ -95,7 +96,7 @@ public final class RecipeDurationResponse implements UseCaseInteractor.Response 
 
         public RecipeDurationResponse build() {
             return new RecipeDurationResponse(
-                    result,
+                    state,
                     failReasons,
                     model
             );

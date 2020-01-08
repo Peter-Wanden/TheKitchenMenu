@@ -68,7 +68,7 @@ public final class RecipeIdentityRequest implements UseCaseInteractor.Request {
         private String cloneToRecipeId;
         private RecipeIdentityModel model;
 
-        public Builder getDefault() {
+        public static Builder getDefault() {
             return new Builder().
                     setRecipeId("").
                     setCloneToRecipeId("").

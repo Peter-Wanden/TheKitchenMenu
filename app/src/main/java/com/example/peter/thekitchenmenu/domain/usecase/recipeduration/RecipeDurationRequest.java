@@ -6,6 +6,8 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
+import static com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDuration.DO_NOT_CLONE;
+
 public final class RecipeDurationRequest implements UseCaseInteractor.Request {
     @Nonnull
     private final String recipeId;
@@ -66,6 +68,15 @@ public final class RecipeDurationRequest implements UseCaseInteractor.Request {
         private String recipeId;
         private String cloneToRecipeId;
         private RecipeDurationModel model;
+
+        public static Builder getDefault() {
+            return new Builder().
+                    setRecipeId("").
+                    setCloneToRecipeId(DO_NOT_CLONE).
+                    setModel(RecipeDurationModel.Builder.
+                            getDefault().
+                            build());
+        }
 
         public Builder setRecipeId(String recipeId) {
             this.recipeId = recipeId;

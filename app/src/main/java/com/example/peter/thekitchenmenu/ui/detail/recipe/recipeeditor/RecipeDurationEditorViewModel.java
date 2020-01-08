@@ -13,6 +13,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDura
 import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDurationRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDuration;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDurationResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipestate.RecipeState;
 import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 
 import javax.annotation.Nonnull;
@@ -110,19 +111,19 @@ public class RecipeDurationEditorViewModel
     private void processUseCaseResponse(RecipeDurationResponse response) {
         useCaseResponse = response;
         dataLoading = false;
-        RecipeDuration.Result result = response.getResult();
+        RecipeState.ComponentState state = response.getState();
 
-        if (result == Result.DATA_UNAVAILABLE) {
+        if (state == RecipeState.ComponentState.DATA_UNAVAILABLE) {
             dataLoadingError = true;
             updateRecipeComponentStatus(false, false);
             return;
-        } else if (result == Result.INVALID_UNCHANGED) {
+        } else if (state == RecipeState.ComponentState.INVALID_UNCHANGED) {
             updateRecipeComponentStatus(false, false);
-        } else if (result == Result.VALID_UNCHANGED) {
+        } else if (state == RecipeState.ComponentState.VALID_UNCHANGED) {
             updateRecipeComponentStatus(true, false);
-        } else if (result == Result.INVALID_CHANGED) {
+        } else if (state == RecipeState.ComponentState.INVALID_CHANGED) {
             updateRecipeComponentStatus(false, true);
-        } else if (result == Result.VALID_CHANGED) {
+        } else if (state == RecipeState.ComponentState.VALID_CHANGED) {
             updateRecipeComponentStatus(true, true);
         }
         updateObservables();
@@ -131,25 +132,25 @@ public class RecipeDurationEditorViewModel
     private void updateRecipeComponentStatus(boolean isValid, boolean isChanged) {
         if (!updatingUi) {
             RecipeComponentStateModel model = new RecipeComponentStateModel(
-                    RecipeValidator.ComponentName.DURATION,
+                    RecipeState.ComponentName.DURATION,
                     getStatus(isChanged, isValid)
             );
             modelSubmitter.submitRecipeComponentStatus(model);
         }
     }
 
-    private RecipeValidator.ComponentState getStatus(boolean isChanged, boolean isValid) {
+    private RecipeState.ComponentState getStatus(boolean isChanged, boolean isValid) {
         if (!isValid && !isChanged) {
-            return RecipeValidator.ComponentState.INVALID_UNCHANGED;
+            return RecipeState.ComponentState.INVALID_UNCHANGED;
 
         } else if (isValid && !isChanged) {
-            return RecipeValidator.ComponentState.VALID_UNCHANGED;
+            return RecipeState.ComponentState.VALID_UNCHANGED;
 
         } else if (!isValid && isChanged) {
-            return RecipeValidator.ComponentState.INVALID_CHANGED;
+            return RecipeState.ComponentState.INVALID_CHANGED;
 
         } else {
-            return RecipeValidator.ComponentState.VALID_CHANGED;
+            return RecipeState.ComponentState.VALID_CHANGED;
         }
     }
 

@@ -13,6 +13,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePort
 import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortionsModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortionsRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortionsResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipestate.RecipeState;
 import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 
 import javax.annotation.Nonnull;
@@ -239,24 +240,24 @@ public class RecipePortionsEditorViewModel
     private void updateRecipeComponentStatus(boolean isValid, boolean isChanged) {
         if (!updatingUi) {
             modelSubmitter.submitRecipeComponentStatus(new RecipeComponentStateModel(
-                    RecipeValidator.ComponentName.PORTIONS,
+                    RecipeState.ComponentName.PORTIONS,
                     getStatus(isChanged, isValid))
             );
         }
     }
 
-    private RecipeValidator.ComponentState getStatus(boolean isChanged, boolean isValid) {
+    private RecipeState.ComponentState getStatus(boolean isChanged, boolean isValid) {
         if (!isValid && !isChanged) {
-            return RecipeValidator.ComponentState.INVALID_UNCHANGED;
+            return RecipeState.ComponentState.INVALID_UNCHANGED;
 
         } else if (isValid && !isChanged) {
-            return RecipeValidator.ComponentState.VALID_UNCHANGED;
+            return RecipeState.ComponentState.VALID_UNCHANGED;
 
         } else if (!isValid && isChanged) {
-            return RecipeValidator.ComponentState.INVALID_CHANGED;
+            return RecipeState.ComponentState.INVALID_CHANGED;
 
         } else {
-            return RecipeValidator.ComponentState.VALID_CHANGED;
+            return RecipeState.ComponentState.VALID_CHANGED;
         }
     }
 }
