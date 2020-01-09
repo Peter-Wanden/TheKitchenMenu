@@ -139,7 +139,7 @@ public class RecipeIdentityEditorViewModelTest {
     }
 
     @Test
-    public void startNewRecipeId_RecipeModelStatusINVALID_UNCHANGED() {
+    public void startNewRecipeId_stateINVALID_UNCHANGED() {
         // Arrange
         String recipeId = INVALID_NEW_EMPTY.getId();
         // Act
@@ -166,7 +166,7 @@ public class RecipeIdentityEditorViewModelTest {
     }
 
     @Test
-    public void startNewRecipeId_invalidTitle_recipeModelStatusINVALID_CHANGED() {
+    public void startNewRecipeId_invalidTitle_stateINVALID_CHANGED() {
         // Arrange
         String invalidTitle = INVALID_NEW_TITLE_INVALID.getTitle();
 
@@ -226,7 +226,7 @@ public class RecipeIdentityEditorViewModelTest {
     }
 
     @Test
-    public void startNewRecipeId_validTitle_recipeModelStatusVALID_CHANGED() {
+    public void startNewRecipeId_validTitle_stateVALID_CHANGED() {
         // Arrange
         String recipeId = INVALID_NEW_EMPTY.getId();
         String title = VALID_NEW_TITLE_VALID.getTitle();
@@ -287,7 +287,7 @@ public class RecipeIdentityEditorViewModelTest {
     }
 
     @Test
-    public void startNewRecipeId_validTitleInvalidDescription_recipeModelStatusINVALID_CHANGED() {
+    public void startNewRecipeId_validTitleInvalidDescription_stateINVALID_CHANGED() {
         // Arrange
         String recipeId = INVALID_NEW_EMPTY.getId();
 
@@ -349,7 +349,7 @@ public class RecipeIdentityEditorViewModelTest {
     }
 
     @Test
-    public void startNewRecipeId_validTitleValidDescription_recipeModelStatusVALID_CHANGED() {
+    public void startNewRecipeId_validTitleValidDescription_stateVALID_CHANGED() {
         // Arrange
         String recipeId = INVALID_NEW_EMPTY.getId();
         String validTitle = VALID_NEW_COMPLETE.getTitle();
@@ -384,7 +384,7 @@ public class RecipeIdentityEditorViewModelTest {
     }
 
     @Test
-    public void startValidExistingRecipeId_recipeModelStatusVALID_UNCHANGED() {
+    public void startValidExistingRecipeId_stateVALID_UNCHANGED() {
         // Arrange
         String recipeId = VALID_EXISTING_COMPLETE.getId();
         // Act
@@ -416,9 +416,9 @@ public class RecipeIdentityEditorViewModelTest {
 //    }
     // startValidExistingRecipeId_invalidTitle_notSaved
 
-    // startValidExistingRecipeId_invalidTitle_recipeModelStatusINVALID_CHANGED
+    // startValidExistingRecipeId_invalidTitle_stateINVALID_CHANGED
 
-    // startInvalidExistingRecipeId_recipeModelStatusINVALID_UNCHANGED
+    // startInvalidExistingRecipeId_stateINVALID_UNCHANGED
 
     @Test
     public void startWithCloned_existingAndNewId_persistenceCalledWithExistingId() {

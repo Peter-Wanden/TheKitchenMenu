@@ -1,12 +1,12 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipeportions;
 
-import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
+import com.example.peter.thekitchenmenu.domain.UseCaseCommand;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipePortionsRequest implements UseCaseInteractor.Request {
+public final class RecipePortionsRequest implements UseCaseCommand.Request {
     @Nonnull
     private final String recipeId;
     @Nonnull
@@ -67,7 +67,7 @@ public final class RecipePortionsRequest implements UseCaseInteractor.Request {
         private String cloneToRecipeId;
         private RecipePortionsModel model;
 
-        public Builder getDefault() {
+        public static Builder getDefault() {
             return new Builder().
                     setRecipeId("").
                     setCloneToRecipeId("").

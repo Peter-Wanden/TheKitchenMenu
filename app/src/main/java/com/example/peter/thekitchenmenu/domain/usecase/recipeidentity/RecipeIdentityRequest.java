@@ -1,13 +1,13 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipeidentity;
 
-import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
+import com.example.peter.thekitchenmenu.domain.UseCaseCommand;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public final class RecipeIdentityRequest implements UseCaseInteractor.Request {
+public final class RecipeIdentityRequest implements UseCaseCommand.Request {
     @Nonnull
     private final String recipeId;
     @Nonnull

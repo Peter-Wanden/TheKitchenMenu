@@ -1,13 +1,14 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipeidentity;
 
-import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
+import com.example.peter.thekitchenmenu.domain.UseCaseCommand;
 import com.example.peter.thekitchenmenu.domain.usecase.recipestate.RecipeState;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipeIdentityResponse implements UseCaseInteractor.Response {
+public final class RecipeIdentityResponse implements UseCaseCommand.Response {
 
     @Nonnull
     private final RecipeState.ComponentState state;
@@ -37,6 +38,30 @@ public final class RecipeIdentityResponse implements UseCaseInteractor.Response 
     @Nonnull
     public RecipeState.ComponentState getState() {
         return state;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RecipeIdentityResponse that = (RecipeIdentityResponse) o;
+        return state == that.state &&
+                failReasons.equals(that.failReasons) &&
+                model.equals(that.model);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(state, failReasons, model);
+    }
+
+    @Override
+    public String toString() {
+        return "RecipeIdentityResponse{" +
+                "state=" + state +
+                ", failReasons=" + failReasons +
+                ", model=" + model +
+                '}';
     }
 
     public static class Builder {

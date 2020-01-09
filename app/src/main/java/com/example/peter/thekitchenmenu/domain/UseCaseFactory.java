@@ -82,7 +82,7 @@ public class UseCaseFactory {
         return INSTANCE;
     }
 
-    public IngredientCalculator providePortionsUseCase() {
+    public IngredientCalculator provideIngredientCalculator() {
         return new IngredientCalculator(
                 recipePortionsRepository,
                 recipeIngredientRepository,
@@ -92,13 +92,13 @@ public class UseCaseFactory {
         );
     }
 
-    public ConversionFactorStatus provideConversionFactorUseCase() {
+    public ConversionFactorStatus provideConversionFactorStatus() {
         return new ConversionFactorStatus(
                 ingredientRepository
         );
     }
 
-    public RecipeIngredientList provideRecipeIngredientListUseCase() {
+    public RecipeIngredientList provideRecipeIngredientList() {
         return new RecipeIngredientList(
                 recipeIngredientRepository,
                 ingredientRepository,
@@ -106,27 +106,27 @@ public class UseCaseFactory {
         );
     }
 
-    public RecipeIdentityAndDurationList provideRecipeIdentityAndDurationListUseCase() {
+    public RecipeIdentityAndDurationList provideRecipeIdentityAndDurationList() {
         return new RecipeIdentityAndDurationList(
                 recipeIdentityRepository,
                 recipeDurationRepository
         );
     }
 
-    public RecipeIdentity provideRecipeIdentityUseCase() {
+    public RecipeIdentity provideRecipeIdentity() {
         return new RecipeIdentity(
                 recipeIdentityRepository,
                 new TimeProvider());
     }
 
-    public RecipeCourse provideRecipeCourseUseCase() {
+    public RecipeCourse provideRecipeCourse() {
         return new RecipeCourse(
                 recipeCourseRepository,
                 new UniqueIdProvider(),
                 new TimeProvider());
     }
 
-    public TextValidator provideTextValidatorUseCase() {
+    public TextValidator provideTextValidator() {
         Resources resources = application.getResources();
 
         return new TextValidator.Builder().
@@ -141,7 +141,7 @@ public class UseCaseFactory {
                 build();
     }
 
-    public Ingredient provideIngredientEditorUseCase() {
+    public Ingredient provideIngredient() {
         return new Ingredient(
                 ingredientRepository,
                 new UniqueIdProvider(),
@@ -150,18 +150,18 @@ public class UseCaseFactory {
                 );
     }
 
-    public RecipePortions provideRecipePortionsUseCase() {
+    public RecipePortions provideRecipePortions() {
         Resources resources = application.getResources();
         return new RecipePortions(
-                new TimeProvider(),
-                new UniqueIdProvider(),
                 recipePortionsRepository,
+                new UniqueIdProvider(),
+                new TimeProvider(),
                 resources.getInteger(R.integer.recipe_max_servings),
                 resources.getInteger(R.integer.recipe_max_sittings)
         );
     }
 
-    public RecipeDuration provideRecipeDurationUseCase() {
+    public RecipeDuration provideRecipeDuration() {
         Resources resources = application.getResources();
         return new RecipeDuration(
                 recipeDurationRepository,

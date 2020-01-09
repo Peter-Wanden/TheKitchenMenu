@@ -19,6 +19,7 @@ import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortions.DO_NOT_CLONE;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipestate.RecipeState.*;
 
 public class RecipePortionsEditorViewModel
         extends
@@ -118,22 +119,28 @@ public class RecipePortionsEditorViewModel
     }
 
     private void processUseCaseResponse(RecipePortionsResponse response) {
-        useCaseResponse = response;
         dataLoading = false;
+        useCaseResponse = response;
+        ComponentState state = response.getState();
         setPortionsErrorMessage(false);
-        if (response.getResult() == RecipePortions.Result.DATA_UNAVAILABLE) {
+
+        if (state == ComponentState.DATA_UNAVAILABLE) {
             dataLoadingError = true;
             updateRecipeComponentStatus(false, false);
             return;
-        } else if (response.getResult() == RecipePortions.Result.INVALID_UNCHANGED) {
+
+        } else if (state == ComponentState.INVALID_UNCHANGED) {
             setPortionsErrorMessage(true);
             updateRecipeComponentStatus(false, false);
-        } else if (response.getResult() == RecipePortions.Result.VALID_UNCHANGED) {
+
+        } else if (state == ComponentState.VALID_UNCHANGED) {
             updateRecipeComponentStatus(true, false);
-        } else if (response.getResult() == RecipePortions.Result.INVALID_CHANGED) {
+
+        } else if (state == ComponentState.INVALID_CHANGED) {
             setPortionsErrorMessage(true);
             updateRecipeComponentStatus(false, true);
-        } else if (response.getResult() == RecipePortions.Result.VALID_CHANGED) {
+
+        } else if (state == ComponentState.VALID_CHANGED) {
             updateRecipeComponentStatus(true, true);
         }
         updateObservables();
@@ -240,24 +247,24 @@ public class RecipePortionsEditorViewModel
     private void updateRecipeComponentStatus(boolean isValid, boolean isChanged) {
         if (!updatingUi) {
             modelSubmitter.submitRecipeComponentStatus(new RecipeComponentStateModel(
-                    RecipeState.ComponentName.PORTIONS,
+                    ComponentName.PORTIONS,
                     getStatus(isChanged, isValid))
             );
         }
     }
 
-    private RecipeState.ComponentState getStatus(boolean isChanged, boolean isValid) {
+    private ComponentState getStatus(boolean isChanged, boolean isValid) {
         if (!isValid && !isChanged) {
-            return RecipeState.ComponentState.INVALID_UNCHANGED;
+            return ComponentState.INVALID_UNCHANGED;
 
         } else if (isValid && !isChanged) {
-            return RecipeState.ComponentState.VALID_UNCHANGED;
+            return ComponentState.VALID_UNCHANGED;
 
         } else if (!isValid && isChanged) {
-            return RecipeState.ComponentState.INVALID_CHANGED;
+            return ComponentState.INVALID_CHANGED;
 
         } else {
-            return RecipeState.ComponentState.VALID_CHANGED;
+            return ComponentState.VALID_CHANGED;
         }
     }
 }

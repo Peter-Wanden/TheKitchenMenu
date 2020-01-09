@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipeduration;
 
-import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
+import com.example.peter.thekitchenmenu.domain.UseCaseCommand;
 import com.example.peter.thekitchenmenu.domain.usecase.recipestate.RecipeState;
 
 import java.util.LinkedList;
@@ -9,7 +9,7 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipeDurationResponse implements UseCaseInteractor.Response {
+public final class RecipeDurationResponse implements UseCaseCommand.Response {
     @Nonnull
     private final RecipeState.ComponentState state;
     @Nonnull

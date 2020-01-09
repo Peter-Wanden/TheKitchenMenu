@@ -12,6 +12,9 @@ public abstract class RecipeMediatorAbstract <P extends RecipeMediatorAbstract.R
         this.callback = callback;
     }
 
+    interface Request {
+    }
+
     interface Response {
     }
 

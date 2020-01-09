@@ -2,12 +2,12 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipeingredientcalculat
 
 import androidx.annotation.NonNull;
 
-import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
+import com.example.peter.thekitchenmenu.domain.UseCaseCommand;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
 
 import java.util.Objects;
 
-public final class IngredientCalculatorRequest implements UseCaseInteractor.Request {
+public final class IngredientCalculatorRequest implements UseCaseCommand.Request {
     @NonNull
     private final String recipeId;
     @NonNull

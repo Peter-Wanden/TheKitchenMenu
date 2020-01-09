@@ -4,8 +4,14 @@ import com.example.peter.thekitchenmenu.data.entity.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
+import com.example.peter.thekitchenmenu.domain.usecase.recipestate.RecipeState;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.example.peter.thekitchenmenu.domain.usecase.recipestate.RecipeState.*;
 
 public class RecipePortions
         extends UseCaseInteractor<RecipePortionsRequest, RecipePortionsResponse>
@@ -13,12 +19,12 @@ public class RecipePortions
 
     private static final String TAG = "tkm-" + RecipePortions.class.getSimpleName() + ": ";
 
-    public enum Result {
-        DATA_UNAVAILABLE,
-        INVALID_UNCHANGED,
-        VALID_UNCHANGED,
-        INVALID_CHANGED,
-        VALID_CHANGED,
+    public enum FailReason {
+        SERVINGS_TOO_LOW,
+        SERVINGS_TOO_HIGH,
+        SITTINGS_TOO_LOW,
+        SITTINGS_TOO_HIGH,
+        NONE
     }
 
     public static final String DO_NOT_CLONE = "";
@@ -26,8 +32,8 @@ public class RecipePortions
     public static final int MIN_SITTINGS = 1;
 
     private final TimeProvider timeProvider;
-    private final UniqueIdProvider idProvider;
     private final RepositoryRecipePortions repository;
+    private final UniqueIdProvider idProvider;
 
     private final int maxServings;
     private final int maxSittings;
@@ -37,11 +43,12 @@ public class RecipePortions
     private RecipePortionsModel responseModel;
     private boolean isCloned;
 
-    public RecipePortions(TimeProvider timeProvider,
+    public RecipePortions(RepositoryRecipePortions repository,
                           UniqueIdProvider idProvider,
-                          RepositoryRecipePortions repository,
+                          TimeProvider timeProvider,
                           int maxServings,
                           int maxSittings) {
+
         this.timeProvider = timeProvider;
         this.idProvider = idProvider;
         this.repository = repository;
@@ -53,18 +60,17 @@ public class RecipePortions
 
     @Override
     protected void execute(RecipePortionsRequest request) {
-        requestModel = request.getModel();
         System.out.println(TAG + request);
+        requestModel = request.getModel();
         if (isNewRequest(request)) {
             loadData(request);
         } else {
-            sendResponse();
+            buildResponse();
         }
     }
 
     private boolean isNewRequest(RecipePortionsRequest request) {
-        return !recipeId.equals(request.getRecipeId()) ||
-                requestModel.equals(new RecipePortionsModel.Builder().getDefault().build());
+        return !recipeId.equals(request.getRecipeId());
     }
 
     private void loadData(RecipePortionsRequest request) {
@@ -91,7 +97,7 @@ public class RecipePortions
         }
 
         equaliseState();
-        sendResponse();
+        buildResponse();
     }
 
     private RecipePortionsModel convertEntityToModel(RecipePortionsEntity entity) {
@@ -111,7 +117,7 @@ public class RecipePortions
         requestModel = createNewModel();
         equaliseState();
         save(responseModel);
-        sendResponse();
+        buildResponse();
     }
 
     private RecipePortionsModel createNewModel() {
@@ -126,32 +132,72 @@ public class RecipePortions
                 build();
     }
 
-    private void sendResponse() {
-        RecipePortionsResponse.Builder builder = new RecipePortionsResponse.Builder();
+    private void buildResponse() {
+        RecipePortionsResponse.Builder builder = new RecipePortionsResponse.Builder().
+                setState(getState()).
+                setFailReasons(getFailReasons()
+        );
 
+        equaliseState();
+
+        RecipePortionsResponse response = builder.
+                setModel(responseModel).
+                build();
+
+        sendResponse(response);
+    }
+
+    private RecipeState.ComponentState getState() {
         if (!isValid() && !isChanged()) {
-            builder.setResult(Result.INVALID_UNCHANGED);
+            return ComponentState.INVALID_UNCHANGED;
 
         } else if (isValid() && !isChanged()) {
-            builder.setResult(Result.VALID_UNCHANGED);
+            return ComponentState.VALID_UNCHANGED;
 
         } else if (!isValid() && isChanged()) {
-            builder.setResult(Result.INVALID_CHANGED);
+            return ComponentState.INVALID_CHANGED;
 
-        } else if (isValid() && isChanged()) {
-            builder.setResult(Result.VALID_CHANGED);
-
+        } else  {
             requestModel = RecipePortionsModel.Builder.
                     basedOn(requestModel).
                     setLastUpdate(timeProvider.getCurrentTimeInMills()).
                     build();
             save(requestModel);
-        }
 
-        equaliseState();
-        RecipePortionsResponse response = builder.setModel(responseModel).build();
+            return ComponentState.VALID_CHANGED;
+        }
+    }
+
+    private List<FailReason> getFailReasons() {
+        List<FailReason> failReasons = new ArrayList<>();
+
+        if (requestModel.getServings() < MIN_SERVINGS) {
+            failReasons.add(FailReason.SERVINGS_TOO_LOW);
+        }
+        if (requestModel.getServings() > maxServings) {
+            failReasons.add(FailReason.SERVINGS_TOO_HIGH);
+        }
+        if (requestModel.getSittings() < MIN_SITTINGS) {
+            failReasons.add(FailReason.SITTINGS_TOO_LOW);
+        }
+        if (requestModel.getSittings() > maxSittings) {
+            failReasons.add(FailReason.SITTINGS_TOO_HIGH);
+        }
+        if (isValid()) {
+            failReasons.add(FailReason.NONE);
+        }
+        return failReasons;
+    }
+
+    private void sendResponse(RecipePortionsResponse response) {
         System.out.println(TAG + response);
-        getUseCaseCallback().onSuccess(response);
+        ComponentState state = response.getState();
+
+        if (state == ComponentState.VALID_UNCHANGED || state == ComponentState.VALID_CHANGED) {
+            getUseCaseCallback().onSuccess(response);
+        } else {
+            getUseCaseCallback().onError(response);
+        }
     }
 
     private void equaliseState() {

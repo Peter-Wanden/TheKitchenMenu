@@ -38,15 +38,16 @@ public class RecipeCourseTest {
 
     // region helper fields ------------------------------------------------------------------------
     @Mock
-    RepositoryRecipeCourse repoMock;
+    RepositoryRecipeCourse repoCourseMock;
     @Captor
-    ArgumentCaptor<DataSource.GetAllCallback<RecipeCourseEntity>> repoCallback;
+    ArgumentCaptor<DataSource.GetAllCallback<RecipeCourseEntity>> repoCourseCallback;
     @Mock
     UniqueIdProvider idProviderMock;
     @Mock
     TimeProvider timeProviderMock;
     @Captor
     ArgumentCaptor<RecipeCourseEntity> entityCaptor;
+
     private UseCaseHandler handler;
     private RecipeCourseRequest request;
     private RecipeCourseResponse actualResponse;
@@ -63,7 +64,7 @@ public class RecipeCourseTest {
 
     private RecipeCourse givenUseCase() {
         return new RecipeCourse(
-                repoMock,
+                repoCourseMock,
                 idProviderMock,
                 timeProviderMock
         );
@@ -76,7 +77,7 @@ public class RecipeCourseTest {
         // Act
         handler.execute(SUT, request, getCallback());
         // Assert
-        verify(repoMock).getCoursesForRecipe(eq(EXISTING_RECIPE_ID), repoCallback.capture());
+        verify(repoCourseMock).getCoursesForRecipe(eq(EXISTING_RECIPE_ID), repoCourseCallback.capture());
     }
 
     @Test
@@ -86,7 +87,7 @@ public class RecipeCourseTest {
         // Act
         handler.execute(SUT, request, getCallback());
         // Assert
-        confirmRepoCalledAndReturnMatchingCourses(request.getRecipeId());
+        confirmRepoCourseCalledAndReturnMatchingCourses(request.getRecipeId());
         assertEquals(RecipeState.ComponentState.DATA_UNAVAILABLE, actualResponse.getStatus());
         assertEquals(0, actualResponse.getCourseList().size());
     }
@@ -98,7 +99,7 @@ public class RecipeCourseTest {
         // Act
         handler.execute(SUT, request, getCallback());
         // Assert
-        confirmRepoCalledAndReturnMatchingCourses(request.getRecipeId());
+        confirmRepoCourseCalledAndReturnMatchingCourses(request.getRecipeId());
 
         int expectedNumberOfModels = TestDataRecipeCourseEntity.
                 getAllByRecipeId(EXISTING_RECIPE_ID).
@@ -119,7 +120,7 @@ public class RecipeCourseTest {
         // Act
         handler.execute(SUT, request, getCallback());
         // Assert
-        verify(repoMock).getCoursesForRecipe(eq(EXISTING_RECIPE_ID), anyObject());
+        verify(repoCourseMock).getCoursesForRecipe(eq(EXISTING_RECIPE_ID), anyObject());
     }
 
     @Test
@@ -132,12 +133,12 @@ public class RecipeCourseTest {
         // Act
         handler.execute(SUT, request, getCallback());
         // Assert
-        confirmRepoCalledAndReturnMatchingCourses(request.getRecipeId());
+        confirmRepoCourseCalledAndReturnMatchingCourses(request.getRecipeId());
         // Confirm the correct number of entities have been cloned
         int expectedNumberOfClonesSaved = TestDataRecipeCourseEntity.
                 getAllByRecipeId(EXISTING_RECIPE_ID).
                 size();
-        verify(repoMock, times(expectedNumberOfClonesSaved)).save(entityCaptor.capture());
+        verify(repoCourseMock, times(expectedNumberOfClonesSaved)).save(entityCaptor.capture());
         // Confirm all entities have been saved with the cloneToId
         for (RecipeCourseEntity entity : entityCaptor.getAllValues()) {
             assertEquals(NEW_RECIPE_ID, entity.getRecipeId());
@@ -155,7 +156,7 @@ public class RecipeCourseTest {
         // Act
         handler.execute(SUT, request, getCallback());
         // Assert
-        confirmRepoCalledAndReturnMatchingCourses(request.getRecipeId());
+        confirmRepoCourseCalledAndReturnMatchingCourses(request.getRecipeId());
         // confirm target is in results
         assertTrue(actualResponse.getCourseList().containsKey(RecipeCourse.Course.COURSE_ONE));
         // confirm target has correct recipeId
@@ -175,7 +176,7 @@ public class RecipeCourseTest {
         // Act
         handler.execute(SUT, request, getCallback());
         // Assert - confirm target deleted from database and list
-        verify(repoMock).deleteById(eq(targetsDataBaseId));
+        verify(repoCourseMock).deleteById(eq(targetsDataBaseId));
         assertNull(actualResponse.getCourseList().get(RecipeCourse.Course.COURSE_ONE));
         // confirm data has changed
         if (actualResponse.getCourseList().size() > 0) {
@@ -214,15 +215,15 @@ public class RecipeCourseTest {
         };
     }
 
-    private void confirmRepoCalledAndReturnMatchingCourses(String recipeId) {
+    private void confirmRepoCourseCalledAndReturnMatchingCourses(String recipeId) {
         // Confirm repo called and capture the callback
-        verify(repoMock).getCoursesForRecipe(eq(recipeId), repoCallback.capture());
+        verify(repoCourseMock).getCoursesForRecipe(eq(recipeId), repoCourseCallback.capture());
         // Find the matching values in the test data and return the callback with results
         List<RecipeCourseEntity> courseEntityList = getAllByRecipeId(recipeId);
         if (courseEntityList.size() > 0) {
-            repoCallback.getValue().onAllLoaded(getAllByRecipeId(recipeId));
+            repoCourseCallback.getValue().onAllLoaded(getAllByRecipeId(recipeId));
         } else {
-            repoCallback.getValue().onDataNotAvailable();
+            repoCourseCallback.getValue().onDataNotAvailable();
         }
     }
 

@@ -1,4 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipestate;
 
-public class RecipeStateResponse {
+import com.example.peter.thekitchenmenu.domain.UseCaseCommand;
+
+public class RecipeStateResponse implements UseCaseCommand.Response {
 }

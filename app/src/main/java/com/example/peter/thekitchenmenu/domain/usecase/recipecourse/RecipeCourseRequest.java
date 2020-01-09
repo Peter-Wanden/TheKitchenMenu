@@ -1,5 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipecourse;
 
+import com.example.peter.thekitchenmenu.domain.UseCaseCommand;
 import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
 
 import java.util.Objects;
@@ -9,7 +10,7 @@ import javax.annotation.Nullable;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipecourse.RecipeCourse.DO_NOT_CLONE;
 
-public final class RecipeCourseRequest implements UseCaseInteractor.Request {
+public final class RecipeCourseRequest implements UseCaseCommand.Request {
     @Nonnull
     private final String recipeId;
     @Nonnull

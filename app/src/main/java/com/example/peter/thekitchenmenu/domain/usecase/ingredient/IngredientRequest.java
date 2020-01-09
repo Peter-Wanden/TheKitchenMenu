@@ -1,12 +1,13 @@
 package com.example.peter.thekitchenmenu.domain.usecase.ingredient;
 
+import com.example.peter.thekitchenmenu.domain.UseCaseCommand;
 import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class IngredientRequest implements UseCaseInteractor.Request {
+public final class IngredientRequest implements UseCaseCommand.Request {
     @Nonnull
     private final IngredientModel model;
 

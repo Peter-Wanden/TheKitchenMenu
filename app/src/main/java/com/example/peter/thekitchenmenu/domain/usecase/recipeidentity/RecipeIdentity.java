@@ -25,8 +25,8 @@ public class RecipeIdentity
 
     public static final String DO_NOT_CLONE = "";
 
-    private RepositoryRecipeIdentity repository;
     private TimeProvider timeProvider;
+    private RepositoryRecipeIdentity repository;
     private RecipeIdentityModel requestModel;
     private RecipeIdentityModel responseModel;
 
@@ -53,8 +53,7 @@ public class RecipeIdentity
     }
 
     private boolean isNewRequest(RecipeIdentityRequest request) {
-        return !recipeId.equals(request.getRecipeId()) ||
-                requestModel.equals(new RecipeIdentityModel.Builder().getDefault().build());
+        return !recipeId.equals(request.getRecipeId());
     }
 
     private void loadData(RecipeIdentityRequest request) {
@@ -104,11 +103,11 @@ public class RecipeIdentity
     }
 
     private RecipeIdentityModel createNewModel() {
-        long time = timeProvider.getCurrentTimeInMills();
+        long currentTime = timeProvider.getCurrentTimeInMills();
         return new RecipeIdentityModel.Builder().getDefault().
                 setId(recipeId).
-                setCreateDate(time).
-                setLastUpdate(time).
+                setCreateDate(currentTime).
+                setLastUpdate(currentTime).
                 build();
     }
 
@@ -130,6 +129,7 @@ public class RecipeIdentity
     private ComponentState getState() {
         if (isDataUnAvailable) {
             return ComponentState.DATA_UNAVAILABLE;
+
 
         } else if (!isValid() && !isModelChanged()) {
             return ComponentState.INVALID_UNCHANGED;
@@ -156,7 +156,6 @@ public class RecipeIdentity
 
         if (isDataUnAvailable) {
             failReasons.add(FailReason.DATA_UNAVAILABLE);
-
         }
         if (requestModel.getTitle().isEmpty()) {
             failReasons.add(FailReason.INVALID_TITLE);
@@ -174,6 +173,7 @@ public class RecipeIdentity
         if (state == ComponentState.VALID_UNCHANGED || state == ComponentState.VALID_CHANGED) {
             getUseCaseCallback().onSuccess(response);
         } else {
+            if (isDataUnAvailable) isDataUnAvailable = false;
             getUseCaseCallback().onError(response);
         }
     }

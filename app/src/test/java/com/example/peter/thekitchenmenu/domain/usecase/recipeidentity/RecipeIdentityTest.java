@@ -76,7 +76,7 @@ public class RecipeIdentityTest {
     }
 
     @Test
-    public void newRecipeId_response_NO_DATA_AVAILABLE() {
+    public void newId_DATA_UNAVAILABLE() {
         // Arrange
         // Act
         givenNewEmptyModelSimulateNothingReturnedFromDatabase();
@@ -84,8 +84,11 @@ public class RecipeIdentityTest {
         assertEquals(ComponentState.DATA_UNAVAILABLE, actualResponse.getState());
     }
 
+    // newId_validTitleInvalidDescription_stateINVALID_CHANGED
+    // newId_validTitleInvalidDescription_failReasonsINVALID_DESCRIPTION
+
     @Test
-    public void newRecipeId_invalidTitleValidDescription_responseInvalidChanged() {
+    public void newId_invalidTitleValidDescription_stateINVALID_CHANGED() {
         // Arrange
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(INVALID_NEW_EMPTY.getCreateDate());
 
@@ -110,8 +113,10 @@ public class RecipeIdentityTest {
         assertEquals(ComponentState.INVALID_CHANGED, actualResponse.getState());
     }
 
+    // newId_invalidTitleValidDescription_failReasonsINVALID_TITLE
+
     @Test
-    public void newRecipeId_validTitle_valuesPersisted() {
+    public void newId_validTitleNoDescription_valuesPersisted() {
         // Arrange
         when(timeProviderMock.getCurrentTimeInMills()).
                 thenReturn(VALID_NEW_TITLE_VALID.getCreateDate());
@@ -138,8 +143,11 @@ public class RecipeIdentityTest {
         assertEquals(ComponentState.VALID_CHANGED, actualResponse.getState());
     }
 
+    // newId_validTitleValidDescription_stateVALID_CHANGED
+    // newId_validTitleValidDescription_failReasonsNONE
+
     @Test
-    public void newRecipeId_validTitleValidDescription_valuesPersisted() {
+    public void newId_validTitleValidDescription_valuesPersisted() {
         // Arrange
         when(timeProviderMock.getCurrentTimeInMills()).
                 thenReturn(VALID_NEW_COMPLETE.getCreateDate());
@@ -168,7 +176,7 @@ public class RecipeIdentityTest {
     }
 
     @Test
-    public void existingRecipeId_existingValidValuesLoaded_VALID_UNCHANGED() {
+    public void existingId_existingValidValuesLoaded_VALID_UNCHANGED() {
         // Arrange
         RecipeIdentityRequest request = getRequest(
                 VALID_EXISTING_COMPLETE.getId(), DO_NOT_CLONE, getDefaultModel());

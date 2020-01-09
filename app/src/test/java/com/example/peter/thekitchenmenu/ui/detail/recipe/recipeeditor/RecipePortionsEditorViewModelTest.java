@@ -98,7 +98,11 @@ public class RecipePortionsEditorViewModelTest {
         UseCaseHandler handler = new UseCaseHandler(new UseCaseSchedulerMock()
         );
         RecipePortions useCase = new RecipePortions(
-                timeProviderMock, idProviderMock, repoMock, MAX_SERVINGS, MAX_SITTINGS
+                repoMock,
+                idProviderMock,
+                timeProviderMock,
+                MAX_SERVINGS,
+                MAX_SITTINGS
         );
 
         return new RecipePortionsEditorViewModel(

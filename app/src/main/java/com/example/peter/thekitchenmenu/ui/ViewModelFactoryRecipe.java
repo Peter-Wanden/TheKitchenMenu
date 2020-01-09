@@ -72,7 +72,7 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
             //noinspection unchecked
             return (T) new RecipeCatalogViewModel(
                     useCaseHandler,
-                    useCaseFactory.provideRecipeIdentityAndDurationListUseCase()
+                    useCaseFactory.provideRecipeIdentityAndDurationList()
             );
         } else if (modelClass.isAssignableFrom(RecipeEditorViewModel.class)) {
             //noinspection unchecked
@@ -87,36 +87,36 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
             //noinspection unchecked
             return (T) new RecipeIdentityEditorViewModel(
                     useCaseHandler,
-                    useCaseFactory.provideRecipeIdentityUseCase(),
-                    useCaseFactory.provideTextValidatorUseCase(),
+                    useCaseFactory.provideRecipeIdentity(),
+                    useCaseFactory.provideTextValidator(),
                     application.getResources()
             );
         } else if (modelClass.isAssignableFrom(RecipeCourseEditorViewModel.class)) {
             //noinspection unchecked
             return (T) new RecipeCourseEditorViewModel(
                     useCaseHandler,
-                    useCaseFactory.provideRecipeCourseUseCase()
+                    useCaseFactory.provideRecipeCourse()
             );
         } else if (modelClass.isAssignableFrom(RecipeDurationEditorViewModel.class)) {
             // noinspection unchecked
             return (T) new RecipeDurationEditorViewModel(
                     useCaseHandler,
-                    useCaseFactory.provideRecipeDurationUseCase(),
+                    useCaseFactory.provideRecipeDuration(),
                     application.getResources()
             );
         } else if (modelClass.isAssignableFrom(RecipePortionsEditorViewModel.class)) {
             // noinspection unchecked
             return (T) new RecipePortionsEditorViewModel(
                     useCaseHandler,
-                    useCaseFactory.provideRecipePortionsUseCase(),
+                    useCaseFactory.provideRecipePortions(),
                     application.getResources()
             );
         } else if (modelClass.isAssignableFrom(RecipeIngredientCalculatorViewModel.class)) {
             // noinspection unchecked
             return (T) new RecipeIngredientCalculatorViewModel(
                     useCaseHandler,
-                    useCaseFactory.providePortionsUseCase(),
-                    useCaseFactory.provideConversionFactorUseCase(),
+                    useCaseFactory.provideIngredientCalculator(),
+                    useCaseFactory.provideConversionFactorStatus(),
                     application.getResources(),
                     new NumberFormatter(application.getResources()),
                     new MeasurementErrorMessageMaker(application.getResources(),
@@ -126,14 +126,14 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
             // noinspection unchecked
             return (T) new RecipeNameAndPortionsViewModel(
                     useCaseHandler,
-                    useCaseFactory.provideRecipeIdentityUseCase(),
-                    useCaseFactory.provideRecipePortionsUseCase()
+                    useCaseFactory.provideRecipeIdentity(),
+                    useCaseFactory.provideRecipePortions()
             );
         } else if (modelClass.isAssignableFrom(RecipeIngredientListViewModel.class)) {
             // noinspection unchecked
             return (T) new RecipeIngredientListViewModel(
                     useCaseHandler,
-                    useCaseFactory.provideRecipeIngredientListUseCase()
+                    useCaseFactory.provideRecipeIngredientList()
             );
         } else if (modelClass.isAssignableFrom(RecipeIngredientListItemViewModel.class)) {
             // noinspection unchecked

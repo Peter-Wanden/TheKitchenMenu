@@ -10,6 +10,8 @@ import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import java.util.LinkedList;
 import java.util.List;
 
+import static com.example.peter.thekitchenmenu.domain.usecase.recipestate.RecipeState.*;
+
 public class RecipeDuration
         extends UseCaseInteractor<RecipeDurationRequest, RecipeDurationResponse>
         implements DataSource.GetEntityCallback<RecipeDurationEntity> {
@@ -23,16 +25,17 @@ public class RecipeDuration
     }
 
     public static final String DO_NOT_CLONE = "";
-
-    private final TimeProvider timeProvider;
-    private final RepositoryRecipeDuration repository;
     private final int MAX_PREP_TIME;
     private final int MAX_COOK_TIME;
 
+    private final TimeProvider timeProvider;
+    private final RepositoryRecipeDuration repository;
+
     private String recipeId = "";
-    private RecipeDurationModel requestModel = RecipeDurationModel.Builder.getDefault().build();
-    private RecipeDurationModel responseModel = RecipeDurationModel.Builder.getDefault().build();
     private boolean isCloned;
+
+    private RecipeDurationModel requestModel;
+    private RecipeDurationModel responseModel;
 
     public RecipeDuration(RepositoryRecipeDuration repository,
                           TimeProvider timeProvider,
@@ -42,6 +45,8 @@ public class RecipeDuration
         this.timeProvider = timeProvider;
         MAX_PREP_TIME = maxPrepTime;
         MAX_COOK_TIME = maxCookTime;
+        requestModel = RecipeDurationModel.Builder.getDefault().build();
+        responseModel = RecipeDurationModel.Builder.getDefault().build();
     }
 
     @Override
@@ -167,18 +172,29 @@ public class RecipeDuration
         sendResponse(response);
     }
 
-    private void equaliseState() {
-        responseModel = requestModel;
+    private ComponentState getState() {
+        if (!isValid() && !isChanged()) {
+            return ComponentState.INVALID_UNCHANGED;
+
+        } else if (isValid() && !isChanged()) {
+            return ComponentState.VALID_UNCHANGED;
+
+        } else if (!isValid() && isChanged()) {
+            return ComponentState.INVALID_CHANGED;
+
+        } else {
+            requestModel = RecipeDurationModel.Builder.
+                    basedOn(requestModel).
+                    setLastUpdate(timeProvider.getCurrentTimeInMills()).
+                    build();
+            save(requestModel);
+
+            return ComponentState.VALID_CHANGED;
+        }
     }
 
-    private void sendResponse(RecipeDurationResponse response) {
-        System.out.println(TAG + response);
-        if (response.getState() == RecipeState.ComponentState.VALID_CHANGED ||
-                response.getState() == RecipeState.ComponentState.VALID_UNCHANGED) {
-            getUseCaseCallback().onSuccess(response);
-        } else {
-            getUseCaseCallback().onError(response);
-        }
+    private boolean isChanged() {
+        return !requestModel.equals(responseModel);
     }
 
     private List<FailReason> getFailReasons() {
@@ -196,34 +212,24 @@ public class RecipeDuration
         return failReasons;
     }
 
-    private RecipeState.ComponentState getState() {
-        if (!isValid() && !isChanged()) {
-            return RecipeState.ComponentState.INVALID_UNCHANGED;
-
-        } else if (isValid() && !isChanged()) {
-            return RecipeState.ComponentState.VALID_UNCHANGED;
-
-        } else if (!isValid() && isChanged()) {
-            return RecipeState.ComponentState.INVALID_CHANGED;
-
-        } else {
-            requestModel = RecipeDurationModel.Builder.
-                    basedOn(requestModel).
-                    setLastUpdate(timeProvider.getCurrentTimeInMills()).
-                    build();
-            save(requestModel);
-
-            return RecipeState.ComponentState.VALID_CHANGED;
-        }
-    }
-
     private boolean isValid() {
         return requestModel.getTotalPrepTime() <= MAX_PREP_TIME &&
                 requestModel.getTotalCookTime() <= MAX_COOK_TIME;
     }
 
-    private boolean isChanged() {
-        return !requestModel.equals(responseModel);
+    private void equaliseState() {
+        responseModel = requestModel;
+    }
+
+    private void sendResponse(RecipeDurationResponse response) {
+        System.out.println(TAG + response);
+        ComponentState state = response.getState();
+
+        if (state == ComponentState.VALID_CHANGED || state == ComponentState.VALID_UNCHANGED) {
+            getUseCaseCallback().onSuccess(response);
+        } else {
+            getUseCaseCallback().onError(response);
+        }
     }
 
     private void save(RecipeDurationModel model) {

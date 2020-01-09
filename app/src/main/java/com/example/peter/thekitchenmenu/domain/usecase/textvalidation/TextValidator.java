@@ -12,7 +12,9 @@ public class TextValidator
         LONG_TEXT
     }
 
-    public enum Result {
+    // State comes from parent use case
+
+    public enum Result { // FailReasons are an aggregate from here and parent use case
         TOO_SHORT,
         TOO_LONG,
         VALID

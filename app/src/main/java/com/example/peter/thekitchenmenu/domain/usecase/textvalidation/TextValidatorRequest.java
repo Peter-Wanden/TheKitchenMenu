@@ -1,12 +1,12 @@
 package com.example.peter.thekitchenmenu.domain.usecase.textvalidation;
 
-import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
+import com.example.peter.thekitchenmenu.domain.UseCaseCommand;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class TextValidatorRequest implements UseCaseInteractor.Request {
+public final class TextValidatorRequest implements UseCaseCommand.Request {
     @Nonnull
     private final TextValidator.RequestType type;
     @Nonnull

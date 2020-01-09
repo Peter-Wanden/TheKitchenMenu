@@ -58,8 +58,8 @@ public class ViewModelFactoryIngredient extends ViewModelProvider.NewInstanceFac
             return (T) new IngredientEditorViewModel(
                     application.getResources(),
                     useCaseHandler,
-                    useCaseFactory.provideTextValidatorUseCase(),
-                    useCaseFactory.provideIngredientEditorUseCase());
+                    useCaseFactory.provideTextValidator(),
+                    useCaseFactory.provideIngredient());
 
         } else if (modelClass.isAssignableFrom(IngredientViewerViewModel.class)) {
             // noinspection unchecked

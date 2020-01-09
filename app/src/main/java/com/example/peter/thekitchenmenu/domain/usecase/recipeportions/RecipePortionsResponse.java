@@ -1,26 +1,38 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipeportions;
 
-import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
+import com.example.peter.thekitchenmenu.domain.UseCaseCommand;
 
+import java.util.List;
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipePortionsResponse implements UseCaseInteractor.Response {
+import static com.example.peter.thekitchenmenu.domain.usecase.recipestate.RecipeState.*;
+
+public final class RecipePortionsResponse implements UseCaseCommand.Response {
     @Nonnull
-    private final RecipePortions.Result result;
+    private final ComponentState state;
+    @Nonnull
+    private final List<RecipePortions.FailReason> failReasons;
     @Nonnull
     private final RecipePortionsModel model;
 
-    private RecipePortionsResponse(@Nonnull RecipePortions.Result result,
+    private RecipePortionsResponse(@Nonnull ComponentState state,
+                                   @Nonnull List<RecipePortions.FailReason> failReasons,
                                    @Nonnull RecipePortionsModel model) {
-        this.result = result;
+        this.state = state;
+        this.failReasons = failReasons;
         this.model = model;
     }
 
     @Nonnull
-    public RecipePortions.Result getResult() {
-        return result;
+    public ComponentState getState() {
+        return state;
+    }
+
+    @Nonnull
+    public List<RecipePortions.FailReason> getFailReasons() {
+        return failReasons;
     }
 
     @Nonnull
@@ -32,39 +44,46 @@ public final class RecipePortionsResponse implements UseCaseInteractor.Response 
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RecipePortionsResponse response = (RecipePortionsResponse) o;
-        return result == response.result &&
-                model.equals(response.model);
+        RecipePortionsResponse that = (RecipePortionsResponse) o;
+        return state == that.state &&
+                failReasons.equals(that.failReasons) &&
+                model.equals(that.model);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(result, model);
+        return Objects.hash(state, failReasons, model);
     }
 
-    @Nonnull
     @Override
     public String toString() {
         return "RecipePortionsResponse{" +
-                "result=" + result +
+                "state=" + state +
+                ", failReasons=" + failReasons +
                 ", model=" + model +
                 '}';
     }
 
     public static class Builder {
-        private RecipePortions.Result result;
+        private ComponentState state;
+        private List<RecipePortions.FailReason> failReasons;
         private RecipePortionsModel model;
 
         public static Builder getDefault() {
             return new Builder().
-                    setResult(RecipePortions.Result.INVALID_UNCHANGED).
+                    setState(ComponentState.INVALID_UNCHANGED).
                     setModel(new RecipePortionsModel.Builder().
                             getDefault().
                             build());
         }
 
-        public Builder setResult(RecipePortions.Result result) {
-            this.result = result;
+        public Builder setState(ComponentState state) {
+            this.state = state;
+            return this;
+        }
+
+        public Builder setFailReasons(List<RecipePortions.FailReason> failReasons) {
+            this.failReasons = failReasons;
             return this;
         }
 
@@ -75,7 +94,8 @@ public final class RecipePortionsResponse implements UseCaseInteractor.Response 
 
         public RecipePortionsResponse build() {
             return new RecipePortionsResponse(
-                    result,
+                    state,
+                    failReasons,
                     model
             );
         }
