@@ -7,7 +7,7 @@ import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
-import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
+import com.example.peter.thekitchenmenu.domain.UseCase;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModelBuilder;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
@@ -22,7 +22,7 @@ import java.util.Map;
  * Returns a list of ingredients for a given recipeId
  */
 public class RecipeIngredientList extends
-        UseCaseInteractor<RecipeIngredientListRequest, RecipeIngredientListResponse> {
+        UseCase<RecipeIngredientListRequest, RecipeIngredientListResponse> {
 
     private static final String TAG = "tkm-" + RecipeIngredientList.class.getSimpleName() + ": ";
 

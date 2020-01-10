@@ -5,7 +5,7 @@ import com.example.peter.thekitchenmenu.data.entity.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
+import com.example.peter.thekitchenmenu.domain.UseCase;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipePortionsEntity;
@@ -422,8 +422,8 @@ public class RecipePortionsTest {
         repoPortionsCallback.getValue().onEntityLoaded(VALID_EXISTING);
     }
 
-    private UseCaseInteractor.Callback<RecipePortionsResponse> getCallback() {
-        return new UseCaseInteractor.Callback<RecipePortionsResponse>() {
+    private UseCase.Callback<RecipePortionsResponse> getCallback() {
+        return new UseCase.Callback<RecipePortionsResponse>() {
 
             @Override
             public void onSuccess(RecipePortionsResponse response) {

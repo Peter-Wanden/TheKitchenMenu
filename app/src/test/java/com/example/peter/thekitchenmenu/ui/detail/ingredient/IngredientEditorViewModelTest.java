@@ -352,7 +352,7 @@ public class IngredientEditorViewModelTest {
 
         String description = new StringMaker().
                 makeStringOfExactLength(longTextMaxLength).
-                addOneCharacter().
+                thenAddOneCharacter().
                 build();
         // Act
         SUT.start();
@@ -371,7 +371,7 @@ public class IngredientEditorViewModelTest {
 
         String description = new StringMaker().
                 makeStringOfExactLength(longTextMaxLength).
-                addOneCharacter().
+                thenAddOneCharacter().
                 build();
         // Act
         SUT.start();
@@ -533,7 +533,7 @@ public class IngredientEditorViewModelTest {
         // Arrange
         String nameTooShort = new StringMaker().
                 makeStringOfExactLength(shortTextMinLength).
-                removeOneCharacter().
+                thenRemoveOneCharacter().
                 build();
         // Act
         SUT.start(VALID_EXISTING_COMPLETE.getId());
@@ -627,7 +627,7 @@ public class IngredientEditorViewModelTest {
         // Arrange
         String description = new StringMaker().
                 makeStringOfExactLength(longTextMaxLength).
-                addOneCharacter().
+                thenAddOneCharacter().
                 build();
         // Act
         SUT.start(VALID_EXISTING_COMPLETE.getId());
@@ -642,7 +642,7 @@ public class IngredientEditorViewModelTest {
         // Arrange
         String description = new StringMaker().
                 makeStringOfExactLength(longTextMaxLength).
-                addOneCharacter().
+                thenAddOneCharacter().
                 build();
         // Act
         SUT.start(VALID_EXISTING_COMPLETE.getId());

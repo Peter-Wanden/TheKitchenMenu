@@ -14,12 +14,12 @@ public class StringMaker {
         return this;
     }
 
-    public StringMaker addOneCharacter() {
+    public StringMaker thenAddOneCharacter() {
         string += "a";
         return this;
     }
 
-    public StringMaker removeOneCharacter() {
+    public StringMaker thenRemoveOneCharacter() {
         string = string.substring(0, string.length() -1);
         return this;
     }

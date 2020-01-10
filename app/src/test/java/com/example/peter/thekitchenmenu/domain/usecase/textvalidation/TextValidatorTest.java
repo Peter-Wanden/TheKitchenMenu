@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.textvalidation;
 
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
+import com.example.peter.thekitchenmenu.domain.UseCase;
 
 import org.junit.*;
 import org.mockito.*;
@@ -39,24 +39,24 @@ public class TextValidatorTest {
     public void requestTypeSHORT_TEXT_emptyString_resultTOO_SHORT() {
         // Arrange
         TextValidatorRequest request = new TextValidatorRequest(
-                TextValidator.RequestType.SHORT_TEXT,
+                TextValidator.TextType.SHORT_TEXT,
                 new TextValidatorModel(""));
         // Act
         handler.execute(SUT, request, getCallback());
         // Assert
-        assertEquals(TextValidator.Result.TOO_SHORT, actualResponse.getResult());
+        assertEquals(TextValidator.FailReason.TOO_SHORT, actualResponse.getFailReason());
     }
 
     @Test
     public void requestTypeSHORT_TEXT_textTooShort_resultTOO_SHORT() {
         // Arrange
         TextValidatorRequest request = new TextValidatorRequest(
-                TextValidator.RequestType.SHORT_TEXT,
+                TextValidator.TextType.SHORT_TEXT,
                 new TextValidatorModel("ti"));
         // Act
         handler.execute(SUT, request, getCallback());
         // Assert
-        assertEquals(TextValidator.Result.TOO_SHORT, actualResponse.getResult());
+        assertEquals(TextValidator.FailReason.TOO_SHORT, actualResponse.getFailReason());
     }
 
     @Test
@@ -65,36 +65,36 @@ public class TextValidatorTest {
         String text = getTooLongString(textLengthValues[1]);
 
         TextValidatorRequest request = new TextValidatorRequest(
-                TextValidator.RequestType.SHORT_TEXT,
+                TextValidator.TextType.SHORT_TEXT,
                 new TextValidatorModel(text));
         // Act
         handler.execute(SUT, request, getCallback());
         // Assert
-        assertEquals(TextValidator.Result.TOO_LONG, actualResponse.getResult());
+        assertEquals(TextValidator.FailReason.TOO_LONG, actualResponse.getFailReason());
     }
 
     @Test
     public void requestTypeLONG_TEXT_emptyString_resultVALID() {
         // Arrange
         TextValidatorRequest request = new TextValidatorRequest(
-                TextValidator.RequestType.LONG_TEXT,
+                TextValidator.TextType.LONG_TEXT,
                 new TextValidatorModel(""));
         // Act
         handler.execute(SUT, request, getCallback());
         // Assert
-        assertEquals(TextValidator.Result.VALID, actualResponse.getResult());
+        assertEquals(TextValidator.FailReason.NONE, actualResponse.getFailReason());
     }
 
     @Test
     public void requestTypeLONG_TEXT_singleCharacter_resultVALID() {
         // Arrange
         TextValidatorRequest request = new TextValidatorRequest(
-                TextValidator.RequestType.LONG_TEXT,
+                TextValidator.TextType.LONG_TEXT,
                 new TextValidatorModel("1"));
         // Act
         handler.execute(SUT, request, getCallback());
         // Assert
-        assertEquals(TextValidator.Result.VALID, actualResponse.getResult());
+        assertEquals(TextValidator.FailReason.NONE, actualResponse.getFailReason());
     }
 
     @Test
@@ -103,17 +103,17 @@ public class TextValidatorTest {
         String text = getTooLongString(textLengthValues[3]);
 
         TextValidatorRequest request = new TextValidatorRequest(
-                TextValidator.RequestType.LONG_TEXT,
+                TextValidator.TextType.LONG_TEXT,
                 new TextValidatorModel(text));
         // Act
         handler.execute(SUT, request, getCallback());
         // Assert
-        assertEquals(TextValidator.Result.TOO_LONG, actualResponse.getResult());
+        assertEquals(TextValidator.FailReason.TOO_LONG, actualResponse.getFailReason());
     }
 
     // region helper methods -----------------------------------------------------------------------
-    private UseCaseInteractor.Callback<TextValidatorResponse> getCallback() {
-        return new UseCaseInteractor.Callback<TextValidatorResponse>() {
+    private UseCase.Callback<TextValidatorResponse> getCallback() {
+        return new UseCase.Callback<TextValidatorResponse>() {
             @Override
             public void onSuccess(TextValidatorResponse response) {
                 actualResponse = response;

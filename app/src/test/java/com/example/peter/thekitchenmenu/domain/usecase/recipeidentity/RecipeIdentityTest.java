@@ -5,8 +5,7 @@ import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
-import com.example.peter.thekitchenmenu.domain.usecase.recipestate.RecipeState;
+import com.example.peter.thekitchenmenu.domain.UseCase;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 
@@ -248,18 +247,19 @@ public class RecipeIdentityTest {
 
     // region helper methods -----------------------------------------------------------------------
     private void givenNewEmptyModelSimulateNothingReturnedFromDatabase() {
-        RecipeIdentityModel initialModel = new RecipeIdentityModel.Builder().
-                getDefault().setId(INVALID_NEW_EMPTY.getId()).build();
+        RecipeIdentityModel model = RecipeIdentityModel.Builder.getDefault().
+                setId(INVALID_NEW_EMPTY.getId()).
+                build();
 
         handler.execute(
                 SUT,
-                getRequest(INVALID_NEW_EMPTY.getId(), DO_NOT_CLONE, initialModel),
+                getRequest(INVALID_NEW_EMPTY.getId(), DO_NOT_CLONE, model),
                 getCallback());
         simulateNothingReturnedFromDatabase();
     }
 
     private RecipeIdentityModel getDefaultModel() {
-        return new RecipeIdentityModel.Builder().getDefault().build();
+        return RecipeIdentityModel.Builder.getDefault().build();
     }
 
     private RecipeIdentityRequest getRequest(String recipeId,
@@ -272,8 +272,8 @@ public class RecipeIdentityTest {
                 build();
     }
 
-    private UseCaseInteractor.Callback<RecipeIdentityResponse> getCallback() {
-        return new UseCaseInteractor.Callback<RecipeIdentityResponse>() {
+    private UseCase.Callback<RecipeIdentityResponse> getCallback() {
+        return new UseCase.Callback<RecipeIdentityResponse>() {
 
             @Override
             public void onSuccess(RecipeIdentityResponse response) {

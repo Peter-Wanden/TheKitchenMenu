@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
 
 public final class TextValidatorResponse implements UseCaseCommand.Response {
     @Nonnull
-    private final TextValidator.Result result;
+    private final TextValidator.FailReason failReason;
     @Nonnull
     private final TextValidatorModel model;
     @Nonnull
@@ -16,19 +16,19 @@ public final class TextValidatorResponse implements UseCaseCommand.Response {
     @Nonnull
     private String maxLength;
 
-    public TextValidatorResponse(@Nonnull TextValidator.Result result,
+    public TextValidatorResponse(@Nonnull TextValidator.FailReason failReason,
                                  @Nonnull TextValidatorModel model,
                                  @Nonnull String minLength,
                                  @Nonnull String maxLength) {
-        this.result = result;
+        this.failReason = failReason;
         this.model = model;
         this.minLength = minLength;
         this.maxLength = maxLength;
     }
 
     @Nonnull
-    public TextValidator.Result getResult() {
-        return result;
+    public TextValidator.FailReason getFailReason() {
+        return failReason;
     }
 
     @Nonnull
@@ -51,7 +51,7 @@ public final class TextValidatorResponse implements UseCaseCommand.Response {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TextValidatorResponse response = (TextValidatorResponse) o;
-        return result == response.result &&
+        return failReason == response.failReason &&
                 model.equals(response.model) &&
                 minLength.equals(response.minLength) &&
                 maxLength.equals(response.maxLength);
@@ -59,14 +59,14 @@ public final class TextValidatorResponse implements UseCaseCommand.Response {
 
     @Override
     public int hashCode() {
-        return Objects.hash(result, model, minLength, maxLength);
+        return Objects.hash(failReason, model, minLength, maxLength);
     }
 
     @Nonnull
     @Override
     public String toString() {
         return "TextValidatorResponse{" +
-                "result=" + result +
+                "failReason=" + failReason +
                 ", model=" + model +
                 ", minLength='" + minLength + '\'' +
                 ", maxLength='" + maxLength + '\'' +
@@ -74,13 +74,13 @@ public final class TextValidatorResponse implements UseCaseCommand.Response {
     }
 
     public static class Builder {
-        private TextValidator.Result result;
+        private TextValidator.FailReason failReason;
         private TextValidatorModel model;
         String minLength;
         String maxLength;
 
-        public Builder setResult(TextValidator.Result result) {
-            this.result = result;
+        public Builder setFailReason(TextValidator.FailReason failReason) {
+            this.failReason = failReason;
             return this;
         }
 
@@ -101,7 +101,7 @@ public final class TextValidatorResponse implements UseCaseCommand.Response {
 
         public TextValidatorResponse build() {
             return new TextValidatorResponse(
-                    result,
+                    failReason,
                     model,
                     minLength,
                     maxLength

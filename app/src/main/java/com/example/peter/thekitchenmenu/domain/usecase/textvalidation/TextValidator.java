@@ -1,23 +1,21 @@
 package com.example.peter.thekitchenmenu.domain.usecase.textvalidation;
 
-import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
+import com.example.peter.thekitchenmenu.domain.FailReasons;
+import com.example.peter.thekitchenmenu.domain.UseCase;
 
-public class TextValidator
-        extends UseCaseInteractor<TextValidatorRequest, TextValidatorResponse> {
+public class TextValidator extends UseCase<TextValidatorRequest, TextValidatorResponse> {
 
     private static final String TAG = "tkm-" + TextValidator.class.getSimpleName() + ": ";
 
-    public enum RequestType {
+    public enum TextType {
         SHORT_TEXT,
         LONG_TEXT
     }
 
-    // State comes from parent use case
-
-    public enum Result { // FailReasons are an aggregate from here and parent use case
+    public enum FailReason implements FailReasons {
         TOO_SHORT,
         TOO_LONG,
-        VALID
+        NONE
     }
 
     private final int shortTextMinLength;
@@ -38,9 +36,9 @@ public class TextValidator
     @Override
     protected void execute(TextValidatorRequest request) {
         System.out.println(TAG + request);
-        if (request.getType() == RequestType.SHORT_TEXT) {
+        if (request.getType() == TextType.SHORT_TEXT) {
             validateShortText(request);
-        } else if (request.getType() == RequestType.LONG_TEXT) {
+        } else if (request.getType() == TextType.LONG_TEXT) {
             validateLongText(request);
         } else {
             throw new UnsupportedOperationException("Unknown requestType");
@@ -71,7 +69,7 @@ public class TextValidator
 
     private void sendTextTooShortResponse(TextValidatorRequest request) {
         TextValidatorResponse.Builder responseBuilder = new TextValidatorResponse.Builder().
-                setResult(Result.TOO_SHORT).
+                setFailReason(FailReason.TOO_SHORT).
                 setModel(request.getModel());
         responseBuilder = addRequiredLengths(request, responseBuilder);
 
@@ -82,7 +80,7 @@ public class TextValidator
 
     private void sendTextTooLongResponse(TextValidatorRequest request) {
         TextValidatorResponse.Builder responseBuilder = new TextValidatorResponse.Builder().
-                setResult(Result.TOO_LONG).
+                setFailReason(FailReason.TOO_LONG).
                 setModel(request.getModel());
         responseBuilder = addRequiredLengths(request, responseBuilder);
 
@@ -93,7 +91,7 @@ public class TextValidator
 
     private void sendTextValidatedResponse(TextValidatorRequest request) {
         TextValidatorResponse.Builder responseBuilder = new TextValidatorResponse.Builder().
-                setResult(Result.VALID).
+                setFailReason(FailReason.NONE).
                 setModel(request.getModel());
         responseBuilder = addRequiredLengths(request, responseBuilder);
 
@@ -104,10 +102,10 @@ public class TextValidator
 
     private TextValidatorResponse.Builder addRequiredLengths(TextValidatorRequest request,
                                                              TextValidatorResponse.Builder responseBuilder) {
-        if (request.getType() == RequestType.SHORT_TEXT) {
+        if (request.getType() == TextType.SHORT_TEXT) {
             responseBuilder = addShortTextLengths(responseBuilder);
 
-        } else if (request.getType() == RequestType.LONG_TEXT) {
+        } else if (request.getType() == TextType.LONG_TEXT) {
             responseBuilder = addLongTextLengths(responseBuilder);
         }
         return responseBuilder;

@@ -3,27 +3,36 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipeidentity;
 import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
-import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
+import com.example.peter.thekitchenmenu.domain.FailReasons;
+import com.example.peter.thekitchenmenu.domain.UseCase;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipestate.RecipeState.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator.*;
 
 public class RecipeIdentity
-        extends UseCaseInteractor<RecipeIdentityRequest, RecipeIdentityResponse>
+        extends UseCase<RecipeIdentityRequest, RecipeIdentityResponse>
         implements DataSource.GetEntityCallback<RecipeIdentityEntity> {
 
     private static final String TAG = "tkm-" + RecipeIdentity.class.getSimpleName() + ": ";
 
-    public enum FailReason {
+    public enum FailReason implements FailReasons {
         DATA_UNAVAILABLE,
-        INVALID_TITLE,
+        TITLE_TOO_SHORT,
+        TITLE_TOO_LONG,
+        TITLE_OK,
+        DESCRIPTION_TOO_SHORT,
+        DESCRIPTION_TOO_LONG,
+        DESCRIPTION_OK,
         NONE
     }
 
     public static final String DO_NOT_CLONE = "";
+    public static final TextType TITLE_TEXT_TYPE = TextType.SHORT_TEXT;
+    public static final TextType DESCRIPTION_TEXT_TYPE = TextType.LONG_TEXT;
 
     private TimeProvider timeProvider;
     private RepositoryRecipeIdentity repository;
@@ -34,11 +43,12 @@ public class RecipeIdentity
     private boolean isCloned;
     private boolean isDataUnAvailable;
 
-    public RecipeIdentity(RepositoryRecipeIdentity repository, TimeProvider timeProvider) {
+    public RecipeIdentity(RepositoryRecipeIdentity repository,
+                          TimeProvider timeProvider) {
         this.repository = repository;
         this.timeProvider = timeProvider;
-        requestModel = new RecipeIdentityModel.Builder().getDefault().build();
-        responseModel = new RecipeIdentityModel.Builder().getDefault().build();
+        requestModel = RecipeIdentityModel.Builder.getDefault().build();
+        responseModel = RecipeIdentityModel.Builder.getDefault().build();
     }
 
     @Override
@@ -104,7 +114,7 @@ public class RecipeIdentity
 
     private RecipeIdentityModel createNewModel() {
         long currentTime = timeProvider.getCurrentTimeInMills();
-        return new RecipeIdentityModel.Builder().getDefault().
+        return RecipeIdentityModel.Builder.getDefault().
                 setId(recipeId).
                 setCreateDate(currentTime).
                 setLastUpdate(currentTime).
@@ -151,14 +161,11 @@ public class RecipeIdentity
         }
     }
 
-    private List<FailReason> getFailReasons() {
-        List<FailReason> failReasons = new ArrayList<>();
+    private List<FailReasons> getFailReasons() {
+        List<FailReasons> failReasons = new ArrayList<>();
 
         if (isDataUnAvailable) {
             failReasons.add(FailReason.DATA_UNAVAILABLE);
-        }
-        if (requestModel.getTitle().isEmpty()) {
-            failReasons.add(FailReason.INVALID_TITLE);
         }
         if (isValid()) {
             failReasons.add(FailReason.NONE);
@@ -183,7 +190,7 @@ public class RecipeIdentity
     }
 
     private boolean isValid() {
-        if (requestModel.equals(new RecipeIdentityModel.Builder().getDefault().build())) {
+        if (requestModel.equals(RecipeIdentityModel.Builder.getDefault().build())) {
             return false;
         } else {
             return !requestModel.getTitle().isEmpty();

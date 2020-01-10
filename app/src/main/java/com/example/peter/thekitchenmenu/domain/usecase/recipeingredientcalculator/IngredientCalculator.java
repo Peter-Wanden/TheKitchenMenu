@@ -8,7 +8,7 @@ import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
-import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
+import com.example.peter.thekitchenmenu.domain.UseCase;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModelBuilder;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasure;
@@ -21,7 +21,7 @@ import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
  * Calculates the measurement of an ingredient for a single portion of a recipe.
  */
 public class IngredientCalculator
-        extends UseCaseInteractor<IngredientCalculatorRequest, IngredientCalculatorResponse> {
+        extends UseCase<IngredientCalculatorRequest, IngredientCalculatorResponse> {
 
     private static final String TAG = "tkm-" + IngredientCalculator.class.getSimpleName() + ": ";
 

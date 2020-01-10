@@ -5,7 +5,7 @@ import android.annotation.SuppressLint;
 import com.example.peter.thekitchenmenu.data.entity.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeCourse;
-import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
+import com.example.peter.thekitchenmenu.domain.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.recipestate.RecipeState;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
@@ -19,7 +19,7 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 
 public class RecipeCourse
-        extends UseCaseInteractor<RecipeCourseRequest, RecipeCourseResponse>
+        extends UseCase<RecipeCourseRequest, RecipeCourseResponse>
         implements DataSource.GetAllCallback<RecipeCourseEntity> {
 
     private static final String TAG = "tkm-" + RecipeCourse.class.getSimpleName() + ": ";

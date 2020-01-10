@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.domain;
 
-public abstract class UseCaseInteractor
+public abstract class UseCase
         <Q extends UseCaseCommand.Request, P extends UseCaseCommand.Response>
         implements UseCaseCommand<Q, P> {
 

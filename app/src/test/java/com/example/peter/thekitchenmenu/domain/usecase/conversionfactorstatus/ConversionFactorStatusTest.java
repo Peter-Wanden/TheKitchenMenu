@@ -4,7 +4,7 @@ import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
-import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
+import com.example.peter.thekitchenmenu.domain.UseCase;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.testdata.TestDataIngredientEntity;
@@ -150,8 +150,8 @@ public class ConversionFactorStatusTest {
         return new ConversionFactorStatusRequest(subtype, ingredientId);
     }
 
-    private UseCaseInteractor.Callback<ConversionFactorStatusResponse> getResponseCallback() {
-        return new UseCaseInteractor.Callback<ConversionFactorStatusResponse>() {
+    private UseCase.Callback<ConversionFactorStatusResponse> getResponseCallback() {
+        return new UseCase.Callback<ConversionFactorStatusResponse>() {
             @Override
             public void onSuccess(ConversionFactorStatusResponse response) {
                 ConversionFactorStatusTest.this.actualResponse = response;

@@ -14,7 +14,6 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIden
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipestate.RecipeState;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorModel;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorRequest;
@@ -64,7 +63,7 @@ public class RecipeIdentityEditorViewModel
         this.recipeIdentity = recipeIdentity;
         this.textValidator = textValidator;
         this.resources = resources;
-        response = new RecipeIdentityResponse.Builder().getDefault().build();
+        response = RecipeIdentityResponse.Builder.getDefault().build();
     }
 
     void setModelValidationSubmitter(RecipeValidatorModelSubmission modelSubmitter) {
@@ -125,7 +124,7 @@ public class RecipeIdentityEditorViewModel
         titleErrorMessage.set(null);
 
         TextValidatorRequest request = getTextValidatorRequest(
-                TextValidator.RequestType.SHORT_TEXT,
+                RecipeIdentity.TITLE_TEXT_TYPE,
                 title
         );
         handler.execute(
@@ -144,7 +143,7 @@ public class RecipeIdentityEditorViewModel
     }
 
     private void processShortTextValidationResponse(TextValidatorResponse response) {
-        if (response.getResult() == TextValidator.Result.VALID) {
+        if (response.getFailReason() == TextValidator.FailReason.NONE) {
 
             executeUseCaseRecipeIdentity(RecipeIdentityModel.Builder.
                     basedOn(this.response.getModel()).
@@ -172,7 +171,7 @@ public class RecipeIdentityEditorViewModel
         descriptionErrorMessage.set(null);
 
         TextValidatorRequest request = getTextValidatorRequest(
-                TextValidator.RequestType.LONG_TEXT,
+                RecipeIdentity.DESCRIPTION_TEXT_TYPE,
                 description
         );
 
@@ -193,7 +192,7 @@ public class RecipeIdentityEditorViewModel
     }
 
     private void processLongTextValidationResponse(TextValidatorResponse response) {
-        if (response.getResult() == TextValidator.Result.VALID) {
+        if (response.getFailReason() == TextValidator.FailReason.NONE) {
 
             executeUseCaseRecipeIdentity(RecipeIdentityModel.Builder.
                     basedOn(this.response.getModel()).
@@ -207,7 +206,7 @@ public class RecipeIdentityEditorViewModel
     }
 
     private TextValidatorRequest getTextValidatorRequest(
-            TextValidator.RequestType type, String textToValidate) {
+            TextValidator.TextType type, String textToValidate) {
         return new TextValidatorRequest(
                 type,
                 new TextValidatorModel(textToValidate));
@@ -215,13 +214,13 @@ public class RecipeIdentityEditorViewModel
 
     private void setError(ObservableField<String> errorObservable,
                           TextValidatorResponse response) {
-        if (response.getResult() == TextValidator.Result.TOO_SHORT) {
+        if (response.getFailReason() == TextValidator.FailReason.TOO_SHORT) {
             errorObservable.set(resources.getString(
                     R.string.input_error_text_too_short,
                     response.getMinLength(),
                     response.getMaxLength()));
 
-        } else if (response.getResult() == TextValidator.Result.TOO_LONG) {
+        } else if (response.getFailReason() == TextValidator.FailReason.TOO_LONG) {
             errorObservable.set(resources.getString(
                     R.string.input_error_text_too_long,
                     response.getMinLength(),

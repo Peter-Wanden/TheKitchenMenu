@@ -1,7 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipeduration;
 
 import com.example.peter.thekitchenmenu.domain.UseCaseCommand;
-import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
 
 import java.util.Objects;
 

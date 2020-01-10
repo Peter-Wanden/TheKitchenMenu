@@ -5,7 +5,7 @@ import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
-import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
+import com.example.peter.thekitchenmenu.domain.UseCase;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -16,8 +16,8 @@ import javax.annotation.Nonnull;
 
 public class RecipeIdentityAndDurationList
         extends
-        UseCaseInteractor<RecipeIdentityAndDurationList.Request,
-                RecipeIdentityAndDurationList.Response> {
+        UseCase<RecipeIdentityAndDurationList.Request,
+                        RecipeIdentityAndDurationList.Response> {
 
     private static final String TAG = "tkm:" + RecipeIdentityAndDurationList.class.getSimpleName() +
             ": ";
@@ -206,7 +206,7 @@ public class RecipeIdentityAndDurationList
         }
     }
 
-    public static final class Request implements UseCaseInteractor.Request {
+    public static final class Request implements UseCase.Request {
         @Nonnull
         private final RecipeFilter filter;
 
@@ -241,7 +241,7 @@ public class RecipeIdentityAndDurationList
         }
     }
 
-    public class Response implements UseCaseInteractor.Response {
+    public class Response implements UseCase.Response {
         @Nonnull
         private final ResultStatus resultStatus;
 

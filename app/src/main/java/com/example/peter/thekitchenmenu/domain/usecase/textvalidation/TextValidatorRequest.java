@@ -6,20 +6,22 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
+import static com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator.*;
+
 public final class TextValidatorRequest implements UseCaseCommand.Request {
     @Nonnull
-    private final TextValidator.RequestType type;
+    private final TextType type;
     @Nonnull
     private final TextValidatorModel model;
 
-    public TextValidatorRequest(@Nonnull TextValidator.RequestType type,
+    public TextValidatorRequest(@Nonnull TextType type,
                                 @Nonnull TextValidatorModel model) {
         this.type = type;
         this.model = model;
     }
 
     @Nonnull
-    public TextValidator.RequestType getType() {
+    public TextType getType() {
         return type;
     }
 

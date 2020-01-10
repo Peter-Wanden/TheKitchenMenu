@@ -4,14 +4,14 @@ import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
-import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
+import com.example.peter.thekitchenmenu.domain.UseCase;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientDuplicateChecker.NO_DUPLICATE_FOUND;
 
 public class Ingredient
-        extends UseCaseInteractor<IngredientRequest, IngredientResponse>
+        extends UseCase<IngredientRequest, IngredientResponse>
         implements DataSource.GetEntityCallback<IngredientEntity> {
 
         private static final String TAG = "tkm-" + Ingredient.class.getSimpleName() + ": ";

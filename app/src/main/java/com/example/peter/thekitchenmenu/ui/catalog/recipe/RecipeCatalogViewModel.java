@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
+import com.example.peter.thekitchenmenu.domain.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentityandduration.RecipeIdentityAndDurationList;
 
 import java.util.List;
@@ -69,9 +69,9 @@ public class RecipeCatalogViewModel extends ViewModel {
         return new RecipeIdentityAndDurationList.Request(filter);
     }
 
-    private UseCaseInteractor.Callback<RecipeIdentityAndDurationList.Response>
+    private UseCase.Callback<RecipeIdentityAndDurationList.Response>
     getCallback() {
-        return new UseCaseInteractor.Callback<RecipeIdentityAndDurationList.Response>() {
+        return new UseCase.Callback<RecipeIdentityAndDurationList.Response>() {
 
             @Override
             public void onSuccess(RecipeIdentityAndDurationList.Response response) {

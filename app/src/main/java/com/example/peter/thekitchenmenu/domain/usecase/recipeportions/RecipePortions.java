@@ -3,7 +3,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipeportions;
 import com.example.peter.thekitchenmenu.data.entity.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
-import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
+import com.example.peter.thekitchenmenu.domain.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.recipestate.RecipeState;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
@@ -14,7 +14,7 @@ import java.util.List;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipestate.RecipeState.*;
 
 public class RecipePortions
-        extends UseCaseInteractor<RecipePortionsRequest, RecipePortionsResponse>
+        extends UseCase<RecipePortionsRequest, RecipePortionsResponse>
         implements DataSource.GetEntityCallback<RecipePortionsEntity> {
 
     private static final String TAG = "tkm-" + RecipePortions.class.getSimpleName() + ": ";

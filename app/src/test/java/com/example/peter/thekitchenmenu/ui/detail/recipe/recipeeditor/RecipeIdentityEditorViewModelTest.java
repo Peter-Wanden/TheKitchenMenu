@@ -252,7 +252,7 @@ public class RecipeIdentityEditorViewModelTest {
 
         String description = new StringMaker().
                 makeStringOfExactLength(longTextMaxLength).
-                addOneCharacter().
+                thenAddOneCharacter().
                 build();
         // Act
         SUT.start(recipeId);
@@ -275,7 +275,7 @@ public class RecipeIdentityEditorViewModelTest {
 
         String description = new StringMaker().
                 makeStringOfExactLength(longTextMaxLength).
-                addOneCharacter().
+                thenAddOneCharacter().
                 build();
         // Act
         SUT.start(recipeId);
@@ -297,7 +297,7 @@ public class RecipeIdentityEditorViewModelTest {
 
         String description = new StringMaker().
                 makeStringOfExactLength(longTextMaxLength).
-                addOneCharacter().
+                thenAddOneCharacter().
                 build();
         // Act
         SUT.start(recipeId);

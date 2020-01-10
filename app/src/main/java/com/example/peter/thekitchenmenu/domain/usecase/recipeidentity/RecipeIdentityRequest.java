@@ -16,8 +16,8 @@ public final class RecipeIdentityRequest implements UseCaseCommand.Request {
     private final RecipeIdentityModel model;
 
     private RecipeIdentityRequest(@Nonnull String recipeId,
-                    @Nonnull String cloneToRecipeId,
-                    @Nullable RecipeIdentityModel model) {
+                                  @Nonnull String cloneToRecipeId,
+                                  @Nullable RecipeIdentityModel model) {
         this.recipeId = recipeId;
         this.cloneToRecipeId = cloneToRecipeId;
         this.model = model;
@@ -72,9 +72,7 @@ public final class RecipeIdentityRequest implements UseCaseCommand.Request {
             return new Builder().
                     setRecipeId("").
                     setCloneToRecipeId("").
-                    setModel(new RecipeIdentityModel.Builder().
-                            getDefault().
-                            build());
+                    setModel(RecipeIdentityModel.Builder.getDefault().build());
         }
 
         public Builder setRecipeId(String recipeId) {

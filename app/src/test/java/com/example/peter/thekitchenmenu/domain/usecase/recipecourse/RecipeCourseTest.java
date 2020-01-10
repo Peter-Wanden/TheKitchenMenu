@@ -6,7 +6,7 @@ import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeCourse;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
+import com.example.peter.thekitchenmenu.domain.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.recipestate.RecipeState;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeCourseEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeEntity;
@@ -199,8 +199,8 @@ public class RecipeCourseTest {
                 build();
     }
 
-    private UseCaseInteractor.Callback<RecipeCourseResponse> getCallback() {
-        return new UseCaseInteractor.Callback<RecipeCourseResponse>() {
+    private UseCase.Callback<RecipeCourseResponse> getCallback() {
+        return new UseCase.Callback<RecipeCourseResponse>() {
 
             @Override
             public void onSuccess(RecipeCourseResponse response) {

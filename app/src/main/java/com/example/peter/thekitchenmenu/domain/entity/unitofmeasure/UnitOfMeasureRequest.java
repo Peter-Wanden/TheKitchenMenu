@@ -2,12 +2,12 @@ package com.example.peter.thekitchenmenu.domain.entity.unitofmeasure;
 
 import androidx.annotation.NonNull;
 
-import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
+import com.example.peter.thekitchenmenu.domain.UseCase;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
 
 import java.util.Objects;
 
-public class UnitOfMeasureRequest implements UseCaseInteractor.Request {
+public class UnitOfMeasureRequest implements UseCase.Request {
     @NonNull
     private final MeasurementModel model;
 

@@ -17,6 +17,9 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePort
 import com.example.peter.thekitchenmenu.domain.usecase.recipestate.RecipeState;
 import com.example.peter.thekitchenmenu.domain.usecase.recipestate.RecipeStateRequest;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+
 import static com.example.peter.thekitchenmenu.domain.usecase.recipestate.RecipeState.*;
 
 /**
@@ -40,6 +43,8 @@ public class RecipeMediator extends RecipeMediatorAbstract<RecipeMediatorRespons
     private boolean isCoursesLoading;
     private final RecipePortions portions;
     private boolean isPortionsLoading;
+
+    private HashMap<ComponentName, ComponentState> componentStates = new LinkedHashMap<>();
 
     private RecipeMediatorResponse response = new RecipeMediatorResponse();
 
@@ -81,6 +86,7 @@ public class RecipeMediator extends RecipeMediatorAbstract<RecipeMediatorRespons
                     public void onSuccess(RecipeIdentityResponse response) {
                         isIdentityLoading = false;
                         RecipeMediator.this.response.setIdentityResponse(response);
+                        componentStates.put(ComponentName.IDENTITY, response.getState());
                         sendGetAllResponse();
                     }
 
@@ -179,7 +185,6 @@ public class RecipeMediator extends RecipeMediatorAbstract<RecipeMediatorRespons
     }
 
     private void updateRecipeState(UseCaseCommand.Response  response) {
-        RecipeStateRequest request = RecipeStateRequest.Builder()
 
         if (response instanceof RecipeDurationResponse) {
             ComponentState state = ((RecipeDurationResponse) response).getState();

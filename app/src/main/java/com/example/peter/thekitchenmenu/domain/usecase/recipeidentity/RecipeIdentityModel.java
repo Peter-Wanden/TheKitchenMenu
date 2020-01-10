@@ -97,7 +97,7 @@ public final class RecipeIdentityModel implements PersistenceModel {
                     setLastUpdate(oldModel.getLastUpdate());
         }
 
-        public Builder getDefault() {
+        public static Builder getDefault() {
             return new Builder().
                     setId("").
                     setTitle("").

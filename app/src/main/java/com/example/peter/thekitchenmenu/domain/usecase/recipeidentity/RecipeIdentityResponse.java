@@ -1,5 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipeidentity;
 
+import com.example.peter.thekitchenmenu.domain.FailReasons;
 import com.example.peter.thekitchenmenu.domain.UseCaseCommand;
 import com.example.peter.thekitchenmenu.domain.usecase.recipestate.RecipeState;
 
@@ -13,12 +14,12 @@ public final class RecipeIdentityResponse implements UseCaseCommand.Response {
     @Nonnull
     private final RecipeState.ComponentState state;
     @Nonnull
-    private final List<RecipeIdentity.FailReason> failReasons;
+    private final List<FailReasons> failReasons;
     @Nonnull
     private final RecipeIdentityModel model;
 
     private RecipeIdentityResponse(@Nonnull RecipeState.ComponentState state,
-                                   @Nonnull List<RecipeIdentity.FailReason> failReasons,
+                                   @Nonnull List<FailReasons> failReasons,
                                    @Nonnull RecipeIdentityModel model) {
         this.state = state;
         this.failReasons = failReasons;
@@ -31,7 +32,7 @@ public final class RecipeIdentityResponse implements UseCaseCommand.Response {
     }
 
     @Nonnull
-    public List<RecipeIdentity.FailReason> getFailReasons() {
+    public List<FailReasons> getFailReasons() {
         return failReasons;
     }
 
@@ -66,14 +67,13 @@ public final class RecipeIdentityResponse implements UseCaseCommand.Response {
 
     public static class Builder {
         private RecipeIdentityModel model;
-        private List<RecipeIdentity.FailReason> failReasons;
+        private List<FailReasons> failReasons;
         private RecipeState.ComponentState state;
 
-        public Builder getDefault() {
-            return new Builder().
-                    setModel(new RecipeIdentityModel.Builder().
-                            getDefault().
-                            build());
+        public static Builder getDefault() {
+            return new Builder().setModel(RecipeIdentityModel.Builder.
+                    getDefault().
+                    build());
         }
 
         public Builder setState(RecipeState.ComponentState state) {
@@ -81,7 +81,7 @@ public final class RecipeIdentityResponse implements UseCaseCommand.Response {
             return this;
         }
 
-        public Builder setFailReasons(List<RecipeIdentity.FailReason> failReasons) {
+        public Builder setFailReasons(List<FailReasons> failReasons) {
             this.failReasons = failReasons;
             return this;
         }

@@ -1,7 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipecourse;
 
 import com.example.peter.thekitchenmenu.domain.UseCaseCommand;
-import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
 import com.example.peter.thekitchenmenu.domain.usecase.recipestate.RecipeState;
 
 import java.util.HashMap;

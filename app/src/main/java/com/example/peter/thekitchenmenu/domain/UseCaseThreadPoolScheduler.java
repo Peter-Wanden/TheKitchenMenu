@@ -36,17 +36,17 @@ public class UseCaseThreadPoolScheduler implements UseCaseScheduler {
     }
 
     @Override
-    public <V extends UseCaseInteractor.Response> void notifyResponse(
+    public <V extends UseCase.Response> void notifyResponse(
             final V response,
-            final UseCaseInteractor.Callback<V> callback) {
+            final UseCase.Callback<V> callback) {
 
         handler.post(() -> callback.onSuccess(response));
     }
 
     @Override
-    public <V extends UseCaseInteractor.Response> void onError(
+    public <V extends UseCase.Response> void onError(
             final V response,
-            final UseCaseInteractor.Callback<V> callback) {
+            final UseCase.Callback<V> callback) {
         handler.post(() -> callback.onError(response));
     }
 }

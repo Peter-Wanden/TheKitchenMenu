@@ -108,7 +108,7 @@ public class IngredientEditorViewModel
         showNameError.set(null);
         // todo - strip out html
         TextValidatorRequest request = new TextValidatorRequest(
-                TextValidator.RequestType.SHORT_TEXT,
+                TextValidator.TextType.SHORT_TEXT,
                 new TextValidatorModel(name)
         );
         handler.execute(
@@ -128,7 +128,7 @@ public class IngredientEditorViewModel
     }
 
     private void processNameTextValidationResponse(TextValidatorResponse response) {
-        if (response.getResult() == TextValidator.Result.VALID) {
+        if (response.getFailReason() == TextValidator.FailReason.NONE) {
 
             IngredientModel model = IngredientModel.Builder.
                     basedOn(ingredientResponse.getModel()).
@@ -156,7 +156,7 @@ public class IngredientEditorViewModel
         showDescriptionError.set(null);
 
         TextValidatorRequest request = new TextValidatorRequest(
-                TextValidator.RequestType.LONG_TEXT,
+                TextValidator.TextType.LONG_TEXT,
                 new TextValidatorModel(description)
         );
 
@@ -178,7 +178,7 @@ public class IngredientEditorViewModel
 
     private void processDescriptionTextValidationResponse(TextValidatorResponse
                                                                   longTextResponse) {
-        if (longTextResponse.getResult() == TextValidator.Result.VALID) {
+        if (longTextResponse.getFailReason() == TextValidator.FailReason.NONE) {
 
             IngredientModel model = IngredientModel.Builder.
                     basedOn(ingredientResponse.getModel()).
@@ -264,13 +264,13 @@ public class IngredientEditorViewModel
     private void setError(ObservableField<String> errorObservable,
                           TextValidatorResponse response) {
 
-        if (response.getResult() == TextValidator.Result.TOO_SHORT) {
+        if (response.getFailReason() == TextValidator.FailReason.TOO_SHORT) {
             errorObservable.set(resources.getString(
                     R.string.input_error_text_too_short,
                     response.getMinLength(),
                     response.getMaxLength()));
 
-        } else if (response.getResult() == TextValidator.Result.TOO_LONG) {
+        } else if (response.getFailReason() == TextValidator.FailReason.TOO_LONG) {
             errorObservable.set(resources.getString(
                     R.string.input_error_text_too_long,
                     response.getMinLength(),

@@ -3,8 +3,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipeduration;
 import com.example.peter.thekitchenmenu.data.entity.RecipeDurationEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration;
-import com.example.peter.thekitchenmenu.domain.UseCaseInteractor;
-import com.example.peter.thekitchenmenu.domain.usecase.recipestate.RecipeState;
+import com.example.peter.thekitchenmenu.domain.UseCase;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 
 import java.util.LinkedList;
@@ -13,7 +12,7 @@ import java.util.List;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipestate.RecipeState.*;
 
 public class RecipeDuration
-        extends UseCaseInteractor<RecipeDurationRequest, RecipeDurationResponse>
+        extends UseCase<RecipeDurationRequest, RecipeDurationResponse>
         implements DataSource.GetEntityCallback<RecipeDurationEntity> {
 
     private static final String TAG = "tkm-" + RecipeDuration.class.getSimpleName() + ": ";
