@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel;
 import com.example.peter.thekitchenmenu.domain.UseCaseCommand;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentity;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortions;
@@ -39,7 +38,7 @@ public class RecipeNameAndPortionsViewModel extends ViewModel {
     }
 
     private void getRecipeIdentityData(String recipeId) {
-        RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
+        RecipeIdentityRequest request = RecipeIdentityRequest.Builder.
                 getDefault().
                 setRecipeId(recipeId).
                 build();
@@ -61,7 +60,7 @@ public class RecipeNameAndPortionsViewModel extends ViewModel {
         });
     }
 
-    private void setIdentityToView(RecipeIdentityModel model) {
+    private void setIdentityToView(RecipeIdentityResponse.Model model) {
         recipeTitleObservable.set(model.getTitle());
     }
 

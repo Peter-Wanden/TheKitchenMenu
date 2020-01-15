@@ -97,7 +97,7 @@ public class TextValidator extends UseCase<TextValidatorRequest, TextValidatorRe
 
         TextValidatorResponse response = responseBuilder.build();
         System.out.println(TAG + response);
-        getUseCaseCallback().onError(response);
+        getUseCaseCallback().onSuccess(response);
     }
 
     private TextValidatorResponse.Builder addRequiredLengths(TextValidatorRequest request,

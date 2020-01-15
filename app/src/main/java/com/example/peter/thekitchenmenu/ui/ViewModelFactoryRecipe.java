@@ -87,8 +87,7 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
             //noinspection unchecked
             return (T) new RecipeIdentityEditorViewModel(
                     useCaseHandler,
-                    useCaseFactory.provideRecipeIdentity(),
-                    useCaseFactory.provideTextValidator(),
+                    useCaseFactory.provideRecipeIdentityMediator(),
                     application.getResources()
             );
         } else if (modelClass.isAssignableFrom(RecipeCourseEditorViewModel.class)) {

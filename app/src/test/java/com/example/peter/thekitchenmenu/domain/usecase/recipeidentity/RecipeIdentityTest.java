@@ -1,11 +1,13 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipeidentity;
 
+import com.example.peter.thekitchenmenu.commonmocks.StringMaker;
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorTest;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 
@@ -24,15 +26,15 @@ public class RecipeIdentityTest {
     private static final RecipeIdentityEntity INVALID_NEW_EMPTY =
             TestDataRecipeIdentityEntity.getInvalidNewEmpty();
     private static final RecipeIdentityEntity INVALID_NEW_TITLE_INVALID =
-            TestDataRecipeIdentityEntity.getInvalidNewTitleUpdatedWithInvalidValue();
+            TestDataRecipeIdentityEntity.getInvalidNewTitleTooShortDefaultDescription();
     private static final RecipeIdentityEntity INVALID_NEW_TITLE_INVALID_DESCRIPTION_VALID =
-            TestDataRecipeIdentityEntity.getInvalidNewTitleInvalidDescriptionValid();
+            TestDataRecipeIdentityEntity.getInvalidNewTitleTooShortValidDescription();
     private static final RecipeIdentityEntity VALID_NEW_TITLE_VALID =
-            TestDataRecipeIdentityEntity.getValidNewTitleUpdatedWithValidValue();
+            TestDataRecipeIdentityEntity.getValidNewValidTitleUpdatedDefaultDescription();
     private static final RecipeIdentityEntity VALID_NEW_COMPLETE =
             TestDataRecipeIdentityEntity.getValidNewComplete();
     private static final RecipeIdentityEntity INVALID_EXISTING_INCOMPLETE_INVALID_TITLE =
-            TestDataRecipeIdentityEntity.getInvalidExistingIncomplete();
+            TestDataRecipeIdentityEntity.getInvalidExistingTitleTooShortDefaultDescription();
 
     private static final RecipeIdentityEntity VALID_EXISTING_COMPLETE =
             TestDataRecipeIdentityEntity.getValidExistingComplete();
@@ -41,7 +43,7 @@ public class RecipeIdentityTest {
     private static final RecipeIdentityEntity INVALID_FROM_ANOTHER_USER =
             TestDataRecipeIdentityEntity.getInvalidCompleteFromAnotherUser();
     private static final RecipeIdentityEntity VALID_NEW_CLONED =
-            TestDataRecipeIdentityEntity.getValidNewCloned();
+            TestDataRecipeIdentityEntity.getValidNewClonedComplete();
     private static final RecipeIdentityEntity INVALID_NEW_CLONED =
             TestDataRecipeIdentityEntity.getInvalidNewCloned();
     private static final RecipeIdentityEntity VALID_CLONED_DESCRIPTION_UPDATED =
@@ -93,13 +95,14 @@ public class RecipeIdentityTest {
 
         givenNewEmptyModelSimulateNothingReturnedFromDatabase();
 
-        RecipeIdentityModel modelValidDescription = new RecipeIdentityModel.
-                Builder().
-                setId(INVALID_NEW_EMPTY.getId()).
+        String validDescription = new StringMaker().
+                makeStringOfExactLength(TextValidatorTest.LONG_TEXT_MAX_LENGTH).
+                build();
+
+        RecipeIdentityRequest.Model modelValidDescription = RecipeIdentityRequest.Model.Builder.
+                basedOn(actualResponse.getModel()).
                 setTitle(INVALID_TITLE).
-                setDescription("VALID_DESCRIPTION").
-                setCreateDate(INVALID_NEW_EMPTY.getCreateDate()).
-                setLastUpdate(INVALID_NEW_EMPTY.getCreateDate()).
+                setDescription(validDescription).
                 build();
 
         // Act
@@ -122,12 +125,9 @@ public class RecipeIdentityTest {
 
         givenNewEmptyModelSimulateNothingReturnedFromDatabase();
 
-        RecipeIdentityModel validTitleModel = new RecipeIdentityModel.Builder().
-                setId(actualResponse.getModel().getId()).
+        RecipeIdentityRequest.Model validTitleModel = new RecipeIdentityRequest.Model.Builder().
                 setTitle(VALID_NEW_TITLE_VALID.getTitle()).
                 setDescription(actualResponse.getModel().getDescription()).
-                setCreateDate(actualResponse.getModel().getCreateDate()).
-                setLastUpdate(actualResponse.getModel().getLastUpdate()).
                 build();
 
         // Act
@@ -148,23 +148,18 @@ public class RecipeIdentityTest {
     @Test
     public void newId_validTitleValidDescription_valuesPersisted() {
         // Arrange
-        when(timeProviderMock.getCurrentTimeInMills()).
-                thenReturn(VALID_NEW_COMPLETE.getCreateDate());
+        whenTimeProviderReturnTime(VALID_NEW_COMPLETE.getCreateDate());
         givenNewEmptyModelSimulateNothingReturnedFromDatabase();
 
-        RecipeIdentityModel validTitleAndDescription = new RecipeIdentityModel.
-                Builder().
-                setId(INVALID_NEW_EMPTY.getId()).
+        RecipeIdentityRequest.Model requestModel = new RecipeIdentityRequest.Model.Builder().
                 setTitle(VALID_NEW_COMPLETE.getTitle()).
                 setDescription(VALID_NEW_COMPLETE.getDescription()).
-                setCreateDate(VALID_NEW_COMPLETE.getCreateDate()).
-                setLastUpdate(VALID_NEW_COMPLETE.getLastUpdate()).
                 build();
 
         RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
                 setRecipeId(INVALID_NEW_EMPTY.getId()).
                 setCloneToRecipeId(DO_NOT_CLONE).
-                setModel(validTitleAndDescription).
+                setModel(requestModel).
                 build();
         // Act
         handler.execute(SUT, request, getCallback());
@@ -178,7 +173,9 @@ public class RecipeIdentityTest {
     public void existingId_existingValidValuesLoaded_VALID_UNCHANGED() {
         // Arrange
         RecipeIdentityRequest request = getRequest(
-                VALID_EXISTING_COMPLETE.getId(), DO_NOT_CLONE, getDefaultModel());
+                VALID_EXISTING_COMPLETE.getId(),
+                DO_NOT_CLONE,
+                getDefaultModel());
         // Act
         handler.execute(SUT, request, getCallback());
 
@@ -199,10 +196,12 @@ public class RecipeIdentityTest {
     @Test
     public void existingIdCloneToId_persistenceCalledWithExistingRecipeId() {
         // Arrange
-        RecipeIdentityRequest request = getRequest(
-                VALID_FROM_ANOTHER_USER.getId(), VALID_NEW_CLONED.getId(), getDefaultModel());
-
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(VALID_NEW_CLONED.getCreateDate());
+
+        RecipeIdentityRequest request = getRequest(
+                VALID_FROM_ANOTHER_USER.getId(),
+                VALID_NEW_CLONED.getId(),
+                getDefaultModel());
         // Act
         handler.execute(SUT, request, getCallback());
         // Assert
@@ -232,12 +231,10 @@ public class RecipeIdentityTest {
         RecipeIdentityRequest requestUpdateDescription = getRequest(
                 actualResponse.getModel().getId(),
                 DO_NOT_CLONE,
-                new RecipeIdentityModel(
-                        actualResponse.getModel().getId(),
-                        actualResponse.getModel().getTitle(),
-                        VALID_CLONED_DESCRIPTION_UPDATED.getDescription(),
-                        actualResponse.getModel().getCreateDate(),
-                        actualResponse.getModel().getLastUpdate()));
+                new RecipeIdentityRequest.Model.Builder().
+                        setTitle(actualResponse.getModel().getTitle()).
+                        setDescription(VALID_CLONED_DESCRIPTION_UPDATED.getDescription()).
+                        build());
         // Act
         handler.execute(SUT, requestUpdateDescription, getCallback());
         // Assert
@@ -247,24 +244,20 @@ public class RecipeIdentityTest {
 
     // region helper methods -----------------------------------------------------------------------
     private void givenNewEmptyModelSimulateNothingReturnedFromDatabase() {
-        RecipeIdentityModel model = RecipeIdentityModel.Builder.getDefault().
-                setId(INVALID_NEW_EMPTY.getId()).
-                build();
-
         handler.execute(
                 SUT,
-                getRequest(INVALID_NEW_EMPTY.getId(), DO_NOT_CLONE, model),
+                getRequest(INVALID_NEW_EMPTY.getId(), DO_NOT_CLONE, getDefaultModel()),
                 getCallback());
         simulateNothingReturnedFromDatabase();
     }
 
-    private RecipeIdentityModel getDefaultModel() {
-        return RecipeIdentityModel.Builder.getDefault().build();
+    private RecipeIdentityRequest.Model getDefaultModel() {
+        return RecipeIdentityRequest.Model.Builder.getDefault().build();
     }
 
     private RecipeIdentityRequest getRequest(String recipeId,
-                                              String cloneToRecipeId,
-                                              RecipeIdentityModel model) {
+                                             String cloneToRecipeId,
+                                             RecipeIdentityRequest.Model model) {
         return new RecipeIdentityRequest.Builder().
                 setRecipeId(recipeId).
                 setCloneToRecipeId(cloneToRecipeId).
@@ -311,7 +304,9 @@ public class RecipeIdentityTest {
         repoCallback.getValue().onEntityLoaded(VALID_FROM_ANOTHER_USER);
     }
 
-
+    private void whenTimeProviderReturnTime(long time) {
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(time);
+    }
     // endregion helper methods --------------------------------------------------------------------
 
     // region helper classes -----------------------------------------------------------------------

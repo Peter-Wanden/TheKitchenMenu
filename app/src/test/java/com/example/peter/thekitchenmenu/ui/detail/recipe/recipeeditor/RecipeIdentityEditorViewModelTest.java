@@ -10,6 +10,7 @@ import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentity;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityMediator;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeValidator;
@@ -24,6 +25,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 
+import static com.example.peter.thekitchenmenu.domain.usecase.recipestate.RecipeState.ComponentState.DATA_UNAVAILABLE;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -32,16 +34,18 @@ public class RecipeIdentityEditorViewModelTest {
     // region constants ----------------------------------------------------------------------------
     private static final RecipeIdentityEntity INVALID_NEW_EMPTY =
             TestDataRecipeIdentityEntity.getInvalidNewEmpty();
-    private static final RecipeIdentityEntity INVALID_NEW_TITLE_INVALID =
-            TestDataRecipeIdentityEntity.getInvalidNewTitleUpdatedWithInvalidValue();
+    private static final RecipeIdentityEntity INVALID_NEW_TITLE_TOO_SHORT =
+            TestDataRecipeIdentityEntity.getInvalidNewTitleTooShortDefaultDescription();
+    private static final RecipeIdentityEntity INVALID_NEW_TITLE_TOO_LONG =
+            TestDataRecipeIdentityEntity.getInvalidNewTitleTooLongDefaultDescription();
     private static final RecipeIdentityEntity INVALID_NEW_TITLE_INVALID_DESCRIPTION_VALID =
-            TestDataRecipeIdentityEntity.getInvalidNewTitleInvalidDescriptionValid();
+            TestDataRecipeIdentityEntity.getInvalidNewTitleTooShortValidDescription();
     private static final RecipeIdentityEntity VALID_NEW_TITLE_VALID =
-            TestDataRecipeIdentityEntity.getValidNewTitleUpdatedWithValidValue();
+            TestDataRecipeIdentityEntity.getValidNewValidTitleUpdatedDefaultDescription();
     private static final RecipeIdentityEntity VALID_NEW_COMPLETE =
             TestDataRecipeIdentityEntity.getValidNewComplete();
     private static final RecipeIdentityEntity INVALID_EXISTING_INCOMPLETE_INVALID_TITLE =
-            TestDataRecipeIdentityEntity.getInvalidExistingIncomplete();
+            TestDataRecipeIdentityEntity.getInvalidExistingTitleTooShortDefaultDescription();
     private static final RecipeIdentityEntity VALID_EXISTING_COMPLETE =
             TestDataRecipeIdentityEntity.getValidExistingComplete();
     private static final RecipeIdentityEntity VALID_FROM_ANOTHER_USER =
@@ -49,7 +53,7 @@ public class RecipeIdentityEditorViewModelTest {
     private static final RecipeIdentityEntity INVALID_FROM_ANOTHER_USER =
             TestDataRecipeIdentityEntity.getInvalidCompleteFromAnotherUser();
     private static final RecipeIdentityEntity VALID_NEW_CLONED =
-            TestDataRecipeIdentityEntity.getValidNewCloned();
+            TestDataRecipeIdentityEntity.getValidNewClonedComplete();
     private static final RecipeIdentityEntity INVALID_NEW_CLONED =
             TestDataRecipeIdentityEntity.getInvalidNewCloned();
     private static final RecipeIdentityEntity VALID_CLONED_DESCRIPTION_UPDATED =
@@ -114,10 +118,13 @@ public class RecipeIdentityEditorViewModelTest {
                 setLongTextMaxLength(longTextMaxLength).
                 build();
 
+        RecipeIdentityMediator recipeIdentityMediator = new RecipeIdentityMediator(
+                handler, recipeIdentity, textValidator
+        );
+
         return new RecipeIdentityEditorViewModel(
                 handler,
-                recipeIdentity,
-                textValidator,
+                recipeIdentityMediator,
                 resourcesMock);
     }
 
@@ -139,7 +146,7 @@ public class RecipeIdentityEditorViewModelTest {
     }
 
     @Test
-    public void startNewRecipeId_stateINVALID_UNCHANGED() {
+    public void startNewId_stateDATA_UNAVAILABLE() {
         // Arrange
         String recipeId = INVALID_NEW_EMPTY.getId();
         // Act
@@ -148,14 +155,14 @@ public class RecipeIdentityEditorViewModelTest {
         // Assert
         verify(modelValidationSubmitterMock).submitRecipeComponentStatus(statusCaptor.capture());
         RecipeComponentStateModel actualStatus = statusCaptor.getValue();
-        assertEquals(INVALID_UNCHANGED, actualStatus);
+        assertEquals(DATA_UNAVAILABLE, actualStatus.getState());
     }
 
     @Test
-    public void startNewRecipeId_invalidTitle_errorMessageSetToObservable() {
+    public void startNewId_invalidTitleTooShort_tooShortErrorMessageSetToObservable() {
         // Arrange
         String recipeId = INVALID_NEW_EMPTY.getId();
-        String invalidTitle = INVALID_NEW_TITLE_INVALID.getTitle();
+        String invalidTitle = INVALID_NEW_TITLE_TOO_SHORT.getTitle();
         // Act
         SUT.start(recipeId);
         simulateNothingReturnedFromDatabase(recipeId);
@@ -166,10 +173,23 @@ public class RecipeIdentityEditorViewModelTest {
     }
 
     @Test
-    public void startNewRecipeId_invalidTitle_stateINVALID_CHANGED() {
+    public void startNewId_invalidTitleTooLong_tooLongErrorMessageSetToObservable() {
         // Arrange
-        String invalidTitle = INVALID_NEW_TITLE_INVALID.getTitle();
+        String recipeId = INVALID_NEW_EMPTY.getId();
+        String invalidTitle = INVALID_NEW_TITLE_TOO_LONG.getTitle();
+        // Act
+        SUT.start(recipeId);
+        simulateNothingReturnedFromDatabase(recipeId);
 
+        SUT.setTitle(invalidTitle);
+        // Assert
+        assertEquals(ERROR_MESSAGE_TOO_LONG, SUT.titleErrorMessage.get());
+    }
+
+    @Test
+    public void startNewId_invalidTitle_stateDATA_UNAVAILABLE() {
+        // Arrange
+        String invalidTitle = INVALID_NEW_TITLE_TOO_SHORT.getTitle();
         String recipeId = INVALID_NEW_EMPTY.getId();
         // Act
         SUT.start(recipeId);
@@ -179,7 +199,7 @@ public class RecipeIdentityEditorViewModelTest {
         // Assert
         verify(modelValidationSubmitterMock, times((2))).submitRecipeComponentStatus(statusCaptor.capture());
         RecipeComponentStateModel actualStatus = statusCaptor.getValue();
-        assertEquals(INVALID_CHANGED, actualStatus);
+        assertEquals(DATA_UNAVAILABLE, actualStatus.getState());
     }
 
     @Test
@@ -287,15 +307,15 @@ public class RecipeIdentityEditorViewModelTest {
     }
 
     @Test
-    public void startNewRecipeId_validTitleInvalidDescription_stateINVALID_CHANGED() {
+    public void startNewRecipeId_validTitleInvalidDescription_stateVALID_CHANGED() {
         // Arrange
         String recipeId = INVALID_NEW_EMPTY.getId();
 
-        String title = new StringMaker().
+        String validTitle = new StringMaker().
                 makeStringOfExactLength(shortTextMaxLength).
                 build();
 
-        String description = new StringMaker().
+        String invalidDescription = new StringMaker().
                 makeStringOfExactLength(longTextMaxLength).
                 thenAddOneCharacter().
                 build();
@@ -303,8 +323,8 @@ public class RecipeIdentityEditorViewModelTest {
         SUT.start(recipeId);
         simulateNothingReturnedFromDatabase(recipeId);
 
-        SUT.setTitle(title);
-        SUT.setDescription(description);
+        SUT.setTitle(validTitle);
+        SUT.setDescription(invalidDescription);
         // Assert
         verify(modelValidationSubmitterMock, times((3))).submitRecipeComponentStatus(statusCaptor.capture());
         RecipeComponentStateModel actualStatus = statusCaptor.getValue();

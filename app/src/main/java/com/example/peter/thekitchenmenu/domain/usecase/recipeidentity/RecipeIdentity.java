@@ -23,10 +23,8 @@ public class RecipeIdentity
         DATA_UNAVAILABLE,
         TITLE_TOO_SHORT,
         TITLE_TOO_LONG,
-        TITLE_OK,
         DESCRIPTION_TOO_SHORT,
         DESCRIPTION_TOO_LONG,
-        DESCRIPTION_OK,
         NONE
     }
 
@@ -34,21 +32,24 @@ public class RecipeIdentity
     public static final TextType TITLE_TEXT_TYPE = TextType.SHORT_TEXT;
     public static final TextType DESCRIPTION_TEXT_TYPE = TextType.LONG_TEXT;
 
-    private TimeProvider timeProvider;
     private RepositoryRecipeIdentity repository;
-    private RecipeIdentityModel requestModel;
-    private RecipeIdentityModel responseModel;
+    private TimeProvider timeProvider;
+
+    private RecipeIdentityRequest.Model requestModel;
+    private RecipeIdentityModel persistenceModel;
 
     private String recipeId = "";
     private boolean isCloned;
+    private boolean isChanged;
     private boolean isDataUnAvailable;
 
     public RecipeIdentity(RepositoryRecipeIdentity repository,
                           TimeProvider timeProvider) {
         this.repository = repository;
         this.timeProvider = timeProvider;
-        requestModel = RecipeIdentityModel.Builder.getDefault().build();
-        responseModel = RecipeIdentityModel.Builder.getDefault().build();
+
+        requestModel = RecipeIdentityRequest.Model.Builder.getDefault().build();
+        persistenceModel = RecipeIdentityModel.Builder.getDefault().build();
     }
 
     @Override
@@ -58,7 +59,7 @@ public class RecipeIdentity
         if (isNewRequest(request)) {
             loadData(request);
         } else {
-            buildResponse();
+            processChanges();
         }
     }
 
@@ -83,14 +84,13 @@ public class RecipeIdentity
     @Override
     public void onEntityLoaded(RecipeIdentityEntity entity) {
         isDataUnAvailable = false;
-        requestModel = convertEntityToModel(entity);
+        isChanged = false;
+        persistenceModel = convertEntityToModel(entity);
 
         if (isCloned) {
-            save(requestModel);
+            save(persistenceModel);
             isCloned = false;
         }
-
-        equaliseState();
         buildResponse();
     }
 
@@ -107,12 +107,12 @@ public class RecipeIdentity
 
     @Override
     public void onDataNotAvailable() {
-        requestModel = createNewModel();
+        persistenceModel = createNewPersistenceModel();
         isDataUnAvailable = true;
         buildResponse();
     }
 
-    private RecipeIdentityModel createNewModel() {
+    private RecipeIdentityModel createNewPersistenceModel() {
         long currentTime = timeProvider.getCurrentTimeInMills();
         return RecipeIdentityModel.Builder.getDefault().
                 setId(recipeId).
@@ -121,16 +121,24 @@ public class RecipeIdentity
                 build();
     }
 
+    private void processChanges() {
+        if (!persistenceModel.getTitle().equals(requestModel.getTitle().trim())) {
+            isChanged = true;
+        }
+        if (!persistenceModel.getDescription().equals(requestModel.getDescription().trim())) {
+            isChanged = true;
+        }
+        buildResponse();
+    }
+
     private void buildResponse() {
         RecipeIdentityResponse.Builder builder = new RecipeIdentityResponse.Builder().
                 setState(getState()).
                 setFailReasons(getFailReasons()
-        );
-
-        equaliseState();
+                );
 
         RecipeIdentityResponse response = builder.
-                setModel(responseModel).
+                setModel(getResponseModel()).
                 build();
 
         sendResponse(response);
@@ -140,22 +148,23 @@ public class RecipeIdentity
         if (isDataUnAvailable) {
             return ComponentState.DATA_UNAVAILABLE;
 
-
-        } else if (!isValid() && !isModelChanged()) {
+        } else if (!isValid() && !isChanged) {
             return ComponentState.INVALID_UNCHANGED;
 
-        } else if (isValid() && !isModelChanged()) {
+        } else if (isValid() && !isChanged) {
             return ComponentState.VALID_UNCHANGED;
 
-        } else if (!isValid() && isModelChanged()) {
+        } else if (!isValid() && isChanged) {
             return ComponentState.INVALID_CHANGED;
 
         } else {
-            requestModel = RecipeIdentityModel.Builder.
-                    basedOn(requestModel).
+            persistenceModel = RecipeIdentityModel.Builder.
+                    basedOn(persistenceModel).
+                    setTitle(requestModel.getTitle()).
+                    setDescription(requestModel.getDescription()).
                     setLastUpdate(timeProvider.getCurrentTimeInMills()).
                     build();
-            save(requestModel);
+            save(persistenceModel);
 
             return ComponentState.VALID_CHANGED;
         }
@@ -173,36 +182,31 @@ public class RecipeIdentity
         return failReasons;
     }
 
+    private RecipeIdentityResponse.Model getResponseModel() {
+        return RecipeIdentityResponse.Model.Builder.basedOn(persistenceModel).build();
+    }
+
     private void sendResponse(RecipeIdentityResponse response) {
         System.out.println(TAG + response);
         ComponentState state = response.getState();
+        isChanged = false;
 
         if (state == ComponentState.VALID_UNCHANGED || state == ComponentState.VALID_CHANGED) {
             getUseCaseCallback().onSuccess(response);
         } else {
-            if (isDataUnAvailable) isDataUnAvailable = false;
+            if (isDataUnAvailable) {
+                isDataUnAvailable = false;
+            }
             getUseCaseCallback().onError(response);
         }
     }
 
-    private boolean isModelChanged() {
-        return !requestModel.equals(responseModel);
-    }
-
     private boolean isValid() {
-        if (requestModel.equals(RecipeIdentityModel.Builder.getDefault().build())) {
-            return false;
-        } else {
-            return !requestModel.getTitle().isEmpty();
-        }
+        return !persistenceModel.getTitle().isEmpty() || !requestModel.getTitle().isEmpty();
     }
 
     private void save(RecipeIdentityModel model) {
         repository.save(convertModelToEntity(model));
-    }
-
-    private void equaliseState() {
-        responseModel = requestModel;
     }
 
     // todo - move model / entity conversions to the data layer

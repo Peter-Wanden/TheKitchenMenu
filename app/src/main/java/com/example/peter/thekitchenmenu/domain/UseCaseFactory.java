@@ -15,6 +15,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.Co
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.Ingredient;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDuration;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentity;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityMediator;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentityandduration.RecipeIdentityAndDurationList;
 import com.example.peter.thekitchenmenu.domain.usecase.recipecourse.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.RecipeIngredientList;
@@ -27,8 +28,12 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientcalculato
 
 public class UseCaseFactory {
 
+//    private static final String TAG = "tkm-" + UseCaseFactory.class.getSimpleName() + ": ";
+
     private static volatile UseCaseFactory INSTANCE;
+
     private final Application application;
+    private final UseCaseHandler useCaseHandler;
     private final RepositoryRecipePortions recipePortionsRepository;
     private final RepositoryRecipeIngredient recipeIngredientRepository;
     private final RepositoryIngredient ingredientRepository;
@@ -37,6 +42,7 @@ public class UseCaseFactory {
     private final RepositoryRecipeCourse recipeCourseRepository;
 
     private UseCaseFactory(Application application,
+                           UseCaseHandler useCaseHandler,
                            RepositoryRecipePortions recipePortionsRepository,
                            RepositoryRecipeIngredient recipeIngredientRepository,
                            RepositoryIngredient ingredientRepository,
@@ -44,6 +50,7 @@ public class UseCaseFactory {
                            RepositoryRecipeDuration recipeDurationRepository,
                            RepositoryRecipeCourse recipeCourseRepository) {
         this.application = application;
+        this.useCaseHandler = useCaseHandler;
         this.recipePortionsRepository = recipePortionsRepository;
         this.recipeIngredientRepository = recipeIngredientRepository;
         this.ingredientRepository = ingredientRepository;
@@ -58,6 +65,7 @@ public class UseCaseFactory {
                 if (INSTANCE == null)
                     INSTANCE = new UseCaseFactory(
                             application,
+                            UseCaseHandler.getInstance(),
                             DatabaseInjection.provideRecipePortionsDataSource(
                                     application.getApplicationContext()
                             ),
@@ -168,6 +176,14 @@ public class UseCaseFactory {
                 new TimeProvider(),
                 resources.getInteger(R.integer.recipe_max_prep_time_in_minutes),
                 resources.getInteger(R.integer.recipe_max_cook_time_in_minutes)
+        );
+    }
+
+    public RecipeIdentityMediator provideRecipeIdentityMediator() {
+        return new RecipeIdentityMediator(
+                useCaseHandler,
+                provideRecipeIdentity(),
+                provideTextValidator()
         );
     }
 }

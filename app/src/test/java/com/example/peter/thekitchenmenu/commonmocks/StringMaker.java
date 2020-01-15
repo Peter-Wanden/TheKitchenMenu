@@ -5,9 +5,20 @@ public class StringMaker {
     private String string = "";
 
     public StringMaker makeStringOfExactLength(int length) {
-        StringBuilder builder = new StringBuilder();
+
         String a="a";
-        for (int i=0; i<length; i++) {
+        StringBuilder builder = new StringBuilder();
+
+        if (!string.isEmpty()) {
+            builder.append(string);
+            if (string.length() >= length) {
+                builder.setLength(length);
+                string = builder.toString();
+                return this;
+            }
+        }
+
+        for (int i=string.length(); i<length; i++) {
             builder.append(a);
         }
         string = builder.toString();
@@ -20,7 +31,27 @@ public class StringMaker {
     }
 
     public StringMaker thenRemoveOneCharacter() {
-        string = string.substring(0, string.length() -1);
+        if (string.length() > 1) {
+            string = string.substring(0, string.length() -1);
+            return this;
+        } else {
+            throw new IllegalStateException("String too short");
+        }
+    }
+
+    public StringMaker includeStringAtStart(String stringToInclude) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(stringToInclude);
+
+        if (!string.isEmpty()) {
+            if (stringToInclude.length() >= string.length()) {
+                builder.setLength(string.length());
+            } else {
+                string = string.substring(0, string.length() - stringToInclude.length());
+                builder.append(string);
+            }
+        }
+        string = builder.toString();
         return this;
     }
 

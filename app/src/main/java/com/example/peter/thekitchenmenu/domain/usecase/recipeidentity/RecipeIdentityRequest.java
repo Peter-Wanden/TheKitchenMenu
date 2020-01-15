@@ -12,12 +12,12 @@ public final class RecipeIdentityRequest implements UseCaseCommand.Request {
     private final String recipeId;
     @Nonnull
     private final String cloneToRecipeId;
-    @Nullable
-    private final RecipeIdentityModel model;
+    @Nonnull
+    private final Model model;
 
     private RecipeIdentityRequest(@Nonnull String recipeId,
                                   @Nonnull String cloneToRecipeId,
-                                  @Nullable RecipeIdentityModel model) {
+                                  @Nonnull Model model) {
         this.recipeId = recipeId;
         this.cloneToRecipeId = cloneToRecipeId;
         this.model = model;
@@ -33,8 +33,8 @@ public final class RecipeIdentityRequest implements UseCaseCommand.Request {
         return cloneToRecipeId;
     }
 
-    @Nullable
-    public RecipeIdentityModel getModel() {
+    @Nonnull
+    public Model getModel() {
         return model;
     }
 
@@ -66,13 +66,15 @@ public final class RecipeIdentityRequest implements UseCaseCommand.Request {
     public static class Builder {
         private String recipeId;
         private String cloneToRecipeId;
-        private RecipeIdentityModel model;
+        private Model model;
 
         public static Builder getDefault() {
             return new Builder().
                     setRecipeId("").
                     setCloneToRecipeId("").
-                    setModel(RecipeIdentityModel.Builder.getDefault().build());
+                    setModel(Model.Builder.
+                            getDefault().
+                            build());
         }
 
         public Builder setRecipeId(String recipeId) {
@@ -85,7 +87,7 @@ public final class RecipeIdentityRequest implements UseCaseCommand.Request {
             return this;
         }
 
-        public Builder setModel(RecipeIdentityModel model) {
+        public Builder setModel(Model model) {
             this.model = model;
             return this;
         }
@@ -96,6 +98,84 @@ public final class RecipeIdentityRequest implements UseCaseCommand.Request {
                     cloneToRecipeId,
                     model
             );
+        }
+    }
+
+    public static final class Model {
+        @Nonnull
+        private final String title;
+        @Nonnull
+        private final String description;
+
+        private Model(@Nonnull String title, @Nonnull String description) {
+            this.title = title;
+            this.description = description;
+        }
+
+        @Nonnull
+        public String getTitle() {
+            return title;
+        }
+
+        @Nonnull
+        public String getDescription() {
+            return description;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Model model = (Model) o;
+            return title.equals(model.title) &&
+                    description.equals(model.description);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(title, description);
+        }
+
+        @Override
+        public String toString() {
+            return "Model{" +
+                    "title='" + title + '\'' +
+                    ", description='" + description + '\'' +
+                    '}';
+        }
+
+        public static final class Builder {
+            private String title;
+            private String description;
+
+            public static Builder basedOn(RecipeIdentityResponse.Model model) {
+                return new Builder().
+                        setTitle(model.getTitle()).
+                        setDescription(model.getDescription());
+            }
+
+            public static Builder getDefault() {
+                return new Builder().
+                        setTitle("").
+                        setDescription("");
+            }
+
+            public Builder setTitle(String title) {
+                this.title = title;
+                return this;
+            }
+
+            public Builder setDescription(String description) {
+                this.description = description;
+                return this;
+            }
+
+            public Model build() {
+                return new Model(
+                        title,
+                        description
+                );
+            }
         }
     }
 }

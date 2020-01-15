@@ -1,5 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecase.textvalidation;
 
+import com.example.peter.thekitchenmenu.commonmocks.StringMaker;
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.UseCase;
@@ -12,12 +13,15 @@ import static org.junit.Assert.assertEquals;
 public class TextValidatorTest {
 
     // region constants ----------------------------------------------------------------------------
+    public static final int SHORT_TEXT_MIN_LENGTH = 3;
+    public static final int SHORT_TEXT_MAX_LENGTH = 70;
+    public static final int LONG_TEXT_MIN_LENGTH = 0;
+    public static final int LONG_TEXT_MAX_LENGTH = 500;
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
     private UseCaseHandler handler;
     private TextValidatorResponse actualResponse;
-    private int[] textLengthValues = {3, 70, 0, 500};
     // endregion helper fields ---------------------------------------------------------------------
 
     private TextValidator SUT;
@@ -28,10 +32,10 @@ public class TextValidatorTest {
         handler = new UseCaseHandler(new UseCaseSchedulerMock());
 
         SUT = new TextValidator.Builder().
-                setShortTextMinLength(textLengthValues[0]).
-                setShortTextMaxLength(textLengthValues[1]).
-                setLongTextMinLength(textLengthValues[2]).
-                setLongTextMaxLength(textLengthValues[3]).
+                setShortTextMinLength(SHORT_TEXT_MIN_LENGTH).
+                setShortTextMaxLength(SHORT_TEXT_MAX_LENGTH).
+                setLongTextMinLength(LONG_TEXT_MIN_LENGTH).
+                setLongTextMaxLength(LONG_TEXT_MAX_LENGTH).
                 build();
     }
 
@@ -50,9 +54,14 @@ public class TextValidatorTest {
     @Test
     public void requestTypeSHORT_TEXT_textTooShort_resultTOO_SHORT() {
         // Arrange
+        String shortTextToShort = new StringMaker().
+                makeStringOfExactLength(SHORT_TEXT_MIN_LENGTH).
+                thenRemoveOneCharacter().
+                build();
+
         TextValidatorRequest request = new TextValidatorRequest(
                 TextValidator.TextType.SHORT_TEXT,
-                new TextValidatorModel("ti"));
+                new TextValidatorModel(shortTextToShort));
         // Act
         handler.execute(SUT, request, getCallback());
         // Assert
@@ -62,11 +71,14 @@ public class TextValidatorTest {
     @Test
     public void requestTypeSHORT_TEXT_textTooLong_resultTOO_LONG() {
         // Arrange
-        String text = getTooLongString(textLengthValues[1]);
+        String shortTextTooLong = new StringMaker().
+                makeStringOfExactLength(SHORT_TEXT_MAX_LENGTH).
+                thenAddOneCharacter().
+                build();
 
         TextValidatorRequest request = new TextValidatorRequest(
                 TextValidator.TextType.SHORT_TEXT,
-                new TextValidatorModel(text));
+                new TextValidatorModel(shortTextTooLong));
         // Act
         handler.execute(SUT, request, getCallback());
         // Assert
@@ -88,9 +100,14 @@ public class TextValidatorTest {
     @Test
     public void requestTypeLONG_TEXT_singleCharacter_resultVALID() {
         // Arrange
+        String longTextMinLengthPlusOne = new StringMaker().
+                makeStringOfExactLength(LONG_TEXT_MIN_LENGTH).
+                thenAddOneCharacter().
+                build();
+
         TextValidatorRequest request = new TextValidatorRequest(
                 TextValidator.TextType.LONG_TEXT,
-                new TextValidatorModel("1"));
+                new TextValidatorModel(longTextMinLengthPlusOne));
         // Act
         handler.execute(SUT, request, getCallback());
         // Assert
@@ -100,11 +117,14 @@ public class TextValidatorTest {
     @Test
     public void requestTypeLONG_TEXT_textTooLong_result_TOO_LONG() {
         // Arrange
-        String text = getTooLongString(textLengthValues[3]);
+        String longTextTooLong = new StringMaker().
+                makeStringOfExactLength(LONG_TEXT_MAX_LENGTH).
+                thenAddOneCharacter().
+                build();
 
         TextValidatorRequest request = new TextValidatorRequest(
                 TextValidator.TextType.LONG_TEXT,
-                new TextValidatorModel(text));
+                new TextValidatorModel(longTextTooLong));
         // Act
         handler.execute(SUT, request, getCallback());
         // Assert
@@ -124,16 +144,6 @@ public class TextValidatorTest {
                 actualResponse = response;
             }
         };
-    }
-
-    private String getTooLongString(int length) {
-        StringBuilder builder = new StringBuilder();
-        String a="a";
-        for (int i=0; i<length; i++) {
-            builder.append(a);
-        }
-        builder.append(a);
-        return builder.toString();
     }
     // endregion helper methods --------------------------------------------------------------------
 
