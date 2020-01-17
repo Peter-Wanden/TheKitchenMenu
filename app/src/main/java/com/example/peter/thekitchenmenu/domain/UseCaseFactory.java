@@ -19,6 +19,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIden
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentityandduration.RecipeIdentityAndDurationList;
 import com.example.peter.thekitchenmenu.domain.usecase.recipecourse.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.RecipeIngredientList;
+import com.example.peter.thekitchenmenu.domain.usecase.recipemediator.Recipe;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientDuplicateChecker;
@@ -33,7 +34,6 @@ public class UseCaseFactory {
     private static volatile UseCaseFactory INSTANCE;
 
     private final Application application;
-    private final UseCaseHandler useCaseHandler;
     private final RepositoryRecipePortions recipePortionsRepository;
     private final RepositoryRecipeIngredient recipeIngredientRepository;
     private final RepositoryIngredient ingredientRepository;
@@ -42,7 +42,6 @@ public class UseCaseFactory {
     private final RepositoryRecipeCourse recipeCourseRepository;
 
     private UseCaseFactory(Application application,
-                           UseCaseHandler useCaseHandler,
                            RepositoryRecipePortions recipePortionsRepository,
                            RepositoryRecipeIngredient recipeIngredientRepository,
                            RepositoryIngredient ingredientRepository,
@@ -50,7 +49,6 @@ public class UseCaseFactory {
                            RepositoryRecipeDuration recipeDurationRepository,
                            RepositoryRecipeCourse recipeCourseRepository) {
         this.application = application;
-        this.useCaseHandler = useCaseHandler;
         this.recipePortionsRepository = recipePortionsRepository;
         this.recipeIngredientRepository = recipeIngredientRepository;
         this.ingredientRepository = ingredientRepository;
@@ -65,7 +63,6 @@ public class UseCaseFactory {
                 if (INSTANCE == null)
                     INSTANCE = new UseCaseFactory(
                             application,
-                            UseCaseHandler.getInstance(),
                             DatabaseInjection.provideRecipePortionsDataSource(
                                     application.getApplicationContext()
                             ),
@@ -121,12 +118,6 @@ public class UseCaseFactory {
         );
     }
 
-    public RecipeIdentity provideRecipeIdentity() {
-        return new RecipeIdentity(
-                recipeIdentityRepository,
-                new TimeProvider());
-    }
-
     public RecipeCourse provideRecipeCourse() {
         return new RecipeCourse(
                 recipeCourseRepository,
@@ -155,7 +146,7 @@ public class UseCaseFactory {
                 new UniqueIdProvider(),
                 new TimeProvider(),
                 new IngredientDuplicateChecker(ingredientRepository)
-                );
+        );
     }
 
     public RecipePortions provideRecipePortions() {
@@ -179,11 +170,17 @@ public class UseCaseFactory {
         );
     }
 
-    public RecipeIdentityMediator provideRecipeIdentityMediator() {
-        return new RecipeIdentityMediator(
-                useCaseHandler,
-                provideRecipeIdentity(),
-                provideTextValidator()
-        );
+    public RecipeIdentity provideRecipeIdentity(UseCase mediator) {
+        return new RecipeIdentity(
+                recipeIdentityRepository,
+                new TimeProvider(),
+                UseCaseHandler.getInstance(),
+                mediator);
+    }
+
+    public Recipe provideRecipe() {
+        return new Recipe(
+                UseCaseHandler.getInstance(),
+                UseCaseFactory.getInstance(application));
     }
 }

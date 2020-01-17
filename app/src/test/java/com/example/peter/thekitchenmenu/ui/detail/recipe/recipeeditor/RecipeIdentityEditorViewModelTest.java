@@ -11,6 +11,7 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityMediator;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityTest;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeValidator;
@@ -35,29 +36,29 @@ public class RecipeIdentityEditorViewModelTest {
     private static final RecipeIdentityEntity INVALID_NEW_EMPTY =
             TestDataRecipeIdentityEntity.getInvalidNewEmpty();
     private static final RecipeIdentityEntity INVALID_NEW_TITLE_TOO_SHORT =
-            TestDataRecipeIdentityEntity.getInvalidNewTitleTooShortDefaultDescription();
+            TestDataRecipeIdentityEntity.getInvalidNewTitleTooShortDescriptionDefault();
     private static final RecipeIdentityEntity INVALID_NEW_TITLE_TOO_LONG =
-            TestDataRecipeIdentityEntity.getInvalidNewTitleTooLongDefaultDescription();
+            TestDataRecipeIdentityEntity.getInvalidNewTitleTooLongDescriptionDefault();
     private static final RecipeIdentityEntity INVALID_NEW_TITLE_INVALID_DESCRIPTION_VALID =
-            TestDataRecipeIdentityEntity.getInvalidNewTitleTooShortValidDescription();
+            TestDataRecipeIdentityEntity.getInvalidNewTitleTooShortDescriptionValid();
     private static final RecipeIdentityEntity VALID_NEW_TITLE_VALID =
-            TestDataRecipeIdentityEntity.getValidNewValidTitleUpdatedDefaultDescription();
+            TestDataRecipeIdentityEntity.getValidNewTitleValidDescriptionDefault();
     private static final RecipeIdentityEntity VALID_NEW_COMPLETE =
             TestDataRecipeIdentityEntity.getValidNewComplete();
     private static final RecipeIdentityEntity INVALID_EXISTING_INCOMPLETE_INVALID_TITLE =
             TestDataRecipeIdentityEntity.getInvalidExistingTitleTooShortDefaultDescription();
     private static final RecipeIdentityEntity VALID_EXISTING_COMPLETE =
-            TestDataRecipeIdentityEntity.getValidExistingComplete();
+            TestDataRecipeIdentityEntity.getValidExistingTitleValidDescriptionValid();
     private static final RecipeIdentityEntity VALID_FROM_ANOTHER_USER =
             TestDataRecipeIdentityEntity.getValidCompleteFromAnotherUser();
     private static final RecipeIdentityEntity INVALID_FROM_ANOTHER_USER =
-            TestDataRecipeIdentityEntity.getInvalidCompleteFromAnotherUser();
+            TestDataRecipeIdentityEntity.getInvalidFromAnotherUser();
     private static final RecipeIdentityEntity VALID_NEW_CLONED =
-            TestDataRecipeIdentityEntity.getValidNewClonedComplete();
+            TestDataRecipeIdentityEntity.getValidCompleteAfterCloned();
     private static final RecipeIdentityEntity INVALID_NEW_CLONED =
-            TestDataRecipeIdentityEntity.getInvalidNewCloned();
+            TestDataRecipeIdentityEntity.getValidAfterInvalidClonedData();
     private static final RecipeIdentityEntity VALID_CLONED_DESCRIPTION_UPDATED =
-            TestDataRecipeIdentityEntity.getValidNewClonedDescriptionUpdatedComplete();
+            TestDataRecipeIdentityEntity.getValidClonedDescriptionUpdated();
 
     private RecipeComponentStateModel INVALID_UNCHANGED =
             TestDataRecipeValidator.getIdentityModelStatusINVALID_UNCHANGED();
@@ -108,8 +109,18 @@ public class RecipeIdentityEditorViewModelTest {
     private RecipeIdentityEditorViewModel givenViewModel() {
         UseCaseHandler handler = new UseCaseHandler(new UseCaseSchedulerMock()
         );
+        TextValidator identityTextValidator = new TextValidator.Builder().
+                setShortTextMinLength(RecipeIdentityTest.TITLE_MIN_LENGTH).
+                setShortTextMaxLength(RecipeIdentityTest.TITLE_MAX_LENGTH).
+                setLongTextMinLength(RecipeIdentityTest.DESCRIPTION_MIN_LENGTH).
+                setLongTextMaxLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
+                build();
+
         RecipeIdentity recipeIdentity = new RecipeIdentity(
-                repoMock, timeProviderMock
+                repoMock,
+                timeProviderMock,
+                handler,
+                identityTextValidator
         );
         TextValidator textValidator = new TextValidator.Builder().
                 setShortTextMinLength(shortTextMinLength).

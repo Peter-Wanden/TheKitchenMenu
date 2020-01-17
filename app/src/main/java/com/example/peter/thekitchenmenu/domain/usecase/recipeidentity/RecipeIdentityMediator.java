@@ -30,7 +30,7 @@ public class RecipeIdentityMediator
     private String recipeId = "";
     private RecipeIdentityResponse response;
     private boolean isTextValidationError;
-    private boolean isNewRequest;
+    private boolean isTextValidated;
 
     private List<FailReasons> failReasons = new ArrayList<>();
     private RecipeIdentityResponse.Model.Builder responseModelBuilder;
@@ -44,15 +44,18 @@ public class RecipeIdentityMediator
         initialiseInstanceVariables();
     }
 
+    private void initialiseInstanceVariables() {
+        isTextValidationError = false;
+        responseModelBuilder = RecipeIdentityResponse.Model.Builder.getDefault();
+    }
+
     @Override
     protected void execute(RecipeIdentityRequest request) {
         System.out.println(TAG + request);
         if (isNewRequest()) {
-            isNewRequest = true;
             this.recipeId = getRequest().getRecipeId();
             executeUseCaseRecipeIdentity();
         } else {
-            isNewRequest = false;
             validateText();
         }
     }
@@ -62,6 +65,7 @@ public class RecipeIdentityMediator
     }
 
     private void validateText() {
+        isTextValidated = true;
         validateTitle();
     }
 
@@ -155,12 +159,12 @@ public class RecipeIdentityMediator
     @Override
     public void onSuccess(RecipeIdentityResponse response) {
         this.response = response;
-        if (isNewRequest) {
+        if (!isTextValidated) {
             // TODO - Intercept response of a new request and pass through text validation
-            System.out.println(TAG + "new response going through text validation:" + response);
+            System.out.println(TAG + "onSuccess, validating text:" + this.response);
             validateTextFromNewResponse();
         } else {
-            System.out.println(TAG + this.response);
+            System.out.println(TAG + "onSuccess, not validating text" + this.response);
             getUseCaseCallback().onSuccess(this.response);
         }
     }
@@ -168,13 +172,12 @@ public class RecipeIdentityMediator
     @Override
     public void onError(RecipeIdentityResponse response) {
         this.response = response;
-        System.out.println(TAG + this.response);
-
+        System.out.println(TAG + "onError:" + this.response);
         getUseCaseCallback().onError(this.response);
     }
 
     private void validateTextFromNewResponse() {
-        isNewRequest = false;
+        isTextValidated = true;
         String title = response.getModel().getTitle();
 
         TextValidatorRequest request = new TextValidatorRequest(
@@ -190,7 +193,6 @@ public class RecipeIdentityMediator
             @Override
             public void onError(TextValidatorResponse response) {
                 isTextValidationError = true;
-                responseModelBuilder.setTitle(response.getModel().getText());
 
                 TextValidator.FailReason failReason = response.getFailReason();
                 if (failReason == TextValidator.FailReason.TOO_SHORT) {
@@ -214,19 +216,20 @@ public class RecipeIdentityMediator
         handler.execute(textValidator, request, new Callback<TextValidatorResponse>() {
             @Override
             public void onSuccess(TextValidatorResponse response) {
-                responseModelBuilder.setDescription(response.getModel().getText());
-
                 if (!isTextValidationError) {
-                    buildTextValidationErrorFromNewRequestResponse();
-                } else {
                     failReasons.add(RecipeIdentity.FailReason.NONE);
-
                     RecipeIdentityResponse finalResponse = new RecipeIdentityResponse.Builder().
                             setState(RecipeState.ComponentState.VALID_UNCHANGED).
+                            setModel(RecipeIdentityMediator.this.response.getModel()).
+                            setFailReasons(failReasons).build();
+                    RecipeIdentityMediator.this.onSuccess(finalResponse);
+                } else {
+                    RecipeIdentityResponse finalResponse = new RecipeIdentityResponse.Builder().
+                            setState(RecipeState.ComponentState.INVALID_UNCHANGED).
                             setFailReasons(failReasons).
-                            setModel(responseModelBuilder.build()).
+                            setModel(RecipeIdentityMediator.this.response.getModel()).
                             build();
-                    getUseCaseCallback().onSuccess(finalResponse);
+                    RecipeIdentityMediator.this.onError(finalResponse);
                 }
             }
 
@@ -241,7 +244,12 @@ public class RecipeIdentityMediator
                 } else if (failReason == TextValidator.FailReason.TOO_LONG) {
                     failReasons.add(RecipeIdentity.FailReason.DESCRIPTION_TOO_LONG);
                 }
-                buildTextValidationErrorFromNewRequestResponse();
+                RecipeIdentityResponse finalResponse = new RecipeIdentityResponse.Builder().
+                        setState(RecipeState.ComponentState.INVALID_UNCHANGED).
+                        setFailReasons(failReasons).
+                        setModel(RecipeIdentityMediator.this.response.getModel()).
+                        build();
+                RecipeIdentityMediator.this.onError(finalResponse);
             }
         });
     }
@@ -260,9 +268,5 @@ public class RecipeIdentityMediator
         builder.setModel(responseModelBuilder.build());
         isTextValidationError = false;
         onError(response);
-    }
-    private void initialiseInstanceVariables() {
-        isTextValidationError = false;
-        responseModelBuilder = RecipeIdentityResponse.Model.Builder.getDefault();
     }
 }

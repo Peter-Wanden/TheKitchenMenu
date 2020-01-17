@@ -7,6 +7,7 @@ import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorTest;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
@@ -25,29 +26,19 @@ public class RecipeIdentityTest {
     // region constants ----------------------------------------------------------------------------
     private static final RecipeIdentityEntity INVALID_NEW_EMPTY =
             TestDataRecipeIdentityEntity.getInvalidNewEmpty();
-    private static final RecipeIdentityEntity INVALID_NEW_TITLE_INVALID =
-            TestDataRecipeIdentityEntity.getInvalidNewTitleTooShortDefaultDescription();
-    private static final RecipeIdentityEntity INVALID_NEW_TITLE_INVALID_DESCRIPTION_VALID =
-            TestDataRecipeIdentityEntity.getInvalidNewTitleTooShortValidDescription();
     private static final RecipeIdentityEntity VALID_NEW_TITLE_VALID =
-            TestDataRecipeIdentityEntity.getValidNewValidTitleUpdatedDefaultDescription();
+            TestDataRecipeIdentityEntity.getValidNewTitleValidDescriptionDefault();
     private static final RecipeIdentityEntity VALID_NEW_COMPLETE =
             TestDataRecipeIdentityEntity.getValidNewComplete();
-    private static final RecipeIdentityEntity INVALID_EXISTING_INCOMPLETE_INVALID_TITLE =
-            TestDataRecipeIdentityEntity.getInvalidExistingTitleTooShortDefaultDescription();
 
     private static final RecipeIdentityEntity VALID_EXISTING_COMPLETE =
-            TestDataRecipeIdentityEntity.getValidExistingComplete();
+            TestDataRecipeIdentityEntity.getValidExistingTitleValidDescriptionValid();
     private static final RecipeIdentityEntity VALID_FROM_ANOTHER_USER =
             TestDataRecipeIdentityEntity.getValidCompleteFromAnotherUser();
-    private static final RecipeIdentityEntity INVALID_FROM_ANOTHER_USER =
-            TestDataRecipeIdentityEntity.getInvalidCompleteFromAnotherUser();
     private static final RecipeIdentityEntity VALID_NEW_CLONED =
-            TestDataRecipeIdentityEntity.getValidNewClonedComplete();
-    private static final RecipeIdentityEntity INVALID_NEW_CLONED =
-            TestDataRecipeIdentityEntity.getInvalidNewCloned();
+            TestDataRecipeIdentityEntity.getValidCompleteAfterCloned();
     private static final RecipeIdentityEntity VALID_CLONED_DESCRIPTION_UPDATED =
-            TestDataRecipeIdentityEntity.getValidNewClonedDescriptionUpdatedComplete();
+            TestDataRecipeIdentityEntity.getValidClonedDescriptionUpdated();
 
     private static final String INVALID_TITLE = "";
     // endregion constants -------------------------------------------------------------------------
@@ -60,7 +51,19 @@ public class RecipeIdentityTest {
     ArgumentCaptor<DataSource.GetEntityCallback<RecipeIdentityEntity>> repoCallback;
     @Mock
     TimeProvider timeProviderMock;
-    private RecipeIdentityResponse actualResponse;
+
+    private RecipeIdentityResponse onSuccessResponse;
+    private RecipeIdentityResponse onErrorResponse;
+
+    private static final int SHORT_TEXT_MIN_LENGTH = 3;
+    private static final int SHORT_TEXT_MAX_LENGTH = 70;
+    private static final int LONG_TEXT_MIN_LENGTH = 0;
+    private static final int LONG_TEXT_MAX_LENGTH = 500;
+
+    public static final int TITLE_MIN_LENGTH = SHORT_TEXT_MIN_LENGTH;
+    public static final int TITLE_MAX_LENGTH = SHORT_TEXT_MAX_LENGTH;
+    public static final int DESCRIPTION_MIN_LENGTH = LONG_TEXT_MIN_LENGTH;
+    public static final int DESCRIPTION_MAX_LENGTH = LONG_TEXT_MAX_LENGTH;
     // endregion helper fields ---------------------------------------------------------------------
 
     private RecipeIdentity SUT;
@@ -73,7 +76,18 @@ public class RecipeIdentityTest {
     }
 
     private RecipeIdentity givenUseCase() {
-        return new RecipeIdentity(repoMock, timeProviderMock);
+        TextValidator textValidator = new TextValidator.Builder().
+                setShortTextMinLength(SHORT_TEXT_MIN_LENGTH).
+                setShortTextMaxLength(SHORT_TEXT_MAX_LENGTH).
+                setLongTextMinLength(LONG_TEXT_MIN_LENGTH).
+                setLongTextMaxLength(LONG_TEXT_MAX_LENGTH).
+                build();
+
+        return new RecipeIdentity(
+                repoMock,
+                timeProviderMock,
+                handler,
+                textValidator);
     }
 
     @Test
@@ -82,11 +96,8 @@ public class RecipeIdentityTest {
         // Act
         givenNewEmptyModelSimulateNothingReturnedFromDatabase();
         // Assert
-        assertEquals(ComponentState.DATA_UNAVAILABLE, actualResponse.getState());
+        assertEquals(ComponentState.DATA_UNAVAILABLE, onErrorResponse.getState());
     }
-
-    // newId_validTitleInvalidDescription_stateINVALID_CHANGED
-    // newId_validTitleInvalidDescription_failReasonsINVALID_DESCRIPTION
 
     @Test
     public void newId_invalidTitleValidDescription_stateINVALID_CHANGED() {
@@ -100,7 +111,7 @@ public class RecipeIdentityTest {
                 build();
 
         RecipeIdentityRequest.Model modelValidDescription = RecipeIdentityRequest.Model.Builder.
-                basedOn(actualResponse.getModel()).
+                basedOn(onSuccessResponse.getModel()).
                 setTitle(INVALID_TITLE).
                 setDescription(validDescription).
                 build();
@@ -112,10 +123,8 @@ public class RecipeIdentityTest {
                 getCallback());
 
         // Assert
-        assertEquals(ComponentState.INVALID_CHANGED, actualResponse.getState());
+        assertEquals(ComponentState.INVALID_CHANGED, onSuccessResponse.getState());
     }
-
-    // newId_invalidTitleValidDescription_failReasonsINVALID_TITLE
 
     @Test
     public void newId_validTitleNoDescription_valuesPersisted() {
@@ -127,7 +136,7 @@ public class RecipeIdentityTest {
 
         RecipeIdentityRequest.Model validTitleModel = new RecipeIdentityRequest.Model.Builder().
                 setTitle(VALID_NEW_TITLE_VALID.getTitle()).
-                setDescription(actualResponse.getModel().getDescription()).
+                setDescription(onSuccessResponse.getModel().getDescription()).
                 build();
 
         // Act
@@ -139,11 +148,8 @@ public class RecipeIdentityTest {
 
         // Assert
         verify(repoMock).save(eq(VALID_NEW_TITLE_VALID));
-        assertEquals(ComponentState.VALID_CHANGED, actualResponse.getState());
+        assertEquals(ComponentState.VALID_CHANGED, onSuccessResponse.getState());
     }
-
-    // newId_validTitleValidDescription_stateVALID_CHANGED
-    // newId_validTitleValidDescription_failReasonsNONE
 
     @Test
     public void newId_validTitleValidDescription_valuesPersisted() {
@@ -166,7 +172,7 @@ public class RecipeIdentityTest {
 
         // Assert
         verify(repoMock).save(VALID_NEW_COMPLETE);
-        assertEquals(ComponentState.VALID_CHANGED, actualResponse.getState());
+        assertEquals(ComponentState.VALID_CHANGED, onSuccessResponse.getState());
     }
 
     @Test
@@ -181,7 +187,7 @@ public class RecipeIdentityTest {
 
         simulateGetValidExistingCompleteFromDatabase();
         // Assert
-        assertEquals(ComponentState.VALID_UNCHANGED, actualResponse.getState());
+        assertEquals(ComponentState.VALID_UNCHANGED, onSuccessResponse.getState());
     }
 
     @Test
@@ -207,7 +213,7 @@ public class RecipeIdentityTest {
         // Assert
         simulateGetValidFromAnotherUserFromDatabase();
         verify(repoMock).save(eq(VALID_NEW_CLONED));
-        assertEquals(ComponentState.VALID_UNCHANGED, actualResponse.getState());
+        assertEquals(ComponentState.VALID_UNCHANGED, onSuccessResponse.getState());
     }
 
     @Test
@@ -229,17 +235,17 @@ public class RecipeIdentityTest {
 
         // Arrange
         RecipeIdentityRequest requestUpdateDescription = getRequest(
-                actualResponse.getModel().getId(),
+                onSuccessResponse.getModel().getId(),
                 DO_NOT_CLONE,
                 new RecipeIdentityRequest.Model.Builder().
-                        setTitle(actualResponse.getModel().getTitle()).
+                        setTitle(onSuccessResponse.getModel().getTitle()).
                         setDescription(VALID_CLONED_DESCRIPTION_UPDATED.getDescription()).
                         build());
         // Act
         handler.execute(SUT, requestUpdateDescription, getCallback());
         // Assert
         verify(repoMock).save(VALID_CLONED_DESCRIPTION_UPDATED);
-        assertEquals(ComponentState.VALID_CHANGED, actualResponse.getState());
+        assertEquals(ComponentState.VALID_CHANGED, onSuccessResponse.getState());
     }
 
     // region helper methods -----------------------------------------------------------------------
@@ -270,13 +276,13 @@ public class RecipeIdentityTest {
 
             @Override
             public void onSuccess(RecipeIdentityResponse response) {
-                RecipeIdentityTest.this.actualResponse = response;
+                RecipeIdentityTest.this.onSuccessResponse = response;
 
             }
 
             @Override
             public void onError(RecipeIdentityResponse response) {
-                RecipeIdentityTest.this.actualResponse = response;
+                RecipeIdentityTest.this.onErrorResponse = response;
             }
         };
     }
@@ -285,12 +291,6 @@ public class RecipeIdentityTest {
         verify(repoMock).getById(eq(INVALID_NEW_EMPTY.getId()),
                 repoCallback.capture());
         repoCallback.getValue().onDataNotAvailable();
-    }
-
-    private void simulateGetValidNewTitleValidFromDatabase() {
-        verify(repoMock).getById(eq(VALID_NEW_TITLE_VALID.getId()),
-                repoCallback.capture());
-        repoCallback.getValue().onEntityLoaded(VALID_NEW_TITLE_VALID);
     }
 
     private void simulateGetValidExistingCompleteFromDatabase() {

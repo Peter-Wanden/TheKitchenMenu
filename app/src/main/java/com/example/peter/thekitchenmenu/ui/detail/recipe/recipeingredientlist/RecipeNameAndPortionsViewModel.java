@@ -5,10 +5,9 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.peter.thekitchenmenu.domain.UseCaseCommand;
 import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortions;
+import com.example.peter.thekitchenmenu.domain.usecase.recipemediator.Recipe;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortionsModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortionsRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortionsResponse;
@@ -16,20 +15,16 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePort
 public class RecipeNameAndPortionsViewModel extends ViewModel {
 
     private UseCaseHandler handler;
-    private RecipeIdentity identity;
-    private RecipePortions portions;
+    private Recipe recipe;
 
     public final ObservableField<String> recipeTitleObservable = new ObservableField<>();
     public final ObservableField<String> servingsObservable = new ObservableField<>();
     public final ObservableField<String> sittingsObservable = new ObservableField<>();
     public final ObservableField<String> portionsObservable = new ObservableField<>();
 
-    public RecipeNameAndPortionsViewModel(UseCaseHandler handler,
-                                          RecipeIdentity identity,
-                                          RecipePortions portions) {
+    public RecipeNameAndPortionsViewModel(UseCaseHandler handler, Recipe recipe) {
         this.handler = handler;
-        this.identity = identity;
-        this.portions = portions;
+        this.recipe = recipe;
     }
 
     public void start(String recipeId) {
@@ -44,7 +39,7 @@ public class RecipeNameAndPortionsViewModel extends ViewModel {
                 build();
 
         handler.execute(
-                identity,
+                recipe,
                 request,
                 new UseCaseCommand.Callback<RecipeIdentityResponse>() {
 
@@ -71,7 +66,7 @@ public class RecipeNameAndPortionsViewModel extends ViewModel {
                 build();
 
         handler.execute(
-                portions,
+                recipe,
                 request,
                 new UseCaseCommand.Callback<RecipePortionsResponse>() {
 

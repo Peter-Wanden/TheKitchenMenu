@@ -1,11 +1,12 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipemediator;
 
+import com.example.peter.thekitchenmenu.domain.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.recipecourse.RecipeCourseResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDurationResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortionsResponse;
 
-public class RecipeMediatorResponse implements RecipeMediatorAbstract.Response {
+public class RecipeMediatorResponse implements UseCase.Response {
 
     private RecipeIdentityResponse identityResponse;
     private RecipeDurationResponse durationResponse;

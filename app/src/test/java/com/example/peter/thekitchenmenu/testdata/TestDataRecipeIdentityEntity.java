@@ -25,7 +25,7 @@ public class TestDataRecipeIdentityEntity {
         );
     }
 
-    public static RecipeIdentityEntity getInvalidNewTitleTooShortDefaultDescription() {
+    public static RecipeIdentityEntity getInvalidNewTitleTooShortDescriptionDefault() {
         String titleTooShort = new StringMaker().
                 makeStringOfExactLength(TITLE_MIN_LENGTH).
                 thenRemoveOneCharacter().
@@ -40,7 +40,7 @@ public class TestDataRecipeIdentityEntity {
         );
     }
 
-    public static RecipeIdentityEntity getInvalidNewTitleTooLongDefaultDescription() {
+    public static RecipeIdentityEntity getInvalidNewTitleTooLongDescriptionDefault() {
         String titleTooLong = new StringMaker().
                 makeStringOfExactLength(TITLE_MAX_LENGTH).
                 includeStringAtStart("invalidTitle").
@@ -64,24 +64,24 @@ public class TestDataRecipeIdentityEntity {
 
         return new RecipeIdentityEntity(
                 TestDataRecipeEntity.getNewInvalid().getId(),
-                getInvalidNewTitleTooLongDefaultDescription().getTitle(),
+                getInvalidNewTitleTooLongDescriptionDefault().getTitle(),
                 descriptionTooLong,
                 TestDataRecipeEntity.getNewInvalid().getCreateDate(),
                 TestDataRecipeEntity.getNewInvalid().getLastUpdate()
         );
     }
 
-    public static RecipeIdentityEntity getInvalidNewTitleTooShortValidDescription() {
+    public static RecipeIdentityEntity getInvalidNewTitleTooShortDescriptionValid() {
         return new RecipeIdentityEntity(
                 TestDataRecipeEntity.getNewInvalid().getId(),
-                getInvalidNewTitleTooShortDefaultDescription().getTitle(),
+                getInvalidNewTitleTooShortDescriptionDefault().getTitle(),
                 getValidNewComplete().getDescription(),
                 TestDataRecipeEntity.getNewInvalid().getCreateDate(),
                 TestDataRecipeEntity.getNewInvalid().getLastUpdate()
         );
     }
 
-    public static RecipeIdentityEntity getValidNewValidTitleUpdatedDefaultDescription() {
+    public static RecipeIdentityEntity getValidNewTitleValidDescriptionDefault() {
         return new RecipeIdentityEntity(
                 TestDataRecipeEntity.getNewValid().getId(),
                 getValidNewComplete().getTitle(),
@@ -127,7 +127,58 @@ public class TestDataRecipeIdentityEntity {
         );
     }
 
-    public static RecipeIdentityEntity getValidExistingComplete() {
+    public static RecipeIdentityEntity getInvalidExistingTitleTooLongDefaultDescription() {
+        String invalidExistingTitleTooLong = new StringMaker().
+                makeStringOfExactLength(TITLE_MAX_LENGTH).
+                includeStringAtStart("invalidExistingTitleTooLong").thenAddOneCharacter().
+                build();
+
+        return new RecipeIdentityEntity(
+                TestDataRecipeEntity.getInvalidExisting().getId(),
+                invalidExistingTitleTooLong,
+                defaultModel.getDescription(),
+                TestDataRecipeEntity.getInvalidExisting().getCreateDate(),
+                TestDataRecipeEntity.getInvalidExisting().getLastUpdate()
+        );
+    }
+
+    public static RecipeIdentityEntity getInvalidExistingTitleValidDescriptionTooLong() {
+        String existingDescriptionTooLong = new StringMaker().
+                makeStringOfExactLength(DESCRIPTION_MAX_LENGTH).
+                includeStringAtStart("existingDescriptionTooLong").
+                thenAddOneCharacter().
+                build();
+
+        return new RecipeIdentityEntity(
+                TestDataRecipeEntity.getInvalidExisting().getId(),
+                getValidExistingTitleValidDescriptionValid().getTitle(),
+                existingDescriptionTooLong,
+                TestDataRecipeEntity.getInvalidExisting().getCreateDate(),
+                TestDataRecipeEntity.getInvalidExisting().getLastUpdate()
+        );
+    }
+
+    public static RecipeIdentityEntity getInvalidExistingTitleTooShortDescriptionTooLong() {
+        return new RecipeIdentityEntity(
+                TestDataRecipeEntity.getInvalidExisting().getId(),
+                getInvalidExistingTitleTooShortDefaultDescription().getTitle(),
+                getInvalidExistingTitleValidDescriptionTooLong().getDescription(),
+                TestDataRecipeEntity.getInvalidExisting().getCreateDate(),
+                TestDataRecipeEntity.getInvalidExisting().getLastUpdate()
+        );
+    }
+
+    public static RecipeIdentityEntity getInvalidExistingTitleTooLongDescriptionTooLong() {
+        return new RecipeIdentityEntity(
+                TestDataRecipeEntity.getInvalidExisting().getId(),
+                getInvalidExistingTitleTooLongDefaultDescription().getTitle(),
+                getInvalidExistingTitleValidDescriptionTooLong().getDescription(),
+                TestDataRecipeEntity.getInvalidExisting().getCreateDate(),
+                TestDataRecipeEntity.getInvalidExisting().getLastUpdate()
+        );
+    }
+
+    public static RecipeIdentityEntity getValidExistingTitleValidDescriptionValid() {
         String validExistingCompleteTitle = new StringMaker().
                 makeStringOfExactLength(TITLE_MAX_LENGTH).
                 includeStringAtStart("validExistingCompleteTitle").
@@ -141,6 +192,16 @@ public class TestDataRecipeIdentityEntity {
                 TestDataRecipeEntity.getValidExisting().getId(),
                 validExistingCompleteTitle,
                 validExistingCompleteDescription,
+                TestDataRecipeEntity.getValidExisting().getCreateDate(),
+                TestDataRecipeEntity.getValidExisting().getLastUpdate()
+        );
+    }
+
+    public static RecipeIdentityEntity getValidExistingTitleValidDescriptionDefault() {
+        return new RecipeIdentityEntity(
+                TestDataRecipeEntity.getInvalidExisting().getId(),
+                getValidExistingTitleValidDescriptionValid().getTitle(),
+                defaultModel.getDescription(),
                 TestDataRecipeEntity.getValidExisting().getCreateDate(),
                 TestDataRecipeEntity.getValidExisting().getLastUpdate()
         );
@@ -165,7 +226,17 @@ public class TestDataRecipeIdentityEntity {
         );
     }
 
-    public static RecipeIdentityEntity getInvalidCompleteFromAnotherUser() {
+    public static RecipeIdentityEntity getValidCompleteAfterCloned() {
+        return new RecipeIdentityEntity(
+                TestDataRecipeEntity.getNewValid().getId(),
+                getValidCompleteFromAnotherUser().getTitle(),
+                getValidCompleteFromAnotherUser().getDescription(),
+                TestDataRecipeEntity.getNewValid().getCreateDate(),
+                TestDataRecipeEntity.getNewValid().getLastUpdate()
+        );
+    }
+
+    public static RecipeIdentityEntity getInvalidFromAnotherUser() {
         String invalidCompleteFromAnotherUserTitle = new StringMaker().
                 makeStringOfExactLength(TITLE_MAX_LENGTH).
                 includeStringAtStart("invalidFromAnotherUserTitle").
@@ -186,36 +257,34 @@ public class TestDataRecipeIdentityEntity {
         );
     }
 
-    public static RecipeIdentityEntity getValidNewClonedComplete() {
-        return new RecipeIdentityEntity(
-                TestDataRecipeEntity.getNewValid().getId(),
-                getValidCompleteFromAnotherUser().getTitle(),
-                getValidCompleteFromAnotherUser().getDescription(),
-                TestDataRecipeEntity.getNewValid().getCreateDate(),
-                TestDataRecipeEntity.getNewValid().getLastUpdate()
-        );
-    }
+    public static RecipeIdentityEntity getValidAfterInvalidClonedData() {
+        StringBuilder truncatedTitle = new StringBuilder().
+                append(getInvalidFromAnotherUser().getTitle());
+        truncatedTitle.setLength(TITLE_MAX_LENGTH);
 
-    public static RecipeIdentityEntity getInvalidNewCloned() {
+        StringBuilder truncatedDescription = new StringBuilder().
+                append(getInvalidFromAnotherUser().getDescription());
+        truncatedDescription.setLength(DESCRIPTION_MAX_LENGTH);
+
         return new RecipeIdentityEntity(
                 TestDataRecipeEntity.getInvalidNewCloned().getId(),
-                getInvalidCompleteFromAnotherUser().getTitle(),
-                getInvalidCompleteFromAnotherUser().getDescription(),
+                truncatedTitle.toString(),
+                truncatedDescription.toString(),
                 TestDataRecipeEntity.getInvalidNewCloned().getCreateDate(),
                 TestDataRecipeEntity.getInvalidNewCloned().getLastUpdate()
         );
     }
 
-    public static RecipeIdentityEntity getValidNewClonedDescriptionUpdatedComplete() {
-        String validUpdatedDescription = new StringMaker().
+    public static RecipeIdentityEntity getValidClonedDescriptionUpdated() {
+        String validClonedValidUpdatedDescription = new StringMaker().
                 makeStringOfExactLength(DESCRIPTION_MAX_LENGTH).
-                includeStringAtStart("validUpdatedDescription").
+                includeStringAtStart("validClonedValidUpdatedDescription").
                 build();
 
         return new RecipeIdentityEntity(
                 TestDataRecipeEntity.getValidNewCloned().getId(),
                 getValidCompleteFromAnotherUser().getTitle(),
-                validUpdatedDescription,
+                validClonedValidUpdatedDescription,
                 TestDataRecipeEntity.getValidNewCloned().getLastUpdate(),
                 TestDataRecipeEntity.getValidNewCloned().getCreateDate()
         );
@@ -224,17 +293,17 @@ public class TestDataRecipeIdentityEntity {
     public static RecipeIdentityEntity getRecipeIdentityEntityById(String recipeId) {
         List<RecipeIdentityEntity> entityList = new ArrayList<>();
         entityList.add(getInvalidNewEmpty());
-        entityList.add(getInvalidNewTitleTooShortDefaultDescription());
-        entityList.add(getInvalidNewTitleTooShortValidDescription());
-        entityList.add(getValidNewValidTitleUpdatedDefaultDescription());
+        entityList.add(getInvalidNewTitleTooShortDescriptionDefault());
+        entityList.add(getInvalidNewTitleTooShortDescriptionValid());
+        entityList.add(getValidNewTitleValidDescriptionDefault());
         entityList.add(getValidNewComplete());
         entityList.add(getInvalidExistingTitleTooShortDefaultDescription());
-        entityList.add(getValidExistingComplete());
+        entityList.add(getValidExistingTitleValidDescriptionValid());
         entityList.add(getValidCompleteFromAnotherUser());
-        entityList.add(getInvalidCompleteFromAnotherUser());
-        entityList.add(getValidNewClonedComplete());
-        entityList.add(getInvalidNewCloned());
-        entityList.add(getValidNewClonedDescriptionUpdatedComplete());
+        entityList.add(getInvalidFromAnotherUser());
+        entityList.add(getValidCompleteAfterCloned());
+        entityList.add(getValidAfterInvalidClonedData());
+        entityList.add(getValidClonedDescriptionUpdated());
 
         for (RecipeIdentityEntity entity : entityList) {
             if (entity.getId().equals(recipeId)) {

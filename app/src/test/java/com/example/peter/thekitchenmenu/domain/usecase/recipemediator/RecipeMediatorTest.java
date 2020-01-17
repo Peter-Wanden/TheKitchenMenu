@@ -16,7 +16,9 @@ import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipecourse.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDuration;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentity;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityTest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortions;
+import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeDurationEntity;
@@ -42,7 +44,7 @@ public class RecipeMediatorTest {
     private static final RecipeDurationEntity VALID_EXISTING_COMPLETE_DURATION =
             TestDataRecipeDurationEntity.getValidExistingComplete();
     private static final RecipeIdentityEntity VALID_EXISTING_COMPLETE_IDENTITY =
-            TestDataRecipeIdentityEntity.getValidExistingComplete();
+            TestDataRecipeIdentityEntity.getValidExistingTitleValidDescriptionValid();
     private static final RecipePortionsEntity VALID_EXISTING_PORTIONS =
             TestDataRecipePortionsEntity.getExistingValidNinePortions();
 
@@ -77,7 +79,7 @@ public class RecipeMediatorTest {
     private RecipeMediatorResponse actualResponse;
     // endregion helper fields ---------------------------------------------------------------------
 
-    private RecipeMediator SUT;
+    private Recipe SUT;
 
     @Before
     public void setup() {
@@ -86,12 +88,21 @@ public class RecipeMediatorTest {
         SUT = givenUseCase();
     }
 
-    private RecipeMediator givenUseCase() {
+    private Recipe givenUseCase() {
         UseCaseHandler handler = new UseCaseHandler(new UseCaseSchedulerMock());
+
+        TextValidator identityTextValidator = new TextValidator.Builder().
+                setShortTextMinLength(RecipeIdentityTest.TITLE_MIN_LENGTH).
+                setShortTextMaxLength(RecipeIdentityTest.TITLE_MAX_LENGTH).
+                setLongTextMinLength(RecipeIdentityTest.DESCRIPTION_MIN_LENGTH).
+                setLongTextMaxLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
+                build();
 
         RecipeIdentity identity = new RecipeIdentity(
                 repoIdentityMock,
-                timeProviderMock
+                timeProviderMock,
+                handler,
+                identityTextValidator
         );
 
         int MAX_PREP_TIME = 6000;
@@ -118,7 +129,7 @@ public class RecipeMediatorTest {
                 maxSittings
         );
 
-        return new RecipeMediator(handler, identity, duration, course, portions);
+        return new Recipe(handler, identity, duration, course, portions);
     }
 
     @Test
@@ -146,8 +157,8 @@ public class RecipeMediatorTest {
     }
 
     // region helper methods -----------------------------------------------------------------------
-    private RecipeMediator.Callback<RecipeMediatorResponse> getMediatorCallback() {
-        return new RecipeMediator.Callback<RecipeMediatorResponse>() {
+    private Recipe.Callback<RecipeMediatorResponse> getMediatorCallback() {
+        return new Recipe.Callback<RecipeMediatorResponse>() {
             @Override
             public void onSuccess(RecipeMediatorResponse response) {
                 actualResponse = response;

@@ -87,7 +87,7 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
             //noinspection unchecked
             return (T) new RecipeIdentityEditorViewModel(
                     useCaseHandler,
-                    useCaseFactory.provideRecipeIdentityMediator(),
+                    useCaseFactory.provideRecipe(),
                     application.getResources()
             );
         } else if (modelClass.isAssignableFrom(RecipeCourseEditorViewModel.class)) {
@@ -125,8 +125,7 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
             // noinspection unchecked
             return (T) new RecipeNameAndPortionsViewModel(
                     useCaseHandler,
-                    useCaseFactory.provideRecipeIdentity(),
-                    useCaseFactory.provideRecipePortions()
+                    useCaseFactory.provideRecipe()
             );
         } else if (modelClass.isAssignableFrom(RecipeIngredientListViewModel.class)) {
             // noinspection unchecked
