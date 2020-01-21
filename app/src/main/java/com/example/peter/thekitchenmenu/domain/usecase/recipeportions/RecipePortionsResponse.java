@@ -1,13 +1,13 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipeportions;
 
-import com.example.peter.thekitchenmenu.domain.UseCaseCommand;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseCommand;
 
 import java.util.List;
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipestate.RecipeState.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeState.*;
 
 public final class RecipePortionsResponse implements UseCaseCommand.Response {
     @Nonnull

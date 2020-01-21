@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.testdata;
 
-import com.example.peter.thekitchenmenu.domain.usecase.recipestate.RecipeState;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeState;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeComponentStateModel;
 
 public class TestDataRecipeValidator {

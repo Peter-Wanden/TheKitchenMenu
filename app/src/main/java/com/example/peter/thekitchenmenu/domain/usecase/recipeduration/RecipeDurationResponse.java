@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipeduration;
 
-import com.example.peter.thekitchenmenu.domain.UseCaseCommand;
-import com.example.peter.thekitchenmenu.domain.usecase.recipestate.RecipeState;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseCommand;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeState;
 
 import java.util.LinkedList;
 import java.util.List;

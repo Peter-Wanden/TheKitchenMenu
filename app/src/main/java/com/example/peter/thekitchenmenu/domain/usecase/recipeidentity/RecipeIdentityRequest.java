@@ -1,11 +1,10 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipeidentity;
 
-import com.example.peter.thekitchenmenu.domain.UseCaseCommand;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseCommand;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public final class RecipeIdentityRequest implements UseCaseCommand.Request {
     @Nonnull

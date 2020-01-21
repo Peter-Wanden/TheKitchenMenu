@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipeportions;
 
-import com.example.peter.thekitchenmenu.domain.UseCaseCommand;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseCommand;
 
 import java.util.Objects;
 

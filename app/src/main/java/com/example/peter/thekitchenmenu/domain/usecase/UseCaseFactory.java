@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain;
+package com.example.peter.thekitchenmenu.domain.usecase;
 
 import android.app.Application;
 import android.content.res.Resources;
@@ -15,11 +15,10 @@ import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.Co
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.Ingredient;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDuration;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentity;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityMediator;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentityandduration.RecipeIdentityAndDurationList;
 import com.example.peter.thekitchenmenu.domain.usecase.recipecourse.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.RecipeIngredientList;
-import com.example.peter.thekitchenmenu.domain.usecase.recipemediator.Recipe;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientDuplicateChecker;
@@ -29,7 +28,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientcalculato
 
 public class UseCaseFactory {
 
-//    private static final String TAG = "tkm-" + UseCaseFactory.class.getSimpleName() + ": ";
+    private static final String TAG = "tkm-" + UseCaseFactory.class.getSimpleName() + ": ";
 
     private static volatile UseCaseFactory INSTANCE;
 
@@ -86,6 +85,8 @@ public class UseCaseFactory {
         }
         return INSTANCE;
     }
+
+
 
     public IngredientCalculator provideIngredientCalculator() {
         return new IngredientCalculator(
@@ -170,17 +171,16 @@ public class UseCaseFactory {
         );
     }
 
-    public RecipeIdentity provideRecipeIdentity(UseCase mediator) {
+    public RecipeIdentity provideRecipeIdentity() {
         return new RecipeIdentity(
                 recipeIdentityRepository,
                 new TimeProvider(),
                 UseCaseHandler.getInstance(),
-                mediator);
+                provideTextValidator());
     }
 
     public Recipe provideRecipe() {
-        return new Recipe(
-                UseCaseHandler.getInstance(),
-                UseCaseFactory.getInstance(application));
+        RecipeIdentity identity = provideRecipeIdentity();
+        return new Recipe(identity);
     }
 }

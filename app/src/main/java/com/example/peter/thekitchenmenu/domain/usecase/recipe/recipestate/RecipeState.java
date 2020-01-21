@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipestate;
+package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -23,7 +23,8 @@ public class RecipeState {
         IDENTITY,
         DURATION,
         COURSE,
-        PORTIONS
+        PORTIONS,
+        TEXT_VALIDATOR
     }
 
     public enum ComponentState {
@@ -35,6 +36,4 @@ public class RecipeState {
     }
 
     private HashMap<ComponentName, ComponentState> componentStateList = new LinkedHashMap<>();
-
-
 }

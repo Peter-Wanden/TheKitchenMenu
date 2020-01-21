@@ -3,7 +3,6 @@ package com.example.peter.thekitchenmenu.ui.detail.ingredient;
 import android.content.res.Resources;
 
 import androidx.annotation.NonNull;
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.Observer;
 
 import com.example.peter.thekitchenmenu.R;
@@ -12,7 +11,7 @@ import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
-import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.Ingredient;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientDuplicateChecker;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
@@ -67,8 +66,6 @@ public class IngredientEditorViewModelTest {
 
     // region helper fields ------------------------------------------------------------------------
     private ResourcesMock resourcesMock;
-    @Rule
-    public InstantTaskExecutorRule instantExecutorRule = new InstantTaskExecutorRule();
     @Mock
     RepositoryIngredient repoMock;
     @Captor

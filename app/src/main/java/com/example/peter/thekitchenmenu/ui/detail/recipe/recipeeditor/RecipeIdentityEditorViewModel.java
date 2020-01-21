@@ -9,12 +9,12 @@ import androidx.databinding.library.baseAdapters.BR;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.domain.FailReasons;
-import com.example.peter.thekitchenmenu.domain.UseCaseCommand;
-import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseCommand;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipemediator.Recipe;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe;
 import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 
 import java.util.List;
@@ -22,10 +22,11 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentity.DO_NOT_CLONE;
-import static com.example.peter.thekitchenmenu.domain.usecase.recipestate.RecipeState.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeState.*;
 import static com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidation.*;
 
 public class RecipeIdentityEditorViewModel
+        <T extends UseCaseCommand.Request, P extends UseCaseCommand.Response>
         extends
         ObservableViewModel
         implements
@@ -74,7 +75,7 @@ public class RecipeIdentityEditorViewModel
                     setCloneToRecipeId(DO_NOT_CLONE).
                     setModel(RecipeIdentityRequest.Model.Builder.getDefault().build()).
                     build();
-            handler.execute(recipe, request, getCallback());
+//            handler.execute(recipe, request, getCallback());
         }
     }
 
@@ -88,7 +89,7 @@ public class RecipeIdentityEditorViewModel
                     setModel(RecipeIdentityRequest.Model.Builder.getDefault().build()).
                     build();
 
-            handler.execute(recipe, request, getCallback());
+//            handler.execute(recipe, request, getCallback());
         }
     }
 
@@ -132,7 +133,7 @@ public class RecipeIdentityEditorViewModel
                     setCloneToRecipeId(DO_NOT_CLONE).
                     setModel(model).
                     build();
-            handler.execute(recipe, request, getCallback());
+//            handler.execute(recipe, request, getCallback());
         }
     }
 
@@ -156,7 +157,7 @@ public class RecipeIdentityEditorViewModel
                     setCloneToRecipeId(DO_NOT_CLONE).
                     setModel(model).
                     build();
-            handler.execute(recipe, request, getCallback());
+//            handler.execute(recipe, request, getCallback());
         }
     }
 

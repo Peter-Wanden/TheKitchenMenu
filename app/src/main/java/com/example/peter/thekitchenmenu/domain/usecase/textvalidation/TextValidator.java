@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.textvalidation;
 
 import com.example.peter.thekitchenmenu.domain.FailReasons;
-import com.example.peter.thekitchenmenu.domain.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 
 public class TextValidator extends UseCase<TextValidatorRequest, TextValidatorResponse> {
 

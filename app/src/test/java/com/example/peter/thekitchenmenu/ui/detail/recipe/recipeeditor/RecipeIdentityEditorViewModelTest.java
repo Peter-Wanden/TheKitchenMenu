@@ -8,9 +8,10 @@ import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
-import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseFactory;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentity;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityMediator;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityTest;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIdentityEntity;
@@ -26,7 +27,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipestate.RecipeState.ComponentState.DATA_UNAVAILABLE;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeState.ComponentState.DATA_UNAVAILABLE;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -78,7 +79,7 @@ public class RecipeIdentityEditorViewModelTest {
     @Mock
     Resources resourcesMock;
     @Mock
-    RepositoryRecipeIdentity repoMock;
+    RepositoryRecipeIdentity repoIdentityMock;
     @Captor
     ArgumentCaptor<DataSource.GetEntityCallback<RecipeIdentityEntity>> repoCallback;
     @Mock
@@ -87,6 +88,8 @@ public class RecipeIdentityEditorViewModelTest {
     RecipeValidation.RecipeValidatorModelSubmission modelValidationSubmitterMock;
     @Captor
     ArgumentCaptor<RecipeComponentStateModel> statusCaptor;
+    @Mock
+    UseCaseFactory useCaseFactoryMock;
 
     private int shortTextMinLength = 3;
     private int shortTextMaxLength = 70;
@@ -116,26 +119,19 @@ public class RecipeIdentityEditorViewModelTest {
                 setLongTextMaxLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
                 build();
 
-        RecipeIdentity recipeIdentity = new RecipeIdentity(
-                repoMock,
+
+        RecipeIdentity identity = new RecipeIdentity(
+                repoIdentityMock,
                 timeProviderMock,
                 handler,
                 identityTextValidator
         );
-        TextValidator textValidator = new TextValidator.Builder().
-                setShortTextMinLength(shortTextMinLength).
-                setShortTextMaxLength(shortTextMaxLength).
-                setLongTextMinLength(longTextMinLength).
-                setLongTextMaxLength(longTextMaxLength).
-                build();
 
-        RecipeIdentityMediator recipeIdentityMediator = new RecipeIdentityMediator(
-                handler, recipeIdentity, textValidator
-        );
+        Recipe recipe = new Recipe(identity);
 
         return new RecipeIdentityEditorViewModel(
                 handler,
-                recipeIdentityMediator,
+                recipe,
                 resourcesMock);
     }
 
@@ -225,7 +221,7 @@ public class RecipeIdentityEditorViewModelTest {
         SUT.setTitle(invalidTitle);
         SUT.setDescription(validDescription);
         // Assert
-        verifyNoMoreInteractions(repoMock);
+        verifyNoMoreInteractions(repoIdentityMock);
     }
 
     @Test
@@ -253,7 +249,7 @@ public class RecipeIdentityEditorViewModelTest {
         simulateNothingReturnedFromDatabase(recipeId);
         SUT.setTitle(title);
         // Assert
-        verify(repoMock).save(VALID_NEW_TITLE_VALID);
+        verify(repoIdentityMock).save(VALID_NEW_TITLE_VALID);
     }
 
     @Test
@@ -312,9 +308,9 @@ public class RecipeIdentityEditorViewModelTest {
         SUT.start(recipeId);
         simulateNothingReturnedFromDatabase(recipeId);
         SUT.setTitle(title);
-        verify(repoMock).save(anyObject());
+        verify(repoIdentityMock).save(anyObject());
         SUT.setDescription(description);
-        verifyNoMoreInteractions(repoMock);
+        verifyNoMoreInteractions(repoIdentityMock);
     }
 
     @Test
@@ -374,9 +370,9 @@ public class RecipeIdentityEditorViewModelTest {
 
         // Assert
         SUT.setTitle(validTitle);
-        verify(repoMock).save(eq(VALID_NEW_TITLE_VALID));
+        verify(repoIdentityMock).save(eq(VALID_NEW_TITLE_VALID));
         SUT.setDescription(validDescription);
-        verify(repoMock).save(eq(VALID_NEW_COMPLETE));
+        verify(repoIdentityMock).save(eq(VALID_NEW_COMPLETE));
     }
 
     @Test
@@ -407,7 +403,7 @@ public class RecipeIdentityEditorViewModelTest {
         String description = VALID_EXISTING_COMPLETE.getDescription();
         // Act
         SUT.start(recipeId);
-        verify(repoMock).getById(eq(recipeId), repoCallback.capture());
+        verify(repoIdentityMock).getById(eq(recipeId), repoCallback.capture());
         repoCallback.getValue().onEntityLoaded(VALID_EXISTING_COMPLETE);
         // Assert
         assertEquals(title, SUT.getTitle());
@@ -420,7 +416,7 @@ public class RecipeIdentityEditorViewModelTest {
         String recipeId = VALID_EXISTING_COMPLETE.getId();
         // Act
         SUT.start(recipeId);
-        verify(repoMock).getById(eq(recipeId), repoCallback.capture());
+        verify(repoIdentityMock).getById(eq(recipeId), repoCallback.capture());
         repoCallback.getValue().onEntityLoaded(VALID_EXISTING_COMPLETE);
         // Assert
         verify(modelValidationSubmitterMock).submitRecipeComponentStatus(statusCaptor.capture());
@@ -438,8 +434,8 @@ public class RecipeIdentityEditorViewModelTest {
 //        whenLongTextValidationReturnValidated(description);
 //
 //        // Act
-//        SUT.start(recipeId);
-//        verify(repoMock).getById(eq(recipeId), repoCallback.capture());
+//        SUT.startColleague(recipeId);
+//        verify(repoIdentityMock).getById(eq(recipeId), repoCallback.capture());
 //        repoCallback.getValue().onEntityLoaded(INVALID_EXISTING_INCOMPLETE_INVALID_TITLE);
 //
 //        // Assert
@@ -459,7 +455,7 @@ public class RecipeIdentityEditorViewModelTest {
         // Act
         SUT.startByCloningModel(cloneFromRecipeId, cloneToRecipeId);
         // Assert
-        verify(repoMock).getById(eq(cloneFromRecipeId), anyObject());
+        verify(repoIdentityMock).getById(eq(cloneFromRecipeId), anyObject());
     }
 
     @Test
@@ -472,7 +468,7 @@ public class RecipeIdentityEditorViewModelTest {
         SUT.startByCloningModel(cloneFromRecipeId, cloneToRecipeId);
         simulateGetValidFromAnotherUserFromDatabase();
         // Assert
-        verify(repoMock).save(eq(VALID_NEW_CLONED));
+        verify(repoIdentityMock).save(eq(VALID_NEW_CLONED));
     }
 
     @Test
@@ -485,12 +481,12 @@ public class RecipeIdentityEditorViewModelTest {
         whenTimeProviderReturnTime(time);
         // Act
         SUT.startByCloningModel(cloneFromRecipeId, cloneToRecipeId);
-        verify(repoMock).getById(eq(cloneFromRecipeId), repoCallback.capture());
+        verify(repoIdentityMock).getById(eq(cloneFromRecipeId), repoCallback.capture());
         repoCallback.getValue().onEntityLoaded(VALID_FROM_ANOTHER_USER);
 
         SUT.setDescription(VALID_CLONED_DESCRIPTION_UPDATED.getDescription());
         // Assert
-        verify(repoMock).save(VALID_CLONED_DESCRIPTION_UPDATED);
+        verify(repoIdentityMock).save(VALID_CLONED_DESCRIPTION_UPDATED);
     }
 
     @Test(expected = RuntimeException.class)
@@ -523,12 +519,12 @@ public class RecipeIdentityEditorViewModelTest {
     }
 
     private void simulateNothingReturnedFromDatabase(String recipeId) {
-        verify(repoMock).getById(eq(recipeId), repoCallback.capture());
+        verify(repoIdentityMock).getById(eq(recipeId), repoCallback.capture());
         repoCallback.getValue().onDataNotAvailable();
     }
 
     private void simulateGetValidFromAnotherUserFromDatabase() {
-        verify(repoMock).getById(eq(VALID_FROM_ANOTHER_USER.getId()), repoCallback.capture());
+        verify(repoIdentityMock).getById(eq(VALID_FROM_ANOTHER_USER.getId()), repoCallback.capture());
         repoCallback.getValue().onEntityLoaded(VALID_FROM_ANOTHER_USER);
     }
     // endregion helper methods --------------------------------------------------------------------

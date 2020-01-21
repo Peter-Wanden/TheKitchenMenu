@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain;
+package com.example.peter.thekitchenmenu.domain.usecase;
 
 /**
  * Use cases are the entry points to the domain layer. Use cases use Command pattern for

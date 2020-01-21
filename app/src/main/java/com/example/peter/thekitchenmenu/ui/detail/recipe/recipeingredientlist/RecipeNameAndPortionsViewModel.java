@@ -3,11 +3,12 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist;
 import androidx.databinding.ObservableField;
 import androidx.lifecycle.ViewModel;
 
-import com.example.peter.thekitchenmenu.domain.UseCaseCommand;
-import com.example.peter.thekitchenmenu.domain.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseCommand;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipemediator.Recipe;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortionsModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortionsRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortionsResponse;
@@ -15,16 +16,20 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePort
 public class RecipeNameAndPortionsViewModel extends ViewModel {
 
     private UseCaseHandler handler;
-    private Recipe recipe;
+    private RecipeIdentity recipeIdentity;
+    private RecipePortions recipePortions;
 
     public final ObservableField<String> recipeTitleObservable = new ObservableField<>();
     public final ObservableField<String> servingsObservable = new ObservableField<>();
     public final ObservableField<String> sittingsObservable = new ObservableField<>();
     public final ObservableField<String> portionsObservable = new ObservableField<>();
 
-    public RecipeNameAndPortionsViewModel(UseCaseHandler handler, Recipe recipe) {
+    public RecipeNameAndPortionsViewModel(UseCaseHandler handler,
+                                          RecipeIdentity recipeIdentity,
+                                          RecipePortions recipePortions) {
         this.handler = handler;
-        this.recipe = recipe;
+        this.recipeIdentity = recipeIdentity;
+        this.recipePortions = recipePortions;
     }
 
     public void start(String recipeId) {
@@ -39,7 +44,7 @@ public class RecipeNameAndPortionsViewModel extends ViewModel {
                 build();
 
         handler.execute(
-                recipe,
+                recipeIdentity,
                 request,
                 new UseCaseCommand.Callback<RecipeIdentityResponse>() {
 
@@ -66,7 +71,7 @@ public class RecipeNameAndPortionsViewModel extends ViewModel {
                 build();
 
         handler.execute(
-                recipe,
+                recipePortions,
                 request,
                 new UseCaseCommand.Callback<RecipePortionsResponse>() {
 

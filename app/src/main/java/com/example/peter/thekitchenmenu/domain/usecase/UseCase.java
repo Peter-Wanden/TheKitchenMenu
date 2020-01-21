@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain;
+package com.example.peter.thekitchenmenu.domain.usecase;
 
 public abstract class UseCase
         <Q extends UseCaseCommand.Request, P extends UseCaseCommand.Response>

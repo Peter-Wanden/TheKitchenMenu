@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain;
+package com.example.peter.thekitchenmenu.domain.usecase;
 
 public interface UseCaseScheduler {
 
