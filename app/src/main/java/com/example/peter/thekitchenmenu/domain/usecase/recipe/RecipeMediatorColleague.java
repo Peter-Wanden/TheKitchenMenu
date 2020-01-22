@@ -9,4 +9,6 @@ public interface RecipeMediatorColleague {
     RecipeState.ComponentState getState();
 
     void startColleague(String recipeId);
+
+    String getRecipeId();
 }

@@ -1,8 +1,5 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-
 public class RecipeState {
 
     public enum State {
@@ -34,6 +31,4 @@ public class RecipeState {
         INVALID_CHANGED,
         VALID_CHANGED
     }
-
-    private HashMap<ComponentName, ComponentState> componentStateList = new LinkedHashMap<>();
 }

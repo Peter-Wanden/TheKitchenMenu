@@ -8,7 +8,7 @@ import androidx.databinding.ObservableField;
 import androidx.databinding.library.baseAdapters.BR;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.domain.FailReasons;
+import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseCommand;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentity;

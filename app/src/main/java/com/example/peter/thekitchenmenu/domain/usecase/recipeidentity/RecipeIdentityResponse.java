@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipeidentity;
 
-import com.example.peter.thekitchenmenu.domain.FailReasons;
+import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseCommand;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeState;
 

@@ -6,6 +6,7 @@ import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeState;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIdentityEntity;
@@ -120,6 +121,15 @@ public class RecipeIdentityTest {
 
     @Test
     public void newId_emptyModel_stateDATA_UNAVAILABLE() {
+        // Arrange
+        // Act
+        givenNewEmptyModelSimulateNothingReturnedFromDatabase();
+        // Assert
+        assertEquals(ComponentState.DATA_UNAVAILABLE, onErrorResponse.getState());
+    }
+
+    @Test
+    public void newId_emptyModel_stateDATA_UNAVAILABLE_recipeStateListenerUpdated() {
         // Arrange
         // Act
         givenNewEmptyModelSimulateNothingReturnedFromDatabase();
@@ -720,5 +730,6 @@ public class RecipeIdentityTest {
     // endregion helper methods --------------------------------------------------------------------
 
     // region helper classes -----------------------------------------------------------------------
+
     // endregion helper classes --------------------------------------------------------------------
 }

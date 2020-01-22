@@ -3,11 +3,12 @@ package com.example.peter.thekitchenmenu.testdata;
 import com.example.peter.thekitchenmenu.commonmocks.StringMaker;
 import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityTest;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityMediatorTest.*;
+
 
 public class TestDataRecipeIdentityEntity {
 
@@ -27,7 +28,7 @@ public class TestDataRecipeIdentityEntity {
 
     public static RecipeIdentityEntity getInvalidNewTitleTooShortDescriptionDefault() {
         String titleTooShort = new StringMaker().
-                makeStringOfExactLength(TITLE_MIN_LENGTH).
+                makeStringOfExactLength(RecipeIdentityTest.TITLE_MIN_LENGTH).
                 thenRemoveOneCharacter().
                 build();
 
@@ -42,7 +43,7 @@ public class TestDataRecipeIdentityEntity {
 
     public static RecipeIdentityEntity getInvalidNewTitleTooLongDescriptionDefault() {
         String titleTooLong = new StringMaker().
-                makeStringOfExactLength(TITLE_MAX_LENGTH).
+                makeStringOfExactLength(RecipeIdentityTest.TITLE_MAX_LENGTH).
                 includeStringAtStart("invalidTitle").
                 thenAddOneCharacter().build();
 
@@ -57,7 +58,7 @@ public class TestDataRecipeIdentityEntity {
 
     public static RecipeIdentityEntity getInvalidNewTitleTooLongDescriptionTooLong() {
         String descriptionTooLong = new StringMaker().
-                makeStringOfExactLength(DESCRIPTION_MAX_LENGTH).
+                makeStringOfExactLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
                 includeStringAtStart("descriptionTooLong").
                 thenAddOneCharacter().
                 build();
@@ -93,11 +94,11 @@ public class TestDataRecipeIdentityEntity {
 
     public static RecipeIdentityEntity getValidNewComplete() {
         String newValidTitle = new StringMaker().
-                makeStringOfExactLength(TITLE_MAX_LENGTH).
+                makeStringOfExactLength(RecipeIdentityTest.TITLE_MAX_LENGTH).
                 includeStringAtStart("newValidTitle").
                 build();
         String newValidDescription = new StringMaker().
-                makeStringOfExactLength(DESCRIPTION_MAX_LENGTH).
+                makeStringOfExactLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
                 includeStringAtStart("newValidDescription").
                 build();
 
@@ -112,7 +113,7 @@ public class TestDataRecipeIdentityEntity {
 
     public static RecipeIdentityEntity getInvalidExistingTitleTooShortDefaultDescription() {
         String invalidExistingTitleTooShort = new StringMaker().
-                makeStringOfExactLength(TITLE_MIN_LENGTH).
+                makeStringOfExactLength(RecipeIdentityTest.TITLE_MIN_LENGTH).
                 includeStringAtStart("invalidExistingTitleTooShort").
                 thenRemoveOneCharacter().
                 build();
@@ -129,7 +130,7 @@ public class TestDataRecipeIdentityEntity {
 
     public static RecipeIdentityEntity getInvalidExistingTitleTooLongDefaultDescription() {
         String invalidExistingTitleTooLong = new StringMaker().
-                makeStringOfExactLength(TITLE_MAX_LENGTH).
+                makeStringOfExactLength(RecipeIdentityTest.TITLE_MAX_LENGTH).
                 includeStringAtStart("invalidExistingTitleTooLong").thenAddOneCharacter().
                 build();
 
@@ -144,7 +145,7 @@ public class TestDataRecipeIdentityEntity {
 
     public static RecipeIdentityEntity getInvalidExistingTitleValidDescriptionTooLong() {
         String existingDescriptionTooLong = new StringMaker().
-                makeStringOfExactLength(DESCRIPTION_MAX_LENGTH).
+                makeStringOfExactLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
                 includeStringAtStart("existingDescriptionTooLong").
                 thenAddOneCharacter().
                 build();
@@ -180,11 +181,11 @@ public class TestDataRecipeIdentityEntity {
 
     public static RecipeIdentityEntity getValidExistingTitleValidDescriptionValid() {
         String validExistingCompleteTitle = new StringMaker().
-                makeStringOfExactLength(TITLE_MAX_LENGTH).
+                makeStringOfExactLength(RecipeIdentityTest.TITLE_MAX_LENGTH).
                 includeStringAtStart("validExistingCompleteTitle").
                 build();
         String validExistingCompleteDescription = new StringMaker().
-                makeStringOfExactLength(DESCRIPTION_MAX_LENGTH).
+                makeStringOfExactLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
                 includeStringAtStart("validExistingCompleteDescription").
                 build();
 
@@ -209,11 +210,11 @@ public class TestDataRecipeIdentityEntity {
 
     public static RecipeIdentityEntity getValidCompleteFromAnotherUser() {
         String validCompleteFromAnotherUserTitle = new StringMaker().
-                makeStringOfExactLength(TITLE_MAX_LENGTH).
+                makeStringOfExactLength(RecipeIdentityTest.TITLE_MAX_LENGTH).
                 includeStringAtStart("validCompleteFromAnotherUserTitle").
                 build();
         String validCompleteFromAnotherUserDescription = new StringMaker().
-                makeStringOfExactLength(DESCRIPTION_MAX_LENGTH).
+                makeStringOfExactLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
                 includeStringAtStart("validCompleteFromAnotherUserDescription").
                 build();
 
@@ -238,12 +239,12 @@ public class TestDataRecipeIdentityEntity {
 
     public static RecipeIdentityEntity getInvalidFromAnotherUser() {
         String invalidCompleteFromAnotherUserTitle = new StringMaker().
-                makeStringOfExactLength(TITLE_MAX_LENGTH).
+                makeStringOfExactLength(RecipeIdentityTest.TITLE_MAX_LENGTH).
                 includeStringAtStart("invalidFromAnotherUserTitle").
                 thenAddOneCharacter().
                 build();
         String invalidCompleteFromAnotherUserDescription = new StringMaker().
-                makeStringOfExactLength(DESCRIPTION_MAX_LENGTH).
+                makeStringOfExactLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
                 includeStringAtStart("validCompleteFromAnotherUserDescription").
                 thenAddOneCharacter().
                 build();
@@ -260,11 +261,11 @@ public class TestDataRecipeIdentityEntity {
     public static RecipeIdentityEntity getValidAfterInvalidClonedData() {
         StringBuilder truncatedTitle = new StringBuilder().
                 append(getInvalidFromAnotherUser().getTitle());
-        truncatedTitle.setLength(TITLE_MAX_LENGTH);
+        truncatedTitle.setLength(RecipeIdentityTest.TITLE_MAX_LENGTH);
 
         StringBuilder truncatedDescription = new StringBuilder().
                 append(getInvalidFromAnotherUser().getDescription());
-        truncatedDescription.setLength(DESCRIPTION_MAX_LENGTH);
+        truncatedDescription.setLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH);
 
         return new RecipeIdentityEntity(
                 TestDataRecipeEntity.getInvalidNewCloned().getId(),
@@ -277,7 +278,7 @@ public class TestDataRecipeIdentityEntity {
 
     public static RecipeIdentityEntity getValidClonedDescriptionUpdated() {
         String validClonedValidUpdatedDescription = new StringMaker().
-                makeStringOfExactLength(DESCRIPTION_MAX_LENGTH).
+                makeStringOfExactLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
                 includeStringAtStart("validClonedValidUpdatedDescription").
                 build();
 

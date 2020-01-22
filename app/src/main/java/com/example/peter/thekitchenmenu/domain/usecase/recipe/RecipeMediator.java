@@ -6,5 +6,5 @@ public interface RecipeMediator {
 
     void createComponents();
 
-    void startColleagues(String recipeId);
+    void startColleaguesAndNotify(String recipeId);
 }
