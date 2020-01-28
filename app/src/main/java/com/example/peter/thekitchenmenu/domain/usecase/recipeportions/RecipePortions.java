@@ -4,14 +4,15 @@ import com.example.peter.thekitchenmenu.data.entity.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeState;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeState.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe.DO_NOT_CLONE;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
 
 public class RecipePortions
         extends UseCase<RecipePortionsRequest, RecipePortionsResponse>
@@ -27,7 +28,6 @@ public class RecipePortions
         NONE
     }
 
-    public static final String DO_NOT_CLONE = "";
     public static final int MIN_SERVINGS = 1;
     public static final int MIN_SITTINGS = 1;
 
@@ -147,7 +147,7 @@ public class RecipePortions
         sendResponse(response);
     }
 
-    private RecipeState.ComponentState getState() {
+    private RecipeStateCalculator.ComponentState getState() {
         if (!isValid() && !isChanged()) {
             return ComponentState.INVALID_UNCHANGED;
 

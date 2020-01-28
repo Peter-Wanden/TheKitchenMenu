@@ -6,7 +6,8 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDuration.DO_NOT_CLONE;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe.DO_NOT_CLONE;
+
 
 public final class RecipeDurationRequest implements UseCaseCommand.Request {
     @Nonnull

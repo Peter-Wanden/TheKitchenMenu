@@ -13,6 +13,7 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredie
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.ConversionFactorStatus;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.Ingredient;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDuration;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentityandduration.RecipeIdentityAndDurationList;
@@ -181,6 +182,13 @@ public class UseCaseFactory {
 
     public Recipe provideRecipe() {
         RecipeIdentity identity = provideRecipeIdentity();
-        return new Recipe(identity);
+        return new Recipe(
+                UseCaseHandler.getInstance(),
+                provideRecipeStateCalculator(),
+                identity);
+    }
+
+    public RecipeStateCalculator provideRecipeStateCalculator() {
+        return new RecipeStateCalculator();
     }
 }

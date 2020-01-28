@@ -1,12 +1,17 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipeidentity;
 
+
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseCommand;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
+
 public final class RecipeIdentityRequest implements UseCaseCommand.Request {
+    @Nonnull
+    private static final ComponentName componentName = ComponentName.IDENTITY;
     @Nonnull
     private final String recipeId;
     @Nonnull
@@ -14,12 +19,17 @@ public final class RecipeIdentityRequest implements UseCaseCommand.Request {
     @Nonnull
     private final Model model;
 
-    private RecipeIdentityRequest(@Nonnull String recipeId,
-                                  @Nonnull String cloneToRecipeId,
-                                  @Nonnull Model model) {
+    public RecipeIdentityRequest(@Nonnull String recipeId,
+                                 @Nonnull String cloneToRecipeId,
+                                 @Nonnull Model model) {
         this.recipeId = recipeId;
         this.cloneToRecipeId = cloneToRecipeId;
         this.model = model;
+    }
+
+    @Nonnull
+    public ComponentName getComponentName() { // receiver
+        return componentName;
     }
 
     @Nonnull
@@ -41,10 +51,10 @@ public final class RecipeIdentityRequest implements UseCaseCommand.Request {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RecipeIdentityRequest request = (RecipeIdentityRequest) o;
-        return recipeId.equals(request.recipeId) &&
-                cloneToRecipeId.equals(request.cloneToRecipeId) &&
-                Objects.equals(model, request.model);
+        RecipeIdentityRequest that = (RecipeIdentityRequest) o;
+        return recipeId.equals(that.recipeId) &&
+                cloneToRecipeId.equals(that.cloneToRecipeId) &&
+                model.equals(that.model);
     }
 
     @Override
@@ -52,7 +62,6 @@ public final class RecipeIdentityRequest implements UseCaseCommand.Request {
         return Objects.hash(recipeId, cloneToRecipeId, model);
     }
 
-    @Nonnull
     @Override
     public String toString() {
         return "RecipeIdentityRequest{" +

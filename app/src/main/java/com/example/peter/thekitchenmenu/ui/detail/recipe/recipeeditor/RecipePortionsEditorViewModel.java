@@ -17,8 +17,8 @@ import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortions.DO_NOT_CLONE;
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeState.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe.DO_NOT_CLONE;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
 
 public class RecipePortionsEditorViewModel
         extends

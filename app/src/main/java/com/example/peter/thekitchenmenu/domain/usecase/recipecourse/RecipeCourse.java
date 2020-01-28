@@ -6,7 +6,7 @@ import com.example.peter.thekitchenmenu.data.entity.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeState;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
+
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe.DO_NOT_CLONE;
 
 public class RecipeCourse
         extends UseCase<RecipeCourseRequest, RecipeCourseResponse>
@@ -61,8 +63,6 @@ public class RecipeCourse
             return courseNo;
         }
     }
-
-    public static final String DO_NOT_CLONE = "";
 
     @Nonnull
     private RepositoryRecipeCourse repository;
@@ -124,7 +124,7 @@ public class RecipeCourse
     @Override
     public void onDataNotAvailable() {
         RecipeCourseResponse response = RecipeCourseResponse.Builder.getDefault().
-                setStatus(RecipeState.ComponentState.DATA_UNAVAILABLE).
+                setStatus(RecipeStateCalculator.ComponentState.DATA_UNAVAILABLE).
                 setFailReasons(getFailReasons()).
                 build();
         System.out.println(TAG + response);
@@ -241,18 +241,18 @@ public class RecipeCourse
         getUseCaseCallback().onSuccess(response);
     }
 
-    private RecipeState.ComponentState getStatus(boolean isChanged, boolean isValid) {
+    private RecipeStateCalculator.ComponentState getStatus(boolean isChanged, boolean isValid) {
         if (!isValid && !isChanged) {
-            return RecipeState.ComponentState.INVALID_UNCHANGED;
+            return RecipeStateCalculator.ComponentState.INVALID_UNCHANGED;
 
         } else if (isValid && !isChanged) {
-            return RecipeState.ComponentState.VALID_UNCHANGED;
+            return RecipeStateCalculator.ComponentState.VALID_UNCHANGED;
 
         } else if (!isValid && isChanged) {
-            return RecipeState.ComponentState.INVALID_CHANGED;
+            return RecipeStateCalculator.ComponentState.INVALID_CHANGED;
 
         } else {
-            return RecipeState.ComponentState.VALID_CHANGED;
+            return RecipeStateCalculator.ComponentState.VALID_CHANGED;
         }
     }
 

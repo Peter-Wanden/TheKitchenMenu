@@ -6,9 +6,6 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity
 import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeMediator;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeMediatorColleague;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeState;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorModel;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorRequest;
@@ -18,17 +15,18 @@ import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeState.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe.DO_NOT_CLONE;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
 import static com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator.*;
 
 public class RecipeIdentity
         extends
         UseCase<RecipeIdentityRequest, RecipeIdentityResponse>
         implements
-        DataSource.GetEntityCallback<RecipeIdentityEntity>,
-        RecipeMediatorColleague {
+        DataSource.GetEntityCallback<RecipeIdentityEntity> {
 
     private static final String TAG = "tkm-" + RecipeIdentity.class.getSimpleName() + ": ";
+    private static final ComponentName RECIPE_IDENTITY = ComponentName.IDENTITY;
 
     public enum FailReason implements FailReasons {
         DATA_UNAVAILABLE,
@@ -39,7 +37,6 @@ public class RecipeIdentity
         NONE
     }
 
-    public static final String DO_NOT_CLONE = "";
     private static final TextType TITLE_TEXT_TYPE = TextType.SHORT_TEXT;
     private static final TextType DESCRIPTION_TEXT_TYPE = TextType.LONG_TEXT;
 
@@ -47,12 +44,10 @@ public class RecipeIdentity
     private final TimeProvider timeProvider;
     private final UseCaseHandler handler;
     private final TextValidator textValidator;
-    private RecipeMediator mediator;
 
     private RecipeIdentityRequest.Model requestModel;
     private RecipeIdentityModel persistenceModel;
 
-    private RecipeState.ComponentState componentState;
     private List<FailReasons> failReasons;
     private String recipeId = "";
 
@@ -75,22 +70,12 @@ public class RecipeIdentity
         failReasons = new ArrayList<>();
     }
 
-    public void setMediator(RecipeMediator mediator) {
-        this.mediator = mediator;
-    }
-
-    @Override
-    public String getRecipeId() {
-        return recipeId;
-    }
-
     @Override
     protected void execute(RecipeIdentityRequest request) {
         System.out.println(TAG + request);
         requestModel = request.getModel();
 
         if (isNewRequest(request.getRecipeId())) {
-            isNewRequest = true;
             extractIds(request);
         } else {
             processChanges();
@@ -111,16 +96,8 @@ public class RecipeIdentity
         return !request.getCloneToRecipeId().equals(DO_NOT_CLONE);
     }
 
-    @Override
-    public void startColleague(String recipeId) {
-        isColleagueStartRequest = true;
-        isNewRequest = true;
-        this.recipeId = recipeId;
-        loadData(recipeId);
-    }
-
     private boolean isNewRequest(String recipeId) {
-        return !this.recipeId.equals(recipeId);
+        return isNewRequest = !this.recipeId.equals(recipeId);
     }
 
     private void loadData(String recipeId) {
@@ -141,87 +118,17 @@ public class RecipeIdentity
     }
 
     private RecipeIdentityModel convertEntityToModel(RecipeIdentityEntity entity) {
-        long time = timeProvider.getCurrentTimeInMills();
+        long timeNow = timeProvider.getCurrentTimeInMills();
         return new RecipeIdentityModel.Builder().
                 setId(isCloned ? recipeId : entity.getId()).
                 setTitle(entity.getTitle() == null ? "" : entity.getTitle()).
                 setDescription(entity.getDescription() == null ? "" : entity.getDescription()).
-                setCreateDate(isCloned ? time : entity.getCreateDate()).
-                setLastUpdate(isCloned ? time : entity.getLastUpdate()).
+                setCreateDate(isCloned ? timeNow : entity.getCreateDate()).
+                setLastUpdate(isCloned ? timeNow : entity.getLastUpdate()).
                 build();
     }
 
-    private void validateData() {
-        validateTitle();
-    }
 
-    private void validateTitle() {
-        String title;
-        if (isNewRequest) {
-            title = persistenceModel.getTitle();
-        } else {
-            title = requestModel.getTitle();
-        }
-
-        TextValidatorRequest request = new TextValidatorRequest(
-                TITLE_TEXT_TYPE,
-                new TextValidatorModel(title)
-        );
-        handler.execute(textValidator, request, new UseCase.Callback<TextValidatorResponse>() {
-
-            @Override
-            public void onSuccess(TextValidatorResponse response) {
-                validateDescription();
-            }
-
-            @Override
-            public void onError(TextValidatorResponse response) {
-                TextValidator.FailReason failReason = response.getFailReason();
-                if (failReason == TextValidator.FailReason.TOO_SHORT) {
-                    failReasons.add(RecipeIdentity.FailReason.TITLE_TOO_SHORT);
-
-                } else if (failReason == TextValidator.FailReason.TOO_LONG) {
-                    failReasons.add(RecipeIdentity.FailReason.TITLE_TOO_LONG);
-                }
-                validateDescription();
-            }
-        });
-    }
-
-    private void validateDescription() {
-        String description;
-        if (isNewRequest) {
-            description = persistenceModel.getDescription();
-        } else {
-            description = requestModel.getDescription();
-        }
-        TextValidatorRequest request = new TextValidatorRequest(
-                RecipeIdentity.DESCRIPTION_TEXT_TYPE,
-                new TextValidatorModel(description)
-        );
-        handler.execute(textValidator, request, new UseCase.Callback<TextValidatorResponse>() {
-            @Override
-            public void onSuccess(TextValidatorResponse response) {
-                if (!isNewRequest) {
-                    buildResponse();
-                }
-            }
-
-            @Override
-            public void onError(TextValidatorResponse response) {
-                TextValidator.FailReason failReason = response.getFailReason();
-                if (failReason == TextValidator.FailReason.TOO_SHORT) {
-                    failReasons.add(RecipeIdentity.FailReason.DESCRIPTION_TOO_SHORT);
-
-                } else if (failReason == TextValidator.FailReason.TOO_LONG) {
-                    failReasons.add(RecipeIdentity.FailReason.DESCRIPTION_TOO_LONG);
-                }
-                if (!isNewRequest) {
-                    buildResponse();
-                }
-            }
-        });
-    }
 
     @Override
     public void onDataNotAvailable() {
@@ -250,6 +157,77 @@ public class RecipeIdentity
         validateData();
     }
 
+    private void validateData() {
+        validateTitle();
+    }
+
+    private void validateTitle() {
+        String title;
+        if (isNewRequest) {
+            title = persistenceModel.getTitle();
+        } else {
+            title = requestModel.getTitle();
+        }
+        TextValidatorRequest request = new TextValidatorRequest(
+                TITLE_TEXT_TYPE,
+                new TextValidatorModel(title)
+        );
+        handler.execute(textValidator, request, new UseCase.Callback<TextValidatorResponse>() {
+
+            @Override
+            public void onSuccess(TextValidatorResponse response) {
+                validateDescription();
+            }
+
+            @Override
+            public void onError(TextValidatorResponse response) {
+                TextValidator.FailReason failReason = response.getFailReason();
+                if (failReason == TextValidator.FailReason.TOO_SHORT) {
+                    failReasons.add(FailReason.TITLE_TOO_SHORT);
+
+                } else if (failReason == TextValidator.FailReason.TOO_LONG) {
+                    failReasons.add(FailReason.TITLE_TOO_LONG);
+                }
+                validateDescription();
+            }
+        });
+    }
+
+    private void validateDescription() {
+        String description;
+        if (isNewRequest) {
+            description = persistenceModel.getDescription();
+        } else {
+            description = requestModel.getDescription();
+        }
+        TextValidatorRequest request = new TextValidatorRequest(
+                DESCRIPTION_TEXT_TYPE,
+                new TextValidatorModel(description)
+        );
+        handler.execute(textValidator, request, new UseCase.Callback<TextValidatorResponse>() {
+            @Override
+            public void onSuccess(TextValidatorResponse response) {
+                if (!isNewRequest) {
+                    buildResponse();
+                }
+            }
+
+            @Override
+            public void onError(TextValidatorResponse response) {
+                TextValidator.FailReason failReason = response.getFailReason();
+                if (failReason == TextValidator.FailReason.TOO_SHORT) {
+                    failReasons.add(FailReason.DESCRIPTION_TOO_SHORT);
+
+                } else if (failReason == TextValidator.FailReason.TOO_LONG) {
+                    failReasons.add(FailReason.DESCRIPTION_TOO_LONG);
+                }
+                if (!isNewRequest) {
+                    buildResponse();
+                }
+            }
+        });
+    }
+
     private void buildResponse() {
         RecipeIdentityResponse.Builder builder = new RecipeIdentityResponse.Builder().
                 setFailReasons(getFailReasons());
@@ -257,29 +235,13 @@ public class RecipeIdentity
         ComponentState state = getState();
 
         if (state == ComponentState.VALID_CHANGED) {
-            persistenceModel = RecipeIdentityModel.Builder.
-                    basedOn(persistenceModel).
-                    setTitle(requestModel.getTitle()).
-                    setDescription(requestModel.getDescription()).
-                    setLastUpdate(timeProvider.getCurrentTimeInMills()).
-                    build();
-            save(persistenceModel);
+            saveUpdatedModel();
         }
-        recipeComponentStatusChanged();
 
         builder.setState(state).setModel(getResponseModel());
         sendResponse(builder.build());
     }
 
-    @Override
-    public void recipeComponentStatusChanged() {
-        if (mediator != null) {
-            System.out.println(TAG + "recipeComponentStateChangedCalled");
-            mediator.componentStatusChanged(this);
-        }
-    }
-
-    @Override
     public ComponentState getState() {
         if (failReasons.contains(FailReason.DATA_UNAVAILABLE)) {
             return ComponentState.DATA_UNAVAILABLE;
@@ -302,8 +264,17 @@ public class RecipeIdentity
         if (failReasons.isEmpty()) {
             failReasons.add(FailReason.NONE);
         }
-        System.out.println(TAG + "getFailReasons=" + failReasons);
         return new ArrayList<>(failReasons);
+    }
+
+    private void saveUpdatedModel() {
+        persistenceModel = RecipeIdentityModel.Builder.
+                basedOn(persistenceModel).
+                setTitle(requestModel.getTitle()).
+                setDescription(requestModel.getDescription()).
+                setLastUpdate(timeProvider.getCurrentTimeInMills()).
+                build();
+        save(persistenceModel);
     }
 
     private RecipeIdentityResponse.Model getResponseModel() {

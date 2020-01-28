@@ -5,7 +5,7 @@ import com.example.peter.thekitchenmenu.data.entity.RecipeDurationEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeState;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeDurationEntity;
 
@@ -13,8 +13,8 @@ import org.junit.*;
 import org.mockito.*;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.UseCaseCommand.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe.DO_NOT_CLONE;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDuration.*;
-import static com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDuration.DO_NOT_CLONE;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
@@ -107,7 +107,7 @@ public class RecipeDurationTest {
         handler.execute(SUT, request, getUseCaseCallback());
         simulateNothingReturnedFromRepo(recipeId);
         // Assert
-        assertEquals(RecipeState.ComponentState.VALID_UNCHANGED, actualResponse.getState());
+        assertEquals(RecipeStateCalculator.ComponentState.VALID_UNCHANGED, actualResponse.getState());
     }
 
     @Test
@@ -141,7 +141,7 @@ public class RecipeDurationTest {
         );
         handler.execute(SUT, invalidRequest, getUseCaseCallback());
         // Assert
-        assertEquals(RecipeState.ComponentState.INVALID_CHANGED, actualResponse.getState());
+        assertEquals(RecipeStateCalculator.ComponentState.INVALID_CHANGED, actualResponse.getState());
     }
 
     @Test
@@ -178,7 +178,7 @@ public class RecipeDurationTest {
         );
         handler.execute(SUT, validRequest, getUseCaseCallback());
         // Assert
-        assertEquals(RecipeState.ComponentState.VALID_CHANGED, actualResponse.getState());
+        assertEquals(RecipeStateCalculator.ComponentState.VALID_CHANGED, actualResponse.getState());
     }
 
     @Test
@@ -245,7 +245,7 @@ public class RecipeDurationTest {
         );
         handler.execute(SUT, invalidRequest, getUseCaseCallback());
         // Assert
-        assertEquals(RecipeState.ComponentState.INVALID_CHANGED, actualResponse.getState());
+        assertEquals(RecipeStateCalculator.ComponentState.INVALID_CHANGED, actualResponse.getState());
     }
 
     @Test
@@ -280,7 +280,7 @@ public class RecipeDurationTest {
         );
         handler.execute(SUT, validRequest, getUseCaseCallback());
         // Assert
-        assertEquals(RecipeState.ComponentState.VALID_CHANGED, actualResponse.getState());
+        assertEquals(RecipeStateCalculator.ComponentState.VALID_CHANGED, actualResponse.getState());
     }
 
     @Test
@@ -349,7 +349,7 @@ public class RecipeDurationTest {
         );
         handler.execute(SUT, invalidRequest, getUseCaseCallback());
         // Assert
-        assertEquals(RecipeState.ComponentState.INVALID_CHANGED, actualResponse.getState());
+        assertEquals(RecipeStateCalculator.ComponentState.INVALID_CHANGED, actualResponse.getState());
     }
 
     @Test
@@ -401,7 +401,7 @@ public class RecipeDurationTest {
         );
         handler.execute(SUT, validRequest, getUseCaseCallback());
         // Assert
-        assertEquals(RecipeState.ComponentState.VALID_CHANGED, actualResponse.getState());
+        assertEquals(RecipeStateCalculator.ComponentState.VALID_CHANGED, actualResponse.getState());
     }
 
     @Test
@@ -453,7 +453,7 @@ public class RecipeDurationTest {
         );
         handler.execute(SUT, request, getUseCaseCallback());
         // Assert
-        assertEquals(RecipeState.ComponentState.INVALID_CHANGED, actualResponse.getState());
+        assertEquals(RecipeStateCalculator.ComponentState.INVALID_CHANGED, actualResponse.getState());
     }
 
     @Test
@@ -505,7 +505,7 @@ public class RecipeDurationTest {
         );
         handler.execute(SUT, request, getUseCaseCallback());
         // Assert
-        assertEquals(RecipeState.ComponentState.VALID_CHANGED, actualResponse.getState());
+        assertEquals(RecipeStateCalculator.ComponentState.VALID_CHANGED, actualResponse.getState());
     }
 
     @Test
@@ -541,7 +541,7 @@ public class RecipeDurationTest {
         givenValidExistingModel();
         // Act
         // Assert
-        assertEquals(RecipeState.ComponentState.VALID_UNCHANGED, actualResponse.getState());
+        assertEquals(RecipeStateCalculator.ComponentState.VALID_UNCHANGED, actualResponse.getState());
     }
 
     @Test

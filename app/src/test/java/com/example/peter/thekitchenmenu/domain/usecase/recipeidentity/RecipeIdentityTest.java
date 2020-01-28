@@ -6,8 +6,7 @@ import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeState;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
@@ -15,8 +14,8 @@ import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import org.junit.*;
 import org.mockito.*;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentity.DO_NOT_CLONE;
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeState.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe.DO_NOT_CLONE;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
@@ -123,7 +122,7 @@ public class RecipeIdentityTest {
     public void newId_emptyModel_stateDATA_UNAVAILABLE() {
         // Arrange
         // Act
-        givenNewEmptyModelSimulateNothingReturnedFromDatabase();
+        verifyIdentityDatabaseCalledWithNewIdAndReturnDataNotAvailable();
         // Assert
         assertEquals(ComponentState.DATA_UNAVAILABLE, onErrorResponse.getState());
     }
@@ -132,7 +131,7 @@ public class RecipeIdentityTest {
     public void newId_emptyModel_stateDATA_UNAVAILABLE_recipeStateListenerUpdated() {
         // Arrange
         // Act
-        givenNewEmptyModelSimulateNothingReturnedFromDatabase();
+        verifyIdentityDatabaseCalledWithNewIdAndReturnDataNotAvailable();
         // Assert
         assertEquals(ComponentState.DATA_UNAVAILABLE, onErrorResponse.getState());
     }
@@ -148,7 +147,7 @@ public class RecipeIdentityTest {
                 setTitle(titleTooLong).
                 setDescription(descriptionTooLong).
                 build();
-        givenNewEmptyModelSimulateNothingReturnedFromDatabase();
+        verifyIdentityDatabaseCalledWithNewIdAndReturnDataNotAvailable();
         // Act
         handler.execute(
                 SUT,
@@ -169,7 +168,7 @@ public class RecipeIdentityTest {
                 setTitle(title).
                 setDescription(description).
                 build();
-        givenNewEmptyModelSimulateNothingReturnedFromDatabase();
+        verifyIdentityDatabaseCalledWithNewIdAndReturnDataNotAvailable();
         // Act
         handler.execute(
                 SUT,
@@ -193,7 +192,7 @@ public class RecipeIdentityTest {
                 build();
 
         // Act
-        givenNewEmptyModelSimulateNothingReturnedFromDatabase();
+        verifyIdentityDatabaseCalledWithNewIdAndReturnDataNotAvailable();
         handler.execute(
                 SUT,
                 getRequest(recipeId, DO_NOT_CLONE, model),
@@ -215,7 +214,7 @@ public class RecipeIdentityTest {
         String invalidTitle = INVALID_NEW_TITLE_TOO_SHORT_DEFAULT_DESCRIPTION.getTitle();
         String description = INVALID_NEW_TITLE_TOO_SHORT_DEFAULT_DESCRIPTION.getDescription();
 
-        givenNewEmptyModelSimulateNothingReturnedFromDatabase();
+        verifyIdentityDatabaseCalledWithNewIdAndReturnDataNotAvailable();
 
         RecipeIdentityRequest.Model model = RecipeIdentityRequest.Model.Builder.
                 basedOn(onErrorResponse.getModel()).
@@ -237,7 +236,7 @@ public class RecipeIdentityTest {
     public void newId_titleValidDescriptionDefault_valuesPersisted() {
         // Arrange
         whenTimeProviderReturnTime(VALID_NEW_TITLE_VALID_DEFAULT_DESCRIPTION.getCreateDate());
-        givenNewEmptyModelSimulateNothingReturnedFromDatabase();
+        verifyIdentityDatabaseCalledWithNewIdAndReturnDataNotAvailable();
 
         String recipeId = VALID_NEW_TITLE_VALID_DEFAULT_DESCRIPTION.getId();
         String validTitle = VALID_NEW_TITLE_VALID_DEFAULT_DESCRIPTION.getTitle();
@@ -263,7 +262,7 @@ public class RecipeIdentityTest {
     public void newId_titleValidDescriptionDefault_stateVALID_CHANGED() {
         // Arrange
         whenTimeProviderReturnTime(VALID_NEW_TITLE_VALID_DEFAULT_DESCRIPTION.getCreateDate());
-        givenNewEmptyModelSimulateNothingReturnedFromDatabase();
+        verifyIdentityDatabaseCalledWithNewIdAndReturnDataNotAvailable();
 
         String recipeId = VALID_NEW_TITLE_VALID_DEFAULT_DESCRIPTION.getId();
         String validTitle = VALID_NEW_TITLE_VALID_DEFAULT_DESCRIPTION.getTitle();
@@ -278,7 +277,7 @@ public class RecipeIdentityTest {
                 getRequest(recipeId, DO_NOT_CLONE, model),
                 getCallback());
         // Assert
-        assertEquals(RecipeState.ComponentState.VALID_CHANGED, onSuccessResponse.getState());
+        assertEquals(RecipeStateCalculator.ComponentState.VALID_CHANGED, onSuccessResponse.getState());
         assertTrue(onSuccessResponse.getFailReasons().contains(RecipeIdentity.FailReason.NONE));
     }
 
@@ -286,7 +285,7 @@ public class RecipeIdentityTest {
     public void newId_titleValidDescriptionValid_valuesPersisted() {
         // Arrange
         whenTimeProviderReturnTime(VALID_NEW_COMPLETE.getCreateDate());
-        givenNewEmptyModelSimulateNothingReturnedFromDatabase();
+        verifyIdentityDatabaseCalledWithNewIdAndReturnDataNotAvailable();
 
         RecipeIdentityRequest.Model requestModel = new RecipeIdentityRequest.Model.Builder().
                 setTitle(VALID_NEW_COMPLETE.getTitle()).
@@ -313,7 +312,7 @@ public class RecipeIdentityTest {
         ArgumentCaptor<RecipeIdentityEntity> identityEntity = ArgumentCaptor.forClass(RecipeIdentityEntity.class);
         whenTimeProviderReturnTime(VALID_NEW_COMPLETE.getCreateDate());
         // Request/Response 1
-        givenNewEmptyModelSimulateNothingReturnedFromDatabase();
+        verifyIdentityDatabaseCalledWithNewIdAndReturnDataNotAvailable();
 
         // Request/Response 2
         String validTitle = VALID_NEW_COMPLETE.getTitle();
@@ -344,7 +343,7 @@ public class RecipeIdentityTest {
         assertEquals(validTitle, onSuccessResponse.getModel().getTitle());
         assertEquals(validDescription, onSuccessResponse.getModel().getDescription());
         // Assert state
-        assertEquals(RecipeState.ComponentState.VALID_CHANGED, onSuccessResponse.getState());
+        assertEquals(RecipeStateCalculator.ComponentState.VALID_CHANGED, onSuccessResponse.getState());
         assertEquals(1, onSuccessResponse.getFailReasons().size());
         assertTrue(onSuccessResponse.getFailReasons().contains(RecipeIdentity.FailReason.NONE));
     }
@@ -377,7 +376,7 @@ public class RecipeIdentityTest {
         verify(repoIdentityMock).getById(eq(recipeId), repoCallback.capture());
         repoCallback.getValue().onEntityLoaded(INVALID_EXISTING_TITLE_TOO_SHORT_DEFAULT_DESCRIPTION);
         // Assert state
-        assertEquals(RecipeState.ComponentState.INVALID_UNCHANGED, onErrorResponse.getState());
+        assertEquals(RecipeStateCalculator.ComponentState.INVALID_UNCHANGED, onErrorResponse.getState());
     }
 
     @Test
@@ -410,7 +409,7 @@ public class RecipeIdentityTest {
         verify(repoIdentityMock).getById(eq(recipeId), repoCallback.capture());
         repoCallback.getValue().onEntityLoaded(INVALID_EXISTING_TITLE_TOO_LONG_DEFAULT_DESCRIPTION);
         // assert state
-        assertEquals(RecipeState.ComponentState.INVALID_UNCHANGED, onErrorResponse.getState());
+        assertEquals(RecipeStateCalculator.ComponentState.INVALID_UNCHANGED, onErrorResponse.getState());
     }
 
     @Test
@@ -427,7 +426,7 @@ public class RecipeIdentityTest {
         verify(repoIdentityMock).getById(eq(recipeId), repoCallback.capture());
         repoCallback.getValue().onEntityLoaded(INVALID_EXISTING_TITLE_VALID_DESCRIPTION_TOO_LONG);
 
-        assertEquals(RecipeState.ComponentState.INVALID_UNCHANGED, onErrorResponse.getState());
+        assertEquals(RecipeStateCalculator.ComponentState.INVALID_UNCHANGED, onErrorResponse.getState());
         assertEquals(1, onErrorResponse.getFailReasons().size());
         assertTrue(onErrorResponse.getFailReasons().contains(RecipeIdentity.FailReason.DESCRIPTION_TOO_LONG));
     }
@@ -463,7 +462,7 @@ public class RecipeIdentityTest {
         verify(repoIdentityMock).getById(eq(recipeId), repoCallback.capture());
         repoCallback.getValue().onEntityLoaded(INVALID_EXISTING_TITLE_TOO_SHORT_DESCRIPTION_TOO_LONG);
 
-        assertEquals(RecipeState.ComponentState.INVALID_UNCHANGED, onErrorResponse.getState());
+        assertEquals(RecipeStateCalculator.ComponentState.INVALID_UNCHANGED, onErrorResponse.getState());
     }
 
     @Test
@@ -497,7 +496,7 @@ public class RecipeIdentityTest {
         verify(repoIdentityMock).getById(eq(recipeId), repoCallback.capture());
         repoCallback.getValue().onEntityLoaded(INVALID_EXISTING_TITLE_TOO_LONG_DESCRIPTION_TOO_LONG);
         // Assert state
-        assertEquals(RecipeState.ComponentState.INVALID_UNCHANGED, onErrorResponse.getState());
+        assertEquals(RecipeStateCalculator.ComponentState.INVALID_UNCHANGED, onErrorResponse.getState());
     }
 
     @Test
@@ -531,7 +530,7 @@ public class RecipeIdentityTest {
         verify(repoIdentityMock).getById(eq(recipeId), repoCallback.capture());
         repoCallback.getValue().onEntityLoaded(VALID_EXISTING_TITLE_VALID_DESCRIPTION_DEFAULT);
         // Assert state
-        assertEquals(RecipeState.ComponentState.VALID_UNCHANGED, onSuccessResponse.getState());
+        assertEquals(RecipeStateCalculator.ComponentState.VALID_UNCHANGED, onSuccessResponse.getState());
     }
 
     @Test
@@ -564,7 +563,7 @@ public class RecipeIdentityTest {
         verify(repoIdentityMock).getById(eq(recipeId), repoCallback.capture());
         repoCallback.getValue().onEntityLoaded(VALID_EXISTING_TITLE_VALID_DESCRIPTION_VALID);
         // Assert state
-        assertEquals(RecipeState.ComponentState.VALID_UNCHANGED, onSuccessResponse.getState());
+        assertEquals(RecipeStateCalculator.ComponentState.VALID_UNCHANGED, onSuccessResponse.getState());
     }
 
     @Test
@@ -674,7 +673,7 @@ public class RecipeIdentityTest {
     }
 
     // region helper methods -----------------------------------------------------------------------
-    private void givenNewEmptyModelSimulateNothingReturnedFromDatabase() {
+    private void verifyIdentityDatabaseCalledWithNewIdAndReturnDataNotAvailable() {
         handler.execute(
                 SUT,
                 getRequest(INVALID_NEW_EMPTY.getId(), DO_NOT_CLONE, getDefaultModel()),

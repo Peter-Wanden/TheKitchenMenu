@@ -11,6 +11,7 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseFactory;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityTest;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
@@ -27,7 +28,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeState.ComponentState.DATA_UNAVAILABLE;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.ComponentState.DATA_UNAVAILABLE;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -126,8 +127,9 @@ public class RecipeIdentityEditorViewModelTest {
                 handler,
                 identityTextValidator
         );
+        RecipeStateCalculator stateCalculator = new RecipeStateCalculator();
 
-        Recipe recipe = new Recipe(identity);
+        Recipe recipe = new Recipe(handler, stateCalculator, identity);
 
         return new RecipeIdentityEditorViewModel(
                 handler,

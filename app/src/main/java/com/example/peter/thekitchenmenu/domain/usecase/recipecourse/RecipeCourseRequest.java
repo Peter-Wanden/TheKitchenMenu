@@ -7,7 +7,7 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipecourse.RecipeCourse.DO_NOT_CLONE;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe.DO_NOT_CLONE;
 
 public final class RecipeCourseRequest implements UseCaseCommand.Request {
     @Nonnull

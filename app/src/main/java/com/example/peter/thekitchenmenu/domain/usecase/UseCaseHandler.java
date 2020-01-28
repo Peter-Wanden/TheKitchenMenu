@@ -19,10 +19,11 @@ public class UseCaseHandler {
         return INSTANCE;
     }
 
-    public <T extends UseCase.Request, R extends UseCase.Response>
-    void execute(final UseCase<T, R> useCase,
-                 T request,
-                 UseCase.Callback<R> callback) {
+    public <T extends UseCase.Request, R extends UseCase.Response> void execute(
+            final UseCase<T, R> useCase,
+            T request,
+            UseCase.Callback<R> callback) {
+
         useCase.setRequest(request);
         useCase.setUseCaseCallback(new UseCaseHandler.UiCallbackWrapper<>(callback, this));
 

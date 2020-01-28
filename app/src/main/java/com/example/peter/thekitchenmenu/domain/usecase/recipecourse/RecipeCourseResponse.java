@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipecourse;
 
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseCommand;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeState;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -12,13 +12,13 @@ import javax.annotation.Nonnull;
 
 public final class RecipeCourseResponse implements UseCaseCommand.Response {
     @Nonnull
-    private final RecipeState.ComponentState status;
+    private final RecipeStateCalculator.ComponentState status;
     @Nonnull
     private final List<RecipeCourse.FailReason> failReasons;
     @Nonnull
     private final HashMap<RecipeCourse.Course, RecipeCourseModel> courseList;
 
-    public RecipeCourseResponse(@Nonnull RecipeState.ComponentState status,
+    public RecipeCourseResponse(@Nonnull RecipeStateCalculator.ComponentState status,
                                 @Nonnull List<RecipeCourse.FailReason> failReasons,
                                 @Nonnull HashMap<RecipeCourse.Course, RecipeCourseModel> courseList)
     {
@@ -28,7 +28,7 @@ public final class RecipeCourseResponse implements UseCaseCommand.Response {
     }
 
     @Nonnull
-    public RecipeState.ComponentState getStatus() {
+    public RecipeStateCalculator.ComponentState getStatus() {
         return status;
     }
 
@@ -67,18 +67,18 @@ public final class RecipeCourseResponse implements UseCaseCommand.Response {
     }
 
     public static class Builder {
-        private RecipeState.ComponentState status;
+        private RecipeStateCalculator.ComponentState status;
         private List<RecipeCourse.FailReason> failReasons;
         private HashMap<RecipeCourse.Course, RecipeCourseModel> courseList;
 
         public static Builder getDefault() {
             return new Builder().
-                    setStatus(RecipeState.ComponentState.INVALID_UNCHANGED).
+                    setStatus(RecipeStateCalculator.ComponentState.INVALID_UNCHANGED).
                     setFailReasons(getDefaultFailReason()).
                     setCourseList(new HashMap<>());
         }
 
-        public Builder setStatus(RecipeState.ComponentState status) {
+        public Builder setStatus(RecipeStateCalculator.ComponentState status) {
             this.status = status;
             return this;
         }

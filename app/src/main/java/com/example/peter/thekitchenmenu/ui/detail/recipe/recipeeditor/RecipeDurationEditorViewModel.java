@@ -13,13 +13,13 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDura
 import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDurationRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDuration;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDurationResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeState;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
 import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 
 import javax.annotation.Nonnull;
 
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe.DO_NOT_CLONE;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDuration.*;
-import static com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDuration.DO_NOT_CLONE;
 
 public class RecipeDurationEditorViewModel
         extends
@@ -111,19 +111,19 @@ public class RecipeDurationEditorViewModel
     private void processUseCaseResponse(RecipeDurationResponse response) {
         useCaseResponse = response;
         dataLoading = false;
-        RecipeState.ComponentState state = response.getState();
+        RecipeStateCalculator.ComponentState state = response.getState();
 
-        if (state == RecipeState.ComponentState.DATA_UNAVAILABLE) {
+        if (state == RecipeStateCalculator.ComponentState.DATA_UNAVAILABLE) {
             dataLoadingError = true;
             updateRecipeComponentStatus(false, false);
             return;
-        } else if (state == RecipeState.ComponentState.INVALID_UNCHANGED) {
+        } else if (state == RecipeStateCalculator.ComponentState.INVALID_UNCHANGED) {
             updateRecipeComponentStatus(false, false);
-        } else if (state == RecipeState.ComponentState.VALID_UNCHANGED) {
+        } else if (state == RecipeStateCalculator.ComponentState.VALID_UNCHANGED) {
             updateRecipeComponentStatus(true, false);
-        } else if (state == RecipeState.ComponentState.INVALID_CHANGED) {
+        } else if (state == RecipeStateCalculator.ComponentState.INVALID_CHANGED) {
             updateRecipeComponentStatus(false, true);
-        } else if (state == RecipeState.ComponentState.VALID_CHANGED) {
+        } else if (state == RecipeStateCalculator.ComponentState.VALID_CHANGED) {
             updateRecipeComponentStatus(true, true);
         }
         updateObservables();
@@ -132,25 +132,25 @@ public class RecipeDurationEditorViewModel
     private void updateRecipeComponentStatus(boolean isValid, boolean isChanged) {
         if (!updatingUi) {
             RecipeComponentStateModel model = new RecipeComponentStateModel(
-                    RecipeState.ComponentName.DURATION,
+                    RecipeStateCalculator.ComponentName.DURATION,
                     getStatus(isChanged, isValid)
             );
             modelSubmitter.submitRecipeComponentStatus(model);
         }
     }
 
-    private RecipeState.ComponentState getStatus(boolean isChanged, boolean isValid) {
+    private RecipeStateCalculator.ComponentState getStatus(boolean isChanged, boolean isValid) {
         if (!isValid && !isChanged) {
-            return RecipeState.ComponentState.INVALID_UNCHANGED;
+            return RecipeStateCalculator.ComponentState.INVALID_UNCHANGED;
 
         } else if (isValid && !isChanged) {
-            return RecipeState.ComponentState.VALID_UNCHANGED;
+            return RecipeStateCalculator.ComponentState.VALID_UNCHANGED;
 
         } else if (!isValid && isChanged) {
-            return RecipeState.ComponentState.INVALID_CHANGED;
+            return RecipeStateCalculator.ComponentState.INVALID_CHANGED;
 
         } else {
-            return RecipeState.ComponentState.VALID_CHANGED;
+            return RecipeStateCalculator.ComponentState.VALID_CHANGED;
         }
     }
 

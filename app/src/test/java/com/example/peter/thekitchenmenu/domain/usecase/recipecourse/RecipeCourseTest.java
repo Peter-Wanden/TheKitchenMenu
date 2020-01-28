@@ -7,7 +7,7 @@ import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeState;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeCourseEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeEntity;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
@@ -18,10 +18,9 @@ import org.mockito.*;
 
 import java.util.List;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipecourse.RecipeCourse.DO_NOT_CLONE;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe.DO_NOT_CLONE;
 import static com.example.peter.thekitchenmenu.testdata.TestDataRecipeCourseEntity.getAllByRecipeId;
 import static com.example.peter.thekitchenmenu.testdata.TestDataRecipeEntity.getValidExisting;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.*;
@@ -88,7 +87,7 @@ public class RecipeCourseTest {
         handler.execute(SUT, request, getCallback());
         // Assert
         confirmRepoCourseCalledAndReturnMatchingCourses(request.getRecipeId());
-        assertEquals(RecipeState.ComponentState.DATA_UNAVAILABLE, actualResponse.getStatus());
+        assertEquals(RecipeStateCalculator.ComponentState.DATA_UNAVAILABLE, actualResponse.getStatus());
         assertEquals(0, actualResponse.getCourseList().size());
     }
 
@@ -110,7 +109,7 @@ public class RecipeCourseTest {
 
         assertEquals(expectedNumberOfModels, actualNumberOfModels);
         // No data has been modified, just data returned
-        assertEquals(RecipeState.ComponentState.VALID_UNCHANGED, actualResponse.getStatus());
+        assertEquals(RecipeStateCalculator.ComponentState.VALID_UNCHANGED, actualResponse.getStatus());
     }
 
     @Test
@@ -143,7 +142,7 @@ public class RecipeCourseTest {
         for (RecipeCourseEntity entity : entityCaptor.getAllValues()) {
             assertEquals(NEW_RECIPE_ID, entity.getRecipeId());
         }
-        assertEquals(RecipeState.ComponentState.VALID_CHANGED, actualResponse.getStatus());
+        assertEquals(RecipeStateCalculator.ComponentState.VALID_CHANGED, actualResponse.getStatus());
     }
 
     @Test
@@ -180,9 +179,9 @@ public class RecipeCourseTest {
         assertNull(actualResponse.getCourseList().get(RecipeCourse.Course.COURSE_ONE));
         // confirm data has changed
         if (actualResponse.getCourseList().size() > 0) {
-            assertEquals(RecipeState.ComponentState.VALID_CHANGED, actualResponse.getStatus());
+            assertEquals(RecipeStateCalculator.ComponentState.VALID_CHANGED, actualResponse.getStatus());
         } else {
-            assertEquals(RecipeState.ComponentState.INVALID_CHANGED, actualResponse.getStatus());
+            assertEquals(RecipeStateCalculator.ComponentState.INVALID_CHANGED, actualResponse.getStatus());
         }
     }
 

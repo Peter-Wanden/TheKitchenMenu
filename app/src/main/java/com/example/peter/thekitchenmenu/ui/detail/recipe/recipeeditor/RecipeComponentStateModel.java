@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 
 import androidx.annotation.NonNull;
 
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeState;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
 
 import java.util.Objects;
 
@@ -11,23 +11,23 @@ import javax.annotation.Nonnull;
 public final class RecipeComponentStateModel {
 
     @NonNull
-    private final RecipeState.ComponentName componentName;
+    private final RecipeStateCalculator.ComponentName componentName;
     @Nonnull
-    private final RecipeState.ComponentState state;
+    private final RecipeStateCalculator.ComponentState state;
 
-    public RecipeComponentStateModel(@NonNull RecipeState.ComponentName componentName,
-                                     @Nonnull RecipeState.ComponentState state) {
+    public RecipeComponentStateModel(@NonNull RecipeStateCalculator.ComponentName componentName,
+                                     @Nonnull RecipeStateCalculator.ComponentState state) {
         this.componentName = componentName;
         this.state = state;
     }
 
     @NonNull
-    RecipeState.ComponentName getComponentName() {
+    RecipeStateCalculator.ComponentName getComponentName() {
         return componentName;
     }
 
     @Nonnull
-    public RecipeState.ComponentState getState() {
+    public RecipeStateCalculator.ComponentState getState() {
         return state;
     }
 

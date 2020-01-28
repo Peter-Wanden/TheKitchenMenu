@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipeduration;
 
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseCommand;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeState;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -11,13 +11,13 @@ import javax.annotation.Nonnull;
 
 public final class RecipeDurationResponse implements UseCaseCommand.Response {
     @Nonnull
-    private final RecipeState.ComponentState state;
+    private final RecipeStateCalculator.ComponentState state;
     @Nonnull
     private final List<RecipeDuration.FailReason> failReasons;
     @Nonnull
     private final RecipeDurationModel model;
 
-    public RecipeDurationResponse(@Nonnull RecipeState.ComponentState state,
+    public RecipeDurationResponse(@Nonnull RecipeStateCalculator.ComponentState state,
                                   @Nonnull List<RecipeDuration.FailReason> failReasons,
                                   @Nonnull RecipeDurationModel model) {
         this.state = state;
@@ -26,7 +26,7 @@ public final class RecipeDurationResponse implements UseCaseCommand.Response {
     }
 
     @Nonnull
-    public RecipeState.ComponentState getState() {
+    public RecipeStateCalculator.ComponentState getState() {
         return state;
     }
 
@@ -66,20 +66,20 @@ public final class RecipeDurationResponse implements UseCaseCommand.Response {
     }
 
     public static class Builder {
-        private RecipeState.ComponentState state;
+        private RecipeStateCalculator.ComponentState state;
         private List<RecipeDuration.FailReason> failReasons;
         private RecipeDurationModel model;
 
         public static Builder getDefault() {
             return new Builder().
-                    setState(RecipeState.ComponentState.INVALID_UNCHANGED).
+                    setState(RecipeStateCalculator.ComponentState.INVALID_UNCHANGED).
                     setFailReasons(getDefaultFailReasons()).
                     setModel(RecipeDurationModel.Builder.
                             getDefault().
                             build());
         }
 
-        public Builder setState(RecipeState.ComponentState state) {
+        public Builder setState(RecipeStateCalculator.ComponentState state) {
             this.state = state;
             return this;
         }

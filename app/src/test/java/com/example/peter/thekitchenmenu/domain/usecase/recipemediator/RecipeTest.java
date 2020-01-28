@@ -7,10 +7,14 @@ import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
+import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityResponse;
@@ -25,15 +29,18 @@ import com.example.peter.thekitchenmenu.testdata.TestDataRecipePortionsEntity;
 import org.junit.*;
 import org.mockito.*;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.List;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeState.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe.DO_NOT_CLONE;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 public class RecipeTest {
 
@@ -42,8 +49,11 @@ public class RecipeTest {
     // region constants ----------------------------------------------------------------------------
     private static final RecipeEntity INVALID_NEW =
             TestDataRecipeEntity.getNewInvalid();
-    private static final RecipeIdentityEntity INVALID_NEW_EMPTY =
+
+    private static final RecipeIdentityEntity IDENTITY_INVALID_NEW_EMPTY =
             TestDataRecipeIdentityEntity.getInvalidNewEmpty();
+    private static final RecipeIdentityEntity IDENTITY_VALID_NEW_COMPLETE =
+            TestDataRecipeIdentityEntity.getValidNewComplete();
 
     private static final RecipeEntity VALID_EXISTING_RECIPE =
             TestDataRecipeEntity.getValidExisting();
@@ -64,10 +74,12 @@ public class RecipeTest {
     @Mock
     TimeProvider timeProviderMock;
     @Captor
-    ArgumentCaptor<RecipeStateModel> stateModelCaptor;
+    ArgumentCaptor<RecipeStateResponse> stateResponseCaptor;
 
     private RecipeIdentityResponse onIdentitySuccessResponse;
     private RecipeIdentityResponse onIdentityErrorResponse;
+    private RecipeResponse onRecipeSuccessResponse;
+    private RecipeResponse onRecipeErrorResponse;
 
     private RecipeIdentity recipeIdentity;
     private UseCaseHandler handler;
@@ -103,68 +115,161 @@ public class RecipeTest {
                 handler,
                 textValidator
         );
-        return new Recipe(recipeIdentity);
+
+        RecipeStateCalculator stateCalculator = new RecipeStateCalculator();
+
+        return new Recipe(handler, stateCalculator, recipeIdentity);
     }
 
     @Test
-    public void newId_mediatorIssuesIdToAllColleagues() {
+    public void recipeRequestNewId_invokerIssuesCommandToAllReceivers() {
         // Arrange
         String recipeId = INVALID_NEW.getId();
         // Act
         SUT.registerClientListener(recipeClientListener1);
-        SUT.startColleaguesAndNotify(recipeId);
+        RecipeRequest request = new RecipeRequest(
+                recipeId
+        );
+        handler.execute(SUT, request, getCallback());
         // Assert
         verify(repoIdentityMock).getById(eq(recipeId), repoIdentityCallback.capture());
+        repoIdentityCallback.getValue().onDataNotAvailable();
+        // Assert database call, return data not available
+        verifyIdentityDatabaseCalledWithNewIdAndReturnDataUnavailable();
     }
 
     @Test
-    public void newId_mediatorIssuesIdToAllColleagues_allColleaguesReportCorrectValuesToMediator() {
+    public void recipeRequestNewId_invokerIssuesCommandToAllReceivers_listenersUpdatedWithCorrectRecipeStateValues() {
         // Arrange
         String recipeId = INVALID_NEW.getId();
         // Act
         SUT.registerClientListener(recipeClientListener1);
-        SUT.startColleaguesAndNotify(recipeId);
-        // Assert database call, return nothing
-        verifyIdentityDatabaseCalledWithNewIdAndReturnDataNotAvailable();
-        // Assert verify listener called with correct values
-        verify(recipeClientListener1).recipeStateChanged(stateModelCaptor.capture());
-        HashMap<ComponentName, ComponentState> componentStates =
-                new LinkedHashMap<>(stateModelCaptor.getValue().getComponentStates());
-        assertEquals(ComponentState.DATA_UNAVAILABLE, componentStates.get(ComponentName.IDENTITY));
+        RecipeRequest request = new RecipeRequest(
+                recipeId
+        );
+        handler.execute(SUT, request, getCallback());
+        verifyIdentityDatabaseCalledWithNewIdAndReturnDataUnavailable();
+
+        // Assert recipe listener updated with correct recipe state model
+        verify(recipeClientListener1).recipeStateChanged(stateResponseCaptor.capture());
+        RecipeStateResponse recipeStateResponse = stateResponseCaptor.getValue();
+
+        assertEquals(RecipeState.DATA_UNAVAILABLE, recipeStateResponse.getState());
+        assertEquals(1, recipeStateResponse.getComponentStates().size());
+        assertTrue(recipeStateResponse.getComponentStates().containsKey(ComponentName.IDENTITY));
+        assertEquals(ComponentState.DATA_UNAVAILABLE, recipeStateResponse.getComponentStates().
+                get(ComponentName.IDENTITY));
     }
 
     @Test
-    public void newId_colleagueIssuedNewId_mediatorIssuesNewIdToAllColleagues() {
-        // Arrange first transaction from client, to mediator, to colleague
-        String recipeIdIssuedByMediator = INVALID_NEW.getId();
+    public void recipeRequestNewId_invokerIssuesCommandToAllReceivers_responseINVALID_UNCHANGED_INVALID_MODELS() {
+        // Arrange
+        String recipeId = INVALID_NEW.getId();
+        RecipeRequest request = new RecipeRequest(
+                recipeId
+        );
         // Act
         SUT.registerClientListener(recipeClientListener1);
-        SUT.startColleaguesAndNotify(recipeIdIssuedByMediator);
-        // Assert first transaction responses
-        verifyIdentityDatabaseCalledWithNewIdAndReturnDataNotAvailable();
-        verify(recipeClientListener1).recipeStateChanged(stateModelCaptor.capture());
-        assertEquals(ComponentState.DATA_UNAVAILABLE,
-                stateModelCaptor.getValue().getComponentStates().get(ComponentName.IDENTITY));
+        handler.execute(SUT, request, getCallback());
+        verifyIdentityDatabaseCalledWithNewIdAndReturnDataUnavailable();
 
-        // Arrange second transaction from RecipeIdentity colleague, to mediator, to client
-        String recipeIdIssuedByColleague = VALID_EXISTING_RECIPE.getId();
-        RecipeIdentityRequest request = RecipeIdentityRequest.Builder.getDefault().
-                setRecipeId(recipeIdIssuedByColleague).build();
-        RecipeIdentity identity = SUT.getIdentity();
-        // Act
-        handler.execute(identity, request, getIdentityUseCaseCallBack());
-        verifyIdentityDatabaseCalledWithValidExistingCompleteIdAndReturnValues();
-        // Assert second transaction responses
-        verify(recipeClientListener1).recipeStateChanged(stateModelCaptor.capture());
-        assertEquals(ComponentState.VALID_UNCHANGED,
-                stateModelCaptor.getValue().getComponentStates().get(ComponentName.IDENTITY));
-        System.out.println(stateModelCaptor.getAllValues());
-
-        // todo, test correct listeners called
-        // todo, add another client and see if their model database is called with correct id
-        // todo, test RecipeMediator functionality from within RecipeIdentityTest
-
+        // Assert request originator updated with recipe response
+        assertEquals(RecipeState.DATA_UNAVAILABLE, onRecipeErrorResponse.getRecipeState());
+        assertTrue(onRecipeErrorResponse.getFailReasons().contains(FailReason.MISSING_COMPONENTS));
     }
+
+    @Test
+    public void recipeRequestNewId_invokerIssuesCommandToAllReceivers_correctComponentResponses() {
+        // Arrange
+        String recipeId = INVALID_NEW.getId();
+        // Act
+        SUT.registerClientListener(recipeClientListener1);
+        RecipeRequest request = new RecipeRequest(
+                recipeId
+        );
+        handler.execute(SUT, request, getCallback());
+        verifyIdentityDatabaseCalledWithNewIdAndReturnDataUnavailable();
+
+        // Assert correct response identity component
+        ComponentState identityState = onRecipeErrorResponse.getIdentityResponse().getState();
+        assertEquals(ComponentState.DATA_UNAVAILABLE, identityState);
+
+        List<FailReasons> identityFails = onRecipeErrorResponse.getIdentityResponse().getFailReasons();
+        assertEquals(1, identityFails.size());
+        assertTrue(identityFails.contains(RecipeIdentity.FailReason.DATA_UNAVAILABLE));
+    }
+
+    @Test
+    public void identityRequestNewId_initialRequest_invokerIssuesCommandToAllReceivers() {
+        // Arrange
+        String recipeId = INVALID_NEW.getId();
+        RecipeIdentityRequest identityRequest = RecipeIdentityRequest.Builder.getDefault().
+                setRecipeId(recipeId).
+                build();
+        // Act
+        SUT.registerClientListener(recipeClientListener1);
+        handler.execute(SUT, identityRequest, getCallback());
+        verifyIdentityDatabaseCalledWithNewIdAndReturnDataUnavailable();
+        // Assert
+    }
+
+    @Test
+    public void identityRequestNewId_titleValidDescriptionValid_identityStateVALID_CHANGED() {
+        // Arrange
+        String recipeId = IDENTITY_INVALID_NEW_EMPTY.getId();
+        ArgumentCaptor<RecipeIdentityEntity> identityEntity = ArgumentCaptor.forClass(RecipeIdentityEntity.class);
+        whenTimeProviderReturnTime(IDENTITY_VALID_NEW_COMPLETE.getCreateDate());
+        // Request/Response 1
+        RecipeIdentityRequest firstRequest = RecipeIdentityRequest.Builder.
+                getDefault().
+                setRecipeId(recipeId).
+                build();
+        SUT.registerClientListener(recipeClientListener1);
+        handler.execute(SUT, firstRequest, getCallback());
+
+        verifyIdentityDatabaseCalledWithNewIdAndReturnDataUnavailable();
+
+        // Request/Response 2
+        String validTitle = IDENTITY_VALID_NEW_COMPLETE.getTitle();
+        RecipeIdentityRequest.Model validTitleModel = RecipeIdentityRequest.Model.Builder.
+                basedOn(onIdentityErrorResponse.getModel()).
+                setTitle(validTitle).
+                build();
+
+        RecipeIdentityRequest validTitleRequest = new RecipeIdentityRequest.Builder().
+                setRecipeId(recipeId).
+                setCloneToRecipeId(DO_NOT_CLONE).
+                setModel(validTitleModel).
+                build();
+
+        handler.execute(SUT, validTitleRequest, getCallback());
+
+        // Request/Response 3
+        String validDescription = IDENTITY_VALID_NEW_COMPLETE.getDescription();
+        RecipeIdentityRequest.Model validTitleDescriptionModel = RecipeIdentityRequest.Model.Builder.
+                basedOn(onIdentitySuccessResponse.getModel()).
+                setDescription(validDescription).
+                build();
+        RecipeIdentityRequest validDescriptionRequest = new RecipeIdentityRequest.Builder().
+                setRecipeId(recipeId).
+                setCloneToRecipeId(DO_NOT_CLONE).
+                setModel(validTitleDescriptionModel).
+                build();
+        // Act
+        handler.execute(SUT, validDescriptionRequest, getCallback());
+        // Assert save
+        verify(repoIdentityMock, times((2))).save(identityEntity.capture());
+        assertEquals(IDENTITY_VALID_NEW_COMPLETE, identityEntity.getValue());
+        // Assert values
+        assertEquals(validTitle, onIdentitySuccessResponse.getModel().getTitle());
+        assertEquals(validDescription, onIdentitySuccessResponse.getModel().getDescription());
+        // Assert state
+        assertEquals(RecipeStateCalculator.ComponentState.VALID_CHANGED, onIdentitySuccessResponse.getState());
+        assertEquals(1, onIdentitySuccessResponse.getFailReasons().size());
+        assertTrue(onIdentitySuccessResponse.getFailReasons().contains(RecipeIdentity.FailReason.NONE));
+    }
+
+    // Check RecipeResponse as well as listener response
 
     // newId_invalidColleagueValuesUpdated_mediatorNotifiesRecipeStateINVALID_CHANGED
     // newId_allRequiredColleaguesMadeValid_mediatorNotifiesClientVALID_CHANGED
@@ -172,29 +277,12 @@ public class RecipeTest {
 
     @Test
     public void existingId_validData_correctDataRequested() {
-        // Arrange
-        String recipeId = VALID_EXISTING_RECIPE.getId();
-        // Act
-        SUT.startColleaguesAndNotify(recipeId);
-        // Assert
-        verify(repoIdentityMock).getById(eq(recipeId), repoIdentityCallback.capture());
-        repoIdentityCallback.getValue().onEntityLoaded(VALID_EXISTING_COMPLETE_IDENTITY);
+
     }
 
     @Test
     public void existingId_validData_clientListenersNotified() {
-        // Arrange
-        String recipeId = VALID_EXISTING_RECIPE.getId();
-        // Act
-        SUT.registerClientListener(recipeClientListener1);
-        SUT.registerClientListener(recipeStateListener2);
-        SUT.startColleaguesAndNotify(recipeId);
-        // Assert database called and return data
-        verify(repoIdentityMock).getById(eq(recipeId), repoIdentityCallback.capture());
-        repoIdentityCallback.getValue().onEntityLoaded(VALID_EXISTING_COMPLETE_IDENTITY);
-        // Assert listeners called
-        verify(recipeClientListener1).recipeStateChanged(stateModelCaptor.capture());
-        verify(recipeStateListener2).recipeStateChanged(stateModelCaptor.capture());
+
     }
 
     @Test
@@ -205,12 +293,15 @@ public class RecipeTest {
         SUT.registerClientListener(recipeClientListener1);
         SUT.registerClientListener(recipeStateListener2);
         SUT.unRegisterClientListener(recipeStateListener2);
-        SUT.startColleaguesAndNotify(recipeId);
+        RecipeRequest request = new RecipeRequest(
+                recipeId
+        );
+        handler.execute(SUT, request, getCallback());
         // Assert database called and return data
         verify(repoIdentityMock).getById(eq(recipeId), repoIdentityCallback.capture());
         repoIdentityCallback.getValue().onEntityLoaded(VALID_EXISTING_COMPLETE_IDENTITY);
         // Assert listeners called
-        verify(recipeClientListener1).recipeStateChanged(any(RecipeStateModel.class));
+        verify(recipeClientListener1).recipeStateChanged(any(RecipeStateResponse.class));
         verifyNoMoreInteractions(recipeStateListener2);
     }
 
@@ -224,22 +315,23 @@ public class RecipeTest {
         // Act
         SUT.registerClientListener(recipeClientListener1);
         SUT.registerClientListener(recipeStateListener2);
-        SUT.startColleaguesAndNotify(recipeId);
+        RecipeRequest request = new RecipeRequest(recipeId);
+        handler.execute(SUT, request, getCallback());
         // Assert database called and return data
         verify(repoIdentityMock).getById(eq(recipeId), repoIdentityCallback.capture());
         repoIdentityCallback.getValue().onEntityLoaded(VALID_EXISTING_COMPLETE_IDENTITY);
         // Assert listeners called
-        verify(recipeClientListener1).recipeStateChanged(stateModelCaptor.capture());
-        verify(recipeStateListener2).recipeStateChanged(stateModelCaptor.capture());
+        verify(recipeClientListener1).recipeStateChanged(stateResponseCaptor.capture());
+        verify(recipeStateListener2).recipeStateChanged(stateResponseCaptor.capture());
         // Assert recipe component status
-        ComponentState identityComponentState1 = stateModelCaptor.getAllValues().
+        ComponentState identityComponentState1 = stateResponseCaptor.getAllValues().
                 get(0).
                 getComponentStates().
                 get(ComponentName.IDENTITY);
         assertEquals(ComponentState.VALID_UNCHANGED, identityComponentState1);
 
-        verify(recipeStateListener2).recipeStateChanged(stateModelCaptor.capture());
-        ComponentState identityComponentState2 = stateModelCaptor.getAllValues().
+        verify(recipeStateListener2).recipeStateChanged(stateResponseCaptor.capture());
+        ComponentState identityComponentState2 = stateResponseCaptor.getAllValues().
                 get(1).
                 getComponentStates().
                 get(ComponentName.IDENTITY);
@@ -253,16 +345,19 @@ public class RecipeTest {
         // Act
         SUT.registerClientListener(recipeClientListener1);
         SUT.registerClientListener(recipeStateListener2);
-        SUT.startColleaguesAndNotify(recipeId);
+        RecipeRequest request = new RecipeRequest(
+                recipeId
+        );
+        handler.execute(SUT, request, getCallback());
         // Assert database called and return data
         verify(repoIdentityMock).getById(eq(recipeId), repoIdentityCallback.capture());
         repoIdentityCallback.getValue().onEntityLoaded(VALID_EXISTING_COMPLETE_IDENTITY);
         // Assert listeners called
-        verify(recipeClientListener1).recipeStateChanged(stateModelCaptor.capture());
-        verify(recipeStateListener2).recipeStateChanged(stateModelCaptor.capture());
+        verify(recipeClientListener1).recipeStateChanged(stateResponseCaptor.capture());
+        verify(recipeStateListener2).recipeStateChanged(stateResponseCaptor.capture());
         // Assert recipe state
-        State recipeState = stateModelCaptor.getValue().getRecipeState();
-        assertEquals(State.VALID_UNCHANGED, recipeState);
+        RecipeState recipeState = stateResponseCaptor.getValue().getState();
+        assertEquals(RecipeState.VALID_UNCHANGED, recipeState);
     }
 
     // existingId_validDataUpdatedWithValidValues_recipeStateVALID_CHANGED
@@ -273,26 +368,10 @@ public class RecipeTest {
     // anotherExistingId_sentDirectlyToRecipeComponent_mediatorUpdatesAllOtherComponentsWithNewId
 
     // region helper methods -----------------------------------------------------------------------
-    private void verifyIdentityDatabaseCalledWithNewIdAndReturnDataNotAvailable() {
-        String recipeId = INVALID_NEW_EMPTY.getId();
+    private void verifyIdentityDatabaseCalledWithNewIdAndReturnDataUnavailable() {
+        String recipeId = IDENTITY_INVALID_NEW_EMPTY.getId();
         verify(repoIdentityMock).getById(eq(recipeId), repoIdentityCallback.capture());
         repoIdentityCallback.getValue().onDataNotAvailable();
-    }
-
-    private UseCase.Callback<RecipeIdentityResponse> getIdentityUseCaseCallBack() {
-        return new UseCase.Callback<RecipeIdentityResponse>() {
-
-            @Override
-            public void onSuccess(RecipeIdentityResponse response) {
-                onIdentitySuccessResponse = response;
-
-            }
-
-            @Override
-            public void onError(RecipeIdentityResponse response) {
-                onIdentityErrorResponse = response;
-            }
-        };
     }
 
     private void verifyIdentityDatabaseCalledWithValidExistingCompleteIdAndReturnValues() {
@@ -300,13 +379,45 @@ public class RecipeTest {
                 repoIdentityCallback.capture());
         repoIdentityCallback.getValue().onEntityLoaded(VALID_EXISTING_COMPLETE_IDENTITY);
     }
+
+    private UseCase.Callback<RecipeResponse> getCallback() {
+        return new UseCase.Callback<RecipeResponse>() {
+
+            @Override
+            public void onSuccess(RecipeResponse response) {
+                if (response != null) {
+                    System.out.println(TAG + "recipeResponseOnSuccess: " + response);
+                    onRecipeSuccessResponse = response;
+                    onIdentitySuccessResponse = response.getIdentityResponse();
+                }
+            }
+
+            @Override
+            public void onError(RecipeResponse response) {
+                if (response != null) {
+                    System.out.println(TAG + "recipeResponseOnError: " + response);
+                    onRecipeErrorResponse = response;
+
+                    if (response.getIdentityResponse().getFailReasons().contains(FailReason.NONE)) {
+                        onIdentitySuccessResponse = response.getIdentityResponse();
+                    } else {
+                        onIdentityErrorResponse = response.getIdentityResponse();
+                    }
+                }
+            }
+        };
+    }
+
+    private void whenTimeProviderReturnTime(long time) {
+        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(time);
+    }
     // endregion helper methods --------------------------------------------------------------------
 
     // region helper classes -----------------------------------------------------------------------
     private static class RecipeClient implements Recipe.Listener {
 
         @Override
-        public void recipeStateChanged(RecipeStateModel stateModel) {
+        public void recipeStateChanged(RecipeStateResponse stateResponse) {
 
         }
     }

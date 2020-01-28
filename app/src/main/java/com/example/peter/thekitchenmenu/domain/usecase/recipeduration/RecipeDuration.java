@@ -9,7 +9,8 @@ import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import java.util.LinkedList;
 import java.util.List;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeState.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe.DO_NOT_CLONE;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
 
 public class RecipeDuration
         extends UseCase<RecipeDurationRequest, RecipeDurationResponse>
@@ -23,7 +24,6 @@ public class RecipeDuration
         NONE
     }
 
-    public static final String DO_NOT_CLONE = "";
     private final int MAX_PREP_TIME;
     private final int MAX_COOK_TIME;
 
