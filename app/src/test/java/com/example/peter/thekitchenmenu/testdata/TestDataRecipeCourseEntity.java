@@ -7,7 +7,7 @@ import java.util.List;
 
 public class TestDataRecipeCourseEntity {
 
-    private static final String EXISTING_RECIPE_ID =
+    public static final String EXISTING_RECIPE_ID =
             TestDataRecipeEntity.getValidExisting().getId();
 
     private static final String NEW_RECIPE_ID =

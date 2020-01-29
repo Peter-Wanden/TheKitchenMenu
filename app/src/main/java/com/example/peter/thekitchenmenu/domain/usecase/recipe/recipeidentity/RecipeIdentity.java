@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipeidentity;
+package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity;
 
 import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
@@ -15,6 +15,8 @@ import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe.DO_NOT_CLONE;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
 import static com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator.*;
@@ -26,7 +28,6 @@ public class RecipeIdentity
         DataSource.GetEntityCallback<RecipeIdentityEntity> {
 
     private static final String TAG = "tkm-" + RecipeIdentity.class.getSimpleName() + ": ";
-    private static final ComponentName RECIPE_IDENTITY = ComponentName.IDENTITY;
 
     public enum FailReason implements FailReasons {
         DATA_UNAVAILABLE,
@@ -40,9 +41,13 @@ public class RecipeIdentity
     private static final TextType TITLE_TEXT_TYPE = TextType.SHORT_TEXT;
     private static final TextType DESCRIPTION_TEXT_TYPE = TextType.LONG_TEXT;
 
+    @Nonnull
     private final RepositoryRecipeIdentity repository;
+    @Nonnull
     private final TimeProvider timeProvider;
+    @Nonnull
     private final UseCaseHandler handler;
+    @Nonnull
     private final TextValidator textValidator;
 
     private RecipeIdentityRequest.Model requestModel;
@@ -56,10 +61,10 @@ public class RecipeIdentity
     private boolean isNewRequest;
     private boolean isColleagueStartRequest;
 
-    public RecipeIdentity(RepositoryRecipeIdentity repository,
-                          TimeProvider timeProvider,
-                          UseCaseHandler handler,
-                          TextValidator textValidator) {
+    public RecipeIdentity(@Nonnull RepositoryRecipeIdentity repository,
+                          @Nonnull TimeProvider timeProvider,
+                          @Nonnull UseCaseHandler handler,
+                          @Nonnull TextValidator textValidator) {
         this.repository = repository;
         this.timeProvider = timeProvider;
         this.handler = handler;
@@ -82,6 +87,10 @@ public class RecipeIdentity
         }
     }
 
+    private boolean isNewRequest(String recipeId) {
+        return isNewRequest = !this.recipeId.equals(recipeId);
+    }
+
     private void extractIds(RecipeIdentityRequest request) {
         if (isCloneRequest(request)) {
             isCloned = true;
@@ -94,10 +103,6 @@ public class RecipeIdentity
 
     private boolean isCloneRequest(RecipeIdentityRequest request) {
         return !request.getCloneToRecipeId().equals(DO_NOT_CLONE);
-    }
-
-    private boolean isNewRequest(String recipeId) {
-        return isNewRequest = !this.recipeId.equals(recipeId);
     }
 
     private void loadData(String recipeId) {
@@ -127,8 +132,6 @@ public class RecipeIdentity
                 setLastUpdate(isCloned ? timeNow : entity.getLastUpdate()).
                 build();
     }
-
-
 
     @Override
     public void onDataNotAvailable() {
@@ -229,17 +232,15 @@ public class RecipeIdentity
     }
 
     private void buildResponse() {
-        RecipeIdentityResponse.Builder builder = new RecipeIdentityResponse.Builder().
+        RecipeIdentityResponse.Builder responseBuilder = new RecipeIdentityResponse.Builder().
                 setFailReasons(getFailReasons());
 
-        ComponentState state = getState();
-
-        if (state == ComponentState.VALID_CHANGED) {
+        if (getState() == ComponentState.VALID_CHANGED) {
             saveUpdatedModel();
         }
 
-        builder.setState(state).setModel(getResponseModel());
-        sendResponse(builder.build());
+        responseBuilder.setState(getState()).setModel(getResponseModel());
+        sendResponse(responseBuilder.build());
     }
 
     public ComponentState getState() {

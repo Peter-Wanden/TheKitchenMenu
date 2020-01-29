@@ -1,7 +1,7 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipecourse;
+package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse;
 
+import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseCommand;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -10,30 +10,32 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
+
 public final class RecipeCourseResponse implements UseCaseCommand.Response {
     @Nonnull
-    private final RecipeStateCalculator.ComponentState status;
+    private final ComponentState state;
     @Nonnull
-    private final List<RecipeCourse.FailReason> failReasons;
+    private final List<FailReasons> failReasons;
     @Nonnull
     private final HashMap<RecipeCourse.Course, RecipeCourseModel> courseList;
 
-    public RecipeCourseResponse(@Nonnull RecipeStateCalculator.ComponentState status,
-                                @Nonnull List<RecipeCourse.FailReason> failReasons,
+    public RecipeCourseResponse(@Nonnull ComponentState status,
+                                @Nonnull List<FailReasons> failReasons,
                                 @Nonnull HashMap<RecipeCourse.Course, RecipeCourseModel> courseList)
     {
-        this.status = status;
+        this.state = status;
         this.failReasons = failReasons;
         this.courseList = courseList;
     }
 
     @Nonnull
-    public RecipeStateCalculator.ComponentState getStatus() {
-        return status;
+    public ComponentState getState() {
+        return state;
     }
 
     @Nonnull
-    public List<RecipeCourse.FailReason> getFailReasons() {
+    public List<FailReasons> getFailReasons() {
         return failReasons;
     }
 
@@ -47,43 +49,43 @@ public final class RecipeCourseResponse implements UseCaseCommand.Response {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RecipeCourseResponse that = (RecipeCourseResponse) o;
-        return status == that.status &&
+        return state == that.state &&
                 failReasons.equals(that.failReasons) &&
                 courseList.equals(that.courseList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(status, failReasons, courseList);
+        return Objects.hash(state, failReasons, courseList);
     }
 
     @Override
     public String toString() {
         return "RecipeCourseResponse{" +
-                "status=" + status +
+                "state=" + state +
                 ", failReasons=" + failReasons +
                 ", courseList=" + courseList +
                 '}';
     }
 
     public static class Builder {
-        private RecipeStateCalculator.ComponentState status;
-        private List<RecipeCourse.FailReason> failReasons;
+        private ComponentState status;
+        private List<FailReasons> failReasons;
         private HashMap<RecipeCourse.Course, RecipeCourseModel> courseList;
 
         public static Builder getDefault() {
             return new Builder().
-                    setStatus(RecipeStateCalculator.ComponentState.INVALID_UNCHANGED).
+                    setStatus(ComponentState.INVALID_UNCHANGED).
                     setFailReasons(getDefaultFailReason()).
                     setCourseList(new HashMap<>());
         }
 
-        public Builder setStatus(RecipeStateCalculator.ComponentState status) {
+        public Builder setStatus(ComponentState status) {
             this.status = status;
             return this;
         }
 
-        public Builder setFailReasons(List<RecipeCourse.FailReason> failReasons) {
+        public Builder setFailReasons(List<FailReasons> failReasons) {
             this.failReasons = failReasons;
             return this;
         }
@@ -101,8 +103,8 @@ public final class RecipeCourseResponse implements UseCaseCommand.Response {
             );
         }
 
-        private static List<RecipeCourse.FailReason> getDefaultFailReason() {
-            List<RecipeCourse.FailReason> defaultFailReason = new LinkedList<>();
+        private static List<FailReasons> getDefaultFailReason() {
+            List<FailReasons> defaultFailReason = new LinkedList<>();
             defaultFailReason.add(RecipeCourse.FailReason.NO_COURSES_SET);
             return defaultFailReason;
         }

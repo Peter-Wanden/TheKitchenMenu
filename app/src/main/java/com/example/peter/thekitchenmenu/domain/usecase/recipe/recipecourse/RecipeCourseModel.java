@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipecourse;
+package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse;
 
 import java.util.Objects;
 
@@ -11,6 +11,7 @@ public final class RecipeCourseModel {
     private final RecipeCourse.Course course;
     @Nonnull
     private final String recipeId;
+
     private final long createDate;
     private final long lasUpdate;
 

@@ -5,16 +5,24 @@ import android.content.res.Resources;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.commonmocks.StringMaker;
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
+import com.example.peter.thekitchenmenu.data.entity.RecipeCourseEntity;
+import com.example.peter.thekitchenmenu.data.entity.RecipeDurationEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeCourse;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseFactory;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentity;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentity;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDuration;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDurationTest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityTest;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
+import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeValidator;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
@@ -84,7 +92,17 @@ public class RecipeIdentityEditorViewModelTest {
     @Captor
     ArgumentCaptor<DataSource.GetEntityCallback<RecipeIdentityEntity>> repoCallback;
     @Mock
+    RepositoryRecipeCourse repoCourseMock;
+    @Captor
+    ArgumentCaptor<DataSource.GetAllCallback<RecipeCourseEntity>> repoCourseCallback;
+    @Mock
+    RepositoryRecipeDuration repoDurationMock;
+    @Captor
+    ArgumentCaptor<DataSource.GetEntityCallback<RecipeDurationEntity>> repoDurationCallback;
+    @Mock
     TimeProvider timeProviderMock;
+    @Mock
+    UniqueIdProvider idProviderMock;
     @Mock
     RecipeValidation.RecipeValidatorModelSubmission modelValidationSubmitterMock;
     @Captor
@@ -127,9 +145,23 @@ public class RecipeIdentityEditorViewModelTest {
                 handler,
                 identityTextValidator
         );
+
+        RecipeCourse recipeCourse = new RecipeCourse(
+                repoCourseMock,
+                idProviderMock,
+                timeProviderMock
+        );
+
+        RecipeDuration recipeDuration = new RecipeDuration(
+                repoDurationMock,
+                timeProviderMock,
+                RecipeDurationTest.MAX_PREP_TIME,
+                RecipeDurationTest.MAX_COOK_TIME
+        );
+
         RecipeStateCalculator stateCalculator = new RecipeStateCalculator();
 
-        Recipe recipe = new Recipe(handler, stateCalculator, identity);
+        Recipe recipe = new Recipe(handler, stateCalculator, identity, recipeCourse, recipeDuration);
 
         return new RecipeIdentityEditorViewModel(
                 handler,

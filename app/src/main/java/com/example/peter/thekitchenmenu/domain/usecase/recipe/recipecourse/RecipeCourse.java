@@ -1,10 +1,11 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipecourse;
+package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse;
 
 import android.annotation.SuppressLint;
 
 import com.example.peter.thekitchenmenu.data.entity.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeCourse;
+import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
@@ -26,7 +27,7 @@ public class RecipeCourse
 
     private static final String TAG = "tkm-" + RecipeCourse.class.getSimpleName() + ": ";
 
-    public enum FailReason {
+    public enum FailReason implements FailReasons {
         NO_COURSES_SET,
         NONE
     }
@@ -73,8 +74,8 @@ public class RecipeCourse
 
     private String recipeId = "";
     private boolean isClone;
-    private HashMap<Course, RecipeCourseModel> oldCourseList = new LinkedHashMap<>();
-    private HashMap<Course, RecipeCourseModel> newCourseList = new LinkedHashMap<>();
+    private final HashMap<Course, RecipeCourseModel> oldCourseList = new LinkedHashMap<>();
+    private final HashMap<Course, RecipeCourseModel> newCourseList = new LinkedHashMap<>();
 
     public RecipeCourse(@Nonnull RepositoryRecipeCourse repository,
                         @Nonnull UniqueIdProvider idProvider,
@@ -87,15 +88,15 @@ public class RecipeCourse
     @Override
     protected void execute(RecipeCourseRequest request) {
         System.out.println(TAG + request);
-        if (isNewRequest(request)) {
+        if (isNewRequest(request.getRecipeId())) {
             loadData(request);
         } else {
             addOrRemoveCourse(request.isAddCourse(), request.getCourse());
         }
     }
 
-    private boolean isNewRequest(RecipeCourseRequest request) {
-        return !recipeId.equals(request.getRecipeId());
+    private boolean isNewRequest(String recipeId) {
+        return !this.recipeId.equals(recipeId);
     }
 
     private void loadData(RecipeCourseRequest request) {
@@ -237,8 +238,14 @@ public class RecipeCourse
                 setFailReasons(getFailReasons()).
                 setCourseList(newCourseList).
                 build();
+
         System.out.println(TAG + response);
-        getUseCaseCallback().onSuccess(response);
+
+        if (response.getFailReasons().contains(FailReason.NONE)) {
+            getUseCaseCallback().onSuccess(response);
+        } else {
+            getUseCaseCallback().onError(response);
+        }
     }
 
     private RecipeStateCalculator.ComponentState getStatus(boolean isChanged, boolean isValid) {
@@ -256,8 +263,8 @@ public class RecipeCourse
         }
     }
 
-    private List<FailReason> getFailReasons() {
-        List<FailReason> failReasons = new LinkedList<>();
+    private List<FailReasons> getFailReasons() {
+        List<FailReasons> failReasons = new LinkedList<>();
         if (newCourseList.isEmpty()) {
             failReasons.add(FailReason.NO_COURSES_SET);
         } else {

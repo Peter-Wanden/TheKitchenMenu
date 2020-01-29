@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-
 public class RecipeStateCalculator extends UseCase<RecipeStateRequest, RecipeStateResponse> {
 
     private static final String TAG = "tkm-" + RecipeStateCalculator.class.getSimpleName() + ": ";
@@ -84,6 +83,8 @@ public class RecipeStateCalculator extends UseCase<RecipeStateRequest, RecipeSta
 
         requiredComponents = new HashSet<>();
         requiredComponents.add(ComponentName.IDENTITY);
+        requiredComponents.add(ComponentName.COURSE);
+        requiredComponents.add(ComponentName.DURATION);
     }
 
     @Override

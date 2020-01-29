@@ -5,9 +5,9 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseCommand;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentity;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentity;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentityRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentityResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortionsModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortionsRequest;

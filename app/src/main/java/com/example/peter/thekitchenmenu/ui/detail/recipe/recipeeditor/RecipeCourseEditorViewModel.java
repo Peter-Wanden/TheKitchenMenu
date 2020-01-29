@@ -5,9 +5,9 @@ import androidx.databinding.ObservableBoolean;
 
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseCommand;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipecourse.RecipeCourse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipecourse.RecipeCourseRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipecourse.RecipeCourseResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourseRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourseResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
 import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 
@@ -83,7 +83,7 @@ public class RecipeCourseEditorViewModel
     private void processResponse(RecipeCourseResponse response) {
         dataLoading.set(false);
         this.response = response;
-        RecipeStateCalculator.ComponentState status = response.getStatus();
+        RecipeStateCalculator.ComponentState status = response.getState();
 
         if (status.equals(RecipeStateCalculator.ComponentState.VALID_CHANGED) ||
                 status.equals(RecipeStateCalculator.ComponentState.INVALID_CHANGED)) {

@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipecourse;
+package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse;
 
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseCommand;
 
