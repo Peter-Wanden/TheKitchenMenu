@@ -703,13 +703,13 @@ public class RecipeIdentityTest {
 
             @Override
             public void onSuccess(RecipeIdentityResponse response) {
-                RecipeIdentityTest.this.onSuccessResponse = response;
+                onSuccessResponse = response;
 
             }
 
             @Override
             public void onError(RecipeIdentityResponse response) {
-                RecipeIdentityTest.this.onErrorResponse = response;
+                onErrorResponse = response;
             }
         };
     }

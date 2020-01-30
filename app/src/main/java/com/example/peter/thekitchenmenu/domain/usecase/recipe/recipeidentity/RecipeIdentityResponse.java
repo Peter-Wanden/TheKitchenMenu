@@ -199,7 +199,7 @@ public final class RecipeIdentityResponse implements UseCaseCommand.Response {
                         setLastUpdate(0L);
             }
 
-            public static Builder basedOn(RecipeIdentityModel model) {
+            public static Builder basedOn(RecipeIdentityPersistenceModel model) {
                 return new Builder().
                         setId(model.getId()).
                         setTitle(model.getTitle()).

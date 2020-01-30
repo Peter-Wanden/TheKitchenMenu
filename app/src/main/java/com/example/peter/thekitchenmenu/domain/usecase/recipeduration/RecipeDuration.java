@@ -3,11 +3,14 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipeduration;
 import com.example.peter.thekitchenmenu.data.entity.RecipeDurationEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration;
+import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe.DO_NOT_CLONE;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
@@ -18,7 +21,8 @@ public class RecipeDuration
 
     private static final String TAG = "tkm-" + RecipeDuration.class.getSimpleName() + ": ";
 
-    public enum FailReason {
+    public enum FailReason implements FailReasons {
+        DATA_UNAVAILABLE,
         INVALID_PREP_TIME,
         INVALID_COOK_TIME,
         NONE
@@ -27,121 +31,151 @@ public class RecipeDuration
     private final int MAX_PREP_TIME;
     private final int MAX_COOK_TIME;
 
+    @Nonnull
     private final TimeProvider timeProvider;
+    @Nonnull
     private final RepositoryRecipeDuration repository;
 
     private String recipeId = "";
     private boolean isCloned;
+    private boolean isChanged;
+    private boolean isNewRequest;
+    private boolean isValid;
+    private final List<FailReasons> failReasons;
 
-    private RecipeDurationModel requestModel;
-    private RecipeDurationModel responseModel;
+    private RecipeDurationPersistenceModel persistenceModel;
+    private RecipeDurationRequest.Model requestModel;
 
-    public RecipeDuration(RepositoryRecipeDuration repository,
-                          TimeProvider timeProvider,
+    public RecipeDuration(@Nonnull RepositoryRecipeDuration repository,
+                          @Nonnull TimeProvider timeProvider,
                           int maxPrepTime,
                           int maxCookTime) {
         this.repository = repository;
         this.timeProvider = timeProvider;
+
         MAX_PREP_TIME = maxPrepTime;
         MAX_COOK_TIME = maxCookTime;
-        requestModel = RecipeDurationModel.Builder.getDefault().build();
-        responseModel = RecipeDurationModel.Builder.getDefault().build();
+
+        failReasons = new ArrayList<>();
+
+        requestModel = RecipeDurationRequest.Model.Builder.getDefault().build();
     }
 
     @Override
     protected void execute(RecipeDurationRequest request) {
         System.out.println(TAG + request);
         requestModel = request.getModel();
-        if (isNewRequest(request)) {
-            loadData(request);
+
+        if (isNewRequest(request.getRecipeId())) {
+            System.out.println(TAG + "isNewRequest");
+            extractIds(request);
         } else {
-            calculateValues();
+            processChanges();
         }
     }
 
-    private boolean isNewRequest(RecipeDurationRequest request) {
-        return !recipeId.equals(request.getRecipeId());
+    private boolean isNewRequest(String recipeId) {
+        return isNewRequest = !this.recipeId.equals(recipeId);
     }
 
-    private void loadData(RecipeDurationRequest request) {
+    private void extractIds(RecipeDurationRequest request) {
         if (isCloneRequest(request)) {
             isCloned = true;
             recipeId = request.getCloneToRecipeId();
         } else {
             recipeId = request.getRecipeId();
         }
-        repository.getById(request.getRecipeId(), this);
+        loadData(request.getRecipeId());
     }
 
     private boolean isCloneRequest(RecipeDurationRequest request) {
         return !request.getCloneToRecipeId().equals(DO_NOT_CLONE);
     }
 
+    private void loadData(String recipeId) {
+        repository.getById(recipeId, this);
+    }
+
     @Override
     public void onEntityLoaded(RecipeDurationEntity entity) {
-        requestModel = convertEntityToModel(entity);
+        isChanged = false;
+        persistenceModel = convertEntityToPersistenceModel(entity);
+        validateData();
 
         if (isCloned) {
-            save(requestModel);
+            save(persistenceModel);
             isCloned = false;
         }
-
-        equaliseState();
         buildResponse();
     }
 
-    private RecipeDurationModel convertEntityToModel(RecipeDurationEntity entity) {
+    private RecipeDurationPersistenceModel convertEntityToPersistenceModel(RecipeDurationEntity entity) {
         long currentTime = timeProvider.getCurrentTimeInMills();
-        return new RecipeDurationModel.Builder().
+        return new RecipeDurationPersistenceModel.Builder().
                 setId(isCloned ? recipeId : entity.getId()).
-                setPrepHours(getHours(entity.getPrepTime())).
-                setPrepMinutes(getMinutes(entity.getPrepTime())).
-                setTotalPrepTime(entity.getPrepTime()).
-                setCookHours(getHours(entity.getCookTime())).
-                setCookMinutes(getMinutes(entity.getCookTime())).
-                setTotalCookTime(entity.getCookTime()).
-                setTotalTime(entity.getPrepTime() + entity.getCookTime()).
+                setPrepTime(entity.getPrepTime()).
+                setCookTime(entity.getCookTime()).
                 setCreateDate(isCloned ? currentTime : entity.getCreateDate()).
-                setLastUpdate(isCloned ? currentTime : entity.getLastUpdate()).
-                build();
+                setLastUpdate(isCloned ? currentTime : entity.getLastUpdate()).build();
     }
 
     @Override
     public void onDataNotAvailable() {
-        requestModel = createNewModel();
-        equaliseState();
-        save(responseModel);
+        persistenceModel = createNewPersistenceModel();
+        failReasons.add(FailReason.DATA_UNAVAILABLE);
         buildResponse();
     }
 
-    private RecipeDurationModel createNewModel() {
+    private RecipeDurationPersistenceModel createNewPersistenceModel() {
         long currentTime = timeProvider.getCurrentTimeInMills();
-        return RecipeDurationModel.Builder.
-                getDefault().
+        return RecipeDurationPersistenceModel.Builder.getDefault().
                 setId(recipeId).
                 setCreateDate(currentTime).
                 setLastUpdate(currentTime).
                 build();
     }
 
-    private void calculateValues() {
-        int totalPrepTime = calculateTotalMinutes(requestModel.getPrepHours(),
-                requestModel.getPrepMinutes());
+    private void processChanges() {
+        int prepTime = getTotalMinutes(requestModel.getPrepHours(), requestModel.getPrepMinutes());
+        int cookTime = getTotalMinutes(requestModel.getCookHours(), requestModel.getCookMinutes());
 
-        int totalCookTime = calculateTotalMinutes(requestModel.getCookHours(),
-                requestModel.getCookMinutes());
-
-        requestModel = RecipeDurationModel.Builder.
-                basedOn(requestModel).
-                setPrepHours(getHours(totalPrepTime)).
-                setPrepMinutes(getMinutes(totalPrepTime)).
-                setTotalPrepTime(totalPrepTime).
-                setCookHours(getHours(totalCookTime)).
-                setCookMinutes(getMinutes(totalCookTime)).
-                setTotalCookTime(totalCookTime).
-                build();
-
+        if (prepTime != persistenceModel.getPrepTime()) {
+            isChanged = true;
+        }
+        if (cookTime != persistenceModel.getCookTime()) {
+            isChanged = true;
+        }
+        System.out.println(TAG + "processingChanges: isChanged:" + isChanged);
+        validateData();
         buildResponse();
+    }
+
+    private void validateData() {
+        int prepTime;
+        int cookTime;
+        if (isNewRequest) {
+            prepTime = persistenceModel.getPrepTime();
+            cookTime = persistenceModel.getCookTime();
+        } else {
+            prepTime = getTotalMinutes(requestModel.getPrepHours(), requestModel.getPrepMinutes());
+            cookTime = getTotalMinutes(requestModel.getCookHours(), requestModel.getCookMinutes());
+        }
+
+        boolean isPrepTimeValid = prepTime <= MAX_PREP_TIME;
+        boolean isCookTimeValid = cookTime <= MAX_COOK_TIME;
+        if (!isPrepTimeValid) {
+            failReasons.add(FailReason.INVALID_PREP_TIME);
+        }
+        if (!isCookTimeValid) {
+            failReasons.add(FailReason.INVALID_COOK_TIME);
+        }
+
+        isValid = isPrepTimeValid && isCookTimeValid;
+
+        System.out.println(TAG + "validatingData:" +
+                " isPrepTimeValid:" + isPrepTimeValid +
+                " isCookTimeValid:" + isCookTimeValid +
+                " isValid:" + isValid);
     }
 
     private int getHours(int totalTime) {
@@ -152,94 +186,136 @@ public class RecipeDuration
         return totalTime % 60;
     }
 
-    private int calculateTotalMinutes(int hours, int minutes) {
+    private int getTotalMinutes(int hours, int minutes) {
         return hours * 60 + minutes;
     }
 
     private void buildResponse() {
-        RecipeDurationResponse.Builder builder = new RecipeDurationResponse.Builder().
-                setState(getState()).
+
+        RecipeDurationResponse.Builder responseBuilder = new RecipeDurationResponse.Builder().
                 setFailReasons(getFailReasons()
-        );
+                );
 
-        equaliseState();
+        if (getComponentState() == ComponentState.VALID_CHANGED) {
+            saveUpdatedModel();
+        }
 
-        RecipeDurationResponse response = builder.
-                setModel(responseModel).
-                build();
+        responseBuilder.
+                setState(getComponentState()).
+                setModel(getResponseModel());
 
-        sendResponse(response);
+        System.out.println(TAG + "buildingResponse:" +
+                " componentState:" + getComponentState());
+
+        sendResponse(responseBuilder.build());
     }
 
-    private ComponentState getState() {
-        if (!isValid() && !isChanged()) {
+    private ComponentState getComponentState() {
+        if (failReasons.contains(FailReason.DATA_UNAVAILABLE)) {
+            return ComponentState.DATA_UNAVAILABLE;
+
+        } else if (!isValid && !isChanged) {
             return ComponentState.INVALID_UNCHANGED;
 
-        } else if (isValid() && !isChanged()) {
+        } else if (isValid && !isChanged) {
             return ComponentState.VALID_UNCHANGED;
 
-        } else if (!isValid() && isChanged()) {
+        } else if (!isValid && isChanged) {
             return ComponentState.INVALID_CHANGED;
 
         } else {
-            requestModel = RecipeDurationModel.Builder.
-                    basedOn(requestModel).
-                    setLastUpdate(timeProvider.getCurrentTimeInMills()).
-                    build();
-            save(requestModel);
-
             return ComponentState.VALID_CHANGED;
         }
     }
 
-    private boolean isChanged() {
-        return !requestModel.equals(responseModel);
-    }
-
-    private List<FailReason> getFailReasons() {
-        List<FailReason> failReasons = new LinkedList<>();
-
-        if (requestModel.getTotalPrepTime() > MAX_PREP_TIME) {
-            failReasons.add(FailReason.INVALID_PREP_TIME);
-        }
-        if (requestModel.getTotalCookTime() > MAX_COOK_TIME) {
-            failReasons.add(FailReason.INVALID_COOK_TIME);
-        }
-        if (isValid()) {
+    private List<FailReasons> getFailReasons() {
+        if (failReasons.isEmpty()) {
             failReasons.add(FailReason.NONE);
         }
-        return failReasons;
+        return new ArrayList<>(failReasons);
     }
 
-    private boolean isValid() {
-        return requestModel.getTotalPrepTime() <= MAX_PREP_TIME &&
-                requestModel.getTotalCookTime() <= MAX_COOK_TIME;
-    }
+    private RecipeDurationResponse.Model getResponseModel() {
+        return new RecipeDurationResponse.Model.Builder().
+                setPrepHours(isNewRequest ?
+                        getHours(persistenceModel.getPrepTime()) :
+                        requestModel.getPrepHours()).
 
-    private void equaliseState() {
-        responseModel = requestModel;
+                setPrepMinutes(isNewRequest ?
+                        getMinutes(persistenceModel.getPrepTime()) :
+                        requestModel.getPrepMinutes()).
+
+                setTotalPrepTime(isNewRequest ?
+                        persistenceModel.getPrepTime() :
+                        getTotalMinutes(requestModel.getPrepHours(), requestModel.getPrepMinutes())).
+
+                setCookHours(isNewRequest ?
+                        getHours(persistenceModel.getCookTime()) :
+                        requestModel.getCookHours()).
+
+                setCookMinutes(isNewRequest ?
+                        getMinutes(persistenceModel.getCookTime()) :
+                        requestModel.getCookMinutes()).
+
+                setTotalCookTime(isNewRequest ?
+                        persistenceModel.getCookTime() :
+                        getTotalMinutes(requestModel.getCookHours(), requestModel.getCookMinutes())).
+
+                setTotalTime(isNewRequest ?
+                        persistenceModel.getPrepTime() + persistenceModel.getCookTime() :
+                        getTotalMinutes(
+                                requestModel.getPrepHours(),
+                                requestModel.getPrepMinutes()) +
+                                getTotalMinutes(
+                                        requestModel.getCookHours(),
+                                        requestModel.getPrepMinutes())).
+
+                setCreateDate(persistenceModel.getCreateDate()).
+                setLastUpdate(persistenceModel.getLastUpdate()).
+                build();
     }
 
     private void sendResponse(RecipeDurationResponse response) {
         System.out.println(TAG + response);
-        ComponentState state = response.getState();
+        resetState();
 
-        if (state == ComponentState.VALID_CHANGED || state == ComponentState.VALID_UNCHANGED) {
+        if (response.getFailReasons().contains(FailReason.NONE)) {
             getUseCaseCallback().onSuccess(response);
         } else {
             getUseCaseCallback().onError(response);
         }
     }
 
-    private void save(RecipeDurationModel model) {
+    private void resetState() {
+        isChanged = false;
+        failReasons.clear();
+        isNewRequest = false;
+    }
+
+    private void saveUpdatedModel() {
+        RecipeDurationPersistenceModel updatedModel = RecipeDurationPersistenceModel.Builder.
+                basedOnPersistenceModel(persistenceModel).
+                setPrepTime(getTotalMinutes(
+                        requestModel.getPrepHours(),
+                        requestModel.getPrepMinutes())).
+                setCookTime(getTotalMinutes(
+                        requestModel.getCookHours(),
+                        requestModel.getCookMinutes())).
+                setLastUpdate(timeProvider.getCurrentTimeInMills()).build();
+
+        save(updatedModel);
+    }
+
+    private void save(RecipeDurationPersistenceModel model) {
+        System.out.println(TAG + "savingPersistenceModel:" + model);
         repository.save(convertModelToEntity(model));
     }
 
-    private RecipeDurationEntity convertModelToEntity(RecipeDurationModel model) {
+    private RecipeDurationEntity convertModelToEntity(RecipeDurationPersistenceModel model) {
         return new RecipeDurationEntity(
                 model.getId(),
-                model.getTotalPrepTime(),
-                model.getTotalCookTime(),
+                model.getPrepTime(),
+                model.getCookTime(),
                 model.getCreateDate(),
                 model.getLastUpdate()
         );

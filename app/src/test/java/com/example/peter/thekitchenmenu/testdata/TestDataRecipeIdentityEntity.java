@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.testdata;
 
 import com.example.peter.thekitchenmenu.commonmocks.StringMaker;
 import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentityModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentityPersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityTest;
 
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import java.util.List;
 
 public class TestDataRecipeIdentityEntity {
 
-    private static final RecipeIdentityModel defaultModel = RecipeIdentityModel.Builder.
+    private static final RecipeIdentityPersistenceModel defaultModel = RecipeIdentityPersistenceModel.Builder.
             getDefault().
             build();
 

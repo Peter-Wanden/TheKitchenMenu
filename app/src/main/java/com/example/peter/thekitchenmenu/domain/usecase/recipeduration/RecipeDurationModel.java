@@ -19,16 +19,17 @@ public final class RecipeDurationModel implements PersistenceModel {
     private final long createDate;
     private final long lastUpdate;
 
-    private RecipeDurationModel(@Nonnull String id,
-                  int prepHours,
-                  int prepMinutes,
-                  int totalPrepTime,
-                  int cookHours,
-                  int cookMinutes,
-                  int totalCookTime,
-                  int totalTime,
-                  long createDate,
-                  long lastUpdate) {
+    private RecipeDurationModel(
+            @Nonnull String id,
+            int prepHours,
+            int prepMinutes,
+            int totalPrepTime,
+            int cookHours,
+            int cookMinutes,
+            int totalCookTime,
+            int totalTime,
+            long createDate,
+            long lastUpdate) {
         this.id = id;
         this.prepHours = prepHours;
         this.prepMinutes = prepMinutes;

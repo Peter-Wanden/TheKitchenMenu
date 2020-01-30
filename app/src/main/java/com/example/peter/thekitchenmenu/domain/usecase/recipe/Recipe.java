@@ -250,14 +250,14 @@ public class Recipe<Q extends UseCaseCommand.Request> extends UseCase<Q, RecipeR
                 durationResponse
         );
 
-        if (isRecipeStateResponseValid()) {
+        if (isRecipeStateValid()) {
             getUseCaseCallback().onSuccess(response);
         } else {
             getUseCaseCallback().onError(response);
         }
     }
 
-    private boolean isRecipeStateResponseValid() {
+    private boolean isRecipeStateValid() {
         RecipeState recipeState = recipeStateResponse.getState();
         return recipeState == RecipeState.VALID_UNCHANGED || recipeState == RecipeState.VALID_CHANGED;
     }

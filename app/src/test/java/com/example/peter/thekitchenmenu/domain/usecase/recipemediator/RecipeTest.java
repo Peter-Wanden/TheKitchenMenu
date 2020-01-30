@@ -196,14 +196,15 @@ public class RecipeTest {
         // Assert database calls
         verifyIdentityDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
         verifyCoursesDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
+        verifyDurationDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
 
-        // Assert recipe listener updated with correct recipe state model
+        // Assert recipe listener updated with correct recipe state
         verify(recipeClientListener1).recipeStateChanged(recipeStateCaptor.capture());
         RecipeStateResponse recipeStateResponse = recipeStateCaptor.getValue();
 
         // Assert recipe state updated
         assertEquals(RecipeState.DATA_UNAVAILABLE, recipeStateResponse.getState());
-        assertEquals(2, recipeStateResponse.getComponentStates().size());
+        assertEquals(3, recipeStateResponse.getComponentStates().size());
 
         // Assert identity component status
         assertTrue(recipeStateResponse.getComponentStates().containsKey(ComponentName.IDENTITY));
@@ -214,6 +215,11 @@ public class RecipeTest {
         assertTrue(recipeStateResponse.getComponentStates().containsKey(ComponentName.COURSE));
         assertEquals(ComponentState.DATA_UNAVAILABLE, recipeStateResponse.getComponentStates().
                 get(ComponentName.COURSE));
+
+        // Assert duration component state
+        assertTrue(recipeStateResponse.getComponentStates().containsKey(ComponentName.DURATION));
+        assertEquals(ComponentState.DATA_UNAVAILABLE, recipeStateResponse.getComponentStates().
+                get(ComponentName.DURATION));
     }
 
     @Test

@@ -7,7 +7,7 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public final class RecipeIdentityModel implements PersistenceModel {
+public final class RecipeIdentityPersistenceModel implements PersistenceModel {
     @Nonnull
     private final String id;
     @Nonnull
@@ -17,11 +17,11 @@ public final class RecipeIdentityModel implements PersistenceModel {
     private final long createDate;
     private final long lastUpdate;
 
-    public RecipeIdentityModel(@Nonnull String id,
-                 @Nonnull String title,
-                 @Nullable String description,
-                 long createDate,
-                 long lastUpdate) {
+    public RecipeIdentityPersistenceModel(@Nonnull String id,
+                                          @Nonnull String title,
+                                          @Nullable String description,
+                                          long createDate,
+                                          long lastUpdate) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -56,7 +56,7 @@ public final class RecipeIdentityModel implements PersistenceModel {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RecipeIdentityModel that = (RecipeIdentityModel) o;
+        RecipeIdentityPersistenceModel that = (RecipeIdentityPersistenceModel) o;
         return createDate == that.createDate &&
                 lastUpdate == that.lastUpdate &&
                 id.equals(that.id) &&
@@ -72,7 +72,7 @@ public final class RecipeIdentityModel implements PersistenceModel {
     @Nonnull
     @Override
     public String toString() {
-        return "RecipeIdentityModel{" +
+        return "RecipeIdentityPersistenceModel{" +
                 "id='" + id + '\'' +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
@@ -88,7 +88,7 @@ public final class RecipeIdentityModel implements PersistenceModel {
         private long createDate;
         private long lastUpdate;
 
-        public static Builder basedOn(@Nonnull RecipeIdentityModel oldModel) {
+        public static Builder basedOn(@Nonnull RecipeIdentityPersistenceModel oldModel) {
             return new Builder().
                     setId(oldModel.getId()).
                     setTitle(oldModel.getTitle()).
@@ -102,8 +102,8 @@ public final class RecipeIdentityModel implements PersistenceModel {
                     setId("").
                     setTitle("").
                     setDescription("").
-                    setCreateDate(0).
-                    setLastUpdate(0);
+                    setCreateDate(0L).
+                    setLastUpdate(0L);
         }
 
         public Builder setId(String id) {
@@ -131,8 +131,8 @@ public final class RecipeIdentityModel implements PersistenceModel {
             return this;
         }
 
-        public RecipeIdentityModel build() {
-            return new RecipeIdentityModel(
+        public RecipeIdentityPersistenceModel build() {
+            return new RecipeIdentityPersistenceModel(
                     id,
                     title,
                     description,

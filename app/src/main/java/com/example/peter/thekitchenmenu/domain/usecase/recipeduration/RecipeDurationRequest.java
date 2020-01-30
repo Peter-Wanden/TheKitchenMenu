@@ -15,11 +15,11 @@ public final class RecipeDurationRequest implements UseCaseCommand.Request {
     @Nonnull
     private final String cloneToRecipeId;
     @Nonnull
-    private final RecipeDurationModel model;
+    private final RecipeDurationRequest.Model model;
 
-    public RecipeDurationRequest(@Nonnull String recipeId,
-                   @Nonnull String cloneToRecipeId,
-                   @Nonnull RecipeDurationModel model) {
+    private RecipeDurationRequest(@Nonnull String recipeId,
+                                 @Nonnull String cloneToRecipeId,
+                                 @Nonnull RecipeDurationRequest.Model model) {
         this.recipeId = recipeId;
         this.cloneToRecipeId = cloneToRecipeId;
         this.model = model;
@@ -36,7 +36,7 @@ public final class RecipeDurationRequest implements UseCaseCommand.Request {
     }
 
     @Nonnull
-    public RecipeDurationModel getModel() {
+    public RecipeDurationRequest.Model getModel() {
         return model;
     }
 
@@ -68,13 +68,13 @@ public final class RecipeDurationRequest implements UseCaseCommand.Request {
     public static class Builder {
         private String recipeId;
         private String cloneToRecipeId;
-        private RecipeDurationModel model;
+        private RecipeDurationRequest.Model model;
 
         public static Builder getDefault() {
             return new Builder().
                     setRecipeId("").
                     setCloneToRecipeId(DO_NOT_CLONE).
-                    setModel(RecipeDurationModel.Builder.
+                    setModel(RecipeDurationRequest.Model.Builder.
                             getDefault().
                             build());
         }
@@ -89,7 +89,7 @@ public final class RecipeDurationRequest implements UseCaseCommand.Request {
             return this;
         }
 
-        public Builder setModel(RecipeDurationModel model) {
+        public Builder setModel(RecipeDurationRequest.Model model) {
             this.model = model;
             return this;
         }
@@ -100,6 +100,114 @@ public final class RecipeDurationRequest implements UseCaseCommand.Request {
                     cloneToRecipeId,
                     model
             );
+        }
+    }
+
+    public static final class Model {
+        private final int prepHours;
+        private final int prepMinutes;
+        private final int cookHours;
+        private final int cookMinutes;
+
+        private Model(int prepHours, int prepMinutes, int cookHours, int cookMinutes) {
+            this.prepHours = prepHours;
+            this.prepMinutes = prepMinutes;
+            this.cookHours = cookHours;
+            this.cookMinutes = cookMinutes;
+        }
+
+        public int getPrepHours() {
+            return prepHours;
+        }
+
+        public int getPrepMinutes() {
+            return prepMinutes;
+        }
+
+        public int getCookHours() {
+            return cookHours;
+        }
+
+        public int getCookMinutes() {
+            return cookMinutes;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Model model = (Model) o;
+            return prepHours == model.prepHours &&
+                    prepMinutes == model.prepMinutes &&
+                    cookHours == model.cookHours &&
+                    cookMinutes == model.cookMinutes;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(prepHours, prepMinutes, cookHours, cookMinutes);
+        }
+
+        @Override
+        public String toString() {
+            return "Model{" +
+                    "prepHours=" + prepHours +
+                    ", prepMinutes=" + prepMinutes +
+                    ", cookHours=" + cookHours +
+                    ", cookMinutes=" + cookMinutes +
+                    '}';
+        }
+
+        public static class Builder {
+            private int prepHours;
+            private int prepMinutes;
+            private int cookHours;
+            private int cookMinutes;
+
+            public static Builder getDefault() {
+                return new Builder().
+                        setPrepHours(0).
+                        setPrepMinutes(0).
+                        setCookHours(0).
+                        setCookMinutes(0);
+            }
+
+            public static Builder basedOnDurationResponseModel(RecipeDurationResponse.Model model) {
+                return new Builder().
+                        setPrepHours(model.getPrepHours()).
+                        setPrepMinutes(model.getPrepMinutes()).
+                        setCookHours(model.getCookHours()).
+                        setCookMinutes(model.getCookMinutes());
+            }
+
+            public Builder setPrepHours(int prepHours) {
+                this.prepHours = prepHours;
+                return this;
+            }
+
+            public Builder setPrepMinutes(int prepMinutes) {
+                this.prepMinutes = prepMinutes;
+                return this;
+            }
+
+            public Builder setCookHours(int cookHours) {
+                this.cookHours = cookHours;
+                return this;
+            }
+
+            public Builder setCookMinutes(int cookMinutes) {
+                this.cookMinutes = cookMinutes;
+                return this;
+            }
+
+            public RecipeDurationRequest.Model build() {
+                return new RecipeDurationRequest.Model(
+                        prepHours,
+                        prepMinutes,
+                        cookHours,
+                        cookMinutes
+                );
+            }
         }
     }
 }

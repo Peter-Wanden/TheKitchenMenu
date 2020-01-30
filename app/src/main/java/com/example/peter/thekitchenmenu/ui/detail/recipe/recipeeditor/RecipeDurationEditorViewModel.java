@@ -74,7 +74,7 @@ public class RecipeDurationEditorViewModel
             executeUseCase(
                     recipeId,
                     DO_NOT_CLONE,
-                    RecipeDurationModel.Builder.
+                    RecipeDurationRequest.Model.Builder.
                             getDefault().
                             build());
         }
@@ -88,7 +88,7 @@ public class RecipeDurationEditorViewModel
             executeUseCase(
                     oldRecipeId,
                     cloneToRecipeId,
-                    RecipeDurationModel.Builder.
+                    RecipeDurationRequest.Model.Builder.
                             getDefault().
                             build());
         }
@@ -206,8 +206,8 @@ public class RecipeDurationEditorViewModel
                     if (prepHoursParsed == MEASUREMENT_ERROR)
                         prepTimeErrorMessage.set(numberFormatExceptionErrorMessage());
                     else {
-                        RecipeDurationModel model = RecipeDurationModel.Builder.
-                                basedOn(useCaseResponse.getModel()).
+                        RecipeDurationRequest.Model model = RecipeDurationRequest.Model.Builder.
+                                basedOnDurationResponseModel(useCaseResponse.getModel()).
                                 setPrepHours(prepHoursParsed).
                                 build();
                         executeUseCase(recipeId, DO_NOT_CLONE, model);
@@ -235,8 +235,8 @@ public class RecipeDurationEditorViewModel
                     if (prepMinutesParsed == MEASUREMENT_ERROR)
                         prepTimeErrorMessage.set(numberFormatExceptionErrorMessage());
                     else {
-                        RecipeDurationModel model = RecipeDurationModel.Builder.
-                                basedOn(useCaseResponse.getModel()).
+                        RecipeDurationRequest.Model model = RecipeDurationRequest.Model.Builder.
+                                basedOnDurationResponseModel(useCaseResponse.getModel()).
                                 setPrepMinutes(prepMinutesParsed).
                                 build();
                         executeUseCase(recipeId, DO_NOT_CLONE, model);
@@ -264,8 +264,8 @@ public class RecipeDurationEditorViewModel
                     if (cookHoursParsed == MEASUREMENT_ERROR)
                         cookTimeErrorMessage.set(numberFormatExceptionErrorMessage());
                     else {
-                        RecipeDurationModel model = RecipeDurationModel.Builder.
-                                basedOn(useCaseResponse.getModel()).
+                        RecipeDurationRequest.Model model = RecipeDurationRequest.Model.Builder.
+                                basedOnDurationResponseModel(useCaseResponse.getModel()).
                                 setCookHours(cookHoursParsed).
                                 build();
                         executeUseCase(recipeId, DO_NOT_CLONE, model);
@@ -293,8 +293,8 @@ public class RecipeDurationEditorViewModel
                     if (cookMinutesParsed == MEASUREMENT_ERROR)
                         cookTimeErrorMessage.set(numberFormatExceptionErrorMessage());
                     else {
-                        RecipeDurationModel model = RecipeDurationModel.Builder.
-                                basedOn(useCaseResponse.getModel()).
+                        RecipeDurationRequest.Model model = RecipeDurationRequest.Model.Builder.
+                                basedOnDurationResponseModel(useCaseResponse.getModel()).
                                 setCookMinutes(cookMinutesParsed).
                                 build();
                         executeUseCase(recipeId, DO_NOT_CLONE, model);
@@ -310,7 +310,7 @@ public class RecipeDurationEditorViewModel
 
     private void executeUseCase(String recipeId,
                                 String cloneToRecipeId,
-                                RecipeDurationModel model) {
+                                RecipeDurationRequest.Model model) {
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                 setRecipeId(recipeId).
                 setCloneToRecipeId(cloneToRecipeId).
