@@ -35,13 +35,12 @@ public class RecipeDuration
     private final TimeProvider timeProvider;
     @Nonnull
     private final RepositoryRecipeDuration repository;
+    @Nonnull
+    private final List<FailReasons> failReasons;
 
     private String recipeId = "";
     private boolean isCloned;
-    private boolean isChanged;
     private boolean isNewRequest;
-    private boolean isValid;
-    private final List<FailReasons> failReasons;
 
     private RecipeDurationPersistenceModel persistenceModel;
     private RecipeDurationRequest.Model requestModel;
@@ -56,9 +55,8 @@ public class RecipeDuration
         MAX_PREP_TIME = maxPrepTime;
         MAX_COOK_TIME = maxCookTime;
 
-        failReasons = new ArrayList<>();
-
         requestModel = RecipeDurationRequest.Model.Builder.getDefault().build();
+        failReasons = new ArrayList<>();
     }
 
     @Override
@@ -80,7 +78,6 @@ public class RecipeDuration
 
     private void extractIds(RecipeDurationRequest request) {
         if (isCloneRequest(request)) {
-            isCloned = true;
             recipeId = request.getCloneToRecipeId();
         } else {
             recipeId = request.getRecipeId();
@@ -89,7 +86,7 @@ public class RecipeDuration
     }
 
     private boolean isCloneRequest(RecipeDurationRequest request) {
-        return !request.getCloneToRecipeId().equals(DO_NOT_CLONE);
+        return isCloned = !request.getCloneToRecipeId().equals(DO_NOT_CLONE);
     }
 
     private void loadData(String recipeId) {
@@ -98,11 +95,10 @@ public class RecipeDuration
 
     @Override
     public void onEntityLoaded(RecipeDurationEntity entity) {
-        isChanged = false;
         persistenceModel = convertEntityToPersistenceModel(entity);
         validateData();
 
-        if (isCloned) {
+        if (isCloned && failReasons.contains(FailReason.NONE)) {
             save(persistenceModel);
             isCloned = false;
         }
@@ -123,6 +119,7 @@ public class RecipeDuration
     public void onDataNotAvailable() {
         persistenceModel = createNewPersistenceModel();
         failReasons.add(FailReason.DATA_UNAVAILABLE);
+
         buildResponse();
     }
 
@@ -136,16 +133,6 @@ public class RecipeDuration
     }
 
     private void processChanges() {
-        int prepTime = getTotalMinutes(requestModel.getPrepHours(), requestModel.getPrepMinutes());
-        int cookTime = getTotalMinutes(requestModel.getCookHours(), requestModel.getCookMinutes());
-
-        if (prepTime != persistenceModel.getPrepTime()) {
-            isChanged = true;
-        }
-        if (cookTime != persistenceModel.getCookTime()) {
-            isChanged = true;
-        }
-        System.out.println(TAG + "processingChanges: isChanged:" + isChanged);
         validateData();
         buildResponse();
     }
@@ -157,25 +144,19 @@ public class RecipeDuration
             prepTime = persistenceModel.getPrepTime();
             cookTime = persistenceModel.getCookTime();
         } else {
-            prepTime = getTotalMinutes(requestModel.getPrepHours(), requestModel.getPrepMinutes());
-            cookTime = getTotalMinutes(requestModel.getCookHours(), requestModel.getCookMinutes());
+            prepTime = getRequestPrepTime();
+            cookTime = getRequestCookTime();
         }
-
-        boolean isPrepTimeValid = prepTime <= MAX_PREP_TIME;
-        boolean isCookTimeValid = cookTime <= MAX_COOK_TIME;
-        if (!isPrepTimeValid) {
+        if (prepTime > MAX_PREP_TIME) {
             failReasons.add(FailReason.INVALID_PREP_TIME);
         }
-        if (!isCookTimeValid) {
+        if (cookTime > MAX_COOK_TIME) {
             failReasons.add(FailReason.INVALID_COOK_TIME);
         }
-
-        isValid = isPrepTimeValid && isCookTimeValid;
-
-        System.out.println(TAG + "validatingData:" +
-                " isPrepTimeValid:" + isPrepTimeValid +
-                " isCookTimeValid:" + isCookTimeValid +
-                " isValid:" + isValid);
+        if (failReasons.isEmpty()) {
+            failReasons.add(FailReason.NONE);
+        }
+        System.out.println(TAG + "validatingData: failReasons:" + failReasons);
     }
 
     private int getHours(int totalTime) {
@@ -191,36 +172,30 @@ public class RecipeDuration
     }
 
     private void buildResponse() {
-
-        RecipeDurationResponse.Builder responseBuilder = new RecipeDurationResponse.Builder().
-                setFailReasons(getFailReasons()
-                );
-
-        if (getComponentState() == ComponentState.VALID_CHANGED) {
-            saveUpdatedModel();
-        }
-
-        responseBuilder.
+        RecipeDurationResponse response = new RecipeDurationResponse.Builder().
                 setState(getComponentState()).
-                setModel(getResponseModel());
+                setFailReasons(new ArrayList<>(failReasons)).
+                setModel(getResponseModel()).build();
 
-        System.out.println(TAG + "buildingResponse:" +
-                " componentState:" + getComponentState());
-
-        sendResponse(responseBuilder.build());
+        if (response.getState() == ComponentState.VALID_CHANGED) {
+            save(updatePersistenceFromRequestModel());
+        }
+        sendResponse(response);
     }
 
     private ComponentState getComponentState() {
+        boolean isValid = failReasons.contains(FailReason.NONE);
+
         if (failReasons.contains(FailReason.DATA_UNAVAILABLE)) {
             return ComponentState.DATA_UNAVAILABLE;
 
-        } else if (!isValid && !isChanged) {
+        } else if (!isValid && !isChanged()) {
             return ComponentState.INVALID_UNCHANGED;
 
-        } else if (isValid && !isChanged) {
+        } else if (isValid && !isChanged()) {
             return ComponentState.VALID_UNCHANGED;
 
-        } else if (!isValid && isChanged) {
+        } else if (!isValid && isChanged()) {
             return ComponentState.INVALID_CHANGED;
 
         } else {
@@ -228,11 +203,24 @@ public class RecipeDuration
         }
     }
 
-    private List<FailReasons> getFailReasons() {
-        if (failReasons.isEmpty()) {
-            failReasons.add(FailReason.NONE);
-        }
-        return new ArrayList<>(failReasons);
+    private boolean isChanged() {
+        return !isNewRequest && (isPrepTimeChanged() || isCookTimeChanged());
+    }
+
+    private boolean isPrepTimeChanged() {
+        return getRequestPrepTime() != persistenceModel.getPrepTime();
+    }
+
+    private boolean isCookTimeChanged() {
+        return getRequestCookTime() != persistenceModel.getCookTime();
+    }
+
+    private int getRequestPrepTime() {
+        return getTotalMinutes(requestModel.getPrepHours(), requestModel.getPrepMinutes());
+    }
+
+    private int getRequestCookTime() {
+        return getTotalMinutes(requestModel.getCookHours(), requestModel.getCookMinutes());
     }
 
     private RecipeDurationResponse.Model getResponseModel() {
@@ -247,7 +235,9 @@ public class RecipeDuration
 
                 setTotalPrepTime(isNewRequest ?
                         persistenceModel.getPrepTime() :
-                        getTotalMinutes(requestModel.getPrepHours(), requestModel.getPrepMinutes())).
+                        getTotalMinutes(
+                                requestModel.getPrepHours(),
+                                requestModel.getPrepMinutes())).
 
                 setCookHours(isNewRequest ?
                         getHours(persistenceModel.getCookTime()) :
@@ -259,7 +249,9 @@ public class RecipeDuration
 
                 setTotalCookTime(isNewRequest ?
                         persistenceModel.getCookTime() :
-                        getTotalMinutes(requestModel.getCookHours(), requestModel.getCookMinutes())).
+                        getTotalMinutes(
+                                requestModel.getCookHours(),
+                                requestModel.getCookMinutes())).
 
                 setTotalTime(isNewRequest ?
                         persistenceModel.getPrepTime() + persistenceModel.getCookTime() :
@@ -287,23 +279,23 @@ public class RecipeDuration
     }
 
     private void resetState() {
-        isChanged = false;
         failReasons.clear();
         isNewRequest = false;
     }
 
-    private void saveUpdatedModel() {
-        RecipeDurationPersistenceModel updatedModel = RecipeDurationPersistenceModel.Builder.
+    private RecipeDurationPersistenceModel updatePersistenceFromRequestModel() {
+        return RecipeDurationPersistenceModel.Builder.
                 basedOnPersistenceModel(persistenceModel).
+
                 setPrepTime(getTotalMinutes(
                         requestModel.getPrepHours(),
                         requestModel.getPrepMinutes())).
+
                 setCookTime(getTotalMinutes(
                         requestModel.getCookHours(),
                         requestModel.getCookMinutes())).
-                setLastUpdate(timeProvider.getCurrentTimeInMills()).build();
 
-        save(updatedModel);
+                setLastUpdate(timeProvider.getCurrentTimeInMills()).build();
     }
 
     private void save(RecipeDurationPersistenceModel model) {

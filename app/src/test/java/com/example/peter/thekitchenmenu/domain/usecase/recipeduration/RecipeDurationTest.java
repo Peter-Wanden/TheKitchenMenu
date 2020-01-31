@@ -70,7 +70,7 @@ public class RecipeDurationTest {
     }
 
     @Test
-    public void startNewRecipeId_componentStateDATA_UNAVAILABLE() {
+    public void startNewId_componentStateDATA_UNAVAILABLE() {
         // Arrange
         String recipeId = VALID_NEW_EMPTY.getId();
         // Act
@@ -81,7 +81,7 @@ public class RecipeDurationTest {
     }
 
     @Test
-    public void startNewRecipeId_invalidPrepHours_invalidValueNotSaved() {
+    public void startNewId_invalidPrepHours_invalidValueNotSaved() {
         // Arrange
         String recipeId = VALID_NEW_EMPTY.getId();
         givenNewModel(recipeId);
@@ -101,7 +101,7 @@ public class RecipeDurationTest {
     }
 
     @Test
-    public void startNewRecipeId_invalidPrepHours_resultINVALID_CHANGED() {
+    public void startNewId_invalidPrepHours_resultINVALID_CHANGED() {
         // Arrange
         String recipeId = VALID_NEW_EMPTY.getId();
         givenNewModel(recipeId);
@@ -122,7 +122,7 @@ public class RecipeDurationTest {
     }
 
     @Test
-    public void startNewRecipeId_invalidPrepHours_FaiReasonINVALID_PREP_TIME() {
+    public void startNewId_invalidPrepHours_FaiReasonINVALID_PREP_TIME() {
         // Arrange
         String recipeId = VALID_NEW_EMPTY.getId();
         givenNewModel(recipeId);
@@ -143,7 +143,7 @@ public class RecipeDurationTest {
     }
 
     @Test
-    public void startNewRecipeId_validPrepHours_resultVALID_CHANGED() {
+    public void startNewId_validPrepHours_resultVALID_CHANGED() {
         // Arrange
         String recipeId = VALID_NEW_EMPTY.getId();
         givenNewModel(recipeId);
@@ -165,7 +165,7 @@ public class RecipeDurationTest {
     }
 
     @Test
-    public void startNewRecipeId_validPrepHours_failReasonNONE() {
+    public void startNewId_validPrepHours_failReasonNONE() {
         // Arrange
         String recipeId = VALID_NEW_EMPTY.getId();
         givenNewModel(recipeId);
@@ -186,7 +186,7 @@ public class RecipeDurationTest {
     }
 
     @Test
-    public void startNewRecipeId_validPrepHours_prepHoursSaved() {
+    public void startNewId_validPrepHours_prepHoursSaved() {
         // Arrange
         String recipeId = VALID_NEW_EMPTY.getId();
         whenTimeProviderCalledReturn(VALID_NEW_PREP_TIME_VALID.getCreateDate());
@@ -208,7 +208,7 @@ public class RecipeDurationTest {
     }
 
     @Test
-    public void startNewRecipeId_invalidPrepMinutes_invalidValueNotSaved() {
+    public void startNewId_invalidPrepMinutes_invalidValueNotSaved() {
         // Arrange
         String recipeId = VALID_NEW_EMPTY.getId();
         givenNewModel(recipeId);
@@ -228,7 +228,7 @@ public class RecipeDurationTest {
     }
 
     @Test
-    public void startNewRecipeId_invalidPrepMinutes_resultINVALID_CHANGED() {
+    public void startNewId_invalidPrepMinutes_resultINVALID_CHANGED() {
         // Arrange
         String recipeId = VALID_NEW_EMPTY.getId();
         givenNewModel(recipeId);
@@ -249,7 +249,7 @@ public class RecipeDurationTest {
     }
 
     @Test
-    public void startNewRecipeId_invalidPrepMinutes_FaiReasonINVALID_PREP_TIME() {
+    public void startNewId_invalidPrepMinutes_FaiReasonINVALID_PREP_TIME() {
         // Arrange
         String recipeId = VALID_NEW_EMPTY.getId();
         givenNewModel(recipeId);
@@ -270,7 +270,7 @@ public class RecipeDurationTest {
     }
 
     @Test
-    public void startNewRecipeId_validPrepMinutes_resultVALID_CHANGED() {
+    public void startNewId_validPrepMinutes_resultVALID_CHANGED() {
         // Arrange
         String recipeId = VALID_NEW_EMPTY.getId();
         givenNewModel(recipeId);
@@ -291,7 +291,7 @@ public class RecipeDurationTest {
     }
 
     @Test
-    public void startNewRecipeId_validPrepMinutes_failReasonNONE() {
+    public void startNewId_validPrepMinutes_failReasonNONE() {
         // Arrange
         String recipeId = VALID_NEW_EMPTY.getId();
         givenNewModel(recipeId);
@@ -312,7 +312,7 @@ public class RecipeDurationTest {
     }
 
     @Test
-    public void startNewRecipeId_validPrepMinutes_prepMinutesSaved() {
+    public void startNewId_validPrepMinutes_prepMinutesSaved() {
         // Arrange
         String recipeId = VALID_NEW_EMPTY.getId();
         whenTimeProviderCalledReturn(VALID_NEW_PREP_TIME_VALID.getCreateDate());
@@ -333,7 +333,7 @@ public class RecipeDurationTest {
     }
 
     @Test
-    public void startNewRecipeId_invalidCookHours_invalidValueNotSaved() {
+    public void startNewId_invalidCookHours_invalidValueNotSaved() {
         // Arrange
         String recipeId = VALID_NEW_EMPTY.getId();
         givenNewModel(recipeId);
@@ -353,7 +353,7 @@ public class RecipeDurationTest {
     }
 
     @Test
-    public void startNewRecipeId_invalidCookHours_resultINVALID_CHANGED() {
+    public void startNewId_invalidCookHours_resultINVALID_CHANGED() {
         // Arrange
         String recipeId = VALID_NEW_EMPTY.getId();
         givenNewModel(recipeId);
@@ -374,7 +374,7 @@ public class RecipeDurationTest {
     }
 
     @Test
-    public void startNewRecipeId_invalidCookHours_failReasonINVALID_COOK_TIME() {
+    public void startNewId_invalidCookHours_failReasonINVALID_COOK_TIME() {
         // Arrange
         String recipeId = VALID_NEW_EMPTY.getId();
         givenNewModel(recipeId);
@@ -395,7 +395,7 @@ public class RecipeDurationTest {
     }
 
     @Test
-    public void startNewRecipeId_validCookHours_validValueSaved() {
+    public void startNewId_validCookHours_validValueSaved() {
         // Arrange
         String recipeId = VALID_NEW_EMPTY.getId();
         whenTimeProviderCalledReturn(VALID_NEW_COOK_TIME_VALID.getCreateDate());
@@ -416,7 +416,7 @@ public class RecipeDurationTest {
     }
 
     @Test
-    public void startNewRecipeId_validCookHours_resultVALID_CHANGED() {
+    public void startNewId_validCookHours_resultVALID_CHANGED() {
         // Arrange
         String recipeId = VALID_NEW_EMPTY.getId();
         givenNewModel(recipeId);
@@ -437,7 +437,7 @@ public class RecipeDurationTest {
     }
 
     @Test
-    public void startNewRecipeId_validCookHours_failReasonNONE() {
+    public void startNewId_validCookHours_failReasonNONE() {
         // Arrange
         String recipeId = VALID_NEW_EMPTY.getId();
         givenNewModel(recipeId);
@@ -458,7 +458,7 @@ public class RecipeDurationTest {
     }
 
     @Test
-    public void startNewRecipeId_invalidCookMinutes_invalidValueNotSaved() {
+    public void startNewId_invalidCookMinutes_invalidValueNotSaved() {
         // Arrange
         String recipeId = VALID_NEW_EMPTY.getId();
         givenNewModel(recipeId);
@@ -478,7 +478,7 @@ public class RecipeDurationTest {
     }
 
     @Test
-    public void startNewRecipeId_invalidCookMinutes_resultINVALID_CHANGED() {
+    public void startNewId_invalidCookMinutes_resultINVALID_CHANGED() {
         // Arrange
         String recipeId = VALID_NEW_EMPTY.getId();
         givenNewModel(recipeId);
@@ -500,7 +500,7 @@ public class RecipeDurationTest {
     }
 
     @Test
-    public void startNewRecipeId_invalidCookMinutes_failReasonINVALID_COOK_TIME() {
+    public void startNewId_invalidCookMinutes_failReasonINVALID_COOK_TIME() {
         // Arrange
         String recipeId = VALID_NEW_EMPTY.getId();
         givenNewModel(recipeId);
@@ -521,7 +521,7 @@ public class RecipeDurationTest {
     }
 
     @Test
-    public void startNewRecipeId_validCookMinutes_validValueSaved() {
+    public void startNewId_validCookMinutes_validValueSaved() {
         // Arrange
         String recipeId = VALID_NEW_EMPTY.getId();
         whenTimeProviderCalledReturn(VALID_NEW_COOK_TIME_VALID.getCreateDate());
@@ -542,7 +542,7 @@ public class RecipeDurationTest {
     }
 
     @Test
-    public void startNewRecipeId_validCookMinutes_resultVALID_CHANGED() {
+    public void startNewId_validCookMinutes_resultVALID_CHANGED() {
         // Arrange
         String recipeId = VALID_NEW_EMPTY.getId();
         givenNewModel(recipeId);
@@ -564,7 +564,7 @@ public class RecipeDurationTest {
     }
 
     @Test
-    public void startNewRecipeId_validCookMinutes_failReasonNONE() {
+    public void startNewId_validCookMinutes_failReasonNONE() {
         // Arrange
         String recipeId = VALID_NEW_EMPTY.getId();
         whenTimeProviderCalledReturn(VALID_NEW_COOK_TIME_VALID.getCreateDate());
@@ -586,7 +586,54 @@ public class RecipeDurationTest {
     }
 
     @Test
-    public void startValidExistingRecipeId_correctValuesReturned() {
+    public void startNewId_invalidPrepTimeInvalidCookTime_failReasonsINVALID_PREP_TIME_INVALID_COOK_TIME() {
+        // Arrange
+        String recipeId = VALID_NEW_EMPTY.getId();
+        givenNewModel(recipeId);
+        RecipeDurationRequest.Model model = RecipeDurationRequest.Model.Builder.
+                basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
+                setPrepHours(MAX_PREP_TIME / 60).setPrepMinutes(1).
+                setCookHours(MAX_COOK_TIME / 60).setCookMinutes(1)
+                .build();
+        RecipeDurationRequest request = new RecipeDurationRequest.Builder().
+                setRecipeId(recipeId).
+                setCloneToRecipeId(DO_NOT_CLONE).
+                setModel(model).
+                build();
+        // Act
+        handler.execute(SUT, request, getUseCaseCallback());
+        // Assert
+        assertEquals(RecipeStateCalculator.ComponentState.INVALID_CHANGED,
+                durationOnErrorResponse.getState());
+        assertEquals(2, durationOnErrorResponse.getFailReasons().size());
+        assertTrue(durationOnErrorResponse.getFailReasons().contains(FailReason.INVALID_PREP_TIME));
+        assertTrue(durationOnErrorResponse.getFailReasons().contains(FailReason.INVALID_COOK_TIME));
+    }
+
+    @Test
+    public void startNewId_validPrepTimeValidCookTime_failReasonsNONE() {
+        // Arrange
+        String recipeId = VALID_NEW_EMPTY.getId();
+        whenTimeProviderCalledReturn(VALID_NEW_COOK_TIME_VALID.getCreateDate());
+        givenNewModel(recipeId);
+        RecipeDurationRequest.Model model = RecipeDurationRequest.Model.Builder.
+                basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
+                setPrepHours(MAX_PREP_TIME / 60 - 1).setPrepMinutes(59).
+                setCookHours(MAX_COOK_TIME / 60 - 1).setCookMinutes(59)
+                .build();
+        RecipeDurationRequest request = new RecipeDurationRequest.Builder().
+                setRecipeId(recipeId).
+                setCloneToRecipeId(DO_NOT_CLONE).
+                setModel(model).
+                build();
+        // Act
+        handler.execute(SUT, request, getUseCaseCallback());
+        // Assert
+        System.out.println(durationOnSuccessResponse);
+    }
+
+    @Test
+    public void startValidExistingId_correctValuesReturned() {
         // Arrange
         String recipeId = VALID_EXISTING_COMPLETE.getId();
         // Act
@@ -597,7 +644,7 @@ public class RecipeDurationTest {
     }
 
     @Test
-    public void startValidExistingRecipeId_resultVALID_UNCHANGED() {
+    public void startValidExistingId_resultVALID_UNCHANGED() {
         // Arrange
         String recipeId = VALID_EXISTING_COMPLETE.getId();
         // Act
@@ -608,13 +655,13 @@ public class RecipeDurationTest {
     }
 
     @Test
-    public void startWithCloned_existingAndNewRecipeId_databaseCalledWithExistingId() {
+    public void startClone_existingAndNewId_databaseCalledWithExistingId() {
         // Act
         givenClonedModel();
     }
 
     @Test
-    public void startWithCloned_existingAndNewRecipeId_existingClonedAndSavedWithNewRecipeId() {
+    public void startClone_existingAndNewId_existingClonedAndSavedWithNewRecipeId() {
         // Arrange
         // Act
         givenClonedModel();
@@ -623,7 +670,7 @@ public class RecipeDurationTest {
     }
 
     @Test
-    public void startWithCloned_prepTimeChanged_savedWithUpdatedPrepTime() {
+    public void startClone_prepTimeChanged_savedWithUpdatedPrepTime() {
         // Arrange
         whenTimeProviderCalledReturn(VALID_NEW_CLONED_PREP_TIME_UPDATED.getCreateDate());
         givenClonedModel();
@@ -644,10 +691,11 @@ public class RecipeDurationTest {
     }
 
     @Test
-    public void startWithCloned_cloneAttemptFromDataUnavailable_componentStateDATA_UNAVAILABLE() {
+    public void startClone_attemptCloneFromDataUnavailable_componentStateDATA_UNAVAILABLE() {
         // Arrange
         String cloneFromRecipeId = VALID_COMPLETE_FROM_ANOTHER_USER.getId();
         String cloneToRecipeId = VALID_NEW_EMPTY.getId();
+        whenTimeProviderCalledReturn(VALID_NEW_EMPTY.getCreateDate());
 
         RecipeDurationRequest request = RecipeDurationRequest.Builder.
                 getDefault().

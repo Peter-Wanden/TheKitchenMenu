@@ -47,16 +47,15 @@ public class RecipeIdentity
     private final UseCaseHandler handler;
     @Nonnull
     private final TextValidator textValidator;
+    @Nonnull
+    private final List<FailReasons> failReasons;
+
+    private String recipeId = "";
+    private boolean isCloned;
+    private boolean isNewRequest;
 
     private RecipeIdentityRequest.Model requestModel;
     private RecipeIdentityPersistenceModel persistenceModel;
-
-    private List<FailReasons> failReasons;
-    private String recipeId = "";
-
-    private boolean isCloned;
-    private boolean isChanged;
-    private boolean isNewRequest;
 
     public RecipeIdentity(@Nonnull RepositoryRecipeIdentity repository,
                           @Nonnull TimeProvider timeProvider,
@@ -68,7 +67,6 @@ public class RecipeIdentity
         this.textValidator = textValidator;
 
         requestModel = RecipeIdentityRequest.Model.Builder.getDefault().build();
-        persistenceModel = RecipeIdentityPersistenceModel.Builder.getDefault().build();
         failReasons = new ArrayList<>();
     }
 
@@ -90,7 +88,6 @@ public class RecipeIdentity
 
     private void extractIds(RecipeIdentityRequest request) {
         if (isCloneRequest(request)) {
-            isCloned = true;
             recipeId = request.getCloneToRecipeId();
         } else {
             recipeId = request.getRecipeId();
@@ -99,7 +96,7 @@ public class RecipeIdentity
     }
 
     private boolean isCloneRequest(RecipeIdentityRequest request) {
-        return !request.getCloneToRecipeId().equals(DO_NOT_CLONE);
+        return isCloned = !request.getCloneToRecipeId().equals(DO_NOT_CLONE);
     }
 
     private void loadData(String recipeId) {
@@ -108,11 +105,10 @@ public class RecipeIdentity
 
     @Override
     public void onEntityLoaded(RecipeIdentityEntity entity) {
-        isChanged = false;
         persistenceModel = convertEntityToPersistenceModel(entity);
         validateData();
 
-        if (isCloned && failReasons.isEmpty()) {
+        if (isCloned && failReasons.contains(FailReason.NONE)) {
             save(persistenceModel);
             isCloned = false;
         }
@@ -134,6 +130,7 @@ public class RecipeIdentity
     public void onDataNotAvailable() {
         persistenceModel = createNewPersistenceModel();
         failReasons.add(FailReason.DATA_UNAVAILABLE);
+
         buildResponse();
     }
 
@@ -148,13 +145,9 @@ public class RecipeIdentity
 
     private void processChanges() {
         System.out.println(TAG + "process changes");
-        if (!persistenceModel.getTitle().equals(requestModel.getTitle().trim())) {
-            isChanged = true;
-        }
-        if (!persistenceModel.getDescription().equals(requestModel.getDescription().trim())) {
-            isChanged = true;
-        }
+
         validateData();
+        buildResponse();
     }
 
     private void validateData() {
@@ -173,7 +166,6 @@ public class RecipeIdentity
                 new TextValidatorModel(title)
         );
         handler.execute(textValidator, request, new UseCase.Callback<TextValidatorResponse>() {
-
             @Override
             public void onSuccess(TextValidatorResponse response) {
                 validateDescription();
@@ -207,8 +199,8 @@ public class RecipeIdentity
         handler.execute(textValidator, request, new UseCase.Callback<TextValidatorResponse>() {
             @Override
             public void onSuccess(TextValidatorResponse response) {
-                if (!isNewRequest) {
-                    buildResponse();
+                if (failReasons.isEmpty()) {
+                    failReasons.add(FailReason.NONE);
                 }
             }
 
@@ -221,36 +213,34 @@ public class RecipeIdentity
                 } else if (failReason == TextValidator.FailReason.TOO_LONG) {
                     failReasons.add(FailReason.DESCRIPTION_TOO_LONG);
                 }
-                if (!isNewRequest) {
-                    buildResponse();
-                }
             }
         });
     }
 
     private void buildResponse() {
-        RecipeIdentityResponse.Builder responseBuilder = new RecipeIdentityResponse.Builder().
-                setFailReasons(getFailReasons());
+        RecipeIdentityResponse response = new RecipeIdentityResponse.Builder().
+                setState(getComponentState()).
+                setFailReasons(new ArrayList<>(failReasons)).
+                setModel(getResponseModel()).
+                build();
 
-        if (getComponentState() == ComponentState.VALID_CHANGED) {
-            saveUpdatedModel();
+        if (response.getState() == ComponentState.VALID_CHANGED) {
+            save(updatePersistenceFromRequestModel());
         }
-
-        responseBuilder.setState(getComponentState()).setModel(getResponseModel());
-        sendResponse(responseBuilder.build());
+        sendResponse(response);
     }
 
-    public ComponentState getComponentState() {
+    private ComponentState getComponentState() {
         if (failReasons.contains(FailReason.DATA_UNAVAILABLE)) {
             return ComponentState.DATA_UNAVAILABLE;
 
-        } else if (!isValid() && !isChanged) {
+        } else if (!isValid() && !isChanged()) {
             return ComponentState.INVALID_UNCHANGED;
 
-        } else if (isValid() && !isChanged) {
+        } else if (isValid() && !isChanged()) {
             return ComponentState.VALID_UNCHANGED;
 
-        } else if (!isValid() && isChanged) {
+        } else if (!isValid() && isChanged()) {
             return ComponentState.INVALID_CHANGED;
 
         } else {
@@ -258,21 +248,25 @@ public class RecipeIdentity
         }
     }
 
-    private List<FailReasons> getFailReasons() {
-        if (failReasons.isEmpty()) {
-            failReasons.add(FailReason.NONE);
-        }
-        return new ArrayList<>(failReasons);
+    private boolean isChanged() {
+        return !isNewRequest && (isTitleChanged() || isDescriptionChanged());
     }
 
-    private void saveUpdatedModel() {
-        persistenceModel = RecipeIdentityPersistenceModel.Builder.
+    private boolean isTitleChanged() {
+        return !persistenceModel.getTitle().equals(requestModel.getTitle().trim());
+    }
+
+    private boolean isDescriptionChanged() {
+        return !persistenceModel.getDescription().equals(requestModel.getDescription().trim());
+    }
+
+    private RecipeIdentityPersistenceModel updatePersistenceFromRequestModel() {
+        return RecipeIdentityPersistenceModel.Builder.
                 basedOn(persistenceModel).
                 setTitle(requestModel.getTitle()).
                 setDescription(requestModel.getDescription()).
                 setLastUpdate(timeProvider.getCurrentTimeInMills()).
                 build();
-        save(persistenceModel);
     }
 
     private RecipeIdentityResponse.Model getResponseModel() {
@@ -300,7 +294,6 @@ public class RecipeIdentity
     }
 
     private void resetState() {
-        isChanged = false;
         failReasons.clear();
         isNewRequest = false;
     }
