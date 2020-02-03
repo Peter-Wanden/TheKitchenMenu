@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipeduration;
+package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration;
 
 import com.example.peter.thekitchenmenu.data.entity.RecipeDurationEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
@@ -39,8 +39,8 @@ public class RecipeDuration
     private final List<FailReasons> failReasons;
 
     private String recipeId = "";
-    private boolean isCloned;
     private boolean isNewRequest;
+    private boolean isCloned;
 
     private RecipeDurationPersistenceModel persistenceModel;
     private RecipeDurationRequest.Model requestModel;
@@ -99,7 +99,7 @@ public class RecipeDuration
         validateData();
 
         if (isCloned && failReasons.contains(FailReason.NONE)) {
-            save(persistenceModel);
+            save();
             isCloned = false;
         }
         buildResponse();
@@ -112,7 +112,8 @@ public class RecipeDuration
                 setPrepTime(entity.getPrepTime()).
                 setCookTime(entity.getCookTime()).
                 setCreateDate(isCloned ? currentTime : entity.getCreateDate()).
-                setLastUpdate(isCloned ? currentTime : entity.getLastUpdate()).build();
+                setLastUpdate(isCloned ? currentTime : entity.getLastUpdate()).
+                build();
     }
 
     @Override
@@ -175,10 +176,12 @@ public class RecipeDuration
         RecipeDurationResponse response = new RecipeDurationResponse.Builder().
                 setState(getComponentState()).
                 setFailReasons(new ArrayList<>(failReasons)).
-                setModel(getResponseModel()).build();
+                setModel(getResponseModel()).
+                build();
 
         if (response.getState() == ComponentState.VALID_CHANGED) {
-            save(updatePersistenceFromRequestModel());
+            persistenceModel = updatePersistenceFromRequestModel();
+            save();
         }
         sendResponse(response);
     }
@@ -221,6 +224,21 @@ public class RecipeDuration
 
     private int getRequestCookTime() {
         return getTotalMinutes(requestModel.getCookHours(), requestModel.getCookMinutes());
+    }
+
+    private RecipeDurationPersistenceModel updatePersistenceFromRequestModel() {
+        return RecipeDurationPersistenceModel.Builder.
+                basedOnPersistenceModel(persistenceModel).
+
+                setPrepTime(getTotalMinutes(
+                        requestModel.getPrepHours(),
+                        requestModel.getPrepMinutes())).
+
+                setCookTime(getTotalMinutes(
+                        requestModel.getCookHours(),
+                        requestModel.getCookMinutes())).
+
+                setLastUpdate(timeProvider.getCurrentTimeInMills()).build();
     }
 
     private RecipeDurationResponse.Model getResponseModel() {
@@ -283,24 +301,9 @@ public class RecipeDuration
         isNewRequest = false;
     }
 
-    private RecipeDurationPersistenceModel updatePersistenceFromRequestModel() {
-        return RecipeDurationPersistenceModel.Builder.
-                basedOnPersistenceModel(persistenceModel).
-
-                setPrepTime(getTotalMinutes(
-                        requestModel.getPrepHours(),
-                        requestModel.getPrepMinutes())).
-
-                setCookTime(getTotalMinutes(
-                        requestModel.getCookHours(),
-                        requestModel.getCookMinutes())).
-
-                setLastUpdate(timeProvider.getCurrentTimeInMills()).build();
-    }
-
-    private void save(RecipeDurationPersistenceModel model) {
-        System.out.println(TAG + "savingPersistenceModel:" + model);
-        repository.save(convertModelToEntity(model));
+    private void save() {
+        System.out.println(TAG + "savingPersistenceModel:" + persistenceModel);
+        repository.save(convertModelToEntity(persistenceModel));
     }
 
     private RecipeDurationEntity convertModelToEntity(RecipeDurationPersistenceModel model) {

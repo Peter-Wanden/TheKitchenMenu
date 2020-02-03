@@ -85,6 +85,7 @@ public class RecipeStateCalculator extends UseCase<RecipeStateRequest, RecipeSta
         requiredComponents.add(ComponentName.IDENTITY);
         requiredComponents.add(ComponentName.COURSE);
         requiredComponents.add(ComponentName.DURATION);
+        requiredComponents.add(ComponentName.PORTIONS);
     }
 
     @Override
@@ -123,8 +124,9 @@ public class RecipeStateCalculator extends UseCase<RecipeStateRequest, RecipeSta
     }
 
     private void addFailReasonMissingModels() {
-        if (!failReasons.contains(FailReason.MISSING_COMPONENTS))
+        if (!failReasons.contains(FailReason.MISSING_COMPONENTS)) {
             failReasons.add(FailReason.MISSING_COMPONENTS);
+        }
     }
 
     private void checkForInvalidComponents() {

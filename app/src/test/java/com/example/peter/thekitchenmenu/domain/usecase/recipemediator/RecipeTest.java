@@ -10,12 +10,13 @@ import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeCourse;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
-import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDurationRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentity;
@@ -24,10 +25,14 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.Rec
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourseRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourseResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDuration;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDurationResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDuration;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDurationResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDurationTest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityTest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions.RecipePortions;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions.RecipePortionsRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions.RecipePortionsResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortionsTest;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
@@ -41,7 +46,6 @@ import org.junit.*;
 import org.mockito.*;
 
 import java.util.HashMap;
-import java.util.List;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe.DO_NOT_CLONE;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
@@ -69,10 +73,10 @@ public class RecipeTest {
 
     private static final RecipeEntity VALID_EXISTING_RECIPE =
             TestDataRecipeEntity.getValidExisting();
-    private static final RecipeDurationEntity VALID_EXISTING_COMPLETE_DURATION =
-            TestDataRecipeDurationEntity.getValidExistingComplete();
     private static final RecipeIdentityEntity VALID_EXISTING_COMPLETE_IDENTITY =
             TestDataRecipeIdentityEntity.getValidExistingTitleValidDescriptionValid();
+    private static final RecipeDurationEntity VALID_EXISTING_COMPLETE_DURATION =
+            TestDataRecipeDurationEntity.getValidExistingComplete();
     private static final RecipePortionsEntity VALID_EXISTING_PORTIONS =
             TestDataRecipePortionsEntity.getExistingValidNinePortions();
 
@@ -92,6 +96,10 @@ public class RecipeTest {
     @Captor
     ArgumentCaptor<DataSource.GetEntityCallback<RecipeDurationEntity>> repoDurationCallback;
     @Mock
+    RepositoryRecipePortions repoPortionsMock;
+    @Captor
+    ArgumentCaptor<DataSource.GetEntityCallback<RecipePortionsEntity>> repoPortionsCallback;
+    @Mock
     TimeProvider timeProviderMock;
     @Mock
     UniqueIdProvider idProvider;
@@ -105,20 +113,24 @@ public class RecipeTest {
     private RecipeClient recipeClientListener2;
 
     private Recipe SUT;
-    private RecipeResponse recipeOnSuccessResponse;
-    private RecipeResponse recipeOnErrorResponse;
+    private RecipeResponse recipeOnSuccess;
+    private RecipeResponse recipeOnError;
 
-    private RecipeIdentity recipeIdentity;
-    private RecipeIdentityResponse identityOnSuccessResponse;
-    private RecipeIdentityResponse identityOnErrorResponse;
+    private RecipeIdentity identity;
+    private RecipeIdentityResponse identityOnSuccess;
+    private RecipeIdentityResponse identityOnError;
 
-    private RecipeCourse recipeCourse;
-    private RecipeCourseResponse courseOnSuccessResponse;
-    private RecipeCourseResponse courseOnErrorResponse;
+    private RecipeCourse course;
+    private RecipeCourseResponse courseOnSuccess;
+    private RecipeCourseResponse courseOnError;
 
-    private RecipeDuration recipeDuration;
-    private RecipeDurationResponse durationOnSuccessResponse;
-    private RecipeDurationResponse durationOnErrorResponse;
+    private RecipeDuration duration;
+    private RecipeDurationResponse durationOnSuccess;
+    private RecipeDurationResponse durationOnError;
+
+    private RecipePortions portions;
+    private RecipePortionsResponse portionsOnSuccess;
+    private RecipePortionsResponse portionsOnError;
 
     // endregion helper fields ---------------------------------------------------------------------
 
@@ -140,29 +152,37 @@ public class RecipeTest {
         UseCaseHandler handler = new UseCaseHandler(new UseCaseSchedulerMock());
         this.handler = handler;
 
-        recipeIdentity = new RecipeIdentity(
+        identity = new RecipeIdentity(
                 repoIdentityMock,
                 timeProviderMock,
                 handler,
                 textValidator
         );
 
-        recipeCourse = new RecipeCourse(
+        course = new RecipeCourse(
                 repoCourseMock,
                 idProvider,
                 timeProviderMock
         );
 
-        recipeDuration = new RecipeDuration(
+        duration = new RecipeDuration(
                 repoDurationMock,
                 timeProviderMock,
                 RecipeDurationTest.MAX_PREP_TIME,
                 RecipeDurationTest.MAX_COOK_TIME
         );
 
+        portions = new RecipePortions(
+                repoPortionsMock,
+                idProvider,
+                timeProviderMock,
+                RecipePortionsTest.MAX_SERVINGS,
+                RecipePortionsTest.MAX_SITTINGS
+        );
+
         RecipeStateCalculator stateCalculator = new RecipeStateCalculator();
 
-        return new Recipe(handler, stateCalculator, recipeIdentity, recipeCourse, recipeDuration);
+        return new Recipe(handler, stateCalculator, identity, course, duration, portions);
     }
 
     // todo - test for clone, delete and favorite as separate macro commands
@@ -181,6 +201,7 @@ public class RecipeTest {
         verifyIdentityDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
         verifyCoursesDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
         verifyDurationDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
+        verifyPortionsDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
     }
 
     @Test
@@ -197,6 +218,7 @@ public class RecipeTest {
         verifyIdentityDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
         verifyCoursesDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
         verifyDurationDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
+        verifyPortionsDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
 
         // Assert recipe listener updated with correct recipe state
         verify(recipeClientListener1).recipeStateChanged(recipeStateCaptor.capture());
@@ -204,7 +226,7 @@ public class RecipeTest {
 
         // Assert recipe state updated
         assertEquals(RecipeState.DATA_UNAVAILABLE, recipeStateResponse.getState());
-        assertEquals(3, recipeStateResponse.getComponentStates().size());
+        assertEquals(4, recipeStateResponse.getComponentStates().size());
 
         // Assert identity component status
         assertTrue(recipeStateResponse.getComponentStates().containsKey(ComponentName.IDENTITY));
@@ -220,6 +242,11 @@ public class RecipeTest {
         assertTrue(recipeStateResponse.getComponentStates().containsKey(ComponentName.DURATION));
         assertEquals(ComponentState.DATA_UNAVAILABLE, recipeStateResponse.getComponentStates().
                 get(ComponentName.DURATION));
+
+        // Assert portions component state
+        assertTrue(recipeStateResponse.getComponentStates().containsKey(ComponentName.PORTIONS));
+        assertEquals(ComponentState.DATA_UNAVAILABLE, recipeStateResponse.getComponentStates().get(
+                ComponentName.PORTIONS));
     }
 
     @Test
@@ -235,10 +262,12 @@ public class RecipeTest {
         // Assert database calls
         verifyIdentityDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
         verifyCoursesDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
+        verifyDurationDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
+        verifyPortionsDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
 
         // Assert, request originator updated with recipe response
-        assertEquals(RecipeState.DATA_UNAVAILABLE, recipeOnErrorResponse.getRecipeState());
-        assertTrue(recipeOnErrorResponse.getFailReasons().contains(FailReason.MISSING_COMPONENTS));
+        assertEquals(RecipeState.DATA_UNAVAILABLE, recipeOnError.getRecipeState());
+        assertTrue(recipeOnError.getFailReasons().contains(FailReason.MISSING_COMPONENTS));
     }
 
     @Test
@@ -254,20 +283,40 @@ public class RecipeTest {
         // Assert database calls
         verifyIdentityDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
         verifyCoursesDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
+        verifyDurationDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
+        verifyPortionsDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
 
         // Assert response from identity component
-        ComponentState identityState = recipeOnErrorResponse.getIdentityResponse().getState();
-        assertEquals(ComponentState.DATA_UNAVAILABLE, identityState);
-        List<FailReasons> identityFails = recipeOnErrorResponse.getIdentityResponse().getFailReasons();
-        assertEquals(1, identityFails.size());
-        assertTrue(identityFails.contains(RecipeIdentity.FailReason.DATA_UNAVAILABLE));
+        RecipeIdentityResponse identityResponse = (RecipeIdentityResponse) recipeOnError.
+                getComponentResponses().get(ComponentName.IDENTITY);
+        assertEquals(ComponentState.DATA_UNAVAILABLE, identityResponse.getState());
+        assertEquals(1, identityResponse.getFailReasons().size());
+        assertTrue(identityResponse.getFailReasons().contains(
+                RecipeIdentity.FailReason.DATA_UNAVAILABLE));
 
         // Assert response from courses component
-        ComponentState coursesState = recipeOnErrorResponse.getCourseResponse().getState();
-        assertEquals(ComponentState.DATA_UNAVAILABLE, coursesState);
-        List<FailReasons> coursesFails = recipeOnErrorResponse.getCourseResponse().getFailReasons();
-        assertEquals(1, coursesFails.size());
-        assertTrue(coursesFails.contains(RecipeCourse.FailReason.NO_COURSES_SET));
+        RecipeCourseResponse courseResponse = (RecipeCourseResponse) recipeOnError.
+                getComponentResponses().get(ComponentName.COURSE);
+        assertEquals(ComponentState.DATA_UNAVAILABLE, courseResponse.getState());
+        assertEquals(1, courseResponse.getFailReasons().size());
+        assertTrue(courseResponse.getFailReasons().contains(
+                RecipeCourse.FailReason.DATA_UNAVAILABLE));
+
+        // Assert response from duration component
+        RecipeDurationResponse durationResponse = (RecipeDurationResponse) recipeOnError.
+                getComponentResponses().get(ComponentName.DURATION);
+        assertEquals(ComponentState.DATA_UNAVAILABLE, durationResponse.getState());
+        assertEquals(1, courseResponse.getFailReasons().size());
+        assertTrue(durationResponse.getFailReasons().contains(
+                RecipeDuration.FailReason.DATA_UNAVAILABLE));
+
+        // Assert response from
+        RecipePortionsResponse portionResponse = (RecipePortionsResponse) recipeOnError.
+                getComponentResponses().get(ComponentName.PORTIONS);
+        assertEquals(ComponentState.DATA_UNAVAILABLE, portionResponse.getState());
+        assertEquals(1, portionResponse.getFailReasons().size());
+        assertTrue(portionResponse.getFailReasons().contains(
+                RecipePortions.FailReason.DATA_UNAVAILABLE));
     }
 
     @Test
@@ -285,6 +334,9 @@ public class RecipeTest {
         // Assert
         verifyIdentityDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
         verifyCoursesDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
+        verifyDurationDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
+        verifyPortionsDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
+
     }
 
     @Test
@@ -302,6 +354,46 @@ public class RecipeTest {
         // Assert
         verifyIdentityDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
         verifyCoursesDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
+        verifyDurationDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
+        verifyPortionsDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
+    }
+
+    @Test
+    public void durationRequestNewId_initialRequest_invokerIssuesCommandToAllReceivers() {
+        // Arrange
+        String recipeId = INVALID_NEW.getId();
+        RecipeDurationRequest durationRequest = RecipeDurationRequest.Builder.getDefault().
+                setRecipeId(recipeId).
+                build();
+
+        // Act
+        SUT.registerClientListener(recipeClientListener1);
+        handler.execute(SUT, durationRequest, getCallback());
+
+        // Assert
+        verifyIdentityDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
+        verifyCoursesDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
+        verifyDurationDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
+        verifyPortionsDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
+    }
+
+    @Test
+    public void portionsRequestNewId_initialRequest_invokerIssuesCommandToAllReceivers() {
+        // Arrange
+        String recipeId = INVALID_NEW.getId();
+        RecipePortionsRequest portionsRequest = RecipePortionsRequest.Builder.getDefault().
+                setRecipeId(recipeId).
+                build();
+
+        // Act
+        SUT.registerClientListener(recipeClientListener1);
+        handler.execute(SUT, portionsRequest, getCallback());
+
+        // Assert
+        verifyIdentityDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
+        verifyCoursesDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
+        verifyDurationDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
+        verifyPortionsDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
     }
 
     @Test
@@ -311,7 +403,7 @@ public class RecipeTest {
         ArgumentCaptor<RecipeIdentityEntity> identityEntity = ArgumentCaptor.forClass(RecipeIdentityEntity.class);
         whenTimeProviderReturnTime(IDENTITY_VALID_NEW_COMPLETE.getCreateDate());
 
-        // Act - Request/Response 1
+        // Act - Request/Response 1 - new request
         RecipeIdentityRequest firstRequest = RecipeIdentityRequest.Builder.
                 getDefault().
                 setRecipeId(recipeId).
@@ -320,11 +412,13 @@ public class RecipeTest {
         handler.execute(SUT, firstRequest, getCallback());
         verifyIdentityDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
         verifyCoursesDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
+        verifyDurationDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
+        verifyPortionsDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
 
-        // Request/Response 2
+        // Request/Response 2 - existing request
         String validTitle = IDENTITY_VALID_NEW_COMPLETE.getTitle();
         RecipeIdentityRequest.Model validTitleModel = RecipeIdentityRequest.Model.Builder.
-                basedOn(identityOnErrorResponse.getModel()).
+                basedOn(identityOnError.getModel()).
                 setTitle(validTitle).
                 build();
         RecipeIdentityRequest validTitleRequest = new RecipeIdentityRequest.Builder().
@@ -337,7 +431,7 @@ public class RecipeTest {
         // Request/Response 3
         String validDescription = IDENTITY_VALID_NEW_COMPLETE.getDescription();
         RecipeIdentityRequest.Model validTitleDescriptionModel = RecipeIdentityRequest.Model.Builder.
-                basedOn(identityOnSuccessResponse.getModel()).
+                basedOn(identityOnSuccess.getModel()).
                 setDescription(validDescription).
                 build();
         RecipeIdentityRequest validDescriptionRequest = new RecipeIdentityRequest.Builder().
@@ -354,13 +448,13 @@ public class RecipeTest {
         assertEquals(IDENTITY_VALID_NEW_COMPLETE, identityEntity.getValue());
 
         // Assert identity component response values
-        assertEquals(validTitle, identityOnSuccessResponse.getModel().getTitle());
-        assertEquals(validDescription, identityOnSuccessResponse.getModel().getDescription());
+        assertEquals(validTitle, identityOnSuccess.getModel().getTitle());
+        assertEquals(validDescription, identityOnSuccess.getModel().getDescription());
 
         // Assert identity component state
-        assertEquals(ComponentState.VALID_CHANGED, identityOnSuccessResponse.getState());
-        assertEquals(1, identityOnSuccessResponse.getFailReasons().size());
-        assertTrue(identityOnSuccessResponse.getFailReasons().contains(RecipeIdentity.FailReason.NONE));
+        assertEquals(ComponentState.VALID_CHANGED, identityOnSuccess.getState());
+        assertEquals(1, identityOnSuccess.getFailReasons().size());
+        assertTrue(identityOnSuccess.getFailReasons().contains(RecipeIdentity.FailReason.NONE));
 
         // Assert client listeners updated
         verify(recipeClientListener1, times((2))).recipeStateChanged(recipeStateCaptor.capture());
@@ -392,6 +486,8 @@ public class RecipeTest {
         // Assert
         verifyIdentityDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
         verifyCoursesDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
+        verifyDurationDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
+        verifyPortionsDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
 
         // Arrange
         RecipeCourseRequest addCourseRequest = new RecipeCourseRequest.Builder().
@@ -409,7 +505,14 @@ public class RecipeTest {
         assertEquals(expectedCourseEntity, actualCourseEntity.getValue());
 
         // Assert courses response
-        assertEquals(ComponentState.VALID_CHANGED, recipeOnErrorResponse.getCourseResponse().getState());
+        RecipeCourseResponse response = (RecipeCourseResponse) recipeOnError.
+                getComponentResponses().get(ComponentName.COURSE);
+        assertEquals(ComponentState.VALID_CHANGED, response.getState());
+
+        // Assert listener updated
+        verify(recipeClientListener1, times((2))).recipeStateChanged(recipeStateCaptor.capture());
+        assertEquals(ComponentState.VALID_CHANGED, recipeStateCaptor.getValue().
+                getComponentStates().get(ComponentName.COURSE));
     }
 
     @Test
@@ -424,11 +527,16 @@ public class RecipeTest {
         SUT.unRegisterClientListener(recipeClientListener2);
         handler.execute(SUT, request, getCallback());
 
-        // Assert database called and return data
+        // Assert database called and return valid data for all components
         verify(repoIdentityMock).getById(eq(recipeId), repoIdentityCallback.capture());
         repoIdentityCallback.getValue().onEntityLoaded(VALID_EXISTING_COMPLETE_IDENTITY);
         verify(repoCourseMock).getCoursesForRecipe(eq(recipeId), repoCourseCallback.capture());
         repoCourseCallback.getValue().onAllLoaded(TestDataRecipeCourseEntity.getAllByRecipeId(recipeId));
+        verify(repoDurationMock).getById(eq(recipeId), repoDurationCallback.capture());
+        repoDurationCallback.getValue().onEntityLoaded(VALID_EXISTING_COMPLETE_DURATION);
+        verify(repoPortionsMock).getPortionsForRecipe(eq(recipeId), repoPortionsCallback.capture());
+        repoPortionsCallback.getValue().onEntityLoaded(VALID_EXISTING_PORTIONS);
+
 
         // Assert listeners called
         verify(recipeClientListener1).recipeStateChanged(any(RecipeStateResponse.class));
@@ -450,10 +558,15 @@ public class RecipeTest {
         repoIdentityCallback.getValue().onEntityLoaded(VALID_EXISTING_COMPLETE_IDENTITY);
         verify(repoCourseMock).getCoursesForRecipe(eq(recipeId), repoCourseCallback.capture());
         repoCourseCallback.getValue().onAllLoaded(TestDataRecipeCourseEntity.getAllByRecipeId(recipeId));
+        verify(repoDurationMock).getById(eq(recipeId), repoDurationCallback.capture());
+        repoDurationCallback.getValue().onEntityLoaded(VALID_EXISTING_COMPLETE_DURATION);
+        verify(repoPortionsMock).getPortionsForRecipe(eq(recipeId), repoPortionsCallback.capture());
+        repoPortionsCallback.getValue().onEntityLoaded(VALID_EXISTING_PORTIONS);
 
         // Assert listeners called
         verify(recipeClientListener1).recipeStateChanged(recipeStateCaptor.capture());
         verify(recipeClientListener2).recipeStateChanged(recipeStateCaptor.capture());
+
 
         // Assert recipe component states
         HashMap<ComponentName, ComponentState> componentStates = recipeStateCaptor.getValue().
@@ -478,10 +591,15 @@ public class RecipeTest {
         repoIdentityCallback.getValue().onEntityLoaded(VALID_EXISTING_COMPLETE_IDENTITY);
         verify(repoCourseMock).getCoursesForRecipe(eq(recipeId), repoCourseCallback.capture());
         repoCourseCallback.getValue().onAllLoaded(TestDataRecipeCourseEntity.getAllByRecipeId(recipeId));
+        verify(repoDurationMock).getById(eq(recipeId), repoDurationCallback.capture());
+        repoDurationCallback.getValue().onEntityLoaded(VALID_EXISTING_COMPLETE_DURATION);
+        verify(repoPortionsMock).getPortionsForRecipe(eq(recipeId), repoPortionsCallback.capture());
+        repoPortionsCallback.getValue().onEntityLoaded(VALID_EXISTING_PORTIONS);
 
         // Assert listeners called
         verify(recipeClientListener1).recipeStateChanged(recipeStateCaptor.capture());
         verify(recipeClientListener2).recipeStateChanged(recipeStateCaptor.capture());
+
 
         // Assert correct recipe state
         RecipeState recipeState = recipeStateCaptor.getValue().getState();
@@ -501,6 +619,10 @@ public class RecipeTest {
         verify(repoDurationMock).getById(eq(recipeId), repoDurationCallback.capture());
         repoDurationCallback.getValue().onDataNotAvailable();
     }
+    private void verifyPortionsDatabaseCalledWithIdAndReturnDataUnavailable(String recipeId) {
+        verify(repoPortionsMock).getPortionsForRecipe(eq(recipeId), repoPortionsCallback.capture());
+        repoPortionsCallback.getValue().onDataNotAvailable();
+    }
 
     private UseCase.Callback<RecipeResponse> getCallback() {
         return new UseCase.Callback<RecipeResponse>() {
@@ -509,9 +631,15 @@ public class RecipeTest {
             public void onSuccess(RecipeResponse response) {
                 if (response != null) {
                     System.out.println(TAG + "recipeResponseOnSuccess: " + response);
-                    recipeOnSuccessResponse = response;
-                    identityOnSuccessResponse = response.getIdentityResponse();
-                    courseOnSuccessResponse = response.getCourseResponse();
+                    recipeOnSuccess = response;
+                    identityOnSuccess = (RecipeIdentityResponse) response.getComponentResponses().
+                            get(ComponentName.IDENTITY);
+                    courseOnSuccess = (RecipeCourseResponse) response.getComponentResponses().
+                            get(ComponentName.COURSE);
+                    durationOnSuccess = (RecipeDurationResponse) response.getComponentResponses().
+                            get(ComponentName.DURATION);
+                    portionsOnSuccess = (RecipePortionsResponse) response.getComponentResponses().
+                            get(ComponentName.PORTIONS);
                 }
             }
 
@@ -519,20 +647,38 @@ public class RecipeTest {
             public void onError(RecipeResponse response) {
                 if (response != null) {
                     System.out.println(TAG + "recipeResponseOnError: " + response);
-                    recipeOnErrorResponse = response;
+                    recipeOnError = response;
 
-                    if (response.getIdentityResponse().getFailReasons().
-                            contains(RecipeIdentity.FailReason.NONE)) {
-                        identityOnSuccessResponse = response.getIdentityResponse();
+                    RecipeIdentityResponse identityResponse = (RecipeIdentityResponse)
+                            response.getComponentResponses().get(ComponentName.IDENTITY);
+                    if (identityResponse.getFailReasons().contains(RecipeIdentity.FailReason.NONE)) {
+                        identityOnSuccess = identityResponse;
                     } else {
-                        identityOnErrorResponse = response.getIdentityResponse();
+                        identityOnError = identityResponse;
                     }
 
-                    if (response.getCourseResponse().getFailReasons().
-                            contains(RecipeCourse.FailReason.NONE)) {
-                        courseOnSuccessResponse = response.getCourseResponse();
+                    RecipeCourseResponse courseResponse = (RecipeCourseResponse)
+                            response.getComponentResponses().get(ComponentName.COURSE);
+                    if (courseResponse.getFailReasons().contains(RecipeCourse.FailReason.NONE)) {
+                        courseOnSuccess = courseResponse;
                     } else {
-                        courseOnErrorResponse = response.getCourseResponse();
+                        courseOnError = courseResponse;
+                    }
+
+                    RecipeDurationResponse durationResponse = (RecipeDurationResponse)
+                            response.getComponentResponses().get(ComponentName.DURATION);
+                    if (durationResponse.getFailReasons().contains(RecipeDuration.FailReason.NONE)) {
+                        durationOnSuccess = durationResponse;
+                    } else {
+                        durationOnError = durationResponse;
+                    }
+
+                    RecipePortionsResponse portionsResponse = (RecipePortionsResponse)
+                            response.getComponentResponses().get(ComponentName.PORTIONS);
+                    if (portionsResponse.getFailReasons().contains(RecipePortions.FailReason.NONE)) {
+                        portionsOnSuccess = portionsResponse;
+                    } else {
+                        portionsOnError = portionsResponse;
                     }
                 }
             }

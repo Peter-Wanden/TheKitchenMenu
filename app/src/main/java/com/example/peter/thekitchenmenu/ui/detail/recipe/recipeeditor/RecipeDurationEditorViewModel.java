@@ -9,17 +9,16 @@ import androidx.databinding.library.baseAdapters.BR;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseCommand;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDurationModel;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDurationRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDuration;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDurationResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDurationRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDuration;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDurationResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
 import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 
 import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe.DO_NOT_CLONE;
-import static com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDuration.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDuration.*;
 
 public class RecipeDurationEditorViewModel
         extends

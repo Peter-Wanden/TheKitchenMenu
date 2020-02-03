@@ -1,42 +1,36 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe;
 
 import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseCommand;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentityResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourseResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDurationResponse;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
+
 public class RecipeResponse implements UseCaseCommand.Response {
     @Nonnull
-    private final RecipeStateCalculator.RecipeState recipeState;
+    private final RecipeState recipeState;
     @Nonnull
     private final List<FailReasons> failReasons;
     @Nonnull
-    private final RecipeIdentityResponse identityResponse;
-    @Nonnull
-    private final RecipeCourseResponse courseResponse;
-    @Nonnull
-    private final RecipeDurationResponse durationResponse;
+    private final HashMap<ComponentName, Response> componentResponses;
 
-    public RecipeResponse(@Nonnull RecipeStateCalculator.RecipeState recipeState,
+    public RecipeResponse(@Nonnull RecipeState recipeState,
                           @Nonnull List<FailReasons> failReasons,
-                          @Nonnull RecipeIdentityResponse identityResponse,
-                          @Nonnull RecipeCourseResponse courseResponse,
-                          @Nonnull RecipeDurationResponse durationResponse) {
+                          @Nonnull HashMap<ComponentName, Response> componentResponses) {
         this.recipeState = recipeState;
         this.failReasons = failReasons;
-        this.identityResponse = identityResponse;
-        this.courseResponse = courseResponse;
-        this.durationResponse = durationResponse;
+        this.componentResponses = componentResponses;
     }
 
     @Nonnull
-    public RecipeStateCalculator.RecipeState getRecipeState() {
+    public RecipeState getRecipeState() {
         return recipeState;
     }
 
@@ -46,29 +40,31 @@ public class RecipeResponse implements UseCaseCommand.Response {
     }
 
     @Nonnull
-    public RecipeIdentityResponse getIdentityResponse() {
-        return identityResponse;
+    public HashMap<ComponentName, Response> getComponentResponses() {
+        return componentResponses;
     }
 
-    @Nonnull
-    public RecipeCourseResponse getCourseResponse() {
-        return courseResponse;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RecipeResponse that = (RecipeResponse) o;
+        return recipeState == that.recipeState &&
+                failReasons.equals(that.failReasons) &&
+                componentResponses.equals(that.componentResponses);
     }
 
-    @Nonnull
-    public RecipeDurationResponse getDurationResponse() {
-        return durationResponse;
+    @Override
+    public int hashCode() {
+        return Objects.hash(recipeState, failReasons, componentResponses);
     }
 
-    @Nonnull
     @Override
     public String toString() {
         return "RecipeResponse{" +
                 "recipeState=" + recipeState +
                 ", failReasons=" + failReasons +
-                ", identityResponse=" + identityResponse +
-                ", courseResponse=" + courseResponse +
-                ", durationResponse=" + durationResponse +
+                ", componentResponses=" + componentResponses +
                 '}';
     }
 }

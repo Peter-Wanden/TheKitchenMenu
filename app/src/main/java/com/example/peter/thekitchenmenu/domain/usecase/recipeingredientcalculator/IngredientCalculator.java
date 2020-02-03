@@ -17,6 +17,8 @@ import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasur
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
+import javax.annotation.Nonnull;
+
 /**
  * Calculates the measurement of an ingredient for a single portion of a recipe.
  */
@@ -37,22 +39,30 @@ public class IngredientCalculator
         RESULT_OK
     }
 
-    private RepositoryRecipeIngredient recipeIngredientRepository;
-    private RepositoryRecipePortions portionsRepository;
-    private RepositoryIngredient ingredientRepository;
-    private UniqueIdProvider idProvider;
+    @Nonnull
+    private final RepositoryRecipeIngredient recipeIngredientRepository; // TODO - Use the use cases for this data
+    @Nonnull
+    private final RepositoryRecipePortions portionsRepository; // TODO - Or use a recipe instance
+    @Nonnull
+    private final RepositoryIngredient ingredientRepository; // TODO - for all three??
+    @Nonnull
+    private final UniqueIdProvider idProvider;
+    @Nonnull
     private TimeProvider timeProvider;
 
     private UnitOfMeasure unitOfMeasure;
     private boolean conversionFactorChanged;
     private boolean isConversionFactorSet;
+
+    private boolean totalUnitOneChanged;
+    private boolean totalUnitTwoChanged;
+    private boolean isTotalUnitOneSet;
+    private boolean isTotalUnitTwoSet;
+
+    private boolean isItemBaseUnitsSet;
+
     private boolean portionsChanged;
     private boolean isPortionsSet;
-    private boolean isItemBaseUnitsSet;
-    private boolean totalUnitOneChanged;
-    private boolean isTotalUnitOneSet;
-    private boolean totalUnitTwoChanged;
-    private boolean isTotalUnitTwoSet;
 
     private String recipeId = "";
     private String ingredientId = "";
@@ -64,11 +74,11 @@ public class IngredientCalculator
     private RecipeIngredientQuantityEntity quantityEntity;
     private IngredientEntity ingredientEntity;
 
-    public IngredientCalculator(RepositoryRecipePortions portionsRepository,
-                                RepositoryRecipeIngredient recipeIngredientRepository,
-                                RepositoryIngredient ingredientRepository,
-                                UniqueIdProvider idProvider,
-                                TimeProvider timeProvider) {
+    public IngredientCalculator(@Nonnull RepositoryRecipePortions portionsRepository,
+                                @Nonnull RepositoryRecipeIngredient recipeIngredientRepository,
+                                @Nonnull RepositoryIngredient ingredientRepository,
+                                @Nonnull UniqueIdProvider idProvider,
+                                @Nonnull TimeProvider timeProvider) {
         this.portionsRepository = portionsRepository;
         this.recipeIngredientRepository = recipeIngredientRepository;
         this.ingredientRepository = ingredientRepository;
@@ -194,7 +204,6 @@ public class IngredientCalculator
     }
 
     private void setupUnitOfMeasure() {
-
         int subtypeAsInt = quantityEntity.getUnitOfMeasureSubtype();
         MeasurementSubtype subType = MeasurementSubtype.fromInt(subtypeAsInt);
 
@@ -256,14 +265,13 @@ public class IngredientCalculator
     }
 
     private boolean isConversionFactorChanged() {
-        if (Double.compare(modelIn.getConversionFactor(), unitOfMeasure.getConversionFactor()) !=0) {
-            return conversionFactorChanged = true;
-        }
-        return false;
+        return conversionFactorChanged = Double.compare(
+                modelIn.getConversionFactor(),
+                unitOfMeasure.getConversionFactor())
+                != 0;
     }
 
     private void processConversionFactor() {
-        conversionFactorChanged = true;
         isConversionFactorSet = unitOfMeasure.isConversionFactorSet(
                 modelIn.getConversionFactor());
 
@@ -277,10 +285,10 @@ public class IngredientCalculator
     }
 
     private boolean isTotalUnitOneChanged() {
-        if (Double.compare(modelIn.getTotalUnitOne(), unitOfMeasure.getTotalUnitOne()) != 0) {
-            return totalUnitOneChanged = true;
-        }
-        return false;
+        return totalUnitOneChanged = Double.compare(
+                modelIn.getTotalUnitOne(),
+                unitOfMeasure.getTotalUnitOne())
+                != 0;
     }
 
     private void processTotalMeasurementOne() {
@@ -288,10 +296,7 @@ public class IngredientCalculator
     }
 
     private boolean isTotalUnitTwoChanged() {
-        if (modelIn.getTotalUnitTwo() != unitOfMeasure.getTotalUnitTwo()) {
-            return totalUnitTwoChanged = true;
-        }
-        return false;
+        return totalUnitTwoChanged = modelIn.getTotalUnitTwo() != unitOfMeasure.getTotalUnitTwo();
     }
 
     private void processTotalMeasurementTwo() {

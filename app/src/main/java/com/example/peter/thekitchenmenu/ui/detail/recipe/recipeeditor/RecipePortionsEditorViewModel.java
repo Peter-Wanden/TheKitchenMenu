@@ -9,10 +9,9 @@ import androidx.databinding.library.baseAdapters.BR;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseCommand;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortions;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortionsModel;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortionsRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortionsResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions.RecipePortions;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions.RecipePortionsRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions.RecipePortionsResponse;
 import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 
 import javax.annotation.Nonnull;
@@ -49,6 +48,7 @@ public class RecipePortionsEditorViewModel
 
     private boolean dataLoading;
     private boolean updatingUi;
+    private String recipeId;
 
     public RecipePortionsEditorViewModel(@Nonnull UseCaseHandler handler,
                                          @Nonnull RecipePortions useCase,
@@ -68,42 +68,24 @@ public class RecipePortionsEditorViewModel
 
     @Override
     public void start(String recipeId) {
-        if (isNewInstantiationOrRecipeIdChanged(recipeId)) {
-            executeUseCase(
-                    recipeId,
-                    DO_NOT_CLONE,
-                    new RecipePortionsModel.Builder().
-                            getDefault().
-                            build());
-        }
+        this.recipeId = recipeId;
+        RecipePortionsRequest request = RecipePortionsRequest.Builder.
+                getDefault().
+                setRecipeId(recipeId).
+                build();
+
+        handler.execute(useCase, request, this);
     }
 
     @Override
     public void startByCloningModel(String cloneFromRecipeId, String cloneToRecipeId) {
-        if (isNewInstantiationOrRecipeIdChanged(cloneToRecipeId)) {
-            executeUseCase(
-                    cloneFromRecipeId,
-                    cloneToRecipeId,
-                    new RecipePortionsModel.Builder().
-                            getDefault().
-                            build());
-        }
-    }
+        recipeId = cloneToRecipeId;
 
-    private boolean isNewInstantiationOrRecipeIdChanged(String recipeId) {
-        return !useCaseResponse.getModel().getId().equals(recipeId);
-    }
-
-    private void executeUseCase(String recipeId,
-                                String cloneToRecipeId,
-                                RecipePortionsModel model) {
-        RecipePortionsRequest request = new RecipePortionsRequest.Builder().
-                setRecipeId(recipeId).
+        RecipePortionsRequest request = RecipePortionsRequest.Builder.
+                getDefault().
+                setRecipeId(cloneFromRecipeId).
                 setCloneToRecipeId(cloneToRecipeId).
-                setModel(model).
                 build();
-
-        dataLoading = true;
         handler.execute(useCase, request, this);
     }
 
@@ -167,11 +149,16 @@ public class RecipePortionsEditorViewModel
                 if (servingsParsed == MEASUREMENT_ERROR)
                     servingsErrorMessage.set(numberFormatExceptionErrorMessage());
                 else {
-                    RecipePortionsModel model = RecipePortionsModel.Builder.basedOn(
-                            useCaseResponse.getModel()).
+                    RecipePortionsRequest.Model model = new RecipePortionsRequest.Model.Builder().
                             setServings(servingsParsed).
+                            setSittings(useCaseResponse.getModel().getSittings()).
                             build();
-                    executeUseCase(useCaseResponse.getModel().getRecipeId(), DO_NOT_CLONE, model);
+                    RecipePortionsRequest request = new RecipePortionsRequest.Builder().
+                            setRecipeId(recipeId).
+                            setCloneToRecipeId(DO_NOT_CLONE).
+                            setModel(model).build();
+
+                    handler.execute(useCase, request, this);
                 }
             }
         }
@@ -210,11 +197,16 @@ public class RecipePortionsEditorViewModel
                 if (sittingsParsed == MEASUREMENT_ERROR)
                     sittingsErrorMessage.set(numberFormatExceptionErrorMessage());
                 else {
-                    RecipePortionsModel model = RecipePortionsModel.Builder.basedOn(
-                            useCaseResponse.getModel()).
-                            setSittings(sittingsParsed).
+                    RecipePortionsRequest.Model model = new RecipePortionsRequest.Model.Builder().
+                            setServings(useCaseResponse.getModel().getServings()).
+                            setSittings(sittingsParsed).build();
+
+                    RecipePortionsRequest request = new RecipePortionsRequest.Builder().
+                            setRecipeId(recipeId).
+                            setCloneToRecipeId(DO_NOT_CLONE).
+                            setModel(model).
                             build();
-                    executeUseCase(useCaseResponse.getModel().getRecipeId(), DO_NOT_CLONE, model);
+                    handler.execute(useCase, request, this);
                 }
             }
         }

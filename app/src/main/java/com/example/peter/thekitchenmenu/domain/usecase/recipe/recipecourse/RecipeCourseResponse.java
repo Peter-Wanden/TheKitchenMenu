@@ -105,7 +105,7 @@ public final class RecipeCourseResponse implements UseCaseCommand.Response {
 
         private static List<FailReasons> getDefaultFailReason() {
             List<FailReasons> defaultFailReason = new LinkedList<>();
-            defaultFailReason.add(RecipeCourse.FailReason.NO_COURSES_SET);
+            defaultFailReason.add(RecipeCourse.FailReason.DATA_UNAVAILABLE);
             return defaultFailReason;
         }
     }

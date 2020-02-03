@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipeportions;
+package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions;
 
 import com.example.peter.thekitchenmenu.domain.model.PersistenceModel;
 
@@ -6,10 +6,7 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortions.MIN_SERVINGS;
-import static com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortions.MIN_SITTINGS;
-
-public final class RecipePortionsModel implements PersistenceModel {
+public final class RecipePortionsPersistenceModel implements PersistenceModel {
     @Nonnull
     private final String id;
     @Nonnull
@@ -19,12 +16,12 @@ public final class RecipePortionsModel implements PersistenceModel {
     private final long createDate;
     private final long lastUpdate;
 
-    private RecipePortionsModel(@Nonnull String id,
-                  @Nonnull String recipeId,
-                  int servings,
-                  int sittings,
-                  long createDate,
-                  long lastUpdate) {
+    private RecipePortionsPersistenceModel(@Nonnull String id,
+                                           @Nonnull String recipeId,
+                                           int servings,
+                                           int sittings,
+                                           long createDate,
+                                           long lastUpdate) {
         this.id = id;
         this.recipeId = recipeId;
         this.servings = servings;
@@ -64,7 +61,7 @@ public final class RecipePortionsModel implements PersistenceModel {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RecipePortionsModel model = (RecipePortionsModel) o;
+        RecipePortionsPersistenceModel model = (RecipePortionsPersistenceModel) o;
         return servings == model.servings &&
                 sittings == model.sittings &&
                 createDate == model.createDate &&
@@ -81,7 +78,7 @@ public final class RecipePortionsModel implements PersistenceModel {
     @Nonnull
     @Override
     public String toString() {
-        return "RecipePortionsModel{" +
+        return "RecipePortionsPersistenceModel{" +
                 "id='" + id + '\'' +
                 ", recipeId='" + recipeId + '\'' +
                 ", servings=" + servings +
@@ -99,7 +96,7 @@ public final class RecipePortionsModel implements PersistenceModel {
         private long createDate;
         private long lastUpdate;
 
-        public static Builder basedOn(@Nonnull RecipePortionsModel oldModel) {
+        public static Builder basedOnPersistenceModel(@Nonnull RecipePortionsPersistenceModel oldModel) {
             return new Builder().
                     setId(oldModel.getId()).
                     setRecipeId(oldModel.getRecipeId()).
@@ -113,8 +110,8 @@ public final class RecipePortionsModel implements PersistenceModel {
             return new Builder().
                     setId("").
                     setRecipeId("").
-                    setServings(MIN_SERVINGS).
-                    setSittings(MIN_SITTINGS).
+                    setServings(RecipePortions.MIN_SERVINGS).
+                    setSittings(RecipePortions.MIN_SITTINGS).
                     setCreateDate(0L).
                     setLastUpdate(0L);
         }
@@ -149,8 +146,8 @@ public final class RecipePortionsModel implements PersistenceModel {
             return this;
         }
 
-        public RecipePortionsModel build() {
-            return new RecipePortionsModel(
+        public RecipePortionsPersistenceModel build() {
+            return new RecipePortionsPersistenceModel(
                     id,
                     recipeId,
                     servings,

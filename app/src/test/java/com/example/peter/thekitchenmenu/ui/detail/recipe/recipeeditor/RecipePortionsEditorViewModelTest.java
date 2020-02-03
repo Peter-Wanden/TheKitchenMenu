@@ -8,7 +8,7 @@ import com.example.peter.thekitchenmenu.data.entity.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortions;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions.RecipePortions;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipePortionsEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeValidator;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
@@ -39,11 +39,11 @@ public class RecipePortionsEditorViewModelTest {
     private final RecipePortionsEntity NEW_EMPTY =
             TestDataRecipePortionsEntity.getNewValidEmpty();
     private final RecipePortionsEntity NEW_INVALID =
-            TestDataRecipePortionsEntity.getNewInvalidServingsInvalidSittings();
+            TestDataRecipePortionsEntity.getNewInvalidTooHighServingsInvalidTooHighSittings();
     private final RecipePortionsEntity NEW_INVALID_SERVINGS_VALID_SITTINGS =
-            TestDataRecipePortionsEntity.getNewInvalidServingsValidSittings();
+            TestDataRecipePortionsEntity.getNewInvalidTooHighServingsValidSittings();
     private final RecipePortionsEntity NEW_VALID_SERVINGS_INVALID_SITTINGS =
-            TestDataRecipePortionsEntity.getNewValidServingsInvalidSittings();
+            TestDataRecipePortionsEntity.getNewValidServingsInvalidTooHighSittings();
     private final RecipePortionsEntity NEW_VALID =
             TestDataRecipePortionsEntity.getNewValidServingsValidSittings();
     private final RecipePortionsEntity EXISTING_VALID =

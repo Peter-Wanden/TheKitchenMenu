@@ -8,19 +8,22 @@ import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.entity.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipeDurationEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
+import com.example.peter.thekitchenmenu.data.entity.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeCourse;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseFactory;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDuration;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDuration;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDurationTest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityTest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions.RecipePortions;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortionsTest;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIdentityEntity;
@@ -100,6 +103,10 @@ public class RecipeIdentityEditorViewModelTest {
     @Captor
     ArgumentCaptor<DataSource.GetEntityCallback<RecipeDurationEntity>> repoDurationCallback;
     @Mock
+    RepositoryRecipePortions repoPortionsMock;
+    @Captor
+    ArgumentCaptor<DataSource.GetAllCallback<RecipePortionsEntity>> repoPortionsCallback;
+    @Mock
     TimeProvider timeProviderMock;
     @Mock
     UniqueIdProvider idProviderMock;
@@ -107,8 +114,6 @@ public class RecipeIdentityEditorViewModelTest {
     RecipeValidation.RecipeValidatorModelSubmission modelValidationSubmitterMock;
     @Captor
     ArgumentCaptor<RecipeComponentStateModel> statusCaptor;
-    @Mock
-    UseCaseFactory useCaseFactoryMock;
 
     private int shortTextMinLength = 3;
     private int shortTextMaxLength = 70;
@@ -146,22 +151,30 @@ public class RecipeIdentityEditorViewModelTest {
                 identityTextValidator
         );
 
-        RecipeCourse recipeCourse = new RecipeCourse(
+        RecipeCourse courses = new RecipeCourse(
                 repoCourseMock,
                 idProviderMock,
                 timeProviderMock
         );
 
-        RecipeDuration recipeDuration = new RecipeDuration(
+        RecipeDuration duration = new RecipeDuration(
                 repoDurationMock,
                 timeProviderMock,
                 RecipeDurationTest.MAX_PREP_TIME,
                 RecipeDurationTest.MAX_COOK_TIME
         );
 
+        RecipePortions portions = new RecipePortions(
+                repoPortionsMock,
+                idProviderMock,
+                timeProviderMock,
+                RecipePortionsTest.MAX_SERVINGS,
+                RecipePortionsTest.MAX_SITTINGS
+        );
+
         RecipeStateCalculator stateCalculator = new RecipeStateCalculator();
 
-        Recipe recipe = new Recipe(handler, stateCalculator, identity, recipeCourse, recipeDuration);
+        Recipe recipe = new Recipe(handler, stateCalculator, identity, courses, duration, portions);
 
         return new RecipeIdentityEditorViewModel(
                 handler,

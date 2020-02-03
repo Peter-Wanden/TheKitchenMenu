@@ -8,10 +8,9 @@ import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentityRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentityResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortions;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortionsModel;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortionsRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortionsResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions.RecipePortions;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions.RecipePortionsRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions.RecipePortionsResponse;
 
 public class RecipeNameAndPortionsViewModel extends ViewModel {
 
@@ -87,13 +86,9 @@ public class RecipeNameAndPortionsViewModel extends ViewModel {
         });
     }
 
-    private void setPortionsToView(RecipePortionsModel model) {
+    private void setPortionsToView(RecipePortionsResponse.Model model) {
         servingsObservable.set(String.valueOf(model.getServings()));
         sittingsObservable.set(String.valueOf(model.getSittings()));
-        portionsObservable.set(String.valueOf(calculatePortions(model)));
-    }
-
-    private int calculatePortions(RecipePortionsModel model) {
-        return model.getServings() * model.getSittings();
+        portionsObservable.set(String.valueOf(model.getPortions()));
     }
 }

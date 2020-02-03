@@ -50,7 +50,7 @@ public class TestDataRecipePortionsEntity {
         );
     }
 
-    public static RecipePortionsEntity getNewInvalidServingsInvalidSittings() {
+    public static RecipePortionsEntity getNewInvalidTooHighServingsInvalidTooHighSittings() {
         return new RecipePortionsEntity(
                 getNewValidEmpty().getId(),
                 TestDataRecipeEntity.getNewInvalid().getId(),
@@ -61,7 +61,7 @@ public class TestDataRecipePortionsEntity {
         );
     }
 
-    public static RecipePortionsEntity getNewInvalidServingsValidSittings() {
+    public static RecipePortionsEntity getNewInvalidTooHighServingsValidSittings() {
         return new RecipePortionsEntity(
                 getNewValidEmpty().getId(),
                 TestDataRecipeEntity.getNewInvalid().getId(),
@@ -72,7 +72,7 @@ public class TestDataRecipePortionsEntity {
         );
     }
 
-    public static RecipePortionsEntity getNewValidServingsInvalidSittings() {
+    public static RecipePortionsEntity getNewValidServingsInvalidTooHighSittings() {
         return new RecipePortionsEntity(
                 getNewValidEmpty().getId(),
                 TestDataRecipeEntity.getNewInvalid().getId(),
@@ -94,7 +94,7 @@ public class TestDataRecipePortionsEntity {
         );
     }
 
-    public static RecipePortionsEntity getExistingInvalid() {
+    public static RecipePortionsEntity getExistingInvalidTooHighSittingsInvalidTooHighServings() {
         return new RecipePortionsEntity(
                 "validExistingPortionId",
                 TestDataRecipeEntity.getValidExisting().getId(),

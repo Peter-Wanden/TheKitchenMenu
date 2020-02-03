@@ -184,7 +184,7 @@ public class RecipeCourseTest {
         // Assert
         assertEquals(ComponentState.INVALID_CHANGED, onErrorResponse.getState());
         assertTrue(onErrorResponse.getCourseList().isEmpty());
-        assertTrue(onErrorResponse.getFailReasons().contains(RecipeCourse.FailReason.NO_COURSES_SET));
+        assertTrue(onErrorResponse.getFailReasons().contains(RecipeCourse.FailReason.DATA_UNAVAILABLE));
     }
 
     @Test

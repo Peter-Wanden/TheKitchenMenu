@@ -231,16 +231,18 @@ public class RecipeIdentity
     }
 
     private ComponentState getComponentState() {
+        boolean isValid = failReasons.contains(FailReason.NONE);
+
         if (failReasons.contains(FailReason.DATA_UNAVAILABLE)) {
             return ComponentState.DATA_UNAVAILABLE;
 
-        } else if (!isValid() && !isChanged()) {
+        } else if (!isValid && !isChanged()) {
             return ComponentState.INVALID_UNCHANGED;
 
-        } else if (isValid() && !isChanged()) {
+        } else if (isValid && !isChanged()) {
             return ComponentState.VALID_UNCHANGED;
 
-        } else if (!isValid() && isChanged()) {
+        } else if (!isValid && isChanged()) {
             return ComponentState.INVALID_CHANGED;
 
         } else {
@@ -298,15 +300,10 @@ public class RecipeIdentity
         isNewRequest = false;
     }
 
-    private boolean isValid() {
-        return failReasons.contains(FailReason.NONE);
-    }
-
     private void save(RecipeIdentityPersistenceModel model) {
         repository.save(convertModelToEntity(model));
     }
 
-    // todo - move model / entity conversions to the data layer
     private RecipeIdentityEntity convertModelToEntity(RecipeIdentityPersistenceModel model) {
         return new RecipeIdentityEntity(
                 model.getId(),
