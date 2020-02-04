@@ -7,9 +7,11 @@ import com.example.peter.thekitchenmenu.commonmocks.StringMaker;
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.entity.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipeDurationEntity;
+import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipe;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeCourse;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
@@ -90,6 +92,10 @@ public class RecipeIdentityEditorViewModelTest {
     // region helper fields ------------------------------------------------------------------------
     @Mock
     Resources resourcesMock;
+    @Mock
+    RepositoryRecipe repoRecipeMock;
+    @Captor
+    ArgumentCaptor<DataSource.GetEntityCallback<RecipeEntity>> repoRecipeCallback;
     @Mock
     RepositoryRecipeIdentity repoIdentityMock;
     @Captor
@@ -174,7 +180,14 @@ public class RecipeIdentityEditorViewModelTest {
 
         RecipeStateCalculator stateCalculator = new RecipeStateCalculator();
 
-        Recipe recipe = new Recipe(handler, stateCalculator, identity, courses, duration, portions);
+        Recipe recipe = new Recipe(
+                repoRecipeMock,
+                handler,
+                stateCalculator,
+                identity,
+                courses,
+                duration,
+                portions);
 
         return new RecipeIdentityEditorViewModel(
                 handler,

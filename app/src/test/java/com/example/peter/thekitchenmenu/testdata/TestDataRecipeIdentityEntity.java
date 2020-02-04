@@ -291,26 +291,13 @@ public class TestDataRecipeIdentityEntity {
         );
     }
 
-    public static RecipeIdentityEntity getRecipeIdentityEntityById(String recipeId) {
+    public static List<RecipeIdentityEntity> getValidIdentityEntities() {
         List<RecipeIdentityEntity> entityList = new ArrayList<>();
-        entityList.add(getInvalidNewEmpty());
-        entityList.add(getInvalidNewTitleTooShortDescriptionDefault());
-        entityList.add(getInvalidNewTitleTooShortDescriptionValid());
-        entityList.add(getValidNewTitleValidDescriptionDefault());
         entityList.add(getValidNewComplete());
-        entityList.add(getInvalidExistingTitleTooShortDefaultDescription());
         entityList.add(getValidExistingTitleValidDescriptionValid());
         entityList.add(getValidCompleteFromAnotherUser());
-        entityList.add(getInvalidFromAnotherUser());
         entityList.add(getValidCompleteAfterCloned());
-        entityList.add(getValidAfterInvalidClonedData());
         entityList.add(getValidClonedDescriptionUpdated());
-
-        for (RecipeIdentityEntity entity : entityList) {
-            if (entity.getId().equals(recipeId)) {
-                return entity;
-            }
-        }
-        return null;
+        return entityList;
     }
 }

@@ -11,11 +11,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.RecipeListItemBinding;
+import com.example.peter.thekitchenmenu.domain.usecase.recipelist.RecipeListItemModel;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.example.peter.thekitchenmenu.domain.usecase.recipeidentityandduration.RecipeIdentityAndDurationList.*;
 
 public class RecipeCatalogAllRecyclerAdapter
         extends RecyclerView.Adapter<RecipeCatalogAllRecyclerAdapter.ViewHolder>
@@ -25,8 +24,8 @@ public class RecipeCatalogAllRecyclerAdapter
             + ":";
 
     private final RecipeCatalogViewModel viewModel;
-    private List<ListItemModel> recipeModelList;
-    private List<ListItemModel> recipeModelListFull;
+    private List<RecipeListItemModel> recipeModelList;
+    private List<RecipeListItemModel> recipeModelListFull;
 
     RecipeCatalogAllRecyclerAdapter(RecipeCatalogViewModel viewModel) {
         this.viewModel = viewModel;
@@ -47,7 +46,7 @@ public class RecipeCatalogAllRecyclerAdapter
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        final ListItemModel listItemModel = recipeModelList.get(position);
+        final RecipeListItemModel listItemModel = recipeModelList.get(position);
         holder.bind(listItemModel);
     }
 
@@ -66,14 +65,14 @@ public class RecipeCatalogAllRecyclerAdapter
     private Filter filterResults = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
-            List<ListItemModel> filteredList = new ArrayList<>();
+            List<RecipeListItemModel> filteredList = new ArrayList<>();
 
             if (constraint == null || constraint.length() == 0) {
                 filteredList.addAll(recipeModelListFull);
             } else {
                 String filterPattern = constraint.toString().toLowerCase().trim();
 
-                for (ListItemModel model : recipeModelListFull) {
+                for (RecipeListItemModel model : recipeModelListFull) {
                     String title = model.getRecipeName().toLowerCase();
 
                     if (title.contains(filterPattern)) {
@@ -95,11 +94,11 @@ public class RecipeCatalogAllRecyclerAdapter
     };
 
     /* Getter for the current list of recipes */
-    public List<ListItemModel> getRecipes() {
+    public List<RecipeListItemModel> getRecipes() {
         return recipeModelList;
     }
 
-    void setRecipeModels(List<ListItemModel> recipeModelList) {
+    void setRecipeModels(List<RecipeListItemModel> recipeModelList) {
         this.recipeModelList = recipeModelList;
         recipeModelListFull = new ArrayList<>(recipeModelList);
         notifyDataSetChanged();
@@ -111,17 +110,17 @@ public class RecipeCatalogAllRecyclerAdapter
 
         RecipeItemUserActionsListener listener = new RecipeItemUserActionsListener() {
             @Override
-            public void onRecipeClicked(ListItemModel listItemModel) {
+            public void onRecipeClicked(RecipeListItemModel listItemModel) {
                 viewModel.viewRecipe(listItemModel);
             }
 
             @Override
-            public void onAddToFavoritesClicked(ListItemModel listItemModel) {
+            public void onAddToFavoritesClicked(RecipeListItemModel listItemModel) {
                 viewModel.addToFavorites(listItemModel);
             }
 
             @Override
-            public void onRemoveFromFavoritesClicked(ListItemModel listItemModel) {
+            public void onRemoveFromFavoritesClicked(RecipeListItemModel listItemModel) {
                 viewModel.removeFromFavorites(listItemModel);
             }
         };
@@ -131,7 +130,7 @@ public class RecipeCatalogAllRecyclerAdapter
             this.binding = binding;
         }
 
-        void bind(ListItemModel recipeModel) {
+        void bind(RecipeListItemModel recipeModel) {
             binding.setRecipeModel(recipeModel);
             binding.setListener(listener);
             binding.executePendingBindings();

@@ -55,7 +55,7 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
                             application,
                             UseCaseFactory.getInstance(application),
                             UseCaseHandler.getInstance(),
-                            DatabaseInjection.provideRecipesDataSource(
+                            DatabaseInjection.provideRecipeDataSource(
                                     application.getApplicationContext()
                             )
                     );

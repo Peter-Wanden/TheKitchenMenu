@@ -10,7 +10,7 @@
 
         <variable
             name="recipeModel"
-            type="com.example.peter.thekitchenmenu.domain.usecase.recipeidentityandduration.RecipeIdentityAndDurationList.ListItemModel" />
+            type="com.example.peter.thekitchenmenu.domain.usecase.recipelist.RecipeListItemModel" />
 
         <variable
             name="listener"

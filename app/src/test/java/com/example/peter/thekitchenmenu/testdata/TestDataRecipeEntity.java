@@ -3,6 +3,9 @@ package com.example.peter.thekitchenmenu.testdata;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TestDataRecipeEntity {
 
     // Create new recipe, or used when cloning
@@ -99,6 +102,15 @@ public class TestDataRecipeEntity {
                 getNewInvalid().getLastUpdate(),
                 true
         );
+    }
+
+    public static List<RecipeEntity> getAllRecipeEntities() {
+        List<RecipeEntity> recipes = new ArrayList<>();
+        recipes.add(getNewValid());
+        recipes.add(getValidExisting());
+        recipes.add(getValidFromAnotherUser());
+        recipes.add(getValidNewCloned());
+        return recipes;
     }
 }
 

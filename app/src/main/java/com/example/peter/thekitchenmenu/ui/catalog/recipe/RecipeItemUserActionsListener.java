@@ -1,15 +1,15 @@
 package com.example.peter.thekitchenmenu.ui.catalog.recipe;
 
-import com.example.peter.thekitchenmenu.domain.usecase.recipeidentityandduration.RecipeIdentityAndDurationList;
+import com.example.peter.thekitchenmenu.domain.usecase.recipelist.RecipeListItemModel;
 
 /**
- * Listener used with data binding to process user actions on a recipe in a catalog list
+ * RecipeClientListener used with data binding to process user actions on a recipe in a catalog list
  */
 public interface RecipeItemUserActionsListener {
 
-    void onRecipeClicked(RecipeIdentityAndDurationList.ListItemModel listItemModel);
+    void onRecipeClicked(RecipeListItemModel listItemModel);
 
-    void onAddToFavoritesClicked(RecipeIdentityAndDurationList.ListItemModel listItemModel);
+    void onAddToFavoritesClicked(RecipeListItemModel listItemModel);
 
-    void onRemoveFromFavoritesClicked(RecipeIdentityAndDurationList.ListItemModel listItemModel);
+    void onRemoveFromFavoritesClicked(RecipeListItemModel listItemModel);
 }

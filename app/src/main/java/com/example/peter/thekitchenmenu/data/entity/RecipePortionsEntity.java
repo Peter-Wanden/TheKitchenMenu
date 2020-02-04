@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey;
 import java.util.Objects;
 
 @Entity(tableName = RecipePortionsEntity.TABLE_RECIPE_PORTIONS)
-public class RecipePortionsEntity implements TkmEntity {
+public final class RecipePortionsEntity implements TkmEntity {
 
     public static final String TABLE_RECIPE_PORTIONS = "recipePortions";
     public static final String ID = "id";

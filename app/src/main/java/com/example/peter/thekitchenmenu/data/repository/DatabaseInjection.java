@@ -5,7 +5,6 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
-import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.IngredientLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.RecipeIngredientLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.RecipePortionsLocalDataSource;
@@ -30,7 +29,7 @@ import static androidx.core.util.Preconditions.checkNotNull;
 
 public class DatabaseInjection {
 
-    public static RepositoryProduct provideProductsDataSource(
+    public static RepositoryProduct provideProductDataSource(
             @NonNull Context context) {
         checkNotNull(context);
 
@@ -39,10 +38,11 @@ public class DatabaseInjection {
         return RepositoryProduct.getInstance(
                 ProductRemoteDataSource.getInstance(),
                 ProductLocalDataSource.getInstance(
-                        new AppExecutors(), database.productEntityDao()));
+                        new AppExecutors(), database.productEntityDao())
+        );
     }
 
-    public static RepositoryFavoriteProduct provideFavoritesProductsDataSource(
+    public static RepositoryFavoriteProduct provideFavoriteProductsDataSource(
             @NonNull Context context) {
         checkNotNull(context);
 
@@ -52,18 +52,21 @@ public class DatabaseInjection {
                         FavoriteProductsRemoteDataSource.getInstance(),
                         FavoriteProductsLocalDataSource.getInstance(
                                 new AppExecutors(),
-                                database.favoriteProductEntityDao()));
+                                database.favoriteProductEntityDao())
+        );
     }
 
-    public static RepositoryRecipe provideRecipesDataSource(
-            @NonNull Context context) {
+    public static RepositoryRecipe provideRecipeDataSource(@NonNull Context context) {
         checkNotNull(context);
 
         TKMDatabase database = TKMDatabase.getInstance(context, new AppExecutors());
 
         return RepositoryRecipe.getInstance(
                 RecipeRemoteDataSource.getInstance(),
-                RecipeLocalDataSource.getInstance(new AppExecutors(), database.recipeEntityDao()));
+                RecipeLocalDataSource.getInstance(
+                        new AppExecutors(),
+                        database.recipeEntityDao())
+        );
     }
 
     public static RepositoryRecipeCourse provideRecipeCourseDataSource(
@@ -76,7 +79,8 @@ public class DatabaseInjection {
                 RecipeCourseRemoteDataSource.getInstance(),
                 RecipeCourseLocalDataSource.getInstance(
                         new AppExecutors(),
-                        database.recipeCourseEntityDao()));
+                        database.recipeCourseEntityDao())
+        );
     }
 
     public static RepositoryRecipeIdentity provideRecipeIdentityDataSource(
@@ -89,7 +93,8 @@ public class DatabaseInjection {
                 RecipeIdentityRemoteDataSource.getInstance(),
                 RecipeIdentityLocalDataSource.getInstance(
                         new AppExecutors(),
-                        database.recipeIdentityEntityDao()));
+                        database.recipeIdentityEntityDao())
+        );
     }
 
     public static RepositoryRecipeDuration provideRecipeDurationDataSource(
@@ -102,7 +107,8 @@ public class DatabaseInjection {
                 RecipeDurationRemoteDataSource.getInstance(),
                 RecipeDurationLocalDataSource.getInstance(
                         new AppExecutors(),
-                        database.recipeDurationEntityDao()));
+                        database.recipeDurationEntityDao())
+        );
     }
 
     public static RepositoryIngredient provideIngredientDataSource(@NonNull Context context) {
@@ -114,7 +120,8 @@ public class DatabaseInjection {
                 IngredientRemoteDataSource.getInstance(),
                 IngredientLocalDataSource.getInstance(
                         new AppExecutors(),
-                        database.ingredientEntityDao()));
+                        database.ingredientEntityDao())
+        );
     }
 
     public static RepositoryRecipePortions provideRecipePortionsDataSource(
@@ -127,7 +134,8 @@ public class DatabaseInjection {
                 RecipePortionsRemoteDataSource.getInstance(),
                 RecipePortionsLocalDataSource.getInstance(
                         new AppExecutors(),
-                        database.recipePortionsEntityDao()));
+                        database.recipePortionsEntityDao())
+        );
     }
 
     public static RepositoryRecipeIngredient provideRecipeIngredientDataSource(
@@ -140,6 +148,7 @@ public class DatabaseInjection {
                 RecipeIngredientRemoteDataSource.getInstance(),
                 RecipeIngredientLocalDataSource.getInstance(
                         new AppExecutors(),
-                        database.recipeIngredientEntityDao()));
+                        database.recipeIngredientEntityDao())
+        );
     }
 }

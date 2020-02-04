@@ -38,7 +38,7 @@ public class IngredientCalculator
         INVALID_MEASUREMENT,
         RESULT_OK
     }
-
+    // TODO -------------------------- USE A RECIPE FOR THE DATA HERE ---------------------- TODO //
     @Nonnull
     private final RepositoryRecipeIngredient recipeIngredientRepository; // TODO - Use the use cases for this data
     @Nonnull
@@ -58,8 +58,6 @@ public class IngredientCalculator
     private boolean totalUnitTwoChanged;
     private boolean isTotalUnitOneSet;
     private boolean isTotalUnitTwoSet;
-
-    private boolean isItemBaseUnitsSet;
 
     private boolean portionsChanged;
     private boolean isPortionsSet;
@@ -211,12 +209,7 @@ public class IngredientCalculator
         setConversionFactor();
         setPortions();
 
-        if (quantityEntity.getItemBaseUnits() > 0) {
-            isItemBaseUnitsSet = unitOfMeasure.isItemBaseUnitsSet(
-                    quantityEntity.getItemBaseUnits());
-        }
-
-        if (isItemBaseUnitsSet) {
+        if (unitOfMeasure.isItemBaseUnitsSet(quantityEntity.getItemBaseUnits())) {
             isTotalUnitOneSet = true;
             isTotalUnitTwoSet = true;
         }

@@ -1,7 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecase.productcatalog;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -47,9 +46,9 @@ public class ProductCatalogInteractorImpl implements ProductCatalogInteractor {
             synchronized (ProductCatalogInteractorImpl.class) {
                 if (INSTANCE == null) {
                     INSTANCE = new ProductCatalogInteractorImpl(
-                            DatabaseInjection.provideProductsDataSource(
+                            DatabaseInjection.provideProductDataSource(
                                     application.getApplicationContext()),
-                            DatabaseInjection.provideFavoritesProductsDataSource(
+                            DatabaseInjection.provideFavoriteProductsDataSource(
                                     application.getApplicationContext()
                             )
                     );

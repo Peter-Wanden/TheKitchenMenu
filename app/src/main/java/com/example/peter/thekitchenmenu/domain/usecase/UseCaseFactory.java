@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipe;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeCourse;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
@@ -16,7 +17,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.ingredient.Ingredient;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDuration;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentity;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeidentityandduration.RecipeIdentityAndDurationList;
+import com.example.peter.thekitchenmenu.domain.usecase.recipelist.RecipeList;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.RecipeIngredientList;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe;
@@ -34,6 +35,7 @@ public class UseCaseFactory {
     private static volatile UseCaseFactory INSTANCE;
 
     private final Application application;
+    private final RepositoryRecipe recipeRepository;
     private final RepositoryRecipePortions recipePortionsRepository;
     private final RepositoryRecipeIngredient recipeIngredientRepository;
     private final RepositoryIngredient ingredientRepository;
@@ -42,6 +44,7 @@ public class UseCaseFactory {
     private final RepositoryRecipeCourse recipeCourseRepository;
 
     private UseCaseFactory(Application application,
+                           RepositoryRecipe recipeRepository,
                            RepositoryRecipePortions recipePortionsRepository,
                            RepositoryRecipeIngredient recipeIngredientRepository,
                            RepositoryIngredient ingredientRepository,
@@ -49,6 +52,7 @@ public class UseCaseFactory {
                            RepositoryRecipeDuration recipeDurationRepository,
                            RepositoryRecipeCourse recipeCourseRepository) {
         this.application = application;
+        this.recipeRepository = recipeRepository;
         this.recipePortionsRepository = recipePortionsRepository;
         this.recipeIngredientRepository = recipeIngredientRepository;
         this.ingredientRepository = ingredientRepository;
@@ -63,6 +67,9 @@ public class UseCaseFactory {
                 if (INSTANCE == null)
                     INSTANCE = new UseCaseFactory(
                             application,
+                            DatabaseInjection.provideRecipeDataSource(
+                                    application.getApplicationContext()
+                            ),
                             DatabaseInjection.provideRecipePortionsDataSource(
                                     application.getApplicationContext()
                             ),
@@ -86,8 +93,6 @@ public class UseCaseFactory {
         }
         return INSTANCE;
     }
-
-
 
     public IngredientCalculator provideIngredientCalculator() {
         return new IngredientCalculator(
@@ -113,11 +118,10 @@ public class UseCaseFactory {
         );
     }
 
-    public RecipeIdentityAndDurationList provideRecipeIdentityAndDurationList() {
-        return new RecipeIdentityAndDurationList(
-                recipeIdentityRepository,
-                recipeDurationRepository
-        );
+    public RecipeList provideRecipeIdentityAndDurationList() {
+        return new RecipeList(
+                this,
+                UseCaseHandler.getInstance());
     }
 
     public RecipeCourse provideRecipeCourse() {
@@ -180,8 +184,9 @@ public class UseCaseFactory {
                 provideTextValidator());
     }
 
-    public Recipe provideRecipe() {
-        return new Recipe(
+    public <Q extends UseCase.Request> Recipe<Q> provideRecipe() {
+        return new Recipe<>(
+                recipeRepository,
                 UseCaseHandler.getInstance(),
                 provideRecipeStateCalculator(),
                 provideRecipeIdentity(),

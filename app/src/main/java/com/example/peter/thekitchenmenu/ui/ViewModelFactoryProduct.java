@@ -36,7 +36,7 @@ public class ViewModelFactoryProduct extends ViewModelProvider.NewInstanceFactor
                 if (INSTANCE == null)
                     INSTANCE = new ViewModelFactoryProduct(
                         application,
-                        DatabaseInjection.provideProductsDataSource(
+                        DatabaseInjection.provideProductDataSource(
                                 application.getApplicationContext()));
             }
         }

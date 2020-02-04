@@ -34,7 +34,7 @@ public class ViewModelFactoryFavoriteProduct extends ViewModelProvider.NewInstan
                 if (INSTANCE == null)
                     INSTANCE = new ViewModelFactoryFavoriteProduct(
                             application,
-                            DatabaseInjection.provideFavoritesProductsDataSource(
+                            DatabaseInjection.provideFavoriteProductsDataSource(
                                     application.getApplicationContext()));
             }
         }

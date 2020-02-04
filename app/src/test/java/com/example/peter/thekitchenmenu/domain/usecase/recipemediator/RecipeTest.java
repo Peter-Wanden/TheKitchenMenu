@@ -7,6 +7,7 @@ import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipe;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeCourse;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
@@ -63,7 +64,7 @@ public class RecipeTest {
     private static final String TAG = "tkm-" + RecipeTest.class.getSimpleName() + ": ";
 
     // region constants ----------------------------------------------------------------------------
-    private static final RecipeEntity INVALID_NEW =
+    private static final RecipeEntity INVALID_NEW_RECIPE =
             TestDataRecipeEntity.getNewInvalid();
 
     private static final RecipeIdentityEntity IDENTITY_INVALID_NEW_EMPTY =
@@ -83,6 +84,10 @@ public class RecipeTest {
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
+    @Mock
+    RepositoryRecipe repoRecipeMock;
+    @Captor
+    ArgumentCaptor<DataSource.GetEntityCallback<RecipeEntity>> repoRecipeCallback;
     @Mock
     RepositoryRecipeIdentity repoIdentityMock;
     @Captor
@@ -134,7 +139,6 @@ public class RecipeTest {
 
     // endregion helper fields ---------------------------------------------------------------------
 
-
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
@@ -182,7 +186,14 @@ public class RecipeTest {
 
         RecipeStateCalculator stateCalculator = new RecipeStateCalculator();
 
-        return new Recipe(handler, stateCalculator, identity, course, duration, portions);
+        return new Recipe(
+                repoRecipeMock,
+                handler,
+                stateCalculator,
+                identity,
+                course,
+                duration,
+                portions);
     }
 
     // todo - test for clone, delete and favorite as separate macro commands
@@ -190,7 +201,7 @@ public class RecipeTest {
     @Test
     public void recipeRequestNewId_invokerIssuesCommand() {
         // Arrange
-        String recipeId = INVALID_NEW.getId();
+        String recipeId = INVALID_NEW_RECIPE.getId();
         RecipeRequest request = new RecipeRequest(recipeId);
 
         // Act
@@ -207,7 +218,7 @@ public class RecipeTest {
     @Test
     public void recipeRequestNewId_invokerIssuesCommand_listenersUpdatedWithCorrectRecipeStateValues() {
         // Arrange
-        String recipeId = INVALID_NEW.getId();
+        String recipeId = INVALID_NEW_RECIPE.getId();
         RecipeRequest request = new RecipeRequest(recipeId);
 
         // Act
@@ -215,6 +226,9 @@ public class RecipeTest {
         handler.execute(SUT, request, getCallback());
 
         // Assert database calls
+        verify(repoRecipeMock).getById(eq(recipeId), repoRecipeCallback.capture());
+        repoRecipeCallback.getValue().onEntityLoaded(INVALID_NEW_RECIPE);
+
         verifyIdentityDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
         verifyCoursesDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
         verifyDurationDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
@@ -252,7 +266,7 @@ public class RecipeTest {
     @Test
     public void recipeRequestNewId_invokerIssuesCommand_responseINVALID_UNCHANGED_INVALID_MODELS() {
         // Arrange
-        String recipeId = INVALID_NEW.getId();
+        String recipeId = INVALID_NEW_RECIPE.getId();
         RecipeRequest request = new RecipeRequest(recipeId);
 
         // Act
@@ -273,7 +287,7 @@ public class RecipeTest {
     @Test
     public void recipeRequestNewId_invokerIssuesCommand_correctComponentResponses() {
         // Arrange
-        String recipeId = INVALID_NEW.getId();
+        String recipeId = INVALID_NEW_RECIPE.getId();
         RecipeRequest request = new RecipeRequest(recipeId);
 
         // Act
@@ -322,7 +336,7 @@ public class RecipeTest {
     @Test
     public void identityRequestNewId_initialRequest_invokerIssuesCommandToAllReceivers() {
         // Arrange
-        String recipeId = INVALID_NEW.getId();
+        String recipeId = INVALID_NEW_RECIPE.getId();
         RecipeIdentityRequest identityRequest = RecipeIdentityRequest.Builder.getDefault().
                 setRecipeId(recipeId).
                 build();
@@ -342,7 +356,7 @@ public class RecipeTest {
     @Test
     public void coursesRequestNewId_initialRequest_invokerIssuesCommandToAllReceivers() {
         // Arrange
-        String recipeId = INVALID_NEW.getId();
+        String recipeId = INVALID_NEW_RECIPE.getId();
         RecipeCourseRequest coursesRequest = RecipeCourseRequest.Builder.getDefault().
                 setRecipeId(recipeId).
                 build();
@@ -361,7 +375,7 @@ public class RecipeTest {
     @Test
     public void durationRequestNewId_initialRequest_invokerIssuesCommandToAllReceivers() {
         // Arrange
-        String recipeId = INVALID_NEW.getId();
+        String recipeId = INVALID_NEW_RECIPE.getId();
         RecipeDurationRequest durationRequest = RecipeDurationRequest.Builder.getDefault().
                 setRecipeId(recipeId).
                 build();
@@ -380,7 +394,7 @@ public class RecipeTest {
     @Test
     public void portionsRequestNewId_initialRequest_invokerIssuesCommandToAllReceivers() {
         // Arrange
-        String recipeId = INVALID_NEW.getId();
+        String recipeId = INVALID_NEW_RECIPE.getId();
         RecipePortionsRequest portionsRequest = RecipePortionsRequest.Builder.getDefault().
                 setRecipeId(recipeId).
                 build();
@@ -691,7 +705,7 @@ public class RecipeTest {
     // endregion helper methods --------------------------------------------------------------------
 
     // region helper classes -----------------------------------------------------------------------
-    private static class RecipeClient implements Recipe.Listener {
+    private static class RecipeClient implements Recipe.RecipeClientListener {
 
         @Override
         public void recipeStateChanged(RecipeStateResponse stateResponse) {

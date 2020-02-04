@@ -8,13 +8,16 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeidentityandduration.RecipeIdentityAndDurationList;
+import com.example.peter.thekitchenmenu.domain.usecase.recipelist.RecipeList;
+import com.example.peter.thekitchenmenu.domain.usecase.recipelist.RecipeListItemModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipelist.RecipeListRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipelist.RecipeListResponse;
 
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipeidentityandduration.RecipeIdentityAndDurationList.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipelist.RecipeList.*;
 
 public class RecipeCatalogViewModel extends ViewModel {
 
@@ -23,17 +26,17 @@ public class RecipeCatalogViewModel extends ViewModel {
     @NonNull
     private UseCaseHandler handler;
     @Nonnull
-    private RecipeIdentityAndDurationList useCase;
+    private RecipeList useCase;
     private RecipeNavigator navigator;
 
     public ObservableBoolean dataLoading = new ObservableBoolean(); // todo - setup empty screen
     public ObservableBoolean isDataLoadingError = new ObservableBoolean();
     public ObservableBoolean showEmptyScreen = new ObservableBoolean();
 
-    private MutableLiveData<List<RecipeIdentityAndDurationList.ListItemModel>> recipeList = new MutableLiveData<>();
+    private MutableLiveData<List<RecipeListItemModel>> recipeList = new MutableLiveData<>();
 
     public RecipeCatalogViewModel(@Nonnull UseCaseHandler handler,
-                                  @Nonnull RecipeIdentityAndDurationList useCase) {
+                                  @Nonnull RecipeList useCase) {
         this.handler = handler;
         this.useCase = useCase;
     }
@@ -46,7 +49,7 @@ public class RecipeCatalogViewModel extends ViewModel {
         navigator = null;
     }
 
-    MutableLiveData<List<RecipeIdentityAndDurationList.ListItemModel>> getRecipeListLiveData() {
+    MutableLiveData<List<RecipeListItemModel>> getRecipeListLiveData() {
         return recipeList;
     }
 
@@ -59,28 +62,27 @@ public class RecipeCatalogViewModel extends ViewModel {
 
         handler.execute(
                 useCase,
-                getRequestModel(RecipeIdentityAndDurationList.RecipeFilter.ALL),
+                getRequestModel(RecipeFilter.ALL),
                 getCallback()
         );
     }
 
-    private RecipeIdentityAndDurationList.Request getRequestModel(
-            RecipeIdentityAndDurationList.RecipeFilter filter) {
-        return new RecipeIdentityAndDurationList.Request(filter);
+    private RecipeListRequest getRequestModel(RecipeFilter filter) {
+        return new RecipeListRequest(filter);
     }
 
-    private UseCase.Callback<RecipeIdentityAndDurationList.Response>
+    private UseCase.Callback<RecipeListResponse>
     getCallback() {
-        return new UseCase.Callback<RecipeIdentityAndDurationList.Response>() {
+        return new UseCase.Callback<RecipeListResponse>() {
 
             @Override
-            public void onSuccess(RecipeIdentityAndDurationList.Response response) {
+            public void onSuccess(RecipeListResponse response) {
                 dataLoading.set(false);
                 RecipeCatalogViewModel.this.recipeList.setValue(response.getRecipeListItemModels());
             }
 
             @Override
-            public void onError(RecipeIdentityAndDurationList.Response response) {
+            public void onError(RecipeListResponse response) {
                 dataLoading.set(false);
                 dataLoadingFailed(response.getResultStatus());
 
@@ -102,15 +104,15 @@ public class RecipeCatalogViewModel extends ViewModel {
             navigator.addRecipe();
     }
 
-    void viewRecipe(RecipeIdentityAndDurationList.ListItemModel listItemModel) {
+    void viewRecipe(RecipeListItemModel listItemModel) {
         navigator.viewRecipe(listItemModel.getRecipeId());
     }
 
-    void addToFavorites(RecipeIdentityAndDurationList.ListItemModel listItemModel) {
+    void addToFavorites(RecipeListItemModel listItemModel) {
 
     }
 
-    void removeFromFavorites(RecipeIdentityAndDurationList.ListItemModel listItemModel) {
+    void removeFromFavorites(RecipeListItemModel listItemModel) {
 
     }
 }

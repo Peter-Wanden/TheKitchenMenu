@@ -1,11 +1,9 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe;
 
 import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseCommand;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 
@@ -59,6 +57,7 @@ public class RecipeResponse implements UseCaseCommand.Response {
         return Objects.hash(recipeState, failReasons, componentResponses);
     }
 
+    @Nonnull
     @Override
     public String toString() {
         return "RecipeResponse{" +

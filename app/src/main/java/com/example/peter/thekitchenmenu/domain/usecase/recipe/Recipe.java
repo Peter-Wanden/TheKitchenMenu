@@ -1,8 +1,12 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe;
 
+import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
+import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipe;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseCommand;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipePersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateResponse;
@@ -26,19 +30,24 @@ import java.util.List;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
 
-public class Recipe<Q extends UseCaseCommand.Request> extends UseCase<Q, RecipeResponse> {
+public class Recipe<Q extends UseCaseCommand.Request>
+        extends UseCase<Q, RecipeResponse>
+        implements DataSource.GetEntityCallback<RecipeEntity> {
 
     private static final String TAG = "tkm-" + Recipe.class.getSimpleName() + ": ";
 
-    public interface Listener {
+    public interface RecipeClientListener {
         void recipeStateChanged(RecipeStateResponse response);
     }
+    private final List<RecipeClientListener> recipeClientListeners = new ArrayList<>();
 
     private String recipeId = "";
     public static final String DO_NOT_CLONE = "";
 
-    private final UseCaseHandler handler;
+    private final RepositoryRecipe repositoryRecipe;
+    private RecipePersistenceModel persistenceModel;
 
+    private final UseCaseHandler handler;
     private final RecipeStateCalculator recipeStateCalculator;
     private RecipeStateResponse recipeStateResponse;
 
@@ -48,15 +57,16 @@ public class Recipe<Q extends UseCaseCommand.Request> extends UseCase<Q, RecipeR
     private final RecipePortions portions;
     private HashMap<ComponentName, UseCase.Response> componentResponses = new LinkedHashMap<>();
 
-    private final List<Listener> recipeClientListeners = new ArrayList<>();
     private final HashMap<ComponentName, ComponentState> componentStates = new LinkedHashMap<>();
 
-    public Recipe(UseCaseHandler handler,
+    public Recipe(RepositoryRecipe repositoryRecipe,
+                  UseCaseHandler handler,
                   RecipeStateCalculator recipeStateCalculator,
                   RecipeIdentity identity,
                   RecipeCourse course,
                   RecipeDuration duration,
                   RecipePortions portions) {
+        this.repositoryRecipe = repositoryRecipe;
         this.handler = handler;
         this.recipeStateCalculator = recipeStateCalculator;
         this.identity = identity;
@@ -68,48 +78,70 @@ public class Recipe<Q extends UseCaseCommand.Request> extends UseCase<Q, RecipeR
     @Override
     protected void execute(Q request) {
         if (request instanceof RecipeRequest) {
-
             RecipeRequest recipeRequest = (RecipeRequest) request;
             if (isNewRequest(recipeRequest.getRecipeId())) {
-                startComponents(recipeRequest.getRecipeId());
+                loadData(recipeRequest.getRecipeId());
             } else {
                 sendResponse();
             }
         } else if (request instanceof RecipeIdentityRequest) {
-
             RecipeIdentityRequest identityRequest = (RecipeIdentityRequest) request;
             if (isNewRequest(identityRequest.getRecipeId())) {
-                startComponents(identityRequest.getRecipeId());
+                loadData(identityRequest.getRecipeId());
             } else {
                 handler.execute(identity, identityRequest, getIdentityCallback());
             }
         } else if (request instanceof RecipeCourseRequest) {
-
             RecipeCourseRequest courseRequest = (RecipeCourseRequest) request;
             if (isNewRequest(courseRequest.getRecipeId())) {
-                startComponents(courseRequest.getRecipeId());
+                loadData(courseRequest.getRecipeId());
             } else {
                 handler.execute(course, courseRequest, getCoursesCallback());
             }
         } else if (request instanceof RecipeDurationRequest) {
             RecipeDurationRequest durationRequest = (RecipeDurationRequest) request;
             if (isNewRequest(durationRequest.getRecipeId())) {
-                startComponents(durationRequest.getRecipeId());
+                loadData(durationRequest.getRecipeId());
             } else {
                 handler.execute(duration, durationRequest, getDurationCallback());
             }
         } else if (request instanceof RecipePortionsRequest) {
-
             RecipePortionsRequest portionsRequest = (RecipePortionsRequest) request;
             if (isNewRequest(portionsRequest.getRecipeId())) {
-                startComponents(portionsRequest.getRecipeId());
+                loadData(portionsRequest.getRecipeId());
             } else {
                 handler.execute(portions, portionsRequest, getPortionsCallback());
             }
         }
     }
 
-    private void startComponents(String recipeId) {
+    private void loadData(String recipeId) {
+        repositoryRecipe.getById(recipeId, this);
+    }
+
+    @Override
+    public void onEntityLoaded(RecipeEntity entity) {
+        persistenceModel = convertEntityToPersistenceModel(entity);
+        startComponents();
+    }
+
+    @Override
+    public void onDataNotAvailable() {
+
+    }
+
+    private RecipePersistenceModel convertEntityToPersistenceModel(RecipeEntity entity) {
+        return new RecipePersistenceModel.Builder().
+                setId(entity.getId()).
+                setParentId(entity.getParentId()).
+                setCreatedBy(entity.getCreatedBy()).
+                setCreateDate(entity.getCreateDate()).
+                setLastUpdate(entity.getLastUpdate()).
+                setDraft(entity.isDraft()).
+                build();
+    }
+
+    private void startComponents() {
         componentStates.clear();
 
         handler.execute(
@@ -247,6 +279,7 @@ public class Recipe<Q extends UseCaseCommand.Request> extends UseCase<Q, RecipeR
                 if (!response.equals(recipeStateResponse)) {
                     recipeStateResponse = response;
                     notifyClientListeners();
+                    sendResponse();
                 } else {
                     sendResponse();
                 }
@@ -258,6 +291,7 @@ public class Recipe<Q extends UseCaseCommand.Request> extends UseCase<Q, RecipeR
                 if (!response.equals(recipeStateResponse)) {
                     recipeStateResponse = response;
                     notifyClientListeners();
+                    sendResponse();
                 } else {
                     sendResponse();
                 }
@@ -266,17 +300,16 @@ public class Recipe<Q extends UseCaseCommand.Request> extends UseCase<Q, RecipeR
     }
 
     private void notifyClientListeners() {
-        for (Listener listener : recipeClientListeners) {
+        for (RecipeClientListener listener : recipeClientListeners) {
             listener.recipeStateChanged(recipeStateResponse);
         }
-        sendResponse();
     }
 
-    public void registerClientListener(Listener listener) {
+    public void registerClientListener(RecipeClientListener listener) {
         recipeClientListeners.add(listener);
     }
 
-    public void unRegisterClientListener(Listener listener) {
+    public void unRegisterClientListener(RecipeClientListener listener) {
         recipeClientListeners.remove(listener);
     }
 

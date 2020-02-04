@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey;
 import java.util.Objects;
 
 @Entity(tableName = IngredientEntity.TABLE_INGREDIENTS)
-public class IngredientEntity implements TkmEntity {
+public final class IngredientEntity implements TkmEntity {
 
     public static final String TABLE_INGREDIENTS = "ingredients";
     public static final String ID = "id";

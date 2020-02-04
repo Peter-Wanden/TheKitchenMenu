@@ -53,7 +53,7 @@ public class SuggestionsProvider extends ContentProvider {
 //            }
 //
 //            // Get the cursor async and append a wildcard.
-//            Repository<ProductEntity> repository = DatabaseInjection.provideProductsDataSource(getContext());
+//            Repository<ProductEntity> repository = DatabaseInjection.provideProductDataSource(getContext());
 ////            return repository.getMatchingProducts(selectionArgs[0] + "*");
 //
 //        } else {
