@@ -209,10 +209,11 @@ public class RecipeTest {
         handler.execute(SUT, request, getCallback());
 
         // Assert database calls, return data not available
-        verifyIdentityDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
-        verifyCoursesDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
-        verifyDurationDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
-        verifyPortionsDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
+        verifyRepoRecipeCalledAndReturnDataUnavailable(recipeId);
+        verifyRepoIdentityCalledAndReturnDataUnavailable(recipeId);
+        verifyRepoCoursesCalledAndReturnDataUnavailable(recipeId);
+        verifyRepoDurationCalledAndReturnDataUnavailable(recipeId);
+        verifyRepoPortionsCalledAndReturnDataUnavailable(recipeId);
     }
 
     @Test
@@ -229,10 +230,10 @@ public class RecipeTest {
         verify(repoRecipeMock).getById(eq(recipeId), repoRecipeCallback.capture());
         repoRecipeCallback.getValue().onEntityLoaded(INVALID_NEW_RECIPE);
 
-        verifyIdentityDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
-        verifyCoursesDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
-        verifyDurationDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
-        verifyPortionsDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
+        verifyRepoIdentityCalledAndReturnDataUnavailable(recipeId);
+        verifyRepoCoursesCalledAndReturnDataUnavailable(recipeId);
+        verifyRepoDurationCalledAndReturnDataUnavailable(recipeId);
+        verifyRepoPortionsCalledAndReturnDataUnavailable(recipeId);
 
         // Assert recipe listener updated with correct recipe state
         verify(recipeClientListener1).recipeStateChanged(recipeStateCaptor.capture());
@@ -274,10 +275,10 @@ public class RecipeTest {
         handler.execute(SUT, request, getCallback());
 
         // Assert database calls
-        verifyIdentityDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
-        verifyCoursesDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
-        verifyDurationDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
-        verifyPortionsDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
+        verifyRepoIdentityCalledAndReturnDataUnavailable(recipeId);
+        verifyRepoCoursesCalledAndReturnDataUnavailable(recipeId);
+        verifyRepoDurationCalledAndReturnDataUnavailable(recipeId);
+        verifyRepoPortionsCalledAndReturnDataUnavailable(recipeId);
 
         // Assert, request originator updated with recipe response
         assertEquals(RecipeState.DATA_UNAVAILABLE, recipeOnError.getRecipeState());
@@ -295,10 +296,10 @@ public class RecipeTest {
         handler.execute(SUT, request, getCallback());
 
         // Assert database calls
-        verifyIdentityDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
-        verifyCoursesDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
-        verifyDurationDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
-        verifyPortionsDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
+        verifyRepoIdentityCalledAndReturnDataUnavailable(recipeId);
+        verifyRepoCoursesCalledAndReturnDataUnavailable(recipeId);
+        verifyRepoDurationCalledAndReturnDataUnavailable(recipeId);
+        verifyRepoPortionsCalledAndReturnDataUnavailable(recipeId);
 
         // Assert response from identity component
         RecipeIdentityResponse identityResponse = (RecipeIdentityResponse) recipeOnError.
@@ -346,10 +347,10 @@ public class RecipeTest {
         handler.execute(SUT, identityRequest, getCallback());
 
         // Assert
-        verifyIdentityDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
-        verifyCoursesDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
-        verifyDurationDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
-        verifyPortionsDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
+        verifyRepoIdentityCalledAndReturnDataUnavailable(recipeId);
+        verifyRepoCoursesCalledAndReturnDataUnavailable(recipeId);
+        verifyRepoDurationCalledAndReturnDataUnavailable(recipeId);
+        verifyRepoPortionsCalledAndReturnDataUnavailable(recipeId);
 
     }
 
@@ -366,10 +367,10 @@ public class RecipeTest {
         handler.execute(SUT, coursesRequest, getCallback());
 
         // Assert
-        verifyIdentityDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
-        verifyCoursesDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
-        verifyDurationDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
-        verifyPortionsDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
+        verifyRepoIdentityCalledAndReturnDataUnavailable(recipeId);
+        verifyRepoCoursesCalledAndReturnDataUnavailable(recipeId);
+        verifyRepoDurationCalledAndReturnDataUnavailable(recipeId);
+        verifyRepoPortionsCalledAndReturnDataUnavailable(recipeId);
     }
 
     @Test
@@ -385,10 +386,10 @@ public class RecipeTest {
         handler.execute(SUT, durationRequest, getCallback());
 
         // Assert
-        verifyIdentityDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
-        verifyCoursesDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
-        verifyDurationDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
-        verifyPortionsDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
+        verifyRepoIdentityCalledAndReturnDataUnavailable(recipeId);
+        verifyRepoCoursesCalledAndReturnDataUnavailable(recipeId);
+        verifyRepoDurationCalledAndReturnDataUnavailable(recipeId);
+        verifyRepoPortionsCalledAndReturnDataUnavailable(recipeId);
     }
 
     @Test
@@ -404,10 +405,10 @@ public class RecipeTest {
         handler.execute(SUT, portionsRequest, getCallback());
 
         // Assert
-        verifyIdentityDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
-        verifyCoursesDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
-        verifyDurationDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
-        verifyPortionsDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
+        verifyRepoIdentityCalledAndReturnDataUnavailable(recipeId);
+        verifyRepoCoursesCalledAndReturnDataUnavailable(recipeId);
+        verifyRepoDurationCalledAndReturnDataUnavailable(recipeId);
+        verifyRepoPortionsCalledAndReturnDataUnavailable(recipeId);
     }
 
     @Test
@@ -424,15 +425,15 @@ public class RecipeTest {
                 build();
         SUT.registerClientListener(recipeClientListener1);
         handler.execute(SUT, firstRequest, getCallback());
-        verifyIdentityDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
-        verifyCoursesDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
-        verifyDurationDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
-        verifyPortionsDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
+        verifyRepoIdentityCalledAndReturnDataUnavailable(recipeId);
+        verifyRepoCoursesCalledAndReturnDataUnavailable(recipeId);
+        verifyRepoDurationCalledAndReturnDataUnavailable(recipeId);
+        verifyRepoPortionsCalledAndReturnDataUnavailable(recipeId);
 
         // Request/Response 2 - existing request
         String validTitle = IDENTITY_VALID_NEW_COMPLETE.getTitle();
         RecipeIdentityRequest.Model validTitleModel = RecipeIdentityRequest.Model.Builder.
-                basedOn(identityOnError.getModel()).
+                basedOnIdentityResponseModel(identityOnError.getModel()).
                 setTitle(validTitle).
                 build();
         RecipeIdentityRequest validTitleRequest = new RecipeIdentityRequest.Builder().
@@ -445,7 +446,7 @@ public class RecipeTest {
         // Request/Response 3
         String validDescription = IDENTITY_VALID_NEW_COMPLETE.getDescription();
         RecipeIdentityRequest.Model validTitleDescriptionModel = RecipeIdentityRequest.Model.Builder.
-                basedOn(identityOnSuccess.getModel()).
+                basedOnIdentityResponseModel(identityOnSuccess.getModel()).
                 setDescription(validDescription).
                 build();
         RecipeIdentityRequest validDescriptionRequest = new RecipeIdentityRequest.Builder().
@@ -498,10 +499,10 @@ public class RecipeTest {
         handler.execute(SUT, initialRequest, getCallback());
 
         // Assert
-        verifyIdentityDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
-        verifyCoursesDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
-        verifyDurationDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
-        verifyPortionsDatabaseCalledWithIdAndReturnDataUnavailable(recipeId);
+        verifyRepoIdentityCalledAndReturnDataUnavailable(recipeId);
+        verifyRepoCoursesCalledAndReturnDataUnavailable(recipeId);
+        verifyRepoDurationCalledAndReturnDataUnavailable(recipeId);
+        verifyRepoPortionsCalledAndReturnDataUnavailable(recipeId);
 
         // Arrange
         RecipeCourseRequest addCourseRequest = new RecipeCourseRequest.Builder().
@@ -621,19 +622,23 @@ public class RecipeTest {
     }
 
     // region helper methods -----------------------------------------------------------------------
-    private void verifyIdentityDatabaseCalledWithIdAndReturnDataUnavailable(String recipeId) {
+    private void verifyRepoRecipeCalledAndReturnDataUnavailable(String recipeId) {
+        verify(repoRecipeMock).getById(eq(recipeId), repoRecipeCallback.capture());
+        repoRecipeCallback.getValue().onDataNotAvailable();
+    }
+    private void verifyRepoIdentityCalledAndReturnDataUnavailable(String recipeId) {
         verify(repoIdentityMock).getById(eq(recipeId), repoIdentityCallback.capture());
         repoIdentityCallback.getValue().onDataNotAvailable();
     }
-    private void verifyCoursesDatabaseCalledWithIdAndReturnDataUnavailable(String recipeId) {
+    private void verifyRepoCoursesCalledAndReturnDataUnavailable(String recipeId) {
         verify(repoCourseMock).getCoursesForRecipe(eq(recipeId), repoCourseCallback.capture());
         repoCourseCallback.getValue().onDataNotAvailable();
     }
-    private void verifyDurationDatabaseCalledWithIdAndReturnDataUnavailable(String recipeId) {
+    private void verifyRepoDurationCalledAndReturnDataUnavailable(String recipeId) {
         verify(repoDurationMock).getById(eq(recipeId), repoDurationCallback.capture());
         repoDurationCallback.getValue().onDataNotAvailable();
     }
-    private void verifyPortionsDatabaseCalledWithIdAndReturnDataUnavailable(String recipeId) {
+    private void verifyRepoPortionsCalledAndReturnDataUnavailable(String recipeId) {
         verify(repoPortionsMock).getPortionsForRecipe(eq(recipeId), repoPortionsCallback.capture());
         repoPortionsCallback.getValue().onDataNotAvailable();
     }

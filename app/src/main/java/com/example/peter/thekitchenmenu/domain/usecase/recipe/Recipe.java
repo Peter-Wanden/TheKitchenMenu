@@ -30,7 +30,7 @@ import java.util.List;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
 
-public class Recipe<Q extends UseCaseCommand.Request>
+public class Recipe<Q extends UseCase.Request>
         extends UseCase<Q, RecipeResponse>
         implements DataSource.GetEntityCallback<RecipeEntity> {
 
@@ -42,6 +42,7 @@ public class Recipe<Q extends UseCaseCommand.Request>
     private final List<RecipeClientListener> recipeClientListeners = new ArrayList<>();
 
     private String recipeId = "";
+    private String parentId = "";
     public static final String DO_NOT_CLONE = "";
 
     private final RepositoryRecipe repositoryRecipe;
@@ -55,8 +56,7 @@ public class Recipe<Q extends UseCaseCommand.Request>
     private final RecipeCourse course;
     private final RecipeDuration duration;
     private final RecipePortions portions;
-    private HashMap<ComponentName, UseCase.Response> componentResponses = new LinkedHashMap<>();
-
+    private final HashMap<ComponentName, UseCase.Response> componentResponses = new LinkedHashMap<>();
     private final HashMap<ComponentName, ComponentState> componentStates = new LinkedHashMap<>();
 
     public Recipe(RepositoryRecipe repositoryRecipe,
@@ -115,6 +115,17 @@ public class Recipe<Q extends UseCaseCommand.Request>
         }
     }
 
+    private boolean isNewRequest(String recipeId) {
+        if (this.recipeId.equals(recipeId)) {
+            System.out.println(TAG + "isExistingRequest");
+            return false;
+        } else {
+            this.recipeId = recipeId;
+            System.out.println(TAG + "isNewRequest");
+            return true;
+        }
+    }
+
     private void loadData(String recipeId) {
         repositoryRecipe.getById(recipeId, this);
     }
@@ -127,7 +138,15 @@ public class Recipe<Q extends UseCaseCommand.Request>
 
     @Override
     public void onDataNotAvailable() {
+        persistenceModel = createNewPersistenceModel();
+        startComponents();
+    }
 
+    private RecipePersistenceModel createNewPersistenceModel() {
+        return RecipePersistenceModel.Builder.
+                getDefault().
+                setId(recipeId).
+                build();
     }
 
     private RecipePersistenceModel convertEntityToPersistenceModel(RecipeEntity entity) {
@@ -164,17 +183,6 @@ public class Recipe<Q extends UseCaseCommand.Request>
                 RecipePortionsRequest.Builder.getDefault().setRecipeId(recipeId).build(),
                 getPortionsCallback()
         );
-    }
-
-    private boolean isNewRequest(String recipeId) {
-        if (this.recipeId.equals(recipeId)) {
-            System.out.println(TAG + "isExistingRequest");
-            return false;
-        } else {
-            this.recipeId = recipeId;
-            System.out.println(TAG + "isNewRequest");
-            return true;
-        }
     }
 
     private UseCase.Callback<RecipeIdentityResponse> getIdentityCallback() {
@@ -300,12 +308,14 @@ public class Recipe<Q extends UseCaseCommand.Request>
     }
 
     private void notifyClientListeners() {
+        System.out.println(TAG + "notifying listeners");
         for (RecipeClientListener listener : recipeClientListeners) {
             listener.recipeStateChanged(recipeStateResponse);
         }
     }
 
     public void registerClientListener(RecipeClientListener listener) {
+        System.out.println(TAG + "client listener registered");
         recipeClientListeners.add(listener);
     }
 
@@ -315,6 +325,7 @@ public class Recipe<Q extends UseCaseCommand.Request>
 
     private void sendResponse() {
         RecipeResponse response = new RecipeResponse(
+
                 recipeStateResponse.getState(),
                 recipeStateResponse.getFailReasons(),
                 componentResponses

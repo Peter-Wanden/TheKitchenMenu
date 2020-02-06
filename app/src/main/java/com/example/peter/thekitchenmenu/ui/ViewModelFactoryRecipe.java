@@ -11,6 +11,7 @@ import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipe;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseFactory;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor.RecipeIngredientCalculatorViewModel;
 import com.example.peter.thekitchenmenu.ui.utils.unitofmeasure.MeasurementToSpannableConverter;
 import com.example.peter.thekitchenmenu.ui.detail.common.MeasurementErrorMessageMaker;
@@ -18,7 +19,6 @@ import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeCour
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeDurationEditorViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeIdentityEditorViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipePortionsEditorViewModel;
-import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidator;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist.RecipeIngredientListItemViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist.RecipeNameAndPortionsViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist.RecipeIngredientListViewModel;
@@ -28,19 +28,26 @@ import com.example.peter.thekitchenmenu.ui.catalog.recipe.RecipeCatalogViewModel
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeEditorViewModel;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
+import javax.annotation.Nonnull;
+
 public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory {
 
     @SuppressLint("StaticFieldLeak")
     private static volatile ViewModelFactoryRecipe INSTANCE;
+    @Nonnull
     private final Application application;
+    @Nonnull
     private final UseCaseFactory useCaseFactory;
+    @Nonnull
     private final UseCaseHandler useCaseHandler;
+    @Nonnull
     private final RepositoryRecipe recipeRepository;
+    private Recipe recipe;
 
-    private ViewModelFactoryRecipe(Application application,
-                                   UseCaseFactory useCaseFactory,
-                                   UseCaseHandler useCaseHandler,
-                                   RepositoryRecipe recipeRepository) {
+    private ViewModelFactoryRecipe(@Nonnull Application application,
+                                   @Nonnull UseCaseFactory useCaseFactory,
+                                   @Nonnull UseCaseHandler useCaseHandler,
+                                   @Nonnull RepositoryRecipe recipeRepository) {
         this.application = application;
         this.useCaseFactory = useCaseFactory;
         this.useCaseHandler = useCaseHandler;
@@ -64,6 +71,37 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
         return INSTANCE;
     }
 
+    private ViewModelFactoryRecipe(@Nonnull Application application,
+                                   Recipe recipe,
+                                   @Nonnull UseCaseFactory useCaseFactory,
+                                   @Nonnull UseCaseHandler useCaseHandler,
+                                   @Nonnull RepositoryRecipe recipeRepository) {
+        this.application = application;
+        this.recipe = recipe;
+        this.useCaseFactory = useCaseFactory;
+        this.useCaseHandler = useCaseHandler;
+        this.recipeRepository = recipeRepository;
+    }
+
+    public static ViewModelFactoryRecipe getInstance(@Nonnull Application application,
+                                                     Recipe recipe) {
+        if (INSTANCE == null) {
+            synchronized (ViewModelFactoryRecipe.class) {
+                if (INSTANCE == null)
+                    INSTANCE = new ViewModelFactoryRecipe(
+                            application,
+                            recipe,
+                            UseCaseFactory.getInstance(application),
+                            UseCaseHandler.getInstance(),
+                            DatabaseInjection.provideRecipeDataSource(
+                                    application.getApplicationContext()
+                            )
+                    );
+            }
+        }
+        return INSTANCE;
+    }
+
     @NonNull
     @Override
     public <T extends ViewModel> T create(Class<T> modelClass) {
@@ -74,6 +112,7 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
                     useCaseHandler,
                     useCaseFactory.provideRecipeIdentityAndDurationList()
             );
+
         } else if (modelClass.isAssignableFrom(RecipeEditorViewModel.class)) {
             //noinspection unchecked
             return (T) new RecipeEditorViewModel(
@@ -81,35 +120,40 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
                     recipeRepository,
                     new UniqueIdProvider(),
                     application.getResources(),
-                    new RecipeValidator()
-            );
+                    useCaseHandler,
+                    useCaseFactory);
+
         } else if (modelClass.isAssignableFrom(RecipeIdentityEditorViewModel.class)) {
             //noinspection unchecked
             return (T) new RecipeIdentityEditorViewModel(
                     useCaseHandler,
-                    useCaseFactory.provideRecipe(),
+                    recipe,
                     application.getResources()
             );
+
         } else if (modelClass.isAssignableFrom(RecipeCourseEditorViewModel.class)) {
             //noinspection unchecked
             return (T) new RecipeCourseEditorViewModel(
                     useCaseHandler,
-                    useCaseFactory.provideRecipeCourse()
+                    recipe
             );
+
         } else if (modelClass.isAssignableFrom(RecipeDurationEditorViewModel.class)) {
             // noinspection unchecked
             return (T) new RecipeDurationEditorViewModel(
                     useCaseHandler,
-                    useCaseFactory.provideRecipeDuration(),
+                    recipe,
                     application.getResources()
             );
+
         } else if (modelClass.isAssignableFrom(RecipePortionsEditorViewModel.class)) {
             // noinspection unchecked
             return (T) new RecipePortionsEditorViewModel(
                     useCaseHandler,
-                    useCaseFactory.provideRecipePortions(),
+                    recipe,
                     application.getResources()
             );
+
         } else if (modelClass.isAssignableFrom(RecipeIngredientCalculatorViewModel.class)) {
             // noinspection unchecked
             return (T) new RecipeIngredientCalculatorViewModel(
@@ -121,6 +165,7 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
                     new MeasurementErrorMessageMaker(application.getResources(),
                             new NumberFormatter(application.getResources()))
             );
+
         } else if (modelClass.isAssignableFrom(RecipeNameAndPortionsViewModel.class)) {
             // noinspection unchecked
             return (T) new RecipeNameAndPortionsViewModel(
@@ -128,12 +173,14 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
                     useCaseFactory.provideRecipeIdentity(),
                     useCaseFactory.provideRecipePortions()
             );
+
         } else if (modelClass.isAssignableFrom(RecipeIngredientListViewModel.class)) {
             // noinspection unchecked
             return (T) new RecipeIngredientListViewModel(
                     useCaseHandler,
                     useCaseFactory.provideRecipeIngredientList()
             );
+
         } else if (modelClass.isAssignableFrom(RecipeIngredientListItemViewModel.class)) {
             // noinspection unchecked
             return (T) new RecipeIngredientListItemViewModel(

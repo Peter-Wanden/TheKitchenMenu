@@ -23,5 +23,4 @@ public class ViewModelHolder<VM> extends Fragment {
     public void setViewModel(@NonNull VM viewModel) {
         this.viewModel = viewModel;
     }
-
 }

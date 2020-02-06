@@ -11,15 +11,16 @@ import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipe;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseFactory;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
-import static com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidator.*;
-import static com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeValidator.RecipeStatus.*;
 
 public class RecipeEditorViewModel
         extends ViewModel
-        implements DataSource.GetEntityCallback<RecipeEntity>, RecipeValidation.RecipeEditor {
+        implements DataSource.GetEntityCallback<RecipeEntity> {
 
     private static final String TAG = "tkm-" + RecipeEditorViewModel.class.getSimpleName() + ":";
 
@@ -28,15 +29,15 @@ public class RecipeEditorViewModel
     private UniqueIdProvider idProvider;
     private Resources resources;
     private TimeProvider timeProvider;
-    private RecipeStatus recipeStatus = INVALID_MISSING_MODELS;
-    private RecipeValidator validator;
-    private RecipeModelObserver recipeModels;
+    private final UseCaseHandler handler;
 
     public final ObservableBoolean showIngredientsButtonObservable = new ObservableBoolean();
     public final ObservableField<String> ingredientsButtonTextObservable = new ObservableField<>();
     public final ObservableBoolean dataIsLoadingObservable = new ObservableBoolean();
 
     private RecipeEntity recipeEntity;
+    private String recipeId;
+    private Recipe recipe;
 
     private boolean isDraft;
     private boolean isNewRecipe;
@@ -46,13 +47,15 @@ public class RecipeEditorViewModel
                                  RepositoryRecipe repositoryRecipe,
                                  UniqueIdProvider idProvider,
                                  Resources resources,
-                                 RecipeValidator validator) {
+                                 UseCaseHandler handler,
+                                 UseCaseFactory factory) {
         this.timeProvider = timeProvider;
         this.repositoryRecipe = repositoryRecipe;
         this.idProvider = idProvider;
         this.resources = resources;
-        this.validator = validator;
-        validator.setRecipeEditor(this);
+        this.handler = handler;
+
+        recipe = factory.provideRecipe();
     }
 
     void setNavigator(AddEditRecipeNavigator navigator) {
@@ -63,28 +66,32 @@ public class RecipeEditorViewModel
         navigator = null;
     }
 
-    void setRecipeModelComposite(RecipeModelObserver recipeModels) {
-        this.recipeModels = recipeModels;
+    public Recipe getRecipe() {
+        return recipe;
     }
 
     void start() {
-        if (recipeEntity == null)
+        if (recipeEntity == null) {
             setupForNewRecipe();
+        }
     }
 
     private void setupForNewRecipe() {
         isNewRecipe = true;
-
         navigator.setActivityTitle(R.string.activity_title_add_new_recipe);
+        recipeId = idProvider.getUId();
 
         recipeEntity = getNewRecipe();
         saveRecipe();
-        startModels();
         setIngredientsButton();
     }
 
     void start(String recipeId) {
         loadExistingRecipe(recipeId);
+    }
+
+    void start(String cloneFromRecipeId, String cloneToRecipeId) {
+
     }
 
     private void loadExistingRecipe(String recipeId) {
@@ -97,17 +104,18 @@ public class RecipeEditorViewModel
         dataIsLoadingObservable.set(false);
         this.recipeEntity = recipeEntity;
 
-        if (creatorIsEditingOwnRecipe())
+        if (editorIsCreatorOfRecipe()) {
             setupForExistingRecipe();
-        else
+        }
+        else {
             setupForClonedRecipe();
+        }
     }
 
     private void setupForExistingRecipe() {
         isNewRecipe = false;
         navigator.setActivityTitle(R.string.activity_title_edit_recipe);
 
-        startModels();
         setIngredientsButton();
     }
 
@@ -121,14 +129,9 @@ public class RecipeEditorViewModel
         setIngredientsButton();
     }
 
-    private void startModels() {
-        recipeModels.start(recipeEntity.getId());
-    }
-
     private void startModelsWithClone() {
         String oldRecipeId = recipeEntity.getParentId();
         String newRecipeId = recipeEntity.getId();
-        recipeModels.startWithClonedModel(oldRecipeId, newRecipeId);
     }
 
     @Override
@@ -142,7 +145,7 @@ public class RecipeEditorViewModel
             // Todo - isNewRecipe, change to ifNoIngredients when ingredient component added
             ingredientsButtonTextObservable.set(resources.getString(R.string.add_ingredients));
 
-        } else if (creatorIsEditingOwnRecipe()) {
+        } else if (editorIsCreatorOfRecipe()) {
             ingredientsButtonTextObservable.set(resources.getString(R.string.edit_ingredients));
 
         } else if (recipeIsCloned()) {
@@ -153,40 +156,20 @@ public class RecipeEditorViewModel
         }
     }
 
-    RecipeValidator getValidator() {
-        return validator;
-    }
-
-    @Override
-    public void setValidationStatus(RecipeStatus recipeStatus) {
-        this.recipeStatus = recipeStatus;
-
-        isDraft = recipeStatus != VALID_CHANGED &&
-                recipeStatus != VALID_UNCHANGED;
-
-        if (recipeStatus != INVALID_UNCHANGED &&
-                recipeStatus != VALID_UNCHANGED) {
-
-            this.recipeEntity = createNewEntity();
-            saveRecipe();
-        }
-        updateButtonVisibility();
-    }
-
     private void updateButtonVisibility() {
-        if (recipeStatus == VALID_CHANGED) {
-            showIngredientsButtonObservable.set(true);
-            showReviewButton = true;
-            navigator.refreshOptionsMenu();
-
-        } else if (recipeStatus == VALID_UNCHANGED) {
-            showIngredientsButtonObservable.set(true);
-            showReviewButton = false;
-            navigator.refreshOptionsMenu();
-
-        } else {
-            hideButtons();
-        }
+//        if (recipeStatus == VALID_CHANGED) {
+//            showIngredientsButtonObservable.set(true);
+//            showReviewButton = true;
+//            navigator.refreshOptionsMenu();
+//
+//        } else if (recipeStatus == VALID_UNCHANGED) {
+//            showIngredientsButtonObservable.set(true);
+//            showReviewButton = false;
+//            navigator.refreshOptionsMenu();
+//
+//        } else {
+//            hideButtons();
+//        }
     }
 
     private void hideButtons() {
@@ -200,11 +183,11 @@ public class RecipeEditorViewModel
     }
 
     void upOrBackPressed() {
-        if (recipeStatus == INVALID_CHANGED) {
-            navigator.showUnsavedChangedDialog();
-        } else {
-            navigator.cancelEditing();
-        }
+//        if (recipeStatus == INVALID_CHANGED) {
+//            navigator.showUnsavedChangedDialog();
+//        } else {
+//            navigator.cancelEditing();
+//        }
     }
 
     void reviewButtonPressed() {
@@ -213,7 +196,7 @@ public class RecipeEditorViewModel
         if (isNewRecipe) {
             navigator.reviewNewRecipe(recipeId);
 
-        } else if (creatorIsEditingOwnRecipe()) {
+        } else if (editorIsCreatorOfRecipe()) {
             navigator.reviewEditedRecipe(recipeId);
 
         } else if (recipeIsCloned()) {
@@ -230,7 +213,7 @@ public class RecipeEditorViewModel
         if (isNewRecipe) {
             navigator.addIngredients(recipeId);
 
-        } else if (creatorIsEditingOwnRecipe()) {
+        } else if (editorIsCreatorOfRecipe()) {
             navigator.editIngredients(recipeId);
 
         } else if (recipeIsCloned()) {
@@ -242,7 +225,7 @@ public class RecipeEditorViewModel
     }
 
     private RecipeEntity createNewEntity() {
-        if (creatorIsEditingOwnRecipe()) {
+        if (editorIsCreatorOfRecipe()) {
             return getEditedRecipe();
 
         } else if (recipeIsCloned()) {
@@ -289,12 +272,12 @@ public class RecipeEditorViewModel
         );
     }
 
-    private boolean creatorIsEditingOwnRecipe() {
+    private boolean editorIsCreatorOfRecipe() {
         return recipeEntity.getCreatedBy().equals(Constants.getUserId());
     }
 
     private boolean recipeIsCloned() {
-        return !creatorIsEditingOwnRecipe();
+        return !editorIsCreatorOfRecipe();
     }
 
     private void saveRecipe() {

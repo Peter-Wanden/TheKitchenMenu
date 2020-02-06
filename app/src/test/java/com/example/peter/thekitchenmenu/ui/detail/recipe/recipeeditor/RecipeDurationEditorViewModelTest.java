@@ -4,14 +4,30 @@ import android.content.res.Resources;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
+import com.example.peter.thekitchenmenu.data.entity.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipeDurationEntity;
+import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
+import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
+import com.example.peter.thekitchenmenu.data.entity.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipe;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeCourse;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDuration;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentity;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions.RecipePortions;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDurationTest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityTest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortionsTest;
+import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
+import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeDurationEntity;
-import com.example.peter.thekitchenmenu.testdata.TestDataRecipeValidator;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 
 import org.junit.*;
@@ -55,32 +71,39 @@ public class RecipeDurationEditorViewModelTest {
     private static final int MAX_COOK_TIME = TestDataRecipeDurationEntity.getMaxCookTime();
     private static final String ERROR_MESSAGE_TIME_TOO_LONG = "error_message_time_too_long";
 
-    private static final RecipeComponentStateModel INVALID_UNCHANGED =
-            TestDataRecipeValidator.getDurationModelStatusINVALID_UNCHANGED();
-    private static final RecipeComponentStateModel INVALID_CHANGED =
-            TestDataRecipeValidator.getDurationModelStatusINVALID_CHANGED();
-    private static final RecipeComponentStateModel VALID_UNCHANGED =
-            TestDataRecipeValidator.getDurationModelStatusVALID_UNCHANGED();
-    private static final RecipeComponentStateModel VALID_CHANGED =
-            TestDataRecipeValidator.getDurationModelStatusVALID_CHANGED();
-
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
     @Mock
-    RepositoryRecipeDuration repoMock;
+    RepositoryRecipe repoRecipeMock;
     @Captor
-    ArgumentCaptor<DataSource.GetEntityCallback<RecipeDurationEntity>> repoCallbackCaptor;
+    ArgumentCaptor<DataSource.GetEntityCallback<RecipeEntity>> repoRecipeCallback;
+    @Mock
+    RepositoryRecipeIdentity repoIdentityMock;
+    @Captor
+    ArgumentCaptor<DataSource.GetEntityCallback<RecipeIdentityEntity>> repoIdentityCallback;
+    @Mock
+    RepositoryRecipeCourse repoCourseMock;
+    @Captor
+    ArgumentCaptor<DataSource.GetAllCallback<RecipeCourseEntity>> repoCourseCallback;
+    @Mock
+    RepositoryRecipeDuration repoDurationMock;
+    @Captor
+    ArgumentCaptor<DataSource.GetEntityCallback<RecipeDurationEntity>> repoDurationCallback;
+    @Mock
+    RepositoryRecipePortions repoPortionsMock;
+    @Captor
+    ArgumentCaptor<DataSource.GetEntityCallback<RecipePortionsEntity>> repoPortionsCallback;
     @Mock
     Resources resourcesMock;
     @Captor
     ArgumentCaptor<RecipeDurationEntity> durationEntityCaptor;
-    @Captor
-    ArgumentCaptor<RecipeComponentStateModel> modelStatusCaptor;
     @Mock
     TimeProvider timeProviderMock;
     @Mock
-    RecipeValidation.RecipeValidatorModelSubmission modelValidationSubmitterMock;
+    UniqueIdProvider idProviderMock;
+
+    private Recipe recipe;
     // endregion helper fields ---------------------------------------------------------------------
 
     private RecipeDurationEditorViewModel SUT;
@@ -91,21 +114,60 @@ public class RecipeDurationEditorViewModelTest {
         setupResourceMockReturnValues();
 
         SUT = givenViewModel();
-
-        SUT.setModelValidationSubmitter(modelValidationSubmitterMock);
     }
 
     private RecipeDurationEditorViewModel givenViewModel() {
         UseCaseHandler handler = new UseCaseHandler(new UseCaseSchedulerMock()
         );
-        RecipeDuration useCase = new RecipeDuration(
-                repoMock,
+
+        TextValidator textValidator = new TextValidator.Builder().
+                setShortTextMinLength(RecipeIdentityTest.TITLE_MIN_LENGTH).
+                setShortTextMaxLength(RecipeIdentityTest.TITLE_MAX_LENGTH).
+                setLongTextMinLength(RecipeIdentityTest.DESCRIPTION_MIN_LENGTH).
+                setLongTextMaxLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
+                build();
+
+        RecipeIdentity identity = new RecipeIdentity(
+                repoIdentityMock,
+                timeProviderMock,
+                handler,
+                textValidator
+        );
+
+        RecipeCourse course = new RecipeCourse(
+                repoCourseMock,
+                idProviderMock,
+                timeProviderMock
+        );
+
+        RecipeDuration duration = new RecipeDuration(
+                repoDurationMock,
                 timeProviderMock,
                 RecipeDurationTest.MAX_PREP_TIME,
                 RecipeDurationTest.MAX_COOK_TIME
         );
+
+        RecipePortions portions = new RecipePortions(
+                repoPortionsMock,
+                idProviderMock,
+                timeProviderMock,
+                RecipePortionsTest.MAX_SERVINGS,
+                RecipePortionsTest.MAX_SITTINGS
+        );
+
+        RecipeStateCalculator stateCalculator = new RecipeStateCalculator();
+
+        Recipe recipe = new Recipe(
+                repoRecipeMock,
+                handler,
+                stateCalculator,
+                identity,
+                course,
+                duration,
+                portions);
+
         return new RecipeDurationEditorViewModel(
-                handler, useCase, resourcesMock
+                handler, recipe, resourcesMock
         );
     }
 
@@ -130,9 +192,7 @@ public class RecipeDurationEditorViewModelTest {
         SUT.start(VALID_NEW_EMPTY.getId());
         simulateNothingReturnedFromRepo();
         // Assert
-        verify(modelValidationSubmitterMock).submitRecipeComponentStatus(modelStatusCaptor.capture());
-        RecipeComponentStateModel modelStatus = modelStatusCaptor.getValue();
-        assertEquals(VALID_UNCHANGED, modelStatus);
+
     }
 
     @Test
@@ -155,7 +215,7 @@ public class RecipeDurationEditorViewModelTest {
         simulateNothingReturnedFromRepo();
         SUT.setPrepHoursInView(String.valueOf(INVALID_NEW_PREP_TIME_INVALID.getPrepTime() / 60 + 1));
         // Assert
-        verify(repoMock).save(durationEntityCaptor.capture());
+        verify(repoDurationMock).save(durationEntityCaptor.capture());
         assertEquals(VALID_NEW_EMPTY, durationEntityCaptor.getValue());
     }
 
@@ -168,9 +228,7 @@ public class RecipeDurationEditorViewModelTest {
         simulateNothingReturnedFromRepo();
         SUT.setPrepHoursInView(String.valueOf(INVALID_NEW_PREP_TIME_INVALID.getPrepTime() / 60 + 1));
         // Assert
-        verify(modelValidationSubmitterMock, times((2))).
-                submitRecipeComponentStatus(modelStatusCaptor.capture());
-        assertEquals(INVALID_CHANGED, modelStatusCaptor.getValue());
+
     }
 
     @Test
@@ -192,8 +250,7 @@ public class RecipeDurationEditorViewModelTest {
         simulateNothingReturnedFromRepo();
         SUT.setPrepHoursInView(String.valueOf(VALID_NEW_PREP_TIME_VALID.getPrepTime() / 60));
         // Assert
-        verify(modelValidationSubmitterMock, times((2))).submitRecipeComponentStatus(modelStatusCaptor.capture());
-        assertEquals(VALID_CHANGED, modelStatusCaptor.getValue());
+
     }
 
     @Test
@@ -205,7 +262,7 @@ public class RecipeDurationEditorViewModelTest {
         simulateNothingReturnedFromRepo();
         SUT.setPrepHoursInView(String.valueOf(VALID_NEW_PREP_TIME_VALID.getPrepTime() / 60));
         // Assert
-        verify(repoMock, times((2))).save(durationEntityCaptor.capture());
+        verify(repoDurationMock, times((2))).save(durationEntityCaptor.capture());
         assertEquals(VALID_NEW_PREP_TIME_VALID, durationEntityCaptor.getValue());
     }
 
@@ -228,8 +285,7 @@ public class RecipeDurationEditorViewModelTest {
         simulateNothingReturnedFromRepo();
         SUT.setPrepMinutesInView(String.valueOf(INVALID_NEW_PREP_TIME_INVALID.getPrepTime()));
         // Assert
-        verify(modelValidationSubmitterMock, times((2))).submitRecipeComponentStatus(modelStatusCaptor.capture());
-        assertEquals(INVALID_CHANGED, modelStatusCaptor.getValue());
+
     }
 
     @Test
@@ -240,7 +296,7 @@ public class RecipeDurationEditorViewModelTest {
         simulateNothingReturnedFromRepo();
         SUT.setPrepMinutesInView(String.valueOf(INVALID_NEW_PREP_TIME_INVALID.getPrepTime()));
         // Assert
-        verify(repoMock).save(durationEntityCaptor.capture());
+        verify(repoDurationMock).save(durationEntityCaptor.capture());
         assertEquals(VALID_NEW_EMPTY, durationEntityCaptor.getValue());
     }
 
@@ -263,8 +319,7 @@ public class RecipeDurationEditorViewModelTest {
         simulateNothingReturnedFromRepo();
         SUT.setPrepMinutesInView(String.valueOf(VALID_NEW_PREP_TIME_VALID.getPrepTime()));
         // Assert
-        verify(modelValidationSubmitterMock, times((2))).submitRecipeComponentStatus(modelStatusCaptor.capture());
-        assertEquals(VALID_CHANGED, modelStatusCaptor.getValue());
+
     }
 
     @Test
@@ -277,7 +332,7 @@ public class RecipeDurationEditorViewModelTest {
         simulateNothingReturnedFromRepo();
         SUT.setPrepMinutesInView(String.valueOf(VALID_NEW_PREP_TIME_VALID.getPrepTime()));
         // Assert
-        verify(repoMock, times((2))).save(durationEntityCaptor.capture());
+        verify(repoDurationMock, times((2))).save(durationEntityCaptor.capture());
         assertEquals(VALID_NEW_PREP_TIME_VALID, durationEntityCaptor.getValue());
     }
 
@@ -292,7 +347,7 @@ public class RecipeDurationEditorViewModelTest {
         SUT.setPrepHoursInView(String.valueOf(VALID_NEW_PREP_TIME_VALID.getPrepTime() / 60));
         SUT.setPrepMinutesInView(String.valueOf(VALID_NEW_PREP_TIME_VALID.getPrepTime() % 60));
         // Assert
-        verify(repoMock, times((2))).save(durationEntityCaptor.capture());
+        verify(repoDurationMock, times((2))).save(durationEntityCaptor.capture());
         assertEquals(VALID_NEW_PREP_TIME_VALID, durationEntityCaptor.getAllValues().get(1));
     }
 
@@ -304,7 +359,7 @@ public class RecipeDurationEditorViewModelTest {
         simulateNothingReturnedFromRepo();
         SUT.setPrepHoursInView(String.valueOf(VALID_NEW_PREP_TIME_VALID.getPrepTime() / 60));
         SUT.setPrepMinutesInView(String.valueOf(VALID_NEW_PREP_TIME_VALID.getPrepTime() % 60));
-        verify(modelValidationSubmitterMock).submitRecipeComponentStatus(VALID_CHANGED);
+//        verify(modelValidationSubmitterMock).submitRecipeComponentStatus(VALID_CHANGED);
     }
 
     @Test
@@ -318,7 +373,7 @@ public class RecipeDurationEditorViewModelTest {
         SUT.setPrepHoursInView(String.valueOf(INVALID_NEW_PREP_TIME_INVALID.getPrepTime() / 60));
         SUT.setPrepMinutesInView(String.valueOf(INVALID_NEW_PREP_TIME_INVALID.getPrepTime() % 60));
         // Assert
-        verify(repoMock, times((2))).save(durationEntityCaptor.capture());
+        verify(repoDurationMock, times((2))).save(durationEntityCaptor.capture());
         assertEquals(VALID_NEW_PREP_TIME_VALID, durationEntityCaptor.getValue());
     }
 
@@ -330,10 +385,8 @@ public class RecipeDurationEditorViewModelTest {
         simulateNothingReturnedFromRepo();
         SUT.setPrepHoursInView(String.valueOf(MAX_PREP_TIME / 60));
         SUT.setPrepMinutesInView(String.valueOf(MAX_PREP_TIME % 60 + 1));
+        // Assert
 
-        verify(modelValidationSubmitterMock, times((3))).submitRecipeComponentStatus(modelStatusCaptor.capture());
-        assertEquals(INVALID_CHANGED, modelStatusCaptor.getValue());
-        verify(modelValidationSubmitterMock).submitRecipeComponentStatus(eq(INVALID_CHANGED));
     }
 
     @Test
@@ -357,8 +410,7 @@ public class RecipeDurationEditorViewModelTest {
         simulateNothingReturnedFromRepo();
         SUT.setCookHoursInView(String.valueOf(VALID_NEW_COOK_TIME_VALID.getCookTime() / 60));
         // Assert
-        verify(modelValidationSubmitterMock, times((2))).submitRecipeComponentStatus(modelStatusCaptor.capture());
-        assertEquals(VALID_CHANGED, modelStatusCaptor.getValue());
+
     }
 
     @Test
@@ -371,7 +423,7 @@ public class RecipeDurationEditorViewModelTest {
         simulateNothingReturnedFromRepo();
         SUT.setCookHoursInView(String.valueOf(VALID_NEW_COOK_TIME_VALID.getCookTime() / 60));
         // Assert
-        verify(repoMock, times((2))).save(durationEntityCaptor.capture());
+        verify(repoDurationMock, times((2))).save(durationEntityCaptor.capture());
         assertEquals(VALID_NEW_COOK_TIME_VALID, durationEntityCaptor.getValue());
     }
 
@@ -394,8 +446,7 @@ public class RecipeDurationEditorViewModelTest {
         simulateNothingReturnedFromRepo();
         SUT.setCookHoursInView(String.valueOf(INVALID_NEW_COOK_TIME_INVALID.getCookTime() / 60 + 1));
         // Assert
-        verify(modelValidationSubmitterMock, times((2))).submitRecipeComponentStatus(modelStatusCaptor.capture());
-        assertEquals(INVALID_CHANGED, modelStatusCaptor.getValue());
+
     }
 
     @Test
@@ -407,7 +458,7 @@ public class RecipeDurationEditorViewModelTest {
         simulateNothingReturnedFromRepo();
         SUT.setCookHoursInView(String.valueOf(INVALID_NEW_COOK_TIME_INVALID.getCookTime() / 60 + 1));
         // Assert
-        verify(repoMock).save(durationEntityCaptor.capture());
+        verify(repoDurationMock).save(durationEntityCaptor.capture());
         assertEquals(VALID_NEW_EMPTY, durationEntityCaptor.getValue());
     }
 
@@ -430,8 +481,7 @@ public class RecipeDurationEditorViewModelTest {
         simulateNothingReturnedFromRepo();
         SUT.setCookMinutesInView(String.valueOf(VALID_NEW_COOK_TIME_VALID.getCookTime()));
         // Assert
-        verify(modelValidationSubmitterMock, times((2))).submitRecipeComponentStatus(modelStatusCaptor.capture());
-        assertEquals(VALID_CHANGED, modelStatusCaptor.getValue());
+
     }
 
     @Test
@@ -444,7 +494,7 @@ public class RecipeDurationEditorViewModelTest {
         simulateNothingReturnedFromRepo();
         SUT.setCookMinutesInView(String.valueOf(VALID_NEW_COOK_TIME_VALID.getCookTime()));
         // Assert
-        verify(repoMock, times((2))).save(durationEntityCaptor.capture());
+        verify(repoDurationMock, times((2))).save(durationEntityCaptor.capture());
         assertEquals(VALID_NEW_COOK_TIME_VALID, durationEntityCaptor.getValue());
     }
 
@@ -467,8 +517,7 @@ public class RecipeDurationEditorViewModelTest {
         simulateNothingReturnedFromRepo();
         SUT.setCookMinutesInView(String.valueOf(INVALID_NEW_COOK_TIME_INVALID.getCookTime()));
         // Assert
-        verify(modelValidationSubmitterMock, times((2))).submitRecipeComponentStatus(modelStatusCaptor.capture());
-        assertEquals(INVALID_CHANGED, modelStatusCaptor.getValue());
+
     }
 
     @Test
@@ -481,7 +530,7 @@ public class RecipeDurationEditorViewModelTest {
         simulateNothingReturnedFromRepo();
         SUT.setCookMinutesInView(String.valueOf(INVALID_NEW_COOK_TIME_INVALID.getCookTime()));
         // Assert
-        verify(repoMock).save(durationEntityCaptor.capture());
+        verify(repoDurationMock).save(durationEntityCaptor.capture());
         assertEquals(VALID_NEW_EMPTY, durationEntityCaptor.getValue());
     }
 
@@ -508,7 +557,7 @@ public class RecipeDurationEditorViewModelTest {
         SUT.setCookHoursInView(String.valueOf(VALID_NEW_COOK_TIME_VALID.getCookTime() / 60));
         SUT.setCookMinutesInView(String.valueOf(VALID_NEW_COOK_TIME_VALID.getCookTime() % 60));
         // Assert
-        verify(modelValidationSubmitterMock).submitRecipeComponentStatus(eq(VALID_CHANGED));
+//        verify(modelValidationSubmitterMock).submitRecipeComponentStatus(eq(VALID_CHANGED));
     }
 
     @Test
@@ -522,7 +571,7 @@ public class RecipeDurationEditorViewModelTest {
         SUT.setCookHoursInView(String.valueOf(VALID_NEW_COOK_TIME_VALID.getCookTime() / 60));
         SUT.setCookMinutesInView(String.valueOf(VALID_NEW_COOK_TIME_VALID.getCookTime() % 60));
         // Assert
-        verify(repoMock, times((2))).save(durationEntityCaptor.capture());
+        verify(repoDurationMock, times((2))).save(durationEntityCaptor.capture());
         assertEquals(VALID_NEW_COOK_TIME_VALID, durationEntityCaptor.getValue());
     }
 
@@ -547,7 +596,7 @@ public class RecipeDurationEditorViewModelTest {
         SUT.setCookHoursInView(String.valueOf(INVALID_NEW_COOK_TIME_INVALID.getCookTime() / 60));
         SUT.setCookMinutesInView(String.valueOf(INVALID_NEW_COOK_TIME_INVALID.getCookTime() % 60 + 1));
         // Assert
-        verify(modelValidationSubmitterMock).submitRecipeComponentStatus(eq(INVALID_CHANGED));
+//        verify(modelValidationSubmitterMock).submitRecipeComponentStatus(eq(INVALID_CHANGED));
     }
 
     @Test
@@ -561,7 +610,7 @@ public class RecipeDurationEditorViewModelTest {
         SUT.setCookHoursInView(String.valueOf(INVALID_NEW_COOK_TIME_INVALID.getCookTime() / 60));
         SUT.setCookMinutesInView(String.valueOf(INVALID_NEW_COOK_TIME_INVALID.getCookTime() % 60 + 1));
         // Assert
-        verify(repoMock).save(VALID_NEW_EMPTY);
+        verify(repoDurationMock).save(VALID_NEW_EMPTY);
     }
 
     @Test
@@ -616,9 +665,7 @@ public class RecipeDurationEditorViewModelTest {
         SUT.start(VALID_EXISTING_COMPLETE.getId());
         simulateGetValidExistingCompleteFromDatabase();
         // Assert
-        verify(modelValidationSubmitterMock).submitRecipeComponentStatus(modelStatusCaptor.capture());
-        RecipeComponentStateModel modelStatus = modelStatusCaptor.getValue();
-        assertEquals(VALID_UNCHANGED, modelStatus);
+
     }
 
     @Test
@@ -626,8 +673,8 @@ public class RecipeDurationEditorViewModelTest {
         // Arrange
         SUT.startByCloningModel(VALID_COMPLETE_FROM_ANOTHER_USER.getId(), VALID_NEW_EMPTY.getId());
         // Assert
-        verify(repoMock).getById(eq(VALID_COMPLETE_FROM_ANOTHER_USER.getId()),
-                repoCallbackCaptor.capture());
+        verify(repoDurationMock).getById(eq(VALID_COMPLETE_FROM_ANOTHER_USER.getId()),
+                repoDurationCallback.capture());
     }
 
     @Test
@@ -638,7 +685,7 @@ public class RecipeDurationEditorViewModelTest {
         SUT.startByCloningModel(VALID_COMPLETE_FROM_ANOTHER_USER.getId(), VALID_NEW_EMPTY.getId());
         simulateGetValidEntityFromAnotherUserFromDatabase();
         // Assert
-        verify(repoMock).save(eq(VALID_NEW_CLONED));
+        verify(repoDurationMock).save(eq(VALID_NEW_CLONED));
     }
 
     @Test
@@ -652,7 +699,7 @@ public class RecipeDurationEditorViewModelTest {
         SUT.setPrepHoursInView(String.valueOf(VALID_NEW_CLONED_PREP_TIME_UPDATED.getPrepTime() / 60));
         SUT.setPrepMinutesInView(String.valueOf(VALID_NEW_CLONED_PREP_TIME_UPDATED.getPrepTime() % 60));
         // Assert
-        verify(repoMock, times((3))).save(durationEntityCaptor.capture());
+        verify(repoDurationMock, times((3))).save(durationEntityCaptor.capture());
         assertEquals(VALID_NEW_CLONED_PREP_TIME_UPDATED, durationEntityCaptor.getValue());
     }
 
@@ -662,12 +709,12 @@ public class RecipeDurationEditorViewModelTest {
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(VALID_NEW_EMPTY.getCreateDate());
         // Act
         SUT.startByCloningModel(INVALID_COMPLETE_FROM_ANOTHER_USER.getId(), VALID_NEW_EMPTY.getId());
-        verify(repoMock).getById(eq(INVALID_COMPLETE_FROM_ANOTHER_USER.getId()),
-                repoCallbackCaptor.capture());
-        repoCallbackCaptor.getValue().onDataNotAvailable();
+        verify(repoDurationMock).getById(eq(INVALID_COMPLETE_FROM_ANOTHER_USER.getId()),
+                repoDurationCallback.capture());
+        repoDurationCallback.getValue().onDataNotAvailable();
 
         // Assert
-        verify(repoMock).save(eq(VALID_NEW_EMPTY));
+        verify(repoDurationMock).save(eq(VALID_NEW_EMPTY));
     }
 
     // region helper methods -----------------------------------------------------------------------
@@ -679,25 +726,25 @@ public class RecipeDurationEditorViewModelTest {
     }
 
     private void simulateNothingReturnedFromRepo() {
-        verify(repoMock).getById(eq(VALID_NEW_EMPTY.getId()),
-                repoCallbackCaptor.capture());
+        verify(repoDurationMock).getById(eq(VALID_NEW_EMPTY.getId()),
+                repoDurationCallback.capture());
 
-        repoCallbackCaptor.getValue().onDataNotAvailable();
+        repoDurationCallback.getValue().onDataNotAvailable();
     }
 
     private void simulateGetValidExistingCompleteFromDatabase() {
-        verify(repoMock).getById(eq(VALID_EXISTING_COMPLETE.getId()),
-                repoCallbackCaptor.capture());
+        verify(repoDurationMock).getById(eq(VALID_EXISTING_COMPLETE.getId()),
+                repoDurationCallback.capture());
 
-        repoCallbackCaptor.getValue().onEntityLoaded(VALID_EXISTING_COMPLETE);
+        repoDurationCallback.getValue().onEntityLoaded(VALID_EXISTING_COMPLETE);
     }
 
     private void simulateGetValidEntityFromAnotherUserFromDatabase() {
-        verify(repoMock).getById(
+        verify(repoDurationMock).getById(
                 eq(VALID_COMPLETE_FROM_ANOTHER_USER.getId()),
-                repoCallbackCaptor.capture());
+                repoDurationCallback.capture());
 
-        repoCallbackCaptor.getValue().onEntityLoaded(
+        repoDurationCallback.getValue().onEntityLoaded(
                 VALID_COMPLETE_FROM_ANOTHER_USER);
     }
     // endregion helper methods --------------------------------------------------------------------

@@ -4,13 +4,29 @@ import android.content.res.Resources;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
+import com.example.peter.thekitchenmenu.data.entity.RecipeCourseEntity;
+import com.example.peter.thekitchenmenu.data.entity.RecipeDurationEntity;
+import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
+import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipe;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeCourse;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDuration;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions.RecipePortions;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDurationTest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityTest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortionsTest;
+import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipePortionsEntity;
-import com.example.peter.thekitchenmenu.testdata.TestDataRecipeValidator;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
@@ -21,7 +37,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -58,29 +73,37 @@ public class RecipePortionsEditorViewModelTest {
             TestDataRecipePortionsEntity.getExistingClonedUpdatedSittingsServings();
     private final RecipePortionsEntity EXISTING_VALID_FROM_ANOTHER_USER =
             TestDataRecipePortionsEntity.getValidCloneFromAnotherUser();
-    private static final RecipeComponentStateModel INVALID_UNCHANGED =
-            TestDataRecipeValidator.getPortionsModelStatusINVALID_UNCHANGED();
-    private static final RecipeComponentStateModel INVALID_CHANGED =
-            TestDataRecipeValidator.getPortionsModelStatusINVALID_CHANGED();
-    private static final RecipeComponentStateModel VALID_UNCHANGED =
-            TestDataRecipeValidator.getPortionsModelStatusVALID_UNCHANGED();
-    private static final RecipeComponentStateModel VALID_CHANGED =
-            TestDataRecipeValidator.getPortionsModelStatusVALID_CHANGED();
+
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
     @Mock
-    private Resources resourcesMock;
-    @Mock
-    private RepositoryRecipePortions repoMock;
+    RepositoryRecipe repoRecipeMock;
     @Captor
-    ArgumentCaptor<DataSource.GetEntityCallback<RecipePortionsEntity>> repoCallback;
+    ArgumentCaptor<DataSource.GetEntityCallback<RecipeEntity>> repoRecipeCallback;
+    @Mock
+    RepositoryRecipeIdentity repoIdentityMock;
+    @Captor
+    ArgumentCaptor<DataSource.GetEntityCallback<RecipeIdentityEntity>> repoIdentityCallback;
+    @Mock
+    RepositoryRecipeCourse repoCourseMock;
+    @Captor
+    ArgumentCaptor<DataSource.GetAllCallback<RecipeCourseEntity>> repoCourseCallback;
+    @Mock
+    RepositoryRecipeDuration repoDurationMock;
+    @Captor
+    ArgumentCaptor<DataSource.GetEntityCallback<RecipeDurationEntity>> repoDurationCallback;
+    @Mock
+    RepositoryRecipePortions repoPortionsMock;
+    @Captor
+    ArgumentCaptor<DataSource.GetEntityCallback<RecipePortionsEntity>> repoPortionsCallback;
+    @Mock
+    private Resources resourcesMock;
     @Mock
     private TimeProvider timeProviderMock;
     @Mock
     private UniqueIdProvider idProviderMock;
-    @Mock
-    RecipeValidation.RecipeValidatorModelSubmission modelValidationSubmitterMock;
+
     private RecipePortionsEditorViewModel SUT;
     // endregion helper fields ---------------------------------------------------------------------
 
@@ -90,23 +113,60 @@ public class RecipePortionsEditorViewModelTest {
         setupResourceMockReturnValues();
 
         SUT = givenViewModel();
-
-        SUT.setModelValidationSubmitter(modelValidationSubmitterMock);
     }
 
     private RecipePortionsEditorViewModel givenViewModel() {
         UseCaseHandler handler = new UseCaseHandler(new UseCaseSchedulerMock()
         );
-        RecipePortions useCase = new RecipePortions(
-                repoMock,
-                idProviderMock,
+
+        TextValidator textValidator = new TextValidator.Builder().
+                setShortTextMinLength(RecipeIdentityTest.TITLE_MIN_LENGTH).
+                setShortTextMaxLength(RecipeIdentityTest.TITLE_MAX_LENGTH).
+                setLongTextMinLength(RecipeIdentityTest.DESCRIPTION_MIN_LENGTH).
+                setLongTextMaxLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
+                build();
+
+        RecipeIdentity identity = new RecipeIdentity(
+                repoIdentityMock,
                 timeProviderMock,
-                MAX_SERVINGS,
-                MAX_SITTINGS
+                handler,
+                textValidator
         );
 
+        RecipeCourse course = new RecipeCourse(
+                repoCourseMock,
+                idProviderMock,
+                timeProviderMock
+        );
+
+        RecipeDuration duration = new RecipeDuration(
+                repoDurationMock,
+                timeProviderMock,
+                RecipeDurationTest.MAX_PREP_TIME,
+                RecipeDurationTest.MAX_COOK_TIME
+        );
+
+        RecipePortions portions = new RecipePortions(
+                repoPortionsMock,
+                idProviderMock,
+                timeProviderMock,
+                RecipePortionsTest.MAX_SERVINGS,
+                RecipePortionsTest.MAX_SITTINGS
+        );
+
+        RecipeStateCalculator stateCalculator = new RecipeStateCalculator();
+
+        Recipe recipe = new Recipe(
+                repoRecipeMock,
+                handler,
+                stateCalculator,
+                identity,
+                course,
+                duration,
+                portions);
+
         return new RecipePortionsEditorViewModel(
-                handler, useCase, resourcesMock
+                handler, recipe, resourcesMock
         );
     }
 
@@ -130,7 +190,7 @@ public class RecipePortionsEditorViewModelTest {
         SUT.start(NEW_EMPTY.getRecipeId());
         simulateNothingReturnedFromDatabase();
         // Assert
-        verify(modelValidationSubmitterMock).submitRecipeComponentStatus(eq(VALID_UNCHANGED));
+//        verify(modelValidationSubmitterMock).submitRecipeComponentStatus(eq(VALID_UNCHANGED));
     }
 
     @Test
@@ -157,7 +217,7 @@ public class RecipePortionsEditorViewModelTest {
         SUT.setServingsInView(String.valueOf(NEW_INVALID.getServings()));
         SUT.setSittingsInView(String.valueOf(NEW_INVALID.getSittings()));
         // Assert
-        verify(modelValidationSubmitterMock, times((2))).submitRecipeComponentStatus(eq(INVALID_CHANGED));
+//        verify(modelValidationSubmitterMock, times((2))).submitRecipeComponentStatus(eq(INVALID_CHANGED));
     }
 
     @Test
@@ -170,7 +230,7 @@ public class RecipePortionsEditorViewModelTest {
         SUT.setServingsInView(String.valueOf(NEW_INVALID_SERVINGS_VALID_SITTINGS.getServings()));
         SUT.setSittingsInView(String.valueOf(NEW_INVALID_SERVINGS_VALID_SITTINGS.getSittings()));
         // Assert
-        verify(modelValidationSubmitterMock).submitRecipeComponentStatus(eq(INVALID_CHANGED));
+//        verify(modelValidationSubmitterMock).submitRecipeComponentStatus(eq(INVALID_CHANGED));
     }
 
     @Test
@@ -183,7 +243,7 @@ public class RecipePortionsEditorViewModelTest {
         SUT.setServingsInView(String.valueOf(NEW_VALID_SERVINGS_INVALID_SITTINGS.getServings()));
         SUT.setSittingsInView(String.valueOf(NEW_VALID_SERVINGS_INVALID_SITTINGS.getSittings()));
         // Assert
-        verify(modelValidationSubmitterMock).submitRecipeComponentStatus(eq(INVALID_CHANGED));
+//        verify(modelValidationSubmitterMock).submitRecipeComponentStatus(eq(INVALID_CHANGED));
     }
 
     @Test
@@ -210,7 +270,7 @@ public class RecipePortionsEditorViewModelTest {
         SUT.setServingsInView(String.valueOf(NEW_VALID.getServings()));
         SUT.setSittingsInView(String.valueOf(NEW_VALID.getSittings()));
         // Assert
-        verify(modelValidationSubmitterMock, times((2))).submitRecipeComponentStatus(eq(VALID_CHANGED));
+//        verify(modelValidationSubmitterMock, times((2))).submitRecipeComponentStatus(eq(VALID_CHANGED));
     }
 
     @Test
@@ -238,7 +298,7 @@ public class RecipePortionsEditorViewModelTest {
         SUT.setServingsInView(String.valueOf(NEW_VALID.getServings()));
         SUT.setSittingsInView(String.valueOf(NEW_VALID.getSittings()));
         // Assert
-        verify(repoMock).save(eq(NEW_VALID));
+        verify(repoPortionsMock).save(eq(NEW_VALID));
     }
 
     @Test
@@ -259,7 +319,7 @@ public class RecipePortionsEditorViewModelTest {
         SUT.start(EXISTING_VALID.getRecipeId());
         simulateExistingValidReturnedFromDatabase();
         // Assert
-        verify(modelValidationSubmitterMock).submitRecipeComponentStatus(eq(VALID_UNCHANGED));
+//        verify(modelValidationSubmitterMock).submitRecipeComponentStatus(eq(VALID_UNCHANGED));
     }
 
     @Test
@@ -270,7 +330,7 @@ public class RecipePortionsEditorViewModelTest {
         // Act
         SUT.setServingsInView(String.valueOf(NEW_INVALID.getServings()));
         // Assert
-        verifyNoMoreInteractions(repoMock);
+        verifyNoMoreInteractions(repoPortionsMock);
     }
 
     @Test
@@ -283,7 +343,7 @@ public class RecipePortionsEditorViewModelTest {
         simulateExistingValidReturnedFromDatabase();
         SUT.setServingsInView(String.valueOf(EXISTING_VALID_UPDATED_SERVINGS.getServings()));
         // Assert
-        verify(repoMock).save(eq(EXISTING_VALID_UPDATED_SERVINGS));
+        verify(repoPortionsMock).save(eq(EXISTING_VALID_UPDATED_SERVINGS));
     }
 
     @Test
@@ -294,7 +354,7 @@ public class RecipePortionsEditorViewModelTest {
         simulateExistingValidReturnedFromDatabase();
         SUT.setSittingsInView(String.valueOf(NEW_INVALID.getSittings()));
         // Assert
-        verifyNoMoreInteractions(repoMock);
+        verifyNoMoreInteractions(repoPortionsMock);
     }
 
     @Test
@@ -307,7 +367,7 @@ public class RecipePortionsEditorViewModelTest {
         simulateExistingValidReturnedFromDatabase();
         SUT.setSittingsInView(String.valueOf(EXISTING_VALID_UPDATED_SITTINGS.getSittings()));
         // Assert
-        verify(repoMock).save(eq(EXISTING_VALID_UPDATED_SITTINGS));
+        verify(repoPortionsMock).save(eq(EXISTING_VALID_UPDATED_SITTINGS));
     }
 
     @Test
@@ -320,7 +380,7 @@ public class RecipePortionsEditorViewModelTest {
         SUT.startByCloningModel(EXISTING_VALID.getRecipeId(), NEW_EMPTY.getRecipeId());
         simulateExistingValidReturnedFromDatabase();
         // Assert
-        verify(repoMock).save(EXISTING_VALID_CLONE);
+        verify(repoPortionsMock).save(EXISTING_VALID_CLONE);
     }
 
     @Test
@@ -333,7 +393,7 @@ public class RecipePortionsEditorViewModelTest {
         SUT.startByCloningModel(EXISTING_VALID.getRecipeId(), NEW_EMPTY.getRecipeId());
         simulateExistingValidReturnedFromDatabase();
         // Assert
-        verify(modelValidationSubmitterMock).submitRecipeComponentStatus(eq(VALID_UNCHANGED));
+//        verify(modelValidationSubmitterMock).submitRecipeComponentStatus(eq(VALID_UNCHANGED));
     }
 
     @Test
@@ -348,7 +408,7 @@ public class RecipePortionsEditorViewModelTest {
         SUT.setServingsInView(String.valueOf(EXISTING_VALID_UPDATED_SERVINGS.getServings()));
         SUT.setSittingsInView(String.valueOf(EXISTING_VALID_UPDATED_SITTINGS.getSittings()));
         // Assert
-        verify(repoMock).save(eq(EXISTING_VALID_CLONE_UPDATED_SITTINGS_SERVINGS));
+        verify(repoPortionsMock).save(eq(EXISTING_VALID_CLONE_UPDATED_SITTINGS_SERVINGS));
     }
 
     // region helper methods -----------------------------------------------------------------------
@@ -367,13 +427,13 @@ public class RecipePortionsEditorViewModelTest {
     }
 
     private void simulateNothingReturnedFromDatabase() {
-        verify(repoMock).getPortionsForRecipe(eq(NEW_EMPTY.getRecipeId()), repoCallback.capture());
-        repoCallback.getValue().onDataNotAvailable();
+        verify(repoPortionsMock).getPortionsForRecipe(eq(NEW_EMPTY.getRecipeId()), repoPortionsCallback.capture());
+        repoPortionsCallback.getValue().onDataNotAvailable();
     }
 
     private void simulateExistingValidReturnedFromDatabase() {
-        verify(repoMock).getPortionsForRecipe(eq(EXISTING_VALID.getRecipeId()), repoCallback.capture());
-        repoCallback.getValue().onEntityLoaded(EXISTING_VALID);
+        verify(repoPortionsMock).getPortionsForRecipe(eq(EXISTING_VALID.getRecipeId()), repoPortionsCallback.capture());
+        repoPortionsCallback.getValue().onEntityLoaded(EXISTING_VALID);
     }
 
     private void whenIdProviderReturn(String id) {

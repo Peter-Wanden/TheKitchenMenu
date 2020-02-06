@@ -289,7 +289,7 @@ public class RecipePortionsTest {
         simulateValidExistingReturnedFromDatabase(recipeId);
         // Act
         RecipePortionsRequest.Model invalidModel = RecipePortionsRequest.Model.Builder.
-                basedOnResponseModel(portionsOnSuccessResponse.getModel()).
+                basedOnPortionsResponseModel(portionsOnSuccessResponse.getModel()).
                 setServings(INVALID_NEW_TOO_HIGH_SITTINGS_TOO_HIGH_SERVINGS.getServings()).
                 build();
         RecipePortionsRequest invalidRequest = new RecipePortionsRequest.Builder().
@@ -313,7 +313,7 @@ public class RecipePortionsTest {
         simulateValidExistingReturnedFromDatabase(recipeId);
         // Act
         RecipePortionsRequest.Model validModel = RecipePortionsRequest.Model.Builder.
-                basedOnResponseModel(portionsOnSuccessResponse.getModel()).
+                basedOnPortionsResponseModel(portionsOnSuccessResponse.getModel()).
                 setServings(VALID_EXISTING_UPDATED_SERVINGS.getServings()).
                 build();
         RecipePortionsRequest validRequest = new RecipePortionsRequest.Builder().
@@ -336,7 +336,7 @@ public class RecipePortionsTest {
         simulateValidExistingReturnedFromDatabase(recipeId);
         // Act
         RecipePortionsRequest.Model invalidModel = RecipePortionsRequest.Model.Builder.
-                basedOnResponseModel(portionsOnSuccessResponse.getModel()).
+                basedOnPortionsResponseModel(portionsOnSuccessResponse.getModel()).
                 setSittings(INVALID_NEW_TOO_HIGH_SITTINGS_TOO_HIGH_SERVINGS.getSittings()).
                 build();
         RecipePortionsRequest invalidRequest = new RecipePortionsRequest.Builder().
@@ -362,7 +362,7 @@ public class RecipePortionsTest {
         simulateValidExistingReturnedFromDatabase(recipeId);
         // Act
         RecipePortionsRequest.Model validModel = RecipePortionsRequest.Model.Builder.
-                basedOnResponseModel(portionsOnSuccessResponse.getModel()).
+                basedOnPortionsResponseModel(portionsOnSuccessResponse.getModel()).
                 setSittings(VALID_EXISTING_UPDATED_SITTINGS.getSittings()).
                 build();
         RecipePortionsRequest validRequest = new RecipePortionsRequest.Builder().
@@ -434,7 +434,7 @@ public class RecipePortionsTest {
         simulateValidExistingReturnedFromDatabase(cloneFromRecipeId);
         // Act
         RecipePortionsRequest.Model updatedServingsSittingsModel = RecipePortionsRequest.Model.Builder.
-                basedOnResponseModel(portionsOnSuccessResponse.getModel()).
+                basedOnPortionsResponseModel(portionsOnSuccessResponse.getModel()).
                 setServings(VALID_EXISTING_CLONE_UPDATED_SITTINGS_SERVINGS.getServings()).
                 setSittings(VALID_EXISTING_CLONE_UPDATED_SITTINGS_SERVINGS.getSittings()).
                 build();

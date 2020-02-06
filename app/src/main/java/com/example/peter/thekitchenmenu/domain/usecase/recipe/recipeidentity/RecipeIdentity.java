@@ -279,7 +279,6 @@ public class RecipeIdentity
         } else {
             return RecipeIdentityResponse.Model.Builder.
                     basedOn(requestModel).
-                    setId(recipeId).
                     build();
         }
     }

@@ -18,18 +18,20 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDuration;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDurationTest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityTest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions.RecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortionsTest;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
+import com.example.peter.thekitchenmenu.testdata.TestDataRecipeEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIdentityEntity;
-import com.example.peter.thekitchenmenu.testdata.TestDataRecipeValidator;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 
 import org.junit.Before;
@@ -41,11 +43,16 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.ComponentState.DATA_UNAVAILABLE;
+import javax.annotation.Nonnull;
+
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class RecipeIdentityEditorViewModelTest {
+
+    private static final String TAG = "tkm-" +
+            RecipeIdentityEditorViewModelTest.class.getSimpleName() + ": ";
 
     // region constants ----------------------------------------------------------------------------
     private static final RecipeIdentityEntity INVALID_NEW_EMPTY =
@@ -75,15 +82,6 @@ public class RecipeIdentityEditorViewModelTest {
     private static final RecipeIdentityEntity VALID_CLONED_DESCRIPTION_UPDATED =
             TestDataRecipeIdentityEntity.getValidClonedDescriptionUpdated();
 
-    private RecipeComponentStateModel INVALID_UNCHANGED =
-            TestDataRecipeValidator.getIdentityModelStatusINVALID_UNCHANGED();
-    private RecipeComponentStateModel INVALID_CHANGED =
-            TestDataRecipeValidator.getIdentityModelStatusINVALID_CHANGED();
-    private RecipeComponentStateModel VALID_UNCHANGED =
-            TestDataRecipeValidator.getIdentityModelStatusVALID_UNCHANGED();
-    private RecipeComponentStateModel VALID_CHANGED =
-            TestDataRecipeValidator.getIdentityModelStatusVALID_CHANGED();
-
     private static final String ERROR_MESSAGE_TOO_LONG = "ERROR_MESSAGE_TOO_LONG";
     private static final String ERROR_MESSAGE_TOO_SHORT = "ERROR_MESSAGE_TOO_SHORT";
 
@@ -99,7 +97,7 @@ public class RecipeIdentityEditorViewModelTest {
     @Mock
     RepositoryRecipeIdentity repoIdentityMock;
     @Captor
-    ArgumentCaptor<DataSource.GetEntityCallback<RecipeIdentityEntity>> repoCallback;
+    ArgumentCaptor<DataSource.GetEntityCallback<RecipeIdentityEntity>> repoIdentityCallback;
     @Mock
     RepositoryRecipeCourse repoCourseMock;
     @Captor
@@ -111,16 +109,16 @@ public class RecipeIdentityEditorViewModelTest {
     @Mock
     RepositoryRecipePortions repoPortionsMock;
     @Captor
-    ArgumentCaptor<DataSource.GetAllCallback<RecipePortionsEntity>> repoPortionsCallback;
+    ArgumentCaptor<DataSource.GetEntityCallback<RecipePortionsEntity>> repoPortionsCallback;
     @Mock
     TimeProvider timeProviderMock;
     @Mock
     UniqueIdProvider idProviderMock;
-    @Mock
-    RecipeValidation.RecipeValidatorModelSubmission modelValidationSubmitterMock;
-    @Captor
-    ArgumentCaptor<RecipeComponentStateModel> statusCaptor;
 
+    private RecipeClientListener recipeClientListener;
+    private RecipeStateResponse recipeStateResponse;
+    private RecipeResponse recipeResponse;
+    private ComponentState actualComponentState;
     private int shortTextMinLength = 3;
     private int shortTextMaxLength = 70;
     private int longTextMinLength = 0;
@@ -136,7 +134,6 @@ public class RecipeIdentityEditorViewModelTest {
         setupResources();
 
         SUT = givenViewModel();
-        SUT.setModelValidationSubmitter(modelValidationSubmitterMock);
     }
 
     private RecipeIdentityEditorViewModel givenViewModel() {
@@ -189,6 +186,9 @@ public class RecipeIdentityEditorViewModelTest {
                 duration,
                 portions);
 
+        recipeClientListener = new RecipeClientListener();
+        recipe.registerClientListener(recipeClientListener);
+
         return new RecipeIdentityEditorViewModel(
                 handler,
                 recipe,
@@ -204,7 +204,7 @@ public class RecipeIdentityEditorViewModelTest {
         // Act
         SUT.start(recipeId);
         // Assert
-        simulateNothingReturnedFromDatabase(recipeId);
+        verifyAllComponentRepoCalledAndReturnDataUnavailable(recipeId);
 
         assertEquals(expectedTitle, SUT.getTitle());
         assertEquals(expectedDescription, SUT.getDescription());
@@ -218,11 +218,15 @@ public class RecipeIdentityEditorViewModelTest {
         String recipeId = INVALID_NEW_EMPTY.getId();
         // Act
         SUT.start(recipeId);
-        simulateNothingReturnedFromDatabase(recipeId);
         // Assert
-        verify(modelValidationSubmitterMock).submitRecipeComponentStatus(statusCaptor.capture());
-        RecipeComponentStateModel actualStatus = statusCaptor.getValue();
-        assertEquals(DATA_UNAVAILABLE, actualStatus.getState());
+        verifyAllComponentRepoCalledAndReturnDataUnavailable(recipeId);
+
+        ComponentState expectedState = ComponentState.DATA_UNAVAILABLE;
+        ComponentState actualState = recipeClientListener.
+                getResponse().
+                getComponentStates().
+                get(ComponentName.IDENTITY);
+        assertEquals(expectedState, actualState);
     }
 
     @Test
@@ -232,7 +236,7 @@ public class RecipeIdentityEditorViewModelTest {
         String invalidTitle = INVALID_NEW_TITLE_TOO_SHORT.getTitle();
         // Act
         SUT.start(recipeId);
-        simulateNothingReturnedFromDatabase(recipeId);
+        verifyAllComponentRepoCalledAndReturnDataUnavailable(recipeId);
 
         SUT.setTitle(invalidTitle);
         // Assert
@@ -246,7 +250,7 @@ public class RecipeIdentityEditorViewModelTest {
         String invalidTitle = INVALID_NEW_TITLE_TOO_LONG.getTitle();
         // Act
         SUT.start(recipeId);
-        simulateNothingReturnedFromDatabase(recipeId);
+        verifyAllComponentRepoCalledAndReturnDataUnavailable(recipeId);
 
         SUT.setTitle(invalidTitle);
         // Assert
@@ -254,19 +258,22 @@ public class RecipeIdentityEditorViewModelTest {
     }
 
     @Test
-    public void startNewId_invalidTitle_stateDATA_UNAVAILABLE() {
+    public void startNewId_invalidTitle_stateINVALID_CHANGED() {
         // Arrange
         String invalidTitle = INVALID_NEW_TITLE_TOO_SHORT.getTitle();
         String recipeId = INVALID_NEW_EMPTY.getId();
         // Act
         SUT.start(recipeId);
-        simulateNothingReturnedFromDatabase(recipeId);
+        verifyAllComponentRepoCalledAndReturnDataUnavailable(recipeId);
 
         SUT.setTitle(invalidTitle);
         // Assert
-        verify(modelValidationSubmitterMock, times((2))).submitRecipeComponentStatus(statusCaptor.capture());
-        RecipeComponentStateModel actualStatus = statusCaptor.getValue();
-        assertEquals(DATA_UNAVAILABLE, actualStatus.getState());
+        ComponentState expectedState = ComponentState.INVALID_CHANGED;
+        ComponentState actualState = recipeClientListener.
+                getResponse().
+                getComponentStates().
+                get(ComponentName.IDENTITY);
+        assertEquals(expectedState, actualState);
     }
 
     @Test
@@ -276,7 +283,7 @@ public class RecipeIdentityEditorViewModelTest {
         String validDescription = INVALID_NEW_TITLE_INVALID_DESCRIPTION_VALID.getDescription();
         // Act
         SUT.start(recipeId);
-        simulateNothingReturnedFromDatabase(recipeId);
+        verifyAllComponentRepoCalledAndReturnDataUnavailable(recipeId);
 
         SUT.setTitle(invalidTitle);
         SUT.setDescription(validDescription);
@@ -288,11 +295,11 @@ public class RecipeIdentityEditorViewModelTest {
     public void startNewRecipeId_validTitle_errorMessageObservableNull() {
         // Arrange
         String recipeId = INVALID_NEW_EMPTY.getId();
-        String title = VALID_NEW_TITLE_VALID.getTitle();
+        String validTitle = VALID_NEW_TITLE_VALID.getTitle();
         // Act
         SUT.start(recipeId);
-        simulateNothingReturnedFromDatabase(recipeId);
-        SUT.setTitle(title);
+        verifyAllComponentRepoCalledAndReturnDataUnavailable(recipeId);
+        SUT.setTitle(validTitle);
         // Assert
         assertNull(SUT.titleErrorMessage.get());
     }
@@ -306,7 +313,7 @@ public class RecipeIdentityEditorViewModelTest {
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(time);
         // Act
         SUT.start(recipeId);
-        simulateNothingReturnedFromDatabase(recipeId);
+        verifyAllComponentRepoCalledAndReturnDataUnavailable(recipeId);
         SUT.setTitle(title);
         // Assert
         verify(repoIdentityMock).save(VALID_NEW_TITLE_VALID);
@@ -319,62 +326,20 @@ public class RecipeIdentityEditorViewModelTest {
         String title = VALID_NEW_TITLE_VALID.getTitle();
         // Act
         SUT.start(recipeId);
-        simulateNothingReturnedFromDatabase(recipeId);
+        verifyAllComponentRepoCalledAndReturnDataUnavailable(recipeId);
 
         SUT.setTitle(title);
         // Assert
-        verify(modelValidationSubmitterMock, times((2))).submitRecipeComponentStatus(statusCaptor.capture());
-        RecipeComponentStateModel actualStatus = statusCaptor.getValue();
-        assertEquals(VALID_CHANGED, actualStatus);
+        ComponentState expectedState = ComponentState.VALID_CHANGED;
+        ComponentState actualState = recipeClientListener.
+                getResponse().
+                getComponentStates().
+                get(ComponentName.IDENTITY);
+        assertEquals(expectedState, actualState);
     }
 
     @Test
     public void startNewRecipeId_validTitleInvalidDescription_errorMessageSetToObservable() {
-        // Arrange
-        String recipeId = INVALID_NEW_EMPTY.getId();
-
-        String title = new StringMaker().
-                makeStringOfExactLength(shortTextMaxLength).
-                build();
-
-        String description = new StringMaker().
-                makeStringOfExactLength(longTextMaxLength).
-                thenAddOneCharacter().
-                build();
-        // Act
-        SUT.start(recipeId);
-        simulateNothingReturnedFromDatabase(recipeId);
-
-        SUT.setTitle(title);
-        SUT.setDescription(description);
-        // Assert
-        assertEquals(ERROR_MESSAGE_TOO_LONG, SUT.descriptionErrorMessage.get());
-    }
-
-    @Test
-    public void startNewRecipeId_validTitleInvalidDescription_descriptionNotSaved() {
-        // Arrange
-        String recipeId = INVALID_NEW_EMPTY.getId();
-
-        String title = new StringMaker().
-                makeStringOfExactLength(shortTextMaxLength).
-                build();
-
-        String description = new StringMaker().
-                makeStringOfExactLength(longTextMaxLength).
-                thenAddOneCharacter().
-                build();
-        // Act
-        SUT.start(recipeId);
-        simulateNothingReturnedFromDatabase(recipeId);
-        SUT.setTitle(title);
-        verify(repoIdentityMock).save(anyObject());
-        SUT.setDescription(description);
-        verifyNoMoreInteractions(repoIdentityMock);
-    }
-
-    @Test
-    public void startNewRecipeId_validTitleInvalidDescription_stateVALID_CHANGED() {
         // Arrange
         String recipeId = INVALID_NEW_EMPTY.getId();
 
@@ -388,14 +353,62 @@ public class RecipeIdentityEditorViewModelTest {
                 build();
         // Act
         SUT.start(recipeId);
-        simulateNothingReturnedFromDatabase(recipeId);
+        verifyAllComponentRepoCalledAndReturnDataUnavailable(recipeId);
 
         SUT.setTitle(validTitle);
         SUT.setDescription(invalidDescription);
         // Assert
-        verify(modelValidationSubmitterMock, times((3))).submitRecipeComponentStatus(statusCaptor.capture());
-        RecipeComponentStateModel actualStatus = statusCaptor.getValue();
-        assertEquals(INVALID_CHANGED, actualStatus);
+        assertEquals(ERROR_MESSAGE_TOO_LONG, SUT.descriptionErrorMessage.get());
+    }
+
+    @Test
+    public void startNewRecipeId_validTitleInvalidDescription_descriptionNotSaved() {
+        // Arrange
+        String recipeId = INVALID_NEW_EMPTY.getId();
+
+        String validTitle = new StringMaker().
+                makeStringOfExactLength(shortTextMaxLength).
+                build();
+
+        String invalidDescription = new StringMaker().
+                makeStringOfExactLength(longTextMaxLength).
+                thenAddOneCharacter().
+                build();
+        // Act
+        SUT.start(recipeId);
+        verifyAllComponentRepoCalledAndReturnDataUnavailable(recipeId);
+        SUT.setTitle(validTitle);
+        verify(repoIdentityMock).save(anyObject());
+        SUT.setDescription(invalidDescription);
+        verifyNoMoreInteractions(repoIdentityMock);
+    }
+
+    @Test
+    public void startNewRecipeId_validTitleInvalidDescription_stateINVALID_CHANGED() {
+        // Arrange
+        String recipeId = INVALID_NEW_EMPTY.getId();
+
+        String validTitle = new StringMaker().
+                makeStringOfExactLength(shortTextMaxLength).
+                build();
+
+        String invalidDescription = new StringMaker().
+                makeStringOfExactLength(longTextMaxLength).
+                thenAddOneCharacter().
+                build();
+        // Act
+        SUT.start(recipeId);
+        verifyAllComponentRepoCalledAndReturnDataUnavailable(recipeId);
+
+        SUT.setTitle(validTitle);
+        SUT.setDescription(invalidDescription);
+        // Assert
+        ComponentState expectedState = ComponentState.INVALID_CHANGED;
+        ComponentState actualState = recipeClientListener.
+                getResponse().
+                getComponentStates().
+                get(ComponentName.IDENTITY);
+        assertEquals(expectedState, actualState);
     }
 
     @Test
@@ -406,7 +419,7 @@ public class RecipeIdentityEditorViewModelTest {
         String description = VALID_NEW_COMPLETE.getDescription();
         // Act
         SUT.start(recipeId);
-        simulateNothingReturnedFromDatabase(recipeId);
+        verifyAllComponentRepoCalledAndReturnDataUnavailable(recipeId);
 
         SUT.setTitle(title);
         SUT.setDescription(description);
@@ -419,14 +432,13 @@ public class RecipeIdentityEditorViewModelTest {
     public void startNewRecipeId_validTitleValidDescription_saved() {
         // Arrange
         String recipeId = INVALID_NEW_EMPTY.getId();
+
         String validTitle = VALID_NEW_COMPLETE.getTitle();
         String validDescription = VALID_NEW_COMPLETE.getDescription();
-        long time = VALID_NEW_COMPLETE.getCreateDate();
-        whenTimeProviderReturnTime(time);
-
+        whenTimeProviderReturnTime(VALID_NEW_COMPLETE.getCreateDate());
         // Act
         SUT.start(recipeId);
-        simulateNothingReturnedFromDatabase(recipeId);
+        verifyAllComponentRepoCalledAndReturnDataUnavailable(recipeId);
 
         // Assert
         SUT.setTitle(validTitle);
@@ -441,18 +453,20 @@ public class RecipeIdentityEditorViewModelTest {
         String recipeId = INVALID_NEW_EMPTY.getId();
         String validTitle = VALID_NEW_COMPLETE.getTitle();
         String validDescription = VALID_NEW_COMPLETE.getDescription();
-        long time = VALID_NEW_COMPLETE.getCreateDate();
-        whenTimeProviderReturnTime(time);
+        whenTimeProviderReturnTime(VALID_NEW_COMPLETE.getCreateDate());
         // Act
         SUT.start(recipeId);
-        simulateNothingReturnedFromDatabase(recipeId);
+        verifyAllComponentRepoCalledAndReturnDataUnavailable(recipeId);
 
         SUT.setTitle(validTitle);
         SUT.setDescription(validDescription);
         // Assert
-        verify(modelValidationSubmitterMock, times((3))).submitRecipeComponentStatus(statusCaptor.capture());
-        RecipeComponentStateModel actualStatus = statusCaptor.getValue();
-        assertEquals(VALID_CHANGED, actualStatus);
+        ComponentState expectedState = ComponentState.VALID_CHANGED;
+        ComponentState actualState = recipeClientListener.
+                getResponse().
+                getComponentStates().
+                get(ComponentName.IDENTITY);
+        assertEquals(expectedState, actualState);
     }
 
     @Test
@@ -463,8 +477,8 @@ public class RecipeIdentityEditorViewModelTest {
         String description = VALID_EXISTING_COMPLETE.getDescription();
         // Act
         SUT.start(recipeId);
-        verify(repoIdentityMock).getById(eq(recipeId), repoCallback.capture());
-        repoCallback.getValue().onEntityLoaded(VALID_EXISTING_COMPLETE);
+        verify(repoIdentityMock).getById(eq(recipeId), repoIdentityCallback.capture());
+        repoIdentityCallback.getValue().onEntityLoaded(VALID_EXISTING_COMPLETE);
         // Assert
         assertEquals(title, SUT.getTitle());
         assertEquals(description, SUT.getDescription());
@@ -476,31 +490,44 @@ public class RecipeIdentityEditorViewModelTest {
         String recipeId = VALID_EXISTING_COMPLETE.getId();
         // Act
         SUT.start(recipeId);
-        verify(repoIdentityMock).getById(eq(recipeId), repoCallback.capture());
-        repoCallback.getValue().onEntityLoaded(VALID_EXISTING_COMPLETE);
         // Assert
-        verify(modelValidationSubmitterMock).submitRecipeComponentStatus(statusCaptor.capture());
-        RecipeComponentStateModel actualStatus = statusCaptor.getValue();
-        assertEquals(VALID_UNCHANGED, actualStatus);
+        verifyRepoRecipeCalledAndReturnValidExistingComplete(recipeId);
+        verifyRepoIdentityCalledAndReturnValidExistingComplete(recipeId);
+        verifyRepoCoursesCalledAndReturnDataUnavailable(recipeId);
+        verifyRepoDurationCalledAndReturnDataUnavailable(recipeId);
+        verifyRepoPortionsCalledAndReturnDataUnavailable(recipeId);
+        // Assert
+        ComponentState expectedState = ComponentState.VALID_UNCHANGED;
+        ComponentState actualState = recipeClientListener.
+                getResponse().
+                getComponentStates().
+                get(ComponentName.IDENTITY);
+        assertEquals(expectedState, actualState);
     }
-//    @Test
-//    public void startValidExistingRecipeId_invalidTitle_errorMessageSetToObservable() {
-//        // Arrange
-//        String recipeId = INVALID_EXISTING_INCOMPLETE_INVALID_TITLE.getId();
-//        String title = INVALID_EXISTING_INCOMPLETE_INVALID_TITLE.getTitle();
-//        String description = INVALID_EXISTING_INCOMPLETE_INVALID_TITLE.getDescription();
-//
-//        whenShortTextValidationReturnTooShortError(title);
-//        whenLongTextValidationReturnValidated(description);
-//
-//        // Act
-//        SUT.startColleague(recipeId);
-//        verify(repoIdentityMock).getById(eq(recipeId), repoCallback.capture());
-//        repoCallback.getValue().onEntityLoaded(INVALID_EXISTING_INCOMPLETE_INVALID_TITLE);
-//
-//        // Assert
-//        assertEquals(ERROR_MESSAGE_TOO_SHORT, SUT.titleErrorMessage.get());
-//    }
+
+    @Test
+    public void startValidExistingRecipeId_invalidTitle_errorMessageSetToObservable() {
+        // Arrange
+        String recipeId = INVALID_EXISTING_INCOMPLETE_INVALID_TITLE.getId();
+        String title = INVALID_EXISTING_INCOMPLETE_INVALID_TITLE.getTitle();
+        String description = INVALID_EXISTING_INCOMPLETE_INVALID_TITLE.getDescription();
+
+        // Act
+        SUT.start(recipeId);
+
+        // Assert
+        verify(repoRecipeMock).getById(eq(recipeId), repoRecipeCallback.capture());
+        repoRecipeCallback.getValue().onEntityLoaded(TestDataRecipeEntity.getInvalidExisting());
+
+        verify(repoIdentityMock).getById(eq(recipeId), repoIdentityCallback.capture());
+        repoIdentityCallback.getValue().onEntityLoaded(INVALID_EXISTING_INCOMPLETE_INVALID_TITLE);
+
+        verifyRepoCoursesCalledAndReturnDataUnavailable(recipeId);
+        verifyRepoDurationCalledAndReturnDataUnavailable(recipeId);
+        verifyRepoPortionsCalledAndReturnDataUnavailable(recipeId);
+
+        assertEquals(ERROR_MESSAGE_TOO_SHORT, SUT.titleErrorMessage.get());
+    }
     // startValidExistingRecipeId_invalidTitle_notSaved
 
     // startValidExistingRecipeId_invalidTitle_stateINVALID_CHANGED
@@ -541,8 +568,8 @@ public class RecipeIdentityEditorViewModelTest {
         whenTimeProviderReturnTime(time);
         // Act
         SUT.startByCloningModel(cloneFromRecipeId, cloneToRecipeId);
-        verify(repoIdentityMock).getById(eq(cloneFromRecipeId), repoCallback.capture());
-        repoCallback.getValue().onEntityLoaded(VALID_FROM_ANOTHER_USER);
+        verify(repoIdentityMock).getById(eq(cloneFromRecipeId), repoIdentityCallback.capture());
+        repoIdentityCallback.getValue().onEntityLoaded(VALID_FROM_ANOTHER_USER);
 
         SUT.setDescription(VALID_CLONED_DESCRIPTION_UPDATED.getDescription());
         // Assert
@@ -578,19 +605,69 @@ public class RecipeIdentityEditorViewModelTest {
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(time);
     }
 
-    private void simulateNothingReturnedFromDatabase(String recipeId) {
-        verify(repoIdentityMock).getById(eq(recipeId), repoCallback.capture());
-        repoCallback.getValue().onDataNotAvailable();
+    private void verifyAllComponentRepoCalledAndReturnDataUnavailable(String recipeId) {
+        verifyRepoRecipeCalledAndReturnDataUnavailable(recipeId);
+        verifyRepoIdentityCalledAndReturnDataUnavailable(recipeId);
+        verifyRepoCoursesCalledAndReturnDataUnavailable(recipeId);
+        verifyRepoDurationCalledAndReturnDataUnavailable(recipeId);
+        verifyRepoPortionsCalledAndReturnDataUnavailable(recipeId);
+    }
+    private void verifyRepoRecipeCalledAndReturnDataUnavailable(String recipeId) {
+        verify(repoRecipeMock).getById(eq(recipeId), repoRecipeCallback.capture());
+        repoRecipeCallback.getValue().onDataNotAvailable();
+    }
+    private void verifyRepoIdentityCalledAndReturnDataUnavailable(String recipeId) {
+        verify(repoIdentityMock).getById(eq(recipeId), repoIdentityCallback.capture());
+        repoIdentityCallback.getValue().onDataNotAvailable();
+    }
+    private void verifyRepoCoursesCalledAndReturnDataUnavailable(String recipeId) {
+        verify(repoCourseMock).getCoursesForRecipe(eq(recipeId), repoCourseCallback.capture());
+        repoCourseCallback.getValue().onDataNotAvailable();
+    }
+    private void verifyRepoDurationCalledAndReturnDataUnavailable(String recipeId) {
+        verify(repoDurationMock).getById(eq(recipeId), repoDurationCallback.capture());
+        repoDurationCallback.getValue().onDataNotAvailable();
+    }
+    private void verifyRepoPortionsCalledAndReturnDataUnavailable(String recipeId) {
+        verify(repoPortionsMock).getPortionsForRecipe(eq(recipeId), repoPortionsCallback.capture());
+        repoPortionsCallback.getValue().onDataNotAvailable();
+    }
+
+    private void verifyRepoRecipeCalledAndReturnValidExistingComplete(String recipeId) {
+        verify(repoRecipeMock).getById(eq(recipeId), repoRecipeCallback.capture());
+        repoRecipeCallback.getValue().onEntityLoaded(TestDataRecipeEntity.getValidExisting());
+    }
+    private void verifyRepoIdentityCalledAndReturnValidExistingComplete(String recipeId) {
+        verify(repoIdentityMock).getById(eq(recipeId), repoIdentityCallback.capture());
+        repoIdentityCallback.getValue().onEntityLoaded(VALID_EXISTING_COMPLETE);
     }
 
     private void simulateGetValidFromAnotherUserFromDatabase() {
-        verify(repoIdentityMock).getById(eq(VALID_FROM_ANOTHER_USER.getId()), repoCallback.capture());
-        repoCallback.getValue().onEntityLoaded(VALID_FROM_ANOTHER_USER);
+        verify(repoIdentityMock).getById(eq(VALID_FROM_ANOTHER_USER.getId()), repoIdentityCallback.capture());
+        repoIdentityCallback.getValue().onEntityLoaded(VALID_FROM_ANOTHER_USER);
     }
     // endregion helper methods --------------------------------------------------------------------
 
     // region helper classes -----------------------------------------------------------------------
+    private class RecipeClientListener implements Recipe.RecipeClientListener {
+        RecipeStateResponse response;
+        @Override
+        public void recipeStateChanged(RecipeStateResponse response) {
+            this.response = response;
+        }
 
+        public RecipeStateResponse getResponse() {
+            return response;
+        }
+
+        @Nonnull
+        @Override
+        public String toString() {
+            return "RecipeClientListener{" +
+                    "response=" + response +
+                    '}';
+        }
+    }
     // endregion helper classes --------------------------------------------------------------------
 
 }

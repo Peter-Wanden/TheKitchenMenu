@@ -9,17 +9,19 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.RecipeCourseEditorFragmentBinding;
 
-public class RecipeCourseSelectorFragment extends Fragment {
+public class RecipeCourseEditorFragment extends Fragment {
 
-    public static RecipeCourseSelectorFragment newInstance() {
-        return new RecipeCourseSelectorFragment();
+    public static RecipeCourseEditorFragment newInstance() {
+        return new RecipeCourseEditorFragment();
     }
 
-    public RecipeCourseSelectorFragment() {}
+    public RecipeCourseEditorFragment() {
+    }
 
     @Nullable
     @Override
@@ -33,8 +35,9 @@ public class RecipeCourseSelectorFragment extends Fragment {
                 container,
                 false);
 
-        binding.setViewModel(RecipeEditorActivity.obtainCourseSelectorViewModel(
-                getActivity()));
+        binding.setViewModel(
+                new ViewModelProvider(requireActivity()).
+                        get(RecipeCourseEditorViewModel.class));
 
         return binding.getRoot();
     }

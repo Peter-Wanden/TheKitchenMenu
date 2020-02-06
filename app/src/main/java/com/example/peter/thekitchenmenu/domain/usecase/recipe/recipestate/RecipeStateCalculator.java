@@ -26,6 +26,7 @@ public class RecipeStateCalculator extends UseCase<RecipeStateRequest, RecipeSta
         COMPLETE(5);
 
         private final int stateLevel;
+
         @SuppressLint("UseSparseArrays")
         private static Map<Integer, RecipeState> recipeStates = new HashMap<>();
 

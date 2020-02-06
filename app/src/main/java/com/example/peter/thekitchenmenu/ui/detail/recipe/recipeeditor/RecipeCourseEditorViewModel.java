@@ -3,71 +3,71 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 import androidx.databinding.Bindable;
 import androidx.databinding.ObservableBoolean;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseCommand;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourseRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourseResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
 import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 
-public class RecipeCourseEditorViewModel
-        extends
-        ObservableViewModel
-        implements
-        RecipeModelObserver.RecipeModelActions,  UseCaseCommand.Callback<RecipeCourseResponse>{
+import javax.annotation.Nonnull;
 
-    private UseCaseHandler handler;
-    private RecipeCourse useCase;
-    private RecipeValidation.RecipeValidatorModelSubmission modelSubmitter;
+public class RecipeCourseEditorViewModel
+        extends ObservableViewModel
+        implements UseCase.Callback<RecipeCourseResponse> {
+
+    private static final String TAG = "tkm-" + RecipeCourseEditorViewModel.class.getSimpleName() +
+            "; ";
+
+    @Nonnull
+    private final UseCaseHandler handler;
+    @Nonnull
+    private Recipe recipe;
 
     private String recipeId = "";
     private RecipeCourseResponse response;
-    private RecipeCourseRequest request;
 
     private boolean updatingUi;
     private final ObservableBoolean dataLoading = new ObservableBoolean();
 
-    public RecipeCourseEditorViewModel(UseCaseHandler handler,
-                                       RecipeCourse useCase) {
+    public RecipeCourseEditorViewModel(@Nonnull UseCaseHandler handler,
+                                       @Nonnull Recipe recipe) {
         this.handler = handler;
-        this.useCase = useCase;
-        request = RecipeCourseRequest.Builder.getDefault().build();
+        this.recipe = recipe;
         response = RecipeCourseResponse.Builder.getDefault().build();
     }
 
-    void setModelValidationSubmitter(RecipeValidation.RecipeValidatorModelSubmission modelSubmitter) {
-        this.modelSubmitter = modelSubmitter;
-    }
-
-    @Override
     public void start(String recipeId) {
         if (isNewInstantiationOrRecipeIdChanged(recipeId)) {
             this.recipeId = recipeId;
             dataLoading.set(true);
 
-            request = RecipeCourseRequest.Builder.getDefault().setRecipeId(recipeId).build();
-            handler.execute(useCase, request, this);
+            RecipeCourseRequest request = RecipeCourseRequest.Builder.
+                    getDefault().
+                    setRecipeId(recipeId).
+                    build();
+            handler.execute(recipe, request, this);
         }
     }
 
-    @Override
     public void startByCloningModel(String cloneFromRecipeId, String cloneToRecipeId) {
         if (isNewInstantiationOrRecipeIdChanged(cloneToRecipeId)) {
             recipeId = cloneToRecipeId;
             dataLoading.set(true);
 
-            request = RecipeCourseRequest.Builder.getDefault().
+            RecipeCourseRequest request = RecipeCourseRequest.Builder.
+                    getDefault().
                     setRecipeId(cloneFromRecipeId).
                     setCloneToRecipeId(cloneToRecipeId).
                     build();
 
-            handler.execute(useCase, request, this);
+            handler.execute(recipe, request, this);
         }
     }
 
     private boolean isNewInstantiationOrRecipeIdChanged(String recipeId) {
-        return this.recipeId.isEmpty() || !this.recipeId.equals(recipeId);
+        return !this.recipeId.equals(recipeId);
     }
 
     @Override
@@ -82,23 +82,10 @@ public class RecipeCourseEditorViewModel
 
     private void processResponse(RecipeCourseResponse response) {
         dataLoading.set(false);
-        this.response = response;
-        RecipeStateCalculator.ComponentState status = response.getState();
-
-        if (status.equals(RecipeStateCalculator.ComponentState.VALID_CHANGED) ||
-                status.equals(RecipeStateCalculator.ComponentState.INVALID_CHANGED)) {
+        if (!this.response.equals(response)) {
+            this.response = response;
             setRecipeCoursesToObservables();
         }
-
-        submitModelStatus(status);
-    }
-
-    private void submitModelStatus(RecipeStateCalculator.ComponentState componentState) {
-        RecipeComponentStateModel model = new RecipeComponentStateModel(
-                RecipeStateCalculator.ComponentName.COURSE,
-                componentState
-        );
-        modelSubmitter.submitRecipeComponentStatus(model);
     }
 
     private void setRecipeCoursesToObservables() {
@@ -198,11 +185,11 @@ public class RecipeCourseEditorViewModel
     private void sendRequest(RecipeCourse.Course course, boolean addCourse) {
         dataLoading.set(true);
 
-        request = RecipeCourseRequest.Builder.getDefault().
+        RecipeCourseRequest request = RecipeCourseRequest.Builder.getDefault().
                 setRecipeId(recipeId).
                 setCourse(course).
                 setAddCourse(addCourse).
                 build();
-        handler.execute(useCase, request, this);
+        handler.execute(recipe, request, this);
     }
 }

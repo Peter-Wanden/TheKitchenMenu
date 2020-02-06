@@ -3,7 +3,9 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe;
 import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseCommand;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -65,5 +67,51 @@ public class RecipeResponse implements UseCaseCommand.Response {
                 ", failReasons=" + failReasons +
                 ", componentResponses=" + componentResponses +
                 '}';
+    }
+
+    public static class Builder {
+        private RecipeState recipeState;
+        private List<FailReasons> failReasons;
+        private HashMap<ComponentName, Response> componentResponses;
+
+        public static Builder getDefault() {
+            return new Builder().
+                    setRecipeState(RecipeState.INVALID_UNCHANGED).
+                    setFailReasons(getDefaultFailReasons()).
+                    setComponentResponses(getDefaultComponentResponses());
+        }
+
+        public Builder setRecipeState(RecipeState recipeState) {
+            this.recipeState = recipeState;
+            return this;
+        }
+
+        public Builder setFailReasons(List<FailReasons> failReasons) {
+            this.failReasons = failReasons;
+            return this;
+        }
+
+        public Builder setComponentResponses(HashMap<ComponentName, Response> componentResponses) {
+            this.componentResponses = componentResponses;
+            return this;
+        }
+
+        public RecipeResponse build() {
+            return new RecipeResponse(
+                    recipeState,
+                    failReasons,
+                    componentResponses
+            );
+        }
+
+        private static List<FailReasons> getDefaultFailReasons() {
+            List<FailReasons> defaultFailReasons = new ArrayList<>();
+            defaultFailReasons.add(FailReason.MISSING_COMPONENTS);
+            return defaultFailReasons;
+        }
+
+        private static HashMap<ComponentName, Response> getDefaultComponentResponses() {
+            return new LinkedHashMap<>();
+        }
     }
 }

@@ -220,7 +220,7 @@ public class RecipeIdentityTest {
         verifyIdentityDatabaseCalledWithNewIdAndReturnDataNotAvailable();
 
         RecipeIdentityRequest.Model model = RecipeIdentityRequest.Model.Builder.
-                basedOn(onErrorResponse.getModel()).
+                basedOnIdentityResponseModel(onErrorResponse.getModel()).
                 setTitle(invalidTitle).
                 setDescription(description).
                 build();
@@ -271,7 +271,7 @@ public class RecipeIdentityTest {
         String validTitle = VALID_NEW_TITLE_VALID_DEFAULT_DESCRIPTION.getTitle();
 
         RecipeIdentityRequest.Model model = RecipeIdentityRequest.Model.Builder.
-                basedOn(onErrorResponse.getModel()).
+                basedOnIdentityResponseModel(onErrorResponse.getModel()).
                 setTitle(validTitle).
                 build();
         // Act
@@ -320,7 +320,7 @@ public class RecipeIdentityTest {
         // Request/Response 2
         String validTitle = VALID_NEW_COMPLETE.getTitle();
         RecipeIdentityRequest.Model validTitleModel = RecipeIdentityRequest.Model.Builder.
-                basedOn(onErrorResponse.getModel()).
+                basedOnIdentityResponseModel(onErrorResponse.getModel()).
                 setTitle(validTitle).
                 build();
         handler.execute(
@@ -331,7 +331,7 @@ public class RecipeIdentityTest {
         // Request/Response 3
         String validDescription = VALID_NEW_COMPLETE.getDescription();
         RecipeIdentityRequest.Model validTitleDescriptionModel = RecipeIdentityRequest.Model.Builder.
-                basedOn(onSuccessResponse.getModel()).
+                basedOnIdentityResponseModel(onSuccessResponse.getModel()).
                 setDescription(validDescription).
                 build();
         // Act
@@ -642,7 +642,7 @@ public class RecipeIdentityTest {
         // Arrange, 2nd request, update description
         String updatedDescription = VALID_COMPLETE_AFTER_CLONE_DESCRIPTION_UPDATED.getDescription();
         RecipeIdentityRequest.Model modelWithUpdatedDescription = RecipeIdentityRequest.Model.Builder.
-                basedOn(onSuccessResponse.getModel()).
+                basedOnIdentityResponseModel(onSuccessResponse.getModel()).
                 setDescription(updatedDescription).
                 build();
 

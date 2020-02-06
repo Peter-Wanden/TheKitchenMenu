@@ -112,29 +112,20 @@ public final class RecipeIdentityResponse implements UseCaseCommand.Response {
 
     public static final class Model {
         @Nonnull
-        private final String id;
-        @Nonnull
         private final String title;
         @Nonnull
         private final String description;
         private final long createDate;
         private final long lastUpdate;
 
-        public Model(@Nonnull String id,
-                     @Nonnull String title,
+        public Model(@Nonnull String title,
                      @Nonnull String description,
                      long createDate,
                      long lastUpdate) {
-            this.id = id;
             this.title = title;
             this.description = description;
             this.createDate = createDate;
             this.lastUpdate = lastUpdate;
-        }
-
-        @Nonnull
-        public String getId() {
-            return id;
         }
 
         @Nonnull
@@ -162,21 +153,19 @@ public final class RecipeIdentityResponse implements UseCaseCommand.Response {
             Model model = (Model) o;
             return createDate == model.createDate &&
                     lastUpdate == model.lastUpdate &&
-                    id.equals(model.id) &&
                     title.equals(model.title) &&
                     description.equals(model.description);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(id, title, description, createDate, lastUpdate);
+            return Objects.hash(title, description, createDate, lastUpdate);
         }
 
         @Override
         public String toString() {
             return "Model{" +
-                    "id='" + id + '\'' +
-                    ", title='" + title + '\'' +
+                    "title='" + title + '\'' +
                     ", description='" + description + '\'' +
                     ", createDate=" + createDate +
                     ", lastUpdate=" + lastUpdate +
@@ -184,7 +173,6 @@ public final class RecipeIdentityResponse implements UseCaseCommand.Response {
         }
 
         public static class Builder {
-            private String id;
             private String title;
             private String description;
             private long createDate;
@@ -192,7 +180,6 @@ public final class RecipeIdentityResponse implements UseCaseCommand.Response {
 
             public static Builder getDefault() {
                 return new Builder().
-                        setId("").
                         setTitle("").
                         setDescription("").
                         setCreateDate(0L).
@@ -201,7 +188,6 @@ public final class RecipeIdentityResponse implements UseCaseCommand.Response {
 
             public static Builder basedOn(RecipeIdentityPersistenceModel model) {
                 return new Builder().
-                        setId(model.getId()).
                         setTitle(model.getTitle()).
                         setDescription(model.getDescription()).
                         setCreateDate(model.getCreateDate()).
@@ -212,11 +198,6 @@ public final class RecipeIdentityResponse implements UseCaseCommand.Response {
                 return new Builder().
                         setTitle(model.getTitle()).
                         setDescription(model.getDescription());
-            }
-
-            public Builder setId(String id) {
-                this.id = id;
-                return this;
             }
 
             public Builder setTitle(String title) {
@@ -241,7 +222,6 @@ public final class RecipeIdentityResponse implements UseCaseCommand.Response {
 
             public RecipeIdentityResponse.Model build() {
                 return new RecipeIdentityResponse.Model(
-                        id,
                         title,
                         description,
                         createDate,

@@ -3,28 +3,25 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 import android.content.res.Resources;
 
 import androidx.databinding.Bindable;
+import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
 import androidx.databinding.library.baseAdapters.BR;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseCommand;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDurationRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDuration;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDurationResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
 import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe.DO_NOT_CLONE;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDuration.*;
 
 public class RecipeDurationEditorViewModel
-        extends
-        ObservableViewModel
-        implements
-        RecipeModelObserver.RecipeModelActions, UseCaseCommand.Callback<RecipeDurationResponse> {
+        extends ObservableViewModel
+        implements UseCase.Callback<RecipeDurationResponse> {
 
     private static final String TAG = "tkm-" + RecipeDurationEditorViewModel.class.getSimpleName()
             + ":";
@@ -32,134 +29,81 @@ public class RecipeDurationEditorViewModel
     private static final int MEASUREMENT_ERROR = -1;
 
     @Nonnull
-    private UseCaseHandler handler;
+    private final Resources resources;
     @Nonnull
-    private RecipeDuration useCase;
-    private RecipeDurationResponse useCaseResponse;
-
-    private Resources resources;
-    private RecipeValidation.RecipeValidatorModelSubmission modelSubmitter;
+    private final UseCaseHandler handler;
+    @Nonnull
+    private Recipe recipe;
 
     public final ObservableField<String> prepTimeErrorMessage = new ObservableField<>();
     public final ObservableField<String> cookTimeErrorMessage = new ObservableField<>();
 
-    private String recipeId;
+    private RecipeDurationResponse response;
+    private String recipeId = "";
 
-    private boolean dataLoading;
-    private boolean dataLoadingError;
-    private boolean updatingUi;
+    private boolean isUpdatingUi;
+    private final ObservableBoolean isDataLoading = new ObservableBoolean();
+    private boolean isDataLoadingError;
 
     public RecipeDurationEditorViewModel(@Nonnull UseCaseHandler handler,
-                                         @Nonnull RecipeDuration useCase,
-                                         Resources resources) {
+                                         @Nonnull Recipe recipe,
+                                         @Nonnull Resources resources) {
         this.handler = handler;
-        this.useCase = useCase;
+        this.recipe = recipe;
         this.resources = resources;
-        useCaseResponse = RecipeDurationResponse.Builder.
-                getDefault().
-                build();
+
+        response = RecipeDurationResponse.Builder.getDefault().build();
     }
 
-    void setModelValidationSubmitter(RecipeValidation.RecipeValidatorModelSubmission
-                                             modelSubmitter) {
-        this.modelSubmitter = modelSubmitter;
-    }
-
-    @Override
     public void start(String recipeId) {
-        if (isRecipeIdChanged(recipeId)) {
+        if (isNewInstantiationOrRecipeIdChanged(recipeId)) {
             this.recipeId = recipeId;
+            isDataLoading.set(true);
 
-            executeUseCase(
-                    recipeId,
-                    DO_NOT_CLONE,
-                    RecipeDurationRequest.Model.Builder.
-                            getDefault().
-                            build());
+            RecipeDurationRequest request = RecipeDurationRequest.Builder.
+                    getDefault().
+                    setRecipeId(recipeId).
+                    build();
+            handler.execute(recipe, request, this);
         }
     }
 
-    @Override
-    public void startByCloningModel(String oldRecipeId, String cloneToRecipeId) {
-        if (isRecipeIdChanged(cloneToRecipeId)) {
-            this.recipeId = cloneToRecipeId;
+    public void startByCloningModel(String cloneFromRecipeId, String cloneToRecipeId) {
+        if (isNewInstantiationOrRecipeIdChanged(cloneToRecipeId)) {
+            recipeId = cloneToRecipeId;
 
-            executeUseCase(
-                    oldRecipeId,
-                    cloneToRecipeId,
-                    RecipeDurationRequest.Model.Builder.
-                            getDefault().
-                            build());
+            RecipeDurationRequest request = RecipeDurationRequest.Builder.
+                    getDefault().
+                    setRecipeId(cloneFromRecipeId).
+                    setCloneToRecipeId(cloneToRecipeId).
+                    build();
+            handler.execute(recipe, request, this);
         }
     }
 
-    private boolean isRecipeIdChanged(String recipeId) {
-        return this.recipeId == null || !this.recipeId.equals(recipeId);
+    private boolean isNewInstantiationOrRecipeIdChanged(String recipeId) {
+        return !this.recipeId.equals(recipeId);
     }
 
     @Override
     public void onSuccess(RecipeDurationResponse response) {
-        processUseCaseResponse(response);
+        RecipeDurationEditorViewModel.this.response = response;
+        updateObservables();
     }
 
     @Override
     public void onError(RecipeDurationResponse response) {
-        processUseCaseResponse(response);
-    }
-
-    private void processUseCaseResponse(RecipeDurationResponse response) {
-        useCaseResponse = response;
-        dataLoading = false;
-        RecipeStateCalculator.ComponentState state = response.getState();
-
-        if (state == RecipeStateCalculator.ComponentState.DATA_UNAVAILABLE) {
-            dataLoadingError = true;
-            updateRecipeComponentStatus(false, false);
-            return;
-        } else if (state == RecipeStateCalculator.ComponentState.INVALID_UNCHANGED) {
-            updateRecipeComponentStatus(false, false);
-        } else if (state == RecipeStateCalculator.ComponentState.VALID_UNCHANGED) {
-            updateRecipeComponentStatus(true, false);
-        } else if (state == RecipeStateCalculator.ComponentState.INVALID_CHANGED) {
-            updateRecipeComponentStatus(false, true);
-        } else if (state == RecipeStateCalculator.ComponentState.VALID_CHANGED) {
-            updateRecipeComponentStatus(true, true);
-        }
-        updateObservables();
-    }
-
-    private void updateRecipeComponentStatus(boolean isValid, boolean isChanged) {
-        if (!updatingUi) {
-            RecipeComponentStateModel model = new RecipeComponentStateModel(
-                    RecipeStateCalculator.ComponentName.DURATION,
-                    getStatus(isChanged, isValid)
-            );
-            modelSubmitter.submitRecipeComponentStatus(model);
-        }
-    }
-
-    private RecipeStateCalculator.ComponentState getStatus(boolean isChanged, boolean isValid) {
-        if (!isValid && !isChanged) {
-            return RecipeStateCalculator.ComponentState.INVALID_UNCHANGED;
-
-        } else if (isValid && !isChanged) {
-            return RecipeStateCalculator.ComponentState.VALID_UNCHANGED;
-
-        } else if (!isValid && isChanged) {
-            return RecipeStateCalculator.ComponentState.INVALID_CHANGED;
-
-        } else {
-            return RecipeStateCalculator.ComponentState.VALID_CHANGED;
-        }
+        RecipeDurationEditorViewModel.this.response = response;
+        displayErrors();
     }
 
     private void updateObservables() {
-        updatingUi = true;
+        isUpdatingUi = true;
         notifyPropertyChanged(BR.prepHoursInView);
         notifyPropertyChanged(BR.prepMinutesInView);
         notifyPropertyChanged(BR.cookHoursInView);
         notifyPropertyChanged(BR.cookMinutesInView);
-        updatingUi = false;
+        isUpdatingUi = false;
 
         if (hasFailReasons()) {
             displayErrors();
@@ -167,7 +111,7 @@ public class RecipeDurationEditorViewModel
     }
 
     private boolean hasFailReasons() {
-        return !useCaseResponse.getFailReasons().contains(FailReason.NONE);
+        return !response.getFailReasons().contains(FailReason.NONE);
     }
 
     private void displayErrors() {
@@ -176,7 +120,7 @@ public class RecipeDurationEditorViewModel
     }
 
     private boolean isInvalidPrepTime() {
-        return useCaseResponse.getFailReasons().contains(FailReason.INVALID_PREP_TIME);
+        return response.getFailReasons().contains(FailReason.INVALID_PREP_TIME);
     }
 
     private String getPrepTimeErrorMessage() {
@@ -184,7 +128,7 @@ public class RecipeDurationEditorViewModel
     }
 
     private boolean isInvalidCookTime() {
-        return useCaseResponse.getFailReasons().contains(FailReason.INVALID_COOK_TIME);
+        return response.getFailReasons().contains(FailReason.INVALID_COOK_TIME);
     }
 
     private String getCookTimeErrorMessage() {
@@ -193,11 +137,11 @@ public class RecipeDurationEditorViewModel
 
     @Bindable
     public String getPrepHoursInView() {
-        return String.valueOf(useCaseResponse.getModel().getPrepHours());
+        return String.valueOf(response.getModel().getPrepHours());
     }
 
     public void setPrepHoursInView(String prepHoursInView) {
-        if (!updatingUi) {
+        if (!isUpdatingUi) {
             if (isPrepHoursInViewChanged(prepHoursInView)) {
                 if (!prepHoursInView.isEmpty()) {
                     int prepHoursParsed = parseIntegerFromString(prepHoursInView);
@@ -206,10 +150,14 @@ public class RecipeDurationEditorViewModel
                         prepTimeErrorMessage.set(numberFormatExceptionErrorMessage());
                     else {
                         RecipeDurationRequest.Model model = RecipeDurationRequest.Model.Builder.
-                                basedOnDurationResponseModel(useCaseResponse.getModel()).
+                                basedOnDurationResponseModel(response.getModel()).
                                 setPrepHours(prepHoursParsed).
                                 build();
-                        executeUseCase(recipeId, DO_NOT_CLONE, model);
+                        RecipeDurationRequest request = new RecipeDurationRequest.Builder().
+                                setRecipeId(recipeId).
+                                setModel(model).
+                                build();
+                        handler.execute(recipe, request, this);
                     }
                 }
             }
@@ -217,16 +165,16 @@ public class RecipeDurationEditorViewModel
     }
 
     private boolean isPrepHoursInViewChanged(String prepHoursInView) {
-        return !String.valueOf(useCaseResponse.getModel().getPrepHours()).equals(prepHoursInView);
+        return !String.valueOf(response.getModel().getPrepHours()).equals(prepHoursInView);
     }
 
     @Bindable
     public String getPrepMinutesInView() {
-        return String.valueOf(useCaseResponse.getModel().getPrepMinutes());
+        return String.valueOf(response.getModel().getPrepMinutes());
     }
 
     public void setPrepMinutesInView(String prepMinutesInView) {
-        if (!updatingUi) {
+        if (!isUpdatingUi) {
             if (isPrepMinutesInViewChanged(prepMinutesInView)) {
                 if (!prepMinutesInView.isEmpty()) {
                     int prepMinutesParsed = parseIntegerFromString(prepMinutesInView);
@@ -235,10 +183,14 @@ public class RecipeDurationEditorViewModel
                         prepTimeErrorMessage.set(numberFormatExceptionErrorMessage());
                     else {
                         RecipeDurationRequest.Model model = RecipeDurationRequest.Model.Builder.
-                                basedOnDurationResponseModel(useCaseResponse.getModel()).
+                                basedOnDurationResponseModel(response.getModel()).
                                 setPrepMinutes(prepMinutesParsed).
                                 build();
-                        executeUseCase(recipeId, DO_NOT_CLONE, model);
+                        RecipeDurationRequest request = new RecipeDurationRequest.Builder().
+                                setRecipeId(recipeId).
+                                setModel(model).
+                                build();
+                        handler.execute(recipe, request, this);
                     }
                 }
             }
@@ -246,16 +198,16 @@ public class RecipeDurationEditorViewModel
     }
 
     private boolean isPrepMinutesInViewChanged(String prepMinutesInView) {
-        return !String.valueOf(useCaseResponse.getModel().getPrepMinutes()).equals(prepMinutesInView);
+        return !String.valueOf(response.getModel().getPrepMinutes()).equals(prepMinutesInView);
     }
 
     @Bindable
     public String getCookHoursInView() {
-        return String.valueOf(useCaseResponse.getModel().getCookHours());
+        return String.valueOf(response.getModel().getCookHours());
     }
 
     public void setCookHoursInView(String cookHoursInView) {
-        if (!updatingUi) {
+        if (!isUpdatingUi) {
             if (isCookHoursInViewChanged(cookHoursInView)) {
                 if (!cookHoursInView.isEmpty()) {
                     int cookHoursParsed = parseIntegerFromString(cookHoursInView);
@@ -264,10 +216,14 @@ public class RecipeDurationEditorViewModel
                         cookTimeErrorMessage.set(numberFormatExceptionErrorMessage());
                     else {
                         RecipeDurationRequest.Model model = RecipeDurationRequest.Model.Builder.
-                                basedOnDurationResponseModel(useCaseResponse.getModel()).
+                                basedOnDurationResponseModel(response.getModel()).
                                 setCookHours(cookHoursParsed).
                                 build();
-                        executeUseCase(recipeId, DO_NOT_CLONE, model);
+                        RecipeDurationRequest request = new RecipeDurationRequest.Builder().
+                                setRecipeId(recipeId).
+                                setModel(model).
+                                build();
+                        handler.execute(recipe, request, this);
                     }
                 }
             }
@@ -275,16 +231,16 @@ public class RecipeDurationEditorViewModel
     }
 
     private boolean isCookHoursInViewChanged(String cookHoursInView) {
-        return !String.valueOf(useCaseResponse.getModel().getCookHours()).equals(cookHoursInView);
+        return !String.valueOf(response.getModel().getCookHours()).equals(cookHoursInView);
     }
 
     @Bindable
     public String getCookMinutesInView() {
-        return String.valueOf(useCaseResponse.getModel().getCookMinutes());
+        return String.valueOf(response.getModel().getCookMinutes());
     }
 
     public void setCookMinutesInView(String cookMinutesInView) {
-        if (!updatingUi) {
+        if (!isUpdatingUi) {
             if (isCookMinutesInViewChanged(cookMinutesInView)) {
                 if (!cookMinutesInView.isEmpty()) {
                     int cookMinutesParsed = parseIntegerFromString(cookMinutesInView);
@@ -293,10 +249,14 @@ public class RecipeDurationEditorViewModel
                         cookTimeErrorMessage.set(numberFormatExceptionErrorMessage());
                     else {
                         RecipeDurationRequest.Model model = RecipeDurationRequest.Model.Builder.
-                                basedOnDurationResponseModel(useCaseResponse.getModel()).
+                                basedOnDurationResponseModel(response.getModel()).
                                 setCookMinutes(cookMinutesParsed).
                                 build();
-                        executeUseCase(recipeId, DO_NOT_CLONE, model);
+                        RecipeDurationRequest request = new RecipeDurationRequest.Builder().
+                                setRecipeId(recipeId).
+                                setModel(model).
+                                build();
+                        handler.execute(recipe, request, this);
                     }
                 }
             }
@@ -304,19 +264,7 @@ public class RecipeDurationEditorViewModel
     }
 
     private boolean isCookMinutesInViewChanged(String cookMinutesInView) {
-        return !String.valueOf(useCaseResponse.getModel().getCookMinutes()).equals(cookMinutesInView);
-    }
-
-    private void executeUseCase(String recipeId,
-                                String cloneToRecipeId,
-                                RecipeDurationRequest.Model model) {
-        RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setRecipeId(recipeId).
-                setCloneToRecipeId(cloneToRecipeId).
-                setModel(model).
-                build();
-        dataLoading = true;
-        handler.execute(useCase, request, this);
+        return !String.valueOf(response.getModel().getCookMinutes()).equals(cookMinutesInView);
     }
 
     private int parseIntegerFromString(String integerToParse) {

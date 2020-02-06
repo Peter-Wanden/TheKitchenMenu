@@ -3,28 +3,25 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 import android.content.res.Resources;
 
 import androidx.databinding.Bindable;
+import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
 import androidx.databinding.library.baseAdapters.BR;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseCommand;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions.RecipePortions;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions.RecipePortionsRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions.RecipePortionsResponse;
 import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe.DO_NOT_CLONE;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
 
 public class RecipePortionsEditorViewModel
-        extends
-        ObservableViewModel
-        implements
-        RecipeModelObserver.RecipeModelActions,
-        UseCaseCommand.Callback<RecipePortionsResponse> {
+        extends ObservableViewModel
+        implements UseCase.Callback<RecipePortionsResponse> {
 
     private static final String TAG = "tkm-" + RecipePortionsEditorViewModel.class.getSimpleName()
             + ":";
@@ -32,61 +29,61 @@ public class RecipePortionsEditorViewModel
     private static final int MEASUREMENT_ERROR = -1;
 
     @Nonnull
+    private Resources resources;
+    @Nonnull
     private UseCaseHandler handler;
     @Nonnull
-    private RecipePortions useCase;
-    @Nonnull
-    private Resources resources;
-    private RecipePortionsResponse useCaseResponse;
-
-    private boolean dataLoadingError;
-
-    private RecipeValidation.RecipeValidatorModelSubmission modelSubmitter;
+    Recipe recipe;
+    private RecipePortionsResponse response;
 
     public final ObservableField<String> servingsErrorMessage = new ObservableField<>();
     public final ObservableField<String> sittingsErrorMessage = new ObservableField<>();
 
-    private boolean dataLoading;
+    private final ObservableBoolean isDataLoading = new ObservableBoolean();
+    private boolean dataLoadingError;
     private boolean updatingUi;
     private String recipeId;
 
     public RecipePortionsEditorViewModel(@Nonnull UseCaseHandler handler,
-                                         @Nonnull RecipePortions useCase,
+                                         @Nonnull Recipe recipe,
                                          @Nonnull Resources resources) {
         this.handler = handler;
-        this.useCase = useCase;
+        this.recipe = recipe;
         this.resources = resources;
-        useCaseResponse = RecipePortionsResponse.Builder.
-                getDefault().
-                build();
+
+        response = RecipePortionsResponse.Builder.getDefault().build();
     }
 
-    void setModelValidationSubmitter(RecipeValidation.RecipeValidatorModelSubmission
-                                             modelSubmitter) {
-        this.modelSubmitter = modelSubmitter;
-    }
 
-    @Override
     public void start(String recipeId) {
-        this.recipeId = recipeId;
-        RecipePortionsRequest request = RecipePortionsRequest.Builder.
-                getDefault().
-                setRecipeId(recipeId).
-                build();
+        if (isNewInstantiationOrRecipeIdChanged(recipeId)) {
+            this.recipeId = recipeId;
+            isDataLoading.set(true);
 
-        handler.execute(useCase, request, this);
+            RecipePortionsRequest request = RecipePortionsRequest.Builder.
+                    getDefault().
+                    setRecipeId(recipeId).
+                    build();
+            handler.execute(recipe, request, this);
+        }
     }
 
-    @Override
-    public void startByCloningModel(String cloneFromRecipeId, String cloneToRecipeId) {
-        recipeId = cloneToRecipeId;
 
-        RecipePortionsRequest request = RecipePortionsRequest.Builder.
-                getDefault().
-                setRecipeId(cloneFromRecipeId).
-                setCloneToRecipeId(cloneToRecipeId).
-                build();
-        handler.execute(useCase, request, this);
+    public void startByCloningModel(String cloneFromRecipeId, String cloneToRecipeId) {
+        if (isNewInstantiationOrRecipeIdChanged(cloneToRecipeId)) {
+            recipeId = cloneToRecipeId;
+
+            RecipePortionsRequest request = RecipePortionsRequest.Builder.
+                    getDefault().
+                    setRecipeId(cloneFromRecipeId).
+                    setCloneToRecipeId(cloneToRecipeId).
+                    build();
+            handler.execute(recipe, request, this);
+        }
+    }
+
+    private boolean isNewInstantiationOrRecipeIdChanged(String recipeId) {
+        return !this.recipeId.equals(recipeId);
     }
 
     @Override
@@ -100,29 +97,21 @@ public class RecipePortionsEditorViewModel
     }
 
     private void processUseCaseResponse(RecipePortionsResponse response) {
-        dataLoading = false;
-        useCaseResponse = response;
+        isDataLoading.set(false);
+        this.response = response;
+
         ComponentState state = response.getState();
         setPortionsErrorMessage(false);
 
         if (state == ComponentState.DATA_UNAVAILABLE) {
             dataLoadingError = true;
-            updateRecipeComponentStatus(false, false);
             return;
 
         } else if (state == ComponentState.INVALID_UNCHANGED) {
             setPortionsErrorMessage(true);
-            updateRecipeComponentStatus(false, false);
-
-        } else if (state == ComponentState.VALID_UNCHANGED) {
-            updateRecipeComponentStatus(true, false);
 
         } else if (state == ComponentState.INVALID_CHANGED) {
             setPortionsErrorMessage(true);
-            updateRecipeComponentStatus(false, true);
-
-        } else if (state == ComponentState.VALID_CHANGED) {
-            updateRecipeComponentStatus(true, true);
         }
         updateObservables();
     }
@@ -137,8 +126,7 @@ public class RecipePortionsEditorViewModel
 
     @Bindable
     public String getServingsInView() {
-        return useCaseResponse == null ? "" : String.valueOf(useCaseResponse.getModel().
-                getServings());
+        return response == null ? "" : String.valueOf(response.getModel().getServings());
     }
 
     public void setServingsInView(String servingsInView) {
@@ -149,23 +137,22 @@ public class RecipePortionsEditorViewModel
                 if (servingsParsed == MEASUREMENT_ERROR)
                     servingsErrorMessage.set(numberFormatExceptionErrorMessage());
                 else {
-                    RecipePortionsRequest.Model model = new RecipePortionsRequest.Model.Builder().
+                    RecipePortionsRequest.Model model = RecipePortionsRequest.Model.Builder.
+                            basedOnPortionsResponseModel(response.getModel()).
                             setServings(servingsParsed).
-                            setSittings(useCaseResponse.getModel().getSittings()).
                             build();
                     RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                             setRecipeId(recipeId).
-                            setCloneToRecipeId(DO_NOT_CLONE).
-                            setModel(model).build();
-
-                    handler.execute(useCase, request, this);
+                            setModel(model).
+                            build();
+                    handler.execute(recipe, request, this);
                 }
             }
         }
     }
 
     private boolean isServingsInViewChanged(String servingsInView) {
-        return !String.valueOf(useCaseResponse.getModel().getServings()).equals(servingsInView);
+        return !String.valueOf(response.getModel().getServings()).equals(servingsInView);
     }
 
     private void setPortionsErrorMessage(boolean showErrorMessage) {
@@ -182,11 +169,7 @@ public class RecipePortionsEditorViewModel
 
     @Bindable
     public String getSittingsInView() {
-        if (useCaseResponse != null) {
-            return String.valueOf(useCaseResponse.getModel().getSittings());
-        } else {
-            return "";
-        }
+        return String.valueOf(response.getModel().getSittings());
     }
 
     public void setSittingsInView(String sittingsInView) {
@@ -197,30 +180,27 @@ public class RecipePortionsEditorViewModel
                 if (sittingsParsed == MEASUREMENT_ERROR)
                     sittingsErrorMessage.set(numberFormatExceptionErrorMessage());
                 else {
-                    RecipePortionsRequest.Model model = new RecipePortionsRequest.Model.Builder().
-                            setServings(useCaseResponse.getModel().getServings()).
-                            setSittings(sittingsParsed).build();
-
+                    RecipePortionsRequest.Model model = RecipePortionsRequest.Model.Builder.
+                            basedOnPortionsResponseModel(response.getModel()).
+                            setSittings(sittingsParsed).
+                            build();
                     RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                             setRecipeId(recipeId).
-                            setCloneToRecipeId(DO_NOT_CLONE).
                             setModel(model).
                             build();
-                    handler.execute(useCase, request, this);
+                    handler.execute(recipe, request, this);
                 }
             }
         }
     }
 
     private boolean isSittingsInViewChanged(String sittingsInView) {
-        return !String.valueOf(useCaseResponse.getModel().getSittings()).equals(sittingsInView);
+        return !String.valueOf(response.getModel().getSittings()).equals(sittingsInView);
     }
 
     @Bindable
     public String getPortionsInView() {
-        return String.valueOf(
-                useCaseResponse.getModel().getServings() *
-                        useCaseResponse.getModel().getSittings());
+        return String.valueOf(response.getModel().getPortions());
     }
 
     private int parseIntegerFromString(String integerToParse) {
@@ -233,29 +213,5 @@ public class RecipePortionsEditorViewModel
 
     private String numberFormatExceptionErrorMessage() {
         return resources.getString(R.string.number_format_exception);
-    }
-
-    private void updateRecipeComponentStatus(boolean isValid, boolean isChanged) {
-        if (!updatingUi) {
-            modelSubmitter.submitRecipeComponentStatus(new RecipeComponentStateModel(
-                    ComponentName.PORTIONS,
-                    getStatus(isChanged, isValid))
-            );
-        }
-    }
-
-    private ComponentState getStatus(boolean isChanged, boolean isValid) {
-        if (!isValid && !isChanged) {
-            return ComponentState.INVALID_UNCHANGED;
-
-        } else if (isValid && !isChanged) {
-            return ComponentState.VALID_UNCHANGED;
-
-        } else if (!isValid && isChanged) {
-            return ComponentState.INVALID_CHANGED;
-
-        } else {
-            return ComponentState.VALID_CHANGED;
-        }
     }
 }

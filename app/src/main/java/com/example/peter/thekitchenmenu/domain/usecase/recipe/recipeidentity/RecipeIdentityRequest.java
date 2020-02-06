@@ -11,8 +11,6 @@ import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate
 
 public final class RecipeIdentityRequest implements UseCaseCommand.Request {
     @Nonnull
-    private static final ComponentName componentName = ComponentName.IDENTITY;
-    @Nonnull
     private final String recipeId;
     @Nonnull
     private final String cloneToRecipeId;
@@ -25,11 +23,6 @@ public final class RecipeIdentityRequest implements UseCaseCommand.Request {
         this.recipeId = recipeId;
         this.cloneToRecipeId = cloneToRecipeId;
         this.model = model;
-    }
-
-    @Nonnull
-    public ComponentName getComponentName() { // receiver
-        return componentName;
     }
 
     @Nonnull
@@ -51,10 +44,10 @@ public final class RecipeIdentityRequest implements UseCaseCommand.Request {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RecipeIdentityRequest that = (RecipeIdentityRequest) o;
-        return recipeId.equals(that.recipeId) &&
-                cloneToRecipeId.equals(that.cloneToRecipeId) &&
-                model.equals(that.model);
+        RecipeIdentityRequest request = (RecipeIdentityRequest) o;
+        return recipeId.equals(request.recipeId) &&
+                cloneToRecipeId.equals(request.cloneToRecipeId) &&
+                model.equals(request.model);
     }
 
     @Override
@@ -156,7 +149,7 @@ public final class RecipeIdentityRequest implements UseCaseCommand.Request {
             private String title;
             private String description;
 
-            public static Builder basedOn(RecipeIdentityResponse.Model model) {
+            public static Builder basedOnIdentityResponseModel(RecipeIdentityResponse.Model model) {
                 return new Builder().
                         setTitle(model.getTitle()).
                         setDescription(model.getDescription());

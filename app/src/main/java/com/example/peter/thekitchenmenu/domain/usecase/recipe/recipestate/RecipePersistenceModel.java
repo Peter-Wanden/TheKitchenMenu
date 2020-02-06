@@ -1,5 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate;
 
+import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.domain.model.PersistenceModel;
 
 import java.util.Objects;
@@ -96,6 +97,16 @@ public final class RecipePersistenceModel implements PersistenceModel {
         private long createDate;
         private long lastUpdate;
         private boolean isDraft;
+
+        public static Builder getDefault() {
+            return new Builder().
+                    setId("").
+                    setParentId("").
+                    setCreatedBy(Constants.getUserId()).
+                    setCreateDate(0L).
+                    setLastUpdate(0L).
+                    setDraft(true);
+        }
 
         public Builder setId(String id) {
             this.id = id;

@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.RecipePortionsEditorBinding;
@@ -32,8 +33,11 @@ public class RecipePortionsFragment extends Fragment {
                 R.layout.recipe_portions_editor,
                 container,
                 false);
+        binding.setLifecycleOwner(this);
 
-        binding.setViewModel(RecipeEditorActivity.obtainPortionsViewModel(getActivity()));
+        binding.setViewModel(
+                new ViewModelProvider(requireActivity()).
+                get(RecipePortionsEditorViewModel.class));
 
         return binding.getRoot();
     }

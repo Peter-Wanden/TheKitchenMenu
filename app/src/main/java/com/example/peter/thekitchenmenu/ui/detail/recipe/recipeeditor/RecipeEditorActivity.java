@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.RecipeEditorActivityBinding;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe;
 import com.example.peter.thekitchenmenu.ui.UnsavedChangesDialogFragment;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryRecipe;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist.RecipeIngredientListActivity;
@@ -59,81 +60,68 @@ public class RecipeEditorActivity
     private void setupActionBar() {
         setSupportActionBar(binding.recipeEditorToolbar);
         ActionBar actionBar = getSupportActionBar();
-        if (actionBar == null)
+        if (actionBar == null) {
             return;
+        }
 
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
 
-        if (getIntent().getStringExtra(EXTRA_RECIPE_ID) != null)
+        if (getIntent().getStringExtra(EXTRA_RECIPE_ID) != null) {
             actionBar.setTitle(R.string.activity_title_edit_recipe);
-        else
+        } else {
             actionBar.setTitle(R.string.activity_title_add_new_recipe);
+        }
     }
 
     private void setupViewModels() {
-        recipeEditorViewModel = findOrCreateEditorViewModel(this);
+        recipeEditorViewModel = obtainRecipeEditorViewModel(this);
         recipeEditorViewModel.setNavigator(this);
         binding.setViewModel(recipeEditorViewModel);
 
-        RecipeModelObserver recipeModelObserver = new RecipeModelObserver();
-        recipeEditorViewModel.setRecipeModelComposite(recipeModelObserver);
+        RecipeIdentityEditorViewModel identityVM = obtainIdentityViewModel(this,
+                recipeEditorViewModel.getRecipe());
+        RecipeCourseEditorViewModel courseVM = obtainCourseViewModel(this,
+                recipeEditorViewModel.getRecipe());
+        RecipeDurationEditorViewModel durationVM = obtainDurationViewModel(this,
+                recipeEditorViewModel.getRecipe());
+        RecipePortionsEditorViewModel portionsVM = obtainPortionsViewModel(this,
+                recipeEditorViewModel.getRecipe());
 
-        RecipeIdentityEditorViewModel recipeIdentityEditorViewModel = obtainIdentityViewModel(this);
-        recipeModelObserver.registerModel(recipeIdentityEditorViewModel);
-        recipeIdentityEditorViewModel.setModelValidationSubmitter(recipeEditorViewModel.getValidator());
-
-        RecipeCourseEditorViewModel courseSelectorViewModel = obtainCourseSelectorViewModel((this));
-        recipeModelObserver.registerModel(courseSelectorViewModel);
-        courseSelectorViewModel.setModelValidationSubmitter(recipeEditorViewModel.getValidator());
-
-        RecipeDurationEditorViewModel durationViewModel = obtainDurationViewModel(this);
-        recipeModelObserver.registerModel(durationViewModel);
-        durationViewModel.setModelValidationSubmitter(recipeEditorViewModel.getValidator());
-
-        RecipePortionsEditorViewModel portionsViewModel = obtainPortionsViewModel(this);
-        recipeModelObserver.registerModel(portionsViewModel);
-        portionsViewModel.setModelValidationSubmitter(recipeEditorViewModel.getValidator());
     }
 
-    private RecipeEditorViewModel findOrCreateEditorViewModel(
-            FragmentActivity activity) {
-        ViewModelFactoryRecipe factoryRecipe = ViewModelFactoryRecipe.getInstance(
+    static RecipeEditorViewModel obtainRecipeEditorViewModel(FragmentActivity activity) {
+        ViewModelFactoryRecipe factory = ViewModelFactoryRecipe.getInstance(
                 activity.getApplication());
-        return new ViewModelProvider(activity, factoryRecipe).get(
-                        RecipeEditorViewModel.class);
+        return new ViewModelProvider(activity, factory).get(RecipeEditorViewModel.class);
     }
 
-    static RecipeIdentityEditorViewModel obtainIdentityViewModel(
-            FragmentActivity activity) {
-        ViewModelFactoryRecipe factoryRecipe = ViewModelFactoryRecipe.getInstance(
-                activity.getApplication());
-        return new ViewModelProvider(activity, factoryRecipe).get(
-                RecipeIdentityEditorViewModel.class);
+    static RecipeIdentityEditorViewModel obtainIdentityViewModel(FragmentActivity activity,
+                                                                 Recipe recipe) {
+        ViewModelFactoryRecipe factory = ViewModelFactoryRecipe.getInstance(
+                activity.getApplication(), recipe);
+        return new ViewModelProvider(activity, factory).get(RecipeIdentityEditorViewModel.class);
     }
 
-    static RecipeCourseEditorViewModel obtainCourseSelectorViewModel(
-            FragmentActivity activity) {
-        ViewModelFactoryRecipe factoryRecipe = ViewModelFactoryRecipe.getInstance(
-                activity.getApplication());
-        return new ViewModelProvider(activity, factoryRecipe).get(
-                RecipeCourseEditorViewModel.class);
+    static RecipeCourseEditorViewModel obtainCourseViewModel(FragmentActivity activity,
+                                                             Recipe recipe) {
+        ViewModelFactoryRecipe factory = ViewModelFactoryRecipe.getInstance(
+                activity.getApplication(), recipe);
+        return new ViewModelProvider(activity, factory).get(RecipeCourseEditorViewModel.class);
     }
 
-    static RecipeDurationEditorViewModel obtainDurationViewModel(
-            FragmentActivity activity) {
-        ViewModelFactoryRecipe factoryRecipe = ViewModelFactoryRecipe.getInstance(
-                activity.getApplication());
-        return new ViewModelProvider(activity, factoryRecipe).get(
-                RecipeDurationEditorViewModel.class);
+    static RecipeDurationEditorViewModel obtainDurationViewModel(FragmentActivity activity,
+                                                                 Recipe recipe) {
+        ViewModelFactoryRecipe factory = ViewModelFactoryRecipe.getInstance(
+                activity.getApplication(), recipe);
+        return new ViewModelProvider(activity, factory).get(RecipeDurationEditorViewModel.class);
     }
 
-    static RecipePortionsEditorViewModel obtainPortionsViewModel(
-            FragmentActivity activity) {
-        ViewModelFactoryRecipe factoryRecipe = ViewModelFactoryRecipe.getInstance(
-                activity.getApplication());
-        return new ViewModelProvider(activity, factoryRecipe).get(
-                RecipePortionsEditorViewModel.class);
+    static RecipePortionsEditorViewModel obtainPortionsViewModel(FragmentActivity activity,
+                                                                 Recipe recipe) {
+        ViewModelFactoryRecipe factory = ViewModelFactoryRecipe.getInstance(
+                activity.getApplication(), recipe);
+        return new ViewModelProvider(activity, factory).get(RecipePortionsEditorViewModel.class);
     }
 
     private void setupFragments() {
@@ -143,25 +131,25 @@ public class RecipeEditorActivity
                 imageEditorFragment,
                 R.id.recipe_editor_image_editor_content_frame);
 
-        RecipeIdentityFragment recipeIdentityFragment = findOrCreateRecipeIdentityFragment();
+        RecipeIdentityFragment recipeIdentityFragment = findOrCreateIdentityEditorFragment();
         ActivityUtils.replaceFragmentInActivity(
                 getSupportFragmentManager(),
                 recipeIdentityFragment,
                 R.id.recipe_editor_recipe_identity_content_frame);
 
-        RecipeCourseSelectorFragment courseSelectorFragment = findOrCreateCourseSelectorFragment();
+        RecipeCourseEditorFragment courseSelectorFragment = findOrCreateCourseSelectorFragment();
         ActivityUtils.replaceFragmentInActivity(
                 getSupportFragmentManager(),
                 courseSelectorFragment,
                 R.id.recipe_editor_course_selector_content_frame);
 
-        RecipeDurationFragment durationFragment = findOrCreateDurationFragment();
+        RecipeDurationFragment durationFragment = findOrCreateDurationEditorFragment();
         ActivityUtils.replaceFragmentInActivity(
                 getSupportFragmentManager(),
                 durationFragment,
                 R.id.recipe_duration_content_frame);
 
-        RecipePortionsFragment portionsFragment = findOrCreatePortionsFragment();
+        RecipePortionsFragment portionsFragment = findOrCreatePortionsEditorFragment();
         ActivityUtils.replaceFragmentInActivity(
                 getSupportFragmentManager(),
                 portionsFragment,
@@ -169,7 +157,7 @@ public class RecipeEditorActivity
     }
 
     @NonNull
-    private RecipeIdentityFragment findOrCreateRecipeIdentityFragment() {
+    private RecipeIdentityFragment findOrCreateIdentityEditorFragment() {
         RecipeIdentityFragment recipeIdentityFragment =
                 (RecipeIdentityFragment) getSupportFragmentManager().
                         findFragmentById(R.id.recipe_editor_recipe_identity_content_frame);
@@ -193,19 +181,19 @@ public class RecipeEditorActivity
     }
 
     @NonNull
-    private RecipeCourseSelectorFragment findOrCreateCourseSelectorFragment() {
-        RecipeCourseSelectorFragment courseSelectorFragment =
-                (RecipeCourseSelectorFragment) getSupportFragmentManager().
+    private RecipeCourseEditorFragment findOrCreateCourseSelectorFragment() {
+        RecipeCourseEditorFragment courseSelectorFragment =
+                (RecipeCourseEditorFragment) getSupportFragmentManager().
                         findFragmentById(R.id.recipe_editor_course_selector_content_frame);
 
         if (courseSelectorFragment == null) {
-            courseSelectorFragment = RecipeCourseSelectorFragment.newInstance();
+            courseSelectorFragment = RecipeCourseEditorFragment.newInstance();
         }
         return courseSelectorFragment;
     }
 
     @NonNull
-    private RecipeDurationFragment findOrCreateDurationFragment() {
+    private RecipeDurationFragment findOrCreateDurationEditorFragment() {
         RecipeDurationFragment durationFragment =
                 (RecipeDurationFragment) getSupportFragmentManager().
                         findFragmentById(R.id.recipe_duration_content_frame);
@@ -217,7 +205,7 @@ public class RecipeEditorActivity
     }
 
     @NonNull
-    private RecipePortionsFragment findOrCreatePortionsFragment() {
+    private RecipePortionsFragment findOrCreatePortionsEditorFragment() {
         RecipePortionsFragment portionsFragment =
                 (RecipePortionsFragment) getSupportFragmentManager().
                         findFragmentById(R.id.recipe_portions_content_frame);

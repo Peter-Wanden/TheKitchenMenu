@@ -149,7 +149,7 @@ public final class RecipePortionsRequest implements UseCaseCommand.Request {
                         setSittings(1);
             }
 
-            public static Builder basedOnResponseModel(RecipePortionsResponse.Model model) {
+            public static Builder basedOnPortionsResponseModel(RecipePortionsResponse.Model model) {
                 return new Builder().
                         setServings(model.getServings()).
                         setSittings(model.getSittings());
