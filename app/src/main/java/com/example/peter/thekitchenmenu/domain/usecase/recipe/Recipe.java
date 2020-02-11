@@ -36,10 +36,9 @@ public class Recipe<Q extends UseCase.Request>
 
     private static final String TAG = "tkm-" + Recipe.class.getSimpleName() + ": ";
 
-    public interface RecipeClientListener {
+    public interface RecipeStateListener {
         void recipeStateChanged(RecipeStateResponse response);
     }
-    private final List<RecipeClientListener> recipeClientListeners = new ArrayList<>();
 
     private String recipeId = "";
     private String parentId = "";
@@ -56,8 +55,19 @@ public class Recipe<Q extends UseCase.Request>
     private final RecipeCourse course;
     private final RecipeDuration duration;
     private final RecipePortions portions;
-    private final HashMap<ComponentName, UseCase.Response> componentResponses = new LinkedHashMap<>();
-    private final HashMap<ComponentName, ComponentState> componentStates = new LinkedHashMap<>();
+
+    private final List<RecipeStateListener> recipeStateListeners = new ArrayList<>();
+
+    private final List<UseCase.Callback<RecipeResponse>> recipeResponseListeners = new ArrayList<>();
+
+    private final HashMap<ComponentName, UseCase.Response> componentOnSuccessResponses =
+            new LinkedHashMap<>();
+
+    private final HashMap<ComponentName, UseCase.Response> componentOnErrorResponses =
+            new LinkedHashMap<>();
+
+    private final HashMap<ComponentName, ComponentState> componentStates =
+            new LinkedHashMap<>();
 
     public Recipe(RepositoryRecipe repositoryRecipe,
                   UseCaseHandler handler,
@@ -190,7 +200,7 @@ public class Recipe<Q extends UseCase.Request>
             @Override
             public void onSuccess(RecipeIdentityResponse response) {
                 System.out.println(TAG + "identityOnSuccess:" + response);
-                componentResponses.put(ComponentName.IDENTITY, response);
+                componentOnSuccessResponses.put(ComponentName.IDENTITY, response);
                 componentStates.put(ComponentName.IDENTITY, response.getState());
                 updateRecipeState();
             }
@@ -198,7 +208,10 @@ public class Recipe<Q extends UseCase.Request>
             @Override
             public void onError(RecipeIdentityResponse response) {
                 System.out.println(TAG + "identityOnError:" + response);
-                componentResponses.put(ComponentName.IDENTITY, response);
+                componentOnErrorResponses.put(ComponentName.IDENTITY, response);
+
+                componentOnSuccessResponses.put(ComponentName.IDENTITY, response);
+
                 componentStates.put(ComponentName.IDENTITY, response.getState());
                 updateRecipeState();
             }
@@ -210,7 +223,7 @@ public class Recipe<Q extends UseCase.Request>
             @Override
             public void onSuccess(RecipeCourseResponse response) {
                 System.out.println(TAG + "coursesOnSuccess:" + response);
-                componentResponses.put(ComponentName.COURSE, response);
+                componentOnSuccessResponses.put(ComponentName.COURSE, response);
                 componentStates.put(ComponentName.COURSE, response.getState());
                 updateRecipeState();
             }
@@ -218,7 +231,10 @@ public class Recipe<Q extends UseCase.Request>
             @Override
             public void onError(RecipeCourseResponse response) {
                 System.out.println(TAG + "coursesOnError:" + response);
-                componentResponses.put(ComponentName.COURSE, response);
+                componentOnErrorResponses.put(ComponentName.COURSE, response);
+
+                componentOnSuccessResponses.put(ComponentName.COURSE, response);
+
                 componentStates.put(ComponentName.COURSE, response.getState());
                 updateRecipeState();
             }
@@ -230,7 +246,7 @@ public class Recipe<Q extends UseCase.Request>
             @Override
             public void onSuccess(RecipeDurationResponse response) {
                 System.out.println(TAG + "durationOnSuccess:" + response);
-                componentResponses.put(ComponentName.DURATION, response);
+                componentOnSuccessResponses.put(ComponentName.DURATION, response);
                 componentStates.put(ComponentName.DURATION, response.getState());
                 updateRecipeState();
             }
@@ -238,7 +254,10 @@ public class Recipe<Q extends UseCase.Request>
             @Override
             public void onError(RecipeDurationResponse response) {
                 System.out.println(TAG + "durationOnError:" + response);
-                componentResponses.put(ComponentName.DURATION, response);
+                componentOnErrorResponses.put(ComponentName.DURATION, response);
+
+                componentOnSuccessResponses.put(ComponentName.DURATION, response);
+
                 componentStates.put(ComponentName.DURATION, response.getState());
                 updateRecipeState();
             }
@@ -250,7 +269,7 @@ public class Recipe<Q extends UseCase.Request>
             @Override
             public void onSuccess(RecipePortionsResponse response) {
                 System.out.println(TAG + "portionsOnSuccess:");
-                componentResponses.put(ComponentName.PORTIONS, response);
+                componentOnSuccessResponses.put(ComponentName.PORTIONS, response);
                 componentStates.put(ComponentName.PORTIONS, response.getState());
                 updateRecipeState();
             }
@@ -258,7 +277,10 @@ public class Recipe<Q extends UseCase.Request>
             @Override
             public void onError(RecipePortionsResponse response) {
                 System.out.println(TAG + "portionsOnError:");
-                componentResponses.put(ComponentName.PORTIONS, response);
+                componentOnErrorResponses.put(ComponentName.PORTIONS, response);
+
+                componentOnSuccessResponses.put(ComponentName.PORTIONS, response);
+
                 componentStates.put(ComponentName.PORTIONS, response.getState());
                 updateRecipeState();
             }
@@ -268,7 +290,7 @@ public class Recipe<Q extends UseCase.Request>
     private void updateRecipeState() {
         if (isAllComponentStatesUpdated()) {
             RecipeStateRequest stateRequest = new RecipeStateRequest(componentStates);
-            handler.execute(recipeStateCalculator, stateRequest, getStateRequestCallback());
+            handler.execute(recipeStateCalculator, stateRequest, getRecipeStateResponseCallback());
         }
     }
 
@@ -279,14 +301,15 @@ public class Recipe<Q extends UseCase.Request>
                 componentStates.containsKey(ComponentName.PORTIONS);
     }
 
-    private UseCase.Callback<RecipeStateResponse> getStateRequestCallback() {
+    private UseCase.Callback<RecipeStateResponse> getRecipeStateResponseCallback() {
         return new UseCase.Callback<RecipeStateResponse>() {
             @Override
             public void onSuccess(RecipeStateResponse response) {
                 System.out.println(TAG + "recipeStateResponseOnSuccess:" + response);
                 if (!response.equals(recipeStateResponse)) {
                     recipeStateResponse = response;
-                    notifyClientListeners();
+                    notifyRecipeStateListeners();
+
                     sendResponse();
                 } else {
                     sendResponse();
@@ -298,7 +321,7 @@ public class Recipe<Q extends UseCase.Request>
                 System.out.println(TAG + "recipeStateResponseOnError:" + response);
                 if (!response.equals(recipeStateResponse)) {
                     recipeStateResponse = response;
-                    notifyClientListeners();
+                    notifyRecipeStateListeners();
                     sendResponse();
                 } else {
                     sendResponse();
@@ -307,28 +330,48 @@ public class Recipe<Q extends UseCase.Request>
         };
     }
 
-    private void notifyClientListeners() {
-        System.out.println(TAG + "notifying listeners");
-        for (RecipeClientListener listener : recipeClientListeners) {
+    public void registerRecipeStateListener(RecipeStateListener listener) {
+        System.out.println(TAG + "client listener registered");
+        recipeStateListeners.add(listener);
+    }
+
+    private void notifyRecipeStateListeners() {
+        System.out.println(TAG + "notifying listeners:" + recipeStateResponse);
+        for (RecipeStateListener listener : recipeStateListeners) {
             listener.recipeStateChanged(recipeStateResponse);
         }
     }
 
-    public void registerClientListener(RecipeClientListener listener) {
-        System.out.println(TAG + "client listener registered");
-        recipeClientListeners.add(listener);
+    public void unRegisterRecipeStateListener(RecipeStateListener listener) {
+        recipeStateListeners.remove(listener);
     }
 
-    public void unRegisterClientListener(RecipeClientListener listener) {
-        recipeClientListeners.remove(listener);
+    // Registering recipe response callbacks to components and interested listeners allows the
+    // Recipe to push responses out to any number of RecipeResponse listeners. This is useful when
+    // one component changes the state of another, where the Recipe acts as a mediator, or the
+    // recipe receives a single global request, such as a clone request and needs to push out a
+    // response to all of its components.
+    public void registerRecipeResponseCallback(UseCaseCommand.Callback<RecipeResponse> callback) {
+        recipeResponseListeners.add(callback);
+    }
+
+    public void notifyRecipeResponseCallbacks(RecipeResponse response) {
+        for (UseCaseCommand.Callback<RecipeResponse> callback : recipeResponseListeners) {
+            if (getUseCaseCallback() != callback) {
+                callback.onSuccess(response);
+            }
+        }
+    }
+
+    public void unRegisterRecipeResponseCallback(UseCaseCommand.Callback<RecipeResponse> callback) {
+        recipeResponseListeners.remove(callback);
     }
 
     private void sendResponse() {
         RecipeResponse response = new RecipeResponse(
-
-                recipeStateResponse.getState(),
-                recipeStateResponse.getFailReasons(),
-                componentResponses
+                recipeId,
+                recipeStateResponse,
+                componentOnSuccessResponses
         );
 
         if (isRecipeStateValid()) {
@@ -340,7 +383,8 @@ public class Recipe<Q extends UseCase.Request>
 
     private boolean isRecipeStateValid() {
         RecipeState recipeState = recipeStateResponse.getState();
-        return recipeState == RecipeState.VALID_UNCHANGED || recipeState == RecipeState.VALID_CHANGED;
-        // Or recipeState COMPLETE?
+        return recipeState == RecipeState.VALID_UNCHANGED ||
+                recipeState == RecipeState.VALID_CHANGED ||
+                recipeState == RecipeState.COMPLETE;
     }
 }

@@ -6,6 +6,7 @@ import androidx.databinding.ObservableBoolean;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourseRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourseResponse;
@@ -13,9 +14,11 @@ import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 
 import javax.annotation.Nonnull;
 
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
+
 public class RecipeCourseEditorViewModel
         extends ObservableViewModel
-        implements UseCase.Callback<RecipeCourseResponse> {
+        implements UseCase.Callback<RecipeResponse> {
 
     private static final String TAG = "tkm-" + RecipeCourseEditorViewModel.class.getSimpleName() +
             "; ";
@@ -71,21 +74,36 @@ public class RecipeCourseEditorViewModel
     }
 
     @Override
-    public void onSuccess(RecipeCourseResponse response) {
-        processResponse(response);
+    public void onSuccess(RecipeResponse response) {
+        System.out.println(TAG + "onSuccess:" + response);
+        extractResponse(response);
     }
 
     @Override
-    public void onError(RecipeCourseResponse response) {
-        processResponse(response);
+    public void onError(RecipeResponse response) {
+        System.out.println(TAG + "onError:" + response);
+        extractResponse(response);
+    }
+
+    private void extractResponse(RecipeResponse recipeResponse) {
+        RecipeCourseResponse response = (RecipeCourseResponse)
+                recipeResponse.
+                getComponentResponses().
+                get(ComponentName.COURSE);
+
+        if (isStateChanged(response)) {
+            processResponse(response);
+        }
+    }
+
+    private boolean isStateChanged(RecipeCourseResponse response) {
+        return !this.response.equals(response);
     }
 
     private void processResponse(RecipeCourseResponse response) {
         dataLoading.set(false);
-        if (!this.response.equals(response)) {
-            this.response = response;
-            setRecipeCoursesToObservables();
-        }
+        this.response = response;
+        setRecipeCoursesToObservables();
     }
 
     private void setRecipeCoursesToObservables() {

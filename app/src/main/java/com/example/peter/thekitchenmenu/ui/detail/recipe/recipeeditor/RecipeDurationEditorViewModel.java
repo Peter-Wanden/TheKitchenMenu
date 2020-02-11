@@ -11,8 +11,10 @@ import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDurationRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDurationResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
 import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 
 import javax.annotation.Nonnull;
@@ -21,7 +23,7 @@ import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipedurat
 
 public class RecipeDurationEditorViewModel
         extends ObservableViewModel
-        implements UseCase.Callback<RecipeDurationResponse> {
+        implements UseCase.Callback<RecipeResponse> {
 
     private static final String TAG = "tkm-" + RecipeDurationEditorViewModel.class.getSimpleName()
             + ":";
@@ -86,15 +88,33 @@ public class RecipeDurationEditorViewModel
     }
 
     @Override
-    public void onSuccess(RecipeDurationResponse response) {
-        RecipeDurationEditorViewModel.this.response = response;
-        updateObservables();
+    public void onSuccess(RecipeResponse response) {
+        System.out.println(TAG + "onSuccess:" + response);
+        RecipeDurationResponse durationResponse = getResponse(response);
+        if (isStateChanged(durationResponse)) {
+            this.response = durationResponse;
+            updateObservables();
+        }
     }
 
     @Override
-    public void onError(RecipeDurationResponse response) {
-        RecipeDurationEditorViewModel.this.response = response;
-        displayErrors();
+    public void onError(RecipeResponse response) {
+        System.out.println(TAG + "onError:" + response);
+        RecipeDurationResponse durationResponse = getResponse(response);
+        if (isStateChanged(durationResponse)) {
+            this.response = durationResponse;
+            displayErrors();
+        }
+    }
+
+    private boolean isStateChanged(RecipeDurationResponse response) {
+        return !this.response.equals(response);
+    }
+
+    private RecipeDurationResponse getResponse(RecipeResponse response) {
+        return (RecipeDurationResponse) response.
+                getComponentResponses().
+                get(RecipeStateCalculator.ComponentName.DURATION);
     }
 
     private void updateObservables() {

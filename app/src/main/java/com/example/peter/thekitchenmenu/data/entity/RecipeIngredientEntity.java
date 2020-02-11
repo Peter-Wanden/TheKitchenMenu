@@ -8,8 +8,8 @@ import androidx.room.PrimaryKey;
 
 import java.util.Objects;
 
-@Entity(tableName = RecipeIngredientQuantityEntity.TABLE_RECIPE_INGREDIENT)
-public final class RecipeIngredientQuantityEntity implements TkmEntity {
+@Entity(tableName = RecipeIngredientEntity.TABLE_RECIPE_INGREDIENT)
+public final class RecipeIngredientEntity implements TkmEntity {
 
     public static final String TABLE_RECIPE_INGREDIENT = "recipeIngredient";
     public static final String ID = "id";
@@ -43,7 +43,7 @@ public final class RecipeIngredientQuantityEntity implements TkmEntity {
     private final double itemBaseUnits;
 
     @ColumnInfo(name = UNIT_OF_MEASURE_SUBTYPE)
-    private final int unitOfMeasureSubtype;
+    private final int measurementSubtype;
 
     @NonNull
     @ColumnInfo(name = CREATED_BY)
@@ -55,21 +55,21 @@ public final class RecipeIngredientQuantityEntity implements TkmEntity {
     @ColumnInfo(name = LAST_UPDATE)
     private final long lastUpdate;
 
-    public RecipeIngredientQuantityEntity(@NonNull String id,
-                                          @NonNull String recipeId,
-                                          @NonNull String ingredientId,
-                                          @Nullable String productId,
-                                          double itemBaseUnits,
-                                          int unitOfMeasureSubtype,
-                                          @NonNull String createdBy,
-                                          long createDate,
-                                          long lastUpdate) {
+    public RecipeIngredientEntity(@NonNull String id,
+                                  @NonNull String recipeId,
+                                  @NonNull String ingredientId,
+                                  @Nullable String productId,
+                                  double itemBaseUnits,
+                                  int measurementSubtype,
+                                  @NonNull String createdBy,
+                                  long createDate,
+                                  long lastUpdate) {
         this.id = id;
         this.recipeId = recipeId;
         this.ingredientId = ingredientId;
         this.productId = productId;
         this.itemBaseUnits = itemBaseUnits;
-        this.unitOfMeasureSubtype = unitOfMeasureSubtype;
+        this.measurementSubtype = measurementSubtype;
         this.createdBy = createdBy;
         this.createDate = createDate;
         this.lastUpdate = lastUpdate;
@@ -79,9 +79,9 @@ public final class RecipeIngredientQuantityEntity implements TkmEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RecipeIngredientQuantityEntity entity = (RecipeIngredientQuantityEntity) o;
+        RecipeIngredientEntity entity = (RecipeIngredientEntity) o;
         return Double.compare(entity.itemBaseUnits, itemBaseUnits) == 0 &&
-                unitOfMeasureSubtype == entity.unitOfMeasureSubtype &&
+                measurementSubtype == entity.measurementSubtype &&
                 createDate == entity.createDate &&
                 lastUpdate == entity.lastUpdate &&
                 id.equals(entity.id) &&
@@ -99,7 +99,7 @@ public final class RecipeIngredientQuantityEntity implements TkmEntity {
                 ingredientId,
                 productId,
                 itemBaseUnits,
-                unitOfMeasureSubtype,
+                measurementSubtype,
                 createdBy,
                 createDate,
                 lastUpdate);
@@ -107,13 +107,13 @@ public final class RecipeIngredientQuantityEntity implements TkmEntity {
 
     @Override
     public String toString() {
-        return "RecipeIngredientQuantityEntity{" +
+        return "RecipeIngredientEntity{" +
                 "id='" + id + '\'' +
                 ", recipeId='" + recipeId + '\'' +
                 ", ingredientId='" + ingredientId + '\'' +
                 ", productId='" + productId + '\'' +
                 ", itemBaseUnits=" + itemBaseUnits +
-                ", unitOfMeasureSubtype=" + unitOfMeasureSubtype +
+                ", measurementSubtype=" + measurementSubtype +
                 ", createdBy='" + createdBy + '\'' +
                 ", createDate=" + createDate +
                 ", lastUpdate=" + lastUpdate +
@@ -145,8 +145,8 @@ public final class RecipeIngredientQuantityEntity implements TkmEntity {
         return itemBaseUnits;
     }
 
-    public int getUnitOfMeasureSubtype() {
-        return unitOfMeasureSubtype;
+    public int getMeasurementSubtype() {
+        return measurementSubtype;
     }
 
     @NonNull

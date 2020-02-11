@@ -4,7 +4,7 @@ import android.content.res.Resources;
 
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
-import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientQuantityEntity;
+import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
@@ -28,7 +28,6 @@ import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -108,16 +107,16 @@ public class RecipeIngredientCalculatorViewModelTest {
     // endregion - PORTIONS TEST DATA
 
     // region - RECIPE INGREDIENT TEST DATA
-    private RecipeIngredientQuantityEntity QUANTITY_NEW_INVALID =
+    private RecipeIngredientEntity QUANTITY_NEW_INVALID =
             TestDataRecipeIngredientQuantityEntity.getNewInvalid();
 
-    private RecipeIngredientQuantityEntity QUANTITY_NEW_VALID_METRIC =
+    private RecipeIngredientEntity QUANTITY_NEW_VALID_METRIC =
             TestDataRecipeIngredientQuantityEntity.getNewValidMetric();
 
-    private RecipeIngredientQuantityEntity QUANTITY_EXISTING_VALID_METRIC =
+    private RecipeIngredientEntity QUANTITY_EXISTING_VALID_METRIC =
             TestDataRecipeIngredientQuantityEntity.getExistingValidMetric();
 
-    private RecipeIngredientQuantityEntity QUANTITY_EXISTING_VALID_IMPERIAL_SPOON =
+    private RecipeIngredientEntity QUANTITY_EXISTING_VALID_IMPERIAL_SPOON =
             TestDataRecipeIngredientQuantityEntity.getExistingValidImperialTwoSpoons();
     // endregion - RECIPE INGREDIENT TEST DATA
 
@@ -134,7 +133,7 @@ public class RecipeIngredientCalculatorViewModelTest {
     @Mock
     RepositoryRecipeIngredient repoRecipeIngredientMock;
     @Captor
-    ArgumentCaptor<DataSource.GetEntityCallback<RecipeIngredientQuantityEntity>>
+    ArgumentCaptor<DataSource.GetEntityCallback<RecipeIngredientEntity>>
             getRecipeIngredientCallbackCaptor;
     @Mock
     RepositoryIngredient repoIngredientMock;

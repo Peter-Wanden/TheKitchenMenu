@@ -115,7 +115,7 @@ public class RecipeIdentityEditorViewModelTest {
     @Mock
     UniqueIdProvider idProviderMock;
 
-    private RecipeClientListener recipeClientListener;
+    private RecipeStateListener recipeClientListener;
     private RecipeStateResponse recipeStateResponse;
     private RecipeResponse recipeResponse;
     private ComponentState actualComponentState;
@@ -186,8 +186,8 @@ public class RecipeIdentityEditorViewModelTest {
                 duration,
                 portions);
 
-        recipeClientListener = new RecipeClientListener();
-        recipe.registerClientListener(recipeClientListener);
+        recipeClientListener = new RecipeStateListener();
+        recipe.registerRecipeStateListener(recipeClientListener);
 
         return new RecipeIdentityEditorViewModel(
                 handler,
@@ -649,7 +649,7 @@ public class RecipeIdentityEditorViewModelTest {
     // endregion helper methods --------------------------------------------------------------------
 
     // region helper classes -----------------------------------------------------------------------
-    private class RecipeClientListener implements Recipe.RecipeClientListener {
+    private class RecipeStateListener implements Recipe.RecipeStateListener {
         RecipeStateResponse response;
         @Override
         public void recipeStateChanged(RecipeStateResponse response) {
@@ -663,7 +663,7 @@ public class RecipeIdentityEditorViewModelTest {
         @Nonnull
         @Override
         public String toString() {
-            return "RecipeClientListener{" +
+            return "RecipeStateListener{" +
                     "response=" + response +
                     '}';
         }

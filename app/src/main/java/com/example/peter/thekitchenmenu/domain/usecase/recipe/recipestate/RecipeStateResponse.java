@@ -3,6 +3,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate;
 import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseCommand;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -64,5 +65,41 @@ public class RecipeStateResponse implements UseCaseCommand.Response {
                 ", failReasons=" + failReasons +
                 ", componentStates=" + componentStates +
                 '}';
+    }
+
+    public static class Builder {
+        private RecipeState recipeState;
+        private List<FailReasons> failReasons;
+        private HashMap<ComponentName, ComponentState> componentStates;
+
+        public static Builder getDefault() {
+            return new Builder().
+                    setRecipeState(RecipeState.INVALID_UNCHANGED).
+                    setFailReasons(new ArrayList<>()).
+                    setComponentStates(new HashMap<>());
+        }
+
+        public Builder setRecipeState(RecipeState recipeState) {
+            this.recipeState = recipeState;
+            return this;
+        }
+
+        public Builder setFailReasons(List<FailReasons> failReasons) {
+            this.failReasons = failReasons;
+            return this;
+        }
+
+        public Builder setComponentStates(HashMap<ComponentName, ComponentState> componentStates) {
+            this.componentStates = componentStates;
+            return this;
+        }
+
+        public RecipeStateResponse build() {
+            return new RecipeStateResponse(
+                    recipeState,
+                    failReasons,
+                    componentStates
+            );
+        }
     }
 }

@@ -16,7 +16,6 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.Rec
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentityRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentityResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
 import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 
 import java.util.List;
@@ -24,6 +23,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe.DO_NOT_CLONE;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
 
 public class RecipeIdentityEditorViewModel
         extends ObservableViewModel
@@ -93,21 +93,29 @@ public class RecipeIdentityEditorViewModel
     @Override
     public void onSuccess(RecipeResponse response) {
         System.out.println(TAG + "onSuccess");
-        extractResponse(response);
-        onUseCaseSuccess();
+        RecipeIdentityResponse identityResponse = extractResponse(response);
+        if (isStateChanged(identityResponse)) {
+            onUseCaseSuccess();
+        }
     }
 
     @Override
     public void onError(RecipeResponse response) {
         System.out.println(TAG + "onError");
-        extractResponse(response);
-        onUseCaseError();
+        RecipeIdentityResponse identityResponse = extractResponse(response);
+        if (isStateChanged(identityResponse)) {
+            onUseCaseError();
+        }
     }
 
-    private void extractResponse(RecipeResponse recipeResponse) {
-        response = (RecipeIdentityResponse) recipeResponse.
+    private RecipeIdentityResponse extractResponse(RecipeResponse recipeResponse) {
+        return (RecipeIdentityResponse) recipeResponse.
                 getComponentResponses().
-                get(RecipeStateCalculator.ComponentName.IDENTITY);
+                get(ComponentName.IDENTITY);
+    }
+
+    private boolean isStateChanged(RecipeIdentityResponse response) {
+        return !this.response.equals(response);
     }
 
     @Bindable

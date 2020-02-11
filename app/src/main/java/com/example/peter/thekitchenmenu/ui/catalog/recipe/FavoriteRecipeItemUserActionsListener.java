@@ -3,7 +3,7 @@ package com.example.peter.thekitchenmenu.ui.catalog.recipe;
 import com.example.peter.thekitchenmenu.data.model.FavoriteRecipeModel;
 
 /**
- * RecipeClientListener used with data binding to process user actions on a favorite product list item in a
+ * RecipeStateListener used with data binding to process user actions on a favorite product list item in a
  * catalog
  */
 public interface FavoriteRecipeItemUserActionsListener {

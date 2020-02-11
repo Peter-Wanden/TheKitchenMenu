@@ -11,7 +11,7 @@ public class TestDataUseCaseConversionFactorStatusRequestResponse {
     getRequestMetricNoConversionFactor() {
         return new ConversionFactorStatusRequest(
                 MeasurementSubtype.fromInt(TestDataRecipeIngredientQuantityEntity.
-                        getNewValidMetric().getUnitOfMeasureSubtype()),
+                        getNewValidMetric().getMeasurementSubtype()),
                 TestDataIngredientEntity.getNewValidNameValidDescription().getId());
     }
 

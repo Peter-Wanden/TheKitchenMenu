@@ -19,10 +19,10 @@ public class UseCaseHandler {
         return INSTANCE;
     }
 
-    public <T extends UseCase.Request, R extends UseCase.Response> void execute(
-            final UseCase<T, R> useCase,
-            T request,
-            UseCase.Callback<R> callback) {
+    public <T extends UseCase.Request, R extends UseCase.Response>
+    void execute(final UseCase<T, R> useCase,
+                 T request,
+                 UseCase.Callback<R> callback) {
 
         useCase.setRequest(request);
         useCase.setUseCaseCallback(new UseCaseHandler.UiCallbackWrapper<>(callback, this));
@@ -30,15 +30,15 @@ public class UseCaseHandler {
         useCaseScheduler.execute(useCase::run);
     }
 
-    public <V extends UseCase.Response> void notifyResponse(
-            final V response,
-            final UseCase.Callback<V> callback) {
+    public <V extends UseCase.Response>
+    void notifyResponse(final V response,
+                        final UseCase.Callback<V> callback) {
         useCaseScheduler.notifyResponse(response, callback);
     }
 
-    private <V extends UseCase.Response> void notifyError(
-            final V response,
-            final UseCase.Callback<V> callback) {
+    private <V extends UseCase.Response>
+    void notifyError(final V response,
+                     final UseCase.Callback<V> callback) {
         useCaseScheduler.onError(response, callback);
     }
 

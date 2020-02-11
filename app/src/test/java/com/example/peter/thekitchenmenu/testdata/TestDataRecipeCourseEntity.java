@@ -93,7 +93,7 @@ public class TestDataRecipeCourseEntity {
         );
     }
 
-    public static List<RecipeCourseEntity> getAllRecipeCoursesDatabaseResponse() {
+    public static List<RecipeCourseEntity> getAllRecipeCourses() {
         List<RecipeCourseEntity> courseEntities = new ArrayList<>();
         courseEntities.add(getRecipeCourseZero());
         courseEntities.add(getRecipeCourseOne());
@@ -108,7 +108,7 @@ public class TestDataRecipeCourseEntity {
 
     public static List<RecipeCourseEntity> getEvenRecipeCoursesDatabaseResponse() {
         List<RecipeCourseEntity> evenCourseEntities = new ArrayList<>();
-        for (RecipeCourseEntity entity : getAllRecipeCoursesDatabaseResponse()) {
+        for (RecipeCourseEntity entity : getAllRecipeCourses()) {
             if (entity.getCourseNo() % 2 == 0) {
                 evenCourseEntities.add(entity);
             }
@@ -118,7 +118,7 @@ public class TestDataRecipeCourseEntity {
 
     public static List<RecipeCourseEntity> getAllByRecipeId(String recipeId) {
         List<RecipeCourseEntity> listToReturn = new ArrayList<>();
-        for (RecipeCourseEntity entity : getAllRecipeCoursesDatabaseResponse()) {
+        for (RecipeCourseEntity entity : getAllRecipeCourses()) {
             if (entity.getRecipeId().equals(recipeId)) {
                 listToReturn.add(entity);
             }

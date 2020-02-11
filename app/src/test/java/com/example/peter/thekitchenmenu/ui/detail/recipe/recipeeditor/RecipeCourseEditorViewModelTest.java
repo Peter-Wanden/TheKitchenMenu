@@ -14,14 +14,19 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDura
 import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityTest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortionsTest;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
+import com.example.peter.thekitchenmenu.testdata.TestDataRecipeCourseEntity;
+import com.example.peter.thekitchenmenu.testdata.TestDataRecipeDurationEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeEntity;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
+import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIdentityEntity;
+import com.example.peter.thekitchenmenu.testdata.TestDataRecipePortionsEntity;
 
 import org.junit.*;
 import org.mockito.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.example.peter.thekitchenmenu.testdata.TestDataRecipeCourseEntity.*;
 import static com.example.peter.thekitchenmenu.testdata.TestDataRecipeEntity.*;
@@ -34,6 +39,20 @@ public class RecipeCourseEditorViewModelTest {
     private RecipeEntity VALID_EXISTING_RECIPE_ENTITY = getValidExisting();
     private String EXISTING_RECIPE_ID = VALID_EXISTING_RECIPE_ENTITY.getId();
     private String NEW_RECIPE_ID = TestDataRecipeEntity.getNewInvalid().getId();
+
+    private static final RecipeEntity RECIPE_INVALID_NEW =
+            TestDataRecipeEntity.getNewInvalid();
+
+    private static final RecipeEntity RECIPE_VALID_EXISTING =
+            TestDataRecipeEntity.getValidExisting();
+    private static final RecipeIdentityEntity IDENTITY_VALID_EXISTING_COMPLETE =
+            TestDataRecipeIdentityEntity.getValidExistingTitleValidDescriptionValid();
+    private static final RecipeDurationEntity DURATION_VALID_EXISTING_COMPLETE =
+            TestDataRecipeDurationEntity.getValidExistingComplete();
+    private static final RecipePortionsEntity PORTIONS_VALID_EXISTING_NINE =
+            TestDataRecipePortionsEntity.getExistingValidNinePortions();
+    private static final List<RecipeCourseEntity> COURSES_VALID_EXISTING_ALL =
+            TestDataRecipeCourseEntity.getAllRecipeCourses();
 
     // endregion constants -------------------------------------------------------------------------
 
@@ -62,8 +81,6 @@ public class RecipeCourseEditorViewModelTest {
     UniqueIdProvider idProviderMock;
     @Mock
     TimeProvider timeProviderMock;
-    @Captor
-//    ArgumentCaptor<RecipeComponentStateModel> componentStatus;
     // endregion helper fields ---------------------------------------------------------------------
 
     private RecipeCourseEditorViewModel SUT;
@@ -130,18 +147,23 @@ public class RecipeCourseEditorViewModelTest {
     @Test
     public void start_recipeIdSupplied_databaseCalledForListOfCourses() {
         // Arrange
+        String recipeId = RECIPE_VALID_EXISTING.getId();
         // Act
-        SUT.start(EXISTING_RECIPE_ID);
+        SUT.start(recipeId);
         // Assert
-        verify(repoCourseMock).getCoursesForRecipe(eq(EXISTING_RECIPE_ID), repoCourseCallback.capture());
+        verifyAllOtherComponentReposCalledAndReturnValidExisting(recipeId);
+        verifyRepoCourseCalledAndReturnCoursesMatchingId(recipeId);
+        verify(repoCourseMock).getCoursesForRecipe(eq(recipeId), repoCourseCallback.capture());
     }
 
     @Test
     public void start_recipeIdSupplied_observersCalled() {
         // Arrange
+        String recipeId = RECIPE_VALID_EXISTING.getId();
         // Act
-        SUT.start(EXISTING_RECIPE_ID);
-        confirmRepoCalledAndReturnMatchingCourses(EXISTING_RECIPE_ID);
+        SUT.start(recipeId);
+        verifyAllOtherComponentReposCalledAndReturnValidExisting(recipeId);
+        verifyRepoCourseCalledAndReturnCoursesMatchingId(recipeId);
         // Assert
         assertTrue(SUT.isCourseZero());
         assertTrue(SUT.isCourseOne());
@@ -156,9 +178,12 @@ public class RecipeCourseEditorViewModelTest {
     @Test
     public void start_recipeIdSupplied_evenObserversCalledOnly() {
         // Arrange
+        String recipeId = RECIPE_VALID_EXISTING.getId();
+
         // Act
         SUT.start(EXISTING_RECIPE_ID);
-        simulateGetEvenCoursesForRecipeFromDatabase();
+        verifyAllOtherComponentReposCalledAndReturnValidExisting(EXISTING_RECIPE_ID);
+        verifyRepoCourseCalledAndReturnEvenCoursesForId(recipeId);
         // Assert
         assertTrue(SUT.isCourseZero());
         assertFalse(SUT.isCourseOne());
@@ -173,19 +198,25 @@ public class RecipeCourseEditorViewModelTest {
     @Test
     public void startWithClone_cloneFromAndToIds_persistenceCalledWithCloneFromId() {
         // Arrange
+        String cloneFromRecipeId = RECIPE_VALID_EXISTING.getId();
+        String cloneToRecipeId = RECIPE_INVALID_NEW.getId();
         // Act
-        SUT.startByCloningModel(EXISTING_RECIPE_ID, NEW_RECIPE_ID);
+        SUT.startByCloningModel(cloneFromRecipeId, cloneToRecipeId);
         // Assert
-        verify(repoCourseMock).getCoursesForRecipe(eq(EXISTING_RECIPE_ID), anyObject());
+        verifyAllOtherComponentReposCalledAndReturnValidExisting(cloneFromRecipeId);
+        verifyRepoCourseCalledAndReturnCoursesMatchingId(cloneFromRecipeId);
     }
 
     @Test
     public void startWithClonedModel_cloneFromAndToIds_whenDeleteCourse_courseDeletedFromCloneToId() {
         // Arrange
+        String cloneFromRecipeId = RECIPE_VALID_EXISTING.getId();
+        String cloneToRecipeId = RECIPE_INVALID_NEW.getId();
         whenUniqueIdProviderMockCalledReturnClonedEvenIds();
         // Act
-        SUT.startByCloningModel(EXISTING_RECIPE_ID, NEW_RECIPE_ID);
-        simulateGetEvenCoursesForRecipeFromDatabase();
+        SUT.startByCloningModel(cloneFromRecipeId, cloneToRecipeId);
+        verifyAllOtherComponentReposCalledAndReturnValidExisting(cloneFromRecipeId);
+        verifyRepoCourseCalledAndReturnCoursesMatchingId(cloneFromRecipeId);
         // Assert
         assertTrue(SUT.isCourseZero());
         SUT.setCourseZero(false);
@@ -201,6 +232,7 @@ public class RecipeCourseEditorViewModelTest {
         whenTimeProviderCalledReturnTime(getRecipeCourseZero().getCreateDate());
         // Act
         SUT.start(EXISTING_RECIPE_ID);
+        verifyRepoRecipeCalledAndReturnValidExistingRecipe(EXISTING_RECIPE_ID);
         SUT.setCourseZero(true);
         // Assert
         verify(repoCourseMock).save(getRecipeCourseZero());
@@ -212,11 +244,12 @@ public class RecipeCourseEditorViewModelTest {
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
         // Act
         SUT.start(EXISTING_RECIPE_ID);
-        confirmRepoCalledAndReturnMatchingCourses(EXISTING_RECIPE_ID);
+        verifyRepoRecipeCalledAndReturnValidExistingRecipe(EXISTING_RECIPE_ID);
+        verifyRepoCourseCalledAndReturnCoursesMatchingId(EXISTING_RECIPE_ID);
         SUT.setCourseZero(false);
         // Assert
         verify(repoCourseMock).deleteById(ac.capture());
-        assertEquals(getAllRecipeCoursesDatabaseResponse().get(0).getId(), ac.getValue());
+        assertEquals(getAllRecipeCourses().get(0).getId(), ac.getValue());
     }
 
     @Test
@@ -226,6 +259,7 @@ public class RecipeCourseEditorViewModelTest {
         whenTimeProviderCalledReturnTime(getRecipeCourseFour().getCreateDate());
         // Act
         SUT.start(EXISTING_RECIPE_ID);
+        verifyRepoRecipeCalledAndReturnValidExistingRecipe(EXISTING_RECIPE_ID);
         SUT.setCourseOne(true);
         // Assert
         verify(repoCourseMock).save(getRecipeCourseOne());
@@ -237,11 +271,12 @@ public class RecipeCourseEditorViewModelTest {
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
         // Act
         SUT.start(EXISTING_RECIPE_ID);
-        confirmRepoCalledAndReturnMatchingCourses(EXISTING_RECIPE_ID);
+        verifyRepoRecipeCalledAndReturnValidExistingRecipe(EXISTING_RECIPE_ID);
+        verifyRepoCourseCalledAndReturnCoursesMatchingId(EXISTING_RECIPE_ID);
         SUT.setCourseOne(false);
         // Assert
         verify(repoCourseMock).deleteById(ac.capture());
-        assertEquals(getAllRecipeCoursesDatabaseResponse().get(1).getId(), ac.getValue());
+        assertEquals(getAllRecipeCourses().get(1).getId(), ac.getValue());
     }
 
     @Test
@@ -251,6 +286,7 @@ public class RecipeCourseEditorViewModelTest {
         whenTimeProviderCalledReturnTime(getRecipeCourseTwo().getCreateDate());
         // Act
         SUT.start(EXISTING_RECIPE_ID);
+        verifyRepoRecipeCalledAndReturnValidExistingRecipe(EXISTING_RECIPE_ID);
         SUT.setCourseTwo(true);
         // Assert
         verify(repoCourseMock).save(getRecipeCourseTwo());
@@ -262,11 +298,11 @@ public class RecipeCourseEditorViewModelTest {
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
         // Act
         SUT.start(EXISTING_RECIPE_ID);
-        confirmRepoCalledAndReturnMatchingCourses(EXISTING_RECIPE_ID);
+        verifyRepoCourseCalledAndReturnCoursesMatchingId(EXISTING_RECIPE_ID);
         SUT.setCourseTwo(false);
         // Assert
         verify(repoCourseMock).deleteById(ac.capture());
-        assertEquals(getAllRecipeCoursesDatabaseResponse().get(2).getId(), ac.getValue());
+        assertEquals(getAllRecipeCourses().get(2).getId(), ac.getValue());
     }
 
     @Test
@@ -287,11 +323,11 @@ public class RecipeCourseEditorViewModelTest {
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
         // Act
         SUT.start(EXISTING_RECIPE_ID);
-        confirmRepoCalledAndReturnMatchingCourses(EXISTING_RECIPE_ID);
+        verifyRepoCourseCalledAndReturnCoursesMatchingId(EXISTING_RECIPE_ID);
         SUT.setCourseThree(false);
         // Assert
         verify(repoCourseMock).deleteById(ac.capture());
-        assertEquals(getAllRecipeCoursesDatabaseResponse().get(3).getId(), ac.getValue());
+        assertEquals(getAllRecipeCourses().get(3).getId(), ac.getValue());
     }
 
     @Test
@@ -312,11 +348,11 @@ public class RecipeCourseEditorViewModelTest {
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
         // Act
         SUT.start(EXISTING_RECIPE_ID);
-        confirmRepoCalledAndReturnMatchingCourses(EXISTING_RECIPE_ID);
+        verifyRepoCourseCalledAndReturnCoursesMatchingId(EXISTING_RECIPE_ID);
         SUT.setCourseFour(false);
         // Assert
         verify(repoCourseMock).deleteById(ac.capture());
-        assertEquals(getAllRecipeCoursesDatabaseResponse().get(4).getId(), ac.getValue());
+        assertEquals(getAllRecipeCourses().get(4).getId(), ac.getValue());
     }
 
     @Test
@@ -337,11 +373,11 @@ public class RecipeCourseEditorViewModelTest {
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
         // Act
         SUT.start(EXISTING_RECIPE_ID);
-        confirmRepoCalledAndReturnMatchingCourses(EXISTING_RECIPE_ID);
+        verifyRepoCourseCalledAndReturnCoursesMatchingId(EXISTING_RECIPE_ID);
         SUT.setCourseFive(false);
         // Assert
         verify(repoCourseMock).deleteById(ac.capture());
-        assertEquals(getAllRecipeCoursesDatabaseResponse().get(5).getId(), ac.getValue());
+        assertEquals(getAllRecipeCourses().get(5).getId(), ac.getValue());
     }
 
     @Test
@@ -362,11 +398,11 @@ public class RecipeCourseEditorViewModelTest {
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
         // Act
         SUT.start(EXISTING_RECIPE_ID);
-        confirmRepoCalledAndReturnMatchingCourses(EXISTING_RECIPE_ID);
+        verifyRepoCourseCalledAndReturnCoursesMatchingId(EXISTING_RECIPE_ID);
         SUT.setCourseSix(false);
         // Assert
         verify(repoCourseMock).deleteById(ac.capture());
-        assertEquals(getAllRecipeCoursesDatabaseResponse().get(6).getId(), ac.getValue());
+        assertEquals(getAllRecipeCourses().get(6).getId(), ac.getValue());
     }
 
     @Test
@@ -387,11 +423,11 @@ public class RecipeCourseEditorViewModelTest {
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
         // Act
         SUT.start(EXISTING_RECIPE_ID);
-        confirmRepoCalledAndReturnMatchingCourses(EXISTING_RECIPE_ID);
+        verifyRepoCourseCalledAndReturnCoursesMatchingId(EXISTING_RECIPE_ID);
         SUT.setCourseSeven(false);
         // Assert
         verify(repoCourseMock).deleteById(ac.capture());
-        assertEquals(getAllRecipeCoursesDatabaseResponse().get(7).getId(), ac.getValue());
+        assertEquals(getAllRecipeCourses().get(7).getId(), ac.getValue());
     }
 
     @Test(expected = RuntimeException.class)
@@ -410,7 +446,7 @@ public class RecipeCourseEditorViewModelTest {
         // Arrange
         // Act
         SUT.start(EXISTING_RECIPE_ID);
-        simulateReturnNoCoursesForRecipeFromDatabase();
+        verifyRepoCourseCalledAndReturnNoCoursesForId(EXISTING_RECIPE_ID);
         // Assert
 
     }
@@ -420,7 +456,7 @@ public class RecipeCourseEditorViewModelTest {
         // Arrange
         // Act
         SUT.start(EXISTING_RECIPE_ID);
-        confirmRepoCalledAndReturnMatchingCourses(EXISTING_RECIPE_ID);
+        verifyRepoCourseCalledAndReturnCoursesMatchingId(EXISTING_RECIPE_ID);
         // Assert
 
     }
@@ -431,7 +467,7 @@ public class RecipeCourseEditorViewModelTest {
 
         // Act
         SUT.start(EXISTING_RECIPE_ID);
-        confirmRepoCalledAndReturnMatchingCourses(EXISTING_RECIPE_ID);
+        verifyRepoCourseCalledAndReturnCoursesMatchingId(EXISTING_RECIPE_ID);
         SUT.setCourseZero(false);
         SUT.setCourseOne(false);
         SUT.setCourseTwo(false);
@@ -449,7 +485,7 @@ public class RecipeCourseEditorViewModelTest {
 
         // Act
         SUT.start(EXISTING_RECIPE_ID);
-        confirmRepoCalledAndReturnMatchingCourses(EXISTING_RECIPE_ID);
+        verifyRepoCourseCalledAndReturnCoursesMatchingId(EXISTING_RECIPE_ID);
         SUT.setCourseZero(false);
         SUT.setCourseOne(false);
         SUT.setCourseTwo(false);
@@ -461,26 +497,35 @@ public class RecipeCourseEditorViewModelTest {
     }
 
     // region helper methods -----------------------------------------------------------------------
-    private void confirmRepoCalledAndReturnMatchingCourses(String recipeId) {
-        // verify call database with recipe id
+    private void verifyRepoRecipeCalledAndReturnValidExistingRecipe(String recipeId) {
+        verify(repoRecipeMock).getById(eq(recipeId), repoRecipeCallback.capture());
+        repoRecipeCallback.getValue().onEntityLoaded(RECIPE_VALID_EXISTING);
+    }
+    private void verifyRepoCourseCalledAndReturnCoursesMatchingId(String recipeId) {
         verify(repoCourseMock).getCoursesForRecipe(eq(recipeId), repoCourseCallback.capture());
-        // simulate list of courses returned
         repoCourseCallback.getValue().onAllLoaded(getAllByRecipeId(recipeId));
     }
-
-    private void simulateGetEvenCoursesForRecipeFromDatabase() {
-        // verify call database with recipe id
-        verify(repoCourseMock).getCoursesForRecipe(eq(EXISTING_RECIPE_ID), repoCourseCallback.capture());
-        // simulate list of courses returned
+    private void verifyRepoCourseCalledAndReturnEvenCoursesForId(String recipeId) {
+        verify(repoCourseMock).getCoursesForRecipe(eq(recipeId), repoCourseCallback.capture());
         repoCourseCallback.getValue().onAllLoaded(getEvenRecipeCoursesDatabaseResponse());
     }
-
-    private void simulateReturnNoCoursesForRecipeFromDatabase() {
-        // verify call database with recipe id
-        verify(repoCourseMock).getCoursesForRecipe(eq(EXISTING_RECIPE_ID),
-                repoCourseCallback.capture());
-        // simulate list no courses returned
+    private void verifyRepoCourseCalledAndReturnNoCoursesForId(String recipeId) {
+        verify(repoCourseMock).getCoursesForRecipe(eq(recipeId), repoCourseCallback.capture());
         repoCourseCallback.getValue().onDataNotAvailable();
+    }
+
+    private void verifyAllOtherComponentReposCalledAndReturnValidExisting(String recipeId) {
+        verify(repoRecipeMock).getById(eq(recipeId), repoRecipeCallback.capture());
+        repoRecipeCallback.getValue().onEntityLoaded(RECIPE_VALID_EXISTING);
+
+        verify(repoIdentityMock).getById(eq(recipeId), repoIdentityCallback.capture());
+        repoIdentityCallback.getValue().onEntityLoaded(IDENTITY_VALID_EXISTING_COMPLETE);
+
+        verify(repoDurationMock).getById(eq(recipeId), repoDurationCallback.capture());
+        repoDurationCallback.getValue().onEntityLoaded(DURATION_VALID_EXISTING_COMPLETE);
+
+        verify(repoPortionsMock).getPortionsForRecipe(eq(recipeId), repoPortionsCallback.capture());
+        repoPortionsCallback.getValue().onEntityLoaded(PORTIONS_VALID_EXISTING_NINE);
     }
 
     private void whenUniqueIdProviderMockCalledReturnClonedEvenIds() {

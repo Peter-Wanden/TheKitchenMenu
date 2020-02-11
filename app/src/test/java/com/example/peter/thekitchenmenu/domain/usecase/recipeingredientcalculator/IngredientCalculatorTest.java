@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipeingredientcalculat
 
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
-import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientQuantityEntity;
+import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
@@ -48,19 +48,19 @@ public class IngredientCalculatorTest {
     private List<IngredientCalculatorResponse> responses = new ArrayList<>();
 
     // region - RECIPE INGREDIENT QUANTITY TEST DATA
-    private RecipeIngredientQuantityEntity QUANTITY_NEW_INVALID =
+    private RecipeIngredientEntity QUANTITY_NEW_INVALID =
             TestDataRecipeIngredientQuantityEntity.getNewInvalid();
 
-    private RecipeIngredientQuantityEntity QUANTITY_NEW_VALID_METRIC =
+    private RecipeIngredientEntity QUANTITY_NEW_VALID_METRIC =
             TestDataRecipeIngredientQuantityEntity.getNewValidMetric();
 
-    private RecipeIngredientQuantityEntity QUANTITY_EXISTING_VALID_METRIC =
+    private RecipeIngredientEntity QUANTITY_EXISTING_VALID_METRIC =
             TestDataRecipeIngredientQuantityEntity.getExistingValidMetric();
 
-    private RecipeIngredientQuantityEntity QUANTITY_EXISTING_VALID_IMPERIAL_SPOON =
+    private RecipeIngredientEntity QUANTITY_EXISTING_VALID_IMPERIAL_SPOON =
             TestDataRecipeIngredientQuantityEntity.getExistingValidImperialTwoSpoons();
 
-    private RecipeIngredientQuantityEntity QUANTITY_NEW_VALID_MAX_MASS_DIV_FOUR_PORTIONS =
+    private RecipeIngredientEntity QUANTITY_NEW_VALID_MAX_MASS_DIV_FOUR_PORTIONS =
             TestDataRecipeIngredientQuantityEntity.getNewValidMetricMaxMassDivFourPortions();
     // endregion - RECIPE INGREDIENT QUANTITY TEST DATA
 
@@ -212,7 +212,7 @@ public class IngredientCalculatorTest {
     @Mock
     RepositoryRecipeIngredient repoRecipeIngredientMock;
     @Captor
-    ArgumentCaptor<DataSource.GetEntityCallback<RecipeIngredientQuantityEntity>>
+    ArgumentCaptor<DataSource.GetEntityCallback<RecipeIngredientEntity>>
             getRecipeIngredientCallbackCaptor;
     @Mock
     RepositoryIngredient repoIngredientMock;
@@ -224,7 +224,7 @@ public class IngredientCalculatorTest {
     @Mock
     TimeProvider timeProviderMock;
     @Captor
-    ArgumentCaptor<RecipeIngredientQuantityEntity> recipeIngredientCaptor;
+    ArgumentCaptor<RecipeIngredientEntity> recipeIngredientCaptor;
     @Captor
     ArgumentCaptor<IngredientEntity> ingredientArgumentCaptor;
     // endregion helper fields ---------------------------------------------------------------------
@@ -371,7 +371,7 @@ public class IngredientCalculatorTest {
         handler.execute(SUT, REQUEST_NEW_VALID_UNIT_TWO, getResponseCallback());
         // Assert
         verify(repoRecipeIngredientMock).save(recipeIngredientCaptor.capture());
-        RecipeIngredientQuantityEntity actualResult = recipeIngredientCaptor.getValue();
+        RecipeIngredientEntity actualResult = recipeIngredientCaptor.getValue();
         assertEquals(QUANTITY_NEW_VALID_MAX_MASS_DIV_FOUR_PORTIONS, actualResult);
     }
 
@@ -759,7 +759,7 @@ public class IngredientCalculatorTest {
         handler.execute(SUT, REQUEST_EXISTING_VALID_METRIC_UNIT_TWO, getResponseCallback());
         // Assert
         verify(repoRecipeIngredientMock).save(recipeIngredientCaptor.capture());
-        RecipeIngredientQuantityEntity saveResult = recipeIngredientCaptor.getValue();
+        RecipeIngredientEntity saveResult = recipeIngredientCaptor.getValue();
         double expectedBaseUnits = RESPONSE_EXISTING_VALID_METRIC_UNIT_TWO.
                 getModel().getItemBaseUnits();
         double actualItemBseUnits = saveResult.getItemBaseUnits();
@@ -874,7 +874,7 @@ public class IngredientCalculatorTest {
                 QUANTITY_EXISTING_VALID_METRIC.getLastUpdate());
 
         MeasurementSubtype subtype = MeasurementSubtype.fromInt(
-                QUANTITY_EXISTING_VALID_METRIC.getUnitOfMeasureSubtype());
+                QUANTITY_EXISTING_VALID_METRIC.getMeasurementSubtype());
 
         UnitOfMeasure unitOfMeasureStartValues = subtype.getMeasurementClass();
         unitOfMeasureStartValues.isNumberOfItemsSet(portions);
@@ -951,10 +951,10 @@ public class IngredientCalculatorTest {
         assertEquals(ResultStatus.RESULT_OK, actualResponse.getResultStatus());
         // verify changes saved to quantity entity
         verify(repoRecipeIngredientMock).save(recipeIngredientCaptor.capture());
-        RecipeIngredientQuantityEntity actualQuantityEntityAfterUnitOneChange =
+        RecipeIngredientEntity actualQuantityEntityAfterUnitOneChange =
                 recipeIngredientCaptor.getValue();
-        RecipeIngredientQuantityEntity expectedQuantityEntityUnitOneChange =
-                new RecipeIngredientQuantityEntity(
+        RecipeIngredientEntity expectedQuantityEntityUnitOneChange =
+                new RecipeIngredientEntity(
                         QUANTITY_EXISTING_VALID_METRIC.getId(),
                         QUANTITY_EXISTING_VALID_METRIC.getRecipeId(),
                         QUANTITY_EXISTING_VALID_METRIC.getIngredientId(),
@@ -1004,9 +1004,9 @@ public class IngredientCalculatorTest {
 
         // verify changes saved to quantity entity
         verify(repoRecipeIngredientMock, times((2))).save(recipeIngredientCaptor.capture());
-        RecipeIngredientQuantityEntity actualQuantityEntity = recipeIngredientCaptor.getValue();
-        RecipeIngredientQuantityEntity expectedQuantityEntityAfterConversionFactorApplied =
-                new RecipeIngredientQuantityEntity(
+        RecipeIngredientEntity actualQuantityEntity = recipeIngredientCaptor.getValue();
+        RecipeIngredientEntity expectedQuantityEntityAfterConversionFactorApplied =
+                new RecipeIngredientEntity(
                         QUANTITY_EXISTING_VALID_METRIC.getId(),
                         QUANTITY_EXISTING_VALID_METRIC.getRecipeId(),
                         QUANTITY_EXISTING_VALID_METRIC.getIngredientId(),

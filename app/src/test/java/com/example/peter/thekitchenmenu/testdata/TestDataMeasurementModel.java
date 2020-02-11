@@ -24,7 +24,7 @@ public class TestDataMeasurementModel {
 
     private static MeasurementSubtype getSubtypeFromNewInvalidMetric() {
         return MeasurementSubtype.fromInt(TestDataRecipeIngredientQuantityEntity.
-                getNewInvalid().getUnitOfMeasureSubtype());
+                getNewInvalid().getMeasurementSubtype());
     }
 
     public static MeasurementModel getNewInvalidTotalUnitOne() {
@@ -173,7 +173,7 @@ public class TestDataMeasurementModel {
 
     private static MeasurementSubtype getSubtypeForValidNewMetric() {
         return MeasurementSubtype.fromInt(TestDataRecipeIngredientQuantityEntity.
-                getNewValidMetric().getUnitOfMeasureSubtype());
+                getNewValidMetric().getMeasurementSubtype());
     }
 
     public static MeasurementModel getNewInvalidUnitOfMeasureChangedImperialSpoon() {
@@ -304,7 +304,7 @@ public class TestDataMeasurementModel {
 
     private static MeasurementSubtype getSubtypeForNewValidImperialSpoon() {
         return MeasurementSubtype.fromInt(TestDataRecipeIngredientQuantityEntity.
-                getNewValidImperialOneTeaspoonFourPortionsNoConversionFactor().getUnitOfMeasureSubtype());
+                getNewValidImperialOneTeaspoonFourPortionsNoConversionFactor().getMeasurementSubtype());
     }
 
     private static int getEmptyModelFourPortions() {
@@ -568,7 +568,7 @@ public class TestDataMeasurementModel {
 
     private static MeasurementSubtype getExistingValidSubtype() {
         return MeasurementSubtype.fromInt(TestDataRecipeIngredientQuantityEntity.
-                getExistingValidMetric().getUnitOfMeasureSubtype());
+                getExistingValidMetric().getMeasurementSubtype());
     }
 
     private static int getExistingValidNinePortions() {

@@ -3,7 +3,7 @@ package com.example.peter.thekitchenmenu.domain.usecase;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
-import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientQuantityEntity;
+import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
@@ -69,10 +69,10 @@ public class RecipeIngredientListTest {
         };
     }
 
-    private DataSource.GetAllCallback<RecipeIngredientQuantityEntity> quantityCallback() {
-        return new DataSource.GetAllCallback<RecipeIngredientQuantityEntity>() {
+    private DataSource.GetAllCallback<RecipeIngredientEntity> quantityCallback() {
+        return new DataSource.GetAllCallback<RecipeIngredientEntity>() {
             @Override
-            public void onAllLoaded(List<RecipeIngredientQuantityEntity> entities) {
+            public void onAllLoaded(List<RecipeIngredientEntity> entities) {
 
             }
 
@@ -83,8 +83,8 @@ public class RecipeIngredientListTest {
         };
     }
 
-    private List<RecipeIngredientQuantityEntity> getRecipeIngredients() {
-        RecipeIngredientQuantityEntity quantity1 = new RecipeIngredientQuantityEntity(
+    private List<RecipeIngredientEntity> getRecipeIngredients() {
+        RecipeIngredientEntity quantity1 = new RecipeIngredientEntity(
                 "id1",
                 RECIPE_ID,
                 "INGREDIENT_ID_1",
@@ -96,7 +96,7 @@ public class RecipeIngredientListTest {
                 10
         );
 
-        RecipeIngredientQuantityEntity quantity2 = new RecipeIngredientQuantityEntity(
+        RecipeIngredientEntity quantity2 = new RecipeIngredientEntity(
                 "id2",
                 RECIPE_ID,
                 "INGREDIENT_ID_2",
@@ -108,7 +108,7 @@ public class RecipeIngredientListTest {
                 20
         );
 
-        RecipeIngredientQuantityEntity quantity3 = new RecipeIngredientQuantityEntity(
+        RecipeIngredientEntity quantity3 = new RecipeIngredientEntity(
                 "id1",
                 RECIPE_ID,
                 "INGREDIENT_ID_3",
@@ -120,7 +120,7 @@ public class RecipeIngredientListTest {
                 30
         );
 
-        RecipeIngredientQuantityEntity quantity4 = new RecipeIngredientQuantityEntity(
+        RecipeIngredientEntity quantity4 = new RecipeIngredientEntity(
                 "id1",
                 RECIPE_ID,
                 "INGREDIENT_ID_4",
@@ -132,7 +132,7 @@ public class RecipeIngredientListTest {
                 40
         );
 
-        List<RecipeIngredientQuantityEntity> list = new ArrayList<>();
+        List<RecipeIngredientEntity> list = new ArrayList<>();
         list.add(quantity1);
         list.add(quantity2);
         list.add(quantity3);

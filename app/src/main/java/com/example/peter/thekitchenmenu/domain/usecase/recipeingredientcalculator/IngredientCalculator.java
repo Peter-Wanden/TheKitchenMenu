@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipeingredientcalculat
 
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
-import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientQuantityEntity;
+import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
@@ -69,7 +69,7 @@ public class IngredientCalculator
 
     private MeasurementModel modelIn;
     private MeasurementModel existingModel;
-    private RecipeIngredientQuantityEntity quantityEntity;
+    private RecipeIngredientEntity quantityEntity;
     private IngredientEntity ingredientEntity;
 
     public IngredientCalculator(@Nonnull RepositoryRecipePortions portionsRepository,
@@ -118,9 +118,9 @@ public class IngredientCalculator
         loadIngredient();
     }
 
-    private RecipeIngredientQuantityEntity createNewRecipeIngredientQuantityEntity() {
+    private RecipeIngredientEntity createNewRecipeIngredientQuantityEntity() {
         long currentTime = timeProvider.getCurrentTimeInMills();
-        return new RecipeIngredientQuantityEntity(
+        return new RecipeIngredientEntity(
                 idProvider.getUId(),
                 recipeId,
                 ingredientId,
@@ -141,9 +141,9 @@ public class IngredientCalculator
     private void loadRecipeIngredient(String recipeIngredientId) {
         recipeIngredientRepository.getById(
                 recipeIngredientId,
-                new DataSource.GetEntityCallback<RecipeIngredientQuantityEntity>() {
+                new DataSource.GetEntityCallback<RecipeIngredientEntity>() {
                     @Override
-                    public void onEntityLoaded(RecipeIngredientQuantityEntity quantityEntity) {
+                    public void onEntityLoaded(RecipeIngredientEntity quantityEntity) {
                         recipeId = quantityEntity.getRecipeId();
                         ingredientId = quantityEntity.getIngredientId();
                         IngredientCalculator.this.quantityEntity = quantityEntity;
@@ -202,7 +202,7 @@ public class IngredientCalculator
     }
 
     private void setupUnitOfMeasure() {
-        int subtypeAsInt = quantityEntity.getUnitOfMeasureSubtype();
+        int subtypeAsInt = quantityEntity.getMeasurementSubtype();
         MeasurementSubtype subType = MeasurementSubtype.fromInt(subtypeAsInt);
 
         unitOfMeasure = subType.getMeasurementClass();
@@ -382,7 +382,7 @@ public class IngredientCalculator
 
     private boolean quantityEntityHasChanged() {
         if (quantityEntity != null) {
-            RecipeIngredientQuantityEntity updatedEntity = new RecipeIngredientQuantityEntity(
+            RecipeIngredientEntity updatedEntity = new RecipeIngredientEntity(
                     quantityEntity.getId(),
                     quantityEntity.getRecipeId(),
                     quantityEntity.getIngredientId(),
@@ -399,8 +399,8 @@ public class IngredientCalculator
             return false;
     }
 
-    private RecipeIngredientQuantityEntity updatedRecipeIngredientEntity() {
-        return new RecipeIngredientQuantityEntity(
+    private RecipeIngredientEntity updatedRecipeIngredientEntity() {
+        return new RecipeIngredientEntity(
                 quantityEntity.getId(),
                 quantityEntity.getRecipeId(),
                 quantityEntity.getIngredientId(),
@@ -413,7 +413,7 @@ public class IngredientCalculator
         );
     }
 
-    private void save(RecipeIngredientQuantityEntity quantityEntity) {
+    private void save(RecipeIngredientEntity quantityEntity) {
         this.quantityEntity = quantityEntity;
         recipeIngredientRepository.save(quantityEntity);
     }

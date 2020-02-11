@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist;
 
 import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
-import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientQuantityEntity;
+import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
@@ -31,7 +31,7 @@ public class RecipeIngredientList extends
     private RepositoryRecipePortions repoPortions;
 
     private String recipeId;
-    private Map<String, RecipeIngredientQuantityEntity> recipeIngredientQuantities =
+    private Map<String, RecipeIngredientEntity> recipeIngredientQuantities =
             new LinkedHashMap<>();
     private Map<String, IngredientEntity> ingredients = new LinkedHashMap<>();
     private List<RecipeIngredientListItemModel> listItemModels = new ArrayList<>();
@@ -75,10 +75,10 @@ public class RecipeIngredientList extends
 
         repoRecipeIngredient.getByRecipeId(
                 recipeId,
-                new DataSource.GetAllCallback<RecipeIngredientQuantityEntity>() {
+                new DataSource.GetAllCallback<RecipeIngredientEntity>() {
                     @Override
-                    public void onAllLoaded(List<RecipeIngredientQuantityEntity> entities) {
-                        for (RecipeIngredientQuantityEntity entity : entities) {
+                    public void onAllLoaded(List<RecipeIngredientEntity> entities) {
+                        for (RecipeIngredientEntity entity : entities) {
                             recipeIngredientQuantities.put(entity.getIngredientId(), entity);
                         }
                         getRecipeIngredients();
@@ -118,7 +118,7 @@ public class RecipeIngredientList extends
             listItemModels.clear();
             for (String ingredientId : recipeIngredientQuantities.keySet()) {
 
-                RecipeIngredientQuantityEntity recipeIngredient = recipeIngredientQuantities.
+                RecipeIngredientEntity recipeIngredient = recipeIngredientQuantities.
                         get(ingredientId);
 
                 IngredientEntity ingredient = ingredients.get(ingredientId);
@@ -142,11 +142,11 @@ public class RecipeIngredientList extends
         return recipeIngredientQuantities.keySet().equals(ingredients.keySet());
     }
 
-    private MeasurementModel getMeasurementModel(RecipeIngredientQuantityEntity quantityEntity,
+    private MeasurementModel getMeasurementModel(RecipeIngredientEntity quantityEntity,
                                                  IngredientEntity ingredient) {
 
         UnitOfMeasure unitOfMeasure = MeasurementSubtype.fromInt(quantityEntity.
-                getUnitOfMeasureSubtype()).getMeasurementClass();
+                getMeasurementSubtype()).getMeasurementClass();
         unitOfMeasure.isNumberOfItemsSet(portions);
 
         if (unitOfMeasure.isConversionFactorEnabled()) {

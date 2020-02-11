@@ -11,6 +11,7 @@ import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions.RecipePortionsRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions.RecipePortionsResponse;
 import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
@@ -21,7 +22,7 @@ import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate
 
 public class RecipePortionsEditorViewModel
         extends ObservableViewModel
-        implements UseCase.Callback<RecipePortionsResponse> {
+        implements UseCase.Callback<RecipeResponse> {
 
     private static final String TAG = "tkm-" + RecipePortionsEditorViewModel.class.getSimpleName()
             + ":";
@@ -87,13 +88,19 @@ public class RecipePortionsEditorViewModel
     }
 
     @Override
-    public void onSuccess(RecipePortionsResponse response) {
-        processUseCaseResponse(response);
+    public void onSuccess(RecipeResponse response) {
+        RecipePortionsResponse portionsResponse = extractResponse(response);
+        processUseCaseResponse(portionsResponse);
     }
 
     @Override
-    public void onError(RecipePortionsResponse response) {
-        processUseCaseResponse(response);
+    public void onError(RecipeResponse response) {
+        RecipePortionsResponse portionsResponse = extractResponse(response);
+        processUseCaseResponse(portionsResponse);
+    }
+
+    private RecipePortionsResponse extractResponse(RecipeResponse response) {
+        return (RecipePortionsResponse) response.getComponentResponses().get(ComponentName.PORTIONS);
     }
 
     private void processUseCaseResponse(RecipePortionsResponse response) {

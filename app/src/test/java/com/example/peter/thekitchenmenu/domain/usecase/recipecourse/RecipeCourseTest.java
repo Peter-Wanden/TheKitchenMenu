@@ -83,7 +83,10 @@ public class RecipeCourseTest {
     @Test
     public void newRequest_idWithNoCourses_emptyListReturned_DATA_UNAVAILABLE() {
         // Arrange
-        request = getRequest("IdNotInTestData", DO_NOT_CLONE, null, false);
+        RecipeCourseRequest request = RecipeCourseRequest.Builder.
+                getDefault().
+                setRecipeId("idNotInTestData").
+                build();
         // Act
         handler.execute(SUT, request, getCallback());
         // Assert

@@ -79,14 +79,19 @@ public class RecipeEditorActivity
         recipeEditorViewModel.setNavigator(this);
         binding.setViewModel(recipeEditorViewModel);
 
-        RecipeIdentityEditorViewModel identityVM = obtainIdentityViewModel(this,
-                recipeEditorViewModel.getRecipe());
-        RecipeCourseEditorViewModel courseVM = obtainCourseViewModel(this,
-                recipeEditorViewModel.getRecipe());
-        RecipeDurationEditorViewModel durationVM = obtainDurationViewModel(this,
-                recipeEditorViewModel.getRecipe());
-        RecipePortionsEditorViewModel portionsVM = obtainPortionsViewModel(this,
-                recipeEditorViewModel.getRecipe());
+        Recipe recipe = recipeEditorViewModel.getRecipe();
+
+        RecipeIdentityEditorViewModel identityVM = obtainIdentityViewModel(this, recipe);
+        recipe.registerRecipeResponseCallback(identityVM);
+
+        RecipeCourseEditorViewModel courseVM = obtainCourseViewModel(this, recipe);
+        recipe.registerRecipeResponseCallback(courseVM);
+
+        RecipeDurationEditorViewModel durationVM = obtainDurationViewModel(this, recipe);
+        recipe.registerRecipeResponseCallback(durationVM);
+
+        RecipePortionsEditorViewModel portionsVM = obtainPortionsViewModel(this, recipe);
+        recipe.registerRecipeResponseCallback(portionsVM);
 
     }
 
