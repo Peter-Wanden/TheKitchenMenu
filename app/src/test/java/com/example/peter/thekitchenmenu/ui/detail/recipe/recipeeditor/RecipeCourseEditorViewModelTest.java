@@ -5,6 +5,7 @@ import com.example.peter.thekitchenmenu.data.entity.*;
 import com.example.peter.thekitchenmenu.data.repository.*;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDuration;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentity;
@@ -77,6 +78,8 @@ public class RecipeCourseEditorViewModelTest {
     RepositoryRecipePortions repoPortionsMock;
     @Captor
     ArgumentCaptor<DataSource.GetEntityCallback<RecipePortionsEntity>> repoPortionsCallback;
+    @Captor
+    ArgumentCaptor<RecipeResponse> recipeResponseCallback;
     @Mock
     UniqueIdProvider idProviderMock;
     @Mock

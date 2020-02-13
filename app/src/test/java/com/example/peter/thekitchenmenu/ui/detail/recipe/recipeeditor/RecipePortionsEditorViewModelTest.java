@@ -427,12 +427,14 @@ public class RecipePortionsEditorViewModelTest {
     }
 
     private void simulateNothingReturnedFromDatabase() {
-        verify(repoPortionsMock).getPortionsForRecipe(eq(NEW_EMPTY.getRecipeId()), repoPortionsCallback.capture());
+        verify(repoPortionsMock).getPortionsForRecipe(eq(NEW_EMPTY.getRecipeId()),
+                repoPortionsCallback.capture());
         repoPortionsCallback.getValue().onDataNotAvailable();
     }
 
     private void simulateExistingValidReturnedFromDatabase() {
-        verify(repoPortionsMock).getPortionsForRecipe(eq(EXISTING_VALID.getRecipeId()), repoPortionsCallback.capture());
+        verify(repoPortionsMock).getPortionsForRecipe(eq(EXISTING_VALID.getRecipeId()),
+                repoPortionsCallback.capture());
         repoPortionsCallback.getValue().onEntityLoaded(EXISTING_VALID);
     }
 

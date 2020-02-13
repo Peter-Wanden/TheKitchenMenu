@@ -65,7 +65,6 @@ public class RecipeDuration
         requestModel = request.getModel();
 
         if (isNewRequest(request.getRecipeId())) {
-            System.out.println(TAG + "isNewRequest");
             extractIds(request);
         } else {
             processChanges();

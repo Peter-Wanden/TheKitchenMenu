@@ -52,7 +52,7 @@ public class RecipeList extends UseCase<RecipeListRequest, RecipeListResponse> {
     private void getAllRecipes() {
         // TODO - Create a list of all recipes using a Recipe for each Recipe :)
 
-        Recipe<RecipeRequest> recipe = factory.provideRecipe();
+        Recipe<RecipeRequest, RecipeResponse> recipe = factory.provideRecipe();
         RecipeRequest request = new RecipeRequest("recipeId");
 
         handler.execute(recipe, request, getRecipeResponseCallback());

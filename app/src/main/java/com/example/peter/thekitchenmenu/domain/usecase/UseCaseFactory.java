@@ -184,7 +184,7 @@ public class UseCaseFactory {
                 provideTextValidator());
     }
 
-    public <Q extends UseCase.Request> Recipe<Q> provideRecipe() {
+    public <Q extends UseCase.Request, P extends UseCase.Response> Recipe<Q, P> provideRecipe() {
         return new Recipe<>(
                 recipeRepository,
                 UseCaseHandler.getInstance(),

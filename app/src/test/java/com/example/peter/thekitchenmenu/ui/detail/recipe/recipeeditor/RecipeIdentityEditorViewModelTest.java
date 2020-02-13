@@ -187,7 +187,7 @@ public class RecipeIdentityEditorViewModelTest {
                 portions);
 
         recipeClientListener = new RecipeStateListener();
-        recipe.registerRecipeStateListener(recipeClientListener);
+//        recipe.registerRecipeStateListener(recipeClientListener);
 
         return new RecipeIdentityEditorViewModel(
                 handler,
@@ -237,7 +237,6 @@ public class RecipeIdentityEditorViewModelTest {
         // Act
         SUT.start(recipeId);
         verifyAllComponentRepoCalledAndReturnDataUnavailable(recipeId);
-
         SUT.setTitle(invalidTitle);
         // Assert
         assertEquals(ERROR_MESSAGE_TOO_SHORT, SUT.titleErrorMessage.get());
@@ -477,8 +476,12 @@ public class RecipeIdentityEditorViewModelTest {
         String description = VALID_EXISTING_COMPLETE.getDescription();
         // Act
         SUT.start(recipeId);
-        verify(repoIdentityMock).getById(eq(recipeId), repoIdentityCallback.capture());
-        repoIdentityCallback.getValue().onEntityLoaded(VALID_EXISTING_COMPLETE);
+        verifyRepoRecipeCalledAndReturnValidExistingComplete(recipeId);
+        verifyRepoIdentityCalledAndReturnValidExistingComplete(recipeId);
+        verifyRepoCoursesCalledAndReturnDataUnavailable(recipeId);
+        verifyRepoDurationCalledAndReturnDataUnavailable(recipeId);
+        verifyRepoPortionsCalledAndReturnDataUnavailable(recipeId);
+
         // Assert
         assertEquals(title, SUT.getTitle());
         assertEquals(description, SUT.getDescription());

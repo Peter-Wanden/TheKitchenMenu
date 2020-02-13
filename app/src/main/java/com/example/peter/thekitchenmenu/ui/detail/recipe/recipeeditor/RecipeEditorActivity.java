@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.RecipeEditorActivityBinding;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
 import com.example.peter.thekitchenmenu.ui.UnsavedChangesDialogFragment;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryRecipe;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist.RecipeIngredientListActivity;
@@ -80,18 +81,16 @@ public class RecipeEditorActivity
         binding.setViewModel(recipeEditorViewModel);
 
         Recipe recipe = recipeEditorViewModel.getRecipe();
-
-        RecipeIdentityEditorViewModel identityVM = obtainIdentityViewModel(this, recipe);
-        recipe.registerRecipeResponseCallback(identityVM);
+        obtainIdentityViewModel(this, recipe);
 
         RecipeCourseEditorViewModel courseVM = obtainCourseViewModel(this, recipe);
-        recipe.registerRecipeResponseCallback(courseVM);
+//        recipe.registerRecipeResponseCallback(courseVM);
 
         RecipeDurationEditorViewModel durationVM = obtainDurationViewModel(this, recipe);
-        recipe.registerRecipeResponseCallback(durationVM);
+//        recipe.registerRecipeResponseCallback(durationVM);
 
         RecipePortionsEditorViewModel portionsVM = obtainPortionsViewModel(this, recipe);
-        recipe.registerRecipeResponseCallback(portionsVM);
+//        recipe.registerRecipeResponseCallback(portionsVM);
 
     }
 

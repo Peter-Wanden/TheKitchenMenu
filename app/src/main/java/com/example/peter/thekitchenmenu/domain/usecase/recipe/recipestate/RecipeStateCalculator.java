@@ -60,7 +60,8 @@ public class RecipeStateCalculator extends UseCase<RecipeStateRequest, RecipeSta
         DURATION,
         COURSE,
         PORTIONS,
-        TEXT_VALIDATOR
+        TEXT_VALIDATOR,
+        RECIPE
     }
 
     public enum ComponentState {

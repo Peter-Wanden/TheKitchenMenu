@@ -74,7 +74,6 @@ public class RecipePortions
         requestModel = request.getModel();
 
         if (isNewRequest(request.getRecipeId())) {
-            System.out.println(TAG + "isNewRequest");
             extractIds(request);
         } else {
             processChanges();
@@ -176,8 +175,6 @@ public class RecipePortions
         if (failReasons.isEmpty()) {
             failReasons.add(FailReason.NONE);
         }
-
-        System.out.println(TAG + "validateData:" + failReasons);
     }
 
     private void buildResponse() {

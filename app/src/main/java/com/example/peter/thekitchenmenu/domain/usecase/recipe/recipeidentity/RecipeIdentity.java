@@ -144,8 +144,6 @@ public class RecipeIdentity
     }
 
     private void processChanges() {
-        System.out.println(TAG + "process changes");
-
         validateData();
         buildResponse();
     }

@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate;
+package com.example.peter.thekitchenmenu.domain.usecase.recipe;
 
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.domain.model.PersistenceModel;
