@@ -4,6 +4,7 @@ import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
+import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentity;
@@ -17,7 +18,7 @@ import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import org.junit.*;
 import org.mockito.*;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe.DO_NOT_CLONE;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe.DO_NOT_CLONE;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.*;
@@ -281,7 +282,7 @@ public class RecipeIdentityTest {
                 getCallback());
         // Assert
         assertEquals(RecipeStateCalculator.ComponentState.VALID_CHANGED, onSuccessResponse.getState());
-        assertTrue(onSuccessResponse.getFailReasons().contains(RecipeIdentity.FailReason.NONE));
+        assertTrue(onSuccessResponse.getFailReasons().contains(CommonFailReason.NONE));
     }
 
     @Test
@@ -296,8 +297,8 @@ public class RecipeIdentityTest {
                 build();
 
         RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
-                setRecipeId(INVALID_NEW_EMPTY.getId()).
-                setCloneToRecipeId(DO_NOT_CLONE).
+                setId(INVALID_NEW_EMPTY.getId()).
+                setCloneToId(DO_NOT_CLONE).
                 setModel(requestModel).
                 build();
         // Act
@@ -314,10 +315,10 @@ public class RecipeIdentityTest {
         String recipeId = INVALID_NEW_EMPTY.getId();
         ArgumentCaptor<RecipeIdentityEntity> identityEntity = ArgumentCaptor.forClass(RecipeIdentityEntity.class);
         whenTimeProviderReturnTime(VALID_NEW_COMPLETE.getCreateDate());
-        // Request/Response 1
+        // RecipeRequestAbstract/Response 1
         verifyIdentityDatabaseCalledWithNewIdAndReturnDataNotAvailable();
 
-        // Request/Response 2
+        // RecipeRequestAbstract/Response 2
         String validTitle = VALID_NEW_COMPLETE.getTitle();
         RecipeIdentityRequest.Model validTitleModel = RecipeIdentityRequest.Model.Builder.
                 basedOnIdentityResponseModel(onErrorResponse.getModel()).
@@ -328,7 +329,7 @@ public class RecipeIdentityTest {
                 getRequest(recipeId, DO_NOT_CLONE, validTitleModel),
                 getCallback());
 
-        // Request/Response 3
+        // RecipeRequestAbstract/Response 3
         String validDescription = VALID_NEW_COMPLETE.getDescription();
         RecipeIdentityRequest.Model validTitleDescriptionModel = RecipeIdentityRequest.Model.Builder.
                 basedOnIdentityResponseModel(onSuccessResponse.getModel()).
@@ -348,7 +349,7 @@ public class RecipeIdentityTest {
         // Assert state
         assertEquals(RecipeStateCalculator.ComponentState.VALID_CHANGED, onSuccessResponse.getState());
         assertEquals(1, onSuccessResponse.getFailReasons().size());
-        assertTrue(onSuccessResponse.getFailReasons().contains(RecipeIdentity.FailReason.NONE));
+        assertTrue(onSuccessResponse.getFailReasons().contains(CommonFailReason.NONE));
     }
 
     @Test
@@ -550,7 +551,7 @@ public class RecipeIdentityTest {
         repoCallback.getValue().onEntityLoaded(VALID_EXISTING_TITLE_VALID_DESCRIPTION_DEFAULT);
         // Assert fail reasons
         assertEquals(1, onSuccessResponse.getFailReasons().size());
-        assertTrue(onSuccessResponse.getFailReasons().contains(RecipeIdentity.FailReason.NONE));
+        assertTrue(onSuccessResponse.getFailReasons().contains(CommonFailReason.NONE));
     }
 
     @Test
@@ -584,7 +585,7 @@ public class RecipeIdentityTest {
         // Assert values
         // Assert state
         assertEquals(1, onSuccessResponse.getFailReasons().size());
-        assertTrue(onSuccessResponse.getFailReasons().contains(RecipeIdentity.FailReason.NONE));
+        assertTrue(onSuccessResponse.getFailReasons().contains(CommonFailReason.NONE));
     }
 
     @Test
@@ -692,8 +693,8 @@ public class RecipeIdentityTest {
                                              String cloneToRecipeId,
                                              RecipeIdentityRequest.Model model) {
         return new RecipeIdentityRequest.Builder().
-                setRecipeId(recipeId).
-                setCloneToRecipeId(cloneToRecipeId).
+                setId(recipeId).
+                setCloneToId(cloneToRecipeId).
                 setModel(model).
                 build();
     }
@@ -704,7 +705,6 @@ public class RecipeIdentityTest {
             @Override
             public void onSuccess(RecipeIdentityResponse response) {
                 onSuccessResponse = response;
-
             }
 
             @Override

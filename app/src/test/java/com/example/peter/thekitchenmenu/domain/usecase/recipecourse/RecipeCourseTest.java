@@ -5,6 +5,7 @@ import com.example.peter.thekitchenmenu.data.entity.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeCourse;
+import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourse;
@@ -23,7 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe.DO_NOT_CLONE;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe.DO_NOT_CLONE;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourse.*;
 import static com.example.peter.thekitchenmenu.testdata.TestDataRecipeCourseEntity.getAllByRecipeId;
@@ -85,12 +86,12 @@ public class RecipeCourseTest {
         // Arrange
         RecipeCourseRequest request = RecipeCourseRequest.Builder.
                 getDefault().
-                setRecipeId("idNotInTestData").
+                setId("idNotInTestData").
                 build();
         // Act
         handler.execute(SUT, request, getCallback());
         // Assert
-        verifyRepoCalledAndReturnMatchingCourses(request.getRecipeId());
+        verifyRepoCalledAndReturnMatchingCourses(request.getId());
         assertEquals(ComponentState.DATA_UNAVAILABLE, onErrorResponse.getState());
         assertEquals(0, onErrorResponse.getCourseList().size());
     }
@@ -107,7 +108,7 @@ public class RecipeCourseTest {
         // Act
         handler.execute(SUT, request, getCallback());
         // Assert
-        verifyRepoCalledAndReturnMatchingCourses(request.getRecipeId());
+        verifyRepoCalledAndReturnMatchingCourses(request.getId());
         assertEquals(ComponentState.DATA_UNAVAILABLE, onErrorResponse.getState());
         assertEquals(0, onErrorResponse.getCourseList().size());
         // Arrange
@@ -143,7 +144,7 @@ public class RecipeCourseTest {
         // Act
         handler.execute(SUT, request, getCallback());
         // Assert
-        verifyRepoCalledAndReturnMatchingCourses(request.getRecipeId());
+        verifyRepoCalledAndReturnMatchingCourses(request.getId());
 
         int expectedNumberOfModels = TestDataRecipeCourseEntity.
                 getAllByRecipeId(EXISTING_RECIPE_ID).
@@ -164,7 +165,7 @@ public class RecipeCourseTest {
         // Act
         handler.execute(SUT, request, getCallback());
         // Assert
-        verifyRepoCalledAndReturnMatchingCourses(request.getRecipeId());
+        verifyRepoCalledAndReturnMatchingCourses(request.getId());
         // Arrange
         RecipeCourseResponse recipeCourseResponse = new RecipeCourseResponse.Builder().
                 setStatus(onSuccessResponse.getState()).
@@ -177,7 +178,7 @@ public class RecipeCourseTest {
                     SUT,
                     RecipeCourseRequest.Builder.
                             getDefault().
-                            setRecipeId(EXISTING_RECIPE_ID).
+                            setId(EXISTING_RECIPE_ID).
                             setCourse(course).
                             setAddCourse(false).
                             build(),
@@ -187,7 +188,7 @@ public class RecipeCourseTest {
         // Assert
         assertEquals(ComponentState.INVALID_CHANGED, onErrorResponse.getState());
         assertTrue(onErrorResponse.getCourseList().isEmpty());
-        assertTrue(onErrorResponse.getFailReasons().contains(RecipeCourse.FailReason.DATA_UNAVAILABLE));
+        assertTrue(onErrorResponse.getFailReasons().contains(CommonFailReason.DATA_UNAVAILABLE));
     }
 
     @Test
@@ -210,7 +211,7 @@ public class RecipeCourseTest {
         // Act
         handler.execute(SUT, request, getCallback());
         // Assert
-        verifyRepoCalledAndReturnMatchingCourses(request.getRecipeId());
+        verifyRepoCalledAndReturnMatchingCourses(request.getId());
         // Confirm the correct number of entities have been cloned
         int expectedNumberOfClonesSaved = TestDataRecipeCourseEntity.
                 getAllByRecipeId(EXISTING_RECIPE_ID).
@@ -233,7 +234,7 @@ public class RecipeCourseTest {
         // Act
         handler.execute(SUT, request, getCallback());
         // Assert
-        verifyRepoCalledAndReturnMatchingCourses(request.getRecipeId());
+        verifyRepoCalledAndReturnMatchingCourses(request.getId());
         // confirm target is in results
         assertTrue(onSuccessResponse.getCourseList().containsKey(Course.COURSE_ONE));
         // confirm target has correct recipeId
@@ -269,8 +270,8 @@ public class RecipeCourseTest {
                                            Course course,
                                            boolean isAddCourse) {
         return new RecipeCourseRequest.Builder().
-                setRecipeId(recipeId).
-                setCloneToRecipeId(cloneToRecipeId).
+                setId(recipeId).
+                setCloneToId(cloneToRecipeId).
                 setCourse(course).
                 setAddCourse(isAddCourse).
                 build();

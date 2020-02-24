@@ -1,7 +1,5 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipeidentityandduration;
 
-import android.provider.ContactsContract;
-
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.entity.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.entity.RecipeDurationEntity;
@@ -15,9 +13,12 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseCommand;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseFactory;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequestAbstract;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDuration;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentity;
@@ -103,10 +104,15 @@ public class RecipeListTest {
     @Test
     public void identityAndDurationRequest_getAllRecipes_recipesReturned() {
         // Arrange
-        when(useCaseFactoryMock.provideRecipe()).thenReturn(new Recipe<>(
-                        repoRecipeMock,
+        when(useCaseFactoryMock.provideRecipeMacro()).thenReturn(
+                new RecipeMacro<>(
                         handler,
+
                         new RecipeStateCalculator(),
+
+                        new Recipe(
+                                repoRecipeMock,
+                                timeProviderMock),
 
                         new RecipeIdentity(
                                 repoIdentityMock,

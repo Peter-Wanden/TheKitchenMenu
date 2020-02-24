@@ -13,7 +13,7 @@ import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipe;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseFactory;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
@@ -37,7 +37,7 @@ public class RecipeEditorViewModel
 
     private RecipeEntity recipeEntity;
     private String recipeId;
-    private Recipe recipe;
+    private RecipeMacro recipeMacro;
 
     private boolean isDraft;
     private boolean isNewRecipe;
@@ -55,7 +55,7 @@ public class RecipeEditorViewModel
         this.resources = resources;
         this.handler = handler;
 
-        recipe = factory.provideRecipe();
+        recipeMacro = factory.provideRecipeMacro();
     }
 
     void setNavigator(AddEditRecipeNavigator navigator) {
@@ -66,8 +66,8 @@ public class RecipeEditorViewModel
         navigator = null;
     }
 
-    public Recipe getRecipe() {
-        return recipe;
+    public RecipeMacro getRecipeMacro() {
+        return recipeMacro;
     }
 
     void start() {
@@ -244,8 +244,7 @@ public class RecipeEditorViewModel
                 id,
                 Constants.getUserId(),
                 timeStamp,
-                timeStamp,
-                true
+                timeStamp
         );
     }
 
@@ -255,8 +254,7 @@ public class RecipeEditorViewModel
                 recipeEntity.getId(),
                 recipeEntity.getCreatedBy(),
                 recipeEntity.getCreateDate(),
-                timeProvider.getCurrentTimeInMills(),
-                isDraft
+                timeProvider.getCurrentTimeInMills()
         );
     }
 
@@ -267,8 +265,7 @@ public class RecipeEditorViewModel
                 recipeEntity.getId(),
                 recipeEntity.getCreatedBy(),
                 timeStamp,
-                timeStamp,
-                isDraft
+                timeStamp
         );
     }
 

@@ -8,10 +8,11 @@ import androidx.databinding.ObservableField;
 import androidx.databinding.library.baseAdapters.BR;
 
 import com.example.peter.thekitchenmenu.R;
+import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacroResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDurationRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDurationResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
@@ -23,7 +24,7 @@ import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipedurat
 
 public class RecipeDurationEditorViewModel
         extends ObservableViewModel
-        implements UseCase.Callback<RecipeResponse> {
+        implements UseCase.Callback<RecipeMacroResponse> {
 
     private static final String TAG = "tkm-" + RecipeDurationEditorViewModel.class.getSimpleName()
             + ":";
@@ -35,7 +36,7 @@ public class RecipeDurationEditorViewModel
     @Nonnull
     private final UseCaseHandler handler;
     @Nonnull
-    private Recipe recipe;
+    private RecipeMacro recipeMacro;
 
     public final ObservableField<String> prepTimeErrorMessage = new ObservableField<>();
     public final ObservableField<String> cookTimeErrorMessage = new ObservableField<>();
@@ -48,10 +49,10 @@ public class RecipeDurationEditorViewModel
     private boolean isDataLoadingError;
 
     public RecipeDurationEditorViewModel(@Nonnull UseCaseHandler handler,
-                                         @Nonnull Recipe recipe,
+                                         @Nonnull RecipeMacro recipeMacro,
                                          @Nonnull Resources resources) {
         this.handler = handler;
-        this.recipe = recipe;
+        this.recipeMacro = recipeMacro;
         this.resources = resources;
 
         response = RecipeDurationResponse.Builder.getDefault().build();
@@ -64,9 +65,9 @@ public class RecipeDurationEditorViewModel
 
             RecipeDurationRequest request = RecipeDurationRequest.Builder.
                     getDefault().
-                    setRecipeId(recipeId).
+                    setId(recipeId).
                     build();
-            handler.execute(recipe, request, this);
+            handler.execute(recipeMacro, request, this);
         }
     }
 
@@ -76,10 +77,10 @@ public class RecipeDurationEditorViewModel
 
             RecipeDurationRequest request = RecipeDurationRequest.Builder.
                     getDefault().
-                    setRecipeId(cloneFromRecipeId).
-                    setCloneToRecipeId(cloneToRecipeId).
+                    setId(cloneFromRecipeId).
+                    setCloneToId(cloneToRecipeId).
                     build();
-            handler.execute(recipe, request, this);
+            handler.execute(recipeMacro, request, this);
         }
     }
 
@@ -88,7 +89,7 @@ public class RecipeDurationEditorViewModel
     }
 
     @Override
-    public void onSuccess(RecipeResponse response) {
+    public void onSuccess(RecipeMacroResponse response) {
         System.out.println(TAG + "onSuccess:" + response);
         RecipeDurationResponse durationResponse = getResponse(response);
         if (isStateChanged(durationResponse)) {
@@ -98,7 +99,7 @@ public class RecipeDurationEditorViewModel
     }
 
     @Override
-    public void onError(RecipeResponse response) {
+    public void onError(RecipeMacroResponse response) {
         System.out.println(TAG + "onError:" + response);
         RecipeDurationResponse durationResponse = getResponse(response);
         if (isStateChanged(durationResponse)) {
@@ -111,7 +112,7 @@ public class RecipeDurationEditorViewModel
         return !this.response.equals(response);
     }
 
-    private RecipeDurationResponse getResponse(RecipeResponse response) {
+    private RecipeDurationResponse getResponse(RecipeMacroResponse response) {
         return (RecipeDurationResponse) response.
                 getComponentResponses().
                 get(RecipeStateCalculator.ComponentName.DURATION);
@@ -131,7 +132,7 @@ public class RecipeDurationEditorViewModel
     }
 
     private boolean hasFailReasons() {
-        return !response.getFailReasons().contains(FailReason.NONE);
+        return !response.getFailReasons().contains(CommonFailReason.NONE);
     }
 
     private void displayErrors() {
@@ -174,10 +175,10 @@ public class RecipeDurationEditorViewModel
                                 setPrepHours(prepHoursParsed).
                                 build();
                         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                                setRecipeId(recipeId).
+                                setId(recipeId).
                                 setModel(model).
                                 build();
-                        handler.execute(recipe, request, this);
+                        handler.execute(recipeMacro, request, this);
                     }
                 }
             }
@@ -207,10 +208,10 @@ public class RecipeDurationEditorViewModel
                                 setPrepMinutes(prepMinutesParsed).
                                 build();
                         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                                setRecipeId(recipeId).
+                                setId(recipeId).
                                 setModel(model).
                                 build();
-                        handler.execute(recipe, request, this);
+                        handler.execute(recipeMacro, request, this);
                     }
                 }
             }
@@ -240,10 +241,10 @@ public class RecipeDurationEditorViewModel
                                 setCookHours(cookHoursParsed).
                                 build();
                         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                                setRecipeId(recipeId).
+                                setId(recipeId).
                                 setModel(model).
                                 build();
-                        handler.execute(recipe, request, this);
+                        handler.execute(recipeMacro, request, this);
                     }
                 }
             }
@@ -273,10 +274,10 @@ public class RecipeDurationEditorViewModel
                                 setCookMinutes(cookMinutesParsed).
                                 build();
                         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                                setRecipeId(recipeId).
+                                setId(recipeId).
                                 setModel(model).
                                 build();
-                        handler.execute(recipe, request, this);
+                        handler.execute(recipeMacro, request, this);
                     }
                 }
             }

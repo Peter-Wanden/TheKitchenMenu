@@ -117,6 +117,9 @@ public class TestDataRecipeCourseEntity {
     }
 
     public static List<RecipeCourseEntity> getAllByRecipeId(String recipeId) {
+        if ("idFromAnotherUser".equals(recipeId)) {
+            return getAllRecipeCourseClones();
+        }
         List<RecipeCourseEntity> listToReturn = new ArrayList<>();
         for (RecipeCourseEntity entity : getAllRecipeCourses()) {
             if (entity.getRecipeId().equals(recipeId)) {

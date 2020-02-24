@@ -1,38 +1,24 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseCommand;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequestAbstract;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe.DO_NOT_CLONE;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe.DO_NOT_CLONE;
 
 
-public final class RecipeDurationRequest implements UseCaseCommand.Request {
-    @Nonnull
-    private final String recipeId;
-    @Nonnull
-    private final String cloneToRecipeId;
+public final class RecipeDurationRequest extends RecipeRequestAbstract {
     @Nonnull
     private final RecipeDurationRequest.Model model;
 
-    private RecipeDurationRequest(@Nonnull String recipeId,
-                                 @Nonnull String cloneToRecipeId,
-                                 @Nonnull RecipeDurationRequest.Model model) {
-        this.recipeId = recipeId;
-        this.cloneToRecipeId = cloneToRecipeId;
+    private RecipeDurationRequest(@Nonnull String id,
+                                  @Nonnull String cloneToId,
+                                  @Nonnull RecipeDurationRequest.Model model) {
+        this.id = id;
+        this.cloneToId = cloneToId;
         this.model = model;
-    }
-
-    @Nonnull
-    public String getRecipeId() {
-        return recipeId;
-    }
-
-    @Nonnull
-    public String getCloneToRecipeId() {
-        return cloneToRecipeId;
     }
 
     @Nonnull
@@ -45,8 +31,8 @@ public final class RecipeDurationRequest implements UseCaseCommand.Request {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RecipeDurationRequest request = (RecipeDurationRequest) o;
-        return recipeId.equals(request.recipeId) &&
-                cloneToRecipeId.equals(request.cloneToRecipeId) &&
+        return id.equals(request.id) &&
+                cloneToId.equals(request.cloneToId) &&
                 model.equals(request.model);
     }
 
@@ -54,38 +40,38 @@ public final class RecipeDurationRequest implements UseCaseCommand.Request {
     @Override
     public String toString() {
         return "RecipeDurationRequest{" +
-                "recipeId='" + recipeId + '\'' +
-                ", cloneToRecipeId='" + cloneToRecipeId + '\'' +
+                "id='" + id + '\'' +
+                ", cloneToId='" + cloneToId + '\'' +
                 ", model=" + model +
                 '}';
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(recipeId, cloneToRecipeId, model);
+        return Objects.hash(id, cloneToId, model);
     }
 
     public static class Builder {
-        private String recipeId;
-        private String cloneToRecipeId;
+        private String id;
+        private String cloneToId;
         private RecipeDurationRequest.Model model;
 
         public static Builder getDefault() {
             return new Builder().
-                    setRecipeId("").
-                    setCloneToRecipeId(DO_NOT_CLONE).
+                    setId("").
+                    setCloneToId(DO_NOT_CLONE).
                     setModel(RecipeDurationRequest.Model.Builder.
                             getDefault().
                             build());
         }
 
-        public Builder setRecipeId(String recipeId) {
-            this.recipeId = recipeId;
+        public Builder setId(String id) {
+            this.id = id;
             return this;
         }
 
-        public Builder setCloneToRecipeId(String cloneToRecipeId) {
-            this.cloneToRecipeId = cloneToRecipeId;
+        public Builder setCloneToId(String cloneToId) {
+            this.cloneToId = cloneToId;
             return this;
         }
 
@@ -96,8 +82,8 @@ public final class RecipeDurationRequest implements UseCaseCommand.Request {
 
         public RecipeDurationRequest build() {
             return new RecipeDurationRequest(
-                    recipeId,
-                    cloneToRecipeId,
+                    id,
+                    cloneToId,
                     model
             );
         }

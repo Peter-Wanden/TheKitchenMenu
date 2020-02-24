@@ -1,5 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse;
 
+import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseCommand;
 
@@ -105,7 +106,7 @@ public final class RecipeCourseResponse implements UseCaseCommand.Response {
 
         private static List<FailReasons> getDefaultFailReason() {
             List<FailReasons> defaultFailReason = new LinkedList<>();
-            defaultFailReason.add(RecipeCourse.FailReason.DATA_UNAVAILABLE);
+            defaultFailReason.add(CommonFailReason.DATA_UNAVAILABLE);
             return defaultFailReason;
         }
     }

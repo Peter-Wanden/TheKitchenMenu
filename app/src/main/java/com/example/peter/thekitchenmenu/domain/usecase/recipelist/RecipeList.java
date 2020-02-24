@@ -3,9 +3,9 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipelist;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseFactory;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacroResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.RecipeRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +31,8 @@ public class RecipeList extends UseCase<RecipeListRequest, RecipeListResponse> {
 
     private List<RecipeListItemModel> recipeListItemModels = new ArrayList<>();
 
-    private final List<Recipe> recipes = new ArrayList<>();
-    private final List<RecipeResponse> recipeResponses = new ArrayList<>();
+    private final List<RecipeMacro> recipeMacros = new ArrayList<>();
+    private final List<RecipeMacroResponse> recipeMacroRespons = new ArrayList<>();
 
     public RecipeList(UseCaseFactory factory,
                       UseCaseHandler handler) {
@@ -50,24 +50,27 @@ public class RecipeList extends UseCase<RecipeListRequest, RecipeListResponse> {
     }
 
     private void getAllRecipes() {
-        // TODO - Create a list of all recipes using a Recipe for each Recipe :)
+        // TODO - Create a list of all recipeMacros using a RecipeMacro for each RecipeMacro :)
 
-        Recipe<RecipeRequest, RecipeResponse> recipe = factory.provideRecipe();
-        RecipeRequest request = new RecipeRequest("recipeId");
+        RecipeMacro<RecipeRequest, RecipeMacroResponse> recipeMacro = factory.provideRecipeMacro();
+        RecipeRequest request = RecipeRequest.Builder.
+                getDefault().
+                setId("recipeId").
+                build();
 
-        handler.execute(recipe, request, getRecipeResponseCallback());
+        handler.execute(recipeMacro, request, getRecipeResponseCallback());
     }
 
-    private UseCase.Callback<RecipeResponse> getRecipeResponseCallback() {
-        return new UseCase.Callback<RecipeResponse>() {
+    private UseCase.Callback<RecipeMacroResponse> getRecipeResponseCallback() {
+        return new UseCase.Callback<RecipeMacroResponse>() {
             @Override
-            public void onSuccess(RecipeResponse response) {
-                recipeResponses.add(response);
+            public void onSuccess(RecipeMacroResponse response) {
+                recipeMacroRespons.add(response);
             }
 
             @Override
-            public void onError(RecipeResponse response) {
-                recipeResponses.add(response);
+            public void onError(RecipeMacroResponse response) {
+                recipeMacroRespons.add(response);
             }
         };
     }

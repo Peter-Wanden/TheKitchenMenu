@@ -1,38 +1,24 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity;
 
-
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseCommand;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequestAbstract;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe.DO_NOT_CLONE;
 
-public final class RecipeIdentityRequest implements UseCaseCommand.Request {
-    @Nonnull
-    private final String recipeId;
-    @Nonnull
-    private final String cloneToRecipeId;
+
+public final class RecipeIdentityRequest extends RecipeRequestAbstract {
     @Nonnull
     private final Model model;
 
-    public RecipeIdentityRequest(@Nonnull String recipeId,
-                                 @Nonnull String cloneToRecipeId,
+    public RecipeIdentityRequest(@Nonnull String id,
+                                 @Nonnull String cloneToId,
                                  @Nonnull Model model) {
-        this.recipeId = recipeId;
-        this.cloneToRecipeId = cloneToRecipeId;
+        this.id = id;
+        this.cloneToId = cloneToId;
         this.model = model;
-    }
-
-    @Nonnull
-    public String getRecipeId() {
-        return recipeId;
-    }
-
-    @Nonnull
-    public String getCloneToRecipeId() {
-        return cloneToRecipeId;
     }
 
     @Nonnull
@@ -44,47 +30,46 @@ public final class RecipeIdentityRequest implements UseCaseCommand.Request {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RecipeIdentityRequest request = (RecipeIdentityRequest) o;
-        return recipeId.equals(request.recipeId) &&
-                cloneToRecipeId.equals(request.cloneToRecipeId) &&
-                model.equals(request.model);
+        RecipeIdentityRequest that = (RecipeIdentityRequest) o;
+        return id.equals(that.id) && cloneToId.equals(that.cloneToId) &&
+                model.equals(that.model);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(recipeId, cloneToRecipeId, model);
+        return Objects.hash(id, cloneToId, model);
     }
 
     @Override
     public String toString() {
         return "RecipeIdentityRequest{" +
-                "recipeId='" + recipeId + '\'' +
-                ", cloneToRecipeId='" + cloneToRecipeId + '\'' +
+                "id='" + id + '\'' +
+                ", cloneToId='" + cloneToId + '\'' +
                 ", model=" + model +
                 '}';
     }
 
     public static class Builder {
-        private String recipeId;
-        private String cloneToRecipeId;
+        private String id;
+        private String cloneToId;
         private Model model;
 
         public static Builder getDefault() {
             return new Builder().
-                    setRecipeId("").
-                    setCloneToRecipeId("").
+                    setId("").
+                    setCloneToId(DO_NOT_CLONE).
                     setModel(Model.Builder.
                             getDefault().
                             build());
         }
 
-        public Builder setRecipeId(String recipeId) {
-            this.recipeId = recipeId;
+        public Builder setId(String id) {
+            this.id = id;
             return this;
         }
 
-        public Builder setCloneToRecipeId(String cloneToRecipeId) {
-            this.cloneToRecipeId = cloneToRecipeId;
+        public Builder setCloneToId(String cloneToId) {
+            this.cloneToId = cloneToId;
             return this;
         }
 
@@ -95,8 +80,8 @@ public final class RecipeIdentityRequest implements UseCaseCommand.Request {
 
         public RecipeIdentityRequest build() {
             return new RecipeIdentityRequest(
-                    recipeId,
-                    cloneToRecipeId,
+                    id,
+                    cloneToId,
                     model
             );
         }

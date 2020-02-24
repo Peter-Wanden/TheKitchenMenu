@@ -3,6 +3,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity;
 import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
+import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
@@ -17,7 +18,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe.DO_NOT_CLONE;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe.DO_NOT_CLONE;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
 import static com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator.*;
 
@@ -28,12 +29,10 @@ public class RecipeIdentity
     private static final String TAG = "tkm-" + RecipeIdentity.class.getSimpleName() + ": ";
 
     public enum FailReason implements FailReasons {
-        DATA_UNAVAILABLE,
         TITLE_TOO_SHORT,
         TITLE_TOO_LONG,
         DESCRIPTION_TOO_SHORT,
-        DESCRIPTION_TOO_LONG,
-        NONE
+        DESCRIPTION_TOO_LONG
     }
 
     private static final TextType TITLE_TEXT_TYPE = TextType.SHORT_TEXT;
@@ -50,7 +49,7 @@ public class RecipeIdentity
     @Nonnull
     private final List<FailReasons> failReasons;
 
-    private String recipeId = "";
+    private String id = "";
     private boolean isCloned;
     private boolean isNewRequest;
 
@@ -75,7 +74,7 @@ public class RecipeIdentity
         System.out.println(TAG + request);
         requestModel = request.getModel();
 
-        if (isNewRequest(request.getRecipeId())) {
+        if (isNewRequest(request.getId())) {
             extractIds(request);
         } else {
             processChanges();
@@ -83,20 +82,20 @@ public class RecipeIdentity
     }
 
     private boolean isNewRequest(String recipeId) {
-        return isNewRequest = !this.recipeId.equals(recipeId);
+        return isNewRequest = !this.id.equals(recipeId);
     }
 
     private void extractIds(RecipeIdentityRequest request) {
         if (isCloneRequest(request)) {
-            recipeId = request.getCloneToRecipeId();
+            id = request.getCloneToId();
         } else {
-            recipeId = request.getRecipeId();
+            id = request.getId();
         }
-        loadData(request.getRecipeId());
+        loadData(request.getId());
     }
 
     private boolean isCloneRequest(RecipeIdentityRequest request) {
-        return isCloned = !request.getCloneToRecipeId().equals(DO_NOT_CLONE);
+        return isCloned = !request.getCloneToId().equals(DO_NOT_CLONE);
     }
 
     private void loadData(String recipeId) {
@@ -108,7 +107,7 @@ public class RecipeIdentity
         persistenceModel = convertEntityToPersistenceModel(entity);
         validateData();
 
-        if (isCloned && failReasons.contains(FailReason.NONE)) {
+        if (isCloned && failReasons.contains(CommonFailReason.NONE)) {
             save(persistenceModel);
             isCloned = false;
         }
@@ -118,7 +117,7 @@ public class RecipeIdentity
     private RecipeIdentityPersistenceModel convertEntityToPersistenceModel(RecipeIdentityEntity entity) {
         long currentTime = timeProvider.getCurrentTimeInMills();
         return new RecipeIdentityPersistenceModel.Builder().
-                setId(isCloned ? recipeId : entity.getId()).
+                setId(isCloned ? id : entity.getId()).
                 setTitle(entity.getTitle() == null ? "" : entity.getTitle()).
                 setDescription(entity.getDescription() == null ? "" : entity.getDescription()).
                 setCreateDate(isCloned ? currentTime : entity.getCreateDate()).
@@ -129,7 +128,7 @@ public class RecipeIdentity
     @Override
     public void onDataNotAvailable() {
         persistenceModel = createNewPersistenceModel();
-        failReasons.add(FailReason.DATA_UNAVAILABLE);
+        failReasons.add(CommonFailReason.DATA_UNAVAILABLE);
 
         buildResponse();
     }
@@ -137,7 +136,7 @@ public class RecipeIdentity
     private RecipeIdentityPersistenceModel createNewPersistenceModel() {
         long currentTime = timeProvider.getCurrentTimeInMills();
         return RecipeIdentityPersistenceModel.Builder.getDefault().
-                setId(recipeId).
+                setId(id).
                 setCreateDate(currentTime).
                 setLastUpdate(currentTime).
                 build();
@@ -198,7 +197,7 @@ public class RecipeIdentity
             @Override
             public void onSuccess(TextValidatorResponse response) {
                 if (failReasons.isEmpty()) {
-                    failReasons.add(FailReason.NONE);
+                    failReasons.add(CommonFailReason.NONE);
                 }
             }
 
@@ -229,9 +228,9 @@ public class RecipeIdentity
     }
 
     private ComponentState getComponentState() {
-        boolean isValid = failReasons.contains(FailReason.NONE);
+        boolean isValid = failReasons.contains(CommonFailReason.NONE);
 
-        if (failReasons.contains(FailReason.DATA_UNAVAILABLE)) {
+        if (failReasons.contains(CommonFailReason.DATA_UNAVAILABLE)) {
             return ComponentState.DATA_UNAVAILABLE;
 
         } else if (!isValid && !isChanged()) {
@@ -285,7 +284,7 @@ public class RecipeIdentity
         System.out.println(TAG + response);
         resetState();
 
-        if (response.getFailReasons().contains(FailReason.NONE)) {
+        if (response.getFailReasons().contains(CommonFailReason.NONE)) {
             getUseCaseCallback().onSuccess(response);
         } else {
             getUseCaseCallback().onError(response);

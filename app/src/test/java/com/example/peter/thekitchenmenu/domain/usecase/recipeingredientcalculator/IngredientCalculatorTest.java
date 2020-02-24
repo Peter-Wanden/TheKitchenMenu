@@ -905,7 +905,7 @@ public class IngredientCalculatorTest {
         unitOfMeasureChangeToSpoonValues.isConversionFactorSet(
                 conversionFactorChangeFromUi.getConversionFactor());
 
-        // Act - Request an existing ingredient quantity measurement
+        // Act - RecipeRequestAbstract an existing ingredient quantity measurement
         handler.execute(SUT, REQUEST_EXISTING_VALID_METRIC, getResponseCallback());
         // verify database called and return data
         verifyRepoRecipeIngredientCalledReturnExistingValidMetric();

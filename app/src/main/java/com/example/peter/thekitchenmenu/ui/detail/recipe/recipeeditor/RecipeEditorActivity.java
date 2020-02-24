@@ -17,8 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.RecipeEditorActivityBinding;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro;
 import com.example.peter.thekitchenmenu.ui.UnsavedChangesDialogFragment;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryRecipe;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist.RecipeIngredientListActivity;
@@ -80,17 +79,17 @@ public class RecipeEditorActivity
         recipeEditorViewModel.setNavigator(this);
         binding.setViewModel(recipeEditorViewModel);
 
-        Recipe recipe = recipeEditorViewModel.getRecipe();
-        obtainIdentityViewModel(this, recipe);
+        RecipeMacro recipeMacro = recipeEditorViewModel.getRecipeMacro();
+        obtainIdentityViewModel(this, recipeMacro);
 
-        RecipeCourseEditorViewModel courseVM = obtainCourseViewModel(this, recipe);
-//        recipe.registerRecipeResponseCallback(courseVM);
+        RecipeCourseEditorViewModel courseVM = obtainCourseViewModel(this, recipeMacro);
+//        recipeMacro.registerMacroCallback(courseVM);
 
-        RecipeDurationEditorViewModel durationVM = obtainDurationViewModel(this, recipe);
-//        recipe.registerRecipeResponseCallback(durationVM);
+        RecipeDurationEditorViewModel durationVM = obtainDurationViewModel(this, recipeMacro);
+//        recipeMacro.registerMacroCallback(durationVM);
 
-        RecipePortionsEditorViewModel portionsVM = obtainPortionsViewModel(this, recipe);
-//        recipe.registerRecipeResponseCallback(portionsVM);
+        RecipePortionsEditorViewModel portionsVM = obtainPortionsViewModel(this, recipeMacro);
+//        recipeMacro.registerMacroCallback(portionsVM);
 
     }
 
@@ -101,30 +100,30 @@ public class RecipeEditorActivity
     }
 
     static RecipeIdentityEditorViewModel obtainIdentityViewModel(FragmentActivity activity,
-                                                                 Recipe recipe) {
+                                                                 RecipeMacro recipeMacro) {
         ViewModelFactoryRecipe factory = ViewModelFactoryRecipe.getInstance(
-                activity.getApplication(), recipe);
+                activity.getApplication(), recipeMacro);
         return new ViewModelProvider(activity, factory).get(RecipeIdentityEditorViewModel.class);
     }
 
     static RecipeCourseEditorViewModel obtainCourseViewModel(FragmentActivity activity,
-                                                             Recipe recipe) {
+                                                             RecipeMacro recipeMacro) {
         ViewModelFactoryRecipe factory = ViewModelFactoryRecipe.getInstance(
-                activity.getApplication(), recipe);
+                activity.getApplication(), recipeMacro);
         return new ViewModelProvider(activity, factory).get(RecipeCourseEditorViewModel.class);
     }
 
     static RecipeDurationEditorViewModel obtainDurationViewModel(FragmentActivity activity,
-                                                                 Recipe recipe) {
+                                                                 RecipeMacro recipeMacro) {
         ViewModelFactoryRecipe factory = ViewModelFactoryRecipe.getInstance(
-                activity.getApplication(), recipe);
+                activity.getApplication(), recipeMacro);
         return new ViewModelProvider(activity, factory).get(RecipeDurationEditorViewModel.class);
     }
 
     static RecipePortionsEditorViewModel obtainPortionsViewModel(FragmentActivity activity,
-                                                                 Recipe recipe) {
+                                                                 RecipeMacro recipeMacro) {
         ViewModelFactoryRecipe factory = ViewModelFactoryRecipe.getInstance(
-                activity.getApplication(), recipe);
+                activity.getApplication(), recipeMacro);
         return new ViewModelProvider(activity, factory).get(RecipePortionsEditorViewModel.class);
     }
 

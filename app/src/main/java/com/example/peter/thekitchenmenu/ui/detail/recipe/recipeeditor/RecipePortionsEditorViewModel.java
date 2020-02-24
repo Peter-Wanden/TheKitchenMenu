@@ -10,8 +10,8 @@ import androidx.databinding.library.baseAdapters.BR;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacroResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions.RecipePortionsRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions.RecipePortionsResponse;
 import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
@@ -22,7 +22,7 @@ import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate
 
 public class RecipePortionsEditorViewModel
         extends ObservableViewModel
-        implements UseCase.Callback<RecipeResponse> {
+        implements UseCase.Callback<RecipeMacroResponse> {
 
     private static final String TAG = "tkm-" + RecipePortionsEditorViewModel.class.getSimpleName()
             + ":";
@@ -34,7 +34,7 @@ public class RecipePortionsEditorViewModel
     @Nonnull
     private UseCaseHandler handler;
     @Nonnull
-    Recipe recipe;
+    RecipeMacro recipeMacro;
     private RecipePortionsResponse response;
 
     public final ObservableField<String> servingsErrorMessage = new ObservableField<>();
@@ -46,10 +46,10 @@ public class RecipePortionsEditorViewModel
     private String recipeId;
 
     public RecipePortionsEditorViewModel(@Nonnull UseCaseHandler handler,
-                                         @Nonnull Recipe recipe,
+                                         @Nonnull RecipeMacro recipeMacro,
                                          @Nonnull Resources resources) {
         this.handler = handler;
-        this.recipe = recipe;
+        this.recipeMacro = recipeMacro;
         this.resources = resources;
 
         response = RecipePortionsResponse.Builder.getDefault().build();
@@ -63,9 +63,9 @@ public class RecipePortionsEditorViewModel
 
             RecipePortionsRequest request = RecipePortionsRequest.Builder.
                     getDefault().
-                    setRecipeId(recipeId).
+                    setId(recipeId).
                     build();
-            handler.execute(recipe, request, this);
+            handler.execute(recipeMacro, request, this);
         }
     }
 
@@ -76,10 +76,10 @@ public class RecipePortionsEditorViewModel
 
             RecipePortionsRequest request = RecipePortionsRequest.Builder.
                     getDefault().
-                    setRecipeId(cloneFromRecipeId).
-                    setCloneToRecipeId(cloneToRecipeId).
+                    setId(cloneFromRecipeId).
+                    setCloneToId(cloneToRecipeId).
                     build();
-            handler.execute(recipe, request, this);
+            handler.execute(recipeMacro, request, this);
         }
     }
 
@@ -88,18 +88,18 @@ public class RecipePortionsEditorViewModel
     }
 
     @Override
-    public void onSuccess(RecipeResponse response) {
+    public void onSuccess(RecipeMacroResponse response) {
         RecipePortionsResponse portionsResponse = extractResponse(response);
         processUseCaseResponse(portionsResponse);
     }
 
     @Override
-    public void onError(RecipeResponse response) {
+    public void onError(RecipeMacroResponse response) {
         RecipePortionsResponse portionsResponse = extractResponse(response);
         processUseCaseResponse(portionsResponse);
     }
 
-    private RecipePortionsResponse extractResponse(RecipeResponse response) {
+    private RecipePortionsResponse extractResponse(RecipeMacroResponse response) {
         return (RecipePortionsResponse) response.getComponentResponses().get(ComponentName.PORTIONS);
     }
 
@@ -149,10 +149,10 @@ public class RecipePortionsEditorViewModel
                             setServings(servingsParsed).
                             build();
                     RecipePortionsRequest request = new RecipePortionsRequest.Builder().
-                            setRecipeId(recipeId).
+                            setId(recipeId).
                             setModel(model).
                             build();
-                    handler.execute(recipe, request, this);
+                    handler.execute(recipeMacro, request, this);
                 }
             }
         }
@@ -192,10 +192,10 @@ public class RecipePortionsEditorViewModel
                             setSittings(sittingsParsed).
                             build();
                     RecipePortionsRequest request = new RecipePortionsRequest.Builder().
-                            setRecipeId(recipeId).
+                            setId(recipeId).
                             setModel(model).
                             build();
-                    handler.execute(recipe, request, this);
+                    handler.execute(recipeMacro, request, this);
                 }
             }
         }

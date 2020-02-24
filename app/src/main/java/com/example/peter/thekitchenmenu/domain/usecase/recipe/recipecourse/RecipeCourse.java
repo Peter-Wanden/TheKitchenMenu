@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import com.example.peter.thekitchenmenu.data.entity.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeCourse;
+import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
@@ -18,7 +19,7 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe.DO_NOT_CLONE;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe.DO_NOT_CLONE;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
 
 public class RecipeCourse
@@ -26,11 +27,6 @@ public class RecipeCourse
         implements DataSource.GetAllCallback<RecipeCourseEntity> {
 
     private static final String TAG = "tkm-" + RecipeCourse.class.getSimpleName() + ": ";
-
-    public enum FailReason implements FailReasons {
-        DATA_UNAVAILABLE,
-        NONE
-    }
 
     public enum Course {
         COURSE_ZERO(0),
@@ -88,7 +84,7 @@ public class RecipeCourse
     @Override
     protected void execute(RecipeCourseRequest request) {
         System.out.println(TAG + request);
-        if (isNewRequest(request.getRecipeId())) {
+        if (isNewRequest(request.getId())) {
             extractIds(request);
         } else {
             addOrRemoveCourse(request.isAddCourse(), request.getCourse());
@@ -101,15 +97,15 @@ public class RecipeCourse
 
     private void extractIds(RecipeCourseRequest request) {
         if (isCloneRequest(request)) {
-            recipeId = request.getCloneToRecipeId();
+            recipeId = request.getCloneToId();
         } else {
-            recipeId = request.getRecipeId();
+            recipeId = request.getId();
         }
-        loadData(request.getRecipeId());
+        loadData(request.getId());
     }
 
     private boolean isCloneRequest(RecipeCourseRequest request) {
-        return isCloned = !request.getCloneToRecipeId().equals(DO_NOT_CLONE);
+        return isCloned = !request.getCloneToId().equals(DO_NOT_CLONE);
     }
 
     private void loadData(String recipeId) {
@@ -242,7 +238,7 @@ public class RecipeCourse
 
         System.out.println(TAG + response);
 
-        if (response.getFailReasons().contains(FailReason.NONE)) {
+        if (response.getFailReasons().contains(CommonFailReason.NONE)) {
             getUseCaseCallback().onSuccess(response);
         } else {
             getUseCaseCallback().onError(response);
@@ -268,9 +264,9 @@ public class RecipeCourse
     private List<FailReasons> getFailReasons() {
         List<FailReasons> failReasons = new LinkedList<>();
         if (newCourseList.isEmpty()) {
-            failReasons.add(FailReason.DATA_UNAVAILABLE);
+            failReasons.add(CommonFailReason.DATA_UNAVAILABLE);
         } else {
-            failReasons.add(FailReason.NONE);
+            failReasons.add(CommonFailReason.NONE);
         }
         return failReasons;
     }

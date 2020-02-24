@@ -1,41 +1,27 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseCommand;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequestAbstract;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe.DO_NOT_CLONE;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe.DO_NOT_CLONE;
 
-public final class RecipeCourseRequest implements UseCaseCommand.Request {
-    @Nonnull
-    private final String recipeId;
-    @Nonnull
-    private final String cloneToRecipeId;
+public final class RecipeCourseRequest extends RecipeRequestAbstract {
     @Nullable
     private final RecipeCourse.Course course;
     private final boolean addCourse;
 
-    private RecipeCourseRequest(@Nonnull String recipeId,
-                   @Nonnull String cloneToRecipeId,
-                   @Nullable RecipeCourse.Course course,
-                   boolean addCourse) {
-        this.recipeId = recipeId;
-        this.cloneToRecipeId = cloneToRecipeId;
+    private RecipeCourseRequest(@Nonnull String id,
+                                @Nonnull String cloneToId,
+                                @Nullable RecipeCourse.Course course,
+                                boolean addCourse) {
+        this.id = id;
+        this.cloneToId = cloneToId;
         this.course = course;
         this.addCourse = addCourse;
-    }
-
-    @Nonnull
-    public String getRecipeId() {
-        return recipeId;
-    }
-
-    @Nonnull
-    public String getCloneToRecipeId() {
-        return cloneToRecipeId;
     }
 
     @Nullable
@@ -53,48 +39,47 @@ public final class RecipeCourseRequest implements UseCaseCommand.Request {
         if (o == null || getClass() != o.getClass()) return false;
         RecipeCourseRequest request = (RecipeCourseRequest) o;
         return addCourse == request.addCourse &&
-                recipeId.equals(request.recipeId) &&
-                cloneToRecipeId.equals(request.cloneToRecipeId) &&
+                id.equals(request.id) &&
+                cloneToId.equals(request.cloneToId) &&
                 course == request.course;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(recipeId, cloneToRecipeId, course, addCourse);
+        return Objects.hash(id, cloneToId, course, addCourse);
     }
 
-    @Nonnull
     @Override
     public String toString() {
         return "RecipeCourseRequest{" +
-                "recipeId='" + recipeId + '\'' +
-                ", cloneToRecipeId='" + cloneToRecipeId + '\'' +
+                "id='" + id + '\'' +
+                ", cloneToId='" + cloneToId + '\'' +
                 ", course=" + course +
                 ", addCourse=" + addCourse +
                 '}';
     }
 
     public static class Builder {
-        private String recipeId;
-        private String cloneToRecipeId;
+        private String id;
+        private String cloneToId;
         private RecipeCourse.Course course;
         private boolean isAddCourse;
 
         public static Builder getDefault() {
             return new Builder().
-                    setRecipeId("").
-                    setCloneToRecipeId(DO_NOT_CLONE).
+                    setId("").
+                    setCloneToId(DO_NOT_CLONE).
                     setCourse(null).
                     setAddCourse(false);
         }
 
-        public Builder setRecipeId(String recipeId) {
-            this.recipeId = recipeId;
+        public Builder setId(String id) {
+            this.id = id;
             return this;
         }
 
-        public Builder setCloneToRecipeId(String cloneToRecipeId) {
-            this.cloneToRecipeId = cloneToRecipeId;
+        public Builder setCloneToId(String cloneToId) {
+            this.cloneToId = cloneToId;
             return this;
         }
 
@@ -110,8 +95,8 @@ public final class RecipeCourseRequest implements UseCaseCommand.Request {
 
         public RecipeCourseRequest build() {
             return new RecipeCourseRequest(
-                    recipeId,
-                    cloneToRecipeId,
+                    id,
+                    cloneToId,
                     course,
                     isAddCourse
             );

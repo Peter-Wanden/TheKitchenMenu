@@ -3,6 +3,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration;
 import com.example.peter.thekitchenmenu.data.entity.RecipeDurationEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration;
+import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
@@ -12,7 +13,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe.DO_NOT_CLONE;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe.DO_NOT_CLONE;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
 
 public class RecipeDuration
@@ -22,10 +23,8 @@ public class RecipeDuration
     private static final String TAG = "tkm-" + RecipeDuration.class.getSimpleName() + ": ";
 
     public enum FailReason implements FailReasons {
-        DATA_UNAVAILABLE,
         INVALID_PREP_TIME,
-        INVALID_COOK_TIME,
-        NONE
+        INVALID_COOK_TIME
     }
 
     private final int MAX_PREP_TIME;
@@ -64,7 +63,7 @@ public class RecipeDuration
         System.out.println(TAG + request);
         requestModel = request.getModel();
 
-        if (isNewRequest(request.getRecipeId())) {
+        if (isNewRequest(request.getId())) {
             extractIds(request);
         } else {
             processChanges();
@@ -77,15 +76,15 @@ public class RecipeDuration
 
     private void extractIds(RecipeDurationRequest request) {
         if (isCloneRequest(request)) {
-            recipeId = request.getCloneToRecipeId();
+            recipeId = request.getCloneToId();
         } else {
-            recipeId = request.getRecipeId();
+            recipeId = request.getId();
         }
-        loadData(request.getRecipeId());
+        loadData(request.getId());
     }
 
     private boolean isCloneRequest(RecipeDurationRequest request) {
-        return isCloned = !request.getCloneToRecipeId().equals(DO_NOT_CLONE);
+        return isCloned = !request.getCloneToId().equals(DO_NOT_CLONE);
     }
 
     private void loadData(String recipeId) {
@@ -97,7 +96,7 @@ public class RecipeDuration
         persistenceModel = convertEntityToPersistenceModel(entity);
         validateData();
 
-        if (isCloned && failReasons.contains(FailReason.NONE)) {
+        if (isCloned && failReasons.contains(CommonFailReason.NONE)) {
             save();
             isCloned = false;
         }
@@ -118,7 +117,7 @@ public class RecipeDuration
     @Override
     public void onDataNotAvailable() {
         persistenceModel = createNewPersistenceModel();
-        failReasons.add(FailReason.DATA_UNAVAILABLE);
+        failReasons.add(CommonFailReason.DATA_UNAVAILABLE);
 
         buildResponse();
     }
@@ -154,7 +153,7 @@ public class RecipeDuration
             failReasons.add(FailReason.INVALID_COOK_TIME);
         }
         if (failReasons.isEmpty()) {
-            failReasons.add(FailReason.NONE);
+            failReasons.add(CommonFailReason.NONE);
         }
         System.out.println(TAG + "validatingData: failReasons:" + failReasons);
     }
@@ -186,9 +185,9 @@ public class RecipeDuration
     }
 
     private ComponentState getComponentState() {
-        boolean isValid = failReasons.contains(FailReason.NONE);
+        boolean isValid = failReasons.contains(CommonFailReason.NONE);
 
-        if (failReasons.contains(FailReason.DATA_UNAVAILABLE)) {
+        if (failReasons.contains(CommonFailReason.DATA_UNAVAILABLE)) {
             return ComponentState.DATA_UNAVAILABLE;
 
         } else if (!isValid && !isChanged()) {
@@ -288,7 +287,7 @@ public class RecipeDuration
         System.out.println(TAG + response);
         resetState();
 
-        if (response.getFailReasons().contains(FailReason.NONE)) {
+        if (response.getFailReasons().contains(CommonFailReason.NONE)) {
             getUseCaseCallback().onSuccess(response);
         } else {
             getUseCaseCallback().onError(response);

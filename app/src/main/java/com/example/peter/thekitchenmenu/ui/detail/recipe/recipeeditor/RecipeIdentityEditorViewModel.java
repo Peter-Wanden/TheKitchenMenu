@@ -8,22 +8,22 @@ import androidx.databinding.ObservableField;
 import androidx.databinding.library.baseAdapters.BR;
 
 import com.example.peter.thekitchenmenu.R;
+import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacroResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentityRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentityResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe;
 import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe.DO_NOT_CLONE;
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe.DO_NOT_CLONE;
 
 public class RecipeIdentityEditorViewModel extends ObservableViewModel {
 
@@ -35,7 +35,7 @@ public class RecipeIdentityEditorViewModel extends ObservableViewModel {
     @Nonnull
     private final UseCaseHandler handler;
     @Nonnull
-    private Recipe recipe;
+    private RecipeMacro recipeMacro;
 
     public final ObservableField<String> titleErrorMessage = new ObservableField<>();
     public final ObservableField<String> descriptionErrorMessage = new ObservableField<>();
@@ -48,16 +48,16 @@ public class RecipeIdentityEditorViewModel extends ObservableViewModel {
     private final ObservableBoolean dataLoading = new ObservableBoolean();
 
     public RecipeIdentityEditorViewModel(@Nonnull UseCaseHandler handler,
-                                         @Nonnull Recipe recipe,
+                                         @Nonnull RecipeMacro recipeMacro,
                                          @Nonnull Resources resources) {
         this.handler = handler;
         this.resources = resources;
 
         response = RecipeIdentityResponse.Builder.getDefault().build();
 
-        this.recipe = recipe;
-//        recipe.registerComponentCallback(ComponentName.IDENTITY, getRecipeIdentityCallback());
-//        recipe.registerRecipeResponseCallback(getRecipeResponseCallback());
+        this.recipeMacro = recipeMacro;
+//        recipeMacro.registerComponentCallback(ComponentName.IDENTITY, getRecipeIdentityCallback());
+//        recipeMacro.registerMacroCallback(getRecipeResponseCallback());
     }
 
     private UseCase.Callback<RecipeIdentityResponse> getRecipeIdentityCallback() {
@@ -82,15 +82,15 @@ public class RecipeIdentityEditorViewModel extends ObservableViewModel {
         };
     }
 
-    private UseCase.Callback<RecipeResponse> getRecipeResponseCallback() {
-        return new UseCase.Callback<RecipeResponse>() {
+    private UseCase.Callback<RecipeMacroResponse> getRecipeResponseCallback() {
+        return new UseCase.Callback<RecipeMacroResponse>() {
             @Override
-            public void onSuccess(RecipeResponse response) {
+            public void onSuccess(RecipeMacroResponse response) {
                 // ToDo implement clone to etc
             }
 
             @Override
-            public void onError(RecipeResponse response) {
+            public void onError(RecipeMacroResponse response) {
 
             }
         };
@@ -103,9 +103,9 @@ public class RecipeIdentityEditorViewModel extends ObservableViewModel {
 
             RecipeIdentityRequest request = RecipeIdentityRequest.Builder.
                     getDefault().
-                    setRecipeId(recipeId).
+                    setId(recipeId).
                     build();
-            handler.execute(recipe, request, getRecipeIdentityCallback());
+            handler.execute(recipeMacro, request, getRecipeIdentityCallback());
         }
     }
 
@@ -116,10 +116,10 @@ public class RecipeIdentityEditorViewModel extends ObservableViewModel {
 
             RecipeIdentityRequest request = RecipeIdentityRequest.Builder.
                     getDefault().
-                    setRecipeId(cloneFromRecipeId).
-                    setCloneToRecipeId(cloneToRecipeId).
+                    setId(cloneFromRecipeId).
+                    setCloneToId(cloneToRecipeId).
                     build();
-            handler.execute(recipe, request, getRecipeIdentityCallback());
+            handler.execute(recipeMacro, request, getRecipeIdentityCallback());
         }
     }
 
@@ -143,11 +143,11 @@ public class RecipeIdentityEditorViewModel extends ObservableViewModel {
                     setTitle(title).
                     build();
             RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
-                    setRecipeId(recipeId).
-                    setCloneToRecipeId(DO_NOT_CLONE).
+                    setId(recipeId).
+                    setCloneToId(DO_NOT_CLONE).
                     setModel(model).
                     build();
-            handler.execute(recipe, request, getRecipeIdentityCallback());
+            handler.execute(recipeMacro, request, getRecipeIdentityCallback());
         }
     }
 
@@ -167,11 +167,11 @@ public class RecipeIdentityEditorViewModel extends ObservableViewModel {
                     setDescription(description).
                     build();
             RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
-                    setRecipeId(recipeId).
-                    setCloneToRecipeId(DO_NOT_CLONE).
+                    setId(recipeId).
+                    setCloneToId(DO_NOT_CLONE).
                     setModel(model).
                     build();
-            handler.execute(recipe, request, getRecipeIdentityCallback());
+            handler.execute(recipeMacro, request, getRecipeIdentityCallback());
         }
     }
 
@@ -192,7 +192,7 @@ public class RecipeIdentityEditorViewModel extends ObservableViewModel {
     private void onUseCaseError() {
         System.out.println("OnUseCaseErrorCalled:" + response.getFailReasons());
         List<FailReasons> failReasons = response.getFailReasons();
-        if (failReasons.contains(RecipeIdentity.FailReason.DATA_UNAVAILABLE)) {
+        if (failReasons.contains(CommonFailReason.DATA_UNAVAILABLE)) {
             dataLoadingError.set(true);
         }
         if (failReasons.contains(RecipeIdentity.FailReason.TITLE_TOO_SHORT)) {

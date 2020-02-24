@@ -16,7 +16,8 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDuration;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentity;
@@ -126,6 +127,11 @@ public class RecipePortionsEditorViewModelTest {
                 setLongTextMaxLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
                 build();
 
+        Recipe recipe = new Recipe(
+                repoRecipeMock,
+                timeProviderMock
+        );
+
         RecipeIdentity identity = new RecipeIdentity(
                 repoIdentityMock,
                 timeProviderMock,
@@ -156,17 +162,16 @@ public class RecipePortionsEditorViewModelTest {
 
         RecipeStateCalculator stateCalculator = new RecipeStateCalculator();
 
-        Recipe recipe = new Recipe(
-                repoRecipeMock,
+        RecipeMacro recipeMacro = new RecipeMacro(
                 handler,
                 stateCalculator,
-                identity,
+                recipe, identity,
                 course,
                 duration,
                 portions);
 
         return new RecipePortionsEditorViewModel(
-                handler, recipe, resourcesMock
+                handler, recipeMacro, resourcesMock
         );
     }
 

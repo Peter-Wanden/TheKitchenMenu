@@ -1,5 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity;
 
+import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseCommand;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
@@ -82,7 +83,7 @@ public final class RecipeIdentityResponse implements UseCaseCommand.Response {
 
         private static List<FailReasons> getDefaultFailReasons() {
             List<FailReasons> failReasons = new ArrayList<>();
-            failReasons.add(RecipeIdentity.FailReason.DATA_UNAVAILABLE);
+            failReasons.add(CommonFailReason.DATA_UNAVAILABLE);
             return failReasons;
         }
 

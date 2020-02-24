@@ -4,6 +4,7 @@ import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.entity.RecipeDurationEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration;
+import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDuration;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDurationRequest;
@@ -16,7 +17,7 @@ import org.junit.*;
 import org.mockito.*;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.UseCaseCommand.*;
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe.DO_NOT_CLONE;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe.DO_NOT_CLONE;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDuration.*;
 import static org.junit.Assert.assertEquals;
@@ -93,8 +94,8 @@ public class RecipeDurationTest {
                 setPrepHours(MAX_PREP_TIME / 60 + 1).
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setRecipeId(recipeId).
-                setCloneToRecipeId(DO_NOT_CLONE).
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
                 setModel(invalidModel).
                 build();
         // Act
@@ -113,8 +114,8 @@ public class RecipeDurationTest {
                 setPrepHours(MAX_PREP_TIME / 60 + 1).
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setRecipeId(recipeId).
-                setCloneToRecipeId(DO_NOT_CLONE).
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
                 setModel(invalidModel).
                 build();
         // Act
@@ -134,8 +135,8 @@ public class RecipeDurationTest {
                 setPrepHours(MAX_PREP_TIME / 60 + 1).
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setRecipeId(recipeId).
-                setCloneToRecipeId(DO_NOT_CLONE).
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
                 setModel(invalidModel).
                 build();
         // Act
@@ -155,8 +156,8 @@ public class RecipeDurationTest {
                 setPrepHours(VALID_NEW_PREP_TIME_VALID.getPrepTime() / 60).
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
-                setRecipeId(recipeId).
-                setCloneToRecipeId(DO_NOT_CLONE).
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
                 setModel(validModel).
                 build();
 
@@ -177,15 +178,15 @@ public class RecipeDurationTest {
                 setPrepHours(VALID_NEW_PREP_TIME_VALID.getPrepTime() / 60).
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
-                setRecipeId(recipeId).
-                setCloneToRecipeId(DO_NOT_CLONE).
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
                 setModel(validModel).
                 build();
 
         // Act
         handler.execute(SUT, validRequest, getUseCaseCallback());
         // Assert
-        assertTrue(durationOnSuccessResponse.getFailReasons().contains(FailReason.NONE));
+        assertTrue(durationOnSuccessResponse.getFailReasons().contains(CommonFailReason.NONE));
     }
 
     @Test
@@ -199,8 +200,8 @@ public class RecipeDurationTest {
                 setPrepHours(VALID_NEW_PREP_TIME_VALID.getPrepTime() / 60).
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
-                setRecipeId(recipeId).
-                setCloneToRecipeId(DO_NOT_CLONE).
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
                 setModel(validModel).
                 build();
 
@@ -220,8 +221,8 @@ public class RecipeDurationTest {
                 setPrepMinutes(MAX_PREP_TIME + 1).
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setRecipeId(recipeId).
-                setCloneToRecipeId(DO_NOT_CLONE).
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
                 setModel(invalidModel).
                 build();
         // Act
@@ -240,8 +241,8 @@ public class RecipeDurationTest {
                 setPrepMinutes(MAX_PREP_TIME + 1).
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setRecipeId(recipeId).
-                setCloneToRecipeId(DO_NOT_CLONE).
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
                 setModel(invalidModel).
                 build();
         // Act
@@ -261,8 +262,8 @@ public class RecipeDurationTest {
                 setPrepMinutes(MAX_PREP_TIME + 1).
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setRecipeId(recipeId).
-                setCloneToRecipeId(DO_NOT_CLONE).
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
                 setModel(invalidModel).
                 build();
         // Act
@@ -282,8 +283,8 @@ public class RecipeDurationTest {
                 setPrepMinutes(VALID_NEW_PREP_TIME_VALID.getPrepTime()).
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
-                setRecipeId(recipeId).
-                setCloneToRecipeId(DO_NOT_CLONE).
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
                 setModel(validModel).
                 build();
         // Act
@@ -303,15 +304,15 @@ public class RecipeDurationTest {
                 setPrepMinutes(VALID_NEW_PREP_TIME_VALID.getPrepTime()).
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
-                setRecipeId(recipeId).
-                setCloneToRecipeId(DO_NOT_CLONE).
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
                 setModel(validModel).
                 build();
         // Act
         handler.execute(SUT, validRequest, getUseCaseCallback());
         // Assert
         assertEquals(1, durationOnSuccessResponse.getFailReasons().size());
-        assertTrue(durationOnSuccessResponse.getFailReasons().contains(FailReason.NONE));
+        assertTrue(durationOnSuccessResponse.getFailReasons().contains(CommonFailReason.NONE));
     }
 
     @Test
@@ -325,8 +326,8 @@ public class RecipeDurationTest {
                 setPrepMinutes(VALID_NEW_PREP_TIME_VALID.getPrepTime()).
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
-                setRecipeId(recipeId).
-                setCloneToRecipeId(DO_NOT_CLONE).
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
                 setModel(validModel).
                 build();
         // Act
@@ -345,8 +346,8 @@ public class RecipeDurationTest {
                 setCookHours(MAX_COOK_TIME / 60 + 1).
                 build();
         RecipeDurationRequest invalidRequest = new RecipeDurationRequest.Builder().
-                setRecipeId(recipeId).
-                setCloneToRecipeId(DO_NOT_CLONE).
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
                 setModel(invalidModel).
                 build();
         // Act
@@ -365,8 +366,8 @@ public class RecipeDurationTest {
                 setCookHours(MAX_COOK_TIME / 60 + 1).
                 build();
         RecipeDurationRequest invalidRequest = new RecipeDurationRequest.Builder().
-                setRecipeId(recipeId).
-                setCloneToRecipeId(DO_NOT_CLONE).
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
                 setModel(invalidModel).
                 build();
         // Act
@@ -386,8 +387,8 @@ public class RecipeDurationTest {
                 setCookHours(MAX_COOK_TIME / 60 + 1).
                 build();
         RecipeDurationRequest invalidRequest = new RecipeDurationRequest.Builder().
-                setRecipeId(recipeId).
-                setCloneToRecipeId(DO_NOT_CLONE).
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
                 setModel(invalidModel).
                 build();
         // Act
@@ -408,8 +409,8 @@ public class RecipeDurationTest {
                 setCookHours(VALID_NEW_COOK_TIME_VALID.getCookTime() / 60).
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
-                setRecipeId(recipeId).
-                setCloneToRecipeId(DO_NOT_CLONE).
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
                 setModel(validModel).
                 build();
         // Act
@@ -428,8 +429,8 @@ public class RecipeDurationTest {
                 setCookHours(VALID_NEW_COOK_TIME_VALID.getCookTime() / 60).
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
-                setRecipeId(recipeId).
-                setCloneToRecipeId(DO_NOT_CLONE).
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
                 setModel(validModel).
                 build();
         // Act
@@ -449,15 +450,15 @@ public class RecipeDurationTest {
                 setCookHours(VALID_NEW_COOK_TIME_VALID.getCookTime() / 60).
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
-                setRecipeId(recipeId).
-                setCloneToRecipeId(DO_NOT_CLONE).
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
                 setModel(validModel).
                 build();
         // Act
         handler.execute(SUT, validRequest, getUseCaseCallback());
         // Assert
         assertEquals(1, durationOnSuccessResponse.getFailReasons().size());
-        assertTrue(durationOnSuccessResponse.getFailReasons().contains(FailReason.NONE));
+        assertTrue(durationOnSuccessResponse.getFailReasons().contains(CommonFailReason.NONE));
     }
 
     @Test
@@ -470,8 +471,8 @@ public class RecipeDurationTest {
                 setCookMinutes(MAX_COOK_TIME + 1).
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setRecipeId(recipeId).
-                setCloneToRecipeId(DO_NOT_CLONE).
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
                 setModel(invalidModel).
                 build();
         // Act
@@ -490,8 +491,8 @@ public class RecipeDurationTest {
                 setCookMinutes(MAX_COOK_TIME + 1).
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setRecipeId(recipeId).
-                setCloneToRecipeId(DO_NOT_CLONE).
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
                 setModel(invalidModel).
                 build();
         // Act
@@ -512,8 +513,8 @@ public class RecipeDurationTest {
                 setCookMinutes(MAX_COOK_TIME + 1).
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setRecipeId(recipeId).
-                setCloneToRecipeId(DO_NOT_CLONE).
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
                 setModel(invalidModel).
                 build();
         // Act
@@ -534,8 +535,8 @@ public class RecipeDurationTest {
                 setCookMinutes(VALID_NEW_COOK_TIME_VALID.getCookTime())
                 .build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setRecipeId(recipeId).
-                setCloneToRecipeId(DO_NOT_CLONE).
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
                 setModel(model).
                 build();
         // Act
@@ -555,8 +556,8 @@ public class RecipeDurationTest {
                 setCookMinutes(VALID_NEW_COOK_TIME_VALID.getCookTime())
                 .build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setRecipeId(recipeId).
-                setCloneToRecipeId(DO_NOT_CLONE).
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
                 setModel(model).
                 build();
         // Act
@@ -577,15 +578,15 @@ public class RecipeDurationTest {
                 setCookMinutes(VALID_NEW_COOK_TIME_VALID.getCookTime())
                 .build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setRecipeId(recipeId).
-                setCloneToRecipeId(DO_NOT_CLONE).
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
                 setModel(model).
                 build();
         // Act
         handler.execute(SUT, request, getUseCaseCallback());
         // Assert
         assertEquals(1, durationOnSuccessResponse.getFailReasons().size());
-        assertTrue(durationOnSuccessResponse.getFailReasons().contains(FailReason.NONE));
+        assertTrue(durationOnSuccessResponse.getFailReasons().contains(CommonFailReason.NONE));
     }
 
     @Test
@@ -599,8 +600,8 @@ public class RecipeDurationTest {
                 setCookHours(MAX_COOK_TIME / 60).setCookMinutes(1)
                 .build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setRecipeId(recipeId).
-                setCloneToRecipeId(DO_NOT_CLONE).
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
                 setModel(model).
                 build();
         // Act
@@ -625,8 +626,8 @@ public class RecipeDurationTest {
                 setCookHours(MAX_COOK_TIME / 60 - 1).setCookMinutes(59)
                 .build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setRecipeId(recipeId).
-                setCloneToRecipeId(DO_NOT_CLONE).
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
                 setModel(model).
                 build();
         // Act
@@ -683,8 +684,8 @@ public class RecipeDurationTest {
                 setPrepMinutes(VALID_NEW_CLONED_PREP_TIME_UPDATED.getPrepTime() % 60).
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setRecipeId(VALID_NEW_EMPTY.getId()).
-                setCloneToRecipeId(DO_NOT_CLONE).
+                setId(VALID_NEW_EMPTY.getId()).
+                setCloneToId(DO_NOT_CLONE).
                 setModel(model).
                 build();
         // Act
@@ -702,8 +703,8 @@ public class RecipeDurationTest {
 
         RecipeDurationRequest request = RecipeDurationRequest.Builder.
                 getDefault().
-                setRecipeId(cloneFromRecipeId).
-                setCloneToRecipeId(cloneToRecipeId).
+                setId(cloneFromRecipeId).
+                setCloneToId(cloneToRecipeId).
                 build();
         // Act
         handler.execute(SUT, request, getUseCaseCallback());
@@ -744,7 +745,7 @@ public class RecipeDurationTest {
 
         RecipeDurationRequest request = RecipeDurationRequest.Builder.
                 getDefault().
-                setRecipeId(recipeId).
+                setId(recipeId).
                 build();
 
         handler.execute(SUT, request, getUseCaseCallback());
@@ -755,7 +756,7 @@ public class RecipeDurationTest {
         // Arrange
         RecipeDurationRequest request = RecipeDurationRequest.Builder.
                 getDefault().
-                setRecipeId(recipeId).build();
+                setId(recipeId).build();
         // Act
         handler.execute(SUT, request, getUseCaseCallback());
         verify(repoMock).getById(eq(recipeId), repoCallback.capture());
@@ -767,8 +768,8 @@ public class RecipeDurationTest {
         whenTimeProviderCalledReturn(VALID_NEW_CLONED.getCreateDate());
         RecipeDurationRequest request = RecipeDurationRequest.Builder.
                 getDefault().
-                setRecipeId(VALID_COMPLETE_FROM_ANOTHER_USER.getId()).
-                setCloneToRecipeId(VALID_NEW_EMPTY.getId()).
+                setId(VALID_COMPLETE_FROM_ANOTHER_USER.getId()).
+                setCloneToId(VALID_NEW_EMPTY.getId()).
                 build();
         // Act
         handler.execute(SUT, request, getUseCaseCallback());

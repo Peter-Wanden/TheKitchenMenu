@@ -20,7 +20,7 @@ public final class RecipeIngredientListRequest implements UseCaseCommand.Request
     @Nonnull
     @Override
     public String toString() {
-        return "Request{" +
+        return "RecipeIngredientListRequest{" +
                 "recipeId='" + recipeId + '\'' +
                 '}';
     }

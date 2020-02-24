@@ -66,7 +66,7 @@ public final class IngredientCalculatorRequest implements UseCaseCommand.Request
     @NonNull
     @Override
     public String toString() {
-        return "Request{" +
+        return "IngredientCalculatorRequest{" +
                 "recipeId='" + recipeId + '\'' +
                 ", ingredientId='" + ingredientId + '\'' +
                 ", recipeIngredientId='" + recipeIngredientId + '\'' +

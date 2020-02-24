@@ -5,8 +5,8 @@ import androidx.databinding.ObservableBoolean;
 
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacroResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourseRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourseResponse;
@@ -18,7 +18,7 @@ import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate
 
 public class RecipeCourseEditorViewModel
         extends ObservableViewModel
-        implements UseCase.Callback<RecipeResponse> {
+        implements UseCase.Callback<RecipeMacroResponse> {
 
     private static final String TAG = "tkm-" + RecipeCourseEditorViewModel.class.getSimpleName() +
             "; ";
@@ -26,7 +26,7 @@ public class RecipeCourseEditorViewModel
     @Nonnull
     private final UseCaseHandler handler;
     @Nonnull
-    private Recipe recipe;
+    private RecipeMacro recipeMacro;
 
     private String recipeId = "";
     private RecipeCourseResponse response;
@@ -35,9 +35,9 @@ public class RecipeCourseEditorViewModel
     private final ObservableBoolean dataLoading = new ObservableBoolean();
 
     public RecipeCourseEditorViewModel(@Nonnull UseCaseHandler handler,
-                                       @Nonnull Recipe recipe) {
+                                       @Nonnull RecipeMacro recipeMacro) {
         this.handler = handler;
-        this.recipe = recipe;
+        this.recipeMacro = recipeMacro;
         response = RecipeCourseResponse.Builder.getDefault().build();
     }
 
@@ -48,9 +48,9 @@ public class RecipeCourseEditorViewModel
 
             RecipeCourseRequest request = RecipeCourseRequest.Builder.
                     getDefault().
-                    setRecipeId(recipeId).
+                    setId(recipeId).
                     build();
-            handler.execute(recipe, request, this);
+            handler.execute(recipeMacro, request, this);
         }
     }
 
@@ -61,11 +61,11 @@ public class RecipeCourseEditorViewModel
 
             RecipeCourseRequest request = RecipeCourseRequest.Builder.
                     getDefault().
-                    setRecipeId(cloneFromRecipeId).
-                    setCloneToRecipeId(cloneToRecipeId).
+                    setId(cloneFromRecipeId).
+                    setCloneToId(cloneToRecipeId).
                     build();
 
-            handler.execute(recipe, request, this);
+            handler.execute(recipeMacro, request, this);
         }
     }
 
@@ -74,20 +74,20 @@ public class RecipeCourseEditorViewModel
     }
 
     @Override
-    public void onSuccess(RecipeResponse response) {
+    public void onSuccess(RecipeMacroResponse response) {
         System.out.println(TAG + "onSuccess:" + response);
         extractResponse(response);
     }
 
     @Override
-    public void onError(RecipeResponse response) {
+    public void onError(RecipeMacroResponse response) {
         System.out.println(TAG + "onError:" + response);
         extractResponse(response);
     }
 
-    private void extractResponse(RecipeResponse recipeResponse) {
+    private void extractResponse(RecipeMacroResponse recipeMacroResponse) {
         RecipeCourseResponse response = (RecipeCourseResponse)
-                recipeResponse.
+                recipeMacroResponse.
                 getComponentResponses().
                 get(ComponentName.COURSE);
 
@@ -204,10 +204,10 @@ public class RecipeCourseEditorViewModel
         dataLoading.set(true);
 
         RecipeCourseRequest request = RecipeCourseRequest.Builder.getDefault().
-                setRecipeId(recipeId).
+                setId(recipeId).
                 setCourse(course).
                 setAddCourse(addCourse).
                 build();
-        handler.execute(recipe, request, this);
+        handler.execute(recipeMacro, request, this);
     }
 }

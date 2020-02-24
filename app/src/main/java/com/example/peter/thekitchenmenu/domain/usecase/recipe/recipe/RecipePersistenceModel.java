@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipe;
+package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe;
 
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.domain.model.PersistenceModel;
@@ -16,20 +16,17 @@ public final class RecipePersistenceModel implements PersistenceModel {
     private final String createdBy;
     private final long createDate;
     private final long lastUpdate;
-    private final boolean isDraft;
 
     private RecipePersistenceModel(@Nonnull String id,
                                   @Nonnull String parentId,
                                   @Nonnull String createdBy,
                                   long createDate,
-                                  long lastUpdate,
-                                  boolean isDraft) {
+                                  long lastUpdate) {
         this.id = id;
         this.parentId = parentId;
         this.createdBy = createdBy;
         this.createDate = createDate;
         this.lastUpdate = lastUpdate;
-        this.isDraft = isDraft;
     }
 
     @Override
@@ -56,10 +53,6 @@ public final class RecipePersistenceModel implements PersistenceModel {
         return lastUpdate;
     }
 
-    public boolean isDraft() {
-        return isDraft;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -67,7 +60,6 @@ public final class RecipePersistenceModel implements PersistenceModel {
         RecipePersistenceModel that = (RecipePersistenceModel) o;
         return createDate == that.createDate &&
                 lastUpdate == that.lastUpdate &&
-                isDraft == that.isDraft &&
                 id.equals(that.id) &&
                 parentId.equals(that.parentId) &&
                 createdBy.equals(that.createdBy);
@@ -75,7 +67,7 @@ public final class RecipePersistenceModel implements PersistenceModel {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, parentId, createdBy, createDate, lastUpdate, isDraft);
+        return Objects.hash(id, parentId, createdBy, createDate, lastUpdate);
     }
 
     @Override
@@ -86,7 +78,6 @@ public final class RecipePersistenceModel implements PersistenceModel {
                 ", createdBy='" + createdBy + '\'' +
                 ", createDate=" + createDate +
                 ", lastUpdate=" + lastUpdate +
-                ", isDraft=" + isDraft +
                 '}';
     }
 
@@ -96,7 +87,6 @@ public final class RecipePersistenceModel implements PersistenceModel {
         private String createdBy;
         private long createDate;
         private long lastUpdate;
-        private boolean isDraft;
 
         public static Builder getDefault() {
             return new Builder().
@@ -104,8 +94,7 @@ public final class RecipePersistenceModel implements PersistenceModel {
                     setParentId("").
                     setCreatedBy(Constants.getUserId()).
                     setCreateDate(0L).
-                    setLastUpdate(0L).
-                    setDraft(true);
+                    setLastUpdate(0L);
         }
 
         public Builder setId(String id) {
@@ -133,19 +122,13 @@ public final class RecipePersistenceModel implements PersistenceModel {
             return this;
         }
 
-        public Builder setDraft(boolean draft) {
-            isDraft = draft;
-            return this;
-        }
-
         public RecipePersistenceModel build() {
             return new RecipePersistenceModel(
                     id,
                     parentId,
                     createdBy,
                     createDate,
-                    lastUpdate,
-                    isDraft
+                    lastUpdate
             );
         }
     }

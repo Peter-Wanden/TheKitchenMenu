@@ -4,8 +4,9 @@ import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.entity.*;
 import com.example.peter.thekitchenmenu.data.repository.*;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacroResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDuration;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentity;
@@ -79,7 +80,7 @@ public class RecipeCourseEditorViewModelTest {
     @Captor
     ArgumentCaptor<DataSource.GetEntityCallback<RecipePortionsEntity>> repoPortionsCallback;
     @Captor
-    ArgumentCaptor<RecipeResponse> recipeResponseCallback;
+    ArgumentCaptor<RecipeMacroResponse> recipeResponseCallback;
     @Mock
     UniqueIdProvider idProviderMock;
     @Mock
@@ -104,6 +105,11 @@ public class RecipeCourseEditorViewModelTest {
                 setLongTextMinLength(RecipeIdentityTest.DESCRIPTION_MIN_LENGTH).
                 setLongTextMaxLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
                 build();
+
+        Recipe recipe = new Recipe(
+                repoRecipeMock,
+                timeProviderMock
+        );
 
         RecipeIdentity identity = new RecipeIdentity(
                 repoIdentityMock,
@@ -135,16 +141,16 @@ public class RecipeCourseEditorViewModelTest {
 
         RecipeStateCalculator stateCalculator = new RecipeStateCalculator();
 
-        Recipe recipe = new Recipe(
-                repoRecipeMock,
+        RecipeMacro recipeMacro = new RecipeMacro(
                 handler,
                 stateCalculator,
+                recipe,
                 identity,
                 course,
                 duration,
                 portions);
 
-        return new RecipeCourseEditorViewModel(handler, recipe);
+        return new RecipeCourseEditorViewModel(handler, recipeMacro);
     }
 
     @Test

@@ -429,7 +429,6 @@ public class RecipeEditorViewModelTest {
         // Assert
         verify(repoRecipeMock, times(2)).save(ac.capture());
         RecipeEntity recipeEntity = ac.getAllValues().get(1);
-        assertTrue(recipeEntity.isDraft());
     }
 
     @Test
@@ -454,7 +453,6 @@ public class RecipeEditorViewModelTest {
         // Assert
         verify(repoRecipeMock).save(ac.capture());
         RecipeEntity recipeEntity = ac.getValue();
-        assertTrue(recipeEntity.isDraft());
     }
 
     @Test
@@ -479,7 +477,6 @@ public class RecipeEditorViewModelTest {
         // Assert
         verify(repoRecipeMock).save(ac.capture());
         RecipeEntity recipeEntity = ac.getValue();
-        assertFalse(recipeEntity.isDraft());
     }
 
     // region for helper methods -------------------------------------------------------------------

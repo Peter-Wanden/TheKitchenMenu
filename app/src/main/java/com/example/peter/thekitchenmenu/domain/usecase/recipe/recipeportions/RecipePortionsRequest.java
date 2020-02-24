@@ -1,35 +1,21 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseCommand;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequestAbstract;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipePortionsRequest implements UseCaseCommand.Request {
-    @Nonnull
-    private final String recipeId;
-    @Nonnull
-    private final String cloneToRecipeId;
+public final class RecipePortionsRequest extends RecipeRequestAbstract {
     @Nonnull
     private final RecipePortionsRequest.Model model;
 
-    private RecipePortionsRequest(@Nonnull String recipeId,
-                                  @Nonnull String cloneToRecipeId,
+    private RecipePortionsRequest(@Nonnull String id,
+                                  @Nonnull String cloneToId,
                                   @Nonnull RecipePortionsRequest.Model model) {
-        this.recipeId = recipeId;
-        this.cloneToRecipeId = cloneToRecipeId;
+        this.id = id;
+        this.cloneToId = cloneToId;
         this.model = model;
-    }
-
-    @Nonnull
-    public String getRecipeId() {
-        return recipeId;
-    }
-
-    @Nonnull
-    public String getCloneToRecipeId() {
-        return cloneToRecipeId;
     }
 
     @Nonnull
@@ -41,48 +27,46 @@ public final class RecipePortionsRequest implements UseCaseCommand.Request {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RecipePortionsRequest request = (RecipePortionsRequest) o;
-        return recipeId.equals(request.recipeId) &&
-                cloneToRecipeId.equals(request.cloneToRecipeId) &&
-                model.equals(request.model);
+        RecipePortionsRequest that = (RecipePortionsRequest) o;
+        return id.equals(that.id) && cloneToId.equals(that.cloneToId) &&
+                model.equals(that.model);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(recipeId, cloneToRecipeId, model);
+        return Objects.hash(id, cloneToId, model);
     }
 
-    @Nonnull
     @Override
     public String toString() {
         return "RecipePortionsRequest{" +
-                "recipeId='" + recipeId + '\'' +
-                ", cloneToRecipeId='" + cloneToRecipeId + '\'' +
+                "id='" + id + '\'' +
+                ", cloneToId='" + cloneToId + '\'' +
                 ", model=" + model +
                 '}';
     }
 
     public static class Builder {
-        private String recipeId;
-        private String cloneToRecipeId;
+        private String id;
+        private String cloneToId;
         private RecipePortionsRequest.Model model;
 
         public static Builder getDefault() {
             return new Builder().
-                    setRecipeId("").
-                    setCloneToRecipeId("").
+                    setId("").
+                    setCloneToId("").
                     setModel(RecipePortionsRequest.Model.Builder.
                             getDefault().
                             build());
         }
 
-        public Builder setRecipeId(String recipeId) {
-            this.recipeId = recipeId;
+        public Builder setId(String id) {
+            this.id = id;
             return this;
         }
 
-        public Builder setCloneToRecipeId(String cloneToRecipeId) {
-            this.cloneToRecipeId = cloneToRecipeId;
+        public Builder setCloneToId(String cloneToId) {
+            this.cloneToId = cloneToId;
             return this;
         }
 
@@ -93,8 +77,8 @@ public final class RecipePortionsRequest implements UseCaseCommand.Request {
 
         public RecipePortionsRequest build() {
             return new RecipePortionsRequest(
-                    recipeId,
-                    cloneToRecipeId,
+                    id,
+                    cloneToId,
                     model
             );
         }

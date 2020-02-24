@@ -17,8 +17,9 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacroResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourse;
@@ -117,7 +118,7 @@ public class RecipeIdentityEditorViewModelTest {
 
     private RecipeStateListener recipeClientListener;
     private RecipeStateResponse recipeStateResponse;
-    private RecipeResponse recipeResponse;
+    private RecipeMacroResponse recipeMacroResponse;
     private ComponentState actualComponentState;
     private int shortTextMinLength = 3;
     private int shortTextMaxLength = 70;
@@ -146,6 +147,10 @@ public class RecipeIdentityEditorViewModelTest {
                 setLongTextMaxLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
                 build();
 
+        Recipe recipe = new Recipe(
+                repoRecipeMock,
+                timeProviderMock
+        );
 
         RecipeIdentity identity = new RecipeIdentity(
                 repoIdentityMock,
@@ -177,21 +182,21 @@ public class RecipeIdentityEditorViewModelTest {
 
         RecipeStateCalculator stateCalculator = new RecipeStateCalculator();
 
-        Recipe recipe = new Recipe(
-                repoRecipeMock,
+        RecipeMacro recipeMacro = new RecipeMacro(
                 handler,
                 stateCalculator,
+                recipe,
                 identity,
                 courses,
                 duration,
                 portions);
 
         recipeClientListener = new RecipeStateListener();
-//        recipe.registerRecipeStateListener(recipeClientListener);
+//        recipeMacro.registerStateListener(recipeClientListener);
 
         return new RecipeIdentityEditorViewModel(
                 handler,
-                recipe,
+                recipeMacro,
                 resourcesMock);
     }
 
@@ -587,7 +592,7 @@ public class RecipeIdentityEditorViewModelTest {
         // Assert
         ArrayList list = new ArrayList();
         RuntimeException exception = (RuntimeException) list.get(0);
-        assertEquals(exception.getMessage(), "Recipe id cannot be null");
+        assertEquals(exception.getMessage(), "RecipeMacro id cannot be null");
     }
 
     // region helper methods -------------------------------------------------------------------
@@ -652,7 +657,7 @@ public class RecipeIdentityEditorViewModelTest {
     // endregion helper methods --------------------------------------------------------------------
 
     // region helper classes -----------------------------------------------------------------------
-    private class RecipeStateListener implements Recipe.RecipeStateListener {
+    private class RecipeStateListener implements RecipeMacro.RecipeStateListener {
         RecipeStateResponse response;
         @Override
         public void recipeStateChanged(RecipeStateResponse response) {

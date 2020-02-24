@@ -15,8 +15,7 @@ public class TestDataRecipeEntity {
                 "newId",
                 Constants.getUserId(),
                 10L,
-                10L,
-                true
+                10L
         );
     }
 
@@ -27,8 +26,7 @@ public class TestDataRecipeEntity {
                 getNewInvalid().getId(),
                 getNewInvalid().getCreatedBy(),
                 getNewInvalid().getCreateDate(),
-                getNewInvalid().getLastUpdate(),
-                true
+                getNewInvalid().getLastUpdate()
         );
     }
 
@@ -39,8 +37,7 @@ public class TestDataRecipeEntity {
                 "validExistingRecipeId",
                 Constants.getUserId(),
                 20L,
-                20L,
-                false
+                20L
         );
     }
 
@@ -51,8 +48,7 @@ public class TestDataRecipeEntity {
                 "invalidExistingId",
                 Constants.getUserId(),
                 70L,
-                70L,
-                true
+                70L
         );
     }
 
@@ -63,8 +59,7 @@ public class TestDataRecipeEntity {
                 "idFromAnotherUser",
                 "anotherUser",
                 30L,
-                40L,
-                false
+                40L
         );
     }
 
@@ -74,8 +69,7 @@ public class TestDataRecipeEntity {
                 getValidFromAnotherUser().getId(),
                 getValidFromAnotherUser().getCreatedBy(),
                 50L,
-                60L,
-                true
+                60L
         );
     }
 
@@ -86,8 +80,7 @@ public class TestDataRecipeEntity {
                 getValidFromAnotherUser().getId(),
                 Constants.getUserId(),
                 getNewInvalid().getCreateDate(),
-                getNewInvalid().getLastUpdate(),
-                false
+                getNewInvalid().getLastUpdate()
         );
     }
 
@@ -99,8 +92,7 @@ public class TestDataRecipeEntity {
                 getInvalidFromAnotherUser().getId(),
                 Constants.getUserId(),
                 getNewInvalid().getCreateDate(),
-                getNewInvalid().getLastUpdate(),
-                true
+                getNewInvalid().getLastUpdate()
         );
     }
 

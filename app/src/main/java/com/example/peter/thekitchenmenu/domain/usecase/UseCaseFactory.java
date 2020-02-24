@@ -14,13 +14,15 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredie
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.ConversionFactorStatus;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.Ingredient;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequestAbstract;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDuration;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipelist.RecipeList;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.RecipeIngredientList;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.Recipe;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions.RecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientDuplicateChecker;
@@ -155,6 +157,13 @@ public class UseCaseFactory {
         );
     }
 
+    private Recipe provideRecipe() {
+        return new Recipe(
+                recipeRepository,
+                new TimeProvider()
+        );
+    }
+
     public RecipePortions provideRecipePortions() {
         Resources resources = application.getResources();
         return new RecipePortions(
@@ -166,7 +175,7 @@ public class UseCaseFactory {
         );
     }
 
-    public RecipeDuration provideRecipeDuration() {
+    private RecipeDuration provideRecipeDuration() {
         Resources resources = application.getResources();
         return new RecipeDuration(
                 recipeDurationRepository,
@@ -184,18 +193,18 @@ public class UseCaseFactory {
                 provideTextValidator());
     }
 
-    public <Q extends UseCase.Request, P extends UseCase.Response> Recipe<Q, P> provideRecipe() {
-        return new Recipe<>(
-                recipeRepository,
+    public <Q extends RecipeRequestAbstract, P extends UseCase.Response> RecipeMacro<Q, P> provideRecipeMacro() {
+        return new RecipeMacro<>(
                 UseCaseHandler.getInstance(),
                 provideRecipeStateCalculator(),
+                provideRecipe(),
                 provideRecipeIdentity(),
                 provideRecipeCourse(),
                 provideRecipeDuration(),
                 provideRecipePortions());
     }
 
-    public RecipeStateCalculator provideRecipeStateCalculator() {
+    private RecipeStateCalculator provideRecipeStateCalculator() {
         return new RecipeStateCalculator();
     }
 }

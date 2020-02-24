@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipe;
+package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro;
 
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseCommand;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateResponse;
@@ -11,7 +11,7 @@ import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
 
-public class RecipeResponse implements UseCaseCommand.Response {
+public class RecipeMacroResponse implements UseCaseCommand.Response {
     @Nonnull
     private final String recipeId;
     @Nonnull
@@ -19,9 +19,9 @@ public class RecipeResponse implements UseCaseCommand.Response {
     @Nonnull
     private final HashMap<ComponentName, Response> componentResponses;
 
-    public RecipeResponse(@Nonnull String recipeId,
-                          @Nonnull RecipeStateResponse recipeStateResponse,
-                          @Nonnull HashMap<ComponentName, Response> componentResponses) {
+    public RecipeMacroResponse(@Nonnull String recipeId,
+                               @Nonnull RecipeStateResponse recipeStateResponse,
+                               @Nonnull HashMap<ComponentName, Response> componentResponses) {
         this.recipeId = recipeId;
         this.recipeStateResponse = recipeStateResponse;
         this.componentResponses = componentResponses;
@@ -46,7 +46,7 @@ public class RecipeResponse implements UseCaseCommand.Response {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RecipeResponse that = (RecipeResponse) o;
+        RecipeMacroResponse that = (RecipeMacroResponse) o;
         return recipeId.equals(that.recipeId) &&
                 recipeStateResponse.equals(that.recipeStateResponse) &&
                 componentResponses.equals(that.componentResponses);
@@ -60,7 +60,7 @@ public class RecipeResponse implements UseCaseCommand.Response {
     @Nonnull
     @Override
     public String toString() {
-        return "RecipeResponse{" +
+        return "RecipeMacroResponse{" +
                 "recipeId='" + recipeId + '\'' +
                 ", recipeStateResponse=" + recipeStateResponse +
                 ", componentResponses=" + componentResponses +
@@ -94,8 +94,8 @@ public class RecipeResponse implements UseCaseCommand.Response {
             return this;
         }
 
-        public RecipeResponse build() {
-            return new RecipeResponse(
+        public RecipeMacroResponse build() {
+            return new RecipeMacroResponse(
                     recipeId,
                     recipeStateResponse,
                     componentResponses
