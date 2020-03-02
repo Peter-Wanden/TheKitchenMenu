@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class RecipeStateCalculator extends UseCase<RecipeStateRequest, RecipeStateResponse> {
+public class RecipeStateCalculator extends UseCase {
 
     private static final String TAG = "tkm-" + RecipeStateCalculator.class.getSimpleName() + ": ";
 
@@ -91,11 +91,13 @@ public class RecipeStateCalculator extends UseCase<RecipeStateRequest, RecipeSta
     }
 
     @Override
-    protected void execute(RecipeStateRequest request) {
-        System.out.println(TAG + request);
+    protected <Q extends Request> void execute(Q request) {
+        RecipeStateRequest rsr = (RecipeStateRequest) request;
+
+        System.out.println(TAG + rsr);
         recipeState = RecipeState.COMPLETE;
         failReasons.clear();
-        componentStates = request.getComponentStates();
+        componentStates = rsr.getComponentStates();
 
         calculateState();
     }

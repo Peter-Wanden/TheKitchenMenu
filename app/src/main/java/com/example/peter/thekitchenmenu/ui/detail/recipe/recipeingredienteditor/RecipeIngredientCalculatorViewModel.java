@@ -8,7 +8,7 @@ import androidx.databinding.library.baseAdapters.BR;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseCommand;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModelBuilder;
@@ -29,10 +29,7 @@ import static androidx.core.util.Preconditions.checkNotNull;
 import static com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants.NOT_SET;
 import static com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.ConversionFactorStatus.*;
 
-public class RecipeIngredientCalculatorViewModel
-        extends ObservableViewModel
-        implements UseCaseCommand.Callback<IngredientCalculatorResponse> {
-
+public class RecipeIngredientCalculatorViewModel extends ObservableViewModel {
 
     private Resources resources;
     private RecipeIngredientEditorNavigator navigator;
@@ -360,19 +357,22 @@ public class RecipeIngredientCalculatorViewModel
                 recipeIngredientId,
                 model
         );
-        useCaseHandler.execute(ingredientCalculator, request, this);
-    }
+        useCaseHandler.execute(
+                ingredientCalculator,
+                request,
+                new UseCase.Callback<IngredientCalculatorResponse>() {
+                    @Override
+                    public void onSuccess(IngredientCalculatorResponse response) {
+                        processModelResult(response.getModel());
+                        processResultStatus(response.getResultStatus());
+                    }
 
-    @Override
-    public void onSuccess(IngredientCalculatorResponse response) {
-        processModelResult(response.getModel());
-        processResultStatus(response.getResultStatus());
-    }
-
-    @Override
-    public void onError(IngredientCalculatorResponse response) {
-        processModelResult(response.getModel());
-        processResultStatus(response.getResultStatus());
+                    @Override
+                    public void onError(IngredientCalculatorResponse response) {
+                        processModelResult(response.getModel());
+                        processResultStatus(response.getResultStatus());
+                    }
+                });
     }
 
     private void processModelResult(MeasurementModel resultModel) {

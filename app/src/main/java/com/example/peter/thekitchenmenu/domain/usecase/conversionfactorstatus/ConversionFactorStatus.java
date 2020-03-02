@@ -8,8 +8,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasure;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
 
-public class ConversionFactorStatus
-        extends UseCase<ConversionFactorStatusRequest, ConversionFactorStatusResponse>
+public class ConversionFactorStatus extends UseCase
         implements DataSource.GetEntityCallback<IngredientEntity> {
 
     private static final String TAG = "tkm-" + ConversionFactorStatus.class.getSimpleName() + ": ";
@@ -30,18 +29,18 @@ public class ConversionFactorStatus
     }
 
     @Override
-    protected void execute(ConversionFactorStatusRequest request) {
-        System.out.println(TAG + "request:" + request);
-        UnitOfMeasure unitOfMeasure = request.getSubtype().getMeasurementClass();
+    protected <Q extends Request> void execute(Q request) {
+        ConversionFactorStatusRequest sr = (ConversionFactorStatusRequest) request;
+        UnitOfMeasure unitOfMeasure = sr.getSubtype().getMeasurementClass();
 
-        if (isNoIdSupplied(request)) {
+        if (isNoIdSupplied(sr)) {
             returnDataNotAvailable();
         }
         if (!unitOfMeasure.isConversionFactorEnabled()) {
             returnResultDisabled();
             return;
         }
-        loadIngredient(request.getIngredientId());
+        loadIngredient(sr.getIngredientId());
     }
 
     private boolean isNoIdSupplied(ConversionFactorStatusRequest request) {

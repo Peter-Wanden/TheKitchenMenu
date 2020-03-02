@@ -22,8 +22,7 @@ import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Reci
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
 import static com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator.*;
 
-public class RecipeIdentity
-        extends UseCase<RecipeIdentityRequest, RecipeIdentityResponse>
+public class RecipeIdentity extends UseCase
         implements DataSource.GetEntityCallback<RecipeIdentityEntity> {
 
     private static final String TAG = "tkm-" + RecipeIdentity.class.getSimpleName() + ": ";
@@ -70,12 +69,14 @@ public class RecipeIdentity
     }
 
     @Override
-    protected void execute(RecipeIdentityRequest request) {
-        System.out.println(TAG + request);
-        requestModel = request.getModel();
+    protected <Q extends Request> void execute(Q request) {
+        RecipeIdentityRequest rir = (RecipeIdentityRequest) request;
 
-        if (isNewRequest(request.getId())) {
-            extractIds(request);
+        System.out.println(TAG + rir);
+        requestModel = rir.getModel();
+
+        if (isNewRequest(rir.getId())) {
+            extractIds(rir);
         } else {
             processChanges();
         }
@@ -216,6 +217,7 @@ public class RecipeIdentity
 
     private void buildResponse() {
         RecipeIdentityResponse response = new RecipeIdentityResponse.Builder().
+                setId(id).
                 setState(getComponentState()).
                 setFailReasons(new ArrayList<>(failReasons)).
                 setModel(getResponseModel()).

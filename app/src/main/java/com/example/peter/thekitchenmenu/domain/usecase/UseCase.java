@@ -1,36 +1,47 @@
 package com.example.peter.thekitchenmenu.domain.usecase;
 
-public abstract class UseCase
-        <Q extends UseCaseCommand.Request, P extends UseCaseCommand.Response>
-        implements UseCaseCommand<Q, P> {
+public abstract class UseCase {
 
-    private Q request;
-    private Callback<P> callback;
+    private UseCase.Request request;
+    private Callback<UseCase.Response> callback;
 
-    @Override
-    public void setRequest(Q request) {
+    public <Q extends UseCase.Request> void setRequest(Q request) {
         this.request = request;
     }
 
-    @Override
-    public Q getRequest() {
+    public UseCase.Request getRequest() {
         return request;
     }
 
-    @Override
-    public Callback<P> getUseCaseCallback() {
+    public Callback<UseCase.Response> getUseCaseCallback() {
         return callback;
     }
 
-    @Override
-    public void setUseCaseCallback(Callback<P> callback) {
+    public void setUseCaseCallback(Callback<UseCase.Response> callback) {
         this.callback = callback;
     }
 
-    @Override
     public void run() {
         execute(request);
     }
 
-    protected abstract void execute(Q request);
+    protected abstract <Q extends UseCase.Request> void execute(Q request);
+
+    /**
+     * Data passed to a request.
+     */
+    public interface Request {
+    }
+
+    /**
+     * Data received from a request.
+     */
+    public interface Response {
+    }
+
+    public interface Callback<R> {
+        void onSuccess(R response);
+
+        void onError(R response);
+    }
 }

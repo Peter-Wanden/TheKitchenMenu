@@ -4,11 +4,11 @@ public interface UseCaseScheduler {
 
     void execute(Runnable runnable);
 
-    <V extends UseCaseCommand.Response> void notifyResponse(
+    <V extends UseCase.Response> void notifyResponse(
             final V response,
-            final UseCaseCommand.Callback<V> callback);
+            final UseCase.Callback<V> callback);
 
-    <V extends UseCaseCommand.Response> void onError(
+    <V extends UseCase.Response> void onError(
             final V response,
-            final UseCaseCommand.Callback<V> callback);
+            final UseCase.Callback<V> callback);
 }

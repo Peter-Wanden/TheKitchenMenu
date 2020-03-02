@@ -22,8 +22,7 @@ import javax.annotation.Nonnull;
 /**
  * Calculates the measurement of an ingredient for a single portion of a recipe.
  */
-public class IngredientCalculator
-        extends UseCase<IngredientCalculatorRequest, IngredientCalculatorResponse> {
+public class IngredientCalculator extends UseCase {
 
     private static final String TAG = "tkm-" + IngredientCalculator.class.getSimpleName() + ": ";
 
@@ -85,12 +84,14 @@ public class IngredientCalculator
     }
 
     @Override
-    protected void execute(IngredientCalculatorRequest request) {
-        System.out.println(TAG + request);
+    protected <Q extends Request> void execute(Q request) {
+        IngredientCalculatorRequest icr = (IngredientCalculatorRequest) request;
+
+        System.out.println(TAG + icr);
         if (isNewInstantiation()) {
-            extractIdsAndStart(request);
+            extractIdsAndStart(icr);
         } else {
-            processModel(request.getModel());
+            processModel(icr.getModel());
         }
     }
 

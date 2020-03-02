@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity;
 
 import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseCommand;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponseAbstract;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
 
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipeIdentityResponse implements UseCaseCommand.Response {
+public final class RecipeIdentityResponse extends RecipeResponseAbstract {
 
     @Nonnull
     private final RecipeStateCalculator.ComponentState state;
@@ -20,9 +20,11 @@ public final class RecipeIdentityResponse implements UseCaseCommand.Response {
     @Nonnull
     private final Model model;
 
-    private RecipeIdentityResponse(@Nonnull RecipeStateCalculator.ComponentState state,
+    private RecipeIdentityResponse(@Nonnull String id,
+                                   @Nonnull RecipeStateCalculator.ComponentState state,
                                    @Nonnull List<FailReasons> failReasons,
                                    @Nonnull Model model) {
+        this.id = id;
         this.state = state;
         this.failReasons = failReasons;
         this.model = model;
@@ -48,32 +50,37 @@ public final class RecipeIdentityResponse implements UseCaseCommand.Response {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RecipeIdentityResponse that = (RecipeIdentityResponse) o;
-        return state == that.state &&
+        return id.equals(that.id) &&
+                state == that.state &&
                 failReasons.equals(that.failReasons) &&
                 model.equals(that.model);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(state, failReasons, model);
+        return Objects.hash(id, state, failReasons, model);
     }
 
+    @Nonnull
     @Override
     public String toString() {
         return "RecipeIdentityResponse{" +
-                "state=" + state +
+                "id=" + id +
+                ", state=" + state +
                 ", failReasons=" + failReasons +
                 ", model=" + model +
                 '}';
     }
 
     public static class Builder {
+        private String id;
         private RecipeStateCalculator.ComponentState state;
         private List<FailReasons> failReasons;
         private Model model;
 
         public static Builder getDefault() {
             return new Builder().
+                    setId("").
                     setState(RecipeStateCalculator.ComponentState.INVALID_UNCHANGED).
                     setFailReasons(getDefaultFailReasons()).
                     setModel(Model.Builder.
@@ -85,6 +92,11 @@ public final class RecipeIdentityResponse implements UseCaseCommand.Response {
             List<FailReasons> failReasons = new ArrayList<>();
             failReasons.add(CommonFailReason.DATA_UNAVAILABLE);
             return failReasons;
+        }
+
+        public Builder setId(String id) {
+            this.id = id;
+            return this;
         }
 
         public Builder setState(RecipeStateCalculator.ComponentState state) {
@@ -104,6 +116,7 @@ public final class RecipeIdentityResponse implements UseCaseCommand.Response {
 
         public RecipeIdentityResponse build() {
             return new RecipeIdentityResponse(
+                    id,
                     state,
                     failReasons,
                     model

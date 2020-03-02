@@ -5,7 +5,7 @@ import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableList;
 import androidx.lifecycle.ViewModel;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseCommand;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.RecipeIngredientListItemModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.RecipeIngredientList;
@@ -13,9 +13,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.Reci
 import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.RecipeIngredientListResponse;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor.RecipeIngredientEditorActivity;
 
-public class RecipeIngredientListViewModel
-        extends ViewModel
-        implements UseCaseCommand.Callback<RecipeIngredientListResponse> {
+public class RecipeIngredientListViewModel extends ViewModel {
 
     private static final String TAG = "tkm-" + RecipeIngredientListViewModel.class.getSimpleName()
             + ":";
@@ -60,23 +58,26 @@ public class RecipeIngredientListViewModel
     }
 
     private void loadRecipeIngredients() {
-        handler.execute(useCase, new RecipeIngredientListRequest(recipeId), this);
-    }
+        handler.execute(
+                useCase,
+                new RecipeIngredientListRequest(recipeId),
+                new UseCase.Callback<RecipeIngredientListResponse>() {
+                    @Override
+                    public void onSuccess(RecipeIngredientListResponse response) {
+                        if (response.getListItemModels().size() > 0) {
+                            hasIngredients.set(true);
+                            recipeIngredientsModels.clear();
+                            recipeIngredientsModels.addAll(response.getListItemModels());
+                        } else {
+                            hasIngredients.set(false);
+                        }
+                    }
 
-    @Override
-    public void onSuccess(RecipeIngredientListResponse response) {
-        if (response.getListItemModels().size() > 0) {
-            hasIngredients.set(true);
-            recipeIngredientsModels.clear();
-            recipeIngredientsModels.addAll(response.getListItemModels());
-        } else {
-            hasIngredients.set(false);
-        }
-    }
-
-    @Override
-    public void onError(RecipeIngredientListResponse response) {
-        hasIngredients.set(false);
+                    @Override
+                    public void onError(RecipeIngredientListResponse response) {
+                        hasIngredients.set(false);
+                    }
+                });
     }
 
     public void addIngredientButtonPressed() {

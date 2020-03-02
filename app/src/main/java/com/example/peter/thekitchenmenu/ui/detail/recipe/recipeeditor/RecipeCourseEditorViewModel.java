@@ -1,12 +1,12 @@
 package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 
+import androidx.core.util.Pair;
 import androidx.databinding.Bindable;
 import androidx.databinding.ObservableBoolean;
 
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacroResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourseRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourseResponse;
@@ -16,9 +16,7 @@ import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
 
-public class RecipeCourseEditorViewModel
-        extends ObservableViewModel
-        implements UseCase.Callback<RecipeMacroResponse> {
+public class RecipeCourseEditorViewModel extends ObservableViewModel {
 
     private static final String TAG = "tkm-" + RecipeCourseEditorViewModel.class.getSimpleName() +
             "; ";
@@ -27,70 +25,44 @@ public class RecipeCourseEditorViewModel
     private final UseCaseHandler handler;
     @Nonnull
     private RecipeMacro recipeMacro;
-
-    private String recipeId = "";
     private RecipeCourseResponse response;
 
     private boolean updatingUi;
-    private final ObservableBoolean dataLoading = new ObservableBoolean();
+    private final ObservableBoolean dataLoading = new ObservableBoolean(true);
 
     public RecipeCourseEditorViewModel(@Nonnull UseCaseHandler handler,
                                        @Nonnull RecipeMacro recipeMacro) {
         this.handler = handler;
         this.recipeMacro = recipeMacro;
+
         response = RecipeCourseResponse.Builder.getDefault().build();
+
+        recipeMacro.registerComponentCallback(new Pair<>(ComponentName.COURSE,
+                new CourseCallbackListener())
+        );
     }
 
-    public void start(String recipeId) {
-        if (isNewInstantiationOrRecipeIdChanged(recipeId)) {
-            this.recipeId = recipeId;
-            dataLoading.set(true);
+    /**
+     * Registered recipe component callback listening for updates pushed from
+     * {@link RecipeMacro}
+     */
+    private class CourseCallbackListener implements UseCase.Callback<RecipeCourseResponse> {
+        @Override
+        public void onSuccess(RecipeCourseResponse response) {
+            System.out.println(TAG + "onSuccess:" + response);
+            RecipeCourseEditorViewModel.this.response = response;
+            checkState(response);
+        }
 
-            RecipeCourseRequest request = RecipeCourseRequest.Builder.
-                    getDefault().
-                    setId(recipeId).
-                    build();
-            handler.execute(recipeMacro, request, this);
+        @Override
+        public void onError(RecipeCourseResponse response) {
+            System.out.println(TAG + "onError:" + response);
+            RecipeCourseEditorViewModel.this.response = response;
+            checkState(response);
         }
     }
 
-    public void startByCloningModel(String cloneFromRecipeId, String cloneToRecipeId) {
-        if (isNewInstantiationOrRecipeIdChanged(cloneToRecipeId)) {
-            recipeId = cloneToRecipeId;
-            dataLoading.set(true);
-
-            RecipeCourseRequest request = RecipeCourseRequest.Builder.
-                    getDefault().
-                    setId(cloneFromRecipeId).
-                    setCloneToId(cloneToRecipeId).
-                    build();
-
-            handler.execute(recipeMacro, request, this);
-        }
-    }
-
-    private boolean isNewInstantiationOrRecipeIdChanged(String recipeId) {
-        return !this.recipeId.equals(recipeId);
-    }
-
-    @Override
-    public void onSuccess(RecipeMacroResponse response) {
-        System.out.println(TAG + "onSuccess:" + response);
-        extractResponse(response);
-    }
-
-    @Override
-    public void onError(RecipeMacroResponse response) {
-        System.out.println(TAG + "onError:" + response);
-        extractResponse(response);
-    }
-
-    private void extractResponse(RecipeMacroResponse recipeMacroResponse) {
-        RecipeCourseResponse response = (RecipeCourseResponse)
-                recipeMacroResponse.
-                getComponentResponses().
-                get(ComponentName.COURSE);
-
+    private void checkState(RecipeCourseResponse response) {
         if (isStateChanged(response)) {
             processResponse(response);
         }
@@ -204,10 +176,10 @@ public class RecipeCourseEditorViewModel
         dataLoading.set(true);
 
         RecipeCourseRequest request = RecipeCourseRequest.Builder.getDefault().
-                setId(recipeId).
+                setId(response.getId()).
                 setCourse(course).
                 setAddCourse(addCourse).
                 build();
-        handler.execute(recipeMacro, request, this);
+        handler.execute(recipeMacro, request, new CourseCallbackListener());
     }
 }

@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse;
 
 import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseCommand;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponseAbstract;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
 
-public final class RecipeCourseResponse implements UseCaseCommand.Response {
+public final class RecipeCourseResponse extends RecipeResponseAbstract {
     @Nonnull
     private final ComponentState state;
     @Nonnull
@@ -21,10 +21,12 @@ public final class RecipeCourseResponse implements UseCaseCommand.Response {
     @Nonnull
     private final HashMap<RecipeCourse.Course, RecipeCourseModel> courseList;
 
-    public RecipeCourseResponse(@Nonnull ComponentState status,
+    public RecipeCourseResponse(@Nonnull String id,
+                                @Nonnull ComponentState status,
                                 @Nonnull List<FailReasons> failReasons,
                                 @Nonnull HashMap<RecipeCourse.Course, RecipeCourseModel> courseList)
     {
+        this.id = id;
         this.state = status;
         this.failReasons = failReasons;
         this.courseList = courseList;
@@ -50,35 +52,44 @@ public final class RecipeCourseResponse implements UseCaseCommand.Response {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RecipeCourseResponse that = (RecipeCourseResponse) o;
-        return state == that.state &&
+        return id.equals(that.id) &&
+                state == that.state &&
                 failReasons.equals(that.failReasons) &&
                 courseList.equals(that.courseList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(state, failReasons, courseList);
+        return Objects.hash(id, state, failReasons, courseList);
     }
 
     @Override
     public String toString() {
         return "RecipeCourseResponse{" +
-                "state=" + state +
+                "id=" + id +
+                ", state=" + state +
                 ", failReasons=" + failReasons +
                 ", courseList=" + courseList +
                 '}';
     }
 
     public static class Builder {
+        private String id;
         private ComponentState status;
         private List<FailReasons> failReasons;
         private HashMap<RecipeCourse.Course, RecipeCourseModel> courseList;
 
         public static Builder getDefault() {
             return new Builder().
+                    setId("").
                     setStatus(ComponentState.INVALID_UNCHANGED).
                     setFailReasons(getDefaultFailReason()).
                     setCourseList(new HashMap<>());
+        }
+
+        public Builder setId(String id) {
+            this.id = id;
+            return this;
         }
 
         public Builder setStatus(ComponentState status) {
@@ -98,6 +109,7 @@ public final class RecipeCourseResponse implements UseCaseCommand.Response {
 
         public RecipeCourseResponse build() {
             return new RecipeCourseResponse(
+                    id,
                     status,
                     failReasons,
                     courseList

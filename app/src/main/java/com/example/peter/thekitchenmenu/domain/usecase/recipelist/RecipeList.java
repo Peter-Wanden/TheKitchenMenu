@@ -10,7 +10,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.RecipeReque
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecipeList extends UseCase<RecipeListRequest, RecipeListResponse> {
+public class RecipeList extends UseCase {
 
     private static final String TAG = "tkm:" + RecipeList.class.getSimpleName() +
             ": ";
@@ -41,18 +41,20 @@ public class RecipeList extends UseCase<RecipeListRequest, RecipeListResponse> {
     }
 
     @Override
-    protected void execute(RecipeListRequest request) {
-        System.out.println(TAG + request);
-        if (request.getFilter() == RecipeFilter.ALL) {
+    protected <Q extends Request> void execute(Q request) {
+        RecipeListRequest rlr = (RecipeListRequest) request;
+
+        System.out.println(TAG + rlr);
+        if (rlr.getFilter() == RecipeFilter.ALL) {
             getAllRecipes();
-        } else if (request.getFilter() == RecipeFilter.FAVORITE)
+        } else if (rlr.getFilter() == RecipeFilter.FAVORITE)
             getFavorites();
     }
 
     private void getAllRecipes() {
         // TODO - Create a list of all recipeMacros using a RecipeMacro for each RecipeMacro :)
 
-        RecipeMacro<RecipeRequest, RecipeMacroResponse> recipeMacro = factory.provideRecipeMacro();
+        RecipeMacro recipeMacro = factory.provideRecipeMacro();
         RecipeRequest request = RecipeRequest.Builder.
                 getDefault().
                 setId("recipeId").

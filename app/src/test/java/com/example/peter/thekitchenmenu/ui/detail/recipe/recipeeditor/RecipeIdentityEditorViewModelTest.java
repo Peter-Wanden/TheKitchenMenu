@@ -16,8 +16,11 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeCourse;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.RecipeRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.RecipeResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacroResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
@@ -31,9 +34,12 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions.Rec
 import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortionsTest;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
+import com.example.peter.thekitchenmenu.testdata.TestDataRecipeCourseEntity;
+import com.example.peter.thekitchenmenu.testdata.TestDataRecipeDurationEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
+import com.example.peter.thekitchenmenu.testdata.TestDataRecipePortionsEntity;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -42,10 +48,9 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.ArrayList;
-
 import javax.annotation.Nonnull;
 
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe.DO_NOT_CLONE;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -116,6 +121,8 @@ public class RecipeIdentityEditorViewModelTest {
     @Mock
     UniqueIdProvider idProviderMock;
 
+    private UseCaseHandler handler;
+    private RecipeMacro recipeMacro;
     private RecipeStateListener recipeClientListener;
     private RecipeStateResponse recipeStateResponse;
     private RecipeMacroResponse recipeMacroResponse;
@@ -138,8 +145,9 @@ public class RecipeIdentityEditorViewModelTest {
     }
 
     private RecipeIdentityEditorViewModel givenViewModel() {
-        UseCaseHandler handler = new UseCaseHandler(new UseCaseSchedulerMock()
+        handler = new UseCaseHandler(new UseCaseSchedulerMock()
         );
+
         TextValidator identityTextValidator = new TextValidator.Builder().
                 setShortTextMinLength(RecipeIdentityTest.TITLE_MIN_LENGTH).
                 setShortTextMaxLength(RecipeIdentityTest.TITLE_MAX_LENGTH).
@@ -182,7 +190,7 @@ public class RecipeIdentityEditorViewModelTest {
 
         RecipeStateCalculator stateCalculator = new RecipeStateCalculator();
 
-        RecipeMacro recipeMacro = new RecipeMacro(
+        recipeMacro = new RecipeMacro(
                 handler,
                 stateCalculator,
                 recipe,
@@ -192,7 +200,7 @@ public class RecipeIdentityEditorViewModelTest {
                 portions);
 
         recipeClientListener = new RecipeStateListener();
-//        recipeMacro.registerStateListener(recipeClientListener);
+        recipeMacro.registerStateListener(recipeClientListener);
 
         return new RecipeIdentityEditorViewModel(
                 handler,
@@ -201,15 +209,30 @@ public class RecipeIdentityEditorViewModelTest {
     }
 
     @Test
-    public void startNewRecipeId_nothingSetToObservers() {
+    public void startNewRecipeId_requestFromAnotherRecipeMacroClient_identityResponsePushedRegisteredCallback() {
         // Arrange
         String recipeId = INVALID_NEW_EMPTY.getId();
         String expectedTitle = INVALID_NEW_EMPTY.getTitle();
         String expectedDescription = INVALID_NEW_EMPTY.getDescription();
+
+        // Used for listening to all recipe data as it changes
+        RecipeMacroResponseListener macroResponseListener = new RecipeMacroResponseListener();
+        recipeMacro.registerMacroCallback(macroResponseListener);
+
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
+                build();
+
         // Act
-        SUT.start(recipeId);
+        handler.execute(
+                recipeMacro,
+                request,
+                new RecipeResponseCallback());
+
         // Assert
-        verifyAllComponentRepoCalledAndReturnDataUnavailable(recipeId);
+        verifyAllComponentReposCalledAndReturnDataUnavailable(recipeId);
 
         assertEquals(expectedTitle, SUT.getTitle());
         assertEquals(expectedDescription, SUT.getDescription());
@@ -218,20 +241,21 @@ public class RecipeIdentityEditorViewModelTest {
     }
 
     @Test
-    public void startNewId_stateDATA_UNAVAILABLE() {
+    public void startNewId_dataLoadingError_true() {
         // Arrange
         String recipeId = INVALID_NEW_EMPTY.getId();
-        // Act
-        SUT.start(recipeId);
-        // Assert
-        verifyAllComponentRepoCalledAndReturnDataUnavailable(recipeId);
 
-        ComponentState expectedState = ComponentState.DATA_UNAVAILABLE;
-        ComponentState actualState = recipeClientListener.
-                getResponse().
-                getComponentStates().
-                get(ComponentName.IDENTITY);
-        assertEquals(expectedState, actualState);
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
+                build();
+        // Act
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        // Assert
+        verifyAllComponentReposCalledAndReturnDataUnavailable(recipeId);
+
+        assertTrue(SUT.dataLoadingError.get());
     }
 
     @Test
@@ -239,9 +263,17 @@ public class RecipeIdentityEditorViewModelTest {
         // Arrange
         String recipeId = INVALID_NEW_EMPTY.getId();
         String invalidTitle = INVALID_NEW_TITLE_TOO_SHORT.getTitle();
+
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
+                build();
         // Act
-        SUT.start(recipeId);
-        verifyAllComponentRepoCalledAndReturnDataUnavailable(recipeId);
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        verifyAllComponentReposCalledAndReturnDataUnavailable(recipeId);
+
+        // Act
         SUT.setTitle(invalidTitle);
         // Assert
         assertEquals(ERROR_MESSAGE_TOO_SHORT, SUT.titleErrorMessage.get());
@@ -252,9 +284,16 @@ public class RecipeIdentityEditorViewModelTest {
         // Arrange
         String recipeId = INVALID_NEW_EMPTY.getId();
         String invalidTitle = INVALID_NEW_TITLE_TOO_LONG.getTitle();
+
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
+                build();
+
         // Act
-        SUT.start(recipeId);
-        verifyAllComponentRepoCalledAndReturnDataUnavailable(recipeId);
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        verifyAllComponentReposCalledAndReturnDataUnavailable(recipeId);
 
         SUT.setTitle(invalidTitle);
         // Assert
@@ -266,9 +305,16 @@ public class RecipeIdentityEditorViewModelTest {
         // Arrange
         String invalidTitle = INVALID_NEW_TITLE_TOO_SHORT.getTitle();
         String recipeId = INVALID_NEW_EMPTY.getId();
+
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
+                build();
+
         // Act
-        SUT.start(recipeId);
-        verifyAllComponentRepoCalledAndReturnDataUnavailable(recipeId);
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        verifyAllComponentReposCalledAndReturnDataUnavailable(recipeId);
 
         SUT.setTitle(invalidTitle);
         // Assert
@@ -285,9 +331,16 @@ public class RecipeIdentityEditorViewModelTest {
         String recipeId = INVALID_NEW_EMPTY.getId();
         String invalidTitle = INVALID_NEW_TITLE_INVALID_DESCRIPTION_VALID.getTitle();
         String validDescription = INVALID_NEW_TITLE_INVALID_DESCRIPTION_VALID.getDescription();
+
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
+                build();
+
         // Act
-        SUT.start(recipeId);
-        verifyAllComponentRepoCalledAndReturnDataUnavailable(recipeId);
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        verifyAllComponentReposCalledAndReturnDataUnavailable(recipeId);
 
         SUT.setTitle(invalidTitle);
         SUT.setDescription(validDescription);
@@ -300,9 +353,17 @@ public class RecipeIdentityEditorViewModelTest {
         // Arrange
         String recipeId = INVALID_NEW_EMPTY.getId();
         String validTitle = VALID_NEW_TITLE_VALID.getTitle();
+
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
+                build();
+
         // Act
-        SUT.start(recipeId);
-        verifyAllComponentRepoCalledAndReturnDataUnavailable(recipeId);
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        verifyAllComponentReposCalledAndReturnDataUnavailable(recipeId);
+
         SUT.setTitle(validTitle);
         // Assert
         assertNull(SUT.titleErrorMessage.get());
@@ -315,9 +376,17 @@ public class RecipeIdentityEditorViewModelTest {
         String title = VALID_NEW_TITLE_VALID.getTitle();
         long time = VALID_NEW_TITLE_VALID.getCreateDate();
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(time);
+
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
+                build();
+
         // Act
-        SUT.start(recipeId);
-        verifyAllComponentRepoCalledAndReturnDataUnavailable(recipeId);
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        verifyAllComponentReposCalledAndReturnDataUnavailable(recipeId);
+
         SUT.setTitle(title);
         // Assert
         verify(repoIdentityMock).save(VALID_NEW_TITLE_VALID);
@@ -328,9 +397,16 @@ public class RecipeIdentityEditorViewModelTest {
         // Arrange
         String recipeId = INVALID_NEW_EMPTY.getId();
         String title = VALID_NEW_TITLE_VALID.getTitle();
+
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
+                build();
+
         // Act
-        SUT.start(recipeId);
-        verifyAllComponentRepoCalledAndReturnDataUnavailable(recipeId);
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        verifyAllComponentReposCalledAndReturnDataUnavailable(recipeId);
 
         SUT.setTitle(title);
         // Assert
@@ -355,9 +431,16 @@ public class RecipeIdentityEditorViewModelTest {
                 makeStringOfExactLength(longTextMaxLength).
                 thenAddOneCharacter().
                 build();
+
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
+                build();
+
         // Act
-        SUT.start(recipeId);
-        verifyAllComponentRepoCalledAndReturnDataUnavailable(recipeId);
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        verifyAllComponentReposCalledAndReturnDataUnavailable(recipeId);
 
         SUT.setTitle(validTitle);
         SUT.setDescription(invalidDescription);
@@ -378,9 +461,16 @@ public class RecipeIdentityEditorViewModelTest {
                 makeStringOfExactLength(longTextMaxLength).
                 thenAddOneCharacter().
                 build();
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
+                build();
+
         // Act
-        SUT.start(recipeId);
-        verifyAllComponentRepoCalledAndReturnDataUnavailable(recipeId);
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        verifyAllComponentReposCalledAndReturnDataUnavailable(recipeId);
+
         SUT.setTitle(validTitle);
         verify(repoIdentityMock).save(anyObject());
         SUT.setDescription(invalidDescription);
@@ -400,9 +490,16 @@ public class RecipeIdentityEditorViewModelTest {
                 makeStringOfExactLength(longTextMaxLength).
                 thenAddOneCharacter().
                 build();
+
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
+                build();
+
         // Act
-        SUT.start(recipeId);
-        verifyAllComponentRepoCalledAndReturnDataUnavailable(recipeId);
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        verifyAllComponentReposCalledAndReturnDataUnavailable(recipeId);
 
         SUT.setTitle(validTitle);
         SUT.setDescription(invalidDescription);
@@ -421,9 +518,16 @@ public class RecipeIdentityEditorViewModelTest {
         String recipeId = INVALID_NEW_EMPTY.getId();
         String title = VALID_NEW_COMPLETE.getTitle();
         String description = VALID_NEW_COMPLETE.getDescription();
+
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
+                build();
+
         // Act
-        SUT.start(recipeId);
-        verifyAllComponentRepoCalledAndReturnDataUnavailable(recipeId);
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        verifyAllComponentReposCalledAndReturnDataUnavailable(recipeId);
 
         SUT.setTitle(title);
         SUT.setDescription(description);
@@ -440,9 +544,16 @@ public class RecipeIdentityEditorViewModelTest {
         String validTitle = VALID_NEW_COMPLETE.getTitle();
         String validDescription = VALID_NEW_COMPLETE.getDescription();
         whenTimeProviderReturnTime(VALID_NEW_COMPLETE.getCreateDate());
+
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
+                build();
+
         // Act
-        SUT.start(recipeId);
-        verifyAllComponentRepoCalledAndReturnDataUnavailable(recipeId);
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        verifyAllComponentReposCalledAndReturnDataUnavailable(recipeId);
 
         // Assert
         SUT.setTitle(validTitle);
@@ -458,9 +569,16 @@ public class RecipeIdentityEditorViewModelTest {
         String validTitle = VALID_NEW_COMPLETE.getTitle();
         String validDescription = VALID_NEW_COMPLETE.getDescription();
         whenTimeProviderReturnTime(VALID_NEW_COMPLETE.getCreateDate());
+
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
+                build();
+
         // Act
-        SUT.start(recipeId);
-        verifyAllComponentRepoCalledAndReturnDataUnavailable(recipeId);
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        verifyAllComponentReposCalledAndReturnDataUnavailable(recipeId);
 
         SUT.setTitle(validTitle);
         SUT.setDescription(validDescription);
@@ -479,8 +597,17 @@ public class RecipeIdentityEditorViewModelTest {
         String recipeId = VALID_EXISTING_COMPLETE.getId();
         String title = VALID_EXISTING_COMPLETE.getTitle();
         String description = VALID_EXISTING_COMPLETE.getDescription();
+
         // Act
-        SUT.start(recipeId);
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
+                build();
+
+        // Act
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+
         verifyRepoRecipeCalledAndReturnValidExistingComplete(recipeId);
         verifyRepoIdentityCalledAndReturnValidExistingComplete(recipeId);
         verifyRepoCoursesCalledAndReturnDataUnavailable(recipeId);
@@ -496,8 +623,16 @@ public class RecipeIdentityEditorViewModelTest {
     public void startValidExistingRecipeId_stateVALID_UNCHANGED() {
         // Arrange
         String recipeId = VALID_EXISTING_COMPLETE.getId();
+
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
+                build();
+
         // Act
-        SUT.start(recipeId);
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+
         // Assert
         verifyRepoRecipeCalledAndReturnValidExistingComplete(recipeId);
         verifyRepoIdentityCalledAndReturnValidExistingComplete(recipeId);
@@ -520,8 +655,14 @@ public class RecipeIdentityEditorViewModelTest {
         String title = INVALID_EXISTING_INCOMPLETE_INVALID_TITLE.getTitle();
         String description = INVALID_EXISTING_INCOMPLETE_INVALID_TITLE.getDescription();
 
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
+                build();
+
         // Act
-        SUT.start(recipeId);
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
         verify(repoRecipeMock).getById(eq(recipeId), repoRecipeCallback.capture());
@@ -547,8 +688,17 @@ public class RecipeIdentityEditorViewModelTest {
         // Arrange
         String cloneFromRecipeId = VALID_FROM_ANOTHER_USER.getId();
         String cloneToRecipeId = INVALID_NEW_EMPTY.getId();
+
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(cloneFromRecipeId).
+                setCloneToId(cloneToRecipeId).
+                build();
+
         // Act
-        SUT.startByCloningModel(cloneFromRecipeId, cloneToRecipeId);
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        simulateGetValidFromAnotherUserFromDatabase(cloneFromRecipeId);
+
         // Assert
         verify(repoIdentityMock).getById(eq(cloneFromRecipeId), anyObject());
     }
@@ -559,9 +709,16 @@ public class RecipeIdentityEditorViewModelTest {
         String cloneFromRecipeId = VALID_FROM_ANOTHER_USER.getId();
         String cloneToRecipeId = INVALID_NEW_EMPTY.getId();
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(VALID_NEW_CLONED.getCreateDate());
+
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(cloneFromRecipeId).
+                setCloneToId(cloneToRecipeId).
+                build();
+
         // Act
-        SUT.startByCloningModel(cloneFromRecipeId, cloneToRecipeId);
-        simulateGetValidFromAnotherUserFromDatabase();
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        simulateGetValidFromAnotherUserFromDatabase(cloneFromRecipeId);
         // Assert
         verify(repoIdentityMock).save(eq(VALID_NEW_CLONED));
     }
@@ -571,28 +728,22 @@ public class RecipeIdentityEditorViewModelTest {
         // Arrange
         String cloneFromRecipeId = VALID_FROM_ANOTHER_USER.getId();
         String cloneToRecipeId = INVALID_NEW_EMPTY.getId();
-        long time = VALID_CLONED_DESCRIPTION_UPDATED.getCreateDate();
+        whenTimeProviderReturnTime(VALID_CLONED_DESCRIPTION_UPDATED.getCreateDate());
 
-        whenTimeProviderReturnTime(time);
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(cloneFromRecipeId).
+                setCloneToId(cloneToRecipeId).
+                build();
+
         // Act
-        SUT.startByCloningModel(cloneFromRecipeId, cloneToRecipeId);
-        verify(repoIdentityMock).getById(eq(cloneFromRecipeId), repoIdentityCallback.capture());
-        repoIdentityCallback.getValue().onEntityLoaded(VALID_FROM_ANOTHER_USER);
-
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+        simulateGetValidFromAnotherUserFromDatabase(cloneFromRecipeId);
+        
         SUT.setDescription(VALID_CLONED_DESCRIPTION_UPDATED.getDescription());
+
         // Assert
         verify(repoIdentityMock).save(VALID_CLONED_DESCRIPTION_UPDATED);
-    }
-
-    @Test(expected = RuntimeException.class)
-    public void start_nullRecipe_runtimeExceptionThrown() {
-        // Arrange
-        // Act
-        SUT.start(null);
-        // Assert
-        ArrayList list = new ArrayList();
-        RuntimeException exception = (RuntimeException) list.get(0);
-        assertEquals(exception.getMessage(), "RecipeMacro id cannot be null");
     }
 
     // region helper methods -------------------------------------------------------------------
@@ -613,29 +764,34 @@ public class RecipeIdentityEditorViewModelTest {
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(time);
     }
 
-    private void verifyAllComponentRepoCalledAndReturnDataUnavailable(String recipeId) {
+    private void verifyAllComponentReposCalledAndReturnDataUnavailable(String recipeId) {
         verifyRepoRecipeCalledAndReturnDataUnavailable(recipeId);
         verifyRepoIdentityCalledAndReturnDataUnavailable(recipeId);
         verifyRepoCoursesCalledAndReturnDataUnavailable(recipeId);
         verifyRepoDurationCalledAndReturnDataUnavailable(recipeId);
         verifyRepoPortionsCalledAndReturnDataUnavailable(recipeId);
     }
+
     private void verifyRepoRecipeCalledAndReturnDataUnavailable(String recipeId) {
         verify(repoRecipeMock).getById(eq(recipeId), repoRecipeCallback.capture());
         repoRecipeCallback.getValue().onDataNotAvailable();
     }
+
     private void verifyRepoIdentityCalledAndReturnDataUnavailable(String recipeId) {
         verify(repoIdentityMock).getById(eq(recipeId), repoIdentityCallback.capture());
         repoIdentityCallback.getValue().onDataNotAvailable();
     }
+
     private void verifyRepoCoursesCalledAndReturnDataUnavailable(String recipeId) {
         verify(repoCourseMock).getCoursesForRecipe(eq(recipeId), repoCourseCallback.capture());
         repoCourseCallback.getValue().onDataNotAvailable();
     }
+
     private void verifyRepoDurationCalledAndReturnDataUnavailable(String recipeId) {
         verify(repoDurationMock).getById(eq(recipeId), repoDurationCallback.capture());
         repoDurationCallback.getValue().onDataNotAvailable();
     }
+
     private void verifyRepoPortionsCalledAndReturnDataUnavailable(String recipeId) {
         verify(repoPortionsMock).getPortionsForRecipe(eq(recipeId), repoPortionsCallback.capture());
         repoPortionsCallback.getValue().onDataNotAvailable();
@@ -645,20 +801,37 @@ public class RecipeIdentityEditorViewModelTest {
         verify(repoRecipeMock).getById(eq(recipeId), repoRecipeCallback.capture());
         repoRecipeCallback.getValue().onEntityLoaded(TestDataRecipeEntity.getValidExisting());
     }
+
     private void verifyRepoIdentityCalledAndReturnValidExistingComplete(String recipeId) {
         verify(repoIdentityMock).getById(eq(recipeId), repoIdentityCallback.capture());
         repoIdentityCallback.getValue().onEntityLoaded(VALID_EXISTING_COMPLETE);
     }
 
-    private void simulateGetValidFromAnotherUserFromDatabase() {
-        verify(repoIdentityMock).getById(eq(VALID_FROM_ANOTHER_USER.getId()), repoIdentityCallback.capture());
+    private void simulateGetValidFromAnotherUserFromDatabase(String recipeId) {
+
+        verify(repoRecipeMock).getById(eq(recipeId), repoRecipeCallback.capture());
+        repoRecipeCallback.getValue().onEntityLoaded(TestDataRecipeEntity.getValidFromAnotherUser());
+
+        verify(repoIdentityMock).getById(eq(recipeId), repoIdentityCallback.capture());
         repoIdentityCallback.getValue().onEntityLoaded(VALID_FROM_ANOTHER_USER);
+
+        verify(repoCourseMock).getCoursesForRecipe(eq(recipeId), repoCourseCallback.capture());
+        repoCourseCallback.getValue().onAllLoaded(TestDataRecipeCourseEntity.getAllByRecipeId(recipeId));
+
+        verify(repoPortionsMock).getPortionsForRecipe(eq(recipeId), repoPortionsCallback.capture());
+        repoPortionsCallback.getValue().onEntityLoaded(TestDataRecipePortionsEntity.
+                getValidCloneFromAnotherUser());
+
+        verify(repoDurationMock).getById(eq(recipeId), repoDurationCallback.capture());
+        repoDurationCallback.getValue().onEntityLoaded(TestDataRecipeDurationEntity.
+                getValidCompleteFromAnotherUser());
     }
     // endregion helper methods --------------------------------------------------------------------
 
     // region helper classes -----------------------------------------------------------------------
-    private class RecipeStateListener implements RecipeMacro.RecipeStateListener {
+    private static class RecipeStateListener implements RecipeMacro.RecipeStateListener {
         RecipeStateResponse response;
+
         @Override
         public void recipeStateChanged(RecipeStateResponse response) {
             this.response = response;
@@ -672,6 +845,69 @@ public class RecipeIdentityEditorViewModelTest {
         @Override
         public String toString() {
             return "RecipeStateListener{" +
+                    "response=" + response +
+                    '}';
+        }
+    }
+
+    private static class RecipeResponseCallback implements UseCase.Callback<RecipeResponse> {
+
+        private static final String TAG = "tkm-" + RecipeResponseCallback.class.getSimpleName() +
+                ": ";
+
+        private RecipeResponse response;
+
+        @Override
+        public void onSuccess(RecipeResponse response) {
+            System.out.println(RecipeIdentityEditorViewModelTest.TAG + TAG + "onSuccess:" + response);
+            this.response = response;
+        }
+
+        @Override
+        public void onError(RecipeResponse response) {
+            System.out.println(RecipeIdentityEditorViewModelTest.TAG + TAG + "onError:" + response);
+            this.response = response;
+        }
+
+        public RecipeResponse getResponse() {
+            return response;
+        }
+
+        @Nonnull
+        @Override
+        public String toString() {
+            return "RecipeResponseCallback{" +
+                    "response=" + response +
+                    '}';
+        }
+    }
+
+    private static class RecipeMacroResponseListener implements UseCase.Callback<RecipeMacroResponse> {
+
+        private static final String TAG = "tkm-" + RecipeMacroResponseListener.class.
+                getSimpleName() + ": ";
+
+        RecipeMacroResponse response;
+
+        @Override
+        public void onSuccess(RecipeMacroResponse response) {
+            System.out.println(RecipeIdentityEditorViewModelTest.TAG + TAG + "onSuccess:");
+            this.response = response;
+        }
+
+        @Override
+        public void onError(RecipeMacroResponse response) {
+            System.out.println(RecipeIdentityEditorViewModelTest.TAG + TAG + "onError:");
+            this.response = response;
+        }
+
+        public RecipeMacroResponse getResponse() {
+            return response;
+        }
+
+        @Override
+        public String toString() {
+            return "RecipeMacroResponseListener{" +
                     "response=" + response +
                     '}';
         }

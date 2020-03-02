@@ -3,8 +3,11 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.entity.*;
 import com.example.peter.thekitchenmenu.data.repository.*;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.RecipeRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.RecipeResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacroResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourse;
@@ -30,12 +33,18 @@ import org.mockito.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe.DO_NOT_CLONE;
 import static com.example.peter.thekitchenmenu.testdata.TestDataRecipeCourseEntity.*;
 import static com.example.peter.thekitchenmenu.testdata.TestDataRecipeEntity.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class RecipeCourseEditorViewModelTest {
+
+    private static final String TAG = "tkm-" + RecipeEditorViewModelTest.class.getSimpleName() +
+            ": ";
 
     // region constants ----------------------------------------------------------------------------
     private RecipeEntity VALID_EXISTING_RECIPE_ENTITY = getValidExisting();
@@ -44,7 +53,6 @@ public class RecipeCourseEditorViewModelTest {
 
     private static final RecipeEntity RECIPE_INVALID_NEW =
             TestDataRecipeEntity.getNewInvalid();
-
     private static final RecipeEntity RECIPE_VALID_EXISTING =
             TestDataRecipeEntity.getValidExisting();
     private static final RecipeIdentityEntity IDENTITY_VALID_EXISTING_COMPLETE =
@@ -85,6 +93,8 @@ public class RecipeCourseEditorViewModelTest {
     UniqueIdProvider idProviderMock;
     @Mock
     TimeProvider timeProviderMock;
+    private UseCaseHandler handler;
+    private RecipeMacro recipeMacro;
     // endregion helper fields ---------------------------------------------------------------------
 
     private RecipeCourseEditorViewModel SUT;
@@ -96,7 +106,7 @@ public class RecipeCourseEditorViewModelTest {
     }
 
     private RecipeCourseEditorViewModel givenViewModel() {
-        UseCaseHandler handler = new UseCaseHandler(new UseCaseSchedulerMock()
+        handler = new UseCaseHandler(new UseCaseSchedulerMock()
         );
 
         TextValidator textValidator = new TextValidator.Builder().
@@ -141,7 +151,7 @@ public class RecipeCourseEditorViewModelTest {
 
         RecipeStateCalculator stateCalculator = new RecipeStateCalculator();
 
-        RecipeMacro recipeMacro = new RecipeMacro(
+        recipeMacro = new RecipeMacro(
                 handler,
                 stateCalculator,
                 recipe,
@@ -157,8 +167,16 @@ public class RecipeCourseEditorViewModelTest {
     public void start_recipeIdSupplied_databaseCalledForListOfCourses() {
         // Arrange
         String recipeId = RECIPE_VALID_EXISTING.getId();
+
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
+                build();
+
         // Act
-        SUT.start(recipeId);
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+
         // Assert
         verifyAllOtherComponentReposCalledAndReturnValidExisting(recipeId);
         verifyRepoCourseCalledAndReturnCoursesMatchingId(recipeId);
@@ -169,8 +187,15 @@ public class RecipeCourseEditorViewModelTest {
     public void start_recipeIdSupplied_observersCalled() {
         // Arrange
         String recipeId = RECIPE_VALID_EXISTING.getId();
+
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
+                build();
+
         // Act
-        SUT.start(recipeId);
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
         verifyAllOtherComponentReposCalledAndReturnValidExisting(recipeId);
         verifyRepoCourseCalledAndReturnCoursesMatchingId(recipeId);
         // Assert
@@ -189,8 +214,15 @@ public class RecipeCourseEditorViewModelTest {
         // Arrange
         String recipeId = RECIPE_VALID_EXISTING.getId();
 
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(recipeId).
+                setCloneToId(DO_NOT_CLONE).
+                build();
+
         // Act
-        SUT.start(EXISTING_RECIPE_ID);
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+
         verifyAllOtherComponentReposCalledAndReturnValidExisting(EXISTING_RECIPE_ID);
         verifyRepoCourseCalledAndReturnEvenCoursesForId(recipeId);
         // Assert
@@ -209,8 +241,14 @@ public class RecipeCourseEditorViewModelTest {
         // Arrange
         String cloneFromRecipeId = RECIPE_VALID_EXISTING.getId();
         String cloneToRecipeId = RECIPE_INVALID_NEW.getId();
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(cloneFromRecipeId).
+                setCloneToId(cloneToRecipeId).
+                build();
+
         // Act
-        SUT.startByCloningModel(cloneFromRecipeId, cloneToRecipeId);
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
         // Assert
         verifyAllOtherComponentReposCalledAndReturnValidExisting(cloneFromRecipeId);
         verifyRepoCourseCalledAndReturnCoursesMatchingId(cloneFromRecipeId);
@@ -222,8 +260,16 @@ public class RecipeCourseEditorViewModelTest {
         String cloneFromRecipeId = RECIPE_VALID_EXISTING.getId();
         String cloneToRecipeId = RECIPE_INVALID_NEW.getId();
         whenUniqueIdProviderMockCalledReturnClonedEvenIds();
+
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(cloneFromRecipeId).
+                setCloneToId(cloneToRecipeId).
+                build();
+
         // Act
-        SUT.startByCloningModel(cloneFromRecipeId, cloneToRecipeId);
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+
         verifyAllOtherComponentReposCalledAndReturnValidExisting(cloneFromRecipeId);
         verifyRepoCourseCalledAndReturnCoursesMatchingId(cloneFromRecipeId);
         // Assert
@@ -239,8 +285,16 @@ public class RecipeCourseEditorViewModelTest {
         // Arrange
         when(idProviderMock.getUId()).thenReturn(getRecipeCourseZero().getId());
         whenTimeProviderCalledReturnTime(getRecipeCourseZero().getCreateDate());
-        // Act
-        SUT.start(EXISTING_RECIPE_ID);
+
+         // An external request that starts/loads the recipe
+         RecipeRequest request = new RecipeRequest.Builder().
+                 setId(EXISTING_RECIPE_ID).
+                 setCloneToId(DO_NOT_CLONE).
+                 build();
+
+         // Act
+         handler.execute(recipeMacro, request, new RecipeResponseCallback());
+
         verifyRepoRecipeCalledAndReturnValidExistingRecipe(EXISTING_RECIPE_ID);
         SUT.setCourseZero(true);
         // Assert
@@ -251,10 +305,18 @@ public class RecipeCourseEditorViewModelTest {
     public void courseZeroSelected_false_courseZeroForRecipeRemovedFromDatabase() {
         // Arrange
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
+
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(EXISTING_RECIPE_ID).
+                setCloneToId(DO_NOT_CLONE).
+                build();
+
         // Act
-        SUT.start(EXISTING_RECIPE_ID);
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
         verifyRepoRecipeCalledAndReturnValidExistingRecipe(EXISTING_RECIPE_ID);
         verifyRepoCourseCalledAndReturnCoursesMatchingId(EXISTING_RECIPE_ID);
+
         SUT.setCourseZero(false);
         // Assert
         verify(repoCourseMock).deleteById(ac.capture());
@@ -267,7 +329,15 @@ public class RecipeCourseEditorViewModelTest {
         when(idProviderMock.getUId()).thenReturn(getRecipeCourseOne().getId());
         whenTimeProviderCalledReturnTime(getRecipeCourseFour().getCreateDate());
         // Act
-        SUT.start(EXISTING_RECIPE_ID);
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(EXISTING_RECIPE_ID).
+                setCloneToId(DO_NOT_CLONE).
+                build();
+
+        // Act
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+
         verifyRepoRecipeCalledAndReturnValidExistingRecipe(EXISTING_RECIPE_ID);
         SUT.setCourseOne(true);
         // Assert
@@ -278,8 +348,15 @@ public class RecipeCourseEditorViewModelTest {
     public void courseOneSelected_false_courseOneAndRecipeIdRemovedFromDatabase() {
         // Arrange
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(EXISTING_RECIPE_ID).
+                setCloneToId(DO_NOT_CLONE).
+                build();
+
         // Act
-        SUT.start(EXISTING_RECIPE_ID);
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+
         verifyRepoRecipeCalledAndReturnValidExistingRecipe(EXISTING_RECIPE_ID);
         verifyRepoCourseCalledAndReturnCoursesMatchingId(EXISTING_RECIPE_ID);
         SUT.setCourseOne(false);
@@ -293,8 +370,14 @@ public class RecipeCourseEditorViewModelTest {
         // Arrange
         when(idProviderMock.getUId()).thenReturn(getRecipeCourseTwo().getId());
         whenTimeProviderCalledReturnTime(getRecipeCourseTwo().getCreateDate());
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(EXISTING_RECIPE_ID).
+                setCloneToId(DO_NOT_CLONE).
+                build();
+
         // Act
-        SUT.start(EXISTING_RECIPE_ID);
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
         verifyRepoRecipeCalledAndReturnValidExistingRecipe(EXISTING_RECIPE_ID);
         SUT.setCourseTwo(true);
         // Assert
@@ -305,8 +388,14 @@ public class RecipeCourseEditorViewModelTest {
     public void courseTwoSelected_false_courseId2AndRecipeIdRemovedFromDatabase() {
         // Arrange
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(EXISTING_RECIPE_ID).
+                setCloneToId(DO_NOT_CLONE).
+                build();
+
         // Act
-        SUT.start(EXISTING_RECIPE_ID);
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
         verifyRepoCourseCalledAndReturnCoursesMatchingId(EXISTING_RECIPE_ID);
         SUT.setCourseTwo(false);
         // Assert
@@ -319,8 +408,14 @@ public class RecipeCourseEditorViewModelTest {
         // Arrange
         when(idProviderMock.getUId()).thenReturn(getRecipeCourseThree().getId());
         whenTimeProviderCalledReturnTime(getRecipeCourseThree().getCreateDate());
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(EXISTING_RECIPE_ID).
+                setCloneToId(DO_NOT_CLONE).
+                build();
+
         // Act
-        SUT.start(EXISTING_RECIPE_ID);
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
         SUT.setCourseThree(true);
         // Assert
         verify(repoCourseMock).save(getRecipeCourseThree());
@@ -330,8 +425,14 @@ public class RecipeCourseEditorViewModelTest {
     public void courseThreeSelected_false_courseId3AndRecipeIdRemovedFromDatabase() {
         // Arrange
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(EXISTING_RECIPE_ID).
+                setCloneToId(DO_NOT_CLONE).
+                build();
+
         // Act
-        SUT.start(EXISTING_RECIPE_ID);
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
         verifyRepoCourseCalledAndReturnCoursesMatchingId(EXISTING_RECIPE_ID);
         SUT.setCourseThree(false);
         // Assert
@@ -344,8 +445,14 @@ public class RecipeCourseEditorViewModelTest {
         // Arrange
         when(idProviderMock.getUId()).thenReturn(getRecipeCourseFour().getId());
         whenTimeProviderCalledReturnTime(getRecipeCourseFour().getCreateDate());
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(EXISTING_RECIPE_ID).
+                setCloneToId(DO_NOT_CLONE).
+                build();
+
         // Act
-        SUT.start(EXISTING_RECIPE_ID);
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
         SUT.setCourseFour(true);
         // Assert
         verify(repoCourseMock).save(getRecipeCourseFour());
@@ -356,7 +463,14 @@ public class RecipeCourseEditorViewModelTest {
         // Arrange
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
         // Act
-        SUT.start(EXISTING_RECIPE_ID);
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(EXISTING_RECIPE_ID).
+                setCloneToId(DO_NOT_CLONE).
+                build();
+
+        // Act
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
         verifyRepoCourseCalledAndReturnCoursesMatchingId(EXISTING_RECIPE_ID);
         SUT.setCourseFour(false);
         // Assert
@@ -369,8 +483,14 @@ public class RecipeCourseEditorViewModelTest {
         // Arrange
         when(idProviderMock.getUId()).thenReturn(getRecipeCourseFive().getId());
         whenTimeProviderCalledReturnTime(getRecipeCourseFive().getCreateDate());
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(EXISTING_RECIPE_ID).
+                setCloneToId(DO_NOT_CLONE).
+                build();
+
         // Act
-        SUT.start(EXISTING_RECIPE_ID);
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
         SUT.setCourseFive(true);
         // Assert
         verify(repoCourseMock).save(getRecipeCourseFive());
@@ -380,8 +500,15 @@ public class RecipeCourseEditorViewModelTest {
     public void courseFiveSelected_false_courseId5AndRecipeIdRemovedFromDatabase() {
         // Arrange
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
+
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(EXISTING_RECIPE_ID).
+                setCloneToId(DO_NOT_CLONE).
+                build();
+
         // Act
-        SUT.start(EXISTING_RECIPE_ID);
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
         verifyRepoCourseCalledAndReturnCoursesMatchingId(EXISTING_RECIPE_ID);
         SUT.setCourseFive(false);
         // Assert
@@ -394,8 +521,14 @@ public class RecipeCourseEditorViewModelTest {
         // Arrange
         when(idProviderMock.getUId()).thenReturn(getRecipeCourseSix().getId());
         whenTimeProviderCalledReturnTime(getRecipeCourseSix().getCreateDate());
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(EXISTING_RECIPE_ID).
+                setCloneToId(DO_NOT_CLONE).
+                build();
+
         // Act
-        SUT.start(EXISTING_RECIPE_ID);
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
         SUT.setCourseSix(true);
         // Assert
         verify(repoCourseMock).save(getRecipeCourseSix());
@@ -405,8 +538,14 @@ public class RecipeCourseEditorViewModelTest {
     public void courseSixSelected_false_courseId6AndRecipeIdRemovedFromDatabase() {
         // Arrange
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(EXISTING_RECIPE_ID).
+                setCloneToId(DO_NOT_CLONE).
+                build();
+
         // Act
-        SUT.start(EXISTING_RECIPE_ID);
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
         verifyRepoCourseCalledAndReturnCoursesMatchingId(EXISTING_RECIPE_ID);
         SUT.setCourseSix(false);
         // Assert
@@ -419,8 +558,14 @@ public class RecipeCourseEditorViewModelTest {
         // Arrange
         when(idProviderMock.getUId()).thenReturn(getRecipeCourseSeven().getId());
         whenTimeProviderCalledReturnTime(getRecipeCourseSeven().getCreateDate());
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(EXISTING_RECIPE_ID).
+                setCloneToId(DO_NOT_CLONE).
+                build();
+
         // Act
-        SUT.start(EXISTING_RECIPE_ID);
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
         SUT.setCourseSeven(true);
         // Assert
         verify(repoCourseMock).save(getRecipeCourseSeven());
@@ -430,8 +575,15 @@ public class RecipeCourseEditorViewModelTest {
     public void courseSevenSelected_false_courseId7AndRecipeIdRemovedFromDatabase() {
         // Arrange
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(EXISTING_RECIPE_ID).
+                setCloneToId(DO_NOT_CLONE).
+                build();
+
         // Act
-        SUT.start(EXISTING_RECIPE_ID);
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+
         verifyRepoCourseCalledAndReturnCoursesMatchingId(EXISTING_RECIPE_ID);
         SUT.setCourseSeven(false);
         // Assert
@@ -439,22 +591,17 @@ public class RecipeCourseEditorViewModelTest {
         assertEquals(getAllRecipeCourses().get(7).getId(), ac.getValue());
     }
 
-    @Test(expected = RuntimeException.class)
-    public void start_noRecipeIdSupplied_throwsRuntimeException() {
-        // Arrange
-        // Act
-        SUT.start(null);
-        // Assert
-        ArrayList list = new ArrayList();
-        RuntimeException exception = (RuntimeException) list.get(0);
-        assertEquals(exception.getMessage(), "This should throw an error!");
-    }
-
     @Test
     public void start_recipeIdSupplied_RecipeModelStatus_COURSES_MODEL_UNCHANGED_INVALID() {
         // Arrange
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(EXISTING_RECIPE_ID).
+                setCloneToId(DO_NOT_CLONE).
+                build();
+
         // Act
-        SUT.start(EXISTING_RECIPE_ID);
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
         verifyRepoCourseCalledAndReturnNoCoursesForId(EXISTING_RECIPE_ID);
         // Assert
 
@@ -463,8 +610,15 @@ public class RecipeCourseEditorViewModelTest {
     @Test
     public void start_recipeIdSupplied_RecipeModelStatus_COURSES_MODEL_UNCHANGED_VALID() {
         // Arrange
+
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(EXISTING_RECIPE_ID).
+                setCloneToId(DO_NOT_CLONE).
+                build();
+
         // Act
-        SUT.start(EXISTING_RECIPE_ID);
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
         verifyRepoCourseCalledAndReturnCoursesMatchingId(EXISTING_RECIPE_ID);
         // Assert
 
@@ -475,7 +629,15 @@ public class RecipeCourseEditorViewModelTest {
         // Arrange
 
         // Act
-        SUT.start(EXISTING_RECIPE_ID);
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(EXISTING_RECIPE_ID).
+                setCloneToId(DO_NOT_CLONE).
+                build();
+
+        // Act
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+
         verifyRepoCourseCalledAndReturnCoursesMatchingId(EXISTING_RECIPE_ID);
         SUT.setCourseZero(false);
         SUT.setCourseOne(false);
@@ -492,8 +654,14 @@ public class RecipeCourseEditorViewModelTest {
     public void allButOneOptionsDeselected_recipeIdSupplied_RecipeModelStatus_COURSES_MODEL_CHANGED_VALID() {
         // Arrange
 
+        // An external request that starts/loads the recipe
+        RecipeRequest request = new RecipeRequest.Builder().
+                setId(EXISTING_RECIPE_ID).
+                setCloneToId(DO_NOT_CLONE).
+                build();
+
         // Act
-        SUT.start(EXISTING_RECIPE_ID);
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
         verifyRepoCourseCalledAndReturnCoursesMatchingId(EXISTING_RECIPE_ID);
         SUT.setCourseZero(false);
         SUT.setCourseOne(false);
@@ -551,6 +719,37 @@ public class RecipeCourseEditorViewModelTest {
     // endregion helper methods --------------------------------------------------------------------
 
     // region helper classes -----------------------------------------------------------------------
+    private static class RecipeResponseCallback implements UseCase.Callback<RecipeResponse> {
+
+        private static final String TAG = "tkm-" + RecipeCourseEditorViewModelTest.
+                RecipeResponseCallback.class.getSimpleName() + ": ";
+
+        private RecipeResponse response;
+
+        @Override
+        public void onSuccess(RecipeResponse response) {
+            System.out.println(RecipeCourseEditorViewModelTest.TAG + TAG + "onSuccess:" + response);
+            this.response = response;
+        }
+
+        @Override
+        public void onError(RecipeResponse response) {
+            System.out.println(RecipeCourseEditorViewModelTest.TAG + TAG + "onError:" + response);
+            this.response = response;
+        }
+
+        public RecipeResponse getResponse() {
+            return response;
+        }
+
+        @Nonnull
+        @Override
+        public String toString() {
+            return "RecipeResponseCallback{" +
+                    "response=" + response +
+                    '}';
+        }
+    }
     // endregion helper classes --------------------------------------------------------------------
 
 

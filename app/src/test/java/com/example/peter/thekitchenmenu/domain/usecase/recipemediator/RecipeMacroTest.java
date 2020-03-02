@@ -124,11 +124,12 @@ public class RecipeMacroTest {
     @Captor
     ArgumentCaptor<RecipeStateResponse> recipeStateCaptor;
 
-    private UseCaseHandler handler;
     @Mock
     private StateListenerClient recipeStateListener1;
     @Mock
     private StateListenerClient recipeStateListener2;
+
+    private UseCaseHandler handler;
 
     private RecipeMacro SUT;
 
@@ -186,7 +187,7 @@ public class RecipeMacroTest {
 
         RecipeStateCalculator stateCalculator = new RecipeStateCalculator();
 
-        return new RecipeMacro<>(
+        return new RecipeMacro(
                 handler,
                 stateCalculator,
                 recipe,
@@ -204,11 +205,13 @@ public class RecipeMacroTest {
         String recipeId = INVALID_NEW_RECIPE.getId();
 
         RecipeCallbackClient callback = new RecipeCallbackClient();
+
         RecipeRequest request = RecipeRequest.Builder.
                 getDefault().
                 setId(recipeId).
                 build();
         // Act
+//
         handler.execute(SUT, request, callback);
         // Assert database called for every component, meaning command has been issued.
         verifyAllReposCalledAndReturnDataUnavailable(recipeId);
@@ -812,6 +815,7 @@ public class RecipeMacroTest {
 
         @Override
         public void recipeStateChanged(RecipeStateResponse stateResponse) {
+            System.out.println(TAG + stateResponse);
             this.stateResponse = stateResponse;
         }
 
@@ -828,7 +832,7 @@ public class RecipeMacroTest {
         }
     }
 
-    private class MacroCallbackClient implements UseCase.Callback<RecipeMacroResponse> {
+    private static class MacroCallbackClient implements UseCase.Callback<RecipeMacroResponse> {
 
         private final String TAG = "tkm-" + MacroCallbackClient.class.
                 getSimpleName() + ": ";
@@ -1001,7 +1005,7 @@ public class RecipeMacroTest {
         }
     }
 
-    private class RecipeCallbackClient implements UseCase.Callback<RecipeResponse> {
+    private static class RecipeCallbackClient implements UseCase.Callback<RecipeResponse> {
 
         private RecipeResponse response;
 
@@ -1028,7 +1032,7 @@ public class RecipeMacroTest {
         }
     }
 
-    private class IdentityCallbackClient implements UseCase.Callback<RecipeIdentityResponse> {
+    private static class IdentityCallbackClient implements UseCase.Callback<RecipeIdentityResponse> {
 
         private final String TAG = "tkm-" +
                 IdentityCallbackClient.class.getSimpleName() + ": ";
@@ -1060,7 +1064,7 @@ public class RecipeMacroTest {
         }
     }
 
-    private class DurationCallbackClient implements UseCase.Callback<RecipeDurationResponse> {
+    private static class DurationCallbackClient implements UseCase.Callback<RecipeDurationResponse> {
 
         private final String TAG = "tkm-" + DurationCallbackClient.class.getSimpleName()
                 + ": ";
@@ -1092,7 +1096,7 @@ public class RecipeMacroTest {
         }
     }
 
-    private class CourseCallbackClient implements UseCase.Callback<RecipeCourseResponse> {
+    private static class CourseCallbackClient implements UseCase.Callback<RecipeCourseResponse> {
 
         private final String TAG = "tkm-" + CourseCallbackClient.class.getSimpleName() + ": ";
 
@@ -1123,7 +1127,7 @@ public class RecipeMacroTest {
         }
     }
 
-    private class PortionCallbackClient implements UseCase.Callback<RecipePortionsResponse> {
+    private static class PortionCallbackClient implements UseCase.Callback<RecipePortionsResponse> {
 
         private final String TAG = "tkm-" + PortionCallbackClient.class.getSimpleName() + ": ";
 

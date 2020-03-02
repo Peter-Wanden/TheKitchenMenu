@@ -193,8 +193,8 @@ public class UseCaseFactory {
                 provideTextValidator());
     }
 
-    public <Q extends RecipeRequestAbstract, P extends UseCase.Response> RecipeMacro<Q, P> provideRecipeMacro() {
-        return new RecipeMacro<>(
+    public RecipeMacro provideRecipeMacro() {
+        return new RecipeMacro(
                 UseCaseHandler.getInstance(),
                 provideRecipeStateCalculator(),
                 provideRecipe(),

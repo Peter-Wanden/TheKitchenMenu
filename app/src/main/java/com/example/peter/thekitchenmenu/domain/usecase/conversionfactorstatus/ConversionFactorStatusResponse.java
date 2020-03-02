@@ -2,11 +2,11 @@ package com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus;
 
 import androidx.annotation.NonNull;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseCommand;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 
 import java.util.Objects;
 
-public final class ConversionFactorStatusResponse implements UseCaseCommand.Response {
+public final class ConversionFactorStatusResponse implements UseCase.Response {
     @NonNull
     private ConversionFactorStatus.Result result;
 

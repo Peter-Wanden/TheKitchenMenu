@@ -2,14 +2,13 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe;
 
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponseAbstract;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipeResponse implements UseCase.Response {
-    @Nonnull
-    private final String id;
+public final class RecipeResponse extends RecipeResponseAbstract {
     @Nonnull
     private final String parentId;
     @Nonnull
@@ -27,11 +26,6 @@ public final class RecipeResponse implements UseCase.Response {
         this.createdBy = createdBy;
         this.createDate = createDate;
         this.lastUpdate = lastUpdate;
-    }
-
-    @Nonnull
-    public String getId() {
-        return id;
     }
 
     @Nonnull
@@ -57,11 +51,11 @@ public final class RecipeResponse implements UseCase.Response {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RecipeResponse response = (RecipeResponse) o;
-        return createDate == response.createDate &&
-                lastUpdate == response.lastUpdate &&
-                id.equals(response.id) &&
+        return id.equals(response.id) &&
                 parentId.equals(response.parentId) &&
-                createdBy.equals(response.createdBy);
+                createdBy.equals(response.createdBy) &&
+                createDate == response.createDate &&
+                lastUpdate == response.lastUpdate;
     }
 
     @Override

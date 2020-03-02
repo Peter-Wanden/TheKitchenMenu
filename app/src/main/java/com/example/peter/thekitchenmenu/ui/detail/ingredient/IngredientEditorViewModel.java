@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseCommand;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.Ingredient;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientModel;
@@ -18,9 +18,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValida
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorResponse;
 
-public class IngredientEditorViewModel
-        extends ViewModel
-        implements UseCaseCommand.Callback<IngredientResponse> {
+public class IngredientEditorViewModel extends ViewModel {
 
     private static final String TAG = "tkm-" + IngredientEditorViewModel.class.getSimpleName() + ":";
 
@@ -114,7 +112,7 @@ public class IngredientEditorViewModel
         handler.execute(
                 textValidator,
                 request,
-                new UseCaseCommand.Callback<TextValidatorResponse>() {
+                new UseCase.Callback<TextValidatorResponse>() {
                     @Override
                     public void onSuccess(TextValidatorResponse response) {
                         processNameTextValidationResponse(response);
@@ -163,7 +161,7 @@ public class IngredientEditorViewModel
         handler.execute(
                 textValidator,
                 request,
-                new UseCaseCommand.Callback<TextValidatorResponse>() {
+                new UseCase.Callback<TextValidatorResponse>() {
                     @Override
                     public void onSuccess(TextValidatorResponse response) {
                         processDescriptionTextValidationResponse(response);
@@ -196,17 +194,17 @@ public class IngredientEditorViewModel
         dataLoading.setValue(true);
         IngredientRequest request = new IngredientRequest(model);
 
-        handler.execute(ingredient, request, this);
-    }
+        handler.execute(ingredient, request, new UseCase.Callback<IngredientResponse>() {
+            @Override
+            public void onSuccess(IngredientResponse response) {
+                processUseCaseIngredientResponse(response);
+            }
 
-    @Override
-    public void onSuccess(IngredientResponse response) {
-        processUseCaseIngredientResponse(response);
-    }
-
-    @Override
-    public void onError(IngredientResponse response) {
-        processUseCaseIngredientResponse(response);
+            @Override
+            public void onError(IngredientResponse response) {
+                processUseCaseIngredientResponse(response);
+            }
+        });
     }
 
     private void processUseCaseIngredientResponse(IngredientResponse response) {

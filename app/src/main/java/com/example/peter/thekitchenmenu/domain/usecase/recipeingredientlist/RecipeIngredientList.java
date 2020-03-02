@@ -21,8 +21,7 @@ import java.util.Map;
 /**
  * Returns a list of ingredients for a given recipeId
  */
-public class RecipeIngredientList extends
-        UseCase<RecipeIngredientListRequest, RecipeIngredientListResponse> {
+public class RecipeIngredientList extends UseCase {
 
     private static final String TAG = "tkm-" + RecipeIngredientList.class.getSimpleName() + ": ";
 
@@ -46,9 +45,11 @@ public class RecipeIngredientList extends
     }
 
     @Override
-    protected void execute(RecipeIngredientListRequest request) {
-        System.out.println(TAG + request);
-        recipeId = request.getRecipeId();
+    protected <Q extends Request> void execute(Q request) {
+        RecipeIngredientListRequest rir = (RecipeIngredientListRequest) request;
+
+        System.out.println(TAG + rir);
+        recipeId = rir.getRecipeId();
         getPortionsForRecipe();
     }
 

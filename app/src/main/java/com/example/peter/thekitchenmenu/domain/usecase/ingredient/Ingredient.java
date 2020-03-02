@@ -10,9 +10,7 @@ import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientDuplicateChecker.NO_DUPLICATE_FOUND;
 
-public class Ingredient
-        extends UseCase<IngredientRequest, IngredientResponse>
-        implements DataSource.GetEntityCallback<IngredientEntity> {
+public class Ingredient extends UseCase implements DataSource.GetEntityCallback<IngredientEntity> {
 
         private static final String TAG = "tkm-" + Ingredient.class.getSimpleName() + ": ";
 
@@ -50,10 +48,11 @@ public class Ingredient
     }
 
     @Override
-    protected void execute(IngredientRequest request) {
-        System.out.println(TAG + "request:" + request);
-        requestModel = request.getModel();
-        String ingredientId = request.getModel().getIngredientId();
+    protected <Q extends Request> void execute(Q request) {
+        IngredientRequest ir = (IngredientRequest) request;
+        System.out.println(TAG + "request:" + ir);
+        requestModel = ir.getModel();
+        String ingredientId = ir.getModel().getIngredientId();
 
         if (isCreateNew(ingredientId)) {
             requestModel = createNewIngredientModel();

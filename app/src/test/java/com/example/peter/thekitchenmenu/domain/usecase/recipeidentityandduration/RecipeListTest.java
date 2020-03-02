@@ -13,10 +13,8 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseCommand;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseFactory;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequestAbstract;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourse;
@@ -105,7 +103,7 @@ public class RecipeListTest {
     public void identityAndDurationRequest_getAllRecipes_recipesReturned() {
         // Arrange
         when(useCaseFactoryMock.provideRecipeMacro()).thenReturn(
-                new RecipeMacro<>(
+                new RecipeMacro(
                         handler,
 
                         new RecipeStateCalculator(),

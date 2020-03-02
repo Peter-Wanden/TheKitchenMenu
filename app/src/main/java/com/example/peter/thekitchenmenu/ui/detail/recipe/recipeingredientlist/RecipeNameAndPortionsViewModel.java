@@ -3,7 +3,7 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist;
 import androidx.databinding.ObservableField;
 import androidx.lifecycle.ViewModel;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseCommand;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentityRequest;
@@ -45,7 +45,7 @@ public class RecipeNameAndPortionsViewModel extends ViewModel {
         handler.execute(
                 recipeIdentity,
                 request,
-                new UseCaseCommand.Callback<RecipeIdentityResponse>() {
+                new UseCase.Callback<RecipeIdentityResponse>() {
 
             @Override
             public void onSuccess(RecipeIdentityResponse response) {
@@ -72,7 +72,7 @@ public class RecipeNameAndPortionsViewModel extends ViewModel {
         handler.execute(
                 recipePortions,
                 request,
-                new UseCaseCommand.Callback<RecipePortionsResponse>() {
+                new UseCase.Callback<RecipePortionsResponse>() {
 
             @Override
             public void onSuccess(RecipePortionsResponse response) {

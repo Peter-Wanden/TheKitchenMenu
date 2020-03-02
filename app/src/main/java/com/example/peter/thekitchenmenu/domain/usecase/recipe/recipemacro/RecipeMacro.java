@@ -6,6 +6,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequestAbstract;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponseAbstract;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.RecipeRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.RecipeResponse;
@@ -35,10 +36,9 @@ import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.ComponentName.*;
 
 /**
- * Acts as a mediator enabling recipe components work together
+ * Acts as a mediator enabling recipe components to work together
  */
-public class RecipeMacro<Q extends RecipeRequestAbstract, P extends UseCase.Response>
-        extends UseCase<Q, P> {
+public class RecipeMacro extends UseCase {
 
     private static final String TAG = "tkm-" + RecipeMacro.class.getSimpleName() + ": ";
 
@@ -61,8 +61,9 @@ public class RecipeMacro<Q extends RecipeRequestAbstract, P extends UseCase.Resp
     private final RecipeCourse course;
     private final RecipeDuration duration;
     private final RecipePortions portions;
+    private RecipeRequestAbstract request;
 
-    private final List<Pair<ComponentName, UseCase.Callback<? extends UseCase.Response>>>
+    private final List<Pair<ComponentName, UseCase.Callback<? extends RecipeResponseAbstract>>>
             componentCallbacks = new ArrayList<>();
     private final HashMap<ComponentName, UseCase.Response> componentResponses =
             new LinkedHashMap<>();
@@ -93,7 +94,9 @@ public class RecipeMacro<Q extends RecipeRequestAbstract, P extends UseCase.Resp
     }
 
     @Override
-    public void execute(Q request) {
+    public <Q extends Request> void execute(Q request) {
+
+        this.request = (RecipeRequestAbstract) request;
 
         if (request instanceof RecipeRequest) {
             requestOriginator = RECIPE;
@@ -107,8 +110,8 @@ public class RecipeMacro<Q extends RecipeRequestAbstract, P extends UseCase.Resp
             requestOriginator = PORTIONS;
         }
 
-        if (isNewRequest(request.getId())) {
-            extractIds(request);
+        if (isNewRequest(this.request.getId())) {
+            extractIds(this.request);
             startComponents();
 
         } else if (RECIPE.equals(requestOriginator)) {
@@ -128,7 +131,7 @@ public class RecipeMacro<Q extends RecipeRequestAbstract, P extends UseCase.Resp
         return !this.id.equals(recipeId);
     }
 
-    private void extractIds(Q request) {
+    private void extractIds(RecipeRequestAbstract request) {
         if (isCloneRequest(request)) {
             id = request.getCloneToId();
         } else {
@@ -136,7 +139,7 @@ public class RecipeMacro<Q extends RecipeRequestAbstract, P extends UseCase.Resp
         }
     }
 
-    private boolean isCloneRequest(Q request) {
+    private boolean isCloneRequest(RecipeRequestAbstract request) {
         return isCloned = !request.getCloneToId().equals(DO_NOT_CLONE);
     }
 
@@ -155,8 +158,8 @@ public class RecipeMacro<Q extends RecipeRequestAbstract, P extends UseCase.Resp
         handler.execute(
                 recipe,
                 new RecipeRequest.Builder().
-                        setId(isCloned ? getRequest().getId() : id).
-                        setCloneToId(isCloned ? getRequest().getCloneToId() : DO_NOT_CLONE).
+                        setId(isCloned ? request.getId() : id).
+                        setCloneToId(isCloned ? request.getCloneToId() : DO_NOT_CLONE).
                         build(),
                 new RecipeCallback()
         );
@@ -181,8 +184,8 @@ public class RecipeMacro<Q extends RecipeRequestAbstract, P extends UseCase.Resp
                 identity,
                 RecipeIdentityRequest.Builder.
                         getDefault().
-                        setId(isCloned ? getRequest().getId() : id).
-                        setCloneToId(isCloned ? getRequest().getCloneToId() : DO_NOT_CLONE).
+                        setId(isCloned ? request.getId() : id).
+                        setCloneToId(isCloned ? request.getCloneToId() : DO_NOT_CLONE).
                         build(),
                 new IdentityCallback()
         );
@@ -210,8 +213,8 @@ public class RecipeMacro<Q extends RecipeRequestAbstract, P extends UseCase.Resp
                 course,
                 RecipeCourseRequest.Builder.
                         getDefault().
-                        setId(isCloned ? getRequest().getId() : id).
-                        setCloneToId(isCloned ? getRequest().getCloneToId() : DO_NOT_CLONE).
+                        setId(isCloned ? request.getId() : id).
+                        setCloneToId(isCloned ? request.getCloneToId() : DO_NOT_CLONE).
                         build(),
                 new CourseCallback()
         );
@@ -239,8 +242,8 @@ public class RecipeMacro<Q extends RecipeRequestAbstract, P extends UseCase.Resp
                 duration,
                 RecipeDurationRequest.Builder.
                         getDefault().
-                        setId(isCloned ? getRequest().getId() : id).
-                        setCloneToId(isCloned ? getRequest().getCloneToId() : DO_NOT_CLONE).
+                        setId(isCloned ? request.getId() : id).
+                        setCloneToId(isCloned ? request.getCloneToId() : DO_NOT_CLONE).
                         build(),
                 new DurationCallback()
         );
@@ -269,8 +272,8 @@ public class RecipeMacro<Q extends RecipeRequestAbstract, P extends UseCase.Resp
                 portions,
                 RecipePortionsRequest.Builder.
                         getDefault().
-                        setId(isCloned ? getRequest().getId() : id).
-                        setCloneToId(isCloned ? getRequest().getCloneToId() : DO_NOT_CLONE).
+                        setId(isCloned ? request.getId() : id).
+                        setCloneToId(isCloned ? request.getCloneToId() : DO_NOT_CLONE).
                         build(),
                 new PortionsCallback()
         );
@@ -336,7 +339,7 @@ public class RecipeMacro<Q extends RecipeRequestAbstract, P extends UseCase.Resp
         }
     }
 
-    private abstract class RecipeMacroUseCaseCallback<C extends UseCase.Response>
+    private abstract static class RecipeMacroUseCaseCallback<C extends UseCase.Response>
             implements UseCase.Callback<C> {
 
         @Override
@@ -412,14 +415,15 @@ public class RecipeMacro<Q extends RecipeRequestAbstract, P extends UseCase.Resp
     }
 
     public void registerComponentCallback(Pair<ComponentName, UseCase.Callback
-            <? extends UseCase.Response>> callback) {
+            <? extends RecipeResponseAbstract>> callback) {
         componentCallbacks.add(callback);
     }
 
     private void notifyComponentCallbacks() {
         System.out.println(TAG + "notifyComponentCallbacks called:" + componentCallbacks);
+        System.out.println(TAG + "componentResponses:" + componentResponses);
 
-        for (Pair<ComponentName, UseCase.Callback<? extends UseCase.Response>> callbackPair :
+        for (Pair<ComponentName, UseCase.Callback<? extends RecipeResponseAbstract>> callbackPair :
                 componentCallbacks) {
             ComponentName componentName = callbackPair.first;
 
@@ -495,59 +499,46 @@ public class RecipeMacro<Q extends RecipeRequestAbstract, P extends UseCase.Resp
         if (RECIPE.equals(requestOriginator)) {
             RecipeResponse response = (RecipeResponse)
                     componentResponses.get(RECIPE);
-            //noinspection unchecked
-            ((UseCase.Callback<RecipeResponse>) getUseCaseCallback()).onSuccess(response);
+            getUseCaseCallback().onSuccess(response);
 
         } else if (IDENTITY.equals(requestOriginator)) {
             RecipeIdentityResponse response = (RecipeIdentityResponse)
                     componentResponses.get(IDENTITY);
-            //noinspection unchecked
-            UseCase.Callback<RecipeIdentityResponse> callback =
-                    (UseCase.Callback<RecipeIdentityResponse>) getUseCaseCallback();
 
             if (response.getFailReasons().contains(CommonFailReason.NONE)) {
-                callback.onSuccess(response);
+                getUseCaseCallback().onSuccess(response);
             } else {
-                callback.onError(response);
+                getUseCaseCallback().onError(response);
             }
 
         } else if (COURSE.equals(requestOriginator)) {
             RecipeCourseResponse response = (RecipeCourseResponse)
                     componentResponses.get(COURSE);
-            //noinspection unchecked
-            UseCase.Callback<RecipeCourseResponse> callback =
-                    (UseCase.Callback<RecipeCourseResponse>) getUseCaseCallback();
 
             if (response.getFailReasons().contains(CommonFailReason.NONE)) {
-                callback.onSuccess(response);
+                getUseCaseCallback().onSuccess(response);
             } else {
-                callback.onError(response);
+                getUseCaseCallback().onError(response);
             }
 
         } else if (DURATION.equals(requestOriginator)) {
             RecipeDurationResponse response = (RecipeDurationResponse)
                     componentResponses.get(DURATION);
-            // noinspection unchecked
-            UseCase.Callback<RecipeDurationResponse> callback =
-                    (UseCase.Callback<RecipeDurationResponse>) getUseCaseCallback();
 
             if (response.getFailReasons().contains(CommonFailReason.NONE)) {
-                callback.onSuccess(response);
+                getUseCaseCallback().onSuccess(response);
             } else {
-                callback.onError(response);
+                getUseCaseCallback().onError(response);
             }
 
         } else if (PORTIONS.equals(requestOriginator)) {
             RecipePortionsResponse response = (RecipePortionsResponse)
                     componentResponses.get(PORTIONS);
-            //noinspection unchecked
-            UseCase.Callback<RecipePortionsResponse> callback =
-                    (UseCase.Callback<RecipePortionsResponse>) getUseCaseCallback();
 
             if (response.getFailReasons().contains(CommonFailReason.NONE)) {
-                callback.onSuccess(response);
+                getUseCaseCallback().onSuccess(response);
             } else {
-                callback.onError(response);
+                getUseCaseCallback().onError(response);
             }
         }
     }

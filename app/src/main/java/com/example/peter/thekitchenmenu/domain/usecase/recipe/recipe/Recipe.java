@@ -5,13 +5,12 @@ import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipe;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientRequest;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 
 import javax.annotation.Nonnull;
 
-public class Recipe
-        extends UseCase<RecipeRequest, RecipeResponse>
-        implements DataSource.GetEntityCallback<RecipeEntity> {
+public class Recipe extends UseCase implements DataSource.GetEntityCallback<RecipeEntity> {
 
     private static final String TAG = "tkm-" + Recipe.class.getSimpleName() + ": ";
 
@@ -35,11 +34,13 @@ public class Recipe
     }
 
     @Override
-    protected void execute(RecipeRequest request) {
-        System.out.println(TAG + request);
+    protected <Q extends Request> void execute(Q request) {
+        RecipeRequest rr = (RecipeRequest) request;
 
-        if (isNewRequest(request.getId())) {
-            extractIds(request);
+        System.out.println(TAG + rr);
+
+        if (isNewRequest(rr.getId())) {
+            extractIds(rr);
         } else {
             buildResponse();
         }

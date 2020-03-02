@@ -1,5 +1,11 @@
 package com.example.peter.thekitchenmenu.domain.usecase;
 
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequestAbstract;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponseAbstract;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.RecipeRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.RecipeResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro;
+
 /**
  * Runs {@link UseCase}s using a {@link UseCaseScheduler}.
  */
@@ -19,13 +25,13 @@ public class UseCaseHandler {
         return INSTANCE;
     }
 
-    public <T extends UseCase.Request, R extends UseCase.Response>
-    void execute(final UseCase<T, R> useCase,
-                 T request,
-                 UseCase.Callback<R> callback) {
+    public <T extends UseCase.Request, R extends UseCase.Response> void execute(
+            final UseCase useCase,
+            T request,
+            UseCase.Callback<R> callback) {
 
         useCase.setRequest(request);
-        useCase.setUseCaseCallback(new UseCaseHandler.UiCallbackWrapper<>(callback, this));
+        useCase.setUseCaseCallback(new UseCaseHandler.UiCallbackWrapper(callback, this));
 
         useCaseScheduler.execute(useCase::run);
     }

@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration;
 
 import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseCommand;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponseAbstract;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -12,7 +12,7 @@ import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
 
-public final class RecipeDurationResponse implements UseCaseCommand.Response {
+public final class RecipeDurationResponse extends RecipeResponseAbstract {
     @Nonnull
     private final ComponentState state;
     @Nonnull
@@ -20,9 +20,11 @@ public final class RecipeDurationResponse implements UseCaseCommand.Response {
     @Nonnull
     private final Model model;
 
-    private RecipeDurationResponse(@Nonnull ComponentState state,
-                                  @Nonnull List<FailReasons> failReasons,
-                                  @Nonnull Model model) {
+    private RecipeDurationResponse(@Nonnull String id,
+                                   @Nonnull ComponentState state,
+                                   @Nonnull List<FailReasons> failReasons,
+                                   @Nonnull Model model) {
+        this.id = id;
         this.state = state;
         this.failReasons = failReasons;
         this.model = model;
@@ -48,38 +50,47 @@ public final class RecipeDurationResponse implements UseCaseCommand.Response {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RecipeDurationResponse response = (RecipeDurationResponse) o;
-        return state == response.state &&
+        return id.equals(response.id) &&
+                state == response.state &&
                 failReasons.equals(response.failReasons) &&
                 model.equals(response.model);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(state, failReasons, model);
+        return Objects.hash(id, state, failReasons, model);
     }
 
     @Nonnull
     @Override
     public String toString() {
         return "RecipeDurationResponse{" +
-                "state=" + state +
+                "id=" + id +
+                ", state=" + state +
                 ", failReasons=" + failReasons +
                 ", model=" + model +
                 '}';
     }
 
     public static class Builder {
+        private String id;
         private ComponentState state;
         private List<FailReasons> failReasons;
         private Model model;
 
         public static Builder getDefault() {
             return new Builder().
+                    setId("").
                     setState(ComponentState.INVALID_UNCHANGED).
                     setFailReasons(getDefaultFailReasons()).
                     setModel(Model.Builder.
                             getDefault().
                             build());
+        }
+
+        public Builder setId(String id) {
+            this.id = id;
+            return this;
         }
 
         public Builder setState(ComponentState state) {
@@ -99,6 +110,7 @@ public final class RecipeDurationResponse implements UseCaseCommand.Response {
 
         public RecipeDurationResponse build() {
             return new RecipeDurationResponse(
+                    id,
                     state,
                     failReasons,
                     model
@@ -124,14 +136,14 @@ public final class RecipeDurationResponse implements UseCaseCommand.Response {
         private final long lastUpdate;
 
         private Model(int prepHours,
-                     int prepMinutes,
-                     int totalPrepTime,
-                     int cookHours,
-                     int cookMinutes,
-                     int totalCookTime,
-                     int totalTime,
-                     long createDate,
-                     long lastUpdate) {
+                      int prepMinutes,
+                      int totalPrepTime,
+                      int cookHours,
+                      int cookMinutes,
+                      int totalCookTime,
+                      int totalTime,
+                      long createDate,
+                      long lastUpdate) {
             this.prepHours = prepHours;
             this.prepMinutes = prepMinutes;
             this.totalPrepTime = totalPrepTime;

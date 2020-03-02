@@ -3,7 +3,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.textvalidation;
 import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 
-public class TextValidator extends UseCase<TextValidatorRequest, TextValidatorResponse> {
+public class TextValidator extends UseCase {
 
     private static final String TAG = "tkm-" + TextValidator.class.getSimpleName() + ": ";
 
@@ -34,12 +34,13 @@ public class TextValidator extends UseCase<TextValidatorRequest, TextValidatorRe
     }
 
     @Override
-    protected void execute(TextValidatorRequest request) {
-        System.out.println(TAG + request);
-        if (request.getType() == TextType.SHORT_TEXT) {
-            validateShortText(request);
-        } else if (request.getType() == TextType.LONG_TEXT) {
-            validateLongText(request);
+    protected <Q extends Request> void execute(Q request) {
+        TextValidatorRequest tvr = (TextValidatorRequest) request;
+        System.out.println(TAG + tvr);
+        if (tvr.getType() == TextType.SHORT_TEXT) {
+            validateShortText(tvr);
+        } else if (tvr.getType() == TextType.LONG_TEXT) {
+            validateLongText(tvr);
         } else {
             throw new UnsupportedOperationException("Unknown requestType");
         }

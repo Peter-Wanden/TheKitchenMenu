@@ -22,9 +22,7 @@ import javax.annotation.Nonnull;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe.DO_NOT_CLONE;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
 
-public class RecipeCourse
-        extends UseCase<RecipeCourseRequest, RecipeCourseResponse>
-        implements DataSource.GetAllCallback<RecipeCourseEntity> {
+public class RecipeCourse extends UseCase implements DataSource.GetAllCallback<RecipeCourseEntity> {
 
     private static final String TAG = "tkm-" + RecipeCourse.class.getSimpleName() + ": ";
 
@@ -82,12 +80,13 @@ public class RecipeCourse
     }
 
     @Override
-    protected void execute(RecipeCourseRequest request) {
-        System.out.println(TAG + request);
-        if (isNewRequest(request.getId())) {
-            extractIds(request);
+    protected <Q extends Request> void execute(Q request) {
+        RecipeCourseRequest rcr = (RecipeCourseRequest) request;
+        System.out.println(TAG + rcr);
+        if (isNewRequest(rcr.getId())) {
+            extractIds(rcr);
         } else {
-            addOrRemoveCourse(request.isAddCourse(), request.getCourse());
+            addOrRemoveCourse(rcr.isAddCourse(), rcr.getCourse());
         }
     }
 

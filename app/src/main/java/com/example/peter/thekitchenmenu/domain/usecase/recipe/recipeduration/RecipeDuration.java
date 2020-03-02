@@ -16,8 +16,7 @@ import javax.annotation.Nonnull;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe.DO_NOT_CLONE;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
 
-public class RecipeDuration
-        extends UseCase<RecipeDurationRequest, RecipeDurationResponse>
+public class RecipeDuration extends UseCase
         implements DataSource.GetEntityCallback<RecipeDurationEntity> {
 
     private static final String TAG = "tkm-" + RecipeDuration.class.getSimpleName() + ": ";
@@ -59,12 +58,14 @@ public class RecipeDuration
     }
 
     @Override
-    protected void execute(RecipeDurationRequest request) {
-        System.out.println(TAG + request);
-        requestModel = request.getModel();
+    protected <Q extends Request> void execute(Q request) {
+        RecipeDurationRequest rdr = (RecipeDurationRequest) request;
 
-        if (isNewRequest(request.getId())) {
-            extractIds(request);
+        System.out.println(TAG + rdr);
+        requestModel = rdr.getModel();
+
+        if (isNewRequest(rdr.getId())) {
+            extractIds(rdr);
         } else {
             processChanges();
         }
