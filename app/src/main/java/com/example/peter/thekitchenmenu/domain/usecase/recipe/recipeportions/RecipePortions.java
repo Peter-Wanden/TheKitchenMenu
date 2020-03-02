@@ -179,6 +179,7 @@ public class RecipePortions extends UseCase
 
     private void buildResponse() {
         RecipePortionsResponse response = new RecipePortionsResponse.Builder().
+                setId(recipeId).
                 setState(getComponentState()).
                 setFailReasons(new ArrayList<>(failReasons)).
                 setModel(getResponseModel()).

@@ -58,7 +58,7 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
         public void onError(RecipeCourseResponse response) {
             System.out.println(TAG + "onError:" + response);
             RecipeCourseEditorViewModel.this.response = response;
-            checkState(response);
+            onUseCaseError(response);
         }
     }
 
@@ -82,6 +82,10 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
         updatingUi = true;
         notifyChange();
         updatingUi = false;
+    }
+
+    private void onUseCaseError(RecipeCourseResponse response) {
+
     }
 
     @Bindable

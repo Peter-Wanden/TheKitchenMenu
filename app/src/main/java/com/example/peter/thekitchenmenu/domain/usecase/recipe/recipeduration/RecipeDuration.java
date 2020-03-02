@@ -173,6 +173,7 @@ public class RecipeDuration extends UseCase
 
     private void buildResponse() {
         RecipeDurationResponse response = new RecipeDurationResponse.Builder().
+                setId(recipeId).
                 setState(getComponentState()).
                 setFailReasons(new ArrayList<>(failReasons)).
                 setModel(getResponseModel()).

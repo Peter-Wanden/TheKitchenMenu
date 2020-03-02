@@ -121,16 +121,19 @@ public class RecipeCourse extends UseCase implements DataSource.GetAllCallback<R
     }
 
     private void cloneCourses(List<RecipeCourseEntity> courseEntities) {
+        System.out.println("CLONE COURSES CALLED");
         for (RecipeCourseEntity recipeCourseEntity : courseEntities) {
             addOrRemoveCourse(true, Course.fromInt(recipeCourseEntity.getCourseNo()));
         }
         isCloned = false;
+        System.out.println(TAG + newCourseList);
         compareCourseLists();
     }
 
     @Override
     public void onDataNotAvailable() {
         RecipeCourseResponse response = RecipeCourseResponse.Builder.getDefault().
+                setId(recipeId).
                 setStatus(ComponentState.DATA_UNAVAILABLE).
                 setFailReasons(getFailReasons()).
                 build();
@@ -230,6 +233,7 @@ public class RecipeCourse extends UseCase implements DataSource.GetAllCallback<R
 
     private void sendResponse(boolean isChanged) {
         RecipeCourseResponse response = new RecipeCourseResponse.Builder().
+                setId(recipeId).
                 setStatus(getComponentState(isChanged)).
                 setFailReasons(getFailReasons()).
                 setCourseList(newCourseList).

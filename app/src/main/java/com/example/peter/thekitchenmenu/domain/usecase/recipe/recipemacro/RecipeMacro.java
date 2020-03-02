@@ -449,6 +449,7 @@ public class RecipeMacro extends UseCase {
             } else if (COURSE.equals(componentName)) {
                 RecipeCourseResponse response = (RecipeCourseResponse)
                         componentResponses.get(componentName);
+
                 //noinspection unchecked
                 UseCase.Callback<RecipeCourseResponse> callback =
                         (UseCase.Callback<RecipeCourseResponse>) callbackPair.second;
