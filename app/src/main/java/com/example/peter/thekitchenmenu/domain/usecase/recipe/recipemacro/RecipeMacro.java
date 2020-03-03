@@ -46,21 +46,20 @@ public class RecipeMacro extends UseCase {
         void recipeStateChanged(RecipeStateResponse response);
     }
 
-    private String id = "";
-    private boolean isCloned;
-
     private final UseCaseHandler handler;
-    private final RecipeStateCalculator recipeStateCalculator;
-    private RecipeStateResponse recipeStateResponse;
-    private RecipeMacroResponse recipeMacroResponse;
-
-    private ComponentName requestOriginator;
 
     private final Recipe recipe;
     private final RecipeIdentity identity;
     private final RecipeCourse course;
     private final RecipeDuration duration;
     private final RecipePortions portions;
+    private final RecipeStateCalculator recipeStateCalculator;
+
+    private RecipeMacroResponse recipeMacroResponse;
+    private RecipeStateResponse recipeStateResponse;
+    private ComponentName requestOriginator;
+    private String id = "";
+    private boolean isCloned;
     private RecipeRequestAbstract request;
 
     private final List<Pair<ComponentName, UseCase.Callback<? extends RecipeResponseAbstract>>>

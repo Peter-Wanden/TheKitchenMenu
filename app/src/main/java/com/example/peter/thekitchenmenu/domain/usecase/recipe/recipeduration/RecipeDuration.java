@@ -156,7 +156,6 @@ public class RecipeDuration extends UseCase
         if (failReasons.isEmpty()) {
             failReasons.add(CommonFailReason.NONE);
         }
-        System.out.println(TAG + "validatingData: failReasons:" + failReasons);
     }
 
     private int getHours(int totalTime) {
@@ -278,7 +277,7 @@ public class RecipeDuration extends UseCase
                                 requestModel.getPrepMinutes()) +
                                 getTotalMinutes(
                                         requestModel.getCookHours(),
-                                        requestModel.getPrepMinutes())).
+                                        requestModel.getCookMinutes())).
 
                 setCreateDate(persistenceModel.getCreateDate()).
                 setLastUpdate(persistenceModel.getLastUpdate()).

@@ -40,12 +40,12 @@ public class RecipeIdentityEditorViewModel extends ObservableViewModel {
 
     public final ObservableField<String> titleErrorMessage = new ObservableField<>();
     public final ObservableField<String> descriptionErrorMessage = new ObservableField<>();
-    public final ObservableBoolean dataLoadingError = new ObservableBoolean();
-    private final ObservableBoolean dataLoading = new ObservableBoolean();
+    public final ObservableBoolean isDataLoadingError = new ObservableBoolean();
+    private final ObservableBoolean isDataLoading = new ObservableBoolean();
 
     private RecipeIdentityResponse response;
 
-    private boolean updatingUi;
+    private boolean isUpdatingUi;
 
     public RecipeIdentityEditorViewModel(@Nonnull UseCaseHandler handler,
                                          @Nonnull RecipeMacro recipeMacro,
@@ -56,7 +56,8 @@ public class RecipeIdentityEditorViewModel extends ObservableViewModel {
 
         response = RecipeIdentityResponse.Builder.getDefault().build();
 
-        recipeMacro.registerComponentCallback(new Pair<>(ComponentName.IDENTITY,
+        recipeMacro.registerComponentCallback(new Pair<>(
+                ComponentName.IDENTITY,
                 new IdentityCallbackListener())
         );
     }
@@ -68,22 +69,28 @@ public class RecipeIdentityEditorViewModel extends ObservableViewModel {
     private class IdentityCallbackListener implements UseCase.Callback<RecipeIdentityResponse> {
         @Override
         public void onSuccess(RecipeIdentityResponse response) {
-            System.out.println(TAG + "onSuccess:" + response);
-            RecipeIdentityEditorViewModel.this.response = response;
-            onUseCaseSuccess();
+            isDataLoading.set(false);
+            if (isStateChanged(response)) {
+                System.out.println(TAG + "onSuccess:" + response);
+                RecipeIdentityEditorViewModel.this.response = response;
+                onUseCaseSuccess();
+            }
         }
 
         @Override
         public void onError(RecipeIdentityResponse response) {
-            System.out.println(TAG + "onError:" + response);
-            RecipeIdentityEditorViewModel.this.response = response;
-            onUseCaseError();
+            isDataLoading.set(false);
+            if (isStateChanged(response)) {
+                System.out.println(TAG + "onError:" + response);
+                RecipeIdentityEditorViewModel.this.response = response;
+                onUseCaseError();
+            }
         }
     }
 
     @Bindable
     public String getTitle() {
-        return response.getModel().getTitle();
+        return response == null ? "" : response.getModel().getTitle();
     }
 
     public void setTitle(String title) {
@@ -97,17 +104,17 @@ public class RecipeIdentityEditorViewModel extends ObservableViewModel {
                     setCloneToId(DO_NOT_CLONE).
                     setModel(model).
                     build();
-            handler.execute(recipeMacro, request, getRecipeIdentityCallback());
+            handler.execute(recipeMacro, request, new IdentityCallbackListener());
         }
     }
 
     private boolean isTitleChanged(String title) {
-        return !updatingUi && !response.getModel().getTitle().equals(title.trim());
+        return !isUpdatingUi && !response.getModel().getTitle().equals(title.trim());
     }
 
     @Bindable
     public String getDescription() {
-        return response.getModel().getDescription();
+        return response == null ? "" : response.getModel().getDescription();
     }
 
     public void setDescription(String description) {
@@ -124,37 +131,12 @@ public class RecipeIdentityEditorViewModel extends ObservableViewModel {
 
             System.out.println(TAG + response);
 
-            handler.execute(recipeMacro, request, getRecipeIdentityCallback());
+            handler.execute(recipeMacro, request, new IdentityCallbackListener());
         }
     }
 
     private boolean isDescriptionChanged(String description) {
-        return !updatingUi && !response.getModel().getDescription().equals(description.trim());
-    }
-
-    /**
-     * @return callback passed in when sending requests directly to {@link RecipeMacro}
-     */
-    private UseCase.Callback<RecipeIdentityResponse> getRecipeIdentityCallback() {
-        return new UseCase.Callback<RecipeIdentityResponse>() {
-            @Override
-            public void onSuccess(RecipeIdentityResponse response) {
-                System.out.println(TAG + "onSuccess:");
-                if (isStateChanged(response)) {
-                    RecipeIdentityEditorViewModel.this.response = response;
-                    onUseCaseSuccess();
-                }
-            }
-
-            @Override
-            public void onError(RecipeIdentityResponse response) {
-                System.out.println(TAG + "onError:" + response);
-                if (isStateChanged(response)) {
-                    RecipeIdentityEditorViewModel.this.response = response;
-                    onUseCaseError();
-                }
-            }
-        };
+        return !isUpdatingUi && !response.getModel().getDescription().equals(description.trim());
     }
 
     private boolean isStateChanged(RecipeIdentityResponse response) {
@@ -175,7 +157,7 @@ public class RecipeIdentityEditorViewModel extends ObservableViewModel {
         System.out.println(TAG + "onUseCaseError: failReasons=" + response.getFailReasons());
         List<FailReasons> failReasons = response.getFailReasons();
         if (failReasons.contains(CommonFailReason.DATA_UNAVAILABLE)) {
-            dataLoadingError.set(true);
+            isDataLoadingError.set(true);
         }
         if (failReasons.contains(RecipeIdentity.FailReason.TITLE_TOO_SHORT)) {
             System.out.println(TAG + "Setting title too short error.");
@@ -205,9 +187,9 @@ public class RecipeIdentityEditorViewModel extends ObservableViewModel {
     }
 
     private void updateObservables() {
-        updatingUi = true;
+        isUpdatingUi = true;
         notifyPropertyChanged(BR.title);
         notifyPropertyChanged(BR.description);
-        updatingUi = false;
+        isUpdatingUi = false;
     }
 }

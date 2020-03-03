@@ -68,13 +68,13 @@ public class RecipePortions extends UseCase
 
     @Override
     protected <Q extends Request> void execute(Q request) {
-        RecipePortionsRequest rpr = (RecipePortionsRequest) request;
+        RecipePortionsRequest portionsRequest = (RecipePortionsRequest) request;
 
-        System.out.println(TAG + rpr);
-        requestModel = rpr.getModel();
+        System.out.println(TAG + portionsRequest);
+        requestModel = portionsRequest.getModel();
 
-        if (isNewRequest(rpr.getId())) {
-            extractIds(rpr);
+        if (isNewRequest(portionsRequest.getId())) {
+            extractIds(portionsRequest);
         } else {
             processChanges();
         }
@@ -240,8 +240,8 @@ public class RecipePortions extends UseCase
                         requestModel.getServings()).
 
                 setSittings(isNewRequest ?
-                        persistenceModel.getServings() :
-                        requestModel.getServings()).
+                        persistenceModel.getSittings() :
+                        requestModel.getSittings()).
 
                 setPortions(isNewRequest ?
                         persistenceModel.getServings() * persistenceModel.getSittings() :

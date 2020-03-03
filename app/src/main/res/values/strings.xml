@@ -141,9 +141,9 @@
     <string name="activity_title_add_favorite_product">Add favorite</string>
     <string name="activity_title_edit_favorite_product">Edit favorite</string>
     <string name="activity_title_recipe_catalog">Recipe catalog</string>
-    <string name="activity_title_add_new_recipe">Add new recipeMacro</string>
-    <string name="activity_title_edit_recipe">Edit recipeMacro</string>
-    <string name="activity_title_copy_recipe">Copy recipeMacro</string>
+    <string name="activity_title_add_new_recipe">Add new recipe</string>
+    <string name="activity_title_edit_recipe">Edit recipe</string>
+    <string name="activity_title_copy_recipe">Copy recipe</string>
     <string name="activity_title_image_cropper">TKM - Image Cropper</string>
     <string name="activity_title_add_new_ingredient">Add new ingredient</string>
     <string name="activity_title_edit_ingredient">Edit ingredient</string>

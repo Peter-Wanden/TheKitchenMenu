@@ -18,40 +18,26 @@ import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 
-public class RecipeEditorViewModel
-        extends ViewModel
-        implements DataSource.GetEntityCallback<RecipeEntity> {
+public class RecipeEditorViewModel extends ViewModel {
 
     private static final String TAG = "tkm-" + RecipeEditorViewModel.class.getSimpleName() + ":";
 
-    private RepositoryRecipe repositoryRecipe;
     private AddEditRecipeNavigator navigator;
-    private UniqueIdProvider idProvider;
     private Resources resources;
-    private TimeProvider timeProvider;
     private final UseCaseHandler handler;
 
     public final ObservableBoolean showIngredientsButtonObservable = new ObservableBoolean();
     public final ObservableField<String> ingredientsButtonTextObservable = new ObservableField<>();
     public final ObservableBoolean dataIsLoadingObservable = new ObservableBoolean();
 
-    private RecipeEntity recipeEntity;
-    private String recipeId;
     private RecipeMacro recipeMacro;
 
-    private boolean isDraft;
     private boolean isNewRecipe;
     private boolean showReviewButton;
 
-    public RecipeEditorViewModel(TimeProvider timeProvider,
-                                 RepositoryRecipe repositoryRecipe,
-                                 UniqueIdProvider idProvider,
-                                 Resources resources,
+    public RecipeEditorViewModel(Resources resources,
                                  UseCaseHandler handler,
                                  UseCaseFactory factory) {
-        this.timeProvider = timeProvider;
-        this.repositoryRecipe = repositoryRecipe;
-        this.idProvider = idProvider;
         this.resources = resources;
         this.handler = handler;
 
@@ -70,46 +56,11 @@ public class RecipeEditorViewModel
         return recipeMacro;
     }
 
-    void start() {
-        if (recipeEntity == null) {
-            setupForNewRecipe();
-        }
-    }
-
     private void setupForNewRecipe() {
-        isNewRecipe = true;
         navigator.setActivityTitle(R.string.activity_title_add_new_recipe);
-        recipeId = idProvider.getUId();
 
-        recipeEntity = getNewRecipe();
         saveRecipe();
         setIngredientsButton();
-    }
-
-    void start(String recipeId) {
-        loadExistingRecipe(recipeId);
-    }
-
-    void start(String cloneFromRecipeId, String cloneToRecipeId) {
-
-    }
-
-    private void loadExistingRecipe(String recipeId) {
-        dataIsLoadingObservable.set(true);
-        repositoryRecipe.getById(recipeId, this);
-    }
-
-    @Override
-    public void onEntityLoaded(RecipeEntity recipeEntity) {
-        dataIsLoadingObservable.set(false);
-        this.recipeEntity = recipeEntity;
-
-        if (editorIsCreatorOfRecipe()) {
-            setupForExistingRecipe();
-        }
-        else {
-            setupForClonedRecipe();
-        }
     }
 
     private void setupForExistingRecipe() {
@@ -123,21 +74,8 @@ public class RecipeEditorViewModel
         isNewRecipe = false;
         navigator.setActivityTitle(R.string.activity_title_copy_recipe);
 
-        recipeEntity = getClonedRecipeEntity();
-        saveRecipe();
         startModelsWithClone();
         setIngredientsButton();
-    }
-
-    private void startModelsWithClone() {
-        String oldRecipeId = recipeEntity.getParentId();
-        String newRecipeId = recipeEntity.getId();
-    }
-
-    @Override
-    public void onDataNotAvailable() {
-        dataIsLoadingObservable.set(false);
-        setupForNewRecipe();
     }
 
     private void setIngredientsButton() {
@@ -191,7 +129,7 @@ public class RecipeEditorViewModel
     }
 
     void reviewButtonPressed() {
-        String recipeId = recipeEntity.getId();
+        String recipeId =
 
         if (isNewRecipe) {
             navigator.reviewNewRecipe(recipeId);
@@ -222,66 +160,5 @@ public class RecipeEditorViewModel
         } else {
             throwUnknownEditingModeException();
         }
-    }
-
-    private RecipeEntity createNewEntity() {
-        if (editorIsCreatorOfRecipe()) {
-            return getEditedRecipe();
-
-        } else if (recipeIsCloned()) {
-            return getClonedRecipeEntity();
-
-        } else {
-            throw new RuntimeException("Unknown editing mode type");
-        }
-    }
-
-    private RecipeEntity getNewRecipe() {
-        String id = idProvider.getUId();
-        long timeStamp = timeProvider.getCurrentTimeInMills();
-        return new RecipeEntity(
-                id,
-                id,
-                Constants.getUserId(),
-                timeStamp,
-                timeStamp
-        );
-    }
-
-    private RecipeEntity getEditedRecipe() {
-        return new RecipeEntity(
-                recipeEntity.getId(),
-                recipeEntity.getId(),
-                recipeEntity.getCreatedBy(),
-                recipeEntity.getCreateDate(),
-                timeProvider.getCurrentTimeInMills()
-        );
-    }
-
-    private RecipeEntity getClonedRecipeEntity() {
-        long timeStamp = timeProvider.getCurrentTimeInMills();
-        return new RecipeEntity(
-                idProvider.getUId(),
-                recipeEntity.getId(),
-                recipeEntity.getCreatedBy(),
-                timeStamp,
-                timeStamp
-        );
-    }
-
-    private boolean editorIsCreatorOfRecipe() {
-        return recipeEntity.getCreatedBy().equals(Constants.getUserId());
-    }
-
-    private boolean recipeIsCloned() {
-        return !editorIsCreatorOfRecipe();
-    }
-
-    private void saveRecipe() {
-        repositoryRecipe.save(recipeEntity);
-    }
-
-    private void throwUnknownEditingModeException() {
-        throw new RuntimeException("Unknown editing mode");
     }
 }

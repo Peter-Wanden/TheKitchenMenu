@@ -122,14 +122,10 @@ public class RecipeIdentityEditorViewModelTest {
     UniqueIdProvider idProviderMock;
 
     private UseCaseHandler handler;
+
     private RecipeMacro recipeMacro;
-    private RecipeStateListener recipeClientListener;
-    private RecipeStateResponse recipeStateResponse;
-    private RecipeMacroResponse recipeMacroResponse;
-    private ComponentState actualComponentState;
-    private int shortTextMinLength = 3;
+    private RecipeStateListener recipeStateListener;
     private int shortTextMaxLength = 70;
-    private int longTextMinLength = 0;
     private int longTextMaxLength = 500;
 
     // endregion helper fields ---------------------------------------------------------------------
@@ -199,8 +195,8 @@ public class RecipeIdentityEditorViewModelTest {
                 duration,
                 portions);
 
-        recipeClientListener = new RecipeStateListener();
-        recipeMacro.registerStateListener(recipeClientListener);
+        recipeStateListener = new RecipeStateListener();
+        recipeMacro.registerStateListener(recipeStateListener);
 
         return new RecipeIdentityEditorViewModel(
                 handler,
@@ -226,10 +222,7 @@ public class RecipeIdentityEditorViewModelTest {
                 build();
 
         // Act
-        handler.execute(
-                recipeMacro,
-                request,
-                new RecipeResponseCallback());
+        handler.execute(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
         verifyAllComponentReposCalledAndReturnDataUnavailable(recipeId);
@@ -255,7 +248,7 @@ public class RecipeIdentityEditorViewModelTest {
         // Assert
         verifyAllComponentReposCalledAndReturnDataUnavailable(recipeId);
 
-        assertTrue(SUT.dataLoadingError.get());
+        assertTrue(SUT.isDataLoadingError.get());
     }
 
     @Test
@@ -319,7 +312,7 @@ public class RecipeIdentityEditorViewModelTest {
         SUT.setTitle(invalidTitle);
         // Assert
         ComponentState expectedState = ComponentState.INVALID_CHANGED;
-        ComponentState actualState = recipeClientListener.
+        ComponentState actualState = recipeStateListener.
                 getResponse().
                 getComponentStates().
                 get(ComponentName.IDENTITY);
@@ -411,7 +404,7 @@ public class RecipeIdentityEditorViewModelTest {
         SUT.setTitle(title);
         // Assert
         ComponentState expectedState = ComponentState.VALID_CHANGED;
-        ComponentState actualState = recipeClientListener.
+        ComponentState actualState = recipeStateListener.
                 getResponse().
                 getComponentStates().
                 get(ComponentName.IDENTITY);
@@ -505,7 +498,7 @@ public class RecipeIdentityEditorViewModelTest {
         SUT.setDescription(invalidDescription);
         // Assert
         ComponentState expectedState = ComponentState.INVALID_CHANGED;
-        ComponentState actualState = recipeClientListener.
+        ComponentState actualState = recipeStateListener.
                 getResponse().
                 getComponentStates().
                 get(ComponentName.IDENTITY);
@@ -584,7 +577,7 @@ public class RecipeIdentityEditorViewModelTest {
         SUT.setDescription(validDescription);
         // Assert
         ComponentState expectedState = ComponentState.VALID_CHANGED;
-        ComponentState actualState = recipeClientListener.
+        ComponentState actualState = recipeStateListener.
                 getResponse().
                 getComponentStates().
                 get(ComponentName.IDENTITY);
@@ -641,7 +634,7 @@ public class RecipeIdentityEditorViewModelTest {
         verifyRepoPortionsCalledAndReturnDataUnavailable(recipeId);
         // Assert
         ComponentState expectedState = ComponentState.VALID_UNCHANGED;
-        ComponentState actualState = recipeClientListener.
+        ComponentState actualState = recipeStateListener.
                 getResponse().
                 getComponentStates().
                 get(ComponentName.IDENTITY);
@@ -652,8 +645,6 @@ public class RecipeIdentityEditorViewModelTest {
     public void startValidExistingRecipeId_invalidTitle_errorMessageSetToObservable() {
         // Arrange
         String recipeId = INVALID_EXISTING_INCOMPLETE_INVALID_TITLE.getId();
-        String title = INVALID_EXISTING_INCOMPLETE_INVALID_TITLE.getTitle();
-        String description = INVALID_EXISTING_INCOMPLETE_INVALID_TITLE.getDescription();
 
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
@@ -697,7 +688,7 @@ public class RecipeIdentityEditorViewModelTest {
 
         // Act
         handler.execute(recipeMacro, request, new RecipeResponseCallback());
-        simulateGetValidFromAnotherUserFromDatabase(cloneFromRecipeId);
+        verifyAllReposCalledAndReturnValidExisting(cloneFromRecipeId);
 
         // Assert
         verify(repoIdentityMock).getById(eq(cloneFromRecipeId), anyObject());
@@ -718,7 +709,7 @@ public class RecipeIdentityEditorViewModelTest {
 
         // Act
         handler.execute(recipeMacro, request, new RecipeResponseCallback());
-        simulateGetValidFromAnotherUserFromDatabase(cloneFromRecipeId);
+        verifyAllReposCalledAndReturnValidExisting(cloneFromRecipeId);
         // Assert
         verify(repoIdentityMock).save(eq(VALID_NEW_CLONED));
     }
@@ -738,7 +729,7 @@ public class RecipeIdentityEditorViewModelTest {
 
         // Act
         handler.execute(recipeMacro, request, new RecipeResponseCallback());
-        simulateGetValidFromAnotherUserFromDatabase(cloneFromRecipeId);
+        verifyAllReposCalledAndReturnValidExisting(cloneFromRecipeId);
         
         SUT.setDescription(VALID_CLONED_DESCRIPTION_UPDATED.getDescription());
 
@@ -807,7 +798,7 @@ public class RecipeIdentityEditorViewModelTest {
         repoIdentityCallback.getValue().onEntityLoaded(VALID_EXISTING_COMPLETE);
     }
 
-    private void simulateGetValidFromAnotherUserFromDatabase(String recipeId) {
+    private void verifyAllReposCalledAndReturnValidExisting(String recipeId) {
 
         verify(repoRecipeMock).getById(eq(recipeId), repoRecipeCallback.capture());
         repoRecipeCallback.getValue().onEntityLoaded(TestDataRecipeEntity.getValidFromAnotherUser());
@@ -830,6 +821,7 @@ public class RecipeIdentityEditorViewModelTest {
 
     // region helper classes -----------------------------------------------------------------------
     private static class RecipeStateListener implements RecipeMacro.RecipeStateListener {
+
         RecipeStateResponse response;
 
         @Override
@@ -905,6 +897,7 @@ public class RecipeIdentityEditorViewModelTest {
             return response;
         }
 
+        @Nonnull
         @Override
         public String toString() {
             return "RecipeMacroResponseListener{" +

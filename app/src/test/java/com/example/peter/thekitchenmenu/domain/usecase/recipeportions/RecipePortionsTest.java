@@ -137,7 +137,9 @@ public class RecipePortionsTest {
         handler.execute(SUT, request, getCallback());
         simulateNothingReturnedFromDatabase();
         // Act
-        RecipePortionsRequest.Model invalidModel = getRequestModelFromEntity(INVALID_NEW_TOO_HIGH_SITTINGS_TOO_HIGH_SERVINGS);
+        RecipePortionsRequest.Model invalidModel = getRequestModelFromEntity(
+                INVALID_NEW_TOO_HIGH_SITTINGS_TOO_HIGH_SERVINGS);
+
         RecipePortionsRequest invalidRequest = new RecipePortionsRequest.Builder().
                 setId(NEW_EMPTY.getRecipeId()).
                 setCloneToId(DO_NOT_CLONE).

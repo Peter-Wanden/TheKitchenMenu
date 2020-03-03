@@ -27,8 +27,8 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
     private RecipeMacro recipeMacro;
     private RecipeCourseResponse response;
 
-    private boolean updatingUi;
-    private final ObservableBoolean dataLoading = new ObservableBoolean(true);
+    private boolean isUpdatingUi;
+    private final ObservableBoolean isDataLoading = new ObservableBoolean(true);
 
     public RecipeCourseEditorViewModel(@Nonnull UseCaseHandler handler,
                                        @Nonnull RecipeMacro recipeMacro) {
@@ -49,22 +49,22 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
     private class CourseCallbackListener implements UseCase.Callback<RecipeCourseResponse> {
         @Override
         public void onSuccess(RecipeCourseResponse response) {
-            System.out.println(TAG + "onSuccess:" + response);
-            RecipeCourseEditorViewModel.this.response = response;
-            checkState(response);
+            isDataLoading.set(false);
+            if (isStateChanged(response)) {
+                System.out.println(TAG + "onSuccess:" + response);
+                RecipeCourseEditorViewModel.this.response = response;
+                setRecipeCoursesToObservables();
+            }
         }
 
         @Override
         public void onError(RecipeCourseResponse response) {
-            System.out.println(TAG + "onError:" + response);
-            RecipeCourseEditorViewModel.this.response = response;
-            onUseCaseError(response);
-        }
-    }
-
-    private void checkState(RecipeCourseResponse response) {
-        if (isStateChanged(response)) {
-            processResponse(response);
+            isDataLoading.set(false);
+            if (isStateChanged(response)) {
+                System.out.println(TAG + "onError:" + response);
+                RecipeCourseEditorViewModel.this.response = response;
+                onUseCaseError(response);
+            }
         }
     }
 
@@ -72,20 +72,15 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
         return !this.response.equals(response);
     }
 
-    private void processResponse(RecipeCourseResponse response) {
-        dataLoading.set(false);
-        this.response = response;
-        setRecipeCoursesToObservables();
-    }
-
     private void setRecipeCoursesToObservables() {
-        updatingUi = true;
+        isUpdatingUi = true;
         notifyChange();
-        updatingUi = false;
+        isUpdatingUi = false;
     }
 
     private void onUseCaseError(RecipeCourseResponse response) {
-
+        // Then only case in which there is an error is DATA_UNAVAILABLE so display warning 'recipe
+        // requires at least one course
     }
 
     @Bindable
@@ -94,7 +89,7 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
     }
 
     public void setCourseZero(boolean isCourseZero) {
-        if (!updatingUi) {
+        if (!isUpdatingUi) {
             sendRequest(RecipeCourse.Course.COURSE_ZERO, isCourseZero);
         }
     }
@@ -105,7 +100,7 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
     }
 
     public void setCourseOne(boolean isCourseOne) {
-        if (!updatingUi) {
+        if (!isUpdatingUi) {
             sendRequest(RecipeCourse.Course.COURSE_ONE, isCourseOne);
         }
     }
@@ -116,7 +111,7 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
     }
 
     public void setCourseTwo(boolean isCourseTwo) {
-        if (!updatingUi) {
+        if (!isUpdatingUi) {
             sendRequest(RecipeCourse.Course.COURSE_TWO, isCourseTwo);
         }
     }
@@ -127,7 +122,7 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
     }
 
     public void setCourseThree(boolean isCourseThree) {
-        if (!updatingUi) {
+        if (!isUpdatingUi) {
             sendRequest(RecipeCourse.Course.COURSE_THREE, isCourseThree);
         }
     }
@@ -138,7 +133,7 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
     }
 
     public void setCourseFour(boolean isCourseFour) {
-        if (!updatingUi) {
+        if (!isUpdatingUi) {
             sendRequest(RecipeCourse.Course.COURSE_FOUR, isCourseFour);
         }
     }
@@ -149,7 +144,7 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
     }
 
     public void setCourseFive(boolean isCourseFive) {
-        if (!updatingUi) {
+        if (!isUpdatingUi) {
             sendRequest(RecipeCourse.Course.COURSE_FIVE, isCourseFive);
         }
     }
@@ -160,7 +155,7 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
     }
 
     public void setCourseSix(boolean isCourseSix) {
-        if (!updatingUi) {
+        if (!isUpdatingUi) {
             sendRequest(RecipeCourse.Course.COURSE_SIX, isCourseSix);
         }
     }
@@ -171,13 +166,13 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
     }
 
     public void setCourseSeven(boolean isCourseSeven) {
-        if (!updatingUi) {
+        if (!isUpdatingUi) {
             sendRequest(RecipeCourse.Course.COURSE_SEVEN, isCourseSeven);
         }
     }
 
     private void sendRequest(RecipeCourse.Course course, boolean addCourse) {
-        dataLoading.set(true);
+        isDataLoading.set(true);
 
         RecipeCourseRequest request = RecipeCourseRequest.Builder.getDefault().
                 setId(response.getId()).

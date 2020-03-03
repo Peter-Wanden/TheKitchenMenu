@@ -2,27 +2,31 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 
 import android.content.res.Resources;
 
+import androidx.core.util.Pair;
 import androidx.databinding.Bindable;
 import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
 import androidx.databinding.library.baseAdapters.BR;
 
 import com.example.peter.thekitchenmenu.R;
+import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
+import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacroResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions.RecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions.RecipePortionsRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions.RecipePortionsResponse;
 import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 
+import java.util.List;
+
 import javax.annotation.Nonnull;
 
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe.DO_NOT_CLONE;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
 
-public class RecipePortionsEditorViewModel
-        extends ObservableViewModel
-        implements UseCase.Callback<RecipeMacroResponse> {
+public class RecipePortionsEditorViewModel extends ObservableViewModel {
 
     private static final String TAG = "tkm-" + RecipePortionsEditorViewModel.class.getSimpleName()
             + ":";
@@ -34,16 +38,16 @@ public class RecipePortionsEditorViewModel
     @Nonnull
     private UseCaseHandler handler;
     @Nonnull
-    RecipeMacro recipeMacro;
+    private RecipeMacro recipeMacro;
     private RecipePortionsResponse response;
 
     public final ObservableField<String> servingsErrorMessage = new ObservableField<>();
     public final ObservableField<String> sittingsErrorMessage = new ObservableField<>();
 
     private final ObservableBoolean isDataLoading = new ObservableBoolean();
-    private boolean dataLoadingError;
-    private boolean updatingUi;
-    private String recipeId;
+    private final ObservableBoolean dataLoadingError = new ObservableBoolean();
+    private boolean isUpdatingUi;
+    private PortionsCallbackListener callback;
 
     public RecipePortionsEditorViewModel(@Nonnull UseCaseHandler handler,
                                          @Nonnull RecipeMacro recipeMacro,
@@ -53,82 +57,79 @@ public class RecipePortionsEditorViewModel
         this.resources = resources;
 
         response = RecipePortionsResponse.Builder.getDefault().build();
+
+        callback = new PortionsCallbackListener();
+        recipeMacro.registerComponentCallback(new Pair<>(
+                ComponentName.PORTIONS,
+                callback)
+        );
     }
 
+    /**
+     * Registered recipe component callback listening for updates pushed from
+     * {@link RecipeMacro}
+     */
+    private class PortionsCallbackListener implements UseCase.Callback<RecipePortionsResponse> {
+        @Override
+        public void onSuccess(RecipePortionsResponse response) {
+            isDataLoading.set(false);
+            if (isStateChanged(response)) {
+                System.out.println(TAG + "onSuccess:" + response);
+                RecipePortionsEditorViewModel.this.response = response;
+                onUseCaseSuccess();
+            }
+        }
 
-    public void start(String recipeId) {
-        if (isNewInstantiationOrRecipeIdChanged(recipeId)) {
-            this.recipeId = recipeId;
-            isDataLoading.set(true);
-
-            RecipePortionsRequest request = RecipePortionsRequest.Builder.
-                    getDefault().
-                    setId(recipeId).
-                    build();
-            handler.execute(recipeMacro, request, this);
+        @Override
+        public void onError(RecipePortionsResponse response) {
+            isDataLoading.set(false);
+            if (isStateChanged(response)) {
+                System.out.println(TAG + "onError:" + response);
+                RecipePortionsEditorViewModel.this.response = response;
+                onUseCaseError(response);
+            }
         }
     }
 
-
-    public void startByCloningModel(String cloneFromRecipeId, String cloneToRecipeId) {
-        if (isNewInstantiationOrRecipeIdChanged(cloneToRecipeId)) {
-            recipeId = cloneToRecipeId;
-
-            RecipePortionsRequest request = RecipePortionsRequest.Builder.
-                    getDefault().
-                    setId(cloneFromRecipeId).
-                    setCloneToId(cloneToRecipeId).
-                    build();
-            handler.execute(recipeMacro, request, this);
-        }
+    private boolean isStateChanged(RecipePortionsResponse response) {
+        return !response.equals(this.response);
     }
 
-    private boolean isNewInstantiationOrRecipeIdChanged(String recipeId) {
-        return !this.recipeId.equals(recipeId);
+    private void onUseCaseSuccess() {
+        clearErrors();
+        updateObservables();
     }
 
-    @Override
-    public void onSuccess(RecipeMacroResponse response) {
-        RecipePortionsResponse portionsResponse = extractResponse(response);
-        processUseCaseResponse(portionsResponse);
+    private void clearErrors() {
+        sittingsErrorMessage.set(null);
+        servingsErrorMessage.set(null);
+        dataLoadingError.set(false);
     }
 
-    @Override
-    public void onError(RecipeMacroResponse response) {
-        RecipePortionsResponse portionsResponse = extractResponse(response);
-        processUseCaseResponse(portionsResponse);
-    }
+    private void onUseCaseError(RecipePortionsResponse response) {
+        List<FailReasons> failReasons = response.getFailReasons();
 
-    private RecipePortionsResponse extractResponse(RecipeMacroResponse response) {
-        return (RecipePortionsResponse) response.getComponentResponses().get(ComponentName.PORTIONS);
-    }
-
-    private void processUseCaseResponse(RecipePortionsResponse response) {
-        isDataLoading.set(false);
-        this.response = response;
-
-        ComponentState state = response.getState();
-        setPortionsErrorMessage(false);
-
-        if (state == ComponentState.DATA_UNAVAILABLE) {
-            dataLoadingError = true;
+        if (failReasons.contains(CommonFailReason.DATA_UNAVAILABLE)) {
+            dataLoadingError.set(true);
             return;
-
-        } else if (state == ComponentState.INVALID_UNCHANGED) {
-            setPortionsErrorMessage(true);
-
-        } else if (state == ComponentState.INVALID_CHANGED) {
-            setPortionsErrorMessage(true);
+        }
+        if (failReasons.contains(RecipePortions.FailReason.SERVINGS_TOO_LOW) ||
+                failReasons.contains(RecipePortions.FailReason.SERVINGS_TOO_HIGH)) {
+            showServingsErrorMessage();
+        }
+        if (failReasons.contains(RecipePortions.FailReason.SITTINGS_TOO_LOW) ||
+                failReasons.contains(RecipePortions.FailReason.SITTINGS_TOO_HIGH)) {
+            showSittingsErrorMessage();
         }
         updateObservables();
     }
 
     private void updateObservables() {
-        updatingUi = true;
+        isUpdatingUi = true;
         notifyPropertyChanged(BR.servingsInView);
         notifyPropertyChanged(BR.sittingsInView);
         notifyPropertyChanged(BR.portionsInView);
-        updatingUi = false;
+        isUpdatingUi = false;
     }
 
     @Bindable
@@ -149,29 +150,35 @@ public class RecipePortionsEditorViewModel
                             setServings(servingsParsed).
                             build();
                     RecipePortionsRequest request = new RecipePortionsRequest.Builder().
-                            setId(recipeId).
+                            setId(response.getId()).
+                            setCloneToId(DO_NOT_CLONE).
                             setModel(model).
                             build();
-                    handler.execute(recipeMacro, request, this);
+                    handler.execute(recipeMacro, request, callback);
                 }
             }
         }
     }
 
     private boolean isServingsInViewChanged(String servingsInView) {
-        return !String.valueOf(response.getModel().getServings()).equals(servingsInView);
+        return !isUpdatingUi && !String.valueOf(response.getModel().getServings()).
+                equals(servingsInView);
     }
 
-    private void setPortionsErrorMessage(boolean showErrorMessage) {
-        if (showErrorMessage) {
-            int minServings = resources.getInteger(R.integer.recipe_min_servings);
-            int maxServings = resources.getInteger(R.integer.recipe_max_servings);
-            String errorMessage = resources.getString(R.string.input_error_recipe_servings,
-                    minServings, maxServings);
-            servingsErrorMessage.set(errorMessage);
-        } else {
-            servingsErrorMessage.set(null);
-        }
+    private void showServingsErrorMessage() {
+        int minServings = resources.getInteger(R.integer.recipe_min_servings);
+        int maxServings = resources.getInteger(R.integer.recipe_max_servings);
+        String errorMessage = resources.getString(R.string.input_error_recipe_servings,
+                minServings, maxServings);
+        servingsErrorMessage.set(errorMessage);
+    }
+
+    private void showSittingsErrorMessage() {
+        int minSittings = resources.getInteger(R.integer.recipe_min_sittings);
+        int maxSittings = resources.getInteger(R.integer.recipe_max_sittings);
+        String errorMessage = resources.getString(R.string.input_error_recipe_sittings,
+                minSittings, maxSittings);
+        sittingsErrorMessage.set(errorMessage);
     }
 
     @Bindable
@@ -192,17 +199,19 @@ public class RecipePortionsEditorViewModel
                             setSittings(sittingsParsed).
                             build();
                     RecipePortionsRequest request = new RecipePortionsRequest.Builder().
-                            setId(recipeId).
+                            setId(response.getId()).
+                            setCloneToId(DO_NOT_CLONE).
                             setModel(model).
                             build();
-                    handler.execute(recipeMacro, request, this);
+                    handler.execute(recipeMacro, request, callback);
                 }
             }
         }
     }
 
     private boolean isSittingsInViewChanged(String sittingsInView) {
-        return !String.valueOf(response.getModel().getSittings()).equals(sittingsInView);
+        return !isUpdatingUi && !String.valueOf(response.getModel().getSittings()).
+                equals(sittingsInView);
     }
 
     @Bindable

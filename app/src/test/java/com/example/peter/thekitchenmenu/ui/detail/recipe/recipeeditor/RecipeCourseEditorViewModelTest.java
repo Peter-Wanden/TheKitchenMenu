@@ -87,8 +87,6 @@ public class RecipeCourseEditorViewModelTest {
     RepositoryRecipePortions repoPortionsMock;
     @Captor
     ArgumentCaptor<DataSource.GetEntityCallback<RecipePortionsEntity>> repoPortionsCallback;
-    @Captor
-    ArgumentCaptor<RecipeMacroResponse> recipeMacroResponseCallback;
     @Mock
     UniqueIdProvider idProviderMock;
     @Mock
@@ -168,7 +166,7 @@ public class RecipeCourseEditorViewModelTest {
         // Arrange
         String recipeId = RECIPE_VALID_EXISTING.getId();
 
-        // An external request that starts/loads the recipe
+        // An external request that starts loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
                 setCloneToId(DO_NOT_CLONE).
