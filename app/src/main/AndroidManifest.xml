@@ -135,16 +135,17 @@
         </activity>
 
         <activity
-            android:name=".ui.catalog.recipeMacro.RecipeCatalogActivity"
+            android:name=".ui.catalog.recipe.RecipeCatalogActivity"
             android:label="@string/title_recipe_catalog"
             >
         </activity>
 
         <activity
-            android:name=".ui.detail.recipeMacro.recipeeditor.RecipeEditorActivity"
+            android:name=".ui.detail.recipe.recipeeditor.RecipeEditorActivity"
             android:label="@string/title_recipe_editor"
             >
         </activity>
+
 
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
@@ -163,7 +164,7 @@
             >
         </activity>
         <activity
-            android:name=".ui.detail.recipeMacro.recipeviewer.RecipeViewerActivity"
+            android:name=".ui.detail.recipe.recipeviewer.RecipeViewerActivity"
             >
         </activity>
 
@@ -171,8 +172,8 @@
             android:name=".ui.detail.ingredient.IngredientEditorActivity"
             >
         </activity>
-        <activity android:name=".ui.detail.recipeMacro.recipeingredienteditor.RecipeIngredientEditorActivity" />
-        <activity android:name=".ui.detail.recipeMacro.recipeingredientlist.RecipeIngredientListActivity" />
+        <activity android:name=".ui.detail.recipe.recipeingredienteditor.RecipeIngredientEditorActivity" />
+        <activity android:name=".ui.detail.recipe.recipeingredientlist.RecipeIngredientListActivity" />
 
         <uses-library
             android:name="android.test.runner"

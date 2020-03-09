@@ -15,7 +15,7 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions
 import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.ConversionFactorStatus;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.Ingredient;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequestAbstract;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.recipemacroclone.RecipeMacroClone;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDuration;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentity;
@@ -123,14 +123,16 @@ public class UseCaseFactory {
     public RecipeList provideRecipeIdentityAndDurationList() {
         return new RecipeList(
                 this,
-                UseCaseHandler.getInstance());
+                UseCaseHandler.getInstance()
+        );
     }
 
     public RecipeCourse provideRecipeCourse() {
         return new RecipeCourse(
                 recipeCourseRepository,
                 new UniqueIdProvider(),
-                new TimeProvider());
+                new TimeProvider()
+        );
     }
 
     public TextValidator provideTextValidator() {
@@ -159,8 +161,8 @@ public class UseCaseFactory {
 
     private Recipe provideRecipe() {
         return new Recipe(
-                recipeRepository,
-                new TimeProvider()
+                new TimeProvider(),
+                recipeRepository
         );
     }
 
@@ -201,7 +203,17 @@ public class UseCaseFactory {
                 provideRecipeIdentity(),
                 provideRecipeCourse(),
                 provideRecipeDuration(),
-                provideRecipePortions());
+                provideRecipePortions()
+        );
+    }
+
+    public RecipeMacroClone provideRecipeMacroClone() {
+        return new RecipeMacroClone(
+                UseCaseHandler.getInstance(),
+                new UniqueIdProvider(),
+                provideRecipeMacro(),
+                provideRecipeMacro()
+        );
     }
 
     private RecipeStateCalculator provideRecipeStateCalculator() {

@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponseAbstract;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateResponse;
 
 import java.util.HashMap;
@@ -11,25 +11,24 @@ import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
 
-public class RecipeMacroResponse implements UseCase.Response {
-    @Nonnull
-    private final String recipeId;
+public class RecipeMacroResponse extends RecipeResponseAbstract {
+
     @Nonnull
     private final RecipeStateResponse recipeStateResponse;
     @Nonnull
     private final HashMap<ComponentName, Response> componentResponses;
 
-    public RecipeMacroResponse(@Nonnull String recipeId,
+    public RecipeMacroResponse(@Nonnull String id,
                                @Nonnull RecipeStateResponse recipeStateResponse,
                                @Nonnull HashMap<ComponentName, Response> componentResponses) {
-        this.recipeId = recipeId;
+        this.id = id;
         this.recipeStateResponse = recipeStateResponse;
         this.componentResponses = componentResponses;
     }
 
     @Nonnull
-    public String getRecipeId() {
-        return recipeId;
+    public String getId() {
+        return id;
     }
 
     @Nonnull
@@ -47,40 +46,40 @@ public class RecipeMacroResponse implements UseCase.Response {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RecipeMacroResponse that = (RecipeMacroResponse) o;
-        return recipeId.equals(that.recipeId) &&
+        return id.equals(that.id) &&
                 recipeStateResponse.equals(that.recipeStateResponse) &&
                 componentResponses.equals(that.componentResponses);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(recipeId, recipeStateResponse, componentResponses);
+        return Objects.hash(id, recipeStateResponse, componentResponses);
     }
 
     @Nonnull
     @Override
     public String toString() {
         return "RecipeMacroResponse{" +
-                "recipeId='" + recipeId + '\'' +
+                "id='" + id + '\'' +
                 ", recipeStateResponse=" + recipeStateResponse +
                 ", componentResponses=" + componentResponses +
                 '}';
     }
 
     public static class Builder {
-        private String recipeId;
+        private String id;
         private RecipeStateResponse recipeStateResponse;
         private HashMap<ComponentName, Response> componentResponses;
 
         public static Builder getDefault() {
             return new Builder().
-                    setRecipeId("").
+                    setId("").
                     setRecipeStateResponse(RecipeStateResponse.Builder.getDefault().build()).
                     setComponentResponses(getDefaultComponentResponses());
         }
 
-        public Builder setRecipeId(String recipeId) {
-            this.recipeId = recipeId;
+        public Builder setId(String id) {
+            this.id = id;
             return this;
         }
 
@@ -96,7 +95,7 @@ public class RecipeMacroResponse implements UseCase.Response {
 
         public RecipeMacroResponse build() {
             return new RecipeMacroResponse(
-                    recipeId,
+                    id,
                     recipeStateResponse,
                     componentResponses
             );

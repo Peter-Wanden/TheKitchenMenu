@@ -18,7 +18,6 @@ import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import org.junit.*;
 import org.mockito.*;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe.DO_NOT_CLONE;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.*;
@@ -62,16 +61,16 @@ public class RecipeIdentityTest {
     private static final RecipeIdentityEntity VALID_EXISTING_COMPLETE =
             TestDataRecipeIdentityEntity.getValidExistingTitleValidDescriptionValid();
 
-    private static final RecipeIdentityEntity INVALID_FROM_ANOTHER_USER_TITLE_TOO_LONG_DESCRIPTION_TOO_LONG =
-            TestDataRecipeIdentityEntity.getInvalidFromAnotherUser();
-    private static final RecipeIdentityEntity VALID_AFTER_INVALID_FROM_ANOTHER_USER =
-            TestDataRecipeIdentityEntity.getValidAfterInvalidClonedData();
-    private static final RecipeIdentityEntity VALID_COMPLETE_FROM_ANOTHER_USER =
-            TestDataRecipeIdentityEntity.getValidCompleteFromAnotherUser();
-    private static final RecipeIdentityEntity VALID_COMPLETE_AFTER_CLONED =
-            TestDataRecipeIdentityEntity.getValidCompleteAfterCloned();
-    private static final RecipeIdentityEntity VALID_COMPLETE_AFTER_CLONE_DESCRIPTION_UPDATED =
-            TestDataRecipeIdentityEntity.getValidClonedDescriptionUpdated();
+//    private static final RecipeIdentityEntity INVALID_FROM_ANOTHER_USER_TITLE_TOO_LONG_DESCRIPTION_TOO_LONG =
+//            TestDataRecipeIdentityEntity.getInvalidFromAnotherUser();
+//    private static final RecipeIdentityEntity VALID_AFTER_INVALID_FROM_ANOTHER_USER =
+//            TestDataRecipeIdentityEntity.getValidAfterInvalidClonedData();
+//    private static final RecipeIdentityEntity VALID_COMPLETE_FROM_ANOTHER_USER =
+//            TestDataRecipeIdentityEntity.getValidCompleteFromAnotherUser();
+//    private static final RecipeIdentityEntity VALID_COMPLETE_AFTER_CLONED =
+//            TestDataRecipeIdentityEntity.getValidCompleteAfterCloned();
+//    private static final RecipeIdentityEntity VALID_COMPLETE_AFTER_CLONE_DESCRIPTION_UPDATED =
+//            TestDataRecipeIdentityEntity.getValidClonedDescriptionUpdated();
 
     // endregion constants -------------------------------------------------------------------------
 
@@ -123,21 +122,15 @@ public class RecipeIdentityTest {
     }
 
     @Test
-    public void newId_emptyModel_stateDATA_UNAVAILABLE() {
+    public void newId_emptyModel_stateINVALID_UNCHANGED_recipeStateListenerUpdated() {
         // Arrange
         // Act
         verifyIdentityDatabaseCalledWithNewIdAndReturnDataNotAvailable();
         // Assert
-        assertEquals(ComponentState.DATA_UNAVAILABLE, onErrorResponse.getState());
-    }
-
-    @Test
-    public void newId_emptyModel_stateDATA_UNAVAILABLE_recipeStateListenerUpdated() {
-        // Arrange
-        // Act
-        verifyIdentityDatabaseCalledWithNewIdAndReturnDataNotAvailable();
-        // Assert
-        assertEquals(ComponentState.DATA_UNAVAILABLE, onErrorResponse.getState());
+        assertEquals(ComponentState.INVALID_UNCHANGED, onErrorResponse.getMetadata().getState());
+        assertTrue(onErrorResponse.getMetadata().
+                getFailReasons().
+                contains(CommonFailReason.DATA_UNAVAILABLE));
     }
 
     @Test
@@ -155,10 +148,10 @@ public class RecipeIdentityTest {
         // Act
         handler.execute(
                 SUT,
-                getRequest(recipeId, DO_NOT_CLONE, model),
+                getRequest(recipeId, model),
                 getCallback());
         // Assert
-        assertEquals(ComponentState.INVALID_CHANGED, onErrorResponse.getState());
+        assertEquals(ComponentState.INVALID_CHANGED, onErrorResponse.getMetadata().getState());
     }
 
     @Test
@@ -176,11 +169,17 @@ public class RecipeIdentityTest {
         // Act
         handler.execute(
                 SUT,
-                getRequest(recipeId, DO_NOT_CLONE, model),
+                getRequest(recipeId, model),
                 getCallback());
         // Assert
-        assertTrue(onErrorResponse.getFailReasons().contains(RecipeIdentity.FailReason.TITLE_TOO_LONG));
-        assertTrue(onErrorResponse.getFailReasons().contains(RecipeIdentity.FailReason.DESCRIPTION_TOO_LONG));
+        assertTrue(onErrorResponse.
+                getMetadata().
+                getFailReasons().
+                contains(RecipeIdentity.FailReason.TITLE_TOO_LONG));
+        assertTrue(onErrorResponse.
+                getMetadata().
+                getFailReasons().
+                contains(RecipeIdentity.FailReason.DESCRIPTION_TOO_LONG));
     }
 
     @Test
@@ -199,14 +198,17 @@ public class RecipeIdentityTest {
         verifyIdentityDatabaseCalledWithNewIdAndReturnDataNotAvailable();
         handler.execute(
                 SUT,
-                getRequest(recipeId, DO_NOT_CLONE, model),
+                getRequest(recipeId, model),
                 getCallback());
 
         // Assert
-        assertEquals(ComponentState.INVALID_CHANGED, onErrorResponse.getState());
+        assertEquals(ComponentState.INVALID_CHANGED, onErrorResponse.getMetadata().getState());
         System.out.println(TAG + onErrorResponse);
 
-        assertTrue(onErrorResponse.getFailReasons().contains(RecipeIdentity.FailReason.TITLE_TOO_SHORT));
+        assertTrue(onErrorResponse.
+                getMetadata().
+                getFailReasons().
+                contains(RecipeIdentity.FailReason.TITLE_TOO_SHORT));
         assertEquals(invalidTitle, onErrorResponse.getModel().getTitle());
         assertEquals(validDescription, onErrorResponse.getModel().getDescription());
     }
@@ -228,12 +230,15 @@ public class RecipeIdentityTest {
         // Act
         handler.execute(
                 SUT,
-                getRequest(recipeId, DO_NOT_CLONE, model),
+                getRequest(recipeId, model),
                 getCallback());
 
         // Assert
-        assertEquals(ComponentState.INVALID_CHANGED, onErrorResponse.getState());
-        assertTrue(onErrorResponse.getFailReasons().contains(RecipeIdentity.FailReason.TITLE_TOO_SHORT));
+        assertEquals(ComponentState.INVALID_CHANGED, onErrorResponse.getMetadata().getState());
+        assertTrue(onErrorResponse.
+                getMetadata().
+                getFailReasons().
+                contains(RecipeIdentity.FailReason.TITLE_TOO_SHORT));
     }
 
     @Test
@@ -253,13 +258,13 @@ public class RecipeIdentityTest {
         // Act
         handler.execute(
                 SUT,
-                getRequest(recipeId, DO_NOT_CLONE, validTitleModel),
+                getRequest(recipeId, validTitleModel),
                 getCallback()
         );
 
         // Assert
         verify(repoIdentityMock).save(eq(VALID_NEW_TITLE_VALID_DEFAULT_DESCRIPTION));
-        assertEquals(ComponentState.VALID_CHANGED, onSuccessResponse.getState());
+        assertEquals(ComponentState.VALID_CHANGED, onSuccessResponse.getMetadata().getState());
     }
 
     @Test
@@ -278,11 +283,14 @@ public class RecipeIdentityTest {
         // Act
         handler.execute(
                 SUT,
-                getRequest(recipeId, DO_NOT_CLONE, model),
+                getRequest(recipeId, model),
                 getCallback());
         // Assert
-        assertEquals(RecipeStateCalculator.ComponentState.VALID_CHANGED, onSuccessResponse.getState());
-        assertTrue(onSuccessResponse.getFailReasons().contains(CommonFailReason.NONE));
+        assertEquals(
+                RecipeStateCalculator.ComponentState.VALID_CHANGED,
+                onSuccessResponse.getMetadata().getState());
+        assertTrue(
+                onSuccessResponse.getMetadata().getFailReasons().contains(CommonFailReason.NONE));
     }
 
     @Test
@@ -298,7 +306,6 @@ public class RecipeIdentityTest {
 
         RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
                 setId(INVALID_NEW_EMPTY.getId()).
-                setCloneToId(DO_NOT_CLONE).
                 setModel(requestModel).
                 build();
         // Act
@@ -306,7 +313,7 @@ public class RecipeIdentityTest {
 
         // Assert
         verify(repoIdentityMock).save(VALID_NEW_COMPLETE);
-        assertEquals(ComponentState.VALID_CHANGED, onSuccessResponse.getState());
+        assertEquals(ComponentState.VALID_CHANGED, onSuccessResponse.getMetadata().getState());
     }
 
     @Test
@@ -326,7 +333,7 @@ public class RecipeIdentityTest {
                 build();
         handler.execute(
                 SUT,
-                getRequest(recipeId, DO_NOT_CLONE, validTitleModel),
+                getRequest(recipeId, validTitleModel),
                 getCallback());
 
         // RecipeRequestAbstract/Response 3
@@ -338,7 +345,7 @@ public class RecipeIdentityTest {
         // Act
         handler.execute(
                 SUT,
-                getRequest(recipeId, DO_NOT_CLONE, validTitleDescriptionModel),
+                getRequest(recipeId, validTitleDescriptionModel),
                 getCallback());
         // Assert save
         verify(repoIdentityMock, times((2))).save(identityEntity.capture());
@@ -347,9 +354,14 @@ public class RecipeIdentityTest {
         assertEquals(validTitle, onSuccessResponse.getModel().getTitle());
         assertEquals(validDescription, onSuccessResponse.getModel().getDescription());
         // Assert state
-        assertEquals(RecipeStateCalculator.ComponentState.VALID_CHANGED, onSuccessResponse.getState());
-        assertEquals(1, onSuccessResponse.getFailReasons().size());
-        assertTrue(onSuccessResponse.getFailReasons().contains(CommonFailReason.NONE));
+        assertEquals(
+                RecipeStateCalculator.ComponentState.VALID_CHANGED,
+                onSuccessResponse.getMetadata().getState());
+        assertEquals(1, onSuccessResponse.getMetadata().getFailReasons().size());
+        assertTrue(onSuccessResponse.
+                getMetadata().
+                getFailReasons().
+                contains(CommonFailReason.NONE));
     }
 
     @Test
@@ -357,14 +369,13 @@ public class RecipeIdentityTest {
         // Arrange
         RecipeIdentityRequest request = getRequest(
                 VALID_EXISTING_COMPLETE.getId(),
-                DO_NOT_CLONE,
                 getDefaultModel());
         // Act
         handler.execute(SUT, request, getCallback());
 
         simulateGetValidExistingCompleteFromDatabase();
         // Assert
-        assertEquals(ComponentState.VALID_UNCHANGED, onSuccessResponse.getState());
+        assertEquals(ComponentState.VALID_UNCHANGED, onSuccessResponse.getMetadata().getState());
     }
 
     @Test
@@ -374,13 +385,14 @@ public class RecipeIdentityTest {
         // Act
         handler.execute(
                 SUT,
-                getRequest(recipeId, DO_NOT_CLONE, getDefaultModel()),
+                getRequest(recipeId, getDefaultModel()),
                 getCallback());
         // Assert
         verify(repoIdentityMock).getById(eq(recipeId), repoCallback.capture());
         repoCallback.getValue().onEntityLoaded(INVALID_EXISTING_TITLE_TOO_SHORT_DEFAULT_DESCRIPTION);
         // Assert state
-        assertEquals(RecipeStateCalculator.ComponentState.INVALID_UNCHANGED, onErrorResponse.getState());
+        assertEquals(RecipeStateCalculator.ComponentState.INVALID_UNCHANGED,
+                onErrorResponse.getMetadata().getState());
     }
 
     @Test
@@ -390,14 +402,17 @@ public class RecipeIdentityTest {
         // Act
         handler.execute(
                 SUT,
-                getRequest(recipeId, DO_NOT_CLONE, getDefaultModel()),
+                getRequest(recipeId, getDefaultModel()),
                 getCallback());
         // Assert
         verify(repoIdentityMock).getById(eq(recipeId), repoCallback.capture());
         repoCallback.getValue().onEntityLoaded(INVALID_EXISTING_TITLE_TOO_SHORT_DEFAULT_DESCRIPTION);
         // Assert fail reasons
-        assertEquals(1, onErrorResponse.getFailReasons().size());
-        assertTrue(onErrorResponse.getFailReasons().contains(RecipeIdentity.FailReason.TITLE_TOO_SHORT));
+        assertEquals(1, onErrorResponse.getMetadata().getFailReasons().size());
+        assertTrue(onErrorResponse.
+                getMetadata().
+                getFailReasons().
+                contains(RecipeIdentity.FailReason.TITLE_TOO_SHORT));
     }
 
     @Test
@@ -407,13 +422,15 @@ public class RecipeIdentityTest {
         // Act
         handler.execute(
                 SUT,
-                getRequest(recipeId, DO_NOT_CLONE, getDefaultModel()),
+                getRequest(recipeId, getDefaultModel()),
                 getCallback());
         // Assert
         verify(repoIdentityMock).getById(eq(recipeId), repoCallback.capture());
         repoCallback.getValue().onEntityLoaded(INVALID_EXISTING_TITLE_TOO_LONG_DEFAULT_DESCRIPTION);
         // assert state
-        assertEquals(RecipeStateCalculator.ComponentState.INVALID_UNCHANGED, onErrorResponse.getState());
+        assertEquals(
+                RecipeStateCalculator.ComponentState.INVALID_UNCHANGED,
+                onErrorResponse.getMetadata().getState());
     }
 
     @Test
@@ -423,16 +440,21 @@ public class RecipeIdentityTest {
         // Act
         handler.execute(
                 SUT,
-                getRequest(recipeId, DO_NOT_CLONE, getDefaultModel()),
+                getRequest(recipeId, getDefaultModel()),
                 getCallback()
         );
         // Assert
         verify(repoIdentityMock).getById(eq(recipeId), repoCallback.capture());
         repoCallback.getValue().onEntityLoaded(INVALID_EXISTING_TITLE_VALID_DESCRIPTION_TOO_LONG);
 
-        assertEquals(RecipeStateCalculator.ComponentState.INVALID_UNCHANGED, onErrorResponse.getState());
-        assertEquals(1, onErrorResponse.getFailReasons().size());
-        assertTrue(onErrorResponse.getFailReasons().contains(RecipeIdentity.FailReason.DESCRIPTION_TOO_LONG));
+        assertEquals(
+                RecipeStateCalculator.ComponentState.INVALID_UNCHANGED,
+                onErrorResponse.getMetadata().getState());
+        assertEquals(1, onErrorResponse.getMetadata().getFailReasons().size());
+        assertTrue(onErrorResponse.
+                getMetadata().
+                getFailReasons().
+                contains(RecipeIdentity.FailReason.DESCRIPTION_TOO_LONG));
     }
 
     @Test
@@ -442,15 +464,18 @@ public class RecipeIdentityTest {
         // Act
         handler.execute(
                 SUT,
-                getRequest(recipeId, DO_NOT_CLONE, getDefaultModel()),
+                getRequest(recipeId, getDefaultModel()),
                 getCallback()
         );
         // Assert
         verify(repoIdentityMock).getById(eq(recipeId), repoCallback.capture());
         repoCallback.getValue().onEntityLoaded(INVALID_EXISTING_TITLE_VALID_DESCRIPTION_TOO_LONG);
 
-        assertEquals(1, onErrorResponse.getFailReasons().size());
-        assertTrue(onErrorResponse.getFailReasons().contains(RecipeIdentity.FailReason.DESCRIPTION_TOO_LONG));
+        assertEquals(1, onErrorResponse.getMetadata().getFailReasons().size());
+        assertTrue(onErrorResponse.
+                getMetadata().
+                getFailReasons().
+                contains(RecipeIdentity.FailReason.DESCRIPTION_TOO_LONG));
     }
 
     @Test
@@ -460,13 +485,15 @@ public class RecipeIdentityTest {
         // Act
         handler.execute(
                 SUT,
-                getRequest(recipeId, DO_NOT_CLONE, getDefaultModel()),
+                getRequest(recipeId, getDefaultModel()),
                 getCallback());
         // Assert
         verify(repoIdentityMock).getById(eq(recipeId), repoCallback.capture());
         repoCallback.getValue().onEntityLoaded(INVALID_EXISTING_TITLE_TOO_SHORT_DESCRIPTION_TOO_LONG);
 
-        assertEquals(RecipeStateCalculator.ComponentState.INVALID_UNCHANGED, onErrorResponse.getState());
+        assertEquals(
+                RecipeStateCalculator.ComponentState.INVALID_UNCHANGED,
+                onErrorResponse.getMetadata().getState());
     }
 
     @Test
@@ -474,17 +501,25 @@ public class RecipeIdentityTest {
         // Arrange
         String recipeId = INVALID_EXISTING_TITLE_TOO_SHORT_DESCRIPTION_TOO_LONG.getId();
         // Act
-        handler.execute(
-                SUT,
-                getRequest(recipeId, DO_NOT_CLONE, getDefaultModel()),
-                getCallback());
+        RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
+                setId(recipeId).
+                setModel(getDefaultModel()).
+                build();
+
+        handler.execute(SUT, request, getCallback());
         // Assert
         verify(repoIdentityMock).getById(eq(recipeId), repoCallback.capture());
         repoCallback.getValue().onEntityLoaded(INVALID_EXISTING_TITLE_TOO_SHORT_DESCRIPTION_TOO_LONG);
 
-        assertEquals(2, onErrorResponse.getFailReasons().size());
-        assertTrue(onErrorResponse.getFailReasons().contains(RecipeIdentity.FailReason.TITLE_TOO_SHORT));
-        assertTrue(onErrorResponse.getFailReasons().contains(RecipeIdentity.FailReason.DESCRIPTION_TOO_LONG));
+        assertEquals(2, onErrorResponse.getMetadata().getFailReasons().size());
+        assertTrue(onErrorResponse.
+                getMetadata().
+                getFailReasons().
+                contains(RecipeIdentity.FailReason.TITLE_TOO_SHORT));
+        assertTrue(onErrorResponse.
+                getMetadata().
+                getFailReasons().
+                contains(RecipeIdentity.FailReason.DESCRIPTION_TOO_LONG));
     }
 
     @Test
@@ -492,15 +527,14 @@ public class RecipeIdentityTest {
         // Arrange
         String recipeId = INVALID_EXISTING_TITLE_TOO_LONG_DESCRIPTION_TOO_LONG.getId();
         // Act
-        handler.execute(
-                SUT,
-                getRequest(recipeId, DO_NOT_CLONE, getDefaultModel()),
-                getCallback());
+        handler.execute(SUT, getRequest(recipeId, getDefaultModel()), getCallback());
         // Assert
         verify(repoIdentityMock).getById(eq(recipeId), repoCallback.capture());
         repoCallback.getValue().onEntityLoaded(INVALID_EXISTING_TITLE_TOO_LONG_DESCRIPTION_TOO_LONG);
         // Assert state
-        assertEquals(RecipeStateCalculator.ComponentState.INVALID_UNCHANGED, onErrorResponse.getState());
+        assertEquals(
+                RecipeStateCalculator.ComponentState.INVALID_UNCHANGED,
+                onErrorResponse.getMetadata().getState());
     }
 
     @Test
@@ -508,17 +542,20 @@ public class RecipeIdentityTest {
         // Arrange
         String recipeId = INVALID_EXISTING_TITLE_TOO_LONG_DESCRIPTION_TOO_LONG.getId();
         // Act
-        handler.execute(
-                SUT,
-                getRequest(recipeId, DO_NOT_CLONE, getDefaultModel()),
-                getCallback());
+        handler.execute(SUT, getRequest(recipeId, getDefaultModel()), getCallback());
         // Assert
         verify(repoIdentityMock).getById(eq(recipeId), repoCallback.capture());
         repoCallback.getValue().onEntityLoaded(INVALID_EXISTING_TITLE_TOO_LONG_DESCRIPTION_TOO_LONG);
         // Assert fail reasons
-        assertEquals(2, onErrorResponse.getFailReasons().size());
-        assertTrue(onErrorResponse.getFailReasons().contains(RecipeIdentity.FailReason.TITLE_TOO_LONG));
-        assertTrue(onErrorResponse.getFailReasons().contains(RecipeIdentity.FailReason.DESCRIPTION_TOO_LONG));
+        assertEquals(2, onErrorResponse.getMetadata().getFailReasons().size());
+        assertTrue(onErrorResponse.
+                getMetadata().
+                getFailReasons().
+                contains(RecipeIdentity.FailReason.TITLE_TOO_LONG));
+        assertTrue(onErrorResponse.
+                getMetadata().
+                getFailReasons().
+                contains(RecipeIdentity.FailReason.DESCRIPTION_TOO_LONG));
     }
 
     @Test
@@ -526,15 +563,14 @@ public class RecipeIdentityTest {
         // Arrange
         String recipeId = VALID_EXISTING_TITLE_VALID_DESCRIPTION_DEFAULT.getId();
         // Act
-        handler.execute(
-                SUT,
-                getRequest(recipeId, DO_NOT_CLONE, getDefaultModel()),
-                getCallback());
+        handler.execute(SUT, getRequest(recipeId, getDefaultModel()), getCallback());
         // Assert
         verify(repoIdentityMock).getById(eq(recipeId), repoCallback.capture());
         repoCallback.getValue().onEntityLoaded(VALID_EXISTING_TITLE_VALID_DESCRIPTION_DEFAULT);
         // Assert state
-        assertEquals(RecipeStateCalculator.ComponentState.VALID_UNCHANGED, onSuccessResponse.getState());
+        assertEquals(
+                RecipeStateCalculator.ComponentState.VALID_UNCHANGED,
+                onSuccessResponse.getMetadata().getState());
     }
 
     @Test
@@ -542,16 +578,16 @@ public class RecipeIdentityTest {
         // Arrange
         String recipeId = VALID_EXISTING_TITLE_VALID_DESCRIPTION_DEFAULT.getId();
         // Act
-        handler.execute(
-                SUT,
-                getRequest(recipeId, DO_NOT_CLONE, getDefaultModel()),
-                getCallback());
+        handler.execute(SUT, getRequest(recipeId, getDefaultModel()), getCallback());
         // Assert
         verify(repoIdentityMock).getById(eq(recipeId), repoCallback.capture());
         repoCallback.getValue().onEntityLoaded(VALID_EXISTING_TITLE_VALID_DESCRIPTION_DEFAULT);
         // Assert fail reasons
-        assertEquals(1, onSuccessResponse.getFailReasons().size());
-        assertTrue(onSuccessResponse.getFailReasons().contains(CommonFailReason.NONE));
+        assertEquals(1, onSuccessResponse.getMetadata().getFailReasons().size());
+        assertTrue(onSuccessResponse.
+                getMetadata().
+                getFailReasons().
+                contains(CommonFailReason.NONE));
     }
 
     @Test
@@ -559,15 +595,14 @@ public class RecipeIdentityTest {
         // Arrange
         String recipeId = VALID_EXISTING_TITLE_VALID_DESCRIPTION_VALID.getId();
         // Act
-        handler.execute(
-                SUT,
-                getRequest(recipeId, DO_NOT_CLONE, getDefaultModel()),
-                getCallback());
+        handler.execute(SUT, getRequest(recipeId, getDefaultModel()), getCallback());
 
         verify(repoIdentityMock).getById(eq(recipeId), repoCallback.capture());
         repoCallback.getValue().onEntityLoaded(VALID_EXISTING_TITLE_VALID_DESCRIPTION_VALID);
         // Assert state
-        assertEquals(RecipeStateCalculator.ComponentState.VALID_UNCHANGED, onSuccessResponse.getState());
+        assertEquals(
+                RecipeStateCalculator.ComponentState.VALID_UNCHANGED,
+                onSuccessResponse.getMetadata().getState());
     }
 
     @Test
@@ -575,17 +610,17 @@ public class RecipeIdentityTest {
         // Arrange
         String recipeId = VALID_EXISTING_TITLE_VALID_DESCRIPTION_VALID.getId();
         // Act
-        handler.execute(
-                SUT,
-                getRequest(recipeId, DO_NOT_CLONE, getDefaultModel()),
-                getCallback());
+        handler.execute(SUT, getRequest(recipeId, getDefaultModel()), getCallback());
 
         verify(repoIdentityMock).getById(eq(recipeId), repoCallback.capture());
         repoCallback.getValue().onEntityLoaded(VALID_EXISTING_TITLE_VALID_DESCRIPTION_VALID);
         // Assert values
         // Assert state
-        assertEquals(1, onSuccessResponse.getFailReasons().size());
-        assertTrue(onSuccessResponse.getFailReasons().contains(CommonFailReason.NONE));
+        assertEquals(1, onSuccessResponse.getMetadata().getFailReasons().size());
+        assertTrue(onSuccessResponse.
+                getMetadata().
+                getFailReasons().
+                contains(CommonFailReason.NONE));
     }
 
     @Test
@@ -593,94 +628,23 @@ public class RecipeIdentityTest {
         // Arrange
         String recipeId = INVALID_EXISTING_TITLE_TOO_LONG_DEFAULT_DESCRIPTION.getId();
         // Act
-        handler.execute(
-                SUT,
-                getRequest(recipeId, DO_NOT_CLONE, getDefaultModel()),
-                getCallback());
+        handler.execute(SUT, getRequest(recipeId, getDefaultModel()), getCallback());
         // Assert
         verify(repoIdentityMock).getById(eq(recipeId), repoCallback.capture());
         repoCallback.getValue().onEntityLoaded(INVALID_EXISTING_TITLE_TOO_LONG_DEFAULT_DESCRIPTION);
         // Assert fail reasons
-        assertEquals(1, onErrorResponse.getFailReasons().size());
-        assertTrue(onErrorResponse.getFailReasons().contains(RecipeIdentity.FailReason.TITLE_TOO_LONG));
-    }
-
-    @Test
-    public void existingIdCloneToId_dataClonedAndSavedToCloneToId() {
-        // Arrange
-        whenTimeProviderReturnTime(VALID_NEW_COMPLETE.getCreateDate());
-        String cloneFromRecipeId = VALID_COMPLETE_FROM_ANOTHER_USER.getId();
-        String cloneToRecipeId = VALID_COMPLETE_AFTER_CLONED.getId();
-        // Act
-        handler.execute(
-                SUT,
-                getRequest(cloneFromRecipeId, cloneToRecipeId, getDefaultModel()),
-                getCallback()
-        );
-        // Assert repo called with correct id
-        verify(repoIdentityMock).getById(eq(cloneFromRecipeId), repoCallback.capture());
-        repoCallback.getValue().onEntityLoaded(VALID_COMPLETE_FROM_ANOTHER_USER);
-        // Assert data cloned and saved with clone to id
-        verify(repoIdentityMock).save(eq(VALID_COMPLETE_AFTER_CLONED));
-    }
-
-    @Test
-    public void existingIdCloneToId_descriptionUpdatedAfterClone_updatesSavedToCloneToId() {
-        // Arrange, 1st request, clone data
-        whenTimeProviderReturnTime(VALID_NEW_COMPLETE.getCreateDate());
-        String cloneFromRecipeId = VALID_COMPLETE_FROM_ANOTHER_USER.getId();
-        String cloneToRecipeId = VALID_COMPLETE_AFTER_CLONED.getId();
-        // Act
-        handler.execute(
-                SUT,
-                getRequest(cloneFromRecipeId, cloneToRecipeId, getDefaultModel()),
-                getCallback()
-        );
-        // Assert repo called with correct id
-        verify(repoIdentityMock).getById(eq(cloneFromRecipeId), repoCallback.capture());
-        repoCallback.getValue().onEntityLoaded(VALID_COMPLETE_FROM_ANOTHER_USER);
-
-        // Arrange, 2nd request, update description
-        String updatedDescription = VALID_COMPLETE_AFTER_CLONE_DESCRIPTION_UPDATED.getDescription();
-        RecipeIdentityRequest.Model modelWithUpdatedDescription = RecipeIdentityRequest.Model.Builder.
-                basedOnIdentityResponseModel(onSuccessResponse.getModel()).
-                setDescription(updatedDescription).
-                build();
-
-        // Act
-        handler.execute(
-                SUT,
-                getRequest(cloneToRecipeId, DO_NOT_CLONE, modelWithUpdatedDescription),
-                getCallback()
-        );
-        // Assert
-        verify(repoIdentityMock).save(eq(VALID_COMPLETE_AFTER_CLONE_DESCRIPTION_UPDATED));
-    }
-
-    @Test
-    public void existingIdCloneToId_titleTooLongDescriptionTooLongInClone_failReasonTITLE_TOO_LONG_DESCRIPTION_TOO_LONG() {
-        // Arrange
-        // Arrange, 1st request, clone data
-        whenTimeProviderReturnTime(VALID_NEW_COMPLETE.getCreateDate());
-        String cloneFromRecipeId = INVALID_FROM_ANOTHER_USER_TITLE_TOO_LONG_DESCRIPTION_TOO_LONG.getId();
-        String cloneToRecipeId = VALID_AFTER_INVALID_FROM_ANOTHER_USER.getId();
-        // Act
-        handler.execute(
-                SUT,
-                getRequest(cloneFromRecipeId, cloneToRecipeId, getDefaultModel()),
-                getCallback()
-        );
-        // Assert
-        verify(repoIdentityMock).getById(eq(cloneFromRecipeId), repoCallback.capture());
-        repoCallback.getValue().onEntityLoaded(INVALID_FROM_ANOTHER_USER_TITLE_TOO_LONG_DESCRIPTION_TOO_LONG);
-
+        assertEquals(1, onErrorResponse.getMetadata().getFailReasons().size());
+        assertTrue(onErrorResponse.
+                getMetadata().
+                getFailReasons().
+                contains(RecipeIdentity.FailReason.TITLE_TOO_LONG));
     }
 
     // region helper methods -----------------------------------------------------------------------
     private void verifyIdentityDatabaseCalledWithNewIdAndReturnDataNotAvailable() {
         handler.execute(
                 SUT,
-                getRequest(INVALID_NEW_EMPTY.getId(), DO_NOT_CLONE, getDefaultModel()),
+                getRequest(INVALID_NEW_EMPTY.getId(), getDefaultModel()),
                 getCallback());
         simulateNothingReturnedFromDatabase();
     }
@@ -690,11 +654,9 @@ public class RecipeIdentityTest {
     }
 
     private RecipeIdentityRequest getRequest(String recipeId,
-                                             String cloneToRecipeId,
                                              RecipeIdentityRequest.Model model) {
         return new RecipeIdentityRequest.Builder().
                 setId(recipeId).
-                setCloneToId(cloneToRecipeId).
                 setModel(model).
                 build();
     }

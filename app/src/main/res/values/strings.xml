@@ -6,7 +6,7 @@
     <string name="cd_picture_of_product">A picture of the product</string>
     <string name="cd_add_image_from_camera">Select to add image from camera</string>
     <string name="cd_add_image_from_gallery">Click to add image from gallery</string>
-    <!-- Attach to any ImageView's of the recipeMacro -->
+    <!-- Attach to any ImageView's of the recipe -->
     <string name="cd_done">Click when done editing</string>
     <string name="cd_use">Click to use</string>
     <string name="cd_delete_product">Click to delete the current product</string>
@@ -16,7 +16,7 @@
     <string name="cd_add_product">Add a product</string>
     <string name="cd_brand_logo">The kitchen menu brand logo</string>
 
-    <string name="cd_picture_of_ingredient">A image of the ingredient to be used with this recipeMacro</string>
+    <string name="cd_picture_of_ingredient">A image of the ingredient to be used with this recipe</string>
 
     <!-- Common field labels and hints -->
     <string name="label_description">Manufacturer or retailers exact description</string>
@@ -221,7 +221,7 @@
     <string name="input_error_recipe_prep_time_too_long">Prep time needs to be under 100 hours</string>
     <string name="input_error_recipe_cook_time_too_long">Cook time needs to be under 100 hours</string>
 
-    <!-- RecipeMacro course labels -->
+    <!-- Recipe course labels -->
     <string name="course_label_breakfast">Breakfast</string>
     <string name="course_label_lunch">Lunch</string>
     <string name="course_label_dinner">Main course</string>
@@ -239,13 +239,13 @@
     <!-- ProductCatalogActivity -->
     <string name="product_catalog_empty_view_title_text">The cupboards are empty.</string>
     <string name="product_catalog_empty_view_subtitle_text">Press + to add some products!</string>
-    <string name="image_of_meal">An image of the selected recipeMacro</string>
+    <string name="image_of_meal">An image of the selected recipe</string>
     <string name="activity_catalog_products_tab_1_title">All Products</string>
     <string name="activity_catalog_products_tab_2_title">My Favorites</string>
     <string name="activity_catalog_recipes_tab_1_title">All recipes</string>
     <string name="activity_catalog_recipes_tab_2_title">My favorites</string>
 
-    <!-- RecipeMacro ingredient Editor -->
+    <!-- Recipe ingredient Editor -->
     <string name="recipe_ingredient_recipe_name">Enter an amount for this ingredient</string>
 
     <!-- AdapterProduct -->
@@ -280,10 +280,10 @@
     <string name="search_hint">Search products…</string>
     <string name="tkm_product_descriptions">Product descriptions</string>
 
-    <!-- RecipeMacro Catalog -->
+    <!-- Recipe Catalog -->
     <string name="title_recipe_catalog">Recipe Catalog</string>
 
-    <!-- RecipeMacro Editor -->
+    <!-- Recipe Editor -->
     <string name="title_recipe_editor">Recipe Editor</string>
 
     <!-- Ingredient -->
@@ -357,15 +357,15 @@
     <string name="servings_label">Servings</string>
     <string name="portions_label">Portions</string>
 
-    <!-- RecipeMacro measurement ingredientEditor -->
+    <!-- Recipe measurement ingredientEditor -->
     <string name="recipe_ingredient_unit_of_measure_label">Unit</string>
     <string name="add_recommended_product">Add recommended product</string>
 
-    <!-- RecipeMacro ingredients list -->
+    <!-- Recipe ingredients list -->
     <string name="recipe_ingredient_list_header">Ingredients for:</string>
     <string name="add_ingredient">Add ingredient</string>
     <string name="empty_recipe_ingredients_message">There are currently no ingredients associated
-        with this recipeMacro.</string>
+        with this recipe.</string>
 
     <!-- Conversion factor -->
     <string name="volume_to_weight_conversion_advanced_label">Advanced: Volume to weight conversion</string>

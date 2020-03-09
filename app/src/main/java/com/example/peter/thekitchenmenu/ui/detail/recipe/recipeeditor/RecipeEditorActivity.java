@@ -17,24 +17,32 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.RecipeEditorActivityBinding;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseFactory;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateResponse;
 import com.example.peter.thekitchenmenu.ui.UnsavedChangesDialogFragment;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryRecipe;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist.RecipeIngredientListActivity;
 import com.example.peter.thekitchenmenu.ui.imageeditor.ImageEditorFragment;
 import com.example.peter.thekitchenmenu.utils.ActivityUtils;
 
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro.CREATE_NEW_RECIPE;
+
 public class RecipeEditorActivity
         extends AppCompatActivity
         implements AddEditRecipeNavigator {
 
-    public static final String EXTRA_RECIPE_ID = "RECIPE_ID";
+    private static final String TAG = "tkm-" + RecipeEditorActivity.class.getSimpleName() + ": ";
+
+    public static final String EXTRA_RECIPE_ID = "";
     public static final int REQUEST_ADD_EDIT_RECIPE = 50;
     public static final int RESULT_ADD_EDIT_RECIPE_OK = RESULT_FIRST_USER + 1;
     public static final int RESULT_ADD_EDIT_RECIPE_CANCELLED = RESULT_FIRST_USER + 2;
 
     private RecipeEditorActivityBinding binding;
     private RecipeEditorViewModel recipeEditorViewModel;
+
+    private RecipeMacro recipeMacro;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,56 +83,49 @@ public class RecipeEditorActivity
     }
 
     private void setupViewModels() {
-        recipeEditorViewModel = obtainRecipeEditorViewModel(this);
+        recipeMacro = UseCaseFactory.getInstance(getApplication()).provideRecipeMacro();
+
+        recipeEditorViewModel = createRecipeEditorViewModel(this, recipeMacro);
         recipeEditorViewModel.setNavigator(this);
         binding.setViewModel(recipeEditorViewModel);
 
-        RecipeMacro recipeMacro = recipeEditorViewModel.getRecipeMacro();
-        obtainIdentityViewModel(this, recipeMacro);
+        createIdentityViewModel(this, recipeMacro);
+        createCourseViewModel(this, recipeMacro);
+        createDurationViewModel(this, recipeMacro);
+        createPortionsViewModel(this, recipeMacro);
 
-        RecipeCourseEditorViewModel courseVM = obtainCourseViewModel(this, recipeMacro);
-//        recipeMacro.registerMacroCallback(courseVM);
-
-        RecipeDurationEditorViewModel durationVM = obtainDurationViewModel(this, recipeMacro);
-//        recipeMacro.registerMacroCallback(durationVM);
-
-        RecipePortionsEditorViewModel portionsVM = obtainPortionsViewModel(this, recipeMacro);
-//        recipeMacro.registerMacroCallback(portionsVM);
-
+        recipeMacro.registerStateListener(new RecipeStateListener());
     }
 
-    static RecipeEditorViewModel obtainRecipeEditorViewModel(FragmentActivity activity) {
-        ViewModelFactoryRecipe factory = ViewModelFactoryRecipe.getInstance(
-                activity.getApplication());
-        return new ViewModelProvider(activity, factory).get(RecipeEditorViewModel.class);
-    }
-
-    static RecipeIdentityEditorViewModel obtainIdentityViewModel(FragmentActivity activity,
-                                                                 RecipeMacro recipeMacro) {
-        ViewModelFactoryRecipe factory = ViewModelFactoryRecipe.getInstance(
-                activity.getApplication(), recipeMacro);
-        return new ViewModelProvider(activity, factory).get(RecipeIdentityEditorViewModel.class);
-    }
-
-    static RecipeCourseEditorViewModel obtainCourseViewModel(FragmentActivity activity,
+    static RecipeEditorViewModel createRecipeEditorViewModel(FragmentActivity activity,
                                                              RecipeMacro recipeMacro) {
         ViewModelFactoryRecipe factory = ViewModelFactoryRecipe.getInstance(
                 activity.getApplication(), recipeMacro);
-        return new ViewModelProvider(activity, factory).get(RecipeCourseEditorViewModel.class);
+        return new ViewModelProvider(activity, factory).get(RecipeEditorViewModel.class);
     }
 
-    static RecipeDurationEditorViewModel obtainDurationViewModel(FragmentActivity activity,
-                                                                 RecipeMacro recipeMacro) {
+    static void createIdentityViewModel(FragmentActivity activity, RecipeMacro recipeMacro) {
         ViewModelFactoryRecipe factory = ViewModelFactoryRecipe.getInstance(
                 activity.getApplication(), recipeMacro);
-        return new ViewModelProvider(activity, factory).get(RecipeDurationEditorViewModel.class);
+        new ViewModelProvider(activity, factory).get(RecipeIdentityEditorViewModel.class);
     }
 
-    static RecipePortionsEditorViewModel obtainPortionsViewModel(FragmentActivity activity,
-                                                                 RecipeMacro recipeMacro) {
+    static void createCourseViewModel(FragmentActivity activity, RecipeMacro recipeMacro) {
         ViewModelFactoryRecipe factory = ViewModelFactoryRecipe.getInstance(
                 activity.getApplication(), recipeMacro);
-        return new ViewModelProvider(activity, factory).get(RecipePortionsEditorViewModel.class);
+        new ViewModelProvider(activity, factory).get(RecipeCourseEditorViewModel.class);
+    }
+
+    static void createDurationViewModel(FragmentActivity activity, RecipeMacro recipeMacro) {
+        ViewModelFactoryRecipe factory = ViewModelFactoryRecipe.getInstance(
+                activity.getApplication(), recipeMacro);
+        new ViewModelProvider(activity, factory).get(RecipeDurationEditorViewModel.class);
+    }
+
+    static void createPortionsViewModel(FragmentActivity activity, RecipeMacro recipeMacro) {
+        ViewModelFactoryRecipe factory = ViewModelFactoryRecipe.getInstance(
+                activity.getApplication(), recipeMacro);
+        new ViewModelProvider(activity, factory).get(RecipePortionsEditorViewModel.class);
     }
 
     private void setupFragments() {
@@ -160,18 +161,6 @@ public class RecipeEditorActivity
     }
 
     @NonNull
-    private RecipeIdentityFragment findOrCreateIdentityEditorFragment() {
-        RecipeIdentityFragment recipeIdentityFragment =
-                (RecipeIdentityFragment) getSupportFragmentManager().
-                        findFragmentById(R.id.recipe_editor_recipe_identity_content_frame);
-
-        if (recipeIdentityFragment == null) {
-            recipeIdentityFragment = RecipeIdentityFragment.newInstance();
-        }
-        return recipeIdentityFragment;
-    }
-
-    @NonNull
     private ImageEditorFragment findOrCreateImageEditorFragment() {
         ImageEditorFragment imageEditorFragment =
                 (ImageEditorFragment) getSupportFragmentManager().
@@ -181,6 +170,18 @@ public class RecipeEditorActivity
             imageEditorFragment = ImageEditorFragment.newInstance();
         }
         return imageEditorFragment;
+    }
+
+    @NonNull
+    private RecipeIdentityFragment findOrCreateIdentityEditorFragment() {
+        RecipeIdentityFragment recipeIdentityFragment =
+                (RecipeIdentityFragment) getSupportFragmentManager().
+                        findFragmentById(R.id.recipe_editor_recipe_identity_content_frame);
+
+        if (recipeIdentityFragment == null) {
+            recipeIdentityFragment = RecipeIdentityFragment.newInstance();
+        }
+        return recipeIdentityFragment;
     }
 
     @NonNull
@@ -220,10 +221,17 @@ public class RecipeEditorActivity
     }
 
     private void start() {
-        if (getIntent().hasExtra(EXTRA_RECIPE_ID)) {
-            recipeEditorViewModel.start(getIntent().getStringExtra(EXTRA_RECIPE_ID));
-        } else {
-            recipeEditorViewModel.start();
+        String recipeId = getIntent().hasExtra(EXTRA_RECIPE_ID) ?
+                getIntent().getStringExtra(EXTRA_RECIPE_ID) :
+                CREATE_NEW_RECIPE;
+
+        recipeEditorViewModel.start(recipeId);
+    }
+
+    private static class RecipeStateListener implements RecipeMacro.RecipeStateListener {
+        @Override
+        public void recipeStateChanged(RecipeStateResponse response) {
+
         }
     }
 

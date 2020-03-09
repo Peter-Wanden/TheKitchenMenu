@@ -23,7 +23,6 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe.DO_NOT_CLONE;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
 
 public class RecipePortionsEditorViewModel extends ObservableViewModel {
@@ -151,7 +150,7 @@ public class RecipePortionsEditorViewModel extends ObservableViewModel {
                             build();
                     RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                             setId(response.getId()).
-                            setCloneToId(DO_NOT_CLONE).
+                            setCloneToId("").
                             setModel(model).
                             build();
                     handler.execute(recipeMacro, request, callback);
@@ -200,7 +199,7 @@ public class RecipePortionsEditorViewModel extends ObservableViewModel {
                             build();
                     RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                             setId(response.getId()).
-                            setCloneToId(DO_NOT_CLONE).
+                            setCloneToId("").
                             setModel(model).
                             build();
                     handler.execute(recipeMacro, request, callback);

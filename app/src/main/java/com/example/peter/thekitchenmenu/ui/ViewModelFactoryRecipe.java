@@ -6,12 +6,10 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
-
-import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipe;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseFactory;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro;
+import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor.RecipeIngredientCalculatorViewModel;
 import com.example.peter.thekitchenmenu.ui.utils.unitofmeasure.MeasurementToSpannableConverter;
 import com.example.peter.thekitchenmenu.ui.detail.common.MeasurementErrorMessageMaker;
@@ -23,10 +21,8 @@ import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist.Re
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist.RecipeNameAndPortionsViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist.RecipeIngredientListViewModel;
 import com.example.peter.thekitchenmenu.ui.utils.NumberFormatter;
-import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.ui.catalog.recipe.RecipeCatalogViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipeEditorViewModel;
-import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import javax.annotation.Nonnull;
 
@@ -40,18 +36,14 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
     private final UseCaseFactory useCaseFactory;
     @Nonnull
     private final UseCaseHandler useCaseHandler;
-    @Nonnull
-    private final RepositoryRecipe recipeRepository;
     private RecipeMacro recipeMacro;
 
     private ViewModelFactoryRecipe(@Nonnull Application application,
                                    @Nonnull UseCaseFactory useCaseFactory,
-                                   @Nonnull UseCaseHandler useCaseHandler,
-                                   @Nonnull RepositoryRecipe recipeRepository) {
+                                   @Nonnull UseCaseHandler useCaseHandler) {
         this.application = application;
         this.useCaseFactory = useCaseFactory;
         this.useCaseHandler = useCaseHandler;
-        this.recipeRepository = recipeRepository;
     }
 
     public static ViewModelFactoryRecipe getInstance(Application application) {
@@ -61,10 +53,7 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
                     INSTANCE = new ViewModelFactoryRecipe(
                             application,
                             UseCaseFactory.getInstance(application),
-                            UseCaseHandler.getInstance(),
-                            DatabaseInjection.provideRecipeDataSource(
-                                    application.getApplicationContext()
-                            )
+                            UseCaseHandler.getInstance()
                     );
             }
         }
@@ -72,19 +61,17 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
     }
 
     private ViewModelFactoryRecipe(@Nonnull Application application,
-                                   RecipeMacro recipeMacro,
+                                   @Nonnull RecipeMacro recipeMacro,
                                    @Nonnull UseCaseFactory useCaseFactory,
-                                   @Nonnull UseCaseHandler useCaseHandler,
-                                   @Nonnull RepositoryRecipe recipeRepository) {
+                                   @Nonnull UseCaseHandler useCaseHandler) {
         this.application = application;
         this.recipeMacro = recipeMacro;
         this.useCaseFactory = useCaseFactory;
         this.useCaseHandler = useCaseHandler;
-        this.recipeRepository = recipeRepository;
     }
 
     public static ViewModelFactoryRecipe getInstance(@Nonnull Application application,
-                                                     RecipeMacro recipeMacro) {
+                                                     @Nonnull RecipeMacro recipeMacro) {
         if (INSTANCE == null) {
             synchronized (ViewModelFactoryRecipe.class) {
                 if (INSTANCE == null)
@@ -92,10 +79,7 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
                             application,
                             recipeMacro,
                             UseCaseFactory.getInstance(application),
-                            UseCaseHandler.getInstance(),
-                            DatabaseInjection.provideRecipeDataSource(
-                                    application.getApplicationContext()
-                            )
+                            UseCaseHandler.getInstance()
                     );
             }
         }
@@ -115,12 +99,10 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
         } else if (modelClass.isAssignableFrom(RecipeEditorViewModel.class)) {
             //noinspection unchecked
             return (T) new RecipeEditorViewModel(
-                    new TimeProvider(),
-                    recipeRepository,
-                    new UniqueIdProvider(),
-                    application.getResources(),
                     useCaseHandler,
-                    useCaseFactory
+                    recipeMacro,
+                    new UniqueIdProvider(),
+                    application.getResources()
             );
         } else if (modelClass.isAssignableFrom(RecipeIdentityEditorViewModel.class)) {
             //noinspection unchecked

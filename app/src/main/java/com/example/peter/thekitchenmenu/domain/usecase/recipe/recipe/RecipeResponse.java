@@ -1,9 +1,11 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe;
 
 import com.example.peter.thekitchenmenu.app.Constants;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponseAbstract;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
@@ -15,17 +17,21 @@ public final class RecipeResponse extends RecipeResponseAbstract {
     private final String createdBy;
     private final long createDate;
     private final long lastUpdate;
+    @Nonnull
+    private final List<FailReasons> failReasons;
 
     private RecipeResponse(@Nonnull String id,
                            @Nonnull String parentId,
                            @Nonnull String createdBy,
                            long createDate,
-                           long lastUpdate) {
+                           long lastUpdate,
+                           @Nonnull List<FailReasons> failReasons) {
         this.id = id;
         this.parentId = parentId;
         this.createdBy = createdBy;
         this.createDate = createDate;
         this.lastUpdate = lastUpdate;
+        this.failReasons = failReasons;
     }
 
     @Nonnull
@@ -46,24 +52,28 @@ public final class RecipeResponse extends RecipeResponseAbstract {
         return lastUpdate;
     }
 
+    @Nonnull
+    public List<FailReasons> getFailReasons() {
+        return failReasons;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RecipeResponse response = (RecipeResponse) o;
-        return id.equals(response.id) &&
-                parentId.equals(response.parentId) &&
-                createdBy.equals(response.createdBy) &&
-                createDate == response.createDate &&
-                lastUpdate == response.lastUpdate;
+        RecipeResponse that = (RecipeResponse) o;
+        return createDate == that.createDate &&
+                lastUpdate == that.lastUpdate &&
+                parentId.equals(that.parentId) &&
+                createdBy.equals(that.createdBy) &&
+                failReasons.equals(that.failReasons);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, parentId, createdBy, createDate, lastUpdate);
+        return Objects.hash(parentId, createdBy, createDate, lastUpdate, failReasons);
     }
 
-    @Nonnull
     @Override
     public String toString() {
         return "RecipeResponse{" +
@@ -72,6 +82,7 @@ public final class RecipeResponse extends RecipeResponseAbstract {
                 ", createdBy='" + createdBy + '\'' +
                 ", createDate=" + createDate +
                 ", lastUpdate=" + lastUpdate +
+                ", failReasons=" + failReasons +
                 '}';
     }
 
@@ -81,6 +92,7 @@ public final class RecipeResponse extends RecipeResponseAbstract {
         private String createdBy;
         private long createDate;
         private long lastUpdate;
+        private List<FailReasons> failReasons;
 
         public static Builder getDefault() {
             return new Builder().
@@ -88,7 +100,8 @@ public final class RecipeResponse extends RecipeResponseAbstract {
                     setParentId("").
                     setCreatedBy(Constants.getUserId()).
                     setCreateDate(0L).
-                    setLastUpdate(0L);
+                    setLastUpdate(0L).
+                    getDefaultFailReasons();
         }
 
         public Builder setId(String id) {
@@ -116,13 +129,24 @@ public final class RecipeResponse extends RecipeResponseAbstract {
             return this;
         }
 
+        public Builder setFailReasons(List<FailReasons> failReasons) {
+            this.failReasons = failReasons;
+            return this;
+        }
+
+        private Builder getDefaultFailReasons() {
+            this.failReasons = new ArrayList<>();
+            return this;
+        }
+
         public RecipeResponse build() {
             return new RecipeResponse(
                     id,
                     parentId,
                     createdBy,
                     createDate,
-                    lastUpdate
+                    lastUpdate,
+                    failReasons
             );
         }
     }

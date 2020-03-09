@@ -23,7 +23,6 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe.DO_NOT_CLONE;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
 
 public class RecipeIdentityEditorViewModel extends ObservableViewModel {
@@ -101,7 +100,6 @@ public class RecipeIdentityEditorViewModel extends ObservableViewModel {
                     build();
             RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
                     setId(response.getId()).
-                    setCloneToId(DO_NOT_CLONE).
                     setModel(model).
                     build();
             handler.execute(recipeMacro, request, new IdentityCallbackListener());
@@ -125,7 +123,6 @@ public class RecipeIdentityEditorViewModel extends ObservableViewModel {
                     build();
             RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
                     setId(response.getId()).
-                    setCloneToId(DO_NOT_CLONE).
                     setModel(model).
                     build();
 
@@ -154,8 +151,10 @@ public class RecipeIdentityEditorViewModel extends ObservableViewModel {
     }
 
     private void onUseCaseError() {
-        System.out.println(TAG + "onUseCaseError: failReasons=" + response.getFailReasons());
-        List<FailReasons> failReasons = response.getFailReasons();
+        System.out.println(TAG + "onUseCaseError: failReasons=" +
+                response.getMetadata().getFailReasons());
+
+        List<FailReasons> failReasons = response.getMetadata().getFailReasons();
         if (failReasons.contains(CommonFailReason.DATA_UNAVAILABLE)) {
             isDataLoadingError.set(true);
         }

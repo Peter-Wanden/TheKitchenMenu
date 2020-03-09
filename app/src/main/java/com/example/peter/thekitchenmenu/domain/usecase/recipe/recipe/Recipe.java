@@ -4,9 +4,13 @@ import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipe;
+import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
+import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientRequest;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 
@@ -14,12 +18,19 @@ public class Recipe extends UseCase implements DataSource.GetEntityCallback<Reci
 
     private static final String TAG = "tkm-" + Recipe.class.getSimpleName() + ": ";
 
-    public static final String DO_NOT_CLONE = "";
+    // TODO - Rename to RecipeMetaData
+    //  last update - should be the time of the last updated component
+    //  keep recipe state, creator, etc. for fast access of statistics when searching
+    // TODO - Data layer:
+    //  have uid as well as recipeId
+    //  keep a copy of all data as it changes
 
+    @Nonnull
+    private final TimeProvider timeProvider;
     @Nonnull
     private final RepositoryRecipe repository;
     @Nonnull
-    private final TimeProvider timeProvider;
+    private final List<FailReasons> failReasons;
 
     private String id = "";
     private String parentId;
@@ -27,20 +38,21 @@ public class Recipe extends UseCase implements DataSource.GetEntityCallback<Reci
 
     private RecipePersistenceModel persistenceModel;
 
-    public Recipe(@Nonnull RepositoryRecipe repository,
-                  @Nonnull TimeProvider timeProvider) {
-        this.repository = repository;
+    public Recipe(@Nonnull TimeProvider timeProvider,
+                  @Nonnull RepositoryRecipe repository) {
         this.timeProvider = timeProvider;
+        this.repository = repository;
+        failReasons = new ArrayList<>();
     }
 
     @Override
     protected <Q extends Request> void execute(Q request) {
-        RecipeRequest rr = (RecipeRequest) request;
+        RecipeRequest recipeRequest = (RecipeRequest) request;
 
-        System.out.println(TAG + rr);
+        System.out.println(TAG + recipeRequest);
 
-        if (isNewRequest(rr.getId())) {
-            extractIds(rr);
+        if (isNewRequest(recipeRequest.getId())) {
+            extractIds(recipeRequest);
         } else {
             buildResponse();
         }
@@ -61,7 +73,7 @@ public class Recipe extends UseCase implements DataSource.GetEntityCallback<Reci
     }
 
     private boolean isCloneRequest(RecipeRequest request) {
-        return isCloned = !request.getCloneToId().equals(DO_NOT_CLONE);
+        return isCloned = !request.getCloneToId().equals("DO_NOT_CLONE");
     }
 
     private void loadData(String recipeId) {
@@ -93,6 +105,7 @@ public class Recipe extends UseCase implements DataSource.GetEntityCallback<Reci
     @Override
     public void onDataNotAvailable() {
         persistenceModel = createNewPersistenceModel();
+        failReasons.add(CommonFailReason.DATA_UNAVAILABLE);
         buildResponse();
     }
 
@@ -108,19 +121,27 @@ public class Recipe extends UseCase implements DataSource.GetEntityCallback<Reci
     }
 
     private void buildResponse() {
+        if (failReasons.isEmpty()) {
+            failReasons.add(CommonFailReason.NONE);
+        }
         RecipeResponse response = new RecipeResponse.Builder().
                 setId(persistenceModel.getId()).
                 setParentId(persistenceModel.getParentId()).
                 setCreatedBy(persistenceModel.getCreatedBy()).
                 setCreateDate(persistenceModel.getCreateDate()).
                 setLastUpdate(persistenceModel.getLastUpdate()).
+                setFailReasons(failReasons).
                 build();
 
         sendResponse(response);
     }
 
     private void sendResponse(RecipeResponse response) {
-        getUseCaseCallback().onSuccess(response);
+        if (failReasons.contains(CommonFailReason.NONE)) {
+            getUseCaseCallback().onSuccess(response);
+        } else {
+            getUseCaseCallback().onError(response);
+        }
     }
 
     private void save(RecipePersistenceModel model) {

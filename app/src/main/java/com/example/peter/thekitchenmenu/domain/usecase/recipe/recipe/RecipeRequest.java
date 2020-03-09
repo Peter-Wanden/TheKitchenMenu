@@ -2,15 +2,32 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe;
 
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequestAbstract;
 
-import javax.annotation.Nonnull;
+import java.util.Objects;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe.DO_NOT_CLONE;
+import javax.annotation.Nonnull;
 
 public final class RecipeRequest extends RecipeRequestAbstract {
 
-    private RecipeRequest(@Nonnull String id, @Nonnull String cloneToId) {
+    private String parentId;
+
+    private RecipeRequest(@Nonnull String id, @Nonnull String cloneToId, @Nonnull String parentId) {
         this.id = id;
         this.cloneToId = cloneToId;
+        this.parentId = parentId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RecipeRequest that = (RecipeRequest) o;
+        return parentId.equals(that.parentId) &&
+                cloneToId.equals(that.cloneToId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(parentId, cloneToId);
     }
 
     @Nonnull
@@ -18,18 +35,21 @@ public final class RecipeRequest extends RecipeRequestAbstract {
     public String toString() {
         return "RecipeRequest{" +
                 "id='" + id + '\'' +
-                ", cloneToId='" + cloneToId + '\'' +
+                ", cloneToId=" + cloneToId + '\'' +
+                ", parentId='" + parentId + '\'' +
                 '}';
     }
 
     public static class Builder {
         private String id;
         private String cloneToId;
+        private String parentId;
 
         public static Builder getDefault() {
             return new Builder().
                     setId("").
-                    setCloneToId(DO_NOT_CLONE);
+                    setCloneToId("").
+                    setParentId("");
         }
 
         public Builder setId(String id) {
@@ -42,10 +62,16 @@ public final class RecipeRequest extends RecipeRequestAbstract {
             return this;
         }
 
+        public Builder setParentId(String parentId) {
+            this.parentId = parentId;
+            return this;
+        }
+
         public RecipeRequest build() {
             return new RecipeRequest(
                     id,
-                    cloneToId
+                    cloneToId,
+                    parentId
             );
         }
     }

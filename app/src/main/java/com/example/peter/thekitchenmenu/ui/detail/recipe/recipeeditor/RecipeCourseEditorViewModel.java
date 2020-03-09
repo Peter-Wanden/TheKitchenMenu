@@ -12,8 +12,14 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.Recip
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourseResponse;
 import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+
 import javax.annotation.Nonnull;
 
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourse.*;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
 
 public class RecipeCourseEditorViewModel extends ObservableViewModel {
@@ -26,6 +32,7 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
     @Nonnull
     private RecipeMacro recipeMacro;
     private RecipeCourseResponse response;
+    private List<Course> courseList = new ArrayList<>();
 
     private boolean isUpdatingUi;
     private final ObservableBoolean isDataLoading = new ObservableBoolean(true);
@@ -73,112 +80,123 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
     }
 
     private void setRecipeCoursesToObservables() {
+        courseList.clear();
+        courseList.addAll(response.getModel().getCourseList().keySet());
+
         isUpdatingUi = true;
         notifyChange();
         isUpdatingUi = false;
     }
 
     private void onUseCaseError(RecipeCourseResponse response) {
-        // Then only case in which there is an error is DATA_UNAVAILABLE so display warning 'recipe
-        // requires at least one course
+        // The only case in which there is an error is DATA_UNAVAILABLE so display warning 'recipe
+        // requires at least one course'.
     }
 
     @Bindable
     public boolean isCourseZero() {
-        return response.getCourseList().get(RecipeCourse.Course.COURSE_ZERO) != null;
+        return courseList.contains(Course.COURSE_ZERO);
     }
 
     public void setCourseZero(boolean isCourseZero) {
         if (!isUpdatingUi) {
-            sendRequest(RecipeCourse.Course.COURSE_ZERO, isCourseZero);
+            sendRequest(Course.COURSE_ZERO, isCourseZero);
         }
     }
 
     @Bindable
     public boolean isCourseOne() {
-        return response.getCourseList().get(RecipeCourse.Course.COURSE_ONE) != null;
+        return courseList.contains(Course.COURSE_ONE);
     }
 
     public void setCourseOne(boolean isCourseOne) {
         if (!isUpdatingUi) {
-            sendRequest(RecipeCourse.Course.COURSE_ONE, isCourseOne);
+            sendRequest(Course.COURSE_ONE, isCourseOne);
         }
     }
 
     @Bindable
     public boolean isCourseTwo() {
-        return response.getCourseList().get(RecipeCourse.Course.COURSE_TWO) != null;
+        return courseList.contains(Course.COURSE_TWO);
     }
 
     public void setCourseTwo(boolean isCourseTwo) {
         if (!isUpdatingUi) {
-            sendRequest(RecipeCourse.Course.COURSE_TWO, isCourseTwo);
+            sendRequest(Course.COURSE_TWO, isCourseTwo);
         }
     }
 
     @Bindable
     public boolean isCourseThree() {
-        return response.getCourseList().get(RecipeCourse.Course.COURSE_THREE) != null;
+        return courseList.contains(Course.COURSE_THREE);
     }
 
     public void setCourseThree(boolean isCourseThree) {
         if (!isUpdatingUi) {
-            sendRequest(RecipeCourse.Course.COURSE_THREE, isCourseThree);
+            sendRequest(Course.COURSE_THREE, isCourseThree);
         }
     }
 
     @Bindable
     public boolean isCourseFour() {
-        return response.getCourseList().get(RecipeCourse.Course.COURSE_FOUR) != null;
+        return courseList.contains(Course.COURSE_FOUR);
     }
 
     public void setCourseFour(boolean isCourseFour) {
         if (!isUpdatingUi) {
-            sendRequest(RecipeCourse.Course.COURSE_FOUR, isCourseFour);
+            sendRequest(Course.COURSE_FOUR, isCourseFour);
         }
     }
 
     @Bindable
     public boolean isCourseFive() {
-        return response.getCourseList().get(RecipeCourse.Course.COURSE_FIVE) != null;
+        return courseList.contains(Course.COURSE_FIVE);
     }
 
     public void setCourseFive(boolean isCourseFive) {
         if (!isUpdatingUi) {
-            sendRequest(RecipeCourse.Course.COURSE_FIVE, isCourseFive);
+            sendRequest(Course.COURSE_FIVE, isCourseFive);
         }
     }
 
     @Bindable
     public boolean isCourseSix() {
-        return response.getCourseList().get(RecipeCourse.Course.COURSE_SIX) != null;
+        return courseList.contains(Course.COURSE_SIX);
     }
 
     public void setCourseSix(boolean isCourseSix) {
         if (!isUpdatingUi) {
-            sendRequest(RecipeCourse.Course.COURSE_SIX, isCourseSix);
+            sendRequest(Course.COURSE_SIX, isCourseSix);
         }
     }
 
     @Bindable
     public boolean isCourseSeven() {
-        return response.getCourseList().get(RecipeCourse.Course.COURSE_SEVEN) != null;
+        return courseList.contains(Course.COURSE_SEVEN);
     }
 
     public void setCourseSeven(boolean isCourseSeven) {
         if (!isUpdatingUi) {
-            sendRequest(RecipeCourse.Course.COURSE_SEVEN, isCourseSeven);
+            sendRequest(Course.COURSE_SEVEN, isCourseSeven);
         }
     }
 
-    private void sendRequest(RecipeCourse.Course course, boolean addCourse) {
+    private void sendRequest(Course course, boolean isAddCourse) {
         isDataLoading.set(true);
+
+        if (isAddCourse) {
+            courseList.add(course);
+        } else {
+            courseList.remove(course);
+        }
 
         RecipeCourseRequest request = RecipeCourseRequest.Builder.getDefault().
                 setId(response.getId()).
-                setCourse(course).
-                setAddCourse(addCourse).
+                setModel(new RecipeCourseRequest.Model.Builder().
+                        setCourseList(courseList).
+                        build()).
                 build();
+
         handler.execute(recipeMacro, request, new CourseCallbackListener());
     }
 }

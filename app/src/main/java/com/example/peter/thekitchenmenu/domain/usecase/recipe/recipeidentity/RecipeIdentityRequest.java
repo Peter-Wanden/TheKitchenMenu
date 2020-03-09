@@ -6,18 +6,13 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe.DO_NOT_CLONE;
-
-
 public final class RecipeIdentityRequest extends RecipeRequestAbstract {
     @Nonnull
     private final Model model;
 
-    public RecipeIdentityRequest(@Nonnull String id,
-                                 @Nonnull String cloneToId,
-                                 @Nonnull Model model) {
+    private RecipeIdentityRequest(@Nonnull String id,
+                                  @Nonnull Model model) {
         this.id = id;
-        this.cloneToId = cloneToId;
         this.model = model;
     }
 
@@ -31,45 +26,48 @@ public final class RecipeIdentityRequest extends RecipeRequestAbstract {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RecipeIdentityRequest that = (RecipeIdentityRequest) o;
-        return id.equals(that.id) && cloneToId.equals(that.cloneToId) &&
-                model.equals(that.model);
+        return id.equals(that.id) && model.equals(that.model);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, cloneToId, model);
+        return Objects.hash(id, model);
     }
 
+    @Nonnull
     @Override
     public String toString() {
         return "RecipeIdentityRequest{" +
                 "id='" + id + '\'' +
-                ", cloneToId='" + cloneToId + '\'' +
                 ", model=" + model +
                 '}';
     }
 
     public static class Builder {
         private String id;
-        private String cloneToId;
         private Model model;
 
         public static Builder getDefault() {
             return new Builder().
                     setId("").
-                    setCloneToId(DO_NOT_CLONE).
                     setModel(Model.Builder.
                             getDefault().
                             build());
         }
 
-        public Builder setId(String id) {
-            this.id = id;
-            return this;
+        public static Builder basedOnResponse(RecipeIdentityResponse response) {
+            return new Builder().
+                    setId(response.getId()).
+                    setModel(
+                            new Model.Builder().
+                                    setTitle(response.getModel().getTitle()).
+                                    setDescription(response.getModel().getDescription()).
+                                    build()
+                    );
         }
 
-        public Builder setCloneToId(String cloneToId) {
-            this.cloneToId = cloneToId;
+        public Builder setId(String id) {
+            this.id = id;
             return this;
         }
 
@@ -81,7 +79,6 @@ public final class RecipeIdentityRequest extends RecipeRequestAbstract {
         public RecipeIdentityRequest build() {
             return new RecipeIdentityRequest(
                     id,
-                    cloneToId,
                     model
             );
         }

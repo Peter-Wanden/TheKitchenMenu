@@ -16,6 +16,7 @@ import com.example.peter.thekitchenmenu.databinding.RecipeCourseEditorFragmentBi
 
 public class RecipeCourseEditorFragment extends Fragment {
 
+
     public static RecipeCourseEditorFragment newInstance() {
         return new RecipeCourseEditorFragment();
     }
@@ -35,9 +36,8 @@ public class RecipeCourseEditorFragment extends Fragment {
                 container,
                 false);
 
-        binding.setViewModel(
-                new ViewModelProvider(requireActivity()).
-                        get(RecipeCourseEditorViewModel.class));
+        binding.setViewModel(new ViewModelProvider(requireActivity()).
+                get(RecipeCourseEditorViewModel.class));
 
         return binding.getRoot();
     }

@@ -2,75 +2,61 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse;
 
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequestAbstract;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe.DO_NOT_CLONE;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourse.*;
 
 public final class RecipeCourseRequest extends RecipeRequestAbstract {
-    @Nullable
-    private final RecipeCourse.Course course;
-    private final boolean addCourse;
+    @Nonnull
+    private final Model model;
 
     private RecipeCourseRequest(@Nonnull String id,
-                                @Nonnull String cloneToId,
-                                @Nullable RecipeCourse.Course course,
-                                boolean addCourse) {
+                                @Nonnull Model model) {
         this.id = id;
-        this.cloneToId = cloneToId;
-        this.course = course;
-        this.addCourse = addCourse;
+        this.model = model;
     }
 
-    @Nullable
-    public RecipeCourse.Course getCourse() {
-        return course;
-    }
-
-    public boolean isAddCourse() {
-        return addCourse;
+    @Nonnull
+    public Model getModel() {
+        return model;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RecipeCourseRequest request = (RecipeCourseRequest) o;
-        return addCourse == request.addCourse &&
-                id.equals(request.id) &&
-                cloneToId.equals(request.cloneToId) &&
-                course == request.course;
+        RecipeCourseRequest that = (RecipeCourseRequest) o;
+        return model.equals(that.model);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, cloneToId, course, addCourse);
+        return Objects.hash(model);
     }
 
+    @Nonnull
     @Override
     public String toString() {
         return "RecipeCourseRequest{" +
                 "id='" + id + '\'' +
-                ", cloneToId='" + cloneToId + '\'' +
-                ", course=" + course +
-                ", addCourse=" + addCourse +
+                ", model=" + model +
                 '}';
     }
 
     public static class Builder {
         private String id;
-        private String cloneToId;
-        private RecipeCourse.Course course;
-        private boolean isAddCourse;
+        private Model model;
 
         public static Builder getDefault() {
             return new Builder().
                     setId("").
-                    setCloneToId(DO_NOT_CLONE).
-                    setCourse(null).
-                    setAddCourse(false);
+                    setModel(Model.Builder.
+                            getDefault().
+                            build());
         }
 
         public Builder setId(String id) {
@@ -78,28 +64,74 @@ public final class RecipeCourseRequest extends RecipeRequestAbstract {
             return this;
         }
 
-        public Builder setCloneToId(String cloneToId) {
-            this.cloneToId = cloneToId;
-            return this;
-        }
-
-        public Builder setCourse(RecipeCourse.Course course) {
-            this.course = course;
-            return this;
-        }
-
-        public Builder setAddCourse(boolean addCourse) {
-            isAddCourse = addCourse;
+        public Builder setModel(Model model) {
+            this.model = model;
             return this;
         }
 
         public RecipeCourseRequest build() {
             return new RecipeCourseRequest(
                     id,
-                    cloneToId,
-                    course,
-                    isAddCourse
+                    model
             );
+        }
+    }
+
+    public static final class Model {
+        @Nonnull
+        private final List<Course> courseList;
+
+        private Model(@Nonnull List<Course> courseList) {
+            this.courseList = courseList;
+        }
+
+        @Nonnull
+        public List<Course> getCourseList() {
+            return courseList;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Model model = (Model) o;
+            return courseList.equals(model.courseList);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(courseList);
+        }
+
+        @Override
+        public String toString() {
+            return "Model{" +
+                    "courseList=" + courseList +
+                    '}';
+        }
+
+        public static final class Builder {
+            private List<Course> courseList;
+
+            public static Builder getDefault() {
+                return new Builder().
+                        setCourseList(getDefaultList());
+            }
+
+            public Builder setCourseList(List<Course> courseList) {
+                this.courseList = courseList;
+                return this;
+            }
+
+            public Model build() {
+                return new Model(
+                        courseList
+                );
+            }
+
+            private static List<Course> getDefaultList() {
+                return new ArrayList<>();
+            }
         }
     }
 }

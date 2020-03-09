@@ -3,7 +3,6 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity;
 import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponseAbstract;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,33 +10,25 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipeIdentityResponse extends RecipeResponseAbstract {
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
 
+public final class RecipeIdentityResponse extends RecipeResponseAbstract {
     @Nonnull
-    private final RecipeStateCalculator.ComponentState state;
-    @Nonnull
-    private final List<FailReasons> failReasons;
+    private final Metadata metadata;
     @Nonnull
     private final Model model;
 
     private RecipeIdentityResponse(@Nonnull String id,
-                                   @Nonnull RecipeStateCalculator.ComponentState state,
-                                   @Nonnull List<FailReasons> failReasons,
+                                   @Nonnull Metadata metaData,
                                    @Nonnull Model model) {
         this.id = id;
-        this.state = state;
-        this.failReasons = failReasons;
+        this.metadata = metaData;
         this.model = model;
     }
 
     @Nonnull
-    public RecipeStateCalculator.ComponentState getState() {
-        return state;
-    }
-
-    @Nonnull
-    public List<FailReasons> getFailReasons() {
-        return failReasons;
+    public Metadata getMetadata() {
+        return metadata;
     }
 
     @Nonnull
@@ -51,14 +42,13 @@ public final class RecipeIdentityResponse extends RecipeResponseAbstract {
         if (o == null || getClass() != o.getClass()) return false;
         RecipeIdentityResponse that = (RecipeIdentityResponse) o;
         return id.equals(that.id) &&
-                state == that.state &&
-                failReasons.equals(that.failReasons) &&
+                metadata.equals(that.metadata) &&
                 model.equals(that.model);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, state, failReasons, model);
+        return Objects.hash(id, metadata, model);
     }
 
     @Nonnull
@@ -66,32 +56,27 @@ public final class RecipeIdentityResponse extends RecipeResponseAbstract {
     public String toString() {
         return "RecipeIdentityResponse{" +
                 "id=" + id +
-                ", state=" + state +
-                ", failReasons=" + failReasons +
+                ", metadata=" + metadata +
                 ", model=" + model +
                 '}';
     }
 
     public static class Builder {
         private String id;
-        private RecipeStateCalculator.ComponentState state;
-        private List<FailReasons> failReasons;
+        private Metadata metadata;
         private Model model;
 
         public static Builder getDefault() {
             return new Builder().
                     setId("").
-                    setState(RecipeStateCalculator.ComponentState.INVALID_UNCHANGED).
-                    setFailReasons(getDefaultFailReasons()).
-                    setModel(Model.Builder.
-                            getDefault().
-                            build());
-        }
-
-        private static List<FailReasons> getDefaultFailReasons() {
-            List<FailReasons> failReasons = new ArrayList<>();
-            failReasons.add(CommonFailReason.DATA_UNAVAILABLE);
-            return failReasons;
+                    setMetadata(
+                            Metadata.Builder.
+                                    getDefault().
+                                    build()).
+                    setModel(
+                            Model.Builder.
+                                    getDefault().
+                                    build());
         }
 
         public Builder setId(String id) {
@@ -99,17 +84,12 @@ public final class RecipeIdentityResponse extends RecipeResponseAbstract {
             return this;
         }
 
-        public Builder setState(RecipeStateCalculator.ComponentState state) {
-            this.state = state;
+        public Builder setMetadata(Metadata metadata) {
+            this.metadata = metadata;
             return this;
         }
 
-        public Builder setFailReasons(List<FailReasons> failReasons) {
-            this.failReasons = failReasons;
-            return this;
-        }
-
-        public Builder setModel(RecipeIdentityResponse.Model model) {
+        public Builder setModel(Model model) {
             this.model = model;
             return this;
         }
@@ -117,10 +97,122 @@ public final class RecipeIdentityResponse extends RecipeResponseAbstract {
         public RecipeIdentityResponse build() {
             return new RecipeIdentityResponse(
                     id,
-                    state,
-                    failReasons,
+                    metadata,
                     model
             );
+        }
+    }
+
+    public static final class Metadata {
+        @Nonnull
+        private final ComponentState state;
+        @Nonnull
+        private final List<FailReasons> failReasons;
+        private final long createDate;
+        private final long lasUpdate;
+
+        private Metadata(@Nonnull ComponentState state,
+                         @Nonnull List<FailReasons> failReasons,
+                         long createDate,
+                         long lasUpdate) {
+            this.state = state;
+            this.failReasons = failReasons;
+            this.createDate = createDate;
+            this.lasUpdate = lasUpdate;
+        }
+
+        @Nonnull
+        public ComponentState getState() {
+            return state;
+        }
+
+        @Nonnull
+        public List<FailReasons> getFailReasons() {
+            return failReasons;
+        }
+
+        public long getCreateDate() {
+            return createDate;
+        }
+
+        public long getLasUpdate() {
+            return lasUpdate;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Metadata that = (Metadata) o;
+            return state == that.state &&
+                    failReasons.equals(that.failReasons) &&
+                    createDate == that.createDate &&
+                    lasUpdate == that.lasUpdate;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(state, failReasons, createDate, lasUpdate);
+        }
+
+        @Override
+        public String toString() {
+            return "MetadataModel{" +
+                    "state=" + state +
+                    ", failReasons=" + failReasons +
+                    ", createDate=" + createDate +
+                    ", lasUpdate=" + lasUpdate +
+                    '}';
+        }
+
+        public static final class Builder {
+            private ComponentState state;
+            private List<FailReasons> failReasons;
+            private long createDate;
+            private long lasUpdate;
+
+            public static Builder getDefault() {
+                return new Builder().
+                        setState(ComponentState.INVALID_UNCHANGED).
+                        setFailReasons(getDefaultFailReasons()).
+                        setCreateDate(0L).
+                        setLasUpdate(0L);
+            }
+
+            public Builder setState(ComponentState state) {
+                this.state = state;
+                return this;
+            }
+
+            public Builder setFailReasons(List<FailReasons> failReasons) {
+                this.failReasons = failReasons;
+                return this;
+            }
+
+            public Builder setCreateDate(long createDate) {
+                this.createDate = createDate;
+                return this;
+            }
+
+            public Builder setLasUpdate(long lasUpdate) {
+                this.lasUpdate = lasUpdate;
+                return this;
+            }
+
+            private static List<FailReasons> getDefaultFailReasons() {
+                List<FailReasons> failReasons = new ArrayList<>();
+                failReasons.add(CommonFailReason.DATA_UNAVAILABLE);
+                return failReasons;
+            }
+
+            public Metadata build() {
+                return new Metadata(
+                        state,
+                        failReasons,
+                        createDate,
+                        lasUpdate
+                );
+            }
         }
     }
 
@@ -129,17 +221,11 @@ public final class RecipeIdentityResponse extends RecipeResponseAbstract {
         private final String title;
         @Nonnull
         private final String description;
-        private final long createDate;
-        private final long lastUpdate;
 
-        public Model(@Nonnull String title,
-                     @Nonnull String description,
-                     long createDate,
-                     long lastUpdate) {
+        private Model(@Nonnull String title,
+                      @Nonnull String description) {
             this.title = title;
             this.description = description;
-            this.createDate = createDate;
-            this.lastUpdate = lastUpdate;
         }
 
         @Nonnull
@@ -152,60 +238,42 @@ public final class RecipeIdentityResponse extends RecipeResponseAbstract {
             return description;
         }
 
-        public long getCreateDate() {
-            return createDate;
-        }
-
-        public long getLastUpdate() {
-            return lastUpdate;
-        }
-
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             Model model = (Model) o;
-            return createDate == model.createDate &&
-                    lastUpdate == model.lastUpdate &&
-                    title.equals(model.title) &&
+            return title.equals(model.title) &&
                     description.equals(model.description);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(title, description, createDate, lastUpdate);
+            return Objects.hash(title, description);
         }
 
         @Override
         public String toString() {
             return "Model{" +
                     "title='" + title + '\'' +
-                    ", description='" + description + '\'' +
-                    ", createDate=" + createDate +
-                    ", lastUpdate=" + lastUpdate +
+                    ", description='" + description +
                     '}';
         }
 
         public static class Builder {
             private String title;
             private String description;
-            private long createDate;
-            private long lastUpdate;
 
             public static Builder getDefault() {
                 return new Builder().
                         setTitle("").
-                        setDescription("").
-                        setCreateDate(0L).
-                        setLastUpdate(0L);
+                        setDescription("");
             }
 
             public static Builder basedOn(RecipeIdentityPersistenceModel model) {
                 return new Builder().
                         setTitle(model.getTitle()).
-                        setDescription(model.getDescription()).
-                        setCreateDate(model.getCreateDate()).
-                        setLastUpdate(model.getLastUpdate());
+                        setDescription(model.getDescription());
             }
 
             public static Builder basedOn(RecipeIdentityRequest.Model model) {
@@ -224,22 +292,10 @@ public final class RecipeIdentityResponse extends RecipeResponseAbstract {
                 return this;
             }
 
-            public Builder setCreateDate(long createDate) {
-                this.createDate = createDate;
-                return this;
-            }
-
-            public Builder setLastUpdate(long lastUpdate) {
-                this.lastUpdate = lastUpdate;
-                return this;
-            }
-
             public RecipeIdentityResponse.Model build() {
                 return new RecipeIdentityResponse.Model(
                         title,
-                        description,
-                        createDate,
-                        lastUpdate
+                        description
                 );
             }
         }

@@ -92,12 +92,12 @@ public class RecipeStateCalculator extends UseCase {
 
     @Override
     protected <Q extends Request> void execute(Q request) {
-        RecipeStateRequest rsr = (RecipeStateRequest) request;
+        RecipeStateRequest stateRequest = (RecipeStateRequest) request;
 
-        System.out.println(TAG + rsr);
+        System.out.println(TAG + stateRequest);
         recipeState = RecipeState.COMPLETE;
         failReasons.clear();
-        componentStates = rsr.getComponentStates();
+        componentStates = stateRequest.getComponentStates();
 
         calculateState();
     }

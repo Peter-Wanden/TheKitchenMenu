@@ -14,7 +14,6 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe.DO_NOT_CLONE;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
 
 public class RecipePortions extends UseCase
@@ -94,7 +93,7 @@ public class RecipePortions extends UseCase
     }
 
     private boolean isCloneRequest(RecipePortionsRequest request) {
-        return isCloned = !request.getCloneToId().equals(DO_NOT_CLONE);
+        return isCloned = !request.getCloneToId().equals("DO_NOT_CLONE");
     }
 
     private void loadData(String recipeId) {
@@ -195,18 +194,12 @@ public class RecipePortions extends UseCase
     private ComponentState getComponentState() {
         boolean isValid = failReasons.contains(CommonFailReason.NONE);
 
-        if (failReasons.contains(CommonFailReason.DATA_UNAVAILABLE)) {
-            return ComponentState.DATA_UNAVAILABLE;
-
-        } else if (!isValid && !isChanged()) {
+        if (!isValid && !isChanged()) {
             return ComponentState.INVALID_UNCHANGED;
-
         } else if (isValid && !isChanged()) {
             return ComponentState.VALID_UNCHANGED;
-
         } else if (!isValid && isChanged()) {
             return ComponentState.INVALID_CHANGED;
-
         } else  {
             return ComponentState.VALID_CHANGED;
         }

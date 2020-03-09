@@ -4,6 +4,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponseAbstract;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,36 +16,26 @@ import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate
 
 public final class RecipeCourseResponse extends RecipeResponseAbstract {
     @Nonnull
-    private final ComponentState state;
+    private final Metadata metadata;
     @Nonnull
-    private final List<FailReasons> failReasons;
-    @Nonnull
-    private final HashMap<RecipeCourse.Course, RecipeCourseModel> courseList;
+    private final Model model;
 
     public RecipeCourseResponse(@Nonnull String id,
-                                @Nonnull ComponentState status,
-                                @Nonnull List<FailReasons> failReasons,
-                                @Nonnull HashMap<RecipeCourse.Course, RecipeCourseModel> courseList)
-    {
+                                @Nonnull Metadata metadata,
+                                @Nonnull Model model) {
         this.id = id;
-        this.state = status;
-        this.failReasons = failReasons;
-        this.courseList = courseList;
+        this.metadata = metadata;
+        this.model = model;
     }
 
     @Nonnull
-    public ComponentState getState() {
-        return state;
+    public Metadata getMetadata() {
+        return metadata;
     }
 
     @Nonnull
-    public List<FailReasons> getFailReasons() {
-        return failReasons;
-    }
-
-    @Nonnull
-    public HashMap<RecipeCourse.Course, RecipeCourseModel> getCourseList() {
-        return courseList;
+    public Model getModel() {
+        return model;
     }
 
     @Override
@@ -53,38 +44,41 @@ public final class RecipeCourseResponse extends RecipeResponseAbstract {
         if (o == null || getClass() != o.getClass()) return false;
         RecipeCourseResponse that = (RecipeCourseResponse) o;
         return id.equals(that.id) &&
-                state == that.state &&
-                failReasons.equals(that.failReasons) &&
-                courseList.equals(that.courseList);
+                metadata.equals(that.metadata) &&
+                model.equals(that.model);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, state, failReasons, courseList);
+        return Objects.hash(id, metadata, model);
     }
 
+    @Nonnull
     @Override
     public String toString() {
         return "RecipeCourseResponse{" +
-                "id=" + id +
-                ", state=" + state +
-                ", failReasons=" + failReasons +
-                ", courseList=" + courseList +
+                "id='" + id + '\'' +
+                ", metadata=" + metadata +
+                ", model=" + model +
                 '}';
     }
 
     public static class Builder {
         private String id;
-        private ComponentState status;
-        private List<FailReasons> failReasons;
-        private HashMap<RecipeCourse.Course, RecipeCourseModel> courseList;
+        private Metadata metadata;
+        private Model model;
 
         public static Builder getDefault() {
             return new Builder().
                     setId("").
-                    setStatus(ComponentState.INVALID_UNCHANGED).
-                    setFailReasons(getDefaultFailReason()).
-                    setCourseList(new HashMap<>());
+                    setMetaData(
+                            Metadata.Builder.
+                                    getDefault().
+                                    build()).
+                    setModel(
+                            Model.Builder.
+                                    getDefault().
+                                    build());
         }
 
         public Builder setId(String id) {
@@ -92,34 +86,191 @@ public final class RecipeCourseResponse extends RecipeResponseAbstract {
             return this;
         }
 
-        public Builder setStatus(ComponentState status) {
-            this.status = status;
+        public Builder setMetaData(Metadata metadata) {
+            this.metadata = metadata;
             return this;
         }
 
-        public Builder setFailReasons(List<FailReasons> failReasons) {
-            this.failReasons = failReasons;
-            return this;
-        }
-
-        public Builder setCourseList(HashMap<RecipeCourse.Course, RecipeCourseModel> courseList) {
-            this.courseList = courseList;
+        public Builder setModel(Model model) {
+            this.model = model;
             return this;
         }
 
         public RecipeCourseResponse build() {
             return new RecipeCourseResponse(
                     id,
-                    status,
-                    failReasons,
-                    courseList
+                    metadata,
+                    model
             );
         }
+    }
 
-        private static List<FailReasons> getDefaultFailReason() {
-            List<FailReasons> defaultFailReason = new LinkedList<>();
-            defaultFailReason.add(CommonFailReason.DATA_UNAVAILABLE);
-            return defaultFailReason;
+    public static final class Metadata {
+        @Nonnull
+        private final ComponentState state;
+        @Nonnull
+        private final List<FailReasons> failReasons;
+        long createDate;
+        long lasUpdate;
+
+        private Metadata(@Nonnull ComponentState state,
+                         @Nonnull List<FailReasons> failReasons,
+                         long createDate,
+                         long lasUpdate) {
+            this.state = state;
+            this.failReasons = failReasons;
+            this.createDate = createDate;
+            this.lasUpdate = lasUpdate;
+        }
+
+        @Nonnull
+        public ComponentState getState() {
+            return state;
+        }
+
+        @Nonnull
+        public List<FailReasons> getFailReasons() {
+            return failReasons;
+        }
+
+        public long getCreateDate() {
+            return createDate;
+        }
+
+        public long getLasUpdate() {
+            return lasUpdate;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Metadata metaData = (Metadata) o;
+            return state == metaData.state &&
+                    failReasons.equals(metaData.failReasons) &&
+                    createDate == metaData.createDate &&
+                    lasUpdate == metaData.lasUpdate;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(state, failReasons, createDate, lasUpdate);
+        }
+
+        @Override
+        public String toString() {
+            return "MetaData{" +
+                    "state=" + state +
+                    ", failReasons=" + failReasons +
+                    ", createDate=" + createDate +
+                    ", lasUpdate=" + lasUpdate +
+                    '}';
+        }
+
+        public static class Builder {
+            private ComponentState state;
+            private List<FailReasons> failReasons;
+            long createDate;
+            long lasUpdate;
+
+            public static Builder getDefault() {
+                return new Builder().
+                        setState(ComponentState.INVALID_UNCHANGED).
+                        setFailReasons(getDefaultFailReasons()).
+                        setCreateDate(0L).
+                        setLasUpdate(0L);
+            }
+
+            public Builder setState(ComponentState state) {
+                this.state = state;
+                return this;
+            }
+
+            public Builder setFailReasons(List<FailReasons> failReasons) {
+                this.failReasons = failReasons;
+                return this;
+            }
+
+            public Builder setCreateDate(long createDate) {
+                this.createDate = createDate;
+                return this;
+            }
+
+            public Builder setLasUpdate(long lasUpdate) {
+                this.lasUpdate = lasUpdate;
+                return this;
+            }
+
+            private static List<FailReasons> getDefaultFailReasons() {
+                List<FailReasons> failReasons = new ArrayList<>();
+                failReasons.add(CommonFailReason.DATA_UNAVAILABLE);
+                return failReasons;
+            }
+
+            public Metadata build() {
+                return new Metadata(
+                        state,
+                        failReasons,
+                        createDate,
+                        lasUpdate
+                );
+            }
+        }
+    }
+
+    public static final class Model {
+        @Nonnull
+        private final HashMap<RecipeCourse.Course, RecipeCourseModel> courseList;
+
+        private Model(@Nonnull HashMap<RecipeCourse.Course, RecipeCourseModel> courseList) {
+            this.courseList = courseList;
+        }
+
+        @Nonnull
+        public HashMap<RecipeCourse.Course, RecipeCourseModel> getCourseList() {
+            return courseList;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Model model = (Model) o;
+            return courseList.equals(model.courseList);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(courseList);
+        }
+
+        @Override
+        public String toString() {
+            return "Model{" +
+                    "courseList=" + courseList +
+                    '}';
+        }
+
+        public static class Builder {
+            private HashMap<RecipeCourse.Course, RecipeCourseModel> courseList;
+
+            public static Builder getDefault() {
+                return new Builder().
+                        setCourseList(getDefaultCourseList());
+            }
+
+            public Builder setCourseList(HashMap<RecipeCourse.Course, RecipeCourseModel> courseList) {
+                this.courseList = courseList;
+                return this;
+            }
+
+            public Model build() {
+                return new Model(courseList);
+            }
+
+            private static HashMap<RecipeCourse.Course, RecipeCourseModel> getDefaultCourseList() {
+                return new HashMap<>();
+            }
         }
     }
 }

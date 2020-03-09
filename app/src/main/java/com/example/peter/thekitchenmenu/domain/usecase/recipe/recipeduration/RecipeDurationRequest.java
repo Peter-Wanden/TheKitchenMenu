@@ -6,9 +6,6 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe.DO_NOT_CLONE;
-
-
 public final class RecipeDurationRequest extends RecipeRequestAbstract {
     @Nonnull
     private final RecipeDurationRequest.Model model;
@@ -59,7 +56,7 @@ public final class RecipeDurationRequest extends RecipeRequestAbstract {
         public static Builder getDefault() {
             return new Builder().
                     setId("").
-                    setCloneToId(DO_NOT_CLONE).
+                    setCloneToId("").
                     setModel(RecipeDurationRequest.Model.Builder.
                             getDefault().
                             build());

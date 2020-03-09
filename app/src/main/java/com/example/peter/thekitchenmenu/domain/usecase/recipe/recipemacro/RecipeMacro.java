@@ -31,16 +31,25 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe.DO_NOT_CLONE;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.ComponentName.*;
 
 /**
- * Acts as a mediator enabling recipe components to work together
+ * Acts as a command mediator enabling recipe components to work together
  */
 public class RecipeMacro extends UseCase {
 
     private static final String TAG = "tkm-" + RecipeMacro.class.getSimpleName() + ": ";
+
+    enum RequestType {
+        CREATE,
+        EDIT,
+        FAVORITE,
+        CLONE,
+        DELETE
+    }
+
+    public static final String CREATE_NEW_RECIPE = "CREATE_NEW_RECIPE";
 
     public interface RecipeStateListener {
         void recipeStateChanged(RecipeStateResponse response);
@@ -110,7 +119,7 @@ public class RecipeMacro extends UseCase {
         }
 
         if (isNewRequest(this.request.getId())) {
-            extractIds(this.request);
+            id = this.request.getId();
             startComponents();
 
         } else if (RECIPE.equals(requestOriginator)) {
@@ -130,18 +139,6 @@ public class RecipeMacro extends UseCase {
         return !this.id.equals(recipeId);
     }
 
-    private void extractIds(RecipeRequestAbstract request) {
-        if (isCloneRequest(request)) {
-            id = request.getCloneToId();
-        } else {
-            id = request.getId();
-        }
-    }
-
-    private boolean isCloneRequest(RecipeRequestAbstract request) {
-        return isCloned = !request.getCloneToId().equals(DO_NOT_CLONE);
-    }
-
     private void startComponents() {
         componentResponses.clear();
         componentStates.clear();
@@ -157,8 +154,8 @@ public class RecipeMacro extends UseCase {
         handler.execute(
                 recipe,
                 new RecipeRequest.Builder().
-                        setId(isCloned ? request.getId() : id).
-                        setCloneToId(isCloned ? request.getCloneToId() : DO_NOT_CLONE).
+                        setId(id).
+                        setCloneToId("").
                         build(),
                 new RecipeCallback()
         );
@@ -175,16 +172,15 @@ public class RecipeMacro extends UseCase {
         @Override
         protected void processResponse(RecipeResponse response) {
             addComponentResponse(RECIPE, response);
+            checkComponentsUpdated();
         }
     }
 
     private void startIdentityComponent() {
         handler.execute(
                 identity,
-                RecipeIdentityRequest.Builder.
-                        getDefault().
-                        setId(isCloned ? request.getId() : id).
-                        setCloneToId(isCloned ? request.getCloneToId() : DO_NOT_CLONE).
+                new RecipeIdentityRequest.Builder().
+                        setId(id).
                         build(),
                 new IdentityCallback()
         );
@@ -199,9 +195,9 @@ public class RecipeMacro extends UseCase {
     }
 
     private class IdentityCallback extends RecipeMacroUseCaseCallback<RecipeIdentityResponse> {
-
+        @Override
         protected void processResponse(RecipeIdentityResponse response) {
-            addComponentState(IDENTITY, response.getState());
+            addComponentState(IDENTITY, response.getMetadata().getState());
             addComponentResponse(IDENTITY, response);
             checkComponentsUpdated();
         }
@@ -210,10 +206,8 @@ public class RecipeMacro extends UseCase {
     private void startCourseComponent() {
         handler.execute(
                 course,
-                RecipeCourseRequest.Builder.
-                        getDefault().
-                        setId(isCloned ? request.getId() : id).
-                        setCloneToId(isCloned ? request.getCloneToId() : DO_NOT_CLONE).
+                new RecipeCourseRequest.Builder().
+                        setId(id).
                         build(),
                 new CourseCallback()
         );
@@ -227,10 +221,9 @@ public class RecipeMacro extends UseCase {
     }
 
     private class CourseCallback extends RecipeMacroUseCaseCallback<RecipeCourseResponse> {
-
         @Override
         protected void processResponse(RecipeCourseResponse response) {
-            addComponentState(COURSE, response.getState());
+            addComponentState(COURSE, response.getMetadata().getState());
             addComponentResponse(COURSE, response);
             checkComponentsUpdated();
         }
@@ -241,8 +234,8 @@ public class RecipeMacro extends UseCase {
                 duration,
                 RecipeDurationRequest.Builder.
                         getDefault().
-                        setId(isCloned ? request.getId() : id).
-                        setCloneToId(isCloned ? request.getCloneToId() : DO_NOT_CLONE).
+                        setId(id).
+                        setCloneToId("").
                         build(),
                 new DurationCallback()
         );
@@ -257,7 +250,6 @@ public class RecipeMacro extends UseCase {
     }
 
     private class DurationCallback extends RecipeMacroUseCaseCallback<RecipeDurationResponse> {
-
         @Override
         protected void processResponse(RecipeDurationResponse response) {
             addComponentState(DURATION, response.getState());
@@ -269,10 +261,9 @@ public class RecipeMacro extends UseCase {
     private void startPortionsComponent() {
         handler.execute(
                 portions,
-                RecipePortionsRequest.Builder.
-                        getDefault().
-                        setId(isCloned ? request.getId() : id).
-                        setCloneToId(isCloned ? request.getCloneToId() : DO_NOT_CLONE).
+                new RecipePortionsRequest.Builder().
+                        setId(id).
+                        setCloneToId("").
                         build(),
                 new PortionsCallback()
         );
@@ -287,7 +278,6 @@ public class RecipeMacro extends UseCase {
     }
 
     private class PortionsCallback extends RecipeMacroUseCaseCallback<RecipePortionsResponse> {
-
         @Override
         protected void processResponse(RecipePortionsResponse response) {
             addComponentState(PORTIONS, response.getState());
@@ -306,13 +296,13 @@ public class RecipeMacro extends UseCase {
 
     private void checkComponentsUpdated() {
         System.out.println(TAG + "componentStatesUpdated: " + componentResponses.keySet());
-        if (isAllComponentStatesUpdated()) {
+        if (isAllComponentsUpdated()) {
             isCloned = false;
             updateRecipeState();
         }
     }
 
-    private boolean isAllComponentStatesUpdated() {
+    private boolean isAllComponentsUpdated() {
         return componentResponses.containsKey(RECIPE) &&
                 componentResponses.containsKey(IDENTITY) &&
                 componentResponses.containsKey(COURSE) &&
@@ -331,29 +321,10 @@ public class RecipeMacro extends UseCase {
     }
 
     private class RecipeStateCallback extends RecipeMacroUseCaseCallback<RecipeStateResponse> {
-
         @Override
         protected void processResponse(RecipeStateResponse response) {
             notifyStateListeners(response);
         }
-    }
-
-    private abstract static class RecipeMacroUseCaseCallback<C extends UseCase.Response>
-            implements UseCase.Callback<C> {
-
-        @Override
-        public void onSuccess(C response) {
-            System.out.println(TAG + "onSuccess:" + response);
-            processResponse(response);
-        }
-
-        @Override
-        public void onError(C response) {
-            System.out.println(TAG + "onError:" + response);
-            processResponse(response);
-        }
-
-        protected abstract void processResponse(C response);
     }
 
     public void registerStateListener(RecipeStateListener listener) {
@@ -399,7 +370,7 @@ public class RecipeMacro extends UseCase {
 
     private RecipeMacroResponse getMacroResponse() {
         return new RecipeMacroResponse.Builder().
-                setRecipeId(id).
+                setId(id).
                 setRecipeStateResponse(recipeStateResponse).
                 setComponentResponses(componentResponses).
                 build();
@@ -430,7 +401,14 @@ public class RecipeMacro extends UseCase {
                 RecipeResponse response = (RecipeResponse)
                         componentResponses.get(componentName);
                 //noinspection unchecked
-                ((UseCase.Callback<RecipeResponse>) callbackPair.second).onSuccess(response);
+                UseCase.Callback<RecipeResponse> callback =
+                        (UseCase.Callback<RecipeResponse>) callbackPair.second;
+
+                if (response.getFailReasons().contains(CommonFailReason.NONE)) {
+                    callback.onSuccess(response);
+                } else {
+                    callback.onError(response);
+                }
 
             } else if (IDENTITY.equals(componentName)) {
                 RecipeIdentityResponse response = (RecipeIdentityResponse)
@@ -439,7 +417,7 @@ public class RecipeMacro extends UseCase {
                 UseCase.Callback<RecipeIdentityResponse> callback =
                         (UseCase.Callback<RecipeIdentityResponse>) callbackPair.second;
 
-                if (response.getFailReasons().contains(CommonFailReason.NONE)) {
+                if (response.getMetadata().getFailReasons().contains(CommonFailReason.NONE)) {
                     callback.onSuccess(response);
                 } else {
                     callback.onError(response);
@@ -453,7 +431,7 @@ public class RecipeMacro extends UseCase {
                 UseCase.Callback<RecipeCourseResponse> callback =
                         (UseCase.Callback<RecipeCourseResponse>) callbackPair.second;
 
-                if (response.getFailReasons().contains(CommonFailReason.NONE)) {
+                if (response.getMetadata().getFailReasons().contains(CommonFailReason.NONE)) {
                     callback.onSuccess(response);
                 } else {
                     callback.onError(response);
@@ -505,7 +483,7 @@ public class RecipeMacro extends UseCase {
             RecipeIdentityResponse response = (RecipeIdentityResponse)
                     componentResponses.get(IDENTITY);
 
-            if (response.getFailReasons().contains(CommonFailReason.NONE)) {
+            if (response.getMetadata().getFailReasons().contains(CommonFailReason.NONE)) {
                 getUseCaseCallback().onSuccess(response);
             } else {
                 getUseCaseCallback().onError(response);
@@ -515,7 +493,7 @@ public class RecipeMacro extends UseCase {
             RecipeCourseResponse response = (RecipeCourseResponse)
                     componentResponses.get(COURSE);
 
-            if (response.getFailReasons().contains(CommonFailReason.NONE)) {
+            if (response.getMetadata().getFailReasons().contains(CommonFailReason.NONE)) {
                 getUseCaseCallback().onSuccess(response);
             } else {
                 getUseCaseCallback().onError(response);

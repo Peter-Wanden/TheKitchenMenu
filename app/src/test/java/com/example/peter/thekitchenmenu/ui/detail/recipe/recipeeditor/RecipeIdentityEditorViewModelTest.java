@@ -34,12 +34,9 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions.Rec
 import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortionsTest;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
-import com.example.peter.thekitchenmenu.testdata.TestDataRecipeCourseEntity;
-import com.example.peter.thekitchenmenu.testdata.TestDataRecipeDurationEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
-import com.example.peter.thekitchenmenu.testdata.TestDataRecipePortionsEntity;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -50,7 +47,6 @@ import org.mockito.MockitoAnnotations;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe.DO_NOT_CLONE;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -73,20 +69,11 @@ public class RecipeIdentityEditorViewModelTest {
             TestDataRecipeIdentityEntity.getValidNewTitleValidDescriptionDefault();
     private static final RecipeIdentityEntity VALID_NEW_COMPLETE =
             TestDataRecipeIdentityEntity.getValidNewComplete();
+
     private static final RecipeIdentityEntity INVALID_EXISTING_INCOMPLETE_INVALID_TITLE =
             TestDataRecipeIdentityEntity.getInvalidExistingTitleTooShortDefaultDescription();
     private static final RecipeIdentityEntity VALID_EXISTING_COMPLETE =
             TestDataRecipeIdentityEntity.getValidExistingTitleValidDescriptionValid();
-    private static final RecipeIdentityEntity VALID_FROM_ANOTHER_USER =
-            TestDataRecipeIdentityEntity.getValidCompleteFromAnotherUser();
-    private static final RecipeIdentityEntity INVALID_FROM_ANOTHER_USER =
-            TestDataRecipeIdentityEntity.getInvalidFromAnotherUser();
-    private static final RecipeIdentityEntity VALID_NEW_CLONED =
-            TestDataRecipeIdentityEntity.getValidCompleteAfterCloned();
-    private static final RecipeIdentityEntity INVALID_NEW_CLONED =
-            TestDataRecipeIdentityEntity.getValidAfterInvalidClonedData();
-    private static final RecipeIdentityEntity VALID_CLONED_DESCRIPTION_UPDATED =
-            TestDataRecipeIdentityEntity.getValidClonedDescriptionUpdated();
 
     private static final String ERROR_MESSAGE_TOO_LONG = "ERROR_MESSAGE_TOO_LONG";
     private static final String ERROR_MESSAGE_TOO_SHORT = "ERROR_MESSAGE_TOO_SHORT";
@@ -152,8 +139,8 @@ public class RecipeIdentityEditorViewModelTest {
                 build();
 
         Recipe recipe = new Recipe(
-                repoRecipeMock,
-                timeProviderMock
+                timeProviderMock,
+                repoRecipeMock
         );
 
         RecipeIdentity identity = new RecipeIdentity(
@@ -218,7 +205,7 @@ public class RecipeIdentityEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 build();
 
         // Act
@@ -241,7 +228,7 @@ public class RecipeIdentityEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 build();
         // Act
         handler.execute(recipeMacro, request, new RecipeResponseCallback());
@@ -260,7 +247,7 @@ public class RecipeIdentityEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 build();
         // Act
         handler.execute(recipeMacro, request, new RecipeResponseCallback());
@@ -281,7 +268,7 @@ public class RecipeIdentityEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 build();
 
         // Act
@@ -302,7 +289,7 @@ public class RecipeIdentityEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 build();
 
         // Act
@@ -328,7 +315,7 @@ public class RecipeIdentityEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 build();
 
         // Act
@@ -350,7 +337,7 @@ public class RecipeIdentityEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 build();
 
         // Act
@@ -373,7 +360,7 @@ public class RecipeIdentityEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 build();
 
         // Act
@@ -394,7 +381,7 @@ public class RecipeIdentityEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 build();
 
         // Act
@@ -428,7 +415,7 @@ public class RecipeIdentityEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 build();
 
         // Act
@@ -457,7 +444,7 @@ public class RecipeIdentityEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 build();
 
         // Act
@@ -487,7 +474,7 @@ public class RecipeIdentityEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 build();
 
         // Act
@@ -515,7 +502,7 @@ public class RecipeIdentityEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 build();
 
         // Act
@@ -541,7 +528,7 @@ public class RecipeIdentityEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 build();
 
         // Act
@@ -566,7 +553,7 @@ public class RecipeIdentityEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 build();
 
         // Act
@@ -595,7 +582,7 @@ public class RecipeIdentityEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 build();
 
         // Act
@@ -620,7 +607,7 @@ public class RecipeIdentityEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 build();
 
         // Act
@@ -649,7 +636,7 @@ public class RecipeIdentityEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 build();
 
         // Act
@@ -673,69 +660,6 @@ public class RecipeIdentityEditorViewModelTest {
     // startValidExistingRecipeId_invalidTitle_stateINVALID_CHANGED
 
     // startInvalidExistingRecipeId_stateINVALID_UNCHANGED
-
-    @Test
-    public void startWithCloned_existingAndNewId_persistenceCalledWithExistingId() {
-        // Arrange
-        String cloneFromRecipeId = VALID_FROM_ANOTHER_USER.getId();
-        String cloneToRecipeId = INVALID_NEW_EMPTY.getId();
-
-        // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
-                setId(cloneFromRecipeId).
-                setCloneToId(cloneToRecipeId).
-                build();
-
-        // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
-        verifyAllReposCalledAndReturnValidExisting(cloneFromRecipeId);
-
-        // Assert
-        verify(repoIdentityMock).getById(eq(cloneFromRecipeId), anyObject());
-    }
-
-    @Test
-    public void startWithCloned_existingAndNewId_existingCopiedAndSavedWithNewId() {
-        // Arrange
-        String cloneFromRecipeId = VALID_FROM_ANOTHER_USER.getId();
-        String cloneToRecipeId = INVALID_NEW_EMPTY.getId();
-        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(VALID_NEW_CLONED.getCreateDate());
-
-        // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
-                setId(cloneFromRecipeId).
-                setCloneToId(cloneToRecipeId).
-                build();
-
-        // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
-        verifyAllReposCalledAndReturnValidExisting(cloneFromRecipeId);
-        // Assert
-        verify(repoIdentityMock).save(eq(VALID_NEW_CLONED));
-    }
-
-    @Test
-    public void startWithCloned_validExistingIdAndNewId_descriptionUpdatedCopiedAndSavedWithUpdatedDescription() {
-        // Arrange
-        String cloneFromRecipeId = VALID_FROM_ANOTHER_USER.getId();
-        String cloneToRecipeId = INVALID_NEW_EMPTY.getId();
-        whenTimeProviderReturnTime(VALID_CLONED_DESCRIPTION_UPDATED.getCreateDate());
-
-        // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
-                setId(cloneFromRecipeId).
-                setCloneToId(cloneToRecipeId).
-                build();
-
-        // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
-        verifyAllReposCalledAndReturnValidExisting(cloneFromRecipeId);
-        
-        SUT.setDescription(VALID_CLONED_DESCRIPTION_UPDATED.getDescription());
-
-        // Assert
-        verify(repoIdentityMock).save(VALID_CLONED_DESCRIPTION_UPDATED);
-    }
 
     // region helper methods -------------------------------------------------------------------
     private void setupResources() {
@@ -798,25 +722,6 @@ public class RecipeIdentityEditorViewModelTest {
         repoIdentityCallback.getValue().onEntityLoaded(VALID_EXISTING_COMPLETE);
     }
 
-    private void verifyAllReposCalledAndReturnValidExisting(String recipeId) {
-
-        verify(repoRecipeMock).getById(eq(recipeId), repoRecipeCallback.capture());
-        repoRecipeCallback.getValue().onEntityLoaded(TestDataRecipeEntity.getValidFromAnotherUser());
-
-        verify(repoIdentityMock).getById(eq(recipeId), repoIdentityCallback.capture());
-        repoIdentityCallback.getValue().onEntityLoaded(VALID_FROM_ANOTHER_USER);
-
-        verify(repoCourseMock).getCoursesForRecipe(eq(recipeId), repoCourseCallback.capture());
-        repoCourseCallback.getValue().onAllLoaded(TestDataRecipeCourseEntity.getAllByRecipeId(recipeId));
-
-        verify(repoPortionsMock).getPortionsForRecipe(eq(recipeId), repoPortionsCallback.capture());
-        repoPortionsCallback.getValue().onEntityLoaded(TestDataRecipePortionsEntity.
-                getValidCloneFromAnotherUser());
-
-        verify(repoDurationMock).getById(eq(recipeId), repoDurationCallback.capture());
-        repoDurationCallback.getValue().onEntityLoaded(TestDataRecipeDurationEntity.
-                getValidCompleteFromAnotherUser());
-    }
     // endregion helper methods --------------------------------------------------------------------
 
     // region helper classes -----------------------------------------------------------------------

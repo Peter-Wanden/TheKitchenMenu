@@ -109,9 +109,9 @@ public class RecipeListTest {
                         new RecipeStateCalculator(),
 
                         new Recipe(
-                                repoRecipeMock,
-                                timeProviderMock),
-
+                                timeProviderMock,
+                                repoRecipeMock
+                        ),
                         new RecipeIdentity(
                                 repoIdentityMock,
                                 timeProviderMock,
@@ -125,19 +125,19 @@ public class RecipeListTest {
                                                 TextValidatorTest.LONG_TEXT_MIN_LENGTH).
                                         setLongTextMaxLength(
                                                 TextValidatorTest.LONG_TEXT_MAX_LENGTH).
-                                        build()),
-
+                                        build()
+                        ),
                         new RecipeCourse(
                                 repoCourseMock,
                                 idProvideMock,
-                                timeProviderMock),
-
+                                timeProviderMock
+                        ),
                         new RecipeDuration(
                                 repoDurationMock,
                                 timeProviderMock,
                                 RecipeDurationTest.MAX_PREP_TIME,
-                                RecipeDurationTest.MAX_COOK_TIME),
-
+                                RecipeDurationTest.MAX_COOK_TIME
+                        ),
                         new RecipePortions(
                                 repoPortionsMock,
                                 idProvideMock,

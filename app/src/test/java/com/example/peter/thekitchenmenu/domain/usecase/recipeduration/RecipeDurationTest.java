@@ -20,8 +20,6 @@ import org.mockito.*;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe.DO_NOT_CLONE;
-
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDuration.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -99,7 +97,7 @@ public class RecipeDurationTest {
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 setModel(invalidModel).
                 build();
         // Act
@@ -119,7 +117,7 @@ public class RecipeDurationTest {
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 setModel(invalidModel).
                 build();
         // Act
@@ -140,7 +138,7 @@ public class RecipeDurationTest {
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 setModel(invalidModel).
                 build();
         // Act
@@ -161,7 +159,7 @@ public class RecipeDurationTest {
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 setModel(validModel).
                 build();
 
@@ -182,7 +180,7 @@ public class RecipeDurationTest {
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 setModel(validModel).
                 build();
 
@@ -204,7 +202,7 @@ public class RecipeDurationTest {
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 setModel(validModel).
                 build();
 
@@ -225,7 +223,7 @@ public class RecipeDurationTest {
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 setModel(invalidModel).
                 build();
         // Act
@@ -245,7 +243,7 @@ public class RecipeDurationTest {
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 setModel(invalidModel).
                 build();
         // Act
@@ -266,7 +264,7 @@ public class RecipeDurationTest {
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 setModel(invalidModel).
                 build();
         // Act
@@ -288,7 +286,7 @@ public class RecipeDurationTest {
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 setModel(validModel).
                 build();
         // Act
@@ -309,7 +307,7 @@ public class RecipeDurationTest {
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 setModel(validModel).
                 build();
         // Act
@@ -331,7 +329,7 @@ public class RecipeDurationTest {
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 setModel(validModel).
                 build();
         // Act
@@ -351,7 +349,7 @@ public class RecipeDurationTest {
                 build();
         RecipeDurationRequest invalidRequest = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 setModel(invalidModel).
                 build();
         // Act
@@ -371,7 +369,7 @@ public class RecipeDurationTest {
                 build();
         RecipeDurationRequest invalidRequest = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 setModel(invalidModel).
                 build();
         // Act
@@ -392,7 +390,7 @@ public class RecipeDurationTest {
                 build();
         RecipeDurationRequest invalidRequest = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 setModel(invalidModel).
                 build();
         // Act
@@ -414,7 +412,7 @@ public class RecipeDurationTest {
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 setModel(validModel).
                 build();
         // Act
@@ -434,7 +432,7 @@ public class RecipeDurationTest {
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 setModel(validModel).
                 build();
         // Act
@@ -455,7 +453,7 @@ public class RecipeDurationTest {
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 setModel(validModel).
                 build();
         // Act
@@ -476,7 +474,7 @@ public class RecipeDurationTest {
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 setModel(invalidModel).
                 build();
         // Act
@@ -496,7 +494,7 @@ public class RecipeDurationTest {
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 setModel(invalidModel).
                 build();
         // Act
@@ -518,7 +516,7 @@ public class RecipeDurationTest {
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 setModel(invalidModel).
                 build();
         // Act
@@ -542,7 +540,7 @@ public class RecipeDurationTest {
                 .build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 setModel(model).
                 build();
         // Act
@@ -564,7 +562,7 @@ public class RecipeDurationTest {
                 .build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 setModel(model).
                 build();
         // Act
@@ -586,7 +584,7 @@ public class RecipeDurationTest {
                 .build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 setModel(model).
                 build();
         // Act
@@ -608,7 +606,7 @@ public class RecipeDurationTest {
                 .build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 setModel(model).
                 build();
         // Act
@@ -634,7 +632,7 @@ public class RecipeDurationTest {
                 .build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 setModel(model).
                 build();
         // Act
@@ -692,7 +690,7 @@ public class RecipeDurationTest {
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                 setId(VALID_NEW_EMPTY.getId()).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 setModel(model).
                 build();
         // Act

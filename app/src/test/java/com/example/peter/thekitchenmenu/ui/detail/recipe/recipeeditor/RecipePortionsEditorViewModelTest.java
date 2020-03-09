@@ -44,7 +44,6 @@ import org.mockito.*;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe.DO_NOT_CLONE;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -146,8 +145,8 @@ public class RecipePortionsEditorViewModelTest {
                 build();
 
         Recipe recipe = new Recipe(
-                repoRecipeMock,
-                timeProviderMock
+                timeProviderMock,
+                repoRecipeMock
         );
 
         RecipeIdentity identity = new RecipeIdentity(
@@ -205,7 +204,7 @@ public class RecipePortionsEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 build();
 
         // Act
@@ -228,7 +227,7 @@ public class RecipePortionsEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 build();
 
         // Act
@@ -254,7 +253,7 @@ public class RecipePortionsEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 build();
 
         // Act
@@ -284,7 +283,7 @@ public class RecipePortionsEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 build();
 
         // Act
@@ -315,7 +314,7 @@ public class RecipePortionsEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 build();
 
         // Act
@@ -346,7 +345,7 @@ public class RecipePortionsEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 build();
 
         // Act
@@ -377,7 +376,7 @@ public class RecipePortionsEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 build();
 
         // Act
@@ -403,7 +402,7 @@ public class RecipePortionsEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 build();
 
         // Act
@@ -434,7 +433,7 @@ public class RecipePortionsEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 build();
 
         // Act
@@ -461,7 +460,7 @@ public class RecipePortionsEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 build();
 
         // Act
@@ -486,7 +485,7 @@ public class RecipePortionsEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 build();
 
         // Act
@@ -506,7 +505,7 @@ public class RecipePortionsEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 build();
 
         // Act
@@ -532,7 +531,7 @@ public class RecipePortionsEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 build();
 
         // Act
@@ -559,7 +558,7 @@ public class RecipePortionsEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 build();
 
         // Act
@@ -586,7 +585,7 @@ public class RecipePortionsEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 build();
 
         // Act
@@ -613,7 +612,7 @@ public class RecipePortionsEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId(DO_NOT_CLONE).
+                setCloneToId("").
                 build();
 
         // Act

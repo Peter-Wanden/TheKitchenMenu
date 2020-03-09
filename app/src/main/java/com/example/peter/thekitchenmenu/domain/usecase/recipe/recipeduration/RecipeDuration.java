@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
-
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe.DO_NOT_CLONE;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
 
 public class RecipeDuration extends UseCase
@@ -36,7 +34,7 @@ public class RecipeDuration extends UseCase
     @Nonnull
     private final List<FailReasons> failReasons;
 
-    private String recipeId = "";
+    private String id = "";
     private boolean isNewRequest;
     private boolean isCloned;
 
@@ -59,33 +57,32 @@ public class RecipeDuration extends UseCase
 
     @Override
     protected <Q extends Request> void execute(Q request) {
-        RecipeDurationRequest rdr = (RecipeDurationRequest) request;
+        RecipeDurationRequest durationRequest = (RecipeDurationRequest) request;
+        System.out.println(TAG + durationRequest);
+        requestModel = durationRequest.getModel();
 
-        System.out.println(TAG + rdr);
-        requestModel = rdr.getModel();
-
-        if (isNewRequest(rdr.getId())) {
-            extractIds(rdr);
+        if (isNewRequest(durationRequest.getId())) {
+            extractIds(durationRequest);
         } else {
             processChanges();
         }
     }
 
     private boolean isNewRequest(String recipeId) {
-        return isNewRequest = !this.recipeId.equals(recipeId);
+        return isNewRequest = !this.id.equals(recipeId);
     }
 
     private void extractIds(RecipeDurationRequest request) {
         if (isCloneRequest(request)) {
-            recipeId = request.getCloneToId();
+            id = request.getCloneToId();
         } else {
-            recipeId = request.getId();
+            id = request.getId();
         }
         loadData(request.getId());
     }
 
     private boolean isCloneRequest(RecipeDurationRequest request) {
-        return isCloned = !request.getCloneToId().equals(DO_NOT_CLONE);
+        return isCloned = !request.getCloneToId().equals("DO_NOT_CLONE");
     }
 
     private void loadData(String recipeId) {
@@ -107,7 +104,7 @@ public class RecipeDuration extends UseCase
     private RecipeDurationPersistenceModel convertEntityToPersistenceModel(RecipeDurationEntity entity) {
         long currentTime = timeProvider.getCurrentTimeInMills();
         return new RecipeDurationPersistenceModel.Builder().
-                setId(isCloned ? recipeId : entity.getId()).
+                setId(isCloned ? id : entity.getId()).
                 setPrepTime(entity.getPrepTime()).
                 setCookTime(entity.getCookTime()).
                 setCreateDate(isCloned ? currentTime : entity.getCreateDate()).
@@ -126,7 +123,7 @@ public class RecipeDuration extends UseCase
     private RecipeDurationPersistenceModel createNewPersistenceModel() {
         long currentTime = timeProvider.getCurrentTimeInMills();
         return RecipeDurationPersistenceModel.Builder.getDefault().
-                setId(recipeId).
+                setId(id).
                 setCreateDate(currentTime).
                 setLastUpdate(currentTime).
                 build();
@@ -172,7 +169,7 @@ public class RecipeDuration extends UseCase
 
     private void buildResponse() {
         RecipeDurationResponse response = new RecipeDurationResponse.Builder().
-                setId(recipeId).
+                setId(id).
                 setState(getComponentState()).
                 setFailReasons(new ArrayList<>(failReasons)).
                 setModel(getResponseModel()).
@@ -188,18 +185,12 @@ public class RecipeDuration extends UseCase
     private ComponentState getComponentState() {
         boolean isValid = failReasons.contains(CommonFailReason.NONE);
 
-        if (failReasons.contains(CommonFailReason.DATA_UNAVAILABLE)) {
-            return ComponentState.DATA_UNAVAILABLE;
-
-        } else if (!isValid && !isChanged()) {
+        if (!isValid && !isChanged()) {
             return ComponentState.INVALID_UNCHANGED;
-
         } else if (isValid && !isChanged()) {
             return ComponentState.VALID_UNCHANGED;
-
         } else if (!isValid && isChanged()) {
             return ComponentState.INVALID_CHANGED;
-
         } else {
             return ComponentState.VALID_CHANGED;
         }
