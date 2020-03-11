@@ -42,12 +42,11 @@ public class RecipePortions extends UseCase
     @Nonnull
     private final List<FailReasons> failReasons;
 
-    private String recipeId = "";
+    private String id = "";
     private boolean isNewRequest;
-    private boolean isCloned;
 
-    private RecipePortionsPersistenceModel persistenceModel;
     private RecipePortionsRequest.Model requestModel;
+    private RecipePortionsPersistenceModel persistenceModel;
 
     public RecipePortions(@Nonnull RepositoryRecipePortions repository,
                           @Nonnull UniqueIdProvider idProvider,
@@ -68,32 +67,19 @@ public class RecipePortions extends UseCase
     @Override
     protected <Q extends Request> void execute(Q request) {
         RecipePortionsRequest portionsRequest = (RecipePortionsRequest) request;
-
-        System.out.println(TAG + portionsRequest);
         requestModel = portionsRequest.getModel();
+        System.out.println(TAG + portionsRequest);
 
         if (isNewRequest(portionsRequest.getId())) {
-            extractIds(portionsRequest);
+            id = portionsRequest.getId();
+            loadData(id);
         } else {
             processChanges();
         }
     }
 
     private boolean isNewRequest(String recipeId) {
-        return isNewRequest = !this.recipeId.equals(recipeId);
-    }
-
-    private void extractIds(RecipePortionsRequest request) {
-        if (isCloneRequest(request)) {
-            recipeId = request.getCloneToId();
-        } else {
-            recipeId = request.getId();
-        }
-        loadData(request.getId());
-    }
-
-    private boolean isCloneRequest(RecipePortionsRequest request) {
-        return isCloned = !request.getCloneToId().equals("DO_NOT_CLONE");
+        return isNewRequest = !this.id.equals(recipeId);
     }
 
     private void loadData(String recipeId) {
@@ -104,23 +90,17 @@ public class RecipePortions extends UseCase
     public void onEntityLoaded(RecipePortionsEntity entity) {
         persistenceModel = convertEntityToPersistenceModel(entity);
         validateData();
-
-        if (isCloned && failReasons.contains(CommonFailReason.NONE)) {
-            save();
-            isCloned = false;
-        }
         buildResponse();
     }
 
     private RecipePortionsPersistenceModel convertEntityToPersistenceModel(RecipePortionsEntity entity) {
-        long currentTime = timeProvider.getCurrentTimeInMills();
         return new RecipePortionsPersistenceModel.Builder().
-                setId(isCloned ? idProvider.getUId() : entity.getId()).
-                setRecipeId(isCloned ? recipeId : entity.getRecipeId()).
+                setId(entity.getId()).
+                setRecipeId(entity.getRecipeId()).
                 setServings(entity.getServings()).
                 setSittings(entity.getSittings()).
-                setCreateDate(isCloned ? currentTime : entity.getCreateDate()).
-                setLastUpdate(isCloned ? currentTime : entity.getLastUpdate()).
+                setCreateDate(entity.getCreateDate()).
+                setLastUpdate(entity.getLastUpdate()).
                 build();
     }
 
@@ -136,7 +116,7 @@ public class RecipePortions extends UseCase
         long currentTime = timeProvider.getCurrentTimeInMills();
         return new RecipePortionsPersistenceModel.Builder().
                 setId(idProvider.getUId()).
-                setRecipeId(recipeId).
+                setRecipeId(id).
                 setServings(MIN_SERVINGS).
                 setSittings(MIN_SITTINGS).
                 setCreateDate(currentTime).
@@ -178,22 +158,28 @@ public class RecipePortions extends UseCase
 
     private void buildResponse() {
         RecipePortionsResponse response = new RecipePortionsResponse.Builder().
-                setId(recipeId).
-                setState(getComponentState()).
-                setFailReasons(new ArrayList<>(failReasons)).
+                setId(id).
+                setMetadata(getMetadata()).
                 setModel(getResponseModel()).
                 build();
 
-        if (response.getState() == ComponentState.VALID_CHANGED) {
-            persistenceModel = updatePersistenceFromRequestModel();
-            save();
+        if (response.getMetadata().getState() == ComponentState.VALID_CHANGED) {
+            save(updatePersistenceFromRequestModel());
         }
         sendResponse(response);
     }
 
+    private RecipePortionsResponse.Metadata getMetadata() {
+        return new RecipePortionsResponse.Metadata.Builder().
+                setState(getComponentState()).
+                setFailReasons(new ArrayList<>(failReasons)).
+                setCreateDate(persistenceModel.getCreateDate()). // TODO - These times may be wrong
+                setLasUpdate(persistenceModel.getLastUpdate()).  //  as they are updated after called
+                build();
+    }
+
     private ComponentState getComponentState() {
         boolean isValid = failReasons.contains(CommonFailReason.NONE);
-
         if (!isValid && !isChanged()) {
             return ComponentState.INVALID_UNCHANGED;
         } else if (isValid && !isChanged()) {
@@ -210,11 +196,11 @@ public class RecipePortions extends UseCase
     }
 
     private boolean isServingsChanged() {
-        return requestModel.getServings() != persistenceModel.getServings();
+        return persistenceModel.getServings() != requestModel.getServings();
     }
 
     private boolean isSittingsChanged() {
-        return requestModel.getSittings() != persistenceModel.getSittings();
+        return persistenceModel.getSittings() != requestModel.getSittings();
     }
 
     private RecipePortionsPersistenceModel updatePersistenceFromRequestModel() {
@@ -240,8 +226,6 @@ public class RecipePortions extends UseCase
                         persistenceModel.getServings() * persistenceModel.getSittings() :
                         requestModel.getServings() * requestModel.getSittings()).
 
-                setCreateDate(persistenceModel.getCreateDate()).
-                setLasUpdate(persistenceModel.getLastUpdate()).
                 build();
     }
 
@@ -249,7 +233,7 @@ public class RecipePortions extends UseCase
         System.out.println(TAG + response);
         resetState();
 
-        if (response.getFailReasons().contains(CommonFailReason.NONE)) {
+        if (response.getMetadata().getFailReasons().contains(CommonFailReason.NONE)) {
             getUseCaseCallback().onSuccess(response);
         } else {
             getUseCaseCallback().onError(response);
@@ -261,8 +245,8 @@ public class RecipePortions extends UseCase
         isNewRequest = false;
     }
 
-    private void save() {
-        repository.save(convertModelToEntity(persistenceModel));
+    private void save(RecipePortionsPersistenceModel model) {
+        repository.save(convertModelToEntity(model));
     }
 
     private RecipePortionsEntity convertModelToEntity(RecipePortionsPersistenceModel model) {

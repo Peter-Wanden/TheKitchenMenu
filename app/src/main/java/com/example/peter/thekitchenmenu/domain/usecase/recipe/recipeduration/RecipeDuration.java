@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
 
 public class RecipeDuration extends UseCase
@@ -36,10 +37,9 @@ public class RecipeDuration extends UseCase
 
     private String id = "";
     private boolean isNewRequest;
-    private boolean isCloned;
 
-    private RecipeDurationPersistenceModel persistenceModel;
     private RecipeDurationRequest.Model requestModel;
+    private RecipeDurationPersistenceModel persistenceModel;
 
     public RecipeDuration(@Nonnull RepositoryRecipeDuration repository,
                           @Nonnull TimeProvider timeProvider,
@@ -58,11 +58,12 @@ public class RecipeDuration extends UseCase
     @Override
     protected <Q extends Request> void execute(Q request) {
         RecipeDurationRequest durationRequest = (RecipeDurationRequest) request;
-        System.out.println(TAG + durationRequest);
         requestModel = durationRequest.getModel();
+        System.out.println(TAG + durationRequest);
 
         if (isNewRequest(durationRequest.getId())) {
-            extractIds(durationRequest);
+            id = durationRequest.getId();
+            loadData(id);
         } else {
             processChanges();
         }
@@ -70,19 +71,6 @@ public class RecipeDuration extends UseCase
 
     private boolean isNewRequest(String recipeId) {
         return isNewRequest = !this.id.equals(recipeId);
-    }
-
-    private void extractIds(RecipeDurationRequest request) {
-        if (isCloneRequest(request)) {
-            id = request.getCloneToId();
-        } else {
-            id = request.getId();
-        }
-        loadData(request.getId());
-    }
-
-    private boolean isCloneRequest(RecipeDurationRequest request) {
-        return isCloned = !request.getCloneToId().equals("DO_NOT_CLONE");
     }
 
     private void loadData(String recipeId) {
@@ -93,22 +81,16 @@ public class RecipeDuration extends UseCase
     public void onEntityLoaded(RecipeDurationEntity entity) {
         persistenceModel = convertEntityToPersistenceModel(entity);
         validateData();
-
-        if (isCloned && failReasons.contains(CommonFailReason.NONE)) {
-            save();
-            isCloned = false;
-        }
         buildResponse();
     }
 
     private RecipeDurationPersistenceModel convertEntityToPersistenceModel(RecipeDurationEntity entity) {
-        long currentTime = timeProvider.getCurrentTimeInMills();
         return new RecipeDurationPersistenceModel.Builder().
-                setId(isCloned ? id : entity.getId()).
+                setId(entity.getId()).
                 setPrepTime(entity.getPrepTime()).
                 setCookTime(entity.getCookTime()).
-                setCreateDate(isCloned ? currentTime : entity.getCreateDate()).
-                setLastUpdate(isCloned ? currentTime : entity.getLastUpdate()).
+                setCreateDate(entity.getCreateDate()).
+                setLastUpdate(entity.getLastUpdate()).
                 build();
     }
 
@@ -116,7 +98,6 @@ public class RecipeDuration extends UseCase
     public void onDataNotAvailable() {
         persistenceModel = createNewPersistenceModel();
         failReasons.add(CommonFailReason.DATA_UNAVAILABLE);
-
         buildResponse();
     }
 
@@ -170,16 +151,23 @@ public class RecipeDuration extends UseCase
     private void buildResponse() {
         RecipeDurationResponse response = new RecipeDurationResponse.Builder().
                 setId(id).
-                setState(getComponentState()).
-                setFailReasons(new ArrayList<>(failReasons)).
+                setMetadata(getMetadata()).
                 setModel(getResponseModel()).
                 build();
 
-        if (response.getState() == ComponentState.VALID_CHANGED) {
+        if (response.getMetadata().getState() == ComponentState.VALID_CHANGED) {
             persistenceModel = updatePersistenceFromRequestModel();
             save();
         }
         sendResponse(response);
+    }
+
+    private RecipeDurationResponse.Metadata getMetadata() {
+        return new RecipeDurationResponse.Metadata.Builder().
+                setState(getComponentState()).
+                setFailReasons(new ArrayList<>(failReasons)).
+                setCreateDate(0L).setLasUpdate(0L).
+                build();
     }
 
     private ComponentState getComponentState() {
@@ -279,7 +267,7 @@ public class RecipeDuration extends UseCase
         System.out.println(TAG + response);
         resetState();
 
-        if (response.getFailReasons().contains(CommonFailReason.NONE)) {
+        if (response.getMetadata().getFailReasons().contains(CommonFailReason.NONE)) {
             getUseCaseCallback().onSuccess(response);
         } else {
             getUseCaseCallback().onError(response);

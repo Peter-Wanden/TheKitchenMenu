@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse;
 
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequestAbstract;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequestBase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,32 +10,16 @@ import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourse.*;
 
-public final class RecipeCourseRequest extends RecipeRequestAbstract {
-    @Nonnull
-    private final Model model;
+public final class RecipeCourseRequest extends RecipeRequestBase<RecipeCourseRequest.Model> {
 
-    private RecipeCourseRequest(@Nonnull String id,
-                                @Nonnull Model model) {
-        this.id = id;
-        this.model = model;
+    private RecipeCourseRequest(@Nonnull String id, @Nonnull Model model) {
+        super(id, model);
     }
 
     @Nonnull
+    @Override
     public Model getModel() {
         return model;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        RecipeCourseRequest that = (RecipeCourseRequest) o;
-        return model.equals(that.model);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(model);
     }
 
     @Nonnull
@@ -77,7 +61,7 @@ public final class RecipeCourseRequest extends RecipeRequestAbstract {
         }
     }
 
-    public static final class Model {
+    public static final class Model implements RecipeRequestBase.RecipeRequestModel {
         @Nonnull
         private final List<Course> courseList;
 

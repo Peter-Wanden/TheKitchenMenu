@@ -106,7 +106,7 @@ public class RecipePortionsEditorViewModel extends ObservableViewModel {
     }
 
     private void onUseCaseError(RecipePortionsResponse response) {
-        List<FailReasons> failReasons = response.getFailReasons();
+        List<FailReasons> failReasons = response.getMetadata().getFailReasons();
 
         if (failReasons.contains(CommonFailReason.DATA_UNAVAILABLE)) {
             dataLoadingError.set(true);
@@ -150,7 +150,6 @@ public class RecipePortionsEditorViewModel extends ObservableViewModel {
                             build();
                     RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                             setId(response.getId()).
-                            setCloneToId("").
                             setModel(model).
                             build();
                     handler.execute(recipeMacro, request, callback);
@@ -199,7 +198,6 @@ public class RecipePortionsEditorViewModel extends ObservableViewModel {
                             build();
                     RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                             setId(response.getId()).
-                            setCloneToId("").
                             setModel(model).
                             build();
                     handler.execute(recipeMacro, request, callback);

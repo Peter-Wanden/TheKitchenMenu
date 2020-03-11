@@ -1,8 +1,10 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions;
 
+import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponseAbstract;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponseBase;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -10,32 +12,23 @@ import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
 
-public final class RecipePortionsResponse extends RecipeResponseAbstract {
+public final class RecipePortionsResponse extends RecipeResponseBase {
     @Nonnull
-    private final ComponentState state;
-    @Nonnull
-    private final List<FailReasons> failReasons;
+    private final Metadata metadata;
     @Nonnull
     private final RecipePortionsResponse.Model model;
 
     private RecipePortionsResponse(@Nonnull String id,
-                                   @Nonnull ComponentState state,
-                                   @Nonnull List<FailReasons> failReasons,
+                                   @Nonnull Metadata metadata,
                                    @Nonnull RecipePortionsResponse.Model model) {
         this.id = id;
-        this.state = state;
-        this.failReasons = failReasons;
+        this.metadata = metadata;
         this.model = model;
     }
 
     @Nonnull
-    public ComponentState getState() {
-        return state;
-    }
-
-    @Nonnull
-    public List<FailReasons> getFailReasons() {
-        return failReasons;
+    public Metadata getMetadata() {
+        return metadata;
     }
 
     @Nonnull
@@ -49,37 +42,36 @@ public final class RecipePortionsResponse extends RecipeResponseAbstract {
         if (o == null || getClass() != o.getClass()) return false;
         RecipePortionsResponse that = (RecipePortionsResponse) o;
         return id.equals(that.id) &&
-                state == that.state &&
-                failReasons.equals(that.failReasons) &&
+                metadata.equals(that.metadata) &&
                 model.equals(that.model);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, state, failReasons, model);
+        return Objects.hash(id, metadata, model);
     }
 
     @Override
     public String toString() {
         return "RecipePortionsResponse{" +
                 "id=" + id +
-                ", state=" + state +
-                ", failReasons=" + failReasons +
+                ", metadata=" + metadata +
                 ", model=" + model +
                 '}';
     }
 
     public static class Builder {
         private String id;
-        private ComponentState state;
-        private List<FailReasons> failReasons;
-        private RecipePortionsResponse.Model model;
+        private Metadata metadata;
+        private Model model;
 
         public static Builder getDefault() {
             return new Builder().
                     setId("").
-                    setState(ComponentState.INVALID_UNCHANGED).
-                    setModel(RecipePortionsResponse.Model.Builder.
+                    setMetadata(Metadata.Builder.
+                            getDefault().
+                            build()).
+                    setModel(Model.Builder.
                             getDefault().
                             build());
         }
@@ -89,13 +81,8 @@ public final class RecipePortionsResponse extends RecipeResponseAbstract {
             return this;
         }
 
-        public Builder setState(ComponentState state) {
-            this.state = state;
-            return this;
-        }
-
-        public Builder setFailReasons(List<FailReasons> failReasons) {
-            this.failReasons = failReasons;
+        public Builder setMetadata(Metadata metadata) {
+            this.metadata = metadata;
             return this;
         }
 
@@ -107,42 +94,38 @@ public final class RecipePortionsResponse extends RecipeResponseAbstract {
         public RecipePortionsResponse build() {
             return new RecipePortionsResponse(
                     id,
-                    state,
-                    failReasons,
+                    metadata,
                     model
             );
         }
     }
 
-    public static final class Model {
-        private final int servings;
-        private final int sittings;
-        private final int portions;
+    public static final class Metadata {
+        @Nonnull
+        private final ComponentState state;
+        @Nonnull
+        private final List<FailReasons> failReasons;
         private final long createDate;
         private final long lasUpdate;
 
-        private Model(int servings,
-                      int sittings,
-                      int portions,
-                      long createDate,
-                      long lasUpdate) {
-            this.servings = servings;
-            this.sittings = sittings;
-            this.portions = portions;
+        private Metadata(@Nonnull ComponentState state,
+                         @Nonnull List<FailReasons> failReasons,
+                         long createDate,
+                         long lasUpdate) {
+            this.state = state;
+            this.failReasons = failReasons;
             this.createDate = createDate;
             this.lasUpdate = lasUpdate;
         }
 
-        public int getServings() {
-            return servings;
+        @Nonnull
+        public ComponentState getState() {
+            return state;
         }
 
-        public int getSittings() {
-            return sittings;
-        }
-
-        public int getPortions() {
-            return portions;
+        @Nonnull
+        public List<FailReasons> getFailReasons() {
+            return failReasons;
         }
 
         public long getCreateDate() {
@@ -157,17 +140,117 @@ public final class RecipePortionsResponse extends RecipeResponseAbstract {
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
-            Model model = (Model) o;
-            return servings == model.servings &&
-                    sittings == model.sittings &&
-                    portions == model.portions &&
-                    createDate == model.createDate &&
-                    lasUpdate == model.lasUpdate;
+            Metadata that = (Metadata) o;
+            return state == that.state &&
+                    failReasons.equals(that.failReasons) &&
+                    createDate == that.createDate &&
+                    lasUpdate == that.lasUpdate;
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(servings, sittings, portions, createDate, lasUpdate);
+            return Objects.hash(state, failReasons, createDate, lasUpdate);
+        }
+
+        @Override
+        public String toString() {
+            return "MetadataModel{" +
+                    "state=" + state +
+                    ", failReasons=" + failReasons +
+                    ", createDate=" + createDate +
+                    ", lasUpdate=" + lasUpdate +
+                    '}';
+        }
+
+        public static class Builder {
+            private ComponentState state;
+            private List<FailReasons> failReasons;
+            private long createDate;
+            private long lasUpdate;
+
+            public static Builder getDefault() {
+                return new Builder().
+                        setState(ComponentState.INVALID_UNCHANGED).
+                        setFailReasons(getDefaultFailReasons()).
+                        setCreateDate(0L).
+                        setLasUpdate(0L);
+            }
+
+            public Builder setState(ComponentState state) {
+                this.state = state;
+                return this;
+            }
+
+            public Builder setFailReasons(List<FailReasons> failReasons) {
+                this.failReasons = failReasons;
+                return this;
+            }
+
+            public Builder setCreateDate(long createDate) {
+                this.createDate = createDate;
+                return this;
+            }
+
+            public Builder setLasUpdate(long lasUpdate) {
+                this.lasUpdate = lasUpdate;
+                return this;
+            }
+
+            private static List<FailReasons> getDefaultFailReasons() {
+                List<FailReasons> failReasons = new ArrayList<>();
+                failReasons.add(CommonFailReason.DATA_UNAVAILABLE);
+                return failReasons;
+            }
+
+            public Metadata build() {
+                return new Metadata(
+                        state,
+                        failReasons,
+                        createDate,
+                        lasUpdate
+                );
+            }
+        }
+    }
+
+    public static final class Model {
+        private final int servings;
+        private final int sittings;
+        private final int portions;
+
+        private Model(int servings,
+                      int sittings,
+                      int portions) {
+            this.servings = servings;
+            this.sittings = sittings;
+            this.portions = portions;
+        }
+
+        public int getServings() {
+            return servings;
+        }
+
+        public int getSittings() {
+            return sittings;
+        }
+
+        public int getPortions() {
+            return portions;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Model model = (Model) o;
+            return servings == model.servings &&
+                    sittings == model.sittings &&
+                    portions == model.portions;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(servings, sittings, portions);
         }
 
         @Nonnull
@@ -177,8 +260,6 @@ public final class RecipePortionsResponse extends RecipeResponseAbstract {
                     "servings=" + servings +
                     ", sittings=" + sittings +
                     ", portions=" + portions +
-                    ", createDate=" + createDate +
-                    ", lasUpdate=" + lasUpdate +
                     '}';
         }
 
@@ -186,16 +267,12 @@ public final class RecipePortionsResponse extends RecipeResponseAbstract {
             private int servings;
             private int sittings;
             private int portions;
-            private long createDate;
-            private long lasUpdate;
 
             public static Builder getDefault() {
                 return new Builder().
-                        setServings(1).
-                        setSittings(1).
-                        setPortions(1).
-                        setCreateDate(0L).
-                        setLasUpdate(0L);
+                        setServings(RecipePortions.MIN_SERVINGS).
+                        setSittings(RecipePortions.MIN_SITTINGS).
+                        setPortions(RecipePortions.MIN_SERVINGS * RecipePortions.MIN_SITTINGS);
             }
 
             public Builder setServings(int servings) {
@@ -213,23 +290,11 @@ public final class RecipePortionsResponse extends RecipeResponseAbstract {
                 return this;
             }
 
-            public Builder setCreateDate(long createDate) {
-                this.createDate = createDate;
-                return this;
-            }
-
-            public Builder setLasUpdate(long lasUpdate) {
-                this.lasUpdate = lasUpdate;
-                return this;
-            }
-
             public Model build() {
                 return new Model(
                         servings,
                         sittings,
-                        portions,
-                        createDate,
-                        lasUpdate
+                        portions
                 );
             }
         }

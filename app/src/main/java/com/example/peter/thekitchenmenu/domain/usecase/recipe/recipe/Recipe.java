@@ -7,6 +7,7 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipe;
 import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 
 import java.util.ArrayList;
@@ -34,7 +35,6 @@ public class Recipe extends UseCase implements DataSource.GetEntityCallback<Reci
 
     private String id = "";
     private String parentId;
-    private boolean isCloned;
 
     private RecipePersistenceModel persistenceModel;
 
@@ -48,11 +48,11 @@ public class Recipe extends UseCase implements DataSource.GetEntityCallback<Reci
     @Override
     protected <Q extends Request> void execute(Q request) {
         RecipeRequest recipeRequest = (RecipeRequest) request;
-
         System.out.println(TAG + recipeRequest);
 
         if (isNewRequest(recipeRequest.getId())) {
-            extractIds(recipeRequest);
+            id = recipeRequest.getId();
+            loadData(id);
         } else {
             buildResponse();
         }
@@ -62,20 +62,6 @@ public class Recipe extends UseCase implements DataSource.GetEntityCallback<Reci
         return !this.id.equals(id);
     }
 
-    private void extractIds(RecipeRequest request) {
-        if (isCloneRequest(request)) {
-            id = request.getCloneToId();
-            parentId = request.getId();
-        } else {
-            id = request.getId();
-        }
-        loadData(request.getId());
-    }
-
-    private boolean isCloneRequest(RecipeRequest request) {
-        return isCloned = !request.getCloneToId().equals("DO_NOT_CLONE");
-    }
-
     private void loadData(String recipeId) {
         repository.getById(recipeId, this);
     }
@@ -83,22 +69,16 @@ public class Recipe extends UseCase implements DataSource.GetEntityCallback<Reci
     @Override
     public void onEntityLoaded(RecipeEntity entity) {
         persistenceModel = convertEntityToPersistenceModel(entity);
-
-        if (isCloned) {
-            save(persistenceModel);
-            isCloned = false;
-        }
         buildResponse();
     }
 
     private RecipePersistenceModel convertEntityToPersistenceModel(RecipeEntity entity) {
-        long currentTime = timeProvider.getCurrentTimeInMills();
         return new RecipePersistenceModel.Builder().
-                setId(isCloned ? id : entity.getId()).
-                setParentId(isCloned ? parentId : entity.getParentId()).
-                setCreatedBy(isCloned ? Constants.getUserId() : entity.getCreatedBy()).
-                setCreateDate(isCloned ? currentTime : entity.getCreateDate()).
-                setLastUpdate(isCloned ? currentTime : entity.getLastUpdate()).
+                setId(entity.getId()).
+                setParentId(entity.getParentId()).
+                setCreatedBy(entity.getCreatedBy()).
+                setCreateDate(entity.getCreateDate()).
+                setLastUpdate(entity.getLastUpdate()).
                 build();
     }
 
@@ -124,16 +104,28 @@ public class Recipe extends UseCase implements DataSource.GetEntityCallback<Reci
         if (failReasons.isEmpty()) {
             failReasons.add(CommonFailReason.NONE);
         }
+
         RecipeResponse response = new RecipeResponse.Builder().
-                setId(persistenceModel.getId()).
-                setParentId(persistenceModel.getParentId()).
-                setCreatedBy(persistenceModel.getCreatedBy()).
-                setCreateDate(persistenceModel.getCreateDate()).
-                setLastUpdate(persistenceModel.getLastUpdate()).
-                setFailReasons(failReasons).
+                setMetadata(getMetadata()).
+                setModel(getResponseModel()).
                 build();
 
         sendResponse(response);
+    }
+
+    private RecipeResponse.Metadata getMetadata() {
+        List<FailReasons> failReasons = new ArrayList<>();
+        failReasons.add(CommonFailReason.NONE);
+        return new RecipeResponse.Metadata.Builder().
+                setState(RecipeStateCalculator.ComponentState.VALID_CHANGED).
+                setFailReasons(failReasons).
+                setCreateDate(0L).
+                setLasUpdate(0L).
+                build();
+    }
+
+    private RecipeResponse.Model getResponseModel() {
+        return new RecipeResponse.Model.Builder().setParentId("").build();
     }
 
     private void sendResponse(RecipeResponse response) {

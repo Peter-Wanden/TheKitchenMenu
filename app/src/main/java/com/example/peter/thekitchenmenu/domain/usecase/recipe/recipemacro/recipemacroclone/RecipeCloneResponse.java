@@ -1,9 +1,9 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.recipemacroclone;
 
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponseAbstract;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro;
 
-public final class RecipeCloneResponse extends RecipeResponseAbstract {
+public final class RecipeCloneResponse extends RecipeResponseBase {
 
     private RecipeMacro clonedRecipe;
     private String clonedFromId;

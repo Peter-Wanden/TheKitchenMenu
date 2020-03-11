@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity;
 
 import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponseAbstract;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponseBase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +12,7 @@ import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
 
-public final class RecipeIdentityResponse extends RecipeResponseAbstract {
+public final class RecipeIdentityResponse extends RecipeResponseBase {
     @Nonnull
     private final Metadata metadata;
     @Nonnull
@@ -165,7 +165,7 @@ public final class RecipeIdentityResponse extends RecipeResponseAbstract {
                     '}';
         }
 
-        public static final class Builder {
+        public static class Builder {
             private ComponentState state;
             private List<FailReasons> failReasons;
             private long createDate;
@@ -268,18 +268,6 @@ public final class RecipeIdentityResponse extends RecipeResponseAbstract {
                 return new Builder().
                         setTitle("").
                         setDescription("");
-            }
-
-            public static Builder basedOn(RecipeIdentityPersistenceModel model) {
-                return new Builder().
-                        setTitle(model.getTitle()).
-                        setDescription(model.getDescription());
-            }
-
-            public static Builder basedOn(RecipeIdentityRequest.Model model) {
-                return new Builder().
-                        setTitle(model.getTitle()).
-                        setDescription(model.getDescription());
             }
 
             public Builder setTitle(String title) {

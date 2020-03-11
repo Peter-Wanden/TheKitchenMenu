@@ -120,7 +120,8 @@ public class RecipePortionsTest {
         handler.execute(SUT, request, getCallback());
         simulateNothingReturnedFromDatabase();
         // Assert
-        assertEquals(RecipeStateCalculator.ComponentState.DATA_UNAVAILABLE, portionsOnErrorResponse.getState());
+        assertEquals(RecipeStateCalculator.ComponentState.DATA_UNAVAILABLE,
+                portionsOnErrorResponse.getMetadata().getState());
     }
 
     @Test
@@ -141,16 +142,20 @@ public class RecipePortionsTest {
 
         RecipePortionsRequest invalidRequest = new RecipePortionsRequest.Builder().
                 setId(NEW_EMPTY.getRecipeId()).
-                setCloneToId("").
                 setModel(invalidModel).
                 build();
 
         handler.execute(SUT, invalidRequest, getCallback());
         // Assert
-        assertEquals(RecipeStateCalculator.ComponentState.INVALID_CHANGED, portionsOnErrorResponse.getState());
-        assertEquals(2, portionsOnErrorResponse.getFailReasons().size());
-        assertTrue(portionsOnErrorResponse.getFailReasons().contains(FailReason.SERVINGS_TOO_HIGH));
-        assertTrue(portionsOnErrorResponse.getFailReasons().contains(FailReason.SITTINGS_TOO_HIGH));
+        assertEquals(RecipeStateCalculator.ComponentState.INVALID_CHANGED,
+                portionsOnErrorResponse.getMetadata().getState());
+        assertEquals(2, portionsOnErrorResponse.getMetadata().getFailReasons().size());
+        assertTrue(portionsOnErrorResponse.getMetadata().
+                getFailReasons().
+                contains(FailReason.SERVINGS_TOO_HIGH));
+        assertTrue(portionsOnErrorResponse.
+                getMetadata().
+                getFailReasons().contains(FailReason.SITTINGS_TOO_HIGH));
     }
 
     @Test
@@ -170,14 +175,18 @@ public class RecipePortionsTest {
                 INVALID_NEW_TOO_HIGH_SERVINGS_VALID_SITTINGS);
         RecipePortionsRequest invalidRequest = new RecipePortionsRequest.Builder().
                 setId(NEW_EMPTY.getRecipeId()).
-                setCloneToId("").
                 setModel(invalidModel).
                 build();
         handler.execute(SUT, invalidRequest, getCallback());
         // Assert
-        assertEquals(1, portionsOnErrorResponse.getFailReasons().size());
-        assertTrue(portionsOnErrorResponse.getFailReasons().contains(FailReason.SERVINGS_TOO_HIGH));
-        assertEquals(RecipeStateCalculator.ComponentState.INVALID_CHANGED, portionsOnErrorResponse.getState());
+        assertEquals(1, portionsOnErrorResponse.getMetadata().
+                getFailReasons().
+                size());
+        assertTrue(portionsOnErrorResponse.getMetadata().
+                getFailReasons().
+                contains(FailReason.SERVINGS_TOO_HIGH));
+        assertEquals(RecipeStateCalculator.ComponentState.INVALID_CHANGED,
+                portionsOnErrorResponse.getMetadata().getState());
     }
 
     @Test
@@ -197,14 +206,18 @@ public class RecipePortionsTest {
                 INVALID_NEW_VALID_SERVINGS_TOO_HIGH_SITTINGS);
         RecipePortionsRequest invalidRequest = new RecipePortionsRequest.Builder().
                 setId(NEW_EMPTY.getRecipeId()).
-                setCloneToId("").
                 setModel(invalidModel).
                 build();
         handler.execute(SUT, invalidRequest, getCallback());
         // Assert
-        assertEquals(RecipeStateCalculator.ComponentState.INVALID_CHANGED, portionsOnErrorResponse.getState());
-        assertEquals(1, portionsOnErrorResponse.getFailReasons().size());
-        assertTrue(portionsOnErrorResponse.getFailReasons().contains(FailReason.SITTINGS_TOO_HIGH));
+        assertEquals(RecipeStateCalculator.ComponentState.INVALID_CHANGED,
+                portionsOnErrorResponse.getMetadata().getState());
+        assertEquals(1, portionsOnErrorResponse.getMetadata().
+                getFailReasons().
+                size());
+        assertTrue(portionsOnErrorResponse.getMetadata().
+                getFailReasons().
+                contains(FailReason.SITTINGS_TOO_HIGH));
     }
 
     @Test
@@ -222,14 +235,18 @@ public class RecipePortionsTest {
         RecipePortionsRequest.Model validModel = getRequestModelFromEntity(VALID_NEW);
         RecipePortionsRequest validRequest = new RecipePortionsRequest.Builder().
                 setId(NEW_EMPTY.getRecipeId()).
-                setCloneToId("").
                 setModel(validModel).
                 build();
         handler.execute(SUT, validRequest, getCallback());
         // Assert
-        assertEquals(RecipeStateCalculator.ComponentState.VALID_CHANGED, portionsOnSuccessResponse.getState());
-        assertEquals(1, portionsOnSuccessResponse.getFailReasons().size());
-        assertTrue(portionsOnSuccessResponse.getFailReasons().contains(CommonFailReason.NONE));
+        assertEquals(RecipeStateCalculator.ComponentState.VALID_CHANGED,
+                portionsOnSuccessResponse.getMetadata().getState());
+        assertEquals(1, portionsOnSuccessResponse.getMetadata().
+                getFailReasons().
+                size());
+        assertTrue(portionsOnSuccessResponse.getMetadata().
+                getFailReasons().
+                contains(CommonFailReason.NONE));
     }
 
     @Test
@@ -250,14 +267,17 @@ public class RecipePortionsTest {
 
         RecipePortionsRequest validRequest = new RecipePortionsRequest.Builder().
                 setId(NEW_EMPTY.getRecipeId()).
-                setCloneToId("").
                 setModel(validModel).
                 build();
         handler.execute(SUT, validRequest, getCallback());
         // Assert
         verify(repoPortionsMock).save(eq(VALID_NEW));
-        assertEquals(1, portionsOnSuccessResponse.getFailReasons().size());
-        assertTrue(portionsOnSuccessResponse.getFailReasons().contains(CommonFailReason.NONE));
+        assertEquals(1, portionsOnSuccessResponse.getMetadata().
+                getFailReasons().
+                size());
+        assertTrue(portionsOnSuccessResponse.getMetadata().
+                getFailReasons().
+                contains(CommonFailReason.NONE));
     }
 
     @Test
@@ -275,9 +295,15 @@ public class RecipePortionsTest {
         // Assert
         assertEquals(expectedModel, portionsOnSuccessResponse.getModel());
         assertEquals(RecipeStateCalculator.ComponentState.VALID_UNCHANGED,
-                portionsOnSuccessResponse.getState());
-        assertEquals(1, portionsOnSuccessResponse.getFailReasons().size());
-        assertTrue(portionsOnSuccessResponse.getFailReasons().contains(CommonFailReason.NONE));
+                portionsOnSuccessResponse.
+                        getMetadata().
+                        getState());
+        assertEquals(1, portionsOnSuccessResponse.getMetadata().
+                getFailReasons().
+                size());
+        assertTrue(portionsOnSuccessResponse.getMetadata().
+                getFailReasons().
+                contains(CommonFailReason.NONE));
     }
 
     @Test
@@ -296,7 +322,6 @@ public class RecipePortionsTest {
                 build();
         RecipePortionsRequest invalidRequest = new RecipePortionsRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 setModel(invalidModel).build();
         handler.execute(SUT, invalidRequest, getCallback());
         // Assert
@@ -320,7 +345,6 @@ public class RecipePortionsTest {
                 build();
         RecipePortionsRequest validRequest = new RecipePortionsRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 setModel(validModel).
                 build();
         handler.execute(SUT, validRequest, getCallback());
@@ -343,13 +367,14 @@ public class RecipePortionsTest {
                 build();
         RecipePortionsRequest invalidRequest = new RecipePortionsRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 setModel(invalidModel).
                 build();
         handler.execute(SUT, invalidRequest, getCallback());
         // Assert
         verifyNoMoreInteractions(repoPortionsMock);
-        assertTrue(portionsOnErrorResponse.getFailReasons().contains(FailReason.SITTINGS_TOO_HIGH));
+        assertTrue(portionsOnErrorResponse.getMetadata().
+                getFailReasons().
+                contains(FailReason.SITTINGS_TOO_HIGH));
     }
 
     @Test
@@ -369,14 +394,17 @@ public class RecipePortionsTest {
                 build();
         RecipePortionsRequest validRequest = new RecipePortionsRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 setModel(validModel).
                 build();
         handler.execute(SUT, validRequest, getCallback());
         // Assert
         verify(repoPortionsMock).save(eq(VALID_EXISTING_UPDATED_SITTINGS));
-        assertEquals(1, portionsOnSuccessResponse.getFailReasons().size());
-        assertTrue(portionsOnSuccessResponse.getFailReasons().contains(CommonFailReason.NONE));
+        assertEquals(1, portionsOnSuccessResponse.getMetadata().
+                getFailReasons().
+                size());
+        assertTrue(portionsOnSuccessResponse.getMetadata().
+                getFailReasons().
+                contains(CommonFailReason.NONE));
     }
 
     // region helper methods -----------------------------------------------------------------------
@@ -420,8 +448,6 @@ public class RecipePortionsTest {
                 setServings(entity.getServings()).
                 setSittings(entity.getSittings()).
                 setPortions(entity.getServings() * entity.getSittings()).
-                setCreateDate(entity.getCreateDate()).
-                setLasUpdate(entity.getLastUpdate()).
                 build();
     }
 

@@ -1,37 +1,21 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity;
 
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequestAbstract;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequestBase;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipeIdentityRequest extends RecipeRequestAbstract {
-    @Nonnull
-    private final Model model;
+public final class RecipeIdentityRequest extends RecipeRequestBase<RecipeIdentityRequest.Model> {
 
-    private RecipeIdentityRequest(@Nonnull String id,
-                                  @Nonnull Model model) {
-        this.id = id;
-        this.model = model;
+    private RecipeIdentityRequest(@Nonnull String id, @Nonnull Model model) {
+        super(id, model);
     }
 
     @Nonnull
+    @Override
     public Model getModel() {
         return model;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        RecipeIdentityRequest that = (RecipeIdentityRequest) o;
-        return id.equals(that.id) && model.equals(that.model);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, model);
     }
 
     @Nonnull
@@ -55,17 +39,6 @@ public final class RecipeIdentityRequest extends RecipeRequestAbstract {
                             build());
         }
 
-        public static Builder basedOnResponse(RecipeIdentityResponse response) {
-            return new Builder().
-                    setId(response.getId()).
-                    setModel(
-                            new Model.Builder().
-                                    setTitle(response.getModel().getTitle()).
-                                    setDescription(response.getModel().getDescription()).
-                                    build()
-                    );
-        }
-
         public Builder setId(String id) {
             this.id = id;
             return this;
@@ -84,13 +57,14 @@ public final class RecipeIdentityRequest extends RecipeRequestAbstract {
         }
     }
 
-    public static final class Model {
+    public static final class Model implements RecipeRequestBase.RecipeRequestModel {
         @Nonnull
         private final String title;
         @Nonnull
         private final String description;
 
-        private Model(@Nonnull String title, @Nonnull String description) {
+        private Model(@Nonnull String title,
+                      @Nonnull String description) {
             this.title = title;
             this.description = description;
         }
@@ -127,7 +101,7 @@ public final class RecipeIdentityRequest extends RecipeRequestAbstract {
                     '}';
         }
 
-        public static final class Builder {
+        public static class Builder {
             private String title;
             private String description;
 

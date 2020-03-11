@@ -88,7 +88,7 @@ public final class RecipeIdentityPersistenceModel implements PersistenceModel {
         private long createDate;
         private long lastUpdate;
 
-        public static Builder basedOn(@Nonnull RecipeIdentityPersistenceModel oldModel) {
+        public static Builder basedOnPersistenceModel(@Nonnull RecipeIdentityPersistenceModel oldModel) {
             return new Builder().
                     setId(oldModel.getId()).
                     setTitle(oldModel.getTitle()).

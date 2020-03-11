@@ -43,7 +43,6 @@ public class RecipeEditorViewModel extends ViewModel {
     public final ObservableBoolean dataIsLoadingObservable = new ObservableBoolean();
 
     private boolean isNewRecipe;
-    private boolean isCloned;
     private boolean showReviewButton;
 
     private RecipeResponse recipeResponse;
@@ -85,7 +84,6 @@ public class RecipeEditorViewModel extends ViewModel {
             isNewRecipe = false;
             request.setId(recipeId);
         }
-        request.setCloneToId("");
         handler.execute(recipeMacro, request.build(), recipeResponseListener);
     }
 
@@ -137,16 +135,16 @@ public class RecipeEditorViewModel extends ViewModel {
     }
 
     private void onUseCaseSuccess() {
-        if (isEditorCreator()) {
-            if (isCloned) {
-                isCloned = false;
-                setupForClonedRecipe();
-            } else {
-                setupForExistingRecipe();
-            }
-        } else {
-            cloneRecipe();
-        }
+//        if (isEditorCreator()) {
+//            if (isCloned) {
+//                isCloned = false;
+//                setupForClonedRecipe();
+//            } else {
+//                setupForExistingRecipe();
+//            }
+//        } else {
+//            cloneRecipe();
+//        }
     }
 
     private void onUseCaseError() {
@@ -156,14 +154,15 @@ public class RecipeEditorViewModel extends ViewModel {
     }
 
     private boolean isEditorCreator() {
-        return Constants.getUserId().equals(recipeResponse.getCreatedBy());
+//        return Constants.getUserId().equals(recipeResponse.getCreatedBy());
+        return false;
     }
 
     private void cloneRecipe() {
-        RecipeRequest request = new RecipeRequest.Builder().
-                setId(recipeResponse.getId()).
-                setCloneToId(idProvider.getUId()).build();
-        handler.execute(recipeMacro, request, recipeResponseListener);
+//        RecipeRequest request = new RecipeRequest.Builder().
+//                setId(recipeResponse.getId()).
+//                setCloneToId(idProvider.getUId()).build();
+//        handler.execute(recipeMacro, request, recipeResponseListener);
     }
 
     private void setupForNewRecipe() {
@@ -236,9 +235,10 @@ public class RecipeEditorViewModel extends ViewModel {
         } else if (isEditorCreator()) {
             navigator.reviewEditedRecipe(recipeId);
 
-        } else if (isCloned) {
-            navigator.reviewClonedRecipe(recipeId);
         }
+//        else if (isCloned) {
+//            navigator.reviewClonedRecipe(recipeId);
+//        }
     }
 
     public void ingredientsButtonPressed() {
@@ -250,8 +250,9 @@ public class RecipeEditorViewModel extends ViewModel {
         } else if (isEditorCreator()) {
             navigator.editIngredients(recipeId);
 
-        } else if (isCloned) {
-            navigator.reviewIngredients(recipeId);
         }
+//        else if (isCloned) {
+//            navigator.reviewIngredients(recipeId);
+//        }
     }
 }

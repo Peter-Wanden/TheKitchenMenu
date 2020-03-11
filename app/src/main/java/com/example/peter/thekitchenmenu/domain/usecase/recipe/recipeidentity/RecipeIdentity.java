@@ -68,8 +68,8 @@ public class RecipeIdentity extends UseCase
     @Override
     protected <Q extends Request> void execute(Q request) {
         RecipeIdentityRequest identityRequest = (RecipeIdentityRequest) request;
-        System.out.println(TAG + identityRequest);
         requestModel = identityRequest.getModel();
+        System.out.println(TAG + identityRequest);
 
         if (isNewRequest(identityRequest.getId())) {
             id = identityRequest.getId();
@@ -219,13 +219,10 @@ public class RecipeIdentity extends UseCase
         boolean isValid = failReasons.contains(CommonFailReason.NONE);
         if (!isValid && !isChanged()) {
             return ComponentState.INVALID_UNCHANGED;
-
         } else if (isValid && !isChanged()) {
             return ComponentState.VALID_UNCHANGED;
-
         } else if (!isValid && isChanged()) {
             return ComponentState.INVALID_CHANGED;
-
         } else {
             return ComponentState.VALID_CHANGED;
         }
@@ -245,7 +242,7 @@ public class RecipeIdentity extends UseCase
 
     private RecipeIdentityPersistenceModel updatePersistenceFromRequestModel() {
         return RecipeIdentityPersistenceModel.Builder.
-                basedOn(persistenceModel).
+                basedOnPersistenceModel(persistenceModel).
                 setTitle(requestModel.getTitle()).
                 setDescription(requestModel.getDescription()).
                 setLastUpdate(timeProvider.getCurrentTimeInMills()).
@@ -253,15 +250,15 @@ public class RecipeIdentity extends UseCase
     }
 
     private RecipeIdentityResponse.Model getResponseModel() {
-        if (isNewRequest) {
-            return RecipeIdentityResponse.Model.Builder.
-                    basedOn(persistenceModel).
+            return new RecipeIdentityResponse.Model.Builder().
+                    setTitle(isNewRequest ?
+                            persistenceModel.getTitle() :
+                            requestModel.getTitle()).
+
+                    setDescription(isNewRequest ?
+                            persistenceModel.getDescription():
+                            requestModel.getDescription()).
                     build();
-        } else {
-            return RecipeIdentityResponse.Model.Builder.
-                    basedOn(requestModel).
-                    build();
-        }
     }
 
     private void sendResponse(RecipeIdentityResponse response) {

@@ -171,7 +171,6 @@ public class RecipeCourseEditorViewModelTest {
         // An external request that starts loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 build();
 
         // Act
@@ -191,7 +190,6 @@ public class RecipeCourseEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 build();
 
         // Act
@@ -218,7 +216,6 @@ public class RecipeCourseEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 build();
 
         // Act
@@ -237,52 +234,52 @@ public class RecipeCourseEditorViewModelTest {
         assertFalse(SUT.isCourseSeven());
     }
 
-    @Test
-    public void startWithClone_cloneFromAndToIds_persistenceCalledWithCloneFromId() {
-        // Arrange
-        String cloneFromRecipeId = RECIPE_VALID_EXISTING.getId();
-        String cloneToRecipeId = RECIPE_INVALID_NEW.getId();
-        // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
-                setId(cloneFromRecipeId).
-                setCloneToId(cloneToRecipeId).
-                build();
+//    @Test
+//    public void startWithClone_cloneFromAndToIds_persistenceCalledWithCloneFromId() {
+//        // Arrange
+//        String cloneFromRecipeId = RECIPE_VALID_EXISTING.getId();
+//        String cloneToRecipeId = RECIPE_INVALID_NEW.getId();
+//        // An external request that starts/loads the recipe
+//        RecipeRequest request = new RecipeRequest.Builder().
+//                setId(cloneFromRecipeId).
+//                setCloneToId(cloneToRecipeId).
+//                build();
+//
+//        // Act
+//        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+//
+//        // Assert
+//        verifyAllOtherComponentReposCalledAndReturnValidExisting(cloneFromRecipeId);
+//        verifyRepoCourseCalledAndReturnCoursesMatchingId(cloneFromRecipeId);
+//    }
 
-        // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
-
-        // Assert
-        verifyAllOtherComponentReposCalledAndReturnValidExisting(cloneFromRecipeId);
-        verifyRepoCourseCalledAndReturnCoursesMatchingId(cloneFromRecipeId);
-    }
-
-    @Test
-    public void startWithClonedModel_cloneFromAndToIds_whenDeleteCourse_courseDeletedFromCloneToId() {
-        // Arrange
-        String cloneFromRecipeId = RECIPE_VALID_EXISTING.getId();
-        String cloneToRecipeId = RECIPE_INVALID_NEW.getId();
-        whenIdProviderReturnClonedEvenIds();
-
-        // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
-                setId(cloneFromRecipeId).
-                setCloneToId(cloneToRecipeId).
-                build();
-
-        // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
-
-        // Assert
-        verifyAllOtherComponentReposCalledAndReturnValidExisting(cloneFromRecipeId);
-        verifyRepoCourseCalledAndReturnEvenCoursesForId(cloneFromRecipeId);
-
-        assertTrue(SUT.isCourseZero());
-        SUT.setCourseZero(false);
-        verify(repoCourseMock).deleteById(eq(getClonedRecipeCourseZero().getId()));
-        assertFalse(SUT.isCourseZero());
-        SUT.setCourseFour(false);
-        verify(repoCourseMock).deleteById(eq(getClonedRecipeCourseFour().getId()));
-    }
+//    @Test
+//    public void startWithClonedModel_cloneFromAndToIds_whenDeleteCourse_courseDeletedFromCloneToId() {
+//        // Arrange
+//        String cloneFromRecipeId = RECIPE_VALID_EXISTING.getId();
+//        String cloneToRecipeId = RECIPE_INVALID_NEW.getId();
+//        whenIdProviderReturnClonedEvenIds();
+//
+//        // An external request that starts/loads the recipe
+//        RecipeRequest request = new RecipeRequest.Builder().
+//                setId(cloneFromRecipeId).
+//                setCloneToId(cloneToRecipeId).
+//                build();
+//
+//        // Act
+//        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+//
+//        // Assert
+//        verifyAllOtherComponentReposCalledAndReturnValidExisting(cloneFromRecipeId);
+//        verifyRepoCourseCalledAndReturnEvenCoursesForId(cloneFromRecipeId);
+//
+//        assertTrue(SUT.isCourseZero());
+//        SUT.setCourseZero(false);
+//        verify(repoCourseMock).deleteById(eq(getClonedRecipeCourseZero().getId()));
+//        assertFalse(SUT.isCourseZero());
+//        SUT.setCourseFour(false);
+//        verify(repoCourseMock).deleteById(eq(getClonedRecipeCourseFour().getId()));
+//    }
 
     @Test
     public void courseZeroSelected_true_courseZeroAndRecipeIdSavedToDatabase() {
@@ -293,7 +290,6 @@ public class RecipeCourseEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(EXISTING_RECIPE_ID).
-                setCloneToId("").
                 build();
 
         // Act
@@ -318,7 +314,6 @@ public class RecipeCourseEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(EXISTING_RECIPE_ID).
-                setCloneToId("").
                 build();
 
         // Act
@@ -341,7 +336,6 @@ public class RecipeCourseEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(EXISTING_RECIPE_ID).
-                setCloneToId("").
                 build();
 
         // Act
@@ -363,7 +357,6 @@ public class RecipeCourseEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(EXISTING_RECIPE_ID).
-                setCloneToId("").
                 build();
 
         // Act
@@ -389,7 +382,6 @@ public class RecipeCourseEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(EXISTING_RECIPE_ID).
-                setCloneToId("").
                 build();
 
         // Act
@@ -412,7 +404,6 @@ public class RecipeCourseEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(EXISTING_RECIPE_ID).
-                setCloneToId("").
                 build();
 
         // Act
@@ -436,7 +427,6 @@ public class RecipeCourseEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(EXISTING_RECIPE_ID).
-                setCloneToId("").
                 build();
 
         // Act
@@ -459,7 +449,6 @@ public class RecipeCourseEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(EXISTING_RECIPE_ID).
-                setCloneToId("").
                 build();
 
         // Act
@@ -485,7 +474,6 @@ public class RecipeCourseEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(EXISTING_RECIPE_ID).
-                setCloneToId("").
                 build();
 
         // Act
@@ -510,7 +498,6 @@ public class RecipeCourseEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(EXISTING_RECIPE_ID).
-                setCloneToId("").
                 build();
 
         // Act
@@ -536,7 +523,6 @@ public class RecipeCourseEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(EXISTING_RECIPE_ID).
-                setCloneToId("").
                 build();
 
         // Act
@@ -557,7 +543,6 @@ public class RecipeCourseEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(EXISTING_RECIPE_ID).
-                setCloneToId("").
                 build();
 
         // Act
@@ -582,7 +567,6 @@ public class RecipeCourseEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(EXISTING_RECIPE_ID).
-                setCloneToId("").
                 build();
 
         // Act
@@ -605,7 +589,6 @@ public class RecipeCourseEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(EXISTING_RECIPE_ID).
-                setCloneToId("").
                 build();
 
         // Act
@@ -631,7 +614,6 @@ public class RecipeCourseEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(EXISTING_RECIPE_ID).
-                setCloneToId("").
                 build();
 
         // Act
@@ -655,7 +637,6 @@ public class RecipeCourseEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(EXISTING_RECIPE_ID).
-                setCloneToId("").
                 build();
 
         // Act
@@ -678,7 +659,6 @@ public class RecipeCourseEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(EXISTING_RECIPE_ID).
-                setCloneToId("").
                 build();
         RecipeMacroResponseCallback macroCallback = new RecipeMacroResponseCallback();
 
@@ -714,7 +694,6 @@ public class RecipeCourseEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(EXISTING_RECIPE_ID).
-                setCloneToId("").
                 build();
         RecipeMacroResponseCallback macroCallback = new RecipeMacroResponseCallback();
 
@@ -743,7 +722,6 @@ public class RecipeCourseEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(EXISTING_RECIPE_ID).
-                setCloneToId("").
                 build();
         RecipeMacroResponseCallback macroCallback = new RecipeMacroResponseCallback();
 
@@ -783,7 +761,6 @@ public class RecipeCourseEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(EXISTING_RECIPE_ID).
-                setCloneToId("").
                 build();
         RecipeMacroResponseCallback macroCallback = new RecipeMacroResponseCallback();
 

@@ -1,36 +1,22 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration;
 
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequestAbstract;
+
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequestBase;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipeDurationRequest extends RecipeRequestAbstract {
-    @Nonnull
-    private final RecipeDurationRequest.Model model;
+public final class RecipeDurationRequest extends RecipeRequestBase<RecipeDurationRequest.Model> {
 
-    private RecipeDurationRequest(@Nonnull String id,
-                                  @Nonnull String cloneToId,
-                                  @Nonnull RecipeDurationRequest.Model model) {
-        this.id = id;
-        this.cloneToId = cloneToId;
-        this.model = model;
+    private RecipeDurationRequest(@Nonnull String id, @Nonnull Model model) {
+        super(id, model);
     }
 
     @Nonnull
-    public RecipeDurationRequest.Model getModel() {
-        return model;
-    }
-
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        RecipeDurationRequest request = (RecipeDurationRequest) o;
-        return id.equals(request.id) &&
-                cloneToId.equals(request.cloneToId) &&
-                model.equals(request.model);
+    public Model getModel() {
+        return model;
     }
 
     @Nonnull
@@ -38,55 +24,33 @@ public final class RecipeDurationRequest extends RecipeRequestAbstract {
     public String toString() {
         return "RecipeDurationRequest{" +
                 "id='" + id + '\'' +
-                ", cloneToId='" + cloneToId + '\'' +
                 ", model=" + model +
                 '}';
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, cloneToId, model);
-    }
+    public static class Builder extends RecipeRequestBase.Builder<Builder> {
 
-    public static class Builder {
-        private String id;
-        private String cloneToId;
-        private RecipeDurationRequest.Model model;
-
-        public static Builder getDefault() {
+        @Override
+        public Builder getDefault() {
             return new Builder().
                     setId("").
-                    setCloneToId("").
-                    setModel(RecipeDurationRequest.Model.Builder.
+                    setModel(Model.Builder.
                             getDefault().
                             build());
         }
 
-        public Builder setId(String id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder setCloneToId(String cloneToId) {
-            this.cloneToId = cloneToId;
-            return this;
-        }
-
-        public Builder setModel(RecipeDurationRequest.Model model) {
-            this.model = model;
-            return this;
-        }
-
+        @Override
         public RecipeDurationRequest build() {
-            return new RecipeDurationRequest(
-                    id,
-                    cloneToId,
-                    model
-            );
+            return new RecipeDurationRequest(id, (RecipeDurationRequest.Model) model);
+        }
+
+        @Override
+        protected Builder self() {
+            return this;
         }
     }
 
-    public static final class Model {
+    public static final class Model implements RecipeRequestBase.RecipeRequestModel {
         private final int prepHours;
         private final int prepMinutes;
         private final int cookHours;
@@ -183,8 +147,8 @@ public final class RecipeDurationRequest extends RecipeRequestAbstract {
                 return this;
             }
 
-            public RecipeDurationRequest.Model build() {
-                return new RecipeDurationRequest.Model(
+            public Model build() {
+                return new Model(
                         prepHours,
                         prepMinutes,
                         cookHours,

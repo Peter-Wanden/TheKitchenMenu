@@ -15,6 +15,7 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.RecipeRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDuration;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentity;
@@ -40,15 +41,12 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import javax.annotation.Nonnull;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 public class RecipeMacroCloneTest {
@@ -56,16 +54,32 @@ public class RecipeMacroCloneTest {
     private static final String TAG = "tkm-" + RecipeMacroCloneTest.class.getSimpleName() + ": ";
 
     // region constants ----------------------------------------------------------------------------
-    private static final RecipeIdentityEntity VALID_FROM_ANOTHER_USER =
+    private static final RecipeIdentityEntity IDENTITY_VALID_FROM_ANOTHER_USER =
             TestDataRecipeIdentityEntity.getValidCompleteFromAnotherUser();
-    private static final RecipeIdentityEntity INVALID_FROM_ANOTHER_USER =
+    private static final RecipeIdentityEntity IDENTITY_INVALID_FROM_ANOTHER_USER =
             TestDataRecipeIdentityEntity.getInvalidFromAnotherUser();
-    private static final RecipeIdentityEntity VALID_NEW_CLONED =
+    private static final RecipeIdentityEntity IDENTITY_VALID_NEW_CLONED =
             TestDataRecipeIdentityEntity.getValidCompleteAfterCloned();
-    private static final RecipeIdentityEntity INVALID_NEW_CLONED =
+    private static final RecipeIdentityEntity IDENTITY_INVALID_NEW_CLONED =
             TestDataRecipeIdentityEntity.getValidAfterInvalidClonedData();
-    private static final RecipeIdentityEntity VALID_CLONED_DESCRIPTION_UPDATED =
+    private static final RecipeIdentityEntity IDENTITY_VALID_CLONED_DESCRIPTION_UPDATED =
             TestDataRecipeIdentityEntity.getValidClonedDescriptionUpdated();
+    private static final RecipeDurationEntity IDENTITY_DURATION_VALID_COMPLETE_FROM_ANOTHER_USER =
+            TestDataRecipeDurationEntity.getValidCompleteFromAnotherUser();
+    private static final RecipeDurationEntity IDENTITY_DURATION_VALID_NEW_CLONED =
+            TestDataRecipeDurationEntity.getValidNewCloned();
+    private static final RecipeDurationEntity IDENTITY_DURATION_VALID_NEW_CLONED_PREP_TIME_UPDATED =
+            TestDataRecipeDurationEntity.getValidNewClonedPrepTimeUpdated();
+    private static final RecipeDurationEntity DURATION_VALID_COMPLETE_FROM_ANOTHER_USER =
+            TestDataRecipeDurationEntity.getValidCompleteFromAnotherUser();
+    private static final RecipeDurationEntity DURATION_INVALID_COMPLETE_FROM_ANOTHER_USER =
+            TestDataRecipeDurationEntity.getInvalidCompleteFromAnotherUser();
+    private static final RecipeDurationEntity DURATION_VALID_NEW_CLONED =
+            TestDataRecipeDurationEntity.getValidNewCloned();
+    private static final RecipeDurationEntity DURATION_INVALID_NEW_CLONED =
+            TestDataRecipeDurationEntity.getInvalidNewCloned();
+    private static final RecipeDurationEntity DURATION_VALID_NEW_CLONED_PREP_TIME_UPDATED =
+            TestDataRecipeDurationEntity.getValidNewClonedPrepTimeUpdated();
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
@@ -93,13 +107,13 @@ public class RecipeMacroCloneTest {
     UniqueIdProvider idProviderMock;
     @Mock
     TimeProvider timeProviderMock;
-    UseCaseHandler handler;
+    private UseCaseHandler handler;
     // endregion helper fields ---------------------------------------------------------------------
 
     private RecipeMacroClone SUT;
 
     @Before
-    public void setup() throws Exception {
+    public void setup() {
         MockitoAnnotations.initMocks(this);
         SUT = givenUseCase();
     }
@@ -210,7 +224,10 @@ public class RecipeMacroCloneTest {
 
         RecipeCloneRequest request = new RecipeCloneRequest.Builder().
                 setId(cloneFromId).
-                setCloneToId(cloneToId).
+                setModel(RecipeCloneRequest.Model.Builder.
+                        getDefault().
+                        setCloneToId(cloneToId).
+                        build()).
                 build();
         // Act
         handler.execute(SUT, request, new RecipeCloneCallBackListener());
@@ -229,7 +246,10 @@ public class RecipeMacroCloneTest {
 
         RecipeCloneRequest request = new RecipeCloneRequest.Builder().
                 setId(cloneFromId).
-                setCloneToId(cloneToId).
+                setModel(RecipeCloneRequest.Model.Builder.
+                        getDefault().
+                        setCloneToId(cloneToId).
+                        build()).
                 build();
         // Act
         handler.execute(SUT, request, new RecipeCloneCallBackListener());
@@ -592,6 +612,137 @@ public class RecipeMacroCloneTest {
 //        // Assert
 //        verify(repoIdentityMock).save(VALID_CLONED_DESCRIPTION_UPDATED);
 //    }
+//@Test
+//public void startClone_existingAndNewId_databaseCalledWithExistingId() {
+//    // Act
+////    givenClonedModel();
+//}
+
+//    @Test
+////    public void startClone_existingAndNewId_existingClonedAndSavedWithNewRecipeId() {
+////        // Arrange
+////        // Act
+////        givenClonedModel();
+////        // Assert
+////        verify(repoMock).save(eq(VALID_NEW_CLONED));
+////    }
+////
+////    @Test
+////    public void startClone_prepTimeChanged_savedWithUpdatedPrepTime() {
+////        // Arrange
+////        whenTimeProviderCalledReturn(VALID_NEW_CLONED_PREP_TIME_UPDATED.getCreateDate());
+////        givenClonedModel();
+////        RecipeDurationRequest.Model model = RecipeDurationRequest.Model.Builder.
+////                basedOnDurationResponseModel(durationOnSuccessResponse.getModel()).
+////                setPrepHours(VALID_NEW_CLONED_PREP_TIME_UPDATED.getPrepTime() / 60).
+////                setPrepMinutes(VALID_NEW_CLONED_PREP_TIME_UPDATED.getPrepTime() % 60).
+////                build();
+////        RecipeDurationRequest request = new RecipeDurationRequest.Builder().
+////                setId(VALID_NEW_EMPTY.getId()).
+////                setModel(model).
+////                build();
+////        // Act
+////        handler.execute(SUT, request, getUseCaseCallback());
+////        // Assert
+////        verify(repoMock).save(VALID_NEW_CLONED_PREP_TIME_UPDATED);
+////    }
+//@Test
+//public void startClone_attemptCloneFromDataUnavailable_componentStateDATA_UNAVAILABLE() {
+//    // Arrange
+//    String cloneFromRecipeId = VALID_COMPLETE_FROM_ANOTHER_USER.getId();
+//    String cloneToRecipeId = VALID_NEW_EMPTY.getId();
+//    whenTimeProviderCalledReturn(VALID_NEW_EMPTY.getCreateDate());
+//
+//    RecipeDurationRequest request = RecipeDurationRequest.Builder.
+//            getDefault().
+//            setId(cloneFromRecipeId).
+//            build();
+//    // Act
+//    handler.execute(SUT, request, getUseCaseCallback());
+//    // Assert
+//    verify(repoMock).getById(eq(cloneFromRecipeId),repoCallback.capture());
+//    repoCallback.getValue().onDataNotAvailable();
+//    verifyNoMoreInteractions(repoMock);
+//    assertEquals(RecipeStateCalculator.ComponentState.INVALID_UNCHANGED, durationOnErrorResponse.getState());
+//    assertTrue(durationOnErrorResponse.getFailReasons().contains(CommonFailReason.DATA_UNAVAILABLE));
+//}
+
+//    @Test
+//    public void startWithCloned_existingAndNewRecipeId_databaseCalledWithExistingId() {
+//        // Arrange
+//        String cloneFromId = VALID_COMPLETE_FROM_ANOTHER_USER.getId();
+//        String cloneToId = VALID_NEW_EMPTY.getId();
+//
+//        // An external request that starts/loads the recipe
+//        RecipeRequest request = new RecipeRequest.Builder().
+//                setId(cloneFromId).
+//                setCloneToId(cloneToId).
+//                build();
+//
+//        // Act
+//        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+//
+//        verifyAllOtherReposCalledAndReturnValidExisting(cloneFromId);
+//        verifyReposDurationCalledAndReturnValidExisting(cloneFromId);
+//
+//        // Assert
+//        verify(repoDurationMock).getById(eq(cloneFromId), repoDurationCallback.capture());
+//    }
+//
+//    @Test
+//    public void startWithCloned_existingAndNewRecipeId_existingFromAnotherUserCopiedAndSavedWithNewId() {
+//        // Arrange
+//        String cloneFromId = VALID_COMPLETE_FROM_ANOTHER_USER.getId();
+//        String cloneToId = VALID_NEW_EMPTY.getId();
+//
+//        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(VALID_NEW_CLONED.getCreateDate());
+//
+//        // An external request that starts/loads the recipe
+//        RecipeRequest request = new RecipeRequest.Builder().
+//                setId(cloneFromId).
+//                setCloneToId(cloneToId).
+//                build();
+//
+//        // Act
+//        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+//
+//        verifyAllOtherReposCalledAndReturnValidExisting(cloneFromId);
+//        verifyRepoDurationCalledAndReturnValidFromAnotherUser();
+//
+//        // Assert
+//        verify(repoDurationMock).save(eq(VALID_NEW_CLONED));
+//    }
+//
+//    @Test
+//    public void startWithCloned_prepTimeChanged_savedWithUpdatedPrepTime() {
+//        // Arrange
+//
+//        // Arrange
+//        String cloneFromId = VALID_COMPLETE_FROM_ANOTHER_USER.getId();
+//        String cloneToId = VALID_NEW_EMPTY.getId();
+//
+//        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
+//                VALID_NEW_CLONED_PREP_TIME_UPDATED.getCreateDate());
+//
+//        // An external request that starts/loads the recipe
+//        RecipeRequest request = new RecipeRequest.Builder().
+//                setId(cloneFromId).
+//                setCloneToId(cloneToId).
+//                build();
+//
+//        // Act
+//        handler.execute(recipeMacro, request, new RecipeResponseCallback());
+//        // Assert
+//        verifyAllOtherReposCalledAndReturnValidExisting(cloneFromId);
+//        verifyRepoDurationCalledAndReturnValidFromAnotherUser();
+//
+//        SUT.setPrepHoursInView(String.valueOf(VALID_NEW_CLONED_PREP_TIME_UPDATED.getPrepTime() / 60));
+//        SUT.setPrepMinutesInView(String.valueOf(VALID_NEW_CLONED_PREP_TIME_UPDATED.getPrepTime() % 60));
+//
+//        // Assert
+//        verify(repoDurationMock, times((2))).save(durationEntityCaptor.capture());
+//        assertEquals(VALID_NEW_CLONED_PREP_TIME_UPDATED, durationEntityCaptor.getValue());
+//    }
 
     // region helper methods -----------------------------------------------------------------------
     private void verifyAllReposCalledAndReturnValidExisting(String recipeId) {
@@ -600,7 +751,7 @@ public class RecipeMacroCloneTest {
         repoRecipeCallback.getValue().onEntityLoaded(TestDataRecipeEntity.getValidFromAnotherUser());
 
         verify(repoIdentityMock).getById(eq(recipeId), repoIdentityCallback.capture());
-        repoIdentityCallback.getValue().onEntityLoaded(VALID_FROM_ANOTHER_USER);
+        repoIdentityCallback.getValue().onEntityLoaded(IDENTITY_VALID_FROM_ANOTHER_USER);
 
         verify(repoCourseMock).getCoursesForRecipe(eq(recipeId), repoCourseCallback.capture());
         repoCourseCallback.getValue().onAllLoaded(TestDataRecipeCourseEntity.getAllByRecipeId(recipeId));
@@ -612,6 +763,29 @@ public class RecipeMacroCloneTest {
         verify(repoDurationMock).getById(eq(recipeId), repoDurationCallback.capture());
         repoDurationCallback.getValue().onEntityLoaded(TestDataRecipeDurationEntity.
                 getValidCompleteFromAnotherUser());
+    }
+
+//    private void givenClonedModel() {
+//        // Arrange
+//        whenTimeProviderCalledReturn(VALID_NEW_CLONED.getCreateDate());
+//        RecipeDurationRequest request = RecipeDurationRequest.Builder.
+//                getDefault().
+//                setId(VALID_COMPLETE_FROM_ANOTHER_USER.getId()).
+//                build();
+//        // Act
+//        handler.execute(SUT, request, getUseCaseCallback());
+//        verify(repoMock).getById(eq(VALID_COMPLETE_FROM_ANOTHER_USER.getId()),
+//                repoCallback.capture());
+//        repoCallback.getValue().onEntityLoaded(VALID_COMPLETE_FROM_ANOTHER_USER);
+//    }
+
+    private void verifyRepoDurationCalledAndReturnValidFromAnotherUser() {
+        verify(repoDurationMock).getById(
+                eq(DURATION_VALID_COMPLETE_FROM_ANOTHER_USER.getId()),
+                repoDurationCallback.capture());
+
+        repoDurationCallback.getValue().onEntityLoaded(
+                DURATION_VALID_COMPLETE_FROM_ANOTHER_USER);
     }
     // endregion helper methods --------------------------------------------------------------------
 

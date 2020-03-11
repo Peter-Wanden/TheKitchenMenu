@@ -1,25 +1,21 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions;
 
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequestAbstract;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequestBase;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipePortionsRequest extends RecipeRequestAbstract {
-    @Nonnull
-    private final RecipePortionsRequest.Model model;
+public final class RecipePortionsRequest extends RecipeRequestBase<RecipePortionsRequest.Model> {
 
     private RecipePortionsRequest(@Nonnull String id,
-                                  @Nonnull String cloneToId,
-                                  @Nonnull RecipePortionsRequest.Model model) {
-        this.id = id;
-        this.cloneToId = cloneToId;
-        this.model = model;
+                                  @Nonnull Model model) {
+        super(id, model);
     }
 
     @Nonnull
-    public RecipePortionsRequest.Model getModel() {
+    @Override
+    public Model getModel() {
         return model;
     }
 
@@ -28,34 +24,31 @@ public final class RecipePortionsRequest extends RecipeRequestAbstract {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RecipePortionsRequest that = (RecipePortionsRequest) o;
-        return id.equals(that.id) && cloneToId.equals(that.cloneToId) &&
+        return id.equals(that.id)  &&
                 model.equals(that.model);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, cloneToId, model);
+        return Objects.hash(id, model);
     }
 
     @Override
     public String toString() {
         return "RecipePortionsRequest{" +
                 "id='" + id + '\'' +
-                ", cloneToId='" + cloneToId + '\'' +
                 ", model=" + model +
                 '}';
     }
 
     public static class Builder {
         private String id;
-        private String cloneToId;
-        private RecipePortionsRequest.Model model;
+        private Model model;
 
         public static Builder getDefault() {
             return new Builder().
                     setId("").
-                    setCloneToId("").
-                    setModel(RecipePortionsRequest.Model.Builder.
+                    setModel(Model.Builder.
                             getDefault().
                             build());
         }
@@ -65,12 +58,7 @@ public final class RecipePortionsRequest extends RecipeRequestAbstract {
             return this;
         }
 
-        public Builder setCloneToId(String cloneToId) {
-            this.cloneToId = cloneToId;
-            return this;
-        }
-
-        public Builder setModel(RecipePortionsRequest.Model model) {
+        public Builder setModel(Model model) {
             this.model = model;
             return this;
         }
@@ -78,13 +66,12 @@ public final class RecipePortionsRequest extends RecipeRequestAbstract {
         public RecipePortionsRequest build() {
             return new RecipePortionsRequest(
                     id,
-                    cloneToId,
                     model
             );
         }
     }
 
-    public static final class Model {
+    public static final class Model implements RecipeRequestBase.RecipeRequestModel {
         private final int servings;
         private final int sittings;
 
@@ -129,8 +116,8 @@ public final class RecipePortionsRequest extends RecipeRequestAbstract {
 
             public static Builder getDefault() {
                 return new Builder().
-                        setServings(1).
-                        setSittings(1);
+                        setServings(RecipePortions.MIN_SERVINGS).
+                        setSittings(RecipePortions.MIN_SITTINGS);
             }
 
             public static Builder basedOnPortionsResponseModel(RecipePortionsResponse.Model model) {

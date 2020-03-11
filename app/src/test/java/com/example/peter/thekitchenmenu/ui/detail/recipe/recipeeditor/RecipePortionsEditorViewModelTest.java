@@ -204,7 +204,6 @@ public class RecipePortionsEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 build();
 
         // Act
@@ -227,7 +226,6 @@ public class RecipePortionsEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 build();
 
         // Act
@@ -253,7 +251,6 @@ public class RecipePortionsEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 build();
 
         // Act
@@ -283,7 +280,6 @@ public class RecipePortionsEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 build();
 
         // Act
@@ -314,7 +310,6 @@ public class RecipePortionsEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 build();
 
         // Act
@@ -345,7 +340,6 @@ public class RecipePortionsEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 build();
 
         // Act
@@ -376,7 +370,6 @@ public class RecipePortionsEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 build();
 
         // Act
@@ -402,7 +395,6 @@ public class RecipePortionsEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 build();
 
         // Act
@@ -433,7 +425,6 @@ public class RecipePortionsEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 build();
 
         // Act
@@ -460,7 +451,6 @@ public class RecipePortionsEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 build();
 
         // Act
@@ -485,7 +475,6 @@ public class RecipePortionsEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 build();
 
         // Act
@@ -505,7 +494,6 @@ public class RecipePortionsEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 build();
 
         // Act
@@ -531,7 +519,6 @@ public class RecipePortionsEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 build();
 
         // Act
@@ -558,7 +545,6 @@ public class RecipePortionsEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 build();
 
         // Act
@@ -585,7 +571,6 @@ public class RecipePortionsEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 build();
 
         // Act
@@ -612,7 +597,6 @@ public class RecipePortionsEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 build();
 
         // Act
@@ -641,7 +625,6 @@ public class RecipePortionsEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(cloneFromRecipeId).
-                setCloneToId(cloneToRecipeId).
                 build();
 
         // Act
@@ -667,7 +650,6 @@ public class RecipePortionsEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(cloneFromRecipeId).
-                setCloneToId(cloneToRecipeId).
                 build();
 
         // Act
@@ -698,7 +680,6 @@ public class RecipePortionsEditorViewModelTest {
         // An external request that starts/loads the recipe
         RecipeRequest request = new RecipeRequest.Builder().
                 setId(cloneFromRecipeId).
-                setCloneToId(cloneToRecipeId).
                 build();
 
         // Act

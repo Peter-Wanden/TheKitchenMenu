@@ -3,6 +3,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.recip
 import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourseRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentityRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentityResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro;
@@ -56,7 +57,10 @@ public class RecipeMacroClone extends UseCase {
 
     private void initialiseDestinationRecipe() {
         String destinationId = idProvider.getUId();
-        RecipeMacroRequest request = new RecipeMacroRequest(destinationId);
+        RecipeMacroRequest request = RecipeMacroRequest.Builder.
+                getDefault().
+                setId(destinationId).
+                build();
         handler.execute(recipeDestination, request, new DestinationListener());
     }
 
@@ -69,7 +73,10 @@ public class RecipeMacroClone extends UseCase {
     }
 
     private void loadSourceRecipe(String cloneFromId) {
-        RecipeMacroRequest request = new RecipeMacroRequest(cloneFromId);
+        RecipeMacroRequest request = RecipeMacroRequest.Builder.
+                getDefault().
+                setId(cloneFromId).
+                build();
         handler.execute(recipeSource, request, new SourceListener());
     }
 
@@ -91,11 +98,11 @@ public class RecipeMacroClone extends UseCase {
         RecipeIdentityResponse identityResponse = (RecipeIdentityResponse) sourceData.
                 getComponentResponses().
                 get(IDENTITY);
-        RecipeIdentityRequest request = RecipeIdentityRequest.Builder.
-                basedOnResponse(identityResponse).
-                setId(destinationData.getId()).
-                build();
-        handler.execute(recipeDestination, request, new IdentityListener());
+//        RecipeIdentityRequest request = RecipeIdentityRequest.Builder.
+//                basedOnResponse(identityResponse).
+//                setId(destinationData.getId()).
+//                build();
+//        handler.execute(recipeDestination, request, new IdentityListener());
     }
 
     private class IdentityListener extends RecipeMacroUseCaseCallback<RecipeIdentityResponse> {

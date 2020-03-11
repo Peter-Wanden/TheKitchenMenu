@@ -101,7 +101,9 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
     }
 
     private boolean isInvalidPrepTime() {
-        return response.getFailReasons().contains(RecipeDuration.FailReason.INVALID_PREP_TIME);
+        return response.getMetadata().
+                getFailReasons().
+                contains(RecipeDuration.FailReason.INVALID_PREP_TIME);
     }
 
     private String getPrepTimeErrorMessage() {
@@ -109,7 +111,9 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
     }
 
     private boolean isInvalidCookTime() {
-        return response.getFailReasons().contains(RecipeDuration.FailReason.INVALID_COOK_TIME);
+        return response.getMetadata().
+                getFailReasons().
+                contains(RecipeDuration.FailReason.INVALID_COOK_TIME);
     }
 
     private String getCookTimeErrorMessage() {

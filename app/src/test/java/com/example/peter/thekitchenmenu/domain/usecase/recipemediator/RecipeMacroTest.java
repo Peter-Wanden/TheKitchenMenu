@@ -20,6 +20,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.RecipeResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacroRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacroResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.RecipeRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDurationRequest;
@@ -63,6 +64,7 @@ import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.ComponentName.DURATION;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.ComponentName.IDENTITY;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.ComponentName.PORTIONS;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.ComponentName.RECIPE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
@@ -93,8 +95,6 @@ public class RecipeMacroTest {
             TestDataRecipeDurationEntity.getValidExistingComplete();
     private static final RecipePortionsEntity PORTIONS_VALID_EXISTING_NINE =
             TestDataRecipePortionsEntity.getExistingValidNinePortions();
-    private static final List<RecipeCourseEntity> COURSES_VALID_EXISTING_ALL =
-            TestDataRecipeCourseEntity.getAllRecipeCourses();
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
@@ -194,34 +194,30 @@ public class RecipeMacroTest {
     // todo - test for delete and favorite as separate macro commands?
 
     @Test
-    public void recipeRequestNewId_invokerIssuesCommand_toAllReceivers() {
+    public void newId_invokerIssuesCommandToAllReceivers() {
         // Arrange
         String recipeId = INVALID_NEW_RECIPE.getId();
 
-        RecipeCallbackClient callback = new RecipeCallbackClient();
+        MacroCallbackClient callback = new MacroCallbackClient();
+        RecipeMacroRequest request = RecipeMacroRequest.Builder.getDefault().setId(recipeId).build();
 
-        RecipeRequest request = RecipeRequest.Builder.
-                getDefault().
-                setId(recipeId).
-                build();
         // Act
         handler.execute(SUT, request, callback);
+
         // Assert database called for every component, meaning command has been issued.
         verifyAllReposCalledAndReturnDataUnavailable(recipeId);
     }
 
     @Test
-    public void recipeRequestNewId_invokerIssuesCommand_stateListenersUpdatedWithCorrectValues() {
+    public void macroRequestNewId_invokerIssuesCommand_stateListenersUpdatedWithCorrectValues() {
         // Arrange
         String recipeId = INVALID_NEW_RECIPE.getId();
-        RecipeRequest request = RecipeRequest.Builder.
-                getDefault().
-                setId(recipeId).
-                build();
-        RecipeCallbackClient callback = new RecipeCallbackClient();
+        MacroCallbackClient callback = new MacroCallbackClient();
+        RecipeMacroRequest request = RecipeMacroRequest.Builder.getDefault().setId(recipeId).build();
 
         // Act
         SUT.registerStateListener(recipeStateListener1);
+        SUT.registerStateListener(recipeStateListener2);
         handler.execute(SUT, request, callback);
 
         // Assert database calls
@@ -230,35 +226,35 @@ public class RecipeMacroTest {
         // Assert recipe state listener updated with correct value
         verify(recipeStateListener1).recipeStateChanged(recipeStateCaptor.capture());
         RecipeStateResponse recipeStateResponse = recipeStateCaptor.getValue();
-        assertEquals(RecipeState.DATA_UNAVAILABLE, recipeStateResponse.getState());
+        assertEquals(RecipeState.INVALID_UNCHANGED, recipeStateResponse.getState());
 
         // Assert recipe state updated
-        assertEquals(RecipeState.DATA_UNAVAILABLE, recipeStateResponse.getState());
+        assertEquals(RecipeState.INVALID_UNCHANGED, recipeStateResponse.getState());
         assertEquals(4, recipeStateResponse.getComponentStates().size());
 
         // Assert identity component status
         assertTrue(recipeStateResponse.getComponentStates().containsKey(IDENTITY));
-        assertEquals(ComponentState.DATA_UNAVAILABLE, recipeStateResponse.getComponentStates().
+        assertEquals(ComponentState.INVALID_UNCHANGED, recipeStateResponse.getComponentStates().
                 get(IDENTITY));
 
         // Assert course component state
         assertTrue(recipeStateResponse.getComponentStates().containsKey(COURSE));
-        assertEquals(ComponentState.DATA_UNAVAILABLE, recipeStateResponse.getComponentStates().
+        assertEquals(ComponentState.INVALID_UNCHANGED, recipeStateResponse.getComponentStates().
                 get(COURSE));
 
         // Assert duration component state
         assertTrue(recipeStateResponse.getComponentStates().containsKey(DURATION));
-        assertEquals(ComponentState.DATA_UNAVAILABLE, recipeStateResponse.getComponentStates().
+        assertEquals(ComponentState.INVALID_UNCHANGED, recipeStateResponse.getComponentStates().
                 get(DURATION));
 
         // Assert portions component state
         assertTrue(recipeStateResponse.getComponentStates().containsKey(ComponentName.PORTIONS));
-        assertEquals(ComponentState.DATA_UNAVAILABLE, recipeStateResponse.getComponentStates().get(
+        assertEquals(ComponentState.INVALID_UNCHANGED, recipeStateResponse.getComponentStates().get(
                 ComponentName.PORTIONS));
     }
 
     @Test
-    public void recipeRequestNewId_invokerIssuesCommand_useCaseCallbackINVALID_UNCHANGED_INVALID_COMPONENTS() {
+    public void recipeRequestNewId_invokerIssuesCommand_useCaseCallbackINVALID_UNCHANGED_MISSING_COMPONENTS() {
         // Arrange
         String recipeId = INVALID_NEW_RECIPE.getId();
         RecipeRequest request = RecipeRequest.Builder.
@@ -279,10 +275,11 @@ public class RecipeMacroTest {
         // Assert, callback updated with recipe macro response
         System.out.println(TAG + registeredMacroResponseCallback);
 
-        assertEquals(RecipeState.DATA_UNAVAILABLE,
+        assertEquals(RecipeState.INVALID_UNCHANGED,
                 registeredMacroResponseCallback.getRecipeMacroResponseOnError().
                         getRecipeStateResponse().
                         getState());
+
         assertTrue(registeredMacroResponseCallback.getRecipeMacroResponseOnError().
                 getRecipeStateResponse().
                 getFailReasons().
@@ -290,23 +287,19 @@ public class RecipeMacroTest {
     }
 
     @Test
-    public void recipeRequestNewId_invokerIssuesCommand_recipeResponseListenersUpdated() {
+    public void macroRequestNewId_invokerIssuesCommand_recipeResponseListenersUpdated() {
         // Arrange
         String recipeId = INVALID_NEW_RECIPE.getId();
-        RecipeRequest request = RecipeRequest.Builder.
-                getDefault().
-                setId(recipeId).
-                build();
-        RecipeCallbackClient passedInCallback = new RecipeCallbackClient();
-        MacroCallbackClient registeredCallback = new MacroCallbackClient();
+        RecipeMacroRequest request = RecipeMacroRequest.Builder.getDefault().setId(recipeId).build();
+        MacroCallbackClient callback = new MacroCallbackClient();
+        RecipeCallbackClient registeredCallback = new RecipeCallbackClient();
         // Act
-        SUT.registerMacroCallback(registeredCallback);
-        handler.execute(SUT, request, passedInCallback);
+        SUT.registerComponentCallback(new Pair<>(RECIPE, registeredCallback));
+        handler.execute(SUT, request, callback);
         // Assert
         verifyAllReposCalledAndReturnDataUnavailable(recipeId);
         // Assert recipe response registered callback updated
-        System.out.println(TAG + "  passedInCallback:" + passedInCallback);
-        System.out.println(TAG + "registeredCallback:" + registeredCallback);
+
 //        assertEquals(callback, registeredCallback);
     }
 
@@ -350,30 +343,50 @@ public class RecipeMacroTest {
 
         // Assert response from identity component
         RecipeIdentityResponse identityResponse = macroCallback.getIdentityOnError();
-        assertEquals(ComponentState.DATA_UNAVAILABLE, identityResponse.getMetadata().getState());
-        assertEquals(1, identityResponse.getMetadata().getFailReasons().size());
-        assertTrue(identityResponse.
-                getMetadata().
+        assertEquals(ComponentState.INVALID_UNCHANGED, identityResponse.getMetadata().getState());
+
+        assertEquals(1, identityResponse.getMetadata().
+                getFailReasons().size());
+
+        assertTrue(identityResponse.getMetadata().
                 getFailReasons().
                 contains(CommonFailReason.DATA_UNAVAILABLE));
 
         // Assert response from courses component
         RecipeCourseResponse courseResponse = macroCallback.getCourseOnError();
-        assertEquals(ComponentState.DATA_UNAVAILABLE, courseResponse.getMetadata().getState());
-        assertEquals(1, courseResponse.getMetadata().getFailReasons().size());
-        assertTrue(courseResponse.getMetadata().getFailReasons().contains(CommonFailReason.DATA_UNAVAILABLE));
+        assertEquals(ComponentState.INVALID_UNCHANGED, courseResponse.getMetadata().getState());
+
+        assertEquals(1, courseResponse.getMetadata().
+                getFailReasons().
+                size());
+
+        assertTrue(courseResponse.getMetadata().
+                getFailReasons().
+                contains(CommonFailReason.DATA_UNAVAILABLE));
 
         // Assert response from duration component
         RecipeDurationResponse durationResponse = macroCallback.getDurationOnError();
-        assertEquals(ComponentState.DATA_UNAVAILABLE, durationResponse.getState());
-        assertEquals(1, durationResponse.getFailReasons().size());
-        assertTrue(durationResponse.getFailReasons().contains(CommonFailReason.DATA_UNAVAILABLE));
+        assertEquals(ComponentState.INVALID_UNCHANGED, durationResponse.getMetadata().getState());
+
+        assertEquals(1, durationResponse.getMetadata().
+                getFailReasons().
+                size());
+
+        assertTrue(durationResponse.getMetadata().
+                getFailReasons().
+                contains(CommonFailReason.DATA_UNAVAILABLE));
 
         // Assert response from portions component
         RecipePortionsResponse portionResponse = macroCallback.getPortionsOnError();
-        assertEquals(ComponentState.DATA_UNAVAILABLE, portionResponse.getState());
-        assertEquals(1, portionResponse.getFailReasons().size());
-        assertTrue(portionResponse.getFailReasons().contains(CommonFailReason.DATA_UNAVAILABLE));
+        assertEquals(ComponentState.INVALID_UNCHANGED, portionResponse.getMetadata().getState());
+
+        assertEquals(1, portionResponse.getMetadata().
+                getFailReasons().
+                size());
+
+        assertTrue(portionResponse.getMetadata().
+                getFailReasons().
+                contains(CommonFailReason.DATA_UNAVAILABLE));
     }
 
     @Test
@@ -414,7 +427,9 @@ public class RecipeMacroTest {
 
         // Assert response received
         RecipeDurationResponse response = callback.getResponse();
-        assertTrue(response.getFailReasons().contains(CommonFailReason.DATA_UNAVAILABLE));
+        assertTrue(response.getMetadata().
+                getFailReasons().
+                contains(CommonFailReason.DATA_UNAVAILABLE));
     }
 
     @Test
@@ -434,7 +449,9 @@ public class RecipeMacroTest {
 
         // Assert response received
         RecipePortionsResponse response = callback.getResponse();
-        assertTrue(response.getFailReasons().contains(CommonFailReason.DATA_UNAVAILABLE));
+        assertTrue(response.getMetadata().
+                getFailReasons().
+                contains(CommonFailReason.DATA_UNAVAILABLE));
     }
 
     @Test
@@ -844,7 +861,9 @@ public class RecipeMacroTest {
 
                 RecipeDurationResponse durationResponse = (RecipeDurationResponse)
                         response.getComponentResponses().get(DURATION);
-                if (durationResponse.getFailReasons().contains(CommonFailReason.NONE)) {
+                if (durationResponse.getMetadata().
+                        getFailReasons().
+                        contains(CommonFailReason.NONE)) {
                     durationOnSuccess = durationResponse;
                 } else {
                     durationOnError = durationResponse;
@@ -852,7 +871,9 @@ public class RecipeMacroTest {
 
                 RecipePortionsResponse portionsResponse = (RecipePortionsResponse)
                         response.getComponentResponses().get(ComponentName.PORTIONS);
-                if (portionsResponse.getFailReasons().contains(CommonFailReason.NONE)) {
+                if (portionsResponse.getMetadata().
+                        getFailReasons().
+                        contains(CommonFailReason.NONE)) {
                     portionsOnSuccess = portionsResponse;
                 } else {
                     portionsOnError = portionsResponse;
@@ -868,37 +889,18 @@ public class RecipeMacroTest {
             return recipeMacroResponseOnError;
         }
 
-        public RecipeResponse getRecipeResponse() {
-            return recipeResponse;
-        }
-
-        public RecipeIdentityResponse getIdentityOnSuccess() {
-            return identityOnSuccess;
-        }
-
         RecipeIdentityResponse getIdentityOnError() {
             return identityOnError;
-        }
-
-        public RecipeCourseResponse getCourseOnSuccess() {
-            return courseOnSuccess;
         }
 
         RecipeCourseResponse getCourseOnError() {
             return courseOnError;
         }
 
-        public RecipeDurationResponse getDurationOnSuccess() {
-            return durationOnSuccess;
-        }
-
         RecipeDurationResponse getDurationOnError() {
             return durationOnError;
         }
 
-        public RecipePortionsResponse getPortionsOnSuccess() {
-            return portionsOnSuccess;
-        }
 
         RecipePortionsResponse getPortionsOnError() {
             return portionsOnError;

@@ -2,11 +2,10 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse;
 
 import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponseAbstract;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponseBase;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
@@ -14,7 +13,7 @@ import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
 
-public final class RecipeCourseResponse extends RecipeResponseAbstract {
+public final class RecipeCourseResponse extends RecipeResponseBase {
     @Nonnull
     private final Metadata metadata;
     @Nonnull

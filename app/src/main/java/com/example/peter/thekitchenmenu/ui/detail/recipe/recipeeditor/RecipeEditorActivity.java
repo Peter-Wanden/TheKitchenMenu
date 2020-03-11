@@ -19,6 +19,7 @@ import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.RecipeEditorActivityBinding;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseFactory;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacroRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateResponse;
 import com.example.peter.thekitchenmenu.ui.UnsavedChangesDialogFragment;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryRecipe;
@@ -225,7 +226,15 @@ public class RecipeEditorActivity
                 getIntent().getStringExtra(EXTRA_RECIPE_ID) :
                 CREATE_NEW_RECIPE;
 
-        recipeEditorViewModel.start(recipeId);
+        RecipeMacroRequest request = RecipeMacroRequest.Builder.getDefault().setId(recipeId).build();
+        // TODO -
+        //  if there is no recipe id create a new recipe
+        //  if there is a recipe id, load the recipe:
+        //  - if the recipe creator is not the user clone the recipe
+        //  - if the recipe creator is the user edit the recipe
+        //  - if the recipe is being used byu others, make a copy and allow uses to update their
+        //     copy if they want to
+        //  See {@link RecipeEditorViewModel}
     }
 
     private static class RecipeStateListener implements RecipeMacro.RecipeStateListener {

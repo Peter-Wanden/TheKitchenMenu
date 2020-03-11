@@ -41,24 +41,21 @@ public class RecipeDurationTest {
             TestDataRecipeDurationEntity.getValidNewCookTimeValid();
     private static final RecipeDurationEntity VALID_EXISTING_COMPLETE =
             TestDataRecipeDurationEntity.getValidExistingComplete();
-    private static final RecipeDurationEntity VALID_COMPLETE_FROM_ANOTHER_USER =
-            TestDataRecipeDurationEntity.getValidCompleteFromAnotherUser();
-    private static final RecipeDurationEntity VALID_NEW_CLONED =
-            TestDataRecipeDurationEntity.getValidNewCloned();
-    private static final RecipeDurationEntity VALID_NEW_CLONED_PREP_TIME_UPDATED =
-            TestDataRecipeDurationEntity.getValidNewClonedPrepTimeUpdated();
+
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
     private UseCaseHandler handler;
-    private RecipeDurationResponse durationOnSuccessResponse;
-    private RecipeDurationResponse durationOnErrorResponse;
     @Mock
     RepositoryRecipeDuration repoMock;
     @Captor
     ArgumentCaptor<DataSource.GetEntityCallback<RecipeDurationEntity>> repoCallback;
     @Mock
     TimeProvider timeProviderMock;
+
+    private RecipeDurationResponse durationOnSuccessResponse;
+    private RecipeDurationResponse durationOnErrorResponse;
+
     public static int MAX_PREP_TIME = TestDataRecipeDurationEntity.getMaxPrepTime();
     public static int MAX_COOK_TIME = TestDataRecipeDurationEntity.getMaxCookTime();
     // endregion helper fields ---------------------------------------------------------------------
@@ -77,17 +74,22 @@ public class RecipeDurationTest {
     }
 
     @Test
-    public void startNewId_componentStateDATA_UNAVAILABLE() {
+    public void newId_componentStateDATA_UNAVAILABLE() {
         // Arrange
         String recipeId = VALID_NEW_EMPTY.getId();
         // Act
         setupForNewDuration(recipeId);
         // Assert
-        assertEquals(RecipeStateCalculator.ComponentState.DATA_UNAVAILABLE, durationOnErrorResponse.getState());
+        assertEquals(RecipeStateCalculator.ComponentState.INVALID_UNCHANGED, durationOnErrorResponse.
+                getMetadata().
+                getState());
+        assertTrue(durationOnErrorResponse.getMetadata().
+                getFailReasons().
+                contains(CommonFailReason.DATA_UNAVAILABLE));
     }
 
     @Test
-    public void startNewId_invalidPrepHours_invalidValueNotSaved() {
+    public void newId_invalidPrepHours_invalidValueNotSaved() {
         // Arrange
         String recipeId = VALID_NEW_EMPTY.getId();
         setupForNewDuration(recipeId);
@@ -97,9 +99,9 @@ public class RecipeDurationTest {
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 setModel(invalidModel).
                 build();
+
         // Act
         handler.execute(SUT, request, getUseCaseCallback());
         // Assert
@@ -117,14 +119,13 @@ public class RecipeDurationTest {
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 setModel(invalidModel).
                 build();
         // Act
         handler.execute(SUT, request, getUseCaseCallback());
         // Assert
         assertEquals(RecipeStateCalculator.ComponentState.INVALID_CHANGED,
-                durationOnErrorResponse.getState());
+                durationOnErrorResponse.getMetadata().getState());
     }
 
     @Test
@@ -138,14 +139,19 @@ public class RecipeDurationTest {
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 setModel(invalidModel).
                 build();
         // Act
         handler.execute(SUT, request, getUseCaseCallback());
         // Assert
-        assertEquals(1, durationOnErrorResponse.getFailReasons().size());
-        assertTrue(durationOnErrorResponse.getFailReasons().contains(FailReason.INVALID_PREP_TIME));
+        assertEquals(1, durationOnErrorResponse.
+                getMetadata().
+                getFailReasons().
+                size());
+        assertTrue(durationOnErrorResponse.
+                getMetadata().
+                getFailReasons().
+                contains(RecipeDuration.FailReason.INVALID_PREP_TIME));
     }
 
     @Test
@@ -159,14 +165,14 @@ public class RecipeDurationTest {
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 setModel(validModel).
                 build();
 
         // Act
         handler.execute(SUT, validRequest, getUseCaseCallback());
         // Assert
-        assertEquals(RecipeStateCalculator.ComponentState.VALID_CHANGED, durationOnSuccessResponse.getState());
+        assertEquals(RecipeStateCalculator.ComponentState.VALID_CHANGED,
+                durationOnSuccessResponse.getMetadata().getState());
     }
 
     @Test
@@ -180,14 +186,16 @@ public class RecipeDurationTest {
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 setModel(validModel).
                 build();
 
         // Act
         handler.execute(SUT, validRequest, getUseCaseCallback());
         // Assert
-        assertTrue(durationOnSuccessResponse.getFailReasons().contains(CommonFailReason.NONE));
+        assertTrue(durationOnSuccessResponse.
+                getMetadata().
+                getFailReasons().
+                contains(CommonFailReason.NONE));
     }
 
     @Test
@@ -202,7 +210,6 @@ public class RecipeDurationTest {
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 setModel(validModel).
                 build();
 
@@ -223,7 +230,6 @@ public class RecipeDurationTest {
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 setModel(invalidModel).
                 build();
         // Act
@@ -243,14 +249,13 @@ public class RecipeDurationTest {
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 setModel(invalidModel).
                 build();
         // Act
         handler.execute(SUT, request, getUseCaseCallback());
         // Assert
         assertEquals(RecipeStateCalculator.ComponentState.INVALID_CHANGED,
-                durationOnErrorResponse.getState());
+                durationOnErrorResponse.getMetadata().getState());
     }
 
     @Test
@@ -264,14 +269,13 @@ public class RecipeDurationTest {
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 setModel(invalidModel).
                 build();
         // Act
         handler.execute(SUT, request, getUseCaseCallback());
         // Assert
-        assertEquals(1, durationOnErrorResponse.getFailReasons().size());
-        assertTrue(durationOnErrorResponse.getFailReasons().
+        assertEquals(1, durationOnErrorResponse.getMetadata().getFailReasons().size());
+        assertTrue(durationOnErrorResponse.getMetadata().getFailReasons().
                 contains(FailReason.INVALID_PREP_TIME));
     }
 
@@ -286,14 +290,13 @@ public class RecipeDurationTest {
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 setModel(validModel).
                 build();
         // Act
         handler.execute(SUT, validRequest, getUseCaseCallback());
         // Assert
         assertEquals(RecipeStateCalculator.ComponentState.VALID_CHANGED,
-                durationOnSuccessResponse.getState());
+                durationOnSuccessResponse.getMetadata().getState());
     }
 
     @Test
@@ -307,14 +310,17 @@ public class RecipeDurationTest {
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 setModel(validModel).
                 build();
         // Act
         handler.execute(SUT, validRequest, getUseCaseCallback());
         // Assert
-        assertEquals(1, durationOnSuccessResponse.getFailReasons().size());
-        assertTrue(durationOnSuccessResponse.getFailReasons().contains(CommonFailReason.NONE));
+        assertEquals(1, durationOnSuccessResponse.getMetadata().
+                getFailReasons().
+                size());
+        assertTrue(durationOnSuccessResponse.getMetadata().
+                getFailReasons().
+                contains(CommonFailReason.NONE));
     }
 
     @Test
@@ -329,7 +335,6 @@ public class RecipeDurationTest {
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 setModel(validModel).
                 build();
         // Act
@@ -349,7 +354,6 @@ public class RecipeDurationTest {
                 build();
         RecipeDurationRequest invalidRequest = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 setModel(invalidModel).
                 build();
         // Act
@@ -369,14 +373,13 @@ public class RecipeDurationTest {
                 build();
         RecipeDurationRequest invalidRequest = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 setModel(invalidModel).
                 build();
         // Act
         handler.execute(SUT, invalidRequest, getUseCaseCallback());
         // Assert
         assertEquals(RecipeStateCalculator.ComponentState.INVALID_CHANGED,
-                durationOnErrorResponse.getState());
+                durationOnErrorResponse.getMetadata().getState());
     }
 
     @Test
@@ -390,14 +393,17 @@ public class RecipeDurationTest {
                 build();
         RecipeDurationRequest invalidRequest = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 setModel(invalidModel).
                 build();
         // Act
         handler.execute(SUT, invalidRequest, getUseCaseCallback());
         // Assert
-        assertEquals(1, durationOnErrorResponse.getFailReasons().size());
-        assertTrue(durationOnErrorResponse.getFailReasons().contains(FailReason.INVALID_COOK_TIME));
+        assertEquals(1, durationOnErrorResponse.getMetadata().
+                getFailReasons().
+                size());
+        assertTrue(durationOnErrorResponse.getMetadata().
+                getFailReasons().
+                contains(FailReason.INVALID_COOK_TIME));
     }
 
     @Test
@@ -412,7 +418,6 @@ public class RecipeDurationTest {
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 setModel(validModel).
                 build();
         // Act
@@ -432,14 +437,13 @@ public class RecipeDurationTest {
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 setModel(validModel).
                 build();
         // Act
         handler.execute(SUT, validRequest, getUseCaseCallback());
         // Assert
         assertEquals(RecipeStateCalculator.ComponentState.VALID_CHANGED,
-                durationOnSuccessResponse.getState());
+                durationOnSuccessResponse.getMetadata().getState());
     }
 
     @Test
@@ -453,14 +457,13 @@ public class RecipeDurationTest {
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 setModel(validModel).
                 build();
         // Act
         handler.execute(SUT, validRequest, getUseCaseCallback());
         // Assert
-        assertEquals(1, durationOnSuccessResponse.getFailReasons().size());
-        assertTrue(durationOnSuccessResponse.getFailReasons().contains(CommonFailReason.NONE));
+        assertEquals(1, durationOnSuccessResponse.getMetadata().getFailReasons().size());
+        assertTrue(durationOnSuccessResponse.getMetadata().getFailReasons().contains(CommonFailReason.NONE));
     }
 
     @Test
@@ -474,7 +477,6 @@ public class RecipeDurationTest {
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 setModel(invalidModel).
                 build();
         // Act
@@ -494,7 +496,6 @@ public class RecipeDurationTest {
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 setModel(invalidModel).
                 build();
         // Act
@@ -502,7 +503,7 @@ public class RecipeDurationTest {
         // Assert
         // Assert
         assertEquals(RecipeStateCalculator.ComponentState.INVALID_CHANGED,
-                durationOnErrorResponse.getState());
+                durationOnErrorResponse.getMetadata().getState());
     }
 
     @Test
@@ -516,14 +517,17 @@ public class RecipeDurationTest {
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 setModel(invalidModel).
                 build();
         // Act
         handler.execute(SUT, request, getUseCaseCallback());
         // Assert
-        assertEquals(1, durationOnErrorResponse.getFailReasons().size());
-        assertTrue(durationOnErrorResponse.getFailReasons().contains(FailReason.INVALID_COOK_TIME));
+        assertEquals(1, durationOnErrorResponse.getMetadata().
+                getFailReasons().
+                size());
+        assertTrue(durationOnErrorResponse.getMetadata().
+                getFailReasons().
+                contains(FailReason.INVALID_COOK_TIME));
     }
 
     @Test
@@ -540,7 +544,6 @@ public class RecipeDurationTest {
                 .build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 setModel(model).
                 build();
         // Act
@@ -562,14 +565,13 @@ public class RecipeDurationTest {
                 .build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 setModel(model).
                 build();
         // Act
         handler.execute(SUT, request, getUseCaseCallback());
         // Assert
         assertEquals(RecipeStateCalculator.ComponentState.VALID_CHANGED,
-                durationOnSuccessResponse.getState());
+                durationOnSuccessResponse.getMetadata().getState());
     }
 
     @Test
@@ -584,14 +586,17 @@ public class RecipeDurationTest {
                 .build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 setModel(model).
                 build();
         // Act
         handler.execute(SUT, request, getUseCaseCallback());
         // Assert
-        assertEquals(1, durationOnSuccessResponse.getFailReasons().size());
-        assertTrue(durationOnSuccessResponse.getFailReasons().contains(CommonFailReason.NONE));
+        assertEquals(1, durationOnSuccessResponse.getMetadata().
+                getFailReasons().
+                size());
+        assertTrue(durationOnSuccessResponse.getMetadata().
+                getFailReasons().
+                contains(CommonFailReason.NONE));
     }
 
     @Test
@@ -606,17 +611,20 @@ public class RecipeDurationTest {
                 .build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 setModel(model).
                 build();
         // Act
         handler.execute(SUT, request, getUseCaseCallback());
         // Assert
         assertEquals(RecipeStateCalculator.ComponentState.INVALID_CHANGED,
-                durationOnErrorResponse.getState());
-        assertEquals(2, durationOnErrorResponse.getFailReasons().size());
-        assertTrue(durationOnErrorResponse.getFailReasons().contains(FailReason.INVALID_PREP_TIME));
-        assertTrue(durationOnErrorResponse.getFailReasons().contains(FailReason.INVALID_COOK_TIME));
+                durationOnErrorResponse.getMetadata().getState());
+        assertEquals(2, durationOnErrorResponse.getMetadata().getFailReasons().size());
+        assertTrue(durationOnErrorResponse.getMetadata().
+                getFailReasons().
+                contains(FailReason.INVALID_PREP_TIME));
+        assertTrue(durationOnErrorResponse.getMetadata().
+                getFailReasons().
+                contains(FailReason.INVALID_COOK_TIME));
     }
 
     @Test
@@ -632,7 +640,6 @@ public class RecipeDurationTest {
                 .build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setCloneToId("").
                 setModel(model).
                 build();
         // Act
@@ -660,66 +667,10 @@ public class RecipeDurationTest {
         givenValidExistingModel(recipeId);
         // Assert
         assertEquals(RecipeStateCalculator.ComponentState.VALID_UNCHANGED,
-                durationOnSuccessResponse.getState());
+                durationOnSuccessResponse.getMetadata().getState());
     }
 
-    @Test
-    public void startClone_existingAndNewId_databaseCalledWithExistingId() {
-        // Act
-        givenClonedModel();
-    }
 
-    @Test
-    public void startClone_existingAndNewId_existingClonedAndSavedWithNewRecipeId() {
-        // Arrange
-        // Act
-        givenClonedModel();
-        // Assert
-        verify(repoMock).save(eq(VALID_NEW_CLONED));
-    }
-
-    @Test
-    public void startClone_prepTimeChanged_savedWithUpdatedPrepTime() {
-        // Arrange
-        whenTimeProviderCalledReturn(VALID_NEW_CLONED_PREP_TIME_UPDATED.getCreateDate());
-        givenClonedModel();
-        RecipeDurationRequest.Model model = RecipeDurationRequest.Model.Builder.
-                basedOnDurationResponseModel(durationOnSuccessResponse.getModel()).
-                setPrepHours(VALID_NEW_CLONED_PREP_TIME_UPDATED.getPrepTime() / 60).
-                setPrepMinutes(VALID_NEW_CLONED_PREP_TIME_UPDATED.getPrepTime() % 60).
-                build();
-        RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setId(VALID_NEW_EMPTY.getId()).
-                setCloneToId("").
-                setModel(model).
-                build();
-        // Act
-        handler.execute(SUT, request, getUseCaseCallback());
-        // Assert
-        verify(repoMock).save(VALID_NEW_CLONED_PREP_TIME_UPDATED);
-    }
-
-    @Test
-    public void startClone_attemptCloneFromDataUnavailable_componentStateDATA_UNAVAILABLE() {
-        // Arrange
-        String cloneFromRecipeId = VALID_COMPLETE_FROM_ANOTHER_USER.getId();
-        String cloneToRecipeId = VALID_NEW_EMPTY.getId();
-        whenTimeProviderCalledReturn(VALID_NEW_EMPTY.getCreateDate());
-
-        RecipeDurationRequest request = RecipeDurationRequest.Builder.
-                getDefault().
-                setId(cloneFromRecipeId).
-                setCloneToId(cloneToRecipeId).
-                build();
-        // Act
-        handler.execute(SUT, request, getUseCaseCallback());
-        // Assert
-        verify(repoMock).getById(eq(cloneFromRecipeId),repoCallback.capture());
-        repoCallback.getValue().onDataNotAvailable();
-        verifyNoMoreInteractions(repoMock);
-        assertEquals(RecipeStateCalculator.ComponentState.DATA_UNAVAILABLE,
-                durationOnErrorResponse.getState());
-    }
 
     // region helper methods -----------------------------------------------------------------------
     private Callback<RecipeDurationResponse> getUseCaseCallback() {
@@ -747,7 +698,6 @@ public class RecipeDurationTest {
     }
 
     private void setupForNewDuration(String recipeId) {
-
         RecipeDurationRequest request = RecipeDurationRequest.Builder.
                 getDefault().
                 setId(recipeId).
@@ -768,20 +718,7 @@ public class RecipeDurationTest {
         repoCallback.getValue().onEntityLoaded(VALID_EXISTING_COMPLETE);
     }
 
-    private void givenClonedModel() {
-        // Arrange
-        whenTimeProviderCalledReturn(VALID_NEW_CLONED.getCreateDate());
-        RecipeDurationRequest request = RecipeDurationRequest.Builder.
-                getDefault().
-                setId(VALID_COMPLETE_FROM_ANOTHER_USER.getId()).
-                setCloneToId(VALID_NEW_EMPTY.getId()).
-                build();
-        // Act
-        handler.execute(SUT, request, getUseCaseCallback());
-        verify(repoMock).getById(eq(VALID_COMPLETE_FROM_ANOTHER_USER.getId()),
-                repoCallback.capture());
-        repoCallback.getValue().onEntityLoaded(VALID_COMPLETE_FROM_ANOTHER_USER);
-    }
+
     // endregion helper methods --------------------------------------------------------------------
 
     // region helper classes -----------------------------------------------------------------------

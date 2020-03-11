@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro;
 
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponseAbstract;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponseBase;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateResponse;
 
 import java.util.HashMap;
@@ -11,7 +11,7 @@ import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
 
-public class RecipeMacroResponse extends RecipeResponseAbstract {
+public class RecipeMacroResponse extends RecipeResponseBase {
 
     @Nonnull
     private final RecipeStateResponse recipeStateResponse;
