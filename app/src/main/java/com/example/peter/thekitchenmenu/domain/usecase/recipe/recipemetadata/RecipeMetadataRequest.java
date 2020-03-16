@@ -1,37 +1,32 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse;
+package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemetadata;
 
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequestModel;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourse.*;
+public final class RecipeMetadataRequest extends RecipeRequest<RecipeMetadataRequest.Model> {
 
-public final class RecipeCourseRequest extends RecipeRequest<RecipeCourseRequest.Model> {
-
-    @Nonnull
     @Override
     public String toString() {
-        return "RecipeCourseRequest{" +
+        return "RecipeRequest{" +
                 "id='" + id + '\'' +
                 ", model=" + model +
                 '}';
     }
 
-    public static class Builder extends RecipeRequestBuilder<Builder, RecipeCourseRequest, Model> {
+    public static class Builder extends RecipeRequestBuilder<Builder, RecipeMetadataRequest, Model> {
 
         public Builder() {
-            request = new RecipeCourseRequest();
+            request = new RecipeMetadataRequest();
         }
 
         public Builder getDefault() {
             return new Builder().
                     setId("").
-                    setModel(new Model.Builder().
+                    setModel(Model.Builder.
                             getDefault().
                             build());
         }
@@ -43,11 +38,12 @@ public final class RecipeCourseRequest extends RecipeRequest<RecipeCourseRequest
     }
 
     public static final class Model extends RecipeRequestModel {
+        @Nonnull
+        private String parentId;
 
-        private List<Course> courseList;
-
-        public List<Course> getCourseList() {
-            return courseList;
+        @Nonnull
+        public String getParentId() {
+            return parentId;
         }
 
         @Override
@@ -55,19 +51,19 @@ public final class RecipeCourseRequest extends RecipeRequest<RecipeCourseRequest
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             Model model = (Model) o;
-            return courseList.equals(model.courseList);
+            return parentId.equals(model.parentId);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(courseList);
+            return Objects.hash(parentId);
         }
 
-        @Nonnull
+
         @Override
         public String toString() {
             return "Model{" +
-                    "courseList=" + courseList +
+                    "parentId='" + parentId + '\'' +
                     '}';
         }
 
@@ -77,22 +73,18 @@ public final class RecipeCourseRequest extends RecipeRequest<RecipeCourseRequest
                 model = new Model();
             }
 
-            public Builder getDefault() {
-                return new Builder().setCourseList(getDefaultList());
+            public static Builder getDefault() {
+                return new Builder().setParentId("");
             }
 
-            public Builder setCourseList(List<Course> courseList) {
-                model.courseList = courseList;
+            public Builder setParentId(String parentId) {
+                model.parentId = parentId;
                 return self();
             }
 
             @Override
             protected Builder self() {
                 return this;
-            }
-
-            private static List<Course> getDefaultList() {
-                return new ArrayList<>();
             }
         }
     }

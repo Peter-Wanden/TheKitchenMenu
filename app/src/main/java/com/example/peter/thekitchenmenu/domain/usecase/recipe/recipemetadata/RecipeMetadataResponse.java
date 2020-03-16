@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions;
+package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemetadata;
 
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponseMetadata;
@@ -8,12 +8,12 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipePortionsResponse extends RecipeResponse<RecipePortionsResponse.Model> {
+public final class RecipeMetadataResponse extends RecipeResponse<RecipeMetadataResponse.Model> {
 
     @Override
     public String toString() {
-        return "RecipePortionsResponse{" +
-                "id=" + id +
+        return "RecipeMetadataResponse{" +
+                "id='" + id + '\'' +
                 ", metadata=" + metadata +
                 ", model=" + model +
                 '}';
@@ -21,11 +21,11 @@ public final class RecipePortionsResponse extends RecipeResponse<RecipePortionsR
 
     public static class Builder extends RecipeResponseBuilder<
             Builder,
-            RecipePortionsResponse,
+            RecipeMetadataResponse,
             Model> {
 
         public Builder() {
-            response = new RecipePortionsResponse();
+            response = new RecipeMetadataResponse();
         }
 
         public Builder getDefault() {
@@ -39,30 +39,35 @@ public final class RecipePortionsResponse extends RecipeResponse<RecipePortionsR
                             build());
         }
 
+        public Builder setId(String id) {
+            response.id = id;
+            return self();
+        }
+
+        public Builder setMetadata(RecipeResponseMetadata metadata) {
+            response.metadata = metadata;
+            return self();
+        }
+
+        public Builder setModel(Model model) {
+            response.model = model;
+            return self();
+        }
+
         @Override
         protected Builder self() {
-            return this;
+            return super.self();
         }
     }
 
     public static final class Model extends RecipeResponseModel {
+        private String parentId;
 
-        private int servings;
-        private int sittings;
-        private int portions;
+        public Model() {}
 
-        private Model() {}
-
-        public int getServings() {
-            return servings;
-        }
-
-        public int getSittings() {
-            return sittings;
-        }
-
-        public int getPortions() {
-            return portions;
+        @Nonnull
+        public String getParentId() {
+            return parentId;
         }
 
         @Override
@@ -70,53 +75,37 @@ public final class RecipePortionsResponse extends RecipeResponse<RecipePortionsR
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             Model model = (Model) o;
-            return servings == model.servings &&
-                    sittings == model.sittings &&
-                    portions == model.portions;
+            return parentId.equals(model.parentId);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(servings, sittings, portions);
+            return Objects.hash(parentId);
         }
 
         @Nonnull
         @Override
         public String toString() {
             return "Model{" +
-                    "servings=" + servings +
-                    ", sittings=" + sittings +
-                    ", portions=" + portions +
+                    "parentId='" + parentId + '\'' +
                     '}';
         }
 
         public static class Builder extends RecipeResponseModelBuilder<
                 Builder,
-                RecipePortionsResponse.Model> {
+                RecipeMetadataResponse.Model> {
 
             public Builder() {
-                model = new RecipePortionsResponse.Model();
+                model = new RecipeMetadataResponse.Model();
             }
 
             public Builder getDefault() {
-                return new Builder().
-                        setServings(RecipePortions.MIN_SERVINGS).
-                        setSittings(RecipePortions.MIN_SITTINGS).
-                        setPortions(RecipePortions.MIN_SERVINGS * RecipePortions.MIN_SITTINGS);
+                return new Builder().setParentId("");
+
             }
 
-            public Builder setServings(int servings) {
-                model.servings = servings;
-                return self();
-            }
-
-            public Builder setSittings(int sittings) {
-                model.sittings = sittings;
-                return self();
-            }
-
-            public Builder setPortions(int portions) {
-                model.portions = portions;
+            public Builder setParentId(String parentId) {
+                model.parentId = parentId;
                 return self();
             }
 

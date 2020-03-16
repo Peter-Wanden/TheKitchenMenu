@@ -1,38 +1,15 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions;
 
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequestBase;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequestModel;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipePortionsRequest extends RecipeRequestBase<RecipePortionsRequest.Model> {
-
-    private RecipePortionsRequest(@Nonnull String id,
-                                  @Nonnull Model model) {
-        super(id, model);
-    }
+public final class RecipePortionsRequest extends RecipeRequest<RecipePortionsRequest.Model> {
 
     @Nonnull
-    @Override
-    public Model getModel() {
-        return model;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        RecipePortionsRequest that = (RecipePortionsRequest) o;
-        return id.equals(that.id)  &&
-                model.equals(that.model);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, model);
-    }
-
     @Override
     public String toString() {
         return "RecipePortionsRequest{" +
@@ -41,11 +18,13 @@ public final class RecipePortionsRequest extends RecipeRequestBase<RecipePortion
                 '}';
     }
 
-    public static class Builder {
-        private String id;
-        private Model model;
+    public static class Builder extends RecipeRequestBuilder<Builder, RecipePortionsRequest, Model> {
 
-        public static Builder getDefault() {
+        public Builder() {
+            request = new RecipePortionsRequest();
+        }
+
+        public Builder getDefault() {
             return new Builder().
                     setId("").
                     setModel(Model.Builder.
@@ -53,32 +32,15 @@ public final class RecipePortionsRequest extends RecipeRequestBase<RecipePortion
                             build());
         }
 
-        public Builder setId(String id) {
-            this.id = id;
+        @Override
+        protected Builder self() {
             return this;
-        }
-
-        public Builder setModel(Model model) {
-            this.model = model;
-            return this;
-        }
-
-        public RecipePortionsRequest build() {
-            return new RecipePortionsRequest(
-                    id,
-                    model
-            );
         }
     }
 
-    public static final class Model implements RecipeRequestBase.RecipeRequestModel {
-        private final int servings;
-        private final int sittings;
-
-        private Model(int servings, int sittings) {
-            this.servings = servings;
-            this.sittings = sittings;
-        }
+    public static final class Model extends RecipeRequestModel {
+        private int servings;
+        private int sittings;
 
         public int getServings() {
             return servings;
@@ -110,9 +72,11 @@ public final class RecipePortionsRequest extends RecipeRequestBase<RecipePortion
                     '}';
         }
 
-        public static class Builder {
-            int servings;
-            int sittings;
+        public static class Builder extends RecipeRequestModelBuilder<Builder, Model> {
+
+            public Builder() {
+                model = new Model();
+            }
 
             public static Builder getDefault() {
                 return new Builder().
@@ -127,20 +91,18 @@ public final class RecipePortionsRequest extends RecipeRequestBase<RecipePortion
             }
 
             public Builder setServings(int servings) {
-                this.servings = servings;
-                return this;
+                model.servings = servings;
+                return self();
             }
 
             public Builder setSittings(int sittings) {
-                this.sittings = sittings;
-                return this;
+                model.sittings = sittings;
+                return self();
             }
 
-            public Model build() {
-                return new Model(
-                        servings,
-                        sittings
-                );
+            @Override
+            protected Builder self() {
+                return this;
             }
         }
     }

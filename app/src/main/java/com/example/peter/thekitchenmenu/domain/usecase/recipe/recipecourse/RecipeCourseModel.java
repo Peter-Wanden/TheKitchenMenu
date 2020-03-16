@@ -1,10 +1,12 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse;
 
+import com.example.peter.thekitchenmenu.domain.model.PersistenceModel;
+
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipeCourseModel {
+public final class RecipeCourseModel implements PersistenceModel {
     @Nonnull
     private final String id;
     @Nonnull
@@ -28,6 +30,7 @@ public final class RecipeCourseModel {
     }
 
     @Nonnull
+    @Override
     public String getId() {
         return id;
     }

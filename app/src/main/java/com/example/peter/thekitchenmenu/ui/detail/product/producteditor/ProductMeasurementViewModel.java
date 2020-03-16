@@ -13,6 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.databinding.Bindable;
 import androidx.lifecycle.MutableLiveData;
 
+import static com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureAbstract.UNIT_ONE_WIDTH_INDEX;
+
 public class ProductMeasurementViewModel extends ObservableAndroidViewModel {
 
     private final MutableLiveData<ProductMeasurementModel> measurementModel = new MutableLiveData<>();
@@ -211,7 +213,8 @@ public class ProductMeasurementViewModel extends ObservableAndroidViewModel {
         if (numberOfItems != unitOfMeasure.getNumberOfItems())
             numberOfItems = unitOfMeasure.getNumberOfItems();
 
-        int unitsAfterDecimal = (int) unitOfMeasure.getMaxUnitDigitWidths()[0].second;
+        int unitsAfterDecimal = (int) unitOfMeasure.
+                getMaxUnitDigitWidths()[UNIT_ONE_WIDTH_INDEX].second;
 
         if (unitsAfterDecimal > 0) {
             totalUnitOne = String.valueOf(unitOfMeasure.getTotalUnitOne());

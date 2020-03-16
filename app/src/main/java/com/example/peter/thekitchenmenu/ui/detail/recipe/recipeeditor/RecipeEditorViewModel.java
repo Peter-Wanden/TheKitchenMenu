@@ -8,11 +8,10 @@ import androidx.databinding.ObservableField;
 import androidx.lifecycle.ViewModel;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.RecipeRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.RecipeResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemetadata.RecipeMetadataRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemetadata.RecipeMetadataResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateResponse;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
@@ -45,7 +44,7 @@ public class RecipeEditorViewModel extends ViewModel {
     private boolean isNewRecipe;
     private boolean showReviewButton;
 
-    private RecipeResponse recipeResponse;
+    private RecipeMetadataResponse recipeMetadataResponse;
     private RecipeResponseListener recipeResponseListener;
     private RecipeStateResponse recipeStateResponse;
 
@@ -58,7 +57,7 @@ public class RecipeEditorViewModel extends ViewModel {
         this.idProvider = idProvider;
         this.resources = resources;
 
-        recipeResponse = RecipeResponse.Builder.getDefault().build();
+        recipeMetadataResponse = new RecipeMetadataResponse.Builder().getDefault().build();
         recipeResponseListener = new RecipeResponseListener();
         recipeMacro.registerComponentCallback(new Pair<>(ComponentName.RECIPE, recipeResponseListener));
 
@@ -75,7 +74,7 @@ public class RecipeEditorViewModel extends ViewModel {
     }
 
     public void start(String recipeId) {
-        RecipeRequest.Builder request = new RecipeRequest.Builder();
+        RecipeMetadataRequest.Builder request = new RecipeMetadataRequest.Builder();
 
         if (recipeId.equals(CREATE_NEW_RECIPE)) {
             isNewRecipe = true;
@@ -91,23 +90,23 @@ public class RecipeEditorViewModel extends ViewModel {
      * Registered recipe component callback listening for updates pushed from
      * {@link RecipeMacro}
      */
-    private class RecipeResponseListener implements UseCase.Callback<RecipeResponse> {
+    private class RecipeResponseListener implements UseCase.Callback<RecipeMetadataResponse> {
         private final String TAG = "tkm-" + RecipeResponseListener.class.
                 getSimpleName() + ": ";
         @Override
-        public void onSuccess(RecipeResponse recipeResponse) {
-            if (isRecipeResponseChanged(recipeResponse)) {
-                System.out.println(RecipeEditorViewModel.TAG + TAG + "onSuccess:" + recipeResponse);
-                RecipeEditorViewModel.this.recipeResponse = recipeResponse;
+        public void onSuccess(RecipeMetadataResponse recipeMetadataResponse) {
+            if (isRecipeResponseChanged(recipeMetadataResponse)) {
+                System.out.println(RecipeEditorViewModel.TAG + TAG + "onSuccess:" + recipeMetadataResponse);
+                RecipeEditorViewModel.this.recipeMetadataResponse = recipeMetadataResponse;
                 onUseCaseSuccess();
             }
         }
 
         @Override
-        public void onError(RecipeResponse recipeResponse) {
-            if (isRecipeResponseChanged(recipeResponse)) {
-                System.out.println(RecipeEditorViewModel.TAG + TAG + "onError:" + recipeResponse);
-                RecipeEditorViewModel.this.recipeResponse = recipeResponse;
+        public void onError(RecipeMetadataResponse recipeMetadataResponse) {
+            if (isRecipeResponseChanged(recipeMetadataResponse)) {
+                System.out.println(RecipeEditorViewModel.TAG + TAG + "onError:" + recipeMetadataResponse);
+                RecipeEditorViewModel.this.recipeMetadataResponse = recipeMetadataResponse;
                 onUseCaseError();
             }
         }
@@ -130,8 +129,8 @@ public class RecipeEditorViewModel extends ViewModel {
         return !this.recipeStateResponse.equals(recipeStateResponse);
     }
 
-    private boolean isRecipeResponseChanged(RecipeResponse recipeResponse) {
-        return !this.recipeResponse.equals(recipeResponse);
+    private boolean isRecipeResponseChanged(RecipeMetadataResponse recipeMetadataResponse) {
+        return !this.recipeMetadataResponse.equals(recipeMetadataResponse);
     }
 
     private void onUseCaseSuccess() {
@@ -228,9 +227,9 @@ public class RecipeEditorViewModel extends ViewModel {
     }
 
     void reviewButtonPressed() {
-        String recipeId = recipeResponse.getId();
+        String recipeId = recipeMetadataResponse.getId();
         if (isNewRecipe) {
-            navigator.reviewNewRecipe(recipeResponse.getId());
+            navigator.reviewNewRecipe(recipeMetadataResponse.getId());
 
         } else if (isEditorCreator()) {
             navigator.reviewEditedRecipe(recipeId);
@@ -242,7 +241,7 @@ public class RecipeEditorViewModel extends ViewModel {
     }
 
     public void ingredientsButtonPressed() {
-        String recipeId = recipeResponse.getId();
+        String recipeId = recipeMetadataResponse.getId();
 
         if (isNewRecipe) {
             navigator.addIngredients(recipeId);

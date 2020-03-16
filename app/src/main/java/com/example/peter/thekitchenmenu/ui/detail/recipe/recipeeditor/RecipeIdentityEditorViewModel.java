@@ -53,7 +53,7 @@ public class RecipeIdentityEditorViewModel extends ObservableViewModel {
         this.recipeMacro = recipeMacro;
         this.resources = resources;
 
-        response = RecipeIdentityResponse.Builder.getDefault().build();
+        response = new RecipeIdentityResponse.Builder().getDefault().build();
 
         recipeMacro.registerComponentCallback(new Pair<>(
                 ComponentName.IDENTITY,

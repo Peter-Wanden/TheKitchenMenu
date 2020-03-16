@@ -14,7 +14,7 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredie
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.ConversionFactorStatus;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.Ingredient;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemetadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.recipemacroclone.RecipeMacroClone;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDuration;
@@ -159,8 +159,8 @@ public class UseCaseFactory {
         );
     }
 
-    private Recipe provideRecipe() {
-        return new Recipe(
+    private RecipeMetadata provideRecipe() {
+        return new RecipeMetadata(
                 new TimeProvider(),
                 recipeRepository
         );

@@ -226,7 +226,10 @@ public class RecipeEditorActivity
                 getIntent().getStringExtra(EXTRA_RECIPE_ID) :
                 CREATE_NEW_RECIPE;
 
-        RecipeMacroRequest request = RecipeMacroRequest.Builder.getDefault().setId(recipeId).build();
+        RecipeMacroRequest request = new RecipeMacroRequest.Builder().
+                getDefault().
+                setId(recipeId).
+                build();
         // TODO -
         //  if there is no recipe id create a new recipe
         //  if there is a recipe id, load the recipe:

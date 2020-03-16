@@ -14,12 +14,12 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.RecipeRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemetadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDuration;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemetadata.RecipeMetadataRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions.RecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
 import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDurationTest;
@@ -33,6 +33,7 @@ import com.example.peter.thekitchenmenu.testdata.TestDataRecipeDurationEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipePortionsEntity;
+import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor.RecipePortionsEditorViewModelTest;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -45,7 +46,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -80,6 +80,16 @@ public class RecipeMacroCloneTest {
             TestDataRecipeDurationEntity.getInvalidNewCloned();
     private static final RecipeDurationEntity DURATION_VALID_NEW_CLONED_PREP_TIME_UPDATED =
             TestDataRecipeDurationEntity.getValidNewClonedPrepTimeUpdated();
+    private static final RecipePortionsEntity PORTION_VALID_EXISTING_CLONE =
+            TestDataRecipePortionsEntity.getExistingValidClone();
+    private static final RecipePortionsEntity PORTION_VALID_EXISTING_CLONE_UPDATED_SITTINGS_SERVINGS =
+            TestDataRecipePortionsEntity.getExistingClonedUpdatedSittingsServings();
+    private static final RecipePortionsEntity PORTIONS_EXISTING_VALID_CLONE =
+            TestDataRecipePortionsEntity.getExistingValidClone();
+    private static final RecipePortionsEntity PORTIONS_EXISTING_VALID_CLONE_UPDATED_SITTINGS_SERVINGS =
+            TestDataRecipePortionsEntity.getExistingClonedUpdatedSittingsServings();
+    private static final RecipePortionsEntity PORTIONS_EXISTING_VALID_FROM_ANOTHER_USER =
+            TestDataRecipePortionsEntity.getValidCloneFromAnotherUser();
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
@@ -131,7 +141,7 @@ public class RecipeMacroCloneTest {
                 build();
 
         // Source
-        Recipe recipeMetaDataSource = new Recipe(
+        RecipeMetadata recipeMetadataSource = new RecipeMetadata(
                 timeProviderMock,
                 repoRecipeMock
         );
@@ -162,7 +172,7 @@ public class RecipeMacroCloneTest {
         RecipeMacro recipeSource = new RecipeMacro(
                 handler,
                 stateCalculator,
-                recipeMetaDataSource,
+                recipeMetadataSource,
                 identitySource,
                 courseSource,
                 durationSource,
@@ -170,7 +180,7 @@ public class RecipeMacroCloneTest {
         );
 
         // Destination
-        Recipe recipeMetaDataDestination = new Recipe(
+        RecipeMetadata recipeMetadataDestination = new RecipeMetadata(
                 timeProviderMock,
                 repoRecipeMock
         );
@@ -201,7 +211,7 @@ public class RecipeMacroCloneTest {
         RecipeMacro recipeDestination = new RecipeMacro(
                 handler,
                 stateCalculator,
-                recipeMetaDataDestination,
+                recipeMetadataDestination,
                 identityDestination,
                 courseDestination,
                 durationDestination,
@@ -742,6 +752,90 @@ public class RecipeMacroCloneTest {
 //        // Assert
 //        verify(repoDurationMock, times((2))).save(durationEntityCaptor.capture());
 //        assertEquals(VALID_NEW_CLONED_PREP_TIME_UPDATED, durationEntityCaptor.getValue());
+//    }
+
+//    @Test
+//    public void startByCloningModel_existingAndCloneToRecipeId_existingSavedWithNewId() {
+//        // Arrange
+//        String cloneFromRecipeId = EXISTING_VALID.getRecipeId();
+//        String cloneToRecipeId = NEW_EMPTY.getRecipeId();
+//
+//        whenIdProviderReturn(EXISTING_VALID_CLONE.getId());
+//        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
+//                EXISTING_VALID_CLONE.getLastUpdate());
+//
+//        // An external request that starts/loads the recipe
+//        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
+//                setId(cloneFromRecipeId).
+//                build();
+//
+//        // Act
+//        handler.execute(recipeMacro, request, new RecipePortionsEditorViewModelTest.RecipeResponseCallback());
+//        // Assert
+//        verifyAllOtherComponentReposCalledAndReturnDataUnavailable(cloneFromRecipeId);
+//        verifyRepoPortionsCalledAndReturnExistingValid(cloneFromRecipeId);
+//
+//        // Assert
+//        verify(repoPortionsMock).save(EXISTING_VALID_CLONE);
+//    }
+//
+//    @Test
+//    public void startByCloningModel_existingAndNewRecipeId_recipeModelStatusVALID_UNCHANGED() {
+//        // Arrange
+//        String cloneFromRecipeId = EXISTING_VALID.getRecipeId();
+//        String cloneToRecipeId = NEW_EMPTY.getRecipeId();
+//
+//        whenIdProviderReturn(cloneToRecipeId);
+//        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
+//                EXISTING_VALID_CLONE.getLastUpdate());
+//
+//        // An external request that starts/loads the recipe
+//        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
+//                setId(cloneFromRecipeId).
+//                build();
+//
+//        // Act
+//        handler.execute(recipeMacro, request, new RecipePortionsEditorViewModelTest.RecipeResponseCallback());
+//
+//        // Assert
+//        verifyAllOtherComponentReposCalledAndReturnDataUnavailable(cloneFromRecipeId);
+//        verifyRepoPortionsCalledAndReturnExistingValid(cloneFromRecipeId);
+//
+//        RecipeStateCalculator.ComponentState expectedState = RecipeStateCalculator.ComponentState.VALID_UNCHANGED;
+//        RecipeStateCalculator.ComponentState actualState = recipeStateListener.
+//                getResponse().
+//                getComponentStates().
+//                get(RecipeStateCalculator.ComponentName.PORTIONS);
+//        assertEquals(expectedState, actualState);
+//    }
+//
+//    @Test
+//    public void startByCloningModel_existingAndNewRecipeId_cloneSavedWithUpdatedSittingsServings() {
+//        // Arrange
+//        String cloneFromRecipeId = EXISTING_VALID.getRecipeId();
+//        String cloneToRecipeId = NEW_EMPTY.getRecipeId();
+//
+//        whenIdProviderReturn(EXISTING_VALID_CLONE_UPDATED_SITTINGS_SERVINGS.getId());
+//        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
+//                EXISTING_VALID_CLONE.getLastUpdate());
+//
+//        // An external request that starts/loads the recipe
+//        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
+//                setId(cloneFromRecipeId).
+//                build();
+//
+//        // Act
+//        handler.execute(recipeMacro, request, new RecipePortionsEditorViewModelTest.RecipeResponseCallback());
+//
+//        // Assert
+//        verifyAllOtherComponentReposCalledAndReturnExistingValid(cloneFromRecipeId);
+//        verifyRepoPortionsCalledAndReturnExistingValid(cloneFromRecipeId);
+//
+//        // Act
+//        SUT.setServingsInView(String.valueOf(EXISTING_VALID_UPDATED_SERVINGS.getServings()));
+//        SUT.setSittingsInView(String.valueOf(EXISTING_VALID_UPDATED_SITTINGS.getSittings()));
+//        // Assert
+//        verify(repoPortionsMock).save(eq(EXISTING_VALID_CLONE_UPDATED_SITTINGS_SERVINGS));
 //    }
 
     // region helper methods -----------------------------------------------------------------------

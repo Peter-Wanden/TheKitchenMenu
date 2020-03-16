@@ -78,7 +78,7 @@ public class RecipeCourseTest {
     @Test
     public void newRequest_idWithNoCourses_emptyListReturned_INVALID_UNCHANGED() {
         // Arrange
-        RecipeCourseRequest request = RecipeCourseRequest.Builder.
+        RecipeCourseRequest request = new RecipeCourseRequest.Builder().
                 getDefault().
                 setId("idNotInTestData").
                 build();
@@ -102,7 +102,7 @@ public class RecipeCourseTest {
 
         RecipeCourseRequest initialiseComponentRequest = new RecipeCourseRequest.Builder().
                 setId("IdNotInTestData").
-                setModel(RecipeCourseRequest.Model.Builder.
+                setModel(new RecipeCourseRequest.Model.Builder().
                         getDefault().
                         build()
                 ).
@@ -139,7 +139,7 @@ public class RecipeCourseTest {
         // Arrange
         RecipeCourseRequest initialiseComponentRequest = new RecipeCourseRequest.Builder().
                 setId(EXISTING_RECIPE_ID).
-                setModel(RecipeCourseRequest.Model.Builder.
+                setModel(new RecipeCourseRequest.Model.Builder().
                         getDefault().
                         build()
                 ).
@@ -155,7 +155,7 @@ public class RecipeCourseTest {
         // Arrange
         RecipeCourseRequest initialiseComponentRequest = new RecipeCourseRequest.Builder().
                 setId(EXISTING_RECIPE_ID).
-                setModel(RecipeCourseRequest.Model.Builder.
+                setModel(new RecipeCourseRequest.Model.Builder().
                         getDefault().
                         build()).
                 build();
@@ -184,7 +184,7 @@ public class RecipeCourseTest {
         // Arrange first transaction
         RecipeCourseRequest initialiseComponentRequest = new RecipeCourseRequest.Builder().
                 setId(EXISTING_RECIPE_ID).
-                setModel(RecipeCourseRequest.Model.Builder.getDefault().build()).
+                setModel(new RecipeCourseRequest.Model.Builder().getDefault().build()).
                 build();
         // Act
         handler.execute(SUT, initialiseComponentRequest, getCallback());
@@ -193,7 +193,7 @@ public class RecipeCourseTest {
         // Arrange
         RecipeCourseRequest removeAllCoursesRequest = new RecipeCourseRequest.Builder().
                 setId(EXISTING_RECIPE_ID).
-                setModel(RecipeCourseRequest.Model.Builder.getDefault().build()).
+                setModel(new RecipeCourseRequest.Model.Builder().getDefault().build()).
                 build();
         // Act
         handler.execute(SUT, removeAllCoursesRequest, getCallback());

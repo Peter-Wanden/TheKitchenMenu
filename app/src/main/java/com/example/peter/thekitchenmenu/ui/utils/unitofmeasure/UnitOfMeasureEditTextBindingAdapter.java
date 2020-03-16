@@ -13,6 +13,9 @@ import androidx.databinding.BindingAdapter;
 
 import static android.text.InputType.TYPE_CLASS_NUMBER;
 import static android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL;
+import static com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureAbstract.CONVERSION_FACTOR_WIDTH_INDEX;
+import static com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureAbstract.UNIT_ONE_WIDTH_INDEX;
+import static com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureAbstract.UNIT_TWO_WIDTH_INDEX;
 
 public class UnitOfMeasureEditTextBindingAdapter {
 
@@ -22,7 +25,8 @@ public class UnitOfMeasureEditTextBindingAdapter {
         UnitOfMeasure unitOfMeasure = subtype.getMeasurementClass();
         int viewId = editText.getId();
         int units = unitOfMeasure.getNumberOfUnits();
-        int digitsAfterDecimal = (int) unitOfMeasure.getMaxUnitDigitWidths()[0].second;
+        int digitsAfterDecimal = (int) unitOfMeasure.
+                getMaxUnitDigitWidths()[UNIT_ONE_WIDTH_INDEX].second;
 
         if (viewId == R.id.pack_editable_measurement_one && digitsAfterDecimal > 0 ||
                 viewId == R.id.product_editable_measurement_one && digitsAfterDecimal > 0 ||
@@ -54,18 +58,26 @@ public class UnitOfMeasureEditTextBindingAdapter {
                 viewId == R.id.product_editable_measurement_one ||
                 viewId == R.id.recipe_ingredient_editable_measurement_one) {
 
-            editText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(
-                    (int) inputDigitsFilters[0].first,
-                    (int) inputDigitsFilters[0].second)});
+            editText.setFilters(
+                    new InputFilter[]{
+                            new DecimalDigitsInputFilter(
+                                    (int) inputDigitsFilters[UNIT_ONE_WIDTH_INDEX].first,
+                                    (int) inputDigitsFilters[UNIT_ONE_WIDTH_INDEX].second)
+                    }
+            );
         }
 
         if (viewId == R.id.pack_editable_measurement_two ||
                 viewId == R.id.product_editable_measurement_two ||
                 viewId == R.id.recipe_ingredient_editable_measurement_two) {
 
-            editText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(
-                    (int) inputDigitsFilters[1].first,
-                    (int) inputDigitsFilters[1].second)});
+            editText.setFilters(
+                    new InputFilter[]{
+                            new DecimalDigitsInputFilter(
+                                    (int) inputDigitsFilters[UNIT_TWO_WIDTH_INDEX].first,
+                                    (int) inputDigitsFilters[UNIT_TWO_WIDTH_INDEX].second)
+                    }
+            );
         }
     }
 
@@ -76,14 +88,21 @@ public class UnitOfMeasureEditTextBindingAdapter {
 
         if (unitOfMeasure.isConversionFactorEnabled()) {
             int viewId = editText.getId();
-            int digitsBeforeDecimal = (int) unitOfMeasure.getMaxUnitDigitWidths()[2].first;
-            int digitsAfterDecimal = (int) unitOfMeasure.getMaxUnitDigitWidths()[2].second;
+            int digitsBeforeDecimal = (int) unitOfMeasure.
+                    getMaxUnitDigitWidths()[CONVERSION_FACTOR_WIDTH_INDEX].first;
+            int digitsAfterDecimal = (int) unitOfMeasure.
+                    getMaxUnitDigitWidths()[CONVERSION_FACTOR_WIDTH_INDEX].second;
 
             if (viewId == R.id.recipe_ingredient_editable_conversion_factor) {
 
                 editText.setInputType(TYPE_CLASS_NUMBER | TYPE_NUMBER_FLAG_DECIMAL);
-                editText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(
-                        digitsBeforeDecimal, digitsAfterDecimal)});
+                editText.setFilters(
+                        new InputFilter[]{
+                                new DecimalDigitsInputFilter(
+                                        digitsBeforeDecimal,
+                                        digitsAfterDecimal)
+                        }
+                );
             }
         }
     }

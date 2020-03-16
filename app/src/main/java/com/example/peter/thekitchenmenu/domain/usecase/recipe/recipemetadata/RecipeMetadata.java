@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe;
+package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemetadata;
 
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
@@ -7,6 +7,7 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipe;
 import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponseMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 
@@ -15,9 +16,9 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-public class Recipe extends UseCase implements DataSource.GetEntityCallback<RecipeEntity> {
+public class RecipeMetadata extends UseCase implements DataSource.GetEntityCallback<RecipeEntity> {
 
-    private static final String TAG = "tkm-" + Recipe.class.getSimpleName() + ": ";
+    private static final String TAG = "tkm-" + RecipeMetadata.class.getSimpleName() + ": ";
 
     // TODO - Rename to RecipeMetaData
     //  last update - should be the time of the last updated component
@@ -36,10 +37,10 @@ public class Recipe extends UseCase implements DataSource.GetEntityCallback<Reci
     private String id = "";
     private String parentId;
 
-    private RecipePersistenceModel persistenceModel;
+    private RecipeMetadataPersistenceModel persistenceModel;
 
-    public Recipe(@Nonnull TimeProvider timeProvider,
-                  @Nonnull RepositoryRecipe repository) {
+    public RecipeMetadata(@Nonnull TimeProvider timeProvider,
+                          @Nonnull RepositoryRecipe repository) {
         this.timeProvider = timeProvider;
         this.repository = repository;
         failReasons = new ArrayList<>();
@@ -47,11 +48,11 @@ public class Recipe extends UseCase implements DataSource.GetEntityCallback<Reci
 
     @Override
     protected <Q extends Request> void execute(Q request) {
-        RecipeRequest recipeRequest = (RecipeRequest) request;
-        System.out.println(TAG + recipeRequest);
+        RecipeMetadataRequest recipeMetaDataRequest = (RecipeMetadataRequest) request;
+        System.out.println(TAG + recipeMetaDataRequest);
 
-        if (isNewRequest(recipeRequest.getId())) {
-            id = recipeRequest.getId();
+        if (isNewRequest(recipeMetaDataRequest.getId())) {
+            id = recipeMetaDataRequest.getId();
             loadData(id);
         } else {
             buildResponse();
@@ -72,8 +73,8 @@ public class Recipe extends UseCase implements DataSource.GetEntityCallback<Reci
         buildResponse();
     }
 
-    private RecipePersistenceModel convertEntityToPersistenceModel(RecipeEntity entity) {
-        return new RecipePersistenceModel.Builder().
+    private RecipeMetadataPersistenceModel convertEntityToPersistenceModel(RecipeEntity entity) {
+        return new RecipeMetadataPersistenceModel.Builder().
                 setId(entity.getId()).
                 setParentId(entity.getParentId()).
                 setCreatedBy(entity.getCreatedBy()).
@@ -89,9 +90,9 @@ public class Recipe extends UseCase implements DataSource.GetEntityCallback<Reci
         buildResponse();
     }
 
-    private RecipePersistenceModel createNewPersistenceModel() {
+    private RecipeMetadataPersistenceModel createNewPersistenceModel() {
         long currentTime = timeProvider.getCurrentTimeInMills();
-        return RecipePersistenceModel.Builder.getDefault().
+        return RecipeMetadataPersistenceModel.Builder.getDefault().
                 setId(id).
                 setParentId("").
                 setCreatedBy(Constants.getUserId()).
@@ -105,7 +106,7 @@ public class Recipe extends UseCase implements DataSource.GetEntityCallback<Reci
             failReasons.add(CommonFailReason.NONE);
         }
 
-        RecipeResponse response = new RecipeResponse.Builder().
+        RecipeMetadataResponse response = new RecipeMetadataResponse.Builder().
                 setMetadata(getMetadata()).
                 setModel(getResponseModel()).
                 build();
@@ -113,10 +114,10 @@ public class Recipe extends UseCase implements DataSource.GetEntityCallback<Reci
         sendResponse(response);
     }
 
-    private RecipeResponse.Metadata getMetadata() {
+    private RecipeResponseMetadata getMetadata() {
         List<FailReasons> failReasons = new ArrayList<>();
         failReasons.add(CommonFailReason.NONE);
-        return new RecipeResponse.Metadata.Builder().
+        return new RecipeResponseMetadata.Builder().
                 setState(RecipeStateCalculator.ComponentState.VALID_CHANGED).
                 setFailReasons(failReasons).
                 setCreateDate(0L).
@@ -124,11 +125,11 @@ public class Recipe extends UseCase implements DataSource.GetEntityCallback<Reci
                 build();
     }
 
-    private RecipeResponse.Model getResponseModel() {
-        return new RecipeResponse.Model.Builder().setParentId("").build();
+    private RecipeMetadataResponse.Model getResponseModel() {
+        return new RecipeMetadataResponse.Model.Builder().setParentId("").build();
     }
 
-    private void sendResponse(RecipeResponse response) {
+    private void sendResponse(RecipeMetadataResponse response) {
         if (failReasons.contains(CommonFailReason.NONE)) {
             getUseCaseCallback().onSuccess(response);
         } else {
@@ -136,11 +137,11 @@ public class Recipe extends UseCase implements DataSource.GetEntityCallback<Reci
         }
     }
 
-    private void save(RecipePersistenceModel model) {
+    private void save(RecipeMetadataPersistenceModel model) {
         repository.save(convertPersistenceModelToEntity(model));
     }
 
-    private RecipeEntity convertPersistenceModelToEntity(RecipePersistenceModel model) {
+    private RecipeEntity convertPersistenceModelToEntity(RecipeMetadataPersistenceModel model) {
         return new RecipeEntity(
                 model.getId(),
                 model.getParentId(),

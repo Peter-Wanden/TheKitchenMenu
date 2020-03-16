@@ -1,25 +1,19 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.recipemacroclone;
 
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequestBase;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequestModel;
 
-import javax.annotation.Nonnull;
+import java.util.Objects;
 
-public class RecipeCloneRequest extends RecipeRequestBase<RecipeCloneRequest.Model> {
+public final class RecipeCloneRequest extends RecipeRequest<RecipeCloneRequest.Model> {
 
-    private RecipeCloneRequest(@Nonnull String id,@Nonnull Model model) {
-        super(id, model);
-    }
+    public static class Builder extends RecipeRequestBuilder<Builder, RecipeCloneRequest, Model> {
 
-    @Override
-    public Model getModel() {
-        return model;
-    }
+        public Builder() {
+            request = new RecipeCloneRequest();
+        }
 
-    public static class Builder {
-        private String id;
-        private Model model;
-
-        public static Builder getDefault() {
+        public Builder getDefault() {
             return new Builder().
                     setId("").
                     setModel(Model.Builder.
@@ -27,51 +21,57 @@ public class RecipeCloneRequest extends RecipeRequestBase<RecipeCloneRequest.Mod
                             build());
         }
 
-        public Builder setId(String id) {
-            this.id = id;
+        @Override
+        protected Builder self() {
             return this;
-        }
-
-        public Builder setModel(Model model) {
-            this.model = model;
-            return this;
-        }
-
-        public RecipeCloneRequest build() {
-            return new RecipeCloneRequest(
-                    id,
-                    model
-            );
         }
     }
 
-    public static final class Model implements RecipeRequestBase.RecipeRequestModel {
-        private final String cloneToId;
-
-        public Model(String cloneToId) {
-            this.cloneToId = cloneToId;
-        }
+    public static final class Model extends RecipeRequestModel {
+        private String cloneToId;
 
         public String getCloneToId() {
             return cloneToId;
         }
 
-        public static class Builder {
-            String cloneToId;
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Model model = (Model) o;
+            return Objects.equals(cloneToId, model.cloneToId);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(cloneToId);
+        }
+
+        @Override
+        public String toString() {
+            return "Model{" +
+                    "cloneToId='" + cloneToId + '\'' +
+                    '}';
+        }
+
+        public static class Builder extends RecipeRequestModelBuilder<Builder, Model> {
+
+            public Builder() {
+                model = new Model();
+            }
 
             public static Builder getDefault() {
                 return new Builder().setCloneToId("");
             }
 
             public Builder setCloneToId(String cloneToId) {
-                this.cloneToId = cloneToId;
-                return this;
+                model.cloneToId = cloneToId;
+                return self();
             }
 
-            public Model build() {
-                return new Model(
-                        cloneToId
-                );
+            @Override
+            protected Builder self() {
+                return this;
             }
         }
     }

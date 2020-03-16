@@ -18,8 +18,8 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseFactory;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.RecipeResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemetadata.RecipeMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemetadata.RecipeMetadataResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDuration;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentity;
@@ -134,7 +134,7 @@ public class RecipeEditorViewModelTest {
                 setLongTextMaxLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
                 build();
 
-        Recipe recipe = new Recipe(
+        RecipeMetadata recipeMetaData = new RecipeMetadata(
                 timeProviderMock,
                 repoRecipeMock
         );
@@ -173,7 +173,7 @@ public class RecipeEditorViewModelTest {
         recipeMacro = new RecipeMacro(
                 handler,
                 stateCalculator,
-                recipe,
+                recipeMetaData,
                 identity,
                 course,
                 duration,
@@ -675,26 +675,26 @@ public class RecipeEditorViewModelTest {
         }
     }
 
-    private static class RecipeResponseCallback implements UseCase.Callback<RecipeResponse> {
+    private static class RecipeResponseCallback implements UseCase.Callback<RecipeMetadataResponse> {
 
         private static final String TAG = "tkm-" + RecipeResponseCallback.class.getSimpleName() +
                 ": ";
 
-        private RecipeResponse response;
+        private RecipeMetadataResponse response;
 
         @Override
-        public void onSuccess(RecipeResponse response) {
+        public void onSuccess(RecipeMetadataResponse response) {
             System.out.println(RecipeEditorViewModelTest.TAG + TAG + "onSuccess:" + response);
             this.response = response;
         }
 
         @Override
-        public void onError(RecipeResponse response) {
+        public void onError(RecipeMetadataResponse response) {
             System.out.println(RecipeEditorViewModelTest.TAG + TAG + "onError:" + response);
             this.response = response;
         }
 
-        public RecipeResponse getResponse() {
+        public RecipeMetadataResponse getResponse() {
             return response;
         }
 

@@ -3,8 +3,6 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.recip
 import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourseRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentityRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentityResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacroRequest;
@@ -57,7 +55,7 @@ public class RecipeMacroClone extends UseCase {
 
     private void initialiseDestinationRecipe() {
         String destinationId = idProvider.getUId();
-        RecipeMacroRequest request = RecipeMacroRequest.Builder.
+        RecipeMacroRequest request = new RecipeMacroRequest.Builder().
                 getDefault().
                 setId(destinationId).
                 build();
@@ -73,7 +71,7 @@ public class RecipeMacroClone extends UseCase {
     }
 
     private void loadSourceRecipe(String cloneFromId) {
-        RecipeMacroRequest request = RecipeMacroRequest.Builder.
+        RecipeMacroRequest request = new RecipeMacroRequest.Builder().
                 getDefault().
                 setId(cloneFromId).
                 build();

@@ -20,6 +20,10 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
         RESULT_OK,
     }
 
+    public static final int UNIT_ONE_WIDTH_INDEX = 0;
+    public static final int UNIT_TWO_WIDTH_INDEX = 1;
+    public static final int CONVERSION_FACTOR_WIDTH_INDEX = 2;
+
     protected MeasurementType measurementType;
     protected MeasurementSubtype subtype;
     protected int numberOfUnits;
@@ -419,9 +423,9 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
         Pair<Integer, Integer> conversionFactorMaxDigitWidths = new Pair<>(1, 3);
 
         Pair[] unitDigitWidths = new Pair[3];
-        unitDigitWidths[0] = unitOneMaxDigitsWidth;
-        unitDigitWidths[1] = unitTwoMaxDigitsWidth;
-        unitDigitWidths[2] = conversionFactorMaxDigitWidths;
+        unitDigitWidths[UNIT_ONE_WIDTH_INDEX] = unitOneMaxDigitsWidth;
+        unitDigitWidths[UNIT_TWO_WIDTH_INDEX] = unitTwoMaxDigitsWidth;
+        unitDigitWidths[CONVERSION_FACTOR_WIDTH_INDEX] = conversionFactorMaxDigitWidths;
 
         return unitDigitWidths;
     }

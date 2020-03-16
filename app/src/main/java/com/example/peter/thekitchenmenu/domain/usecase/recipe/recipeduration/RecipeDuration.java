@@ -6,6 +6,7 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration
 import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponseMetadata;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 
 import java.util.ArrayList;
@@ -51,7 +52,7 @@ public class RecipeDuration extends UseCase
         MAX_PREP_TIME = maxPrepTime;
         MAX_COOK_TIME = maxCookTime;
 
-        requestModel = RecipeDurationRequest.Model.Builder.getDefault().build();
+        requestModel = new RecipeDurationRequest.Model.Builder().getDefault().build();
         failReasons = new ArrayList<>();
     }
 
@@ -162,8 +163,8 @@ public class RecipeDuration extends UseCase
         sendResponse(response);
     }
 
-    private RecipeDurationResponse.Metadata getMetadata() {
-        return new RecipeDurationResponse.Metadata.Builder().
+    private RecipeResponseMetadata getMetadata() {
+        return new RecipeResponseMetadata.Builder().
                 setState(getComponentState()).
                 setFailReasons(new ArrayList<>(failReasons)).
                 setCreateDate(0L).setLasUpdate(0L).

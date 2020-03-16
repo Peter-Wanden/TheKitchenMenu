@@ -18,7 +18,8 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions
 import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponseMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemetadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDurationRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDurationResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro;
@@ -117,7 +118,7 @@ public class RecipeDurationEditorViewModelTest {
     private RecipeMacro recipeMacro;
     private RecipeMacroResponseListener macroListener;
     private DurationResponseListener durationListener;
-    private RecipeDurationResponse.Metadata metadata;
+    private RecipeResponseMetadata metadata;
     private RecipeDurationResponse.Model model;
 
     // endregion helper fields ---------------------------------------------------------------------
@@ -143,7 +144,7 @@ public class RecipeDurationEditorViewModelTest {
                 setLongTextMaxLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
                 build();
 
-        Recipe recipe = new Recipe(
+        RecipeMetadata recipeMetaData = new RecipeMetadata(
                 timeProviderMock,
                 repoRecipeMock
         );
@@ -181,7 +182,7 @@ public class RecipeDurationEditorViewModelTest {
         recipeMacro = new RecipeMacro(
                 handler,
                 stateCalculator,
-                recipe,
+                recipeMetaData,
                 identity,
                 course,
                 duration,
@@ -805,7 +806,10 @@ public class RecipeDurationEditorViewModelTest {
         String prepHours = String.valueOf(VALID_EXISTING_COMPLETE.getPrepTime() / 60);
 
         // An external request that loads the recipe
-        RecipeMacroRequest request = RecipeMacroRequest.Builder.getDefault().setId(recipeId).build();
+        RecipeMacroRequest request = new RecipeMacroRequest.Builder().
+                getDefault().
+                setId(recipeId).
+                build();
 
         // Act
         handler.execute(recipeMacro, request, new RecipeMacroResponseListener());
@@ -824,7 +828,10 @@ public class RecipeDurationEditorViewModelTest {
         String prepMinutes = String.valueOf(VALID_EXISTING_COMPLETE.getPrepTime() % 60);
 
         // An external request that loads the recipe
-        RecipeMacroRequest request = RecipeMacroRequest.Builder.getDefault().setId(recipeId).build();
+        RecipeMacroRequest request = new RecipeMacroRequest.Builder().
+                getDefault().
+                setId(recipeId).
+                build();
 
         // Act
         handler.execute(recipeMacro, request, new RecipeMacroResponseListener());
@@ -843,7 +850,10 @@ public class RecipeDurationEditorViewModelTest {
         String cookHours = String.valueOf(VALID_EXISTING_COMPLETE.getCookTime() / 60);
 
         // An external request that starts/loads the recipe
-        RecipeMacroRequest request = RecipeMacroRequest.Builder.getDefault().setId(recipeId).build();
+        RecipeMacroRequest request = new RecipeMacroRequest.Builder().
+                getDefault().
+                setId(recipeId).
+                build();
 
         // Act
         handler.execute(recipeMacro, request, new RecipeMacroResponseListener());
@@ -862,7 +872,10 @@ public class RecipeDurationEditorViewModelTest {
         String cookMinutes = String.valueOf(VALID_EXISTING_COMPLETE.getCookTime() % 60);
 
         // An external request that starts/loads the recipe
-        RecipeMacroRequest request = RecipeMacroRequest.Builder.getDefault().setId(recipeId).build();
+        RecipeMacroRequest request = new RecipeMacroRequest.Builder().
+                getDefault().
+                setId(recipeId).
+                build();
 
         // Act
         handler.execute(recipeMacro, request, new RecipeMacroResponseListener());
@@ -882,7 +895,10 @@ public class RecipeDurationEditorViewModelTest {
                 VALID_EXISTING_COMPLETE.getCreateDate());
 
         // An external request that loads the recipe
-        RecipeMacroRequest request = RecipeMacroRequest.Builder.getDefault().setId(recipeId).build();
+        RecipeMacroRequest request = new RecipeMacroRequest.Builder().
+                getDefault().
+                setId(recipeId).
+                build();
 
         // Act
         handler.execute(recipeMacro, request, new RecipeMacroResponseListener());
@@ -914,7 +930,7 @@ public class RecipeDurationEditorViewModelTest {
         // An external request that loads the recipe. This can ba any request type.
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                 setId(recipeId).
-                setModel(RecipeDurationRequest.Model.Builder.
+                setModel(new RecipeDurationRequest.Model.Builder().
                         getDefault().
                         build()).
                 build();

@@ -650,7 +650,7 @@ public class RecipeIdentityTest {
     }
 
     private RecipeIdentityRequest.Model getDefaultModel() {
-        return RecipeIdentityRequest.Model.Builder.getDefault().build();
+        return new RecipeIdentityRequest.Model.Builder().getDefault().build();
     }
 
     private RecipeIdentityRequest getRequest(String recipeId,

@@ -42,7 +42,7 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
         this.handler = handler;
         this.recipeMacro = recipeMacro;
 
-        response = RecipeCourseResponse.Builder.getDefault().build();
+        response = new RecipeCourseResponse.Builder().getDefault().build();
 
         recipeMacro.registerComponentCallback(new Pair<>(ComponentName.COURSE,
                 new CourseCallbackListener())
@@ -190,7 +190,7 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
             courseList.remove(course);
         }
 
-        RecipeCourseRequest request = RecipeCourseRequest.Builder.getDefault().
+        RecipeCourseRequest request = new RecipeCourseRequest.Builder().getDefault().
                 setId(response.getId()).
                 setModel(new RecipeCourseRequest.Model.Builder().
                         setCourseList(courseList).

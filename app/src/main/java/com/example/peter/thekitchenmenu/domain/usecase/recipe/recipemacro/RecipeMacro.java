@@ -5,11 +5,11 @@ import androidx.core.util.Pair;
 import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequestBase;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponseBase;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.RecipeRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.RecipeResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemetadata.RecipeMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemetadata.RecipeMetadataRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemetadata.RecipeMetadataResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourseRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourseResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDurationRequest;
@@ -57,7 +57,7 @@ public class RecipeMacro extends UseCase {
 
     private final UseCaseHandler handler;
 
-    private final Recipe recipe;
+    private final RecipeMetadata recipeMetaData;
     private final RecipeIdentity identity;
     private final RecipeCourse course;
     private final RecipeDuration duration;
@@ -69,9 +69,9 @@ public class RecipeMacro extends UseCase {
     private ComponentName requestOriginator;
     private String id = "";
     private boolean isCloned;
-    private RecipeRequestBase request;
+    private RecipeRequest request;
 
-    private final List<Pair<ComponentName, UseCase.Callback<? extends RecipeResponseBase>>>
+    private final List<Pair<ComponentName, UseCase.Callback<? extends RecipeResponse>>>
             componentCallbacks = new ArrayList<>();
     private final HashMap<ComponentName, UseCase.Response> componentResponses =
             new LinkedHashMap<>();
@@ -84,7 +84,7 @@ public class RecipeMacro extends UseCase {
 
     public RecipeMacro(UseCaseHandler handler,
                        RecipeStateCalculator recipeStateCalculator,
-                       Recipe recipe,
+                       RecipeMetadata recipeMetaData,
                        RecipeIdentity identity,
                        RecipeCourse course,
                        RecipeDuration duration,
@@ -94,7 +94,7 @@ public class RecipeMacro extends UseCase {
         this.recipeStateCalculator = recipeStateCalculator;
         recipeStateResponse = RecipeStateResponse.Builder.getDefault().build();
         recipeMacroResponse = RecipeMacroResponse.Builder.getDefault().build();
-        this.recipe = recipe;
+        this.recipeMetaData = recipeMetaData;
         this.identity = identity;
         this.course = course;
         this.duration = duration;
@@ -104,9 +104,9 @@ public class RecipeMacro extends UseCase {
     @Override
     public <Q extends Request> void execute(Q request) {
 
-        this.request = (RecipeRequestBase) request;
+        this.request = (RecipeRequest) request;
 
-        if (request instanceof RecipeRequest) {
+        if (request instanceof RecipeMetadataRequest) {
             requestOriginator = RECIPE;
         } else if (request instanceof RecipeIdentityRequest) {
             requestOriginator = IDENTITY;
@@ -123,7 +123,7 @@ public class RecipeMacro extends UseCase {
             startComponents();
 
         } else if (RECIPE.equals(requestOriginator)) {
-            processRecipeRequest((RecipeRequest) request);
+            processRecipeRequest((RecipeMetadataRequest) request);
         } else if (IDENTITY.equals(requestOriginator)) {
             processIdentityRequest((RecipeIdentityRequest) request);
         } else if (COURSE.equals(requestOriginator)) {
@@ -152,24 +152,24 @@ public class RecipeMacro extends UseCase {
 
     private void startRecipeComponent() {
         handler.execute(
-                recipe,
-                new RecipeRequest.Builder().
+                recipeMetaData,
+                new RecipeMetadataRequest.Builder().
                         setId(id).
                         build(),
                 new RecipeCallback()
         );
     }
 
-    private void processRecipeRequest(RecipeRequest request) {
+    private void processRecipeRequest(RecipeMetadataRequest request) {
         handler.execute(
-                recipe,
+                recipeMetaData,
                 request,
                 new RecipeCallback());
     }
 
-    private class RecipeCallback extends RecipeMacroUseCaseCallback<RecipeResponse> {
+    private class RecipeCallback extends RecipeMacroUseCaseCallback<RecipeMetadataResponse> {
         @Override
-        protected void processResponse(RecipeResponse response) {
+        protected void processResponse(RecipeMetadataResponse response) {
             addComponentResponse(RECIPE, response);
             checkComponentsUpdated();
         }
@@ -231,7 +231,7 @@ public class RecipeMacro extends UseCase {
     private void startDurationComponent() {
         handler.execute(
                 duration,
-                RecipeDurationRequest.Builder.
+                new RecipeDurationRequest.Builder().
                         getDefault().
                         setId(id).
                         build(),
@@ -382,7 +382,7 @@ public class RecipeMacro extends UseCase {
     }
 
     public void registerComponentCallback(Pair<ComponentName, UseCase.Callback
-            <? extends RecipeResponseBase>> callback) {
+            <? extends RecipeResponse>> callback) {
         componentCallbacks.add(callback);
     }
 
@@ -390,16 +390,16 @@ public class RecipeMacro extends UseCase {
         System.out.println(TAG + "notifyComponentCallbacks called:" + componentCallbacks);
         System.out.println(TAG + "componentResponses:" + componentResponses);
 
-        for (Pair<ComponentName, UseCase.Callback<? extends RecipeResponseBase>> callbackPair :
+        for (Pair<ComponentName, UseCase.Callback<? extends RecipeResponse>> callbackPair :
                 componentCallbacks) {
             ComponentName componentName = callbackPair.first;
 
             if (RECIPE.equals(componentName)) {
-                RecipeResponse response = (RecipeResponse)
+                RecipeMetadataResponse response = (RecipeMetadataResponse)
                         componentResponses.get(componentName);
                 //noinspection unchecked
-                UseCase.Callback<RecipeResponse> callback =
-                        (UseCase.Callback<RecipeResponse>) callbackPair.second;
+                UseCase.Callback<RecipeMetadataResponse> callback =
+                        (UseCase.Callback<RecipeMetadataResponse>) callbackPair.second;
 
                 if (response.getMetadata().getFailReasons().contains(CommonFailReason.NONE)) {
                     callback.onSuccess(response);
@@ -472,7 +472,7 @@ public class RecipeMacro extends UseCase {
     private void notifyRequestOriginator() {
         System.out.println(TAG + "notifyRequestOriginator called:" + requestOriginator);
         if (RECIPE.equals(requestOriginator)) {
-            RecipeResponse response = (RecipeResponse)
+            RecipeMetadataResponse response = (RecipeMetadataResponse)
                     componentResponses.get(RECIPE);
             getUseCaseCallback().onSuccess(response);
 

@@ -6,9 +6,9 @@ import com.example.peter.thekitchenmenu.data.repository.*;
 import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.RecipeRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.RecipeResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemetadata.RecipeMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemetadata.RecipeMetadataRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemetadata.RecipeMetadataResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourseResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacroResponse;
@@ -116,7 +116,7 @@ public class RecipeCourseEditorViewModelTest {
                 setLongTextMaxLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
                 build();
 
-        Recipe recipe = new Recipe(
+        RecipeMetadata recipeMetaData = new RecipeMetadata(
                 timeProviderMock,
                 repoRecipeMock
         );
@@ -154,7 +154,7 @@ public class RecipeCourseEditorViewModelTest {
         recipeMacro = new RecipeMacro(
                 handler,
                 stateCalculator,
-                recipe,
+                recipeMetaData,
                 identity,
                 course,
                 duration,
@@ -169,7 +169,7 @@ public class RecipeCourseEditorViewModelTest {
         String recipeId = RECIPE_VALID_EXISTING.getId();
 
         // An external request that starts loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(recipeId).
                 build();
 
@@ -188,7 +188,7 @@ public class RecipeCourseEditorViewModelTest {
         String recipeId = RECIPE_VALID_EXISTING.getId();
 
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(recipeId).
                 build();
 
@@ -214,7 +214,7 @@ public class RecipeCourseEditorViewModelTest {
         String recipeId = RECIPE_VALID_EXISTING.getId();
 
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(recipeId).
                 build();
 
@@ -288,7 +288,7 @@ public class RecipeCourseEditorViewModelTest {
         whenTimeProviderCalledReturnTime(getRecipeCourseZero().getCreateDate());
 
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(EXISTING_RECIPE_ID).
                 build();
 
@@ -312,7 +312,7 @@ public class RecipeCourseEditorViewModelTest {
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
 
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(EXISTING_RECIPE_ID).
                 build();
 
@@ -334,7 +334,7 @@ public class RecipeCourseEditorViewModelTest {
         whenTimeProviderCalledReturnTime(getRecipeCourseFour().getCreateDate());
         // Act
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(EXISTING_RECIPE_ID).
                 build();
 
@@ -355,7 +355,7 @@ public class RecipeCourseEditorViewModelTest {
         // Arrange
 
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(EXISTING_RECIPE_ID).
                 build();
 
@@ -380,7 +380,7 @@ public class RecipeCourseEditorViewModelTest {
         whenTimeProviderCalledReturnTime(getRecipeCourseTwo().getCreateDate());
 
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(EXISTING_RECIPE_ID).
                 build();
 
@@ -402,7 +402,7 @@ public class RecipeCourseEditorViewModelTest {
         // Arrange
 
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(EXISTING_RECIPE_ID).
                 build();
 
@@ -425,7 +425,7 @@ public class RecipeCourseEditorViewModelTest {
         whenTimeProviderCalledReturnTime(getRecipeCourseThree().getCreateDate());
 
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(EXISTING_RECIPE_ID).
                 build();
 
@@ -447,7 +447,7 @@ public class RecipeCourseEditorViewModelTest {
     public void courseThreeSelected_false_courseId3AndRecipeIdRemovedFromDatabase() {
         // Arrange
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(EXISTING_RECIPE_ID).
                 build();
 
@@ -472,7 +472,7 @@ public class RecipeCourseEditorViewModelTest {
         whenTimeProviderCalledReturnTime(getRecipeCourseFour().getCreateDate());
 
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(EXISTING_RECIPE_ID).
                 build();
 
@@ -496,7 +496,7 @@ public class RecipeCourseEditorViewModelTest {
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
         // Act
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(EXISTING_RECIPE_ID).
                 build();
 
@@ -521,7 +521,7 @@ public class RecipeCourseEditorViewModelTest {
         whenTimeProviderCalledReturnTime(getRecipeCourseFive().getCreateDate());
 
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(EXISTING_RECIPE_ID).
                 build();
 
@@ -541,7 +541,7 @@ public class RecipeCourseEditorViewModelTest {
     public void courseFiveSelected_false_courseId5AndRecipeIdRemovedFromDatabase() {
         // Arrange
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(EXISTING_RECIPE_ID).
                 build();
 
@@ -565,7 +565,7 @@ public class RecipeCourseEditorViewModelTest {
         when(idProviderMock.getUId()).thenReturn(getRecipeCourseSix().getId());
         whenTimeProviderCalledReturnTime(getRecipeCourseSix().getCreateDate());
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(EXISTING_RECIPE_ID).
                 build();
 
@@ -587,7 +587,7 @@ public class RecipeCourseEditorViewModelTest {
         // Arrange
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(EXISTING_RECIPE_ID).
                 build();
 
@@ -612,7 +612,7 @@ public class RecipeCourseEditorViewModelTest {
         whenTimeProviderCalledReturnTime(getRecipeCourseSeven().getCreateDate());
 
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(EXISTING_RECIPE_ID).
                 build();
 
@@ -635,7 +635,7 @@ public class RecipeCourseEditorViewModelTest {
         // Arrange
 
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(EXISTING_RECIPE_ID).
                 build();
 
@@ -657,7 +657,7 @@ public class RecipeCourseEditorViewModelTest {
     public void start_recipeIdSupplied_RecipeModelStatus_COURSES_MODEL_INVALID_UNCHANGED() {
         // Arrange
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(EXISTING_RECIPE_ID).
                 build();
         RecipeMacroResponseCallback macroCallback = new RecipeMacroResponseCallback();
@@ -692,7 +692,7 @@ public class RecipeCourseEditorViewModelTest {
         // Arrange
 
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(EXISTING_RECIPE_ID).
                 build();
         RecipeMacroResponseCallback macroCallback = new RecipeMacroResponseCallback();
@@ -720,7 +720,7 @@ public class RecipeCourseEditorViewModelTest {
         // Arrange
 
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(EXISTING_RECIPE_ID).
                 build();
         RecipeMacroResponseCallback macroCallback = new RecipeMacroResponseCallback();
@@ -759,7 +759,7 @@ public class RecipeCourseEditorViewModelTest {
         // Arrange
 
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(EXISTING_RECIPE_ID).
                 build();
         RecipeMacroResponseCallback macroCallback = new RecipeMacroResponseCallback();
@@ -842,26 +842,26 @@ public class RecipeCourseEditorViewModelTest {
     // endregion helper methods --------------------------------------------------------------------
 
     // region helper classes -----------------------------------------------------------------------
-    private static class RecipeResponseCallback implements UseCase.Callback<RecipeResponse> {
+    private static class RecipeResponseCallback implements UseCase.Callback<RecipeMetadataResponse> {
 
         private static final String TAG = "tkm-" + RecipeCourseEditorViewModelTest.
                 RecipeResponseCallback.class.getSimpleName() + ": ";
 
-        private RecipeResponse response;
+        private RecipeMetadataResponse response;
 
         @Override
-        public void onSuccess(RecipeResponse response) {
+        public void onSuccess(RecipeMetadataResponse response) {
             System.out.println(RecipeCourseEditorViewModelTest.TAG + TAG + "onSuccess:" + response);
             this.response = response;
         }
 
         @Override
-        public void onError(RecipeResponse response) {
+        public void onError(RecipeMetadataResponse response) {
             System.out.println(RecipeCourseEditorViewModelTest.TAG + TAG + "onError:" + response);
             this.response = response;
         }
 
-        public RecipeResponse getResponse() {
+        public RecipeMetadataResponse getResponse() {
             return response;
         }
 

@@ -55,7 +55,7 @@ public class RecipePortionsEditorViewModel extends ObservableViewModel {
         this.recipeMacro = recipeMacro;
         this.resources = resources;
 
-        response = RecipePortionsResponse.Builder.getDefault().build();
+        response = new RecipePortionsResponse.Builder().getDefault().build();
 
         callback = new PortionsCallbackListener();
         recipeMacro.registerComponentCallback(new Pair<>(

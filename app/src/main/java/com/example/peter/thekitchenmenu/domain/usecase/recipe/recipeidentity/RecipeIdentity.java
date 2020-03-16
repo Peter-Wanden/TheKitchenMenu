@@ -7,6 +7,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponseMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorModel;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorRequest;
@@ -61,7 +62,7 @@ public class RecipeIdentity extends UseCase
         this.handler = handler;
         this.textValidator = textValidator;
 
-        requestModel = RecipeIdentityRequest.Model.Builder.getDefault().build();
+        requestModel = new RecipeIdentityRequest.Model.Builder().getDefault().build();
         failReasons = new ArrayList<>();
     }
 
@@ -206,8 +207,8 @@ public class RecipeIdentity extends UseCase
         sendResponse(response);
     }
 
-    private RecipeIdentityResponse.Metadata getMetaData() {
-        return new RecipeIdentityResponse.Metadata.Builder().
+    private RecipeResponseMetadata getMetaData() {
+        return new RecipeResponseMetadata.Builder().
                 setState(getComponentState()).
                 setFailReasons(new ArrayList<>(failReasons)).
                 setCreateDate(persistenceModel.getCreateDate()).

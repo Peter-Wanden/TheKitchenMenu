@@ -5,7 +5,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.UseCaseFactory;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacroResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.RecipeRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemetadata.RecipeMetadataRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +55,7 @@ public class RecipeList extends UseCase {
         // TODO - Create a list of all recipeMacros using a RecipeMacro for each RecipeMacro :)
 
         RecipeMacro recipeMacro = factory.provideRecipeMacro();
-        RecipeRequest request = RecipeRequest.Builder.
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 getDefault().
                 setId("recipeId").
                 build();

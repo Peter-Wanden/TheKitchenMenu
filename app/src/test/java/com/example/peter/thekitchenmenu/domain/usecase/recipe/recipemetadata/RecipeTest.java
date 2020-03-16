@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe;
+package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemetadata;
 
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
@@ -9,22 +9,16 @@ import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import org.junit.Before;
-import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import javax.annotation.Nonnull;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
 
 public class RecipeTest {
 
@@ -41,10 +35,10 @@ public class RecipeTest {
     @Mock
     TimeProvider timeProviderMock;
     private UseCaseHandler handler;
-    private RecipeResponse response;
+    private RecipeMetadataResponse response;
     // endregion helper fields ---------------------------------------------------------------------
 
-    private Recipe SUT;
+    private RecipeMetadata SUT;
 
     @Before
     public void setup() throws Exception {
@@ -53,9 +47,9 @@ public class RecipeTest {
 
     }
 
-    private Recipe givenUseCase() {
+    private RecipeMetadata givenUseCase() {
         handler = new UseCaseHandler(new UseCaseSchedulerMock());
-        return new Recipe(
+        return new RecipeMetadata(
                 timeProviderMock,
                 repoRecipeMock
         );

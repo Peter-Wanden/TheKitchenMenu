@@ -18,9 +18,9 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.RecipeRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.RecipeResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemetadata.RecipeMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemetadata.RecipeMetadataRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemetadata.RecipeMetadataResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacroResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
@@ -138,7 +138,7 @@ public class RecipeIdentityEditorViewModelTest {
                 setLongTextMaxLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
                 build();
 
-        Recipe recipe = new Recipe(
+        RecipeMetadata recipeMetaData = new RecipeMetadata(
                 timeProviderMock,
                 repoRecipeMock
         );
@@ -176,7 +176,7 @@ public class RecipeIdentityEditorViewModelTest {
         recipeMacro = new RecipeMacro(
                 handler,
                 stateCalculator,
-                recipe,
+                recipeMetaData,
                 identity,
                 courses,
                 duration,
@@ -203,7 +203,7 @@ public class RecipeIdentityEditorViewModelTest {
         recipeMacro.registerMacroCallback(macroResponseListener);
 
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(recipeId).
                 build();
 
@@ -225,7 +225,7 @@ public class RecipeIdentityEditorViewModelTest {
         String recipeId = INVALID_NEW_EMPTY.getId();
 
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(recipeId).
                 build();
         // Act
@@ -243,7 +243,7 @@ public class RecipeIdentityEditorViewModelTest {
         String invalidTitle = INVALID_NEW_TITLE_TOO_SHORT.getTitle();
 
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(recipeId).
                 build();
         // Act
@@ -263,7 +263,7 @@ public class RecipeIdentityEditorViewModelTest {
         String invalidTitle = INVALID_NEW_TITLE_TOO_LONG.getTitle();
 
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(recipeId).
                 build();
 
@@ -283,7 +283,7 @@ public class RecipeIdentityEditorViewModelTest {
         String recipeId = INVALID_NEW_EMPTY.getId();
 
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(recipeId).
                 build();
 
@@ -308,7 +308,7 @@ public class RecipeIdentityEditorViewModelTest {
         String validDescription = INVALID_NEW_TITLE_INVALID_DESCRIPTION_VALID.getDescription();
 
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(recipeId).
                 build();
 
@@ -329,7 +329,7 @@ public class RecipeIdentityEditorViewModelTest {
         String validTitle = VALID_NEW_TITLE_VALID.getTitle();
 
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(recipeId).
                 build();
 
@@ -351,7 +351,7 @@ public class RecipeIdentityEditorViewModelTest {
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(time);
 
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(recipeId).
                 build();
 
@@ -371,7 +371,7 @@ public class RecipeIdentityEditorViewModelTest {
         String title = VALID_NEW_TITLE_VALID.getTitle();
 
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(recipeId).
                 build();
 
@@ -404,7 +404,7 @@ public class RecipeIdentityEditorViewModelTest {
                 build();
 
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(recipeId).
                 build();
 
@@ -432,7 +432,7 @@ public class RecipeIdentityEditorViewModelTest {
                 thenAddOneCharacter().
                 build();
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(recipeId).
                 build();
 
@@ -461,7 +461,7 @@ public class RecipeIdentityEditorViewModelTest {
                 build();
 
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(recipeId).
                 build();
 
@@ -488,7 +488,7 @@ public class RecipeIdentityEditorViewModelTest {
         String description = VALID_NEW_COMPLETE.getDescription();
 
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(recipeId).
                 build();
 
@@ -513,7 +513,7 @@ public class RecipeIdentityEditorViewModelTest {
         whenTimeProviderReturnTime(VALID_NEW_COMPLETE.getCreateDate());
 
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(recipeId).
                 build();
 
@@ -537,7 +537,7 @@ public class RecipeIdentityEditorViewModelTest {
         whenTimeProviderReturnTime(VALID_NEW_COMPLETE.getCreateDate());
 
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(recipeId).
                 build();
 
@@ -565,7 +565,7 @@ public class RecipeIdentityEditorViewModelTest {
 
         // Act
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(recipeId).
                 build();
 
@@ -589,7 +589,7 @@ public class RecipeIdentityEditorViewModelTest {
         String recipeId = VALID_EXISTING_COMPLETE.getId();
 
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(recipeId).
                 build();
 
@@ -617,7 +617,7 @@ public class RecipeIdentityEditorViewModelTest {
         String recipeId = INVALID_EXISTING_INCOMPLETE_INVALID_TITLE.getId();
 
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(recipeId).
                 build();
 
@@ -729,26 +729,26 @@ public class RecipeIdentityEditorViewModelTest {
         }
     }
 
-    private static class RecipeResponseCallback implements UseCase.Callback<RecipeResponse> {
+    private static class RecipeResponseCallback implements UseCase.Callback<RecipeMetadataResponse> {
 
         private static final String TAG = "tkm-" + RecipeResponseCallback.class.getSimpleName() +
                 ": ";
 
-        private RecipeResponse response;
+        private RecipeMetadataResponse response;
 
         @Override
-        public void onSuccess(RecipeResponse response) {
+        public void onSuccess(RecipeMetadataResponse response) {
             System.out.println(RecipeIdentityEditorViewModelTest.TAG + TAG + "onSuccess:" + response);
             this.response = response;
         }
 
         @Override
-        public void onError(RecipeResponse response) {
+        public void onError(RecipeMetadataResponse response) {
             System.out.println(RecipeIdentityEditorViewModelTest.TAG + TAG + "onError:" + response);
             this.response = response;
         }
 
-        public RecipeResponse getResponse() {
+        public RecipeMetadataResponse getResponse() {
             return response;
         }
 

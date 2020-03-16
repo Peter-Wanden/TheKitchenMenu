@@ -8,6 +8,7 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponseMetadata;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
@@ -154,7 +155,10 @@ public class RecipeCourse extends UseCase implements DataSource.GetAllCallback<R
 
     private void addCourse(Course course) {
         isChanged = true;
-        RecipeCourseModel model = createNewCourseModel(course);
+        save(createNewCourseModel(course));
+    }
+
+    private void save(RecipeCourseModel model) {
         repository.save(convertModelToPrimitive(model));
     }
 
@@ -210,7 +214,7 @@ public class RecipeCourse extends UseCase implements DataSource.GetAllCallback<R
     private void sendResponse() {
         RecipeCourseResponse response = new RecipeCourseResponse.Builder().
                 setId(id).
-                setMetaData(getMetadata()).
+                setMetadata(getMetadata()).
                 setModel(getResponseModel()).
                 build();
 
@@ -223,8 +227,8 @@ public class RecipeCourse extends UseCase implements DataSource.GetAllCallback<R
         }
     }
 
-    private RecipeCourseResponse.Metadata getMetadata() {
-        return new RecipeCourseResponse.Metadata.Builder().
+    private RecipeResponseMetadata getMetadata() {
+        return new RecipeResponseMetadata.Builder().
                 setState(getComponentState()).
                 setFailReasons(getFailReasons()).
                 setCreateDate(createDate).

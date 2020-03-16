@@ -7,7 +7,7 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration
 import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.RecipeResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemetadata.RecipeMetadataResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDuration;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDurationRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDurationResponse;
@@ -698,7 +698,7 @@ public class RecipeDurationTest {
     }
 
     private void setupForNewDuration(String recipeId) {
-        RecipeDurationRequest request = RecipeDurationRequest.Builder.
+        RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                 getDefault().
                 setId(recipeId).
                 build();
@@ -709,7 +709,7 @@ public class RecipeDurationTest {
 
     private void givenValidExistingModel(String recipeId) {
         // Arrange
-        RecipeDurationRequest request = RecipeDurationRequest.Builder.
+        RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                 getDefault().
                 setId(recipeId).build();
         // Act
@@ -722,26 +722,26 @@ public class RecipeDurationTest {
     // endregion helper methods --------------------------------------------------------------------
 
     // region helper classes -----------------------------------------------------------------------
-    private static class RecipeResponseCallback implements UseCase.Callback<RecipeResponse> {
+    private static class RecipeResponseCallback implements UseCase.Callback<RecipeMetadataResponse> {
 
         private static final String TAG = "tkm-" + RecipeResponseCallback.class.getSimpleName() +
                 ": ";
 
-        private RecipeResponse response;
+        private RecipeMetadataResponse response;
 
         @Override
-        public void onSuccess(RecipeResponse response) {
+        public void onSuccess(RecipeMetadataResponse response) {
             System.out.println(RecipeDurationTest.TAG + TAG + "onSuccess:" + response);
             this.response = response;
         }
 
         @Override
-        public void onError(RecipeResponse response) {
+        public void onError(RecipeMetadataResponse response) {
             System.out.println(RecipeDurationTest.TAG + TAG + "onError:" + response);
             this.response = response;
         }
 
-        public RecipeResponse getResponse() {
+        public RecipeMetadataResponse getResponse() {
             return response;
         }
 

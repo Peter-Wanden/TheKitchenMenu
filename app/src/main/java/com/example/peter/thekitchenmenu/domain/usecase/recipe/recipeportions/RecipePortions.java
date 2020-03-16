@@ -6,6 +6,7 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions
 import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponseMetadata;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
@@ -169,8 +170,8 @@ public class RecipePortions extends UseCase
         sendResponse(response);
     }
 
-    private RecipePortionsResponse.Metadata getMetadata() {
-        return new RecipePortionsResponse.Metadata.Builder().
+    private RecipeResponseMetadata getMetadata() {
+        return new RecipeResponseMetadata.Builder().
                 setState(getComponentState()).
                 setFailReasons(new ArrayList<>(failReasons)).
                 setCreateDate(persistenceModel.getCreateDate()). // TODO - These times may be wrong

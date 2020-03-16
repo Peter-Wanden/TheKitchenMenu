@@ -37,7 +37,7 @@ public class RecipeNameAndPortionsViewModel extends ViewModel {
     }
 
     private void getRecipeIdentityData(String recipeId) {
-        RecipeIdentityRequest request = RecipeIdentityRequest.Builder.
+        RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
                 getDefault().
                 setId(recipeId).
                 build();
@@ -64,7 +64,7 @@ public class RecipeNameAndPortionsViewModel extends ViewModel {
     }
 
     private void getRecipePortionsData(String recipeId) {
-        RecipePortionsRequest request = RecipePortionsRequest.Builder.
+        RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                 getDefault().
                 setId(recipeId).
                 build();

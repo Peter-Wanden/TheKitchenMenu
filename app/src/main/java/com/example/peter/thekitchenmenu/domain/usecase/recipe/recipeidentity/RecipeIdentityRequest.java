@@ -1,22 +1,13 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity;
 
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequestBase;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequestModel;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipeIdentityRequest extends RecipeRequestBase<RecipeIdentityRequest.Model> {
-
-    private RecipeIdentityRequest(@Nonnull String id, @Nonnull Model model) {
-        super(id, model);
-    }
-
-    @Nonnull
-    @Override
-    public Model getModel() {
-        return model;
-    }
+public final class RecipeIdentityRequest extends RecipeRequest<RecipeIdentityRequest.Model> {
 
     @Nonnull
     @Override
@@ -27,54 +18,34 @@ public final class RecipeIdentityRequest extends RecipeRequestBase<RecipeIdentit
                 '}';
     }
 
-    public static class Builder {
-        private String id;
-        private Model model;
+    public static class Builder extends RecipeRequestBuilder<Builder, RecipeIdentityRequest, Model> {
 
-        public static Builder getDefault() {
+        public Builder() {
+            request = new RecipeIdentityRequest();
+        }
+
+        public Builder getDefault() {
             return new Builder().
                     setId("").
-                    setModel(Model.Builder.
+                    setModel(new Model.Builder().
                             getDefault().
                             build());
         }
 
-        public Builder setId(String id) {
-            this.id = id;
+        @Override
+        protected Builder self() {
             return this;
-        }
-
-        public Builder setModel(Model model) {
-            this.model = model;
-            return this;
-        }
-
-        public RecipeIdentityRequest build() {
-            return new RecipeIdentityRequest(
-                    id,
-                    model
-            );
         }
     }
 
-    public static final class Model implements RecipeRequestBase.RecipeRequestModel {
-        @Nonnull
-        private final String title;
-        @Nonnull
-        private final String description;
+    public static final class Model extends RecipeRequestModel {
+        private String title;
+        private String description;
 
-        private Model(@Nonnull String title,
-                      @Nonnull String description) {
-            this.title = title;
-            this.description = description;
-        }
-
-        @Nonnull
         public String getTitle() {
             return title;
         }
 
-        @Nonnull
         public String getDescription() {
             return description;
         }
@@ -93,6 +64,7 @@ public final class RecipeIdentityRequest extends RecipeRequestBase<RecipeIdentit
             return Objects.hash(title, description);
         }
 
+        @Nonnull
         @Override
         public String toString() {
             return "Model{" +
@@ -101,9 +73,17 @@ public final class RecipeIdentityRequest extends RecipeRequestBase<RecipeIdentit
                     '}';
         }
 
-        public static class Builder {
-            private String title;
-            private String description;
+        public static class Builder extends RecipeRequestModelBuilder<Builder, Model> {
+
+            public Builder() {
+                model = new Model();
+            }
+
+            public Builder getDefault() {
+                return new Builder().
+                        setTitle("").
+                        setDescription("");
+            }
 
             public static Builder basedOnIdentityResponseModel(RecipeIdentityResponse.Model model) {
                 return new Builder().
@@ -111,27 +91,19 @@ public final class RecipeIdentityRequest extends RecipeRequestBase<RecipeIdentit
                         setDescription(model.getDescription());
             }
 
-            public static Builder getDefault() {
-                return new Builder().
-                        setTitle("").
-                        setDescription("");
-            }
-
             public Builder setTitle(String title) {
-                this.title = title;
-                return this;
+                model.title = title;
+                return self();
             }
 
             public Builder setDescription(String description) {
-                this.description = description;
-                return this;
+                model.description = description;
+                return self();
             }
 
-            public Model build() {
-                return new Model(
-                        title,
-                        description
-                );
+            @Override
+            protected Builder self() {
+                return this;
             }
         }
     }

@@ -17,9 +17,9 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.RecipeRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.RecipeResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemetadata.RecipeMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemetadata.RecipeMetadataRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemetadata.RecipeMetadataResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDuration;
@@ -82,12 +82,7 @@ public class RecipePortionsEditorViewModelTest {
             TestDataRecipePortionsEntity.getExistingValidUpdatedServings();
     private final RecipePortionsEntity EXISTING_VALID_UPDATED_SITTINGS =
             TestDataRecipePortionsEntity.getExistingValidUpdatedSittings();
-    private final RecipePortionsEntity EXISTING_VALID_CLONE =
-            TestDataRecipePortionsEntity.getExistingValidClone();
-    private final RecipePortionsEntity EXISTING_VALID_CLONE_UPDATED_SITTINGS_SERVINGS =
-            TestDataRecipePortionsEntity.getExistingClonedUpdatedSittingsServings();
-    private final RecipePortionsEntity EXISTING_VALID_FROM_ANOTHER_USER =
-            TestDataRecipePortionsEntity.getValidCloneFromAnotherUser();
+
 
     // endregion constants -------------------------------------------------------------------------
 
@@ -144,7 +139,7 @@ public class RecipePortionsEditorViewModelTest {
                 setLongTextMaxLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
                 build();
 
-        Recipe recipe = new Recipe(
+        RecipeMetadata recipeMetaData = new RecipeMetadata(
                 timeProviderMock,
                 repoRecipeMock
         );
@@ -182,7 +177,7 @@ public class RecipePortionsEditorViewModelTest {
         recipeMacro = new RecipeMacro(
                 handler,
                 stateCalculator,
-                recipe, identity,
+                recipeMetaData, identity,
                 course,
                 duration,
                 portions);
@@ -202,7 +197,7 @@ public class RecipePortionsEditorViewModelTest {
         whenIdProviderReturn(recipeId);
 
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(recipeId).
                 build();
 
@@ -224,7 +219,7 @@ public class RecipePortionsEditorViewModelTest {
         whenIdProviderReturn(recipeId);
 
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(recipeId).
                 build();
 
@@ -249,7 +244,7 @@ public class RecipePortionsEditorViewModelTest {
         String recipeId = NEW_EMPTY.getRecipeId();
         whenIdProviderReturn(recipeId);
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(recipeId).
                 build();
 
@@ -278,7 +273,7 @@ public class RecipePortionsEditorViewModelTest {
         String recipeId = NEW_EMPTY.getRecipeId();
         whenIdProviderReturn(recipeId);
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(recipeId).
                 build();
 
@@ -308,7 +303,7 @@ public class RecipePortionsEditorViewModelTest {
         String recipeId = NEW_EMPTY.getRecipeId();
         whenIdProviderReturn(recipeId);
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(recipeId).
                 build();
 
@@ -338,7 +333,7 @@ public class RecipePortionsEditorViewModelTest {
         String recipeId = NEW_EMPTY.getRecipeId();
         whenIdProviderReturn(recipeId);
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(recipeId).
                 build();
 
@@ -368,7 +363,7 @@ public class RecipePortionsEditorViewModelTest {
         String recipeId = NEW_EMPTY.getRecipeId();
         whenIdProviderReturn(recipeId);
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(recipeId).
                 build();
 
@@ -393,7 +388,7 @@ public class RecipePortionsEditorViewModelTest {
         String recipeId = NEW_EMPTY.getRecipeId();
         whenIdProviderReturn(recipeId);
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(recipeId).
                 build();
 
@@ -423,7 +418,7 @@ public class RecipePortionsEditorViewModelTest {
         String recipeId = NEW_EMPTY.getRecipeId();
         whenIdProviderReturn(recipeId);
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(recipeId).
                 build();
 
@@ -449,7 +444,7 @@ public class RecipePortionsEditorViewModelTest {
         whenIdProviderReturn(NEW_EMPTY.getId());
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(NEW_EMPTY.getCreateDate());
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(recipeId).
                 build();
 
@@ -473,7 +468,7 @@ public class RecipePortionsEditorViewModelTest {
         String recipeId = EXISTING_VALID.getRecipeId();
         // Act
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(recipeId).
                 build();
 
@@ -492,7 +487,7 @@ public class RecipePortionsEditorViewModelTest {
         String recipeId = EXISTING_VALID.getRecipeId();
         // Act
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(recipeId).
                 build();
 
@@ -517,7 +512,7 @@ public class RecipePortionsEditorViewModelTest {
         String recipeId = EXISTING_VALID.getRecipeId();
 
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(recipeId).
                 build();
 
@@ -543,7 +538,7 @@ public class RecipePortionsEditorViewModelTest {
                 thenReturn(EXISTING_VALID_UPDATED_SERVINGS.getLastUpdate());
 
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(recipeId).
                 build();
 
@@ -569,7 +564,7 @@ public class RecipePortionsEditorViewModelTest {
                 thenReturn(EXISTING_VALID_UPDATED_SERVINGS.getLastUpdate());
 
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(recipeId).
                 build();
 
@@ -595,7 +590,7 @@ public class RecipePortionsEditorViewModelTest {
                 thenReturn(EXISTING_VALID_UPDATED_SITTINGS.getLastUpdate());
 
         // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 setId(recipeId).
                 build();
 
@@ -612,89 +607,6 @@ public class RecipePortionsEditorViewModelTest {
         verify(repoPortionsMock).save(eq(EXISTING_VALID_UPDATED_SITTINGS));
     }
 
-    @Test
-    public void startByCloningModel_existingAndCloneToRecipeId_existingSavedWithNewId() {
-        // Arrange
-        String cloneFromRecipeId = EXISTING_VALID.getRecipeId();
-        String cloneToRecipeId = NEW_EMPTY.getRecipeId();
-
-        whenIdProviderReturn(EXISTING_VALID_CLONE.getId());
-        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
-                EXISTING_VALID_CLONE.getLastUpdate());
-
-        // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
-                setId(cloneFromRecipeId).
-                build();
-
-        // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
-        // Assert
-        verifyAllOtherComponentReposCalledAndReturnDataUnavailable(cloneFromRecipeId);
-        verifyRepoPortionsCalledAndReturnExistingValid(cloneFromRecipeId);
-
-        // Assert
-        verify(repoPortionsMock).save(EXISTING_VALID_CLONE);
-    }
-
-    @Test
-    public void startByCloningModel_existingAndNewRecipeId_recipeModelStatusVALID_UNCHANGED() {
-        // Arrange
-        String cloneFromRecipeId = EXISTING_VALID.getRecipeId();
-        String cloneToRecipeId = NEW_EMPTY.getRecipeId();
-
-        whenIdProviderReturn(cloneToRecipeId);
-        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
-                EXISTING_VALID_CLONE.getLastUpdate());
-
-        // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
-                setId(cloneFromRecipeId).
-                build();
-
-        // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
-
-        // Assert
-        verifyAllOtherComponentReposCalledAndReturnDataUnavailable(cloneFromRecipeId);
-        verifyRepoPortionsCalledAndReturnExistingValid(cloneFromRecipeId);
-
-        ComponentState expectedState = ComponentState.VALID_UNCHANGED;
-        ComponentState actualState = recipeStateListener.
-                getResponse().
-                getComponentStates().
-                get(ComponentName.PORTIONS);
-        assertEquals(expectedState, actualState);
-    }
-
-    @Test
-    public void startByCloningModel_existingAndNewRecipeId_cloneSavedWithUpdatedSittingsServings() {
-        // Arrange
-        String cloneFromRecipeId = EXISTING_VALID.getRecipeId();
-        String cloneToRecipeId = NEW_EMPTY.getRecipeId();
-
-        whenIdProviderReturn(EXISTING_VALID_CLONE_UPDATED_SITTINGS_SERVINGS.getId());
-        when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
-                EXISTING_VALID_CLONE.getLastUpdate());
-
-        // An external request that starts/loads the recipe
-        RecipeRequest request = new RecipeRequest.Builder().
-                setId(cloneFromRecipeId).
-                build();
-
-        // Act
-        handler.execute(recipeMacro, request, new RecipeResponseCallback());
-
-        // Assert
-        verifyAllOtherComponentReposCalledAndReturnExistingValid(cloneFromRecipeId);
-        verifyRepoPortionsCalledAndReturnExistingValid(cloneFromRecipeId);
-
-        // Act
-        SUT.setServingsInView(String.valueOf(EXISTING_VALID_UPDATED_SERVINGS.getServings()));
-        SUT.setSittingsInView(String.valueOf(EXISTING_VALID_UPDATED_SITTINGS.getSittings()));
-        // Assert
-        verify(repoPortionsMock).save(eq(EXISTING_VALID_CLONE_UPDATED_SITTINGS_SERVINGS));
-    }
 
     // region helper methods -----------------------------------------------------------------------
     private void setupResourceMockReturnValues() {
@@ -794,26 +706,26 @@ public class RecipePortionsEditorViewModelTest {
         }
     }
 
-    private static class RecipeResponseCallback implements UseCase.Callback<RecipeResponse> {
+    private static class RecipeResponseCallback implements UseCase.Callback<RecipeMetadataResponse> {
 
         private static final String TAG = "tkm-" + RecipeResponseCallback.class.getSimpleName() +
                 ": ";
 
-        private RecipeResponse response;
+        private RecipeMetadataResponse response;
 
         @Override
-        public void onSuccess(RecipeResponse response) {
+        public void onSuccess(RecipeMetadataResponse response) {
             System.out.println(RecipePortionsEditorViewModelTest.TAG + TAG + "onSuccess:" + response);
             this.response = response;
         }
 
         @Override
-        public void onError(RecipeResponse response) {
+        public void onError(RecipeMetadataResponse response) {
             System.out.println(RecipePortionsEditorViewModelTest.TAG + TAG + "onError:" + response);
             this.response = response;
         }
 
-        public RecipeResponse getResponse() {
+        public RecipeMetadataResponse getResponse() {
             return response;
         }
 

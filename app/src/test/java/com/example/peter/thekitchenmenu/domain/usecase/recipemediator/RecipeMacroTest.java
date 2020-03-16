@@ -17,12 +17,12 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions
 import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.Recipe;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.RecipeResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemetadata.RecipeMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemetadata.RecipeMetadataResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacroRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacroResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe.RecipeRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemetadata.RecipeMetadataRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDurationRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateResponse;
@@ -151,7 +151,7 @@ public class RecipeMacroTest {
                 setLongTextMaxLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
                 build();
 
-        Recipe recipe = new Recipe(
+        RecipeMetadata recipeMetaData = new RecipeMetadata(
                 timeProviderMock,
                 repoRecipeMock
         );
@@ -184,7 +184,7 @@ public class RecipeMacroTest {
         return new RecipeMacro(
                 handler,
                 stateCalculator,
-                recipe,
+                recipeMetaData,
                 identity,
                 course,
                 duration,
@@ -199,7 +199,10 @@ public class RecipeMacroTest {
         String recipeId = INVALID_NEW_RECIPE.getId();
 
         MacroCallbackClient callback = new MacroCallbackClient();
-        RecipeMacroRequest request = RecipeMacroRequest.Builder.getDefault().setId(recipeId).build();
+        RecipeMacroRequest request = new RecipeMacroRequest.Builder().
+                getDefault().
+                setId(recipeId).
+                build();
 
         // Act
         handler.execute(SUT, request, callback);
@@ -213,7 +216,10 @@ public class RecipeMacroTest {
         // Arrange
         String recipeId = INVALID_NEW_RECIPE.getId();
         MacroCallbackClient callback = new MacroCallbackClient();
-        RecipeMacroRequest request = RecipeMacroRequest.Builder.getDefault().setId(recipeId).build();
+        RecipeMacroRequest request = new RecipeMacroRequest.Builder().
+                getDefault().
+                setId(recipeId).
+                build();
 
         // Act
         SUT.registerStateListener(recipeStateListener1);
@@ -257,7 +263,7 @@ public class RecipeMacroTest {
     public void recipeRequestNewId_invokerIssuesCommand_useCaseCallbackINVALID_UNCHANGED_MISSING_COMPONENTS() {
         // Arrange
         String recipeId = INVALID_NEW_RECIPE.getId();
-        RecipeRequest request = RecipeRequest.Builder.
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 getDefault().
                 setId(recipeId).
                 build();
@@ -290,7 +296,10 @@ public class RecipeMacroTest {
     public void macroRequestNewId_invokerIssuesCommand_recipeResponseListenersUpdated() {
         // Arrange
         String recipeId = INVALID_NEW_RECIPE.getId();
-        RecipeMacroRequest request = RecipeMacroRequest.Builder.getDefault().setId(recipeId).build();
+        RecipeMacroRequest request = new RecipeMacroRequest.Builder().
+                getDefault().
+                setId(recipeId).
+                build();
         MacroCallbackClient callback = new MacroCallbackClient();
         RecipeCallbackClient registeredCallback = new RecipeCallbackClient();
         // Act
@@ -309,7 +318,8 @@ public class RecipeMacroTest {
         String recipeId = INVALID_NEW_RECIPE.getId();
         IdentityCallbackClient callback = new IdentityCallbackClient();
 
-        RecipeIdentityRequest identityRequest = RecipeIdentityRequest.Builder.getDefault().
+        RecipeIdentityRequest identityRequest = new RecipeIdentityRequest.Builder().
+                getDefault().
                 setId(recipeId).
                 build();
         // Act
@@ -327,7 +337,7 @@ public class RecipeMacroTest {
     public void identityRequestNewId_invokerIssuesCommand_correctMacroComponentResponses() {
         // Arrange
         String recipeId = INVALID_NEW_RECIPE.getId();
-        RecipeIdentityRequest request = RecipeIdentityRequest.Builder.
+        RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
                 getDefault().
                 setId(recipeId).
                 build();
@@ -395,7 +405,7 @@ public class RecipeMacroTest {
         String recipeId = INVALID_NEW_RECIPE.getId();
         CourseCallbackClient callback = new CourseCallbackClient();
 
-        RecipeCourseRequest courseRequest = RecipeCourseRequest.Builder.getDefault().
+        RecipeCourseRequest courseRequest = new RecipeCourseRequest.Builder().getDefault().
                 setId(recipeId).
                 build();
         // Act
@@ -415,7 +425,8 @@ public class RecipeMacroTest {
         String recipeId = INVALID_NEW_RECIPE.getId();
         DurationCallbackClient callback = new DurationCallbackClient();
 
-        RecipeDurationRequest durationRequest = RecipeDurationRequest.Builder.getDefault().
+        RecipeDurationRequest durationRequest = new RecipeDurationRequest.Builder().
+                getDefault().
                 setId(recipeId).
                 build();
 
@@ -438,7 +449,8 @@ public class RecipeMacroTest {
         String recipeId = INVALID_NEW_RECIPE.getId();
         PortionCallbackClient callback = new PortionCallbackClient();
 
-        RecipePortionsRequest portionsRequest = RecipePortionsRequest.Builder.getDefault().
+        RecipePortionsRequest portionsRequest = new RecipePortionsRequest.Builder().
+                getDefault().
                 setId(recipeId).
                 build();
         // Act
@@ -464,7 +476,7 @@ public class RecipeMacroTest {
                 forClass(RecipeIdentityEntity.class);
         whenTimeProviderReturnTime(IDENTITY_VALID_NEW_COMPLETE.getCreateDate());
 
-        RecipeIdentityRequest firstRequest = RecipeIdentityRequest.Builder.
+        RecipeIdentityRequest firstRequest = new RecipeIdentityRequest.Builder().
                 getDefault().
                 setId(recipeId).
                 build();
@@ -538,10 +550,10 @@ public class RecipeMacroTest {
         whenTimeProviderReturnTime(expectedCourseEntity.getCreateDate());
         when(idProviderMock.getUId()).thenReturn(expectedCourseEntity.getId());
 
-        RecipeCourseRequest.Model initialModel = RecipeCourseRequest.Model.Builder.
+        RecipeCourseRequest.Model initialModel = new RecipeCourseRequest.Model.Builder().
                 getDefault().
                 build();
-        RecipeCourseRequest initialRequest = RecipeCourseRequest.Builder
+        RecipeCourseRequest initialRequest = new RecipeCourseRequest.Builder()
                 .getDefault().
                         setId(recipeId).
                         setModel(initialModel).
@@ -590,7 +602,7 @@ public class RecipeMacroTest {
         String recipeId = RECIPE_VALID_EXISTING.getId();
         RecipeCallbackClient callback = new RecipeCallbackClient();
 
-        RecipeRequest request = RecipeRequest.Builder.
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 getDefault().
                 setId(recipeId).
                 build();
@@ -613,7 +625,7 @@ public class RecipeMacroTest {
         // Arrange
         String recipeId = RECIPE_VALID_EXISTING.getId();
         RecipeCallbackClient callback = new RecipeCallbackClient();
-        RecipeRequest request = RecipeRequest.Builder.
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 getDefault().
                 setId(recipeId).
                 build();
@@ -644,7 +656,7 @@ public class RecipeMacroTest {
         String recipeId = RECIPE_VALID_EXISTING.getId();
         RecipeCallbackClient callback = new RecipeCallbackClient();
 
-        RecipeRequest request = RecipeRequest.Builder.
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 getDefault().
                 setId(recipeId).
                 build();
@@ -672,7 +684,7 @@ public class RecipeMacroTest {
         MacroCallbackClient macroCallbackClient = new MacroCallbackClient();
         IdentityCallbackClient identityCallbackClient = new IdentityCallbackClient();
 
-        RecipeRequest request = RecipeRequest.Builder.
+        RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 getDefault().
                 setId(recipeId).
                 build();
@@ -799,7 +811,7 @@ public class RecipeMacroTest {
         private RecipeMacroResponse recipeMacroResponseOnSuccess;
         private RecipeMacroResponse recipeMacroResponseOnError;
 
-        private RecipeResponse recipeResponse;
+        private RecipeMetadataResponse recipeMetadataResponse;
 
         private RecipeIdentityResponse identityOnSuccess;
         private RecipeIdentityResponse identityOnError;
@@ -818,7 +830,7 @@ public class RecipeMacroTest {
             if (response != null) {
                 System.out.println(TAG + "recipeMacroResponseOnSuccess: " + response);
                 recipeMacroResponseOnSuccess = response;
-                recipeResponse = (RecipeResponse) response.getComponentResponses().
+                recipeMetadataResponse = (RecipeMetadataResponse) response.getComponentResponses().
                         get(ComponentName.RECIPE);
                 identityOnSuccess = (RecipeIdentityResponse) response.getComponentResponses().
                         get(IDENTITY);
@@ -837,7 +849,7 @@ public class RecipeMacroTest {
                 System.out.println(TAG + "recipeMacroResponseOnError: " + response);
                 recipeMacroResponseOnError = response;
 
-                recipeResponse = (RecipeResponse) response.getComponentResponses().
+                recipeMetadataResponse = (RecipeMetadataResponse) response.getComponentResponses().
                         get(ComponentName.RECIPE);
 
                 RecipeIdentityResponse identityResponse = (RecipeIdentityResponse)
@@ -913,7 +925,7 @@ public class RecipeMacroTest {
             MacroCallbackClient that = (MacroCallbackClient) o;
             return Objects.equals(recipeMacroResponseOnSuccess, that.recipeMacroResponseOnSuccess) &&
                     Objects.equals(recipeMacroResponseOnError, that.recipeMacroResponseOnError) &&
-                    Objects.equals(recipeResponse, that.recipeResponse) &&
+                    Objects.equals(recipeMetadataResponse, that.recipeMetadataResponse) &&
                     Objects.equals(identityOnSuccess, that.identityOnSuccess) &&
                     Objects.equals(identityOnError, that.identityOnError) &&
                     Objects.equals(courseOnSuccess, that.courseOnSuccess) &&
@@ -927,7 +939,7 @@ public class RecipeMacroTest {
         @Override
         public int hashCode() {
             return Objects.hash(recipeMacroResponseOnSuccess, recipeMacroResponseOnError,
-                    recipeResponse, identityOnSuccess, identityOnError, courseOnSuccess,
+                    recipeMetadataResponse, identityOnSuccess, identityOnError, courseOnSuccess,
                     courseOnError, durationOnSuccess, durationOnError, portionsOnSuccess,
                     portionsOnError);
         }
@@ -939,7 +951,7 @@ public class RecipeMacroTest {
                     "TAG='" + TAG + '\'' +
                     ", recipeMacroResponseOnSuccess=" + recipeMacroResponseOnSuccess +
                     ", recipeMacroResponseOnError=" + recipeMacroResponseOnError +
-                    ", recipeResponse=" + recipeResponse +
+                    ", recipeResponse=" + recipeMetadataResponse +
                     ", identityOnSuccess=" + identityOnSuccess +
                     ", identityOnError=" + identityOnError +
                     ", courseOnSuccess=" + courseOnSuccess +
@@ -952,21 +964,21 @@ public class RecipeMacroTest {
         }
     }
 
-    private static class RecipeCallbackClient implements UseCase.Callback<RecipeResponse> {
+    private static class RecipeCallbackClient implements UseCase.Callback<RecipeMetadataResponse> {
 
-        private RecipeResponse response;
+        private RecipeMetadataResponse response;
 
         @Override
-        public void onSuccess(RecipeResponse response) {
+        public void onSuccess(RecipeMetadataResponse response) {
             this.response = response;
         }
 
         @Override
-        public void onError(RecipeResponse response) {
+        public void onError(RecipeMetadataResponse response) {
             this.response = response;
         }
 
-        public RecipeResponse getResponse() {
+        public RecipeMetadataResponse getResponse() {
             return response;
         }
 

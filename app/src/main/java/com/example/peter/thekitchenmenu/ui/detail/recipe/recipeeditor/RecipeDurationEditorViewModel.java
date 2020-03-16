@@ -54,7 +54,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
         this.recipeMacro = recipeMacro;
         this.resources = resources;
 
-        response = RecipeDurationResponse.Builder.getDefault().build();
+        response = new RecipeDurationResponse.Builder().getDefault().build();
 
         recipeMacro.registerComponentCallback(new Pair<>(
                 ComponentName.DURATION,

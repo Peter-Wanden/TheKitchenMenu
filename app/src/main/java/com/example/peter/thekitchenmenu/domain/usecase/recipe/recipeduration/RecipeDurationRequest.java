@@ -1,47 +1,27 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration;
 
 
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequestBase;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequestModel;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipeDurationRequest extends RecipeRequestBase<RecipeDurationRequest.Model> {
+public final class RecipeDurationRequest extends RecipeRequest<RecipeDurationRequest.Model> {
 
-    private RecipeDurationRequest(@Nonnull String id, @Nonnull Model model) {
-        super(id, model);
-    }
+    public static class Builder extends RecipeRequestBuilder<Builder, RecipeDurationRequest, Model> {
 
-    @Nonnull
-    @Override
-    public Model getModel() {
-        return model;
-    }
+        public Builder() {
+            request = new RecipeDurationRequest();
+        }
 
-    @Nonnull
-    @Override
-    public String toString() {
-        return "RecipeDurationRequest{" +
-                "id='" + id + '\'' +
-                ", model=" + model +
-                '}';
-    }
-
-    public static class Builder extends RecipeRequestBase.Builder<Builder> {
-
-        @Override
         public Builder getDefault() {
             return new Builder().
                     setId("").
-                    setModel(Model.Builder.
+                    setModel(new Model.Builder().
                             getDefault().
                             build());
-        }
-
-        @Override
-        public RecipeDurationRequest build() {
-            return new RecipeDurationRequest(id, (RecipeDurationRequest.Model) model);
         }
 
         @Override
@@ -50,18 +30,11 @@ public final class RecipeDurationRequest extends RecipeRequestBase<RecipeDuratio
         }
     }
 
-    public static final class Model implements RecipeRequestBase.RecipeRequestModel {
-        private final int prepHours;
-        private final int prepMinutes;
-        private final int cookHours;
-        private final int cookMinutes;
-
-        private Model(int prepHours, int prepMinutes, int cookHours, int cookMinutes) {
-            this.prepHours = prepHours;
-            this.prepMinutes = prepMinutes;
-            this.cookHours = cookHours;
-            this.cookMinutes = cookMinutes;
-        }
+    public static final class Model extends RecipeRequestModel {
+        private int prepHours;
+        private int prepMinutes;
+        private int cookHours;
+        private int cookMinutes;
 
         public int getPrepHours() {
             return prepHours;
@@ -95,6 +68,7 @@ public final class RecipeDurationRequest extends RecipeRequestBase<RecipeDuratio
             return Objects.hash(prepHours, prepMinutes, cookHours, cookMinutes);
         }
 
+        @Nonnull
         @Override
         public String toString() {
             return "Model{" +
@@ -105,13 +79,13 @@ public final class RecipeDurationRequest extends RecipeRequestBase<RecipeDuratio
                     '}';
         }
 
-        public static class Builder {
-            private int prepHours;
-            private int prepMinutes;
-            private int cookHours;
-            private int cookMinutes;
+        public static class Builder extends RecipeRequestModelBuilder<Builder, Model> {
 
-            public static Builder getDefault() {
+            public Builder() {
+                model = new Model();
+            }
+
+            public Builder getDefault() {
                 return new Builder().
                         setPrepHours(0).
                         setPrepMinutes(0).
@@ -128,32 +102,28 @@ public final class RecipeDurationRequest extends RecipeRequestBase<RecipeDuratio
             }
 
             public Builder setPrepHours(int prepHours) {
-                this.prepHours = prepHours;
-                return this;
+                model.prepHours = prepHours;
+                return self();
             }
 
             public Builder setPrepMinutes(int prepMinutes) {
-                this.prepMinutes = prepMinutes;
-                return this;
+                model.prepMinutes = prepMinutes;
+                return self();
             }
 
             public Builder setCookHours(int cookHours) {
-                this.cookHours = cookHours;
-                return this;
+                model.cookHours = cookHours;
+                return self();
             }
 
             public Builder setCookMinutes(int cookMinutes) {
-                this.cookMinutes = cookMinutes;
-                return this;
+                model.cookMinutes = cookMinutes;
+                return self();
             }
 
-            public Model build() {
-                return new Model(
-                        prepHours,
-                        prepMinutes,
-                        cookHours,
-                        cookMinutes
-                );
+            @Override
+            protected Builder self() {
+                return this;
             }
         }
     }

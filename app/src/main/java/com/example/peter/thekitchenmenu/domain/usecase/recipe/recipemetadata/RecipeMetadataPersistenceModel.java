@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipe;
+package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemetadata;
 
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.domain.model.PersistenceModel;
@@ -7,7 +7,7 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipePersistenceModel implements PersistenceModel {
+public final class RecipeMetadataPersistenceModel implements PersistenceModel {
     @Nonnull
     private final String id;
     @Nonnull
@@ -17,11 +17,11 @@ public final class RecipePersistenceModel implements PersistenceModel {
     private final long createDate;
     private final long lastUpdate;
 
-    private RecipePersistenceModel(@Nonnull String id,
-                                  @Nonnull String parentId,
-                                  @Nonnull String createdBy,
-                                  long createDate,
-                                  long lastUpdate) {
+    private RecipeMetadataPersistenceModel(@Nonnull String id,
+                                           @Nonnull String parentId,
+                                           @Nonnull String createdBy,
+                                           long createDate,
+                                           long lastUpdate) {
         this.id = id;
         this.parentId = parentId;
         this.createdBy = createdBy;
@@ -57,7 +57,7 @@ public final class RecipePersistenceModel implements PersistenceModel {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RecipePersistenceModel that = (RecipePersistenceModel) o;
+        RecipeMetadataPersistenceModel that = (RecipeMetadataPersistenceModel) o;
         return createDate == that.createDate &&
                 lastUpdate == that.lastUpdate &&
                 id.equals(that.id) &&
@@ -122,8 +122,8 @@ public final class RecipePersistenceModel implements PersistenceModel {
             return this;
         }
 
-        public RecipePersistenceModel build() {
-            return new RecipePersistenceModel(
+        public RecipeMetadataPersistenceModel build() {
+            return new RecipeMetadataPersistenceModel(
                     id,
                     parentId,
                     createdBy,

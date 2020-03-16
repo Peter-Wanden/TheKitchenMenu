@@ -1,27 +1,30 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro;
 
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequestBase;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequestModel;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public class RecipeMacroRequest extends RecipeRequestBase<RecipeMacroRequest.Model> {
+public class RecipeMacroRequest extends RecipeRequest<RecipeMacroRequest.Model> {
 
-    private RecipeMacroRequest(@Nonnull String id, @Nonnull RecipeMacroRequest.Model model) {
-        super(id, model);
-    }
-
+    @Nonnull
     @Override
-    public Model getModel() {
-        return model;
+    public String toString() {
+        return "RecipeMacroRequest{" +
+                "id='" + id + '\'' +
+                ", model=" + model +
+                '}';
     }
 
-    public static class Builder {
-        private String id;
-        private Model model;
+    public static class Builder extends RecipeRequestBuilder<Builder, RecipeMacroRequest, Model> {
 
-        public static Builder getDefault() {
+        public Builder() {
+            request = new RecipeMacroRequest();
+        }
+
+        public Builder getDefault() {
             return new Builder().
                     setId("").
                     setModel(Model.Builder.
@@ -29,31 +32,14 @@ public class RecipeMacroRequest extends RecipeRequestBase<RecipeMacroRequest.Mod
                             build());
         }
 
-        public Builder setId(String id) {
-            this.id = id;
+        @Override
+        protected Builder self() {
             return this;
-        }
-
-        public Builder setModel(Model model) {
-            this.model = model;
-            return this;
-        }
-
-        public RecipeMacroRequest build() {
-            return new RecipeMacroRequest(
-                    id,
-                    model
-            );
         }
     }
 
-    public static final class Model implements RecipeRequestBase.RecipeRequestModel {
-        @Nonnull
-        private final String recipeId;
-
-        private Model(@Nonnull String recipeId) {
-            this.recipeId = recipeId;
-        }
+    public static final class Model extends RecipeRequestModel {
+        private String recipeId;
 
         @Override
         public boolean equals(Object o) {
@@ -75,24 +61,25 @@ public class RecipeMacroRequest extends RecipeRequestBase<RecipeMacroRequest.Mod
                     '}';
         }
 
-        public static class Builder {
-            private String recipeId;
+        public static class Builder extends RecipeRequestModelBuilder<Builder, Model> {
+
+            public Builder() {
+                model = new Model();
+            }
 
             public static Builder getDefault() {
                 return new Builder().setRecipeId("");
             }
 
             public Builder setRecipeId(String recipeId) {
-                this.recipeId = recipeId;
+                model.recipeId = recipeId;
+                return self();
+            }
+
+            @Override
+            protected Builder self() {
                 return this;
             }
-
-            public Model build() {
-                return new Model(
-                        recipeId
-                );
-            }
-
         }
     }
 }
