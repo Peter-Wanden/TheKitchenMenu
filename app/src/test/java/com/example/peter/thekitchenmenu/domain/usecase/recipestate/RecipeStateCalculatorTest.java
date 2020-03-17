@@ -3,9 +3,9 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipestate;
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.state.RecipeStateCalculator;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.state.RecipeStateRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.state.RecipeStateResponse;
 
 import org.junit.*;
 import org.mockito.*;
@@ -13,7 +13,7 @@ import org.mockito.*;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.state.RecipeStateCalculator.*;
 import static org.junit.Assert.*;
 
 public class RecipeStateCalculatorTest {

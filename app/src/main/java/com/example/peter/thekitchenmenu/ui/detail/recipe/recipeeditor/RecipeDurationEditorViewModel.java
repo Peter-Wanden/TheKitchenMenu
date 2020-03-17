@@ -11,17 +11,15 @@ import androidx.databinding.library.baseAdapters.BR;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDuration;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDurationRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDurationResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeduration.RecipeDuration;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeduration.RecipeDurationRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeduration.RecipeDurationResponse;
 import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDuration.*;
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.state.RecipeStateCalculator.*;
 
 public class RecipeDurationEditorViewModel extends ObservableViewModel {
 
@@ -35,7 +33,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
     @Nonnull
     private final UseCaseHandler handler;
     @Nonnull
-    private RecipeMacro recipeMacro;
+    private Recipe recipeMacro;
 
     public final ObservableField<String> prepTimeErrorMessage = new ObservableField<>();
     public final ObservableField<String> cookTimeErrorMessage = new ObservableField<>();
@@ -48,7 +46,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
     private boolean isUpdatingUi;
 
     public RecipeDurationEditorViewModel(@Nonnull UseCaseHandler handler,
-                                         @Nonnull RecipeMacro recipeMacro,
+                                         @Nonnull Recipe recipeMacro,
                                          @Nonnull Resources resources) {
         this.handler = handler;
         this.recipeMacro = recipeMacro;

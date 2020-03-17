@@ -160,14 +160,25 @@ public class TestDataRecipePortionsEntity {
         );
     }
 
+    public static RecipePortionsEntity getValidFromAnotherUser() {
+        return new RecipePortionsEntity(
+                TestDataRecipeEntity.getValidFromAnotherUser().getId(),
+                TestDataRecipeEntity.getValidFromAnotherUser().getId(),
+                5,
+                5,
+                TestDataRecipeEntity.getValidFromAnotherUser().getCreateDate(),
+                TestDataRecipeEntity.getValidFromAnotherUser().getLastUpdate()
+        );
+    }
+
     public static RecipePortionsEntity getValidCloneFromAnotherUser() {
         return new RecipePortionsEntity(
                 getNewValidEmpty().getId(),
                 TestDataRecipeEntity.getValidFromAnotherUser().getId(),
                 5,
                 5,
-                TestDataRecipeEntity.getValidFromAnotherUser().getCreateDate(),
-                TestDataRecipeEntity.getValidFromAnotherUser().getLastUpdate()
+                TestDataRecipeEntity.getValidNewCloned().getCreateDate(),
+                TestDataRecipeEntity.getValidNewCloned().getLastUpdate()
         );
     }
 }

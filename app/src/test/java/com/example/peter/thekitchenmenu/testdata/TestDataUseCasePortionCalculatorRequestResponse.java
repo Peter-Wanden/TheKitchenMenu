@@ -1,10 +1,10 @@
 package com.example.peter.thekitchenmenu.testdata;
 
-import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientcalculator.IngredientCalculatorRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientcalculator.IngredientCalculatorResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredientcalculator.IngredientCalculatorRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredientcalculator.IngredientCalculatorResponse;
 
 import static com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants.DEFAULT_MEASUREMENT_MODEL;
-import static com.example.peter.thekitchenmenu.domain.usecase.recipeingredientcalculator.IngredientCalculator.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredientcalculator.IngredientCalculator.*;
 
 public class TestDataUseCasePortionCalculatorRequestResponse {
 

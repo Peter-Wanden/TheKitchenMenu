@@ -15,9 +15,9 @@ import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModelBuil
 import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.ConversionFactorStatusRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.ConversionFactorStatus;
 import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.ConversionFactorStatusResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientcalculator.IngredientCalculator;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientcalculator.IngredientCalculatorRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientcalculator.IngredientCalculatorResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredientcalculator.IngredientCalculator;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredientcalculator.IngredientCalculatorRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredientcalculator.IngredientCalculatorResponse;
 import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.common.MeasurementErrorMessageMaker;
 import com.example.peter.thekitchenmenu.ui.utils.unitofmeasure.CountFraction;

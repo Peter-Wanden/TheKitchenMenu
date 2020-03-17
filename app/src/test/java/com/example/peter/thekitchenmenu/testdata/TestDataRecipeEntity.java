@@ -85,7 +85,7 @@ public class TestDataRecipeEntity {
     }
 
     // Existing invalid recipe, expected output when invalid recipe cloned, or made invalid after
-    // editing clone
+    // editing copy
     public static RecipeEntity getInvalidNewCloned() {
         return new RecipeEntity(
                 getNewInvalid().getId(),

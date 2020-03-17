@@ -14,21 +14,21 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredie
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.ConversionFactorStatus;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.Ingredient;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemetadata.RecipeMetadata;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.recipemacroclone.RecipeMacroClone;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDuration;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentity;
-import com.example.peter.thekitchenmenu.domain.usecase.recipelist.RecipeList;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.RecipeIngredientList;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions.RecipePortions;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipecopy.RecipeCopy;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.state.RecipeStateCalculator;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeduration.RecipeDuration;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeidentity.RecipeIdentity;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipelist.RecipeList;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipecourse.RecipeCourse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredientlist.RecipeIngredientList;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeportions.RecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientDuplicateChecker;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientcalculator.IngredientCalculator;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredientcalculator.IngredientCalculator;
 
 public class UseCaseFactory {
 
@@ -195,8 +195,8 @@ public class UseCaseFactory {
                 provideTextValidator());
     }
 
-    public RecipeMacro provideRecipeMacro() {
-        return new RecipeMacro(
+    public Recipe provideRecipeMacro() {
+        return new Recipe(
                 UseCaseHandler.getInstance(),
                 provideRecipeStateCalculator(),
                 provideRecipe(),
@@ -207,8 +207,8 @@ public class UseCaseFactory {
         );
     }
 
-    public RecipeMacroClone provideRecipeMacroClone() {
-        return new RecipeMacroClone(
+    public RecipeCopy provideRecipeMacroClone() {
+        return new RecipeCopy(
                 UseCaseHandler.getInstance(),
                 new UniqueIdProvider(),
                 provideRecipeMacro(),

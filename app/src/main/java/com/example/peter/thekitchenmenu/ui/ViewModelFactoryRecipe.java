@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseFactory;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor.RecipeIngredientCalculatorViewModel;
 import com.example.peter.thekitchenmenu.ui.utils.unitofmeasure.MeasurementToSpannableConverter;
@@ -36,7 +36,7 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
     private final UseCaseFactory useCaseFactory;
     @Nonnull
     private final UseCaseHandler useCaseHandler;
-    private RecipeMacro recipeMacro;
+    private Recipe recipeMacro;
 
     private ViewModelFactoryRecipe(@Nonnull Application application,
                                    @Nonnull UseCaseFactory useCaseFactory,
@@ -61,7 +61,7 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
     }
 
     private ViewModelFactoryRecipe(@Nonnull Application application,
-                                   @Nonnull RecipeMacro recipeMacro,
+                                   @Nonnull Recipe recipeMacro,
                                    @Nonnull UseCaseFactory useCaseFactory,
                                    @Nonnull UseCaseHandler useCaseHandler) {
         this.application = application;
@@ -71,7 +71,7 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
     }
 
     public static ViewModelFactoryRecipe getInstance(@Nonnull Application application,
-                                                     @Nonnull RecipeMacro recipeMacro) {
+                                                     @Nonnull Recipe recipeMacro) {
         if (INSTANCE == null) {
             synchronized (ViewModelFactoryRecipe.class) {
                 if (INSTANCE == null)

@@ -8,16 +8,16 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.recipelist.RecipeList;
-import com.example.peter.thekitchenmenu.domain.usecase.recipelist.RecipeListItemModel;
-import com.example.peter.thekitchenmenu.domain.usecase.recipelist.RecipeListRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipelist.RecipeListResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipelist.RecipeList;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipelist.RecipeListItemModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipelist.RecipeListRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipelist.RecipeListResponse;
 
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipelist.RecipeList.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipelist.RecipeList.*;
 
 public class RecipeCatalogViewModel extends ViewModel {
 

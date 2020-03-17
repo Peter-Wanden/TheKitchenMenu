@@ -18,22 +18,22 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions
 import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeResponseMetadata;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemetadata.RecipeMetadata;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDurationRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDurationResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDuration;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentity;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacroRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacroResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions.RecipePortions;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDurationTest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityTest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortionsTest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.RecipeComponentMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeduration.RecipeDurationRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeduration.RecipeDurationResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipecourse.RecipeCourse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeduration.RecipeDuration;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeidentity.RecipeIdentity;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeportions.RecipePortions;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.state.RecipeStateCalculator;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.state.RecipeStateResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDurationTest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentityTest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions.RecipePortionsTest;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeCourseEntity;
@@ -48,7 +48,7 @@ import org.mockito.*;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.state.RecipeStateCalculator.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -115,10 +115,10 @@ public class RecipeDurationEditorViewModelTest {
 
     private UseCaseHandler handler;
     private RecipeStateListener recipeStateListener;
-    private RecipeMacro recipeMacro;
+    private Recipe recipeMacro;
     private RecipeMacroResponseListener macroListener;
     private DurationResponseListener durationListener;
-    private RecipeResponseMetadata metadata;
+    private RecipeComponentMetadata metadata;
     private RecipeDurationResponse.Model model;
 
     // endregion helper fields ---------------------------------------------------------------------
@@ -179,7 +179,7 @@ public class RecipeDurationEditorViewModelTest {
 
         RecipeStateCalculator stateCalculator = new RecipeStateCalculator();
 
-        recipeMacro = new RecipeMacro(
+        recipeMacro = new Recipe(
                 handler,
                 stateCalculator,
                 recipeMetaData,
@@ -806,10 +806,7 @@ public class RecipeDurationEditorViewModelTest {
         String prepHours = String.valueOf(VALID_EXISTING_COMPLETE.getPrepTime() / 60);
 
         // An external request that loads the recipe
-        RecipeMacroRequest request = new RecipeMacroRequest.Builder().
-                getDefault().
-                setId(recipeId).
-                build();
+        RecipeRequest request = new RecipeRequest(recipeId);
 
         // Act
         handler.execute(recipeMacro, request, new RecipeMacroResponseListener());
@@ -828,10 +825,7 @@ public class RecipeDurationEditorViewModelTest {
         String prepMinutes = String.valueOf(VALID_EXISTING_COMPLETE.getPrepTime() % 60);
 
         // An external request that loads the recipe
-        RecipeMacroRequest request = new RecipeMacroRequest.Builder().
-                getDefault().
-                setId(recipeId).
-                build();
+        RecipeRequest request = new RecipeRequest(recipeId);
 
         // Act
         handler.execute(recipeMacro, request, new RecipeMacroResponseListener());
@@ -850,10 +844,7 @@ public class RecipeDurationEditorViewModelTest {
         String cookHours = String.valueOf(VALID_EXISTING_COMPLETE.getCookTime() / 60);
 
         // An external request that starts/loads the recipe
-        RecipeMacroRequest request = new RecipeMacroRequest.Builder().
-                getDefault().
-                setId(recipeId).
-                build();
+        RecipeRequest request = new RecipeRequest(recipeId);
 
         // Act
         handler.execute(recipeMacro, request, new RecipeMacroResponseListener());
@@ -872,10 +863,7 @@ public class RecipeDurationEditorViewModelTest {
         String cookMinutes = String.valueOf(VALID_EXISTING_COMPLETE.getCookTime() % 60);
 
         // An external request that starts/loads the recipe
-        RecipeMacroRequest request = new RecipeMacroRequest.Builder().
-                getDefault().
-                setId(recipeId).
-                build();
+        RecipeRequest request = new RecipeRequest(recipeId);
 
         // Act
         handler.execute(recipeMacro, request, new RecipeMacroResponseListener());
@@ -895,10 +883,7 @@ public class RecipeDurationEditorViewModelTest {
                 VALID_EXISTING_COMPLETE.getCreateDate());
 
         // An external request that loads the recipe
-        RecipeMacroRequest request = new RecipeMacroRequest.Builder().
-                getDefault().
-                setId(recipeId).
-                build();
+        RecipeRequest request = new RecipeRequest(recipeId);
 
         // Act
         handler.execute(recipeMacro, request, new RecipeMacroResponseListener());
@@ -1005,7 +990,7 @@ public class RecipeDurationEditorViewModelTest {
     // endregion helper methods --------------------------------------------------------------------
 
     // region helper classes -----------------------------------------------------------------------
-    private static class RecipeStateListener implements RecipeMacro.RecipeStateListener {
+    private static class RecipeStateListener implements Recipe.RecipeStateListener {
 
         RecipeStateResponse response;
 
@@ -1027,27 +1012,27 @@ public class RecipeDurationEditorViewModelTest {
         }
     }
 
-    private static class RecipeMacroResponseListener implements UseCase.Callback<RecipeMacroResponse> {
+    private static class RecipeMacroResponseListener implements UseCase.Callback<RecipeResponse> {
 
         private static final String TAG = "tkm-" + RecipeMacroResponseListener.class.
                 getSimpleName() + ": ";
 
-        RecipeMacroResponse response;
+        RecipeResponse response;
 
         @Override
-        public void onSuccess(RecipeMacroResponse response) {
+        public void onSuccess(RecipeResponse response) {
             System.out.println(RecipeDurationEditorViewModelTest.TAG + TAG + "onSuccess:");
             this.response = response;
 
         }
 
         @Override
-        public void onError(RecipeMacroResponse response) {
+        public void onError(RecipeResponse response) {
             System.out.println(RecipeDurationEditorViewModelTest.TAG + TAG + "onError:");
             this.response = response;
         }
 
-        public RecipeMacroResponse getResponse() {
+        public RecipeResponse getResponse() {
             return response;
         }
 

@@ -6,21 +6,18 @@ import androidx.databinding.ObservableBoolean;
 
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourseRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourseResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipecourse.RecipeCourseRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipecourse.RecipeCourseResponse;
 import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourse.*;
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipecourse.RecipeCourse.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.state.RecipeStateCalculator.*;
 
 public class RecipeCourseEditorViewModel extends ObservableViewModel {
 
@@ -30,7 +27,7 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
     @Nonnull
     private final UseCaseHandler handler;
     @Nonnull
-    private RecipeMacro recipeMacro;
+    private Recipe recipeMacro;
     private RecipeCourseResponse response;
     private List<Course> courseList = new ArrayList<>();
 
@@ -38,7 +35,7 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
     private final ObservableBoolean isDataLoading = new ObservableBoolean(true);
 
     public RecipeCourseEditorViewModel(@Nonnull UseCaseHandler handler,
-                                       @Nonnull RecipeMacro recipeMacro) {
+                                       @Nonnull Recipe recipeMacro) {
         this.handler = handler;
         this.recipeMacro = recipeMacro;
 
@@ -51,7 +48,7 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
 
     /**
      * Registered recipe component callback listening for updates pushed from
-     * {@link RecipeMacro}
+     * {@link Recipe}
      */
     private class CourseCallbackListener implements UseCase.Callback<RecipeCourseResponse> {
         @Override

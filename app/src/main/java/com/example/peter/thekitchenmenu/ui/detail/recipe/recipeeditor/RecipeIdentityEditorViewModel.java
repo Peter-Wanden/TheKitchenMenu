@@ -13,17 +13,17 @@ import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentity;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentityRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentityResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeidentity.RecipeIdentity;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeidentity.RecipeIdentityRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeidentity.RecipeIdentityResponse;
 import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.state.RecipeStateCalculator.*;
 
 public class RecipeIdentityEditorViewModel extends ObservableViewModel {
 
@@ -35,7 +35,7 @@ public class RecipeIdentityEditorViewModel extends ObservableViewModel {
     @Nonnull
     private final UseCaseHandler handler;
     @Nonnull
-    private RecipeMacro recipeMacro;
+    private Recipe recipeMacro;
 
     public final ObservableField<String> titleErrorMessage = new ObservableField<>();
     public final ObservableField<String> descriptionErrorMessage = new ObservableField<>();
@@ -47,7 +47,7 @@ public class RecipeIdentityEditorViewModel extends ObservableViewModel {
     private boolean isUpdatingUi;
 
     public RecipeIdentityEditorViewModel(@Nonnull UseCaseHandler handler,
-                                         @Nonnull RecipeMacro recipeMacro,
+                                         @Nonnull Recipe recipeMacro,
                                          @Nonnull Resources resources) {
         this.handler = handler;
         this.recipeMacro = recipeMacro;
@@ -63,7 +63,7 @@ public class RecipeIdentityEditorViewModel extends ObservableViewModel {
 
     /**
      * Registered recipe component callback listening for updates pushed from
-     * {@link RecipeMacro}
+     * {@link Recipe}
      */
     private class IdentityCallbackListener implements UseCase.Callback<RecipeIdentityResponse> {
         @Override

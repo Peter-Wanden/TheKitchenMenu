@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.ui.catalog.recipe;
 
-import com.example.peter.thekitchenmenu.domain.usecase.recipelist.RecipeListItemModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipelist.RecipeListItemModel;
 
 /**
  * RecipeStateListener used with data binding to process user actions on a recipe in a catalog list

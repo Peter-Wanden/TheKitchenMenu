@@ -5,7 +5,7 @@ import android.text.Spanned;
 import androidx.annotation.Nullable;
 import androidx.databinding.ObservableField;
 import androidx.lifecycle.ViewModel;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeingredientlist.RecipeIngredientListItemModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredientlist.RecipeIngredientListItemModel;
 import com.example.peter.thekitchenmenu.ui.utils.unitofmeasure.MeasurementToSpannableConverter;
 
 import java.lang.ref.WeakReference;

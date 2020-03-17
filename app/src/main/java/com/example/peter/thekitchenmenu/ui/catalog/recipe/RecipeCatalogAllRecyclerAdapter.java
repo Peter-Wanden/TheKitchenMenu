@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.RecipeListItemBinding;
-import com.example.peter.thekitchenmenu.domain.usecase.recipelist.RecipeListItemModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipelist.RecipeListItemModel;
 
 import java.util.ArrayList;
 import java.util.List;

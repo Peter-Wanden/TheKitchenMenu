@@ -2,9 +2,6 @@ package com.example.peter.thekitchenmenu.testdata;
 
 import com.example.peter.thekitchenmenu.data.entity.RecipeDurationEntity;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDurationTest.MAX_COOK_TIME;
-import static com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDurationTest.MAX_PREP_TIME;
-
 public class TestDataRecipeDurationEntity {
 
     public static int getMaxPrepTime() {

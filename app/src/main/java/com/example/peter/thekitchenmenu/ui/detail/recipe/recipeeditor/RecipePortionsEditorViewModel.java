@@ -13,17 +13,17 @@ import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions.RecipePortions;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions.RecipePortionsRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions.RecipePortionsResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeportions.RecipePortions;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeportions.RecipePortionsRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeportions.RecipePortionsResponse;
 import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.state.RecipeStateCalculator.*;
 
 public class RecipePortionsEditorViewModel extends ObservableViewModel {
 
@@ -37,7 +37,7 @@ public class RecipePortionsEditorViewModel extends ObservableViewModel {
     @Nonnull
     private UseCaseHandler handler;
     @Nonnull
-    private RecipeMacro recipeMacro;
+    private Recipe recipeMacro;
     private RecipePortionsResponse response;
 
     public final ObservableField<String> servingsErrorMessage = new ObservableField<>();
@@ -49,7 +49,7 @@ public class RecipePortionsEditorViewModel extends ObservableViewModel {
     private PortionsCallbackListener callback;
 
     public RecipePortionsEditorViewModel(@Nonnull UseCaseHandler handler,
-                                         @Nonnull RecipeMacro recipeMacro,
+                                         @Nonnull Recipe recipeMacro,
                                          @Nonnull Resources resources) {
         this.handler = handler;
         this.recipeMacro = recipeMacro;
@@ -66,7 +66,7 @@ public class RecipePortionsEditorViewModel extends ObservableViewModel {
 
     /**
      * Registered recipe component callback listening for updates pushed from
-     * {@link RecipeMacro}
+     * {@link Recipe}
      */
     private class PortionsCallbackListener implements UseCase.Callback<RecipePortionsResponse> {
         @Override

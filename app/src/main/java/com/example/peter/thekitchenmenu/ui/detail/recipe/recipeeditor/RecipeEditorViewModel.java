@@ -10,16 +10,16 @@ import androidx.lifecycle.ViewModel;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemetadata.RecipeMetadataRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemetadata.RecipeMetadataResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadataRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadataResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.state.RecipeStateResponse;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro.CREATE_NEW_RECIPE;
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe.CREATE_NEW_RECIPE;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.state.RecipeStateCalculator.*;
 
 
 public class RecipeEditorViewModel extends ViewModel {
@@ -33,7 +33,7 @@ public class RecipeEditorViewModel extends ViewModel {
     @Nonnull
     private final UseCaseHandler handler;
     @Nonnull
-    private RecipeMacro recipeMacro;
+    private Recipe recipeMacro;
     @Nonnull
     private UniqueIdProvider idProvider;
 
@@ -49,7 +49,7 @@ public class RecipeEditorViewModel extends ViewModel {
     private RecipeStateResponse recipeStateResponse;
 
     public RecipeEditorViewModel(@Nonnull UseCaseHandler handler,
-                                 @Nonnull RecipeMacro recipeMacro,
+                                 @Nonnull Recipe recipeMacro,
                                  @Nonnull UniqueIdProvider idProvider,
                                  @Nonnull Resources resources) {
         this.handler = handler;
@@ -59,7 +59,7 @@ public class RecipeEditorViewModel extends ViewModel {
 
         recipeMetadataResponse = new RecipeMetadataResponse.Builder().getDefault().build();
         recipeResponseListener = new RecipeResponseListener();
-        recipeMacro.registerComponentCallback(new Pair<>(ComponentName.RECIPE, recipeResponseListener));
+        recipeMacro.registerComponentCallback(new Pair<>(ComponentName.RECIPE_METADATA, recipeResponseListener));
 
         recipeStateResponse = RecipeStateResponse.Builder.getDefault().build();
         recipeMacro.registerStateListener(new RecipeStateListener());
@@ -88,7 +88,7 @@ public class RecipeEditorViewModel extends ViewModel {
 
     /**
      * Registered recipe component callback listening for updates pushed from
-     * {@link RecipeMacro}
+     * {@link Recipe}
      */
     private class RecipeResponseListener implements UseCase.Callback<RecipeMetadataResponse> {
         private final String TAG = "tkm-" + RecipeResponseListener.class.
@@ -112,7 +112,7 @@ public class RecipeEditorViewModel extends ViewModel {
         }
     }
 
-    private class RecipeStateListener implements RecipeMacro.RecipeStateListener {
+    private class RecipeStateListener implements Recipe.RecipeStateListener {
         private final String TAG = "tkm-" + RecipeStateListener.class.getSimpleName() + ": ";
 
         @Override

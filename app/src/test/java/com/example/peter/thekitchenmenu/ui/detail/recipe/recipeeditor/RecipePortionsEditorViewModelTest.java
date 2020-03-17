@@ -17,19 +17,19 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemetadata.RecipeMetadata;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemetadata.RecipeMetadataRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemetadata.RecipeMetadataResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDuration;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentity;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions.RecipePortions;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDurationTest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityTest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortionsTest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadataRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadataResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipecourse.RecipeCourse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeduration.RecipeDuration;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeidentity.RecipeIdentity;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeportions.RecipePortions;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.state.RecipeStateCalculator;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.state.RecipeStateResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDurationTest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentityTest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions.RecipePortionsTest;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeCourseEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeDurationEntity;
@@ -44,7 +44,7 @@ import org.mockito.*;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.state.RecipeStateCalculator.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.anyInt;
@@ -114,7 +114,7 @@ public class RecipePortionsEditorViewModelTest {
     @Mock
     private UniqueIdProvider idProviderMock;
     private UseCaseHandler handler;
-    private RecipeMacro recipeMacro;
+    private Recipe recipeMacro;
     private RecipeStateListener recipeStateListener;
     // endregion helper fields ---------------------------------------------------------------------
 
@@ -174,7 +174,7 @@ public class RecipePortionsEditorViewModelTest {
 
         RecipeStateCalculator stateCalculator = new RecipeStateCalculator();
 
-        recipeMacro = new RecipeMacro(
+        recipeMacro = new Recipe(
                 handler,
                 stateCalculator,
                 recipeMetaData, identity,
@@ -684,7 +684,7 @@ public class RecipePortionsEditorViewModelTest {
     // endregion helper methods --------------------------------------------------------------------
 
     // region helper classes -----------------------------------------------------------------------
-    private static class RecipeStateListener implements RecipeMacro.RecipeStateListener {
+    private static class RecipeStateListener implements Recipe.RecipeStateListener {
 
         RecipeStateResponse response;
 

@@ -15,18 +15,18 @@ import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseFactory;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemetadata.RecipeMetadata;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDuration;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentity;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions.RecipePortions;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDurationTest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipelist.RecipeList;
-import com.example.peter.thekitchenmenu.domain.usecase.recipelist.RecipeListRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipelist.RecipeListResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortionsTest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipecourse.RecipeCourse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeduration.RecipeDuration;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeidentity.RecipeIdentity;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeportions.RecipePortions;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.state.RecipeStateCalculator;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDurationTest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipelist.RecipeList;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipelist.RecipeListRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipelist.RecipeListResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions.RecipePortionsTest;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorTest;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
@@ -103,7 +103,7 @@ public class RecipeListTest {
     public void identityAndDurationRequest_getAllRecipes_recipesReturned() {
         // Arrange
         when(useCaseFactoryMock.provideRecipeMacro()).thenReturn(
-                new RecipeMacro(
+                new Recipe(
                         handler,
 
                         new RecipeStateCalculator(),

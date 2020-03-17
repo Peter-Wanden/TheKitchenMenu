@@ -6,20 +6,20 @@ import com.example.peter.thekitchenmenu.data.repository.*;
 import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemetadata.RecipeMetadata;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemetadata.RecipeMetadataRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemetadata.RecipeMetadataResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourseResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacro;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipemacro.RecipeMacroResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipecourse.RecipeCourse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDuration;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentity;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions.RecipePortions;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeduration.RecipeDurationTest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeidentity.RecipeIdentityTest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipeportions.RecipePortionsTest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadataRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadataResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipecourse.RecipeCourseResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipecourse.RecipeCourse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeduration.RecipeDuration;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeidentity.RecipeIdentity;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeportions.RecipePortions;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.state.RecipeStateCalculator;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDurationTest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentityTest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions.RecipePortionsTest;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeCourseEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeDurationEntity;
@@ -36,7 +36,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.recipestate.RecipeStateCalculator.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.state.RecipeStateCalculator.*;
 import static com.example.peter.thekitchenmenu.testdata.TestDataRecipeCourseEntity.*;
 import static com.example.peter.thekitchenmenu.testdata.TestDataRecipeEntity.*;
 import static org.junit.Assert.*;
@@ -94,7 +94,7 @@ public class RecipeCourseEditorViewModelTest {
     TimeProvider timeProviderMock;
 
     private UseCaseHandler handler;
-    private RecipeMacro recipeMacro;
+    private Recipe recipeMacro;
     // endregion helper fields ---------------------------------------------------------------------
 
     private RecipeCourseEditorViewModel SUT;
@@ -151,7 +151,7 @@ public class RecipeCourseEditorViewModelTest {
 
         RecipeStateCalculator stateCalculator = new RecipeStateCalculator();
 
-        recipeMacro = new RecipeMacro(
+        recipeMacro = new Recipe(
                 handler,
                 stateCalculator,
                 recipeMetaData,
@@ -874,21 +874,21 @@ public class RecipeCourseEditorViewModelTest {
         }
     }
 
-    private static class RecipeMacroResponseCallback implements UseCase.Callback<RecipeMacroResponse> {
+    private static class RecipeMacroResponseCallback implements UseCase.Callback<RecipeResponse> {
 
-        RecipeMacroResponse response;
+        RecipeResponse response;
 
         @Override
-        public void onSuccess(RecipeMacroResponse response) {
+        public void onSuccess(RecipeResponse response) {
             this.response = response;
         }
 
         @Override
-        public void onError(RecipeMacroResponse response) {
+        public void onError(RecipeResponse response) {
             this.response = response;
         }
 
-        public RecipeMacroResponse getResponse() {
+        public RecipeResponse getResponse() {
             return response;
         }
     }
