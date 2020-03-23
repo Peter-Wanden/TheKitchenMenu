@@ -1,11 +1,11 @@
 package com.example.peter.thekitchenmenu.data.repository.source.remote;
 
-import androidx.annotation.NonNull;
+import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.IngredientEntity;
+import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
 
-import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
-import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import javax.annotation.Nonnull;
 
-public class IngredientRemoteDataSource implements DataSource<IngredientEntity> {
+public class IngredientRemoteDataSource implements PrimitiveDataSource<IngredientEntity> {
 
     private static IngredientRemoteDataSource INSTANCE;
 
@@ -16,17 +16,18 @@ public class IngredientRemoteDataSource implements DataSource<IngredientEntity> 
     }
 
     @Override
-    public void getAll(@NonNull GetAllCallback<IngredientEntity> callback) {
+    public void getAll(@Nonnull GetAllCallback<IngredientEntity> callback) {
         callback.onDataNotAvailable();
     }
 
     @Override
-    public void getById(@NonNull String id, @NonNull GetEntityCallback<IngredientEntity> callback) {
-        callback.onDataNotAvailable();
+    public void getById(@Nonnull String id,
+                        @Nonnull GetEntityCallback<IngredientEntity> callback) {
+        callback.onDataUnavailable();
     }
 
     @Override
-    public void save(@NonNull IngredientEntity object) {
+    public void save(@Nonnull IngredientEntity entity) {
 
     }
 
@@ -42,7 +43,7 @@ public class IngredientRemoteDataSource implements DataSource<IngredientEntity> 
     }
 
     @Override
-    public void deleteById(@NonNull String id) {
+    public void deleteById(@Nonnull String id) {
 
     }
 }

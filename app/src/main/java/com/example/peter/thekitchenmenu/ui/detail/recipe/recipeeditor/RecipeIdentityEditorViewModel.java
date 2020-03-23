@@ -17,13 +17,12 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recip
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeidentity.RecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeidentity.RecipeIdentityRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeidentity.RecipeIdentityResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 
 import java.util.List;
 
 import javax.annotation.Nonnull;
-
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.state.RecipeStateCalculator.*;
 
 public class RecipeIdentityEditorViewModel extends ObservableViewModel {
 
@@ -56,7 +55,7 @@ public class RecipeIdentityEditorViewModel extends ObservableViewModel {
         response = new RecipeIdentityResponse.Builder().getDefault().build();
 
         recipeMacro.registerComponentCallback(new Pair<>(
-                ComponentName.IDENTITY,
+                RecipeMetadata.ComponentName.IDENTITY,
                 new IdentityCallbackListener())
         );
     }
@@ -95,7 +94,7 @@ public class RecipeIdentityEditorViewModel extends ObservableViewModel {
     public void setTitle(String title) {
         if (isTitleChanged(title)) {
             RecipeIdentityRequest.Model model = RecipeIdentityRequest.Model.Builder.
-                    basedOnIdentityResponseModel(response.getModel()).
+                    basedOnResponseModel(response.getModel()).
                     setTitle(title).
                     build();
             RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
@@ -118,7 +117,7 @@ public class RecipeIdentityEditorViewModel extends ObservableViewModel {
     public void setDescription(String description) {
         if (isDescriptionChanged(description)) {
             RecipeIdentityRequest.Model model = RecipeIdentityRequest.Model.Builder.
-                    basedOnIdentityResponseModel(response.getModel()).
+                    basedOnResponseModel(response.getModel()).
                     setDescription(description).
                     build();
             RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().

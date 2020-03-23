@@ -7,11 +7,12 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.peter.thekitchenmenu.R;
+
+import javax.annotation.Nonnull;
 
 public class UnsavedChangesDialogFragment extends DialogFragment {
 
@@ -27,7 +28,7 @@ public class UnsavedChangesDialogFragment extends DialogFragment {
         return dialogFragment;
     }
 
-    @NonNull
+    @Nonnull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         String title = getArguments().getString("title");

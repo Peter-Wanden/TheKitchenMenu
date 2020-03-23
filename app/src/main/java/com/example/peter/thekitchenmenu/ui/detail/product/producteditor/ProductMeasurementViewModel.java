@@ -9,9 +9,10 @@ import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementS
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasure;
 import com.example.peter.thekitchenmenu.ui.ObservableAndroidViewModel;
 
-import androidx.annotation.NonNull;
 import androidx.databinding.Bindable;
 import androidx.lifecycle.MutableLiveData;
+
+import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureAbstract.UNIT_ONE_WIDTH_INDEX;
 
@@ -31,7 +32,7 @@ public class ProductMeasurementViewModel extends ObservableAndroidViewModel {
     private String itemUnitOne;
     private String itemUnitTwo;
 
-    public ProductMeasurementViewModel(@NonNull Application application) {
+    public ProductMeasurementViewModel(@Nonnull Application application) {
         super(application);
         measurementHandler = new ProductMeasurementHandler(this);
         setSubtype(MeasurementSubtype.METRIC_MASS); // default

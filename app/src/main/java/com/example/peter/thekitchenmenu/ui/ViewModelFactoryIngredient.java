@@ -3,7 +3,6 @@ package com.example.peter.thekitchenmenu.ui;
 import android.annotation.SuppressLint;
 import android.app.Application;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -13,6 +12,8 @@ import com.example.peter.thekitchenmenu.domain.usecase.UseCaseFactory;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.ui.detail.ingredient.IngredientEditorViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.ingredient.IngredientViewerViewModel;
+
+import javax.annotation.Nonnull;
 
 public class ViewModelFactoryIngredient extends ViewModelProvider.NewInstanceFactory {
 
@@ -50,11 +51,11 @@ public class ViewModelFactoryIngredient extends ViewModelProvider.NewInstanceFac
         return INSTANCE;
     }
 
-    @NonNull
+    @SuppressWarnings("unchecked")
+    @Nonnull
     @Override
-    public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+    public <T extends ViewModel> T create(@Nonnull Class<T> modelClass) {
         if (modelClass.isAssignableFrom(IngredientEditorViewModel.class)) {
-            // noinspection unchecked
             return (T) new IngredientEditorViewModel(
                     application.getResources(),
                     useCaseHandler,
@@ -62,7 +63,6 @@ public class ViewModelFactoryIngredient extends ViewModelProvider.NewInstanceFac
                     useCaseFactory.provideIngredient());
 
         } else if (modelClass.isAssignableFrom(IngredientViewerViewModel.class)) {
-            // noinspection unchecked
             return (T) new IngredientViewerViewModel(
                     repositoryIngredient
             );

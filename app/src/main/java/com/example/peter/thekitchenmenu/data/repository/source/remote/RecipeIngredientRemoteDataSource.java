@@ -1,9 +1,10 @@
 package com.example.peter.thekitchenmenu.data.repository.source.remote;
 
-import androidx.annotation.NonNull;
 
-import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientEntity;
+import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.RecipeIngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSourceRecipeIngredient;
+
+import javax.annotation.Nonnull;
 
 public class RecipeIngredientRemoteDataSource implements DataSourceRecipeIngredient {
 
@@ -16,32 +17,36 @@ public class RecipeIngredientRemoteDataSource implements DataSourceRecipeIngredi
     }
 
     @Override
-    public void getByRecipeId(@NonNull String recipeId, @NonNull GetAllCallback<RecipeIngredientEntity> callback) {
+    public void getByRecipeId(@Nonnull String recipeId,
+                              @Nonnull GetAllCallback<RecipeIngredientEntity> callback) {
         callback.onDataNotAvailable();
     }
 
     @Override
-    public void getByProductId(@NonNull String productId, @NonNull GetAllCallback<RecipeIngredientEntity> callback) {
+    public void getByProductId(@Nonnull String productId,
+                               @Nonnull GetAllCallback<RecipeIngredientEntity> callback) {
         callback.onDataNotAvailable();
     }
 
     @Override
-    public void getByIngredientId(@NonNull String ingredientId, @NonNull GetAllCallback<RecipeIngredientEntity> callback) {
+    public void getByIngredientId(@Nonnull String ingredientId,
+                                  @Nonnull GetAllCallback<RecipeIngredientEntity> callback) {
         callback.onDataNotAvailable();
     }
 
     @Override
-    public void getAll(@NonNull GetAllCallback<RecipeIngredientEntity> callback) {
+    public void getAll(@Nonnull GetAllCallback<RecipeIngredientEntity> callback) {
         callback.onDataNotAvailable();
     }
 
     @Override
-    public void getById(@NonNull String id, @NonNull GetEntityCallback<RecipeIngredientEntity> callback) {
-        callback.onDataNotAvailable();
+    public void getById(@Nonnull String id,
+                        @Nonnull GetEntityCallback<RecipeIngredientEntity> callback) {
+        callback.onDataUnavailable();
     }
 
     @Override
-    public void save(@NonNull RecipeIngredientEntity object) {
+    public void save(@Nonnull RecipeIngredientEntity entity) {
 
     }
 
@@ -57,7 +62,7 @@ public class RecipeIngredientRemoteDataSource implements DataSourceRecipeIngredi
     }
 
     @Override
-    public void deleteById(@NonNull String id) {
+    public void deleteById(@Nonnull String id) {
 
     }
 }

@@ -6,7 +6,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
+import com.example.peter.thekitchenmenu.data.primitivemodel.product.ProductEntity;
 import com.example.peter.thekitchenmenu.data.model.ImageModel;
 import com.example.peter.thekitchenmenu.data.model.ProductIdentityModel;
 import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
@@ -19,7 +19,6 @@ import com.example.peter.thekitchenmenu.utils.ActivityUtils;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.ui.imageeditor.ImageEditorViewModel;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
@@ -28,6 +27,8 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.appcompat.app.AppCompatActivity;
+
+import javax.annotation.Nonnull;
 
 public class ProductEditorActivity extends AppCompatActivity implements AddEditProductNavigator {
 
@@ -204,7 +205,7 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
                 R.id.product_measurement_content_frame);
     }
 
-    @NonNull
+    @Nonnull
     private ImageEditorFragment findOrCreateImageEditorFragment() {
         ImageEditorFragment imageEditorFragment =
                 (ImageEditorFragment) getSupportFragmentManager().
@@ -216,7 +217,7 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
         return imageEditorFragment;
     }
 
-    @NonNull
+    @Nonnull
     private ProductIdentityEditorFragment findOrCreateProductIdentityEditorFragment() {
         ProductIdentityEditorFragment productIdentityEditorFragment =
                 (ProductIdentityEditorFragment) getSupportFragmentManager().
@@ -228,7 +229,7 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
         return productIdentityEditorFragment;
     }
 
-    @NonNull
+    @Nonnull
     private ProductMeasurementEditorFragment findOrCreateProductMeasurementEditorFragment() {
         ProductMeasurementEditorFragment productMeasurementEditorFragment =
                 (ProductMeasurementEditorFragment) getSupportFragmentManager().
@@ -263,7 +264,7 @@ public class ProductEditorActivity extends AppCompatActivity implements AddEditP
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    public boolean onOptionsItemSelected(@Nonnull MenuItem item) {
         if (item.getItemId() == R.id.menu_product_editor_action_review) {
             productEditorViewModel.createOrUpdateProduct();
             return true;

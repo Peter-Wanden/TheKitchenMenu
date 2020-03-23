@@ -1,17 +1,17 @@
 package com.example.peter.thekitchenmenu.data.model;
 
-import androidx.annotation.NonNull;
+import javax.annotation.Nonnull;
 
 public final class FavoriteRecipeModel {
-    @NonNull
+    @Nonnull
     private final String recipeId;
-    @NonNull
+    @Nonnull
     private final String recipeName;
     private final int prepTime;
     private final int cookTime;
 
-    public FavoriteRecipeModel(@NonNull String recipeId,
-                               @NonNull String recipeName,
+    public FavoriteRecipeModel(@Nonnull String recipeId,
+                               @Nonnull String recipeName,
                                int prepTime,
                                int cookTime) {
         this.recipeId = recipeId;
@@ -20,12 +20,12 @@ public final class FavoriteRecipeModel {
         this.cookTime = cookTime;
     }
 
-    @NonNull
+    @Nonnull
     public String getRecipeId() {
         return recipeId;
     }
 
-    @NonNull
+    @Nonnull
     public String getRecipeName() {
         return recipeName;
     }

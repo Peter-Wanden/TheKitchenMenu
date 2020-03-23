@@ -9,12 +9,13 @@ import android.widget.TextView;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.ui.utils.SpinnerItemType;
-import com.example.peter.thekitchenmenu.ui.utils.unitofmeasure.UnitOfMeasureSpinnerItemModel;
 
 import java.util.ArrayList;
 
-import androidx.annotation.NonNull;
+
 import androidx.annotation.Nullable;
+
+import javax.annotation.Nonnull;
 
 public class UnitOfMeasureSpinnerAdapter extends ArrayAdapter<UnitOfMeasureSpinnerItemModel> {
 
@@ -22,7 +23,7 @@ public class UnitOfMeasureSpinnerAdapter extends ArrayAdapter<UnitOfMeasureSpinn
     private ArrayList<UnitOfMeasureSpinnerItemModel> unitOfMeasureList;
 
     public UnitOfMeasureSpinnerAdapter(
-            @NonNull Context context,
+            @Nonnull Context context,
             ArrayList<UnitOfMeasureSpinnerItemModel> unitOfMeasureList) {
 
         super(context, 0, unitOfMeasureList);
@@ -30,11 +31,11 @@ public class UnitOfMeasureSpinnerAdapter extends ArrayAdapter<UnitOfMeasureSpinn
         inflater = LayoutInflater.from(context);
     }
 
-    @NonNull
+    @Nonnull
     @Override
     public View getView(int position,
                         @Nullable View convertView,
-                        @NonNull ViewGroup parent) {
+                        @Nonnull ViewGroup parent) {
 
         return initView(position, convertView, parent);
     }
@@ -42,7 +43,7 @@ public class UnitOfMeasureSpinnerAdapter extends ArrayAdapter<UnitOfMeasureSpinn
     @Override
     public View getDropDownView(int position,
                                 @Nullable View convertView,
-                                @NonNull ViewGroup parent) {
+                                @Nonnull ViewGroup parent) {
 
         return initView(position, convertView, parent);
     }

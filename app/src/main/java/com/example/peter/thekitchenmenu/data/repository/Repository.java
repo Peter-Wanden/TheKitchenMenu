@@ -1,28 +1,26 @@
 package com.example.peter.thekitchenmenu.data.repository;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.example.peter.thekitchenmenu.data.entity.TkmEntity;
+import com.example.peter.thekitchenmenu.data.primitivemodel.PrimitiveModel;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static androidx.core.util.Preconditions.checkNotNull;
+import javax.annotation.Nonnull;
 
 
-public abstract class Repository<T extends TkmEntity> implements DataSource<T> {
+public abstract class Repository<T extends PrimitiveModel> implements PrimitiveDataSource<T> {
 
-    DataSource<T> remoteDataSource;
-    DataSource<T> localDataSource;
+    PrimitiveDataSource<T> remoteDataSource;
+    PrimitiveDataSource<T> localDataSource;
     Map<String, T> entityCache;
     private boolean cacheIsDirty;
 
     @Override
-    public void getAll(@NonNull GetAllCallback<T> callback) {
-        checkNotNull(callback);
+    public void getAll(@Nonnull GetAllCallback<T> callback) {
 
         if (entityCache != null && cacheIsDirty) {
             callback.onAllLoaded(new ArrayList<>(entityCache.values()));
@@ -45,7 +43,7 @@ public abstract class Repository<T extends TkmEntity> implements DataSource<T> {
             });
         }
     }
-    private void getItemsFromRemoteDataSource(@NonNull final GetAllCallback<T> callback) {
+    private void getItemsFromRemoteDataSource(@Nonnull final GetAllCallback<T> callback) {
         remoteDataSource.getAll(new GetAllCallback<T>() {
             @Override
             public void onAllLoaded(List<T> entities) {
@@ -81,9 +79,7 @@ public abstract class Repository<T extends TkmEntity> implements DataSource<T> {
     }
 
     @Override
-    public void getById(@NonNull String id, @NonNull GetEntityCallback<T> callback) {
-        checkNotNull(id);
-        checkNotNull(callback);
+    public void getById(@Nonnull String id, @Nonnull GetEntityCallback<T> callback) {
 
         T cachedEntity = getEntityWithId(id);
 
@@ -102,12 +98,12 @@ public abstract class Repository<T extends TkmEntity> implements DataSource<T> {
             }
 
             @Override
-            public void onDataNotAvailable() {
+            public void onDataUnavailable() {
                 remoteDataSource.getById(id, new GetEntityCallback<T>() {
                     @Override
                     public void onEntityLoaded(T entity) {
                         if (entity == null) {
-                            onDataNotAvailable();
+                            onDataUnavailable();
                             return;
                         }
 
@@ -119,8 +115,8 @@ public abstract class Repository<T extends TkmEntity> implements DataSource<T> {
                     }
 
                     @Override
-                    public void onDataNotAvailable() {
-                        callback.onDataNotAvailable();
+                    public void onDataUnavailable() {
+                        callback.onDataUnavailable();
                     }
                 });
             }
@@ -129,7 +125,6 @@ public abstract class Repository<T extends TkmEntity> implements DataSource<T> {
 
     @Nullable
     private T getEntityWithId(String id) {
-        checkNotNull(id);
 
         if (entityCache == null || entityCache.isEmpty())
             return null;
@@ -138,8 +133,7 @@ public abstract class Repository<T extends TkmEntity> implements DataSource<T> {
     }
 
     @Override
-    public void save(@NonNull T entity) {
-        checkNotNull(entity);
+    public void save(@Nonnull T entity) {
         remoteDataSource.save(entity);
         localDataSource.save(entity);
 
@@ -164,7 +158,7 @@ public abstract class Repository<T extends TkmEntity> implements DataSource<T> {
     }
 
     @Override
-    public void deleteById(@NonNull String id) {
+    public void deleteById(@Nonnull String id) {
         remoteDataSource.deleteById(id);
         localDataSource.deleteById(id);
         entityCache.remove(id);

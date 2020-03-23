@@ -1,21 +1,21 @@
 package com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus;
 
-import androidx.annotation.NonNull;
-
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 
 import java.util.Objects;
 
+import javax.annotation.Nonnull;
+
 public final class ConversionFactorStatusResponse implements UseCase.Response {
-    @NonNull
+    @Nonnull
     private ConversionFactorStatus.Result result;
 
     public ConversionFactorStatusResponse(
-            @NonNull ConversionFactorStatus.Result result) {
+            @Nonnull ConversionFactorStatus.Result result) {
         this.result = result;
     }
 
-    @NonNull
+    @Nonnull
     public ConversionFactorStatus.Result getResult() {
         return result;
     }
@@ -33,7 +33,7 @@ public final class ConversionFactorStatusResponse implements UseCase.Response {
         return Objects.hash(result);
     }
 
-    @NonNull
+    @Nonnull
     @Override
     public String toString() {
         return "Response{" +

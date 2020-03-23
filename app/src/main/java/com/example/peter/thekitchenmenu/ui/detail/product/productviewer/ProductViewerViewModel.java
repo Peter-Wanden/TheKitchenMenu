@@ -3,28 +3,27 @@ package com.example.peter.thekitchenmenu.ui.detail.product.productviewer;
 import android.app.Application;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.util.Log;
 
 import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
 import androidx.lifecycle.AndroidViewModel;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
-import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.primitivemodel.product.ProductEntity;
+import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductEditorActivity;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 import com.google.android.gms.common.util.Strings;
 
 public class ProductViewerViewModel
         extends AndroidViewModel
-        implements DataSource.GetEntityCallback<ProductEntity>, ProductViewerNavigator{
+        implements PrimitiveDataSource.GetEntityCallback<ProductEntity>, ProductViewerNavigator{
 
     private static final String TAG = "tkm-" + ProductViewerViewModel.class.getSimpleName() + ":";
 
     private Resources resources;
     private ProductViewerNavigator navigator;
-    private DataSource<ProductEntity> productEntityDataSource;
+    private PrimitiveDataSource<ProductEntity> productEntityDataSource;
 
     public final ObservableBoolean dataIsLoading = new ObservableBoolean();
     public final ObservableField<ProductEntity> productEntityObservable = new ObservableField<>();
@@ -42,7 +41,7 @@ public class ProductViewerViewModel
     private final SingleLiveEvent<Integer> setTitleEvent = new SingleLiveEvent<>();
 
     public ProductViewerViewModel(Application application,
-                                  DataSource<ProductEntity> productEntityDataSource) {
+                                  PrimitiveDataSource<ProductEntity> productEntityDataSource) {
         super(application);
         this.productEntityDataSource = productEntityDataSource;
         resources = application.getResources();
@@ -71,14 +70,14 @@ public class ProductViewerViewModel
     }
 
     @Override
-    public void onEntityLoaded(ProductEntity product) {
+    public void onEntityLoaded(ProductEntity entity) {
         dataIsLoading.set(false);
-        setProductEntityObservable(product);
+        setProductEntityObservable(entity);
         setupDisplayAsViewer();
     }
 
     @Override
-    public void onDataNotAvailable() {
+    public void onDataUnavailable() {
         // This is an error
     }
 

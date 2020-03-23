@@ -1,29 +1,27 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local;
 
-import androidx.annotation.NonNull;
-
 import com.example.peter.thekitchenmenu.app.AppExecutors;
-import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
-import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeMetadataEntity;
+import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
 
 import java.util.List;
 
-import static androidx.core.util.Preconditions.checkNotNull;
+import javax.annotation.Nonnull;
 
-public class RecipeLocalDataSource implements DataSource<RecipeEntity> {
+public class RecipeLocalDataSource implements PrimitiveDataSource<RecipeMetadataEntity> {
 
     private static volatile RecipeLocalDataSource INSTANCE;
     private RecipeEntityDao recipeEntityDao;
     private AppExecutors appExecutors;
 
-    private RecipeLocalDataSource(@NonNull AppExecutors appExecutors,
-                                  @NonNull RecipeEntityDao recipeEntityDao) {
+    private RecipeLocalDataSource(@Nonnull AppExecutors appExecutors,
+                                  @Nonnull RecipeEntityDao recipeEntityDao) {
         this.appExecutors = appExecutors;
         this.recipeEntityDao = recipeEntityDao;
     }
 
-    public static RecipeLocalDataSource getInstance(@NonNull AppExecutors appExecutors,
-                                                    @NonNull RecipeEntityDao recipeEntityDao) {
+    public static RecipeLocalDataSource getInstance(@Nonnull AppExecutors appExecutors,
+                                                    @Nonnull RecipeEntityDao recipeEntityDao) {
         if (INSTANCE == null) {
             synchronized (RecipeLocalDataSource.class) {
                 if (INSTANCE == null)
@@ -34,37 +32,37 @@ public class RecipeLocalDataSource implements DataSource<RecipeEntity> {
     }
 
     @Override
-    public void getAll(@NonNull GetAllCallback<RecipeEntity> callback) {
+    public void getAll(@Nonnull GetAllCallback<RecipeMetadataEntity> callback) {
         Runnable runnable = () -> {
-            final List<RecipeEntity> recipeEntityList = recipeEntityDao.getAll();
+            final List<RecipeMetadataEntity> recipeMetadataEntityList = recipeEntityDao.getAll();
             appExecutors.mainThread().execute(() -> {
-                if (recipeEntityList.isEmpty())
+                if (recipeMetadataEntityList.isEmpty())
                     callback.onDataNotAvailable();
                 else
-                    callback.onAllLoaded(recipeEntityList);
+                    callback.onAllLoaded(recipeMetadataEntityList);
             });
         };
         appExecutors.diskIO().execute(runnable);
     }
 
     @Override
-    public void getById(@NonNull String recipeId, @NonNull GetEntityCallback<RecipeEntity> callback) {
+    public void getById(@Nonnull String recipeId,
+                        @Nonnull GetEntityCallback<RecipeMetadataEntity> callback) {
         Runnable runnable = () -> {
-            final RecipeEntity recipeEntity = recipeEntityDao.getById(recipeId);
+            final RecipeMetadataEntity recipeMetadataEntity = recipeEntityDao.getById(recipeId);
             appExecutors.mainThread().execute(() -> {
-                if (recipeEntity != null)
-                    callback.onEntityLoaded(recipeEntity);
+                if (recipeMetadataEntity != null)
+                    callback.onEntityLoaded(recipeMetadataEntity);
                 else
-                    callback.onDataNotAvailable();
+                    callback.onDataUnavailable();
             });
         };
         appExecutors.diskIO().execute(runnable);
     }
 
     @Override
-    public void save(@NonNull RecipeEntity recipeEntity) {
-        checkNotNull(recipeEntity);
-        Runnable runnable = () -> recipeEntityDao.insert(recipeEntity);
+    public void save(@Nonnull RecipeMetadataEntity entity) {
+        Runnable runnable = () -> recipeEntityDao.insert(entity);
         appExecutors.diskIO().execute(runnable);
     }
 
@@ -81,7 +79,7 @@ public class RecipeLocalDataSource implements DataSource<RecipeEntity> {
     }
 
     @Override
-    public void deleteById(@NonNull final String id) {
+    public void deleteById(@Nonnull final String id) {
         Runnable runnable = () -> recipeEntityDao.deleteById(id);
         appExecutors.diskIO().execute(runnable);
     }

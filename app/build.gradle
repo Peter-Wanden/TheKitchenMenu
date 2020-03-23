@@ -95,14 +95,14 @@ dependencies {
     implementation "com.theartofdev.edmodo:android-image-cropper:$imageCropper"
 
     // Play services
-    implementation "com.google.android.gms:play-services-ads-identifier:$playServices"
-    implementation "com.google.android.gms:play-services-auth:$playServices"
-    implementation "com.google.android.gms:play-services-auth-base:$playServices"
+    implementation "com.google.android.gms:play-services-ads-identifier:$playServicesAdsIdentifier"
+    implementation "com.google.android.gms:play-services-auth:$playServicesAuth"
+    implementation "com.google.android.gms:play-services-auth-base:$playServicesAuthBase"
     implementation "com.google.android.gms:play-services-base:$playServicesBase"
-    implementation "com.google.android.gms:play-services-flags:$playServices"
-    implementation "com.google.android.gms:play-services-phenotype:$playServices"
-    implementation "com.google.android.gms:play-services-stats:$playServices"
-    implementation "com.google.android.gms:play-services-tasks:$playServices"
+    implementation "com.google.android.gms:play-services-flags:$playServicesFlags"
+    implementation "com.google.android.gms:play-services-phenotype:$playServicesPhenotype"
+    implementation "com.google.android.gms:play-services-stats:$playServicesStats"
+    implementation "com.google.android.gms:play-services-tasks:$playServicesTasks"
     implementation "com.google.android.gms:play-services-auth-api-phone:$playServicesAuthApiPhone"
     implementation "com.google.android.gms:play-services-basement:$playServicesBasement"
 

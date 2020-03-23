@@ -13,10 +13,11 @@ import com.example.peter.thekitchenmenu.databinding.FavoriteProductEditorFragmen
 import com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductEditorActivity;
 import com.example.peter.thekitchenmenu.ui.utils.CurrencyInputWatcher;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+
+import javax.annotation.Nonnull;
 
 public class FavoriteProductEditorFragment extends Fragment {
 
@@ -38,7 +39,7 @@ public class FavoriteProductEditorFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
+    public View onCreateView(@Nonnull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
@@ -89,12 +90,12 @@ public class FavoriteProductEditorFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+    public void onCreateOptionsMenu(@Nonnull Menu menu, @Nonnull MenuInflater inflater) {
         inflater.inflate(R.menu.menu_favorite_product_editor_fragment, menu);
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    public boolean onOptionsItemSelected(@Nonnull MenuItem item) {
         if (item.getItemId() == R.id.menu_item_save_favorite) {
             viewModel.saveFavoriteProduct();
             return true;

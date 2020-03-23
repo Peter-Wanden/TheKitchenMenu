@@ -2,12 +2,10 @@ package com.example.peter.thekitchenmenu.domain.usecase.productcatalog;
 
 import android.app.Application;
 
-import androidx.annotation.NonNull;
-
-import com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity;
-import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
+import com.example.peter.thekitchenmenu.data.primitivemodel.product.FavoriteProductEntity;
+import com.example.peter.thekitchenmenu.data.primitivemodel.product.ProductEntity;
 import com.example.peter.thekitchenmenu.data.model.ProductModel;
-import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryFavoriteProduct;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryProduct;
@@ -16,6 +14,8 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.annotation.Nonnull;
 
 public class ProductCatalogInteractorImpl implements ProductCatalogInteractor {
 
@@ -34,8 +34,8 @@ public class ProductCatalogInteractorImpl implements ProductCatalogInteractor {
     private LinkedHashMap<String, FavoriteProductEntity> favoriteProductsMap = new LinkedHashMap<>();
 
     private ProductCatalogInteractorImpl(
-            @NonNull RepositoryProduct repositoryProduct,
-            @NonNull RepositoryFavoriteProduct repositoryFavoriteProduct) {
+            @Nonnull RepositoryProduct repositoryProduct,
+            @Nonnull RepositoryFavoriteProduct repositoryFavoriteProduct) {
 
         this.productEntityDataSource = repositoryProduct;
         this.favoriteProductEntityDataSource = repositoryFavoriteProduct;
@@ -59,12 +59,12 @@ public class ProductCatalogInteractorImpl implements ProductCatalogInteractor {
     }
 
     @Override
-    public void getProductModelList(@NonNull GetAllCallback productListCallback) {
+    public void getProductModelList(@Nonnull GetAllCallback productListCallback) {
         this.productListCallback = productListCallback;
         productsMap.clear();
         productEntitiesLoading = true;
         productEntityDataSource.getAll(
-                new DataSource.GetAllCallback<ProductEntity>() {
+                new PrimitiveDataSource.GetAllCallback<ProductEntity>() {
                     @Override
                     public void onAllLoaded(List<ProductEntity> productEntityList) {
 
@@ -86,12 +86,12 @@ public class ProductCatalogInteractorImpl implements ProductCatalogInteractor {
     }
 
     @Override
-    public void getFavoriteProductModelList(@NonNull GetAllCallback favoriteProductListCallback) {
+    public void getFavoriteProductModelList(@Nonnull GetAllCallback favoriteProductListCallback) {
         this.favoriteProductListCallback = favoriteProductListCallback;
         favoriteProductsMap.clear();
         favoriteProductEntitiesLoading = true;
         favoriteProductEntityDataSource.getAll(
-                new DataSource.GetAllCallback<FavoriteProductEntity>() {
+                new PrimitiveDataSource.GetAllCallback<FavoriteProductEntity>() {
                     @Override
                     public void onAllLoaded(List<FavoriteProductEntity> favoriteProductEntityList) {
 

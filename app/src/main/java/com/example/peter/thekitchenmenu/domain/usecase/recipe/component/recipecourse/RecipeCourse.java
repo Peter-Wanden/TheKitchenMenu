@@ -2,13 +2,14 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipec
 
 import android.annotation.SuppressLint;
 
-import com.example.peter.thekitchenmenu.data.entity.RecipeCourseEntity;
-import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeCourseEntity;
+import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeCourse;
 import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.RecipeComponentMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
@@ -22,9 +23,7 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.state.RecipeStateCalculator.*;
-
-public class RecipeCourse extends UseCase implements DataSource.GetAllCallback<RecipeCourseEntity> {
+public class RecipeCourse extends UseCase implements PrimitiveDataSource.GetAllCallback<RecipeCourseEntity> {
 
     private static final String TAG = "tkm-" + RecipeCourse.class.getSimpleName() + ": ";
 
@@ -245,18 +244,18 @@ public class RecipeCourse extends UseCase implements DataSource.GetAllCallback<R
                 build();
     }
 
-    private ComponentState getComponentState() {
+    private RecipeMetadata.ComponentState getComponentState() {
         boolean isValid = !newCourseList.isEmpty();
         if (!isValid) createDate = 0L;
 
         if (!isValid && !isChanged) {
-            return ComponentState.INVALID_UNCHANGED;
+            return RecipeMetadata.ComponentState.INVALID_UNCHANGED;
         } else if (isValid && !isChanged) {
-            return ComponentState.VALID_UNCHANGED;
+            return RecipeMetadata.ComponentState.VALID_UNCHANGED;
         } else if (!isValid && isChanged) {
-            return ComponentState.INVALID_CHANGED;
+            return RecipeMetadata.ComponentState.INVALID_CHANGED;
         } else {
-            return ComponentState.VALID_CHANGED;
+            return RecipeMetadata.ComponentState.VALID_CHANGED;
         }
     }
 

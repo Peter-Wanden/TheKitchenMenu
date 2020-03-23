@@ -1,12 +1,13 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeportions;
 
-import com.example.peter.thekitchenmenu.data.entity.RecipePortionsEntity;
-import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipePortionsEntity;
+import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.RecipeComponentMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
@@ -15,10 +16,8 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.state.RecipeStateCalculator.*;
-
 public class RecipePortions extends UseCase
-        implements DataSource.GetEntityCallback<RecipePortionsEntity> {
+        implements PrimitiveDataSource.GetEntityCallback<RecipePortionsEntity> {
 
     private static final String TAG = "tkm-" + RecipePortions.class.getSimpleName() + ": ";
 
@@ -106,7 +105,7 @@ public class RecipePortions extends UseCase
     }
 
     @Override
-    public void onDataNotAvailable() {
+    public void onDataUnavailable() {
         persistenceModel = createNewPersistenceModel();
         failReasons.add(CommonFailReason.DATA_UNAVAILABLE);
 
@@ -164,7 +163,7 @@ public class RecipePortions extends UseCase
                 setModel(getResponseModel()).
                 build();
 
-        if (response.getMetadata().getState() == ComponentState.VALID_CHANGED) {
+        if (response.getMetadata().getState() == RecipeMetadata.ComponentState.VALID_CHANGED) {
             save(updatePersistenceFromRequestModel());
         }
         sendResponse(response);
@@ -179,16 +178,16 @@ public class RecipePortions extends UseCase
                 build();
     }
 
-    private ComponentState getComponentState() {
+    private RecipeMetadata.ComponentState getComponentState() {
         boolean isValid = failReasons.contains(CommonFailReason.NONE);
         if (!isValid && !isChanged()) {
-            return ComponentState.INVALID_UNCHANGED;
+            return RecipeMetadata.ComponentState.INVALID_UNCHANGED;
         } else if (isValid && !isChanged()) {
-            return ComponentState.VALID_UNCHANGED;
+            return RecipeMetadata.ComponentState.VALID_UNCHANGED;
         } else if (!isValid && isChanged()) {
-            return ComponentState.INVALID_CHANGED;
+            return RecipeMetadata.ComponentState.INVALID_CHANGED;
         } else  {
-            return ComponentState.VALID_CHANGED;
+            return RecipeMetadata.ComponentState.VALID_CHANGED;
         }
     }
 

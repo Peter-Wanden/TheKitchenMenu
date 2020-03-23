@@ -1,15 +1,17 @@
 package com.example.peter.thekitchenmenu.ui;
 
-import androidx.annotation.NonNull;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import javax.annotation.Nonnull;
 
 public class ViewModelHolder<VM> extends Fragment {
 
     private VM viewModel;
     public ViewModelHolder(){}
 
-    public static <M> ViewModelHolder createContainer(@NonNull M viewModel) {
+    public static <M> ViewModelHolder createContainer(@Nonnull M viewModel) {
         ViewModelHolder<M> viewModelContainer = new ViewModelHolder<>();
         viewModelContainer.setViewModel(viewModel);
         return viewModelContainer;
@@ -20,7 +22,7 @@ public class ViewModelHolder<VM> extends Fragment {
         return viewModel;
     }
 
-    public void setViewModel(@NonNull VM viewModel) {
+    public void setViewModel(@Nonnull VM viewModel) {
         this.viewModel = viewModel;
     }
 }

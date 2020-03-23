@@ -33,13 +33,15 @@ public final class RecipeCourseRequest extends RecipeComponentRequest<RecipeCour
                     setId("").
                     setModel(new Model.Builder().
                             getDefault().
-                            build());
+                            build()
+                    );
         }
 
         public Builder basedOnResponse(RecipeCourseResponse response) {
             request.id = response.getId();
             request.model.courseList = new ArrayList<>(
-                    response.getModel().getCourseList().keySet());
+                    response.getModel().getCourseList().keySet()
+            );
             return self();
         }
 

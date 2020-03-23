@@ -5,13 +5,17 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeDataModel;
 
 import java.util.Objects;
 
+/**
+ * Base class for all recipe component responses
+ * @param <DM> the recipe component data model
+ */
 public abstract class RecipeComponentResponse<
-        T extends RecipeDataModel>
+        DM extends RecipeDataModel>
         implements UseCase.Response {
 
     protected String id;
     protected RecipeComponentMetadata metadata;
-    protected T model;
+    protected DM model;
 
     public String getId() {
         return id;
@@ -21,7 +25,7 @@ public abstract class RecipeComponentResponse<
         return metadata;
     }
 
-    public T getModel() {
+    public DM getModel() {
         return model;
     }
 
@@ -40,12 +44,18 @@ public abstract class RecipeComponentResponse<
         return Objects.hash(id, metadata, model);
     }
 
+    /**
+     * Base builder for {@link RecipeComponentResponse}'s
+     * @param <SELF> the {@link RecipeComponentResponseBuilder} using this base class
+     * @param <CR> the {@link RecipeComponentResponse} class being built
+     * @param <DM> the {@link RecipeDataModel} for the {@link RecipeComponentResponse}
+     */
     public static abstract class RecipeComponentResponseBuilder<
             SELF extends RecipeComponentResponseBuilder,
-            R extends RecipeComponentResponse,
-            T extends RecipeDataModel> {
+            CR extends RecipeComponentResponse,
+            DM extends RecipeDataModel> {
 
-        protected R response;
+        protected CR response;
 
         public abstract SELF getDefault();
 
@@ -59,17 +69,17 @@ public abstract class RecipeComponentResponse<
             return self();
         }
 
-        public SELF setModel(T model) {
+        public SELF setModel(DM model) {
             response.model = model;
             return self();
         }
 
-        public R build() {
+        public CR build() {
             return response;
         }
 
+        @SuppressWarnings("unchecked")
         protected SELF self() {
-            // noinspection unchecked
             return (SELF) this;
         }
     }

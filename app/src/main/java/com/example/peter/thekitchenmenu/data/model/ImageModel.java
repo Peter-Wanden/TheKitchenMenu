@@ -1,9 +1,10 @@
 package com.example.peter.thekitchenmenu.data.model;
 
-import androidx.annotation.NonNull;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 import androidx.databinding.library.baseAdapters.BR;
+
+import javax.annotation.Nonnull;
 
 public class ImageModel extends BaseObservable {
 
@@ -105,7 +106,7 @@ public class ImageModel extends BaseObservable {
         notifyPropertyChanged(BR.webImageUrl);
     }
 
-    @NonNull
+    @Nonnull
     @Override
     public String toString() {
         return "tkm-ImageModel{" +

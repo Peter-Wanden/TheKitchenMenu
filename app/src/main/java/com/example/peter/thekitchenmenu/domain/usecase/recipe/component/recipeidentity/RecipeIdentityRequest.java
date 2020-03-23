@@ -92,7 +92,7 @@ public final class RecipeIdentityRequest extends RecipeComponentRequest<RecipeId
                         setDescription("");
             }
 
-            public static Builder basedOnIdentityResponseModel(RecipeIdentityResponse.Model model) {
+            public static Builder basedOnResponseModel(RecipeIdentityResponse.Model model) {
                 return new Builder().
                         setTitle(model.getTitle()).
                         setDescription(model.getDescription());

@@ -1,9 +1,9 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredientlist;
 
-import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
-import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientEntity;
-import com.example.peter.thekitchenmenu.data.entity.RecipePortionsEntity;
-import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.IngredientEntity;
+import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.RecipeIngredientEntity;
+import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipePortionsEntity;
+import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
@@ -56,16 +56,16 @@ public class RecipeIngredientList extends UseCase {
     private void getPortionsForRecipe() {
         repoPortions.getPortionsForRecipe(
                 recipeId,
-                new DataSource.GetEntityCallback<RecipePortionsEntity>() {
+                new PrimitiveDataSource.GetEntityCallback<RecipePortionsEntity>() {
                     @Override
-                    public void onEntityLoaded(RecipePortionsEntity portions) {
+                    public void onEntityLoaded(RecipePortionsEntity entity) {
                         RecipeIngredientList.this.portions =
-                                portions.getServings() * portions.getSittings();
+                                entity.getServings() * entity.getSittings();
                         getRecipeIngredientQuantities();
                     }
 
                     @Override
-                    public void onDataNotAvailable() {
+                    public void onDataUnavailable() {
 
                     }
                 });
@@ -76,7 +76,7 @@ public class RecipeIngredientList extends UseCase {
 
         repoRecipeIngredient.getByRecipeId(
                 recipeId,
-                new DataSource.GetAllCallback<RecipeIngredientEntity>() {
+                new PrimitiveDataSource.GetAllCallback<RecipeIngredientEntity>() {
                     @Override
                     public void onAllLoaded(List<RecipeIngredientEntity> entities) {
                         for (RecipeIngredientEntity entity : entities) {
@@ -100,15 +100,15 @@ public class RecipeIngredientList extends UseCase {
     }
 
     private void getIngredient(String ingredientId) {
-        repoIngredient.getById(ingredientId, new DataSource.GetEntityCallback<IngredientEntity>() {
+        repoIngredient.getById(ingredientId, new PrimitiveDataSource.GetEntityCallback<IngredientEntity>() {
             @Override
-            public void onEntityLoaded(IngredientEntity ingredient) {
-                ingredients.put(ingredient.getId(), ingredient);
+            public void onEntityLoaded(IngredientEntity entity) {
+                ingredients.put(entity.getId(), entity);
                 createResponseModels();
             }
 
             @Override
-            public void onDataNotAvailable() {
+            public void onDataUnavailable() {
 
             }
         });

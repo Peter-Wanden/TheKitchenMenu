@@ -1,28 +1,28 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredientlist;
 
-import androidx.annotation.NonNull;
-
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
 
 import java.util.Objects;
 
+import javax.annotation.Nonnull;
+
 public final class RecipeIngredientListItemModel {
-    @NonNull
+    @Nonnull
     private final String recipeIngredientId;
-    @NonNull
+    @Nonnull
     private final String ingredientId;
-    @NonNull
+    @Nonnull
     private final String ingredientName;
-    @NonNull
+    @Nonnull
     private final String ingredientDescription;
-    @NonNull
+    @Nonnull
     private final MeasurementModel measurementModel;
 
-    public RecipeIngredientListItemModel(@NonNull String recipeIngredientId,
-                                         @NonNull String ingredientId,
-                                         @NonNull String ingredientName,
-                                         @NonNull String ingredientDescription,
-                                         @NonNull MeasurementModel measurementModel) {
+    public RecipeIngredientListItemModel(@Nonnull String recipeIngredientId,
+                                         @Nonnull String ingredientId,
+                                         @Nonnull String ingredientName,
+                                         @Nonnull String ingredientDescription,
+                                         @Nonnull MeasurementModel measurementModel) {
         this.recipeIngredientId = recipeIngredientId;
         this.ingredientId = ingredientId;
         this.ingredientName = ingredientName;
@@ -30,27 +30,27 @@ public final class RecipeIngredientListItemModel {
         this.measurementModel = measurementModel;
     }
 
-    @NonNull
+    @Nonnull
     public String getRecipeIngredientId() {
         return recipeIngredientId;
     }
 
-    @NonNull
+    @Nonnull
     public String getIngredientId() {
         return ingredientId;
     }
 
-    @NonNull
+    @Nonnull
     public String getIngredientName() {
         return ingredientName;
     }
 
-    @NonNull
+    @Nonnull
     public String getIngredientDescription() {
         return ingredientDescription;
     }
 
-    @NonNull
+    @Nonnull
     public MeasurementModel getMeasurementModel() {
         return measurementModel;
     }

@@ -3,7 +3,6 @@ package com.example.peter.thekitchenmenu.ui;
 import android.annotation.SuppressLint;
 import android.app.Application;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -12,6 +11,8 @@ import com.example.peter.thekitchenmenu.data.repository.DataSourceFavoriteProduc
 import com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.product.productviewer.FavoriteProductViewerViewModel;
 import com.example.peter.thekitchenmenu.ui.utils.TextValidator;
+
+import javax.annotation.Nonnull;
 
 public class ViewModelFactoryFavoriteProduct extends ViewModelProvider.NewInstanceFactory {
 
@@ -41,18 +42,17 @@ public class ViewModelFactoryFavoriteProduct extends ViewModelProvider.NewInstan
         return INSTANCE;
     }
 
-    @NonNull
+    @SuppressWarnings("unchecked")
+    @Nonnull
     @Override
     public <T extends ViewModel> T create(Class<T> modelClass) {
 
         if (modelClass.isAssignableFrom(FavoriteProductEditorViewModel.class)) {
-            //noinspection unchecked
             return (T) new FavoriteProductEditorViewModel(
                     application, favoriteProductEntityDataSource,
                     new TextValidator(application.getResources()));
         }
         else if (modelClass.isAssignableFrom(FavoriteProductViewerViewModel.class)) {
-            //noinspection unchecked
             return (T) new FavoriteProductViewerViewModel(
                     application, favoriteProductEntityDataSource);
         }

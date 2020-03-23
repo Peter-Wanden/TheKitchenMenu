@@ -3,13 +3,13 @@ package com.example.peter.thekitchenmenu.ui.detail.ingredient;
 import androidx.databinding.ObservableField;
 import androidx.lifecycle.ViewModel;
 
-import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
-import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.IngredientEntity;
+import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 
 public class IngredientViewerViewModel
         extends ViewModel
-        implements DataSource.GetEntityCallback<IngredientEntity> {
+        implements PrimitiveDataSource.GetEntityCallback<IngredientEntity> {
 
     private RepositoryIngredient repositoryIngredient;
 
@@ -28,12 +28,12 @@ public class IngredientViewerViewModel
     }
 
     @Override
-    public void onEntityLoaded(IngredientEntity ingredient) {
-        setIngredientToDisplay(ingredient);
+    public void onEntityLoaded(IngredientEntity entity) {
+        setIngredientToDisplay(entity);
     }
 
     @Override
-    public void onDataNotAvailable() {
+    public void onDataUnavailable() {
 
     }
 

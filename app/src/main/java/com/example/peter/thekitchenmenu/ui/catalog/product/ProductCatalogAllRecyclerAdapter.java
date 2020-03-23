@@ -12,9 +12,10 @@ import com.example.peter.thekitchenmenu.databinding.ProductListItemBinding;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
+
+import javax.annotation.Nonnull;
 
 public class ProductCatalogAllRecyclerAdapter
         extends RecyclerView.Adapter<ProductCatalogAllRecyclerAdapter.ViewHolder>
@@ -29,9 +30,9 @@ public class ProductCatalogAllRecyclerAdapter
     }
 
     /* View holder */
-    @NonNull
+    @Nonnull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+    public ViewHolder onCreateViewHolder(@Nonnull ViewGroup viewGroup, int viewType) {
 
         ProductListItemBinding binding = DataBindingUtil.inflate(
                 LayoutInflater.from(viewGroup.getContext()),
@@ -43,7 +44,7 @@ public class ProductCatalogAllRecyclerAdapter
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@Nonnull ViewHolder holder, int position) {
         final ProductModel productModel = productModelList.get(position);
         holder.bind(productModel);
     }

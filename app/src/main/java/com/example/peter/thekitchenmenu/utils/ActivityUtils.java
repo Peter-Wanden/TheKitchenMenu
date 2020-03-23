@@ -1,9 +1,10 @@
 package com.example.peter.thekitchenmenu.utils;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
+import javax.annotation.Nonnull;
 
 import static androidx.core.util.Preconditions.checkNotNull;
 
@@ -17,8 +18,8 @@ public class ActivityUtils {
      * performed by the {@code fragmentManager}.
      *
      */
-    public static void replaceFragmentInActivity(@NonNull FragmentManager fragmentManager,
-                                                 @NonNull Fragment fragment, int frameId) {
+    public static void replaceFragmentInActivity(@Nonnull FragmentManager fragmentManager,
+                                                 @Nonnull Fragment fragment, int frameId) {
         checkNotNull(fragmentManager);
         checkNotNull(fragment);
         FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -31,8 +32,8 @@ public class ActivityUtils {
      * performed by the {@code fragmentManager}.
      *
      */
-    public static void replaceFragmentInActivity(@NonNull FragmentManager fragmentManager,
-                                                 @NonNull Fragment fragment, String tag) {
+    public static void replaceFragmentInActivity(@Nonnull FragmentManager fragmentManager,
+                                                 @Nonnull Fragment fragment, String tag) {
         checkNotNull(fragmentManager);
         checkNotNull(fragment);
         FragmentTransaction transaction = fragmentManager.beginTransaction();

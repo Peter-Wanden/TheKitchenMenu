@@ -2,30 +2,30 @@ package com.example.peter.thekitchenmenu.data.repository.source.local;
 
 import android.database.Cursor;
 
-import androidx.annotation.NonNull;
-
 import com.example.peter.thekitchenmenu.app.AppExecutors;
-import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
-import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.primitivemodel.product.ProductEntity;
+import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import static androidx.core.util.Preconditions.checkNotNull;
 
-public class ProductLocalDataSource implements DataSource<ProductEntity> {
+public class ProductLocalDataSource implements PrimitiveDataSource<ProductEntity> {
 
     private static volatile ProductLocalDataSource INSTANCE;
     private ProductEntityDao entityDao;
     private AppExecutors appExecutors;
 
-    private ProductLocalDataSource(@NonNull AppExecutors appExecutors,
-                                   @NonNull ProductEntityDao entityDao) {
+    private ProductLocalDataSource(@Nonnull AppExecutors appExecutors,
+                                   @Nonnull ProductEntityDao entityDao) {
         this.appExecutors = appExecutors;
         this.entityDao = entityDao;
     }
 
-    public static ProductLocalDataSource getInstance(@NonNull AppExecutors appExecutors,
-                                                     @NonNull ProductEntityDao entityDao) {
+    public static ProductLocalDataSource getInstance(@Nonnull AppExecutors appExecutors,
+                                                     @Nonnull ProductEntityDao entityDao) {
         if (INSTANCE == null) {
             synchronized (ProductLocalDataSource.class) {
                 if (INSTANCE == null)
@@ -40,7 +40,7 @@ public class ProductLocalDataSource implements DataSource<ProductEntity> {
      * database doesn't exist or the table is empty
      */
     @Override
-    public void getAll(@NonNull GetAllCallback<ProductEntity> callback) {
+    public void getAll(@Nonnull GetAllCallback<ProductEntity> callback) {
         Runnable runnable = () -> {
             final List<ProductEntity> entityList = entityDao.getAll();
             appExecutors.mainThread().execute(() -> {
@@ -54,8 +54,8 @@ public class ProductLocalDataSource implements DataSource<ProductEntity> {
     }
 
     @Override
-    public void getById(@NonNull String id,
-                        @NonNull GetEntityCallback<ProductEntity> callback) {
+    public void getById(@Nonnull String id,
+                        @Nonnull GetEntityCallback<ProductEntity> callback) {
 
         Runnable runnable = () -> {
             final ProductEntity entity = entityDao.getById(id);
@@ -63,15 +63,14 @@ public class ProductLocalDataSource implements DataSource<ProductEntity> {
                 if (entity != null)
                     callback.onEntityLoaded(entity);
                 else
-                    callback.onDataNotAvailable();
+                    callback.onDataUnavailable();
             });
         };
         appExecutors.diskIO().execute(runnable);
     }
 
     @Override
-    public void save(@NonNull ProductEntity entity) {
-        checkNotNull(entity);
+    public void save(@Nonnull ProductEntity entity) {
         Runnable runnable = () -> entityDao.insert(entity);
         appExecutors.diskIO().execute(runnable);
     }
@@ -89,7 +88,7 @@ public class ProductLocalDataSource implements DataSource<ProductEntity> {
     }
 
     @Override
-    public void deleteById(@NonNull final String id) {
+    public void deleteById(@Nonnull final String id) {
         Runnable runnable = () -> entityDao.deleteById(id);
         appExecutors.diskIO().execute(runnable);
     }

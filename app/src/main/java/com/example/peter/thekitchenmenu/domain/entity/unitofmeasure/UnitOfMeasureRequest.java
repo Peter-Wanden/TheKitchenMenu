@@ -1,21 +1,21 @@
 package com.example.peter.thekitchenmenu.domain.entity.unitofmeasure;
 
-import androidx.annotation.NonNull;
-
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
 
 import java.util.Objects;
 
+import javax.annotation.Nonnull;
+
 public class UnitOfMeasureRequest implements UseCase.Request {
-    @NonNull
+    @Nonnull
     private final MeasurementModel model;
 
-    public UnitOfMeasureRequest(@NonNull MeasurementModel model) {
+    public UnitOfMeasureRequest(@Nonnull MeasurementModel model) {
         this.model = model;
     }
 
-    @NonNull
+    @Nonnull
     public MeasurementModel getModel() {
         return model;
     }
@@ -33,6 +33,7 @@ public class UnitOfMeasureRequest implements UseCase.Request {
         return Objects.hash(model);
     }
 
+    @Nonnull
     @Override
     public String toString() {
         return "UnitOfMeasureRequest{" +

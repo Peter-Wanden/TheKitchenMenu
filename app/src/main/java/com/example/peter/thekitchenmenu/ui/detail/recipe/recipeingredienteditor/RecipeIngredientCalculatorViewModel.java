@@ -2,7 +2,6 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor
 
 import android.content.res.Resources;
 
-import androidx.annotation.NonNull;
 import androidx.databinding.Bindable;
 import androidx.databinding.library.baseAdapters.BR;
 import androidx.lifecycle.MutableLiveData;
@@ -25,7 +24,7 @@ import com.example.peter.thekitchenmenu.ui.utils.NumberFormatter;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
 
-import static androidx.core.util.Preconditions.checkNotNull;
+import javax.annotation.Nonnull;
 import static com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants.NOT_SET;
 import static com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.ConversionFactorStatus.*;
 
@@ -60,25 +59,19 @@ public class RecipeIngredientCalculatorViewModel extends ObservableViewModel {
     private boolean updatingUi;
 
     public RecipeIngredientCalculatorViewModel(
-            @NonNull UseCaseHandler useCaseHandler,
-            @NonNull IngredientCalculator ingredientCalculator,
-            @NonNull ConversionFactorStatus useCaseConversionFactor,
-            @NonNull Resources resources,
-            @NonNull NumberFormatter numberFormatter,
-            @NonNull MeasurementErrorMessageMaker errorMessageMaker) {
+            @Nonnull UseCaseHandler useCaseHandler,
+            @Nonnull IngredientCalculator ingredientCalculator,
+            @Nonnull ConversionFactorStatus useCaseConversionFactor,
+            @Nonnull Resources resources,
+            @Nonnull NumberFormatter numberFormatter,
+            @Nonnull MeasurementErrorMessageMaker errorMessageMaker) {
 
-        this.useCaseHandler = checkNotNull(
-                useCaseHandler, "useCaseHandler cannot be null");
-        this.ingredientCalculator = checkNotNull(
-                ingredientCalculator, "ingredientCalculator cannot be null");
-        this.conversionFactorStatus = checkNotNull(
-                useCaseConversionFactor, "useCaseConversionFactor cannot be null");
-        this.resources = checkNotNull(
-                resources, "resources cannot be null");
-        this.numberFormatter = checkNotNull(
-                numberFormatter, "numberFormatter cannot be null");
-        this.errorMessageMaker = checkNotNull(
-                errorMessageMaker, "error message maker cannot be null");
+        this.useCaseHandler = useCaseHandler;
+        this.ingredientCalculator = ingredientCalculator;
+        this.conversionFactorStatus = useCaseConversionFactor;
+        this.resources = resources;
+        this.numberFormatter = numberFormatter;
+        this.errorMessageMaker = errorMessageMaker;
     }
 
     void setNavigator(RecipeIngredientEditorNavigator navigator) {

@@ -9,11 +9,12 @@ import android.widget.ArrayAdapter;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.ProductEditorIdentityBinding;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+
+import javax.annotation.Nonnull;
 
 
 public class ProductIdentityEditorFragment extends Fragment {
@@ -27,7 +28,7 @@ public class ProductIdentityEditorFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
+    public View onCreateView(@Nonnull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 

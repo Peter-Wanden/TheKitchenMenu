@@ -1,8 +1,9 @@
 package com.example.peter.thekitchenmenu.data.model;
 
-import androidx.annotation.NonNull;
 
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
+
+import javax.annotation.Nonnull;
 
 public class ProductMeasurementModel {
 
@@ -46,7 +47,7 @@ public class ProductMeasurementModel {
         this.baseUnits = baseUnits;
     }
 
-    @NonNull
+    @Nonnull
     @Override
     public String toString() {
         return "\ntkm-ProductMeasurementModel{" +

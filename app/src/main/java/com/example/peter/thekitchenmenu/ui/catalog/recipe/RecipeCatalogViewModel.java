@@ -1,6 +1,5 @@
 package com.example.peter.thekitchenmenu.ui.catalog.recipe;
 
-import androidx.annotation.NonNull;
 import androidx.databinding.ObservableBoolean;
 
 import androidx.lifecycle.MutableLiveData;
@@ -23,7 +22,7 @@ public class RecipeCatalogViewModel extends ViewModel {
 
     private static final String TAG = "tkm-" + RecipeCatalogViewModel.class.getSimpleName() + " ";
 
-    @NonNull
+    @Nonnull
     private UseCaseHandler handler;
     @Nonnull
     private RecipeList useCase;

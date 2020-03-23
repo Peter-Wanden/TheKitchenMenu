@@ -1,12 +1,16 @@
 package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 
+import com.example.peter.thekitchenmenu.commonmocks.RecipeComponents;
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
-import com.example.peter.thekitchenmenu.data.entity.*;
+import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeCourseEntity;
+import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeDurationEntity;
+import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeIdentityEntity;
+import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeMetadataEntity;
+import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.*;
 import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadataRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadataResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipecourse.RecipeCourseResponse;
@@ -17,13 +21,13 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipedu
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeidentity.RecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeportions.RecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.state.RecipeStateCalculator;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDurationTest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentityTest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions.RecipePortionsTest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeduration.RecipeDurationTest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeidentity.RecipeIdentityTest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeportions.RecipePortionsTest;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeCourseEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeDurationEntity;
-import com.example.peter.thekitchenmenu.testdata.TestDataRecipeEntity;
+import com.example.peter.thekitchenmenu.testdata.TestDataRecipeMetaDataEntity;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIdentityEntity;
@@ -36,9 +40,8 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.state.RecipeStateCalculator.*;
 import static com.example.peter.thekitchenmenu.testdata.TestDataRecipeCourseEntity.*;
-import static com.example.peter.thekitchenmenu.testdata.TestDataRecipeEntity.*;
+import static com.example.peter.thekitchenmenu.testdata.TestDataRecipeMetaDataEntity.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -48,14 +51,14 @@ public class RecipeCourseEditorViewModelTest {
             getSimpleName() + ": ";
 
     // region constants ----------------------------------------------------------------------------
-    private RecipeEntity VALID_EXISTING_RECIPE_ENTITY = getValidExisting();
+    private RecipeMetadataEntity VALID_EXISTING_RECIPE_ENTITY = getValidExisting();
     private String EXISTING_RECIPE_ID = VALID_EXISTING_RECIPE_ENTITY.getId();
-    private String NEW_RECIPE_ID = TestDataRecipeEntity.getNewInvalid().getId();
+    private String NEW_RECIPE_ID = TestDataRecipeMetaDataEntity.getNewInvalid().getId();
 
-    private static final RecipeEntity RECIPE_INVALID_NEW =
-            TestDataRecipeEntity.getNewInvalid();
-    private static final RecipeEntity RECIPE_VALID_EXISTING =
-            TestDataRecipeEntity.getValidExisting();
+    private static final RecipeMetadataEntity RECIPE_INVALID_NEW =
+            TestDataRecipeMetaDataEntity.getNewInvalid();
+    private static final RecipeMetadataEntity RECIPE_VALID_EXISTING =
+            TestDataRecipeMetaDataEntity.getValidExisting();
     private static final RecipeIdentityEntity IDENTITY_VALID_EXISTING_COMPLETE =
             TestDataRecipeIdentityEntity.getValidExistingTitleValidDescriptionValid();
     private static final RecipeDurationEntity DURATION_VALID_EXISTING_COMPLETE =
@@ -69,25 +72,25 @@ public class RecipeCourseEditorViewModelTest {
 
     // region helper fields ------------------------------------------------------------------------
     @Mock
-    RepositoryRecipe repoRecipeMock;
+    RepositoryRecipeMetaData repoRecipeMock;
     @Captor
-    ArgumentCaptor<DataSource.GetEntityCallback<RecipeEntity>> repoRecipeCallback;
+    ArgumentCaptor<PrimitiveDataSource.GetEntityCallback<RecipeMetadataEntity>> repoRecipeCallback;
     @Mock
     RepositoryRecipeIdentity repoIdentityMock;
     @Captor
-    ArgumentCaptor<DataSource.GetEntityCallback<RecipeIdentityEntity>> repoIdentityCallback;
+    ArgumentCaptor<PrimitiveDataSource.GetEntityCallback<RecipeIdentityEntity>> repoIdentityCallback;
     @Mock
     RepositoryRecipeCourse repoCourseMock;
     @Captor
-    ArgumentCaptor<DataSource.GetAllCallback<RecipeCourseEntity>> repoCourseCallback;
+    ArgumentCaptor<PrimitiveDataSource.GetAllCallback<RecipeCourseEntity>> repoCourseCallback;
     @Mock
     RepositoryRecipeDuration repoDurationMock;
     @Captor
-    ArgumentCaptor<DataSource.GetEntityCallback<RecipeDurationEntity>> repoDurationCallback;
+    ArgumentCaptor<PrimitiveDataSource.GetEntityCallback<RecipeDurationEntity>> repoDurationCallback;
     @Mock
     RepositoryRecipePortions repoPortionsMock;
     @Captor
-    ArgumentCaptor<DataSource.GetEntityCallback<RecipePortionsEntity>> repoPortionsCallback;
+    ArgumentCaptor<PrimitiveDataSource.GetEntityCallback<RecipePortionsEntity>> repoPortionsCallback;
     @Mock
     UniqueIdProvider idProviderMock;
     @Mock
@@ -116,9 +119,10 @@ public class RecipeCourseEditorViewModelTest {
                 setLongTextMaxLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
                 build();
 
-        RecipeMetadata recipeMetaData = new RecipeMetadata(
+        com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata recipeMetaData = new com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata(
                 timeProviderMock,
-                repoRecipeMock
+                repoRecipeMock,
+                RecipeComponents.requiredComponents
         );
 
         RecipeIdentity identity = new RecipeIdentity(
@@ -663,25 +667,27 @@ public class RecipeCourseEditorViewModelTest {
         RecipeMacroResponseCallback macroCallback = new RecipeMacroResponseCallback();
 
         // Act
-        recipeMacro.registerMacroCallback(macroCallback);
+        recipeMacro.registerRecipeCallback(macroCallback);
         handler.execute(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
         verifyAllOtherComponentReposCalledAndReturnValidExisting(EXISTING_RECIPE_ID);
         verifyRepoCourseCalledAndReturnDataUnavailableForId(EXISTING_RECIPE_ID);
 
-        ComponentState expectedState = ComponentState.INVALID_UNCHANGED;
-        ComponentState actualState = macroCallback.
+        com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState expectedState = com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState.INVALID_UNCHANGED;
+        com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState actualState = macroCallback.
                 getResponse().
+                getModel().
                 getRecipeStateResponse().
                 getComponentStates().
-                get(ComponentName.COURSE);
+                get(com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentName.COURSE);
         assertEquals(expectedState, actualState);
 
         assertTrue(((RecipeCourseResponse) macroCallback.
                 getResponse().
+                getModel().
                 getComponentResponses().
-                get(ComponentName.COURSE)).
+                get(com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentName.COURSE)).
                 getMetadata().
                 getFailReasons().
                 contains(CommonFailReason.DATA_UNAVAILABLE));
@@ -698,19 +704,20 @@ public class RecipeCourseEditorViewModelTest {
         RecipeMacroResponseCallback macroCallback = new RecipeMacroResponseCallback();
 
         // Act
-        recipeMacro.registerMacroCallback(macroCallback);
+        recipeMacro.registerRecipeCallback(macroCallback);
         handler.execute(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
         verifyAllOtherComponentReposCalledAndReturnValidExisting(EXISTING_RECIPE_ID);
         verifyRepoCourseCalledAndReturnCoursesMatchingId(EXISTING_RECIPE_ID);
 
-        ComponentState expectedState = ComponentState.VALID_UNCHANGED;
-        ComponentState actualState = macroCallback.
+        com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState expectedState = com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState.VALID_UNCHANGED;
+        com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState actualState = macroCallback.
                 getResponse().
+                getModel().
                 getRecipeStateResponse().
                 getComponentStates().
-                get(ComponentName.COURSE);
+                get(com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentName.COURSE);
 
         assertEquals(expectedState, actualState);
     }
@@ -726,7 +733,7 @@ public class RecipeCourseEditorViewModelTest {
         RecipeMacroResponseCallback macroCallback = new RecipeMacroResponseCallback();
 
         // Act
-        recipeMacro.registerMacroCallback(macroCallback);
+        recipeMacro.registerRecipeCallback(macroCallback);
         handler.execute(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
@@ -744,12 +751,13 @@ public class RecipeCourseEditorViewModelTest {
         SUT.setCourseSeven(false);
 
         // Assert
-        ComponentState expectedState = ComponentState.INVALID_CHANGED;
-        ComponentState actualState = macroCallback.
+        com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState expectedState = com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState.INVALID_CHANGED;
+        com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState actualState = macroCallback.
                 getResponse().
+                getModel().
                 getRecipeStateResponse().
                 getComponentStates().
-                get(ComponentName.COURSE);
+                get(com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentName.COURSE);
 
         assertEquals(expectedState, actualState);
     }
@@ -765,7 +773,7 @@ public class RecipeCourseEditorViewModelTest {
         RecipeMacroResponseCallback macroCallback = new RecipeMacroResponseCallback();
 
         // Act
-        recipeMacro.registerMacroCallback(macroCallback);
+        recipeMacro.registerRecipeCallback(macroCallback);
         handler.execute(recipeMacro, request, new RecipeResponseCallback());
 
         // Assert
@@ -782,12 +790,13 @@ public class RecipeCourseEditorViewModelTest {
         SUT.setCourseSix(false);
 
         // Assert
-        ComponentState expectedState = ComponentState.VALID_CHANGED;
-        ComponentState actualState = macroCallback.
+        com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState expectedState = com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState.VALID_CHANGED;
+        com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState actualState = macroCallback.
                 getResponse().
+                getModel().
                 getRecipeStateResponse().
                 getComponentStates().
-                get(ComponentName.COURSE);
+                get(com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentName.COURSE);
 
         assertEquals(expectedState, actualState);
     }

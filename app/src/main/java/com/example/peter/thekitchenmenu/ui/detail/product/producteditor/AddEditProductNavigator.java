@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.ui.detail.product.producteditor;
 
-import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
+import com.example.peter.thekitchenmenu.data.primitivemodel.product.ProductEntity;
 
 public interface AddEditProductNavigator {
 

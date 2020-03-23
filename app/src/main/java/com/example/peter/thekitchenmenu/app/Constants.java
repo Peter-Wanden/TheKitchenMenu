@@ -1,8 +1,5 @@
 package com.example.peter.thekitchenmenu.app;
 
-import androidx.annotation.NonNull;
-import androidx.lifecycle.MutableLiveData;
-
 public abstract class Constants {
 
     private static final String TAG = Constants.class.getSimpleName();

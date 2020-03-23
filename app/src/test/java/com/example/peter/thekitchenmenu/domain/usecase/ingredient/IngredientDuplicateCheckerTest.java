@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.ingredient;
 
-import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
-import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.IngredientEntity;
+import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.testdata.TestDataIngredientEntity;
 
@@ -32,7 +32,7 @@ public class IngredientDuplicateCheckerTest {
     @Mock
     RepositoryIngredient repoMock;
     @Captor
-    ArgumentCaptor<DataSource.GetAllCallback<IngredientEntity>> getRepoCallbackCaptor;
+    ArgumentCaptor<PrimitiveDataSource.GetAllCallback<IngredientEntity>> getRepoCallbackCaptor;
     @Mock
     IngredientDuplicateChecker.DuplicateCallback callbackMock;
     // endregion helper fields ---------------------------------------------------------------------

@@ -3,7 +3,6 @@ package com.example.peter.thekitchenmenu.ui;
 import android.annotation.SuppressLint;
 import android.app.Application;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseFactory;
@@ -86,18 +85,17 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
         return INSTANCE;
     }
 
-    @NonNull
+    @SuppressWarnings("unchecked")
+    @Nonnull
     @Override
     public <T extends ViewModel> T create(Class<T> modelClass) {
 
         if (modelClass.isAssignableFrom(RecipeCatalogViewModel.class)) {
-            //noinspection unchecked
             return (T) new RecipeCatalogViewModel(
                     useCaseHandler,
                     useCaseFactory.provideRecipeIdentityAndDurationList()
             );
         } else if (modelClass.isAssignableFrom(RecipeEditorViewModel.class)) {
-            //noinspection unchecked
             return (T) new RecipeEditorViewModel(
                     useCaseHandler,
                     recipeMacro,
@@ -105,34 +103,29 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
                     application.getResources()
             );
         } else if (modelClass.isAssignableFrom(RecipeIdentityEditorViewModel.class)) {
-            //noinspection unchecked
             return (T) new RecipeIdentityEditorViewModel(
                     useCaseHandler,
                     recipeMacro,
                     application.getResources()
             );
         } else if (modelClass.isAssignableFrom(RecipeCourseEditorViewModel.class)) {
-            //noinspection unchecked
             return (T) new RecipeCourseEditorViewModel(
                     useCaseHandler,
                     recipeMacro
             );
         } else if (modelClass.isAssignableFrom(RecipeDurationEditorViewModel.class)) {
-            // noinspection unchecked
             return (T) new RecipeDurationEditorViewModel(
                     useCaseHandler,
                     recipeMacro,
                     application.getResources()
             );
         } else if (modelClass.isAssignableFrom(RecipePortionsEditorViewModel.class)) {
-            // noinspection unchecked
             return (T) new RecipePortionsEditorViewModel(
                     useCaseHandler,
                     recipeMacro,
                     application.getResources()
             );
         } else if (modelClass.isAssignableFrom(RecipeIngredientCalculatorViewModel.class)) {
-            // noinspection unchecked
             return (T) new RecipeIngredientCalculatorViewModel(
                     useCaseHandler,
                     useCaseFactory.provideIngredientCalculator(),
@@ -143,20 +136,17 @@ public class ViewModelFactoryRecipe extends ViewModelProvider.NewInstanceFactory
                             new NumberFormatter(application.getResources()))
             );
         } else if (modelClass.isAssignableFrom(RecipeNameAndPortionsViewModel.class)) {
-            // noinspection unchecked
             return (T) new RecipeNameAndPortionsViewModel(
                     useCaseHandler,
                     useCaseFactory.provideRecipeIdentity(),
                     useCaseFactory.provideRecipePortions()
             );
         } else if (modelClass.isAssignableFrom(RecipeIngredientListViewModel.class)) {
-            // noinspection unchecked
             return (T) new RecipeIngredientListViewModel(
                     useCaseHandler,
                     useCaseFactory.provideRecipeIngredientList()
             );
         } else if (modelClass.isAssignableFrom(RecipeIngredientListItemViewModel.class)) {
-            // noinspection unchecked
             return (T) new RecipeIngredientListItemViewModel(
                     new MeasurementToSpannableConverter(application.getResources())
             );

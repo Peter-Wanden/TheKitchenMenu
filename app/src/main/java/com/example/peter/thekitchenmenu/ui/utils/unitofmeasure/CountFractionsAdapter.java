@@ -7,34 +7,35 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.peter.thekitchenmenu.R;
 
 import java.util.ArrayList;
 
+import javax.annotation.Nonnull;
+
 public class CountFractionsAdapter extends ArrayAdapter<CountFraction> {
 
     private LayoutInflater inflater;
     private ArrayList<CountFraction> fractionsList;
 
-    CountFractionsAdapter(@NonNull Context context, ArrayList<CountFraction> fractionsList) {
+    CountFractionsAdapter(@Nonnull Context context, ArrayList<CountFraction> fractionsList) {
         super(context, 0, fractionsList);
         this.fractionsList = fractionsList;
         inflater = LayoutInflater.from(context);
     }
 
-    @NonNull
+    @Nonnull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public View getView(int position, @Nullable View convertView, @Nonnull ViewGroup parent) {
         return initView(position, parent);
     }
 
     @Override
     public View getDropDownView(int position,
                                 @Nullable View convertView,
-                                @NonNull ViewGroup parent) {
+                                @Nonnull ViewGroup parent) {
         return initView(position, parent);
     }
 

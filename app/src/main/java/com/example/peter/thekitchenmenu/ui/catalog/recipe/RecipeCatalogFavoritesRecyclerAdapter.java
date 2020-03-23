@@ -5,7 +5,6 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 
-import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,6 +14,8 @@ import com.example.peter.thekitchenmenu.databinding.FavoriteRecipeListItemBindin
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.Nonnull;
 
 public class RecipeCatalogFavoritesRecyclerAdapter
         extends RecyclerView.Adapter<RecipeCatalogFavoritesRecyclerAdapter.ViewHolder>
@@ -31,9 +32,9 @@ public class RecipeCatalogFavoritesRecyclerAdapter
         this.viewModel = viewModel;
     }
 
-    @NonNull
+    @Nonnull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+    public ViewHolder onCreateViewHolder(@Nonnull ViewGroup viewGroup, int viewType) {
 
         FavoriteRecipeListItemBinding binding = DataBindingUtil.inflate(
                 LayoutInflater.from(viewGroup.getContext()),
@@ -45,7 +46,7 @@ public class RecipeCatalogFavoritesRecyclerAdapter
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@Nonnull ViewHolder holder, int position) {
         final FavoriteRecipeModel favoriteRecipeModel = favoriteRecipeModels.get(position);
         holder.bind(favoriteRecipeModel);
     }

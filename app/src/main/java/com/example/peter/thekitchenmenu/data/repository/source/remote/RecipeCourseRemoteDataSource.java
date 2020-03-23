@@ -1,9 +1,9 @@
 package com.example.peter.thekitchenmenu.data.repository.source.remote;
 
-import androidx.annotation.NonNull;
-
-import com.example.peter.thekitchenmenu.data.entity.RecipeCourseEntity;
+import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSourceRecipeCourse;
+
+import javax.annotation.Nonnull;
 
 public class RecipeCourseRemoteDataSource implements DataSourceRecipeCourse {
 
@@ -17,27 +17,30 @@ public class RecipeCourseRemoteDataSource implements DataSourceRecipeCourse {
 
 
     @Override
-    public void getAllRecipesForCourseNo(int courseNo, @NonNull GetAllCallback<RecipeCourseEntity> callback) {
+    public void getAllRecipesForCourseNo(int courseNo,
+                                         @Nonnull GetAllCallback<RecipeCourseEntity> callback) {
         callback.onDataNotAvailable();
     }
 
     @Override
-    public void getCoursesForRecipe(@NonNull String recipeId, @NonNull GetAllCallback<RecipeCourseEntity> callback) {
+    public void getCoursesForRecipe(@Nonnull String recipeId,
+                                    @Nonnull GetAllCallback<RecipeCourseEntity> callback) {
         callback.onDataNotAvailable();
     }
 
     @Override
-    public void getAll(@NonNull GetAllCallback<RecipeCourseEntity> callback) {
+    public void getAll(@Nonnull GetAllCallback<RecipeCourseEntity> callback) {
         callback.onDataNotAvailable();
     }
 
     @Override
-    public void getById(@NonNull String id, @NonNull GetEntityCallback<RecipeCourseEntity> callback) {
-        callback.onDataNotAvailable();
+    public void getById(@Nonnull String id,
+                        @Nonnull GetEntityCallback<RecipeCourseEntity> callback) {
+        callback.onDataUnavailable();
     }
 
     @Override
-    public void save(@NonNull RecipeCourseEntity object) {
+    public void save(@Nonnull RecipeCourseEntity entity) {
 
     }
 
@@ -52,7 +55,7 @@ public class RecipeCourseRemoteDataSource implements DataSourceRecipeCourse {
     }
 
     @Override
-    public void deleteById(@NonNull String id) {
+    public void deleteById(@Nonnull String id) {
 
     }
 }

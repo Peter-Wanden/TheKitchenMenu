@@ -3,9 +3,12 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.domain.model.PersistenceModel;
 
+import java.util.HashMap;
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
+
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.*;
 
 public final class RecipeMetadataPersistenceModel implements PersistenceModel {
     @Nonnull
@@ -13,17 +16,22 @@ public final class RecipeMetadataPersistenceModel implements PersistenceModel {
     @Nonnull
     private final String parentId;
     @Nonnull
+    private HashMap<ComponentName, ComponentState> componentStates;
+    @Nonnull
     private final String createdBy;
     private final long createDate;
     private final long lastUpdate;
 
-    private RecipeMetadataPersistenceModel(@Nonnull String id,
-                                           @Nonnull String parentId,
-                                           @Nonnull String createdBy,
-                                           long createDate,
-                                           long lastUpdate) {
+    private RecipeMetadataPersistenceModel(
+            @Nonnull String id,
+            @Nonnull String parentId,
+            @Nonnull HashMap<ComponentName, ComponentState> componentStates,
+            @Nonnull String createdBy,
+            long createDate,
+            long lastUpdate) {
         this.id = id;
         this.parentId = parentId;
+        this.componentStates = componentStates;
         this.createdBy = createdBy;
         this.createDate = createDate;
         this.lastUpdate = lastUpdate;
@@ -38,6 +46,11 @@ public final class RecipeMetadataPersistenceModel implements PersistenceModel {
     @Nonnull
     public String getParentId() {
         return parentId;
+    }
+
+    @Nonnull
+    public HashMap<ComponentName, ComponentState> getComponentStates() {
+        return componentStates;
     }
 
     @Nonnull
@@ -58,23 +71,25 @@ public final class RecipeMetadataPersistenceModel implements PersistenceModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RecipeMetadataPersistenceModel that = (RecipeMetadataPersistenceModel) o;
-        return createDate == that.createDate &&
-                lastUpdate == that.lastUpdate &&
-                id.equals(that.id) &&
+        return id.equals(that.id) &&
                 parentId.equals(that.parentId) &&
-                createdBy.equals(that.createdBy);
+                componentStates.equals(that.componentStates) &&
+                createdBy.equals(that.createdBy) &&
+                createDate == that.createDate &&
+                lastUpdate == that.lastUpdate;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, parentId, createdBy, createDate, lastUpdate);
+        return Objects.hash(id, parentId, createdBy, componentStates, createDate, lastUpdate);
     }
 
     @Override
     public String toString() {
-        return "RecipePersistenceModel{" +
+        return "RecipeMetadataPersistenceModel{" +
                 "id='" + id + '\'' +
                 ", parentId='" + parentId + '\'' +
+                ", componentStates=" + componentStates + '\'' +
                 ", createdBy='" + createdBy + '\'' +
                 ", createDate=" + createDate +
                 ", lastUpdate=" + lastUpdate +
@@ -84,6 +99,7 @@ public final class RecipeMetadataPersistenceModel implements PersistenceModel {
     public static class Builder {
         private String id;
         private String parentId;
+        private HashMap<ComponentName, ComponentState> componentStates;
         private String createdBy;
         private long createDate;
         private long lastUpdate;
@@ -92,6 +108,7 @@ public final class RecipeMetadataPersistenceModel implements PersistenceModel {
             return new Builder().
                     setId("").
                     setParentId("").
+                    setComponentStates(new HashMap<>()).
                     setCreatedBy(Constants.getUserId()).
                     setCreateDate(0L).
                     setLastUpdate(0L);
@@ -104,6 +121,11 @@ public final class RecipeMetadataPersistenceModel implements PersistenceModel {
 
         public Builder setParentId(String parentId) {
             this.parentId = parentId;
+            return this;
+        }
+
+        public Builder setComponentStates(HashMap<ComponentName, ComponentState> componentStates) {
+            this.componentStates = componentStates;
             return this;
         }
 
@@ -126,6 +148,7 @@ public final class RecipeMetadataPersistenceModel implements PersistenceModel {
             return new RecipeMetadataPersistenceModel(
                     id,
                     parentId,
+                    componentStates,
                     createdBy,
                     createDate,
                     lastUpdate

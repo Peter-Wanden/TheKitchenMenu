@@ -2,17 +2,15 @@ package com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor
 
 import android.app.Application;
 import android.content.res.Resources;
-import android.util.Log;
 
 import com.example.peter.thekitchenmenu.R;
-import com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity;
-import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.primitivemodel.product.FavoriteProductEntity;
+import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.DataSourceFavoriteProducts;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 import com.example.peter.thekitchenmenu.ui.utils.TextValidator;
 import com.google.android.gms.common.util.Strings;
 
-import androidx.annotation.NonNull;
 import androidx.databinding.Observable;
 import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
@@ -21,9 +19,11 @@ import androidx.lifecycle.AndroidViewModel;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 
+import javax.annotation.Nonnull;
+
 public class FavoriteProductEditorViewModel
         extends AndroidViewModel
-        implements DataSource.GetEntityCallback<FavoriteProductEntity> {
+        implements PrimitiveDataSource.GetEntityCallback<FavoriteProductEntity> {
 
     private static final String TAG = "tkm-" + FavoriteProductEditorViewModel.class.getSimpleName()
             + ":";
@@ -61,8 +61,8 @@ public class FavoriteProductEditorViewModel
     private boolean isExistingFavoriteProductEntity;
 
     public FavoriteProductEditorViewModel(
-            @NonNull Application application,
-            @NonNull DataSourceFavoriteProducts favoriteProductEntityDataSource,
+            @Nonnull Application application,
+            @Nonnull DataSourceFavoriteProducts favoriteProductEntityDataSource,
             TextValidator validationHandler) {
 
         super(application);
@@ -114,9 +114,9 @@ public class FavoriteProductEditorViewModel
     }
 
     @Override
-    public void onEntityLoaded(FavoriteProductEntity favoriteProductEntity) {
+    public void onEntityLoaded(FavoriteProductEntity entity) {
         dataIsLoading.set(false);
-        this.favoriteProductEntity = favoriteProductEntity;
+        this.favoriteProductEntity = entity;
         setUpForExistingFavoriteProductEntity();
     }
 
@@ -135,7 +135,7 @@ public class FavoriteProductEditorViewModel
     }
 
     @Override
-    public void onDataNotAvailable() {
+    public void onDataUnavailable() {
         dataIsLoading.set(false);
         setUpForNewFavoriteProductEntity();
     }

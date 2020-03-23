@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import androidx.annotation.NonNull;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,12 +20,14 @@ import com.example.peter.thekitchenmenu.databinding.RecipeEditorActivityBinding;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseFactory;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.state.RecipeStateResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadataResponse;
 import com.example.peter.thekitchenmenu.ui.UnsavedChangesDialogFragment;
 import com.example.peter.thekitchenmenu.ui.ViewModelFactoryRecipe;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist.RecipeIngredientListActivity;
 import com.example.peter.thekitchenmenu.ui.imageeditor.ImageEditorFragment;
 import com.example.peter.thekitchenmenu.utils.ActivityUtils;
+
+import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe.CREATE_NEW_RECIPE;
 
@@ -95,7 +97,7 @@ public class RecipeEditorActivity
         createDurationViewModel(this, recipeMacro);
         createPortionsViewModel(this, recipeMacro);
 
-        recipeMacro.registerStateListener(new RecipeStateListener());
+        recipeMacro.registerMetadataListener(new RecipeMetaDataListener());
     }
 
     static RecipeEditorViewModel createRecipeEditorViewModel(FragmentActivity activity,
@@ -161,7 +163,7 @@ public class RecipeEditorActivity
                 R.id.recipe_portions_content_frame);
     }
 
-    @NonNull
+    @Nonnull
     private ImageEditorFragment findOrCreateImageEditorFragment() {
         ImageEditorFragment imageEditorFragment =
                 (ImageEditorFragment) getSupportFragmentManager().
@@ -173,7 +175,7 @@ public class RecipeEditorActivity
         return imageEditorFragment;
     }
 
-    @NonNull
+    @Nonnull
     private RecipeIdentityFragment findOrCreateIdentityEditorFragment() {
         RecipeIdentityFragment recipeIdentityFragment =
                 (RecipeIdentityFragment) getSupportFragmentManager().
@@ -185,7 +187,7 @@ public class RecipeEditorActivity
         return recipeIdentityFragment;
     }
 
-    @NonNull
+    @Nonnull
     private RecipeCourseEditorFragment findOrCreateCourseSelectorFragment() {
         RecipeCourseEditorFragment courseSelectorFragment =
                 (RecipeCourseEditorFragment) getSupportFragmentManager().
@@ -197,7 +199,7 @@ public class RecipeEditorActivity
         return courseSelectorFragment;
     }
 
-    @NonNull
+    @Nonnull
     private RecipeDurationFragment findOrCreateDurationEditorFragment() {
         RecipeDurationFragment durationFragment =
                 (RecipeDurationFragment) getSupportFragmentManager().
@@ -209,7 +211,7 @@ public class RecipeEditorActivity
         return durationFragment;
     }
 
-    @NonNull
+    @Nonnull
     private RecipePortionsFragment findOrCreatePortionsEditorFragment() {
         RecipePortionsFragment portionsFragment =
                 (RecipePortionsFragment) getSupportFragmentManager().
@@ -237,9 +239,9 @@ public class RecipeEditorActivity
         //  See {@link RecipeEditorViewModel}
     }
 
-    private static class RecipeStateListener implements Recipe.RecipeStateListener {
+    private static class RecipeMetaDataListener implements Recipe.RecipeMetaDataListener {
         @Override
-        public void recipeStateChanged(RecipeStateResponse response) {
+        public void recipeStateChanged(RecipeMetadataResponse response) {
 
         }
     }
@@ -268,7 +270,7 @@ public class RecipeEditorActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    public boolean onOptionsItemSelected(@Nonnull MenuItem item) {
         if (item.getItemId() == R.id.menu_recipe_editor_action_review) {
             recipeEditorViewModel.reviewButtonPressed();
             return true;

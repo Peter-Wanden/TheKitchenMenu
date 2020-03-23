@@ -2,9 +2,7 @@ package com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.databinding.DataBindingUtil;
@@ -23,6 +21,8 @@ import com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductE
 import com.example.peter.thekitchenmenu.ui.detail.product.productviewer.ProductViewerFragment;
 import com.example.peter.thekitchenmenu.ui.detail.product.productviewer.ProductViewerViewModel;
 import com.example.peter.thekitchenmenu.utils.ActivityUtils;
+
+import javax.annotation.Nonnull;
 
 public class FavoriteProductEditorActivity
         extends AppCompatActivityDialogActions
@@ -75,7 +75,7 @@ public class FavoriteProductEditorActivity
         super.onDestroy();
     }
 
-    @NonNull
+    @Nonnull
     public static ProductViewerViewModel obtainProductViewerViewModel(
             FragmentActivity activity) {
 
@@ -85,7 +85,7 @@ public class FavoriteProductEditorActivity
         return new ViewModelProvider(activity, factoryProduct).get(ProductViewerViewModel.class);
     }
 
-    @NonNull
+    @Nonnull
     public static FavoriteProductEditorViewModel obtainFavoriteProductEditorViewModel(
             FragmentActivity activity) {
 

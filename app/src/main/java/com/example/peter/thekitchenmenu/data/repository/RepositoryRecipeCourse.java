@@ -1,12 +1,12 @@
 package com.example.peter.thekitchenmenu.data.repository;
 
-import androidx.annotation.NonNull;
-
-import com.example.peter.thekitchenmenu.data.entity.RecipeCourseEntity;
+import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeCourseEntity;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+
+import javax.annotation.Nonnull;
 
 import static androidx.core.util.Preconditions.checkNotNull;
 
@@ -16,10 +16,10 @@ public class RepositoryRecipeCourse
 
     public static RepositoryRecipeCourse INSTANCE;
 
-    private RepositoryRecipeCourse(@NonNull DataSourceRecipeCourse remoteDataSource,
-                                   @NonNull DataSourceRecipeCourse localDataSource) {
-        this.remoteDataSource = checkNotNull(remoteDataSource);
-        this.localDataSource = checkNotNull(localDataSource);
+    private RepositoryRecipeCourse(@Nonnull DataSourceRecipeCourse remoteDataSource,
+                                   @Nonnull DataSourceRecipeCourse localDataSource) {
+        this.remoteDataSource = remoteDataSource;
+        this.localDataSource = localDataSource;
     }
 
     public static RepositoryRecipeCourse getInstance(DataSourceRecipeCourse remoteDataSource,
@@ -31,9 +31,7 @@ public class RepositoryRecipeCourse
 
     @Override
     public void getAllRecipesForCourseNo(int courseNo,
-                                         @NonNull GetAllCallback<RecipeCourseEntity> callback) {
-        checkNotNull(courseNo);
-        checkNotNull(callback);
+                                         @Nonnull GetAllCallback<RecipeCourseEntity> callback) {
 
         List<RecipeCourseEntity> recipeCourseEntities = checkCacheForCourseNo(courseNo);
 
@@ -100,10 +98,8 @@ public class RepositoryRecipeCourse
     }
 
     @Override
-    public void getCoursesForRecipe(@NonNull String recipeId,
-                                    @NonNull GetAllCallback<RecipeCourseEntity> callback) {
-        checkNotNull(recipeId);
-        checkNotNull(callback);
+    public void getCoursesForRecipe(@Nonnull String recipeId,
+                                    @Nonnull GetAllCallback<RecipeCourseEntity> callback) {
 
         List<RecipeCourseEntity> recipeCourseEntities = checkCacheForRecipeId(recipeId);
 

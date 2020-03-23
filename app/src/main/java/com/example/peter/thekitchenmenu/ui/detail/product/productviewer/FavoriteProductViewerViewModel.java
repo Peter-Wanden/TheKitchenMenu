@@ -7,8 +7,8 @@ import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
 import androidx.lifecycle.AndroidViewModel;
 
-import com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity;
-import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.primitivemodel.product.FavoriteProductEntity;
+import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.DataSourceFavoriteProducts;
 import com.example.peter.thekitchenmenu.ui.UnsavedChangesDialogFragment;
 import com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorActivity;
@@ -18,7 +18,7 @@ import com.google.android.gms.common.util.Strings;
 
 public class FavoriteProductViewerViewModel
         extends AndroidViewModel
-        implements DataSource.GetEntityCallback<FavoriteProductEntity> {
+        implements PrimitiveDataSource.GetEntityCallback<FavoriteProductEntity> {
 
     private static final String TAG = "tkm-" + FavoriteProductViewerViewModel.class.getSimpleName()
             + ":";
@@ -61,9 +61,9 @@ public class FavoriteProductViewerViewModel
     }
 
     @Override
-    public void onEntityLoaded(FavoriteProductEntity favoriteProductEntity) {
+    public void onEntityLoaded(FavoriteProductEntity entity) {
         dataIsLoading.set(false);
-        setFavoriteProduct(favoriteProductEntity);
+        setFavoriteProduct(entity);
     }
 
     private void setFavoriteProduct(FavoriteProductEntity favoriteProductEntity) {
@@ -73,7 +73,7 @@ public class FavoriteProductViewerViewModel
     }
 
     @Override
-    public void onDataNotAvailable() {
+    public void onDataUnavailable() {
         dataIsLoading.set(false);
         setAddFavoriteMode();
     }

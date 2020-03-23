@@ -2,8 +2,6 @@ package com.example.peter.thekitchenmenu.data.repository;
 
 import android.content.Context;
 
-import androidx.annotation.NonNull;
-
 import com.example.peter.thekitchenmenu.app.AppExecutors;
 import com.example.peter.thekitchenmenu.data.repository.source.local.IngredientLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.RecipeIngredientLocalDataSource;
@@ -25,13 +23,14 @@ import com.example.peter.thekitchenmenu.data.repository.source.remote.RecipeIngr
 import com.example.peter.thekitchenmenu.data.repository.source.remote.RecipeRemoteDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.remote.RecipePortionsRemoteDataSource;
 
+import javax.annotation.Nonnull;
+
 import static androidx.core.util.Preconditions.checkNotNull;
 
 public class DatabaseInjection {
 
     public static RepositoryProduct provideProductDataSource(
-            @NonNull Context context) {
-        checkNotNull(context);
+            @Nonnull Context context) {
 
         TKMDatabase database = TKMDatabase.getInstance(context, new AppExecutors());
 
@@ -43,8 +42,7 @@ public class DatabaseInjection {
     }
 
     public static RepositoryFavoriteProduct provideFavoriteProductsDataSource(
-            @NonNull Context context) {
-        checkNotNull(context);
+            @Nonnull Context context) {
 
         TKMDatabase database = TKMDatabase.getInstance(context, new AppExecutors());
 
@@ -56,12 +54,11 @@ public class DatabaseInjection {
         );
     }
 
-    public static RepositoryRecipe provideRecipeDataSource(@NonNull Context context) {
-        checkNotNull(context);
+    public static RepositoryRecipeMetaData provideRecipeDataSource(@Nonnull Context context) {
 
         TKMDatabase database = TKMDatabase.getInstance(context, new AppExecutors());
 
-        return RepositoryRecipe.getInstance(
+        return RepositoryRecipeMetaData.getInstance(
                 RecipeRemoteDataSource.getInstance(),
                 RecipeLocalDataSource.getInstance(
                         new AppExecutors(),
@@ -70,8 +67,7 @@ public class DatabaseInjection {
     }
 
     public static RepositoryRecipeCourse provideRecipeCourseDataSource(
-            @NonNull Context context) {
-        checkNotNull(context);
+            @Nonnull Context context) {
 
         TKMDatabase database = TKMDatabase.getInstance(context, new AppExecutors());
 
@@ -84,8 +80,7 @@ public class DatabaseInjection {
     }
 
     public static RepositoryRecipeIdentity provideRecipeIdentityDataSource(
-            @NonNull Context context) {
-        checkNotNull(context);
+            @Nonnull Context context) {
 
         TKMDatabase database = TKMDatabase.getInstance(context, new AppExecutors());
 
@@ -98,8 +93,7 @@ public class DatabaseInjection {
     }
 
     public static RepositoryRecipeDuration provideRecipeDurationDataSource(
-            @NonNull Context context) {
-        checkNotNull(context);
+            @Nonnull Context context) {
 
         TKMDatabase database = TKMDatabase.getInstance(context, new AppExecutors());
 
@@ -111,8 +105,7 @@ public class DatabaseInjection {
         );
     }
 
-    public static RepositoryIngredient provideIngredientDataSource(@NonNull Context context) {
-        checkNotNull(context);
+    public static RepositoryIngredient provideIngredientDataSource(@Nonnull Context context) {
 
         TKMDatabase database = TKMDatabase.getInstance(context, new AppExecutors());
 
@@ -125,8 +118,7 @@ public class DatabaseInjection {
     }
 
     public static RepositoryRecipePortions provideRecipePortionsDataSource(
-            @NonNull Context context) {
-        checkNotNull(context);
+            @Nonnull Context context) {
 
         TKMDatabase database = TKMDatabase.getInstance(context, new AppExecutors());
 
@@ -139,8 +131,7 @@ public class DatabaseInjection {
     }
 
     public static RepositoryRecipeIngredient provideRecipeIngredientDataSource(
-            @NonNull Context context) {
-        checkNotNull(context);
+            @Nonnull Context context) {
 
         TKMDatabase database = TKMDatabase.getInstance(context, new AppExecutors());
 

@@ -9,6 +9,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipecourse.RecipeCourseRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipecourse.RecipeCourseResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 
 import java.util.ArrayList;
@@ -17,7 +18,6 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipecourse.RecipeCourse.*;
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.state.RecipeStateCalculator.*;
 
 public class RecipeCourseEditorViewModel extends ObservableViewModel {
 
@@ -41,7 +41,7 @@ public class RecipeCourseEditorViewModel extends ObservableViewModel {
 
         response = new RecipeCourseResponse.Builder().getDefault().build();
 
-        recipeMacro.registerComponentCallback(new Pair<>(ComponentName.COURSE,
+        recipeMacro.registerComponentCallback(new Pair<>(RecipeMetadata.ComponentName.COURSE,
                 new CourseCallbackListener())
         );
     }

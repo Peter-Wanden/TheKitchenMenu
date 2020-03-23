@@ -1,22 +1,22 @@
 package com.example.peter.thekitchenmenu.data.repository;
 
-import androidx.annotation.NonNull;
+import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeDurationEntity;
 
-import com.example.peter.thekitchenmenu.data.entity.RecipeDurationEntity;
+import javax.annotation.Nonnull;
 
 public class RepositoryRecipeDuration extends Repository<RecipeDurationEntity> {
 
     public static RepositoryRecipeDuration INSTANCE = null;
 
-    private RepositoryRecipeDuration(@NonNull DataSource<RecipeDurationEntity> remoteDataSource,
-                                     @NonNull DataSource<RecipeDurationEntity> localDataSource) {
+    private RepositoryRecipeDuration(@Nonnull PrimitiveDataSource<RecipeDurationEntity> remoteDataSource,
+                                     @Nonnull PrimitiveDataSource<RecipeDurationEntity> localDataSource) {
         this.remoteDataSource = remoteDataSource;
         this.localDataSource = localDataSource;
     }
 
     public static  RepositoryRecipeDuration getInstance(
-            DataSource<RecipeDurationEntity> remoteDataSource,
-            DataSource<RecipeDurationEntity> localDataSource) {
+            PrimitiveDataSource<RecipeDurationEntity> remoteDataSource,
+            PrimitiveDataSource<RecipeDurationEntity> localDataSource) {
 
         if (INSTANCE == null)
             INSTANCE = new RepositoryRecipeDuration(remoteDataSource, localDataSource);

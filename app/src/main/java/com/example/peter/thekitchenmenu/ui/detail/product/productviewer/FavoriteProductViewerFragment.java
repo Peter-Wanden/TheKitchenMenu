@@ -8,7 +8,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -16,6 +15,8 @@ import androidx.fragment.app.Fragment;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.FavoriteProductViewerFragmentBinding;
 import com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductEditorActivity;
+
+import javax.annotation.Nonnull;
 
 public class FavoriteProductViewerFragment extends Fragment {
 
@@ -46,7 +47,7 @@ public class FavoriteProductViewerFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
+    public View onCreateView(@Nonnull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
@@ -82,12 +83,12 @@ public class FavoriteProductViewerFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+    public void onCreateOptionsMenu(@Nonnull Menu menu, @Nonnull MenuInflater inflater) {
         inflater.inflate(R.menu.menu_favorite_viewer_fragment, menu);
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    public boolean onOptionsItemSelected(@Nonnull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_item_edit_favorite:
                 viewModel.editFavoriteProduct();

@@ -1,11 +1,11 @@
 package com.example.peter.thekitchenmenu.data.repository;
 
-import androidx.annotation.NonNull;
+import com.example.peter.thekitchenmenu.data.primitivemodel.product.FavoriteProductEntity;
 
-import com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity;
+import javax.annotation.Nonnull;
 
-public interface DataSourceFavoriteProducts extends DataSource<FavoriteProductEntity> {
+public interface DataSourceFavoriteProducts extends PrimitiveDataSource<FavoriteProductEntity> {
 
-    void getByProductId(@NonNull String productId,
-                        @NonNull GetEntityCallback<FavoriteProductEntity> callback);
+    void getByProductId(@Nonnull String productId,
+                        @Nonnull GetEntityCallback<FavoriteProductEntity> callback);
 }

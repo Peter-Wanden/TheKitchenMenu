@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SpinnerAdapter;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -18,6 +17,8 @@ import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.databinding.RecipeIngredientEditorMeasurementBinding;
 import com.example.peter.thekitchenmenu.ui.utils.unitofmeasure.CountFractionsSpinnerAdapterBuilder;
 import com.example.peter.thekitchenmenu.ui.utils.unitofmeasure.UnitOfMeasureSpinnerAdapterBuilder;
+
+import javax.annotation.Nonnull;
 
 public class RecipeIngredientMeasurementFragment extends Fragment {
 
@@ -30,7 +31,7 @@ public class RecipeIngredientMeasurementFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
+    public View onCreateView(@Nonnull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
@@ -98,12 +99,12 @@ public class RecipeIngredientMeasurementFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+    public void onCreateOptionsMenu(@Nonnull Menu menu, @Nonnull MenuInflater inflater) {
         inflater.inflate(R.menu.menu_recipe_ingredient_measurement, menu);
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    public boolean onOptionsItemSelected(@Nonnull MenuItem item) {
         if (item.getItemId() == R.id.menu_recipe_ingredient_editor_action_use) {
             viewModel.donePressed();
             return true;

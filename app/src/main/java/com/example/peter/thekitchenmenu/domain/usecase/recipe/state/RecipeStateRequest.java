@@ -1,19 +1,22 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.state;
 
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;
 
 import java.util.HashMap;
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.state.RecipeStateCalculator.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.*;
 
 public final class RecipeStateRequest implements UseCase.Request {
     @Nonnull
     private final HashMap<ComponentName, ComponentState> componentStates;
 
-    public RecipeStateRequest(@Nonnull HashMap<ComponentName, ComponentState> componentStates) {
+    public RecipeStateRequest(
+            @Nonnull HashMap<ComponentName,
+            ComponentState> componentStates) {
         this.componentStates = componentStates;
     }
 

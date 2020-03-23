@@ -1,11 +1,12 @@
 package com.example.peter.thekitchenmenu.domain.entity.unitofmeasure;
 
-import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+
+import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureAbstract.LastMeasurementUpdated.*;
 
@@ -441,7 +442,7 @@ public abstract class UnitOfMeasureAbstract implements UnitOfMeasure {
         return Double.parseDouble(decimalFormat.format(valueToRound));
     }
 
-    @NonNull
+    @Nonnull
     @Override
     public String toString() {
         return "UnitOfMeasureAbstract{" +

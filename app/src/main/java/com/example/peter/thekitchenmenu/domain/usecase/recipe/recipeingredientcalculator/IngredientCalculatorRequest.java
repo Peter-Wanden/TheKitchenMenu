@@ -1,48 +1,48 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredientcalculator;
 
-import androidx.annotation.NonNull;
-
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
 
 import java.util.Objects;
 
+import javax.annotation.Nonnull;
+
 public final class IngredientCalculatorRequest implements UseCase.Request {
-    @NonNull
+    @Nonnull
     private final String recipeId;
-    @NonNull
+    @Nonnull
     private final String ingredientId;
-    @NonNull
+    @Nonnull
     private final String recipeIngredientId;
-    @NonNull
+    @Nonnull
     private final MeasurementModel model;
 
-    public IngredientCalculatorRequest(@NonNull String recipeId,
-                                       @NonNull String ingredientId,
-                                       @NonNull String recipeIngredientId,
-                                       @NonNull MeasurementModel model) {
+    public IngredientCalculatorRequest(@Nonnull String recipeId,
+                                       @Nonnull String ingredientId,
+                                       @Nonnull String recipeIngredientId,
+                                       @Nonnull MeasurementModel model) {
         this.recipeId = recipeId;
         this.ingredientId = ingredientId;
         this.recipeIngredientId = recipeIngredientId;
         this.model = model;
     }
 
-    @NonNull
+    @Nonnull
     public String getRecipeId() {
         return recipeId;
     }
 
-    @NonNull
+    @Nonnull
     public String getIngredientId() {
         return ingredientId;
     }
 
-    @NonNull
+    @Nonnull
     public String getRecipeIngredientId() {
         return recipeIngredientId;
     }
 
-    @NonNull
+    @Nonnull
     public MeasurementModel getModel() {
         return model;
     }
@@ -63,7 +63,7 @@ public final class IngredientCalculatorRequest implements UseCase.Request {
         return Objects.hash(recipeId, ingredientId, recipeIngredientId, model);
     }
 
-    @NonNull
+    @Nonnull
     @Override
     public String toString() {
         return "IngredientCalculatorRequest{" +

@@ -1,11 +1,12 @@
 package com.example.peter.thekitchenmenu.domain.entity.model;
 
-import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
 
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementType;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasure;
+
+import javax.annotation.Nonnull;
 
 public class MeasurementModelBuilder {
 
@@ -28,7 +29,7 @@ public class MeasurementModelBuilder {
     private Pair[] maxUnitDigitWidths;
 
 
-    public static MeasurementModelBuilder basedOnModel(@NonNull MeasurementModel oldModel) {
+    public static MeasurementModelBuilder basedOnModel(@Nonnull MeasurementModel oldModel) {
         return new MeasurementModelBuilder().
                 setType(oldModel.getType()).
                 setSubtype(oldModel.getSubtype()).
@@ -49,7 +50,7 @@ public class MeasurementModelBuilder {
                 setMaxUnitDigitWidths(oldModel.getMaxUnitDigitWidths());
     }
 
-    public static MeasurementModelBuilder basedOnUnitOfMeasure(@NonNull UnitOfMeasure unitOfMeasure) {
+    public static MeasurementModelBuilder basedOnUnitOfMeasure(@Nonnull UnitOfMeasure unitOfMeasure) {
         return new MeasurementModelBuilder().
                 setType(unitOfMeasure.getMeasurementType()).
                 setSubtype(unitOfMeasure.getMeasurementSubtype()).

@@ -1,25 +1,23 @@
 package com.example.peter.thekitchenmenu.data.repository;
 
-import androidx.annotation.NonNull;
+import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeIdentityEntity;
 
-import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
-
-import static androidx.core.util.Preconditions.checkNotNull;
+import javax.annotation.Nonnull;
 
 public class RepositoryRecipeIdentity extends Repository<RecipeIdentityEntity> {
 
     public static RepositoryRecipeIdentity INSTANCE = null;
 
-    private RepositoryRecipeIdentity(@NonNull DataSource<RecipeIdentityEntity> remoteDataSource,
-                                     @NonNull DataSource<RecipeIdentityEntity> localDataSource) {
+    private RepositoryRecipeIdentity(@Nonnull PrimitiveDataSource<RecipeIdentityEntity> remoteDataSource,
+                                     @Nonnull PrimitiveDataSource<RecipeIdentityEntity> localDataSource) {
 
-        this.remoteDataSource = checkNotNull(remoteDataSource);
-        this.localDataSource = checkNotNull(localDataSource);
+        this.remoteDataSource = remoteDataSource;
+        this.localDataSource = localDataSource;
     }
 
     public static RepositoryRecipeIdentity getInstance(
-            DataSource<RecipeIdentityEntity> remoteDataSource,
-            DataSource<RecipeIdentityEntity> localDataSource) {
+            PrimitiveDataSource<RecipeIdentityEntity> remoteDataSource,
+            PrimitiveDataSource<RecipeIdentityEntity> localDataSource) {
 
         if (INSTANCE == null)
             INSTANCE = new RepositoryRecipeIdentity(remoteDataSource, localDataSource);

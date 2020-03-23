@@ -2,6 +2,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.state;
 
 import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,26 +11,24 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.state.RecipeStateCalculator.*;
-
 public class RecipeStateResponse implements UseCase.Response {
     @Nonnull
-    private final RecipeState state;
+    private final RecipeMetadata.RecipeState state;
     @Nonnull
     private final List<FailReasons> failReasons;
     @Nonnull
-    private final HashMap<ComponentName, ComponentState> componentStates;
+    private final HashMap<RecipeMetadata.ComponentName, RecipeMetadata.ComponentState> componentStates;
 
-    public RecipeStateResponse(@Nonnull RecipeState state,
+    public RecipeStateResponse(@Nonnull RecipeMetadata.RecipeState state,
                                @Nonnull List<FailReasons> failReasons,
-                               @Nonnull HashMap<ComponentName, ComponentState> componentStates) {
+                               @Nonnull HashMap<RecipeMetadata.ComponentName, RecipeMetadata.ComponentState> componentStates) {
         this.state = state;
         this.failReasons = failReasons;
         this.componentStates = componentStates;
     }
 
     @Nonnull
-    public RecipeState getState() {
+    public RecipeMetadata.RecipeState getState() {
         return state;
     }
 
@@ -39,7 +38,7 @@ public class RecipeStateResponse implements UseCase.Response {
     }
 
     @Nonnull
-    public HashMap<ComponentName, ComponentState> getComponentStates() {
+    public HashMap<RecipeMetadata.ComponentName, RecipeMetadata.ComponentState> getComponentStates() {
         return componentStates;
     }
 
@@ -68,18 +67,18 @@ public class RecipeStateResponse implements UseCase.Response {
     }
 
     public static class Builder {
-        private RecipeState recipeState;
+        private RecipeMetadata.RecipeState recipeState;
         private List<FailReasons> failReasons;
-        private HashMap<ComponentName, ComponentState> componentStates;
+        private HashMap<RecipeMetadata.ComponentName, RecipeMetadata.ComponentState> componentStates;
 
         public static Builder getDefault() {
             return new Builder().
-                    setRecipeState(RecipeState.INVALID_UNCHANGED).
+                    setRecipeState(RecipeMetadata.RecipeState.INVALID_UNCHANGED).
                     setFailReasons(new ArrayList<>()).
                     setComponentStates(new HashMap<>());
         }
 
-        public Builder setRecipeState(RecipeState recipeState) {
+        public Builder setRecipeState(RecipeMetadata.RecipeState recipeState) {
             this.recipeState = recipeState;
             return this;
         }
@@ -89,7 +88,7 @@ public class RecipeStateResponse implements UseCase.Response {
             return this;
         }
 
-        public Builder setComponentStates(HashMap<ComponentName, ComponentState> componentStates) {
+        public Builder setComponentStates(HashMap<RecipeMetadata.ComponentName, RecipeMetadata.ComponentState> componentStates) {
             this.componentStates = componentStates;
             return this;
         }

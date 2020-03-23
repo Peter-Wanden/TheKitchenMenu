@@ -1,30 +1,30 @@
 package com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus;
 
-import androidx.annotation.NonNull;
-
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
 
 import java.util.Objects;
 
+import javax.annotation.Nonnull;
+
 public final class ConversionFactorStatusRequest implements UseCase.Request {
-    @NonNull
+    @Nonnull
     private MeasurementSubtype subtype;
-    @NonNull
+    @Nonnull
     private String ingredientId;
 
-    public ConversionFactorStatusRequest(@NonNull MeasurementSubtype subtype,
-                                         @NonNull String ingredientId) {
+    public ConversionFactorStatusRequest(@Nonnull MeasurementSubtype subtype,
+                                         @Nonnull String ingredientId) {
         this.subtype = subtype;
         this.ingredientId = ingredientId;
     }
 
-    @NonNull
+    @Nonnull
     public MeasurementSubtype getSubtype() {
         return subtype;
     }
 
-    @NonNull
+    @Nonnull
     public String getIngredientId() {
         return ingredientId;
     }
@@ -43,7 +43,7 @@ public final class ConversionFactorStatusRequest implements UseCase.Request {
         return Objects.hash(subtype, ingredientId);
     }
 
-    @NonNull
+    @Nonnull
     @Override
     public String toString() {
         return "ConversionFactorStatusRequest{" +

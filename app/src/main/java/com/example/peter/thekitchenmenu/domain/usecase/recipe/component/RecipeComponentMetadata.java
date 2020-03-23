@@ -3,6 +3,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.component;
 
 import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,18 +11,16 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.state.RecipeStateCalculator.*;
-
 public class RecipeComponentMetadata {
 
     @Nonnull
-    private final ComponentState state;
+    private final RecipeMetadata.ComponentState state;
     @Nonnull
     private final List<FailReasons> failReasons;
     private final long createDate;
     private final long lasUpdate;
 
-    private RecipeComponentMetadata(@Nonnull ComponentState state,
+    private RecipeComponentMetadata(@Nonnull RecipeMetadata.ComponentState state,
                                     @Nonnull List<FailReasons> failReasons,
                                     long createDate,
                                     long lasUpdate) {
@@ -32,7 +31,7 @@ public class RecipeComponentMetadata {
     }
 
     @Nonnull
-    public ComponentState getState() {
+    public RecipeMetadata.ComponentState getState() {
         return state;
     }
 
@@ -77,20 +76,20 @@ public class RecipeComponentMetadata {
     }
 
     public static class Builder {
-        private ComponentState state;
+        private RecipeMetadata.ComponentState state;
         private List<FailReasons> failReasons;
         private long createDate;
         private long lasUpdate;
 
         public Builder getDefault() {
             return new Builder().
-                    setState(ComponentState.INVALID_UNCHANGED).
+                    setState(RecipeMetadata.ComponentState.INVALID_UNCHANGED).
                     setFailReasons(getDefaultFailReasons()).
                     setCreateDate(0L).
                     setLasUpdate(0L);
         }
 
-        public Builder setState(ComponentState state) {
+        public Builder setState(RecipeMetadata.ComponentState state) {
             this.state = state;
             return this;
         }

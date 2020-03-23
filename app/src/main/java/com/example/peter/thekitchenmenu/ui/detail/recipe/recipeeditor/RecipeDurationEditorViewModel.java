@@ -15,11 +15,10 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipedu
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeduration.RecipeDurationRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeduration.RecipeDurationResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 
 import javax.annotation.Nonnull;
-
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.state.RecipeStateCalculator.*;
 
 public class RecipeDurationEditorViewModel extends ObservableViewModel {
 
@@ -55,7 +54,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
         response = new RecipeDurationResponse.Builder().getDefault().build();
 
         recipeMacro.registerComponentCallback(new Pair<>(
-                ComponentName.DURATION,
+                RecipeMetadata.ComponentName.DURATION,
                 new DurationCallbackListener()));
     }
 

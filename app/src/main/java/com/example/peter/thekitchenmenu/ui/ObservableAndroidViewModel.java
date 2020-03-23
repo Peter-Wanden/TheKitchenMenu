@@ -2,16 +2,17 @@ package com.example.peter.thekitchenmenu.ui;
 
 import android.app.Application;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.databinding.Observable;
 import androidx.databinding.PropertyChangeRegistry;
+
+import javax.annotation.Nonnull;
 
 public class ObservableAndroidViewModel extends AndroidViewModel implements Observable {
 
     private PropertyChangeRegistry callbacks = new PropertyChangeRegistry();
 
-    public ObservableAndroidViewModel(@NonNull Application application) {
+    public ObservableAndroidViewModel(@Nonnull Application application) {
         super(application);
     }
 

@@ -1,21 +1,21 @@
 package com.example.peter.thekitchenmenu.data.repository;
 
-import androidx.annotation.NonNull;
+import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.IngredientEntity;
 
-import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
+import javax.annotation.Nonnull;
 
 public class RepositoryIngredient extends Repository<IngredientEntity> {
 
     public static RepositoryIngredient INSTANCE = null;
 
-    private RepositoryIngredient(@NonNull DataSource<IngredientEntity> remoteDataSource,
-                                 @NonNull DataSource<IngredientEntity> localDataSource) {
+    private RepositoryIngredient(@Nonnull PrimitiveDataSource<IngredientEntity> remoteDataSource,
+                                 @Nonnull PrimitiveDataSource<IngredientEntity> localDataSource) {
         this.remoteDataSource = remoteDataSource;
         this.localDataSource = localDataSource;
     }
 
-    public static RepositoryIngredient getInstance(DataSource<IngredientEntity> remoteDataSource,
-                                                   DataSource<IngredientEntity> localDataSource) {
+    public static RepositoryIngredient getInstance(PrimitiveDataSource<IngredientEntity> remoteDataSource,
+                                                   PrimitiveDataSource<IngredientEntity> localDataSource) {
         if (INSTANCE == null)
             INSTANCE = new RepositoryIngredient(remoteDataSource, localDataSource);
         return INSTANCE;

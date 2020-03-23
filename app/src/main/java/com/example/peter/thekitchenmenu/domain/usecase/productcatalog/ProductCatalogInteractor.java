@@ -1,10 +1,10 @@
 package com.example.peter.thekitchenmenu.domain.usecase.productcatalog;
 
-import androidx.annotation.NonNull;
-
 import com.example.peter.thekitchenmenu.data.model.ProductModel;
 
 import java.util.List;
+
+import javax.annotation.Nonnull;
 
 public interface ProductCatalogInteractor {
 
@@ -22,9 +22,9 @@ public interface ProductCatalogInteractor {
         void onDataNotAvailable();
     }
 
-    void getProductModelList(@NonNull GetAllCallback callback);
+    void getProductModelList(@Nonnull GetAllCallback callback);
 
-    void getFavoriteProductModelList(@NonNull GetAllCallback callback);
+    void getFavoriteProductModelList(@Nonnull GetAllCallback callback);
 
     void removeFavoriteProduct(String favoriteProductId);
 }

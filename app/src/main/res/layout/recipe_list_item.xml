@@ -30,7 +30,7 @@
         android:onClick="@{() -> listener.onRecipeClicked(recipeModel)}"
         >
 
-        <!-- android:onClick="@{() -> listener.onRecipeClicked(recipeEntity)}" -->
+        <!-- android:onClick="@{() -> listener.onRecipeClicked(recipeMetadataEntity)}" -->
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/recipe_list_item_constraintLayout"

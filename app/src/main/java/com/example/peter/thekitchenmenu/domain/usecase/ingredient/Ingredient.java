@@ -1,8 +1,8 @@
 package com.example.peter.thekitchenmenu.domain.usecase.ingredient;
 
 import com.example.peter.thekitchenmenu.app.Constants;
-import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
-import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.IngredientEntity;
+import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
@@ -10,7 +10,7 @@ import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientDuplicateChecker.NO_DUPLICATE_FOUND;
 
-public class Ingredient extends UseCase implements DataSource.GetEntityCallback<IngredientEntity> {
+public class Ingredient extends UseCase implements PrimitiveDataSource.GetEntityCallback<IngredientEntity> {
 
         private static final String TAG = "tkm-" + Ingredient.class.getSimpleName() + ": ";
 
@@ -101,7 +101,7 @@ public class Ingredient extends UseCase implements DataSource.GetEntityCallback<
     }
 
     @Override
-    public void onDataNotAvailable() {
+    public void onDataUnavailable() {
         requestModel = createNewIngredientModel();
         equaliseRequestResponseStates();
 

@@ -1,17 +1,17 @@
 package com.example.peter.thekitchenmenu.data.repository;
 
-import androidx.annotation.NonNull;
+import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.RecipeIngredientEntity;
 
-import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientEntity;
+import javax.annotation.Nonnull;
 
-public interface DataSourceRecipeIngredient extends DataSource<RecipeIngredientEntity> {
+public interface DataSourceRecipeIngredient extends PrimitiveDataSource<RecipeIngredientEntity> {
 
-    void getByRecipeId(@NonNull String recipeId,
-                       @NonNull GetAllCallback<RecipeIngredientEntity> callback);
+    void getByRecipeId(@Nonnull String recipeId,
+                       @Nonnull GetAllCallback<RecipeIngredientEntity> callback);
 
-    void getByProductId(@NonNull String productId,
-                        @NonNull GetAllCallback<RecipeIngredientEntity> callback);
+    void getByProductId(@Nonnull String productId,
+                        @Nonnull GetAllCallback<RecipeIngredientEntity> callback);
 
-    void getByIngredientId(@NonNull String ingredientId,
-                           @NonNull GetAllCallback<RecipeIngredientEntity> callback);
+    void getByIngredientId(@Nonnull String ingredientId,
+                           @Nonnull GetAllCallback<RecipeIngredientEntity> callback);
 }

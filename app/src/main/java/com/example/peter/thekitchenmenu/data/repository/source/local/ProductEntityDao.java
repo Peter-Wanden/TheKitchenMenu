@@ -8,18 +8,18 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
+import com.example.peter.thekitchenmenu.data.primitivemodel.product.ProductEntity;
 
 import java.util.List;
 
 import static android.app.SearchManager.SUGGEST_COLUMN_INTENT_DATA;
 import static android.app.SearchManager.SUGGEST_COLUMN_TEXT_1;
 import static android.app.SearchManager.SUGGEST_COLUMN_TEXT_2;
-import static com.example.peter.thekitchenmenu.data.entity.ProductEntity.DESCRIPTION;
-import static com.example.peter.thekitchenmenu.data.entity.ProductEntity.ID;
-import static com.example.peter.thekitchenmenu.data.entity.ProductEntity.SHOPPING_LIST_ITEM_NAME;
-import static com.example.peter.thekitchenmenu.data.entity.ProductEntity.TABLE_PRODUCT;
-import static com.example.peter.thekitchenmenu.data.entity.ProductFastTextSearch.TABLE_FTS_PRODUCT;
+import static com.example.peter.thekitchenmenu.data.primitivemodel.product.ProductEntity.DESCRIPTION;
+import static com.example.peter.thekitchenmenu.data.primitivemodel.product.ProductEntity.ID;
+import static com.example.peter.thekitchenmenu.data.primitivemodel.product.ProductEntity.SHOPPING_LIST_ITEM_NAME;
+import static com.example.peter.thekitchenmenu.data.primitivemodel.product.ProductEntity.TABLE_PRODUCT;
+import static com.example.peter.thekitchenmenu.data.primitivemodel.product.ProductFastTextSearch.TABLE_FTS_PRODUCT;
 
 @Dao
 public interface ProductEntityDao {

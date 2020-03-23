@@ -6,7 +6,7 @@ import android.content.res.Resources;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipe;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeMetaData;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeCourse;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
@@ -30,6 +30,9 @@ import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredientcalculator.IngredientCalculator;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class UseCaseFactory {
 
     private static final String TAG = "tkm-" + UseCaseFactory.class.getSimpleName() + ": ";
@@ -37,7 +40,7 @@ public class UseCaseFactory {
     private static volatile UseCaseFactory INSTANCE;
 
     private final Application application;
-    private final RepositoryRecipe recipeRepository;
+    private final RepositoryRecipeMetaData recipeRepository;
     private final RepositoryRecipePortions recipePortionsRepository;
     private final RepositoryRecipeIngredient recipeIngredientRepository;
     private final RepositoryIngredient ingredientRepository;
@@ -46,7 +49,7 @@ public class UseCaseFactory {
     private final RepositoryRecipeCourse recipeCourseRepository;
 
     private UseCaseFactory(Application application,
-                           RepositoryRecipe recipeRepository,
+                           RepositoryRecipeMetaData recipeRepository,
                            RepositoryRecipePortions recipePortionsRepository,
                            RepositoryRecipeIngredient recipeIngredientRepository,
                            RepositoryIngredient ingredientRepository,
@@ -159,10 +162,17 @@ public class UseCaseFactory {
         );
     }
 
-    private RecipeMetadata provideRecipe() {
+    private RecipeMetadata provideRecipeMetadata() {
+        final Set<RecipeMetadata.ComponentName> requiredComponents = new HashSet<>();
+        requiredComponents.add(RecipeMetadata.ComponentName.IDENTITY);
+        requiredComponents.add(RecipeMetadata.ComponentName.COURSE);
+        requiredComponents.add(RecipeMetadata.ComponentName.DURATION);
+        requiredComponents.add(RecipeMetadata.ComponentName.PORTIONS);
+
         return new RecipeMetadata(
                 new TimeProvider(),
-                recipeRepository
+                recipeRepository,
+                requiredComponents
         );
     }
 
@@ -199,7 +209,7 @@ public class UseCaseFactory {
         return new Recipe(
                 UseCaseHandler.getInstance(),
                 provideRecipeStateCalculator(),
-                provideRecipe(),
+                provideRecipeMetadata(),
                 provideRecipeIdentity(),
                 provideRecipeCourse(),
                 provideRecipeDuration(),

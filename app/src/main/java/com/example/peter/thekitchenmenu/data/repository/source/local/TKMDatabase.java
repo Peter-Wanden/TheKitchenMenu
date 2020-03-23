@@ -3,18 +3,17 @@ package com.example.peter.thekitchenmenu.data.repository.source.local;
 import android.content.Context;
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
-import com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity;
-import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
-import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
-import com.example.peter.thekitchenmenu.data.entity.ProductFastTextSearch;
-import com.example.peter.thekitchenmenu.data.entity.RecipeCourseEntity;
-import com.example.peter.thekitchenmenu.data.entity.RecipeDurationEntity;
-import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
-import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
-import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientEntity;
-import com.example.peter.thekitchenmenu.data.entity.RecipePortionsEntity;
+import com.example.peter.thekitchenmenu.data.primitivemodel.product.FavoriteProductEntity;
+import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.IngredientEntity;
+import com.example.peter.thekitchenmenu.data.primitivemodel.product.ProductEntity;
+import com.example.peter.thekitchenmenu.data.primitivemodel.product.ProductFastTextSearch;
+import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeCourseEntity;
+import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeDurationEntity;
+import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeMetadataEntity;
+import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeIdentityEntity;
+import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.RecipeIngredientEntity;
+import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipePortionsEntity;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.room.Database;
@@ -23,14 +22,16 @@ import androidx.room.RoomDatabase;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import static com.example.peter.thekitchenmenu.data.entity.ProductEntity.*;
-import static com.example.peter.thekitchenmenu.data.entity.ProductFastTextSearch.TABLE_FTS_PRODUCT;
+import javax.annotation.Nonnull;
+
+import static com.example.peter.thekitchenmenu.data.primitivemodel.product.ProductEntity.*;
+import static com.example.peter.thekitchenmenu.data.primitivemodel.product.ProductFastTextSearch.TABLE_FTS_PRODUCT;
 
 @Database(entities = {
         ProductEntity.class,
         ProductFastTextSearch.class,
         FavoriteProductEntity.class,
-        RecipeEntity.class,
+        RecipeMetadataEntity.class,
         RecipeCourseEntity.class,
         RecipeIdentityEntity.class,
         RecipeDurationEntity.class,
@@ -76,7 +77,7 @@ public abstract class TKMDatabase extends RoomDatabase {
         return Room.databaseBuilder(appContext, TKMDatabase.class, TKM_LOCAL_DATABASE)
                 .addCallback(new Callback() {
             @Override
-            public void onCreate(@NonNull SupportSQLiteDatabase db) {
+            public void onCreate(@Nonnull SupportSQLiteDatabase db) {
                 super.onCreate(db);
                 executors.diskIO().execute(() -> {
                     // Add anything here that needs to be completed during database creation,
@@ -113,7 +114,7 @@ public abstract class TKMDatabase extends RoomDatabase {
     private static final Migration MIGRATION_2_3 = new Migration(2,3) {
 
         @Override
-        public void migrate(@NonNull SupportSQLiteDatabase database) {
+        public void migrate(@Nonnull SupportSQLiteDatabase database) {
             database.execSQL("CREATE VIRTUAL TABLE IF NOT EXISTS " + TABLE_FTS_PRODUCT +
                             " USING FTS4(" + DESCRIPTION + " TEXT, " +
                                 SHOPPING_LIST_ITEM_NAME + " TEXT, " +

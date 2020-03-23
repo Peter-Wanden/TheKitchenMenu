@@ -3,7 +3,6 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +17,8 @@ import com.example.peter.thekitchenmenu.ui.ViewModelFactoryRecipe;
 import com.example.peter.thekitchenmenu.ui.detail.ingredient.IngredientViewerViewModel;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist.RecipeNameAndPortionsViewModel;
 import com.example.peter.thekitchenmenu.utils.ActivityUtils;
+
+import javax.annotation.Nonnull;
 
 public class RecipeIngredientEditorActivity
         extends AppCompatActivity implements RecipeIngredientEditorNavigator {
@@ -157,7 +158,7 @@ public class RecipeIngredientEditorActivity
         );
     }
 
-    @NonNull
+    @Nonnull
     private RecipeIngredientMeasurementFragment findOrCreateMeasurementFragment() {
         RecipeIngredientMeasurementFragment fragment =
                 (RecipeIngredientMeasurementFragment) getSupportFragmentManager().

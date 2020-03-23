@@ -17,13 +17,12 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recip
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeportions.RecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeportions.RecipePortionsRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeportions.RecipePortionsResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.ui.ObservableViewModel;
 
 import java.util.List;
 
 import javax.annotation.Nonnull;
-
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.state.RecipeStateCalculator.*;
 
 public class RecipePortionsEditorViewModel extends ObservableViewModel {
 
@@ -59,7 +58,7 @@ public class RecipePortionsEditorViewModel extends ObservableViewModel {
 
         callback = new PortionsCallbackListener();
         recipeMacro.registerComponentCallback(new Pair<>(
-                ComponentName.PORTIONS,
+                RecipeMetadata.ComponentName.PORTIONS,
                 callback)
         );
     }

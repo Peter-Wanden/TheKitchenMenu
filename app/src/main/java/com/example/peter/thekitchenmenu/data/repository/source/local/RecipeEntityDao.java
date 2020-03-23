@@ -6,27 +6,27 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
+import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeMetadataEntity;
 
 import java.util.List;
 
-import static com.example.peter.thekitchenmenu.data.entity.RecipeEntity.ID;
-import static com.example.peter.thekitchenmenu.data.entity.RecipeEntity.TABLE_RECIPE;
+import static com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeMetadataEntity.ID;
+import static com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeMetadataEntity.TABLE_RECIPE;
 
 @Dao
 public interface RecipeEntityDao {
 
     @Query("SELECT * FROM " + TABLE_RECIPE)
-    List<RecipeEntity> getAll();
+    List<RecipeMetadataEntity> getAll();
 
     @Query("SELECT * FROM " + TABLE_RECIPE + " WHERE " + ID + " = :id")
-    RecipeEntity getById(String id);
+    RecipeMetadataEntity getById(String id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(RecipeEntity recipeEntity);
+    void insert(RecipeMetadataEntity recipeMetadataEntity);
 
     @Update
-    void update(RecipeEntity recipeEntity);
+    void update(RecipeMetadataEntity recipeMetadataEntity);
 
     @Query("DELETE FROM " + TABLE_RECIPE + " WHERE " + ID + " = :id")
     void deleteById(String id);

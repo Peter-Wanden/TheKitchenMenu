@@ -1,9 +1,9 @@
 package com.example.peter.thekitchenmenu.testdata;
 
 import com.example.peter.thekitchenmenu.commonmocks.StringMaker;
-import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
+import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeidentity.RecipeIdentityPersistenceModel;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentityTest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeidentity.RecipeIdentityTest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,11 +18,11 @@ public class TestDataRecipeIdentityEntity {
 
     public static RecipeIdentityEntity getInvalidNewEmpty() {
         return new RecipeIdentityEntity(
-                TestDataRecipeEntity.getNewInvalid().getId(),
+                TestDataRecipeMetaDataEntity.getNewInvalid().getId(),
                 defaultModel.getTitle(),
                 defaultModel.getDescription(),
-                TestDataRecipeEntity.getNewInvalid().getCreateDate(),
-                TestDataRecipeEntity.getNewInvalid().getLastUpdate()
+                TestDataRecipeMetaDataEntity.getNewInvalid().getCreateDate(),
+                TestDataRecipeMetaDataEntity.getNewInvalid().getLastUpdate()
         );
     }
 
@@ -33,11 +33,11 @@ public class TestDataRecipeIdentityEntity {
                 build();
 
         return new RecipeIdentityEntity(
-                TestDataRecipeEntity.getNewInvalid().getId(),
+                TestDataRecipeMetaDataEntity.getNewInvalid().getId(),
                 titleTooShort,
                 defaultModel.getDescription(),
-                TestDataRecipeEntity.getNewInvalid().getCreateDate(),
-                TestDataRecipeEntity.getNewInvalid().getLastUpdate()
+                TestDataRecipeMetaDataEntity.getNewInvalid().getCreateDate(),
+                TestDataRecipeMetaDataEntity.getNewInvalid().getLastUpdate()
         );
     }
 
@@ -48,11 +48,11 @@ public class TestDataRecipeIdentityEntity {
                 thenAddOneCharacter().build();
 
         return new RecipeIdentityEntity(
-                TestDataRecipeEntity.getNewInvalid().getId(),
+                TestDataRecipeMetaDataEntity.getNewInvalid().getId(),
                 titleTooLong,
                 defaultModel.getDescription(),
-                TestDataRecipeEntity.getNewInvalid().getCreateDate(),
-                TestDataRecipeEntity.getNewInvalid().getLastUpdate()
+                TestDataRecipeMetaDataEntity.getNewInvalid().getCreateDate(),
+                TestDataRecipeMetaDataEntity.getNewInvalid().getLastUpdate()
         );
     }
 
@@ -64,31 +64,31 @@ public class TestDataRecipeIdentityEntity {
                 build();
 
         return new RecipeIdentityEntity(
-                TestDataRecipeEntity.getNewInvalid().getId(),
+                TestDataRecipeMetaDataEntity.getNewInvalid().getId(),
                 getInvalidNewTitleTooLongDescriptionDefault().getTitle(),
                 descriptionTooLong,
-                TestDataRecipeEntity.getNewInvalid().getCreateDate(),
-                TestDataRecipeEntity.getNewInvalid().getLastUpdate()
+                TestDataRecipeMetaDataEntity.getNewInvalid().getCreateDate(),
+                TestDataRecipeMetaDataEntity.getNewInvalid().getLastUpdate()
         );
     }
 
     public static RecipeIdentityEntity getInvalidNewTitleTooShortDescriptionValid() {
         return new RecipeIdentityEntity(
-                TestDataRecipeEntity.getNewInvalid().getId(),
+                TestDataRecipeMetaDataEntity.getNewInvalid().getId(),
                 getInvalidNewTitleTooShortDescriptionDefault().getTitle(),
                 getValidNewComplete().getDescription(),
-                TestDataRecipeEntity.getNewInvalid().getCreateDate(),
-                TestDataRecipeEntity.getNewInvalid().getLastUpdate()
+                TestDataRecipeMetaDataEntity.getNewInvalid().getCreateDate(),
+                TestDataRecipeMetaDataEntity.getNewInvalid().getLastUpdate()
         );
     }
 
     public static RecipeIdentityEntity getValidNewTitleValidDescriptionDefault() {
         return new RecipeIdentityEntity(
-                TestDataRecipeEntity.getNewValid().getId(),
+                TestDataRecipeMetaDataEntity.getNewValid().getId(),
                 getValidNewComplete().getTitle(),
                 defaultModel.getDescription(),
-                TestDataRecipeEntity.getNewValid().getCreateDate(),
-                TestDataRecipeEntity.getNewValid().getLastUpdate()
+                TestDataRecipeMetaDataEntity.getNewValid().getCreateDate(),
+                TestDataRecipeMetaDataEntity.getNewValid().getLastUpdate()
         );
     }
 
@@ -103,11 +103,11 @@ public class TestDataRecipeIdentityEntity {
                 build();
 
         return new RecipeIdentityEntity(
-                TestDataRecipeEntity.getNewValid().getId(),
+                TestDataRecipeMetaDataEntity.getNewValid().getId(),
                 newValidTitle,
                 newValidDescription,
-                TestDataRecipeEntity.getNewValid().getCreateDate(),
-                TestDataRecipeEntity.getNewValid().getLastUpdate()
+                TestDataRecipeMetaDataEntity.getNewValid().getCreateDate(),
+                TestDataRecipeMetaDataEntity.getNewValid().getLastUpdate()
         );
     }
 
@@ -120,11 +120,11 @@ public class TestDataRecipeIdentityEntity {
 
 
         return new RecipeIdentityEntity(
-                TestDataRecipeEntity.getInvalidExisting().getId(),
+                TestDataRecipeMetaDataEntity.getInvalidExisting().getId(),
                 invalidExistingTitleTooShort,
                 defaultModel.getDescription(),
-                TestDataRecipeEntity.getInvalidExisting().getCreateDate(),
-                TestDataRecipeEntity.getInvalidExisting().getLastUpdate()
+                TestDataRecipeMetaDataEntity.getInvalidExisting().getCreateDate(),
+                TestDataRecipeMetaDataEntity.getInvalidExisting().getLastUpdate()
         );
     }
 
@@ -135,11 +135,11 @@ public class TestDataRecipeIdentityEntity {
                 build();
 
         return new RecipeIdentityEntity(
-                TestDataRecipeEntity.getInvalidExisting().getId(),
+                TestDataRecipeMetaDataEntity.getInvalidExisting().getId(),
                 invalidExistingTitleTooLong,
                 defaultModel.getDescription(),
-                TestDataRecipeEntity.getInvalidExisting().getCreateDate(),
-                TestDataRecipeEntity.getInvalidExisting().getLastUpdate()
+                TestDataRecipeMetaDataEntity.getInvalidExisting().getCreateDate(),
+                TestDataRecipeMetaDataEntity.getInvalidExisting().getLastUpdate()
         );
     }
 
@@ -151,31 +151,31 @@ public class TestDataRecipeIdentityEntity {
                 build();
 
         return new RecipeIdentityEntity(
-                TestDataRecipeEntity.getInvalidExisting().getId(),
+                TestDataRecipeMetaDataEntity.getInvalidExisting().getId(),
                 getValidExistingTitleValidDescriptionValid().getTitle(),
                 existingDescriptionTooLong,
-                TestDataRecipeEntity.getInvalidExisting().getCreateDate(),
-                TestDataRecipeEntity.getInvalidExisting().getLastUpdate()
+                TestDataRecipeMetaDataEntity.getInvalidExisting().getCreateDate(),
+                TestDataRecipeMetaDataEntity.getInvalidExisting().getLastUpdate()
         );
     }
 
     public static RecipeIdentityEntity getInvalidExistingTitleTooShortDescriptionTooLong() {
         return new RecipeIdentityEntity(
-                TestDataRecipeEntity.getInvalidExisting().getId(),
+                TestDataRecipeMetaDataEntity.getInvalidExisting().getId(),
                 getInvalidExistingTitleTooShortDefaultDescription().getTitle(),
                 getInvalidExistingTitleValidDescriptionTooLong().getDescription(),
-                TestDataRecipeEntity.getInvalidExisting().getCreateDate(),
-                TestDataRecipeEntity.getInvalidExisting().getLastUpdate()
+                TestDataRecipeMetaDataEntity.getInvalidExisting().getCreateDate(),
+                TestDataRecipeMetaDataEntity.getInvalidExisting().getLastUpdate()
         );
     }
 
     public static RecipeIdentityEntity getInvalidExistingTitleTooLongDescriptionTooLong() {
         return new RecipeIdentityEntity(
-                TestDataRecipeEntity.getInvalidExisting().getId(),
+                TestDataRecipeMetaDataEntity.getInvalidExisting().getId(),
                 getInvalidExistingTitleTooLongDefaultDescription().getTitle(),
                 getInvalidExistingTitleValidDescriptionTooLong().getDescription(),
-                TestDataRecipeEntity.getInvalidExisting().getCreateDate(),
-                TestDataRecipeEntity.getInvalidExisting().getLastUpdate()
+                TestDataRecipeMetaDataEntity.getInvalidExisting().getCreateDate(),
+                TestDataRecipeMetaDataEntity.getInvalidExisting().getLastUpdate()
         );
     }
 
@@ -190,21 +190,21 @@ public class TestDataRecipeIdentityEntity {
                 build();
 
         return new RecipeIdentityEntity(
-                TestDataRecipeEntity.getValidExisting().getId(),
+                TestDataRecipeMetaDataEntity.getValidExisting().getId(),
                 validExistingCompleteTitle,
                 validExistingCompleteDescription,
-                TestDataRecipeEntity.getValidExisting().getCreateDate(),
-                TestDataRecipeEntity.getValidExisting().getLastUpdate()
+                TestDataRecipeMetaDataEntity.getValidExisting().getCreateDate(),
+                TestDataRecipeMetaDataEntity.getValidExisting().getLastUpdate()
         );
     }
 
     public static RecipeIdentityEntity getValidExistingTitleValidDescriptionDefault() {
         return new RecipeIdentityEntity(
-                TestDataRecipeEntity.getInvalidExisting().getId(),
+                TestDataRecipeMetaDataEntity.getInvalidExisting().getId(),
                 getValidExistingTitleValidDescriptionValid().getTitle(),
                 defaultModel.getDescription(),
-                TestDataRecipeEntity.getValidExisting().getCreateDate(),
-                TestDataRecipeEntity.getValidExisting().getLastUpdate()
+                TestDataRecipeMetaDataEntity.getValidExisting().getCreateDate(),
+                TestDataRecipeMetaDataEntity.getValidExisting().getLastUpdate()
         );
     }
 
@@ -219,21 +219,21 @@ public class TestDataRecipeIdentityEntity {
                 build();
 
         return new RecipeIdentityEntity(
-                TestDataRecipeEntity.getValidFromAnotherUser().getId(),
+                TestDataRecipeMetaDataEntity.getValidFromAnotherUser().getId(),
                 validCompleteFromAnotherUserTitle,
                 validCompleteFromAnotherUserDescription,
-                TestDataRecipeEntity.getValidFromAnotherUser().getCreateDate(),
-                TestDataRecipeEntity.getValidFromAnotherUser().getLastUpdate()
+                TestDataRecipeMetaDataEntity.getValidFromAnotherUser().getCreateDate(),
+                TestDataRecipeMetaDataEntity.getValidFromAnotherUser().getLastUpdate()
         );
     }
 
     public static RecipeIdentityEntity getValidCompleteAfterCloned() {
         return new RecipeIdentityEntity(
-                TestDataRecipeEntity.getNewValid().getId(),
+                TestDataRecipeMetaDataEntity.getNewValid().getId(),
                 getValidCompleteFromAnotherUser().getTitle(),
                 getValidCompleteFromAnotherUser().getDescription(),
-                TestDataRecipeEntity.getNewValid().getCreateDate(),
-                TestDataRecipeEntity.getNewValid().getLastUpdate()
+                TestDataRecipeMetaDataEntity.getNewValid().getCreateDate(),
+                TestDataRecipeMetaDataEntity.getNewValid().getLastUpdate()
         );
     }
 
@@ -250,11 +250,11 @@ public class TestDataRecipeIdentityEntity {
                 build();
 
         return new RecipeIdentityEntity(
-                TestDataRecipeEntity.getInvalidFromAnotherUser().getId(),
+                TestDataRecipeMetaDataEntity.getInvalidFromAnotherUser().getId(),
                 invalidCompleteFromAnotherUserTitle,
                 invalidCompleteFromAnotherUserDescription,
-                TestDataRecipeEntity.getInvalidFromAnotherUser().getCreateDate(),
-                TestDataRecipeEntity.getInvalidFromAnotherUser().getLastUpdate()
+                TestDataRecipeMetaDataEntity.getInvalidFromAnotherUser().getCreateDate(),
+                TestDataRecipeMetaDataEntity.getInvalidFromAnotherUser().getLastUpdate()
         );
     }
 
@@ -268,11 +268,11 @@ public class TestDataRecipeIdentityEntity {
         truncatedDescription.setLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH);
 
         return new RecipeIdentityEntity(
-                TestDataRecipeEntity.getInvalidNewCloned().getId(),
+                TestDataRecipeMetaDataEntity.getInvalidNewCloned().getId(),
                 truncatedTitle.toString(),
                 truncatedDescription.toString(),
-                TestDataRecipeEntity.getInvalidNewCloned().getCreateDate(),
-                TestDataRecipeEntity.getInvalidNewCloned().getLastUpdate()
+                TestDataRecipeMetaDataEntity.getInvalidNewCloned().getCreateDate(),
+                TestDataRecipeMetaDataEntity.getInvalidNewCloned().getLastUpdate()
         );
     }
 
@@ -283,11 +283,11 @@ public class TestDataRecipeIdentityEntity {
                 build();
 
         return new RecipeIdentityEntity(
-                TestDataRecipeEntity.getValidNewCloned().getId(),
+                TestDataRecipeMetaDataEntity.getValidNewCloned().getId(),
                 getValidCompleteFromAnotherUser().getTitle(),
                 validClonedValidUpdatedDescription,
-                TestDataRecipeEntity.getValidNewCloned().getLastUpdate(),
-                TestDataRecipeEntity.getValidNewCloned().getCreateDate()
+                TestDataRecipeMetaDataEntity.getValidNewCloned().getLastUpdate(),
+                TestDataRecipeMetaDataEntity.getValidNewCloned().getCreateDate()
         );
     }
 

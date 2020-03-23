@@ -1,12 +1,13 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeduration;
 
-import com.example.peter.thekitchenmenu.data.entity.RecipeDurationEntity;
-import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeDurationEntity;
+import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration;
 import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.RecipeComponentMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 
 import java.util.ArrayList;
@@ -14,10 +15,8 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.state.RecipeStateCalculator.*;
-
 public class RecipeDuration extends UseCase
-        implements DataSource.GetEntityCallback<RecipeDurationEntity> {
+        implements PrimitiveDataSource.GetEntityCallback<RecipeDurationEntity> {
 
     private static final String TAG = "tkm-" + RecipeDuration.class.getSimpleName() + ": ";
 
@@ -96,7 +95,7 @@ public class RecipeDuration extends UseCase
     }
 
     @Override
-    public void onDataNotAvailable() {
+    public void onDataUnavailable() {
         persistenceModel = createNewPersistenceModel();
         failReasons.add(CommonFailReason.DATA_UNAVAILABLE);
         buildResponse();
@@ -156,7 +155,7 @@ public class RecipeDuration extends UseCase
                 setModel(getResponseModel()).
                 build();
 
-        if (response.getMetadata().getState() == ComponentState.VALID_CHANGED) {
+        if (response.getMetadata().getState() == RecipeMetadata.ComponentState.VALID_CHANGED) {
             persistenceModel = updatePersistenceFromRequestModel();
             save();
         }
@@ -171,17 +170,17 @@ public class RecipeDuration extends UseCase
                 build();
     }
 
-    private ComponentState getComponentState() {
+    private RecipeMetadata.ComponentState getComponentState() {
         boolean isValid = failReasons.contains(CommonFailReason.NONE);
 
         if (!isValid && !isChanged()) {
-            return ComponentState.INVALID_UNCHANGED;
+            return RecipeMetadata.ComponentState.INVALID_UNCHANGED;
         } else if (isValid && !isChanged()) {
-            return ComponentState.VALID_UNCHANGED;
+            return RecipeMetadata.ComponentState.VALID_UNCHANGED;
         } else if (!isValid && isChanged()) {
-            return ComponentState.INVALID_CHANGED;
+            return RecipeMetadata.ComponentState.INVALID_CHANGED;
         } else {
-            return ComponentState.VALID_CHANGED;
+            return RecipeMetadata.ComponentState.VALID_CHANGED;
         }
     }
 

@@ -1,15 +1,15 @@
 package com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus;
 
 import com.example.peter.thekitchenmenu.app.Constants;
-import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
-import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.IngredientEntity;
+import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasure;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
 
 public class ConversionFactorStatus extends UseCase
-        implements DataSource.GetEntityCallback<IngredientEntity> {
+        implements PrimitiveDataSource.GetEntityCallback<IngredientEntity> {
 
     private static final String TAG = "tkm-" + ConversionFactorStatus.class.getSimpleName() + ": ";
 
@@ -60,13 +60,13 @@ public class ConversionFactorStatus extends UseCase
     }
 
     @Override
-    public void onEntityLoaded(IngredientEntity ingredientEntity) {
-        this.ingredientEntity = ingredientEntity;
+    public void onEntityLoaded(IngredientEntity entity) {
+        this.ingredientEntity = entity;
         checkEditableStatus();
     }
 
     @Override
-    public void onDataNotAvailable() {
+    public void onDataUnavailable() {
         returnDataNotAvailable();
     }
 

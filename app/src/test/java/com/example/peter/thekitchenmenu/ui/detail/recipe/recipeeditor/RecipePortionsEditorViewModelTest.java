@@ -3,21 +3,21 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeeditor;
 import android.content.res.Resources;
 
 import com.example.peter.thekitchenmenu.R;
+import com.example.peter.thekitchenmenu.commonmocks.RecipeComponents;
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
-import com.example.peter.thekitchenmenu.data.entity.RecipeCourseEntity;
-import com.example.peter.thekitchenmenu.data.entity.RecipeDurationEntity;
-import com.example.peter.thekitchenmenu.data.entity.RecipeEntity;
-import com.example.peter.thekitchenmenu.data.entity.RecipeIdentityEntity;
-import com.example.peter.thekitchenmenu.data.entity.RecipePortionsEntity;
-import com.example.peter.thekitchenmenu.data.repository.DataSource;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipe;
+import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeCourseEntity;
+import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeDurationEntity;
+import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeMetadataEntity;
+import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeIdentityEntity;
+import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipePortionsEntity;
+import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
+import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeMetaData;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeCourse;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadataRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadataResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
@@ -26,14 +26,13 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipedu
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeidentity.RecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeportions.RecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.state.RecipeStateCalculator;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.state.RecipeStateResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeduration.RecipeDurationTest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeidentity.RecipeIdentityTest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeportions.RecipePortionsTest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeduration.RecipeDurationTest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeidentity.RecipeIdentityTest;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeportions.RecipePortionsTest;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeCourseEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeDurationEntity;
-import com.example.peter.thekitchenmenu.testdata.TestDataRecipeEntity;
+import com.example.peter.thekitchenmenu.testdata.TestDataRecipeMetaDataEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipePortionsEntity;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
@@ -44,7 +43,6 @@ import org.mockito.*;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.state.RecipeStateCalculator.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.anyInt;
@@ -88,25 +86,25 @@ public class RecipePortionsEditorViewModelTest {
 
     // region helper fields ------------------------------------------------------------------------
     @Mock
-    RepositoryRecipe repoRecipeMock;
+    RepositoryRecipeMetaData repoRecipeMock;
     @Captor
-    ArgumentCaptor<DataSource.GetEntityCallback<RecipeEntity>> repoRecipeCallback;
+    ArgumentCaptor<PrimitiveDataSource.GetEntityCallback<RecipeMetadataEntity>> repoRecipeCallback;
     @Mock
     RepositoryRecipeIdentity repoIdentityMock;
     @Captor
-    ArgumentCaptor<DataSource.GetEntityCallback<RecipeIdentityEntity>> repoIdentityCallback;
+    ArgumentCaptor<PrimitiveDataSource.GetEntityCallback<RecipeIdentityEntity>> repoIdentityCallback;
     @Mock
     RepositoryRecipeCourse repoCourseMock;
     @Captor
-    ArgumentCaptor<DataSource.GetAllCallback<RecipeCourseEntity>> repoCourseCallback;
+    ArgumentCaptor<PrimitiveDataSource.GetAllCallback<RecipeCourseEntity>> repoCourseCallback;
     @Mock
     RepositoryRecipeDuration repoDurationMock;
     @Captor
-    ArgumentCaptor<DataSource.GetEntityCallback<RecipeDurationEntity>> repoDurationCallback;
+    ArgumentCaptor<PrimitiveDataSource.GetEntityCallback<RecipeDurationEntity>> repoDurationCallback;
     @Mock
     RepositoryRecipePortions repoPortionsMock;
     @Captor
-    ArgumentCaptor<DataSource.GetEntityCallback<RecipePortionsEntity>> repoPortionsCallback;
+    ArgumentCaptor<PrimitiveDataSource.GetEntityCallback<RecipePortionsEntity>> repoPortionsCallback;
     @Mock
     private Resources resourcesMock;
     @Mock
@@ -115,7 +113,7 @@ public class RecipePortionsEditorViewModelTest {
     private UniqueIdProvider idProviderMock;
     private UseCaseHandler handler;
     private Recipe recipeMacro;
-    private RecipeStateListener recipeStateListener;
+    private RecipeMetaDataListener recipeStateListener;
     // endregion helper fields ---------------------------------------------------------------------
 
     private RecipePortionsEditorViewModel SUT;
@@ -139,9 +137,10 @@ public class RecipePortionsEditorViewModelTest {
                 setLongTextMaxLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
                 build();
 
-        RecipeMetadata recipeMetaData = new RecipeMetadata(
+        com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata recipeMetaData = new com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata(
                 timeProviderMock,
-                repoRecipeMock
+                repoRecipeMock,
+                RecipeComponents.requiredComponents
         );
 
         RecipeIdentity identity = new RecipeIdentity(
@@ -182,8 +181,8 @@ public class RecipePortionsEditorViewModelTest {
                 duration,
                 portions);
 
-        recipeStateListener = new RecipeStateListener();
-        recipeMacro.registerStateListener(recipeStateListener);
+        recipeStateListener = new RecipeMetaDataListener();
+        recipeMacro.registerMetadataListener(recipeStateListener);
 
         return new RecipePortionsEditorViewModel(
                 handler, recipeMacro, resourcesMock
@@ -230,11 +229,12 @@ public class RecipePortionsEditorViewModelTest {
         verifyAllOtherComponentReposCalledAndReturnExistingValid(recipeId);
         verifyRepoPortionsCalledAndReturnExistingValid(recipeId);
 
-        ComponentState expectedState = ComponentState.VALID_UNCHANGED;
-        ComponentState actualState = recipeStateListener.
+        com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState expectedState = com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState.VALID_UNCHANGED;
+        com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState actualState = recipeStateListener.
                 getResponse().
+                getModel().
                 getComponentStates().
-                get(ComponentName.PORTIONS);
+                get(com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentName.PORTIONS);
         assertEquals(expectedState, actualState);
     }
 
@@ -289,11 +289,12 @@ public class RecipePortionsEditorViewModelTest {
         SUT.setSittingsInView(String.valueOf(NEW_INVALID.getSittings()));
 
         // Assert
-        ComponentState expectedState = ComponentState.INVALID_CHANGED;
-        ComponentState actualState = recipeStateListener.
+        com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState expectedState = com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState.INVALID_CHANGED;
+        com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState actualState = recipeStateListener.
                 getResponse().
+                getModel().
                 getComponentStates().
-                get(ComponentName.PORTIONS);
+                get(com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentName.PORTIONS);
         assertEquals(expectedState, actualState);
     }
 
@@ -319,11 +320,12 @@ public class RecipePortionsEditorViewModelTest {
         SUT.setSittingsInView(String.valueOf(NEW_INVALID_SERVINGS_VALID_SITTINGS.getSittings()));
 
         // Assert
-        ComponentState expectedState = ComponentState.INVALID_CHANGED;
-        ComponentState actualState = recipeStateListener.
+        com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState expectedState = com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState.INVALID_CHANGED;
+        com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState actualState = recipeStateListener.
                 getResponse().
+                getModel().
                 getComponentStates().
-                get(ComponentName.PORTIONS);
+                get(com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentName.PORTIONS);
         assertEquals(expectedState, actualState);
     }
 
@@ -349,11 +351,12 @@ public class RecipePortionsEditorViewModelTest {
         SUT.setSittingsInView(String.valueOf(NEW_VALID_SERVINGS_INVALID_SITTINGS.getSittings()));
 
         // Assert
-        ComponentState expectedState = ComponentState.INVALID_CHANGED;
-        ComponentState actualState = recipeStateListener.
+        com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState expectedState = com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState.INVALID_CHANGED;
+        com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState actualState = recipeStateListener.
                 getResponse().
+                getModel().
                 getComponentStates().
-                get(ComponentName.PORTIONS);
+                get(com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentName.PORTIONS);
         assertEquals(expectedState, actualState);
     }
 
@@ -404,11 +407,12 @@ public class RecipePortionsEditorViewModelTest {
         SUT.setSittingsInView(String.valueOf(NEW_VALID.getSittings()));
 
         // Assert
-        ComponentState expectedState = ComponentState.VALID_CHANGED;
-        ComponentState actualState = recipeStateListener.
+        com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState expectedState = com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState.VALID_CHANGED;
+        com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState actualState = recipeStateListener.
                 getResponse().
+                getModel().
                 getComponentStates().
-                get(ComponentName.PORTIONS);
+                get(com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentName.PORTIONS);
         assertEquals(expectedState, actualState);
     }
 
@@ -498,11 +502,12 @@ public class RecipePortionsEditorViewModelTest {
         verifyAllOtherComponentReposCalledAndReturnExistingValid(recipeId);
         verifyRepoPortionsCalledAndReturnExistingValid(recipeId);
 
-        ComponentState expectedState = ComponentState.VALID_UNCHANGED;
-        ComponentState actualState = recipeStateListener.
+        com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState expectedState = com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState.VALID_UNCHANGED;
+        com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState actualState = recipeStateListener.
                 getResponse().
+                getModel().
                 getComponentStates().
-                get(ComponentName.PORTIONS);
+                get(com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentName.PORTIONS);
         assertEquals(expectedState, actualState);
     }
 
@@ -632,12 +637,12 @@ public class RecipePortionsEditorViewModelTest {
 
     private void verifyRepoRecipeCalledAndReturnDataUnavailable(String recipeId) {
         verify(repoRecipeMock).getById(eq(recipeId), repoRecipeCallback.capture());
-        repoRecipeCallback.getValue().onDataNotAvailable();
+        repoRecipeCallback.getValue().onDataUnavailable();
     }
 
     private void verifyRepoIdentityCalledAndReturnDataUnavailable(String recipeId) {
         verify(repoIdentityMock).getById(eq(recipeId), repoIdentityCallback.capture());
-        repoIdentityCallback.getValue().onDataNotAvailable();
+        repoIdentityCallback.getValue().onDataUnavailable();
     }
 
     private void verifyRepoCoursesCalledAndReturnDataUnavailable(String recipeId) {
@@ -647,17 +652,17 @@ public class RecipePortionsEditorViewModelTest {
 
     private void verifyRepoDurationCalledAndReturnDataUnavailable(String recipeId) {
         verify(repoDurationMock).getById(eq(recipeId), repoDurationCallback.capture());
-        repoDurationCallback.getValue().onDataNotAvailable();
+        repoDurationCallback.getValue().onDataUnavailable();
     }
 
     private void verifyRepoPortionsCalledAndReturnDataUnavailable(String recipeId) {
         verify(repoPortionsMock).getPortionsForRecipe(eq(recipeId), repoPortionsCallback.capture());
-        repoPortionsCallback.getValue().onDataNotAvailable();
+        repoPortionsCallback.getValue().onDataUnavailable();
     }
 
     private void verifyAllOtherComponentReposCalledAndReturnExistingValid(String recipeId) {
         verify(repoRecipeMock).getById(eq(recipeId), repoRecipeCallback.capture());
-        repoRecipeCallback.getValue().onEntityLoaded(TestDataRecipeEntity.getValidExisting());
+        repoRecipeCallback.getValue().onEntityLoaded(TestDataRecipeMetaDataEntity.getValidExisting());
 
         verify(repoIdentityMock).getById(eq(recipeId), repoIdentityCallback.capture());
         repoIdentityCallback.getValue().onEntityLoaded(TestDataRecipeIdentityEntity.
@@ -684,16 +689,16 @@ public class RecipePortionsEditorViewModelTest {
     // endregion helper methods --------------------------------------------------------------------
 
     // region helper classes -----------------------------------------------------------------------
-    private static class RecipeStateListener implements Recipe.RecipeStateListener {
+    private static class RecipeMetaDataListener implements Recipe.RecipeMetaDataListener {
 
-        RecipeStateResponse response;
+        RecipeMetadataResponse response;
 
         @Override
-        public void recipeStateChanged(RecipeStateResponse response) {
+        public void recipeStateChanged(RecipeMetadataResponse response) {
             this.response = response;
         }
 
-        public RecipeStateResponse getResponse() {
+        public RecipeMetadataResponse getResponse() {
             return response;
         }
 

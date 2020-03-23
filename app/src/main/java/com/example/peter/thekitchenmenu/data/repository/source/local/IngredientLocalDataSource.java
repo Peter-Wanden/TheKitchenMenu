@@ -1,30 +1,30 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local;
 
-import androidx.annotation.NonNull;
-
 import com.example.peter.thekitchenmenu.app.AppExecutors;
-import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
-import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.IngredientEntity;
+import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import static androidx.core.util.Preconditions.checkNotNull;
 
-public class IngredientLocalDataSource implements DataSource<IngredientEntity> {
+public class IngredientLocalDataSource implements PrimitiveDataSource<IngredientEntity> {
 
     private static volatile IngredientLocalDataSource INSTANCE;
     private IngredientEntityDao entityDao;
     private AppExecutors appExecutors;
 
-    private IngredientLocalDataSource(@NonNull AppExecutors appExecutors,
-                                      @NonNull IngredientEntityDao entityDao) {
+    private IngredientLocalDataSource(@Nonnull AppExecutors appExecutors,
+                                      @Nonnull IngredientEntityDao entityDao) {
         this.appExecutors = appExecutors;
         this.entityDao = entityDao;
     }
 
     public static IngredientLocalDataSource getInstance(
-            @NonNull AppExecutors appExecutors,
-            @NonNull IngredientEntityDao entityDao) {
+            @Nonnull AppExecutors appExecutors,
+            @Nonnull IngredientEntityDao entityDao) {
 
         if (INSTANCE == null) {
             synchronized (IngredientLocalDataSource.class) {
@@ -36,7 +36,7 @@ public class IngredientLocalDataSource implements DataSource<IngredientEntity> {
     }
 
     @Override
-    public void getAll(@NonNull GetAllCallback<IngredientEntity> callback) {
+    public void getAll(@Nonnull GetAllCallback<IngredientEntity> callback) {
         Runnable runnable = () -> {
             final List<IngredientEntity> entityList = entityDao.getAll();
             appExecutors.mainThread().execute(() -> {
@@ -50,22 +50,21 @@ public class IngredientLocalDataSource implements DataSource<IngredientEntity> {
     }
 
     @Override
-    public void getById(@NonNull String id, @NonNull GetEntityCallback<IngredientEntity> callback) {
+    public void getById(@Nonnull String id, @Nonnull GetEntityCallback<IngredientEntity> callback) {
         Runnable runnable = () -> {
             final IngredientEntity entity = entityDao.getById(id);
             appExecutors.mainThread().execute(() -> {
                 if (entity != null)
                     callback.onEntityLoaded(entity);
                 else
-                    callback.onDataNotAvailable();
+                    callback.onDataUnavailable();
             });
         };
         appExecutors.diskIO().execute(runnable);
     }
 
     @Override
-    public void save(@NonNull IngredientEntity entity) {
-        checkNotNull(entity);
+    public void save(@Nonnull IngredientEntity entity) {
         Runnable runnable = () -> entityDao.insert(entity);
         appExecutors.diskIO().execute(runnable);
     }
@@ -83,7 +82,7 @@ public class IngredientLocalDataSource implements DataSource<IngredientEntity> {
     }
 
     @Override
-    public void deleteById(@NonNull String id) {
+    public void deleteById(@Nonnull String id) {
         Runnable runnable = () -> entityDao.deleteById(id);
         appExecutors.diskIO().execute(runnable);
     }

@@ -1,26 +1,20 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequestAbstract;
 
 import javax.annotation.Nonnull;
 
-public final class RecipeRequest implements UseCase.Request {
-    @Nonnull
-    private final String recipeId;
 
-    public RecipeRequest(@Nonnull String recipeId) {
-        this.recipeId = recipeId;
-    }
+public final class RecipeRequest extends RecipeRequestAbstract {
 
-    @Nonnull
-    public String getRecipeId() {
-        return recipeId;
+    public RecipeRequest(@Nonnull String id) {
+        this.id = id;
     }
 
     @Override
     public String toString() {
-        return "RecipeMacroRequest{" +
-                "recipeId='" + recipeId + '\'' +
+        return "RecipeRequest{" +
+                "id='" + id + '\'' +
                 '}';
     }
 }

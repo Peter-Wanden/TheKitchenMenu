@@ -2,19 +2,19 @@ package com.example.peter.thekitchenmenu.ui.detail.product.producteditor;
 
 import android.app.Application;
 import android.content.res.Resources;
-import android.util.Log;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.data.model.ProductIdentityModel;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 import com.example.peter.thekitchenmenu.ui.utils.TextValidator;
 
-import androidx.annotation.NonNull;
 import androidx.databinding.Observable;
 import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableInt;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
+
+import javax.annotation.Nonnull;
 
 public class ProductIdentityViewModel extends AndroidViewModel {
 
@@ -40,7 +40,7 @@ public class ProductIdentityViewModel extends AndroidViewModel {
     private boolean descriptionValidated = false;
     private boolean shoppingItemNameValidated = false;
 
-    public ProductIdentityViewModel(@NonNull Application application,
+    public ProductIdentityViewModel(@Nonnull Application application,
                                     TextValidator validationHandler) {
         super(application);
         resources = application.getResources();

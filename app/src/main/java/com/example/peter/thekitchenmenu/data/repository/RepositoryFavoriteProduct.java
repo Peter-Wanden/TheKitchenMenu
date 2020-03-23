@@ -1,10 +1,10 @@
 package com.example.peter.thekitchenmenu.data.repository;
 
-import androidx.annotation.NonNull;
-
-import com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity;
+import com.example.peter.thekitchenmenu.data.primitivemodel.product.FavoriteProductEntity;
 
 import java.util.LinkedHashMap;
+
+import javax.annotation.Nonnull;
 
 import static androidx.core.util.Preconditions.checkNotNull;
 
@@ -15,11 +15,11 @@ public class RepositoryFavoriteProduct
     public static RepositoryFavoriteProduct INSTANCE = null;
 
     private RepositoryFavoriteProduct(
-            @NonNull DataSourceFavoriteProducts remoteDataSource,
-            @NonNull DataSourceFavoriteProducts localDataSource) {
+            @Nonnull DataSourceFavoriteProducts remoteDataSource,
+            @Nonnull DataSourceFavoriteProducts localDataSource) {
 
-        this.remoteDataSource = checkNotNull(remoteDataSource);
-        this.localDataSource = checkNotNull(localDataSource);
+        this.remoteDataSource = remoteDataSource;
+        this.localDataSource = localDataSource;
     }
 
     public static RepositoryFavoriteProduct getInstance(
@@ -32,10 +32,8 @@ public class RepositoryFavoriteProduct
     }
 
     @Override
-    public void getByProductId(@NonNull String productId,
-                               @NonNull GetEntityCallback<FavoriteProductEntity> callback) {
-        checkNotNull(productId);
-        checkNotNull(callback);
+    public void getByProductId(@Nonnull String productId,
+                               @Nonnull GetEntityCallback<FavoriteProductEntity> callback) {
 
         FavoriteProductEntity cachedEntity = checkCacheForProductId(productId);
 
@@ -56,7 +54,7 @@ public class RepositoryFavoriteProduct
             }
 
             @Override
-            public void onDataNotAvailable() {
+            public void onDataUnavailable() {
                 ((DataSourceFavoriteProducts)remoteDataSource).getByProductId(
                         productId,
                         new GetEntityCallback<FavoriteProductEntity>() {
@@ -70,8 +68,8 @@ public class RepositoryFavoriteProduct
                     }
 
                     @Override
-                    public void onDataNotAvailable() {
-                        callback.onDataNotAvailable();
+                    public void onDataUnavailable() {
+                        callback.onDataUnavailable();
                     }
                 });
             }
@@ -79,7 +77,6 @@ public class RepositoryFavoriteProduct
     }
 
     private FavoriteProductEntity checkCacheForProductId(String productId) {
-        checkNotNull(productId);
 
         if (entityCache == null || entityCache.isEmpty())
             return null;

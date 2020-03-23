@@ -1,10 +1,10 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredientcalculator;
 
 import com.example.peter.thekitchenmenu.app.Constants;
-import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
-import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientEntity;
-import com.example.peter.thekitchenmenu.data.entity.RecipePortionsEntity;
-import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.IngredientEntity;
+import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.RecipeIngredientEntity;
+import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipePortionsEntity;
+import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
@@ -142,17 +142,17 @@ public class IngredientCalculator extends UseCase {
     private void loadRecipeIngredient(String recipeIngredientId) {
         recipeIngredientRepository.getById(
                 recipeIngredientId,
-                new DataSource.GetEntityCallback<RecipeIngredientEntity>() {
+                new PrimitiveDataSource.GetEntityCallback<RecipeIngredientEntity>() {
                     @Override
-                    public void onEntityLoaded(RecipeIngredientEntity quantityEntity) {
-                        recipeId = quantityEntity.getRecipeId();
-                        ingredientId = quantityEntity.getIngredientId();
-                        IngredientCalculator.this.quantityEntity = quantityEntity;
+                    public void onEntityLoaded(RecipeIngredientEntity entity) {
+                        recipeId = entity.getRecipeId();
+                        ingredientId = entity.getIngredientId();
+                        IngredientCalculator.this.quantityEntity = entity;
                         loadIngredient();
                     }
 
                     @Override
-                    public void onDataNotAvailable() {
+                    public void onDataUnavailable() {
                         returnDataNotAvailable(ResultStatus.QUANTITY_DATA_NOT_AVAILABLE);
                     }
                 });
@@ -161,16 +161,16 @@ public class IngredientCalculator extends UseCase {
     private void loadIngredient() {
         ingredientRepository.getById(
                 ingredientId,
-                new DataSource.GetEntityCallback<IngredientEntity>() {
+                new PrimitiveDataSource.GetEntityCallback<IngredientEntity>() {
                     @Override
-                    public void onEntityLoaded(IngredientEntity ingredientEntity) {
-                        ingredientId = ingredientEntity.getId();
-                        IngredientCalculator.this.ingredientEntity = ingredientEntity;
+                    public void onEntityLoaded(IngredientEntity entity) {
+                        ingredientId = entity.getId();
+                        IngredientCalculator.this.ingredientEntity = entity;
                         loadPortions();
                     }
 
                     @Override
-                    public void onDataNotAvailable() {
+                    public void onDataUnavailable() {
                         returnDataNotAvailable(ResultStatus.INGREDIENT_DATA_NOT_AVAILABLE);
                     }
                 });
@@ -179,16 +179,16 @@ public class IngredientCalculator extends UseCase {
     private void loadPortions() {
         portionsRepository.getPortionsForRecipe(
                 recipeId,
-                new DataSource.GetEntityCallback<RecipePortionsEntity>() {
+                new PrimitiveDataSource.GetEntityCallback<RecipePortionsEntity>() {
                     @Override
-                    public void onEntityLoaded(RecipePortionsEntity portionsEntity) {
-                        numberOfPortions = portionsEntity.getServings() *
-                                portionsEntity.getSittings();
+                    public void onEntityLoaded(RecipePortionsEntity entity) {
+                        numberOfPortions = entity.getServings() *
+                                entity.getSittings();
                         setupUnitOfMeasure();
                     }
 
                     @Override
-                    public void onDataNotAvailable() {
+                    public void onDataUnavailable() {
                         returnDataNotAvailable(ResultStatus.PORTIONS_DATA_NOT_AVAILABLE);
                     }
                 });

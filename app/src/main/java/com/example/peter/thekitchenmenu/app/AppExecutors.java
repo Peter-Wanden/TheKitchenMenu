@@ -2,9 +2,10 @@ package com.example.peter.thekitchenmenu.app;
 
 import android.os.Handler;
 import android.os.Looper;
-import androidx.annotation.NonNull;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+
+import javax.annotation.Nonnull;
 
 /**
  * Global executor pools for the whole application.
@@ -44,7 +45,7 @@ public class AppExecutors {
         private Handler mainThreadHandler = new Handler(Looper.getMainLooper());
 
         @Override
-        public void execute(@NonNull Runnable command) {
+        public void execute(@Nonnull Runnable command) {
             mainThreadHandler.post(command);
         }
     }

@@ -1,8 +1,8 @@
 package com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus;
 
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
-import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
-import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.IngredientEntity;
+import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
@@ -68,7 +68,7 @@ public class ConversionFactorStatusTest {
     @Mock
     RepositoryIngredient repoMock;
     @Captor
-    ArgumentCaptor<DataSource.GetEntityCallback<IngredientEntity>> getEntityCallbackCaptor;
+    ArgumentCaptor<PrimitiveDataSource.GetEntityCallback<IngredientEntity>> getEntityCallbackCaptor;
 
     private ConversionFactorStatusResponse actualResponse;
 
@@ -91,7 +91,7 @@ public class ConversionFactorStatusTest {
         handler.execute(SUT, getRequestValues(subtype, ingredientId), getResponseCallback());
         // Assert
         verify(repoMock).getById(eq(ingredientId), getEntityCallbackCaptor.capture());
-        getEntityCallbackCaptor.getValue().onDataNotAvailable();
+        getEntityCallbackCaptor.getValue().onDataUnavailable();
 
         assertEquals(RESPONSE_NO_DATA_AVAILABLE, actualResponse);
     }

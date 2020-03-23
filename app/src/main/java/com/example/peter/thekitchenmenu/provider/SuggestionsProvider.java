@@ -7,8 +7,9 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import javax.annotation.Nonnull;
 
 public class SuggestionsProvider extends ContentProvider {
 
@@ -30,14 +31,14 @@ public class SuggestionsProvider extends ContentProvider {
 
     @Nullable
     @Override
-    public Cursor query(@NonNull Uri uri, @Nullable String[] strings, @Nullable String s, @Nullable String[] strings1, @Nullable String s1) {
+    public Cursor query(@Nonnull Uri uri, @Nullable String[] strings, @Nullable String s, @Nullable String[] strings1, @Nullable String s1) {
         return null;
     }
 
 
 //    @Nullable
 //    @Override
-//    public Cursor query(@NonNull Uri uri,
+//    public Cursor query(@Nonnull Uri uri,
 //                        @Nullable String[] projection,
 //                        @Nullable String selection,
 //                        @Nullable String[] selectionArgs,
@@ -63,7 +64,7 @@ public class SuggestionsProvider extends ContentProvider {
 
     @Nullable
     @Override
-    public String getType(@NonNull Uri uri) {
+    public String getType(@Nonnull Uri uri) {
         switch (MATCHER.match(uri)) {
             case SEARCH_SUGGEST:
                 return SearchManager.SUGGEST_MIME_TYPE;
@@ -74,20 +75,20 @@ public class SuggestionsProvider extends ContentProvider {
 
     @Nullable
     @Override
-    public Uri insert(@NonNull Uri uri,
+    public Uri insert(@Nonnull Uri uri,
                       @Nullable ContentValues contentValues) {
         return null;
     }
 
     @Override
-    public int delete(@NonNull Uri uri,
+    public int delete(@Nonnull Uri uri,
                       @Nullable String s,
                       @Nullable String[] strings) {
         return 0;
     }
 
     @Override
-    public int update(@NonNull Uri uri,
+    public int update(@Nonnull Uri uri,
                       @Nullable ContentValues contentValues,
                       @Nullable String s,
                       @Nullable String[] strings) {

@@ -1,19 +1,19 @@
 package com.example.peter.thekitchenmenu.data.model;
 
-import androidx.annotation.NonNull;
+import javax.annotation.Nonnull;
 
 public class ProductIdentityModel {
 
     private static final String TAG = "tkm - ProductIdentityModel";
 
-    @NonNull
+    @Nonnull
     private final String description;
-    @NonNull
+    @Nonnull
     private final String shoppingListItemName;
     private final int category;
     private final int shelfLife;
 
-    public ProductIdentityModel(@NonNull String description, @NonNull String shoppingListItemName,
+    public ProductIdentityModel(@Nonnull String description, @Nonnull String shoppingListItemName,
                                 int category, int shelfLife) {
         this.description = description;
         this.shoppingListItemName = shoppingListItemName;
@@ -21,12 +21,12 @@ public class ProductIdentityModel {
         this.shelfLife = shelfLife;
     }
 
-    @NonNull
+    @Nonnull
     public String getDescription() {
         return description;
     }
 
-    @NonNull
+    @Nonnull
     public String getShoppingListItemName() {
         return shoppingListItemName;
     }

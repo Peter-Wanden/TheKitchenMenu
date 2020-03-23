@@ -1,10 +1,10 @@
 package com.example.peter.thekitchenmenu.data.repository;
 
-import androidx.annotation.NonNull;
-
-import com.example.peter.thekitchenmenu.data.entity.RecipePortionsEntity;
+import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipePortionsEntity;
 
 import java.util.LinkedHashMap;
+
+import javax.annotation.Nonnull;
 
 import static androidx.core.util.Preconditions.checkNotNull;
 
@@ -14,10 +14,10 @@ public class RepositoryRecipePortions
 
     public static RepositoryRecipePortions INSTANCE;
 
-    private RepositoryRecipePortions(@NonNull DataSourceRecipePortions remoteDataSource,
-                                     @NonNull DataSourceRecipePortions localDataSource) {
-        this.remoteDataSource = checkNotNull(remoteDataSource);
-        this.localDataSource = checkNotNull(localDataSource);
+    private RepositoryRecipePortions(@Nonnull DataSourceRecipePortions remoteDataSource,
+                                     @Nonnull DataSourceRecipePortions localDataSource) {
+        this.remoteDataSource = remoteDataSource;
+        this.localDataSource = localDataSource;
     }
 
     public static RepositoryRecipePortions getInstance(DataSourceRecipePortions remoteDataSource,
@@ -29,10 +29,8 @@ public class RepositoryRecipePortions
     }
 
     @Override
-    public void getPortionsForRecipe(@NonNull String recipeId,
-                                     @NonNull GetEntityCallback<RecipePortionsEntity> callback) {
-        checkNotNull(recipeId);
-        checkNotNull(callback);
+    public void getPortionsForRecipe(@Nonnull String recipeId,
+                                     @Nonnull GetEntityCallback<RecipePortionsEntity> callback) {
 
         RecipePortionsEntity cachedEntity = checkCacheForId(recipeId);
 
@@ -53,7 +51,7 @@ public class RepositoryRecipePortions
                     }
 
                     @Override
-                    public void onDataNotAvailable() {
+                    public void onDataUnavailable() {
                         ((DataSourceRecipePortions)remoteDataSource).getPortionsForRecipe(
                                 recipeId,
                                 new GetEntityCallback<RecipePortionsEntity>() {
@@ -67,8 +65,8 @@ public class RepositoryRecipePortions
                                     }
 
                                     @Override
-                                    public void onDataNotAvailable() {
-                                        callback.onDataNotAvailable();
+                                    public void onDataUnavailable() {
+                                        callback.onDataUnavailable();
                                     }
                                 }
                         );
@@ -77,7 +75,6 @@ public class RepositoryRecipePortions
     }
 
     private RecipePortionsEntity checkCacheForId(String recipeId) {
-        checkNotNull(recipeId);
 
         if (entityCache == null || entityCache.isEmpty())
             return null;

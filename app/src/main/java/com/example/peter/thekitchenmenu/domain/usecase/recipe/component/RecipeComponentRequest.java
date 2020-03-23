@@ -1,18 +1,22 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeDataModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequestAbstract;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 
 import java.util.Objects;
 
-public abstract class RecipeComponentRequest<M extends RecipeDataModel> implements UseCase.Request {
+/**
+ * The base class for a recipe component request. Component requests should always be routed
+ * through a {@link Recipe}.
+ * All recipe component requests require a recipe ID and a data structure (model) of the business
+ * data relating to the request. See classes extending this abstract class for details of the
+ * the data models and the implementation pattern for the builders.
+ * @param <M> the business data model
+ */
+public abstract class RecipeComponentRequest<M extends RecipeDataModel> extends RecipeRequestAbstract {
 
-    protected String id;
     protected M model;
-
-    public String getId() {
-        return id;
-    }
 
     public M getModel() {
         return model;
@@ -32,6 +36,12 @@ public abstract class RecipeComponentRequest<M extends RecipeDataModel> implemen
         return Objects.hash(id, model);
     }
 
+    /**
+     * Base class for a {@link RecipeComponentRequest} builder.
+     * @param <SELF> the builder class extending this abstract builder.
+     * @param <R> the request class extending the {@link RecipeComponentRequest} for the builder.
+     * @param <M> the the {@link RecipeDataModel} for the {@link RecipeComponentRequest}.
+     */
     public static abstract class RecipeRequestBuilder
                     <SELF extends RecipeRequestBuilder<SELF, R, M>,
                     R extends RecipeComponentRequest<M>,
@@ -55,8 +65,8 @@ public abstract class RecipeComponentRequest<M extends RecipeDataModel> implemen
             return request;
         }
 
+        @SuppressWarnings("unchecked")
         protected SELF self() {
-            // noinspection unchecked
             return (SELF) this;
         }
     }

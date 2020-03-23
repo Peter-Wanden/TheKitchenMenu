@@ -1,14 +1,14 @@
 package com.example.peter.thekitchenmenu.data.repository;
 
-import androidx.annotation.NonNull;
+import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeCourseEntity;
 
-import com.example.peter.thekitchenmenu.data.entity.RecipeCourseEntity;
+import javax.annotation.Nonnull;
 
-public interface DataSourceRecipeCourse extends DataSource<RecipeCourseEntity> {
+public interface DataSourceRecipeCourse extends PrimitiveDataSource<RecipeCourseEntity> {
 
     void getAllRecipesForCourseNo(int courseNo,
-                                  @NonNull GetAllCallback<RecipeCourseEntity> callback);
+                                  @Nonnull GetAllCallback<RecipeCourseEntity> callback);
 
-    void getCoursesForRecipe(@NonNull String recipeId,
-                             @NonNull GetAllCallback<RecipeCourseEntity> callback);
+    void getCoursesForRecipe(@Nonnull String recipeId,
+                             @Nonnull GetAllCallback<RecipeCourseEntity> callback);
 }

@@ -1,14 +1,12 @@
 package com.example.peter.thekitchenmenu.data.repository;
 
-import androidx.annotation.NonNull;
-
-import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientEntity;
+import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.RecipeIngredientEntity;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import static androidx.core.util.Preconditions.checkNotNull;
+import javax.annotation.Nonnull;
 
 public class RepositoryRecipeIngredient
         extends Repository<RecipeIngredientEntity>
@@ -16,10 +14,10 @@ public class RepositoryRecipeIngredient
 
     public static RepositoryRecipeIngredient INSTANCE = null;
 
-    private RepositoryRecipeIngredient(@NonNull DataSourceRecipeIngredient remoteDataSource,
-                                       @NonNull DataSourceRecipeIngredient localDataSource) {
-        this.remoteDataSource = checkNotNull(remoteDataSource);
-        this.localDataSource = checkNotNull(localDataSource);
+    private RepositoryRecipeIngredient(@Nonnull DataSourceRecipeIngredient remoteDataSource,
+                                       @Nonnull DataSourceRecipeIngredient localDataSource) {
+        this.remoteDataSource = remoteDataSource;
+        this.localDataSource = localDataSource;
     }
 
     public static RepositoryRecipeIngredient getInstance(
@@ -31,10 +29,8 @@ public class RepositoryRecipeIngredient
     }
 
     @Override
-    public void getByRecipeId(@NonNull String recipeId,
-                              @NonNull GetAllCallback<RecipeIngredientEntity> callback) {
-        checkNotNull(recipeId);
-        checkNotNull(callback);
+    public void getByRecipeId(@Nonnull String recipeId,
+                              @Nonnull GetAllCallback<RecipeIngredientEntity> callback) {
 
         List<RecipeIngredientEntity> cachedEntities = getFromCachedByRecipeId(recipeId);
 
@@ -82,10 +78,8 @@ public class RepositoryRecipeIngredient
     }
 
     @Override
-    public void getByProductId(@NonNull String productId,
-                               @NonNull GetAllCallback<RecipeIngredientEntity> callback) {
-        checkNotNull(productId);
-        checkNotNull(callback);
+    public void getByProductId(@Nonnull String productId,
+                               @Nonnull GetAllCallback<RecipeIngredientEntity> callback) {
 
         List<RecipeIngredientEntity> cachedEntities = getFromCacheByProductId(productId);
 
@@ -133,10 +127,8 @@ public class RepositoryRecipeIngredient
     }
 
     @Override
-    public void getByIngredientId(@NonNull String ingredientId,
-                                  @NonNull GetAllCallback<RecipeIngredientEntity> callback) {
-        checkNotNull(ingredientId);
-        checkNotNull(callback);
+    public void getByIngredientId(@Nonnull String ingredientId,
+                                  @Nonnull GetAllCallback<RecipeIngredientEntity> callback) {
 
         List<RecipeIngredientEntity> entities = getFromCacheByIngredientId(ingredientId);
         if (entities != null || !entities.isEmpty()) {
@@ -182,8 +174,7 @@ public class RepositoryRecipeIngredient
         );
     }
 
-    private List<RecipeIngredientEntity> getFromCachedByRecipeId(String recipeId) {
-        checkNotNull(recipeId);
+    private List<RecipeIngredientEntity> getFromCachedByRecipeId(@Nonnull String recipeId) {
 
         if (entityCache == null)
             return null;
@@ -198,8 +189,7 @@ public class RepositoryRecipeIngredient
         }
     }
 
-    private List<RecipeIngredientEntity> getFromCacheByProductId(String productId) {
-        checkNotNull(productId);
+    private List<RecipeIngredientEntity> getFromCacheByProductId(@Nonnull String productId) {
 
         if (entityCache == null)
             return null;
@@ -214,8 +204,7 @@ public class RepositoryRecipeIngredient
         }
     }
 
-    private List<RecipeIngredientEntity> getFromCacheByIngredientId(String ingredientId) {
-        checkNotNull(ingredientId);
+    private List<RecipeIngredientEntity> getFromCacheByIngredientId(@Nonnull String ingredientId) {
 
         if (entityCache == null)
             return null;

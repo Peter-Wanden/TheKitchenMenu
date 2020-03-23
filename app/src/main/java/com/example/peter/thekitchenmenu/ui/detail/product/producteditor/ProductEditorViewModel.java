@@ -4,15 +4,16 @@ import android.app.Application;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.app.Constants;
-import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
+import com.example.peter.thekitchenmenu.data.primitivemodel.product.ProductEntity;
 import com.example.peter.thekitchenmenu.data.model.ProductIdentityModel;
 import com.example.peter.thekitchenmenu.data.model.ImageModel;
 import com.example.peter.thekitchenmenu.data.model.ProductMeasurementModel;
 import com.example.peter.thekitchenmenu.ui.ObservableAndroidViewModel;
 import com.example.peter.thekitchenmenu.utils.SingleLiveEvent;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
+
+import javax.annotation.Nonnull;
 
 public class ProductEditorViewModel extends ObservableAndroidViewModel {
 
@@ -36,7 +37,7 @@ public class ProductEditorViewModel extends ObservableAndroidViewModel {
 
     // TODO - Change category and shelf life to an enum
 
-    public ProductEditorViewModel(@NonNull Application application) {
+    public ProductEditorViewModel(@Nonnull Application application) {
         super(application);
     }
 
@@ -151,7 +152,7 @@ public class ProductEditorViewModel extends ObservableAndroidViewModel {
     }
 
     void createOrUpdateProduct() {
-        @NonNull
+        @Nonnull
         ProductEntity productEntity;
 
         if (isExistingProductEntity) {

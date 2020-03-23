@@ -3,10 +3,10 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeIngredientEditor
 import android.content.res.Resources;
 
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
-import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
-import com.example.peter.thekitchenmenu.data.entity.RecipeIngredientEntity;
-import com.example.peter.thekitchenmenu.data.entity.RecipePortionsEntity;
-import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.IngredientEntity;
+import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.RecipeIngredientEntity;
+import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipePortionsEntity;
+import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
@@ -128,17 +128,17 @@ public class RecipeIngredientCalculatorViewModelTest {
     @Mock
     RepositoryRecipePortions repoPortionsMock;
     @Captor
-    ArgumentCaptor<DataSource.GetEntityCallback<RecipePortionsEntity>>
+    ArgumentCaptor<PrimitiveDataSource.GetEntityCallback<RecipePortionsEntity>>
             getPortionsCallbackCaptor;
     @Mock
     RepositoryRecipeIngredient repoRecipeIngredientMock;
     @Captor
-    ArgumentCaptor<DataSource.GetEntityCallback<RecipeIngredientEntity>>
+    ArgumentCaptor<PrimitiveDataSource.GetEntityCallback<RecipeIngredientEntity>>
             getRecipeIngredientCallbackCaptor;
     @Mock
     RepositoryIngredient repoIngredientMock;
     @Captor
-    ArgumentCaptor<DataSource.GetEntityCallback<IngredientEntity>>
+    ArgumentCaptor<PrimitiveDataSource.GetEntityCallback<IngredientEntity>>
             getIngredientCallbackCaptor;
     @Mock
     UniqueIdProvider idProviderMock;

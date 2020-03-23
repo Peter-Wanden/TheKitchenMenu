@@ -2,14 +2,13 @@ package com.example.peter.thekitchenmenu.ui.detail.ingredient;
 
 import android.content.res.Resources;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
 
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.commonmocks.StringMaker;
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
-import com.example.peter.thekitchenmenu.data.entity.IngredientEntity;
-import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.IngredientEntity;
+import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.Ingredient;
@@ -21,6 +20,8 @@ import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import org.junit.*;
 import org.mockito.*;
+
+import javax.annotation.Nonnull;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -69,7 +70,7 @@ public class IngredientEditorViewModelTest {
     @Mock
     RepositoryIngredient repoMock;
     @Captor
-    ArgumentCaptor<DataSource.GetEntityCallback<IngredientEntity>> repoCallbackCaptor;
+    ArgumentCaptor<PrimitiveDataSource.GetEntityCallback<IngredientEntity>> repoCallbackCaptor;
     @Mock
     UniqueIdProvider idProviderMock;
     @Mock
@@ -740,7 +741,7 @@ public class IngredientEditorViewModelTest {
             super(null, null, null);
         }
 
-        @NonNull
+        @Nonnull
         @Override
         public String getString(int id) throws NotFoundException {
             if (id == R.string.ingredient_name_duplicate_error_message) {
@@ -750,7 +751,7 @@ public class IngredientEditorViewModelTest {
             return "";
         }
 
-        @NonNull
+        @Nonnull
         @Override
         public String getString(int id, Object... formatArgs) throws NotFoundException {
             if (id == R.string.input_error_text_too_short) {

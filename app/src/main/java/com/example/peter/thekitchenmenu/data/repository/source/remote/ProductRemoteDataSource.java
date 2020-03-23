@@ -2,12 +2,12 @@ package com.example.peter.thekitchenmenu.data.repository.source.remote;
 
 import android.database.Cursor;
 
-import androidx.annotation.NonNull;
+import com.example.peter.thekitchenmenu.data.primitivemodel.product.ProductEntity;
+import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
 
-import com.example.peter.thekitchenmenu.data.entity.ProductEntity;
-import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import javax.annotation.Nonnull;
 
-public class ProductRemoteDataSource implements DataSource<ProductEntity> {
+public class ProductRemoteDataSource implements PrimitiveDataSource<ProductEntity> {
 
     private static ProductRemoteDataSource INSTANCE;
 
@@ -18,19 +18,19 @@ public class ProductRemoteDataSource implements DataSource<ProductEntity> {
     }
 
     @Override
-    public void getAll(@NonNull GetAllCallback<ProductEntity> callback) {
+    public void getAll(@Nonnull GetAllCallback<ProductEntity> callback) {
         callback.onDataNotAvailable();
     }
 
     @Override
     public void getById(
-            @NonNull String productId,
-            @NonNull GetEntityCallback<ProductEntity> callback) {
-        callback.onDataNotAvailable();
+            @Nonnull String productId,
+            @Nonnull GetEntityCallback<ProductEntity> callback) {
+        callback.onDataUnavailable();
     }
 
     @Override
-    public void save(@NonNull ProductEntity product) {
+    public void save(@Nonnull ProductEntity entity) {
 
     }
 
@@ -46,7 +46,7 @@ public class ProductRemoteDataSource implements DataSource<ProductEntity> {
     }
 
     @Override
-    public void deleteById(@NonNull String productId) {
+    public void deleteById(@Nonnull String productId) {
 
     }
 

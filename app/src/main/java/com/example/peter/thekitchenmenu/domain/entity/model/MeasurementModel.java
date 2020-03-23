@@ -1,6 +1,5 @@
 package com.example.peter.thekitchenmenu.domain.entity.model;
 
-import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
 
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
@@ -9,11 +8,13 @@ import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementT
 import java.util.Arrays;
 import java.util.Objects;
 
+import javax.annotation.Nonnull;
+
 public final class MeasurementModel {
 
-    @NonNull
+    @Nonnull
     private final MeasurementType type;
-    @NonNull
+    @Nonnull
     private final MeasurementSubtype subtype;
 
     private final int numberOfUnits;
@@ -41,8 +42,8 @@ public final class MeasurementModel {
 
     private final Pair[] maxUnitDigitWidths;
 
-    public MeasurementModel(@NonNull MeasurementType type,
-                            @NonNull MeasurementSubtype subtype,
+    public MeasurementModel(@Nonnull MeasurementType type,
+                            @Nonnull MeasurementSubtype subtype,
                             int numberOfUnits,
                             boolean isConversionFactorEnabled,
                             double conversionFactor,
@@ -135,12 +136,12 @@ public final class MeasurementModel {
                 '}';
     }
 
-    @NonNull
+    @Nonnull
     public MeasurementType getType() {
         return type;
     }
 
-    @NonNull
+    @Nonnull
     public MeasurementSubtype getSubtype() {
         return subtype;
     }

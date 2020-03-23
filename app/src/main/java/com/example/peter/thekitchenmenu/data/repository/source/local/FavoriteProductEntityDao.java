@@ -1,10 +1,10 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local;
 
-import static com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity.TABLE_FAVORITE_PRODUCTS;
-import static com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity.PRODUCT_ID;
-import static com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity.ID;
+import static com.example.peter.thekitchenmenu.data.primitivemodel.product.FavoriteProductEntity.TABLE_FAVORITE_PRODUCTS;
+import static com.example.peter.thekitchenmenu.data.primitivemodel.product.FavoriteProductEntity.PRODUCT_ID;
+import static com.example.peter.thekitchenmenu.data.primitivemodel.product.FavoriteProductEntity.ID;
 
-import com.example.peter.thekitchenmenu.data.entity.FavoriteProductEntity;
+import com.example.peter.thekitchenmenu.data.primitivemodel.product.FavoriteProductEntity;
 
 import java.util.List;
 

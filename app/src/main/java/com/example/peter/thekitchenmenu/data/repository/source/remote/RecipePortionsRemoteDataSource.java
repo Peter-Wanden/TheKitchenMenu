@@ -1,9 +1,9 @@
 package com.example.peter.thekitchenmenu.data.repository.source.remote;
 
-import androidx.annotation.NonNull;
-
-import com.example.peter.thekitchenmenu.data.entity.RecipePortionsEntity;
+import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.DataSourceRecipePortions;
+
+import javax.annotation.Nonnull;
 
 public class RecipePortionsRemoteDataSource implements DataSourceRecipePortions {
 
@@ -16,22 +16,24 @@ public class RecipePortionsRemoteDataSource implements DataSourceRecipePortions 
     }
 
     @Override
-    public void getPortionsForRecipe(@NonNull String recipeId, @NonNull GetEntityCallback<RecipePortionsEntity> callback) {
+    public void getPortionsForRecipe(@Nonnull String recipeId,
+                                     @Nonnull GetEntityCallback<RecipePortionsEntity> callback) {
+        callback.onDataUnavailable();
+    }
+
+    @Override
+    public void getAll(@Nonnull GetAllCallback<RecipePortionsEntity> callback) {
         callback.onDataNotAvailable();
     }
 
     @Override
-    public void getAll(@NonNull GetAllCallback<RecipePortionsEntity> callback) {
-        callback.onDataNotAvailable();
+    public void getById(@Nonnull String id,
+                        @Nonnull GetEntityCallback<RecipePortionsEntity> callback) {
+        callback.onDataUnavailable();
     }
 
     @Override
-    public void getById(@NonNull String id, @NonNull GetEntityCallback<RecipePortionsEntity> callback) {
-        callback.onDataNotAvailable();
-    }
-
-    @Override
-    public void save(@NonNull RecipePortionsEntity object) {
+    public void save(@Nonnull RecipePortionsEntity entity) {
 
     }
 
@@ -46,7 +48,7 @@ public class RecipePortionsRemoteDataSource implements DataSourceRecipePortions 
     }
 
     @Override
-    public void deleteById(@NonNull String id) {
+    public void deleteById(@Nonnull String id) {
 
     }
 }

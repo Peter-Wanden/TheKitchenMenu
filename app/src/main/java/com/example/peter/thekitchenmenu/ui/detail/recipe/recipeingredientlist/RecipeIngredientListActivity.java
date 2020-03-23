@@ -2,9 +2,7 @@ package com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredientlist;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +16,8 @@ import com.example.peter.thekitchenmenu.ui.ViewModelFactoryRecipe;
 import com.example.peter.thekitchenmenu.ui.detail.ingredient.IngredientEditorActivity;
 import com.example.peter.thekitchenmenu.ui.detail.recipe.recipeingredienteditor.RecipeIngredientEditorActivity;
 import com.example.peter.thekitchenmenu.utils.ActivityUtils;
+
+import javax.annotation.Nonnull;
 
 public class RecipeIngredientListActivity
         extends AppCompatActivity
@@ -97,7 +97,7 @@ public class RecipeIngredientListActivity
                 R.id.recipeIngredientListContentFrame);
     }
 
-    @NonNull
+    @Nonnull
     private RecipeIngredientListFragment findOrCreateRecipeIngredientListFragment() {
         RecipeIngredientListFragment fragment =
                 (RecipeIngredientListFragment) getSupportFragmentManager().
