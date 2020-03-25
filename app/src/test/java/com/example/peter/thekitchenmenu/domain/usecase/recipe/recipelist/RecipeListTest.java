@@ -8,11 +8,11 @@ import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeMetadat
 import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeMetaData;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeCourse;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeComponentState;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeCourse;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeDuration;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIdentity;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseFactory;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
@@ -45,7 +45,7 @@ public class RecipeListTest {
 
     // region helper fields ------------------------------------------------------------------------
     @Mock
-    RepositoryRecipeMetaData repoRecipeMock;
+    RepositoryRecipeComponentState repoRecipeMock;
     @Captor
     ArgumentCaptor<PrimitiveDataSource.GetEntityCallback<RecipeMetadataEntity>> repoRecipeCallback;
     @Mock
@@ -186,8 +186,8 @@ public class RecipeListTest {
     }
 
     private void verifyCoursesDatabaseCalledWithIdAndReturnDataUnavailable(String recipeId) {
-        verify(repoCourseMock).getCoursesForRecipe(eq(recipeId), repoCourseCallback.capture());
-        repoCourseCallback.getValue().onDataNotAvailable();
+        verify(repoCourseMock).getAllByRecipeId(eq(recipeId), repoCourseCallback.capture());
+        repoCourseCallback.getValue().onDataUnavailable();
     }
 
     private void verifyDurationDatabaseCalledWithIdAndReturnDataUnavailable(String recipeId) {
@@ -196,7 +196,7 @@ public class RecipeListTest {
     }
 
     private void verifyPortionsDatabaseCalledWithIdAndReturnDataUnavailable(String recipeId) {
-        verify(repoPortionsMock).getPortionsForRecipe(eq(recipeId), repoPortionsCallback.capture());
+        verify(repoPortionsMock).getByRecipeId(eq(recipeId), repoPortionsCallback.capture());
         repoPortionsCallback.getValue().onDataUnavailable();
     }
     // region helper classes -----------------------------------------------------------------------

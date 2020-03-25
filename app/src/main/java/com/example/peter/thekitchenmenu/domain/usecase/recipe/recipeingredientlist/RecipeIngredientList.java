@@ -4,9 +4,9 @@ import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.Ingredien
 import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.RecipeIngredientEntity;
 import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
+import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIngredient;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModelBuilder;
@@ -54,7 +54,7 @@ public class RecipeIngredientList extends UseCase {
     }
 
     private void getPortionsForRecipe() {
-        repoPortions.getPortionsForRecipe(
+        repoPortions.getByRecipeId(
                 recipeId,
                 new PrimitiveDataSource.GetEntityCallback<RecipePortionsEntity>() {
                     @Override
@@ -74,7 +74,7 @@ public class RecipeIngredientList extends UseCase {
     private void getRecipeIngredientQuantities() {
         recipeIngredientQuantities.clear();
 
-        repoRecipeIngredient.getByRecipeId(
+        repoRecipeIngredient.getAllByRecipeId(
                 recipeId,
                 new PrimitiveDataSource.GetAllCallback<RecipeIngredientEntity>() {
                     @Override
@@ -86,7 +86,7 @@ public class RecipeIngredientList extends UseCase {
                     }
 
                     @Override
-                    public void onDataNotAvailable() {
+                    public void onDataUnavailable() {
 
                     }
                 });

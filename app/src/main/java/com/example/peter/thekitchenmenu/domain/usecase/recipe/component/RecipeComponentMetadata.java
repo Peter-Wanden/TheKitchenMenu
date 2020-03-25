@@ -1,8 +1,8 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component;
 
 
-import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
-import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
+import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
+import com.example.peter.thekitchenmenu.domain.model.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;
 
 import java.util.ArrayList;
@@ -11,6 +11,11 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
+/**
+ * A data structure for storing a single recipe components state.
+ * Recipe components send updated metadata in their respective {@link RecipeComponentResponse}
+ * each time the components state changes.
+ */
 public class RecipeComponentMetadata {
 
     @Nonnull

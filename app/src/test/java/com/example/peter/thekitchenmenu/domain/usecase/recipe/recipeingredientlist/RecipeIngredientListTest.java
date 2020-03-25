@@ -6,9 +6,9 @@ import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.Ingredien
 import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.RecipeIngredientEntity;
 import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
+import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIngredient;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 
@@ -77,7 +77,7 @@ public class RecipeIngredientListTest {
             }
 
             @Override
-            public void onDataNotAvailable() {
+            public void onDataUnavailable() {
 
             }
         };

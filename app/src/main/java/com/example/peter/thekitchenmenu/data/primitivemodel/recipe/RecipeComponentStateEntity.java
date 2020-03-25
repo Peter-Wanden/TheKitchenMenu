@@ -1,15 +1,19 @@
 package com.example.peter.thekitchenmenu.data.primitivemodel.recipe;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.OnConflictStrategy;
 import androidx.room.PrimaryKey;
+
+import com.example.peter.thekitchenmenu.data.primitivemodel.PrimitiveModel;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
 @Entity(tableName = RecipeComponentStateEntity.TABLE_RECIPE_COMPONENT_STATE)
-public final class RecipeComponentStateEntity {
+public final class RecipeComponentStateEntity implements PrimitiveModel {
 
     public static final String TABLE_RECIPE_COMPONENT_STATE = "recipeComponentState";
     public static final String ID = "id";
@@ -18,7 +22,7 @@ public final class RecipeComponentStateEntity {
     public static final String COMPONENT_STATE = "componentState";
 
     @PrimaryKey
-    @Nonnull
+    @NonNull
     @ColumnInfo(name = ID)
     private final String id;
 
@@ -68,6 +72,7 @@ public final class RecipeComponentStateEntity {
                 '}';
     }
 
+    @Override
     @Nonnull
     public String getId() {
         return id;

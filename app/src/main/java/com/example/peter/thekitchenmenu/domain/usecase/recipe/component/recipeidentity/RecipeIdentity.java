@@ -2,9 +2,9 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipei
 
 import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
-import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
-import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIdentity;
+import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
+import com.example.peter.thekitchenmenu.domain.model.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.RecipeComponentMetadata;
@@ -198,7 +198,7 @@ public class RecipeIdentity extends UseCase
     private void buildResponse() {
         RecipeIdentityResponse response = new RecipeIdentityResponse.Builder().
                 setId(id).
-                setMetadata(getMetaData()).
+                setMetadata(getMetadata()).
                 setModel(getResponseModel()).
                 build();
 
@@ -208,7 +208,7 @@ public class RecipeIdentity extends UseCase
         sendResponse(response);
     }
 
-    private RecipeComponentMetadata getMetaData() {
+    private RecipeComponentMetadata getMetadata() {
         return new RecipeComponentMetadata.Builder().
                 setState(getComponentState()).
                 setFailReasons(new ArrayList<>(failReasons)).

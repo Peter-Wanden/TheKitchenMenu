@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
+import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
 
 public class IngredientViewerViewModel
         extends ViewModel

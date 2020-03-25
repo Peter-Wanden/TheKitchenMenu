@@ -97,7 +97,7 @@ public class RecipeEditorActivity
         createDurationViewModel(this, recipeMacro);
         createPortionsViewModel(this, recipeMacro);
 
-        recipeMacro.registerMetadataListener(new RecipeMetaDataListener());
+        recipeMacro.registerMetadataListener(new RecipeMetadataListener());
     }
 
     static RecipeEditorViewModel createRecipeEditorViewModel(FragmentActivity activity,
@@ -239,7 +239,7 @@ public class RecipeEditorActivity
         //  See {@link RecipeEditorViewModel}
     }
 
-    private static class RecipeMetaDataListener implements Recipe.RecipeMetaDataListener {
+    private static class RecipeMetadataListener implements Recipe.RecipeMetadataListener {
         @Override
         public void recipeStateChanged(RecipeMetadataResponse response) {
 

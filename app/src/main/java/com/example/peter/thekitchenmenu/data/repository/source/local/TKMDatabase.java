@@ -7,12 +7,25 @@ import com.example.peter.thekitchenmenu.data.primitivemodel.product.FavoriteProd
 import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.primitivemodel.product.ProductEntity;
 import com.example.peter.thekitchenmenu.data.primitivemodel.product.ProductFastTextSearch;
+import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeComponentStateEntity;
 import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeDurationEntity;
 import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeMetadataEntity;
 import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.RecipeIngredientEntity;
 import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipePortionsEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.product.dao.FavoriteProductEntityDao;
+import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.dao.IngredientEntityDao;
+import com.example.peter.thekitchenmenu.data.repository.source.local.product.dao.ProductEntityDao;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.dao.RecipeComponentStateEntityDao;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.dao.RecipeCourseEntityDao;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.dao.RecipeDurationEntityDao;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.dao.RecipeFailReasonEntityDao;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.dao.RecipeMetadataEntityDao;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.dao.RecipeIdentityEntityDao;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.dao.RecipeIngredientEntityDao;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.dao.RecipePortionsEntityDao;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.entitymodel.RecipeFailReasonEntity;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -37,7 +50,9 @@ import static com.example.peter.thekitchenmenu.data.primitivemodel.product.Produ
         RecipeDurationEntity.class,
         IngredientEntity.class,
         RecipePortionsEntity.class,
-        RecipeIngredientEntity.class},
+        RecipeIngredientEntity.class,
+        RecipeComponentStateEntity.class,
+        RecipeFailReasonEntity.class},
         version = 2,
         exportSchema = false)
 public abstract class TKMDatabase extends RoomDatabase {
@@ -47,13 +62,15 @@ public abstract class TKMDatabase extends RoomDatabase {
 
     public abstract ProductEntityDao productEntityDao();
     public abstract FavoriteProductEntityDao favoriteProductEntityDao();
-    public abstract RecipeEntityDao recipeEntityDao();
+    public abstract RecipeMetadataEntityDao recipeEntityDao();
     public abstract RecipeCourseEntityDao recipeCourseEntityDao();
     public abstract RecipeIdentityEntityDao recipeIdentityEntityDao();
     public abstract RecipeDurationEntityDao recipeDurationEntityDao();
     public abstract IngredientEntityDao ingredientEntityDao();
     public abstract RecipePortionsEntityDao recipePortionsEntityDao();
     public abstract RecipeIngredientEntityDao recipeIngredientEntityDao();
+    public abstract RecipeComponentStateEntityDao recipeComponentStateEntityDao();
+    public abstract RecipeFailReasonEntityDao recipeFailReasonDao();
 
     private final MutableLiveData<Boolean> isDatabaseCreated = new MutableLiveData<>();
 

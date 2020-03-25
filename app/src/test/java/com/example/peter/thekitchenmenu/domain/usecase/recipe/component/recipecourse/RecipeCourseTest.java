@@ -4,8 +4,8 @@ import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeMetadataEntity;
 import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeCourse;
-import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeCourse;
+import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeCourseEntity;
@@ -20,7 +20,7 @@ import java.util.List;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipecourse.RecipeCourse.*;
 import static com.example.peter.thekitchenmenu.testdata.TestDataRecipeCourseEntity.getAllByRecipeId;
-import static com.example.peter.thekitchenmenu.testdata.TestDataRecipeMetaDataEntity.getValidExisting;
+import static com.example.peter.thekitchenmenu.testdata.TestDataRecipeMetadataEntity.getValidExisting;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.*;
@@ -143,7 +143,7 @@ public class RecipeCourseTest {
         // Act
         handler.execute(SUT, initialiseComponentRequest, getCallback());
         // Assert
-        verify(repoCourseMock).getCoursesForRecipe(eq(EXISTING_RECIPE_ID), repoCourseCallback.capture());
+        verify(repoCourseMock).getAllByRecipeId(eq(EXISTING_RECIPE_ID), repoCourseCallback.capture());
     }
 
     @Test
@@ -225,13 +225,13 @@ public class RecipeCourseTest {
 
     private void verifyRepoCalledAndReturnMatchingCourses(String recipeId) {
         // Confirm repo called and capture the callback
-        verify(repoCourseMock).getCoursesForRecipe(eq(recipeId), repoCourseCallback.capture());
+        verify(repoCourseMock).getAllByRecipeId(eq(recipeId), repoCourseCallback.capture());
         // Find the matching values in the test data and return the callback with results
         List<RecipeCourseEntity> courseEntityList = getAllByRecipeId(recipeId);
         if (courseEntityList.size() > 0) {
             repoCourseCallback.getValue().onAllLoaded(getAllByRecipeId(recipeId));
         } else {
-            repoCourseCallback.getValue().onDataNotAvailable();
+            repoCourseCallback.getValue().onDataUnavailable();
         }
     }
 

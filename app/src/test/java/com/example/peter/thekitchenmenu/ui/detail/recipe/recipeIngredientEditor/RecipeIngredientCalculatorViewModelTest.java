@@ -7,9 +7,9 @@ import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.Ingredien
 import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.RecipeIngredientEntity;
 import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
+import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIngredient;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
@@ -411,7 +411,7 @@ public class RecipeIngredientCalculatorViewModelTest {
     }
 
     private void verifyRepoPortionsCalledReturnNewValidFourPortions() {
-        verify(repoPortionsMock).getPortionsForRecipe(
+        verify(repoPortionsMock).getByRecipeId(
                 eq(QUANTITY_NEW_INVALID.getRecipeId()),
                 getPortionsCallbackCaptor.capture());
         getPortionsCallbackCaptor.getValue().onEntityLoaded(PORTIONS_NEW_VALID_FOUR);
@@ -434,7 +434,7 @@ public class RecipeIngredientCalculatorViewModelTest {
     }
 
     private void verifyRepoPortionsCalledAndReturnExistingValidNinePortions() {
-        verify(repoPortionsMock).getPortionsForRecipe(
+        verify(repoPortionsMock).getByRecipeId(
                 eq(QUANTITY_EXISTING_VALID_METRIC.getRecipeId()),
                 getPortionsCallbackCaptor.capture());
         getPortionsCallbackCaptor.getValue().onEntityLoaded(PORTIONS_EXISTING_VALID_NINE);

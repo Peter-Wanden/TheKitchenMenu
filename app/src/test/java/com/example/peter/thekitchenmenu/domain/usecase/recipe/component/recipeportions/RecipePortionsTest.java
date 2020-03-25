@@ -3,8 +3,8 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipep
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
-import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
+import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;
@@ -426,14 +426,14 @@ public class RecipePortionsTest {
     }
 
     private void simulateNothingReturnedFromDatabase() {
-        verify(repoPortionsMock).getPortionsForRecipe(eq(NEW_EMPTY.getRecipeId()),
+        verify(repoPortionsMock).getByRecipeId(eq(NEW_EMPTY.getRecipeId()),
                 repoPortionsCallback.capture());
         repoPortionsCallback.getValue().onDataUnavailable();
     }
 
     private void simulateValidExistingReturnedFromDatabase(String recipeId) {
         assertEquals(VALID_EXISTING.getRecipeId(), recipeId);
-        verify(repoPortionsMock).getPortionsForRecipe(eq(recipeId), repoPortionsCallback.capture());
+        verify(repoPortionsMock).getByRecipeId(eq(recipeId), repoPortionsCallback.capture());
         repoPortionsCallback.getValue().onEntityLoaded(VALID_EXISTING);
     }
 

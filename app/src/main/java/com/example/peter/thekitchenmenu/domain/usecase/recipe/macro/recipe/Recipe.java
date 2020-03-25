@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe;
 
 import androidx.core.util.Pair;
 
-import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
+import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.RecipeComponentRequest;
@@ -35,9 +35,9 @@ import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.Re
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentName.*;
 
 /**
- * Acts as a command mediator enabling recipe components to work together.
+ * A use case interactor acting as a command mediator enabling recipe components to work
+ * together.
  * All {@link RecipeComponentRequest}'s should be routed through a Recipes execute method.
- * <p>
  * The first request sent to a Recipe, regardless of type, will only load and return data.
  * Subsequent requests will perform the requested operation.
  */
@@ -55,7 +55,7 @@ public class Recipe extends UseCase {
 
     public static final String CREATE_NEW_RECIPE = "CREATE_NEW_RECIPE";
 
-    public interface RecipeMetaDataListener {
+    public interface RecipeMetadataListener {
         void recipeStateChanged(RecipeMetadataResponse response);
     }
 
@@ -66,7 +66,7 @@ public class Recipe extends UseCase {
     private final RecipeDuration duration;
     private final RecipePortions portions;
 
-    private final RecipeMetadata recipeMetaData;
+    private final RecipeMetadata recipeMetadata;
     private final RecipeStateCalculator recipeStateCalculator;
 
     private RecipeResponse recipeResponse;
@@ -83,14 +83,14 @@ public class Recipe extends UseCase {
     // Listeners
     private final List<Pair<ComponentName, UseCase.Callback<? extends RecipeComponentResponse>>>
             componentListeners = new ArrayList<>();
-    private final List<RecipeMetaDataListener>
+    private final List<RecipeMetadataListener>
             metaDataListeners = new ArrayList<>();
     private final List<UseCase.Callback<RecipeResponse>>
             recipeResponseListeners = new ArrayList<>();
 
     public Recipe(UseCaseHandler handler,
                   RecipeStateCalculator recipeStateCalculator,
-                  RecipeMetadata recipeMetaData,
+                  RecipeMetadata recipeMetadata,
                   RecipeIdentity identity,
                   RecipeCourse course,
                   RecipeDuration duration,
@@ -103,7 +103,7 @@ public class Recipe extends UseCase {
 
         recipeResponse = new RecipeResponse.Builder().getDefault().build();
         recipeMetadataResponse = new RecipeMetadataResponse.Builder().getDefault().build();
-        this.recipeMetaData = recipeMetaData;
+        this.recipeMetadata = recipeMetadata;
         this.identity = identity;
         this.course = course;
         this.duration = duration;
@@ -147,7 +147,7 @@ public class Recipe extends UseCase {
         componentResponses.clear();
         componentStates.clear();
 
-        startRecipeMetaDataComponent();
+        startRecipeMetadataComponent();
         startIdentityComponent();
         startCourseComponent();
         startDurationComponent();
@@ -173,9 +173,9 @@ public class Recipe extends UseCase {
         }
     }
 
-    private void startRecipeMetaDataComponent() {
+    private void startRecipeMetadataComponent() {
         handler.execute(
-                recipeMetaData,
+                recipeMetadata,
                 new RecipeMetadataRequest.Builder().
                         getDefault().
                         setId(id).
@@ -333,26 +333,26 @@ public class Recipe extends UseCase {
     private class RecipeStateCallback extends RecipeUseCaseCallback<RecipeMetadataResponse> {
         @Override
         protected void processResponse(RecipeMetadataResponse response) {
-            processRecipeMetaDataResponse(response);
+            processRecipeMetadataResponse(response);
         }
     }
 
-    private void processRecipeMetaDataResponse(RecipeMetadataResponse response) {
+    private void processRecipeMetadataResponse(RecipeMetadataResponse response) {
         if (isMetadataChanged(response)) {
             // todo - update recipe metadata with recipe state response
 
         }
-        notifyMetaDataListeners(response);
+        notifyMetadataListeners(response);
     }
 
-    public void registerMetadataListener(RecipeMetaDataListener listener) {
+    public void registerMetadataListener(RecipeMetadataListener listener) {
         metaDataListeners.add(listener);
     }
 
-    private void notifyMetaDataListeners(RecipeMetadataResponse response) {
+    private void notifyMetadataListeners(RecipeMetadataResponse response) {
         if (isMetadataChanged(response)) {
             recipeMetadataResponse = response;
-            for (RecipeMetaDataListener listener : metaDataListeners) {
+            for (RecipeMetadataListener listener : metaDataListeners) {
                 listener.recipeStateChanged(response);
             }
         }
@@ -363,7 +363,7 @@ public class Recipe extends UseCase {
         return !recipeMetadataResponse.equals(response);
     }
 
-    public void unregisterStateListener(RecipeMetaDataListener listener) {
+    public void unregisterStateListener(RecipeMetadataListener listener) {
         metaDataListeners.remove(listener);
     }
 

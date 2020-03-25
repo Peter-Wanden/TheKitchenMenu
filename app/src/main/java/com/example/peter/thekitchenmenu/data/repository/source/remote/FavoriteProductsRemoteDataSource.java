@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.data.repository.source.remote;
 
 import com.example.peter.thekitchenmenu.data.primitivemodel.product.FavoriteProductEntity;
-import com.example.peter.thekitchenmenu.data.repository.DataSourceFavoriteProducts;
+import com.example.peter.thekitchenmenu.data.repository.product.DataSourceFavoriteProducts;
 
 import javax.annotation.Nonnull;
 
@@ -17,7 +17,7 @@ public class FavoriteProductsRemoteDataSource implements DataSourceFavoriteProdu
 
     @Override
     public void getAll(@Nonnull GetAllCallback callback) {
-        callback.onDataNotAvailable();
+        callback.onDataUnavailable();
     }
 
     @Override

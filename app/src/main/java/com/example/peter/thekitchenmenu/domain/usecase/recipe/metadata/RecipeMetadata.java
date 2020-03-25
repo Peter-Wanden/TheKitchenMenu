@@ -4,10 +4,11 @@ import android.annotation.SuppressLint;
 
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeMetadataEntity;
+import com.example.peter.thekitchenmenu.data.repository.DataModelAdapter;
 import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeMetaData;
-import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
-import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeComponentState;
+import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
+import com.example.peter.thekitchenmenu.domain.model.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.RecipeComponentMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.RecipeComponentResponse;
@@ -29,7 +30,7 @@ import javax.annotation.Nonnull;
  */
 public class RecipeMetadata
         extends UseCase
-        implements PrimitiveDataSource.GetEntityCallback<RecipeMetadataEntity> {
+        implements DataModelAdapter.GetModelCallback<RecipeMetadataPersistenceModel> {
 
     private static final String TAG = "tkm-" + RecipeMetadata.class.getSimpleName() + ": ";
 
@@ -92,7 +93,7 @@ public class RecipeMetadata
     @Nonnull
     private final TimeProvider timeProvider;
     @Nonnull
-    private final RepositoryRecipeMetaData repository;
+    private final RecipeMetadataModelAdapter repository;
     private RecipeMetadataPersistenceModel persistenceModel;
     @Nonnull
     private final Set<ComponentName> requiredComponents;
@@ -107,14 +108,14 @@ public class RecipeMetadata
     private boolean hasRequiredComponents;
     private boolean hasInvalidModels;
 
-    // TODO - Rename to RecipeMetaData
+    // TODO - Rename to RecipeMetadata
     //  last update - should be the time of the last updated component
     // TODO - Data layer:
     //  have uid as well as recipeId
     //  keep a copy of all metadata as it changes
 
     public RecipeMetadata(@Nonnull TimeProvider timeProvider,
-                          @Nonnull RepositoryRecipeMetaData repository,
+                          @Nonnull RecipeMetadataModelAdapter repository,
                           @Nonnull Set<ComponentName> requiredComponents) {
 
         this.timeProvider = timeProvider;
@@ -152,23 +153,13 @@ public class RecipeMetadata
     }
 
     @Override
-    public void onEntityLoaded(RecipeMetadataEntity entity) {
-        persistenceModel = convertPrimitiveToPersistenceModel(entity);
-//        buildResponse();
-    }
-
-    private RecipeMetadataPersistenceModel convertPrimitiveToPersistenceModel(RecipeMetadataEntity entity) {
-        return new RecipeMetadataPersistenceModel.Builder().
-                setId(entity.getId()).
-                setParentId(entity.getParentId()).
-                setCreatedBy(entity.getCreatedBy()).
-                setCreateDate(entity.getCreateDate()).
-                setLastUpdate(entity.getLastUpdate()).
-                build();
+    public void onModelLoaded(RecipeMetadataPersistenceModel model) {
+        persistenceModel = model;
+        buildResponse();
     }
 
     @Override
-    public void onDataUnavailable() {
+    public void onModelUnavailable() {
         persistenceModel = createNewPersistenceModel();
         failReasons.add(CommonFailReason.DATA_UNAVAILABLE);
         calculateState();
@@ -176,9 +167,12 @@ public class RecipeMetadata
 
     private RecipeMetadataPersistenceModel createNewPersistenceModel() {
         long currentTime = timeProvider.getCurrentTimeInMills();
-        return RecipeMetadataPersistenceModel.Builder.getDefault().
+        return new RecipeMetadataPersistenceModel.Builder().
                 setId(id).
+                setRecipeId(id).
                 setParentId(parentId).
+                setComponentStates(componentStates).
+                setFailReasons(failReasons).
                 setCreatedBy(Constants.getUserId()).
                 setCreateDate(currentTime).
                 setLastUpdate(currentTime).
@@ -318,17 +312,6 @@ public class RecipeMetadata
     }
 
     private void save(RecipeMetadataPersistenceModel model) {
-        repository.save(convertPersistenceModelPrimitive(model));
-    }
-
-    private RecipeMetadataEntity convertPersistenceModelPrimitive(RecipeMetadataPersistenceModel model) {
-        return new RecipeMetadataEntity(
-                model.getId(),
-                model.getRecipeId(),
-                model.getParentId(),
-                model.getCreatedBy(),
-                model.getCreateDate(),
-                model.getLastUpdate()
-        );
+        repository.save(model);
     }
 }

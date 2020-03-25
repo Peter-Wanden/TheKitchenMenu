@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.ingredient;
 
 import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
+import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
 import com.google.android.gms.common.util.Strings;
 
 import java.util.LinkedHashMap;
@@ -85,7 +85,7 @@ public class IngredientDuplicateChecker
     }
 
     @Override
-    public void onDataNotAvailable() {
+    public void onDataUnavailable() {
         notifyCallback(NO_DUPLICATE_FOUND);
     }
 }

@@ -7,11 +7,11 @@ import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeMetadat
 import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeMetaData;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeCourse;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeComponentState;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeCourse;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeDuration;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIdentity;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipecourse.RecipeCourse;
@@ -28,7 +28,7 @@ import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeCourseEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeDurationEntity;
-import com.example.peter.thekitchenmenu.testdata.TestDataRecipeMetaDataEntity;
+import com.example.peter.thekitchenmenu.testdata.TestDataRecipeMetadataEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipePortionsEntity;
 
@@ -98,7 +98,7 @@ public class RecipeCopyTest {
 
     // region helper fields ------------------------------------------------------------------------
     @Mock
-    RepositoryRecipeMetaData repoRecipeMock;
+    RepositoryRecipeComponentState repoRecipeMock;
     @Captor
     ArgumentCaptor<PrimitiveDataSource.GetEntityCallback<RecipeMetadataEntity>> repoRecipeCallback;
     @Mock
@@ -241,7 +241,7 @@ public class RecipeCopyTest {
     @Test
     public void cloneFromAnotherUser_validRecipe_objectsRequestedFromDataLayer() {
         // Arrange
-        String cloneFromId = TestDataRecipeMetaDataEntity.getValidFromAnotherUser().getId();
+        String cloneFromId = TestDataRecipeMetadataEntity.getValidFromAnotherUser().getId();
 
         RecipeCopyRequest request = new RecipeCopyRequest(cloneFromId);
         // Act
@@ -254,8 +254,8 @@ public class RecipeCopyTest {
     @Test
     public void cloneFromAnotherUser_validRecipe_objectsClonedAndSavedToDataLayer() {
         // Arrange
-        String cloneFromId = TestDataRecipeMetaDataEntity.getValidFromAnotherUser().getId();
-        String copyToId = TestDataRecipeMetaDataEntity.getValidNewCloned().getId();
+        String cloneFromId = TestDataRecipeMetadataEntity.getValidFromAnotherUser().getId();
+        String copyToId = TestDataRecipeMetadataEntity.getValidNewCloned().getId();
         when(idProviderMock.getUId()).thenReturn(copyToId);
 
         ArgumentCaptor<RecipeCourseEntity> courseEntity = ArgumentCaptor.
@@ -846,18 +846,18 @@ public class RecipeCopyTest {
     private void verifyAllReposCalledAndReturnValidFromAnotherUser(String recipeId) {
 
         verify(repoRecipeMock).getById(eq(recipeId), repoRecipeCallback.capture());
-        repoRecipeCallback.getValue().onEntityLoaded(TestDataRecipeMetaDataEntity.
+        repoRecipeCallback.getValue().onEntityLoaded(TestDataRecipeMetadataEntity.
                 getValidFromAnotherUser());
 
         verify(repoIdentityMock).getById(eq(recipeId), repoIdentityCallback.capture());
         repoIdentityCallback.getValue().onEntityLoaded(TestDataRecipeIdentityEntity.
                 getValidCompleteFromAnotherUser());
 
-        verify(repoCourseMock).getCoursesForRecipe(eq(recipeId), repoCourseCallback.capture());
+        verify(repoCourseMock).getAllByRecipeId(eq(recipeId), repoCourseCallback.capture());
         repoCourseCallback.getValue().onAllLoaded(TestDataRecipeCourseEntity.
                 getAllByRecipeId(recipeId));
 
-        verify(repoPortionsMock).getPortionsForRecipe(eq(recipeId), repoPortionsCallback.capture());
+        verify(repoPortionsMock).getByRecipeId(eq(recipeId), repoPortionsCallback.capture());
         repoPortionsCallback.getValue().onEntityLoaded(TestDataRecipePortionsEntity.
                 getValidFromAnotherUser());
 

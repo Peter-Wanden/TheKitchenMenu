@@ -2,9 +2,9 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.reciped
 
 import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeDurationEntity;
 import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration;
-import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
-import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeDuration;
+import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
+import com.example.peter.thekitchenmenu.domain.model.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.RecipeComponentMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;

@@ -2,9 +2,9 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipep
 
 import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
-import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
-import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
+import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
+import com.example.peter.thekitchenmenu.domain.model.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.RecipeComponentMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;
@@ -83,7 +83,7 @@ public class RecipePortions extends UseCase
     }
 
     private void loadData(String recipeId) {
-        repository.getPortionsForRecipe(recipeId, this);
+        repository.getByRecipeId(recipeId, this);
     }
 
     @Override

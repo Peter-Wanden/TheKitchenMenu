@@ -4,9 +4,9 @@ import android.annotation.SuppressLint;
 
 import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeCourse;
-import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
-import com.example.peter.thekitchenmenu.domain.usecase.FailReasons;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeCourse;
+import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
+import com.example.peter.thekitchenmenu.domain.model.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.RecipeComponentMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;
@@ -100,7 +100,7 @@ public class RecipeCourse extends UseCase implements PrimitiveDataSource.GetAllC
     }
 
     private void loadData(String recipeId) {
-        repository.getCoursesForRecipe(recipeId, this);
+        repository.getAllByRecipeId(recipeId, this);
     }
 
     @Override
@@ -127,7 +127,7 @@ public class RecipeCourse extends UseCase implements PrimitiveDataSource.GetAllC
     }
 
     @Override
-    public void onDataNotAvailable() {
+    public void onDataUnavailable() {
         sendResponse();
     }
 

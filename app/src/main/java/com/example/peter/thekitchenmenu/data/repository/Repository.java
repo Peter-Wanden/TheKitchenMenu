@@ -14,9 +14,11 @@ import javax.annotation.Nonnull;
 
 public abstract class Repository<T extends PrimitiveModel> implements PrimitiveDataSource<T> {
 
-    PrimitiveDataSource<T> remoteDataSource;
-    PrimitiveDataSource<T> localDataSource;
-    Map<String, T> entityCache;
+    protected static Repository INSTANCE = null;
+    protected PrimitiveDataSource<T> remoteDataSource;
+    protected PrimitiveDataSource<T> localDataSource;
+    protected Map<String, T> entityCache;
+
     private boolean cacheIsDirty;
 
     @Override
@@ -37,7 +39,7 @@ public abstract class Repository<T extends PrimitiveModel> implements PrimitiveD
                 }
 
                 @Override
-                public void onDataNotAvailable() {
+                public void onDataUnavailable() {
                     getItemsFromRemoteDataSource(callback);
                 }
             });
@@ -53,8 +55,8 @@ public abstract class Repository<T extends PrimitiveModel> implements PrimitiveD
             }
 
             @Override
-            public void onDataNotAvailable() {
-                callback.onDataNotAvailable();
+            public void onDataUnavailable() {
+                callback.onDataUnavailable();
             }
         });
     }

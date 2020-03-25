@@ -19,7 +19,7 @@ public class ProductRemoteDataSource implements PrimitiveDataSource<ProductEntit
 
     @Override
     public void getAll(@Nonnull GetAllCallback<ProductEntity> callback) {
-        callback.onDataNotAvailable();
+        callback.onDataUnavailable();
     }
 
     @Override

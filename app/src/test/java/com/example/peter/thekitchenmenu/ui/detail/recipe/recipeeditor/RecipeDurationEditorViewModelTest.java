@@ -11,12 +11,12 @@ import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeMetadat
 import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeMetaData;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeCourse;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeDuration;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIdentity;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
-import com.example.peter.thekitchenmenu.domain.usecase.CommonFailReason;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeComponentState;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeCourse;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeDuration;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIdentity;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
+import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.RecipeComponentMetadata;
@@ -29,6 +29,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeid
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.RecipeResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeportions.RecipePortions;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadataResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.state.RecipeStateCalculator;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeduration.RecipeDurationTest;
@@ -39,7 +40,7 @@ import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeCourseEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeDurationEntity;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
-import com.example.peter.thekitchenmenu.testdata.TestDataRecipeMetaDataEntity;
+import com.example.peter.thekitchenmenu.testdata.TestDataRecipeMetadataEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.testdata.TestDataRecipePortionsEntity;
 
@@ -84,7 +85,7 @@ public class RecipeDurationEditorViewModelTest {
 
     // region helper fields ------------------------------------------------------------------------
     @Mock
-    RepositoryRecipeMetaData repoRecipeMock;
+    RepositoryRecipeComponentState repoRecipeMock;
     @Captor
     ArgumentCaptor<PrimitiveDataSource.GetEntityCallback<RecipeMetadataEntity>> repoRecipeCallback;
     @Mock
@@ -113,7 +114,7 @@ public class RecipeDurationEditorViewModelTest {
     UniqueIdProvider idProviderMock;
 
     private UseCaseHandler handler;
-    private RecipeMetaDataListener recipeStateListener;
+    private RecipeMetadataListener recipeStateListener;
     private Recipe recipeMacro;
     private RecipeMacroResponseListener macroListener;
     private DurationResponseListener durationListener;
@@ -143,7 +144,7 @@ public class RecipeDurationEditorViewModelTest {
                 setLongTextMaxLength(RecipeIdentityTest.DESCRIPTION_MAX_LENGTH).
                 build();
 
-        com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata recipeMetaData = new com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata(
+        RecipeMetadata recipeMetadata = new RecipeMetadata(
                 timeProviderMock,
                 repoRecipeMock,
                 RecipeComponents.requiredComponents
@@ -182,13 +183,13 @@ public class RecipeDurationEditorViewModelTest {
         recipeMacro = new Recipe(
                 handler,
                 stateCalculator,
-                recipeMetaData,
+                recipeMetadata,
                 identity,
                 course,
                 duration,
                 portions);
 
-        recipeStateListener = new RecipeMetaDataListener();
+        recipeStateListener = new RecipeMetadataListener();
         recipeMacro.registerMetadataListener(recipeStateListener);
 
         return new RecipeDurationEditorViewModel(
@@ -966,8 +967,8 @@ public class RecipeDurationEditorViewModelTest {
     }
 
     private void verifyRepoCoursesCalledAndReturnDataUnavailable(String recipeId) {
-        verify(repoCourseMock).getCoursesForRecipe(eq(recipeId), repoCourseCallback.capture());
-        repoCourseCallback.getValue().onDataNotAvailable();
+        verify(repoCourseMock).getAllByRecipeId(eq(recipeId), repoCourseCallback.capture());
+        repoCourseCallback.getValue().onDataUnavailable();
     }
 
     private void verifyRepoDurationCalledAndReturnDataUnavailable(String recipeId) {
@@ -976,23 +977,23 @@ public class RecipeDurationEditorViewModelTest {
     }
 
     private void verifyRepoPortionsCalledAndReturnDataUnavailable(String recipeId) {
-        verify(repoPortionsMock).getPortionsForRecipe(eq(recipeId), repoPortionsCallback.capture());
+        verify(repoPortionsMock).getByRecipeId(eq(recipeId), repoPortionsCallback.capture());
         repoPortionsCallback.getValue().onDataUnavailable();
     }
 
     private void verifyAllOtherReposCalledAndReturnValidExisting(String recipeId) {
 
         verify(repoRecipeMock).getById(eq(recipeId), repoRecipeCallback.capture());
-        repoRecipeCallback.getValue().onEntityLoaded(TestDataRecipeMetaDataEntity.getValidFromAnotherUser());
+        repoRecipeCallback.getValue().onEntityLoaded(TestDataRecipeMetadataEntity.getValidFromAnotherUser());
 
         verify(repoIdentityMock).getById(eq(recipeId), repoIdentityCallback.capture());
         repoIdentityCallback.getValue().onEntityLoaded(TestDataRecipeIdentityEntity.
                 getValidExistingTitleValidDescriptionValid());
 
-        verify(repoCourseMock).getCoursesForRecipe(eq(recipeId), repoCourseCallback.capture());
+        verify(repoCourseMock).getAllByRecipeId(eq(recipeId), repoCourseCallback.capture());
         repoCourseCallback.getValue().onAllLoaded(TestDataRecipeCourseEntity.getAllByRecipeId(recipeId));
 
-        verify(repoPortionsMock).getPortionsForRecipe(eq(recipeId), repoPortionsCallback.capture());
+        verify(repoPortionsMock).getByRecipeId(eq(recipeId), repoPortionsCallback.capture());
         repoPortionsCallback.getValue().onEntityLoaded(TestDataRecipePortionsEntity.
                 getExistingValidNinePortions());
     }
@@ -1006,7 +1007,7 @@ public class RecipeDurationEditorViewModelTest {
     // endregion helper methods --------------------------------------------------------------------
 
     // region helper classes -----------------------------------------------------------------------
-    private static class RecipeMetaDataListener implements Recipe.RecipeMetaDataListener {
+    private static class RecipeMetadataListener implements Recipe.RecipeMetadataListener {
 
         RecipeMetadataResponse response;
 

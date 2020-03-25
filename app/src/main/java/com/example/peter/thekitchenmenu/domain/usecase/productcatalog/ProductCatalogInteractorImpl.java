@@ -7,8 +7,8 @@ import com.example.peter.thekitchenmenu.data.primitivemodel.product.ProductEntit
 import com.example.peter.thekitchenmenu.data.model.ProductModel;
 import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.DatabaseInjection;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryFavoriteProduct;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryProduct;
+import com.example.peter.thekitchenmenu.data.repository.product.RepositoryFavoriteProduct;
+import com.example.peter.thekitchenmenu.data.repository.product.RepositoryProduct;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -77,7 +77,7 @@ public class ProductCatalogInteractorImpl implements ProductCatalogInteractor {
                     }
 
                     @Override
-                    public void onDataNotAvailable() {
+                    public void onDataUnavailable() {
                         productEntitiesLoading = false;
                         productListCallback.onDataNotAvailable();
                         sortDataWhenLoaded();
@@ -105,7 +105,7 @@ public class ProductCatalogInteractorImpl implements ProductCatalogInteractor {
                     }
 
                     @Override
-                    public void onDataNotAvailable() {
+                    public void onDataUnavailable() {
                         favoriteProductEntitiesLoading = false;
                         favoriteProductListCallback.onDataNotAvailable();
                         sortDataWhenLoaded();

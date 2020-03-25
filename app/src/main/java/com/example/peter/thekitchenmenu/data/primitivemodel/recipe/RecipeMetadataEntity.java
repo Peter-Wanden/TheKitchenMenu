@@ -18,6 +18,7 @@ public final class RecipeMetadataEntity implements PrimitiveModel {
     public static final String ID = "id";
     public static final String RECIPE_ID = "recipeId";
     private static final String PARENT_ID = "parentId";
+    private static final String RECIPE_STATE = "recipeState";
     private static final String CREATED_BY = "createdBy";
     private static final String CREATE_DATE = "createDate";
     private static final String LAST_UPDATE = "lastUpdate";
@@ -35,6 +36,9 @@ public final class RecipeMetadataEntity implements PrimitiveModel {
     @ColumnInfo(name = PARENT_ID)
     private final String parentId;
 
+    @ColumnInfo(name = RECIPE_STATE)
+    private final int recipeState;
+
     @Nonnull
     @ColumnInfo(name = CREATED_BY)
     private final String createdBy;
@@ -48,12 +52,14 @@ public final class RecipeMetadataEntity implements PrimitiveModel {
     public RecipeMetadataEntity(@Nonnull String id,
                                 @Nonnull String recipeId,
                                 @Nonnull String parentId,
+                                int recipeState,
                                 @Nonnull String createdBy,
                                 long createDate,
                                 long lastUpdate) {
         this.id = id;
         this.recipeId  = recipeId;
         this.parentId = parentId;
+        this.recipeState = recipeState;
         this.createdBy = createdBy;
         this.createDate = createDate;
         this.lastUpdate = lastUpdate;
@@ -64,7 +70,8 @@ public final class RecipeMetadataEntity implements PrimitiveModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RecipeMetadataEntity that = (RecipeMetadataEntity) o;
-        return createDate == that.createDate &&
+        return recipeState == that.recipeState &&
+                createDate == that.createDate &&
                 lastUpdate == that.lastUpdate &&
                 id.equals(that.id) &&
                 recipeId.equals(that.recipeId) &&
@@ -74,15 +81,16 @@ public final class RecipeMetadataEntity implements PrimitiveModel {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, recipeId, parentId, createdBy, createDate, lastUpdate);
+        return Objects.hash(id, recipeId, parentId, recipeState, createdBy, createDate, lastUpdate);
     }
 
     @Override
     public String toString() {
-        return "RecipeMetadata{" +
+        return "RecipeMetadataEntity{" +
                 "id='" + id + '\'' +
                 ", recipeId='" + recipeId + '\'' +
                 ", parentId='" + parentId + '\'' +
+                ", recipeState=" + recipeState +
                 ", createdBy='" + createdBy + '\'' +
                 ", createDate=" + createDate +
                 ", lastUpdate=" + lastUpdate +
@@ -103,6 +111,10 @@ public final class RecipeMetadataEntity implements PrimitiveModel {
     @Nonnull
     public String getParentId() {
         return parentId;
+    }
+
+    public int getRecipeState() {
+        return recipeState;
     }
 
     @Nonnull

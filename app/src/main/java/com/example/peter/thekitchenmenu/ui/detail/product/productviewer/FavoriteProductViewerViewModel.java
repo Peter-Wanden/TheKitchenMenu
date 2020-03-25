@@ -9,7 +9,7 @@ import androidx.lifecycle.AndroidViewModel;
 
 import com.example.peter.thekitchenmenu.data.primitivemodel.product.FavoriteProductEntity;
 import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
-import com.example.peter.thekitchenmenu.data.repository.DataSourceFavoriteProducts;
+import com.example.peter.thekitchenmenu.data.repository.product.DataSourceFavoriteProducts;
 import com.example.peter.thekitchenmenu.ui.UnsavedChangesDialogFragment;
 import com.example.peter.thekitchenmenu.ui.detail.product.favoriteproducteditor.FavoriteProductEditorActivity;
 import com.example.peter.thekitchenmenu.ui.detail.product.producteditor.ProductEditorActivity;

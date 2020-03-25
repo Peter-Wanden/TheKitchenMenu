@@ -5,9 +5,9 @@ import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.Ingredien
 import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.RecipeIngredientEntity;
 import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryIngredient;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipeIngredient;
-import com.example.peter.thekitchenmenu.data.repository.RepositoryRecipePortions;
+import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIngredient;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
@@ -1062,21 +1062,21 @@ public class IngredientCalculatorTest {
     }
 
     private void verifyRepoPortionsCalledReturnNewValidFourPortions() {
-        verify(repoRecipePortionsMock).getPortionsForRecipe(
+        verify(repoRecipePortionsMock).getByRecipeId(
                 eq(QUANTITY_NEW_INVALID.getRecipeId()),
                 getRecipePortionsCallbackCaptor.capture());
         getRecipePortionsCallbackCaptor.getValue().onEntityLoaded(PORTIONS_NEW_VALID_FOUR);
     }
 
     private void verifyRepoPortionsCalledAndReturnNewValidFourPortions() {
-        verify(repoRecipePortionsMock).getPortionsForRecipe(
+        verify(repoRecipePortionsMock).getByRecipeId(
                 eq(QUANTITY_NEW_VALID_METRIC.getRecipeId()),
                 getRecipePortionsCallbackCaptor.capture());
         getRecipePortionsCallbackCaptor.getValue().onEntityLoaded(PORTIONS_NEW_VALID_FOUR);
     }
 
     private void verifyRepoPortionsCalledAndReturnExistingValidNinePortions() {
-        verify(repoRecipePortionsMock).getPortionsForRecipe(
+        verify(repoRecipePortionsMock).getByRecipeId(
                 eq(QUANTITY_EXISTING_VALID_METRIC.getRecipeId()),
                 getRecipePortionsCallbackCaptor.capture());
         getRecipePortionsCallbackCaptor.getValue().onEntityLoaded(PORTIONS_EXISTING_VALID_NINE);

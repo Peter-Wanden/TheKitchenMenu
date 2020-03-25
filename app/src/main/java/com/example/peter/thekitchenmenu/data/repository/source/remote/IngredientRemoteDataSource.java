@@ -17,7 +17,7 @@ public class IngredientRemoteDataSource implements PrimitiveDataSource<Ingredien
 
     @Override
     public void getAll(@Nonnull GetAllCallback<IngredientEntity> callback) {
-        callback.onDataNotAvailable();
+        callback.onDataUnavailable();
     }
 
     @Override

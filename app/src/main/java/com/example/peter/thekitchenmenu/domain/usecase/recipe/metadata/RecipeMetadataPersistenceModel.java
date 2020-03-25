@@ -1,59 +1,41 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata;
 
-import com.example.peter.thekitchenmenu.app.Constants;
-import com.example.peter.thekitchenmenu.domain.model.PersistenceModel;
+import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeMetadataEntity;
+import com.example.peter.thekitchenmenu.domain.model.FailReasons;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipePersistenceModel;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
-
-import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.*;
 
-public final class RecipeMetadataPersistenceModel implements PersistenceModel {
-    @Nonnull
-    private final String id;
-    @Nonnull
-    private final String parentId;
-    @Nonnull
+/**
+ * Represented in primitive form by {@link RecipeMetadataEntity}
+ */
+public final class RecipeMetadataPersistenceModel extends RecipePersistenceModel {
+
+    private String parentId;
     private HashMap<ComponentName, ComponentState> componentStates;
-    @Nonnull
-    private final String createdBy;
-    private final long createDate;
-    private final long lastUpdate;
+    private List<FailReasons> failReasons;
+    private String createdBy;
+    private long createDate;
+    private long lastUpdate;
 
-    private RecipeMetadataPersistenceModel(
-            @Nonnull String id,
-            @Nonnull String parentId,
-            @Nonnull HashMap<ComponentName, ComponentState> componentStates,
-            @Nonnull String createdBy,
-            long createDate,
-            long lastUpdate) {
-        this.id = id;
-        this.parentId = parentId;
-        this.componentStates = componentStates;
-        this.createdBy = createdBy;
-        this.createDate = createDate;
-        this.lastUpdate = lastUpdate;
-    }
+    private RecipeMetadataPersistenceModel(){}
 
-    @Override
-    @Nonnull
-    public String getId() {
-        return id;
-    }
-
-    @Nonnull
     public String getParentId() {
         return parentId;
     }
 
-    @Nonnull
     public HashMap<ComponentName, ComponentState> getComponentStates() {
         return componentStates;
     }
 
-    @Nonnull
+    public List<FailReasons> getFailReasons() {
+        return failReasons;
+    }
+
     public String getCreatedBy() {
         return createdBy;
     }
@@ -71,88 +53,70 @@ public final class RecipeMetadataPersistenceModel implements PersistenceModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RecipeMetadataPersistenceModel that = (RecipeMetadataPersistenceModel) o;
-        return id.equals(that.id) &&
-                parentId.equals(that.parentId) &&
-                componentStates.equals(that.componentStates) &&
-                createdBy.equals(that.createdBy) &&
+        return Objects.equals(id, that.id) &&
+                Objects.equals(recipeId, that.recipeId) &&
+                Objects.equals(parentId, that.parentId) &&
+                Objects.equals(componentStates, that.componentStates) &&
+                Objects.equals(failReasons, that.failReasons) &&
+                Objects.equals(createdBy, that.createdBy) &&
                 createDate == that.createDate &&
                 lastUpdate == that.lastUpdate;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, parentId, createdBy, componentStates, createDate, lastUpdate);
+        return Objects.hash(
+                id, recipeId, parentId, componentStates, failReasons,
+                createdBy, createDate, lastUpdate);
     }
 
-    @Override
-    public String toString() {
-        return "RecipeMetadataPersistenceModel{" +
-                "id='" + id + '\'' +
-                ", parentId='" + parentId + '\'' +
-                ", componentStates=" + componentStates + '\'' +
-                ", createdBy='" + createdBy + '\'' +
-                ", createDate=" + createDate +
-                ", lastUpdate=" + lastUpdate +
-                '}';
-    }
-
-    public static class Builder {
-        private String id;
-        private String parentId;
-        private HashMap<ComponentName, ComponentState> componentStates;
-        private String createdBy;
-        private long createDate;
-        private long lastUpdate;
-
-        public static Builder getDefault() {
-            return new Builder().
-                    setId("").
-                    setParentId("").
-                    setComponentStates(new HashMap<>()).
-                    setCreatedBy(Constants.getUserId()).
-                    setCreateDate(0L).
-                    setLastUpdate(0L);
-        }
+    public static class Builder extends RecipeDataModelBuilder<
+            Builder,
+            RecipeMetadataPersistenceModel> {
 
         public Builder setId(String id) {
-            this.id = id;
-            return this;
+            model.id = id;
+            return self();
+        }
+
+        public Builder setRecipeId(String recipeId) {
+            model.recipeId = recipeId;
+            return self();
         }
 
         public Builder setParentId(String parentId) {
-            this.parentId = parentId;
-            return this;
+            model.parentId = parentId;
+            return self();
         }
 
         public Builder setComponentStates(HashMap<ComponentName, ComponentState> componentStates) {
-            this.componentStates = componentStates;
-            return this;
+            model.componentStates = componentStates;
+            return self();
+        }
+
+        public Builder setFailReasons(List<FailReasons> failReasons) {
+            model.failReasons = failReasons;
+            return self();
         }
 
         public Builder setCreatedBy(String createdBy) {
-            this.createdBy = createdBy;
-            return this;
+            model.createdBy = createdBy;
+            return self();
         }
 
         public Builder setCreateDate(long createDate) {
-            this.createDate = createDate;
-            return this;
+            model.createDate = createDate;
+            return self();
         }
 
         public Builder setLastUpdate(long lastUpdate) {
-            this.lastUpdate = lastUpdate;
-            return this;
+            model.lastUpdate = lastUpdate;
+            return self();
         }
 
-        public RecipeMetadataPersistenceModel build() {
-            return new RecipeMetadataPersistenceModel(
-                    id,
-                    parentId,
-                    componentStates,
-                    createdBy,
-                    createDate,
-                    lastUpdate
-            );
+        @Override
+        protected Builder self() {
+            return this;
         }
     }
 }

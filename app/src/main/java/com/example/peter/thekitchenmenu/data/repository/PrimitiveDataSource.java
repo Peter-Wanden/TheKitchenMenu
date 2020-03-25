@@ -23,7 +23,7 @@ public interface PrimitiveDataSource<T extends PrimitiveModel> {
 
         void onAllLoaded(List<E> entities);
 
-        void onDataNotAvailable();
+        void onDataUnavailable();
     }
 
     interface GetEntityCallback<T extends PrimitiveModel> {
