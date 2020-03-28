@@ -1,80 +1,104 @@
 package com.example.peter.thekitchenmenu.domain.usecase.ingredient;
 
 import com.example.peter.thekitchenmenu.app.Constants;
-import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.IngredientEntity;
-import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
+import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
+import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
+import com.example.peter.thekitchenmenu.domain.model.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
+import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorModel;
+import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorRequest;
+import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorResponse;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+
 import static com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientDuplicateChecker.NO_DUPLICATE_FOUND;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator.*;
 
-public class Ingredient extends UseCase implements PrimitiveDataSource.GetEntityCallback<IngredientEntity> {
+public class Ingredient
+        extends UseCase
+        implements DataSource.GetModelCallback<IngredientPersistenceModel> {
 
-        private static final String TAG = "tkm-" + Ingredient.class.getSimpleName() + ": ";
+    private static final String TAG = "tkm-" + Ingredient.class.getSimpleName() + ": ";
 
-    public enum Result {
+    public enum FailReason implements FailReasons {
         UNEDITABLE,
-        IS_DUPLICATE,
-        DATA_UNAVAILABLE,
-        INVALID_UNCHANGED,
-        VALID_UNCHANGED,
-        INVALID_CHANGED,
-        VALID_CHANGED
+        DUPLICATE,
+        NAME_TOO_SHORT,
+        NAME_TOO_LONG,
+        DESCRIPTION_TOO_SHORT,
+        DESCRIPTION_TOO_LONG
     }
 
     static final String CREATE_NEW_INGREDIENT = "";
+    private static final TextType NAME_TEXT_TYPE = TextType.SHORT_TEXT;
+    private static final TextType DESCRIPTION_TEXT_TYPE = TextType.LONG_TEXT;
 
-    private RepositoryIngredient repository;
-    private UniqueIdProvider idProvider;
-    private TimeProvider timeProvider;
-    private IngredientDuplicateChecker duplicateNameChecker;
+    @Nonnull
+    private final RepositoryIngredient repository;
+    @Nonnull
+    private final UseCaseHandler handler;
+    @Nonnull
+    private final TextValidator textValidator;
+    @Nonnull
+    private final IngredientDuplicateChecker duplicateNameChecker;
+    @Nonnull
+    private final TimeProvider timeProvider;
+    @Nonnull
+    private final UniqueIdProvider idProvider;
+    @Nonnull
+    private final List<FailReasons> failReasons;
 
-    private boolean isDuplicate;
-    private IngredientModel requestModel;
-    private IngredientModel responseModel;
+    private String id = "";
+    private String ingredientId;
+    private boolean isNewRequest;
+    private IngredientRequest request;
+    private IngredientRequest.Model requestModel;
+    private IngredientPersistenceModel persistenceModel;
 
-    public Ingredient(RepositoryIngredient repository,
-                      UniqueIdProvider idProvider,
-                      TimeProvider timeProvider,
-                      IngredientDuplicateChecker duplicateNameChecker) {
+    public Ingredient(@Nonnull RepositoryIngredient repository,
+                      @Nonnull UniqueIdProvider idProvider,
+                      @Nonnull TimeProvider timeProvider,
+                      @Nonnull IngredientDuplicateChecker duplicateNameChecker,
+                      @Nonnull UseCaseHandler handler,
+                      @Nonnull TextValidator textValidator) {
+
         this.repository = repository;
         this.idProvider = idProvider;
         this.timeProvider = timeProvider;
         this.duplicateNameChecker = duplicateNameChecker;
-        requestModel = new IngredientModel.Builder().getDefault().build();
-        responseModel = new IngredientModel.Builder().getDefault().build();
+        this.handler = handler;
+        this.textValidator = textValidator;
+
+        requestModel = new IngredientRequest.Model.Builder().getDefault().build();
+        failReasons = new ArrayList<>();
     }
 
     @Override
     protected <Q extends Request> void execute(Q request) {
-        IngredientRequest ir = (IngredientRequest) request;
-        System.out.println(TAG + "request:" + ir);
-        requestModel = ir.getModel();
-        String ingredientId = ir.getModel().getIngredientId();
+        IngredientRequest ingredientRequest = (IngredientRequest) request;
+        this.request = ingredientRequest;
+        System.out.println(TAG + "request:" + ingredientRequest);
 
-        if (isCreateNew(ingredientId)) {
-            requestModel = createNewIngredientModel();
-            sendResponse();
-        } else if (isEditExisting(ingredientId)) {
+        if (isNewRequest(ingredientRequest.getIngredientId())) {
+            ingredientId = ingredientRequest.getIngredientId();
             loadData(ingredientId);
         } else {
-            checkForChanges();
+            processChanges();
         }
     }
 
-    private boolean isCreateNew(String ingredientId) {
-        return ingredientId.equals(CREATE_NEW_INGREDIENT);
-    }
-
-    private boolean isEditExisting(String ingredientId) {
-        IngredientModel model = new IngredientModel.Builder().
-                getDefault().
-                setIngredientId(ingredientId).
-                build();
-
-        return this.requestModel.equals(model);
+    private boolean isNewRequest(String ingredientId) {
+        return isNewRequest = !this.ingredientId.equals(ingredientId);
     }
 
     private void loadData(String ingredientId) {
@@ -82,144 +106,218 @@ public class Ingredient extends UseCase implements PrimitiveDataSource.GetEntity
     }
 
     @Override
-    public void onEntityLoaded(IngredientEntity entity) {
-        requestModel = convertEntityToModel(entity);
-        equaliseRequestResponseStates();
-        sendResponse();
-    }
-
-    private IngredientModel convertEntityToModel(IngredientEntity entity) {
-        return new IngredientModel.Builder().
-                setIngredientId(entity.getId()).
-                setName(entity.getName()).
-                setDescription(entity.getDescription()).
-                setConversionFactor(entity.getConversionFactor()).
-                setCreatedBy(entity.getCreatedBy()).
-                setCreateDate(entity.getCreateDate()).
-                setLastUpdate(entity.getLastUpdate()).
-                build();
+    public void onModelLoaded(IngredientPersistenceModel model) {
+        persistenceModel = model;
+        if (isEditable()) {
+            validateData();
+        } else {
+            failReasons.add(FailReason.UNEDITABLE);
+            buildResponse();
+        }
     }
 
     @Override
-    public void onDataUnavailable() {
-        requestModel = createNewIngredientModel();
-        equaliseRequestResponseStates();
+    public void onModelUnavailable() {
+        persistenceModel = createNewPersistenceModel();
+        failReasons.add(CommonFailReason.DATA_UNAVAILABLE);
 
-        IngredientResponse response = new IngredientResponse(
-                Result.DATA_UNAVAILABLE,
-                responseModel
-        );
-        System.out.println(TAG + "response" + response);
-        getUseCaseCallback().onError(response);
+        buildResponse();
     }
 
-    private IngredientModel createNewIngredientModel() {
+    private IngredientPersistenceModel createNewPersistenceModel() {
         long currentTime = timeProvider.getCurrentTimeInMills();
-        String ingredientId = idProvider.getUId();
+        id = idProvider.getUId();
+        ingredientId = idProvider.getUId();
 
-        return new IngredientModel.Builder().
+        return new IngredientPersistenceModel.Builder().
                 getDefault().
+                setId(id).
                 setIngredientId(ingredientId).
                 setCreateDate(currentTime).
                 setLastUpdate(currentTime).
                 build();
     }
 
-    private void checkForChanges() {
-        if (isNameChanged()) {
-            checkForDuplicateName();
-        } else if (isDescriptionChanged()) {
-            saveIfValid();
-        }
+    private void processChanges() {
+            validateData();
+    }
+
+    private void validateData() {
+        checkForDuplicateName();
     }
 
     private void checkForDuplicateName() {
         duplicateNameChecker.checkForDuplicateAndNotify(
-                requestModel.getName(),
-                requestModel.getIngredientId(),
+                request.getModel().getName(),
+                request.getIngredientId(),
 
                 duplicateId -> {
-                    isDuplicate = !duplicateId.equals(NO_DUPLICATE_FOUND);
-                    saveIfValid();
+                    if (!NO_DUPLICATE_FOUND.equals(duplicateId)) {
+                        failReasons.add(FailReason.DUPLICATE);
+                    }
+                    validateName();
                 });
-
     }
 
-    private void saveIfValid() {
-        if (getResult() == Result.VALID_CHANGED) {
-            requestModel = setLasUpdateToCurrentTime();
-            save();
+    private void validateName() {
+        String name;
+        if (isNewRequest) {
+            name = persistenceModel.getName();
+        } else {
+            name = requestModel.getName();
         }
-        sendResponse();
-    }
-
-    private IngredientModel setLasUpdateToCurrentTime() {
-        IngredientModel.Builder builder = IngredientModel.Builder.basedOn(requestModel);
-        builder.setLastUpdate(timeProvider.getCurrentTimeInMills());
-        return builder.build();
-    }
-
-    private void save() {
-        repository.save(convertModelToEntity(requestModel));
-    }
-
-    private IngredientEntity convertModelToEntity(IngredientModel model) {
-        return new IngredientEntity(
-                model.getIngredientId(),
-                model.getName(),
-                model.getDescription(),
-                model.getConversionFactor(),
-                Constants.getUserId(),
-                model.getCreateDate(),
-                model.getLastUpdate()
+        TextValidatorRequest request = new TextValidatorRequest(
+                NAME_TEXT_TYPE,
+                new TextValidatorModel(name)
         );
-    }
-
-    private void sendResponse() {
-        IngredientResponse response = new IngredientResponse(getResult(), requestModel);
-        equaliseRequestResponseStates();
-        System.out.println(TAG + "response" + response);
-        getUseCaseCallback().onSuccess(response);
-    }
-
-    private Result getResult() {
-        if (!isEditable()) {
-            return Result.UNEDITABLE;
-
-        } else if (isDuplicate) {
-            return Result.IS_DUPLICATE;
-
-        } else if (isNameChanged() || isDescriptionChanged()) {
-            if (isNameValid()) {
-                return Result.VALID_CHANGED;
-            } else {
-                return Result.INVALID_CHANGED;
+        handler.execute(textValidator, request, new UseCase.Callback<TextValidatorResponse>() {
+            @Override
+            public void onSuccess(TextValidatorResponse response) {
+                validateDescription();
             }
 
-        } else if (isNameValid()) {
-            return Result.VALID_UNCHANGED;
+            @Override
+            public void onError(TextValidatorResponse response) {
+                TextValidator.FailReason failReason = response.getFailReason();
+                if (TextValidator.FailReason.TOO_SHORT.equals(failReason)) {
+                    failReasons.add(FailReason.NAME_TOO_SHORT);
+
+                } else if (TextValidator.FailReason.TOO_LONG == failReason) {
+                    failReasons.add(FailReason.NAME_TOO_LONG);
+                }
+                validateDescription();
+            }
+        });
+    }
+
+    private void validateDescription() {
+        String description;
+        if (isNewRequest) {
+            description = persistenceModel.getDescription();
         } else {
-            return Result.INVALID_UNCHANGED;
+            description = requestModel.getDescription();
         }
+        TextValidatorRequest request = new TextValidatorRequest(
+                DESCRIPTION_TEXT_TYPE,
+                new TextValidatorModel(description)
+        );
+        handler.execute(textValidator, request, new UseCase.Callback<TextValidatorResponse>() {
+            @Override
+            public void onSuccess(TextValidatorResponse response) {
+                if (failReasons.isEmpty()) {
+                    failReasons.add(CommonFailReason.NONE);
+                }
+                buildResponse();
+            }
+
+            @Override
+            public void onError(TextValidatorResponse response) {
+                TextValidator.FailReason failReason = response.getFailReason();
+                if (TextValidator.FailReason.TOO_SHORT == failReason) {
+                    failReasons.add(FailReason.DESCRIPTION_TOO_SHORT);
+                } else {
+                    failReasons.add(FailReason.DESCRIPTION_TOO_LONG);
+                }
+                buildResponse();
+            }
+        });
+    }
+
+    private void buildResponse() {
+        IngredientResponse response = new IngredientResponse.Builder().
+                setId(id).
+                setIngredientId(ingredientId).
+                setMetadata(getMetadata()).
+                setModel(getResponseModel()).
+                build();
+
+        if (ComponentState.VALID_CHANGED == response.getMetadata().getState()) {
+            save(updatePersistenceFromRequestModel());
+        }
+        sendResponse(response);
+    }
+
+    private UseCaseMetadata getMetadata() {
+        return new UseCaseMetadata.Builder().
+                setState(getComponentState()).
+                setFailReasons(new ArrayList<>(failReasons)).
+                setCreateDate(persistenceModel.getCreateDate()).
+                setLasUpdate(persistenceModel.getLastUpdate()).
+                build();
+    }
+
+    private ComponentState getComponentState() {
+        boolean isValid = failReasons.contains(CommonFailReason.NONE);
+
+        if (!isValid && !isChanged()) {
+            return ComponentState.INVALID_UNCHANGED;
+        } else if (isValid && !isChanged()) {
+            return ComponentState.VALID_UNCHANGED;
+        } else if (!isValid && isChanged()) {
+            return ComponentState.INVALID_CHANGED;
+        } else {
+            return ComponentState.VALID_CHANGED;
+        }
+    }
+
+    private boolean isChanged() {
+        return !isNewRequest && (isNameChanged() || isDescriptionChanged());
     }
 
     private boolean isEditable() {
-        return Constants.getUserId().equals(responseModel.getUserId());
-    }
-
-    private void equaliseRequestResponseStates() {
-        responseModel = requestModel;
+        return Constants.getUserId().equals(persistenceModel.getUserId());
     }
 
     private boolean isNameChanged() {
-        return !requestModel.getName().equals(responseModel.getName());
-    }
-
-    private boolean isNameValid() {
-        return !requestModel.getName().isEmpty();
+        return !persistenceModel.getName().toLowerCase().trim().
+                equals(request.getModel().getName().toLowerCase().trim());
     }
 
     private boolean isDescriptionChanged() {
-        return !requestModel.getDescription().equals(responseModel.getDescription());
+        return !persistenceModel.getDescription().toLowerCase().trim().
+                equals(request.getModel().getDescription().toLowerCase().trim());
+    }
+
+    private IngredientResponse.Model getResponseModel() {
+        return new IngredientResponse.Model.Builder().
+                setName(isNewRequest ?
+                        persistenceModel.getName() :
+                        requestModel.getName()).
+                setDescription(isNewRequest ?
+                        persistenceModel.getDescription() :
+                        requestModel.getDescription()).
+                setConversionFactor(isNewRequest ?
+                        persistenceModel.getConversionFactor() :
+                        requestModel.getConversionFactor()).
+                build();
+    }
+
+    private IngredientPersistenceModel updatePersistenceFromRequestModel() {
+        return IngredientPersistenceModel.Builder.
+                basedOnPersistenceModel(persistenceModel).
+                setConversionFactor(persistenceModel.getConversionFactor()).
+                setName(persistenceModel.getName()).
+                setDescription(persistenceModel.getDescription()).
+                build();
+    }
+
+    private void save(IngredientPersistenceModel model) {
+        repository.save(model);
+    }
+
+    private void sendResponse(IngredientResponse response) {
+        System.out.println(TAG + response);
+        resetState();
+
+        if (response.getMetadata().getFailReasons().contains(CommonFailReason.NONE)) {
+            getUseCaseCallback().onSuccess(response);
+        } else {
+            getUseCaseCallback().onError(response);
+        }
+    }
+
+    private void resetState() {
+        failReasons.clear();
+        isNewRequest = false;
     }
 }

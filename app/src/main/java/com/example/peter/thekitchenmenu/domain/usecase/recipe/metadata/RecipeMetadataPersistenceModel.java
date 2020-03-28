@@ -70,9 +70,9 @@ public final class RecipeMetadataPersistenceModel extends RecipePersistenceModel
                 createdBy, createDate, lastUpdate);
     }
 
-    public static class Builder extends RecipeDataModelBuilder<
-            Builder,
-            RecipeMetadataPersistenceModel> {
+    public static class Builder extends DomainModelBuilder<
+                    Builder,
+                    RecipeMetadataPersistenceModel> {
 
         public Builder setId(String id) {
             model.id = id;

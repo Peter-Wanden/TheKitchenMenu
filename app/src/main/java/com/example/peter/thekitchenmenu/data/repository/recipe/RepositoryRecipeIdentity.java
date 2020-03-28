@@ -1,26 +1,26 @@
 package com.example.peter.thekitchenmenu.data.repository.recipe;
 
-import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeIdentityEntity;
-import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
+import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.Repository;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeidentity.RecipeIdentityPersistenceModel;
 
 import javax.annotation.Nonnull;
 
-public class RepositoryRecipeIdentity extends Repository<RecipeIdentityEntity> {
+public class RepositoryRecipeIdentity extends Repository<RecipeIdentityPersistenceModel> {
 
     public static RepositoryRecipeIdentity INSTANCE = null;
 
     private RepositoryRecipeIdentity(
-            @Nonnull PrimitiveDataSource<RecipeIdentityEntity> remoteDataSource,
-            @Nonnull PrimitiveDataSource<RecipeIdentityEntity> localDataSource) {
+            @Nonnull DataSource<RecipeIdentityPersistenceModel> remoteDataSource,
+            @Nonnull DataSource<RecipeIdentityPersistenceModel> localDataSource) {
 
         this.remoteDataSource = remoteDataSource;
         this.localDataSource = localDataSource;
     }
 
     public static RepositoryRecipeIdentity getInstance(
-            PrimitiveDataSource<RecipeIdentityEntity> remoteDataSource,
-            PrimitiveDataSource<RecipeIdentityEntity> localDataSource) {
+            DataSource<RecipeIdentityPersistenceModel> remoteDataSource,
+            DataSource<RecipeIdentityPersistenceModel> localDataSource) {
 
         if (INSTANCE == null) {
             INSTANCE = new RepositoryRecipeIdentity(remoteDataSource, localDataSource);

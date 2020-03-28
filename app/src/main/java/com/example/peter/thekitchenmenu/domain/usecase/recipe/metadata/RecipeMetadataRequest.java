@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata;
 
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.RecipeComponentRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeDataModel;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseRequestWithDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainModel;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -10,17 +10,20 @@ import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.*;
 
-public final class RecipeMetadataRequest extends RecipeComponentRequest<RecipeMetadataRequest.Model> {
+public final class RecipeMetadataRequest
+        extends UseCaseRequestWithDomainModel<RecipeMetadataRequest.Model> {
 
     @Override
     public String toString() {
         return "RecipeMetadataRequest{" +
-                "id='" + id + '\'' +
+                "dataId='" + dataId + '\'' +
+                ", domainId='" + domainId + '\'' +
                 ", model=" + model +
                 '}';
     }
 
-    public static class Builder extends RecipeRequestBuilder<Builder, RecipeMetadataRequest, Model> {
+    public static class Builder
+            extends UseCaseRequestBuilder<Builder, RecipeMetadataRequest, Model> {
 
         public Builder() {
             request = new RecipeMetadataRequest();
@@ -28,7 +31,7 @@ public final class RecipeMetadataRequest extends RecipeComponentRequest<RecipeMe
 
         public Builder getDefault() {
             return new Builder().
-                    setId("").
+                    setDataId("").
                     setModel(new Model.Builder().
                             getDefault().
                             build()
@@ -36,7 +39,7 @@ public final class RecipeMetadataRequest extends RecipeComponentRequest<RecipeMe
         }
 
         public Builder basedOnResponse(RecipeMetadataResponse response) {
-            request.id = response.getId();
+            request.dataId = response.getId();
             request.model.parentId = response.getModel().getParentId();
             request.model.componentStates = response.getModel().getComponentStates();
             return self();
@@ -48,7 +51,7 @@ public final class RecipeMetadataRequest extends RecipeComponentRequest<RecipeMe
         }
     }
 
-    public static final class Model extends RecipeDataModel {
+    public static final class Model extends UseCaseDomainModel {
         private String parentId;
         private HashMap<ComponentName, ComponentState> componentStates;
 
@@ -84,7 +87,7 @@ public final class RecipeMetadataRequest extends RecipeComponentRequest<RecipeMe
                     '}';
         }
 
-        public static class Builder extends RecipeDataModelBuilder<Builder, Model> {
+        public static class Builder extends DomainModelBuilder<Builder, Model> {
 
             public Builder() {
                 model = new Model();

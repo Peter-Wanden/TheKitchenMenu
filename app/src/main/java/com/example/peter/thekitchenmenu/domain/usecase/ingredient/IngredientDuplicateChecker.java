@@ -1,7 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecase.ingredient;
 
-import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.IngredientEntity;
-import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
+import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
 import com.google.android.gms.common.util.Strings;
 
@@ -9,7 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 public class IngredientDuplicateChecker
-        implements PrimitiveDataSource.GetAllCallback<IngredientEntity> {
+        implements DataSource.GetAllCallback<IngredientPersistenceModel> {
 
     public interface DuplicateCallback {
         void duplicateCheckResult(String duplicateId);
@@ -38,23 +37,23 @@ public class IngredientDuplicateChecker
     }
 
     @Override
-    public void onAllLoaded(List<IngredientEntity> entities) {
-        if (!entities.isEmpty()) {
-            createExistingIngredientList(entities);
+    public void onAllLoaded(List<IngredientPersistenceModel> ingredients) {
+        if (!ingredients.isEmpty()) {
+            createExistingIngredientList(ingredients);
             checkForDuplicates();
         }
     }
 
-    private void createExistingIngredientList(List<IngredientEntity> entities) {
+    private void createExistingIngredientList(List<IngredientPersistenceModel> ingredients) {
         if (existingIngredients == null) {
             existingIngredients = new LinkedHashMap<>();
         }
 
         existingIngredients.clear();
 
-        for (IngredientEntity entity : entities) {
-            String key = makeKey(entity.getName());
-            existingIngredients.put(key, entity.getId());
+        for (IngredientPersistenceModel ingredient : ingredients) {
+            String key = makeKey(ingredient.getName());
+            existingIngredients.put(key, ingredient.getDataId());
         }
     }
 

@@ -32,7 +32,7 @@ public final class RecipePortionsPersistenceModel implements PersistenceModel {
 
     @Override
     @Nonnull
-    public String getId() {
+    public String getDataId() {
         return id;
     }
 
@@ -98,7 +98,7 @@ public final class RecipePortionsPersistenceModel implements PersistenceModel {
 
         public static Builder basedOnPersistenceModel(@Nonnull RecipePortionsPersistenceModel oldModel) {
             return new Builder().
-                    setId(oldModel.getId()).
+                    setId(oldModel.getDataId()).
                     setRecipeId(oldModel.getRecipeId()).
                     setServings(oldModel.getServings()).
                     setSittings(oldModel.getSittings()).

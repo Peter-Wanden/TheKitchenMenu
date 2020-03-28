@@ -17,15 +17,15 @@ import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipePortion
 import com.example.peter.thekitchenmenu.data.repository.source.local.product.dao.FavoriteProductEntityDao;
 import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.dao.IngredientEntityDao;
 import com.example.peter.thekitchenmenu.data.repository.source.local.product.dao.ProductEntityDao;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.dao.RecipeComponentStateEntityDao;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.dao.RecipeCourseEntityDao;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.dao.RecipeDurationEntityDao;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.dao.RecipeFailReasonEntityDao;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.dao.RecipeMetadataEntityDao;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.dao.RecipeIdentityEntityDao;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.dao.RecipeIngredientEntityDao;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.dao.RecipePortionsEntityDao;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.entitymodel.RecipeFailReasonEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.RecipeComponentStateEntityDao;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.RecipeCourseEntityDao;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.RecipeDurationEntityDao;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.RecipeFailReasonEntityDao;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.RecipeMetadataEntityDao;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.RecipeIdentityEntityDao;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.ingredient.RecipeIngredientEntityDao;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.RecipePortionsEntityDao;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.RecipeFailReasonEntity;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

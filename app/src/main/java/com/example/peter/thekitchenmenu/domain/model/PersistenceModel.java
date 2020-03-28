@@ -5,5 +5,8 @@ package com.example.peter.thekitchenmenu.domain.model;
  * id = the unique id of the data structure assigned by the application
  */
 public interface PersistenceModel {
-    String getId();
+
+    String getDataId();
+
+    String getDomainId();
 }

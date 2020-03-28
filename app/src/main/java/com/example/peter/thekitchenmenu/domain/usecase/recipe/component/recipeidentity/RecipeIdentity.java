@@ -1,14 +1,12 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeidentity;
 
-import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeIdentityEntity;
-import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
+import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.RecipeComponentMetadata;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorModel;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidatorRequest;
@@ -20,10 +18,11 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.*;
 import static com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator.*;
 
 public class RecipeIdentity extends UseCase
-        implements PrimitiveDataSource.GetEntityCallback<RecipeIdentityEntity> {
+        implements DataSource.GetModelCallback<RecipeIdentityPersistenceModel> {
 
     private static final String TAG = "tkm-" + RecipeIdentity.class.getSimpleName() + ": ";
 
@@ -73,8 +72,8 @@ public class RecipeIdentity extends UseCase
         requestModel = identityRequest.getModel();
         System.out.println(TAG + identityRequest);
 
-        if (isNewRequest(identityRequest.getId())) {
-            id = identityRequest.getId();
+        if (isNewRequest(identityRequest.getDataId())) {
+            id = identityRequest.getDataId();
             loadData(id);
         } else {
             processChanges();
@@ -82,7 +81,7 @@ public class RecipeIdentity extends UseCase
     }
 
     private boolean isNewRequest(String recipeId) {
-        return isNewRequest = !this.id.equals(recipeId);
+        return isNewRequest = !id.equals(recipeId);
     }
 
     private void loadData(String recipeId) {
@@ -90,24 +89,14 @@ public class RecipeIdentity extends UseCase
     }
 
     @Override
-    public void onEntityLoaded(RecipeIdentityEntity entity) {
-        persistenceModel = convertEntityToPersistenceModel(entity);
+    public void onModelLoaded(RecipeIdentityPersistenceModel model) {
+        persistenceModel = model;
         validateData();
         buildResponse();
     }
 
-    private RecipeIdentityPersistenceModel convertEntityToPersistenceModel(RecipeIdentityEntity entity) {
-        return new RecipeIdentityPersistenceModel.Builder().
-                setId(entity.getId()).
-                setTitle(entity.getTitle() == null ? "" : entity.getTitle()).
-                setDescription(entity.getDescription() == null ? "" : entity.getDescription()).
-                setCreateDate(entity.getCreateDate()).
-                setLastUpdate(entity.getLastUpdate()).
-                build();
-    }
-
     @Override
-    public void onDataUnavailable() {
+    public void onModelUnavailable() {
         persistenceModel = createNewPersistenceModel();
         failReasons.add(CommonFailReason.DATA_UNAVAILABLE);
 
@@ -202,14 +191,14 @@ public class RecipeIdentity extends UseCase
                 setModel(getResponseModel()).
                 build();
 
-        if (response.getMetadata().getState() == RecipeMetadata.ComponentState.VALID_CHANGED) {
+        if (response.getMetadata().getState() == ComponentState.VALID_CHANGED) {
             save(updatePersistenceFromRequestModel());
         }
         sendResponse(response);
     }
 
-    private RecipeComponentMetadata getMetadata() {
-        return new RecipeComponentMetadata.Builder().
+    private UseCaseMetadata getMetadata() {
+        return new UseCaseMetadata.Builder().
                 setState(getComponentState()).
                 setFailReasons(new ArrayList<>(failReasons)).
                 setCreateDate(persistenceModel.getCreateDate()).
@@ -217,16 +206,16 @@ public class RecipeIdentity extends UseCase
                 build();
     }
 
-    private RecipeMetadata.ComponentState getComponentState() {
+    private ComponentState getComponentState() {
         boolean isValid = failReasons.contains(CommonFailReason.NONE);
         if (!isValid && !isChanged()) {
-            return RecipeMetadata.ComponentState.INVALID_UNCHANGED;
+            return ComponentState.INVALID_UNCHANGED;
         } else if (isValid && !isChanged()) {
-            return RecipeMetadata.ComponentState.VALID_UNCHANGED;
+            return ComponentState.VALID_UNCHANGED;
         } else if (!isValid && isChanged()) {
-            return RecipeMetadata.ComponentState.INVALID_CHANGED;
+            return ComponentState.INVALID_CHANGED;
         } else {
-            return RecipeMetadata.ComponentState.VALID_CHANGED;
+            return ComponentState.VALID_CHANGED;
         }
     }
 
@@ -235,11 +224,13 @@ public class RecipeIdentity extends UseCase
     }
 
     private boolean isTitleChanged() {
-        return !persistenceModel.getTitle().equals(requestModel.getTitle().trim());
+        return !persistenceModel.getTitle().toLowerCase().
+                equals(requestModel.getTitle().toLowerCase().trim());
     }
 
     private boolean isDescriptionChanged() {
-        return !persistenceModel.getDescription().equals(requestModel.getDescription().trim());
+        return !persistenceModel.getDescription().toLowerCase().trim().
+                equals(requestModel.getDescription().toLowerCase().trim());
     }
 
     private RecipeIdentityPersistenceModel updatePersistenceFromRequestModel() {
@@ -280,16 +271,6 @@ public class RecipeIdentity extends UseCase
     }
 
     private void save(RecipeIdentityPersistenceModel model) {
-        repository.save(convertModelToEntity(model));
-    }
-
-    private RecipeIdentityEntity convertModelToEntity(RecipeIdentityPersistenceModel model) {
-        return new RecipeIdentityEntity(
-                model.getId(),
-                model.getTitle().trim(),
-                model.getDescription().trim(),
-                model.getCreateDate(),
-                model.getLastUpdate()
-        );
+        repository.save(model);
     }
 }

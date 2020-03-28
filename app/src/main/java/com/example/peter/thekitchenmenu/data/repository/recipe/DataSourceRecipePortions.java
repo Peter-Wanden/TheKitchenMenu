@@ -1,12 +1,12 @@
 package com.example.peter.thekitchenmenu.data.repository.recipe;
 
-import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipePortionsEntity;
-import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
+import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeportions.RecipePortionsPersistenceModel;
 
 import javax.annotation.Nonnull;
 
-public interface DataSourceRecipePortions extends PrimitiveDataSource<RecipePortionsEntity> {
+public interface DataSourceRecipePortions extends DataSource<RecipePortionsPersistenceModel> {
 
     void getByRecipeId(@Nonnull String recipeId,
-                       @Nonnull GetEntityCallback<RecipePortionsEntity> callback);
+                       @Nonnull GetModelCallback<RecipePortionsPersistenceModel> callback);
 }

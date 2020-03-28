@@ -1,24 +1,24 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeduration;
 
 
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.RecipeComponentRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeDataModel;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseRequestWithDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainModel;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipeDurationRequest extends RecipeComponentRequest<RecipeDurationRequest.Model> {
+public final class RecipeDurationRequest extends UseCaseRequestWithDomainModel<RecipeDurationRequest.Model> {
 
     @Override
     public String toString() {
         return "RecipeDurationRequest{" +
-                "id='" + id + '\'' +
+                "id='" + dataId + '\'' +
                 ", model=" + model +
                 '}';
     }
 
-    public static class Builder extends RecipeRequestBuilder<Builder, RecipeDurationRequest, Model> {
+    public static class Builder extends UseCaseRequestBuilder<Builder, RecipeDurationRequest, Model> {
 
         public Builder() {
             request = new RecipeDurationRequest();
@@ -26,14 +26,14 @@ public final class RecipeDurationRequest extends RecipeComponentRequest<RecipeDu
 
         public Builder getDefault() {
             return new Builder().
-                    setId("").
+                    setDataId("").
                     setModel(new Model.Builder().
                             getDefault().
                             build());
         }
 
         public Builder basedOnResponse(RecipeDurationResponse response) {
-            request.id = response.getId();
+            request.dataId = response.getId();
             request.model.prepHours = response.getModel().getPrepHours();
             request.model.prepMinutes = response.getModel().getPrepMinutes();
             request.model.cookHours = response.getModel().getCookHours();
@@ -47,7 +47,7 @@ public final class RecipeDurationRequest extends RecipeComponentRequest<RecipeDu
         }
     }
 
-    public static final class Model extends RecipeDataModel {
+    public static final class Model extends UseCaseDomainModel {
         private int prepHours;
         private int prepMinutes;
         private int cookHours;
@@ -96,7 +96,7 @@ public final class RecipeDurationRequest extends RecipeComponentRequest<RecipeDu
                     '}';
         }
 
-        public static class Builder extends RecipeDataModelBuilder<Builder, Model> {
+        public static class Builder extends DomainModelBuilder<Builder, Model> {
 
             public Builder() {
                 model = new Model();

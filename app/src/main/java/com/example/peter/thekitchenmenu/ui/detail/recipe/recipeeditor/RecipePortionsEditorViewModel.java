@@ -148,7 +148,7 @@ public class RecipePortionsEditorViewModel extends ObservableViewModel {
                             setServings(servingsParsed).
                             build();
                     RecipePortionsRequest request = new RecipePortionsRequest.Builder().
-                            setId(response.getId()).
+                            setDataId(response.getId()).
                             setModel(model).
                             build();
                     handler.execute(recipeMacro, request, callback);
@@ -196,7 +196,7 @@ public class RecipePortionsEditorViewModel extends ObservableViewModel {
                             setSittings(sittingsParsed).
                             build();
                     RecipePortionsRequest request = new RecipePortionsRequest.Builder().
-                            setId(response.getId()).
+                            setDataId(response.getId()).
                             setModel(model).
                             build();
                     handler.execute(recipeMacro, request, callback);

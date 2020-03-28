@@ -30,7 +30,7 @@ public final class RecipeIdentityPersistenceModel implements PersistenceModel {
     }
 
     @Nonnull
-    public String getId() {
+    public String getDataId() {
         return id;
     }
 
@@ -88,9 +88,10 @@ public final class RecipeIdentityPersistenceModel implements PersistenceModel {
         private long createDate;
         private long lastUpdate;
 
-        public static Builder basedOnPersistenceModel(@Nonnull RecipeIdentityPersistenceModel oldModel) {
+        public static Builder basedOnPersistenceModel(
+                @Nonnull RecipeIdentityPersistenceModel oldModel) {
             return new Builder().
-                    setId(oldModel.getId()).
+                    setId(oldModel.getDataId()).
                     setTitle(oldModel.getTitle()).
                     setDescription(oldModel.getDescription()).
                     setCreateDate(oldModel.getCreateDate()).

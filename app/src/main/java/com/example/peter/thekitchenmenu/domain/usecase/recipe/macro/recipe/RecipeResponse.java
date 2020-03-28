@@ -1,15 +1,14 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe;
 
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeDataModel;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.state.RecipeStateResponse;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Objects;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.state.RecipeStateCalculator.*;
 
 public final class RecipeResponse implements UseCase.Response {
     protected String id;
@@ -79,23 +78,18 @@ public final class RecipeResponse implements UseCase.Response {
         }
     }
 
-    public static final class Model extends RecipeDataModel {
-        private RecipeStateResponse recipeStateResponse;
-        private HashMap<RecipeMetadata.ComponentName, Response> componentResponses;
+    public static final class Model extends UseCaseDomainModel {
+        private HashMap<RecipeMetadata.ComponentName, UseCaseResponse> componentResponses;
 
         public Model() {}
 
-        public RecipeStateResponse getRecipeStateResponse() {
-            return recipeStateResponse;
-        }
-
-        public HashMap<RecipeMetadata.ComponentName, Response> getComponentResponses() {
+        public HashMap<RecipeMetadata.ComponentName, UseCaseResponse> getComponentResponses() {
             return componentResponses;
         }
 
-        public static class Builder extends RecipeDataModelBuilder<
-                Builder,
-                Model> {
+        public static class Builder extends DomainModelBuilder<
+                                Builder,
+                                Model> {
 
             public Builder() {
                 model = new Model();
@@ -103,23 +97,17 @@ public final class RecipeResponse implements UseCase.Response {
 
             public Builder getDefault() {
                 return new Model.Builder().
-                        setRecipeStateResponse(RecipeStateResponse.Builder.
-                                getDefault().
-                                build()).
                         setComponentResponses(getDefaultComponentResponses());
             }
 
-            public Builder setRecipeStateResponse(RecipeStateResponse response) {
-                model.recipeStateResponse = response;
-                return self();
-            }
-
-            public Builder setComponentResponses(HashMap<RecipeMetadata.ComponentName, Response> componentResponses) {
+            public Builder setComponentResponses(
+                    HashMap<RecipeMetadata.ComponentName, UseCaseResponse> componentResponses) {
                 model.componentResponses = componentResponses;
                 return self();
             }
 
-            private static HashMap<RecipeMetadata.ComponentName, Response> getDefaultComponentResponses() {
+            private static HashMap<RecipeMetadata.ComponentName, UseCaseResponse>
+            getDefaultComponentResponses() {
                 return new LinkedHashMap<>();
             }
 

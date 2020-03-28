@@ -1,14 +1,14 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeduration;
 
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.RecipeComponentResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.RecipeComponentMetadata;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeDataModel;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainModel;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipeDurationResponse extends RecipeComponentResponse<RecipeDurationResponse.Model> {
+public final class RecipeDurationResponse extends UseCaseResponse<RecipeDurationResponse.Model> {
 
     @Nonnull
     @Override
@@ -20,10 +20,10 @@ public final class RecipeDurationResponse extends RecipeComponentResponse<Recipe
                 '}';
     }
 
-    public static class Builder extends RecipeComponentResponseBuilder<
-                Builder,
-                RecipeDurationResponse,
-                Model> {
+    public static class Builder extends UseCaseResponseBuilder<
+                    Builder,
+                    RecipeDurationResponse,
+                    Model> {
 
         public Builder() {
             response = new RecipeDurationResponse();
@@ -32,7 +32,7 @@ public final class RecipeDurationResponse extends RecipeComponentResponse<Recipe
         public Builder getDefault() {
             return new Builder().
                     setId("").
-                    setMetadata(new RecipeComponentMetadata.Builder().
+                    setMetadata(new UseCaseMetadata.Builder().
                             getDefault().
                             build()).
                     setModel(new Model.Builder().
@@ -46,7 +46,7 @@ public final class RecipeDurationResponse extends RecipeComponentResponse<Recipe
         }
     }
 
-    public static final class Model extends RecipeDataModel {
+    public static final class Model extends UseCaseDomainModel {
 
         private int prepHours;
         private int prepMinutes;
@@ -133,9 +133,9 @@ public final class RecipeDurationResponse extends RecipeComponentResponse<Recipe
                     '}';
         }
 
-        public static class Builder extends RecipeDataModelBuilder<
-                Builder,
-                Model> {
+        public static class Builder extends DomainModelBuilder<
+                                Builder,
+                                Model> {
 
             public Builder() {
                 model = new Model();

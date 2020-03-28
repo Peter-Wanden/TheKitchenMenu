@@ -19,7 +19,7 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeP
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.RecipeComponentMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeduration.RecipeDurationRequest;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeduration.RecipeDurationResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
@@ -118,7 +118,7 @@ public class RecipeDurationEditorViewModelTest {
     private Recipe recipeMacro;
     private RecipeMacroResponseListener macroListener;
     private DurationResponseListener durationListener;
-    private RecipeComponentMetadata metadata;
+    private UseCaseMetadata metadata;
     private RecipeDurationResponse.Model model;
 
     // endregion helper fields ---------------------------------------------------------------------
@@ -931,7 +931,7 @@ public class RecipeDurationEditorViewModelTest {
         // Arrange
         // An external request that loads the recipe. This can ba any request type.
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 setModel(new RecipeDurationRequest.Model.Builder().
                         getDefault().
                         build()).

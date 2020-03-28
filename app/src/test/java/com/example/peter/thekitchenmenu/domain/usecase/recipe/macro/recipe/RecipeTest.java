@@ -273,7 +273,7 @@ public class RecipeTest {
         String recipeId = INVALID_NEW_RECIPE.getId();
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 getDefault().
-                setId(recipeId).
+                setDataId(recipeId).
                 build();
 
         RecipeMetadataCallback passedInCallback = new RecipeMetadataCallback();
@@ -331,7 +331,7 @@ public class RecipeTest {
 
         RecipeIdentityRequest identityRequest = new RecipeIdentityRequest.Builder().
                 getDefault().
-                setId(recipeId).
+                setDataId(recipeId).
                 build();
         // Act
         handler.execute(SUT, identityRequest, callback);
@@ -350,7 +350,7 @@ public class RecipeTest {
         String recipeId = INVALID_NEW_RECIPE.getId();
         RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
                 getDefault().
-                setId(recipeId).
+                setDataId(recipeId).
                 build();
         IdentityCallbackClient callback = new IdentityCallbackClient();
 
@@ -425,7 +425,7 @@ public class RecipeTest {
         CourseCallbackClient callback = new CourseCallbackClient();
 
         RecipeCourseRequest courseRequest = new RecipeCourseRequest.Builder().getDefault().
-                setId(recipeId).
+                setDataId(recipeId).
                 build();
         // Act
         handler.execute(SUT, courseRequest, callback);
@@ -446,7 +446,7 @@ public class RecipeTest {
 
         RecipeDurationRequest durationRequest = new RecipeDurationRequest.Builder().
                 getDefault().
-                setId(recipeId).
+                setDataId(recipeId).
                 build();
 
         // Act
@@ -470,7 +470,7 @@ public class RecipeTest {
 
         RecipePortionsRequest portionsRequest = new RecipePortionsRequest.Builder().
                 getDefault().
-                setId(recipeId).
+                setDataId(recipeId).
                 build();
         // Act
         handler.execute(SUT, portionsRequest, callback);
@@ -497,7 +497,7 @@ public class RecipeTest {
 
         RecipeIdentityRequest firstRequest = new RecipeIdentityRequest.Builder().
                 getDefault().
-                setId(recipeId).
+                setDataId(recipeId).
                 build();
 
         // Act - RecipeIdentityRequest/Response 1 - new request
@@ -516,7 +516,7 @@ public class RecipeTest {
                 build();
 
         RecipeIdentityRequest validTitleRequest = new RecipeIdentityRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 setModel(validTitleModel).
                 build();
         handler.execute(SUT, validTitleRequest, callback);
@@ -532,7 +532,7 @@ public class RecipeTest {
                 build();
 
         RecipeIdentityRequest validDescriptionRequest = new RecipeIdentityRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 setModel(validTitleDescriptionModel).
                 build();
 
@@ -573,7 +573,7 @@ public class RecipeTest {
                 getDefault().
                 build();
         RecipeCourseRequest initialRequest = new RecipeCourseRequest.Builder().getDefault().
-                setId(recipeId).
+                setDataId(recipeId).
                 setModel(initialModel).
                 build();
 
@@ -588,7 +588,7 @@ public class RecipeTest {
         courses.add(RecipeCourse.Course.COURSE_ZERO);
         // Arrange
         RecipeCourseRequest addCourseRequest = new RecipeCourseRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 setModel(new RecipeCourseRequest.Model.Builder().
                         setCourseList(courses).build()).
                 build();
@@ -625,7 +625,7 @@ public class RecipeTest {
 
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 getDefault().
-                setId(recipeId).
+                setDataId(recipeId).
                 build();
         // Act
         SUT.registerMetadataListener(metadataListener1);
@@ -648,7 +648,7 @@ public class RecipeTest {
         RecipeMetadataCallback callback = new RecipeMetadataCallback();
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 getDefault().
-                setId(recipeId).
+                setDataId(recipeId).
                 build();
         // Act
         SUT.registerMetadataListener(metadataListener1);
@@ -679,7 +679,7 @@ public class RecipeTest {
 
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 getDefault().
-                setId(recipeId).
+                setDataId(recipeId).
                 build();
 
         // Act
@@ -707,7 +707,7 @@ public class RecipeTest {
 
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 getDefault().
-                setId(recipeId).
+                setDataId(recipeId).
                 build();
         RecipeMetadataCallback callback = new RecipeMetadataCallback();
 

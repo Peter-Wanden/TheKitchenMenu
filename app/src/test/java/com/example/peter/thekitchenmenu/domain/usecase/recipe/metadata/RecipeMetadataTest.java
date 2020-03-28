@@ -108,7 +108,7 @@ public class RecipeMetadataTest {
                 build();
 
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 setModel(model).
                 build();
 
@@ -139,7 +139,7 @@ public class RecipeMetadataTest {
                 build();
 
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 setModel(model).
                 build();
 
@@ -169,7 +169,7 @@ public class RecipeMetadataTest {
                 build();
 
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 setModel(model).
                 build();
 
@@ -199,7 +199,7 @@ public class RecipeMetadataTest {
                 build();
 
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 setModel(model).
                 build();
 
@@ -229,7 +229,7 @@ public class RecipeMetadataTest {
                 build();
 
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 setModel(model).
                 build();
 
@@ -251,7 +251,7 @@ public class RecipeMetadataTest {
                 thenReturn(TestDataRecipeMetadataEntity.getNewInvalid().getCreateDate());
 
         RecipeMetadataRequest initialRequest = new RecipeMetadataRequest.Builder().getDefault().
-                setId(id).
+                setDataId(id).
                 build();
 
         handler.execute(SUT, initialRequest, new MetadataCallbackClient());

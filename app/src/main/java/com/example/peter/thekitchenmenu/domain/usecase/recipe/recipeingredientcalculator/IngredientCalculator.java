@@ -3,17 +3,19 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredientc
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.RecipeIngredientEntity;
-import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipePortionsEntity;
+import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
+import com.example.peter.thekitchenmenu.domain.model.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModelBuilder;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.MeasurementSubtype;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasure;
 import com.example.peter.thekitchenmenu.domain.entity.model.MeasurementModel;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeportions.RecipePortionsPersistenceModel;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
@@ -26,10 +28,10 @@ public class IngredientCalculator extends UseCase {
 
     private static final String TAG = "tkm-" + IngredientCalculator.class.getSimpleName() + ": ";
 
-    public enum ResultStatus {
-        QUANTITY_DATA_NOT_AVAILABLE,
-        INGREDIENT_DATA_NOT_AVAILABLE,
-        PORTIONS_DATA_NOT_AVAILABLE,
+    public enum Result {
+        QUANTITY_DATA_UNAVAILABLE,
+        INGREDIENT_DATA_UNAVAILABLE,
+        PORTIONS_DATA_UNAVAILABLE,
         INVALID_CONVERSION_FACTOR,
         INVALID_PORTIONS,
         INVALID_TOTAL_UNIT_ONE,
@@ -37,6 +39,19 @@ public class IngredientCalculator extends UseCase {
         INVALID_MEASUREMENT,
         RESULT_OK
     }
+
+    public enum FailReason implements FailReasons {
+        QUANTITY_DATA_UNAVAILABLE,
+        INGREDIENT_DATA_UNAVAILABLE,
+        PORTIONS_DATA_UNAVAILABLE,
+        INVALID_CONVERSION_FACTOR,
+        INVALID_PORTIONS,
+        INVALID_TOTAL_UNIT_ONE,
+        INVALID_TOTAL_UNIT_TWO,
+        INVALID_MEASUREMENT
+    }
+
+
     // TODO -------------------------- USE A RECIPE FOR THE DATA HERE ---------------------- TODO //
     @Nonnull
     private final RepositoryRecipeIngredient recipeIngredientRepository; // TODO - Use the use cases for this data
@@ -153,7 +168,7 @@ public class IngredientCalculator extends UseCase {
 
                     @Override
                     public void onDataUnavailable() {
-                        returnDataNotAvailable(ResultStatus.QUANTITY_DATA_NOT_AVAILABLE);
+                        returnDataNotAvailable(Result.QUANTITY_DATA_UNAVAILABLE);
                     }
                 });
     }
@@ -171,7 +186,7 @@ public class IngredientCalculator extends UseCase {
 
                     @Override
                     public void onDataUnavailable() {
-                        returnDataNotAvailable(ResultStatus.INGREDIENT_DATA_NOT_AVAILABLE);
+                        returnDataNotAvailable(Result.INGREDIENT_DATA_UNAVAILABLE);
                     }
                 });
     }
@@ -179,22 +194,22 @@ public class IngredientCalculator extends UseCase {
     private void loadPortions() {
         portionsRepository.getByRecipeId(
                 recipeId,
-                new PrimitiveDataSource.GetEntityCallback<RecipePortionsEntity>() {
+                new DataSource.GetModelCallback<RecipePortionsPersistenceModel>() {
                     @Override
-                    public void onEntityLoaded(RecipePortionsEntity entity) {
-                        numberOfPortions = entity.getServings() *
-                                entity.getSittings();
+                    public void onModelLoaded(RecipePortionsPersistenceModel model) {
+                        numberOfPortions = model.getServings() *
+                                model.getSittings();
                         setupUnitOfMeasure();
                     }
 
                     @Override
-                    public void onDataUnavailable() {
-                        returnDataNotAvailable(ResultStatus.PORTIONS_DATA_NOT_AVAILABLE);
+                    public void onModelUnavailable() {
+                        returnDataNotAvailable(Result.PORTIONS_DATA_UNAVAILABLE);
                     }
                 });
     }
 
-    private void returnDataNotAvailable(ResultStatus status) {
+    private void returnDataNotAvailable(Result status) {
         IngredientCalculatorResponse response = new IngredientCalculatorResponse(
                 UnitOfMeasureConstants.DEFAULT_MEASUREMENT_MODEL,
                 status);
@@ -348,24 +363,24 @@ public class IngredientCalculator extends UseCase {
                 modelIn.getTotalUnitTwo() : unitOfMeasure.getTotalUnitTwo();
     }
 
-    private ResultStatus getResultStatus() {
+    private Result getResultStatus() {
 
         if (portionsChanged && !isPortionsSet) {
-            return ResultStatus.INVALID_PORTIONS;
+            return Result.INVALID_PORTIONS;
         }
         if (conversionFactorChanged && !isConversionFactorSet) {
-            return ResultStatus.INVALID_CONVERSION_FACTOR;
+            return Result.INVALID_CONVERSION_FACTOR;
         }
         if (totalUnitOneChanged && !isTotalUnitOneSet) {
-            return ResultStatus.INVALID_TOTAL_UNIT_ONE;
+            return Result.INVALID_TOTAL_UNIT_ONE;
         }
         if (totalUnitTwoChanged && !isTotalUnitTwoSet) {
-            return ResultStatus.INVALID_TOTAL_UNIT_TWO;
+            return Result.INVALID_TOTAL_UNIT_TWO;
         }
         if (!unitOfMeasure.isValidMeasurement()) {
-            return ResultStatus.INVALID_MEASUREMENT;
+            return Result.INVALID_MEASUREMENT;
         }
-        return ResultStatus.RESULT_OK;
+        return Result.RESULT_OK;
     }
 
     private void resetResults() {

@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipecourse;
 
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.RecipeComponentRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeDataModel;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseRequestWithDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,18 +11,18 @@ import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipecourse.RecipeCourse.*;
 
-public final class RecipeCourseRequest extends RecipeComponentRequest<RecipeCourseRequest.Model> {
+public final class RecipeCourseRequest extends UseCaseRequestWithDomainModel<RecipeCourseRequest.Model> {
 
     @Nonnull
     @Override
     public String toString() {
         return "RecipeCourseRequest{" +
-                "id='" + id + '\'' +
+                "id='" + dataId + '\'' +
                 ", model=" + model +
                 '}';
     }
 
-    public static class Builder extends RecipeRequestBuilder<Builder, RecipeCourseRequest, Model> {
+    public static class Builder extends UseCaseRequestBuilder<Builder, RecipeCourseRequest, Model> {
 
         public Builder() {
             request = new RecipeCourseRequest();
@@ -30,7 +30,7 @@ public final class RecipeCourseRequest extends RecipeComponentRequest<RecipeCour
 
         public Builder getDefault() {
             return new Builder().
-                    setId("").
+                    setDataId("").
                     setModel(new Model.Builder().
                             getDefault().
                             build()
@@ -38,7 +38,7 @@ public final class RecipeCourseRequest extends RecipeComponentRequest<RecipeCour
         }
 
         public Builder basedOnResponse(RecipeCourseResponse response) {
-            request.id = response.getId();
+            request.dataId = response.getId();
             request.model.courseList = new ArrayList<>(
                     response.getModel().getCourseList().keySet()
             );
@@ -51,7 +51,7 @@ public final class RecipeCourseRequest extends RecipeComponentRequest<RecipeCour
         }
     }
 
-    public static final class Model extends RecipeDataModel {
+    public static final class Model extends UseCaseDomainModel {
 
         private List<Course> courseList;
 
@@ -80,7 +80,7 @@ public final class RecipeCourseRequest extends RecipeComponentRequest<RecipeCour
                     '}';
         }
 
-        public static class Builder extends RecipeDataModelBuilder<Builder, Model> {
+        public static class Builder extends DomainModelBuilder<Builder, Model> {
 
             public Builder() {
                 model = new Model();

@@ -179,7 +179,7 @@ public class RecipeCourseEditorViewModelTest {
 
         // An external request that starts loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 build();
 
         // Act
@@ -198,7 +198,7 @@ public class RecipeCourseEditorViewModelTest {
 
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 build();
 
         // Act
@@ -224,7 +224,7 @@ public class RecipeCourseEditorViewModelTest {
 
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 build();
 
         // Act
@@ -298,7 +298,7 @@ public class RecipeCourseEditorViewModelTest {
 
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setId(EXISTING_RECIPE_ID).
+                setDataId(EXISTING_RECIPE_ID).
                 build();
 
         // Act
@@ -322,7 +322,7 @@ public class RecipeCourseEditorViewModelTest {
 
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setId(EXISTING_RECIPE_ID).
+                setDataId(EXISTING_RECIPE_ID).
                 build();
 
         // Act
@@ -344,7 +344,7 @@ public class RecipeCourseEditorViewModelTest {
         // Act
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setId(EXISTING_RECIPE_ID).
+                setDataId(EXISTING_RECIPE_ID).
                 build();
 
         // Act
@@ -365,7 +365,7 @@ public class RecipeCourseEditorViewModelTest {
 
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setId(EXISTING_RECIPE_ID).
+                setDataId(EXISTING_RECIPE_ID).
                 build();
 
         // Act
@@ -390,7 +390,7 @@ public class RecipeCourseEditorViewModelTest {
 
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setId(EXISTING_RECIPE_ID).
+                setDataId(EXISTING_RECIPE_ID).
                 build();
 
         // Act
@@ -412,7 +412,7 @@ public class RecipeCourseEditorViewModelTest {
 
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setId(EXISTING_RECIPE_ID).
+                setDataId(EXISTING_RECIPE_ID).
                 build();
 
         // Act
@@ -435,7 +435,7 @@ public class RecipeCourseEditorViewModelTest {
 
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setId(EXISTING_RECIPE_ID).
+                setDataId(EXISTING_RECIPE_ID).
                 build();
 
         // Act
@@ -457,7 +457,7 @@ public class RecipeCourseEditorViewModelTest {
         // Arrange
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setId(EXISTING_RECIPE_ID).
+                setDataId(EXISTING_RECIPE_ID).
                 build();
 
         // Act
@@ -482,7 +482,7 @@ public class RecipeCourseEditorViewModelTest {
 
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setId(EXISTING_RECIPE_ID).
+                setDataId(EXISTING_RECIPE_ID).
                 build();
 
         // Act
@@ -506,7 +506,7 @@ public class RecipeCourseEditorViewModelTest {
         // Act
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setId(EXISTING_RECIPE_ID).
+                setDataId(EXISTING_RECIPE_ID).
                 build();
 
         // Act
@@ -531,7 +531,7 @@ public class RecipeCourseEditorViewModelTest {
 
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setId(EXISTING_RECIPE_ID).
+                setDataId(EXISTING_RECIPE_ID).
                 build();
 
         // Act
@@ -551,7 +551,7 @@ public class RecipeCourseEditorViewModelTest {
         // Arrange
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setId(EXISTING_RECIPE_ID).
+                setDataId(EXISTING_RECIPE_ID).
                 build();
 
         // Act
@@ -575,7 +575,7 @@ public class RecipeCourseEditorViewModelTest {
         whenTimeProviderCalledReturnTime(getRecipeCourseSix().getCreateDate());
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setId(EXISTING_RECIPE_ID).
+                setDataId(EXISTING_RECIPE_ID).
                 build();
 
         // Act
@@ -597,7 +597,7 @@ public class RecipeCourseEditorViewModelTest {
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setId(EXISTING_RECIPE_ID).
+                setDataId(EXISTING_RECIPE_ID).
                 build();
 
         // Act
@@ -622,7 +622,7 @@ public class RecipeCourseEditorViewModelTest {
 
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setId(EXISTING_RECIPE_ID).
+                setDataId(EXISTING_RECIPE_ID).
                 build();
 
         // Act
@@ -645,7 +645,7 @@ public class RecipeCourseEditorViewModelTest {
 
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setId(EXISTING_RECIPE_ID).
+                setDataId(EXISTING_RECIPE_ID).
                 build();
 
         // Act
@@ -667,7 +667,7 @@ public class RecipeCourseEditorViewModelTest {
         // Arrange
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setId(EXISTING_RECIPE_ID).
+                setDataId(EXISTING_RECIPE_ID).
                 build();
         RecipeMacroResponseCallback macroCallback = new RecipeMacroResponseCallback();
 
@@ -704,7 +704,7 @@ public class RecipeCourseEditorViewModelTest {
 
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setId(EXISTING_RECIPE_ID).
+                setDataId(EXISTING_RECIPE_ID).
                 build();
         RecipeMacroResponseCallback macroCallback = new RecipeMacroResponseCallback();
 
@@ -733,7 +733,7 @@ public class RecipeCourseEditorViewModelTest {
 
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setId(EXISTING_RECIPE_ID).
+                setDataId(EXISTING_RECIPE_ID).
                 build();
         RecipeMacroResponseCallback macroCallback = new RecipeMacroResponseCallback();
 
@@ -773,7 +773,7 @@ public class RecipeCourseEditorViewModelTest {
 
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setId(EXISTING_RECIPE_ID).
+                setDataId(EXISTING_RECIPE_ID).
                 build();
         RecipeMacroResponseCallback macroCallback = new RecipeMacroResponseCallback();
 

@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.data.repository.recipe;
 
-import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.repository.Repository;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipecourse.RecipeCourseModel;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -9,10 +9,8 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import static androidx.core.util.Preconditions.checkNotNull;
-
 public class RepositoryRecipeCourse
-        extends Repository<RecipeCourseEntity>
+        extends Repository<RecipeCourseModel>
         implements DataSourceRecipeCourse {
 
     private RepositoryRecipeCourse(@Nonnull DataSourceRecipeCourse remoteDataSource,
@@ -31,48 +29,47 @@ public class RepositoryRecipeCourse
 
     @Override
     public void getAllByCourseNo(int courseNo,
-                                 @Nonnull GetAllCallback<RecipeCourseEntity> callback) {
+                                 @Nonnull GetAllCallback<RecipeCourseModel> callback) {
 
-        List<RecipeCourseEntity> recipeCourseEntities = checkCacheForCourseNo(courseNo);
+        List<RecipeCourseModel> models = checkCacheForCourseNo(courseNo);
 
-        if (recipeCourseEntities != null) {
-            callback.onAllLoaded(recipeCourseEntities);
+        if (models != null) {
+            callback.onAllLoaded(models);
             return;
         }
         ((DataSourceRecipeCourse)localDataSource).getAllByCourseNo(
                 courseNo,
-                new GetAllCallback<RecipeCourseEntity>() {
+                new GetAllCallback<RecipeCourseModel>() {
                     @Override
-                    public void onAllLoaded(List<RecipeCourseEntity> courseEntities) {
-                        if (entityCache == null)
-                            entityCache = new LinkedHashMap<>();
+                    public void onAllLoaded(List<RecipeCourseModel> models) {
+                        if (cache == null)
+                            cache = new LinkedHashMap<>();
 
-                        for (RecipeCourseEntity entity : courseEntities)
-                            entityCache.put(entity.getId(), entity);
+                        for (RecipeCourseModel model : models)
+                            cache.put(model.getDataId(), model);
 
-                        callback.onAllLoaded(courseEntities);
+                        callback.onAllLoaded(models);
                     }
 
                     @Override
                     public void onDataUnavailable() {
                         ((DataSourceRecipeCourse)remoteDataSource).getAllByCourseNo(
                                 courseNo,
-                                new GetAllCallback<RecipeCourseEntity>() {
+                                new GetAllCallback<RecipeCourseModel>() {
                                     @Override
-                                    public void onAllLoaded(List<RecipeCourseEntity>
-                                                                    courseEntities) {
-                                        if (courseEntities == null) {
+                                    public void onAllLoaded(List<RecipeCourseModel> models) {
+                                        if (models == null) {
                                             onDataUnavailable();
                                             return;
                                         }
 
-                                        if (entityCache == null)
-                                            entityCache = new LinkedHashMap<>();
+                                        if (cache == null)
+                                            cache = new LinkedHashMap<>();
 
-                                        for (RecipeCourseEntity courseEntity : courseEntities)
-                                            entityCache.put(courseEntity.getId(), courseEntity);
+                                        for (RecipeCourseModel model : models)
+                                            cache.put(model.getDataId(), model);
 
-                                        callback.onAllLoaded(courseEntities);
+                                        callback.onAllLoaded(models);
                                     }
 
                                     @Override
@@ -84,63 +81,62 @@ public class RepositoryRecipeCourse
                 });
     }
 
-    private List<RecipeCourseEntity> checkCacheForCourseNo(int courseNo) {
-        List<RecipeCourseEntity> recipeCourseEntityList = new ArrayList<>();
-        if (entityCache == null || entityCache.isEmpty())
+    private List<RecipeCourseModel> checkCacheForCourseNo(int courseNo) {
+        List<RecipeCourseModel> models = new ArrayList<>();
+        if (cache == null || cache.isEmpty())
             return null;
         else {
-            for (RecipeCourseEntity recipeCourseEntity : entityCache.values()) {
-                if (recipeCourseEntity.getCourseNo() == courseNo)
-                    recipeCourseEntityList.add(recipeCourseEntity);
+            for (RecipeCourseModel model : cache.values()) {
+                if (courseNo == model.getCourse().getCourseNo())
+                    models.add(model);
             }
-            return recipeCourseEntityList.isEmpty() ? null : recipeCourseEntityList;
+            return models.isEmpty() ? null : models;
         }
     }
 
     @Override
     public void getAllByRecipeId(@Nonnull String recipeId,
-                                 @Nonnull GetAllCallback<RecipeCourseEntity> callback) {
+                                 @Nonnull GetAllCallback<RecipeCourseModel> callback) {
 
-        List<RecipeCourseEntity> recipeCourseEntities = checkCacheForRecipeId(recipeId);
+        List<RecipeCourseModel> models = checkCacheForRecipeId(recipeId);
 
-        if (recipeCourseEntities != null) {
-            callback.onAllLoaded(recipeCourseEntities);
+        if (models != null) {
+            callback.onAllLoaded(models);
             return;
         }
         ((DataSourceRecipeCourse)localDataSource).getAllByRecipeId(
                 recipeId,
-                new GetAllCallback<RecipeCourseEntity>() {
+                new GetAllCallback<RecipeCourseModel>() {
                     @Override
-                    public void onAllLoaded(List<RecipeCourseEntity> courseEntities) {
-                        if (entityCache == null)
-                            entityCache = new LinkedHashMap<>();
+                    public void onAllLoaded(List<RecipeCourseModel> models) {
+                        if (cache == null)
+                            cache = new LinkedHashMap<>();
 
-                        for (RecipeCourseEntity courseEntity : courseEntities)
-                            entityCache.put(courseEntity.getId(), courseEntity);
+                        for (RecipeCourseModel model : models)
+                            cache.put(model.getDataId(), model);
 
-                        callback.onAllLoaded(courseEntities);
+                        callback.onAllLoaded(models);
                     }
 
                     @Override
                     public void onDataUnavailable() {
                         ((DataSourceRecipeCourse)remoteDataSource).getAllByRecipeId(
                                 recipeId,
-                                new GetAllCallback<RecipeCourseEntity>() {
+                                new GetAllCallback<RecipeCourseModel>() {
                                     @Override
-                                    public void onAllLoaded(List<RecipeCourseEntity>
-                                                                    courseEntities) {
-                                        if (courseEntities == null) {
+                                    public void onAllLoaded(List<RecipeCourseModel> models) {
+                                        if (models == null) {
                                             onDataUnavailable();
                                             return;
                                         }
 
-                                        if (entityCache == null)
-                                            entityCache = new LinkedHashMap<>();
+                                        if (cache == null)
+                                            cache = new LinkedHashMap<>();
 
-                                        for (RecipeCourseEntity courseEntity : recipeCourseEntities)
-                                            entityCache.put(courseEntity.getId(), courseEntity);
+                                        for (RecipeCourseModel model : models)
+                                            cache.put(model.getDataId(), model);
 
-                                        callback.onAllLoaded(courseEntities);
+                                        callback.onAllLoaded(models);
                                     }
 
                                     @Override
@@ -152,17 +148,17 @@ public class RepositoryRecipeCourse
                 });
     }
 
-    private List<RecipeCourseEntity> checkCacheForRecipeId(String recipeId) {
-        List<RecipeCourseEntity> recipeCourseEntities = new ArrayList<>();
-        if (entityCache == null || entityCache.isEmpty())
+    private List<RecipeCourseModel> checkCacheForRecipeId(String recipeId) {
+        List<RecipeCourseModel> models = new ArrayList<>();
+        if (cache == null || cache.isEmpty())
             return null;
         else {
-            for (RecipeCourseEntity recipeCourseEntity : entityCache.values()) {
-                if (recipeCourseEntity.getRecipeId().equals(recipeId)) {
-                    recipeCourseEntities.add(recipeCourseEntity);
+            for (RecipeCourseModel model : cache.values()) {
+                if (model.getRecipeId().equals(recipeId)) {
+                    models.add(model);
                 }
             }
-            return recipeCourseEntities.isEmpty() ? null : recipeCourseEntities;
+            return models.isEmpty() ? null : models;
         }
     }
 }

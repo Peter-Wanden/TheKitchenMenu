@@ -1,15 +1,15 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipecourse;
 
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.RecipeComponentResponse;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.RecipeComponentMetadata;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeDataModel;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainModel;
 
 import java.util.HashMap;
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipeCourseResponse extends RecipeComponentResponse<RecipeCourseResponse.Model> {
+public final class RecipeCourseResponse extends UseCaseResponse<RecipeCourseResponse.Model> {
 
     @Nonnull
     @Override
@@ -21,10 +21,10 @@ public final class RecipeCourseResponse extends RecipeComponentResponse<RecipeCo
                 '}';
     }
 
-    public static class Builder extends RecipeComponentResponseBuilder<
-                Builder,
-                RecipeCourseResponse,
-                Model> {
+    public static class Builder extends UseCaseResponseBuilder<
+                    Builder,
+                    RecipeCourseResponse,
+                    Model> {
 
         public Builder() {
             response = new RecipeCourseResponse();
@@ -33,7 +33,7 @@ public final class RecipeCourseResponse extends RecipeComponentResponse<RecipeCo
         public Builder getDefault() {
             return new Builder().
                     setId("").
-                    setMetadata(new RecipeComponentMetadata.Builder().
+                    setMetadata(new UseCaseMetadata.Builder().
                                     getDefault().
                                     build()).
                     setModel(new Model.Builder().
@@ -47,7 +47,7 @@ public final class RecipeCourseResponse extends RecipeComponentResponse<RecipeCo
         }
     }
 
-    public static final class Model extends RecipeDataModel {
+    public static final class Model extends UseCaseDomainModel {
 
         private HashMap<RecipeCourse.Course, RecipeCourseModel> courseList;
 
@@ -78,9 +78,9 @@ public final class RecipeCourseResponse extends RecipeComponentResponse<RecipeCo
                     '}';
         }
 
-        public static class Builder extends RecipeDataModelBuilder<
-                Builder,
-                Model> {
+        public static class Builder extends DomainModelBuilder<
+                                Builder,
+                                Model> {
 
             public Builder() {
                 model = new Model();
@@ -91,7 +91,8 @@ public final class RecipeCourseResponse extends RecipeComponentResponse<RecipeCo
                         setCourseList(getDefaultCourseList());
             }
 
-            public Builder setCourseList(HashMap<RecipeCourse.Course, RecipeCourseModel> courseList) {
+            public Builder setCourseList(
+                    HashMap<RecipeCourse.Course, RecipeCourseModel> courseList) {
                 model.courseList = courseList;
                 return self();
             }

@@ -57,7 +57,7 @@ public class RecipeList extends UseCase {
         Recipe recipeMacro = factory.provideRecipeMacro();
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
                 getDefault().
-                setId("recipeId").
+                setDataId("recipeId").
                 build();
 
         handler.execute(recipeMacro, request, getRecipeResponseCallback());

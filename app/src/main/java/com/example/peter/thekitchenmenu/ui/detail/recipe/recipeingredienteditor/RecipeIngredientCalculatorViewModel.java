@@ -397,18 +397,18 @@ public class RecipeIngredientCalculatorViewModel extends ObservableViewModel {
         measurementModel = resultModel;
     }
 
-    private void processResultStatus(IngredientCalculator.ResultStatus resultStatus) {
+    private void processResultStatus(IngredientCalculator.Result resultStatus) {
         hideAllInputErrors();
 
-        if (resultStatus == IngredientCalculator.ResultStatus.INVALID_CONVERSION_FACTOR) {
+        if (resultStatus == IngredientCalculator.Result.INVALID_CONVERSION_FACTOR) {
             conversionFactorErrorMessage = errorMessageMaker.getConversionFactorErrorMessage();
             notifyPropertyChanged(BR.conversionFactorErrorMessage);
 
-        } else if (resultStatus == IngredientCalculator.ResultStatus.INVALID_TOTAL_UNIT_ONE) {
+        } else if (resultStatus == IngredientCalculator.Result.INVALID_TOTAL_UNIT_ONE) {
             unitOneErrorMessage = errorMessageMaker.getMeasurementErrorMessage(measurementModel);
             notifyPropertyChanged(BR.unitOneErrorMessage);
 
-        } else if (resultStatus == IngredientCalculator.ResultStatus.INVALID_TOTAL_UNIT_TWO) {
+        } else if (resultStatus == IngredientCalculator.Result.INVALID_TOTAL_UNIT_TWO) {
             unitTwoErrorMessage = errorMessageMaker.getMeasurementErrorMessage(measurementModel);
             notifyPropertyChanged(BR.unitTwoErrorMessage);
         }
@@ -453,7 +453,7 @@ public class RecipeIngredientCalculatorViewModel extends ObservableViewModel {
         };
     }
 
-    private void processConversionFactorResult(ConversionFactorStatus.Result result) {
+    private void processConversionFactorResult(Result result) {
         if (result == ConversionFactorStatus.Result.DISABLED) {
             hideAllConversionFactorInformation();
 

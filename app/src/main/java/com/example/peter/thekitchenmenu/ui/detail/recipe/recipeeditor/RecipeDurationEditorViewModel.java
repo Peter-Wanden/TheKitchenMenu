@@ -136,7 +136,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
                                 setPrepHours(prepHoursParsed).
                                 build();
                         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                                setId(response.getId()).
+                                setDataId(response.getId()).
                                 setModel(model).
                                 build();
                         handler.execute(recipeMacro, request, new DurationCallbackListener());
@@ -169,7 +169,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
                                 setPrepMinutes(prepMinutesParsed).
                                 build();
                         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                                setId(response.getId()).
+                                setDataId(response.getId()).
                                 setModel(model).
                                 build();
                         handler.execute(recipeMacro, request, new DurationCallbackListener());
@@ -202,7 +202,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
                                 setCookHours(cookHoursParsed).
                                 build();
                         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                                setId(response.getId()).
+                                setDataId(response.getId()).
                                 setModel(model).
                                 build();
                         handler.execute(recipeMacro, request, new DurationCallbackListener());
@@ -235,7 +235,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
                                 setCookMinutes(cookMinutesParsed).
                                 build();
                         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                                setId(response.getId()).
+                                setDataId(response.getId()).
                                 setModel(model).
                                 build();
                         handler.execute(recipeMacro, request, new DurationCallbackListener());

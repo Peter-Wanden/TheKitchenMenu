@@ -1,24 +1,24 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeportions;
 
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.RecipeComponentRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeDataModel;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseRequestWithDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainModel;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipePortionsRequest extends RecipeComponentRequest<RecipePortionsRequest.Model> {
+public final class RecipePortionsRequest extends UseCaseRequestWithDomainModel<RecipePortionsRequest.Model> {
 
     @Nonnull
     @Override
     public String toString() {
         return "RecipePortionsRequest{" +
-                "id='" + id + '\'' +
+                "id='" + dataId + '\'' +
                 ", model=" + model +
                 '}';
     }
 
-    public static class Builder extends RecipeRequestBuilder<Builder, RecipePortionsRequest, Model> {
+    public static class Builder extends UseCaseRequestBuilder<Builder, RecipePortionsRequest, Model> {
 
         public Builder() {
             request = new RecipePortionsRequest();
@@ -26,14 +26,14 @@ public final class RecipePortionsRequest extends RecipeComponentRequest<RecipePo
 
         public Builder getDefault() {
             return new Builder().
-                    setId("").
+                    setDataId("").
                     setModel(Model.Builder.
                             getDefault().
                             build());
         }
 
         public Builder basedOnResponse(RecipePortionsResponse response) {
-            request.id = response.getId();
+            request.dataId = response.getId();
             request.model.servings = response.getModel().getServings();
             request.model.sittings = response.getModel().getSittings();
             return self();
@@ -45,7 +45,7 @@ public final class RecipePortionsRequest extends RecipeComponentRequest<RecipePo
         }
     }
 
-    public static final class Model extends RecipeDataModel {
+    public static final class Model extends UseCaseDomainModel {
         private int servings;
         private int sittings;
 
@@ -79,7 +79,7 @@ public final class RecipePortionsRequest extends RecipeComponentRequest<RecipePo
                     '}';
         }
 
-        public static class Builder extends RecipeDataModelBuilder<Builder, Model> {
+        public static class Builder extends DomainModelBuilder<Builder, Model> {
 
             public Builder() {
                 model = new Model();

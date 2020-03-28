@@ -107,7 +107,7 @@ public class RecipeCopy extends UseCase {
 
         RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
                 basedOnResponse(response).
-                setId(destinationId).
+                setDataId(destinationId).
                 build();
 
         handler.execute(destinationRecipe, request, new IdentityCallback());
@@ -131,7 +131,7 @@ public class RecipeCopy extends UseCase {
 
         RecipeCourseRequest request = new RecipeCourseRequest.Builder().
                 basedOnResponse(response).
-                setId(destinationId).
+                setDataId(destinationId).
                 build();
 
         handler.execute(destinationRecipe, request, new CourseCallback());
@@ -154,7 +154,7 @@ public class RecipeCopy extends UseCase {
 
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                 basedOnResponse(response).
-                setId(destinationId).
+                setDataId(destinationId).
                 build();
 
         handler.execute(destinationRecipe, request, new DurationCallback());
@@ -176,7 +176,7 @@ public class RecipeCopy extends UseCase {
 
         RecipePortionsRequest request = new RecipePortionsRequest.Builder().
                 basedOnResponse(response).
-                setId(destinationId).
+                setDataId(destinationId).
                 build();
 
         handler.execute(destinationRecipe, request, new PortionsCallback());

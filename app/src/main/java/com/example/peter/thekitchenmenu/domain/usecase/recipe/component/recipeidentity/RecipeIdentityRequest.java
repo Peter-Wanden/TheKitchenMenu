@@ -1,24 +1,26 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeidentity;
 
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.RecipeComponentRequest;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeDataModel;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseRequestWithDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainModel;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipeIdentityRequest extends RecipeComponentRequest<RecipeIdentityRequest.Model> {
+public final class RecipeIdentityRequest
+        extends UseCaseRequestWithDomainModel<RecipeIdentityRequest.Model> {
 
     @Nonnull
     @Override
     public String toString() {
         return "RecipeIdentityRequest{" +
-                "id='" + id + '\'' +
+                "id='" + dataId + '\'' +
                 ", model=" + model +
                 '}';
     }
 
-    public static class Builder extends RecipeRequestBuilder<Builder, RecipeIdentityRequest, Model> {
+    public static class Builder
+            extends UseCaseRequestBuilder<Builder, RecipeIdentityRequest, Model> {
 
         public Builder() {
             request = new RecipeIdentityRequest();
@@ -26,14 +28,14 @@ public final class RecipeIdentityRequest extends RecipeComponentRequest<RecipeId
 
         public Builder getDefault() {
             return new Builder().
-                    setId("").
+                    setDataId("").
                     setModel(new Model.Builder().
                             getDefault().
                             build());
         }
 
         public Builder basedOnResponse(RecipeIdentityResponse response) {
-            request.id = response.getId();
+            request.dataId = response.getId();
             request.model.title = response.getModel().getTitle();
             request.model.description = response.getModel().getDescription();
             return self();
@@ -45,7 +47,7 @@ public final class RecipeIdentityRequest extends RecipeComponentRequest<RecipeId
         }
     }
 
-    public static final class Model extends RecipeDataModel {
+    public static final class Model extends UseCaseDomainModel {
         private String title;
         private String description;
 
@@ -80,7 +82,7 @@ public final class RecipeIdentityRequest extends RecipeComponentRequest<RecipeId
                     '}';
         }
 
-        public static class Builder extends RecipeDataModelBuilder<Builder, Model> {
+        public static class Builder extends DomainModelBuilder<Builder, Model> {
 
             public Builder() {
                 model = new Model();

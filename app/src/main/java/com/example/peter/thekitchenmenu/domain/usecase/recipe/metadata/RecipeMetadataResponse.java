@@ -1,8 +1,9 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata;
 
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeDataModel;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseResponse;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,31 +13,24 @@ import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.*;
 
-public final class RecipeMetadataResponse implements UseCase.Response {
-    private String id;
-    private Model model;
-
-
-    public String getId() {
-        return id;
-    }
-
-    public Model getModel() {
-        return model;
-    }
+public final class RecipeMetadataResponse extends UseCaseResponse<RecipeMetadataResponse.Model> {
 
     @Override
     public String toString() {
         return "RecipeMetadataResponse{" +
                 "id='" + id + '\'' +
+                ", metadata=" + metadata +
                 ", model=" + model +
                 '}';
     }
 
-    private RecipeMetadataResponse() {}
+    private RecipeMetadataResponse() {
+    }
 
-    public static class Builder {
-        RecipeMetadataResponse response;
+    public static class Builder extends UseCaseResponseBuilder<
+            Builder,
+            RecipeMetadataResponse,
+            Model> {
 
         public Builder() {
             response = new RecipeMetadataResponse();
@@ -45,27 +39,21 @@ public final class RecipeMetadataResponse implements UseCase.Response {
         public Builder getDefault() {
             return new Builder().
                     setId("").
+                    setMetadata(new UseCaseMetadata.Builder().
+                            getDefault().
+                            build()).
                     setModel(new Model.Builder().
                             getDefault().
                             build());
         }
 
-        public Builder setId(String id) {
-            response.id = id;
+        @Override
+        protected Builder self() {
             return this;
-        }
-
-        public Builder setModel(Model model) {
-            response.model = model;
-            return this;
-        }
-
-        public RecipeMetadataResponse build() {
-            return response;
         }
     }
 
-    public static final class Model extends RecipeDataModel {
+    public static final class Model extends UseCaseDomainModel {
         private String parentId;
         private RecipeState state;
         private List<FailReasons> failReasons;
@@ -73,7 +61,8 @@ public final class RecipeMetadataResponse implements UseCase.Response {
         private long createDate;
         private long lastUpdate;
 
-        private Model() {}
+        private Model() {
+        }
 
         @Nonnull
         public String getParentId() {
@@ -112,7 +101,7 @@ public final class RecipeMetadataResponse implements UseCase.Response {
                     '}';
         }
 
-        public static class Builder extends RecipeDataModelBuilder<
+        public static class Builder extends DomainModelBuilder<
                 Builder,
                 Model> {
 
@@ -121,11 +110,11 @@ public final class RecipeMetadataResponse implements UseCase.Response {
             }
 
             public Builder getDefault() {
-                return new Builder().
-                        setParentId("").
-                        setRecipeState(RecipeState.INVALID_UNCHANGED).
-                        setFailReasons(getDefaultFailReasons()).
-                        setComponentStates(new HashMap<>());
+                model.parentId = "";
+                model.state = RecipeState.INVALID_UNCHANGED;
+                model.failReasons = getDefaultFailReasons();
+                model.componentStates = new HashMap<>();
+                return self();
             }
 
             public Builder setParentId(String parentId) {
@@ -143,7 +132,8 @@ public final class RecipeMetadataResponse implements UseCase.Response {
                 return self();
             }
 
-            public Builder setComponentStates(HashMap<ComponentName, ComponentState> componentStates) {
+            public Builder setComponentStates(
+                    HashMap<ComponentName, ComponentState> componentStates) {
                 model.componentStates = componentStates;
                 return self();
             }

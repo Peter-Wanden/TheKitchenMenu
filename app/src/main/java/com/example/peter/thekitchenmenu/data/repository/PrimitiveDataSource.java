@@ -7,7 +7,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 /**
- * Used by the {@link DataModelAdapter} to send and receive primitive data models too and from the
+ * Used by the {@link DataSource} to send and receive primitive data models too and from the
  * frameworks data layer.
  *
  * Primitive data models should ony be used for saving and retrieving data

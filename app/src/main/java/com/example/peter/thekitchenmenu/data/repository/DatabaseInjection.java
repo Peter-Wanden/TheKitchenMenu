@@ -15,14 +15,15 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeC
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeMetadata;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.IngredientLocalDataSource;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.datasource.RecipeComponentStateLocalDataSource;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.datasource.RecipeIngredientLocalDataSource;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.datasource.RecipePortionsLocalDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.RecipeComponentStateLocalDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.RecipeFailReasonsLocalDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.ingredient.RecipeIngredientLocalDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.RecipePortionsLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.product.datasource.ProductLocalDataSource;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.datasource.RecipeCourseLocalDataSource;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.datasource.RecipeDurationLocalDataSource;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.datasource.RecipeIdentityLocalDataSource;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.datasource.RecipeMetadataLocalDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.RecipeCourseLocalDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.RecipeDurationLocalDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.RecipeIdentityLocalDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.RecipeMetadataLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.TKMDatabase;
 import com.example.peter.thekitchenmenu.data.repository.source.local.product.datasource.FavoriteProductsLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.remote.IngredientRemoteDataSource;
@@ -31,6 +32,7 @@ import com.example.peter.thekitchenmenu.data.repository.source.remote.recipe.Rec
 import com.example.peter.thekitchenmenu.data.repository.source.remote.recipe.RecipeDurationRemoteDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.remote.FavoriteProductsRemoteDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.remote.recipe.RecipeCourseRemoteDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.remote.recipe.RecipeFailReasonsRemoteDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.remote.recipe.RecipeIdentityRemoteDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.remote.recipe.RecipeIngredientRemoteDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.remote.recipe.RecipeMetadataRemoteDataSource;
@@ -81,7 +83,7 @@ public class DatabaseInjection {
     }
 
     public static RepositoryRecipeFailReasons provideRecipeFailReasonsDataSource(
-            Context context) {
+            @Nonnull Context context) {
 
         TKMDatabase database = TKMDatabase.getInstance(context, new AppExecutors());
 

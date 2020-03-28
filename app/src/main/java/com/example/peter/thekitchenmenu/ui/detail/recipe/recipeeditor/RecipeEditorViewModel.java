@@ -77,10 +77,10 @@ public class RecipeEditorViewModel extends ViewModel {
 
         if (recipeId.equals(CREATE_NEW_RECIPE)) {
             isNewRecipe = true;
-            request.setId(idProvider.getUId());
+            request.setDataId(idProvider.getUId());
         } else {
             isNewRecipe = false;
-            request.setId(recipeId);
+            request.setDataId(recipeId);
         }
         handler.execute(recipeMacro, request.build(), recipeResponseListener);
     }

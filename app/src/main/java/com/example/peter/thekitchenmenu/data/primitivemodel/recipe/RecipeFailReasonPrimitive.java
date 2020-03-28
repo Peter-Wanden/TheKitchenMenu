@@ -1,21 +1,21 @@
 package com.example.peter.thekitchenmenu.data.primitivemodel.recipe;
 
 import com.example.peter.thekitchenmenu.data.primitivemodel.PrimitiveModel;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeDataModel;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainModel;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipeFailReasonPrimitive
-        extends RecipeDataModel
+public class RecipeFailReasonPrimitive
+        extends UseCaseDomainModel
         implements PrimitiveModel {
 
     private String id;
     private String recipeId;
     private int failReason;
 
-    private RecipeFailReasonPrimitive(){}
+    protected RecipeFailReasonPrimitive(){}
 
     @Override
     public boolean equals(Object o) {
@@ -32,6 +32,7 @@ public final class RecipeFailReasonPrimitive
         return Objects.hash(id, recipeId, failReason);
     }
 
+    @Nonnull
     @Override
     public String toString() {
         return "RecipeFailReasonPrimitive{" +
@@ -59,7 +60,7 @@ public final class RecipeFailReasonPrimitive
 
 
     public static class Builder
-            extends RecipeDataModelBuilder<Builder, RecipeFailReasonPrimitive> {
+            extends DomainModelBuilder<Builder, RecipeFailReasonPrimitive> {
 
         public Builder() {
             model = new RecipeFailReasonPrimitive();

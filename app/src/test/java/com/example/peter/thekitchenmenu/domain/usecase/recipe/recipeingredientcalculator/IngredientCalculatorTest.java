@@ -269,7 +269,7 @@ public class IngredientCalculatorTest {
         verifyRepoIngredientCalledReturnNewValidNameValidDescription();
         verifyRepoPortionsCalledReturnNewValidFourPortions();
         assertEquals(RESPONSE_NEW_EMPTY_FOUR_PORTIONS, actualResponse);
-        assertEquals(ResultStatus.INVALID_MEASUREMENT, actualResponse.getResultStatus());
+        assertEquals(Result.INVALID_MEASUREMENT, actualResponse.getResultStatus());
     }
 
     @Test
@@ -298,7 +298,7 @@ public class IngredientCalculatorTest {
         handler.execute(SUT, REQUEST_NEW_INVALID_UNIT_ONE, getResponseCallback());
         // Assert
         assertEquals(RESPONSE_NEW_INVALID_UNIT_ONE, actualResponse);
-        assertEquals(ResultStatus.INVALID_TOTAL_UNIT_ONE, actualResponse.getResultStatus());
+        assertEquals(Result.INVALID_TOTAL_UNIT_ONE, actualResponse.getResultStatus());
     }
 
     @Test
@@ -327,7 +327,7 @@ public class IngredientCalculatorTest {
         handler.execute(SUT, REQUEST_NEW_VALID_UNIT_ONE, getResponseCallback());
         // Assert
         assertEquals(RESPONSE_NEW_VALID_UNIT_ONE, actualResponse);
-        assertEquals(ResultStatus.RESULT_OK, actualResponse.getResultStatus());
+        assertEquals(Result.RESULT_OK, actualResponse.getResultStatus());
     }
 
     @Test
@@ -356,7 +356,7 @@ public class IngredientCalculatorTest {
         handler.execute(SUT, REQUEST_NEW_INVALID_UNIT_TWO, getResponseCallback());
         // Assert
         assertEquals(RESPONSE_NEW_INVALID_UNIT_TWO, actualResponse);
-        assertEquals(ResultStatus.INVALID_TOTAL_UNIT_TWO, actualResponse.getResultStatus());
+        assertEquals(Result.INVALID_TOTAL_UNIT_TWO, actualResponse.getResultStatus());
     }
 
     @Test
@@ -387,7 +387,7 @@ public class IngredientCalculatorTest {
         handler.execute(SUT, REQUEST_NEW_VALID_UNIT_TWO, getResponseCallback());
         // Assert
         assertEquals(RESPONSE_NEW_VALID_UNIT_TWO, actualResponse);
-        assertEquals(ResultStatus.RESULT_OK, actualResponse.getResultStatus());
+        assertEquals(Result.RESULT_OK, actualResponse.getResultStatus());
     }
 
     @Test
@@ -608,7 +608,7 @@ public class IngredientCalculatorTest {
         // Act - update unit two
         handler.execute(SUT, requestUnitTwoUpdated, getResponseCallback());
         // Assert
-        assertEquals(ResultStatus.RESULT_OK, actualResponse.getResultStatus());
+        assertEquals(Result.RESULT_OK, actualResponse.getResultStatus());
     }
 
     @Test
@@ -632,7 +632,7 @@ public class IngredientCalculatorTest {
         verifyRepoIngredientCalledAndReturnExistingValidNameDescriptionNoConversionFactor();
         verifyRepoPortionsCalledAndReturnExistingValidNinePortions();
         assertEquals(RESPONSE_EXISTING_VALID_METRIC, actualResponse);
-        assertEquals(ResultStatus.RESULT_OK, actualResponse.getResultStatus());
+        assertEquals(Result.RESULT_OK, actualResponse.getResultStatus());
     }
 
     @Test
@@ -658,7 +658,7 @@ public class IngredientCalculatorTest {
         // Act
         handler.execute(SUT, REQUEST_EXISTING_INVALID_METRIC_UNIT_ONE, getResponseCallback());
         // Assert
-        assertEquals(ResultStatus.INVALID_TOTAL_UNIT_ONE, actualResponse.getResultStatus());
+        assertEquals(Result.INVALID_TOTAL_UNIT_ONE, actualResponse.getResultStatus());
     }
 
     @Test
@@ -930,7 +930,7 @@ public class IngredientCalculatorTest {
         handler.execute(SUT, updatedUnitOfMeasureRequest, getResponseCallback());
         // verify expected model and result status response
         assertEquals(MeasurementSubtype.IMPERIAL_SPOON, actualResponse.getModel().getSubtype());
-        assertEquals(ResultStatus.INVALID_MEASUREMENT, actualResponse.getResultStatus());
+        assertEquals(Result.INVALID_MEASUREMENT, actualResponse.getResultStatus());
         // confirm nothing saved
         verifyNoMoreInteractions(repoRecipeIngredientMock);
 
@@ -948,7 +948,7 @@ public class IngredientCalculatorTest {
         handler.execute(SUT, updatedUnitOneRequest, getResponseCallback());
         // verify expected model and result status response
         assertEquals(numberOfTeaspoons, actualResponse.getModel().getTotalUnitOne(), DELTA);
-        assertEquals(ResultStatus.RESULT_OK, actualResponse.getResultStatus());
+        assertEquals(Result.RESULT_OK, actualResponse.getResultStatus());
         // verify changes saved to quantity entity
         verify(repoRecipeIngredientMock).save(recipeIngredientCaptor.capture());
         RecipeIngredientEntity actualQuantityEntityAfterUnitOneChange =
@@ -985,7 +985,7 @@ public class IngredientCalculatorTest {
         // verify expected UI updates returned
         assertEquals(numberOfTeaspoons, actualResponse.getModel().getTotalUnitOne(), DELTA);
         assertEquals(MAX_CONVERSION_FACTOR, actualResponse.getModel().getConversionFactor(), DELTA);
-        assertEquals(ResultStatus.RESULT_OK, actualResponse.getResultStatus());
+        assertEquals(Result.RESULT_OK, actualResponse.getResultStatus());
 
         // verify changes saved to ingredient entity
         verify(repoIngredientMock).save(ingredientArgumentCaptor.capture());

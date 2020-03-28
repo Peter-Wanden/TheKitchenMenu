@@ -2,16 +2,13 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata;
 
 import android.annotation.SuppressLint;
 
-import com.example.peter.thekitchenmenu.app.Constants;
-import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeMetadataEntity;
-import com.example.peter.thekitchenmenu.data.repository.DataModelAdapter;
-import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeComponentState;
+import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.RecipeComponentMetadata;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.RecipeComponentResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe.Recipe;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 
@@ -25,12 +22,14 @@ import java.util.Set;
 import javax.annotation.Nonnull;
 
 /**
- * Calculates and stores {@link Recipe} state information based on {@link RecipeComponentResponse}'s
- * Always use in conjunction with a {@link Recipe}
+ * Calculates and stores {@link Recipe} metadata state information based on recipe
+ * {@link UseCaseResponse}'s
+ *
+ * Always use as a {@link Recipe} component
  */
 public class RecipeMetadata
         extends UseCase
-        implements DataModelAdapter.GetModelCallback<RecipeMetadataPersistenceModel> {
+        implements DataSource.GetModelCallback<RecipeMetadataPersistenceModel> {
 
     private static final String TAG = "tkm-" + RecipeMetadata.class.getSimpleName() + ": ";
 
@@ -93,7 +92,7 @@ public class RecipeMetadata
     @Nonnull
     private final TimeProvider timeProvider;
     @Nonnull
-    private final RecipeMetadataModelAdapter repository;
+    private final RepositoryRecipeMetadata repository;
     private RecipeMetadataPersistenceModel persistenceModel;
     @Nonnull
     private final Set<ComponentName> requiredComponents;
@@ -102,11 +101,15 @@ public class RecipeMetadata
     @Nonnull
     private final List<FailReasons> failReasons;
 
-    private String id = "";
+    private String dataId = "";
+    private String recipeId = "";
     private String parentId = "";
     private HashMap<ComponentName, ComponentState> componentStates;
+    private RecipeMetadataRequest.Model requestModel;
+
     private boolean hasRequiredComponents;
     private boolean hasInvalidModels;
+    private boolean isNewRequest;
 
     // TODO - Rename to RecipeMetadata
     //  last update - should be the time of the last updated component
@@ -115,7 +118,7 @@ public class RecipeMetadata
     //  keep a copy of all metadata as it changes
 
     public RecipeMetadata(@Nonnull TimeProvider timeProvider,
-                          @Nonnull RecipeMetadataModelAdapter repository,
+                          @Nonnull RepositoryRecipeMetadata repository,
                           @Nonnull Set<ComponentName> requiredComponents) {
 
         this.timeProvider = timeProvider;
@@ -131,25 +134,22 @@ public class RecipeMetadata
         RecipeMetadataRequest metadataRequest = (RecipeMetadataRequest) request;
         System.out.println(TAG + metadataRequest);
 
-        recipeState = RecipeState.COMPLETE;
-        failReasons.clear();
-        componentStates = metadataRequest.getModel().getComponentStates();
-
-        if (isNewRequest(metadataRequest.getId())) {
-            id = metadataRequest.getId();
-            parentId = metadataRequest.getModel().getParentId();
-            loadData(id);
+        if (isNewRequest(metadataRequest.getDomainId())) {
+            dataId = metadataRequest.getDataId();
+            recipeId = metadataRequest.getDomainId();
+            loadData(recipeId);
         } else {
+            requestModel = metadataRequest.getModel();
             calculateState();
         }
     }
 
-    private boolean isNewRequest(String id) {
-        return !this.id.equals(id);
+    private boolean isNewRequest(String recipeId) {
+        return isNewRequest = !this.recipeId.equals(recipeId);
     }
 
     private void loadData(String recipeId) {
-        repository.getById(recipeId, this);
+        repository.getByRecipeId(recipeId, this);
     }
 
     @Override
@@ -167,13 +167,11 @@ public class RecipeMetadata
 
     private RecipeMetadataPersistenceModel createNewPersistenceModel() {
         long currentTime = timeProvider.getCurrentTimeInMills();
+
         return new RecipeMetadataPersistenceModel.Builder().
-                setId(id).
-                setRecipeId(id).
-                setParentId(parentId).
-                setComponentStates(componentStates).
-                setFailReasons(failReasons).
-                setCreatedBy(Constants.getUserId()).
+                getDefault().
+                setId(dataId).
+                setRecipeId(recipeId).
                 setCreateDate(currentTime).
                 setLastUpdate(currentTime).
                 build();
@@ -188,6 +186,7 @@ public class RecipeMetadata
     }
 
     private void checkForRequiredComponents() {
+
         int noOfRequiredComponents = requiredComponents.size();
         int noOfRequiredComponentsSubmitted = 0;
 
@@ -258,7 +257,7 @@ public class RecipeMetadata
     }
 
     private void addFailReasonNone() {
-        if (!failReasons.contains(FailReason.NONE)) {
+        if (failReasons.isEmpty()) {
             failReasons.add(FailReason.NONE);
         }
     }
@@ -269,10 +268,11 @@ public class RecipeMetadata
                 recipeState == RecipeState.COMPLETE;
     }
 
-    private RecipeComponentMetadata getMetadata() {
+    // todo - What should the metadata for the metadata look like? Should it exist?
+    private UseCaseMetadata getMetadata() {
         List<FailReasons> failReasons = new ArrayList<>();
         failReasons.add(CommonFailReason.NONE);
-        return new RecipeComponentMetadata.Builder().
+        return new UseCaseMetadata.Builder().
                 setState(ComponentState.VALID_CHANGED).
                 setFailReasons(failReasons).
                 setCreateDate(0L).
@@ -281,14 +281,14 @@ public class RecipeMetadata
     }
 
     private void buildResponse() {
-        if (failReasons.isEmpty()) {
-            failReasons.add(CommonFailReason.NONE);
-        }
+        addFailReasonNone();
 
         RecipeMetadataResponse response = new RecipeMetadataResponse.Builder().
-                setId(id).
+                setId(dataId).
                 setModel(getModel()).
                 build();
+
+        save(getUpdatedPersistenceModel());
 
         sendResponse(response);
     }
@@ -300,6 +300,20 @@ public class RecipeMetadata
                 setFailReasons(new ArrayList<>(failReasons)).
                 setComponentStates(new LinkedHashMap<>(componentStates)).
                 build();
+    }
+
+    private RecipeMetadataPersistenceModel getUpdatedPersistenceModel() {
+
+    }
+
+    private boolean isChanged() {
+        return !isNewRequest && (parentId requestModel.getParentId())
+    }
+
+    private void resetState() {
+        recipeState = RecipeState.COMPLETE;
+        failReasons.clear();
+        componentStates.clear();
     }
 
     private void sendResponse(RecipeMetadataResponse response) {

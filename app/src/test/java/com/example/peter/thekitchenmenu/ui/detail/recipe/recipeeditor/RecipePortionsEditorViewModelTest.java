@@ -199,7 +199,7 @@ public class RecipePortionsEditorViewModelTest {
 
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 build();
 
         // Act
@@ -221,7 +221,7 @@ public class RecipePortionsEditorViewModelTest {
 
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 build();
 
         // Act
@@ -247,7 +247,7 @@ public class RecipePortionsEditorViewModelTest {
         whenIdProviderReturn(recipeId);
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 build();
 
         // Act
@@ -276,7 +276,7 @@ public class RecipePortionsEditorViewModelTest {
         whenIdProviderReturn(recipeId);
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 build();
 
         // Act
@@ -307,7 +307,7 @@ public class RecipePortionsEditorViewModelTest {
         whenIdProviderReturn(recipeId);
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 build();
 
         // Act
@@ -338,7 +338,7 @@ public class RecipePortionsEditorViewModelTest {
         whenIdProviderReturn(recipeId);
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 build();
 
         // Act
@@ -369,7 +369,7 @@ public class RecipePortionsEditorViewModelTest {
         whenIdProviderReturn(recipeId);
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 build();
 
         // Act
@@ -394,7 +394,7 @@ public class RecipePortionsEditorViewModelTest {
         whenIdProviderReturn(recipeId);
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 build();
 
         // Act
@@ -425,7 +425,7 @@ public class RecipePortionsEditorViewModelTest {
         whenIdProviderReturn(recipeId);
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 build();
 
         // Act
@@ -451,7 +451,7 @@ public class RecipePortionsEditorViewModelTest {
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(NEW_EMPTY.getCreateDate());
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 build();
 
         // Act
@@ -475,7 +475,7 @@ public class RecipePortionsEditorViewModelTest {
         // Act
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 build();
 
         // Act
@@ -494,7 +494,7 @@ public class RecipePortionsEditorViewModelTest {
         // Act
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 build();
 
         // Act
@@ -520,7 +520,7 @@ public class RecipePortionsEditorViewModelTest {
 
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 build();
 
         // Act
@@ -546,7 +546,7 @@ public class RecipePortionsEditorViewModelTest {
 
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 build();
 
         // Act
@@ -572,7 +572,7 @@ public class RecipePortionsEditorViewModelTest {
 
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 build();
 
         // Act
@@ -598,7 +598,7 @@ public class RecipePortionsEditorViewModelTest {
 
         // An external request that starts/loads the recipe
         RecipeMetadataRequest request = new RecipeMetadataRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 build();
 
         // Act

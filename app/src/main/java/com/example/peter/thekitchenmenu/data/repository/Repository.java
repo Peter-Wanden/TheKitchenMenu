@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.data.repository;
 
 import androidx.annotation.Nullable;
 
-import com.example.peter.thekitchenmenu.data.primitivemodel.PrimitiveModel;
+import com.example.peter.thekitchenmenu.domain.model.PersistenceModel;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -12,20 +12,20 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 
 
-public abstract class Repository<T extends PrimitiveModel> implements PrimitiveDataSource<T> {
+public abstract class Repository<T extends PersistenceModel> implements DataSource<T> {
 
     protected static Repository INSTANCE = null;
-    protected PrimitiveDataSource<T> remoteDataSource;
-    protected PrimitiveDataSource<T> localDataSource;
-    protected Map<String, T> entityCache;
+    protected DataSource<T> remoteDataSource;
+    protected DataSource<T> localDataSource;
+    protected Map<String, T> cache;
 
     private boolean cacheIsDirty;
 
     @Override
     public void getAll(@Nonnull GetAllCallback<T> callback) {
 
-        if (entityCache != null && cacheIsDirty) {
-            callback.onAllLoaded(new ArrayList<>(entityCache.values()));
+        if (cache != null && cacheIsDirty) {
+            callback.onAllLoaded(new ArrayList<>(cache.values()));
             return;
         }
         if (cacheIsDirty)
@@ -33,9 +33,9 @@ public abstract class Repository<T extends PrimitiveModel> implements PrimitiveD
         else {
             localDataSource.getAll(new GetAllCallback<T>() {
                 @Override
-                public void onAllLoaded(List<T> entities) {
-                    refreshCache(entities);
-                    callback.onAllLoaded(new ArrayList<>(entityCache.values()));
+                public void onAllLoaded(List<T> models) {
+                    refreshCache(models);
+                    callback.onAllLoaded(new ArrayList<>(cache.values()));
                 }
 
                 @Override
@@ -45,13 +45,14 @@ public abstract class Repository<T extends PrimitiveModel> implements PrimitiveD
             });
         }
     }
+
     private void getItemsFromRemoteDataSource(@Nonnull final GetAllCallback<T> callback) {
         remoteDataSource.getAll(new GetAllCallback<T>() {
             @Override
-            public void onAllLoaded(List<T> entities) {
-                refreshCache(entities);
-                refreshLocalDataSource(entities);
-                callback.onAllLoaded(new ArrayList<>(entityCache.values()));
+            public void onAllLoaded(List<T> models) {
+                refreshCache(models);
+                refreshLocalDataSource(models);
+                callback.onAllLoaded(new ArrayList<>(cache.values()));
             }
 
             @Override
@@ -61,64 +62,64 @@ public abstract class Repository<T extends PrimitiveModel> implements PrimitiveD
         });
     }
 
-    private void refreshCache(List<T> entities) {
-        if (entityCache == null)
-            entityCache = new LinkedHashMap<>();
+    private void refreshCache(List<T> models) {
+        if (cache == null)
+            cache = new LinkedHashMap<>();
 
-        entityCache.clear();
+        cache.clear();
 
-        for (T entity : entities)
-            entityCache.put(entity.getId(), entity);
+        for (T model : models)
+            cache.put(model.getDataId(), model);
 
         cacheIsDirty = false;
     }
 
-    private void refreshLocalDataSource(List<T> entities) {
+    private void refreshLocalDataSource(List<T> models) {
         localDataSource.deleteAll();
 
-        for (T entity : entities)
-            localDataSource.save(entity);
+        for (T model : models)
+            localDataSource.save(model);
     }
 
     @Override
-    public void getById(@Nonnull String id, @Nonnull GetEntityCallback<T> callback) {
+    public void getById(@Nonnull String id, @Nonnull GetModelCallback<T> callback) {
 
-        T cachedEntity = getEntityWithId(id);
+        T cachedModel = getModelWithId(id);
 
-        if (cachedEntity != null) {
-            callback.onEntityLoaded(cachedEntity);
+        if (cachedModel != null) {
+            callback.onModelLoaded(cachedModel);
             return;
         }
-        localDataSource.getById(id, new GetEntityCallback<T>() {
+        localDataSource.getById(id, new GetModelCallback<T>() {
             @Override
-            public void onEntityLoaded(T entity) {
-                if (entityCache == null)
-                    entityCache = new LinkedHashMap<>();
+            public void onModelLoaded(T model) {
+                if (cache == null)
+                    cache = new LinkedHashMap<>();
 
-                entityCache.put(entity.getId(), entity);
-                callback.onEntityLoaded(entity);
+                cache.put(model.getDataId(), model);
+                callback.onModelLoaded(model);
             }
 
             @Override
-            public void onDataUnavailable() {
-                remoteDataSource.getById(id, new GetEntityCallback<T>() {
+            public void onModelUnavailable() {
+                remoteDataSource.getById(id, new GetModelCallback<T>() {
                     @Override
-                    public void onEntityLoaded(T entity) {
-                        if (entity == null) {
-                            onDataUnavailable();
+                    public void onModelLoaded(T model) {
+                        if (model == null) {
+                            callback.onModelUnavailable();
                             return;
                         }
 
-                        if (entityCache == null)
-                            entityCache = new LinkedHashMap<>();
+                        if (cache == null)
+                            cache = new LinkedHashMap<>();
 
-                        entityCache.put(entity.getId(), entity);
-                        callback.onEntityLoaded(entity);
+                        cache.put(model.getDataId(), model);
+                        callback.onModelLoaded(model);
                     }
 
                     @Override
-                    public void onDataUnavailable() {
-                        callback.onDataUnavailable();
+                    public void onModelUnavailable() {
+                        callback.onModelUnavailable();
                     }
                 });
             }
@@ -126,22 +127,22 @@ public abstract class Repository<T extends PrimitiveModel> implements PrimitiveD
     }
 
     @Nullable
-    private T getEntityWithId(String id) {
+    private T getModelWithId(String id) {
 
-        if (entityCache == null || entityCache.isEmpty())
+        if (cache == null || cache.isEmpty())
             return null;
         else
-            return entityCache.get(id);
+            return cache.get(id);
     }
 
     @Override
-    public void save(@Nonnull T entity) {
-        remoteDataSource.save(entity);
-        localDataSource.save(entity);
+    public void save(@Nonnull T model) {
+        remoteDataSource.save(model);
+        localDataSource.save(model);
 
-        if (entityCache == null)
-            entityCache = new LinkedHashMap<>();
-        entityCache.put(entity.getId(), entity);
+        if (cache == null)
+            cache = new LinkedHashMap<>();
+        cache.put(model.getDataId(), model);
     }
 
     @Override
@@ -154,15 +155,15 @@ public abstract class Repository<T extends PrimitiveModel> implements PrimitiveD
         remoteDataSource.deleteAll();
         localDataSource.deleteAll();
 
-        if (entityCache == null)
-            entityCache = new LinkedHashMap<>();
-        entityCache.clear();
+        if (cache == null)
+            cache = new LinkedHashMap<>();
+        cache.clear();
     }
 
     @Override
     public void deleteById(@Nonnull String id) {
         remoteDataSource.deleteById(id);
         localDataSource.deleteById(id);
-        entityCache.remove(id);
+        cache.remove(id);
     }
 }

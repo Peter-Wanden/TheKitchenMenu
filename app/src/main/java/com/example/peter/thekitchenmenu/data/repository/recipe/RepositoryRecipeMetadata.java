@@ -1,14 +1,14 @@
 package com.example.peter.thekitchenmenu.data.repository.recipe;
 
-import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeMetadataEntity;
 import com.example.peter.thekitchenmenu.data.repository.Repository;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadataPersistenceModel;
 
 import java.util.LinkedHashMap;
 
 import javax.annotation.Nonnull;
 
 public class RepositoryRecipeMetadata
-        extends Repository<RecipeMetadataEntity>
+        extends Repository<RecipeMetadataPersistenceModel>
         implements DataSourceRecipeMetaData {
 
     private RepositoryRecipeMetadata(
@@ -28,42 +28,45 @@ public class RepositoryRecipeMetadata
         return (RepositoryRecipeMetadata) INSTANCE;
     }
 
+    // todo - this should generate a list of previously changed data. Only return the one with the
+    //  latest update
     @Override
     public void getByRecipeId(@Nonnull String recipeId,
-                              @Nonnull GetEntityCallback<RecipeMetadataEntity> callback) {
+                              @Nonnull GetModelCallback<RecipeMetadataPersistenceModel> callback) {
 
-        RecipeMetadataEntity cachedEntity = checkCacheForRecipeId(recipeId);
+        RecipeMetadataPersistenceModel cachedModel = checkCacheForRecipeId(recipeId);
 
-        if (cachedEntity != null) {
-            callback.onEntityLoaded(cachedEntity);
+        if (cachedModel != null) {
+            callback.onModelLoaded(cachedModel);
             return;
         }
         ((DataSourceRecipeMetaData)localDataSource).getByRecipeId(
                 recipeId,
-                new GetEntityCallback<RecipeMetadataEntity>() {
+                new GetModelCallback<RecipeMetadataPersistenceModel>() {
                     @Override
-                    public void onEntityLoaded(RecipeMetadataEntity e) {
-                        if (entityCache == null) entityCache = new LinkedHashMap<>();
+                    public void onModelLoaded(RecipeMetadataPersistenceModel model) {
+                        if (cache == null)
+                            cache = new LinkedHashMap<>();
 
-                        entityCache.put(e.getId(), e);
-                        callback.onEntityLoaded(e);
+                        cache.put(model.getDataId(), model);
+                        callback.onModelLoaded(model);
                     }
 
                     @Override
-                    public void onDataUnavailable() {
+                    public void onModelUnavailable() {
                         ((DataSourceRecipeMetaData)remoteDataSource).getByRecipeId(
-                                recipeId, new GetEntityCallback<RecipeMetadataEntity>() {
+                                recipeId, new GetModelCallback<RecipeMetadataPersistenceModel>() {
                                     @Override
-                                    public void onEntityLoaded(RecipeMetadataEntity e) {
-                                        if (entityCache == null) entityCache = new LinkedHashMap<>();
-                                        entityCache.put(e.getId(), e);
+                                    public void onModelLoaded(RecipeMetadataPersistenceModel model) {
+                                        if (cache == null) cache = new LinkedHashMap<>();
+                                        cache.put(model.getDataId(), model);
 
-                                        callback.onEntityLoaded(e);
+                                        callback.onModelLoaded(model);
                                     }
 
                                     @Override
-                                    public void onDataUnavailable() {
-                                        callback.onDataUnavailable();
+                                    public void onModelUnavailable() {
+                                        callback.onModelUnavailable();
                                     }
                                 });
 
@@ -71,17 +74,17 @@ public class RepositoryRecipeMetadata
                 });
     }
 
-    private RecipeMetadataEntity checkCacheForRecipeId(String recipeId) {
-        RecipeMetadataEntity e = null;
-        if (entityCache == null || entityCache.isEmpty())
-            return e;
+    private RecipeMetadataPersistenceModel checkCacheForRecipeId(String recipeId) {
+        RecipeMetadataPersistenceModel model = null;
+        if (cache == null || cache.isEmpty())
+            return model;
         else {
-            for (RecipeMetadataEntity entity : entityCache.values()) {
-                if (recipeId.equals(e.getRecipeId())) {
-                    e = entity;
+            for (RecipeMetadataPersistenceModel m : cache.values()) {
+                if (recipeId.equals(model.getRecipeId())) {
+                    model = m;
                 }
             }
-            return e;
+            return model;
         }
     }
 
@@ -92,14 +95,14 @@ public class RepositoryRecipeMetadata
 
         String id = "";
 
-        if (entityCache != null) {
-            for (RecipeMetadataEntity e : entityCache.values()) {
-                if (recipeId.equals(e.getRecipeId())) {
-                    id = e.getId();
+        if (cache != null) {
+            for (RecipeMetadataPersistenceModel m : cache.values()) {
+                if (recipeId.equals(m.getRecipeId())) {
+                    id = m.getDataId();
                 }
             }
             if (!id.isEmpty()) {
-                entityCache.remove(id);
+                cache.remove(id);
             }
         }
     }

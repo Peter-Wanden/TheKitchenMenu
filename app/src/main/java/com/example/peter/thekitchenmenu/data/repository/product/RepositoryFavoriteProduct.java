@@ -47,10 +47,10 @@ public class RepositoryFavoriteProduct
                 new GetEntityCallback<FavoriteProductEntity>() {
             @Override
             public void onEntityLoaded(FavoriteProductEntity entity) {
-                if (entityCache == null)
-                    entityCache = new LinkedHashMap<>();
+                if (cache == null)
+                    cache = new LinkedHashMap<>();
 
-                entityCache.put(entity.getId(), entity);
+                cache.put(entity.getId(), entity);
                 callback.onEntityLoaded(entity);
             }
 
@@ -61,10 +61,10 @@ public class RepositoryFavoriteProduct
                         new GetEntityCallback<FavoriteProductEntity>() {
                     @Override
                     public void onEntityLoaded(FavoriteProductEntity entity) {
-                        if (entityCache == null)
-                            entityCache = new LinkedHashMap<>();
+                        if (cache == null)
+                            cache = new LinkedHashMap<>();
 
-                        entityCache.put(entity.getId(), entity);
+                        cache.put(entity.getId(), entity);
                         callback.onEntityLoaded(entity);
                     }
 
@@ -79,10 +79,10 @@ public class RepositoryFavoriteProduct
 
     private FavoriteProductEntity checkCacheForProductId(String productId) {
 
-        if (entityCache == null || entityCache.isEmpty())
+        if (cache == null || cache.isEmpty())
             return null;
         else {
-            for (FavoriteProductEntity entity : entityCache.values()) {
+            for (FavoriteProductEntity entity : cache.values()) {
                 if (entity.getProductId().equals(productId))
                     return entity;
             }

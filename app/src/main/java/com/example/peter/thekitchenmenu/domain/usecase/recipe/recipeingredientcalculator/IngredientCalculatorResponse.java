@@ -13,10 +13,10 @@ public final class IngredientCalculatorResponse implements UseCase.Response {
     @Nonnull
     private final MeasurementModel model;
     @Nonnull
-    private final ResultStatus resultStatus;
+    private final Result resultStatus;
 
     public IngredientCalculatorResponse(@Nonnull MeasurementModel model,
-                                        @Nonnull ResultStatus resultStatus) {
+                                        @Nonnull Result resultStatus) {
         this.model = model;
         this.resultStatus = resultStatus;
     }
@@ -27,7 +27,7 @@ public final class IngredientCalculatorResponse implements UseCase.Response {
     }
 
     @Nonnull
-    public ResultStatus getResultStatus() {
+    public Result getResultStatus() {
         return resultStatus;
     }
 

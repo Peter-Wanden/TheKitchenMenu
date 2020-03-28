@@ -76,12 +76,12 @@ public class RecipeCourseTest {
         // Arrange
         RecipeCourseRequest request = new RecipeCourseRequest.Builder().
                 getDefault().
-                setId("idNotInTestData").
+                setDataId("idNotInTestData").
                 build();
         // Act
         handler.execute(SUT, request, getCallback());
         // Assert
-        verifyRepoCalledAndReturnMatchingCourses(request.getId());
+        verifyRepoCalledAndReturnMatchingCourses(request.getDataId());
         assertEquals(com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState.INVALID_UNCHANGED, onErrorResponse.getMetadata().getState());
         assertTrue(onErrorResponse.getMetadata().getFailReasons().
                 contains(CommonFailReason.DATA_UNAVAILABLE));
@@ -97,7 +97,7 @@ public class RecipeCourseTest {
         when(idProviderMock.getUId()).thenReturn(id);
 
         RecipeCourseRequest initialiseComponentRequest = new RecipeCourseRequest.Builder().
-                setId("IdNotInTestData").
+                setDataId("IdNotInTestData").
                 setModel(new RecipeCourseRequest.Model.Builder().
                         getDefault().
                         build()
@@ -107,14 +107,14 @@ public class RecipeCourseTest {
         // Act
         handler.execute(SUT, initialiseComponentRequest, getCallback());
         // Assert
-        verifyRepoCalledAndReturnMatchingCourses(initialiseComponentRequest.getId());
+        verifyRepoCalledAndReturnMatchingCourses(initialiseComponentRequest.getDataId());
         assertEquals(com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState.INVALID_UNCHANGED, onErrorResponse.getMetadata().getState());
         assertEquals(0, onErrorResponse.getModel().getCourseList().size());
         // Arrange
         List<Course> addCourseOne = new ArrayList<>();
         addCourseOne.add(Course.COURSE_ONE);
         RecipeCourseRequest request = new RecipeCourseRequest.Builder().
-                setId("IdNotInTestData").
+                setDataId("IdNotInTestData").
                 setModel(new RecipeCourseRequest.Model.Builder().
                         setCourseList(addCourseOne).
                         build()
@@ -134,7 +134,7 @@ public class RecipeCourseTest {
     public void existingRequest_persistenceCalledWithCorrectId() {
         // Arrange
         RecipeCourseRequest initialiseComponentRequest = new RecipeCourseRequest.Builder().
-                setId(EXISTING_RECIPE_ID).
+                setDataId(EXISTING_RECIPE_ID).
                 setModel(new RecipeCourseRequest.Model.Builder().
                         getDefault().
                         build()
@@ -150,7 +150,7 @@ public class RecipeCourseTest {
     public void existingRequest_completeListOfModelsReturned_VALID_UNCHANGED() {
         // Arrange
         RecipeCourseRequest initialiseComponentRequest = new RecipeCourseRequest.Builder().
-                setId(EXISTING_RECIPE_ID).
+                setDataId(EXISTING_RECIPE_ID).
                 setModel(new RecipeCourseRequest.Model.Builder().
                         getDefault().
                         build()).
@@ -158,7 +158,7 @@ public class RecipeCourseTest {
         // Act
         handler.execute(SUT, initialiseComponentRequest, getCallback());
         // Assert
-        verifyRepoCalledAndReturnMatchingCourses(initialiseComponentRequest.getId());
+        verifyRepoCalledAndReturnMatchingCourses(initialiseComponentRequest.getDataId());
 
         int expectedNumberOfModels = TestDataRecipeCourseEntity.
                 getAllByRecipeId(EXISTING_RECIPE_ID).
@@ -179,16 +179,16 @@ public class RecipeCourseTest {
     public void existingRequest_allModelsDeleted_INVALID_CHANGED() {
         // Arrange first transaction
         RecipeCourseRequest initialiseComponentRequest = new RecipeCourseRequest.Builder().
-                setId(EXISTING_RECIPE_ID).
+                setDataId(EXISTING_RECIPE_ID).
                 setModel(new RecipeCourseRequest.Model.Builder().getDefault().build()).
                 build();
         // Act
         handler.execute(SUT, initialiseComponentRequest, getCallback());
         // Assert
-        verifyRepoCalledAndReturnMatchingCourses(initialiseComponentRequest.getId());
+        verifyRepoCalledAndReturnMatchingCourses(initialiseComponentRequest.getDataId());
         // Arrange
         RecipeCourseRequest removeAllCoursesRequest = new RecipeCourseRequest.Builder().
-                setId(EXISTING_RECIPE_ID).
+                setDataId(EXISTING_RECIPE_ID).
                 setModel(new RecipeCourseRequest.Model.Builder().getDefault().build()).
                 build();
         // Act

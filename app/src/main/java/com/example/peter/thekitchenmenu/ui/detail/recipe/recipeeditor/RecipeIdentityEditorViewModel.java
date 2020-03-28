@@ -98,7 +98,7 @@ public class RecipeIdentityEditorViewModel extends ObservableViewModel {
                     setTitle(title).
                     build();
             RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
-                    setId(response.getId()).
+                    setDataId(response.getId()).
                     setModel(model).
                     build();
             handler.execute(recipeMacro, request, new IdentityCallbackListener());
@@ -121,7 +121,7 @@ public class RecipeIdentityEditorViewModel extends ObservableViewModel {
                     setDescription(description).
                     build();
             RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
-                    setId(response.getId()).
+                    setDataId(response.getId()).
                     setModel(model).
                     build();
 

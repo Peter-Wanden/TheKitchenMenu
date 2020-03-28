@@ -2,13 +2,12 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipec
 
 import android.annotation.SuppressLint;
 
-import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeCourseEntity;
-import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
+import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeCourse;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.RecipeComponentMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
@@ -23,7 +22,9 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
-public class RecipeCourse extends UseCase implements PrimitiveDataSource.GetAllCallback<RecipeCourseEntity> {
+public class RecipeCourse
+        extends UseCase
+        implements DataSource.GetAllCallback<RecipeCourseModel> {
 
     private static final String TAG = "tkm-" + RecipeCourse.class.getSimpleName() + ": ";
 
@@ -87,8 +88,8 @@ public class RecipeCourse extends UseCase implements PrimitiveDataSource.GetAllC
         RecipeCourseRequest courseRequest = (RecipeCourseRequest) request;
         System.out.println(TAG + courseRequest);
 
-        if (isNewRequest(courseRequest.getId())) {
-            id = courseRequest.getId();
+        if (isNewRequest(courseRequest.getDataId())) {
+            id = courseRequest.getDataId();
             loadData(id);
         } else {
             processChanges(courseRequest.getModel().getCourseList());
@@ -104,23 +105,22 @@ public class RecipeCourse extends UseCase implements PrimitiveDataSource.GetAllC
     }
 
     @Override
-    public void onAllLoaded(List<RecipeCourseEntity> courseEntities) {
-        addCoursesToLists(courseEntities);
+    public void onAllLoaded(List<RecipeCourseModel> courseModels) {
+        addCoursesToLists(courseModels);
     }
 
-    private void addCoursesToLists(List<RecipeCourseEntity> courseEntities) {
-        createDate = courseEntities.isEmpty() ? 0L : Long.MAX_VALUE;
+    private void addCoursesToLists(List<RecipeCourseModel> courseModels) {
+        createDate = courseModels.isEmpty() ? 0L : Long.MAX_VALUE;
         lastUpdate = 0L;
 
-        for (RecipeCourseEntity courseEntity : courseEntities) {
-            RecipeCourseModel model = convertEntityToModel(courseEntity);
-            Course course = model.getCourse();
+        for (RecipeCourseModel courseModel : courseModels) {
 
-            oldCourseMap.put(course, model);
+            Course course = courseModel.getCourse();
+            oldCourseMap.put(course, courseModel);
             newCourseList.add(course);
 
-            createDate = Math.min(createDate, model.getCreateDate());
-            lastUpdate = Math.max(lastUpdate, model.getLasUpdate());
+            createDate = Math.min(createDate, courseModel.getCreateDate());
+            lastUpdate = Math.max(lastUpdate, courseModel.getLasUpdate());
         }
 
         sendResponse();
@@ -160,7 +160,7 @@ public class RecipeCourse extends UseCase implements PrimitiveDataSource.GetAllC
     }
 
     private void save(RecipeCourseModel model) {
-        repository.save(convertModelToPrimitive(model));
+        repository.save(model);
     }
 
     private void processCourseSubtractions() {
@@ -179,17 +179,7 @@ public class RecipeCourse extends UseCase implements PrimitiveDataSource.GetAllC
     private void subtractCourse(Course course) {
         isChanged = true;
         lastUpdate = timeProvider.getCurrentTimeInMills();
-        repository.deleteById(oldCourseMap.get(course).getId());
-    }
-
-    private RecipeCourseModel convertEntityToModel(RecipeCourseEntity entity) {
-        return new RecipeCourseModel(
-                entity.getId(),
-                Course.fromInt(entity.getCourseNo()),
-                entity.getRecipeId(),
-                entity.getCreateDate(),
-                entity.getLasUpdate()
-        );
+        repository.deleteById(oldCourseMap.get(course).getDataId());
     }
 
     private RecipeCourseModel createNewCourseModel(Course course) {
@@ -201,15 +191,6 @@ public class RecipeCourse extends UseCase implements PrimitiveDataSource.GetAllC
                 lastUpdate,
                 lastUpdate
         );
-    }
-
-    private RecipeCourseEntity convertModelToPrimitive(RecipeCourseModel model) {
-        return new RecipeCourseEntity(
-                model.getId(),
-                model.getCourse().getCourseNo(),
-                model.getRecipeId(),
-                model.getCreateDate(),
-                model.getLasUpdate());
     }
 
     private void sendResponse() {
@@ -229,8 +210,8 @@ public class RecipeCourse extends UseCase implements PrimitiveDataSource.GetAllC
         }
     }
 
-    private RecipeComponentMetadata getMetadata() {
-        return new RecipeComponentMetadata.Builder().
+    private UseCaseMetadata getMetadata() {
+        return new UseCaseMetadata.Builder().
                 setState(getComponentState()).
                 setFailReasons(getFailReasons()).
                 setCreateDate(createDate).

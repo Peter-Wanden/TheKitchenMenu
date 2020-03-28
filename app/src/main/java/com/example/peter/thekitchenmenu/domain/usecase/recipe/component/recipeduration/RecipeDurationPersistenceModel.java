@@ -28,7 +28,7 @@ public final class RecipeDurationPersistenceModel implements PersistenceModel {
 
     @Override
     @Nonnull
-    public String getId() {
+    public String getDataId() {
         return id;
     }
 
@@ -53,11 +53,11 @@ public final class RecipeDurationPersistenceModel implements PersistenceModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RecipeDurationPersistenceModel that = (RecipeDurationPersistenceModel) o;
-        return prepTime == that.prepTime &&
+        return id.equals(that.id) &&
+                prepTime == that.prepTime &&
                 cookTime == that.cookTime &&
                 createDate == that.createDate &&
-                lastUpdate == that.lastUpdate &&
-                id.equals(that.id);
+                lastUpdate == that.lastUpdate;
     }
 
     @Override
@@ -93,7 +93,7 @@ public final class RecipeDurationPersistenceModel implements PersistenceModel {
 
         public static Builder basedOnPersistenceModel(@Nonnull RecipeDurationPersistenceModel model) {
             return new Builder().
-                    setId(model.getId()).
+                    setId(model.getDataId()).
                     setPrepTime(model.getPrepTime()).
                     setCookTime(model.getCookTime()).
                     setCreateDate(model.getCreateDate()).

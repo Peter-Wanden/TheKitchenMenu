@@ -31,7 +31,7 @@ public final class RecipeCourseModel implements PersistenceModel {
 
     @Nonnull
     @Override
-    public String getId() {
+    public String getDataId() {
         return id;
     }
 

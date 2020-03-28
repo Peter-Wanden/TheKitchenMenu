@@ -1,20 +1,20 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe;
 
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipeRequestAbstract;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainRequest;
 
 import javax.annotation.Nonnull;
 
 
-public final class RecipeRequest extends RecipeRequestAbstract {
+public final class RecipeRequest extends UseCaseDomainRequest {
 
     public RecipeRequest(@Nonnull String id) {
-        this.id = id;
+        this.dataId = id;
     }
 
     @Override
     public String toString() {
         return "RecipeRequest{" +
-                "id='" + id + '\'' +
+                "id='" + dataId + '\'' +
                 '}';
     }
 }

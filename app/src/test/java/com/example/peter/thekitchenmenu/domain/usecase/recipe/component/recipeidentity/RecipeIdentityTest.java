@@ -301,7 +301,7 @@ public class RecipeIdentityTest {
                 build();
 
         RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
-                setId(INVALID_NEW_EMPTY.getId()).
+                setDataId(INVALID_NEW_EMPTY.getId()).
                 setModel(requestModel).
                 build();
         // Act
@@ -498,7 +498,7 @@ public class RecipeIdentityTest {
         String recipeId = INVALID_EXISTING_TITLE_TOO_SHORT_DESCRIPTION_TOO_LONG.getId();
         // Act
         RecipeIdentityRequest request = new RecipeIdentityRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 setModel(getDefaultModel()).
                 build();
 
@@ -652,7 +652,7 @@ public class RecipeIdentityTest {
     private RecipeIdentityRequest getRequest(String recipeId,
                                              RecipeIdentityRequest.Model model) {
         return new RecipeIdentityRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 setModel(model).
                 build();
     }

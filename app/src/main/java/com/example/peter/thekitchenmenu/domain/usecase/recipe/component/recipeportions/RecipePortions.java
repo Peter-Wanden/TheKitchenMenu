@@ -1,12 +1,11 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeportions;
 
-import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipePortionsEntity;
-import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
+import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.RecipeComponentMetadata;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
@@ -17,7 +16,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 public class RecipePortions extends UseCase
-        implements PrimitiveDataSource.GetEntityCallback<RecipePortionsEntity> {
+        implements DataSource.GetModelCallback<RecipePortionsPersistenceModel> {
 
     private static final String TAG = "tkm-" + RecipePortions.class.getSimpleName() + ": ";
 
@@ -67,11 +66,12 @@ public class RecipePortions extends UseCase
     @Override
     protected <Q extends Request> void execute(Q request) {
         RecipePortionsRequest portionsRequest = (RecipePortionsRequest) request;
-        requestModel = portionsRequest.getModel();
         System.out.println(TAG + portionsRequest);
 
-        if (isNewRequest(portionsRequest.getId())) {
-            id = portionsRequest.getId();
+        requestModel = portionsRequest.getModel();
+
+        if (isNewRequest(portionsRequest.getDataId())) {
+            id = portionsRequest.getDataId();
             loadData(id);
         } else {
             processChanges();
@@ -87,25 +87,14 @@ public class RecipePortions extends UseCase
     }
 
     @Override
-    public void onEntityLoaded(RecipePortionsEntity entity) {
-        persistenceModel = convertEntityToPersistenceModel(entity);
+    public void onModelLoaded(RecipePortionsPersistenceModel model) {
+        persistenceModel = model;
         validateData();
         buildResponse();
     }
 
-    private RecipePortionsPersistenceModel convertEntityToPersistenceModel(RecipePortionsEntity entity) {
-        return new RecipePortionsPersistenceModel.Builder().
-                setId(entity.getId()).
-                setRecipeId(entity.getRecipeId()).
-                setServings(entity.getServings()).
-                setSittings(entity.getSittings()).
-                setCreateDate(entity.getCreateDate()).
-                setLastUpdate(entity.getLastUpdate()).
-                build();
-    }
-
     @Override
-    public void onDataUnavailable() {
+    public void onModelUnavailable() {
         persistenceModel = createNewPersistenceModel();
         failReasons.add(CommonFailReason.DATA_UNAVAILABLE);
 
@@ -169,8 +158,8 @@ public class RecipePortions extends UseCase
         sendResponse(response);
     }
 
-    private RecipeComponentMetadata getMetadata() {
-        return new RecipeComponentMetadata.Builder().
+    private UseCaseMetadata getMetadata() {
+        return new UseCaseMetadata.Builder().
                 setState(getComponentState()).
                 setFailReasons(new ArrayList<>(failReasons)).
                 setCreateDate(persistenceModel.getCreateDate()). // TODO - These times may be wrong
@@ -246,17 +235,6 @@ public class RecipePortions extends UseCase
     }
 
     private void save(RecipePortionsPersistenceModel model) {
-        repository.save(convertModelToEntity(model));
-    }
-
-    private RecipePortionsEntity convertModelToEntity(RecipePortionsPersistenceModel model) {
-        return new RecipePortionsEntity(
-                model.getId(),
-                model.getRecipeId(),
-                model.getServings(),
-                model.getSittings(),
-                model.getCreateDate(),
-                model.getLastUpdate()
-        );
+        repository.save(model);
     }
 }

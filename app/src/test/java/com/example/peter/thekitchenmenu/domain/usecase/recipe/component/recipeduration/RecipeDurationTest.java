@@ -95,7 +95,7 @@ public class RecipeDurationTest {
                 setPrepHours(MAX_PREP_TIME / 60 + 1).
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 setModel(invalidModel).
                 build();
 
@@ -115,7 +115,7 @@ public class RecipeDurationTest {
                 setPrepHours(MAX_PREP_TIME / 60 + 1).
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 setModel(invalidModel).
                 build();
         // Act
@@ -135,7 +135,7 @@ public class RecipeDurationTest {
                 setPrepHours(MAX_PREP_TIME / 60 + 1).
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 setModel(invalidModel).
                 build();
         // Act
@@ -161,7 +161,7 @@ public class RecipeDurationTest {
                 setPrepHours(VALID_NEW_PREP_TIME_VALID.getPrepTime() / 60).
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 setModel(validModel).
                 build();
 
@@ -182,7 +182,7 @@ public class RecipeDurationTest {
                 setPrepHours(VALID_NEW_PREP_TIME_VALID.getPrepTime() / 60).
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 setModel(validModel).
                 build();
 
@@ -206,7 +206,7 @@ public class RecipeDurationTest {
                 setPrepHours(VALID_NEW_PREP_TIME_VALID.getPrepTime() / 60).
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 setModel(validModel).
                 build();
 
@@ -226,7 +226,7 @@ public class RecipeDurationTest {
                 setPrepMinutes(MAX_PREP_TIME + 1).
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 setModel(invalidModel).
                 build();
         // Act
@@ -245,7 +245,7 @@ public class RecipeDurationTest {
                 setPrepMinutes(MAX_PREP_TIME + 1).
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 setModel(invalidModel).
                 build();
         // Act
@@ -265,7 +265,7 @@ public class RecipeDurationTest {
                 setPrepMinutes(MAX_PREP_TIME + 1).
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 setModel(invalidModel).
                 build();
         // Act
@@ -286,7 +286,7 @@ public class RecipeDurationTest {
                 setPrepMinutes(VALID_NEW_PREP_TIME_VALID.getPrepTime()).
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 setModel(validModel).
                 build();
         // Act
@@ -306,7 +306,7 @@ public class RecipeDurationTest {
                 setPrepMinutes(VALID_NEW_PREP_TIME_VALID.getPrepTime()).
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 setModel(validModel).
                 build();
         // Act
@@ -331,7 +331,7 @@ public class RecipeDurationTest {
                 setPrepMinutes(VALID_NEW_PREP_TIME_VALID.getPrepTime()).
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 setModel(validModel).
                 build();
         // Act
@@ -350,7 +350,7 @@ public class RecipeDurationTest {
                 setCookHours(MAX_COOK_TIME / 60 + 1).
                 build();
         RecipeDurationRequest invalidRequest = new RecipeDurationRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 setModel(invalidModel).
                 build();
         // Act
@@ -369,7 +369,7 @@ public class RecipeDurationTest {
                 setCookHours(MAX_COOK_TIME / 60 + 1).
                 build();
         RecipeDurationRequest invalidRequest = new RecipeDurationRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 setModel(invalidModel).
                 build();
         // Act
@@ -389,7 +389,7 @@ public class RecipeDurationTest {
                 setCookHours(MAX_COOK_TIME / 60 + 1).
                 build();
         RecipeDurationRequest invalidRequest = new RecipeDurationRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 setModel(invalidModel).
                 build();
         // Act
@@ -414,7 +414,7 @@ public class RecipeDurationTest {
                 setCookHours(VALID_NEW_COOK_TIME_VALID.getCookTime() / 60).
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 setModel(validModel).
                 build();
         // Act
@@ -433,7 +433,7 @@ public class RecipeDurationTest {
                 setCookHours(VALID_NEW_COOK_TIME_VALID.getCookTime() / 60).
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 setModel(validModel).
                 build();
         // Act
@@ -453,7 +453,7 @@ public class RecipeDurationTest {
                 setCookHours(VALID_NEW_COOK_TIME_VALID.getCookTime() / 60).
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 setModel(validModel).
                 build();
         // Act
@@ -473,7 +473,7 @@ public class RecipeDurationTest {
                 setCookMinutes(MAX_COOK_TIME + 1).
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 setModel(invalidModel).
                 build();
         // Act
@@ -492,7 +492,7 @@ public class RecipeDurationTest {
                 setCookMinutes(MAX_COOK_TIME + 1).
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 setModel(invalidModel).
                 build();
         // Act
@@ -513,7 +513,7 @@ public class RecipeDurationTest {
                 setCookMinutes(MAX_COOK_TIME + 1).
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 setModel(invalidModel).
                 build();
         // Act
@@ -540,7 +540,7 @@ public class RecipeDurationTest {
                 setCookMinutes(MAX_COOK_TIME)
                 .build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 setModel(model).
                 build();
         // Act
@@ -561,7 +561,7 @@ public class RecipeDurationTest {
                 setCookMinutes(VALID_NEW_COOK_TIME_VALID.getCookTime())
                 .build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 setModel(model).
                 build();
         // Act
@@ -582,7 +582,7 @@ public class RecipeDurationTest {
                 setCookMinutes(VALID_NEW_COOK_TIME_VALID.getCookTime())
                 .build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 setModel(model).
                 build();
         // Act
@@ -607,7 +607,7 @@ public class RecipeDurationTest {
                 setCookHours(MAX_COOK_TIME / 60).setCookMinutes(1)
                 .build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 setModel(model).
                 build();
         // Act
@@ -636,7 +636,7 @@ public class RecipeDurationTest {
                 setCookHours(MAX_COOK_TIME / 60 - 1).setCookMinutes(59)
                 .build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
-                setId(recipeId).
+                setDataId(recipeId).
                 setModel(model).
                 build();
         // Act
@@ -697,7 +697,7 @@ public class RecipeDurationTest {
     private void setupForNewDuration(String recipeId) {
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                 getDefault().
-                setId(recipeId).
+                setDataId(recipeId).
                 build();
 
         handler.execute(SUT, request, getUseCaseCallback());
@@ -708,7 +708,7 @@ public class RecipeDurationTest {
         // Arrange
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
                 getDefault().
-                setId(recipeId).build();
+                setDataId(recipeId).build();
         // Act
         handler.execute(SUT, request, getUseCaseCallback());
         verify(repoMock).getById(eq(recipeId), repoCallback.capture());
