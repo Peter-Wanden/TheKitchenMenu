@@ -21,8 +21,8 @@ public class IngredientRemoteDataSource implements PrimitiveDataSource<Ingredien
     }
 
     @Override
-    public void getById(@Nonnull String id,
-                        @Nonnull GetEntityCallback<IngredientEntity> callback) {
+    public void getByDataId(@Nonnull String dataId,
+                            @Nonnull GetEntityCallback<IngredientEntity> callback) {
         callback.onDataUnavailable();
     }
 
@@ -43,7 +43,7 @@ public class IngredientRemoteDataSource implements PrimitiveDataSource<Ingredien
     }
 
     @Override
-    public void deleteById(@Nonnull String id) {
+    public void deleteByDataId(@Nonnull String dataId) {
 
     }
 }

@@ -1,7 +1,6 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course;
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
-import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.repository.recipe.DataSourceRecipeCourse;
 
 import java.util.List;
@@ -39,7 +38,7 @@ public class RecipeCourseLocalDataSource implements DataSourceRecipeCourse {
 
     @Override
     public void getAllByCourseNo(int courseNo,
-                                 @Nonnull GetAllCallback<RecipeCourseEntity> c) {
+                                 @Nonnull GetAllDomainModelsCallback<RecipeCourseEntity> c) {
         Runnable r = () -> {
             final List<RecipeCourseEntity> e = dao.getAllByCourseNo(courseNo);
             executors.mainThread().execute(() -> {
@@ -54,7 +53,7 @@ public class RecipeCourseLocalDataSource implements DataSourceRecipeCourse {
 
     @Override
     public void getAllByRecipeId(@Nonnull String recipeId,
-                                 @Nonnull GetAllCallback<RecipeCourseEntity> c) {
+                                 @Nonnull GetAllDomainModelsCallback<RecipeCourseEntity> c) {
         Runnable r = () -> {
             final List<RecipeCourseEntity> e = dao.getAllByRecipeId(recipeId);
             executors.mainThread().execute(() -> {
@@ -68,7 +67,7 @@ public class RecipeCourseLocalDataSource implements DataSourceRecipeCourse {
     }
 
     @Override
-    public void getAll(@Nonnull GetAllCallback<RecipeCourseEntity> c) {
+    public void getAll(@Nonnull GetAllDomainModelsCallback<RecipeCourseEntity> c) {
         Runnable r = () -> {
             final List<RecipeCourseEntity> e = dao.getAll();
             executors.mainThread().execute(() -> {

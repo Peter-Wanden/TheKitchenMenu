@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.data.repository.source.remote.recipe;
 
-import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeComponentStateEntity;
-import com.example.peter.thekitchenmenu.data.repository.recipe.DataSourceRecipeComponentState;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.componentstate.RecipeComponentStateEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.componentstate.DataSourceRecipeComponentState;
 
 import javax.annotation.Nonnull;
 
@@ -34,7 +34,7 @@ public class RecipeComponentStateRemoteDataSource implements DataSourceRecipeCom
     }
 
     @Override
-    public void getById(@Nonnull String id, @Nonnull GetEntityCallback<RecipeComponentStateEntity> callback) {
+    public void getByDataId(@Nonnull String dataId, @Nonnull GetEntityCallback<RecipeComponentStateEntity> callback) {
         callback.onDataUnavailable();
     }
 
@@ -54,7 +54,7 @@ public class RecipeComponentStateRemoteDataSource implements DataSourceRecipeCom
     }
 
     @Override
-    public void deleteById(@Nonnull String id) {
+    public void deleteByDataId(@Nonnull String dataId) {
 
     }
 }

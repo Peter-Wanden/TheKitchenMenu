@@ -8,8 +8,8 @@ import javax.annotation.Nonnull;
 public interface DataSourceRecipeCourse extends DataSource<RecipeCourseModel> {
 
     void getAllByCourseNo(int courseNo,
-                          @Nonnull GetAllCallback<RecipeCourseModel> callback);
+                          @Nonnull GetAllDomainModelsCallback<RecipeCourseModel> callback);
 
     void getAllByRecipeId(@Nonnull String recipeId,
-                          @Nonnull GetAllCallback<RecipeCourseModel> callback);
+                          @Nonnull GetAllDomainModelsCallback<RecipeCourseModel> callback);
 }

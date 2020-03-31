@@ -24,7 +24,7 @@ public class IngredientViewerViewModel
     }
 
     private void getIngredient(String ingredientId) {
-        repositoryIngredient.getById(ingredientId, this);
+        repositoryIngredient.getByDataId(ingredientId, this);
     }
 
     @Override

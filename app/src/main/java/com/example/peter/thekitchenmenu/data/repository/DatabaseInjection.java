@@ -12,11 +12,11 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeF
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIngredient;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeComponentState;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeMetadata;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeMetadataModel;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.IngredientLocalDataSource;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.RecipeComponentStateLocalDataSource;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.RecipeFailReasonsLocalDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.componentstate.RecipeComponentStateLocalDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.failreason.RecipeFailReasonsLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.ingredient.RecipeIngredientLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.RecipePortionsLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.product.datasource.ProductLocalDataSource;
@@ -69,12 +69,12 @@ public class DatabaseInjection {
         );
     }
 
-    public static RepositoryRecipeMetadata provideRecipeMetadataDataSource(
+    public static RepositoryRecipeMetadataModel provideRecipeMetadataDataSource(
             @Nonnull Context context) {
 
         TKMDatabase database = TKMDatabase.getInstance(context, new AppExecutors());
 
-        return RepositoryRecipeMetadata.getInstance(
+        return RepositoryRecipeMetadataModel.getInstance(
                 RecipeMetadataRemoteDataSource.getInstance(),
                 RecipeMetadataLocalDataSource.getInstance(
                         new AppExecutors(),

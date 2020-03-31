@@ -8,7 +8,7 @@ public final class FavoriteRecipeEntity implements PrimitiveModel {
 
     @Nonnull
     @Override
-    public String getId() {
+    public String getDataId() {
         return "";
     }
 }

@@ -1,15 +1,22 @@
 package com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus;
 
+import android.annotation.SuppressLint;
+
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.IngredientEntity;
-import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
+import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
+import com.example.peter.thekitchenmenu.domain.model.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasure;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
+import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientPersistenceModel;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ConversionFactorStatus extends UseCase
-        implements PrimitiveDataSource.GetEntityCallback<IngredientEntity> {
+        implements DataSource.GetDomainModelCallback<IngredientPersistenceModel> {
 
     private static final String TAG = "tkm-" + ConversionFactorStatus.class.getSimpleName() + ": ";
 
@@ -21,8 +28,38 @@ public class ConversionFactorStatus extends UseCase
         ENABLED_EDITABLE_SET
     }
 
+    public enum FailReason implements FailReasons {
+        DISABLED(101),
+        ENABLED_UNEDITABLE(102),
+        ENABLED_EDITABLE_UNSET(103),
+        ENABLED_EDITABLE_SET(104);
+
+        private final int id;
+
+        @SuppressLint("UseSparseArrays")
+        private static Map<Integer, FailReason> options = new HashMap<>();
+
+        FailReason(int id) {
+            this.id = id;
+        }
+
+        static {
+            for (FailReason fr : FailReason.values())
+                options.put(fr.id, fr);
+        }
+
+        public static FailReason getFromId(int id) {
+            return options.get(id);
+        }
+
+        public int getId() {
+            return id;
+        }
+    }
+
     private RepositoryIngredient repository;
     private IngredientEntity ingredientEntity;
+    private IngredientPersistenceModel persistenceModel;
 
     public ConversionFactorStatus(RepositoryIngredient repository) {
         this.repository = repository;
@@ -56,17 +93,17 @@ public class ConversionFactorStatus extends UseCase
     }
 
     private void loadIngredient(String ingredientId) {
-        repository.getById(ingredientId, this);
+        repository.getByDataId(ingredientId, this);
     }
 
     @Override
-    public void onEntityLoaded(IngredientEntity entity) {
-        this.ingredientEntity = entity;
+    public void onModelLoaded(IngredientPersistenceModel model) {
+        persistenceModel = model;
         checkEditableStatus();
     }
 
     @Override
-    public void onDataUnavailable() {
+    public void onModelUnavailable() {
         returnDataNotAvailable();
     }
 

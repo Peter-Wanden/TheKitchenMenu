@@ -1,5 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeidentity;
 
+import android.annotation.SuppressLint;
+
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
@@ -14,7 +16,9 @@ import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValida
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
 
@@ -22,15 +26,37 @@ import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.Re
 import static com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator.*;
 
 public class RecipeIdentity extends UseCase
-        implements DataSource.GetModelCallback<RecipeIdentityPersistenceModel> {
+        implements DataSource.GetDomainModelCallback<RecipeIdentityPersistenceModel> {
 
     private static final String TAG = "tkm-" + RecipeIdentity.class.getSimpleName() + ": ";
 
     public enum FailReason implements FailReasons {
-        TITLE_TOO_SHORT,
-        TITLE_TOO_LONG,
-        DESCRIPTION_TOO_SHORT,
-        DESCRIPTION_TOO_LONG
+        TITLE_TOO_SHORT(300),
+        TITLE_TOO_LONG(301),
+        DESCRIPTION_TOO_SHORT(302),
+        DESCRIPTION_TOO_LONG(303);
+
+        private final int id;
+
+        @SuppressLint("UseSparseArrays")
+        private static Map<Integer, FailReason> options = new HashMap<>();
+
+        FailReason(int id) {
+            this.id = id;
+        }
+
+        static {
+            for (FailReason s : FailReason.values())
+                options.put(s.id, s);
+        }
+
+        public static FailReason getById(int id) {
+            return options.get(id);
+        }
+
+        public int getId() {
+            return id;
+        }
     }
 
     private static final TextType TITLE_TEXT_TYPE = TextType.SHORT_TEXT;
@@ -85,7 +111,7 @@ public class RecipeIdentity extends UseCase
     }
 
     private void loadData(String recipeId) {
-        repository.getById(recipeId, this);
+        repository.getByDataId(recipeId, this);
     }
 
     @Override

@@ -1,8 +1,8 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipecourse;
 
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
-import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeCourseEntity;
-import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeMetadataEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.RecipeCourseEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.parent.RecipeMetadataParentEntity;
 import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeCourse;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
@@ -32,8 +32,8 @@ public class RecipeCourseTest {
 //    private static final String TAG = "tkm-" + RecipeCourseTest.class.getSimpleName() + ": ";
 
     // region constants ----------------------------------------------------------------------------
-    private RecipeMetadataEntity VALID_EXISTING_RECIPE_ENTITY = getValidExisting();
-    private String EXISTING_RECIPE_ID = VALID_EXISTING_RECIPE_ENTITY.getId();
+    private RecipeMetadataParentEntity VALID_EXISTING_RECIPE_ENTITY = getValidExisting();
+    private String EXISTING_RECIPE_ID = VALID_EXISTING_RECIPE_ENTITY.getDataId();
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
@@ -126,7 +126,7 @@ public class RecipeCourseTest {
         verify(repoCourseMock).save(entityCaptor.capture());
         assertEquals(Course.COURSE_ONE.getCourseNo(), entityCaptor.getValue().getCourseNo());
         assertEquals(time, entityCaptor.getValue().getCreateDate());
-        assertEquals(id, entityCaptor.getValue().getId());
+        assertEquals(id, entityCaptor.getValue().getDataId());
         assertEquals(com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.ComponentState.VALID_CHANGED, onSuccessResponse.getMetadata().getState());
     }
 

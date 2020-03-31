@@ -5,7 +5,7 @@ import android.content.res.Resources;
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.RecipeIngredientEntity;
-import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipePortionsEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIngredient;
@@ -189,7 +189,7 @@ public class RecipeIngredientCalculatorViewModelTest {
         String ingredientId = REQUEST_EMPTY_FOUR_PORTIONS.getIngredientId();
         double conversionFactor = REQUEST_EMPTY_FOUR_PORTIONS.getModel().getConversionFactor();
         // UseCasePortion interactions
-        when(idProviderMock.getUId()).thenReturn(QUANTITY_NEW_INVALID.getId());
+        when(idProviderMock.getUId()).thenReturn(QUANTITY_NEW_INVALID.getDataId());
         when(numberFormatterMock.formatDecimalForDisplay(eq(conversionFactor))).
                 thenReturn(String.valueOf(conversionFactor));
         // Act
@@ -210,7 +210,7 @@ public class RecipeIngredientCalculatorViewModelTest {
         MeasurementModel model = RESPONSE_EMPTY_FOUR_PORTIONS.getModel();
         when(numberFormatterMock.formatDecimalForDisplay(eq(model.getConversionFactor()))).
                 thenReturn(String.valueOf(model.getConversionFactor()));
-        when(idProviderMock.getUId()).thenReturn(QUANTITY_NEW_INVALID.getId());
+        when(idProviderMock.getUId()).thenReturn(QUANTITY_NEW_INVALID.getDataId());
         // Act
         SUT.start(recipeId, ingredientId);
         // Assert
@@ -229,7 +229,7 @@ public class RecipeIngredientCalculatorViewModelTest {
         MeasurementModel model = REQUEST_INVALID_TOTAL_UNIT_ONE.getModel();
         String recipeId = REQUEST_INVALID_TOTAL_UNIT_ONE.getRecipeId();
         String ingredientId = REQUEST_INVALID_TOTAL_UNIT_ONE.getIngredientId();
-        when(idProviderMock.getUId()).thenReturn(QUANTITY_NEW_INVALID.getId());
+        when(idProviderMock.getUId()).thenReturn(QUANTITY_NEW_INVALID.getDataId());
 
         SUT.start(recipeId, ingredientId);
         verifyRepoIngredientCalledReturnNewValidNameValidDescription();
@@ -253,7 +253,7 @@ public class RecipeIngredientCalculatorViewModelTest {
         when(numberFormatterMock.formatDecimalForDisplay(eq(expectedUnitOneDecimal))).
                 thenReturn(String.valueOf(expectedUnitOneDecimal));
 
-        when(idProviderMock.getUId()).thenReturn(QUANTITY_NEW_INVALID.getId());
+        when(idProviderMock.getUId()).thenReturn(QUANTITY_NEW_INVALID.getDataId());
 
         SUT.start(recipeId, ingredientId);
         verifyRepoIngredientCalledReturnNewValidNameValidDescription();
@@ -271,7 +271,7 @@ public class RecipeIngredientCalculatorViewModelTest {
         MeasurementModel model = REQUEST_INVALID_UNIT_TWO.getModel();
         String recipeId = REQUEST_INVALID_UNIT_TWO.getRecipeId();
         String ingredientId = REQUEST_INVALID_UNIT_TWO.getIngredientId();
-        when(idProviderMock.getUId()).thenReturn(QUANTITY_NEW_INVALID.getId());
+        when(idProviderMock.getUId()).thenReturn(QUANTITY_NEW_INVALID.getDataId());
         SUT.start(recipeId, ingredientId);
         verifyRepoIngredientCalledReturnNewValidNameValidDescription();
         verifyRepoPortionsCalledReturnNewValidFourPortions();
@@ -296,7 +296,7 @@ public class RecipeIngredientCalculatorViewModelTest {
         when(numberFormatterMock.formatIntegerForDisplay(eq(expectedUnitTwoInt))).
                 thenReturn(String.valueOf(expectedUnitTwoInt));
 
-        when(idProviderMock.getUId()).thenReturn(QUANTITY_NEW_VALID_METRIC.getId());
+        when(idProviderMock.getUId()).thenReturn(QUANTITY_NEW_VALID_METRIC.getDataId());
 
         SUT.start(recipeId, ingredientId);
         verifyRepoIngredientCalledReturnNewValidNameValidDescription();
@@ -316,7 +316,7 @@ public class RecipeIngredientCalculatorViewModelTest {
 
         MeasurementSubtype postedSubtype = REQUEST_UNIT_OF_MEASURE_IMPERIAL_SPOON.getModel().
                 getSubtype();
-        when(idProviderMock.getUId()).thenReturn(QUANTITY_NEW_VALID_METRIC.getId());
+        when(idProviderMock.getUId()).thenReturn(QUANTITY_NEW_VALID_METRIC.getDataId());
         SUT.start(recipeId, ingredientId);
         verifyRepoIngredientCalledReturnNewValidNameValidDescription();
         verifyRepoPortionsCalledReturnNewValidFourPortions();
@@ -332,7 +332,7 @@ public class RecipeIngredientCalculatorViewModelTest {
         // Arrange
         String recipeId = REQUEST_INVALID_CONVERSION_FACTOR.getRecipeId();
         String ingredientId = REQUEST_INVALID_CONVERSION_FACTOR.getIngredientId();
-        when(idProviderMock.getUId()).thenReturn(QUANTITY_NEW_VALID_METRIC.getId());
+        when(idProviderMock.getUId()).thenReturn(QUANTITY_NEW_VALID_METRIC.getDataId());
         double conversionFactorDecimal = REQUEST_INVALID_CONVERSION_FACTOR.getModel().
                 getConversionFactor();
         String conversionFactor = String.valueOf(conversionFactorDecimal);
@@ -351,7 +351,7 @@ public class RecipeIngredientCalculatorViewModelTest {
         // Arrange
         String recipeId = REQUEST_VALID_CONVERSION_FACTOR.getRecipeId();
         String ingredientId = REQUEST_VALID_CONVERSION_FACTOR.getIngredientId();
-        when(idProviderMock.getUId()).thenReturn(QUANTITY_NEW_VALID_METRIC.getId());
+        when(idProviderMock.getUId()).thenReturn(QUANTITY_NEW_VALID_METRIC.getDataId());
         double invalidConversionFactorDecimal = REQUEST_VALID_CONVERSION_FACTOR.getModel().
                 getConversionFactor();
         String conversionFactor = String.valueOf(invalidConversionFactorDecimal);
@@ -403,8 +403,8 @@ public class RecipeIngredientCalculatorViewModelTest {
     }
 
     private void verifyRepoIngredientCalledReturnNewValidNameValidDescription() {
-        verify(repoIngredientMock).getById(
-                eq(INGREDIENT_NEW_VALID_NAME_DESCRIPTION.getId()),
+        verify(repoIngredientMock).getByDataId(
+                eq(INGREDIENT_NEW_VALID_NAME_DESCRIPTION.getDataId()),
                 getIngredientCallbackCaptor.capture());
         getIngredientCallbackCaptor.getValue().onEntityLoaded(
                 INGREDIENT_NEW_VALID_NAME_DESCRIPTION);
@@ -418,16 +418,16 @@ public class RecipeIngredientCalculatorViewModelTest {
     }
 
     private void verifyRepoRecipeIngredientCalledReturnExistingValidImperialSpoon() {
-        verify(repoRecipeIngredientMock).getById(
-                eq(QUANTITY_EXISTING_VALID_IMPERIAL_SPOON.getId()),
+        verify(repoRecipeIngredientMock).getByDataId(
+                eq(QUANTITY_EXISTING_VALID_IMPERIAL_SPOON.getDataId()),
                 getRecipeIngredientCallbackCaptor.capture());
         getRecipeIngredientCallbackCaptor.getValue().onEntityLoaded(
                 QUANTITY_EXISTING_VALID_IMPERIAL_SPOON);
     }
 
     private void verifyRepoIngredientCalledAndReturnExistingValidNameDescriptionNoConversionFactor() {
-        verify(repoIngredientMock).getById(
-                eq(INGREDIENT_EXISTING_VALID_NAME_DESCRIPTION.getId()),
+        verify(repoIngredientMock).getByDataId(
+                eq(INGREDIENT_EXISTING_VALID_NAME_DESCRIPTION.getDataId()),
                 getIngredientCallbackCaptor.capture());
         getIngredientCallbackCaptor.getValue().onEntityLoaded(
                 INGREDIENT_EXISTING_VALID_NAME_DESCRIPTION);

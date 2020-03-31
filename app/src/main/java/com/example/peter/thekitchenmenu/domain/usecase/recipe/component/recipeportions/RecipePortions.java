@@ -1,5 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeportions;
 
+import android.annotation.SuppressLint;
+
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
@@ -11,20 +13,44 @@ import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
 
 public class RecipePortions extends UseCase
-        implements DataSource.GetModelCallback<RecipePortionsPersistenceModel> {
+        implements DataSource.GetDomainModelCallback<RecipePortionsPersistenceModel> {
 
     private static final String TAG = "tkm-" + RecipePortions.class.getSimpleName() + ": ";
 
     public enum FailReason implements FailReasons {
-        SERVINGS_TOO_LOW,
-        SERVINGS_TOO_HIGH,
-        SITTINGS_TOO_LOW,
-        SITTINGS_TOO_HIGH
+        SERVINGS_TOO_LOW(350),
+        SERVINGS_TOO_HIGH(351),
+        SITTINGS_TOO_LOW(352),
+        SITTINGS_TOO_HIGH(353);
+
+        private final int id;
+
+        @SuppressLint("UseSparseArrays")
+        private static Map<Integer, FailReason> options = new HashMap<>();
+
+        FailReason(int id) {
+            this.id = id;
+        }
+
+        static {
+            for (FailReason s : FailReason.values())
+                options.put(s.id, s);
+        }
+
+        public static FailReason getById(int id) {
+            return options.get(id);
+        }
+
+        public int getId() {
+            return id;
+        }
     }
 
     static final int MIN_SERVINGS = 1;

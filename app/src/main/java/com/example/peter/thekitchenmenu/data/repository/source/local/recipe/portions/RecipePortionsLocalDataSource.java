@@ -1,7 +1,6 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions;
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
-import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.recipe.DataSourceRecipePortions;
 
 import java.util.List;
@@ -49,7 +48,7 @@ public class RecipePortionsLocalDataSource implements DataSourceRecipePortions {
     }
 
     @Override
-    public void getAll(@Nonnull GetAllCallback<RecipePortionsEntity> callback) {
+    public void getAll(@Nonnull GetAllDomainModelsCallback<RecipePortionsEntity> callback) {
         Runnable runnable = () -> {
             final List<RecipePortionsEntity> entities = dao.getAll();
             appExecutors.mainThread().execute(() -> {

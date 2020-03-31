@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 
 public class RecipeCourse
         extends UseCase
-        implements DataSource.GetAllCallback<RecipeCourseModel> {
+        implements DataSource.GetAllDomainModelsCallback<RecipeCourseModel> {
 
     private static final String TAG = "tkm-" + RecipeCourse.class.getSimpleName() + ": ";
 
@@ -179,7 +179,7 @@ public class RecipeCourse
     private void subtractCourse(Course course) {
         isChanged = true;
         lastUpdate = timeProvider.getCurrentTimeInMills();
-        repository.deleteById(oldCourseMap.get(course).getDataId());
+        repository.deleteByDataId(oldCourseMap.get(course).getDataId());
     }
 
     private RecipeCourseModel createNewCourseModel(Course course) {

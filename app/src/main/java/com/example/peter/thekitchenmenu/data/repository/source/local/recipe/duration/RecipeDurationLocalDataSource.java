@@ -1,7 +1,6 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration;
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
-import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeDurationEntity;
 import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
 
 import java.util.List;
@@ -46,10 +45,10 @@ public class RecipeDurationLocalDataSource implements PrimitiveDataSource<Recipe
     }
 
     @Override
-    public void getById(@Nonnull String id,
-                        @Nonnull GetEntityCallback<RecipeDurationEntity> callback) {
+    public void getByDataId(@Nonnull String dataId,
+                            @Nonnull GetEntityCallback<RecipeDurationEntity> callback) {
         Runnable runnable = () -> {
-            final RecipeDurationEntity entity = dao.getById(id);
+            final RecipeDurationEntity entity = dao.getById(dataId);
             appExecutors.mainThread().execute(() -> {
                 if (entity != null)
                     callback.onEntityLoaded(entity);
@@ -79,8 +78,8 @@ public class RecipeDurationLocalDataSource implements PrimitiveDataSource<Recipe
     }
 
     @Override
-    public void deleteById(@Nonnull String id) {
-        Runnable runnable = () -> dao.deleteById(id);
+    public void deleteByDataId(@Nonnull String dataId) {
+        Runnable runnable = () -> dao.deleteById(dataId);
         appExecutors.diskIO().execute(runnable);
     }
 }

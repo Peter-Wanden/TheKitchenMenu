@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredientl
 
 import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.RecipeIngredientEntity;
-import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipePortionsEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIngredient;
@@ -100,10 +100,10 @@ public class RecipeIngredientList extends UseCase {
     }
 
     private void getIngredient(String ingredientId) {
-        repoIngredient.getById(ingredientId, new PrimitiveDataSource.GetEntityCallback<IngredientEntity>() {
+        repoIngredient.getByDataId(ingredientId, new PrimitiveDataSource.GetEntityCallback<IngredientEntity>() {
             @Override
             public void onEntityLoaded(IngredientEntity entity) {
-                ingredients.put(entity.getId(), entity);
+                ingredients.put(entity.getDataId(), entity);
                 createResponseModels();
             }
 
@@ -125,7 +125,7 @@ public class RecipeIngredientList extends UseCase {
                 IngredientEntity ingredient = ingredients.get(ingredientId);
 
                 RecipeIngredientListItemModel listItemModel = new RecipeIngredientListItemModel(
-                        recipeIngredient.getId(),
+                        recipeIngredient.getDataId(),
                         ingredientId,
                         ingredient.getName(),
                         ingredient.getDescription(),

@@ -51,11 +51,11 @@ public class FavoriteProductsLocalDataSource implements DataSourceFavoriteProduc
     }
 
     @Override
-    public void getById(@Nonnull String favoriteProductId,
-                        @Nonnull GetEntityCallback<FavoriteProductEntity> callback) {
+    public void getByDataId(@Nonnull String dataId,
+                            @Nonnull GetEntityCallback<FavoriteProductEntity> callback) {
         Runnable runnable = () -> {
             final FavoriteProductEntity favoriteProduct =
-                    favoriteProductEntityDao.getById(favoriteProductId);
+                    favoriteProductEntityDao.getById(dataId);
             appExecutors.mainThread().execute(() -> {
                 if (favoriteProduct != null) {
                     callback.onEntityLoaded(favoriteProduct);
@@ -101,9 +101,9 @@ public class FavoriteProductsLocalDataSource implements DataSourceFavoriteProduc
     }
 
     @Override
-    public void deleteById(@Nonnull String favoriteProductId) {
+    public void deleteByDataId(@Nonnull String dataId) {
         Runnable runnable = () ->
-                favoriteProductEntityDao.deleteByFavoriteProductId(favoriteProductId);
+                favoriteProductEntityDao.deleteByFavoriteProductId(dataId);
         appExecutors.diskIO().execute(runnable);
     }
 }

@@ -2,7 +2,6 @@ package com.example.peter.thekitchenmenu.ui.catalog.product;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -118,7 +117,7 @@ public class ProductCatalogActivity
     public void viewProduct(ProductModel productModel) {
         Intent intent = new Intent(this, ProductViewerActivity.class);
         intent.putExtra(ProductEditorActivity.EXTRA_PRODUCT_ID,
-                productModel.getProductEntity().getId());
+                productModel.getProductEntity().getDataId());
         startActivityForResult(intent, ProductViewerActivity.REQUEST_VIEW_PRODUCT);
     }
 

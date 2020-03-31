@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeduration;
 
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
-import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeDurationEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.RecipeDurationEntity;
 import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeDuration;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
@@ -73,7 +73,7 @@ public class RecipeDurationTest {
     @Test
     public void newId_componentStateDATA_UNAVAILABLE() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         // Act
         setupForNewDuration(recipeId);
         // Assert
@@ -88,7 +88,7 @@ public class RecipeDurationTest {
     @Test
     public void newId_invalidPrepHours_invalidValueNotSaved() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model invalidModel = RecipeDurationRequest.Model.Builder.
                 basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
@@ -108,7 +108,7 @@ public class RecipeDurationTest {
     @Test
     public void startNewId_invalidPrepHours_resultINVALID_CHANGED() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model invalidModel = RecipeDurationRequest.Model.Builder.
                 basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
@@ -128,7 +128,7 @@ public class RecipeDurationTest {
     @Test
     public void startNewId_invalidPrepHours_FaiReasonINVALID_PREP_TIME() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model invalidModel = RecipeDurationRequest.Model.Builder.
                 basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
@@ -154,7 +154,7 @@ public class RecipeDurationTest {
     @Test
     public void startNewId_validPrepHours_resultVALID_CHANGED() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model validModel = RecipeDurationRequest.Model.Builder.
                 basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
@@ -175,7 +175,7 @@ public class RecipeDurationTest {
     @Test
     public void startNewId_validPrepHours_failReasonNONE() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model validModel = RecipeDurationRequest.Model.Builder.
                 basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
@@ -198,7 +198,7 @@ public class RecipeDurationTest {
     @Test
     public void startNewId_validPrepHours_prepHoursSaved() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         whenTimeProviderCalledReturn(VALID_NEW_PREP_TIME_VALID.getCreateDate());
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model validModel = RecipeDurationRequest.Model.Builder.
@@ -219,7 +219,7 @@ public class RecipeDurationTest {
     @Test
     public void startNewId_invalidPrepMinutes_invalidValueNotSaved() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model invalidModel = RecipeDurationRequest.Model.Builder.
                 basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
@@ -238,7 +238,7 @@ public class RecipeDurationTest {
     @Test
     public void startNewId_invalidPrepMinutes_resultINVALID_CHANGED() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model invalidModel = RecipeDurationRequest.Model.Builder.
                 basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
@@ -258,7 +258,7 @@ public class RecipeDurationTest {
     @Test
     public void startNewId_invalidPrepMinutes_FaiReasonINVALID_PREP_TIME() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model invalidModel = RecipeDurationRequest.Model.Builder.
                 basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
@@ -279,7 +279,7 @@ public class RecipeDurationTest {
     @Test
     public void startNewId_validPrepMinutes_resultVALID_CHANGED() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model validModel = RecipeDurationRequest.Model.Builder.
                 basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
@@ -299,7 +299,7 @@ public class RecipeDurationTest {
     @Test
     public void startNewId_validPrepMinutes_failReasonNONE() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model validModel = RecipeDurationRequest.Model.Builder.
                 basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
@@ -323,7 +323,7 @@ public class RecipeDurationTest {
     @Test
     public void startNewId_validPrepMinutes_prepMinutesSaved() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         whenTimeProviderCalledReturn(VALID_NEW_PREP_TIME_VALID.getCreateDate());
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model validModel = RecipeDurationRequest.Model.Builder.
@@ -343,7 +343,7 @@ public class RecipeDurationTest {
     @Test
     public void startNewId_invalidCookHours_invalidValueNotSaved() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model invalidModel = RecipeDurationRequest.Model.Builder.
                 basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
@@ -362,7 +362,7 @@ public class RecipeDurationTest {
     @Test
     public void startNewId_invalidCookHours_resultINVALID_CHANGED() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model invalidModel = RecipeDurationRequest.Model.Builder.
                 basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
@@ -382,7 +382,7 @@ public class RecipeDurationTest {
     @Test
     public void startNewId_invalidCookHours_failReasonINVALID_COOK_TIME() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model invalidModel = RecipeDurationRequest.Model.Builder.
                 basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
@@ -406,7 +406,7 @@ public class RecipeDurationTest {
     @Test
     public void startNewId_validCookHours_validValueSaved() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         whenTimeProviderCalledReturn(VALID_NEW_COOK_TIME_VALID.getCreateDate());
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model validModel = RecipeDurationRequest.Model.Builder.
@@ -426,7 +426,7 @@ public class RecipeDurationTest {
     @Test
     public void startNewId_validCookHours_resultVALID_CHANGED() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model validModel = RecipeDurationRequest.Model.Builder.
                 basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
@@ -446,7 +446,7 @@ public class RecipeDurationTest {
     @Test
     public void startNewId_validCookHours_failReasonNONE() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model validModel = RecipeDurationRequest.Model.Builder.
                 basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
@@ -466,7 +466,7 @@ public class RecipeDurationTest {
     @Test
     public void startNewId_invalidCookMinutes_invalidValueNotSaved() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model invalidModel = RecipeDurationRequest.Model.Builder.
                 basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
@@ -485,7 +485,7 @@ public class RecipeDurationTest {
     @Test
     public void startNewId_invalidCookMinutes_resultINVALID_CHANGED() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model invalidModel = RecipeDurationRequest.Model.Builder.
                 basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
@@ -506,7 +506,7 @@ public class RecipeDurationTest {
     @Test
     public void startNewId_invalidCookMinutes_failReasonINVALID_COOK_TIME() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model invalidModel = RecipeDurationRequest.Model.Builder.
                 basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
@@ -530,7 +530,7 @@ public class RecipeDurationTest {
     @Test
     public void startNewId_validCookMinutes_validValueSaved() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         whenTimeProviderCalledReturn(VALID_NEW_COOK_TIME_VALID.getCreateDate());
 
         setupForNewDuration(recipeId);
@@ -553,7 +553,7 @@ public class RecipeDurationTest {
     @Test
     public void startNewId_validCookMinutes_resultVALID_CHANGED() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         setupForNewDuration(recipeId);
         whenTimeProviderCalledReturn(VALID_NEW_COOK_TIME_VALID.getCreateDate());
         RecipeDurationRequest.Model model = RecipeDurationRequest.Model.Builder.
@@ -574,7 +574,7 @@ public class RecipeDurationTest {
     @Test
     public void startNewId_validCookMinutes_failReasonNONE() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         whenTimeProviderCalledReturn(VALID_NEW_COOK_TIME_VALID.getCreateDate());
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model model = RecipeDurationRequest.Model.Builder.
@@ -599,7 +599,7 @@ public class RecipeDurationTest {
     @Test
     public void startNewId_invalidPrepTimeInvalidCookTime_failReasonsINVALID_PREP_TIME_INVALID_COOK_TIME() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model model = RecipeDurationRequest.Model.Builder.
                 basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
@@ -627,7 +627,7 @@ public class RecipeDurationTest {
     @Test
     public void startNewId_validPrepTimeValidCookTime_failReasonsNONE() {
         // Arrange
-        String recipeId = VALID_NEW_EMPTY.getId();
+        String recipeId = VALID_NEW_EMPTY.getDataId();
         whenTimeProviderCalledReturn(VALID_NEW_COOK_TIME_VALID.getCreateDate());
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model model = RecipeDurationRequest.Model.Builder.
@@ -648,7 +648,7 @@ public class RecipeDurationTest {
     @Test
     public void startValidExistingId_correctValuesReturned() {
         // Arrange
-        String recipeId = VALID_EXISTING_COMPLETE.getId();
+        String recipeId = VALID_EXISTING_COMPLETE.getDataId();
         // Act
         givenValidExistingModel(recipeId);
         // Assert
@@ -659,7 +659,7 @@ public class RecipeDurationTest {
     @Test
     public void startValidExistingId_resultVALID_UNCHANGED() {
         // Arrange
-        String recipeId = VALID_EXISTING_COMPLETE.getId();
+        String recipeId = VALID_EXISTING_COMPLETE.getDataId();
         // Act
         givenValidExistingModel(recipeId);
         // Assert
@@ -690,7 +690,7 @@ public class RecipeDurationTest {
     }
 
     private void simulateNothingReturnedFromRepo(String recipeId) {
-        verify(repoMock).getById(eq(recipeId), repoCallback.capture());
+        verify(repoMock).getByDataId(eq(recipeId), repoCallback.capture());
         repoCallback.getValue().onDataUnavailable();
     }
 
@@ -711,7 +711,7 @@ public class RecipeDurationTest {
                 setDataId(recipeId).build();
         // Act
         handler.execute(SUT, request, getUseCaseCallback());
-        verify(repoMock).getById(eq(recipeId), repoCallback.capture());
+        verify(repoMock).getByDataId(eq(recipeId), repoCallback.capture());
         repoCallback.getValue().onEntityLoaded(VALID_EXISTING_COMPLETE);
     }
 

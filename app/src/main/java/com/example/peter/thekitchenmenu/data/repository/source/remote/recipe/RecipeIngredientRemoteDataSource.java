@@ -18,24 +18,24 @@ public class RecipeIngredientRemoteDataSource implements DataSourceRecipeIngredi
 
     @Override
     public void getAllByRecipeId(@Nonnull String recipeId,
-                                 @Nonnull GetAllCallback<RecipeIngredientEntity> callback) {
+                                 @Nonnull GetAllDomainModelsCallback<RecipeIngredientEntity> callback) {
         callback.onDataUnavailable();
     }
 
     @Override
     public void getAllByProductId(@Nonnull String productId,
-                                  @Nonnull GetAllCallback<RecipeIngredientEntity> callback) {
+                                  @Nonnull GetAllDomainModelsCallback<RecipeIngredientEntity> callback) {
         callback.onDataUnavailable();
     }
 
     @Override
     public void getAllByIngredientId(@Nonnull String ingredientId,
-                                     @Nonnull GetAllCallback<RecipeIngredientEntity> callback) {
+                                     @Nonnull GetAllDomainModelsCallback<RecipeIngredientEntity> callback) {
         callback.onDataUnavailable();
     }
 
     @Override
-    public void getAll(@Nonnull GetAllCallback<RecipeIngredientEntity> callback) {
+    public void getAll(@Nonnull GetAllDomainModelsCallback<RecipeIngredientEntity> callback) {
         callback.onDataUnavailable();
     }
 

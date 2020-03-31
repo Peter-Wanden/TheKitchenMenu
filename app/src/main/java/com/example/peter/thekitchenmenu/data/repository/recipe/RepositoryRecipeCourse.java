@@ -29,7 +29,7 @@ public class RepositoryRecipeCourse
 
     @Override
     public void getAllByCourseNo(int courseNo,
-                                 @Nonnull GetAllCallback<RecipeCourseModel> callback) {
+                                 @Nonnull GetAllDomainModelsCallback<RecipeCourseModel> callback) {
 
         List<RecipeCourseModel> models = checkCacheForCourseNo(courseNo);
 
@@ -39,7 +39,7 @@ public class RepositoryRecipeCourse
         }
         ((DataSourceRecipeCourse)localDataSource).getAllByCourseNo(
                 courseNo,
-                new GetAllCallback<RecipeCourseModel>() {
+                new GetAllDomainModelsCallback<RecipeCourseModel>() {
                     @Override
                     public void onAllLoaded(List<RecipeCourseModel> models) {
                         if (cache == null)
@@ -55,7 +55,7 @@ public class RepositoryRecipeCourse
                     public void onDataUnavailable() {
                         ((DataSourceRecipeCourse)remoteDataSource).getAllByCourseNo(
                                 courseNo,
-                                new GetAllCallback<RecipeCourseModel>() {
+                                new GetAllDomainModelsCallback<RecipeCourseModel>() {
                                     @Override
                                     public void onAllLoaded(List<RecipeCourseModel> models) {
                                         if (models == null) {
@@ -96,7 +96,7 @@ public class RepositoryRecipeCourse
 
     @Override
     public void getAllByRecipeId(@Nonnull String recipeId,
-                                 @Nonnull GetAllCallback<RecipeCourseModel> callback) {
+                                 @Nonnull GetAllDomainModelsCallback<RecipeCourseModel> callback) {
 
         List<RecipeCourseModel> models = checkCacheForRecipeId(recipeId);
 
@@ -106,7 +106,7 @@ public class RepositoryRecipeCourse
         }
         ((DataSourceRecipeCourse)localDataSource).getAllByRecipeId(
                 recipeId,
-                new GetAllCallback<RecipeCourseModel>() {
+                new GetAllDomainModelsCallback<RecipeCourseModel>() {
                     @Override
                     public void onAllLoaded(List<RecipeCourseModel> models) {
                         if (cache == null)
@@ -122,7 +122,7 @@ public class RepositoryRecipeCourse
                     public void onDataUnavailable() {
                         ((DataSourceRecipeCourse)remoteDataSource).getAllByRecipeId(
                                 recipeId,
-                                new GetAllCallback<RecipeCourseModel>() {
+                                new GetAllDomainModelsCallback<RecipeCourseModel>() {
                                     @Override
                                     public void onAllLoaded(List<RecipeCourseModel> models) {
                                         if (models == null) {

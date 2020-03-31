@@ -1,7 +1,13 @@
 package com.example.peter.thekitchenmenu.domain.usecase.textvalidation;
 
+import android.annotation.SuppressLint;
+
+import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class TextValidator extends UseCase {
 
@@ -13,9 +19,30 @@ public class TextValidator extends UseCase {
     }
 
     public enum FailReason implements FailReasons {
-        TOO_SHORT,
-        TOO_LONG,
-        NONE
+        TOO_SHORT(500),
+        TOO_LONG(501);
+
+        private final int id;
+
+        @SuppressLint("UseSparseArrays")
+        private static Map<Integer, FailReason> options = new HashMap<>();
+
+        FailReason(int id) {
+            this.id = id;
+        }
+
+        static {
+            for (FailReason s : FailReason.values())
+                options.put(s.id, s);
+        }
+
+        public static FailReason getById(int id) {
+            return options.get(id);
+        }
+
+        public int getId() {
+            return id;
+        }
     }
 
     private final int shortTextMinLength;
@@ -92,7 +119,7 @@ public class TextValidator extends UseCase {
 
     private void sendTextValidatedResponse(TextValidatorRequest request) {
         TextValidatorResponse.Builder responseBuilder = new TextValidatorResponse.Builder().
-                setFailReason(FailReason.NONE).
+                setFailReason(CommonFailReason.NONE).
                 setModel(request.getModel());
         responseBuilder = addRequiredLengths(request, responseBuilder);
 

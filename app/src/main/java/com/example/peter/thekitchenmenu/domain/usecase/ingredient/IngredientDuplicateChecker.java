@@ -8,7 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 public class IngredientDuplicateChecker
-        implements DataSource.GetAllCallback<IngredientPersistenceModel> {
+        implements DataSource.GetAllDomainModelsCallback<IngredientPersistenceModel> {
 
     public interface DuplicateCallback {
         void duplicateCheckResult(String duplicateId);

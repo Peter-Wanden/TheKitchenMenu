@@ -1,5 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredientcalculator;
 
+import android.annotation.SuppressLint;
+
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.RecipeIngredientEntity;
@@ -18,6 +20,9 @@ import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasur
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeportions.RecipePortionsPersistenceModel;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
 
@@ -41,14 +46,36 @@ public class IngredientCalculator extends UseCase {
     }
 
     public enum FailReason implements FailReasons {
-        QUANTITY_DATA_UNAVAILABLE,
-        INGREDIENT_DATA_UNAVAILABLE,
-        PORTIONS_DATA_UNAVAILABLE,
-        INVALID_CONVERSION_FACTOR,
-        INVALID_PORTIONS,
-        INVALID_TOTAL_UNIT_ONE,
-        INVALID_TOTAL_UNIT_TWO,
-        INVALID_MEASUREMENT
+        QUANTITY_DATA_UNAVAILABLE(450),
+        INGREDIENT_DATA_UNAVAILABLE(451),
+        PORTIONS_DATA_UNAVAILABLE(452),
+        INVALID_CONVERSION_FACTOR(453),
+        INVALID_PORTIONS(454),
+        INVALID_TOTAL_UNIT_ONE(455),
+        INVALID_TOTAL_UNIT_TWO(456),
+        INVALID_MEASUREMENT(457);
+
+        private final int id;
+
+        @SuppressLint("UseSparseArrays")
+        private static Map<Integer, FailReason> options = new HashMap<>();
+
+        FailReason(int id) {
+            this.id = id;
+        }
+
+        static {
+            for (FailReason s : FailReason.values())
+                options.put(s.id, s);
+        }
+
+        public static FailReason getById(int id) {
+            return options.get(id);
+        }
+
+        public int getId() {
+            return id;
+        }
     }
 
 
@@ -130,7 +157,7 @@ public class IngredientCalculator extends UseCase {
         this.recipeId = recipeId;
         this.ingredientId = ingredientId;
         quantityEntity = createNewRecipeIngredientQuantityEntity();
-        recipeIngredientId = quantityEntity.getId();
+        recipeIngredientId = quantityEntity.getDataId();
         loadIngredient();
     }
 
@@ -155,7 +182,7 @@ public class IngredientCalculator extends UseCase {
     }
 
     private void loadRecipeIngredient(String recipeIngredientId) {
-        recipeIngredientRepository.getById(
+        recipeIngredientRepository.getByDataId(
                 recipeIngredientId,
                 new PrimitiveDataSource.GetEntityCallback<RecipeIngredientEntity>() {
                     @Override
@@ -174,12 +201,12 @@ public class IngredientCalculator extends UseCase {
     }
 
     private void loadIngredient() {
-        ingredientRepository.getById(
+        ingredientRepository.getByDataId(
                 ingredientId,
                 new PrimitiveDataSource.GetEntityCallback<IngredientEntity>() {
                     @Override
                     public void onEntityLoaded(IngredientEntity entity) {
-                        ingredientId = entity.getId();
+                        ingredientId = entity.getDataId();
                         IngredientCalculator.this.ingredientEntity = entity;
                         loadPortions();
                     }
@@ -194,7 +221,7 @@ public class IngredientCalculator extends UseCase {
     private void loadPortions() {
         portionsRepository.getByRecipeId(
                 recipeId,
-                new DataSource.GetModelCallback<RecipePortionsPersistenceModel>() {
+                new DataSource.GetDomainModelCallback<RecipePortionsPersistenceModel>() {
                     @Override
                     public void onModelLoaded(RecipePortionsPersistenceModel model) {
                         numberOfPortions = model.getServings() *
@@ -314,7 +341,7 @@ public class IngredientCalculator extends UseCase {
 
     private IngredientEntity getUpdatedIngredientEntity() {
         return new IngredientEntity(
-                ingredientEntity.getId(),
+                ingredientEntity.getDataId(),
                 ingredientEntity.getName(),
                 ingredientEntity.getDescription(),
                 unitOfMeasure.getConversionFactor(),
@@ -399,7 +426,7 @@ public class IngredientCalculator extends UseCase {
     private boolean quantityEntityHasChanged() {
         if (quantityEntity != null) {
             RecipeIngredientEntity updatedEntity = new RecipeIngredientEntity(
-                    quantityEntity.getId(),
+                    quantityEntity.getDataId(),
                     quantityEntity.getRecipeId(),
                     quantityEntity.getIngredientId(),
                     quantityEntity.getProductId(),
@@ -417,7 +444,7 @@ public class IngredientCalculator extends UseCase {
 
     private RecipeIngredientEntity updatedRecipeIngredientEntity() {
         return new RecipeIngredientEntity(
-                quantityEntity.getId(),
+                quantityEntity.getDataId(),
                 quantityEntity.getRecipeId(),
                 quantityEntity.getIngredientId(),
                 quantityEntity.getProductId(),

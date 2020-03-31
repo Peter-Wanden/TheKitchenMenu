@@ -1,11 +1,11 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipecopy;
 
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
-import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeCourseEntity;
-import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeDurationEntity;
-import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeMetadataEntity;
-import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeIdentityEntity;
-import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipePortionsEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.RecipeCourseEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.RecipeDurationEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.parent.RecipeMetadataParentEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.RecipeIdentityEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeComponentState;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeCourse;
@@ -100,7 +100,7 @@ public class RecipeCopyTest {
     @Mock
     RepositoryRecipeComponentState repoRecipeMock;
     @Captor
-    ArgumentCaptor<PrimitiveDataSource.GetEntityCallback<RecipeMetadataEntity>> repoRecipeCallback;
+    ArgumentCaptor<PrimitiveDataSource.GetEntityCallback<RecipeMetadataParentEntity>> repoRecipeCallback;
     @Mock
     RepositoryRecipeIdentity repoIdentityMock;
     @Captor
@@ -241,7 +241,7 @@ public class RecipeCopyTest {
     @Test
     public void cloneFromAnotherUser_validRecipe_objectsRequestedFromDataLayer() {
         // Arrange
-        String cloneFromId = TestDataRecipeMetadataEntity.getValidFromAnotherUser().getId();
+        String cloneFromId = TestDataRecipeMetadataEntity.getValidFromAnotherUser().getDataId();
 
         RecipeCopyRequest request = new RecipeCopyRequest(cloneFromId);
         // Act
@@ -254,8 +254,8 @@ public class RecipeCopyTest {
     @Test
     public void cloneFromAnotherUser_validRecipe_objectsClonedAndSavedToDataLayer() {
         // Arrange
-        String cloneFromId = TestDataRecipeMetadataEntity.getValidFromAnotherUser().getId();
-        String copyToId = TestDataRecipeMetadataEntity.getValidNewCloned().getId();
+        String cloneFromId = TestDataRecipeMetadataEntity.getValidFromAnotherUser().getDataId();
+        String copyToId = TestDataRecipeMetadataEntity.getValidNewCloned().getDataId();
         when(idProviderMock.getUId()).thenReturn(copyToId);
 
         ArgumentCaptor<RecipeCourseEntity> courseEntity = ArgumentCaptor.
@@ -849,7 +849,7 @@ public class RecipeCopyTest {
         repoRecipeCallback.getValue().onEntityLoaded(TestDataRecipeMetadataEntity.
                 getValidFromAnotherUser());
 
-        verify(repoIdentityMock).getById(eq(recipeId), repoIdentityCallback.capture());
+        verify(repoIdentityMock).getByDataId(eq(recipeId), repoIdentityCallback.capture());
         repoIdentityCallback.getValue().onEntityLoaded(TestDataRecipeIdentityEntity.
                 getValidCompleteFromAnotherUser());
 
@@ -861,7 +861,7 @@ public class RecipeCopyTest {
         repoPortionsCallback.getValue().onEntityLoaded(TestDataRecipePortionsEntity.
                 getValidFromAnotherUser());
 
-        verify(repoDurationMock).getById(eq(recipeId), repoDurationCallback.capture());
+        verify(repoDurationMock).getByDataId(eq(recipeId), repoDurationCallback.capture());
         repoDurationCallback.getValue().onEntityLoaded(TestDataRecipeDurationEntity.
                 getValidCompleteFromAnotherUser());
     }
@@ -881,8 +881,8 @@ public class RecipeCopyTest {
 //    }
 
     private void verifyRepoDurationCalledAndReturnValidFromAnotherUser() {
-        verify(repoDurationMock).getById(
-                eq(DURATION_VALID_COMPLETE_FROM_ANOTHER_USER.getId()),
+        verify(repoDurationMock).getByDataId(
+                eq(DURATION_VALID_COMPLETE_FROM_ANOTHER_USER.getDataId()),
                 repoDurationCallback.capture());
 
         repoDurationCallback.getValue().onEntityLoaded(

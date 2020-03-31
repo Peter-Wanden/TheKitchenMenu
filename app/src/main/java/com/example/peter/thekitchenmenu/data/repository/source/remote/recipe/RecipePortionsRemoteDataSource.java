@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.data.repository.source.remote.recipe;
 
-import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipePortionsEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.recipe.DataSourceRecipePortions;
 
 import javax.annotation.Nonnull;
@@ -22,7 +22,7 @@ public class RecipePortionsRemoteDataSource implements DataSourceRecipePortions 
     }
 
     @Override
-    public void getAll(@Nonnull GetAllCallback<RecipePortionsEntity> callback) {
+    public void getAll(@Nonnull GetAllDomainModelsCallback<RecipePortionsEntity> callback) {
         callback.onDataUnavailable();
     }
 

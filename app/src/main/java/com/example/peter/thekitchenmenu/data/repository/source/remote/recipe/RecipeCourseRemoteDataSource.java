@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.data.repository.source.remote.recipe;
 
-import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeCourseEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.RecipeCourseEntity;
 import com.example.peter.thekitchenmenu.data.repository.recipe.DataSourceRecipeCourse;
 
 import javax.annotation.Nonnull;
@@ -18,18 +18,18 @@ public class RecipeCourseRemoteDataSource implements DataSourceRecipeCourse {
 
     @Override
     public void getAllByCourseNo(int courseNo,
-                                 @Nonnull GetAllCallback<RecipeCourseEntity> callback) {
+                                 @Nonnull GetAllDomainModelsCallback<RecipeCourseEntity> callback) {
         callback.onDataUnavailable();
     }
 
     @Override
     public void getAllByRecipeId(@Nonnull String recipeId,
-                                 @Nonnull GetAllCallback<RecipeCourseEntity> callback) {
+                                 @Nonnull GetAllDomainModelsCallback<RecipeCourseEntity> callback) {
         callback.onDataUnavailable();
     }
 
     @Override
-    public void getAll(@Nonnull GetAllCallback<RecipeCourseEntity> callback) {
+    public void getAll(@Nonnull GetAllDomainModelsCallback<RecipeCourseEntity> callback) {
         callback.onDataUnavailable();
     }
 

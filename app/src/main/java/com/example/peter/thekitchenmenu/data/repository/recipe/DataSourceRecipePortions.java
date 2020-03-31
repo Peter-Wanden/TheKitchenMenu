@@ -8,5 +8,5 @@ import javax.annotation.Nonnull;
 public interface DataSourceRecipePortions extends DataSource<RecipePortionsPersistenceModel> {
 
     void getByRecipeId(@Nonnull String recipeId,
-                       @Nonnull GetModelCallback<RecipePortionsPersistenceModel> callback);
+                       @Nonnull GetDomainModelCallback<RecipePortionsPersistenceModel> callback);
 }

@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
 public interface DataSourceRecipeMetaData extends DataSource<RecipeMetadataPersistenceModel> {
 
     void getByRecipeId(@Nonnull String recipeId,
-                       @Nonnull GetModelCallback<RecipeMetadataPersistenceModel> callback);
+                       @Nonnull GetDomainModelCallback<RecipeMetadataPersistenceModel> callback);
 
     void deleteByRecipeId(@Nonnull String recipeId);
 }

@@ -7,16 +7,16 @@ public abstract class RecipePersistenceModel
         extends UseCaseDomainModel
         implements PersistenceModel {
 
-    protected String id;
+    protected String dataId;
     protected String recipeId;
 
     @Override
     public String getDataId() {
-        return id;
+        return dataId;
     }
 
-
-    public String getRecipeId() {
+    @Override
+    public String getDomainId() {
         return recipeId;
     }
 }

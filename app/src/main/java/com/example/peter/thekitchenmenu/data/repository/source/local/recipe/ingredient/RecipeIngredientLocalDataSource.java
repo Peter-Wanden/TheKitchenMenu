@@ -35,7 +35,7 @@ public class RecipeIngredientLocalDataSource implements DataSourceRecipeIngredie
     }
 
     @Override
-    public void getAll(@Nonnull GetAllCallback<RecipeIngredientEntity> callback) {
+    public void getAll(@Nonnull GetAllDomainModelsCallback<RecipeIngredientEntity> callback) {
         Runnable runnable = () -> {
             final List<RecipeIngredientEntity> entities = dao.getAll();
             appExecutors.mainThread().execute(() -> {
@@ -50,7 +50,7 @@ public class RecipeIngredientLocalDataSource implements DataSourceRecipeIngredie
 
     @Override
     public void getAllByRecipeId(@Nonnull String recipeId,
-                                 @Nonnull GetAllCallback<RecipeIngredientEntity> callback) {
+                                 @Nonnull GetAllDomainModelsCallback<RecipeIngredientEntity> callback) {
         Runnable runnable = () -> {
             final List<RecipeIngredientEntity> entities = dao.getAllByRecipeId(recipeId);
             appExecutors.mainThread().execute(() -> {
@@ -65,7 +65,7 @@ public class RecipeIngredientLocalDataSource implements DataSourceRecipeIngredie
 
     @Override
     public void getAllByProductId(@Nonnull String productId,
-                                  @Nonnull GetAllCallback<RecipeIngredientEntity> callback) {
+                                  @Nonnull GetAllDomainModelsCallback<RecipeIngredientEntity> callback) {
         Runnable runnable = () -> {
             final List<RecipeIngredientEntity> entities = dao.getAllByProductId(productId);
             appExecutors.mainThread().execute(() -> {
@@ -80,7 +80,7 @@ public class RecipeIngredientLocalDataSource implements DataSourceRecipeIngredie
 
     @Override
     public void getAllByIngredientId(@Nonnull String ingredientId,
-                                     @Nonnull GetAllCallback<RecipeIngredientEntity> callback) {
+                                     @Nonnull GetAllDomainModelsCallback<RecipeIngredientEntity> callback) {
         Runnable runnable = () -> {
             final List<RecipeIngredientEntity> entities = dao.getAllByIngredientId(ingredientId);
             appExecutors.mainThread().execute(() -> {

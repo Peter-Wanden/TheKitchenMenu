@@ -18,23 +18,23 @@ import javax.annotation.Nonnull;
  */
 public interface DataSource<T extends PersistenceModel> {
 
-    interface GetAllCallback<E extends PersistenceModel> {
+    interface GetAllDomainModelsCallback<E extends PersistenceModel> {
 
         void onAllLoaded(List<E> models);
 
         void onDataUnavailable();
     }
 
-    interface GetModelCallback<T extends PersistenceModel> {
+    interface GetDomainModelCallback<T extends PersistenceModel> {
 
         void onModelLoaded(T model);
 
         void onModelUnavailable();
     }
 
-    void getAll(@Nonnull GetAllCallback<T> callback);
+    void getAll(@Nonnull GetAllDomainModelsCallback<T> callback);
 
-    void getById(@Nonnull String id, @Nonnull GetModelCallback<T> callback);
+    void getByDataId(@Nonnull String dataId, @Nonnull GetDomainModelCallback<T> callback);
 
     void save(@Nonnull T model);
 

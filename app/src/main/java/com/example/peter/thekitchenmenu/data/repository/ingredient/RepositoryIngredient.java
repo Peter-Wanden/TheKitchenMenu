@@ -8,8 +8,6 @@ import javax.annotation.Nonnull;
 
 public class RepositoryIngredient extends Repository<IngredientPersistenceModel> {
 
-    public static RepositoryIngredient INSTANCE = null;
-
     private RepositoryIngredient(
             @Nonnull DataSource<IngredientPersistenceModel> remoteDataSource,
             @Nonnull DataSource<IngredientPersistenceModel> localDataSource) {
@@ -23,6 +21,6 @@ public class RepositoryIngredient extends Repository<IngredientPersistenceModel>
 
         if (INSTANCE == null)
             INSTANCE = new RepositoryIngredient(remoteDataSource, localDataSource);
-        return INSTANCE;
+        return (RepositoryIngredient) INSTANCE;
     }
 }

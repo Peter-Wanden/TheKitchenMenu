@@ -1,7 +1,6 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity;
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
-import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeIdentityEntity;
 import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
 
 import java.util.List;
@@ -50,10 +49,10 @@ public class RecipeIdentityLocalDataSource implements PrimitiveDataSource<Recipe
     }
 
     @Override
-    public void getById(@Nonnull String id,
-                        @Nonnull GetEntityCallback<RecipeIdentityEntity> callback) {
+    public void getByDataId(@Nonnull String dataId,
+                            @Nonnull GetEntityCallback<RecipeIdentityEntity> callback) {
         Runnable runnable = ()-> {
-            final RecipeIdentityEntity recipeIdentityEntity = recipeIdentityEntityDao.getById(id);
+            final RecipeIdentityEntity recipeIdentityEntity = recipeIdentityEntityDao.getById(dataId);
             appExecutors.mainThread().execute(() -> {
                 if (recipeIdentityEntity != null)
                     callback.onEntityLoaded(recipeIdentityEntity);
@@ -83,8 +82,8 @@ public class RecipeIdentityLocalDataSource implements PrimitiveDataSource<Recipe
     }
 
     @Override
-    public void deleteById(@Nonnull String id) {
-        Runnable runnable = ()-> recipeIdentityEntityDao.deleteById(id);
+    public void deleteByDataId(@Nonnull String dataId) {
+        Runnable runnable = ()-> recipeIdentityEntityDao.deleteById(dataId);
         appExecutors.diskIO().execute(runnable);
     }
 }

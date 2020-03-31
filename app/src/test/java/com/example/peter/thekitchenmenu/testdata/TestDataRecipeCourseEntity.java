@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.testdata;
 
-import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeCourseEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.RecipeCourseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,10 +8,10 @@ import java.util.List;
 public class TestDataRecipeCourseEntity {
 
     public static final String EXISTING_RECIPE_ID =
-            TestDataRecipeMetadataEntity.getValidExisting().getId();
+            TestDataRecipeMetadataEntity.getValidExisting().getDataId();
 
     private static final String NEW_RECIPE_ID =
-            TestDataRecipeMetadataEntity.getNewInvalid().getId();
+            TestDataRecipeMetadataEntity.getNewInvalid().getDataId();
 
     public static RecipeCourseEntity getRecipeCourseZero() {
         return new RecipeCourseEntity(

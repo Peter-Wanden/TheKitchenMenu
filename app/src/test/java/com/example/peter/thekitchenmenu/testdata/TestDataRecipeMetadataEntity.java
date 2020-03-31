@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.testdata;
 
 import com.example.peter.thekitchenmenu.app.Constants;
-import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeMetadataEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.parent.RecipeMetadataParentEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,8 +9,8 @@ import java.util.List;
 public class TestDataRecipeMetadataEntity {
 
     // Create new recipe, or used when cloning
-    public static RecipeMetadataEntity getNewInvalid() {
-        return new RecipeMetadataEntity(
+    public static RecipeMetadataParentEntity getNewInvalid() {
+        return new RecipeMetadataParentEntity(
                 "newId",
                 "newId",
                 Constants.getUserId(),
@@ -20,10 +20,10 @@ public class TestDataRecipeMetadataEntity {
     }
 
     // Built from new, or cloned / copied to current user
-    public static RecipeMetadataEntity getNewValid() {
-        return new RecipeMetadataEntity(
-                getNewInvalid().getId(),
-                getNewInvalid().getId(),
+    public static RecipeMetadataParentEntity getNewValid() {
+        return new RecipeMetadataParentEntity(
+                getNewInvalid().getDataId(),
+                getNewInvalid().getDataId(),
                 getNewInvalid().getCreatedBy(),
                 getNewInvalid().getCreateDate(),
                 getNewInvalid().getLastUpdate()
@@ -31,8 +31,8 @@ public class TestDataRecipeMetadataEntity {
     }
 
     // Existing valid recipe loaded, current user is creator
-    public static RecipeMetadataEntity getValidExisting() {
-        return new RecipeMetadataEntity(
+    public static RecipeMetadataParentEntity getValidExisting() {
+        return new RecipeMetadataParentEntity(
                 "validExistingRecipeId",
                 "validExistingRecipeId",
                 Constants.getUserId(),
@@ -42,8 +42,8 @@ public class TestDataRecipeMetadataEntity {
     }
 
     // Existing invalid recipe, current user is creator, one or more recipe data models are invalid
-    public static RecipeMetadataEntity getInvalidExisting() {
-        return new RecipeMetadataEntity(
+    public static RecipeMetadataParentEntity getInvalidExisting() {
+        return new RecipeMetadataParentEntity(
                 "invalidExistingId",
                 "invalidExistingId",
                 Constants.getUserId(),
@@ -53,8 +53,8 @@ public class TestDataRecipeMetadataEntity {
     }
 
     // Existing valid recipe, another user is creator
-    public static RecipeMetadataEntity getValidFromAnotherUser() {
-        return new RecipeMetadataEntity(
+    public static RecipeMetadataParentEntity getValidFromAnotherUser() {
+        return new RecipeMetadataParentEntity(
                 "idFromAnotherUser",
                 "idFromAnotherUser",
                 "anotherUser",
@@ -63,10 +63,10 @@ public class TestDataRecipeMetadataEntity {
         );
     }
 
-    public static RecipeMetadataEntity getInvalidFromAnotherUser() {
-        return new RecipeMetadataEntity(
-                getValidFromAnotherUser().getId(),
-                getValidFromAnotherUser().getId(),
+    public static RecipeMetadataParentEntity getInvalidFromAnotherUser() {
+        return new RecipeMetadataParentEntity(
+                getValidFromAnotherUser().getDataId(),
+                getValidFromAnotherUser().getDataId(),
                 getValidFromAnotherUser().getCreatedBy(),
                 50L,
                 60L
@@ -74,10 +74,10 @@ public class TestDataRecipeMetadataEntity {
     }
 
     // Existing valid recipe, expected output when cloned from another user
-    public static RecipeMetadataEntity getValidNewCloned() {
-        return new RecipeMetadataEntity(
-                getNewInvalid().getId(),
-                getValidFromAnotherUser().getId(),
+    public static RecipeMetadataParentEntity getValidNewCloned() {
+        return new RecipeMetadataParentEntity(
+                getNewInvalid().getDataId(),
+                getValidFromAnotherUser().getDataId(),
                 Constants.getUserId(),
                 getNewInvalid().getCreateDate(),
                 getNewInvalid().getLastUpdate()
@@ -86,18 +86,18 @@ public class TestDataRecipeMetadataEntity {
 
     // Existing invalid recipe, expected output when invalid recipe cloned, or made invalid after
     // editing copy
-    public static RecipeMetadataEntity getInvalidNewCloned() {
-        return new RecipeMetadataEntity(
-                getNewInvalid().getId(),
-                getInvalidFromAnotherUser().getId(),
+    public static RecipeMetadataParentEntity getInvalidNewCloned() {
+        return new RecipeMetadataParentEntity(
+                getNewInvalid().getDataId(),
+                getInvalidFromAnotherUser().getDataId(),
                 Constants.getUserId(),
                 getNewInvalid().getCreateDate(),
                 getNewInvalid().getLastUpdate()
         );
     }
 
-    public static List<RecipeMetadataEntity> getAllRecipeEntities() {
-        List<RecipeMetadataEntity> recipes = new ArrayList<>();
+    public static List<RecipeMetadataParentEntity> getAllRecipeEntities() {
+        List<RecipeMetadataParentEntity> recipes = new ArrayList<>();
         recipes.add(getNewValid());
         recipes.add(getValidExisting());
         recipes.add(getValidFromAnotherUser());

@@ -23,8 +23,8 @@ public class ProductRemoteDataSource implements PrimitiveDataSource<ProductEntit
     }
 
     @Override
-    public void getById(
-            @Nonnull String productId,
+    public void getByDataId(
+            @Nonnull String dataId,
             @Nonnull GetEntityCallback<ProductEntity> callback) {
         callback.onDataUnavailable();
     }
@@ -46,7 +46,7 @@ public class ProductRemoteDataSource implements PrimitiveDataSource<ProductEntit
     }
 
     @Override
-    public void deleteById(@Nonnull String productId) {
+    public void deleteByDataId(@Nonnull String dataId) {
 
     }
 

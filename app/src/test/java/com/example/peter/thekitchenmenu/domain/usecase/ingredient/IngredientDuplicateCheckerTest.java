@@ -24,7 +24,7 @@ public class IngredientDuplicateCheckerTest {
     private String VALID_NAME_DUPLICATE_IS_BEING_EDITED =
             TestDataIngredientEntity.getNewValidName().getName();
     private String INGREDIENT_ID =
-            TestDataIngredientEntity.getNewValidName().getId();
+            TestDataIngredientEntity.getNewValidName().getDataId();
     private String NO_DUPLICATE_FOUND = IngredientDuplicateChecker.NO_DUPLICATE_FOUND;
     // endregion constants -------------------------------------------------------------------------
 
@@ -93,7 +93,7 @@ public class IngredientDuplicateCheckerTest {
         SUT.checkForDuplicateAndNotify(VALID_DUPLICATE.getName(), INGREDIENT_ID, callbackMock);
         // Assert
         simulateGetAllFromDatabase();
-        verify(callbackMock).duplicateCheckResult(eq(VALID_DUPLICATE.getId()));
+        verify(callbackMock).duplicateCheckResult(eq(VALID_DUPLICATE.getDataId()));
     }
 
     // region helper methods -----------------------------------------------------------------------

@@ -22,7 +22,7 @@ public abstract class Repository<T extends PersistenceModel> implements DataSour
     private boolean cacheIsDirty;
 
     @Override
-    public void getAll(@Nonnull GetAllCallback<T> callback) {
+    public void getAll(@Nonnull GetAllDomainModelsCallback<T> callback) {
 
         if (cache != null && cacheIsDirty) {
             callback.onAllLoaded(new ArrayList<>(cache.values()));
@@ -31,7 +31,7 @@ public abstract class Repository<T extends PersistenceModel> implements DataSour
         if (cacheIsDirty)
             getItemsFromRemoteDataSource(callback);
         else {
-            localDataSource.getAll(new GetAllCallback<T>() {
+            localDataSource.getAll(new GetAllDomainModelsCallback<T>() {
                 @Override
                 public void onAllLoaded(List<T> models) {
                     refreshCache(models);
@@ -46,8 +46,8 @@ public abstract class Repository<T extends PersistenceModel> implements DataSour
         }
     }
 
-    private void getItemsFromRemoteDataSource(@Nonnull final GetAllCallback<T> callback) {
-        remoteDataSource.getAll(new GetAllCallback<T>() {
+    private void getItemsFromRemoteDataSource(@Nonnull final GetAllDomainModelsCallback<T> callback) {
+        remoteDataSource.getAll(new GetAllDomainModelsCallback<T>() {
             @Override
             public void onAllLoaded(List<T> models) {
                 refreshCache(models);
@@ -82,15 +82,15 @@ public abstract class Repository<T extends PersistenceModel> implements DataSour
     }
 
     @Override
-    public void getById(@Nonnull String id, @Nonnull GetModelCallback<T> callback) {
+    public void getByDataId(@Nonnull String dataId, @Nonnull GetDomainModelCallback<T> callback) {
 
-        T cachedModel = getModelWithId(id);
+        T cachedModel = getModelWithId(dataId);
 
         if (cachedModel != null) {
             callback.onModelLoaded(cachedModel);
             return;
         }
-        localDataSource.getById(id, new GetModelCallback<T>() {
+        localDataSource.getByDataId(dataId, new GetDomainModelCallback<T>() {
             @Override
             public void onModelLoaded(T model) {
                 if (cache == null)
@@ -102,7 +102,7 @@ public abstract class Repository<T extends PersistenceModel> implements DataSour
 
             @Override
             public void onModelUnavailable() {
-                remoteDataSource.getById(id, new GetModelCallback<T>() {
+                remoteDataSource.getByDataId(dataId, new GetDomainModelCallback<T>() {
                     @Override
                     public void onModelLoaded(T model) {
                         if (model == null) {
@@ -160,10 +160,9 @@ public abstract class Repository<T extends PersistenceModel> implements DataSour
         cache.clear();
     }
 
-    @Override
-    public void deleteById(@Nonnull String id) {
-        remoteDataSource.deleteById(id);
-        localDataSource.deleteById(id);
-        cache.remove(id);
+    public void deleteByDataId(@Nonnull String dataId) {
+        remoteDataSource.deleteById(dataId);
+        localDataSource.deleteById(dataId);
+        cache.remove(dataId);
     }
 }

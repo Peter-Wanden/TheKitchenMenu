@@ -105,7 +105,7 @@ public class FavoriteProductViewerViewModel
 
     void deleteFavoriteProduct() {
         if (favoriteProduct.get() != null) {
-            favoriteProductEntityDataSource.deleteById(favoriteProduct.get().getId());
+            favoriteProductEntityDataSource.deleteByDataId(favoriteProduct.get().getDataId());
             isFavorite.set(false);
             favoriteProduct.set(null);
             hasOptionsMenuEvent.call();

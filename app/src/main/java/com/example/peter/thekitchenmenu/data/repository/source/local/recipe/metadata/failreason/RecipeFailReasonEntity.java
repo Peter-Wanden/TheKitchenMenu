@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata;
+package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.failreason;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
@@ -15,28 +15,28 @@ import javax.annotation.Nonnull;
 public final class RecipeFailReasonEntity implements PrimitiveModel {
 
     public static final String TABLE_RECIPE_FAIL_REASON = "recipeFailReason";
-    public static final String ID = "id";
-    public static final String RECIPE_ID = "recipeId";
-    public static final String FAIL_REASON = "failReason";
+    public static final String DATA_ID = "dataId";
+    public static final String PARENT_DATA_ID = "parentDataId";
+    public static final String FAIL_REASON_ID = "failReason";
 
     @PrimaryKey
     @NonNull
-    @ColumnInfo(name = ID)
+    @ColumnInfo(name = DATA_ID)
     private final String id;
 
     @Nonnull
-    @ColumnInfo(name = RECIPE_ID)
-    private final String recipeId;
+    @ColumnInfo(name = PARENT_DATA_ID)
+    private final String parentDataId;
 
-    @ColumnInfo(name = FAIL_REASON)
-    private final int failReason;
+    @ColumnInfo(name = FAIL_REASON_ID)
+    private final int failReasonId;
 
     public RecipeFailReasonEntity(@NonNull String id,
-                                  @Nonnull String recipeId,
-                                  int failReason) {
+                                  @Nonnull String parentDataId,
+                                  int failReasonId) {
         this.id = id;
-        this.recipeId = recipeId;
-        this.failReason = failReason;
+        this.parentDataId = parentDataId;
+        this.failReasonId = failReasonId;
     }
 
     @Override
@@ -44,36 +44,36 @@ public final class RecipeFailReasonEntity implements PrimitiveModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RecipeFailReasonEntity that = (RecipeFailReasonEntity) o;
-        return failReason == that.failReason &&
+        return failReasonId == that.failReasonId &&
                 id.equals(that.id) &&
-                recipeId.equals(that.recipeId);
+                parentDataId.equals(that.parentDataId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, recipeId, failReason);
+        return Objects.hash(id, parentDataId, failReasonId);
     }
 
     @Override
     public String toString() {
         return "RecipeFailReasonEntity{" +
                 "id='" + id + '\'' +
-                ", recipeId='" + recipeId + '\'' +
-                ", failReason=" + failReason +
+                ", parentDataId='" + parentDataId + '\'' +
+                ", failReason=" + failReasonId +
                 '}';
     }
 
     @NonNull
-    public String getId() {
+    public String getDataId() {
         return id;
     }
 
     @Nonnull
-    public String getRecipeId() {
-        return recipeId;
+    public String getParentDataId() {
+        return parentDataId;
     }
 
-    public int getFailReason() {
-        return failReason;
+    public int getFailReasonId() {
+        return failReasonId;
     }
 }

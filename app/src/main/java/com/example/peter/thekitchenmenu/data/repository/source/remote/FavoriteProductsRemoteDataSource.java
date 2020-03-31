@@ -21,8 +21,8 @@ public class FavoriteProductsRemoteDataSource implements DataSourceFavoriteProdu
     }
 
     @Override
-    public void getById(@Nonnull String id,
-                        @Nonnull GetEntityCallback<FavoriteProductEntity> callback) {
+    public void getByDataId(@Nonnull String dataId,
+                            @Nonnull GetEntityCallback<FavoriteProductEntity> callback) {
         callback.onDataUnavailable();
     }
 
@@ -49,7 +49,7 @@ public class FavoriteProductsRemoteDataSource implements DataSourceFavoriteProdu
     }
 
     @Override
-    public void deleteById(@Nonnull String id) {
+    public void deleteByDataId(@Nonnull String dataId) {
 
     }
 }

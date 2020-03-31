@@ -1,13 +1,14 @@
-package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata;
+package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.failreason;
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
-import com.example.peter.thekitchenmenu.data.repository.recipe.DataSourceRecipeFailReasons;
+import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
 
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
-public class RecipeFailReasonsLocalDataSource implements DataSourceRecipeFailReasons {
+public class RecipeFailReasonsLocalDataSource
+        implements PrimitiveDataSource<RecipeFailReasonEntity> {
 
     private static volatile RecipeFailReasonsLocalDataSource INSTANCE;
 
@@ -36,27 +37,6 @@ public class RecipeFailReasonsLocalDataSource implements DataSourceRecipeFailRea
     }
 
     @Override
-    public void getAllByRecipeId(@Nonnull String recipeId,
-                                 @Nonnull GetAllCallback<RecipeFailReasonEntity> c) {
-        Runnable r = () -> {
-            final List<RecipeFailReasonEntity> e = dao.getAll();
-            executors.mainThread().execute(() -> {
-                if (e.isEmpty())
-                    c.onDataUnavailable();
-                else
-                    c.onAllLoaded(e);
-            });
-        };
-        executors.diskIO().execute(r);
-    }
-
-    @Override
-    public void deleteAllByRecipeId(@Nonnull String recipeId) {
-        Runnable r = () -> dao.deleteByRecipeId(recipeId);
-        executors.diskIO().execute(r);
-    }
-
-    @Override
     public void getAll(@Nonnull GetAllCallback<RecipeFailReasonEntity> c) {
         Runnable r = () -> {
             final List<RecipeFailReasonEntity> e = dao.getAll();
@@ -71,10 +51,25 @@ public class RecipeFailReasonsLocalDataSource implements DataSourceRecipeFailRea
     }
 
     @Override
-    public void getById(@Nonnull String id,
-                        @Nonnull GetEntityCallback<RecipeFailReasonEntity> c) {
+    public void getAllByParentDataId(@Nonnull String parentDataId,
+                                     @Nonnull GetAllCallback<RecipeFailReasonEntity> c) {
         Runnable r = () -> {
-            final RecipeFailReasonEntity e = dao.getById(id);
+            final List<RecipeFailReasonEntity> e = dao.getAllByParentDataId(parentDataId);
+            executors.mainThread().execute(() -> {
+                if (e.isEmpty())
+                    c.onDataUnavailable();
+                else
+                    c.onAllLoaded(e);
+            });
+        };
+        executors.diskIO().execute(r);
+    }
+
+    @Override
+    public void getByDataId(@Nonnull String dataId,
+                            @Nonnull GetEntityCallback<RecipeFailReasonEntity> c) {
+        Runnable r = () -> {
+            final RecipeFailReasonEntity e = dao.getByDataId(dataId);
             executors.mainThread().execute(() -> {
                 if (e != null)
                     c.onEntityLoaded(e);
@@ -98,14 +93,20 @@ public class RecipeFailReasonsLocalDataSource implements DataSourceRecipeFailRea
     }
 
     @Override
-    public void deleteAll() {
-        Runnable r = () -> dao.deleteAll();
+    public void deleteByDataId(@Nonnull String dataId) {
+        Runnable r = () -> dao.deleteByDataId(dataId);
         executors.diskIO().execute(r);
     }
 
     @Override
-    public void deleteById(@Nonnull String id) {
-        Runnable r = () -> dao.deleteById(id);
+    public void deleteAllByParentId(String parentDataId) {
+        Runnable r = () -> dao.deleteAllByParentDataId(parentDataId);
+        executors.diskIO().execute(r);
+    }
+
+    @Override
+    public void deleteAll() {
+        Runnable r = () -> dao.deleteAll();
         executors.diskIO().execute(r);
     }
 }

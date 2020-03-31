@@ -50,7 +50,7 @@ public class RepositoryFavoriteProduct
                 if (cache == null)
                     cache = new LinkedHashMap<>();
 
-                cache.put(entity.getId(), entity);
+                cache.put(entity.getDataId(), entity);
                 callback.onEntityLoaded(entity);
             }
 
@@ -64,7 +64,7 @@ public class RepositoryFavoriteProduct
                         if (cache == null)
                             cache = new LinkedHashMap<>();
 
-                        cache.put(entity.getId(), entity);
+                        cache.put(entity.getDataId(), entity);
                         callback.onEntityLoaded(entity);
                     }
 

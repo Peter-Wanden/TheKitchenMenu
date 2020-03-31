@@ -11,13 +11,13 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeD
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeFailReasons;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIngredient;
-import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeMetadata;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeMetadataModel;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.usecase.conversionfactorstatus.ConversionFactorStatus;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.Ingredient;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipecopy.RecipeCopy;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadataDataSource;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RecipeMetadataDataSource;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeduration.RecipeDuration;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeidentity.RecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipelist.RecipeList;
@@ -41,7 +41,7 @@ public class UseCaseFactory {
     private static volatile UseCaseFactory INSTANCE;
 
     private final Application application;
-    private final RepositoryRecipeMetadata recipeMetadataRepository;
+    private final RepositoryRecipeMetadataModel recipeMetadataRepository;
     private final RepositoryRecipeFailReasons recipeFailReasonsRepository;
     private final RepositoryRecipePortions recipePortionsRepository;
     private final RepositoryRecipeIngredient recipeIngredientRepository;
@@ -51,7 +51,7 @@ public class UseCaseFactory {
     private final RepositoryRecipeCourse recipeCourseRepository;
 
     private UseCaseFactory(Application application,
-                           RepositoryRecipeMetadata recipeMetadataRepository,
+                           RepositoryRecipeMetadataModel recipeMetadataRepository,
                            RepositoryRecipeFailReasons recipeFailReasonsRepository,
                            RepositoryRecipePortions recipePortionsRepository,
                            RepositoryRecipeIngredient recipeIngredientRepository,

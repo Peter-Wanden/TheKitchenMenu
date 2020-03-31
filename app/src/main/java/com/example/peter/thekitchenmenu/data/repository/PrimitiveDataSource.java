@@ -7,15 +7,14 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 /**
- * Used by the {@link DataSource} to send and receive primitive data models too and from the
- * frameworks data layer.
+ * Used by data interface adapters for the bi-directional conversion of relational object models
+ * into primitive data structures for frameworks that require it.
  *
- * Primitive data models should ony be used for saving and retrieving data
- * models. They should not be used or manipulated by the use cases, business entities or any other
- * part of the application.
+ * Primitive data models should ony be used for saving and retrieving data. They should not be used
+ * or manipulated by the use cases, business entities or any other part of the application.
  *
- * @param <T> data structures that extend {@link PrimitiveModel} which are represented in the
- *            repository.
+ * @param <T> data structures that extend {@link PrimitiveModel} which are represented by any data
+ *            source that requires them.
  */
 public interface PrimitiveDataSource<T extends PrimitiveModel> {
 
@@ -35,13 +34,24 @@ public interface PrimitiveDataSource<T extends PrimitiveModel> {
 
     void getAll(@Nonnull GetAllCallback<T> callback);
 
-    void getById(@Nonnull String id, @Nonnull GetEntityCallback<T> callback);
+    /**
+     * Used while recreating object relational data models. returns lists (of primitive data
+     * structures) within a parent object
+     * @param parentDataId the parent object
+     * @param callback self explanatory
+     */
+    void getAllByParentDataId(@Nonnull String parentDataId,
+                              @Nonnull GetAllCallback<T> callback);
+
+    void getByDataId(@Nonnull String dataId, @Nonnull GetEntityCallback<T> callback);
 
     void save(@Nonnull T entity);
 
     void refreshData();
 
+    void deleteAllByParentId(String parentDataId);
+
     void deleteAll();
 
-    void deleteById(@Nonnull String id);
+    void deleteByDataId(@Nonnull String dataId);
 }

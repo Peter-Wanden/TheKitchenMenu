@@ -131,7 +131,7 @@ public class IngredientEditorViewModelTest {
     @Test
     public void startNewIngredientId_nothingSetToObservers() {
         // Arrange
-        when(idProviderMock.getUId()).thenReturn(NEW.getId());
+        when(idProviderMock.getUId()).thenReturn(NEW.getDataId());
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(NEW.getCreateDate());
         // Act
         SUT.start();
@@ -143,7 +143,7 @@ public class IngredientEditorViewModelTest {
     @Test
     public void startNewIngredientId_nothingSaved() {
         // Arrange
-        when(idProviderMock.getUId()).thenReturn(NEW.getId());
+        when(idProviderMock.getUId()).thenReturn(NEW.getDataId());
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(NEW.getCreateDate());
         // Act
         SUT.start();
@@ -163,7 +163,7 @@ public class IngredientEditorViewModelTest {
     @Test
     public void startNewIngredientId_useButtonNotShown() {
         // Arrange
-        when(idProviderMock.getUId()).thenReturn(NEW.getId());
+        when(idProviderMock.getUId()).thenReturn(NEW.getDataId());
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(NEW.getCreateDate());
         // Act
         SUT.start();
@@ -174,7 +174,7 @@ public class IngredientEditorViewModelTest {
     @Test
     public void startNewIngredientId_invalidName_nameErrorMessageSetToObserver() {
         // Arrange
-        when(idProviderMock.getUId()).thenReturn(NEW_INVALID_NAME.getId());
+        when(idProviderMock.getUId()).thenReturn(NEW_INVALID_NAME.getDataId());
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(NEW_INVALID_NAME.getCreateDate());
         // Act
         SUT.start();
@@ -186,7 +186,7 @@ public class IngredientEditorViewModelTest {
     @Test
     public void startNewIngredientId_invalidName_useButtonNotShown() {
         // Arrange
-        when(idProviderMock.getUId()).thenReturn(NEW_INVALID_NAME.getId());
+        when(idProviderMock.getUId()).thenReturn(NEW_INVALID_NAME.getDataId());
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 NEW_INVALID_NAME.getCreateDate());
         // Act
@@ -248,10 +248,10 @@ public class IngredientEditorViewModelTest {
         // Assert
         verify(duplicateCheckerMock).checkForDuplicateAndNotify(
                 eq(VALID_EXISTING_COMPLETE.getName()),
-                eq(NEW.getId()),
+                eq(NEW.getDataId()),
                 duplicateCallbackCaptor.capture());
 
-        duplicateCallbackCaptor.getValue().duplicateCheckResult(VALID_EXISTING_COMPLETE.getId());
+        duplicateCallbackCaptor.getValue().duplicateCheckResult(VALID_EXISTING_COMPLETE.getDataId());
 
         assertEquals(DUPLICATE_ERROR_MESSAGE, SUT.showNameError.get());
     }
@@ -266,10 +266,10 @@ public class IngredientEditorViewModelTest {
         // Assert
         verify(duplicateCheckerMock).checkForDuplicateAndNotify(
                 eq(VALID_EXISTING_COMPLETE.getName()),
-                eq(NEW.getId()),
+                eq(NEW.getDataId()),
                 duplicateCallbackCaptor.capture());
         duplicateCallbackCaptor.getValue().duplicateCheckResult(
-                VALID_EXISTING_COMPLETE.getId());
+                VALID_EXISTING_COMPLETE.getDataId());
 
         verify(useButtonVisibilityObserverMock, times((3))).onChanged(eq(false));
     }
@@ -296,7 +296,7 @@ public class IngredientEditorViewModelTest {
         SUT.start();
         SUT.setName(NEW_VALID_NAME.getName());
         verify(duplicateCheckerMock).checkForDuplicateAndNotify(
-                eq(NEW_VALID_NAME.getName()), eq(NEW.getId()),
+                eq(NEW_VALID_NAME.getName()), eq(NEW.getDataId()),
                 duplicateCallbackCaptor.capture());
         duplicateCallbackCaptor.getValue().duplicateCheckResult(
                 IngredientDuplicateChecker.NO_DUPLICATE_FOUND);
@@ -304,10 +304,10 @@ public class IngredientEditorViewModelTest {
         SUT.setName(VALID_EXISTING_COMPLETE.getName());
         verify(duplicateCheckerMock).checkForDuplicateAndNotify(
                 eq(VALID_EXISTING_COMPLETE.getName()),
-                eq(NEW.getId()),
+                eq(NEW.getDataId()),
                 duplicateCallbackCaptor.capture());
         duplicateCallbackCaptor.getValue().duplicateCheckResult(
-                VALID_EXISTING_COMPLETE.getId());
+                VALID_EXISTING_COMPLETE.getDataId());
 
         SUT.setName(NEW_VALID_NAME.getName());
         assertNull(SUT.showNameError.get());
@@ -324,17 +324,17 @@ public class IngredientEditorViewModelTest {
         SUT.setName(NEW_VALID_NAME.getName());
         verify(duplicateCheckerMock).checkForDuplicateAndNotify(
                 eq(NEW_VALID_NAME.getName()),
-                eq(NEW_VALID_NAME.getId()),
+                eq(NEW_VALID_NAME.getDataId()),
                 duplicateCallbackCaptor.capture());
         duplicateCallbackCaptor.getValue().duplicateCheckResult(
                 IngredientDuplicateChecker.NO_DUPLICATE_FOUND);
 
         SUT.setName(VALID_EXISTING_COMPLETE.getName());
         verify(duplicateCheckerMock).checkForDuplicateAndNotify(
-                eq(VALID_EXISTING_COMPLETE.getName()), eq(NEW_VALID_NAME.getId()),
+                eq(VALID_EXISTING_COMPLETE.getName()), eq(NEW_VALID_NAME.getDataId()),
                 duplicateCallbackCaptor.capture());
         duplicateCallbackCaptor.getValue().duplicateCheckResult(
-                VALID_EXISTING_COMPLETE.getId());
+                VALID_EXISTING_COMPLETE.getDataId());
 
         SUT.setName(NEW_VALID_NAME.getName());
         // Assert
@@ -452,7 +452,7 @@ public class IngredientEditorViewModelTest {
     public void startExistingId_validNameValidDescription_activityTitleSetToEdit() {
         // Arrange
         // Act
-        SUT.start(VALID_EXISTING_COMPLETE.getId());
+        SUT.start(VALID_EXISTING_COMPLETE.getDataId());
         simulateGetValidExistingCompleteFromDatabase();
         // Assert
         verify(navigatorMock).setActivityTitle(eq(R.string.activity_title_edit_ingredient));
@@ -463,7 +463,7 @@ public class IngredientEditorViewModelTest {
         // Arrange
 
         // Act
-        SUT.start(VALID_EXISTING_COMPLETE.getId());
+        SUT.start(VALID_EXISTING_COMPLETE.getDataId());
         simulateGetValidExistingCompleteFromDatabase();
         // Assert
         assertEquals(VALID_EXISTING_COMPLETE.getName(), SUT.getName());
@@ -474,7 +474,7 @@ public class IngredientEditorViewModelTest {
         // Arrange
 
         // Act
-        SUT.start(VALID_EXISTING_COMPLETE.getId());
+        SUT.start(VALID_EXISTING_COMPLETE.getDataId());
         simulateGetValidExistingCompleteFromDatabase();
         // Assert
         assertEquals(VALID_EXISTING_COMPLETE.getDescription(), SUT.getDescription());
@@ -485,7 +485,7 @@ public class IngredientEditorViewModelTest {
         // Arrange
 
         // Act
-        SUT.start(VALID_EXISTING_COMPLETE.getId());
+        SUT.start(VALID_EXISTING_COMPLETE.getDataId());
         simulateGetValidExistingCompleteFromDatabase();
         // Assert
         assertNull(SUT.showNameError.get());
@@ -497,7 +497,7 @@ public class IngredientEditorViewModelTest {
         // Arrange
 
         // Act
-        SUT.start(VALID_EXISTING_COMPLETE.getId());
+        SUT.start(VALID_EXISTING_COMPLETE.getDataId());
         simulateGetValidExistingCompleteFromDatabase();
         // Assert
         verify(useButtonVisibilityObserverMock, times((2))).onChanged(eq(false));
@@ -507,7 +507,7 @@ public class IngredientEditorViewModelTest {
     public void startExistingId_validNameValidDescription_duplicateErrorNotShown() {
         // Arrange
         // Act
-        SUT.start(VALID_EXISTING_COMPLETE.getId());
+        SUT.start(VALID_EXISTING_COMPLETE.getDataId());
         simulateGetValidExistingCompleteFromDatabase();
         // Assert
         assertNull(SUT.showNameError.get());
@@ -519,7 +519,7 @@ public class IngredientEditorViewModelTest {
 
 
         // Act
-        SUT.start(VALID_EXISTING_COMPLETE.getId());
+        SUT.start(VALID_EXISTING_COMPLETE.getDataId());
         simulateGetValidExistingCompleteFromDatabase();
         SUT.setName(VALID_EXISTING_INVALID_NAME_UPDATE.getName());
         // Assert
@@ -534,7 +534,7 @@ public class IngredientEditorViewModelTest {
                 thenRemoveOneCharacter().
                 build();
         // Act
-        SUT.start(VALID_EXISTING_COMPLETE.getId());
+        SUT.start(VALID_EXISTING_COMPLETE.getDataId());
         simulateGetValidExistingCompleteFromDatabase();
         SUT.setName(nameTooShort);
         // Assert
@@ -545,7 +545,7 @@ public class IngredientEditorViewModelTest {
     public void startExistingId_validNameValidDescriptionNameUpdatedWithValidValue_useButtonShown() {
         // Arrange
         // Act
-        SUT.start(VALID_EXISTING_COMPLETE.getId());
+        SUT.start(VALID_EXISTING_COMPLETE.getDataId());
         simulateGetValidExistingCompleteFromDatabase();
         SUT.setName(VALID_EXISTING_VALID_NAME_UPDATE.getName());
         whenDuplicateNameCheckForNewIngredientReturnNoneFound();
@@ -559,7 +559,7 @@ public class IngredientEditorViewModelTest {
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 VALID_EXISTING_VALID_NAME_UPDATE.getLastUpdate());
         // Act
-        SUT.start(VALID_EXISTING_COMPLETE.getId());
+        SUT.start(VALID_EXISTING_COMPLETE.getDataId());
         simulateGetValidExistingCompleteFromDatabase();
         SUT.setName(VALID_EXISTING_VALID_NAME_UPDATE.getName());
         whenDuplicateNameCheckForNewIngredientReturnNoneFound();
@@ -577,7 +577,7 @@ public class IngredientEditorViewModelTest {
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 VALID_EXISTING_VALID_NAME_UPDATE.getLastUpdate());
         // Act
-        SUT.start(VALID_EXISTING_COMPLETE.getId());
+        SUT.start(VALID_EXISTING_COMPLETE.getDataId());
         simulateGetValidExistingCompleteFromDatabase();
         SUT.setName(VALID_EXISTING_VALID_NAME_UPDATE.getName());
         // Assert
@@ -588,16 +588,16 @@ public class IngredientEditorViewModelTest {
     public void startExistingId_validNameValidDescriptionDuplicateName_useButtonNotShown() {
         // Arrange
         // Act
-        SUT.start(VALID_EXISTING_COMPLETE.getId());
+        SUT.start(VALID_EXISTING_COMPLETE.getDataId());
         simulateGetValidExistingCompleteFromDatabase();
         SUT.setName(VALID_EXISTING_FROM_ANOTHER_USER.getName());
 
         verify(duplicateCheckerMock).checkForDuplicateAndNotify(
                 eq(VALID_EXISTING_FROM_ANOTHER_USER.getName()),
-                eq(VALID_EXISTING_COMPLETE.getId()),
+                eq(VALID_EXISTING_COMPLETE.getDataId()),
                 duplicateCallbackCaptor.capture());
         duplicateCallbackCaptor.getValue().duplicateCheckResult(
-                VALID_EXISTING_FROM_ANOTHER_USER.getId());
+                VALID_EXISTING_FROM_ANOTHER_USER.getDataId());
         // Assert
         verify(useButtonVisibilityObserverMock, times((3))).onChanged(false);
     }
@@ -606,16 +606,16 @@ public class IngredientEditorViewModelTest {
     public void startExistingId_validNameValidDescriptionDuplicateName_duplicateErrorShown() {
         // Arrange
         // Act
-        SUT.start(VALID_EXISTING_COMPLETE.getId());
+        SUT.start(VALID_EXISTING_COMPLETE.getDataId());
         simulateGetValidExistingCompleteFromDatabase();
         SUT.setName(VALID_EXISTING_FROM_ANOTHER_USER.getName());
 
         verify(duplicateCheckerMock).checkForDuplicateAndNotify(
                 eq(VALID_EXISTING_FROM_ANOTHER_USER.getName()),
-                eq(VALID_EXISTING_COMPLETE.getId()),
+                eq(VALID_EXISTING_COMPLETE.getDataId()),
                 duplicateCallbackCaptor.capture());
         duplicateCallbackCaptor.getValue().duplicateCheckResult(
-                VALID_EXISTING_FROM_ANOTHER_USER.getId());
+                VALID_EXISTING_FROM_ANOTHER_USER.getDataId());
         // Assert
         assertEquals(DUPLICATE_ERROR_MESSAGE, SUT.showNameError.get());
     }
@@ -628,7 +628,7 @@ public class IngredientEditorViewModelTest {
                 thenAddOneCharacter().
                 build();
         // Act
-        SUT.start(VALID_EXISTING_COMPLETE.getId());
+        SUT.start(VALID_EXISTING_COMPLETE.getDataId());
         simulateGetValidExistingCompleteFromDatabase();
         SUT.setDescription(description);
         // Assert
@@ -643,7 +643,7 @@ public class IngredientEditorViewModelTest {
                 thenAddOneCharacter().
                 build();
         // Act
-        SUT.start(VALID_EXISTING_COMPLETE.getId());
+        SUT.start(VALID_EXISTING_COMPLETE.getDataId());
         simulateGetValidExistingCompleteFromDatabase();
         SUT.setDescription(description);
         // Assert
@@ -654,7 +654,7 @@ public class IngredientEditorViewModelTest {
     public void startExistingId_validNameValidDescriptionDescriptionUpdatedWithValidValue_useButtonShown() {
         // Arrange
         // Act
-        SUT.start(VALID_EXISTING_COMPLETE.getId());
+        SUT.start(VALID_EXISTING_COMPLETE.getDataId());
         simulateGetValidExistingCompleteFromDatabase();
         SUT.setDescription(VALID_EXISTING_VALID_DESCRIPTION_UPDATE.getName());
         // Assert
@@ -666,7 +666,7 @@ public class IngredientEditorViewModelTest {
         // Arrange
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 VALID_EXISTING_VALID_DESCRIPTION_UPDATE.getLastUpdate());
-        SUT.start(VALID_EXISTING_COMPLETE.getId());
+        SUT.start(VALID_EXISTING_COMPLETE.getDataId());
         simulateGetValidExistingCompleteFromDatabase();
         // Act
         SUT.setDescription(VALID_EXISTING_VALID_DESCRIPTION_UPDATE.getDescription());
@@ -684,7 +684,7 @@ public class IngredientEditorViewModelTest {
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 VALID_EXISTING_VALID_DESCRIPTION_UPDATE.getLastUpdate());
         // Act
-        SUT.start(VALID_EXISTING_COMPLETE.getId());
+        SUT.start(VALID_EXISTING_COMPLETE.getDataId());
         simulateGetValidExistingCompleteFromDatabase();
         SUT.setDescription(VALID_EXISTING_VALID_DESCRIPTION_UPDATE.getDescription());
         // Assert
@@ -699,7 +699,7 @@ public class IngredientEditorViewModelTest {
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(
                 VALID_EXISTING_VALID_DESCRIPTION_UPDATE.getLastUpdate());
         // Act
-        SUT.start(VALID_EXISTING_FROM_ANOTHER_USER.getId());
+        SUT.start(VALID_EXISTING_FROM_ANOTHER_USER.getDataId());
         simulateGetValidExistingFromAnotherUserFromDatabase();
         // Assert
         verify(navigatorMock).finishActivity(eq(""));
@@ -711,16 +711,16 @@ public class IngredientEditorViewModelTest {
     }
 
     private void whenIdProviderGetIdReturnNewId() {
-        when(idProviderMock.getUId()).thenReturn(NEW.getId());
+        when(idProviderMock.getUId()).thenReturn(NEW.getDataId());
     }
 
     private void simulateGetValidExistingCompleteFromDatabase() {
-        verify(repoMock).getById(eq(VALID_EXISTING_COMPLETE.getId()), repoCallbackCaptor.capture());
+        verify(repoMock).getByDataId(eq(VALID_EXISTING_COMPLETE.getDataId()), repoCallbackCaptor.capture());
         repoCallbackCaptor.getValue().onEntityLoaded(VALID_EXISTING_COMPLETE);
     }
 
     private void simulateGetValidExistingFromAnotherUserFromDatabase() {
-        verify(repoMock).getById(eq(VALID_EXISTING_FROM_ANOTHER_USER.getId()),
+        verify(repoMock).getByDataId(eq(VALID_EXISTING_FROM_ANOTHER_USER.getDataId()),
                 repoCallbackCaptor.capture());
         repoCallbackCaptor.getValue().onEntityLoaded(VALID_EXISTING_FROM_ANOTHER_USER);
     }

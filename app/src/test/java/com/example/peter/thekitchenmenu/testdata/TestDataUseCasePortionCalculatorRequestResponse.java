@@ -14,8 +14,8 @@ public class TestDataUseCasePortionCalculatorRequestResponse {
 
     public static IngredientCalculatorRequest getRequestEmptyFourPortions() {
         return new IngredientCalculatorRequest(
-                TestDataRecipeMetadataEntity.getNewInvalid().getId(),
-                TestDataIngredientEntity.getNewValidName().getId(),
+                TestDataRecipeMetadataEntity.getNewInvalid().getDataId(),
+                TestDataIngredientEntity.getNewValidName().getDataId(),
                 NO_RECIPE_INGREDIENT_ID,
                 DEFAULT_MEASUREMENT_MODEL);
     }
@@ -27,8 +27,8 @@ public class TestDataUseCasePortionCalculatorRequestResponse {
 
     public static IngredientCalculatorRequest getRequestInvalidTotalUnitOne() {
         return new IngredientCalculatorRequest(
-                TestDataRecipeMetadataEntity.getNewInvalid().getId(),
-                TestDataIngredientEntity.getNewValidName().getId(),
+                TestDataRecipeMetadataEntity.getNewInvalid().getDataId(),
+                TestDataIngredientEntity.getNewValidName().getDataId(),
                 NO_RECIPE_INGREDIENT_ID,
                 TestDataMeasurementModel.getNewInvalidTotalUnitOne());
     }
@@ -41,8 +41,8 @@ public class TestDataUseCasePortionCalculatorRequestResponse {
 
     public static IngredientCalculatorRequest getRequestValidTotalUnitOne() {
         return new IngredientCalculatorRequest(
-                TestDataRecipeMetadataEntity.getNewInvalid().getId(),
-                TestDataIngredientEntity.getNewValidName().getId(),
+                TestDataRecipeMetadataEntity.getNewInvalid().getDataId(),
+                TestDataIngredientEntity.getNewValidName().getDataId(),
                 NO_RECIPE_INGREDIENT_ID,
                 TestDataMeasurementModel.getNewValidTotalUnitOne());
     }
@@ -54,8 +54,8 @@ public class TestDataUseCasePortionCalculatorRequestResponse {
 
     public static IngredientCalculatorRequest getRequestInvalidTotalUnitTwo() {
         return new IngredientCalculatorRequest(
-                TestDataRecipeMetadataEntity.getNewInvalid().getId(),
-                TestDataIngredientEntity.getNewValidName().getId(),
+                TestDataRecipeMetadataEntity.getNewInvalid().getDataId(),
+                TestDataIngredientEntity.getNewValidName().getDataId(),
                 NO_RECIPE_INGREDIENT_ID,
                 TestDataMeasurementModel.getNewInvalidTotalUnitTwo());
     }
@@ -67,8 +67,8 @@ public class TestDataUseCasePortionCalculatorRequestResponse {
 
     public static IngredientCalculatorRequest getRequestValidTotalUnitTwo() {
         return new IngredientCalculatorRequest(
-                TestDataRecipeMetadataEntity.getNewInvalid().getId(),
-                TestDataIngredientEntity.getNewValidName().getId(),
+                TestDataRecipeMetadataEntity.getNewInvalid().getDataId(),
+                TestDataIngredientEntity.getNewValidName().getDataId(),
                 NO_RECIPE_INGREDIENT_ID,
                 TestDataMeasurementModel.getNewValidTotalUnitTwo());
     }
@@ -80,8 +80,8 @@ public class TestDataUseCasePortionCalculatorRequestResponse {
 
     public static IngredientCalculatorRequest getRequestUnitOfMeasureChangeImperialSpoon() {
         return new IngredientCalculatorRequest(
-                TestDataRecipeMetadataEntity.getNewInvalid().getId(),
-                TestDataIngredientEntity.getNewValidName().getId(),
+                TestDataRecipeMetadataEntity.getNewInvalid().getDataId(),
+                TestDataIngredientEntity.getNewValidName().getDataId(),
                 NO_RECIPE_INGREDIENT_ID,
                 TestDataMeasurementModel.getNewInvalidUnitOfMeasureChangedImperialSpoon());
     }
@@ -93,8 +93,8 @@ public class TestDataUseCasePortionCalculatorRequestResponse {
 
     public static IngredientCalculatorRequest getRequestNewValidImperialSpoonUnitOneUpdatedHalfSpoon() {
         return new IngredientCalculatorRequest(
-                TestDataRecipeMetadataEntity.getNewInvalid().getId(),
-                TestDataIngredientEntity.getNewValidName().getId(),
+                TestDataRecipeMetadataEntity.getNewInvalid().getDataId(),
+                TestDataIngredientEntity.getNewValidName().getDataId(),
                 NO_RECIPE_INGREDIENT_ID,
                 TestDataMeasurementModel.getNewValidHalfImperialSpoonUnitOneUpdated());
     }
@@ -106,8 +106,8 @@ public class TestDataUseCasePortionCalculatorRequestResponse {
 
     public static IngredientCalculatorRequest getRequestNewValidImperialSpoonInvalidConversionFactor() {
         return new IngredientCalculatorRequest(
-                TestDataRecipeMetadataEntity.getNewInvalid().getId(),
-                TestDataIngredientEntity.getNewValidName().getId(),
+                TestDataRecipeMetadataEntity.getNewInvalid().getDataId(),
+                TestDataIngredientEntity.getNewValidName().getDataId(),
                 NO_RECIPE_INGREDIENT_ID,
                 TestDataMeasurementModel.getNewInvalidConversionFactor());
     }
@@ -119,8 +119,8 @@ public class TestDataUseCasePortionCalculatorRequestResponse {
 
     public static IngredientCalculatorRequest getRequestNewValidImperialSpoonValidConversionFactor() {
         return new IngredientCalculatorRequest(
-                TestDataRecipeMetadataEntity.getNewInvalid().getId(),
-                TestDataIngredientEntity.getNewValidName().getId(),
+                TestDataRecipeMetadataEntity.getNewInvalid().getDataId(),
+                TestDataIngredientEntity.getNewValidName().getDataId(),
                 NO_RECIPE_INGREDIENT_ID,
                 TestDataMeasurementModel.getNewValidImperialSpoonWithConversionFactor());
     }
@@ -134,7 +134,7 @@ public class TestDataUseCasePortionCalculatorRequestResponse {
         return new IngredientCalculatorRequest(
                 NO_RECIPE_ID,
                 NO_INGREDIENT_ID,
-                TestDataRecipeIngredientQuantityEntity.getExistingValidMetric().getId(),
+                TestDataRecipeIngredientQuantityEntity.getExistingValidMetric().getDataId(),
                 DEFAULT_MEASUREMENT_MODEL);
     }
     public static IngredientCalculatorResponse getResponseExistingValidMetric() {
@@ -147,7 +147,7 @@ public class TestDataUseCasePortionCalculatorRequestResponse {
         return new IngredientCalculatorRequest(
                 NO_RECIPE_ID,
                 NO_INGREDIENT_ID,
-                TestDataRecipeIngredientQuantityEntity.getExistingValidMetric().getId(),
+                TestDataRecipeIngredientQuantityEntity.getExistingValidMetric().getDataId(),
                 TestDataMeasurementModel.getExistingMetricInvalidTotalOne());
     }
     public static IngredientCalculatorResponse getResponseExistingMetricInvalidTotalUnitOne() {
@@ -160,7 +160,7 @@ public class TestDataUseCasePortionCalculatorRequestResponse {
         return new IngredientCalculatorRequest(
                 NO_RECIPE_ID,
                 NO_INGREDIENT_ID,
-                TestDataRecipeIngredientQuantityEntity.getExistingValidMetric().getId(),
+                TestDataRecipeIngredientQuantityEntity.getExistingValidMetric().getDataId(),
                 TestDataMeasurementModel.getExistingMetricValidUnitOneUpdated()
         );
     }
@@ -175,7 +175,7 @@ public class TestDataUseCasePortionCalculatorRequestResponse {
         return new IngredientCalculatorRequest(
                 NO_RECIPE_ID,
                 NO_INGREDIENT_ID,
-                TestDataRecipeIngredientQuantityEntity.getExistingValidMetric().getId(),
+                TestDataRecipeIngredientQuantityEntity.getExistingValidMetric().getDataId(),
                 TestDataMeasurementModel.getExistingMetricValidTwoUpdated());
     }
     public static IngredientCalculatorResponse getResponseExistingMetricValidTotalUnitTwo() {
@@ -188,7 +188,7 @@ public class TestDataUseCasePortionCalculatorRequestResponse {
         return new IngredientCalculatorRequest(
                 NO_RECIPE_ID,
                 NO_INGREDIENT_ID,
-                TestDataRecipeIngredientQuantityEntity.getExistingValidMetric().getId(),
+                TestDataRecipeIngredientQuantityEntity.getExistingValidMetric().getDataId(),
                 TestDataMeasurementModel.getExistingMetricUnitOfMeasureUpdatedToImperial());
     }
     public static IngredientCalculatorResponse getResponseExistingMetricUnitOfMeasureChangedToImperialSpoon() {
@@ -201,7 +201,7 @@ public class TestDataUseCasePortionCalculatorRequestResponse {
         return new IngredientCalculatorRequest(
                 NO_RECIPE_ID,
                 NO_INGREDIENT_ID,
-                TestDataRecipeIngredientQuantityEntity.getExistingValidImperialTwoSpoons().getId(),
+                TestDataRecipeIngredientQuantityEntity.getExistingValidImperialTwoSpoons().getDataId(),
                 DEFAULT_MEASUREMENT_MODEL);
     }
     public static IngredientCalculatorResponse getResponseExistingImperialSpoon() {
@@ -215,7 +215,7 @@ public class TestDataUseCasePortionCalculatorRequestResponse {
         return new IngredientCalculatorRequest(
                 NO_RECIPE_ID,
                 NO_INGREDIENT_ID,
-                TestDataRecipeIngredientQuantityEntity.getExistingValidImperialTwoSpoons().getId(),
+                TestDataRecipeIngredientQuantityEntity.getExistingValidImperialTwoSpoons().getDataId(),
                 TestDataMeasurementModel.getExistingImperialSpoonInvalidConversionFactor());
     }
     public static IngredientCalculatorResponse getResponseExistingImperialSpoonInvalidConversionFactor() {

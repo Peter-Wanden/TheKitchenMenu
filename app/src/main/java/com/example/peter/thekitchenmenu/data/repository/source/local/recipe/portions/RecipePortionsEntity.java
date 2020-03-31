@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.data.primitivemodel.recipe;
+package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
@@ -96,7 +96,7 @@ public final class RecipePortionsEntity implements PrimitiveModel {
 
     @Nonnull
     @Override
-    public String getId() {
+    public String getDataId() {
         return id;
     }
 

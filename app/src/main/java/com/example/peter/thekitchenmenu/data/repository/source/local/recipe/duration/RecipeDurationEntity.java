@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.data.primitivemodel.recipe;
+package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
@@ -80,7 +80,7 @@ public final class RecipeDurationEntity implements PrimitiveModel {
 
     @Override
     @Nonnull
-    public String getId() {
+    public String getDataId() {
         return id;
     }
 

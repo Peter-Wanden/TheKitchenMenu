@@ -55,11 +55,11 @@ public class ProductLocalDataSource implements PrimitiveDataSource<ProductEntity
     }
 
     @Override
-    public void getById(@Nonnull String id,
-                        @Nonnull GetEntityCallback<ProductEntity> callback) {
+    public void getByDataId(@Nonnull String dataId,
+                            @Nonnull GetEntityCallback<ProductEntity> callback) {
 
         Runnable runnable = () -> {
-            final ProductEntity entity = entityDao.getById(id);
+            final ProductEntity entity = entityDao.getById(dataId);
             appExecutors.mainThread().execute(() -> {
                 if (entity != null)
                     callback.onEntityLoaded(entity);
@@ -89,8 +89,8 @@ public class ProductLocalDataSource implements PrimitiveDataSource<ProductEntity
     }
 
     @Override
-    public void deleteById(@Nonnull final String id) {
-        Runnable runnable = () -> entityDao.deleteById(id);
+    public void deleteByDataId(@Nonnull final String dataId) {
+        Runnable runnable = () -> entityDao.deleteById(dataId);
         appExecutors.diskIO().execute(runnable);
     }
 

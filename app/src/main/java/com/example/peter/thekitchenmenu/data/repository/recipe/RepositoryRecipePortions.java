@@ -30,7 +30,7 @@ public class RepositoryRecipePortions
 
     @Override
     public void getByRecipeId(@Nonnull String recipeId,
-                              @Nonnull GetModelCallback<RecipePortionsPersistenceModel> callback) {
+                              @Nonnull GetDomainModelCallback<RecipePortionsPersistenceModel> callback) {
 
         RecipePortionsPersistenceModel model = checkCacheForRecipeId(recipeId);
 
@@ -40,7 +40,7 @@ public class RepositoryRecipePortions
         }
         ((DataSourceRecipePortions) localDataSource).getByRecipeId(
                 recipeId,
-                new GetModelCallback<RecipePortionsPersistenceModel>() {
+                new GetDomainModelCallback<RecipePortionsPersistenceModel>() {
                     @Override
                     public void onModelLoaded(RecipePortionsPersistenceModel model) {
                         if (cache == null)
@@ -54,7 +54,7 @@ public class RepositoryRecipePortions
                     public void onModelUnavailable() {
                         ((DataSourceRecipePortions) remoteDataSource).getByRecipeId(
                                 recipeId,
-                                new GetModelCallback<RecipePortionsPersistenceModel>() {
+                                new GetDomainModelCallback<RecipePortionsPersistenceModel>() {
                                     @Override
                                     public void onModelLoaded(RecipePortionsPersistenceModel model) {
                                         if (cache == null)

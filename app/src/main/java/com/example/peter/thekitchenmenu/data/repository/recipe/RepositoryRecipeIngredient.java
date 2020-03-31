@@ -31,7 +31,7 @@ public class RepositoryRecipeIngredient
 
     @Override
     public void getAllByRecipeId(@Nonnull String recipeId,
-                                 @Nonnull GetAllCallback<RecipeIngredientEntity> callback) {
+                                 @Nonnull GetAllDomainModelsCallback<RecipeIngredientEntity> callback) {
 
         List<RecipeIngredientEntity> cachedEntities = getFromCachedByRecipeId(recipeId);
 
@@ -41,14 +41,14 @@ public class RepositoryRecipeIngredient
         }
         ((DataSourceRecipeIngredient)localDataSource).getAllByRecipeId(
                 recipeId,
-                new GetAllCallback<RecipeIngredientEntity>() {
+                new GetAllDomainModelsCallback<RecipeIngredientEntity>() {
                     @Override
                     public void onAllLoaded(List<RecipeIngredientEntity> entities) {
                         if (cache == null)
                             cache = new LinkedHashMap<>();
 
                         for (RecipeIngredientEntity entity : entities)
-                            cache.put(entity.getId(), entity);
+                            cache.put(entity.getDataId(), entity);
 
                         callback.onAllLoaded(entities);
                     }
@@ -57,14 +57,14 @@ public class RepositoryRecipeIngredient
                     public void onDataUnavailable() {
                         ((DataSourceRecipeIngredient)remoteDataSource).getAllByRecipeId(
                                 recipeId,
-                                new GetAllCallback<RecipeIngredientEntity>() {
+                                new GetAllDomainModelsCallback<RecipeIngredientEntity>() {
                                     @Override
                                     public void onAllLoaded(List<RecipeIngredientEntity> entities) {
                                         if (cache == null)
                                             cache = new LinkedHashMap<>();
 
                                         for (RecipeIngredientEntity entity : entities)
-                                            cache.put(entity.getId(), entity);
+                                            cache.put(entity.getDataId(), entity);
 
                                         callback.onAllLoaded(entities);
                                     }
@@ -80,7 +80,7 @@ public class RepositoryRecipeIngredient
 
     @Override
     public void getAllByProductId(@Nonnull String productId,
-                                  @Nonnull GetAllCallback<RecipeIngredientEntity> callback) {
+                                  @Nonnull GetAllDomainModelsCallback<RecipeIngredientEntity> callback) {
 
         List<RecipeIngredientEntity> cachedEntities = getFromCacheByProductId(productId);
 
@@ -90,14 +90,14 @@ public class RepositoryRecipeIngredient
         }
         ((DataSourceRecipeIngredient)localDataSource).getAllByProductId(
                 productId,
-                new GetAllCallback<RecipeIngredientEntity>() {
+                new GetAllDomainModelsCallback<RecipeIngredientEntity>() {
                     @Override
                     public void onAllLoaded(List<RecipeIngredientEntity> entities) {
                         if (cache == null)
                             cache = new LinkedHashMap<>();
 
                         for (RecipeIngredientEntity entity : entities)
-                            cache.put(entity.getId(), entity);
+                            cache.put(entity.getDataId(), entity);
 
                         callback.onAllLoaded(entities);
                     }
@@ -106,14 +106,14 @@ public class RepositoryRecipeIngredient
                     public void onDataUnavailable() {
                         ((DataSourceRecipeIngredient)remoteDataSource).getAllByProductId(
                                 productId,
-                                new GetAllCallback<RecipeIngredientEntity>() {
+                                new GetAllDomainModelsCallback<RecipeIngredientEntity>() {
                                     @Override
                                     public void onAllLoaded(List<RecipeIngredientEntity> entities) {
                                         if (cache == null)
                                             cache = new LinkedHashMap<>();
 
                                         for (RecipeIngredientEntity entity : entities)
-                                            cache.put(entity.getId(), entity);
+                                            cache.put(entity.getDataId(), entity);
 
                                         callback.onAllLoaded(entities);
                                     }
@@ -129,7 +129,7 @@ public class RepositoryRecipeIngredient
 
     @Override
     public void getAllByIngredientId(@Nonnull String ingredientId,
-                                     @Nonnull GetAllCallback<RecipeIngredientEntity> callback) {
+                                     @Nonnull GetAllDomainModelsCallback<RecipeIngredientEntity> callback) {
 
         List<RecipeIngredientEntity> entities = getFromCacheByIngredientId(ingredientId);
         if (entities != null || !entities.isEmpty()) {
@@ -138,14 +138,14 @@ public class RepositoryRecipeIngredient
         }
         ((DataSourceRecipeIngredient)localDataSource).getAllByIngredientId(
                 ingredientId,
-                new GetAllCallback<RecipeIngredientEntity>() {
+                new GetAllDomainModelsCallback<RecipeIngredientEntity>() {
                     @Override
                     public void onAllLoaded(List<RecipeIngredientEntity> entities) {
                         if (cache == null)
                             cache = new LinkedHashMap<>();
 
                         for (RecipeIngredientEntity entity : entities)
-                            cache.put(entity.getId(), entity);
+                            cache.put(entity.getDataId(), entity);
                         callback.onAllLoaded(entities);
                     }
 
@@ -153,14 +153,14 @@ public class RepositoryRecipeIngredient
                     public void onDataUnavailable() {
                         ((DataSourceRecipeIngredient)remoteDataSource).getAllByIngredientId(
                                 ingredientId,
-                                new GetAllCallback<RecipeIngredientEntity>() {
+                                new GetAllDomainModelsCallback<RecipeIngredientEntity>() {
                                     @Override
                                     public void onAllLoaded(List<RecipeIngredientEntity> entities) {
                                         if (cache == null)
                                             cache = new LinkedHashMap<>();
 
                                         for (RecipeIngredientEntity entity : entities)
-                                            cache.put(entity.getId(), entity);
+                                            cache.put(entity.getDataId(), entity);
 
                                         callback.onAllLoaded(entities);
                                     }

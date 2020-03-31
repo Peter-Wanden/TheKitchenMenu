@@ -1,9 +1,11 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata;
 
-import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeMetadataEntity;
+import com.example.peter.thekitchenmenu.app.Constants;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.parent.RecipeMetadataParentEntity;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipePersistenceModel;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -11,11 +13,12 @@ import java.util.Objects;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.*;
 
 /**
- * Represented in primitive form by {@link RecipeMetadataEntity}
+ * Represented in primitive form by {@link RecipeMetadataParentEntity}
  */
 public final class RecipeMetadataPersistenceModel extends RecipePersistenceModel {
 
-    private String parentId;
+    private String recipeParentId;
+    private RecipeState recipeState;
     private HashMap<ComponentName, ComponentState> componentStates;
     private List<FailReasons> failReasons;
     private String createdBy;
@@ -24,8 +27,12 @@ public final class RecipeMetadataPersistenceModel extends RecipePersistenceModel
 
     private RecipeMetadataPersistenceModel(){}
 
-    public String getParentId() {
-        return parentId;
+    public String getRecipeParentId() {
+        return recipeParentId;
+    }
+
+    public RecipeState getRecipeState() {
+        return recipeState;
     }
 
     public HashMap<ComponentName, ComponentState> getComponentStates() {
@@ -48,34 +55,27 @@ public final class RecipeMetadataPersistenceModel extends RecipePersistenceModel
         return lastUpdate;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        RecipeMetadataPersistenceModel that = (RecipeMetadataPersistenceModel) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(recipeId, that.recipeId) &&
-                Objects.equals(parentId, that.parentId) &&
-                Objects.equals(componentStates, that.componentStates) &&
-                Objects.equals(failReasons, that.failReasons) &&
-                Objects.equals(createdBy, that.createdBy) &&
-                createDate == that.createDate &&
-                lastUpdate == that.lastUpdate;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(
-                id, recipeId, parentId, componentStates, failReasons,
-                createdBy, createDate, lastUpdate);
-    }
 
     public static class Builder extends DomainModelBuilder<
                     Builder,
                     RecipeMetadataPersistenceModel> {
 
-        public Builder setId(String id) {
-            model.id = id;
+        @Override
+        public Builder getDefault() {
+            model.dataId = "";
+            model.recipeId = "";
+            model.recipeParentId = "";
+            model.recipeState = RecipeState.DATA_UNAVAILABLE;
+            model.componentStates = new HashMap<>();
+            model.failReasons = new ArrayList<>();
+            model.createdBy = Constants.getUserId();
+            model.createDate = 0L;
+            model.lastUpdate = 0L;
+            return self();
+        }
+
+        public Builder setDataId(String dataId) {
+            model.dataId = dataId;
             return self();
         }
 
@@ -84,8 +84,13 @@ public final class RecipeMetadataPersistenceModel extends RecipePersistenceModel
             return self();
         }
 
-        public Builder setParentId(String parentId) {
-            model.parentId = parentId;
+        public Builder setRecipeParentId(String recipeParentId) {
+            model.recipeParentId = recipeParentId;
+            return self();
+        }
+
+        public Builder setRecipeState(RecipeState recipeState) {
+            model.recipeState = recipeState;
             return self();
         }
 

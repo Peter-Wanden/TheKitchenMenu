@@ -1,5 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.ingredient;
 
+import android.annotation.SuppressLint;
+
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
@@ -16,7 +18,9 @@ import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
 
@@ -26,17 +30,39 @@ import static com.example.peter.thekitchenmenu.domain.usecase.textvalidation.Tex
 
 public class Ingredient
         extends UseCase
-        implements DataSource.GetModelCallback<IngredientPersistenceModel> {
+        implements DataSource.GetDomainModelCallback<IngredientPersistenceModel> {
 
     private static final String TAG = "tkm-" + Ingredient.class.getSimpleName() + ": ";
 
     public enum FailReason implements FailReasons {
-        UNEDITABLE,
-        DUPLICATE,
-        NAME_TOO_SHORT,
-        NAME_TOO_LONG,
-        DESCRIPTION_TOO_SHORT,
-        DESCRIPTION_TOO_LONG
+        UNEDITABLE(151),
+        DUPLICATE(152),
+        NAME_TOO_SHORT(153),
+        NAME_TOO_LONG(154),
+        DESCRIPTION_TOO_SHORT(155),
+        DESCRIPTION_TOO_LONG(156);
+
+        private final int id;
+
+        @SuppressLint("UseSparseArrays")
+        private static Map<Integer, FailReason> options = new HashMap<>();
+
+        FailReason(int id) {
+            this.id = id;
+        }
+
+        static {
+            for (FailReason fr : FailReason.values())
+                options.put(fr.id, fr);
+        }
+
+        public static FailReason getFromId(int id) {
+            return options.get(id);
+        }
+
+        public int getId() {
+            return id;
+        }
     }
 
     static final String CREATE_NEW_INGREDIENT = "";
@@ -102,7 +128,7 @@ public class Ingredient
     }
 
     private void loadData(String ingredientId) {
-        repository.getById(ingredientId, this);
+        repository.getByDataId(ingredientId, this);
     }
 
     @Override

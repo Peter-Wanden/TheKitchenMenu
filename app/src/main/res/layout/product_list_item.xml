@@ -96,7 +96,7 @@
                 android:backgroundTint="@color/primaryDarkColor"
                 android:src="@drawable/ic_list_add"
                 android:visibility="@{productModel.favorite ? View.GONE : View.VISIBLE}"
-                android:onClick="@{() -> listener.addToFavorites(productModel.productEntity.id)}"
+                android:onClick="@{() -> listener.addToFavorites(productModel.productEntity.dataId)}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 />
@@ -110,7 +110,7 @@
                 android:backgroundTint="@color/primaryDarkColor"
                 android:src="@drawable/ic_list_add_check"
                 android:visibility="@{productModel.favorite ? View.VISIBLE : View.GONE}"
-                android:onClick="@{() -> listener.removeFromFavorites(productModel.favoriteProductEntity.id)}"
+                android:onClick="@{() -> listener.removeFromFavorites(productModel.favoriteProductEntity.dataId)}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 />

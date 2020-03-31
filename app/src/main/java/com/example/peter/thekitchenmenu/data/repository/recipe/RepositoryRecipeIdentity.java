@@ -19,8 +19,8 @@ public class RepositoryRecipeIdentity extends Repository<RecipeIdentityPersisten
     }
 
     public static RepositoryRecipeIdentity getInstance(
-            DataSource<RecipeIdentityPersistenceModel> remoteDataSource,
-            DataSource<RecipeIdentityPersistenceModel> localDataSource) {
+            @Nonnull DataSource<RecipeIdentityPersistenceModel> remoteDataSource,
+            @Nonnull DataSource<RecipeIdentityPersistenceModel> localDataSource) {
 
         if (INSTANCE == null) {
             INSTANCE = new RepositoryRecipeIdentity(remoteDataSource, localDataSource);

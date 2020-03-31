@@ -1,5 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeduration;
 
+import android.annotation.SuppressLint;
+
 import com.example.peter.thekitchenmenu.data.repository.DataSource;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeDuration;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
@@ -9,20 +11,44 @@ import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
 import com.example.peter.thekitchenmenu.domain.utils.TimeProvider;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.*;
 
 public class RecipeDuration extends UseCase
-        implements DataSource.GetModelCallback<RecipeDurationPersistenceModel> {
+        implements DataSource.GetDomainModelCallback<RecipeDurationPersistenceModel> {
 
     private static final String TAG = "tkm-" + RecipeDuration.class.getSimpleName() + ": ";
 
     public enum FailReason implements FailReasons {
-        INVALID_PREP_TIME,
-        INVALID_COOK_TIME
+        INVALID_PREP_TIME(250),
+        INVALID_COOK_TIME(251);
+
+        private final int id;
+
+        @SuppressLint("UseSparseArrays")
+        private static Map<Integer, FailReason> options = new HashMap<>();
+
+        FailReason(int id) {
+            this.id = id;
+        }
+
+        static {
+            for (FailReason s : FailReason.values())
+                options.put(s.id, s);
+        }
+
+        public static FailReason getById(int id) {
+            return options.get(id);
+        }
+
+        public int getId() {
+            return id;
+        }
     }
 
     private final int MAX_PREP_TIME;
@@ -74,7 +100,7 @@ public class RecipeDuration extends UseCase
     }
 
     private void loadData(String recipeId) {
-        repository.getById(recipeId, this);
+        repository.getByDataId(recipeId, this);
     }
 
     @Override

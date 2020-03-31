@@ -5,11 +5,11 @@ import android.content.res.Resources;
 import com.example.peter.thekitchenmenu.R;
 import com.example.peter.thekitchenmenu.commonmocks.RecipeComponents;
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
-import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeCourseEntity;
-import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeDurationEntity;
-import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeMetadataEntity;
-import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeIdentityEntity;
-import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipePortionsEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.RecipeCourseEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.RecipeDurationEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.parent.RecipeMetadataParentEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.RecipeIdentityEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeComponentState;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeCourse;
@@ -61,16 +61,16 @@ public class RecipeEditorViewModelTest {
             getSimpleName() + ": ";
 
     // region constants ----------------------------------------------------------------------------
-    private static final RecipeMetadataEntity NEW_EMPTY_RECIPE_ENTITY = getNewInvalid();
-    private static final RecipeMetadataEntity INVALID_DRAFT_RECIPE_ENTITY = getInvalidExisting();
-    private static final String INVALID_DRAFT_RECIPE_ID = INVALID_DRAFT_RECIPE_ENTITY.getId();
+    private static final RecipeMetadataParentEntity NEW_EMPTY_RECIPE_ENTITY = getNewInvalid();
+    private static final RecipeMetadataParentEntity INVALID_DRAFT_RECIPE_ENTITY = getInvalidExisting();
+    private static final String INVALID_DRAFT_RECIPE_ID = INVALID_DRAFT_RECIPE_ENTITY.getDataId();
 
-    private static final RecipeMetadataEntity VALID_RECIPE_ENTITY = getValidExisting();
-    private static final String VALID_RECIPE_ID = VALID_RECIPE_ENTITY.getId();
-    private static final RecipeMetadataEntity VALID_RECIPE_ENTITY_FROM_ANOTHER_USER =
+    private static final RecipeMetadataParentEntity VALID_RECIPE_ENTITY = getValidExisting();
+    private static final String VALID_RECIPE_ID = VALID_RECIPE_ENTITY.getDataId();
+    private static final RecipeMetadataParentEntity VALID_RECIPE_ENTITY_FROM_ANOTHER_USER =
             getValidFromAnotherUser();
     private static final String VALID_RECIPE_ID_FROM_ANOTHER_USER =
-            VALID_RECIPE_ENTITY_FROM_ANOTHER_USER.getId();
+            VALID_RECIPE_ENTITY_FROM_ANOTHER_USER.getDataId();
 
     private static final long CURRENT_TIME = 10L;
 
@@ -80,7 +80,7 @@ public class RecipeEditorViewModelTest {
     @Mock
     RepositoryRecipeComponentState repoRecipeMock;
     @Captor
-    ArgumentCaptor<PrimitiveDataSource.GetEntityCallback<RecipeMetadataEntity>> repoRecipeCallback;
+    ArgumentCaptor<PrimitiveDataSource.GetEntityCallback<RecipeMetadataParentEntity>> repoRecipeCallback;
     @Mock
     RepositoryRecipeIdentity repoIdentityMock;
     @Captor
@@ -191,7 +191,7 @@ public class RecipeEditorViewModelTest {
     @Test
     public void onStart_CREATE_NEW_RECIPE_titleEventCalledWithAddNewRecipeResourceId() {
         // Arrange
-        String recipeId = NEW_EMPTY_RECIPE_ENTITY.getId();
+        String recipeId = NEW_EMPTY_RECIPE_ENTITY.getDataId();
         whenIdProviderReturnId(recipeId);
         // Act
         SUT.start(CREATE_NEW_RECIPE);
@@ -203,7 +203,7 @@ public class RecipeEditorViewModelTest {
     @Test
     public void onStart_CREATE_NEW_RECIPE_startRecipeComponentsNewRecipeId() {
         // Arrange
-        String recipeId = NEW_EMPTY_RECIPE_ENTITY.getId();
+        String recipeId = NEW_EMPTY_RECIPE_ENTITY.getDataId();
         whenIdProviderReturnId(recipeId);
         // Act
         SUT.start(CREATE_NEW_RECIPE);
@@ -214,7 +214,7 @@ public class RecipeEditorViewModelTest {
     @Test
     public void onStart_CREATE_NEW_RECIPE_newRecipeSavedToDatabaseAsDraft() {
         // Arrange
-        String recipeId = NEW_EMPTY_RECIPE_ENTITY.getId();
+        String recipeId = NEW_EMPTY_RECIPE_ENTITY.getDataId();
         whenIdProviderReturnId(recipeId);
         when(timeProviderMock.getCurrentTimeInMills()).thenReturn(CURRENT_TIME);
         // Act
@@ -332,7 +332,7 @@ public class RecipeEditorViewModelTest {
     public void reviewRecipe_newRecipe_navigatorReviewNewRecipeCalledWithRecipeExpectedId() {
         // Arrange
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
-        when(idProviderMock.getUId()).thenReturn(VALID_RECIPE_ENTITY.getId());
+        when(idProviderMock.getUId()).thenReturn(VALID_RECIPE_ENTITY.getDataId());
 //        SUT.start();
 //        SUT.setValidationStatus(VALID_CHANGED);
         // Act
@@ -340,7 +340,7 @@ public class RecipeEditorViewModelTest {
         SUT.reviewButtonPressed();
         // Assert
         verify(navigatorMock).reviewNewRecipe(ac.capture());
-        assertEquals(VALID_RECIPE_ENTITY.getId(), ac.getValue());
+        assertEquals(VALID_RECIPE_ENTITY.getDataId(), ac.getValue());
     }
 
     @Test
@@ -355,7 +355,7 @@ public class RecipeEditorViewModelTest {
         SUT.reviewButtonPressed();
         // Assert
         verify(navigatorMock).reviewEditedRecipe(ac.capture());
-        assertEquals(VALID_RECIPE_ENTITY.getId(), ac.getValue());
+        assertEquals(VALID_RECIPE_ENTITY.getDataId(), ac.getValue());
     }
 
     @Test
@@ -396,7 +396,7 @@ public class RecipeEditorViewModelTest {
     @Test
     public void ingredientsButtonPressed_newRecipe_navigatorAddIngredientsRecipeId() {
         // Arrange
-        String recipeId = NEW_EMPTY_RECIPE_ENTITY.getId();
+        String recipeId = NEW_EMPTY_RECIPE_ENTITY.getDataId();
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
         when(idProviderMock.getUId()).thenReturn(recipeId);
         // Act
@@ -423,13 +423,13 @@ public class RecipeEditorViewModelTest {
         SUT.ingredientsButtonPressed();
         // verify navigator is called
         verify(navigatorMock).editIngredients(ac.capture());
-        assertEquals(VALID_RECIPE_ENTITY.getId(), ac.getValue());
+        assertEquals(VALID_RECIPE_ENTITY.getDataId(), ac.getValue());
     }
 
     @Test
     public void reviewIngredients_clonedRecipe_navigatorReviewIngredientsRecipeId() {
         // Arrange
-        String recipeId = NEW_EMPTY_RECIPE_ENTITY.getId();
+        String recipeId = NEW_EMPTY_RECIPE_ENTITY.getDataId();
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
         when(idProviderMock.getUId()).thenReturn(recipeId);
         // Act
@@ -476,14 +476,14 @@ public class RecipeEditorViewModelTest {
     @Test
     public void onStart_noRecipeIdSupplied_recipeSavedAsDraft_recipeIdAndParentIdSame() {
         // Arrange
-        String recipeId = NEW_EMPTY_RECIPE_ENTITY.getId();
-        ArgumentCaptor<RecipeMetadataEntity> ac = ArgumentCaptor.forClass(RecipeMetadataEntity.class);
+        String recipeId = NEW_EMPTY_RECIPE_ENTITY.getDataId();
+        ArgumentCaptor<RecipeMetadataParentEntity> ac = ArgumentCaptor.forClass(RecipeMetadataParentEntity.class);
         when(idProviderMock.getUId()).thenReturn(recipeId);
         // Act
 //        SUT.start();
         // Assert
         verify(repoRecipeMock).save(ac.capture());
-        assertEquals(ac.getValue().getId(), ac.getValue().getParentId());
+        assertEquals(ac.getValue().getDataId(), ac.getValue().getRecipeParentId());
     }
 
     @Test
@@ -500,23 +500,23 @@ public class RecipeEditorViewModelTest {
     @Test
     public void onStart_recipeIdSuppliedEditorIsNotOwner_recipeClonedAndSaved_recipeIdAndParentIdNotSame() {
         // Arrange
-        String recipeId = NEW_EMPTY_RECIPE_ENTITY.getId();
-        ArgumentCaptor<RecipeMetadataEntity> ac = ArgumentCaptor.forClass(RecipeMetadataEntity.class);
+        String recipeId = NEW_EMPTY_RECIPE_ENTITY.getDataId();
+        ArgumentCaptor<RecipeMetadataParentEntity> ac = ArgumentCaptor.forClass(RecipeMetadataParentEntity.class);
         when(idProviderMock.getUId()).thenReturn(recipeId);
         // Act
         SUT.start(VALID_RECIPE_ID_FROM_ANOTHER_USER);
         simulateReturnValidRecipeFromAnotherUserDatabaseCall();
         // Assert
         verify(repoRecipeMock).save(ac.capture());
-        RecipeMetadataEntity recipeMetadataEntity = ac.getValue();
-        assertEquals(recipeId, recipeMetadataEntity.getId());
-        assertEquals(VALID_RECIPE_ID_FROM_ANOTHER_USER, recipeMetadataEntity.getParentId());
+        RecipeMetadataParentEntity recipeMetadataEntity = ac.getValue();
+        assertEquals(recipeId, recipeMetadataEntity.getDataId());
+        assertEquals(VALID_RECIPE_ID_FROM_ANOTHER_USER, recipeMetadataEntity.getRecipeParentId());
     }
 
     @Test
     public void onStart_recipeIdSuppliedEditorIsNotOwner_recipeModelsStartedInClonedMode() {
         // Arrange
-        String recipeId = NEW_EMPTY_RECIPE_ENTITY.getId();
+        String recipeId = NEW_EMPTY_RECIPE_ENTITY.getDataId();
         when(idProviderMock.getUId()).thenReturn(recipeId);
         // Act
         SUT.start(VALID_RECIPE_ID_FROM_ANOTHER_USER);
@@ -529,8 +529,8 @@ public class RecipeEditorViewModelTest {
     @Test
     public void recipeValidationStatusINVALID_MISSING_MODELS_recipeIsSavedAsDraft() {
         // Arrange
-        String recipeId = NEW_EMPTY_RECIPE_ENTITY.getId();
-        ArgumentCaptor<RecipeMetadataEntity> ac = ArgumentCaptor.forClass(RecipeMetadataEntity.class);
+        String recipeId = NEW_EMPTY_RECIPE_ENTITY.getDataId();
+        ArgumentCaptor<RecipeMetadataParentEntity> ac = ArgumentCaptor.forClass(RecipeMetadataParentEntity.class);
         when(idProviderMock.getUId()).thenReturn(recipeId);
         // Act
 //        SUT.start();
@@ -554,7 +554,7 @@ public class RecipeEditorViewModelTest {
     @Test
     public void recipeValidationStatusINVALID_HAS_CHANGES_recipeIsSavedAsDraft() {
         // Arrange
-        ArgumentCaptor<RecipeMetadataEntity> ac = ArgumentCaptor.forClass(RecipeMetadataEntity.class);
+        ArgumentCaptor<RecipeMetadataParentEntity> ac = ArgumentCaptor.forClass(RecipeMetadataParentEntity.class);
         // Act
         SUT.start(VALID_RECIPE_ID);
         simulateReturnValidRecipeDatabaseCall();
@@ -578,7 +578,7 @@ public class RecipeEditorViewModelTest {
     @Test
     public void recipeValidationStatusVALID_HAS_CHANGES_recipeIsSavedDraftFlagFalse() {
         // Arrange
-        ArgumentCaptor<RecipeMetadataEntity> ac = ArgumentCaptor.forClass(RecipeMetadataEntity.class);
+        ArgumentCaptor<RecipeMetadataParentEntity> ac = ArgumentCaptor.forClass(RecipeMetadataParentEntity.class);
         // Act
         SUT.start(VALID_RECIPE_ID);
         simulateReturnValidRecipeDatabaseCall();
@@ -613,7 +613,7 @@ public class RecipeEditorViewModelTest {
 
     private void returnInvalidDraftRecipeFromDatabaseCall() {
         verify(repoRecipeMock).getById(eq(
-                INVALID_DRAFT_RECIPE_ENTITY.getId()), repoRecipeCallback.capture());
+                INVALID_DRAFT_RECIPE_ENTITY.getDataId()), repoRecipeCallback.capture());
         repoRecipeCallback.getValue().onEntityLoaded(INVALID_DRAFT_RECIPE_ENTITY);
     }
 
@@ -632,7 +632,7 @@ public class RecipeEditorViewModelTest {
     }
 
     private void verifyRepoIdentityCalledAndReturnDataUnavailable(String recipeId) {
-        verify(repoIdentityMock).getById(eq(recipeId), repoIdentityCallback.capture());
+        verify(repoIdentityMock).getByDataId(eq(recipeId), repoIdentityCallback.capture());
         repoIdentityCallback.getValue().onDataUnavailable();
     }
 
@@ -642,7 +642,7 @@ public class RecipeEditorViewModelTest {
     }
 
     private void verifyRepoDurationCalledAndReturnDataUnavailable(String recipeId) {
-        verify(repoDurationMock).getById(eq(recipeId), repoDurationCallback.capture());
+        verify(repoDurationMock).getByDataId(eq(recipeId), repoDurationCallback.capture());
         repoDurationCallback.getValue().onDataUnavailable();
     }
 

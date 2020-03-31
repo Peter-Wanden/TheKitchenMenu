@@ -1,12 +1,11 @@
 package com.example.peter.thekitchenmenu.data.repository.source.remote.recipe;
 
-import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeFailReasonPrimitive;
-import com.example.peter.thekitchenmenu.data.repository.recipe.DataSourceRecipeFailReasons;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.RecipeFailReasonEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.failreason.DataSourceRecipeFailReason;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.failreason.RecipeFailReasonEntity;
 
 import javax.annotation.Nonnull;
 
-public class RecipeFailReasonsRemoteDataSource implements DataSourceRecipeFailReasons {
+public class RecipeFailReasonsRemoteDataSource implements DataSourceRecipeFailReason {
 
     public static RecipeFailReasonsRemoteDataSource INSTANCE;
 
@@ -34,8 +33,8 @@ public class RecipeFailReasonsRemoteDataSource implements DataSourceRecipeFailRe
     }
 
     @Override
-    public void getById(@Nonnull String id,
-                        @Nonnull GetEntityCallback<RecipeFailReasonEntity> callback) {
+    public void getByDataId(@Nonnull String dataId,
+                            @Nonnull GetEntityCallback<RecipeFailReasonEntity> callback) {
         callback.onDataUnavailable();
     }
 
@@ -55,7 +54,7 @@ public class RecipeFailReasonsRemoteDataSource implements DataSourceRecipeFailRe
     }
 
     @Override
-    public void deleteById(@Nonnull String id) {
+    public void deleteByDataId(@Nonnull String dataId) {
 
     }
 }

@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.data.primitivemodel.recipe;
+package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
@@ -11,7 +11,7 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeCourseEntity.*;
+import static com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.RecipeCourseEntity.*;
 
 @Entity(tableName = TABLE_RECIPE_COURSES)
 public final class RecipeCourseEntity implements PrimitiveModel {
@@ -55,7 +55,7 @@ public final class RecipeCourseEntity implements PrimitiveModel {
 
     @Override
     @Nonnull
-    public String getId() {
+    public String getDataId() {
         return id;
     }
 

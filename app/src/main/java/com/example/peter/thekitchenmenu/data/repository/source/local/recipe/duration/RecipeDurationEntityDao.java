@@ -6,11 +6,9 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeDurationEntity;
-
 import java.util.List;
 
-import static com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeDurationEntity.*;
+import static com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.RecipeDurationEntity.*;
 
 @Dao
 public interface RecipeDurationEntityDao {

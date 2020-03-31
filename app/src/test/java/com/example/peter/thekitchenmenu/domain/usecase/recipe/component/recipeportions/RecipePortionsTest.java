@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeportions;
 
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
-import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipePortionsEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.RecipePortionsEntity;
 import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
@@ -87,7 +87,7 @@ public class RecipePortionsTest {
     @Test
     public void newId_defaultModel_newDefaultModelReturned() {
         // Arrange
-        whenIdProviderReturn(NEW_EMPTY.getId());
+        whenIdProviderReturn(NEW_EMPTY.getDataId());
         whenTimeProviderReturn(NEW_EMPTY.getCreateDate());
 
         RecipePortionsRequest request = new RecipePortionsRequest.Builder().
@@ -105,7 +105,7 @@ public class RecipePortionsTest {
     @Test
     public void newId_defaultModel_resultDATA_UNAVAILABLE() {
         // Arrange
-        whenIdProviderReturn(NEW_EMPTY.getId());
+        whenIdProviderReturn(NEW_EMPTY.getDataId());
         whenTimeProviderReturn(NEW_EMPTY.getCreateDate());
 
         RecipePortionsRequest request = new RecipePortionsRequest.Builder().
@@ -126,7 +126,7 @@ public class RecipePortionsTest {
     @Test
     public void newId_invalidServingsInvalidSittings_resultINVALID_CHANGED() {
         // Arrange
-        whenIdProviderReturn(NEW_EMPTY.getId());
+        whenIdProviderReturn(NEW_EMPTY.getDataId());
         whenTimeProviderReturn(NEW_EMPTY.getCreateDate());
 
         RecipePortionsRequest request = new RecipePortionsRequest.Builder().
@@ -161,7 +161,7 @@ public class RecipePortionsTest {
     @Test
     public void newId_invalidServingsValidSittings_resultINVALID_CHANGED() {
         // Arrange
-        whenIdProviderReturn(NEW_EMPTY.getId());
+        whenIdProviderReturn(NEW_EMPTY.getDataId());
         whenTimeProviderReturn(NEW_EMPTY.getCreateDate());
 
         RecipePortionsRequest request = new RecipePortionsRequest.Builder().
@@ -193,7 +193,7 @@ public class RecipePortionsTest {
     @Test
     public void newId_validServingsInvalidSittings_resultINVALID_CHANGED() {
         // Arrange
-        whenIdProviderReturn(NEW_EMPTY.getId());
+        whenIdProviderReturn(NEW_EMPTY.getDataId());
         whenTimeProviderReturn(NEW_EMPTY.getCreateDate());
 
         RecipePortionsRequest request = new RecipePortionsRequest.Builder().
@@ -225,7 +225,7 @@ public class RecipePortionsTest {
     @Test
     public void newId_validServingsValidSittings_resultVALID_CHANGED() {
         // Arrange
-        whenIdProviderReturn(NEW_EMPTY.getId());
+        whenIdProviderReturn(NEW_EMPTY.getDataId());
         whenTimeProviderReturn(NEW_EMPTY.getCreateDate());
 
         RecipePortionsRequest request = new RecipePortionsRequest.Builder().
@@ -255,7 +255,7 @@ public class RecipePortionsTest {
     @Test
     public void newId_validSittingsValidServings_saved() {
         // Arrange
-        whenIdProviderReturn(NEW_EMPTY.getId());
+        whenIdProviderReturn(NEW_EMPTY.getDataId());
         whenTimeProviderReturn(NEW_EMPTY.getCreateDate());
 
         RecipePortionsRequest request = new RecipePortionsRequest.Builder().

@@ -1,14 +1,14 @@
-package com.example.peter.thekitchenmenu.data.repository.source.local.recipe;
+package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.componentstate;
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
-import com.example.peter.thekitchenmenu.data.primitivemodel.recipe.RecipeComponentStateEntity;
-import com.example.peter.thekitchenmenu.data.repository.recipe.DataSourceRecipeComponentState;
+import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
 
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
-public class RecipeComponentStateLocalDataSource implements DataSourceRecipeComponentState {
+public class RecipeComponentStateLocalDataSource
+        implements PrimitiveDataSource<RecipeComponentStateEntity> {
 
     private static volatile RecipeComponentStateLocalDataSource INSTANCE;
     @Nonnull
@@ -25,6 +25,7 @@ public class RecipeComponentStateLocalDataSource implements DataSourceRecipeComp
     public static RecipeComponentStateLocalDataSource getInstance(
             @Nonnull AppExecutors appExecutors,
             @Nonnull RecipeComponentStateEntityDao dao) {
+
         if (INSTANCE == null) {
             synchronized (RecipeComponentStateLocalDataSource.class) {
                 if (INSTANCE == null) {
@@ -36,44 +37,44 @@ public class RecipeComponentStateLocalDataSource implements DataSourceRecipeComp
     }
 
     @Override
-    public void getAllByRecipeId(@Nonnull String recipeId,
-                                 @Nonnull GetAllCallback<RecipeComponentStateEntity> callback) {
-        Runnable r = () -> {
-            final List<RecipeComponentStateEntity> entities = dao.getAllByRecipeId(recipeId);
-            executors.mainThread().execute(() -> {
-                if (entities.isEmpty())
-                    callback.onDataUnavailable();
-                else
-                    callback.onAllLoaded(entities);
-            });
-        };
-        executors.diskIO().execute(r);
-    }
-
-    @Override
-    public void getAll(@Nonnull GetAllCallback<RecipeComponentStateEntity> callback) {
+    public void getAll(@Nonnull GetAllCallback<RecipeComponentStateEntity> c) {
         Runnable r = () -> {
             final List<RecipeComponentStateEntity> entities = dao.getAll();
             executors.diskIO().execute(() -> {
                 if (entities.isEmpty())
-                    callback.onDataUnavailable();
+                    c.onDataUnavailable();
                 else
-                    callback.onAllLoaded(entities);
+                    c.onAllLoaded(entities);
             });
         };
         executors.diskIO().execute(r);
     }
 
     @Override
-    public void getById(@Nonnull String id,
-                        @Nonnull GetEntityCallback<RecipeComponentStateEntity> callback) {
+    public void getAllByParentDataId(@Nonnull String parentDataId,
+                                     @Nonnull GetAllCallback<RecipeComponentStateEntity> c) {
         Runnable r = () -> {
-            final RecipeComponentStateEntity e = dao.getById(id);
+            final List<RecipeComponentStateEntity> e = dao.getAllByParentDataId(parentDataId);
+            executors.mainThread().execute(() -> {
+                if (e.isEmpty())
+                    c.onDataUnavailable();
+                else
+                    c.onAllLoaded(e);
+            });
+        };
+        executors.diskIO().execute(r);
+    }
+
+    @Override
+    public void getByDataId(@Nonnull String dataId,
+                            @Nonnull GetEntityCallback<RecipeComponentStateEntity> c) {
+        Runnable r = () -> {
+            final RecipeComponentStateEntity e = dao.getByDataId(dataId);
             executors.mainThread().execute(() -> {
                 if (e != null)
-                    callback.onEntityLoaded(e);
+                    c.onEntityLoaded(e);
                 else
-                    callback.onDataUnavailable();
+                    c.onDataUnavailable();
             });
         };
         executors.diskIO().execute(r);
@@ -92,14 +93,14 @@ public class RecipeComponentStateLocalDataSource implements DataSourceRecipeComp
     }
 
     @Override
-    public void deleteById(@Nonnull String id) {
-        Runnable r = () -> dao.deleteById(id);
+    public void deleteByDataId(@Nonnull String dataId) {
+        Runnable r = () -> dao.deleteByDataId(dataId);
         executors.diskIO().execute(r);
     }
 
     @Override
-    public void deleteAllByRecipeId(@Nonnull String recipeId) {
-        Runnable r = () -> dao.deleteByRecipeId(recipeId);
+    public void deleteAllByParentId(String parentDataId) {
+        Runnable r = () -> dao.deleteAllByParentDataId(parentDataId);
         executors.diskIO().execute(r);
     }
 

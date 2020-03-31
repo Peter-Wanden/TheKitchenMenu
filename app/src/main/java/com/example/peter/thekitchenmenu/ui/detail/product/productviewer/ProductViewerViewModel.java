@@ -64,7 +64,7 @@ public class ProductViewerViewModel
         if (!showPostMessageEvent.get()) {
             if (!Strings.isEmptyOrWhitespace(productId)) {
                 dataIsLoading.set(true);
-                productEntityDataSource.getById(productId, this);
+                productEntityDataSource.getByDataId(productId, this);
             }
         }
     }
@@ -143,18 +143,18 @@ public class ProductViewerViewModel
         if (showPostMessageEvent.get()) {
             // Product add/edit has not been saved so exit as is.
             productEntityObservable.set(null);
-            doneWithProduct(productEntityObservable.get().getId());
+            doneWithProduct(productEntityObservable.get().getDataId());
         }
         else {
-            productEntityDataSource.deleteById(productEntityObservable.get().getId());
-            navigator.deleteProduct(productEntityObservable.get().getId());
+            productEntityDataSource.deleteByDataId(productEntityObservable.get().getDataId());
+            navigator.deleteProduct(productEntityObservable.get().getDataId());
         }
     }
 
     @Override
     public void discardProductEdits() {
         // Reloads the product to reset it to its last saved state
-        start(productEntityObservable.get().getId());
+        start(productEntityObservable.get().getDataId());
     }
 
     @Override
@@ -178,7 +178,7 @@ public class ProductViewerViewModel
             showUnsavedChangesDialog();
 
         } else if (dataHasChanged) {
-            navigator.doneWithProduct(productEntityObservable.get().getId());
+            navigator.doneWithProduct(productEntityObservable.get().getDataId());
 
         } else {
             navigator.discardProductEdits();
