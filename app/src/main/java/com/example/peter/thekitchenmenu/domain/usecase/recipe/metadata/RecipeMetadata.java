@@ -64,8 +64,8 @@ public class RecipeMetadata
     }
 
     public enum FailReason implements FailReasons {
-        MISSING_COMPONENTS(550),
-        INVALID_COMPONENTS(551);
+        MISSING_COMPONENTS(400),
+        INVALID_COMPONENTS(401);
 
         private final int id;
 
@@ -85,6 +85,7 @@ public class RecipeMetadata
             return options.get(id);
         }
 
+        @Override
         public int getId() {
             return id;
         }

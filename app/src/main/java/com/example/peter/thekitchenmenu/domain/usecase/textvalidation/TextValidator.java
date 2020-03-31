@@ -40,6 +40,7 @@ public class TextValidator extends UseCase {
             return options.get(id);
         }
 
+        @Override
         public int getId() {
             return id;
         }

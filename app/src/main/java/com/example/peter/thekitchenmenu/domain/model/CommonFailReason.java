@@ -27,6 +27,7 @@ public enum CommonFailReason implements FailReasons {
         return options.get(id);
     }
 
+    @Override
     public int getId() {
         return id;
     }

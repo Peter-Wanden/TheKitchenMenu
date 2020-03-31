@@ -1,5 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipecopy;
 
+import android.annotation.SuppressLint;
+
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
@@ -20,14 +22,39 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMet
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
 
 public class RecipeCopy extends UseCase {
 
-    enum FailReason implements FailReasons {
-        SOURCE_DATA_ERROR
+    public enum FailReason implements FailReasons {
+        SOURCE_DATA_ERROR();
+
+        private final int id;
+
+        @SuppressLint("UseSparseArrays")
+        private static Map<Integer, FailReason> options = new HashMap<>();
+
+        FailReason(int id) {
+            this.id = id;
+        }
+
+        static {
+            for (FailReason s : FailReason.values())
+                options.put(s.id, s);
+        }
+
+        public static FailReason getById(int id) {
+            return options.get(id);
+        }
+
+        @Override
+        public int getId() {
+            return id;
+        }
     }
 
     @Nonnull

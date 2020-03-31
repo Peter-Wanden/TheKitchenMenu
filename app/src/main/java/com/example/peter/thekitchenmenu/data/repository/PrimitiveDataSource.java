@@ -7,11 +7,9 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 /**
- * Used by data interface adapters for the bi-directional conversion of relational object models
- * into primitive data structures for frameworks that require it.
- *
- * Primitive data models should ony be used for saving and retrieving data. They should not be used
- * or manipulated by the use cases, business entities or any other part of the application.
+ * Sits between the persistence framework and use case persistence layer {@link DataSource}.
+ * Primitive data models should ony be used for saving and retrieving data. They should not be
+ * used or manipulated by the use cases, business entities or any other part of the application.
  *
  * @param <T> data structures that extend {@link PrimitiveModel} which are represented by any data
  *            source that requires them.

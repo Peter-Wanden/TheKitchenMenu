@@ -51,7 +51,8 @@ public class IngredientLocalDataSource implements PrimitiveDataSource<Ingredient
     }
 
     @Override
-    public void getByDataId(@Nonnull String dataId, @Nonnull GetEntityCallback<IngredientEntity> callback) {
+    public void getByDataId(@Nonnull String dataId,
+                            @Nonnull GetEntityCallback<IngredientEntity> callback) {
         Runnable runnable = () -> {
             final IngredientEntity entity = entityDao.getById(dataId);
             appExecutors.mainThread().execute(() -> {

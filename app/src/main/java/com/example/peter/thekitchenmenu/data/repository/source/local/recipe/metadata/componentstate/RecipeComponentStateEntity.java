@@ -17,7 +17,7 @@ public final class RecipeComponentStateEntity implements PrimitiveModel {
     public static final String TABLE_RECIPE_COMPONENT_STATE = "recipeComponentState";
     public static final String DATA_ID = "dataId";
     public static final String PARENT_DATA_ID = "parentDataId";
-    public static final String COMPONENT_ID = "componentId";
+    public static final String COMPONENT_NAME_ID = "componentId";
     public static final String COMPONENT_STATE_ID = "componentStateId";
 
     @PrimaryKey
@@ -29,19 +29,19 @@ public final class RecipeComponentStateEntity implements PrimitiveModel {
     @ColumnInfo(name = PARENT_DATA_ID)
     private final String parentDataId;
 
-    @ColumnInfo(name = COMPONENT_ID)
-    private final int componentId;
+    @ColumnInfo(name = COMPONENT_NAME_ID)
+    private final int componentNameId;
 
     @ColumnInfo(name = COMPONENT_STATE_ID)
     private final int componentStateId;
 
     public RecipeComponentStateEntity(@Nonnull String dataId,
                                       @Nonnull String parentDataId,
-                                      int componentId,
+                                      int componentNameId,
                                       int componentStateId) {
         this.dataId = dataId;
         this.parentDataId = parentDataId;
-        this.componentId = componentId;
+        this.componentNameId = componentNameId;
         this.componentStateId = componentStateId;
     }
 
@@ -52,13 +52,13 @@ public final class RecipeComponentStateEntity implements PrimitiveModel {
         RecipeComponentStateEntity that = (RecipeComponentStateEntity) o;
         return dataId.equals(that.dataId) &&
                 parentDataId.equals(that.parentDataId) &&
-                componentId == that.componentId &&
+                componentNameId == that.componentNameId &&
                 componentStateId == that.componentStateId;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(dataId, parentDataId, componentId, componentStateId);
+        return Objects.hash(dataId, parentDataId, componentNameId, componentStateId);
     }
 
     @Nonnull
@@ -67,7 +67,7 @@ public final class RecipeComponentStateEntity implements PrimitiveModel {
         return "RecipeComponentStateEntity{" +
                 "id='" + dataId + '\'' +
                 ", parentDataId='" + parentDataId + '\'' +
-                ", componentId=" + componentId +
+                ", componentNameId=" + componentNameId +
                 ", componentStateLevel=" + componentStateId +
                 '}';
     }
@@ -83,8 +83,8 @@ public final class RecipeComponentStateEntity implements PrimitiveModel {
         return parentDataId;
     }
 
-    public int getComponentId() {
-        return componentId;
+    public int getComponentNameId() {
+        return componentNameId;
     }
 
     public int getComponentStateId() {

@@ -1,271 +1,130 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata;
 
-import com.example.peter.thekitchenmenu.app.AppExecutors;
 import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.componentstate.RecipeComponentStateEntity;
 import com.example.peter.thekitchenmenu.data.repository.recipe.DataSourceRecipeMetaData;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.componentstate.RecipeComponentStateEntityDao;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.failreason.RecipeFailReasonEntity;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.failreason.RecipeFailReasonEntityDao;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.parent.RecipeMetadataParentEntity;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.parent.RecipeMetadataParentEntityDao;
-import com.example.peter.thekitchenmenu.domain.model.FailReasons;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadataPersistenceModel;
 import com.example.peter.thekitchenmenu.domain.utils.UniqueIdProvider;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.*;
-
-public class RecipeMetadataLocalDataSource implements DataSourceRecipeMetaData {
+public class RecipeMetadataLocalDataSource
+        implements
+        DataSourceRecipeMetaData {
 
     private static volatile RecipeMetadataLocalDataSource INSTANCE;
 
     @Nonnull
+    private final UniqueIdProvider idProvider;
+    @Nonnull
     private final PrimitiveDataSource<RecipeMetadataParentEntity> metadataSource;
     @Nonnull
-    private final RecipeMetadataParentEntityDao dao;
+    private final RecipeMetadataToPersistenceAdapter toPersistenceAdapter;
     @Nonnull
-    private final PrimitiveDataSource<RecipeComponentStateEntity> componentStateDataSource;
-    @Nonnull
-    private final RecipeComponentStateEntityDao componentStateDao;
-    @Nonnull
-    private final PrimitiveDataSource<RecipeFailReasonEntity> recipeFailReasonsDataSource;
-    @Nonnull
-    private final RecipeFailReasonEntityDao failReasonsDao;
-    @Nonnull
-    private final AppExecutors executors;
-    @Nonnull
-    private final UniqueIdProvider idProvider;
+    private final RecipeMetadataListToPersistenceAdapter listToPersistenceAdapter;
 
-    private final List<RecipeMetadataPersistenceModel> persistenceModels;
-    private int listSize;
-    private int totalProcessed;
-
-    // todo - Implement the adapter pattern from persistence to primitive and back :)
     private RecipeMetadataLocalDataSource(
-            @Nonnull AppExecutors executors,
             @Nonnull UniqueIdProvider idProvider,
             @Nonnull PrimitiveDataSource<RecipeMetadataParentEntity> metadataSource,
-            @Nonnull RecipeMetadataParentEntityDao dao,
-            @Nonnull PrimitiveDataSource<RecipeComponentStateEntity> componentStateDataSource,
-            @Nonnull RecipeComponentStateEntityDao componentStateDao,
-            @Nonnull PrimitiveDataSource<RecipeFailReasonEntity> failReasonDataSource,
-            @Nonnull RecipeFailReasonEntityDao failReasonsDao) {
+            @Nonnull RecipeMetadataToPersistenceAdapter toPersistenceAdapter,
+            @Nonnull RecipeMetadataListToPersistenceAdapter listToPersistenceAdapter) {
 
-        this.executors = executors;
         this.idProvider = idProvider;
         this.metadataSource = metadataSource;
-        this.dao = dao;
-        this.componentStateDataSource = componentStateDataSource;
-        this.componentStateDao = componentStateDao;
-        this.recipeFailReasonsDataSource = failReasonDataSource;
-        this.failReasonsDao = failReasonsDao;
-        persistenceModels = new ArrayList<>();
+        this.toPersistenceAdapter = toPersistenceAdapter;
+        this.listToPersistenceAdapter = listToPersistenceAdapter;
     }
 
     public static RecipeMetadataLocalDataSource getInstance(
-            @Nonnull AppExecutors appExecutors,
             @Nonnull UniqueIdProvider idProvider,
             @Nonnull PrimitiveDataSource<RecipeMetadataParentEntity> metadataSource,
-            @Nonnull RecipeMetadataParentEntityDao dao,
-            @Nonnull PrimitiveDataSource<RecipeComponentStateEntity> componentStateDataSource,
-            @Nonnull RecipeComponentStateEntityDao componentStateDao,
-            @Nonnull PrimitiveDataSource<RecipeFailReasonEntity> failReasonsDataSource,
-            @Nonnull RecipeFailReasonEntityDao failReasonsDao) {
+            @Nonnull RecipeMetadataToPersistenceAdapter toPersistenceAdapter,
+            @Nonnull RecipeMetadataListToPersistenceAdapter listToPersistenceAdapter) {
 
         if (INSTANCE == null) {
             synchronized (RecipeMetadataLocalDataSource.class) {
                 if (INSTANCE == null)
                     INSTANCE = new RecipeMetadataLocalDataSource(
-                            appExecutors,
                             idProvider,
                             metadataSource,
-                            dao,
-                            componentStateDataSource,
-                            componentStateDao,
-                            failReasonsDataSource,
-                            failReasonsDao);
+                            toPersistenceAdapter,
+                            listToPersistenceAdapter);
             }
         }
         return INSTANCE;
     }
 
     @Override
-    public void getAll(@Nonnull GetAllDomainModelsCallback<RecipeMetadataPersistenceModel> callback) {
-        persistenceModels.clear();
+    public void getAll(
+            @Nonnull GetAllDomainModelsCallback<RecipeMetadataPersistenceModel> callback) {
 
-        metadataSource.getAll(new PrimitiveDataSource.GetAllCallback<RecipeMetadataParentEntity>() {
-            @Override
-            public void onAllLoaded(List<RecipeMetadataParentEntity> parentEntities) {
-
-                if (parentEntities.isEmpty())
-                    callback.onDataUnavailable();
-                else {
-                    listSize = parentEntities.size();
-
-                    for (RecipeMetadataParentEntity p : parentEntities) {
-
-                        RecipeMetadataPersistenceModel.Builder modelBuilder =
-                                new RecipeMetadataPersistenceModel.Builder().getDefault();
-
-                        modelBuilder.
-                                setDataId(p.getDataId()).
-                                setRecipeId(p.getRecipeId()).
-                                setRecipeParentId(p.getRecipeParentId()).
-                                setRecipeState(RecipeState.getById(p.getRecipeStateId())).
-                                setCreatedBy(p.getCreatedBy()).
-                                setCreateDate(p.getCreateDate()).
-                                setLastUpdate(p.getLastUpdate());
-
-                        addComponentStates(p.getDataId(), modelBuilder);
-                    }
-                    returnAll(callback); // todo - should this be somewhere else?
-                }
-            }
-
-            @Override
-            public void onDataUnavailable() {
-                callback.onDataUnavailable();
-            }
-        });
-    }
-
-    private void addComponentStates(
-            String parentDataId,
-            RecipeMetadataPersistenceModel.Builder modelBuilder) {
-
-        HashMap<ComponentName, ComponentState> componentStates = new HashMap<>();
-
-        componentStateDataSource.getAllByParentDataId(
-                parentDataId,
-                new PrimitiveDataSource.GetAllCallback<RecipeComponentStateEntity>() {
+        listToPersistenceAdapter.getAllAndNotify(
+                new RecipeMetadataListToPersistenceAdapter.Callback() {
                     @Override
-                    public void onAllLoaded(List<RecipeComponentStateEntity> componentStateList) {
-
-                        for (RecipeComponentStateEntity c : componentStateList) {
-                            componentStates.put(
-                                    ComponentName.getFromId(c.getComponentId()),
-                                    ComponentState.getFromId(c.getComponentStateId()));
+                    public void onAllLoaded(List<RecipeMetadataPersistenceModel> models) {
+                        if (models.isEmpty()) {
+                            callback.onDataUnavailable();
+                        } else {
+                            callback.onAllLoaded(models);
                         }
-                        modelBuilder.setComponentStates(componentStates);
-
-                        addComponentFailReasons(parentDataId, modelBuilder);
                     }
 
                     @Override
                     public void onDataUnavailable() {
-                        addComponentFailReasons(parentDataId, modelBuilder);
+                        callback.onDataUnavailable();
                     }
-                }
-        );
+                });
     }
 
-    private void addComponentFailReasons(
-            String parentDataId,
-            RecipeMetadataPersistenceModel.Builder modelBuilder) {
-
-        recipeFailReasonsDataSource.getAllByParentDataId(
-                parentDataId,
-                new PrimitiveDataSource.GetAllCallback<RecipeFailReasonEntity>() {
+    @Override
+    public void getByDataId(
+            @Nonnull String dataId,
+            @Nonnull GetDomainModelCallback<RecipeMetadataPersistenceModel> callback) {
+        toPersistenceAdapter.createModelByDataIdAndNotify(
+                dataId, new RecipeMetadataToPersistenceAdapter.Callback() {
                     @Override
-                    public void onAllLoaded(List<RecipeFailReasonEntity> failReasons) {
-                        List<FailReasons> fr = new ArrayList<>();
+                    public void onModelCreated(RecipeMetadataPersistenceModel model) {
 
-                        for (RecipeFailReasonEntity f : failReasons) {
-                            fr.add(RecipeMetadata.FailReason.getById(f.getFailReasonId()));
-                        }
-                        modelBuilder.setFailReasons(fr);
-
-                        persistenceModels.add(modelBuilder.build());
-                        totalProcessed++;
                     }
 
                     @Override
-                    public void onDataUnavailable() {
-                        persistenceModels.add(modelBuilder.build());
-                        totalProcessed ++;
+                    public void onModelUnavailable() {
+
                     }
-                }
-        );
-    }
-
-    private void returnAll(GetAllDomainModelsCallback<RecipeMetadataPersistenceModel> callback) {
-        if (totalProcessed == listSize) {
-            totalProcessed = 0;
-            listSize = 0;
-
-            callback.onAllLoaded(persistenceModels);
-        }
+                });
     }
 
     @Override
-    public void getByDataId(@Nonnull String dataId,
-                            @Nonnull GetDomainModelCallback<RecipeMetadataPersistenceModel> callback) {
-        listSize = 1;
-        RecipeMetadataPersistenceModel.Builder modelBuilder =
-                new RecipeMetadataPersistenceModel.Builder();
+    public void getByRecipeId(
+            @Nonnull String recipeId,
+            @Nonnull GetDomainModelCallback<RecipeMetadataPersistenceModel> callback) {
+        // 1. GetAllByRecipeId
+        // 2. Only return the one with the most recent date
 
-        metadataSource.getByDataId(
-                dataId,
-                new PrimitiveDataSource.GetEntityCallback<RecipeMetadataParentEntity>() {
-            @Override
-            public void onEntityLoaded(RecipeMetadataParentEntity e) {
-                modelBuilder.
-                        setDataId(e.getDataId()).
-                        setRecipeId(e.getRecipeId()).
-                        setRecipeParentId(e.getRecipeParentId()).
-                        setRecipeState(RecipeState.getById(e.getRecipeStateId())).
-                        setCreatedBy(e.getCreatedBy()).
-                        setCreateDate(e.getCreateDate()).
-                        setLastUpdate(e.getLastUpdate());
-
-                addComponentStates(e.getDataId(), modelBuilder);
-
-            }
-
-            @Override
-            public void onDataUnavailable() {
-                callback.onModelUnavailable();
-            }
-        });
+        // Create a database adapter for each CRUD situation
     }
 
     @Override
-    public void getByRecipeId(@Nonnull String recipeId,
-                              @Nonnull GetDomainModelCallback<RecipeMetadataPersistenceModel> callback) {
-
-    }
-
-    @Override
-    public void save(@Nonnull RecipeMetadataPersistenceModel pm) {
+    public void save(@Nonnull RecipeMetadataPersistenceModel persistenceModel) {
         // 1. Break persistence model into primitive models
-        RecipeMetadataParentEntity pe = new RecipeMetadataParentEntity.Builder().
-                setDataId(pm.getDataId()).
-                setRecipeId(pm.getDomainId()).
-                setRecipeParentId(pm.getRecipeParentId()).
-                setRecipeStateId(pm.getRecipeState().getId()).
-                setCreatedBy(pm.getCreatedBy()).
-                setCreateDate(pm.getCreateDate()).
-                setLastUpdate(pm.getLastUpdate()).
-                build();
-
-        for (ComponentName componentName : pm.getComponentStates().keySet()) {
-            RecipeComponentStateEntity stateEntity = new RecipeComponentStateEntity(
-                    idProvider.getUId(),
-                    pe.getDataId(),
-                    componentName.getId(),
-                    pm.getComponentStates().get(componentName).getId()
-            );
-        }
+        RecipeMetadataToPrimitiveAdapter adapter = new RecipeMetadataToPrimitiveAdapter(
+                new UniqueIdProvider(), persistenceModel);
+        RecipeMetadataToPrimitiveAdapter.Model models = adapter.convertToPrimitives();
         // 2. Save metadata parent
+        metadataSource.save(models.getParentEntity());
         // 3. Save ComponentStates list
+
+        for (RecipeComponentStateEntity e : models.getStateEntities()) {
+            componentStateDataSource.save(e);
+        }
         // 4. Save FailReasons list
+        for (RecipeFailReasonEntity e : models.getFailReasonEntities()) {
+            recipeFailReasonsDataSource.save(e);
+        }
     }
 
     @Override

@@ -1,6 +1,8 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata;
 
 import com.example.peter.thekitchenmenu.app.Constants;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.componentstate.RecipeComponentStateEntity;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.failreason.RecipeFailReasonEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.parent.RecipeMetadataParentEntity;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipePersistenceModel;
@@ -13,7 +15,8 @@ import java.util.Objects;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.*;
 
 /**
- * Represented in primitive form by {@link RecipeMetadataParentEntity}
+ * Represented in primitive form by {@link RecipeMetadataParentEntity},
+ * {@link RecipeComponentStateEntity} and {@link RecipeFailReasonEntity}
  */
 public final class RecipeMetadataPersistenceModel extends RecipePersistenceModel {
 

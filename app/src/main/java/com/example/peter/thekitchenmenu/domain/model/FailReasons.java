@@ -6,6 +6,7 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeco
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeduration.RecipeDuration;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeidentity.RecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeportions.RecipePortions;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipecopy.RecipeCopy;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.recipeingredientcalculator.IngredientCalculator;
 import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator;
@@ -28,7 +29,10 @@ import com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValida
  * {@link RecipeMetadata.FailReason} 400-449
  * {@link IngredientCalculator.FailReason} 450-499
  * {@link TextValidator.FailReason} 500-549
- * {@link RecipeMetadata.FailReason} 550-599
+ *
+ * {@link RecipeCopy.FailReason} 600-649
  */
 public interface FailReasons {
+
+    int getId();
 }
