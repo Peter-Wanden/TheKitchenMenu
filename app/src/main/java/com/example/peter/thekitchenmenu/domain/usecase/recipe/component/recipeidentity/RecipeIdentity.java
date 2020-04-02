@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipei
 
 import android.annotation.SuppressLint;
 
-import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.repository.DataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIdentity;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
@@ -26,7 +26,7 @@ import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.Re
 import static com.example.peter.thekitchenmenu.domain.usecase.textvalidation.TextValidator.*;
 
 public class RecipeIdentity extends UseCase
-        implements DataSource.GetDomainModelCallback<RecipeIdentityPersistenceModel> {
+        implements DataAccess.GetDomainModelCallback<RecipeIdentityPersistenceModel> {
 
     private static final String TAG = "tkm-" + RecipeIdentity.class.getSimpleName() + ": ";
 

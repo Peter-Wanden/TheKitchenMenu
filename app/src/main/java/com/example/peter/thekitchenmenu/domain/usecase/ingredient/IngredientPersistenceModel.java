@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.ingredient;
 
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.domain.entity.unitofmeasure.UnitOfMeasureConstants;
-import com.example.peter.thekitchenmenu.domain.model.PersistenceModel;
+import com.example.peter.thekitchenmenu.domain.model.DomainPersistenceModel;
 
 import java.util.Objects;
 
@@ -10,7 +10,7 @@ import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.ingredient.Ingredient.CREATE_NEW_INGREDIENT;
 
-public final class IngredientPersistenceModel implements PersistenceModel {
+public final class IngredientPersistenceModel implements DomainPersistenceModel {
 
     @Nonnull
     private final String id;

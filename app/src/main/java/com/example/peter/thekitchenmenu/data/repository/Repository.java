@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.data.repository;
 
 import androidx.annotation.Nullable;
 
-import com.example.peter.thekitchenmenu.domain.model.PersistenceModel;
+import com.example.peter.thekitchenmenu.domain.model.DomainPersistenceModel;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -12,11 +12,11 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 
 
-public abstract class Repository<T extends PersistenceModel> implements DataSource<T> {
+public abstract class Repository<T extends DomainPersistenceModel> implements DataAccess<T> {
 
     protected static Repository INSTANCE = null;
-    protected DataSource<T> remoteDataSource;
-    protected DataSource<T> localDataSource;
+    protected DataAccess<T> remoteDataAccess;
+    protected DataAccess<T> localDataAccess;
     protected Map<String, T> cache;
 
     private boolean cacheIsDirty;
@@ -31,7 +31,7 @@ public abstract class Repository<T extends PersistenceModel> implements DataSour
         if (cacheIsDirty)
             getItemsFromRemoteDataSource(callback);
         else {
-            localDataSource.getAll(new GetAllDomainModelsCallback<T>() {
+            localDataAccess.getAll(new GetAllDomainModelsCallback<T>() {
                 @Override
                 public void onAllLoaded(List<T> models) {
                     refreshCache(models);
@@ -39,7 +39,7 @@ public abstract class Repository<T extends PersistenceModel> implements DataSour
                 }
 
                 @Override
-                public void onDataUnavailable() {
+                public void onModelsUnavailable() {
                     getItemsFromRemoteDataSource(callback);
                 }
             });
@@ -47,7 +47,7 @@ public abstract class Repository<T extends PersistenceModel> implements DataSour
     }
 
     private void getItemsFromRemoteDataSource(@Nonnull final GetAllDomainModelsCallback<T> callback) {
-        remoteDataSource.getAll(new GetAllDomainModelsCallback<T>() {
+        remoteDataAccess.getAll(new GetAllDomainModelsCallback<T>() {
             @Override
             public void onAllLoaded(List<T> models) {
                 refreshCache(models);
@@ -56,8 +56,8 @@ public abstract class Repository<T extends PersistenceModel> implements DataSour
             }
 
             @Override
-            public void onDataUnavailable() {
-                callback.onDataUnavailable();
+            public void onModelsUnavailable() {
+                callback.onModelsUnavailable();
             }
         });
     }
@@ -75,10 +75,10 @@ public abstract class Repository<T extends PersistenceModel> implements DataSour
     }
 
     private void refreshLocalDataSource(List<T> models) {
-        localDataSource.deleteAll();
+        localDataAccess.deleteAll();
 
         for (T model : models)
-            localDataSource.save(model);
+            localDataAccess.save(model);
     }
 
     @Override
@@ -90,7 +90,7 @@ public abstract class Repository<T extends PersistenceModel> implements DataSour
             callback.onModelLoaded(cachedModel);
             return;
         }
-        localDataSource.getByDataId(dataId, new GetDomainModelCallback<T>() {
+        localDataAccess.getByDataId(dataId, new GetDomainModelCallback<T>() {
             @Override
             public void onModelLoaded(T model) {
                 if (cache == null)
@@ -102,7 +102,7 @@ public abstract class Repository<T extends PersistenceModel> implements DataSour
 
             @Override
             public void onModelUnavailable() {
-                remoteDataSource.getByDataId(dataId, new GetDomainModelCallback<T>() {
+                remoteDataAccess.getByDataId(dataId, new GetDomainModelCallback<T>() {
                     @Override
                     public void onModelLoaded(T model) {
                         if (model == null) {
@@ -137,8 +137,8 @@ public abstract class Repository<T extends PersistenceModel> implements DataSour
 
     @Override
     public void save(@Nonnull T model) {
-        remoteDataSource.save(model);
-        localDataSource.save(model);
+        remoteDataAccess.save(model);
+        localDataAccess.save(model);
 
         if (cache == null)
             cache = new LinkedHashMap<>();
@@ -152,8 +152,8 @@ public abstract class Repository<T extends PersistenceModel> implements DataSour
 
     @Override
     public void deleteAll() {
-        remoteDataSource.deleteAll();
-        localDataSource.deleteAll();
+        remoteDataAccess.deleteAll();
+        localDataAccess.deleteAll();
 
         if (cache == null)
             cache = new LinkedHashMap<>();
@@ -161,8 +161,8 @@ public abstract class Repository<T extends PersistenceModel> implements DataSour
     }
 
     public void deleteByDataId(@Nonnull String dataId) {
-        remoteDataSource.deleteById(dataId);
-        localDataSource.deleteById(dataId);
+        remoteDataAccess.deleteByDomainId(dataId);
+        localDataAccess.deleteByDomainId(dataId);
         cache.remove(dataId);
     }
 }

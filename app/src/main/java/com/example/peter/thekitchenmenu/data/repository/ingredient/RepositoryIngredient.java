@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.data.repository.ingredient;
 
-import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.repository.DataAccess;
 import com.example.peter.thekitchenmenu.data.repository.Repository;
 import com.example.peter.thekitchenmenu.domain.usecase.ingredient.IngredientPersistenceModel;
 
@@ -9,18 +9,18 @@ import javax.annotation.Nonnull;
 public class RepositoryIngredient extends Repository<IngredientPersistenceModel> {
 
     private RepositoryIngredient(
-            @Nonnull DataSource<IngredientPersistenceModel> remoteDataSource,
-            @Nonnull DataSource<IngredientPersistenceModel> localDataSource) {
-        this.remoteDataSource = remoteDataSource;
-        this.localDataSource = localDataSource;
+            @Nonnull DataAccess<IngredientPersistenceModel> remoteDataAccess,
+            @Nonnull DataAccess<IngredientPersistenceModel> localDataAccess) {
+        this.remoteDataAccess = remoteDataAccess;
+        this.localDataAccess = localDataAccess;
     }
 
     public static RepositoryIngredient getInstance(
-            @Nonnull DataSource<IngredientPersistenceModel> remoteDataSource,
-            @Nonnull DataSource<IngredientPersistenceModel> localDataSource) {
+            @Nonnull DataAccess<IngredientPersistenceModel> remoteDataAccess,
+            @Nonnull DataAccess<IngredientPersistenceModel> localDataAccess) {
 
         if (INSTANCE == null)
-            INSTANCE = new RepositoryIngredient(remoteDataSource, localDataSource);
+            INSTANCE = new RepositoryIngredient(remoteDataAccess, localDataAccess);
         return (RepositoryIngredient) INSTANCE;
     }
 }

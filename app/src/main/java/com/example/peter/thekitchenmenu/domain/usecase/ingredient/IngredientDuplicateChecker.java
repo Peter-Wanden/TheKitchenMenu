@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecase.ingredient;
 
-import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.repository.DataAccess;
 import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
 import com.google.android.gms.common.util.Strings;
 
@@ -8,7 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 public class IngredientDuplicateChecker
-        implements DataSource.GetAllDomainModelsCallback<IngredientPersistenceModel> {
+        implements DataAccess.GetAllDomainModelsCallback<IngredientPersistenceModel> {
 
     public interface DuplicateCallback {
         void duplicateCheckResult(String duplicateId);
@@ -84,7 +84,7 @@ public class IngredientDuplicateChecker
     }
 
     @Override
-    public void onDataUnavailable() {
+    public void onModelsUnavailable() {
         notifyCallback(NO_DUPLICATE_FOUND);
     }
 }

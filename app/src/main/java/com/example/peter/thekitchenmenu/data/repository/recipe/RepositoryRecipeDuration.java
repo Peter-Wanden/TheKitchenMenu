@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.data.repository.recipe;
 
-import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.repository.DataAccess;
 import com.example.peter.thekitchenmenu.data.repository.Repository;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeduration.RecipeDurationPersistenceModel;
 
@@ -10,18 +10,18 @@ public class RepositoryRecipeDuration extends Repository<RecipeDurationPersisten
 
     public static RepositoryRecipeDuration INSTANCE = null;
 
-    private RepositoryRecipeDuration(@Nonnull DataSource<RecipeDurationPersistenceModel> remoteDataSource,
-                                     @Nonnull DataSource<RecipeDurationPersistenceModel> localDataSource) {
-        this.remoteDataSource = remoteDataSource;
-        this.localDataSource = localDataSource;
+    private RepositoryRecipeDuration(@Nonnull DataAccess<RecipeDurationPersistenceModel> remoteDataAccess,
+                                     @Nonnull DataAccess<RecipeDurationPersistenceModel> localDataAccess) {
+        this.remoteDataAccess = remoteDataAccess;
+        this.localDataAccess = localDataAccess;
     }
 
     public static  RepositoryRecipeDuration getInstance(
-            DataSource<RecipeDurationPersistenceModel> remoteDataSource,
-            DataSource<RecipeDurationPersistenceModel> localDataSource) {
+            DataAccess<RecipeDurationPersistenceModel> remoteDataAccess,
+            DataAccess<RecipeDurationPersistenceModel> localDataAccess) {
 
         if (INSTANCE == null)
-            INSTANCE = new RepositoryRecipeDuration(remoteDataSource, localDataSource);
+            INSTANCE = new RepositoryRecipeDuration(remoteDataAccess, localDataAccess);
         return INSTANCE;
     }
 }

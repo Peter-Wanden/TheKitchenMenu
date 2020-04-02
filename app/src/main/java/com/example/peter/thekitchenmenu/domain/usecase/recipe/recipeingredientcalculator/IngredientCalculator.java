@@ -5,7 +5,7 @@ import android.annotation.SuppressLint;
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.IngredientEntity;
 import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.RecipeIngredientEntity;
-import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.repository.DataAccess;
 import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeIngredient;
@@ -222,7 +222,7 @@ public class IngredientCalculator extends UseCase {
     private void loadPortions() {
         portionsRepository.getByRecipeId(
                 recipeId,
-                new DataSource.GetDomainModelCallback<RecipePortionsPersistenceModel>() {
+                new DataAccess.GetDomainModelCallback<RecipePortionsPersistenceModel>() {
                     @Override
                     public void onModelLoaded(RecipePortionsPersistenceModel model) {
                         numberOfPortions = model.getServings() *

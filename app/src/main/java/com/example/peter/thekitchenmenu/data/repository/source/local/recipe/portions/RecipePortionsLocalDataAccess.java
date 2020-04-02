@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions;
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
-import com.example.peter.thekitchenmenu.data.repository.recipe.DataSourceRecipePortions;
+import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipePortions;
 
 import java.util.List;
 
@@ -9,24 +9,24 @@ import javax.annotation.Nonnull;
 
 import static androidx.core.util.Preconditions.checkNotNull;
 
-public class RecipePortionsLocalDataSource implements DataSourceRecipePortions {
+public class RecipePortionsLocalDataAccess implements DataAccessRecipePortions {
 
-    private static volatile RecipePortionsLocalDataSource INSTANCE;
+    private static volatile RecipePortionsLocalDataAccess INSTANCE;
     private AppExecutors appExecutors;
     private RecipePortionsEntityDao dao;
 
-    private RecipePortionsLocalDataSource(@Nonnull AppExecutors appExecutors,
+    private RecipePortionsLocalDataAccess(@Nonnull AppExecutors appExecutors,
                                           @Nonnull RecipePortionsEntityDao dao) {
         this.appExecutors = appExecutors;
         this.dao = dao;
     }
 
-    public static RecipePortionsLocalDataSource getInstance(@Nonnull AppExecutors appExecutors,
+    public static RecipePortionsLocalDataAccess getInstance(@Nonnull AppExecutors appExecutors,
                                                             @Nonnull RecipePortionsEntityDao dao) {
         if (INSTANCE == null) {
-            synchronized (RecipePortionsLocalDataSource.class) {
+            synchronized (RecipePortionsLocalDataAccess.class) {
                 if (INSTANCE == null)
-                    INSTANCE = new RecipePortionsLocalDataSource(appExecutors, dao);
+                    INSTANCE = new RecipePortionsLocalDataAccess(appExecutors, dao);
             }
         }
         return INSTANCE;
@@ -53,7 +53,7 @@ public class RecipePortionsLocalDataSource implements DataSourceRecipePortions {
             final List<RecipePortionsEntity> entities = dao.getAll();
             appExecutors.mainThread().execute(() -> {
                 if (entities.isEmpty())
-                    callback.onDataUnavailable();
+                    callback.onModelsUnavailable();
                 else
                     callback.onAllLoaded(entities);
             });
@@ -95,8 +95,8 @@ public class RecipePortionsLocalDataSource implements DataSourceRecipePortions {
     }
 
     @Override
-    public void deleteById(@Nonnull String id) {
-        Runnable runnable = () -> dao.deleteById(id);
+    public void deleteByDomainId(@Nonnull String domainId) {
+        Runnable runnable = () -> dao.deleteById(domainId);
         appExecutors.diskIO().execute(runnable);
     }
 }

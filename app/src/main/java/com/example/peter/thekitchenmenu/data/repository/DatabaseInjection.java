@@ -17,13 +17,13 @@ import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeP
 import com.example.peter.thekitchenmenu.data.repository.source.local.ingredient.datasource.IngredientLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.componentstate.RecipeComponentStateLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.failreason.RecipeFailReasonsLocalDataSource;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.ingredient.RecipeIngredientLocalDataSource;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.RecipePortionsLocalDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.ingredient.RecipeIngredientLocalDataAccess;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.RecipePortionsLocalDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.source.local.product.datasource.ProductLocalDataSource;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.RecipeCourseLocalDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course.RecipeCourseLocalDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.RecipeDurationLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.identity.RecipeIdentityLocalDataSource;
-import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.RecipeMetadataLocalDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.RecipeMetadataLocalDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.source.local.TKMDatabase;
 import com.example.peter.thekitchenmenu.data.repository.source.local.product.datasource.FavoriteProductsLocalDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.remote.IngredientRemoteDataSource;
@@ -31,12 +31,12 @@ import com.example.peter.thekitchenmenu.data.repository.source.remote.ProductRem
 import com.example.peter.thekitchenmenu.data.repository.source.remote.recipe.RecipeComponentStateRemoteDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.remote.recipe.RecipeDurationRemoteDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.remote.FavoriteProductsRemoteDataSource;
-import com.example.peter.thekitchenmenu.data.repository.source.remote.recipe.RecipeCourseRemoteDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.remote.recipe.RecipeCourseRemoteDataAccess;
 import com.example.peter.thekitchenmenu.data.repository.source.remote.recipe.RecipeFailReasonsRemoteDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.remote.recipe.RecipeIdentityRemoteDataSource;
-import com.example.peter.thekitchenmenu.data.repository.source.remote.recipe.RecipeIngredientRemoteDataSource;
-import com.example.peter.thekitchenmenu.data.repository.source.remote.recipe.RecipeMetadataRemoteDataSource;
-import com.example.peter.thekitchenmenu.data.repository.source.remote.recipe.RecipePortionsRemoteDataSource;
+import com.example.peter.thekitchenmenu.data.repository.source.remote.recipe.RecipeIngredientRemoteDataAccess;
+import com.example.peter.thekitchenmenu.data.repository.source.remote.recipe.RecipeMetadataRemoteDataAccess;
+import com.example.peter.thekitchenmenu.data.repository.source.remote.recipe.RecipePortionsRemoteDataAccess;
 
 import javax.annotation.Nonnull;
 
@@ -75,8 +75,8 @@ public class DatabaseInjection {
         TKMDatabase database = TKMDatabase.getInstance(context, new AppExecutors());
 
         return RepositoryRecipeMetadataModel.getInstance(
-                RecipeMetadataRemoteDataSource.getInstance(),
-                RecipeMetadataLocalDataSource.getInstance(
+                RecipeMetadataRemoteDataAccess.getInstance(),
+                RecipeMetadataLocalDataAccess.getInstance(
                         new AppExecutors(),
                         database.recipeEntityDao())
         );
@@ -115,8 +115,8 @@ public class DatabaseInjection {
         TKMDatabase database = TKMDatabase.getInstance(context, new AppExecutors());
 
         return RepositoryRecipeCourse.getInstance(
-                RecipeCourseRemoteDataSource.getInstance(),
-                RecipeCourseLocalDataSource.getInstance(
+                RecipeCourseRemoteDataAccess.getInstance(),
+                RecipeCourseLocalDataAccess.getInstance(
                         new AppExecutors(),
                         database.recipeCourseEntityDao())
         );
@@ -166,8 +166,8 @@ public class DatabaseInjection {
         TKMDatabase database = TKMDatabase.getInstance(context, new AppExecutors());
 
         return RepositoryRecipePortions.getInstance(
-                RecipePortionsRemoteDataSource.getInstance(),
-                RecipePortionsLocalDataSource.getInstance(
+                RecipePortionsRemoteDataAccess.getInstance(),
+                RecipePortionsLocalDataAccess.getInstance(
                         new AppExecutors(),
                         database.recipePortionsEntityDao())
         );
@@ -179,8 +179,8 @@ public class DatabaseInjection {
         TKMDatabase database = TKMDatabase.getInstance(context, new AppExecutors());
 
         return RepositoryRecipeIngredient.getInstance(
-                RecipeIngredientRemoteDataSource.getInstance(),
-                RecipeIngredientLocalDataSource.getInstance(
+                RecipeIngredientRemoteDataAccess.getInstance(),
+                RecipeIngredientLocalDataAccess.getInstance(
                         new AppExecutors(),
                         database.recipeIngredientEntityDao())
         );

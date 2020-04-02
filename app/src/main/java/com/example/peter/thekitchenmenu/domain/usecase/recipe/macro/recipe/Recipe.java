@@ -1,6 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.recipe;
 
-import androidx.core.util.Pair;
+
+import android.util.Pair;
 
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
@@ -77,7 +78,7 @@ public class Recipe extends UseCase {
             componentStates = new LinkedHashMap<>();
 
     // Listeners
-    private final List<Pair<ComponentName, UseCase.Callback<? extends UseCaseResponse>>>
+    private final List<Pair<ComponentName, Callback<? extends UseCaseResponse>>>
             componentListeners = new ArrayList<>();
     private final List<RecipeMetadataListener>
             metaDataListeners = new ArrayList<>();
@@ -400,7 +401,7 @@ public class Recipe extends UseCase {
     }
 
     private boolean isValid() {
-        return recipeMetadataResponse.getModel().getFailReasons().contains(FailReason.NONE);
+        return recipeMetadataResponse.getModel().getFailReasons().contains(CommonFailReason.NONE);
     }
 
     public void registerComponentCallback(Pair<

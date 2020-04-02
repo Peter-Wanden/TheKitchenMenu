@@ -1,17 +1,17 @@
 package com.example.peter.thekitchenmenu.data.repository.source.remote.recipe;
 
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.RecipePortionsEntity;
-import com.example.peter.thekitchenmenu.data.repository.recipe.DataSourceRecipePortions;
+import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipePortions;
 
 import javax.annotation.Nonnull;
 
-public class RecipePortionsRemoteDataSource implements DataSourceRecipePortions {
+public class RecipePortionsRemoteDataAccess implements DataAccessRecipePortions {
 
-    private static RecipePortionsRemoteDataSource INSTANCE;
+    private static RecipePortionsRemoteDataAccess INSTANCE;
 
-    public static RecipePortionsRemoteDataSource getInstance() {
+    public static RecipePortionsRemoteDataAccess getInstance() {
         if (INSTANCE == null)
-            INSTANCE = new RecipePortionsRemoteDataSource();
+            INSTANCE = new RecipePortionsRemoteDataAccess();
         return INSTANCE;
     }
 
@@ -23,7 +23,7 @@ public class RecipePortionsRemoteDataSource implements DataSourceRecipePortions 
 
     @Override
     public void getAll(@Nonnull GetAllDomainModelsCallback<RecipePortionsEntity> callback) {
-        callback.onDataUnavailable();
+        callback.onModelsUnavailable();
     }
 
     @Override
@@ -48,7 +48,7 @@ public class RecipePortionsRemoteDataSource implements DataSourceRecipePortions 
     }
 
     @Override
-    public void deleteById(@Nonnull String id) {
+    public void deleteByDomainId(@Nonnull String domainId) {
 
     }
 }

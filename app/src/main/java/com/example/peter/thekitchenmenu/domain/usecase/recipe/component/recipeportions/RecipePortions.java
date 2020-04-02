@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipep
 
 import android.annotation.SuppressLint;
 
-import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.repository.DataAccess;
 import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipePortions;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
@@ -20,7 +20,7 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 
 public class RecipePortions extends UseCase
-        implements DataSource.GetDomainModelCallback<RecipePortionsPersistenceModel> {
+        implements DataAccess.GetDomainModelCallback<RecipePortionsPersistenceModel> {
 
     private static final String TAG = "tkm-" + RecipePortions.class.getSimpleName() + ": ";
 

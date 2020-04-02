@@ -11,16 +11,16 @@ import javax.annotation.Nonnull;
 
 public class RepositoryRecipeCourse
         extends Repository<RecipeCourseModel>
-        implements DataSourceRecipeCourse {
+        implements DataAccessRecipeCourse {
 
-    private RepositoryRecipeCourse(@Nonnull DataSourceRecipeCourse remoteDataSource,
-                                   @Nonnull DataSourceRecipeCourse localDataSource) {
-        this.remoteDataSource = remoteDataSource;
-        this.localDataSource = localDataSource;
+    private RepositoryRecipeCourse(@Nonnull DataAccessRecipeCourse remoteDataSource,
+                                   @Nonnull DataAccessRecipeCourse localDataSource) {
+        this.remoteDataAccess = remoteDataSource;
+        this.localDataAccess = localDataSource;
     }
 
-    public static RepositoryRecipeCourse getInstance(DataSourceRecipeCourse remoteDataSource,
-                                                     DataSourceRecipeCourse localDataSource) {
+    public static RepositoryRecipeCourse getInstance(DataAccessRecipeCourse remoteDataSource,
+                                                     DataAccessRecipeCourse localDataSource) {
         if (INSTANCE == null) {
             INSTANCE = new RepositoryRecipeCourse(remoteDataSource, localDataSource);
         }
@@ -37,7 +37,7 @@ public class RepositoryRecipeCourse
             callback.onAllLoaded(models);
             return;
         }
-        ((DataSourceRecipeCourse)localDataSource).getAllByCourseNo(
+        ((DataAccessRecipeCourse) localDataAccess).getAllByCourseNo(
                 courseNo,
                 new GetAllDomainModelsCallback<RecipeCourseModel>() {
                     @Override
@@ -52,14 +52,14 @@ public class RepositoryRecipeCourse
                     }
 
                     @Override
-                    public void onDataUnavailable() {
-                        ((DataSourceRecipeCourse)remoteDataSource).getAllByCourseNo(
+                    public void onModelsUnavailable() {
+                        ((DataAccessRecipeCourse) remoteDataAccess).getAllByCourseNo(
                                 courseNo,
                                 new GetAllDomainModelsCallback<RecipeCourseModel>() {
                                     @Override
                                     public void onAllLoaded(List<RecipeCourseModel> models) {
                                         if (models == null) {
-                                            onDataUnavailable();
+                                            onModelsUnavailable();
                                             return;
                                         }
 
@@ -73,8 +73,8 @@ public class RepositoryRecipeCourse
                                     }
 
                                     @Override
-                                    public void onDataUnavailable() {
-                                        callback.onDataUnavailable();
+                                    public void onModelsUnavailable() {
+                                        callback.onModelsUnavailable();
                                     }
                                 });
                     }
@@ -104,7 +104,7 @@ public class RepositoryRecipeCourse
             callback.onAllLoaded(models);
             return;
         }
-        ((DataSourceRecipeCourse)localDataSource).getAllByRecipeId(
+        ((DataAccessRecipeCourse) localDataAccess).getAllByRecipeId(
                 recipeId,
                 new GetAllDomainModelsCallback<RecipeCourseModel>() {
                     @Override
@@ -119,14 +119,14 @@ public class RepositoryRecipeCourse
                     }
 
                     @Override
-                    public void onDataUnavailable() {
-                        ((DataSourceRecipeCourse)remoteDataSource).getAllByRecipeId(
+                    public void onModelsUnavailable() {
+                        ((DataAccessRecipeCourse) remoteDataAccess).getAllByRecipeId(
                                 recipeId,
                                 new GetAllDomainModelsCallback<RecipeCourseModel>() {
                                     @Override
                                     public void onAllLoaded(List<RecipeCourseModel> models) {
                                         if (models == null) {
-                                            onDataUnavailable();
+                                            onModelsUnavailable();
                                             return;
                                         }
 
@@ -140,8 +140,8 @@ public class RepositoryRecipeCourse
                                     }
 
                                     @Override
-                                    public void onDataUnavailable() {
-                                        callback.onDataUnavailable();
+                                    public void onModelsUnavailable() {
+                                        callback.onModelsUnavailable();
                                     }
                                 });
                     }

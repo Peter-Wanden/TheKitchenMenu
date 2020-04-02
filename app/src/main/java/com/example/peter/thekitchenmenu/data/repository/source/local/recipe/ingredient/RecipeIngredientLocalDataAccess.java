@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.ing
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
 import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.RecipeIngredientEntity;
-import com.example.peter.thekitchenmenu.data.repository.recipe.DataSourceRecipeIngredient;
+import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeIngredient;
 
 import java.util.List;
 
@@ -10,25 +10,25 @@ import javax.annotation.Nonnull;
 
 import static androidx.core.util.Preconditions.checkNotNull;
 
-public class RecipeIngredientLocalDataSource implements DataSourceRecipeIngredient {
+public class RecipeIngredientLocalDataAccess implements DataAccessRecipeIngredient {
 
-    private static volatile RecipeIngredientLocalDataSource INSTANCE;
+    private static volatile RecipeIngredientLocalDataAccess INSTANCE;
     private AppExecutors appExecutors;
     private RecipeIngredientEntityDao dao;
 
-    private RecipeIngredientLocalDataSource(@Nonnull AppExecutors appExecutors,
+    private RecipeIngredientLocalDataAccess(@Nonnull AppExecutors appExecutors,
                                             @Nonnull RecipeIngredientEntityDao dao) {
         this.appExecutors = appExecutors;
         this.dao = dao;
     }
 
-    public static RecipeIngredientLocalDataSource getInstance(
+    public static RecipeIngredientLocalDataAccess getInstance(
             @Nonnull AppExecutors appExecutors,
             @Nonnull RecipeIngredientEntityDao dao) {
         if (INSTANCE == null) {
-            synchronized (RecipeIngredientLocalDataSource.class) {
+            synchronized (RecipeIngredientLocalDataAccess.class) {
                 if (INSTANCE == null)
-                    INSTANCE = new RecipeIngredientLocalDataSource(appExecutors, dao);
+                    INSTANCE = new RecipeIngredientLocalDataAccess(appExecutors, dao);
             }
         }
         return INSTANCE;
@@ -40,7 +40,7 @@ public class RecipeIngredientLocalDataSource implements DataSourceRecipeIngredie
             final List<RecipeIngredientEntity> entities = dao.getAll();
             appExecutors.mainThread().execute(() -> {
                 if (entities.isEmpty())
-                    callback.onDataUnavailable();
+                    callback.onModelsUnavailable();
                 else
                     callback.onAllLoaded(entities);
             });
@@ -55,7 +55,7 @@ public class RecipeIngredientLocalDataSource implements DataSourceRecipeIngredie
             final List<RecipeIngredientEntity> entities = dao.getAllByRecipeId(recipeId);
             appExecutors.mainThread().execute(() -> {
                 if (entities.isEmpty())
-                    callback.onDataUnavailable();
+                    callback.onModelsUnavailable();
                 else
                     callback.onAllLoaded(entities);
             });
@@ -70,7 +70,7 @@ public class RecipeIngredientLocalDataSource implements DataSourceRecipeIngredie
             final List<RecipeIngredientEntity> entities = dao.getAllByProductId(productId);
             appExecutors.mainThread().execute(() -> {
                 if (entities.isEmpty())
-                    callback.onDataUnavailable();
+                    callback.onModelsUnavailable();
                 else
                     callback.onAllLoaded(entities);
             });
@@ -85,7 +85,7 @@ public class RecipeIngredientLocalDataSource implements DataSourceRecipeIngredie
             final List<RecipeIngredientEntity> entities = dao.getAllByIngredientId(ingredientId);
             appExecutors.mainThread().execute(() -> {
                 if (entities.isEmpty())
-                    callback.onDataUnavailable();
+                    callback.onModelsUnavailable();
                 else
                     callback.onAllLoaded(entities);
             });
@@ -127,8 +127,8 @@ public class RecipeIngredientLocalDataSource implements DataSourceRecipeIngredie
     }
 
     @Override
-    public void deleteById(@Nonnull String id) {
-        Runnable runnable = () -> dao.deleteById(id);
+    public void deleteByDomainId(@Nonnull String domainId) {
+        Runnable runnable = () -> dao.deleteById(domainId);
         appExecutors.diskIO().execute(runnable);
     }
 }

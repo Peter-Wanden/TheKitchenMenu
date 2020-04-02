@@ -9,21 +9,7 @@ import javax.annotation.Nonnull;
 
 public class RepositoryRecipeMetadata extends Repository<RecipeMetadataPersistenceModel> {
 
-
-    private final DataSourceRecipeMetaData remoteMetadataSource;
-    private final DataSourceRecipeMetaData localMetadataSource;
-    private final DataSourceRecipeComponentState remoteComponentStateDataSource;
-    private final DataSourceRecipeComponentState localComponentStateDataSource;
-    private final DataSourceRecipeFailReason remoteFailReasonsDataSource;
-    private final DataSourceRecipeFailReason localFailReasonsDataSource;
-
-    private RepositoryRecipeMetadata(
-            @Nonnull DataSourceRecipeMetaData remoteMetadataSource,
-            @Nonnull DataSourceRecipeMetaData localMetadataSource,
-            @Nonnull DataSourceRecipeComponentState remoteComponentStateDataSource,
-            @Nonnull DataSourceRecipeComponentState localComponentStateDataSource,
-            @Nonnull DataSourceRecipeFailReason remoteFailReasonsDataSource,
-            @Nonnull DataSourceRecipeFailReason localFailReasonsDataSource) {
+    private RepositoryRecipeMetadata() {
 
     }
 }

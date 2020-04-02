@@ -11,8 +11,8 @@ public class RepositoryProduct extends Repository<ProductEntity> {
     private RepositoryProduct(
             @Nonnull PrimitiveDataSource<ProductEntity> remoteDataSource,
             @Nonnull PrimitiveDataSource<ProductEntity> localDataSource) {
-        this.remoteDataSource = remoteDataSource;
-        this.localDataSource = localDataSource;
+        this.remoteDataAccess = remoteDataSource;
+        this.localDataAccess = localDataSource;
     }
 
     public static RepositoryProduct getInstance(

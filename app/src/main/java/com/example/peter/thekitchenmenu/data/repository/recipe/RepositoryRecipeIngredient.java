@@ -11,19 +11,19 @@ import javax.annotation.Nonnull;
 
 public class RepositoryRecipeIngredient
         extends Repository<RecipeIngredientEntity>
-        implements DataSourceRecipeIngredient {
+        implements DataAccessRecipeIngredient {
 
     public static RepositoryRecipeIngredient INSTANCE = null;
 
-    private RepositoryRecipeIngredient(@Nonnull DataSourceRecipeIngredient remoteDataSource,
-                                       @Nonnull DataSourceRecipeIngredient localDataSource) {
-        this.remoteDataSource = remoteDataSource;
-        this.localDataSource = localDataSource;
+    private RepositoryRecipeIngredient(@Nonnull DataAccessRecipeIngredient remoteDataSource,
+                                       @Nonnull DataAccessRecipeIngredient localDataSource) {
+        this.remoteDataAccess = remoteDataSource;
+        this.localDataAccess = localDataSource;
     }
 
     public static RepositoryRecipeIngredient getInstance(
-            DataSourceRecipeIngredient remoteDataSource,
-            DataSourceRecipeIngredient localDataSource) {
+            DataAccessRecipeIngredient remoteDataSource,
+            DataAccessRecipeIngredient localDataSource) {
         if (INSTANCE == null)
             INSTANCE = new RepositoryRecipeIngredient(remoteDataSource, localDataSource);
         return INSTANCE;
@@ -39,7 +39,7 @@ public class RepositoryRecipeIngredient
             callback.onAllLoaded(cachedEntities);
             return;
         }
-        ((DataSourceRecipeIngredient)localDataSource).getAllByRecipeId(
+        ((DataAccessRecipeIngredient) localDataAccess).getAllByRecipeId(
                 recipeId,
                 new GetAllDomainModelsCallback<RecipeIngredientEntity>() {
                     @Override
@@ -54,8 +54,8 @@ public class RepositoryRecipeIngredient
                     }
 
                     @Override
-                    public void onDataUnavailable() {
-                        ((DataSourceRecipeIngredient)remoteDataSource).getAllByRecipeId(
+                    public void onModelsUnavailable() {
+                        ((DataAccessRecipeIngredient) remoteDataAccess).getAllByRecipeId(
                                 recipeId,
                                 new GetAllDomainModelsCallback<RecipeIngredientEntity>() {
                                     @Override
@@ -70,8 +70,8 @@ public class RepositoryRecipeIngredient
                                     }
 
                                     @Override
-                                    public void onDataUnavailable() {
-                                        callback.onDataUnavailable();
+                                    public void onModelsUnavailable() {
+                                        callback.onModelsUnavailable();
                                     }
                                 });
                     }
@@ -88,7 +88,7 @@ public class RepositoryRecipeIngredient
             callback.onAllLoaded(cachedEntities);
             return;
         }
-        ((DataSourceRecipeIngredient)localDataSource).getAllByProductId(
+        ((DataAccessRecipeIngredient) localDataAccess).getAllByProductId(
                 productId,
                 new GetAllDomainModelsCallback<RecipeIngredientEntity>() {
                     @Override
@@ -103,8 +103,8 @@ public class RepositoryRecipeIngredient
                     }
 
                     @Override
-                    public void onDataUnavailable() {
-                        ((DataSourceRecipeIngredient)remoteDataSource).getAllByProductId(
+                    public void onModelsUnavailable() {
+                        ((DataAccessRecipeIngredient) remoteDataAccess).getAllByProductId(
                                 productId,
                                 new GetAllDomainModelsCallback<RecipeIngredientEntity>() {
                                     @Override
@@ -119,8 +119,8 @@ public class RepositoryRecipeIngredient
                                     }
 
                                     @Override
-                                    public void onDataUnavailable() {
-                                        callback.onDataUnavailable();
+                                    public void onModelsUnavailable() {
+                                        callback.onModelsUnavailable();
                                     }
                                 });
                     }
@@ -136,7 +136,7 @@ public class RepositoryRecipeIngredient
             callback.onAllLoaded(entities);
             return;
         }
-        ((DataSourceRecipeIngredient)localDataSource).getAllByIngredientId(
+        ((DataAccessRecipeIngredient) localDataAccess).getAllByIngredientId(
                 ingredientId,
                 new GetAllDomainModelsCallback<RecipeIngredientEntity>() {
                     @Override
@@ -150,8 +150,8 @@ public class RepositoryRecipeIngredient
                     }
 
                     @Override
-                    public void onDataUnavailable() {
-                        ((DataSourceRecipeIngredient)remoteDataSource).getAllByIngredientId(
+                    public void onModelsUnavailable() {
+                        ((DataAccessRecipeIngredient) remoteDataAccess).getAllByIngredientId(
                                 ingredientId,
                                 new GetAllDomainModelsCallback<RecipeIngredientEntity>() {
                                     @Override
@@ -166,8 +166,8 @@ public class RepositoryRecipeIngredient
                                     }
 
                                     @Override
-                                    public void onDataUnavailable() {
-                                        callback.onDataUnavailable();
+                                    public void onModelsUnavailable() {
+                                        callback.onModelsUnavailable();
                                     }
                                 });
                     }

@@ -1,13 +1,14 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.parent;
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
+import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
 
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
 public class RecipeMetadataParentEntityLocalDataSource
-        implements DataSourceRecipeMetadataParent {
+        implements PrimitiveDataSource<RecipeMetadataParentEntity> {
 
     private static volatile RecipeMetadataParentEntityLocalDataSource INSTANCE;
 
@@ -37,11 +38,11 @@ public class RecipeMetadataParentEntityLocalDataSource
     }
 
     @Override
-    public void getAllByRecipeId(@Nonnull String recipeId,
+    public void getAllByDomainId(@Nonnull String domainId,
                                  @Nonnull GetAllCallback<RecipeMetadataParentEntity> callback) {
 
         Runnable r = () -> {
-            final List<RecipeMetadataParentEntity> entities = dao.getAll();
+            final List<RecipeMetadataParentEntity> entities = dao.getAllByDomainId(domainId);
             executors.mainThread().execute(() -> {
                 if (entities.isEmpty())
                     callback.onDataUnavailable();
@@ -70,7 +71,7 @@ public class RecipeMetadataParentEntityLocalDataSource
     public void getByDataId(@Nonnull String dataId,
                             @Nonnull GetEntityCallback<RecipeMetadataParentEntity> callback) {
         Runnable r = () -> {
-            final RecipeMetadataParentEntity e = dao.getById(dataId);
+            final RecipeMetadataParentEntity e = dao.getByDataId(dataId);
             executors.mainThread().execute(() -> {
                 if (e != null)
                     callback.onEntityLoaded(e);
@@ -95,13 +96,13 @@ public class RecipeMetadataParentEntityLocalDataSource
 
     @Override
     public void deleteByDataId(@Nonnull String dataId) {
-        Runnable r = () -> dao.deleteById(dataId);
+        Runnable r = () -> dao.deleteByDataId(dataId);
         executors.diskIO().execute(r);
     }
 
     @Override
-    public void deleteAllByRecipeId(@Nonnull String recipeId) {
-        Runnable r = () -> dao.deleteByRecipeId(recipeId);
+    public void deleteAllByDomainId(@Nonnull String domainId) {
+        Runnable r = () -> dao.deleteAllByDomainId(domainId);
         executors.diskIO().execute(r);
     }
 

@@ -2,41 +2,41 @@ package com.example.peter.thekitchenmenu.data.repository.source.remote.recipe;
 
 
 import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.RecipeIngredientEntity;
-import com.example.peter.thekitchenmenu.data.repository.recipe.DataSourceRecipeIngredient;
+import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeIngredient;
 
 import javax.annotation.Nonnull;
 
-public class RecipeIngredientRemoteDataSource implements DataSourceRecipeIngredient {
+public class RecipeIngredientRemoteDataAccess implements DataAccessRecipeIngredient {
 
-    private static RecipeIngredientRemoteDataSource INSTANCE;
+    private static RecipeIngredientRemoteDataAccess INSTANCE;
 
-    public static RecipeIngredientRemoteDataSource getInstance() {
+    public static RecipeIngredientRemoteDataAccess getInstance() {
         if (INSTANCE == null)
-            INSTANCE = new RecipeIngredientRemoteDataSource();
+            INSTANCE = new RecipeIngredientRemoteDataAccess();
         return INSTANCE;
     }
 
     @Override
     public void getAllByRecipeId(@Nonnull String recipeId,
                                  @Nonnull GetAllDomainModelsCallback<RecipeIngredientEntity> callback) {
-        callback.onDataUnavailable();
+        callback.onModelsUnavailable();
     }
 
     @Override
     public void getAllByProductId(@Nonnull String productId,
                                   @Nonnull GetAllDomainModelsCallback<RecipeIngredientEntity> callback) {
-        callback.onDataUnavailable();
+        callback.onModelsUnavailable();
     }
 
     @Override
     public void getAllByIngredientId(@Nonnull String ingredientId,
                                      @Nonnull GetAllDomainModelsCallback<RecipeIngredientEntity> callback) {
-        callback.onDataUnavailable();
+        callback.onModelsUnavailable();
     }
 
     @Override
     public void getAll(@Nonnull GetAllDomainModelsCallback<RecipeIngredientEntity> callback) {
-        callback.onDataUnavailable();
+        callback.onModelsUnavailable();
     }
 
     @Override
@@ -62,7 +62,7 @@ public class RecipeIngredientRemoteDataSource implements DataSourceRecipeIngredi
     }
 
     @Override
-    public void deleteById(@Nonnull String id) {
+    public void deleteByDomainId(@Nonnull String domainId) {
 
     }
 }

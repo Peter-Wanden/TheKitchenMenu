@@ -18,23 +18,23 @@ public interface RecipeMetadataParentEntityDao {
     @Query("SELECT * FROM " + TABLE_RECIPE)
     List<RecipeMetadataParentEntity> getAll();
 
-    @Query("SELECT * FROM " + TABLE_RECIPE + " WHERE " + DATA_ID + "dataId = :id")
-    RecipeMetadataParentEntity getById(String id);
+    @Query("SELECT * FROM " + TABLE_RECIPE + " WHERE " + DATA_ID + " = :dataId")
+    RecipeMetadataParentEntity getByDataId(String dataId);
 
     @Query("SELECT * FROM " + TABLE_RECIPE + " WHERE " + RECIPE_ID + " = :recipeId")
-    RecipeMetadataParentEntity getByRecipeId(String recipeId);
+    List<RecipeMetadataParentEntity> getAllByDomainId(String recipeId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(RecipeMetadataParentEntity recipeMetadataParentEntity);
+    void insert(RecipeMetadataParentEntity e);
 
     @Update
-    void update(RecipeMetadataParentEntity recipeMetadataParentEntity);
+    void update(RecipeMetadataParentEntity e);
 
-    @Query("DELETE FROM " + TABLE_RECIPE + " WHERE " + RECIPE_ID + " = :recipeId")
-    void deleteByRecipeId(String recipeId);
+    @Query("DELETE FROM " + TABLE_RECIPE + " WHERE " + RECIPE_ID + " = :domainId")
+    void deleteAllByDomainId(String domainId);
 
-    @Query("DELETE FROM " + TABLE_RECIPE + " WHERE " + DATA_ID + "dataId = :id")
-    void deleteById(String id);
+    @Query("DELETE FROM " + TABLE_RECIPE + " WHERE " + DATA_ID + " = :dataId")
+    void deleteByDataId(String dataId);
 
     @Query("DELETE FROM " + TABLE_RECIPE)
     void deleteAll();

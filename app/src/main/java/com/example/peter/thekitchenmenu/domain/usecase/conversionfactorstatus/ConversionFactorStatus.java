@@ -4,7 +4,7 @@ import android.annotation.SuppressLint;
 
 import com.example.peter.thekitchenmenu.app.Constants;
 import com.example.peter.thekitchenmenu.data.primitivemodel.ingredient.IngredientEntity;
-import com.example.peter.thekitchenmenu.data.repository.DataSource;
+import com.example.peter.thekitchenmenu.data.repository.DataAccess;
 import com.example.peter.thekitchenmenu.data.repository.ingredient.RepositoryIngredient;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ConversionFactorStatus extends UseCase
-        implements DataSource.GetDomainModelCallback<IngredientPersistenceModel> {
+        implements DataAccess.GetDomainModelCallback<IngredientPersistenceModel> {
 
     private static final String TAG = "tkm-" + ConversionFactorStatus.class.getSimpleName() + ": ";
 

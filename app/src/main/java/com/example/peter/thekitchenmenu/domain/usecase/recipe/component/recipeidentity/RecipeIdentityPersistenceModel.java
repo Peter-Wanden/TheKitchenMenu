@@ -1,13 +1,13 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeidentity;
 
-import com.example.peter.thekitchenmenu.domain.model.PersistenceModel;
+import com.example.peter.thekitchenmenu.domain.model.DomainPersistenceModel;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public final class RecipeIdentityPersistenceModel implements PersistenceModel {
+public final class RecipeIdentityPersistenceModel implements DomainPersistenceModel {
     @Nonnull
     private final String id;
     @Nonnull

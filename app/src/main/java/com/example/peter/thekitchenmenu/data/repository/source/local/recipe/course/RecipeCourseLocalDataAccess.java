@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.course;
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
-import com.example.peter.thekitchenmenu.data.repository.recipe.DataSourceRecipeCourse;
+import com.example.peter.thekitchenmenu.data.repository.recipe.DataAccessRecipeCourse;
 
 import java.util.List;
 
@@ -9,28 +9,28 @@ import javax.annotation.Nonnull;
 
 import static androidx.core.util.Preconditions.checkNotNull;
 
-public class RecipeCourseLocalDataSource implements DataSourceRecipeCourse {
+public class RecipeCourseLocalDataAccess implements DataAccessRecipeCourse {
 
-    private static volatile RecipeCourseLocalDataSource INSTANCE;
+    private static volatile RecipeCourseLocalDataAccess INSTANCE;
 
     @Nonnull
     private AppExecutors executors;
     @Nonnull
     private RecipeCourseEntityDao dao;
 
-    private RecipeCourseLocalDataSource(@Nonnull AppExecutors executors,
+    private RecipeCourseLocalDataAccess(@Nonnull AppExecutors executors,
                                         @Nonnull RecipeCourseEntityDao dao) {
         this.executors = executors;
         this.dao = dao;
     }
 
-    public static RecipeCourseLocalDataSource getInstance(
+    public static RecipeCourseLocalDataAccess getInstance(
             @Nonnull AppExecutors appExecutors,
             @Nonnull RecipeCourseEntityDao recipeCourseEntityDao) {
         if (INSTANCE == null) {
-            synchronized (RecipeCourseLocalDataSource.class) {
+            synchronized (RecipeCourseLocalDataAccess.class) {
                 if (INSTANCE == null)
-                    INSTANCE = new RecipeCourseLocalDataSource(appExecutors, recipeCourseEntityDao);
+                    INSTANCE = new RecipeCourseLocalDataAccess(appExecutors, recipeCourseEntityDao);
             }
         }
         return INSTANCE;
@@ -43,7 +43,7 @@ public class RecipeCourseLocalDataSource implements DataSourceRecipeCourse {
             final List<RecipeCourseEntity> e = dao.getAllByCourseNo(courseNo);
             executors.mainThread().execute(() -> {
                 if (e.isEmpty())
-                    c.onDataUnavailable();
+                    c.onModelsUnavailable();
                 else
                     c.onAllLoaded(e);
             });
@@ -58,7 +58,7 @@ public class RecipeCourseLocalDataSource implements DataSourceRecipeCourse {
             final List<RecipeCourseEntity> e = dao.getAllByRecipeId(recipeId);
             executors.mainThread().execute(() -> {
                 if (e.isEmpty())
-                    c.onDataUnavailable();
+                    c.onModelsUnavailable();
                 else
                     c.onAllLoaded(e);
             });
@@ -72,7 +72,7 @@ public class RecipeCourseLocalDataSource implements DataSourceRecipeCourse {
             final List<RecipeCourseEntity> e = dao.getAll();
             executors.mainThread().execute(() -> {
                 if (e.isEmpty())
-                    c.onDataUnavailable();
+                    c.onModelsUnavailable();
                 else
                     c.onAllLoaded(e);
             });
@@ -114,8 +114,8 @@ public class RecipeCourseLocalDataSource implements DataSourceRecipeCourse {
     }
 
     @Override
-    public void deleteById(@Nonnull String id) {
-        Runnable r = () -> dao.deleteByCourseId(id);
+    public void deleteByDomainId(@Nonnull String domainId) {
+        Runnable r = () -> dao.deleteByCourseId(domainId);
         executors.diskIO().execute(r);
     }
 }

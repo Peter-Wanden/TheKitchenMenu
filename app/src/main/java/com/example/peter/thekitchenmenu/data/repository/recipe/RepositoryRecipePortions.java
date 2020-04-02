@@ -9,19 +9,19 @@ import javax.annotation.Nonnull;
 
 public class RepositoryRecipePortions
         extends Repository<RecipePortionsPersistenceModel>
-        implements DataSourceRecipePortions {
+        implements DataAccessRecipePortions {
 
     public static RepositoryRecipePortions INSTANCE;
 
-    private RepositoryRecipePortions(@Nonnull DataSourceRecipePortions remoteDataSource,
-                                     @Nonnull DataSourceRecipePortions localDataSource) {
-        this.remoteDataSource = remoteDataSource;
-        this.localDataSource = localDataSource;
+    private RepositoryRecipePortions(@Nonnull DataAccessRecipePortions remoteDataSource,
+                                     @Nonnull DataAccessRecipePortions localDataSource) {
+        this.remoteDataAccess = remoteDataSource;
+        this.localDataAccess = localDataSource;
     }
 
     public static RepositoryRecipePortions getInstance(
-            @Nonnull DataSourceRecipePortions remoteDataSource,
-            @Nonnull DataSourceRecipePortions localDataSource) {
+            @Nonnull DataAccessRecipePortions remoteDataSource,
+            @Nonnull DataAccessRecipePortions localDataSource) {
         if (INSTANCE == null) {
             INSTANCE = new RepositoryRecipePortions(remoteDataSource, localDataSource);
         }
@@ -38,7 +38,7 @@ public class RepositoryRecipePortions
             callback.onModelLoaded(model);
             return;
         }
-        ((DataSourceRecipePortions) localDataSource).getByRecipeId(
+        ((DataAccessRecipePortions) localDataAccess).getByRecipeId(
                 recipeId,
                 new GetDomainModelCallback<RecipePortionsPersistenceModel>() {
                     @Override
@@ -52,7 +52,7 @@ public class RepositoryRecipePortions
 
                     @Override
                     public void onModelUnavailable() {
-                        ((DataSourceRecipePortions) remoteDataSource).getByRecipeId(
+                        ((DataAccessRecipePortions) remoteDataAccess).getByRecipeId(
                                 recipeId,
                                 new GetDomainModelCallback<RecipePortionsPersistenceModel>() {
                                     @Override

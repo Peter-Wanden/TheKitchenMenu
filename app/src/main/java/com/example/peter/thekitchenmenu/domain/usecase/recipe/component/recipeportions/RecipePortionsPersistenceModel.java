@@ -1,12 +1,12 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeportions;
 
-import com.example.peter.thekitchenmenu.domain.model.PersistenceModel;
+import com.example.peter.thekitchenmenu.domain.model.DomainPersistenceModel;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipePortionsPersistenceModel implements PersistenceModel {
+public final class RecipePortionsPersistenceModel implements DomainPersistenceModel {
     @Nonnull
     private final String id;
     @Nonnull
