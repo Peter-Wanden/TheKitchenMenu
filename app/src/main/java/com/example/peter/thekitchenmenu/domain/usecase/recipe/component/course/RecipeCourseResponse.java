@@ -1,6 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainMessageBasePlusModelMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainModel;
 
@@ -9,42 +10,40 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipeCourseResponse extends UseCaseResponse<RecipeCourseResponse.Model> {
+public final class RecipeCourseResponse
+        extends UseCaseDomainMessageBasePlusModelMetadata<RecipeCourseResponse.Model>
+        implements UseCase.Response {
 
-    @Nonnull
     @Override
     public String toString() {
         return "RecipeCourseResponse{" +
-                "id='" + id + '\'' +
-                ", metadata=" + metadata +
+                "metadata=" + metadata +
                 ", model=" + model +
+                ", dataId='" + dataId + '\'' +
+                ", domainId='" + domainId + '\'' +
                 '}';
     }
 
-    public static class Builder extends UseCaseResponseBuilder<
-                    Builder,
-                    RecipeCourseResponse,
-                    Model> {
+    public static class Builder extends UseCaseMessageBuilderWithMetadata
+            <Builder, RecipeCourseResponse, Model> {
 
         public Builder() {
-            response = new RecipeCourseResponse();
+            message = new RecipeCourseResponse();
         }
 
         public Builder getDefault() {
-            return new Builder().
-                    setId("").
-                    setMetadata(new UseCaseMetadata.Builder().
-                                    getDefault().
-                                    build()).
-                    setModel(new Model.Builder().
-                                    getDefault().
-                                    build());
+            message.dataId = "";
+            message.domainId = "";
+            message.metadata = new UseCaseMetadata.Builder().getDefault().build();
+            message.model = new Model.Builder().getDefault().build();
+            return self();
         }
 
         @Override
         protected Builder self() {
             return this;
         }
+
     }
 
     public static final class Model extends UseCaseDomainModel {
@@ -78,27 +77,21 @@ public final class RecipeCourseResponse extends UseCaseResponse<RecipeCourseResp
                     '}';
         }
 
-        public static class Builder extends DomainModelBuilder<
-                                Builder,
-                                Model> {
+        public static class Builder extends DomainModelBuilder<Builder, Model> {
 
             public Builder() {
                 model = new Model();
             }
 
             public Builder getDefault() {
-                return new Builder().
-                        setCourseList(getDefaultCourseList());
+                model.courseList = new HashMap<>();
+                return self();
             }
 
             public Builder setCourseList(
                     HashMap<RecipeCourse.Course, RecipeCoursePersistenceModel> courseList) {
                 model.courseList = courseList;
                 return self();
-            }
-
-            private static HashMap<RecipeCourse.Course, RecipeCoursePersistenceModel> getDefaultCourseList() {
-                return new HashMap<>();
             }
 
             @Override

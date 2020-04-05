@@ -1,36 +1,20 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration;
 
-import com.example.peter.thekitchenmenu.domain.model.DomainPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipePersistenceModel;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipeDurationPersistenceModel implements DomainPersistenceModel {
-    @Nonnull
-    private final String id;
-    private final int prepTime;
-    private final int cookTime;
-    private final long createDate;
-    private final long lastUpdate;
+public final class RecipeDurationPersistenceModel
+        extends RecipePersistenceModel {
 
-    private RecipeDurationPersistenceModel(@Nonnull String id,
-                                          int prepTime,
-                                          int cookTime,
-                                          long createDate,
-                                          long lastUpdate) {
-        this.id = id;
-        this.prepTime = prepTime;
-        this.cookTime = cookTime;
-        this.createDate = createDate;
-        this.lastUpdate = lastUpdate;
-    }
+    private int prepTime;
+    private int cookTime;
+    private long createDate;
+    private long lastUpdate;
 
-    @Override
-    @Nonnull
-    public String getDataId() {
-        return id;
-    }
+    private RecipeDurationPersistenceModel() {}
 
     public int getPrepTime() {
         return prepTime;
@@ -53,7 +37,8 @@ public final class RecipeDurationPersistenceModel implements DomainPersistenceMo
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RecipeDurationPersistenceModel that = (RecipeDurationPersistenceModel) o;
-        return id.equals(that.id) &&
+        return dataId.equals(that.dataId) &&
+                domainId.equals(that.domainId) &&
                 prepTime == that.prepTime &&
                 cookTime == that.cookTime &&
                 createDate == that.createDate &&
@@ -62,13 +47,14 @@ public final class RecipeDurationPersistenceModel implements DomainPersistenceMo
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, prepTime, cookTime, createDate, lastUpdate);
+        return Objects.hash(dataId, domainId, prepTime, cookTime, createDate, lastUpdate);
     }
 
     @Override
     public String toString() {
         return "RecipeDurationPersistenceModel{" +
-                "id='" + id + '\'' +
+                "dataId='" + dataId + '\'' +
+                ", domainId=" + domainId + '\'' +
                 ", prepTime=" + prepTime +
                 ", cookTime=" + cookTime +
                 ", createDate=" + createDate +
@@ -76,63 +62,62 @@ public final class RecipeDurationPersistenceModel implements DomainPersistenceMo
                 '}';
     }
 
-    public static class Builder {
-        private String id;
-        private int prepTime;
-        private int cookTime;
-        private long createDate;
-        private long lastUpdate;
+    public static class Builder
+            extends DomainModelBuilder<Builder, RecipeDurationPersistenceModel> {
 
-        public static Builder getDefault() {
-            return new Builder().setId("").
-                    setPrepTime(0).
-                    setCookTime(0).
-                    setCreateDate(0L).
-                    setLastUpdate(0L);
+        public Builder() {
+            model = new RecipeDurationPersistenceModel();
         }
 
-        public static Builder basedOnPersistenceModel(@Nonnull RecipeDurationPersistenceModel model) {
-            return new Builder().
-                    setId(model.getDataId()).
-                    setPrepTime(model.getPrepTime()).
-                    setCookTime(model.getCookTime()).
-                    setCreateDate(model.getCreateDate()).
-                    setLastUpdate(model.getLastUpdate());
+        public Builder getDefault() {
+            model.dataId = "";
+            model.domainId = "";
+            model.prepTime = 0;
+            model.cookTime = 0;
+            model.createDate = 0L;
+            model.lastUpdate = 0L;
+            return self();
         }
 
-        public Builder setId(String id) {
-            this.id = id;
-            return this;
+        public Builder basedOnPersistenceModel(
+                @Nonnull RecipeDurationPersistenceModel m) {
+            model.dataId = m.getDataId();
+            model.domainId = m.getDomainId();
+            model.prepTime = m.getPrepTime();
+            model.cookTime = m.getCookTime();
+            model.createDate = m.getCreateDate();
+            model.lastUpdate = m.getLastUpdate();
+            return self();
+        }
+
+        public Builder setDataId(String dataId) {
+            model.dataId = dataId;
+            return self();
+        }
+
+        public Builder setDomainId(String domainId) {
+            model.domainId = domainId;
+            return self();
         }
 
         public Builder setPrepTime(int prepTime) {
-            this.prepTime = prepTime;
-            return this;
+            model.prepTime = prepTime;
+            return self();
         }
 
         public Builder setCookTime(int cookTime) {
-            this.cookTime = cookTime;
-            return this;
+            model.cookTime = cookTime;
+            return self();
         }
 
         public Builder setCreateDate(long createDate) {
-            this.createDate = createDate;
-            return this;
+            model.createDate = createDate;
+            return self();
         }
 
         public Builder setLastUpdate(long lastUpdate) {
-            this.lastUpdate = lastUpdate;
-            return this;
-        }
-
-        public RecipeDurationPersistenceModel build() {
-            return new RecipeDurationPersistenceModel(
-                    id,
-                    prepTime,
-                    cookTime,
-                    createDate,
-                    lastUpdate
-            );
+            model.lastUpdate = lastUpdate;
+            return self();
         }
     }
 }

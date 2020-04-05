@@ -1,6 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseResponse;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainMessageBasePlusModelMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainModel;
 
@@ -8,36 +9,36 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipeDurationResponse extends UseCaseResponse<RecipeDurationResponse.Model> {
+public final class RecipeDurationResponse
+        extends UseCaseDomainMessageBasePlusModelMetadata<RecipeDurationResponse.Model>
+        implements UseCase.Response {
 
     @Nonnull
     @Override
     public String toString() {
         return "RecipeDurationResponse{" +
-                "id=" + id +
-                ", metadata=" + metadata +
+                "dataId='" + dataId + '\'' +
+                ", domainId='" + domainId + '\'' +
                 ", model=" + model +
+                ", metadata=" + metadata +
                 '}';
     }
 
-    public static class Builder extends UseCaseResponseBuilder<
-                    Builder,
-                    RecipeDurationResponse,
-                    Model> {
+    public static class Builder extends UseCaseMessageBuilderWithMetadata<
+                        Builder,
+                        RecipeDurationResponse,
+                        Model> {
 
         public Builder() {
-            response = new RecipeDurationResponse();
+            message = new RecipeDurationResponse();
         }
 
         public Builder getDefault() {
-            return new Builder().
-                    setId("").
-                    setMetadata(new UseCaseMetadata.Builder().
-                            getDefault().
-                            build()).
-                    setModel(new Model.Builder().
-                            getDefault().
-                            build());
+            message.dataId = "";
+            message.domainId = "";
+            message.model = new Model.Builder().getDefault().build();
+            message.metadata = new UseCaseMetadata.Builder().getDefault().build();
+            return self();
         }
 
         @Override
@@ -47,7 +48,6 @@ public final class RecipeDurationResponse extends UseCaseResponse<RecipeDuration
     }
 
     public static final class Model extends UseCaseDomainModel {
-
         private int prepHours;
         private int prepMinutes;
         private int totalPrepTime;
@@ -133,25 +133,23 @@ public final class RecipeDurationResponse extends UseCaseResponse<RecipeDuration
                     '}';
         }
 
-        public static class Builder extends DomainModelBuilder<
-                                Builder,
-                                Model> {
+        public static class Builder extends DomainModelBuilder<Builder, Model> {
 
             public Builder() {
                 model = new Model();
             }
 
             public Builder getDefault() {
-                return new Builder().
-                        setPrepHours(0).
-                        setPrepMinutes(0).
-                        setTotalPrepTime(0).
-                        setCookHours(0).
-                        setCookMinutes(0).
-                        setTotalCookTime(0).
-                        setTotalTime(0).
-                        setCreateDate(0L).
-                        setLastUpdate(0L);
+                model.prepHours = 0;
+                model.prepMinutes = 0;
+                model.totalPrepTime = 0;
+                model.cookHours = 0;
+                model.cookMinutes = 0;
+                model.totalCookTime = 0;
+                model.totalTime = 0;
+                model.createDate = 0L;
+                model.lastUpdate = 0L;
+                return self();
             }
 
             public Builder setPrepHours(int prepHours) {

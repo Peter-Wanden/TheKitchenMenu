@@ -62,7 +62,7 @@ public class RecipeDuration extends UseCase
     @Nonnull
     private final List<FailReasons> failReasons;
 
-    private String id = "";
+    private String recipeId = "";
     private boolean isNewRequest;
 
     private RecipeDurationRequest.Model requestModel;
@@ -84,20 +84,20 @@ public class RecipeDuration extends UseCase
 
     @Override
     protected <Q extends Request> void execute(Q request) {
-        RecipeDurationRequest durationRequest = (RecipeDurationRequest) request;
-        requestModel = durationRequest.getModel();
-        System.out.println(TAG + durationRequest);
+        RecipeDurationRequest r = (RecipeDurationRequest) request;
+        requestModel = r.getModel();
+        System.out.println(TAG + r);
 
-        if (isNewRequest(durationRequest.getDataId())) {
-            id = durationRequest.getDataId();
-            loadData(id);
+        if (isNewRequest(r)) {
+            recipeId = r.getDomainId();
+            loadData(recipeId);
         } else {
             processChanges();
         }
     }
 
-    private boolean isNewRequest(String recipeId) {
-        return isNewRequest = !this.id.equals(recipeId);
+    private boolean isNewRequest(RecipeDurationRequest r) {
+        return isNewRequest = !this.recipeId.equals(r.getDomainId());
     }
 
     private void loadData(String recipeId) {
@@ -121,7 +121,7 @@ public class RecipeDuration extends UseCase
     private RecipeDurationPersistenceModel createNewPersistenceModel() {
         long currentTime = timeProvider.getCurrentTimeInMills();
         return RecipeDurationPersistenceModel.Builder.getDefault().
-                setId(id).
+                setDataId(recipeId).
                 setCreateDate(currentTime).
                 setLastUpdate(currentTime).
                 build();
@@ -167,7 +167,8 @@ public class RecipeDuration extends UseCase
 
     private void buildResponse() {
         RecipeDurationResponse response = new RecipeDurationResponse.Builder().
-                setId(id).
+                setDataId("").
+                setDomainId(recipeId).
                 setMetadata(getMetadata()).
                 setModel(getResponseModel()).
                 build();

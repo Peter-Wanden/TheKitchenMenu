@@ -204,7 +204,8 @@ public class RecipeCourse
     private void sendResponse() {
         System.out.println(TAG + "oldCourseMap" + currentCourseList);
         RecipeCourseResponse response = new RecipeCourseResponse.Builder().
-                setId(dataId).
+                setDataId(dataId).
+                setDomainId(recipeId).
                 setMetadata(getMetadata()).
                 setModel(getResponseModel()).
                 build();

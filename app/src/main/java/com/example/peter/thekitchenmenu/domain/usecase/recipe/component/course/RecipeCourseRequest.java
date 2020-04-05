@@ -1,6 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseRequestWithDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainMessageBasePlusModel;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainModel;
 
 import java.util.ArrayList;
@@ -11,7 +12,9 @@ import javax.annotation.Nonnull;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse.*;
 
-public final class RecipeCourseRequest extends UseCaseRequestWithDomainModel<RecipeCourseRequest.Model> {
+public final class RecipeCourseRequest
+        extends UseCaseDomainMessageBasePlusModel<RecipeCourseRequest.Model>
+        implements UseCase.Request {
 
     @Nonnull
     @Override
@@ -23,25 +26,27 @@ public final class RecipeCourseRequest extends UseCaseRequestWithDomainModel<Rec
                 '}';
     }
 
-    public static class Builder extends UseCaseRequestBuilder<Builder, RecipeCourseRequest, Model> {
+    public static class Builder
+            extends UseCaseMessageBuilderWithModel
+            <Builder, RecipeCourseRequest, Model> {
 
         public Builder() {
-            request = new RecipeCourseRequest();
+            message = new RecipeCourseRequest();
         }
 
         public Builder getDefault() {
-            return new Builder().
-                    setDataId("").
-                    setModel(new Model.Builder().
-                            getDefault().
-                            build()
-                    );
+            message.dataId = "";
+            message.domainId = "";
+            message.model = new Model.Builder().getDefault().build();
+            return self();
         }
 
         public Builder basedOnResponse(RecipeCourseResponse response) {
-            request.dataId = response.getId();
-            request.model.courseList = new ArrayList<>(
-                    response.getModel().getCourseList().keySet()
+            message.dataId = response.getDataId();
+            message.model.courseList = new ArrayList<>(response.
+                    getModel().
+                    getCourseList().
+                    keySet()
             );
             return self();
         }
@@ -88,7 +93,8 @@ public final class RecipeCourseRequest extends UseCaseRequestWithDomainModel<Rec
             }
 
             public Builder getDefault() {
-                return new Builder().setCourseList(getDefaultList());
+                model.courseList = new ArrayList<>();
+                return self();
             }
 
             public Builder setCourseList(List<Course> courseList) {
@@ -99,10 +105,6 @@ public final class RecipeCourseRequest extends UseCaseRequestWithDomainModel<Rec
             @Override
             protected Builder self() {
                 return this;
-            }
-
-            private static List<Course> getDefaultList() {
-                return new ArrayList<>();
             }
         }
     }

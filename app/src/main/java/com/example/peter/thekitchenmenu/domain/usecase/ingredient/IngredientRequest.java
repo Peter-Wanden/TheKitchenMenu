@@ -1,14 +1,14 @@
 package com.example.peter.thekitchenmenu.domain.usecase.ingredient;
 
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainModel;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseRequestWithDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainMessageBasePlusModel;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
 public final class IngredientRequest
-        extends UseCaseRequestWithDomainModel<IngredientRequest.Model> {
+        extends UseCaseDomainMessageBasePlusModel<IngredientRequest.Model> {
 
     private String ingredientId;
 
@@ -26,10 +26,10 @@ public final class IngredientRequest
     }
 
     public static class Builder
-            extends UseCaseRequestBuilder<
-                        Builder,
-                        IngredientRequest,
-                        Model> {
+            extends UseCaseMessageBuilderWithModel<
+                                                Builder,
+                                                IngredientRequest,
+                                                Model> {
 
         public Builder() {
             request = new IngredientRequest();

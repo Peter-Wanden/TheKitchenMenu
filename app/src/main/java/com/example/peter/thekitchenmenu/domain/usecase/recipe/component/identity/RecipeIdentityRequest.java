@@ -1,6 +1,7 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseRequestWithDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainMessageBasePlusModel;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainModel;
 
 import java.util.Objects;
@@ -8,36 +9,39 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 
 public final class RecipeIdentityRequest
-        extends UseCaseRequestWithDomainModel<RecipeIdentityRequest.Model> {
+        extends UseCaseDomainMessageBasePlusModel<RecipeIdentityRequest.Model>
+        implements UseCase.Request {
 
-    @Nonnull
     @Override
     public String toString() {
         return "RecipeIdentityRequest{" +
-                "id='" + dataId + '\'' +
+                "dataId='" + dataId + '\'' +
+                ", domainId='" + domainId + '\'' +
                 ", model=" + model +
                 '}';
     }
 
     public static class Builder
-            extends UseCaseRequestBuilder<Builder, RecipeIdentityRequest, Model> {
+            extends UseCaseMessageBuilderWithModel
+            <Builder, RecipeIdentityRequest, Model> {
 
         public Builder() {
-            request = new RecipeIdentityRequest();
+            message = new RecipeIdentityRequest();
         }
 
         public Builder getDefault() {
-            return new Builder().
-                    setDataId("").
-                    setModel(new Model.Builder().
-                            getDefault().
-                            build());
+            message.dataId = "";
+            message.domainId = "";
+            message.model = new Model.Builder().getDefault().build();
+            return self();
         }
 
         public Builder basedOnResponse(RecipeIdentityResponse response) {
-            request.dataId = response.getId();
-            request.model.title = response.getModel().getTitle();
-            request.model.description = response.getModel().getDescription();
+            message.dataId = response.getDataId();
+            message.domainId = response.getDomainId();
+            message.model = new Model.Builder().
+                    basedOnResponseModel(response.getModel()).
+                    build();
             return self();
         }
 
@@ -89,15 +93,15 @@ public final class RecipeIdentityRequest
             }
 
             public Builder getDefault() {
-                return new Builder().
-                        setTitle("").
-                        setDescription("");
+                model.title = "";
+                model.description = "";
+                return self();
             }
 
-            public static Builder basedOnResponseModel(RecipeIdentityResponse.Model model) {
-                return new Builder().
-                        setTitle(model.getTitle()).
-                        setDescription(model.getDescription());
+            public Builder basedOnResponseModel(RecipeIdentityResponse.Model model) {
+                this.model.title = model.getTitle();
+                this.model.description = model.getDescription();
+                return self();
             }
 
             public Builder setTitle(String title) {

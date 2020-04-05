@@ -1,43 +1,48 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration;
 
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseRequestWithDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainMessageBasePlusModel;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainModel;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipeDurationRequest extends UseCaseRequestWithDomainModel<RecipeDurationRequest.Model> {
+public final class RecipeDurationRequest
+        extends UseCaseDomainMessageBasePlusModel<RecipeDurationRequest.Model>
+        implements UseCase.Request {
 
+    @Nonnull
     @Override
     public String toString() {
         return "RecipeDurationRequest{" +
-                "id='" + dataId + '\'' +
+                "dataId='" + dataId + '\'' +
+                ", domainId='" + domainId + '\'' +
                 ", model=" + model +
                 '}';
     }
 
-    public static class Builder extends UseCaseRequestBuilder<Builder, RecipeDurationRequest, Model> {
+    public static class Builder extends UseCaseMessageBuilderWithModel
+            <Builder, RecipeDurationRequest, Model> {
 
         public Builder() {
-            request = new RecipeDurationRequest();
+            message = new RecipeDurationRequest();
         }
 
         public Builder getDefault() {
-            return new Builder().
-                    setDataId("").
-                    setModel(new Model.Builder().
-                            getDefault().
-                            build());
+            message.dataId = "";
+            message.domainId = "";
+            message.model = new Model.Builder().getDefault().build();
+            return self();
         }
 
         public Builder basedOnResponse(RecipeDurationResponse response) {
-            request.dataId = response.getId();
-            request.model.prepHours = response.getModel().getPrepHours();
-            request.model.prepMinutes = response.getModel().getPrepMinutes();
-            request.model.cookHours = response.getModel().getCookHours();
-            request.model.cookMinutes = response.getModel().getCookMinutes();
+            message.dataId = response.getDataId();
+            message.domainId = response.getDomainId();
+            message.model = new Model.Builder().
+                    basedOnResponseModel(response.getModel()).
+                    build();
             return self();
         }
 
@@ -103,19 +108,19 @@ public final class RecipeDurationRequest extends UseCaseRequestWithDomainModel<R
             }
 
             public Builder getDefault() {
-                return new Builder().
-                        setPrepHours(0).
-                        setPrepMinutes(0).
-                        setCookHours(0).
-                        setCookMinutes(0);
+                model.prepHours = 0;
+                model.prepMinutes = 0;
+                model.cookHours = 0;
+                model.prepMinutes = 0;
+                return self();
             }
 
-            public static Builder basedOnDurationResponseModel(RecipeDurationResponse.Model model) {
-                return new Builder().
-                        setPrepHours(model.getPrepHours()).
-                        setPrepMinutes(model.getPrepMinutes()).
-                        setCookHours(model.getCookHours()).
-                        setCookMinutes(model.getCookMinutes());
+            public Builder basedOnResponseModel(RecipeDurationResponse.Model m) {
+                model.prepHours = m.getPrepHours();
+                model.prepMinutes = m.getPrepMinutes();
+                model.cookHours = m.getCookHours();
+                model.prepMinutes = m.getCookMinutes();
+                return self();
             }
 
             public Builder setPrepHours(int prepHours) {

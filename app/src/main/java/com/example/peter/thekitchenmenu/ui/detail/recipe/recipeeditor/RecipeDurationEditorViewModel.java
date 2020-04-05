@@ -132,7 +132,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
                         prepTimeErrorMessage.set(numberFormatExceptionErrorMessage());
                     else {
                         RecipeDurationRequest.Model model = RecipeDurationRequest.Model.Builder.
-                                basedOnDurationResponseModel(response.getModel()).
+                                basedOnResponseModel(response.getModel()).
                                 setPrepHours(prepHoursParsed).
                                 build();
                         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
@@ -165,7 +165,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
                         prepTimeErrorMessage.set(numberFormatExceptionErrorMessage());
                     else {
                         RecipeDurationRequest.Model model = RecipeDurationRequest.Model.Builder.
-                                basedOnDurationResponseModel(response.getModel()).
+                                basedOnResponseModel(response.getModel()).
                                 setPrepMinutes(prepMinutesParsed).
                                 build();
                         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
@@ -198,7 +198,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
                         cookTimeErrorMessage.set(numberFormatExceptionErrorMessage());
                     else {
                         RecipeDurationRequest.Model model = RecipeDurationRequest.Model.Builder.
-                                basedOnDurationResponseModel(response.getModel()).
+                                basedOnResponseModel(response.getModel()).
                                 setCookHours(cookHoursParsed).
                                 build();
                         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
@@ -231,7 +231,7 @@ public class RecipeDurationEditorViewModel extends ObservableViewModel {
                         cookTimeErrorMessage.set(numberFormatExceptionErrorMessage());
                     else {
                         RecipeDurationRequest.Model model = RecipeDurationRequest.Model.Builder.
-                                basedOnDurationResponseModel(response.getModel()).
+                                basedOnResponseModel(response.getModel()).
                                 setCookMinutes(cookMinutesParsed).
                                 build();
                         RecipeDurationRequest request = new RecipeDurationRequest.Builder().

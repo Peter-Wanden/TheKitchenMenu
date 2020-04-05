@@ -91,7 +91,7 @@ public class RecipeDurationTest {
         String recipeId = VALID_NEW_EMPTY.getDataId();
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model invalidModel = RecipeDurationRequest.Model.Builder.
-                basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
+                basedOnResponseModel(durationOnErrorResponse.getModel()).
                 setPrepHours(MAX_PREP_TIME / 60 + 1).
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
@@ -111,7 +111,7 @@ public class RecipeDurationTest {
         String recipeId = VALID_NEW_EMPTY.getDataId();
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model invalidModel = RecipeDurationRequest.Model.Builder.
-                basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
+                basedOnResponseModel(durationOnErrorResponse.getModel()).
                 setPrepHours(MAX_PREP_TIME / 60 + 1).
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
@@ -131,7 +131,7 @@ public class RecipeDurationTest {
         String recipeId = VALID_NEW_EMPTY.getDataId();
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model invalidModel = RecipeDurationRequest.Model.Builder.
-                basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
+                basedOnResponseModel(durationOnErrorResponse.getModel()).
                 setPrepHours(MAX_PREP_TIME / 60 + 1).
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
@@ -157,7 +157,7 @@ public class RecipeDurationTest {
         String recipeId = VALID_NEW_EMPTY.getDataId();
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model validModel = RecipeDurationRequest.Model.Builder.
-                basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
+                basedOnResponseModel(durationOnErrorResponse.getModel()).
                 setPrepHours(VALID_NEW_PREP_TIME_VALID.getPrepTime() / 60).
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
@@ -178,7 +178,7 @@ public class RecipeDurationTest {
         String recipeId = VALID_NEW_EMPTY.getDataId();
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model validModel = RecipeDurationRequest.Model.Builder.
-                basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
+                basedOnResponseModel(durationOnErrorResponse.getModel()).
                 setPrepHours(VALID_NEW_PREP_TIME_VALID.getPrepTime() / 60).
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
@@ -202,7 +202,7 @@ public class RecipeDurationTest {
         whenTimeProviderCalledReturn(VALID_NEW_PREP_TIME_VALID.getCreateDate());
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model validModel = RecipeDurationRequest.Model.Builder.
-                basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
+                basedOnResponseModel(durationOnErrorResponse.getModel()).
                 setPrepHours(VALID_NEW_PREP_TIME_VALID.getPrepTime() / 60).
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
@@ -222,7 +222,7 @@ public class RecipeDurationTest {
         String recipeId = VALID_NEW_EMPTY.getDataId();
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model invalidModel = RecipeDurationRequest.Model.Builder.
-                basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
+                basedOnResponseModel(durationOnErrorResponse.getModel()).
                 setPrepMinutes(MAX_PREP_TIME + 1).
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
@@ -241,7 +241,7 @@ public class RecipeDurationTest {
         String recipeId = VALID_NEW_EMPTY.getDataId();
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model invalidModel = RecipeDurationRequest.Model.Builder.
-                basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
+                basedOnResponseModel(durationOnErrorResponse.getModel()).
                 setPrepMinutes(MAX_PREP_TIME + 1).
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
@@ -261,7 +261,7 @@ public class RecipeDurationTest {
         String recipeId = VALID_NEW_EMPTY.getDataId();
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model invalidModel = RecipeDurationRequest.Model.Builder.
-                basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
+                basedOnResponseModel(durationOnErrorResponse.getModel()).
                 setPrepMinutes(MAX_PREP_TIME + 1).
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
@@ -282,7 +282,7 @@ public class RecipeDurationTest {
         String recipeId = VALID_NEW_EMPTY.getDataId();
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model validModel = RecipeDurationRequest.Model.Builder.
-                basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
+                basedOnResponseModel(durationOnErrorResponse.getModel()).
                 setPrepMinutes(VALID_NEW_PREP_TIME_VALID.getPrepTime()).
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
@@ -302,7 +302,7 @@ public class RecipeDurationTest {
         String recipeId = VALID_NEW_EMPTY.getDataId();
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model validModel = RecipeDurationRequest.Model.Builder.
-                basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
+                basedOnResponseModel(durationOnErrorResponse.getModel()).
                 setPrepMinutes(VALID_NEW_PREP_TIME_VALID.getPrepTime()).
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
@@ -327,7 +327,7 @@ public class RecipeDurationTest {
         whenTimeProviderCalledReturn(VALID_NEW_PREP_TIME_VALID.getCreateDate());
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model validModel = RecipeDurationRequest.Model.Builder.
-                basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
+                basedOnResponseModel(durationOnErrorResponse.getModel()).
                 setPrepMinutes(VALID_NEW_PREP_TIME_VALID.getPrepTime()).
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
@@ -346,7 +346,7 @@ public class RecipeDurationTest {
         String recipeId = VALID_NEW_EMPTY.getDataId();
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model invalidModel = RecipeDurationRequest.Model.Builder.
-                basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
+                basedOnResponseModel(durationOnErrorResponse.getModel()).
                 setCookHours(MAX_COOK_TIME / 60 + 1).
                 build();
         RecipeDurationRequest invalidRequest = new RecipeDurationRequest.Builder().
@@ -365,7 +365,7 @@ public class RecipeDurationTest {
         String recipeId = VALID_NEW_EMPTY.getDataId();
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model invalidModel = RecipeDurationRequest.Model.Builder.
-                basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
+                basedOnResponseModel(durationOnErrorResponse.getModel()).
                 setCookHours(MAX_COOK_TIME / 60 + 1).
                 build();
         RecipeDurationRequest invalidRequest = new RecipeDurationRequest.Builder().
@@ -385,7 +385,7 @@ public class RecipeDurationTest {
         String recipeId = VALID_NEW_EMPTY.getDataId();
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model invalidModel = RecipeDurationRequest.Model.Builder.
-                basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
+                basedOnResponseModel(durationOnErrorResponse.getModel()).
                 setCookHours(MAX_COOK_TIME / 60 + 1).
                 build();
         RecipeDurationRequest invalidRequest = new RecipeDurationRequest.Builder().
@@ -410,7 +410,7 @@ public class RecipeDurationTest {
         whenTimeProviderCalledReturn(VALID_NEW_COOK_TIME_VALID.getCreateDate());
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model validModel = RecipeDurationRequest.Model.Builder.
-                basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
+                basedOnResponseModel(durationOnErrorResponse.getModel()).
                 setCookHours(VALID_NEW_COOK_TIME_VALID.getCookTime() / 60).
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
@@ -429,7 +429,7 @@ public class RecipeDurationTest {
         String recipeId = VALID_NEW_EMPTY.getDataId();
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model validModel = RecipeDurationRequest.Model.Builder.
-                basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
+                basedOnResponseModel(durationOnErrorResponse.getModel()).
                 setCookHours(VALID_NEW_COOK_TIME_VALID.getCookTime() / 60).
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
@@ -449,7 +449,7 @@ public class RecipeDurationTest {
         String recipeId = VALID_NEW_EMPTY.getDataId();
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model validModel = RecipeDurationRequest.Model.Builder.
-                basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
+                basedOnResponseModel(durationOnErrorResponse.getModel()).
                 setCookHours(VALID_NEW_COOK_TIME_VALID.getCookTime() / 60).
                 build();
         RecipeDurationRequest validRequest = new RecipeDurationRequest.Builder().
@@ -469,7 +469,7 @@ public class RecipeDurationTest {
         String recipeId = VALID_NEW_EMPTY.getDataId();
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model invalidModel = RecipeDurationRequest.Model.Builder.
-                basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
+                basedOnResponseModel(durationOnErrorResponse.getModel()).
                 setCookMinutes(MAX_COOK_TIME + 1).
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
@@ -488,7 +488,7 @@ public class RecipeDurationTest {
         String recipeId = VALID_NEW_EMPTY.getDataId();
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model invalidModel = RecipeDurationRequest.Model.Builder.
-                basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
+                basedOnResponseModel(durationOnErrorResponse.getModel()).
                 setCookMinutes(MAX_COOK_TIME + 1).
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
@@ -509,7 +509,7 @@ public class RecipeDurationTest {
         String recipeId = VALID_NEW_EMPTY.getDataId();
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model invalidModel = RecipeDurationRequest.Model.Builder.
-                basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
+                basedOnResponseModel(durationOnErrorResponse.getModel()).
                 setCookMinutes(MAX_COOK_TIME + 1).
                 build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
@@ -536,7 +536,7 @@ public class RecipeDurationTest {
         setupForNewDuration(recipeId);
 
         RecipeDurationRequest.Model model = RecipeDurationRequest.Model.Builder.
-                basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
+                basedOnResponseModel(durationOnErrorResponse.getModel()).
                 setCookMinutes(MAX_COOK_TIME)
                 .build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
@@ -557,7 +557,7 @@ public class RecipeDurationTest {
         setupForNewDuration(recipeId);
         whenTimeProviderCalledReturn(VALID_NEW_COOK_TIME_VALID.getCreateDate());
         RecipeDurationRequest.Model model = RecipeDurationRequest.Model.Builder.
-                basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
+                basedOnResponseModel(durationOnErrorResponse.getModel()).
                 setCookMinutes(VALID_NEW_COOK_TIME_VALID.getCookTime())
                 .build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
@@ -578,7 +578,7 @@ public class RecipeDurationTest {
         whenTimeProviderCalledReturn(VALID_NEW_COOK_TIME_VALID.getCreateDate());
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model model = RecipeDurationRequest.Model.Builder.
-                basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
+                basedOnResponseModel(durationOnErrorResponse.getModel()).
                 setCookMinutes(VALID_NEW_COOK_TIME_VALID.getCookTime())
                 .build();
         RecipeDurationRequest request = new RecipeDurationRequest.Builder().
@@ -602,7 +602,7 @@ public class RecipeDurationTest {
         String recipeId = VALID_NEW_EMPTY.getDataId();
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model model = RecipeDurationRequest.Model.Builder.
-                basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
+                basedOnResponseModel(durationOnErrorResponse.getModel()).
                 setPrepHours(MAX_PREP_TIME / 60).setPrepMinutes(1).
                 setCookHours(MAX_COOK_TIME / 60).setCookMinutes(1)
                 .build();
@@ -631,7 +631,7 @@ public class RecipeDurationTest {
         whenTimeProviderCalledReturn(VALID_NEW_COOK_TIME_VALID.getCreateDate());
         setupForNewDuration(recipeId);
         RecipeDurationRequest.Model model = RecipeDurationRequest.Model.Builder.
-                basedOnDurationResponseModel(durationOnErrorResponse.getModel()).
+                basedOnResponseModel(durationOnErrorResponse.getModel()).
                 setPrepHours(MAX_PREP_TIME / 60 - 1).setPrepMinutes(59).
                 setCookHours(MAX_COOK_TIME / 60 - 1).setCookMinutes(59)
                 .build();

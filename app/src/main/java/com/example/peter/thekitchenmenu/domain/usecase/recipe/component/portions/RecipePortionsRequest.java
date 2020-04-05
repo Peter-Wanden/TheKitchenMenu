@@ -1,13 +1,13 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseRequestWithDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainMessageBasePlusModel;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainModel;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipePortionsRequest extends UseCaseRequestWithDomainModel<RecipePortionsRequest.Model> {
+public final class RecipePortionsRequest extends UseCaseDomainMessageBasePlusModel<RecipePortionsRequest.Model> {
 
     @Nonnull
     @Override
@@ -18,7 +18,7 @@ public final class RecipePortionsRequest extends UseCaseRequestWithDomainModel<R
                 '}';
     }
 
-    public static class Builder extends UseCaseRequestBuilder<Builder, RecipePortionsRequest, Model> {
+    public static class Builder extends UseCaseMessageBuilderWithModel<Builder, RecipePortionsRequest, Model> {
 
         public Builder() {
             request = new RecipePortionsRequest();

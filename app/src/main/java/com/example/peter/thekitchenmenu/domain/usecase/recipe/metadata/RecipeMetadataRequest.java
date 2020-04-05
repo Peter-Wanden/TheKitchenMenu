@@ -1,6 +1,6 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata;
 
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseRequestWithDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainMessageBasePlusModel;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainModel;
 
 import java.util.HashMap;
@@ -11,7 +11,7 @@ import javax.annotation.Nonnull;
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.*;
 
 public final class RecipeMetadataRequest
-        extends UseCaseRequestWithDomainModel<RecipeMetadataRequest.Model> {
+        extends UseCaseDomainMessageBasePlusModel<RecipeMetadataRequest.Model> {
 
     @Override
     public String toString() {
@@ -23,7 +23,7 @@ public final class RecipeMetadataRequest
     }
 
     public static class Builder
-            extends UseCaseRequestBuilder<Builder, RecipeMetadataRequest, Model> {
+            extends UseCaseMessageBuilderWithModel<Builder, RecipeMetadataRequest, Model> {
 
         public Builder() {
             request = new RecipeMetadataRequest();

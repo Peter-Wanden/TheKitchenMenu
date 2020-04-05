@@ -1,7 +1,5 @@
 package com.example.peter.thekitchenmenu.domain.usecase;
 
-import java.util.Objects;
-
 /**
  * Base class for all recipe component responses
  * @param <DM> the recipe components domain data model
@@ -24,21 +22,6 @@ public abstract class UseCaseResponse<
 
     public DM getModel() {
         return model;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UseCaseResponse<?> that = (UseCaseResponse<?>) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(metadata, that.metadata) &&
-                Objects.equals(model, that.model);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, metadata, model);
     }
 
     /**

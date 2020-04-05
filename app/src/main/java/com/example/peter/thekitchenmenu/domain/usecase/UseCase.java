@@ -28,15 +28,22 @@ public abstract class UseCase {
     protected abstract <Q extends UseCase.Request> void execute(Q request);
 
     /**
+     * Allows for the abstraction of commonalities between Requests and Responses
+     */
+    public interface Message {
+
+    }
+
+    /**
      * Data passed to a request.
      */
-    public interface Request {
+    public interface Request extends Message {
     }
 
     /**
      * Data received from a request.
      */
-    public interface Response {
+    public interface Response extends Message {
     }
 
     public interface Callback<R> {

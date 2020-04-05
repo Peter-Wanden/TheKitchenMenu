@@ -1,38 +1,21 @@
 package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity;
 
-import com.example.peter.thekitchenmenu.domain.model.DomainPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipePersistenceModel;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public final class RecipeIdentityPersistenceModel implements DomainPersistenceModel {
-    @Nonnull
-    private final String id;
-    @Nonnull
-    private final String title;
-    @Nullable
-    private final String description;
-    private final long createDate;
-    private final long lastUpdate;
+public final class RecipeIdentityPersistenceModel
+        extends RecipePersistenceModel {
 
-    public RecipeIdentityPersistenceModel(@Nonnull String id,
-                                          @Nonnull String title,
-                                          @Nullable String description,
-                                          long createDate,
-                                          long lastUpdate) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.createDate = createDate;
-        this.lastUpdate = lastUpdate;
-    }
+    private String title;
+    private String description;
+    private long createDate;
+    private long lastUpdate;
 
-    @Nonnull
-    public String getDataId() {
-        return id;
-    }
+    private RecipeIdentityPersistenceModel(){}
 
     @Nonnull
     public String getTitle() {
@@ -59,21 +42,20 @@ public final class RecipeIdentityPersistenceModel implements DomainPersistenceMo
         RecipeIdentityPersistenceModel that = (RecipeIdentityPersistenceModel) o;
         return createDate == that.createDate &&
                 lastUpdate == that.lastUpdate &&
-                id.equals(that.id) &&
                 title.equals(that.title) &&
-                Objects.equals(description, that.description);
+                description.equals(that.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, description, createDate, lastUpdate);
+        return Objects.hash(title, description, createDate, lastUpdate);
     }
 
-    @Nonnull
     @Override
     public String toString() {
         return "RecipeIdentityPersistenceModel{" +
-                "id='" + id + '\'' +
+                "dataId='" + dataId + '\'' +
+                ", domainId='" + domainId + '\'' +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", createDate=" + createDate +
@@ -81,65 +63,67 @@ public final class RecipeIdentityPersistenceModel implements DomainPersistenceMo
                 '}';
     }
 
-    public static class Builder {
-        private String id;
-        private String title;
-        private String description;
-        private long createDate;
-        private long lastUpdate;
+    public static class Builder
+            extends DomainModelBuilder<Builder, RecipeIdentityPersistenceModel> {
 
-        public static Builder basedOnPersistenceModel(
-                @Nonnull RecipeIdentityPersistenceModel oldModel) {
-            return new Builder().
-                    setId(oldModel.getDataId()).
-                    setTitle(oldModel.getTitle()).
-                    setDescription(oldModel.getDescription()).
-                    setCreateDate(oldModel.getCreateDate()).
-                    setLastUpdate(oldModel.getLastUpdate());
+        public Builder() {
+            model = new RecipeIdentityPersistenceModel();
         }
 
-        public static Builder getDefault() {
-            return new Builder().
-                    setId("").
-                    setTitle("").
-                    setDescription("").
-                    setCreateDate(0L).
-                    setLastUpdate(0L);
+        public Builder getDefault() {
+            model.dataId = "";
+            model.domainId = "";
+            model.title = "";
+            model.description = "";
+            model.createDate = 0L;
+            model.lastUpdate = 0L;
+            return self();
         }
 
-        public Builder setId(String id) {
-            this.id = id;
-            return this;
+        public Builder basedOnPersistenceModel(
+                @Nonnull RecipeIdentityPersistenceModel m) {
+            model.dataId = m.getDataId();
+            model.domainId = m.getDomainId();
+            model.title = m.getTitle();
+            model.description = m.getDescription();
+            model.createDate = m.getCreateDate();
+            model.lastUpdate = m.getLastUpdate();
+            return self();
+        }
+
+        public Builder setDataId(String dataId) {
+            model.dataId = dataId;
+            return self();
+        }
+
+        public Builder setDomainId(String domainId) {
+            model.domainId = domainId;
+            return self();
         }
 
         public Builder setTitle(String title) {
-            this.title = title;
-            return this;
+            model.title = title;
+            return self();
         }
 
         public Builder setDescription(String description) {
-            this.description = description;
-            return this;
+            model.description = description;
+            return self();
         }
 
         public Builder setCreateDate(long createDate) {
-            this.createDate = createDate;
-            return this;
+            model.createDate = createDate;
+            return self();
         }
 
         public Builder setLastUpdate(long lastUpdate) {
-            this.lastUpdate = lastUpdate;
-            return this;
+            model.lastUpdate = lastUpdate;
+            return self();
         }
 
-        public RecipeIdentityPersistenceModel build() {
-            return new RecipeIdentityPersistenceModel(
-                    id,
-                    title,
-                    description,
-                    createDate,
-                    lastUpdate
-            );
+        @Override
+        protected Builder self() {
+            return this;
         }
     }
 }

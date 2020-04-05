@@ -6,7 +6,7 @@ import android.util.Pair;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseHandler;
-import com.example.peter.thekitchenmenu.domain.usecase.UseCaseRequestWithDomainModel;
+import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainMessageBasePlusModel;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.macro.RecipeUseCaseCallback;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata;
@@ -36,7 +36,7 @@ import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.Re
 /**
  * A use case interactor acting as a command mediator enabling recipe components to work
  * together.
- * All {@link UseCaseRequestWithDomainModel}'s should be routed through a Recipes execute method.
+ * All {@link UseCaseDomainMessageBasePlusModel}'s should be routed through a Recipes execute method.
  * The first request sent to a Recipe or one of its components, regardless of type, will only load
  * and return data. Subsequent requests will perform the requested operation.
  */

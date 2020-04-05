@@ -14,7 +14,7 @@ import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.Re
 
 /**
  * A data structure for storing a use case's metadata state. Typically generated within a use case
- * as it processes a {@link UseCaseRequestWithDomainModel} and sent as a member var in its respective
+ * as it processes a {@link UseCaseDomainMessageBasePlusModel} and sent as a member var in its respective
  * {@link UseCaseResponse}.
  */
 public class UseCaseMetadata {

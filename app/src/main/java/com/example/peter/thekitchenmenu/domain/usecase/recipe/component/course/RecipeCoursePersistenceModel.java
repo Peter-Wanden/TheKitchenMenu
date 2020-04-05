@@ -6,7 +6,8 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipeCoursePersistenceModel extends RecipePersistenceModel {
+public final class RecipeCoursePersistenceModel
+        extends RecipePersistenceModel {
 
     private RecipeCourse.Course course;
     private long createDate;
@@ -71,7 +72,6 @@ public final class RecipeCoursePersistenceModel extends RecipePersistenceModel {
             model.course = RecipeCourse.Course.COURSE_ZERO;
             model.createDate = 0L;
             model.lasUpdate = 0L;
-
             return self();
         }
 
