@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeportions;
+package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions;
 
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.portions.RecipePortionsEntity;
@@ -15,7 +15,7 @@ import com.example.peter.thekitchenmenu.testdata.TestDataRecipePortionsEntity;
 import org.junit.*;
 import org.mockito.*;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeportions.RecipePortions.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortions.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;

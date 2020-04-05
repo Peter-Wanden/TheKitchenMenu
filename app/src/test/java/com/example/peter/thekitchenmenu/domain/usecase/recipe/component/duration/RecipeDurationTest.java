@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeduration;
+package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration;
 
 import com.example.peter.thekitchenmenu.commonmocks.UseCaseSchedulerMock;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.duration.RecipeDurationEntity;
@@ -17,7 +17,7 @@ import org.mockito.*;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeduration.RecipeDuration.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration.RecipeDuration.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;

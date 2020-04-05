@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeidentity;
+package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions;
 
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseRequestWithDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainModel;
@@ -7,37 +7,35 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipeIdentityRequest
-        extends UseCaseRequestWithDomainModel<RecipeIdentityRequest.Model> {
+public final class RecipePortionsRequest extends UseCaseRequestWithDomainModel<RecipePortionsRequest.Model> {
 
     @Nonnull
     @Override
     public String toString() {
-        return "RecipeIdentityRequest{" +
+        return "RecipePortionsRequest{" +
                 "id='" + dataId + '\'' +
                 ", model=" + model +
                 '}';
     }
 
-    public static class Builder
-            extends UseCaseRequestBuilder<Builder, RecipeIdentityRequest, Model> {
+    public static class Builder extends UseCaseRequestBuilder<Builder, RecipePortionsRequest, Model> {
 
         public Builder() {
-            request = new RecipeIdentityRequest();
+            request = new RecipePortionsRequest();
         }
 
         public Builder getDefault() {
             return new Builder().
                     setDataId("").
-                    setModel(new Model.Builder().
+                    setModel(Model.Builder.
                             getDefault().
                             build());
         }
 
-        public Builder basedOnResponse(RecipeIdentityResponse response) {
+        public Builder basedOnResponse(RecipePortionsResponse response) {
             request.dataId = response.getId();
-            request.model.title = response.getModel().getTitle();
-            request.model.description = response.getModel().getDescription();
+            request.model.servings = response.getModel().getServings();
+            request.model.sittings = response.getModel().getSittings();
             return self();
         }
 
@@ -48,15 +46,15 @@ public final class RecipeIdentityRequest
     }
 
     public static final class Model extends UseCaseDomainModel {
-        private String title;
-        private String description;
+        private int servings;
+        private int sittings;
 
-        public String getTitle() {
-            return title;
+        public int getServings() {
+            return servings;
         }
 
-        public String getDescription() {
-            return description;
+        public int getSittings() {
+            return sittings;
         }
 
         @Override
@@ -64,21 +62,20 @@ public final class RecipeIdentityRequest
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             Model model = (Model) o;
-            return title.equals(model.title) &&
-                    description.equals(model.description);
+            return servings == model.servings &&
+                    sittings == model.sittings;
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(title, description);
+            return Objects.hash(servings, sittings);
         }
 
-        @Nonnull
         @Override
         public String toString() {
             return "Model{" +
-                    "title='" + title + '\'' +
-                    ", description='" + description + '\'' +
+                    "servings=" + servings +
+                    ", sittings=" + sittings +
                     '}';
         }
 
@@ -88,25 +85,25 @@ public final class RecipeIdentityRequest
                 model = new Model();
             }
 
-            public Builder getDefault() {
+            public static Builder getDefault() {
                 return new Builder().
-                        setTitle("").
-                        setDescription("");
+                        setServings(RecipePortions.MIN_SERVINGS).
+                        setSittings(RecipePortions.MIN_SITTINGS);
             }
 
-            public static Builder basedOnResponseModel(RecipeIdentityResponse.Model model) {
+            public static Builder basedOnPortionsResponseModel(RecipePortionsResponse.Model model) {
                 return new Builder().
-                        setTitle(model.getTitle()).
-                        setDescription(model.getDescription());
+                        setServings(model.getServings()).
+                        setSittings(model.getSittings());
             }
 
-            public Builder setTitle(String title) {
-                model.title = title;
+            public Builder setServings(int servings) {
+                model.servings = servings;
                 return self();
             }
 
-            public Builder setDescription(String description) {
-                model.description = description;
+            public Builder setSittings(int sittings) {
+                model.sittings = sittings;
                 return self();
             }
 

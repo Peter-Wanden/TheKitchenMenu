@@ -1,20 +1,21 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeidentity;
+package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course;
 
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainModel;
 
+import java.util.HashMap;
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipeIdentityResponse extends UseCaseResponse<RecipeIdentityResponse.Model> {
+public final class RecipeCourseResponse extends UseCaseResponse<RecipeCourseResponse.Model> {
 
     @Nonnull
     @Override
     public String toString() {
-        return "RecipeIdentityResponse{" +
-                "id=" + id +
+        return "RecipeCourseResponse{" +
+                "id='" + id + '\'' +
                 ", metadata=" + metadata +
                 ", model=" + model +
                 '}';
@@ -22,22 +23,22 @@ public final class RecipeIdentityResponse extends UseCaseResponse<RecipeIdentity
 
     public static class Builder extends UseCaseResponseBuilder<
                     Builder,
-                    RecipeIdentityResponse,
+                    RecipeCourseResponse,
                     Model> {
 
         public Builder() {
-            response = new RecipeIdentityResponse();
+            response = new RecipeCourseResponse();
         }
 
         public Builder getDefault() {
             return new Builder().
                     setId("").
                     setMetadata(new UseCaseMetadata.Builder().
-                            getDefault().
-                            build()).
+                                    getDefault().
+                                    build()).
                     setModel(new Model.Builder().
-                            getDefault().
-                            build());
+                                    getDefault().
+                                    build());
         }
 
         @Override
@@ -47,19 +48,14 @@ public final class RecipeIdentityResponse extends UseCaseResponse<RecipeIdentity
     }
 
     public static final class Model extends UseCaseDomainModel {
-        private String title;
-        private String description;
+
+        private HashMap<RecipeCourse.Course, RecipeCoursePersistenceModel> courseList;
 
         private Model() {}
 
         @Nonnull
-        public String getTitle() {
-            return title;
-        }
-
-        @Nonnull
-        public String getDescription() {
-            return description;
+        public HashMap<RecipeCourse.Course, RecipeCoursePersistenceModel> getCourseList() {
+            return courseList;
         }
 
         @Override
@@ -67,20 +63,18 @@ public final class RecipeIdentityResponse extends UseCaseResponse<RecipeIdentity
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             Model model = (Model) o;
-            return title.equals(model.title) &&
-                    description.equals(model.description);
+            return courseList.equals(model.courseList);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(title, description);
+            return Objects.hash(courseList);
         }
 
         @Override
         public String toString() {
             return "Model{" +
-                    "title='" + title + '\'' +
-                    ", description='" + description +
+                    "courseList=" + courseList +
                     '}';
         }
 
@@ -89,23 +83,22 @@ public final class RecipeIdentityResponse extends UseCaseResponse<RecipeIdentity
                                 Model> {
 
             public Builder() {
-                model = new RecipeIdentityResponse.Model();
+                model = new Model();
             }
 
             public Builder getDefault() {
                 return new Builder().
-                        setTitle("").
-                        setDescription("");
+                        setCourseList(getDefaultCourseList());
             }
 
-            public Builder setTitle(String title) {
-                model.title = title;
+            public Builder setCourseList(
+                    HashMap<RecipeCourse.Course, RecipeCoursePersistenceModel> courseList) {
+                model.courseList = courseList;
                 return self();
             }
 
-            public Builder setDescription(String description) {
-                model.description = description;
-                return self();
+            private static HashMap<RecipeCourse.Course, RecipeCoursePersistenceModel> getDefaultCourseList() {
+                return new HashMap<>();
             }
 
             @Override

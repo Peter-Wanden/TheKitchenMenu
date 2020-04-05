@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipecourse;
+package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course;
 
 import android.annotation.SuppressLint;
 
@@ -71,9 +71,10 @@ public class RecipeCourse
     private long lastUpdate;
     private boolean isChanged;
 
-    private String id = "";
+    private String dataId = "";
     private String recipeId = "";
-    private final HashMap<Course, RecipeCoursePersistenceModel> oldCourseMap = new LinkedHashMap<>();
+    private final HashMap<Course, RecipeCoursePersistenceModel> currentCourseList =
+            new LinkedHashMap<>();
     private final List<Course> newCourseList = new ArrayList<>();
 
     public RecipeCourse(@Nonnull RepositoryRecipeCourse repository,
@@ -86,23 +87,29 @@ public class RecipeCourse
 
     @Override
     protected <Q extends Request> void execute(Q request) {
-        RecipeCourseRequest courseRequest = (RecipeCourseRequest) request;
-        System.out.println(TAG + courseRequest);
+        RecipeCourseRequest r = (RecipeCourseRequest) request;
+        System.out.println(TAG + r);
 
-        if (isNewRequest(courseRequest.getDomainId())) {
-            recipeId = courseRequest.getDomainId();
+        if (isNewRequest(r)) {
+            recipeId = r.getDomainId();
             loadData(recipeId);
         } else {
-            processChanges(courseRequest.getModel().getCourseList());
+            setupUseCase(r);
+            updateCurrentCourseList();
         }
     }
 
-    private boolean isNewRequest(String recipeId) {
-        return !recipeId.equals(this.recipeId);
+    private boolean isNewRequest(RecipeCourseRequest r) {
+        return !r.getDomainId().equals(recipeId);
+    }
+
+    private void setupUseCase(RecipeCourseRequest r) {
+        isChanged = false;
+        newCourseList.clear();
+        newCourseList.addAll(r.getModel().getCourseList());
     }
 
     private void loadData(String recipeId) {
-
         repository.getAllByRecipeId(recipeId, this);
     }
 
@@ -118,13 +125,12 @@ public class RecipeCourse
         for (RecipeCoursePersistenceModel courseModel : courseModels) {
 
             Course course = courseModel.getCourse();
-            oldCourseMap.put(course, courseModel);
+            currentCourseList.put(course, courseModel);
             newCourseList.add(course);
 
             createDate = Math.min(createDate, courseModel.getCreateDate());
             lastUpdate = Math.max(lastUpdate, courseModel.getLasUpdate());
         }
-
         sendResponse();
     }
 
@@ -133,31 +139,28 @@ public class RecipeCourse
         sendResponse();
     }
 
-    private void processChanges(List<Course> courseList) {
-        isChanged = false;
-        newCourseList.clear();
-        newCourseList.addAll(courseList);
-        updateCourses();
+    private void updateCurrentCourseList() {
+        processCourseAdditions();
+        processCourseSubtractions();
         sendResponse();
     }
 
-    private void updateCourses() {
-        processCourseAdditions();
-        processCourseSubtractions();
-    }
-
     private void processCourseAdditions() {
-        for (Course course : newCourseList) {
-            if (!oldCourseMap.containsKey(course)) {
-                addCourse(course);
+        for (Course c : newCourseList) {
+            if (isCourseAddedToNewList(c)) {
+                addCourseToCurrentList(c);
             }
         }
     }
 
-    private void addCourse(Course course) {
+    private boolean isCourseAddedToNewList(Course c) {
+        return !currentCourseList.containsKey(c);
+    }
+
+    private void addCourseToCurrentList(Course course) {
         isChanged = true;
         RecipeCoursePersistenceModel model = createNewCourseModel(course);
-        oldCourseMap.put(course, model);
+        currentCourseList.put(course, model);
         save(model);
     }
 
@@ -166,50 +169,49 @@ public class RecipeCourse
     }
 
     private void processCourseSubtractions() {
-        Iterator<Map.Entry<Course, RecipeCoursePersistenceModel>> courseIterator =
-                oldCourseMap.entrySet().iterator();
+        Iterator<Course> iterator = currentCourseList.keySet().iterator();
+        while (iterator.hasNext()) {
+            Course c = iterator.next();
 
-        while (courseIterator.hasNext()) {
-            Map.Entry<Course, RecipeCoursePersistenceModel> course = courseIterator.next();
-            if (!newCourseList.contains(course.getKey())) {
-                subtractCourse(course.getKey());
-                courseIterator.remove();
+            if (isCourseRemovedFromNewList(c)) {
+                removeCourseFromCurrentList(iterator, c);
             }
         }
     }
 
-    private void subtractCourse(Course course) {
+    private boolean isCourseRemovedFromNewList(Course c) {
+        return !newCourseList.contains(c);
+    }
+
+    private void removeCourseFromCurrentList(Iterator i, Course course) {
         isChanged = true;
         lastUpdate = timeProvider.getCurrentTimeInMills();
-        repository.deleteByDataId(oldCourseMap.get(course).getDataId());
+        repository.deleteByDataId(currentCourseList.get(course).getDataId());
+        i.remove();
     }
 
     private RecipeCoursePersistenceModel createNewCourseModel(Course course) {
         lastUpdate = timeProvider.getCurrentTimeInMills();
-        return new RecipeCoursePersistenceModel(
-                idProvider.getUId(),
-                course,
-                id,
-                lastUpdate,
-                lastUpdate
-        );
-
-        RecipeCoursePersistenceModel model = new RecipeCoursePersistenceModel.Builder().
+        return new RecipeCoursePersistenceModel.Builder().
                 setDataId(idProvider.getUId()).
-                setRecipeId()
+                setRecipeId(recipeId).
+                setCourse(course).
+                setCreateDate(lastUpdate).
+                setLastUpdate(lastUpdate).
+                build();
     }
 
     private void sendResponse() {
-        System.out.println(TAG + "oldCourseMap" + oldCourseMap);
+        System.out.println(TAG + "oldCourseMap" + currentCourseList);
         RecipeCourseResponse response = new RecipeCourseResponse.Builder().
-                setId(id).
+                setId(dataId).
                 setMetadata(getMetadata()).
                 setModel(getResponseModel()).
                 build();
 
         System.out.println(TAG + response);
 
-        if (response.getMetadata().getFailReasons().contains(CommonFailReason.NONE)) {
+        if (isValid()) {
             getUseCaseCallback().onSuccess(response);
         } else {
             getUseCaseCallback().onError(response);
@@ -227,28 +229,31 @@ public class RecipeCourse
 
     private RecipeCourseResponse.Model getResponseModel() {
         return new RecipeCourseResponse.Model.Builder().
-                setCourseList(new HashMap<>(oldCourseMap)).
+                setCourseList(new HashMap<>(currentCourseList)).
                 build();
     }
 
     private RecipeMetadata.ComponentState getComponentState() {
-        boolean isValid = !newCourseList.isEmpty();
-        if (!isValid) createDate = 0L;
+        if (!isValid()) createDate = 0L;
 
-        if (!isValid && !isChanged) {
+        if (!isValid() && !isChanged) {
             return RecipeMetadata.ComponentState.INVALID_UNCHANGED;
-        } else if (isValid && !isChanged) {
+        } else if (isValid() && !isChanged) {
             return RecipeMetadata.ComponentState.VALID_UNCHANGED;
-        } else if (!isValid && isChanged) {
+        } else if (!isValid() && isChanged) {
             return RecipeMetadata.ComponentState.INVALID_CHANGED;
         } else {
             return RecipeMetadata.ComponentState.VALID_CHANGED;
         }
     }
 
+    private boolean isValid() {
+        return !currentCourseList.isEmpty();
+    }
+
     private List<FailReasons> getFailReasons() {
         List<FailReasons> failReasons = new LinkedList<>();
-        if (newCourseList.isEmpty()) {
+        if (isValid()) {
             failReasons.add(CommonFailReason.DATA_UNAVAILABLE);
         } else {
             failReasons.add(CommonFailReason.NONE);

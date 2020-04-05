@@ -32,7 +32,7 @@ public class GetLatestByDomainIdAdapter {
         this.dataIdAdapter = dataIdAdapter;
     }
 
-    public void adaptToModel(@Nonnull String domainId, Callback callback) {
+    public void adaptToDomainModel(@Nonnull String domainId, Callback callback) {
         this.callback = callback;
 
         getLatestParentEntityIdFromDomainId(domainId);
@@ -73,7 +73,7 @@ public class GetLatestByDomainIdAdapter {
     }
 
     private void getModel() {
-        dataIdAdapter.adaptToModel(
+        dataIdAdapter.adaptToDomainModel(
                 lastUpdatedDataId,
                 new GetByDataIdAdapter.Callback() {
                     @Override

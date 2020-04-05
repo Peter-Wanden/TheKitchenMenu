@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipecourse;
+package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course;
 
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseRequestWithDomainModel;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainModel;
@@ -9,7 +9,7 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipecourse.RecipeCourse.*;
+import static com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCourse.*;
 
 public final class RecipeCourseRequest extends UseCaseRequestWithDomainModel<RecipeCourseRequest.Model> {
 
@@ -17,7 +17,8 @@ public final class RecipeCourseRequest extends UseCaseRequestWithDomainModel<Rec
     @Override
     public String toString() {
         return "RecipeCourseRequest{" +
-                "id='" + dataId + '\'' +
+                "dataId='" + dataId + '\'' +
+                "domainId='" + domainId + '\'' +
                 ", model=" + model +
                 '}';
     }

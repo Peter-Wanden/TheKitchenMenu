@@ -42,7 +42,7 @@ public class GetAllLatestAdapter {
         domainModels = new ArrayList<>();
     }
 
-    public void getLatest(Callback callback) {
+    public void adaptLatestToDomainObjects(Callback callback) {
         this.callback = callback;
 
         getAllDomainIds();
@@ -79,7 +79,7 @@ public class GetAllLatestAdapter {
 
     private void getLatestModels() {
         for (String domainId : parentDataIdList) {
-            domainIdAdapter.adaptToModel(domainId, new GetLatestByDomainIdAdapter.Callback() {
+            domainIdAdapter.adaptToDomainModel(domainId, new GetLatestByDomainIdAdapter.Callback() {
                 @Override
                 public void onModelCreated(@Nonnull RecipeMetadataPersistenceModel model) {
                     totalProcessed ++;

@@ -1,21 +1,19 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipecourse;
+package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions;
 
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseResponse;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseMetadata;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCaseDomainModel;
 
-import java.util.HashMap;
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public final class RecipeCourseResponse extends UseCaseResponse<RecipeCourseResponse.Model> {
+public final class RecipePortionsResponse extends UseCaseResponse<RecipePortionsResponse.Model> {
 
-    @Nonnull
     @Override
     public String toString() {
-        return "RecipeCourseResponse{" +
-                "id='" + id + '\'' +
+        return "RecipePortionsResponse{" +
+                "id=" + id +
                 ", metadata=" + metadata +
                 ", model=" + model +
                 '}';
@@ -23,22 +21,22 @@ public final class RecipeCourseResponse extends UseCaseResponse<RecipeCourseResp
 
     public static class Builder extends UseCaseResponseBuilder<
                     Builder,
-                    RecipeCourseResponse,
+                    RecipePortionsResponse,
                     Model> {
 
         public Builder() {
-            response = new RecipeCourseResponse();
+            response = new RecipePortionsResponse();
         }
 
         public Builder getDefault() {
             return new Builder().
                     setId("").
                     setMetadata(new UseCaseMetadata.Builder().
-                                    getDefault().
-                                    build()).
+                            getDefault().
+                            build()).
                     setModel(new Model.Builder().
-                                    getDefault().
-                                    build());
+                            getDefault().
+                            build());
         }
 
         @Override
@@ -49,13 +47,22 @@ public final class RecipeCourseResponse extends UseCaseResponse<RecipeCourseResp
 
     public static final class Model extends UseCaseDomainModel {
 
-        private HashMap<RecipeCourse.Course, RecipeCoursePersistenceModel> courseList;
+        private int servings;
+        private int sittings;
+        private int portions;
 
         private Model() {}
 
-        @Nonnull
-        public HashMap<RecipeCourse.Course, RecipeCoursePersistenceModel> getCourseList() {
-            return courseList;
+        public int getServings() {
+            return servings;
+        }
+
+        public int getSittings() {
+            return sittings;
+        }
+
+        public int getPortions() {
+            return portions;
         }
 
         @Override
@@ -63,18 +70,23 @@ public final class RecipeCourseResponse extends UseCaseResponse<RecipeCourseResp
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             Model model = (Model) o;
-            return courseList.equals(model.courseList);
+            return servings == model.servings &&
+                    sittings == model.sittings &&
+                    portions == model.portions;
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(courseList);
+            return Objects.hash(servings, sittings, portions);
         }
 
+        @Nonnull
         @Override
         public String toString() {
             return "Model{" +
-                    "courseList=" + courseList +
+                    "servings=" + servings +
+                    ", sittings=" + sittings +
+                    ", portions=" + portions +
                     '}';
         }
 
@@ -83,22 +95,29 @@ public final class RecipeCourseResponse extends UseCaseResponse<RecipeCourseResp
                                 Model> {
 
             public Builder() {
-                model = new Model();
+                model = new RecipePortionsResponse.Model();
             }
 
             public Builder getDefault() {
                 return new Builder().
-                        setCourseList(getDefaultCourseList());
+                        setServings(RecipePortions.MIN_SERVINGS).
+                        setSittings(RecipePortions.MIN_SITTINGS).
+                        setPortions(RecipePortions.MIN_SERVINGS * RecipePortions.MIN_SITTINGS);
             }
 
-            public Builder setCourseList(
-                    HashMap<RecipeCourse.Course, RecipeCoursePersistenceModel> courseList) {
-                model.courseList = courseList;
+            public Builder setServings(int servings) {
+                model.servings = servings;
                 return self();
             }
 
-            private static HashMap<RecipeCourse.Course, RecipeCoursePersistenceModel> getDefaultCourseList() {
-                return new HashMap<>();
+            public Builder setSittings(int sittings) {
+                model.sittings = sittings;
+                return self();
+            }
+
+            public Builder setPortions(int portions) {
+                model.portions = portions;
+                return self();
             }
 
             @Override

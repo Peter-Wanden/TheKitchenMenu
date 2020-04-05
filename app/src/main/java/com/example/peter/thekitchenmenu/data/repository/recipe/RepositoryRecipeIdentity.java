@@ -2,7 +2,7 @@ package com.example.peter.thekitchenmenu.data.repository.recipe;
 
 import com.example.peter.thekitchenmenu.data.repository.DataAccess;
 import com.example.peter.thekitchenmenu.data.repository.Repository;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeidentity.RecipeIdentityPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity.RecipeIdentityPersistenceModel;
 
 import javax.annotation.Nonnull;
 

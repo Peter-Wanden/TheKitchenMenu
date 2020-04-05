@@ -85,7 +85,7 @@ public class RecipeMetadataLocalDataAccess
     @Override
     public void getAll(
             @Nonnull GetAllDomainModelsCallback<RecipeMetadataPersistenceModel> callback) {
-        getAllLatestAdapter.getLatest(
+        getAllLatestAdapter.adaptLatestToDomainObjects(
                 new GetAllLatestAdapter.Callback() {
                     @Override
                     public void onAllLoaded(@Nonnull List<RecipeMetadataPersistenceModel> models) {
@@ -103,7 +103,7 @@ public class RecipeMetadataLocalDataAccess
     public void getByDataId(
             @Nonnull String dataId,
             @Nonnull GetDomainModelCallback<RecipeMetadataPersistenceModel> callback) {
-        getByDataIdAdapter.adaptToModel(
+        getByDataIdAdapter.adaptToDomainModel(
                 dataId,
                 new GetByDataIdAdapter.Callback() {
                     @Override
@@ -122,7 +122,7 @@ public class RecipeMetadataLocalDataAccess
     public void getLatestByDomainId(
             @Nonnull String recipeId,
             @Nonnull GetDomainModelCallback<RecipeMetadataPersistenceModel> callback) {
-        getLatestByDomainIdAdapter.adaptToModel(
+        getLatestByDomainIdAdapter.adaptToDomainModel(
                 recipeId, new GetLatestByDomainIdAdapter.Callback() {
                     @Override
                     public void onModelCreated(@Nonnull RecipeMetadataPersistenceModel model) {

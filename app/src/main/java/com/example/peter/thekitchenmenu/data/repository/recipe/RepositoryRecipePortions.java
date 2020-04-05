@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.data.repository.recipe;
 
 import com.example.peter.thekitchenmenu.data.repository.Repository;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeportions.RecipePortionsPersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.portions.RecipePortionsPersistenceModel;
 
 import java.util.LinkedHashMap;
 

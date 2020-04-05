@@ -1,7 +1,8 @@
 package com.example.peter.thekitchenmenu.data.repository.recipe;
 
+
 import com.example.peter.thekitchenmenu.data.repository.Repository;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipecourse.RecipeCoursePersistenceModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.course.RecipeCoursePersistenceModel;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -28,8 +29,9 @@ public class RepositoryRecipeCourse
     }
 
     @Override
-    public void getAllByCourseNo(int courseNo,
-                                 @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback) {
+    public void getAllByCourseNo(
+            int courseNo,
+            @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback) {
 
         List<RecipeCoursePersistenceModel> models = checkCacheForCourseNo(courseNo);
 
@@ -95,8 +97,9 @@ public class RepositoryRecipeCourse
     }
 
     @Override
-    public void getAllByRecipeId(@Nonnull String recipeId,
-                                 @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback) {
+    public void getAllByRecipeId(
+            @Nonnull String recipeId,
+            @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback) {
 
         List<RecipeCoursePersistenceModel> models = checkCacheForRecipeId(recipeId);
 
@@ -154,7 +157,7 @@ public class RepositoryRecipeCourse
             return null;
         else {
             for (RecipeCoursePersistenceModel model : cache.values()) {
-                if (model.getRecipeId().equals(recipeId)) {
+                if (model.getDataId().equals(recipeId)) {
                     models.add(model);
                 }
             }

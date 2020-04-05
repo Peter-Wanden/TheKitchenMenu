@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeidentity;
+package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.identity;
 
 import android.annotation.SuppressLint;
 

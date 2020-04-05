@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipeduration;
+package com.example.peter.thekitchenmenu.domain.usecase.recipe.component.duration;
 
 import com.example.peter.thekitchenmenu.domain.model.DomainPersistenceModel;
 

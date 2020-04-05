@@ -49,7 +49,7 @@ public class GetByDataIdAdapter {
         modelBuilder = new RecipeMetadataPersistenceModel.Builder();
     }
 
-    public void adaptToModel(String dataId, Callback callback) {
+    public void adaptToDomainModel(String dataId, Callback callback) {
         this.callback = callback;
         getParentEntityFromDataId(dataId);
         getComponentStatesFromParentDataId(dataId);
