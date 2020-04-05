@@ -30,7 +30,7 @@ public class RecipeMetadataRemoteDataAccess implements DataAccess<RecipeMetadata
     }
 
     @Override
-    public void getByDomainId(
+    public void getLatestByDomainId(
             @Nonnull String domainId,
             @Nonnull GetDomainModelCallback<RecipeMetadataPersistenceModel> callback) {
         callback.onModelUnavailable();
@@ -47,7 +47,12 @@ public class RecipeMetadataRemoteDataAccess implements DataAccess<RecipeMetadata
     }
 
     @Override
-    public void deleteByDomainId(@Nonnull String domainId) {
+    public void deleteAllByDomainId(@Nonnull String domainId) {
+
+    }
+
+    @Override
+    public void deleteByDataId(String dataId) {
 
     }
 

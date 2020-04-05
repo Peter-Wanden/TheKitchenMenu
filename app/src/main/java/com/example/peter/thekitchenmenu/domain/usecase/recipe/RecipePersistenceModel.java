@@ -8,7 +8,7 @@ public abstract class RecipePersistenceModel
         implements DomainPersistenceModel {
 
     protected String dataId;
-    protected String recipeId;
+    protected String domainId;
 
     @Override
     public String getDataId() {
@@ -17,6 +17,6 @@ public abstract class RecipePersistenceModel
 
     @Override
     public String getDomainId() {
-        return recipeId;
+        return domainId;
     }
 }

@@ -48,7 +48,7 @@ public class RecipePortionsRemoteDataAccess implements DataAccessRecipePortions 
     }
 
     @Override
-    public void deleteByDomainId(@Nonnull String domainId) {
+    public void deleteAllByDomainId(@Nonnull String domainId) {
 
     }
 }

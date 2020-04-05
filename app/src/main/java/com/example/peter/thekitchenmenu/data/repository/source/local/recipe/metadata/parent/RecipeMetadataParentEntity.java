@@ -17,7 +17,7 @@ public final class RecipeMetadataParentEntity implements PrimitiveModel {
 
     public static final String TABLE_RECIPE = "recipe";
     public static final String DATA_ID = "id";
-    public static final String RECIPE_ID = "recipeId";
+    public static final String DOMAIN_ID = "domainId";
     private static final String RECIPE_PARENT_ID = "recipeParentId";
     private static final String RECIPE_STATE_ID = "recipeStateId";
     private static final String CREATED_BY = "createdBy";
@@ -30,8 +30,8 @@ public final class RecipeMetadataParentEntity implements PrimitiveModel {
     private final String dataId;
 
     @Nonnull
-    @ColumnInfo(name = RECIPE_ID)
-    private final String recipeId;
+    @ColumnInfo(name = DOMAIN_ID)
+    private final String domainId;
 
     @Nonnull
     @ColumnInfo(name = RECIPE_PARENT_ID)
@@ -51,14 +51,14 @@ public final class RecipeMetadataParentEntity implements PrimitiveModel {
     private final long lastUpdate;
 
     private RecipeMetadataParentEntity(@Nonnull String dataId,
-                                      @Nonnull String recipeId,
+                                      @Nonnull String domainId,
                                       @Nonnull String recipeParentId,
                                       int recipeStateId,
                                       @Nonnull String createdBy,
                                       long createDate,
                                       long lastUpdate) {
         this.dataId = dataId;
-        this.recipeId  = recipeId;
+        this.domainId = domainId;
         this.recipeParentId = recipeParentId;
         this.recipeStateId = recipeStateId;
         this.createdBy = createdBy;
@@ -75,7 +75,7 @@ public final class RecipeMetadataParentEntity implements PrimitiveModel {
                 createDate == that.createDate &&
                 lastUpdate == that.lastUpdate &&
                 dataId.equals(that.dataId) &&
-                recipeId.equals(that.recipeId) &&
+                domainId.equals(that.domainId) &&
                 recipeParentId.equals(that.recipeParentId) &&
                 createdBy.equals(that.createdBy);
     }
@@ -83,7 +83,7 @@ public final class RecipeMetadataParentEntity implements PrimitiveModel {
     @Override
     public int hashCode() {
         return Objects.hash(
-                dataId, recipeId, recipeParentId, recipeStateId,
+                dataId, domainId, recipeParentId, recipeStateId,
                 createdBy, createDate, lastUpdate);
     }
 
@@ -91,7 +91,7 @@ public final class RecipeMetadataParentEntity implements PrimitiveModel {
     public String toString() {
         return "RecipeMetadataEntity{" +
                 "dataId='" + dataId + '\'' +
-                ", recipeId='" + recipeId + '\'' +
+                ", domainId='" + domainId + '\'' +
                 ", recipeParentId='" + recipeParentId + '\'' +
                 ", recipeStateId=" + recipeStateId +
                 ", createdBy='" + createdBy + '\'' +
@@ -107,8 +107,8 @@ public final class RecipeMetadataParentEntity implements PrimitiveModel {
     }
 
     @Nonnull
-    public String getRecipeId() {
-        return recipeId;
+    public String getDomainId() {
+        return domainId;
     }
 
     @Nonnull
@@ -135,7 +135,7 @@ public final class RecipeMetadataParentEntity implements PrimitiveModel {
 
     public static class Builder {
         private String dataId;
-        private String recipeId;
+        private String domainId;
         private String recipeParentId;
         private int recipeStateId;
         private String createdBy;
@@ -144,7 +144,7 @@ public final class RecipeMetadataParentEntity implements PrimitiveModel {
 
         public Builder getDefault() {
             dataId = "";
-            recipeId = "";
+            domainId = "";
             recipeParentId = "";
             recipeStateId = 0;
             createdBy = Constants.getUserId();
@@ -158,8 +158,8 @@ public final class RecipeMetadataParentEntity implements PrimitiveModel {
             return this;
         }
 
-        public Builder setRecipeId(String recipeId) {
-            this.recipeId = recipeId;
+        public Builder setDomainId(String domainId) {
+            this.domainId = domainId;
             return this;
         }
 
@@ -191,7 +191,7 @@ public final class RecipeMetadataParentEntity implements PrimitiveModel {
         public RecipeMetadataParentEntity build() {
             return new RecipeMetadataParentEntity(
                     dataId,
-                    recipeId,
+                    domainId,
                     recipeParentId,
                     recipeStateId,
                     createdBy,

@@ -1,14 +1,14 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.parent;
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
-import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
+import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSourceParent;
 
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
 public class RecipeMetadataParentEntityLocalDataSource
-        implements PrimitiveDataSource<RecipeMetadataParentEntity> {
+        implements PrimitiveDataSourceParent<RecipeMetadataParentEntity> {
 
     private static volatile RecipeMetadataParentEntityLocalDataSource INSTANCE;
 

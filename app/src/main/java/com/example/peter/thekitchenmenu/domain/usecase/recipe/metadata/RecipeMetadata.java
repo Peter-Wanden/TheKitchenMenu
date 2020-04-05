@@ -3,6 +3,7 @@ package com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata;
 import android.annotation.SuppressLint;
 
 import com.example.peter.thekitchenmenu.data.repository.DataAccess;
+import com.example.peter.thekitchenmenu.data.repository.recipe.RepositoryRecipeMetadata;
 import com.example.peter.thekitchenmenu.domain.model.CommonFailReason;
 import com.example.peter.thekitchenmenu.domain.model.FailReasons;
 import com.example.peter.thekitchenmenu.domain.usecase.UseCase;
@@ -157,15 +158,15 @@ public class RecipeMetadata
     @Nonnull
     private final TimeProvider timeProvider;
     @Nonnull
-    private final RepositoryRecipeMetadataModel repository;
-    private RecipeMetadataPersistenceModel persistenceModel;
+    private final RepositoryRecipeMetadata repository;
     @Nonnull
     private final Set<ComponentName> requiredComponents;
 
-    private RecipeState recipeState;
     @Nonnull
     private final List<FailReasons> failReasons;
 
+    private RecipeMetadataPersistenceModel persistenceModel;
+    private RecipeState recipeState;
     private String dataId = "";
     private String recipeId = "";
     private String parentId = "";
@@ -176,14 +177,13 @@ public class RecipeMetadata
     private boolean hasInvalidModels;
     private boolean isNewRequest;
 
-    // TODO - Rename to RecipeMetadata
-    //  last update - should be the time of the last updated component
+    //  TODO - last update - should be the time of the last updated component
     // TODO - Data layer:
     //  have uid as well as recipeId
     //  keep a copy of all metadata as it changes
 
     public RecipeMetadata(@Nonnull TimeProvider timeProvider,
-                          @Nonnull RepositoryRecipeMetadataModel repository,
+                          @Nonnull RepositoryRecipeMetadata repository,
                           @Nonnull Set<ComponentName> requiredComponents) {
 
         this.timeProvider = timeProvider;
@@ -214,7 +214,7 @@ public class RecipeMetadata
     }
 
     private void loadData(String recipeId) {
-        repository.getByDomainId(recipeId, this);
+        repository.getLatestByDomainId(recipeId, this);
     }
 
     @Override

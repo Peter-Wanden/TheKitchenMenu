@@ -9,7 +9,7 @@ import androidx.room.Update;
 import java.util.List;
 
 import static com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.parent.RecipeMetadataParentEntity.DATA_ID;
-import static com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.parent.RecipeMetadataParentEntity.RECIPE_ID;
+import static com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.parent.RecipeMetadataParentEntity.DOMAIN_ID;
 import static com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.parent.RecipeMetadataParentEntity.TABLE_RECIPE;
 
 @Dao
@@ -21,16 +21,19 @@ public interface RecipeMetadataParentEntityDao {
     @Query("SELECT * FROM " + TABLE_RECIPE + " WHERE " + DATA_ID + " = :dataId")
     RecipeMetadataParentEntity getByDataId(String dataId);
 
-    @Query("SELECT * FROM " + TABLE_RECIPE + " WHERE " + RECIPE_ID + " = :recipeId")
+    @Query("SELECT * FROM " + TABLE_RECIPE + " WHERE " + DOMAIN_ID + " = :recipeId")
     List<RecipeMetadataParentEntity> getAllByDomainId(String recipeId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(RecipeMetadataParentEntity e);
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insert(RecipeMetadataParentEntity... entities);
+
     @Update
     void update(RecipeMetadataParentEntity e);
 
-    @Query("DELETE FROM " + TABLE_RECIPE + " WHERE " + RECIPE_ID + " = :domainId")
+    @Query("DELETE FROM " + TABLE_RECIPE + " WHERE " + DOMAIN_ID + " = :domainId")
     void deleteAllByDomainId(String domainId);
 
     @Query("DELETE FROM " + TABLE_RECIPE + " WHERE " + DATA_ID + " = :dataId")

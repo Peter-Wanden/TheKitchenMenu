@@ -114,7 +114,7 @@ public class RecipeCourseLocalDataAccess implements DataAccessRecipeCourse {
     }
 
     @Override
-    public void deleteByDomainId(@Nonnull String domainId) {
+    public void deleteAllByDomainId(@Nonnull String domainId) {
         Runnable r = () -> dao.deleteByCourseId(domainId);
         executors.diskIO().execute(r);
     }

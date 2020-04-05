@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata;
+package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.dataadapters;
 
 import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.parent.RecipeMetadataParentEntity;
@@ -70,7 +70,7 @@ public class GetAllLatestAdapter {
         } else {
             parentDataIdList.clear();
             for (RecipeMetadataParentEntity e : entities) {
-                parentDataIdList.add(e.getRecipeId());
+                parentDataIdList.add(e.getDomainId());
             }
             listSize = parentDataIdList.size();
             getLatestModels();

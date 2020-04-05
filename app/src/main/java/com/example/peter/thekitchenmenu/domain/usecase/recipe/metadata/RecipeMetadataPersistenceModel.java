@@ -10,13 +10,12 @@ import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipePersistenceM
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 import static com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadata.*;
 
 /**
  * Represented in primitive form by {@link RecipeMetadataParentEntity},
- * {@link RecipeComponentStateEntity} and {@link RecipeFailReasonEntity}
+ * {@link RecipeComponentStateEntity} & {@link RecipeFailReasonEntity}
  */
 public final class RecipeMetadataPersistenceModel extends RecipePersistenceModel {
 
@@ -63,10 +62,14 @@ public final class RecipeMetadataPersistenceModel extends RecipePersistenceModel
                     Builder,
                     RecipeMetadataPersistenceModel> {
 
+        public Builder() {
+            model = new RecipeMetadataPersistenceModel();
+        }
+
         @Override
         public Builder getDefault() {
             model.dataId = "";
-            model.recipeId = "";
+            model.domainId = "";
             model.recipeParentId = "";
             model.recipeState = RecipeState.DATA_UNAVAILABLE;
             model.componentStates = new HashMap<>();
@@ -83,7 +86,7 @@ public final class RecipeMetadataPersistenceModel extends RecipePersistenceModel
         }
 
         public Builder setRecipeId(String recipeId) {
-            model.recipeId = recipeId;
+            model.domainId = recipeId;
             return self();
         }
 

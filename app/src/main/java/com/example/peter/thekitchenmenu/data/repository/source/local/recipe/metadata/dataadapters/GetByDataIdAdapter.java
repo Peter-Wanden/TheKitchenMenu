@@ -1,4 +1,4 @@
-package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata;
+package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.dataadapters;
 
 import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.componentstate.RecipeComponentStateEntity;
@@ -76,7 +76,7 @@ public class GetByDataIdAdapter {
     private void addParentEntityToModelBuilder(RecipeMetadataParentEntity e) {
         modelBuilder.
                 setDataId(e.getDataId()).
-                setRecipeId(e.getRecipeId()).
+                setRecipeId(e.getDomainId()).
                 setRecipeParentId(e.getRecipeParentId()).
                 setRecipeState(RecipeState.getById(e.getRecipeStateId())).
                 setCreatedBy(e.getCreatedBy()).

@@ -1,14 +1,14 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.failreason;
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
-import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
+import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSourceChild;
 
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
 public class RecipeFailReasonsLocalDataSource
-        implements PrimitiveDataSource<RecipeFailReasonEntity> {
+        implements PrimitiveDataSourceChild<RecipeFailReasonEntity> {
 
     private static volatile RecipeFailReasonsLocalDataSource INSTANCE;
 
@@ -87,6 +87,11 @@ public class RecipeFailReasonsLocalDataSource
     }
 
     @Override
+    public void saveAll(@Nonnull RecipeFailReasonEntity... entities) {
+        Runnable r = () -> dao.insertAll(entities);
+    }
+
+    @Override
     public void refreshData() {
         // Not required because the {@link Repository} handles the logic of refreshing the
         // data from all the available sources.
@@ -99,7 +104,7 @@ public class RecipeFailReasonsLocalDataSource
     }
 
     @Override
-    public void deleteAllByParentId(String parentDataId) {
+    public void deleteAllByParentId(@Nonnull String parentDataId) {
         Runnable r = () -> dao.deleteAllByParentDataId(parentDataId);
         executors.diskIO().execute(r);
     }

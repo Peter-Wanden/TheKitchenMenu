@@ -1,14 +1,14 @@
 package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.componentstate;
 
 import com.example.peter.thekitchenmenu.app.AppExecutors;
-import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
+import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSourceChild;
 
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
 public class RecipeComponentStateLocalDataSource
-        implements PrimitiveDataSource<RecipeComponentStateEntity> {
+        implements PrimitiveDataSourceChild<RecipeComponentStateEntity> {
 
     private static volatile RecipeComponentStateLocalDataSource INSTANCE;
     @Nonnull
@@ -83,6 +83,12 @@ public class RecipeComponentStateLocalDataSource
     @Override
     public void save(@Nonnull RecipeComponentStateEntity e) {
         Runnable r = () -> dao.insert(e);
+        executors.diskIO().execute(r);
+    }
+
+    @Override
+    public void saveAll(@Nonnull RecipeComponentStateEntity... entities) {
+        Runnable r = () -> dao.insert(entities);
         executors.diskIO().execute(r);
     }
 

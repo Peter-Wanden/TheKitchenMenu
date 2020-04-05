@@ -1,7 +1,7 @@
 package com.example.peter.thekitchenmenu.data.repository.recipe;
 
 import com.example.peter.thekitchenmenu.data.repository.Repository;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipecourse.RecipeCourseModel;
+import com.example.peter.thekitchenmenu.domain.usecase.recipe.component.recipecourse.RecipeCoursePersistenceModel;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -10,7 +10,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 public class RepositoryRecipeCourse
-        extends Repository<RecipeCourseModel>
+        extends Repository<RecipeCoursePersistenceModel>
         implements DataAccessRecipeCourse {
 
     private RepositoryRecipeCourse(@Nonnull DataAccessRecipeCourse remoteDataSource,
@@ -29,9 +29,9 @@ public class RepositoryRecipeCourse
 
     @Override
     public void getAllByCourseNo(int courseNo,
-                                 @Nonnull GetAllDomainModelsCallback<RecipeCourseModel> callback) {
+                                 @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback) {
 
-        List<RecipeCourseModel> models = checkCacheForCourseNo(courseNo);
+        List<RecipeCoursePersistenceModel> models = checkCacheForCourseNo(courseNo);
 
         if (models != null) {
             callback.onAllLoaded(models);
@@ -39,13 +39,13 @@ public class RepositoryRecipeCourse
         }
         ((DataAccessRecipeCourse) localDataAccess).getAllByCourseNo(
                 courseNo,
-                new GetAllDomainModelsCallback<RecipeCourseModel>() {
+                new GetAllDomainModelsCallback<RecipeCoursePersistenceModel>() {
                     @Override
-                    public void onAllLoaded(List<RecipeCourseModel> models) {
+                    public void onAllLoaded(List<RecipeCoursePersistenceModel> models) {
                         if (cache == null)
                             cache = new LinkedHashMap<>();
 
-                        for (RecipeCourseModel model : models)
+                        for (RecipeCoursePersistenceModel model : models)
                             cache.put(model.getDataId(), model);
 
                         callback.onAllLoaded(models);
@@ -55,9 +55,9 @@ public class RepositoryRecipeCourse
                     public void onModelsUnavailable() {
                         ((DataAccessRecipeCourse) remoteDataAccess).getAllByCourseNo(
                                 courseNo,
-                                new GetAllDomainModelsCallback<RecipeCourseModel>() {
+                                new GetAllDomainModelsCallback<RecipeCoursePersistenceModel>() {
                                     @Override
-                                    public void onAllLoaded(List<RecipeCourseModel> models) {
+                                    public void onAllLoaded(List<RecipeCoursePersistenceModel> models) {
                                         if (models == null) {
                                             onModelsUnavailable();
                                             return;
@@ -66,7 +66,7 @@ public class RepositoryRecipeCourse
                                         if (cache == null)
                                             cache = new LinkedHashMap<>();
 
-                                        for (RecipeCourseModel model : models)
+                                        for (RecipeCoursePersistenceModel model : models)
                                             cache.put(model.getDataId(), model);
 
                                         callback.onAllLoaded(models);
@@ -81,12 +81,12 @@ public class RepositoryRecipeCourse
                 });
     }
 
-    private List<RecipeCourseModel> checkCacheForCourseNo(int courseNo) {
-        List<RecipeCourseModel> models = new ArrayList<>();
+    private List<RecipeCoursePersistenceModel> checkCacheForCourseNo(int courseNo) {
+        List<RecipeCoursePersistenceModel> models = new ArrayList<>();
         if (cache == null || cache.isEmpty())
             return null;
         else {
-            for (RecipeCourseModel model : cache.values()) {
+            for (RecipeCoursePersistenceModel model : cache.values()) {
                 if (courseNo == model.getCourse().getCourseNo())
                     models.add(model);
             }
@@ -96,9 +96,9 @@ public class RepositoryRecipeCourse
 
     @Override
     public void getAllByRecipeId(@Nonnull String recipeId,
-                                 @Nonnull GetAllDomainModelsCallback<RecipeCourseModel> callback) {
+                                 @Nonnull GetAllDomainModelsCallback<RecipeCoursePersistenceModel> callback) {
 
-        List<RecipeCourseModel> models = checkCacheForRecipeId(recipeId);
+        List<RecipeCoursePersistenceModel> models = checkCacheForRecipeId(recipeId);
 
         if (models != null) {
             callback.onAllLoaded(models);
@@ -106,13 +106,13 @@ public class RepositoryRecipeCourse
         }
         ((DataAccessRecipeCourse) localDataAccess).getAllByRecipeId(
                 recipeId,
-                new GetAllDomainModelsCallback<RecipeCourseModel>() {
+                new GetAllDomainModelsCallback<RecipeCoursePersistenceModel>() {
                     @Override
-                    public void onAllLoaded(List<RecipeCourseModel> models) {
+                    public void onAllLoaded(List<RecipeCoursePersistenceModel> models) {
                         if (cache == null)
                             cache = new LinkedHashMap<>();
 
-                        for (RecipeCourseModel model : models)
+                        for (RecipeCoursePersistenceModel model : models)
                             cache.put(model.getDataId(), model);
 
                         callback.onAllLoaded(models);
@@ -122,9 +122,9 @@ public class RepositoryRecipeCourse
                     public void onModelsUnavailable() {
                         ((DataAccessRecipeCourse) remoteDataAccess).getAllByRecipeId(
                                 recipeId,
-                                new GetAllDomainModelsCallback<RecipeCourseModel>() {
+                                new GetAllDomainModelsCallback<RecipeCoursePersistenceModel>() {
                                     @Override
-                                    public void onAllLoaded(List<RecipeCourseModel> models) {
+                                    public void onAllLoaded(List<RecipeCoursePersistenceModel> models) {
                                         if (models == null) {
                                             onModelsUnavailable();
                                             return;
@@ -133,7 +133,7 @@ public class RepositoryRecipeCourse
                                         if (cache == null)
                                             cache = new LinkedHashMap<>();
 
-                                        for (RecipeCourseModel model : models)
+                                        for (RecipeCoursePersistenceModel model : models)
                                             cache.put(model.getDataId(), model);
 
                                         callback.onAllLoaded(models);
@@ -148,12 +148,12 @@ public class RepositoryRecipeCourse
                 });
     }
 
-    private List<RecipeCourseModel> checkCacheForRecipeId(String recipeId) {
-        List<RecipeCourseModel> models = new ArrayList<>();
+    private List<RecipeCoursePersistenceModel> checkCacheForRecipeId(String recipeId) {
+        List<RecipeCoursePersistenceModel> models = new ArrayList<>();
         if (cache == null || cache.isEmpty())
             return null;
         else {
-            for (RecipeCourseModel model : cache.values()) {
+            for (RecipeCoursePersistenceModel model : cache.values()) {
                 if (model.getRecipeId().equals(recipeId)) {
                     models.add(model);
                 }

@@ -49,12 +49,12 @@ public final class RecipeCourseResponse extends UseCaseResponse<RecipeCourseResp
 
     public static final class Model extends UseCaseDomainModel {
 
-        private HashMap<RecipeCourse.Course, RecipeCourseModel> courseList;
+        private HashMap<RecipeCourse.Course, RecipeCoursePersistenceModel> courseList;
 
         private Model() {}
 
         @Nonnull
-        public HashMap<RecipeCourse.Course, RecipeCourseModel> getCourseList() {
+        public HashMap<RecipeCourse.Course, RecipeCoursePersistenceModel> getCourseList() {
             return courseList;
         }
 
@@ -92,12 +92,12 @@ public final class RecipeCourseResponse extends UseCaseResponse<RecipeCourseResp
             }
 
             public Builder setCourseList(
-                    HashMap<RecipeCourse.Course, RecipeCourseModel> courseList) {
+                    HashMap<RecipeCourse.Course, RecipeCoursePersistenceModel> courseList) {
                 model.courseList = courseList;
                 return self();
             }
 
-            private static HashMap<RecipeCourse.Course, RecipeCourseModel> getDefaultCourseList() {
+            private static HashMap<RecipeCourse.Course, RecipeCoursePersistenceModel> getDefaultCourseList() {
                 return new HashMap<>();
             }
 

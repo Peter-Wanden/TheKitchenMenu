@@ -1,9 +1,8 @@
-package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata;
+package com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.dataadapters;
 
 import com.example.peter.thekitchenmenu.data.repository.PrimitiveDataSource;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.parent.RecipeMetadataParentEntity;
 import com.example.peter.thekitchenmenu.data.repository.source.local.recipe.metadata.parent.RecipeMetadataParentEntityLocalDataSource;
-import com.example.peter.thekitchenmenu.domain.usecase.recipe.RecipePersistenceModel;
 import com.example.peter.thekitchenmenu.domain.usecase.recipe.metadata.RecipeMetadataPersistenceModel;
 
 import java.util.List;

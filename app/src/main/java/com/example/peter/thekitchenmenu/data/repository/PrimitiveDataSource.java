@@ -7,14 +7,15 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 /**
- * Sits between the persistence framework and use case persistence layer {@link DataAccess}.
+ * Base interface that sits between the persistence framework and use case persistence
+ * layer {@link DataAccess}.
  * Implemented by data adapters that convert domain model objects to primitive data structures for
  * persistence frameworks that require it.
  *
- * Primitive data structures should ony be used for saving and retrieving data. They should not be
- * used or manipulated by the use cases, business entities or any other part of the application.
+ * Objects with a parent / child relationship with their internal data structures should implement
+ * {@link PrimitiveDataSourceParent} or {@link PrimitiveDataSourceChild} as required.
  *
- * @param <T> primitive data structures that extend {@link PrimitiveModel} which are represented
+ * @param <T> primitive data structures that extend {@link PrimitiveModel}
  */
 public interface PrimitiveDataSource<T extends PrimitiveModel> {
 
@@ -32,19 +33,15 @@ public interface PrimitiveDataSource<T extends PrimitiveModel> {
         void onDataUnavailable();
     }
 
-    void getAll(@Nonnull GetAllCallback<T> callback);
-
-    void getAllByDomainId(@Nonnull String domainId, GetAllCallback<T> callback);
-
     void getByDataId(@Nonnull String dataId, @Nonnull GetEntityCallback<T> callback);
+
+    void getAll(@Nonnull GetAllCallback<T> callback);
 
     void save(@Nonnull T entity);
 
     void refreshData();
 
     void deleteByDataId(@Nonnull String dataId);
-
-    void deleteAllByDomainId(@Nonnull String domainId);
 
     void deleteAll();
 }

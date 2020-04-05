@@ -62,7 +62,7 @@ public class RecipeIngredientRemoteDataAccess implements DataAccessRecipeIngredi
     }
 
     @Override
-    public void deleteByDomainId(@Nonnull String domainId) {
+    public void deleteAllByDomainId(@Nonnull String domainId) {
 
     }
 }
